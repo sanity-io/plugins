@@ -3,12 +3,12 @@ import { useClient, type SanityClient } from "sanity";
 
 import { AddIcon, TrashIcon } from "@sanity/icons";
 import { apiVersion } from "@sanity/preview-url-secret/constants";
-import { subcribeToVercelProtectionBypass } from "@sanity/preview-url-secret/toggle-vercel-protection-bypass";
 import {
   vercelProtectionBypassSchemaId as _id,
   vercelProtectionBypassSchemaType as _type,
   tag,
 } from "@sanity/preview-url-secret/constants";
+import { subcribeToVercelProtectionBypass } from "@sanity/preview-url-secret/toggle-vercel-protection-bypass";
 import {
   Box,
   Button,
@@ -53,7 +53,7 @@ function reducer(prevState: State, action: Action): State {
     case "cancel-add-secret":
       return { ...prevState, status: "disabled" };
     case "add-secret":
-      return { ...prevState, status: "add-secret-dialog" };
+      return { ...prevState, status: "add-secret-sdialog" };
     case "failed-remove-secret":
       return { ...prevState, status: "enabled" };
     case "failed-add-secret":
