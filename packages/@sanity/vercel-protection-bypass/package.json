@@ -10,6 +10,7 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "packages/@sanity/vercel-protection-bypass"
   },
+  "keywords": ["sanity", "studio", "sanity-plugin", "vercel"],
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
   "type": "module",
