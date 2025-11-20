@@ -14,4 +14,5 @@ export default defineConfig({
   tsconfig: 'tsconfig.build.json',
   babel: { reactCompiler: true },
   reactCompilerOptions: { target: '18' },
+  dts: 'rolldown'
 })
