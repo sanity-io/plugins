@@ -47,6 +47,7 @@
   "devDependencies": {
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "^1.0.0",
     "react": "catalog:",
     "sanity": "catalog:",
@@ -57,7 +58,7 @@
     "sanity": "^3.93.0 || ^4"
   },
   "engines": {
-    "node": ">=20.19"
+    "node": ">=20.19 <22 || >=22.12"
   },
   "publishConfig": {
     "access": "public"
