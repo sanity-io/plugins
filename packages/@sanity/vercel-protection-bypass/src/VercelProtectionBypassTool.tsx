@@ -53,7 +53,7 @@ function reducer(prevState: State, action: Action): State {
     case "cancel-add-secret":
       return { ...prevState, status: "disabled" };
     case "add-secret":
-      return { ...prevState, status: "add-secret-sdialog" };
+      return { ...prevState, status: "add-secret-dialog" };
     case "failed-remove-secret":
       return { ...prevState, status: "enabled" };
     case "failed-add-secret":
