@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup
-      - run: pnpm --if-present check:types
+      - run: pnpm --if-present typecheck
 
   lint:
     runs-on: ubuntu-latest

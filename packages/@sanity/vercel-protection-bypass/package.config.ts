@@ -1,4 +1,4 @@
-import {defineConfig} from '@sanity/pkg-utils'
+import { defineConfig } from '@sanity/pkg-utils'
 
 export default defineConfig({
   extract: {
@@ -9,6 +9,6 @@ export default defineConfig({
     },
   },
   tsconfig: 'tsconfig.build.json',
-  babel: {reactCompiler: true},
-  reactCompilerOptions: {target: '18'},
+  babel: { reactCompiler: true },
+  reactCompilerOptions: { target: '18' },
 })
