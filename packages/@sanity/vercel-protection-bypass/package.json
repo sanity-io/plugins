@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/preview-url-secret": "^2.1.15",
+    "@sanity/preview-url-secret": "^2.1.16",
     "@sanity/ui": "^3.1.11",
     "react-compiler-runtime": "^1.0.0"
   },
