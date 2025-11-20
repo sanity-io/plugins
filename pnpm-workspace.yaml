@@ -8,7 +8,7 @@ catalog:
   '@sanity/pkg-utils': ^9.1.1
   '@sanity/vision': ^4.17.0
   '@types/node': ^24.10.1
-  '@types/react': 19.2.6
+  '@types/react': ^19.2.6
   '@types/react-dom': ^19.2.3
   '@typescript/native-preview': 7.0.0-dev.20251117.1
   react: ^19.2.0
