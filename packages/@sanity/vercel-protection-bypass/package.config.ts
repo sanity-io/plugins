@@ -8,6 +8,9 @@ export default defineConfig({
       'ae-missing-release-tag': 'off',
     },
   },
+  strictOptions: {
+    noImplicitBrowsersList: 'off'
+  },
   tsconfig: 'tsconfig.build.json',
   babel: { reactCompiler: true },
   reactCompilerOptions: { target: '18' },

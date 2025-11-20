@@ -4,14 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "turbo build",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "typecheck": "turbo typecheck --continue"
   },
   "dependencies": {
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
     "oxfmt": "^0.14.0",
+    "turbo": "^2.6.1",
     "typescript": "catalog:"
   },
   "packageManager": "pnpm@10.22.0"
