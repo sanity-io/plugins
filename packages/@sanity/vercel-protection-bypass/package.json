@@ -12,7 +12,6 @@
   },
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
-  "sideEffects": false,
   "type": "module",
   "exports": {
     ".": {
@@ -23,8 +22,6 @@
     },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
