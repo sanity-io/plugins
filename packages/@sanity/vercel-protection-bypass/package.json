@@ -46,6 +46,7 @@
     "react-compiler-runtime": "^1.0.0"
   },
   "devDependencies": {
+    "@repo/package.config": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
