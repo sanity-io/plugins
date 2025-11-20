@@ -1,0 +1,6 @@
+{
+  "typescript.experimental.useTsgo": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "oxc.fmt.experimental": true,
+  "oxc.fmt.configPath": ".oxfmtrc.jsonc"
+}
