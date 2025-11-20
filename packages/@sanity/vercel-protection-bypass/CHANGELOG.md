@@ -1,5 +1,11 @@
 # @sanity/vercel-protection-bypass
 
+## 2.1.2
+
+### Patch Changes
+
+- [`2bda9e1`](https://github.com/sanity-io/plugins/commit/2bda9e147d8bf98b59c83b12b994f821262b7689) Thanks [@stipsan](https://github.com/stipsan)! - Reduce reliance on `@sanity/preview-url-secret`
+
 ## 2.1.1
 
 ### Patch Changes
