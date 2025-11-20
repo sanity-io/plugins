@@ -8,7 +8,7 @@ import {
   vercelProtectionBypassSchemaType as _type,
   tag,
 } from "@sanity/preview-url-secret/constants";
-import { subcribeToVercelProtectionBypass } from "@sanity/preview-url-secret/toggle-vercel-protection-bypass";
+import { subscribeToVercelProtectionBypass } from "@sanity/preview-url-secret/toggle-vercel-protection-bypass";
 import {
   Box,
   Button,
@@ -116,7 +116,7 @@ export default function VercelProtectionBypassTool(): React.JSX.Element {
   };
 
   useEffect(() => {
-    const unsubscribe = subcribeToVercelProtectionBypass(client, (secret) =>
+    const unsubscribe = subscribeToVercelProtectionBypass(client, (secret) =>
       dispatch({ type: secret ? "saved-secret" : "removed-secret" })
     );
     return () => unsubscribe();
