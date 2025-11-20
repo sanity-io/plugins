@@ -6,7 +6,7 @@ packages:
 catalog:
   '@sanity/pkg-utils': ^9.1.1
   '@types/react': ^19.2.6
-  '@typescript/native-preview': 7.0.0-dev.20251116.1
+  '@typescript/native-preview': 7.0.0-dev.20251117.1
   react: ^19.2.0
   sanity: ^4.16.0
   typescript: 5.9.3
