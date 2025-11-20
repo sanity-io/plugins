@@ -1,0 +1,27 @@
+{
+  "name": "test-studio",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "typecheck": "(cd ../.. && tsgo --project dev/test-studio/tsconfig.json)",
+    "build": "sanity build"
+  },
+  "dependencies": {
+    "@sanity/vercel-protection-bypass": "workspace:*",
+    "@sanity/vision": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:"
+  },
+  "devDependencies": {
+    "@tsconfig/vite-react": "^7.0.2",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "typescript": "catalog:"
+  }
+}

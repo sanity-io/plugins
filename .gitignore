@@ -140,3 +140,6 @@ vite.config.ts.timestamp-*
 
 # Turborepo
 .turbo
+
+# Sanity Studio
+.sanity
