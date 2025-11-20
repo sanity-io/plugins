@@ -1,7 +1,7 @@
-import { type PkgConfigOptions } from '@sanity/pkg-utils'
+import {type PkgConfigOptions} from '@sanity/pkg-utils'
 
 const config = {
-  extract: { enabled: false },
+  extract: {enabled: false},
   strictOptions: {
     noImplicitBrowsersList: 'off',
     noImplicitSideEffects: 'off',
@@ -17,4 +17,3 @@ const config = {
 } as const satisfies PkgConfigOptions
 
 export default config
-
