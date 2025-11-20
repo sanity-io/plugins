@@ -1,6 +1,6 @@
 {
   "name": "@sanity/vercel-protection-bypass",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "homepage": "https://github.com/sanity-io/plugins/tree/main/packages/%40sanity/vercel-protection-bypass#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
@@ -10,7 +10,12 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "packages/@sanity/vercel-protection-bypass"
   },
-  "keywords": ["sanity", "studio", "sanity-plugin", "vercel"],
+  "keywords": [
+    "sanity",
+    "studio",
+    "sanity-plugin",
+    "vercel"
+  ],
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
   "type": "module",
