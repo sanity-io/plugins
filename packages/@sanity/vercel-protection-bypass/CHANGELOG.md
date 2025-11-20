@@ -1,5 +1,11 @@
 # @sanity/vercel-protection-bypass
 
+## 2.1.1
+
+### Patch Changes
+
+- [#3](https://github.com/sanity-io/plugins/pull/3) [`0c47c28`](https://github.com/sanity-io/plugins/commit/0c47c28f5709863712d92f4fcfd24ae7dac8b468) Thanks [@stipsan](https://github.com/stipsan)! - Setup npm Trusted Publishing
+
 ## [2.1.0](https://github.com/sanity-io/visual-editing/compare/vercel-protection-bypass-v2.0.2...vercel-protection-bypass-v2.1.0) (2025-10-15)
 
 ### Features
