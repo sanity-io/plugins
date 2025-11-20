@@ -1,0 +1,64 @@
+{
+  "name": "@sanity/vercel-protection-bypass",
+  "version": "2.1.0",
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/packages/@sanity/vercel-protection-bypass#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "packages/@sanity/vercel-protection-bypass"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "!src/**/*.test.ts",
+    "!src/**/*.test-d.ts",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.4",
+    "@sanity/preview-url-secret": "^2.1.15",
+    "@sanity/ui": "^3.1.11",
+    "react-compiler-runtime": "^1.0.0"
+  },
+  "devDependencies": {
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "react": "catalog:",
+    "sanity": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "sanity": "^3.93.0 || ^4"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
