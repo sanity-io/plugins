@@ -1,5 +1,19 @@
 # @sanity/vercel-protection-bypass
 
+## 3.0.0
+
+### Major Changes
+
+- [#11](https://github.com/sanity-io/plugins/pull/11) [`d2283b2`](https://github.com/sanity-io/plugins/commit/d2283b2cb214f8c3478e986f0afa06180343dd35) Thanks [@stipsan](https://github.com/stipsan)! - Set node engines to minimum v22.12 in addition to the existing required v20.19 or later
+
+- [#11](https://github.com/sanity-io/plugins/pull/11) [`d2283b2`](https://github.com/sanity-io/plugins/commit/d2283b2cb214f8c3478e986f0afa06180343dd35) Thanks [@stipsan](https://github.com/stipsan)! - Remove CJS, this package is now ESM-only
+
+### Patch Changes
+
+- [#8](https://github.com/sanity-io/plugins/pull/8) [`17e4495`](https://github.com/sanity-io/plugins/commit/17e44959f157bf6b7239db06f19aec31265d7ca9) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/preview-url-secret to ^2.1.16
+
+- [`2bda9e1`](https://github.com/sanity-io/plugins/commit/2bda9e147d8bf98b59c83b12b994f821262b7689) Thanks [@stipsan](https://github.com/stipsan)! - Reduce reliance on `@sanity/preview-url-secret`
+
 ## 2.1.1
 
 ### Patch Changes
