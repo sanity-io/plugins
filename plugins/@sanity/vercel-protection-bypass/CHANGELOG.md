@@ -1,5 +1,15 @@
 # @sanity/vercel-protection-bypass
 
+## 3.1.0
+
+### Minor Changes
+
+- [`d090d93`](https://github.com/sanity-io/plugins/commit/d090d939e29a2aa46ccf1e1f18a63eb383630bdd) Thanks [@stipsan](https://github.com/stipsan)! - Add schema type for debugging
+
+### Patch Changes
+
+- [`4f82b31`](https://github.com/sanity-io/plugins/commit/4f82b3120b3006821a74f444589ac3e752475c4e) Thanks [@stipsan](https://github.com/stipsan)! - Stop publishing src folder to npm
+
 ## 3.0.0
 
 ### Major Changes
