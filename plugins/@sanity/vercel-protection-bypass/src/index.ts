@@ -1,6 +1,7 @@
-import { lazy } from 'react'
-import { definePlugin, defineType } from 'sanity'
-import { CheckmarkCircleIcon, CloseCircleIcon, LockIcon } from '@sanity/icons'
+import {lazy} from 'react'
+import {definePlugin, defineType} from 'sanity'
+
+import {CheckmarkCircleIcon, CloseCircleIcon, LockIcon} from '@sanity/icons'
 import {
   vercelProtectionBypassSchemaId as _id,
   vercelProtectionBypassSchemaType as type,
@@ -16,7 +17,12 @@ export interface VercelProtectionBypassConfig {
 
 export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassConfig | void>(
   (options) => {
-    const { name = 'vercel-protection-bypass', title = 'Vercel Protection Bypass', icon = LockIcon, ...config } = options || {}
+    const {
+      name = 'vercel-protection-bypass',
+      title = 'Vercel Protection Bypass',
+      icon = LockIcon,
+      ...config
+    } = options || {}
     return {
       name: `@sanity/preview-url-secret/${id}`,
       tools: [
@@ -38,33 +44,35 @@ export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassCon
         },
       },
       schema: {
-        types: [defineType({
-          type: 'document',
-          icon: LockIcon,
-          name: type,
-          title,
-          readOnly: true,
-          fields: [
-            {
-              type: 'string',
-              name: 'secret',
-              title: 'Secret',
+        types: [
+          defineType({
+            type: 'document',
+            icon: LockIcon,
+            name: type,
+            title,
+            readOnly: true,
+            fields: [
+              {
+                type: 'string',
+                name: 'secret',
+                title: 'Secret',
+              },
+            ],
+            preview: {
+              select: {
+                secret: 'secret',
+              },
+              prepare(data) {
+                const enabled = data['secret'] !== null
+                return {
+                  title: enabled ? 'Enabled' : 'Disabled',
+                  subtitle: title,
+                  media: enabled ? CheckmarkCircleIcon : CloseCircleIcon,
+                }
+              },
             },
-          ],
-          preview: {
-            select: {
-              secret: 'secret',
-            },
-            prepare(data) {
-              const enabled = data['secret'] !== null
-              return {
-                title: enabled ? 'Enabled' : 'Disabled',
-                subtitle: title,
-                media: enabled ? CheckmarkCircleIcon : CloseCircleIcon,
-              }
-            },
-          },
-        })]
+          }),
+        ],
       },
     }
   },
