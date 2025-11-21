@@ -1,15 +1,40 @@
-import {useEffect, useReducer, Activity} from 'react'
+import {
+  useEffect,
+  useReducer,
+  Activity,
+  useState,
+  use,
+  Suspense,
+  useEffectEvent,
+  useRef,
+  startTransition,
+  useImperativeHandle,
+} from 'react'
 import {useClient, type SanityClient} from 'sanity'
 
+import type {SyncTag, LiveEvent} from '@sanity/client'
+
 import {AddIcon, TrashIcon} from '@sanity/icons'
-import {apiVersion} from '@sanity/preview-url-secret/constants'
 import {
+  apiVersion,
   vercelProtectionBypassSchemaId as _id,
   vercelProtectionBypassSchemaType as _type,
   tag,
+  fetchVercelProtectionBypassSecret,
 } from '@sanity/preview-url-secret/constants'
-import {subscribeToVercelProtectionBypass} from '@sanity/preview-url-secret/toggle-vercel-protection-bypass'
-import {Box, Button, Card, Dialog, Heading, Stack, Text, TextInput, useToast} from '@sanity/ui'
+import {
+  Box,
+  Button,
+  Card,
+  Dialog,
+  Heading,
+  Stack,
+  Spinner,
+  Flex,
+  Text,
+  TextInput,
+  useToast,
+} from '@sanity/ui'
 
 interface State {
   status:
@@ -65,10 +90,72 @@ async function disableVercelProtectionBypass(client: SanityClient): Promise<void
 
 export default function VercelProtectionBypassTool(): React.JSX.Element {
   const client = useClient({apiVersion: apiVersion})
+
+  async function fetchSecret(lastLiveEventId: string | null) {
+    const {result, syncTags} = await client.fetch<string | null>(
+      fetchVercelProtectionBypassSecret,
+      {},
+      {
+        filterResponse: false,
+        lastLiveEventId,
+        tag: 'preview-url-secret.fetch-vercel-bypass-protection-secret',
+      },
+    )
+    return {result, syncTags: syncTags ?? []}
+  }
+  const [dataPromise, setDataPromise] = useState(() => fetchSecret(null))
+  const syncTagsRef = useRef<SyncTag[]>([])
+
+  const handleLiveEvent = useEffectEvent((event: LiveEvent) => {
+    if (event.type === 'message' && event.tags.some((tag) => syncTagsRef.current.includes(tag))) {
+      startTransition(() => setDataPromise(fetchSecret(event.id)))
+    }
+  })
+  useEffect(() => {
+    const subscription = client.live.events().subscribe({
+      next: handleLiveEvent,
+      // eslint-disable-next-line no-console
+      error: (reason) => console.error(reason),
+    })
+
+    return () => subscription.unsubscribe()
+  }, [client])
+
+  return (
+    <Suspense
+      fallback={
+        <Flex
+          align="center"
+          direction="column"
+          height="fill"
+          justify="center"
+          style={{width: '100%'}}
+        >
+          <Spinner />
+        </Flex>
+      }
+    >
+      <Layout dataPromise={dataPromise} syncTagsRef={syncTagsRef} />
+    </Suspense>
+  )
+}
+
+function Layout({
+  dataPromise,
+  syncTagsRef,
+}: {
+  dataPromise: Promise<{result: string | null; syncTags: SyncTag[]}>
+  syncTagsRef: React.RefObject<SyncTag[]>
+}) {
+  const {result, syncTags} = use(dataPromise)
+  useImperativeHandle(syncTagsRef, () => syncTags, [syncTags])
+  const client = useClient({apiVersion: apiVersion})
   const {push: pushToast} = useToast()
   const [state, dispatch] = useReducer(reducer, {status: 'loading'})
   const adding = state.status === 'adding-secret'
   const removing = state.status === 'removing-secret'
+
+  console.log({result, syncTags})
 
   const handleEnable = (secret: string) => {
     dispatch({type: 'save-secret'})
@@ -92,14 +179,7 @@ export default function VercelProtectionBypassTool(): React.JSX.Element {
       })
   }
 
-  useEffect(() => {
-    const unsubscribe = subscribeToVercelProtectionBypass(client, (secret) =>
-      dispatch({type: secret ? 'saved-secret' : 'removed-secret'}),
-    )
-    return () => unsubscribe()
-  }, [client])
-
-  const enabled = state.status === 'enabled' || removing
+  const enabled = Boolean(result)
 
   return (
     <>
