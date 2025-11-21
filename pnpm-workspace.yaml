@@ -3,6 +3,8 @@ packages:
   - packages/*
   - packages/@repo/*
   - packages/@sanity/*
+  - plugins/*
+  - plugins/@sanity/*
 
 catalog:
   '@sanity/pkg-utils': ^9.1.1
