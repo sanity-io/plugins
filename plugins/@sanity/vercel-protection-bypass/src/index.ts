@@ -4,7 +4,6 @@ import { CheckmarkCircleIcon, CloseCircleIcon, LockIcon } from '@sanity/icons'
 import {
   vercelProtectionBypassSchemaId as _id,
   vercelProtectionBypassSchemaType as type,
-  tag,
 } from '@sanity/preview-url-secret/constants'
 
 const id = 'vercel-protection-bypass'

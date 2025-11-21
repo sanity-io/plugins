@@ -32,7 +32,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "typecheck": "(cd ../../.. && tsgo --project packages/@sanity/vercel-protection-bypass/tsconfig.json)",
+    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/vercel-protection-bypass/tsconfig.json)",
     "build": "pkg build --strict --check --clean",
     "prepack": "turbo run build"
   },
