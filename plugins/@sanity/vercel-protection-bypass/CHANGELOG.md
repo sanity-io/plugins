@@ -1,5 +1,13 @@
 # @sanity/vercel-protection-bypass
 
+## 4.0.0
+
+### Major Changes
+
+- [#26](https://github.com/sanity-io/plugins/pull/26) [`32fb288`](https://github.com/sanity-io/plugins/commit/32fb28823efb7b99b8c884dca475ab16fef4883a) Thanks [@stipsan](https://github.com/stipsan)! - Require React 19.2 or later
+
+- [#26](https://github.com/sanity-io/plugins/pull/26) [`32fb288`](https://github.com/sanity-io/plugins/commit/32fb28823efb7b99b8c884dca475ab16fef4883a) Thanks [@stipsan](https://github.com/stipsan)! - Require Sanity Studio v4
+
 ## 3.1.0
 
 ### Minor Changes
