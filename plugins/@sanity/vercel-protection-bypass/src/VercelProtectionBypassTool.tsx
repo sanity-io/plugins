@@ -1,4 +1,4 @@
-import {useEffect, useReducer} from 'react'
+import {useEffect, useReducer, Activity} from 'react'
 import {useClient, type SanityClient} from 'sanity'
 
 import {AddIcon, TrashIcon} from '@sanity/icons'
@@ -213,7 +213,14 @@ export default function VercelProtectionBypassTool(): React.JSX.Element {
           </Card>
         </Stack>
       </Box>
-      {(state.status === 'add-secret-dialog' || state.status === 'adding-secret') && (
+
+      <Activity
+        mode={
+          state.status === 'add-secret-dialog' || state.status === 'adding-secret'
+            ? 'visible'
+            : 'hidden'
+        }
+      >
         <Dialog
           animate
           id="add-secret-dialog"
@@ -269,7 +276,7 @@ export default function VercelProtectionBypassTool(): React.JSX.Element {
             </form>
           </Card>
         </Dialog>
-      )}
+      </Activity>
     </>
   )
 }
