@@ -10,7 +10,7 @@ catalog:
   '@types/node': ^24.10.1
   '@types/react': ^19.2.6
   '@types/react-dom': ^19.2.3
-  '@typescript/native-preview': 7.0.0-dev.20251117.1
+  '@typescript/native-preview': 7.0.0-dev.20251118.1
   react: ^19.2.0
   react-dom: ^19.2.0
   sanity: ^4.17.0
