@@ -53,8 +53,8 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "react": "^18.3 || ^19",
-    "sanity": "^3.93.0 || ^4"
+    "react": "^19.2",
+    "sanity": "^4"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
