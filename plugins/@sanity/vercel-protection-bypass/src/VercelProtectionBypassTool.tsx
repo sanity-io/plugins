@@ -1,14 +1,12 @@
 import {
-  useEffect,
-  useReducer,
   Activity,
-  useState,
-  use,
   Suspense,
+  use,
+  useActionState,
+  useEffect,
   useEffectEvent,
-  useRef,
-  startTransition,
-  useImperativeHandle,
+  useState,
+  useTransition,
 } from 'react'
 import {useClient, type SanityClient} from 'sanity'
 
@@ -27,56 +25,14 @@ import {
   Button,
   Card,
   Dialog,
-  Heading,
-  Stack,
-  Spinner,
   Flex,
+  Heading,
+  Spinner,
+  Stack,
   Text,
   TextInput,
   useToast,
 } from '@sanity/ui'
-
-interface State {
-  status:
-    | 'loading'
-    | 'disabled'
-    | 'add-secret-dialog'
-    | 'adding-secret'
-    | 'enabled'
-    | 'removing-secret'
-}
-type Action =
-  | {type: 'add-secret'}
-  | {type: 'save-secret'}
-  | {type: 'cancel-add-secret'}
-  | {type: 'failed-add-secret'}
-  | {type: 'saved-secret'}
-  | {type: 'remove-secret'}
-  | {type: 'failed-remove-secret'}
-  | {type: 'removed-secret'}
-
-function reducer(prevState: State, action: Action): State {
-  switch (action.type) {
-    case 'removed-secret':
-      return {...prevState, status: 'disabled'}
-    case 'remove-secret':
-      return {...prevState, status: 'removing-secret'}
-    case 'saved-secret':
-      return {...prevState, status: 'enabled'}
-    case 'save-secret':
-      return {...prevState, status: 'adding-secret'}
-    case 'cancel-add-secret':
-      return {...prevState, status: 'disabled'}
-    case 'add-secret':
-      return {...prevState, status: 'add-secret-dialog'}
-    case 'failed-remove-secret':
-      return {...prevState, status: 'enabled'}
-    case 'failed-add-secret':
-      return {...prevState, status: 'add-secret-dialog'}
-    default:
-      return prevState
-  }
-}
 
 async function enableVercelProtectionBypass(client: SanityClient, secret: string): Promise<void> {
   const patch = client.patch(_id).set({secret})
@@ -91,8 +47,8 @@ async function disableVercelProtectionBypass(client: SanityClient): Promise<void
 export default function VercelProtectionBypassTool(): React.JSX.Element {
   const client = useClient({apiVersion: apiVersion})
 
-  async function fetchSecret(lastLiveEventId: string | null) {
-    const {result, syncTags} = await client.fetch<string | null>(
+  async function fetchSecret(lastLiveEventId: string | null): Promise<FormState> {
+    const {result, syncTags: _syncTags} = await client.fetch<string | null>(
       fetchVercelProtectionBypassSecret,
       {},
       {
@@ -101,25 +57,12 @@ export default function VercelProtectionBypassTool(): React.JSX.Element {
         tag: 'preview-url-secret.fetch-vercel-bypass-protection-secret',
       },
     )
-    return {result, syncTags: syncTags ?? []}
+    const syncTags = _syncTags ?? []
+    syncTags.push(`s1:foobar${Math.random()}`)
+    console.log('fetchSecret', {result, syncTags})
+    return {secret: result, syncTags}
   }
-  const [dataPromise, setDataPromise] = useState(() => fetchSecret(null))
-  const syncTagsRef = useRef<SyncTag[]>([])
-
-  const handleLiveEvent = useEffectEvent((event: LiveEvent) => {
-    if (event.type === 'message' && event.tags.some((tag) => syncTagsRef.current.includes(tag))) {
-      startTransition(() => setDataPromise(fetchSecret(event.id)))
-    }
-  })
-  useEffect(() => {
-    const subscription = client.live.events().subscribe({
-      next: handleLiveEvent,
-      // eslint-disable-next-line no-console
-      error: (reason) => console.error(reason),
-    })
-
-    return () => subscription.unsubscribe()
-  }, [client])
+  const [initialStatePromise] = useState(() => fetchSecret(null))
 
   return (
     <Suspense
@@ -135,55 +78,94 @@ export default function VercelProtectionBypassTool(): React.JSX.Element {
         </Flex>
       }
     >
-      <Layout dataPromise={dataPromise} syncTagsRef={syncTagsRef} />
+      <Layout initialStatePromise={initialStatePromise} fetchSecret={fetchSecret} />
     </Suspense>
   )
 }
 
+type FormAction = 'remove-secret' | 'add-secret' | 'refresh-secret'
+type FormName = 'action' | 'lastLiveEventId' | 'secret'
+type FormState = {secret: string | null; syncTags: SyncTag[]}
+
 function Layout({
-  dataPromise,
-  syncTagsRef,
+  initialStatePromise,
+  fetchSecret,
 }: {
-  dataPromise: Promise<{result: string | null; syncTags: SyncTag[]}>
-  syncTagsRef: React.RefObject<SyncTag[]>
+  initialStatePromise: Promise<FormState>
+  fetchSecret(lastLiveEventId: string | null): Promise<FormState>
 }) {
-  const {result, syncTags} = use(dataPromise)
-  useImperativeHandle(syncTagsRef, () => syncTags, [syncTags])
-  const client = useClient({apiVersion: apiVersion})
   const {push: pushToast} = useToast()
-  const [state, dispatch] = useReducer(reducer, {status: 'loading'})
-  const adding = state.status === 'adding-secret'
-  const removing = state.status === 'removing-secret'
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const client = useClient({apiVersion})
 
-  console.log({result, syncTags})
+  const action = async (prevState: FormState, formData: FormData): Promise<FormState> => {
+    const action = formData.get('action' satisfies FormName) as FormAction
 
-  const handleEnable = (secret: string) => {
-    dispatch({type: 'save-secret'})
-    enableVercelProtectionBypass(client, secret)
-      .then(() => {
-        dispatch({type: 'saved-secret'})
-        pushToast({
-          status: 'success',
-          title: 'Protection bypass is now enabled',
+    switch (action) {
+      case 'remove-secret':
+        return disableVercelProtectionBypass(client)
+          .then((): FormState => {
+            pushToast({
+              status: 'warning',
+              title: 'Protection bypass is now disabled',
+            })
+            return {...prevState, secret: null}
+          })
+          .catch((reason): FormState => {
+            // eslint-disable-next-line no-console
+            console.error(reason)
+            pushToast({
+              status: 'error',
+              title:
+                'There was an error when trying to disable protection bypass. See the browser console for more information.',
+            })
+            return prevState
+          })
+
+      case 'add-secret': {
+        const secret = formData.get('secret' satisfies FormName) as string
+        console.log('add-secret', {
+          secret,
+          formData: Object.fromEntries(formData.entries()),
         })
-      })
-      .catch((reason) => {
-        // eslint-disable-next-line no-console
-        console.error(reason)
-        pushToast({
-          status: 'error',
-          title:
-            'There was an error when trying to enable protection bypass. See the browser console for more information.',
-        })
-        dispatch({type: 'failed-add-secret'})
-      })
+        return enableVercelProtectionBypass(client, secret)
+          .then(() => {
+            pushToast({
+              status: 'success',
+              title: 'Protection bypass is now enabled',
+            })
+            setIsDialogOpen(false)
+            return {...prevState, secret}
+          })
+          .catch((reason) => {
+            // eslint-disable-next-line no-console
+            console.error(reason)
+            pushToast({
+              status: 'error',
+              title:
+                'There was an error when trying to enable protection bypass. See the browser console for more information.',
+            })
+            return prevState
+          })
+      }
+      case 'refresh-secret':
+        return fetchSecret(formData.get('lastLiveEventId' satisfies FormName) as string)
+      default:
+        throw new Error(`Unknown action: ${action}`)
+    }
   }
 
-  const enabled = Boolean(result)
+  const [formState, formAction, isPending] = useActionState(action, use(initialStatePromise))
+  const isBackgroundRefetch = useRefetchOnLiveEvent(client, formState, formAction)
+
+  const loading = isPending && !isBackgroundRefetch
+  const enabled = Boolean(formState.secret)
 
   return (
     <>
       <Box
+        as="form"
+        action={formAction}
         sizing="border"
         display="flex"
         style={{
@@ -223,28 +205,10 @@ function Layout({
                     mode="ghost"
                     tone="critical"
                     icon={<TrashIcon />}
-                    loading={removing}
-                    onClick={() => {
-                      dispatch({type: 'remove-secret'})
-                      disableVercelProtectionBypass(client)
-                        .then(() => {
-                          pushToast({
-                            status: 'warning',
-                            title: 'Protection bypass is now disabled',
-                          })
-                          dispatch({type: 'removed-secret'})
-                        })
-                        .catch((reason) => {
-                          // eslint-disable-next-line no-console
-                          console.error(reason)
-                          pushToast({
-                            status: 'error',
-                            title:
-                              'There was an error when trying to disable protection bypass. See the browser console for more information.',
-                          })
-                          dispatch({type: 'failed-remove-secret'})
-                        })
-                    }}
+                    loading={loading}
+                    type="submit"
+                    name={'action' satisfies FormName}
+                    value={'remove-secret' satisfies FormAction}
                     text="Remove secret"
                   />
                   <Text>
@@ -276,9 +240,8 @@ function Layout({
                   <Button
                     mode="ghost"
                     icon={<AddIcon />}
-                    loading={state.status === 'loading'}
                     onClick={() => {
-                      dispatch({type: 'add-secret'})
+                      setIsDialogOpen(true)
                     }}
                     text="Add secret"
                   />
@@ -294,69 +257,79 @@ function Layout({
         </Stack>
       </Box>
 
-      <Activity
-        mode={
-          state.status === 'add-secret-dialog' || state.status === 'adding-secret'
-            ? 'visible'
-            : 'hidden'
-        }
-      >
-        <Dialog
-          animate
-          id="add-secret-dialog"
-          onClickOutside={() => dispatch({type: 'cancel-add-secret'})}
-        >
-          <Card padding={3}>
-            <form
-              onSubmit={(event) => {
-                event.preventDefault()
-                event.currentTarget.reportValidity()
-                const formData = new FormData(event.currentTarget)
-                const secret = formData.get('secret') as string
-                if (secret) handleEnable(secret)
-              }}
-            >
-              <Stack space={3}>
-                <Stack space={2}>
-                  <Text as="label" weight="semibold" size={1}>
-                    Add bypass secret
-                  </Text>
-                  <Text muted size={1}>
-                    {`Make sure it's the same secret the Vercel deployment is using that's loaded in the preview iframe.`}
-                  </Text>
-                  <TextInput
-                    name="secret"
-                    onFocus={(event) => {
-                      event.currentTarget.setCustomValidity('')
-                    }}
-                    onBlur={(event) => {
-                      event.currentTarget.setCustomValidity(
-                        event.currentTarget.value.length == 32
-                          ? ''
-                          : 'Secret must be 32 characters long',
-                      )
-                      event.currentTarget.required = true
-                    }}
-                    minLength={32}
-                    maxLength={32}
-                    autoComplete="off"
-                    autoCapitalize="off"
-                    autoCorrect="off"
-                    spellCheck="false"
-                    disabled={adding}
-                  />
-                </Stack>
-                <Button
-                  type="submit"
-                  loading={adding}
-                  text={adding ? 'Saving…' : 'Save'}
-                  tone="positive"
+      <Activity mode={isDialogOpen ? 'visible' : 'hidden'}>
+        <Dialog animate id="add-secret-dialog" onClickOutside={() => setIsDialogOpen(false)}>
+          <Card as="form" action={formAction} padding={3}>
+            <Stack space={3}>
+              <Stack space={2}>
+                <Text as="label" weight="semibold" size={1}>
+                  Add bypass secret
+                </Text>
+                <Text muted size={1}>
+                  {`Make sure it's the same secret the Vercel deployment is using that's loaded in the preview iframe.`}
+                </Text>
+                <TextInput
+                  name={'secret' satisfies FormName}
+                  onFocus={(event) => {
+                    event.currentTarget.setCustomValidity('')
+                  }}
+                  onBlur={(event) => {
+                    event.currentTarget.setCustomValidity(
+                      event.currentTarget.value.length == 32
+                        ? ''
+                        : 'Secret must be 32 characters long',
+                    )
+                    event.currentTarget.required = true
+                  }}
+                  minLength={32}
+                  maxLength={32}
+                  autoComplete="off"
+                  autoCapitalize="off"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  disabled={loading}
                 />
               </Stack>
-            </form>
+              <Button
+                type="submit"
+                loading={loading}
+                text={loading ? 'Saving…' : 'Save'}
+                tone="positive"
+                name={'action' satisfies FormName}
+                value={'add-secret' satisfies FormAction}
+              />
+            </Stack>
           </Card>
         </Dialog>
       </Activity>
     </>
   )
+}
+
+type isBackgroundRefetch = boolean
+function useRefetchOnLiveEvent(
+  client: SanityClient,
+  formState: FormState,
+  action: (formData: FormData) => void,
+): isBackgroundRefetch {
+  const [isBackgroundRefetch, startTransition] = useTransition()
+  const handleLiveEvent = useEffectEvent((event: LiveEvent) => {
+    if (event.type === 'message' && event.tags.some((tag) => formState.syncTags.includes(tag))) {
+      console.log('handleLiveEvent', event, formState)
+      const formData = new FormData()
+      formData.set('action' satisfies FormName, 'refresh-secret' satisfies FormAction)
+      formData.set('lastLiveEventId' satisfies FormName, event.id)
+      startTransition(() => action(formData))
+    }
+  })
+  useEffect(() => {
+    const subscription = client.live.events().subscribe({
+      next: handleLiveEvent,
+      // eslint-disable-next-line no-console
+      error: (reason) => console.error(reason),
+    })
+
+    return () => subscription.unsubscribe()
+  }, [client])
+  return isBackgroundRefetch
 }
