@@ -1,4 +1,6 @@
 import {defineConfig} from 'sanity'
+import {structureTool} from 'sanity/structure'
+import {visionTool} from '@sanity/vision'
 
 import {vercelProtectionBypassTool} from '@sanity/vercel-protection-bypass'
 
@@ -9,5 +11,5 @@ export default defineConfig({
   projectId,
   dataset,
   title: 'Plugins Studio',
-  plugins: [vercelProtectionBypassTool()],
+  plugins: [structureTool(), vercelProtectionBypassTool(), visionTool()],
 })
