@@ -1,5 +1,11 @@
 # @sanity/vercel-protection-bypass
 
+## 4.0.1
+
+### Patch Changes
+
+- [`c934098`](https://github.com/sanity-io/plugins/commit/c9340986f5af78de17e1277a7362b2d18cd59537) Thanks [@stipsan](https://github.com/stipsan)! - Target React 19 in React Compiler
+
 ## 4.0.0
 
 ### Major Changes
