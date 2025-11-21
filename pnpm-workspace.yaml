@@ -8,6 +8,7 @@ packages:
 
 catalog:
   '@sanity/pkg-utils': ^9.1.1
+  '@sanity/vision': ^4.17.0
   '@types/node': ^24.10.1
   '@types/react': ^19.2.6
   '@types/react-dom': ^19.2.3
@@ -18,12 +19,9 @@ catalog:
   styled-components: ^6.1.19
   typescript: 5.9.3
 
-peerDependencyRules:
-  allowAny:
-    - sanity
-
-preferWorkspacePackages: true
-linkWorkspacePackages: deep
+# wait with enabling until sanity@latest has the latest version of `@sanity/preview-url-secret`
+# preferWorkspacePackages: true
+# linkWorkspacePackages: deep
 
 minimumReleaseAge: 4320
 
