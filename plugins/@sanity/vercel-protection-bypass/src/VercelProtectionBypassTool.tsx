@@ -48,7 +48,7 @@ export default function VercelProtectionBypassTool(): React.JSX.Element {
   const client = useClient({apiVersion: apiVersion})
 
   async function fetchSecret(lastLiveEventId: string | null): Promise<FormState> {
-    const {result, syncTags: _syncTags} = await client.fetch<string | null>(
+    const {result, syncTags} = await client.fetch<string | null>(
       fetchVercelProtectionBypassSecret,
       {},
       {
@@ -57,10 +57,7 @@ export default function VercelProtectionBypassTool(): React.JSX.Element {
         tag: 'preview-url-secret.fetch-vercel-bypass-protection-secret',
       },
     )
-    const syncTags = _syncTags ?? []
-    syncTags.push(`s1:foobar${Math.random()}`)
-    console.log('fetchSecret', {result, syncTags})
-    return {secret: result, syncTags}
+    return {secret: result, syncTags: syncTags ?? []}
   }
   const [initialStatePromise] = useState(() => fetchSecret(null))
 
@@ -124,10 +121,6 @@ function Layout({
 
       case 'add-secret': {
         const secret = formData.get('secret' satisfies FormName) as string
-        console.log('add-secret', {
-          secret,
-          formData: Object.fromEntries(formData.entries()),
-        })
         return enableVercelProtectionBypass(client, secret)
           .then(() => {
             pushToast({
@@ -315,7 +308,6 @@ function useRefetchOnLiveEvent(
   const [isBackgroundRefetch, startTransition] = useTransition()
   const handleLiveEvent = useEffectEvent((event: LiveEvent) => {
     if (event.type === 'message' && event.tags.some((tag) => formState.syncTags.includes(tag))) {
-      console.log('handleLiveEvent', event, formState)
       const formData = new FormData()
       formData.set('action' satisfies FormName, 'refresh-secret' satisfies FormAction)
       formData.set('lastLiveEventId' satisfies FormName, event.id)
