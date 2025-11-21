@@ -16,7 +16,7 @@ export interface VercelProtectionBypassConfig {
 
 export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassConfig | void>(
   (options) => {
-    const { name = 'vercel-protection-bypass', title = 'Vercel Protection Bypass', icon, ...config } = options || {}
+    const { name = 'vercel-protection-bypass', title = 'Vercel Protection Bypass', icon = LockIcon, ...config } = options || {}
     return {
       name: `@sanity/preview-url-secret/${id}`,
       tools: [
@@ -32,18 +32,6 @@ export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassCon
       document: {
         actions: (prev, context) => {
           if (context.schemaType !== type) {
-            return prev
-          }
-          return []
-        },
-        inspectors: (prev, context) => {
-          if (context.documentType !== type) {
-            return prev
-          }
-          return []
-        },
-        unstable_fieldActions: (prev, context) => {
-          if (context.schemaType.name !== type) {
             return prev
           }
           return []
@@ -70,8 +58,8 @@ export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassCon
             prepare(data) {
               const enabled = data['secret'] !== null
               return {
-                title,
-                subtitle: enabled ? 'Enabled' : 'Disabled',
+                title: enabled ? 'Enabled' : 'Disabled',
+                subtitle: title,
                 media: enabled ? CheckmarkCircleIcon : CloseCircleIcon,
               }
             },

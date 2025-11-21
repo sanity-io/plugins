@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "@sanity/vercel-protection-bypass": "workspace:*",
-    "@sanity/vision": "catalog:",
+    "@sanity/vision": "next",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "sanity": "catalog:",
+    "sanity": "next",
     "styled-components": "catalog:"
   },
   "devDependencies": {
