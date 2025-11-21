@@ -29,9 +29,6 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
-    "src",
-    "!src/**/*.test.ts",
-    "!src/**/*.test-d.ts",
     "CHANGELOG.md"
   ],
   "scripts": {

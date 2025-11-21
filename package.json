@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "turbo build --filter=test-studio^... && pnpm dev --filter=test-studio",
+    "dev": "pnpm turbo dev --filter=test-studio",
     "build": "turbo build",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
     "release": "changeset publish",
