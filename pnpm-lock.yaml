@@ -89,6 +89,9 @@ importers:
       '@sanity/debug-preview-url-secret-plugin':
         specifier: workspace:*
         version: link:../../plugins/@sanity/debug-preview-url-secret-plugin
+      '@sanity/icons':
+        specifier: ^3.7.4
+        version: 3.7.4(react@19.2.0)
       '@sanity/vercel-protection-bypass':
         specifier: workspace:*
         version: link:../../plugins/@sanity/vercel-protection-bypass
