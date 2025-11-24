@@ -1,8 +1,14 @@
-import type {CustomPickerInjectedProps} from 'react-color/lib/components/common/ColorWrap'
-
 import {startTransition, useCallback, useDeferredValue, useEffect, useRef, useState} from 'react'
-import {type Color, CustomPicker} from 'react-color'
-import {Alpha, Checkboard, Hue, Saturation} from 'react-color/lib/components/common'
+import {
+  Alpha,
+  Hue,
+  Saturation,
+  type HsvaColor,
+  hsvaToRgba,
+  hsvaToHex,
+  hsvaToHsla,
+  hexToHsva,
+} from '@uiw/react-color'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
 import {styled} from 'styled-components'
 import {useEffectEvent} from 'use-effect-event'
@@ -31,29 +37,56 @@ const ReadOnlyContainer = styled(Flex)`
   width: 100%;
 `
 
-interface ColorPickerProps extends CustomPickerInjectedProps<Color> {
+const Checkboard = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.08) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(0, 0, 0, 0.08) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.08) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.08) 75%);
+  background-size: 8px 8px;
+  background-position:
+    0 0,
+    0 4px,
+    4px -4px,
+    -4px 0px;
+`
+
+interface ColorPickerProps {
   width?: string
   disableAlpha: boolean
-  colorList?: Array<Color> | undefined
+  colorList?: Array<string | ColorValue> | undefined
   readOnly?: boolean
   onUnset: () => void
   color: ColorValue
+  onChange: (color: ColorValue) => void
 }
 
 const ColorPickerInner = (props: ColorPickerProps) => {
-  const {
-    width,
-    color: {rgb, hex, hsv, hsl},
-    onChange,
-    onUnset,
-    disableAlpha,
-    colorList,
-    readOnly,
-  } = props
+  const {width, color: {rgb, hex, hsv, hsl}, onChange, onUnset, disableAlpha, colorList, readOnly} =
+    props
 
   if (!hsl || !hsv) {
     return null
   }
+
+  const handleHsvaChange = useCallback(
+    (newHsva: HsvaColor) => {
+      const newRgba = hsvaToRgba(newHsva)
+      const newHex = hsvaToHex(newHsva)
+      const newHsla = hsvaToHsla(newHsva)
+      onChange({
+        hex: newHex,
+        rgb: newRgba,
+        hsv: newHsva,
+        hsl: newHsla,
+      })
+    },
+    [onChange],
+  )
 
   return (
     <div style={{width}}>
@@ -62,7 +95,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
           {!readOnly && (
             <>
               <Card overflow="hidden" style={{position: 'relative', height: '5em'}}>
-                <Saturation onChange={onChange} hsl={hsl} hsv={hsv} />
+                <Saturation hsva={hsv} onChange={handleHsvaChange} />
               </Card>
 
               <Card
@@ -71,7 +104,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                 overflow="hidden"
                 style={{position: 'relative', height: '10px'}}
               >
-                <Hue hsl={hsl} onChange={!readOnly && onChange} />
+                <Hue hue={hsv.h} onChange={(newHue) => handleHsvaChange({...hsv, ...newHue})} />
               </Card>
 
               {!disableAlpha && (
@@ -81,7 +114,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                   overflow="hidden"
                   style={{position: 'relative', height: '10px', background: '#fff'}}
                 >
-                  <Alpha rgb={rgb} hsl={hsl} onChange={onChange} />
+                  <Alpha hsva={hsv} onChange={(newAlpha) => handleHsvaChange({...hsv, ...newAlpha})} />
                 </Card>
               )}
             </>
@@ -93,12 +126,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
               overflow="hidden"
               style={{position: 'relative', minWidth: '4em', background: '#fff'}}
             >
-              <Checkboard
-                size={8}
-                white="transparent"
-                grey="rgba(0,0,0,.08)"
-                renderers={{} as {canvas: unknown}}
-              />
+              <Checkboard />
               <ColorBox
                 style={{
                   backgroundColor: `rgba(${rgb?.r},${rgb?.g},${rgb?.b},${rgb?.a})`,
@@ -139,7 +167,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                     rgb={rgb}
                     hsl={hsl}
                     hex={hex}
-                    onChange={onChange}
+                    onChange={handleHsvaChange}
                     disableAlpha={disableAlpha}
                   />
                 </Box>
@@ -149,21 +177,18 @@ const ColorPickerInner = (props: ColorPickerProps) => {
               </Flex>
             )}
           </Flex>
-          {colorList && <ColorList colors={colorList} onChange={onChange} />}
+          {colorList && <ColorList colors={colorList} onChange={handleHsvaChange} />}
         </Stack>
       </Card>
     </div>
   )
 }
 
-const ColorPicker = CustomPicker(ColorPickerInner)
-
-const DEFAULT_COLOR: ColorValue & {source: string} = {
+const DEFAULT_COLOR: ColorValue = {
   hex: '#24a3e3',
   hsl: {h: 200, s: 0.7732, l: 0.5156, a: 1},
   hsv: {h: 200, s: 0.8414, v: 0.8901, a: 1},
   rgb: {r: 46, g: 163, b: 227, a: 1},
-  source: 'hex',
 }
 
 export default function ColorInput(props: ObjectInputProps) {
@@ -225,7 +250,7 @@ export default function ColorInput(props: ObjectInputProps) {
   return (
     <>
       {value && value.hex ? (
-        <ColorPicker
+        <ColorPickerInner
           color={color!}
           onChange={handleColorChange}
           readOnly={readOnly || (typeof type.readOnly === 'boolean' && type.readOnly)}

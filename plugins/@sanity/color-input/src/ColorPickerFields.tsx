@@ -1,19 +1,17 @@
-import type {Color, ColorChangeHandler, HSLColor, RGBColor} from 'react-color'
-import type {EditableInputStyles} from 'react-color/lib/components/common/EditableInput'
+import type {HslaColor, HsvaColor, RgbaColor} from '@uiw/react-color'
 
-import {useCallback, useMemo} from 'react'
-import {EditableInput} from 'react-color/lib/components/common'
-// @ts-expect-error missing export
-import {isValidHex} from 'react-color/lib/helpers/color'
+import {useCallback} from 'react'
+import {EditableInput, validHex} from '@uiw/react-color'
+import {hexToHsva, hsvaToRgba, rgbaToHsva} from '@uiw/react-color'
 
 import {Box, Flex, useTheme} from '@sanity/ui'
 
 interface ColorPickerFieldsProps {
-  rgb?: RGBColor
-  hsl?: HSLColor
+  rgb?: RgbaColor
+  hsl?: HslaColor
   hex?: string
   disableAlpha: boolean
-  onChange: ColorChangeHandler<Color>
+  onChange: (color: HsvaColor) => void
 }
 
 export const ColorPickerFields = ({
@@ -25,51 +23,25 @@ export const ColorPickerFields = ({
 }: ColorPickerFieldsProps) => {
   const {sanity} = useTheme()
 
-  const inputStyles: EditableInputStyles = useMemo(
-    () => ({
-      input: {
-        width: '80%',
-        padding: '4px 10% 3px',
-        border: 'none',
-        boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-        color: sanity.color.input.default.enabled.fg,
-        backgroundColor: sanity.color.input.default.enabled.bg,
-        fontSize: sanity.fonts.text.sizes[0]?.fontSize,
-        textAlign: 'center',
-      },
-      label: {
-        display: 'block',
-        textAlign: 'center',
-        fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-        color: sanity.color.base.fg,
-        paddingTop: '3px',
-        paddingBottom: '4px',
-        textTransform: 'capitalize',
-      },
-    }),
-    [sanity],
-  )
-
-  const handleChange: ColorChangeHandler<Record<string, string>> = useCallback(
-    (data) => {
-      if ('hex' in data && data['hex'] && isValidHex(data['hex'])) {
-        onChange({
-          hex: data['hex'],
-          source: 'hex',
-        })
-      } else if (
-        rgb &&
-        (('r' in data && data['r']) || ('g' in data && data['g']) || ('b' in data && data['b']))
-      ) {
-        onChange({
-          r: Number(data['r']) || rgb.r,
-          g: Number(data['g']) || rgb.g,
-          b: Number(data['b']) || rgb.b,
-          a: rgb.a,
-          source: 'rgb',
-        })
-      } else if (hsl && 'a' in data && data['a']) {
-        let alpha = Number(data['a'])
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, value: string | number) => {
+      const name = e.target.name
+      if (name === 'hex' && typeof value === 'string') {
+        const hexValue = value.startsWith('#') ? value : `#${value}`
+        if (validHex(hexValue)) {
+          onChange(hexToHsva(hexValue))
+        }
+      } else if (rgb && (name === 'r' || name === 'g' || name === 'b')) {
+        onChange(
+          rgbaToHsva({
+            r: name === 'r' ? Number(value) : rgb.r,
+            g: name === 'g' ? Number(value) : rgb.g,
+            b: name === 'b' ? Number(value) : rgb.b,
+            a: rgb.a,
+          }),
+        )
+      } else if (rgb && name === 'a') {
+        let alpha = Number(value)
         if (alpha < 0) {
           alpha = 0
         } else if (alpha > 100) {
@@ -77,67 +49,155 @@ export const ColorPickerFields = ({
         }
         alpha /= 100
 
-        onChange({
-          h: hsl.h,
-          s: hsl.s,
-          l: hsl.l,
-          a: alpha,
-          source: 'hsl',
-        })
+        onChange(
+          rgbaToHsva({
+            r: rgb.r,
+            g: rgb.g,
+            b: rgb.b,
+            a: alpha,
+          }),
+        )
       }
     },
-    [onChange, hsl, rgb],
+    [onChange, rgb],
   )
 
   return (
     <Flex>
       <Box flex={2} marginRight={1}>
         <EditableInput
-          style={inputStyles}
+          name="hex"
           label="hex"
           value={hex?.replace('#', '')}
           onChange={handleChange}
+          inputStyle={{
+            width: '100%',
+            padding: '4px 10%',
+            border: 'none',
+            boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
+            color: sanity.color.input.default.enabled.fg,
+            backgroundColor: sanity.color.input.default.enabled.bg,
+            fontSize: sanity.fonts.text.sizes[0]?.fontSize,
+            textAlign: 'center',
+          }}
+          labelStyle={{
+            display: 'block',
+            textAlign: 'center',
+            fontSize: sanity.fonts.label.sizes[0]?.fontSize,
+            color: sanity.color.base.fg,
+            paddingTop: '3px',
+            paddingBottom: '4px',
+            textTransform: 'capitalize',
+          }}
         />
       </Box>
       <Box flex={1} marginRight={1}>
         <EditableInput
-          style={inputStyles}
+          name="r"
           label="r"
           value={rgb?.r}
           onChange={handleChange}
-          dragLabel
-          dragMax={255}
+          inputStyle={{
+            width: '100%',
+            padding: '4px 10%',
+            border: 'none',
+            boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
+            color: sanity.color.input.default.enabled.fg,
+            backgroundColor: sanity.color.input.default.enabled.bg,
+            fontSize: sanity.fonts.text.sizes[0]?.fontSize,
+            textAlign: 'center',
+          }}
+          labelStyle={{
+            display: 'block',
+            textAlign: 'center',
+            fontSize: sanity.fonts.label.sizes[0]?.fontSize,
+            color: sanity.color.base.fg,
+            paddingTop: '3px',
+            paddingBottom: '4px',
+            textTransform: 'capitalize',
+          }}
         />
       </Box>
       <Box flex={1} marginRight={1}>
         <EditableInput
-          style={inputStyles}
+          name="g"
           label="g"
           value={rgb?.g}
           onChange={handleChange}
-          dragLabel
-          dragMax={255}
+          inputStyle={{
+            width: '100%',
+            padding: '4px 10%',
+            border: 'none',
+            boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
+            color: sanity.color.input.default.enabled.fg,
+            backgroundColor: sanity.color.input.default.enabled.bg,
+            fontSize: sanity.fonts.text.sizes[0]?.fontSize,
+            textAlign: 'center',
+          }}
+          labelStyle={{
+            display: 'block',
+            textAlign: 'center',
+            fontSize: sanity.fonts.label.sizes[0]?.fontSize,
+            color: sanity.color.base.fg,
+            paddingTop: '3px',
+            paddingBottom: '4px',
+            textTransform: 'capitalize',
+          }}
         />
       </Box>
       <Box flex={1} marginRight={1}>
         <EditableInput
-          style={inputStyles}
+          name="b"
           label="b"
           value={rgb?.b}
           onChange={handleChange}
-          dragLabel
-          dragMax={255}
+          inputStyle={{
+            width: '100%',
+            padding: '4px 10%',
+            border: 'none',
+            boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
+            color: sanity.color.input.default.enabled.fg,
+            backgroundColor: sanity.color.input.default.enabled.bg,
+            fontSize: sanity.fonts.text.sizes[0]?.fontSize,
+            textAlign: 'center',
+          }}
+          labelStyle={{
+            display: 'block',
+            textAlign: 'center',
+            fontSize: sanity.fonts.label.sizes[0]?.fontSize,
+            color: sanity.color.base.fg,
+            paddingTop: '3px',
+            paddingBottom: '4px',
+            textTransform: 'capitalize',
+          }}
         />
       </Box>
       {!disableAlpha && (
         <Box flex={1}>
           <EditableInput
-            style={inputStyles}
+            name="a"
             label="a"
             value={Math.round((rgb?.a ?? 1) * 100)}
             onChange={handleChange}
-            dragLabel
-            dragMax={100}
+            inputStyle={{
+              width: '100%',
+              padding: '4px 10%',
+              border: 'none',
+              boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
+              color: sanity.color.input.default.enabled.fg,
+              backgroundColor: sanity.color.input.default.enabled.bg,
+              fontSize: sanity.fonts.text.sizes[0]?.fontSize,
+              textAlign: 'center',
+            }}
+            labelStyle={{
+              display: 'block',
+              textAlign: 'center',
+              fontSize: sanity.fonts.label.sizes[0]?.fontSize,
+              color: sanity.color.base.fg,
+              paddingTop: '3px',
+              paddingBottom: '4px',
+              textTransform: 'capitalize',
+            }}
           />
         </Box>
       )}
