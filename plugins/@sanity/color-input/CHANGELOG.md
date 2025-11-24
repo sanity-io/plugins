@@ -1,5 +1,23 @@
 # @sanity/color-input
 
+## 5.0.0
+
+### Major Changes
+
+- [#54](https://github.com/sanity-io/plugins/pull/54) [`18d4457`](https://github.com/sanity-io/plugins/commit/18d445760f5ed3795fcda15e5927ed2baf4b74c4) Thanks [@stipsan](https://github.com/stipsan)! - Require Sanity Studio v4 or later, and node v20.19 or v22.12 or later
+
+- [#54](https://github.com/sanity-io/plugins/pull/54) [`18d4457`](https://github.com/sanity-io/plugins/commit/18d445760f5ed3795fcda15e5927ed2baf4b74c4) Thanks [@stipsan](https://github.com/stipsan)! - Remove CJS, this package is ESM only now
+
+### Minor Changes
+
+- [#55](https://github.com/sanity-io/plugins/pull/55) [`00ddf80`](https://github.com/sanity-io/plugins/commit/00ddf80acd341c66a54decbed28b558ed1018de8) Thanks [@stipsan](https://github.com/stipsan)! - Add React Compiler
+
+### Patch Changes
+
+- [#51](https://github.com/sanity-io/plugins/pull/51) [`1344ce6`](https://github.com/sanity-io/plugins/commit/1344ce6f938a6472954ffd548b449378ccacde5a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
+- [#52](https://github.com/sanity-io/plugins/pull/52) [`6d9eff1`](https://github.com/sanity-io/plugins/commit/6d9eff1d6b04e91242f5633bbc4e785d14fd50ee) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to ^3.1.11
+
 ## 4.0.7
 
 ### Patch Changes
