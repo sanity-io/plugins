@@ -35,6 +35,7 @@ minimumReleaseAgeExclude:
   - '@vite/*'
   - '@vitest/*'
   - csstype
+  - eslint-plugin-oxlint
   - groq
   - oxfmt
   - oxlint
