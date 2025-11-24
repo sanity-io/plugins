@@ -9,6 +9,7 @@
       "cache": false
     },
     "lint": {
+      "env": ["GITHUB_ACTIONS"],
       "dependsOn": ["transit"]
     },
     "build": {
