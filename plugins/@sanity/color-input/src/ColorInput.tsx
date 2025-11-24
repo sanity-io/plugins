@@ -44,7 +44,7 @@ const Checkboard = styled.div`
   right: 0;
   bottom: 0;
   background: url(${BACKGROUND_IMG}) left center;
-  background-size: auto 100%;
+  background-size: 8px 8px;
 `
 
 // Custom pointer to match the original react-color style
@@ -56,11 +56,11 @@ const BarPointer = ({left, top}: {left?: string; top?: string}) => (
       borderRadius: 1,
       boxShadow: 'rgb(0 0 0 / 60%) 0px 0px 2px',
       backgroundColor: '#fff',
-      // For horizontal sliders (Hue/Alpha), use left positioning with small vertical margins
-      // For vertical, use top positioning with small horizontal margins
+      // For horizontal sliders (Hue/Alpha), use left positioning with reduced height
+      // For vertical, use top positioning with reduced width
       ...(left !== undefined
-        ? {left, top: '1px', bottom: '1px'}
-        : {top, left: '1px', right: '1px'}),
+        ? {left, top: '2px', bottom: '2px'}
+        : {top, left: '2px', right: '2px'}),
     }}
   />
 )
@@ -131,6 +131,11 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                     onChange={(newAlpha) => handleHsvaChange({...hsv, ...newAlpha})}
                     pointer={BarPointer}
                     style={{width: '100%'}}
+                    bgProps={{
+                      style: {
+                        backgroundSize: '8px 8px',
+                      },
+                    }}
                   />
                 </Card>
               )}
