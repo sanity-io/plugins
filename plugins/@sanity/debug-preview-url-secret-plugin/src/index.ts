@@ -38,13 +38,13 @@ const schema = defineType({
       updatedAt: '_updatedAt',
     },
     prepare(data) {
-      const url = data['studioUrl'] ? new URL(data['studioUrl'], location.origin) : undefined
-      const updatedAt = new Date(data['updatedAt']).getTime()
+      const url = data.studioUrl ? new URL(data.studioUrl, location.origin) : undefined
+      const updatedAt = new Date(data.updatedAt).getTime()
       const expiresAt = new Date(updatedAt + 1000 * SECRET_TTL)
       const expired = expiresAt < new Date()
       const icon = expired ? CloseCircleIcon : CheckmarkCircleIcon
       return {
-        title: url ? `${url.host}${url.pathname}` : data['source'],
+        title: url ? `${url.host}${url.pathname}` : data.source,
         subtitle: expired
           ? 'Expired'
           : `Expires in ${Math.round((expiresAt.getTime() - Date.now()) / (1000 * 60))} minutes`,

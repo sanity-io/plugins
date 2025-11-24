@@ -34,7 +34,7 @@ const schema = defineType({
       secret: 'secret',
     },
     prepare(data) {
-      const enabled = data['secret'] !== null
+      const enabled = data.secret !== null
       return {
         title: enabled ? 'Enabled' : 'Disabled',
         subtitle: defaultTitle,
