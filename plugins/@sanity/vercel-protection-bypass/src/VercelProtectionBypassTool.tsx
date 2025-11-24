@@ -89,7 +89,7 @@ function Layout({
   fetchSecret,
 }: {
   initialStatePromise: Promise<FormState>
-  fetchSecret(lastLiveEventId: string | null): Promise<FormState>
+  fetchSecret(this: void, lastLiveEventId: string | null): Promise<FormState>
 }) {
   const {push: pushToast} = useToast()
   const [isDialogOpen, setIsDialogOpen] = useState(false)

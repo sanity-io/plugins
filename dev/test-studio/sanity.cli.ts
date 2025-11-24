@@ -1,5 +1,6 @@
 import path from 'node:path'
 import {defineCliConfig} from 'sanity/cli'
+import {mergeConfig} from 'vite'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'plugins'
@@ -11,20 +12,16 @@ export default defineCliConfig({
   reactStrictMode: true,
   reactCompiler: {target: '19'},
   studioHost: 'plugins',
-  vite: async (config, env) => {
-    return env.mode === 'development'
-      ? {
-          ...config,
+  vite: async (config, configEnv) => {
+    return configEnv.mode === 'development'
+      ? mergeConfig(config, {
           resolve: {
-            alias: {
-              ...config.resolve?.alias,
-              ...(await aliasFromSource(
-                '@sanity/debug-preview-url-secret-plugin',
-                '@sanity/vercel-protection-bypass',
-              )),
-            },
+            alias: await aliasFromSource(
+              '@sanity/debug-preview-url-secret-plugin',
+              '@sanity/vercel-protection-bypass',
+            ),
           },
-        }
+        })
       : config
   },
 })
