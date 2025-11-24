@@ -11,11 +11,10 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  run:
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
+      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ~/.npmrc
       - run: pnpm setup-npm-trusted-publish ${{ inputs.package }}
