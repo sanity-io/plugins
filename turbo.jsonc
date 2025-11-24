@@ -2,6 +2,16 @@
   "$schema": "https://turborepo.org/schema.json",
   "ui": "tui",
   "tasks": {
+    "//#oxlint": {
+      "cache": false
+    },
+    "//#oxlint:fix": {
+      "cache": false
+    },
+    "lint": {
+      "env": ["GITHUB_ACTIONS"],
+      "dependsOn": ["transit"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".sanity/**", "dist/**"]

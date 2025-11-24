@@ -14,6 +14,7 @@ catalog:
   '@types/react': ^19.2.6
   '@types/react-dom': ^19.2.3
   '@typescript/native-preview': 7.0.0-dev.20251121.1
+  eslint: ^9.39.1
   react: ^19.2.0
   react-dom: ^19.2.0
   sanity: ^4.17.0

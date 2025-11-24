@@ -47,6 +47,7 @@ async function disableVercelProtectionBypass(client: SanityClient): Promise<void
 export default function VercelProtectionBypassTool(): React.JSX.Element {
   const client = useClient({apiVersion: apiVersion})
 
+
   async function fetchSecret(lastLiveEventId: string | null): Promise<FormState> {
     const {result, syncTags} = await client.fetch<string | null>(
       fetchVercelProtectionBypassSecret,
@@ -89,7 +90,7 @@ function Layout({
   fetchSecret,
 }: {
   initialStatePromise: Promise<FormState>
-  fetchSecret(lastLiveEventId: string | null): Promise<FormState>
+  fetchSecret(this: void, lastLiveEventId: string | null): Promise<FormState>
 }) {
   const {push: pushToast} = useToast()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -109,7 +110,6 @@ function Layout({
             return {...prevState, secret: null}
           })
           .catch((reason): FormState => {
-            // eslint-disable-next-line no-console
             console.error(reason)
             pushToast({
               status: 'error',
@@ -131,7 +131,6 @@ function Layout({
             return {...prevState, secret}
           })
           .catch((reason) => {
-            // eslint-disable-next-line no-console
             console.error(reason)
             pushToast({
               status: 'error',
@@ -144,6 +143,7 @@ function Layout({
       case 'refresh-secret':
         return fetchSecret(formData.get('lastLiveEventId' satisfies FormName) as string)
       default:
+        // oxlint-disable-next-line typescript/restrict-template-expressions
         throw new Error(`Unknown action: ${action}`)
     }
   }
@@ -317,7 +317,6 @@ function useRefetchOnLiveEvent(
   useEffect(() => {
     const subscription = client.live.events().subscribe({
       next: handleLiveEvent,
-      // eslint-disable-next-line no-console
       error: (reason) => console.error(reason),
     })
 

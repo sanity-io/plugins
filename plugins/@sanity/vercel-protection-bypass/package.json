@@ -32,9 +32,10 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/vercel-protection-bypass/tsconfig.json)",
     "build": "pkg build --strict --check --clean",
-    "prepack": "turbo run build"
+    "lint": "eslint .",
+    "prepack": "turbo run build",
+    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/vercel-protection-bypass/tsconfig.json)"
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
@@ -42,6 +43,7 @@
     "@sanity/ui": "^3.1.11"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/client": "catalog:",
@@ -49,6 +51,7 @@
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
     "typescript": "catalog:"
