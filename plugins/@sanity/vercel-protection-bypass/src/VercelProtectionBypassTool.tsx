@@ -47,7 +47,6 @@ async function disableVercelProtectionBypass(client: SanityClient): Promise<void
 export default function VercelProtectionBypassTool(): React.JSX.Element {
   const client = useClient({apiVersion: apiVersion})
 
-
   async function fetchSecret(lastLiveEventId: string | null): Promise<FormState> {
     const {result, syncTags} = await client.fetch<string | null>(
       fetchVercelProtectionBypassSecret,
