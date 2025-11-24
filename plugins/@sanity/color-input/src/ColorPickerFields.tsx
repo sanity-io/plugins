@@ -1,6 +1,5 @@
 import type {HslaColor, HsvaColor, RgbaColor} from '@uiw/react-color'
 
-import type React from 'react'
 import {EditableInput, validHex} from '@uiw/react-color'
 import {hexToHsva, rgbaToHsva} from '@uiw/react-color'
 
@@ -14,12 +13,12 @@ interface ColorPickerFieldsProps {
   onChange: (color: HsvaColor) => void
 }
 
-export const ColorPickerFields = ({
+export function ColorPickerFields({
   onChange,
   rgb,
   hex,
   disableAlpha,
-}: ColorPickerFieldsProps): React.JSX.Element => {
+}: ColorPickerFieldsProps): React.JSX.Element {
   const {sanity} = useTheme()
 
   const inputStyle = {
