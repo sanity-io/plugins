@@ -1,6 +1,6 @@
 {
   "name": "@sanity/debug-preview-url-secret-plugin",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/%40sanity/debug-preview-url-secret-plugin#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
