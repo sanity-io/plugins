@@ -20,10 +20,6 @@ catalog:
   styled-components: ^6.1.19
   typescript: 5.9.3
 
-# wait with enabling until sanity@latest has the latest version of `@sanity/preview-url-secret`
-# preferWorkspacePackages: true
-# linkWorkspacePackages: deep
-
 minimumReleaseAge: 4320
 
 minimumReleaseAgeExclude:
