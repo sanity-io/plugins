@@ -1,5 +1,11 @@
 # @sanity/color-input
 
+## 4.0.7
+
+### Patch Changes
+
+- [#44](https://github.com/sanity-io/plugins/pull/44) [`e727a61`](https://github.com/sanity-io/plugins/commit/e727a613a71da4b6f5d78b67c01b23304c6cc4f3) Thanks [@stipsan](https://github.com/stipsan)! - Setup npm Trusted Publishing
+
 ## [4.0.6](https://github.com/sanity-io/color-input/compare/v4.0.5...v4.0.6) (2025-07-31)
 
 ### Bug Fixes
