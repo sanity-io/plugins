@@ -9,7 +9,6 @@ import {
   useTransition,
 } from 'react'
 import {useClient, type SanityClient} from 'sanity'
-import {useVirtualizer} from '@tanstack/react-virtual'
 
 import type {SyncTag, LiveEvent} from '@sanity/client'
 
@@ -34,6 +33,7 @@ import {
   TextInput,
   useToast,
 } from '@sanity/ui'
+import {useVirtualizer} from '@tanstack/react-virtual'
 
 async function enableVercelProtectionBypass(client: SanityClient, secret: string): Promise<void> {
   const patch = client.patch(_id).set({secret})

@@ -3,24 +3,23 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import {defineConfig, globalIgnores} from 'eslint/config'
 import {dirname, resolve} from 'node:path'
 import {fileURLToPath} from 'node:url'
+import tseslint from 'typescript-eslint'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const rootOxlintrc = resolve(__dirname, '../../../.oxlintrc.jsonc')
 
-const ignores = ['**/.sanity/*', '**/dist/*']
-
 export default [
-  globalIgnores(ignores),
+  globalIgnores(['**/.sanity/*', '**/dist/*']),
   defineConfig({
+    files: ['src/**/*.{cjs,mjs,js,jsx,ts,tsx}'],
+    languageOptions: {parser: tseslint.parser},
     linterOptions: {
       reportUnusedDisableDirectives: 'error',
       reportUnusedInlineConfigs: 'error',
     },
   }),
   reactHooks.configs.flat['recommended-latest'],
-  // oxlint should be the last one so it is able to turn off rules that it's handling
-  ...oxlint.buildFromOxlintConfigFile(rootOxlintrc),
   {
     // While the recommended-latest react-hooks config enables most react compiler rules, it doesn't enable all of them yet, so we do that here
     name: 'react-hooks/react-compiler',
@@ -40,4 +39,6 @@ export default [
       'react-hooks/todo': 'error',
     },
   },
+  // oxlint should be the last one so it is able to turn off rules that it's handling
+  ...oxlint.buildFromOxlintConfigFile(rootOxlintrc),
 ]
