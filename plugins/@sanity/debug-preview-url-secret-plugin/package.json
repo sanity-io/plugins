@@ -1,0 +1,61 @@
+{
+  "name": "@sanity/debug-preview-url-secret-plugin",
+  "version": "0.0.1",
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/packages/%40sanity/debug-preview-url-secret-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "packages/@sanity/debug-preview-url-secret-plugin"
+  },
+  "keywords": [
+    "sanity",
+    "studio",
+    "sanity-plugin"
+  ],
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/debug-preview-url-secret-plugin/tsconfig.json)",
+    "build": "pkg build --strict --check --clean",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.4",
+    "@sanity/preview-url-secret": "^3.0.0"
+  },
+  "devDependencies": {
+    "@repo/package.config": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "react": "catalog:",
+    "sanity": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "sanity": "^4"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
