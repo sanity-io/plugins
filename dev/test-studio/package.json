@@ -9,6 +9,7 @@
     "build": "sanity build"
   },
   "dependencies": {
+    "@sanity/debug-preview-url-secret-plugin": "workspace:*",
     "@sanity/vercel-protection-bypass": "workspace:*",
     "@sanity/vision": "catalog:",
     "react": "catalog:",
