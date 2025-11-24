@@ -1,9 +1,5 @@
 {
-  "extends": "./tsconfig.base",
-  "compilerOptions": {
-    "rootDir": "src",
-    "noCheck": true,
-  },
+  "extends": "@repo/tsconfig/build.json",
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist", "node_modules"]
 }

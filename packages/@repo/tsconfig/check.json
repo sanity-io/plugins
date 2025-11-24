@@ -1,7 +1,8 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "description": "Used for typecheck scripts",
   "extends": ["@sanity/pkg-utils/tsconfig/strictest.json", "@sanity/pkg-utils/tsconfig/isolated-declarations.json"],
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "dist"
+    "noCheck": false
   }
 }

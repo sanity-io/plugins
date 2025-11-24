@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
     "@sanity/client": "catalog:",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
