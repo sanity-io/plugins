@@ -9,6 +9,7 @@ import {
   useTransition,
 } from 'react'
 import {useClient, type SanityClient} from 'sanity'
+import {useVirtualizer} from '@tanstack/react-virtual'
 
 import type {SyncTag, LiveEvent} from '@sanity/client'
 
@@ -46,6 +47,8 @@ async function disableVercelProtectionBypass(client: SanityClient): Promise<void
 
 export default function VercelProtectionBypassTool(): React.JSX.Element {
   const client = useClient({apiVersion: apiVersion})
+  const virtualizer = useVirtualizer({})
+  console.log({virtualizer})
 
   async function fetchSecret(lastLiveEventId: string | null): Promise<FormState> {
     const {result, syncTags} = await client.fetch<string | null>(

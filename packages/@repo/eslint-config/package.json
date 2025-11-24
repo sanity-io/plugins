@@ -1,0 +1,21 @@
+{
+  "name": "@repo/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared ESLint configuration, sets up React Compiler linting",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "catalog:",
+    "eslint-plugin-oxlint": "^1.29.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "typescript-eslint": "^8.47.0"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:"
+  }
+}

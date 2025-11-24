@@ -31,9 +31,9 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/debug-preview-url-secret-plugin/tsconfig.json)",
     "build": "pkg build --strict --check --clean",
-    "prepack": "turbo run build"
+    "prepack": "turbo run build",
+    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/debug-preview-url-secret-plugin/tsconfig.json)"
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
