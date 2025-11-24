@@ -33,7 +33,6 @@ import {
   TextInput,
   useToast,
 } from '@sanity/ui'
-import {useVirtualizer} from '@tanstack/react-virtual'
 
 async function enableVercelProtectionBypass(client: SanityClient, secret: string): Promise<void> {
   const patch = client.patch(_id).set({secret})
@@ -47,8 +46,7 @@ async function disableVercelProtectionBypass(client: SanityClient): Promise<void
 
 export default function VercelProtectionBypassTool(): React.JSX.Element {
   const client = useClient({apiVersion: apiVersion})
-  const virtualizer = useVirtualizer({})
-  console.log({virtualizer})
+
 
   async function fetchSecret(lastLiveEventId: string | null): Promise<FormState> {
     const {result, syncTags} = await client.fetch<string | null>(

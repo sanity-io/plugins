@@ -40,8 +40,7 @@
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/preview-url-secret": "^3.0.0",
-    "@sanity/ui": "^3.1.11",
-    "@tanstack/react-virtual": "^3.13.12"
+    "@sanity/ui": "^3.1.11"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
