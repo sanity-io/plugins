@@ -14,19 +14,19 @@ export default defineCliConfig({
   studioHost: 'plugins',
   vite: async (config, configEnv) => {
     return configEnv.mode === 'development'
-      ? mergeConfig(config, {
-          resolve: {
-            alias: await aliasFromSource(
-              '@sanity/debug-preview-url-secret-plugin',
-              '@sanity/vercel-protection-bypass',
-            ),
-          },
-        })
+      ? mergeConfig(config, {resolve: {alias: await aliasFromSource()}})
       : config
   },
 })
 
-async function aliasFromSource(...packageNames: string[]) {
+async function aliasFromSource() {
+  const {default: rootPkg} = await import('./package.json', {with: {type: 'json'}})
+  const packageNames: string[] = []
+  for (const [key, value] of Object.entries(rootPkg.dependencies)) {
+    if (!value.startsWith('workspace:')) continue
+    packageNames.push(key)
+  }
+
   const aliases: Record<string, string> = {}
 
   for (const packageName of packageNames) {

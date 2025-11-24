@@ -1,0 +1,78 @@
+{
+  "name": "@sanity/color-input",
+  "version": "4.0.6",
+  "description": "Color input",
+  "keywords": [
+    "sanity",
+    "cms",
+    "headless",
+    "realtime",
+    "content",
+    "color-input",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/%40sanity/color-input#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/color-input"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "lint": "eslint .",
+    "prepack": "turbo run build",
+    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/color-input/tsconfig.json)"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.5.3",
+    "@sanity/ui": "^3.0.5",
+    "tinycolor2": "^1.6.0",
+    "react-color": "^2.19.3",
+    "use-effect-event": "^2.0.3"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-color": "^2.17.11",
+    "@types/tinycolor2": "^1.4.6",
+    "@typescript/native-preview": "catalog:",
+    "eslint": "catalog:",
+    "react": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "sanity": "^3.23.0 || ^4.0.0-0",
+    "styled-components": "^6.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
