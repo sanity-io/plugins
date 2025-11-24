@@ -1,6 +1,5 @@
 import type {Color, ColorChangeHandler} from 'react-color'
 
-import {memo} from 'react'
 import {styled} from 'styled-components'
 import tinycolor from 'tinycolor2'
 
@@ -53,7 +52,7 @@ const validateColors = (colors: Array<Color>) =>
     return cls
   }, [])
 
-export const ColorList = memo(function ColorList({colors, onChange}: ColorListProps) {
+export function ColorList({colors, onChange}: ColorListProps): React.JSX.Element | null {
   if (!colors) return null
   return (
     <ColorListWrap wrap="wrap">
@@ -69,4 +68,4 @@ export const ColorList = memo(function ColorList({colors, onChange}: ColorListPr
       ))}
     </ColorListWrap>
   )
-})
+}
