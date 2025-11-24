@@ -1,14 +1,14 @@
 {
   "name": "@sanity/debug-preview-url-secret-plugin",
   "version": "0.0.1",
-  "homepage": "https://github.com/sanity-io/plugins/tree/main/packages/%40sanity/debug-preview-url-secret-plugin#readme",
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/%40sanity/debug-preview-url-secret-plugin#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
-    "directory": "packages/@sanity/debug-preview-url-secret-plugin"
+    "directory": "plugins/@sanity/debug-preview-url-secret-plugin"
   },
   "keywords": [
     "sanity",
