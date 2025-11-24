@@ -14,7 +14,7 @@
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
     "@typescript/native-preview": "catalog:",
-    "oxfmt": "^0.14.0",
+    "oxfmt": "^0.15.0",
     "setup-npm-trusted-publish": "^1.0.3",
     "turbo": "^2.6.1",
     "typescript": "catalog:"
