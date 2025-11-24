@@ -44,6 +44,7 @@ const Checkboard = styled.div`
   right: 0;
   bottom: 0;
   background: url(${BACKGROUND_IMG}) left center;
+  background-size: auto 100%;
 `
 
 // Custom pointer to match the original react-color style
@@ -55,11 +56,11 @@ const BarPointer = ({left, top}: {left?: string; top?: string}) => (
       borderRadius: 1,
       boxShadow: 'rgb(0 0 0 / 60%) 0px 0px 2px',
       backgroundColor: '#fff',
-      // For horizontal sliders (Hue/Alpha), use left positioning
-      // For vertical, use top positioning
+      // For horizontal sliders (Hue/Alpha), use left positioning with small vertical margins
+      // For vertical, use top positioning with small horizontal margins
       ...(left !== undefined
-        ? {left, top: 1, bottom: 1}
-        : {top, left: 1, right: 1}),
+        ? {left, top: '1px', bottom: '1px'}
+        : {top, left: '1px', right: '1px'}),
     }}
   />
 )
