@@ -3,4 +3,6 @@ import {defineConfig} from '@sanity/pkg-utils'
 
 export default defineConfig({
   ...config,
+  babel: {reactCompiler: true},
+  reactCompilerOptions: {target: '18'},
 })
