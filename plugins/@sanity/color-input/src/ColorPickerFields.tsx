@@ -1,6 +1,6 @@
 import type {HslaColor, HsvaColor, RgbaColor} from '@uiw/react-color'
 
-import {useCallback} from 'react'
+import {useCallback, useMemo} from 'react'
 import {EditableInput, validHex} from '@uiw/react-color'
 import {hexToHsva, hsvaToRgba, rgbaToHsva} from '@uiw/react-color'
 
@@ -22,6 +22,33 @@ export const ColorPickerFields = ({
   disableAlpha,
 }: ColorPickerFieldsProps) => {
   const {sanity} = useTheme()
+
+  const inputStyle = useMemo(
+    () => ({
+      width: '100%',
+      padding: '4px 10%',
+      border: 'none',
+      boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
+      color: sanity.color.input.default.enabled.fg,
+      backgroundColor: sanity.color.input.default.enabled.bg,
+      fontSize: sanity.fonts.text.sizes[0]?.fontSize,
+      textAlign: 'center' as const,
+    }),
+    [sanity],
+  )
+
+  const labelStyle = useMemo(
+    () => ({
+      display: 'block',
+      textAlign: 'center' as const,
+      fontSize: sanity.fonts.label.sizes[0]?.fontSize,
+      color: sanity.color.base.fg,
+      paddingTop: '3px',
+      paddingBottom: '4px',
+      textTransform: 'capitalize' as const,
+    }),
+    [sanity],
+  )
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>, value: string | number) => {
@@ -70,25 +97,8 @@ export const ColorPickerFields = ({
           label="hex"
           value={hex?.replace('#', '')}
           onChange={handleChange}
-          inputStyle={{
-            width: '100%',
-            padding: '4px 10%',
-            border: 'none',
-            boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-            color: sanity.color.input.default.enabled.fg,
-            backgroundColor: sanity.color.input.default.enabled.bg,
-            fontSize: sanity.fonts.text.sizes[0]?.fontSize,
-            textAlign: 'center',
-          }}
-          labelStyle={{
-            display: 'block',
-            textAlign: 'center',
-            fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-            color: sanity.color.base.fg,
-            paddingTop: '3px',
-            paddingBottom: '4px',
-            textTransform: 'capitalize',
-          }}
+          inputStyle={inputStyle}
+          labelStyle={labelStyle}
         />
       </Box>
       <Box flex={1} marginRight={1}>
@@ -97,25 +107,8 @@ export const ColorPickerFields = ({
           label="r"
           value={rgb?.r}
           onChange={handleChange}
-          inputStyle={{
-            width: '100%',
-            padding: '4px 10%',
-            border: 'none',
-            boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-            color: sanity.color.input.default.enabled.fg,
-            backgroundColor: sanity.color.input.default.enabled.bg,
-            fontSize: sanity.fonts.text.sizes[0]?.fontSize,
-            textAlign: 'center',
-          }}
-          labelStyle={{
-            display: 'block',
-            textAlign: 'center',
-            fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-            color: sanity.color.base.fg,
-            paddingTop: '3px',
-            paddingBottom: '4px',
-            textTransform: 'capitalize',
-          }}
+          inputStyle={inputStyle}
+          labelStyle={labelStyle}
         />
       </Box>
       <Box flex={1} marginRight={1}>
@@ -124,25 +117,8 @@ export const ColorPickerFields = ({
           label="g"
           value={rgb?.g}
           onChange={handleChange}
-          inputStyle={{
-            width: '100%',
-            padding: '4px 10%',
-            border: 'none',
-            boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-            color: sanity.color.input.default.enabled.fg,
-            backgroundColor: sanity.color.input.default.enabled.bg,
-            fontSize: sanity.fonts.text.sizes[0]?.fontSize,
-            textAlign: 'center',
-          }}
-          labelStyle={{
-            display: 'block',
-            textAlign: 'center',
-            fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-            color: sanity.color.base.fg,
-            paddingTop: '3px',
-            paddingBottom: '4px',
-            textTransform: 'capitalize',
-          }}
+          inputStyle={inputStyle}
+          labelStyle={labelStyle}
         />
       </Box>
       <Box flex={1} marginRight={1}>
@@ -151,25 +127,8 @@ export const ColorPickerFields = ({
           label="b"
           value={rgb?.b}
           onChange={handleChange}
-          inputStyle={{
-            width: '100%',
-            padding: '4px 10%',
-            border: 'none',
-            boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-            color: sanity.color.input.default.enabled.fg,
-            backgroundColor: sanity.color.input.default.enabled.bg,
-            fontSize: sanity.fonts.text.sizes[0]?.fontSize,
-            textAlign: 'center',
-          }}
-          labelStyle={{
-            display: 'block',
-            textAlign: 'center',
-            fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-            color: sanity.color.base.fg,
-            paddingTop: '3px',
-            paddingBottom: '4px',
-            textTransform: 'capitalize',
-          }}
+          inputStyle={inputStyle}
+          labelStyle={labelStyle}
         />
       </Box>
       {!disableAlpha && (
@@ -179,25 +138,8 @@ export const ColorPickerFields = ({
             label="a"
             value={Math.round((rgb?.a ?? 1) * 100)}
             onChange={handleChange}
-            inputStyle={{
-              width: '100%',
-              padding: '4px 10%',
-              border: 'none',
-              boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-              color: sanity.color.input.default.enabled.fg,
-              backgroundColor: sanity.color.input.default.enabled.bg,
-              fontSize: sanity.fonts.text.sizes[0]?.fontSize,
-              textAlign: 'center',
-            }}
-            labelStyle={{
-              display: 'block',
-              textAlign: 'center',
-              fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-              color: sanity.color.base.fg,
-              paddingTop: '3px',
-              paddingBottom: '4px',
-              textTransform: 'capitalize',
-            }}
+            inputStyle={inputStyle}
+            labelStyle={labelStyle}
           />
         </Box>
       )}

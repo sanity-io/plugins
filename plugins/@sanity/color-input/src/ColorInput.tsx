@@ -184,6 +184,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
   )
 }
 
+// Default color used when creating a new color value: a pleasant medium blue (#24a3e3)
 const DEFAULT_COLOR: ColorValue = {
   hex: '#24a3e3',
   hsl: {h: 200, s: 0.7732, l: 0.5156, a: 1},
