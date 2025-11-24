@@ -34,7 +34,7 @@ const ReadOnlyContainer = styled(Flex)`
 interface ColorPickerProps extends CustomPickerInjectedProps<Color> {
   width?: string
   disableAlpha: boolean
-  colorList?: Array<Color>
+  colorList?: Array<Color> | undefined
   readOnly?: boolean
   onUnset: () => void
   color: ColorValue
@@ -230,7 +230,7 @@ export default function ColorInput(props: ObjectInputProps) {
           onChange={handleColorChange}
           readOnly={readOnly || (typeof type.readOnly === 'boolean' && type.readOnly)}
           disableAlpha={!!type.options?.disableAlpha}
-          colorList={type.options?.colorList!}
+          colorList={type.options?.colorList}
           onUnset={handleUnset}
         />
       ) : (

@@ -40,7 +40,7 @@ export const ColorPickerFields = ({
       label: {
         display: 'block',
         textAlign: 'center',
-        fontSize: sanity.fonts.label.sizes[0].fontSize,
+        fontSize: sanity.fonts.label.sizes[0]?.fontSize,
         color: sanity.color.base.fg,
         paddingTop: '3px',
         paddingBottom: '4px',
