@@ -26,8 +26,6 @@
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -66,11 +64,11 @@
   },
   "peerDependencies": {
     "react": "^18.3 || ^19",
-    "sanity": "^3.23.0 || ^4.0.0-0",
+    "sanity": "^4",
     "styled-components": "^6.1"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.19 <22 || >=22.12"
   },
   "publishConfig": {
     "access": "public"
