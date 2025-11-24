@@ -14,6 +14,7 @@ const config = {
   } satisfies NonNullable<PkgConfigOptions['strictOptions']>,
   dts: 'rolldown',
   tsconfig: 'tsconfig.build.json',
+  foo: 'bar',
 } as const satisfies PkgConfigOptions
 
 export default config
