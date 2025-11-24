@@ -46,6 +46,24 @@ const Checkboard = styled.div`
   background: url(${BACKGROUND_IMG}) left center;
 `
 
+// Custom pointer to match the original react-color style
+const BarPointer = ({left, top}: {left?: string; top?: string}) => (
+  <div
+    style={{
+      position: 'absolute',
+      width: 4,
+      borderRadius: 1,
+      boxShadow: 'rgb(0 0 0 / 60%) 0px 0px 2px',
+      backgroundColor: '#fff',
+      // For horizontal sliders (Hue/Alpha), use left positioning
+      // For vertical, use top positioning
+      ...(left !== undefined
+        ? {left, top: 1, bottom: 1}
+        : {top, left: 1, right: 1}),
+    }}
+  />
+)
+
 interface ColorPickerProps {
   width?: string
   disableAlpha: boolean
@@ -83,7 +101,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
           {!readOnly && (
             <>
               <Card overflow="hidden" style={{position: 'relative', height: '5em'}}>
-                <Saturation hsva={hsv} onChange={handleHsvaChange} />
+                <Saturation hsva={hsv} onChange={handleHsvaChange} style={{width: '100%'}} />
               </Card>
 
               <Card
@@ -92,7 +110,12 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                 overflow="hidden"
                 style={{position: 'relative', height: '10px'}}
               >
-                <Hue hue={hsv.h} onChange={(newHue) => handleHsvaChange({...hsv, ...newHue})} />
+                <Hue
+                  hue={hsv.h}
+                  onChange={(newHue) => handleHsvaChange({...hsv, ...newHue})}
+                  pointer={BarPointer}
+                  style={{width: '100%'}}
+                />
               </Card>
 
               {!disableAlpha && (
@@ -102,7 +125,12 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                   overflow="hidden"
                   style={{position: 'relative', height: '10px', background: '#fff'}}
                 >
-                  <Alpha hsva={hsv} onChange={(newAlpha) => handleHsvaChange({...hsv, ...newAlpha})} />
+                  <Alpha
+                    hsva={hsv}
+                    onChange={(newAlpha) => handleHsvaChange({...hsv, ...newAlpha})}
+                    pointer={BarPointer}
+                    style={{width: '100%'}}
+                  />
                 </Card>
               )}
             </>
