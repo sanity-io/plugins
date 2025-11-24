@@ -15,6 +15,7 @@
     "@changesets/cli": "^2.29.7",
     "@typescript/native-preview": "catalog:",
     "oxfmt": "^0.14.0",
+    "setup-npm-trusted-publish": "^1.0.3",
     "turbo": "^2.6.1",
     "typescript": "catalog:"
   },
