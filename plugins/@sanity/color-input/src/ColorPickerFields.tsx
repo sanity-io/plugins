@@ -1,6 +1,6 @@
 import type {HslaColor, HsvaColor, RgbaColor} from '@uiw/react-color'
 
-import {useCallback, useMemo} from 'react'
+import type React from 'react'
 import {EditableInput, validHex} from '@uiw/react-color'
 import {hexToHsva, rgbaToHsva} from '@uiw/react-color'
 
@@ -19,74 +19,65 @@ export const ColorPickerFields = ({
   rgb,
   hex,
   disableAlpha,
-}: ColorPickerFieldsProps) => {
+}: ColorPickerFieldsProps): React.JSX.Element => {
   const {sanity} = useTheme()
 
-  const inputStyle = useMemo(
-    () => ({
-      width: '100%',
-      padding: '4px 10%',
-      border: 'none',
-      boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-      color: sanity.color.input.default.enabled.fg,
-      backgroundColor: sanity.color.input.default.enabled.bg,
-      fontSize: sanity.fonts.text.sizes[0]?.fontSize,
-      textAlign: 'center' as const,
-    }),
-    [sanity],
-  )
+  const inputStyle = {
+    width: '100%',
+    padding: '4px 10%',
+    border: 'none',
+    boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
+    color: sanity.color.input.default.enabled.fg,
+    backgroundColor: sanity.color.input.default.enabled.bg,
+    fontSize: sanity.fonts.text.sizes[0]?.fontSize,
+    textAlign: 'center' as const,
+  }
 
-  const labelStyle = useMemo(
-    () => ({
-      display: 'block',
-      textAlign: 'center' as const,
-      fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-      color: sanity.color.base.fg,
-      paddingTop: '3px',
-      paddingBottom: '4px',
-      textTransform: 'capitalize' as const,
-    }),
-    [sanity],
-  )
+  const labelStyle = {
+    display: 'block',
+    textAlign: 'center' as const,
+    fontSize: sanity.fonts.label.sizes[0]?.fontSize,
+    color: sanity.color.base.fg,
+    paddingTop: '3px',
+    paddingBottom: '4px',
+    textTransform: 'capitalize' as const,
+  }
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>, value: string | number) => {
-      const name = e.target.name
-      if (name === 'hex' && typeof value === 'string') {
-        const hexValue = value.startsWith('#') ? value : `#${value}`
-        if (validHex(hexValue)) {
-          onChange(hexToHsva(hexValue))
-        }
-      } else if (rgb && (name === 'r' || name === 'g' || name === 'b')) {
-        onChange(
-          rgbaToHsva({
-            r: name === 'r' ? Number(value) : rgb.r,
-            g: name === 'g' ? Number(value) : rgb.g,
-            b: name === 'b' ? Number(value) : rgb.b,
-            a: rgb.a,
-          }),
-        )
-      } else if (rgb && name === 'a') {
-        let alpha = Number(value)
-        if (alpha < 0) {
-          alpha = 0
-        } else if (alpha > 100) {
-          alpha = 100
-        }
-        alpha /= 100
-
-        onChange(
-          rgbaToHsva({
-            r: rgb.r,
-            g: rgb.g,
-            b: rgb.b,
-            a: alpha,
-          }),
-        )
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, value: string | number) => {
+    const name = e.target.name
+    if (name === 'hex' && typeof value === 'string') {
+      const hexValue = value.startsWith('#') ? value : `#${value}`
+      if (validHex(hexValue)) {
+        onChange(hexToHsva(hexValue))
       }
-    },
-    [onChange, rgb],
-  )
+    } else if (rgb && (name === 'r' || name === 'g' || name === 'b')) {
+      onChange(
+        rgbaToHsva({
+          r: name === 'r' ? Number(value) : rgb.r,
+          g: name === 'g' ? Number(value) : rgb.g,
+          b: name === 'b' ? Number(value) : rgb.b,
+          a: rgb.a,
+        }),
+      )
+    } else if (rgb && name === 'a') {
+      let alpha = Number(value)
+      if (alpha < 0) {
+        alpha = 0
+      } else if (alpha > 100) {
+        alpha = 100
+      }
+      alpha /= 100
+
+      onChange(
+        rgbaToHsva({
+          r: rgb.r,
+          g: rgb.g,
+          b: rgb.b,
+          a: alpha,
+        }),
+      )
+    }
+  }
 
   return (
     <Flex>

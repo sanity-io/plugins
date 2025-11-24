@@ -1,4 +1,4 @@
-import {startTransition, useCallback, useDeferredValue, useEffect, useRef, useState} from 'react'
+import {startTransition, useDeferredValue, useEffect, useRef, useState} from 'react'
 import {
   Alpha,
   Hue,
@@ -7,6 +7,7 @@ import {
   hsvaToRgba,
   hsvaToHex,
   hsvaToHsla,
+  BACKGROUND_IMG,
 } from '@uiw/react-color'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
 import {styled} from 'styled-components'
@@ -42,16 +43,7 @@ const Checkboard = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.08) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(0, 0, 0, 0.08) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.08) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.08) 75%);
-  background-size: 8px 8px;
-  background-position:
-    0 0,
-    0 4px,
-    4px -4px,
-    -4px 0px;
+  background: url(${BACKGROUND_IMG}) left center;
 `
 
 interface ColorPickerProps {
@@ -72,20 +64,17 @@ const ColorPickerInner = (props: ColorPickerProps) => {
     return null
   }
 
-  const handleHsvaChange = useCallback(
-    (newHsva: HsvaColor) => {
-      const newRgba = hsvaToRgba(newHsva)
-      const newHex = hsvaToHex(newHsva)
-      const newHsla = hsvaToHsla(newHsva)
-      onChange({
-        hex: newHex,
-        rgb: newRgba,
-        hsv: newHsva,
-        hsl: newHsla,
-      })
-    },
-    [onChange],
-  )
+  const handleHsvaChange = (newHsva: HsvaColor) => {
+    const newRgba = hsvaToRgba(newHsva)
+    const newHex = hsvaToHex(newHsva)
+    const newHsla = hsvaToHsla(newHsva)
+    onChange({
+      hex: newHex,
+      rgb: newRgba,
+      hsv: newHsva,
+      hsl: newHsla,
+    })
+  }
 
   return (
     <div style={{width}}>
@@ -232,20 +221,20 @@ export default function ColorInput(props: ObjectInputProps) {
     return () => cancelAnimationFrame(raf)
   }, [debouncedColor])
 
-  const handleCreateColor = useCallback(() => {
+  const handleCreateColor = () => {
     setColor(DEFAULT_COLOR)
     setEmitColor(DEFAULT_COLOR)
-  }, [])
+  }
 
-  const handleColorChange = useCallback((nextColor: ColorValue) => {
+  const handleColorChange = (nextColor: ColorValue) => {
     setColor(nextColor)
     setEmitColor(nextColor)
-  }, [])
+  }
 
-  const handleUnset = useCallback(() => {
+  const handleUnset = () => {
     setColor(undefined)
     onChange(unset())
-  }, [onChange])
+  }
 
   return (
     <>
