@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
