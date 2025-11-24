@@ -7,7 +7,6 @@ import {
   hsvaToRgba,
   hsvaToHex,
   hsvaToHsla,
-  hexToHsva,
 } from '@uiw/react-color'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
 import {styled} from 'styled-components'

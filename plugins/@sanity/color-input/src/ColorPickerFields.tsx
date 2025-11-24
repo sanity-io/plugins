@@ -2,7 +2,7 @@ import type {HslaColor, HsvaColor, RgbaColor} from '@uiw/react-color'
 
 import {useCallback, useMemo} from 'react'
 import {EditableInput, validHex} from '@uiw/react-color'
-import {hexToHsva, hsvaToRgba, rgbaToHsva} from '@uiw/react-color'
+import {hexToHsva, rgbaToHsva} from '@uiw/react-color'
 
 import {Box, Flex, useTheme} from '@sanity/ui'
 
@@ -17,7 +17,6 @@ interface ColorPickerFieldsProps {
 export const ColorPickerFields = ({
   onChange,
   rgb,
-  hsl,
   hex,
   disableAlpha,
 }: ColorPickerFieldsProps) => {
@@ -95,7 +94,7 @@ export const ColorPickerFields = ({
         <EditableInput
           name="hex"
           label="hex"
-          value={hex?.replace('#', '')}
+          value={hex?.replace('#', '') ?? ''}
           onChange={handleChange}
           inputStyle={inputStyle}
           labelStyle={labelStyle}
@@ -105,7 +104,7 @@ export const ColorPickerFields = ({
         <EditableInput
           name="r"
           label="r"
-          value={rgb?.r}
+          value={rgb?.r ?? 0}
           onChange={handleChange}
           inputStyle={inputStyle}
           labelStyle={labelStyle}
@@ -115,7 +114,7 @@ export const ColorPickerFields = ({
         <EditableInput
           name="g"
           label="g"
-          value={rgb?.g}
+          value={rgb?.g ?? 0}
           onChange={handleChange}
           inputStyle={inputStyle}
           labelStyle={labelStyle}
@@ -125,7 +124,7 @@ export const ColorPickerFields = ({
         <EditableInput
           name="b"
           label="b"
-          value={rgb?.b}
+          value={rgb?.b ?? 0}
           onChange={handleChange}
           inputStyle={inputStyle}
           labelStyle={labelStyle}
