@@ -15,6 +15,35 @@ export interface VercelProtectionBypassConfig {
   icon?: React.ComponentType
 }
 
+const defaultTitle = 'Vercel Protection Bypass'
+const schema = defineType({
+  type: 'document',
+  icon: LockIcon,
+  name: type,
+  title: defaultTitle,
+  readOnly: true,
+  fields: [
+    {
+      type: 'string',
+      name: 'secret',
+      title: 'Secret',
+    },
+  ],
+  preview: {
+    select: {
+      secret: 'secret',
+    },
+    prepare(data) {
+      const enabled = data['secret'] !== null
+      return {
+        title: enabled ? 'Enabled' : 'Disabled',
+        subtitle: defaultTitle,
+        media: enabled ? CheckmarkCircleIcon : CloseCircleIcon,
+      }
+    },
+  },
+})
+
 export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassConfig | void>(
   (options) => {
     const {
@@ -43,37 +72,7 @@ export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassCon
           return []
         },
       },
-      schema: {
-        types: [
-          defineType({
-            type: 'document',
-            icon: LockIcon,
-            name: type,
-            title,
-            readOnly: true,
-            fields: [
-              {
-                type: 'string',
-                name: 'secret',
-                title: 'Secret',
-              },
-            ],
-            preview: {
-              select: {
-                secret: 'secret',
-              },
-              prepare(data) {
-                const enabled = data['secret'] !== null
-                return {
-                  title: enabled ? 'Enabled' : 'Disabled',
-                  subtitle: title,
-                  media: enabled ? CheckmarkCircleIcon : CloseCircleIcon,
-                }
-              },
-            },
-          }),
-        ],
-      },
+      schema: {types: [schema]},
     }
   },
 )

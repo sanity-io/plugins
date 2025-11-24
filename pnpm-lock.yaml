@@ -182,6 +182,9 @@ importers:
       '@repo/package.config':
         specifier: workspace:*
         version: link:../../../packages/@repo/package.config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../../../packages/@repo/tsconfig
       '@sanity/client':
         specifier: 'catalog:'
         version: 7.13.0(debug@4.4.3)
