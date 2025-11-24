@@ -179,7 +179,7 @@ importers:
   plugins/@sanity/color-input:
     dependencies:
       '@sanity/icons':
-        specifier: ^3.5.3
+        specifier: ^3.7.4
         version: 3.7.4(react@19.2.0)
       '@sanity/ui':
         specifier: ^3.0.5

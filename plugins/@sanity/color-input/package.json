@@ -43,7 +43,7 @@
     "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/color-input/tsconfig.json)"
   },
   "dependencies": {
-    "@sanity/icons": "^3.5.3",
+    "@sanity/icons": "^3.7.4",
     "@sanity/ui": "^3.0.5",
     "tinycolor2": "^1.6.0",
     "react-color": "^2.19.3",
