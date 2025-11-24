@@ -44,7 +44,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
-      - run: pnpm --if-present lint:ci
+      - name: Oxlint
+        run: pnpm oxlint --format github
+      - name: ESLint
+        run: pnpm lint:ci
 
   test:
     runs-on: ubuntu-latest
