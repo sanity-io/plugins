@@ -12,7 +12,7 @@ const rootOxlintrc = resolve(__dirname, '../../../.oxlintrc.jsonc')
 export default [
   globalIgnores(['**/.sanity/*', '**/dist/*']),
   defineConfig({
-    files: ['src/**/*.{cjs,mjs,js,jsx,ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     languageOptions: {parser: tseslint.parser},
     linterOptions: {
       reportUnusedDisableDirectives: 'error',
