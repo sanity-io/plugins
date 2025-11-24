@@ -67,7 +67,7 @@ To disable the alpha option, set `disableAlpha` to `true`:
 
 Which will render accordingly:
 
-![This is an image](assets/no-alpha.png)
+![This is an image](https://github.com/user-attachments/assets/f7095cbb-8014-4aef-bb95-58f6aa25672b)
 
 ### Color list
 
@@ -97,7 +97,7 @@ This uses the `react-color` under the hood https://casesandberg.github.io/react-
 
 Which will render accordingly:
 
-![This is an image](assets/color-list.png)
+![This is an image](https://github.com/user-attachments/assets/f2a35da3-8944-46b3-a626-9aa870800b65)
 
 ## Data model
 

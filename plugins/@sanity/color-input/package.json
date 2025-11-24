@@ -22,16 +22,17 @@
   },
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
+  "type": "module",
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "import": "./lib/index.mjs",
-      "require": "./lib/index.js",
-      "default": "./lib/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
-  "types": "./lib/index.d.ts",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
