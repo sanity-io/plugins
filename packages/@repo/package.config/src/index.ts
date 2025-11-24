@@ -11,7 +11,7 @@ const config = {
     noPackageJsonBrowser: 'error',
     noPackageJsonTypesVersions: 'error',
     preferModuleType: 'error',
-  },
+  } satisfies NonNullable<PkgConfigOptions['strictOptions']>,
   dts: 'rolldown',
   tsconfig: 'tsconfig.build.json',
 } as const satisfies PkgConfigOptions
