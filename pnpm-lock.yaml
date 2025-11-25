@@ -384,7 +384,7 @@ importers:
         specifier: ^3.0.6
         version: 3.0.6
       '@sanity/ui':
-        specifier: ^1.0.0
+        specifier: ^1.9.3
         version: 1.9.3(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))
       bezier-easing:
         specifier: ^2.1.0
