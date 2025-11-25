@@ -1,19 +1,16 @@
 import BezierEasing from 'bezier-easing'
 import deepEqual from 'deep-equal'
 import {rgba} from 'polished'
-import {useCallback, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {ForceGraph2D} from 'react-force-graph'
-import {useClient, useUserColorManager} from 'sanity'
+import {useClient, useUserColorManager, type SanityClient, type SanityDocument} from 'sanity'
 import {useRouter} from 'sanity/router'
 import {v4 as uuidv4} from 'uuid'
-
-import type {SanityDocument, SanityClient} from '@sanity/client'
 
 import {black, COLOR_HUES, gray, white, hues} from '@sanity/color'
 import {useTheme} from '@sanity/ui'
 
 import {GraphRoot, GraphWrapper, HoverNode, Legend, LegendBadge, LegendRow} from './GraphViewStyle'
-import {useFetchDocuments, useListen} from './hooks'
 import {sortBy, loadImage, sizeOf, truncate} from './utils'
 
 const DEFAULT_QUERY = `
@@ -51,6 +48,7 @@ function getDocTypeCounts(docs: SanityDocument[]) {
 }
 
 function labelFor(doc: SanityDocument) {
+  // oxlint-disable-next-line restrict-template-expressions,no-base-to-string
   return `${doc.title || doc.name || doc._id}`.trim()
 }
 
@@ -202,16 +200,19 @@ export default function GraphView({
   const router = useRouter()
   const client = useClient({apiVersion})
 
-  const fetchCallback = useCallback((_docs: any) => {
-    const docs = deduplicateDrafts(_docs)
-    setMaxSize(Math.max(...docs.map(sizeOf)))
-    setDocuments(docs)
-    setDocTypes(getDocTypeCounts(docs))
-    setGraph(new GraphData(docs))
-  }, [])
+  useEffect(() => {
+    void client.fetch(query).then((_docs) => {
+      const docs = deduplicateDrafts(_docs)
+      setMaxSize(Math.max(...docs.map(sizeOf)))
+      setDocuments(docs)
+      setDocTypes(getDocTypeCounts(docs))
+      setGraph(new GraphData(docs))
+    })
+  }, [client, query])
 
-  const listenCallback = useCallback(
-    async (update: any) => {
+  useEffect(() => {
+    const subscription = client.listen(query, {}, {}).subscribe(async (update) => {
+      if (update.type !== 'mutation') return
       const doc = update.result
       if (doc) {
         doc._id = stripDraftId(doc._id)
@@ -262,7 +263,6 @@ export default function GraphView({
           setGraph(newGraph)
         }
 
-        // @ts-expect-error - TODO: fix this
         const user = await users.getById(update.identity, client)
         graph.setSession(user, docNode)
       } else if (update.transition === 'disappear') {
@@ -280,13 +280,12 @@ export default function GraphView({
         newGraph.data.nodes = newGraph.data.nodes.filter((n: any) => n.id !== docId)
         setGraph(newGraph)
       }
-    },
-    [documents, graph, client],
-  )
-  // @ts-expect-error - TODO: fix this
-  useFetchDocuments(query, fetchCallback, [], client)
-  // @ts-expect-error - TODO: fix this
-  useListen(query, {}, {}, listenCallback, [documents, graph], client)
+    })
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [client, query, documents, graph])
+
   useEffect(() => {
     const interval = setInterval(() => graph.reapSessions(), 1000)
     return () => clearInterval(interval)
