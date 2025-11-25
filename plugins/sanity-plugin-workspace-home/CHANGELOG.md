@@ -1,5 +1,23 @@
 # sanity-plugin-workspace-home
 
+## 2.0.0
+
+### Major Changes
+
+- [#71](https://github.com/sanity-io/plugins/pull/71) [`592405b`](https://github.com/sanity-io/plugins/commit/592405b091dc5d24e947dcef326c219c401443a2) Thanks [@stipsan](https://github.com/stipsan)! - Require Sanity Studio v4 or later
+
+- [#71](https://github.com/sanity-io/plugins/pull/71) [`592405b`](https://github.com/sanity-io/plugins/commit/592405b091dc5d24e947dcef326c219c401443a2) Thanks [@stipsan](https://github.com/stipsan)! - Remove CJS, this package is now ESM-only
+
+### Minor Changes
+
+- [#71](https://github.com/sanity-io/plugins/pull/71) [`592405b`](https://github.com/sanity-io/plugins/commit/592405b091dc5d24e947dcef326c219c401443a2) Thanks [@stipsan](https://github.com/stipsan)! - Add React Compiler
+
+### Patch Changes
+
+- [#71](https://github.com/sanity-io/plugins/pull/71) [`592405b`](https://github.com/sanity-io/plugins/commit/592405b091dc5d24e947dcef326c219c401443a2) Thanks [@stipsan](https://github.com/stipsan)! - The `@sanity/ui` dependency is now a regular dependency instead of a peer
+
+- [#71](https://github.com/sanity-io/plugins/pull/71) [`592405b`](https://github.com/sanity-io/plugins/commit/592405b091dc5d24e947dcef326c219c401443a2) Thanks [@stipsan](https://github.com/stipsan)! - The `react-is` dependency is now a regular dependency instead of inlined
+
 ## [1.1.3](https://github.com/sanity-io/sanity-plugin-workspace-home/compare/v1.1.2...v1.1.3) (2025-10-03)
 
 ### Bug Fixes
