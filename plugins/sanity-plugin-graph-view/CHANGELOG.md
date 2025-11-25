@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 2.0.3
+
+### Patch Changes
+
+- [#78](https://github.com/sanity-io/plugins/pull/78) [`54b3c98`](https://github.com/sanity-io/plugins/commit/54b3c9885399f4e285475a242b160b66186b02e8) Thanks [@stipsan](https://github.com/stipsan)! - fix: handle max callstack regression
+
 ## 2.0.2
 
 ### Patch Changes
