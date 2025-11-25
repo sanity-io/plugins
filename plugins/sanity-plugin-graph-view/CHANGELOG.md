@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 2.0.2
+
+### Patch Changes
+
+- [#73](https://github.com/sanity-io/plugins/pull/73) [`f8c8e93`](https://github.com/sanity-io/plugins/commit/f8c8e93a63f192db71b69ac5fd8f52cc6dd85d73) Thanks [@stipsan](https://github.com/stipsan)! - Setup npm Trusted Publishing
+
 ## [2.0.1](https://github.com/sanity-io/sanity-plugin-graph-view/compare/v2.0.0...v2.0.1) (2022-11-25)
 
 ### Bug Fixes
