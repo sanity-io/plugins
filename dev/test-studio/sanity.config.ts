@@ -16,7 +16,6 @@ const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'plugins'
 
 export default defineConfig([
-  // @ts-ignore - TODO: fix this
   workspaceHomeConfig({projectId, dataset}),
   {
     projectId,
@@ -29,15 +28,10 @@ export default defineConfig([
     },
     plugins: [
       structureTool(),
-      // @ts-ignore - TODO: fix this
       contentGraphView(),
-      // @ts-ignore - TODO: fix this
       colorInput(),
-      // @ts-ignore - TODO: fix this
       debugSecrets(),
-      // @ts-ignore - TODO: fix this
       vercelProtectionBypassTool(),
-      // @ts-ignore - TODO: fix this
       aprimoPlugin({
         tenantName: 'partner1',
       }),
