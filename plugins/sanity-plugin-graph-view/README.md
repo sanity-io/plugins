@@ -23,7 +23,7 @@ Add it as a plugin in sanity.config.ts (or .js):
 ```js
 import { contentGraphView } from "sanity-plugin-graph-view";
 
-export default defineConfigConfig({
+export default defineConfig({
   // ...
   plugins: [
     contentGraphView({}),
