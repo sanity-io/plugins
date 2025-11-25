@@ -29,6 +29,7 @@
   ],
   "scripts": {
     "build": "pkg build --strict --check --clean",
+    "lint": "eslint .",
     "prepack": "turbo run build",
     "typecheck": "(cd ../.. && tsgo --project plugins/sanity-plugin-graph-view/tsconfig.json)"
   },
@@ -38,16 +39,20 @@
     "bezier-easing": "^2.1.0",
     "deep-equal": "^2.2.3",
     "polished": "^4.3.1",
+    "react-compiler-runtime": "^1.0.0",
     "react-force-graph": "1.41.14",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/deep-equal": "^1.0.4",
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
