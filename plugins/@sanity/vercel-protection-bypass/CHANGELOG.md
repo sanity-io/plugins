@@ -1,5 +1,11 @@
 # @sanity/vercel-protection-bypass
 
+## 4.0.3
+
+### Patch Changes
+
+- [#81](https://github.com/sanity-io/plugins/pull/81) [`33d90c3`](https://github.com/sanity-io/plugins/commit/33d90c3af0732b0b8e890cc87e12ab6a95b818b5) Thanks [@stipsan](https://github.com/stipsan)! - Improve react lazy loading
+
 ## 4.0.2
 
 ### Patch Changes
