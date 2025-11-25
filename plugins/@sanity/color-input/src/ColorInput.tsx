@@ -43,7 +43,9 @@ const Checkboard = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: url(${BACKGROUND_IMG}) left center;
+  background-image: url(${BACKGROUND_IMG});
+  background-repeat: repeat;
+  background-position: 0 0;
   background-size: 8px 8px;
 `
 
@@ -56,11 +58,11 @@ const BarPointer = ({left, top}: {left?: string; top?: string}) => (
       borderRadius: 1,
       boxShadow: 'rgb(0 0 0 / 60%) 0px 0px 2px',
       backgroundColor: '#fff',
-      // For horizontal sliders (Hue/Alpha), use left positioning with reduced height
-      // For vertical, use top positioning with reduced width
+      // For horizontal sliders (Hue/Alpha), use left positioning with fixed height
+      // For vertical, use top positioning with fixed width
       ...(left !== undefined
-        ? {left, top: '2px', bottom: '2px'}
-        : {top, left: '2px', right: '2px'}),
+        ? {left, height: 6, top: '50%', transform: 'translateY(-50%)'}
+        : {top, width: 6, left: '50%', transform: 'translateX(-50%)'}),
     }}
   />
 )
@@ -133,6 +135,8 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                     style={{width: '100%'}}
                     bgProps={{
                       style: {
+                        backgroundRepeat: 'repeat',
+                        backgroundPosition: '0 0',
                         backgroundSize: '8px 8px',
                       },
                     }}
