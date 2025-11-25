@@ -1,0 +1,63 @@
+{
+  "name": "sanity-plugin-aprimo",
+  "version": "0.4.2",
+  "description": "Aprimo asset selector for Sanity",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-aprimo#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-aprimo"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "lint": "eslint .",
+    "prepack": "turbo run build",
+    "typecheck": "(cd ../.. && tsgo --project plugins/sanity-plugin-aprimo/tsconfig.json)"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.4",
+    "@sanity/ui": "^3.1.11",
+    "react-compiler-runtime": "^1.0.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "catalog:",
+    "react": "catalog:",
+    "sanity": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "sanity": "^4"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}
