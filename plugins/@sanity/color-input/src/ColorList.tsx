@@ -1,9 +1,11 @@
-import type {Color, ColorChangeHandler} from 'react-color'
+import type {HsvaColor} from '@uiw/react-color'
 
 import {styled} from 'styled-components'
 import tinycolor from 'tinycolor2'
 
 import {Flex} from '@sanity/ui'
+
+import type {ColorValue} from './types'
 
 const ColorListWrap = styled(Flex)`
   gap: 0.25em;
@@ -30,19 +32,19 @@ const ColorBox = styled.div`
 `
 
 interface ValidatedColor {
-  color: Color
+  color: string | ColorValue
   backgroundColor: string
 }
 
 interface ColorListProps {
-  colors?: Array<Color>
-  onChange: ColorChangeHandler<Color>
+  colors?: Array<string | ColorValue>
+  onChange: (color: HsvaColor) => void
 }
 
-const validateColors = (colors: Array<Color>) =>
+const validateColors = (colors: Array<string | ColorValue>) =>
   colors.reduce((cls: Array<ValidatedColor>, c) => {
     // @ts-expect-error fix types later
-    const color = c.hex ? tinycolor(c.hex) : tinycolor(c)
+    const color = typeof c === 'string' ? tinycolor(c) : c.hex ? tinycolor(c.hex) : tinycolor(c)
     if (color.isValid()) {
       cls.push({
         color: c,
@@ -60,7 +62,9 @@ export function ColorList({colors, onChange}: ColorListProps): React.JSX.Element
         <ColorBoxContainer
           key={`${backgroundColor}-${idx}`}
           onClick={() => {
-            onChange(color)
+            const tc = typeof color === 'string' ? tinycolor(color) : tinycolor(color.hex)
+            const hsva = tc.toHsv()
+            onChange({h: hsva.h, s: hsva.s, v: hsva.v, a: hsva.a})
           }}
         >
           <ColorBox style={{background: backgroundColor}} />
