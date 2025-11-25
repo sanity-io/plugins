@@ -48,6 +48,7 @@ function getDocTypeCounts(docs: SanityDocument[]) {
 }
 
 function labelFor(doc: SanityDocument) {
+  // oxlint-disable-next-line restrict-template-expressions,no-base-to-string
   return `${doc.title || doc.name || doc._id}`.trim()
 }
 
@@ -207,7 +208,7 @@ export default function GraphView({
       setDocTypes(getDocTypeCounts(docs))
       setGraph(new GraphData(docs))
     })
-  }, [client])
+  }, [client, query])
 
   useEffect(() => {
     const subscription = client.listen(query, {}, {}).subscribe(async (update) => {
@@ -283,7 +284,7 @@ export default function GraphView({
     return () => {
       subscription.unsubscribe()
     }
-  }, [client])
+  }, [client, query, documents, graph])
 
   useEffect(() => {
     const interval = setInterval(() => graph.reapSessions(), 1000)
