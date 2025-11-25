@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 3.0.0
+
+### Major Changes
+
+- [#77](https://github.com/sanity-io/plugins/pull/77) [`16e61fb`](https://github.com/sanity-io/plugins/commit/16e61fb7a7462e7d61f5c1af18ebcf31e33ee474) Thanks [@stipsan](https://github.com/stipsan)! - Requires Sanity v4 or later
+
 ## 2.0.3
 
 ### Patch Changes
