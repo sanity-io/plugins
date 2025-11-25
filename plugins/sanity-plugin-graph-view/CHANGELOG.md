@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 3.2.0
+
+### Minor Changes
+
+- [#98](https://github.com/sanity-io/plugins/pull/98) [`56c3cdf`](https://github.com/sanity-io/plugins/commit/56c3cdf64f04bdde9dafd747f3b56dd122c9a335) Thanks [@stipsan](https://github.com/stipsan)! - Add React Compiler
+
 ## 3.1.1
 
 ### Patch Changes
