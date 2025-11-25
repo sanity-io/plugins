@@ -38,7 +38,7 @@
     "@sanity/ui": "^1.0.0",
     "bezier-easing": "^2.1.0",
     "deep-equal": "^2.2.3",
-    "polished": "^4.2.2",
+    "polished": "^4.3.1",
     "react-force-graph": "1.41.14",
     "styled-components": "^5.3.5",
     "uuid": "^8.3.2"
