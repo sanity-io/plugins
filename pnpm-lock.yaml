@@ -393,7 +393,7 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
       deep-equal:
-        specifier: ^2.0.5
+        specifier: ^2.2.3
         version: 2.2.3
       polished:
         specifier: ^4.2.2
