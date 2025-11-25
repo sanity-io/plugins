@@ -1,7 +1,7 @@
 import BezierEasing from 'bezier-easing'
 import deepEqual from 'deep-equal'
 import {rgba} from 'polished'
-import React, {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {ForceGraph2D} from 'react-force-graph'
 import {useClient, useUserColorManager} from 'sanity'
 import {useRouter} from 'sanity/router'
@@ -185,7 +185,11 @@ interface GraphViewConfig {
   apiVersion?: string
 }
 
-export function GraphView(props: GraphViewConfig) {
+export default function GraphView({
+  tool: {options: props},
+}: {
+  tool: {options: GraphViewConfig}
+}): React.JSX.Element {
   const query = props.query || DEFAULT_QUERY
   const apiVersion = props.apiVersion ?? '2022-09-01'
 
@@ -306,8 +310,6 @@ export function GraphView(props: GraphViewConfig) {
           ))}
         </Legend>
         {hoverNode && <HoverNode theme={theme}>{labelFor(hoverNode.doc)}</HoverNode>}
-
-        {/* @ts-expect-error - TODO: fix this */}
         <ForceGraph2D
           graphData={graph.data}
           nodeAutoColorBy="group"

@@ -1,4 +1,4 @@
-import React, {type PropsWithChildren} from 'react'
+import {type PropsWithChildren} from 'react'
 import styled from 'styled-components'
 
 import type {Theme} from '@sanity/ui'
