@@ -1,5 +1,23 @@
 # sanity-plugin-graph-view
 
+## 3.1.1
+
+### Patch Changes
+
+- [#88](https://github.com/sanity-io/plugins/pull/88) [`61a56db`](https://github.com/sanity-io/plugins/commit/61a56dbc07d4cf96c239617ce10ec9a3d93a30e1) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade styled-components to v6
+
+- [#84](https://github.com/sanity-io/plugins/pull/84) [`8089b4a`](https://github.com/sanity-io/plugins/commit/8089b4aba9a079a59d3cd79d13cdf81b21be232d) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency deep-equal to ^2.2.3
+
+- [#85](https://github.com/sanity-io/plugins/pull/85) [`c6b1fab`](https://github.com/sanity-io/plugins/commit/c6b1fab40f7b01a097423f2a3afe38f8b604f687) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency polished to ^4.3.1
+
+- [#93](https://github.com/sanity-io/plugins/pull/93) [`8d49e63`](https://github.com/sanity-io/plugins/commit/8d49e636314bd952fdfae3a4df6a5602923733af) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/color to v3
+
+- [#94](https://github.com/sanity-io/plugins/pull/94) [`7b1658c`](https://github.com/sanity-io/plugins/commit/7b1658ccfe8feb9a0fed4873f8be3197599c33c8) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to v3
+
+- [#97](https://github.com/sanity-io/plugins/pull/97) [`bbaa023`](https://github.com/sanity-io/plugins/commit/bbaa023b2674df88cb0e063ed774b883832ea316) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade uuid to v13
+
+- [#87](https://github.com/sanity-io/plugins/pull/87) [`b7db9f2`](https://github.com/sanity-io/plugins/commit/b7db9f2378d342f83cb61f4c42574cd8d6868c9c) Thanks [@stipsan](https://github.com/stipsan)! - remove `@sanity/client` dependency
+
 ## 3.1.0
 
 ### Minor Changes
