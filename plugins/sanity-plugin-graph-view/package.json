@@ -39,7 +39,7 @@
     "deep-equal": "^2.2.3",
     "polished": "^4.2.2",
     "react-force-graph": "1.41.14",
-    "uuid": "^8.3.2"
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

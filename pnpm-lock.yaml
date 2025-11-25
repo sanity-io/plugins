@@ -399,8 +399,8 @@ importers:
         specifier: 1.41.14
         version: 1.41.14(aframe@1.7.1)(react@19.2.0)(three@0.181.2)
       uuid:
-        specifier: ^8.3.2
-        version: 8.3.2
+        specifier: ^13.0.0
+        version: 13.0.0
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*
