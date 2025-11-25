@@ -1,6 +1,6 @@
 {
-  "extends": "@repo/tsconfig/check.json",
-  "include": ["**/*.ts", "**/*.tsx"],
+  "extends": "@repo/tsconfig/build.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "noPropertyAccessFromIndexSignature": false,
