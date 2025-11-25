@@ -1,5 +1,6 @@
 import {defineConfig} from 'sanity'
 import {aprimoPlugin} from 'sanity-plugin-aprimo'
+import {workspaceHomeConfig} from 'sanity-plugin-workspace-home'
 import {structureTool} from 'sanity/structure'
 
 import {colorInput} from '@sanity/color-input'
@@ -13,21 +14,26 @@ import colorInputSchema from './src/color-input'
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'plugins'
 
-export default defineConfig({
-  projectId,
-  dataset,
-  title: 'Plugins Studio',
-  schema: {
-    types: [colorInputSchema, aprimoInputSchema],
+export default defineConfig([
+  workspaceHomeConfig({projectId, dataset}),
+  {
+    projectId,
+    dataset,
+    basePath: '/kitchen-sink',
+    name: 'kitchen-sink',
+    title: 'Kitchen Sink',
+    schema: {
+      types: [colorInputSchema, aprimoInputSchema],
+    },
+    plugins: [
+      structureTool(),
+      colorInput(),
+      debugSecrets(),
+      vercelProtectionBypassTool(),
+      aprimoPlugin({
+        tenantName: 'partner1',
+      }),
+      visionTool(),
+    ],
   },
-  plugins: [
-    structureTool(),
-    colorInput(),
-    debugSecrets(),
-    vercelProtectionBypassTool(),
-    aprimoPlugin({
-      tenantName: 'partner1',
-    }),
-    visionTool(),
-  ],
-})
+])
