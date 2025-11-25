@@ -47,7 +47,7 @@
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@types/deep-equal": "^1.0.1",
+    "@types/deep-equal": "^1.0.4",
     "@types/react": "catalog:",
     "@types/uuid": "^8",
     "@types/styled-components": "^5.1.25",
