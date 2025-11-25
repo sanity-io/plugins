@@ -33,7 +33,7 @@
     "typecheck": "(cd ../.. && tsgo --project plugins/sanity-plugin-graph-view/tsconfig.json)"
   },
   "dependencies": {
-    "@sanity/color": "^2.1.19",
+    "@sanity/color": "^2.2.5",
     "@sanity/ui": "^1.0.0",
     "bezier-easing": "^2.1.0",
     "deep-equal": "^2.2.3",

@@ -381,7 +381,7 @@ importers:
   plugins/sanity-plugin-graph-view:
     dependencies:
       '@sanity/color':
-        specifier: ^2.1.19
+        specifier: ^2.2.5
         version: 2.2.5
       '@sanity/ui':
         specifier: ^1.0.0
