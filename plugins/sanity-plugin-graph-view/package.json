@@ -1,0 +1,80 @@
+{
+  "name": "sanity-plugin-graph-view",
+  "version": "2.0.1",
+  "description": "",
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-graph-view#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-graph-view"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "source": "./src/index.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "src",
+    "dist",
+    "v2-incompatible.js",
+    "sanity.json"
+  ],
+  "scripts": {
+    "prebuild": "npm run clean && plugin-kit verify-package --silent && pkg-utils",
+    "build": "pkg-utils build --strict",
+    "clean": "rimraf dist",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@sanity/client": "^3.3.0",
+    "@sanity/color": "^2.1.19",
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/ui": "^1.0.0",
+    "bezier-easing": "^2.1.0",
+    "deep-equal": "^2.0.5",
+    "polished": "^4.2.2",
+    "react-force-graph": "1.41.14",
+    "styled-components": "^5.3.5",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@sanity/pkg-utils": "^1.17.2",
+    "@sanity/plugin-kit": "^2.1.6",
+    "@types/deep-equal": "^1.0.1",
+    "@types/react": "^18",
+    "@types/styled-components": "^5.1.25",
+    "react": "^18",
+    "rimraf": "^3.0.2",
+    "sanity": "^3.0.0",
+    "typescript": "^4.8.4"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "sanity": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "sanityExchangeUrl": "https://www.sanity.io/plugins/graph-view",
+  "sanityPlugin": {
+    "verifyPackage": {
+      "eslintImports": false,
+      "scripts": false,
+      "tsc": false
+    }
+  }
+}
