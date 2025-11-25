@@ -44,6 +44,8 @@ const schema = defineType({
   },
 })
 
+const VercelProtectionBypassTool = lazy(() => import('./VercelProtectionBypassTool'))
+
 export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassConfig | void>(
   (options) => {
     const {
@@ -59,7 +61,7 @@ export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassCon
           name,
           title,
           icon: icon,
-          component: lazy(() => import('./VercelProtectionBypassTool')),
+          component: VercelProtectionBypassTool,
           options: config,
           __internalApplicationType: `sanity/${id}`,
         },

@@ -30,7 +30,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       // @ts-ignore - TODO: fix this
-      contentGraphView({}),
+      contentGraphView(),
       // @ts-ignore - TODO: fix this
       colorInput(),
       // @ts-ignore - TODO: fix this

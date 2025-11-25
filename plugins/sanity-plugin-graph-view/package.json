@@ -48,11 +48,11 @@
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/deep-equal": "^1.0.1",
-    "@types/react": "^18",
+    "@types/react": "catalog:",
     "@types/uuid": "^8",
     "@types/styled-components": "^5.1.25",
     "@typescript/native-preview": "catalog:",
-    "react": "^18",
+    "react": "catalog:",
     "rimraf": "^3.0.2",
     "sanity": "catalog:",
     "typescript": "catalog:"
