@@ -1,5 +1,5 @@
 import {type PropsWithChildren} from 'react'
-import styled from 'styled-components'
+import {styled} from 'styled-components'
 
 import type {Theme} from '@sanity/ui'
 
@@ -52,7 +52,9 @@ export const Legend: React.FC<Style> = styled.div`
   }
 `
 
-export const LegendRow = styled.div`
+export const LegendRow: React.FC<
+  PropsWithChildren<{className?: string; style?: React.CSSProperties}>
+> = styled.div`
   display: flex;
 `
 
