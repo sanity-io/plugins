@@ -47,7 +47,7 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/deep-equal": "^1.0.4",
     "@types/react": "catalog:",
-    "@types/uuid": "^8",
+    "@types/uuid": "^8.3.4",
     "@typescript/native-preview": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
