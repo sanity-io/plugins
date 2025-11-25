@@ -1,4 +1,5 @@
 import {defineConfig} from 'sanity'
+import {aprimoPlugin} from 'sanity-plugin-aprimo'
 import {structureTool} from 'sanity/structure'
 
 import {colorInput} from '@sanity/color-input'
@@ -6,6 +7,7 @@ import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
 import {vercelProtectionBypassTool} from '@sanity/vercel-protection-bypass'
 import {visionTool} from '@sanity/vision'
 
+import aprimoInputSchema from './src/aprimo-input'
 import colorInputSchema from './src/color-input'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
@@ -16,13 +18,16 @@ export default defineConfig({
   dataset,
   title: 'Plugins Studio',
   schema: {
-    types: [colorInputSchema],
+    types: [colorInputSchema, aprimoInputSchema],
   },
   plugins: [
     structureTool(),
     colorInput(),
     debugSecrets(),
     vercelProtectionBypassTool(),
+    aprimoPlugin({
+      tenantName: 'partner1',
+    }),
     visionTool(),
   ],
 })

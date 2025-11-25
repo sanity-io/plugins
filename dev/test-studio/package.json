@@ -17,6 +17,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
+    "sanity-plugin-aprimo": "workspace:*",
     "styled-components": "catalog:"
   },
   "devDependencies": {
