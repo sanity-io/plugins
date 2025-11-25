@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 3.1.0
+
+### Minor Changes
+
+- [#81](https://github.com/sanity-io/plugins/pull/81) [`33d90c3`](https://github.com/sanity-io/plugins/commit/33d90c3af0732b0b8e890cc87e12ab6a95b818b5) Thanks [@stipsan](https://github.com/stipsan)! - Add React lazy loading
+
 ## 3.0.0
 
 ### Major Changes
