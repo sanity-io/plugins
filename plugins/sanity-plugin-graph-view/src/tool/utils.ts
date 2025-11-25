@@ -3,13 +3,14 @@ export function sizeOf(value: any): number {
     return 0
   }
 
+  if (typeof value === 'object') {
+    return Object.entries(value).reduce((total, [k, v]) => total + sizeOf(k) + sizeOf(v), 0)
+  }
+
   if (Array.isArray(value)) {
     return Object.entries(value).reduce((total, v) => total + sizeOf(v), 0)
   }
 
-  if (typeof value === 'object') {
-    return Object.entries(value).reduce((total, [k, v]) => total + sizeOf(k) + sizeOf(v), 0)
-  }
   if (typeof value === 'string') {
     return value.length
   }
