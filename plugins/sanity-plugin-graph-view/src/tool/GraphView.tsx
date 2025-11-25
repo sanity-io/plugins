@@ -7,7 +7,8 @@ import {useClient, useUserColorManager} from 'sanity'
 import {useRouter} from 'sanity/router'
 import {v4 as uuidv4} from 'uuid'
 
-import {SanityDocument, SanityClient} from '@sanity/client'
+import type {SanityDocument, SanityClient} from '@sanity/client'
+
 import {black, COLOR_HUES, gray, white, hues} from '@sanity/color'
 import {useTheme} from '@sanity/ui'
 
@@ -141,7 +142,7 @@ class GraphData {
     }
   }
 
-  setSession(user, docNode) {
+  setSession(user: any, docNode: any) {
     let session = this.sessions.find((s) => s.user.id === user.id && s.doc?._id === docNode.doc._id)
     if (!session) {
       session = new Session()
@@ -197,7 +198,7 @@ export function GraphView(props: GraphViewConfig) {
   const router = useRouter()
   const client = useClient({apiVersion})
 
-  const fetchCallback = useCallback((_docs) => {
+  const fetchCallback = useCallback((_docs: any) => {
     const docs = deduplicateDrafts(_docs)
     setMaxSize(Math.max(...docs.map(sizeOf)))
     setDocuments(docs)
@@ -206,7 +207,7 @@ export function GraphView(props: GraphViewConfig) {
   }, [])
 
   const listenCallback = useCallback(
-    async (update) => {
+    async (update: any) => {
       const doc = update.result
       if (doc) {
         doc._id = stripDraftId(doc._id)
@@ -239,12 +240,12 @@ export function GraphView(props: GraphViewConfig) {
         let graphChanged = !deepEqual(oldRefs, newRefs)
         if (graphChanged) {
           newGraph.data.links = newGraph.data.links
-            .filter((l) => l.source.id !== doc._id)
+            .filter((l: any) => l.source.id !== doc._id)
             .concat(newRefs.map((ref) => ({source: doc._id, target: ref})))
         }
 
         let docNode
-        const nodeIdx = graph.data.nodes.findIndex((n) => n.doc && n.doc._id === doc._id)
+        const nodeIdx = graph.data.nodes.findIndex((n: any) => n.doc && n.doc._id === doc._id)
         if (nodeIdx >= 0) {
           docNode = graph.data.nodes[nodeIdx]
           docNode.doc = doc
@@ -257,6 +258,7 @@ export function GraphView(props: GraphViewConfig) {
           setGraph(newGraph)
         }
 
+        // @ts-expect-error - TODO: fix this
         const user = await users.getById(update.identity, client)
         graph.setSession(user, docNode)
       } else if (update.transition === 'disappear') {
@@ -269,15 +271,17 @@ export function GraphView(props: GraphViewConfig) {
 
         const newGraph = graph.clone()
         newGraph.data.links = newGraph.data.links.filter(
-          (l) => l.source.id !== docId && l.target.id !== docId,
+          (l: any) => l.source.id !== docId && l.target.id !== docId,
         )
-        newGraph.data.nodes = newGraph.data.nodes.filter((n) => n.id !== docId)
+        newGraph.data.nodes = newGraph.data.nodes.filter((n: any) => n.id !== docId)
         setGraph(newGraph)
       }
     },
     [documents, graph, client],
   )
+  // @ts-expect-error - TODO: fix this
   useFetchDocuments(query, fetchCallback, [], client)
+  // @ts-expect-error - TODO: fix this
   useListen(query, {}, {}, listenCallback, [documents, graph], client)
   useEffect(() => {
     const interval = setInterval(() => graph.reapSessions(), 1000)
@@ -303,6 +307,7 @@ export function GraphView(props: GraphViewConfig) {
         </Legend>
         {hoverNode && <HoverNode theme={theme}>{labelFor(hoverNode.doc)}</HoverNode>}
 
+        {/* @ts-expect-error - TODO: fix this */}
         <ForceGraph2D
           graphData={graph.data}
           nodeAutoColorBy="group"
@@ -317,7 +322,9 @@ export function GraphView(props: GraphViewConfig) {
           nodeVal={(node: any) => valueFor(node.doc, maxSize)}
           onRenderFramePost={(ctx, globalScale) => {
             for (const session of graph.sessions) {
-              const node = graph.data.nodes.find((n) => n.doc && n.doc._id === session?.doc?._id)
+              const node = graph.data.nodes.find(
+                (n: any) => n.doc && n.doc._id === session?.doc?._id,
+              )
               if (node) {
                 const idleFactorRange = idleTimeout
                 const angle = session.angle
@@ -468,10 +475,10 @@ export function GraphView(props: GraphViewConfig) {
   )
 }
 
-const colorCache = {}
+const colorCache: Record<string, {fill: string; border: string}> = {}
 let typeColorNum = 0
 
-function getDocTypeColor(docType) {
+function getDocTypeColor(docType: any) {
   if (colorCache[docType]) {
     return colorCache[docType]
   }

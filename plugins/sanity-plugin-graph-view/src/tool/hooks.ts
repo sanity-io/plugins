@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 
-import {ListenEvent, ListenOptions, SanityClient} from '@sanity/client'
+import type {ListenEvent, ListenOptions, SanityClient} from '@sanity/client'
 
 export function useListen(
   query: string,
