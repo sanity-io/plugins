@@ -18,6 +18,7 @@
     "react-dom": "catalog:",
     "sanity": "catalog:",
     "sanity-plugin-aprimo": "workspace:*",
+    "sanity-plugin-graph-view": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
     "styled-components": "catalog:"
   },
