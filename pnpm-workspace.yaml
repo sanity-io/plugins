@@ -21,9 +21,6 @@ catalog:
   styled-components: ^6.1.19
   typescript: 5.9.3
 
-overrides:
-  sanity: https://pkg.pr.new/sanity@8d6c11d
-
 minimumReleaseAge: 4320
 
 minimumReleaseAgeExclude:
