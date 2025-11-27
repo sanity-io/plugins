@@ -1,5 +1,5 @@
 import {lazy} from 'react'
-import {definePlugin, defineType} from 'sanity'
+import {definePlugin, type Plugin, defineType} from 'sanity'
 
 import {CheckmarkCircleIcon, CloseCircleIcon, LockIcon} from '@sanity/icons'
 import {
@@ -46,7 +46,7 @@ const schema = defineType({
 
 const VercelProtectionBypassTool = lazy(() => import('./VercelProtectionBypassTool'))
 
-export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassConfig | void>(
+export const vercelProtectionBypassTool: Plugin<VercelProtectionBypassConfig | void> = definePlugin<VercelProtectionBypassConfig | void>(
   (options) => {
     const {
       name = 'vercel-protection-bypass',

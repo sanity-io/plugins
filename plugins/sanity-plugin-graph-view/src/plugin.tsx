@@ -1,5 +1,5 @@
 import {lazy} from 'react'
-import {definePlugin} from 'sanity'
+import { type Plugin} from 'sanity'
 import {route} from 'sanity/router'
 
 import {GraphViewIcon} from './tool/GraphViewIcon'
@@ -10,8 +10,7 @@ export interface GraphViewConfig {
 
 const GraphView = lazy(() => import('./tool/GraphView'))
 
-export const contentGraphView = definePlugin<void | GraphViewConfig>(
-  (config: GraphViewConfig = {}) => {
+export const contentGraphView: Plugin<void | GraphViewConfig> = (config = {}) => {
     return {
       name: '@sanity/content-graph-view',
 
@@ -26,5 +25,4 @@ export const contentGraphView = definePlugin<void | GraphViewConfig>(
         },
       ],
     }
-  },
-)
+  }

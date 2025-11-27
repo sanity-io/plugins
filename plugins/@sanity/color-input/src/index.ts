@@ -1,11 +1,11 @@
-import {definePlugin} from 'sanity'
+import {definePlugin, type Plugin} from 'sanity'
 
 import {color, type ColorDefinition} from './schemas/color'
 import {hslaColor} from './schemas/hslaColor'
 import {hsvaColor} from './schemas/hsvaColor'
 import {rgbaColor} from './schemas/rgbaColor'
 
-export const colorInput = definePlugin({
+export const colorInput: Plugin = definePlugin({
   name: '@sanity/color-input',
   schema: {
     types: [hslaColor, hsvaColor, rgbaColor, color],

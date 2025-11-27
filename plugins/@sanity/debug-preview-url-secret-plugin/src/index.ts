@@ -1,4 +1,4 @@
-import {definePlugin, defineType} from 'sanity'
+import {definePlugin, defineType, type Plugin} from 'sanity'
 
 import {CheckmarkCircleIcon, CloseCircleIcon, LockIcon} from '@sanity/icons'
 import {schemaType, SECRET_TTL} from '@sanity/preview-url-secret/constants'
@@ -54,7 +54,7 @@ const schema = defineType({
   },
 })
 
-export const debugSecrets = definePlugin<void>(() => {
+export const debugSecrets: Plugin = definePlugin<void>(() => {
   return {
     name: 'sanity-plugin-debug-secrets',
     schema: {types: [schema]},

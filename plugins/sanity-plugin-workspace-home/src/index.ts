@@ -1,10 +1,10 @@
-import {definePlugin, type WorkspaceOptions} from 'sanity'
+import {definePlugin, type Plugin, type WorkspaceOptions} from 'sanity'
 
 import {HomeIcon} from '@sanity/icons'
 
 import WorkspaceHome from './components/WorkspaceHome'
 
-export const workspaceHome = definePlugin(() => {
+export const workspaceHome: Plugin = definePlugin(() => {
   return {
     name: 'sanity-plugin-workspace-home',
     tools: [
