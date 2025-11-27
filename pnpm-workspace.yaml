@@ -22,7 +22,9 @@ catalog:
   typescript: 5.9.3
 
 overrides:
+  '@vitejs/plugin-react': npm:@vitejs/plugin-react@latest
   styled-components: npm:@sanity/styled-components@latest
+  vite: npm:rolldown-vite@latest
 
 minimumReleaseAge: 4320
 
