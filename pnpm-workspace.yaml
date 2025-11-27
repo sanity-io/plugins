@@ -23,7 +23,7 @@ catalog:
   typescript: 5.9.3
 
 overrides:
-  styled-components: npm:@sanity/styled-components@latest
+  styled-components: npm:@sanity/css-in-js@latest
 
 minimumReleaseAge: 4320
 
