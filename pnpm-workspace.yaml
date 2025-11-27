@@ -21,9 +21,6 @@ catalog:
   styled-components: ^6.1.19
   typescript: 5.9.3
 
-overrides:
-  styled-components: npm:@sanity/styled-components@latest
-
 minimumReleaseAge: 4320
 
 minimumReleaseAgeExclude:

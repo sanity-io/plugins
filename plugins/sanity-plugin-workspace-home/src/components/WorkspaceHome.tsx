@@ -1,14 +1,27 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useActiveWorkspace, useWorkspaces} from 'sanity'
-import {styled} from 'styled-components'
+import {styled,createGlobalStyle} from 'styled-components'
 
-import {Box, Card, Container, Flex, Heading, Stack, Text, TextInput} from '@sanity/ui'
+import {Box, Card, Container, Flex, Heading, Stack, Text, TextInput, Button} from '@sanity/ui'
 
 import WorkspacePreview from './WorkspacePreview'
 
 const TallCard = styled(Card)`
   min-height: 100%;
 `
+
+const ZoomOut = createGlobalStyle`
+  html {
+    transform: scale(0.5);
+  }
+`
+
+const AnimateZoom = createGlobalStyle`
+  html {
+    transition: transform 0.3s ease-in-out;
+  }
+`
+
 
 export default function WorkspaceHome(): React.JSX.Element {
   const [, ...workspaces] = useWorkspaces()
@@ -56,6 +69,8 @@ export default function WorkspaceHome(): React.JSX.Element {
     }
   }, [query, workspaces, setActiveWorkspace])
 
+  const [zoomOut, setZoomOut] = useState(false)
+
   return (
     <TallCard tone="transparent">
       <Flex direction="column" padding={[4, 5, 6, 6]}>
@@ -69,6 +84,7 @@ export default function WorkspaceHome(): React.JSX.Element {
                     Search
                   </Text>
                   <TextInput ref={searchInput} value={query} onChange={handleQuery} />
+                  <Button onClick={() => setZoomOut(!zoomOut)}>Zoom {zoomOut ? 'In' : 'Out'}</Button>
                 </Stack>
                 <Box>
                   {filteredWorkspaces.map((workspace, index) => (
@@ -85,6 +101,8 @@ export default function WorkspaceHome(): React.JSX.Element {
           </Stack>
         </Container>
       </Flex>
+      <AnimateZoom />
+      {zoomOut && <ZoomOut />}
     </TallCard>
   )
 }
