@@ -13,7 +13,7 @@ catalogs:
       specifier: ^9.1.1
       version: 9.1.4
     '@sanity/vision':
-      specifier: ^4.17.0
+      specifier: ^4.19.0
       version: 4.19.0
     '@types/node':
       specifier: ^24.10.1
@@ -37,7 +37,7 @@ catalogs:
       specifier: ^19.2.0
       version: 19.2.0
     sanity:
-      specifier: ^4.17.0
+      specifier: ^4.19.0
       version: 4.19.0
     styled-components:
       specifier: ^6.1.19
