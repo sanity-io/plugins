@@ -13,7 +13,7 @@
     "eslint": "catalog:",
     "eslint-plugin-oxlint": "^1.30.0",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "typescript-eslint": "^8.47.0"
+    "typescript-eslint": "^8.48.0"
   },
   "devDependencies": {
     "@types/node": "catalog:"
