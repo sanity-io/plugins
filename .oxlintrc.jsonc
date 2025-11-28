@@ -22,6 +22,12 @@
   "rules": {
     "typescript/ban-ts-comment": "error",
     "typescript/prefer-ts-expect-error": "error",
+    "import/no-commonjs ": "error",
+    "no-restricted-globals": [
+      "error",
+      {"name": "__dirname", "message": "Use path.dirname(fileURLToPath(import.meta.url)) instead"},
+      {"name": "__filename", "message": "Use fileURLToPath(import.meta.url) instead"}
+    ],
     "react/jsx-key": "error",
     "unicorn/no-abusive-eslint-disable": "error",
     // Not relevant as we use the modern jsx-runtime transform
