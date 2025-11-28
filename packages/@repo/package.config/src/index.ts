@@ -13,6 +13,7 @@ const config = {
     preferModuleType: 'error',
   } satisfies NonNullable<PkgConfigOptions['strictOptions']>,
   dts: 'rolldown',
+  tsgo: false, // oxc rust is faster at dts gen than tsgo
   tsconfig: 'tsconfig.build.json',
 } as const satisfies PkgConfigOptions
 
