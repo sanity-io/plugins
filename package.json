@@ -14,7 +14,7 @@
     "typecheck": "turbo typecheck --continue"
   },
   "dependencies": {
-    "@changesets/changelog-github": "^0.5.1",
+    "@changesets/changelog-github": "^0.5.2",
     "@changesets/cli": "^2.29.7",
     "@typescript/native-preview": "catalog:",
     "eslint-formatter-gha": "^1.6.0",
