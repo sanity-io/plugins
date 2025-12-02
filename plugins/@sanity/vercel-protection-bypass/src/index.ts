@@ -1,11 +1,10 @@
-import {lazy} from 'react'
-import {definePlugin, defineType} from 'sanity'
-
 import {CheckmarkCircleIcon, CloseCircleIcon, LockIcon} from '@sanity/icons'
 import {
   vercelProtectionBypassSchemaId as _id,
   vercelProtectionBypassSchemaType as type,
 } from '@sanity/preview-url-secret/constants'
+import {lazy} from 'react'
+import {definePlugin, defineType} from 'sanity'
 
 const id = 'vercel-protection-bypass'
 

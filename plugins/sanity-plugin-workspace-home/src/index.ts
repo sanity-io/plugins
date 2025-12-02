@@ -1,6 +1,5 @@
-import {definePlugin, type WorkspaceOptions} from 'sanity'
-
 import {HomeIcon} from '@sanity/icons'
+import {definePlugin, type WorkspaceOptions} from 'sanity'
 
 import WorkspaceHome from './components/WorkspaceHome'
 

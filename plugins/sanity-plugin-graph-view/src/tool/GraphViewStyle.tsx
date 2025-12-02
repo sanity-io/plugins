@@ -1,9 +1,8 @@
-import {type PropsWithChildren} from 'react'
-import {styled} from 'styled-components'
-
 import type {Theme} from '@sanity/ui'
 
 import {black} from '@sanity/color'
+import {type PropsWithChildren} from 'react'
+import {styled} from 'styled-components'
 
 type Style = PropsWithChildren<{theme: SanityTheme}>
 type SanityTheme = Theme['sanity']

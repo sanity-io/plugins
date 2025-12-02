@@ -1,10 +1,9 @@
+import {DatabaseIcon} from '@sanity/icons'
+import {Box, Button, Card, Flex, Grid, Hotkeys, Stack, Text} from '@sanity/ui'
 import {isValidElement, useMemo} from 'react'
 import {isValidElementType} from 'react-is'
 import {useActiveWorkspace, type WorkspaceSummary} from 'sanity'
 import {styled} from 'styled-components'
-
-import {DatabaseIcon} from '@sanity/icons'
-import {Box, Button, Card, Flex, Grid, Hotkeys, Stack, Text} from '@sanity/ui'
 
 const createIcon = (Icon: React.ComponentType | React.ReactNode) => {
   if (isValidElementType(Icon)) return <Icon />
