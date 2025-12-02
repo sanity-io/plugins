@@ -10,10 +10,7 @@
     "./build.json": "./build.json",
     "./package.json": "./package.json"
   },
-  "devDependencies": {
-    "@sanity/pkg-utils": "catalog:"
-  },
-  "peerDependencies": {
-    "@sanity/pkg-utils": "catalog:"
+  "dependencies": {
+    "@sanity/tsconfig": "^1.0.0"
   }
 }

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "description": "Used for building with @sanity/pkg-utils",
-  "extends": ["@sanity/pkg-utils/tsconfig/strictest.json", "@sanity/pkg-utils/tsconfig/isolated-declarations.json"],
+  "extends": ["@sanity/tsconfig/strictest", "@sanity/tsconfig/isolated-declarations"],
   "compilerOptions": {
     "outDir": "${configDir}/dist"
   }

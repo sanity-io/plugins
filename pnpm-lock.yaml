@@ -180,10 +180,10 @@ importers:
         version: 5.9.3
 
   packages/@repo/tsconfig:
-    devDependencies:
-      '@sanity/pkg-utils':
-        specifier: 'catalog:'
-        version: 9.2.3(@types/babel__core@7.20.5)(@types/node@24.10.1)(@typescript/native-preview@7.0.0-dev.20251128.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+    dependencies:
+      '@sanity/tsconfig':
+        specifier: ^1.0.0
+        version: 1.0.0
 
   plugins/@sanity/color-input:
     dependencies:
@@ -2802,6 +2802,9 @@ packages:
     resolution: {integrity: sha512-pce+x6opIjiL5jg4bJba6x0+mCT7pFDCwOjYcu5ZOmaQ/mWxypjjPtzWp3+QU6mfCP/bb9z4zKj+PSGIT3q/zw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
+
+  '@sanity/tsconfig@1.0.0':
+    resolution: {integrity: sha512-GZBLxyURcWJhUVsIGpsW9teVtXlszqvF4Yij6m2/hmmeV4SAkhI91/nYBeBVPx2mFJdCvNmtVwu0WcPq0JmU+A==}
 
   '@sanity/types@3.99.0':
     resolution: {integrity: sha512-a766U9VSoyOSWq+RZz9wsEo/Nnn+inDkEcdGu+rHFuygdepullB/RZpF2MxNsfUMCSPnajgG1Tm9lhwbSmlySA==}
@@ -9981,6 +9984,8 @@ snapshots:
       '@actions/core': 1.11.1
       '@actions/github': 6.0.1
       yaml: 2.8.1
+
+  '@sanity/tsconfig@1.0.0': {}
 
   '@sanity/types@3.99.0(@types/react@19.2.7)(debug@4.4.3)':
     dependencies:
