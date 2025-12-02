@@ -1,3 +1,5 @@
+import {black, COLOR_HUES, gray, white, hues} from '@sanity/color'
+import {useTheme} from '@sanity/ui'
 import BezierEasing from 'bezier-easing'
 import deepEqual from 'deep-equal'
 import {rgba} from 'polished'
@@ -6,9 +8,6 @@ import {ForceGraph2D} from 'react-force-graph'
 import {useClient, useUserColorManager, type SanityClient, type SanityDocument} from 'sanity'
 import {useRouter} from 'sanity/router'
 import {v4 as uuidv4} from 'uuid'
-
-import {black, COLOR_HUES, gray, white, hues} from '@sanity/color'
-import {useTheme} from '@sanity/ui'
 
 import {GraphRoot, GraphWrapper, HoverNode, Legend, LegendBadge, LegendRow} from './GraphViewStyle'
 import {sortBy, loadImage, sizeOf, truncate} from './utils'

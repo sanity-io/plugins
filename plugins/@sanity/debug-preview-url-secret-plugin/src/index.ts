@@ -1,7 +1,6 @@
-import {definePlugin, defineType} from 'sanity'
-
 import {CheckmarkCircleIcon, CloseCircleIcon, LockIcon} from '@sanity/icons'
 import {schemaType, SECRET_TTL} from '@sanity/preview-url-secret/constants'
+import {definePlugin, defineType} from 'sanity'
 
 const schema = defineType({
   type: 'document',

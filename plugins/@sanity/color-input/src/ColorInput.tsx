@@ -1,15 +1,14 @@
 import type {CustomPickerInjectedProps} from 'react-color/lib/components/common/ColorWrap'
 
+import {AddIcon} from '@sanity/icons'
+import {TrashIcon} from '@sanity/icons'
+import {Box, Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {startTransition, useCallback, useDeferredValue, useEffect, useRef, useState} from 'react'
 import {type Color, CustomPicker} from 'react-color'
 import {Alpha, Checkboard, Hue, Saturation} from 'react-color/lib/components/common'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
 import {styled} from 'styled-components'
 import {useEffectEvent} from 'use-effect-event'
-
-import {AddIcon} from '@sanity/icons'
-import {TrashIcon} from '@sanity/icons'
-import {Box, Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
 
 import type {ColorSchemaType, ColorValue} from './types'
 

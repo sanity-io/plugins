@@ -1,7 +1,6 @@
+import {Box, Button, Card, Grid, Text} from '@sanity/ui'
 import {useEffect, useState, useMemo} from 'react'
 import {PatchEvent, type ObjectInputProps, set, unset} from 'sanity'
-
-import {Box, Button, Card, Grid, Text} from '@sanity/ui'
 
 import type {AprimoCDNAsset, AprimoAsset, AprimoConfig} from '../types'
 

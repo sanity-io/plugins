@@ -1,9 +1,8 @@
 import type {Color, ColorChangeHandler} from 'react-color'
 
+import {Flex} from '@sanity/ui'
 import {styled} from 'styled-components'
 import tinycolor from 'tinycolor2'
-
-import {Flex} from '@sanity/ui'
 
 const ColorListWrap = styled(Flex)`
   gap: 0.25em;

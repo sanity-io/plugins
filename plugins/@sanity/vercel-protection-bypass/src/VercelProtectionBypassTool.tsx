@@ -1,15 +1,3 @@
-import {
-  Activity,
-  Suspense,
-  use,
-  useActionState,
-  useEffect,
-  useEffectEvent,
-  useState,
-  useTransition,
-} from 'react'
-import {useClient, type SanityClient} from 'sanity'
-
 import type {SyncTag, LiveEvent} from '@sanity/client'
 
 import {AddIcon, TrashIcon} from '@sanity/icons'
@@ -33,6 +21,17 @@ import {
   TextInput,
   useToast,
 } from '@sanity/ui'
+import {
+  Activity,
+  Suspense,
+  use,
+  useActionState,
+  useEffect,
+  useEffectEvent,
+  useState,
+  useTransition,
+} from 'react'
+import {useClient, type SanityClient} from 'sanity'
 
 async function enableVercelProtectionBypass(client: SanityClient, secret: string): Promise<void> {
   const patch = client.patch(_id).set({secret})

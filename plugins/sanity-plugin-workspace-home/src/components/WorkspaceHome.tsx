@@ -1,8 +1,7 @@
+import {Box, Card, Container, Flex, Heading, Stack, Text, TextInput} from '@sanity/ui'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useActiveWorkspace, useWorkspaces} from 'sanity'
 import {styled} from 'styled-components'
-
-import {Box, Card, Container, Flex, Heading, Stack, Text, TextInput} from '@sanity/ui'
 
 import WorkspacePreview from './WorkspacePreview'
 

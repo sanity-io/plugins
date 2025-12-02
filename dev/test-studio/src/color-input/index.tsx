@@ -1,6 +1,5 @@
-import {defineType} from 'sanity'
-
 import {DropIcon} from '@sanity/icons'
+import {defineType} from 'sanity'
 
 export default defineType({
   name: 'colorTest',
