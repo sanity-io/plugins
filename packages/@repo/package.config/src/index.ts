@@ -6,8 +6,6 @@ const config = {
     noImplicitBrowsersList: 'off',
     noImplicitSideEffects: 'off',
     noCheckTypes: 'error',
-    noPackageJsonMain: 'error',
-    noPackageJsonModule: 'error',
     noPackageJsonBrowser: 'error',
     noPackageJsonTypesVersions: 'error',
     preferModuleType: 'error',
