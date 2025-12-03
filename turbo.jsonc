@@ -1,9 +1,9 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "ui": "tui",
-  "globalDependencies": {
+  "globalDependencies": [
     "pnpm-workspace.yaml"
-  },
+  ],
   "tasks": {
     "//#oxlint": {
       "cache": false
