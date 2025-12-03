@@ -27,7 +27,7 @@ export type WorkspacePreviewProps = {
   query: string
 }
 
-export default function WorkspacePreview(props: WorkspacePreviewProps) {
+export default function WorkspacePreview(props: WorkspacePreviewProps): React.JSX.Element {
   const {workspace, index, query} = props
   const {icon, title, name, subtitle, dataset} = workspace
 

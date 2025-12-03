@@ -41,8 +41,8 @@ export const AprimoCDNAssetSchema = {
         title,
         media: (
           <img src={url} style={{height: '100%', width: '100%'}} />
-        ) satisfies React.JSX.Element,
+        ) as React.JSX.Element,
       }
     },
-  },
+  } ,
 }
