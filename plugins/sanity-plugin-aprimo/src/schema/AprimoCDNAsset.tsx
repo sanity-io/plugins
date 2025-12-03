@@ -39,10 +39,8 @@ export const AprimoCDNAssetSchema = {
     prepare({url, title}: {url: string; title: string}) {
       return {
         title,
-        media: (
-          <img src={url} style={{height: '100%', width: '100%'}} />
-        ) as React.JSX.Element,
+        media: (<img src={url} style={{height: '100%', width: '100%'}} />) as React.JSX.Element,
       }
     },
-  } ,
+  },
 }
