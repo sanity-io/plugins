@@ -165,7 +165,7 @@ const DEFAULT_COLOR: ColorValue & {source: string} = {
   source: 'hex',
 }
 
-export default function ColorInput(props: ObjectInputProps) {
+export default function ColorInput(props: ObjectInputProps): React.JSX.Element {
   const {onChange, readOnly} = props
   const value = props.value as ColorValue | undefined
   const type = props.schemaType as ColorSchemaType

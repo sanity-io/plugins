@@ -21,7 +21,7 @@ export const ColorPickerFields = ({
   hsl,
   hex,
   disableAlpha,
-}: ColorPickerFieldsProps) => {
+}: ColorPickerFieldsProps): React.JSX.Element => {
   const {sanity} = useTheme()
 
   const inputStyles: EditableInputStyles = useMemo(
