@@ -28,7 +28,8 @@
   "packageManager": "pnpm@10.24.0",
   "pnpm": {
     "patchedDependencies": {
-      "@sanity/util": "patches/@sanity__util.patch"
+      "@sanity/util": "patches/@sanity__util.patch",
+      "sanity": "patches/sanity.patch"
     }
   }
 }
