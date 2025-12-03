@@ -2,7 +2,6 @@
   "name": "test-studio",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "sanity dev",
     "typecheck": "(cd ../.. && tsgo --project dev/test-studio/tsconfig.json)",
