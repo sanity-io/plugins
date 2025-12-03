@@ -12,6 +12,9 @@ catalogs:
     '@sanity/pkg-utils':
       specifier: ^10.0.0
       version: 10.0.0
+    '@sanity/tsconfig':
+      specifier: ^1.0.0
+      version: 1.0.0
     '@sanity/vision':
       specifier: ^4.20.0
       version: 4.20.0
@@ -172,6 +175,9 @@ importers:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
         version: 10.0.0(@types/babel__core@7.20.5)(@types/node@24.10.1)(@typescript/native-preview@7.0.0-dev.20251128.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+      '@sanity/tsconfig':
+        specifier: 'catalog:'
+        version: 1.0.0
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20251128.1
@@ -182,7 +188,7 @@ importers:
   packages/@repo/tsconfig:
     dependencies:
       '@sanity/tsconfig':
-        specifier: ^1.0.0
+        specifier: 'catalog:'
         version: 1.0.0
 
   plugins/@sanity/color-input:
