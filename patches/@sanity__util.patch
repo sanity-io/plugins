@@ -1,0 +1,38 @@
+diff --git a/lib/createSafeJsonParser.cjs b/lib/createSafeJsonParser.cjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..c35201a434a768ebe7b30e37f12a49693005b0b5
+--- /dev/null
++++ b/lib/createSafeJsonParser.cjs
+@@ -0,0 +1,20 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: !0 });
++function createSafeJsonParser({ errorLabel }) {
++  return function(line) {
++    try {
++      return JSON.parse(line);
++    } catch (err) {
++      const errorPosition = line.lastIndexOf('{"error":');
++      if (errorPosition === -1)
++        throw err.message = `${err.message} (${line})`, err;
++      const errorJson = line.slice(errorPosition), errorLine = JSON.parse(errorJson), error = errorLine && errorLine.error;
++      throw error && error.description ? new Error(`${errorLabel}: ${error.description}
++
++${errorJson}
++`, { cause: err }) : err;
++    }
++  };
++}
++exports.createSafeJsonParser = createSafeJsonParser;
++//# sourceMappingURL=createSafeJsonParser.cjs.map
+diff --git a/package.json b/package.json
+index e44b8744490bf9ab2a3ed082bf304b390d6a6f78..0e0a0014046d3b08ca56693e234dc1634d0d7f0f 100644
+--- a/package.json
++++ b/package.json
+@@ -46,6 +46,7 @@
+     },
+     "./createSafeJsonParser": {
+       "source": "./src/_exports/createSafeJsonParser.ts",
++      "require": "./lib/createSafeJsonParser.cjs",
+       "default": "./lib/createSafeJsonParser.js"
+     },
+     "./legacyDateFormat": {

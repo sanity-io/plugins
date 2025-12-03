@@ -25,5 +25,10 @@
     "turbo": "^2.6.1",
     "typescript": "catalog:"
   },
-  "packageManager": "pnpm@10.24.0"
+  "packageManager": "pnpm@10.24.0",
+  "pnpm": {
+    "patchedDependencies": {
+      "@sanity/util": "patches/@sanity__util.patch"
+    }
+  }
 }
