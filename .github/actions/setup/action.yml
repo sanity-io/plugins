@@ -5,7 +5,7 @@ inputs:
   node-version:
     description: "Node.js version to use"
     required: true
-    default: lts/*
+    default: 20.19.4
 
 runs:
   using: composite
