@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-graph-view",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "",
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-graph-view#readme",
   "bugs": {
@@ -68,7 +68,7 @@
   },
   "publishConfig": {
     "exports": {
-      ".":  {
+      ".": {
         "import": "./dist/index.js",
         "require": "./dist/index.cjs",
         "default": "./dist/index.js"

@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 3.2.2
+
+### Patch Changes
+
+- [`8379d76`](https://github.com/sanity-io/plugins/commit/8379d76d81cf90e289b80e5099ff5e19b7b88f11) Thanks [@stipsan](https://github.com/stipsan)! - add back missing `require` condition
+
 ## 3.2.1
 
 ### Patch Changes
