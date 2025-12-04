@@ -39,7 +39,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "^3.1.11",
     "react-compiler-runtime": "^1.0.0",
-    "react-is": "^19.2.0"
+    "react-is": "^19.2.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
