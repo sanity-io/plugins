@@ -395,7 +395,7 @@ importers:
   plugins/sanity-plugin-bynder-input:
     dependencies:
       '@sanity/incompatible-plugin':
-        specifier: ^1.0.4
+        specifier: ^1.0.5
         version: 1.0.5(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@sanity/ui':
         specifier: ^3.1.11
