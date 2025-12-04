@@ -404,7 +404,7 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(react@19.2.1)
       video.js:
-        specifier: ^7.11.4
+        specifier: ^7.21.7
         version: 7.21.7
     devDependencies:
       '@bynder/compact-view':
