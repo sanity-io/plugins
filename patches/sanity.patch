@@ -1,0 +1,66 @@
+diff --git a/lib/_chunks-es/execScript.js b/lib/_chunks-es/execScript.js
+index bc9aab578a46e17a253cc37188cd7f01c691dd84..5c75e870e67bda7fb74085ba2db51c8d12d7b2c4 100644
+--- a/lib/_chunks-es/execScript.js
++++ b/lib/_chunks-es/execScript.js
+@@ -1,10 +1,11 @@
+ import { spawn } from "node:child_process";
+ import fs from "node:fs/promises";
+ import path from "node:path";
++import { fileURLToPath } from "node:url";
+ import readPkgUp from "read-pkg-up";
+ import { hideBin } from "yargs/helpers";
+ import yargs from "yargs/yargs";
+-const __dirname$1 = path.dirname(new URL(import.meta.url).pathname);
++const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
+ async function parseCliFlags(args) {
+   return {
+     ...await yargs(hideBin(args.argv || process.argv).slice(2)).option("with-user-token", {
+diff --git a/lib/_chunks-es/helpers.js b/lib/_chunks-es/helpers.js
+index e8e33439e8c5637a769a002837cc3212b232e61d..858e9c61fefc9a800c5b799d9daaea561b3d0e09 100644
+--- a/lib/_chunks-es/helpers.js
++++ b/lib/_chunks-es/helpers.js
+@@ -1,11 +1,12 @@
+ import fs from "node:fs/promises";
+ import path from "node:path";
++import { fileURLToPath } from "node:url";
+ import { PassThrough } from "node:stream";
+ import FormData from "form-data";
+ import { customAlphabet } from "nanoid";
+ import readPkgUp from "read-pkg-up";
+ import { debug as debug$1, determineIsApp } from "./_internal.js";
+-const __dirname$1 = path.dirname(new URL(import.meta.url).pathname), debug = debug$1.extend("deploy");
++const __dirname$1 = path.dirname(fileURLToPath(import.meta.url)), debug = debug$1.extend("deploy");
+ function promiseWithResolvers() {
+   let resolve, reject;
+   return {
+diff --git a/lib/_chunks-es/previewServer.js b/lib/_chunks-es/previewServer.js
+index 150bbcfbe2c4ae2784a801d9e25d84d278c740ac..e9d2533b1edcfb147e52569b21d550003ad03b94 100644
+--- a/lib/_chunks-es/previewServer.js
++++ b/lib/_chunks-es/previewServer.js
+@@ -1,11 +1,12 @@
+ import { constants } from "node:fs";
+ import fs from "node:fs/promises";
+ import path from "node:path";
++import { fileURLToPath } from "node:url";
+ import readPkgUp from "read-pkg-up";
+ import { debug as debug$2, writeSanityRuntime, getViteConfig, extendViteConfigWithUserConfig, finalizeViteConfig, generateWebManifest } from "./runtime.js";
+ import chalk from "chalk";
+ import { version } from "vite";
+-const __dirname$1 = path.dirname(new URL(import.meta.url).pathname), debug$1 = debug$2.extend("static");
++const __dirname$1 = path.dirname(fileURLToPath(import.meta.url)), debug$1 = debug$2.extend("static");
+ async function buildStaticFiles(options) {
+   const {
+     cwd,
+diff --git a/lib/_chunks-es/runtime.js b/lib/_chunks-es/runtime.js
+index 4ee5dce07f4ad2090f2435a74285b3e966e41993..afe774cc357ba46e9502f934d8ff943bf502b44d 100644
+--- a/lib/_chunks-es/runtime.js
++++ b/lib/_chunks-es/runtime.js
+@@ -765,7 +765,7 @@ function sanityRuntimeRewritePlugin() {
+     }
+   };
+ }
+-const __dirname$1 = path.dirname(new URL(import.meta.url).pathname);
++const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
+ async function getViteConfig(options) {
+   const {
+     cwd,
