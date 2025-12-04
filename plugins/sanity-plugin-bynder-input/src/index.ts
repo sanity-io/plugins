@@ -1,8 +1,6 @@
 export {bynderInputPlugin} from './plugin'
 
-
-
-export  {BynderInput, type BynderConfig, type BynderInputProps} from './components/BynderInput'
+export {BynderInput, type BynderConfig, type BynderInputProps} from './components/BynderInput'
 export {BynderDiff} from './components/BynderDiff'
 export {
   bynderAssetSchema,
