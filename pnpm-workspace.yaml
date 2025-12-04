@@ -9,7 +9,7 @@ packages:
 catalog:
   '@sanity/client': ^7.13.1
   '@sanity/pkg-utils': ^10.1.0
-  '@sanity/tsconfig': ^1.0.0
+  '@sanity/tsconfig': ^2.0.0
   '@sanity/vision': ^4.20.0
   '@types/node': ^24.10.1
   '@types/react': ^19.2.7
