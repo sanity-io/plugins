@@ -1,9 +1,7 @@
 import {definePlugin, isObjectInputProps, type SchemaType} from 'sanity'
 
 import {BynderInput, type BynderConfig} from './components/BynderInput'
-
 import {bynderAssetSchema, type BynderAssetValue} from './schema/bynder.asset'
-
 
 export const bynderInputPlugin = definePlugin((config: Partial<BynderConfig>) => {
   const reqConfig: BynderConfig = {
