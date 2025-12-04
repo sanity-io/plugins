@@ -5,8 +5,9 @@ import {type ObjectInputProps, PatchEvent, set, unset} from 'sanity'
 
 import type {BynderAssetValue} from '../schema/bynder.asset'
 
-import VideoPlayer from './VideoPlayer'
 
+
+const VideoPlayer = lazy(() => import('./VideoPlayer'))
 const BynderModalLayout = lazy(() => import('./BynderModalLayout'))
 
 export interface BynderConfig {
@@ -55,7 +56,7 @@ const getVideoAspectRatio = (previewImageUrl: string) =>
     img.src = previewImageUrl
   })
 
-export default function BynderInput(props: BynderInputProps): React.JSX.Element {
+export  function BynderInput(props: BynderInputProps): React.JSX.Element {
   const {value, readOnly, schemaType, pluginConfig, onChange} = props
   const [isOpen, setIsOpen] = useState(false)
 

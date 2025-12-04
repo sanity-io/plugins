@@ -1,11 +1,9 @@
-import {lazy} from 'react'
 import {definePlugin, isObjectInputProps, type SchemaType} from 'sanity'
 
-import type {BynderConfig} from './components/BynderInput'
+import {BynderInput, type BynderConfig} from './components/BynderInput'
 
 import {bynderAssetSchema, type BynderAssetValue} from './schema/bynder.asset'
 
-const BynderInput = lazy(() => import('./components/BynderInput'))
 
 export const bynderInputPlugin = definePlugin((config: Partial<BynderConfig>) => {
   const reqConfig: BynderConfig = {

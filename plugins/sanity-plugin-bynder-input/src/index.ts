@@ -1,10 +1,8 @@
-import {lazy} from 'react'
-
 export {bynderInputPlugin} from './plugin'
 
-export const BynderInput = lazy(() => import('./components/BynderInput'))
 
-export type {BynderConfig, BynderInputProps} from './components/BynderInput'
+
+export  {BynderInput, type BynderConfig, type BynderInputProps} from './components/BynderInput'
 export {BynderDiff} from './components/BynderDiff'
 export {
   bynderAssetSchema,
