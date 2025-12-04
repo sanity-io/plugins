@@ -10,7 +10,7 @@ catalog:
   '@sanity/client': ^7.13.1
   '@sanity/pkg-utils': ^10.1.1
   '@sanity/tsconfig': ^2.0.0
-  '@sanity/vision': ^4.20.0
+  '@sanity/vision': ^4.20.3
   '@types/node': ^24.10.1
   '@types/react': ^19.2.7
   '@types/react-dom': ^19.2.3
@@ -18,12 +18,9 @@ catalog:
   eslint: ^9.39.1
   react: ^19.2.1
   react-dom: ^19.2.1
-  sanity: ^4.20.0
+  sanity: ^4.20.3
   styled-components: ^6.1.19
   typescript: 5.9.3
-
-overrides:
-  styled-components: npm:@sanity/styled-components@latest
 
 minimumReleaseAge: 4320
 
@@ -41,6 +38,7 @@ minimumReleaseAgeExclude:
   - csstype
   - eslint-plugin-oxlint
   - groq
+  - groq-js
   - oxfmt
   - oxlint
   - oxlint-tsgolint
@@ -51,6 +49,12 @@ minimumReleaseAgeExclude:
   - sanity
   - vite
   - vitest
+
+overrides:
+  styled-components: npm:@sanity/styled-components@latest
+
+patchedDependencies:
+  '@bynder/compact-view': patches/@bynder__compact-view.patch
 
 trustPolicy: no-downgrade
 

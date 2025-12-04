@@ -1,0 +1,73 @@
+{
+  "name": "sanity-plugin-bynder-input",
+  "version": "2.3.1",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-bynder-input#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-bynder-input"
+  },
+  "license": "MIT",
+  "author": "Sanity <hello@sanity.io>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "lint": "eslint .",
+    "prepack": "turbo run build",
+    "typecheck": "(cd ../.. && tsgo --project plugins/sanity-plugin-bynder-input/tsconfig.json)"
+  },
+  "dependencies": {
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/ui": "^3.1.11",
+    "react-compiler-runtime": "^1.0.0",
+    "video.js": "^7.11.4"
+  },
+  "devDependencies": {
+    "@bynder/compact-view": "5.1.2",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@types/video.js": "^7.3.58",
+    "@typescript/native-preview": "catalog:",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "react-dom": "^18.3 || ^19",
+    "sanity": "^4"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  }
+}

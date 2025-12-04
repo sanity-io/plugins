@@ -68,6 +68,7 @@ pnpm format
 | [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin) | Debug plugin for preview URL secrets |
 | [`@sanity/vercel-protection-bypass`](./plugins/@sanity/vercel-protection-bypass) | Tool for bypassing Vercel authentication in preview |
 | [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo) | Aprimo DAM integration |
+| [`sanity-plugin-bynder-input`](./plugins/sanity-plugin-bynder-input) | Bynder DAM integration |
 | [`sanity-plugin-graph-view`](./plugins/sanity-plugin-graph-view) | Visual graph view of document references |
 | [`sanity-plugin-workspace-home`](./plugins/sanity-plugin-workspace-home) | Workspace home screen customization |
 
