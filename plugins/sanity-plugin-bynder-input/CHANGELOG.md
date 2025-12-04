@@ -1,5 +1,31 @@
 # sanity-plugin-bynder-input
 
+## 3.0.0
+
+### Major Changes
+
+- [#144](https://github.com/sanity-io/plugins/pull/144) [`fd5eb7d`](https://github.com/sanity-io/plugins/commit/fd5eb7df38ae2a9aa49654dcd11b298207f59718) Thanks [@stipsan](https://github.com/stipsan)! - Updates Bynder Compact View from 3.x.x to 5.1.1
+  This will introduce a [number of improvements](https://developer-docs.bynder.com/ui-components#history) and features for the plugin.
+  Secondly, it migrates from CDN script installation to an npm package, which will eliminate the risks associated with it. And on top of that
+
+  Update required a breaking change in the API of the plugin.
+
+  From the plugin perspective, migration should be straightforward; however, there is also a breaking change in the UCV regarding `AssetFilterJson`, so it might require more attention.
+
+  Thank you @Shastel!
+
+- [#144](https://github.com/sanity-io/plugins/pull/144) [`fd5eb7d`](https://github.com/sanity-io/plugins/commit/fd5eb7df38ae2a9aa49654dcd11b298207f59718) Thanks [@stipsan](https://github.com/stipsan)! - Requires Sanity Studio v4, removes CJS export, adds support for React 19, uses React Compiler to optimize components, moved to plugins monorepo
+
+### Minor Changes
+
+- [#144](https://github.com/sanity-io/plugins/pull/144) [`fd5eb7d`](https://github.com/sanity-io/plugins/commit/fd5eb7df38ae2a9aa49654dcd11b298207f59718) Thanks [@stipsan](https://github.com/stipsan)! - Updated from `@sanity/ui` v1 to v3
+
+### Patch Changes
+
+- [`46526ed`](https://github.com/sanity-io/plugins/commit/46526ed53b09ca1f1f96fe30749657572588f613) Thanks [@stipsan](https://github.com/stipsan)! - Removed `@sanity/incompatible-plugin` dependency
+
+- [#144](https://github.com/sanity-io/plugins/pull/144) [`fd5eb7d`](https://github.com/sanity-io/plugins/commit/fd5eb7df38ae2a9aa49654dcd11b298207f59718) Thanks [@stipsan](https://github.com/stipsan)! - Improved lazy loading
+
 ## [2.3.1](https://github.com/sanity-io/sanity-plugin-bynder-input/compare/v2.3.0...v2.3.1) (2025-07-10)
 
 ### Bug Fixes
