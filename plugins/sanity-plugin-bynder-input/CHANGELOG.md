@@ -1,5 +1,11 @@
 # sanity-plugin-bynder-input
 
+## 3.0.1
+
+### Patch Changes
+
+- [`637b578`](https://github.com/sanity-io/plugins/commit/637b5789359c334b59a48c8b050b00fc73759b6f) Thanks [@stipsan](https://github.com/stipsan)! - Lazy load the video player
+
 ## 3.0.0
 
 ### Major Changes
