@@ -1,4 +1,4 @@
-import {type CompactViewProps, type PortalConfig, type AdditionalInfo} from '@bynder/compact-view'
+import type {CompactViewProps,  PortalConfig,  AdditionalInfo} from '@bynder/compact-view'
 import {Box, Button, Flex} from '@sanity/ui'
 import {useState, lazy, useTransition} from 'react'
 import {type ObjectInputProps, PatchEvent, set, unset} from 'sanity'
