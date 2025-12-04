@@ -35,7 +35,6 @@
     "typecheck": "(cd ../.. && tsgo --project plugins/sanity-plugin-bynder-input/tsconfig.json)"
   },
   "dependencies": {
-    "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^3.1.11",
     "react-compiler-runtime": "^1.0.0",
     "video.js": "^7.11.4"
