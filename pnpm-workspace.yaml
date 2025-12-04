@@ -44,6 +44,9 @@ minimumReleaseAgeExclude:
   - oxfmt
   - oxlint
   - oxlint-tsgolint
+  - react
+  - react-dom
+  - react-is
   - rollup
   - sanity
   - vite
