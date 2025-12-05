@@ -42,6 +42,10 @@ pnpm dev
 
 This will start the Sanity Studio dev server. The studio is pre-configured with all plugins and includes example schemas to test plugin functionality.
 
+The studio is deployed in two places:
+- https://plugins.sanity.studio - deployed on merges to main
+- https://plugins-studio.sanity.dev - also deployed on merges to main, and creates vercel preview deployments on PRs
+
 ### Adding Your Plugin to the Test Studio
 
 1. Add your plugin as a dependency in `dev/test-studio/package.json`:
