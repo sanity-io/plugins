@@ -52,6 +52,7 @@
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "^1.0.0",
+    "babel-plugin-styled-components": "^2.1.4",
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
