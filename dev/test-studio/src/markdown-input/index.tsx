@@ -6,6 +6,6 @@ export const markdownTest = defineType({
   title: 'Markdown',
   fields: [
     {type: 'string', name: 'title', title: 'Title'},
-          {type: 'markdown', name: 'markdown', title: 'Markdown'},
+    {type: 'markdown', name: 'markdown', title: 'Markdown'},
   ],
 })

@@ -1,4 +1,5 @@
 import {definePlugin, type StringInputProps} from 'sanity'
+
 import {markdownSchemaType} from './schema'
 
 export interface MarkdownConfig {

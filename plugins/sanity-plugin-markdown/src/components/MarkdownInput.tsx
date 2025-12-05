@@ -1,3 +1,7 @@
+// dont import non-types here, it will break SSR on next
+import type {SimpleMDEReactProps} from 'react-simplemde-editor'
+
+import {Box, Text} from '@sanity/ui'
 import {type Options as EasyMdeOptions} from 'easymde'
 import {
   lazy,
@@ -9,12 +13,10 @@ import {
   useRef,
   useState,
 } from 'react'
-// dont import non-types here, it will break SSR on next
-import type {SimpleMDEReactProps} from 'react-simplemde-editor'
 import {PatchEvent, set, type StringInputProps, unset, useClient} from 'sanity'
-import type {MarkdownOptions} from '../schema'
-import {Box, Text} from '@sanity/ui'
 import {styled} from 'styled-components'
+
+import type {MarkdownOptions} from '../schema'
 
 const SimpleMdeReact = lazy(() => import('react-simplemde-editor'))
 
@@ -76,7 +78,6 @@ const MarkdownInputStyles = styled(Box)`
     }
   }
 `
-
 
 export interface MarkdownInputProps extends StringInputProps {
   /**
@@ -147,7 +148,6 @@ export function MarkdownInput(props: MarkdownInputProps): React.JSX.Element {
       autofocus: shouldAutoFocus,
     }
   }, [imageUpload, mdeCustomOptions, shouldAutoFocus])
-
 
   useEffect(() => {
     const node = ref.current
