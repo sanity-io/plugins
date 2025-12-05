@@ -4,7 +4,7 @@ import {Box, Button, Flex} from '@sanity/ui'
 import {useState, lazy, useTransition} from 'react'
 import {type ObjectInputProps, PatchEvent, set, unset} from 'sanity'
 
-import type {BynderAssetValue} from '../schema/bynder.asset'
+import type {BynderAssetOptions, BynderAssetValue} from '../schema/bynder.asset'
 
 const VideoPlayer = lazy(() => import('./VideoPlayer'))
 const BynderModalLayout = lazy(() => import('./BynderModalLayout'))
@@ -59,50 +59,67 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
   const {value, readOnly, schemaType, pluginConfig, onChange} = props
   const [isOpen, setIsOpen] = useState(false)
 
+  // Merge field-level options with global plugin config
+  const fieldOptions = schemaType.options as BynderAssetOptions | undefined
+  const compactViewOptions = {
+    ...pluginConfig.compactViewOptions,
+    ...(fieldOptions?.assetTypes && {
+      assetTypes: fieldOptions.assetTypes.map((t) => t.toUpperCase()) as ('IMAGE' | 'VIDEO' | 'AUDIO')[],
+    }),
+    ...(fieldOptions?.assetFilter && {assetFilter: fieldOptions.assetFilter}),
+  }
+
   const removeValue = () => {
     onChange(PatchEvent.from([unset()]))
   }
 
   const onSuccess = (assets: unknown[], addInfo: AdditionalInfo) => {
     const asset = assets[0] as Record<string, any>
-    const webImage = asset['files']['webImage']
+    const webImage = asset['files']?.['webImage']
 
-    const aspectRatio = getAspectRatio({
-      width: webImage.width,
-      height: webImage.height,
-    })
+    const aspectRatio = webImage
+      ? getAspectRatio({
+          width: webImage.width,
+          height: webImage.height,
+        })
+      : undefined
+
+    // Spread all raw Bynder asset fields first, then override with
+    // computed/mapped fields for backward compatibility
     const mediaData = {
+      // 1. Spread ALL raw Bynder fields at top level
+      ...asset,
+
+      // 2. Required Sanity fields (override any conflicts)
       _key: value?._key,
       _type: schemaType.name,
-      id: asset['id'],
-      name: asset['name'],
-      databaseId: asset['databaseId'],
-      type: asset['type'],
+
+      // 3. Backward-compatible computed fields (override raw values)
       previewUrl: getPreviewUrl(asset, addInfo),
-      previewImg: webImage.url,
-      datUrl: asset['files']['transformBaseUrl']?.url,
+      previewImg: webImage?.url,
+      datUrl: asset['files']?.['transformBaseUrl']?.url,
       videoUrl: getVideoUrl(asset),
-      description: asset['description'],
       aspectRatio,
       selectedUrl: addInfo.selectedFile?.url,
-      width: webImage.width,
-      height: webImage.height,
-      // If Bynder supported mimeType in the schema, we could set it here
-      //mimeType: webImage.mimeType,
+      width: webImage?.width,
+      height: webImage?.height,
     }
 
     if (asset['type'] === 'VIDEO') {
-      getVideoAspectRatio(webImage.url)
+      getVideoAspectRatio(webImage?.url ?? '')
         .then((ratio) => {
           onChange(PatchEvent.from([set({...mediaData, aspectRatio: ratio})]))
+          setIsOpen(false)
         })
         .catch((err) => {
           // video aspect ratio couldn't be set, but should still set the rest of the data
           console.error('Error setting video aspect ratio:', err)
           onChange(PatchEvent.from([set(mediaData)]))
+          setIsOpen(false)
         })
     } else {
       onChange(PatchEvent.from([set(mediaData)]))
+      setIsOpen(false)
     }
   }
 
@@ -113,11 +130,11 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
         <VideoPlayer controls poster={value.previewImg} sources={[{src: value.previewUrl ?? ''}]} />
       )
     }
-    if (value.type === 'IMAGE') {
+    if (value.type === 'IMAGE' || value.type === 'DOCUMENT') {
       preview = (
-        <img alt="preview" src={value.previewUrl} style={{maxWidth: '100%', height: 'auto'}} />
+        <img alt="preview" src={value.previewUrl} style={{width: 'auto', height: '100%', maxHeight: '20rem'}} />
       )
-      // TODO: Add preview for document / audio types and empty state
+      // TODO: Add preview for audio types and empty state
     }
   }
 
@@ -133,7 +150,7 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
 
   return (
     <>
-      <div style={{textAlign: 'center'}}>{preview}</div>
+      <Flex justify="center" align="center" marginBottom={2} onClick={openCompactView} style={{cursor: 'pointer'}}>{preview}</Flex>
       <Flex gap={2} style={{width: '100%'}}>
         <Box flex={1}>
           <Button
@@ -141,7 +158,7 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
             loading={loading}
             disabled={readOnly}
             mode="ghost"
-            text={'Browse'}
+            text={value ? 'Replace' : 'Browse'}
             title="Select an asset"
             onClick={openCompactView}
           />
@@ -162,7 +179,7 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
             isOpen={isOpen}
             onClose={closeCompactView}
             portalConfig={pluginConfig.portalConfig}
-            compactViewOptions={pluginConfig.compactViewOptions}
+            compactViewOptions={compactViewOptions}
             onSuccess={onSuccess}
           />
         )}
