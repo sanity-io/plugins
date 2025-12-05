@@ -19,6 +19,7 @@
     "sanity": "catalog:",
     "sanity-plugin-aprimo": "workspace:*",
     "sanity-plugin-bynder-input": "workspace:*",
+    "sanity-plugin-markdown": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
     "styled-components": "catalog:"

@@ -8,10 +8,12 @@ import {bynderInputPlugin} from 'sanity-plugin-bynder-input'
 import {contentGraphView} from 'sanity-plugin-graph-view'
 import {workspaceHomeConfig} from 'sanity-plugin-workspace-home'
 import {structureTool} from 'sanity/structure'
+import {markdownSchema} from 'sanity-plugin-markdown'
 
 import aprimoInputSchema from './src/aprimo-input'
 import {bynderTest} from './src/bynder-input'
 import colorInputSchema from './src/color-input'
+import {markdownTest} from './src/markdown-input'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'plugins'
@@ -33,12 +35,13 @@ export default defineConfig([
   createWorkspace({
     name: 'kitchen-sink',
     schema: {
-      types: [colorInputSchema, aprimoInputSchema, bynderTest],
+      types: [colorInputSchema, aprimoInputSchema, bynderTest, markdownTest],
     },
     plugins: [
       structureTool(),
       colorInput(),
       debugSecrets(),
+      markdownSchema(),
       bynderInputPlugin({
         portalConfig: {url: 'https://wave-trial.getbynder.com/'},
         compactViewOptions: {language: 'en_US'},
