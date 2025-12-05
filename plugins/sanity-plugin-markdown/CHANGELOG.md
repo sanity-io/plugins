@@ -1,5 +1,13 @@
 # sanity-plugin-markdown
 
+## 7.0.2
+
+### Patch Changes
+
+- [#169](https://github.com/sanity-io/plugins/pull/169) [`9d690d7`](https://github.com/sanity-io/plugins/commit/9d690d751132a9b20a13b447f4393e7e3f9b0828) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to ^3.1.11
+
+- [`45ed942`](https://github.com/sanity-io/plugins/commit/45ed942824ab4316d88bf7c49641164643ea519c) Thanks [@stipsan](https://github.com/stipsan)! - Use babel-plugin-styled-components to optimize styled components
+
 ## 7.0.1
 
 ### Patch Changes
