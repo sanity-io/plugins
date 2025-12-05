@@ -1,5 +1,15 @@
 # sanity-plugin-markdown
 
+## 7.0.0
+
+### Major Changes
+
+- [#156](https://github.com/sanity-io/plugins/pull/156) [`ea6b4ca`](https://github.com/sanity-io/plugins/commit/ea6b4caa7ae94997d71aa34985c86f0a22908430) Thanks [@stipsan](https://github.com/stipsan)! - No longer export CJS only ESM, use React Compiler
+
+### Patch Changes
+
+- [#156](https://github.com/sanity-io/plugins/pull/156) [`ea6b4ca`](https://github.com/sanity-io/plugins/commit/ea6b4caa7ae94997d71aa34985c86f0a22908430) Thanks [@stipsan](https://github.com/stipsan)! - Setup npm Trusted Publishing
+
 ## [5.1.3](https://github.com/sanity-io/sanity-plugin-markdown/compare/v5.1.2...v5.1.3) (2025-07-25)
 
 ### Bug Fixes
