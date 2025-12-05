@@ -1,5 +1,11 @@
 # sanity-plugin-markdown
 
+## 7.0.1
+
+### Patch Changes
+
+- [`e9d5c25`](https://github.com/sanity-io/plugins/commit/e9d5c2564f44a9f27e58d8416f7e1f0f1c4faddb) Thanks [@stipsan](https://github.com/stipsan)! - Add missing `./next` export
+
 ## 7.0.0
 
 ### Major Changes
