@@ -1,5 +1,11 @@
 # sanity-plugin-bynder-input
 
+## 3.0.2
+
+### Patch Changes
+
+- [#151](https://github.com/sanity-io/plugins/pull/151) [`e100889`](https://github.com/sanity-io/plugins/commit/e1008891c8f9dd694631e3c9f977197da13de9ad) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency video.js to ^7.21.7
+
 ## 3.0.1
 
 ### Patch Changes
