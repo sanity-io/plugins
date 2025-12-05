@@ -43,7 +43,7 @@
     "typecheck": "(cd ../.. && tsgo --project plugins/sanity-plugin-markdown/tsconfig.json)"
   },
   "dependencies": {
-    "@sanity/ui": "^3.0.5",
+    "@sanity/ui": "^3.1.11",
     "react-compiler-runtime": "^1.0.0",
     "react-simplemde-editor": "^5.2.0"
   },
