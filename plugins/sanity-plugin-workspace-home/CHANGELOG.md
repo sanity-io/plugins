@@ -1,5 +1,11 @@
 # sanity-plugin-workspace-home
 
+## 2.0.2
+
+### Patch Changes
+
+- [`45ed942`](https://github.com/sanity-io/plugins/commit/45ed942824ab4316d88bf7c49641164643ea519c) Thanks [@stipsan](https://github.com/stipsan)! - Use babel-plugin-styled-components to optimize styled components
+
 ## 2.0.1
 
 ### Patch Changes
