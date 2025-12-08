@@ -53,9 +53,13 @@ export interface BynderAssetValue {
   aspectRatio?: number
   videoUrl?: string
   selectedUrl?: string
+  width?: number
+  height?: number
+  /** Index signature to allow any additional Bynder asset fields */
+  [key: string]: unknown
 }
 
-export const bynderAssetSchema = defineType({
+export const bynderAssetSchema: ObjectDefinition = defineType({
   name: bynderAssetSchemaName,
   type: 'object',
   title: 'Bynder Asset',
