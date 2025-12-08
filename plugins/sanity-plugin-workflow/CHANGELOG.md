@@ -1,5 +1,19 @@
 # sanity-plugin-workflow
 
+## 2.1.0
+
+### Minor Changes
+
+- [#221](https://github.com/sanity-io/plugins/pull/221) [`7ffc9b3`](https://github.com/sanity-io/plugins/commit/7ffc9b3a215031dff2e64b02c67254498b045cfd) Thanks [@stipsan](https://github.com/stipsan)! - Add `defineStates` export
+
+- [#221](https://github.com/sanity-io/plugins/pull/221) [`7ffc9b3`](https://github.com/sanity-io/plugins/commit/7ffc9b3a215031dff2e64b02c67254498b045cfd) Thanks [@stipsan](https://github.com/stipsan)! - Refactor `badges` and `actions` to support compilation and linting with React Compiler and oxlint
+
+### Patch Changes
+
+- [#206](https://github.com/sanity-io/plugins/pull/206) [`130329f`](https://github.com/sanity-io/plugins/commit/130329f0930529062b29156df02c71ec9bf4f907) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @hello-pangea/dnd to v18
+
+- [#221](https://github.com/sanity-io/plugins/pull/221) [`7ffc9b3`](https://github.com/sanity-io/plugins/commit/7ffc9b3a215031dff2e64b02c67254498b045cfd) Thanks [@stipsan](https://github.com/stipsan)! - Improve the `styled-components` output
+
 ## 2.0.2
 
 ### Patch Changes
