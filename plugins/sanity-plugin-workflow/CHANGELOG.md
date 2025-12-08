@@ -1,5 +1,19 @@
 # sanity-plugin-workflow
 
+## 2.0.2
+
+### Patch Changes
+
+- [#201](https://github.com/sanity-io/plugins/pull/201) [`506ca62`](https://github.com/sanity-io/plugins/commit/506ca626e00a07446446552039d2fbfdd5812128) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @tanstack/react-virtual to ^3.13.12
+
+- [#203](https://github.com/sanity-io/plugins/pull/203) [`591a0cd`](https://github.com/sanity-io/plugins/commit/591a0cd8229c5c5d896b68cea5a7a4c8a35ff62c) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency react-fast-compare to ^3.2.2
+
+- [#204](https://github.com/sanity-io/plugins/pull/204) [`261e8ec`](https://github.com/sanity-io/plugins/commit/261e8eca1d5c71e4b570f3bbf46129e8e22c29f5) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency sanity-plugin-utils to ^1.7.0
+
+- [#205](https://github.com/sanity-io/plugins/pull/205) [`bc6153d`](https://github.com/sanity-io/plugins/commit/bc6153d8f5fc69db8e5c0f59e741148fec04ba1f) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @hello-pangea/dnd to v17
+
+- [#207](https://github.com/sanity-io/plugins/pull/207) [`04809f0`](https://github.com/sanity-io/plugins/commit/04809f05cfd8a46c0199bf25dc02d80c93d4aafd) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to v3
+
 ## 2.0.1
 
 ### Patch Changes
