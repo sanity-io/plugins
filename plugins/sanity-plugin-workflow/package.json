@@ -1,0 +1,80 @@
+{
+  "name": "sanity-plugin-workflow",
+  "version": "1.0.6",
+  "description": "A demonstration of a custom content publishing workflow using Sanity.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-workflow#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-workflow"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "lint": "eslint .",
+    "prepack": "turbo run build",
+    "typecheck": "(cd ../.. && tsgo --project plugins/sanity-plugin-workflow/tsconfig.json)"
+  },
+  "dependencies": {
+    "@hello-pangea/dnd": "^16.5.0",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/types": "^4.20.3",
+    "@sanity/ui": "^2.16.4",
+    "@tanstack/react-virtual": "^3.0.0-beta.54",
+    "framer-motion": "^10.6.1",
+    "groq": "^3.98.1",
+    "lexorank": "^1.0.5",
+    "react-compiler-runtime": "^1.0.0",
+    "react-fast-compare": "^3.2.1",
+    "sanity-plugin-utils": "^1.6.3"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "babel-plugin-styled-components": "^2.1.4",
+    "eslint": "catalog:",
+    "react": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "sanity": "^4",
+    "styled-components": "^6.1"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  }
+}

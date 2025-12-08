@@ -1,4 +1,7 @@
-export default {
+import {definePlugin, defineType} from 'sanity'
+import {aprimoPlugin} from 'sanity-plugin-aprimo'
+
+const aprimoTest = defineType({
   title: 'Aprimo',
   name: 'aprimoTest',
   type: 'document',
@@ -22,4 +25,9 @@ export default {
       of: [{type: 'aprimo.cdnasset'}],
     },
   ],
-}
+})
+
+export const aprimoExample = definePlugin(() => ({
+  schema: {types: [aprimoTest]},
+  plugins: [aprimoPlugin({tenantName: 'partner1'})],
+}))
