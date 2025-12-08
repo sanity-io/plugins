@@ -31,7 +31,10 @@ export const handleDeleteMetadata = async (
   }
 }
 
-export function useCompleteWorkflow({id, onComplete}: DocumentActionProps): DocumentActionDescription | null {
+export function useCompleteWorkflow({
+  id,
+  onComplete,
+}: DocumentActionProps): DocumentActionDescription | null {
   const {metadata, loading, error, states} = useWorkflowContext(id)
   const client = useClient({apiVersion: API_VERSION})
   const toast = useToast()
