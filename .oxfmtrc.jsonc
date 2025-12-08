@@ -5,9 +5,5 @@
   "singleQuote": true,
   "bracketSpacing": false,
   "experimentalSortImports": {},
-  "ignorePatterns": [
-    "dist/**",
-    "pnpm-lock.yaml",
-    ".changeset/*.md"
-  ]
+  "ignorePatterns": ["dist/**", "pnpm-lock.yaml", ".changeset/*.md"],
 }

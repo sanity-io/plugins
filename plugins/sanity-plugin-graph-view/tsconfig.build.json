@@ -5,5 +5,5 @@
   "compilerOptions": {
     "noPropertyAccessFromIndexSignature": false,
     "noUncheckedIndexedAccess": false,
-  }
+  },
 }

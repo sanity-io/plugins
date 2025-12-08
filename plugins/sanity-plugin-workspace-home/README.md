@@ -22,7 +22,7 @@ export default defineConfig([
   workspaceHomeConfig({
     // projectId and dataset are required, but not used by the plugin
     projectId: 'replace-with-your-project-id',
-    dataset: 'replace-with-your-dataset-name',    
+    dataset: 'replace-with-your-dataset-name',
   }),
   // ...all other workspaces
 ])

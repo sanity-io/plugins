@@ -4,7 +4,6 @@
   <p><img src="assets/screengrab.gif" width="540" alt="Screengrab of the Graph tool" /></p>
 </div>
 
-
 Wonder how a visualization of your dataset will look? How many authors do you have? How many items have they worked on? And are currently working on! Edits and changes are shown in real-time!
 
 **Explore your data with this plugin, seek out strange corners and data types, boldly go where you could not before!**
@@ -14,7 +13,6 @@ Wonder how a visualization of your dataset will look? How many authors do you ha
 ```
 npm install --save sanity-plugin-graph-view
 ```
-
 
 ## Usage
 
@@ -27,18 +25,19 @@ export default defineConfig({
   // ...
   plugins: [
     contentGraphView({}),
-  ] 
+  ]
 })
 ```
 
 This will add a /graph-your-content tools to the Sanity Studio, configured with this default query:
+
 ```
   *[
     !(_id in path("_.*")) &&
     !(_type match "system.*") &&
     !(_type match "sanity.*")
   ]
-````
+```
 
 ## Configuration
 
@@ -54,11 +53,11 @@ export default defineConfig({
       "query": "*[_type in ['a', 'b']]",
       apiVersion: "2022-09-01" // optional, default shown
     }),
-  ] 
+  ]
 })
 ```
 
-For references to turn into graph edges, the entire document must be fetched, 
+For references to turn into graph edges, the entire document must be fetched,
 but you can also selectively filter what references will be included. For example:
 
 ```js
@@ -70,7 +69,6 @@ contentGraphView({
 By default, the plugin uses `doc.title || doc.name || doc._id` as the node label.
 
 If you want to use another property, compute a `title` property in your query, e.g.:
-
 
 ```js
 contentGraphView({

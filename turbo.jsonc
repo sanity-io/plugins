@@ -1,38 +1,36 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "ui": "tui",
-  "globalDependencies": [
-    "pnpm-workspace.yaml"
-  ],
+  "globalDependencies": ["pnpm-workspace.yaml"],
   "tasks": {
     "//#oxlint": {
-      "cache": false
+      "cache": false,
     },
     "//#oxlint:fix": {
-      "cache": false
+      "cache": false,
     },
     "lint": {
       "env": ["GITHUB_ACTIONS"],
-      "dependsOn": ["transit"]
+      "dependsOn": ["transit"],
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".sanity/**", "dist/**"]
+      "outputs": [".sanity/**", "dist/**"],
     },
     "typecheck": {
       "dependsOn": ["transit", "^build"],
-      "outputs": []
+      "outputs": [],
     },
     // Transit node in the turbo graph
     // no package.json scrips actually implement transit but it creates a dependency link for other tasks:
     // https://turbo.build/docs/crafting-your-repository/configuring-tasks#dependent-tasks-that-can-be-run-in-parallel
     "transit": {
-      "dependsOn": ["^transit"]
+      "dependsOn": ["^transit"],
     },
     "dev": {
       "dependsOn": ["^build"],
       "cache": false,
-      "persistent": true
-    }
-  }
+      "persistent": true,
+    },
+  },
 }
