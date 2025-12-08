@@ -43,6 +43,7 @@ pnpm dev
 This will start the Sanity Studio dev server. The studio is pre-configured with all plugins and includes example schemas to test plugin functionality.
 
 The studio is deployed in two places:
+
 - https://plugins.sanity.studio - deployed on merges to main
 - https://plugins-studio.sanity.dev - also deployed on merges to main, and creates vercel preview deployments on PRs
 
@@ -119,14 +120,15 @@ Before you can publish a new package, you need to configure npm trusted publishi
 
 After the workflow completes, go to the package settings on npm and configure trusted publishing with these values:
 
-| Setting | Value |
-|---------|-------|
-| Organization | `sanity-io` |
-| Repository | `plugins` |
-| Workflow name | `release.yml` |
-| Environment | *(leave blank)* |
+| Setting       | Value           |
+| ------------- | --------------- |
+| Organization  | `sanity-io`     |
+| Repository    | `plugins`       |
+| Workflow name | `release.yml`   |
+| Environment   | _(leave blank)_ |
 
 Under token settings, configure:
+
 - **Require 2FA** for publishing
 - **Disallow tokens** (granular and automation tokens)
 
@@ -288,6 +290,7 @@ pnpm changeset add
 ```
 
 When prompted:
+
 - Select your new package
 - Choose **major** for the version bump (to release `1.0.0`)
 - Enter `Initial release` as the summary
@@ -307,6 +310,7 @@ pnpm changeset add
 ```
 
 Follow the prompts to:
+
 1. Select the packages that have changed
 2. Choose the version bump type (patch/minor/major)
 3. Write a summary of the changes
@@ -328,5 +332,6 @@ This creates a changeset file in `.changeset/` that should be committed with you
 ## Questions?
 
 If you have questions or need help, please:
+
 - Open an issue in this repository
 - Join the [Sanity Community Discord](https://snty.link/community)

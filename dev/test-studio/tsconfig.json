@@ -1,4 +1,4 @@
 {
   "extends": "@tsconfig/vite-react/tsconfig.json",
-  "include": ["src/**/*", "sanity.cli.ts", "sanity.config.ts"]
+  "include": ["src/**/*", "sanity.cli.ts", "sanity.config.ts"],
 }
