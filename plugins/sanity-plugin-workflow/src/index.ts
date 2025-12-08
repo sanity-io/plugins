@@ -1,4 +1,4 @@
-import {definePlugin, type DocumentActionProps, isObjectInputProps} from 'sanity'
+import {definePlugin, type DocumentActionProps, isObjectInputProps, type Plugin} from 'sanity'
 
 import type {WorkflowConfig} from './types'
 
@@ -14,7 +14,7 @@ import {DEFAULT_CONFIG} from './constants'
 import metadata from './schema/workflow/workflow.metadata'
 import {workflowTool} from './tools'
 
-export const workflow = definePlugin<WorkflowConfig>((config = DEFAULT_CONFIG) => {
+export const workflow: Plugin<WorkflowConfig> = definePlugin<WorkflowConfig>((config = DEFAULT_CONFIG) => {
   const {schemaTypes, states} = {...DEFAULT_CONFIG, ...config}
 
   if (!states?.length) {

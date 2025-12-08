@@ -2,7 +2,4 @@
   "extends": "@repo/tsconfig/build.json",
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist", "node_modules"],
-  "compilerOptions": {
-    "isolatedDeclarations": false,
-  },
 }
