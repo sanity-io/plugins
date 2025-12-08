@@ -1,5 +1,15 @@
 # sanity-plugin-workflow
 
+## 2.0.1
+
+### Patch Changes
+
+- [#211](https://github.com/sanity-io/plugins/pull/211) [`531e591`](https://github.com/sanity-io/plugins/commit/531e5918eb3f634c7c2b5eafabfce468190fccc1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to ^2.16.22
+
+- [`3e9b178`](https://github.com/sanity-io/plugins/commit/3e9b178f9aa984ab25861d3b1cb9382a4a67cc8f) Thanks [@stipsan](https://github.com/stipsan)! - Improve dts output
+
+- [#212](https://github.com/sanity-io/plugins/pull/212) [`59a1d32`](https://github.com/sanity-io/plugins/commit/59a1d32c1f47f15d423f695b992926f20b6883a9) Thanks [@stipsan](https://github.com/stipsan)! - Replace `framer-motion` with `motion/react`
+
 ## 2.0.0
 
 ### Major Changes
