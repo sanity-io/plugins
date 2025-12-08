@@ -2,10 +2,10 @@ import {definePlugin, isObjectInputProps, type Plugin} from 'sanity'
 
 import type {WorkflowConfig} from './types'
 
-import {useCompleteWorkflow} from './actions/useCompleteWorkflow'
 import {defineUpdateWorkflow} from './actions/defineUpdateWorkflow'
 import {useAssignWorkflow} from './actions/useAssignWorkflow'
 import {useBeginWorkflow} from './actions/useBeginWorkflow'
+import {useCompleteWorkflow} from './actions/useCompleteWorkflow'
 import {useAssigneesBadge} from './badges/useAssigneesBadge'
 import {useStateBadge} from './badges/useStateBadge'
 import {WorkflowProvider} from './components/WorkflowContext'

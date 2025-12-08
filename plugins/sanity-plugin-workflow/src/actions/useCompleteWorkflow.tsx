@@ -1,8 +1,12 @@
 import {CheckmarkIcon} from '@sanity/icons'
 import {type ToastContextValue, useToast} from '@sanity/ui'
 import {useCallback} from 'react'
-import {type DocumentActionDescription,
-type DocumentActionProps, type SanityClient, useClient} from 'sanity'
+import {
+  type DocumentActionDescription,
+  type DocumentActionProps,
+  type SanityClient,
+  useClient,
+} from 'sanity'
 
 import {useWorkflowContext} from '../components/WorkflowContext'
 import {API_VERSION} from '../constants'
@@ -59,6 +63,6 @@ export function useCompleteWorkflow(props: DocumentActionProps): DocumentActionD
       await handle()
       onComplete()
     },
-    tone: 'positive'
+    tone: 'positive',
   }
 }

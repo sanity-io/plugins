@@ -1,7 +1,12 @@
 import {ArrowLeftIcon, ArrowRightIcon} from '@sanity/icons'
 import {useToast} from '@sanity/ui'
-import {type DocumentActionDescription,
-useCurrentUser, useValidationStatus, type DocumentActionProps, useClient} from 'sanity'
+import {
+  type DocumentActionDescription,
+  useCurrentUser,
+  useValidationStatus,
+  type DocumentActionProps,
+  useClient,
+} from 'sanity'
 
 import type {State} from '../types'
 
@@ -9,7 +14,10 @@ import {useWorkflowContext} from '../components/WorkflowContext'
 import {API_VERSION} from '../constants'
 import {arraysContainMatchingString} from '../helpers/arraysContainMatchingString'
 
-function useUpdateWorkflow(props: DocumentActionProps, actionState: State): DocumentActionDescription | null {
+function useUpdateWorkflow(
+  props: DocumentActionProps,
+  actionState: State,
+): DocumentActionDescription | null {
   const {id, type} = props
 
   const user = useCurrentUser()
@@ -125,8 +133,9 @@ function useUpdateWorkflow(props: DocumentActionProps, actionState: State): Docu
   }
 }
 
-
 // @TODO memoize this call, so the defined useUpdateWorkflow can persist if actionState is the same
-export function defineUpdateWorkflow(actionState: State): (props: DocumentActionProps) => DocumentActionDescription | null {
+export function defineUpdateWorkflow(
+  actionState: State,
+): (props: DocumentActionProps) => DocumentActionDescription | null {
   return (props: DocumentActionProps) => useUpdateWorkflow(props, actionState)
 }
