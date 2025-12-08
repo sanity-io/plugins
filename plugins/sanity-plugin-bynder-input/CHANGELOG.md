@@ -1,5 +1,17 @@
 # sanity-plugin-bynder-input
 
+## 3.0.3
+
+### Patch Changes
+
+- [#182](https://github.com/sanity-io/plugins/pull/182) [`1a1713c`](https://github.com/sanity-io/plugins/commit/1a1713ccdc11db31a4e442359f14df529ffc9201) Thanks [@phettler](https://github.com/phettler)! - Enhance BynderInput component with improved asset handling and preview options based on issue 149
+
+  - Added support for field-level options in Bynder asset configuration.
+  - Updated asset handling to safely access nested properties.
+  - Improved media data structure for backward compatibility.
+  - Adjusted image preview styling and added support for document types.
+  - Refactored button text based on asset presence.
+
 ## 3.0.2
 
 ### Patch Changes
