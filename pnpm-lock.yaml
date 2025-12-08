@@ -608,7 +608,7 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(react@19.2.1)
       react-fast-compare:
-        specifier: ^3.2.1
+        specifier: ^3.2.2
         version: 3.2.2
       sanity-plugin-utils:
         specifier: ^1.6.3
