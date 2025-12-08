@@ -1,8 +1,10 @@
+import {PackageIcon, DocumentIcon} from '@sanity/icons'
 import {definePlugin, defineType} from 'sanity'
 import {workflow} from 'sanity-plugin-workflow'
 
 const articleType = defineType({
   type: 'document',
+  icon: DocumentIcon,
   name: 'article',
   title: 'Article',
   fields: [
@@ -13,6 +15,7 @@ const articleType = defineType({
 
 const productType = defineType({
   type: 'document',
+  icon: PackageIcon,
   name: 'product',
   title: 'Product',
   fields: [
