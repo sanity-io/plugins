@@ -1,5 +1,6 @@
+import type {LayoutProps} from 'sanity'
+
 import {useCallback, useContext, useState, createContext} from 'react'
-import {type LayoutProps} from 'sanity'
 
 import type {KeyedMetadata, WorkflowConfig} from '../types'
 

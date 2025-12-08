@@ -1,7 +1,6 @@
 import {ArrowLeftIcon, ArrowRightIcon} from '@sanity/icons'
 import {useToast} from '@sanity/ui'
-import {useCurrentUser, useValidationStatus} from 'sanity'
-import {type DocumentActionProps, useClient} from 'sanity'
+import {useCurrentUser, useValidationStatus, type DocumentActionProps, useClient} from 'sanity'
 
 import type {State} from '../types'
 

@@ -1,5 +1,6 @@
+import type {ObjectInputProps} from 'sanity'
+
 import {useEffect} from 'react'
-import {type ObjectInputProps} from 'sanity'
 
 import {useWorkflowContext} from './WorkflowContext'
 
