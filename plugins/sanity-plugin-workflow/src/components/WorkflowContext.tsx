@@ -41,7 +41,6 @@ type WorkflowProviderProps = LayoutProps & Required<WorkflowConfig>
  * This is performed inside of a component loaded at the root level of the Document Form
  */
 export function WorkflowProvider(props: WorkflowProviderProps) {
-  console.log('WorkflowProvider', props)
   const [ids, setIds] = useState<string[]>([])
   const addId = useCallback(
     (id: string) => setIds((current) => (current.includes(id) ? current : [...current, id])),
