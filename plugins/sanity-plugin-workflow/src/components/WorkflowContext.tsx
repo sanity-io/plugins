@@ -32,7 +32,7 @@ export function useWorkflowContext(id?: string) {
   return {...current, metadata: id ? current.data[id] : null}
 }
 
-type WorkflowProviderProps = LayoutProps & {workflow: Required<WorkflowConfig>}
+type WorkflowProviderProps = LayoutProps & Required<WorkflowConfig>
 
 /**
  * This Provider wraps the Studio and provides the workflow context to document actions and badges.
@@ -41,6 +41,7 @@ type WorkflowProviderProps = LayoutProps & {workflow: Required<WorkflowConfig>}
  * This is performed inside of a component loaded at the root level of the Document Form
  */
 export function WorkflowProvider(props: WorkflowProviderProps) {
+  console.log('WorkflowProvider', props)
   const [ids, setIds] = useState<string[]>([])
   const addId = useCallback(
     (id: string) => setIds((current) => (current.includes(id) ? current : [...current, id])),
@@ -61,8 +62,8 @@ export function WorkflowProvider(props: WorkflowProviderProps) {
         ids,
         addId,
         removeId,
-        states: props.workflow.states,
-        schemaTypes: props.workflow.schemaTypes,
+        states: props.states,
+        schemaTypes: props.schemaTypes,
       }}
     >
       {props.renderDefault(props)}

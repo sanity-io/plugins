@@ -1,6 +1,7 @@
 import {ArrowLeftIcon, ArrowRightIcon} from '@sanity/icons'
 import {useToast} from '@sanity/ui'
-import {useCurrentUser, useValidationStatus, type DocumentActionProps, useClient} from 'sanity'
+import {type DocumentActionDescription,
+useCurrentUser, useValidationStatus, type DocumentActionProps, useClient} from 'sanity'
 
 import type {State} from '../types'
 
@@ -8,7 +9,7 @@ import {useWorkflowContext} from '../components/WorkflowContext'
 import {API_VERSION} from '../constants'
 import {arraysContainMatchingString} from '../helpers/arraysContainMatchingString'
 
-export function UpdateWorkflow(props: DocumentActionProps, actionState: State) {
+function useUpdateWorkflow(props: DocumentActionProps, actionState: State): DocumentActionDescription | null {
   const {id, type} = props
 
   const user = useCurrentUser()
@@ -111,9 +112,9 @@ export function UpdateWorkflow(props: DocumentActionProps, actionState: State) {
     icon: DirectionIcon,
     disabled:
       loading ||
-      error ||
+      Boolean(error) ||
       (currentState?.requireValidation && isValidating) ||
-      hasValidationErrors ||
+      Boolean(hasValidationErrors) ||
       !currentState ||
       !userRoleCanUpdateState ||
       !actionStateIsAValidTransition ||
@@ -122,4 +123,10 @@ export function UpdateWorkflow(props: DocumentActionProps, actionState: State) {
     label: actionState.title,
     onHandle: () => onHandle(id, actionState),
   }
+}
+
+
+// @TODO memoize this call, so the defined useUpdateWorkflow can persist if actionState is the same
+export function defineUpdateWorkflow(actionState: State): (props: DocumentActionProps) => DocumentActionDescription | null {
+  return (props: DocumentActionProps) => useUpdateWorkflow(props, actionState)
 }

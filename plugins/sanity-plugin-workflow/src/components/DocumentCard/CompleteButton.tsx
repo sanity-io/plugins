@@ -3,7 +3,7 @@ import {Box, Button, Text, Tooltip, useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {useClient} from 'sanity'
 
-import {handleDeleteMetadata} from '../../actions/CompleteWorkflow'
+import {handleDeleteMetadata} from '../../actions/useCompleteWorkflow'
 import {API_VERSION} from '../../constants'
 
 type CompleteButtonProps = {
