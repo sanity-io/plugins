@@ -48,7 +48,7 @@ export default (states: State[]) =>
         initialValue: async (_, {getClient}) => {
           const lastDocOrderRank = await getClient({
             apiVersion: API_VERSION,
-          }).fetch(`*[_type == $type]|order(@[$order] desc)[0][$order]`, {
+          }).fetch(/* groq */ `*[_type == $type]|order(@[$order] desc)[0][$order]`, {
             order: `orderRank`,
             type: `workflow.metadata`,
           })

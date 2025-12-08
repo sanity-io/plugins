@@ -1,7 +1,12 @@
 import {ArrowLeftIcon, ArrowRightIcon} from '@sanity/icons'
 import {useToast} from '@sanity/ui'
-import {useCurrentUser, useValidationStatus} from 'sanity'
-import {type DocumentActionProps, useClient} from 'sanity'
+import {
+  type DocumentActionDescription,
+  useCurrentUser,
+  useValidationStatus,
+  type DocumentActionProps,
+  useClient,
+} from 'sanity'
 
 import type {State} from '../types'
 
@@ -9,9 +14,10 @@ import {useWorkflowContext} from '../components/WorkflowContext'
 import {API_VERSION} from '../constants'
 import {arraysContainMatchingString} from '../helpers/arraysContainMatchingString'
 
-export function UpdateWorkflow(props: DocumentActionProps, actionState: State) {
-  const {id, type} = props
-
+function useUpdateWorkflow(
+  {id, type, onComplete}: DocumentActionProps,
+  actionState: State,
+): DocumentActionDescription | null {
   const user = useCurrentUser()
   const client = useClient({apiVersion: API_VERSION})
   const toast = useToast()
@@ -39,14 +45,14 @@ export function UpdateWorkflow(props: DocumentActionProps, actionState: State) {
       .set({state: newState.id})
       .commit()
       .then(() => {
-        props.onComplete()
+        onComplete()
         toast.push({
           status: 'success',
           title: `Document state now "${newState.title}"`,
         })
       })
       .catch((err) => {
-        props.onComplete()
+        onComplete()
         console.error(err)
         toast.push({
           status: 'error',
@@ -112,9 +118,9 @@ export function UpdateWorkflow(props: DocumentActionProps, actionState: State) {
     icon: DirectionIcon,
     disabled:
       loading ||
-      error ||
+      Boolean(error) ||
       (currentState?.requireValidation && isValidating) ||
-      hasValidationErrors ||
+      Boolean(hasValidationErrors) ||
       !currentState ||
       !userRoleCanUpdateState ||
       !actionStateIsAValidTransition ||
@@ -123,4 +129,11 @@ export function UpdateWorkflow(props: DocumentActionProps, actionState: State) {
     label: actionState.title,
     onHandle: () => onHandle(id, actionState),
   }
+}
+
+// @TODO memoize this call, so the defined useUpdateWorkflow can persist if actionState is the same
+export function defineUpdateWorkflow(
+  actionState: State,
+): (props: DocumentActionProps) => DocumentActionDescription | null {
+  return (props: DocumentActionProps) => useUpdateWorkflow(props, actionState)
 }

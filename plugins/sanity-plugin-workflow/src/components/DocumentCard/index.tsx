@@ -1,8 +1,7 @@
 import {DragHandleIcon} from '@sanity/icons'
 import {Box, Card, type CardTone, Flex, Stack, useTheme} from '@sanity/ui'
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {type SchemaType, type ValidationMarker, useSchema} from 'sanity'
-import {Preview} from 'sanity'
+import {type SchemaType, type ValidationMarker, useSchema, Preview} from 'sanity'
 
 import type {SanityDocumentWithMetadata, State, User} from '../../types'
 

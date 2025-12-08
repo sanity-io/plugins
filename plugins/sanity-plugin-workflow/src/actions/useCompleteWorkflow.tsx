@@ -1,7 +1,12 @@
 import {CheckmarkIcon} from '@sanity/icons'
 import {type ToastContextValue, useToast} from '@sanity/ui'
 import {useCallback} from 'react'
-import {type DocumentActionProps, type SanityClient, useClient} from 'sanity'
+import {
+  type DocumentActionDescription,
+  type DocumentActionProps,
+  type SanityClient,
+  useClient,
+} from 'sanity'
 
 import {useWorkflowContext} from '../components/WorkflowContext'
 import {API_VERSION} from '../constants'
@@ -26,8 +31,7 @@ export const handleDeleteMetadata = async (
   }
 }
 
-export function CompleteWorkflow(props: DocumentActionProps) {
-  const {id} = props
+export function useCompleteWorkflow({id, onComplete}: DocumentActionProps): DocumentActionDescription | null {
   const {metadata, loading, error, states} = useWorkflowContext(id)
   const client = useClient({apiVersion: API_VERSION})
   const toast = useToast()
@@ -49,16 +53,15 @@ export function CompleteWorkflow(props: DocumentActionProps) {
 
   return {
     icon: CheckmarkIcon,
-    type: 'dialog',
-    disabled: loading || error || !isLastState,
+    disabled: loading || Boolean(error) || !isLastState,
     label: `Complete Workflow`,
     title: isLastState
       ? `Removes the document from the Workflow process`
       : `Cannot remove from workflow until in the last state`,
     onHandle: async () => {
       await handle()
-      props.onComplete()
+      onComplete()
     },
-    color: 'positive',
+    tone: 'positive',
   }
 }
