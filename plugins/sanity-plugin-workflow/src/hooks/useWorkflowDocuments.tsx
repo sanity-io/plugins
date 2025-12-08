@@ -1,7 +1,6 @@
 import type {DraggableLocation} from '@hello-pangea/dnd'
 
 import {useToast} from '@sanity/ui'
-import groq from 'groq'
 import {useCallback, useEffect, useState} from 'react'
 import {useClient} from 'sanity'
 import {useListeningQuery} from 'sanity-plugin-utils'
@@ -10,7 +9,7 @@ import type {SanityDocumentWithMetadata, State} from '../types'
 
 import {API_VERSION} from '../constants'
 
-const QUERY = groq`*[_type == "workflow.metadata"]|order(orderRank){
+const QUERY = /* groq */ `*[_type == "workflow.metadata"]|order(orderRank){
   "_metadata": {
     _rev,
     assignees,
