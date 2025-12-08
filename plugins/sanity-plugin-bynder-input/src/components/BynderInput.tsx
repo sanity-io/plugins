@@ -64,7 +64,11 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
   const compactViewOptions = {
     ...pluginConfig.compactViewOptions,
     ...(fieldOptions?.assetTypes && {
-      assetTypes: fieldOptions.assetTypes.map((t) => t.toUpperCase()) as ('IMAGE' | 'VIDEO' | 'AUDIO')[],
+      assetTypes: fieldOptions.assetTypes.map((t) => t.toUpperCase()) as (
+        | 'IMAGE'
+        | 'VIDEO'
+        | 'AUDIO'
+      )[],
     }),
     ...(fieldOptions?.assetFilter && {assetFilter: fieldOptions.assetFilter}),
   }
@@ -132,7 +136,11 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
     }
     if (value.type === 'IMAGE' || value.type === 'DOCUMENT') {
       preview = (
-        <img alt="preview" src={value.previewUrl} style={{width: 'auto', height: '100%', maxHeight: '20rem'}} />
+        <img
+          alt="preview"
+          src={value.previewUrl}
+          style={{width: 'auto', height: '100%', maxHeight: '20rem'}}
+        />
       )
       // TODO: Add preview for audio types and empty state
     }
@@ -150,7 +158,15 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
 
   return (
     <>
-      <Flex justify="center" align="center" marginBottom={2} onClick={openCompactView} style={{cursor: 'pointer'}}>{preview}</Flex>
+      <Flex
+        justify="center"
+        align="center"
+        marginBottom={2}
+        onClick={openCompactView}
+        style={{cursor: 'pointer'}}
+      >
+        {preview}
+      </Flex>
       <Flex gap={2} style={{width: '100%'}}>
         <Box flex={1}>
           <Button
