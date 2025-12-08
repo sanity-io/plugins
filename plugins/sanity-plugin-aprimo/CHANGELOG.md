@@ -1,5 +1,11 @@
 # sanity-plugin-aprimo
 
+## 1.0.2
+
+### Patch Changes
+
+- [`69a8d2f`](https://github.com/sanity-io/plugins/commit/69a8d2f8ce1e8f5b342e7066dbc79a20b6687abe) Thanks [@stipsan](https://github.com/stipsan)! - Declare support for Studio v5
+
 ## 1.0.1
 
 ### Patch Changes
