@@ -1,5 +1,11 @@
 # @repo/eslint-config
 
+## 0.0.5
+
+### Patch Changes
+
+- [#191](https://github.com/sanity-io/plugins/pull/191) [`496450f`](https://github.com/sanity-io/plugins/commit/496450fd0ad5ec350cd7b7de30b16712db2f7814) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency eslint-plugin-oxlint to ^1.32.0
+
 ## 0.0.4
 
 ### Patch Changes
