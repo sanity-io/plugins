@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "dev/test-studio/**"
-      - "pnpm-lock.yaml"
+      - 'dev/test-studio/**'
+      - 'pnpm-lock.yaml'
   workflow_dispatch:
 
 concurrency:

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: "The package name name, for example @sanity/foo-bar"
+        description: 'The package name name, for example @sanity/foo-bar'
         required: true
 
 permissions:

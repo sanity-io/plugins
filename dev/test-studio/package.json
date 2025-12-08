@@ -8,6 +8,9 @@
     "typecheck": "(cd ../.. && tsgo --project dev/test-studio/tsconfig.json)",
     "build": "sanity build"
   },
+  "imports": {
+    "#*": "./src/*/index.tsx"
+  },
   "dependencies": {
     "@sanity/color-input": "workspace:*",
     "@sanity/debug-preview-url-secret-plugin": "workspace:*",
