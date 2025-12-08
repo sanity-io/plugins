@@ -3162,8 +3162,8 @@ packages:
       sanity:
         optional: true
 
-  '@sanity/runtime-cli@11.2.5':
-    resolution: {integrity: sha512-KcQdkQMpvC9GgibSGYtmKHPs64Oem/JfaFEwoNIKvRfCqCNgdS4nXAVKW13sSN3CDGRIyfgE2MT9uSjRpQU7jA==}
+  '@sanity/runtime-cli@11.2.6':
+    resolution: {integrity: sha512-lhIcv97mjYDdt7CPt0lSsBsWv1Fu4WQtQ6RTKjmqlDteWaj04brcW1+h4g7nVlMexss74NGx1w3t9pViJ0AjcQ==}
     engines: {node: '>=20.19'}
     hasBin: true
 
@@ -3841,8 +3841,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.9.2:
-    resolution: {integrity: sha512-PxSsosKQjI38iXkmb3d0Y32efqyA0uW4s41u4IVBsLlWLhCiYNpH/AfNOVWRqCQBlD8TFJTz6OUWNd4DFJCnmw==}
+  baseline-browser-mapping@2.9.3:
+    resolution: {integrity: sha512-8QdH6czo+G7uBsNo0GiUfouPN1lRzKdJTGnKXwe12gkFbnnOUaUKGN55dMkfy+mnxmvjwl9zcI4VncczcVXDhA==}
     hasBin: true
 
   before-after-hook@2.2.3:
@@ -10094,7 +10094,7 @@ snapshots:
       '@babel/traverse': 7.28.5
       '@sanity/client': 7.13.1(debug@4.4.3)
       '@sanity/codegen': 4.20.3
-      '@sanity/runtime-cli': 11.2.5(@types/node@24.10.2)(debug@4.4.3)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      '@sanity/runtime-cli': 11.2.6(@types/node@24.10.2)(debug@4.4.3)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
       '@sanity/telemetry': 0.8.1(react@19.2.1)
       '@sanity/template-validator': 2.4.3
       chalk: 4.1.2
@@ -10485,7 +10485,7 @@ snapshots:
       '@sanity/icons': 3.7.4(react@19.2.1)
       sanity: 4.20.3(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.10(@sanity/schema@4.20.3(@types/react@19.2.7))(@sanity/types@4.20.3(@types/react@19.2.7)))(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
 
-  '@sanity/runtime-cli@11.2.5(@types/node@24.10.2)(debug@4.4.3)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)':
+  '@sanity/runtime-cli@11.2.6(@types/node@24.10.2)(debug@4.4.3)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)':
     dependencies:
       '@architect/hydrate': 5.0.1
       '@architect/inventory': 5.0.0
@@ -11394,7 +11394,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.9.2: {}
+  baseline-browser-mapping@2.9.3: {}
 
   before-after-hook@2.2.3: {}
 
@@ -11441,7 +11441,7 @@ snapshots:
 
   browserslist@4.28.1:
     dependencies:
-      baseline-browser-mapping: 2.9.2
+      baseline-browser-mapping: 2.9.3
       caniuse-lite: 1.0.30001759
       electron-to-chromium: 1.5.266
       node-releases: 2.0.27
