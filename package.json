@@ -22,7 +22,7 @@
     "oxlint": "^1.31.0",
     "oxlint-tsgolint": "^0.8.3",
     "setup-npm-trusted-publish": "^1.0.3",
-    "turbo": "^2.6.1",
+    "turbo": "^2.6.3",
     "typescript": "catalog:"
   },
   "packageManager": "pnpm@10.24.0"
