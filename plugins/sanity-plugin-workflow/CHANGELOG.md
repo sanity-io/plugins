@@ -1,5 +1,17 @@
 # sanity-plugin-workflow
 
+## 2.0.0
+
+### Major Changes
+
+- [#198](https://github.com/sanity-io/plugins/pull/198) [`688a528`](https://github.com/sanity-io/plugins/commit/688a5282864137a8588c5fa6a811698b13ccd225) Thanks [@stipsan](https://github.com/stipsan)! - Require Sanity Studio v4 and later, enable React Compiler
+
+### Patch Changes
+
+- [#200](https://github.com/sanity-io/plugins/pull/200) [`3b75dfe`](https://github.com/sanity-io/plugins/commit/3b75dfe54dca322b687bbb9ed2e41ba13d803d8e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @hello-pangea/dnd to ^16.6.0
+
+- [`e5cc409`](https://github.com/sanity-io/plugins/commit/e5cc4096466283146dbecd355f59955aca1dc4ba) Thanks [@stipsan](https://github.com/stipsan)! - Remove `groq` dependency
+
 ## [1.0.6](https://github.com/sanity-io/sanity-plugin-workflow/compare/v1.0.5...v1.0.6) (2025-11-26)
 
 ### Bug Fixes
