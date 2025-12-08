@@ -202,7 +202,7 @@ Each plugin needs the following files. Use existing plugins as reference:
   },
   "peerDependencies": {
     "react": "^18.3 || ^19",
-    "sanity": "^4",
+    "sanity": "^4.0.0-0 || ^5.0.0-0",
     "styled-components": "^6.1"
   },
   "engines": {
