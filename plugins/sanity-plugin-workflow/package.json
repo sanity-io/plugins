@@ -38,7 +38,6 @@
   "dependencies": {
     "@hello-pangea/dnd": "^16.5.0",
     "@sanity/icons": "^3.7.4",
-    "@sanity/types": "^4.20.3",
     "@sanity/ui": "^2.16.4",
     "@tanstack/react-virtual": "^3.0.0-beta.54",
     "framer-motion": "^10.6.1",

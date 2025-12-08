@@ -1,8 +1,6 @@
-import type {PreviewValue, SanityDocument} from '@sanity/types'
-
 import {PublishIcon} from '@sanity/icons'
 import {Box, Text, Tooltip} from '@sanity/ui'
-import {TextWithTone} from 'sanity'
+import {TextWithTone, type PreviewValue, type SanityDocument} from 'sanity'
 
 import {TimeAgo} from './TimeAgo'
 

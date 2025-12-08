@@ -1,8 +1,6 @@
-import type {ValidationMarker} from '@sanity/types'
-
 import {ErrorOutlineIcon, WarningOutlineIcon} from '@sanity/icons'
 import {Box, Text, Tooltip} from '@sanity/ui'
-import {TextWithTone} from 'sanity'
+import {TextWithTone, type ValidationMarker} from 'sanity'
 
 type ValidationStatusProps = {
   validation: ValidationMarker[]
