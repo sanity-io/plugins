@@ -1,13 +1,12 @@
-import type {ObjectInputProps} from 'sanity'
-
 import {useEffect} from 'react'
+import {type ObjectInputProps, getPublishedId} from 'sanity'
 
 import {useWorkflowContext} from './WorkflowContext'
 
 // This component is loaded at the root level of the Document Form
 // It is used to signal the document ID to the WorkflowProvider
 export default function WorkflowSignal(props: ObjectInputProps) {
-  const documentId = props?.value?.['_id'] ? props.value['_id'].replace(`drafts.`, ``) : null
+  const documentId = props?.value?.['_id'] ? getPublishedId(props.value['_id']) : null
 
   const {addId, removeId} = useWorkflowContext()
 
