@@ -15,11 +15,9 @@ import {API_VERSION} from '../constants'
 import {arraysContainMatchingString} from '../helpers/arraysContainMatchingString'
 
 function useUpdateWorkflow(
-  props: DocumentActionProps,
+  {id, type, onComplete}: DocumentActionProps,
   actionState: State,
 ): DocumentActionDescription | null {
-  const {id, type} = props
-
   const user = useCurrentUser()
   const client = useClient({apiVersion: API_VERSION})
   const toast = useToast()
@@ -47,14 +45,14 @@ function useUpdateWorkflow(
       .set({state: newState.id})
       .commit()
       .then(() => {
-        props.onComplete()
+        onComplete()
         toast.push({
           status: 'success',
           title: `Document state now "${newState.title}"`,
         })
       })
       .catch((err) => {
-        props.onComplete()
+        onComplete()
         console.error(err)
         toast.push({
           status: 'error',

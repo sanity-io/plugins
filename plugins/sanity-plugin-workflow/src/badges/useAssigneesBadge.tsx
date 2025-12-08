@@ -4,8 +4,7 @@ import {useProjectUsers} from 'sanity-plugin-utils'
 import {useWorkflowContext} from '../components/WorkflowContext'
 import {API_VERSION} from '../constants'
 
-export function useAssigneesBadge(props: DocumentBadgeProps): DocumentBadgeDescription | null {
-  const {id: documentId} = props
+export function useAssigneesBadge( {id: documentId}: DocumentBadgeProps): DocumentBadgeDescription | null {
   const currentUser = useCurrentUser()
   const {metadata, loading, error} = useWorkflowContext(documentId)
   const userList = useProjectUsers({apiVersion: API_VERSION})
