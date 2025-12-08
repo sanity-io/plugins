@@ -1,7 +1,8 @@
+import {colorInput} from '@sanity/color-input'
 import {DropIcon} from '@sanity/icons'
-import {defineType} from 'sanity'
+import {definePlugin, defineType} from 'sanity'
 
-export default defineType({
+const colorTest = defineType({
   name: 'colorTest',
   type: 'document',
   title: 'Color',
@@ -132,3 +133,8 @@ export default defineType({
     },
   ],
 })
+
+export const colorExample = definePlugin(() => ({
+  schema: {types: [colorTest]},
+  plugins: [colorInput()],
+}))

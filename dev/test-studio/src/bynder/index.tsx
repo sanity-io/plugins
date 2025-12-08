@@ -1,6 +1,7 @@
-import {defineType, defineField} from 'sanity'
+import {definePlugin, defineType, defineField} from 'sanity'
+import {bynderInputPlugin} from 'sanity-plugin-bynder-input'
 
-export const bynderTest = defineType({
+const bynderTest = defineType({
   type: 'document',
   name: 'bynderTest',
   title: 'Bynder',
@@ -26,3 +27,13 @@ export const bynderTest = defineType({
     }),
   ],
 })
+
+export const bynderExample = definePlugin(() => ({
+  schema: {types: [bynderTest]},
+  plugins: [
+    bynderInputPlugin({
+      portalConfig: {url: 'https://wave-trial.getbynder.com/'},
+      compactViewOptions: {language: 'en_US'},
+    }),
+  ],
+}))
