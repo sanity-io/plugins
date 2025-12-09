@@ -9,7 +9,7 @@ const articleType = defineType({
   title: 'Article',
   fields: [
     {type: 'string', name: 'title', title: 'Title'},
-    {type: 'text', name: 'body', title: 'Body'},
+    {type: 'array', of: [{type: 'block'}], name: 'body', title: 'Body'},
   ],
 })
 
