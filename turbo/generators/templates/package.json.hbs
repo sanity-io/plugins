@@ -35,7 +35,8 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "react-compiler-runtime": "^1.0.0"
+    "@sanity/ui": "catalog:",
+    "react-compiler-runtime": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -44,9 +45,9 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
-    "babel-plugin-react-compiler": "^1.0.0",
+    "babel-plugin-react-compiler": "catalog:",
 {{#if hasStyledComponents}}
-    "babel-plugin-styled-components": "^2.1.4",
+    "babel-plugin-styled-components": "catalog:",
 {{/if}}
     "eslint": "catalog:",
     "react": "catalog:",

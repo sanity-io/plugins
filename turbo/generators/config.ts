@@ -257,14 +257,14 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
         pattern: /from 'sanity'(?<insertion>)/,
         template:
-          "\nimport { {{ pluginNamedExport }}Example } from '#{{ dashCase pluginNamedExport }}'\n",
+          "\nimport { {{ pluginNamedExport }}Example } from '#{{ dashCase pluginNamedExport }}'",
       },
       // Add plugin to plugins array
       {
         type: 'append',
         path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
         pattern: /\/\/ add new plugins here(?<insertion>)/,
-        template: '      {{ pluginNamedExport }}Example(),\n',
+        template: '\n      {{ pluginNamedExport }}Example(),',
       },
     ],
   })
