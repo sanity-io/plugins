@@ -181,8 +181,16 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         default: defaultExport,
       })
 
+      // Step 5: Ask about styled-components
+      const {hasStyledComponents} = await inquirer.prompt<{hasStyledComponents: boolean}>({
+        type: 'confirm',
+        name: 'hasStyledComponents',
+        message: 'Will this plugin use styled-components?',
+        default: false,
+      })
+
       // Version starts at 0.0.1 for new plugins (replaces the OIDC setup package)
-      return {name, description, pluginNamedExport, version: '0.0.1'}
+      return {name, description, pluginNamedExport, hasStyledComponents, version: '0.0.1'}
     },
     actions: [
       {
