@@ -10,7 +10,7 @@ type Props = {
   width: number
   height: number
   onClick: (photo: UnsplashPhoto) => void
-  onKeyDown: (event: any) => void
+  onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void
   active: boolean
   onFocus: (photo: UnsplashPhoto) => void
 }
@@ -25,7 +25,7 @@ export default function Photo(props: Props) {
   }, [onClick, data])
 
   const handleCreditLineClicked = useCallback(
-    (event: any) => {
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
       event.stopPropagation()
       const url = `${data.links.html}?utm_source=${encodeURIComponent(
         UTM_SOURCE,
@@ -36,7 +36,7 @@ export default function Photo(props: Props) {
   )
 
   const handleKeyDown = useCallback(
-    (event: any) => {
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
       onKeyDown(event)
       if (event.keyCode === 13) {
         onClick(data)
