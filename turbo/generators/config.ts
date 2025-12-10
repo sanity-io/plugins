@@ -15,7 +15,9 @@ interface NpmPackageData {
 }
 
 async function fetchNpmPackage(name: string): Promise<NpmPackageData | null> {
-  const url = `https://registry.npmjs.org/${encodeURIComponent(name)}`
+  // For scoped packages like @sanity/foo, npm registry expects @sanity%2Ffoo (only / encoded)
+  const encodedName = name.startsWith('@') ? `@${encodeURIComponent(name.slice(1))}` : name
+  const url = `https://registry.npmjs.org/${encodedName}`
   const response = await fetch(url)
 
   if (response.status === 404) {
