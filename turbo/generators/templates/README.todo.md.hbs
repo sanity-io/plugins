@@ -46,6 +46,9 @@ Copy all source files from the original plugin into `./src`:
 
 {{#if originalRepositoryUrl}}
 ```bash
+# Navigate to the plugin workspace folder
+cd plugins/{{ name }}
+
 # Clone the original repo and copy the src directory
 git clone {{ originalRepositoryUrl }} /tmp/original-plugin
 cp -r /tmp/original-plugin/src/* ./src/
@@ -53,16 +56,21 @@ rm -rf /tmp/original-plugin
 ```
 {{else}}
 ```bash
+# Navigate to the plugin workspace folder
+cd plugins/{{ name }}
+
 # Copy the src directory from the original plugin location
 cp -r /path/to/original-plugin/src/* ./src/
 ```
 {{/if}}
 
-## 3. Copy README.md
+After copying, update the test studio example at:
 
-Copy the `README.md` from the original plugin and replace this file with it.
+`dev/test-studio/src/{{ dashCase pluginNamedExport }}/index.tsx`
 
-## 4. Copy and Update CHANGELOG.md
+Add any required options, schemas, or configuration needed to properly test the plugin in the test studio.
+
+## 3. Copy and Update CHANGELOG.md
 
 Copy the `CHANGELOG.md` from the original plugin, then update the top of the file:
 
@@ -83,7 +91,7 @@ All notable changes to this project will be documented in this file. See
 # {{ name }}
 ```
 
-## 5. Update package.json Dependencies
+## 4. Update package.json Dependencies
 
 Manually update `package.json` with any missing dependencies from the original plugin:
 
@@ -97,12 +105,13 @@ Manually update `package.json` with any missing dependencies from the original p
 - `@sanity/incompatible-plugin`
 - `@sanity/plugin-kit`
 
-## 6. Verify Setup
+## 5. Verify Setup
 
-After completing all steps:
+1. Run `pnpm install` from the monorepo root
+2. Run `pnpm build` to verify the plugin builds correctly
+3. Run `pnpm dev` to test in the test studio
+4. Create a changeset: `pnpm changeset add`
 
-1. Delete this README.md and replace it with the original plugin's README
-2. Run `pnpm install` from the monorepo root
-3. Run `pnpm build` to verify the plugin builds correctly
-4. Run `pnpm dev` to test in the test studio
-5. Create a changeset: `pnpm changeset add`
+## 6. Copy README.md (Final Step)
+
+Copy the `README.md` from the original plugin and replace this file with it.

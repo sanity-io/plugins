@@ -417,11 +417,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/index.ts',
-        templateFile: 'templates/src/index.ts.hbs',
-      },
-      {
-        type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/plugin.tsx',
         templateFile: 'templates/src/plugin.todo.tsx.hbs',
       },
       {

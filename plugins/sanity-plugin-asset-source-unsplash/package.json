@@ -40,7 +40,11 @@
   },
   "dependencies": {
     "@sanity/ui": "catalog:",
-    "react-compiler-runtime": "catalog:"
+    "react-compiler-runtime": "catalog:",
+    "@sanity/icons": "^3.7.4",
+    "react-infinite-scroll-component": "6.1.0",
+    "react-photo-album": "2.4.1",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
