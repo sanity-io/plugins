@@ -7,6 +7,7 @@
     "build": "turbo build",
     "dev": "pnpm turbo dev --filter=test-studio",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
+    "prelint": "pnpm build --filter='!test-studio'",
     "lint": "turbo run oxlint lint",
     "lint:ci": "turbo run lint -- -f gha --max-warnings 0",
     "oxlint": "oxlint --type-check --type-aware --deny-warnings",
