@@ -131,6 +131,9 @@ function getRepositoryUrls(packageJson: NpmPackageJson): RepositoryUrls {
 }
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
+  // Register a helper to output JSON (useful for arrays like keywords)
+  plop.setHelper('json', (value) => JSON.stringify(value))
+
   plop.setGenerator('new plugin', {
     description: 'Generates a new Sanity Studio plugin',
     prompts: async (inquirer) => {

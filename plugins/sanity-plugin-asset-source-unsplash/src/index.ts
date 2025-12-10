@@ -1,0 +1,1 @@
+export {unsplashImageAsset} from './plugin'
