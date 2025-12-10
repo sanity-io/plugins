@@ -32,8 +32,7 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "lint": "eslint .",
-    "prepack": "turbo run build",
-    "typecheck": "(cd ../.. && tsgo --project plugins/@sanity/singleton-tools-plugin/tsconfig.json)"
+    "prepack": "turbo run build"
   },
   "dependencies": {
     "react-compiler-runtime": "^1.0.0"
