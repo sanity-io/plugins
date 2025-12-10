@@ -2,7 +2,6 @@ import {aprimoExample} from '#aprimo'
 import {bynderExample} from '#bynder'
 import {colorExample} from '#color'
 import {markdownExample} from '#markdown'
-import {singletonToolsExample} from '#singleton-tools'
 import {workflowExample} from '#workflow'
 import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
 import {vercelProtectionBypassTool} from '@sanity/vercel-protection-bypass'
@@ -40,8 +39,6 @@ export default defineConfig([
       markdownExample(),
       debugSecrets(),
       // add new plugins here
-      singletonToolsExample(),
-
       vercelProtectionBypassTool(),
       visionTool(),
     ],

@@ -54,9 +54,6 @@ catalogs:
     sanity:
       specifier: ^4.21.0
       version: 4.21.0
-    styled-components:
-      specifier: ^6.1.19
-      version: 6.1.19
     typescript:
       specifier: 5.9.3
       version: 5.9.3
@@ -130,9 +127,6 @@ importers:
       '@sanity/icons':
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.1)
-      '@sanity/singleton-tools-plugin':
-        specifier: workspace:*
-        version: link:../../plugins/@sanity/singleton-tools-plugin
       '@sanity/vercel-protection-bypass':
         specifier: workspace:*
         version: link:../../plugins/@sanity/vercel-protection-bypass
@@ -329,55 +323,6 @@ importers:
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20251207.1
-      react:
-        specifier: 'catalog:'
-        version: 19.2.1
-      sanity:
-        specifier: 'catalog:'
-        version: 4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(styled-components@6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-
-  plugins/@sanity/singleton-tools-plugin:
-    dependencies:
-      '@sanity/ui':
-        specifier: 'catalog:'
-        version: 3.1.11(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.1(react@19.2.1))(react-is@19.2.1)(react@19.2.1)(styled-components@6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1))
-      react-compiler-runtime:
-        specifier: 'catalog:'
-        version: 1.0.0(react@19.2.1)
-      styled-components:
-        specifier: 'catalog:'
-        version: 6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-    devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../../packages/@repo/eslint-config
-      '@repo/package.config':
-        specifier: workspace:*
-        version: link:../../../packages/@repo/package.config
-      '@repo/tsconfig':
-        specifier: workspace:*
-        version: link:../../../packages/@repo/tsconfig
-      '@sanity/pkg-utils':
-        specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.2)(@typescript/native-preview@7.0.0-dev.20251207.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.7
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251207.1
-      babel-plugin-react-compiler:
-        specifier: 'catalog:'
-        version: 1.0.0
-      babel-plugin-styled-components:
-        specifier: 'catalog:'
-        version: 2.1.4(@babel/core@7.28.5)(styled-components@6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1))
-      eslint:
-        specifier: 'catalog:'
-        version: 9.39.1(jiti@2.6.1)
       react:
         specifier: 'catalog:'
         version: 19.2.1
@@ -11232,14 +11177,6 @@ snapshots:
       '@sanity/icons': 3.7.4(react@19.2.1)
       sanity: 4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/node@24.10.2)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
 
-  '@sanity/preview-url-secret@3.0.0(@sanity/client@7.13.1(debug@4.4.3))(@sanity/icons@3.7.4(react@19.2.1))(sanity@4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))':
-    dependencies:
-      '@sanity/client': 7.13.1(debug@4.4.3)
-      '@sanity/uuid': 3.0.2
-    optionalDependencies:
-      '@sanity/icons': 3.7.4(react@19.2.1)
-      sanity: 4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-
   '@sanity/preview-url-secret@3.0.0(@sanity/client@7.13.1(debug@4.4.3))(@sanity/icons@3.7.4(react@19.2.1))(sanity@4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(styled-components@6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))':
     dependencies:
       '@sanity/client': 7.13.1(debug@4.4.3)
@@ -11247,6 +11184,14 @@ snapshots:
     optionalDependencies:
       '@sanity/icons': 3.7.4(react@19.2.1)
       sanity: 4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(styled-components@6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+
+  '@sanity/preview-url-secret@3.0.0(@sanity/client@7.13.1)(@sanity/icons@3.7.4(react@19.2.1))(sanity@4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))':
+    dependencies:
+      '@sanity/client': 7.13.1(debug@4.4.3)
+      '@sanity/uuid': 3.0.2
+    optionalDependencies:
+      '@sanity/icons': 3.7.4(react@19.2.1)
+      sanity: 4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
 
   '@sanity/runtime-cli@12.1.0(@types/node@24.10.2)(debug@4.4.3)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)':
     dependencies:
@@ -12227,18 +12172,6 @@ snapshots:
       lodash: 4.17.21
       picomatch: 2.3.1
       styled-components: '@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1)'
-    transitivePeerDependencies:
-      - '@babel/core'
-      - supports-color
-
-  babel-plugin-styled-components@2.1.4(@babel/core@7.28.5)(styled-components@6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1)):
-    dependencies:
-      '@babel/helper-annotate-as-pure': 7.27.3
-      '@babel/helper-module-imports': 7.27.1
-      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.28.5)
-      lodash: 4.17.21
-      picomatch: 2.3.1
-      styled-components: 6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -15947,7 +15880,7 @@ snapshots:
       '@sanity/migrate': 4.21.0(@types/react@19.2.7)
       '@sanity/mutator': 4.21.0(@types/react@19.2.7)
       '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.13.1)(@sanity/types@4.21.0(@types/react@19.2.7)(debug@4.4.3))
-      '@sanity/preview-url-secret': 3.0.0(@sanity/client@7.13.1(debug@4.4.3))(@sanity/icons@3.7.4(react@19.2.1))(sanity@4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
+      '@sanity/preview-url-secret': 3.0.0(@sanity/client@7.13.1)(@sanity/icons@3.7.4(react@19.2.1))(sanity@4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
       '@sanity/schema': 4.21.0(@types/react@19.2.7)(debug@4.4.3)
       '@sanity/sdk': 2.1.2(@types/react@19.2.7)(debug@4.4.3)(react@19.2.1)(use-sync-external-store@1.6.0(react@19.2.1))
       '@sanity/telemetry': 0.8.1(react@19.2.1)
