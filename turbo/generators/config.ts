@@ -33,28 +33,32 @@ function getSetupInstructions(name: string): string {
   return `
 The npm package "${name}" does not exist yet.
 
-To set up trusted publishing for this package, follow these steps:
+First, create the package on npm by running the setup-trusted-publish workflow:
 
 1. Go to https://github.com/sanity-io/plugins/actions/workflows/setup-trusted-publish.yml
 2. Click "Run workflow"
 3. Enter "${name}" in "The package name"
 4. Click "Run workflow" in the popover
-5. After the run completes, open https://www.npmjs.com/package/${name}/access
-6. Under "Trusted Publisher", click "GitHub Actions"
-7. In "Organization or user", enter: sanity-io
-8. In "Repository", enter: plugins
-9. In "Workflow filename", enter: release.yml
-10. Click "Set up connection"
+5. Wait for the workflow to complete - this creates the initial package on npm
+
+Then, configure trusted publishing so releases can be automated:
+
+6. Open https://www.npmjs.com/package/${name}/access
+7. Under "Trusted Publisher", click "GitHub Actions"
+8. In "Organization or user", enter: sanity-io
+9. In "Repository", enter: plugins
+10. In "Workflow filename", enter: release.yml
+11. Click "Set up connection"
 
 After completing these steps, run this generator again.
 `
 }
 
-function isValidSetupPackage(packageJson: NpmPackageJson): boolean {
+function isValidSetupPackage(name: string, packageJson: NpmPackageJson): boolean {
   return (
     packageJson.version === '0.0.1' &&
     packageJson.description ===
-      'OIDC trusted publishing setup package for @sanity/debug-preview-url-secret-plugin' &&
+      `OIDC trusted publishing setup package for ${name}` &&
     Array.isArray(packageJson.keywords) &&
     packageJson.keywords.length === 3 &&
     packageJson.keywords[0] === 'oidc' &&
@@ -116,7 +120,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       // Check if the 0.0.1 package.json matches the setup template
       const setupPackageJson = npmPackage.versions['0.0.1']
 
-      if (!isValidSetupPackage(setupPackageJson)) {
+      if (!isValidSetupPackage(name, setupPackageJson)) {
         throw new Error(
           `Package "${name}@0.0.1" exists but doesn't match the expected OIDC setup template.\n` +
             `This appears to be a real published package.\n` +
