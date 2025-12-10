@@ -1,19 +1,19 @@
 {
-  "name": "{{ name }}",
-  "version": "{{ version }}",
-  "description": "{{ description }}",
+  "name": "@sanity/singleton-tools-plugin",
+  "version": "0.0.1",
+  "description": "A fork of sanity-plugin-singleton-tools",
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
-  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/{{ name }}#readme",
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/singleton-tools-plugin#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
-    "directory": "plugins/{{ name }}"
+    "directory": "plugins/@sanity/singleton-tools-plugin"
   },
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
@@ -32,7 +32,8 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "lint": "eslint .",
-    "prepack": "turbo run build"
+    "prepack": "turbo run build",
+    "typecheck": "(cd ../.. && tsgo --project plugins/@sanity/singleton-tools-plugin/tsconfig.json)"
   },
   "dependencies": {
     "react-compiler-runtime": "^1.0.0"
