@@ -2,43 +2,141 @@ import type {PlopTypes} from '@turbo/gen'
 
 import validateNpmPackageName from 'validate-npm-package-name'
 
+interface NpmPackageJson {
+  name: string
+  version: string
+  description: string
+  keywords?: string[]
+}
+
+interface NpmPackageData {
+  name: string
+  versions: Record<string, NpmPackageJson>
+}
+
+async function fetchNpmPackage(name: string): Promise<NpmPackageData | null> {
+  const url = `https://registry.npmjs.org/${encodeURIComponent(name)}`
+  const response = await fetch(url)
+
+  if (response.status === 404) {
+    return null
+  }
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch npm package: ${response.statusText}`)
+  }
+
+  return response.json() as Promise<NpmPackageData>
+}
+
+function getSetupInstructions(name: string): string {
+  return `
+The npm package "${name}" does not exist yet.
+
+To set up trusted publishing for this package, follow these steps:
+
+1. Go to https://github.com/sanity-io/plugins/actions/workflows/setup-trusted-publish.yml
+2. Click "Run workflow"
+3. Enter "${name}" in "The package name"
+4. Click "Run workflow" in the popover
+5. After the run completes, open https://www.npmjs.com/package/${name}/access
+6. Under "Trusted Publisher", click "GitHub Actions"
+7. In "Organization or user", enter: sanity-io
+8. In "Repository", enter: plugins
+9. In "Workflow filename", enter: release.yml
+10. Click "Set up connection"
+
+After completing these steps, run this generator again.
+`
+}
+
+function isValidSetupPackage(packageJson: NpmPackageJson): boolean {
+  return (
+    packageJson.version === '0.0.1' &&
+    packageJson.description ===
+      'OIDC trusted publishing setup package for @sanity/debug-preview-url-secret-plugin' &&
+    Array.isArray(packageJson.keywords) &&
+    packageJson.keywords.length === 3 &&
+    packageJson.keywords[0] === 'oidc' &&
+    packageJson.keywords[1] === 'trusted-publishing' &&
+    packageJson.keywords[2] === 'setup'
+  )
+}
+
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
   plop.setGenerator('new plugin', {
     description: 'Generates a new Sanity Studio plugin',
-
-    prompts: [
-      {
+    prompts: async (inquirer) => {
+      // Step 1: Get and validate the plugin name
+      const {name} = await inquirer.prompt<{name: string}>({
         type: 'input',
         name: 'name',
         message: 'What is the name of the plugin?',
         validate: (input: string) => {
           if (!input) {
-            return 'file name is required'
+            return 'Plugin name is required'
           }
           const {errors} = validateNpmPackageName(input)
           if (errors?.length) {
             return errors.join(', ')
           }
           if (input.startsWith('@') && !input.startsWith('@sanity/')) {
-            return 'only the @sanity scope is allowed'
+            return 'Only the @sanity scope is allowed'
           }
-
           return true
         },
-      },
-      {
+      })
+
+      // Step 2: Check npm package existence and validate
+      console.log(`\nChecking npm registry for "${name}"...`)
+
+      const npmPackage = await fetchNpmPackage(name)
+
+      if (!npmPackage) {
+        // Package doesn't exist - show setup instructions and abort
+        console.error(getSetupInstructions(name))
+        throw new Error(`Package "${name}" does not exist on npm. See instructions above.`)
+      }
+
+      // Package exists - check versions
+      const versions = Object.keys(npmPackage.versions)
+
+      if (versions.length === 0) {
+        console.error(getSetupInstructions(name))
+        throw new Error(`Package "${name}" has no published versions. See instructions above.`)
+      }
+
+      if (versions.length > 1 || versions[0] !== '0.0.1') {
+        throw new Error(
+          `Package "${name}" already has published versions other than 0.0.1 (found: ${versions.join(', ')}).\n` +
+            `Use the "copy plugin" command instead to migrate an existing plugin.`,
+        )
+      }
+
+      // Check if the 0.0.1 package.json matches the setup template
+      const setupPackageJson = npmPackage.versions['0.0.1']
+
+      if (!isValidSetupPackage(setupPackageJson)) {
+        throw new Error(
+          `Package "${name}@0.0.1" exists but doesn't match the expected OIDC setup template.\n` +
+            `This appears to be a real published package.\n` +
+            `Use the "copy plugin" command instead to migrate an existing plugin.`,
+        )
+      }
+
+      console.log(`✓ Package "${name}" is a valid OIDC setup package. Proceeding...\n`)
+
+      // Step 3: Get description
+      const {description} = await inquirer.prompt<{description: string}>({
         type: 'input',
         name: 'description',
         message:
-          'What is the description of the plugin? This is used both as the `description` field in the `package.json` and the `README.md` intro.',
-      },
-      {
-        type: 'input',
-        name: 'version',
-        message: 'What is the version of the plugin?',
-        default: async () => '0.0.1',
-      },
-    ],
+          'What is the description of the plugin?\n  (Used in package.json and README.md intro)',
+      })
+
+      // Version starts at 0.0.1 for new plugins (replaces the OIDC setup package)
+      return {name, description, version: '0.0.1'}
+    },
     actions: [
       {
         type: 'add',
