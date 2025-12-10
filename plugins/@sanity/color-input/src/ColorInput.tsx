@@ -34,7 +34,7 @@ interface ColorPickerProps extends CustomPickerInjectedProps<Color> {
   width?: string
   disableAlpha: boolean
   colorList?: Array<Color> | undefined
-  // readOnly?: boolean
+  readOnly?: boolean
   onUnset: () => void
   color: ColorValue
 }
