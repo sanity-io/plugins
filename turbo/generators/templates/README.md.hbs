@@ -26,10 +26,10 @@ Add it as a plugin in sanity.config.ts:
 
 ```js
 import { defineConfig } from 'sanity'
-import { {{ camelCase name }} } from '{{ name }}'
+import { {{ pluginNamedExport }} } from '{{ name }}'
 
 export default defineConfig({
   // ...
-  plugins: [{{ camelCase name }}()],
+  plugins: [{{ pluginNamedExport }}()],
 })
 ```

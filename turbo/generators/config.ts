@@ -56,6 +56,38 @@ After completing these steps, run this generator again.
 `
 }
 
+/**
+ * Derives a default export name from a package name.
+ *
+ * Examples:
+ * - sanity-plugin-mux-input → muxInput
+ * - @sanity/vercel-bypass-protection → vercelBypassProtection
+ * - @sanity/code-input → codeInput
+ * - @sanity/personalization-plugin → personalization
+ * - @sanity/sanity-plugin-async-list → asyncList
+ */
+function derivePluginNamedExport(name: string): string {
+  let result = name
+
+  // Remove @scope/ prefix if present
+  if (result.startsWith('@')) {
+    result = result.split('/')[1] || result
+  }
+
+  // Remove sanity-plugin- prefix if present
+  if (result.startsWith('sanity-plugin-')) {
+    result = result.slice('sanity-plugin-'.length)
+  }
+
+  // Remove -plugin suffix if present
+  if (result.endsWith('-plugin')) {
+    result = result.slice(0, -'-plugin'.length)
+  }
+
+  // Convert kebab-case to camelCase
+  return result.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+}
+
 function isValidSetupPackage(name: string, packageJson: NpmPackageJson): boolean {
   return (
     packageJson.version === '0.0.1' &&
@@ -139,8 +171,17 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           'What is the description of the plugin?\n  (Used in package.json and README.md intro)',
       })
 
+      // Step 4: Get plugin named export
+      const defaultExport = derivePluginNamedExport(name)
+      const {pluginNamedExport} = await inquirer.prompt<{pluginNamedExport: string}>({
+        type: 'input',
+        name: 'pluginNamedExport',
+        message: 'What should the plugin export be named?\n  (Used in imports like: import { X } from ...)',
+        default: defaultExport,
+      })
+
       // Version starts at 0.0.1 for new plugins (replaces the OIDC setup package)
-      return {name, description, version: '0.0.1'}
+      return {name, description, pluginNamedExport, version: '0.0.1'}
     },
     actions: [
       {

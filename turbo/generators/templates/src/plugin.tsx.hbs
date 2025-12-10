@@ -4,9 +4,9 @@ interface PluginConfig {
   name?: string
 }
 
-export const {{ camelCase name }}: Plugin<PluginConfig> = definePlugin<PluginConfig>(
+export const {{ pluginNamedExport }}: Plugin<PluginConfig> = definePlugin<PluginConfig>(
   (config = {}) => {
-    const { name = '{{ name }}'} = config
+    const {name = '{{ name }}'} = config
 
     return {
       name,
