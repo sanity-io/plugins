@@ -9,7 +9,7 @@
     "format": "oxfmt . --no-error-on-unmatched-pattern",
     "lint": "turbo run oxlint lint",
     "lint:ci": "turbo run lint -- -f gha --max-warnings 0",
-    "oxlint": "oxlint --type-aware --deny-warnings",
+    "oxlint": "oxlint --type-check --type-aware --deny-warnings",
     "release": "changeset publish",
     "typecheck": "turbo typecheck --continue"
   },
