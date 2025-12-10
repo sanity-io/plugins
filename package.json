@@ -20,7 +20,7 @@
     "eslint-formatter-gha": "^1.6.0",
     "oxfmt": "^0.17.0",
     "oxlint": "^1.32.0",
-    "oxlint-tsgolint": "^0.8.4",
+    "oxlint-tsgolint": "^0.8.5",
     "setup-npm-trusted-publish": "^1.0.3",
     "turbo": "^2.6.3",
     "typescript": "catalog:"
