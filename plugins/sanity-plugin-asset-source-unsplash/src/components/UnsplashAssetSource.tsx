@@ -133,7 +133,7 @@ class UnsplashAssetSourceInternal extends React.Component<
     this.searchSubject$.next('')
   }
 
-  handleScollerLoadMore = () => {
+  handleScrollerLoadMore = () => {
     const nextPage = this.state.page + 1
     this.setState({page: nextPage, isLoading: true})
     this.pageSubject$.next(nextPage)
@@ -211,7 +211,7 @@ class UnsplashAssetSourceInternal extends React.Component<
           )}
           <InfiniteScroll
             dataLength={this.getPhotos().length} // This is important field to render the next data
-            next={this.handleScollerLoadMore}
+            next={this.handleScrollerLoadMore}
             // scrollableTarget="unsplash-scroller"
             hasMore
             scrollThreshold={0.99}
