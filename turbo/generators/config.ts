@@ -238,6 +238,34 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
         templateFile: 'templates/tsconfig.build.json',
       },
+      // Add to test-studio dependencies
+      {
+        type: 'append',
+        path: '{{ turbo.paths.root }}/dev/test-studio/package.json',
+        pattern: /"dependencies": {(?<insertion>)/,
+        template: '    "{{ name }}": "workspace:*",\n',
+      },
+      // Create test-studio example file
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/dev/test-studio/src/{{ dashCase pluginNamedExport }}/index.tsx',
+        templateFile: 'templates/dev/test-studio-example.tsx.hbs',
+      },
+      // Add import to sanity.config.ts (insert before first import)
+      {
+        type: 'append',
+        path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
+        pattern: /from 'sanity'(?<insertion>)/,
+        template:
+          "\nimport { {{ pluginNamedExport }}Example } from '#{{ dashCase pluginNamedExport }}'\n",
+      },
+      // Add plugin to plugins array
+      {
+        type: 'append',
+        path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
+        pattern: /\/\/ add new plugins here(?<insertion>)/,
+        template: '      {{ pluginNamedExport }}Example(),\n',
+      },
     ],
   })
 }

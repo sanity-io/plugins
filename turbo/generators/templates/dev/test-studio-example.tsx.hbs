@@ -1,0 +1,6 @@
+import { {{ pluginNamedExport }} } from '{{ name }}'
+import {definePlugin} from 'sanity'
+
+export const {{ pluginNamedExport }}Example = definePlugin(() => ({
+  plugins: [{{ pluginNamedExport }}()],
+}))

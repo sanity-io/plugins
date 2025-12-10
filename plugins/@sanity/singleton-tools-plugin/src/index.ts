@@ -1,1 +1,0 @@
-export {singletonTools} from './plugin'
