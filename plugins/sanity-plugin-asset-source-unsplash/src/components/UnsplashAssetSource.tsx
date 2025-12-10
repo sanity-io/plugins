@@ -18,6 +18,7 @@ import Photo from './Photo'
 import {SearchInput} from './UnsplashAssetSource.styled'
 
 type UnsplashPhotoAlbumPhoto = PhotoType & {
+  key: string
   data: UnsplashPhoto
 }
 
