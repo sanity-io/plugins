@@ -37,8 +37,7 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "lint": "eslint .",
-    "prepack": "turbo run build",
-    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/color-input/tsconfig.json)"
+    "prepack": "turbo run build"
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",

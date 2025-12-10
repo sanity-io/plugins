@@ -10,8 +10,7 @@
     "lint": "turbo run oxlint lint",
     "lint:ci": "turbo run lint -- -f gha --max-warnings 0",
     "oxlint": "oxlint --type-check --type-aware --deny-warnings",
-    "release": "changeset publish",
-    "typecheck": "turbo typecheck --continue"
+    "release": "changeset publish"
   },
   "dependencies": {
     "@changesets/changelog-github": "^0.5.2",

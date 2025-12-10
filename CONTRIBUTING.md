@@ -88,12 +88,7 @@ pnpm oxlint
 
 ### Type Checking
 
-We use TypeScript with [tsgo](https://github.com/nicknisi/tsgo) (native TypeScript) for type checking:
-
-```bash
-# Type check all packages
-pnpm typecheck
-```
+Type checking is [performed by oxlint](https://oxc.rs/blog/2025-12-08-type-aware-alpha.html#support-for-type-checking-while-linting) when running the `lint` command.
 
 ### Running All Checks
 
@@ -101,7 +96,6 @@ Before submitting a PR, make sure all checks pass:
 
 ```bash
 pnpm build
-pnpm typecheck
 pnpm lint
 pnpm format
 ```
@@ -180,8 +174,7 @@ Each plugin needs the following files. Use existing plugins as reference:
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "lint": "eslint .",
-    "prepack": "turbo run build",
-    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/my-plugin/tsconfig.json)"
+    "prepack": "turbo run build"
   },
   "dependencies": {
     "react-compiler-runtime": "^1.0.0"
@@ -217,7 +210,6 @@ Each plugin needs the following files. Use existing plugins as reference:
 }
 ```
 
-> **Note:** Adjust the `typecheck` script path based on your plugin location. For `plugins/@sanity/*` use `../../..`, for `plugins/sanity-plugin-*` use `../..`.
 
 #### `package.config.ts`
 
