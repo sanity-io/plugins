@@ -59,8 +59,7 @@ After completing these steps, run this generator again.
 function isValidSetupPackage(name: string, packageJson: NpmPackageJson): boolean {
   return (
     packageJson.version === '0.0.1' &&
-    packageJson.description ===
-      `OIDC trusted publishing setup package for ${name}` &&
+    packageJson.description === `OIDC trusted publishing setup package for ${name}` &&
     Array.isArray(packageJson.keywords) &&
     packageJson.keywords.length === 3 &&
     packageJson.keywords[0] === 'oidc' &&
