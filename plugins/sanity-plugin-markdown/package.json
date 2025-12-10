@@ -39,8 +39,7 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "lint": "eslint .",
-    "prepack": "turbo run build",
-    "typecheck": "(cd ../.. && tsgo --project plugins/sanity-plugin-markdown/tsconfig.json)"
+    "prepack": "turbo run build"
   },
   "dependencies": {
     "@sanity/ui": "^3.1.11",
