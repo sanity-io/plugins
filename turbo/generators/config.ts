@@ -3,8 +3,9 @@ import type {PlopTypes} from '@turbo/gen'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
-  plop.setGenerator('plugin', {
+  plop.setGenerator('new plugin', {
     description: 'Generates a new Sanity Studio plugin',
+
     prompts: [
       {
         type: 'input',

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "create:plugin": "turbo gen plugin",
+    "generate": "turbo gen",
     "build": "turbo build",
     "dev": "pnpm turbo dev --filter=test-studio",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
