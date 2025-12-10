@@ -34,14 +34,14 @@ export default defineConfig([
     name: 'kitchen-sink',
     plugins: [
       structureTool(),
+      // add new plugins here
+      singletonToolsExample(),
+
       aprimoExample(),
       bynderExample(),
       colorExample(),
       markdownExample(),
       debugSecrets(),
-      // add new plugins here
-
-      singletonToolsExample(),
       vercelProtectionBypassTool(),
       visionTool(),
     ],

@@ -7,6 +7,8 @@ interface NpmPackageJson {
   version: string
   description: string
   keywords?: string[]
+  devDependencies?: Record<string, string>
+  peerDependencies?: Record<string, string>
 }
 
 interface NpmPackageData {
@@ -263,8 +265,169 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       {
         type: 'append',
         path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
-        pattern: /\/\/ add new plugins here(?<insertion>)/,
-        template: '\n      {{ pluginNamedExport }}Example(),',
+        pattern: /(?<insertion>)\/\/ add new plugins here/,
+        template: '      {{ pluginNamedExport }}Example(),\n',
+      },
+    ],
+  })
+
+  plop.setGenerator('copy plugin', {
+    description: 'Copies an existing Sanity Studio plugin into the monorepo',
+    prompts: async (inquirer) => {
+      // Step 1: Get and validate the plugin name
+      const {name} = await inquirer.prompt<{name: string}>({
+        type: 'input',
+        name: 'name',
+        message: 'What is the name of the plugin?',
+        validate: (input: string) => {
+          if (!input) {
+            return 'Plugin name is required'
+          }
+          const {errors} = validateNpmPackageName(input)
+          if (errors?.length) {
+            return errors.join(', ')
+          }
+          if (input.startsWith('@') && !input.startsWith('@sanity/')) {
+            return 'Only the @sanity scope is allowed'
+          }
+          return true
+        },
+      })
+
+      // Step 2: Check npm package existence and validate
+      console.log(`\nChecking npm registry for "${name}"...`)
+
+      const npmPackage = await fetchNpmPackage(name)
+
+      if (!npmPackage) {
+        throw new Error(
+          `Package "${name}" does not exist on npm.\n` +
+            `Use the "new plugin" command to create a new plugin.`,
+        )
+      }
+
+      // Package exists - check versions
+      const versions = Object.keys(npmPackage.versions)
+
+      if (versions.length === 0) {
+        throw new Error(
+          `Package "${name}" has no published versions.\n` +
+            `Use the "new plugin" command to create a new plugin.`,
+        )
+      }
+
+      // Disallow 0.0.1 only if it's a valid OIDC setup package
+      // (more than one release is always fine, single release that isn't a setup package is fine)
+      if (versions.length === 1 && versions[0] === '0.0.1') {
+        const setupPackageJson = npmPackage.versions['0.0.1']
+        if (isValidSetupPackage(name, setupPackageJson)) {
+          throw new Error(
+            `Package "${name}@0.0.1" is an OIDC setup package, not a real published plugin.\n` +
+              `Use the "new plugin" command to create a new plugin.`,
+          )
+        }
+      }
+
+      // Get the latest version's package.json for metadata
+      const latestVersion = versions[versions.length - 1]
+      const latestPackageJson = npmPackage.versions[latestVersion]
+
+      console.log(`✓ Found "${name}@${latestVersion}". Proceeding...\n`)
+
+      // Extract version and description from package metadata
+      const version = latestPackageJson.version
+      const description = latestPackageJson.description || ''
+
+      // Check for styled-components in both devDependencies and peerDependencies
+      const hasStyledComponents =
+        latestPackageJson.devDependencies?.['styled-components'] !== undefined &&
+        latestPackageJson.peerDependencies?.['styled-components'] !== undefined
+
+      // Step 3: Get plugin named export
+      const defaultExport = derivePluginNamedExport(name)
+      const {pluginNamedExport} = await inquirer.prompt<{pluginNamedExport: string}>({
+        type: 'input',
+        name: 'pluginNamedExport',
+        message:
+          'What should the plugin export be named?\n  (Used in imports like: import { X } from ...)',
+        default: defaultExport,
+      })
+
+      return {name, description, pluginNamedExport, hasStyledComponents, version}
+    },
+    actions: [
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/README.md',
+        templateFile: 'templates/README.md.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/index.ts',
+        templateFile: 'templates/src/index.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/components/Tool.tsx',
+        templateFile: 'templates/src/components/Tool.tsx.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/plugin.tsx',
+        templateFile: 'templates/src/plugin.tsx.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/eslint.config.js',
+        templateFile: 'templates/eslint.config.js.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/package.config.ts',
+        templateFile: 'templates/package.config.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/package.json',
+        templateFile: 'templates/package.json.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.json',
+        templateFile: 'templates/tsconfig.json',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
+        templateFile: 'templates/tsconfig.build.json',
+      },
+      // Add to test-studio dependencies
+      {
+        type: 'append',
+        path: '{{ turbo.paths.root }}/dev/test-studio/package.json',
+        pattern: /"dependencies": {(?<insertion>)/,
+        template: '    "{{ name }}": "workspace:*",\n',
+      },
+      // Create test-studio example file
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/dev/test-studio/src/{{ dashCase pluginNamedExport }}/index.tsx',
+        templateFile: 'templates/dev/test-studio-example.tsx.hbs',
+      },
+      // Add import to sanity.config.ts (insert before first import)
+      {
+        type: 'append',
+        path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
+        pattern: /from 'sanity'(?<insertion>)/,
+        template:
+          "\nimport { {{ pluginNamedExport }}Example } from '#{{ dashCase pluginNamedExport }}'",
+      },
+      // Add plugin to plugins array
+      {
+        type: 'append',
+        path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
+        pattern: /(?<insertion>)\/\/ add new plugins here/,
+        template: '      {{ pluginNamedExport }}Example(),\n',
       },
     ],
   })
