@@ -1,1 +1,1 @@
-export { singletonTools } from './plugin'
+export {singletonTools} from './plugin'
