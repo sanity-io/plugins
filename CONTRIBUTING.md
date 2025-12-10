@@ -176,6 +176,10 @@ pnpm generate "copy plugin"
 
 ### 2. Manually port over files
 
+Refer to the generated `README.md` file in the plugin workspace for how to complete the last manual steps.
+
+You can run `pnpm dev` to quickly see how the plugin works in the test studio as you migrate code.
+
 ### 3. Create a new major release
 
 When moving a plugin to this monorepo the conventions enforced on the repo typically warrant a new major version:

@@ -9,6 +9,7 @@ interface NpmPackageJson {
   keywords?: string[]
   devDependencies?: Record<string, string>
   peerDependencies?: Record<string, string>
+  repository?: string | {type?: string; url?: string; directory?: string}
 }
 
 interface NpmPackageData {
@@ -100,6 +101,20 @@ function isValidSetupPackage(name: string, packageJson: NpmPackageJson): boolean
     packageJson.keywords[1] === 'trusted-publishing' &&
     packageJson.keywords[2] === 'setup'
   )
+}
+
+function getRepositoryUrl(packageJson: NpmPackageJson): string | undefined {
+  const repo = packageJson.repository
+  if (!repo) return undefined
+  if (typeof repo === 'string') return repo
+  if (repo.url) {
+    // Convert git+https://... or git://... to https://...
+    return repo.url
+      .replace(/^git\+/, '')
+      .replace(/^git:\/\//, 'https://')
+      .replace(/\.git$/, '')
+  }
+  return undefined
 }
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
@@ -233,12 +248,12 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.json',
-        templateFile: 'templates/tsconfig.json',
+        templateFile: 'templates/tsconfig.json.hbs',
       },
       {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
-        templateFile: 'templates/tsconfig.build.json',
+        templateFile: 'templates/tsconfig.build.json.hbs',
       },
       // Add to test-studio dependencies
       {
@@ -334,9 +349,10 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
       console.log(`✓ Found "${name}@${latestVersion}". Proceeding...\n`)
 
-      // Extract version and description from package metadata
+      // Extract version, description, and repository URL from package metadata
       const version = latestPackageJson.version
       const description = latestPackageJson.description || ''
+      const originalRepositoryUrl = getRepositoryUrl(latestPackageJson)
 
       // Check for styled-components in both devDependencies and peerDependencies
       const hasStyledComponents =
@@ -353,13 +369,30 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         default: defaultExport,
       })
 
-      return {name, description, pluginNamedExport, hasStyledComponents, version}
+      // Step 4: Ask about isolatedDeclarations
+      const {isolatedDeclarations} = await inquirer.prompt<{isolatedDeclarations: boolean}>({
+        type: 'confirm',
+        name: 'isolatedDeclarations',
+        message:
+          'Enable isolatedDeclarations?\n  (Recommended to disable initially and enable later, as it may require many changes to existing exports)',
+        default: false,
+      })
+
+      return {
+        name,
+        description,
+        pluginNamedExport,
+        hasStyledComponents,
+        version,
+        isolatedDeclarations,
+        originalRepositoryUrl,
+      }
     },
     actions: [
       {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/README.md',
-        templateFile: 'templates/README.md.hbs',
+        templateFile: 'templates/README.todo.md.hbs',
       },
       {
         type: 'add',
@@ -368,13 +401,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/components/Tool.tsx',
-        templateFile: 'templates/src/components/Tool.tsx.hbs',
-      },
-      {
-        type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/plugin.tsx',
-        templateFile: 'templates/src/plugin.tsx.hbs',
+        templateFile: 'templates/src/plugin.todo.tsx.hbs',
       },
       {
         type: 'add',
@@ -394,12 +422,12 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.json',
-        templateFile: 'templates/tsconfig.json',
+        templateFile: 'templates/tsconfig.json.hbs',
       },
       {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
-        templateFile: 'templates/tsconfig.build.json',
+        templateFile: 'templates/tsconfig.build.json.hbs',
       },
       // Add to test-studio dependencies
       {

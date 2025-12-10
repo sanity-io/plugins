@@ -1,0 +1,106 @@
+# TODO: Manual Steps for `{{ name }}`
+
+This plugin was scaffolded using `pnpm generate "copy plugin"`.
+
+{{#if originalRepositoryUrl}}
+**Original repository:** {{ originalRepositoryUrl }}
+{{/if}}
+
+## 1. Configure Trusted Publishing (CRITICAL)
+
+⚠️ **If trusted publishing is not configured correctly, the plugin will fail to publish from this monorepo.**
+
+Go to the npm package access settings:
+
+**https://www.npmjs.com/package/{{ name }}/access**
+
+### Configure GitHub Actions as Trusted Publisher
+
+Under **"Publishing access"**, click **"Add a trusted publisher"** and select **"GitHub Actions"**.
+
+Fill in the fields **exactly** as shown:
+
+| Setting              | Value         |
+| -------------------- | ------------- |
+| **Owner**            | `sanity-io`   |
+| **Repository**       | `plugins`     |
+| **Workflow**         | `release.yml` |
+| **Environment name** | _(leave empty)_ |
+
+Click **"Add trusted publisher"**.
+
+### Configure Token Settings
+
+Under **"Token settings"**, ensure:
+
+- ✅ **Require 2FA** for publishing is enabled
+- ✅ **Disallow tokens** (both granular and automation tokens)
+
+This ensures only the GitHub Actions release workflow can publish this package using OIDC-based trusted publishing.
+
+## 2. Copy Source Files
+
+Copy all source files from the original plugin into `./src`:
+
+{{#if originalRepositoryUrl}}
+```bash
+# Clone the original repo and copy the src directory
+git clone {{ originalRepositoryUrl }} /tmp/original-plugin
+cp -r /tmp/original-plugin/src/* ./src/
+rm -rf /tmp/original-plugin
+```
+{{else}}
+```bash
+# Copy the src directory from the original plugin location
+cp -r /path/to/original-plugin/src/* ./src/
+```
+{{/if}}
+
+## 3. Copy README.md
+
+Copy the `README.md` from the original plugin and replace this file with it.
+
+## 4. Copy and Update CHANGELOG.md
+
+Copy the `CHANGELOG.md` from the original plugin, then update the top of the file:
+
+**Remove this header if present:**
+
+```md
+<!-- markdownlint-disable --><!-- textlint-disable -->
+
+# 📓 Changelog
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+```
+
+**Replace with:**
+
+```md
+# {{ name }}
+```
+
+## 5. Update package.json Dependencies
+
+Manually update `package.json` with any missing dependencies from the original plugin:
+
+- `dependencies`
+- `devDependencies`
+- `peerDependencies`
+- `exports` (if the original has custom export paths)
+
+**Do NOT copy over:**
+
+- `@sanity/incompatible-plugin`
+- `@sanity/plugin-kit`
+
+## 6. Verify Setup
+
+After completing all steps:
+
+1. Delete this README.md and replace it with the original plugin's README
+2. Run `pnpm install` from the monorepo root
+3. Run `pnpm build` to verify the plugin builds correctly
+4. Run `pnpm dev` to test in the test studio
+5. Create a changeset: `pnpm changeset add`

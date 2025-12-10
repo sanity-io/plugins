@@ -1,0 +1,15 @@
+{{#if isolatedDeclarations}}
+import {definePlugin, type Plugin} from 'sanity'
+
+export const {{ pluginNamedExport }}: Plugin<void> = definePlugin<void>(() => {
+{{else}}
+import {definePlugin} from 'sanity'
+
+export const {{ pluginNamedExport }} = definePlugin<void>(() => {
+{{/if}}
+  // TODO: migrate over plugin code from the original repo
+
+  return {
+    //
+  }
+})
