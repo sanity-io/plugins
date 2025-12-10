@@ -118,6 +118,9 @@ importers:
       sanity-plugin-aprimo:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-aprimo
+      sanity-plugin-asset-source-unsplash:
+        specifier: workspace:*
+        version: link:../../plugins/sanity-plugin-asset-source-unsplash
       sanity-plugin-bynder-input:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-bynder-input
