@@ -5,7 +5,7 @@ import {definePlugin, defineType} from 'sanity'
 const colorTest = defineType({
   name: 'colorTest',
   type: 'document',
-  title: 'Color',
+  titles: 'Color',
   icon: DropIcon,
   preview: {
     select: {
