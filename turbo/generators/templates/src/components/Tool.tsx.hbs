@@ -1,3 +1,31 @@
+import {Flex, Heading} from '@sanity/ui'
+{{#if hasStyledComponents}}
+import {styled} from 'styled-components'
+
+const Layout = styled(Flex).attrs({
+  align: 'center',
+  direction: 'column',
+  height: 'fill',
+  justify: 'center',
+})`
+  width: 100;
+`
+
+{{else}}
+
+function Layout({children}: {children: React.ReactNode}) {
+  return (
+    <Flex align="center" direction="column" height="fill" justify="center" style={{width: '100%'}}>
+      {children}
+    </Flex>
+  )
+}
+{{/if}}
+
 export default function Tool() {
-  return <>Hello World!</>
+  return (
+    <Layout>
+      <Heading>Hello World!</Heading>
+    </Layout>
+  )
 }

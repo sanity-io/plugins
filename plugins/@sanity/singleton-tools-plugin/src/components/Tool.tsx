@@ -1,9 +1,17 @@
 import {Flex, Heading} from '@sanity/ui'
 
-export default function Tool() {
+function Layout({children}: {children: React.ReactNode}) {
   return (
     <Flex align="center" direction="column" height="fill" justify="center" style={{width: '100%'}}>
-      <Heading>Hello World!</Heading>
+      {children}
     </Flex>
+  )
+}
+
+export default function Tool() {
+  return (
+    <Layout>
+      <Heading>Hello World!</Heading>
+    </Layout>
   )
 }
