@@ -38,7 +38,7 @@ export default function Photo(props: Props) {
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       onKeyDown(event)
-      if (event.keyCode === 13) {
+      if (event.key === 'Enter') {
         onClick(data)
       }
     },
