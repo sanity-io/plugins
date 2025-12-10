@@ -32,8 +32,7 @@
   ],
   "scripts": {
     "build": "pkg build --strict --check --clean",
-    "prepack": "turbo run build",
-    "typecheck": "(cd ../../.. && tsgo --project plugins/@sanity/debug-preview-url-secret-plugin/tsconfig.json)"
+    "prepack": "turbo run build"
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",

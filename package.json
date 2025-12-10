@@ -7,11 +7,11 @@
     "build": "turbo build",
     "dev": "pnpm turbo dev --filter=test-studio",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
+    "prelint": "pnpm build --filter='!test-studio'",
     "lint": "turbo run oxlint lint",
     "lint:ci": "turbo run lint -- -f gha --max-warnings 0",
-    "oxlint": "oxlint --type-aware --deny-warnings",
-    "release": "changeset publish",
-    "typecheck": "turbo typecheck --continue"
+    "oxlint": "oxlint --type-check --type-aware --deny-warnings",
+    "release": "changeset publish"
   },
   "dependencies": {
     "@changesets/changelog-github": "^0.5.2",
@@ -20,7 +20,7 @@
     "eslint-formatter-gha": "^1.6.0",
     "oxfmt": "^0.17.0",
     "oxlint": "^1.32.0",
-    "oxlint-tsgolint": "^0.8.4",
+    "oxlint-tsgolint": "^0.8.5",
     "setup-npm-trusted-publish": "^1.0.3",
     "turbo": "^2.6.3",
     "typescript": "catalog:"

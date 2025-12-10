@@ -50,10 +50,7 @@ pnpm dev
 # Build all packages
 pnpm build
 
-# Run type checking
-pnpm typecheck
-
-# Run linting
+# Run linting and type checking
 pnpm lint
 
 # Format code

@@ -30,8 +30,7 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "lint": "eslint .",
-    "prepack": "turbo run build",
-    "typecheck": "(cd ../.. && tsgo --project plugins/sanity-plugin-graph-view/tsconfig.json)"
+    "prepack": "turbo run build"
   },
   "dependencies": {
     "@sanity/color": "^3.0.6",
