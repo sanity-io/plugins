@@ -19,7 +19,7 @@
     "postinstall": "husky"
   },
   "nano-staged": {
-    "*": [
+    "*.{ts,tsx,js,jsx,json,jsonc,md}": [
       "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
