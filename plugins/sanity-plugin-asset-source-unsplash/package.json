@@ -73,7 +73,6 @@
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
-      "./next": "./dist/indexNext.js",
       "./package.json": "./package.json"
     }
   }
