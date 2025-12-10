@@ -13,16 +13,19 @@ const fetchSearch = (
   query: string,
   page: number,
   perPage: number,
-): Observable<any> =>
-  defer(
-    () =>
-      client.observable.request({
-        url: `/addons/unsplash/search/photos?query=${encodeURIComponent(
-          query,
-        )}&page=${page}&per_page=${perPage}`,
-        withCredentials: true,
-        method: 'GET',
-      }) as any,
+): Observable<{
+  results: UnsplashPhoto[]
+  total: number
+  total_pages: number
+}> =>
+  defer(() =>
+    client.observable.request({
+      url: `/addons/unsplash/search/photos?query=${encodeURIComponent(
+        query,
+      )}&page=${page}&per_page=${perPage}`,
+      withCredentials: true,
+      method: 'GET',
+    }),
   )
 
 const fetchList = (
@@ -30,14 +33,13 @@ const fetchList = (
   type: string,
   page: number,
   perPage: number,
-): Observable<any> =>
-  defer(
-    () =>
-      client.observable.request({
-        url: `/addons/unsplash/photos?order_by=${type}&page=${page}&per_page=${perPage}`,
-        withCredentials: true,
-        method: 'GET',
-      }) as any,
+): Observable<UnsplashPhoto[]> =>
+  defer(() =>
+    client.observable.request({
+      url: `/addons/unsplash/photos?order_by=${type}&page=${page}&per_page=${perPage}`,
+      withCredentials: true,
+      method: 'GET',
+    }),
   )
 
 export function fetchDownloadUrl(client: SanityClient, photo: UnsplashPhoto): Promise<string> {
@@ -61,7 +63,7 @@ export const search = (
   query: SearchSubject,
   page: PageSubject,
   resultsPerPage: number,
-): Observable<any> => {
+): Observable<UnsplashPhoto[]> => {
   return concat(
     query.pipe(
       withLatestFrom(page),
