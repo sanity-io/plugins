@@ -45,17 +45,21 @@
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "^1.0.0",
+{{#if hasStyledComponents}}
     "babel-plugin-styled-components": "^2.1.4",
+{{/if}}
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
+{{#if hasStyledComponents}}
     "styled-components": "catalog:",
+{{/if}}
     "typescript": "catalog:"
   },
   "peerDependencies": {
     "react": "^18.3 || ^19",
-    "sanity": "^4.0.0-0 || ^5.0.0-0",
-    "styled-components": "^6.1"
+    "sanity": "^4.0.0-0 || ^5.0.0-0"{{#if hasStyledComponents}},
+    "styled-components": "^6.1"{{/if}}
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

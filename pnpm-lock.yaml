@@ -326,9 +326,6 @@ importers:
       react-compiler-runtime:
         specifier: ^1.0.0
         version: 1.0.0(react@19.2.1)
-      styled-components:
-        specifier: npm:@sanity/styled-components@latest
-        version: '@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1)'
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -351,9 +348,6 @@ importers:
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
-      babel-plugin-styled-components:
-        specifier: ^2.1.4
-        version: 2.1.4(@babel/core@7.28.5)(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -362,7 +356,7 @@ importers:
         version: 19.2.1
       sanity:
         specifier: 'catalog:'
-        version: 4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+        version: 4.21.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.12(@types/react@19.2.7))(@types/node@24.10.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(styled-components@6.1.19(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
