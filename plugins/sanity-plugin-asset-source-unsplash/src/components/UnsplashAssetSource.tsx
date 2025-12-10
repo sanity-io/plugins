@@ -173,7 +173,7 @@ class UnsplashAssetSourceInternal extends React.Component<
         this.state.cursor || false
     return (
       <Photo
-        onClick={this.handleSelect.bind(photo.data)}
+        onClick={() => this.handleSelect(photo.data)}
         onKeyDown={this.handleKeyDown}
         data={photo.data}
         width={layout.width}
