@@ -38,6 +38,7 @@ export default defineConfig([
       colorExample(),
       markdownExample(),
       debugSecrets(),
+      // add new plugins here
       vercelProtectionBypassTool(),
       visionTool(),
     ],
