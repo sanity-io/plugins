@@ -95,12 +95,17 @@ Type checking is [performed by oxlint](https://oxc.rs/blog/2025-12-08-type-aware
 Before submitting a PR, make sure all checks pass:
 
 ```bash
+pnpm format
 pnpm build
 pnpm lint
-pnpm format
+```
+And attach a changeset:
+```bash
+pnpm changeset add
 ```
 
 ## Adding a New Plugin
+
 
 ### 1. Set Up Trusted Publishing (for new npm packages)
 
@@ -127,6 +132,13 @@ Under token settings, configure:
 - **Disallow tokens** (granular and automation tokens)
 
 This sets up [OIDC-based trusted publishing](https://docs.npmjs.com/generating-provenance-statements) so the release workflow can publish packages without storing npm tokens.
+
+### 2. Init the plugin workspace
+
+Run the generator and follow the prompts:
+```bash
+pnpm generate "new plugin"
+```
 
 ### 2. Create the Plugin Directory
 

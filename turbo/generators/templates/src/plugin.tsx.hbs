@@ -1,0 +1,16 @@
+import {definePlugin, type Plugin} from 'sanity'
+
+interface PluginConfig {
+  name?: string
+}
+
+export const {{ camelCase name }}: Plugin<PluginConfig> = definePlugin<PluginConfig>(
+  (config = {}) => {
+    const { name = '{{ name }}'} = config
+
+    return {
+      name,
+      // ...
+    }
+  },
+)

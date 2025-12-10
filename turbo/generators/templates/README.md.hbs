@@ -1,0 +1,35 @@
+# {{ name }}
+
+{{ description }}
+
+## Installation
+
+```bash
+npm install --save {{ name }}
+```
+
+or
+
+```bash
+pnpm add {{ name }}
+```
+
+or
+
+```
+yarn add {{ name }}
+```
+
+## Usage
+
+Add it as a plugin in sanity.config.ts:
+
+```js
+import { defineConfig } from 'sanity'
+import { {{ camelCase name }} } from '{{ name }}'
+
+export default defineConfig({
+  // ...
+  plugins: [{{ camelCase name }}()],
+})
+```

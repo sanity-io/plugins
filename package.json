@@ -4,18 +4,22 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "create:plugin": "turbo gen plugin",
     "build": "turbo build",
     "dev": "pnpm turbo dev --filter=test-studio",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
-    "prelint": "pnpm build --filter='!test-studio'",
+    "prelint": "pnpm preoxlint",
     "lint": "turbo run oxlint lint",
     "lint:ci": "turbo run lint -- -f gha --max-warnings 0",
+    "preoxlint": "pnpm build --filter='!test-studio'",
     "oxlint": "oxlint --type-check --type-aware --deny-warnings",
     "release": "changeset publish"
   },
   "dependencies": {
     "@changesets/changelog-github": "^0.5.2",
     "@changesets/cli": "^2.29.8",
+    "@turbo/gen": "^2.6.3",
+    "@types/validate-npm-package-name": "^4.0.2",
     "@typescript/native-preview": "catalog:",
     "eslint-formatter-gha": "^1.6.0",
     "oxfmt": "^0.17.0",
@@ -23,7 +27,8 @@
     "oxlint-tsgolint": "^0.8.5",
     "setup-npm-trusted-publish": "^1.0.3",
     "turbo": "^2.6.3",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "validate-npm-package-name": "^7.0.0"
   },
   "packageManager": "pnpm@10.25.0"
 }
