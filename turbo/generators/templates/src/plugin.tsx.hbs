@@ -1,16 +1,34 @@
 import {definePlugin, type Plugin} from 'sanity'
+import {lazy} from 'react'
+
+const ToolComponent = lazy(() => import('./components/Tool'))
 
 interface PluginConfig {
   name?: string
+  title?: string
+  icon?: React.ComponentType
 }
 
-export const {{ pluginNamedExport }}: Plugin<PluginConfig> = definePlugin<PluginConfig>(
+export const {{ pluginNamedExport }}: Plugin<PluginConfig | void> = definePlugin(
   (config = {}) => {
-    const {name = '{{ name }}'} = config
+    const {
+      name = '{{ dashCase pluginNamedExport }}',
+      title = '{{ titleCase pluginNamedExport }}',
+      icon,
+      ...options
+    } = config
 
     return {
-      name,
-      // ...
+      name: '{{ name }}',
+      tools: [
+        {
+          name,
+          title,
+          icon,
+          component: ToolComponent,
+          options,
+        }
+      ],
     }
   },
 )
