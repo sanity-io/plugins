@@ -10,13 +10,13 @@ interface PluginConfig {
 }
 
 export const {{ pluginNamedExport }}: Plugin<PluginConfig | void> = definePlugin(
-  (config = {}) => {
+  (config) => {
     const {
       name = '{{ dashCase pluginNamedExport }}',
       title = '{{ titleCase pluginNamedExport }}',
       icon,
       ...options
-    } = config
+    } = config || {}
 
     return {
       name: '{{ name }}',

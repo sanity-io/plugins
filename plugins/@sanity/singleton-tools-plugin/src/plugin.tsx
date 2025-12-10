@@ -10,13 +10,13 @@ interface PluginConfig {
 }
 
 export const singletonTools: Plugin<PluginConfig | void> = definePlugin(
-  (config = {}) => {
+  (config) => {
     const {
       name = 'singleton-tools',
       title = 'Singleton Tools',
       icon,
       ...options
-    } = config
+    } = config || {}
 
     return {
       name: '@sanity/singleton-tools-plugin',
