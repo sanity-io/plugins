@@ -174,6 +174,28 @@ Follow the prompts in the generator:
 pnpm generate "copy plugin"
 ```
 
+### 2. Manually port over files
+
+### 3. Create a new major release
+
+When moving a plugin to this monorepo the conventions enforced on the repo typically warrant a new major version:
+
+- enabling React Compiler
+- Dropping CJS
+- Dropping Studio v3 support and requiring at least v4
+
+```bash
+pnpm changeset add
+```
+
+When prompted:
+
+- Select your new package
+- Choose **major** for the version bump
+- Enter a summary of the changes that are breaking, and other changes that might affect runtime in order to pass linting and strict type checks.
+
+Commit the changeset file with your PR.
+
 ## Publishing Packages
 
 This monorepo uses [Changesets](https://github.com/changesets/changesets) for version management and publishing.
