@@ -93,7 +93,6 @@ class UnsplashAssetSourceInternal extends React.Component<
           },
           description,
           creditLine: `${photo.user.name} by Unsplash`,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
       }
       this.props.onSelect([asset])
@@ -118,14 +117,12 @@ class UnsplashAssetSourceInternal extends React.Component<
   }
 
   handleScollerLoadMore = () => {
-    // eslint-disable-next-line react/no-access-state-in-setstate
     const nextPage = this.state.page + 1
     this.setState({page: nextPage, isLoading: true})
     this.pageSubject$.next(nextPage)
     this.searchSubject$.next(this.state.query)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleKeyDown = (event: any) => {
     const {cursor} = this.state
     if ((event.keyCode === 38 || event.keyCode === 37) && cursor > 0) {
@@ -151,7 +148,6 @@ class UnsplashAssetSourceInternal extends React.Component<
     this.setState({cursor: index})
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   renderImage = (props: any) => {
     const {photo, layout} = props
     const active =
@@ -218,7 +214,6 @@ class UnsplashAssetSourceInternal extends React.Component<
               .filter((photos) => photos.length > 0)
               .map((photos: UnsplashPhoto[], index) => (
                 <PhotoAlbum
-                  // eslint-disable-next-line react/no-array-index-key
                   key={`gallery-${query || 'popular'}-${index}`}
                   layout="rows"
                   spacing={PHOTO_SPACING}
