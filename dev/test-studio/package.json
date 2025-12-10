@@ -21,6 +21,7 @@
     "react-dom": "catalog:",
     "sanity": "catalog:",
     "sanity-plugin-aprimo": "workspace:*",
+    "sanity-plugin-asset-source-unsplash": "workspace:*",
     "sanity-plugin-bynder-input": "workspace:*",
     "sanity-plugin-markdown": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
