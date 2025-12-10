@@ -25,7 +25,7 @@ export default function Photo(props: Props) {
   }, [onClick, data])
 
   const handleCreditLineClicked = useCallback(
-    (event: any) => {
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
       event.stopPropagation()
       const url = `${data.links.html}?utm_source=${encodeURIComponent(
         UTM_SOURCE,
@@ -38,7 +38,7 @@ export default function Photo(props: Props) {
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       onKeyDown(event)
-      if (event.keyCode === 13) {
+      if (event.key === 'Enter') {
         onClick(data)
       }
     },
