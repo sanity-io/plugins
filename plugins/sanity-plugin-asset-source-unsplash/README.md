@@ -214,7 +214,7 @@ export default defineConfig({
 }
 ```
 
-## Futher reading
+## Further reading
 
 - https://unsplash.com/documentation
 - https://www.sanity.io/docs/custom-asset-sources
