@@ -2,7 +2,7 @@ import {SearchIcon} from '@sanity/icons'
 import {Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import React from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import PhotoAlbum, {type RenderPhotoProps, type Photo} from 'react-photo-album'
+import PhotoAlbum, {type RenderPhotoProps, type Photo as PhotoType} from 'react-photo-album'
 import {BehaviorSubject, type Subscription} from 'rxjs'
 import {
   type AssetFromSource,
@@ -17,7 +17,8 @@ import {fetchDownloadUrl, search} from '../datastores/unsplash'
 import Photo from './Photo'
 import {SearchInput} from './UnsplashAssetSource.styled'
 
-type UnsplashPhotoAlbumPhoto = Photo & {
+type UnsplashPhotoAlbumPhoto = PhotoType & {
+  key: string
   data: UnsplashPhoto
 }
 
