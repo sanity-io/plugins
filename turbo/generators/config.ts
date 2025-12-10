@@ -176,7 +176,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       const {pluginNamedExport} = await inquirer.prompt<{pluginNamedExport: string}>({
         type: 'input',
         name: 'pluginNamedExport',
-        message: 'What should the plugin export be named?\n  (Used in imports like: import { X } from ...)',
+        message:
+          'What should the plugin export be named?\n  (Used in imports like: import { X } from ...)',
         default: defaultExport,
       })
 
