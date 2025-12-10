@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "turbo:fix": "pnpm dlx rimraf ./node_modules && pnpm install && pnpm turbo scan",
     "generate": "turbo gen",
     "build": "turbo build",
     "dev": "pnpm turbo dev --filter=test-studio",
