@@ -2,10 +2,14 @@
   "name": "{{ name }}",
   "version": "{{ version }}",
   "description": "{{ description }}",
+{{#if keywords}}
+  "keywords": {{{ json keywords }}},
+{{else}}
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
+{{/if}}
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/{{ name }}#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"

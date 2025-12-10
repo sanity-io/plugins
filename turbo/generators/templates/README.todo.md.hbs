@@ -2,7 +2,9 @@
 
 This plugin was scaffolded using `pnpm generate "copy plugin"`.
 
-{{#if originalRepositoryUrl}}
+{{#if originalSourceUrl}}
+**Original source:** {{ originalSourceUrl }}
+{{else if originalRepositoryUrl}}
 **Original repository:** {{ originalRepositoryUrl }}
 {{/if}}
 

@@ -1,5 +1,6 @@
 import type {PlopTypes} from '@turbo/gen'
 
+import hostedGitInfo from 'hosted-git-info'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 interface NpmPackageJson {
@@ -103,18 +104,30 @@ function isValidSetupPackage(name: string, packageJson: NpmPackageJson): boolean
   )
 }
 
-function getRepositoryUrl(packageJson: NpmPackageJson): string | undefined {
+interface RepositoryUrls {
+  /** The root repository URL (e.g., https://github.com/sanity-io/sanity-plugin-foo) */
+  repositoryUrl: string | undefined
+  /** The URL to the source directory, including tree/main/directory if specified */
+  sourceUrl: string | undefined
+}
+
+function getRepositoryUrls(packageJson: NpmPackageJson): RepositoryUrls {
   const repo = packageJson.repository
-  if (!repo) return undefined
-  if (typeof repo === 'string') return repo
-  if (repo.url) {
-    // Convert git+https://... or git://... to https://...
-    return repo.url
-      .replace(/^git\+/, '')
-      .replace(/^git:\/\//, 'https://')
-      .replace(/\.git$/, '')
-  }
-  return undefined
+  if (!repo) return {repositoryUrl: undefined, sourceUrl: undefined}
+
+  const repoString = typeof repo === 'string' ? repo : repo.url
+  if (!repoString) return {repositoryUrl: undefined, sourceUrl: undefined}
+
+  const info = hostedGitInfo.fromUrl(repoString)
+  if (!info) return {repositoryUrl: undefined, sourceUrl: undefined}
+
+  const repositoryUrl = info.browse()
+  const directory = typeof repo === 'object' ? repo.directory : undefined
+
+  // If there's a directory, construct a URL to that path in the repo
+  const sourceUrl = directory ? `${repositoryUrl}/tree/main/${directory}` : repositoryUrl
+
+  return {repositoryUrl, sourceUrl}
 }
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
@@ -349,10 +362,12 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
       console.log(`✓ Found "${name}@${latestVersion}". Proceeding...\n`)
 
-      // Extract version, description, and repository URL from package metadata
+      // Extract version, description, repository URLs, and keywords from package metadata
       const version = latestPackageJson.version
       const description = latestPackageJson.description || ''
-      const originalRepositoryUrl = getRepositoryUrl(latestPackageJson)
+      const {repositoryUrl: originalRepositoryUrl, sourceUrl: originalSourceUrl} =
+        getRepositoryUrls(latestPackageJson)
+      const keywords = latestPackageJson.keywords
 
       // Check for styled-components in both devDependencies and peerDependencies
       const hasStyledComponents =
@@ -386,6 +401,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         version,
         isolatedDeclarations,
         originalRepositoryUrl,
+        originalSourceUrl,
+        keywords,
       }
     },
     actions: [
