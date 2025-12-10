@@ -210,7 +210,6 @@ Each plugin needs the following files. Use existing plugins as reference:
 }
 ```
 
-
 #### `package.config.ts`
 
 ```typescript
