@@ -297,7 +297,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'append',
         path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
         pattern: /(?<insertion>)\/\/ add new plugins here/,
-        template: '      {{ pluginNamedExport }}Example(),\n',
+        template: '{{ pluginNamedExport }}Example(),',
       },
     ],
   })
@@ -449,7 +449,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'append',
         path: '{{ turbo.paths.root }}/dev/test-studio/package.json',
         pattern: /"dependencies": {(?<insertion>)/,
-        template: '    "{{ name }}": "workspace:*",\n',
+        template: '    "{{ name }}": "workspace:*",',
       },
       // Create test-studio example file
       {
@@ -470,7 +470,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'append',
         path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
         pattern: /(?<insertion>)\/\/ add new plugins here/,
-        template: '      {{ pluginNamedExport }}Example(),\n',
+        template: '      {{ pluginNamedExport }}Example(),',
       },
     ],
   })

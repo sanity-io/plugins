@@ -11,8 +11,6 @@
     "#*": "./src/*/index.tsx"
   },
   "dependencies": {
-    "sanity-plugin-asset-source-unsplash": "workspace:*",
-    "@sanity/singleton-tools-plugin": "workspace:*",
     "@sanity/color-input": "workspace:*",
     "@sanity/debug-preview-url-secret-plugin": "workspace:*",
     "@sanity/icons": "^3.7.4",
