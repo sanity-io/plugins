@@ -1,6 +1,6 @@
 {
   "name": "@sanity/vercel-protection-bypass",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/%40sanity/vercel-protection-bypass#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
