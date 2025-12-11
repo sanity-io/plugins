@@ -95,9 +95,15 @@ Type checking is [performed by oxlint](https://oxc.rs/blog/2025-12-08-type-aware
 Before submitting a PR, make sure all checks pass:
 
 ```bash
+pnpm format
 pnpm build
 pnpm lint
-pnpm format
+```
+
+And attach a changeset:
+
+```bash
+pnpm changeset add
 ```
 
 ## Adding a New Plugin
@@ -128,151 +134,21 @@ Under token settings, configure:
 
 This sets up [OIDC-based trusted publishing](https://docs.npmjs.com/generating-provenance-statements) so the release workflow can publish packages without storing npm tokens.
 
-### 2. Create the Plugin Directory
+### 2. Init the plugin workspace
 
-Create your plugin in the `plugins/` directory:
-
-```bash
-mkdir -p plugins/@sanity/my-plugin
-# or
-mkdir -p plugins/sanity-plugin-my-feature
-```
-
-### 3. Required Files
-
-Each plugin needs the following files. Use existing plugins as reference:
-
-#### `package.json`
-
-```json
-{
-  "name": "@sanity/my-plugin",
-  "version": "0.0.1",
-  "description": "Description of your plugin",
-  "keywords": ["sanity", "sanity-plugin"],
-  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/my-plugin#readme",
-  "bugs": {
-    "url": "https://github.com/sanity-io/plugins/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
-    "directory": "plugins/@sanity/my-plugin"
-  },
-  "license": "MIT",
-  "author": "Sanity.io <hello@sanity.io>",
-  "type": "module",
-  "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "types": "./dist/index.d.ts",
-  "files": ["dist"],
-  "scripts": {
-    "build": "pkg build --strict --check --clean",
-    "lint": "eslint .",
-    "prepack": "turbo run build"
-  },
-  "dependencies": {
-    "react-compiler-runtime": "^1.0.0"
-  },
-  "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
-    "@types/react": "catalog:",
-    "@typescript/native-preview": "catalog:",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "catalog:",
-    "react": "catalog:",
-    "sanity": "catalog:",
-    "styled-components": "catalog:",
-    "typescript": "catalog:"
-  },
-  "peerDependencies": {
-    "react": "^18.3 || ^19",
-    "sanity": "^4.0.0-0 || ^5.0.0-0",
-    "styled-components": "^6.1"
-  },
-  "engines": {
-    "node": ">=20.19 <22 || >=22.12"
-  },
-  "publishConfig": {
-    "exports": {
-      ".": "./dist/index.js",
-      "./package.json": "./package.json"
-    }
-  }
-}
-```
-
-#### `package.config.ts`
-
-```typescript
-import config from '@repo/package.config'
-import {defineConfig} from '@sanity/pkg-utils'
-
-export default defineConfig({
-  ...config,
-  babel: {reactCompiler: true},
-  reactCompilerOptions: {target: '18'},
-})
-```
-
-#### `tsconfig.json`
-
-```json
-{
-  "extends": "@repo/tsconfig/check.json",
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["dist", "node_modules"]
-}
-```
-
-#### `tsconfig.build.json`
-
-```json
-{
-  "extends": "@repo/tsconfig/build.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["dist", "node_modules"]
-}
-```
-
-#### `eslint.config.js`
-
-```javascript
-import baseConfig from '@repo/eslint-config'
-import {defineConfig} from 'eslint/config'
-
-export default defineConfig(baseConfig)
-```
-
-#### `README.md`
-
-Create a README documenting your plugin's installation and usage.
-
-#### `src/index.ts`
-
-Your plugin's main entry point.
-
-### 4. Install Dependencies
-
-After creating your plugin, run:
+Run the generator and follow the prompts:
 
 ```bash
-pnpm install
+pnpm generate "new plugin"
 ```
 
-### 5. Add to Test Studio
+You can now iterate on the plugin with hot reloading in the test studio:
 
-Add your plugin to `dev/test-studio/package.json` and `dev/test-studio/sanity.config.ts` to test it locally.
+```bash
+pnpm dev
+```
 
-### 6. Create the Initial Release Changeset
+### 3. Create the Initial Release Changeset
 
 The trusted publishing workflow publishes an initial `0.0.1` placeholder version. To publish the real first version, create a changeset:
 
@@ -285,6 +161,42 @@ When prompted:
 - Select your new package
 - Choose **major** for the version bump (to release `1.0.0`)
 - Enter `Initial release` as the summary
+
+Commit the changeset file with your PR.
+
+## Migrate an existing plugin to this monorepo
+
+### 1. Init the plugin workspace
+
+Follow the prompts in the generator:
+
+```bash
+pnpm generate "copy plugin"
+```
+
+### 2. Manually port over files
+
+Refer to the generated `README.md` file in the plugin workspace for how to complete the last manual steps.
+
+You can run `pnpm dev` to quickly see how the plugin works in the test studio as you migrate code.
+
+### 3. Create a new major release
+
+When moving a plugin to this monorepo the conventions enforced on the repo typically warrant a new major version:
+
+- enabling React Compiler
+- Dropping CJS
+- Dropping Studio v3 support and requiring at least v4
+
+```bash
+pnpm changeset add
+```
+
+When prompted:
+
+- Select your new package
+- Choose **major** for the version bump
+- Enter a summary of the changes that are breaking, and other changes that might affect runtime in order to pass linting and strict type checks.
 
 Commit the changeset file with your PR.
 

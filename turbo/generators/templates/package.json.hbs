@@ -1,22 +1,26 @@
 {
-  "name": "sanity-plugin-workspace-home",
-  "version": "2.0.3",
-  "description": "A home screen for your multi-workspace Sanity Studio",
+  "name": "{{ name }}",
+  "version": "{{ version }}",
+  "description": "{{ description }}",
+{{#if keywords}}
+  "keywords": {{{ json keywords }}},
+{{else}}
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
-  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-workspace-home#readme",
+{{/if}}
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/{{ name }}#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
-    "directory": "plugins/sanity-plugin-workspace-home"
+    "directory": "plugins/{{ name }}"
   },
   "license": "MIT",
-  "author": "Sanity <hello@sanity.io>",
+  "author": "Sanity.io <hello@sanity.io>",
   "type": "module",
   "exports": {
     ".": {
@@ -35,10 +39,8 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
-    "react-compiler-runtime": "catalog:",
-    "react-is": "^19.2.1"
+    "react-compiler-runtime": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -46,19 +48,23 @@
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
-    "@types/react-is": "^19.2.0",
     "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
+{{#if hasStyledComponents}}
     "babel-plugin-styled-components": "catalog:",
+{{/if}}
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
+{{#if hasStyledComponents}}
+    "styled-components": "catalog:",
+{{/if}}
     "typescript": "catalog:"
   },
   "peerDependencies": {
     "react": "^18.3 || ^19",
-    "sanity": "^4.0.0-0 || ^5.0.0-0",
-    "styled-components": "^6.1"
+    "sanity": "^4.0.0-0 || ^5.0.0-0"{{#if hasStyledComponents}},
+    "styled-components": "^6.1"{{/if}}
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

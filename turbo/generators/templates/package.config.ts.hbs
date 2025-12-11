@@ -1,0 +1,12 @@
+import config from '@repo/package.config'
+import {defineConfig} from '@sanity/pkg-utils'
+
+export default defineConfig({
+  ...config,
+{{#if hasStyledComponents}}
+  babel: {reactCompiler: true, styledComponents: true},
+{{else}}
+  babel: {reactCompiler: true},
+{{/if}}
+  reactCompilerOptions: {target: '18'},
+})

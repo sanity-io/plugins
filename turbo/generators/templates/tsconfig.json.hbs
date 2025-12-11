@@ -1,0 +1,11 @@
+{
+  "extends": "@repo/tsconfig/check.json",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "node_modules"],
+  {{#if isolatedDeclarations}}
+  {{else}}
+  "compilerOptions": {
+    "isolatedDeclarations": false,
+  },
+  {{/if}}
+}
