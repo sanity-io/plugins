@@ -38,7 +38,7 @@
     "@hello-pangea/dnd": "^18.0.1",
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
-    "@tanstack/react-virtual": "^3.13.12",
+    "@tanstack/react-virtual": "^3.13.13",
     "lexorank": "^1.0.5",
     "motion": "^12.23.25",
     "react-compiler-runtime": "catalog:",
