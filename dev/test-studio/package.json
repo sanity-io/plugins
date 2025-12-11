@@ -36,5 +36,8 @@
     "babel-plugin-react-compiler": "catalog:",
     "typescript": "catalog:",
     "vite": "^7.2.7"
+  },
+  "engines": {
+    "node": "24"
   }
 }
