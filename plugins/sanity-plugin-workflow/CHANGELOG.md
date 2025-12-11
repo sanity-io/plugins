@@ -1,5 +1,11 @@
 # sanity-plugin-workflow
 
+## 2.1.2
+
+### Patch Changes
+
+- [`7074855`](https://github.com/sanity-io/plugins/commit/7074855ecf139da7d7952963a12589a8f464bd0f) Thanks [@stipsan](https://github.com/stipsan)! - Fix linter issues
+
 ## 2.1.1
 
 ### Patch Changes
