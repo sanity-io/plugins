@@ -9,5 +9,6 @@ export default function initialRank(lastRankValue = ``): string {
       : LexoRank.min()
   const nextRank = lastRank.genNext().genNext()
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   return (nextRank as any).value
 }

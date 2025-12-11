@@ -53,7 +53,7 @@ const schema = defineType({
   },
 })
 
-export const debugSecrets = definePlugin<void>(() => {
+export const debugSecrets = definePlugin(() => {
   return {
     name: 'sanity-plugin-debug-secrets',
     schema: {types: [schema]},

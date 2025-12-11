@@ -30,6 +30,7 @@ export const aprimoPlugin = definePlugin((config: Partial<AprimoConfig>) => {
               // @ts-expect-error - TODO: fix this
               <AprimoWidget
                 {...props}
+                // oxlint-disable-next-line no-unsafe-type-assertion
                 value={props.value as AprimoCDNAsset}
                 pluginConfig={reqConfig}
               />

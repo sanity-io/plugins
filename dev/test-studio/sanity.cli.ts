@@ -30,6 +30,7 @@ async function aliasFromSource() {
   const aliases: Record<string, string> = {}
 
   for (const packageName of packageNames) {
+    // oxlint-disable-next-line no-await-in-loop - this is fine, we'll replace this setup in the future once on tsdown
     const {default: pkg} = await import(`${packageName}/package.json`, {with: {type: 'json'}})
     const root = path.dirname(require.resolve(`${packageName}/package.json`))
 

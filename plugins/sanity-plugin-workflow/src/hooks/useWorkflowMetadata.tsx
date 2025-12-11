@@ -34,17 +34,17 @@ export function useWorkflowMetadata(ids: string[]): {
       options: {apiVersion: API_VERSION},
     },
   )
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const rawData = _rawData as Metadata[]
 
   const keyedMetadata = useMemo(() => {
     if (!rawData || rawData.length === 0) return {}
 
-    return rawData.reduce<KeyedMetadata>((acc, cur) => {
-      return {
-        ...acc,
-        [cur.documentId]: cur,
-      }
-    }, {})
+    const acc: KeyedMetadata = {}
+    for (const item of rawData) {
+      acc[item.documentId] = item
+    }
+    return acc
   }, [rawData])
 
   return {data: keyedMetadata, loading, error}

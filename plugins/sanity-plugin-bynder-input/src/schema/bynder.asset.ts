@@ -2,7 +2,7 @@ import {defineType, type ObjectDefinition, type ObjectOptions} from 'sanity'
 
 import {BynderDiff} from '../components/BynderDiff'
 
-const bynderAssetSchemaName = 'bynder.asset' as const
+const bynderAssetSchemaName = 'bynder.asset'
 
 type BynderAssetType = 'AUDIO' | 'DOCUMENT' | 'IMAGE' | 'VIDEO'
 

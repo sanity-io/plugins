@@ -204,7 +204,10 @@ export default function WorkflowTool(props: WorkflowToolProps) {
     const uniqueUserIds = data.reduce((acc, item) => {
       const { assignees = []} = item._metadata ?? {}
       const newAssignees = assignees?.length ? assignees.filter((a) => !acc.includes(a)) : []
-      return newAssignees.length ? [...acc, ...newAssignees] : acc
+      if (newAssignees.length) {
+        acc.push(...newAssignees)
+      }
+      return acc
     }, [] as string[])
 
     return userList.filter((u) => uniqueUserIds.includes(u.id))

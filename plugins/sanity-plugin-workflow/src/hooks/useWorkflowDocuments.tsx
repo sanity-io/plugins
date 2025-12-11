@@ -59,6 +59,7 @@ export function useWorkflowDocuments(schemaTypes: string[]): WorkflowDocuments {
     params: {schemaTypes},
     initialValue: [],
   })
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const data = _data as SanityDocumentWithMetadata[]
 
   const [localDocuments, setLocalDocuments] = useState<SanityDocumentWithMetadata[]>([])
@@ -155,7 +156,7 @@ export function useWorkflowDocuments(schemaTypes: string[]): WorkflowDocuments {
         })
 
       // Send back to the workflow board so a document update can happen
-      return {_id, _type, documentId, state: newState as State}
+      return {_id, _type, documentId, state: newState}
     },
     [client, toast, localDocuments],
   )

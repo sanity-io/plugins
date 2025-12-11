@@ -46,13 +46,13 @@ async function disableVercelProtectionBypass(client: SanityClient): Promise<void
 export default function VercelProtectionBypassTool(): React.JSX.Element {
   const client = useClient({apiVersion: apiVersion})
 
-  async function fetchSecret(lastLiveEventId: string | null): Promise<FormState> {
+  async function fetchSecret(lastLiveEventId: FormDataEntryValue | null): Promise<FormState> {
     const {result, syncTags} = await client.fetch<string | null>(
       fetchVercelProtectionBypassSecret,
       {},
       {
         filterResponse: false,
-        lastLiveEventId,
+        lastLiveEventId: typeof lastLiveEventId === 'string' ? lastLiveEventId : null,
         tag: 'preview-url-secret.fetch-vercel-bypass-protection-secret',
       },
     )
@@ -88,14 +88,17 @@ function Layout({
   fetchSecret,
 }: {
   initialStatePromise: Promise<FormState>
-  fetchSecret(this: void, lastLiveEventId: string | null): Promise<FormState>
+  fetchSecret(this: void, lastLiveEventId: FormDataEntryValue | null): Promise<FormState>
 }) {
   const {push: pushToast} = useToast()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const client = useClient({apiVersion})
 
   const action = async (prevState: FormState, formData: FormData): Promise<FormState> => {
-    const action = formData.get('action' satisfies FormName) as FormAction
+    const action = formData.get('action' satisfies FormName)
+    if (typeof action !== 'string') {
+      throw new Error('Action is not a string')
+    }
 
     switch (action) {
       case 'remove-secret':
@@ -118,7 +121,10 @@ function Layout({
           })
 
       case 'add-secret': {
-        const secret = formData.get('secret' satisfies FormName) as string
+        const secret = formData.get('secret' satisfies FormName)
+        if (typeof secret !== 'string') {
+          throw new Error('Secret is not a string')
+        }
         return enableVercelProtectionBypass(client, secret)
           .then(() => {
             pushToast({
@@ -139,9 +145,8 @@ function Layout({
           })
       }
       case 'refresh-secret':
-        return fetchSecret(formData.get('lastLiveEventId' satisfies FormName) as string)
+        return fetchSecret(formData.get('lastLiveEventId' satisfies FormName))
       default:
-        // oxlint-disable-next-line typescript/restrict-template-expressions
         throw new Error(`Unknown action: ${action}`)
     }
   }

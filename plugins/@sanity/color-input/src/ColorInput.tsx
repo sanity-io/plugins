@@ -96,6 +96,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                 size={8}
                 white="transparent"
                 grey="rgba(0,0,0,.08)"
+                // oxlint-disable-next-line no-unsafe-type-assertion
                 renderers={{} as {canvas: unknown}}
               />
               <ColorBox
@@ -167,6 +168,7 @@ const DEFAULT_COLOR: ColorValue & {source: string} = {
 
 export default function ColorInput(props: ObjectInputProps): React.JSX.Element {
   const {onChange, readOnly} = props
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const value = props.value as ColorValue | undefined
   const type = props.schemaType as ColorSchemaType
   const focusRef = useRef<HTMLButtonElement>(null)
@@ -185,6 +187,7 @@ export default function ColorInput(props: ObjectInputProps): React.JSX.Element {
     const fieldPatches = type.fields
       .filter((field) => field.name in nextColor)
       .map((field) => {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const nextFieldValue = nextColor[field.name as keyof ColorValue]
         const isObject = field.type.jsonType === 'object'
         return set(
@@ -225,7 +228,7 @@ export default function ColorInput(props: ObjectInputProps): React.JSX.Element {
     <>
       {value && value.hex ? (
         <ColorPicker
-          color={color!}
+          color={color}
           onChange={handleColorChange}
           readOnly={readOnly || (typeof type.readOnly === 'boolean' && type.readOnly)}
           disableAlpha={!!type.options?.disableAlpha}

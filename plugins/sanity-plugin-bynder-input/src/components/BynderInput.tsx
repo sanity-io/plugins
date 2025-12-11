@@ -42,6 +42,7 @@ const getVideoAspectRatio = (previewImageUrl: string) =>
   new Promise((resolve, reject) => {
     const img = new Image()
 
+    // oxlint-disable-next-line prefer-add-event-listener
     img.onload = () => {
       resolve(
         getAspectRatio({
@@ -50,6 +51,7 @@ const getVideoAspectRatio = (previewImageUrl: string) =>
         }),
       )
     }
+    // oxlint-disable-next-line prefer-add-event-listener
     img.onerror = (err) => reject(err)
 
     img.src = previewImageUrl
@@ -60,10 +62,12 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
 
   // Merge field-level options with global plugin config
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const fieldOptions = schemaType.options as BynderAssetOptions | undefined
   const compactViewOptions = {
     ...pluginConfig.compactViewOptions,
     ...(fieldOptions?.assetTypes && {
+      // oxlint-disable-next-line no-unsafe-type-assertion
       assetTypes: fieldOptions.assetTypes.map((t) => t.toUpperCase()) as (
         | 'IMAGE'
         | 'VIDEO'
@@ -78,6 +82,7 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
   }
 
   const onSuccess = (assets: unknown[], addInfo: AdditionalInfo) => {
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const asset = assets[0] as Record<string, any>
     const webImage = asset['files']?.['webImage']
 
@@ -111,6 +116,7 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
 
     if (asset['type'] === 'VIDEO') {
       getVideoAspectRatio(webImage?.url ?? '')
+        // oxlint-disable-next-line always-return
         .then((ratio) => {
           onChange(PatchEvent.from([set({...mediaData, aspectRatio: ratio})]))
           setIsOpen(false)

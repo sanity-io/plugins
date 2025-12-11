@@ -44,5 +44,13 @@
     // Requires polyfills for older browsers
     "no-array-reverse": "off",
     "no-array-sort": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["turbo/generators/**/*.ts"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
 }

@@ -17,6 +17,7 @@ export default function Field(props: StringInputProps) {
       draftId: `drafts.${String(props.value)}`,
     },
   })
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const data = _data as SanityDocument
 
   if (loading) {

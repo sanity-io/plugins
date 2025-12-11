@@ -5,7 +5,7 @@ import {type ColorOptions} from '../types'
 
 const round = (val: number = 1) => Math.round(val * 100)
 
-const colorTypeName = 'color' as const
+const colorTypeName = 'color'
 
 /**
  * @public

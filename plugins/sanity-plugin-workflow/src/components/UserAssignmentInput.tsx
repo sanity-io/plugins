@@ -1,14 +1,12 @@
 import {Card} from '@sanity/ui'
 import {type FunctionComponent} from 'react'
-import {type ArraySchemaType, type ArrayOfPrimitivesInputProps, useFormValue} from 'sanity'
+import {type ArrayOfPrimitivesInputProps, useFormValue} from 'sanity'
 import {useProjectUsers} from 'sanity-plugin-utils'
 
 import {API_VERSION} from '../constants'
 import UserAssignment from './UserAssignment'
 
-const UserAssignmentInput: FunctionComponent<
-  ArrayOfPrimitivesInputProps<string | number | boolean, ArraySchemaType>
-> = (props) => {
+const UserAssignmentInput: FunctionComponent<ArrayOfPrimitivesInputProps> = (props) => {
   const documentId = useFormValue([`documentId`])
   const userList = useProjectUsers({apiVersion: API_VERSION})
 

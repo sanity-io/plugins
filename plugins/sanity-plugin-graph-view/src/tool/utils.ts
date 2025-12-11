@@ -21,11 +21,13 @@ export function sizeOf(value: any): number {
 export function loadImage(url: string, w: number, h: number): Promise<HTMLImageElement | null> {
   return new Promise((resolve) => {
     const img = new Image(w, h)
+    // oxlint-disable-next-line prefer-add-event-listener
     img.onload = () => {
       resolve(img)
     }
+    // oxlint-disable-next-line prefer-add-event-listener
     img.onerror = (event) => {
-      console.log('Image error', event)
+      console.error('Image error', event)
       resolve(null)
     }
     img.src = url

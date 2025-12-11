@@ -28,6 +28,7 @@ export const bynderInputPlugin = definePlugin((config: Partial<BynderConfig>) =>
               // @ts-expect-error - TODO: fix this
               <BynderInput
                 {...props}
+                // oxlint-disable-next-line no-unsafe-type-assertion
                 value={props.value as BynderAssetValue}
                 pluginConfig={reqConfig}
               />

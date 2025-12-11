@@ -38,11 +38,11 @@ export function AprimoWidget(props: AprimoWidgetProps): React.JSX.Element {
   //this keeps track of which component is requesting an asset
   const [isLoading, setIsLoading] = useState(false)
 
-  const setAsset = (asset: Record<string, any>) => {
-    onChange(PatchEvent.from(asset ? set(asset) : unset()))
-  }
-
   useEffect(() => {
+    const setAsset = (asset: Record<string, any>) => {
+      onChange(PatchEvent.from(asset ? set(asset) : unset()))
+    }
+
     const handleMessageEvent = async (event: MessageEvent) => {
       // Ensure only messages from the Aprimo Content Selector are handled
       if (tenantName && event.origin === `https://${tenantName || ''}.dam.aprimo.com`) {
@@ -63,7 +63,7 @@ export function AprimoWidget(props: AprimoWidgetProps): React.JSX.Element {
     window.addEventListener('message', handleMessageEvent)
     //cleanup
     return () => window.removeEventListener('message', handleMessageEvent)
-  }, [tenantName, isLoading, _key])
+  }, [tenantName, isLoading, _key, onChange])
 
   const action = () => {
     const selectType = schemaType.name === 'aprimo.cdnasset' ? 'singlerendition' : 'singlefile'

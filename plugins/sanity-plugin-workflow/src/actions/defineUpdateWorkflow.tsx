@@ -50,6 +50,7 @@ function useUpdateWorkflow(
           status: 'success',
           title: `Document state now "${newState.title}"`,
         })
+        return undefined
       })
       .catch((err) => {
         onComplete()

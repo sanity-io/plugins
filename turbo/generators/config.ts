@@ -32,6 +32,7 @@ async function fetchNpmPackage(name: string): Promise<NpmPackageData | null> {
     throw new Error(`Failed to fetch npm package: ${response.statusText}`)
   }
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   return response.json() as Promise<NpmPackageData>
 }
 

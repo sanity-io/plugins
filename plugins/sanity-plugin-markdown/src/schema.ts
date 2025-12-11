@@ -4,7 +4,7 @@ import {defineType, type StringDefinition} from 'sanity'
 
 import {MarkdownInput} from './components/MarkdownInput'
 
-export const markdownTypeName = 'markdown' as const
+export const markdownTypeName = 'markdown'
 
 export interface MarkdownOptions {
   /**
