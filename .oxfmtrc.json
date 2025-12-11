@@ -5,5 +5,11 @@
   "singleQuote": true,
   "bracketSpacing": false,
   "experimentalSortImports": {},
-  "ignorePatterns": ["dist/**", "pnpm-lock.yaml", ".changeset/*.md", "turbo/**/*.hbs"],
+  "ignorePatterns": [
+    "dist/**",
+    "pnpm-lock.yaml",
+    ".changeset/*.md",
+    "turbo/**/*.hbs",
+    "**/CHANGELOG.md"
+  ]
 }
