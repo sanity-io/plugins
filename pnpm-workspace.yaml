@@ -55,6 +55,9 @@ minimumReleaseAgeExclude:
   - vitest
 
 overrides:
+  '@sanity/cli': link:../../Library/pnpm/global/5/node_modules/@sanity/cli
+  '@sanity/codegen': link:../../Library/pnpm/global/5/node_modules/@sanity/codegen
+  sanity: link:../../Library/pnpm/global/5/node_modules/sanity
   styled-components: npm:@sanity/styled-components@latest
 
 patchedDependencies:
