@@ -1,5 +1,11 @@
 # @repo/eslint-config
 
+## 0.0.6
+
+### Patch Changes
+
+- [#249](https://github.com/sanity-io/plugins/pull/249) [`f52e4f2`](https://github.com/sanity-io/plugins/commit/f52e4f25f1d477c3e296819dd8ee28bfa25569e4) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency typescript-eslint to ^8.49.0
+
 ## 0.0.5
 
 ### Patch Changes
