@@ -3,7 +3,6 @@
   "description": "Used for type checking with oxlint and the IDE",
   "extends": ["@sanity/tsconfig/strictest", "@sanity/tsconfig/isolated-declarations"],
   "compilerOptions": {
-    "customConditions": ["development"],
-    "noCheck": false
+    "customConditions": ["development"]
   }
 }
