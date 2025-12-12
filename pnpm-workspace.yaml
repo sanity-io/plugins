@@ -15,7 +15,7 @@ catalog:
   '@types/node': ^24.10.3
   '@types/react': ^19.2.7
   '@types/react-dom': ^19.2.3
-  '@typescript/native-preview': 7.0.0-dev.20251207.1
+  '@typescript/native-preview': 7.0.0-dev.20251208.1
   babel-plugin-react-compiler: ^1.0.0
   babel-plugin-styled-components: ^2.1.4
   eslint: ^9.39.1
