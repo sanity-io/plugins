@@ -26,9 +26,6 @@ corepack enable
 
 # Install all dependencies
 pnpm install
-
-# Build all packages (required before running the test studio)
-pnpm build
 ```
 
 ## Running the Test Studio
