@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 4.0.0
+
+### Major Changes
+
+- [#251](https://github.com/sanity-io/plugins/pull/251) [`70f2ee3`](https://github.com/sanity-io/plugins/commit/70f2ee30f29e331f4996521101ff86ae73af3f3a) Thanks [@stipsan](https://github.com/stipsan)! - Drop CJS exports, this package is now ESM-only
+
 ## 3.2.5
 
 ### Patch Changes
