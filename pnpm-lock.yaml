@@ -10,8 +10,8 @@ catalogs:
       specifier: 7.13.2
       version: 7.13.2
     '@sanity/pkg-utils':
-      specifier: ^10.1.2
-      version: 10.1.2
+      specifier: ^10.1.3
+      version: 10.1.3
     '@sanity/tsconfig':
       specifier: ^2.0.0
       version: 2.0.0
@@ -188,9 +188,6 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
-      vite:
-        specifier: ^7.2.7
-        version: 7.2.7(@types/node@24.10.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/@repo/eslint-config:
     dependencies:
@@ -218,7 +215,7 @@ importers:
     devDependencies:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.0.0
@@ -270,7 +267,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -319,7 +316,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -362,7 +359,7 @@ importers:
         version: 7.13.2(debug@4.4.3)
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -408,7 +405,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -457,7 +454,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -527,7 +524,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -585,7 +582,7 @@ importers:
         version: 7.13.2(debug@4.4.3)
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -658,7 +655,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -713,7 +710,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -3294,12 +3291,12 @@ packages:
   '@sanity/mutator@4.21.1':
     resolution: {integrity: sha512-i3Fnz5DT94SfQPY4NP84FEzuCjc0eCknZTOUJxP7NImNrKFYPKzyVgDOCJBE6TedA75fWXQSZmAuOR1rwSKhqw==}
 
-  '@sanity/parse-package-json@1.0.1':
-    resolution: {integrity: sha512-5En7CKBvSC+L2UNHg1mWhenUT8XMiCCPaf6tQ3PkvMzB4oZ6Z2WARct317MXOAo9u5gPkRq7rWxGjBbL+ZdA/Q==}
+  '@sanity/parse-package-json@1.1.0':
+    resolution: {integrity: sha512-JvZ63Ap0w/sJvJFWLMTNB1iWhxhm5Bd0MhS6QAk6L/9kGMLwscILIAdq78KZzvh8k4V926ThXQo63H6E9BszXw==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
-  '@sanity/pkg-utils@10.1.2':
-    resolution: {integrity: sha512-JWTW6sWhbO7OaE7/8nMfQO5WSzfFrxuFZ4X7Q1w06QNrfNUHIDhT2RRz3fsCZH/s9feXEgH8qB1NG+Ycdzs0cw==}
+  '@sanity/pkg-utils@10.1.3':
+    resolution: {integrity: sha512-cgWyJwzvbBuaNuyuEpdgk80CxKR6BR3xCZsCGxhaENsSnwpVD1twZf7ikA379B1caXHV2rpSyEGBqmMrtYP4cw==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     hasBin: true
     peerDependencies:
@@ -11128,11 +11125,11 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@sanity/parse-package-json@1.0.1':
+  '@sanity/parse-package-json@1.1.0':
     dependencies:
       zod: 4.1.13
 
-  '@sanity/pkg-utils@10.1.2(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)':
+  '@sanity/pkg-utils@10.1.3(@types/babel__core@7.20.5)(@types/node@24.10.3)(@typescript/native-preview@7.0.0-dev.20251208.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/parser': 7.28.5
@@ -11149,7 +11146,7 @@ snapshots:
       '@rollup/plugin-replace': 6.0.3(rollup@4.53.3)
       '@rollup/plugin-terser': 0.4.4(rollup@4.53.3)
       '@sanity/browserslist-config': 1.0.5
-      '@sanity/parse-package-json': 1.0.1
+      '@sanity/parse-package-json': 1.1.0
       '@vanilla-extract/rollup-plugin': 1.5.0(rollup@4.53.3)
       browserslist: 4.28.1
       cac: 6.7.14
@@ -13201,7 +13198,7 @@ snapshots:
 
   eval@0.1.8:
     dependencies:
-      '@types/node': 24.10.3
+      '@types/node': 12.20.55
       require-like: 0.1.2
 
   event-source-polyfill@1.0.31: {}

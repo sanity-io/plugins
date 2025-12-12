@@ -1,6 +1,4 @@
-import path from 'node:path'
 import {defineCliConfig} from 'sanity/cli'
-import {mergeConfig} from 'vite'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'plugins'
@@ -12,39 +10,4 @@ export default defineCliConfig({
   reactStrictMode: true,
   reactCompiler: {target: '19'},
   studioHost: 'plugins',
-  vite: async (config, configEnv) => {
-    return configEnv.mode === 'development'
-      ? mergeConfig(config, {resolve: {alias: await aliasFromSource()}})
-      : config
-  },
 })
-
-async function aliasFromSource() {
-  const {default: rootPkg} = await import('./package.json', {with: {type: 'json'}})
-  const packageNames: string[] = []
-  for (const [key, value] of Object.entries(rootPkg.dependencies)) {
-    if (!value.startsWith('workspace:')) continue
-    packageNames.push(key)
-  }
-
-  const aliases: Record<string, string> = {}
-
-  for (const packageName of packageNames) {
-    // oxlint-disable-next-line no-await-in-loop - this is fine, we'll replace this setup in the future once on tsdown
-    const {default: pkg} = await import(`${packageName}/package.json`, {with: {type: 'json'}})
-    const root = path.dirname(require.resolve(`${packageName}/package.json`))
-
-    for (const [key, value] of Object.entries(pkg.exports)) {
-      if (
-        key === './package.json' ||
-        typeof value !== 'object' ||
-        !value ||
-        !('source' in value) ||
-        typeof value.source !== 'string'
-      )
-        continue
-      aliases[path.join(packageName, key)] = path.resolve(root, value.source)
-    }
-  }
-  return aliases
-}

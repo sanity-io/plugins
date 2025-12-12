@@ -26,7 +26,6 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    needs: build
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -40,7 +39,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, lint]
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}

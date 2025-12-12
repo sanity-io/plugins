@@ -24,10 +24,12 @@
   "exports": {
     ".": {
       "source": "./src/index.ts",
+      "development": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./next": {
       "source": "./src/indexNext.ts",
+      "development": "./src/indexNext.ts",
       "default": "./dist/indexNext.js"
     },
     "./package.json": "./package.json"
