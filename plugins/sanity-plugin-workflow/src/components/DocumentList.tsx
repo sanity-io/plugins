@@ -79,16 +79,16 @@ export default function DocumentList(props: DocumentListProps) {
   // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: dataFiltered.length,
-    getScrollElement: () => parentRef.current,
+    getScrollElement: useCallback(() => parentRef.current, []),
     getItemKey: useCallback(
       (index) => dataFiltered[index]?._metadata?.documentId ?? index,
       [dataFiltered],
     ),
-    estimateSize: () => 115,
+    estimateSize: useCallback(() => 115, []),
     overscan: 7,
-    measureElement: (element) => {
+    measureElement: useCallback((element: Element) => {
       return element.getBoundingClientRect().height || 115
-    },
+    }, []),
   })
 
   if (!data.length || !dataFiltered.length) {
