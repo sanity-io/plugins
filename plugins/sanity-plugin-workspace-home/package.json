@@ -21,6 +21,7 @@
   "exports": {
     ".": {
       "source": "./src/index.ts",
+      "development": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"

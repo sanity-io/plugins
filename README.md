@@ -47,13 +47,13 @@ pnpm install
 # Start the test studio for local development
 pnpm dev
 
-# Build all packages
-pnpm build
-
 # Run linting and type checking
 pnpm lint
 
-# Format code
+# Build all packages
+pnpm build
+
+# Format code (this also runs through a pre-commit git hook)
 pnpm format
 ```
 

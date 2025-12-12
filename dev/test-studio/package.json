@@ -34,8 +34,7 @@
     "@types/react-dom": "catalog:",
     "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "typescript": "catalog:",
-    "vite": "^7.2.7"
+    "typescript": "catalog:"
   },
   "engines": {
     "node": "24"

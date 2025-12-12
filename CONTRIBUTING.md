@@ -26,9 +26,6 @@ corepack enable
 
 # Install all dependencies
 pnpm install
-
-# Build all packages (required before running the test studio)
-pnpm build
 ```
 
 ## Running the Test Studio
@@ -96,8 +93,8 @@ Before submitting a PR, make sure all checks pass:
 
 ```bash
 pnpm format
-pnpm build
 pnpm lint
+pnpm build
 ```
 
 And attach a changeset:
