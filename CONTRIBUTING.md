@@ -93,8 +93,8 @@ Before submitting a PR, make sure all checks pass:
 
 ```bash
 pnpm format
-pnpm build
 pnpm lint
+pnpm build
 ```
 
 And attach a changeset:
