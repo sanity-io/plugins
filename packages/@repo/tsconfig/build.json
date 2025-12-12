@@ -3,6 +3,7 @@
   "description": "Used for building with @sanity/pkg-utils",
   "extends": ["@sanity/tsconfig/strictest", "@sanity/tsconfig/isolated-declarations"],
   "compilerOptions": {
-    "outDir": "${configDir}/dist"
+    "outDir": "${configDir}/dist",
+    "noCheck": true
   }
 }
