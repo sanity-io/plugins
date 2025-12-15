@@ -81,7 +81,8 @@ class UnsplashAssetSourceInternal extends Component<
 
   handleSearchTermChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.currentTarget.value
-    this.allPhotos = []
+    // Reset allPhotos when search changes
+    this.allPhotos.length = 0
     this.setState((prev) => ({
       query,
       cursor: 0,
@@ -90,7 +91,8 @@ class UnsplashAssetSourceInternal extends Component<
   }
 
   handleSearchTermCleared = () => {
-    this.allPhotos = []
+    // Reset allPhotos when clearing search
+    this.allPhotos.length = 0
     this.setState((prev) => ({
       query: '',
       cursor: 0,
@@ -130,8 +132,8 @@ class UnsplashAssetSourceInternal extends Component<
         return null
       }
 
-      // Store photos for cursor navigation
-      this.allPhotos = [...this.allPhotos, ...results]
+      // Store photos for cursor navigation - push directly to array for efficiency
+      this.allPhotos.push(...results)
 
       return results.map((photo: UnsplashPhoto) => ({
         src: photo.urls.small,
@@ -141,7 +143,7 @@ class UnsplashAssetSourceInternal extends Component<
         data: photo,
       }))
     } catch (error) {
-      console.error('Error fetching photos:', error)
+      // InfiniteScroll will handle showing no results when null is returned
       return null
     }
   }
