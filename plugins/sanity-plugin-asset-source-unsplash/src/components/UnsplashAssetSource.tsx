@@ -1,6 +1,6 @@
 import {SearchIcon} from '@sanity/icons'
 import {Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
-import React from 'react'
+import {Component} from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import {PhotoAlbum, type RenderPhotoProps, type Photo as PhotoType} from 'react-photo-album'
 import {BehaviorSubject, type Subscription} from 'rxjs'
@@ -39,7 +39,7 @@ export default function UnsplashAssetSource(props: AssetSourceComponentProps) {
   return <UnsplashAssetSourceInternal {...props} client={client} />
 }
 
-class UnsplashAssetSourceInternal extends React.Component<
+class UnsplashAssetSourceInternal extends Component<
   AssetSourceComponentProps & {client: SanityClient},
   State
 > {
