@@ -44,7 +44,7 @@
     "@sanity/ui": "catalog:",
     "react-compiler-runtime": "catalog:",
     "react-infinite-scroll-component": "6.1.0",
-    "react-photo-album": "2.4.1",
+    "react-photo-album": "3.3.0",
     "rxjs": "catalog:"
   },
   "devDependencies": {
