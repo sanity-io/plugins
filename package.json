@@ -39,5 +39,5 @@
     "typescript": "catalog:",
     "validate-npm-package-name": "^7.0.0"
   },
-  "packageManager": "pnpm@10.25.0"
+  "packageManager": "pnpm@10.26.0"
 }
