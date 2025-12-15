@@ -2,12 +2,12 @@
   "name": "@repo/tsconfig",
   "version": "1.0.0",
   "private": true,
-  "license": "MIT",
   "description": "Shared tsconfig.json presets",
+  "license": "MIT",
   "type": "module",
   "exports": {
-    "./check.json": "./check.json",
     "./build.json": "./build.json",
+    "./check.json": "./check.json",
     "./package.json": "./package.json"
   },
   "dependencies": {

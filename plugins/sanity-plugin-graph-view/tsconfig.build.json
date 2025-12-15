@@ -4,6 +4,6 @@
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "noPropertyAccessFromIndexSignature": false,
-    "noUncheckedIndexedAccess": false,
-  },
+    "noUncheckedIndexedAccess": false
+  }
 }

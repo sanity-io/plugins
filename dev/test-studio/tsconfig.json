@@ -3,6 +3,6 @@
   "extends": "@tsconfig/vite-react/tsconfig.json",
   "include": ["src/**/*", "sanity.cli.ts", "sanity.config.ts"],
   "compilerOptions": {
-    "customConditions": ["development"],
-  },
+    "customConditions": ["development"]
+  }
 }

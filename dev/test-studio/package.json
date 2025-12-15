@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "imports": {
+    "#*": "./src/*/index.tsx"
+  },
   "scripts": {
     "dev": "sanity dev",
     "build": "sanity build"
-  },
-  "imports": {
-    "#*": "./src/*/index.tsx"
   },
   "dependencies": {
     "@sanity/color-input": "workspace:*",
@@ -21,8 +21,8 @@
     "sanity": "catalog:",
     "sanity-plugin-aprimo": "workspace:*",
     "sanity-plugin-bynder-input": "workspace:*",
-    "sanity-plugin-markdown": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
+    "sanity-plugin-markdown": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
     "styled-components": "catalog:"
