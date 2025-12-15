@@ -13,8 +13,8 @@ catalogs:
       specifier: ^10.2.1
       version: 10.2.1
     '@sanity/tsconfig':
-      specifier: ^2.0.0
-      version: 2.0.0
+      specifier: ^2.1.0
+      version: 2.1.0
     '@sanity/ui':
       specifier: ^3.1.11
       version: 3.1.11
@@ -224,7 +224,7 @@ importers:
         version: 10.2.1(@types/babel__core@7.20.5)(@types/node@24.10.4)(@typescript/native-preview@7.0.0-dev.20251212.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@sanity/tsconfig':
         specifier: 'catalog:'
-        version: 2.0.0
+        version: 2.1.0
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20251212.1
@@ -236,7 +236,7 @@ importers:
     dependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
-        version: 2.0.0
+        version: 2.1.0
 
   plugins/@sanity/color-input:
     dependencies:
@@ -3423,8 +3423,8 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  '@sanity/tsconfig@2.0.0':
-    resolution: {integrity: sha512-t3VkUo8Sz4g6TjffUTDXzDCghs+MelX+lTJHNPK+Htjrcv/+VJSfHZhp4Zi4GuKjmdd3VzCtFb37S7R42qpppw==}
+  '@sanity/tsconfig@2.1.0':
+    resolution: {integrity: sha512-Cnz0EycMsfeILkxL/gYzzfPs511OzP3sjQxU4XkDtujdiFAc+bteMYXi4/SJ83m98cXLum63HbHDk+he6AbbIA==}
 
   '@sanity/types@3.99.0':
     resolution: {integrity: sha512-a766U9VSoyOSWq+RZz9wsEo/Nnn+inDkEcdGu+rHFuygdepullB/RZpF2MxNsfUMCSPnajgG1Tm9lhwbSmlySA==}
@@ -11430,7 +11430,7 @@ snapshots:
       '@actions/github': 6.0.1
       yaml: 2.8.2
 
-  '@sanity/tsconfig@2.0.0': {}
+  '@sanity/tsconfig@2.1.0': {}
 
   '@sanity/types@3.99.0(@types/react@19.2.7)(debug@4.4.3)':
     dependencies:
