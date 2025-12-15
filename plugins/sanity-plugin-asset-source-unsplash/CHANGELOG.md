@@ -1,5 +1,11 @@
 # sanity-plugin-asset-source-unsplash
 
+## 5.0.1
+
+### Patch Changes
+
+- [`eff3997`](https://github.com/sanity-io/plugins/commit/eff3997ed120aff6adfb0e77ef6fe67d63e92d38) Thanks [@stipsan](https://github.com/stipsan)! - Use `Component` named export instead of default React export
+
 ## 5.0.0
 
 ### Major Changes
