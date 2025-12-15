@@ -1,9 +1,9 @@
 import {SearchIcon} from '@sanity/icons'
 import {Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {Component} from 'react'
-import InfiniteScroll from 'react-infinite-scroll-component'
 import {PhotoAlbum, type RenderPhotoProps, type Photo as PhotoType} from 'react-photo-album'
-import {BehaviorSubject, type Subscription} from 'rxjs'
+import InfiniteScroll from 'react-photo-album/scroll'
+import {BehaviorSubject} from 'rxjs'
 import {
   type AssetFromSource,
   type AssetSourceComponentProps,
@@ -24,10 +24,8 @@ type UnsplashPhotoAlbumPhoto = PhotoType & {
 
 type State = {
   query: string
-  searchResults: UnsplashPhoto[][]
-  page: number
-  isLoading: boolean
   cursor: number
+  key: number // Used to force remount of InfiniteScroll when query changes
 }
 
 const RESULTS_PER_PAGE = 42
@@ -50,40 +48,12 @@ class UnsplashAssetSourceInternal extends Component<
   override state = {
     cursor: 0,
     query: '',
-    page: 1,
-    searchResults: [[]],
-    isLoading: true,
+    key: 0,
   }
 
-  searchSubscription: Subscription | null = null
-
-  searchSubject$ = new BehaviorSubject('')
-  pageSubject$ = new BehaviorSubject(1)
-
-  override componentDidMount() {
-    this.searchSubscription = search(
-      this.props.client,
-      this.searchSubject$,
-      this.pageSubject$,
-      RESULTS_PER_PAGE,
-    ).subscribe({
-      next: (results: UnsplashPhoto[]) => {
-        this.setState((prev) => ({
-          searchResults: [...prev.searchResults, results],
-          isLoading: false,
-        }))
-      },
-    })
-  }
-
-  override componentWillUnmount() {
-    if (this.searchSubscription) {
-      this.searchSubscription.unsubscribe()
-    }
-  }
+  allPhotos: UnsplashPhoto[] = []
 
   handleSelect = (photo: UnsplashPhoto) => {
-    this.setState({isLoading: true})
     return fetchDownloadUrl(this.props.client, photo).then((downloadUrl) => {
       const description = photo.description || undefined
       const asset: AssetFromSource = {
@@ -112,34 +82,60 @@ class UnsplashAssetSourceInternal extends Component<
 
   handleSearchTermChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.currentTarget.value
-    this.setState({
+    this.allPhotos = []
+    this.setState((prev) => ({
       query,
-      page: 1,
-      searchResults: [[]],
-      isLoading: true,
       cursor: 0,
-    })
-    this.pageSubject$.next(1)
-    this.searchSubject$.next(query)
+      key: prev.key + 1, // Force remount of InfiniteScroll
+    }))
   }
 
   handleSearchTermCleared = () => {
-    this.setState({
+    this.allPhotos = []
+    this.setState((prev) => ({
       query: '',
-      page: 1,
-      searchResults: [[]],
-      isLoading: true,
       cursor: 0,
-    })
-    this.pageSubject$.next(1)
-    this.searchSubject$.next('')
+      key: prev.key + 1, // Force remount of InfiniteScroll
+    }))
   }
 
-  handleScrollerLoadMore = () => {
-    const nextPage = this.state.page + 1
-    this.setState({page: nextPage, isLoading: true})
-    this.pageSubject$.next(nextPage)
-    this.searchSubject$.next(this.state.query)
+  fetchPhotos = (index: number): Promise<UnsplashPhotoAlbumPhoto[] | null> => {
+    return new Promise((resolve) => {
+      const page = index + 1
+      const query = this.state.query
+
+      const searchSubject$ = new BehaviorSubject(query)
+      const pageSubject$ = new BehaviorSubject(page)
+
+      const subscription = search(
+        this.props.client,
+        searchSubject$,
+        pageSubject$,
+        RESULTS_PER_PAGE,
+      ).subscribe({
+        next: (results: UnsplashPhoto[]) => {
+          subscription.unsubscribe()
+          if (results.length === 0) {
+            resolve(null)
+          } else {
+            // Store photos for cursor navigation
+            this.allPhotos = [...this.allPhotos, ...results]
+            const photos = results.map((photo: UnsplashPhoto) => ({
+              src: photo.urls.small,
+              width: photo.width,
+              height: photo.height,
+              key: photo.id,
+              data: photo,
+            }))
+            resolve(photos)
+          }
+        },
+        error: () => {
+          subscription.unsubscribe()
+          resolve(null)
+        },
+      })
+    })
   }
 
   handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -150,7 +146,7 @@ class UnsplashAssetSourceInternal extends Component<
       }))
     } else if (
       (event.keyCode === 40 || event.keyCode === 39) &&
-      cursor < this.getPhotos().length - 1
+      cursor < this.allPhotos.length - 1
     ) {
       this.setState((prevState) => ({
         cursor: prevState.cursor + 1,
@@ -158,19 +154,15 @@ class UnsplashAssetSourceInternal extends Component<
     }
   }
 
-  getPhotos() {
-    return this.state.searchResults.flat()
-  }
-
   updateCursor = (photo: UnsplashPhoto) => {
-    const index = this.getPhotos().findIndex((result: UnsplashPhoto) => result.id === photo.id)
+    const index = this.allPhotos.findIndex((result: UnsplashPhoto) => result.id === photo.id)
     this.setState({cursor: index})
   }
 
   renderImage = (props: RenderPhotoProps<UnsplashPhotoAlbumPhoto>) => {
     const {photo, layout} = props
     const active =
-      this.getPhotos().findIndex((result: UnsplashPhoto) => result.id === photo.data.id) ===
+      this.allPhotos.findIndex((result: UnsplashPhoto) => result.id === photo.data.id) ===
         this.state.cursor || false
     return (
       <Photo
@@ -186,7 +178,7 @@ class UnsplashAssetSourceInternal extends Component<
   }
 
   override render() {
-    const {query, searchResults, isLoading} = this.state
+    const {query, key} = this.state
 
     return (
       <Dialog
@@ -206,58 +198,35 @@ class UnsplashAssetSourceInternal extends Component<
             placeholder="Search by topics or colors"
             value={query}
           />
-          {!isLoading && this.getPhotos().length === 0 && (
-            <Text size={1} muted>
-              No results found
-            </Text>
-          )}
-          <InfiniteScroll
-            dataLength={this.getPhotos().length} // This is important field to render the next data
-            next={this.handleScrollerLoadMore}
-            // scrollableTarget="unsplash-scroller"
-            hasMore
-            scrollThreshold={0.99}
-            height="60vh"
-            loader={
-              <Flex align="center" justify="center" padding={3}>
-                <Spinner muted />
-              </Flex>
-            }
-            endMessage={
-              <Text size={1} muted>
-                No more results
-              </Text>
-            }
-          >
-            {searchResults
-              .filter((photos) => photos.length > 0)
-              .map((photos: UnsplashPhoto[], index) => (
-                <PhotoAlbum
-                  key={`gallery-${query || 'popular'}-${index}`}
-                  layout="rows"
-                  spacing={PHOTO_SPACING}
-                  padding={PHOTO_PADDING}
-                  targetRowHeight={(width) => {
-                    if (width < 300) return 150
-                    if (width < 600) return 200
-                    return 300
-                  }}
-                  photos={photos.map((photo: UnsplashPhoto) => ({
-                    src: photo.urls.small,
-                    width: photo.width,
-                    height: photo.height,
-                    key: photo.id,
-                    data: photo,
-                  }))}
-                  renderPhoto={this.renderImage}
-                  componentsProps={{
-                    containerProps: {
-                      style: {marginBottom: `${PHOTO_SPACING}px`},
-                    },
-                  }}
-                />
-              ))}
-          </InfiniteScroll>
+          <div style={{height: '60vh', overflow: 'auto'}}>
+            <InfiniteScroll
+              key={key}
+              fetch={this.fetchPhotos}
+              loading={
+                <Flex align="center" justify="center" padding={3}>
+                  <Spinner muted />
+                </Flex>
+              }
+              finished={
+                <Text size={1} muted>
+                  No more results
+                </Text>
+              }
+            >
+              <PhotoAlbum
+                layout="rows"
+                spacing={PHOTO_SPACING}
+                padding={PHOTO_PADDING}
+                targetRowHeight={(width) => {
+                  if (width < 300) return 150
+                  if (width < 600) return 200
+                  return 300
+                }}
+                photos={[]}
+                renderPhoto={this.renderImage}
+              />
+            </InfiniteScroll>
+          </div>
         </Stack>
       </Dialog>
     )

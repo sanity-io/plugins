@@ -43,7 +43,6 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "react-compiler-runtime": "catalog:",
-    "react-infinite-scroll-component": "6.1.0",
     "react-photo-album": "3.3.0",
     "rxjs": "catalog:"
   },
