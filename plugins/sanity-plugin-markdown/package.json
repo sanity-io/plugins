@@ -3,11 +3,11 @@
   "version": "7.0.4",
   "description": "Markdown fields in Sanity Studio. Supports Github flavored Markdown and image uploads.",
   "keywords": [
+    "github flavored markdown",
+    "markdown",
     "sanity",
     "sanity-plugin",
-    "studio",
-    "markdown",
-    "github flavored markdown"
+    "studio"
   ],
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-markdown#readme",
   "bugs": {
@@ -18,18 +18,18 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-markdown"
   },
-  "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
-      "source": "./src/index.ts",
       "development": "./src/index.ts",
+      "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./next": {
-      "source": "./src/indexNext.ts",
       "development": "./src/indexNext.ts",
+      "source": "./src/indexNext.ts",
       "default": "./dist/indexNext.js"
     },
     "./package.json": "./package.json"

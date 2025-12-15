@@ -3,12 +3,12 @@
   "version": "5.0.4",
   "description": "Color input",
   "keywords": [
-    "sanity",
     "cms",
+    "color-input",
+    "content",
     "headless",
     "realtime",
-    "content",
-    "color-input",
+    "sanity",
     "sanity-plugin"
   ],
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/%40sanity/color-input#readme",
@@ -20,13 +20,13 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/@sanity/color-input"
   },
-  "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
-      "source": "./src/index.ts",
       "development": "./src/index.ts",
+      "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"

@@ -14,13 +14,13 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-bynder-input"
   },
-  "license": "MIT",
   "author": "Sanity <hello@sanity.io>",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
-      "source": "./src/index.ts",
       "development": "./src/index.ts",
+      "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"

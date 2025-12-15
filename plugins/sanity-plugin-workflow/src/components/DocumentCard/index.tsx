@@ -35,7 +35,7 @@ export function DocumentCard(props: DocumentCardProps) {
     toggleInvalidDocumentId,
     userList,
   } = props
-  const { assignees = [], documentId} = item._metadata ?? {}
+  const {assignees = [], documentId} = item._metadata ?? {}
   const schema = useSchema()
   const state = states.find((s) => s.id === item._metadata?.state)
 

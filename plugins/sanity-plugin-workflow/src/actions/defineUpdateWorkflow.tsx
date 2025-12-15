@@ -25,7 +25,7 @@ function useUpdateWorkflow(
 
   const {metadata, loading, error, states} = useWorkflowContext(id)
   const currentState = states.find((s) => s.id === metadata?.state)
-  const { assignees = []} = metadata ?? {}
+  const {assignees = []} = metadata ?? {}
 
   // TODO: Shouldn't the document action props contain this?
   const {validation, isValidating} = useValidationStatus(id, type)

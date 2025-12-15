@@ -7,7 +7,7 @@ type ValidationStatusProps = {
 }
 
 export function ValidationStatus(props: ValidationStatusProps) {
-  const { validation = []} = props
+  const {validation = []} = props
 
   if (!validation.length) {
     return null
