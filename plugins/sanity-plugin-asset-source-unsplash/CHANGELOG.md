@@ -1,5 +1,11 @@
 # sanity-plugin-asset-source-unsplash
 
+## 5.0.0
+
+### Major Changes
+
+- [#230](https://github.com/sanity-io/plugins/pull/230) [`ec9a903`](https://github.com/sanity-io/plugins/commit/ec9a903ebdc6128e455e2ec387054d98f7109aee) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Enable React Compiler
+
 ## [4.0.1](https://github.com/sanity-io/sanity-plugin-asset-source-unsplash/compare/v4.0.0...v4.0.1) (2025-08-15)
 
 ### Bug Fixes
