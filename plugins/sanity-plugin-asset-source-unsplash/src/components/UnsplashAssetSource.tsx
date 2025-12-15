@@ -82,7 +82,7 @@ class UnsplashAssetSourceInternal extends Component<
   handleSearchTermChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.currentTarget.value
     // Reset allPhotos when search changes
-    this.allPhotos.length = 0
+    this.allPhotos = []
     this.setState((prev) => ({
       query,
       cursor: 0,
@@ -92,7 +92,7 @@ class UnsplashAssetSourceInternal extends Component<
 
   handleSearchTermCleared = () => {
     // Reset allPhotos when clearing search
-    this.allPhotos.length = 0
+    this.allPhotos = []
     this.setState((prev) => ({
       query: '',
       cursor: 0,
