@@ -4,6 +4,7 @@
   "semi": false,
   "singleQuote": true,
   "bracketSpacing": false,
+  "quoteProps": "consistent",
   "experimentalSortImports": {},
   "ignorePatterns": [
     "dist/**",
