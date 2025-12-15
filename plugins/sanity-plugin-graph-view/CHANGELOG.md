@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 4.0.1
+
+### Patch Changes
+
+- [`e921d32`](https://github.com/sanity-io/plugins/commit/e921d32eefa7c3bd9bc4c00cb083284812bcaa78) Thanks [@stipsan](https://github.com/stipsan)! - `key` should always be first
+
 ## 4.0.0
 
 ### Major Changes

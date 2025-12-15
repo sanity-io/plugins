@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-workflow",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "A demonstration of a custom content publishing workflow using Sanity.",
   "keywords": [
     "sanity",
