@@ -3,7 +3,6 @@ import {Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {Component} from 'react'
 import {PhotoAlbum, type RenderPhotoProps, type Photo as PhotoType} from 'react-photo-album'
 import InfiniteScroll from 'react-photo-album/scroll'
-import {BehaviorSubject} from 'rxjs'
 import {
   type AssetFromSource,
   type AssetSourceComponentProps,
@@ -13,7 +12,7 @@ import {
 
 import type {UnsplashPhoto} from '../types'
 
-import {fetchDownloadUrl, search} from '../datastores/unsplash'
+import {fetchDownloadUrl} from '../datastores/unsplash'
 import Photo from './Photo'
 import {SearchInput} from './UnsplashAssetSource.styled'
 
@@ -99,43 +98,52 @@ class UnsplashAssetSourceInternal extends Component<
     }))
   }
 
-  fetchPhotos = (index: number): Promise<UnsplashPhotoAlbumPhoto[] | null> => {
-    return new Promise((resolve) => {
+  fetchPhotos = async (index: number): Promise<UnsplashPhotoAlbumPhoto[] | null> => {
+    try {
       const page = index + 1
       const query = this.state.query
 
-      const searchSubject$ = new BehaviorSubject(query)
-      const pageSubject$ = new BehaviorSubject(page)
+      let results: UnsplashPhoto[]
 
-      const subscription = search(
-        this.props.client,
-        searchSubject$,
-        pageSubject$,
-        RESULTS_PER_PAGE,
-      ).subscribe({
-        next: (results: UnsplashPhoto[]) => {
-          subscription.unsubscribe()
-          if (results.length === 0) {
-            resolve(null)
-          } else {
-            // Store photos for cursor navigation
-            this.allPhotos = [...this.allPhotos, ...results]
-            const photos = results.map((photo: UnsplashPhoto) => ({
-              src: photo.urls.small,
-              width: photo.width,
-              height: photo.height,
-              key: photo.id,
-              data: photo,
-            }))
-            resolve(photos)
-          }
-        },
-        error: () => {
-          subscription.unsubscribe()
-          resolve(null)
-        },
-      })
-    })
+      if (query) {
+        const response = await this.props.client.request<{
+          results: UnsplashPhoto[]
+          total: number
+          total_pages: number
+        }>({
+          url: `/addons/unsplash/search/photos?query=${encodeURIComponent(
+            query,
+          )}&page=${page}&per_page=${RESULTS_PER_PAGE}`,
+          withCredentials: true,
+          method: 'GET',
+        })
+        results = response.results
+      } else {
+        results = await this.props.client.request<UnsplashPhoto[]>({
+          url: `/addons/unsplash/photos?order_by=popular&page=${page}&per_page=${RESULTS_PER_PAGE}`,
+          withCredentials: true,
+          method: 'GET',
+        })
+      }
+
+      if (results.length === 0) {
+        return null
+      }
+
+      // Store photos for cursor navigation
+      this.allPhotos = [...this.allPhotos, ...results]
+
+      return results.map((photo: UnsplashPhoto) => ({
+        src: photo.urls.small,
+        width: photo.width,
+        height: photo.height,
+        key: photo.id,
+        data: photo,
+      }))
+    } catch (error) {
+      console.error('Error fetching photos:', error)
+      return null
+    }
   }
 
   handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -222,7 +230,6 @@ class UnsplashAssetSourceInternal extends Component<
                   if (width < 600) return 200
                   return 300
                 }}
-                photos={[]}
                 renderPhoto={this.renderImage}
               />
             </InfiniteScroll>
