@@ -29,7 +29,6 @@
   },
   "types": "./dist/index.d.ts",
   "files": [
-    "CHANGELOG.md",
     "dist"
   ],
   "scripts": {

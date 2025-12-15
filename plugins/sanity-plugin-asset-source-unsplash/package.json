@@ -24,6 +24,7 @@
   "type": "module",
   "exports": {
     ".": {
+      "development": "./src/index.ts",
       "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
@@ -40,11 +41,11 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/ui": "^3.0.7",
-    "react-compiler-runtime": "^1.0.0",
+    "@sanity/ui": "catalog:",
+    "react-compiler-runtime": "catalog:",
     "react-infinite-scroll-component": "6.1.0",
     "react-photo-album": "2.4.1",
-    "rxjs": "^7.8.2"
+    "rxjs": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -53,8 +54,8 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "babel-plugin-styled-components": "^2.1.4",
+    "babel-plugin-react-compiler": "catalog:",
+    "babel-plugin-styled-components": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
