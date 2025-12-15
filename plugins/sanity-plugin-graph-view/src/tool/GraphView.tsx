@@ -299,8 +299,8 @@ export default function GraphView({
         <Legend theme={theme}>
           {getTopDocTypes(docTypes).map((docType) => (
             <LegendRow
-              className={'legend__row'}
               key={docType}
+              className={'legend__row'}
               style={{color: getDocTypeColor(docType).fill}}
             >
               <LegendBadge theme={theme} />

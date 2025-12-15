@@ -148,9 +148,9 @@ export default function Filters(props: FiltersProps) {
 
               return (
                 <Button
+                  key={typeName}
                   padding={3}
                   fontSize={1}
-                  key={typeName}
                   text={schemaType?.title ?? typeName}
                   icon={schemaType?.icon ?? undefined}
                   mode={selectedSchemaTypes.includes(typeName) ? `default` : `ghost`}
