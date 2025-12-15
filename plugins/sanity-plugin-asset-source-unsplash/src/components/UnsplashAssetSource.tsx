@@ -1,7 +1,7 @@
 import {SearchIcon} from '@sanity/icons'
 import {Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {Component} from 'react'
-import {PhotoAlbum, type RenderPhotoProps, type Photo as PhotoType} from 'react-photo-album'
+import PhotoAlbum, {type RenderPhotoProps, type Photo as PhotoType} from 'react-photo-album'
 import InfiniteScroll from 'react-photo-album/scroll'
 import {
   type AssetFromSource,
