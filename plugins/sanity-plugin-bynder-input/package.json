@@ -37,7 +37,7 @@
   "dependencies": {
     "@sanity/ui": "catalog:",
     "react-compiler-runtime": "catalog:",
-    "video.js": "^7.21.7"
+    "video.js": "^8.23.4"
   },
   "devDependencies": {
     "@bynder/compact-view": "5.1.2",
