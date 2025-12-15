@@ -3,12 +3,12 @@
   "version": "4.0.1",
   "description": "Use images from Unsplash.com in your Sanity Studio",
   "keywords": [
-    "sanity",
-    "plugin",
-    "images",
-    "unsplash",
     "assets",
-    "source"
+    "images",
+    "plugin",
+    "sanity",
+    "source",
+    "unsplash"
   ],
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-asset-source-unsplash#readme",
   "bugs": {
@@ -19,8 +19,8 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-asset-source-unsplash"
   },
-  "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
