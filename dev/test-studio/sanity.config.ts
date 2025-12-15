@@ -40,9 +40,9 @@ export default defineConfig([
       colorExample(),
       markdownExample(),
       debugSecrets(),
+      unsplashExample(),
       vercelProtectionBypassTool(),
       visionTool(),
-      unsplashExample(),
     ],
   }),
 ])
