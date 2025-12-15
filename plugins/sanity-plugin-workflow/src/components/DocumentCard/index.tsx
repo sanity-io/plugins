@@ -35,7 +35,7 @@ export function DocumentCard(props: DocumentCardProps) {
     toggleInvalidDocumentId,
     userList,
   } = props
-  const { assignees = [], documentId} = item._metadata ?? {}
+  const {assignees = [], documentId} = item._metadata ?? {}
   const schema = useSchema()
   const state = states.find((s) => s.id === item._metadata?.state)
 
@@ -136,6 +136,7 @@ export function DocumentCard(props: DocumentCardProps) {
                     layout="default"
                     skipVisibilityCheck
                     value={item}
+                    // oxlint-disable-next-line no-unsafe-type-assertion
                     schemaType={schema.get(item._type) as SchemaType}
                   />
                 </Box>

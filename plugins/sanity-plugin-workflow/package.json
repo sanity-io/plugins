@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-workflow",
-  "version": "2.1.1",
+  "version": "2.1.3",
   "description": "A demonstration of a custom content publishing workflow using Sanity.",
   "keywords": [
     "sanity",
@@ -15,11 +15,12 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-workflow"
   },
-  "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
+      "development": "./src/index.ts",
       "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
@@ -37,11 +38,11 @@
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "@sanity/icons": "^3.7.4",
-    "@sanity/ui": "^3.1.11",
-    "@tanstack/react-virtual": "^3.13.12",
+    "@sanity/ui": "catalog:",
+    "@tanstack/react-virtual": "^3.13.13",
     "lexorank": "^1.0.5",
-    "motion": "^12.23.25",
-    "react-compiler-runtime": "^1.0.0",
+    "motion": "^12.23.26",
+    "react-compiler-runtime": "catalog:",
     "react-fast-compare": "^3.2.2",
     "sanity-plugin-utils": "^1.7.0"
   },
@@ -52,8 +53,8 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "babel-plugin-styled-components": "^2.1.4",
+    "babel-plugin-react-compiler": "catalog:",
+    "babel-plugin-styled-components": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",

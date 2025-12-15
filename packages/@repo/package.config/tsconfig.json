@@ -1,8 +1,5 @@
 {
   "extends": ["@sanity/tsconfig/strictest", "@sanity/tsconfig/isolated-declarations"],
   "include": ["src/*.ts"],
-  "exclude": ["node_modules"],
-  "compilerOptions": {
-    "noCheck": false,
-  },
+  "exclude": ["node_modules"]
 }

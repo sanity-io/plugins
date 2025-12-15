@@ -28,7 +28,7 @@ type WorkflowToolProps = {
 }
 
 export default function WorkflowTool(props: WorkflowToolProps) {
-  const { schemaTypes = [], states = []} = props?.tool?.options ?? {}
+  const {schemaTypes = [], states = []} = props?.tool?.options ?? {}
 
   const isDarkMode = useTheme().sanity.color.dark
   const defaultCardTone = isDarkMode ? 'default' : 'transparent'
@@ -202,9 +202,12 @@ export default function WorkflowTool(props: WorkflowToolProps) {
   // Used for the user filter UI
   const uniqueAssignedUsers = useMemo(() => {
     const uniqueUserIds = data.reduce((acc, item) => {
-      const { assignees = []} = item._metadata ?? {}
+      const {assignees = []} = item._metadata ?? {}
       const newAssignees = assignees?.length ? assignees.filter((a) => !acc.includes(a)) : []
-      return newAssignees.length ? [...acc, ...newAssignees] : acc
+      if (newAssignees.length) {
+        acc.push(...newAssignees)
+      }
+      return acc
     }, [] as string[])
 
     return userList.filter((u) => uniqueUserIds.includes(u.id))

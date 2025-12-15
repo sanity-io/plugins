@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "imports": {
+    "#*": "./src/*/index.tsx"
+  },
   "scripts": {
     "dev": "sanity dev",
     "build": "sanity build"
-  },
-  "imports": {
-    "#*": "./src/*/index.tsx"
   },
   "dependencies": {
     "@sanity/color-input": "workspace:*",
@@ -22,8 +22,8 @@
     "sanity-plugin-aprimo": "workspace:*",
     "sanity-plugin-asset-source-unsplash": "workspace:*",
     "sanity-plugin-bynder-input": "workspace:*",
-    "sanity-plugin-markdown": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
+    "sanity-plugin-markdown": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
     "styled-components": "catalog:"
@@ -34,8 +34,10 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@typescript/native-preview": "catalog:",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "typescript": "catalog:",
-    "vite": "^7.2.7"
+    "babel-plugin-react-compiler": "catalog:",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": "24"
   }
 }

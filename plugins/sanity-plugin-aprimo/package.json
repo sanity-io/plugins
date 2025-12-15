@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-aprimo",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Aprimo asset selector for Sanity",
   "keywords": [
     "sanity",
@@ -15,11 +15,12 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-aprimo"
   },
-  "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
+      "development": "./src/index.ts",
       "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
@@ -36,8 +37,8 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/ui": "^3.1.11",
-    "react-compiler-runtime": "^1.0.0"
+    "@sanity/ui": "catalog:",
+    "react-compiler-runtime": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -46,7 +47,7 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
-    "babel-plugin-react-compiler": "^1.0.0",
+    "babel-plugin-react-compiler": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",

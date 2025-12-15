@@ -1,0 +1,79 @@
+{
+  "name": "{{ name }}",
+  "version": "{{ version }}",
+  "description": "{{ description }}",
+{{#if keywords}}
+  "keywords": {{{ json keywords }}},
+{{else}}
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+{{/if}}
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/{{ name }}#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/{{ name }}"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "lint": "eslint .",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/ui": "catalog:",
+    "react-compiler-runtime": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@typescript/native-preview": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+{{#if hasStyledComponents}}
+    "babel-plugin-styled-components": "catalog:",
+{{/if}}
+    "eslint": "catalog:",
+    "react": "catalog:",
+    "sanity": "catalog:",
+{{#if hasStyledComponents}}
+    "styled-components": "catalog:",
+{{/if}}
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "sanity": "^4.0.0-0 || ^5.0.0-0"{{#if hasStyledComponents}},
+    "styled-components": "^6.1"{{/if}}
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-bynder-input",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "keywords": [
     "sanity",
     "sanity-plugin"
@@ -14,11 +14,12 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-bynder-input"
   },
-  "license": "MIT",
   "author": "Sanity <hello@sanity.io>",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
+      "development": "./src/index.ts",
       "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
@@ -34,8 +35,8 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/ui": "^3.1.11",
-    "react-compiler-runtime": "^1.0.0",
+    "@sanity/ui": "catalog:",
+    "react-compiler-runtime": "catalog:",
     "video.js": "^7.21.7"
   },
   "devDependencies": {
@@ -47,7 +48,7 @@
     "@types/react": "catalog:",
     "@types/video.js": "^7.3.58",
     "@typescript/native-preview": "catalog:",
-    "babel-plugin-react-compiler": "^1.0.0",
+    "babel-plugin-react-compiler": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

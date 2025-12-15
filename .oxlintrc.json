@@ -8,13 +8,13 @@
     "oxc",
     "import",
     "jsx-a11y",
-    "promise",
+    "promise"
   ],
   "ignorePatterns": ["**/.sanity/*", "**/dist/*"],
   "categories": {
     "correctness": "error",
     "suspicious": "error",
-    "perf": "error",
+    "perf": "error"
   },
   "rules": {
     "typescript/ban-ts-comment": "error",
@@ -23,7 +23,7 @@
     "no-restricted-globals": [
       "error",
       {"name": "__dirname", "message": "Use path.dirname(fileURLToPath(import.meta.url)) instead"},
-      {"name": "__filename", "message": "Use fileURLToPath(import.meta.url) instead"},
+      {"name": "__filename", "message": "Use fileURLToPath(import.meta.url) instead"}
     ],
     "react/jsx-key": "error",
     "unicorn/no-abusive-eslint-disable": "error",
@@ -43,6 +43,14 @@
     "eslint/no-console": ["error", {"allow": ["warn", "error"]}],
     // Requires polyfills for older browsers
     "no-array-reverse": "off",
-    "no-array-sort": "off",
+    "no-array-sort": "off"
   },
+  "overrides": [
+    {
+      "files": ["turbo/generators/**/*.ts"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
 }

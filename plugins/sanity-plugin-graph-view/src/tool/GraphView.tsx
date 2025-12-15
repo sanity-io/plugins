@@ -206,6 +206,7 @@ export default function GraphView({
       setDocuments(docs)
       setDocTypes(getDocTypeCounts(docs))
       setGraph(new GraphData(docs))
+      return undefined
     })
   }, [client, query])
 

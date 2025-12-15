@@ -4,7 +4,7 @@ import {
   vercelProtectionBypassSchemaType as type,
 } from '@sanity/preview-url-secret/constants'
 import {lazy} from 'react'
-import {definePlugin, defineType} from 'sanity'
+import {definePlugin, defineType, type Plugin} from 'sanity'
 
 const id = 'vercel-protection-bypass'
 
@@ -45,7 +45,7 @@ const schema = defineType({
 
 const VercelProtectionBypassTool = lazy(() => import('./VercelProtectionBypassTool'))
 
-export const vercelProtectionBypassTool = definePlugin<VercelProtectionBypassConfig | void>(
+export const vercelProtectionBypassTool: Plugin<VercelProtectionBypassConfig | void> = definePlugin(
   (options) => {
     const {
       name = 'vercel-protection-bypass',

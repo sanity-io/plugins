@@ -1,5 +1,19 @@
 # sanity-plugin-workflow
 
+## 2.1.3
+
+### Patch Changes
+
+- [#223](https://github.com/sanity-io/plugins/pull/223) [`1a8541c`](https://github.com/sanity-io/plugins/commit/1a8541c432ed40c719118c30fffc657154091d3f) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @tanstack/react-virtual to ^3.13.13
+
+- [`11ecb81`](https://github.com/sanity-io/plugins/commit/11ecb81d91b40d95e6174ba5204f49c6e6f0ef9c) Thanks [@stipsan](https://github.com/stipsan)! - Fixes a crash caused by an infinite rerender loop after updating to `@tanstack/react-virutal@^3.13.13`
+
+## 2.1.2
+
+### Patch Changes
+
+- [`7074855`](https://github.com/sanity-io/plugins/commit/7074855ecf139da7d7952963a12589a8f464bd0f) Thanks [@stipsan](https://github.com/stipsan)! - Fix linter issues
+
 ## 2.1.1
 
 ### Patch Changes

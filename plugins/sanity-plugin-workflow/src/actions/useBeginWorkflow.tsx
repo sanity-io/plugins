@@ -27,26 +27,23 @@ export function useBeginWorkflow({
       /* groq */ `*[_type == "workflow.metadata" && state == $state]|order(orderRank)[0].orderRank`,
       {state: states?.[0]?.id},
     )
-    await client
-      .createIfNotExists({
-        _id: `workflow-metadata.${id}`,
-        _type: `workflow.metadata`,
-        documentId: id,
-        state: states?.[0]?.id,
-        orderRank: lowestOrderFirstState
-          ? LexoRank.parse(lowestOrderFirstState).genNext().toString()
-          : LexoRank.min().toString(),
-      })
-      .then(() => {
-        toast.push({
-          status: 'success',
-          title: 'Workflow started',
-          description: `Document is now "${states?.[0]?.title}"`,
-        })
-        setBeginning(false)
-        // Optimistically remove action
-        setComplete(true)
-      })
+    await client.createIfNotExists({
+      _id: `workflow-metadata.${id}`,
+      _type: `workflow.metadata`,
+      documentId: id,
+      state: states?.[0]?.id,
+      orderRank: lowestOrderFirstState
+        ? LexoRank.parse(lowestOrderFirstState).genNext().toString()
+        : LexoRank.min().toString(),
+    })
+    toast.push({
+      status: 'success',
+      title: 'Workflow started',
+      description: `Document is now "${states?.[0]?.title}"`,
+    })
+    setBeginning(false)
+    // Optimistically remove action
+    setComplete(true)
   }, [id, states, client, toast])
 
   if (!draft || complete || metadata) {

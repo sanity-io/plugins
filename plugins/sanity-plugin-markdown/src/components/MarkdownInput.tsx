@@ -116,6 +116,7 @@ export function MarkdownInput(props: MarkdownInputProps): React.JSX.Element {
     focused,
   } = props
   const client = useClient({apiVersion: '2022-01-01'})
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const {imageUrl} = (schemaType.options as MarkdownOptions | undefined) ?? {}
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false)
   const ref = useRef<HTMLDivElement>(null)

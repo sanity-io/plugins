@@ -30,8 +30,10 @@ export default function Verify(props: VerifyProps) {
     ? data.reduce((acc, cur) => {
         const {documentId, state} = cur._metadata ?? {}
         const stateExists = states.find((s) => s.id === state)
-
-        return !stateExists && documentId ? [...acc, documentId] : acc
+        if (!stateExists && documentId) {
+          acc.push(documentId)
+        }
+        return acc
       }, [] as string[])
     : []
 
@@ -43,7 +45,11 @@ export default function Verify(props: VerifyProps) {
             ? assignees?.every((a) => userList.find((u) => u.id === a))
             : true
 
-          return !allAssigneesExist && documentId ? [...acc, documentId] : acc
+          if (!allAssigneesExist && documentId) {
+            acc.push(documentId)
+          }
+
+          return acc
         }, [] as string[])
       : []
 
@@ -51,7 +57,10 @@ export default function Verify(props: VerifyProps) {
     ? data.reduce((acc, cur) => {
         const {documentId, orderRank} = cur._metadata ?? {}
 
-        return !orderRank && documentId ? [...acc, documentId] : acc
+        if (!orderRank && documentId) {
+          acc.push(documentId)
+        }
+        return acc
       }, [] as string[])
     : []
 
@@ -59,11 +68,15 @@ export default function Verify(props: VerifyProps) {
     ? data.reduce((acc, cur) => {
         const {documentId, orderRank} = cur._metadata ?? {}
 
-        return orderRank &&
+        if (
+          orderRank &&
           data.filter((d) => d._metadata?.orderRank === orderRank).length > 1 &&
           documentId
-          ? [...acc, documentId]
-          : acc
+        ) {
+          acc.push(documentId)
+        }
+
+        return acc
       }, [] as string[])
     : []
 
@@ -179,7 +192,7 @@ export default function Verify(props: VerifyProps) {
         status: 'success',
       })
     },
-    [data, client, toast],
+    [client, toast],
   )
 
   // A document could be deleted and the workflow metadata left behind

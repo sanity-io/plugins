@@ -15,11 +15,12 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-workspace-home"
   },
-  "license": "MIT",
   "author": "Sanity <hello@sanity.io>",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
+      "development": "./src/index.ts",
       "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
@@ -36,9 +37,9 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/ui": "^3.1.11",
-    "react-compiler-runtime": "^1.0.0",
-    "react-is": "^19.2.1"
+    "@sanity/ui": "catalog:",
+    "react-compiler-runtime": "catalog:",
+    "react-is": "^19.2.3"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -48,8 +49,8 @@
     "@types/react": "catalog:",
     "@types/react-is": "^19.2.0",
     "@typescript/native-preview": "catalog:",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "babel-plugin-styled-components": "^2.1.4",
+    "babel-plugin-react-compiler": "catalog:",
+    "babel-plugin-styled-components": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",

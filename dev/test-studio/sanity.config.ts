@@ -34,6 +34,7 @@ export default defineConfig([
     name: 'kitchen-sink',
     plugins: [
       structureTool(),
+      // add new plugins here
       aprimoExample(),
       bynderExample(),
       colorExample(),

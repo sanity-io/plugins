@@ -2,8 +2,8 @@
   "name": "@repo/package.config",
   "version": "0.0.0",
   "private": true,
-  "license": "MIT",
   "description": "Shared @sanity/pkg-utils configuration",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",

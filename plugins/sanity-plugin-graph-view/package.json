@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-graph-view",
-  "version": "3.2.4",
+  "version": "4.0.0",
   "description": "",
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-graph-view#readme",
   "bugs": {
@@ -11,14 +11,13 @@
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-graph-view"
   },
-  "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {
+      "development": "./src/index.ts",
       "source": "./src/index.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -34,11 +33,11 @@
   },
   "dependencies": {
     "@sanity/color": "^3.0.6",
-    "@sanity/ui": "^3.1.11",
+    "@sanity/ui": "catalog:",
     "bezier-easing": "^2.1.0",
     "deep-equal": "^2.2.3",
     "polished": "^4.3.1",
-    "react-compiler-runtime": "^1.0.0",
+    "react-compiler-runtime": "catalog:",
     "react-force-graph": "1.41.14",
     "uuid": "^13.0.0"
   },
@@ -50,8 +49,8 @@
     "@types/deep-equal": "^1.0.4",
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "babel-plugin-styled-components": "^2.1.4",
+    "babel-plugin-react-compiler": "catalog:",
+    "babel-plugin-styled-components": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
@@ -68,11 +67,7 @@
   },
   "publishConfig": {
     "exports": {
-      ".": {
-        "import": "./dist/index.js",
-        "require": "./dist/index.cjs",
-        "default": "./dist/index.js"
-      },
+      ".": "./dist/index.js",
       "./package.json": "./package.json"
     }
   }

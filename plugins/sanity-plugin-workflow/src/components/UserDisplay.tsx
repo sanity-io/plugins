@@ -18,7 +18,7 @@ export default function UserDisplay(props: UserDisplayProps) {
   const {assignees, userList, documentId, disabled = false} = props
 
   const [button] = useState(null)
-  const [popover, setPopover] = useState(null)
+  const [popover, setPopover] = useState<HTMLDivElement | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
   const close = useCallback(() => setIsOpen(false), [])
@@ -28,7 +28,6 @@ export default function UserDisplay(props: UserDisplayProps) {
 
   return (
     <Popover
-      // @ts-ignore
       ref={setPopover}
       content={<UserAssignment userList={userList} assignees={assignees} documentId={documentId} />}
       portal

@@ -3,7 +3,7 @@ import type {UserExtended} from 'sanity-plugin-utils'
 
 import {Draggable, type DraggableStyle} from '@hello-pangea/dnd'
 import {useVirtualizer, type VirtualItem} from '@tanstack/react-virtual'
-import {type CSSProperties, useMemo, useRef} from 'react'
+import {type CSSProperties, useCallback, useMemo, useRef} from 'react'
 
 import type {SanityDocumentWithMetadata, State} from '../types'
 
@@ -79,13 +79,16 @@ export default function DocumentList(props: DocumentListProps) {
   // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: dataFiltered.length,
-    getScrollElement: () => parentRef.current,
-    getItemKey: (index) => dataFiltered[index]?._metadata?.documentId ?? index,
-    estimateSize: () => 115,
+    getScrollElement: useCallback(() => parentRef.current, []),
+    getItemKey: useCallback(
+      (index) => dataFiltered[index]?._metadata?.documentId ?? index,
+      [dataFiltered],
+    ),
+    estimateSize: useCallback(() => 115, []),
     overscan: 7,
-    measureElement: (element) => {
+    measureElement: useCallback((element: Element) => {
       return element.getBoundingClientRect().height || 115
-    },
+    }, []),
   })
 
   if (!data.length || !dataFiltered.length) {
