@@ -11,7 +11,7 @@ catalog:
   '@sanity/pkg-utils': ^10.2.1
   '@sanity/tsconfig': ^2.1.0
   '@sanity/ui': ^3.1.11
-  '@sanity/vision': ^4.21.1
+  '@sanity/vision': ^4.22.0
   '@types/node': ^24.10.4
   '@types/react': ^19.2.7
   '@types/react-dom': ^19.2.3
@@ -23,7 +23,7 @@ catalog:
   react-compiler-runtime: ^1.0.0
   react-dom: ^19.2.3
   rxjs: ^7.8.2
-  sanity: ^4.21.1
+  sanity: ^4.22.0
   styled-components: ^6.1.19
   typescript: 5.9.3
 
