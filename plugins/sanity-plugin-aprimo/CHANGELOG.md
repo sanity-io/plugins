@@ -1,5 +1,11 @@
 # sanity-plugin-aprimo
 
+## 2.0.1
+
+### Patch Changes
+
+- [`764cf28`](https://github.com/sanity-io/plugins/commit/764cf281176986d009e7ec8d32e5fa050ca20edb) Thanks [@stipsan](https://github.com/stipsan)! - Remove `react-compiler-runtime` dep
+
 ## 2.0.0
 
 ### Major Changes
