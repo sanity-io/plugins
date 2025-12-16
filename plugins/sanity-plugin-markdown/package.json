@@ -45,7 +45,6 @@
   },
   "dependencies": {
     "@sanity/ui": "catalog:",
-    "react-compiler-runtime": "catalog:",
     "react-simplemde-editor": "^5.2.0"
   },
   "devDependencies": {

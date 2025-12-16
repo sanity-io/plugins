@@ -37,8 +37,7 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/ui": "catalog:",
-    "react-compiler-runtime": "catalog:"
+    "@sanity/ui": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

@@ -42,7 +42,6 @@
     "@tanstack/react-virtual": "^3.13.13",
     "lexorank": "^1.0.5",
     "motion": "^12.23.26",
-    "react-compiler-runtime": "catalog:",
     "react-fast-compare": "^3.2.2",
     "sanity-plugin-utils": "^1.7.0"
   },

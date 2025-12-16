@@ -44,7 +44,6 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "react-color": "^2.19.3",
-    "react-compiler-runtime": "catalog:",
     "tinycolor2": "^1.6.0"
   },
   "devDependencies": {

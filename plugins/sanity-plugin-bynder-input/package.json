@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "@sanity/ui": "catalog:",
-    "react-compiler-runtime": "catalog:",
     "video.js": "^7.21.7"
   },
   "devDependencies": {
