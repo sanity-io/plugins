@@ -1,5 +1,11 @@
 # @sanity/color-input
 
+## 6.0.0
+
+### Major Changes
+
+- [`20c43ac`](https://github.com/sanity-io/plugins/commit/20c43ac07e632ce5d75fd8bd9a47938e377b476b) Thanks [@stipsan](https://github.com/stipsan)! - Require Sanity Studio V5
+
 ## 5.0.4
 
 ### Patch Changes
