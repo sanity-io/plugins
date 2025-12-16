@@ -1,5 +1,11 @@
 # sanity-plugin-asset-source-unsplash
 
+## 6.0.0
+
+### Major Changes
+
+- [#279](https://github.com/sanity-io/plugins/pull/279) [`717cf74`](https://github.com/sanity-io/plugins/commit/717cf7481c3deb5970120ef0be565ab66d14d91e) Thanks [@stipsan](https://github.com/stipsan)! - Require React 19.2
+
 ## 5.0.1
 
 ### Patch Changes
