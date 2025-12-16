@@ -1,265 +1,98 @@
-import {SearchIcon} from '@sanity/icons'
-import {Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
-import {Component} from 'react'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import {PhotoAlbum, type RenderPhotoProps, type Photo as PhotoType} from 'react-photo-album'
-import {BehaviorSubject, type Subscription} from 'rxjs'
-import {
-  type AssetFromSource,
-  type AssetSourceComponentProps,
-  type SanityClient,
-  useClient,
-} from 'sanity'
+import {Dialog, Stack, Box} from '@sanity/ui'
+import {memoize} from 'lodash-es'
+import {lazy, Suspense, useMemo, useRef, useState} from 'react'
+import {type AssetSourceComponentProps, useClient} from 'sanity'
+import {styled} from 'styled-components'
 
-import type {UnsplashPhoto} from '../types'
+import type {FetcherResult, UnsplashPhoto} from '../types'
 
-import {fetchDownloadUrl, search} from '../datastores/unsplash'
-import Photo from './Photo'
-import {SearchInput} from './UnsplashAssetSource.styled'
-
-type UnsplashPhotoAlbumPhoto = PhotoType & {
-  key: string
-  data: UnsplashPhoto
-}
-
-type State = {
-  query: string
-  searchResults: UnsplashPhoto[][]
-  page: number
-  isLoading: boolean
-  cursor: number
-}
+import {Loader} from './Loader'
+import {SearchInput} from './SearchInput'
 
 const RESULTS_PER_PAGE = 42
-const PHOTO_SPACING = 2
-const PHOTO_PADDING = 1 // offset the 1px border width
 
-export default function UnsplashAssetSource(props: AssetSourceComponentProps) {
+const StyledDialog = styled(Dialog)`
+  & > [data-ui='DialogCard'] > [data-ui='Card'] {
+    height: 100%;
+  }
+`
+
+const UnsplashAssetSourceGallery = lazy(() => import('./UnsplashPhotoGallery'))
+
+export function UnsplashAssetSource({onClose, onSelect}: AssetSourceComponentProps) {
   const client = useClient({apiVersion: '2022-09-01'})
-  return <UnsplashAssetSourceInternal {...props} client={client} />
-}
-
-class UnsplashAssetSourceInternal extends Component<
-  AssetSourceComponentProps & {client: SanityClient},
-  State
-> {
-  static defaultProps = {
-    selectedAssets: undefined,
-  }
-
-  override state = {
-    cursor: 0,
-    query: '',
-    page: 1,
-    searchResults: [[]],
-    isLoading: true,
-  }
-
-  searchSubscription: Subscription | null = null
-
-  searchSubject$ = new BehaviorSubject('')
-  pageSubject$ = new BehaviorSubject(1)
-
-  override componentDidMount() {
-    this.searchSubscription = search(
-      this.props.client,
-      this.searchSubject$,
-      this.pageSubject$,
-      RESULTS_PER_PAGE,
-    ).subscribe({
-      next: (results: UnsplashPhoto[]) => {
-        this.setState((prev) => ({
-          searchResults: [...prev.searchResults, results],
-          isLoading: false,
-        }))
-      },
-    })
-  }
-
-  override componentWillUnmount() {
-    if (this.searchSubscription) {
-      this.searchSubscription.unsubscribe()
-    }
-  }
-
-  handleSelect = (photo: UnsplashPhoto) => {
-    this.setState({isLoading: true})
-    return fetchDownloadUrl(this.props.client, photo).then((downloadUrl) => {
-      const description = photo.description || undefined
-      const asset: AssetFromSource = {
-        kind: 'url',
-        value: downloadUrl,
-        // @ts-expect-error TODO: this is a partial assetDocumentProps, update types.
-        assetDocumentProps: {
-          _type: 'sanity.imageAsset',
-          source: {
-            name: 'unsplash',
-            id: photo.id,
-            url: photo.links.html,
-          },
-          description,
-          creditLine: `${photo.user.name} by Unsplash`,
+  const fetcher = useMemo(
+    () =>
+      memoize(
+        async function fetcher(query: string, page: number): Promise<FetcherResult> {
+          const searchParams = new URLSearchParams({
+            page: `${page}`,
+            per_page: `${RESULTS_PER_PAGE}`,
+          })
+          if (query.trim()) {
+            searchParams.set('query', query.trim())
+            return client.request<{
+              results: UnsplashPhoto[]
+              total: number
+              total_pages: number
+            }>({
+              url: `/addons/unsplash/search/photos?${searchParams}`,
+              withCredentials: true,
+              method: 'GET',
+            })
+          }
+          searchParams.set('order_by', 'popular')
+          return client
+            .request<UnsplashPhoto[]>({
+              url: `/addons/unsplash/photos?${searchParams}`,
+              withCredentials: true,
+              method: 'GET',
+            })
+            .then((results) => ({
+              results,
+              total: results.length,
+              total_pages: Math.ceil(results.length / RESULTS_PER_PAGE),
+            }))
         },
-      }
-      this.props.onSelect([asset])
-      return undefined
-    })
-  }
+        (query, page) => JSON.stringify({query, page}),
+      ),
+    [client],
+  )
 
-  handleClose = () => {
-    this.props.onClose()
-  }
+  const [query, setQuery] = useState('')
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  handleSearchTermChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.currentTarget.value
-    this.setState({
-      query,
-      page: 1,
-      searchResults: [[]],
-      isLoading: true,
-      cursor: 0,
-    })
-    this.pageSubject$.next(1)
-    this.searchSubject$.next(query)
-  }
-
-  handleSearchTermCleared = () => {
-    this.setState({
-      query: '',
-      page: 1,
-      searchResults: [[]],
-      isLoading: true,
-      cursor: 0,
-    })
-    this.pageSubject$.next(1)
-    this.searchSubject$.next('')
-  }
-
-  handleScrollerLoadMore = () => {
-    const nextPage = this.state.page + 1
-    this.setState({page: nextPage, isLoading: true})
-    this.pageSubject$.next(nextPage)
-    this.searchSubject$.next(this.state.query)
-  }
-
-  handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const {cursor} = this.state
-    if ((event.keyCode === 38 || event.keyCode === 37) && cursor > 0) {
-      this.setState((prevState) => ({
-        cursor: prevState.cursor - 1,
-      }))
-    } else if (
-      (event.keyCode === 40 || event.keyCode === 39) &&
-      cursor < this.getPhotos().length - 1
-    ) {
-      this.setState((prevState) => ({
-        cursor: prevState.cursor + 1,
-      }))
-    }
-  }
-
-  getPhotos() {
-    return this.state.searchResults.flat()
-  }
-
-  updateCursor = (photo: UnsplashPhoto) => {
-    const index = this.getPhotos().findIndex((result: UnsplashPhoto) => result.id === photo.id)
-    this.setState({cursor: index})
-  }
-
-  renderImage = (props: RenderPhotoProps<UnsplashPhotoAlbumPhoto>) => {
-    const {photo, layout} = props
-    const active =
-      this.getPhotos().findIndex((result: UnsplashPhoto) => result.id === photo.data.id) ===
-        this.state.cursor || false
-    return (
-      <Photo
-        onClick={this.handleSelect}
-        onKeyDown={this.handleKeyDown}
-        data={photo.data}
-        width={layout.width}
-        height={layout.height}
-        active={active}
-        onFocus={this.updateCursor}
-      />
-    )
-  }
-
-  override render() {
-    const {query, searchResults, isLoading} = this.state
-
-    return (
-      <Dialog
-        animate
-        id="unsplash-asset-source"
-        header="Select image from Unsplash"
-        onClose={this.handleClose}
-        open
-        width={4}
+  return (
+    <StyledDialog
+      animate
+      id="unsplash-asset-source"
+      header="Select image from Unsplash"
+      onClose={() => onClose()}
+      open
+      height="100%"
+      width={4}
+    >
+      <Stack
+        ref={scrollContainerRef}
+        space={1}
+        paddingLeft={3}
+        height="stretch"
+        style={{overflow: 'hidden scroll', overflowX: 'clip', overflowY: 'scroll'}}
       >
-        <Stack space={3} paddingX={4} paddingBottom={4}>
-          <SearchInput
-            clearButton={query.length > 0}
-            icon={SearchIcon}
-            onChange={this.handleSearchTermChanged}
-            onClear={this.handleSearchTermCleared}
-            placeholder="Search by topics or colors"
-            value={query}
+        <Box style={{position: 'sticky', top: 0, zIndex: 1}}>
+          <SearchInput changeAction={setQuery} value={query} />
+        </Box>
+        <Suspense fallback={<Loader />}>
+          <UnsplashAssetSourceGallery
+            client={client}
+            query={query}
+            fetcher={fetcher}
+            scrollContainerRef={scrollContainerRef}
+            onSelect={onSelect}
+            initialDataPromise={fetcher(query, 1)}
           />
-          {!isLoading && this.getPhotos().length === 0 && (
-            <Text size={1} muted>
-              No results found
-            </Text>
-          )}
-          <InfiniteScroll
-            dataLength={this.getPhotos().length} // This is important field to render the next data
-            next={this.handleScrollerLoadMore}
-            // scrollableTarget="unsplash-scroller"
-            hasMore
-            scrollThreshold={0.99}
-            height="60vh"
-            loader={
-              <Flex align="center" justify="center" padding={3}>
-                <Spinner muted />
-              </Flex>
-            }
-            endMessage={
-              <Text size={1} muted>
-                No more results
-              </Text>
-            }
-          >
-            {searchResults
-              .filter((photos) => photos.length > 0)
-              .map((photos: UnsplashPhoto[], index) => (
-                <PhotoAlbum
-                  key={`gallery-${query || 'popular'}-${index}`}
-                  layout="rows"
-                  spacing={PHOTO_SPACING}
-                  padding={PHOTO_PADDING}
-                  targetRowHeight={(width) => {
-                    if (width < 300) return 150
-                    if (width < 600) return 200
-                    return 300
-                  }}
-                  photos={photos.map((photo: UnsplashPhoto) => ({
-                    src: photo.urls.small,
-                    width: photo.width,
-                    height: photo.height,
-                    key: photo.id,
-                    data: photo,
-                  }))}
-                  renderPhoto={this.renderImage}
-                  componentsProps={{
-                    containerProps: {
-                      style: {marginBottom: `${PHOTO_SPACING}px`},
-                    },
-                  }}
-                />
-              ))}
-          </InfiniteScroll>
-        </Stack>
-      </Dialog>
-    )
-  }
+        </Suspense>
+      </Stack>
+    </StyledDialog>
+  )
 }

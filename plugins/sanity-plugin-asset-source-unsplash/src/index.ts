@@ -1,7 +1,7 @@
 import {type AssetSource, definePlugin, type Plugin} from 'sanity'
 
 import {UnsplashIcon} from './components/Icon'
-import Unsplash from './components/UnsplashAssetSource'
+import {UnsplashAssetSource} from './components/UnsplashAssetSource'
 
 export type {Asset, AssetDocument, UnsplashPhoto} from './types'
 
@@ -11,7 +11,7 @@ export type {Asset, AssetDocument, UnsplashPhoto} from './types'
 export const unsplashAssetSource: AssetSource = {
   name: 'unsplash',
   title: 'Unsplash',
-  component: Unsplash,
+  component: UnsplashAssetSource,
   icon: UnsplashIcon,
 }
 

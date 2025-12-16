@@ -42,16 +42,15 @@
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
-    "react-compiler-runtime": "catalog:",
-    "react-infinite-scroll-component": "6.1.0",
-    "react-photo-album": "2.4.1",
-    "rxjs": "catalog:"
+    "lodash-es": "^4.17.21",
+    "react-photo-album": "^3.3.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@types/lodash-es": "^4.17.12",
     "@types/react": "catalog:",
     "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
@@ -63,7 +62,7 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "react": "^18.3 || ^19",
+    "react": "^19.2",
     "sanity": "^4.0.0-0 || ^5.0.0-0",
     "styled-components": "^6.1"
   },
