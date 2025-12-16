@@ -27,6 +27,11 @@ export const Root = styled.div`
 export const CreditLineLink = styled.a`
   text-decoration: none;
   cursor: pointer;
+  &:hover, &:focus {
+    [data-ui='Text'] {
+      text-decoration: underline;
+    }
+  }
 `
 
 export const CreditLine = styled(Card)`

@@ -40,7 +40,21 @@ Under **"Token settings"**, ensure:
 
 This ensures only the GitHub Actions release workflow can publish this package using OIDC-based trusted publishing.
 
-## 2. Copy Source Files
+## 2. Update package.json Dependencies
+
+Manually update `package.json` with any missing dependencies from the original plugin:
+
+- `dependencies`
+- `devDependencies`
+- `peerDependencies`
+- `exports` (if the original has custom export paths)
+
+**Do NOT copy over:**
+
+- `@sanity/incompatible-plugin`
+- `@sanity/plugin-kit`
+
+## 3. Copy Source Files
 
 Copy all source files from the original plugin into `./src`:
 
@@ -70,7 +84,7 @@ After copying, update the test studio example at:
 
 Add any required options, schemas, or configuration needed to properly test the plugin in the test studio.
 
-## 3. Copy and Update CHANGELOG.md
+## 4. Copy and Update CHANGELOG.md
 
 Copy the `CHANGELOG.md` from the original plugin, then update the top of the file:
 
@@ -90,20 +104,6 @@ All notable changes to this project will be documented in this file. See
 ```md
 # {{ name }}
 ```
-
-## 4. Update package.json Dependencies
-
-Manually update `package.json` with any missing dependencies from the original plugin:
-
-- `dependencies`
-- `devDependencies`
-- `peerDependencies`
-- `exports` (if the original has custom export paths)
-
-**Do NOT copy over:**
-
-- `@sanity/incompatible-plugin`
-- `@sanity/plugin-kit`
 
 ## 5. Verify Setup
 

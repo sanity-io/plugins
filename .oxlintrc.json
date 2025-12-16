@@ -20,6 +20,7 @@
     "typescript/ban-ts-comment": "error",
     "typescript/prefer-ts-expect-error": "error",
     "import/no-commonjs ": "error",
+    "import/no-unassigned-import": ["error", {"allow": ["**/*.css"]}],
     "no-restricted-globals": [
       "error",
       {"name": "__dirname", "message": "Use path.dirname(fileURLToPath(import.meta.url)) instead"},
