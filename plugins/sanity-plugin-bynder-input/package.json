@@ -40,7 +40,7 @@
     "video.js": "^7.21.7"
   },
   "devDependencies": {
-    "@bynder/compact-view": "5.1.2",
+    "@bynder/compact-view": "5.1.4",
     "@repo/eslint-config": "workspace:*",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
