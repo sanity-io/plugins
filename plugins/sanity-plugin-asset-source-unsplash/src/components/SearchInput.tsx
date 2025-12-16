@@ -17,11 +17,6 @@ const AnimatedSpinnerIcon = styled(SpinnerIcon)`
   animation: ${rotate} 500ms linear infinite;
 `
 
-const StyledTextInput = styled(TextInput)`
-  position: sticky;
-  top: 0;
-  z-index: 1;
-`
 export function SearchInput({
   value,
   changeAction,
@@ -39,7 +34,7 @@ export function SearchInput({
   }
 
   return (
-    <StyledTextInput
+    <TextInput
       clearButton={inputValue.length > 0 && !isPending}
       icon={SearchIcon}
       onChange={(event) => handleChange(event.currentTarget.value)}
@@ -50,8 +45,3 @@ export function SearchInput({
     />
   )
 }
-
-export const Scroller = styled.div`
-  overflow-y: auto;
-  max-height: 80vh;
-`

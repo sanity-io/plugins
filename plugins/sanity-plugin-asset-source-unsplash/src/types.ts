@@ -62,3 +62,9 @@ export interface UnsplashPhoto {
     download_location: string
   }
 }
+
+export type FetcherResult = {
+  results: UnsplashPhoto[]
+  total: number
+  total_pages: number
+}
