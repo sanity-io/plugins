@@ -1,5 +1,13 @@
 # @sanity/color-input
 
+## 6.0.1
+
+### Patch Changes
+
+- [`7ddd344`](https://github.com/sanity-io/plugins/commit/7ddd344e561c862f04c4f94c84a3a3accb0e767b) Thanks [@stipsan](https://github.com/stipsan)! - Remove `use-effect-event` dependency
+
+- [`764cf28`](https://github.com/sanity-io/plugins/commit/764cf281176986d009e7ec8d32e5fa050ca20edb) Thanks [@stipsan](https://github.com/stipsan)! - Remove `react-compiler-runtime` dep
+
 ## 6.0.0
 
 ### Major Changes
