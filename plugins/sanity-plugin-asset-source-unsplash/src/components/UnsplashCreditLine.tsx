@@ -41,7 +41,12 @@ export function UnsplashCreditLine({
   url.searchParams.set('utm_medium', 'referral')
 
   return (
-    <CreditLineLink href={url.toString()} target={id} rel="noreferrer noopener">
+    <CreditLineLink
+      href={url.toString()}
+      target={id}
+      rel="noreferrer noopener"
+      onClick={(event) => event.stopPropagation()}
+    >
       <CreditLine padding={1} radius={1} margin={1}>
         <Text size={0} title={`Open image by ${userName} on Unsplash in new window`}>
           By @{userName}
