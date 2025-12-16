@@ -1,14 +1,12 @@
 import type {CustomPickerInjectedProps} from 'react-color/lib/components/common/ColorWrap'
 
-import {AddIcon} from '@sanity/icons'
-import {TrashIcon} from '@sanity/icons'
+import {AddIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
-import {startTransition, useCallback, useDeferredValue, useEffect, useRef, useState} from 'react'
+import {startTransition, useOptimistic, useRef} from 'react'
 import {type Color, CustomPicker} from 'react-color'
 import {Alpha, Checkboard, Hue, Saturation} from 'react-color/lib/components/common'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
 import {styled} from 'styled-components'
-import {useEffectEvent} from 'use-effect-event'
 
 import type {ColorSchemaType, ColorValue} from './types'
 
@@ -169,21 +167,12 @@ const DEFAULT_COLOR: ColorValue & {source: string} = {
 export default function ColorInput(props: ObjectInputProps): React.JSX.Element {
   const {onChange, readOnly} = props
   // oxlint-disable-next-line no-unsafe-type-assertion
-  const value = props.value as ColorValue | undefined
+  const _value = props.value as ColorValue | undefined
+  const [value, setColorOptimistic] = useOptimistic(_value)
   const type = props.schemaType as ColorSchemaType
   const focusRef = useRef<HTMLButtonElement>(null)
 
-  // use local state so we can have instant ui updates while debouncing patch emits
-  const [color, setColor] = useState(value)
-  // Marking the `setColor` in a transition allows React to interrupt render should the user start dragging the input before React is finished rendering
-  useEffect(() => startTransition(() => setColor(value)), [value])
-
-  // The color picker emits onChange events continuously while the user is sliding the
-  // hue/saturation/alpha selectors. This debounces the event to avoid excessive patches
-  // and massively improve render performance and avoid jank
-  const [emitColor, setEmitColor] = useState<typeof value>(undefined)
-  const debouncedColor = useDeferredValue(emitColor)
-  const handleChange = useEffectEvent((nextColor: ColorValue) => {
+  function handleChange(nextColor: ColorValue) {
     const fieldPatches = type.fields
       .filter((field) => field.name in nextColor)
       .map((field) => {
@@ -202,38 +191,28 @@ export default function ColorInput(props: ObjectInputProps): React.JSX.Element {
       set(nextColor.rgb?.a, ['alpha']),
       ...fieldPatches,
     ])
-  })
-  useEffect(() => {
-    if (!debouncedColor) return undefined
-    const raf = requestAnimationFrame(() => handleChange(debouncedColor))
-    return () => cancelAnimationFrame(raf)
-  }, [debouncedColor])
-
-  const handleCreateColor = useCallback(() => {
-    setColor(DEFAULT_COLOR)
-    setEmitColor(DEFAULT_COLOR)
-  }, [])
-
-  const handleColorChange = useCallback((nextColor: ColorValue) => {
-    setColor(nextColor)
-    setEmitColor(nextColor)
-  }, [])
-
-  const handleUnset = useCallback(() => {
-    setColor(undefined)
-    onChange(unset())
-  }, [onChange])
+  }
 
   return (
     <>
       {value && value.hex ? (
         <ColorPicker
-          color={color}
-          onChange={handleColorChange}
+          color={value}
+          onChange={(nextColor) =>
+            startTransition(() => {
+              setColorOptimistic(nextColor)
+              handleChange(nextColor)
+            })
+          }
           readOnly={readOnly || (typeof type.readOnly === 'boolean' && type.readOnly)}
           disableAlpha={!!type.options?.disableAlpha}
           colorList={type.options?.colorList}
-          onUnset={handleUnset}
+          onUnset={() =>
+            startTransition(() => {
+              setColorOptimistic(undefined)
+              onChange(unset())
+            })
+          }
         />
       ) : (
         <Button
@@ -242,7 +221,12 @@ export default function ColorInput(props: ObjectInputProps): React.JSX.Element {
           text="Create color"
           ref={focusRef}
           disabled={Boolean(readOnly)}
-          onClick={handleCreateColor}
+          onClick={() =>
+            startTransition(() => {
+              setColorOptimistic(DEFAULT_COLOR)
+              handleChange(DEFAULT_COLOR)
+            })
+          }
         />
       )}
     </>

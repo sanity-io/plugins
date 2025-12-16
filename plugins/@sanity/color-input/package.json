@@ -45,8 +45,7 @@
     "@sanity/ui": "catalog:",
     "react-color": "^2.19.3",
     "react-compiler-runtime": "catalog:",
-    "tinycolor2": "^1.6.0",
-    "use-effect-event": "^2.0.3"
+    "tinycolor2": "^1.6.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
