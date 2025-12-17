@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/preview-url-secret": "^3.0.0"
+    "@sanity/preview-url-secret": "^4.0.1"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
