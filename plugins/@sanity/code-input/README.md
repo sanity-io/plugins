@@ -75,7 +75,7 @@ defineField({
 
 ## Add support for more languages
 
-Only a subset of languages are have syntax highlighting support by default (see full list [here](https://github.com/sanity-io/code-input/blob/main/src/codemirror/defaultCodeModes.ts)).
+Only a subset of languages are have syntax highlighting support by default (see full list [here](https://github.com/sanity-io/plugins/blob/main/plugins/@sanity/code-input/src/codemirror/defaultCodeModes.ts)).
 
 ### Mode: Reuse an existing language
 
