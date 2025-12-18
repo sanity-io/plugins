@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.2](https://github.com/sanity-io/sanity-plugin-hotspot-array/compare/v3.0.1...v3.0.2) (2025-12-18)
+
+### Bug Fixes
+
+- **deps:** make peer dependencies include sanity 5.x ([#42](https://github.com/sanity-io/sanity-plugin-hotspot-array/issues/42)) ([00d2d5e](https://github.com/sanity-io/sanity-plugin-hotspot-array/commit/00d2d5e9ff2b3e52258687b50ecefe3763ee3b68))
+
 ## [3.0.1](https://github.com/sanity-io/sanity-plugin-hotspot-array/compare/v3.0.0...v3.0.1) (2025-08-14)
 
 ### Bug Fixes
