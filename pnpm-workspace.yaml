@@ -56,6 +56,7 @@ minimumReleaseAgeExclude:
 
 overrides:
   styled-components: npm:@sanity/styled-components@latest
+  vite: 8.0.0-beta.2
 
 patchedDependencies:
   '@bynder/compact-view': patches/@bynder__compact-view.patch
