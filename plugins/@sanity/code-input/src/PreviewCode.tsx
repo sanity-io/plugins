@@ -23,7 +23,7 @@ export interface PreviewCodeProps extends PreviewProps {
 /**
  * @public
  */
-export function PreviewCode(props: PreviewCodeProps) {
+export function PreviewCode(props: PreviewCodeProps): React.JSX.Element {
   const {selection, schemaType: type} = props
   // oxlint-disable-next-line no-unsafe-type-assertion - fix later
   const {languageMode} = useLanguageMode(type as CodeSchemaType, props.selection)

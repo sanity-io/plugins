@@ -1,6 +1,6 @@
 import {CheckmarkCircleIcon, CloseCircleIcon, LockIcon} from '@sanity/icons'
 import {schemaType, SECRET_TTL} from '@sanity/preview-url-secret/constants'
-import {definePlugin, defineType} from 'sanity'
+import {definePlugin, defineType, type Plugin} from 'sanity'
 
 const schema = defineType({
   type: 'document',
@@ -53,7 +53,7 @@ const schema = defineType({
   },
 })
 
-export const debugSecrets = definePlugin(() => {
+export const debugSecrets: Plugin = definePlugin(() => {
   return {
     name: 'sanity-plugin-debug-secrets',
     schema: {types: [schema]},

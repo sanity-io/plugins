@@ -1,4 +1,4 @@
-import {definePlugin, type StringInputProps} from 'sanity'
+import {definePlugin, type Plugin, type StringInputProps} from 'sanity'
 
 import {markdownSchemaType} from './schema'
 
@@ -40,15 +40,17 @@ export interface MarkdownConfig {
   input?: (props: StringInputProps) => React.ReactElement
 }
 
-export const markdownSchema = definePlugin((config: MarkdownConfig | void) => {
-  return {
-    name: 'markdown-editor',
-    schema: {
-      types: [
-        config && config.input
-          ? {...markdownSchemaType, components: {input: config.input}}
-          : markdownSchemaType,
-      ],
-    },
-  }
-})
+export const markdownSchema: Plugin<MarkdownConfig | void> = definePlugin(
+  (config: MarkdownConfig | void) => {
+    return {
+      name: 'markdown-editor',
+      schema: {
+        types: [
+          config && config.input
+            ? {...markdownSchemaType, components: {input: config.input}}
+            : markdownSchemaType,
+        ],
+      },
+    }
+  },
+)
