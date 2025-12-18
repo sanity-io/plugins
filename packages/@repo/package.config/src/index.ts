@@ -12,7 +12,6 @@ const config = {
     noPublishConfigExports: 'error',
   } satisfies NonNullable<PkgConfigOptions['strictOptions']>,
   dts: 'rolldown',
-  tsgo: false, // use rust to generate dts instead of tsgo
   tsconfig: 'tsconfig.build.json',
 } as const satisfies PkgConfigOptions
 

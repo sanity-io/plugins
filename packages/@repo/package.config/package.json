@@ -11,9 +11,7 @@
   },
   "devDependencies": {
     "@sanity/pkg-utils": "catalog:",
-    "@sanity/tsconfig": "catalog:",
-    "@typescript/native-preview": "catalog:",
-    "typescript": "catalog:"
+    "@sanity/tsconfig": "catalog:"
   },
   "peerDependencies": {
     "@sanity/pkg-utils": "catalog:"
