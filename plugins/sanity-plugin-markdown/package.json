@@ -54,15 +54,13 @@
     "@sanity/client": "catalog:",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",
     "easymde": "^2.20.0",
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:",
-    "typescript": "catalog:"
+    "styled-components": "catalog:"
   },
   "peerDependencies": {
     "easymde": "^2.18",

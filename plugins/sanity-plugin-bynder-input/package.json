@@ -46,13 +46,11 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@types/video.js": "^7.3.58",
-    "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "sanity": "catalog:",
-    "typescript": "catalog:"
+    "sanity": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",

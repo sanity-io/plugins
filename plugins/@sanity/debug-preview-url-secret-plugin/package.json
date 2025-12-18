@@ -44,10 +44,8 @@
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "react": "catalog:",
-    "sanity": "catalog:",
-    "typescript": "catalog:"
+    "sanity": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",

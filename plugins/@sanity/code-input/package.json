@@ -70,14 +70,12 @@
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:",
-    "typescript": "catalog:"
+    "styled-components": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",

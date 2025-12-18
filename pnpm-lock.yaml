@@ -182,15 +182,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.7)
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   packages/@repo/eslint-config:
     dependencies:
@@ -222,12 +216,6 @@ importers:
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.1.0
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   packages/@repo/tsconfig:
     dependencies:
@@ -316,9 +304,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -334,9 +319,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/@sanity/color-input:
     dependencies:
@@ -377,9 +359,6 @@ importers:
       '@types/tinycolor2':
         specifier: ^1.4.6
         version: 1.4.6
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -395,9 +374,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/@sanity/debug-preview-url-secret-plugin:
     dependencies:
@@ -420,18 +396,12 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       react:
         specifier: 'catalog:'
         version: 19.2.3
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(styled-components@6.1.19(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/@sanity/vercel-protection-bypass:
     dependencies:
@@ -463,9 +433,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -478,9 +445,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(styled-components@6.1.19(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/sanity-plugin-aprimo:
     dependencies:
@@ -506,9 +470,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -521,9 +482,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(styled-components@6.1.19(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/sanity-plugin-asset-source-unsplash:
     dependencies:
@@ -561,9 +519,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -579,9 +534,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/sanity-plugin-bynder-input:
     dependencies:
@@ -613,9 +565,6 @@ importers:
       '@types/video.js':
         specifier: ^7.3.58
         version: 7.3.58
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -631,9 +580,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(styled-components@6.1.19(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/sanity-plugin-graph-view:
     dependencies:
@@ -680,9 +626,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -698,9 +641,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/sanity-plugin-markdown:
     dependencies:
@@ -732,9 +672,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -753,9 +690,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/sanity-plugin-workflow:
     dependencies:
@@ -802,9 +736,6 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -820,9 +751,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   plugins/sanity-plugin-workspace-home:
     dependencies:
@@ -857,9 +785,6 @@ importers:
       '@types/react-is':
         specifier: ^19.2.0
         version: 19.2.0
-      '@typescript/native-preview':
-        specifier: 'catalog:'
-        version: 7.0.0-dev.20251216.1
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
@@ -875,9 +800,6 @@ importers:
       sanity:
         specifier: 'catalog:'
         version: 5.0.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@2.0.0(@types/react@19.2.7))(@sanity/styled-components@6.1.24(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/node@25.0.2)(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
 packages:
 
