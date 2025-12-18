@@ -1,0 +1,103 @@
+# TODO: Manual Steps for `@sanity/code-input`
+
+This plugin was scaffolded using `pnpm generate "copy plugin"`.
+
+**Original source:** https://github.com/sanity-io/code-input
+
+## 1. Configure Trusted Publishing (CRITICAL)
+
+⚠️ **If trusted publishing is not configured correctly, the plugin will fail to publish from this monorepo.**
+
+Go to the npm package access settings:
+
+**https://www.npmjs.com/package/@sanity/code-input/access**
+
+### Configure GitHub Actions as Trusted Publisher
+
+Under **"Publishing access"**, click **"Add a trusted publisher"** and select **"GitHub Actions"**.
+
+Fill in the fields **exactly** as shown:
+
+| Setting              | Value           |
+| -------------------- | --------------- |
+| **Owner**            | `sanity-io`     |
+| **Repository**       | `plugins`       |
+| **Workflow**         | `release.yml`   |
+| **Environment name** | _(leave empty)_ |
+
+Click **"Add trusted publisher"**.
+
+### Configure Token Settings
+
+Under **"Token settings"**, ensure:
+
+- ✅ **Require 2FA** for publishing is enabled
+- ✅ **Disallow tokens** (both granular and automation tokens)
+
+This ensures only the GitHub Actions release workflow can publish this package using OIDC-based trusted publishing.
+
+## 2. Update package.json Dependencies
+
+Manually update `package.json` with any missing dependencies from the original plugin:
+
+- `dependencies`
+- `devDependencies`
+- `peerDependencies`
+- `exports` (if the original has custom export paths)
+
+**Do NOT copy over:**
+
+- `@sanity/incompatible-plugin`
+- `@sanity/plugin-kit`
+
+## 3. Copy Source Files
+
+Copy all source files from the original plugin into `./src`:
+
+```bash
+# Navigate to the plugin workspace folder
+cd plugins/@sanity/code-input
+
+# Clone the original repo and copy the src directory
+git clone https://github.com/sanity-io/code-input /tmp/original-plugin
+cp -r /tmp/original-plugin/src/* ./src/
+rm -rf /tmp/original-plugin
+```
+
+After copying, update the test studio example at:
+
+`dev/test-studio/src/code-input/index.tsx`
+
+Add any required options, schemas, or configuration needed to properly test the plugin in the test studio.
+
+## 4. Copy and Update CHANGELOG.md
+
+Copy the `CHANGELOG.md` from the original plugin, then update the top of the file:
+
+**Remove this header if present:**
+
+```md
+<!-- markdownlint-disable --><!-- textlint-disable -->
+
+# 📓 Changelog
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+```
+
+**Replace with:**
+
+```md
+# @sanity/code-input
+```
+
+## 5. Verify Setup
+
+1. Run `pnpm install` from the monorepo root
+2. Run `pnpm build` to verify the plugin builds correctly
+3. Run `pnpm dev` to test in the test studio
+4. Create a changeset: `pnpm changeset add`
+
+## 6. Copy README.md (Final Step)
+
+Copy the `README.md` from the original plugin and replace this file with it.

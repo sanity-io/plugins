@@ -1,5 +1,6 @@
 import {aprimoExample} from '#aprimo'
 import {bynderExample} from '#bynder'
+import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {markdownExample} from '#markdown'
 import {unsplashExample} from '#unsplash'
@@ -35,6 +36,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       // add new plugins here
+      codeInputExample(),
       aprimoExample(),
       bynderExample(),
       colorExample(),
