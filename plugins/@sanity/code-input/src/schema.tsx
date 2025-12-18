@@ -30,7 +30,7 @@ declare module 'sanity' {
 /**
  * @public
  */
-export const codeSchema: any = defineType({
+export const codeSchema = defineType({
   name: 'code',
   type: 'object',
   title: 'Code',
