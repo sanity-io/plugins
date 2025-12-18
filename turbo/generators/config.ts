@@ -133,10 +133,17 @@ function getRepositoryUrls(packageJson: NpmPackageJson): RepositoryUrls {
 }
 
 /**
- * Filters dependencies from a package.json, removing packages that should not be copied:
- * - @sanity/incompatible-plugin (example/test package)
- * - styled-components (should always be a peer dependency)
- * - sanity (should always be a peer/dev dependency)
+ * Packages that should not be copied from dependencies when migrating a plugin.
+ * These packages should always be in peerDependencies or devDependencies instead.
+ */
+const DEPENDENCIES_EXCLUDE_LIST = new Set([
+  '@sanity/incompatible-plugin', // example/test package
+  'styled-components', // should always be a peer dependency
+  'sanity', // should always be a peer/dev dependency
+])
+
+/**
+ * Filters dependencies from a package.json, removing packages that should not be copied.
  */
 function filterDependencies(
   dependencies: Record<string, string> | undefined,
@@ -144,10 +151,9 @@ function filterDependencies(
   if (!dependencies) return undefined
 
   const filtered: Record<string, string> = {}
-  const excludeList = new Set(['@sanity/incompatible-plugin', 'styled-components', 'sanity'])
 
   for (const [name, version] of Object.entries(dependencies)) {
-    if (!excludeList.has(name)) {
+    if (!DEPENDENCIES_EXCLUDE_LIST.has(name)) {
       filtered[name] = version
     }
   }
