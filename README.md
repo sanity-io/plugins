@@ -78,6 +78,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for de
 - Running the development environment
 - Code style and linting
 - Adding new plugins
+- Migrate an existing plugin to this monorepo
 - Publishing packages
 
 ## License
