@@ -11,9 +11,3 @@ This is a major release that migrates the plugin to the new monorepo structure w
 - **React Compiler enabled**: The plugin now uses React Compiler for optimized performance
 - **Updated peer dependencies**: React 19.2+ and styled-components 6.1+ are now required
 
-Other changes:
-
-- Fixed React Compiler compatibility issues by properly handling dependencies in `useMemo` hooks
-- Removed unused eslint-disable directives for cleaner code
-- Updated build tooling to use @sanity/pkg-utils
-- Improved TypeScript configuration
