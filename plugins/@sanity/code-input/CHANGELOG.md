@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.0.2
+
+### Patch Changes
+
+- [`d49675d`](https://github.com/sanity-io/plugins/commit/d49675d82a9a2039de1c5bd733bbb58ff36400f3) Thanks [@stipsan](https://github.com/stipsan)! - Fix regression in dts output for `codeSchema`
+
 ## 7.0.1
 
 ### Patch Changes
