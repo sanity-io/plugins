@@ -10,7 +10,7 @@ import {PreviewCode} from './PreviewCode'
 /**
  * @public
  */
-export const codeTypeName = 'code' as const
+export const codeTypeName = 'code'
 
 /**
  * @public

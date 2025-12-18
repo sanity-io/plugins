@@ -21,6 +21,7 @@ export function LanguageField(
       return (
         <LanguageInput
           onChange={onChange}
+          // oxlint-disable-next-line no-unsafe-type-assertion - fix later
           elementProps={elementProps as PrimitiveInputElementProps}
           language={language}
           languages={languages}

@@ -120,6 +120,7 @@ export function CodeInput(props: CodeInputProps): React.JSX.Element {
               <CodeMirrorProxy
                 languageMode={languageMode}
                 onChange={handleCodeChange}
+                // oxlint-disable-next-line no-unsafe-type-assertion - fix later
                 value={inputProps.value as string}
                 highlightLines={value?.highlightedLines}
                 onHighlightChange={onHighlightChange}
