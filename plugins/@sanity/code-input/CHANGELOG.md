@@ -1,5 +1,17 @@
 # @sanity/code-input
 
+## 7.0.0
+
+### Major Changes
+
+- [#297](https://github.com/sanity-io/plugins/pull/297) [`21dd2ae`](https://github.com/sanity-io/plugins/commit/21dd2ae9da8aabadacd7eed74ffa174e2b1f189a) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port @sanity/code-input to the plugins monorepo
+
+  This is a major release that migrates the plugin to the new monorepo structure with the following breaking changes:
+  - **Requires Sanity Studio v5**: The plugin now requires Sanity Studio v5.0.0 or later
+  - **Drops CommonJS support**: The plugin is now ESM-only
+  - **React Compiler enabled**: The plugin now uses React Compiler for optimized performance
+  - **Updated peer dependencies**: React 19.2+ and styled-components 6.1+ are now required
+
 ## 6.0.4
 
 ### Patch Changes
