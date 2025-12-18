@@ -58,7 +58,7 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.38.6",
     "@juggle/resize-observer": "^3.4.0",
-    "@lezer/highlight": "^1.2.1",
+    "@lezer/highlight": "^1.2.3",
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "@uiw/codemirror-themes": "^4.25.2",
