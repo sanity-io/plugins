@@ -75,11 +75,12 @@ pnpm format
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines on:
 
-- Running the development environment
-- Code style and linting
-- Adding new plugins
-- Migrate an existing plugin to this monorepo
-- Publishing packages
+- [Development Setup](./CONTRIBUTING.md#development-setup)
+- [Running the Test Studio](./CONTRIBUTING.md#running-the-test-studio)
+- [Code Quality](./CONTRIBUTING.md#code-quality)
+- [Adding a New Plugin](./CONTRIBUTING.md#adding-a-new-plugin)
+- [Migrating an Existing Plugin](./CONTRIBUTING.md#migrate-an-existing-plugin-to-this-monorepo)
+- [Publishing Packages](./CONTRIBUTING.md#publishing-packages)
 
 ## License
 

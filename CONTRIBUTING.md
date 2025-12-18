@@ -171,6 +171,18 @@ Follow the prompts in the generator:
 pnpm generate "copy plugin"
 ```
 
+The generator will:
+
+- Fetch metadata from the published npm package
+- Copy over `version`, `description`, and `keywords`
+- Copy over `dependencies`, automatically filtering out:
+  - `@sanity/incompatible-plugin` (test package)
+  - `styled-components` (should always be a peer dependency)
+  - `sanity` (should always be a peer/dev dependency)
+- Detect if the plugin uses `styled-components` based on `devDependencies` and `peerDependencies`
+
+**Note:** You'll need to manually review and copy over any relevant `peerDependencies` and `devDependencies` as needed.
+
 ### 2. Manually port over files
 
 Refer to the generated `README.md` file in the plugin workspace for how to complete the last manual steps.
@@ -183,7 +195,7 @@ When moving a plugin to this monorepo the conventions enforced on the repo typic
 
 - enabling React Compiler
 - Dropping CJS
-- Dropping Studio v3 support and requiring at least v4
+- Requiring Sanity Studio v5 as the baseline
 
 ```bash
 pnpm changeset add

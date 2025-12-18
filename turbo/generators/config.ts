@@ -8,6 +8,7 @@ interface NpmPackageJson {
   version: string
   description: string
   keywords?: string[]
+  dependencies?: Record<string, string>
   devDependencies?: Record<string, string>
   peerDependencies?: Record<string, string>
   repository?: string | {type?: string; url?: string; directory?: string}
@@ -129,6 +130,35 @@ function getRepositoryUrls(packageJson: NpmPackageJson): RepositoryUrls {
   const sourceUrl = directory ? `${repositoryUrl}/tree/main/${directory}` : repositoryUrl
 
   return {repositoryUrl, sourceUrl}
+}
+
+/**
+ * Packages that should not be copied from dependencies when migrating a plugin.
+ * These packages should always be in peerDependencies or devDependencies instead.
+ */
+const DEPENDENCIES_EXCLUDE_LIST = new Set([
+  '@sanity/incompatible-plugin', // legacy Sanity v2 compatibility library, no longer needed
+  'styled-components', // should always be a peer dependency
+  'sanity', // should always be a peer/dev dependency
+])
+
+/**
+ * Filters dependencies from a package.json, removing packages that should not be copied.
+ */
+function filterDependencies(
+  dependencies: Record<string, string> | undefined,
+): Record<string, string> | undefined {
+  if (!dependencies) return undefined
+
+  const filtered: Record<string, string> = {}
+
+  for (const [name, version] of Object.entries(dependencies)) {
+    if (!DEPENDENCIES_EXCLUDE_LIST.has(name)) {
+      filtered[name] = version
+    }
+  }
+
+  return Object.keys(filtered).length > 0 ? filtered : undefined
 }
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
@@ -373,6 +403,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         getRepositoryUrls(latestPackageJson)
       const keywords = latestPackageJson.keywords
 
+      // Filter and copy dependencies from the original plugin
+      const dependencies = filterDependencies(latestPackageJson.dependencies)
+
       // Check for styled-components in both devDependencies and peerDependencies
       const hasStyledComponents =
         latestPackageJson.devDependencies?.['styled-components'] !== undefined &&
@@ -407,6 +440,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         originalRepositoryUrl,
         originalSourceUrl,
         keywords,
+        dependencies,
       }
     },
     actions: [
