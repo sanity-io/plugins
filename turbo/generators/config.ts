@@ -137,7 +137,7 @@ function getRepositoryUrls(packageJson: NpmPackageJson): RepositoryUrls {
  * These packages should always be in peerDependencies or devDependencies instead.
  */
 const DEPENDENCIES_EXCLUDE_LIST = new Set([
-  '@sanity/incompatible-plugin', // example/test package
+  '@sanity/incompatible-plugin', // legacy Sanity v2 compatibility library, no longer needed
   'styled-components', // should always be a peer dependency
   'sanity', // should always be a peer/dev dependency
 ])
