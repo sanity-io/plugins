@@ -1,6 +1,5 @@
 {
   "name": "@repo/eslint-config",
-  "version": "0.0.7",
   "private": true,
   "description": "Shared ESLint configuration, sets up React Compiler linting",
   "type": "module",
