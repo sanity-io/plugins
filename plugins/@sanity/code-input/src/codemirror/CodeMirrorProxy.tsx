@@ -76,7 +76,7 @@ const CodeMirrorProxy = forwardRef<ReactCodeMirrorRef, CodeMirrorProps>(
       }
     }, [editorView, highlightLines, value])
 
-    const initialState = useMemo(() => {
+    const [initialState] = useState(() => {
       return {
         json: {
           doc: value ?? '',
@@ -88,7 +88,7 @@ const CodeMirrorProxy = forwardRef<ReactCodeMirrorRef, CodeMirrorProps>(
         },
         fields: highlightState,
       }
-    }, [value, highlightLines])
+    })
 
     const handleCreateEditor = useCallback((view: EditorView) => {
       setEditorView(view)
@@ -138,6 +138,7 @@ function useLanguageExtension(mode?: string) {
         if (active) {
           setLanguageExtension(extension)
         }
+        return undefined
       })
       .catch((e) => {
         console.error(`Failed to load language mode ${mode}`, e)
