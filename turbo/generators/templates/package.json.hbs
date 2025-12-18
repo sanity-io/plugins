@@ -39,9 +39,13 @@
     "lint": "eslint .",
     "prepack": "turbo run build"
   },
+{{#if dependencies}}
+  "dependencies": {{{ json dependencies }}},
+{{else}}
   "dependencies": {
     "@sanity/ui": "catalog:"
   },
+{{/if}}
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/package.config": "workspace:*",
