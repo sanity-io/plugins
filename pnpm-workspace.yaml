@@ -55,7 +55,7 @@ minimumReleaseAgeExclude:
   - vitest
 
 overrides:
-  styled-components: npm:@sanity/styled-components@latest
+  styled-components: npm:@sanity/css-in-js@latest
 
 patchedDependencies:
   '@bynder/compact-view': patches/@bynder__compact-view.patch
