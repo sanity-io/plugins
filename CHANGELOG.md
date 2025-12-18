@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1](https://github.com/sanity-io/dashboard/compare/v5.0.0...v5.0.1) (2025-12-18)
+
+### Bug Fixes
+
+- **deps:** make peer dependencies include sanity 5.x ([#71](https://github.com/sanity-io/dashboard/issues/71)) ([1140616](https://github.com/sanity-io/dashboard/commit/1140616f4a9b1186455b51e4a607f6cad65c01a8))
+
 ## [5.0.0](https://github.com/sanity-io/dashboard/compare/v4.1.4...v5.0.0) (2025-09-15)
 
 ### ⚠ BREAKING CHANGES
