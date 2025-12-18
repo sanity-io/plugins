@@ -62,7 +62,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "@uiw/codemirror-themes": "^4.25.4",
-    "@uiw/react-codemirror": "^4.25.2"
+    "@uiw/react-codemirror": "^4.25.4"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
