@@ -1,5 +1,19 @@
 # @sanity/code-input
 
+## 7.0.1
+
+### Patch Changes
+
+- [#304](https://github.com/sanity-io/plugins/pull/304) [`9deb94d`](https://github.com/sanity-io/plugins/commit/9deb94dfac2514141a7fd047146a5428e42add93) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update CodeMirror
+
+- [#305](https://github.com/sanity-io/plugins/pull/305) [`8513fb6`](https://github.com/sanity-io/plugins/commit/8513fb60229d48d0269c094112e0cf9ec41c795c) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @lezer/highlight to ^1.2.3
+
+- [#306](https://github.com/sanity-io/plugins/pull/306) [`8b16b28`](https://github.com/sanity-io/plugins/commit/8b16b28f71ecca22eed0271c51cfda93a78d6620) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @uiw/codemirror-themes to ^4.25.4
+
+- [#307](https://github.com/sanity-io/plugins/pull/307) [`7eae5a5`](https://github.com/sanity-io/plugins/commit/7eae5a5c361a01a3b2307b36bac0388331334671) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @uiw/react-codemirror to ^4.25.4
+
+- [`61bd460`](https://github.com/sanity-io/plugins/commit/61bd46026d73147b9f8a51a82fba186927327c4e) Thanks [@stipsan](https://github.com/stipsan)! - Improve dts output
+
 ## 7.0.0
 
 ### Major Changes
