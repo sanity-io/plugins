@@ -10,14 +10,19 @@
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
   },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/@sanity/debug-preview-url-secret-plugin"
   },
-  "author": "Sanity.io <hello@sanity.io>",
-  "license": "MIT",
+  "files": [
+    "CHANGELOG.md",
+    "dist"
+  ],
   "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "development": "./src/index.ts",
@@ -26,11 +31,12 @@
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "files": [
-    "CHANGELOG.md",
-    "dist"
-  ],
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "prepack": "turbo run build"
@@ -53,11 +59,5 @@
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
-  },
-  "publishConfig": {
-    "exports": {
-      ".": "./dist/index.js",
-      "./package.json": "./package.json"
-    }
   }
 }

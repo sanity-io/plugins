@@ -13,14 +13,18 @@
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
   },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-markdown"
   },
-  "author": "Sanity.io <hello@sanity.io>",
-  "license": "MIT",
+  "files": [
+    "dist"
+  ],
   "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "development": "./src/index.ts",
@@ -34,10 +38,13 @@
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./next": "./dist/indexNext.js",
+      "./package.json": "./package.json"
+    }
+  },
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "lint": "eslint .",
@@ -70,12 +77,5 @@
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
-  },
-  "publishConfig": {
-    "exports": {
-      ".": "./dist/index.js",
-      "./next": "./dist/indexNext.js",
-      "./package.json": "./package.json"
-    }
   }
 }
