@@ -22,7 +22,7 @@
     "@turbo/gen": "^2.6.3",
     "@types/validate-npm-package-name": "^4.0.2",
     "@typescript/native-preview": "catalog:",
-    "eslint-formatter-gha": "^1.6.0",
+    "eslint-formatter-gha": "^2.0.1",
     "hosted-git-info": "^9.0.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
