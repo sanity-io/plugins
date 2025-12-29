@@ -10,8 +10,8 @@ catalogs:
       specifier: 7.13.2
       version: 7.13.2
     '@sanity/pkg-utils':
-      specifier: ^10.2.2
-      version: 10.2.2
+      specifier: ^10.2.3
+      version: 10.2.3
     '@sanity/tsconfig':
       specifier: ^2.1.0
       version: 2.1.0
@@ -212,7 +212,7 @@ importers:
     devDependencies:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.1.0
@@ -300,7 +300,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -349,7 +349,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -392,7 +392,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -429,7 +429,7 @@ importers:
         version: 7.13.2(debug@4.4.3)
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -466,7 +466,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -512,7 +512,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -558,7 +558,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -619,7 +619,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -668,7 +668,7 @@ importers:
         version: 7.13.2(debug@4.4.3)
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -732,7 +732,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -778,7 +778,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7
@@ -3229,12 +3229,12 @@ packages:
   '@sanity/mutator@5.0.1':
     resolution: {integrity: sha512-92TmAz6f4neqnmjLEi+Lnbjg7SiVMyTMZGRuo0Io8ljShgizNHUl/FG3qGhXcupUfzVUVgleXFUi8ypnIZ1ljA==}
 
-  '@sanity/parse-package-json@2.0.1':
-    resolution: {integrity: sha512-V55e6DPxMWg+oA4mOqZRXXlZ2cEI8WFHH97bG/ophnBDYzZKzbe0avj0eeshG9ok3dx7lX/8VGX1Py0cu5p4wg==}
+  '@sanity/parse-package-json@2.0.2':
+    resolution: {integrity: sha512-GdtSUsPDAMfuZZESvrVeun4OBCoP8o0QgzVxyivWEZEMImatqp2ikTqz0CB1Z5vw6/7GXt8j928c29dxdok/lQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
-  '@sanity/pkg-utils@10.2.2':
-    resolution: {integrity: sha512-7nl+aH61NY/jwnG3xZqzfUOLBbOtaAsa4hj7frPTlzXF1WiXqaUrs358IMJitpO6KSmKpXpDk+Se/lqQs+b6Dg==}
+  '@sanity/pkg-utils@10.2.3':
+    resolution: {integrity: sha512-B1lhyLxIe9OikhKGD+Lywpfs0KVo8WUc5SBJ5LNEps6F9ZWbAauj+P8CDltC6iUzRiIoCjRZMdDAJFrvjLRvoA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     hasBin: true
     peerDependencies:
@@ -11356,11 +11356,11 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@sanity/parse-package-json@2.0.1':
+  '@sanity/parse-package-json@2.0.2':
     dependencies:
       zod: 4.2.1
 
-  '@sanity/pkg-utils@10.2.2(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)':
+  '@sanity/pkg-utils@10.2.3(@types/babel__core@7.20.5)(@types/node@25.0.3)(@typescript/native-preview@7.0.0-dev.20251226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/parser': 7.28.5
@@ -11377,7 +11377,7 @@ snapshots:
       '@rollup/plugin-replace': 6.0.3(rollup@4.53.5)
       '@rollup/plugin-terser': 0.4.4(rollup@4.53.5)
       '@sanity/browserslist-config': 1.0.5
-      '@sanity/parse-package-json': 2.0.1
+      '@sanity/parse-package-json': 2.0.2
       '@vanilla-extract/rollup-plugin': 1.5.0(rollup@4.53.5)
       browserslist: 4.28.1
       cac: 6.7.14
