@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/sanity-io/table/compare/v2.0.0...v2.0.1) (2025-12-29)
+
+### Bug Fixes
+
+- **deps:** allow studio v5 in peer deps ranges ([#56](https://github.com/sanity-io/table/issues/56)) ([79d97da](https://github.com/sanity-io/table/commit/79d97daaa26a64583afde58ee8818af2e7eeefb2))
+
 ## [2.0.0](https://github.com/sanity-io/table/compare/v1.1.4...v2.0.0) (2025-09-15)
 
 ### ⚠ BREAKING CHANGES
