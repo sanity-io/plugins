@@ -48,7 +48,7 @@
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.22",
     "react-photo-album": "^3.3.0"
   },
   "devDependencies": {
