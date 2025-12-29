@@ -495,8 +495,8 @@ importers:
         specifier: ^4.17.22
         version: 4.17.22
       react-photo-album:
-        specifier: ^3.3.0
-        version: 3.3.0(@types/react@19.2.7)(react@19.2.3)
+        specifier: ^3.4.0
+        version: 3.4.0(@types/react@19.2.7)(react@19.2.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.3(react@19.2.3))(react@19.2.3)'
@@ -6821,8 +6821,8 @@ packages:
     peerDependencies:
       react: '>=16.13.1'
 
-  react-photo-album@3.3.0:
-    resolution: {integrity: sha512-2KvavqTjOgq+cgQDyewdEyOt9mIk4KO91Hq1mTXq8Jdpax7TYSV9ikySCfhlFOcfAC2vGQ7Femb626kJYovIAA==}
+  react-photo-album@3.4.0:
+    resolution: {integrity: sha512-pPaCoxEfVDhowpqxECq4SOD5kzP1Uao8PEN11Jasxayv4cZjad3Fy8SlKt6wvtLnVJRtOjsQDU/ZnnUuberwMg==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/react': ^18 || ^19
@@ -15476,7 +15476,7 @@ snapshots:
       jerrypick: 1.1.2
       react: 19.2.3
 
-  react-photo-album@3.3.0(@types/react@19.2.7)(react@19.2.3):
+  react-photo-album@3.4.0(@types/react@19.2.7)(react@19.2.3):
     dependencies:
       react: 19.2.3
     optionalDependencies:

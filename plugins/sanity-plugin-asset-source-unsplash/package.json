@@ -49,7 +49,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "lodash-es": "^4.17.22",
-    "react-photo-album": "^3.3.0"
+    "react-photo-album": "^3.4.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
