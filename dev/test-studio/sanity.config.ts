@@ -2,6 +2,7 @@ import {aprimoExample} from '#aprimo'
 import {bynderExample} from '#bynder'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
+import {iframePaneExample} from '#iframe-pane'
 import {markdownExample} from '#markdown'
 import {unsplashExample} from '#unsplash'
 import {workflowExample} from '#workflow'
@@ -36,6 +37,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       // add new plugins here
+      iframePaneExample(),
       codeInputExample(),
       aprimoExample(),
       bynderExample(),
