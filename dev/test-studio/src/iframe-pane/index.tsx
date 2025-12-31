@@ -1,5 +1,7 @@
+import type {DefaultDocumentNodeResolver} from 'sanity/structure'
+
 import {LinkIcon} from '@sanity/icons'
-import {definePlugin, defineType, type DefaultDocumentNodeResolver} from 'sanity'
+import {definePlugin, defineType} from 'sanity'
 import {Iframe} from 'sanity-plugin-iframe-pane'
 import {structureTool} from 'sanity/structure'
 
