@@ -1,7 +1,5 @@
 # sanity-plugin-iframe-pane
 
-> For the v2 version, please refer to the [v2-branch](https://github.com/sanity-io/sanity-plugin-iframe-pane/tree/studio-v2).
-
 Display any URL in a View Pane, along with helpful buttons to Copy the URL or open it in a new tab.
 
 Accepts either a string or an async function to resolve a URL based on the current document.
@@ -117,9 +115,3 @@ attributes: {
 ## License
 
 MIT-licensed. See LICENSE.
-
-## Develop & test
-
-This plugin is part of the [Sanity Plugins monorepo](https://github.com/sanity-io/plugins).
-
-See [CONTRIBUTING.md](../../CONTRIBUTING.md) for instructions on how to develop and test this plugin.
