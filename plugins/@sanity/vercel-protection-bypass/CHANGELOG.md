@@ -1,5 +1,11 @@
 # @sanity/vercel-protection-bypass
 
+## 5.0.2
+
+### Patch Changes
+
+- [#351](https://github.com/sanity-io/plugins/pull/351) [`e251678`](https://github.com/sanity-io/plugins/commit/e251678e062788842ba2c55f805874bd5ca91e5f) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/preview-url-secret to v4.0.2
+
 ## 5.0.1
 
 ### Patch Changes

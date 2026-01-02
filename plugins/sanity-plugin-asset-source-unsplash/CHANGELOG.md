@@ -1,5 +1,13 @@
 # sanity-plugin-asset-source-unsplash
 
+## 7.0.1
+
+### Patch Changes
+
+- [#338](https://github.com/sanity-io/plugins/pull/338) [`d0da010`](https://github.com/sanity-io/plugins/commit/d0da0103b36befab880e8bb8e67b0634bc6efaef) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency lodash-es to ^4.17.22
+
+- [#342](https://github.com/sanity-io/plugins/pull/342) [`6538df6`](https://github.com/sanity-io/plugins/commit/6538df642cc527b5d698a9f395cbc329f7cf2af5) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency react-photo-album to ^3.4.0
+
 ## 7.0.0
 
 ### Major Changes

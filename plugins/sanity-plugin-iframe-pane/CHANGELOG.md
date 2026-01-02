@@ -1,5 +1,25 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.0
+
+### Major Changes
+
+- [#350](https://github.com/sanity-io/plugins/pull/350) [`d8632c1`](https://github.com/sanity-io/plugins/commit/d8632c10ed2abd9a68a7fa24014458d9e949a606) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port to Sanity v5 and plugins monorepo
+  - Require Sanity v5 or later
+  - Require React 19 or later
+  - Dropped CommonJS support (ESM only)
+  - Enable React Compiler
+  - Require Node.js v20.19 or later
+  - Migrated to plugins monorepo for maintenance
+
+### Patch Changes
+
+- [#351](https://github.com/sanity-io/plugins/pull/351) [`e251678`](https://github.com/sanity-io/plugins/commit/e251678e062788842ba2c55f805874bd5ca91e5f) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/preview-url-secret to v4.0.2
+
+- [#353](https://github.com/sanity-io/plugins/pull/353) [`bd4d707`](https://github.com/sanity-io/plugins/commit/bd4d7077893ec893a10e4caded632cff586eb996) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to ^3.1.11
+
+- [#354](https://github.com/sanity-io/plugins/pull/354) [`d9e4f20`](https://github.com/sanity-io/plugins/commit/d9e4f20614e433c7a7ee64bb3254d87f8012ba8e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency `framer-motion` to `motion/react` ^12.23.26
+
 ## [4.0.0](https://github.com/sanity-io/sanity-plugin-iframe-pane/compare/v3.2.2...v4.0.0) (2025-08-07)
 
 ### ⚠ BREAKING CHANGES

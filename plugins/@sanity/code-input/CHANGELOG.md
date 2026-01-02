@@ -1,5 +1,13 @@
 # @sanity/code-input
 
+## 7.0.3
+
+### Patch Changes
+
+- [#337](https://github.com/sanity-io/plugins/pull/337) [`f251b32`](https://github.com/sanity-io/plugins/commit/f251b32ac97a908c3eed6a4e1e4a5737acf261cc) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update CodeMirror
+
+- [#352](https://github.com/sanity-io/plugins/pull/352) [`eb8b77a`](https://github.com/sanity-io/plugins/commit/eb8b77af450b864332e4b9f328b929bd1086cbd4) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @codemirror/view to ^6.39.8
+
 ## 7.0.2
 
 ### Patch Changes
