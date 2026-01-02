@@ -4,7 +4,7 @@ import {WarningOutlineIcon} from '@sanity/icons'
 import {createPreviewSecret} from '@sanity/preview-url-secret/create-secret'
 import {definePreviewUrl} from '@sanity/preview-url-secret/define-preview-url'
 import {Box, Card, Container, Flex, Spinner, Stack, Text, usePrefersReducedMotion} from '@sanity/ui'
-import {AnimatePresence, motion, MotionConfig} from 'framer-motion'
+import {AnimatePresence, motion, MotionConfig} from 'motion/react'
 import {
   forwardRef,
   memo,
