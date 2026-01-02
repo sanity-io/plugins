@@ -111,7 +111,7 @@ export function Toolbar(props: ToolbarProps) {
                 onClick={() => {
                   if (!input?.current?.value) return
 
-                  copy(input.current.value).then((copied) => {
+                  void copy(input.current.value).then((copied) => {
                     if (copied) {
                       pushToast({
                         closable: true,
@@ -125,6 +125,7 @@ export function Toolbar(props: ToolbarProps) {
                         title: 'Failed to copy the URL to the clipboard',
                       })
                     }
+                    return copied
                   })
                 }}
               />

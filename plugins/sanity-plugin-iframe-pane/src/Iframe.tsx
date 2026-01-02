@@ -52,7 +52,7 @@ export interface IframeOptions {
          * The URL origin of where the preview is hosted, for example `https://example.com`.
          * If it's an embedded Studio then set it to `'same-origin'`.
          */
-        origin: 'same-origin' | string
+        origin: 'same-origin' | (string & {})
         /**
          * The route to redirect to after enabling Draft Mode.
          * If you don't have enough data to build the URL, return an `Error` instance to show an error message.
@@ -265,7 +265,8 @@ const IframeInner = memo(function IframeInner(props: IframeInnerProps) {
     }
 
     // Funky way to reload an iframe without CORS issues
-    iframe.current.src = iframe.current.src
+    const {src} = iframe.current
+    iframe.current.src = src
 
     setReloading(true)
   }, [])
