@@ -31,13 +31,13 @@ function createWorkspace(
 export default defineConfig([
   workspaceHomeConfig({projectId, dataset}),
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
+  createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
   createWorkspace({
     name: 'kitchen-sink',
     plugins: [
       structureTool(),
       // add new plugins here
-      iframePaneExample(),
       codeInputExample(),
       aprimoExample(),
       bynderExample(),
