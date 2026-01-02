@@ -1,5 +1,11 @@
 # sanity-plugin-workflow
 
+## 3.0.2
+
+### Patch Changes
+
+- [#330](https://github.com/sanity-io/plugins/pull/330) [`a796d04`](https://github.com/sanity-io/plugins/commit/a796d04ab5c4b2eb4dbae8ac34f584e98429b6a1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency sanity-plugin-utils to ^1.8.0
+
 ## 3.0.1
 
 ### Patch Changes
