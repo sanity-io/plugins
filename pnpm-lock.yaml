@@ -654,7 +654,7 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2(@sanity/client@7.13.2)
       '@sanity/ui':
-        specifier: ^3.0.5
+        specifier: ^3.1.11
         version: 3.1.11(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react-is@19.2.3)(react@19.2.3)
       framer-motion:
         specifier: ^12.23.12
