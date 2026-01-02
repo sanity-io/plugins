@@ -44,7 +44,7 @@
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/preview-url-secret": "^4.0.2",
-    "@sanity/ui": "^3.0.5",
+    "@sanity/ui": "^3.1.11",
     "framer-motion": "^12.23.12",
     "suspend-react": "0.1.3"
   },
