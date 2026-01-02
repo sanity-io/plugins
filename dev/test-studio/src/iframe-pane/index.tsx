@@ -37,7 +37,7 @@ const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
         .component(Iframe)
         .options({
           // Example using a string URL
-          url: 'https://www.sanity.io',
+          url: 'https://example.com',
           showDisplayUrl: true,
           reload: {button: true},
         })
