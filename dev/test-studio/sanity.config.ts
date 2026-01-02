@@ -2,6 +2,7 @@ import {aprimoExample} from '#aprimo'
 import {bynderExample} from '#bynder'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
+import {iframePaneExample} from '#iframe-pane'
 import {markdownExample} from '#markdown'
 import {unsplashExample} from '#unsplash'
 import {workflowExample} from '#workflow'
@@ -30,6 +31,7 @@ function createWorkspace(
 export default defineConfig([
   workspaceHomeConfig({projectId, dataset}),
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
+  createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
   createWorkspace({
     name: 'kitchen-sink',

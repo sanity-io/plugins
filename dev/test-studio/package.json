@@ -24,6 +24,7 @@
     "sanity-plugin-asset-source-unsplash": "workspace:*",
     "sanity-plugin-bynder-input": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
+    "sanity-plugin-iframe-pane": "workspace:*",
     "sanity-plugin-markdown": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
