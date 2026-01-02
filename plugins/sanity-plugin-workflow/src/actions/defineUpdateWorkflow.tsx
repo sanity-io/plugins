@@ -28,7 +28,7 @@ function useUpdateWorkflow(
   const {assignees = []} = metadata ?? {}
 
   // TODO: Shouldn't the document action props contain this?
-  const {validation, isValidating} = useValidationStatus(id, type)
+  const {validation, isValidating} = useValidationStatus(id, type, false)
   const hasValidationErrors =
     currentState?.requireValidation &&
     !isValidating &&
