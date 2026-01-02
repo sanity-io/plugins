@@ -1,5 +1,11 @@
 # @sanity/color-input
 
+## 6.0.3
+
+### Patch Changes
+
+- [`d3978bc`](https://github.com/sanity-io/plugins/commit/d3978bc676286c86396d29e02b744474b3340bee) Thanks [@stipsan](https://github.com/stipsan)! - Update LICENSE year
+
 ## 6.0.2
 
 ### Patch Changes
