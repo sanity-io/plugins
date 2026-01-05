@@ -1,5 +1,11 @@
 # sanity-plugin-workflow
 
+## 3.0.4
+
+### Patch Changes
+
+- [#346](https://github.com/sanity-io/plugins/pull/346) [`f19369f`](https://github.com/sanity-io/plugins/commit/f19369f8773742b52e1f345f69b3695725450321) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @tanstack/react-virtual to ^3.13.14
+
 ## 3.0.3
 
 ### Patch Changes
