@@ -1,11 +1,13 @@
 import {Dialog, Stack, Box} from '@sanity/ui'
 import {memoize} from 'lodash-es'
 import {lazy, Suspense, useMemo, useRef, useState} from 'react'
+import {preload} from 'react-dom'
 import {type AssetSourceComponentProps, useClient} from 'sanity'
 import {styled} from 'styled-components'
 
 import type {FetcherResult, UnsplashPhoto} from '../types'
 
+import {reactPhotoAlbumCss} from '../constants'
 import {Loader} from './Loader'
 import {SearchInput} from './SearchInput'
 
@@ -61,6 +63,8 @@ export function UnsplashAssetSource({onClose, onSelect}: AssetSourceComponentPro
 
   const [query, setQuery] = useState('')
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+  preload(reactPhotoAlbumCss, {as: 'style'})
 
   return (
     <StyledDialog

@@ -1,12 +1,12 @@
 import {Box, Text} from '@sanity/ui'
 import {use, Activity} from 'react'
-import 'react-photo-album/rows.css'
 import {RowsPhotoAlbum} from 'react-photo-album'
 import InfiniteScroll from 'react-photo-album/scroll'
 import {type AssetFromSource, type AssetSourceComponentProps, type SanityClient} from 'sanity'
 
 import type {FetcherResult, UnsplashPhoto} from '../types'
 
+import {reactPhotoAlbumCss} from '../constants'
 import {fetchDownloadUrl} from '../datastores/unsplash'
 import {Loader} from './Loader'
 import {UnsplashCreditLine} from './UnsplashCreditLine'
@@ -42,6 +42,7 @@ export default function UnsplashAssetSourceGallery({
 
   return (
     <>
+      <link rel="stylesheet" href={reactPhotoAlbumCss} precedence="default" />
       <Activity mode={data.total === 0 ? 'visible' : 'hidden'}>
         <Box paddingX={2} paddingY={3}>
           <Text size={1} muted>
