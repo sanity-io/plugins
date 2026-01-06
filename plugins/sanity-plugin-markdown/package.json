@@ -29,6 +29,7 @@
     ".": {
       "development": "./src/index.ts",
       "source": "./src/index.ts",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./next": {
@@ -40,7 +41,10 @@
   },
   "publishConfig": {
     "exports": {
-      ".": "./dist/index.js",
+      ".": {
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
       "./next": "./dist/indexNext.js",
       "./package.json": "./package.json"
     }
