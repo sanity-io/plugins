@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-asset-source-unsplash",
-  "version": "7.0.2",
+  "version": "7.0.3-canary.0",
   "description": "Use images from Unsplash.com in your Sanity Studio",
   "keywords": [
     "assets",
@@ -58,15 +58,18 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
+    "react-dom": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",
+    "react-dom": "^19.2",
     "sanity": "^5",
     "styled-components": "^6.1"
   },

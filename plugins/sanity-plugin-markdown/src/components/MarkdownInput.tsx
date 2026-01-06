@@ -1,8 +1,8 @@
+import type {Options as EasyMdeOptions} from 'easymde'
 // dont import non-types here, it will break SSR on next
 import type {SimpleMDEReactProps} from 'react-simplemde-editor'
 
 import {Box, Text} from '@sanity/ui'
-import {type Options as EasyMdeOptions} from 'easymde'
 import {
   lazy,
   Suspense,
@@ -13,10 +13,16 @@ import {
   useRef,
   useState,
 } from 'react'
+import {preload} from 'react-dom'
 import {PatchEvent, set, type StringInputProps, unset, useClient} from 'sanity'
 import {styled} from 'styled-components'
 
 import type {MarkdownOptions} from '../schema'
+
+const cssUrl = new URL('easymde/dist/easymde.min.css', import.meta.url).toString()
+
+// preload(cssUrl, {as: 'style', fetchPriority: 'low'})
+// preload('https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css', {as: 'style', fetchPriority: 'low'})
 
 const SimpleMdeReact = lazy(() => import('react-simplemde-editor'))
 
@@ -180,6 +186,8 @@ export function MarkdownInput(props: MarkdownInputProps): React.JSX.Element {
     [onChange],
   )
 
+  preload(cssUrl, {as: 'style'})
+
   return (
     <MarkdownInputStyles>
       <Suspense fallback={fallback}>
@@ -193,6 +201,7 @@ export function MarkdownInput(props: MarkdownInputProps): React.JSX.Element {
           options={mdeOptions}
           spellCheck={false}
         />
+        <link rel="stylesheet" href={cssUrl} precedence="default" />
       </Suspense>
     </MarkdownInputStyles>
   )
