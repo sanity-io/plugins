@@ -19,7 +19,7 @@ import {styled} from 'styled-components'
 
 import type {MarkdownOptions} from '../schema'
 
-const cssUrl = new URL('easymde/dist/easymde.min.css', import.meta.url).toString()
+const cssUrl = new URL('easymde/dist/easymde.min.css', import.meta.url).href
 
 // preload(cssUrl, {as: 'style', fetchPriority: 'low'})
 // preload('https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css', {as: 'style', fetchPriority: 'low'})
