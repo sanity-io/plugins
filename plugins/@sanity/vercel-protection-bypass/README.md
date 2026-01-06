@@ -17,9 +17,9 @@ Add the tool your `sanity.config.ts`:
 
 ```ts
 // ./sanity.config.ts
-import { vercelProtectionBypassTool } from "@sanity/vercel-protection-bypass";
-import { defineConfig } from "sanity";
-import { presentationTool } from "sanity/presentation";
+import {vercelProtectionBypassTool} from '@sanity/vercel-protection-bypass'
+import {defineConfig} from 'sanity'
+import {presentationTool} from 'sanity/presentation'
 
 export default defineConfig({
   // ... other options
@@ -28,15 +28,15 @@ export default defineConfig({
     presentationTool({
       previewUrl: {
         // @TODO change to the URL of the application, or `location.origin` if it's an embedded Studio
-        origin: "http://localhost:3000",
+        origin: 'http://localhost:3000',
         previewMode: {
-          enable: "/api/draft",
+          enable: '/api/draft',
         },
       },
     }),
     vercelProtectionBypassTool(),
   ],
-});
+})
 ```
 
 You should see a new `Vercel Protection Bypass` tab in the Studio's settings. Click it and follow the instructions to set up the tool.

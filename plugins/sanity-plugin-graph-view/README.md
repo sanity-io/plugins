@@ -19,13 +19,11 @@ npm install --save sanity-plugin-graph-view
 Add it as a plugin in sanity.config.ts (or .js):
 
 ```js
-import { contentGraphView } from "sanity-plugin-graph-view";
+import {contentGraphView} from 'sanity-plugin-graph-view'
 
 export default defineConfig({
   // ...
-  plugins: [
-    contentGraphView({}),
-  ]
+  plugins: [contentGraphView({})],
 })
 ```
 
@@ -44,16 +42,16 @@ This will add a /graph-your-content tools to the Sanity Studio, configured with 
 You can control which documents appear in the graph by providing a query:
 
 ```js
-import { contentGraphView } from "sanity-plugin-graph-view";
+import {contentGraphView} from 'sanity-plugin-graph-view'
 
 export default defineConfig({
   // ...
   plugins: [
     contentGraphView({
-      "query": "*[_type in ['a', 'b']]",
-      apiVersion: "2022-09-01" // optional, default shown
+      query: "*[_type in ['a', 'b']]",
+      apiVersion: '2022-09-01', // optional, default shown
     }),
-  ]
+  ],
 })
 ```
 
@@ -62,7 +60,7 @@ but you can also selectively filter what references will be included. For exampl
 
 ```js
 contentGraphView({
-  "query": "*[_type in ['a', 'b']]{ 'refs': [author, publisher] }"
+  query: "*[_type in ['a', 'b']]{ 'refs': [author, publisher] }",
 })
 ```
 
@@ -72,7 +70,8 @@ If you want to use another property, compute a `title` property in your query, e
 
 ```js
 contentGraphView({
-  "query": "*[_type in ['a', 'b']] { ..., \"title\": select(_type == 'a' => 'Title A', _type == 'b' => 'Title B') }"
+  query:
+    "*[_type in ['a', 'b']] { ..., \"title\": select(_type == 'a' => 'Title A', _type == 'b' => 'Title B') }",
 })
 ```
 

@@ -13,10 +13,10 @@ Add the plugin to your `sanity.config.ts`:
 
 ```ts
 // ./sanity.config.ts
-import { debugSecrets } from "@sanity/debug-preview-url-secret-plugin";
-import { defineConfig } from "sanity";
-import { structureTool } from "sanity/structure";
-import { presentationTool } from "sanity/presentation";
+import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
+import {defineConfig} from 'sanity'
+import {structureTool} from 'sanity/structure'
+import {presentationTool} from 'sanity/presentation'
 
 export default defineConfig({
   // ... other options
@@ -26,15 +26,15 @@ export default defineConfig({
     presentationTool({
       previewUrl: {
         // @TODO change to the URL of the application, or `location.origin` if it's an embedded Studio
-        origin: "http://localhost:3000",
+        origin: 'http://localhost:3000',
         previewMode: {
-          enable: "/api/draft",
+          enable: '/api/draft',
         },
       },
     }),
     debugSecrets(),
   ],
-});
+})
 ```
 
 You should see a new `@sanity/preview-url-secret` type in Structure Tool, which lists out secrets with metadata about when they were created and in what context.
