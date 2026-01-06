@@ -1,5 +1,11 @@
 # sanity-plugin-markdown
 
+## 8.0.4
+
+### Patch Changes
+
+- [`f095119`](https://github.com/sanity-io/plugins/commit/f095119fd1c15df506e794a9f6683c900eb19feb) Thanks [@stipsan](https://github.com/stipsan)! - Fix issue with `sanity schema extract` throwing `Unknown file extension ".css"` errors
+
 ## 8.0.3
 
 ### Patch Changes
