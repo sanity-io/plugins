@@ -19,7 +19,7 @@ or
 Add it as a plugin in sanity.config.ts (or .js):
 
 ```js
-import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
+import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
 
 export default defineConfig({
   // ...
@@ -35,14 +35,14 @@ If you need to configure when Unsplash should be available as an asset source, f
 `form.image.assetSources`:
 
 ```js
-import { unsplashImageAsset, unsplashAssetSource } from 'sanity-plugin-asset-source-unsplash'
+import {unsplashImageAsset, unsplashAssetSource} from 'sanity-plugin-asset-source-unsplash'
 
 export default defineConfig({
   // ...
   plugins: [unsplashImageAsset()],
   form: {
     image: {
-      assetSources: (previousAssetSources, { schema }) => {
+      assetSources: (previousAssetSources, {schema}) => {
         if (schema.name === 'movie-image') {
           // remove unsplash from movie-image types
           return previousAssetSources.filter((assetSource) => assetSource !== unsplashAssetSource)

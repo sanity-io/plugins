@@ -47,27 +47,27 @@ If you do not specify options all asset types will be available for selection.
 Here is an example of a document that has one Bynder asset field restricted to only images, and another which can be either a video or an audio file.
 
 ```javascript
- import {defineType, defineField} from 'sanity'
+import {defineType, defineField} from 'sanity'
 
 export const myDocumentSchema = defineType({
-  type: "document",
-  name: "article",
+  type: 'document',
+  name: 'article',
   fields: [
     defineField({
-      type: "bynder.asset",
-      name: "image",
+      type: 'bynder.asset',
+      name: 'image',
       options: {
-        assetTypes: ["image"]
-      }
+        assetTypes: ['image'],
+      },
     }),
     defineField({
-      type: "bynder.asset",
-      name: "temporalMedia",
+      type: 'bynder.asset',
+      name: 'temporalMedia',
       options: {
-        assetTypes: ["video", "audio"]
-      }
-    })
-  ]
+        assetTypes: ['video', 'audio'],
+      },
+    }),
+  ],
 })
 ```
 
@@ -78,20 +78,20 @@ If you are looking for a more robust way to filter assets, you can restrict the 
 Here is an example of a document that has one Bynder asset field restricted to only images, and another which can be either a video or an audio file.
 
 ```javascript
- import {defineType, defineField} from 'sanity'
+import {defineType, defineField} from 'sanity'
 
 export const myDocumentSchema = defineType({
-  type: "document",
-  name: "article",
+  type: 'document',
+  name: 'article',
   fields: [
     defineField({
-      type: "bynder.asset",
-      name: "image",
+      type: 'bynder.asset',
+      name: 'image',
       options: {
-        assetTypes: ["image"],
+        assetTypes: ['image'],
         assetFilter: {
           // Filter by tags
-          tagNames_in: ["foo", "bar"],
+          tagNames_in: ['foo', 'bar'],
           // and show the toolbar to let the user adjust the filters
           showToolbar: true,
           // You can optionally filter the asset types in the initial view like this
@@ -99,10 +99,10 @@ export const myDocumentSchema = defineType({
           // If you need it fully enforced, use the `assetType` option instead
           //
           // assetType_in: ["IMAGE"],
-        }
-      }
+        },
+      },
     }),
-  ]
+  ],
 })
 ```
 
@@ -111,14 +111,14 @@ Here is the full set of options for the `assetFilter`.
 ```typescript
 // See https://www.npmjs.com/package/@bynder/compact-view for latest options
 type BynderAssetFilterJson = {
-  predefinedAssetType?: ('AUDIO' | 'DOCUMENT' | 'IMAGE' | 'VIDEO' | 'ARCHIVE')[]; // predefined asset types
-  collectionId?: string; // predefined collection id
-  predefinedMetapropertiesOptions?: string[]; // predefined metaproperty IDs
-  searchTerm?: string; // predefined search term
-  predefinedTagNames?: string[]; // predefined tags
-  isLimitedUse?: boolean; // whether or not this asset is marked as Limited Use
-  showToolbar?: boolean; // show toolbar for predefined filters (false by default)
-};
+  predefinedAssetType?: ('AUDIO' | 'DOCUMENT' | 'IMAGE' | 'VIDEO' | 'ARCHIVE')[] // predefined asset types
+  collectionId?: string // predefined collection id
+  predefinedMetapropertiesOptions?: string[] // predefined metaproperty IDs
+  searchTerm?: string // predefined search term
+  predefinedTagNames?: string[] // predefined tags
+  isLimitedUse?: boolean // whether or not this asset is marked as Limited Use
+  showToolbar?: boolean // show toolbar for predefined filters (false by default)
+}
 ```
 
 ## License
