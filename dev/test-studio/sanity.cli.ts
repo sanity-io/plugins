@@ -10,4 +10,5 @@ export default defineCliConfig({
   reactStrictMode: true,
   reactCompiler: {target: '19'},
   studioHost: 'plugins',
+  typegen: {formatGeneratedCode: false},
 })

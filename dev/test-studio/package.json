@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "sanity dev",
     "build": "sanity build",
-    "typegen": "sanity schema extract --workspace kitchen-sink && sanity typegen generate"
+    "typegen": "sanity schema extract --enforce-required-fields --workspace kitchen-sink && sanity typegen generate"
   },
   "dependencies": {
     "@sanity/code-input": "workspace:*",

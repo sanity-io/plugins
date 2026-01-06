@@ -1,0 +1,41 @@
+name: TypeGen
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+      - run: pnpm typegen
+      - uses: actions/create-github-app-token@v2
+        id: generate-token
+        with:
+          app-id: ${{ secrets.ECOSPARK_APP_ID }}
+          private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
+      - uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8
+        id: pr
+        with:
+          body: I ran `pnpm typegen` 🧑‍💻
+          branch: actions/typegen/${{ github.ref_name }}
+          commit-message: 'fix(typegen): 🤖 ✨'
+          labels: 🤖 bot
+          sign-commits: true
+          title: 'fix(typegen): 🤖 ✨'
+          token: ${{ steps.generate-token.outputs.token }}
+      - name: Enable automerge on Pull Request
+        if: steps.pr.outputs.pull-request-operation == 'created'
+        run: gh pr merge --squash --auto "${{ steps.pr.outputs.pull-request-number }}"
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
