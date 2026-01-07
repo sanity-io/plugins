@@ -1,5 +1,24 @@
 # @sanity/rich-date-input
 
+## 4.0.0
+
+### Major Changes
+
+- [#392](https://github.com/sanity-io/plugins/pull/392) [`3e095e0`](https://github.com/sanity-io/plugins/commit/3e095e07461204f68a0427ebb7184816dc6f0e56) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Migrate plugin to monorepo with React Compiler support, ESM-only, and Sanity Studio v5 baseline.
+
+  ## Breaking Changes
+  - **ESM-only**: This package now ships as ESM-only. CommonJS (CJS) is no longer supported.
+  - **Sanity Studio v5 baseline**: The minimum required version of Sanity Studio is now v5.
+  - **React 19**: Peer dependency updated to React 19.2.
+  - **React Compiler enabled**: The plugin is now compiled with React Compiler for optimized performance.
+
+  ## Migration Guide
+
+  If you're upgrading from v3.x:
+  1. Ensure your project is using Sanity Studio v5 or later
+  2. Ensure your project is using React 19.2 or later
+  3. No code changes required - the API remains the same
+
 ## <small>3.0.8 (2025-12-29)</small>
 
 - fix: update package.json and package-lock.json to support Sanity v5 (#29) ([cb042fd](https://github.com/sanity-io/rich-date-input/commit/cb042fd)), closes [#29](https://github.com/sanity-io/rich-date-input/issues/29)
