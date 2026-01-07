@@ -26,6 +26,7 @@
     "sanity-plugin-bynder-input": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
     "sanity-plugin-iframe-pane": "workspace:*",
+    "sanity-plugin-latex-input": "workspace:*",
     "sanity-plugin-markdown": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
