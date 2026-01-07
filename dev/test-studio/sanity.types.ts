@@ -242,6 +242,30 @@ export type Code = {
   highlightedLines?: Array<number>
 }
 
+export type RichDateTest = {
+  _id: string
+  _type: 'richDateTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  scheduledAt?: RichDate
+  publishedAt?: RichDate
+  dateList?: Array<
+    {
+      _key: string
+    } & RichDate
+  >
+}
+
+export type RichDate = {
+  _type: 'richDate'
+  local?: string
+  utc?: string
+  timezone?: string
+  offset?: number
+}
+
 export type SanityImagePaletteSwatch = {
   _type: 'sanity.imagePaletteSwatch'
   background?: string
@@ -367,6 +391,8 @@ export type AllSanitySchemaTypes =
   | AprimoAdditionalFile
   | CodeTest
   | Code
+  | RichDateTest
+  | RichDate
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
