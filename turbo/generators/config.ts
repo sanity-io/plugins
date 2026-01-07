@@ -1,9 +1,9 @@
 import type {PlopTypes} from '@turbo/gen'
 
-import {execSync} from 'child_process'
-import {readdirSync, rmSync} from 'fs'
 import hostedGitInfo from 'hosted-git-info'
-import {join} from 'path'
+import {execSync} from 'node:child_process'
+import {readdirSync, rmSync} from 'node:fs'
+import {join} from 'node:path'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 interface NpmPackageJson {
