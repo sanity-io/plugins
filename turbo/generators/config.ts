@@ -1,10 +1,9 @@
 import type {PlopTypes} from '@turbo/gen'
 
 import {execSync} from 'child_process'
-import fs from 'fs'
-import path from 'path'
-
+import {readdirSync, rmSync} from 'fs'
 import hostedGitInfo from 'hosted-git-info'
+import {join} from 'path'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 interface NpmPackageJson {
@@ -172,7 +171,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
   // Register custom action for git subtree add
   plop.setActionType('gitSubtreeAdd', (answers, config, plop) => {
     const rootPath = plop.getDestBasePath()
-    const pluginDir = path.join(rootPath, 'plugins', answers.name)
+    const pluginDir = join(rootPath, 'plugins', answers.name)
 
     const repoUrl = answers.originalRepositoryUrl
     if (!repoUrl) {
@@ -208,7 +207,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       )
     }
 
-    console.log(`\n📦 Running: git subtree add --prefix=plugins/${answers.name} ${gitUrl} ${branch}\n`)
+    console.log(
+      `\n📦 Running: git subtree add --prefix=plugins/${answers.name} ${gitUrl} ${branch}\n`,
+    )
 
     execSync(`git subtree add --prefix=plugins/${answers.name} ${gitUrl} ${branch}`, {
       cwd: rootPath,
@@ -216,13 +217,13 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     })
 
     // Clean up: keep only src/ and CHANGELOG.md
-    const entries = fs.readdirSync(pluginDir)
+    const entries = readdirSync(pluginDir)
     const keepList = new Set(['src', 'CHANGELOG.md'])
     const deleted: string[] = []
 
     for (const entry of entries) {
       if (!keepList.has(entry)) {
-        fs.rmSync(path.join(pluginDir, entry), {recursive: true, force: true})
+        rmSync(join(pluginDir, entry), {recursive: true, force: true})
         deleted.push(entry)
       }
     }
