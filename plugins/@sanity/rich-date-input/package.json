@@ -1,0 +1,77 @@
+{
+  "name": "@sanity/rich-date-input",
+  "version": "3.0.8",
+  "description": "A timezone-aware datetime type and input component for Sanity Studio",
+  "keywords": [
+    "cms",
+    "content",
+    "headless",
+    "realtime",
+    "rich-date-input",
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/rich-date-input#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/rich-date-input"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "lint": "eslint .",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.5.3",
+    "@sanity/ui": "catalog:",
+    "@vvo/tzdb": "^6.154.0",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.1"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "eslint": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^19.2",
+    "react-dom": "^19.2",
+    "sanity": "^5"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}
