@@ -181,9 +181,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       )
     }
 
-    // Convert HTTPS URL to git SSH URL
-    // e.g., https://github.com/sanity-io/sanity-plugin-foo → git@github.com:sanity-io/sanity-plugin-foo.git
-    const gitUrl = repoUrl.replace('https://github.com/', 'git@github.com:').concat('.git')
+    // Use HTTPS URL directly (works without SSH keys)
+    // Ensure it has .git extension
+    const gitUrl = repoUrl.endsWith('.git') ? repoUrl : `${repoUrl}.git`
 
     // Detect the default branch using git ls-remote --symref
     // Output looks like: "ref: refs/heads/main\tHEAD"
@@ -203,9 +203,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       throw new Error(
         `Failed to detect default branch for ${gitUrl}.\n` +
           `This may indicate:\n` +
-          `  - Missing SSH access to the repository\n` +
           `  - Network connectivity issues\n` +
-          `  - Invalid or inaccessible repository URL`,
+          `  - Invalid or inaccessible repository URL\n` +
+          `  - Repository does not exist or is private`,
         {cause: error},
       )
     }
