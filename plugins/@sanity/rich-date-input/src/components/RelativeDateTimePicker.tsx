@@ -1,8 +1,9 @@
 import {formatInTimeZone, getTimezoneOffset, zonedTimeToUtc} from 'date-fns-tz'
 import {type ReactNode, useCallback} from 'react'
-import {DateTimeInput, FieldProps, FormPatch, PatchEvent, set, unset} from 'sanity'
+import {DateTimeInput, type FieldProps, type FormPatch, type PatchEvent, set, unset} from 'sanity'
 
-import {RichDate} from '../types'
+import type {RichDate} from '../types'
+
 import {getConstructedUTCDate, unlocalizeDateTime} from '../utils'
 
 interface RelativeDateTimePickerProps extends Omit<FieldProps, 'renderDefault'> {
@@ -16,21 +17,29 @@ export const RelativeDateTimePicker = (props: RelativeDateTimePickerProps): Reac
 
   const handleDateChange = useCallback(
     (patch: FormPatch | PatchEvent | FormPatch[]) => {
-      const timezone = value?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone
-      const newDatetime = (patch as unknown as {value: string})?.value
-      if (!newDatetime || !('type' in patch) || patch.type !== 'set') {
+      const formatter = new Intl.DateTimeFormat()
+      const timezone = value?.timezone ?? formatter.resolvedOptions().timeZone
+
+      // Type guard to check if patch is a set patch with a value
+      if (
+        !patch ||
+        Array.isArray(patch) ||
+        !('type' in patch) ||
+        patch.type !== 'set' ||
+        !('value' in patch) ||
+        typeof patch.value !== 'string'
+      ) {
         onChange(unset())
         return
       }
+
+      const newDatetime = patch.value
 
       /* get what time the user "meant" to set without tz info
        * right now, newDatetime is the time the user set plus
        * their current offset, not the timezone offset
        */
-      const desiredDateTime = unlocalizeDateTime(
-        newDatetime,
-        Intl.DateTimeFormat().resolvedOptions().timeZone,
-      )
+      const desiredDateTime = unlocalizeDateTime(newDatetime, formatter.resolvedOptions().timeZone)
 
       const newUtcDateObject = zonedTimeToUtc(desiredDateTime, timezone)
       // offset may have changed based on DST, capture that

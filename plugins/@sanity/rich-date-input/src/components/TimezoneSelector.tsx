@@ -2,9 +2,10 @@ import {SearchIcon} from '@sanity/icons'
 import {Autocomplete, Box, Card, Text} from '@sanity/ui'
 import {formatInTimeZone, getTimezoneOffset, zonedTimeToUtc} from 'date-fns-tz'
 import {type ReactNode, useCallback} from 'react'
-import {ObjectInputProps, set} from 'sanity'
+import {type ObjectInputProps, set} from 'sanity'
 
-import {NormalizedTimeZone, RichDate} from '../types'
+import type {RichDate} from '../types'
+
 import {allTimezones, unlocalizeDateTime} from '../utils'
 
 interface TimezoneSelectorProps {
@@ -15,14 +16,14 @@ interface TimezoneSelectorProps {
 export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
   const {onChange, value} = props
   const currentTz = allTimezones.find((tz) => tz.name === value?.timezone)
-  const userTzName = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const formatter = new Intl.DateTimeFormat()
+  const userTzName = formatter.resolvedOptions().timeZone
   const userTz = (allTimezones.find((tz) => tz.name === userTzName) ??
     allTimezones.find((tz) => tz.group.includes(userTzName)))!
 
   const handleTimezoneChange = useCallback(
     (selectedTz: string) => {
-      const newTimezone =
-        allTimezones.find((tz) => tz.value === selectedTz) ?? (userTz as NormalizedTimeZone)
+      const newTimezone = allTimezones.find((tz) => tz.value === selectedTz) ?? userTz
 
       const timezonePatch = set(newTimezone.name, ['timezone'])
       const patches = [timezonePatch]
@@ -64,7 +65,6 @@ export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
           constrainSize: true,
           placement: 'bottom-start',
         }}
-        // eslint-disable-next-line react/jsx-no-bind
         renderOption={(option) => {
           return (
             <Card as="button" padding={3}>
@@ -76,7 +76,6 @@ export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
             </Card>
           )
         }}
-        // eslint-disable-next-line react/jsx-no-bind
         renderValue={(_, option) => {
           if (!option) return ''
           return `${option.alternativeName} (${option.namePretty})`

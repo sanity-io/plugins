@@ -1,7 +1,7 @@
 import {getTimeZones} from '@vvo/tzdb'
 import {formatInTimeZone} from 'date-fns-tz'
 
-import {NormalizedTimeZone} from '../types'
+import type {NormalizedTimeZone} from '../types'
 
 export const unlocalizeDateTime = (datetime: string, timezone: string): string => {
   return formatInTimeZone(datetime, timezone, 'yyyy-MM-dd HH:mm:ss')
@@ -23,7 +23,8 @@ export const getConstructedUTCDate = (utc: string, offset: number): string => {
 
 //keep some consistency with scheduled publishing
 //https://github.com/sanity-io/sanity-plugin-scheduled-publishing/blob/bb282e3df9a8a73df37fab8ee1fdd0e2430745be/src/hooks/useTimeZone.tsx#L17
-export const allTimezones = getTimeZones().map((tz) => {
+export const allTimezones: NormalizedTimeZone[] = getTimeZones().map((tz) => {
+  const offset = tz.currentTimeFormat.split(' ')[0]
   return {
     abbreviation: tz.abbreviation,
     alternativeName: tz.alternativeName,
@@ -32,10 +33,10 @@ export const allTimezones = getTimeZones().map((tz) => {
     name: tz.name,
     // Time zone name with underscores removed
     namePretty: tz.name.replaceAll('_', ' '),
-    offset: tz.currentTimeFormat.split(' ')[0],
+    offset: offset ?? '',
     // all searchable text - this is transformed before being rendered in `<AutoComplete>`
     value: `${tz.currentTimeFormat} ${tz.abbreviation} ${tz.name}`,
     currentTimeOffsetInMinutes: tz.currentTimeOffsetInMinutes,
     group: tz.group,
-  } as NormalizedTimeZone
+  }
 })

@@ -11,7 +11,8 @@ interface TimezoneButtonProps {
 
 export const TimezoneButton = (props: TimezoneButtonProps): ReactNode => {
   const {onClick, timezone} = props
-  const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const formatter = new Intl.DateTimeFormat()
+  const currentTimezone = formatter.resolvedOptions().timeZone
 
   const label =
     allTimezones.find((tz) => tz.name === timezone)?.abbreviation ??

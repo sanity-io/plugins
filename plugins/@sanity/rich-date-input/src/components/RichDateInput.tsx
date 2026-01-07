@@ -1,11 +1,18 @@
 import {Box, Dialog, Flex} from '@sanity/ui'
 import {type ReactNode, useCallback, useState} from 'react'
-import {ObjectInputMember, ObjectInputProps} from 'sanity'
+import {ObjectInputMember, type ObjectInputProps} from 'sanity'
 
-import {RichDate} from '../types'
+import type {RichDate} from '../types'
+
 import {RelativeDateTimePicker} from './RelativeDateTimePicker'
 import {TimezoneButton} from './TimezoneButton'
 import {TimezoneSelector} from './TimezoneSelector'
+
+function isRichDate(value: unknown): value is RichDate {
+  return (
+    typeof value === 'object' && value !== null && '_type' in value && value._type === 'richDate'
+  )
+}
 
 export const RichDateInput = (props: ObjectInputProps): ReactNode => {
   const {onChange, value, members, schemaType} = props
@@ -18,6 +25,8 @@ export const RichDateInput = (props: ObjectInputProps): ReactNode => {
   const onClose = useCallback(() => setTimezoneSelectorOpen(false), [])
   const onOpen = useCallback(() => setTimezoneSelectorOpen(true), [])
 
+  const richDateValue = isRichDate(value) ? value : undefined
+
   return (
     <>
       <Flex>
@@ -26,11 +35,10 @@ export const RichDateInput = (props: ObjectInputProps): ReactNode => {
             <ObjectInputMember
               {...props}
               member={localMember}
-              // eslint-disable-next-line react/jsx-no-bind
               renderField={(renderFieldProps) => (
                 <RelativeDateTimePicker
                   {...renderFieldProps}
-                  dateValue={value as RichDate}
+                  dateValue={richDateValue}
                   schemaType={{...renderFieldProps.schemaType, options}}
                   inputProps={{...renderFieldProps.inputProps, onChange: onChange}}
                 />
@@ -43,9 +51,8 @@ export const RichDateInput = (props: ObjectInputProps): ReactNode => {
             <ObjectInputMember
               {...props}
               member={timezoneMember}
-              // eslint-disable-next-line react/jsx-no-bind
               renderInput={() => (
-                <TimezoneButton onClick={onOpen} timezone={value?.timezone ?? ''} />
+                <TimezoneButton onClick={onOpen} timezone={richDateValue?.timezone ?? ''} />
               )}
             />
           )}
@@ -53,7 +60,7 @@ export const RichDateInput = (props: ObjectInputProps): ReactNode => {
       </Flex>
       {timezoneSelectorOpen && (
         <Dialog onClose={onClose} header="Select a timezone" id="timezone-select" width={1}>
-          <TimezoneSelector onChange={onChange} value={value as RichDate} />
+          <TimezoneSelector onChange={onChange} value={richDateValue} />
         </Dialog>
       )}
     </>

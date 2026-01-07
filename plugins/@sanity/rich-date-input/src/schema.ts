@@ -1,9 +1,9 @@
 import {
-  DatetimeDefinition,
+  type DatetimeDefinition,
   defineField,
   defineType,
-  ObjectDefinition,
-  ObjectSchemaType,
+  type ObjectDefinition,
+  type ObjectSchemaType,
 } from 'sanity'
 
 import {RichDateInput} from './components/RichDateInput'
