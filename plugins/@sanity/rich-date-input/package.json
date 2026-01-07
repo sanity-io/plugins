@@ -49,7 +49,7 @@
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
-    "@vvo/tzdb": "^6.154.0",
+    "@vvo/tzdb": "^6.198.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.1"
   },
