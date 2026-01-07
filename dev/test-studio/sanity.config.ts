@@ -4,6 +4,7 @@ import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {iframePaneExample} from '#iframe-pane'
 import {markdownExample} from '#markdown'
+import {richDateInputExample} from '#rich-date-input'
 import {unsplashExample} from '#unsplash'
 import {workflowExample} from '#workflow'
 import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
@@ -38,6 +39,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       // add new plugins here
+      richDateInputExample(),
       codeInputExample(),
       aprimoExample(),
       bynderExample(),
