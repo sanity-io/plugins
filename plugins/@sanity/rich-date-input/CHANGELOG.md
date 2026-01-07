@@ -1,5 +1,13 @@
 # @sanity/rich-date-input
 
+## 4.0.1
+
+### Patch Changes
+
+- [#395](https://github.com/sanity-io/plugins/pull/395) [`ea217b7`](https://github.com/sanity-io/plugins/commit/ea217b7e6d3b3483b2216972b3e746e1d073c2dc) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
+- [#396](https://github.com/sanity-io/plugins/pull/396) [`f9d7bcf`](https://github.com/sanity-io/plugins/commit/f9d7bcf4fad8eac7a89e9bc5fdb4123a1fa552a2) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @vvo/tzdb to ^6.198.0
+
 ## 4.0.0
 
 ### Major Changes
