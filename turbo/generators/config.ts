@@ -170,11 +170,16 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
   // Register custom action for git subtree add
   plop.setActionType('gitSubtreeAdd', (answers, config, plop) => {
+    if (!plop) {
+      throw new Error('Plop instance is required')
+    }
+
     const rootPath = plop.getDestBasePath()
 
     // Validate plugin name to prevent command injection
     // Plugin names are already validated by npm package name rules, but double-check
-    const pluginName = String(answers.name)
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const pluginName = String((answers as any).name)
     const {errors} = validateNpmPackageName(pluginName)
     if (errors?.length) {
       throw new Error(`Invalid plugin name: ${pluginName}\n${errors.join(', ')}`)
@@ -182,7 +187,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
     const pluginDir = join(rootPath, 'plugins', pluginName)
 
-    const repoUrl = answers.originalRepositoryUrl
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const repoUrl = (answers as any).originalRepositoryUrl
     if (!repoUrl) {
       throw new Error(
         'No repository URL found in npm package metadata. Cannot use git subtree.\n' +
