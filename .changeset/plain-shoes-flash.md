@@ -17,5 +17,4 @@ If you're upgrading from v3.x:
 
 1. Ensure your project is using Sanity Studio v5 or later
 2. Ensure your project is using React 19.2 or later
-3. If using CommonJS, migrate to ESM or use dynamic imports
-4. No code changes required - the API remains the same
+3. No code changes required - the API remains the same
