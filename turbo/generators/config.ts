@@ -175,8 +175,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     // Validate plugin name to prevent command injection
     // Plugin names are already validated by npm package name rules, but double-check
     const pluginName = String(answers.name)
-    if (!/^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(pluginName)) {
-      throw new Error(`Invalid plugin name: ${pluginName}`)
+    const {errors} = validateNpmPackageName(pluginName)
+    if (errors?.length) {
+      throw new Error(`Invalid plugin name: ${pluginName}\n${errors.join(', ')}`)
     }
 
     const pluginDir = join(rootPath, 'plugins', pluginName)
