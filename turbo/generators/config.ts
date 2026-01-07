@@ -202,8 +202,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     } catch (error) {
       throw new Error(
         `Failed to detect default branch for ${gitUrl}.\n` +
-          `Ensure you have SSH access to the repository.\n` +
-          `Original error: ${error instanceof Error ? error.message : error}`,
+          `Ensure you have SSH access to the repository.`,
+        {cause: error},
       )
     }
 
