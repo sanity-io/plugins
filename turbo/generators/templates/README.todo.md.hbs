@@ -54,41 +54,21 @@ Manually update `package.json` with any missing dependencies from the original p
 - `@sanity/incompatible-plugin`
 - `@sanity/plugin-kit`
 
-## 3. Copy Source Files
+## 3. Source Files
 
-Copy all source files from the original plugin into `./src`:
+The `src/` directory was automatically imported from the original repository with full git history preserved.
 
-{{#if originalRepositoryUrl}}
-```bash
-# Navigate to the plugin workspace folder
-cd plugins/{{ name }}
-
-# Clone the original repo and copy the src directory
-git clone {{ originalRepositoryUrl }} /tmp/original-plugin
-cp -r /tmp/original-plugin/src/* ./src/
-rm -rf /tmp/original-plugin
-```
-{{else}}
-```bash
-# Navigate to the plugin workspace folder
-cd plugins/{{ name }}
-
-# Copy the src directory from the original plugin location
-cp -r /path/to/original-plugin/src/* ./src/
-```
-{{/if}}
-
-After copying, update the test studio example at:
+After reviewing, update the test studio example at:
 
 `dev/test-studio/src/{{ dashCase pluginNamedExport }}/index.tsx`
 
 Add any required options, schemas, or configuration needed to properly test the plugin in the test studio.
 
-## 4. Copy and Update CHANGELOG.md
+## 4. Update CHANGELOG.md
 
-Copy the `CHANGELOG.md` from the original plugin, then update the top of the file:
+The `CHANGELOG.md` was automatically copied from the original repository.
 
-**Remove this header if present:**
+Update the top of the file - **remove this header if present:**
 
 ```md
 <!-- markdownlint-disable --><!-- textlint-disable -->
