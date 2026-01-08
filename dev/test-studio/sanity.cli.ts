@@ -7,7 +7,7 @@ const tsRE = /\.tsx?$/
 
 export default defineCliConfig({
   api: {projectId, dataset},
-  deployment: {appId, autoUpdates: true},
+  deployment: {appId, autoUpdates: false},
   reactStrictMode: true,
   reactCompiler: {
     target: '19',
