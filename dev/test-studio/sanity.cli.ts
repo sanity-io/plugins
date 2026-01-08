@@ -13,7 +13,7 @@ export default defineCliConfig({
     target: '19',
     sources: (filename) => {
       // The default behavior is to always skip node_modules: https://github.com/facebook/react/blob/d6cae440e34c6250928e18bed4a16480f83ae18a/compiler/packages/babel-plugin-react-compiler/src/Entrypoint/Options.ts#L326
-      if (filename.includes('node_modules')) {
+      if (filename.indexOf('node_modules') !== -1) {
         return false
       }
       // If the file is `.ts` or `.tsx` then we should run the compiler (it's resolved with the `development` condition during `sanity dev`)
