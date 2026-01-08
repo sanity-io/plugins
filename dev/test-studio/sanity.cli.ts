@@ -23,4 +23,11 @@ export default defineCliConfig({
   },
   studioHost: 'plugins',
   typegen: {formatGeneratedCode: false},
+  vite: {
+    resolve: {dedupe: ['react', 'react-dom', 'sanity', 'styled-components']},
+    // optimizeDeps: {
+    // exclude: ['sanity'],
+    // include: ['sanity > react-is'],
+    // },
+  },
 })
