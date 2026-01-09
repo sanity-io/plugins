@@ -34,7 +34,7 @@
     "setup-npm-trusted-publish": "^1.0.3",
     "turbo": "^2.7.3",
     "typescript": "catalog:",
-    "validate-npm-package-name": "^7.0.1"
+    "validate-npm-package-name": "^7.0.2"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,jsonc,md}": [
