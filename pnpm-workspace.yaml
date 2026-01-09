@@ -55,6 +55,8 @@ minimumReleaseAgeExclude:
   - vitest
 
 overrides:
+  '@sanity/vision': https://pkg.pr.new/@sanity/vision@0ae16e6
+  sanity: https://pkg.pr.new/sanity@0ae16e6
   styled-components: npm:@sanity/styled-components@latest
 
 patchedDependencies:
