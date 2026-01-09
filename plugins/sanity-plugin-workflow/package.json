@@ -47,7 +47,7 @@
     "@sanity/ui": "catalog:",
     "@tanstack/react-virtual": "^3.13.16",
     "lexorank": "^1.0.5",
-    "motion": "^12.23.26",
+    "motion": "^12.24.3",
     "react-fast-compare": "^3.2.2",
     "sanity-plugin-utils": "^1.8.0"
   },
