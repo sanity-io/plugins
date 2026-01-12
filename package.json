@@ -4,19 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "turbo:fix": "pnpm dlx rimraf ./node_modules && pnpm install && pnpm turbo scan",
-    "generate": "turbo gen",
-    "postgenerate": "pnpm install && pnpm format && pnpm build",
     "build": "turbo build",
-    "typegen": "pnpm --filter=test-studio run typegen && pnpm format",
     "dev": "pnpm turbo dev --filter=test-studio",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
+    "generate": "turbo gen",
     "lint": "turbo run oxlint lint",
     "lint:ci": "turbo run lint -- -f gha --max-warnings 0",
     "lint:fix": "pnpm oxlint --fix --fix-suggestions && turbo run lint -- --fix",
     "oxlint": "oxlint --type-check --type-aware --deny-warnings",
+    "postgenerate": "pnpm install && pnpm format && pnpm build",
+    "postinstall": "husky",
     "release": "changeset publish",
-    "postinstall": "husky"
+    "turbo:fix": "pnpm dlx rimraf ./node_modules && pnpm install && pnpm turbo scan",
+    "typegen": "pnpm --filter=test-studio run typegen && pnpm format"
   },
   "dependencies": {
     "@changesets/changelog-github": "^0.5.2",
