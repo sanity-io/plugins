@@ -68,13 +68,15 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "@uiw/codemirror-themes": "^4.25.4",
-    "@uiw/react-codemirror": "^4.25.4"
+    "@uiw/react-codemirror": "^4.25.4",
+    "lodash-es": "^4.17.22"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@types/lodash-es": "^4.17.12",
     "@types/react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",

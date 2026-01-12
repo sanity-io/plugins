@@ -1,11 +1,9 @@
-import type {Extension} from '@codemirror/state'
-
 import {EditorView} from '@codemirror/view'
 import {useRootTheme} from '@sanity/ui'
 import CodeMirror, {type ReactCodeMirrorProps, type ReactCodeMirrorRef} from '@uiw/react-codemirror'
-import {forwardRef, useCallback, useContext, useEffect, useMemo, useState} from 'react'
+import {forwardRef, use, useCallback, useEffect, useMemo, useState} from 'react'
 
-import {CodeInputConfigContext} from './CodeModeContext'
+import {CodeInputLanguageModeLoaderContext} from './CodeModeContext'
 import {defaultCodeModes} from './defaultCodeModes'
 import {
   highlightLine,
@@ -118,40 +116,9 @@ const CodeMirrorProxy = forwardRef<ReactCodeMirrorRef, CodeMirrorProps>(
 )
 
 function useLanguageExtension(mode?: string) {
-  const codeConfig = useContext(CodeInputConfigContext)
-
-  const [languageExtension, setLanguageExtension] = useState<Extension | undefined>()
-
-  useEffect(() => {
-    const customModes = codeConfig?.codeModes ?? []
-    const modes = [...customModes, ...defaultCodeModes]
-
-    const codeMode = modes.find((m) => m.name === mode)
-    if (!codeMode?.loader) {
-      console.warn(
-        `Found no codeMode for language mode ${mode}, syntax highlighting will be disabled.`,
-      )
-    }
-    let active = true
-    Promise.resolve(codeMode?.loader())
-      .then((extension) => {
-        if (active) {
-          setLanguageExtension(extension)
-        }
-        return undefined
-      })
-      .catch((e) => {
-        console.error(`Failed to load language mode ${mode}`, e)
-        if (active) {
-          setLanguageExtension(undefined)
-        }
-      })
-    return () => {
-      active = false
-    }
-  }, [mode, codeConfig])
-
-  return languageExtension
+  if (!mode) return undefined
+  const languageModeLoader = use(CodeInputLanguageModeLoaderContext)
+  return use(languageModeLoader(mode, defaultCodeModes))
 }
 
 export default CodeMirrorProxy
