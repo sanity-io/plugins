@@ -6,5 +6,6 @@
   "bracketSpacing": false,
   "quoteProps": "consistent",
   "experimentalSortImports": {},
+  "experimentalSortPackageJson": {"sortScripts": true},
   "ignorePatterns": ["dist/**", "pnpm-lock.yaml", ".changeset/*.md", "turbo/**/*.hbs"]
 }
