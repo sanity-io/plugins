@@ -1,5 +1,11 @@
 # @sanity/rich-date-input
 
+## 4.0.2
+
+### Patch Changes
+
+- [`c06778e`](https://github.com/sanity-io/plugins/commit/c06778e2acf304bdb7b57a306edca11eaeeb8800) Thanks [@stipsan](https://github.com/stipsan)! - Fix crash on `sanity@5.3.0`
+
 ## 4.0.1
 
 ### Patch Changes
