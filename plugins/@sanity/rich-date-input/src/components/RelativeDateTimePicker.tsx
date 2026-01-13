@@ -71,7 +71,13 @@ export const RelativeDateTimePicker = (props: RelativeDateTimePickerProps): Reac
       : (value?.offset ?? 0)
 
   const dateToDisplay = value?.utc ? getConstructedUTCDate(value.utc, displayOffset) : ''
-
-  // @ts-expect-error -- slight mismatch in elementProps and renderDefault, but should line up in practice
-  return <DateTimeInput {...props} onChange={handleDateChange} value={dateToDisplay} />
+  return (
+    // @ts-expect-error -- slight mismatch in elementProps and renderDefault, but should line up in practice
+    <DateTimeInput
+      {...props}
+      id={props.inputProps.id}
+      onChange={handleDateChange}
+      value={dateToDisplay}
+    />
+  )
 }
