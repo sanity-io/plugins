@@ -10,7 +10,7 @@
     "jsx-a11y",
     "promise"
   ],
-  "ignorePatterns": ["**/.sanity/*", "**/dist/*"],
+  "ignorePatterns": ["**/.sanity/*", "**/dist/*", "**/sanity.types.ts"],
   "categories": {
     "correctness": "error",
     "suspicious": "error",
