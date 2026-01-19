@@ -3148,6 +3148,7 @@ packages:
   '@sanity/export@6.0.2':
     resolution: {integrity: sha512-CUA7jd4MAv+4BvDt+ZvUi4A4dX/M1/DjNCW8euWlkzgRvMF0lEbO4hBCcXQ7Qtwlbxz4E4Y7xKqH19E4c/ff/A==}
     engines: {node: '>=20.19 <22 || >=22.12'}
+    deprecated: Critical UTF-8 export issue fixed in v6.0.3
 
   '@sanity/generate-help-url@3.0.1':
     resolution: {integrity: sha512-bKqCEqFP7qXpNcHxJZnXFLrti8/HYQhhJtMRYFSNJ8bkUXCuUmhHKckzoyiH1n1WAZpI2Y05z2h5yZWbi3gThQ==}
