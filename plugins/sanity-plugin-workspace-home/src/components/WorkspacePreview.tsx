@@ -14,7 +14,7 @@ const createIcon = (Icon: React.ComponentType | React.ReactNode) => {
 const MediaCard = styled(Card)`
   width: 35px;
   height: 35px;
-
+  
   svg {
     width: 100%;
     height: 100%;

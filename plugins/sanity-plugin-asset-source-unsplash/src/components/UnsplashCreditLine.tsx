@@ -4,7 +4,8 @@ import {styled} from 'styled-components'
 const CreditLineLink = styled.a`
   text-decoration: none;
   cursor: pointer;
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     [data-ui='Text'] {
       text-decoration: underline;
     }
