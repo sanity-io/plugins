@@ -18,6 +18,7 @@
   },
   "rules": {
     "typescript/ban-ts-comment": "error",
+    "typescript/no-deprecated": "error",
     "typescript/prefer-ts-expect-error": "error",
     "import/no-commonjs ": "error",
     "import/no-unassigned-import": ["error", {"allow": ["**/*.css"]}],
