@@ -91,6 +91,23 @@ pnpm oxlint
 
 Type checking is [performed by oxlint](https://oxc.rs/blog/2025-12-08-type-aware-alpha.html#support-for-type-checking-while-linting) when running the `lint` command.
 
+### Testing
+
+The monorepo uses [Vitest v4](https://vitest.dev) for testing.
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests for a specific plugin
+pnpm --filter @sanity/code-input test
+
+# Run tests for all plugins
+pnpm --filter "./plugins/**" test
+```
+
+Tests are co-located with source code in the `src/` directory using `.test.ts` or `.spec.ts` extensions. Each plugin includes a package exports test to verify all exports are valid.
+
 ### Running All Checks
 
 Before submitting a PR, make sure all checks pass:
@@ -99,6 +116,7 @@ Before submitting a PR, make sure all checks pass:
 pnpm format
 pnpm lint
 pnpm build
+pnpm test
 ```
 
 And attach a changeset:

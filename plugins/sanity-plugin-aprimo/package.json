@@ -39,7 +39,8 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "lint": "eslint .",
-    "prepack": "turbo run build"
+    "prepack": "turbo run build",
+    "test": "vitest run"
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
@@ -54,7 +55,9 @@
     "babel-plugin-react-compiler": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",
-    "sanity": "catalog:"
+    "sanity": "catalog:",
+    "vitest": "catalog:",
+    "vitest-package-exports": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",
