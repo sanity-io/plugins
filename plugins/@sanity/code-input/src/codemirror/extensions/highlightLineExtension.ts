@@ -86,13 +86,13 @@ function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
   // For accessing color schemes, we need to use the old structure since Theme.sanity.v2
   // doesn't provide access to both light and dark schemes (Theme_v2.color is a single scheme)
   // Cast to unknown first to allow accessing the deprecated color structure
-  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const theme = themeCtx.theme as unknown as {
     sanity: {color: {dark: Record<string, any>; light: Record<string, any>}}
   }
-  // oxlint-disable-next-line typescript-eslint/no-deprecated
+  // oxlint-disable-next-line typescript/no-deprecated
   const darkScheme = theme.sanity.color.dark[fallbackTone]
-  // oxlint-disable-next-line typescript-eslint/no-deprecated
+  // oxlint-disable-next-line typescript/no-deprecated
   const lightScheme = theme.sanity.color.light[fallbackTone]
 
   return EditorView.baseTheme({
