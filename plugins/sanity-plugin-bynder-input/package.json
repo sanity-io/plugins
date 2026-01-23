@@ -38,8 +38,7 @@
   "scripts": {
     "build": "pkg build --strict --check --clean",
     "lint": "eslint .",
-    "prepack": "turbo run build",
-    "test": "vitest run"
+    "prepack": "turbo run build"
   },
   "dependencies": {
     "@sanity/ui": "catalog:",
@@ -57,9 +56,7 @@
     "eslint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "sanity": "catalog:",
-    "vitest": "catalog:",
-    "vitest-package-exports": "catalog:"
+    "sanity": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",
