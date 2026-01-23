@@ -1,22 +1,26 @@
 import type {Extension} from '@codemirror/state'
 
 import {EditorView} from '@codemirror/view'
-import {useTheme} from '@sanity/ui'
+import {useRootTheme} from '@sanity/ui'
 import {rgba} from '@sanity/ui/theme'
 import {useMemo} from 'react'
 
+import {getBackwardsCompatibleTone} from './backwardsCompatibleTone'
+
 export function useThemeExtension(): Extension {
-  const theme = useTheme()
-  // Use default tone for dark/light schemes since we don't have context here
-  const fallbackTone = 'default'
+  const themeCtx = useRootTheme()
 
   return useMemo(() => {
-    // For accessing color schemes, we need to use the old structure since Theme.sanity.v2
-    // doesn't provide access to both light and dark schemes (Theme_v2.color is a single scheme)
-    // oxlint-disable-next-line typescript/no-deprecated, typescript/no-unsafe-type-assertion
-    const darkScheme = (theme.sanity.color as any).dark[fallbackTone]
-    // oxlint-disable-next-line typescript/no-deprecated, typescript/no-unsafe-type-assertion
-    const lightScheme = (theme.sanity.color as any).light[fallbackTone]
+    // Get the tone from context or fall back to 'default' for backwards compatibility
+    const tone = getBackwardsCompatibleTone(themeCtx)
+
+    // Access the color schemes directly from the RootTheme
+    // themeCtx.theme.color contains both 'dark' and 'light' color schemes
+    // Each scheme contains tones like 'default', 'primary', etc.
+    // oxlint-disable-next-line typescript/no-deprecated
+    const colorSchemes = themeCtx.theme.color as Record<string, Record<string, any>>
+    const darkScheme = colorSchemes['dark']?.[tone]
+    const lightScheme = colorSchemes['light']?.[tone]
 
     return EditorView.baseTheme({
       '&.cm-editor': {
@@ -34,16 +38,16 @@ export function useThemeExtension(): Extension {
         backgroundColor: 'transparent',
       },
       '&dark.cm-editor.cm-focused .cm-matchingBracket': {
-        outline: `1px solid ${darkScheme.border}`,
+        outline: `1px solid ${darkScheme?.border ?? '#333'}`,
       },
       '&dark.cm-editor.cm-focused .cm-nonmatchingBracket': {
-        outline: `1px solid ${darkScheme.border}`,
+        outline: `1px solid ${darkScheme?.border ?? '#333'}`,
       },
       '&light.cm-editor.cm-focused .cm-matchingBracket': {
-        outline: `1px solid ${lightScheme.border}`,
+        outline: `1px solid ${lightScheme?.border ?? '#ccc'}`,
       },
       '&light.cm-editor.cm-focused .cm-nonmatchingBracket': {
-        outline: `1px solid ${lightScheme.border}`,
+        outline: `1px solid ${lightScheme?.border ?? '#ccc'}`,
       },
 
       // Size and padding of gutter
@@ -57,13 +61,13 @@ export function useThemeExtension(): Extension {
 
       // Color of gutter
       '&dark .cm-gutters': {
-        color: `${rgba(darkScheme.code.fg, 0.5)} !important`,
-        borderRight: `1px solid ${rgba(darkScheme.border, 0.5)}`,
+        color: `${rgba(darkScheme?.code?.fg ?? '#888', 0.5)} !important`,
+        borderRight: `1px solid ${rgba(darkScheme?.border ?? '#333', 0.5)}`,
       },
       '&light .cm-gutters': {
-        color: `${rgba(lightScheme.code.fg, 0.5)} !important`,
-        borderRight: `1px solid ${rgba(lightScheme.border, 0.5)}`,
+        color: `${rgba(lightScheme?.code?.fg ?? '#888', 0.5)} !important`,
+        borderRight: `1px solid ${rgba(lightScheme?.border ?? '#ccc', 0.5)}`,
       },
     })
-  }, [theme])
+  }, [themeCtx])
 }

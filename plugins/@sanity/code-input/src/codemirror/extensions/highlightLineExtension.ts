@@ -81,19 +81,22 @@ export interface HighlightLineConfig {
 function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
   const {themeCtx} = options
 
-  const fallbackTone = getBackwardsCompatibleTone(themeCtx)
+  // Get the tone from context or fall back to 'default' for backwards compatibility
+  const tone = getBackwardsCompatibleTone(themeCtx)
 
-  // For accessing color schemes, we need to use the old structure since Theme.sanity.v2
-  // doesn't provide access to both light and dark schemes (Theme_v2.color is a single scheme)
-  // Cast to unknown first to allow accessing the deprecated color structure
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
-  const theme = themeCtx.theme as unknown as {
-    sanity: {color: {dark: Record<string, any>; light: Record<string, any>}}
-  }
+  // Access the color schemes directly from the RootTheme
+  // themeCtx.theme.color contains both 'dark' and 'light' color schemes
+  // Each scheme contains tones like 'default', 'primary', etc.
   // oxlint-disable-next-line typescript/no-deprecated
-  const darkScheme = theme.sanity.color.dark[fallbackTone]
-  // oxlint-disable-next-line typescript/no-deprecated
-  const lightScheme = theme.sanity.color.light[fallbackTone]
+  const colorSchemes = themeCtx.theme.color as Record<string, Record<string, any>>
+  const darkScheme = colorSchemes['dark']?.[tone]
+  const lightScheme = colorSchemes['light']?.[tone]
+
+  // Use a caution-tinted highlight color, fallback to muted bg if caution is unavailable
+  const darkHighlightBg =
+    darkScheme?.muted?.caution?.pressed?.bg ?? darkScheme?.muted?.bg ?? '#3d3d00'
+  const lightHighlightBg =
+    lightScheme?.muted?.caution?.pressed?.bg ?? lightScheme?.muted?.bg ?? '#ffffd0'
 
   return EditorView.baseTheme({
     '.cm-lineNumbers': {
@@ -115,10 +118,10 @@ function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
       boxSizing: 'border-box',
     },
     [`&dark .${highlightLineClass}::before`]: {
-      background: rgba(darkScheme.muted.caution.pressed.bg, 0.5),
+      background: rgba(darkHighlightBg, 0.5),
     },
     [`&light .${highlightLineClass}::before`]: {
-      background: rgba(lightScheme.muted.caution.pressed.bg, 0.75),
+      background: rgba(lightHighlightBg, 0.75),
     },
   })
 }
