@@ -2,6 +2,8 @@
 
 Thank you for your interest in contributing to the Sanity Plugins monorepo! This guide will help you get set up and explain our workflows.
 
+> **For AI Agents:** See [AGENTS.md](./AGENTS.md) for agent-specific instructions and quick reference commands.
+
 ## Table of Contents
 
 - [Development Setup](#development-setup)
@@ -15,8 +17,8 @@ Thank you for your interest in contributing to the Sanity Plugins monorepo! This
 
 ### Prerequisites
 
-- Node.js `>=20.19 <22 || >=22.12`
-- [pnpm](https://pnpm.io/) (we use corepack for version management)
+- Node.js **v24** (latest LTS) — packages support `>=20.19 <22 || >=22.12` but we recommend v24
+- [pnpm](https://pnpm.io/) v10 or later — the exact version is managed via `packageManager` in root `package.json`
 
 ### Initial Setup
 
@@ -37,7 +39,9 @@ The test studio located at `dev/test-studio` is a Sanity Studio instance that in
 pnpm dev
 ```
 
-This will start the Sanity Studio dev server. The studio is pre-configured with all plugins and includes example schemas to test plugin functionality.
+This starts the Sanity Studio dev server at `http://localhost:3333`. The studio is pre-configured with all plugins and includes example schemas to test plugin functionality.
+
+> **Note:** The test studio requires **Sanity user authentication** in the browser. When you access the studio, you'll need to log in with your Sanity account. Simply accessing the URL isn't enough—the studio connects to Sanity APIs and requires authenticated access to the configured project.
 
 The studio is deployed in two places:
 
