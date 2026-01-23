@@ -17,7 +17,7 @@ type UserDisplayProps = {
 export default function UserDisplay(props: UserDisplayProps) {
   const {assignees, userList, documentId, disabled = false} = props
 
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
   const popoverRef = useRef<HTMLDivElement | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
