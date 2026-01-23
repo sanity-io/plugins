@@ -92,14 +92,14 @@ The monorepo uses [Vitest v4](https://vitest.dev) for testing.
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all tests from root
 pnpm test
 
-# Run tests for a specific plugin
-pnpm --filter @sanity/code-input test
+# Run tests with watch mode
+pnpm test --watch
 
-# Run tests for all plugins
-pnpm --filter "./plugins/**" test
+# Update snapshots
+pnpm test -u
 ```
 
 ### Writing Tests
@@ -107,28 +107,40 @@ pnpm --filter "./plugins/**" test
 Tests are co-located with source code in the `src/` directory:
 
 - Test files use `.test.ts` or `.spec.ts` extensions
-- Each plugin has a `vitest.config.ts` that extends the root configuration
+- Each plugin has a minimal `vitest.config.ts` that inlines `vitest-package-exports`
 - All plugins include a package exports test using `vitest-package-exports` to verify all exports are valid
 
-Example test file (`src/myfeature.test.ts`):
+Example test file (`src/index.test.ts`):
 
 ```ts
-import {describe, expect, test} from 'vitest'
-import {myFunction} from './myfeature'
+import {fileURLToPath} from 'node:url'
+import {expect, test} from 'vitest'
+import {getPackageExportsManifest} from 'vitest-package-exports'
 
-describe('myFunction', () => {
-  test('should work correctly', () => {
-    expect(myFunction('input')).toBe('expected output')
+test('package exports', async () => {
+  const manifest = await getPackageExportsManifest({
+    importMode: 'dist',
+    cwd: fileURLToPath(import.meta.url),
   })
+
+  expect(manifest.exports).toMatchInlineSnapshot()
 })
+```
+
+For tests that take longer, add a timeout as the third argument:
+
+```ts
+test('package exports', async () => {
+  // ... test code
+}, 30000) // 30 second timeout
 ```
 
 ### Test Configuration
 
-- Root `vitest.config.ts` provides shared configuration
-- Individual plugins can override settings in their own `vitest.config.ts`
-- Default timeout: 30 seconds (for package export tests)
-- Most plugins use `environment: 'node'`, but browser-dependent plugins may use `environment: 'jsdom'`
+- Root `vitest.config.ts` finds tests in all plugins
+- Individual plugins have minimal `vitest.config.ts` with just inline deps configuration
+- Tests run against built `dist/` output after `pnpm build`
+- Snapshots are generated with `pnpm test -u`
 
 ## Pull Request Workflow
 

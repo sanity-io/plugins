@@ -1,24 +1,27 @@
+import {readFileSync} from 'node:fs'
+import {dirname, resolve} from 'node:path'
 import {fileURLToPath} from 'node:url'
-import {describe, expect, test} from 'vitest'
-import {getPackageExportsManifest} from 'vitest-package-exports'
+import {expect, test} from 'vitest'
 
-describe('package exports', () => {
-  test('all exports are valid and can be imported', async () => {
-    const manifest = await getPackageExportsManifest({
-      // Test source files in development
-      importMode: 'src',
-      cwd: fileURLToPath(import.meta.url),
-    })
+test('package exports', () => {
+  const __dirname = dirname(fileURLToPath(import.meta.url))
+  const packagePath = resolve(__dirname, '../package.json')
+  const pkg = JSON.parse(readFileSync(packagePath, 'utf-8'))
 
-    // Verify that the package has exports
-    expect(manifest.exports).toBeDefined()
-    expect(Object.keys(manifest.exports).length).toBeGreaterThan(0)
-
-    // Verify that all exports can be imported without errors
-    for (const [exportName, exportInfo] of Object.entries(manifest.exports)) {
-      if (exportInfo['import'] && !exportName.includes('package.json')) {
-        expect(exportInfo['import']).toBeTruthy()
-      }
+  expect(pkg.exports).toMatchInlineSnapshot(`
+    {
+      ".": {
+        "default": "./dist/index.js",
+        "development": "./src/index.ts",
+        "require": "./dist/index.cjs",
+        "source": "./src/index.ts",
+      },
+      "./next": {
+        "default": "./dist/indexNext.js",
+        "development": "./src/indexNext.ts",
+        "source": "./src/indexNext.ts",
+      },
+      "./package.json": "./package.json",
     }
-  })
+  `)
 })

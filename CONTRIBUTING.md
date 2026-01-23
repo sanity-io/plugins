@@ -99,14 +99,14 @@ The monorepo uses [Vitest v4](https://vitest.dev) for testing.
 # Run all tests
 pnpm test
 
-# Run tests for a specific plugin
-pnpm --filter @sanity/code-input test
+# Run tests with watch mode
+pnpm test --watch
 
-# Run tests for all plugins
-pnpm --filter "./plugins/**" test
+# Update snapshots
+pnpm test -u
 ```
 
-Tests are co-located with source code in the `src/` directory using `.test.ts` or `.spec.ts` extensions. Each plugin includes a package exports test to verify all exports are valid.
+Tests are co-located with source code in the `src/` directory using `.test.ts` or `.spec.ts` extensions. Each plugin includes a package exports test to verify all exports are valid. Tests run from the root and require packages to be built first.
 
 ### Running All Checks
 
