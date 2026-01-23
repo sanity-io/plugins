@@ -29,10 +29,9 @@ export interface CodeInputProps extends ObjectInputProps<CodeInputValue, CodeSch
 
 const EditorContainer = styled(Card)(({theme}) => {
   const v2 = getTheme_v2({sanity: theme.sanity})
-  const {input} = v2
   const border = {
     color: v2.color.input.default.enabled.border,
-    width: input.border.width,
+    width: v2.input.border.width,
   }
 
   return css`
