@@ -15,6 +15,7 @@
     "postgenerate": "pnpm install && pnpm format && pnpm build",
     "postinstall": "husky",
     "release": "changeset publish",
+    "test": "vitest",
     "turbo:fix": "pnpm dlx rimraf ./node_modules && pnpm install && pnpm turbo scan",
     "typegen": "pnpm --filter=test-studio run typegen && pnpm format"
   },
@@ -35,6 +36,10 @@
     "turbo": "^2.7.5",
     "typescript": "catalog:",
     "validate-npm-package-name": "^7.0.2"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.18",
+    "vitest-package-exports": "^1.1.2"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,jsonc,md}": [

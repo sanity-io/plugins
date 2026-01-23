@@ -6,15 +6,15 @@ This guide is for AI agents working on this codebase. Follow these instructions 
 
 ## Quick Reference
 
-| Task                 | Command                  |
-| -------------------- | ------------------------ |
-| Install dependencies | `pnpm install`           |
-| Format code          | `pnpm format`            |
-| Run linters          | `pnpm lint`              |
-| Build all packages   | `pnpm build`             |
-| Run tests            | `pnpm --if-present test` |
-| Add changeset        | `pnpm changeset add`     |
-| Start dev server     | `pnpm dev`               |
+| Task                 | Command              |
+| -------------------- | -------------------- |
+| Install dependencies | `pnpm install`       |
+| Format code          | `pnpm format`        |
+| Run linters          | `pnpm lint`          |
+| Build all packages   | `pnpm build`         |
+| Run tests            | `pnpm test`          |
+| Add changeset        | `pnpm changeset add` |
+| Start dev server     | `pnpm dev`           |
 
 ## Environment Setup
 
@@ -48,8 +48,8 @@ pnpm lint
 # 3. Build all packages
 pnpm build
 
-# 4. Run tests (if any exist)
-pnpm --if-present test
+# 4. Run tests
+pnpm test
 ```
 
 ### Required: Add a Changeset
@@ -76,7 +76,7 @@ The CI pipeline runs on every PR:
 | --------- | ------------------------------------------------------------------------------ |
 | **build** | `pnpm build` - All packages compile successfully                               |
 | **lint**  | `pnpm oxlint --format github` + `pnpm lint:ci` - Code passes oxlint and ESLint |
-| **test**  | `pnpm --if-present test` - All tests pass (runs after build + lint)            |
+| **test**  | `pnpm test` - All tests pass (runs after build + lint)                         |
 
 ### Lint Specifics
 
@@ -84,6 +84,63 @@ The CI pipeline runs on every PR:
 - **TypeScript type checking** is included in `pnpm lint` (via oxlint's `--type-check --type-aware` flags) — no separate `tsc` needed
 - **ESLint**: React Compiler rules only
 - Run `pnpm lint:fix` to auto-fix issues when possible
+
+## Testing
+
+The monorepo uses [Vitest v4](https://vitest.dev) for testing.
+
+### Running Tests
+
+```bash
+# Run all tests from root
+pnpm test
+
+# Run tests with watch mode
+pnpm test --watch
+
+# Update snapshots
+pnpm test -u
+```
+
+### Writing Tests
+
+Tests are co-located with source code in the `src/` directory:
+
+- Test files use `.test.ts` or `.spec.ts` extensions
+- Each plugin has a minimal `vitest.config.ts` that inlines `vitest-package-exports`
+- All plugins include a package exports test using `vitest-package-exports` to verify all exports are valid
+
+Example test file (`src/index.test.ts`):
+
+```ts
+import {fileURLToPath} from 'node:url'
+import {expect, test} from 'vitest'
+import {getPackageExportsManifest} from 'vitest-package-exports'
+
+test('package exports', async () => {
+  const manifest = await getPackageExportsManifest({
+    importMode: 'dist',
+    cwd: fileURLToPath(import.meta.url),
+  })
+
+  expect(manifest.exports).toMatchInlineSnapshot()
+})
+```
+
+For tests that take longer, add a timeout as the third argument:
+
+```ts
+test('package exports', async () => {
+  // ... test code
+}, 30000) // 30 second timeout
+```
+
+### Test Configuration
+
+- Root `vitest.config.ts` finds tests in all plugins
+- Individual plugins have minimal `vitest.config.ts` with just inline deps configuration
+- Tests run against built `dist/` output after `pnpm build`
+- Snapshots are generated with `pnpm test -u`
 
 ## Pull Request Workflow
 
