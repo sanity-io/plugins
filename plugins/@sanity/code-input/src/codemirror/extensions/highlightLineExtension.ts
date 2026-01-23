@@ -83,8 +83,17 @@ function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
 
   const fallbackTone = getBackwardsCompatibleTone(themeCtx)
 
-  const dark = {color: themeCtx.theme.color.dark[fallbackTone]}
-  const light = {color: themeCtx.theme.color.light[fallbackTone]}
+  // For accessing color schemes, we need to use the old structure since Theme.sanity.v2
+  // doesn't provide access to both light and dark schemes (Theme_v2.color is a single scheme)
+  // Cast to unknown first to allow accessing the deprecated color structure
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+  const theme = themeCtx.theme as unknown as {
+    sanity: {color: {dark: Record<string, any>; light: Record<string, any>}}
+  }
+  // oxlint-disable-next-line typescript-eslint/no-deprecated
+  const darkScheme = theme.sanity.color.dark[fallbackTone]
+  // oxlint-disable-next-line typescript-eslint/no-deprecated
+  const lightScheme = theme.sanity.color.light[fallbackTone]
 
   return EditorView.baseTheme({
     '.cm-lineNumbers': {
@@ -106,10 +115,10 @@ function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
       boxSizing: 'border-box',
     },
     [`&dark .${highlightLineClass}::before`]: {
-      background: rgba(dark.color.muted.caution.pressed.bg, 0.5),
+      background: rgba(darkScheme.muted.caution.pressed.bg, 0.5),
     },
     [`&light .${highlightLineClass}::before`]: {
-      background: rgba(light.color.muted.caution.pressed.bg, 0.75),
+      background: rgba(lightScheme.muted.caution.pressed.bg, 0.75),
     },
   })
 }

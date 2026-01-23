@@ -2,6 +2,7 @@
 import type {SimpleMDEReactProps} from 'react-simplemde-editor'
 
 import {Box, Text} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {type Options as EasyMdeOptions} from 'easymde'
 import {
   lazy,
@@ -22,41 +23,41 @@ const SimpleMdeReact = lazy(() => import('react-simplemde-editor'))
 
 const MarkdownInputStyles = styled(Box)`
   & .CodeMirror.CodeMirror {
-    color: ${({theme}) => theme.sanity.color.card.enabled.fg};
-    border-color: ${({theme}) => theme.sanity.color.card.enabled.border};
+    color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.fg};
+    border-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.border};
     background-color: inherit;
   }
 
   & .cm-s-easymde .CodeMirror-cursor {
-    border-color: ${({theme}) => theme.sanity.color.card.enabled.fg};
+    border-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.fg};
   }
 
   & .editor-toolbar,
   .editor-preview-side {
-    border-color: ${({theme}) => theme.sanity.color.card.enabled.border};
+    border-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.border};
   }
 
   & .CodeMirror-focused .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected {
-    background-color: ${({theme}) => theme.sanity.color.selectable?.primary?.hovered?.bg};
+    background-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.selectable?.primary?.hovered?.bg};
   }
 
   & .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected {
-    background-color: ${({theme}) => theme.sanity.color.card.enabled.bg};
+    background-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.bg};
   }
 
   & .editor-toolbar > * {
-    color: ${({theme}) => theme.sanity.color.card.enabled.fg};
+    color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.fg};
   }
 
   & .editor-toolbar > .active,
   .editor-toolbar > button:hover,
   .editor-preview pre,
   .cm-s-easymde .cm-comment {
-    background-color: ${({theme}) => theme.sanity.color.card.enabled.bg};
+    background-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.bg};
   }
 
   & .editor-preview {
-    background-color: ${({theme}) => theme.sanity.color.card.enabled.bg};
+    background-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.bg};
 
     & h1,
     h2,

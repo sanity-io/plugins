@@ -1,5 +1,6 @@
 import {DragHandleIcon} from '@sanity/icons'
 import {Box, Card, type CardTone, Flex, Stack, useTheme} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {type SchemaType, type ValidationMarker, useSchema, Preview} from 'sanity'
 
@@ -39,7 +40,8 @@ export function DocumentCard(props: DocumentCardProps) {
   const schema = useSchema()
   const state = states.find((s) => s.id === item._metadata?.state)
 
-  const isDarkMode = useTheme().sanity.color.dark
+  const theme = useTheme()
+  const isDarkMode = getTheme_v2({sanity: theme.sanity}).color._dark
   const defaultCardTone = isDarkMode ? `transparent` : `default`
 
   // Validation only runs if the state requests it

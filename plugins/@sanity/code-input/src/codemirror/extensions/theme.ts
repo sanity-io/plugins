@@ -1,19 +1,22 @@
 import type {Extension} from '@codemirror/state'
 
 import {EditorView} from '@codemirror/view'
-import {useRootTheme} from '@sanity/ui'
+import {useTheme} from '@sanity/ui'
 import {rgba} from '@sanity/ui/theme'
 import {useMemo} from 'react'
 
-import {getBackwardsCompatibleTone} from './backwardsCompatibleTone'
-
 export function useThemeExtension(): Extension {
-  const themeCtx = useRootTheme()
+  const theme = useTheme()
+  // Use default tone for dark/light schemes since we don't have context here
+  const fallbackTone = 'default'
 
   return useMemo(() => {
-    const fallbackTone = getBackwardsCompatibleTone(themeCtx)
-    const dark = {color: themeCtx.theme.color.dark[fallbackTone]}
-    const light = {color: themeCtx.theme.color.light[fallbackTone]}
+    // For accessing color schemes, we need to use the old structure since Theme.sanity.v2
+    // doesn't provide access to both light and dark schemes (Theme_v2.color is a single scheme)
+    // oxlint-disable-next-line typescript-eslint/no-deprecated, typescript-eslint/no-unsafe-type-assertion
+    const darkScheme = (theme.sanity.color as any).dark[fallbackTone]
+    // oxlint-disable-next-line typescript-eslint/no-deprecated, typescript-eslint/no-unsafe-type-assertion
+    const lightScheme = (theme.sanity.color as any).light[fallbackTone]
 
     return EditorView.baseTheme({
       '&.cm-editor': {
@@ -31,16 +34,16 @@ export function useThemeExtension(): Extension {
         backgroundColor: 'transparent',
       },
       '&dark.cm-editor.cm-focused .cm-matchingBracket': {
-        outline: `1px solid ${dark.color.base.border}`,
+        outline: `1px solid ${darkScheme.border}`,
       },
       '&dark.cm-editor.cm-focused .cm-nonmatchingBracket': {
-        outline: `1px solid ${dark.color.base.border}`,
+        outline: `1px solid ${darkScheme.border}`,
       },
       '&light.cm-editor.cm-focused .cm-matchingBracket': {
-        outline: `1px solid ${light.color.base.border}`,
+        outline: `1px solid ${lightScheme.border}`,
       },
       '&light.cm-editor.cm-focused .cm-nonmatchingBracket': {
-        outline: `1px solid ${light.color.base.border}`,
+        outline: `1px solid ${lightScheme.border}`,
       },
 
       // Size and padding of gutter
@@ -54,13 +57,13 @@ export function useThemeExtension(): Extension {
 
       // Color of gutter
       '&dark .cm-gutters': {
-        color: `${rgba(dark.color.card.enabled.code.fg, 0.5)} !important`,
-        borderRight: `1px solid ${rgba(dark.color.base.border, 0.5)}`,
+        color: `${rgba(darkScheme.code.fg, 0.5)} !important`,
+        borderRight: `1px solid ${rgba(darkScheme.border, 0.5)}`,
       },
       '&light .cm-gutters': {
-        color: `${rgba(light.color.card.enabled.code.fg, 0.5)} !important`,
-        borderRight: `1px solid ${rgba(light.color.base.border, 0.5)}`,
+        color: `${rgba(lightScheme.code.fg, 0.5)} !important`,
+        borderRight: `1px solid ${rgba(lightScheme.border, 0.5)}`,
       },
     })
-  }, [themeCtx])
+  }, [theme])
 }
