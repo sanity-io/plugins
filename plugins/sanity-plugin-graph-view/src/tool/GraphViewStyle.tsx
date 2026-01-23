@@ -1,6 +1,5 @@
-import type {Theme} from '@sanity/ui'
-
 import {black} from '@sanity/color'
+import {type Theme} from '@sanity/ui/theme'
 import {getTheme_v2} from '@sanity/ui/theme'
 import {type PropsWithChildren} from 'react'
 import {styled} from 'styled-components'
