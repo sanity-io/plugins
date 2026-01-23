@@ -51,7 +51,9 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "react": "catalog:",
-    "sanity": "catalog:"
+    "sanity": "catalog:",
+    "vitest": "catalog:",
+    "vitest-package-exports": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",

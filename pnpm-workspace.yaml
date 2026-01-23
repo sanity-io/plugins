@@ -25,6 +25,8 @@ catalog:
   sanity: ^5.5.0
   styled-components: ^6.3.8
   typescript: 5.9.3
+  vitest: ^4.0.18
+  vitest-package-exports: ^1.1.2
 
 minimumReleaseAge: 4320
 
