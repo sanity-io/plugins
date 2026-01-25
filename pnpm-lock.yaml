@@ -31,8 +31,8 @@ catalogs:
       specifier: ^19.2.3
       version: 19.2.3
     '@typescript/native-preview':
-      specifier: 7.0.0-dev.20260117.1
-      version: 7.0.0-dev.20260117.1
+      specifier: 7.0.0-dev.20260122.4
+      version: 7.0.0-dev.20260122.4
     babel-plugin-react-compiler:
       specifier: ^1.0.0
       version: 1.0.0
@@ -81,7 +81,7 @@ importers:
         version: 4.0.2
       '@typescript/native-preview':
         specifier: 'catalog:'
-        version: 7.0.0-dev.20260117.1
+        version: 7.0.0-dev.20260122.4
       eslint-formatter-gha:
         specifier: ^2.0.1
         version: 2.0.1
@@ -218,7 +218,7 @@ importers:
     devDependencies:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.1.0
@@ -306,7 +306,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -355,7 +355,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -398,7 +398,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -438,7 +438,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -487,7 +487,7 @@ importers:
         version: 7.14.0(debug@4.4.3)
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -524,7 +524,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -570,7 +570,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -616,7 +616,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -677,7 +677,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -732,7 +732,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -784,7 +784,7 @@ importers:
         version: 7.14.0(debug@4.4.3)
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -848,7 +848,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -894,7 +894,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.8
@@ -3666,43 +3666,43 @@ packages:
     resolution: {integrity: sha512-LZ2NqIHFhvFwxG0qZeLL9DvdNAHPGCY5dIRwBhyYeU+LfLhcStE1ImjsuTG/WaVh3XysGaeLW8Rqq7cGkPCFvw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260117.1':
-    resolution: {integrity: sha512-sf8/7keXq1auS7XI0vyAs3t/vgss4/EwACZmzSYtO75dug8TRmuSQDPHxx4R16VURijO/GQ3Bz6rA8VivREzsA==}
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260122.4':
+    resolution: {integrity: sha512-8hIIPe6LoY+FmUBRvhX7IbsZCr4Puwps0Ok+ez+rzg7d+sJCVuJ37ZxFh1pcNJEM39eII2o5TZ9dTCIT7/aAWA==}
     cpu: [arm64]
     os: [darwin]
 
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260117.1':
-    resolution: {integrity: sha512-3DhQdRUbDq7YduIaRYJtH5MXqCzOry+GT4DjkLPJ08vOGOFypZjgd6G+moEQHgitnefisC1PkNcL1baF4B7+og==}
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260122.4':
+    resolution: {integrity: sha512-kJNpVzPW9jcFuRco+QwSHToEFHmfovNmwLo9PY97DLMqGnrvxkSy+k5sClHscEThIdzSRQbi7uZJUVBwgohNmA==}
     cpu: [x64]
     os: [darwin]
 
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260117.1':
-    resolution: {integrity: sha512-R9h8cX5C0yBtE8xnpAxZBSHWPiVW3d5o3mup0ei1n/8w98lwtMFLWURnPD8N4kRgql9L40IbRXW6jqWdjDUe4Q==}
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260122.4':
+    resolution: {integrity: sha512-QsSNK3PbRyNviv0xru21jGV8fgzTVJ26oMnQwoK0IcyGabXtcLHJe5I5y4lwvLNjZPCbKDNThawso54Fo72FJQ==}
     cpu: [arm64]
     os: [linux]
 
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20260117.1':
-    resolution: {integrity: sha512-RKSKINs23agj0MJJ2Tzkhe/MuwhcPqRNRRfLmpVRjrNWI43Ta6a5+5Lah+7GYjt00wHUOhay94ZT3iHJkeHATg==}
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260122.4':
+    resolution: {integrity: sha512-ImSMhsrB9QMK/cT2s4yCWkWOBUGZ+1L6vBaMMdyw3eNrU4tQo85Z3AqTn12M8WRbefLL89OmP6zJppP2TH3PAQ==}
     cpu: [arm]
     os: [linux]
 
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20260117.1':
-    resolution: {integrity: sha512-KI5UprUMIVT4wehBcbGZQm0I3z1uls8fsOmCUzdEpmaLpVu8NbTahgJPVtMyS/nDUiN3At4Uj8ciL36kgbqRmQ==}
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260122.4':
+    resolution: {integrity: sha512-0OyzmbZ2Zq039RPLCyEjcrBhDkCXDfIrwbMJfoOrCyEO9XrK9Icwqzogm7H4bLyhcfuZIgugYSP2mQflaDvOVg==}
     cpu: [x64]
     os: [linux]
 
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260117.1':
-    resolution: {integrity: sha512-dUJTLMD24TQ4XiyYAxxqKs6hPrq8wS9BiFt+ucjCuWXBGQLbnfiT4bgYz2a4yfbtyxVkG7mxV8udo+gRXtaWRQ==}
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260122.4':
+    resolution: {integrity: sha512-FSRZ0iylGKbrYiimfkqKBXRlhR+PwOz5Jcb57dAU7wzr/7xSGON9bfywb0BhoF31GjYAnZ5Xv+1fuQOiB2HBYw==}
     cpu: [arm64]
     os: [win32]
 
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20260117.1':
-    resolution: {integrity: sha512-SdKCAtNZee2TMdZ/bGjfKWX43qIAZhBwLlkPU1G0uxKqmDG1mVRbg/krxm5MnKOjFL00X/gozth6d3LmimonnA==}
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260122.4':
+    resolution: {integrity: sha512-vAzRnS4nMBAd2XduzdmrhsCAAVSbCzZxVGMIKVvRcL9ljO5+fooggiYq7sk798TIZ1ov7A0rZk5k+o0Wyx2nXA==}
     cpu: [x64]
     os: [win32]
 
-  '@typescript/native-preview@7.0.0-dev.20260117.1':
-    resolution: {integrity: sha512-5peFvGyf+TOlU6KYMLzfPiPJdxYwG0O/oQN4Z+EzDOzrN8tbY/H58+QOQww4Lo8m4b7+4o/0r+zopD/sYR6uMw==}
+  '@typescript/native-preview@7.0.0-dev.20260122.4':
+    resolution: {integrity: sha512-lboRukXxL3jeIyMKc4EjNHI4QThjOrrT5jjCyaNOUFkrk3JiObrR4z7Z6Z+m+WM/gbSW2tqaRBRFBRMsZGsxKQ==}
     hasBin: true
 
   '@uiw/codemirror-extensions-basic-setup@4.25.4':
@@ -11524,7 +11524,7 @@ snapshots:
     dependencies:
       zod: 4.3.5
 
-  '@sanity/pkg-utils@10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260117.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)':
+  '@sanity/pkg-utils@10.3.3(@types/babel__core@7.20.5)(@types/node@25.0.9)(@typescript/native-preview@7.0.0-dev.20260122.4)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)':
     dependencies:
       '@babel/core': 7.28.6
       '@babel/parser': 7.28.6
@@ -11563,7 +11563,7 @@ snapshots:
       recast: 0.23.11
       rimraf: 6.1.2
       rolldown: 1.0.0-beta.60
-      rolldown-plugin-dts: 0.21.2(@typescript/native-preview@7.0.0-dev.20260117.1)(rolldown@1.0.0-beta.60)(typescript@5.9.3)
+      rolldown-plugin-dts: 0.21.2(@typescript/native-preview@7.0.0-dev.20260122.4)(rolldown@1.0.0-beta.60)(typescript@5.9.3)
       rollup: 4.55.2
       rollup-plugin-esbuild: 6.2.1(esbuild@0.27.2)(rollup@4.55.2)
       rxjs: 7.8.2
@@ -12242,36 +12242,36 @@ snapshots:
       '@typescript-eslint/types': 8.53.0
       eslint-visitor-keys: 4.2.1
 
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260117.1':
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260122.4':
     optional: true
 
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260117.1':
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20260122.4':
     optional: true
 
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260117.1':
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20260122.4':
     optional: true
 
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20260117.1':
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20260122.4':
     optional: true
 
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20260117.1':
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20260122.4':
     optional: true
 
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260117.1':
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20260122.4':
     optional: true
 
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20260117.1':
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20260122.4':
     optional: true
 
-  '@typescript/native-preview@7.0.0-dev.20260117.1':
+  '@typescript/native-preview@7.0.0-dev.20260122.4':
     optionalDependencies:
-      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20260117.1
-      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20260117.1
-      '@typescript/native-preview-linux-arm': 7.0.0-dev.20260117.1
-      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20260117.1
-      '@typescript/native-preview-linux-x64': 7.0.0-dev.20260117.1
-      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260117.1
-      '@typescript/native-preview-win32-x64': 7.0.0-dev.20260117.1
+      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20260122.4
+      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20260122.4
+      '@typescript/native-preview-linux-arm': 7.0.0-dev.20260122.4
+      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20260122.4
+      '@typescript/native-preview-linux-x64': 7.0.0-dev.20260122.4
+      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260122.4
+      '@typescript/native-preview-win32-x64': 7.0.0-dev.20260122.4
 
   '@uiw/codemirror-extensions-basic-setup@4.25.4(@codemirror/autocomplete@6.20.0)(@codemirror/commands@6.10.1)(@codemirror/language@6.12.1)(@codemirror/lint@6.9.2)(@codemirror/search@6.6.0)(@codemirror/state@6.5.4)(@codemirror/view@6.39.11)':
     dependencies:
@@ -15904,7 +15904,7 @@ snapshots:
       glob: 13.0.0
       package-json-from-dist: 1.0.1
 
-  rolldown-plugin-dts@0.21.2(@typescript/native-preview@7.0.0-dev.20260117.1)(rolldown@1.0.0-beta.60)(typescript@5.9.3):
+  rolldown-plugin-dts@0.21.2(@typescript/native-preview@7.0.0-dev.20260122.4)(rolldown@1.0.0-beta.60)(typescript@5.9.3):
     dependencies:
       '@babel/generator': 7.28.6
       '@babel/parser': 7.28.6
@@ -15916,7 +15916,7 @@ snapshots:
       obug: 2.1.1
       rolldown: 1.0.0-beta.60
     optionalDependencies:
-      '@typescript/native-preview': 7.0.0-dev.20260117.1
+      '@typescript/native-preview': 7.0.0-dev.20260122.4
       typescript: 5.9.3
     transitivePeerDependencies:
       - oxc-resolver
