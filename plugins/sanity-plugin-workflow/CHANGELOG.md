@@ -1,5 +1,11 @@
 # sanity-plugin-workflow
 
+## 3.0.8
+
+### Patch Changes
+
+- [#460](https://github.com/sanity-io/plugins/pull/460) [`f74ac95`](https://github.com/sanity-io/plugins/commit/f74ac95d05e63f124e08d599d635e8d90c870eae) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency motion to ^12.27.0
+
 ## 3.0.7
 
 ### Patch Changes
