@@ -2,6 +2,7 @@ import type {Color, ColorChangeHandler, HSLColor, RGBColor} from 'react-color'
 import type {EditableInputStyles} from 'react-color/lib/components/common/EditableInput'
 
 import {Box, Flex, useTheme} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {useCallback, useMemo} from 'react'
 import {EditableInput} from 'react-color/lib/components/common'
 // @ts-expect-error missing export
@@ -24,30 +25,30 @@ export const ColorPickerFields = ({
 }: ColorPickerFieldsProps): React.JSX.Element => {
   const {sanity} = useTheme()
 
-  const inputStyles: EditableInputStyles = useMemo(
-    () => ({
+  const inputStyles: EditableInputStyles = useMemo(() => {
+    const v2 = getTheme_v2({sanity})
+    return {
       input: {
         width: '80%',
         padding: '4px 10% 3px',
         border: 'none',
-        boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-        color: sanity.color.input.default.enabled.fg,
-        backgroundColor: sanity.color.input.default.enabled.bg,
-        fontSize: sanity.fonts.text.sizes[0]?.fontSize,
+        boxShadow: `inset 0 0 0 1px ${v2.color.input.default.enabled.border}`,
+        color: v2.color.input.default.enabled.fg,
+        backgroundColor: v2.color.input.default.enabled.bg,
+        fontSize: v2.font.text.sizes[0]?.fontSize,
         textAlign: 'center',
       },
       label: {
         display: 'block',
         textAlign: 'center',
-        fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-        color: sanity.color.base.fg,
+        fontSize: v2.font.label.sizes[0]?.fontSize,
+        color: v2.color.fg,
         paddingTop: '3px',
         paddingBottom: '4px',
         textTransform: 'capitalize',
       },
-    }),
-    [sanity],
-  )
+    }
+  }, [sanity])
 
   const handleChange: ColorChangeHandler<Record<string, string>> = useCallback(
     (data) => {

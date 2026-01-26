@@ -1,4 +1,5 @@
 import {Box, Card, Stack, Text} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {Suspense, useCallback} from 'react'
 import {
   MemberField,
@@ -27,12 +28,10 @@ export type {CodeInputLanguage, CodeInputValue} from './types'
 export interface CodeInputProps extends ObjectInputProps<CodeInputValue, CodeSchemaType> {}
 
 const EditorContainer = styled(Card)(({theme}) => {
-  const {focusRing, input} = theme.sanity
-  const base = theme.sanity.color.base
-  const color = theme.sanity.color.input
+  const v2 = getTheme_v2({sanity: theme.sanity})
   const border = {
-    color: color.default.enabled.border,
-    width: input.border.width,
+    color: v2.color.input.default.enabled.border,
+    width: v2.input.border.width,
   }
 
   return css`
@@ -52,9 +51,9 @@ const EditorContainer = styled(Card)(({theme}) => {
 
     &:focus-within {
       --input-box-shadow: ${focusRingStyle({
-        base,
+        base: {bg: v2.color.bg},
         border,
-        focusRing,
+        focusRing: v2.card.focusRing,
       })};
     }
   `

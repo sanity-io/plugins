@@ -81,10 +81,22 @@ export interface HighlightLineConfig {
 function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
   const {themeCtx} = options
 
-  const fallbackTone = getBackwardsCompatibleTone(themeCtx)
+  // Get the tone from context or fall back to 'default' for backwards compatibility
+  const tone = getBackwardsCompatibleTone(themeCtx)
 
-  const dark = {color: themeCtx.theme.color.dark[fallbackTone]}
-  const light = {color: themeCtx.theme.color.light[fallbackTone]}
+  // Access the color schemes directly from the RootTheme
+  // themeCtx.theme.color contains both 'dark' and 'light' color schemes
+  // Each scheme contains tones like 'default', 'primary', etc.
+  // oxlint-disable-next-line typescript/no-deprecated
+  const colorSchemes = themeCtx.theme.color as Record<string, Record<string, any>>
+  const darkScheme = colorSchemes['dark']?.[tone]
+  const lightScheme = colorSchemes['light']?.[tone]
+
+  // Use a caution-tinted highlight color, fallback to muted bg if caution is unavailable
+  const darkHighlightBg =
+    darkScheme?.muted?.caution?.pressed?.bg ?? darkScheme?.muted?.bg ?? '#3d3d00'
+  const lightHighlightBg =
+    lightScheme?.muted?.caution?.pressed?.bg ?? lightScheme?.muted?.bg ?? '#ffffd0'
 
   return EditorView.baseTheme({
     '.cm-lineNumbers': {
@@ -106,10 +118,10 @@ function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
       boxSizing: 'border-box',
     },
     [`&dark .${highlightLineClass}::before`]: {
-      background: rgba(dark.color.muted.caution.pressed.bg, 0.5),
+      background: rgba(darkHighlightBg, 0.5),
     },
     [`&light .${highlightLineClass}::before`]: {
-      background: rgba(light.color.muted.caution.pressed.bg, 0.75),
+      background: rgba(lightHighlightBg, 0.75),
     },
   })
 }

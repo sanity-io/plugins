@@ -35,11 +35,7 @@ export default function StateTitle(props: StateTitleProps) {
   return (
     <StyledStickyCard paddingY={4} padding={3} tone="inherit">
       <Flex gap={3} align="center">
-        <Badge
-          mode={(draggingFrom && !isDropDisabled) || isSource ? 'default' : 'outline'}
-          tone={tone}
-          muted={!userRoleCanDrop || isDropDisabled}
-        >
+        <Badge tone={tone} muted={!userRoleCanDrop || isDropDisabled}>
           {state.title}
         </Badge>
         {userRoleCanDrop ? null : (

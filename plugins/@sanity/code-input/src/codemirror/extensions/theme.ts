@@ -11,9 +11,16 @@ export function useThemeExtension(): Extension {
   const themeCtx = useRootTheme()
 
   return useMemo(() => {
-    const fallbackTone = getBackwardsCompatibleTone(themeCtx)
-    const dark = {color: themeCtx.theme.color.dark[fallbackTone]}
-    const light = {color: themeCtx.theme.color.light[fallbackTone]}
+    // Get the tone from context or fall back to 'default' for backwards compatibility
+    const tone = getBackwardsCompatibleTone(themeCtx)
+
+    // Access the color schemes directly from the RootTheme
+    // themeCtx.theme.color contains both 'dark' and 'light' color schemes
+    // Each scheme contains tones like 'default', 'primary', etc.
+    // oxlint-disable-next-line typescript/no-deprecated
+    const colorSchemes = themeCtx.theme.color as Record<string, Record<string, any>>
+    const darkScheme = colorSchemes['dark']?.[tone]
+    const lightScheme = colorSchemes['light']?.[tone]
 
     return EditorView.baseTheme({
       '&.cm-editor': {
@@ -31,16 +38,16 @@ export function useThemeExtension(): Extension {
         backgroundColor: 'transparent',
       },
       '&dark.cm-editor.cm-focused .cm-matchingBracket': {
-        outline: `1px solid ${dark.color.base.border}`,
+        outline: `1px solid ${darkScheme?.border ?? '#333'}`,
       },
       '&dark.cm-editor.cm-focused .cm-nonmatchingBracket': {
-        outline: `1px solid ${dark.color.base.border}`,
+        outline: `1px solid ${darkScheme?.border ?? '#333'}`,
       },
       '&light.cm-editor.cm-focused .cm-matchingBracket': {
-        outline: `1px solid ${light.color.base.border}`,
+        outline: `1px solid ${lightScheme?.border ?? '#ccc'}`,
       },
       '&light.cm-editor.cm-focused .cm-nonmatchingBracket': {
-        outline: `1px solid ${light.color.base.border}`,
+        outline: `1px solid ${lightScheme?.border ?? '#ccc'}`,
       },
 
       // Size and padding of gutter
@@ -54,12 +61,12 @@ export function useThemeExtension(): Extension {
 
       // Color of gutter
       '&dark .cm-gutters': {
-        color: `${rgba(dark.color.card.enabled.code.fg, 0.5)} !important`,
-        borderRight: `1px solid ${rgba(dark.color.base.border, 0.5)}`,
+        color: `${rgba(darkScheme?.code?.fg ?? '#888', 0.5)} !important`,
+        borderRight: `1px solid ${rgba(darkScheme?.border ?? '#333', 0.5)}`,
       },
       '&light .cm-gutters': {
-        color: `${rgba(light.color.card.enabled.code.fg, 0.5)} !important`,
-        borderRight: `1px solid ${rgba(light.color.base.border, 0.5)}`,
+        color: `${rgba(lightScheme?.code?.fg ?? '#888', 0.5)} !important`,
+        borderRight: `1px solid ${rgba(lightScheme?.border ?? '#ccc', 0.5)}`,
       },
     })
   }, [themeCtx])
