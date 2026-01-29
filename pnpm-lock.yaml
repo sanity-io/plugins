@@ -550,7 +550,7 @@ importers:
         specifier: 'catalog:'
         version: 3.1.11(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@19.2.4)(react@19.2.4)
       lodash-es:
-        specifier: ^4.17.22
+        specifier: ^4.17.23
         version: 4.17.23
       react-photo-album:
         specifier: ^3.4.0
