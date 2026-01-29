@@ -13,14 +13,14 @@ catalog:
   '@sanity/ui': ^3.1.11
   '@sanity/vision': ^5.7.0
   '@types/node': ^24.10.9
-  '@types/react': ^19.2.9
+  '@types/react': ^19.2.10
   '@types/react-dom': ^19.2.3
   '@typescript/native-preview': 7.0.0-dev.20260126.1
   babel-plugin-react-compiler: ^1.0.0
   babel-plugin-styled-components: ^2.1.4
   eslint: ^9.39.2
-  react: ^19.2.3
-  react-dom: ^19.2.3
+  react: ^19.2.4
+  react-dom: ^19.2.4
   rxjs: ^7.8.2
   sanity: ^5.7.0
   styled-components: ^6.3.8

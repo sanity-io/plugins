@@ -44,7 +44,7 @@
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
-    "react-is": "^19.2.3"
+    "react-is": "^19.2.4"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
