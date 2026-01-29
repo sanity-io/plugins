@@ -68,7 +68,7 @@ Create individual `.md` files in `.changeset/` directory:
 
 ```markdown
 ---
-"plugin-name": patch
+'plugin-name': patch
 ---
 
 Brief description of the change specific to this plugin
@@ -106,6 +106,7 @@ pnpm changeset add
 ```
 
 Follow the prompts to:
+
 1. Select **one** package that changed
 2. Choose the version bump type (patch/minor/major)
 3. Write a summary of changes **specific to that package**
@@ -124,35 +125,41 @@ Follow the prompts to:
 #### Bad vs Good Examples
 
 ❌ **Bad** (combined changeset):
+
 ```markdown
 ---
-"@sanity/code-input": patch
-"sanity-plugin-workflow": patch
+'@sanity/code-input': patch
+'sanity-plugin-workflow': patch
 ---
 
 - Migrated to v2 theme APIs
 - Replaced useTimeAgo with useRelativeTime
 - Fixed input styling
 ```
-*Problem: Workflow's changelog will say "Fixed input styling" which is irrelevant*
+
+_Problem: Workflow's changelog will say "Fixed input styling" which is irrelevant_
 
 ✅ **Good** (separate changesets):
+
 ```markdown
 # .changeset/code-input-theme.md
+
 ---
-"@sanity/code-input": patch
----
+
+## "@sanity/code-input": patch
 
 Migrate to v2 theme API for input styling
 
 # .changeset/workflow-hooks.md
+
 ---
-"sanity-plugin-workflow": patch
----
+
+## "sanity-plugin-workflow": patch
 
 Replace deprecated useTimeAgo hook with useRelativeTime
 ```
-*Each plugin's changelog only shows relevant changes*
+
+_Each plugin's changelog only shows relevant changes_
 
 ## CI Checks
 
