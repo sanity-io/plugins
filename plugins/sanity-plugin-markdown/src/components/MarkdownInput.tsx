@@ -1,8 +1,10 @@
+// TODO: when upgrading to @sanity/ui@4 start using the new tokens
+// oxlint-disable typescript/no-deprecated
+
 // dont import non-types here, it will break SSR on next
 import type {SimpleMDEReactProps} from 'react-simplemde-editor'
 
 import {Box, Text} from '@sanity/ui'
-import {getTheme_v2} from '@sanity/ui/theme'
 import {type Options as EasyMdeOptions} from 'easymde'
 import {
   lazy,
@@ -23,41 +25,41 @@ const SimpleMdeReact = lazy(() => import('react-simplemde-editor'))
 
 const MarkdownInputStyles = styled(Box)`
   & .CodeMirror.CodeMirror {
-    color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.fg};
-    border-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.border};
+    color: ${({theme}) => theme.sanity.color.card.enabled.fg};
+    border-color: ${({theme}) => theme.sanity.color.card.enabled.border};
     background-color: inherit;
   }
 
   & .cm-s-easymde .CodeMirror-cursor {
-    border-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.fg};
+    border-color: ${({theme}) => theme.sanity.color.card.enabled.fg};
   }
 
   & .editor-toolbar,
   .editor-preview-side {
-    border-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.border};
+    border-color: ${({theme}) => theme.sanity.color.card.enabled.border};
   }
 
   & .CodeMirror-focused .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected {
-    background-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.selectable?.primary?.hovered?.bg};
+    background-color: ${({theme}) => theme.sanity.color.selectable?.primary?.hovered?.bg};
   }
 
   & .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected {
-    background-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.bg};
+    background-color: ${({theme}) => theme.sanity.color.card.enabled.bg};
   }
 
   & .editor-toolbar > * {
-    color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.fg};
+    color: ${({theme}) => theme.sanity.color.card.enabled.fg};
   }
 
   & .editor-toolbar > .active,
   .editor-toolbar > button:hover,
   .editor-preview pre,
   .cm-s-easymde .cm-comment {
-    background-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.bg};
+    background-color: ${({theme}) => theme.sanity.color.card.enabled.bg};
   }
 
   & .editor-preview {
-    background-color: ${({theme}) => getTheme_v2({sanity: theme.sanity}).color.bg};
+    background-color: ${({theme}) => theme.sanity.color.card.enabled.bg};
 
     & h1,
     h2,
