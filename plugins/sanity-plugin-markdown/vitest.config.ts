@@ -7,13 +7,5 @@ export default defineConfig({
         inline: ['vitest-package-exports'],
       },
     },
-    css: {
-      modules: {
-        classNameStrategy: 'non-scoped',
-      },
-    },
-  },
-  css: {
-    modules: false,
   },
 })
