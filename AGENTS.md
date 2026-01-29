@@ -233,7 +233,8 @@ test('package exports', async () => {
 ### Test Configuration
 
 - Root `vitest.config.ts` uses glob patterns `['plugins/@sanity/*', 'plugins/sanity-plugin-*']` to automatically find all plugin projects
-- Individual plugins have minimal `vitest.config.ts` with just inline deps configuration
+- Individual plugins have minimal `vitest.config.ts` starting with just inline deps configuration for vitest-package-exports
+- Plugins can expand their vitest configs and test suites over time as needed (unit tests, integration tests, etc.)
 - Tests run against built `dist/` output after `pnpm build`
 - Snapshots are generated with `pnpm test -u`
 

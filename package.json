@@ -14,6 +14,7 @@
     "oxlint": "oxlint --type-check --type-aware --deny-warnings",
     "postgenerate": "pnpm install && pnpm format && pnpm build",
     "postinstall": "husky",
+    "pretest": "turbo run build --filter='./plugins/@sanity/*' --filter='./plugins/sanity-plugin-*'",
     "release": "changeset publish",
     "test": "vitest",
     "turbo:fix": "pnpm dlx rimraf ./node_modules && pnpm install && pnpm turbo scan",
