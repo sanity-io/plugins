@@ -51,7 +51,7 @@
     "@sanity/ui": "catalog:",
     "@vvo/tzdb": "^6.198.0",
     "date-fns": "^2.30.0",
-    "date-fns-tz": "^2.0.1"
+    "date-fns-tz": "^3.2.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
