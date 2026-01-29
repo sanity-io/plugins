@@ -52,21 +52,107 @@ pnpm build
 pnpm --if-present test
 ```
 
-### Required: Add a Changeset
+### Required: Add Changesets
 
-Every PR that changes published packages **must** include a changeset:
+Every PR that changes published packages **must** include changesets. **Important:** Create a separate changeset file for each plugin you modify.
+
+#### Why Separate Changesets?
+
+Each plugin has its own changelog that consumers read. A combined changeset would pollute individual plugin changelogs with irrelevant information. For example, `@sanity/code-input`'s changelog should not mention workflow-specific changes.
+
+#### How to Add Changesets
+
+**Option 1: Manual Creation (Recommended for Multiple Plugins)**
+
+Create individual `.md` files in `.changeset/` directory:
+
+```markdown
+---
+"plugin-name": patch
+---
+
+Brief description of the change specific to this plugin
+```
+
+**Example:** If you modified 3 plugins, create 3 files:
+
+```bash
+# .changeset/code-input-fix.md
+---
+"@sanity/code-input": patch
+---
+
+Fix input border styling with v2 theme API
+
+# .changeset/workflow-hooks.md
+---
+"sanity-plugin-workflow": patch
+---
+
+Replace deprecated useTimeAgo hook with useRelativeTime
+
+# .changeset/markdown-theme.md
+---
+"sanity-plugin-markdown": patch
+---
+
+Migrate to v2 theme API for color properties
+```
+
+**Option 2: Interactive CLI (For Single Plugin)**
 
 ```bash
 pnpm changeset add
 ```
 
 Follow the prompts to:
-
-1. Select the packages that changed
+1. Select **one** package that changed
 2. Choose the version bump type (patch/minor/major)
-3. Write a summary of the changes
+3. Write a summary of changes **specific to that package**
+4. Repeat for each modified package
 
-This creates a file in `.changeset/` that must be committed with your PR.
+#### Changeset Guidelines
+
+- **Scope**: Each changeset should only mention changes relevant to that specific plugin
+- **Clarity**: Write from the consumer's perspective—what do they need to know?
+- **Version bumps**:
+  - `patch`: Bug fixes, dependency updates, internal refactors
+  - `minor`: New features, non-breaking API additions
+  - `major`: Breaking changes
+- **Format**: Use clear, concise language without technical jargon when possible
+
+#### Bad vs Good Examples
+
+❌ **Bad** (combined changeset):
+```markdown
+---
+"@sanity/code-input": patch
+"sanity-plugin-workflow": patch
+---
+
+- Migrated to v2 theme APIs
+- Replaced useTimeAgo with useRelativeTime
+- Fixed input styling
+```
+*Problem: Workflow's changelog will say "Fixed input styling" which is irrelevant*
+
+✅ **Good** (separate changesets):
+```markdown
+# .changeset/code-input-theme.md
+---
+"@sanity/code-input": patch
+---
+
+Migrate to v2 theme API for input styling
+
+# .changeset/workflow-hooks.md
+---
+"sanity-plugin-workflow": patch
+---
+
+Replace deprecated useTimeAgo hook with useRelativeTime
+```
+*Each plugin's changelog only shows relevant changes*
 
 ## CI Checks
 

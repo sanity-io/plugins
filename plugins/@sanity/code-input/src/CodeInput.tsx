@@ -27,8 +27,12 @@ export type {CodeInputLanguage, CodeInputValue} from './types'
 export interface CodeInputProps extends ObjectInputProps<CodeInputValue, CodeSchemaType> {}
 
 const EditorContainer = styled(Card)(({theme}) => {
+  // TODO: when upgrading to @sanity/ui@4 start using the new tokens
+  // oxlint-disable-next-line typescript/no-deprecated
   const {focusRing, input} = theme.sanity
+  // oxlint-disable-next-line typescript/no-deprecated
   const base = theme.sanity.color.base
+  // oxlint-disable-next-line typescript/no-deprecated
   const color = theme.sanity.color.input
   const border = {
     color: color.default.enabled.border,

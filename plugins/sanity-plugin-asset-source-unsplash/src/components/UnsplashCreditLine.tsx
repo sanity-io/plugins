@@ -1,4 +1,5 @@
 import {Text, Card} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {styled} from 'styled-components'
 
 const CreditLineLink = styled.a`
@@ -13,10 +14,13 @@ const CreditLineLink = styled.a`
 `
 
 const CreditLine = styled(Card)`
-  ${({theme}) => `
-     --creditline-fg: ${theme.sanity.color.card.enabled.fg};
-     --creditline-bg: ${theme.sanity.color.card.enabled.bg};
-   `};
+  ${({theme}) => {
+    const v2 = getTheme_v2({sanity: theme.sanity})
+    return `
+     --creditline-fg: ${v2.color.fg};
+     --creditline-bg: ${v2.color.bg};
+   `
+  }};
   -webkit-user-drag: none;
   position: absolute;
   background-color: var(--creditline-bg);

@@ -31,10 +31,7 @@ export const handleDeleteMetadata = async (
   }
 }
 
-export function useCompleteWorkflow({
-  id,
-  onComplete,
-}: DocumentActionProps): DocumentActionDescription | null {
+export function useCompleteWorkflow({id}: DocumentActionProps): DocumentActionDescription | null {
   const {metadata, loading, error, states} = useWorkflowContext(id)
   const client = useClient({apiVersion: API_VERSION})
   const toast = useToast()
@@ -63,7 +60,6 @@ export function useCompleteWorkflow({
       : `Cannot remove from workflow until in the last state`,
     onHandle: async () => {
       await handle()
-      onComplete()
     },
     tone: 'positive',
   }

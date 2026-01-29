@@ -1,6 +1,6 @@
 import {AddIcon} from '@sanity/icons'
-import {Button, Grid, Popover, useClickOutside} from '@sanity/ui'
-import {useCallback, useState} from 'react'
+import {Button, Grid, Popover, useClickOutsideEvent} from '@sanity/ui'
+import {useCallback, useRef, useState} from 'react'
 
 import type {User} from '../types'
 
@@ -17,24 +17,25 @@ type UserDisplayProps = {
 export default function UserDisplay(props: UserDisplayProps) {
   const {assignees, userList, documentId, disabled = false} = props
 
-  const [button] = useState(null)
-  const [popover, setPopover] = useState<HTMLDivElement | null>(null)
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const popoverRef = useRef<HTMLDivElement | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
   const close = useCallback(() => setIsOpen(false), [])
   const open = useCallback(() => setIsOpen(true), [])
 
-  useClickOutside(close, [button, popover])
+  useClickOutsideEvent(close, () => [buttonRef.current, popoverRef.current])
 
   return (
     <Popover
-      ref={setPopover}
+      ref={popoverRef}
       content={<UserAssignment userList={userList} assignees={assignees} documentId={documentId} />}
       portal
       open={isOpen}
     >
       {!assignees || assignees.length === 0 ? (
         <Button
+          ref={buttonRef}
           onClick={open}
           fontSize={1}
           padding={2}
@@ -47,7 +48,7 @@ export default function UserDisplay(props: UserDisplayProps) {
         />
       ) : (
         <Grid>
-          <Button onClick={open} padding={0} mode="bleed" disabled={disabled}>
+          <Button ref={buttonRef} onClick={open} padding={0} mode="bleed" disabled={disabled}>
             <AvatarGroup users={userList.filter((u) => assignees.includes(u.id))} />
           </Button>
         </Grid>

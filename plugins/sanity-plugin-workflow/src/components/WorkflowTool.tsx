@@ -6,6 +6,7 @@ import {
   type DropResult,
 } from '@hello-pangea/dnd'
 import {Box, Card, Container, Flex, Grid, Spinner, useTheme, useToast} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {LexoRank} from 'lexorank'
 import {useCallback, useMemo, useState} from 'react'
 import {type Tool, useCurrentUser} from 'sanity'
@@ -30,7 +31,8 @@ type WorkflowToolProps = {
 export default function WorkflowTool(props: WorkflowToolProps) {
   const {schemaTypes = [], states = []} = props?.tool?.options ?? {}
 
-  const isDarkMode = useTheme().sanity.color.dark
+  const theme = useTheme()
+  const isDarkMode = getTheme_v2({sanity: theme.sanity}).color._dark
   const defaultCardTone = isDarkMode ? 'default' : 'transparent'
   const toast = useToast()
 

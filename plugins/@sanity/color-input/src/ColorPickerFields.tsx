@@ -30,16 +30,23 @@ export const ColorPickerFields = ({
         width: '80%',
         padding: '4px 10% 3px',
         border: 'none',
+        // TODO: when upgrading to @sanity/ui@4 start using the new tokens
+        // oxlint-disable-next-line typescript/no-deprecated
         boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
+        // oxlint-disable-next-line typescript/no-deprecated
         color: sanity.color.input.default.enabled.fg,
+        // oxlint-disable-next-line typescript/no-deprecated
         backgroundColor: sanity.color.input.default.enabled.bg,
+        // oxlint-disable-next-line typescript/no-deprecated
         fontSize: sanity.fonts.text.sizes[0]?.fontSize,
         textAlign: 'center',
       },
       label: {
         display: 'block',
         textAlign: 'center',
+        // oxlint-disable-next-line typescript/no-deprecated
         fontSize: sanity.fonts.label.sizes[0]?.fontSize,
+        // oxlint-disable-next-line typescript/no-deprecated
         color: sanity.color.base.fg,
         paddingTop: '3px',
         paddingBottom: '4px',

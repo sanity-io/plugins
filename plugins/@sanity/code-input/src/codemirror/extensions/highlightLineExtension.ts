@@ -83,7 +83,10 @@ function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
 
   const fallbackTone = getBackwardsCompatibleTone(themeCtx)
 
+  // TODO: when upgrading to @sanity/ui@4 start using the new tokens
+  // oxlint-disable-next-line typescript/no-deprecated
   const dark = {color: themeCtx.theme.color.dark[fallbackTone]}
+  // oxlint-disable-next-line typescript/no-deprecated
   const light = {color: themeCtx.theme.color.light[fallbackTone]}
 
   return EditorView.baseTheme({

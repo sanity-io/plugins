@@ -9,6 +9,8 @@ export function useFontSizeExtension(props: {fontSize: number}): Extension {
   const theme = useTheme()
 
   return useMemo(() => {
+    // TODO: when upgrading to @sanity/ui@4 start using the new tokens
+    // oxlint-disable-next-line typescript/no-deprecated
     const {code: codeFont} = theme.sanity.fonts
     const {fontSize, lineHeight} = codeFont.sizes[fontSizeProp] || codeFont.sizes[2]!
 

@@ -1,3 +1,6 @@
+// TODO: when upgrading to @sanity/ui@4 start using the new tokens
+// oxlint-disable typescript/no-deprecated
+
 // dont import non-types here, it will break SSR on next
 import type {SimpleMDEReactProps} from 'react-simplemde-editor'
 
