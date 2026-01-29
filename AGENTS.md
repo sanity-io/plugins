@@ -203,6 +203,8 @@ Tests are co-located with source code in the `src/` directory:
 - Each plugin has a minimal `vitest.config.ts` that inlines `vitest-package-exports`
 - All plugins include a package exports test using `vitest-package-exports` to verify all exports are valid
 
+When creating a new plugin with `pnpm generate`, test files are automatically created. The root `vitest.config.ts` uses glob patterns to automatically discover all plugins, so new plugins are included without manual configuration.
+
 Example test file (`src/index.test.ts`):
 
 ```ts
@@ -230,7 +232,7 @@ test('package exports', async () => {
 
 ### Test Configuration
 
-- Root `vitest.config.ts` finds tests in all plugins
+- Root `vitest.config.ts` uses glob patterns `['plugins/@sanity/*', 'plugins/sanity-plugin-*']` to automatically find all plugin projects
 - Individual plugins have minimal `vitest.config.ts` with just inline deps configuration
 - Tests run against built `dist/` output after `pnpm build`
 - Snapshots are generated with `pnpm test -u`

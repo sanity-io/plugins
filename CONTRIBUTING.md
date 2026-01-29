@@ -108,6 +108,8 @@ pnpm test -u
 
 Tests are co-located with source code in the `src/` directory using `.test.ts` or `.spec.ts` extensions. Each plugin includes a package exports test to verify all exports are valid. Tests run from the root and require packages to be built first.
 
+When creating a new plugin with `pnpm generate`, test files and configuration are automatically created. The root `vitest.config.ts` uses glob patterns to automatically discover all plugins, so no manual test configuration is needed when adding new plugins.
+
 ### Running All Checks
 
 Before submitting a PR, make sure all checks pass:

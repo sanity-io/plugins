@@ -376,6 +376,11 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/index.test.ts',
+        templateFile: 'templates/src/index.test.ts.hbs',
+      },
+      {
+        type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/components/Tool.tsx',
         templateFile: 'templates/src/components/Tool.tsx.hbs',
       },
@@ -383,6 +388,11 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/plugin.tsx',
         templateFile: 'templates/src/plugin.tsx.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/vitest.config.ts',
+        templateFile: 'templates/vitest.config.ts.hbs',
       },
       {
         type: 'add',
@@ -559,6 +569,16 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/README.md',
         templateFile: 'templates/README.todo.md.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/index.test.ts',
+        templateFile: 'templates/src/index.test.ts.hbs',
+      },
+      {
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/vitest.config.ts',
+        templateFile: 'templates/vitest.config.ts.hbs',
       },
       {
         type: 'add',
