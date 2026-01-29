@@ -185,11 +185,11 @@ The monorepo uses [Vitest v4](https://vitest.dev) for testing.
 ### Running Tests
 
 ```bash
-# Run all tests from root
-pnpm test
+# Run all tests (non-watch mode)
+pnpm test run
 
-# Run tests with watch mode
-pnpm test --watch
+# Run tests in watch mode (default vitest behavior)
+pnpm test
 
 # Update snapshots
 pnpm test -u

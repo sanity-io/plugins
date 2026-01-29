@@ -96,11 +96,11 @@ Type checking is [performed by oxlint](https://oxc.rs/blog/2025-12-08-type-aware
 The monorepo uses [Vitest v4](https://vitest.dev) for testing.
 
 ```bash
-# Run all tests
-pnpm test
+# Run all tests (non-watch mode)
+pnpm test run
 
-# Run tests with watch mode
-pnpm test --watch
+# Run tests in watch mode (default vitest behavior)
+pnpm test
 
 # Update snapshots
 pnpm test -u
