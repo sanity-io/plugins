@@ -1,5 +1,4 @@
 import {Box, Card, Stack, Text} from '@sanity/ui'
-import {getTheme_v2} from '@sanity/ui/theme'
 import {Suspense, useCallback} from 'react'
 import {
   MemberField,
@@ -28,10 +27,16 @@ export type {CodeInputLanguage, CodeInputValue} from './types'
 export interface CodeInputProps extends ObjectInputProps<CodeInputValue, CodeSchemaType> {}
 
 const EditorContainer = styled(Card)(({theme}) => {
-  const v2 = getTheme_v2({sanity: theme.sanity})
+  // TODO: when upgrading to @sanity/ui@4 start using the new tokens
+  // oxlint-disable-next-line typescript/no-deprecated
+  const {focusRing, input} = theme.sanity
+  // oxlint-disable-next-line typescript/no-deprecated
+  const base = theme.sanity.color.base
+  // oxlint-disable-next-line typescript/no-deprecated
+  const color = theme.sanity.color.input
   const border = {
-    color: v2.color.input.default.enabled.border,
-    width: v2.input.border.width,
+    color: color.default.enabled.border,
+    width: input.border.width,
   }
 
   return css`
@@ -51,9 +56,9 @@ const EditorContainer = styled(Card)(({theme}) => {
 
     &:focus-within {
       --input-box-shadow: ${focusRingStyle({
-        base: {bg: v2.color.bg},
+        base,
         border,
-        focusRing: v2.card.focusRing,
+        focusRing,
       })};
     }
   `

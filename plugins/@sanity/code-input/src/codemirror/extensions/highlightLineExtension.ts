@@ -81,22 +81,13 @@ export interface HighlightLineConfig {
 function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
   const {themeCtx} = options
 
-  // Get the tone from context or fall back to 'default' for backwards compatibility
-  const tone = getBackwardsCompatibleTone(themeCtx)
+  const fallbackTone = getBackwardsCompatibleTone(themeCtx)
 
-  // Access the color schemes directly from the RootTheme
-  // themeCtx.theme.color contains both 'dark' and 'light' color schemes
-  // Each scheme contains tones like 'default', 'primary', etc.
+  // TODO: when upgrading to @sanity/ui@4 start using the new tokens
   // oxlint-disable-next-line typescript/no-deprecated
-  const colorSchemes = themeCtx.theme.color as Record<string, Record<string, any>>
-  const darkScheme = colorSchemes['dark']?.[tone]
-  const lightScheme = colorSchemes['light']?.[tone]
-
-  // Use a caution-tinted highlight color, fallback to muted bg if caution is unavailable
-  const darkHighlightBg =
-    darkScheme?.muted?.caution?.pressed?.bg ?? darkScheme?.muted?.bg ?? '#3d3d00'
-  const lightHighlightBg =
-    lightScheme?.muted?.caution?.pressed?.bg ?? lightScheme?.muted?.bg ?? '#ffffd0'
+  const dark = {color: themeCtx.theme.color.dark[fallbackTone]}
+  // oxlint-disable-next-line typescript/no-deprecated
+  const light = {color: themeCtx.theme.color.light[fallbackTone]}
 
   return EditorView.baseTheme({
     '.cm-lineNumbers': {
@@ -118,10 +109,10 @@ function createCodeMirrorTheme(options: {themeCtx: ThemeContextValue}) {
       boxSizing: 'border-box',
     },
     [`&dark .${highlightLineClass}::before`]: {
-      background: rgba(darkHighlightBg, 0.5),
+      background: rgba(dark.color.muted.caution.pressed.bg, 0.5),
     },
     [`&light .${highlightLineClass}::before`]: {
-      background: rgba(lightHighlightBg, 0.75),
+      background: rgba(light.color.muted.caution.pressed.bg, 0.75),
     },
   })
 }

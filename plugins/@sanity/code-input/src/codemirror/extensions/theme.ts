@@ -11,16 +11,12 @@ export function useThemeExtension(): Extension {
   const themeCtx = useRootTheme()
 
   return useMemo(() => {
-    // Get the tone from context or fall back to 'default' for backwards compatibility
-    const tone = getBackwardsCompatibleTone(themeCtx)
-
-    // Access the color schemes directly from the RootTheme
-    // themeCtx.theme.color contains both 'dark' and 'light' color schemes
-    // Each scheme contains tones like 'default', 'primary', etc.
+    const fallbackTone = getBackwardsCompatibleTone(themeCtx)
+    // TODO: when upgrading to @sanity/ui@4 start using the new tokens
     // oxlint-disable-next-line typescript/no-deprecated
-    const colorSchemes = themeCtx.theme.color as Record<string, Record<string, any>>
-    const darkScheme = colorSchemes['dark']?.[tone]
-    const lightScheme = colorSchemes['light']?.[tone]
+    const dark = {color: themeCtx.theme.color.dark[fallbackTone]}
+    // oxlint-disable-next-line typescript/no-deprecated
+    const light = {color: themeCtx.theme.color.light[fallbackTone]}
 
     return EditorView.baseTheme({
       '&.cm-editor': {
@@ -38,16 +34,16 @@ export function useThemeExtension(): Extension {
         backgroundColor: 'transparent',
       },
       '&dark.cm-editor.cm-focused .cm-matchingBracket': {
-        outline: `1px solid ${darkScheme?.border ?? '#333'}`,
+        outline: `1px solid ${dark.color.base.border}`,
       },
       '&dark.cm-editor.cm-focused .cm-nonmatchingBracket': {
-        outline: `1px solid ${darkScheme?.border ?? '#333'}`,
+        outline: `1px solid ${dark.color.base.border}`,
       },
       '&light.cm-editor.cm-focused .cm-matchingBracket': {
-        outline: `1px solid ${lightScheme?.border ?? '#ccc'}`,
+        outline: `1px solid ${light.color.base.border}`,
       },
       '&light.cm-editor.cm-focused .cm-nonmatchingBracket': {
-        outline: `1px solid ${lightScheme?.border ?? '#ccc'}`,
+        outline: `1px solid ${light.color.base.border}`,
       },
 
       // Size and padding of gutter
@@ -61,12 +57,12 @@ export function useThemeExtension(): Extension {
 
       // Color of gutter
       '&dark .cm-gutters': {
-        color: `${rgba(darkScheme?.code?.fg ?? '#888', 0.5)} !important`,
-        borderRight: `1px solid ${rgba(darkScheme?.border ?? '#333', 0.5)}`,
+        color: `${rgba(dark.color.card.enabled.code.fg, 0.5)} !important`,
+        borderRight: `1px solid ${rgba(dark.color.base.border, 0.5)}`,
       },
       '&light .cm-gutters': {
-        color: `${rgba(lightScheme?.code?.fg ?? '#888', 0.5)} !important`,
-        borderRight: `1px solid ${rgba(lightScheme?.border ?? '#ccc', 0.5)}`,
+        color: `${rgba(light.color.card.enabled.code.fg, 0.5)} !important`,
+        borderRight: `1px solid ${rgba(light.color.base.border, 0.5)}`,
       },
     })
   }, [themeCtx])
