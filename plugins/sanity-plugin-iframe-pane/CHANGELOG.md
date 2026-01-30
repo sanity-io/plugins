@@ -1,5 +1,15 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.4
+
+### Patch Changes
+
+- [`6397826`](https://github.com/sanity-io/plugins/commit/63978265fe5b46ea88b524a945d16fbf39d7c199) Thanks [@stipsan](https://github.com/stipsan)! - Improve build output and dts gen
+
+- [#460](https://github.com/sanity-io/plugins/pull/460) [`f74ac95`](https://github.com/sanity-io/plugins/commit/f74ac95d05e63f124e08d599d635e8d90c870eae) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency motion to ^12.27.0
+
+- [#473](https://github.com/sanity-io/plugins/pull/473) [`459423e`](https://github.com/sanity-io/plugins/commit/459423e7fb9dbe35f8ca72a1b95feec58117e7da) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency motion to ^12.29.2
+
 ## 5.0.3
 
 ### Patch Changes
