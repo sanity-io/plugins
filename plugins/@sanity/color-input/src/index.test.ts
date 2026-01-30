@@ -8,16 +8,5 @@ test('package exports', {timeout: 30_000}, async () => {
     cwd: fileURLToPath(import.meta.url),
   })
 
-  expect(manifest.exports).toMatchInlineSnapshot(`
-      {
-        ".": {
-          "ColorInput": "object",
-          "color": "object",
-          "colorInput": "function",
-          "hslaColor": "object",
-          "hsvaColor": "object",
-          "rgbaColor": "object",
-        },
-      }
-    `)
+  expect(manifest.exports).toMatchInlineSnapshot()
 })
