@@ -1,17 +1,13 @@
+import type {FormInsertPatch, FormSetIfMissingPatch} from 'sanity'
+
 import {Box, Stack, Text, useToast} from '@sanity/ui'
 import React, {useCallback} from 'react'
-import {
-  FormInsertPatch,
-  FormSetIfMissingPatch,
-  insert,
-  isSanityDocument,
-  PatchEvent,
-  setIfMissing,
-  useSchema,
-} from 'sanity'
+import {insert, isSanityDocument, PatchEvent, setIfMissing, useSchema} from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import {DocumentsToTranslate, getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
+import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
+
+import {getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
@@ -36,7 +32,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
       // Extract the base type name from internationalized array type
       // e.g., "internationalizedArrayBodyValue" -> "body"
       const match = typeName.match(/^internationalizedArray(.+)Value$/)
-      if (!match) return undefined
+      if (!match?.[1]) return undefined
 
       const baseTypeName = match[1].charAt(0).toLowerCase() + match[1].slice(1)
 
@@ -51,14 +47,14 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
       if (schemaType && 'fields' in schemaType && Array.isArray(schemaType.fields)) {
         const valueField = schemaType.fields.find((f: {name: string}) => f.name === 'value')
         if (valueField && 'type' in valueField) {
-          const fieldType = valueField.type as Record<string, unknown>
+          const fieldType = valueField.type as unknown as Record<string, unknown>
           // Check if the value field is an array type
           if (
-            fieldType?.jsonType === 'array' ||
-            fieldType?.name === 'array' ||
+            fieldType?.['jsonType'] === 'array' ||
+            fieldType?.['name'] === 'array' ||
             (fieldType as {type?: string})?.type === 'array' ||
-            fieldType?.of !== undefined ||
-            (typeof fieldType?.name === 'string' && arrayBasedTypes.has(fieldType.name))
+            fieldType?.['of'] !== undefined ||
+            (typeof fieldType?.['name'] === 'string' && arrayBasedTypes.has(fieldType['name']))
           ) {
             return []
           }
@@ -71,7 +67,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
   )
 
   const handleDocumentButtonClick = useCallback(
-    async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    async (event: React.MouseEvent<HTMLButtonElement>) => {
       const languageId = event.currentTarget.value
       if (!languageId) {
         toast.push({
@@ -83,26 +79,24 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
       const alreadyTranslated = documentsToTranslation.filter(
         (translation) => translation?._key === languageId,
       )
-      const removeDuplicates = documentsToTranslation.reduce<DocumentsToTranslate[]>(
-        (filteredTranslations, translation) => {
-          if (
-            alreadyTranslated.filter(
-              (alreadyTranslation) => alreadyTranslation.pathString === translation.pathString,
-            ).length > 0
-          ) {
-            return filteredTranslations
-          }
-          const translationAlreadyExists = filteredTranslations.filter(
-            (filteredTranslation) => filteredTranslation.path === translation.path,
+      const removeDuplicates: DocumentsToTranslate[] = []
+      for (const translation of documentsToTranslation) {
+        if (
+          alreadyTranslated.some(
+            (alreadyTranslation) => alreadyTranslation.pathString === translation.pathString,
           )
+        ) {
+          continue
+        }
+        const translationAlreadyExists = removeDuplicates.some(
+          (filteredTranslation) => filteredTranslation.path === translation.path,
+        )
 
-          if (translationAlreadyExists.length > 0) {
-            return filteredTranslations
-          }
-          return [...filteredTranslations, translation]
-        },
-        [],
-      )
+        if (translationAlreadyExists) {
+          continue
+        }
+        removeDuplicates.push(translation)
+      }
       if (removeDuplicates.length === 0) {
         toast.push({
           status: 'error',

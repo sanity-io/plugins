@@ -93,7 +93,7 @@ export function InternationalizedArrayProvider(
   const {selectedLanguageIds, options: languageFilterOptions} = useLanguageFilterStudioContext()
 
   const filteredLanguages = useMemo(() => {
-    const documentType = deferredDocument ? deferredDocument._type : undefined
+    const documentType = deferredDocument ? deferredDocument['_type'] : undefined
     const languageFilterEnabled =
       typeof documentType === 'string' && languageFilterOptions.documentTypes.includes(documentType)
 

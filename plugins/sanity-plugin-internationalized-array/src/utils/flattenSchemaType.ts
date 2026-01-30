@@ -1,18 +1,11 @@
-import {
-  isDocumentSchemaType,
-  type ObjectField,
-  type Path,
-  type SchemaType,
-} from 'sanity'
+import {isDocumentSchemaType, type ObjectField, type Path, type SchemaType} from 'sanity'
 
-type ObjectFieldWithPath = ObjectField<SchemaType> & {path: Path}
+type ObjectFieldWithPath = ObjectField & {path: Path}
 
 /**
  * Flattens a document's schema type into a flat array of fields and includes their path
  */
-export function flattenSchemaType(
-  schemaType: SchemaType
-): ObjectFieldWithPath[] {
+export function flattenSchemaType(schemaType: SchemaType): ObjectFieldWithPath[] {
   if (!isDocumentSchemaType(schemaType)) {
     console.error(`Schema type is not a document`)
     return []
@@ -22,25 +15,22 @@ export function flattenSchemaType(
 }
 
 function extractInnerFields(
-  fields: ObjectField<SchemaType>[],
+  fields: ObjectField[],
   path: Path,
-  maxDepth: number
+  maxDepth: number,
 ): ObjectFieldWithPath[] {
   if (path.length >= maxDepth) {
     return []
   }
 
-  return fields.reduce<ObjectFieldWithPath[]>((acc, field) => {
+  const result: ObjectFieldWithPath[] = []
+  for (const field of fields) {
     const thisFieldWithPath = {path: [...path, field.name], ...field}
 
     if (field.type.jsonType === 'object') {
-      const innerFields = extractInnerFields(
-        field.type.fields,
-        [...path, field.name],
-        maxDepth
-      )
+      const innerFields = extractInnerFields(field.type.fields, [...path, field.name], maxDepth)
 
-      return [...acc, thisFieldWithPath, ...innerFields]
+      result.push(thisFieldWithPath, ...innerFields)
     } else if (
       field.type.jsonType === 'array' &&
       field.type.of.length &&
@@ -51,13 +41,14 @@ function extractInnerFields(
           // @ts-expect-error - Fix TS assertion for array fields
           innerField.fields,
           [...path, field.name],
-          maxDepth
-        )
+          maxDepth,
+        ),
       )
 
-      return [...acc, thisFieldWithPath, ...innerFields]
+      result.push(thisFieldWithPath, ...innerFields)
+    } else {
+      result.push(thisFieldWithPath)
     }
-
-    return [...acc, thisFieldWithPath]
-  }, [])
+  }
+  return result
 }

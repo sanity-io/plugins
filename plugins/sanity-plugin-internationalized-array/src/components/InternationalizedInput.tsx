@@ -37,7 +37,8 @@ export default function InternationalizedInput(
   const originalOnChange = props.inputProps.onChange
 
   // Create a wrapped onChange handler to intercept patches for paste operations
-  const wrappedOnChange = (patches: unknown) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Sanity's onChange accepts multiple types
+  const wrappedOnChange = (patches: any) => {
     // Ensure patches is an array before proceeding with paste logic
     // For single patch operations (like unset), pass through directly
     if (!Array.isArray(patches)) {
@@ -60,14 +61,15 @@ export default function InternationalizedInput(
         }
 
         // Look for insert patches targeting the value field or direct array index
+        const patchPath = patch['path']
         if (
-          patch.type === 'insert' &&
-          patch.path &&
-          Array.isArray(patch.path) &&
-          patch.path.length > 0
+          patch['type'] === 'insert' &&
+          patchPath &&
+          Array.isArray(patchPath) &&
+          patchPath.length > 0
         ) {
           // The path might be ['value', index] or just [index] depending on context
-          const isTargetingValue = patch.path[0] === 'value' || typeof patch.path[0] === 'number'
+          const isTargetingValue = patchPath[0] === 'value' || typeof patchPath[0] === 'number'
           return isTargetingValue
         }
         return false
@@ -85,9 +87,10 @@ export default function InternationalizedInput(
             return patch
           }
 
-          if (patch.type === 'insert' && patch.path && Array.isArray(patch.path)) {
+          const patchPath = patch['path']
+          if (patch['type'] === 'insert' && patchPath && Array.isArray(patchPath)) {
             // Ensure the path is correct for the nested structure
-            const fixedPath = patch.path[0] === 'value' ? patch.path : ['value', ...patch.path]
+            const fixedPath = patchPath[0] === 'value' ? patchPath : ['value', ...patchPath]
             const fixedPatch = {...patch, path: fixedPath}
             return fixedPatch
           }
@@ -97,7 +100,8 @@ export default function InternationalizedInput(
         // If we need to initialize the field, include that patch first
         const allPatches = initPatch ? [initPatch, ...fixedPatches] : fixedPatches
 
-        return originalOnChange(allPatches)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Sanity's onChange accepts multiple patch formats
+        return originalOnChange(allPatches as any)
       }
     }
 
@@ -111,7 +115,7 @@ export default function InternationalizedInput(
     members: props.inputProps.members.filter((m) => m.kind === 'field' && m.name === 'value'),
     // This just overrides the type
     // Remove this as it shouldn't be necessary?
-    value: props.value as InternationalizedValue,
+    value: props.value,
     // Use our wrapped onChange handler
     onChange: wrappedOnChange,
   }
@@ -125,7 +129,7 @@ export default function InternationalizedInput(
   const keyIsValid = languages?.length ? languages.find((l) => l.id === value._key) : false
 
   // Changes the key of this item, ideally to a valid language
-  const handleKeyChange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+  const handleKeyChange = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const languageId = event?.currentTarget?.value
 
     if (!value || !languages?.length || !languages.find((l) => l.id === languageId)) {

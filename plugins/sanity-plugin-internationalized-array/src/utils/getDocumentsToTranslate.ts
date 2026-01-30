@@ -1,5 +1,3 @@
-import {SanityDocument} from 'sanity'
-
 export interface DocumentsToTranslate {
   path: (string | number)[]
   pathString: string
@@ -9,8 +7,8 @@ export interface DocumentsToTranslate {
 }
 
 export const getDocumentsToTranslate = (
-  value: SanityDocument | unknown,
-  rootPath: (string | number)[] = []
+  value: unknown,
+  rootPath: (string | number)[] = [],
 ): DocumentsToTranslate[] => {
   if (Array.isArray(value)) {
     const arrayRootPath = [...rootPath]
@@ -21,29 +19,24 @@ export const getDocumentsToTranslate = (
 
       if (typeof item === 'object') {
         const type = item?._type as string | undefined
-        return (
-          type?.startsWith('internationalizedArray') && type?.endsWith('Value')
-        )
+        return type?.startsWith('internationalizedArray') && type?.endsWith('Value')
       }
       return false
     })
 
     if (internationalizedValues.length > 0) {
-      return internationalizedValues.map((internationalizedValue) => {
-        return {
-          ...internationalizedValue,
+      return internationalizedValues.map((internationalizedValue) =>
+        Object.assign({}, internationalizedValue, {
           path: arrayRootPath,
           pathString: arrayRootPath.join('.'),
-        }
-      })
+        }),
+      )
     }
 
     if (value.length > 0) {
-      return value
-        .map((item, index) =>
-          getDocumentsToTranslate(item, [...arrayRootPath, index])
-        )
-        .flat()
+      return value.flatMap((item, index) =>
+        getDocumentsToTranslate(item, [...arrayRootPath, index]),
+      )
     }
 
     return []
@@ -51,16 +44,14 @@ export const getDocumentsToTranslate = (
   if (typeof value === 'object' && value) {
     const startsWithUnderscoreRegex = /^_/
     const itemKeys = Object.keys(value).filter(
-      (key) => !key.match(startsWithUnderscoreRegex)
+      (key) => !key.match(startsWithUnderscoreRegex),
     ) as (keyof typeof value)[]
 
-    return itemKeys
-      .map((item) => {
-        const selectedValue = value[item] as unknown
-        const path = [...rootPath, item]
-        return getDocumentsToTranslate(selectedValue, path)
-      })
-      .flat()
+    return itemKeys.flatMap((item) => {
+      const selectedValue = value[item] as unknown
+      const path = [...rootPath, item]
+      return getDocumentsToTranslate(selectedValue, path)
+    })
   }
   return []
 }

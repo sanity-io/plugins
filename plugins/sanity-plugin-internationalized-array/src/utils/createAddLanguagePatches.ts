@@ -1,6 +1,9 @@
-import {FormInsertPatch, insert, Path, SchemaType} from 'sanity'
+import type {FormInsertPatch, Path, SchemaType} from 'sanity'
 
-import {Language, Value} from '../types'
+import {insert} from 'sanity'
+
+import type {Language, Value} from '../types'
+
 import {createValueSchemaTypeName} from './createValueSchemaTypeName'
 
 type AddConfig = {
@@ -26,18 +29,12 @@ export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
   // Create new items
   const getNewItems = () => {
     if (Array.isArray(addLanguageKeys) && addLanguageKeys.length > 0) {
-      return addLanguageKeys.map((id) => ({
-        ...itemBase,
-        _key: id,
-      }))
+      return addLanguageKeys.map((id) => Object.assign({_key: id}, itemBase))
     }
 
     return filteredLanguages
       .filter((language) => (value?.length ? !value.find((v) => v._key === language.id) : true))
-      .map((language) => ({
-        ...itemBase,
-        _key: language.id,
-      }))
+      .map((language) => Object.assign({_key: language.id}, itemBase))
   }
   const newItems = getNewItems()
 
