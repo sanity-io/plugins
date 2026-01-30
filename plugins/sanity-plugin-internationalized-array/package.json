@@ -1,0 +1,100 @@
+{
+  "name": "sanity-plugin-internationalized-array",
+  "version": "3.2.2",
+  "description": "Store localized fields in an array to save on attributes",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/sanity-plugin-internationalized-array#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity-plugin-internationalized-array/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sanity-io/sanity-plugin-internationalized-array.git"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
+      "default": "./lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./lib/index.js",
+  "module": "./lib/index.esm.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky install",
+    "prepublishOnly": "run-s build",
+    "watch": "pkg-utils watch --strict"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.5.3",
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "@sanity/language-filter": "^4.0.3",
+    "@sanity/ui": "^3.1.11",
+    "fast-deep-equal": "^3.1.3",
+    "lodash": "^4.17.21",
+    "suspend-react": "0.1.3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
+    "@sanity/pkg-utils": "^6.10.9",
+    "@sanity/plugin-kit": "^4.0.18",
+    "@sanity/semantic-release-preset": "^4.1.7",
+    "@types/lodash": "^4.17.0",
+    "@types/react": "^18.2.75",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "@typescript-eslint/parser": "^7.6.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-sanity": "^7.1.2",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.0",
+    "npm-run-all2": "^5.0.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-packagejson": "^2.4.14",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-is": "^18.3.1",
+    "sanity": "^3.67.1",
+    "semantic-release": "^23.0.7",
+    "typescript": "5.5.4"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "sanity": "^3.52.4 || ^4.0.0-0 || ^5",
+    "styled-components": "^6.1"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+      "eslintImports": false,
+      "dependencies": false
+    }
+  }
+}
