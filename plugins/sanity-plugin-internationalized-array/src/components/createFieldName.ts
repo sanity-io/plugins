@@ -1,16 +1,7 @@
-export function camelCase(string: string): string {
-  return string.replace(/-([a-z])/g, (_g, letter: string) => letter.toUpperCase())
-}
-
-export function titleCase(string: string): string {
-  return string
-    .split(` `)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(` `)
-}
+import {camelCase, upperFirst} from 'lodash-es'
 
 export function pascalCase(string: string): string {
-  return titleCase(camelCase(string))
+  return upperFirst(camelCase(string))
 }
 
 export function createFieldName(name: string, addValue = false): string {

@@ -1,4 +1,4 @@
-import {get} from 'lodash'
+import {get} from 'lodash-es'
 
 export const getSelectedValue = (
   select: Record<string, string> | undefined,

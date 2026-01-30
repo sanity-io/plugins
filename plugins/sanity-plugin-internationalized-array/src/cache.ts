@@ -1,5 +1,3 @@
-import * as suspend from 'suspend-react'
-
 import type {Language, LanguageCallback} from './types'
 
 export const namespace = 'sanity-plugin-internationalized-array'
@@ -15,21 +13,50 @@ const functionCache = new Map<string, Language[]>()
 // Cache for function keys to avoid recalculating them
 const functionKeyCache = new WeakMap<LanguageCallback, string>()
 
-// https://github.com/pmndrs/suspend-react#preloading
-export const preload = (fn: () => Promise<Language[]>) =>
-  suspend.preload(() => fn(), [version, namespace])
+// Cache for React.use promises
+const promiseCache = new Map<string, Promise<Language[]>>()
+
+// Helper to create a cache key string from an array
+function stringifyCacheKey(key: unknown[]): string {
+  return JSON.stringify(key)
+}
+
+// Preloading: store promises in cache for React.use
+export const preload = (fn: () => Promise<Language[]>) => {
+  const key = stringifyCacheKey([version, namespace])
+  if (!promiseCache.has(key)) {
+    promiseCache.set(key, fn())
+  }
+}
 
 // Enhanced preload function that can use custom cache keys
-export const preloadWithKey = (fn: () => Promise<Language[]>, key: (string | number)[]) =>
-  suspend.preload(() => fn(), key)
+export const preloadWithKey = (fn: () => Promise<Language[]>, key: (string | number)[]) => {
+  const keyStr = stringifyCacheKey(key)
+  if (!promiseCache.has(keyStr)) {
+    promiseCache.set(keyStr, fn())
+  }
+}
 
-// https://github.com/pmndrs/suspend-react#cache-busting
-export const clear = () => suspend.clear([version, namespace])
+// Cache busting: clear all promise caches
+export const clear = () => {
+  promiseCache.clear()
+}
 
-// https://github.com/pmndrs/suspend-react#peeking-into-entries-outside-of-suspense
-export const peek = (selectedValue: Record<string, unknown>) =>
-  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-  suspend.peek([version, namespace, selectedValue]) as Language[] | undefined
+// Peeking into entries outside of suspense
+export const peek = (selectedValue: Record<string, unknown>) => {
+  const key = stringifyCacheKey([version, namespace, selectedValue])
+  const promise = promiseCache.get(key)
+  if (promise) {
+    // Check if promise is resolved
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    const status = (promise as any)._status
+    if (status === 'fulfilled') {
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      return (promise as any)._value as Language[] | undefined
+    }
+  }
+  return undefined
+}
 
 // Helper function to create a stable cache key that matches the component's key structure
 export const createCacheKey = (selectedValue: Record<string, unknown>, workspaceId?: string) => {
@@ -40,9 +67,33 @@ export const createCacheKey = (selectedValue: Record<string, unknown>, workspace
 }
 
 // Enhanced peek function that can work with workspace context
-export const peekWithWorkspace = (selectedValue: Record<string, unknown>, workspaceId?: string) =>
-  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-  suspend.peek(createCacheKey(selectedValue, workspaceId)) as Language[] | undefined
+export const peekWithWorkspace = (selectedValue: Record<string, unknown>, workspaceId?: string) => {
+  const key = stringifyCacheKey(createCacheKey(selectedValue, workspaceId))
+  const promise = promiseCache.get(key)
+  if (promise) {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    const status = (promise as any)._status
+    if (status === 'fulfilled') {
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      return (promise as any)._value as Language[] | undefined
+    }
+  }
+  return undefined
+}
+
+// Create or get cached promise for React.use
+export const createOrGetPromise = (
+  fn: () => Promise<Language[]>,
+  key: (string | number | Record<string, unknown>)[],
+): Promise<Language[]> => {
+  const keyStr = stringifyCacheKey(key)
+  if (promiseCache.has(keyStr)) {
+    return promiseCache.get(keyStr)!
+  }
+  const promise = fn()
+  promiseCache.set(keyStr, promise)
+  return promise
+}
 
 // Generate a unique key for a function reference (cached for performance)
 export const getFunctionKey = (fn: LanguageCallback): string => {
@@ -120,6 +171,7 @@ export const clearFunctionCache = (): void => {
 // Clear function key cache as well
 export const clearAllCaches = (): void => {
   functionCache.clear()
+  promiseCache.clear()
   // Note: WeakMap doesn't have a clear method, but it will be garbage collected
   // when the function references are no longer held
 }

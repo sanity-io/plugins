@@ -2,15 +2,13 @@ import type React from 'react'
 
 import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Stack} from '@sanity/ui'
-import equal from 'fast-deep-equal'
-import {createContext, useContext, useDeferredValue, useMemo} from 'react'
+import {createContext, use, useContext, useDeferredValue, useMemo} from 'react'
 import {type ObjectInputProps, useClient, useWorkspace} from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
-import {suspend} from 'suspend-react'
 
 import type {Language, PluginConfig} from '../types'
 
-import {createCacheKey, setFunctionCache} from '../cache'
+import {createCacheKey, createOrGetPromise, setFunctionCache} from '../cache'
 import {CONFIG_DEFAULT} from '../constants'
 import DocumentAddButtons from './DocumentAddButtons'
 import {getSelectedValue} from './getSelectedValue'
@@ -73,21 +71,28 @@ export function InternationalizedArrayProvider(
   )
 
   // Fetch or return languages
-  const languages = Array.isArray(internationalizedArray.languages)
-    ? internationalizedArray.languages
-    : suspend(
-        async () => {
-          if (typeof internationalizedArray.languages === 'function') {
-            const result = await internationalizedArray.languages(client, selectedValue)
-            // Populate function cache for use outside React context
-            setFunctionCache(internationalizedArray.languages, selectedValue, result, workspaceId)
-            return result
-          }
-          return internationalizedArray.languages
-        },
-        cacheKey,
-        {equal},
-      )
+  const languagesPromise = useMemo(() => {
+    if (Array.isArray(internationalizedArray.languages)) {
+      return null // Return null for synchronous arrays
+    }
+
+    // Create or get cached promise for React.use
+    return createOrGetPromise(async () => {
+      if (typeof internationalizedArray.languages === 'function') {
+        const result = await internationalizedArray.languages(client, selectedValue)
+        // Populate function cache for use outside React context
+        setFunctionCache(internationalizedArray.languages, selectedValue, result, workspaceId)
+        return result
+      }
+      return internationalizedArray.languages
+    }, cacheKey)
+  }, [internationalizedArray, client, selectedValue, workspaceId, cacheKey])
+
+  // Use React.use to handle the promise with Suspense, or return array directly
+  const languages = languagesPromise
+    ? use(languagesPromise)
+    : // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      (internationalizedArray.languages as Language[])
 
   // Filter out some languages if language filter is enabled
   const {selectedLanguageIds, options: languageFilterOptions} = useLanguageFilterStudioContext()
