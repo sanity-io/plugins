@@ -1,9 +1,4 @@
-import type {
-  FieldDefinition,
-  Rule,
-  RuleTypeConstraint,
-  SanityClient,
-} from 'sanity'
+import type {FieldDefinition, Rule, RuleTypeConstraint, SanityClient} from 'sanity'
 
 export type Language = {
   id: Intl.UnicodeBCP47LocaleIdentifier
@@ -21,8 +16,7 @@ export type ArrayConfig = {
   hidden?: boolean | (() => boolean)
   readOnly?: boolean | (() => boolean)
   validation?: Rule | Rule[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  field?: {[key: string]: any; options: {[key: string]: any}}
+  field?: {[key: string]: unknown; options: {[key: string]: unknown}}
 }
 
 export type Value = {
@@ -32,7 +26,7 @@ export type Value = {
 
 export type LanguageCallback = (
   client: SanityClient,
-  selectedValue: Record<string, unknown>
+  selectedValue: Record<string, unknown>,
 ) => Promise<Language[]>
 
 export type LanguageDisplay = 'titleOnly' | 'codeOnly' | 'titleAndCode'
