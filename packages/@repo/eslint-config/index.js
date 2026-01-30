@@ -7,7 +7,7 @@ import tseslint from 'typescript-eslint'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
-const rootOxlintrc = resolve(__dirname, '../../../.oxlintrc.jsonc')
+const rootOxlintrc = resolve(__dirname, '../../../.oxlintrc.json')
 
 export default [
   globalIgnores(['**/.sanity/*', '**/dist/*']),

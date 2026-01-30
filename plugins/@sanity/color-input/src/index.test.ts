@@ -9,15 +9,15 @@ test('package exports', {timeout: 30_000}, async () => {
   })
 
   expect(manifest.exports).toMatchInlineSnapshot(`
-      {
-        ".": {
-          "ColorInput": "object",
-          "color": "object",
-          "colorInput": "function",
-          "hslaColor": "object",
-          "hsvaColor": "object",
-          "rgbaColor": "object",
-        },
-      }
-    `)
+    {
+      ".": {
+        "ColorInput": "object",
+        "color": "object",
+        "colorInput": "function",
+        "hslaColor": "object",
+        "hsvaColor": "object",
+        "rgbaColor": "object",
+      },
+    }
+  `)
 })
