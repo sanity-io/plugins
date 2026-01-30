@@ -1,5 +1,22 @@
 # sanity-plugin-workflow
 
+## 3.0.8
+
+### Patch Changes
+
+- [`6397826`](https://github.com/sanity-io/plugins/commit/63978265fe5b46ea88b524a945d16fbf39d7c199) Thanks [@stipsan](https://github.com/stipsan)! - Improve build output and dts gen
+
+- [#460](https://github.com/sanity-io/plugins/pull/460) [`f74ac95`](https://github.com/sanity-io/plugins/commit/f74ac95d05e63f124e08d599d635e8d90c870eae) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency motion to ^12.27.0
+
+- [#473](https://github.com/sanity-io/plugins/pull/473) [`459423e`](https://github.com/sanity-io/plugins/commit/459423e7fb9dbe35f8ca72a1b95feec58117e7da) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency motion to ^12.29.2
+
+- [#463](https://github.com/sanity-io/plugins/pull/463) [`2ce1ce0`](https://github.com/sanity-io/plugins/commit/2ce1ce06fd5d0803a3a1eeb0ff4fe62b53881ae9) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Replace deprecated Sanity UI hooks and remove deprecated props
+  - Replaced deprecated `useTimeAgo` hook with `useRelativeTime`
+  - Replaced deprecated `useClickOutside` hook with `useClickOutsideEvent`
+  - Removed deprecated `onComplete` parameter from document action hooks
+  - Removed deprecated `mode` prop from Badge component
+  - Migrated from deprecated theme v0 APIs to v2 APIs using `getTheme_v2` helper
+
 ## 3.0.7
 
 ### Patch Changes

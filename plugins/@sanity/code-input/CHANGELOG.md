@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.0.7
+
+### Patch Changes
+
+- [`6397826`](https://github.com/sanity-io/plugins/commit/63978265fe5b46ea88b524a945d16fbf39d7c199) Thanks [@stipsan](https://github.com/stipsan)! - Improve build output and dts gen
+
 ## 7.0.6
 
 ### Patch Changes

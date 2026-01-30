@@ -1,5 +1,15 @@
 # sanity-plugin-asset-source-unsplash
 
+## 7.0.3
+
+### Patch Changes
+
+- [`6397826`](https://github.com/sanity-io/plugins/commit/63978265fe5b46ea88b524a945d16fbf39d7c199) Thanks [@stipsan](https://github.com/stipsan)! - Improve build output and dts gen
+
+- [#485](https://github.com/sanity-io/plugins/pull/485) [`8ef77f6`](https://github.com/sanity-io/plugins/commit/8ef77f6c5cb6132644b62eb4a4450746047fe655) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency lodash-es to ^4.17.23
+
+- [#463](https://github.com/sanity-io/plugins/pull/463) [`2ce1ce0`](https://github.com/sanity-io/plugins/commit/2ce1ce06fd5d0803a3a1eeb0ff4fe62b53881ae9) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Migrate from deprecated theme v0 APIs to v2 APIs using `getTheme_v2` helper
+
 ## 7.0.2
 
 ### Patch Changes
