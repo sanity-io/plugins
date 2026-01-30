@@ -21,8 +21,15 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: pnpm build
+      - name: Build (PR)
+        if: github.event_name == 'pull_request'
+        run: pnpm turbo run build --affected
+      - name: Build (Main)
+        if: github.ref == 'refs/heads/main'
+        run: pnpm turbo run build
 
   lint:
     runs-on: ubuntu-latest
@@ -31,11 +38,17 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Oxlint
         run: pnpm oxlint --format github
-      - name: ESLint
-        run: pnpm lint:ci
+      - name: ESLint (PR)
+        if: github.event_name == 'pull_request'
+        run: pnpm turbo run lint --affected -- -f gha --max-warnings 0
+      - name: ESLint (Main)
+        if: github.ref == 'refs/heads/main'
+        run: pnpm turbo run lint -- -f gha --max-warnings 0
 
   test:
     runs-on: ubuntu-latest
@@ -45,5 +58,12 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: pnpm --if-present test
+      - name: Test (PR)
+        if: github.event_name == 'pull_request'
+        run: pnpm vitest --changed --run
+      - name: Test (Main)
+        if: github.ref == 'refs/heads/main'
+        run: pnpm vitest --run
