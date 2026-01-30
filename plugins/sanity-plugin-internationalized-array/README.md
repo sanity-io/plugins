@@ -2,6 +2,8 @@
 
 A plugin to register array fields with a custom input component to store field values in multiple languages, queryable by using the language ID as an array `_key`.
 
+![Screenshot of an internationalized input](./img/internationalized-array.png)
+
 - [sanity-plugin-internationalized-array](#sanity-plugin-internationalized-array)
   - [Installation](#installation)
   - [Usage for simple field types](#usage-for-simple-field-types)
@@ -348,6 +350,10 @@ Using GROQ filters you can query for a specific language key like so:
 ```
 
 ## Migrate from objects to arrays
+
+[See the migration script](./migrations/transformObjectToArray.ts) inside `./migrations/transformObjectToArray.ts` of this plugin.
+
+Follow the instructions inside the script and set the `_type` and field name you wish to target.
 
 Please take a backup first!
 
