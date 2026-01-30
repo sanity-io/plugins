@@ -212,7 +212,7 @@ import {fileURLToPath} from 'node:url'
 import {expect, test} from 'vitest'
 import {getPackageExportsManifest} from 'vitest-package-exports'
 
-test('package exports', async () => {
+test('package exports', {timeout: 30_000}, async () => {
   const manifest = await getPackageExportsManifest({
     importMode: 'dist',
     cwd: fileURLToPath(import.meta.url),
@@ -222,13 +222,23 @@ test('package exports', async () => {
 })
 ```
 
-For tests that take longer, add a timeout as the third argument:
+#### Test Timeouts
+
+Always use the options object syntax for timeouts, placing it as the second argument:
 
 ```ts
-test('package exports', async () => {
+// Correct - options object as second argument
+test('my test', {timeout: 30_000}, async () => {
   // ... test code
-}, 30000) // 30 second timeout
+})
+
+// Wrong - timeout as third argument (deprecated style)
+test('my test', async () => {
+  // ...
+}, 30000)
 ```
+
+Use numeric separators (`30_000` instead of `30000`) for readability.
 
 ### Test Configuration
 

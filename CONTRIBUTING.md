@@ -110,6 +110,20 @@ Tests are co-located with source code in the `src/` directory using `.test.ts` o
 
 When creating a new plugin with `pnpm generate`, test files and configuration are automatically created. The root `vitest.config.ts` uses glob patterns to automatically discover all plugins, so no manual test configuration is needed when adding new plugins.
 
+#### Test Timeouts
+
+When tests need custom timeouts, use the options object syntax as the second argument:
+
+```ts
+// Correct
+test('my test', {timeout: 30_000}, async () => {
+  // ...
+})
+
+// Wrong (deprecated)
+test('my test', async () => {}, 30000)
+```
+
 ### Running All Checks
 
 Before submitting a PR, make sure all checks pass:
