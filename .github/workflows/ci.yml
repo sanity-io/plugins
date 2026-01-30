@@ -61,6 +61,12 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+      - name: Build packages for tests (PR)
+        if: github.event_name == 'pull_request'
+        run: pnpm turbo run build --filter='!./dev/*' --affected
+      - name: Build packages for tests (Main)
+        if: github.ref == 'refs/heads/main'
+        run: pnpm turbo run build --filter='!./dev/*'
       - name: Test (PR)
         if: github.event_name == 'pull_request'
         run: pnpm vitest --changed --run
