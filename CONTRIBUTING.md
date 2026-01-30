@@ -91,6 +91,39 @@ pnpm oxlint
 
 Type checking is [performed by oxlint](https://oxc.rs/blog/2025-12-08-type-aware-alpha.html#support-for-type-checking-while-linting) when running the `lint` command.
 
+### Testing
+
+The monorepo uses [Vitest v4](https://vitest.dev) for testing.
+
+```bash
+# Run all tests (non-watch mode)
+pnpm test run
+
+# Run tests in watch mode (default vitest behavior)
+pnpm test
+
+# Update snapshots
+pnpm test -u
+```
+
+Tests are co-located with source code in the `src/` directory using `.test.ts` or `.spec.ts` extensions. Each plugin includes a package exports test to verify all exports are valid. Tests run from the root and require packages to be built first.
+
+When creating a new plugin with `pnpm generate`, test files and configuration are automatically created. The root `vitest.config.ts` uses glob patterns to automatically discover all plugins, so no manual test configuration is needed when adding new plugins.
+
+#### Test Timeouts
+
+When tests need custom timeouts, use the options object syntax as the second argument:
+
+```ts
+// Correct
+test('my test', {timeout: 30_000}, async () => {
+  // ...
+})
+
+// Wrong (deprecated)
+test('my test', async () => {}, 30000)
+```
+
 ### Running All Checks
 
 Before submitting a PR, make sure all checks pass:
@@ -99,6 +132,7 @@ Before submitting a PR, make sure all checks pass:
 pnpm format
 pnpm lint
 pnpm build
+pnpm test
 ```
 
 And attach a changeset:
