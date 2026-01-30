@@ -110,6 +110,7 @@ export type PluginConfig = {
    * }
    * ```
    */
+  // oxlint-disable-next-line typescript-eslint/no-redundant-type-constituents
   fieldTypes: (string | RuleTypeConstraint | FieldDefinition)[]
   /**
    * Locations where the "+ EN" add language buttons are visible

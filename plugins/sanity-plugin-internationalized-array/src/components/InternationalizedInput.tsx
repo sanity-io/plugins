@@ -31,6 +31,7 @@ export type InternationalizedValue = {
 export default function InternationalizedInput(
   props: ObjectItemProps<InternationalizedValue>,
 ): ReactNode {
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
   const parentValue = useFormValue(props.path.slice(0, -1)) as InternationalizedValue[]
 
   // Extract the original onChange to avoid dependency issues
@@ -41,6 +42,7 @@ export default function InternationalizedInput(
     // Ensure patches is an array before proceeding with paste logic
     // For single patch operations (like unset), pass through directly
     if (!Array.isArray(patches)) {
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
       return originalOnChange(patches as Parameters<typeof originalOnChange>[0])
     }
 
@@ -99,11 +101,13 @@ export default function InternationalizedInput(
         // If we need to initialize the field, include that patch first
         const allPatches = initPatch ? [initPatch, ...fixedPatches] : fixedPatches
 
+        // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
         return originalOnChange(allPatches as Parameters<typeof originalOnChange>[0])
       }
     }
 
     // For all other cases, pass through unchanged
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     return originalOnChange(patches as Parameters<typeof originalOnChange>[0])
   }
 
@@ -113,6 +117,7 @@ export default function InternationalizedInput(
     members: props.inputProps.members.filter((m) => m.kind === 'field' && m.name === 'value'),
     // This just overrides the type
     // Remove this as it shouldn't be necessary?
+    // oxlint-disable-next-line typescript-eslint/no-unnecessary-type-assertion
     value: props.value as InternationalizedValue,
     // Use our wrapped onChange handler
     onChange: wrappedOnChange,
@@ -127,7 +132,7 @@ export default function InternationalizedInput(
   const keyIsValid = languages?.length ? languages.find((l) => l.id === value._key) : false
 
   // Changes the key of this item, ideally to a valid language
-  const handleKeyChange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+  const handleKeyChange = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const languageId = event?.currentTarget?.value
 
     if (!value || !languages?.length || !languages.find((l) => l.id === languageId)) {

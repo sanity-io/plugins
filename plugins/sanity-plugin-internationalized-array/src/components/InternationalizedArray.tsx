@@ -7,7 +7,6 @@ import {useCallback, useEffect, useMemo} from 'react'
 import {
   type ArrayOfObjectsInputProps,
   ArrayOfObjectsItem,
-  type ArraySchemaType,
   MemberItemError,
   set,
   setIfMissing,
@@ -24,7 +23,7 @@ import AddButtons from './AddButtons'
 import Feedback from './Feedback'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
-export type InternationalizedArrayProps = ArrayOfObjectsInputProps<Value, ArraySchemaType>
+export type InternationalizedArrayProps = ArrayOfObjectsInputProps<Value>
 
 export default function InternationalizedArray(
   props: InternationalizedArrayProps,
@@ -72,14 +71,15 @@ export default function InternationalizedArray(
   )
 
   const handleAddLanguage = useCallback(
-    async (param?: React.MouseEvent<HTMLButtonElement, MouseEvent> | string[]) => {
+    async (param?: React.MouseEvent<HTMLButtonElement> | string[]) => {
       if (!filteredLanguages?.length) {
         return
       }
 
       const addLanguageKeys: string[] = Array.isArray(param)
         ? param
-        : ([param?.currentTarget?.value].filter(Boolean) as string[])
+        : // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+          ([param?.currentTarget?.value].filter(Boolean) as string[])
 
       const patches = createAddLanguagePatches({
         addLanguageKeys,

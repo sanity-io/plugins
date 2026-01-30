@@ -1,6 +1,6 @@
 import {isDocumentSchemaType, type ObjectField, type Path, type SchemaType} from 'sanity'
 
-type ObjectFieldWithPath = ObjectField<SchemaType> & {path: Path}
+type ObjectFieldWithPath = ObjectField & {path: Path}
 
 /**
  * Flattens a document's schema type into a flat array of fields and includes their path
@@ -15,7 +15,7 @@ export function flattenSchemaType(schemaType: SchemaType): ObjectFieldWithPath[]
 }
 
 function extractInnerFields(
-  fields: ObjectField<SchemaType>[],
+  fields: ObjectField[],
   path: Path,
   maxDepth: number,
 ): ObjectFieldWithPath[] {

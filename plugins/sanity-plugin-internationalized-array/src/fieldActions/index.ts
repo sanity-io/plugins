@@ -25,6 +25,7 @@ const createTranslateFieldActions: (
   },
 ) => DocumentFieldActionItem[] = (fieldActionProps, {languages, filteredLanguages}) =>
   languages.map((language) => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     const value = useFormValue(fieldActionProps.path) as Value[]
     const disabled =
       value && Array.isArray(value)
@@ -67,6 +68,7 @@ const AddMissingTranslationsFieldAction: (
     filteredLanguages: Language[]
   },
 ) => DocumentFieldActionItem = (fieldActionProps, {languages, filteredLanguages}) => {
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
   const value = useFormValue(fieldActionProps.path) as Value[]
   const disabled = value && value.length === filteredLanguages.length
   const hidden = checkAllLanguagesArePresent(filteredLanguages, value)

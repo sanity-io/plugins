@@ -14,7 +14,7 @@ type AddButtonsProps = {
   languages: Language[]
   readOnly: boolean
   value: Value[] | undefined
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 function AddButtons(props: AddButtonsProps) {

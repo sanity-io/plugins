@@ -52,6 +52,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
       const schemaType = schema.get(typeName)
       if (schemaType && 'fields' in schemaType) {
         // Check if this is an object type with a 'value' field
+        // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
         const fields = schemaType.fields as Array<{
           name: string
           type?: {jsonType?: string; name?: string; type?: string; of?: unknown}
@@ -78,7 +79,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
   )
 
   const handleDocumentButtonClick = useCallback(
-    async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    async (event: React.MouseEvent<HTMLButtonElement>) => {
       const languageId = event.currentTarget.value
       if (!languageId) {
         toast.push({
