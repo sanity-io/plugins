@@ -65,7 +65,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Test (PR)
         if: github.event_name == 'pull_request'
-        run: pnpm test --changed
+        run: pnpm test --changed origin/${{ github.event.pull_request.base.ref }}
       - name: Test
         if: github.event_name != 'pull_request'
         run: pnpm test
