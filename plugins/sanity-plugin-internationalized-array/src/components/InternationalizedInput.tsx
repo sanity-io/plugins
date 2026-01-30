@@ -14,7 +14,7 @@ import {
   Text,
   Tooltip,
 } from '@sanity/ui'
-import {ReactNode, useCallback, useMemo} from 'react'
+import {ReactNode, useMemo} from 'react'
 import {type ObjectItemProps, useFormValue} from 'sanity'
 import {set, unset} from 'sanity'
 
@@ -37,7 +37,7 @@ export default function InternationalizedInput(
   const originalOnChange = props.inputProps.onChange
 
   // Create a wrapped onChange handler to intercept patches for paste operations
-  const wrappedOnChange = (patches: PatchEvent | PatchEvent[] | Patch | Patch[]) => {
+  const wrappedOnChange = (patches: unknown) => {
     // Ensure patches is an array before proceeding with paste logic
     // For single patch operations (like unset), pass through directly
     if (!Array.isArray(patches)) {
@@ -53,7 +53,7 @@ export default function InternationalizedInput(
 
     if (isEmptyOrUndefined) {
       // Check for insert patches that are trying to operate on a non-existent structure
-      const hasProblematicInsert = patches.some((patch: Patch) => {
+      const hasProblematicInsert = patches.some((patch: {type?: string; path?: unknown[]}) => {
         // Ensure patch exists and has required properties
         if (!patch || typeof patch !== 'object') {
           return false
@@ -79,20 +79,22 @@ export default function InternationalizedInput(
           valueField === undefined ? {type: 'setIfMissing', path: ['value'], value: []} : null
 
         // Transform the patches to ensure they work with the nested structure
-        const fixedPatches = patches.map((patch: Patch) => {
-          // Ensure patch exists and has required properties
-          if (!patch || typeof patch !== 'object') {
-            return patch
-          }
+        const fixedPatches = patches.map(
+          (patch: {type?: string; path?: unknown[]; [key: string]: unknown}) => {
+            // Ensure patch exists and has required properties
+            if (!patch || typeof patch !== 'object') {
+              return patch
+            }
 
-          if (patch.type === 'insert' && patch.path && Array.isArray(patch.path)) {
-            // Ensure the path is correct for the nested structure
-            const fixedPath = patch.path[0] === 'value' ? patch.path : ['value', ...patch.path]
-            const fixedPatch = {...patch, path: fixedPath}
-            return fixedPatch
-          }
-          return patch
-        })
+            if (patch.type === 'insert' && patch.path && Array.isArray(patch.path)) {
+              // Ensure the path is correct for the nested structure
+              const fixedPath = patch.path[0] === 'value' ? patch.path : ['value', ...patch.path]
+              const fixedPatch = {...patch, path: fixedPath}
+              return fixedPatch
+            }
+            return patch
+          },
+        )
 
         // If we need to initialize the field, include that patch first
         const allPatches = initPatch ? [initPatch, ...fixedPatches] : fixedPatches

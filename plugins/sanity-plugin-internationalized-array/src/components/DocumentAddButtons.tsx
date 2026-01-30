@@ -41,8 +41,8 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
       const baseTypeName = match[1].charAt(0).toLowerCase() + match[1].slice(1)
 
       // Check if it's a known array-based type (Portable Text fields)
-      const arrayBasedTypes = ['body', 'htmlContent', 'blockContent', 'portableText']
-      if (arrayBasedTypes.includes(baseTypeName)) {
+      const arrayBasedTypes = new Set(['body', 'htmlContent', 'blockContent', 'portableText'])
+      if (arrayBasedTypes.has(baseTypeName)) {
         return []
       }
 
@@ -63,7 +63,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
             fieldType?.name === 'array' ||
             fieldType?.type === 'array' ||
             fieldType?.of !== undefined ||
-            (fieldType?.name && arrayBasedTypes.includes(fieldType.name))
+            (fieldType?.name && arrayBasedTypes.has(fieldType.name))
           ) {
             return []
           }
@@ -104,7 +104,8 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
           if (translationAlreadyExists.length > 0) {
             return filteredTranslations
           }
-          return [...filteredTranslations, translation]
+          filteredTranslations.push(translation)
+          return filteredTranslations
         },
         [],
       )

@@ -6,11 +6,11 @@ export function getToneFromValidation(validations: FormNodeValidation[]): CardTo
     return undefined
   }
 
-  const validationLevels = validations.map((v) => v.level)
+  const validationLevels = new Set(validations.map((v) => v.level))
 
-  if (validationLevels.includes('error')) {
+  if (validationLevels.has('error')) {
     return `critical`
-  } else if (validationLevels.includes('warning')) {
+  } else if (validationLevels.has('warning')) {
     return `caution`
   }
 

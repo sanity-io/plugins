@@ -29,7 +29,8 @@ function extractInnerFields(
     if (field.type.jsonType === 'object') {
       const innerFields = extractInnerFields(field.type.fields, [...path, field.name], maxDepth)
 
-      return [...acc, thisFieldWithPath, ...innerFields]
+      acc.push(thisFieldWithPath, ...innerFields)
+      return acc
     } else if (
       field.type.jsonType === 'array' &&
       field.type.of.length &&
@@ -44,9 +45,11 @@ function extractInnerFields(
         ),
       )
 
-      return [...acc, thisFieldWithPath, ...innerFields]
+      acc.push(thisFieldWithPath, ...innerFields)
+      return acc
     }
 
-    return [...acc, thisFieldWithPath]
+    acc.push(thisFieldWithPath)
+    return acc
   }, [])
 }

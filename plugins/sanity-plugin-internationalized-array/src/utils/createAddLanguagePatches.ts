@@ -26,18 +26,12 @@ export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
   // Create new items
   const getNewItems = () => {
     if (Array.isArray(addLanguageKeys) && addLanguageKeys.length > 0) {
-      return addLanguageKeys.map((id) => ({
-        ...itemBase,
-        _key: id,
-      }))
+      return addLanguageKeys.map((id) => Object.assign({}, itemBase, {_key: id}))
     }
 
     return filteredLanguages
       .filter((language) => (value?.length ? !value.find((v) => v._key === language.id) : true))
-      .map((language) => ({
-        ...itemBase,
-        _key: language.id,
-      }))
+      .map((language) => Object.assign({}, itemBase, {_key: language.id}))
   }
   const newItems = getNewItems()
 

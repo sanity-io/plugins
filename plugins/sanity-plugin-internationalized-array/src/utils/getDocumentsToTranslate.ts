@@ -28,18 +28,17 @@ export const getDocumentsToTranslate = (
 
     if (internationalizedValues.length > 0) {
       return internationalizedValues.map((internationalizedValue) => {
-        return {
-          ...internationalizedValue,
+        return Object.assign({}, internationalizedValue, {
           path: arrayRootPath,
           pathString: arrayRootPath.join('.'),
-        }
+        })
       })
     }
 
     if (value.length > 0) {
-      return value
-        .map((item, index) => getDocumentsToTranslate(item, [...arrayRootPath, index]))
-        .flat()
+      return value.flatMap((item, index) =>
+        getDocumentsToTranslate(item, [...arrayRootPath, index]),
+      )
     }
 
     return []
@@ -50,13 +49,11 @@ export const getDocumentsToTranslate = (
       (key) => !key.match(startsWithUnderscoreRegex),
     ) as (keyof typeof value)[]
 
-    return itemKeys
-      .map((item) => {
-        const selectedValue = value[item] as unknown
-        const path = [...rootPath, item]
-        return getDocumentsToTranslate(selectedValue, path)
-      })
-      .flat()
+    return itemKeys.flatMap((item) => {
+      const selectedValue = value[item] as unknown
+      const path = [...rootPath, item]
+      return getDocumentsToTranslate(selectedValue, path)
+    })
   }
   return []
 }
