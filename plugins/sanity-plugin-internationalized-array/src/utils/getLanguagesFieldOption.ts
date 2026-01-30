@@ -8,6 +8,7 @@ export function getLanguagesFieldOption(
   if (!schemaType) {
     return undefined
   }
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const languagesOption = (schemaType.options as ArrayFieldOptions)?.languages
   if (languagesOption) {
     return languagesOption

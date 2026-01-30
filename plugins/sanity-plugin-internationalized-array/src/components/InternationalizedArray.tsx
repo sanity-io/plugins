@@ -78,7 +78,8 @@ export default function InternationalizedArray(
 
       const addLanguageKeys: string[] = Array.isArray(param)
         ? param
-        : ([param?.currentTarget?.value].filter(Boolean) as string[])
+        : // oxlint-disable-next-line no-unsafe-type-assertion
+          ([param?.currentTarget?.value].filter(Boolean) as string[])
 
       const patches = createAddLanguagePatches({
         addLanguageKeys,

@@ -28,6 +28,7 @@ export const clear = () => suspend.clear([version, namespace])
 
 // https://github.com/pmndrs/suspend-react#peeking-into-entries-outside-of-suspense
 export const peek = (selectedValue: Record<string, unknown>) =>
+  // oxlint-disable-next-line no-unsafe-type-assertion
   suspend.peek([version, namespace, selectedValue]) as Language[] | undefined
 
 // Helper function to create a stable cache key that matches the component's key structure
@@ -40,6 +41,7 @@ export const createCacheKey = (selectedValue: Record<string, unknown>, workspace
 
 // Enhanced peek function that can work with workspace context
 export const peekWithWorkspace = (selectedValue: Record<string, unknown>, workspaceId?: string) =>
+  // oxlint-disable-next-line no-unsafe-type-assertion
   suspend.peek(createCacheKey(selectedValue, workspaceId)) as Language[] | undefined
 
 // Generate a unique key for a function reference (cached for performance)

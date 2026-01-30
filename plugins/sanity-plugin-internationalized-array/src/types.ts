@@ -110,6 +110,7 @@ export type PluginConfig = {
    * }
    * ```
    */
+  // oxlint-disable-next-line no-redundant-type-constituents -- Intentional API: RuleTypeConstraint provides type hints even though it's a string literal union
   fieldTypes: (string | RuleTypeConstraint | FieldDefinition)[]
   /**
    * Locations where the "+ EN" add language buttons are visible

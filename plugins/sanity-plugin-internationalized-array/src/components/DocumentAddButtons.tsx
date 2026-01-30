@@ -47,6 +47,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
       if (schemaType && 'fields' in schemaType && Array.isArray(schemaType.fields)) {
         const valueField = schemaType.fields.find((f: {name: string}) => f.name === 'value')
         if (valueField && 'type' in valueField) {
+          // oxlint-disable-next-line no-unsafe-type-assertion
           const fieldType = valueField.type as unknown as Record<string, unknown>
           // Check if the value field is an array type
           if (

@@ -18,6 +18,7 @@ export const getDocumentsToTranslate = (
       if (Array.isArray(item)) return false
 
       if (typeof item === 'object') {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const type = item?._type as string | undefined
         return type?.startsWith('internationalizedArray') && type?.endsWith('Value')
       }
@@ -43,6 +44,7 @@ export const getDocumentsToTranslate = (
   }
   if (typeof value === 'object' && value) {
     const startsWithUnderscoreRegex = /^_/
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const itemKeys = Object.keys(value).filter(
       (key) => !key.match(startsWithUnderscoreRegex),
     ) as (keyof typeof value)[]

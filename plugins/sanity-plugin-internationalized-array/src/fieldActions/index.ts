@@ -10,8 +10,9 @@ import {
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import {useInternationalizedArrayContext} from '../components/InternationalizedArrayContext'
 import type {Language, Value} from '../types'
+
+import {useInternationalizedArrayContext} from '../components/InternationalizedArrayContext'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
@@ -21,12 +22,10 @@ const createTranslateFieldActions: (
   context: {
     languages: Language[]
     filteredLanguages: Language[]
-  }
-) => DocumentFieldActionItem[] = (
-  fieldActionProps,
-  {languages, filteredLanguages}
-) =>
+  },
+) => DocumentFieldActionItem[] = (fieldActionProps, {languages, filteredLanguages}) =>
   languages.map((language) => {
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const value = useFormValue(fieldActionProps.path) as Value[]
     const disabled =
       value && Array.isArray(value)
@@ -67,11 +66,9 @@ const AddMissingTranslationsFieldAction: (
   context: {
     languages: Language[]
     filteredLanguages: Language[]
-  }
-) => DocumentFieldActionItem = (
-  fieldActionProps,
-  {languages, filteredLanguages}
-) => {
+  },
+) => DocumentFieldActionItem = (fieldActionProps, {languages, filteredLanguages}) => {
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const value = useFormValue(fieldActionProps.path) as Value[]
   const disabled = value && value.length === filteredLanguages.length
   const hidden = checkAllLanguagesArePresent(filteredLanguages, value)
@@ -108,15 +105,13 @@ export const internationalizedArrayFieldAction = defineDocumentFieldAction({
   name: 'internationalizedArray',
   useAction(fieldActionProps) {
     const isInternationalizedArrayField =
-      fieldActionProps?.schemaType?.type?.name.startsWith(
-        'internationalizedArray'
-      )
+      fieldActionProps?.schemaType?.type?.name.startsWith('internationalizedArray')
     const {languages, filteredLanguages} = useInternationalizedArrayContext()
 
-    const translateFieldActions = createTranslateFieldActions(
-      fieldActionProps,
-      {languages, filteredLanguages}
-    )
+    const translateFieldActions = createTranslateFieldActions(fieldActionProps, {
+      languages,
+      filteredLanguages,
+    })
 
     return {
       type: 'group',

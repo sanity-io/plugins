@@ -31,6 +31,7 @@ export type InternationalizedValue = {
 export default function InternationalizedInput(
   props: ObjectItemProps<InternationalizedValue>,
 ): ReactNode {
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const parentValue = useFormValue(props.path.slice(0, -1)) as InternationalizedValue[]
 
   // Extract the original onChange to avoid dependency issues
@@ -101,6 +102,7 @@ export default function InternationalizedInput(
         const allPatches = initPatch ? [initPatch, ...fixedPatches] : fixedPatches
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Sanity's onChange accepts multiple patch formats
+        // oxlint-disable-next-line no-unsafe-type-assertion
         return originalOnChange(allPatches as any)
       }
     }
