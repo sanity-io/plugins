@@ -389,9 +389,6 @@ greeting[].value
 
 By using this plugin you can safely extend the number of languages without adding any additional query paths.
 
-MIT © Sanity.io
-See LICENSE
-
 ## License
 
-[MIT](LICENSE) © Sanity.io
+[MIT](LICENSE) © Simeon Griggs
