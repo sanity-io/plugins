@@ -254,11 +254,17 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 
 Always open PRs as **draft** initially. The prompter (person who requested the work) reviews first before marking ready for team review.
 
-### 2. Move Out of Draft
+### 2. Apply the "🤖 bot" Label
+
+**All PRs created by AI agents must be labeled with "🤖 bot".** This label helps the team identify bot-created PRs and ensures proper tracking and review workflows.
+
+When creating or updating a PR, always ensure the `🤖 bot` label is applied.
+
+### 3. Move Out of Draft
 
 Once the prompter approves, convert from draft to ready-for-review so the team can review.
 
-### 3. Merge Process
+### 4. Merge Process
 
 After approval, PRs merge to `main`. The release workflow automatically:
 
