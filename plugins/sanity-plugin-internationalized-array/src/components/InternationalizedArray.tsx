@@ -57,7 +57,7 @@ export default function InternationalizedArray(
             const valueMember = member.item.members[0]
 
             // Satisfy TS
-            if (valueMember.kind !== 'field') {
+            if (!valueMember || valueMember.kind !== 'field') {
               return false
             }
 
@@ -108,7 +108,7 @@ export default function InternationalizedArray(
         .filter((language) => languages.find((l) => l.id === language))
       // Account for strict mode by scheduling the update
       const timeout = setTimeout(() => {
-        if (!documentReadOnly) handleAddLanguage(languagesToAdd)
+        if (!documentReadOnly) void handleAddLanguage(languagesToAdd)
       })
       return () => clearTimeout(timeout)
     }

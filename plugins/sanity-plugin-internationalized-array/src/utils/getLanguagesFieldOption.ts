@@ -1,6 +1,6 @@
-import {SchemaType} from 'sanity'
+import type {SchemaType} from 'sanity'
 
-import {ArrayFieldOptions} from '../schema/array'
+import type {ArrayFieldOptions} from '../schema/array'
 
 export function getLanguagesFieldOption(
   schemaType: SchemaType | undefined,

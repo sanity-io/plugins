@@ -1,4 +1,4 @@
-import {defineField, FieldDefinition} from 'sanity'
+import {defineField, type FieldDefinition} from 'sanity'
 
 import {createFieldName} from '../components/createFieldName'
 import InternationalizedInput from '../components/InternationalizedInput'
@@ -14,7 +14,7 @@ export default (config: ObjectFactoryConfig): FieldDefinition<'object'> => {
 
   return defineField({
     name: objectName,
-    title: `Internationalized array ${type}`,
+    title: `Internationalized array ${typeName}`,
     type: 'object',
     components: {
       // @ts-expect-error - fix typings

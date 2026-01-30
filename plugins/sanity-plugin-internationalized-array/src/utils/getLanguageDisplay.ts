@@ -1,4 +1,4 @@
-import {LanguageDisplay} from '../types'
+import type {LanguageDisplay} from '../types'
 
 export function getLanguageDisplay(
   languageDisplay: LanguageDisplay,

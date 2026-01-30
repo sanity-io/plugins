@@ -1,4 +1,4 @@
-import {PluginConfig} from './types'
+import type {PluginConfig} from './types'
 
 export const MAX_COLUMNS = {
   codeOnly: 5,

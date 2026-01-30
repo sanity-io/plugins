@@ -14,7 +14,7 @@ import {
   Text,
   Tooltip,
 } from '@sanity/ui'
-import {ReactNode, useMemo} from 'react'
+import {type ReactNode, useMemo} from 'react'
 import {type ObjectItemProps, useFormValue} from 'sanity'
 import {set, unset} from 'sanity'
 
@@ -41,7 +41,7 @@ export default function InternationalizedInput(
     // Ensure patches is an array before proceeding with paste logic
     // For single patch operations (like unset), pass through directly
     if (!Array.isArray(patches)) {
-      return originalOnChange(patches)
+      return originalOnChange(patches as Parameters<typeof originalOnChange>[0])
     }
 
     // Check if this is a paste operation into an empty or uninitialized Portable Text field
@@ -99,12 +99,12 @@ export default function InternationalizedInput(
         // If we need to initialize the field, include that patch first
         const allPatches = initPatch ? [initPatch, ...fixedPatches] : fixedPatches
 
-        return originalOnChange(allPatches)
+        return originalOnChange(allPatches as Parameters<typeof originalOnChange>[0])
       }
     }
 
     // For all other cases, pass through unchanged
-    return originalOnChange(patches)
+    return originalOnChange(patches as Parameters<typeof originalOnChange>[0])
   }
 
   const inlineProps = {

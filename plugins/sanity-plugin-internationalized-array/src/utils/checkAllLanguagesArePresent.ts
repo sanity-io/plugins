@@ -1,4 +1,4 @@
-import {Language, Value} from '../types'
+import type {Language, Value} from '../types'
 
 export function checkAllLanguagesArePresent(
   languages: Language[],

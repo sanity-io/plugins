@@ -1,8 +1,8 @@
 import {Box, Stack, Text, useToast} from '@sanity/ui'
 import React, {useCallback} from 'react'
 import {
-  FormInsertPatch,
-  FormSetIfMissingPatch,
+  type FormInsertPatch,
+  type FormSetIfMissingPatch,
   insert,
   isSanityDocument,
   PatchEvent,
@@ -11,7 +11,9 @@ import {
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import {DocumentsToTranslate, getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
+import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
+
+import {getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
@@ -36,7 +38,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
       // Extract the base type name from internationalized array type
       // e.g., "internationalizedArrayBodyValue" -> "body"
       const match = typeName.match(/^internationalizedArray(.+)Value$/)
-      if (!match) return undefined
+      if (!match || !match[1]) return undefined
 
       const baseTypeName = match[1].charAt(0).toLowerCase() + match[1].slice(1)
 

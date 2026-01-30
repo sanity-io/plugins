@@ -1,6 +1,7 @@
-import {FormInsertPatch, insert, Path, SchemaType} from 'sanity'
+import {type FormInsertPatch, insert, type Path, type SchemaType} from 'sanity'
 
-import {Language, Value} from '../types'
+import type {Language, Value} from '../types'
+
 import {createValueSchemaTypeName} from './createValueSchemaTypeName'
 
 type AddConfig = {
