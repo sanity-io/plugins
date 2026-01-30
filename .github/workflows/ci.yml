@@ -19,37 +19,23 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && (github.event.pull_request.base.sha || github.event.before) }}
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
-      - name: Build (PR)
-        if: github.event_name == 'pull_request'
-        run: pnpm turbo run build --affected
       - name: Build
-        if: github.event_name != 'pull_request'
-        run: pnpm turbo run build
+        run: pnpm turbo run build --filter='!./dev/*'
 
   lint:
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && (github.event.pull_request.base.sha || github.event.before) }}
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Oxlint
         run: pnpm oxlint --format github
-      - name: ESLint (PR)
-        if: github.event_name == 'pull_request'
-        run: pnpm turbo run lint --affected -- -f gha --max-warnings 0
       - name: ESLint
-        if: github.event_name != 'pull_request'
         run: pnpm turbo run lint -- -f gha --max-warnings 0
 
   test:
