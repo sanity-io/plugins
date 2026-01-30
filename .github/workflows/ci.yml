@@ -65,7 +65,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Test (PR)
         if: github.event_name == 'pull_request'
-        run: pnpm test -- --changed --run
+        run: pnpm test --changed
       - name: Test (Main)
         if: github.ref == 'refs/heads/main'
-        run: pnpm test -- --run
+        run: pnpm test
