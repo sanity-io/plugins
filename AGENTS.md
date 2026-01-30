@@ -313,6 +313,20 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 
 ## Code Style
 
+### Dependencies
+
+**Always use `lodash-es` instead of `lodash`**
+
+When working with lodash utility functions, always use the `lodash-es` package instead of `lodash`. The `lodash-es` package is the ES module version that supports tree-shaking and works correctly with modern build tools.
+
+```bash
+# Correct
+pnpm add lodash-es
+
+# Wrong
+pnpm add lodash
+```
+
 ### Formatting
 
 We use [oxfmt](https://oxc.rs/docs/formatter.html):
