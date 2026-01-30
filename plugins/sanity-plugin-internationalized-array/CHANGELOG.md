@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-plugin-internationalized-array
 
 ## [3.2.2](https://github.com/sanity-io/sanity-plugin-internationalized-array/compare/v3.2.1...v3.2.2) (2025-12-17)
 

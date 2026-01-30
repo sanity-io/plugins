@@ -55,31 +55,24 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
           }
 
           const flatFieldTypeNames = flattenSchemaType(props.schemaType).map(
-            (field) => field.type.name
+            (field) => field.type.name,
           )
           const hasInternationalizedArray = flatFieldTypeNames.some((name) =>
-            name.startsWith('internationalizedArray')
+            name.startsWith('internationalizedArray'),
           )
 
           if (!hasInternationalizedArray) {
             return props.renderDefault(props)
           }
 
-          return (
-            <InternationalizedArrayProvider
-              {...props}
-              internationalizedArray={pluginConfig}
-            />
-          )
+          return <InternationalizedArrayProvider {...props} internationalizedArray={pluginConfig} />
         },
       },
     },
     // Register custom schema types for the outer array and the inner object
     schema: {
       types: [
-        ...fieldTypes.map((type) =>
-          array({type, apiVersion, select, languages, defaultLanguages})
-        ),
+        ...fieldTypes.map((type) => array({type, apiVersion, select, languages, defaultLanguages})),
         ...fieldTypes.map((type) => object({type})),
       ],
     },

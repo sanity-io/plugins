@@ -1,11 +1,11 @@
-/* eslint-disable no-nested-ternary */
 import {defineField, type FieldDefinition, type Rule} from 'sanity'
+
+import type {Language, LanguageCallback, Value} from '../types'
 
 import {getFunctionCache, peek, setFunctionCache} from '../cache'
 import {createFieldName} from '../components/createFieldName'
 import {getSelectedValue} from '../components/getSelectedValue'
 import InternationalizedArray from '../components/InternationalizedArray'
-import type {Language, LanguageCallback, Value} from '../types'
 import {getLanguagesFieldOption} from '../utils/getLanguagesFieldOption'
 
 type ArrayFactoryConfig = {
@@ -16,10 +16,7 @@ type ArrayFactoryConfig = {
   type: string | FieldDefinition
 }
 
-export type ArrayFieldOptions = Pick<
-  ArrayFactoryConfig,
-  'apiVersion' | 'select' | 'languages'
->
+export type ArrayFieldOptions = Pick<ArrayFactoryConfig, 'apiVersion' | 'select' | 'languages'>
 
 export default (config: ArrayFactoryConfig): FieldDefinition<'array'> => {
   const {apiVersion, select, languages, type} = config
@@ -71,10 +68,7 @@ export default (config: ArrayFactoryConfig): FieldDefinition<'array'> => {
           contextLanguages = peek(selectedValue) || []
         } else if (typeof languagesFieldOption === 'function') {
           // Try to get from function cache first (if it's the same function as the component)
-          const cachedLanguages = getFunctionCache(
-            languagesFieldOption,
-            selectedValue
-          )
+          const cachedLanguages = getFunctionCache(languagesFieldOption, selectedValue)
 
           if (Array.isArray(cachedLanguages)) {
             contextLanguages = cachedLanguages
@@ -85,25 +79,16 @@ export default (config: ArrayFactoryConfig): FieldDefinition<'array'> => {
               contextLanguages = suspendCachedLanguages
             } else {
               // Only make the async call if we don't have cached data
-              contextLanguages = await languagesFieldOption(
-                client,
-                selectedValue
-              )
+              contextLanguages = await languagesFieldOption(client, selectedValue)
               // Cache the result for future validation calls
-              setFunctionCache(
-                languagesFieldOption,
-                selectedValue,
-                contextLanguages
-              )
+              setFunctionCache(languagesFieldOption, selectedValue, contextLanguages)
             }
           }
         }
 
         if (value && value.length > contextLanguages.length) {
           return `Cannot be more than ${
-            contextLanguages.length === 1
-              ? `1 item`
-              : `${contextLanguages.length} items`
+            contextLanguages.length === 1 ? `1 item` : `${contextLanguages.length} items`
           }`
         }
 
@@ -111,9 +96,7 @@ export default (config: ArrayFactoryConfig): FieldDefinition<'array'> => {
         const languageIds = new Set(contextLanguages.map((lang) => lang.id))
 
         // Check for invalid language keys
-        const nonLanguageKeys = value.filter(
-          (item) => item?._key && !languageIds.has(item._key)
-        )
+        const nonLanguageKeys = value.filter((item) => item?._key && !languageIds.has(item._key))
         if (nonLanguageKeys.length) {
           return {
             message: `Array item keys must be valid languages registered to the field type`,

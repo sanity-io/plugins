@@ -1,11 +1,12 @@
 import {memo} from 'react'
 import {useClient} from 'sanity'
 
-import {createCacheKey, peek, preloadWithKey, setFunctionCache} from '../cache'
 import type {PluginConfig} from '../types'
 
+import {createCacheKey, peek, preloadWithKey, setFunctionCache} from '../cache'
+
 export default memo(function Preload(
-  props: Required<Pick<PluginConfig, 'apiVersion' | 'languages'>>
+  props: Required<Pick<PluginConfig, 'apiVersion' | 'languages'>>,
 ) {
   const client = useClient({apiVersion: props.apiVersion})
 
@@ -14,7 +15,6 @@ export default memo(function Preload(
   const cacheKey = createCacheKey({})
 
   if (!Array.isArray(peek({}))) {
-    // eslint-disable-next-line require-await
     preloadWithKey(async () => {
       if (Array.isArray(props.languages)) {
         return props.languages

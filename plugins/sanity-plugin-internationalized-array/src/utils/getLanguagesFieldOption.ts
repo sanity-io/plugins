@@ -3,7 +3,7 @@ import {SchemaType} from 'sanity'
 import {ArrayFieldOptions} from '../schema/array'
 
 export function getLanguagesFieldOption(
-  schemaType: SchemaType | undefined
+  schemaType: SchemaType | undefined,
 ): ArrayFieldOptions['languages'] | undefined {
   if (!schemaType) {
     return undefined

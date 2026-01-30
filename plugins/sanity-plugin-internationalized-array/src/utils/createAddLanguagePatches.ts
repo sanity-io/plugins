@@ -19,14 +19,7 @@ type AddConfig = {
 }
 
 export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
-  const {
-    addLanguageKeys,
-    schemaType,
-    languages,
-    filteredLanguages,
-    value,
-    path = [],
-  } = config
+  const {addLanguageKeys, schemaType, languages, filteredLanguages, value, path = []} = config
 
   const itemBase = {_type: createValueSchemaTypeName(schemaType)}
 
@@ -40,9 +33,7 @@ export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
     }
 
     return filteredLanguages
-      .filter((language) =>
-        value?.length ? !value.find((v) => v._key === language.id) : true
-      )
+      .filter((language) => (value?.length ? !value.find((v) => v._key === language.id) : true))
       .map((language) => ({
         ...itemBase,
         _key: language.id,
@@ -62,8 +53,7 @@ export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
 
     // So what is the index in the current value array of the next language in the language array?
     const nextLanguageIndex = languagesInUse.findIndex((l) =>
-      // eslint-disable-next-line max-nested-callbacks
-      remainingLanguages.find((r) => r.id === l._key)
+      remainingLanguages.find((r) => r.id === l._key),
     )
 
     // Keep local state up to date incase multiple insertions are being made

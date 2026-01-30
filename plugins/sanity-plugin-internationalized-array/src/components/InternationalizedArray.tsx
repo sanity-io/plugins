@@ -1,7 +1,8 @@
+import type React from 'react'
+
 import {AddIcon} from '@sanity/icons'
 import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Button, Card, Stack, Text, useToast} from '@sanity/ui'
-import type React from 'react'
 import {useCallback, useEffect, useMemo} from 'react'
 import {
   type ArrayOfObjectsInputProps,
@@ -15,6 +16,7 @@ import {
 import {useDocumentPane} from 'sanity/structure'
 
 import type {Value} from '../types'
+
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
@@ -22,41 +24,24 @@ import AddButtons from './AddButtons'
 import Feedback from './Feedback'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
-export type InternationalizedArrayProps = ArrayOfObjectsInputProps<
-  Value,
-  ArraySchemaType
->
+export type InternationalizedArrayProps = ArrayOfObjectsInputProps<Value, ArraySchemaType>
 
 export default function InternationalizedArray(
-  props: InternationalizedArrayProps
+  props: InternationalizedArrayProps,
 ): React.ReactElement {
-  const {
-    members,
-    value,
-    schemaType,
-    onChange,
-    readOnly: documentReadOnly,
-  } = props
+  const {members, value, schemaType, onChange, readOnly: documentReadOnly} = props
 
-  const readOnly =
-    typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false
+  const readOnly = typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false
   const toast = useToast()
 
-  const {
-    languages,
-    filteredLanguages,
-    defaultLanguages,
-    buttonAddAll,
-    buttonLocations,
-  } = useInternationalizedArrayContext()
+  const {languages, filteredLanguages, defaultLanguages, buttonAddAll, buttonLocations} =
+    useInternationalizedArrayContext()
 
   // Support updating the UI if languageFilter is installed
-  const {selectedLanguageIds, options: languageFilterOptions} =
-    useLanguageFilterStudioContext()
+  const {selectedLanguageIds, options: languageFilterOptions} = useLanguageFilterStudioContext()
   const documentType = useFormValue(['_type'])
   const languageFilterEnabled =
-    typeof documentType === 'string' &&
-    languageFilterOptions.documentTypes.includes(documentType)
+    typeof documentType === 'string' && languageFilterOptions.documentTypes.includes(documentType)
 
   const filteredMembers = useMemo(
     () =>
@@ -79,17 +64,15 @@ export default function InternationalizedArray(
             return languageFilterOptions.filterField(
               member.item.schemaType,
               valueMember,
-              selectedLanguageIds
+              selectedLanguageIds,
             )
           })
         : members,
-    [languageFilterEnabled, members, languageFilterOptions, selectedLanguageIds]
+    [languageFilterEnabled, members, languageFilterOptions, selectedLanguageIds],
   )
 
   const handleAddLanguage = useCallback(
-    async (
-      param?: React.MouseEvent<HTMLButtonElement, MouseEvent> | string[]
-    ) => {
+    async (param?: React.MouseEvent<HTMLButtonElement, MouseEvent> | string[]) => {
       if (!filteredLanguages?.length) {
         return
       }
@@ -108,7 +91,7 @@ export default function InternationalizedArray(
 
       onChange([setIfMissing([]), ...patches])
     },
-    [filteredLanguages, languages, onChange, schemaType, value]
+    [filteredLanguages, languages, onChange, schemaType, value],
   )
 
   const {isDeleting} = useDocumentPane()
@@ -184,7 +167,7 @@ export default function InternationalizedArray(
       languages && languages.length > 1
         ? languages.filter((l) => value?.find((v) => v._key === l.id))
         : [],
-    [languages, value]
+    [languages, value],
   )
 
   const languagesOutOfOrder = useMemo(() => {
@@ -193,17 +176,14 @@ export default function InternationalizedArray(
     }
 
     return value
-      .map((v, vIndex) =>
-        vIndex === languagesInUse.findIndex((l) => l.id === v._key) ? null : v
-      )
+      .map((v, vIndex) => (vIndex === languagesInUse.findIndex((l) => l.id === v._key) ? null : v))
       .filter(Boolean)
   }, [value, languagesInUse])
 
   const languagesAreValid = useMemo(
     () =>
-      !languages?.length ||
-      (languages?.length && languages.every((item) => item.id && item.title)),
-    [languages]
+      !languages?.length || (languages?.length && languages.every((item) => item.id && item.title)),
+    [languages],
   )
 
   // Automatically restore order of fields
@@ -216,7 +196,7 @@ export default function InternationalizedArray(
   // compare value keys with possible languages
   const allLanguagesArePresent = useMemo(
     () => checkAllLanguagesArePresent(filteredLanguages, value),
-    [filteredLanguages, value]
+    [filteredLanguages, value],
   )
 
   if (!languagesAreValid) {
@@ -238,13 +218,7 @@ export default function InternationalizedArray(
         <>
           {filteredMembers.map((member) => {
             if (member.kind === 'item') {
-              return (
-                <ArrayOfObjectsItem
-                  {...props}
-                  key={member.key}
-                  member={member}
-                />
-              )
+              return <ArrayOfObjectsItem {...props} key={member.key} member={member} />
             }
 
             return <MemberItemError key={member.key} member={member} />
@@ -255,9 +229,7 @@ export default function InternationalizedArray(
       {/* Give some feedback in the UI so the field doesn't look "missing" */}
       {!addButtonsAreVisible && !fieldHasMembers ? (
         <Card border tone="transparent" padding={3} radius={2}>
-          <Text size={1}>
-            This internationalized field currently has no translations.
-          </Text>
+          <Text size={1}>This internationalized field currently has no translations.</Text>
         </Card>
       ) : null}
 

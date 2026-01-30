@@ -1,18 +1,11 @@
-import {
-  isDocumentSchemaType,
-  type ObjectField,
-  type Path,
-  type SchemaType,
-} from 'sanity'
+import {isDocumentSchemaType, type ObjectField, type Path, type SchemaType} from 'sanity'
 
 type ObjectFieldWithPath = ObjectField<SchemaType> & {path: Path}
 
 /**
  * Flattens a document's schema type into a flat array of fields and includes their path
  */
-export function flattenSchemaType(
-  schemaType: SchemaType
-): ObjectFieldWithPath[] {
+export function flattenSchemaType(schemaType: SchemaType): ObjectFieldWithPath[] {
   if (!isDocumentSchemaType(schemaType)) {
     console.error(`Schema type is not a document`)
     return []
@@ -24,7 +17,7 @@ export function flattenSchemaType(
 function extractInnerFields(
   fields: ObjectField<SchemaType>[],
   path: Path,
-  maxDepth: number
+  maxDepth: number,
 ): ObjectFieldWithPath[] {
   if (path.length >= maxDepth) {
     return []
@@ -34,11 +27,7 @@ function extractInnerFields(
     const thisFieldWithPath = {path: [...path, field.name], ...field}
 
     if (field.type.jsonType === 'object') {
-      const innerFields = extractInnerFields(
-        field.type.fields,
-        [...path, field.name],
-        maxDepth
-      )
+      const innerFields = extractInnerFields(field.type.fields, [...path, field.name], maxDepth)
 
       return [...acc, thisFieldWithPath, ...innerFields]
     } else if (
@@ -51,8 +40,8 @@ function extractInnerFields(
           // @ts-expect-error - Fix TS assertion for array fields
           innerField.fields,
           [...path, field.name],
-          maxDepth
-        )
+          maxDepth,
+        ),
       )
 
       return [...acc, thisFieldWithPath, ...innerFields]

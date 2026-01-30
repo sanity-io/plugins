@@ -3,6 +3,7 @@ import {bynderExample} from '#bynder'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {iframePaneExample} from '#iframe-pane'
+import {internationalizedArrayExample} from '#internationalized-array'
 import {markdownExample} from '#markdown'
 import {richDateInputExample} from '#rich-date-input'
 import {unsplashExample} from '#unsplash'
@@ -39,6 +40,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       // add new plugins here
+      internationalizedArrayExample(),
       richDateInputExample(),
       codeInputExample(),
       aprimoExample(),

@@ -10,7 +10,7 @@ export interface DocumentsToTranslate {
 
 export const getDocumentsToTranslate = (
   value: SanityDocument | unknown,
-  rootPath: (string | number)[] = []
+  rootPath: (string | number)[] = [],
 ): DocumentsToTranslate[] => {
   if (Array.isArray(value)) {
     const arrayRootPath = [...rootPath]
@@ -21,9 +21,7 @@ export const getDocumentsToTranslate = (
 
       if (typeof item === 'object') {
         const type = item?._type as string | undefined
-        return (
-          type?.startsWith('internationalizedArray') && type?.endsWith('Value')
-        )
+        return type?.startsWith('internationalizedArray') && type?.endsWith('Value')
       }
       return false
     })
@@ -40,9 +38,7 @@ export const getDocumentsToTranslate = (
 
     if (value.length > 0) {
       return value
-        .map((item, index) =>
-          getDocumentsToTranslate(item, [...arrayRootPath, index])
-        )
+        .map((item, index) => getDocumentsToTranslate(item, [...arrayRootPath, index]))
         .flat()
     }
 
@@ -51,7 +47,7 @@ export const getDocumentsToTranslate = (
   if (typeof value === 'object' && value) {
     const startsWithUnderscoreRegex = /^_/
     const itemKeys = Object.keys(value).filter(
-      (key) => !key.match(startsWithUnderscoreRegex)
+      (key) => !key.match(startsWithUnderscoreRegex),
     ) as (keyof typeof value)[]
 
     return itemKeys

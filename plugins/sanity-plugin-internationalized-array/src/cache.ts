@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 import * as suspend from 'suspend-react'
 
 import type {Language, LanguageCallback} from './types'
@@ -22,10 +20,8 @@ export const preload = (fn: () => Promise<Language[]>) =>
   suspend.preload(() => fn(), [version, namespace])
 
 // Enhanced preload function that can use custom cache keys
-export const preloadWithKey = (
-  fn: () => Promise<Language[]>,
-  key: (string | number)[]
-) => suspend.preload(() => fn(), key)
+export const preloadWithKey = (fn: () => Promise<Language[]>, key: (string | number)[]) =>
+  suspend.preload(() => fn(), key)
 
 // https://github.com/pmndrs/suspend-react#cache-busting
 export const clear = () => suspend.clear([version, namespace])
@@ -35,10 +31,7 @@ export const peek = (selectedValue: Record<string, unknown>) =>
   suspend.peek([version, namespace, selectedValue]) as Language[] | undefined
 
 // Helper function to create a stable cache key that matches the component's key structure
-export const createCacheKey = (
-  selectedValue: Record<string, unknown>,
-  workspaceId?: string
-) => {
+export const createCacheKey = (selectedValue: Record<string, unknown>, workspaceId?: string) => {
   const selectedValueHash = JSON.stringify(selectedValue)
   return workspaceId
     ? [version, namespace, selectedValueHash, workspaceId]
@@ -46,13 +39,8 @@ export const createCacheKey = (
 }
 
 // Enhanced peek function that can work with workspace context
-export const peekWithWorkspace = (
-  selectedValue: Record<string, unknown>,
-  workspaceId?: string
-) =>
-  suspend.peek(createCacheKey(selectedValue, workspaceId)) as
-    | Language[]
-    | undefined
+export const peekWithWorkspace = (selectedValue: Record<string, unknown>, workspaceId?: string) =>
+  suspend.peek(createCacheKey(selectedValue, workspaceId)) as Language[] | undefined
 
 // Generate a unique key for a function reference (cached for performance)
 export const getFunctionKey = (fn: LanguageCallback): string => {
@@ -69,9 +57,7 @@ export const getFunctionKey = (fn: LanguageCallback): string => {
   const maxLength = Math.min(fnStr.length, 100)
   for (let i = 0; i < maxLength; i++) {
     const char = fnStr.charCodeAt(i)
-    // eslint-disable-next-line no-bitwise
     hash = (hash << 5) - hash + char
-    // eslint-disable-next-line no-bitwise
     hash &= hash // Convert to 32-bit integer
   }
   const key = `anonymous_${Math.abs(hash)}`
@@ -83,7 +69,7 @@ export const getFunctionKey = (fn: LanguageCallback): string => {
 export const createFunctionCacheKey = (
   fn: LanguageCallback,
   selectedValue: Record<string, unknown>,
-  workspaceId?: string
+  workspaceId?: string,
 ): string => {
   const functionKey = getFunctionKey(fn)
   const selectedValueHash = JSON.stringify(selectedValue)
@@ -97,10 +83,7 @@ export const getValidationCache = (key: string): Language[] | undefined => {
   return validationCache.get(key)
 }
 
-export const setValidationCache = (
-  key: string,
-  languages: Language[]
-): void => {
+export const setValidationCache = (key: string, languages: Language[]): void => {
   validationCache.set(key, languages)
 }
 
@@ -112,7 +95,7 @@ export const clearValidationCache = (): void => {
 export const getFunctionCache = (
   fn: LanguageCallback,
   selectedValue: Record<string, unknown>,
-  workspaceId?: string
+  workspaceId?: string,
 ): Language[] | undefined => {
   const key = createFunctionCacheKey(fn, selectedValue, workspaceId)
   return functionCache.get(key)
@@ -122,7 +105,7 @@ export const setFunctionCache = (
   fn: LanguageCallback,
   selectedValue: Record<string, unknown>,
   languages: Language[],
-  workspaceId?: string
+  workspaceId?: string,
 ): void => {
   const key = createFunctionCacheKey(fn, selectedValue, workspaceId)
   functionCache.set(key, languages)
@@ -140,9 +123,6 @@ export const clearAllCaches = (): void => {
 }
 
 // Check if two functions are the same reference
-export const isSameFunction = (
-  fn1: LanguageCallback,
-  fn2: LanguageCallback
-): boolean => {
+export const isSameFunction = (fn1: LanguageCallback, fn2: LanguageCallback): boolean => {
   return fn1 === fn2 || getFunctionKey(fn1) === getFunctionKey(fn2)
 }

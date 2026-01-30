@@ -1,4 +1,5 @@
 import type {ReactNode} from 'react'
+
 import {useMemo} from 'react'
 import {type FieldProps} from 'sanity'
 
@@ -11,14 +12,9 @@ export default function InternationalizedField(props: FieldProps): ReactNode {
   const customProps = useMemo(() => {
     const pathSegment = props.path.slice(0, -1)[1]
     const languageId =
-      typeof pathSegment === 'object' && '_key' in pathSegment
-        ? pathSegment._key
-        : undefined
-    const hasValidLanguageId = languageId
-      ? languages.some((l) => l.id === languageId)
-      : false
-    const shouldHideTitle =
-      props.title?.toLowerCase() === 'value' && hasValidLanguageId
+      typeof pathSegment === 'object' && '_key' in pathSegment ? pathSegment._key : undefined
+    const hasValidLanguageId = languageId ? languages.some((l) => l.id === languageId) : false
+    const shouldHideTitle = props.title?.toLowerCase() === 'value' && hasValidLanguageId
 
     return {
       ...props,

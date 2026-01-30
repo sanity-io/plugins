@@ -11,20 +11,14 @@ import {
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import {
-  DocumentsToTranslate,
-  getDocumentsToTranslate,
-} from '../utils/getDocumentsToTranslate'
+import {DocumentsToTranslate, getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
 type DocumentAddButtonsProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: Record<string, any> | undefined
+  value: Record<string, unknown> | undefined
 }
-export default function DocumentAddButtons(
-  props: DocumentAddButtonsProps
-): React.ReactElement {
+export default function DocumentAddButtons(props: DocumentAddButtonsProps): React.ReactElement {
   const {filteredLanguages} = useInternationalizedArrayContext()
   const value = isSanityDocument(props.value) ? props.value : undefined
 
@@ -47,52 +41,38 @@ export default function DocumentAddButtons(
       const baseTypeName = match[1].charAt(0).toLowerCase() + match[1].slice(1)
 
       // Check if it's a known array-based type (Portable Text fields)
-      const arrayBasedTypes = [
-        'body',
-        'htmlContent',
-        'blockContent',
-        'portableText',
-      ]
+      const arrayBasedTypes = ['body', 'htmlContent', 'blockContent', 'portableText']
       if (arrayBasedTypes.includes(baseTypeName)) {
         return []
       }
 
       // Try to look up the schema type to determine if it's an array
-      try {
-        const schemaType = schema.get(typeName)
-        if (schemaType) {
-          // Check if this is an object type with a 'value' field
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const valueField = (schemaType as any)?.fields?.find(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (f: any) => f.name === 'value'
-          )
-          if (valueField) {
-            const fieldType = valueField.type
-            // Check if the value field is an array type
-            if (
-              fieldType?.jsonType === 'array' ||
-              fieldType?.name === 'array' ||
-              fieldType?.type === 'array' ||
-              fieldType?.of !== undefined ||
-              arrayBasedTypes.includes(fieldType?.name)
-            ) {
-              return []
-            }
+      const schemaType = schema.get(typeName)
+      if (schemaType && 'fields' in schemaType) {
+        // Check if this is an object type with a 'value' field
+        const fields = schemaType.fields as Array<{
+          name: string
+          type?: {jsonType?: string; name?: string; type?: string; of?: unknown}
+        }>
+        const valueField = fields.find((f) => f.name === 'value')
+        if (valueField) {
+          const fieldType = valueField.type
+          // Check if the value field is an array type
+          if (
+            fieldType?.jsonType === 'array' ||
+            fieldType?.name === 'array' ||
+            fieldType?.type === 'array' ||
+            fieldType?.of !== undefined ||
+            (fieldType?.name && arrayBasedTypes.includes(fieldType.name))
+          ) {
+            return []
           }
         }
-      } catch (error) {
-        // If we can't determine from schema, fall back to undefined
-        console.warn(
-          'Could not determine field type from schema:',
-          typeName,
-          error
-        )
       }
 
       return undefined
     },
-    [schema]
+    [schema],
   )
 
   const handleDocumentButtonClick = useCallback(
@@ -106,28 +86,28 @@ export default function DocumentAddButtons(
         return
       }
       const alreadyTranslated = documentsToTranslation.filter(
-        (translation) => translation?._key === languageId
+        (translation) => translation?._key === languageId,
       )
-      const removeDuplicates = documentsToTranslation.reduce<
-        DocumentsToTranslate[]
-      >((filteredTranslations, translation) => {
-        if (
-          alreadyTranslated.filter(
-            (alreadyTranslation) =>
-              alreadyTranslation.pathString === translation.pathString
-          ).length > 0
-        ) {
-          return filteredTranslations
-        }
-        const translationAlreadyExists = filteredTranslations.filter(
-          (filteredTranslation) => filteredTranslation.path === translation.path
-        )
+      const removeDuplicates = documentsToTranslation.reduce<DocumentsToTranslate[]>(
+        (filteredTranslations, translation) => {
+          if (
+            alreadyTranslated.filter(
+              (alreadyTranslation) => alreadyTranslation.pathString === translation.pathString,
+            ).length > 0
+          ) {
+            return filteredTranslations
+          }
+          const translationAlreadyExists = filteredTranslations.filter(
+            (filteredTranslation) => filteredTranslation.path === translation.path,
+          )
 
-        if (translationAlreadyExists.length > 0) {
-          return filteredTranslations
-        }
-        return [...filteredTranslations, translation]
-      }, [])
+          if (translationAlreadyExists.length > 0) {
+            return filteredTranslations
+          }
+          return [...filteredTranslations, translation]
+        },
+        [],
+      )
       if (removeDuplicates.length === 0) {
         toast.push({
           status: 'error',
@@ -155,7 +135,7 @@ export default function DocumentAddButtons(
             },
           ],
           'after',
-          [...path, -1]
+          [...path, -1],
         )
         patches.push(ifMissing)
         patches.push(insertValue)
@@ -163,7 +143,7 @@ export default function DocumentAddButtons(
 
       onChange(PatchEvent.from(patches.flat()))
     },
-    [documentsToTranslation, getInitialValueForType, onChange, toast]
+    [documentsToTranslation, getInitialValueForType, onChange, toast],
   )
   return (
     <Stack space={3}>
