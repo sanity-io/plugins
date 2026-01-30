@@ -1,12 +1,6 @@
-> This is the **Sanity Studio v3 version** of sanity-plugin-internationalized-array.
->
-> For the v2 version, please refer to the [v2-branch](https://github.com/sanity-io/sanity-plugin-internationalized-array/tree/studio-v2).
-
 # sanity-plugin-internationalized-array
 
 A plugin to register array fields with a custom input component to store field values in multiple languages, queryable by using the language ID as an array `_key`.
-
-![Screenshot of an internationalized input](./img/internationalized-array.png)
 
 - [sanity-plugin-internationalized-array](#sanity-plugin-internationalized-array)
   - [Installation](#installation)
@@ -355,10 +349,6 @@ Using GROQ filters you can query for a specific language key like so:
 
 ## Migrate from objects to arrays
 
-[See the migration script](https://github.com/sanity-io/sanity-plugin-internationalized-array/blob/main/migrations/transformObjectToArray.ts) inside `./migrations/transformObjectToArray.ts` of this Repo.
-
-Follow the instructions inside the script and set the `_type` and field name you wish to target.
-
 Please take a backup first!
 
 ### Why store localized field data like this?
@@ -404,23 +394,4 @@ See LICENSE
 
 ## License
 
-MIT-licensed. See LICENSE.
-
-## Develop & test
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/sanity-plugin-internationalized-array/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
-
-Semantic release will only release on configured branches, so it is safe to run release on any branch.
-
-## License
-
-[MIT](LICENSE) © Simeon Griggs
+[MIT](LICENSE) © Sanity.io
