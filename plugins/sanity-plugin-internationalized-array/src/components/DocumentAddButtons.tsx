@@ -1,5 +1,5 @@
 import {Box, Stack, Text, useToast} from '@sanity/ui'
-import React, {useCallback} from 'react'
+import {type ReactElement, type MouseEvent, useCallback} from 'react'
 import {
   type FormInsertPatch,
   type FormSetIfMissingPatch,
@@ -20,7 +20,7 @@ import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 type DocumentAddButtonsProps = {
   value: Record<string, unknown> | undefined
 }
-export default function DocumentAddButtons(props: DocumentAddButtonsProps): React.ReactElement {
+export default function DocumentAddButtons(props: DocumentAddButtonsProps): ReactElement {
   const {filteredLanguages} = useInternationalizedArrayContext()
   const value = isSanityDocument(props.value) ? props.value : undefined
 
@@ -79,7 +79,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
   )
 
   const handleDocumentButtonClick = useCallback(
-    async (event: React.MouseEvent<HTMLButtonElement>) => {
+    async (event: MouseEvent<HTMLButtonElement>) => {
       const languageId = event.currentTarget.value
       if (!languageId) {
         toast.push({
