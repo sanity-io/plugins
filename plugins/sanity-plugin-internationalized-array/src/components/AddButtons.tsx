@@ -2,7 +2,6 @@ import type React from 'react'
 
 import {AddIcon} from '@sanity/icons'
 import {Button, Grid} from '@sanity/ui'
-import {memo} from 'react'
 
 import type {Language, Value} from '../types'
 
@@ -52,4 +51,4 @@ function AddButtons(props: AddButtonsProps) {
   ) : null
 }
 
-export default memo(AddButtons)
+export default AddButtons

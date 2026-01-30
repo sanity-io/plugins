@@ -1,13 +1,10 @@
-import {memo} from 'react'
 import {useClient} from 'sanity'
 
 import type {PluginConfig} from '../types'
 
 import {createCacheKey, peek, preloadWithKey, setFunctionCache} from '../cache'
 
-export default memo(function Preload(
-  props: Required<Pick<PluginConfig, 'apiVersion' | 'languages'>>,
-) {
+export default function Preload(props: Required<Pick<PluginConfig, 'apiVersion' | 'languages'>>) {
   const client = useClient({apiVersion: props.apiVersion})
 
   // Use the same cache key structure as the main component
@@ -28,4 +25,4 @@ export default memo(function Preload(
   }
 
   return null
-})
+}
