@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/preview-url-secret": "^4.0.2",
+    "@sanity/preview-url-secret": "^4.0.3",
     "@sanity/ui": "^3.1.11",
     "motion": "^12.29.2",
     "suspend-react": "0.1.3"
