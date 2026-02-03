@@ -188,19 +188,10 @@ export default function InternationalizedArray(
 
   // Automatically restore order of fields
   useEffect(() => {
-    if (
-      languagesOutOfOrder.length > 0 &&
-      allKeysAreLanguages &&
-      !documentReadOnly
-    ) {
+    if (languagesOutOfOrder.length > 0 && allKeysAreLanguages && !documentReadOnly) {
       handleRestoreOrder()
     }
-  }, [
-    languagesOutOfOrder,
-    allKeysAreLanguages,
-    handleRestoreOrder,
-    documentReadOnly,
-  ])
+  }, [languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, documentReadOnly])
 
   // compare value keys with possible languages
   const allLanguagesArePresent = useMemo(
