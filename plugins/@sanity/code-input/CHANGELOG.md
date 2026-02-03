@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.0.8
+
+### Patch Changes
+
+- [#499](https://github.com/sanity-io/plugins/pull/499) [`d32dab6`](https://github.com/sanity-io/plugins/commit/d32dab69b209f7cf4cd40661af4c519086c3ce96) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @codemirror/view to ^6.39.12
+
 ## 7.0.7
 
 ### Patch Changes

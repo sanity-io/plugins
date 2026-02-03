@@ -1,5 +1,33 @@
 # sanity-plugin-internationalized-array
 
+## 4.0.0
+
+### Major Changes
+
+- [#493](https://github.com/sanity-io/plugins/pull/493) [`4d9e6bb`](https://github.com/sanity-io/plugins/commit/4d9e6bb044c80db8cec386e36fcddab94d5102f5) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port sanity-plugin-internationalized-array to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+  - **React Compiler enabled**: The plugin is now optimized with React Compiler for better performance
+  - **ESM-only**: CommonJS is no longer supported (removed dual module format)
+  - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the baseline
+  - **React 19 required**: Updated to support React 19.2+
+  - **Stricter TypeScript**: Updated type definitions with improved type safety
+  - **Updated dependencies**: All dependencies updated to latest compatible versions
+
+  The plugin functionality remains the same, but the new build process and dependencies require these breaking changes for compatibility with the monorepo's tooling and conventions.
+
+### Patch Changes
+
+- [#525](https://github.com/sanity-io/plugins/pull/525) [`575e069`](https://github.com/sanity-io/plugins/commit/575e069e30b0a0e18a2e14812439c8dd8877ee58) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
+- [#530](https://github.com/sanity-io/plugins/pull/530) [`7e825c1`](https://github.com/sanity-io/plugins/commit/7e825c1d987b282d3a63c094ab2429cbd0519c14) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/language-filter to ^4.0.6
+
+- [#533](https://github.com/sanity-io/plugins/pull/533) [`a019be6`](https://github.com/sanity-io/plugins/commit/a019be65598d5bad6b5654551e8da569c22ab703) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency lodash-es to ^4.17.23
+
+- [#526](https://github.com/sanity-io/plugins/pull/526) [`ea2b950`](https://github.com/sanity-io/plugins/commit/ea2b950a287b4f1b1c212b68ebb936e3bec2f051) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix "restore order" action on read-only documents
+
+  Previously, the automatic "restore order" action would attempt to patch read-only documents, resulting in an error. The action now checks the document's read-only status before executing.
+
 ## [3.2.2](https://github.com/sanity-io/sanity-plugin-internationalized-array/compare/v3.2.1...v3.2.2) (2025-12-17)
 
 ### Bug Fixes
