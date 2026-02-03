@@ -266,6 +266,45 @@ export type RichDate = {
   offset?: number
 }
 
+export type InternationalizedPost = {
+  _id: string
+  _type: 'internationalizedPost'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: InternationalizedArrayString
+  description?: InternationalizedArrayText
+  slug?: Slug
+}
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
+}
+
+export type InternationalizedArrayText = Array<
+  {
+    _key: string
+  } & InternationalizedArrayTextValue
+>
+
+export type InternationalizedArrayString = Array<
+  {
+    _key: string
+  } & InternationalizedArrayStringValue
+>
+
+export type InternationalizedArrayTextValue = {
+  _type: 'internationalizedArrayTextValue'
+  value?: string
+}
+
+export type InternationalizedArrayStringValue = {
+  _type: 'internationalizedArrayStringValue'
+  value?: string
+}
+
 export type SanityImagePaletteSwatch = {
   _type: 'sanity.imagePaletteSwatch'
   background?: string
@@ -363,12 +402,6 @@ export type Geopoint = {
   alt?: number
 }
 
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
-}
-
 export type AllSanitySchemaTypes =
   | Rendition
   | SanityVercelProtectionBypass
@@ -394,6 +427,12 @@ export type AllSanitySchemaTypes =
   | Code
   | RichDateTest
   | RichDate
+  | InternationalizedPost
+  | Slug
+  | InternationalizedArrayText
+  | InternationalizedArrayString
+  | InternationalizedArrayTextValue
+  | InternationalizedArrayStringValue
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -402,7 +441,6 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | SanityImageAsset
   | Geopoint
-  | Slug
 
 export declare const internalGroqTypeReferenceTo: unique symbol
 
