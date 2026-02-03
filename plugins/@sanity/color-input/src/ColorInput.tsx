@@ -33,35 +33,14 @@ const ReadOnlyContainer = styled(Flex)`
   width: 100%;
 `
 
-// Subtle checkboard pattern matching react-color original (white=transparent, grey=rgba(0,0,0,.08))
+// Checkboard pattern matching react-color original: 8x8 pixel squares, white and rgba(0,0,0,.08)
 const Checkboard = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: transparent;
-  background-image:
-    linear-gradient(
-      45deg,
-      rgba(0, 0, 0, 0.08) 25%,
-      transparent 25%,
-      transparent 75%,
-      rgba(0, 0, 0, 0.08) 75%,
-      rgba(0, 0, 0, 0.08)
-    ),
-    linear-gradient(
-      45deg,
-      rgba(0, 0, 0, 0.08) 25%,
-      transparent 25%,
-      transparent 75%,
-      rgba(0, 0, 0, 0.08) 75%,
-      rgba(0, 0, 0, 0.08)
-    );
-  background-size: 8px 8px;
-  background-position:
-    0 0,
-    4px 4px;
+  background: repeating-conic-gradient(rgba(0, 0, 0, 0.08) 0% 25%, #fff 0% 50%) 0 0 / 16px 16px;
 `
 
 // Custom pointer to match the original react-color vertical bar style
@@ -126,12 +105,17 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                 />
               </Card>
 
-              <Card shadow={1} radius={3} style={{position: 'relative', height: '10px'}}>
+              <Card
+                shadow={1}
+                radius={3}
+                overflow="hidden"
+                style={{position: 'relative', height: '10px'}}
+              >
                 <Hue
                   hue={hsv.h}
                   onChange={(newHue) => handleHsvaChange({...hsv, ...newHue})}
                   pointer={Pointer}
-                  style={{width: '100%', height: '100%', borderRadius: 'inherit'}}
+                  style={{width: '100%', height: '100%'}}
                 />
               </Card>
 
@@ -139,14 +123,15 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                 <Card
                   shadow={1}
                   radius={3}
+                  overflow="hidden"
                   style={{position: 'relative', height: '10px', background: '#fff'}}
                 >
-                  <Checkboard style={{borderRadius: 'inherit'}} />
+                  <Checkboard />
                   <Alpha
                     hsva={hsv}
                     onChange={(newAlpha) => handleHsvaChange({...hsv, ...newAlpha})}
                     pointer={Pointer}
-                    style={{width: '100%', height: '100%', borderRadius: 'inherit'}}
+                    style={{width: '100%', height: '100%'}}
                   />
                 </Card>
               )}

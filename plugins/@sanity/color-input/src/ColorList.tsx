@@ -18,28 +18,7 @@ const ColorBoxContainer = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 3px;
-  background-color: #fff;
-  background-image:
-    linear-gradient(
-      45deg,
-      rgba(0, 0, 0, 0.08) 25%,
-      transparent 25%,
-      transparent 75%,
-      rgba(0, 0, 0, 0.08) 75%,
-      rgba(0, 0, 0, 0.08)
-    ),
-    linear-gradient(
-      45deg,
-      rgba(0, 0, 0, 0.08) 25%,
-      transparent 25%,
-      transparent 75%,
-      rgba(0, 0, 0, 0.08) 75%,
-      rgba(0, 0, 0, 0.08)
-    );
-  background-size: 8px 8px;
-  background-position:
-    0 0,
-    4px 4px;
+  background: repeating-conic-gradient(rgba(0, 0, 0, 0.08) 0% 25%, #fff 0% 50%) 0 0 / 16px 16px;
 `
 
 const ColorBox = styled.div`
@@ -51,28 +30,56 @@ const ColorBox = styled.div`
   z-index: 1;
 `
 
+// Color format interfaces for preset colors
+interface RgbColor {
+  r: number
+  g: number
+  b: number
+  a?: number
+}
+
+interface HslColor {
+  h: number
+  s: number
+  l: number
+  a?: number
+}
+
+interface HsvColor {
+  h: number
+  s: number
+  v: number
+  a?: number
+}
+
+interface HexColor {
+  hex: string
+}
+
+type PresetColor = string | ColorValue | RgbColor | HslColor | HsvColor | HexColor
+
 interface ValidatedColor {
-  color: string | ColorValue | Record<string, number>
+  color: PresetColor
   backgroundColor: string
   hex: string
 }
 
 interface ColorListProps {
-  colors?: Array<string | ColorValue | Record<string, number>>
+  colors?: PresetColor[]
   onChange: (color: HsvaColor) => void
 }
 
-const validateColors = (colors: Array<string | ColorValue | Record<string, number>>) =>
-  colors.reduce((cls: Array<ValidatedColor>, c) => {
+const validateColors = (colors: PresetColor[]) =>
+  colors.reduce((cls: ValidatedColor[], c) => {
     // Handle various color formats: hex string, {hex}, {r,g,b}, {h,s,l}, {h,s,v}
     let color
     if (typeof c === 'string') {
       color = tinycolor(c)
-    } else if ('hex' in c && c.hex) {
+    } else if ('hex' in c && typeof c.hex === 'string') {
       color = tinycolor(c.hex)
     } else if ('r' in c) {
       // RGB(A) format
-      color = tinycolor(c as tinycolor.ColorInputWithoutInstance)
+      color = tinycolor({r: c.r, g: c.g, b: c.b, a: c.a})
     } else if ('h' in c && 's' in c) {
       if ('v' in c) {
         // HSV(A) format
