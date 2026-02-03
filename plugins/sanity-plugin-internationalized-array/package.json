@@ -42,7 +42,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.5.3",
+    "@sanity/icons": "^3.7.4",
     "@sanity/language-filter": "^4.0.3",
     "@sanity/ui": "^3.1.11",
     "fast-deep-equal": "^3.1.3",
