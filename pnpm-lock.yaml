@@ -770,7 +770,7 @@ importers:
   plugins/sanity-plugin-internationalized-array:
     dependencies:
       '@sanity/icons':
-        specifier: ^3.5.3
+        specifier: ^3.7.4
         version: 3.7.4(react@19.2.4)
       '@sanity/language-filter':
         specifier: ^4.0.3
