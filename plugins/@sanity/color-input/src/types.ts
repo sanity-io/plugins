@@ -1,16 +1,16 @@
-import type {Color, HSLColor, HSVColor, RGBColor} from 'react-color'
+import type {HslaColor, HsvaColor, RgbaColor} from '@uiw/react-color'
 import type {ObjectInputProps, ObjectOptions, ObjectSchemaType} from 'sanity'
 
 export interface ColorValue {
   hex: string
-  hsl: HSLColor
-  hsv: HSVColor
-  rgb: RGBColor
+  hsl: HslaColor
+  hsv: HsvaColor
+  rgb: RgbaColor
 }
 
 export interface ColorOptions extends Omit<ObjectOptions, 'columns'> {
   disableAlpha?: boolean
-  colorList?: Array<Color>
+  colorList?: Array<string | ColorValue>
 }
 
 export type ColorSchemaType = Omit<ObjectSchemaType, 'options'> & {

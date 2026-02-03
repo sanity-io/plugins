@@ -1,10 +1,15 @@
-import type {CustomPickerInjectedProps} from 'react-color/lib/components/common/ColorWrap'
-
 import {AddIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
+import {
+  Alpha,
+  Hue,
+  type HsvaColor,
+  Saturation,
+  hsvaToHex,
+  hsvaToHsla,
+  hsvaToRgba,
+} from '@uiw/react-color'
 import {startTransition, useOptimistic, useRef} from 'react'
-import {type Color, CustomPicker} from 'react-color'
-import {Alpha, Checkboard, Hue, Saturation} from 'react-color/lib/components/common'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
 import {styled} from 'styled-components'
 
@@ -28,28 +33,83 @@ const ReadOnlyContainer = styled(Flex)`
   width: 100%;
 `
 
-interface ColorPickerProps extends CustomPickerInjectedProps<Color> {
+// Subtle checkboard pattern matching react-color original (white=transparent, grey=rgba(0,0,0,.08))
+const Checkboard = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  background-image:
+    linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.08) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgba(0, 0, 0, 0.08) 75%,
+      rgba(0, 0, 0, 0.08)
+    ),
+    linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.08) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgba(0, 0, 0, 0.08) 75%,
+      rgba(0, 0, 0, 0.08)
+    );
+  background-size: 8px 8px;
+  background-position:
+    0 0,
+    4px 4px;
+`
+
+// Custom pointer to match the original react-color vertical bar style
+const BarPointer = styled.div<{$left: string}>`
+  position: absolute;
+  left: ${(props) => props.$left};
+  width: 4px;
+  height: 100%;
+  border-radius: 1px;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 2px;
+  transform: translateX(-50%);
+`
+
+interface PointerProps {
+  left?: string
+}
+
+const Pointer = ({left = '0%'}: PointerProps) => <BarPointer $left={left} />
+
+interface ColorPickerProps {
   width?: string
   disableAlpha: boolean
-  colorList?: Array<Color> | undefined
+  colorList?: Array<string | ColorValue> | undefined
   readOnly?: boolean
   onUnset: () => void
   color: ColorValue
+  onChange: (color: ColorValue) => void
 }
 
 const ColorPickerInner = (props: ColorPickerProps) => {
-  const {
-    width,
-    color: {rgb, hex, hsv, hsl},
-    onChange,
-    onUnset,
-    disableAlpha,
-    colorList,
-    readOnly,
-  } = props
+  const {width, color, onChange, onUnset, disableAlpha, colorList, readOnly} = props
+  const {rgb, hex, hsv, hsl} = color
 
   if (!hsl || !hsv) {
     return null
+  }
+
+  const handleHsvaChange = (newHsva: HsvaColor) => {
+    const newRgba = hsvaToRgba(newHsva)
+    const newHex = hsvaToHex(newHsva)
+    const newHsla = hsvaToHsla(newHsva)
+    onChange({
+      hex: newHex,
+      rgb: newRgba,
+      hsv: newHsva,
+      hsl: newHsla,
+    })
   }
 
   return (
@@ -59,26 +119,35 @@ const ColorPickerInner = (props: ColorPickerProps) => {
           {!readOnly && (
             <>
               <Card overflow="hidden" style={{position: 'relative', height: '5em'}}>
-                <Saturation onChange={onChange} hsl={hsl} hsv={hsv} />
+                <Saturation
+                  hsva={hsv}
+                  onChange={handleHsvaChange}
+                  style={{width: '100%', height: '100%'}}
+                />
               </Card>
 
-              <Card
-                shadow={1}
-                radius={3}
-                overflow="hidden"
-                style={{position: 'relative', height: '10px'}}
-              >
-                <Hue hsl={hsl} onChange={!readOnly && onChange} />
+              <Card shadow={1} radius={3} style={{position: 'relative', height: '10px'}}>
+                <Hue
+                  hue={hsv.h}
+                  onChange={(newHue) => handleHsvaChange({...hsv, ...newHue})}
+                  pointer={Pointer}
+                  style={{width: '100%', height: '100%', borderRadius: 'inherit'}}
+                />
               </Card>
 
               {!disableAlpha && (
                 <Card
                   shadow={1}
                   radius={3}
-                  overflow="hidden"
                   style={{position: 'relative', height: '10px', background: '#fff'}}
                 >
-                  <Alpha rgb={rgb} hsl={hsl} onChange={onChange} />
+                  <Checkboard style={{borderRadius: 'inherit'}} />
+                  <Alpha
+                    hsva={hsv}
+                    onChange={(newAlpha) => handleHsvaChange({...hsv, ...newAlpha})}
+                    pointer={Pointer}
+                    style={{width: '100%', height: '100%', borderRadius: 'inherit'}}
+                  />
                 </Card>
               )}
             </>
@@ -90,13 +159,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
               overflow="hidden"
               style={{position: 'relative', minWidth: '4em', background: '#fff'}}
             >
-              <Checkboard
-                size={8}
-                white="transparent"
-                grey="rgba(0,0,0,.08)"
-                // oxlint-disable-next-line no-unsafe-type-assertion
-                renderers={{} as {canvas: unknown}}
-              />
+              <Checkboard />
               <ColorBox
                 style={{
                   backgroundColor: `rgba(${rgb?.r},${rgb?.g},${rgb?.b},${rgb?.a})`,
@@ -137,7 +200,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                     rgb={rgb}
                     hsl={hsl}
                     hex={hex}
-                    onChange={onChange}
+                    onChange={handleHsvaChange}
                     disableAlpha={disableAlpha}
                   />
                 </Box>
@@ -147,21 +210,18 @@ const ColorPickerInner = (props: ColorPickerProps) => {
               </Flex>
             )}
           </Flex>
-          {colorList && <ColorList colors={colorList} onChange={onChange} />}
+          {colorList && <ColorList colors={colorList} onChange={handleHsvaChange} />}
         </Stack>
       </Card>
     </div>
   )
 }
 
-const ColorPicker = CustomPicker(ColorPickerInner)
-
-const DEFAULT_COLOR: ColorValue & {source: string} = {
+const DEFAULT_COLOR: ColorValue = {
   hex: '#24a3e3',
   hsl: {h: 200, s: 0.7732, l: 0.5156, a: 1},
   hsv: {h: 200, s: 0.8414, v: 0.8901, a: 1},
   rgb: {r: 46, g: 163, b: 227, a: 1},
-  source: 'hex',
 }
 
 export default function ColorInput(props: ObjectInputProps): React.JSX.Element {
@@ -196,7 +256,7 @@ export default function ColorInput(props: ObjectInputProps): React.JSX.Element {
   return (
     <>
       {value && value.hex ? (
-        <ColorPicker
+        <ColorPickerInner
           color={value}
           onChange={(nextColor) =>
             startTransition(() => {

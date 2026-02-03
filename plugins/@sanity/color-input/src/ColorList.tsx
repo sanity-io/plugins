@@ -1,8 +1,11 @@
-import type {Color, ColorChangeHandler} from 'react-color'
+import type {HsvaColor} from '@uiw/react-color'
 
 import {Flex} from '@sanity/ui'
+import {hexToHsva} from '@uiw/react-color'
 import {styled} from 'styled-components'
 import tinycolor from 'tinycolor2'
+
+import type {ColorValue} from './types'
 
 const ColorListWrap = styled(Flex)`
   gap: 0.25em;
@@ -15,8 +18,28 @@ const ColorBoxContainer = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 3px;
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADFJREFUOE9jZGBgEGHAD97gk2YcNYBhmIQBgWSAP52AwoAQwJvQRg1gACckQoC2gQgAIF8IscwEtKYAAAAASUVORK5CYII=')
-    left center #fff;
+  background-color: #fff;
+  background-image:
+    linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.08) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgba(0, 0, 0, 0.08) 75%,
+      rgba(0, 0, 0, 0.08)
+    ),
+    linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.08) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgba(0, 0, 0, 0.08) 75%,
+      rgba(0, 0, 0, 0.08)
+    );
+  background-size: 8px 8px;
+  background-position:
+    0 0,
+    4px 4px;
 `
 
 const ColorBox = styled.div`
@@ -29,23 +52,46 @@ const ColorBox = styled.div`
 `
 
 interface ValidatedColor {
-  color: Color
+  color: string | ColorValue | Record<string, number>
   backgroundColor: string
+  hex: string
 }
 
 interface ColorListProps {
-  colors?: Array<Color>
-  onChange: ColorChangeHandler<Color>
+  colors?: Array<string | ColorValue | Record<string, number>>
+  onChange: (color: HsvaColor) => void
 }
 
-const validateColors = (colors: Array<Color>) =>
+const validateColors = (colors: Array<string | ColorValue | Record<string, number>>) =>
   colors.reduce((cls: Array<ValidatedColor>, c) => {
-    // @ts-expect-error fix types later
-    const color = c.hex ? tinycolor(c.hex) : tinycolor(c)
-    if (color.isValid()) {
+    // Handle various color formats: hex string, {hex}, {r,g,b}, {h,s,l}, {h,s,v}
+    let color
+    if (typeof c === 'string') {
+      color = tinycolor(c)
+    } else if ('hex' in c && c.hex) {
+      color = tinycolor(c.hex)
+    } else if ('r' in c) {
+      // RGB(A) format
+      color = tinycolor(c as tinycolor.ColorInputWithoutInstance)
+    } else if ('h' in c && 's' in c) {
+      if ('v' in c) {
+        // HSV(A) format
+        color = tinycolor.fromRatio({h: c.h / 360, s: c.s / 100, v: c.v / 100, a: c.a ?? 1})
+      } else if ('l' in c) {
+        // HSL(A) format
+        color = tinycolor.fromRatio({h: c.h / 360, s: c.s / 100, l: c.l / 100, a: c.a ?? 1})
+      } else {
+        return cls
+      }
+    } else {
+      return cls
+    }
+
+    if (color && color.isValid()) {
       cls.push({
         color: c,
         backgroundColor: color.toRgbString(),
+        hex: color.toHexString(),
       })
     }
     return cls
@@ -55,11 +101,11 @@ export function ColorList({colors, onChange}: ColorListProps): React.JSX.Element
   if (!colors) return null
   return (
     <ColorListWrap wrap="wrap">
-      {validateColors(colors).map(({color, backgroundColor}, idx) => (
+      {validateColors(colors).map(({backgroundColor, hex}, idx) => (
         <ColorBoxContainer
           key={`${backgroundColor}-${idx}`}
           onClick={() => {
-            onChange(color)
+            onChange(hexToHsva(hex))
           }}
         >
           <ColorBox style={{background: backgroundColor}} />

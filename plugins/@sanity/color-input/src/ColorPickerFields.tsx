@@ -1,149 +1,144 @@
-import type {Color, ColorChangeHandler, HSLColor, RGBColor} from 'react-color'
-import type {EditableInputStyles} from 'react-color/lib/components/common/EditableInput'
+import type {HslaColor, HsvaColor, RgbaColor} from '@uiw/react-color'
 
 import {Box, Flex, useTheme} from '@sanity/ui'
-import {useCallback, useMemo} from 'react'
-import {EditableInput} from 'react-color/lib/components/common'
-// @ts-expect-error missing export
-import {isValidHex} from 'react-color/lib/helpers/color'
+import {EditableInput, hexToHsva, rgbaToHsva, validHex} from '@uiw/react-color'
 
 interface ColorPickerFieldsProps {
-  rgb?: RGBColor
-  hsl?: HSLColor
+  rgb?: RgbaColor
+  hsl?: HslaColor
   hex?: string
   disableAlpha: boolean
-  onChange: ColorChangeHandler<Color>
+  onChange: (color: HsvaColor) => void
 }
 
-export const ColorPickerFields = ({
+export function ColorPickerFields({
   onChange,
   rgb,
-  hsl,
   hex,
   disableAlpha,
-}: ColorPickerFieldsProps): React.JSX.Element => {
+}: ColorPickerFieldsProps): React.JSX.Element {
   const {sanity} = useTheme()
 
-  const inputStyles: EditableInputStyles = useMemo(
-    () => ({
-      input: {
-        width: '80%',
-        padding: '4px 10% 3px',
-        border: 'none',
-        // TODO: when upgrading to @sanity/ui@4 start using the new tokens
-        // oxlint-disable-next-line typescript/no-deprecated
-        boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-        // oxlint-disable-next-line typescript/no-deprecated
-        color: sanity.color.input.default.enabled.fg,
-        // oxlint-disable-next-line typescript/no-deprecated
-        backgroundColor: sanity.color.input.default.enabled.bg,
-        // oxlint-disable-next-line typescript/no-deprecated
-        fontSize: sanity.fonts.text.sizes[0]?.fontSize,
-        textAlign: 'center',
-      },
-      label: {
-        display: 'block',
-        textAlign: 'center',
-        // oxlint-disable-next-line typescript/no-deprecated
-        fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-        // oxlint-disable-next-line typescript/no-deprecated
-        color: sanity.color.base.fg,
-        paddingTop: '3px',
-        paddingBottom: '4px',
-        textTransform: 'capitalize',
-      },
-    }),
-    [sanity],
-  )
+  const inputStyle = {
+    width: '80%',
+    padding: '4px 10% 3px',
+    border: 'none',
+    // TODO: when upgrading to @sanity/ui@4 start using the new tokens
+    // oxlint-disable-next-line typescript/no-deprecated
+    boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
+    // oxlint-disable-next-line typescript/no-deprecated
+    color: sanity.color.input.default.enabled.fg,
+    // oxlint-disable-next-line typescript/no-deprecated
+    backgroundColor: sanity.color.input.default.enabled.bg,
+    // oxlint-disable-next-line typescript/no-deprecated
+    fontSize: sanity.fonts.text.sizes[0]?.fontSize,
+    textAlign: 'center' as const,
+  }
 
-  const handleChange: ColorChangeHandler<Record<string, string>> = useCallback(
-    (data) => {
-      if ('hex' in data && data['hex'] && isValidHex(data['hex'])) {
-        onChange({
-          hex: data['hex'],
-          source: 'hex',
-        })
-      } else if (
-        rgb &&
-        (('r' in data && data['r']) || ('g' in data && data['g']) || ('b' in data && data['b']))
-      ) {
-        onChange({
-          r: Number(data['r']) || rgb.r,
-          g: Number(data['g']) || rgb.g,
-          b: Number(data['b']) || rgb.b,
-          a: rgb.a,
-          source: 'rgb',
-        })
-      } else if (hsl && 'a' in data && data['a']) {
-        let alpha = Number(data['a'])
-        if (alpha < 0) {
-          alpha = 0
-        } else if (alpha > 100) {
-          alpha = 100
-        }
-        alpha /= 100
+  const labelStyle = {
+    display: 'block',
+    textAlign: 'center' as const,
+    // oxlint-disable-next-line typescript/no-deprecated
+    fontSize: sanity.fonts.label.sizes[0]?.fontSize,
+    // oxlint-disable-next-line typescript/no-deprecated
+    color: sanity.color.base.fg,
+    paddingTop: '3px',
+    paddingBottom: '4px',
+    textTransform: 'capitalize' as const,
+  }
 
-        onChange({
-          h: hsl.h,
-          s: hsl.s,
-          l: hsl.l,
-          a: alpha,
-          source: 'hsl',
-        })
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, value: string | number) => {
+    const name = e.target.name
+    if (name === 'hex' && typeof value === 'string') {
+      const hexValue = value.startsWith('#') ? value : `#${value}`
+      if (validHex(hexValue)) {
+        onChange(hexToHsva(hexValue))
       }
-    },
-    [onChange, hsl, rgb],
-  )
+    } else if (rgb && (name === 'r' || name === 'g' || name === 'b')) {
+      onChange(
+        rgbaToHsva({
+          r: name === 'r' ? Number(value) : rgb.r,
+          g: name === 'g' ? Number(value) : rgb.g,
+          b: name === 'b' ? Number(value) : rgb.b,
+          a: rgb.a,
+        }),
+      )
+    } else if (rgb && name === 'a') {
+      let alpha = Number(value)
+      if (alpha < 0) {
+        alpha = 0
+      } else if (alpha > 100) {
+        alpha = 100
+      }
+      alpha /= 100
+
+      onChange(
+        rgbaToHsva({
+          r: rgb.r,
+          g: rgb.g,
+          b: rgb.b,
+          a: alpha,
+        }),
+      )
+    }
+  }
 
   return (
     <Flex>
       <Box flex={2} marginRight={1}>
         <EditableInput
-          style={inputStyles}
-          label="hex"
-          value={hex?.replace('#', '')}
+          label="Hex"
+          name="hex"
+          value={hex?.replace('#', '') ?? ''}
           onChange={handleChange}
+          style={{width: '100%'}}
+          inputStyle={inputStyle}
+          labelStyle={labelStyle}
         />
       </Box>
       <Box flex={1} marginRight={1}>
         <EditableInput
-          style={inputStyles}
-          label="r"
-          value={rgb?.r}
+          label="R"
+          name="r"
+          value={rgb?.r ?? 0}
           onChange={handleChange}
-          dragLabel
-          dragMax={255}
+          style={{width: '100%'}}
+          inputStyle={inputStyle}
+          labelStyle={labelStyle}
         />
       </Box>
       <Box flex={1} marginRight={1}>
         <EditableInput
-          style={inputStyles}
-          label="g"
-          value={rgb?.g}
+          label="G"
+          name="g"
+          value={rgb?.g ?? 0}
           onChange={handleChange}
-          dragLabel
-          dragMax={255}
+          style={{width: '100%'}}
+          inputStyle={inputStyle}
+          labelStyle={labelStyle}
         />
       </Box>
       <Box flex={1} marginRight={1}>
         <EditableInput
-          style={inputStyles}
-          label="b"
-          value={rgb?.b}
+          label="B"
+          name="b"
+          value={rgb?.b ?? 0}
           onChange={handleChange}
-          dragLabel
-          dragMax={255}
+          style={{width: '100%'}}
+          inputStyle={inputStyle}
+          labelStyle={labelStyle}
         />
       </Box>
       {!disableAlpha && (
         <Box flex={1}>
           <EditableInput
-            style={inputStyles}
-            label="a"
+            label="A"
+            name="a"
             value={Math.round((rgb?.a ?? 1) * 100)}
             onChange={handleChange}
-            dragLabel
-            dragMax={100}
+            style={{width: '100%'}}
+            inputStyle={inputStyle}
+            labelStyle={labelStyle}
           />
         </Box>
       )}
