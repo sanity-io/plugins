@@ -16,6 +16,7 @@ import {useDocumentPane} from 'sanity/structure'
 
 import type {Value} from '../types'
 
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
@@ -133,7 +134,7 @@ export default function InternationalizedArray(
     // This would also strip out values that don't have a language as the key
     const updatedValue = value
       .reduce((acc, v) => {
-        const newIndex = languages.findIndex((l) => l.id === v?._key)
+        const newIndex = languages.findIndex((l) => l.id === v?.[LANGUAGE_FIELD_NAME])
 
         if (newIndex > -1) {
           acc[newIndex] = v
@@ -158,14 +159,14 @@ export default function InternationalizedArray(
       return true
     }
 
-    return value?.every((v) => languages.find((l) => l?.id === v?._key))
+    return value?.every((v) => languages.find((l) => l?.id === v?.[LANGUAGE_FIELD_NAME]))
   }, [value, languages])
 
   // Check languages are in the correct order
   const languagesInUse = useMemo(
     () =>
       languages && languages.length > 1
-        ? languages.filter((l) => value?.find((v) => v._key === l.id))
+        ? languages.filter((l) => value?.find((v) => v[LANGUAGE_FIELD_NAME] === l.id))
         : [],
     [languages, value],
   )
@@ -176,7 +177,9 @@ export default function InternationalizedArray(
     }
 
     return value
-      .map((v, vIndex) => (vIndex === languagesInUse.findIndex((l) => l.id === v._key) ? null : v))
+      .map((v, vIndex) =>
+        vIndex === languagesInUse.findIndex((l) => l.id === v[LANGUAGE_FIELD_NAME]) ? null : v,
+      )
       .filter(Boolean)
   }, [value, languagesInUse])
 

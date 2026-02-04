@@ -18,6 +18,7 @@ import {type ReactNode, useMemo} from 'react'
 import {type ObjectItemProps, useFormValue} from 'sanity'
 import {set, unset} from 'sanity'
 
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
 import {getToneFromValidation} from './getToneFromValidation'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
@@ -128,8 +129,13 @@ export default function InternationalizedInput(
   // The parent array contains the languages from the plugin config
   const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
 
-  const languageKeysInUse = useMemo(() => parentValue?.map((v) => v._key) ?? [], [parentValue])
-  const keyIsValid = languages?.length ? languages.find((l) => l.id === value._key) : false
+  const languageKeysInUse = useMemo(
+    () => parentValue?.map((v) => v[LANGUAGE_FIELD_NAME]) ?? [],
+    [parentValue],
+  )
+  const keyIsValid = languages?.length
+    ? languages.find((l) => l.id === value[LANGUAGE_FIELD_NAME])
+    : false
 
   // Changes the key of this item, ideally to a valid language
   const handleKeyChange = (event: React.MouseEvent<HTMLButtonElement>): void => {
@@ -139,7 +145,7 @@ export default function InternationalizedInput(
       return
     }
 
-    onChange([set(languageId, ['_key'])])
+    onChange([set(languageId, [LANGUAGE_FIELD_NAME])])
   }
 
   // Removes this item from the array
@@ -151,11 +157,11 @@ export default function InternationalizedInput(
     return <Spinner />
   }
 
-  const language = languages.find((l) => l.id === value._key)
+  const language = languages.find((l) => l.id === value[LANGUAGE_FIELD_NAME])
   const languageTitle: string =
     keyIsValid && language ? getLanguageDisplay(languageDisplay, language.title, language.id) : ''
 
-  const isDefault = defaultLanguages.includes(value._key)
+  const isDefault = defaultLanguages.includes(value[LANGUAGE_FIELD_NAME])
 
   const removeButton = (
     <Button
@@ -177,8 +183,8 @@ export default function InternationalizedInput(
             </Label>
           ) : (
             <MenuButton
-              button={<Button fontSize={1} text={`Change "${value._key}"`} />}
-              id={`${value._key}-change-key`}
+              button={<Button fontSize={1} text={`Change "${value[LANGUAGE_FIELD_NAME]}"`} />}
+              id={`${value[LANGUAGE_FIELD_NAME]}-change-key`}
               menu={
                 <Menu>
                   {languages.map((lang) => (

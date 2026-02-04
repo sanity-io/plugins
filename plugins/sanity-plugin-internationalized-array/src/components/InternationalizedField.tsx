@@ -1,26 +1,48 @@
 import type {ReactNode} from 'react'
 
 import {useMemo} from 'react'
-import {type FieldProps} from 'sanity'
+import {type FieldProps, useFormValue} from 'sanity'
 
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
+
+const getLanguageId = (fieldParent: unknown): string | undefined => {
+  try {
+    const languageId =
+      typeof fieldParent === 'object' &&
+      fieldParent !== null &&
+      // Checks if it's an internationalized array item
+      '_type' in fieldParent &&
+      typeof fieldParent._type === 'string' &&
+      fieldParent._type.startsWith('internationalizedArray') &&
+      // Checks if the language field name is in the field and if it's a string
+      LANGUAGE_FIELD_NAME in fieldParent &&
+      typeof fieldParent[LANGUAGE_FIELD_NAME] === 'string'
+        ? fieldParent[LANGUAGE_FIELD_NAME]
+        : undefined
+    return languageId
+  } catch (error) {
+    console.error('Error getting language id', error)
+    return undefined
+  }
+}
 
 export default function InternationalizedField(props: FieldProps): ReactNode {
   const {languages} = useInternationalizedArrayContext()
+  // Get the parent array to look up the language from the actual array item
+  const fieldParent = useFormValue(props.path.slice(0, -1))
 
-  // hide titles for 'value' fields within valid language entries
+  const languageId = getLanguageId(fieldParent)
   const customProps = useMemo(() => {
-    const pathSegment = props.path.slice(0, -1)[1]
-    const languageId =
-      typeof pathSegment === 'object' && '_key' in pathSegment ? pathSegment._key : undefined
     const hasValidLanguageId = languageId ? languages.some((l) => l.id === languageId) : false
+    // hide titles for 'value' fields within valid language entries
     const shouldHideTitle = props.title?.toLowerCase() === 'value' && hasValidLanguageId
 
     return {
       ...props,
       title: shouldHideTitle ? '' : props.title,
     }
-  }, [props, languages])
+  }, [props, languages, languageId])
 
   if (!customProps.schemaType.name.startsWith('internationalizedArray')) {
     return customProps.renderDefault(customProps)
