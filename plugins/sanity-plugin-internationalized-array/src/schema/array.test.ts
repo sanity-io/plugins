@@ -251,7 +251,7 @@ describe('getSelectedValue', () => {
     }
 
     const result = getSelectedValue(select, document)
-    expect(result.refs).toHaveLength(2)
+    expect(result['refs']).toHaveLength(2)
   })
 })
 

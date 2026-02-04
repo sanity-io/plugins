@@ -18,47 +18,46 @@ import {createMockSchemaType, createValue, createValues, testLanguages} from '..
  * When migrating to sanity_language, these validation patterns must all be updated.
  */
 
-describe('validation flow integration', () => {
-  // Helper to run validation
-  async function runValidation(
-    value: Value[] | undefined,
-    options: {
-      languages?: Language[]
-      document?: Record<string, unknown>
-      select?: Record<string, string>
-    } = {},
-  ) {
-    const {languages = testLanguages, document = {}, select} = options
+// Helper to run validation
+async function runValidation(
+  value: Value[] | undefined,
+  options: {
+    languages?: Language[]
+    document?: Record<string, unknown>
+    select?: Record<string, string>
+  } = {},
+) {
+  const {languages = testLanguages, document = {}, select} = options
 
-    const schema = createArraySchema({
-      apiVersion: '2025-10-15',
+  const schema = createArraySchema({
+    apiVersion: '2025-10-15',
+    languages,
+    select,
+    type: 'string',
+  })
+
+  // Get the validation rule and extract the custom function
+  const rule = (schema.validation as Function)({
+    custom: (fn: (value: Value[], context: unknown) => Promise<unknown>) => ({_custom: fn}),
+  })
+
+  const mockContext = {
+    document,
+    type: createMockSchemaType('internationalizedArrayString', {
       languages,
+      apiVersion: '2025-10-15',
       select,
-      type: 'string',
-    })
-
-    // @ts-expect-error - accessing internal validation structure
-    const rule = schema.validation({
-      custom: (fn: (value: Value[], context: unknown) => Promise<unknown>) => ({_custom: fn}),
-    })
-
-    const mockContext = {
-      document,
-      type: createMockSchemaType('internationalizedArrayString', {
-        languages,
-        apiVersion: '2025-10-15',
-        select,
-      }),
-      getClient: () => ({
-        fetch: vi.fn().mockResolvedValue([]),
-        config: () => ({apiVersion: '2025-10-15'}),
-      }),
-    }
-
-    // @ts-expect-error - calling internal validation function
-    return rule._custom(value, mockContext)
+    }),
+    getClient: () => ({
+      fetch: vi.fn().mockResolvedValue([]),
+      config: () => ({apiVersion: '2025-10-15'}),
+    }),
   }
 
+  return (rule as {_custom: Function})._custom(value, mockContext)
+}
+
+describe('validation flow integration', () => {
   describe('validation error paths use _key', () => {
     it('validation error path references item by _key', async () => {
       const value = [
@@ -201,8 +200,9 @@ describe('validation flow integration', () => {
         languages: testLanguages,
       })
 
-      // @ts-expect-error - mock schema type
-      const languages = getLanguagesFieldOption(schemaType)
+      const languages = getLanguagesFieldOption(
+        schemaType as Parameters<typeof getLanguagesFieldOption>[0],
+      )
       expect(languages).toEqual(testLanguages)
     })
   })

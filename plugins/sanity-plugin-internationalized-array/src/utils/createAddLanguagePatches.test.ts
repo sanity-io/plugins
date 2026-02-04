@@ -50,8 +50,8 @@ describe('createAddLanguagePatches', () => {
       })
 
       expect(patches).toHaveLength(2)
-      expect(patches[0]!.items[0]!._key).toBe('en')
-      expect(patches[1]!.items[0]!._key).toBe('fr')
+      expect((patches[0]!.items[0] as {_key: string})._key).toBe('en')
+      expect((patches[1]!.items[0] as {_key: string})._key).toBe('fr')
     })
 
     it('item _type is derived from schema type name', () => {
@@ -65,7 +65,9 @@ describe('createAddLanguagePatches', () => {
         value: undefined,
       })
 
-      expect(patches[0]!.items[0]!._type).toBe('internationalizedArrayCustomFieldValue')
+      expect((patches[0]!.items[0] as {_type: string})._type).toBe(
+        'internationalizedArrayCustomFieldValue',
+      )
     })
   })
 
@@ -84,7 +86,7 @@ describe('createAddLanguagePatches', () => {
 
       // Should only add 'fr' since 'en' is already present (matched by _key)
       expect(patches).toHaveLength(1)
-      expect(patches[0]!.items[0]!._key).toBe('fr')
+      expect((patches[0]!.items[0] as {_key: string})._key).toBe('fr')
     })
 
     it('does not add languages when all are present', () => {
@@ -113,7 +115,7 @@ describe('createAddLanguagePatches', () => {
       })
 
       expect(patches).toHaveLength(1)
-      expect(patches[0]!.items[0]!._key).toBe('de')
+      expect((patches[0]!.items[0] as {_key: string})._key).toBe('de')
     })
   })
 
@@ -201,8 +203,8 @@ describe('createAddLanguagePatches', () => {
 
       expect(patches).toHaveLength(2)
       // First 'fr', then 'de' - both at end initially, but local state tracking maintains order
-      expect(patches[0]!.items[0]!._key).toBe('fr')
-      expect(patches[1]!.items[0]!._key).toBe('de')
+      expect((patches[0]!.items[0] as {_key: string})._key).toBe('fr')
+      expect((patches[1]!.items[0] as {_key: string})._key).toBe('de')
     })
 
     it('correctly orders when filling gaps', () => {
@@ -219,8 +221,8 @@ describe('createAddLanguagePatches', () => {
 
       expect(patches).toHaveLength(2)
       // 'fr' goes after 'en', 'de' goes before 'es'
-      expect(patches[0]!.items[0]!._key).toBe('fr')
-      expect(patches[1]!.items[0]!._key).toBe('de')
+      expect((patches[0]!.items[0] as {_key: string})._key).toBe('fr')
+      expect((patches[1]!.items[0] as {_key: string})._key).toBe('de')
     })
   })
 
@@ -240,7 +242,7 @@ describe('createAddLanguagePatches', () => {
       })
 
       expect(patches).toHaveLength(2)
-      expect(patches.map((p) => p.items[0]!._key)).toEqual(['en', 'de'])
+      expect(patches.map((p) => (p.items[0] as {_key: string})._key)).toEqual(['en', 'de'])
     })
   })
 
