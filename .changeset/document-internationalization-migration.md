@@ -2,13 +2,16 @@
 "@sanity/document-internationalization": major
 ---
 
-Migrate to new plugins monorepo with updated build tooling and dependencies:
+Port @sanity/document-internationalization to the Sanity plugins monorepo
 
-- Use React 19's native `use()` hook instead of `suspend-react`
-- Require `styled-components` as a peer dependency  
-- Update to work with `sanity` v5
-- Use `rxjs` for document store operations
-- Update to use `sanity-plugin-internationalized-array` from workspace
-- Fix deprecated APIs (`useClickOutside` → `useClickOutsideEvent`, proper typing for form events)
-- Use proper index signature access for TypeScript 4111 compliance
-- Add proper type guards for language field values
+This major release includes several breaking changes as part of the migration to the monorepo:
+
+- **React Compiler enabled**: The plugin is now optimized with React Compiler for better performance
+- **ESM-only**: CommonJS is no longer supported (removed dual module format)
+- **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the baseline
+- **React 19 required**: Updated to support React 19.2+
+- **styled-components peer dependency**: The plugin now requires `styled-components` ^6.1 as a peer dependency
+- **Stricter TypeScript**: Updated type definitions with improved type safety
+- **Updated dependencies**: All dependencies updated to latest compatible versions
+
+The plugin functionality remains the same, but the new build process and dependencies require these breaking changes for compatibility with the monorepo's tooling and conventions.
