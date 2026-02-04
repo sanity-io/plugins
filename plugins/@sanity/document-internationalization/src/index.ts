@@ -1,0 +1,6 @@
+export {DeleteTranslationAction} from './actions/DeleteTranslationAction'
+export {DuplicateWithTranslationsAction} from './actions/DuplicateWithTranslationsAction'
+export {useDocumentInternationalizationContext} from './components/DocumentInternationalizationContext'
+export {DocumentInternationalizationMenu} from './components/DocumentInternationalizationMenu'
+export {documentInternationalization} from './plugin'
+export * from './types'
