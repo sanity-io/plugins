@@ -12,28 +12,100 @@ import {describe, expect, it} from 'vitest'
  * difficult to test in isolation. We test the underlying logic instead.
  */
 
+type TranslationDoc = {
+  _key: string
+  _type: string
+  path: string[]
+  pathString: string
+}
+
+/**
+ * From DocumentAddButtons.tsx:
+ * const alreadyTranslated = documentsToTranslation.filter(
+ *   (translation) => translation?._key === languageId,
+ * )
+ */
+function filterAlreadyTranslated(
+  translations: TranslationDoc[],
+  languageId: string,
+): TranslationDoc[] {
+  return translations.filter((translation) => translation?._key === languageId)
+}
+
+/**
+ * From DocumentAddButtons.tsx:
+ * const removeDuplicates = documentsToTranslation.reduce<DocumentsToTranslate[]>(
+ *   (filteredTranslations, translation) => {
+ *     if (alreadyTranslated.filter(
+ *       (alreadyTranslation) => alreadyTranslation.pathString === translation.pathString,
+ *     ).length > 0) {
+ *       return filteredTranslations
+ *     }
+ *     ...
+ *   }
+ * )
+ */
+function removeDuplicates(
+  translations: TranslationDoc[],
+  alreadyTranslated: TranslationDoc[],
+): TranslationDoc[] {
+  return translations.reduce<TranslationDoc[]>((filtered, translation) => {
+    // Skip if already translated at this path
+    if (alreadyTranslated.some((t) => t.pathString === translation.pathString)) {
+      return filtered
+    }
+    // Skip if we already have this path in our filtered list
+    if (filtered.some((t) => t.path === translation.path)) {
+      return filtered
+    }
+    filtered.push(translation)
+    return filtered
+  }, [])
+}
+
+/**
+ * From DocumentAddButtons.tsx:
+ * const insertValue = insert(
+ *   [{
+ *     _key: languageId,  // <-- This is the key pattern
+ *     _type: toTranslate._type,
+ *     value: initialValue,
+ *   }],
+ *   'after',
+ *   [...path, -1],
+ * )
+ */
+function createInsertItem(languageId: string, _type: string, initialValue: unknown) {
+  return {
+    _key: languageId, // Language identifier stored in _key
+    _type,
+    value: initialValue,
+  }
+}
+
+/**
+ * From DocumentAddButtons.tsx:
+ * const getInitialValueForType = useCallback((typeName: string): unknown => {
+ *   // Check if it's a known array-based type (Portable Text fields)
+ *   const arrayBasedTypes = new Set(['body', 'htmlContent', 'blockContent', 'portableText'])
+ *   ...
+ * })
+ */
+function getInitialValueForType(typeName: string): unknown {
+  const match = typeName.match(/^internationalizedArray(.+)Value$/)
+  if (!match || !match[1]) return undefined
+
+  const baseTypeName = match[1].charAt(0).toLowerCase() + match[1].slice(1)
+  const arrayBasedTypes = new Set(['body', 'htmlContent', 'blockContent', 'portableText'])
+
+  if (arrayBasedTypes.has(baseTypeName)) {
+    return []
+  }
+  return undefined
+}
+
 describe('DocumentAddButtons', () => {
   describe('filtering existing translations - uses _key comparison', () => {
-    /**
-     * From DocumentAddButtons.tsx:
-     * const alreadyTranslated = documentsToTranslation.filter(
-     *   (translation) => translation?._key === languageId,
-     * )
-     */
-    type TranslationDoc = {
-      _key: string
-      _type: string
-      path: string[]
-      pathString: string
-    }
-
-    function filterAlreadyTranslated(
-      translations: TranslationDoc[],
-      languageId: string,
-    ): TranslationDoc[] {
-      return translations.filter((translation) => translation?._key === languageId)
-    }
-
     it('filters documents with matching _key', () => {
       const translations: TranslationDoc[] = [
         {_key: 'en', _type: 'test', path: ['field1'], pathString: 'field1'},
@@ -67,44 +139,6 @@ describe('DocumentAddButtons', () => {
   })
 
   describe('removing duplicates - uses _key comparison', () => {
-    /**
-     * From DocumentAddButtons.tsx:
-     * const removeDuplicates = documentsToTranslation.reduce<DocumentsToTranslate[]>(
-     *   (filteredTranslations, translation) => {
-     *     if (alreadyTranslated.filter(
-     *       (alreadyTranslation) => alreadyTranslation.pathString === translation.pathString,
-     *     ).length > 0) {
-     *       return filteredTranslations
-     *     }
-     *     ...
-     *   }
-     * )
-     */
-    type TranslationDoc = {
-      _key: string
-      _type: string
-      path: string[]
-      pathString: string
-    }
-
-    function removeDuplicates(
-      translations: TranslationDoc[],
-      alreadyTranslated: TranslationDoc[],
-    ): TranslationDoc[] {
-      return translations.reduce<TranslationDoc[]>((filtered, translation) => {
-        // Skip if already translated at this path
-        if (alreadyTranslated.some((t) => t.pathString === translation.pathString)) {
-          return filtered
-        }
-        // Skip if we already have this path in our filtered list
-        if (filtered.some((t) => t.path === translation.path)) {
-          return filtered
-        }
-        filtered.push(translation)
-        return filtered
-      }, [])
-    }
-
     it('excludes documents already translated', () => {
       const translations: TranslationDoc[] = [
         {_key: '', _type: 'test', path: ['field1'], pathString: 'field1'},
@@ -116,7 +150,7 @@ describe('DocumentAddButtons', () => {
 
       const result = removeDuplicates(translations, alreadyTranslated)
       expect(result).toHaveLength(1)
-      expect(result[0].pathString).toBe('field2')
+      expect(result[0]!.pathString).toBe('field2')
     })
 
     it('handles empty translations array', () => {
@@ -126,26 +160,6 @@ describe('DocumentAddButtons', () => {
   })
 
   describe('creating insert patches - uses _key for language', () => {
-    /**
-     * From DocumentAddButtons.tsx:
-     * const insertValue = insert(
-     *   [{
-     *     _key: languageId,  // <-- This is the key pattern
-     *     _type: toTranslate._type,
-     *     value: initialValue,
-     *   }],
-     *   'after',
-     *   [...path, -1],
-     * )
-     */
-    function createInsertItem(languageId: string, _type: string, initialValue: unknown) {
-      return {
-        _key: languageId, // Language identifier stored in _key
-        _type,
-        value: initialValue,
-      }
-    }
-
     it('creates item with _key set to language id', () => {
       const item = createInsertItem('en', 'internationalizedArrayStringValue', undefined)
       expect(item._key).toBe('en')
@@ -165,27 +179,6 @@ describe('DocumentAddButtons', () => {
   })
 
   describe('initial value determination', () => {
-    /**
-     * From DocumentAddButtons.tsx:
-     * const getInitialValueForType = useCallback((typeName: string): unknown => {
-     *   // Check if it's a known array-based type (Portable Text fields)
-     *   const arrayBasedTypes = new Set(['body', 'htmlContent', 'blockContent', 'portableText'])
-     *   ...
-     * })
-     */
-    function getInitialValueForType(typeName: string): unknown {
-      const match = typeName.match(/^internationalizedArray(.+)Value$/)
-      if (!match || !match[1]) return undefined
-
-      const baseTypeName = match[1].charAt(0).toLowerCase() + match[1].slice(1)
-      const arrayBasedTypes = new Set(['body', 'htmlContent', 'blockContent', 'portableText'])
-
-      if (arrayBasedTypes.has(baseTypeName)) {
-        return []
-      }
-      return undefined
-    }
-
     it('returns empty array for body type', () => {
       const result = getInitialValueForType('internationalizedArrayBodyValue')
       expect(result).toEqual([])

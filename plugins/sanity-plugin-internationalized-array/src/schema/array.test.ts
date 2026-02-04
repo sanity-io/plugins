@@ -23,6 +23,46 @@ import createArraySchema from './array'
  * - Error path generation using _key
  */
 
+// Helper to extract and run validation
+async function runValidation(
+  value: Value[] | undefined,
+  options: {
+    languages?: Language[]
+    document?: Record<string, unknown>
+    select?: Record<string, string>
+  } = {},
+) {
+  const {languages = testLanguages, document = {}, select} = options
+
+  const schema = createArraySchema({
+    apiVersion: '2025-10-15',
+    languages,
+    select,
+    type: 'string',
+  })
+
+  // Get the validation rule and extract the custom function
+  const rule = (schema.validation as Function)({
+    custom: (fn: (value: Value[], context: unknown) => Promise<unknown>) => ({_custom: fn}),
+  })
+
+  // Create mock context
+  const mockContext = {
+    document,
+    type: createMockSchemaType('internationalizedArrayString', {
+      languages,
+      apiVersion: '2025-10-15',
+      select,
+    }),
+    getClient: () => ({
+      fetch: vi.fn().mockResolvedValue([]),
+      config: () => ({apiVersion: '2025-10-15'}),
+    }),
+  }
+
+  return (rule as {_custom: Function})._custom(value, mockContext)
+}
+
 describe('schema/array', () => {
   describe('createArraySchema', () => {
     it('creates array schema with correct structure', () => {
@@ -53,48 +93,6 @@ describe('schema/array', () => {
   })
 
   describe('validation', () => {
-    // Extract the validation function for testing
-    async function runValidation(
-      value: Value[] | undefined,
-      options: {
-        languages?: Language[]
-        document?: Record<string, unknown>
-        select?: Record<string, string>
-      } = {},
-    ) {
-      const {languages = testLanguages, document = {}, select} = options
-
-      const schema = createArraySchema({
-        apiVersion: '2025-10-15',
-        languages,
-        select,
-        type: 'string',
-      })
-
-      // Get the validation rule and extract the custom function
-      // @ts-expect-error - accessing internal validation structure
-      const rule = schema.validation({
-        custom: (fn: (value: Value[], context: unknown) => Promise<unknown>) => ({_custom: fn}),
-      })
-
-      // Create mock context
-      const mockContext = {
-        document,
-        type: createMockSchemaType('internationalizedArrayString', {
-          languages,
-          apiVersion: '2025-10-15',
-          select,
-        }),
-        getClient: () => ({
-          fetch: vi.fn().mockResolvedValue([]),
-          config: () => ({apiVersion: '2025-10-15'}),
-        }),
-      }
-
-      // @ts-expect-error - calling internal validation function
-      return rule._custom(value, mockContext)
-    }
-
     describe('valid arrays', () => {
       it('validates array with valid language keys', async () => {
         const value = createValues(['en', 'fr'])
@@ -263,16 +261,18 @@ describe('getLanguagesFieldOption', () => {
       languages: testLanguages,
     })
 
-    // @ts-expect-error - mock schema type
-    const result = getLanguagesFieldOption(schemaType)
+    const result = getLanguagesFieldOption(
+      schemaType as Parameters<typeof getLanguagesFieldOption>[0],
+    )
     expect(result).toEqual(testLanguages)
   })
 
   it('returns undefined for schema without languages option', () => {
     const schemaType = createMockSchemaType('test', {})
 
-    // @ts-expect-error - mock schema type
-    const result = getLanguagesFieldOption(schemaType)
+    const result = getLanguagesFieldOption(
+      schemaType as Parameters<typeof getLanguagesFieldOption>[0],
+    )
     expect(result).toBeUndefined()
   })
 
@@ -290,8 +290,9 @@ describe('getLanguagesFieldOption', () => {
       type: parentType,
     }
 
-    // @ts-expect-error - mock schema type
-    const result = getLanguagesFieldOption(childType)
+    const result = getLanguagesFieldOption(
+      childType as Parameters<typeof getLanguagesFieldOption>[0],
+    )
     expect(result).toEqual(testLanguages)
   })
 })
