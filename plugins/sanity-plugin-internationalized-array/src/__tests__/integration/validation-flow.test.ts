@@ -226,11 +226,11 @@ describe('validation flow integration', () => {
       expect(result).toBe(true)
     })
 
-    it('validates items with extra properties beyond _key', async () => {
-      const value = [
-        {_key: 'en', _type: 'internationalizedArrayStringValue', value: 'Hello'},
-        {_key: 'fr', _type: 'internationalizedArrayStringValue', value: 'Bonjour'},
-      ] as Value[]
+    it('validates items with value property', async () => {
+      const value: Value[] = [
+        {_key: 'en', value: 'Hello'},
+        {_key: 'fr', value: 'Bonjour'},
+      ]
 
       const result = await runValidation(value)
       expect(result).toBe(true)

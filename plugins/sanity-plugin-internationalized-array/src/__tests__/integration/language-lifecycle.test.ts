@@ -1,3 +1,5 @@
+import type {FormInsertPatch} from 'sanity'
+
 import {describe, expect, it} from 'vitest'
 
 import type {Language, Value} from '../../types'
@@ -5,6 +7,15 @@ import type {Language, Value} from '../../types'
 import {checkAllLanguagesArePresent} from '../../utils/checkAllLanguagesArePresent'
 import {createAddLanguagePatches} from '../../utils/createAddLanguagePatches'
 import {createMockSchemaType, createValues, testLanguages} from '../test-utils'
+
+// Helper to extract _key from patch items
+function getItemKey(patch: FormInsertPatch): string {
+  const item = patch.items[0]
+  if (item && typeof item === 'object' && '_key' in item) {
+    return item._key as string
+  }
+  throw new Error('Patch item missing _key')
+}
 
 /**
  * Integration tests for the language lifecycle
@@ -36,7 +47,7 @@ describe('language lifecycle integration', () => {
 
       // Verify the new item has _key set to the language id
       expect(patches).toHaveLength(1)
-      expect((patches[0]!.items[0] as {_key: string})._key).toBe('en')
+      expect(getItemKey(patches[0]!)).toBe('en')
 
       // Simulate applying the patch
       const newValue: Value[] = [{_key: 'en', value: undefined}]
@@ -61,7 +72,7 @@ describe('language lifecycle integration', () => {
 
       // Should add fr, de, es (missing languages)
       expect(patches).toHaveLength(3)
-      const addedKeys = patches.map((p) => (p.items[0] as {_key: string})._key)
+      const addedKeys = patches.map(getItemKey)
       expect(addedKeys).toContain('fr')
       expect(addedKeys).toContain('de')
       expect(addedKeys).toContain('es')
@@ -96,7 +107,7 @@ describe('language lifecycle integration', () => {
       })
 
       expect(patches).toHaveLength(1)
-      expect((patches[0]!.items[0] as {_key: string})._key).toBe('fr')
+      expect(getItemKey(patches[0]!)).toBe('fr')
     })
   })
 
@@ -167,8 +178,7 @@ describe('language lifecycle integration', () => {
         filteredLanguages: testLanguages,
         value: [],
       })
-      const newItem = patches[0]!.items[0] as {_key: string}
-      expect(newItem).toHaveProperty('_key', 'en')
+      expect(getItemKey(patches[0]!)).toBe('en')
 
       // 2. Presence checking uses _key
       const value = createValues(['en', 'fr'])
@@ -239,7 +249,7 @@ describe('language lifecycle integration', () => {
         filteredLanguages: languages,
         value,
       })
-      expect((patches[0]!.items[0] as {_key: string})._key).toBe('fr')
+      expect(getItemKey(patches[0]!)).toBe('fr')
     })
   })
 })
