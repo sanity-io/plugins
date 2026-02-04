@@ -9,6 +9,16 @@ type ObjectSchemaWithFields = FieldDefinition<'object'> & {
   fields: Array<{name: string; title?: string; options?: Record<string, unknown>}>
 }
 
+// Type guard to check if schema has fields
+function hasFields(schema: unknown): schema is ObjectSchemaWithFields {
+  return (
+    schema !== null &&
+    typeof schema === 'object' &&
+    'fields' in schema &&
+    Array.isArray((schema as {fields: unknown}).fields)
+  )
+}
+
 /**
  * Tests for schema/object.ts
  *
@@ -44,7 +54,11 @@ describe('schema/object', () => {
     it('includes value field', () => {
       const schema = createObjectSchema({
         type: 'string',
-      }) as ObjectSchemaWithFields
+      })
+
+      if (!hasFields(schema)) {
+        throw new Error('Expected schema to have fields')
+      }
 
       expect(schema.fields).toHaveLength(1)
       expect(schema.fields[0]!.name).toBe('value')
@@ -58,7 +72,11 @@ describe('schema/object', () => {
           title: 'My Custom Title',
           options: {customOption: true},
         },
-      }) as ObjectSchemaWithFields
+      })
+
+      if (!hasFields(schema)) {
+        throw new Error('Expected schema to have fields')
+      }
 
       const valueField = schema.fields[0]!
       expect(valueField.name).toBe('value')
