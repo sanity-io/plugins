@@ -307,9 +307,26 @@ pnpm generate "copy plugin"
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 
-- Setting up npm trusted publishing
+- Setting up npm trusted publishing (different process for new vs existing packages)
 - Creating initial release changesets
 - Migrating existing plugins
+
+### Trusted Publishing Quick Reference
+
+**For brand new packages (not yet on npm):**
+
+- Use the "Setup a new npm package with Trusted Publishing" GitHub Actions workflow
+- The workflow will create the package and provide setup instructions
+
+**For existing packages (already on npm):**
+
+- ⚠️ DO NOT use the setup workflow
+- Manually configure trusted publishing at: `https://www.npmjs.com/package/PACKAGE-NAME/access`
+- Add GitHub Actions as trusted publisher with:
+  - Owner: `sanity-io`
+  - Repository: `plugins`
+  - Workflow: `release.yml`
+  - Environment: _(leave empty)_
 
 ## Code Style
 
