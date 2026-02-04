@@ -40,7 +40,7 @@ describe('schema/object', () => {
       })
 
       expect(schema.fields).toHaveLength(1)
-      expect(schema.fields[0].name).toBe('value')
+      expect(schema.fields[0]!.name).toBe('value')
     })
 
     it('preserves field definition options', () => {
@@ -53,7 +53,7 @@ describe('schema/object', () => {
         },
       })
 
-      const valueField = schema.fields[0]
+      const valueField = schema.fields[0]!
       expect(valueField.name).toBe('value')
       expect(valueField.title).toBe('My Custom Title')
       expect(valueField.options).toEqual({customOption: true})

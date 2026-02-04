@@ -13,20 +13,26 @@ import {createValues, testLanguages} from '../__tests__/test-utils'
  * difficult to test in isolation. We test the underlying logic instead.
  */
 
+/**
+ * From AddButtons.tsx:
+ * disabled={readOnly || Boolean(value?.find((item) => item._key === language.id))}
+ */
+function isButtonDisabled(
+  language: {id: string; title: string},
+  value: ReturnType<typeof createValues> | undefined,
+  readOnly: boolean,
+): boolean {
+  return readOnly || Boolean(value?.find((item) => item._key === language.id))
+}
+
+const MAX_COLUMNS = {
+  codeOnly: 5,
+  titleOnly: 4,
+  titleAndCode: 3,
+}
+
 describe('AddButtons', () => {
   describe('button disabled logic - uses _key comparison', () => {
-    /**
-     * From AddButtons.tsx:
-     * disabled={readOnly || Boolean(value?.find((item) => item._key === language.id))}
-     */
-    function isButtonDisabled(
-      language: {id: string; title: string},
-      value: ReturnType<typeof createValues> | undefined,
-      readOnly: boolean,
-    ): boolean {
-      return readOnly || Boolean(value?.find((item) => item._key === language.id))
-    }
-
     describe('when readOnly is false', () => {
       it('disables button when language already exists in value', () => {
         const value = createValues(['en', 'fr'])
@@ -96,12 +102,6 @@ describe('AddButtons', () => {
      * From AddButtons.tsx:
      * columns={Math.min(languages.length, MAX_COLUMNS[languageDisplay])}
      */
-    const MAX_COLUMNS = {
-      codeOnly: 5,
-      titleOnly: 4,
-      titleAndCode: 3,
-    }
-
     it('uses language count when less than max columns', () => {
       const languages = [{id: 'en'}, {id: 'fr'}]
       const columns = Math.min(languages.length, MAX_COLUMNS.codeOnly)

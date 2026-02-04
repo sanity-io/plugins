@@ -4,7 +4,7 @@ import type {Language, Value} from '../../types'
 
 import {checkAllLanguagesArePresent} from '../../utils/checkAllLanguagesArePresent'
 import {createAddLanguagePatches} from '../../utils/createAddLanguagePatches'
-import {createMockSchemaType, createValue, createValues, testLanguages} from '../test-utils'
+import {createMockSchemaType, createValues, testLanguages} from '../test-utils'
 
 /**
  * Integration tests for the language lifecycle
@@ -36,7 +36,7 @@ describe('language lifecycle integration', () => {
 
       // Verify the new item has _key set to the language id
       expect(patches).toHaveLength(1)
-      expect(patches[0].items[0]._key).toBe('en')
+      expect(patches[0]!.items[0]!._key).toBe('en')
 
       // Simulate applying the patch
       const newValue: Value[] = [{_key: 'en', value: undefined}]
@@ -61,7 +61,7 @@ describe('language lifecycle integration', () => {
 
       // Should add fr, de, es (missing languages)
       expect(patches).toHaveLength(3)
-      const addedKeys = patches.map((p) => p.items[0]._key)
+      const addedKeys = patches.map((p) => p.items[0]!._key)
       expect(addedKeys).toContain('fr')
       expect(addedKeys).toContain('de')
       expect(addedKeys).toContain('es')
@@ -96,7 +96,7 @@ describe('language lifecycle integration', () => {
       })
 
       expect(patches).toHaveLength(1)
-      expect(patches[0].items[0]._key).toBe('fr')
+      expect(patches[0]!.items[0]!._key).toBe('fr')
     })
   })
 
@@ -167,7 +167,7 @@ describe('language lifecycle integration', () => {
         filteredLanguages: testLanguages,
         value: [],
       })
-      const newItem = patches[0].items[0]
+      const newItem = patches[0]!.items[0]!
       expect(newItem).toHaveProperty('_key', 'en')
 
       // 2. Presence checking uses _key
@@ -239,7 +239,7 @@ describe('language lifecycle integration', () => {
         filteredLanguages: languages,
         value,
       })
-      expect(patches[0].items[0]._key).toBe('fr')
+      expect(patches[0]!.items[0]!._key).toBe('fr')
     })
   })
 })
