@@ -1,6 +1,13 @@
+import type {FieldDefinition} from 'sanity'
+
 import {describe, expect, it} from 'vitest'
 
 import createObjectSchema from './object'
+
+// Runtime type that includes fields property
+type ObjectSchemaWithFields = FieldDefinition<'object'> & {
+  fields: Array<{name: string; title?: string; options?: Record<string, unknown>}>
+}
 
 /**
  * Tests for schema/object.ts
@@ -37,10 +44,10 @@ describe('schema/object', () => {
     it('includes value field', () => {
       const schema = createObjectSchema({
         type: 'string',
-      })
+      }) as ObjectSchemaWithFields
 
-      expect(schema['fields']).toHaveLength(1)
-      expect(schema['fields'][0]!.name).toBe('value')
+      expect(schema.fields).toHaveLength(1)
+      expect(schema.fields[0]!.name).toBe('value')
     })
 
     it('preserves field definition options', () => {
@@ -51,9 +58,9 @@ describe('schema/object', () => {
           title: 'My Custom Title',
           options: {customOption: true},
         },
-      })
+      }) as ObjectSchemaWithFields
 
-      const valueField = schema['fields'][0]!
+      const valueField = schema.fields[0]!
       expect(valueField.name).toBe('value')
       expect(valueField.title).toBe('My Custom Title')
       expect(valueField.options).toEqual({customOption: true})

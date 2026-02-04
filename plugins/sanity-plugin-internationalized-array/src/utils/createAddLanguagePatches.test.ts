@@ -1,3 +1,5 @@
+import type {FormInsertPatch} from 'sanity'
+
 import {describe, expect, it} from 'vitest'
 
 import type {Language} from '../types'
@@ -9,6 +11,24 @@ import {
   twoLanguages,
 } from '../__tests__/test-utils'
 import {createAddLanguagePatches} from './createAddLanguagePatches'
+
+// Helper to extract _key from patch items
+function getItemKey(patch: FormInsertPatch): string {
+  const item = patch.items[0]
+  if (item && typeof item === 'object' && '_key' in item) {
+    return item._key as string
+  }
+  throw new Error('Patch item missing _key')
+}
+
+// Helper to extract _type from patch items
+function getItemType(patch: FormInsertPatch): string {
+  const item = patch.items[0]
+  if (item && typeof item === 'object' && '_type' in item) {
+    return item._type as string
+  }
+  throw new Error('Patch item missing _type')
+}
 
 /**
  * Tests for utils/createAddLanguagePatches.ts
@@ -50,8 +70,8 @@ describe('createAddLanguagePatches', () => {
       })
 
       expect(patches).toHaveLength(2)
-      expect((patches[0]!.items[0] as {_key: string})._key).toBe('en')
-      expect((patches[1]!.items[0] as {_key: string})._key).toBe('fr')
+      expect(getItemKey(patches[0]!)).toBe('en')
+      expect(getItemKey(patches[1]!)).toBe('fr')
     })
 
     it('item _type is derived from schema type name', () => {
@@ -65,9 +85,7 @@ describe('createAddLanguagePatches', () => {
         value: undefined,
       })
 
-      expect((patches[0]!.items[0] as {_type: string})._type).toBe(
-        'internationalizedArrayCustomFieldValue',
-      )
+      expect(getItemType(patches[0]!)).toBe('internationalizedArrayCustomFieldValue')
     })
   })
 
@@ -86,7 +104,7 @@ describe('createAddLanguagePatches', () => {
 
       // Should only add 'fr' since 'en' is already present (matched by _key)
       expect(patches).toHaveLength(1)
-      expect((patches[0]!.items[0] as {_key: string})._key).toBe('fr')
+      expect(getItemKey(patches[0]!)).toBe('fr')
     })
 
     it('does not add languages when all are present', () => {
@@ -115,7 +133,7 @@ describe('createAddLanguagePatches', () => {
       })
 
       expect(patches).toHaveLength(1)
-      expect((patches[0]!.items[0] as {_key: string})._key).toBe('de')
+      expect(getItemKey(patches[0]!)).toBe('de')
     })
   })
 
@@ -203,8 +221,8 @@ describe('createAddLanguagePatches', () => {
 
       expect(patches).toHaveLength(2)
       // First 'fr', then 'de' - both at end initially, but local state tracking maintains order
-      expect((patches[0]!.items[0] as {_key: string})._key).toBe('fr')
-      expect((patches[1]!.items[0] as {_key: string})._key).toBe('de')
+      expect(getItemKey(patches[0]!)).toBe('fr')
+      expect(getItemKey(patches[1]!)).toBe('de')
     })
 
     it('correctly orders when filling gaps', () => {
@@ -221,8 +239,8 @@ describe('createAddLanguagePatches', () => {
 
       expect(patches).toHaveLength(2)
       // 'fr' goes after 'en', 'de' goes before 'es'
-      expect((patches[0]!.items[0] as {_key: string})._key).toBe('fr')
-      expect((patches[1]!.items[0] as {_key: string})._key).toBe('de')
+      expect(getItemKey(patches[0]!)).toBe('fr')
+      expect(getItemKey(patches[1]!)).toBe('de')
     })
   })
 
@@ -242,7 +260,7 @@ describe('createAddLanguagePatches', () => {
       })
 
       expect(patches).toHaveLength(2)
-      expect(patches.map((p) => (p.items[0] as {_key: string})._key)).toEqual(['en', 'de'])
+      expect(patches.map(getItemKey)).toEqual(['en', 'de'])
     })
   })
 

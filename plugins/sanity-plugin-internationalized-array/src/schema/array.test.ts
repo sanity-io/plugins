@@ -23,6 +23,11 @@ import createArraySchema from './array'
  * - Error path generation using _key
  */
 
+// Type for the validation rule object returned by the schema
+type ValidationRuleWithCustom = {
+  _custom: (value: Value[] | undefined, context: unknown) => Promise<unknown>
+}
+
 // Helper to extract and run validation
 async function runValidation(
   value: Value[] | undefined,
@@ -42,9 +47,14 @@ async function runValidation(
   })
 
   // Get the validation rule and extract the custom function
-  const rule = (schema.validation as Function)({
+  // The validation function accepts a rule builder and returns the rule
+  const validationFn = schema.validation
+  if (typeof validationFn !== 'function') {
+    throw new Error('Expected validation to be a function')
+  }
+  const rule = validationFn({
     custom: (fn: (value: Value[], context: unknown) => Promise<unknown>) => ({_custom: fn}),
-  })
+  }) as ValidationRuleWithCustom
 
   // Create mock context
   const mockContext = {
@@ -60,7 +70,7 @@ async function runValidation(
     }),
   }
 
-  return (rule as {_custom: Function})._custom(value, mockContext)
+  return rule._custom(value, mockContext)
 }
 
 describe('schema/array', () => {
