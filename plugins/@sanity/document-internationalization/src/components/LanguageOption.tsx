@@ -1,26 +1,13 @@
 import {AddIcon, CheckmarkIcon, SplitVerticalIcon} from '@sanity/icons'
-import {
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Spinner,
-  Text,
-  Tooltip,
-  useToast,
-} from '@sanity/ui'
+import {Badge, Box, Button, Flex, Spinner, Text, Tooltip, useToast} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import {useCallback, useEffect, useState} from 'react'
 import {type ObjectSchemaType, type SanityDocument, useClient} from 'sanity'
 
+import type {Language, Metadata, MetadataDocument, TranslationReference} from '../types'
+
 import {METADATA_SCHEMA_NAME} from '../constants'
 import {useOpenInNewPane} from '../hooks/useOpenInNewPane'
-import type {
-  Language,
-  Metadata,
-  MetadataDocument,
-  TranslationReference,
-} from '../types'
 import {createReference} from '../utils/createReference'
 import {removeExcludedPaths} from '../utils/excludePaths'
 import {useDocumentInternationalizationContext} from './DocumentInternationalizationContext'
@@ -53,14 +40,8 @@ export default function LanguageOption(props: LanguageOptionProps) {
    * translation metadata entries, which editors will not be able to delete */
   const [userHasClicked, setUserHasClicked] = useState(false)
   const disabled =
-    props.disabled ||
-    userHasClicked ||
-    current ||
-    !source ||
-    !sourceLanguageId ||
-    !metadataId
-  const translation: TranslationReference | undefined = metadata?.translations
-    .length
+    props.disabled || userHasClicked || current || !source || !sourceLanguageId || !metadataId
+  const translation: TranslationReference | undefined = metadata?.translations.length
     ? metadata.translations.find((t) => t._key === language.id)
     : undefined
   const {apiVersion, languageField, weakReferences, callback} =
@@ -106,9 +87,10 @@ export default function LanguageOption(props: LanguageOptionProps) {
     }
 
     // Remove fields / paths we don't want to duplicate
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     newTranslationDocument = removeExcludedPaths(
       newTranslationDocument,
-      schemaType
+      schemaType,
     ) as SanityDocument
 
     transaction.create(newTranslationDocument)
@@ -118,13 +100,13 @@ export default function LanguageOption(props: LanguageOptionProps) {
       sourceLanguageId,
       documentId,
       schemaType.name,
-      !weakReferences
+      !weakReferences,
     )
     const newTranslationReference = createReference(
       language.id,
       newTranslationDocumentId,
       schemaType.name,
-      !weakReferences
+      !weakReferences,
     )
     const newMetadataDocument: MetadataDocument = {
       _id: metadataId,
@@ -151,30 +133,29 @@ export default function LanguageOption(props: LanguageOptionProps) {
       .then(() => {
         const metadataExisted = Boolean(metadata?._createdAt)
 
-        callback?.({
-          client,
-          sourceLanguageId,
-          sourceDocument: source,
-          newDocument: newTranslationDocument,
-          destinationLanguageId: language.id,
-          metaDocumentId: metadataId,
-        }).catch((err) => {
-          toast.push({
-            status: 'error',
-            title: `Callback`,
-            description: `Error while running callback - ${err}.`,
-          })
-        })
-
-        return toast.push({
+        toast.push({
           status: 'success',
           title: `Created "${language.title}" translation`,
           description: metadataExisted
             ? `Updated Translations Metadata`
             : `Created Translations Metadata`,
         })
+
+        // Execute callback if provided
+        if (callback) {
+          // oxlint-disable-next-line eslint-plugin-promise/no-callback-in-promise -- This is an async callback, not a Node.js callback
+          return callback({
+            client,
+            sourceLanguageId,
+            sourceDocument: source,
+            newDocument: newTranslationDocument,
+            destinationLanguageId: language.id,
+            metaDocumentId: metadataId,
+          })
+        }
+        return undefined
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error(err)
 
         /* Re-enable the create button if there was an error */
@@ -236,22 +217,13 @@ export default function LanguageOption(props: LanguageOptionProps) {
             <Spinner />
           ) : (
             <Text size={2}>
-              {/* eslint-disable-next-line no-nested-ternary */}
-              {translation ? (
-                <SplitVerticalIcon />
-              ) : current ? (
-                <CheckmarkIcon />
-              ) : (
-                <AddIcon />
-              )}
+              {translation ? <SplitVerticalIcon /> : current ? <CheckmarkIcon /> : <AddIcon />}
             </Text>
           )}
           <Box flex={1}>
             <Text>{language.title}</Text>
           </Box>
-          <Badge tone={disabled || current ? `default` : `primary`}>
-            {language.id}
-          </Badge>
+          <Badge tone={disabled || current ? `default` : `primary`}>{language.id}</Badge>
         </Flex>
       </Button>
     </Tooltip>

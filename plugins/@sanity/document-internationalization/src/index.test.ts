@@ -8,5 +8,15 @@ test('package exports', {timeout: 30_000}, async () => {
     cwd: fileURLToPath(import.meta.url),
   })
 
-  expect(manifest.exports).toMatchInlineSnapshot()
+  expect(manifest.exports).toMatchInlineSnapshot(`
+    {
+      ".": {
+        "DeleteTranslationAction": "function",
+        "DocumentInternationalizationMenu": "function",
+        "DuplicateWithTranslationsAction": "function",
+        "documentInternationalization": "function",
+        "useDocumentInternationalizationContext": "function",
+      },
+    }
+  `)
 })

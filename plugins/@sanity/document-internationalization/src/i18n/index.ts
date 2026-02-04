@@ -5,17 +5,15 @@ import {defineLocaleResourceBundle} from 'sanity'
  *
  * @public
  */
-export const documenti18nLocaleNamespace =
-  'document-internationalization' as const
+export const documenti18nLocaleNamespace = 'document-internationalization' as const
 
 /**
  * The default locale bundle for the document internationalization plugin, which is US English.
  *
  * @internal
  */
-export const documentInternationalizationUsEnglishLocaleBundle =
-  defineLocaleResourceBundle({
-    locale: 'en-US',
-    namespace: documenti18nLocaleNamespace,
-    resources: () => import('./resources'),
-  })
+export const documentInternationalizationUsEnglishLocaleBundle = defineLocaleResourceBundle({
+  locale: 'en-US',
+  namespace: documenti18nLocaleNamespace,
+  resources: () => import('./resources'),
+})

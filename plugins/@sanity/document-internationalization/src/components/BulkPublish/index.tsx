@@ -2,8 +2,9 @@ import {Button, Card, Dialog, Inline, Stack, Text, useToast} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 import {TextWithTone, useClient, useWorkspace} from 'sanity'
 
-import {API_VERSION} from '../../constants'
 import type {TranslationReference} from '../../types'
+
+import {API_VERSION} from '../../constants'
 import DocumentCheck from './DocumentCheck'
 import Info from './Info'
 
@@ -63,8 +64,9 @@ export default function BulkPublish(props: BulkPublishProps) {
           title: 'Success',
           description: 'Bulk publish complete',
         })
+        return undefined
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error(err)
         toast.push({
           status: 'error',
@@ -93,11 +95,7 @@ export default function BulkPublish(props: BulkPublishProps) {
         </Inline>
 
         <Stack>
-          <Button
-            onClick={onOpen}
-            text="Prepare bulk publishing"
-            mode="ghost"
-          />
+          <Button onClick={onOpen} text="Prepare bulk publishing" mode="ghost" />
         </Stack>
 
         {open && (
@@ -123,9 +121,7 @@ export default function BulkPublish(props: BulkPublishProps) {
                     <TextWithTone tone="critical" size={1}>
                       {invalidIds && invalidIds.length === 1
                         ? `1 draft document has`
-                        : `${
-                            invalidIds && invalidIds.length
-                          } draft documents have`}{' '}
+                        : `${invalidIds && invalidIds.length} draft documents have`}{' '}
                       validation issues that must addressed first
                     </TextWithTone>
                   ) : (
@@ -154,11 +150,7 @@ export default function BulkPublish(props: BulkPublishProps) {
               {draftIds.length > 0 ? (
                 <Button
                   mode="ghost"
-                  tone={
-                    invalidIds && invalidIds?.length > 0
-                      ? 'caution'
-                      : 'positive'
-                  }
+                  tone={invalidIds && invalidIds?.length > 0 ? 'caution' : 'positive'}
                   text={
                     draftIds.length === 1
                       ? `Publish draft document`

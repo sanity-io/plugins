@@ -2,8 +2,9 @@ import {useEffect} from 'react'
 import {PatchEvent, unset, useClient, useEditState} from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import {API_VERSION} from '../../constants'
 import type {TranslationReference} from '../../types'
+
+import {API_VERSION} from '../../constants'
 
 type ReferencePatcherProps = {
   translation: TranslationReference
@@ -31,17 +32,13 @@ export default function ReferencePatcher(props: ReferencePatcherProps) {
       editState.published &&
       editState.ready
     ) {
-      const referencePathBase = [
-        'translations',
-        {_key: translation._key},
-        'value',
-      ]
+      const referencePathBase = ['translations', {_key: translation._key}, 'value']
 
       onChange(
         new PatchEvent([
           unset([...referencePathBase, '_weak']),
           unset([...referencePathBase, '_strengthenOnPublish']),
-        ])
+        ]),
       )
     }
   }, [translation, editState, metadataId, client, onChange])

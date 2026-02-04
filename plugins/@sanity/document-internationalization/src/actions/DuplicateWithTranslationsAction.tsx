@@ -23,6 +23,16 @@ import {METADATA_SCHEMA_NAME, TRANSLATIONS_ARRAY_NAME} from '../constants'
 import {useTranslationMetadata} from '../hooks/useLanguageMetadata'
 import {documenti18nLocaleNamespace} from '../i18n'
 
+// Types for document store operations
+interface EditOperations {
+  duplicate: {disabled: string | false; execute: (id: string) => void}
+}
+
+interface OperationSuccessEvent {
+  op: string
+  type: 'success' | 'error'
+}
+
 const DISABLED_REASON_KEY = {
   METADATA_NOT_FOUND: 'action.duplicate.disabled.missing-metadata',
   MULTIPLE_METADATA: 'action.duplicate.disabled.multiple-metadata',
@@ -30,11 +40,13 @@ const DISABLED_REASON_KEY = {
   NOT_READY: 'action.duplicate.disabled.not-ready',
 }
 
+/* oxlint-disable typescript-eslint/no-deprecated -- onComplete is needed for backwards compatibility */
 export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
   id,
   type,
   onComplete,
 }) => {
+  /* oxlint-enable typescript-eslint/no-deprecated */
   const documentStore = useDocumentStore()
   const {duplicate} = useDocumentOperation(id, type)
   const {navigateIntent} = useRouter()
@@ -55,12 +67,13 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
   const {t: d} = useTranslation(documenti18nLocaleNamespace)
   const currentUser = useCurrentUser()
 
-  const handle = useCallback(async () => {
+  const handle = useCallback(() => {
     setDuplicating(true)
 
-    try {
+    // Async function that does the actual work
+    async function performDuplication(): Promise<void> {
       if (!metadataDocument) {
-        throw new Error('Metadata document not found')
+        return Promise.reject(new Error('Metadata document not found'))
       }
 
       // 1. Duplicate the document and its localized versions
@@ -72,86 +85,63 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
           const docId = translation.value?._ref
 
           if (!docId) {
-            throw new Error('Translation document not found')
+            return Promise.reject(new Error('Translation document not found'))
           }
 
           const {duplicate: duplicateTranslation} = await firstValueFrom(
             documentStore.pair
               .editOperations(docId, type)
-              .pipe(filter((op) => op.duplicate.disabled !== 'NOT_READY'))
+              .pipe(filter((op: EditOperations) => op.duplicate.disabled !== 'NOT_READY')),
           )
 
           if (duplicateTranslation.disabled) {
-            throw new Error('Cannot duplicate document')
+            return Promise.reject(new Error('Cannot duplicate document'))
           }
 
           const duplicateTranslationSuccess = firstValueFrom(
             documentStore.pair
               .operationEvents(docId, type)
-              .pipe(filter((e) => e.op === 'duplicate' && e.type === 'success'))
+              .pipe(
+                filter((e: OperationSuccessEvent) => e.op === 'duplicate' && e.type === 'success'),
+              ),
           )
           duplicateTranslation.execute(dupeId)
           await duplicateTranslationSuccess
 
           translations.set(locale, dupeId)
-        })
+        }),
       )
 
       // 2. Duplicate the metadata document
       const {duplicate: duplicateMetadata} = await firstValueFrom(
         documentStore.pair
           .editOperations(metadataDocument._id, METADATA_SCHEMA_NAME)
-          .pipe(filter((op) => op.duplicate.disabled !== 'NOT_READY'))
+          .pipe(filter((op: EditOperations) => op.duplicate.disabled !== 'NOT_READY')),
       )
 
       if (duplicateMetadata.disabled) {
-        throw new Error('Cannot duplicate document')
+        return Promise.reject(new Error('Cannot duplicate document'))
       }
 
       const duplicateMetadataSuccess = firstValueFrom(
         documentStore.pair
           .operationEvents(metadataDocument._id, METADATA_SCHEMA_NAME)
-          .pipe(filter((e) => e.op === 'duplicate' && e.type === 'success'))
+          .pipe(filter((e: OperationSuccessEvent) => e.op === 'duplicate' && e.type === 'success')),
       )
       const dupeId = uuid()
       duplicateMetadata.execute(dupeId)
       await duplicateMetadataSuccess
 
       // 3. Patch the duplicated metadata document to update the references
-      // TODO: use document store
-      // const {patch: patchMetadata} = await firstValueFrom(
-      //   documentStore.pair
-      //     .editOperations(dupeId, METADATA_SCHEMA_NAME)
-      //     .pipe(filter((op) => op.patch.disabled !== 'NOT_READY'))
-      // )
-
-      // if (patchMetadata.disabled) {
-      //   throw new Error('Cannot patch document')
-      // }
-
-      // await firstValueFrom(
-      //   documentStore.pair
-      //     .consistencyStatus(dupeId, METADATA_SCHEMA_NAME)
-      //     .pipe(filter((isConsistant) => isConsistant))
-      // )
-
-      // const patchMetadataSuccess = firstValueFrom(
-      //   documentStore.pair
-      //     .operationEvents(dupeId, METADATA_SCHEMA_NAME)
-      //     .pipe(filter((e) => e.op === 'patch' && e.type === 'success'))
-      // )
-
       const patch: PatchOperations = {
         set: Object.fromEntries(
           Array.from(translations.entries()).map(([locale, documentId]) => [
             `${TRANSLATIONS_ARRAY_NAME}[_key == "${locale}"].value._ref`,
             documentId,
-          ])
+          ]),
         ),
       }
 
-      // patchMetadata.execute([patch])
-      // await patchMetadataSuccess
       await client.transaction().patch(dupeId, patch).commit()
 
       // 4. Navigate to the duplicated document
@@ -161,28 +151,22 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
       })
 
       onComplete()
-    } catch (error) {
-      console.error(error)
-      toast.push({
-        status: 'error',
-        title: 'Error duplicating document',
-        description:
-          error instanceof Error
-            ? error.message
-            : 'Failed to duplicate document',
-      })
-    } finally {
-      setDuplicating(false)
     }
-  }, [
-    client,
-    documentStore.pair,
-    metadataDocument,
-    navigateIntent,
-    onComplete,
-    toast,
-    type,
-  ])
+
+    // Execute and handle success/error
+    performDuplication()
+      .catch((error: unknown) => {
+        console.error(error)
+        toast.push({
+          status: 'error',
+          title: 'Error duplicating document',
+          description: error instanceof Error ? error.message : 'Failed to duplicate document',
+        })
+      })
+      .finally(() => {
+        setDuplicating(false)
+      })
+  }, [client, documentStore.pair, metadataDocument, navigateIntent, onComplete, toast, type])
 
   return useMemo(() => {
     if (!isPermissionsLoading && !permissions?.granted) {
@@ -191,10 +175,7 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
         disabled: true,
         label: d('action.duplicate.label'),
         title: (
-          <InsufficientPermissionsMessage
-            context="duplicate-document"
-            currentUser={currentUser}
-          />
+          <InsufficientPermissionsMessage context="duplicate-document" currentUser={currentUser} />
         ),
       }
     }
@@ -224,12 +205,8 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
         Boolean(duplicate.disabled) ||
         isPermissionsLoading ||
         isMetadataDocumentLoading,
-      label: isDuplicating
-        ? s('action.duplicate.running.label')
-        : d('action.duplicate.label'),
-      title: duplicate.disabled
-        ? s(DISABLED_REASON_KEY[duplicate.disabled])
-        : '',
+      label: isDuplicating ? s('action.duplicate.running.label') : d('action.duplicate.label'),
+      title: duplicate.disabled ? s(DISABLED_REASON_KEY[duplicate.disabled]) : '',
       onHandle: handle,
     }
   }, [

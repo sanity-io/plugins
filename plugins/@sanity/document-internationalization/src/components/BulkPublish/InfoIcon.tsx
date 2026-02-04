@@ -1,5 +1,6 @@
-import {Box, type ButtonTone, Text, Tooltip} from '@sanity/ui'
 import type {ComponentType, PropsWithChildren} from 'react'
+
+import {Box, type ButtonTone, Text, Tooltip} from '@sanity/ui'
 import {TextWithTone} from 'sanity'
 
 type InfoIconProps = PropsWithChildren & {

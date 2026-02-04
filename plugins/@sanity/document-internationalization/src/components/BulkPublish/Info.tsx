@@ -12,14 +12,13 @@ export default function Info() {
         </Box>
         <Box>
           <Text size={1}>
-            Customized Document Actions in the Studio will not execute. Webhooks
-            will execute.
+            Customized Document Actions in the Studio will not execute. Webhooks will execute.
           </Text>
         </Box>
         <Box>
           <Text size={1}>
-            Validation is checked before rendering the button below, but the
-            Scheduling API will not check for – or enforce – validation.
+            Validation is checked before rendering the button below, but the Scheduling API will not
+            check for – or enforce – validation.
           </Text>
         </Box>
       </Stack>

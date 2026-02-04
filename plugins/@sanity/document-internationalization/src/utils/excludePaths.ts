@@ -17,7 +17,7 @@ export interface DocumentMember {
 
 export function removeExcludedPaths(
   doc: SanityDocument | null,
-  schemaType: ObjectSchemaType
+  schemaType: ObjectSchemaType,
 ): SanityDocument | null {
   // If the supplied doc is null or the schemaType
   // isn't a document, return as is.
@@ -31,11 +31,7 @@ export function removeExcludedPaths(
   const pathsToExclude: string[] = extractPaths(doc, schemaType, [])
     // We filter for any fields which should be excluded from the document
     // duplicate action, based on the schemaType option being set.
-    .filter(
-      (field) =>
-        field.schemaType?.options?.documentInternationalization?.exclude ===
-        true
-    )
+    .filter((field) => field.schemaType?.options?.documentInternationalization?.exclude === true)
     // then we return the stringified version of the path
     .map((field) => {
       return pathToString(field.path)
@@ -55,20 +51,23 @@ export function removeExcludedPaths(
     ],
   })
 
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
   return mut.apply(doc) as SanityDocument
 }
 
 function extractPaths(
   doc: SanityDocument,
   schemaType: ObjectSchemaType,
-  path: Path
+  path: Path,
 ): DocumentMember[] {
-  return schemaType.fields.reduce<DocumentMember[]>((acc, field) => {
+  const result: DocumentMember[] = []
+
+  for (const field of schemaType.fields) {
     const fieldPath = [...path, field.name]
     const fieldSchema = field.type
     const {value} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
     if (!value) {
-      return acc
+      continue
     }
 
     const thisFieldWithPath: DocumentMember = {
@@ -80,44 +79,42 @@ function extractPaths(
 
     if (fieldSchema.jsonType === 'object') {
       const innerFields = extractPaths(doc, fieldSchema, fieldPath)
-
-      return [...acc, thisFieldWithPath, ...innerFields]
+      result.push(thisFieldWithPath, ...innerFields)
     } else if (
       fieldSchema.jsonType === 'array' &&
       fieldSchema.of.length &&
       fieldSchema.of.some((item) => 'fields' in item)
     ) {
-      const {value: arrayValue} =
-        extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
+      const {value: arrayValue} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
 
-      let arrayPaths: DocumentMember[] = []
-      if ((arrayValue as any)?.length) {
-        for (const item of arrayValue as any[]) {
-          const itemPath = [...fieldPath, {_key: item._key}]
+      result.push(thisFieldWithPath)
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      if ((arrayValue as unknown[])?.length) {
+        // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+        for (const item of arrayValue as Array<{_key?: string; _type?: string}>) {
+          if (!item._key) continue
+          const itemPath = [...fieldPath, {_key: item._key}] as Path
           let itemSchema = fieldSchema.of.find((t) => t.name === item._type)
           if (!item._type) {
             itemSchema = fieldSchema.of[0]
           }
-          if (item._key && itemSchema) {
-            const innerFields = extractPaths(
-              doc,
-              itemSchema as ObjectSchemaType,
-              itemPath
-            )
-            const arrayMember = {
+          if (itemSchema) {
+            // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+            const innerFields = extractPaths(doc, itemSchema as ObjectSchemaType, itemPath)
+            const arrayMember: DocumentMember = {
               path: itemPath,
               name: item._key,
               schemaType: itemSchema,
               value: item,
             }
-            arrayPaths = [...arrayPaths, arrayMember, ...innerFields]
+            result.push(arrayMember, ...innerFields)
           }
         }
       }
-
-      return [...acc, thisFieldWithPath, ...arrayPaths]
+    } else {
+      result.push(thisFieldWithPath)
     }
+  }
 
-    return [...acc, thisFieldWithPath]
-  }, [])
+  return result
 }
