@@ -11,8 +11,8 @@ import {createMockSchemaType, createValues, testLanguages} from '../test-utils'
 // Helper to extract _key from patch items
 function getItemKey(patch: FormInsertPatch): string {
   const item = patch.items[0]
-  if (item && typeof item === 'object' && '_key' in item) {
-    return item._key as string
+  if (item && typeof item === 'object' && '_key' in item && typeof item['_key'] === 'string') {
+    return item['_key']
   }
   throw new Error('Patch item missing _key')
 }

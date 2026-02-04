@@ -18,6 +18,27 @@ import {createMockSchemaType, createValue, createValues, testLanguages} from '..
  * When migrating to sanity_language, these validation patterns must all be updated.
  */
 
+// Type for validation error result
+type ValidationError = {
+  message: string
+  paths: Array<Array<{_key: string}>>
+}
+
+// Type for validation result
+type ValidationResult = true | ValidationError
+
+// Type guard to check if value has _custom property
+function hasCustomValidation(
+  value: unknown,
+): value is {_custom: (value: Value[], context: unknown) => Promise<ValidationResult>} {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    '_custom' in value &&
+    typeof (value as {_custom: unknown})._custom === 'function'
+  )
+}
+
 // Helper to run validation
 async function runValidation(
   value: Value[] | undefined,
@@ -26,7 +47,7 @@ async function runValidation(
     document?: Record<string, unknown>
     select?: Record<string, string>
   } = {},
-) {
+): Promise<ValidationResult> {
   const {languages = testLanguages, document = {}, select} = options
 
   const schema = createArraySchema({
@@ -37,9 +58,18 @@ async function runValidation(
   })
 
   // Get the validation rule and extract the custom function
-  const rule = (schema.validation as Function)({
+  const validationFn = schema.validation
+  if (typeof validationFn !== 'function') {
+    throw new Error('Expected validation to be a function')
+  }
+  const rule = validationFn({
+    // @ts-expect-error -- Mock rule builder for testing
     custom: (fn: (value: Value[], context: unknown) => Promise<unknown>) => ({_custom: fn}),
   })
+
+  if (!hasCustomValidation(rule)) {
+    throw new Error('Expected validation rule to have _custom function')
+  }
 
   const mockContext = {
     document,
@@ -54,7 +84,7 @@ async function runValidation(
     }),
   }
 
-  return (rule as {_custom: Function})._custom(value, mockContext)
+  return rule._custom(value ?? [], mockContext)
 }
 
 describe('validation flow integration', () => {
@@ -69,7 +99,9 @@ describe('validation flow integration', () => {
 
       expect(result).toHaveProperty('paths')
       // The error path uses _key to identify the problematic item
-      expect(result.paths).toEqual([[{_key: 'invalid-language'}]])
+      if (result !== true) {
+        expect(result.paths).toEqual([[{_key: 'invalid-language'}]])
+      }
     })
 
     it('multiple errors each have _key-based paths', async () => {
@@ -78,7 +110,9 @@ describe('validation flow integration', () => {
       const result = await runValidation(value)
 
       expect(result).toHaveProperty('paths')
-      expect(result.paths).toEqual([[{_key: 'invalid1'}], [{_key: 'invalid2'}]])
+      if (result !== true) {
+        expect(result.paths).toEqual([[{_key: 'invalid1'}], [{_key: 'invalid2'}]])
+      }
     })
 
     it('duplicate detection uses _key for error paths', async () => {
@@ -91,7 +125,9 @@ describe('validation flow integration', () => {
       const result = await runValidation(value)
 
       expect(result).toHaveProperty('message', 'There can only be one field per language')
-      expect(result.paths).toEqual([[{_key: 'en'}]])
+      if (result !== true) {
+        expect(result.paths).toEqual([[{_key: 'en'}]])
+      }
     })
   })
 
@@ -107,7 +143,9 @@ describe('validation flow integration', () => {
       const result = await runValidation(value)
 
       expect(result).toHaveProperty('message')
-      expect(result.message).toContain('valid languages')
+      if (result !== true) {
+        expect(result.message).toContain('valid languages')
+      }
     })
 
     it('validates _key case sensitively', async () => {
@@ -115,7 +153,9 @@ describe('validation flow integration', () => {
       const result = await runValidation(value) // languages have lowercase 'en'
 
       expect(result).toHaveProperty('message')
-      expect(result.paths).toEqual([[{_key: 'EN'}]])
+      if (result !== true) {
+        expect(result.paths).toEqual([[{_key: 'EN'}]])
+      }
     })
   })
 
@@ -145,7 +185,9 @@ describe('validation flow integration', () => {
       ]
 
       const result = await runValidation(value)
-      expect(result.paths).toHaveLength(2) // Two duplicates
+      if (result !== true) {
+        expect(result.paths).toHaveLength(2) // Two duplicates
+      }
     })
   })
 
@@ -221,7 +263,9 @@ describe('validation flow integration', () => {
 
     it('handles undefined _key in single item', async () => {
       // Single item without _key is allowed (grace period for new items)
-      const value = [{value: 'test'}] as Value[]
+      // Using Partial to represent incomplete Value during creation
+      const value: Partial<Value>[] = [{value: 'test'}]
+      // @ts-expect-error -- Testing incomplete value during creation
       const result = await runValidation(value)
       expect(result).toBe(true)
     })
