@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest'
 
 import {createValues, testLanguages} from '../__tests__/test-utils'
+import {MAX_COLUMNS} from '../constants'
 
 /**
  * Tests for components/AddButtons.tsx
@@ -23,12 +24,6 @@ function isButtonDisabled(
   readOnly: boolean,
 ): boolean {
   return readOnly || Boolean(value?.find((item) => item._key === language.id))
-}
-
-const MAX_COLUMNS = {
-  codeOnly: 5,
-  titleOnly: 4,
-  titleAndCode: 3,
 }
 
 describe('AddButtons', () => {
