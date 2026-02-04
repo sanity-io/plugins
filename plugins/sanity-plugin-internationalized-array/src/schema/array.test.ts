@@ -28,6 +28,16 @@ type ValidationRuleWithCustom = {
   _custom: (value: Value[] | undefined, context: unknown) => Promise<unknown>
 }
 
+// Type guard to check if value has _custom property
+function hasCustomValidation(value: unknown): value is ValidationRuleWithCustom {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    '_custom' in value &&
+    typeof (value as {_custom: unknown})._custom === 'function'
+  )
+}
+
 // Helper to extract and run validation
 async function runValidation(
   value: Value[] | undefined,
@@ -53,8 +63,13 @@ async function runValidation(
     throw new Error('Expected validation to be a function')
   }
   const rule = validationFn({
+    // @ts-expect-error -- Mock rule builder for testing
     custom: (fn: (value: Value[], context: unknown) => Promise<unknown>) => ({_custom: fn}),
-  }) as ValidationRuleWithCustom
+  })
+
+  if (!hasCustomValidation(rule)) {
+    throw new Error('Expected validation rule to have _custom function')
+  }
 
   // Create mock context
   const mockContext = {
@@ -122,7 +137,9 @@ describe('schema/array', () => {
 
       it('handles single item without _key (grace period)', async () => {
         // Single item without _key is allowed during initial creation
-        const value = [{value: 'test'}] as Value[]
+        // Using Partial to represent incomplete Value during creation
+        const value: Partial<Value>[] = [{value: 'test'}]
+        // @ts-expect-error -- Testing incomplete value during creation
         const result = await runValidation(value)
         expect(result).toBe(true)
       })

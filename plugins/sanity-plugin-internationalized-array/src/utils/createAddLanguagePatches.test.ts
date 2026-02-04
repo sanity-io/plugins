@@ -15,8 +15,8 @@ import {createAddLanguagePatches} from './createAddLanguagePatches'
 // Helper to extract _key from patch items
 function getItemKey(patch: FormInsertPatch): string {
   const item = patch.items[0]
-  if (item && typeof item === 'object' && '_key' in item) {
-    return item._key as string
+  if (item && typeof item === 'object' && '_key' in item && typeof item['_key'] === 'string') {
+    return item['_key']
   }
   throw new Error('Patch item missing _key')
 }
@@ -24,8 +24,8 @@ function getItemKey(patch: FormInsertPatch): string {
 // Helper to extract _type from patch items
 function getItemType(patch: FormInsertPatch): string {
   const item = patch.items[0]
-  if (item && typeof item === 'object' && '_type' in item) {
-    return item._type as string
+  if (item && typeof item === 'object' && '_type' in item && typeof item['_type'] === 'string') {
+    return item['_type']
   }
   throw new Error('Patch item missing _type')
 }
