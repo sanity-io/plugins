@@ -20,6 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
+      - run: pnpm dlx skills add https://github.com/vercel-labs/skills --skill find-skills --yes
+      - run: pnpm dlx skills add https://github.com/antfu/skills --skill pnpm --yes
+      - run: pnpm dlx skills add https://github.com/vercel/turborepo --skill turborepo --yes
+      - run: pnpm dlx skills add https://github.com/vercel-labs/agent-skills --skill vercel-react-best-practices
+      - run: pnpm dlx skills add https://github.com/antfu/skills --skill vite
+      - run: pnpm dlx skills add https://github.com/antfu/skills --skill vitest
       - run: pnpm dlx skills update --yes
       - run: pnpm format
       - uses: actions/create-github-app-token@v2
