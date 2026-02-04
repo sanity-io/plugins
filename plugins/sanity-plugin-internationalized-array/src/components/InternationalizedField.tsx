@@ -29,7 +29,7 @@ const getLanguageId = (fieldParent: unknown): string | undefined => {
 
 export default function InternationalizedField(props: FieldProps): ReactNode {
   const {languages} = useInternationalizedArrayContext()
-  // Get the parent array to look up the language from the actual array item
+  // Get the array item (parent of the field) to look up the language from it
   const fieldParent = useFormValue(props.path.slice(0, -1))
 
   const languageId = getLanguageId(fieldParent)
