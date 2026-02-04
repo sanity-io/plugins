@@ -10,7 +10,6 @@ This major release includes several breaking changes as part of the migration to
 - **ESM-only**: CommonJS is no longer supported (removed dual module format)
 - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the baseline
 - **React 19 required**: Updated to support React 19.2+
-- **styled-components peer dependency**: The plugin now requires `styled-components` ^6.1 as a peer dependency
 - **Stricter TypeScript**: Updated type definitions with improved type safety
 - **Updated dependencies**: All dependencies updated to latest compatible versions
 

@@ -61,14 +61,12 @@
     "eslint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "sanity": "catalog:",
-    "styled-components": "^6.1"
+    "sanity": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",
     "react-dom": "^19.2",
-    "sanity": "^5",
-    "styled-components": "^6.1"
+    "sanity": "^5"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
