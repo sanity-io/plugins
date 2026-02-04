@@ -1,0 +1,70 @@
+{
+  "name": "@sanity/document-internationalization",
+  "version": "4.1.1",
+  "description": "Create unique translations of a document based on its language, joined by a shared reference document.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/document-internationalization#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/document-internationalization"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.4",
+    "@sanity/mutator": "^5.0.1",
+    "@sanity/ui": "^3.1.11",
+    "@sanity/uuid": "^3.0.2",
+    "sanity-plugin-internationalized-array": "^3.2.1",
+    "sanity-plugin-utils": "^1.7.0"
+  },
+  "devDependencies": {
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^19.2",
+    "react-dom": "^19.2",
+    "sanity": "^5"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}
