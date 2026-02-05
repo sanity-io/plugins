@@ -1,6 +1,6 @@
 # @sanity/document-internationalization
 
-All new rewrite exclusively for Sanity Studio v3
+All new rewrite exclusively for Sanity Studio v5
 
 - [@sanity/document-internationalization](#sanitydocument-internationalization)
   - [What this plugin solves](#what-this-plugin-solves)
