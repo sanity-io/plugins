@@ -144,7 +144,7 @@ export function DocumentInternationalizationMenu(
                       language={language}
                       schemaType={schemaType}
                       documentId={documentId}
-                      disabled={loading || !allLanguagesAreValid}
+                      disabled={!allLanguagesAreValid}
                       current={language.id === sourceLanguageId}
                       metadata={metadata}
                       metadataId={metadataId}
