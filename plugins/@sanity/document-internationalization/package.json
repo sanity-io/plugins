@@ -47,7 +47,7 @@
     "@sanity/ui": "^3.1.11",
     "@sanity/uuid": "^3.0.2",
     "rxjs": "^7.8.1",
-    "sanity-plugin-internationalized-array": "workspace:*",
+    "sanity-plugin-internationalized-array": "workspace:^",
     "sanity-plugin-utils": "^1.7.0"
   },
   "devDependencies": {
