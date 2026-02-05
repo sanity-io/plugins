@@ -14,6 +14,11 @@ import {useDocumentPane} from 'sanity/structure'
 import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import {
+  ARRAY_BASED_TYPES,
+  filterAlreadyTranslated,
+  getInitialValueForType as getInitialValueForTypeBasic,
+} from '../utils/documentAddButtonsHelpers'
 import {getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
@@ -32,22 +37,20 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
   const documentsToTranslation = getDocumentsToTranslate(value, [])
 
   // Helper function to determine if a field should be initialized as an array
+  // This extends the basic utility with schema lookup capability
   const getInitialValueForType = useCallback(
     (typeName: string): unknown => {
+      // First try the basic lookup without schema
+      const basicResult = getInitialValueForTypeBasic(typeName)
+      if (basicResult !== undefined) {
+        return basicResult
+      }
+
       if (!typeName) return undefined
 
-      // Extract the base type name from internationalized array type
-      // e.g., "internationalizedArrayBodyValue" -> "body"
+      // Extract the base type name for schema lookup
       const match = typeName.match(/^internationalizedArray(.+)Value$/)
       if (!match || !match[1]) return undefined
-
-      const baseTypeName = match[1].charAt(0).toLowerCase() + match[1].slice(1)
-
-      // Check if it's a known array-based type (Portable Text fields)
-      const arrayBasedTypes = new Set(['body', 'htmlContent', 'blockContent', 'portableText'])
-      if (arrayBasedTypes.has(baseTypeName)) {
-        return []
-      }
 
       // Try to look up the schema type to determine if it's an array
       const schemaType = schema.get(typeName)
@@ -67,7 +70,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
             fieldType?.name === 'array' ||
             fieldType?.type === 'array' ||
             fieldType?.of !== undefined ||
-            (fieldType?.name && arrayBasedTypes.has(fieldType.name))
+            (fieldType?.name && ARRAY_BASED_TYPES.has(fieldType.name))
           ) {
             return []
           }
@@ -89,9 +92,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
         })
         return
       }
-      const alreadyTranslated = documentsToTranslation.filter(
-        (translation) => translation?.[LANGUAGE_FIELD_NAME] === languageId,
-      )
+      const alreadyTranslated = filterAlreadyTranslated(documentsToTranslation, languageId)
       const removeDuplicates = documentsToTranslation.reduce<DocumentsToTranslate[]>(
         (filteredTranslations, translation) => {
           if (

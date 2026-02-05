@@ -13,10 +13,10 @@ import {useDocumentPane} from 'sanity/structure'
 import type {Language, Value} from '../types'
 
 import {useInternationalizedArrayContext} from '../components/InternationalizedArrayContext'
-import {LANGUAGE_FIELD_NAME} from '../constants'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
+import {isLanguageInValue} from '../utils/isLanguageInValue'
 
 const createTranslateFieldActions: (
   fieldActionProps: DocumentFieldActionProps,
@@ -28,10 +28,7 @@ const createTranslateFieldActions: (
   languages.map((language) => {
     // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     const value = useFormValue(fieldActionProps.path) as Value[]
-    const disabled =
-      value && Array.isArray(value)
-        ? Boolean(value?.find((item) => item[LANGUAGE_FIELD_NAME] === language.id))
-        : false
+    const disabled = value && Array.isArray(value) ? isLanguageInValue(language, value) : false
     const hidden = !filteredLanguages.some((f) => f.id === language.id)
 
     const {onChange} = useDocumentPane()
