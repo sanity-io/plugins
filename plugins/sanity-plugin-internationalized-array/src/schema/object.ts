@@ -2,6 +2,7 @@ import {defineField, type FieldDefinition} from 'sanity'
 
 import {createFieldName} from '../components/createFieldName'
 import InternationalizedInput from '../components/InternationalizedInput'
+import {LANGUAGE_FIELD_NAME} from '../constants'
 
 type ObjectFactoryConfig = {
   type: string | FieldDefinition
@@ -29,7 +30,7 @@ export default (config: ObjectFactoryConfig): FieldDefinition<'object'> => {
     preview: {
       select: {
         title: 'value',
-        subtitle: '_key',
+        subtitle: LANGUAGE_FIELD_NAME,
       },
     },
   })

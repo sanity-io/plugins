@@ -2,6 +2,7 @@ import {type FormInsertPatch, insert, type Path, type SchemaType} from 'sanity'
 
 import type {Language, Value} from '../types'
 
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import {createValueSchemaTypeName} from './createValueSchemaTypeName'
 
 type AddConfig = {
@@ -27,12 +28,14 @@ export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
   // Create new items
   const getNewItems = () => {
     if (Array.isArray(addLanguageKeys) && addLanguageKeys.length > 0) {
-      return addLanguageKeys.map((id) => Object.assign({}, itemBase, {_key: id}))
+      return addLanguageKeys.map((id) => Object.assign({}, itemBase, {[LANGUAGE_FIELD_NAME]: id}))
     }
 
     return filteredLanguages
-      .filter((language) => (value?.length ? !value.find((v) => v._key === language.id) : true))
-      .map((language) => Object.assign({}, itemBase, {_key: language.id}))
+      .filter((language) =>
+        value?.length ? !value.find((v) => v[LANGUAGE_FIELD_NAME] === language.id) : true,
+      )
+      .map((language) => Object.assign({}, itemBase, {[LANGUAGE_FIELD_NAME]: language.id}))
   }
   const newItems = getNewItems()
 
@@ -41,14 +44,15 @@ export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
 
   const insertions = newItems.map((item) => {
     // What's the original index of this language?
-    const languageIndex = languages.findIndex((l) => item._key === l.id)
+    const itemLanguage = item[LANGUAGE_FIELD_NAME]
+    const languageIndex = languages.findIndex((l) => itemLanguage === l.id)
 
     // What languages are there beyond that index?
     const remainingLanguages = languages.slice(languageIndex + 1)
 
     // So what is the index in the current value array of the next language in the language array?
     const nextLanguageIndex = languagesInUse.findIndex((l) =>
-      remainingLanguages.find((r) => r.id === l._key),
+      remainingLanguages.find((r) => r.id === l[LANGUAGE_FIELD_NAME]),
     )
 
     // Keep local state up to date incase multiple insertions are being made
