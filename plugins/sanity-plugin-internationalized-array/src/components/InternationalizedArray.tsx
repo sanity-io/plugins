@@ -97,7 +97,10 @@ export default function InternationalizedArray(
 
   const {isDeleting} = useDocumentPane()
 
-  const addedLanguages = members.map(({key}) => key)
+  const addedLanguages = useMemo(() => {
+    if (!value?.length) return []
+    return value.map((v) => v[LANGUAGE_FIELD_NAME] ?? v._key).filter(Boolean)
+  }, [value])
   const hasAddedDefaultLanguages = defaultLanguages
     .filter((language) => languages.find((l) => l.id === language))
     .every((language) => addedLanguages.includes(language))
