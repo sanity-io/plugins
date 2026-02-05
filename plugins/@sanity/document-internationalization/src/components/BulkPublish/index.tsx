@@ -119,9 +119,9 @@ export default function BulkPublish(props: BulkPublishProps) {
                   </Text>
                   {invalidIds && invalidIds.length > 0 ? (
                     <TextWithTone tone="critical" size={1}>
-                      {invalidIds && invalidIds.length === 1
+                      {invalidIds.length === 1
                         ? `1 draft document has`
-                        : `${invalidIds && invalidIds.length} draft documents have`}{' '}
+                        : `${invalidIds.length} draft documents have`}{' '}
                       validation issues that must addressed first
                     </TextWithTone>
                   ) : (
