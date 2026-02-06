@@ -443,9 +443,3 @@ export type AllSanitySchemaTypes =
   | Geopoint
 
 export declare const internalGroqTypeReferenceTo: unique symbol
-
-type ArrayOf<T> = Array<
-  T & {
-    _key: string
-  }
->
