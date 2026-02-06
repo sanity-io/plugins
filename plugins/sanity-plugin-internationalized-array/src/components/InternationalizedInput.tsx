@@ -108,7 +108,6 @@ export default function InternationalizedInput(
     }
 
     // For all other cases, pass through unchanged
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     return originalOnChange(patches as Parameters<typeof originalOnChange>[0])
   }
 

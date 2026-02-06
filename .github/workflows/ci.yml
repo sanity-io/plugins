@@ -33,10 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
-      - name: Oxlint
-        run: pnpm oxlint --format github
-      - name: ESLint
-        run: pnpm turbo run lint -- -f gha --max-warnings 0
+      - run: pnpm lint --format github
 
   test:
     runs-on: ubuntu-latest

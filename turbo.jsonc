@@ -4,24 +4,9 @@
   "globalDependencies": ["pnpm-workspace.yaml"],
   "globalEnv": ["NODE_ENV", "CI", "GITHUB_ACTIONS"],
   "tasks": {
-    "//#oxlint": {
-      "cache": false,
-    },
-    "//#oxlint:fix": {
-      "cache": false,
-    },
-    "lint": {
-      "dependsOn": ["transit"],
-    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".sanity/**", "dist/**"],
-    },
-    // Transit node in the turbo graph
-    // no package.json scrips actually implement transit but it creates a dependency link for other tasks:
-    // https://turbo.build/docs/crafting-your-repository/configuring-tasks#dependent-tasks-that-can-be-run-in-parallel
-    "transit": {
-      "dependsOn": ["^transit"],
     },
     "dev": {
       "cache": false,

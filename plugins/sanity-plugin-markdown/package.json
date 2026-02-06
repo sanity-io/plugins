@@ -51,7 +51,6 @@
   },
   "scripts": {
     "build": "pkg build --strict --check --clean",
-    "lint": "eslint .",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -59,7 +58,6 @@
     "react-simplemde-editor": "^5.2.0"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/client": "catalog:",
@@ -68,7 +66,6 @@
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",
     "easymde": "^2.20.0",
-    "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:"
