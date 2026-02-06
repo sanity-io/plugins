@@ -23,6 +23,7 @@ import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
 import AddButtons from './AddButtons'
 import Feedback from './Feedback'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
+import {MigrationBanner} from './MigrationBanner'
 
 /**
  * Main array input component for internationalized array fields.
@@ -52,7 +53,10 @@ export default function InternationalizedArray(
   const {members, value: _value, schemaType, onChange, readOnly: documentReadOnly} = props
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const value = _value as InternationalizedArrayItem[]
-  const readOnly = typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false
+  const itemsNeedingMigration = (value?.filter((v) => !v[LANGUAGE_FIELD_NAME]) ?? []).length > 0
+  const readOnly =
+    Boolean(documentReadOnly) ||
+    (typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false)
   const toast = useToast()
 
   const {languages, filteredLanguages, defaultLanguages, buttonAddAll, buttonLocations} =
@@ -115,8 +119,19 @@ export default function InternationalizedArray(
 
   const addedLanguages = useMemo(() => {
     if (!value?.length) return []
-    return value.map((v) => v[LANGUAGE_FIELD_NAME] ?? v._key).filter(Boolean)
-  }, [value])
+    const languageIds = new Set(languages.map((language) => language.id))
+    return value
+      .map((v) => {
+        const language = v[LANGUAGE_FIELD_NAME]
+        if (language) {
+          return language
+        }
+        // Fallback to `_key` if `language` is not set and `_key` matches a valid language ID
+        return v._key && languageIds.has(v._key) ? v._key : null
+      })
+      .filter((language): language is string => Boolean(language))
+  }, [value, languages])
+
   const hasAddedDefaultLanguages = defaultLanguages
     .filter((language) => languages.find((l) => l.id === language))
     .every((language) => addedLanguages.includes(language))
@@ -226,6 +241,7 @@ export default function InternationalizedArray(
   }
 
   const addButtonsAreVisible =
+    !itemsNeedingMigration &&
     // Plugin was configured to display buttons here (default!)
     buttonLocations.includes('field') &&
     // There's at least one language visible
@@ -236,6 +252,14 @@ export default function InternationalizedArray(
 
   return (
     <Stack space={2}>
+      {/* Migration warning banner for old data format */}
+      <MigrationBanner
+        value={value}
+        languages={languages}
+        onChange={onChange}
+        readOnly={readOnly}
+      />
+
       {fieldHasMembers ? (
         <>
           {filteredMembers.map((member) => {

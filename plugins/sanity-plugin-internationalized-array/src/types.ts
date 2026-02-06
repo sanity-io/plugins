@@ -24,6 +24,8 @@ export type ArrayConfig = {
  */
 export type Value = {
   _key: string
+  /** Language identifier (e.g., 'en', 'fr'). Added in v5. */
+  language: string
   value?: unknown
 }
 
@@ -36,6 +38,7 @@ export function isInternationalizedArrayItemType(
 export type InternationalizedArrayItem<T = unknown> = {
   _key: string
   value?: T
+  language: string
   /**
    * string that starts with "internationalizedArray" and ends with "Value"
    */

@@ -1,4 +1,5 @@
 import {Box, Stack, Text, useToast} from '@sanity/ui'
+import {nanoid} from 'nanoid'
 import {type ReactElement, useCallback} from 'react'
 import {
   type FormInsertPatch,
@@ -144,6 +145,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
         const insertValue = insert(
           [
             {
+              _key: nanoid(),
               [LANGUAGE_FIELD_NAME]: languageId,
               _type: toTranslate._type,
               value: initialValue, // Use the determined initial value instead of undefined

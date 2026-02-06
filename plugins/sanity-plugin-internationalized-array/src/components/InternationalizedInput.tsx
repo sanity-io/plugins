@@ -135,7 +135,7 @@ export default function InternationalizedInput(
   }
 
   const {validation, value, onChange, readOnly} = inlineProps
-
+  console.log('validation', validation)
   // The parent array contains the languages from the plugin config
   const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
 
@@ -143,6 +143,7 @@ export default function InternationalizedInput(
     () => parentValue?.map((v) => v[LANGUAGE_FIELD_NAME]) ?? [],
     [parentValue],
   )
+  const itemNeedsMigration = !value[LANGUAGE_FIELD_NAME]
   const keyIsValid = languages?.length
     ? languages.find((l) => l.id === value[LANGUAGE_FIELD_NAME])
     : false
@@ -186,34 +187,37 @@ export default function InternationalizedInput(
   return (
     <Card paddingTop={2} tone={getToneFromValidation(validation)}>
       <Stack space={2}>
-        <Card tone="inherit">
-          {keyIsValid ? (
-            <Label muted size={1}>
-              {languageTitle}
-            </Label>
-          ) : (
-            <MenuButton
-              button={<Button fontSize={1} text={`Change "${value[LANGUAGE_FIELD_NAME]}"`} />}
-              id={`${value[LANGUAGE_FIELD_NAME]}-change-key`}
-              menu={
-                <Menu>
-                  {languages.map((lang) => (
-                    <MenuItem
-                      disabled={languageKeysInUse.includes(lang.id)}
-                      fontSize={1}
-                      key={lang.id}
-                      text={lang.id.toLocaleUpperCase()}
-                      value={lang.id}
-                      // @ts-expect-error - fix typings
-                      onClick={handleKeyChange}
-                    />
-                  ))}
-                </Menu>
-              }
-              popover={{portal: true}}
-            />
-          )}
-        </Card>
+        {!itemNeedsMigration && (
+          <Card tone="inherit">
+            {keyIsValid ? (
+              <Label muted size={1}>
+                {languageTitle}
+              </Label>
+            ) : (
+              <MenuButton
+                button={<Button fontSize={1} text={`Change "${value[LANGUAGE_FIELD_NAME]}"`} />}
+                id={`${value[LANGUAGE_FIELD_NAME]}-change-key`}
+                menu={
+                  <Menu>
+                    {languages.map((lang) => (
+                      <MenuItem
+                        disabled={languageKeysInUse.includes(lang.id)}
+                        fontSize={1}
+                        key={lang.id}
+                        text={lang.id.toLocaleUpperCase()}
+                        value={lang.id}
+                        // @ts-expect-error - fix typings
+                        onClick={handleKeyChange}
+                      />
+                    ))}
+                  </Menu>
+                }
+                popover={{portal: true}}
+              />
+            )}
+          </Card>
+        )}
+
         <Flex align="center" gap={2}>
           <Card flex={1} tone="inherit">
             {props.inputProps.renderInput(inlineProps)}
