@@ -36,6 +36,19 @@ const internationalizedPost = defineType({
       },
     }),
   ],
+  preview: {
+    select: {
+      title: 'title',
+      description: 'description',
+    },
+    prepare(selection) {
+      const {title, description} = selection
+      return {
+        title: title?.[0]?.value || 'Untitled',
+        subtitle: description?.[0]?.value || 'No description',
+      }
+    },
+  },
 })
 const person = defineType({
   name: 'i18nArrayPerformanceTest',
