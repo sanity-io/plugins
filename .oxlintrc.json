@@ -10,6 +10,7 @@
     "jsx-a11y",
     "promise"
   ],
+  "jsPlugins": [{"name": "react-hooks-js", "specifier": "eslint-plugin-react-hooks"}],
   "ignorePatterns": ["**/.sanity/*", "**/dist/*", "**/sanity.types.ts"],
   "categories": {
     "correctness": "error",
@@ -17,6 +18,38 @@
     "perf": "error"
   },
   "rules": {
+    // React Compiler checks
+    // Recommended rules (from LintRulePreset.Recommended)
+    "react-hooks-js/component-hook-factories": "error",
+    "react-hooks-js/config": "error",
+    "react-hooks-js/error-boundaries": "error",
+    "react-hooks-js/gating": "error",
+    "react-hooks-js/globals": "error",
+    "react-hooks-js/immutability": "error",
+    "react-hooks-js/incompatible-library": "error",
+    "react-hooks-js/preserve-manual-memoization": "error",
+    "react-hooks-js/purity": "error",
+    "react-hooks-js/refs": "error",
+    "react-hooks-js/set-state-in-effect": "error",
+    "react-hooks-js/set-state-in-render": "error",
+    "react-hooks-js/static-components": "error",
+    "react-hooks-js/unsupported-syntax": "error",
+    "react-hooks-js/use-memo": "error",
+    // Recommended-latest rules (from LintRulePreset.RecommendedLatest)
+    "react-hooks-js/void-use-memo": "error",
+    // Off rules (LintRulePreset.Off) - not enabled by default
+    "react-hooks-js/automatic-effect-dependencies": "error",
+    "react-hooks-js/capitalized-calls": "error",
+    "react-hooks-js/fbt": "error",
+    "react-hooks-js/fire": "error",
+    "react-hooks-js/hooks": "error",
+    "react-hooks-js/invariant": "error",
+    "react-hooks-js/memoized-effect-dependencies": "error",
+    "react-hooks-js/no-deriving-state-in-effects": "error",
+    "react-hooks-js/rule-suppression": "error",
+    "react-hooks-js/syntax": "error",
+    "react-hooks-js/todo": "error",
+
     "typescript/ban-ts-comment": "error",
     "typescript/no-deprecated": "error",
     "typescript/no-unnecessary-type-assertion": "error",

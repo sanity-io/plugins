@@ -36,7 +36,6 @@
   ],
   "scripts": {
     "build": "pkg build --strict --check --clean",
-    "lint": "eslint .",
     "prepack": "turbo run build"
   },
 {{#if dependencies}}
@@ -58,7 +57,6 @@
     "babel-plugin-styled-components": "catalog:",
     "styled-components": "catalog:",
 {{/if}}
-    "eslint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:"
