@@ -57,6 +57,21 @@ export default (config: ArrayFactoryConfig) => {
           return true
         }
 
+        // Check for items missing the language field (unmigrated data)
+        const itemsMissingLanguage = value.filter(
+          (item) => item && !item[LANGUAGE_FIELD_NAME] && item._key,
+        )
+        if (itemsMissingLanguage.length > 0) {
+          return {
+            message:
+              'Language is required for each array item. Run the migration to update your data from the old format.',
+            paths: itemsMissingLanguage.flatMap((item) => [
+              [{_key: item._key}],
+              [{_key: item._key}, 'value'],
+            ]),
+          }
+        }
+
         // Early return for simple cases to avoid expensive operations
         if (value.length === 1 && !value[0]?.[LANGUAGE_FIELD_NAME]) {
           return true

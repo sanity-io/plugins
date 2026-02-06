@@ -4,6 +4,8 @@ export interface DocumentsToTranslate {
   path: (string | number)[]
   pathString: string
   _key: string
+  /** Language identifier (e.g., 'en', 'fr'). Added in v5. */
+  language: string
   _type: string
   [key: string]: unknown
 }

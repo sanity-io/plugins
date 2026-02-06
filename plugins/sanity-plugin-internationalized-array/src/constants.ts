@@ -3,10 +3,10 @@ import type {PluginConfig} from './types'
 /**
  * The field name used to identify the language of an internationalized array item.
  *
- * In v4.x this was '_key', in v5+ this will be 'language'.
+ * In v4.x this was '_key', in v5+ this is 'language'.
  * Having this as a constant makes the codebase easier to maintain.
  */
-export const LANGUAGE_FIELD_NAME = '_key' as const
+export const LANGUAGE_FIELD_NAME = 'language' as const
 
 export const MAX_COLUMNS = {
   codeOnly: 5,
