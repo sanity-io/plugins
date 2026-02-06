@@ -39,7 +39,6 @@
   },
   "scripts": {
     "build": "pkg build --strict --check --clean",
-    "lint": "eslint .",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -48,14 +47,12 @@
     "@sanity/ui": "catalog:"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/client": "catalog:",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "eslint": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:"
   },
