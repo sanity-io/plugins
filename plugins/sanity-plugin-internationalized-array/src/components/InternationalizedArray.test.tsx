@@ -1,0 +1,676 @@
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react'
+import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
+
+import {LANGUAGE_FIELD_NAME} from '../constants'
+import {createValues, MOCK_LANGUAGES} from '../test/helpers'
+
+const mockToastPush = vi.fn()
+
+// Mock sanity hooks and components
+vi.mock('sanity', () => ({
+  useFormValue: vi.fn(() => 'article'),
+  ArrayOfObjectsItem: () => <div data-testid="array-item" />,
+  MemberItemError: () => <div data-testid="member-error" />,
+  set: vi.fn((value: unknown) => ({type: 'set', value})),
+  setIfMissing: vi.fn((value: unknown) => ({type: 'setIfMissing', value})),
+  insert: vi.fn((items: unknown[], position: string, path: unknown[]) => ({
+    type: 'insert',
+    items,
+    position,
+    path,
+  })),
+}))
+
+vi.mock('sanity/structure', () => ({
+  useDocumentPane: vi.fn(() => ({
+    isDeleting: false,
+    onChange: vi.fn(),
+  })),
+}))
+
+vi.mock('@sanity/language-filter', () => ({
+  useLanguageFilterStudioContext: vi.fn(() => ({
+    selectedLanguageIds: [],
+    options: {
+      documentTypes: [],
+      filterField: () => true,
+    },
+  })),
+}))
+
+vi.mock('./InternationalizedArrayContext', () => ({
+  useInternationalizedArrayContext: vi.fn(() => ({
+    languages: MOCK_LANGUAGES,
+    filteredLanguages: MOCK_LANGUAGES,
+    defaultLanguages: [],
+    buttonAddAll: true,
+    buttonLocations: ['field'],
+    languageDisplay: 'codeOnly',
+    apiVersion: '2025-10-15',
+    select: {},
+    fieldTypes: [],
+  })),
+}))
+
+// Mock useToast from @sanity/ui to avoid missing ToastProvider context
+vi.mock('@sanity/ui', async (importOriginal) => {
+  const original = await importOriginal<typeof import('@sanity/ui')>()
+  return {
+    ...original,
+    useToast: () => ({push: mockToastPush}),
+  }
+})
+
+vi.mock('./Feedback', () => ({
+  default: () => <div data-testid="feedback">Invalid languages configuration</div>,
+}))
+
+import {useLanguageFilterStudioContext} from '@sanity/language-filter'
+import {useDocumentPane} from 'sanity/structure'
+
+import {ThemeWrapper} from '../test/component-helpers'
+import InternationalizedArray from './InternationalizedArray'
+import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
+
+/**
+ * Creates minimal mock ArrayOfObjectsInputProps for InternationalizedArray.
+ */
+function createMockArrayProps(overrides: Record<string, unknown> = {}) {
+  return {
+    members: [],
+    value: undefined,
+    schemaType: {name: 'internationalizedArrayString', readOnly: false},
+    onChange: vi.fn(),
+    readOnly: false,
+    ...overrides,
+  }
+}
+
+describe('InternationalizedArray', () => {
+  beforeEach(() => {
+    mockToastPush.mockClear()
+  })
+
+  afterEach(() => {
+    cleanup()
+    vi.restoreAllMocks()
+  })
+
+  test('shows "no translations" message when field is empty and add buttons are hidden', () => {
+    // No value, no members, but all languages present (no add buttons)
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: [],
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const props = createMockArrayProps()
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    expect(
+      screen.getByText('This internationalized field currently has no translations.'),
+    ).toBeInTheDocument()
+  })
+
+  test('shows add buttons when not all languages are present', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    // Only 'en' has a value, 3 languages missing
+    const value = createValues(['en'])
+    const props = createMockArrayProps({value})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    expect(screen.getByTestId('add-en')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-fr')).toBeInTheDocument()
+    expect(screen.getByTestId('add-es')).toBeInTheDocument()
+    expect(screen.getByTestId('add-de')).toBeInTheDocument()
+    expect(screen.getByTestId('add-all-languages')).toBeInTheDocument()
+  })
+
+  test('hides add buttons when all languages are present', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    // All 4 languages present — add buttons should be hidden
+    const value = createValues(['en', 'fr', 'es', 'de'])
+    const props = createMockArrayProps({value})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    expect(screen.queryByTestId('add-buttons')).not.toBeInTheDocument()
+  })
+
+  test('shows Feedback component when languages configuration is invalid', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      // Invalid: languages without id or title
+      languages: [{id: '', title: ''}],
+      filteredLanguages: [],
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const props = createMockArrayProps()
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    expect(screen.getByTestId('feedback')).toBeInTheDocument()
+  })
+
+  test('hides add buttons when buttonLocations does not include "field"', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['document'], // not 'field'
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const value = createValues(['en']) // missing languages, but button location is 'document'
+    const props = createMockArrayProps({value})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    expect(screen.queryByTestId('add-buttons')).not.toBeInTheDocument()
+  })
+
+  test('shows "Add all languages" button when buttonAddAll is true and languages are missing', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const props = createMockArrayProps()
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    expect(screen.getByText('Add all languages')).toBeInTheDocument()
+  })
+
+  test('extracts added languages using LANGUAGE_FIELD_NAME with _key fallback', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    // Provide 2 of 4 languages → add buttons should be visible
+    const value = createValues(['en', 'fr'])
+    const props = createMockArrayProps({value})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    expect(screen.getByTestId('add-en')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-fr')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-es')).toHaveAttribute('data-disabled', 'false')
+    expect(screen.getByTestId('add-de')).toHaveAttribute('data-disabled', 'false')
+    // "Add all languages" button visible → 2 languages are missing
+    expect(screen.getByTestId('add-all-languages')).toBeInTheDocument()
+  })
+
+  test('calls onChange when a language button is clicked via handleAddLanguage', async () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByTestId('add-en'))
+    expect(onChange).toHaveBeenCalledWith([
+      {
+        type: 'setIfMissing',
+        value: [],
+      },
+      {
+        items: [
+          {
+            [LANGUAGE_FIELD_NAME]: 'en',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
+        path: [-1],
+        position: 'after',
+        type: 'insert',
+      },
+    ])
+  })
+
+  test('auto-reorders value when items are out of order', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const onChange = vi.fn()
+    // Out of order: fr before en (languages order is en, fr, es, de)
+    const value = createValues(['fr', 'en'])
+    const props = createMockArrayProps({onChange, value})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    // The useEffect should detect out-of-order and call onChange(set(reordered))
+    expect(onChange).toHaveBeenCalled()
+    expect(onChange).toHaveBeenCalledWith({
+      type: 'set',
+      value: [
+        {
+          [LANGUAGE_FIELD_NAME]: 'en',
+          _type: 'internationalizedArrayStringValue',
+          value: undefined,
+        },
+        {
+          [LANGUAGE_FIELD_NAME]: 'fr',
+          _type: 'internationalizedArrayStringValue',
+          value: undefined,
+        },
+      ],
+    })
+  })
+
+  test('does not auto-reorder when document is readOnly', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const onChange = vi.fn()
+    const value = createValues(['fr', 'en'])
+    // readOnly at the document level (props.readOnly, mapped to documentReadOnly)
+    const props = createMockArrayProps({onChange, value, readOnly: true})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    // Should NOT reorder because documentReadOnly is true
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('auto-adds default languages when they are missing', async () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: ['en', 'fr'],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    // The default language useEffect uses setTimeout, wait for it
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalled()
+    })
+    expect(onChange).toHaveBeenCalledWith([
+      {
+        type: 'setIfMissing',
+        value: [],
+      },
+      {
+        items: [
+          {
+            [LANGUAGE_FIELD_NAME]: 'en',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
+        path: [-1],
+        position: 'after',
+        type: 'insert',
+      },
+      {
+        items: [
+          {
+            [LANGUAGE_FIELD_NAME]: 'fr',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
+        path: [-1],
+        position: 'after',
+        type: 'insert',
+      },
+    ])
+  })
+
+  test('does not auto-add default languages when document is being deleted', () => {
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: true,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    } as ReturnType<typeof useDocumentPane>)
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: ['en'],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    // Should not add defaults while deleting
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not auto-add default languages when documentReadOnly is true', async () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: ['en'],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange, readOnly: true})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    // Give the setTimeout a chance to fire
+    await new Promise((r) => setTimeout(r, 10))
+
+    // Should not add defaults when documentReadOnly is true
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('hides "Add all languages" button when buttonAddAll is false', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: false,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const props = createMockArrayProps()
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+    expect(screen.getByTestId('add-en')).toBeInTheDocument()
+    expect(screen.getByTestId('add-fr')).toBeInTheDocument()
+    expect(screen.getByTestId('add-es')).toBeInTheDocument()
+    expect(screen.getByTestId('add-de')).toBeInTheDocument()
+    // Add buttons should still be visible (individual language buttons)
+    expect(screen.queryByTestId('add-all-languages')).not.toBeInTheDocument()
+  })
+
+  test('passes readOnly to AddButtons and disables "Add all" button when schema is readOnly', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const props = createMockArrayProps({
+      schemaType: {name: 'internationalizedArrayString', readOnly: true},
+    })
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    // Add buttons should be disabled
+    expect(screen.getByTestId('add-en')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-fr')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-es')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-de')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-all-languages')).toHaveAttribute('data-disabled', 'true')
+  })
+
+  test('filters members when language filter is enabled for the document type', () => {
+    const mockFilterField = vi.fn(() => true)
+    vi.mocked(useLanguageFilterStudioContext).mockReturnValue({
+      selectedLanguageIds: ['en'],
+      setSelectedLanguageIds: vi.fn(),
+      options: {
+        documentTypes: ['article'],
+        filterField: mockFilterField,
+        apiVersion: '2025-10-15',
+        defaultLanguages: [],
+        supportedLanguages: MOCK_LANGUAGES,
+      },
+    })
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const mockMembers = [
+      {
+        kind: 'item',
+        key: 'en',
+        item: {
+          schemaType: {name: 'internationalizedArrayStringValue'},
+          members: [{kind: 'field', name: 'value'}],
+        },
+      },
+      {
+        kind: 'item',
+        key: 'fr',
+        item: {
+          schemaType: {name: 'internationalizedArrayStringValue'},
+          members: [{kind: 'field', name: 'value'}],
+        },
+      },
+    ]
+
+    const value = createValues(['en', 'fr'])
+    const props = createMockArrayProps({members: mockMembers, value})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    // filterField should have been called for each member
+    // since useFormValue returns 'article' which is in documentTypes
+    expect(mockFilterField).toHaveBeenCalledTimes(2)
+  })
+
+  test('renders MemberItemError for members with kind !== "item"', () => {
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: false,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    } as ReturnType<typeof useDocumentPane>)
+
+    vi.mocked(useLanguageFilterStudioContext).mockReturnValue({
+      selectedLanguageIds: [],
+      setSelectedLanguageIds: vi.fn(),
+      options: {
+        documentTypes: [],
+        filterField: () => true,
+        apiVersion: '2025-10-15',
+        defaultLanguages: [],
+        supportedLanguages: [],
+      },
+    })
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      languages: MOCK_LANGUAGES,
+      filteredLanguages: MOCK_LANGUAGES,
+      defaultLanguages: [],
+      buttonAddAll: true,
+      buttonLocations: ['field'],
+      languageDisplay: 'codeOnly',
+      apiVersion: '2025-10-15',
+      select: {},
+      fieldTypes: [],
+    })
+
+    const mockMembers = [{kind: 'error', key: 'error-1'}]
+
+    const props = createMockArrayProps({members: mockMembers})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    expect(screen.getByTestId('member-error')).toBeInTheDocument()
+  })
+})
