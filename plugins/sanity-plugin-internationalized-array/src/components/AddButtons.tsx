@@ -1,5 +1,3 @@
-import type React from 'react'
-
 import {AddIcon} from '@sanity/icons'
 import {Button, Grid} from '@sanity/ui'
 
