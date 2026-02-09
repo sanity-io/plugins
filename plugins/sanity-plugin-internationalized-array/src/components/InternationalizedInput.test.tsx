@@ -1,7 +1,6 @@
 import {cleanup, render, screen} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
-import {LANGUAGE_FIELD_NAME} from '../constants'
 import {ThemeWrapper} from '../test/component-helpers'
 import {MOCK_LANGUAGES, createValue} from '../test/helpers'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
