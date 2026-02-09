@@ -20,6 +20,22 @@ type AddConfig = {
   path?: Path
 }
 
+/**
+ * Creates an array of Sanity `FormInsertPatch` objects that add new language
+ * entries to an internationalized array field.
+ *
+ * If `addLanguageKeys` is provided, patches are created for those specific
+ * language IDs. Otherwise, patches are created for all filtered languages
+ * that are not already present in the current `value` array.
+ *
+ * Each new item is assigned the correct `_type` (derived from the schema)
+ * and the language identifier via `LANGUAGE_FIELD_NAME`.
+ *
+ * Insertions are ordered to maintain the same sequence as the master
+ * `languages` list: each new item is inserted before the next existing
+ * language in the value array, or appended at the end if no subsequent
+ * language exists.
+ */
 export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
   const {addLanguageKeys, schemaType, languages, filteredLanguages, value, path = []} = config
 

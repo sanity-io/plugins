@@ -8,6 +8,18 @@ export interface DocumentsToTranslate {
   [key: string]: unknown
 }
 
+/**
+ * Recursively traverses a Sanity document (or any nested value) and collects
+ * all internationalized array items found within it.
+ *
+ * An item is considered an internationalized array value when its `_type`
+ * starts with `"internationalizedArray"` and ends with `"Value"`.
+ *
+ * The function walks through objects and arrays, skipping keys that start
+ * with `_` (internal Sanity fields like `_id`, `_type`, `_rev`). Each
+ * returned item includes the original properties plus `path` (array of
+ * segments) and `pathString` (dot-joined) indicating where it was found.
+ */
 export const getDocumentsToTranslate = (
   // oxlint-disable-next-line typescript-eslint/no-redundant-type-constituents
   value: SanityDocument | unknown,

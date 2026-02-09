@@ -1,5 +1,18 @@
 import {get} from 'lodash-es'
 
+/**
+ * Extracts a subset of values from a Sanity document based on a `select`
+ * mapping (as configured in the plugin's `select` option).
+ *
+ * Each key in `select` becomes a key in the returned object, with its value
+ * resolved from the document using the corresponding dot-path (via lodash `get`).
+ *
+ * Array values are filtered to remove incomplete references (objects with
+ * `_type: 'reference'` but no `_ref`), since those represent empty reference
+ * fields that should be ignored.
+ *
+ * Returns an empty object when either `select` or `document` is undefined.
+ */
 export const getSelectedValue = (
   select: Record<string, string> | undefined,
   document:
