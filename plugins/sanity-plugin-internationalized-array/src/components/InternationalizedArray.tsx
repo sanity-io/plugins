@@ -84,7 +84,7 @@ export default function InternationalizedArray(
 
       const patches = createAddLanguagePatches({
         addLanguageKeys,
-        schemaType,
+        schemaTypeName: schemaType.name,
         languages,
         filteredLanguages,
         value,

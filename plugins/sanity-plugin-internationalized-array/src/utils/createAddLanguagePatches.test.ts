@@ -1,8 +1,7 @@
-import { describe, expect, test, vi } from 'vitest'
-import type { SchemaType } from 'sanity'
+import {describe, expect, test, vi} from 'vitest'
 
-import { LANGUAGE_FIELD_NAME } from '../constants'
-import { MOCK_LANGUAGES, createValue } from '../test/helpers'
+import {LANGUAGE_FIELD_NAME} from '../constants'
+import {MOCK_LANGUAGES, createValue} from '../test/helpers'
 
 // Mock sanity's insert function so we can inspect the arguments
 vi.mock('sanity', () => ({
@@ -14,9 +13,7 @@ vi.mock('sanity', () => ({
   }),
 }))
 
-import { createAddLanguagePatches } from './createAddLanguagePatches'
-
-const mockSchemaType = { name: 'internationalizedArrayString' } as SchemaType
+import {createAddLanguagePatches} from './createAddLanguagePatches'
 
 type PatchType = {
   items: Record<string, unknown>[]
@@ -27,11 +24,12 @@ type PatchType = {
 describe('createAddLanguagePatches', () => {
   const languages = MOCK_LANGUAGES // en, fr, es, de
   const filteredLanguages = MOCK_LANGUAGES
+  const schemaTypeName = 'internationalizedArrayString'
 
   test('creates patches for specified addLanguageKeys', () => {
     const patches = createAddLanguagePatches({
       addLanguageKeys: ['en'],
-      schemaType: mockSchemaType,
+      schemaTypeName,
       languages,
       filteredLanguages,
     })
@@ -46,14 +44,16 @@ describe('createAddLanguagePatches', () => {
   test('creates patches for all filtered languages when addLanguageKeys is empty', () => {
     const patches = createAddLanguagePatches({
       addLanguageKeys: [],
-      schemaType: mockSchemaType,
+      schemaTypeName,
       languages,
       filteredLanguages,
     })
 
     expect(patches).toHaveLength(4)
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    const languageIds = patches.map((p) => (p as unknown as PatchType).items[0]![LANGUAGE_FIELD_NAME])
+    const languageIds = patches.map(
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      (p) => (p as unknown as PatchType).items[0]![LANGUAGE_FIELD_NAME],
+    )
     expect(languageIds).toEqual(['en', 'fr', 'es', 'de'])
   })
 
@@ -61,15 +61,17 @@ describe('createAddLanguagePatches', () => {
     const value = [createValue('en'), createValue('fr')]
     const patches = createAddLanguagePatches({
       addLanguageKeys: [],
-      schemaType: mockSchemaType,
+      schemaTypeName,
       languages,
       filteredLanguages,
       value,
     })
 
     expect(patches).toHaveLength(2)
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    const languageIds = patches.map((p) => (p as unknown as PatchType).items[0]![LANGUAGE_FIELD_NAME])
+    const languageIds = patches.map(
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      (p) => (p as unknown as PatchType).items[0]![LANGUAGE_FIELD_NAME],
+    )
     expect(languageIds).toEqual(['es', 'de'])
   })
 
@@ -77,7 +79,7 @@ describe('createAddLanguagePatches', () => {
     // Adding 'de' (last language) - nothing comes after it
     const patches = createAddLanguagePatches({
       addLanguageKeys: ['de'],
-      schemaType: mockSchemaType,
+      schemaTypeName,
       languages,
       filteredLanguages,
     })
@@ -96,10 +98,10 @@ describe('createAddLanguagePatches', () => {
     const value = [createValue('en'), createValue('de')]
     const patches = createAddLanguagePatches({
       addLanguageKeys: ['fr'],
-      schemaType: mockSchemaType,
+      schemaTypeName,
       languages,
       filteredLanguages,
-      value
+      value,
     })
 
     expect(patches).toHaveLength(1)
@@ -114,10 +116,10 @@ describe('createAddLanguagePatches', () => {
     const value = [createValue('en')]
     const patches = createAddLanguagePatches({
       addLanguageKeys: ['fr', 'de'],
-      schemaType: mockSchemaType,
+      schemaTypeName,
       languages,
       filteredLanguages,
-      value
+      value,
     })
 
     expect(patches).toHaveLength(2)
@@ -130,7 +132,7 @@ describe('createAddLanguagePatches', () => {
   test('uses provided path for patch references', () => {
     const patches = createAddLanguagePatches({
       addLanguageKeys: ['en'],
-      schemaType: mockSchemaType,
+      schemaTypeName,
       languages,
       filteredLanguages,
       path: ['content', 'title'],
@@ -145,10 +147,9 @@ describe('createAddLanguagePatches', () => {
   })
 
   test('creates items with correct _type from schema', () => {
-    const customSchemaType = { name: 'internationalizedArrayText' } as SchemaType
     const patches = createAddLanguagePatches({
       addLanguageKeys: ['en'],
-      schemaType: customSchemaType,
+      schemaTypeName: 'internationalizedArrayText',
       languages,
       filteredLanguages,
     })
@@ -164,14 +165,16 @@ describe('createAddLanguagePatches', () => {
     const subsetFiltered = MOCK_LANGUAGES.slice(1, 3)
     const patches = createAddLanguagePatches({
       addLanguageKeys: [],
-      schemaType: mockSchemaType,
+      schemaTypeName,
       languages,
       filteredLanguages: subsetFiltered,
     })
 
     expect(patches).toHaveLength(2)
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    const languageIds = patches.map((p) => (p as unknown as PatchType).items[0]![LANGUAGE_FIELD_NAME])
+    const languageIds = patches.map(
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      (p) => (p as unknown as PatchType).items[0]![LANGUAGE_FIELD_NAME],
+    )
     expect(languageIds).toEqual(['fr', 'es'])
   })
 })

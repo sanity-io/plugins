@@ -1,15 +1,14 @@
-import {type FormInsertPatch, insert, type Path, type SchemaType} from 'sanity'
+import {type FormInsertPatch, insert, type Path} from 'sanity'
 
 import type {Language, Value} from '../types'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
-import {createValueSchemaTypeName} from './createValueSchemaTypeName'
 
 type AddConfig = {
   // New keys to add to the field
   addLanguageKeys: string[]
   // Schema of the current field
-  schemaType: SchemaType
+  schemaTypeName: string
   // All languages registered in the plugin
   languages: Language[]
   // Languages that are currently visible
@@ -37,9 +36,9 @@ type AddConfig = {
  * language exists.
  */
 export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
-  const {addLanguageKeys, schemaType, languages, filteredLanguages, value, path = []} = config
+  const {addLanguageKeys, schemaTypeName, languages, filteredLanguages, value, path = []} = config
 
-  const itemBase = {_type: createValueSchemaTypeName(schemaType)}
+  const itemBase = {_type: `${schemaTypeName}Value`}
 
   // Create new items
   const getNewItems = () => {
