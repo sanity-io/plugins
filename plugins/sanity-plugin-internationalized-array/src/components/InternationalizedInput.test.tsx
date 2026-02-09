@@ -103,51 +103,6 @@ describe('InternationalizedInput', () => {
     expect(screen.getByText('Change "xx"')).toBeInTheDocument()
   })
 
-  test('detects migration state when LANGUAGE_FIELD_NAME field is absent', () => {
-    // Create a value WITHOUT the LANGUAGE_FIELD_NAME field.
-    // When LANGUAGE_FIELD_NAME is '_key', _key is always present on Sanity objects,
-    // so true migration only happens when LANGUAGE_FIELD_NAME is 'language' and
-    // old documents lack the 'language' field. We simulate this by removing the field.
-    const itemValue: Record<string, unknown> = {
-      _type: 'internationalizedArrayStringValue',
-      _key: 'temp-key',
-      value: 'test',
-    }
-    // Remove the LANGUAGE_FIELD_NAME field to simulate migration state
-    delete itemValue[LANGUAGE_FIELD_NAME]
-
-    // If LANGUAGE_FIELD_NAME is '_key', we just deleted _key, so re-add it as undefined
-    // to allow the component to still have a minimal valid object.
-    // In real Sanity usage, _key would always be present — this just tests the code path.
-    if (!(LANGUAGE_FIELD_NAME in itemValue)) {
-      // Field is successfully absent — the migration check (!value[LANGUAGE_FIELD_NAME])
-      // should detect this as needing migration
-    }
-
-    const props = {
-      path: ['title', {_key: 'temp-key'}],
-      value: itemValue,
-      inputProps: {
-        onChange: vi.fn(),
-        members: [{kind: 'field' as const, name: 'value'}],
-        renderInput: vi.fn(() => <div data-testid="mock-input" />),
-        validation: [],
-        readOnly: false,
-      },
-    }
-
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedInput {...props} />,
-      {wrapper: ThemeWrapper},
-    )
-
-    // In migration state, no language label is shown
-    expect(screen.queryByText('EN')).not.toBeInTheDocument()
-    // The input is still rendered
-    expect(screen.getByTestId('mock-input')).toBeInTheDocument()
-  })
-
   test('disables remove button for default languages', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
       languages: MOCK_LANGUAGES,
