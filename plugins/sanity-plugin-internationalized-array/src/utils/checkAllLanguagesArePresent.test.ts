@@ -51,4 +51,10 @@ describe('checkAllLanguagesArePresent', () => {
     const value = createValues(['en', 'en']) // duplicate and missing fr
     expect(checkAllLanguagesArePresent(languages, value)).toBe(false)
   })
+
+  test('returns false when value has duplicates matching the single language', () => {
+    const languages = MOCK_LANGUAGES.slice(0, 1) // [en]
+    const value = createValues(['en', 'en'])
+    expect(checkAllLanguagesArePresent(languages, value)).toBe(false)
+  })
 })
