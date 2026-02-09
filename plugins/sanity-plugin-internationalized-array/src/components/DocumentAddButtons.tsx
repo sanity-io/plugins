@@ -28,13 +28,12 @@ type DocumentAddButtonsProps = {
  * Renders a heading and a row of per-language buttons. When a language button
  * is clicked the component:
  *
- * 1. Validates that a language was selected (shows error toast otherwise).
- * 2. Scans the current document for all internationalized array fields
+ * 1. Scans the current document for all internationalized array fields
  *    using `getDocumentsToTranslate`.
- * 3. Filters out fields that already contain a translation for the selected
+ * 2. Filters out fields that already contain a translation for the selected
  *    language, and deduplicates by field path.
- * 4. Shows an error toast if no eligible fields remain.
- * 5. Creates `setIfMissing` + `insert` patches to add the new language
+ * 3. Shows an error toast if no eligible fields remain.
+ * 4. Creates `setIfMissing` + `insert` patches to add the new language
  *    entry to each eligible field, dispatching them via `onChange`.
  *
  * For Portable Text and other array-based value fields, the initial value
