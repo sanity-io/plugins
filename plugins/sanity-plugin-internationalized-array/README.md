@@ -1,6 +1,6 @@
 # sanity-plugin-internationalized-array
 
-A plugin to register array fields with a custom input component to store field values in multiple languages, queryable by using the language ID as an array `_key`.
+A plugin to register array fields with a custom input component to store field values in multiple languages, queryable by using a dedicated `language` field.
 
 ![Screenshot of an internationalized input](./img/internationalized-array.png)
 
@@ -15,6 +15,7 @@ A plugin to register array fields with a custom input component to store field v
   - [Usage with @sanity/language-filter](#usage-with-sanitylanguage-filter)
   - [Shape of stored data](#shape-of-stored-data)
   - [Querying data](#querying-data)
+  - [Migrate from v4 to v5](#migrate-from-v4-to-v5)
   - [Migrate from objects to arrays](#migrate-from-objects-to-arrays)
     - [Why store localized field data like this?](#why-store-localized-field-data-like-this)
   - [License](#license)
@@ -286,6 +287,7 @@ Configure both plugins in your sanity.config.ts file:
 // ./sanity.config.ts
 
 import {defineConfig, isKeySegment} from 'sanity'
+import {get} from 'lodash-es'
 import {languageFilter} from '@sanity/language-filter'
 
 export default defineConfig({
@@ -307,12 +309,16 @@ export default defineConfig({
           // Get last two segments of the field's path
           const pathEnd = member.field.path.slice(-2)
           // If the second-last segment is a _key, and the last segment is `value`,
-          // It's an internationalized array value
-          // And the array _key is the language of the field
-          const language =
-            pathEnd[1] === 'value' && isKeySegment(pathEnd[0]) ? pathEnd[0]._key : null
+          // it's an internationalized array value. Look up the array item and
+          // check its `language` field instead of relying on `_key`.
+          if (pathEnd[1] === 'value' && isKeySegment(pathEnd[0])) {
+            const item = get(member.document, member.field.path.slice(0, -1))
+            const language = item?.language ?? null
 
-          return language ? selectedLanguageIds.includes(language) : false
+            return language ? selectedLanguageIds.includes(language) : false
+          }
+
+          return true
         }
 
         // Filter internationalized objects if you have them
@@ -330,24 +336,51 @@ export default defineConfig({
 
 ## Shape of stored data
 
-The custom input contains buttons which will add new array items with the language as the `_key` value. Data returned from this array will look like this:
+The custom input contains buttons which will add new array items with a random `_key` and the language stored in a dedicated `language` field. Data returned from this array will look like this:
 
 ```json
 "greeting": [
-  { "_key": "en", "value": "hello" },
-  { "_key": "fr", "value": "bonjour" },
+  { "_key": "abc123", "language": "en", "value": "hello" },
+  { "_key": "def456", "language": "fr", "value": "bonjour" },
 ]
 ```
 
 ## Querying data
 
-Using GROQ filters you can query for a specific language key like so:
+Using GROQ filters you can query for a specific language like so:
 
 ```js
 *[_type == "person"] {
-  "greeting": greeting[_key == "en"][0].value
+  "greeting": greeting[language == "en"][0].value
 }
 ```
+
+## Migrate from v4 to v5
+
+v5 stores the language identifier on a dedicated `language` field instead of `_key`.
+
+### Backup your data.
+
+TODO: Explain how to backup the data.
+
+### Update your GROQ queries.
+
+Use a backwards compatible query until your migration is ready and has been executed.
+
+```diff
+*[_type == "person"] {
+-  "greeting": greeting[language == "en"][0].value
++  "greeting": greeting[language == "en" || _key == "en"][0].value
+}
+```
+
+If you wish, later this queries can be update to only use the "language" field and remove the dependency on the `_key`.
+
+### Data migration
+
+[See the migration script](./migrations/keyToLanguageMigration.ts) inside `./migrations/keyToLanguageMigration.ts` of this plugin.
+
+If you prefer a UI flow, the plugin also shows an in‑Studio migration banner that can update old-format items on demand, but we recommend running the migration to update all your items at once.
 
 ## Migrate from objects to arrays
 

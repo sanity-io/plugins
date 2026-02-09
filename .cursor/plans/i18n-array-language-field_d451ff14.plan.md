@@ -33,11 +33,11 @@ todos:
     content: 'Phase 1: Update getDocumentsToTranslate.ts interface - Add language field'
     status: completed
   - id: migration
-    content: 'Phase 2: Create migrations/createKeyToLanguageMigration.ts using defineMigration'
-    status: pending
+    content: 'Phase 2: Create migrations/keyToLanguageMigration.ts as standalone copy-paste script using defineMigration'
+    status: completed
   - id: exports
     content: 'Phase 2: Update src/index.ts - Export migration function'
-    status: pending
+    status: cancelled
   - id: package-json
     content: 'Phase 1: Update package.json - Add nanoid dependency'
     status: completed
@@ -46,11 +46,11 @@ todos:
     status: completed
   - id: readme
     content: 'Phase 3: Update README.md - Document new format, migration guide, query changes'
-    status: pending
+    status: completed
 isProject: false
 ---
 
-# Pivot from \_key to language Field
+# Pivot from key to language Field
 
 ## Background
 
@@ -425,7 +425,7 @@ In addition to the CLI migration function, a `MigrationBanner` component was cre
 - Count of items needing migration (e.g., "3 items need to be updated to the new format.")
 - "Update Languages" button (disabled when field is read-only)
 
-3. On click, migrates all old-format items:
+1. On click, migrates all old-format items:
 
 - Copies the old `_key` value to the new `language` field
 - Generates a new random `_key` using `nanoid()`
