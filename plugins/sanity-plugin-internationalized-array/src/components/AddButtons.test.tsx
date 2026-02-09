@@ -4,7 +4,7 @@ import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 import type {Language} from '../types'
 
 import {ThemeWrapper} from '../test/component-helpers'
-import {createValues, MOCK_LANGUAGES} from '../test/helpers'
+import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES} from '../test/helpers'
 import AddButtons from './AddButtons'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
@@ -22,17 +22,9 @@ function getButtonByValue(value: string): HTMLElement {
 
 describe('AddButtons', () => {
   beforeEach(() => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languageDisplay: 'codeOnly',
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-      buttonLocations: ['field'],
-      buttonAddAll: true,
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
   })
 
   afterEach(() => {
@@ -137,15 +129,8 @@ describe('AddButtons', () => {
 
   test('uses titleOnly display when configured', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       languageDisplay: 'titleOnly',
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-      buttonLocations: ['field'],
-      buttonAddAll: true,
     })
 
     render(
@@ -192,15 +177,8 @@ describe('AddButtons', () => {
 
   test('shows AddIcon when languages exceed MAX_COLUMNS but display is not codeOnly', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       languageDisplay: 'titleOnly',
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-      buttonLocations: ['field'],
-      buttonAddAll: true,
     })
 
     // MAX_COLUMNS.titleOnly = 4, so 5 languages exceeds it — but since

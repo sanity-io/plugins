@@ -1,5 +1,7 @@
-import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {InternationalizedArrayContextProps} from '../components/InternationalizedArrayContext'
 import type {Language, Value} from '../types'
+
+import {LANGUAGE_FIELD_NAME} from '../constants'
 
 /**
  * Shared mock language definitions for tests.
@@ -25,7 +27,7 @@ export function createValue(
   return {
     _type: opts?.type ?? 'internationalizedArrayStringValue',
     [LANGUAGE_FIELD_NAME]: languageId,
-    ...(LANGUAGE_FIELD_NAME === "_key" ? {} : {_key: `key-${languageId}`}),
+    ...(LANGUAGE_FIELD_NAME === '_key' ? {} : {_key: `key-${languageId}`}),
     value: opts?.value,
   } as Value & Record<string, unknown>
 }
@@ -38,4 +40,16 @@ export function createValues(
   opts?: {type?: string},
 ): (Value & Record<string, unknown>)[] {
   return languageIds.map((id) => createValue(id, opts))
+}
+
+export const MOCK_INTERNATIONALIZED_ARRAY_CONTEXT: InternationalizedArrayContextProps = {
+  languages: MOCK_LANGUAGES,
+  filteredLanguages: MOCK_LANGUAGES,
+  defaultLanguages: [],
+  buttonAddAll: true,
+  buttonLocations: ['field'],
+  languageDisplay: 'codeOnly' as const,
+  apiVersion: '2025-10-15',
+  select: {},
+  fieldTypes: [],
 }

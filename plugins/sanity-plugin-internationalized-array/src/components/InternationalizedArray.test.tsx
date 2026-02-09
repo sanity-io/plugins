@@ -2,7 +2,7 @@ import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/reac
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
-import {createValues, MOCK_LANGUAGES} from '../test/helpers'
+import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES} from '../test/helpers'
 
 const mockToastPush = vi.fn()
 
@@ -99,15 +99,8 @@ describe('InternationalizedArray', () => {
   test('shows "no translations" message when field is empty and add buttons are hidden', () => {
     // No value, no members, but all languages present (no add buttons)
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       filteredLanguages: [],
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
     })
 
     const props = createMockArrayProps()
@@ -124,17 +117,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('shows add buttons when not all languages are present', () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     // Only 'en' has a value, 3 languages missing
     const value = createValues(['en'])
@@ -154,17 +139,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('hides add buttons when all languages are present', () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     // All 4 languages present — add buttons should be hidden
     const value = createValues(['en', 'fr', 'es', 'de'])
@@ -181,16 +158,9 @@ describe('InternationalizedArray', () => {
 
   test('shows Feedback component when languages configuration is invalid', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      // Invalid: languages without id or title
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       languages: [{id: '', title: ''}],
       filteredLanguages: [],
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
     })
 
     const props = createMockArrayProps()
@@ -206,15 +176,8 @@ describe('InternationalizedArray', () => {
 
   test('hides add buttons when buttonLocations does not include "field"', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       buttonLocations: ['document'], // not 'field'
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
     })
 
     const value = createValues(['en']) // missing languages, but button location is 'document'
@@ -230,17 +193,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('shows "Add all languages" button when buttonAddAll is true and languages are missing', () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     const props = createMockArrayProps()
 
@@ -254,17 +209,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('extracts added languages using LANGUAGE_FIELD_NAME with _key fallback', () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     // Provide 2 of 4 languages → add buttons should be visible
     const value = createValues(['en', 'fr'])
@@ -285,17 +232,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('calls onChange when a language button is clicked via handleAddLanguage', async () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     const onChange = vi.fn()
     const props = createMockArrayProps({onChange})
@@ -327,17 +266,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('auto-reorders value when items are out of order', () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     const onChange = vi.fn()
     // Out of order: fr before en (languages order is en, fr, es, de)
@@ -370,17 +301,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('does not auto-reorder when document is readOnly', () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     const onChange = vi.fn()
     const value = createValues(['fr', 'en'])
@@ -399,15 +322,8 @@ describe('InternationalizedArray', () => {
 
   test('auto-adds default languages when they are missing', async () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       defaultLanguages: ['en', 'fr'],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
     })
 
     const onChange = vi.fn()
@@ -459,17 +375,9 @@ describe('InternationalizedArray', () => {
       // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: ['en'],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     const onChange = vi.fn()
     const props = createMockArrayProps({onChange})
@@ -486,15 +394,8 @@ describe('InternationalizedArray', () => {
 
   test('does not auto-add default languages when documentReadOnly is true', async () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       defaultLanguages: ['en'],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
     })
 
     const onChange = vi.fn()
@@ -515,15 +416,8 @@ describe('InternationalizedArray', () => {
 
   test('hides "Add all languages" button when buttonAddAll is false', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       buttonAddAll: false,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
     })
 
     const props = createMockArrayProps()
@@ -542,17 +436,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('passes readOnly to AddButtons and disables "Add all" button when schema is readOnly', () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     const props = createMockArrayProps({
       schemaType: {name: 'internationalizedArrayString', readOnly: true},
@@ -586,17 +472,9 @@ describe('InternationalizedArray', () => {
       },
     })
 
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     const mockMembers = [
       {
@@ -649,17 +527,9 @@ describe('InternationalizedArray', () => {
       },
     })
 
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      filteredLanguages: MOCK_LANGUAGES,
-      defaultLanguages: [],
-      buttonAddAll: true,
-      buttonLocations: ['field'],
-      languageDisplay: 'codeOnly',
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     const mockMembers = [{kind: 'error', key: 'error-1'}]
 
