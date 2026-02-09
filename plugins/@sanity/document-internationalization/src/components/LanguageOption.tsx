@@ -1,7 +1,7 @@
 import {AddIcon, CheckmarkIcon, SplitVerticalIcon} from '@sanity/icons'
 import {Badge, Box, Button, Flex, Spinner, Text, Tooltip, useToast} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {type ObjectSchemaType, type SanityDocument, useClient} from 'sanity'
 
 import type {Language, Metadata, MetadataDocument, TranslationReference} from '../types'
@@ -51,14 +51,6 @@ export default function LanguageOption(props: LanguageOptionProps) {
 
   const open = useOpenInNewPane(translation?.value?._ref, schemaType.name)
   const handleOpen = useCallback(() => open(), [open])
-
-  /* Once a translation has been created, reset the userHasClicked state to false
-   * so they can click on it to navigate to the translation. If a translation already
-   * existed when this component was mounted, this will have no effect. */
-  const hasTranslation = Boolean(translation)
-  useEffect(() => {
-    setUserHasClicked(false)
-  }, [hasTranslation])
 
   const handleCreate = useCallback(async () => {
     if (!source) {
@@ -141,6 +133,10 @@ export default function LanguageOption(props: LanguageOptionProps) {
             : `Created Translations Metadata`,
         })
 
+        /* Once a translation has been created, reset the userHasClicked state to false
+         * so they can click on it to navigate to the translation */
+        setUserHasClicked(false)
+
         // Execute callback if provided
         if (callback) {
           // oxlint-disable-next-line eslint-plugin-promise/no-callback-in-promise -- This is an async callback, not a Node.js callback
@@ -153,6 +149,7 @@ export default function LanguageOption(props: LanguageOptionProps) {
             metaDocumentId: metadataId,
           })
         }
+
         return undefined
       })
       .catch((err: Error) => {
