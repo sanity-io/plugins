@@ -8,7 +8,7 @@ type ObjectFactoryConfig = {
   type: string | FieldDefinition
 }
 
-export default (config: ObjectFactoryConfig): FieldDefinition<'object'> => {
+export default (config: ObjectFactoryConfig) => {
   const {type} = config
   const typeName = typeof type === `string` ? type : type.name
   const objectName = createFieldName(typeName, true)
