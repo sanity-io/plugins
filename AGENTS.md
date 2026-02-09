@@ -42,7 +42,7 @@ Run these commands in order. **All must pass** or CI will fail:
 # 1. Format code (oxfmt)
 pnpm format
 
-# 2. Run linters (oxlint + ESLint for React Compiler rules)
+# 2. Run linters (oxlint)
 pnpm lint
 
 # 3. Build all packages
@@ -165,17 +165,16 @@ _Each plugin's changelog only shows relevant changes_
 
 The CI pipeline runs on every PR:
 
-| Job       | What it checks                                                                 |
-| --------- | ------------------------------------------------------------------------------ |
-| **build** | `pnpm build` - All packages compile successfully                               |
-| **lint**  | `pnpm oxlint --format github` + `pnpm lint:ci` - Code passes oxlint and ESLint |
-| **test**  | `pnpm test` - All tests pass (runs after build + lint)                         |
+| Job       | What it checks                                         |
+| --------- | ------------------------------------------------------ |
+| **build** | `pnpm build` - All packages compile successfully       |
+| **lint**  | `pnpm lint --format github` - Code passes oxlint       |
+| **test**  | `pnpm test` - All tests pass (runs after build + lint) |
 
 ### Lint Specifics
 
-- **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors)
+- **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors). React Compiler rules run via the react-hooks-js plugin.
 - **TypeScript type checking** is included in `pnpm lint` (via oxlint's `--type-check --type-aware` flags) — no separate `tsc` needed
-- **ESLint**: React Compiler rules only
 - Run `pnpm lint:fix` to auto-fix issues when possible
 
 ## Testing
@@ -307,9 +306,26 @@ pnpm generate "copy plugin"
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 
-- Setting up npm trusted publishing
+- Setting up npm trusted publishing (different process for new vs existing packages)
 - Creating initial release changesets
 - Migrating existing plugins
+
+### Trusted Publishing Quick Reference
+
+**For brand new packages (not yet on npm):**
+
+- Use the "Setup a new npm package with Trusted Publishing" GitHub Actions workflow
+- The workflow will create the package and provide setup instructions
+
+**For existing packages (already on npm):**
+
+- ⚠️ DO NOT use the setup workflow
+- Manually configure trusted publishing at: `https://www.npmjs.com/package/PACKAGE-NAME/access`
+- Add GitHub Actions as trusted publisher with:
+  - Owner: `sanity-io`
+  - Repository: `plugins`
+  - Workflow: `release.yml`
+  - Environment: _(leave empty)_
 
 ## Code Style
 
@@ -337,10 +353,10 @@ pnpm format
 
 ### Linting
 
-We use [oxlint](https://oxc.rs/docs/linter.html) (type-aware, includes TypeScript type checking) + ESLint (React Compiler rules):
+We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (type-aware, includes TypeScript type checking and React Compiler rules via the react-hooks-js plugin):
 
 ```bash
-pnpm lint        # Run all linters (includes type checking)
+pnpm lint        # Run the linter (includes type checking)
 pnpm lint:fix    # Auto-fix what's possible
 ```
 

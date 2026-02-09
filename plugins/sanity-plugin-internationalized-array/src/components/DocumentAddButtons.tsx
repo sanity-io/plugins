@@ -13,6 +13,7 @@ import {useDocumentPane} from 'sanity/structure'
 
 import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import {getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
@@ -89,7 +90,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
         return
       }
       const alreadyTranslated = documentsToTranslation.filter(
-        (translation) => translation?._key === languageId,
+        (translation) => translation?.[LANGUAGE_FIELD_NAME] === languageId,
       )
       const removeDuplicates = documentsToTranslation.reduce<DocumentsToTranslate[]>(
         (filteredTranslations, translation) => {
@@ -133,7 +134,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
         const insertValue = insert(
           [
             {
-              _key: languageId,
+              [LANGUAGE_FIELD_NAME]: languageId,
               _type: toTranslate._type,
               value: initialValue, // Use the determined initial value instead of undefined
             },

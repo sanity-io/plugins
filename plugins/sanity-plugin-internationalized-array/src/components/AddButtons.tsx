@@ -5,7 +5,7 @@ import {Button, Grid} from '@sanity/ui'
 
 import type {Language, Value} from '../types'
 
-import {MAX_COLUMNS} from '../constants'
+import {LANGUAGE_FIELD_NAME, MAX_COLUMNS} from '../constants'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
@@ -34,7 +34,9 @@ function AddButtons(props: AddButtonsProps) {
             tone="primary"
             mode="ghost"
             fontSize={1}
-            disabled={readOnly || Boolean(value?.find((item) => item._key === language.id))}
+            disabled={
+              readOnly || Boolean(value?.find((item) => item[LANGUAGE_FIELD_NAME] === language.id))
+            }
             text={languageTitle}
             // Only show plus icon if there's one row or less AND only showing codes
             icon={

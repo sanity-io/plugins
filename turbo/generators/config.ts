@@ -396,11 +396,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/eslint.config.js',
-        templateFile: 'templates/eslint.config.js.hbs',
-      },
-      {
-        type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/package.config.ts',
         templateFile: 'templates/package.config.ts.hbs',
       },
@@ -579,11 +574,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/vitest.config.ts',
         templateFile: 'templates/vitest.config.ts.hbs',
-      },
-      {
-        type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/eslint.config.js',
-        templateFile: 'templates/eslint.config.js.hbs',
       },
       {
         type: 'add',

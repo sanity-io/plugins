@@ -6,6 +6,7 @@ import {getFunctionCache, peek, setFunctionCache} from '../cache'
 import {createFieldName} from '../components/createFieldName'
 import {getSelectedValue} from '../components/getSelectedValue'
 import InternationalizedArray from '../components/InternationalizedArray'
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import {getLanguagesFieldOption} from '../utils/getLanguagesFieldOption'
 
 type ArrayFactoryConfig = {
@@ -52,7 +53,7 @@ export default (config: ArrayFactoryConfig): FieldDefinition<'array'> => {
         }
 
         // Early return for simple cases to avoid expensive operations
-        if (value.length === 1 && !value[0]?._key) {
+        if (value.length === 1 && !value[0]?.[LANGUAGE_FIELD_NAME]) {
           return true
         }
 
@@ -96,7 +97,9 @@ export default (config: ArrayFactoryConfig): FieldDefinition<'array'> => {
         const languageIds = new Set(contextLanguages.map((lang) => lang.id))
 
         // Check for invalid language keys
-        const nonLanguageKeys = value.filter((item) => item?._key && !languageIds.has(item._key))
+        const nonLanguageKeys = value.filter(
+          (item) => item?.[LANGUAGE_FIELD_NAME] && !languageIds.has(item[LANGUAGE_FIELD_NAME]),
+        )
         if (nonLanguageKeys.length) {
           return {
             message: `Array item keys must be valid languages registered to the field type`,
@@ -105,15 +108,15 @@ export default (config: ArrayFactoryConfig): FieldDefinition<'array'> => {
         }
 
         // Check for duplicate language keys (more efficient)
-        const seenKeys = new Set<string>()
+        const seenLanguages = new Set<string>()
         const duplicateValues: Value[] = []
 
         for (const item of value) {
-          if (item?._key) {
-            if (seenKeys.has(item._key)) {
+          if (item?.[LANGUAGE_FIELD_NAME]) {
+            if (seenLanguages.has(item[LANGUAGE_FIELD_NAME])) {
               duplicateValues.push(item)
             } else {
-              seenKeys.add(item._key)
+              seenLanguages.add(item[LANGUAGE_FIELD_NAME])
             }
           }
         }

@@ -77,14 +77,11 @@ pnpm format
 
 ### Linting
 
-We use a combination of [oxlint](https://oxc.rs/docs/linter.html) and [ESLint](https://eslint.org/) (for React Compiler rules):
+We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (including React Compiler rules via the react-hooks-js plugin):
 
 ```bash
-# Run all linters
+# Run the linter
 pnpm lint
-
-# Run only oxlint
-pnpm oxlint
 ```
 
 ### Type Checking
@@ -143,9 +140,13 @@ pnpm changeset add
 
 ## Adding a New Plugin
 
-### 1. Set Up Trusted Publishing (for new npm packages)
+### 1. Set Up Trusted Publishing
 
-Before you can publish a new package, you need to configure npm trusted publishing:
+Trusted publishing configuration depends on whether the package is **brand new** (never published to npm) or **already exists** on npm.
+
+#### For Brand New Packages (Not Yet on npm)
+
+If you're creating a package that has never been published to npm before:
 
 1. Go to the repository's **Actions** tab on GitHub
 2. Find the **"Setup a new npm package with Trusted Publishing"** workflow
@@ -168,6 +169,28 @@ Under token settings, configure:
 - **Disallow tokens** (granular and automation tokens)
 
 This sets up [OIDC-based trusted publishing](https://docs.npmjs.com/generating-provenance-statements) so the release workflow can publish packages without storing npm tokens.
+
+#### For Existing Packages (Already on npm)
+
+⚠️ **Do NOT use the "Setup a new npm package with Trusted Publishing" workflow for existing packages!** That workflow is only for brand new packages that don't have an npm settings page yet.
+
+For packages that are already published to npm, manually configure trusted publishing:
+
+1. Go to your package's access settings page: `https://www.npmjs.com/package/YOUR-PACKAGE-NAME/access`
+2. Under **"Publishing access"**, click **"Add a trusted publisher"** and select **"GitHub Actions"**
+3. Fill in the fields **exactly** as shown:
+
+| Setting              | Value           |
+| -------------------- | --------------- |
+| **Owner**            | `sanity-io`     |
+| **Repository**       | `plugins`       |
+| **Workflow**         | `release.yml`   |
+| **Environment name** | _(leave empty)_ |
+
+4. Click **"Add trusted publisher"**
+5. Under **"Token settings"**, ensure:
+   - ✅ **Require 2FA** for publishing is enabled
+   - ✅ **Disallow tokens** (both granular and automation tokens)
 
 ### 2. Init the plugin workspace
 
@@ -201,7 +224,11 @@ Commit the changeset file with your PR.
 
 ## Migrate an existing plugin to this monorepo
 
-### 1. Init the plugin workspace
+### 1. Set Up Trusted Publishing
+
+Since the plugin is already published to npm, you need to manually configure trusted publishing. See [For Existing Packages](#for-existing-packages-already-on-npm) above for detailed instructions.
+
+### 2. Init the plugin workspace
 
 Follow the prompts in the generator:
 
@@ -221,13 +248,13 @@ The generator will:
 
 **Note:** You'll need to manually review and copy over any relevant `peerDependencies` and `devDependencies` as needed.
 
-### 2. Manually port over files
+### 3. Manually port over files
 
 Refer to the generated `README.md` file in the plugin workspace for how to complete the last manual steps.
 
 You can run `pnpm dev` to quickly see how the plugin works in the test studio as you migrate code.
 
-### 3. Create a new major release
+### 4. Create a new major release
 
 When moving a plugin to this monorepo the conventions enforced on the repo typically warrant a new major version:
 

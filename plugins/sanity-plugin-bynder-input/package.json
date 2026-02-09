@@ -37,7 +37,6 @@
   },
   "scripts": {
     "build": "pkg build --strict --check --clean",
-    "lint": "eslint .",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -46,14 +45,12 @@
   },
   "devDependencies": {
     "@bynder/compact-view": "5.1.2",
-    "@repo/eslint-config": "workspace:*",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@types/video.js": "^7.3.58",
     "babel-plugin-react-compiler": "catalog:",
-    "eslint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:"
