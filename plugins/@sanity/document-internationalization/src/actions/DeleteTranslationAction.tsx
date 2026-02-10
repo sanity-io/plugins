@@ -8,6 +8,8 @@ import DeleteTranslationFooter from '../components/DeleteTranslationFooter'
 import {useDocumentInternationalizationContext} from '../components/DocumentInternationalizationContext'
 import {API_VERSION, TRANSLATIONS_ARRAY_NAME} from '../constants'
 
+type DeleteOperation = 'DELETE' | 'UNSET'
+
 export const DeleteTranslationAction: DocumentActionComponent = (props) => {
   const {id: documentId, published, draft} = props
   const doc = draft || published
@@ -25,7 +27,7 @@ export const DeleteTranslationAction: DocumentActionComponent = (props) => {
   // Remove translation reference and delete document in one transaction
   const onProceed = useCallback(() => {
     const tx = client.transaction()
-    let operation = 'DELETE'
+    let operation: DeleteOperation = 'DELETE'
 
     if (documentLanguage && translations.length > 0) {
       operation = 'UNSET'
