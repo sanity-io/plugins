@@ -20,8 +20,7 @@ export default function LanguageManage(props: LanguageManageProps) {
   const {id, metadataId, schemaType, documentId, sourceLanguageId} = props
   const open = useOpenInNewPane(id, METADATA_SCHEMA_NAME)
   const openCreated = useOpenInNewPane(metadataId, METADATA_SCHEMA_NAME)
-  const {allowCreateMetaDoc, apiVersion, weakReferences} =
-    useDocumentInternationalizationContext()
+  const {allowCreateMetaDoc, apiVersion, weakReferences} = useDocumentInternationalizationContext()
   const client = useClient({apiVersion})
   const [userHasClicked, setUserHasClicked] = useState(false)
 
@@ -39,7 +38,7 @@ export default function LanguageManage(props: LanguageManageProps) {
         sourceLanguageId,
         documentId,
         schemaType.name,
-        !weakReferences
+        !weakReferences,
       )
       const newMetadataDocument = {
         _id: metadataId,
@@ -55,8 +54,9 @@ export default function LanguageManage(props: LanguageManageProps) {
         .then(() => {
           setUserHasClicked(false)
           openCreated()
+          return undefined
         })
-        .catch((err) => {
+        .catch((err: unknown) => {
           console.error(err)
           setUserHasClicked(false)
         })
@@ -75,8 +75,7 @@ export default function LanguageManage(props: LanguageManageProps) {
     open,
   ])
 
-  const disabled =
-    (!id && !canCreate) || (canCreate && !sourceLanguageId) || userHasClicked
+  const disabled = (!id && !canCreate) || (canCreate && !sourceLanguageId) || userHasClicked
 
   return (
     <Tooltip

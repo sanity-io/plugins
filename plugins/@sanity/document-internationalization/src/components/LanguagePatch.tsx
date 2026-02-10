@@ -4,6 +4,7 @@ import {useCallback} from 'react'
 import {type SanityDocument, useClient} from 'sanity'
 
 import type {Language} from '../types'
+
 import {useDocumentInternationalizationContext} from './DocumentInternationalizationContext'
 
 type LanguagePatchProps = {
@@ -35,8 +36,9 @@ export default function LanguagePatch(props: LanguagePatchProps) {
           title: `Set document language to ${language.title}`,
           status: `success`,
         })
+        return undefined
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         console.error(err)
 
         return toast.push({
@@ -47,12 +49,7 @@ export default function LanguagePatch(props: LanguagePatchProps) {
   }, [source, client, languageField, language, toast])
 
   return (
-    <Button
-      mode="bleed"
-      onClick={handleClick}
-      disabled={disabled}
-      justify="flex-start"
-    >
+    <Button mode="bleed" onClick={handleClick} disabled={disabled} justify="flex-start">
       <Flex gap={3} align="center">
         <Text size={2}>
           <EditIcon />

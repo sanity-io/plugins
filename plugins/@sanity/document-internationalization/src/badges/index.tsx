@@ -2,15 +2,12 @@ import type {DocumentBadgeDescription, DocumentBadgeProps} from 'sanity'
 
 import {useDocumentInternationalizationContext} from '../components/DocumentInternationalizationContext'
 
-export function LanguageBadge(
-  props: DocumentBadgeProps
-): DocumentBadgeDescription | null {
+export function LanguageBadge(props: DocumentBadgeProps): DocumentBadgeDescription | null {
   const source = props?.draft || props?.published
-  const {languageField, supportedLanguages} =
-    useDocumentInternationalizationContext()
+  const {languageField, supportedLanguages} = useDocumentInternationalizationContext()
   const languageId = source?.[languageField]
 
-  if (!languageId) {
+  if (!languageId || typeof languageId !== 'string') {
     return null
   }
 
@@ -20,7 +17,7 @@ export function LanguageBadge(
 
   // Currently we only show the language id if the supportedLanguages are async
   return {
-    label: language?.id ?? String(languageId),
+    label: language?.id ?? languageId,
     title: language?.title ?? undefined,
     color: `primary`,
   }

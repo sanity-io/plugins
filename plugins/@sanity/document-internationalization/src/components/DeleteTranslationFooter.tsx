@@ -6,9 +6,7 @@ type DeleteTranslationFooterProps = {
   onProceed: () => void
 }
 
-export default function DeleteTranslationFooter(
-  props: DeleteTranslationFooterProps
-) {
+export default function DeleteTranslationFooter(props: DeleteTranslationFooterProps) {
   const {translations, onClose, onProceed} = props
 
   return (

@@ -1,20 +1,14 @@
+import type {ChangeEvent} from 'react'
+
 import {TranslateIcon} from '@sanity/icons'
-import {
-  Box,
-  Button,
-  Card,
-  Popover,
-  Stack,
-  Text,
-  TextInput,
-  useClickOutside,
-} from '@sanity/ui'
+import {Box, Button, Card, Popover, Stack, Text, TextInput, useClickOutsideEvent} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
-import {type FormEvent, useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {useEditState} from 'sanity'
 
-import {useTranslationMetadata} from '../hooks/useLanguageMetadata'
 import type {DocumentInternationalizationMenuProps} from '../types'
+
+import {useTranslationMetadata} from '../hooks/useLanguageMetadata'
 import {useDocumentInternationalizationContext} from './DocumentInternationalizationContext'
 import LanguageManage from './LanguageManage'
 import LanguageOption from './LanguageOption'
@@ -22,16 +16,15 @@ import LanguagePatch from './LanguagePatch'
 import Warning from './Warning'
 
 export function DocumentInternationalizationMenu(
-  props: DocumentInternationalizationMenuProps
-) {
+  props: DocumentInternationalizationMenuProps,
+): React.JSX.Element | null {
   const {documentId} = props
   const schemaType = props.schemaType
-  const {languageField, supportedLanguages} =
-    useDocumentInternationalizationContext()
+  const {languageField, supportedLanguages} = useDocumentInternationalizationContext()
 
   // Search filter query
   const [query, setQuery] = useState(``)
-  const handleQuery = useCallback((event: FormEvent<HTMLInputElement>) => {
+  const handleQuery = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     if (event.currentTarget.value) {
       setQuery(event.currentTarget.value)
     } else {
@@ -42,10 +35,10 @@ export function DocumentInternationalizationMenu(
   // UI Handlers
   const [open, setOpen] = useState(false)
   const handleClick = useCallback(() => setOpen((o) => !o), [])
-  const [button, setButton] = useState<HTMLElement | null>(null)
-  const [popover, setPopover] = useState<HTMLElement | null>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
   const handleClickOutside = useCallback(() => setOpen(false), [])
-  useClickOutside(handleClickOutside, [button, popover])
+  useClickOutsideEvent(handleClickOutside, () => [buttonRef.current, popoverRef.current])
 
   // Get metadata from content lake
   const {data, loading, error} = useTranslationMetadata(documentId)
@@ -71,16 +64,15 @@ export function DocumentInternationalizationMenu(
   const documentIsInOneMetadataDocument = useMemo(() => {
     return Array.isArray(data) && data.length <= 1
   }, [data])
-  const sourceLanguageId = source?.[languageField] as string | undefined
-  const sourceLanguageIsValid = supportedLanguages.some(
-    (l) => l.id === sourceLanguageId
-  )
+  const rawLanguageValue = source?.[languageField]
+  const sourceLanguageId = typeof rawLanguageValue === 'string' ? rawLanguageValue : undefined
+  const sourceLanguageIsValid = supportedLanguages.some((l) => l.id === sourceLanguageId)
   const allLanguagesAreValid = useMemo(() => {
     const valid = supportedLanguages.every((l) => l.id && l.title)
     if (!valid) {
       console.warn(
         `Not all languages are valid. It should be an array of objects with an "id" and "title" property. Or a function that returns an array of objects with an "id" and "title" property.`,
-        supportedLanguages
+        supportedLanguages,
       )
     }
 
@@ -103,11 +95,7 @@ export function DocumentInternationalizationMenu(
             sourceLanguageId={sourceLanguageId}
           />
           {supportedLanguages.length > 4 ? (
-            <TextInput
-              onChange={handleQuery}
-              value={query}
-              placeholder="Filter languages"
-            />
+            <TextInput onChange={handleQuery} value={query} placeholder="Filter languages" />
           ) : null}
           {supportedLanguages.length > 0 ? (
             <>
@@ -118,21 +106,17 @@ export function DocumentInternationalizationMenu(
                   {data && documentIsInOneMetadataDocument ? null : (
                     <Warning>
                       {/* TODO: Surface these documents to the user */}
-                      This document has been found in more than one Translations
-                      Metadata documents
+                      This document has been found in more than one Translations Metadata documents
                     </Warning>
                   )}
                   {/* Not all languages are valid */}
                   {allLanguagesAreValid ? null : (
-                    <Warning>
-                      Not all language objects are valid. See the console.
-                    </Warning>
+                    <Warning>Not all language objects are valid. See the console.</Warning>
                   )}
                   {/* Current document has no language field */}
                   {sourceLanguageId ? null : (
                     <Warning>
-                      Choose a language to apply to{' '}
-                      <strong>this Document</strong>
+                      Choose a language to apply to <strong>this Document</strong>
                     </Warning>
                   )}
                   {/* Current document has an invalid language field */}
@@ -147,9 +131,7 @@ export function DocumentInternationalizationMenu(
               {supportedLanguages
                 .filter((language) => {
                   if (query) {
-                    return language.title
-                      .toLowerCase()
-                      .includes(query.toLowerCase())
+                    return language.title.toLowerCase().includes(query.toLowerCase())
                   }
                   return true
                 })
@@ -162,7 +144,7 @@ export function DocumentInternationalizationMenu(
                       language={language}
                       schemaType={schemaType}
                       documentId={documentId}
-                      disabled={loading || !allLanguagesAreValid}
+                      disabled={!allLanguagesAreValid}
                       current={language.id === sourceLanguageId}
                       metadata={metadata}
                       metadataId={metadataId}
@@ -187,7 +169,7 @@ export function DocumentInternationalizationMenu(
                         false
                       }
                     />
-                  )
+                  ),
                 )}
             </>
           ) : null}
@@ -196,8 +178,7 @@ export function DocumentInternationalizationMenu(
     </Box>
   )
 
-  const issueWithTranslations =
-    !loading && sourceLanguageId && !sourceLanguageIsValid
+  const issueWithTranslations = !loading && sourceLanguageId && !sourceLanguageIsValid
 
   if (!documentId) {
     return null
@@ -214,7 +195,7 @@ export function DocumentInternationalizationMenu(
       content={content}
       open={open}
       portal
-      ref={setPopover}
+      ref={popoverRef}
       overflow="auto"
       tone="default"
     >
@@ -222,12 +203,10 @@ export function DocumentInternationalizationMenu(
         text="Translations"
         mode="bleed"
         disabled={!source}
-        tone={
-          !source || loading || !issueWithTranslations ? undefined : `caution`
-        }
+        tone={!source || loading || !issueWithTranslations ? undefined : `caution`}
         icon={TranslateIcon}
         onClick={handleClick}
-        ref={setButton}
+        ref={buttonRef}
         selected={open}
       />
     </Popover>

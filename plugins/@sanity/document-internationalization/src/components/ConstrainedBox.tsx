@@ -1,6 +1,5 @@
 import {Box} from '@sanity/ui'
-import {styled} from 'styled-components'
 
-export default styled(Box)`
-  max-width: 280px;
-`
+export default function ConstrainedBox({children}: {children: React.ReactNode}): React.JSX.Element {
+  return <Box style={{maxWidth: 280}}>{children}</Box>
+}

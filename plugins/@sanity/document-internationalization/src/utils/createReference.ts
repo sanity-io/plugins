@@ -4,7 +4,7 @@ export function createReference(
   key: string,
   ref: string,
   type: string,
-  strengthenOnPublish: boolean = true
+  strengthenOnPublish: boolean = true,
 ): TranslationReference {
   return {
     _key: key,
