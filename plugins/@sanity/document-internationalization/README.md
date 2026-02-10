@@ -120,7 +120,7 @@ export const defineConfig({
 
       // Optional
       // Customizes the name of the language field
-      languageField: `language`, // defauts to "language"
+      languageField: `language`, // defaults to "language"
 
       // Optional
       // Keep translation.metadata references weak

@@ -29,7 +29,9 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
 
     studio: {
       components: {
-        layout: (props) => DocumentInternationalizationProvider({...props, pluginConfig}),
+        layout: (props) => (
+          <DocumentInternationalizationProvider {...props} pluginConfig={pluginConfig} />
+        ),
       },
     },
 

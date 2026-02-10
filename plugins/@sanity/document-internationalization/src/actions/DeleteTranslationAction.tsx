@@ -55,7 +55,7 @@ export const DeleteTranslationAction: DocumentActionComponent = (props) => {
         toast.push({
           status: 'error',
           title:
-            operation === 'unset'
+            operation === 'UNSET'
               ? 'Failed to unset translation reference'
               : 'Failed to delete document',
           description: err.message,

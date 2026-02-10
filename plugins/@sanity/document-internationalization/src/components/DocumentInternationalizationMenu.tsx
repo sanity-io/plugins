@@ -106,7 +106,7 @@ export function DocumentInternationalizationMenu(
                   {data && documentIsInOneMetadataDocument ? null : (
                     <Warning>
                       {/* TODO: Surface these documents to the user */}
-                      This document has been found in more than one Translations Metadata documents
+                      This document has been found in more than one Translations Metadata document
                     </Warning>
                   )}
                   {/* Not all languages are valid */}
