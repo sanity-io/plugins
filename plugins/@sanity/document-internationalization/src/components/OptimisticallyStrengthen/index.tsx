@@ -1,4 +1,5 @@
 import type {TranslationReference} from '../../types'
+
 import ReferencePatcher from './ReferencePatcher'
 
 type OptimisticallyStrengthenProps = {
@@ -8,9 +9,7 @@ type OptimisticallyStrengthenProps = {
 
 // There's no good reason to leave published references as weak
 // So this component will run on every render and strengthen them
-export default function OptimisticallyStrengthen(
-  props: OptimisticallyStrengthenProps
-) {
+export default function OptimisticallyStrengthen(props: OptimisticallyStrengthenProps) {
   const {translations = [], metadataId} = props
 
   if (!translations.length) {
@@ -27,7 +26,7 @@ export default function OptimisticallyStrengthen(
             documentType={translation.value._strengthenOnPublish.type}
             metadataId={metadataId}
           />
-        ) : null
+        ) : null,
       )}
     </>
   )

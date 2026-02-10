@@ -1,11 +1,7 @@
 import {TrashIcon} from '@sanity/icons'
 import {type ButtonTone, useToast} from '@sanity/ui'
 import {useCallback, useState} from 'react'
-import {
-  type DocumentActionComponent,
-  type SanityDocument,
-  useClient,
-} from 'sanity'
+import {type DocumentActionComponent, type SanityDocument, useClient} from 'sanity'
 
 import DeleteTranslationDialog from '../components/DeleteTranslationDialog'
 import DeleteTranslationFooter from '../components/DeleteTranslationFooter'
@@ -20,7 +16,8 @@ export const DeleteTranslationAction: DocumentActionComponent = (props) => {
   const [isDialogOpen, setDialogOpen] = useState(false)
   const [translations, setTranslations] = useState<SanityDocument[]>([])
   const onClose = useCallback(() => setDialogOpen(false), [])
-  const documentLanguage = doc ? doc[languageField] : null
+  const rawDocumentLanguage = doc ? doc[languageField] : null
+  const documentLanguage = typeof rawDocumentLanguage === 'string' ? rawDocumentLanguage : null
 
   const toast = useToast()
   const client = useClient({apiVersion: API_VERSION})
@@ -34,9 +31,7 @@ export const DeleteTranslationAction: DocumentActionComponent = (props) => {
       operation = 'UNSET'
       translations.forEach((translation) => {
         tx.patch(translation._id, (patch) =>
-          patch.unset([
-            `${TRANSLATIONS_ARRAY_NAME}[_key == "${documentLanguage}"]`,
-          ])
+          patch.unset([`${TRANSLATIONS_ARRAY_NAME}[_key == "${documentLanguage}"]`]),
         )
       })
     } else {
@@ -51,15 +46,12 @@ export const DeleteTranslationAction: DocumentActionComponent = (props) => {
         }
         toast.push({
           status: 'success',
-          title:
-            operation === 'UNSET'
-              ? 'Translation reference unset'
-              : 'Document deleted',
-          description:
-            operation === 'UNSET' ? 'The document can now be deleted' : null,
+          title: operation === 'UNSET' ? 'Translation reference unset' : 'Document deleted',
+          description: operation === 'UNSET' ? 'The document can now be deleted' : null,
         })
+        return undefined
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         toast.push({
           status: 'error',
           title:

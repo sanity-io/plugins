@@ -15,24 +15,15 @@ type DocumentCheckProps = {
 // Check if that draft is valid
 // Report back to parent that it can be added to bulk publish
 export default function DocumentCheck(props: DocumentCheckProps) {
-  const {
-    id,
-    onCheckComplete,
-    addInvalidId,
-    removeInvalidId,
-    addDraftId,
-    removeDraftId,
-  } = props
-  const editState = useEditState(id, ``)
-  const {isValidating, validation} = useValidationStatus(id, ``)
+  const {id, onCheckComplete, addInvalidId, removeInvalidId, addDraftId, removeDraftId} = props
+  // Use empty string for type initially - we get the actual type from the loaded document
+  const editState = useEditState(id, '')
+  const documentType = editState.draft?._type ?? editState.published?._type ?? ''
+  const {isValidating, validation = []} = useValidationStatus(id, documentType, false)
   const schema = useSchema()
 
   const validationHasErrors = useMemo(() => {
-    return (
-      !isValidating &&
-      validation.length > 0 &&
-      validation.some((item) => item.level === 'error')
-    )
+    return !isValidating && validation.some((item) => item.level === 'error')
   }, [isValidating, validation])
 
   useEffect(() => {
@@ -71,17 +62,9 @@ export default function DocumentCheck(props: DocumentCheckProps) {
   const schemaType = schema.get(editState.draft._type)
 
   return (
-    <Card
-      border
-      padding={2}
-      tone={validationHasErrors ? `critical` : `positive`}
-    >
+    <Card border padding={2} tone={validationHasErrors ? `critical` : `positive`}>
       {editState.draft && schemaType ? (
-        <Preview
-          layout="default"
-          value={editState.draft}
-          schemaType={schemaType}
-        />
+        <Preview layout="default" value={editState.draft} schemaType={schemaType} />
       ) : (
         <Spinner />
       )}

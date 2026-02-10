@@ -17,7 +17,7 @@ type TranslationReference = TypedObject &
   }
 
 export const DeleteMetadataAction: DocumentActionComponent = (props) => {
-  const {id: documentId, published, draft, onComplete} = props
+  const {id: documentId, published, draft} = props
   const doc = draft || published
 
   const [isDialogOpen, setDialogOpen] = useState(false)
@@ -25,9 +25,10 @@ export const DeleteMetadataAction: DocumentActionComponent = (props) => {
   const translations: TranslationReference[] = useMemo(
     () =>
       doc && Array.isArray(doc[TRANSLATIONS_ARRAY_NAME])
-        ? (doc[TRANSLATIONS_ARRAY_NAME] as TranslationReference[])
+        ? // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+          (doc[TRANSLATIONS_ARRAY_NAME] as TranslationReference[])
         : [],
-    [doc]
+    [doc],
   )
 
   const toast = useToast()
@@ -58,8 +59,9 @@ export const DeleteMetadataAction: DocumentActionComponent = (props) => {
           status: 'success',
           title: 'Deleted document and translations',
         })
+        return undefined
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         toast.push({
           status: 'error',
           title: 'Failed to delete document and translations',
@@ -78,10 +80,10 @@ export const DeleteMetadataAction: DocumentActionComponent = (props) => {
     },
     dialog: isDialogOpen && {
       type: 'confirm',
-      onCancel: onComplete,
+      onCancel: onClose,
       onConfirm: () => {
         onProceed()
-        onComplete()
+        onClose()
       },
       tone: 'critical' as ButtonTone,
       message:

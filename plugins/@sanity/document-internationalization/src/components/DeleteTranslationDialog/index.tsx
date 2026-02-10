@@ -1,6 +1,7 @@
+import type {SanityDocument} from 'sanity'
+
 import {Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {useEffect, useMemo} from 'react'
-import type {SanityDocument} from 'sanity'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
 import DocumentPreview from './DocumentPreview'
@@ -12,19 +13,18 @@ type DeleteTranslationDialogProps = {
   setTranslations: (translations: SanityDocument[]) => void
 }
 
-export default function DeleteTranslationDialog(
-  props: DeleteTranslationDialogProps
-) {
+export default function DeleteTranslationDialog(props: DeleteTranslationDialogProps) {
   const {doc, documentId, setTranslations} = props
 
   // Get all references and check if any of them are translations metadata
-  const {data, loading} = useListeningQuery<SanityDocument[]>(
-    `*[references($id)]{_id, _type}`,
-    {params: {id: documentId}, initialValue: []}
-  )
+  const {data, loading} = useListeningQuery<SanityDocument[]>(`*[references($id)]{_id, _type}`, {
+    params: {id: documentId},
+    initialValue: [],
+  })
   const {translations, otherReferences} = useMemo(
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     () => separateReferences(data as SanityDocument[] | null),
-    [data]
+    [data],
   )
 
   useEffect(() => {
@@ -43,8 +43,7 @@ export default function DeleteTranslationDialog(
     <Stack space={4}>
       {translations && translations.length > 0 ? (
         <Text>
-          This document is a language-specific version which other translations
-          depend on.
+          This document is a language-specific version which other translations depend on.
         </Text>
       ) : (
         <Text>This document does not have connected translations.</Text>
@@ -88,11 +87,7 @@ export default function DeleteTranslationDialog(
                 to this document
               </Text>
               {otherReferences.map((reference) => (
-                <DocumentPreview
-                  key={reference._id}
-                  value={reference}
-                  type={reference._type}
-                />
+                <DocumentPreview key={reference._id} value={reference} type={reference._type} />
               ))}
             </>
           ) : null}
@@ -102,8 +97,7 @@ export default function DeleteTranslationDialog(
         <Text>This document has no other references.</Text>
       ) : (
         <Text>
-          You may not be able to delete this document because other documents
-          refer to it.
+          You may not be able to delete this document because other documents refer to it.
         </Text>
       )}
     </Stack>

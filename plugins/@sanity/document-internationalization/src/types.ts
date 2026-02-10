@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 import type {
   FieldDefinition,
   KeyedObject,
@@ -15,9 +13,7 @@ export type Language = {
   title: string
 }
 
-export type SupportedLanguages =
-  | Language[]
-  | ((client: SanityClient) => Promise<Language[]>)
+export type SupportedLanguages = Language[] | ((client: SanityClient) => Promise<Language[]>)
 
 export type PluginCallbackArgs = {
   sourceDocument: SanityDocument
