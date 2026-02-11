@@ -1,5 +1,6 @@
-import {describe, expect, test} from 'vitest'
 import type {FormNodeValidation} from 'sanity'
+
+import {describe, expect, test} from 'vitest'
 
 import {getToneFromValidation} from './getToneFromValidation'
 

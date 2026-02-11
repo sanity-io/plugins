@@ -305,6 +305,45 @@ export type InternationalizedArrayStringValue = {
   value?: string
 }
 
+export type TranslationMetadata = {
+  _id: string
+  _type: 'translation.metadata'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  translations?: InternationalizedArrayReference
+  schemaTypes?: Array<string>
+}
+
+export type InternationalizedArrayReference = Array<
+  {
+    _key: string
+  } & InternationalizedArrayReferenceValue
+>
+
+export type LessonReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'lesson'
+}
+
+export type InternationalizedArrayReferenceValue = {
+  _type: 'internationalizedArrayReferenceValue'
+  value?: LessonReference
+}
+
+export type Lesson = {
+  _id: string
+  _type: 'lesson'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  language?: string
+  content?: string
+}
+
 export type SanityImagePaletteSwatch = {
   _type: 'sanity.imagePaletteSwatch'
   background?: string
@@ -433,6 +472,11 @@ export type AllSanitySchemaTypes =
   | InternationalizedArrayString
   | InternationalizedArrayTextValue
   | InternationalizedArrayStringValue
+  | TranslationMetadata
+  | InternationalizedArrayReference
+  | LessonReference
+  | InternationalizedArrayReferenceValue
+  | Lesson
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
