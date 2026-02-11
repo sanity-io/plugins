@@ -2,6 +2,7 @@ import {aprimoExample} from '#aprimo'
 import {bynderExample} from '#bynder'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
+import {documentInternationalizationExample} from '#document-internationalization'
 import {iframePaneExample} from '#iframe-pane'
 import {internationalizedArrayExample} from '#internationalized-array'
 import {markdownExample} from '#markdown'
@@ -40,6 +41,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       // add new plugins here
+      documentInternationalizationExample(),
       internationalizedArrayExample(),
       richDateInputExample(),
       codeInputExample(),
