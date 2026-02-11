@@ -1,5 +1,3 @@
-import type React from 'react'
-
 import {AddIcon} from '@sanity/icons'
 import {Button, Grid} from '@sanity/ui'
 
@@ -13,11 +11,26 @@ type AddButtonsProps = {
   languages: Language[]
   readOnly: boolean
   value: Value[] | undefined
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
+  handleClick: (languageId: string) => void
 }
 
+/**
+ * Renders a grid of "add language" buttons — one per configured language.
+ *
+ * Returns `null` when the `languages` array is empty.
+ *
+ * Each button is disabled when:
+ * - `readOnly` is `true`, or
+ * - the language already exists in the current `value` array
+ *   (matched via `LANGUAGE_FIELD_NAME`).
+ *
+ * The button label is formatted according to the `languageDisplay` setting
+ * from the plugin context (e.g. code-only, title-only, or both).
+ * An `AddIcon` is shown unless there are more languages than fit in one row
+ * and the display mode is `'codeOnly'`.
+ */
 function AddButtons(props: AddButtonsProps) {
-  const {languages, readOnly, value, onClick} = props
+  const {languages, readOnly, value, handleClick} = props
   const {languageDisplay} = useInternationalizedArrayContext()
 
   return languages.length > 0 ? (
@@ -34,6 +47,7 @@ function AddButtons(props: AddButtonsProps) {
             tone="primary"
             mode="ghost"
             fontSize={1}
+            data-testid={`add-${language.id}`}
             disabled={
               readOnly || Boolean(value?.find((item) => item[LANGUAGE_FIELD_NAME] === language.id))
             }
@@ -45,7 +59,7 @@ function AddButtons(props: AddButtonsProps) {
                 : AddIcon
             }
             value={language.id}
-            onClick={onClick}
+            onClick={() => handleClick(language.id)}
           />
         )
       })}

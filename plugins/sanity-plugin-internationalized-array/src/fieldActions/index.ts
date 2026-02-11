@@ -42,7 +42,7 @@ const createTranslateFieldActions: (
       const addLanguageKeys = [language.id]
       const patches = createAddLanguagePatches({
         addLanguageKeys,
-        schemaType,
+        schemaTypeName: schemaType.name,
         languages,
         filteredLanguages,
         value,
@@ -82,7 +82,7 @@ const AddMissingTranslationsFieldAction: (
     const addLanguageKeys: string[] = []
     const patches = createAddLanguagePatches({
       addLanguageKeys,
-      schemaType,
+      schemaTypeName: schemaType.name,
       languages,
       filteredLanguages,
       value,

@@ -19,7 +19,7 @@ type ArrayFactoryConfig = {
 
 export type ArrayFieldOptions = Pick<ArrayFactoryConfig, 'apiVersion' | 'select' | 'languages'>
 
-export default (config: ArrayFactoryConfig): FieldDefinition<'array'> => {
+export default (config: ArrayFactoryConfig) => {
   const {apiVersion, select, languages, type} = config
   const typeName = typeof type === `string` ? type : type.name
   const arrayName = createFieldName(typeName)
