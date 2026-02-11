@@ -1,15 +1,14 @@
-import {type FormInsertPatch, insert, type Path, type SchemaType} from 'sanity'
+import {type FormInsertPatch, insert, type Path} from 'sanity'
 
 import type {Language, Value} from '../types'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
-import {createValueSchemaTypeName} from './createValueSchemaTypeName'
 
 type AddConfig = {
   // New keys to add to the field
   addLanguageKeys: string[]
   // Schema of the current field
-  schemaType: SchemaType
+  schemaTypeName: string
   // All languages registered in the plugin
   languages: Language[]
   // Languages that are currently visible
@@ -20,10 +19,26 @@ type AddConfig = {
   path?: Path
 }
 
+/**
+ * Creates an array of Sanity `FormInsertPatch` objects that add new language
+ * entries to an internationalized array field.
+ *
+ * If `addLanguageKeys` is provided, patches are created for those specific
+ * language IDs. Otherwise, patches are created for all filtered languages
+ * that are not already present in the current `value` array.
+ *
+ * Each new item is assigned the correct `_type` (derived from the schema)
+ * and the language identifier via `LANGUAGE_FIELD_NAME`.
+ *
+ * Insertions are ordered to maintain the same sequence as the master
+ * `languages` list: each new item is inserted before the next existing
+ * language in the value array, or appended at the end if no subsequent
+ * language exists.
+ */
 export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
-  const {addLanguageKeys, schemaType, languages, filteredLanguages, value, path = []} = config
+  const {addLanguageKeys, schemaTypeName, languages, filteredLanguages, value, path = []} = config
 
-  const itemBase = {_type: createValueSchemaTypeName(schemaType)}
+  const itemBase = {_type: `${schemaTypeName}Value`}
 
   // Create new items
   const getNewItems = () => {

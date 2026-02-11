@@ -26,6 +26,28 @@ import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
 export type InternationalizedArrayProps = ArrayOfObjectsInputProps<Value>
 
+/**
+ * Main array input component for internationalized array fields.
+ *
+ * Replaces the default Sanity array input and manages the full lifecycle of
+ * language entries:
+ *
+ * - **Language filter integration**: When `@sanity/language-filter` is active
+ *   for the current document type, array members are filtered to only show
+ *   languages matching the user's selection.
+ * - **Adding languages**: Exposes per-language buttons and an "Add all / Add
+ *   missing languages" button (controlled by `buttonAddAll` and
+ *   `buttonLocations` config). Dispatches `setIfMissing` + `insert` patches.
+ * - **Default languages**: Automatically adds entries for languages listed in
+ *   `defaultLanguages` when a document is first created or when those entries
+ *   are missing.
+ * - **Ordering**: Detects when value items are out of order relative to the
+ *   master `languages` list and automatically re-sorts them.
+ * - **Validation**: Shows a `<Feedback>` component if the languages
+ *   configuration is invalid (e.g. missing `id` or `title`).
+ * - **Empty state**: Displays a "no translations" message when the field has
+ *   no entries and the add buttons are not visible.
+ */
 export default function InternationalizedArray(
   props: InternationalizedArrayProps,
 ): React.ReactElement {
@@ -72,19 +94,14 @@ export default function InternationalizedArray(
   )
 
   const handleAddLanguage = useCallback(
-    async (param?: React.MouseEvent<HTMLButtonElement> | string[]) => {
+    (addLanguageKeys: string[] | string) => {
       if (!filteredLanguages?.length) {
         return
       }
 
-      const addLanguageKeys: string[] = Array.isArray(param)
-        ? param
-        : // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-          ([param?.currentTarget?.value].filter(Boolean) as string[])
-
       const patches = createAddLanguagePatches({
-        addLanguageKeys,
-        schemaType,
+        addLanguageKeys: Array.isArray(addLanguageKeys) ? addLanguageKeys : [addLanguageKeys],
+        schemaTypeName: schemaType.name,
         languages,
         filteredLanguages,
         value,
@@ -97,7 +114,10 @@ export default function InternationalizedArray(
 
   const {isDeleting} = useDocumentPane()
 
-  const addedLanguages = members.map(({key}) => key)
+  const addedLanguages = useMemo(() => {
+    if (!value?.length) return []
+    return value.map((v) => v[LANGUAGE_FIELD_NAME] ?? v._key).filter(Boolean)
+  }, [value])
   const hasAddedDefaultLanguages = defaultLanguages
     .filter((language) => languages.find((l) => l.id === language))
     .every((language) => addedLanguages.includes(language))
@@ -109,7 +129,7 @@ export default function InternationalizedArray(
         .filter((language) => languages.find((l) => l.id === language))
       // Account for strict mode by scheduling the update
       const timeout = setTimeout(() => {
-        if (!documentReadOnly) void handleAddLanguage(languagesToAdd)
+        if (!documentReadOnly) handleAddLanguage(languagesToAdd)
       })
       return () => clearTimeout(timeout)
     }
@@ -242,16 +262,17 @@ export default function InternationalizedArray(
             languages={filteredLanguages}
             value={value}
             readOnly={readOnly}
-            onClick={handleAddLanguage}
+            handleClick={handleAddLanguage}
           />
           {buttonAddAll ? (
             <Button
               tone="primary"
               mode="ghost"
+              data-testid="add-all-languages"
               disabled={readOnly || allLanguagesArePresent}
               icon={AddIcon}
               text={createAddAllTitle(value, filteredLanguages)}
-              onClick={handleAddLanguage}
+              onClick={() => handleAddLanguage(filteredLanguages.map((language) => language.id))}
             />
           ) : null}
         </Stack>

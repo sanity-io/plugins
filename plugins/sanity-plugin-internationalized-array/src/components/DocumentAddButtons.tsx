@@ -1,5 +1,5 @@
 import {Box, Stack, Text, useToast} from '@sanity/ui'
-import {type ReactElement, type MouseEvent, useCallback} from 'react'
+import {type ReactElement, useCallback} from 'react'
 import {
   type FormInsertPatch,
   type FormSetIfMissingPatch,
@@ -21,6 +21,24 @@ import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 type DocumentAddButtonsProps = {
   value: Record<string, unknown> | undefined
 }
+/**
+ * Document-level "add translation" panel that appears outside individual
+ * internationalized array fields (when `buttonLocations` includes `'document'`).
+ *
+ * Renders a heading and a row of per-language buttons. When a language button
+ * is clicked the component:
+ *
+ * 1. Scans the current document for all internationalized array fields
+ *    using `getDocumentsToTranslate`.
+ * 2. Filters out fields that already contain a translation for the selected
+ *    language, and deduplicates by field path.
+ * 3. Shows an error toast if no eligible fields remain.
+ * 4. Creates `setIfMissing` + `insert` patches to add the new language
+ *    entry to each eligible field, dispatching them via `onChange`.
+ *
+ * For Portable Text and other array-based value fields, the initial value
+ * is set to an empty array (`[]`) rather than `undefined`.
+ */
 export default function DocumentAddButtons(props: DocumentAddButtonsProps): ReactElement {
   const {filteredLanguages} = useInternationalizedArrayContext()
   const value = isSanityDocument(props.value) ? props.value : undefined
@@ -80,15 +98,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
   )
 
   const handleDocumentButtonClick = useCallback(
-    async (event: MouseEvent<HTMLButtonElement>) => {
-      const languageId = event.currentTarget.value
-      if (!languageId) {
-        toast.push({
-          status: 'error',
-          title: 'No language selected',
-        })
-        return
-      }
+    async (languageId: string) => {
       const alreadyTranslated = documentsToTranslation.filter(
         (translation) => translation?.[LANGUAGE_FIELD_NAME] === languageId,
       )
@@ -161,7 +171,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
         languages={filteredLanguages}
         readOnly={false}
         value={undefined}
-        onClick={handleDocumentButtonClick}
+        handleClick={handleDocumentButtonClick}
       />
     </Stack>
   )

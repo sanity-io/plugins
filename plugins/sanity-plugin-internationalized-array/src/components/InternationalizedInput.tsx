@@ -29,6 +29,21 @@ export type InternationalizedValue = {
   value: string
 }
 
+/**
+ * Renders a single row of an internationalized array: a language label (or
+ * "Change" menu for invalid keys), the value input, and a remove button.
+ *
+ * Key behaviours:
+ * - Wraps `onChange` to intercept paste operations into empty Portable Text
+ *   fields, ensuring `setIfMissing` and correct path prefixing.
+ * - Detects items needing migration (missing `LANGUAGE_FIELD_NAME`) and hides
+ *   the language label in that state.
+ * - Shows a `MenuButton` with available languages when the current key is
+ *   not a valid language.
+ * - Disables the remove button for languages listed in `defaultLanguages`.
+ * - Shows a `Spinner` when languages have not been loaded yet.
+ * - Applies a `CardTone` based on validation state via `getToneFromValidation`.
+ */
 export default function InternationalizedInput(
   props: ObjectItemProps<InternationalizedValue>,
 ): ReactNode {
