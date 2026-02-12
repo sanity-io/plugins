@@ -41,7 +41,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/ui": "^2.10.10"
+    "@sanity/ui": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
