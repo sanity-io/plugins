@@ -5,7 +5,7 @@ import {
   type ReactElement,
   type SetStateAction,
   useCallback,
-  useEffect,
+  useRef,
   useState,
 } from 'react'
 
@@ -30,16 +30,13 @@ export const SettingsView = ({
   onClose,
   title = 'Configure',
 }: SettingsViewProps): ReactElement => {
-  // oxlint-disable-next-line @typescript-eslint/no-explicit-any
   const {loading, secrets, storeSecrets} = useSecrets<Record<string, any>>(namespace)
-  // oxlint-disable-next-line @typescript-eslint/no-explicit-any
   const [newSecrets, setNewSecrets] = useState<Record<string, any>>({})
-
-  useEffect(() => {
-    if (secrets) {
-      setNewSecrets(secrets)
-    }
-  }, [secrets])
+  const prevSecretsRef = useRef<Record<string, any> | undefined>(undefined)
+  if (secrets && secrets !== prevSecretsRef.current) {
+    prevSecretsRef.current = secrets
+    setNewSecrets(secrets)
+  }
 
   const onClick = useCallback(() => storeSecrets(newSecrets), [storeSecrets, newSecrets])
 
@@ -70,9 +67,7 @@ export const SettingsView = ({
 
 interface SettingsKeyProps {
   loading: boolean
-  // oxlint-disable-next-line @typescript-eslint/no-explicit-any
   newSecrets: Record<string, any>
-  // oxlint-disable-next-line @typescript-eslint/no-explicit-any
   setNewSecrets: Dispatch<SetStateAction<Record<string, any>>>
   keyEntry: SettingsKey
 }
