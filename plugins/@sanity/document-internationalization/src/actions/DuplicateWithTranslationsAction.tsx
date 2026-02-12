@@ -98,6 +98,9 @@ export const useDuplicateWithTranslationsAction = ({
           const locale = translation[LANGUAGE_FIELD_NAME]
           const docId = translation.value?._ref
 
+          if (typeof locale !== 'string' || locale.trim().length === 0) {
+            return Promise.reject(new Error('Invalid locale for translation'))
+          }
           if (!docId) {
             return Promise.reject(new Error('Translation document not found'))
           }
@@ -150,11 +153,8 @@ export const useDuplicateWithTranslationsAction = ({
       const patch: PatchOperations = {
         set: Object.fromEntries(
           Array.from(translations.entries()).map(([locale, documentId]) => {
-            const translationItemKey = metadataDocument.translations.find(
-              (item) => item[LANGUAGE_FIELD_NAME] === locale,
-            )?._key
             return [
-              `${TRANSLATIONS_ARRAY_NAME}[_key == "${translationItemKey}"].value._ref`,
+              `${TRANSLATIONS_ARRAY_NAME}[${LANGUAGE_FIELD_NAME} == "${locale}"].value._ref`,
               documentId,
             ]
           }),

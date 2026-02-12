@@ -1,6 +1,7 @@
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {FieldDefinition} from 'sanity'
 
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {describe, expect, test} from 'vitest'
 
 import {METADATA_SCHEMA_NAME, TRANSLATIONS_ARRAY_NAME} from '../../constants'
@@ -115,7 +116,7 @@ describe('metadata schema', () => {
     const schema = createMetadataSchema(schemaTypes, [])
 
     const result = schema.preview?.prepare?.({
-      translations: [{_key: 'en'}],
+      translations: [{[LANGUAGE_FIELD_NAME]: 'en'}],
       documentSchemaTypes: [],
     })
 

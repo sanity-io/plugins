@@ -55,12 +55,10 @@ export const useDeleteTranslationAction = (
     if (documentLanguage && translations.length > 0) {
       operation = 'UNSET'
       translations.forEach((translation) => {
-        // We need to identify the translation item key that matches the language
-        const translationItemKey = translation.translations.find(
-          (item) => item[LANGUAGE_FIELD_NAME] === documentLanguage,
-        )?._key
         tx.patch(translation._id, (patch) =>
-          patch.unset([`${TRANSLATIONS_ARRAY_NAME}[_key == "${translationItemKey}"]`]),
+          patch.unset([
+            `${TRANSLATIONS_ARRAY_NAME}[${LANGUAGE_FIELD_NAME} == "${documentLanguage}"]`,
+          ]),
         )
       })
     } else {
