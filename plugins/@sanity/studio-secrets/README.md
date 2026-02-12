@@ -56,7 +56,7 @@ const MyComponent = () => {
   }
   return (
     <SettingsView
-      title={'sdfds'}
+      title={'My Plugin Settings'}
       namespace={namespace}
       keys={pluginConfigKeys}
       onClose={() => {

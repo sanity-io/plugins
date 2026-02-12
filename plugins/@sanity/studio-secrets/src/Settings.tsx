@@ -46,7 +46,7 @@ export const SettingsView = ({
   const onClick = useCallback(() => storeSecrets(newSecrets), [storeSecrets, newSecrets])
 
   return (
-    <Dialog animate id="translation-settings" onClose={onClose} header={title}>
+    <Dialog animate id="studio-secrets-settings" onClose={onClose} header={title}>
       <Card padding={3}>
         <Stack space={3}>
           {keys.map((keyEntry) => (
