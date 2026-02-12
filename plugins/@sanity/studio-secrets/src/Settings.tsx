@@ -5,6 +5,7 @@ import {
   type ReactElement,
   type SetStateAction,
   useCallback,
+  useEffect,
   useState,
 } from 'react'
 
@@ -30,7 +31,13 @@ export const SettingsView = ({
   title = 'Configure',
 }: SettingsViewProps): ReactElement => {
   const {loading, secrets, storeSecrets} = useSecrets<Record<string, string>>(namespace)
-  const [newSecrets, setNewSecrets] = useState<Record<string, string>>(secrets ?? {})
+  const [newSecrets, setNewSecrets] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    if (secrets) {
+      setNewSecrets(secrets)
+    }
+  }, [secrets])
 
   const onClick = useCallback(() => storeSecrets(newSecrets), [storeSecrets, newSecrets])
 
