@@ -255,3 +255,8 @@ export const DuplicateWithTranslationsAction = (
 ): DocumentActionDescription => {
   return useDuplicateWithTranslationsAction(props)
 }
+
+/* oxlint-disable-next-line typescript-eslint/no-deprecated -- re-exported for backwards compatibility */
+DuplicateWithTranslationsAction.action = 'duplicate'
+/* oxlint-disable-next-line typescript-eslint/no-deprecated -- re-exported for backwards compatibility */
+DuplicateWithTranslationsAction.displayName = 'DuplicateWithTranslationsAction'
