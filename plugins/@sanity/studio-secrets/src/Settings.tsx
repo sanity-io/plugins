@@ -30,8 +30,10 @@ export const SettingsView = ({
   onClose,
   title = 'Configure',
 }: SettingsViewProps): ReactElement => {
-  const {loading, secrets, storeSecrets} = useSecrets<Record<string, string>>(namespace)
-  const [newSecrets, setNewSecrets] = useState<Record<string, string>>({})
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any
+  const {loading, secrets, storeSecrets} = useSecrets<Record<string, any>>(namespace)
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any
+  const [newSecrets, setNewSecrets] = useState<Record<string, any>>({})
 
   useEffect(() => {
     if (secrets) {
@@ -68,8 +70,10 @@ export const SettingsView = ({
 
 interface SettingsKeyProps {
   loading: boolean
-  newSecrets: Record<string, string>
-  setNewSecrets: Dispatch<SetStateAction<Record<string, string>>>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any
+  newSecrets: Record<string, any>
+  // oxlint-disable-next-line @typescript-eslint/no-explicit-any
+  setNewSecrets: Dispatch<SetStateAction<Record<string, any>>>
   keyEntry: SettingsKey
 }
 
