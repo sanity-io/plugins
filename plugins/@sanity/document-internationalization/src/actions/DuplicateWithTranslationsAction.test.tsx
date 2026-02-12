@@ -1,3 +1,4 @@
+/* oxlint-disable typescript-eslint/no-unsafe-type-assertion, typescript-eslint/no-deprecated */
 import type {DocumentActionProps} from 'sanity'
 
 import {act, renderHook, waitFor} from '@testing-library/react'

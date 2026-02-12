@@ -1,3 +1,4 @@
+/* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {ReactElement} from 'react'
 import type {DocumentActionProps, SanityDocument} from 'sanity'
 

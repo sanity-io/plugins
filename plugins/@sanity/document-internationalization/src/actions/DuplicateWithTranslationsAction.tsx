@@ -53,6 +53,7 @@ const DISABLED_REASON_KEY = {
 export const useDuplicateWithTranslationsAction = ({
   id,
   type,
+  /* oxlint-disable-next-line typescript-eslint/no-deprecated -- kept for backwards compatibility */
   onComplete,
 }: DocumentActionProps): DocumentActionDescription => {
   const documentStore = useDocumentStore()

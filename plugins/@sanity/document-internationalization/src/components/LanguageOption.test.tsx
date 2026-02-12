@@ -1,3 +1,4 @@
+/* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {ObjectSchemaType} from 'sanity'
 
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react'
@@ -360,9 +361,6 @@ describe('LanguageOption', () => {
       new Error('Transaction failed - MockTestError'),
     )
 
-    const {useClient} = await import('sanity')
-    vi.mocked(useClient).mockReturnValue(mockClient as unknown as ReturnType<typeof useClient>)
-
     const source = createMockDocument('doc-1', 'en')
     render(
       <LanguageOption
@@ -393,9 +391,6 @@ describe('LanguageOption', () => {
   test('creates translation document with correct language and draft ID', async () => {
     mockClient = createMockSanityClient()
     const transactionMock = mockClient.transaction()
-
-    const {useClient} = await import('sanity')
-    vi.mocked(useClient).mockReturnValue(mockClient as unknown as ReturnType<typeof useClient>)
 
     const source = createMockDocument('doc-1', 'en')
     render(
@@ -428,9 +423,6 @@ describe('LanguageOption', () => {
   test('creates metadata document with source reference in transaction', async () => {
     mockClient = createMockSanityClient()
     const transactionMock = mockClient.transaction()
-
-    const {useClient} = await import('sanity')
-    vi.mocked(useClient).mockReturnValue(mockClient as unknown as ReturnType<typeof useClient>)
 
     const source = createMockDocument('doc-1', 'en')
     render(

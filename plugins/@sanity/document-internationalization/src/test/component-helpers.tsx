@@ -48,22 +48,31 @@ export function createMockSanityClient(
     transaction?: unknown
   } = {},
 ): MockSanityClient {
-  const mockPatch = {
-    set: vi.fn().mockReturnThis(),
-    setIfMissing: vi.fn().mockReturnThis(),
-    unset: vi.fn().mockReturnThis(),
-    insert: vi.fn().mockReturnThis(),
+  const mockPatch: MockPatch = {
+    set: vi.fn(),
+    setIfMissing: vi.fn(),
+    unset: vi.fn(),
+    insert: vi.fn(),
     commit: vi.fn().mockResolvedValue(responses.patch ?? {}),
-  } as unknown as MockPatch
+  }
+  mockPatch.set.mockReturnValue(mockPatch)
+  mockPatch.setIfMissing.mockReturnValue(mockPatch)
+  mockPatch.unset.mockReturnValue(mockPatch)
+  mockPatch.insert.mockReturnValue(mockPatch)
 
-  const mockTransaction = {
-    create: vi.fn().mockReturnThis(),
-    createIfNotExists: vi.fn().mockReturnThis(),
-    createOrReplace: vi.fn().mockReturnThis(),
-    patch: vi.fn().mockReturnThis(),
-    delete: vi.fn().mockReturnThis(),
+  const mockTransaction: MockTransaction = {
+    create: vi.fn(),
+    createIfNotExists: vi.fn(),
+    createOrReplace: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
     commit: vi.fn().mockResolvedValue(responses.transaction ?? {}),
-  } as unknown as MockTransaction
+  }
+  mockTransaction.create.mockReturnValue(mockTransaction)
+  mockTransaction.createIfNotExists.mockReturnValue(mockTransaction)
+  mockTransaction.createOrReplace.mockReturnValue(mockTransaction)
+  mockTransaction.patch.mockReturnValue(mockTransaction)
+  mockTransaction.delete.mockReturnValue(mockTransaction)
 
   return {
     fetch: vi.fn().mockResolvedValue(responses.fetch ?? null),

@@ -1,3 +1,4 @@
+/* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {FieldDefinition} from 'sanity'
 
 import {describe, expect, test} from 'vitest'

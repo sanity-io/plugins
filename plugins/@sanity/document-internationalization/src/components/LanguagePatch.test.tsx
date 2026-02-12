@@ -134,10 +134,6 @@ describe('LanguagePatch', () => {
     const patchMock = mockClient.patch('any')
     vi.mocked(patchMock.commit).mockRejectedValueOnce(new Error('Network error'))
 
-    // Re-mock useClient to use the updated client
-    const {useClient} = await import('sanity')
-    vi.mocked(useClient).mockReturnValue(mockClient)
-
     const source = createMockDocument('doc-1', 'en')
     render(<LanguagePatch language={mockLanguage} source={source} disabled={false} />, {
       wrapper: ThemeWrapper,
@@ -159,10 +155,7 @@ describe('LanguagePatch', () => {
       languageField: 'locale',
     })
 
-    // Create a fresh client for this test
     mockClient = createMockSanityClient()
-    const {useClient} = await import('sanity')
-    vi.mocked(useClient).mockReturnValue(mockClient as unknown as ReturnType<typeof useClient>)
 
     const source: SanityDocument = {
       _id: 'doc-1',
@@ -184,7 +177,7 @@ describe('LanguagePatch', () => {
     })
 
     // Get the patch mock that was created when patch() was called
-    const patchMock = mockClient.patch.mock.results[0].value
+    const patchMock = mockClient.patch.mock.results[0]?.value
     expect(patchMock.set).toHaveBeenCalledWith({locale: 'fr'})
   })
 })

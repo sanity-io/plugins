@@ -39,7 +39,8 @@ describe('separateReferences', () => {
     const result = separateReferences([metadataDoc])
 
     expect(result.translations).toHaveLength(1)
-    expect(result.translations[0]._id).toBe('meta-1')
+    expect(result.translations[0]).toBeDefined()
+    expect(result.translations[0]!._id).toBe('meta-1')
     expect(result.otherReferences).toHaveLength(0)
   })
 
@@ -49,7 +50,8 @@ describe('separateReferences', () => {
 
     expect(result.translations).toHaveLength(0)
     expect(result.otherReferences).toHaveLength(1)
-    expect(result.otherReferences[0]._id).toBe('article-1')
+    expect(result.otherReferences[0]).toBeDefined()
+    expect(result.otherReferences[0]!._id).toBe('article-1')
   })
 
   test('handles mixed array of metadata and other docs', () => {

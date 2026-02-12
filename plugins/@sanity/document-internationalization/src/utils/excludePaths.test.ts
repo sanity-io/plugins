@@ -1,3 +1,4 @@
+/* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {ObjectSchemaType, SanityDocument} from 'sanity'
 
 import {beforeEach, describe, expect, test, vi} from 'vitest'
@@ -24,7 +25,16 @@ function createSchemaType(
     name: string
     jsonType?: string
     options?: {documentInternationalization?: {exclude?: boolean}}
-    of?: Array<{name: string; fields?: Array<{name: string; type: {jsonType: string}}>}>
+    of?: Array<{
+      name: string
+      fields?: Array<{
+        name: string
+        type: {
+          jsonType: string
+          options?: {documentInternationalization?: {exclude?: boolean}}
+        }
+      }>
+    }>
     fields?: Array<{
       name: string
       type: {
@@ -113,8 +123,8 @@ describe('removeExcludedPaths', () => {
     const result = removeExcludedPaths(doc, schemaType)
 
     expect(result).not.toBeNull()
-    expect(result!.title).toBe('Hello')
-    expect(result!.secret).toBeUndefined()
+    expect(result!['title']).toBe('Hello')
+    expect(result!['secret']).toBeUndefined()
   })
 
   test('preserves non-excluded fields', () => {
@@ -138,9 +148,9 @@ describe('removeExcludedPaths', () => {
 
     expect(result!._id).toBe('doc-1')
     expect(result!._type).toBe('article')
-    expect(result!.title).toBe('Hello')
-    expect(result!.body).toBe('Keep me')
-    expect(result!.excluded).toBeUndefined()
+    expect(result!['title']).toBe('Hello')
+    expect(result!['body']).toBe('Keep me')
+    expect(result!['excluded']).toBeUndefined()
   })
 
   test('removes nested field with exclude: true', () => {
@@ -176,9 +186,10 @@ describe('removeExcludedPaths', () => {
 
     const result = removeExcludedPaths(doc, schemaType)
 
-    expect(result!.title).toBe('Hello')
-    expect((result!.metadata as {author: string}).author).toBe('John')
-    expect((result!.metadata as {internal?: string}).internal).toBeUndefined()
+    const metadata = result!['metadata'] as {author: string; internal?: string}
+    expect(result!['title']).toBe('Hello')
+    expect(metadata.author).toBe('John')
+    expect(metadata.internal).toBeUndefined()
   })
 
   test('handles array fields with keyed items', () => {
@@ -219,13 +230,15 @@ describe('removeExcludedPaths', () => {
 
     const result = removeExcludedPaths(doc, schemaType)
 
-    expect(result!.title).toBe('Hello')
-    const blocks = result!.blocks as Array<{_key: string; text: string; internal?: string}>
+    expect(result!['title']).toBe('Hello')
+    const blocks = result!['blocks'] as Array<{_key: string; text: string; internal?: string}>
     expect(blocks).toHaveLength(2)
-    expect(blocks[0].text).toBe('Keep')
-    expect(blocks[0].internal).toBeUndefined()
-    expect(blocks[1].text).toBe('Also keep')
-    expect(blocks[1].internal).toBeUndefined()
+    expect(blocks[0]).toBeDefined()
+    expect(blocks[1]).toBeDefined()
+    expect(blocks[0]!.text).toBe('Keep')
+    expect(blocks[0]!.internal).toBeUndefined()
+    expect(blocks[1]!.text).toBe('Also keep')
+    expect(blocks[1]!.internal).toBeUndefined()
   })
 
   test('handles field with exclude: false (should not remove)', () => {
@@ -244,7 +257,7 @@ describe('removeExcludedPaths', () => {
     ])
 
     const result = removeExcludedPaths(doc, schemaType)
-    expect(result!.keepMe).toBe('Still here')
+    expect(result!['keepMe']).toBe('Still here')
   })
 
   test('handles fields without value (no error)', () => {
@@ -263,6 +276,6 @@ describe('removeExcludedPaths', () => {
     ])
 
     const result = removeExcludedPaths(doc, schemaType)
-    expect(result!.title).toBe('Hello')
+    expect(result!['title']).toBe('Hello')
   })
 })

@@ -33,6 +33,7 @@ export default function DeleteTranslationDialog(props: DeleteTranslationDialogPr
   )
 
   useEffect(() => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     setTranslations(translations as MetadataDocument[])
   }, [setTranslations, translations])
 
