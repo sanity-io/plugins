@@ -1,5 +1,7 @@
 import type {SanityDocument} from 'sanity'
 
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
+
 import type {Language, Metadata, PluginConfigContext, TranslationReference} from '../types'
 
 import {DEFAULT_CONFIG} from '../constants'
@@ -57,7 +59,8 @@ export function createMockTranslation(
   const type = opts?.type ?? 'article'
 
   return {
-    _key: languageId,
+    ...(LANGUAGE_FIELD_NAME === '_key' ? {} : {_key: `key-${languageId}`}),
+    [LANGUAGE_FIELD_NAME]: languageId,
     _type: 'internationalizedArrayReferenceValue',
     value: {
       _type: 'reference',
