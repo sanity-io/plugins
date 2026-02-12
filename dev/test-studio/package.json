@@ -18,6 +18,7 @@
     "@sanity/document-internationalization": "workspace:*",
     "@sanity/icons": "^3.7.4",
     "@sanity/rich-date-input": "workspace:*",
+    "@sanity/studio-secrets": "workspace:*",
     "@sanity/vercel-protection-bypass": "workspace:*",
     "@sanity/vision": "catalog:",
     "react": "catalog:",

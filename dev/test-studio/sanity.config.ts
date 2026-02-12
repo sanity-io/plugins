@@ -7,6 +7,7 @@ import {iframePaneExample} from '#iframe-pane'
 import {internationalizedArrayExample} from '#internationalized-array'
 import {markdownExample} from '#markdown'
 import {richDateInputExample} from '#rich-date-input'
+import {studioSecretsExample} from '#studio-secrets'
 import {unsplashExample} from '#unsplash'
 import {workflowExample} from '#workflow'
 import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
@@ -41,6 +42,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       // add new plugins here
+      studioSecretsExample(),
       documentInternationalizationExample(),
       internationalizedArrayExample(),
       richDateInputExample(),

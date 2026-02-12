@@ -21,9 +21,9 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
   useEffect(() => {
     const subscription = client.observable
       .listen(query, {id}, {visibility: 'query', tag: 'secrets.listen'})
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((result: Record<string, any>) => {
-        setSecrets(result?.['result']?.secrets)
+      .subscribe((result: Record<string, unknown>) => {
+        const resultData = result as {result?: {secrets?: T}}
+        setSecrets(resultData?.result?.secrets)
       })
     return () => {
       subscription.unsubscribe()
@@ -31,20 +31,20 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
   }, [id, client])
 
   useEffect(() => {
-    async function fetchData() {
-      client
-        .fetch(query, {id}, {tag: 'secrets.get'})
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((doc: Record<string, any> | null) => setSecrets(doc?.['secrets']))
-        .finally(() => setLoading(false))
-    }
-    fetchData()
+    void client
+      .fetch(query, {id}, {tag: 'secrets.get'})
+      .then((doc: Record<string, unknown> | null) => {
+        // oxlint-disable-next-line no-unsafe-type-assertion -- The secrets type T is user-defined and we cannot statically verify it
+        setSecrets(doc?.['secrets'] as T | undefined)
+        return undefined
+      })
+      .finally(() => setLoading(false))
   }, [id, client])
 
   const storeSecrets = (updatedSecret: T) => {
     setLoading(true)
     const keysPatch = client.patch(id).set({secrets: updatedSecret})
-    client
+    void client
       .transaction()
       .createIfNotExists({_id: id, _type: type})
       .patch(keysPatch)

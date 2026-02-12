@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# @sanity/studio-secrets
 
 ## [3.0.3](https://github.com/sanity-io/sanity-studio-secrets/compare/v3.0.2...v3.0.3) (2025-12-18)
 

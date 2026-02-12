@@ -1,5 +1,12 @@
 import {Button, Card, Dialog, Stack, Text, TextInput} from '@sanity/ui'
-import {type Dispatch, type SetStateAction, useCallback, useEffect, useState} from 'react'
+import {
+  type ChangeEvent,
+  type Dispatch,
+  type ReactElement,
+  type SetStateAction,
+  useCallback,
+  useState,
+} from 'react'
 
 import {useSecrets} from './useSecrets'
 
@@ -21,17 +28,9 @@ export const SettingsView = ({
   keys,
   onClose,
   title = 'Configure',
-}: SettingsViewProps): JSX.Element => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const {loading, secrets, storeSecrets} = useSecrets<Record<string, any>>(namespace)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [newSecrets, setNewSecrets] = useState<Record<string, any>>({})
-
-  useEffect(() => {
-    if (secrets) {
-      setNewSecrets(secrets)
-    }
-  }, [secrets])
+}: SettingsViewProps): ReactElement => {
+  const {loading, secrets, storeSecrets} = useSecrets<Record<string, string>>(namespace)
+  const [newSecrets, setNewSecrets] = useState<Record<string, string>>(secrets ?? {})
 
   const onClick = useCallback(() => storeSecrets(newSecrets), [storeSecrets, newSecrets])
 
@@ -62,16 +61,14 @@ export const SettingsView = ({
 
 interface SettingsKeyProps {
   loading: boolean
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  newSecrets: Record<string, any>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setNewSecrets: Dispatch<SetStateAction<Record<string, any>>>
+  newSecrets: Record<string, string>
+  setNewSecrets: Dispatch<SetStateAction<Record<string, string>>>
   keyEntry: SettingsKey
 }
 
 function SettingsKeyEntry({loading, setNewSecrets, newSecrets, keyEntry}: SettingsKeyProps) {
   const onChange = useCallback(
-    (event: React.FormEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       const target = event.currentTarget
       const {value} = target
       setNewSecrets((prevState) => {
