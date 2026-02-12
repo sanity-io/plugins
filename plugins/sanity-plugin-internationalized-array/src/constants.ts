@@ -4,6 +4,24 @@ import type {PluginConfig} from './types'
  * The field name used to identify the language of an internationalized array item.
  *
  * In v4.x this was '_key', in v5+ this is 'language'.
+ * ```ts
+ * {
+ *    "description": [
+ *      {
+ *        "_key": "kjjNvZHK8Y2QpTEf3K5jc",
+ *        "_type": "internationalizedArrayTextValue",
+ *        "language": "en"
+ *        "value": "This is the description in English"
+ *      },
+ *      {
+ *        "_key": "kjjNvZHK8Y2QpTEf3K5jc",
+ *        "_type": "internationalizedArrayTextValue",
+ *        "language": "es"
+ *        "value": "This is the description in Spanish"
+ *      },
+ *    ]
+ * }
+ * ```
  */
 export const LANGUAGE_FIELD_NAME = 'language' as const
 

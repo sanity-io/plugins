@@ -1,6 +1,6 @@
 import {WarningOutlineIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Stack, Text, useToast} from '@sanity/ui'
-import {nanoid} from 'nanoid'
+import {randomKey} from '@sanity/util/content'
 import {type ReactElement, useCallback, useMemo} from 'react'
 import {set} from 'sanity'
 
@@ -81,7 +81,7 @@ export function MigrationBanner({
         // Migrate: copy _key to language field, generate new random _key
         return {
           ...item,
-          _key: nanoid(),
+          _key: randomKey(),
           [LANGUAGE_FIELD_NAME]: item._key,
         }
       }
