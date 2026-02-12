@@ -99,12 +99,14 @@ describe('array schema factory', () => {
       expect(await validate([], context)).toBe(true)
     })
 
-    test('returns true for single item without a language identifier', async () => {
+    test('returns error for single item without a language identifier', async () => {
       // Simulates an item that has not yet been assigned a language.
-      // When LANGUAGE_FIELD_NAME is '_key', _key must be falsy for the early return.
-      // When LANGUAGE_FIELD_NAME is 'language', the language field is absent.
-      const item: Record<string, unknown> = {_key: 'temp-key'}
-      expect(await validate([item], context)).toBe(true)
+      const item: Record<string, unknown> = {_key: '123'}
+      expect(await validate([item], context)).toEqual({
+        message:
+          'Language is required for each array item. Run the migration to update your data from the old format.',
+        paths: [[{_key: '123'}], [{_key: '123'}, 'value']],
+      })
     })
 
     test('returns error message when value count exceeds language count (singular)', async () => {
