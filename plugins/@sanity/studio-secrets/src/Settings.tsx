@@ -36,9 +36,9 @@ export const SettingsView = ({
   // Sync async-loaded secrets into form state. This is a legitimate
   // useEffect for external data sync, not a cascading render issue.
   // See: https://github.com/facebook/react/issues/34743
-  // oxlint-disable-next-line react-hooks-js/set-state-in-effect
   useEffect(() => {
     if (secrets) {
+      // oxlint-disable-next-line react-hooks-js/set-state-in-effect
       setNewSecrets(secrets)
     }
   }, [secrets])
