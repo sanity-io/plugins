@@ -1,5 +1,26 @@
 # @sanity/document-internationalization
 
+## 5.0.0
+
+### Major Changes
+
+- [#562](https://github.com/sanity-io/plugins/pull/562) [`bc342c5`](https://github.com/sanity-io/plugins/commit/bc342c59a49810ae6289546af049a8c3a8a57e43) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Port @sanity/document-internationalization to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+  - **React Compiler enabled**: The plugin is now optimized with React Compiler for better performance
+  - **ESM-only**: CommonJS is no longer supported (removed dual module format)
+  - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the baseline
+  - **React 19 required**: Updated to support React 19.2+
+  - **Stricter TypeScript**: Updated type definitions with improved type safety
+  - **Updated dependencies**: All dependencies updated to latest compatible versions
+
+  The plugin functionality remains the same, but the new build process and dependencies require these breaking changes for compatibility with the monorepo's tooling and conventions.
+
+### Patch Changes
+
+- Updated dependencies [[`b942552`](https://github.com/sanity-io/plugins/commit/b942552b83117c95a73fddb21bd0453497fe883b)]:
+  - sanity-plugin-internationalized-array@4.0.1
+
 ## [4.1.1](https://github.com/sanity-io/document-internationalization/compare/v4.1.0...v4.1.1) (2025-12-17)
 
 ### Bug Fixes

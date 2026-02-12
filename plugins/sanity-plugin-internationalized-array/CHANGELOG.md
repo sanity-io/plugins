@@ -1,5 +1,15 @@
 # sanity-plugin-internationalized-array
 
+## 4.0.1
+
+### Patch Changes
+
+- [#548](https://github.com/sanity-io/plugins/pull/548) [`b942552`](https://github.com/sanity-io/plugins/commit/b942552b83117c95a73fddb21bd0453497fe883b) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Introduce `LANGUAGE_FIELD_NAME` constant for language identification
+
+  This is an internal refactor that centralizes how language identification is handled in internationalized array items. No user-facing changes - the plugin functions identically to before.
+
+  This prepares the codebase for a future migration from storing language IDs in `_key` to a dedicated `language` field.
+
 ## 4.0.0
 
 ### Major Changes
