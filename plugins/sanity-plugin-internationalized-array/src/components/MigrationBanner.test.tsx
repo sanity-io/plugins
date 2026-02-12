@@ -3,7 +3,7 @@ import {buildTheme} from '@sanity/ui/theme'
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
-import type {Language, Value} from '../types'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 import {MigrationBanner, type MigrationBannerProps} from './MigrationBanner'
 
@@ -20,21 +20,22 @@ const testLanguages: Language[] = [
 ]
 
 // Helper to create old format value (language in _key, no language field)
-function createOldFormatValue(languageId: string, content?: unknown): Value {
+function createOldFormatValue(languageId: string, content?: unknown): InternationalizedArrayItem {
   // Cast needed because Value type now requires language field
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion - Cast needed because Value type now requires language field
   return {
     _key: languageId,
     value: content,
-  } as Value
+  } as InternationalizedArrayItem
 }
 
 // Helper to create new format value (random _key, language in dedicated field)
-function createNewFormatValue(languageId: string, content?: unknown): Value {
+function createNewFormatValue(languageId: string, content?: unknown): InternationalizedArrayItem {
   return {
     _key: `random-${languageId}-${Math.random().toString(36).slice(2)}`,
     language: languageId,
     value: content,
+    _type: 'internationalizedArrayStringValue',
   }
 }
 
@@ -225,7 +226,7 @@ describe('MigrationBanner', () => {
           _key: 'en',
           value: 'Hello',
           _type: 'internationalizedArrayStringValue',
-        } as unknown as Value,
+        } as unknown as InternationalizedArrayItem,
       ]
 
       const {onChange} = renderMigrationBanner({value})

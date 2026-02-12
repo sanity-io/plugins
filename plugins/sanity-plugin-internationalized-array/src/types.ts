@@ -38,6 +38,7 @@ export function isInternationalizedArrayItemType(
 export type InternationalizedArrayItem<T = unknown> = {
   _key: string
   value?: T
+  /** Language identifier (e.g., 'en', 'fr'). Added in v5. */
   language: string
   /**
    * string that starts with "internationalizedArray" and ends with "Value"
