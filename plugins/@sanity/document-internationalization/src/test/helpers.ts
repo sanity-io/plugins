@@ -1,5 +1,4 @@
-import type {SanityDocument} from 'sanity'
-
+import {createSchema, defineField, defineType, type SanityDocument} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
 import type {Language, Metadata, PluginConfigContext, TranslationReference} from '../types'
@@ -85,3 +84,19 @@ export function createMockMetadata(
     translations,
   }
 }
+
+export const schema = createSchema({
+  name: 'default',
+  types: [
+    defineType({
+      name: 'article',
+      type: 'document',
+      fields: [
+        defineField({
+          name: 'title',
+          type: 'string',
+        }),
+      ],
+    }),
+  ],
+})
