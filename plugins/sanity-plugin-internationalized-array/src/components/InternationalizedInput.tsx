@@ -135,7 +135,6 @@ export default function InternationalizedInput(
   }
 
   const {validation, value, onChange, readOnly} = inlineProps
-  console.log('validation', validation)
   // The parent array contains the languages from the plugin config
   const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
 
