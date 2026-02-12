@@ -267,6 +267,32 @@ describe('useDuplicateWithTranslationsAction', () => {
     })
   })
 
+  test('onHandle supports legacy translation items keyed by _key without language field', async () => {
+    const legacyTranslations = [createMockTranslation('en', 'doc-1')]
+    const metadata = createMockMetadata('meta-1', legacyTranslations)
+    mockTranslationMetadata.mockReturnValue({data: [metadata], loading: false})
+
+    const props = createActionProps()
+    const tx = mockClient.transaction()
+    const {result} = renderHook(() => useDuplicateWithTranslationsAction(props))
+
+    await act(async () => {
+      result.current.onHandle?.()
+    })
+
+    await waitFor(() => {
+      expect(tx.patch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          set: expect.objectContaining({
+            [`translations[_key == "en"].value._ref`]: expect.any(String),
+          }),
+        }),
+      )
+      expect(props.onComplete).toHaveBeenCalled()
+    })
+  })
+
   test('has static action property set to duplicate', () => {
     expect(useDuplicateWithTranslationsAction.action).toBe('duplicate')
   })

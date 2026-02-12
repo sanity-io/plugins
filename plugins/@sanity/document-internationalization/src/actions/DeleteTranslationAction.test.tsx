@@ -269,4 +269,50 @@ describe('DeleteTranslationAction', () => {
       )
     })
   })
+
+  test('onProceed unsets legacy translation references matched by _key', async () => {
+    const tx = mockClient.transaction()
+    const draft = createMockDocument('drafts.doc-1', 'en')
+    const props = createActionProps({draft})
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
+
+    act(() => {
+      result.current.onHandle?.()
+    })
+
+    const dialog = result.current.dialog as {
+      content: ReactElement<{setTranslations: (translations: unknown[]) => void}>
+      footer: ReactElement<{onProceed: () => void}>
+    }
+
+    const translations: MetadataDocument[] = [
+      {
+        _id: 'meta-1',
+        _type: 'translation.metadata',
+        schemaTypes: ['article'],
+        translations: [
+          {
+            _key: 'en',
+            _type: 'internationalizedArrayReferenceValue',
+            value: {_type: 'reference', _ref: 'doc-1'},
+          },
+        ],
+      },
+    ]
+
+    act(() => {
+      dialog.content.props.setTranslations(translations)
+    })
+
+    const updatedDialog = result.current.dialog as {
+      footer: ReactElement<{onProceed: () => void}>
+    }
+
+    await act(async () => {
+      updatedDialog.footer.props.onProceed()
+    })
+
+    expect(tx.patch).toHaveBeenCalledWith('meta-1', expect.any(Function))
+    expect(tx.commit).toHaveBeenCalled()
+  })
 })
