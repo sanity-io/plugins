@@ -25,11 +25,12 @@ describe('object schema factory', () => {
     expect(schema.type).toBe('object')
   })
 
-  test('includes a single "value" field', () => {
+  test('includes a "value" and "language" fields', () => {
     const schema = objectFactory({type: 'string'})
     const fields = schema.fields
-    expect(fields).toHaveLength(1)
+    expect(fields).toHaveLength(2)
     expect(fields[0]!.name).toBe('value')
+    expect(fields[1]!.name).toBe('language')
   })
 
   test('value field inherits the configured type for string types', () => {

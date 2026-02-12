@@ -255,6 +255,7 @@ describe('InternationalizedArray', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'en',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -374,11 +375,13 @@ describe('InternationalizedArray', () => {
       value: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
+          _key: expect.any(String),
           _type: 'internationalizedArrayStringValue',
           value: undefined,
         },
         {
           [LANGUAGE_FIELD_NAME]: 'fr',
+          _key: expect.any(String),
           _type: 'internationalizedArrayStringValue',
           value: undefined,
         },
@@ -434,6 +437,7 @@ describe('InternationalizedArray', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'en',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -445,6 +449,7 @@ describe('InternationalizedArray', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'fr',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],

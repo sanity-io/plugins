@@ -215,6 +215,7 @@ describe('internationalizedArrayFieldAction', () => {
           items: [
             {
               [LANGUAGE_FIELD_NAME]: 'en',
+              _key: expect.any(String),
               _type: 'internationalizedArrayStringValue',
             },
           ],
@@ -341,6 +342,7 @@ describe('internationalizedArrayFieldAction', () => {
           items: [
             {
               [LANGUAGE_FIELD_NAME]: 'fr',
+              _key: expect.any(String),
               _type: 'internationalizedArrayStringValue',
             },
           ],
@@ -353,6 +355,7 @@ describe('internationalizedArrayFieldAction', () => {
           items: [
             {
               [LANGUAGE_FIELD_NAME]: 'es',
+              _key: expect.any(String),
               _type: 'internationalizedArrayStringValue',
             },
           ],
@@ -365,6 +368,7 @@ describe('internationalizedArrayFieldAction', () => {
           items: [
             {
               [LANGUAGE_FIELD_NAME]: 'de',
+              _key: expect.any(String),
               _type: 'internationalizedArrayStringValue',
             },
           ],
