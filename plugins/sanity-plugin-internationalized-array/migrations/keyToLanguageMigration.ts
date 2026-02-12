@@ -21,7 +21,7 @@
  * 5. After the migration is complete, you can delete this file.
  */
 
-import {nanoid} from 'nanoid'
+import {randomKey} from '@sanity/util/content'
 import {defineMigration, set} from 'sanity/migrate'
 
 // Complete this with the document types you want to migrate
@@ -82,7 +82,7 @@ export default defineMigration({
 
       return set({
         ...node,
-        _key: nanoid(),
+        _key: randomKey(),
         [LANGUAGE_FIELD_NAME]: oldKey,
       })
     },
