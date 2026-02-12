@@ -1,22 +1,22 @@
-import {defineField, type FieldDefinition, type FieldProps} from 'sanity'
+import { defineField, type FieldDefinition, type FieldProps } from "sanity";
 
-import {createFieldName} from '../components/createFieldName'
-import InternationalizedInput from '../components/InternationalizedInput'
-import {LANGUAGE_FIELD_NAME} from '../constants'
+import { createFieldName } from "../components/createFieldName";
+import InternationalizedInput from "../components/InternationalizedInput";
+import { LANGUAGE_FIELD_NAME } from "../constants";
 
 type ObjectFactoryConfig = {
-  type: string | FieldDefinition
-}
+  type: string | FieldDefinition;
+};
 
 export default (config: ObjectFactoryConfig) => {
-  const {type} = config
-  const typeName = typeof type === `string` ? type : type.name
-  const objectName = createFieldName(typeName, true)
+  const { type } = config;
+  const typeName = typeof type === `string` ? type : type.name;
+  const objectName = createFieldName(typeName, true);
 
   return defineField({
     name: objectName,
     title: `Internationalized array ${typeName}`,
-    type: 'object',
+    type: "object",
     components: {
       // @ts-expect-error - fix typings
       item: InternationalizedInput,
@@ -28,26 +28,26 @@ export default (config: ObjectFactoryConfig) => {
         }),
     },
     fields: [
+      defineField({
+        ...(typeof type === "string" ? { type } : type),
+        name: "value",
+        components: {
+          field: (props: FieldProps) => props.renderDefault({ ...props, title: "" }),
+        },
+      }),
       // Hidden language field - stores the language identifier (e.g., 'en', 'fr')
       // This replaces the previous pattern of storing language in _key
       defineField({
-        name: 'language',
-        type: 'string',
+        name: "language",
+        type: "string",
         hidden: true,
-      }),
-      defineField({
-        ...(typeof type === 'string' ? {type} : type),
-        name: 'value',
-        components: {
-          field: (props: FieldProps) => props.renderDefault({...props, title: ''}),
-        },
       }),
     ],
     preview: {
       select: {
-        title: 'value',
+        title: "value",
         subtitle: LANGUAGE_FIELD_NAME,
       },
     },
-  })
-}
+  });
+};

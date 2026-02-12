@@ -136,6 +136,7 @@ describe('DocumentAddButtons', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'fr',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -185,6 +186,7 @@ describe('DocumentAddButtons', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'fr',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -201,6 +203,7 @@ describe('DocumentAddButtons', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'fr',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
