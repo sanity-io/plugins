@@ -112,8 +112,7 @@ describe('DocumentAddButtons', () => {
       title: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
-          // @ts-expect-error - LANGUAGE_FIELD_NAME is '_key' in v4.x, 'language' in v5.x
-          ...(LANGUAGE_FIELD_NAME === 'language' ? {_key: 'random-key'} : {}),
+          _key: 'random-key',
           _type: 'internationalizedArrayStringValue',
           value: 'Hello',
         },
@@ -156,8 +155,7 @@ describe('DocumentAddButtons', () => {
       title: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
-          // @ts-expect-error - LANGUAGE_FIELD_NAME is '_key' in v4.x, 'language' in v5.x
-          ...(LANGUAGE_FIELD_NAME === 'language' ? {_key: 'random-key'} : {}),
+          _key: 'random-key',
           _type: 'internationalizedArrayStringValue',
           value: 'Hello',
         },
@@ -165,8 +163,7 @@ describe('DocumentAddButtons', () => {
       description: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
-          // @ts-expect-error - LANGUAGE_FIELD_NAME is '_key' in v4.x, 'language' in v5.x
-          ...(LANGUAGE_FIELD_NAME === 'language' ? {_key: 'random-key'} : {}),
+          _key: 'random-key',
           _type: 'internationalizedArrayStringValue',
           value: 'Description',
         },
@@ -223,8 +220,7 @@ describe('DocumentAddButtons', () => {
       title: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
-          // @ts-expect-error - LANGUAGE_FIELD_NAME is '_key' in v4.x, 'language' in v5.x
-          ...(LANGUAGE_FIELD_NAME === 'language' ? {_key: 'random-key'} : {}),
+          _key: 'random-key',
           _type: 'internationalizedArrayStringValue',
           value: 'Hello',
         },

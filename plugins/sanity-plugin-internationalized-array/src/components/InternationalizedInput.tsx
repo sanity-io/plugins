@@ -222,8 +222,8 @@ export default function InternationalizedInput(
     [props.inputProps, props.value, wrappedOnChange],
   )
 
-  const {validation, value, readOnly} = inlineProps
 
+  const {validation, value, readOnly} = inlineProps
   // The parent array contains the languages from the plugin config
   const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
 

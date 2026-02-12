@@ -1,8 +1,8 @@
 import {describe, expect, test, vi} from 'vitest'
 
-import {LANGUAGE_FIELD_NAME} from '../constants'
-import {MOCK_LANGUAGES, createValue, createValues} from '../test/helpers'
 import type {Language} from '../types'
+
+import {MOCK_LANGUAGES, createValue, createValues} from '../test/helpers'
 
 // Mock the React component to avoid transitive import issues
 // (InternationalizedArray imports from sanity/structure, @sanity/language-filter, etc.)
@@ -104,10 +104,6 @@ describe('array schema factory', () => {
       // When LANGUAGE_FIELD_NAME is '_key', _key must be falsy for the early return.
       // When LANGUAGE_FIELD_NAME is 'language', the language field is absent.
       const item: Record<string, unknown> = {_key: 'temp-key'}
-      if (LANGUAGE_FIELD_NAME === '_key') {
-        // Delete _key to be empty so the early return triggers
-        delete item['_key']
-      }
       expect(await validate([item], context)).toBe(true)
     })
 

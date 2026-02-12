@@ -4,13 +4,13 @@ import {randomKey} from '@sanity/util/content'
 import {type ReactElement, useCallback, useMemo} from 'react'
 import {set} from 'sanity'
 
-import type {Language, Value} from '../types'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
 
 export type MigrationBannerProps = {
   /** Current array value */
-  value: Value[] | undefined
+  value: InternationalizedArrayItem[] | undefined
   /** Registered languages from plugin config */
   languages: Language[]
   /** onChange handler to update the field value */
@@ -136,7 +136,7 @@ export function MigrationBanner({
  * Useful for conditional logic outside of the component.
  */
 export function hasItemsNeedingMigration(
-  value: Value[] | undefined,
+  value: InternationalizedArrayItem[] | undefined,
   languages: Language[],
 ): boolean {
   if (!value?.length || !languages?.length) {

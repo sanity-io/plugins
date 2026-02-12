@@ -25,8 +25,8 @@ export function createValue(
 ): InternationalizedArrayItem {
   return {
     _type: opts?.type ?? 'internationalizedArrayStringValue',
+    _key: `key-${languageId}`,
     [LANGUAGE_FIELD_NAME]: languageId,
-    ...(LANGUAGE_FIELD_NAME === '_key' ? {} : {_key: `key-${languageId}`}),
     value: opts?.value,
   }
 }
@@ -37,7 +37,7 @@ export function createValue(
 export function createValues(
   languageIds: string[],
   opts?: {type?: InternationalizedArrayItem['_type']; value?: unknown},
-): (InternationalizedArrayItem & Record<string, unknown>)[] {
+): InternationalizedArrayItem[] {
   return languageIds.map((id) => createValue(id, opts))
 }
 
