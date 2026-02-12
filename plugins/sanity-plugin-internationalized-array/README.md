@@ -382,6 +382,8 @@ If you wish, later this queries can be update to only use the "language" field a
 
 If you prefer a UI flow, the plugin also shows an in‑Studio migration banner that can update old-format items on demand, but we recommend running the migration to update all your items at once.
 
+**If you use [@sanity/document-internationalization](https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/document-internationalization):** Include `'translation.metadata'` in your migration's document types so that the `translations` array on metadata documents is migrated.
+
 ## Migrate from objects to arrays
 
 [See the migration script](./migrations/transformObjectToArray.ts) inside `./migrations/transformObjectToArray.ts` of this plugin.

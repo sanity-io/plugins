@@ -24,8 +24,10 @@
 import {randomKey} from '@sanity/util/content'
 import {defineMigration, set} from 'sanity/migrate'
 
-// Complete this with the document types you want to migrate
-const DOCUMENT_TYPES: string[] = ['post', 'page'] // Example: ['post', 'page']
+// Complete this with the document types you want to migrate.
+// If you use @sanity/document-internationalization, include 'translation.metadata' so that
+// the translations array on metadata documents is migrated.
+const DOCUMENT_TYPES: string[] = ['post', 'page', 'translation.metadata'] // Example: ['post', 'page']
 
 /**
  * The property which will be used to store the language identifier from v5
