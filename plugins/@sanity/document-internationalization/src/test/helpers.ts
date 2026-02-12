@@ -44,6 +44,9 @@ export function createMockDocument(
 
 /**
  * Creates a mock translation reference.
+ *
+ * Note: Currently uses `_key: languageId` (pre-migration format).
+ * When migrating to `{_key: random, language: languageId}`, update this factory.
  */
 export function createMockTranslation(
   languageId: string,
