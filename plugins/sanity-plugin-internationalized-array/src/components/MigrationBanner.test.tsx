@@ -7,9 +7,9 @@ import type {Language, Value} from '../types'
 
 import {MigrationBanner, type MigrationBannerProps} from './MigrationBanner'
 
-// Mock nanoid for deterministic _key generation
-vi.mock('nanoid', () => ({
-  nanoid: vi.fn(() => 'mocked-nanoid-key'),
+// Mock @sanity/uuid for deterministic _key generation
+vi.mock('@sanity/util/content', () => ({
+  randomKey: vi.fn(() => 'mocked-randomKey-key'),
 }))
 
 // Test fixtures
@@ -195,7 +195,7 @@ describe('MigrationBanner', () => {
 
       // Verify migration: _key changed to mocked value, language field set to old _key
       expect(updatedValue).toHaveLength(1)
-      expect(updatedValue[0]._key).toBe('mocked-nanoid-key')
+      expect(updatedValue[0]._key).toBe('mocked-randomKey-key')
       expect(updatedValue[0].language).toBe('en')
       expect(updatedValue[0].value).toBe('Hello')
     })
@@ -260,7 +260,7 @@ describe('MigrationBanner', () => {
       expect(updatedValue[0].language).toBe('en')
 
       // Second item (old format) should be migrated
-      expect(updatedValue[1]._key).toBe('mocked-nanoid-key')
+      expect(updatedValue[1]._key).toBe('mocked-randomKey-key')
       expect(updatedValue[1].language).toBe('fr')
     })
   })

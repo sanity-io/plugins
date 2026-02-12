@@ -1,4 +1,4 @@
-import {nanoid} from 'nanoid'
+import {randomKey} from '@sanity/util/content'
 import {type FormInsertPatch, insert, type Path} from 'sanity'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
@@ -59,14 +59,14 @@ export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
           }
           return true
         })
-        .map((id) => Object.assign({}, itemBase, {_key: nanoid(), [LANGUAGE_FIELD_NAME]: id}))
+        .map((id) => Object.assign({}, itemBase, {_key: randomKey(), [LANGUAGE_FIELD_NAME]: id}))
     }
 
     return filteredLanguages
       .filter((language) => {
         return value?.length ? !value.find((v) => v[LANGUAGE_FIELD_NAME] === language.id) : true
       })
-      .map((language) => Object.assign({}, itemBase, {_key: nanoid(), [LANGUAGE_FIELD_NAME]: language.id}))
+      .map((language) => Object.assign({}, itemBase, {_key: randomKey(), [LANGUAGE_FIELD_NAME]: language.id}))
   }
   const newItems = getNewItems()
 
