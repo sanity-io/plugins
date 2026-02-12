@@ -132,11 +132,11 @@ describe('LanguagePatch', () => {
   test('shows error toast on patch failure', async () => {
     mockClient = createMockSanityClient()
     const patchMock = mockClient.patch('any')
-    patchMock.commit.mockRejectedValueOnce(new Error('Network error'))
+    vi.mocked(patchMock.commit).mockRejectedValueOnce(new Error('Network error'))
 
     // Re-mock useClient to use the updated client
     const {useClient} = await import('sanity')
-    vi.mocked(useClient).mockReturnValue(mockClient as unknown as ReturnType<typeof useClient>)
+    vi.mocked(useClient).mockReturnValue(mockClient)
 
     const source = createMockDocument('doc-1', 'en')
     render(<LanguagePatch language={mockLanguage} source={source} disabled={false} />, {

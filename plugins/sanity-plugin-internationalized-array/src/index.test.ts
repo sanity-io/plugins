@@ -13,6 +13,7 @@ test('package exports', {timeout: 30_000}, async () => {
       ".": {
         "clear": "function",
         "internationalizedArray": "function",
+        "LANGUAGE_FIELD_NAME": "string",
       },
     }
   `)

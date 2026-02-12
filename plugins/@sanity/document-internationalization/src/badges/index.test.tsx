@@ -131,13 +131,12 @@ describe('LanguageBadge', () => {
     expect(result!.title).toBe('German')
   })
 
-  test('returns null when supportedLanguages is not an array', () => {
+  test('returns badge with raw language ID when language is not found in supportedLanguages', () => {
     vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
       ...MOCK_PLUGIN_CONFIG,
-      supportedLanguages: MOCK_LANGUAGES, // This is an array, so let's test with a language not in it
+      supportedLanguages: MOCK_LANGUAGES,
     })
 
-    // Language exists but not in supported list - should still return badge with raw ID
     const props = createBadgeProps({
       draft: {_id: 'doc-1', _type: 'article', language: 'zh'},
     })
@@ -145,5 +144,22 @@ describe('LanguageBadge', () => {
 
     expect(result).not.toBeNull()
     expect(result!.label).toBe('zh')
+  })
+
+  test('returns badge with raw languageId and no title when supportedLanguages is not an array', () => {
+    vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
+      ...MOCK_PLUGIN_CONFIG,
+      // Simulate async languages that have not resolved yet (non-array at runtime)
+      supportedLanguages: (() => Promise.resolve([])) as unknown as typeof MOCK_LANGUAGES,
+    })
+
+    const props = createBadgeProps({
+      draft: {_id: 'doc-1', _type: 'article', language: 'en'},
+    })
+    const result = LanguageBadge(props)
+
+    expect(result).not.toBeNull()
+    expect(result!.label).toBe('en')
+    expect(result!.title).toBeUndefined()
   })
 })

@@ -13,6 +13,11 @@ type LanguagePatchProps = {
   disabled: boolean
 }
 
+/**
+ * Button component that patches the current document's language field to
+ * the selected language. Displays the language name and ID badge, and shows
+ * a success or error toast after the patch operation completes.
+ */
 export default function LanguagePatch(props: LanguagePatchProps) {
   const {language, source} = props
   const {apiVersion, languageField} = useDocumentInternationalizationContext()

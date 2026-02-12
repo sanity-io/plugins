@@ -183,4 +183,65 @@ describe('LanguageManage', () => {
       expect(mockClient.transaction).toHaveBeenCalled()
     })
   })
+
+  test('creates metadata document with source reference and schema type', async () => {
+    vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
+      ...MOCK_PLUGIN_CONFIG,
+      allowCreateMetaDoc: true,
+    })
+
+    render(
+      <LanguageManage
+        id={undefined}
+        metadataId="meta-1"
+        schemaType={mockSchemaType}
+        documentId="doc-1"
+        sourceLanguageId="en"
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => {
+      const tx = mockClient.transaction()
+      expect(tx.createIfNotExists).toHaveBeenCalledWith(
+        expect.objectContaining({
+          _id: 'meta-1',
+          _type: 'translation.metadata',
+          schemaTypes: ['article'],
+          translations: expect.arrayContaining([
+            expect.objectContaining({
+              _key: 'en',
+              value: expect.objectContaining({_ref: 'doc-1'}),
+            }),
+          ]),
+        }),
+      )
+    })
+  })
+
+  test('opens created metadata in new pane after successful creation', async () => {
+    vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
+      ...MOCK_PLUGIN_CONFIG,
+      allowCreateMetaDoc: true,
+    })
+
+    render(
+      <LanguageManage
+        id={undefined}
+        metadataId="meta-1"
+        schemaType={mockSchemaType}
+        documentId="doc-1"
+        sourceLanguageId="en"
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => {
+      expect(mockOpenInNewPane).toHaveBeenCalled()
+    })
+  })
 })

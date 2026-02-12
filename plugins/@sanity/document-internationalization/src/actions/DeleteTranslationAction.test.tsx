@@ -1,12 +1,16 @@
+import type {ReactElement} from 'react'
 import type {DocumentActionProps, SanityDocument} from 'sanity'
 
-import {renderHook} from '@testing-library/react'
+import {act, renderHook, waitFor} from '@testing-library/react'
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
+
+import type {MetadataDocument} from '../types'
 
 import {useDocumentInternationalizationContext} from '../components/DocumentInternationalizationContext'
 import {createMockSanityClient} from '../test/component-helpers'
 import {createMockDocument, MOCK_PLUGIN_CONFIG} from '../test/helpers'
-import {DeleteTranslationAction} from './DeleteTranslationAction'
+import {useDeleteTranslationAction} from './DeleteTranslationAction'
 
 // Mock dependencies
 vi.mock('../components/DocumentInternationalizationContext', () => ({
@@ -65,37 +69,21 @@ describe('DeleteTranslationAction', () => {
     vi.clearAllMocks()
   })
 
-  test('returns action with correct label', () => {
+  test('returns action with correct label, icon and tone', () => {
     const draft = createMockDocument('drafts.doc-1', 'en')
     const props = createActionProps({draft})
 
-    const {result} = renderHook(() => DeleteTranslationAction(props))
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
 
     expect(result.current.label).toBe('Delete translation...')
-  })
-
-  test('returns action with trash icon', () => {
-    const draft = createMockDocument('drafts.doc-1', 'en')
-    const props = createActionProps({draft})
-
-    const {result} = renderHook(() => DeleteTranslationAction(props))
-
     expect(result.current.icon).toBeDefined()
-  })
-
-  test('returns action with critical tone', () => {
-    const draft = createMockDocument('drafts.doc-1', 'en')
-    const props = createActionProps({draft})
-
-    const {result} = renderHook(() => DeleteTranslationAction(props))
-
     expect(result.current.tone).toBe('critical')
   })
 
   test('disables action when no document exists', () => {
     const props = createActionProps({draft: null, published: null})
 
-    const {result} = renderHook(() => DeleteTranslationAction(props))
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
 
     expect(result.current.disabled).toBe(true)
   })
@@ -111,7 +99,7 @@ describe('DeleteTranslationAction', () => {
     }
     const props = createActionProps({draft})
 
-    const {result} = renderHook(() => DeleteTranslationAction(props))
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
 
     expect(result.current.disabled).toBe(true)
   })
@@ -120,7 +108,7 @@ describe('DeleteTranslationAction', () => {
     const draft = createMockDocument('drafts.doc-1', 'en')
     const props = createActionProps({draft})
 
-    const {result} = renderHook(() => DeleteTranslationAction(props))
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
 
     expect(result.current.disabled).toBe(false)
   })
@@ -129,7 +117,7 @@ describe('DeleteTranslationAction', () => {
     const published = createMockDocument('doc-1', 'en')
     const props = createActionProps({draft: null, published})
 
-    const {result} = renderHook(() => DeleteTranslationAction(props))
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
 
     expect(result.current.disabled).toBe(false)
   })
@@ -139,7 +127,7 @@ describe('DeleteTranslationAction', () => {
     const published = createMockDocument('doc-1', 'en')
     const props = createActionProps({draft, published})
 
-    const {result} = renderHook(() => DeleteTranslationAction(props))
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
 
     expect(result.current.disabled).toBe(false)
   })
@@ -160,7 +148,7 @@ describe('DeleteTranslationAction', () => {
     }
     const props = createActionProps({draft})
 
-    const {result} = renderHook(() => DeleteTranslationAction(props))
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
 
     expect(result.current.disabled).toBe(false)
   })
@@ -176,7 +164,7 @@ describe('DeleteTranslationAction', () => {
     }
     const props = createActionProps({draft})
 
-    const {result} = renderHook(() => DeleteTranslationAction(props))
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
 
     expect(result.current.disabled).toBe(true)
   })
@@ -185,8 +173,99 @@ describe('DeleteTranslationAction', () => {
     const draft = createMockDocument('drafts.doc-1', 'en')
     const props = createActionProps({draft})
 
-    const {result} = renderHook(() => DeleteTranslationAction(props))
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
 
     expect(typeof result.current.onHandle).toBe('function')
+  })
+
+  test('onProceed deletes document when there are no translation references', async () => {
+    const tx = mockClient.transaction()
+    const draft = createMockDocument('drafts.doc-1', 'en')
+    const props = createActionProps({draft})
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
+
+    act(() => {
+      result.current.onHandle?.()
+    })
+
+    const dialog = result.current.dialog as {
+      footer: ReactElement<{onProceed: () => void}>
+    }
+
+    await act(async () => {
+      dialog.footer.props.onProceed()
+    })
+
+    expect(tx.delete).toHaveBeenCalledWith('doc-1')
+    expect(tx.delete).toHaveBeenCalledWith('drafts.doc-1')
+    expect(tx.patch).not.toHaveBeenCalled()
+    expect(tx.commit).toHaveBeenCalled()
+
+    await waitFor(() => {
+      expect(mockToastPush).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: 'success',
+          title: 'Document deleted',
+        }),
+      )
+    })
+  })
+
+  test('onProceed unsets translation references when metadata translations exist', async () => {
+    const tx = mockClient.transaction()
+    const draft = createMockDocument('drafts.doc-1', 'en')
+    const props = createActionProps({draft})
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
+
+    act(() => {
+      result.current.onHandle?.()
+    })
+
+    const dialog = result.current.dialog as {
+      content: ReactElement<{setTranslations: (translations: unknown[]) => void}>
+      footer: ReactElement<{onProceed: () => void}>
+    }
+
+    const translations: MetadataDocument[] = [
+      {
+        _id: 'meta-1',
+        _type: 'translation.metadata',
+        schemaTypes: ['article'],
+        translations: [
+          {
+            [LANGUAGE_FIELD_NAME]: 'en',
+            _type: 'internationalizedArrayReferenceValue',
+            value: {_type: 'reference', _ref: 'doc-1'},
+          },
+        ],
+      },
+    ]
+
+    act(() => {
+      dialog.content.props.setTranslations(translations)
+    })
+
+    const updatedDialog = result.current.dialog as {
+      footer: ReactElement<{onProceed: () => void}>
+    }
+
+    await act(async () => {
+      updatedDialog.footer.props.onProceed()
+    })
+
+    expect(tx.patch).toHaveBeenCalledWith('meta-1', expect.any(Function))
+    expect(tx.delete).not.toHaveBeenCalledWith('doc-1')
+    expect(tx.delete).not.toHaveBeenCalledWith('drafts.doc-1')
+    expect(tx.commit).toHaveBeenCalled()
+
+    await waitFor(() => {
+      expect(mockToastPush).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: 'success',
+          title: 'Translation reference unset',
+          description: 'The document can now be deleted',
+        }),
+      )
+    })
   })
 })

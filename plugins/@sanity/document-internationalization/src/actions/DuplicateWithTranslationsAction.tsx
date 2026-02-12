@@ -5,7 +5,6 @@ import {useCallback, useMemo, useState} from 'react'
 import {filter, firstValueFrom} from 'rxjs'
 import {
   DEFAULT_STUDIO_CLIENT_OPTIONS,
-  type DocumentActionComponent,
   type Id,
   InsufficientPermissionsMessage,
   type PatchOperations,
@@ -15,7 +14,10 @@ import {
   useDocumentPairPermissions,
   useDocumentStore,
   useTranslation,
+  type DocumentActionProps,
+  type DocumentActionDescription,
 } from 'sanity'
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {useRouter} from 'sanity/router'
 import {structureLocaleNamespace} from 'sanity/structure'
 
@@ -40,13 +42,19 @@ const DISABLED_REASON_KEY = {
   NOT_READY: 'action.duplicate.disabled.not-ready',
 }
 
-/* oxlint-disable typescript-eslint/no-deprecated -- onComplete is needed for backwards compatibility */
-export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
+/**
+ * Optional Document action that duplicates a document along with all its translations
+ * and the associated metadata document. The workflow duplicates each translated
+ * document, duplicates the metadata document, patches the new metadata to
+ * reference the new translation copies, and navigates to the duplicated document.
+ * Disabled when the user lacks permissions, metadata is missing or ambiguous,
+ * or the underlying duplicate operation is unavailable.
+ */
+export const useDuplicateWithTranslationsAction = ({
   id,
   type,
   onComplete,
-}) => {
-  /* oxlint-enable typescript-eslint/no-deprecated */
+}: DocumentActionProps): DocumentActionDescription => {
   const documentStore = useDocumentStore()
   const {duplicate} = useDocumentOperation(id, type)
   const {navigateIntent} = useRouter()
@@ -86,7 +94,7 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
       await Promise.all(
         translationsArray.map(async (translation) => {
           const dupeId = uuid()
-          const locale = translation._key
+          const locale = translation[LANGUAGE_FIELD_NAME]
           const docId = translation.value?._ref
 
           if (!docId) {
@@ -140,10 +148,15 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
       // 3. Patch the duplicated metadata document to update the references
       const patch: PatchOperations = {
         set: Object.fromEntries(
-          Array.from(translations.entries()).map(([locale, documentId]) => [
-            `${TRANSLATIONS_ARRAY_NAME}[_key == "${locale}"].value._ref`,
-            documentId,
-          ]),
+          Array.from(translations.entries()).map(([locale, documentId]) => {
+            const translationItemKey = metadataDocument.translations.find(
+              (item) => item[LANGUAGE_FIELD_NAME] === locale,
+            )?._key
+            return [
+              `${TRANSLATIONS_ARRAY_NAME}[_key == "${translationItemKey}"].value._ref`,
+              documentId,
+            ]
+          }),
         ),
       }
 
@@ -229,5 +242,15 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
   ])
 }
 
-DuplicateWithTranslationsAction.action = 'duplicate'
-DuplicateWithTranslationsAction.displayName = 'DuplicateWithTranslationsAction'
+useDuplicateWithTranslationsAction.action = 'duplicate'
+useDuplicateWithTranslationsAction.displayName = 'DuplicateWithTranslationsAction'
+
+/**
+ * @deprecated use useDuplicateWithTranslationsAction instead
+ * Will be removed in the next major version
+ */
+export const DuplicateWithTranslationsAction = (
+  props: DocumentActionProps,
+): DocumentActionDescription => {
+  return useDuplicateWithTranslationsAction(props)
+}

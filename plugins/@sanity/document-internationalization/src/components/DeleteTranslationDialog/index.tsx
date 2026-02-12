@@ -4,23 +4,28 @@ import {Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {useEffect, useMemo} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
+import type {MetadataDocument} from '../../types'
+
 import DocumentPreview from './DocumentPreview'
 import {separateReferences} from './separateReferences'
 
 type DeleteTranslationDialogProps = {
   doc: SanityDocument
   documentId: string
-  setTranslations: (translations: SanityDocument[]) => void
+  setTranslations: (translations: MetadataDocument[]) => void
 }
 
 export default function DeleteTranslationDialog(props: DeleteTranslationDialogProps) {
   const {doc, documentId, setTranslations} = props
 
   // Get all references and check if any of them are translations metadata
-  const {data, loading} = useListeningQuery<SanityDocument[]>(`*[references($id)]{_id, _type}`, {
-    params: {id: documentId},
-    initialValue: [],
-  })
+  const {data, loading} = useListeningQuery<SanityDocument[]>(
+    `*[references($id)]{_id, _type, translations}`,
+    {
+      params: {id: documentId},
+      initialValue: [],
+    },
+  )
   const {translations, otherReferences} = useMemo(
     // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     () => separateReferences(data as SanityDocument[] | null),
@@ -28,7 +33,7 @@ export default function DeleteTranslationDialog(props: DeleteTranslationDialogPr
   )
 
   useEffect(() => {
-    setTranslations(translations)
+    setTranslations(translations as MetadataDocument[])
   }, [setTranslations, translations])
 
   if (loading) {

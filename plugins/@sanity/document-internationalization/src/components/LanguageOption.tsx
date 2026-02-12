@@ -24,6 +24,13 @@ type LanguageOptionProps = {
   sourceLanguageId?: string
 }
 
+/**
+ * Button component representing a single language in the translations menu.
+ * Displays the language name, an ID badge, and a contextual icon: checkmark
+ * for the current language, split-vertical for existing translations, or add
+ * for new translations. Clicking opens an existing translation in a new pane,
+ * or creates a new translation document via a Sanity transaction.
+ */
 export default function LanguageOption(props: LanguageOptionProps) {
   const {
     language,

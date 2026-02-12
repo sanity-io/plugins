@@ -2,7 +2,8 @@ import {TrashIcon} from '@sanity/icons'
 import {type ButtonTone, useToast} from '@sanity/ui'
 import {useCallback, useMemo, useState} from 'react'
 import {
-  type DocumentActionComponent,
+  type DocumentActionDescription,
+  type DocumentActionProps,
   type KeyedObject,
   type Reference,
   type TypedObject,
@@ -16,7 +17,14 @@ type TranslationReference = TypedObject &
     value: Reference
   }
 
-export const DeleteMetadataAction: DocumentActionComponent = (props) => {
+/**
+ * Document action that deletes a translation metadata document along with all
+ * its referenced translation documents. Opens a confirmation dialog showing
+ * how many translations will be deleted. Executes a single transaction that
+ * unsets the translations array, deletes each referenced document (both
+ * published and draft), and finally deletes the metadata document itself.
+ */
+export const useDeleteMetadataAction = (props: DocumentActionProps): DocumentActionDescription => {
   const {id: documentId, published, draft} = props
   const doc = draft || published
 

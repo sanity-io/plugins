@@ -3,6 +3,13 @@ import {defineField, defineType, type DocumentDefinition, type FieldDefinition} 
 
 import {METADATA_SCHEMA_NAME, TRANSLATIONS_ARRAY_NAME} from '../../constants'
 
+/**
+ * Creates the `translation.metadata` document schema definition. This schema
+ * type stores the array of translation references linking all language versions
+ * of a document together, along with the allowed schema types and any custom
+ * metadata fields provided by the plugin consumer. The document uses `liveEdit`
+ * so changes are published immediately without drafts.
+ */
 export default (schemaTypes: string[], metadataFields: FieldDefinition[]): DocumentDefinition =>
   defineType({
     type: 'document',

@@ -3,7 +3,7 @@ import type {ObjectSchemaType} from 'sanity'
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
-import type {Language, Metadata} from '../types'
+import type {Language} from '../types'
 
 import {createMockSanityClient, ThemeWrapper} from '../test/component-helpers'
 import {
@@ -49,6 +49,12 @@ vi.mock('@sanity/ui', async (importOriginal) => {
 // Mock @sanity/uuid
 vi.mock('@sanity/uuid', () => ({
   uuid: () => 'mock-uuid-123',
+}))
+
+// Mock removeExcludedPaths to return the document unchanged
+// (avoids dependency on @sanity/mutator internals in component tests)
+vi.mock('../utils/excludePaths', () => ({
+  removeExcludedPaths: vi.fn((doc: unknown) => doc),
 }))
 
 const mockSchemaType: ObjectSchemaType = {
@@ -350,7 +356,9 @@ describe('LanguageOption', () => {
   test('shows error toast on transaction failure', async () => {
     mockClient = createMockSanityClient()
     const transactionMock = mockClient.transaction()
-    transactionMock.commit.mockRejectedValueOnce(new Error('Transaction failed'))
+    vi.mocked(transactionMock.commit).mockRejectedValueOnce(
+      new Error('Transaction failed - MockTestError'),
+    )
 
     const {useClient} = await import('sanity')
     vi.mocked(useClient).mockReturnValue(mockClient as unknown as ReturnType<typeof useClient>)
@@ -377,6 +385,117 @@ describe('LanguageOption', () => {
         expect.objectContaining({
           status: 'error',
           title: 'Error creating translation',
+        }),
+      )
+    })
+  })
+
+  test('creates translation document with correct language and draft ID', async () => {
+    mockClient = createMockSanityClient()
+    const transactionMock = mockClient.transaction()
+
+    const {useClient} = await import('sanity')
+    vi.mocked(useClient).mockReturnValue(mockClient as unknown as ReturnType<typeof useClient>)
+
+    const source = createMockDocument('doc-1', 'en')
+    render(
+      <LanguageOption
+        language={mockLanguage}
+        schemaType={mockSchemaType}
+        documentId="doc-1"
+        disabled={false}
+        current={false}
+        source={source}
+        metadataId="meta-1"
+        sourceLanguageId="en"
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => {
+      expect(transactionMock.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          _id: 'drafts.mock-uuid-123',
+          _type: 'article',
+          language: 'fr',
+        }),
+      )
+    })
+  })
+
+  test('creates metadata document with source reference in transaction', async () => {
+    mockClient = createMockSanityClient()
+    const transactionMock = mockClient.transaction()
+
+    const {useClient} = await import('sanity')
+    vi.mocked(useClient).mockReturnValue(mockClient as unknown as ReturnType<typeof useClient>)
+
+    const source = createMockDocument('doc-1', 'en')
+    render(
+      <LanguageOption
+        language={mockLanguage}
+        schemaType={mockSchemaType}
+        documentId="doc-1"
+        disabled={false}
+        current={false}
+        source={source}
+        metadataId="meta-1"
+        sourceLanguageId="en"
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => {
+      expect(transactionMock.createIfNotExists).toHaveBeenCalledWith(
+        expect.objectContaining({
+          _id: 'meta-1',
+          _type: 'translation.metadata',
+          schemaTypes: ['article'],
+          translations: expect.arrayContaining([
+            expect.objectContaining({
+              _key: 'en',
+              value: expect.objectContaining({_ref: 'doc-1'}),
+            }),
+          ]),
+        }),
+      )
+    })
+  })
+
+  test('executes callback after successful translation creation', async () => {
+    const mockCallback = vi.fn().mockResolvedValue(undefined)
+    vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
+      ...MOCK_PLUGIN_CONFIG,
+      callback: mockCallback,
+    })
+
+    const source = createMockDocument('doc-1', 'en')
+    render(
+      <LanguageOption
+        language={mockLanguage}
+        schemaType={mockSchemaType}
+        documentId="doc-1"
+        disabled={false}
+        current={false}
+        source={source}
+        metadataId="meta-1"
+        sourceLanguageId="en"
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => {
+      expect(mockCallback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sourceLanguageId: 'en',
+          destinationLanguageId: 'fr',
+          metaDocumentId: 'meta-1',
         }),
       )
     })
