@@ -1,8 +1,6 @@
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
-
+import {randomKey} from '@sanity/util/content'
 import type {TranslationReference} from '../types'
-// TODO: Update in next major version when we migrate to the new format
-// import { createRandomKey } from '@sanity/util/content';
 
 /**
  * Creates a translation reference object used in metadata documents to link
@@ -17,9 +15,8 @@ export function createReference(
   strengthenOnPublish: boolean = true,
 ): TranslationReference {
   return {
-    // TODO: Update in next major version when we migrate to the new format
-    // ...(LANGUAGE_FIELD_NAME === "_key"?  {} : {_key: createRandomKey()} )
     [LANGUAGE_FIELD_NAME]: language,
+    _key: randomKey(),
     _type: 'internationalizedArrayReferenceValue',
     value: {
       _type: 'reference',
