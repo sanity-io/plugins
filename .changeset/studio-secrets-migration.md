@@ -14,6 +14,5 @@ Port @sanity/studio-secrets plugin to the plugins monorepo
 - Fixed floating promises with proper void operator usage
 - Replaced deprecated `React.FormEvent` with `ChangeEvent`
 - Replaced `JSX.Element` return type with `ReactElement`
-- Removed the `useEffect` that was setting state synchronously (React Compiler requirement)
-- Removed eslint-disable comments and unnecessary type assertions
+- Removed eslint-disable comments (oxlint does not require them)
 - Updated `@sanity/ui` to v2
