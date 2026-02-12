@@ -1,0 +1,81 @@
+import type {SanityDocument} from 'sanity'
+
+import type {Language, Metadata, PluginConfigContext, TranslationReference} from '../types'
+
+import {DEFAULT_CONFIG} from '../constants'
+
+/**
+ * Shared mock language definitions for tests.
+ */
+export const MOCK_LANGUAGES: Language[] = [
+  {id: 'en', title: 'English'},
+  {id: 'fr', title: 'French'},
+  {id: 'es', title: 'Spanish'},
+  {id: 'de', title: 'German'},
+]
+
+/**
+ * Default plugin config for tests.
+ */
+export const MOCK_PLUGIN_CONFIG: PluginConfigContext = {
+  ...DEFAULT_CONFIG,
+  supportedLanguages: MOCK_LANGUAGES,
+  schemaTypes: ['article', 'page'],
+}
+
+/**
+ * Creates a mock document with the given language.
+ */
+export function createMockDocument(
+  id: string,
+  language: string,
+  opts?: {type?: string; languageField?: string},
+): SanityDocument {
+  const languageField = opts?.languageField ?? 'language'
+  return {
+    _id: id,
+    _type: opts?.type ?? 'article',
+    _rev: 'test-rev',
+    _createdAt: '2024-01-01T00:00:00Z',
+    _updatedAt: '2024-01-01T00:00:00Z',
+    [languageField]: language,
+  }
+}
+
+/**
+ * Creates a mock translation reference.
+ */
+export function createMockTranslation(
+  languageId: string,
+  ref: string,
+  opts?: {weak?: boolean; strengthenOnPublish?: boolean; type?: string},
+): TranslationReference {
+  const strengthenOnPublish = opts?.strengthenOnPublish ?? true
+  const type = opts?.type ?? 'article'
+
+  return {
+    _key: languageId,
+    _type: 'internationalizedArrayReferenceValue',
+    value: {
+      _type: 'reference',
+      _ref: ref,
+      _weak: opts?.weak ?? true,
+      ...(strengthenOnPublish ? {_strengthenOnPublish: {type}} : {}),
+    },
+  }
+}
+
+/**
+ * Creates a mock metadata document with translations.
+ */
+export function createMockMetadata(
+  id: string,
+  translations: TranslationReference[],
+  opts?: {createdAt?: string},
+): Metadata {
+  return {
+    _id: id,
+    _createdAt: opts?.createdAt ?? '2024-01-01T00:00:00Z',
+    translations,
+  }
+}
