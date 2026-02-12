@@ -31,13 +31,13 @@ todos:
     status: completed
   - id: migration-translation-metadata
     content: 'Phase 2: Ensure translation.metadata is covered by migration docs'
-    status: pending
+    status: completed
   - id: readme-docs
     content: 'Phase 2: Update document-internationalization README - migration note'
-    status: pending
+    status: completed
   - id: changeset
     content: 'Phase 2: Add changeset for @sanity/document-internationalization'
-    status: pending
+    status: completed
 isProject: false
 ---
 
