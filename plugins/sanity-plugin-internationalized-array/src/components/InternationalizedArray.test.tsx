@@ -265,25 +265,49 @@ describe('InternationalizedArray', () => {
         value: [],
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'en', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'en',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'fr', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'fr',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'es', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'es',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'de', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'de',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',
@@ -311,13 +335,25 @@ describe('InternationalizedArray', () => {
         value: [],
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'fr', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'fr',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [1],
         position: 'before',
         type: 'insert',
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'de', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'de',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',

@@ -64,7 +64,7 @@ export function createMockTranslation(
   const type = opts?.type ?? 'article'
 
   return {
-    ...(LANGUAGE_FIELD_NAME === '_key' ? {} : {_key: `key-${languageId}`}),
+    _key: `key-${languageId}`,
     [LANGUAGE_FIELD_NAME]: languageId,
     _type: 'internationalizedArrayReferenceValue',
     value: {
