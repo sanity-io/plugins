@@ -234,6 +234,7 @@ describe('DeleteTranslationAction', () => {
         schemaTypes: ['article'],
         translations: [
           {
+            _key: 'random-key',
             [LANGUAGE_FIELD_NAME]: 'en',
             _type: 'internationalizedArrayReferenceValue',
             value: {_type: 'reference', _ref: 'doc-1'},
@@ -293,6 +294,7 @@ describe('DeleteTranslationAction', () => {
         translations: [
           {
             [LANGUAGE_FIELD_NAME]: 'en',
+            _key: 'random-key',
             _type: 'internationalizedArrayReferenceValue',
             value: {_type: 'reference', _ref: 'doc-1'},
           },

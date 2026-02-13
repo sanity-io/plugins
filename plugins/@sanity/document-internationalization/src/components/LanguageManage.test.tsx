@@ -215,6 +215,7 @@ describe('LanguageManage', () => {
           translations: expect.arrayContaining([
             expect.objectContaining({
               [LANGUAGE_FIELD_NAME]: 'en',
+              _key: expect.any(String),
               value: expect.objectContaining({_ref: 'doc-1'}),
             }),
           ]),

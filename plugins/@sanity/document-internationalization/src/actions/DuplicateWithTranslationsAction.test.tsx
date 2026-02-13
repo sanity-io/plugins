@@ -267,7 +267,7 @@ describe('useDuplicateWithTranslationsAction', () => {
     })
   })
 
-  test('onHandle supports legacy translation items keyed by _key without language field', async () => {
+  test('onHandle uses the new language field', async () => {
     const legacyTranslations = [createMockTranslation('en', 'doc-1')]
     const metadata = createMockMetadata('meta-1', legacyTranslations)
     mockTranslationMetadata.mockReturnValue({data: [metadata], loading: false})

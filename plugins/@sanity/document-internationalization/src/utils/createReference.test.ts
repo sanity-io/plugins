@@ -6,6 +6,7 @@ import {createReference} from './createReference'
 describe('createReference', () => {
   test('creates reference with correct _key from key parameter', () => {
     const result = createReference('en', 'doc-123', 'article')
+    expect(result._key).toBeTypeOf('string')
     expect(result[LANGUAGE_FIELD_NAME]).toBe('en')
   })
 
@@ -46,7 +47,7 @@ describe('createReference', () => {
 
   test('handles different key values', () => {
     const result = createReference('fr-CA', 'doc-456', 'article')
-    expect(result._key).toBe('fr-CA')
+    expect(result._key).toBeTypeOf('string')
     expect(result[LANGUAGE_FIELD_NAME]).toBe('fr-CA')
     expect(result.value._ref).toBe('doc-456')
   })
