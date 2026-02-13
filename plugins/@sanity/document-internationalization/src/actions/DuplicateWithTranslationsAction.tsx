@@ -76,10 +76,15 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
         return Promise.reject(new Error('Metadata document not found'))
       }
 
+      const translationsArray = metadataDocument[TRANSLATIONS_ARRAY_NAME]
+      if (!translationsArray || translationsArray.length === 0) {
+        return Promise.reject(new Error('No translations found in metadata document'))
+      }
+
       // 1. Duplicate the document and its localized versions
       const translations = new Map<string, Id>()
       await Promise.all(
-        metadataDocument[TRANSLATIONS_ARRAY_NAME].map(async (translation) => {
+        translationsArray.map(async (translation) => {
           const dupeId = uuid()
           const locale = translation._key
           const docId = translation.value?._ref
