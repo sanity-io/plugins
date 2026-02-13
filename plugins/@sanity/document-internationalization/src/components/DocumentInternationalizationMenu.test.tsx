@@ -180,7 +180,7 @@ describe('DocumentInternationalizationMenu', () => {
 
     expect(
       screen.getByText(
-        'This document has been found in more than one Translations Metadata documents',
+        'This document has been found in more than one Translations Metadata document',
       ),
     ).toBeInTheDocument()
   })
