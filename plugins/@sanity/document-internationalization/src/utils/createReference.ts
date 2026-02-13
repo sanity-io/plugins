@@ -1,5 +1,6 @@
-import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {randomKey} from '@sanity/util/content'
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
+
 import type {TranslationReference} from '../types'
 
 /**

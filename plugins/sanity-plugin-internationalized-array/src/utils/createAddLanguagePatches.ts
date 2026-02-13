@@ -66,7 +66,9 @@ export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
       .filter((language) => {
         return value?.length ? !value.find((v) => v[LANGUAGE_FIELD_NAME] === language.id) : true
       })
-      .map((language) => Object.assign({}, itemBase, {_key: randomKey(), [LANGUAGE_FIELD_NAME]: language.id}))
+      .map((language) =>
+        Object.assign({}, itemBase, {_key: randomKey(), [LANGUAGE_FIELD_NAME]: language.id}),
+      )
   }
   const newItems = getNewItems()
 
