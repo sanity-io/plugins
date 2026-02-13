@@ -2,4 +2,4 @@
 'sanity-plugin-internationalized-array': patch
 ---
 
-Export `LANGUAGE_FIELD_NAME` constant for use in custom implementations
+Export `LANGUAGE_FIELD_NAME` constant 
