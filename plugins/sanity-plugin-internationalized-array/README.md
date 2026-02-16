@@ -359,30 +359,60 @@ Using GROQ filters you can query for a specific language like so:
 
 v5 stores the language identifier on a dedicated `language` field instead of `_key`.
 
-### Backup your data.
+### 1. Backup your data.
 
-TODO: Explain how to backup the data.
+You can manually backup your data using the sanity CLI.
 
-### Update your GROQ queries.
+```
+sanity dataset export production
+```
+
+This creates a production.tar.gz file in your current directory containing all your documents and assets.
+
+You can also specify a custom filename and location:
+
+```
+sanity dataset export production ./backups/backup-2026-02-16.tar.gz
+```
+
+If you ever need to restore, use the import command:
+
+```
+sanity dataset import backup-2026-02-16.tar.gz production
+```
+
+Or you can use the backup service, read more at https://www.sanity.io/docs/content-lake/backups
+
+### 2. Update your GROQ queries.
 
 Use a backwards compatible query until your migration is ready and has been executed.
 
 ```diff
 *[_type == "person"] {
--  "greeting": greeting[language == "en"][0].value
+-  "greeting": greeting[_key == "en"][0].value
 +  "greeting": greeting[language == "en" || _key == "en"][0].value
 }
 ```
 
-If you wish, later this queries can be update to only use the "language" field and remove the dependency on the `_key`.
-
-### Data migration
+### 3. Data migration
 
 [See the migration script](./migrations/keyToLanguageMigration.ts) inside `./migrations/keyToLanguageMigration.ts` of this plugin.
 
 If you prefer a UI flow, the plugin also shows an in‑Studio migration banner that can update old-format items on demand, but we recommend running the migration to update all your items at once.
 
-**If you use [@sanity/document-internationalization](https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/document-internationalization):** Include `'translation.metadata'` in your migration's document types so that the `translations` array on metadata documents is migrated.
+**If you use [@sanity/document-internationalization](https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/document-internationalization):** Include `'translation.metadata'` in your migration's document types so that the `translations` array on metadata documents is migrated
+And update `@sanity/document-internationalization` to `v6`
+
+### 4. Update your GROQ queries
+
+Previously we have update the GROQ queries to support both locations for the language field, now we can update again the GROQ queries to only use `language` and remove the dependency on the `_key`.
+
+```diff
+*[_type == "person"] {
+-  "greeting": greeting[language == "en" || _key == "en"][0].value
++  "greeting": greeting[language == "en"][0].value
+}
+```
 
 ## Migrate from objects to arrays
 
