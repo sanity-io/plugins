@@ -1,5 +1,5 @@
-import {finalize, share} from 'rxjs'
 import {useCallback, useEffect, useRef, useState} from 'react'
+import {finalize, share} from 'rxjs'
 import {type SanityClient, useClient} from 'sanity'
 
 const query = '* [_id == $id] {secrets}[0]'
@@ -13,16 +13,11 @@ export interface Secrets<T> {
 
 const sharedListeners = new Map<string, ReturnType<typeof createSharedListener>>()
 
-function createSharedListener(
-  client: SanityClient,
-  id: string,
-) {
-  return client.observable
-    .listen(query, {id}, {visibility: 'query', tag: 'secrets.listen'})
-    .pipe(
-      finalize(() => sharedListeners.delete(id)),
-      share({resetOnRefCountZero: true}),
-    )
+function createSharedListener(client: SanityClient, id: string) {
+  return client.observable.listen(query, {id}, {visibility: 'query', tag: 'secrets.listen'}).pipe(
+    finalize(() => sharedListeners.delete(id)),
+    share({resetOnRefCountZero: true}),
+  )
 }
 
 export function useSecrets<T>(namespace: string): Secrets<T> {
@@ -33,9 +28,7 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
   // when useClient() returns a new object on re-renders.
   const client = useClient({apiVersion: '2021-03-01'})
   const clientRef = useRef(client)
-  useEffect(() => {
-    clientRef.current = client
-  }, [client])
+  clientRef.current = client
 
   const id = `secrets.${namespace}`
 
@@ -89,6 +82,9 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
         .createIfNotExists({_id: id, _type: type})
         .patch(keysPatch)
         .commit({visibility: 'async', tag: 'secrets.store'})
+        .catch(() => {
+          // Non-fatal — the SSE listener will keep showing the last-known value
+        })
         .finally(() => setLoading(false))
     },
     [id],

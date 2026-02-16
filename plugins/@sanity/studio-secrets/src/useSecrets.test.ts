@@ -1,5 +1,5 @@
-import {Subject} from 'rxjs'
 import {act, renderHook, waitFor} from '@testing-library/react'
+import {Subject} from 'rxjs'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {useSecrets} from './useSecrets'
@@ -178,12 +178,8 @@ describe('useSecrets', () => {
   test('both subscribers receive SSE events from shared listener', async () => {
     mockFetch.mockResolvedValue(null)
 
-    const {result: result1} = renderHook(() =>
-      useSecrets<Record<string, string>>('shared-ns'),
-    )
-    const {result: result2} = renderHook(() =>
-      useSecrets<Record<string, string>>('shared-ns'),
-    )
+    const {result: result1} = renderHook(() => useSecrets<Record<string, string>>('shared-ns'))
+    const {result: result2} = renderHook(() => useSecrets<Record<string, string>>('shared-ns'))
 
     await waitFor(() => {
       expect(result1.current.loading).toBe(false)
@@ -250,6 +246,28 @@ describe('useSecrets', () => {
       // Verify the keysPatch (return value of .set()) was passed into the transaction
       const keysPatch = mockSet.mock.results[0]?.value
       expect(mockTransactionPatch).toHaveBeenCalledWith(keysPatch)
+    })
+
+    test('resets loading to false when commit fails', async () => {
+      mockCommit.mockRejectedValue(new Error('Network error'))
+      mockFetch.mockResolvedValue(null)
+
+      const {result} = renderHook(() => useSecrets<Record<string, string>>('my-plugin'))
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      act(() => {
+        result.current.storeSecrets({apiKey: 'will-fail'})
+      })
+
+      expect(result.current.loading).toBe(true)
+
+      // Wait for the rejected commit to settle
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
     })
 
     test('sets loading to true while storing', async () => {
