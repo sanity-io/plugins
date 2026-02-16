@@ -34,7 +34,11 @@ function AddButtons(props: AddButtonsProps) {
   if (!languages.length) return null
 
   return (
-    <Grid columns={Math.min(languages.length, MAX_COLUMNS[languageDisplay])} gap={2}>
+    <Grid
+      columns={Math.min(languages.length, MAX_COLUMNS[languageDisplay])}
+      gap={2}
+      data-testid="add-buttons-grid"
+    >
       {languages.map((language) => {
         const languageTitle: string = getLanguageDisplay(
           languageDisplay,

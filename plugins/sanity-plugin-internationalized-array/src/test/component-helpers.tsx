@@ -1,4 +1,4 @@
-import {ThemeProvider} from '@sanity/ui'
+import {ThemeProvider, ToastProvider} from '@sanity/ui'
 import {buildTheme} from '@sanity/ui/theme'
 import type {ReactNode} from 'react'
 
@@ -8,5 +8,9 @@ import type {ReactNode} from 'react'
  */
 export function ThemeWrapper({children}: {children: ReactNode}) {
   const theme = buildTheme()
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>
+  return (
+    <ThemeProvider theme={theme}>
+      <ToastProvider>{children}</ToastProvider>
+    </ThemeProvider>
+  )
 }
