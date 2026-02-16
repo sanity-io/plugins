@@ -91,17 +91,26 @@ function SettingsKeyEntry({loading, setNewSecrets, newSecrets, keyEntry}: Settin
     [keyEntry, setNewSecrets],
   )
 
+  const inputId = `studio-secrets-${keyEntry.key}`
+  const descriptionId = `${inputId}-description`
+
   return (
     <Stack space={2}>
-      <Text as="label" weight="semibold" size={1}>
+      <Text as="label" htmlFor={inputId} weight="semibold" size={1}>
         {keyEntry.title}
       </Text>
       {keyEntry.description && (
-        <Text muted size={1}>
+        <Text id={descriptionId} muted size={1}>
           {keyEntry.description}
         </Text>
       )}
-      <TextInput disabled={loading} onChange={onChange} value={newSecrets[keyEntry.key] ?? ''} />
+      <TextInput
+        disabled={loading}
+        id={inputId}
+        aria-describedby={keyEntry.description ? descriptionId : undefined}
+        onChange={onChange}
+        value={newSecrets[keyEntry.key] ?? ''}
+      />
     </Stack>
   )
 }
