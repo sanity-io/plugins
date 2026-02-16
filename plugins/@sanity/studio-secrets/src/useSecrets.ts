@@ -60,7 +60,7 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
     return () => {
       subscription.unsubscribe()
     }
-  }, [mapKey])
+  }, [id, mapKey])
 
   useEffect(() => {
     const fetchedAtVersion = writeVersionRef.current
@@ -79,7 +79,7 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
         // Non-fatal — the SSE listener will deliver the value when it connects
       })
       .finally(() => setLoading(false))
-  }, [mapKey])
+  }, [id, mapKey])
 
   const storeSecrets = useCallback(
     (updatedSecret: T) => {
