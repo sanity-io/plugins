@@ -19,9 +19,27 @@ export type ArrayConfig = {
   field?: {[key: string]: unknown; options: {[key: string]: unknown}}
 }
 
+/**
+ * @deprecated Use InternationalizedArrayItem instead
+ */
 export type Value = {
   _key: string
   value?: unknown
+}
+
+export function isInternationalizedArrayItemType(
+  type: string,
+): type is InternationalizedArrayItem['_type'] {
+  return type.startsWith('internationalizedArray') && type.endsWith('Value')
+}
+
+export type InternationalizedArrayItem<T = unknown> = {
+  _key: string
+  value?: T
+  /**
+   * string that starts with "internationalizedArray" and ends with "Value"
+   */
+  _type: `internationalizedArray${string}Value`
 }
 
 export type LanguageCallback = (

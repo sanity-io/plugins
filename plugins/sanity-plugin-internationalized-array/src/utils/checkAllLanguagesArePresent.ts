@@ -1,4 +1,4 @@
-import type {Language, Value} from '../types'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
 
@@ -14,7 +14,7 @@ import {LANGUAGE_FIELD_NAME} from '../constants'
  */
 export function checkAllLanguagesArePresent(
   languages: Language[],
-  value: Value[] | undefined,
+  value: InternationalizedArrayItem[] | undefined,
 ): boolean {
   const filteredLanguageIds = new Set(languages.map((l) => l.id))
   const languagesInUseIds = value ? value.map((v) => v[LANGUAGE_FIELD_NAME]) : []

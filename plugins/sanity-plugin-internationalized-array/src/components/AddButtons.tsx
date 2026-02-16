@@ -1,7 +1,7 @@
 import {AddIcon} from '@sanity/icons'
 import {Button, Grid} from '@sanity/ui'
 
-import type {Language, Value} from '../types'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 import {LANGUAGE_FIELD_NAME, MAX_COLUMNS} from '../constants'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
@@ -10,7 +10,7 @@ import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 type AddButtonsProps = {
   languages: Language[]
   readOnly: boolean
-  value: Value[] | undefined
+  value: InternationalizedArrayItem[] | undefined
   handleClick: (languageId: string) => void
 }
 

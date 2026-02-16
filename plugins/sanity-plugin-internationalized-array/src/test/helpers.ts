@@ -1,5 +1,5 @@
 import type {InternationalizedArrayContextProps} from '../components/InternationalizedArrayContext'
-import type {Language, Value} from '../types'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
 
@@ -22,14 +22,14 @@ export const MOCK_LANGUAGES: Language[] = [
  */
 export function createValue(
   languageId: string,
-  opts?: {value?: unknown; type?: string},
-): Value & Record<string, unknown> {
+  opts?: {value?: unknown; type?: InternationalizedArrayItem['_type']},
+): InternationalizedArrayItem {
   return {
     _type: opts?.type ?? 'internationalizedArrayStringValue',
     [LANGUAGE_FIELD_NAME]: languageId,
     ...(LANGUAGE_FIELD_NAME === '_key' ? {} : {_key: `key-${languageId}`}),
     value: opts?.value,
-  } as Value & Record<string, unknown>
+  }
 }
 
 /**
@@ -37,8 +37,8 @@ export function createValue(
  */
 export function createValues(
   languageIds: string[],
-  opts?: {type?: string},
-): (Value & Record<string, unknown>)[] {
+  opts?: {type?: InternationalizedArrayItem['_type']; value?: unknown},
+): (InternationalizedArrayItem & Record<string, unknown>)[] {
   return languageIds.map((id) => createValue(id, opts))
 }
 

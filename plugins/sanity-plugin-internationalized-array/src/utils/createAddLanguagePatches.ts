@@ -1,8 +1,11 @@
 import {type FormInsertPatch, insert, type Path} from 'sanity'
 
-import type {Language, Value} from '../types'
-
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import {
+  type Language,
+  type InternationalizedArrayItem,
+  isInternationalizedArrayItemType,
+} from '../types'
 
 type AddConfig = {
   // New keys to add to the field
@@ -14,7 +17,7 @@ type AddConfig = {
   // Languages that are currently visible
   filteredLanguages: Language[]
   // Current value of the internationalizedArray field
-  value?: Value[]
+  value?: InternationalizedArrayItem[]
   // Path to this item
   path?: Path
 }
@@ -38,7 +41,11 @@ type AddConfig = {
 export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
   const {addLanguageKeys, schemaTypeName, languages, filteredLanguages, value, path = []} = config
 
-  const itemBase = {_type: `${schemaTypeName}Value`}
+  const type = `${schemaTypeName}Value`
+  if (!isInternationalizedArrayItemType(type)) {
+    throw new Error(`Invalid internationalized array type: ${type}`)
+  }
+  const itemBase = {_type: type}
 
   // Create new items
   const getNewItems = () => {

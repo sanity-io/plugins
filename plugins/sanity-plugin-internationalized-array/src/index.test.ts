@@ -14,6 +14,7 @@ test('package exports', {timeout: 30_000}, async () => {
         "LANGUAGE_FIELD_NAME": "string",
         "clear": "function",
         "internationalizedArray": "function",
+        "isInternationalizedArrayItemType": "function",
       },
     }
   `)
