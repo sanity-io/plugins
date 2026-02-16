@@ -245,3 +245,18 @@ export const useDuplicateWithTranslationsAction = ({
 
 useDuplicateWithTranslationsAction.action = 'duplicate'
 useDuplicateWithTranslationsAction.displayName = 'DuplicateWithTranslationsAction'
+
+/**
+ * @deprecated use useDuplicateWithTranslationsAction instead
+ * Will be removed in the next major version
+ */
+export const DuplicateWithTranslationsAction = (
+  props: DocumentActionProps,
+): DocumentActionDescription => {
+  return useDuplicateWithTranslationsAction(props)
+}
+
+/* oxlint-disable-next-line typescript-eslint/no-deprecated -- re-exported for backwards compatibility */
+DuplicateWithTranslationsAction.action = 'duplicate'
+/* oxlint-disable-next-line typescript-eslint/no-deprecated -- re-exported for backwards compatibility */
+DuplicateWithTranslationsAction.displayName = 'DuplicateWithTranslationsAction'
