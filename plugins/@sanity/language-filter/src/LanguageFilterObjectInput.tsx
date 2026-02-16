@@ -8,6 +8,7 @@ import {useLanguageFilterStudioContext} from './LanguageFilterStudioContext'
 export function FilteredObjectWrapper(props: ObjectInputProps) {
   const {options} = useLanguageFilterStudioContext()
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const documentType = useFormValue(['_type']) as string
   const schema = useSchema()
   const languageFilterEnabled = isLanguageFilterEnabled(schema.get(documentType), options)
@@ -21,31 +22,34 @@ export function FilteredObjectInput(props: ObjectInputProps) {
   const {filterField} = options
 
   const members: ObjectMember[] = useMemo(() => {
-    return membersProp
-      .filter((member) => {
-        return (
-          (member.kind === 'field' && filterField(schemaType, member, selectedLanguageIds)) ||
-          member.kind === 'fieldSet' ||
-          member.kind === 'error'
-        )
-      })
-      .map((member) => {
-        if (member.kind === 'fieldSet') {
-          return {
-            ...member,
-            fieldSet: {
-              ...member.fieldSet,
-              members: member.fieldSet.members.filter((fieldsetMember) => {
-                return (
-                  fieldsetMember.kind === 'field' &&
-                  filterField(schemaType, fieldsetMember, selectedLanguageIds)
-                )
-              }),
-            },
+    return (
+      membersProp
+        .filter((member) => {
+          return (
+            (member.kind === 'field' && filterField(schemaType, member, selectedLanguageIds)) ||
+            member.kind === 'fieldSet' ||
+            member.kind === 'error'
+          )
+        })
+        // oxc-disable-next-line no-map-spread
+        .map((member) => {
+          if (member.kind === 'fieldSet') {
+            return {
+              ...member,
+              fieldSet: {
+                ...member.fieldSet,
+                members: member.fieldSet.members.filter((fieldsetMember) => {
+                  return (
+                    fieldsetMember.kind === 'field' &&
+                    filterField(schemaType, fieldsetMember, selectedLanguageIds)
+                  )
+                }),
+              },
+            }
           }
-        }
-        return member
-      })
+          return member
+        })
+    )
   }, [schemaType, membersProp, filterField, selectedLanguageIds])
 
   return renderDefault({...restProps, members, schemaType, renderDefault})

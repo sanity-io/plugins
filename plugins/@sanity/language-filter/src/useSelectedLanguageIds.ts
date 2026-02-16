@@ -12,7 +12,9 @@ export function getPersistedLanguageIds(options: LanguageFilterConfig): string[]
     if (persistedValue) {
       selected = JSON.parse(persistedValue)
     }
-  } catch (err) {} // eslint-disable-line no-empty
+  } catch {
+    // Ignore parsing errors
+  }
 
   // constrain persisted/selected languages to the ones currently supported
   selected = intersection(selected, selectableLangs)

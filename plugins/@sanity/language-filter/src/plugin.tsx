@@ -5,11 +5,16 @@ import {
   type ObjectInputProps,
 } from 'sanity'
 
+import type {LanguageFilterConfig} from './types'
+
 import {isLanguageFilterEnabled} from './filterField'
 import {LanguageFilterMenuButton} from './LanguageFilterMenuButton'
 import {FilteredObjectWrapper} from './LanguageFilterObjectInput'
 import {defaultContextValue, LanguageFilterStudioProvider} from './LanguageFilterStudioContext'
-import type {LanguageFilterConfig} from './types'
+
+const RenderLanguageFilter: DocumentLanguageFilterComponent = () => {
+  return <LanguageFilterMenuButton />
+}
 
 /**
  * ## Usage in sanity.config.ts (or .js)
@@ -45,10 +50,6 @@ import type {LanguageFilterConfig} from './types'
  * ```
  */
 export const languageFilter = definePlugin<LanguageFilterConfig>((options) => {
-  const RenderLanguageFilter: DocumentLanguageFilterComponent = () => {
-    return <LanguageFilterMenuButton />
-  }
-
   const pluginOptions = {
     ...defaultContextValue.options,
     ...options,
@@ -75,6 +76,7 @@ export const languageFilter = definePlugin<LanguageFilterConfig>((options) => {
       components: {
         input: (props) => {
           if (props.id !== 'root' && isObjectSchemaType(props.schemaType)) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
             return FilteredObjectWrapper(props as ObjectInputProps)
           }
 

@@ -13,6 +13,7 @@ export function isLanguageFilterEnabled(
   options: LanguageFilterConfig,
 ): boolean {
   const schemaFilter =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     isDocument(schemaType) && (schemaType as LanguageFilterSchema)?.options?.languageFilter
   const defaultEnabled = !options.documentTypes
 

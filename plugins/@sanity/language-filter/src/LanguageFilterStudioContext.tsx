@@ -1,13 +1,14 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 import {type LayoutProps, useClient} from 'sanity'
 
-import {defaultFilterField} from './filterField'
 import type {
   Language,
   LanguageCallback,
   LanguageFilterConfig,
   LanguageFilterConfigProcessed,
 } from './types'
+
+import {defaultFilterField} from './filterField'
 import {useSelectedLanguageIds} from './useSelectedLanguageIds'
 
 export interface LanguageFilterStudioContextProps {
@@ -60,7 +61,7 @@ export function LanguageFilterStudioProvider(
     }
 
     if (!Array.isArray(props.options.supportedLanguages)) {
-      getLanguages(props.options.supportedLanguages)
+      void getLanguages(props.options.supportedLanguages)
     }
   }, [client, props.options.supportedLanguages])
 
