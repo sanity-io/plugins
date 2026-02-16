@@ -122,3 +122,16 @@ export const useDeleteTranslationAction = (
 
 useDeleteTranslationAction.action = 'deleteTranslation'
 useDeleteTranslationAction.displayName = 'DeleteTranslationAction'
+
+/**
+ * @deprecated use useDeleteTranslationAction instead
+ * Will be removed in the next major version
+ */
+export const DeleteTranslationAction = (props: DocumentActionProps): DocumentActionDescription => {
+  return useDeleteTranslationAction(props)
+}
+
+// oxlint-disable-next-line typescript/no-deprecated
+DeleteTranslationAction.action = 'deleteTranslation'
+// oxlint-disable-next-line typescript/no-deprecated
+DeleteTranslationAction.displayName = 'DeleteTranslationAction'
