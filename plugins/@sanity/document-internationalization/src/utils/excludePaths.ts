@@ -114,7 +114,7 @@ function extractPaths(
             const innerFields = extractPaths(doc, itemSchema as ObjectSchemaType, itemPath)
             const arrayMember: DocumentMember = {
               path: itemPath,
-              name: item.language ?? item._key,
+              name: item._key,
               schemaType: itemSchema,
               value: item,
             }

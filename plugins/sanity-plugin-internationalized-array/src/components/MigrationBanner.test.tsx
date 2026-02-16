@@ -1,10 +1,8 @@
-import {ThemeProvider, ToastProvider} from '@sanity/ui'
-import {buildTheme} from '@sanity/ui/theme'
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
+import {ThemeWrapper} from '../test/component-helpers'
 import type {Language, InternationalizedArrayItem} from '../types'
-
 import {MigrationBanner, type MigrationBannerProps} from './MigrationBanner'
 
 // Mock @sanity/uuid for deterministic _key generation
@@ -22,7 +20,7 @@ const testLanguages: Language[] = [
 // Helper to create old format value (language in _key, no language field)
 function createOldFormatValue(languageId: string, content?: unknown): InternationalizedArrayItem {
   // Cast needed because Value type now requires language field
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - Cast needed because Value type now requires language field
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   return {
     _key: languageId,
     value: content,
@@ -39,16 +37,6 @@ function createNewFormatValue(languageId: string, content?: unknown): Internatio
   }
 }
 
-// Test wrapper that provides required context
-function TestWrapper({children}: {children: React.ReactNode}) {
-  const theme = buildTheme()
-  return (
-    <ThemeProvider theme={theme}>
-      <ToastProvider>{children}</ToastProvider>
-    </ThemeProvider>
-  )
-}
-
 function renderMigrationBanner(props: Partial<MigrationBannerProps> = {}) {
   const onChange = vi.fn()
   const defaultProps: MigrationBannerProps = {
@@ -60,7 +48,7 @@ function renderMigrationBanner(props: Partial<MigrationBannerProps> = {}) {
   }
 
   return {
-    ...render(<MigrationBanner {...defaultProps} />, {wrapper: TestWrapper}),
+    ...render(<MigrationBanner {...defaultProps} />, {wrapper: ThemeWrapper}),
     onChange,
   }
 }

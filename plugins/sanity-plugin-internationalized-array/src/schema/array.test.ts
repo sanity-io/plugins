@@ -1,8 +1,7 @@
 import {describe, expect, test, vi} from 'vitest'
 
-import type {Language} from '../types'
-
 import {MOCK_LANGUAGES, createValue, createValues} from '../test/helpers'
+import type {Language} from '../types'
 
 // Mock the React component to avoid transitive import issues
 // (InternationalizedArray imports from sanity/structure, @sanity/language-filter, etc.)

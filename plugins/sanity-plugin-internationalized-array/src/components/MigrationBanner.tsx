@@ -4,9 +4,8 @@ import {randomKey} from '@sanity/util/content'
 import {type ReactElement, useCallback, useMemo} from 'react'
 import {set} from 'sanity'
 
-import type {Language, InternationalizedArrayItem} from '../types'
-
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 export type MigrationBannerProps = {
   /** Current array value */
@@ -128,24 +127,5 @@ export function MigrationBanner({
         />
       </Flex>
     </Card>
-  )
-}
-
-/**
- * Utility function to check if a value array has items that need migration.
- * Useful for conditional logic outside of the component.
- */
-export function hasItemsNeedingMigration(
-  value: InternationalizedArrayItem[] | undefined,
-  languages: Language[],
-): boolean {
-  if (!value?.length || !languages?.length) {
-    return false
-  }
-
-  const languageIds = new Set(languages.map((l) => l.id))
-  return value.some(
-    (item) =>
-      item._key && languageIds.has(item._key) && !item[LANGUAGE_FIELD_NAME as keyof typeof item],
   )
 }

@@ -222,7 +222,6 @@ export default function InternationalizedInput(
     [props.inputProps, props.value, wrappedOnChange],
   )
 
-
   const {validation, value, readOnly} = inlineProps
   // The parent array contains the languages from the plugin config
   const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
@@ -230,7 +229,7 @@ export default function InternationalizedInput(
   const keyIsValid = languages?.length
     ? languages.find((l) => l.id === value[LANGUAGE_FIELD_NAME])
     : false
-    const itemNeedsMigration = !value[LANGUAGE_FIELD_NAME]
+  const itemNeedsMigration = !value[LANGUAGE_FIELD_NAME]
 
   if (!languages) {
     return <Spinner />
@@ -253,7 +252,6 @@ export default function InternationalizedInput(
               </Label>
             ) : (
               <ChangeLanguageButton value={value} path={props.path} onChange={originalOnChange} />
-
             )}
           </Card>
         )}
