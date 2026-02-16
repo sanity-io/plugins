@@ -290,7 +290,13 @@ After the plugin has been successfully migrated and published from the monorepo,
    > - Issues: Please open new issues in the [monorepo](https://github.com/sanity-io/plugins/issues)
    ```
 
-2. **Archive the repository** (optional): Consider archiving the original repository on GitHub to prevent new issues and PRs while keeping the history accessible.
+2. **Migrate existing issues** to the monorepo:
+   - Review all open issues in the original repository
+   - Add a label matching the plugin name to each issue for organization
+   - Move the issues to the monorepo's issue tracker
+   - Update issue references as needed
+
+3. **Archive the repository**: Archive the original repository on GitHub to prevent new issues and PRs while keeping the history accessible.
 
 See [this example PR](https://github.com/sanity-io/document-internationalization/pull/214) for reference.
 
