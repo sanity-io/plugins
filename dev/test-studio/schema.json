@@ -1518,6 +1518,13 @@
             "type": "string"
           },
           "optional": true
+        },
+        "language": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": false
         }
       }
     }
@@ -1541,6 +1548,13 @@
             "type": "string"
           },
           "optional": true
+        },
+        "language": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": false
         }
       }
     }
@@ -1672,6 +1686,13 @@
             "name": "lesson.reference"
           },
           "optional": true
+        },
+        "language": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": false
         }
       }
     }
