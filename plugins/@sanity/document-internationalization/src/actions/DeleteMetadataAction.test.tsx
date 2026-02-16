@@ -6,7 +6,7 @@ import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {createMockSanityClient} from '../test/component-helpers'
 import {createActionProps, createMockMetadata, createMockTranslation} from '../test/helpers'
-import {DeleteMetadataAction as useDeleteMetadataAction} from './DeleteMetadataAction'
+import {useDeleteMetadataAction} from './DeleteMetadataAction'
 
 let mockClient: ReturnType<typeof createMockSanityClient>
 const mockToastPush = vi.fn()

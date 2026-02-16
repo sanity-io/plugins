@@ -8,7 +8,7 @@ import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {createMockSanityClient} from '../test/component-helpers'
 import {createMockMetadata, createMockTranslation} from '../test/helpers'
-import {DuplicateWithTranslationsAction as useDuplicateWithTranslationsAction} from './DuplicateWithTranslationsAction'
+import {useDuplicateWithTranslationsAction} from './DuplicateWithTranslationsAction'
 
 // Mock the translation metadata hook
 const mockTranslationMetadata = vi.fn()

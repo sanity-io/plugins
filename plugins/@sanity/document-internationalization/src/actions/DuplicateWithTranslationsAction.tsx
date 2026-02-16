@@ -50,7 +50,7 @@ const DISABLED_REASON_KEY = {
  * Disabled when the user lacks permissions, metadata is missing or ambiguous,
  * or the underlying duplicate operation is unavailable.
  */
-export const DuplicateWithTranslationsAction = ({
+export const useDuplicateWithTranslationsAction = ({
   id,
   type,
   /* oxlint-disable-next-line typescript-eslint/no-deprecated -- kept for backwards compatibility */
@@ -243,5 +243,20 @@ export const DuplicateWithTranslationsAction = ({
   ])
 }
 
+useDuplicateWithTranslationsAction.action = 'duplicate'
+useDuplicateWithTranslationsAction.displayName = 'DuplicateWithTranslationsAction'
+
+/**
+ * @deprecated use useDuplicateWithTranslationsAction instead
+ * Will be removed in the next major version
+ */
+export const DuplicateWithTranslationsAction = (
+  props: DocumentActionProps,
+): DocumentActionDescription => {
+  return useDuplicateWithTranslationsAction(props)
+}
+
+/* oxlint-disable-next-line typescript-eslint/no-deprecated -- re-exported for backwards compatibility */
 DuplicateWithTranslationsAction.action = 'duplicate'
+/* oxlint-disable-next-line typescript-eslint/no-deprecated -- re-exported for backwards compatibility */
 DuplicateWithTranslationsAction.displayName = 'DuplicateWithTranslationsAction'

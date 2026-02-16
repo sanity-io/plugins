@@ -11,7 +11,7 @@ import type {MetadataDocument} from '../types'
 import {useDocumentInternationalizationContext} from '../components/DocumentInternationalizationContext'
 import {createMockSanityClient} from '../test/component-helpers'
 import {createMockDocument, MOCK_PLUGIN_CONFIG} from '../test/helpers'
-import {DeleteTranslationAction as useDeleteTranslationAction} from './DeleteTranslationAction'
+import {useDeleteTranslationAction} from './DeleteTranslationAction'
 
 // Mock dependencies
 vi.mock('../components/DocumentInternationalizationContext', () => ({

@@ -24,7 +24,7 @@ type TranslationReference = TypedObject &
  * unsets the translations array, deletes each referenced document (both
  * published and draft), and finally deletes the metadata document itself.
  */
-export const DeleteMetadataAction = (props: DocumentActionProps): DocumentActionDescription => {
+export const useDeleteMetadataAction = (props: DocumentActionProps): DocumentActionDescription => {
   const {id: documentId, published, draft} = props
   const doc = draft || published
 

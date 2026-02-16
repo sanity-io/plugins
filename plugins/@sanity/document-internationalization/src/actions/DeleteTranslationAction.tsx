@@ -25,14 +25,16 @@ type DeleteOperation = 'DELETE' | 'UNSET'
  * document: {
  *   actions: (prev, {schemaType}) => {
  *     if (translatedSchemaTypes.includes(schemaType)) {
- *       return [...prev, DeleteTranslationAction]
+ *       return [...prev, useDeleteTranslationAction]
  *     }
  *     return prev
  *   },
  * },
  * ```
  */
-export const DeleteTranslationAction = (props: DocumentActionProps): DocumentActionDescription => {
+export const useDeleteTranslationAction = (
+  props: DocumentActionProps,
+): DocumentActionDescription => {
   const {id: documentId, published, draft} = props
   const doc = draft || published
   const {languageField} = useDocumentInternationalizationContext()
@@ -45,7 +47,6 @@ export const DeleteTranslationAction = (props: DocumentActionProps): DocumentAct
 
   const toast = useToast()
   const client = useClient({apiVersion: API_VERSION})
-
   // Remove translation reference and delete document in one transaction
   const onProceed = useCallback(() => {
     const tx = client.transaction()
@@ -117,4 +118,15 @@ export const DeleteTranslationAction = (props: DocumentActionProps): DocumentAct
       ),
     },
   }
+}
+
+useDeleteTranslationAction.action = 'deleteTranslation'
+useDeleteTranslationAction.displayName = 'DeleteTranslationAction'
+
+/**
+ * @deprecated use useDeleteTranslationAction instead
+ * Will be removed in the next major version
+ */
+export const DeleteTranslationAction = (props: DocumentActionProps): DocumentActionDescription => {
+  return useDeleteTranslationAction(props)
 }

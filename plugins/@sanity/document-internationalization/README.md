@@ -10,6 +10,7 @@
     - [Advanced configuration](#advanced-configuration)
     - [Language field](#language-field)
     - [Excluding fields](#excluding-fields)
+    - [Document actions](#document-actions)
   - [Querying translations](#querying-translations)
     - [Querying with GROQ](#querying-with-groq)
     - [Querying with GraphQL](#querying-with-graphql)
@@ -197,6 +198,37 @@ defineField({
     },
   },
 }),
+```
+
+### Document actions
+
+This package exports hook-based document actions that you can add in your Studio `document.actions` configuration:
+
+- `useDeleteTranslationAction`
+- `useDuplicateWithTranslationsAction`
+
+The legacy action exports `DeleteTranslationAction` and `DuplicateWithTranslationsAction` are deprecated.
+
+```ts
+import {
+  useDeleteTranslationAction,
+  useDuplicateWithTranslationsAction,
+} from '@sanity/document-internationalization'
+
+export default defineConfig({
+  // ... all other config
+  document: {
+    actions: (prev, context) => {
+      const translatedSchemaTypes = ['lesson', 'article']
+
+      if (translatedSchemaTypes.includes(context.schemaType)) {
+        return [...prev, useDeleteTranslationAction, useDuplicateWithTranslationsAction]
+      }
+
+      return prev
+    },
+  },
+})
 ```
 
 ## Querying translations
