@@ -1,5 +1,5 @@
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
-import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
+import {afterEach, describe, expect, test, vi} from 'vitest'
 
 import {SettingsView, type SettingsKey} from './Settings'
 import {ThemeWrapper} from './test/component-helpers'
