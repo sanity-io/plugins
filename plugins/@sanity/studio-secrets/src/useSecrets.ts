@@ -28,7 +28,9 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
   // when useClient() returns a new object on re-renders.
   const client = useClient({apiVersion: '2021-03-01'})
   const clientRef = useRef(client)
-  clientRef.current = client
+  useEffect(() => {
+    clientRef.current = client
+  }, [client])
 
   const id = `secrets.${namespace}`
 
