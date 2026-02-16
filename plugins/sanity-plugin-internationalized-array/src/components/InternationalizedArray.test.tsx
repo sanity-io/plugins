@@ -265,6 +265,92 @@ describe('InternationalizedArray', () => {
     ])
   })
 
+  test('calls onChange with all languages when "Add all languages" is clicked and value is empty', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange, value: []})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByTestId('add-all-languages'))
+
+    expect(onChange).toHaveBeenCalledWith([
+      {
+        type: 'setIfMissing',
+        value: [],
+      },
+      {
+        items: [{[LANGUAGE_FIELD_NAME]: 'en', _type: 'internationalizedArrayStringValue'}],
+        path: [-1],
+        position: 'after',
+        type: 'insert',
+      },
+      {
+        items: [{[LANGUAGE_FIELD_NAME]: 'fr', _type: 'internationalizedArrayStringValue'}],
+        path: [-1],
+        position: 'after',
+        type: 'insert',
+      },
+      {
+        items: [{[LANGUAGE_FIELD_NAME]: 'es', _type: 'internationalizedArrayStringValue'}],
+        path: [-1],
+        position: 'after',
+        type: 'insert',
+      },
+      {
+        items: [{[LANGUAGE_FIELD_NAME]: 'de', _type: 'internationalizedArrayStringValue'}],
+        path: [-1],
+        position: 'after',
+        type: 'insert',
+      },
+    ])
+  })
+
+  test('calls onChange with only missing languages when "Add all languages" is clicked', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
+
+    const onChange = vi.fn()
+    // "en" and "es" already exist, so only "fr" and "de" should be added
+    const value = createValues(['en', 'es'])
+    const props = createMockArrayProps({onChange, value})
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByTestId('add-all-languages'))
+
+    expect(onChange).toHaveBeenCalledWith([
+      {
+        type: 'setIfMissing',
+        value: [],
+      },
+      {
+        items: [{[LANGUAGE_FIELD_NAME]: 'fr', _type: 'internationalizedArrayStringValue'}],
+        path: [1],
+        position: 'before',
+        type: 'insert',
+      },
+      {
+        items: [{[LANGUAGE_FIELD_NAME]: 'de', _type: 'internationalizedArrayStringValue'}],
+        path: [-1],
+        position: 'after',
+        type: 'insert',
+      },
+    ])
+  })
+
   test('auto-reorders value when items are out of order', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
       MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,

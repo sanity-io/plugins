@@ -75,6 +75,18 @@ describe('createAddLanguagePatches', () => {
     expect(languageIds).toEqual(['es', 'de'])
   })
 
+  test('skips languages already in value when addLanguageKeys includes it', () => {
+    const value = [createValue('en'), createValue('fr')]
+    const patches = createAddLanguagePatches({
+      addLanguageKeys: ['en', 'fr'],
+      schemaTypeName,
+      languages,
+      filteredLanguages,
+      value,
+    })
+    expect(patches).toHaveLength(0)
+  })
+
   test('inserts at end (after) when no subsequent language exists in value', () => {
     // Adding 'de' (last language) - nothing comes after it
     const patches = createAddLanguagePatches({
