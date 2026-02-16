@@ -3,17 +3,8 @@ import type {SanityDocument} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
 import {METADATA_SCHEMA_NAME} from '../../constants'
+import {createMockDocument} from '../../test/helpers'
 import {separateReferences} from './separateReferences'
-
-function createDoc(id: string, type: string): SanityDocument {
-  return {
-    _id: id,
-    _type: type,
-    _rev: 'rev-1',
-    _createdAt: '2024-01-01T00:00:00Z',
-    _updatedAt: '2024-01-01T00:00:00Z',
-  }
-}
 
 describe('separateReferences', () => {
   test('returns empty arrays for null input', () => {
@@ -35,7 +26,7 @@ describe('separateReferences', () => {
   })
 
   test('separates translation.metadata docs into translations array', () => {
-    const metadataDoc = createDoc('meta-1', METADATA_SCHEMA_NAME)
+    const metadataDoc = createMockDocument('meta-1', undefined, {type: METADATA_SCHEMA_NAME})
     const result = separateReferences([metadataDoc])
 
     expect(result.translations).toHaveLength(1)
@@ -45,7 +36,7 @@ describe('separateReferences', () => {
   })
 
   test('separates other doc types into otherReferences array', () => {
-    const articleDoc = createDoc('article-1', 'article')
+    const articleDoc = createMockDocument('article-1', undefined, {type: 'article'} as const)
     const result = separateReferences([articleDoc])
 
     expect(result.translations).toHaveLength(0)
@@ -56,11 +47,11 @@ describe('separateReferences', () => {
 
   test('handles mixed array of metadata and other docs', () => {
     const docs: SanityDocument[] = [
-      createDoc('meta-1', METADATA_SCHEMA_NAME),
-      createDoc('article-1', 'article'),
-      createDoc('meta-2', METADATA_SCHEMA_NAME),
-      createDoc('page-1', 'page'),
-      createDoc('post-1', 'post'),
+      createMockDocument('meta-1', undefined, {type: METADATA_SCHEMA_NAME}),
+      createMockDocument('article-1', undefined, {type: 'article'}),
+      createMockDocument('meta-2', undefined, {type: METADATA_SCHEMA_NAME}),
+      createMockDocument('page-1', undefined, {type: 'page'}),
+      createMockDocument('post-1', undefined, {type: 'post'}),
     ]
 
     const result = separateReferences(docs)
@@ -74,9 +65,9 @@ describe('separateReferences', () => {
 
   test('preserves document order within each category', () => {
     const docs: SanityDocument[] = [
-      createDoc('meta-3', METADATA_SCHEMA_NAME),
-      createDoc('meta-1', METADATA_SCHEMA_NAME),
-      createDoc('meta-2', METADATA_SCHEMA_NAME),
+      createMockDocument('meta-3', undefined, {type: METADATA_SCHEMA_NAME}),
+      createMockDocument('meta-1', undefined, {type: METADATA_SCHEMA_NAME}),
+      createMockDocument('meta-2', undefined, {type: METADATA_SCHEMA_NAME}),
     ]
 
     const result = separateReferences(docs)
@@ -85,7 +76,10 @@ describe('separateReferences', () => {
   })
 
   test('handles array with only other references', () => {
-    const docs: SanityDocument[] = [createDoc('article-1', 'article'), createDoc('page-1', 'page')]
+    const docs: SanityDocument[] = [
+      createMockDocument('article-1', undefined, {type: 'article'}),
+      createMockDocument('page-1', undefined, {type: 'page'}),
+    ]
 
     const result = separateReferences(docs)
 

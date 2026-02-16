@@ -36,7 +36,7 @@ export const MOCK_PLUGIN_CONFIG: PluginConfigContext = {
  */
 export function createMockDocument(
   id: string,
-  language: string,
+  language?: string,
   opts?: {type?: string; languageField?: string},
 ): SanityDocument {
   const languageField = opts?.languageField ?? 'language'
