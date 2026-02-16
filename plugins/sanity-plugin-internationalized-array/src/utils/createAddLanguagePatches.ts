@@ -28,7 +28,7 @@ type AddConfig = {
  *
  * If `addLanguageKeys` is provided, patches are created for those specific
  * language IDs. Otherwise, patches are created for all filtered languages
- * that are not already present in the current `value` array.
+ * that are not already present in the current `value` array, for example when adding all missing languages.
  *
  * Each new item is assigned the correct `_type` (derived from the schema)
  * and the language identifier via `LANGUAGE_FIELD_NAME`.
@@ -50,13 +50,21 @@ export function createAddLanguagePatches(config: AddConfig): FormInsertPatch[] {
   // Create new items
   const getNewItems = () => {
     if (Array.isArray(addLanguageKeys) && addLanguageKeys.length > 0) {
-      return addLanguageKeys.map((id) => Object.assign({}, itemBase, {[LANGUAGE_FIELD_NAME]: id}))
+      return addLanguageKeys
+        .filter((id) => {
+          if (value?.length) {
+            // Check if the language is already in the value and filter it out if it exists to avoid duplicates
+            return !value.find((v) => v[LANGUAGE_FIELD_NAME] === id)
+          }
+          return true
+        })
+        .map((id) => Object.assign({}, itemBase, {[LANGUAGE_FIELD_NAME]: id}))
     }
 
     return filteredLanguages
-      .filter((language) =>
-        value?.length ? !value.find((v) => v[LANGUAGE_FIELD_NAME] === language.id) : true,
-      )
+      .filter((language) => {
+        return value?.length ? !value.find((v) => v[LANGUAGE_FIELD_NAME] === language.id) : true
+      })
       .map((language) => Object.assign({}, itemBase, {[LANGUAGE_FIELD_NAME]: language.id}))
   }
   const newItems = getNewItems()
