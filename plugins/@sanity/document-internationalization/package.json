@@ -68,7 +68,7 @@
     "react": "^19.2",
     "react-dom": "^19.2",
     "sanity": "^5",
-    "sanity-plugin-internationalized-array": "^4.0.2"
+    "sanity-plugin-internationalized-array": "^5.0.0"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
