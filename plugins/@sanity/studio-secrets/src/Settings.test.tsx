@@ -83,9 +83,8 @@ describe('SettingsView', () => {
     })
 
     expect(screen.getByText('Simple Key')).toBeInTheDocument()
-    // Only the title text should be present, no description
-    const stack = screen.getByText('Simple Key').closest('[data-ui="Stack"]')
-    expect(stack).toBeTruthy()
+    // Description from the other key fixture should not appear
+    expect(screen.queryByText('Your API key')).not.toBeInTheDocument()
   })
 
   test('shows "Loading…" on the save button when loading', () => {
