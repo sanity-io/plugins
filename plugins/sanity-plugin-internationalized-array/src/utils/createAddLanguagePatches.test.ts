@@ -87,6 +87,21 @@ describe('createAddLanguagePatches', () => {
     expect(patches).toHaveLength(0)
   })
 
+  test('creates patches only for languages not already in value when addLanguageKeys mixes existing and new', () => {
+    const value = [createValue('en')]
+    const patches = createAddLanguagePatches({
+      addLanguageKeys: ['en', 'es'],
+      schemaTypeName,
+      languages,
+      filteredLanguages,
+      value,
+    })
+
+    expect(patches).toHaveLength(1)
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    const details = patches[0] as PatchType
+    expect(details.items[0]![LANGUAGE_FIELD_NAME]).toBe('es')
+  })
   test('inserts at end (after) when no subsequent language exists in value', () => {
     // Adding 'de' (last language) - nothing comes after it
     const patches = createAddLanguagePatches({
