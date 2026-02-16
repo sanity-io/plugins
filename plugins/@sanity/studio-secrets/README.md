@@ -6,7 +6,7 @@ React hooks and UI for reading and managing secrets in a Sanity Studio. This is 
 
 This plugin stores secrets as fields on a document in your dataset.
 Even though that document is not accessible without having the correct permissions
-(logged in user with read access) it will be included in any export your may do of your dataset and this is important to be aware of.
+(logged in user with read access) it will be included in any export you may do of your dataset and this is important to be aware of.
 
 ## Future deprecation
 
