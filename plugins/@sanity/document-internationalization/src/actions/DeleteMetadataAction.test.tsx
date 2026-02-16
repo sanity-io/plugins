@@ -1,12 +1,11 @@
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
-import type {DocumentActionProps, SanityDocument} from 'sanity'
+import type {SanityDocument} from 'sanity'
 
 import {act, renderHook, waitFor} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
-import {TRANSLATIONS_ARRAY_NAME} from '../constants'
 import {createMockSanityClient} from '../test/component-helpers'
-import {createMockTranslation} from '../test/helpers'
+import {createActionProps, createMockMetadata, createMockTranslation} from '../test/helpers'
 import {useDeleteMetadataAction} from './DeleteMetadataAction'
 
 let mockClient: ReturnType<typeof createMockSanityClient>
@@ -28,34 +27,6 @@ vi.mock('@sanity/ui', async (importOriginal) => {
   }
 })
 
-function createMetadataDocument(
-  id: string,
-  translations: ReturnType<typeof createMockTranslation>[],
-): SanityDocument {
-  return {
-    _id: id,
-    _type: 'translation.metadata',
-    _rev: 'rev-1',
-    _createdAt: '2024-01-01T00:00:00Z',
-    _updatedAt: '2024-01-01T00:00:00Z',
-    [TRANSLATIONS_ARRAY_NAME]: translations,
-  }
-}
-
-function createActionProps(opts: {
-  draft?: SanityDocument | null
-  published?: SanityDocument | null
-}): DocumentActionProps {
-  return {
-    id: opts.draft?._id?.replace('drafts.', '') ?? opts.published?._id ?? 'meta-1',
-    type: 'translation.metadata',
-    draft: opts.draft ?? null,
-    published: opts.published ?? null,
-    liveEdit: true,
-    onComplete: vi.fn(),
-  } as unknown as DocumentActionProps
-}
-
 describe('useDeleteMetadataAction', () => {
   beforeEach(() => {
     mockClient = createMockSanityClient()
@@ -68,7 +39,7 @@ describe('useDeleteMetadataAction', () => {
 
   test('returns action with correct label, icon and tone', () => {
     const translations = [createMockTranslation('en', 'doc-1')]
-    const published = createMetadataDocument('meta-1', translations)
+    const published = createMockMetadata('meta-1', translations)
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -87,7 +58,7 @@ describe('useDeleteMetadataAction', () => {
   })
 
   test('disables action when translations array is empty', () => {
-    const published = createMetadataDocument('meta-1', [])
+    const published = createMockMetadata('meta-1', [])
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -113,7 +84,7 @@ describe('useDeleteMetadataAction', () => {
 
   test('enables action when document has translations', () => {
     const translations = [createMockTranslation('en', 'doc-1')]
-    const published = createMetadataDocument('meta-1', translations)
+    const published = createMockMetadata('meta-1', translations)
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -127,8 +98,8 @@ describe('useDeleteMetadataAction', () => {
       createMockTranslation('fr', 'doc-2'),
     ]
     const publishedTranslations = [createMockTranslation('en', 'doc-1')]
-    const draft = createMetadataDocument('drafts.meta-1', draftTranslations)
-    const published = createMetadataDocument('meta-1', publishedTranslations)
+    const draft = createMockMetadata('drafts.meta-1', draftTranslations)
+    const published = createMockMetadata('meta-1', publishedTranslations)
     const props = createActionProps({draft, published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -139,7 +110,7 @@ describe('useDeleteMetadataAction', () => {
 
   test('has onHandle function', () => {
     const translations = [createMockTranslation('en', 'doc-1')]
-    const published = createMetadataDocument('meta-1', translations)
+    const published = createMockMetadata('meta-1', translations)
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -149,7 +120,7 @@ describe('useDeleteMetadataAction', () => {
 
   test('dialog is initially closed', () => {
     const translations = [createMockTranslation('en', 'doc-1')]
-    const published = createMetadataDocument('meta-1', translations)
+    const published = createMockMetadata('meta-1', translations)
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -159,7 +130,7 @@ describe('useDeleteMetadataAction', () => {
 
   test('onHandle opens the confirmation dialog', () => {
     const translations = [createMockTranslation('en', 'doc-1')]
-    const published = createMetadataDocument('meta-1', translations)
+    const published = createMockMetadata('meta-1', translations)
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -180,7 +151,7 @@ describe('useDeleteMetadataAction', () => {
       createMockTranslation('fr', 'doc-2'),
       createMockTranslation('es', 'doc-3'),
     ]
-    const published = createMetadataDocument('meta-1', translations)
+    const published = createMockMetadata('meta-1', translations)
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -198,7 +169,7 @@ describe('useDeleteMetadataAction', () => {
       createMockTranslation('en', 'doc-1'),
       createMockTranslation('fr', 'doc-2'),
     ]
-    const published = createMetadataDocument('meta-1', translations)
+    const published = createMockMetadata('meta-1', translations)
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -225,7 +196,7 @@ describe('useDeleteMetadataAction', () => {
 
   test('shows success toast after successful deletion', async () => {
     const translations = [createMockTranslation('en', 'doc-1')]
-    const published = createMetadataDocument('meta-1', translations)
+    const published = createMockMetadata('meta-1', translations)
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))
@@ -255,7 +226,7 @@ describe('useDeleteMetadataAction', () => {
     tx.commit.mockRejectedValueOnce(new Error('Network error'))
 
     const translations = [createMockTranslation('en', 'doc-1')]
-    const published = createMetadataDocument('meta-1', translations)
+    const published = createMockMetadata('meta-1', translations)
     const props = createActionProps({published})
 
     const {result} = renderHook(() => useDeleteMetadataAction(props))

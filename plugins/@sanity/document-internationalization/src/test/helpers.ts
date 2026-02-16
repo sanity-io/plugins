@@ -1,9 +1,16 @@
-import {createSchema, defineField, defineType, type SanityDocument} from 'sanity'
+import {
+  createSchema,
+  defineField,
+  defineType,
+  type DocumentActionProps,
+  type SanityDocument,
+} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
+import {vi} from 'vitest'
 
-import type {Language, Metadata, PluginConfigContext, TranslationReference} from '../types'
+import type {Language, PluginConfigContext, TranslationReference, MetadataDocument} from '../types'
 
-import {DEFAULT_CONFIG} from '../constants'
+import {DEFAULT_CONFIG, TRANSLATIONS_ARRAY_NAME} from '../constants'
 
 /**
  * Shared mock language definitions for tests.
@@ -76,12 +83,16 @@ export function createMockTranslation(
 export function createMockMetadata(
   id: string,
   translations: TranslationReference[],
-  opts?: {createdAt?: string},
-): Metadata {
+  opts?: {createdAt?: string; schemaTypes?: string[]},
+): SanityDocument & MetadataDocument {
   return {
     _id: id,
+    _type: 'translation.metadata',
+    schemaTypes: opts?.schemaTypes ?? [],
     _createdAt: opts?.createdAt ?? '2024-01-01T00:00:00Z',
-    translations,
+    _updatedAt: '2024-01-01T00:00:00Z',
+    _rev: 'test-rev',
+    [TRANSLATIONS_ARRAY_NAME]: translations,
   }
 }
 
@@ -100,3 +111,18 @@ export const schema = createSchema({
     }),
   ],
 })
+
+export function createActionProps(opts: {
+  draft?: SanityDocument | null
+  published?: SanityDocument | null
+}): DocumentActionProps {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  return {
+    id: opts.draft?._id?.replace('drafts.', '') ?? opts.published?._id ?? 'meta-1',
+    type: 'translation.metadata',
+    draft: opts.draft ?? null,
+    published: opts.published ?? null,
+    liveEdit: true,
+    onComplete: vi.fn(),
+  } as unknown as DocumentActionProps
+}
