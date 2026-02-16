@@ -17,6 +17,7 @@
     "@sanity/debug-preview-url-secret-plugin": "workspace:*",
     "@sanity/document-internationalization": "workspace:*",
     "@sanity/icons": "^3.7.4",
+    "@sanity/language-filter": "^4.0.6",
     "@sanity/rich-date-input": "workspace:*",
     "@sanity/studio-secrets": "workspace:*",
     "@sanity/ui": "catalog:",
