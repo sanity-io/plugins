@@ -46,7 +46,6 @@
     "@sanity/ui": "^3.1.11",
     "@sanity/uuid": "^3.0.2",
     "rxjs": "^7.8.1",
-    "sanity-plugin-internationalized-array": "workspace:^",
     "sanity-plugin-utils": "^1.7.0"
   },
   "devDependencies": {
@@ -61,12 +60,14 @@
     "jsdom": "^28.0.0",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "sanity": "catalog:"
+    "sanity": "catalog:",
+    "sanity-plugin-internationalized-array": "workspace:^"
   },
   "peerDependencies": {
     "react": "^19.2",
     "react-dom": "^19.2",
-    "sanity": "^5"
+    "sanity": "^5",
+    "sanity-plugin-internationalized-array": "^4.0.2"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

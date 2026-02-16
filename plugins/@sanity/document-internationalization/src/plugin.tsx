@@ -4,7 +4,7 @@ import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 
 import type {PluginConfig, TranslationReference} from './types'
 
-import {DeleteMetadataAction} from './actions/DeleteMetadataAction'
+import {useDeleteMetadataAction} from './actions/DeleteMetadataAction'
 import {LanguageBadge} from './badges'
 import BulkPublish from './components/BulkPublish'
 import {DocumentInternationalizationProvider} from './components/DocumentInternationalizationContext'
@@ -98,7 +98,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
       },
       actions: (prev, {schemaType}) => {
         if (schemaType === METADATA_SCHEMA_NAME) {
-          return [...prev, DeleteMetadataAction]
+          return [...prev, useDeleteMetadataAction]
         }
 
         return prev

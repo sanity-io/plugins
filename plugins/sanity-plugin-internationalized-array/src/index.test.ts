@@ -11,6 +11,7 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
     {
       ".": {
+        "LANGUAGE_FIELD_NAME": "string",
         "clear": "function",
         "internationalizedArray": "function",
       },

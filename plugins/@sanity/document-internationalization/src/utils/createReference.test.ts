@@ -1,3 +1,4 @@
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {describe, expect, test} from 'vitest'
 
 import {createReference} from './createReference'
@@ -46,6 +47,7 @@ describe('createReference', () => {
   test('handles different key values', () => {
     const result = createReference('fr-CA', 'doc-456', 'article')
     expect(result._key).toBe('fr-CA')
+    expect(result[LANGUAGE_FIELD_NAME]).toBe('fr-CA')
     expect(result.value._ref).toBe('doc-456')
   })
 })
