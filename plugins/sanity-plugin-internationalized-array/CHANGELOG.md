@@ -1,5 +1,15 @@
 # sanity-plugin-internationalized-array
 
+## 4.0.2
+
+### Patch Changes
+
+- [#584](https://github.com/sanity-io/plugins/pull/584) [`c878cf5`](https://github.com/sanity-io/plugins/commit/c878cf57e8fac91c2112375dcd4ddd5a5e01ba16) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix the "Add all languages" action so it only inserts missing language items.
+
+- [#581](https://github.com/sanity-io/plugins/pull/581) [`952a50b`](https://github.com/sanity-io/plugins/commit/952a50b1735b05da60d13f52c33428a5b1955a57) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Export `InternationalizedArrayItem` from the package so it can be imported and reused by consumers.
+
+- [#576](https://github.com/sanity-io/plugins/pull/576) [`88c8e2d`](https://github.com/sanity-io/plugins/commit/88c8e2d717f1fb2314ae65b7dd3853a9f07fd246) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Export `LANGUAGE_FIELD_NAME` constant
+
 ## 4.0.1
 
 ### Patch Changes
