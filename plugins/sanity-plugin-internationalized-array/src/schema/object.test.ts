@@ -58,6 +58,17 @@ describe('object schema factory', () => {
     expect(schema.name).toBe('internationalizedArrayCustomTypeValue')
   })
 
+  test('language field is hidden and required', () => {
+    const schema = objectFactory({type: 'string'})
+    const languageField = schema.fields.find((field) => field.name === 'language')!
+
+    const rule = {required: vi.fn()}
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+    const validationFn = languageField.validation as (rule: unknown) => unknown
+    validationFn(rule)
+    expect(rule.required).toHaveBeenCalled()
+  })
+
   test('spreads FieldDefinition properties onto value field', () => {
     const schema = objectFactory({
       type: {

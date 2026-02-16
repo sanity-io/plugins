@@ -41,6 +41,7 @@ export default (config: ObjectFactoryConfig) => {
         name: "language",
         type: "string",
         hidden: true,
+        validation: (Rule) => Rule.required(),
       }),
     ],
     preview: {
