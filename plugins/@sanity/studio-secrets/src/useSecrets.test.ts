@@ -24,6 +24,7 @@ const mockClient = {
   },
   patch: mockPatch,
   transaction: vi.fn(),
+  config: () => ({projectId: 'test-project', dataset: 'test-dataset'}),
 }
 
 vi.mock('sanity', () => ({
@@ -173,6 +174,25 @@ describe('useSecrets', () => {
 
     // listen() should only be called once — the second hook reuses the shared listener
     expect(mockListen).toHaveBeenCalledTimes(1)
+  })
+
+  test('creates separate listeners for different client configs (multi-workspace)', () => {
+    mockListen.mockClear()
+
+    // First hook uses the default test-project/test-dataset config
+    renderHook(() => useSecrets('same-ns'))
+
+    // Change the client config to simulate a different workspace
+    mockClient.config = () => ({projectId: 'project-b', dataset: 'dataset-b'})
+
+    renderHook(() => useSecrets('same-ns'))
+
+    // listen() should be called twice — different client configs mean separate listeners
+    // even though the namespace is the same
+    expect(mockListen).toHaveBeenCalledTimes(2)
+
+    // Restore original config for other tests
+    mockClient.config = () => ({projectId: 'test-project', dataset: 'test-dataset'})
   })
 
   test('both subscribers receive SSE events from shared listener', async () => {

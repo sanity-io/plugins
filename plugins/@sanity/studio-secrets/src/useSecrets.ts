@@ -13,9 +13,9 @@ export interface Secrets<T> {
 
 const sharedListeners = new Map<string, ReturnType<typeof createSharedListener>>()
 
-function createSharedListener(client: SanityClient, id: string) {
+function createSharedListener(client: SanityClient, id: string, mapKey: string) {
   return client.observable.listen(query, {id}, {visibility: 'query', tag: 'secrets.listen'}).pipe(
-    finalize(() => sharedListeners.delete(id)),
+    finalize(() => sharedListeners.delete(mapKey)),
     share({resetOnRefCountZero: true}),
   )
 }
@@ -34,6 +34,11 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
 
   const id = `secrets.${namespace}`
 
+  // Include project/dataset in the Map key so multi-workspace setups
+  // don't share SSE listeners across different projects or datasets.
+  const config = client.config()
+  const mapKey = `${config.projectId}.${config.dataset}:${id}`
+
   // Monotonic counter to prevent a pre-existing race condition: if an SSE
   // event arrives while the initial fetch is in flight, the slower fetch
   // response could overwrite the newer SSE value. Each write increments
@@ -42,18 +47,20 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
   const writeVersionRef = useRef(0)
 
   useEffect(() => {
-    if (!sharedListeners.has(id)) {
-      sharedListeners.set(id, createSharedListener(clientRef.current, id))
+    if (!sharedListeners.has(mapKey)) {
+      sharedListeners.set(mapKey, createSharedListener(clientRef.current, id, mapKey))
     }
-    const subscription = sharedListeners.get(id)!.subscribe((result: Record<string, unknown>) => {
-      writeVersionRef.current++
-      const resultData = result as {result?: {secrets?: T}}
-      setSecrets(resultData?.result?.secrets)
-    })
+    const subscription = sharedListeners
+      .get(mapKey)!
+      .subscribe((result: Record<string, unknown>) => {
+        writeVersionRef.current++
+        const resultData = result as {result?: {secrets?: T}}
+        setSecrets(resultData?.result?.secrets)
+      })
     return () => {
       subscription.unsubscribe()
     }
-  }, [id])
+  }, [mapKey])
 
   useEffect(() => {
     const fetchedAtVersion = writeVersionRef.current
@@ -72,7 +79,7 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
         // Non-fatal — the SSE listener will deliver the value when it connects
       })
       .finally(() => setLoading(false))
-  }, [id])
+  }, [mapKey])
 
   const storeSecrets = useCallback(
     (updatedSecret: T) => {
