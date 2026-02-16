@@ -15,4 +15,4 @@ Port @sanity/studio-secrets plugin to the plugins monorepo
 - Replaced deprecated `React.FormEvent` with `ChangeEvent`
 - Replaced `JSX.Element` return type with `ReactElement`
 - Removed eslint-disable comments (oxlint does not require them)
-- Updated `@sanity/ui` to v2
+- Updated `@sanity/ui` to v3.1.11
