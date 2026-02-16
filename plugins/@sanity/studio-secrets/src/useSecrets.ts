@@ -61,25 +61,22 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
   }, [id])
 
   useEffect(() => {
-    async function fetchData() {
-      const fetchedAtVersion = writeVersionRef.current
-      clientRef.current
-        .fetch(query, {id}, {tag: 'secrets.get'})
-        .then((doc: Record<string, unknown> | null) => {
-          // Only apply if no SSE event arrived while the fetch was in flight
-          if (writeVersionRef.current === fetchedAtVersion) {
-            writeVersionRef.current++
-            // oxlint-disable-next-line no-unsafe-type-assertion -- The secrets type T is user-defined and we cannot statically verify it
-            setSecrets(doc?.['secrets'] as T | undefined)
-          }
-          return undefined
-        })
-        .catch(() => {
-          // Non-fatal — the SSE listener will deliver the value when it connects
-        })
-        .finally(() => setLoading(false))
-    }
-    fetchData()
+    const fetchedAtVersion = writeVersionRef.current
+    void clientRef.current
+      .fetch(query, {id}, {tag: 'secrets.get'})
+      .then((doc: Record<string, unknown> | null) => {
+        // Only apply if no SSE event arrived while the fetch was in flight
+        if (writeVersionRef.current === fetchedAtVersion) {
+          writeVersionRef.current++
+          // oxlint-disable-next-line no-unsafe-type-assertion -- The secrets type T is user-defined and we cannot statically verify it
+          setSecrets(doc?.['secrets'] as T | undefined)
+        }
+        return undefined
+      })
+      .catch(() => {
+        // Non-fatal — the SSE listener will deliver the value when it connects
+      })
+      .finally(() => setLoading(false))
   }, [id])
 
   const storeSecrets = useCallback(
@@ -87,7 +84,7 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
       setLoading(true)
       const currentClient = clientRef.current
       const keysPatch = currentClient.patch(id).set({secrets: updatedSecret})
-      currentClient
+      void currentClient
         .transaction()
         .createIfNotExists({_id: id, _type: type})
         .patch(keysPatch)
