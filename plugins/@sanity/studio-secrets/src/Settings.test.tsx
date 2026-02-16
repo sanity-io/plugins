@@ -184,7 +184,12 @@ describe('SettingsView', () => {
 
     render(
       <ThemeWrapper>
-        <SettingsView namespace="test" keys={[{key: 'k', title: 'Key'}]} onClose={vi.fn()} />
+        <SettingsView
+          namespace="test"
+          keys={[{key: 'k', title: 'Key'}]}
+          onClose={vi.fn()}
+          title="Configure"
+        />
       </ThemeWrapper>,
     )
 
