@@ -15,9 +15,7 @@ test('package exports', {timeout: 30_000}, async () => {
         "DocumentInternationalizationMenu": "function",
         "DuplicateWithTranslationsAction": "function",
         "documentInternationalization": "function",
-        "useDeleteTranslationAction": "function",
         "useDocumentInternationalizationContext": "function",
-        "useDuplicateWithTranslationsAction": "function",
       },
     }
   `)

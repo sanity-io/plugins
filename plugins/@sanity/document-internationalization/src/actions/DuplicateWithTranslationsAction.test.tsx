@@ -3,12 +3,11 @@ import type {DocumentActionProps} from 'sanity'
 
 import {act, renderHook, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
-import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {createMockSanityClient} from '../test/component-helpers'
 import {createMockMetadata, createMockTranslation} from '../test/helpers'
-import {useDuplicateWithTranslationsAction} from './DuplicateWithTranslationsAction'
+import {DuplicateWithTranslationsAction as useDuplicateWithTranslationsAction} from './DuplicateWithTranslationsAction'
 
 // Mock the translation metadata hook
 const mockTranslationMetadata = vi.fn()
@@ -93,7 +92,7 @@ describe('useDuplicateWithTranslationsAction', () => {
     const translations = [
       {
         ...createMockTranslation('en', 'doc-1'),
-        [LANGUAGE_FIELD_NAME]: 'en',
+        _key: 'en',
       },
     ]
     const metadata = createMockMetadata('meta-1', translations)

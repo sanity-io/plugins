@@ -5,7 +5,6 @@ import {Box, Button, Card, Popover, Stack, Text, TextInput, useClickOutsideEvent
 import {uuid} from '@sanity/uuid'
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {useEditState} from 'sanity'
-import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
 import type {DocumentInternationalizationMenuProps} from '../types'
 
@@ -166,7 +165,7 @@ export function DocumentInternationalizationMenu(
                           !allLanguagesAreValid ||
                           metadata?.translations
                             .filter((t) => t?.value?._ref !== documentId)
-                            .some((t) => t[LANGUAGE_FIELD_NAME] === language.id)) ??
+                            .some((t) => t._key === language.id)) ??
                         false
                       }
                     />

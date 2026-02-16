@@ -1,5 +1,3 @@
-import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
-
 import type {TranslationReference} from '../types'
 // TODO: Update in next major version when we migrate to the new format
 // import { createRandomKey } from '@sanity/util/content';
@@ -19,7 +17,7 @@ export function createReference(
   return {
     // TODO: Update in next major version when we migrate to the new format
     // ...(LANGUAGE_FIELD_NAME === "_key"?  {} : {_key: createRandomKey()} )
-    [LANGUAGE_FIELD_NAME]: language,
+    _key: language,
     _type: 'internationalizedArrayReferenceValue',
     value: {
       _type: 'reference',

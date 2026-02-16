@@ -1,8 +1,5 @@
 import {TranslateIcon} from '@sanity/icons'
 import {defineField, defineType, type DocumentDefinition, type FieldDefinition} from 'sanity'
-import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
-
-import type {TranslationReference} from '../../types'
 
 import {METADATA_SCHEMA_NAME, TRANSLATIONS_ARRAY_NAME} from '../../constants'
 
@@ -46,9 +43,7 @@ export default (schemaTypes: string[], metadataFields: FieldDefinition[]): Docum
         const title =
           translations.length === 1 ? `1 Translation` : `${translations.length} Translations`
         const languageKeys = translations.length
-          ? translations
-              .map((t: TranslationReference) => t[LANGUAGE_FIELD_NAME].toUpperCase())
-              .join(', ')
+          ? translations.map((t: {_key: string}) => t._key.toUpperCase()).join(', ')
           : ``
         const subtitle = [
           languageKeys ? `(${languageKeys})` : null,

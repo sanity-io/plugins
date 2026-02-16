@@ -1,7 +1,7 @@
 import {
-  useDeleteTranslationAction,
+  DeleteTranslationAction,
+  DuplicateWithTranslationsAction,
   documentInternationalization,
-  useDuplicateWithTranslationsAction,
 } from '@sanity/document-internationalization'
 import {defineField, definePlugin, defineType} from 'sanity'
 
@@ -38,7 +38,7 @@ export const documentInternationalizationExample = definePlugin(() => ({
   document: {
     actions: (prev, {schemaType}) => {
       if (['lesson'].includes(schemaType)) {
-        return [...prev, useDeleteTranslationAction, useDuplicateWithTranslationsAction]
+        return [...prev, DeleteTranslationAction, DuplicateWithTranslationsAction]
       }
 
       return prev

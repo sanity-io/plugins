@@ -3,7 +3,6 @@ import type {ReactElement} from 'react'
 import type {DocumentActionProps, SanityDocument} from 'sanity'
 
 import {act, renderHook, waitFor} from '@testing-library/react'
-import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import type {MetadataDocument} from '../types'
@@ -11,7 +10,7 @@ import type {MetadataDocument} from '../types'
 import {useDocumentInternationalizationContext} from '../components/DocumentInternationalizationContext'
 import {createMockSanityClient} from '../test/component-helpers'
 import {createMockDocument, MOCK_PLUGIN_CONFIG} from '../test/helpers'
-import {useDeleteTranslationAction} from './DeleteTranslationAction'
+import {DeleteTranslationAction as useDeleteTranslationAction} from './DeleteTranslationAction'
 
 // Mock dependencies
 vi.mock('../components/DocumentInternationalizationContext', () => ({
@@ -234,7 +233,7 @@ describe('DeleteTranslationAction', () => {
         schemaTypes: ['article'],
         translations: [
           {
-            [LANGUAGE_FIELD_NAME]: 'en',
+            _key: 'en',
             _type: 'internationalizedArrayReferenceValue',
             value: {_type: 'reference', _ref: 'doc-1'},
           },
