@@ -1,3 +1,5 @@
+import type {ReactNode} from 'react'
+
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import {afterEach, describe, expect, test, vi} from 'vitest'
 
@@ -12,6 +14,37 @@ const mockUseSecrets = vi.fn()
 vi.mock('./useSecrets', () => ({
   useSecrets: (...args: unknown[]) => mockUseSecrets(...args),
 }))
+
+// Mock the Dialog component to avoid the expensive styled-components + Portal +
+// Layer rendering pipeline that causes timeouts in CI/jsdom environments.
+// The tests here verify SettingsView behaviour, not @sanity/ui internals.
+vi.mock('@sanity/ui', async () => {
+  const actual = await vi.importActual('@sanity/ui')
+  return {
+    ...actual,
+    Dialog: ({
+      children,
+      header,
+      id,
+      onClose,
+    }: {
+      children: ReactNode
+      header?: string
+      id?: string
+      onClose?: () => void
+    }) => (
+      <div data-testid="mock-dialog" data-ui="Dialog" id={id}>
+        <span>{header}</span>
+        {onClose && (
+          <button type="button" aria-label="Close dialog" onClick={onClose}>
+            ×
+          </button>
+        )}
+        {children}
+      </div>
+    ),
+  }
+})
 
 afterEach(() => {
   cleanup()
