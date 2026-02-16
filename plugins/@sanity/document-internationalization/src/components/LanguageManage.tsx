@@ -16,6 +16,12 @@ type LanguageManageProps = {
   sourceLanguageId?: string
 }
 
+/**
+ * Button component for opening or creating the translation metadata document.
+ * When metadata already exists, clicking opens it in a new pane. When no
+ * metadata exists and creation is allowed, clicking creates a new metadata
+ * document with the source language reference and then opens it.
+ */
 export default function LanguageManage(props: LanguageManageProps) {
   const {id, metadataId, schemaType, documentId, sourceLanguageId} = props
   const open = useOpenInNewPane(id, METADATA_SCHEMA_NAME)

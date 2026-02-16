@@ -1,13 +1,23 @@
 import type {TranslationReference} from '../types'
+// TODO: Update in next major version when we migrate to the new format
+// import { createRandomKey } from '@sanity/util/content';
 
+/**
+ * Creates a translation reference object used in metadata documents to link
+ * a language key to a document. References are created as weak by default,
+ * with optional strengthen-on-publish metadata so the reference becomes
+ * strong once the referenced document is published.
+ */
 export function createReference(
-  key: string,
+  language: string,
   ref: string,
   type: string,
   strengthenOnPublish: boolean = true,
 ): TranslationReference {
   return {
-    _key: key,
+    // TODO: Update in next major version when we migrate to the new format
+    // ...(LANGUAGE_FIELD_NAME === "_key"?  {} : {_key: createRandomKey()} )
+    _key: language,
     _type: 'internationalizedArrayReferenceValue',
     value: {
       _type: 'reference',

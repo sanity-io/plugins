@@ -1,22 +1,43 @@
 import {TrashIcon} from '@sanity/icons'
 import {type ButtonTone, useToast} from '@sanity/ui'
 import {useCallback, useState} from 'react'
-import {type DocumentActionComponent, type SanityDocument, useClient} from 'sanity'
+import {useClient, type DocumentActionDescription, type DocumentActionProps} from 'sanity'
 
 import DeleteTranslationDialog from '../components/DeleteTranslationDialog'
 import DeleteTranslationFooter from '../components/DeleteTranslationFooter'
 import {useDocumentInternationalizationContext} from '../components/DocumentInternationalizationContext'
 import {API_VERSION, TRANSLATIONS_ARRAY_NAME} from '../constants'
+import {type MetadataDocument} from '../types'
 
 type DeleteOperation = 'DELETE' | 'UNSET'
 
-export const DeleteTranslationAction: DocumentActionComponent = (props) => {
+/**
+ * Optional Document action that removes a single translation from the metadata document
+ * and optionally deletes the translation document. Opens a confirmation dialog
+ * showing which metadata entries reference the document and any other references
+ * that may exist. When the document has translation references, those references
+ * are unset; otherwise the document is deleted directly.
+ *
+ * To use it, you need to add it to the document actions config
+ * ```
+ *  const translatedSchemaTypes = ['lesson', 'article'];
+ * document: {
+ *   actions: (prev, {schemaType}) => {
+ *     if (translatedSchemaTypes.includes(schemaType)) {
+ *       return [...prev, DeleteTranslationAction]
+ *     }
+ *     return prev
+ *   },
+ * },
+ * ```
+ */
+export const DeleteTranslationAction = (props: DocumentActionProps): DocumentActionDescription => {
   const {id: documentId, published, draft} = props
   const doc = draft || published
   const {languageField} = useDocumentInternationalizationContext()
 
   const [isDialogOpen, setDialogOpen] = useState(false)
-  const [translations, setTranslations] = useState<SanityDocument[]>([])
+  const [translations, setTranslations] = useState<MetadataDocument[]>([])
   const onClose = useCallback(() => setDialogOpen(false), [])
   const rawDocumentLanguage = doc ? doc[languageField] : null
   const documentLanguage = typeof rawDocumentLanguage === 'string' ? rawDocumentLanguage : null

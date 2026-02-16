@@ -15,6 +15,13 @@ export interface DocumentMember {
   value: unknown
 }
 
+/**
+ * Removes fields from a document that are marked with the
+ * `documentInternationalization.exclude` schema option. This is used when
+ * duplicating a source document to create a translation, so that
+ * language-specific or non-translatable fields are stripped from the copy.
+ * Returns the document with excluded paths unset, or `null` if the input is null.
+ */
 export function removeExcludedPaths(
   doc: SanityDocument | null,
   schemaType: ObjectSchemaType,

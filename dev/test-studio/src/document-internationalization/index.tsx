@@ -1,4 +1,8 @@
-import {documentInternationalization} from '@sanity/document-internationalization'
+import {
+  DeleteTranslationAction,
+  DuplicateWithTranslationsAction,
+  documentInternationalization,
+} from '@sanity/document-internationalization'
 import {defineField, definePlugin, defineType} from 'sanity'
 
 // Define a simple lesson schema type for testing document internationalization
@@ -31,6 +35,15 @@ export const documentInternationalizationExample = definePlugin(() => ({
   schema: {
     types: [lessonType],
   },
+  document: {
+    actions: (prev, {schemaType}) => {
+      if (['lesson'].includes(schemaType)) {
+        return [...prev, DeleteTranslationAction, DuplicateWithTranslationsAction]
+      }
+
+      return prev
+    },
+  },
   plugins: [
     documentInternationalization({
       supportedLanguages: [
@@ -39,6 +52,7 @@ export const documentInternationalizationExample = definePlugin(() => ({
         {id: 'fr', title: 'French'},
       ],
       schemaTypes: ['lesson'],
+      bulkPublish: true,
     }),
   ],
 }))

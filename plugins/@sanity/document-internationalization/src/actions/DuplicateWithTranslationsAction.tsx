@@ -5,7 +5,6 @@ import {useCallback, useMemo, useState} from 'react'
 import {filter, firstValueFrom} from 'rxjs'
 import {
   DEFAULT_STUDIO_CLIENT_OPTIONS,
-  type DocumentActionComponent,
   type Id,
   InsufficientPermissionsMessage,
   type PatchOperations,
@@ -15,6 +14,8 @@ import {
   useDocumentPairPermissions,
   useDocumentStore,
   useTranslation,
+  type DocumentActionProps,
+  type DocumentActionDescription,
 } from 'sanity'
 import {useRouter} from 'sanity/router'
 import {structureLocaleNamespace} from 'sanity/structure'
@@ -40,13 +41,20 @@ const DISABLED_REASON_KEY = {
   NOT_READY: 'action.duplicate.disabled.not-ready',
 }
 
-/* oxlint-disable typescript-eslint/no-deprecated -- onComplete is needed for backwards compatibility */
-export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
+/**
+ * Optional Document action that duplicates a document along with all its translations
+ * and the associated metadata document. The workflow duplicates each translated
+ * document, duplicates the metadata document, patches the new metadata to
+ * reference the new translation copies, and navigates to the duplicated document.
+ * Disabled when the user lacks permissions, metadata is missing or ambiguous,
+ * or the underlying duplicate operation is unavailable.
+ */
+export const DuplicateWithTranslationsAction = ({
   id,
   type,
+  /* oxlint-disable-next-line typescript-eslint/no-deprecated -- kept for backwards compatibility */
   onComplete,
-}) => {
-  /* oxlint-enable typescript-eslint/no-deprecated */
+}: DocumentActionProps): DocumentActionDescription => {
   const documentStore = useDocumentStore()
   const {duplicate} = useDocumentOperation(id, type)
   const {navigateIntent} = useRouter()
@@ -89,6 +97,9 @@ export const DuplicateWithTranslationsAction: DocumentActionComponent = ({
           const locale = translation._key
           const docId = translation.value?._ref
 
+          if (typeof locale !== 'string' || locale.trim().length === 0) {
+            return Promise.reject(new Error('Invalid locale for translation'))
+          }
           if (!docId) {
             return Promise.reject(new Error('Translation document not found'))
           }
