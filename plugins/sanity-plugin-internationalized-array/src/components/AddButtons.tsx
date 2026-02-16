@@ -34,7 +34,11 @@ function AddButtons(props: AddButtonsProps) {
   const {languageDisplay} = useInternationalizedArrayContext()
 
   return languages.length > 0 ? (
-    <Grid columns={Math.min(languages.length, MAX_COLUMNS[languageDisplay])} gap={2}>
+    <Grid
+      columns={Math.min(languages.length, MAX_COLUMNS[languageDisplay])}
+      gap={2}
+      data-testid="add-buttons-grid"
+    >
       {languages.map((language) => {
         const languageTitle: string = getLanguageDisplay(
           languageDisplay,

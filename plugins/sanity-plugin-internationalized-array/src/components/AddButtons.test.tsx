@@ -103,12 +103,11 @@ describe('AddButtons', () => {
   })
 
   test('renders null when languages array is empty', () => {
-    const {container} = render(
-      <AddButtons languages={[]} readOnly={false} value={undefined} handleClick={vi.fn()} />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons languages={[]} readOnly={false} value={undefined} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
-    expect(container.innerHTML).toBe('')
+    expect(screen.queryByTestId('add-buttons-grid')).not.toBeInTheDocument()
   })
 
   test('calls handleClick when a button is clicked', () => {

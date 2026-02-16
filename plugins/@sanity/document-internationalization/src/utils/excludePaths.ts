@@ -98,11 +98,7 @@ function extractPaths(
       // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
       if ((arrayValue as unknown[])?.length) {
         // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-        for (const item of arrayValue as Array<{
-          _key?: string
-          language?: string
-          _type?: string
-        }>) {
+        for (const item of arrayValue as Array<{_key?: string; _type?: string}>) {
           if (!item._key) continue
           const itemPath = [...fieldPath, {_key: item._key}] as Path
           let itemSchema = fieldSchema.of.find((t) => t.name === item._type)
@@ -114,7 +110,7 @@ function extractPaths(
             const innerFields = extractPaths(doc, itemSchema as ObjectSchemaType, itemPath)
             const arrayMember: DocumentMember = {
               path: itemPath,
-              name: item.language ?? item._key,
+              name: item._key,
               schemaType: itemSchema,
               value: item,
             }

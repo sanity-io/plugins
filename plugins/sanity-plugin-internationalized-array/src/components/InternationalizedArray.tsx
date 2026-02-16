@@ -54,9 +54,7 @@ export default function InternationalizedArray(
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const value = _value as InternationalizedArrayItem[]
   const itemsNeedingMigration = (value?.filter((v) => !v[LANGUAGE_FIELD_NAME]) ?? []).length > 0
-  const readOnly =
-    Boolean(documentReadOnly) ||
-    (typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false)
+  const readOnly = typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false
   const toast = useToast()
 
   const {languages, filteredLanguages, defaultLanguages, buttonAddAll, buttonLocations} =

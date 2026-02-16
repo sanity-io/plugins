@@ -11,7 +11,9 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
     {
       ".": {
+        "DeleteTranslationAction": "function",
         "DocumentInternationalizationMenu": "function",
+        "DuplicateWithTranslationsAction": "function",
         "documentInternationalization": "function",
         "useDeleteTranslationAction": "function",
         "useDocumentInternationalizationContext": "function",

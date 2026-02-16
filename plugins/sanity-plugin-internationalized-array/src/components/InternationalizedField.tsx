@@ -57,7 +57,7 @@ export default function InternationalizedField(props: FieldProps): ReactNode {
     const hasValidLanguageId = languageId ? languages.some((l) => l.id === languageId) : false
     // hide titles for 'value' fields within valid language entries
     const shouldHideTitle = props.title?.toLowerCase() === 'value' && hasValidLanguageId
-    // TODO: This is not working as expected.
+
     return {
       ...props,
       title: shouldHideTitle ? '' : props.title,

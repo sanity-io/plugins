@@ -50,7 +50,7 @@ export default function BulkPublish(props: BulkPublishProps) {
 
   const handleBulkPublish = useCallback(() => {
     const body = translations.map((translation) => ({
-      documentId: translation.value?._ref,
+      documentId: translation.value._ref,
     }))
     client
       .request({
