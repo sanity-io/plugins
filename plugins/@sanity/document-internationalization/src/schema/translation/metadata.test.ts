@@ -127,7 +127,11 @@ describe('metadata schema', () => {
     const schema = createMetadataSchema(schemaTypes, [])
 
     const result = schema.preview?.prepare?.({
-      translations: [{_key: 'en'}, {_key: 'fr'}, {_key: 'es'}],
+      translations: [
+        {[LANGUAGE_FIELD_NAME]: 'en'},
+        {[LANGUAGE_FIELD_NAME]: 'fr'},
+        {[LANGUAGE_FIELD_NAME]: 'es'},
+      ],
       documentSchemaTypes: [],
     })
 
@@ -149,7 +153,7 @@ describe('metadata schema', () => {
     const schema = createMetadataSchema(schemaTypes, [])
 
     const result = schema.preview?.prepare?.({
-      translations: [{_key: 'en'}, {_key: 'fr'}],
+      translations: [{[LANGUAGE_FIELD_NAME]: 'en'}, {[LANGUAGE_FIELD_NAME]: 'fr'}],
       documentSchemaTypes: [],
     })
 
@@ -160,7 +164,7 @@ describe('metadata schema', () => {
     const schema = createMetadataSchema(schemaTypes, [])
 
     const result = schema.preview?.prepare?.({
-      translations: [{_key: 'en'}],
+      translations: [{[LANGUAGE_FIELD_NAME]: 'en'}],
       documentSchemaTypes: ['article', 'page'],
     })
 

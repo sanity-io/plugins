@@ -24,8 +24,6 @@ import AddButtons from './AddButtons'
 import Feedback from './Feedback'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
-export type InternationalizedArrayProps = ArrayOfObjectsInputProps<InternationalizedArrayItem>
-
 /**
  * Main array input component for internationalized array fields.
  *

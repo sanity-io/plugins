@@ -1,6 +1,6 @@
 import {Stack} from '@sanity/ui'
 import {defineField, definePlugin, isSanityDocument} from 'sanity'
-import {internationalizedArray} from 'sanity-plugin-internationalized-array'
+import {internationalizedArray, LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
 import type {PluginConfig, TranslationReference} from './types'
 
@@ -163,7 +163,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
               validation: (Rule) =>
                 // @ts-expect-error - fix typings
                 Rule.custom(async (item: TranslationReference, context) => {
-                  if (!item?.value?._ref || !item?._key) {
+                  if (!item?.value?._ref || !item?.[LANGUAGE_FIELD_NAME]) {
                     return true
                   }
 
@@ -176,7 +176,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
                     },
                   )
 
-                  if (valueLanguage && valueLanguage === item._key) {
+                  if (valueLanguage && valueLanguage === item[LANGUAGE_FIELD_NAME]) {
                     return true
                   }
 
@@ -190,23 +190,23 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
                   // I'm not sure in what instance there's an array of parents
                   // But the Type suggests it's possible
                   const parentArray = Array.isArray(parent) ? parent : [parent]
-                  const language = parentArray.find((p) => p['_key'])
+                  const language = parentArray.find((p) => p[LANGUAGE_FIELD_NAME])
 
-                  if (!language?.['_key']) return null
+                  if (!language?.[LANGUAGE_FIELD_NAME]) return null
 
                   if (document['schemaTypes']) {
                     return {
                       filter: `_type in $schemaTypes && ${languageField} == $language`,
                       params: {
                         schemaTypes: document['schemaTypes'],
-                        language: language['_key'],
+                        language: language[LANGUAGE_FIELD_NAME],
                       },
                     }
                   }
 
                   return {
                     filter: `${languageField} == $language`,
-                    params: {language: language['_key']},
+                    params: {language: language[LANGUAGE_FIELD_NAME]},
                   }
                 },
               },

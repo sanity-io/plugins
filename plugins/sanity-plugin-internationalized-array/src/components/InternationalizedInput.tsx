@@ -18,16 +18,12 @@ import {type ReactNode, useMemo} from 'react'
 import {type ObjectItemProps, useFormValue} from 'sanity'
 import {set, unset} from 'sanity'
 
+import type {InternationalizedArrayItem} from '../types'
+
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
 import {getToneFromValidation} from './getToneFromValidation'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
-
-export type InternationalizedValue = {
-  _type: string
-  _key: string
-  value: string
-}
 
 /**
  * Renders a single row of an internationalized array: a language label (or
@@ -45,10 +41,10 @@ export type InternationalizedValue = {
  * - Applies a `CardTone` based on validation state via `getToneFromValidation`.
  */
 export default function InternationalizedInput(
-  props: ObjectItemProps<InternationalizedValue>,
+  props: ObjectItemProps<InternationalizedArrayItem>,
 ): ReactNode {
   // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-  const parentValue = useFormValue(props.path.slice(0, -1)) as InternationalizedValue[]
+  const parentValue = useFormValue(props.path.slice(0, -1)) as InternationalizedArrayItem[]
 
   // Extract the original onChange to avoid dependency issues
   const originalOnChange = props.inputProps.onChange
@@ -133,7 +129,7 @@ export default function InternationalizedInput(
     // This just overrides the type
     // Remove this as it shouldn't be necessary?
     // oxlint-disable-next-line typescript-eslint/no-unnecessary-type-assertion
-    value: props.value as InternationalizedValue,
+    value: props.value as InternationalizedArrayItem,
     // Use our wrapped onChange handler
     onChange: wrappedOnChange,
   }

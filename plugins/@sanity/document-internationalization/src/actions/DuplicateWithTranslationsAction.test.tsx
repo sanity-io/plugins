@@ -285,7 +285,7 @@ describe('useDuplicateWithTranslationsAction', () => {
         expect.any(String),
         expect.objectContaining({
           set: expect.objectContaining({
-            [`translations[_key == "en"].value._ref`]: expect.any(String),
+            [`translations[${LANGUAGE_FIELD_NAME} == "en"].value._ref`]: expect.any(String),
           }),
         }),
       )
