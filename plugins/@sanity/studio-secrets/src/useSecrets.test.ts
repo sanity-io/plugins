@@ -1,3 +1,4 @@
+import {Subject} from 'rxjs'
 import {act, renderHook, waitFor} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
@@ -13,9 +14,8 @@ const mockCreateIfNotExists = vi.fn()
 const mockCommit = vi.fn()
 const mockTransactionPatch = vi.fn()
 
-// Track subscription callbacks so tests can simulate SSE events
-let listenCallback: ((result: Record<string, unknown>) => void) | undefined
-let listenSubscription: {unsubscribe: ReturnType<typeof vi.fn>}
+// RxJS Subject that acts as the SSE stream — tests push events into it
+let listenSubject: Subject<Record<string, unknown>>
 
 const mockClient = {
   fetch: mockFetch,
@@ -31,14 +31,9 @@ vi.mock('sanity', () => ({
 }))
 
 beforeEach(() => {
-  listenSubscription = {unsubscribe: vi.fn()}
+  listenSubject = new Subject<Record<string, unknown>>()
 
-  mockListen.mockImplementation((_query: string, _params: unknown, _opts: unknown) => ({
-    subscribe: (cb: (result: Record<string, unknown>) => void) => {
-      listenCallback = cb
-      return listenSubscription
-    },
-  }))
+  mockListen.mockImplementation(() => listenSubject.asObservable())
 
   mockFetch.mockResolvedValue(null)
 
@@ -51,8 +46,9 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  // Complete the subject to tear down shared listeners between tests
+  listenSubject.complete()
   vi.restoreAllMocks()
-  listenCallback = undefined
 })
 
 describe('useSecrets', () => {
@@ -128,7 +124,7 @@ describe('useSecrets', () => {
 
     // Simulate an SSE event with updated secrets
     act(() => {
-      listenCallback?.({result: {secrets: {apiKey: 'new-value'}}})
+      listenSubject.next({result: {secrets: {apiKey: 'new-value'}}})
     })
 
     expect(result.current.secrets).toEqual({apiKey: 'new-value'})
@@ -137,9 +133,13 @@ describe('useSecrets', () => {
   test('unsubscribes from listener on unmount', () => {
     const {unmount} = renderHook(() => useSecrets('my-plugin'))
 
+    // The subject should have subscribers
+    expect(listenSubject.observed).toBe(true)
+
     unmount()
 
-    expect(listenSubscription.unsubscribe).toHaveBeenCalled()
+    // After unmount, no subscribers should remain
+    expect(listenSubject.observed).toBe(false)
   })
 
   test('uses different document IDs for different namespaces', () => {
@@ -161,6 +161,68 @@ describe('useSecrets', () => {
       {id: 'secrets.plugin-b'},
       expect.any(Object),
     )
+  })
+
+  test('deduplicates SSE listeners for the same namespace', () => {
+    // Clear any listen calls from previous tests
+    mockListen.mockClear()
+
+    // Two hooks using the same namespace should share one listener
+    renderHook(() => useSecrets('dedup-ns'))
+    renderHook(() => useSecrets('dedup-ns'))
+
+    // listen() should only be called once — the second hook reuses the shared listener
+    expect(mockListen).toHaveBeenCalledTimes(1)
+  })
+
+  test('both subscribers receive SSE events from shared listener', async () => {
+    mockFetch.mockResolvedValue(null)
+
+    const {result: result1} = renderHook(() =>
+      useSecrets<Record<string, string>>('shared-ns'),
+    )
+    const {result: result2} = renderHook(() =>
+      useSecrets<Record<string, string>>('shared-ns'),
+    )
+
+    await waitFor(() => {
+      expect(result1.current.loading).toBe(false)
+      expect(result2.current.loading).toBe(false)
+    })
+
+    act(() => {
+      listenSubject.next({result: {secrets: {key: 'shared-value'}}})
+    })
+
+    expect(result1.current.secrets).toEqual({key: 'shared-value'})
+    expect(result2.current.secrets).toEqual({key: 'shared-value'})
+  })
+
+  test('SSE event wins over slow fetch (race condition fix)', async () => {
+    // Fetch resolves slowly with stale data
+    let resolveFetch: (value: Record<string, unknown> | null) => void
+    mockFetch.mockReturnValue(
+      new Promise<Record<string, unknown> | null>((resolve) => {
+        resolveFetch = resolve
+      }),
+    )
+
+    const {result} = renderHook(() => useSecrets<Record<string, string>>('my-plugin'))
+
+    // SSE event arrives first with fresh data
+    act(() => {
+      listenSubject.next({result: {secrets: {apiKey: 'fresh-from-sse'}}})
+    })
+
+    expect(result.current.secrets).toEqual({apiKey: 'fresh-from-sse'})
+
+    // Now the slow fetch resolves with stale data — should be ignored
+    await act(async () => {
+      resolveFetch!({secrets: {apiKey: 'stale-from-fetch'}})
+    })
+
+    // Secrets should still be the fresh SSE value
+    expect(result.current.secrets).toEqual({apiKey: 'fresh-from-sse'})
   })
 
   describe('storeSecrets', () => {
