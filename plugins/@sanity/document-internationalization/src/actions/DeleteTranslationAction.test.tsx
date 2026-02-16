@@ -3,6 +3,7 @@ import type {ReactElement} from 'react'
 import type {DocumentActionProps, SanityDocument} from 'sanity'
 
 import {act, renderHook, waitFor} from '@testing-library/react'
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import type {MetadataDocument} from '../types'
@@ -233,7 +234,7 @@ describe('DeleteTranslationAction', () => {
         schemaTypes: ['article'],
         translations: [
           {
-            _key: 'en',
+            [LANGUAGE_FIELD_NAME]: 'en',
             _type: 'internationalizedArrayReferenceValue',
             value: {_type: 'reference', _ref: 'doc-1'},
           },

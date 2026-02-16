@@ -17,6 +17,7 @@ import {
   type DocumentActionProps,
   type DocumentActionDescription,
 } from 'sanity'
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {useRouter} from 'sanity/router'
 import {structureLocaleNamespace} from 'sanity/structure'
 
@@ -94,7 +95,7 @@ export const DuplicateWithTranslationsAction = ({
       await Promise.all(
         translationsArray.map(async (translation) => {
           const dupeId = uuid()
-          const locale = translation._key
+          const locale = translation[LANGUAGE_FIELD_NAME]
           const docId = translation.value?._ref
 
           if (typeof locale !== 'string' || locale.trim().length === 0) {
@@ -151,10 +152,12 @@ export const DuplicateWithTranslationsAction = ({
       // 3. Patch the duplicated metadata document to update the references
       const patch: PatchOperations = {
         set: Object.fromEntries(
-          Array.from(translations.entries()).map(([locale, documentId]) => [
-            `${TRANSLATIONS_ARRAY_NAME}[_key == "${locale}"].value._ref`,
-            documentId,
-          ]),
+          Array.from(translations.entries()).map(([locale, documentId]) => {
+            return [
+              `${TRANSLATIONS_ARRAY_NAME}[${LANGUAGE_FIELD_NAME} == "${locale}"].value._ref`,
+              documentId,
+            ]
+          }),
         ),
       }
 

@@ -2,6 +2,7 @@ import {TrashIcon} from '@sanity/icons'
 import {type ButtonTone, useToast} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 import {useClient, type DocumentActionDescription, type DocumentActionProps} from 'sanity'
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
 import DeleteTranslationDialog from '../components/DeleteTranslationDialog'
 import DeleteTranslationFooter from '../components/DeleteTranslationFooter'
@@ -54,7 +55,9 @@ export const DeleteTranslationAction = (props: DocumentActionProps): DocumentAct
       operation = 'UNSET'
       translations.forEach((translation) => {
         tx.patch(translation._id, (patch) =>
-          patch.unset([`${TRANSLATIONS_ARRAY_NAME}[_key == "${documentLanguage}"]`]),
+          patch.unset([
+            `${TRANSLATIONS_ARRAY_NAME}[${LANGUAGE_FIELD_NAME} == "${documentLanguage}"]`,
+          ]),
         )
       })
     } else {
