@@ -14,7 +14,7 @@ import {
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import type {Value} from '../types'
+import type {InternationalizedArrayItem} from '../types'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
@@ -24,7 +24,7 @@ import AddButtons from './AddButtons'
 import Feedback from './Feedback'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
-export type InternationalizedArrayProps = ArrayOfObjectsInputProps<Value>
+export type InternationalizedArrayProps = ArrayOfObjectsInputProps<InternationalizedArrayItem>
 
 /**
  * Main array input component for internationalized array fields.
@@ -49,10 +49,11 @@ export type InternationalizedArrayProps = ArrayOfObjectsInputProps<Value>
  *   no entries and the add buttons are not visible.
  */
 export default function InternationalizedArray(
-  props: InternationalizedArrayProps,
+  props: ArrayOfObjectsInputProps,
 ): React.ReactElement {
-  const {members, value, schemaType, onChange, readOnly: documentReadOnly} = props
-
+  const {members, value: _value, schemaType, onChange, readOnly: documentReadOnly} = props
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  const value = _value as InternationalizedArrayItem[]
   const readOnly = typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false
   const toast = useToast()
 
@@ -161,7 +162,7 @@ export default function InternationalizedArray(
         }
 
         return acc
-      }, [] as Value[])
+      }, [] as InternationalizedArrayItem[])
       .filter(Boolean)
 
     if (value?.length !== updatedValue.length) {

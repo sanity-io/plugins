@@ -1,4 +1,4 @@
-import type {Language, Value} from '../types'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 /**
  * Generates the label text for the "add all / add missing languages" button.
@@ -8,7 +8,10 @@ import type {Language, Value} from '../types'
  * - When some values already exist: returns `"Add missing language"` (singular)
  *   or `"Add missing languages"` (plural) depending on how many are left.
  */
-export function createAddAllTitle(value: Value[] | undefined, languages: Language[]): string {
+export function createAddAllTitle(
+  value: InternationalizedArrayItem[] | undefined,
+  languages: Language[],
+): string {
   if (value?.length) {
     return `Add missing ${languages.length - value.length === 1 ? `language` : `languages`}`
   }

@@ -1,12 +1,12 @@
 import type {
   FieldDefinition,
-  KeyedObject,
   ObjectSchemaType,
   Reference,
   SanityClient,
   SanityDocument,
   SanityDocumentLike,
 } from 'sanity'
+import type {InternationalizedArrayItem} from 'sanity-plugin-internationalized-array'
 
 export type Language = {
   id: Intl.UnicodeBCP47LocaleIdentifier
@@ -43,7 +43,7 @@ export type PluginConfigContext = Required<PluginConfig> & {
   supportedLanguages: Language[]
 }
 
-export type TranslationReference = KeyedObject & {
+export type TranslationReference = InternationalizedArrayItem<Reference> & {
   _type: 'internationalizedArrayReferenceValue'
   value: Reference
 }

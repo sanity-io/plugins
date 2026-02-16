@@ -1,6 +1,6 @@
 import {defineField, type FieldDefinition, type Rule} from 'sanity'
 
-import type {Language, LanguageCallback, Value} from '../types'
+import type {Language, LanguageCallback, InternationalizedArrayItem} from '../types'
 
 import {getFunctionCache, peek, setFunctionCache} from '../cache'
 import {createFieldName} from '../components/createFieldName'
@@ -47,7 +47,7 @@ export default (config: ArrayFactoryConfig) => {
     ],
     // @ts-expect-error - fix typings
     validation: (rule: Rule) =>
-      rule.custom<Value[]>(async (value, context) => {
+      rule.custom<InternationalizedArrayItem[]>(async (value, context) => {
         if (!value || value.length === 0) {
           return true
         }
@@ -109,7 +109,7 @@ export default (config: ArrayFactoryConfig) => {
 
         // Check for duplicate language keys (more efficient)
         const seenLanguages = new Set<string>()
-        const duplicateValues: Value[] = []
+        const duplicateValues: InternationalizedArrayItem[] = []
 
         for (const item of value) {
           if (item?.[LANGUAGE_FIELD_NAME]) {
