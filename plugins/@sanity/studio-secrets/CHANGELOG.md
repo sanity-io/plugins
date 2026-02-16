@@ -1,5 +1,28 @@
 # @sanity/studio-secrets
 
+## 4.0.0
+
+### Major Changes
+
+- [#568](https://github.com/sanity-io/plugins/pull/568) [`f49588a`](https://github.com/sanity-io/plugins/commit/f49588a397a5c9c655272efc6085d697f44d7083) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port @sanity/studio-secrets plugin to the plugins monorepo
+
+  **Breaking Changes:**
+  - Require React 19 and Sanity Studio v5
+  - Drop CJS output, ESM only
+  - Enable React Compiler
+
+  **Code Modernization:**
+  - Fixed TypeScript linting issues for strict type checking
+  - Fixed floating promises with proper void operator usage
+  - Replaced deprecated `React.FormEvent` with `ChangeEvent`
+  - Replaced `JSX.Element` return type with `ReactElement`
+  - Removed eslint-disable comments (oxlint does not require them)
+  - Updated `@sanity/ui` to v3.1.11
+
+### Patch Changes
+
+- [#575](https://github.com/sanity-io/plugins/pull/575) [`94e6c7a`](https://github.com/sanity-io/plugins/commit/94e6c7ab36016e3a5f306dfbe4025f5e9b766dc0) Thanks [@RitaDias](https://github.com/RitaDias)! - test(studio-secrets): add comprehensive test suite for Settings and useSecrets
+
 ## [3.0.3](https://github.com/sanity-io/sanity-studio-secrets/compare/v3.0.2...v3.0.3) (2025-12-18)
 
 ### Bug Fixes

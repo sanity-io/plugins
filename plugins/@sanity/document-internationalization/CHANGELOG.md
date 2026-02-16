@@ -1,5 +1,37 @@
 # @sanity/document-internationalization
 
+## 5.0.1
+
+### Patch Changes
+
+- [#581](https://github.com/sanity-io/plugins/pull/581) [`952a50b`](https://github.com/sanity-io/plugins/commit/952a50b1735b05da60d13f52c33428a5b1955a57) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update the plugin to consume the exported `InternationalizedArrayItem` type from `sanity-plugin-internationalized-array`.
+
+- [#576](https://github.com/sanity-io/plugins/pull/576) [`88c8e2d`](https://github.com/sanity-io/plugins/commit/88c8e2d717f1fb2314ae65b7dd3853a9f07fd246) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Deprecate the legacy `DeleteTranslationAction` and `DuplicateWithTranslationsAction` action exports. Use the hook-based actions instead: `useDeleteTranslationAction` and `useDuplicateWithTranslationsAction`.
+
+  To insert the hook-based actions, add them in your Studio `document.actions` configuration:
+
+  ```ts
+  import {
+    useDeleteTranslationAction,
+    useDuplicateWithTranslationsAction,
+  } from '@sanity/document-internationalization'
+
+  export default defineConfig({
+    // ...
+    document: {
+      actions: (prev, context) => {
+        const translatedSchemaTypes = ['lesson', 'article']
+
+        if (translatedSchemaTypes.includes(context.schemaType)) {
+          return [...prev, useDeleteTranslationAction, useDuplicateWithTranslationsAction]
+        }
+
+        return prev
+      },
+    },
+  })
+  ```
+
 ## 5.0.0
 
 ### Major Changes
