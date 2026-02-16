@@ -220,4 +220,14 @@ describe('SettingsView', () => {
       expect(input).toHaveValue('')
     })
   })
+
+  test('calls onClose when dialog close button is clicked', () => {
+    const {onClose} = renderSettingsView()
+
+    // @sanity/ui Dialog renders a close button with aria-label="Close dialog"
+    const closeButton = screen.getByRole('button', {name: /close/i})
+    fireEvent.click(closeButton)
+
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
 })

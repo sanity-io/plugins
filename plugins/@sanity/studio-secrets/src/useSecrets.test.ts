@@ -11,6 +11,7 @@ const mockSet = vi.fn()
 const mockPatch = vi.fn()
 const mockCreateIfNotExists = vi.fn()
 const mockCommit = vi.fn()
+const mockTransactionPatch = vi.fn()
 
 // Track subscription callbacks so tests can simulate SSE events
 let listenCallback: ((result: Record<string, unknown>) => void) | undefined
@@ -43,7 +44,8 @@ beforeEach(() => {
 
   mockSet.mockReturnValue({toJSON: () => ({})})
   mockPatch.mockReturnValue({set: mockSet})
-  mockCreateIfNotExists.mockReturnValue({patch: vi.fn().mockReturnValue({commit: mockCommit})})
+  mockTransactionPatch.mockReturnValue({commit: mockCommit})
+  mockCreateIfNotExists.mockReturnValue({patch: mockTransactionPatch})
   mockClient.transaction.mockReturnValue({createIfNotExists: mockCreateIfNotExists})
   mockCommit.mockResolvedValue(undefined)
 })
@@ -180,8 +182,12 @@ describe('useSecrets', () => {
         _id: 'secrets.my-plugin',
         _type: 'pluginSecrets',
       })
+      // Verify client.patch(id).set({secrets}) builds the keysPatch
       expect(mockPatch).toHaveBeenCalledWith('secrets.my-plugin')
       expect(mockSet).toHaveBeenCalledWith({secrets: {apiKey: 'new-secret'}})
+      // Verify the keysPatch (return value of .set()) was passed into the transaction
+      const keysPatch = mockSet.mock.results[0]?.value
+      expect(mockTransactionPatch).toHaveBeenCalledWith(keysPatch)
     })
 
     test('sets loading to true while storing', async () => {
