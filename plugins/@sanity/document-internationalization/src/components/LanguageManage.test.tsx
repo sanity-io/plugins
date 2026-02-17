@@ -2,6 +2,7 @@
 import type {ObjectSchemaType} from 'sanity'
 
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react'
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {createMockSanityClient, ThemeWrapper} from '../test/component-helpers'
@@ -213,7 +214,7 @@ describe('LanguageManage', () => {
           schemaTypes: ['article'],
           translations: expect.arrayContaining([
             expect.objectContaining({
-              _key: 'en',
+              [LANGUAGE_FIELD_NAME]: 'en',
               value: expect.objectContaining({_ref: 'doc-1'}),
             }),
           ]),

@@ -292,7 +292,7 @@ describe('DeleteTranslationAction', () => {
         schemaTypes: ['article'],
         translations: [
           {
-            _key: 'en',
+            [LANGUAGE_FIELD_NAME]: 'en',
             _type: 'internationalizedArrayReferenceValue',
             value: {_type: 'reference', _ref: 'doc-1'},
           },

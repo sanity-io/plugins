@@ -1,91 +1,128 @@
-/* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
-import type {ObjectSchemaType, SanityDocument} from 'sanity'
-
-import {beforeEach, describe, expect, test, vi} from 'vitest'
+import {
+  createSchema,
+  defineArrayMember,
+  defineField,
+  defineType,
+  type ObjectSchemaType,
+  type SanityDocument,
+} from 'sanity'
+import {describe, expect, test} from 'vitest'
 
 import {removeExcludedPaths} from './excludePaths'
 
-// Mock the isDocumentSchemaType function from sanity
-vi.mock('sanity', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('sanity')>()
-  return {
-    ...actual,
-    isDocumentSchemaType: vi.fn(),
-  }
+const schema = createSchema({
+  name: 'default',
+  types: [
+    defineType({
+      name: 'articleWithExcludes',
+      type: 'document',
+      fields: [
+        defineField({name: 'title', type: 'string'}),
+        defineField({name: 'body', type: 'string'}),
+        defineField({
+          name: 'keepMe',
+          type: 'string',
+          options: {documentInternationalization: {exclude: false}},
+        }),
+        defineField({
+          name: 'secret',
+          type: 'string',
+          options: {documentInternationalization: {exclude: true}},
+        }),
+        defineField({
+          name: 'excluded',
+          type: 'string',
+          options: {documentInternationalization: {exclude: true}},
+        }),
+        defineField({
+          name: 'metadata',
+          type: 'object',
+          fields: [
+            defineField({name: 'author', type: 'string'}),
+            defineField({
+              name: 'internal',
+              type: 'string',
+              options: {documentInternationalization: {exclude: true}},
+            }),
+          ],
+        }),
+        defineField({
+          name: 'blocks',
+          type: 'array',
+          of: [
+            defineArrayMember({
+              name: 'textBlock',
+              type: 'object',
+              fields: [
+                defineField({name: 'text', type: 'string'}),
+                defineField({
+                  name: 'internal',
+                  type: 'string',
+                  options: {documentInternationalization: {exclude: true}},
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    }),
+    defineType({
+      name: 'articleWithoutExcludes',
+      type: 'document',
+      fields: [
+        defineField({name: 'title', type: 'string'}),
+        defineField({name: 'body', type: 'string'}),
+      ],
+    }),
+    defineType({
+      name: 'nonDocumentObject',
+      type: 'object',
+      fields: [defineField({name: 'title', type: 'string'})],
+    }),
+  ],
 })
 
-// Import after mocking
-import {isDocumentSchemaType} from 'sanity'
+function getSchemaType(typeName: string): ObjectSchemaType {
+  const schemaType = schema.get(typeName)
+  if (!schemaType || schemaType.jsonType !== 'object') {
+    throw new Error(`Expected object schema type: ${typeName}`)
+  }
 
-/**
- * Creates a minimal schema type for testing.
- */
-function createSchemaType(
-  fields: Array<{
-    name: string
-    jsonType?: string
-    options?: {documentInternationalization?: {exclude?: boolean}}
-    of?: Array<{
-      name: string
-      fields?: Array<{
-        name: string
-        type: {
-          jsonType: string
-          options?: {documentInternationalization?: {exclude?: boolean}}
-        }
-      }>
-    }>
-    fields?: Array<{
-      name: string
-      type: {
-        jsonType: string
-        options?: {documentInternationalization?: {exclude?: boolean}}
-      }
-    }>
-  }>,
-): ObjectSchemaType {
-  return {
-    name: 'testDocument',
-    type: 'document',
-    jsonType: 'object',
-    fields: fields.map((f) => ({
-      name: f.name,
-      type: {
-        name: f.name,
-        jsonType: f.jsonType ?? 'string',
-        options: f.options,
-        of: f.of,
-        fields: f.fields,
-      },
-    })),
-  } as unknown as ObjectSchemaType
+  return schemaType
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function expectRecord(value: unknown, message: string): Record<string, unknown> {
+  if (!isRecord(value)) {
+    throw new Error(message)
+  }
+  return value
 }
 
 describe('removeExcludedPaths', () => {
-  beforeEach(() => {
-    vi.mocked(isDocumentSchemaType).mockReturnValue(true)
-  })
+  const excludedSchemaType = getSchemaType('articleWithExcludes')
+  const nonExcludedSchemaType = getSchemaType('articleWithoutExcludes')
+  const nonDocumentSchemaType = getSchemaType('nonDocumentObject')
 
   test('returns null when doc is null', () => {
-    const schemaType = createSchemaType([{name: 'title'}])
-    const result = removeExcludedPaths(null, schemaType)
+    const result = removeExcludedPaths(null, excludedSchemaType)
     expect(result).toBeNull()
   })
 
   test('returns doc unchanged when schemaType is not a document type', () => {
-    vi.mocked(isDocumentSchemaType).mockReturnValue(false)
-
     const doc: SanityDocument = {
       _id: 'doc-1',
-      _type: 'article',
+      _type: 'nonDocumentObject',
       _rev: 'rev-1',
       _createdAt: '2024-01-01T00:00:00Z',
       _updatedAt: '2024-01-01T00:00:00Z',
       title: 'Hello',
     }
-    const schemaType = createSchemaType([{name: 'title'}])
 
-    const result = removeExcludedPaths(doc, schemaType)
+    const result = removeExcludedPaths(doc, nonDocumentSchemaType)
     expect(result).toEqual(doc)
   })
 
@@ -99,9 +136,8 @@ describe('removeExcludedPaths', () => {
       title: 'Hello',
       body: 'World',
     }
-    const schemaType = createSchemaType([{name: 'title'}, {name: 'body'}])
 
-    const result = removeExcludedPaths(doc, schemaType)
+    const result = removeExcludedPaths(doc, nonExcludedSchemaType)
     expect(result).toEqual(doc)
   })
 
@@ -115,12 +151,8 @@ describe('removeExcludedPaths', () => {
       title: 'Hello',
       secret: 'should-be-removed',
     }
-    const schemaType = createSchemaType([
-      {name: 'title'},
-      {name: 'secret', options: {documentInternationalization: {exclude: true}}},
-    ])
 
-    const result = removeExcludedPaths(doc, schemaType)
+    const result = removeExcludedPaths(doc, excludedSchemaType)
 
     expect(result).not.toBeNull()
     expect(result!['title']).toBe('Hello')
@@ -137,20 +169,17 @@ describe('removeExcludedPaths', () => {
       title: 'Hello',
       body: 'Keep me',
       excluded: 'Remove me',
+      secret: 'Also remove me',
     }
-    const schemaType = createSchemaType([
-      {name: 'title'},
-      {name: 'body'},
-      {name: 'excluded', options: {documentInternationalization: {exclude: true}}},
-    ])
 
-    const result = removeExcludedPaths(doc, schemaType)
+    const result = removeExcludedPaths(doc, excludedSchemaType)
 
     expect(result!._id).toBe('doc-1')
     expect(result!._type).toBe('article')
     expect(result!['title']).toBe('Hello')
     expect(result!['body']).toBe('Keep me')
     expect(result!['excluded']).toBeUndefined()
+    expect(result!['secret']).toBeUndefined()
   })
 
   test('removes nested field with exclude: true', () => {
@@ -166,30 +195,14 @@ describe('removeExcludedPaths', () => {
         internal: 'should-be-removed',
       },
     }
-    const schemaType = createSchemaType([
-      {name: 'title'},
-      {
-        name: 'metadata',
-        jsonType: 'object',
-        fields: [
-          {name: 'author', type: {jsonType: 'string'}},
-          {
-            name: 'internal',
-            type: {
-              jsonType: 'string',
-              options: {documentInternationalization: {exclude: true}},
-            },
-          },
-        ],
-      },
-    ])
 
-    const result = removeExcludedPaths(doc, schemaType)
-
-    const metadata = result!['metadata'] as {author: string; internal?: string}
+    const result = removeExcludedPaths(doc, excludedSchemaType)
+    const metadata = result?.['metadata']
+    expect(metadata).toBeTypeOf('object')
     expect(result!['title']).toBe('Hello')
-    expect(metadata.author).toBe('John')
-    expect(metadata.internal).toBeUndefined()
+    const metadataRecord = expectRecord(metadata, 'Expected metadata to be an object')
+    expect(metadataRecord['author']).toBe('John')
+    expect(metadataRecord['internal']).toBeUndefined()
   })
 
   test('handles array fields with keyed items', () => {
@@ -205,40 +218,24 @@ describe('removeExcludedPaths', () => {
         {_key: 'block-2', _type: 'textBlock', text: 'Also keep', internal: 'Also remove'},
       ],
     }
-    const schemaType = createSchemaType([
-      {name: 'title'},
-      {
-        name: 'blocks',
-        jsonType: 'array',
-        of: [
-          {
-            name: 'textBlock',
-            fields: [
-              {name: 'text', type: {jsonType: 'string'}},
-              {
-                name: 'internal',
-                type: {
-                  jsonType: 'string',
-                  options: {documentInternationalization: {exclude: true}},
-                },
-              },
-            ],
-          },
-        ],
-      },
-    ])
 
-    const result = removeExcludedPaths(doc, schemaType)
+    const result = removeExcludedPaths(doc, excludedSchemaType)
 
     expect(result!['title']).toBe('Hello')
-    const blocks = result!['blocks'] as Array<{_key: string; text: string; internal?: string}>
+    const blocks = result?.['blocks']
+    expect(Array.isArray(blocks)).toBe(true)
+    if (!Array.isArray(blocks)) {
+      throw new Error('Expected blocks to be an array')
+    }
     expect(blocks).toHaveLength(2)
-    expect(blocks[0]).toBeDefined()
-    expect(blocks[1]).toBeDefined()
-    expect(blocks[0]!.text).toBe('Keep')
-    expect(blocks[0]!.internal).toBeUndefined()
-    expect(blocks[1]!.text).toBe('Also keep')
-    expect(blocks[1]!.internal).toBeUndefined()
+    expect(isRecord(blocks[0])).toBe(true)
+    expect(isRecord(blocks[1])).toBe(true)
+    const firstBlock = expectRecord(blocks[0], 'Expected first block to be an object')
+    const secondBlock = expectRecord(blocks[1], 'Expected second block to be an object')
+    expect(firstBlock['text']).toBe('Keep')
+    expect(firstBlock['internal']).toBeUndefined()
+    expect(secondBlock['text']).toBe('Also keep')
+    expect(secondBlock['internal']).toBeUndefined()
   })
 
   test('handles field with exclude: false (should not remove)', () => {
@@ -251,12 +248,8 @@ describe('removeExcludedPaths', () => {
       title: 'Hello',
       keepMe: 'Still here',
     }
-    const schemaType = createSchemaType([
-      {name: 'title'},
-      {name: 'keepMe', options: {documentInternationalization: {exclude: false}}},
-    ])
 
-    const result = removeExcludedPaths(doc, schemaType)
+    const result = removeExcludedPaths(doc, excludedSchemaType)
     expect(result!['keepMe']).toBe('Still here')
   })
 
@@ -269,13 +262,10 @@ describe('removeExcludedPaths', () => {
       _updatedAt: '2024-01-01T00:00:00Z',
       title: 'Hello',
       // body is not set
+      // secret is not set
     }
-    const schemaType = createSchemaType([
-      {name: 'title'},
-      {name: 'body', options: {documentInternationalization: {exclude: true}}},
-    ])
 
-    const result = removeExcludedPaths(doc, schemaType)
+    const result = removeExcludedPaths(doc, excludedSchemaType)
     expect(result!['title']).toBe('Hello')
   })
 })

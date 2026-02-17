@@ -3,6 +3,7 @@ import {Badge, Box, Button, Flex, Spinner, Text, Tooltip, useToast} from '@sanit
 import {uuid} from '@sanity/uuid'
 import {useCallback, useState} from 'react'
 import {type ObjectSchemaType, type SanityDocument, useClient} from 'sanity'
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
 import type {Language, Metadata, MetadataDocument, TranslationReference} from '../types'
 
@@ -49,7 +50,7 @@ export default function LanguageOption(props: LanguageOptionProps) {
   const disabled =
     props.disabled || userHasClicked || current || !source || !sourceLanguageId || !metadataId
   const translation: TranslationReference | undefined = metadata?.translations.length
-    ? metadata.translations.find((t) => t._key === language.id)
+    ? metadata.translations.find((t) => t[LANGUAGE_FIELD_NAME] === language.id)
     : undefined
   const {apiVersion, languageField, weakReferences, callback} =
     useDocumentInternationalizationContext()
