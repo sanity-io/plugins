@@ -13,6 +13,7 @@ export function isLanguageFilterEnabled(
   options: LanguageFilterConfig,
 ): boolean {
   const schemaFilter =
+    // oxlint-disable-next-line no-unsafe-type-assertion -- Checking if schemaType has options.languageFilter
     isDocument(schemaType) && (schemaType as LanguageFilterSchema)?.options?.languageFilter
   const defaultEnabled = !options.documentTypes
 

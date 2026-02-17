@@ -1,17 +1,17 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 import {type LayoutProps, useClient} from 'sanity'
 
-import {defaultFilterField} from './filterField'
 import type {
   Language,
   LanguageCallback,
   LanguageFilterConfig,
   LanguageFilterConfigProcessed,
 } from './types'
+
+import {defaultFilterField} from './filterField'
 import {useSelectedLanguageIds} from './useSelectedLanguageIds'
 
 export interface LanguageFilterStudioContextProps {
-  // eslint-disable-next-line react/require-default-props
   options: Required<LanguageFilterConfig>
 }
 
@@ -46,7 +46,7 @@ const LanguageFilterStudioContext =
  */
 export function LanguageFilterStudioProvider(
   props: LayoutProps & LanguageFilterStudioContextProps,
-) {
+): React.JSX.Element {
   const client = useClient({apiVersion: '2023-01-01'})
   const [languages, setLanguages] = useState<Language[]>(
     Array.isArray(props.options.supportedLanguages) ? props.options.supportedLanguages : [],
@@ -60,7 +60,7 @@ export function LanguageFilterStudioProvider(
     }
 
     if (!Array.isArray(props.options.supportedLanguages)) {
-      getLanguages(props.options.supportedLanguages)
+      void getLanguages(props.options.supportedLanguages)
     }
   }, [client, props.options.supportedLanguages])
 
@@ -87,6 +87,6 @@ export function LanguageFilterStudioProvider(
  * Retrieves plugin options and the currently selected
  * language IDs from anywhere in the Studio
  */
-export function useLanguageFilterStudioContext() {
+export function useLanguageFilterStudioContext(): LanguageFilterStudioContextValue {
   return useContext(LanguageFilterStudioContext)
 }

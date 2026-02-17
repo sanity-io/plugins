@@ -1,5 +1,7 @@
 import type {FieldMember, ObjectSchemaType} from 'sanity'
 
+import {describe, expect, it} from 'vitest'
+
 import {defaultFilterField, isLanguageFilterEnabled} from './filterField'
 
 describe('filterField', () => {
@@ -8,13 +10,11 @@ describe('filterField', () => {
       name: 'some-doc',
       jsonType: 'object',
       fields: [],
-      // eslint-disable-next-line camelcase
       __experimental_search: [],
       type: {
         name: 'document',
         jsonType: 'object',
         fields: [],
-        // eslint-disable-next-line camelcase
         __experimental_search: [],
       },
     }
@@ -53,7 +53,6 @@ describe('filterField', () => {
       name: 'locale_parent',
       jsonType: 'object',
       fields: [],
-      // eslint-disable-next-line camelcase
       __experimental_search: [],
     }
     const member: FieldMember = {
@@ -73,18 +72,28 @@ describe('filterField', () => {
         presence: [],
         changed: false,
         value: undefined,
+        // Required properties for BaseFormNode
+        hasUpstreamVersion: false,
+        // oxlint-disable-next-line no-unsafe-type-assertion -- Test mock, actual type not needed
+        __unstable_computeDiff: () => null as any,
       },
       groups: [],
       inSelectedGroup: false,
     }
 
     it('should filter -> true for nb field inside local-prefixed object', () => {
-      const result = defaultFilterField(localePrefixedObject, member, ['nb'])
+      const result = defaultFilterField(localePrefixedObject, member, ['nb'], {
+        _key: 'nb',
+        _type: 'locale_parent',
+      })
       expect(result).toBeTruthy()
     })
 
     it('should filter -> false for unselected field inside local-prefixed object', () => {
-      const result = defaultFilterField(localePrefixedObject, member, ['other'])
+      const result = defaultFilterField(localePrefixedObject, member, ['other'], {
+        _key: 'other',
+        _type: 'locale_parent',
+      })
       expect(result).toBeFalsy()
     })
 
@@ -93,6 +102,10 @@ describe('filterField', () => {
         {...localePrefixedObject, name: 'not-start-with-locale-field'},
         member,
         ['nb'],
+        {
+          _key: 'nb',
+          _type: 'not-start-with-locale-field',
+        },
       )
       expect(result).toBeTruthy()
     })

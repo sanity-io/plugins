@@ -5,11 +5,12 @@ import {
   type ObjectInputProps,
 } from 'sanity'
 
+import type {LanguageFilterConfig} from './types'
+
 import {isLanguageFilterEnabled} from './filterField'
 import {LanguageFilterMenuButton} from './LanguageFilterMenuButton'
 import {FilteredObjectWrapper} from './LanguageFilterObjectInput'
 import {defaultContextValue, LanguageFilterStudioProvider} from './LanguageFilterStudioContext'
-import type {LanguageFilterConfig} from './types'
 
 /**
  * ## Usage in sanity.config.ts (or .js)
@@ -44,43 +45,46 @@ import type {LanguageFilterConfig} from './types'
  * })
  * ```
  */
-export const languageFilter = definePlugin<LanguageFilterConfig>((options) => {
-  const RenderLanguageFilter: DocumentLanguageFilterComponent = () => {
-    return <LanguageFilterMenuButton />
-  }
 
-  const pluginOptions = {
-    ...defaultContextValue.options,
-    ...options,
-  }
+const RenderLanguageFilter: DocumentLanguageFilterComponent = () => {
+  return <LanguageFilterMenuButton />
+}
 
-  return {
-    name: '@sanity/language-filter',
-    studio: {
-      components: {
-        layout: (props) => LanguageFilterStudioProvider({...props, options: pluginOptions}),
-      },
-    },
+export const languageFilter: ReturnType<typeof definePlugin<LanguageFilterConfig>> =
+  definePlugin<LanguageFilterConfig>((options) => {
+    const pluginOptions = {
+      ...defaultContextValue.options,
+      ...options,
+    }
 
-    document: {
-      unstable_languageFilter: (prev, {schemaType, schema}) => {
-        if (isLanguageFilterEnabled(schema.get(schemaType), options)) {
-          return [...prev, RenderLanguageFilter]
-        }
-        return prev
-      },
-    },
-
-    form: {
-      components: {
-        input: (props) => {
-          if (props.id !== 'root' && isObjectSchemaType(props.schemaType)) {
-            return FilteredObjectWrapper(props as ObjectInputProps)
-          }
-
-          return props.renderDefault(props)
+    return {
+      name: '@sanity/language-filter',
+      studio: {
+        components: {
+          layout: (props) => LanguageFilterStudioProvider({...props, options: pluginOptions}),
         },
       },
-    },
-  }
-})
+
+      document: {
+        unstable_languageFilter: (prev, {schemaType, schema}) => {
+          if (isLanguageFilterEnabled(schema.get(schemaType), options)) {
+            return [...prev, RenderLanguageFilter]
+          }
+          return prev
+        },
+      },
+
+      form: {
+        components: {
+          input: (props) => {
+            if (props.id !== 'root' && isObjectSchemaType(props.schemaType)) {
+              // oxlint-disable-next-line no-unsafe-type-assertion -- isObjectSchemaType confirms the type
+              return FilteredObjectWrapper(props as ObjectInputProps)
+            }
+
+            return props.renderDefault(props)
+          },
+        },
+      },
+    }
+  })

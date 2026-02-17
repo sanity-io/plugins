@@ -15,20 +15,15 @@ import {
   Stack,
   Text,
   TextInput,
-  useClickOutside,
+  useClickOutsideEvent,
 } from '@sanity/ui'
-import {type FormEvent, type MouseEventHandler, useCallback, useState} from 'react'
+import {type MouseEventHandler, useCallback, useState} from 'react'
 import {TextWithTone} from 'sanity'
-import {styled} from 'styled-components'
 
 import {useLanguageFilterStudioContext} from './LanguageFilterStudioContext'
 import {usePaneLanguages} from './usePaneLanguages'
 
-const StyledBox = styled(Box)`
-  max-height: calc(100vh - 200px);
-`
-
-export function LanguageFilterMenuButton() {
+export function LanguageFilterMenuButton(): React.JSX.Element {
   const {options} = useLanguageFilterStudioContext()
 
   const defaultLanguages = options.supportedLanguages.filter((l) =>
@@ -60,13 +55,19 @@ export function LanguageFilterMenuButton() {
 
   const handleClickOutside = useCallback(() => setOpen(false), [])
 
-  useClickOutside(handleClickOutside, [button, popover])
+  useClickOutsideEvent(
+    handleClickOutside,
+    useCallback(
+      () => [button, popover].filter((el): el is HTMLElement => el !== null),
+      [button, popover],
+    ),
+  )
 
   const langCount = options.supportedLanguages.length
 
   // Search filter query
   const [query, setQuery] = useState('')
-  const handleQuery = useCallback((event: FormEvent<HTMLInputElement>) => {
+  const handleQuery = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.currentTarget.value) {
       setQuery(event.currentTarget.value)
     } else {
@@ -77,7 +78,7 @@ export function LanguageFilterMenuButton() {
   const showSearch = langCount > 4
 
   const content = (
-    <StyledBox overflow="auto">
+    <Box overflow="auto" style={{maxHeight: 'calc(100vh - 200px)'}}>
       <Stack padding={1} space={1}>
         {defaultLanguages.length > 0 && (
           <>
@@ -134,7 +135,7 @@ export function LanguageFilterMenuButton() {
             />
           ))}
       </Stack>
-    </StyledBox>
+    </Box>
   )
 
   const buttonText =
@@ -159,7 +160,6 @@ function LanguageFilterOption(props: {
   id: string
   selected: boolean
   title: string
-  // eslint-disable-next-line react/require-default-props
   onToggle?: (id: string) => void
 }) {
   const {id, onToggle, selected, title} = props

@@ -8,6 +8,7 @@ import {useLanguageFilterStudioContext} from './LanguageFilterStudioContext'
 export function FilteredObjectWrapper(props: ObjectInputProps) {
   const {options} = useLanguageFilterStudioContext()
 
+  // oxlint-disable-next-line no-unsafe-type-assertion -- documentType is always a string for Sanity documents
   const documentType = useFormValue(['_type']) as string
   const schema = useSchema()
   const languageFilterEnabled = isLanguageFilterEnabled(schema.get(documentType), options)
@@ -19,34 +20,32 @@ export function FilteredObjectInput(props: ObjectInputProps) {
   const {members: membersProp, schemaType, renderDefault, ...restProps} = props
   const {selectedLanguageIds, options} = useLanguageFilterStudioContext()
   const {filterField} = options
+  const parentValue = props.value
 
   const members: ObjectMember[] = useMemo(() => {
     return membersProp
       .filter((member) => {
         return (
-          (member.kind === 'field' && filterField(schemaType, member, selectedLanguageIds)) ||
+          (member.kind === 'field' &&
+            filterField(schemaType, member, selectedLanguageIds, parentValue)) ||
           member.kind === 'fieldSet' ||
           member.kind === 'error'
         )
       })
       .map((member) => {
         if (member.kind === 'fieldSet') {
-          return {
-            ...member,
-            fieldSet: {
-              ...member.fieldSet,
-              members: member.fieldSet.members.filter((fieldsetMember) => {
-                return (
-                  fieldsetMember.kind === 'field' &&
-                  filterField(schemaType, fieldsetMember, selectedLanguageIds)
-                )
-              }),
-            },
-          }
+          Object.assign(member.fieldSet, {
+            members: member.fieldSet.members.filter((fieldsetMember) => {
+              return (
+                fieldsetMember.kind === 'field' &&
+                filterField(schemaType, fieldsetMember, selectedLanguageIds, parentValue)
+              )
+            }),
+          })
         }
         return member
       })
-  }, [schemaType, membersProp, filterField, selectedLanguageIds])
+  }, [schemaType, membersProp, filterField, selectedLanguageIds, parentValue])
 
   return renderDefault({...restProps, members, schemaType, renderDefault})
 }
