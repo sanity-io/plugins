@@ -21,7 +21,6 @@
  * 5. After the migration is complete, you can delete this file.
  */
 
-import {randomKey} from '@sanity/util/content'
 import {defineMigration, set} from 'sanity/migrate'
 
 // Complete this with the document types you want to migrate.
@@ -84,7 +83,7 @@ export default defineMigration({
 
       return set({
         ...node,
-        _key: randomKey(),
+        _key: undefined, // Sets as undefined, the server will generate a new random key
         [LANGUAGE_FIELD_NAME]: oldKey,
       })
     },
