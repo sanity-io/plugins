@@ -92,8 +92,8 @@ describe('DocumentAddButtons', () => {
     fireEvent.click(screen.getByTestId('add-fr'))
 
     expect(mockToastPush).toHaveBeenCalledWith({
-      status: 'error',
-      title: 'No internationalizedArray fields found in document root',
+      status: 'warning',
+      title: 'No missing translations for French found.',
     })
   })
 
@@ -230,8 +230,8 @@ describe('DocumentAddButtons', () => {
     // Since all fields already have 'en', the toast should show an error
     // (the filter reduces to 0 items)
     expect(mockToastPush).toHaveBeenCalledWith({
-      status: 'error',
-      title: 'No internationalizedArray fields found in document root',
+      status: 'warning',
+      title: 'No missing translations for English found.',
     })
   })
 })
