@@ -292,7 +292,7 @@ After the plugin has been successfully migrated and published from the monorepo,
 
 2. **Migrate existing issues** to the monorepo:
    - Review all open issues in the original repository
-   - Add a label matching the plugin name to each issue for organization
+   - Add a label matching the plugin name to each issue for organization (example: an issue that was once in the `@sanity/color-input` repo will have a tag `color-input` in this repo)
    - Move the issues to the monorepo's issue tracker
    - Update issue references as needed
 
