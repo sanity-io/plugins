@@ -28,11 +28,17 @@
       "development": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./migrations": {
+      "source": "./migrations/index.ts",
+      "development": "./migrations/index.ts",
+      "default": "./dist/migrations/index.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./migrations": "./dist/migrations/index.js",
       "./package.json": "./package.json"
     }
   },

@@ -1,6 +1,6 @@
 {
   "extends": "@repo/tsconfig/build.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "migrations/**/*.ts"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "isolatedDeclarations": false
