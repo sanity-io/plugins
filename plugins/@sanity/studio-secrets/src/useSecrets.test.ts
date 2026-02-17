@@ -170,19 +170,33 @@ describe('useSecrets', () => {
     )
   })
 
-  test('deduplicates SSE listeners for the same namespace', () => {
-    // Clear any listen calls from previous tests
+  test('deduplicates both fetch and SSE for the same namespace', async () => {
+    mockFetch.mockClear()
     mockListen.mockClear()
+    mockFetch.mockResolvedValue({secrets: {key: 'value'}})
 
-    // Two hooks using the same namespace should share one listener
-    renderHook(() => useSecrets('dedup-ns'))
-    renderHook(() => useSecrets('dedup-ns'))
+    const {result: result1} = renderHook(() => useSecrets<Record<string, string>>('dedup-ns'))
 
-    // listen() should only be called once — the second hook reuses the shared listener
+    // Wait for first subscriber's fetch to complete
+    await waitFor(() => {
+      expect(result1.current.loading).toBe(false)
+    })
+
+    // Second subscriber with the same namespace — should reuse the shared stream
+    const {result: result2} = renderHook(() => useSecrets<Record<string, string>>('dedup-ns'))
+
+    // Second subscriber gets the replayed value immediately, no new fetch
+    await waitFor(() => {
+      expect(result2.current.loading).toBe(false)
+    })
+
+    expect(mockFetch).toHaveBeenCalledTimes(1)
     expect(mockListen).toHaveBeenCalledTimes(1)
+    expect(result2.current.secrets).toEqual({key: 'value'})
   })
 
-  test('creates separate listeners for different client configs (multi-workspace)', () => {
+  test('creates separate streams for different client configs (multi-workspace)', () => {
+    mockFetch.mockClear()
     mockListen.mockClear()
 
     // First hook uses the default test-project/test-dataset config
@@ -193,8 +207,9 @@ describe('useSecrets', () => {
 
     renderHook(() => useSecrets('same-ns'))
 
-    // listen() should be called twice — different client configs mean separate listeners
-    // even though the namespace is the same
+    // Both fetch and listen should be called twice — different client configs
+    // mean separate streams even though the namespace is the same
+    expect(mockFetch).toHaveBeenCalledTimes(2)
     expect(mockListen).toHaveBeenCalledTimes(2)
 
     // Restore original config for other tests
@@ -218,6 +233,43 @@ describe('useSecrets', () => {
 
     expect(result1.current.secrets).toEqual({key: 'shared-value'})
     expect(result2.current.secrets).toEqual({key: 'shared-value'})
+  })
+
+  test('remounting a second subscriber does not re-fetch (dialog close/reopen)', async () => {
+    mockFetch.mockClear()
+    mockListen.mockClear()
+    mockFetch.mockResolvedValue({secrets: {key: 'initial'}})
+
+    // First subscriber stays mounted (like SecretsDemo)
+    const {result: result1} = renderHook(() => useSecrets<Record<string, string>>('remount-ns'))
+
+    await waitFor(() => {
+      expect(result1.current.loading).toBe(false)
+    })
+
+    // Second subscriber mounts (like SettingsView opening)
+    const hook2 = renderHook(() => useSecrets<Record<string, string>>('remount-ns'))
+
+    await waitFor(() => {
+      expect(hook2.result.current.loading).toBe(false)
+    })
+
+    // Second subscriber gets the replayed value, no new fetch
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(hook2.result.current.secrets).toEqual({key: 'initial'})
+
+    // Unmount second subscriber (dialog closes)
+    hook2.unmount()
+
+    // Remount second subscriber (dialog reopens) — still no new fetch
+    const hook3 = renderHook(() => useSecrets<Record<string, string>>('remount-ns'))
+
+    await waitFor(() => {
+      expect(hook3.result.current.loading).toBe(false)
+    })
+
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(hook3.result.current.secrets).toEqual({key: 'initial'})
   })
 
   test('SSE events override fetch value (concat sequencing)', async () => {

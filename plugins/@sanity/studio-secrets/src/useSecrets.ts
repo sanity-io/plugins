@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useObservable} from 'react-rx'
-import {catchError, concat, defer, finalize, from, map, of, share, tap, timeout} from 'rxjs'
+import {catchError, concat, defer, finalize, from, map, of, shareReplay, tap, timeout} from 'rxjs'
 import {type SanityClient, useClient} from 'sanity'
 
 const query = '* [_id == $id] {secrets}[0]'
@@ -12,18 +12,24 @@ export interface Secrets<T> {
   storeSecrets: (secrets: T) => void
 }
 
-const sharedListeners = new Map<string, ReturnType<typeof createSharedListener>>()
+// Shares the entire concat(fetch$, sse$) pipeline so multiple useSecrets
+// calls with the same namespace reuse a single fetch + SSE stream.
+const sharedStreams = new Map<string, ReturnType<typeof createSharedStream>>()
 
-function createSharedListener(client: SanityClient, id: string, mapKey: string) {
-  return client.observable.listen(query, {id}, {visibility: 'query', tag: 'secrets.listen'}).pipe(
-    finalize(() => sharedListeners.delete(mapKey)),
-    share({resetOnRefCountZero: true}),
+function createSharedStream(client: SanityClient, id: string, mapKey: string) {
+  const fetch$ = defer(() => from(client.fetch(query, {id}, {tag: 'secrets.get'}))).pipe(
+    timeout(5_000),
+    map((doc) => doc?.['secrets']),
+    catchError(() => of(undefined)),
   )
-}
-
-function extractSecrets<T>(doc: Record<string, unknown> | null): T | undefined {
-  // oxlint-disable-next-line no-unsafe-type-assertion
-  return doc?.['secrets'] as T | undefined
+  const sse$ = client.observable
+    .listen(query, {id}, {visibility: 'query', tag: 'secrets.listen'})
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    .pipe(map((result) => (result as {result?: {secrets?: unknown}})?.result?.secrets))
+  return concat(fetch$, sse$).pipe(
+    finalize(() => sharedStreams.delete(mapKey)),
+    shareReplay({bufferSize: 1, refCount: true}),
+  )
 }
 
 export function useSecrets<T>(namespace: string): Secrets<T> {
@@ -38,31 +44,19 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
   const id = `secrets.${namespace}`
 
   // Include project/dataset in the Map key so multi-workspace setups
-  // don't share SSE listeners across different projects or datasets.
+  // don't share streams across different projects or datasets.
   const config = client.config()
   const mapKey = `${config.projectId}.${config.dataset}:${id}`
 
   const secrets$ = useMemo(() => {
-    if (!sharedListeners.has(mapKey)) {
-      sharedListeners.set(mapKey, createSharedListener(client, id, mapKey))
+    if (!sharedStreams.has(mapKey)) {
+      sharedStreams.set(mapKey, createSharedStream(client, id, mapKey))
     }
-    const fetch$ = defer(() => from(client.fetch(query, {id}, {tag: 'secrets.get'}))).pipe(
-      // Added to make sure we handle hanging requests / requests that take too long
-      timeout(5_000),
-      map((doc) => extractSecrets<T>(doc)),
-      catchError(() => of(undefined as T | undefined)),
-    )
-    const sse$ = sharedListeners.get(mapKey)!.pipe(
-      map((result) => {
-        // oxlint-disable-next-line no-unsafe-type-assertion
-        const resultData = result as {result?: {secrets?: T}}
-        return resultData?.result?.secrets
-      }),
-    )
-    return concat(fetch$, sse$).pipe(tap(() => setLoading(false)))
+    return sharedStreams.get(mapKey)!.pipe(tap(() => setLoading(false)))
   }, [client, id, mapKey])
 
-  const secrets = useObservable(secrets$)
+  // oxlint-disable-next-line no-unsafe-type-assertion
+  const secrets = useObservable(secrets$) as T | undefined
 
   const storeSecrets = useCallback(
     (updatedSecret: T) => {
