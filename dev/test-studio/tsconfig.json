@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@tsconfig/vite-react/tsconfig.json",
-  "include": ["src/**/*", "sanity.cli.ts", "sanity.config.ts"],
+  "include": ["src/**/*", "sanity.cli.ts", "sanity.config.ts", "migrations/**/*"],
   "compilerOptions": {
     "customConditions": ["development"]
   }
