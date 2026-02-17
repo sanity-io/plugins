@@ -140,7 +140,7 @@ export default function InternationalizedArray(
       .filter((language) => languages.find((l) => l.id === language))
       .every((language) => addedLanguages.includes(language))
 
-    if (!isDeleting && !hasAddedDefaultLanguages) {
+    if (!isDeleting && !hasAddedDefaultLanguages && !itemsNeedingMigration) {
       const languagesToAdd = defaultLanguages
         .filter((language) => !addedLanguages.includes(language))
         .filter((language) => languages.find((l) => l.id === language))
@@ -158,6 +158,7 @@ export default function InternationalizedArray(
     addedLanguages,
     languages,
     documentReadOnly,
+    itemsNeedingMigration,
   ])
 
   // NOTE: This is reordering and re-setting the whole array, it could be surgical

@@ -128,9 +128,10 @@ export default function DocumentAddButtons(): ReactElement {
         [],
       )
       if (removeDuplicates.length === 0) {
+        const language = filteredLanguages.find((l) => l.id === languageId)
         toast.push({
-          status: 'error',
-          title: 'No internationalizedArray fields found in document root',
+          status: 'warning',
+          title: `No missing translations for ${language?.title || languageId} found.`,
         })
         return
       }

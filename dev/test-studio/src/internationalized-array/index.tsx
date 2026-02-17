@@ -1,6 +1,9 @@
 import {languageFilter} from '@sanity/language-filter'
 import {definePlugin, defineType, defineField} from 'sanity'
-import {internationalizedArray} from 'sanity-plugin-internationalized-array'
+import {
+  internationalizedArray,
+  isInternationalizedArrayItemType,
+} from 'sanity-plugin-internationalized-array'
 
 const internationalizedPost = defineType({
   type: 'document',
@@ -74,43 +77,37 @@ const person = defineType({
   ],
 })
 
+const SUPPORTED_LANGUAGES = [
+  {id: 'en', title: 'English'},
+  {id: 'es', title: 'Spanish'},
+  {id: 'fr', title: 'French'},
+  {id: 'de', title: 'German'},
+  {id: 'pt', title: 'Portuguese'},
+  {id: 'it', title: 'Italian'},
+]
+
 export const internationalizedArrayExample = definePlugin(() => ({
   schema: {types: [internationalizedPost, person]},
   plugins: [
     internationalizedArray({
-      languages: [
-        {id: 'en', title: 'English'},
-        {id: 'es', title: 'Spanish'},
-        {id: 'fr', title: 'French'},
-        {id: 'de', title: 'German'},
-        {id: 'pt', title: 'Portuguese'},
-        {id: 'it', title: 'Italian'},
-      ],
-      defaultLanguages: ['en'],
+      languages: SUPPORTED_LANGUAGES,
+      defaultLanguages: [SUPPORTED_LANGUAGES[0].id],
       fieldTypes: ['string', 'text'],
       buttonLocations: ['document', 'field'],
     }),
     languageFilter({
       documentTypes: ['internationalizedPost', 'lesson'],
-      supportedLanguages: [
-        {id: 'en', title: 'English'},
-        {id: 'es', title: 'Spanish'},
-        {id: 'fr', title: 'French'},
-        {id: 'de', title: 'German'},
-        {id: 'pt', title: 'Portuguese'},
-        {id: 'it', title: 'Italian'},
-      ],
+      supportedLanguages: SUPPORTED_LANGUAGES,
       filterField: (enclosingType, member, selectedLanguageIds, parentValue) => {
+        // Filter internationalized arrays
         if (
           enclosingType.jsonType === 'object' &&
-          enclosingType.name.startsWith('internationalizedArray') &&
+          isInternationalizedArrayItemType(enclosingType.name) &&
           'kind' in member
         ) {
           const language = typeof parentValue?.language === 'string' ? parentValue?.language : null
-
           return language ? selectedLanguageIds.includes(language) : false
         }
-
         return true
       },
     }),
