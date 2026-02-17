@@ -1,5 +1,6 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
-import {finalize, share} from 'rxjs'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useObservable} from 'react-rx'
+import {catchError, concat, defer, finalize, from, map, of, share, tap, timeout} from 'rxjs'
 import {type SanityClient, useClient} from 'sanity'
 
 const query = '* [_id == $id] {secrets}[0]'
@@ -20,12 +21,14 @@ function createSharedListener(client: SanityClient, id: string, mapKey: string) 
   )
 }
 
+function extractSecrets<T>(doc: Record<string, unknown> | null): T | undefined {
+  // oxlint-disable-next-line no-unsafe-type-assertion
+  return doc?.['secrets'] as T | undefined
+}
+
 export function useSecrets<T>(namespace: string): Secrets<T> {
   const [loading, setLoading] = useState<boolean>(true)
-  const [secrets, setSecrets] = useState<T>()
 
-  // Stabilize the client reference to avoid re-triggering the useEffect
-  // when useClient() returns a new object on re-renders.
   const client = useClient({apiVersion: '2021-03-01'})
   const clientRef = useRef(client)
   useEffect(() => {
@@ -39,47 +42,27 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
   const config = client.config()
   const mapKey = `${config.projectId}.${config.dataset}:${id}`
 
-  // Monotonic counter to prevent a pre-existing race condition: if an SSE
-  // event arrives while the initial fetch is in flight, the slower fetch
-  // response could overwrite the newer SSE value. Each write increments
-  // the counter; the fetch only applies its result if no write occurred
-  // since it started.
-  const writeVersionRef = useRef(0)
-
-  useEffect(() => {
+  const secrets$ = useMemo(() => {
     if (!sharedListeners.has(mapKey)) {
-      sharedListeners.set(mapKey, createSharedListener(clientRef.current, id, mapKey))
+      sharedListeners.set(mapKey, createSharedListener(client, id, mapKey))
     }
-    const subscription = sharedListeners
-      .get(mapKey)!
-      .subscribe((result: Record<string, unknown>) => {
-        writeVersionRef.current++
+    // Added to make sure we handle hanging requests / requests that take too long
+    const fetch$ = defer(() => from(client.fetch(query, {id}, {tag: 'secrets.get'}))).pipe(
+      timeout(5_000),
+      map((doc) => extractSecrets<T>(doc)),
+      catchError(() => of(undefined as T | undefined)),
+    )
+    const sse$ = sharedListeners.get(mapKey)!.pipe(
+      map((result) => {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const resultData = result as {result?: {secrets?: T}}
-        setSecrets(resultData?.result?.secrets)
-      })
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [id, mapKey])
+        return resultData?.result?.secrets
+      }),
+    )
+    return concat(fetch$, sse$).pipe(tap(() => setLoading(false)))
+  }, [client, id, mapKey])
 
-  useEffect(() => {
-    const fetchedAtVersion = writeVersionRef.current
-    void clientRef.current
-      .fetch(query, {id}, {tag: 'secrets.get'})
-      .then((doc: Record<string, unknown> | null) => {
-        // Only apply if no SSE event arrived while the fetch was in flight
-        if (writeVersionRef.current === fetchedAtVersion) {
-          writeVersionRef.current++
-          // oxlint-disable-next-line no-unsafe-type-assertion -- The secrets type T is user-defined and we cannot statically verify it
-          setSecrets(doc?.['secrets'] as T | undefined)
-        }
-        return undefined
-      })
-      .catch(() => {
-        // Non-fatal — the SSE listener will deliver the value when it connects
-      })
-      .finally(() => setLoading(false))
-  }, [id, mapKey])
+  const secrets = useObservable(secrets$)
 
   const storeSecrets = useCallback(
     (updatedSecret: T) => {

@@ -131,16 +131,22 @@ describe('useSecrets', () => {
     expect(result.current.secrets).toEqual({apiKey: 'new-value'})
   })
 
-  test('unsubscribes from listener on unmount', () => {
+  test('unsubscribes from listener on unmount', async () => {
+    mockFetch.mockResolvedValue(null)
+
     const {unmount} = renderHook(() => useSecrets('my-plugin'))
 
-    // The subject should have subscribers
-    expect(listenSubject.observed).toBe(true)
+    // Wait for fetch to complete so concat subscribes to the SSE stream
+    await waitFor(() => {
+      expect(listenSubject.observed).toBe(true)
+    })
 
     unmount()
 
-    // After unmount, no subscribers should remain
-    expect(listenSubject.observed).toBe(false)
+    // react-rx teardown is asynchronous (share uses timer(0, asapScheduler))
+    await waitFor(() => {
+      expect(listenSubject.observed).toBe(false)
+    })
   })
 
   test('uses different document IDs for different namespaces', () => {
@@ -214,31 +220,22 @@ describe('useSecrets', () => {
     expect(result2.current.secrets).toEqual({key: 'shared-value'})
   })
 
-  test('SSE event wins over slow fetch (race condition fix)', async () => {
-    // Fetch resolves slowly with stale data
-    let resolveFetch: (value: Record<string, unknown> | null) => void
-    mockFetch.mockReturnValue(
-      new Promise<Record<string, unknown> | null>((resolve) => {
-        resolveFetch = resolve
-      }),
-    )
+  test('SSE events override fetch value (concat sequencing)', async () => {
+    mockFetch.mockResolvedValue({secrets: {apiKey: 'from-fetch'}})
 
     const {result} = renderHook(() => useSecrets<Record<string, string>>('my-plugin'))
 
-    // SSE event arrives first with fresh data
+    // Fetch completes first via concat
+    await waitFor(() => {
+      expect(result.current.secrets).toEqual({apiKey: 'from-fetch'})
+    })
+
+    // SSE event arrives with newer data — overrides the fetch value
     act(() => {
-      listenSubject.next({result: {secrets: {apiKey: 'fresh-from-sse'}}})
+      listenSubject.next({result: {secrets: {apiKey: 'from-sse'}}})
     })
 
-    expect(result.current.secrets).toEqual({apiKey: 'fresh-from-sse'})
-
-    // Now the slow fetch resolves with stale data — should be ignored
-    await act(async () => {
-      resolveFetch!({secrets: {apiKey: 'stale-from-fetch'}})
-    })
-
-    // Secrets should still be the fresh SSE value
-    expect(result.current.secrets).toEqual({apiKey: 'fresh-from-sse'})
+    expect(result.current.secrets).toEqual({apiKey: 'from-sse'})
   })
 
   describe('storeSecrets', () => {
