@@ -394,13 +394,13 @@ export default migrateToLanguageField(DOCUMENT_TYPES)
 
 Then verify your migration with a dry run:
 
-```
+```bash
 pnpm sanity migration run migrateToLanguageField
 ```
 
 Once ready, run the migration:
 
-```
+```bash
 pnpm sanity migration run migrateToLanguageField --dry-run=false
 ```
 
