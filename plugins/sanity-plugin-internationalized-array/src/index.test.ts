@@ -17,6 +17,9 @@ test('package exports', {timeout: 30_000}, async () => {
         "internationalizedArray": "function",
         "isInternationalizedArrayItemType": "function",
       },
+      "./migrations": {
+        "migrateToLanguageField": "function",
+      },
     }
   `)
 })
