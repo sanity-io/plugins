@@ -298,7 +298,7 @@ export default defineConfig({
       supportedLanguages: SUPPORTED_LANGUAGES,
       defaultLanguages: [],
       documentTypes: ['post'],
-      filterField: (enclosingType, member, selectedLanguageIds, parentvalue) => {
+      filterField: (enclosingType, member, selectedLanguageIds, parentValue) => {
         // Filter internationalized arrays
         if (
           enclosingType.jsonType === 'object' &&
