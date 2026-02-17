@@ -377,16 +377,39 @@ Use a backwards compatible query until your migration is ready and has been exec
 
 ### 3. Data migration
 
-[See the migration script](./migrations/keyToLanguageMigration.ts) inside `./migrations/keyToLanguageMigration.ts` of this plugin.
+The package exports a migration helper that you can run with the [migration CLI](https://www.sanity.io/docs/cli-reference/cli-migration).
 
-If you prefer a UI flow, the plugin also shows an in‑Studio migration banner that can update old-format items on demand, but we recommend running the migration to update all your items at once.
+Create a migration file in your project and export it:
+
+```ts
+// ./migrations/migrateToLanguageField.ts
+import {migrateToLanguageField} from 'sanity-plugin-internationalized-array/migrations'
+
+// Add the document types that contain internationalized arrays.
+// Example: ['internationalizedPost', 'translation.metadata']
+const DOCUMENT_TYPES: string[] = []
+
+export default migrateToLanguageField(DOCUMENT_TYPES)
+```
+
+Then verify your migration with a dry run:
+
+```
+pnpm sanity migration run migrateToLanguageField
+```
+
+Once ready, run the migration:
+
+```
+pnpm sanity migration run migrateToLanguageField --dry-run=false
+```
 
 **If you use [@sanity/document-internationalization](https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/document-internationalization):** Include `'translation.metadata'` in your migration's document types so that the `translations` array on metadata documents is migrated
 And update `@sanity/document-internationalization` to `v6`
 
 ### 4. Update your GROQ queries
 
-Previously we have update the GROQ queries to support both locations for the language field, now we can update again the GROQ queries to only use `language` and remove the dependency on the `_key`.
+Previously we updated the GROQ queries to support both locations for the language field. Once migration is complete, update the GROQ queries again to only use `language` and remove the dependency on `_key`.
 
 ```diff
 *[_type == "person"] {
