@@ -12,6 +12,7 @@ This major release includes several breaking changes as part of the migration to
 - **React 19 required**: The plugin now requires React 19.2 or later
 - **Node.js 20.19+ required**: The plugin now requires Node.js 20.19 or later (or 22.12+)
 - **styled-components removed**: Removed styled-components dependency - styles now use inline styles
+- **Language subscription bus removed**: The `languageSubscription.ts` module and its exports (`createSelectedLanguageIdsBus`, `SelectedLanguageIdsBus`, `LanguageSubscription`, `Unsubscribe`, `LanguageSubscribe`) have been removed. State management now uses React Context via `LanguageFilterStudioContext` instead of the subscription bus pattern.
 
 **Modernization:**
 - Replaced deprecated `useClickOutside` hook with `useClickOutsideEvent`
