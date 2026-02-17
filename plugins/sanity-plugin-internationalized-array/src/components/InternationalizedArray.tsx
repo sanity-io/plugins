@@ -68,6 +68,7 @@ export default function InternationalizedArray(
   const languageFilterEnabled =
     typeof documentType === 'string' && languageFilterOptions.documentTypes.includes(documentType)
 
+  // TODO:Is this redundant? The filter plugin is already filtering the members, why do we also need to call it at this level.
   const filteredMembers = useMemo(
     () =>
       languageFilterEnabled
