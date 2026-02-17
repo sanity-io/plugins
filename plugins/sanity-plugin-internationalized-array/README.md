@@ -287,7 +287,8 @@ Configure both plugins in your sanity.config.ts file:
 // ./sanity.config.ts
 
 import {defineConfig, isKeySegment} from 'sanity'
-import {languageFilter, isInternationalizedArrayItemType} from '@sanity/language-filter'
+import {languageFilter} from '@sanity/language-filter'
+import {isInternationalizedArrayItemType} from 'sanity-plugin-internationalized-array'
 
 export default defineConfig({
   // ... other config
