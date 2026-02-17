@@ -9,6 +9,7 @@
   "scripts": {
     "build": "sanity build",
     "dev": "sanity dev",
+    "import:internationalized-posts": "sanity exec ./scripts/import-internationalized-posts.mjs --with-user-token",
     "typegen": "sanity schema extract --enforce-required-fields --workspace kitchen-sink && sanity typegen generate"
   },
   "dependencies": {
