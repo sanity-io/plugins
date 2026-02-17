@@ -6,4 +6,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: [],
   },
+  server: {
+    deps: {
+      inline: ['vitest-package-exports'],
+    },
+  },
 })
