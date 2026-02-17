@@ -10,10 +10,23 @@ Support `sanity-plugin-internationalized-array` v5 `language` field format.
 
 1. Update `sanity-plugin-internationalized-array` to v5 first.
 2. Backup your data.
-3. Run the internationalized-array migration and **include `'translation.metadata'` in your `documentTypes` array** so that translation metadata documents are also migrated:
-   ```bash
-   npx sanity migration run keyToLanguageMigration --dry-run
-   npx sanity migration run keyToLanguageMigration
+3. Create a migration file using the new bundled helper from `sanity-plugin-internationalized-array/migrations`, and **include `'translation.metadata'` in your `documentTypes` array** so translation metadata documents are also migrated:
+
+   ```ts
+   // ./migrations/migrateToLanguageField.ts
+   import {migrateToLanguageField} from 'sanity-plugin-internationalized-array/migrations'
+   export default migrateToLanguageField(['yourType', 'translation.metadata'])
    ```
+
+   ```bash
+   npx sanity migration run migrateToLanguageField
+   ```
+
+   Verify everything looks as expected
+
+   ```bash
+   npx sanity migration run migrateToLanguageField   --dry-run=false
+   ```
+
 4. If you have custom code that reads `translation._key` to identify languages, update it to use `translation.language` instead.
 5. If you use the legacy action exports (`DeleteTranslationAction`, `DuplicateWithTranslationsAction`), migrate to the hook-based replacements (`useDeleteTranslationAction`, `useDuplicateWithTranslationsAction`).

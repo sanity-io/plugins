@@ -161,7 +161,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
 
       onChange(PatchEvent.from(patches.flat()))
     },
-    [documentsToTranslation, getInitialValueForType, onChange, toast],
+    [documentsToTranslation, getInitialValueForType, onChange, toast, filteredLanguages],
   )
   return (
     <Stack space={3}>
