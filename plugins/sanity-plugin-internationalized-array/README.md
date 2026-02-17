@@ -287,8 +287,7 @@ Configure both plugins in your sanity.config.ts file:
 // ./sanity.config.ts
 
 import {defineConfig, isKeySegment} from 'sanity'
-import {get} from 'lodash-es'
-import {languageFilter} from '@sanity/language-filter'
+import {languageFilter, isInternationalizedArrayItemType} from '@sanity/language-filter'
 
 export default defineConfig({
   // ... other config
@@ -299,34 +298,16 @@ export default defineConfig({
       supportedLanguages: SUPPORTED_LANGUAGES,
       defaultLanguages: [],
       documentTypes: ['post'],
-      filterField: (enclosingType, member, selectedLanguageIds) => {
+      filterField: (enclosingType, member, selectedLanguageIds, parentvalue) => {
         // Filter internationalized arrays
         if (
           enclosingType.jsonType === 'object' &&
-          enclosingType.name.startsWith('internationalizedArray') &&
+          isInternationalizedArrayItemType(enclosingType.name) &&
           'kind' in member
         ) {
-          // Get last two segments of the field's path
-          const pathEnd = member.field.path.slice(-2)
-          // If the second-last segment is a _key, and the last segment is `value`,
-          // it's an internationalized array value. Look up the array item and
-          // check its `language` field instead of relying on `_key`.
-          if (pathEnd[1] === 'value' && isKeySegment(pathEnd[0])) {
-            const item = get(member.document, member.field.path.slice(0, -1))
-            const language = item?.language ?? null
-
-            return language ? selectedLanguageIds.includes(language) : false
-          }
-
-          return true
+          const language = typeof parentValue?.language === 'string' ? parentValue?.language : null
+          return language ? selectedLanguageIds.includes(language) : false
         }
-
-        // Filter internationalized objects if you have them
-        // `localeString` must be registered as a custom schema type
-        if (enclosingType.jsonType === 'object' && enclosingType.name.startsWith('locale')) {
-          return selectedLanguageIds.includes(member.name)
-        }
-
         return true
       },
     }),
