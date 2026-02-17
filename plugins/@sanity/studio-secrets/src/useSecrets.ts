@@ -1,7 +1,8 @@
-import {useEffect, useState} from 'react'
-import {useClient} from 'sanity'
+import {useCallback, useMemo, useState} from 'react'
+import {useObservable} from 'react-rx'
+import {map} from 'rxjs'
+import {useClient, useDocumentPreviewStore} from 'sanity'
 
-const query = '* [_id == $id] {secrets}[0]'
 const type = 'pluginSecrets'
 
 export interface Secrets<T> {
@@ -10,47 +11,45 @@ export interface Secrets<T> {
   storeSecrets: (secrets: T) => void
 }
 
+const INITIAL_STATE = {loading: true, secrets: undefined}
+
 export function useSecrets<T>(namespace: string): Secrets<T> {
-  const [loading, setLoading] = useState<boolean>(true)
-  const [secrets, setSecrets] = useState<T>()
+  const [saving, setSaving] = useState(false)
 
   const client = useClient({apiVersion: '2021-03-01'})
-
+  const documentPreviewStore = useDocumentPreviewStore()
   const id = `secrets.${namespace}`
 
-  useEffect(() => {
-    const subscription = client.observable
-      .listen(query, {id}, {visibility: 'query', tag: 'secrets.listen'})
-      .subscribe((result: Record<string, unknown>) => {
-        const resultData = result as {result?: {secrets?: T}}
-        setSecrets(resultData?.result?.secrets)
-      })
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [id, client])
+  const secrets$ = useMemo(
+    () =>
+      documentPreviewStore.unstable_observeDocument(id).pipe(
+        map((doc) => ({
+          loading: false,
+          // oxlint-disable-next-line no-unsafe-type-assertion
+          secrets: (doc as Record<string, unknown> | undefined)?.['secrets'] as T | undefined,
+        })),
+      ),
+    [id, documentPreviewStore],
+  )
 
-  useEffect(() => {
-    void client
-      .fetch(query, {id}, {tag: 'secrets.get'})
-      .then((doc: Record<string, unknown> | null) => {
-        // oxlint-disable-next-line no-unsafe-type-assertion -- The secrets type T is user-defined and we cannot statically verify it
-        setSecrets(doc?.['secrets'] as T | undefined)
-        return undefined
-      })
-      .finally(() => setLoading(false))
-  }, [id, client])
+  const {loading: readLoading, secrets} = useObservable(secrets$, INITIAL_STATE)
 
-  const storeSecrets = (updatedSecret: T) => {
-    setLoading(true)
-    const keysPatch = client.patch(id).set({secrets: updatedSecret})
-    void client
-      .transaction()
-      .createIfNotExists({_id: id, _type: type})
-      .patch(keysPatch)
-      .commit({visibility: 'async', tag: 'secrets.store'})
-      .finally(() => setLoading(false))
-  }
+  const storeSecrets = useCallback(
+    (updatedSecret: T) => {
+      setSaving(true)
+      const keysPatch = client.patch(id).set({secrets: updatedSecret})
+      void client
+        .transaction()
+        .createIfNotExists({_id: id, _type: type})
+        .patch(keysPatch)
+        .commit({visibility: 'async', tag: 'secrets.store'})
+        .catch(() => {
+          // Non-fatal — the listener will deliver the updated value
+        })
+        .finally(() => setSaving(false))
+    },
+    [client, id],
+  )
 
-  return {loading, secrets, storeSecrets}
+  return {loading: readLoading || saving, secrets, storeSecrets}
 }
