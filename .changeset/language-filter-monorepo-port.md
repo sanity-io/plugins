@@ -11,7 +11,6 @@ This major release includes several breaking changes as part of the migration to
 - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the minimum version
 - **React 19 required**: The plugin now requires React 19.2 or later
 - **Node.js 20.19+ required**: The plugin now requires Node.js 20.19 or later (or 22.12+)
-- **Stricter TypeScript**: The plugin is built with `isolatedDeclarations` for better type safety
 - **styled-components removed**: Removed styled-components dependency - styles now use inline styles
 
 **Modernization:**
