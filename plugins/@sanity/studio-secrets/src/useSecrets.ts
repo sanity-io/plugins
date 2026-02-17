@@ -46,8 +46,8 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
     if (!sharedListeners.has(mapKey)) {
       sharedListeners.set(mapKey, createSharedListener(client, id, mapKey))
     }
-    // Added to make sure we handle hanging requests / requests that take too long
     const fetch$ = defer(() => from(client.fetch(query, {id}, {tag: 'secrets.get'}))).pipe(
+      // Added to make sure we handle hanging requests / requests that take too long
       timeout(5_000),
       map((doc) => extractSecrets<T>(doc)),
       catchError(() => of(undefined as T | undefined)),
