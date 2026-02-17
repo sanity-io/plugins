@@ -1,5 +1,11 @@
 # @sanity/document-internationalization
 
+## 5.0.2
+
+### Patch Changes
+
+- [#582](https://github.com/sanity-io/plugins/pull/582) [`d4e3d2b`](https://github.com/sanity-io/plugins/commit/d4e3d2baad5964c6a1f17adba590c7ac301744af) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Use `LANGUAGE_FIELD_NAME` constant from `sanity-plugin-internationalized-array` instead of hardcoded `_key` references
+
 ## 5.0.1
 
 ### Patch Changes
