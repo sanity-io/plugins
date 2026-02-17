@@ -1,5 +1,5 @@
 import {languageFilter} from '@sanity/language-filter'
-import {definePlugin, defineType, defineField, isKeySegment} from 'sanity'
+import {definePlugin, defineType, defineField} from 'sanity'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 
 const internationalizedPost = defineType({
@@ -62,28 +62,15 @@ export const internationalizedArrayExample = definePlugin(() => ({
         {id: 'es', title: 'Spanish'},
         {id: 'fr', title: 'French'},
       ],
-      filterField: (enclosingType, member, selectedLanguageIds) => {
-        // Filter internationalized arrays - follows readme example
+      filterField: (enclosingType, member, selectedLanguageIds, parentValue) => {
         if (
           enclosingType.jsonType === 'object' &&
           enclosingType.name.startsWith('internationalizedArray') &&
           'kind' in member
         ) {
-          // Get last two segments of the field's path
-          const pathEnd = member.field.path.slice(-2)
-          // If the second-last segment is a _key, and the last segment is `value`,
-          // It's an internationalized array value
-          // And the array _key is the language of the field
-          const language =
-            pathEnd[1] === 'value' && isKeySegment(pathEnd[0]) ? pathEnd[0]._key : null
+          const language = typeof parentValue?.language === 'string' ? parentValue?.language : null
 
           return language ? selectedLanguageIds.includes(language) : false
-        }
-
-        // Filter internationalized objects if you have them
-        // `localeString` must be registered as a custom schema type
-        if (enclosingType.jsonType === 'object' && enclosingType.name.startsWith('locale')) {
-          return selectedLanguageIds.includes(member.name)
         }
 
         return true
