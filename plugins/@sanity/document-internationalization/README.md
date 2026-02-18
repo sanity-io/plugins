@@ -113,14 +113,9 @@ pnpm sanity migration run migrateToLanguageField
 
 Once ready, run the migration:
 
-````
-pnpm sanity migration run migrateToLanguageField --no-dry-run
-
-## Install
-
 ```bash
-npm install --save @sanity/document-internationalization
-````
+pnpm sanity migration run migrateToLanguageField --no-dry-run
+```
 
 ### 4. Update your GROQ queries
 
@@ -131,6 +126,12 @@ Previously we updated the GROQ queries to support both locations for the languag
 -  "greeting": greeting[language == "en" || _key == "en"][0].value
 +  "greeting": greeting[language == "en"][0].value
 }
+```
+
+## Install
+
+```bash
+npm install --save @sanity/document-internationalization
 ```
 
 ## Usage
