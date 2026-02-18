@@ -52,4 +52,7 @@ export const MOCK_INTERNATIONALIZED_ARRAY_CONTEXT: InternationalizedArrayContext
   select: {},
   fieldTypes: [],
   includeForDocumentType: () => true,
+  languageFilter: {
+    documentTypes: [],
+  },
 }
