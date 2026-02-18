@@ -402,7 +402,7 @@ pnpm sanity migration run migrateToLanguageField
 Once ready, run the migration:
 
 ```bash
-pnpm sanity migration run migrateToLanguageField --dry-run=false
+pnpm sanity migration run migrateToLanguageField --no-dry-run
 ```
 
 **If you use [@sanity/document-internationalization](https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/document-internationalization):** Include `'translation.metadata'` in your migration's document types so that the `translations` array on metadata documents is migrated
