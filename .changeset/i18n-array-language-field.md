@@ -18,7 +18,7 @@ Move language identifier from `_key` to dedicated `language` field.
 {"_key": "abc123", "language": "en", "value": "hello"}
 ```
 
-**How to upgrade:**
+## How to upgrade
 
 Full details in [README Migrate from v4 to v5](https://github.com/sanity-io/plugins/blob/main/plugins/sanity-plugin-internationalized-array/README.md#migrate-from-v4-to-v5) section of the README.
 
@@ -43,3 +43,31 @@ Full details in [README Migrate from v4 to v5](https://github.com/sanity-io/plug
 
 3. Update any custom code that reads `_key` as the language identifier to use the `language` field instead.
 4. Remove `_key == "en"` from your queries once migration is complete, since language is now stored in `language`.
+
+## Usage with language filter
+
+The plugin now includes built-in integration with `@sanity/language-filter`.
+To enable it, add `languageFilter.documentTypes` in the plugin config for the document types that should show the filter.
+
+```ts
+import {defineConfig} from 'sanity'
+import {internationalizedArray} from 'sanity-plugin-internationalized-array'
+
+
+export default defineConfig({
+  // ...
+  plugins: [
+    internationalizedArray({
+      languages: [
+        {id: 'en', title: 'English'},
+        {id: 'fr', title: 'French'}
+      ],
+      defaultLanguages: ['en'],
+      fieldTypes: ['string'],
+      languageFilter: {
+        documentTypes: ['internationalizedPost', 'lesson'],
+      },
+    }),
+  ],
+})
+```

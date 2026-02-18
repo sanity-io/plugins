@@ -1,9 +1,5 @@
-import {languageFilter} from '@sanity/language-filter'
 import {definePlugin, defineType, defineField} from 'sanity'
-import {
-  internationalizedArray,
-  isInternationalizedArrayItemType,
-} from 'sanity-plugin-internationalized-array'
+import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 
 const internationalizedPost = defineType({
   type: 'document',
@@ -94,21 +90,8 @@ export const internationalizedArrayExample = definePlugin(() => ({
       defaultLanguages: [SUPPORTED_LANGUAGES[0].id],
       fieldTypes: ['string', 'text'],
       buttonLocations: ['document', 'field'],
-    }),
-    languageFilter({
-      documentTypes: ['internationalizedPost', 'lesson'],
-      supportedLanguages: SUPPORTED_LANGUAGES,
-      filterField: (enclosingType, member, selectedLanguageIds, parentValue) => {
-        // Filter internationalized arrays
-        if (
-          enclosingType.jsonType === 'object' &&
-          isInternationalizedArrayItemType(enclosingType.name) &&
-          'kind' in member
-        ) {
-          const language = typeof parentValue?.language === 'string' ? parentValue?.language : null
-          return language ? selectedLanguageIds.includes(language) : false
-        }
-        return true
+      languageFilter: {
+        documentTypes: ['internationalizedPost', 'lesson'],
       },
     }),
   ],
