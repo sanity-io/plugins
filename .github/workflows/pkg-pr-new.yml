@@ -28,4 +28,4 @@ jobs:
       - name: Build
         run: pnpm turbo run build --filter='!./dev/*'
 
-      - run: pnpm dlx pkg-pr-new publish "./plugins/**" --pnpm --no-template --json output.json
+      - run: pnpm dlx pkg-pr-new publish "./plugins/sanity-plugin-internationalized-array" --pnpm --no-template --json output.json
