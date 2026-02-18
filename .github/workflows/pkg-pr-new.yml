@@ -1,0 +1,27 @@
+name: Publish
+on:
+  pull_request:
+    types: [opened, synchronize, labeled, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  publish:
+    if: >
+      github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'trigger: preview')
+
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - name: Build
+        run: pnpm turbo run build --filter='!./dev/*'
+
+      - run: pnpm dlx pkg-pr-new publish "./plugins/*"
