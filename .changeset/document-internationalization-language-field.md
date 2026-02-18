@@ -25,7 +25,7 @@ Support `sanity-plugin-internationalized-array` v5 `language` field format.
    Verify everything looks as expected
 
    ```bash
-   npx sanity migration run migrateToLanguageField   --dry-run=false
+   npx sanity migration run migrateToLanguageField   --no-dry-run
    ```
 
 4. If you have custom code that reads `translation._key` to identify languages, update it to use `translation.language` instead.

@@ -114,7 +114,7 @@ pnpm sanity migration run migrateToLanguageField
 Once ready, run the migration:
 
 ````
-pnpm sanity migration run migrateToLanguageField --dry-run=false
+pnpm sanity migration run migrateToLanguageField --no-dry-run
 
 ## Install
 

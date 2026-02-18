@@ -38,7 +38,7 @@ Full details in [README Migrate from v4 to v5](https://github.com/sanity-io/plug
    Verify everything looks as expected
 
    ```bash
-   npx sanity migration run migrateToLanguageField  --dry-run=false
+   npx sanity migration run migrateToLanguageField  --no-dry-run
    ```
 
 3. Update any custom code that reads `_key` as the language identifier to use the `language` field instead.
