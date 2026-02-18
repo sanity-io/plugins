@@ -175,7 +175,7 @@ jobs:
             `
               : `## Preview this PR with [pkg.pr.new](https://pkg.pr.new)
 
-            No packages were published, nothing has changed.
+            No packages were published, no changesets were found.
 
             [View Commit](${`https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${sha}`}) (${sha})
 
