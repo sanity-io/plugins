@@ -43,18 +43,18 @@ Add it as a plugin in sanity.config.ts (or .js):
 import {defineConfig} from 'sanity'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 
- export const defineConfig({
+export default defineConfig({
   // ...
   plugins: [
     internationalizedArray({
       languages: [
         {id: 'en', title: 'English'},
-        {id: 'fr', title: 'French'}
+        {id: 'fr', title: 'French'},
       ],
       defaultLanguages: ['en'],
       fieldTypes: ['string'],
-    })
-  ]
+    }),
+  ],
 })
 ```
 
@@ -144,16 +144,16 @@ The "Add all languages" button can be hidden with `buttonAddAll`.
 import {defineConfig} from 'sanity'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 
- export const defineConfig({
+export default defineConfig({
   // ...
   plugins: [
     internationalizedArray({
       // ...other config
       buttonLocations: ['field', 'unstable__fieldAction', 'document'], // default ['field']
       buttonAddAll: false, // default true
-      languageDisplay: 'codeOnly' // codeOnly (default) | titleOnly | titleAndCode
-    })
-  ]
+      languageDisplay: 'codeOnly', // codeOnly (default) | titleOnly | titleAndCode
+    }),
+  ],
 })
 ```
 
@@ -165,7 +165,7 @@ For more control over the `value` field, you can pass a schema definition into t
 import {defineConfig} from 'sanity'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 
- export const defineConfig({
+ export default defineConfig({
   // ...
   plugins: [
     internationalizedArray({
@@ -281,40 +281,32 @@ If you have many languages and authors that predominately write in only a few, [
 
 ![Internationalized array field filtered with language-filter](https://github.com/sanity-io/language-filter/assets/9684022/4b402520-4128-4e6e-af07-960a10be397e)
 
-Configure both plugins in your sanity.config.ts file:
+The plugin includes built-in integration with `@sanity/language-filter`.
+To enable it, add `languageFilter.documentTypes` in the plugin config for the document types that should show the filter.
 
 ```ts
-// ./sanity.config.ts
-
-import {defineConfig, isKeySegment} from 'sanity'
-import {languageFilter} from '@sanity/language-filter'
-import {isInternationalizedArrayItemType} from 'sanity-plugin-internationalized-array'
+import {defineConfig} from 'sanity'
+import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 
 export default defineConfig({
-  // ... other config
+  // ...
   plugins: [
-    // ... other plugins
-    languageFilter({
-      // Use the same languages as the internationalized array plugin
-      supportedLanguages: SUPPORTED_LANGUAGES,
-      defaultLanguages: [],
-      documentTypes: ['post'],
-      filterField: (enclosingType, member, selectedLanguageIds, parentValue) => {
-        // Filter internationalized arrays
-        if (
-          enclosingType.jsonType === 'object' &&
-          isInternationalizedArrayItemType(enclosingType.name) &&
-          'kind' in member
-        ) {
-          const language = typeof parentValue?.language === 'string' ? parentValue?.language : null
-          return language ? selectedLanguageIds.includes(language) : false
-        }
-        return true
+    internationalizedArray({
+      languages: [
+        {id: 'en', title: 'English'},
+        {id: 'fr', title: 'French'},
+      ],
+      defaultLanguages: ['en'],
+      fieldTypes: ['string'],
+      languageFilter: {
+        documentTypes: ['internationalizedPost', 'lesson'],
       },
     }),
   ],
 })
 ```
+
+If you need more control, you can continue using `@sanity/language-filter` directly and pass `internationalizedArrayLanguageFilter` from this package as your `filterField`.
 
 ## Shape of stored data
 
@@ -417,6 +409,33 @@ Previously we updated the GROQ queries to support both locations for the languag
 -  "greeting": greeting[language == "en" || _key == "en"][0].value
 +  "greeting": greeting[language == "en"][0].value
 }
+```
+
+## Usage with language filter
+
+The plugin now includes built-in integration with `@sanity/language-filter`.
+To enable it, add `languageFilter.documentTypes` in the plugin config for the document types that should show the filter.
+
+```ts
+import {defineConfig} from 'sanity'
+import {internationalizedArray} from 'sanity-plugin-internationalized-array'
+
+export default defineConfig({
+  // ...
+  plugins: [
+    internationalizedArray({
+      languages: [
+        {id: 'en', title: 'English'},
+        {id: 'fr', title: 'French'},
+      ],
+      defaultLanguages: ['en'],
+      fieldTypes: ['string'],
+      languageFilter: {
+        documentTypes: ['internationalizedPost', 'lesson'],
+      },
+    }),
+  ],
+})
 ```
 
 ## Migrate from objects to arrays

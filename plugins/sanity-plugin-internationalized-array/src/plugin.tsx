@@ -1,3 +1,4 @@
+import {languageFilter} from '@sanity/language-filter'
 import {definePlugin, isObjectInputProps} from 'sanity'
 
 import {InternationalizedArrayFormInput} from './components/InternationalizedArrayFormInput'
@@ -9,6 +10,7 @@ import array from './schema/array'
 import object from './schema/object'
 import type {PluginConfig} from './types'
 import {hasInternationalizedArrayField} from './utils/hasInternationalizedArrayField'
+import {internationalizedArrayLanguageFilter} from './utils/internationalizedArrayLanguageFilter'
 
 export const internationalizedArray = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...CONFIG_DEFAULT, ...config}
@@ -19,6 +21,7 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
     fieldTypes,
     defaultLanguages,
     buttonLocations,
+    languageFilter: languageFilterConfig,
   } = pluginConfig
 
   return {
@@ -76,5 +79,15 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
         ...fieldTypes.map((type) => object({type})),
       ],
     },
+    plugins:
+      languageFilterConfig?.documentTypes?.length > 0
+        ? [
+            languageFilter({
+              documentTypes: languageFilterConfig.documentTypes,
+              supportedLanguages: languages,
+              filterField: internationalizedArrayLanguageFilter,
+            }),
+          ]
+        : undefined,
   }
 })
