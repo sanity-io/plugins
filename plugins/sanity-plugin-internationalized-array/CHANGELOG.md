@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 4.0.3
+
+### Patch Changes
+
+- [#582](https://github.com/sanity-io/plugins/pull/582) [`d4e3d2b`](https://github.com/sanity-io/plugins/commit/d4e3d2baad5964c6a1f17adba590c7ac301744af) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Refactor internal code to use `LANGUAGE_FIELD_NAME` constant instead of hardcoded `_key` references
+
 ## 4.0.2
 
 ### Patch Changes
