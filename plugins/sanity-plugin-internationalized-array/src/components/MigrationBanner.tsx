@@ -1,7 +1,6 @@
 import {WarningOutlineIcon} from '@sanity/icons'
-import {Box, Button, Card, Flex, Stack, Text, useToast} from '@sanity/ui'
-import {randomKey} from '@sanity/util/content'
-import {type ReactElement, useCallback, useMemo} from 'react'
+import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
+import {type ReactElement, useMemo} from 'react'
 import {set} from 'sanity'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
@@ -36,14 +35,7 @@ export type MigrationBannerProps = {
  * />
  * ```
  */
-export function MigrationBanner({
-  value,
-  languages,
-  onChange,
-  readOnly = false,
-}: MigrationBannerProps): ReactElement | null {
-  const toast = useToast()
-
+export function MigrationBanner({value, languages}: MigrationBannerProps): ReactElement | null {
   // Detect items that need migration from old format (_key as language) to new format (language field)
   // An item needs migration if:
   // 1. It has a _key that matches a valid language ID
@@ -61,40 +53,6 @@ export function MigrationBanner({
   }, [value, languages])
 
   const needsMigration = itemsNeedingMigration.length > 0
-
-  // Handler to migrate items from old format to new format
-  const handleMigrateLanguages = useCallback(() => {
-    if (!value?.length || !needsMigration) {
-      return
-    }
-
-    const languageIds = new Set(languages.map((l) => l.id))
-
-    // Create updated value array with migrated items
-    const updatedValue = value.map((item) => {
-      // Check if this item needs migration
-      const needsItemMigration =
-        item._key && languageIds.has(item._key) && !item[LANGUAGE_FIELD_NAME as keyof typeof item]
-
-      if (needsItemMigration) {
-        // Migrate: copy _key to language field, generate new random _key
-        return {
-          ...item,
-          _key: randomKey(),
-          [LANGUAGE_FIELD_NAME]: item._key,
-        }
-      }
-
-      return item
-    })
-
-    onChange([set(updatedValue)])
-    toast.push({
-      title: `Updated ${itemsNeedingMigration.length} item${itemsNeedingMigration.length === 1 ? '' : 's'} to new format`,
-      status: 'success',
-    })
-  }, [value, languages, needsMigration, onChange, toast, itemsNeedingMigration.length])
-
   // Don't render if no migration is needed
   if (!needsMigration) {
     return null
@@ -110,21 +68,28 @@ export function MigrationBanner({
         </Box>
         <Stack space={2} flex={1}>
           <Text size={1} weight="semibold">
-            Data format update required
+            Data migration required
           </Text>
           <Text size={1} muted>
             {itemsNeedingMigration.length} item
-            {itemsNeedingMigration.length === 1 ? '' : 's'} need
-            {itemsNeedingMigration.length === 1 ? 's' : ''} to be updated to the new format.
+            {itemsNeedingMigration.length === 1 ? '' : 's'}{' '}
+            {itemsNeedingMigration.length === 1 ? 'needs' : 'need'} to be migrated to the v5 format.
           </Text>
+          <Box marginTop={2}>
+            <Text size={1}>
+              This field still uses the v4 format where language is stored in <code>_key</code>.
+              Migrate to the v5 format where language is stored in <code>language</code>.{' '}
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://github.com/sanity-io/plugins/blob/main/plugins/sanity-plugin-internationalized-array/README.md#migrate-from-v4-to-v5"
+              >
+                Learn more
+              </a>
+              .
+            </Text>
+          </Box>
         </Stack>
-        <Button
-          tone="caution"
-          mode="ghost"
-          text="Update Languages"
-          onClick={handleMigrateLanguages}
-          disabled={readOnly}
-        />
       </Flex>
     </Card>
   )
