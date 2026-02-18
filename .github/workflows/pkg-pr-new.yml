@@ -72,9 +72,12 @@ jobs:
             function renderInstallInstructions() {
               return PACKAGE_MANAGERS.map(
                 (pkgManager) =>
-                  `#### <img height="16" align="center" alt="${pkgManager.name} logo" src="${pkgManager.logoUrl}" /> Using ${pkgManager.name}
+                  `<details${pkgManager.name === 'pnpm' ? ' open' : ''}>
+            <summary><img height="16" align="center" alt="${pkgManager.name} logo" src="${pkgManager.logoUrl}" /> <b>Using ${pkgManager.name}</b></summary>
 
             ${renderPackages(pkgManager, output.packages)}
+
+            </details>
             `,
               ).join('\n')
             }
