@@ -3,6 +3,10 @@ on:
   pull_request:
     types: [opened, synchronize, labeled, reopened]
 
+concurrency:  
+  group: pkg-pr-new-${{ github.event.pull_request.number }}  
+  cancel-in-progress: true  
+
 permissions:
   contents: read
   pull-requests: write
@@ -24,4 +28,4 @@ jobs:
       - name: Build
         run: pnpm turbo run build --filter='!./dev/*'
 
-      - run: pnpm dlx pkg-pr-new publish "./plugins/*"
+      - run: pnpm dlx pkg-pr-new publish "./plugins/**" --pnpm --no-template --json output.json
