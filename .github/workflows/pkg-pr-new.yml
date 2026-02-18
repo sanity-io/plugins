@@ -9,6 +9,7 @@ concurrency:
 
 permissions:
   contents: read
+  issues: write
   pull-requests: write
 
 jobs:
@@ -30,20 +31,67 @@ jobs:
       - name: Build
         run: pnpm turbo run build --filter='!./dev/*'
 
-      - name: Detect changed plugin packages
+      - name: Detect changed plugin packages from changesets
         id: changed-packages
         run: |
-          mapfile -t packages < <(
-            git diff --name-only "origin/${{ github.base_ref }}"...HEAD \
-              | awk -F/ '/^plugins\/(@sanity\/[^/]+|sanity-plugin-[^/]+)\// {
-                  if ($2 == "@sanity") {
-                    print "./plugins/" $2 "/" $3
-                  } else {
-                    print "./plugins/" $2
-                  }
-                }' \
-              | sort -u
+          mapfile -t changeset_files < <(
+            git diff --name-only "origin/${{ github.base_ref }}"...HEAD -- '.changeset/*.md'
           )
+
+          filtered_changeset_files=()
+          for file in "${changeset_files[@]}"; do
+            if [[ "$file" == ".changeset/README.md" ]]; then
+              continue
+            fi
+            if [[ "$file" == .changeset/*.md ]]; then
+              filtered_changeset_files+=("$file")
+            fi
+          done
+          changeset_files=("${filtered_changeset_files[@]}")
+
+          if [ ${#changeset_files[@]} -eq 0 ]; then
+            echo "has_changed_packages=false" >> "$GITHUB_OUTPUT"
+            echo "package_paths=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          parser_script="$(mktemp)"
+          cat > "$parser_script" <<'NODE'
+          const fs = require("node:fs")
+          const files = process.argv.slice(2)
+          const paths = new Set()
+
+          for (const file of files) {
+            const content = fs.readFileSync(file, "utf8")
+            const match = content.match(/^---\n([\s\S]*?)\n---/)
+            if (!match) continue
+
+            for (const line of match[1].split("\n")) {
+              const packageMatch = line.match(/^\s*['"]([^'"]+)['"]\s*:\s*(major|minor|patch)\s*$/)
+              if (!packageMatch) continue
+
+              const packageName = packageMatch[1]
+              let packagePath = null
+
+              if (packageName.startsWith("@sanity/")) {
+                packagePath = `./plugins/@sanity/${packageName.slice("@sanity/".length)}`
+              } else if (packageName.startsWith("sanity-plugin-")) {
+                packagePath = `./plugins/${packageName}`
+              }
+
+              if (packagePath && fs.existsSync(packagePath)) {
+                paths.add(packagePath)
+              }
+            }
+          }
+
+          for (const path of [...paths].sort()) {
+            console.log(path)
+          }
+          NODE
+
+          mapfile -t packages < <(node "$parser_script" "${changeset_files[@]}")
+          rm -f "$parser_script"
 
           if [ ${#packages[@]} -eq 0 ]; then
             echo "has_changed_packages=false" >> "$GITHUB_OUTPUT"
