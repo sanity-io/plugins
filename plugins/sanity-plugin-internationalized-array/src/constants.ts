@@ -41,4 +41,7 @@ export const CONFIG_DEFAULT: Required<PluginConfig> = {
   buttonAddAll: true,
   languageDisplay: 'codeOnly',
   includeForDocumentType: (documentType) => documentType !== 'translation.metadata',
+  languageFilter: {
+    documentTypes: [],
+  },
 }
