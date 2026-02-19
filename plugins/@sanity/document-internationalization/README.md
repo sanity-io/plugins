@@ -47,8 +47,6 @@ A good use of **field-level** translation could be a `person` schema. It could h
 
 ## Upgrade
 
-If upgrading from a previous version (v1), please see the [upgrade documentation](https://github.com/sanity-io/document-internationalization/blob/main/docs/00-upgrade-from-v1.md) in the original repository.
-
 ### Migrating to v6
 
 This plugin uses [sanity-plugin-internationalized-array](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-internationalized-array) for the `translations` array on `translation.metadata` documents. In v5, the internationalized-array plugin moved the language identifier from `_key` to a dedicated `language` field.
@@ -126,6 +124,17 @@ Previously we updated the GROQ queries to support both locations for the languag
 -  "greeting": greeting[language == "en" || _key == "en"][0].value
 +  "greeting": greeting[language == "en"][0].value
 }
+```
+
+## Upgrade from V1
+
+If upgrading from a previous version (v1), please see the [upgrade documentation](https://github.com/sanity-io/document-internationalization/blob/main/docs/00-upgrade-from-v1.md) in the original repository.
+And change `_key: doc[LANGUAGE_FIELD]` to `language: doc[LANGUAGE_FIELD]` in https://github.com/sanity-io/document-internationalization/blob/main/scripts/createMetadata.ts#L80
+
+```diff
+// https://github.com/sanity-io/document-internationalization/blob/main/scripts/createMetadata.ts#L80
+-  _key: doc[LANGUAGE_FIELD]
++  language: doc[LANGUAGE_FIELD]
 ```
 
 ## Install
