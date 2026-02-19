@@ -34,12 +34,14 @@ export function FilteredObjectInput(props: ObjectInputProps) {
       })
       .map((member) => {
         if (member.kind === 'fieldSet') {
-          Object.assign(member.fieldSet, {
-            members: member.fieldSet.members.filter((fieldsetMember) => {
-              return (
-                fieldsetMember.kind === 'field' &&
-                filterField(schemaType, fieldsetMember, selectedLanguageIds, parentValue)
-              )
+          return Object.assign({}, member, {
+            fieldSet: Object.assign({}, member.fieldSet, {
+              members: member.fieldSet.members.filter((fieldsetMember) => {
+                return (
+                  fieldsetMember.kind === 'field' &&
+                  filterField(schemaType, fieldsetMember, selectedLanguageIds, parentValue)
+                )
+              }),
             }),
           })
         }
