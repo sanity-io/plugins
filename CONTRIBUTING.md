@@ -278,6 +278,39 @@ Commit the changeset file with your PR.
 
 This monorepo uses [Changesets](https://github.com/changesets/changesets) for version management and publishing.
 
+### Preview Packages in a PR (`pkg-pr-new`)
+
+You can publish preview versions of changed plugin packages directly from a PR using [`pkg.pr.new`](https://pkg.pr.new).
+
+#### How it is triggered
+
+The preview workflow runs on PR events **only when the PR has the `trigger: preview` label**.
+
+1. Open your PR
+2. Add the `trigger: preview` label
+3. Wait for the `Publish` workflow (`.github/workflows/pkg-pr-new.yml`) to finish
+
+#### What gets preview-published
+
+The workflow detects changed packages from `.changeset/*.md` files in your PR diff and publishes only matching plugin packages.
+
+- It ignores `.changeset/README.md`
+- It supports package names that map to:
+  - `@sanity/*` -> `plugins/@sanity/*`
+  - `sanity-plugin-*` -> `plugins/sanity-plugin-*`
+
+If no valid changesets are found, no packages are published.
+
+#### How to use the preview
+
+After the workflow runs, it posts (or updates) a PR comment titled **"Preview this PR with pkg.pr.new"** that includes install commands for each published package (for both `pnpm` and `npm`).
+
+Use the provided command in another project to test the preview package version, for example:
+
+```bash
+pnpm install <pkg.pr.new url from the PR comment>
+```
+
 ### Creating a Changeset
 
 When you make changes that should be released:
