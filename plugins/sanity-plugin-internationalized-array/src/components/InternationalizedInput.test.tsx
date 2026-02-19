@@ -2,7 +2,7 @@ import {cleanup, render, screen} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {ThemeWrapper} from '../test/component-helpers'
-import {MOCK_LANGUAGES, createValue} from '../test/helpers'
+import {MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES, createValue} from '../test/helpers'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 import InternationalizedInput from './InternationalizedInput'
 
@@ -58,18 +58,9 @@ function createMockProps(
 describe('InternationalizedInput', () => {
   beforeEach(() => {
     // Reset the context mock to default values
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      languageDisplay: 'codeOnly',
-      defaultLanguages: [],
-      filteredLanguages: MOCK_LANGUAGES,
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-      buttonLocations: ['field'],
-      buttonAddAll: true,
-      includeForDocumentType: () => true,
-    })
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
 
     // Default: parent has multiple language entries
     mockUseFormValue.mockReturnValue([
@@ -105,16 +96,8 @@ describe('InternationalizedInput', () => {
 
   test('disables remove button for default languages', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      languageDisplay: 'codeOnly',
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       defaultLanguages: ['en'], // 'en' is a default language
-      filteredLanguages: MOCK_LANGUAGES,
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-      buttonLocations: ['field'],
-      buttonAddAll: true,
-      includeForDocumentType: () => true,
     })
 
     const props = createMockProps('en')
@@ -138,16 +121,8 @@ describe('InternationalizedInput', () => {
 
   test('enables remove button for non-default languages', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      languages: MOCK_LANGUAGES,
-      languageDisplay: 'codeOnly',
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       defaultLanguages: ['en'], // only 'en' is default
-      filteredLanguages: MOCK_LANGUAGES,
-      apiVersion: '2025-10-15',
-      select: {},
-      fieldTypes: [],
-      buttonLocations: ['field'],
-      buttonAddAll: true,
-      includeForDocumentType: () => true,
     })
 
     const props = createMockProps('fr') // 'fr' is not default
