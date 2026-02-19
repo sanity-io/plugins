@@ -274,6 +274,32 @@ When prompted:
 
 Commit the changeset file with your PR.
 
+### 5. Update the original repository
+
+After the plugin has been successfully migrated and published from the monorepo, update the original repository to inform users about the move:
+
+1. **Update the README** in the original repository to include a notice at the top:
+
+   ```markdown
+   > **Note:** This repository has been moved to the [sanity-io/plugins](https://github.com/sanity-io/plugins) monorepo.
+   >
+   > All future development, issues, and releases will be managed there.
+   >
+   > - New location: `plugins/PLUGIN-NAME` (e.g., `plugins/@sanity/document-internationalization`)
+   > - npm package: The package name remains the same
+   > - Issues: Please open new issues in the [monorepo](https://github.com/sanity-io/plugins/issues)
+   ```
+
+2. **Migrate existing issues** to the monorepo:
+   - Review all open issues in the original repository
+   - Add a label matching the plugin name to each issue for organization (example: an issue that was once in the `@sanity/color-input` repo will have a tag `color-input` in this repo)
+   - Move the issues to the monorepo's issue tracker
+   - Update issue references as needed
+
+3. **Archive the repository**: Archive the original repository on GitHub to prevent new issues and PRs while keeping the history accessible.
+
+See [this example PR](https://github.com/sanity-io/document-internationalization/pull/214) for reference.
+
 ## Publishing Packages
 
 This monorepo uses [Changesets](https://github.com/changesets/changesets) for version management and publishing.
