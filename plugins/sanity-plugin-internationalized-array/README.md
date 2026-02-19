@@ -368,6 +368,30 @@ Use a backwards compatible query until your migration is ready and has been exec
 }
 ```
 
+If you use AI agents in your code, you can copy [this skill](../../.claude/skills/i18n-array-groq-query-migration/SKILL.md) to your project to guide your agents and help you with the migration.
+
+Use this pre migration prompt
+
+```text
+Use the project skill `i18n-array-groq-query-migration` to update this repo's GROQ queries for `sanity-plugin-internationalized-array` v5.
+
+Goal:
+- Detect all query patterns where language is read from `_key` (for example `_key == "en"` or `_key == $language`).
+- Keep the same language expression used in each query.
+
+Mode: PRE-MIGRATION (backwards-compatible)
+- Replace `_key == <languageExpr>` with `language == <languageExpr> || _key == <languageExpr>`.
+
+What to do:
+1) Scan the codebase for all relevant GROQ queries.
+2) Update the files in place.
+3) Exclude unrelated `_key` uses that are not language matching.
+4) Return a concise report with:
+   - files changed
+   - before/after snippets
+   - any ambiguous matches needing manual review.
+```
+
 ### 3. Data migration
 
 The package exports a migration helper that you can run with the [migration CLI](https://www.sanity.io/docs/cli-reference/cli-migration).
@@ -404,11 +428,23 @@ And update `@sanity/document-internationalization` to `v6`
 
 Previously we updated the GROQ queries to support both locations for the language field. Once migration is complete, update the GROQ queries again to only use `language` and remove the dependency on `_key`.
 
-```diff
+```groq
 *[_type == "person"] {
--  "greeting": greeting[language == "en" || _key == "en"][0].value
-+  "greeting": greeting[language == "en"][0].value
+  "greeting": greeting[language == "en"][0].value
 }
+```
+
+If you use AI agents in your code, you can automate this with the project skill at `.cursor/skills/i18n-array-groq-query-migration/SKILL.md`.
+
+```text
+Use the project skill `i18n-array-groq-query-migration` in POST-MIGRATION mode.
+
+Update all GROQ queries from:
+`language == <languageExpr> || _key == <languageExpr>`
+to:
+`language == <languageExpr>`
+
+Keep the same `<languageExpr>` in each query, edit files in place, and report changed files plus any ambiguous cases.
 ```
 
 ## Usage with language filter
