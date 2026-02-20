@@ -160,7 +160,12 @@ export const defineConfig({
         client // Sanity client
       }) {
         // Your function implementation
-      }
+      },
+
+      // Optional
+      // Hides the "Translations" button in the document editor toolbar.
+      // The language badge will still be shown.
+      hideTranslationsButton: true, // defaults to false
     })
   ]
 })

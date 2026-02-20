@@ -34,6 +34,7 @@ export type PluginConfig = {
   apiVersion?: string
   allowCreateMetaDoc?: boolean
   callback?: ((args: PluginCallbackArgs) => Promise<void>) | null
+  hideTranslationsButton?: boolean
 }
 
 // Context version of config

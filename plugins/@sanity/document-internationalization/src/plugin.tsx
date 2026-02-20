@@ -16,7 +16,14 @@ import metadata from './schema/translation/metadata'
 
 export const documentInternationalization = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...DEFAULT_CONFIG, ...config}
-  const {supportedLanguages, schemaTypes, languageField, bulkPublish, metadataFields} = pluginConfig
+  const {
+    supportedLanguages,
+    schemaTypes,
+    languageField,
+    bulkPublish,
+    metadataFields,
+    hideTranslationsButton,
+  } = pluginConfig
 
   if (schemaTypes.length === 0) {
     throw new Error(
@@ -83,6 +90,8 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
     // - The `DeleteMetadataAction` action to the metadata document type
     document: {
       unstable_languageFilter: (prev, ctx) => {
+        if (hideTranslationsButton) return prev
+
         const {schemaType, documentId} = ctx
 
         return schemaTypes.includes(schemaType) && documentId
