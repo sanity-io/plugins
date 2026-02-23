@@ -1,64 +1,64 @@
-import type { FieldDefinition, Rule, RuleTypeConstraint, SanityClient } from "sanity";
+import type {FieldDefinition, Rule, RuleTypeConstraint, SanityClient} from 'sanity'
 
 export type Language = {
-  id: Intl.UnicodeBCP47LocaleIdentifier;
-  title: string;
-};
+  id: Intl.UnicodeBCP47LocaleIdentifier
+  title: string
+}
 
-export type AllowedType = "string" | "number" | "boolean" | "text" | "reference";
+export type AllowedType = 'string' | 'number' | 'boolean' | 'text' | 'reference'
 
 export type ArrayConfig = {
-  name: string;
-  type: AllowedType;
-  languages: Language[];
-  title?: string;
-  group?: string;
-  hidden?: boolean | (() => boolean);
-  readOnly?: boolean | (() => boolean);
-  validation?: Rule | Rule[];
-  field?: { [key: string]: unknown; options: { [key: string]: unknown } };
-};
+  name: string
+  type: AllowedType
+  languages: Language[]
+  title?: string
+  group?: string
+  hidden?: boolean | (() => boolean)
+  readOnly?: boolean | (() => boolean)
+  validation?: Rule | Rule[]
+  field?: {[key: string]: unknown; options: {[key: string]: unknown}}
+}
 
 /**
  * @deprecated Use InternationalizedArrayItem instead
  */
 export type Value = {
-  _key: string;
+  _key: string
   /** Language identifier (e.g., 'en', 'fr'). Added in v5. */
-  language: string;
-  value?: unknown;
-};
+  language: string
+  value?: unknown
+}
 
 export function isInternationalizedArrayItemType(
   type: string,
-): type is InternationalizedArrayItem["_type"] {
-  return type.startsWith("internationalizedArray") && type.endsWith("Value");
+): type is InternationalizedArrayItem['_type'] {
+  return type.startsWith('internationalizedArray') && type.endsWith('Value')
 }
 
 export type InternationalizedArrayItem<T = unknown> = {
-  _key: string;
-  value?: T;
+  _key: string
+  value?: T
   /** Language identifier (e.g., 'en', 'fr'). Added in v5. */
-  language: string;
+  language: string
   /**
    * string that starts with "internationalizedArray" and ends with "Value"
    */
-  _type: `internationalizedArray${string}Value`;
-};
+  _type: `internationalizedArray${string}Value`
+}
 
 export type LanguageCallback = (
   client: SanityClient,
   selectedValue: Record<string, unknown>,
-) => Promise<Language[]>;
+) => Promise<Language[]>
 
-export type LanguageDisplay = "titleOnly" | "codeOnly" | "titleAndCode";
+export type LanguageDisplay = 'titleOnly' | 'codeOnly' | 'titleAndCode'
 
 export type PluginConfig = {
   /**
    * https://www.sanity.io/docs/api-versioning
    * @defaultValue '2025-10-15'
    */
-  apiVersion?: string;
+  apiVersion?: string
   /**
    * Specify fields that should be available in the language callback:
    * ```tsx
@@ -71,7 +71,7 @@ export type PluginConfig = {
    * }
    * ```
    */
-  select?: Record<string, string>;
+  select?: Record<string, string>
   /**
    * You can give it an array of language definitions:
    * ```tsx
@@ -99,7 +99,7 @@ export type PluginConfig = {
    * }
    * ```
    */
-  languages: Language[] | LanguageCallback;
+  languages: Language[] | LanguageCallback
   /**
    * You can specify a list of language IDs that should be pre-filled when creating a new document
    * ```tsx
@@ -108,7 +108,7 @@ export type PluginConfig = {
    * }
    * ```
    */
-  defaultLanguages?: string[];
+  defaultLanguages?: string[]
   /**
    * Can be a string matching core field types, as well as custom ones:
    * ```tsx
@@ -133,22 +133,22 @@ export type PluginConfig = {
    * ```
    */
   // oxlint-disable-next-line typescript-eslint/no-redundant-type-constituents
-  fieldTypes: (string | RuleTypeConstraint | FieldDefinition)[];
+  fieldTypes: (string | RuleTypeConstraint | FieldDefinition)[]
   /**
    * Locations where the "+ EN" add language buttons are visible
    * @defaultValue ['field']
    * */
-  buttonLocations?: ("field" | "unstable__fieldAction" | "document")[];
+  buttonLocations?: ('field' | 'unstable__fieldAction' | 'document')[]
   /**
    * Show or hide the "Add missing languages" button
    * @defaultValue true
    * */
-  buttonAddAll?: boolean;
+  buttonAddAll?: boolean
   /**
    * How to display the languages on buttons and fields
    * @defaultValue 'code'
    * */
-  languageDisplay?: LanguageDisplay;
+  languageDisplay?: LanguageDisplay
   /**
    * @internal
    * Function to determine if the plugin layout and root input should be included for a given document type.
@@ -158,7 +158,7 @@ export type PluginConfig = {
    *   includeForDocumentType: (documentType) => documentType === 'translation.metadata'
    * }
    */
-  includeForDocumentType?: (documentType: string) => boolean;
+  includeForDocumentType?: (documentType: string) => boolean
   /**
    * Configure the language filter for the plugin by providing the document types that should show the filter.
    * ```tsx
@@ -170,6 +170,6 @@ export type PluginConfig = {
    * ```
    */
   languageFilter?: {
-    documentTypes: string[];
-  };
-};
+    documentTypes: string[]
+  }
+}
