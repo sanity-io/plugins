@@ -11,7 +11,7 @@ export default defineMigration({
   documentTypes: DOCUMENT_TYPES,
   migrate: {
     object(node) {
-      const type = node['_type']
+      const type = node._type
       const language = node[LANGUAGE_FIELD_NAME]
 
       if (

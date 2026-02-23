@@ -1,6 +1,6 @@
 ---
 name: i18n-array-groq-query-migration
-description: Detect and update legacy GROQ patterns for sanity-plugin-internationalized-array where language is read from _key. Use when users mention v4 to v5 migration, GROQ query updates, localized arrays, or patterns like `_key == "en"` and `_key == $language`.
+description: Detect and update legacy GROQ patterns where language is read from _key for sanity-plugin-internationalized-array when users mention v4 to v5 migration, or @sanity/document-internationalization from v5 to v6. GROQ query updates, localized arrays, or patterns like `_key == "en"` and `_key == $language`.
 ---
 
 # Internationalized Array GROQ Migration
@@ -14,10 +14,13 @@ Help users find GROQ queries that still read locale from `_key` and rewrite them
 Use this skill when a user asks to:
 
 - migrate `sanity-plugin-internationalized-array` from v4 to v5
+- migrate `@sanity/document-internationalization` from v5 to v6 alongside `sanity-plugin-internationalized-array` language field changes
 - find queries that still use `_key` for language lookup
 - update GROQ filters like `_key == "en"` or `_key == $language`
 
 ## Detection Workflow
+
+Detection commands below use `rg` (ripgrep). If `rg` is unavailable, use `grep -R` or your editor's global search with equivalent patterns.
 
 1. Search for direct language comparisons on `_key`:
 
@@ -36,7 +39,7 @@ rg '\[[^]]*_key[^]]*\]'
 - `field[_key == ...][0].value`
 - `select(...)` branches that compare `_key` to a language value
 
-1. Check for uses of `groq` and verify if they use `_key` as the language.
+1. Check for uses of `groq` and verify if they use `_key` as the language, if it is using it, update them.
 
 1. Explicitly check for template-interpolated language expressions and keep the same operand, for example:
    - `_key == "${language}"`
