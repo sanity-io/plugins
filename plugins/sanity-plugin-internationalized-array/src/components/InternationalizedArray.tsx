@@ -52,10 +52,9 @@ export default function InternationalizedArray(
   const {members, value: _value, schemaType, onChange, readOnly: documentReadOnly} = props
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const value = _value as InternationalizedArrayItem[]
-  const itemsNeedingMigration = (value?.filter((v) => !v[LANGUAGE_FIELD_NAME]) ?? []).length > 0
-  const readOnly =
-    Boolean(documentReadOnly) ||
-    (typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false)
+  const itemsNeedingMigration = value?.filter((v) => !v[LANGUAGE_FIELD_NAME]) ?? []
+  const shouldMigrateArray = itemsNeedingMigration.length > 0
+  const readOnly = typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false
   const toast = useToast()
 
   const getFormValue = useGetFormValue()
@@ -140,7 +139,7 @@ export default function InternationalizedArray(
       .filter((language) => languages.find((l) => l.id === language))
       .every((language) => addedLanguages.includes(language))
 
-    if (!isDeleting && !hasAddedDefaultLanguages && !itemsNeedingMigration) {
+    if (!isDeleting && !hasAddedDefaultLanguages && !shouldMigrateArray) {
       const languagesToAdd = defaultLanguages
         .filter((language) => !addedLanguages.includes(language))
         .filter((language) => languages.find((l) => l.id === language))
@@ -158,7 +157,7 @@ export default function InternationalizedArray(
     addedLanguages,
     languages,
     documentReadOnly,
-    itemsNeedingMigration,
+    shouldMigrateArray,
   ])
 
   // NOTE: This is reordering and re-setting the whole array, it could be surgical
@@ -240,7 +239,7 @@ export default function InternationalizedArray(
   }
 
   const addButtonsAreVisible =
-    !itemsNeedingMigration &&
+    !shouldMigrateArray &&
     // Plugin was configured to display buttons here (default!)
     buttonLocations.includes('field') &&
     // There's at least one language visible
@@ -258,12 +257,7 @@ export default function InternationalizedArray(
         }
         return <MemberItemError key={member.key} member={member} />
       })}
-      <MigrationBanner
-        value={value}
-        languages={languages}
-        onChange={onChange}
-        readOnly={readOnly}
-      />
+      <MigrationBanner itemsNeedingMigration={itemsNeedingMigration} />
 
       {/* Give some feedback in the UI so the field doesn't look "missing" */}
       {!addButtonsAreVisible && !fieldHasMembers ? (

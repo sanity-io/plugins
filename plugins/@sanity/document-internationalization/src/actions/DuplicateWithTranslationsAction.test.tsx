@@ -267,8 +267,8 @@ describe('useDuplicateWithTranslationsAction', () => {
   })
 
   test('onHandle uses the new language field', async () => {
-    const legacyTranslations = [createMockTranslation('en', 'doc-1')]
-    const metadata = createMockMetadata('meta-1', legacyTranslations)
+    const translations = [createMockTranslation('en', 'doc-1')]
+    const metadata = createMockMetadata('meta-1', translations)
     mockTranslationMetadata.mockReturnValue({data: [metadata], loading: false})
 
     const props = createActionProps()

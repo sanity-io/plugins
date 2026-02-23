@@ -1,20 +1,11 @@
 import {WarningOutlineIcon} from '@sanity/icons'
 import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
-import {type ReactElement, useMemo} from 'react'
-import {set} from 'sanity'
+import {type ReactElement} from 'react'
 
-import {LANGUAGE_FIELD_NAME} from '../constants'
-import type {Language, InternationalizedArrayItem} from '../types'
+import type {InternationalizedArrayItem} from '../types'
 
 export type MigrationBannerProps = {
-  /** Current array value */
-  value: InternationalizedArrayItem[] | undefined
-  /** Registered languages from plugin config */
-  languages: Language[]
-  /** onChange handler to update the field value */
-  onChange: (patches: ReturnType<typeof set>[]) => void
-  /** Whether the field is read-only */
-  readOnly?: boolean
+  itemsNeedingMigration: InternationalizedArrayItem[]
 }
 
 /**
@@ -35,26 +26,11 @@ export type MigrationBannerProps = {
  * />
  * ```
  */
-export function MigrationBanner({value, languages}: MigrationBannerProps): ReactElement | null {
-  // Detect items that need migration from old format (_key as language) to new format (language field)
-  // An item needs migration if:
-  // 1. It has a _key that matches a valid language ID
-  // 2. It doesn't have a language field set
-  const itemsNeedingMigration = useMemo(() => {
-    if (!value?.length || !languages?.length) {
-      return []
-    }
-
-    const languageIds = new Set(languages.map((l) => l.id))
-    return value.filter(
-      (item) =>
-        item._key && languageIds.has(item._key) && !item[LANGUAGE_FIELD_NAME as keyof typeof item],
-    )
-  }, [value, languages])
-
-  const needsMigration = itemsNeedingMigration.length > 0
+export function MigrationBanner({
+  itemsNeedingMigration,
+}: MigrationBannerProps): ReactElement | null {
   // Don't render if no migration is needed
-  if (!needsMigration) {
+  if (!itemsNeedingMigration.length) {
     return null
   }
 
