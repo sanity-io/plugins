@@ -436,6 +436,8 @@ Previously we updated the GROQ queries to support both locations for the languag
 
 If you use AI agents in your code, you can automate this with the project skill at `.cursor/skills/i18n-array-groq-query-migration/SKILL.md`.
 
+### Ask your AI agent to help you
+
 ```text
 # Migrate internationalized-array to v5 and document-internationalization to v6
 Create and present a plan first, then wait for user confirmation before making changes.
@@ -443,9 +445,9 @@ Create and present a plan first, then wait for user confirmation before making c
 Before running any migration steps, ask the user to create a backup and confirm it is complete. Do not proceed until backup confirmation is received.
 
 Use this context:
-- Document internationalization (v5 -> v6): https://github.com/sanity-io/plugins/blob/145b18fe17ed83976540aa453884f18da1cc9c94/plugins/%40sanity/document-internationalization/README.md#migrating-to-v6
-- Internationalized array README: https://github.com/sanity-io/plugins/blob/145b18fe17ed83976540aa453884f18da1cc9c94/plugins/sanity-plugin-internationalized-array/README.md
-- Skill source to copy from: https://github.com/sanity-io/plugins/blob/145b18fe17ed83976540aa453884f18da1cc9c94/.claude/skills/i18n-array-groq-query-migration/SKILL.md
+- Document internationalization (v5 -> v6): https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/README.md#migrating-to-v6
+- Internationalized array README: https://github.com/sanity-io/plugins/blob/main/plugins/sanity-plugin-internationalized-array/README.md
+- Skill source to copy from: https://github.com/sanity-io/plugins/blob/main/.claude/skills/i18n-array-groq-query-migration/SKILL.md
 
 Then execute this workflow:
 ## Pre migration:
