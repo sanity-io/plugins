@@ -20,18 +20,18 @@ Use this skill when a user asks to:
 
 ## Detection Workflow
 
-Detection commands below use `rg` (ripgrep). If `rg` is unavailable, use `grep -R` or your editor's global search with equivalent patterns.
+Detection commands below use `grep`. If your environment differs, use your editor's global search with equivalent patterns.
 
 1. Search for direct language comparisons on `_key`:
 
 ```bash
-rg '_key\s*==\s*("[^"]+"|'"'"'[^'"'"']+'"'"'|\$[A-Za-z_][A-Za-z0-9_]*)'
+grep -REn --exclude-dir=node_modules "_key[[:space:]]*==[[:space:]]*(\"[^\"]+\"|'[^']+'|\\$[A-Za-z_][A-Za-z0-9_]*)" .
 ```
 
 1. Search for any localized-array filters that mention `_key`:
 
 ```bash
-rg '\[[^]]*_key[^]]*\]'
+grep -REn --exclude-dir=node_modules "\[[^]]*_key[^]]*\]" .
 ```
 
 1. Prioritize matches that look like localized-value reads, for example:
