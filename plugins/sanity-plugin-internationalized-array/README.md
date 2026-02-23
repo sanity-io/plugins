@@ -437,14 +437,49 @@ Previously we updated the GROQ queries to support both locations for the languag
 If you use AI agents in your code, you can automate this with the project skill at `.cursor/skills/i18n-array-groq-query-migration/SKILL.md`.
 
 ```text
-Use the project skill `i18n-array-groq-query-migration` in POST-MIGRATION mode.
+# Migrate internationalized-array to v5 and document-internationalization to v6
+Create and present a plan first, then wait for user confirmation before making changes.
 
-Update all GROQ queries from:
-`language == <languageExpr> || _key == <languageExpr>`
-to:
-`language == <languageExpr>`
+Before running any migration steps, ask the user to create a backup and confirm it is complete. Do not proceed until backup confirmation is received.
 
-Keep the same `<languageExpr>` in each query, edit files in place, and report changed files plus any ambiguous cases.
+Use this context:
+- Document internationalization (v5 -> v6): https://github.com/sanity-io/plugins/blob/145b18fe17ed83976540aa453884f18da1cc9c94/plugins/%40sanity/document-internationalization/README.md#migrating-to-v6
+- Internationalized array README: https://github.com/sanity-io/plugins/blob/145b18fe17ed83976540aa453884f18da1cc9c94/plugins/sanity-plugin-internationalized-array/README.md
+- Skill source to copy from: https://github.com/sanity-io/plugins/blob/145b18fe17ed83976540aa453884f18da1cc9c94/.claude/skills/i18n-array-groq-query-migration/SKILL.md
+
+Then execute this workflow:
+## Pre migration:
+1) Copy the `i18n-array-groq-query-migration` skill file from the provided source URL into the relevant local project skill location.
+2) Use the project skill `i18n-array-groq-query-migration` in PRE-MIGRATION mode and update all legacy GROQ filters from:
+   `_key == <languageExpr>`
+   to:
+   `language == <languageExpr> || _key == <languageExpr>`
+3) Keep the same `<languageExpr>` in each query, edit files in place, and report changed files plus any ambiguous cases.
+4) Add a pause here, the user should deploy this changes with the queries updated before continuing with the migration, request confirmation on this step.
+
+## Migration:
+5) Update the packages to the new versions.
+6) Identify schema types that need updates by scanning schemas where internationalization is used, specifically document types that contain fields with `type` matching `internationalizedArray*`.
+7) Create the migration file following the internationalized array migration guidance, using the discovered document types in the previous step.
+8) If `@sanity/document-internationalization` is used, include `translation.metadata` in the migration document types and plan for upgrading `@sanity/document-internationalization` to `v6`.
+9) Ask the user to run the migration as dry run first, then non-dry-run only after confirmation.
+10) Stop and ask the user to confirm the migration completed successfully before proceeding to post-migration query cleanup.
+11) Ask the user to deploy the changes.
+
+## Post migration.
+11) After migration is confirmed complete, use the project skill in POST-MIGRATION mode.
+12) Update all GROQ queries from:
+   `language == <languageExpr> || _key == <languageExpr>`
+   to:
+   `language == <languageExpr>`
+13) Keep the same `<languageExpr>` in each query, edit files in place, and report changed files plus any ambiguous cases.
+
+Report:
+- The approved plan
+- Backup confirmation status
+- Changed query files
+- Discovered schema types for migration
+- The created migration file path and summary of what it migrates
 ```
 
 ## Usage with language filter
