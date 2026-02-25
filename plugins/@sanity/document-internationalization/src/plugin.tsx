@@ -22,7 +22,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
     languageField,
     bulkPublish,
     metadataFields,
-    hideTranslationsButton,
+    hideLanguageFilter,
   } = pluginConfig
 
   if (schemaTypes.length === 0) {
@@ -90,9 +90,15 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
     // - The `DeleteMetadataAction` action to the metadata document type
     document: {
       unstable_languageFilter: (prev, ctx) => {
-        if (hideTranslationsButton) return prev
-
         const {schemaType, documentId} = ctx
+
+        if (typeof hideLanguageFilter === 'function') {
+          if (hideLanguageFilter(ctx)) return prev
+        } else if (Array.isArray(hideLanguageFilter)) {
+          if (hideLanguageFilter.includes(schemaType)) return prev
+        } else if (hideLanguageFilter) {
+          return prev
+        }
 
         return schemaTypes.includes(schemaType) && documentId
           ? [...prev, (props) => DocumentInternationalizationMenu({...props, documentId})]

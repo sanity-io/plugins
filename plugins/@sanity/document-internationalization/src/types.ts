@@ -1,4 +1,5 @@
 import type {
+  DocumentLanguageFilterContext,
   FieldDefinition,
   ObjectSchemaType,
   Reference,
@@ -34,7 +35,7 @@ export type PluginConfig = {
   apiVersion?: string
   allowCreateMetaDoc?: boolean
   callback?: ((args: PluginCallbackArgs) => Promise<void>) | null
-  hideTranslationsButton?: boolean
+  hideLanguageFilter?: boolean | string[] | ((ctx: DocumentLanguageFilterContext) => boolean)
 }
 
 // Context version of config
