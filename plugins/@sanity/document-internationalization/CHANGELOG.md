@@ -1,5 +1,11 @@
 # @sanity/document-internationalization
 
+## 5.1.0
+
+### Minor Changes
+
+- [#593](https://github.com/sanity-io/plugins/pull/593) [`80e58e9`](https://github.com/sanity-io/plugins/commit/80e58e9d0c2b463333c952a73c18c163d5595c8c) Thanks [@SamHemingway](https://github.com/SamHemingway)! - Add `hideLanguageFilter` config option to hide the language filter in the document editor toolbar. Supports `boolean`, `string[]` (schema type names), or a callback function for dynamic control.
+
 ## 5.0.2
 
 ### Patch Changes
