@@ -16,7 +16,14 @@ import metadata from './schema/translation/metadata'
 
 export const documentInternationalization = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...DEFAULT_CONFIG, ...config}
-  const {supportedLanguages, schemaTypes, languageField, bulkPublish, metadataFields} = pluginConfig
+  const {
+    supportedLanguages,
+    schemaTypes,
+    languageField,
+    bulkPublish,
+    metadataFields,
+    hideLanguageFilter,
+  } = pluginConfig
 
   if (schemaTypes.length === 0) {
     throw new Error(
@@ -84,6 +91,14 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
     document: {
       unstable_languageFilter: (prev, ctx) => {
         const {schemaType, documentId} = ctx
+
+        if (typeof hideLanguageFilter === 'function') {
+          if (hideLanguageFilter(ctx)) return prev
+        } else if (Array.isArray(hideLanguageFilter)) {
+          if (hideLanguageFilter.includes(schemaType)) return prev
+        } else if (hideLanguageFilter) {
+          return prev
+        }
 
         return schemaTypes.includes(schemaType) && documentId
           ? [...prev, (props) => DocumentInternationalizationMenu({...props, documentId})]

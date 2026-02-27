@@ -160,7 +160,15 @@ export const defineConfig({
         client // Sanity client
       }) {
         // Your function implementation
-      }
+      },
+
+      // Optional
+      // Hides the language filter (Translations button) in the document editor toolbar.
+      // The language badge will still be shown. Accepts:
+      // - A boolean to hide for all types: `hideLanguageFilter: true`
+      // - An array of schema type names: `hideLanguageFilter: ['lesson']`
+      // - A function for dynamic control: `hideLanguageFilter: (ctx) => ctx.schemaType === 'lesson'`
+      hideLanguageFilter: true, // defaults to false
     })
   ]
 })
