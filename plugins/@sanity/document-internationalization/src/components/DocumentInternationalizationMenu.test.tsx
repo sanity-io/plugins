@@ -61,6 +61,7 @@ describe('DocumentInternationalizationMenu', () => {
   const articleSchemaType = schema.get('article') as ObjectSchemaType
 
   beforeEach(() => {
+    vi.useFakeTimers({shouldAdvanceTime: true})
     vi.mocked(useDocumentInternationalizationContext).mockReturnValue(MOCK_PLUGIN_CONFIG)
     vi.mocked(useTranslationMetadata).mockReturnValue({
       data: [],
@@ -73,9 +74,16 @@ describe('DocumentInternationalizationMenu', () => {
     })
   })
 
-  afterEach(() => {
+  afterEach(async () => {
+    // Advance timers to flush pending framer-motion animation Promises
+    // that would otherwise leak (MotionValue.start creates Promises
+    // resolved only on animation completion)
+    await vi.advanceTimersByTimeAsync(1000)
     cleanup()
+    // Advance again in case cleanup triggered exit animations
+    await vi.advanceTimersByTimeAsync(1000)
     vi.clearAllMocks()
+    vi.useRealTimers()
   })
 
   test('returns null when documentId is empty', () => {
