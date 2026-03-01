@@ -55,11 +55,6 @@ catalogs:
 overrides:
   styled-components: npm:@sanity/styled-components@latest
 
-patchedDependencies:
-  '@bynder/compact-view':
-    hash: c71de21a98b99e126cf6a513070404932603d4254f3614440c3a5f5ee7e7e8a6
-    path: patches/@bynder__compact-view.patch
-
 importers:
 
   .:
@@ -674,7 +669,7 @@ importers:
     devDependencies:
       '@bynder/compact-view':
         specifier: 5.2.3
-        version: 5.2.3(patch_hash=c71de21a98b99e126cf6a513070404932603d4254f3614440c3a5f5ee7e7e8a6)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 5.2.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@repo/package.config':
         specifier: workspace:*
         version: link:../../packages/@repo/package.config
@@ -9361,7 +9356,7 @@ snapshots:
       '@babel/helper-string-parser': 8.0.0-rc.1
       '@babel/helper-validator-identifier': 8.0.0-rc.1
 
-  '@bynder/compact-view@5.2.3(patch_hash=c71de21a98b99e126cf6a513070404932603d4254f3614440c3a5f5ee7e7e8a6)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@bynder/compact-view@5.2.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
