@@ -1,10 +1,23 @@
 # Sanity Embeddings Index UI
 
-> Using this feature requires Sanity to send data to OpenAI.com, and Pinecone.io for storing vector interpretations of documents.
+> ⚠️ **Deprecation Notice**
+>
+> The Embeddings Index API is deprecated and will be sunset in a future release. We recommend migrating to the new **Embeddings** feature, now natively available within Sanity datasets.
+>
+> The new Embeddings feature offers a more integrated experience with improved performance and full support going forward. **No new features or fixes will be made to this package.**
+>
+> 👉 **[Migrate to Embeddings today](https://www.sanity.io/docs/content-lake/dataset-embeddings)**
+>
+> If you have questions or need migration support, please [open a discussion](https://github.com/sanity-io/embeddings-index-ui/discussions) or reach out via [Sanity Community Discord](https://discord.com/servers/sanity-1304483263171264613).
+
+
+---
 
 Sanity Studio v3 plugins that interact with the `/embeddings-index` HTTP API.
 
-The Embeddings Index API enables the creation, management, and search of named embeddings vector indexes.
+The Embeddings Index API enables the creation, management, and search of named embeddings vector indexes. 
+
+> Using this feature requires Sanity to send data to OpenAI.com, and Pinecone.io for storing vector interpretations of documents.
 
 An embeddings index contains embeddings for all Sanity documents matching a configured [GROQ filter](https://www.sanity.io/docs/how-queries-work) in a dataset.
 A [GROQ projection](https://www.sanity.io/docs/query-cheat-sheet) is applied to matching documents before vectorization.
