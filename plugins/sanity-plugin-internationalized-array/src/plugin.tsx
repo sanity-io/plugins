@@ -1,6 +1,7 @@
 import {definePlugin, isObjectInputProps} from 'sanity'
 
-import {InternationalizedArrayProvider} from './components/InternationalizedArrayContext'
+import {InternationalizedArrayFormInput} from './components/InternationalizedArrayFormInput'
+import {InternationalizedArrayLayout} from './components/InternationalizedArrayLayout'
 import Preload from './components/Preload'
 import {CONFIG_DEFAULT} from './constants'
 import {internationalizedArrayFieldAction} from './fieldActions'
@@ -37,6 +38,11 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
         },
     // Optional: render "add language" buttons as field actions
     document: {
+      components: {
+        unstable_layout: (props) => (
+          <InternationalizedArrayLayout {...props} pluginConfig={pluginConfig} />
+        ),
+      },
       unstable_fieldActions: buttonLocations.includes('unstable__fieldAction')
         ? (prev) => [...prev, internationalizedArrayFieldAction]
         : undefined,
@@ -57,7 +63,7 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
             return props.renderDefault(props)
           }
 
-          return <InternationalizedArrayProvider {...props} internationalizedArray={pluginConfig} />
+          return <InternationalizedArrayFormInput {...props} pluginConfig={pluginConfig} />
         },
       },
     },
