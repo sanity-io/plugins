@@ -10,7 +10,7 @@ catalog:
   '@sanity/client': 7.14.1
   '@sanity/pkg-utils': ^10.4.5
   '@sanity/tsconfig': ^2.1.0
-  '@sanity/ui': ^3.1.11
+  '@sanity/ui': ^3.1.13
   '@sanity/vision': ^5.8.1
   '@types/node': ^24.11.0
   '@types/react': ^19.2.13
