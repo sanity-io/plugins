@@ -1,4 +1,4 @@
-import {get} from 'lodash-es'
+import get from 'lodash-es/get.js'
 
 /**
  * Extracts a subset of values from a Sanity document based on a `select`

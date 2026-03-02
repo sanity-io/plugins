@@ -18,6 +18,24 @@
     "perf": "error"
   },
   "rules": {
+    "eslint/no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "lodash-es",
+            "message": "Import from individual modules instead, e.g. `import debounce from 'lodash-es/debounce.js'`. Barrel imports are ~55% slower."
+          }
+        ],
+        "patterns": [
+          {
+            "group": ["lodash.*", "lodash/*", "lodash"],
+            "message": "Please use individual imports from 'lodash-es' instead, e.g. `import debounce from 'lodash-es/debounce.js'`."
+          }
+        ]
+      }
+    ],
+
     // React Compiler checks
     // Recommended rules (from LintRulePreset.Recommended)
     "react-hooks-js/component-hook-factories": "error",

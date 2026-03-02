@@ -1,4 +1,5 @@
-import {camelCase, upperFirst} from 'lodash-es'
+import camelCase from 'lodash-es/camelCase.js'
+import upperFirst from 'lodash-es/upperFirst.js'
 
 /**
  * Converts a string to PascalCase (e.g. `"my-field"` -> `"MyField"`).
