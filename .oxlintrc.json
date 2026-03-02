@@ -12,6 +12,10 @@
   ],
   "jsPlugins": [{"name": "react-hooks-js", "specifier": "eslint-plugin-react-hooks"}],
   "ignorePatterns": ["**/.sanity/*", "**/dist/*", "**/sanity.types.ts"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
   "categories": {
     "correctness": "error",
     "suspicious": "error",
