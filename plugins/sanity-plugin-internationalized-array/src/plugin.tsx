@@ -7,7 +7,7 @@ import {internationalizedArrayFieldAction} from './fieldActions'
 import array from './schema/array'
 import object from './schema/object'
 import type {PluginConfig} from './types'
-import {flattenSchemaType} from './utils/flattenSchemaType'
+import {hasInternationalizedArrayField} from './utils/hasInternationalizedArrayField'
 
 export const internationalizedArray = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...CONFIG_DEFAULT, ...config}
@@ -51,12 +51,7 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
             return props.renderDefault(props)
           }
 
-          const flatFieldTypeNames = flattenSchemaType(props.schemaType).map(
-            (field) => field.type.name,
-          )
-          const hasInternationalizedArray = flatFieldTypeNames.some((name) =>
-            name.startsWith('internationalizedArray'),
-          )
+          const hasInternationalizedArray = hasInternationalizedArrayField(props.schemaType)
 
           if (!hasInternationalizedArray) {
             return props.renderDefault(props)
