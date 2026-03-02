@@ -37,7 +37,7 @@
     "typescript": "catalog:",
     "validate-npm-package-name": "^7.0.2",
     "vitest": "^4.0.18",
-    "vitest-package-exports": "^1.1.2"
+    "vitest-package-exports": "^1.2.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,jsonc,md}": [
