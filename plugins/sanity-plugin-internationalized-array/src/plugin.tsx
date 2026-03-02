@@ -1,7 +1,6 @@
 import {definePlugin, isObjectInputProps} from 'sanity'
 
 import {InternationalizedArrayProvider} from './components/InternationalizedArrayContext'
-import InternationalizedField from './components/InternationalizedField'
 import Preload from './components/Preload'
 import {CONFIG_DEFAULT} from './constants'
 import {internationalizedArrayFieldAction} from './fieldActions'
@@ -45,8 +44,6 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
     // Wrap document editor with a language provider
     form: {
       components: {
-        field: (props) => <InternationalizedField {...props} />,
-
         input: (props) => {
           const isRootInput = props.id === 'root' && isObjectInputProps(props)
 
