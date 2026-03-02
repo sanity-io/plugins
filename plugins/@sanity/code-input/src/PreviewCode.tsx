@@ -1,13 +1,11 @@
-import type {PreviewProps} from 'sanity'
-
 import {Box, Card, Flex, Label, Text} from '@sanity/ui'
 import {Suspense} from 'react'
+import type {PreviewProps} from 'sanity'
 import {styled} from 'styled-components'
-
-import type {CodeInputValue, CodeSchemaType} from './types'
 
 import {CodeMirrorProxy, useMounted} from './codemirror/useCodeMirror'
 import {useLanguageMode} from './codemirror/useLanguageMode'
+import type {CodeInputValue, CodeSchemaType} from './types'
 
 const PreviewContainer = styled(Box)`
   position: relative;

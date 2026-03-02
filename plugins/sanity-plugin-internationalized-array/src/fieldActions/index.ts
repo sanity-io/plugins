@@ -10,10 +10,9 @@ import {
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import type {Language, InternationalizedArrayItem} from '../types'
-
 import {useInternationalizedArrayContext} from '../components/InternationalizedArrayContext'
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {Language, InternationalizedArrayItem} from '../types'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'

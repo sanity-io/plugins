@@ -8,11 +8,10 @@ import {
   useClient,
 } from 'sanity'
 
-import type {State} from '../types'
-
 import {useWorkflowContext} from '../components/WorkflowContext'
 import {API_VERSION} from '../constants'
 import {arraysContainMatchingString} from '../helpers/arraysContainMatchingString'
+import type {State} from '../types'
 
 function useUpdateWorkflow(
   {id, type}: DocumentActionProps,

@@ -5,7 +5,6 @@ import {type ReactNode, useCallback} from 'react'
 import {type ObjectInputProps, set} from 'sanity'
 
 import type {RichDate} from '../types'
-
 import {allTimezones, unlocalizeDateTime} from '../utils'
 
 interface TimezoneSelectorProps {

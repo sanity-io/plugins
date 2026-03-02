@@ -5,7 +5,6 @@ import {type AssetSourceComponentProps, useClient} from 'sanity'
 import {styled} from 'styled-components'
 
 import type {FetcherResult, UnsplashPhoto} from '../types'
-
 import {Loader} from './Loader'
 import {SearchInput} from './SearchInput'
 

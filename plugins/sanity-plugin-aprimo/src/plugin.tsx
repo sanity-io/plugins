@@ -1,11 +1,10 @@
 import {definePlugin, isObjectInputProps, type SchemaType} from 'sanity'
 
-import type {AprimoCDNAsset, AprimoConfig} from './types'
-
 import {AprimoWidget} from './components/AprimoWidget'
 import {AprimoAdditionalFileSchema} from './schema/AdditionalFile'
 import {AprimoAssetSchema} from './schema/AprimoAsset'
 import {AprimoCDNAssetSchema} from './schema/AprimoCDNAsset'
+import type {AprimoCDNAsset, AprimoConfig} from './types'
 
 export const aprimoPlugin = definePlugin((config: Partial<AprimoConfig>) => {
   const reqConfig: AprimoConfig = {

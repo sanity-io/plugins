@@ -1,6 +1,5 @@
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {DocumentBadgeProps, SanityDocument} from 'sanity'
-
 import {beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {useDocumentInternationalizationContext} from '../components/DocumentInternationalizationContext'

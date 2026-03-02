@@ -2,8 +2,6 @@ import {Stack} from '@sanity/ui'
 import {defineField, definePlugin, isSanityDocument} from 'sanity'
 import {internationalizedArray, LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
-import type {PluginConfig, TranslationReference} from './types'
-
 import {useDeleteMetadataAction} from './actions/DeleteMetadataAction'
 import {LanguageBadge} from './badges'
 import BulkPublish from './components/BulkPublish'
@@ -13,6 +11,7 @@ import OptimisticallyStrengthen from './components/OptimisticallyStrengthen'
 import {API_VERSION, DEFAULT_CONFIG, METADATA_SCHEMA_NAME} from './constants'
 import {documentInternationalizationUsEnglishLocaleBundle} from './i18n'
 import metadata from './schema/translation/metadata'
+import type {PluginConfig, TranslationReference} from './types'
 
 export const documentInternationalization = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...DEFAULT_CONFIG, ...config}

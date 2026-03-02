@@ -1,5 +1,4 @@
 import type {Extension} from '@codemirror/state'
-
 import {tags as t} from '@lezer/highlight'
 import {useTheme} from '@sanity/ui'
 import {rgba} from '@sanity/ui/theme'

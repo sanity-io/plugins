@@ -1,8 +1,7 @@
+import {black} from '@sanity/color'
 // TODO: when upgrading to @sanity/ui@4 start using the new tokens
 // oxlint-disable typescript/no-deprecated
 import type {Theme} from '@sanity/ui'
-
-import {black} from '@sanity/color'
 import {type PropsWithChildren} from 'react'
 import {styled} from 'styled-components'
 

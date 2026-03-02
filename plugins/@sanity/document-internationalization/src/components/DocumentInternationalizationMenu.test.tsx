@@ -3,11 +3,10 @@ import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/reac
 import {type ObjectSchemaType} from 'sanity'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
-import type {Language, Metadata} from '../types'
-
 import {useTranslationMetadata} from '../hooks/useLanguageMetadata'
 import {ThemeWrapper} from '../test/component-helpers'
 import {createMockDocument, MOCK_LANGUAGES, MOCK_PLUGIN_CONFIG, schema} from '../test/helpers'
+import type {Language, Metadata} from '../types'
 import {useDocumentInternationalizationContext} from './DocumentInternationalizationContext'
 import {DocumentInternationalizationMenu} from './DocumentInternationalizationMenu'
 

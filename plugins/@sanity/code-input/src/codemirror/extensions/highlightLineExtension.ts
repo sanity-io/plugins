@@ -1,7 +1,6 @@
-import type {ThemeContextValue} from '@sanity/ui'
-
 import {type Extension, StateEffect, StateField} from '@codemirror/state'
 import {Decoration, type DecorationSet, EditorView, lineNumbers} from '@codemirror/view'
+import type {ThemeContextValue} from '@sanity/ui'
 import {rgba} from '@sanity/ui/theme'
 
 import {getBackwardsCompatibleTone} from './backwardsCompatibleTone'

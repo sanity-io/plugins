@@ -1,8 +1,7 @@
 import {definePlugin} from 'sanity'
 
-import type {RichDate} from './types'
-
 import {type RichDateDefinition, richDateSchema, type RichDateSchemaType} from './schema'
+import type {RichDate} from './types'
 
 export const richDate = definePlugin({
   name: 'v3-rich-date-input',

@@ -1,11 +1,9 @@
-import type {LayoutProps} from 'sanity'
-
 import {createContext, use, useContext, useMemo} from 'react'
+import type {LayoutProps} from 'sanity'
 import {useClient, useWorkspace} from 'sanity'
 
-import type {PluginConfig, PluginConfigContext} from '../types'
-
 import {DEFAULT_CONFIG} from '../constants'
+import type {PluginConfig, PluginConfigContext} from '../types'
 
 const DocumentInternationalizationContext = createContext<PluginConfigContext>(DEFAULT_CONFIG)
 

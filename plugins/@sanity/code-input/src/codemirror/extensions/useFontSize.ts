@@ -1,5 +1,4 @@
 import type {Extension} from '@codemirror/state'
-
 import {EditorView} from '@codemirror/view'
 import {rem, useTheme} from '@sanity/ui'
 import {useMemo} from 'react'

@@ -1,5 +1,4 @@
 import type {SanityDocument} from 'sanity'
-
 import {describe, expect, test} from 'vitest'
 
 import {METADATA_SCHEMA_NAME} from '../../constants'

@@ -1,7 +1,6 @@
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react'
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {ObjectSchemaType} from 'sanity'
-
-import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 

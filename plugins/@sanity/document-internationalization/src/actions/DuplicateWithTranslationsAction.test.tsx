@@ -1,8 +1,7 @@
-/* oxlint-disable typescript-eslint/no-unsafe-type-assertion, typescript-eslint/no-deprecated */
-import type {DocumentActionProps} from 'sanity'
-
 import {act, renderHook, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
+/* oxlint-disable typescript-eslint/no-unsafe-type-assertion, typescript-eslint/no-deprecated */
+import type {DocumentActionProps} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 

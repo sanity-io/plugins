@@ -1,5 +1,3 @@
-import type React from 'react'
-
 import {RemoveCircleIcon} from '@sanity/icons'
 import {
   Button,
@@ -14,13 +12,13 @@ import {
   Text,
   Tooltip,
 } from '@sanity/ui'
+import type React from 'react'
 import {type ReactNode, useMemo} from 'react'
 import {type ObjectItemProps, useFormValue} from 'sanity'
 import {set, unset} from 'sanity'
 
-import type {InternationalizedArrayItem} from '../types'
-
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {InternationalizedArrayItem} from '../types'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
 import {getToneFromValidation} from './getToneFromValidation'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'

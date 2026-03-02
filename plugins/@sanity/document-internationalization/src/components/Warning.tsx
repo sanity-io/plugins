@@ -1,6 +1,5 @@
-import type {PropsWithChildren} from 'react'
-
 import {Card, Flex, Text} from '@sanity/ui'
+import type {PropsWithChildren} from 'react'
 
 import ConstrainedBox from './ConstrainedBox'
 

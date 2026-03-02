@@ -1,7 +1,5 @@
 import {definePlugin, isObjectInputProps} from 'sanity'
 
-import type {PluginConfig} from './types'
-
 import {InternationalizedArrayProvider} from './components/InternationalizedArrayContext'
 import InternationalizedField from './components/InternationalizedField'
 import Preload from './components/Preload'
@@ -9,6 +7,7 @@ import {CONFIG_DEFAULT} from './constants'
 import {internationalizedArrayFieldAction} from './fieldActions'
 import array from './schema/array'
 import object from './schema/object'
+import type {PluginConfig} from './types'
 import {flattenSchemaType} from './utils/flattenSchemaType'
 
 export const internationalizedArray = definePlugin<PluginConfig>((config) => {

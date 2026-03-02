@@ -1,6 +1,5 @@
-import type {Extension} from '@codemirror/state'
-
 import {StreamLanguage} from '@codemirror/language'
+import type {Extension} from '@codemirror/state'
 
 export interface CodeMode {
   name: string

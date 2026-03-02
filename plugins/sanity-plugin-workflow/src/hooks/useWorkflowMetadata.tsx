@@ -1,9 +1,8 @@
 import {useMemo} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
-import type {KeyedMetadata, Metadata} from '../types'
-
 import {API_VERSION} from '../constants'
+import type {KeyedMetadata, Metadata} from '../types'
 
 /**
  * Takes the published ID of documents and return the metadata for those documents.
