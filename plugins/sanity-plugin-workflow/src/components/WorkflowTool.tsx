@@ -12,12 +12,11 @@ import {useCallback, useMemo, useState} from 'react'
 import {type Tool, useCurrentUser} from 'sanity'
 import {Feedback, useProjectUsers} from 'sanity-plugin-utils'
 
-import type {State, WorkflowConfig} from '../types'
-
 import {API_VERSION} from '../constants'
 import {arraysContainMatchingString} from '../helpers/arraysContainMatchingString'
 import {filterItemsAndSort} from '../helpers/filterItemsAndSort'
 import {useWorkflowDocuments} from '../hooks/useWorkflowDocuments'
+import type {State, WorkflowConfig} from '../types'
 import {DocumentCard} from './DocumentCard'
 import DocumentList from './DocumentList'
 import Filters from './Filters'

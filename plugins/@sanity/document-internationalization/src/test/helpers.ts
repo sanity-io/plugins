@@ -8,9 +8,8 @@ import {
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {vi} from 'vitest'
 
-import type {Language, PluginConfigContext, TranslationReference, MetadataDocument} from '../types'
-
 import {DEFAULT_CONFIG, TRANSLATIONS_ARRAY_NAME} from '../constants'
+import type {Language, PluginConfigContext, TranslationReference, MetadataDocument} from '../types'
 
 /**
  * Shared mock language definitions for tests.

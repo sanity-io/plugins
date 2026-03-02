@@ -3,7 +3,6 @@ import {Badge, type BadgeTone, Box, Card, Flex, Text} from '@sanity/ui'
 import {styled} from 'styled-components'
 
 import type {State} from '../../types'
-
 import {Status} from './Status'
 
 const StyledStickyCard = styled(Card)`

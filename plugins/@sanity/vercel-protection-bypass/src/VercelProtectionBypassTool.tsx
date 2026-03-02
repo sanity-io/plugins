@@ -1,5 +1,4 @@
 import type {SyncTag, LiveEvent} from '@sanity/client'
-
 import {AddIcon, TrashIcon} from '@sanity/icons'
 import {
   apiVersion,

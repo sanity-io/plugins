@@ -1,9 +1,8 @@
 import {AddIcon} from '@sanity/icons'
 import {Button, Grid} from '@sanity/ui'
 
-import type {Language, InternationalizedArrayItem} from '../types'
-
 import {LANGUAGE_FIELD_NAME, MAX_COLUMNS} from '../constants'
+import type {Language, InternationalizedArrayItem} from '../types'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 

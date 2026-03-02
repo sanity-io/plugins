@@ -1,6 +1,5 @@
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {FieldDefinition} from 'sanity'
-
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {describe, expect, test} from 'vitest'
 

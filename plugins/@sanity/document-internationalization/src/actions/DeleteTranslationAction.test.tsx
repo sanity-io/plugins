@@ -1,16 +1,14 @@
+import {act, renderHook, waitFor} from '@testing-library/react'
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {ReactElement} from 'react'
 import type {DocumentActionProps, SanityDocument} from 'sanity'
-
-import {act, renderHook, waitFor} from '@testing-library/react'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
-
-import type {MetadataDocument} from '../types'
 
 import {useDocumentInternationalizationContext} from '../components/DocumentInternationalizationContext'
 import {createMockSanityClient} from '../test/component-helpers'
 import {createMockDocument, MOCK_PLUGIN_CONFIG} from '../test/helpers'
+import type {MetadataDocument} from '../types'
 import {useDeleteTranslationAction} from './DeleteTranslationAction'
 
 // Mock dependencies

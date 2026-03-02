@@ -1,12 +1,11 @@
 import {defineField, type FieldDefinition, type Rule} from 'sanity'
 
-import type {Language, LanguageCallback, InternationalizedArrayItem} from '../types'
-
 import {getFunctionCache, peek, setFunctionCache} from '../cache'
 import {createFieldName} from '../components/createFieldName'
 import {getSelectedValue} from '../components/getSelectedValue'
 import InternationalizedArray from '../components/InternationalizedArray'
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {Language, LanguageCallback, InternationalizedArrayItem} from '../types'
 import {getLanguagesFieldOption} from '../utils/getLanguagesFieldOption'
 
 type ArrayFactoryConfig = {

@@ -2,9 +2,8 @@ import {CopyIcon, LaunchIcon, MobileDeviceIcon, RefreshIcon} from '@sanity/icons
 import {Box, Button, Card, Flex, Text, Tooltip, useToast} from '@sanity/ui'
 import {useCallback, useRef, useState} from 'react'
 
-import type {IframeSizeKey, SizeProps} from './types'
-
 import {DisplayUrl} from './DisplayUrl'
+import type {IframeSizeKey, SizeProps} from './types'
 
 export const sizes: SizeProps = {
   desktop: {

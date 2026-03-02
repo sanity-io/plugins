@@ -1,7 +1,6 @@
-import type {DocumentActionDescription, DocumentActionProps} from 'sanity'
-
 import {UsersIcon} from '@sanity/icons'
 import {useState} from 'react'
+import type {DocumentActionDescription, DocumentActionProps} from 'sanity'
 import {useProjectUsers} from 'sanity-plugin-utils'
 
 import UserAssignment from '../components/UserAssignment'

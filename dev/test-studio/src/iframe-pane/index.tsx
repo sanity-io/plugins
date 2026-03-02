@@ -1,8 +1,7 @@
-import type {DefaultDocumentNodeResolver} from 'sanity/structure'
-
 import {LinkIcon} from '@sanity/icons'
 import {definePlugin, defineType} from 'sanity'
 import {Iframe} from 'sanity-plugin-iframe-pane'
+import type {DefaultDocumentNodeResolver} from 'sanity/structure'
 import {structureTool} from 'sanity/structure'
 
 // Example document type for demonstrating the iframe pane

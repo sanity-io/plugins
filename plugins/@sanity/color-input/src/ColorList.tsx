@@ -1,6 +1,5 @@
-import type {Color, ColorChangeHandler} from 'react-color'
-
 import {Flex} from '@sanity/ui'
+import type {Color, ColorChangeHandler} from 'react-color'
 import {styled} from 'styled-components'
 import tinycolor from 'tinycolor2'
 

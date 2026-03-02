@@ -1,11 +1,10 @@
 import {CodeBlockIcon} from '@sanity/icons'
 import {defineType, type ObjectDefinition} from 'sanity'
 
-import type {CodeOptions} from './types'
-
 import {CodeInput} from './CodeInput'
 import {getMedia} from './getMedia'
 import {PreviewCode} from './PreviewCode'
+import type {CodeOptions} from './types'
 
 /**
  * @public

@@ -1,15 +1,13 @@
-import type {ChangeEvent} from 'react'
-
 import {TranslateIcon} from '@sanity/icons'
 import {Box, Button, Card, Popover, Stack, Text, TextInput, useClickOutsideEvent} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
+import type {ChangeEvent} from 'react'
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {useEditState} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
-import type {DocumentInternationalizationMenuProps} from '../types'
-
 import {useTranslationMetadata} from '../hooks/useLanguageMetadata'
+import type {DocumentInternationalizationMenuProps} from '../types'
 import {useDocumentInternationalizationContext} from './DocumentInternationalizationContext'
 import LanguageManage from './LanguageManage'
 import LanguageOption from './LanguageOption'

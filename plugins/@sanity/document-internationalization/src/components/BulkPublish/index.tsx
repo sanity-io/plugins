@@ -2,9 +2,8 @@ import {Button, Card, Dialog, Inline, Stack, Text, useToast} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 import {TextWithTone, useClient, useWorkspace} from 'sanity'
 
-import type {TranslationReference} from '../../types'
-
 import {API_VERSION} from '../../constants'
+import type {TranslationReference} from '../../types'
 import DocumentCheck from './DocumentCheck'
 import Info from './Info'
 

@@ -1,14 +1,12 @@
-import type {UserExtended} from 'sanity-plugin-utils'
-
 import {Button, useToast} from '@sanity/ui'
 import {LexoRank} from 'lexorank'
 import {useCallback, useMemo} from 'react'
 import {useClient} from 'sanity'
-
-import type {SanityDocumentWithMetadata, State} from '../types'
+import type {UserExtended} from 'sanity-plugin-utils'
 
 import {API_VERSION} from '../constants'
 import {generateMultipleOrderRanks} from '../helpers/generateMultipleOrderRanks'
+import type {SanityDocumentWithMetadata, State} from '../types'
 import FloatingCard from './FloatingCard'
 
 type VerifyProps = {

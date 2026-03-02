@@ -11,9 +11,8 @@ import {
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
-
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import {getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'

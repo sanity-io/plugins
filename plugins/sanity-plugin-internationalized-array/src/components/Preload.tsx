@@ -1,8 +1,7 @@
 import {useClient} from 'sanity'
 
-import type {PluginConfig} from '../types'
-
 import {createCacheKey, peek, preloadWithKey, setFunctionCache} from '../cache'
+import type {PluginConfig} from '../types'
 
 export default function Preload(props: Required<Pick<PluginConfig, 'apiVersion' | 'languages'>>) {
   const client = useClient({apiVersion: props.apiVersion})

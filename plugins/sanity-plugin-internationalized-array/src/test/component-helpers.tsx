@@ -1,7 +1,6 @@
-import type {ReactNode} from 'react'
-
 import {ThemeProvider} from '@sanity/ui'
 import {buildTheme} from '@sanity/ui/theme'
+import type {ReactNode} from 'react'
 
 /**
  * Wrapper component that provides @sanity/ui ThemeProvider for component tests.

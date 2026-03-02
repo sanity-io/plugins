@@ -1,7 +1,5 @@
 import {definePlugin, isObjectInputProps, type Plugin} from 'sanity'
 
-import type {WorkflowConfig} from './types'
-
 import {defineUpdateWorkflow} from './actions/defineUpdateWorkflow'
 import {useAssignWorkflow} from './actions/useAssignWorkflow'
 import {useBeginWorkflow} from './actions/useBeginWorkflow'
@@ -13,6 +11,7 @@ import WorkflowSignal from './components/WorkflowSignal'
 import {DEFAULT_CONFIG} from './constants'
 import metadata from './schema/workflow/workflow.metadata'
 import {workflowTool} from './tools'
+import type {WorkflowConfig} from './types'
 
 export const workflow: Plugin<WorkflowConfig> = definePlugin<WorkflowConfig>(
   (config = DEFAULT_CONFIG) => {

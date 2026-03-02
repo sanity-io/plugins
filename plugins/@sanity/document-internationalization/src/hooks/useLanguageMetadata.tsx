@@ -1,8 +1,7 @@
 import {useListeningQuery} from 'sanity-plugin-utils'
 
-import type {Metadata} from '../types'
-
 import {METADATA_SCHEMA_NAME} from '../constants'
+import type {Metadata} from '../types'
 
 // Using references() seemed less reliable for updating the listener
 // results than querying raw values in the array

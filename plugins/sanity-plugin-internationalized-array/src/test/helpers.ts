@@ -1,7 +1,6 @@
 import type {InternationalizedArrayContextProps} from '../components/InternationalizedArrayContext'
-import type {Language, InternationalizedArrayItem} from '../types'
-
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 /**
  * Shared mock language definitions for tests.

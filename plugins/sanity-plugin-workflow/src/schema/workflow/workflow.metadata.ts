@@ -1,11 +1,10 @@
 import {defineField, defineType} from 'sanity'
 
-import type {State} from '../../types'
-
 import Field from '../../components/DocumentCard/Field'
 import UserAssignmentInput from '../../components/UserAssignmentInput'
 import {API_VERSION} from '../../constants'
 import initialRank from '../../helpers/initialRank'
+import type {State} from '../../types'
 
 export default (states: State[]) =>
   defineType({

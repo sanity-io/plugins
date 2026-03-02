@@ -1,13 +1,11 @@
-import type {CurrentUser} from 'sanity'
-import type {UserExtended} from 'sanity-plugin-utils'
-
 import {Draggable, type DraggableStyle} from '@hello-pangea/dnd'
 import {useVirtualizer, type VirtualItem} from '@tanstack/react-virtual'
 import {type CSSProperties, useCallback, useMemo, useRef} from 'react'
-
-import type {SanityDocumentWithMetadata, State} from '../types'
+import type {CurrentUser} from 'sanity'
+import type {UserExtended} from 'sanity-plugin-utils'
 
 import {filterItemsAndSort} from '../helpers/filterItemsAndSort'
+import type {SanityDocumentWithMetadata, State} from '../types'
 import {DocumentCard} from './DocumentCard'
 
 type DocumentListProps = {
