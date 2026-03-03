@@ -54,9 +54,9 @@ export function ColorList({colors, onChange}: ColorListProps): React.JSX.Element
   if (!colors) return null
   return (
     <ColorListWrap wrap="wrap">
-      {validateColors(colors).map(({color, backgroundColor}, idx) => (
+      {validateColors(colors).map(({color, backgroundColor}) => (
         <ColorBoxContainer
-          key={`${backgroundColor}-${idx}`}
+          key={backgroundColor}
           onClick={() => {
             onChange(color)
           }}

@@ -102,7 +102,9 @@
     "eslint/no-console": ["error", {"allow": ["warn", "error"]}],
     // Requires polyfills for older browsers
     "no-array-reverse": "off",
-    "no-array-sort": "off"
+    "no-array-sort": "off",
+    // Too noisy, common in callbacks/closures
+    "no-shadow": "off"
   },
   "overrides": [
     {
