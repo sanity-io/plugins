@@ -12,6 +12,10 @@
   ],
   "jsPlugins": [{"name": "react-hooks-js", "specifier": "eslint-plugin-react-hooks"}],
   "ignorePatterns": ["**/.sanity/*", "**/dist/*", "**/sanity.types.ts"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
   "categories": {
     "correctness": "error",
     "suspicious": "error",
@@ -98,7 +102,9 @@
     "eslint/no-console": ["error", {"allow": ["warn", "error"]}],
     // Requires polyfills for older browsers
     "no-array-reverse": "off",
-    "no-array-sort": "off"
+    "no-array-sort": "off",
+    // Too noisy, common in callbacks/closures
+    "no-shadow": "off"
   },
   "overrides": [
     {

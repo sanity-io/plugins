@@ -1,4 +1,4 @@
-import {useCallback, useContext, useState, createContext} from 'react'
+import {useCallback, useContext, useMemo, useState, createContext} from 'react'
 import type {LayoutProps} from 'sanity'
 
 import {DEFAULT_CONFIG} from '../constants'
@@ -50,19 +50,22 @@ export function WorkflowProvider(props: WorkflowProviderProps) {
   )
   const {data, loading, error} = useWorkflowMetadata(ids)
 
+  const contextValue = useMemo(
+    () => ({
+      data,
+      loading,
+      error,
+      ids,
+      addId,
+      removeId,
+      states: props.states,
+      schemaTypes: props.schemaTypes,
+    }),
+    [data, loading, error, ids, addId, removeId, props.states, props.schemaTypes],
+  )
+
   return (
-    <WorkflowContext.Provider
-      value={{
-        data,
-        loading,
-        error,
-        ids,
-        addId,
-        removeId,
-        states: props.states,
-        schemaTypes: props.schemaTypes,
-      }}
-    >
+    <WorkflowContext.Provider value={contextValue}>
       {props.renderDefault(props)}
     </WorkflowContext.Provider>
   )

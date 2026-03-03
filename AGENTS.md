@@ -174,7 +174,7 @@ The CI pipeline runs on every PR:
 ### Lint Specifics
 
 - **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors). React Compiler rules run via the react-hooks-js plugin.
-- **TypeScript type checking** is included in `pnpm lint` (via oxlint's `--type-check --type-aware` flags) — no separate `tsc` needed
+- **TypeScript type checking** is included in `pnpm lint` via oxlint — no separate `tsc` needed
 - Run `pnpm lint:fix` to auto-fix issues when possible
 
 ## Testing
