@@ -195,7 +195,7 @@ describe('AddButtons', () => {
     // When the constant changes from '_key' to 'language', this test verifies
     // that button disabled state still works correctly.
     const singleValue = createValues(['es'])
-    const languagesInUse = singleValue.map((item) => String(item._key ?? item['language']))
+    const languagesInUse = singleValue.map((item) => String(item[LANGUAGE_FIELD_NAME]))
 
     render(<AddButtons readOnly={false} languagesInUse={languagesInUse} handleClick={vi.fn()} />, {
       wrapper: ThemeWrapper,

@@ -1,4 +1,3 @@
-import type React from 'react'
 import {useSchema, type DocumentLayoutProps} from 'sanity'
 
 import type {PluginConfig} from '../types'
@@ -8,7 +7,7 @@ import {InternationalizedArrayProvider} from './InternationalizedArrayContext'
 
 export function InternationalizedArrayLayout(
   props: DocumentLayoutProps & {pluginConfig: Required<PluginConfig>},
-): React.ReactElement {
+) {
   const schema = useSchema()
   const schemaType = schema.get(props.documentType)
 
