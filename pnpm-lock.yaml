@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@sanity/client':
-      specifier: 7.14.1
-      version: 7.14.1
+      specifier: 7.16.0
+      version: 7.16.0
     '@sanity/pkg-utils':
       specifier: ^10.4.5
       version: 10.4.5
@@ -375,7 +375,7 @@ importers:
         version: 3.7.4(react@19.2.4)
       '@sanity/preview-url-secret':
         specifier: ^4.0.3
-        version: 4.0.3(@sanity/client@7.16.0(debug@4.4.3))
+        version: 4.0.3(@sanity/client@7.16.0)
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*
@@ -559,7 +559,7 @@ importers:
         version: 3.7.4(react@19.2.4)
       '@sanity/preview-url-secret':
         specifier: ^4.0.3
-        version: 4.0.3(@sanity/client@7.14.1)
+        version: 4.0.3(@sanity/client@7.16.0)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.1.13(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.4(react@19.2.4))(react-is@19.2.4)(react@19.2.4)(styled-components@6.3.8(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
@@ -572,7 +572,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.14.1
+        version: 7.16.0(debug@4.4.3)
       '@sanity/pkg-utils':
         specifier: 'catalog:'
         version: 10.4.5(@types/babel__core@7.20.5)(@types/node@25.3.3)(@typescript/native-preview@7.0.0-dev.20260226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
@@ -768,7 +768,7 @@ importers:
         version: 3.7.4(react@19.2.4)
       '@sanity/preview-url-secret':
         specifier: ^4.0.3
-        version: 4.0.3(@sanity/client@7.16.0(debug@4.4.3))
+        version: 4.0.3(@sanity/client@7.16.0)
       '@sanity/ui':
         specifier: ^3.1.13
         version: 3.1.13(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@19.2.4)(react@19.2.4)
@@ -891,7 +891,7 @@ importers:
         version: link:../../packages/@repo/tsconfig
       '@sanity/client':
         specifier: 'catalog:'
-        version: 7.14.1
+        version: 7.16.0(debug@4.4.3)
       '@sanity/pkg-utils':
         specifier: 'catalog:'
         version: 10.4.5(@types/babel__core@7.20.5)(@types/node@25.3.3)(@typescript/native-preview@7.0.0-dev.20260226.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
@@ -3285,10 +3285,6 @@ packages:
     peerDependenciesMeta:
       babel-plugin-react-compiler:
         optional: true
-
-  '@sanity/client@7.14.1':
-    resolution: {integrity: sha512-lCDx0vuNUgg9FL2E5Hiv1q7u6iHd1Z+jjMZAaYtfzzFPoBKOiyZlaFwqyLVHRyTbwnXQdIGDPmx2AvfBTbGQsQ==}
-    engines: {node: '>=20'}
 
   '@sanity/client@7.16.0':
     resolution: {integrity: sha512-6kesQ1iPzcuQM9oLEx6UVRaSjffssp2RnFOVE3MHOAEeq2T3AOtTU5BpZf2jzB+FDBfOYTyKUdzVsmRUZbCfAw==}
@@ -11347,15 +11343,6 @@ snapshots:
       - utf-8-validate
       - yaml
 
-  '@sanity/client@7.14.1':
-    dependencies:
-      '@sanity/eventsource': 5.0.2
-      get-it: 8.7.0(debug@4.4.3)
-      nanoid: 3.3.11
-      rxjs: 7.8.2
-    transitivePeerDependencies:
-      - debug
-
   '@sanity/client@7.16.0(debug@4.4.3)':
     dependencies:
       '@sanity/eventsource': 5.0.2
@@ -11854,12 +11841,7 @@ snapshots:
       - '@sanity/client'
       - '@sanity/types'
 
-  '@sanity/preview-url-secret@4.0.3(@sanity/client@7.14.1)':
-    dependencies:
-      '@sanity/client': 7.14.1
-      '@sanity/uuid': 3.0.2
-
-  '@sanity/preview-url-secret@4.0.3(@sanity/client@7.16.0(debug@4.4.3))':
+  '@sanity/preview-url-secret@4.0.3(@sanity/client@7.16.0)':
     dependencies:
       '@sanity/client': 7.16.0(debug@4.4.3)
       '@sanity/uuid': 3.0.2
@@ -16462,7 +16444,7 @@ snapshots:
       '@sanity/migrate': 5.2.5(@noble/hashes@2.0.1)(@sanity/telemetry@0.8.1(react@19.2.4))(@types/node@24.11.0)(@types/react@19.2.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(xstate@5.28.0)(yaml@2.8.2)
       '@sanity/mutator': 5.12.0(@types/react@19.2.13)
       '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.16.0)(@sanity/types@5.12.0(@types/react@19.2.13)(debug@4.4.3))
-      '@sanity/preview-url-secret': 4.0.3(@sanity/client@7.16.0(debug@4.4.3))
+      '@sanity/preview-url-secret': 4.0.3(@sanity/client@7.16.0)
       '@sanity/schema': 5.12.0(@types/react@19.2.13)(debug@4.4.3)
       '@sanity/sdk': 2.1.2(@types/react@19.2.13)(debug@4.4.3)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
       '@sanity/telemetry': 0.8.1(react@19.2.4)
@@ -16642,7 +16624,7 @@ snapshots:
       '@sanity/migrate': 5.2.5(@noble/hashes@2.0.1)(@sanity/telemetry@0.8.1(react@19.2.4))(@types/node@25.3.3)(@types/react@19.2.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(xstate@5.28.0)(yaml@2.8.2)
       '@sanity/mutator': 5.12.0(@types/react@19.2.13)
       '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.16.0)(@sanity/types@5.12.0(@types/react@19.2.13)(debug@4.4.3))
-      '@sanity/preview-url-secret': 4.0.3(@sanity/client@7.16.0(debug@4.4.3))
+      '@sanity/preview-url-secret': 4.0.3(@sanity/client@7.16.0)
       '@sanity/schema': 5.12.0(@types/react@19.2.13)(debug@4.4.3)
       '@sanity/sdk': 2.1.2(@types/react@19.2.13)(debug@4.4.3)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
       '@sanity/telemetry': 0.8.1(react@19.2.4)
@@ -16822,7 +16804,7 @@ snapshots:
       '@sanity/migrate': 5.2.5(@noble/hashes@2.0.1)(@sanity/telemetry@0.8.1(react@19.2.4))(@types/node@25.3.3)(@types/react@19.2.13)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(xstate@5.28.0)(yaml@2.8.2)
       '@sanity/mutator': 5.12.0(@types/react@19.2.13)
       '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.16.0)(@sanity/types@5.12.0(@types/react@19.2.13)(debug@4.4.3))
-      '@sanity/preview-url-secret': 4.0.3(@sanity/client@7.16.0(debug@4.4.3))
+      '@sanity/preview-url-secret': 4.0.3(@sanity/client@7.16.0)
       '@sanity/schema': 5.12.0(@types/react@19.2.13)(debug@4.4.3)
       '@sanity/sdk': 2.1.2(@types/react@19.2.13)(debug@4.4.3)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
       '@sanity/telemetry': 0.8.1(react@19.2.4)
