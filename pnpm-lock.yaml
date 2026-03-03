@@ -724,8 +724,8 @@ importers:
         specifier: ^4.3.1
         version: 4.3.1
       react-force-graph:
-        specifier: 1.41.14
-        version: 1.41.14(aframe@1.7.1)(react@19.2.4)(three@0.182.0)
+        specifier: 1.48.2
+        version: 1.48.2(aframe@1.7.1)(react@19.2.4)(three@0.182.0)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.4(react@19.2.4))(react@19.2.4)'
@@ -1018,9 +1018,11 @@ packages:
     resolution: {integrity: sha512-I93bRB+PY7RGPGEPa/+MyC17UYXUBkGu8i71VjRVJCSDtk23XOJ3RlcyVWHKzifTktQ7Oy0YRnqWwbxkHV8m4g==}
     engines: {node: '>=12'}
 
-  3d-force-graph-vr@2.4.4:
-    resolution: {integrity: sha512-//k5TeEVNDLS2y/hE+Oq6QpacM0yZsntP9pRQFjdD46rwwgjTN/Cxmc3Qg7YdANqKXPtVS4rBIqam0xmMrMpeA==}
+  3d-force-graph-vr@3.1.1:
+    resolution: {integrity: sha512-q/NhHQyAkGMHkf9Irvt6350yIYnCK77XuEc/09HrRqYbaENqwraPPzahr9BG5wkd2//KtzEEp9AYhPU2GQ0KHg==}
     engines: {node: '>=12'}
+    peerDependencies:
+      aframe: ^1.5
 
   3d-force-graph@1.79.0:
     resolution: {integrity: sha512-0RUNcfiH12f93loY/iS4wShzhXzdLLN4futvFnintF7eP30DjX+nAdLDAGOZwSflhijQyVwnGtpczNjFrDLUzQ==}
@@ -7319,8 +7321,9 @@ packages:
       '@types/react':
         optional: true
 
-  react-force-graph@1.41.14:
-    resolution: {integrity: sha512-PH7MRSJa8x1m0Q5coLACY3bMVdxDMhIImEnLbyl1k5F7yjqMbicziTGdf8+axZRtU7Caaami3MyO0wDi9XUU5w==}
+  react-force-graph@1.48.2:
+    resolution: {integrity: sha512-VpBphuNN0X4BAl8c8h0r8M3XI18ExHfteNuUdCEzq0e9SORDi+5J2jpa2uNm9TQhoyXiUQjkIc1zvwIymaqdWw==}
+    engines: {node: '>=12'}
     peerDependencies:
       react: '*'
 
@@ -8806,7 +8809,7 @@ snapshots:
       - aframe
       - three
 
-  3d-force-graph-vr@2.4.4(three@0.182.0):
+  3d-force-graph-vr@3.1.1(aframe@1.7.1)(three@0.182.0):
     dependencies:
       accessor-fn: 1.5.3
       aframe: 1.7.1
@@ -8815,7 +8818,6 @@ snapshots:
       kapsule: 1.16.3
       polished: 4.3.1
     transitivePeerDependencies:
-      - supports-color
       - three
 
   3d-force-graph@1.79.0:
@@ -16378,18 +16380,17 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.13
 
-  react-force-graph@1.41.14(aframe@1.7.1)(react@19.2.4)(three@0.182.0):
+  react-force-graph@1.48.2(aframe@1.7.1)(react@19.2.4)(three@0.182.0):
     dependencies:
       3d-force-graph: 1.79.0
       3d-force-graph-ar: 1.10.0(aframe@1.7.1)(three@0.182.0)
-      3d-force-graph-vr: 2.4.4(three@0.182.0)
+      3d-force-graph-vr: 3.1.1(aframe@1.7.1)(three@0.182.0)
       force-graph: 1.51.0
       prop-types: 15.8.1
       react: 19.2.4
       react-kapsule: 2.5.7(react@19.2.4)
     transitivePeerDependencies:
       - aframe
-      - supports-color
       - three
 
   react-i18next@15.6.1(i18next@23.16.8)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3):
