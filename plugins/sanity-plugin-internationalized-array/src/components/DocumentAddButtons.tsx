@@ -15,7 +15,6 @@ import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import {getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
-import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
 type DocumentAddButtonsProps = {
   value: Record<string, unknown> | undefined
@@ -39,7 +38,6 @@ type DocumentAddButtonsProps = {
  * is set to an empty array (`[]`) rather than `undefined`.
  */
 export default function DocumentAddButtons(props: DocumentAddButtonsProps): ReactElement {
-  const {filteredLanguages} = useInternationalizedArrayContext()
   const value = isSanityDocument(props.value) ? props.value : undefined
 
   const toast = useToast()
@@ -166,12 +164,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
           Add translation to internationalized fields
         </Text>
       </Box>
-      <AddButtons
-        languages={filteredLanguages}
-        readOnly={false}
-        value={undefined}
-        handleClick={handleDocumentButtonClick}
-      />
+      <AddButtons readOnly={false} handleClick={handleDocumentButtonClick} languagesInUse={[]} />
     </Stack>
   )
 }

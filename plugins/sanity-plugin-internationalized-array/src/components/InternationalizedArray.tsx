@@ -6,6 +6,7 @@ import {useCallback, useEffect, useMemo} from 'react'
 import {
   type ArrayOfObjectsInputProps,
   ArrayOfObjectsItem,
+  insert,
   MemberItemError,
   set,
   setIfMissing,
@@ -90,8 +91,8 @@ export default function InternationalizedArray(
     [languageFilterEnabled, members, languageFilterOptions, selectedLanguageIds],
   )
 
-  const handleAddLanguage = useCallback(
-    (addLanguageKeys: string[] | string) => {
+  const handleAddLanguages = useCallback(
+    (addLanguageKeys: string[]) => {
       if (!filteredLanguages?.length) {
         return
       }
@@ -109,12 +110,30 @@ export default function InternationalizedArray(
     [filteredLanguages, languages, onChange, schemaType, value],
   )
 
+  // This is more stable than handleAddLanguages because it doesn't depend on the value array.
+  const handleAddLanguage = useCallback(
+    (languageId: string) => {
+      onChange([setIfMissing([]), insert([{[LANGUAGE_FIELD_NAME]: languageId}], 'after', [-1])])
+    },
+    [onChange],
+  )
   const {isDeleting} = useDocumentPane()
 
+  // Create a string with the values so it's stable and doesn't recalculate on every change to value
+  const languageKeysFromValue = value
+    ?.map((v) => v[LANGUAGE_FIELD_NAME] ?? v._key)
+    .filter(Boolean)
+    .join(',')
+
   const addedLanguages = useMemo(() => {
-    if (!value?.length) return []
-    return value.map((v) => v[LANGUAGE_FIELD_NAME] ?? v._key).filter(Boolean)
-  }, [value])
+    const languageKeys = languageKeysFromValue.split(',')
+    if (!languageKeys?.length) return []
+    if (!languages?.length) return []
+
+    return languages.filter((l) => languageKeys?.find((key) => key === l.id)).map((l) => l.id)
+    // languageKeys.filter((key) => languages.find((l) => l.id === key))
+  }, [languageKeysFromValue, languages])
+
   const hasAddedDefaultLanguages = defaultLanguages
     .filter((language) => languages.find((l) => l.id === language))
     .every((language) => addedLanguages.includes(language))
@@ -126,7 +145,7 @@ export default function InternationalizedArray(
         .filter((language) => languages.find((l) => l.id === language))
       // Account for strict mode by scheduling the update
       const timeout = setTimeout(() => {
-        if (!documentReadOnly) handleAddLanguage(languagesToAdd)
+        if (!documentReadOnly) handleAddLanguages(languagesToAdd)
       })
       return () => clearTimeout(timeout)
     }
@@ -134,7 +153,7 @@ export default function InternationalizedArray(
   }, [
     isDeleting,
     hasAddedDefaultLanguages,
-    handleAddLanguage,
+    handleAddLanguages,
     defaultLanguages,
     addedLanguages,
     languages,
@@ -179,26 +198,19 @@ export default function InternationalizedArray(
     return value?.every((v) => languages.find((l) => l?.id === v?.[LANGUAGE_FIELD_NAME]))
   }, [value, languages])
 
-  // Check languages are in the correct order
-  const languagesInUse = useMemo(
-    () =>
-      languages && languages.length > 1
-        ? languages.filter((l) => value?.find((v) => v[LANGUAGE_FIELD_NAME] === l.id))
-        : [],
-    [languages, value],
-  )
-
   const languagesOutOfOrder = useMemo(() => {
-    if (!value?.length || !languagesInUse.length) {
+    if (!value?.length || !addedLanguages.length) {
       return []
     }
 
     return value
       .map((v, vIndex) =>
-        vIndex === languagesInUse.findIndex((l) => l.id === v[LANGUAGE_FIELD_NAME]) ? null : v,
+        vIndex === addedLanguages.findIndex((language) => language === v[LANGUAGE_FIELD_NAME])
+          ? null
+          : v,
       )
       .filter(Boolean)
-  }, [value, languagesInUse])
+  }, [value, addedLanguages])
 
   const languagesAreValid = useMemo(
     () =>
@@ -256,8 +268,7 @@ export default function InternationalizedArray(
       {addButtonsAreVisible ? (
         <Stack space={2}>
           <AddButtons
-            languages={filteredLanguages}
-            value={value}
+            languagesInUse={addedLanguages}
             readOnly={readOnly}
             handleClick={handleAddLanguage}
           />
@@ -269,7 +280,7 @@ export default function InternationalizedArray(
               disabled={readOnly || allLanguagesArePresent}
               icon={AddIcon}
               text={createAddAllTitle(value, filteredLanguages)}
-              onClick={() => handleAddLanguage(filteredLanguages.map((language) => language.id))}
+              onClick={() => handleAddLanguages(filteredLanguages.map((language) => language.id))}
             />
           ) : null}
         </Stack>
