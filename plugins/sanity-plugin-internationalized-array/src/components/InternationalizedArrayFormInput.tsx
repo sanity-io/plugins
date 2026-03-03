@@ -16,7 +16,7 @@ export function InternationalizedArrayFormInput(
   if (showDocumentButtons) {
     return (
       <Stack space={5}>
-        <DocumentAddButtons value={props.value} />
+        <DocumentAddButtons />
         {props.renderDefault(props)}
       </Stack>
     )

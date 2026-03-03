@@ -7,6 +7,7 @@ import {
   isSanityDocument,
   PatchEvent,
   setIfMissing,
+  useGetFormValue,
   useSchema,
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
@@ -16,9 +17,6 @@ import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import {getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
 
-type DocumentAddButtonsProps = {
-  value: Record<string, unknown> | undefined
-}
 /**
  * Document-level "add translation" panel that appears outside individual
  * internationalized array fields (when `buttonLocations` includes `'document'`).
@@ -37,8 +35,9 @@ type DocumentAddButtonsProps = {
  * For Portable Text and other array-based value fields, the initial value
  * is set to an empty array (`[]`) rather than `undefined`.
  */
-export default function DocumentAddButtons(props: DocumentAddButtonsProps): ReactElement {
-  const value = isSanityDocument(props.value) ? props.value : undefined
+export default function DocumentAddButtons(): ReactElement {
+  const getFormValue = useGetFormValue()
+
   const toast = useToast()
   const {onChange} = useDocumentPane()
   const schema = useSchema()
@@ -93,6 +92,14 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
 
   const handleDocumentButtonClick = useCallback(
     async (languageId: string) => {
+      const value = getFormValue([])
+      if (!isSanityDocument(value)) {
+        toast.push({
+          status: 'error',
+          title: 'No document value found',
+        })
+        return
+      }
       const documentsToTranslation = getDocumentsToTranslate(value, [])
 
       const alreadyTranslated = documentsToTranslation.filter(
@@ -154,7 +161,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
 
       onChange(PatchEvent.from(patches.flat()))
     },
-    [value, getInitialValueForType, onChange, toast],
+    [getInitialValueForType, onChange, toast, getFormValue],
   )
   return (
     <Stack space={3}>
