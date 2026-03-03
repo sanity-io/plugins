@@ -68,6 +68,7 @@ describe('InternationalizedInput', () => {
       fieldTypes: [],
       buttonLocations: ['field'],
       buttonAddAll: true,
+      isDocumentInternationalizationIntegration: false,
     })
 
     // Default: parent has multiple language entries
@@ -113,6 +114,7 @@ describe('InternationalizedInput', () => {
       fieldTypes: [],
       buttonLocations: ['field'],
       buttonAddAll: true,
+      isDocumentInternationalizationIntegration: false,
     })
 
     const props = createMockProps('en')
@@ -145,6 +147,7 @@ describe('InternationalizedInput', () => {
       fieldTypes: [],
       buttonLocations: ['field'],
       buttonAddAll: true,
+      isDocumentInternationalizationIntegration: false,
     })
 
     const props = createMockProps('fr') // 'fr' is not default

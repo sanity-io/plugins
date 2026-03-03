@@ -51,8 +51,12 @@ export type PluginConfig = {
 // Context version of config
 // should have processed the
 // supportedLanguages function
-export type PluginConfigContext = Required<PluginConfig> & {
+export type PluginConfigContext = Required<Omit<PluginConfig, 'metadataInternationalization'>> & {
   supportedLanguages: Language[]
+  metadataInternationalization?: Pick<
+    InternationalizedArrayPluginConfig,
+    'buttonLocations' | 'buttonAddAll' | 'languageDisplay'
+  >
 }
 
 export type TranslationReference = InternationalizedArrayItem<Reference> & {
