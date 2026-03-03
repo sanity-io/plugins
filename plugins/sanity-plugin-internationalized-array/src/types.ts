@@ -145,4 +145,13 @@ export type PluginConfig = {
    * @defaultValue 'code'
    * */
   languageDisplay?: LanguageDisplay
+
+  /**
+   * @internal
+   * For use from document-internationalization plugin only.
+   * This will make it so that the InternationalizedArray context injects the
+   * correct context into the document form when use in combination with document internationalization.
+   *
+   */
+  isDocumentInternationalizationIntegration?: boolean
 }

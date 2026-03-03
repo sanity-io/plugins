@@ -9,6 +9,7 @@ import array from './schema/array'
 import object from './schema/object'
 import type {PluginConfig} from './types'
 import {hasInternationalizedArrayField} from './utils/hasInternationalizedArrayField'
+import {shouldHandleDocumentType} from './utils/shouldHandleDocumentType'
 
 export const internationalizedArray = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...CONFIG_DEFAULT, ...config}
@@ -54,6 +55,10 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
           const isRootInput = props.id === 'root' && isObjectInputProps(props)
 
           if (!isRootInput) {
+            return props.renderDefault(props)
+          }
+
+          if (!shouldHandleDocumentType(pluginConfig, props.schemaType.name)) {
             return props.renderDefault(props)
           }
 

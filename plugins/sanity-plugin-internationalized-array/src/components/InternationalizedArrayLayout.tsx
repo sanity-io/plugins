@@ -2,6 +2,7 @@ import {useSchema, type DocumentLayoutProps} from 'sanity'
 
 import type {PluginConfig} from '../types'
 import {hasInternationalizedArrayField} from '../utils/hasInternationalizedArrayField'
+import {shouldHandleDocumentType} from '../utils/shouldHandleDocumentType'
 import {InternationalizedArrayProvider} from './InternationalizedArrayContext'
 
 export function InternationalizedArrayLayout(
@@ -9,6 +10,10 @@ export function InternationalizedArrayLayout(
 ): React.ReactElement {
   const schema = useSchema()
   const schemaType = schema.get(props.documentType)
+
+  if (!shouldHandleDocumentType(props.pluginConfig, props.documentType)) {
+    return props.renderDefault(props)
+  }
   if (!schemaType) {
     console.error(`Schema type not found: ${props.documentType}`)
     return props.renderDefault(props)

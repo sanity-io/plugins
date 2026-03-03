@@ -22,6 +22,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
     bulkPublish,
     metadataFields,
     hideLanguageFilter,
+    metadataInternationalization,
   } = pluginConfig
 
   if (schemaTypes.length === 0) {
@@ -164,6 +165,8 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
       // Translation metadata stores its references using this plugin
       // It cuts down on attribute usage and gives UI conveniences to add new translations
       internationalizedArray({
+        ...metadataInternationalization,
+        isDocumentInternationalizationIntegration: true,
         apiVersion: pluginConfig.apiVersion,
         languages: supportedLanguages,
         fieldTypes: [
