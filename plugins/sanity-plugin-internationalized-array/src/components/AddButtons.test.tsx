@@ -3,7 +3,7 @@ import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import {ThemeWrapper} from '../test/component-helpers'
-import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES} from '../test/helpers'
+import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT} from '../test/helpers'
 import type {Language} from '../types'
 import AddButtons from './AddButtons'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
@@ -195,7 +195,7 @@ describe('AddButtons', () => {
     // When the constant changes from '_key' to 'language', this test verifies
     // that button disabled state still works correctly.
     const singleValue = createValues(['es'])
-    const languagesInUse = singleValue.map((item) => String(item._key ?? item.language))
+    const languagesInUse = singleValue.map((item) => String(item._key ?? item['language']))
 
     render(<AddButtons readOnly={false} languagesInUse={languagesInUse} handleClick={vi.fn()} />, {
       wrapper: ThemeWrapper,

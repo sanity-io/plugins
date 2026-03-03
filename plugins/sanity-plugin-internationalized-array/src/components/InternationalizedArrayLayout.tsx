@@ -1,3 +1,4 @@
+import type React from 'react'
 import {useSchema, type DocumentLayoutProps} from 'sanity'
 
 import type {PluginConfig} from '../types'

@@ -115,7 +115,7 @@ export default function InternationalizedArray(
 
   const {isDeleting} = useDocumentPane()
 
-  // Create a string with the values so it's stable and doesn't recalculate on every change to value
+  // Create a stable dependency string that only changes when language keys change
   const languageKeysFromValue = value
     ?.map((v) => v[LANGUAGE_FIELD_NAME] ?? v._key)
     .filter(Boolean)
@@ -127,7 +127,6 @@ export default function InternationalizedArray(
     if (!languages?.length) return []
 
     return languages.filter((l) => languageKeys?.find((key) => key === l.id)).map((l) => l.id)
-    // languageKeys.filter((key) => languages.find((l) => l.id === key))
   }, [languageKeysFromValue, languages])
 
   useEffect(() => {
