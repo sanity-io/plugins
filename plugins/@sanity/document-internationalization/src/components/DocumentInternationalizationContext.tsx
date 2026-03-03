@@ -73,8 +73,13 @@ export function DocumentInternationalizationProvider(
     : // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
       (pluginConfig.supportedLanguages as PluginConfigContext['supportedLanguages'])
 
+  const contextValue = useMemo(
+    () => ({...pluginConfig, supportedLanguages}),
+    [pluginConfig, supportedLanguages],
+  )
+
   return (
-    <DocumentInternationalizationContext.Provider value={{...pluginConfig, supportedLanguages}}>
+    <DocumentInternationalizationContext.Provider value={contextValue}>
       {props.renderDefault(props)}
     </DocumentInternationalizationContext.Provider>
   )
