@@ -39,12 +39,9 @@ type DocumentAddButtonsProps = {
  */
 export default function DocumentAddButtons(props: DocumentAddButtonsProps): ReactElement {
   const value = isSanityDocument(props.value) ? props.value : undefined
-
   const toast = useToast()
   const {onChange} = useDocumentPane()
   const schema = useSchema()
-
-  const documentsToTranslation = getDocumentsToTranslate(value, [])
 
   // Helper function to determine if a field should be initialized as an array
   const getInitialValueForType = useCallback(
@@ -96,6 +93,8 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
 
   const handleDocumentButtonClick = useCallback(
     async (languageId: string) => {
+      const documentsToTranslation = getDocumentsToTranslate(value, [])
+
       const alreadyTranslated = documentsToTranslation.filter(
         (translation) => translation?.[LANGUAGE_FIELD_NAME] === languageId,
       )
@@ -155,7 +154,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
 
       onChange(PatchEvent.from(patches.flat()))
     },
-    [documentsToTranslation, getInitialValueForType, onChange, toast],
+    [value, getInitialValueForType, onChange, toast],
   )
   return (
     <Stack space={3}>
