@@ -1,0 +1,93 @@
+{
+  "name": "@sanity/plugin-kit",
+  "version": "4.0.20",
+  "description": "Enhanced Sanity.io plugin development experience",
+  "keywords": [
+    "bootstrap",
+    "development",
+    "plugin",
+    "sanity",
+    "sanity-io",
+    "typescript"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/plugin-kit#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/plugin-kit"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@rexxars/choosealicense-list": "1.1.2",
+    "@sanity/pkg-utils": "8.1.12",
+    "chalk": "4.1.2",
+    "concurrently": "8.2.2",
+    "discover-path": "1.0.0",
+    "email-validator": "2.0.4",
+    "execa": "5.1.1",
+    "get-it": "8.6.3",
+    "get-latest-version": "5.1.0",
+    "git-remote-origin-url": "3.1.0",
+    "github-url-to-object": "4.0.6",
+    "inquirer": "8.2.6",
+    "meow": "9.0.0",
+    "nodemon": "3.1.0",
+    "npm-packlist": "8.0.2",
+    "npm-run-path": "4.0.1",
+    "outdent": "0.8.0",
+    "p-any": "3.0.0",
+    "p-props": "4.0.0",
+    "postcss": "8.4.40",
+    "semver": "7.5.4",
+    "spdx-license-ids": "3.0.18",
+    "validate-npm-package-name": "5.0.0",
+    "xdg-basedir": "4.0.0",
+    "yalc": "1.0.0-pre.53"
+  },
+  "devDependencies": {
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^19.2",
+    "react-dom": "^19.2",
+    "sanity": "^5"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}
