@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 
 # Sanity Studio
 .sanity
+turbo/generators/node_modules
