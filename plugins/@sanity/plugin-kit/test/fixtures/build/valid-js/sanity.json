@@ -1,0 +1,13 @@
+{
+  "paths": {
+    "source": "./src",
+    "compiled": "./dist"
+  },
+
+  "parts": [
+    {
+      "name": "part:valid/some/thing",
+      "path": "one.js"
+    }
+  ]
+}

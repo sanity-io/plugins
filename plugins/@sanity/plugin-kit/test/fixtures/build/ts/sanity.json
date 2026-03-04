@@ -1,0 +1,13 @@
+{
+  "paths": {
+    "source": "./src",
+    "compiled": "./dist"
+  },
+
+  "parts": [
+    {
+      "name": "part:ts/some/thing",
+      "path": "one"
+    }
+  ]
+}

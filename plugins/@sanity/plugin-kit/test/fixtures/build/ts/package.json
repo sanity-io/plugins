@@ -1,0 +1,21 @@
+{
+  "name": "sanity-plugin-ts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Just a valid typescript Sanity plugin fixture. Do not publish.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "license": "MIT",
+  "author": "Some person",
+  "main": "./dist/one.js",
+  "types": "types.d.ts",
+  "files": [
+    "dist",
+    ".eslintignore"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

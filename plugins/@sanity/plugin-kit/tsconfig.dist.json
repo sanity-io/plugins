@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.settings.json",
+  // Only use the src dir during build
+  "include": ["./src"]
+}

@@ -1,0 +1,154 @@
+{
+  "name": "@sanity/plugin-kit",
+  "version": "4.0.20",
+  "description": "Enhanced Sanity.io plugin development experience",
+  "keywords": [
+    "sanity-io",
+    "sanity",
+    "plugin",
+    "development",
+    "typescript",
+    "bootstrap"
+  ],
+  "homepage": "https://github.com/sanity-io/plugin-kit#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugin-kit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugin-kit.git"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "plugin-kit": "./bin/plugin-kit.js"
+  },
+  "files": [
+    "assets",
+    "bin",
+    "dist",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "pkg-utils build --strict --check --clean",
+    "commit": "git-cz",
+    "compile": "tsc --build",
+    "format": "prettier src package.json -w",
+    "lint": "eslint .",
+    "prepare": "husky install",
+    "prepublishOnly": "npm run build",
+    "test": "tap",
+    "test:update-snapshots": "tap --snapshot",
+    "watch": "pkg-utils watch --strict"
+  },
+  "browserslist": "extends @sanity/browserslist-config",
+  "tap": {
+    "browser": false,
+    "check-coverage": false,
+    "coverage-report": [
+      "html"
+    ],
+    "jobs": 2,
+    "reporter": "spec",
+    "test-ignore": "^dist/.*|.*ignore.*|.*run-test-command.*|.*fixture.utils.*",
+    "timeout": 120,
+    "ts": true
+  },
+  "overrides": {
+    "@babel/helpers": "7.28.4",
+    "brace-expansion": "1.1.12",
+    "conventional-changelog-conventionalcommits": ">= 8.0.0",
+    "esbuild": "0.25.0",
+    "micromatch": "4.0.8",
+    "prismjs": "1.30.0",
+    "tap": {
+      "@babel/helpers": "7.28.4",
+      "brace-expansion": "1.1.12",
+      "ws": "5.2.4"
+    },
+    "tmp": "0.2.4",
+    "ws": "5.2.4"
+  },
+  "dependencies": {
+    "@rexxars/choosealicense-list": "1.1.2",
+    "@sanity/pkg-utils": "8.1.12",
+    "chalk": "4.1.2",
+    "concurrently": "8.2.2",
+    "discover-path": "1.0.0",
+    "email-validator": "2.0.4",
+    "execa": "5.1.1",
+    "get-it": "8.6.3",
+    "get-latest-version": "5.1.0",
+    "git-remote-origin-url": "3.1.0",
+    "github-url-to-object": "4.0.6",
+    "inquirer": "8.2.6",
+    "meow": "9.0.0",
+    "nodemon": "3.1.0",
+    "npm-packlist": "8.0.2",
+    "npm-run-path": "4.0.1",
+    "outdent": "0.8.0",
+    "p-any": "3.0.0",
+    "p-props": "4.0.0",
+    "postcss": "8.4.40",
+    "semver": "7.5.4",
+    "spdx-license-ids": "3.0.18",
+    "validate-npm-package-name": "5.0.0",
+    "xdg-basedir": "4.0.0",
+    "yalc": "1.0.0-pre.53"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.3.0",
+    "@commitlint/config-conventional": "19.2.2",
+    "@sanity/semantic-release-preset": "5.0.0",
+    "@sanity/ui-workshop": "^3.3.2",
+    "@types/eslint": "^8.56.11",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.3",
+    "@types/node": "^18.17.4",
+    "@types/nodemon": "^1.19.6",
+    "@types/tap": "^15.0.11",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-sanity": "^7.1.2",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "fs-extra": "^11.2.0",
+    "husky": "^8.0.3",
+    "json5": "2.2.3",
+    "lint-staged": "^13.3.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-packagejson": "^2.5.1",
+    "readdirp": "^3.6.0",
+    "rimraf": "^4.4.1",
+    "sanity": "^4.9.0",
+    "sinon": "^17.0.2",
+    "tap": "^16.3.10",
+    "ts-node": "^10.9.2",
+    "typescript": "5.8.3"
+  },
+  "peerDependencies": {
+    "eslint": ">=8.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "binname": "sanity-plugin"
+}
