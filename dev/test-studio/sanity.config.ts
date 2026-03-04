@@ -14,7 +14,6 @@ import {documentInternationalizationExample} from '#document-internationalizatio
 import {iframePaneExample} from '#iframe-pane'
 import {internationalizedArrayExample} from '#internationalized-array'
 import {markdownExample} from '#markdown'
-import {pluginKitExample} from '#plugin-kit'
 import {richDateInputExample} from '#rich-date-input'
 import {studioSecretsExample} from '#studio-secrets'
 import {unsplashExample} from '#unsplash'
@@ -43,7 +42,6 @@ export default defineConfig([
     name: 'kitchen-sink',
     plugins: [
       structureTool(),
-      pluginKitExample(),
       // add new plugins here
       studioSecretsExample(),
       documentInternationalizationExample(),
