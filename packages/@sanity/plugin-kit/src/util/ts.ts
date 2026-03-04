@@ -12,12 +12,8 @@ export async function readTSConfig(options: {basePath: string; filename: string}
   if (!exists) return undefined
 
   // oxlint-disable-next-line unbound-method
-  return ts.readConfigFile(filePath, ts.sys.readFile).config
-    ? ts.parseJsonConfigFileContent(
-        // oxlint-disable-next-line unbound-method
-        ts.readConfigFile(filePath, ts.sys.readFile).config,
-        ts.sys,
-        basePath,
-      )
+  const configResult = ts.readConfigFile(filePath, ts.sys.readFile)
+  return configResult.config
+    ? ts.parseJsonConfigFileContent(configResult.config, ts.sys, basePath)
     : undefined
 }
