@@ -12,15 +12,22 @@ This plugin was scaffolded using `pnpm generate "copy plugin"`.
 
 ⚠️ **If trusted publishing is not configured correctly, the plugin will fail to publish from this monorepo.**
 
-Go to the npm package access settings:
+Run this command locally (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
 
-**https://www.npmjs.com/package/{{ name }}/access**
+```bash
+npm trust github {{ name }} --file=release.yml --repository=sanity-io/plugins
+```
 
-### Configure GitHub Actions as Trusted Publisher
+This sets up OIDC-based trusted publishing so the GitHub Actions release workflow can publish this package without storing npm tokens.
 
-Under **"Publishing access"**, click **"Add a trusted publisher"** and select **"GitHub Actions"**.
+<details>
+<summary>Alternative: Configure via npm website</summary>
 
-Fill in the fields **exactly** as shown:
+If you don't have npm >= 11.10.0, you can configure trusted publishing manually:
+
+1. Go to **https://www.npmjs.com/package/{{ name }}/access**
+2. Under **"Publishing access"**, click **"Add a trusted publisher"** and select **"GitHub Actions"**
+3. Fill in the fields:
 
 | Setting              | Value         |
 | -------------------- | ------------- |
@@ -29,16 +36,9 @@ Fill in the fields **exactly** as shown:
 | **Workflow**         | `release.yml` |
 | **Environment name** | _(leave empty)_ |
 
-Click **"Add trusted publisher"**.
+4. Click **"Add trusted publisher"**
 
-### Configure Token Settings
-
-Under **"Token settings"**, ensure:
-
-- ✅ **Require 2FA** for publishing is enabled
-- ✅ **Disallow tokens** (both granular and automation tokens)
-
-This ensures only the GitHub Actions release workflow can publish this package using OIDC-based trusted publishing.
+</details>
 
 ## 2. Update package.json Dependencies
 
