@@ -17,7 +17,7 @@ Thank you for your interest in contributing to the Sanity Plugins monorepo! This
 
 ### Prerequisites
 
-- Node.js **v24** (latest LTS) — packages support `>=20.19 <22 || >=22.12` but we recommend v24
+- Node.js (latest LTS)
 - [pnpm](https://pnpm.io/) v10 or later — the exact version is managed via `packageManager` in root `package.json`
 
 ### Initial Setup

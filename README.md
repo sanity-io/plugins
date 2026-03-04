@@ -28,8 +28,8 @@ The packages folder contains two types of packages:
 
 ### Prerequisites
 
-- Node.js `>=20.19 <22 || >=22.12`
-- [pnpm](https://pnpm.io/) `10.24.0` (managed via corepack)
+- Node.js (latest LTS)
+- [pnpm](https://pnpm.io/) v10 or later (managed via corepack)
 
 ### Installation
 

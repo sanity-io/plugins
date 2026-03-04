@@ -20,11 +20,11 @@ This guide is for AI agents working on this codebase. Follow these instructions 
 
 ### Node.js Version
 
-Use Node.js **v24** (latest LTS). The engines field in packages specifies `>=20.19 <22 || >=22.12`, but the test studio targets Node 24.
+Use the **latest LTS** release of Node.js.
 
 ### pnpm Version
 
-The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v10 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified (currently `pnpm@10.28.1`).
+The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v10 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
 
 ```bash
 # Enable corepack to automatically use the correct pnpm version
