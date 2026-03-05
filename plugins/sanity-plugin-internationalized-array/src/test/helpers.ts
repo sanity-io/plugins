@@ -51,5 +51,5 @@ export const MOCK_INTERNATIONALIZED_ARRAY_CONTEXT: InternationalizedArrayContext
   apiVersion: '2025-10-15',
   select: {},
   fieldTypes: [],
-  isDocumentInternationalizationIntegration: false,
+  includeForDocumentType: () => true,
 }
