@@ -19,7 +19,7 @@ export type InternationalizedArrayContextProps = Required<PluginConfig> & {
   filteredLanguages: Language[]
 }
 
-export const InternationalizedArrayContext = createContext<InternationalizedArrayContextProps>({
+const InternationalizedArrayContext = createContext<InternationalizedArrayContextProps>({
   ...CONFIG_DEFAULT,
   languages: [],
   filteredLanguages: [],

@@ -1,14 +1,8 @@
 import type {Language, LanguageCallback} from './types'
 
-export const namespace = 'sanity-plugin-internationalized-array'
+const namespace = 'sanity-plugin-internationalized-array'
 
-export const version = 'v1'
-
-// Simple in-memory cache for validation functions that run outside React context
-const validationCache = new Map<string, Language[]>()
-
-// Cache for function references to enable sharing between same functions
-const functionCache = new Map<string, Language[]>()
+const version = 'v1'
 
 // Cache for function keys to avoid recalculating them
 const functionKeyCache = new WeakMap<LanguageCallback, string>()
@@ -16,17 +10,12 @@ const functionKeyCache = new WeakMap<LanguageCallback, string>()
 // Cache for React.use promises
 const promiseCache = new Map<string, Promise<Language[]>>()
 
+// Cache for function references to enable sharing between same functions
+const functionCache = new Map<string, Language[]>()
+
 // Helper to create a cache key string from an array
 function stringifyCacheKey(key: unknown[]): string {
   return JSON.stringify(key)
-}
-
-// Preloading: store promises in cache for React.use
-export const preload = (fn: () => Promise<Language[]>) => {
-  const key = stringifyCacheKey([version, namespace])
-  if (!promiseCache.has(key)) {
-    promiseCache.set(key, fn())
-  }
 }
 
 // Enhanced preload function that can use custom cache keys
@@ -66,21 +55,6 @@ export const createCacheKey = (selectedValue: Record<string, unknown>, workspace
     : [version, namespace, selectedValueHash]
 }
 
-// Enhanced peek function that can work with workspace context
-export const peekWithWorkspace = (selectedValue: Record<string, unknown>, workspaceId?: string) => {
-  const key = stringifyCacheKey(createCacheKey(selectedValue, workspaceId))
-  const promise = promiseCache.get(key)
-  if (promise) {
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    const status = (promise as any)._status
-    if (status === 'fulfilled') {
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-      return (promise as any)._value as Language[] | undefined
-    }
-  }
-  return undefined
-}
-
 // Create or get cached promise for React.use
 export const createOrGetPromise = (
   fn: () => Promise<Language[]>,
@@ -96,7 +70,7 @@ export const createOrGetPromise = (
 }
 
 // Generate a unique key for a function reference (cached for performance)
-export const getFunctionKey = (fn: LanguageCallback): string => {
+const getFunctionKey = (fn: LanguageCallback): string => {
   // Check if we already have a cached key for this function
   const cachedKey = functionKeyCache.get(fn)
   if (cachedKey) {
@@ -119,7 +93,7 @@ export const getFunctionKey = (fn: LanguageCallback): string => {
 }
 
 // Create a cache key that includes function identity
-export const createFunctionCacheKey = (
+const createFunctionCacheKey = (
   fn: LanguageCallback,
   selectedValue: Record<string, unknown>,
   workspaceId?: string,
@@ -129,19 +103,6 @@ export const createFunctionCacheKey = (
   return workspaceId
     ? `${functionKey}:${selectedValueHash}:${workspaceId}`
     : `${functionKey}:${selectedValueHash}`
-}
-
-// Cache for validation functions with function awareness
-export const getValidationCache = (key: string): Language[] | undefined => {
-  return validationCache.get(key)
-}
-
-export const setValidationCache = (key: string, languages: Language[]): void => {
-  validationCache.set(key, languages)
-}
-
-export const clearValidationCache = (): void => {
-  validationCache.clear()
 }
 
 // Function-aware cache operations
@@ -162,21 +123,4 @@ export const setFunctionCache = (
 ): void => {
   const key = createFunctionCacheKey(fn, selectedValue, workspaceId)
   functionCache.set(key, languages)
-}
-
-export const clearFunctionCache = (): void => {
-  functionCache.clear()
-}
-
-// Clear function key cache as well
-export const clearAllCaches = (): void => {
-  functionCache.clear()
-  promiseCache.clear()
-  // Note: WeakMap doesn't have a clear method, but it will be garbage collected
-  // when the function references are no longer held
-}
-
-// Check if two functions are the same reference
-export const isSameFunction = (fn1: LanguageCallback, fn2: LanguageCallback): boolean => {
-  return fn1 === fn2 || getFunctionKey(fn1) === getFunctionKey(fn2)
 }

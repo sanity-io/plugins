@@ -62,7 +62,7 @@
     "react": "^19.2",
     "react-dom": "^19.2",
     "react-rx": "^4",
-    "rxjs": "^7",
+    "rxjs": "catalog:",
     "sanity": "^5"
   },
   "engines": {

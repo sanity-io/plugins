@@ -1,0 +1,128 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignoreWorkspaces": ["dev/*"],
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true,
+  },
+  "rules": {
+    // dev/* workspaces are ignored, so their catalog entries appear unused
+    "catalog": "warn",
+  },
+  "workspaces": {
+    ".": {
+      "entry": ["*.{ts,mts,mjs}", "turbo/generators/**/*.ts"],
+      "project": ["*.{ts,mts,mjs}", "turbo/generators/**/*.ts"],
+      "ignoreDependencies": [
+        // Used via .oxlintrc.json jsPlugins specifier, not directly imported
+        "eslint-plugin-react-hooks",
+        // TypeScript native compiler, used as a dev tool not imported
+        "@typescript/native-preview",
+      ],
+      "ignoreBinaries": [
+        // Provided by sanity package in dev/test-studio, which is an ignored workspace
+        "sanity",
+      ],
+    },
+    "packages/@repo/tsconfig": {},
+    "packages/@repo/package.config": {
+      "project": ["src/**/*.ts"],
+    },
+    "plugins/@sanity/code-input": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/@sanity/color-input": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/@sanity/debug-preview-url-secret-plugin": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/@sanity/document-internationalization": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/@sanity/rich-date-input": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/@sanity/studio-secrets": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/@sanity/vercel-protection-bypass": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-aprimo": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-asset-source-unsplash": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-bynder-input": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-graph-view": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-iframe-pane": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-internationalized-array": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-markdown": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-workflow": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-workspace-home": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+  },
+}

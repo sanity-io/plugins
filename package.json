@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "turbo build",
+    "check:deps": "knip --dependencies",
     "dev": "pnpm turbo dev --filter=test-studio",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
     "generate": "turbo gen",
+    "knip": "knip",
     "lint": "pnpm run oxlint",
     "lint:fix": "pnpm lint --fix --fix-suggestions",
     "oxlint": "oxlint --deny-warnings --disable-nested-config --report-unused-disable-directives",
@@ -39,6 +41,9 @@
     "validate-npm-package-name": "^7.0.2",
     "vitest": "^4.0.18",
     "vitest-package-exports": "^1.2.0"
+  },
+  "devDependencies": {
+    "knip": "^5.85.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,jsonc,md}": [
