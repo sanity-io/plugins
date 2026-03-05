@@ -281,7 +281,7 @@ importers:
         version: link:../../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 10.4.6(@types/babel__core@7.20.5)(@types/node@25.3.3)(@typescript/native-preview@7.0.0-dev.20260301.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+        version: 10.4.7(@types/babel__core@7.20.5)(@types/node@25.3.3)(@typescript/native-preview@7.0.0-dev.20260301.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
       '@sanity/schema':
         specifier: ^5
         version: 5.13.0(@types/react@19.2.14)(debug@4.4.3)
