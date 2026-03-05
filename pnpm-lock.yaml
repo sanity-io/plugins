@@ -249,7 +249,7 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.4)
       '@sanity/mutator':
-        specifier: ^3.36.4 || ^4.0.0-0 || ^5.0.0
+        specifier: ^5
         version: 5.13.0(@types/react@19.2.14)
       '@sanity/ui':
         specifier: 'catalog:'
@@ -257,9 +257,6 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
-      get-random-values-esm:
-        specifier: ^1.0.2
-        version: 1.0.2
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.23
@@ -5514,14 +5511,6 @@ packages:
   get-proto@1.0.1:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
-
-  get-random-values-esm@1.0.2:
-    resolution: {integrity: sha512-HMSDTgj1HPFAuZG0FqxzHbYt5JeEGDUeT9r1RLXhS6RZQS8rLRjokgjZ0Pd28CN0lhXlRwfH6eviZqZEJ2kIoA==}
-    deprecated: use crypto.getRandomValues() instead
-
-  get-random-values@1.2.2:
-    resolution: {integrity: sha512-lMyPjQyl0cNNdDf2oR+IQ/fM3itDvpoHy45Ymo2r0L1EjazeSl13SfbKZs7KtZ/3MDCeueiaJiuOEfKqRTsSgA==}
-    engines: {node: 10 || 12 || >=14}
 
   get-stream@4.1.0:
     resolution: {integrity: sha512-GMat4EJ5161kIy2HevLlr4luNjBgvmj413KaQA7jt4V8B4RDsfpHk7WQ9GVqfYyyx8OS/L66Kox+rJRNklLK7w==}
@@ -14095,14 +14084,6 @@ snapshots:
     dependencies:
       dunder-proto: 1.0.1
       es-object-atoms: 1.1.1
-
-  get-random-values-esm@1.0.2:
-    dependencies:
-      get-random-values: 1.2.2
-
-  get-random-values@1.2.2:
-    dependencies:
-      global: 4.4.0
 
   get-stream@4.1.0:
     dependencies:

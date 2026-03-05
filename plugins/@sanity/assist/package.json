@@ -48,7 +48,6 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "date-fns": "^3.6.0",
-    "get-random-values-esm": "^1.0.2",
     "lodash-es": "^4.17.21",
     "react-fast-compare": "^3.2.2",
     "rxjs": "catalog:",
@@ -70,7 +69,7 @@
     "styled-components": "catalog:"
   },
   "peerDependencies": {
-    "@sanity/mutator": "^3.36.4 || ^4.0.0-0 || ^5.0.0",
+    "@sanity/mutator": "^5",
     "react": "^19.2",
     "react-dom": "^19.2",
     "sanity": "^5",

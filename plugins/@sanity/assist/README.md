@@ -37,8 +37,6 @@
   - [Define helpers](#define-helpers)
   - [useUserInput](#useuserinput)
 - [License](#license)
-- [Develop \& test](#develop--test)
-  - [Release new version](#release-new-version)
 
 ## About Sanity AI Assist
 
@@ -1050,12 +1048,3 @@ but some common caveats to the field that you may run into using AI Assist are:
 This version of the feature uses OpenAI.com as a third-party sub-processor. Their security posture has been vetted by Sanity's security team, and approved for use.
 ## License
 [MIT](LICENSE) © Sanity
-## Develop & test
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-### Release new version
-Run ["CI & Release" workflow](https://github.com/sanity-io/assist/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
-Semantic release will only release on configured branches, so it is safe to run release on any branch.
