@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 5.0.5
+
+### Patch Changes
+
+- [#618](https://github.com/sanity-io/plugins/pull/618) [`40bc9d3`](https://github.com/sanity-io/plugins/commit/40bc9d3d1e05c0e4be7bd59c917a6697751eeb65) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency react-force-graph to v1.48.2
+
 ## 5.0.4
 
 ### Patch Changes

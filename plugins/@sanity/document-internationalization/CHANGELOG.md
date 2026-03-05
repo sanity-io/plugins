@@ -1,5 +1,17 @@
 # @sanity/document-internationalization
 
+## 5.1.1
+
+### Patch Changes
+
+- [#606](https://github.com/sanity-io/plugins/pull/606) [`173c0a1`](https://github.com/sanity-io/plugins/commit/173c0a193e3e385b0b5c9dbf0f011bf224e0ca9e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency rxjs to ^7.8.2
+
+- [#607](https://github.com/sanity-io/plugins/pull/607) [`1dd3276`](https://github.com/sanity-io/plugins/commit/1dd327644e4e024b2e652ddc41b8bad076d2e5b3) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency sanity-plugin-utils to ^1.8.0
+
+- [#633](https://github.com/sanity-io/plugins/pull/633) [`cdef1a3`](https://github.com/sanity-io/plugins/commit/cdef1a3dd351d3b4e3783937b7d65090adabaf75) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - # Changes
+
+  Configure the internal internationalized-array integration with an explicit integration mode so translation metadata documents use the correct plugin wiring while non-metadata documents avoid unnecessary wrapping.
+
 ## 5.1.0
 
 ### Minor Changes
