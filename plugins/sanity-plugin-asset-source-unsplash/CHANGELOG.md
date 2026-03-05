@@ -1,5 +1,11 @@
 # sanity-plugin-asset-source-unsplash
 
+## 7.0.4
+
+### Patch Changes
+
+- [#624](https://github.com/sanity-io/plugins/pull/624) [`dbfe998`](https://github.com/sanity-io/plugins/commit/dbfe9982f69f173cc67bcec0a3a38ca57cd9dcb8) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Import lodash-es functions from subpaths instead of barrel export for better performance
+
 ## 7.0.3
 
 ### Patch Changes
