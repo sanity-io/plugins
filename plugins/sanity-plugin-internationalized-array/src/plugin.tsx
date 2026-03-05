@@ -9,7 +9,6 @@ import array from './schema/array'
 import object from './schema/object'
 import type {PluginConfig} from './types'
 import {hasInternationalizedArrayField} from './utils/hasInternationalizedArrayField'
-import {shouldHandleDocumentType} from './utils/shouldHandleDocumentType'
 
 export const internationalizedArray = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...CONFIG_DEFAULT, ...config}
@@ -58,17 +57,15 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
             return props.renderDefault(props)
           }
 
-          if (!shouldHandleDocumentType(pluginConfig, props.schemaType.name)) {
-            return props.renderDefault(props)
-          }
-
           const hasInternationalizedArray = hasInternationalizedArrayField(props.schemaType)
 
-          if (!hasInternationalizedArray) {
-            return props.renderDefault(props)
+          if (
+            hasInternationalizedArray &&
+            pluginConfig.includeForDocumentType(props.schemaType.name)
+          ) {
+            return <InternationalizedArrayFormInput {...props} pluginConfig={pluginConfig} />
           }
-
-          return <InternationalizedArrayFormInput {...props} pluginConfig={pluginConfig} />
+          return props.renderDefault(props)
         },
       },
     },

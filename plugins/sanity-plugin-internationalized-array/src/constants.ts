@@ -23,5 +23,5 @@ export const CONFIG_DEFAULT: Required<PluginConfig> = {
   buttonLocations: ['field'],
   buttonAddAll: true,
   languageDisplay: 'codeOnly',
-  isDocumentInternationalizationIntegration: false,
+  includeForDocumentType: (documentType) => documentType !== 'translation.metadata',
 }

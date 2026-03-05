@@ -166,9 +166,9 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
       // It cuts down on attribute usage and gives UI conveniences to add new translations
       internationalizedArray({
         ...metadataInternationalization,
-        isDocumentInternationalizationIntegration: true,
         apiVersion: pluginConfig.apiVersion,
         languages: supportedLanguages,
+        includeForDocumentType: (documentType) => documentType === METADATA_SCHEMA_NAME,
         fieldTypes: [
           defineField(
             {
