@@ -6,9 +6,6 @@ on:
       package:
         description: 'The package name, for example @sanity/foo-bar'
         required: true
-      otp:
-        description: 'npm OTP code for 2FA (required to configure trusted publishing automatically)'
-        required: false
 
 permissions:
   contents: read
@@ -23,27 +20,9 @@ jobs:
       - run: pnpm setup-npm-trusted-publish ${{ inputs.package }}
       - name: Configure trusted publishing
         run: |
-          NPM_VERSION=$(npm --version)
-          REQUIRED_VERSION="11.10.0"
-
-          if npx semver -r ">=${REQUIRED_VERSION}" "${NPM_VERSION}" > /dev/null 2>&1; then
-            if [ -n "$OTP" ]; then
-              echo "🔐 Configuring trusted publishing for ${{ inputs.package }}..."
-              npm trust github "${{ inputs.package }}" --file=release.yml --repository=sanity-io/plugins --yes --otp="$OTP"
-              echo "✅ Trusted publishing configured successfully!"
-            else
-              echo "⚠️ No OTP provided. To configure trusted publishing, run locally:"
-              echo ""
-              echo "  npm trust github ${{ inputs.package }} --file=release.yml --repository=sanity-io/plugins"
-              echo ""
-            fi
-          else
-            echo "⚠️ npm ${NPM_VERSION} does not support 'npm trust' (requires >=${REQUIRED_VERSION})."
-            echo "To configure trusted publishing, update npm and run locally:"
-            echo ""
-            echo "  npm install -g npm@^${REQUIRED_VERSION}"
-            echo "  npm trust github ${{ inputs.package }} --file=release.yml --repository=sanity-io/plugins"
-            echo ""
-          fi
-        env:
-          OTP: ${{ inputs.otp }}
+          echo "📦 Package ${{ inputs.package }} has been created on npm."
+          echo ""
+          echo "Next, configure trusted publishing by running locally (requires npm >= 11.10.0):"
+          echo ""
+          echo "  npm trust github ${{ inputs.package }} --file=release.yml --repository=sanity-io/plugins"
+          echo ""

@@ -152,10 +152,9 @@ If you're creating a package that has never been published to npm before:
 2. Find the **"Setup a new npm package with Trusted Publishing"** workflow
 3. Click **"Run workflow"**
 4. Enter the package name (e.g., `@sanity/my-new-plugin` or `sanity-plugin-my-feature`)
-5. Enter your **npm OTP code** to automatically configure trusted publishing
-6. Click **"Run workflow"** — the workflow will create the package on npm and configure trusted publishing
+5. Click **"Run workflow"** — the workflow will create the package on npm
 
-If you didn't provide an OTP, or the workflow couldn't configure trusted publishing automatically, run this command locally (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
+Then, configure trusted publishing by running locally (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
 
 ```bash
 npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins

@@ -315,8 +315,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 **For brand new packages (not yet on npm):**
 
 - Use the "Setup a new npm package with Trusted Publishing" GitHub Actions workflow
-- Provide your npm OTP code to automatically configure trusted publishing
-- If OTP wasn't provided, run locally: `npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins`
+- Then run locally: `npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins` (requires npm >= 11.10.0)
 
 **For existing packages (already on npm):**
 
