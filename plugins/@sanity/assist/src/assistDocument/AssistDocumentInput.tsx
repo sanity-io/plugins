@@ -38,7 +38,7 @@ function AssistDocumentInput({documentId, ...props}: ObjectInputProps & {documen
       ...props.schemaType,
       type: {
         ...props.schemaType.type,
-        // compatability with i18nArrays plugin that requires this to be document
+        // compatibility with i18nArrays plugin that requires this to be document
         name: 'document',
       },
     } as ObjectSchemaType
