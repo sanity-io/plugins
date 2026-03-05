@@ -73,6 +73,9 @@ export const internationalizedArrayExample = definePlugin(() => ({
         {id: 'en', title: 'English'},
         {id: 'es', title: 'Spanish'},
         {id: 'fr', title: 'French'},
+        {id: 'de', title: 'German'},
+        {id: 'pt', title: 'Portuguese'},
+        {id: 'it', title: 'Italian'},
       ],
       filterField: (enclosingType, member, selectedLanguageIds) => {
         // Filter internationalized arrays - follows readme example
