@@ -266,6 +266,52 @@ export type RichDate = {
   offset?: number
 }
 
+export type I18nArrayPerformanceTest = {
+  _id: string
+  _type: 'i18nArrayPerformanceTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: InternationalizedArrayString
+  age?: number
+  field_0?: InternationalizedArrayString
+  field_1?: InternationalizedArrayString
+  field_2?: InternationalizedArrayString
+  field_3?: InternationalizedArrayString
+  field_4?: InternationalizedArrayString
+  field_5?: InternationalizedArrayString
+  field_6?: InternationalizedArrayString
+  field_7?: InternationalizedArrayString
+  field_8?: InternationalizedArrayString
+  field_9?: InternationalizedArrayString
+  field_10?: InternationalizedArrayString
+  field_11?: InternationalizedArrayString
+  field_12?: InternationalizedArrayString
+  field_13?: InternationalizedArrayString
+  field_14?: InternationalizedArrayString
+  field_15?: InternationalizedArrayString
+  field_16?: InternationalizedArrayString
+  field_17?: InternationalizedArrayString
+  field_18?: InternationalizedArrayString
+  field_19?: InternationalizedArrayString
+  field_20?: InternationalizedArrayString
+  field_21?: InternationalizedArrayString
+  field_22?: InternationalizedArrayString
+  field_23?: InternationalizedArrayString
+  field_24?: InternationalizedArrayString
+  field_25?: InternationalizedArrayString
+  field_26?: InternationalizedArrayString
+  field_27?: InternationalizedArrayString
+  field_28?: InternationalizedArrayString
+  field_29?: InternationalizedArrayString
+}
+
+export type InternationalizedArrayString = Array<
+  {
+    _key: string
+  } & InternationalizedArrayStringValue
+>
+
 export type InternationalizedPost = {
   _id: string
   _type: 'internationalizedPost'
@@ -287,12 +333,6 @@ export type InternationalizedArrayText = Array<
   {
     _key: string
   } & InternationalizedArrayTextValue
->
-
-export type InternationalizedArrayString = Array<
-  {
-    _key: string
-  } & InternationalizedArrayStringValue
 >
 
 export type InternationalizedArrayTextValue = {
@@ -466,10 +506,11 @@ export type AllSanitySchemaTypes =
   | Code
   | RichDateTest
   | RichDate
+  | I18nArrayPerformanceTest
+  | InternationalizedArrayString
   | InternationalizedPost
   | Slug
   | InternationalizedArrayText
-  | InternationalizedArrayString
   | InternationalizedArrayTextValue
   | InternationalizedArrayStringValue
   | TranslationMetadata
