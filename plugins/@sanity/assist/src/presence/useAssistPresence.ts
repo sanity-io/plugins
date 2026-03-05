@@ -36,7 +36,7 @@ export function useAssistPresence(path: Path, showFocusWithin?: boolean): FormNo
           if (typeof pathSegment === 'string') {
             return pathSegment === statusSegment
           }
-          if (isKeySegment(pathSegment) && isKeySegment(statusSegment)) {
+          if (isKeySegment(pathSegment) && statusSegment && isKeySegment(statusSegment)) {
             return pathSegment._key === statusSegment._key
           }
           return false
@@ -50,8 +50,7 @@ export function useAssistPresence(path: Path, showFocusWithin?: boolean): FormNo
   }, [showFocusWithin, tasks, path])
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function aiPresence(presence: AiPresence, path: Path, title?: string): FormNodePresence {
+export function aiPresence(presence: AiPresence, path: Path, _title?: string): FormNodePresence {
   return {
     user: {
       id: `sanity-assistant_${presence._key}`,

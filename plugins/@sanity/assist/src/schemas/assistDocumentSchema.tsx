@@ -3,14 +3,14 @@ import {
   CodeIcon,
   ComposeIcon,
   icons,
-  IconSymbol,
+  type IconSymbol,
   LockIcon,
   SparklesIcon,
   ThListIcon,
 } from '@sanity/icons'
 import {Box, Flex, Stack, Text, Tooltip} from '@sanity/ui'
 import {createElement} from 'react'
-import {defineArrayMember, defineField, defineType, ObjectSchemaType} from 'sanity'
+import {defineArrayMember, defineField, defineType, type ObjectSchemaType} from 'sanity'
 
 import {AssistDocumentForm} from '../assistDocument/components/AssistDocumentForm'
 import {FieldRefPreview} from '../assistDocument/components/FieldRefPreview'
@@ -24,6 +24,7 @@ import {InstructionOutputInput} from '../assistDocument/components/instruction/I
 import {PromptInput} from '../assistDocument/components/instruction/PromptInput'
 import {InstructionsArrayField} from '../assistDocument/components/InstructionsArrayField'
 import {InstructionsArrayInput} from '../assistDocument/components/InstructionsArrayInput'
+import {createFieldRefCache} from '../assistLayout/fieldRefCache'
 import {instructionGuideUrl} from '../constants'
 import {getInstructionTitle} from '../helpers/misc'
 import {
@@ -41,8 +42,6 @@ import {
   userInputTypeName,
 } from '../types'
 import {contextDocumentSchema} from './contextDocumentSchema'
-
-import {createFieldRefCache} from '../assistLayout/fieldRefCache'
 
 export const fieldReference = defineType({
   type: 'object',
@@ -74,6 +73,7 @@ export const fieldReference = defineType({
             if (!schema) {
               return `Field reference cannot be used outside document inspector context. Could not resolve schema: ${targetDocType}`
             }
+            // oxlint-disable-next-line no-unsafe-type-assertion
             const {fieldRefs} = getForSchemaType(schema as ObjectSchemaType)
             const fieldRef = fieldRefs.find((r) => r.key === value)
             if (!fieldRef) {
@@ -264,6 +264,7 @@ export const instruction = defineType({
     prepare: ({icon, title, userId}) => {
       return {
         title,
+        // oxlint-disable-next-line no-unsafe-type-assertion
         icon: icon ? icons[icon as IconSymbol] : SparklesIcon,
         userId,
       }
@@ -347,7 +348,7 @@ export const instruction = defineType({
         field: HiddenFieldTitle,
         input: InstructionVisibility,
       },
-      initialValue: (params, context) => context.currentUser?.id ?? '',
+      initialValue: (_params, context) => context.currentUser?.id ?? '',
       readOnly: (context) =>
         Boolean(
           context.parent?.createdById && context.parent?.createdById !== context.currentUser?.id,
@@ -359,7 +360,7 @@ export const instruction = defineType({
       title: 'Created by',
       hidden: true,
       fieldset: 'appearance',
-      initialValue: (params, context) => {
+      initialValue: (_params, context) => {
         return context.currentUser?.id ?? ''
       },
     }),
@@ -416,6 +417,7 @@ export const assistDocumentSchema = defineType({
   //NOTE: this is a document type. Using object here ensures it does not appear in structure menus
   type: 'object',
   //workaround for using object and not document
+  // oxlint-disable-next-line no-unsafe-type-assertion
   ...({liveEdit: true} as any),
   name: assistDocumentTypeName,
   title: 'AI Document',
@@ -483,6 +485,7 @@ export const documentInstructionStatus = defineType({
   //NOTE: this is a document type. Using object here ensures it does not appear in structure menus
   type: 'object',
   //workaround for using object and not document
+  // oxlint-disable-next-line no-unsafe-type-assertion
   ...({liveEdit: true} as any),
   name: assistTasksStatusTypeName,
   title: 'Document instruction status',

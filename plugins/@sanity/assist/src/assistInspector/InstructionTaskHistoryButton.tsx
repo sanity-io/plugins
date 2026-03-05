@@ -108,6 +108,7 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
             task.started &&
             new Date().getTime() - new Date(task.started).getTime() < maxHistoryVisibilityMs,
         )
+        // oxlint-disable-next-line no-map-spread
         .map((task): CancelableInstructionTask => {
           const instruction = instructions?.find((i) => i._key === task.instructionKey)
           return {
@@ -139,6 +140,7 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
     setOpen(false)
   }, [])
 
+  // oxlint-disable-next-line no-deprecated
   useClickOutside(handleClickOutside, [button, popover])
 
   const handleEscape = useCallback(() => {

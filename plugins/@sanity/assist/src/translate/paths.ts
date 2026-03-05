@@ -1,3 +1,4 @@
+// oxlint-disable no-accumulating-spread
 import {extractWithPath} from '@sanity/mutator'
 import {
   isDocumentSchemaType,
@@ -46,7 +47,7 @@ function extractPaths(
     const fieldPath = [...path, field.name]
     const fieldSchema = field.type
     const {value} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
-    if (!value) {
+    if (value === undefined || value === null) {
       return acc
     }
 
@@ -71,7 +72,9 @@ function extractPaths(
       const {value: arrayValue} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
 
       let arrayPaths: DocumentMember[] = []
+      // oxlint-disable-next-line no-unsafe-type-assertion
       if ((arrayValue as any)?.length) {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         for (const item of arrayValue as any[]) {
           const itemPath = [...fieldPath, {_key: item._key}]
           let itemSchema = fieldSchema.of.find((t) => t.name === item._type)
@@ -89,6 +92,7 @@ function extractPaths(
           if (item._key && itemSchema) {
             const innerFields = extractPaths(
               doc,
+              // oxlint-disable-next-line no-unsafe-type-assertion
               itemSchema as ObjectSchemaType,
               itemPath,
               maxDepth,
@@ -128,7 +132,7 @@ export const defaultLanguageOutputs: TranslationOutputsFunction = function (
   ) {
     const pathEnd = member.path.slice(-1)
 
-    const language = isKeySegment(pathEnd[0]) ? pathEnd[0]._key : null
+    const language = pathEnd[0] && isKeySegment(pathEnd[0]) ? pathEnd[0]._key : null
     return language === translateFromLanguageId
       ? translateToLanguageIds.map((translateToId) => ({
           id: translateToId,

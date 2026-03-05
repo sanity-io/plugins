@@ -5,7 +5,7 @@ import {styled} from 'styled-components'
 import {releaseAnnouncementUrl} from '../constants'
 
 const SparklesIllustration = styled(SparklesIcon)({
-  fontSize: '3.125em',
+  'fontSize': '3.125em',
   '& path': {
     strokeWidth: `0.6px !important`,
   },

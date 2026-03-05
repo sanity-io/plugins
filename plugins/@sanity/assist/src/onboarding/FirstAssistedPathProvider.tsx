@@ -1,5 +1,5 @@
-import {createContext, PropsWithChildren, useMemo} from 'react'
-import {FieldMember, ObjectInputProps, pathToString} from 'sanity'
+import {createContext, type PropsWithChildren, useMemo} from 'react'
+import {type FieldMember, type ObjectInputProps, pathToString} from 'sanity'
 
 import {isAssistSupported} from '../helpers/assistSupported'
 

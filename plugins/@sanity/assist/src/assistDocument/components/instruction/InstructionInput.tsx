@@ -1,6 +1,6 @@
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {useId, useMemo} from 'react'
-import {FieldError, FieldMember, ObjectInputMember, ObjectInputProps} from 'sanity'
+import {type FieldError, type FieldMember, ObjectInputMember, type ObjectInputProps} from 'sanity'
 
 import {findFieldMember, findFieldsetMember} from '../helpers'
 

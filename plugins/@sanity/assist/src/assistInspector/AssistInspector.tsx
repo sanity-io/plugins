@@ -25,6 +25,7 @@ import {giveFeedbackUrl, pluginTitle, releaseAnnouncementUrl, salesUrl} from '..
 import {getConditionalMembers} from '../helpers/conditionalMembers'
 import {assistDocumentId} from '../helpers/ids'
 import {InspectorOnboarding} from '../onboarding/InspectorOnboarding'
+import {inspectorOnboardingKey, useOnboardingFeature} from '../onboarding/onboardingStore'
 import {assistDocumentTypeName, fieldPathParam, instructionParam} from '../types'
 import {FieldTitle} from './FieldAutocomplete'
 import {
@@ -35,7 +36,6 @@ import {
   useTypePath,
 } from './helpers'
 import {InstructionTaskHistoryButton} from './InstructionTaskHistoryButton'
-import {inspectorOnboardingKey, useOnboardingFeature} from '../onboarding/onboardingStore'
 
 const CardWithShadowBelow = styled(Card)`
   position: relative;
@@ -210,6 +210,7 @@ export function AssistInspector(props: DocumentInspectorProps) {
   const {assistableDocumentId, documentIsAssistable} = useAssistDocumentContext()
 
   const formStateRef = useRef(formState)
+  // oxlint-disable-next-line react-hooks-js/refs
   formStateRef.current = formState
 
   const {instructionLoading, requestRunInstruction} = useRequestRunInstruction({
@@ -240,6 +241,7 @@ export function AssistInspector(props: DocumentInspectorProps) {
     if (!promptValue?.length) {
       return true
     }
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const firstBlock = promptValue[0] as any
     const children = firstBlock?.children
 
@@ -320,6 +322,7 @@ export function AssistInspector(props: DocumentInspectorProps) {
                 {selectedField && (
                   <AssistTypeContext.Provider value={assistTypeContext}>
                     <VirtualizerScrollInstanceProvider
+                      // oxlint-disable-next-line react-hooks-js/refs
                       scrollElement={boundary.current}
                       containerElement={boundary}
                     >

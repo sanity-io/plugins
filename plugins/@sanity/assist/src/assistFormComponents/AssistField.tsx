@@ -1,6 +1,6 @@
 import {Box, Flex} from '@sanity/ui'
 import {useMemo} from 'react'
-import {FieldProps, isArraySchemaType} from 'sanity'
+import {type FieldProps, isArraySchemaType} from 'sanity'
 
 import {assistFormId} from '../_lib/form/constants'
 import {isAssistSupported} from '../helpers/assistSupported'
@@ -57,7 +57,6 @@ export function AssistField(props: FieldProps) {
     actions: props.actions,
 
     // Render presence in the internal slot (between presence and the field actions)
-    // eslint-disable-next-line camelcase
     __internal_slot: actions,
   })
 }

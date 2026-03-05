@@ -47,8 +47,10 @@ export function ListItem(props: ValidationListItemProps) {
             {path}
           </StyledText>
         )}
+        {/* oxlint-disable-next-line no-deprecated */}
         {marker.item?.message && (
           <StyledText muted size={1} textOverflow={truncate ? 'ellipsis' : undefined}>
+            {/* oxlint-disable-next-line no-deprecated */}
             {marker.item?.message}
           </StyledText>
         )}

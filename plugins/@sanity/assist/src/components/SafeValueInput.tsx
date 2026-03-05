@@ -66,6 +66,7 @@ function PteValueFixer(props: InputProps) {
     [props.schemaType],
   )
   const value = props.value
+  // oxlint-disable-next-line no-unsafe-type-assertion
   if (isPortableText && value && !(value as any[]).length) {
     return props.renderDefault({...props, value: undefined})
   }

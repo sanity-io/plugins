@@ -1,11 +1,11 @@
 import type {SanityClient} from '@sanity/client'
 import {useToast} from '@sanity/ui'
 import {useCallback, useMemo, useState} from 'react'
-import {Path, pathToString, useClient, useCurrentUser} from 'sanity'
+import {type Path, pathToString, useClient, useCurrentUser} from 'sanity'
 
 import {useAiAssistanceConfig, useSerializedTypes} from './assistLayout/AiAssistanceConfigContext'
-import {ConditionalMemberState} from './helpers/conditionalMembers'
-import {FieldLanguageMap} from './translate/paths'
+import type {ConditionalMemberState} from './helpers/conditionalMembers'
+import type {FieldLanguageMap} from './translate/paths'
 import {documentRootKey} from './types'
 
 export interface UserTextInstance {
@@ -232,6 +232,7 @@ export function useGetInstructStatus(apiClient: SanityClient) {
     setLoading(true)
 
     const projectId = apiClient.config().projectId
+    // oxlint-disable-next-line react-hooks-js/todo
     try {
       const status = await apiClient.request<InstructStatus>({
         method: 'GET',

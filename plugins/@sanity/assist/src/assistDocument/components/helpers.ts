@@ -1,4 +1,4 @@
-import {FieldError, FieldMember, FieldSetMember, ObjectMember} from 'sanity'
+import type {FieldError, FieldMember, FieldSetMember, ObjectMember} from 'sanity'
 
 export function findFieldMember(
   members: ObjectMember[],

@@ -1,7 +1,8 @@
 import {useEffect, useRef, useState} from 'react'
 import isEqual from 'react-fast-compare'
+import {of} from 'rxjs'
 import {catchError, distinctUntilChanged} from 'rxjs/operators'
-import {ListenQueryOptions, useClient} from 'sanity'
+import {type ListenQueryOptions, useClient} from 'sanity'
 
 import {listenQuery} from './fixedListenQuery'
 
@@ -39,11 +40,11 @@ export function useListeningQuery<T>(
           distinctUntilChanged(isEqual),
           catchError((err) => {
             console.error(err)
-            setError(err)
+            setError(true)
             setLoading(false)
             setData(null)
 
-            return err
+            return of(null)
           }),
         )
         .subscribe((documents) => {

@@ -1,4 +1,4 @@
-import {DocumentLayoutProps} from 'sanity'
+import type {DocumentLayoutProps} from 'sanity'
 
 import {AssistDocumentContextProvider} from './AssistDocumentContextProvider'
 

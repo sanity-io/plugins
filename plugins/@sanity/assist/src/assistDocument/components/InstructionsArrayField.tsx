@@ -1,4 +1,4 @@
-import {ArrayFieldProps} from 'sanity'
+import type {ArrayFieldProps} from 'sanity'
 
 export function InstructionsArrayField(props: ArrayFieldProps) {
   return props.renderDefault({

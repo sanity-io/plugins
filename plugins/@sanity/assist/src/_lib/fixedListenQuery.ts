@@ -1,8 +1,8 @@
 import type {SanityClient} from '@sanity/client'
 import {defer, delay, merge, Observable, of, partition, switchMap, throwError} from 'rxjs'
-import {filter, mergeMap, share, take} from 'rxjs/operators'
 import {exhaustMapToWithTrailing} from 'rxjs-exhaustmap-with-trailing'
-import {MutationEvent, ReconnectEvent, WelcomeEvent} from 'sanity'
+import {filter, mergeMap, share, take} from 'rxjs/operators'
+import type {MutationEvent, ReconnectEvent, WelcomeEvent} from 'sanity'
 
 /** @internal */
 export type ListenQueryParams = Record<string, string | number | boolean | string[]>
@@ -35,6 +35,7 @@ const listen = (
   params: ListenQueryParams,
   options: ListenQueryOptions,
 ) =>
+  // oxlint-disable-next-line no-unsafe-type-assertion
   defer(() =>
     // getVersionedClient(options.apiVersion)
     client.listen(query, params, {
@@ -69,6 +70,7 @@ export const listenQuery = (
       if (isFirst && !isWelcomeEvent(ev)) {
         // if the first event is not welcome, it is most likely a reconnect and
         // if it's not a reconnect something is very wrong
+        // oxlint-disable-next-line no-deprecated
         return throwError(
           new Error(
             ev.type === 'reconnect'

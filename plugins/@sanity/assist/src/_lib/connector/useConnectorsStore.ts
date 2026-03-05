@@ -1,6 +1,6 @@
 import {useContext} from 'react'
 
-import {ConnectorsStore} from './ConnectorsStore'
+import type {ConnectorsStore} from './ConnectorsStore'
 import {ConnectorsStoreContext} from './ConnectorsStoreContext'
 
 export function useConnectorsStore(): ConnectorsStore {

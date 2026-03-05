@@ -1,5 +1,5 @@
 import {Box, Flex} from '@sanity/ui'
-import {ItemProps} from 'sanity'
+import type {ItemProps} from 'sanity'
 
 import {AiFieldPresence} from '../presence/AiFieldPresence'
 import {useAssistPresence} from '../presence/useAssistPresence'

@@ -1,9 +1,9 @@
 import {createContext, useContext} from 'react'
 
-import {AssistPluginConfig} from '../plugin'
-import {InstructStatus} from '../useApiClient'
-import {SerializedSchemaType} from '../types'
-import {FieldRef} from '../assistInspector/helpers'
+import type {FieldRef} from '../assistInspector/helpers'
+import type {AssistPluginConfig} from '../plugin'
+import type {SerializedSchemaType} from '../types'
+import type {InstructStatus} from '../useApiClient'
 
 export interface AiAssistanceConfigContextValue {
   config: AssistPluginConfig
@@ -17,6 +17,7 @@ export interface AiAssistanceConfigContextValue {
   getFieldRefsByTypePath: (documentType: string) => Record<string, FieldRef | undefined>
 }
 
+// oxlint-disable-next-line no-unsafe-type-assertion
 export const AiAssistanceConfigContext = createContext<AiAssistanceConfigContextValue>({} as any)
 
 export function useAiAssistanceConfig() {

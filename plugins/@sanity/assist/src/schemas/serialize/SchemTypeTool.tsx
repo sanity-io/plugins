@@ -4,7 +4,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {useClient, useSchema} from 'sanity'
 
 import {useListeningQuery} from '../../_lib/useListeningQuery'
-import {assistSerializedTypeName, SerializedSchemaType} from '../../types'
+import {assistSerializedTypeName, type SerializedSchemaType} from '../../types'
 import {serializeSchema} from './serializeSchema'
 
 const NO_DATA: SerializedSchemaType[] = []
@@ -35,9 +35,11 @@ export function SchemaTypeTool() {
         if (!canSave) {
           break
         }
-        const type = types[i]
+        const type = types[i]!
+        // oxlint-disable-next-line no-await-in-loop, no-unsafe-type-assertion, await-thenable
         await transaction.createOrReplace(type as Required<typeof type>)
         if (i > 0 && i % 50 === 0) {
+          // oxlint-disable-next-line no-await-in-loop
           await transaction.commit()
           transaction.reset()
           setSyncTitle(`Syncing ${i}/${types.length}`)

@@ -1,11 +1,17 @@
-import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
-import {AssistPluginConfig} from '../plugin'
-import {InstructStatus, useApiClient, useGetInstructStatus, useInitInstruct} from '../useApiClient'
-import {type ObjectSchemaType, Schema, useSchema} from 'sanity'
+import {type ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
+import {type ObjectSchemaType, type Schema, useSchema} from 'sanity'
+
+import type {AssistPluginConfig} from '../plugin'
 import {serializeSchema} from '../schemas/serialize/serializeSchema'
 import {
+  type InstructStatus,
+  useApiClient,
+  useGetInstructStatus,
+  useInitInstruct,
+} from '../useApiClient'
+import {
   AiAssistanceConfigContext,
-  AiAssistanceConfigContextValue,
+  type AiAssistanceConfigContextValue,
 } from './AiAssistanceConfigContext'
 import {createFieldRefCache} from './fieldRefCache'
 
@@ -29,6 +35,7 @@ export function AiAssistanceConfigProvider(props: {
       .then((s) => setStatus(s))
       .catch((e) => {
         console.error(e)
+        // oxlint-disable-next-line no-unsafe-type-assertion
         setError(e as Error)
       })
   }, [getInstructStatus])
@@ -41,6 +48,7 @@ export function AiAssistanceConfigProvider(props: {
       setStatus(status)
     } catch (e) {
       console.error('Failed to init ai assistance', e)
+      // oxlint-disable-next-line no-unsafe-type-assertion
       setError(e as Error)
     }
   }, [initInstruct, getInstructStatus, setStatus])
@@ -82,6 +90,7 @@ function useFieldRefGetters(schema: Schema) {
     const getForSchemaType = createFieldRefCache()
 
     function getRefsForType(documentType: string) {
+      // oxlint-disable-next-line no-unsafe-type-assertion
       const schemaType = schema.get(documentType) as ObjectSchemaType | undefined
       if (!schemaType) {
         throw new Error(`Schema type "${documentType}" not found`)

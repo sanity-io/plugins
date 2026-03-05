@@ -1,3 +1,4 @@
+import type {AgentActionPath} from '@sanity/client/stega'
 import {ControlsIcon, SparklesIcon} from '@sanity/icons'
 import {useCallback, useMemo, useRef} from 'react'
 import {
@@ -23,11 +24,10 @@ import {getInstructionTitle, usePathKey} from '../helpers/misc'
 import {useAssistSupported} from '../helpers/useAssistSupported'
 import {translateActions, type TranslateProps} from '../translate/translateActions'
 import {documentRootKey, fieldPathParam, instructionParam, type StudioInstruction} from '../types'
+import {type AgentActionConditionalPath, useCustomFieldActions} from './customFieldActions'
 import {generateCaptionsActions} from './generateCaptionActions'
 import {generateImagActions} from './generateImageActions'
 import {PrivateIcon} from './PrivateIcon'
-import {AgentActionConditionalPath, useCustomFieldActions} from './customFieldActions'
-import {AgentActionPath} from '@sanity/client/stega'
 
 function node(node: DocumentFieldActionItem | DocumentFieldActionGroup) {
   return node
@@ -104,6 +104,7 @@ export const assistFieldActions: DocumentFieldAction = {
           ? closeInspector(aiInspectorId)
           : openInspector(aiInspectorId, {
               [fieldPathParam]: pathKey,
+              // oxlint-disable-next-line no-unsafe-type-assertion
               [instructionParam]: undefined as any,
             }),
       [openInspector, closeInspector, isSelected, pathKey],
@@ -191,6 +192,7 @@ export const assistFieldActions: DocumentFieldAction = {
     }, [])
 
     const getConditionalPaths: () => AgentActionConditionalPath[] = useCallback(() => {
+      // oxlint-disable-next-line no-map-spread
       return (formStateRef.current ? getConditionalMembers(formStateRef.current) : []).flatMap(
         (cm) => {
           const path = stringToPath(cm.path)
@@ -200,6 +202,7 @@ export const assistFieldActions: DocumentFieldAction = {
           }
           return {
             ...cm,
+            // oxlint-disable-next-line no-unsafe-type-assertion
             path: path as AgentActionPath,
           }
         },

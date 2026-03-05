@@ -10,6 +10,7 @@ export function BackToInstructionListLink() {
   const {openInspector} = useDocumentPane()
 
   const goBack = useCallback(
+    // oxlint-disable-next-line no-unsafe-type-assertion
     () => openInspector(aiInspectorId, {[instructionParam]: undefined as any}),
     [openInspector],
   )

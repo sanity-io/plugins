@@ -1,4 +1,4 @@
-import {ConnectorLine, ConnectorOptions} from '../../_lib/connector'
+import type {ConnectorLine, ConnectorOptions} from '../../_lib/connector'
 
 export function drawArrowPath(
   options: ConnectorOptions,

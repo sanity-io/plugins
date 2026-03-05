@@ -1,6 +1,6 @@
 import {Card, Flex, Switch, Text} from '@sanity/ui'
 import {useCallback, useId} from 'react'
-import {set, StringInputProps, unset, useCurrentUser} from 'sanity'
+import {set, type StringInputProps, unset, useCurrentUser} from 'sanity'
 
 export function InstructionVisibility(props: StringInputProps) {
   const {value, onChange} = props

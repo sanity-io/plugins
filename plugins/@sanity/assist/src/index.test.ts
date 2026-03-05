@@ -1,4 +1,5 @@
 import {fileURLToPath} from 'node:url'
+
 import {expect, test} from 'vitest'
 import {getPackageExportsManifest} from 'vitest-package-exports'
 
@@ -8,5 +9,19 @@ test('package exports', {timeout: 30_000}, async () => {
     cwd: fileURLToPath(import.meta.url),
   })
 
-  expect(manifest.exports).toMatchInlineSnapshot()
+  expect(manifest.exports).toMatchInlineSnapshot(`
+    {
+      ".": {
+        "SchemaTypeTool": "function",
+        "assist": "function",
+        "contextDocumentTypeName": "string",
+        "defaultLanguageOutputs": "function",
+        "defineAssistFieldAction": "function",
+        "defineAssistFieldActionGroup": "function",
+        "defineFieldActionDivider": "function",
+        "isType": "function",
+        "useUserInput": "function",
+      },
+    }
+  `)
 })

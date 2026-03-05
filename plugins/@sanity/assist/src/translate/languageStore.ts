@@ -6,7 +6,13 @@ export function getPreferredToFieldLanguages(fromLanguageId: string): string[] {
   }
 
   const value = localStorage.getItem(`${toFieldLanguagesKeyPrefix}${fromLanguageId}`)
-  return value ? (JSON.parse(value) as string[]) : []
+  if (!value) return []
+  try {
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    return JSON.parse(value) as string[]
+  } catch {
+    return []
+  }
 }
 
 export function setPreferredToFieldLanguages(fromLanguageId: string, languageIds: string[]) {

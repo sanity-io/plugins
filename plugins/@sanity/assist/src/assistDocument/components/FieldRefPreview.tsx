@@ -1,6 +1,6 @@
 import {Box, Flex, Text} from '@sanity/ui'
 import {useContext} from 'react'
-import {PreviewProps} from 'sanity'
+import type {PreviewProps} from 'sanity'
 
 import {InlineBlockValueContext} from '../../assistFormComponents/AssistInlineFormBlock'
 import {useSelectedField} from '../../assistInspector/helpers'
@@ -9,6 +9,7 @@ import {SelectedFieldContext} from './SelectedFieldContext'
 export function FieldRefPreview(props: PreviewProps & {path?: string}) {
   const {actions} = props
   const documentSchema = useContext(SelectedFieldContext)?.documentSchema
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const path = (useContext(InlineBlockValueContext) as {path?: string})?.path ?? props.path
   const selectedField = useSelectedField(documentSchema, path)
   return (
@@ -20,6 +21,7 @@ export function FieldRefPreview(props: PreviewProps & {path?: string}) {
           </Text>
         </Box>
       </Flex>
+      {/* oxlint-disable-next-line no-unsafe-type-assertion */}
       {actions as any}
     </Flex>
   )

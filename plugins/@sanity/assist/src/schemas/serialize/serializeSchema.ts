@@ -1,12 +1,12 @@
 import {
-  ArraySchemaType,
-  ImageOptions,
+  type ArraySchemaType,
+  type ImageOptions,
   isArraySchemaType,
-  ObjectSchemaType,
-  ReferenceOptions,
-  ReferenceSchemaType,
-  Schema,
-  SchemaType,
+  type ObjectSchemaType,
+  type ReferenceOptions,
+  type ReferenceSchemaType,
+  type Schema,
+  type SchemaType,
   typed,
 } from 'sanity'
 
@@ -16,8 +16,8 @@ import {
   assistSchemaIdPrefix,
   assistSerializedFieldTypeName,
   assistSerializedTypeName,
-  SerializedSchemaMember,
-  SerializedSchemaType,
+  type SerializedSchemaMember,
+  type SerializedSchemaType,
 } from '../../types'
 import {hiddenTypes} from './schemaUtils'
 
@@ -25,6 +25,7 @@ interface Options {
   leanFormat?: boolean
 }
 
+// oxlint-disable-next-line prefer-set-has
 const inlineTypes = ['document', 'object', 'image', 'file']
 
 export function serializeSchema(schema: Schema, options?: Options): SerializedSchemaType[] {
@@ -58,7 +59,6 @@ function getSchemaStub(
   options?: Options,
 ): SerializedSchemaType {
   if (!schemaType.type?.name) {
-    // eslint-disable-next-line no-console -- log error
     console.error('Missing type name', schemaType.type)
     throw new Error('Type is missing name!')
   }
@@ -83,21 +83,20 @@ function getBaseFields(
   options: Options | undefined,
 ) {
   const schemaOptions: SerializedSchemaType['options'] = removeUndef({
+    // oxlint-disable-next-line no-unsafe-type-assertion
     imagePromptField: (type.options as ImageOptions)?.aiAssist?.imageInstructionField,
+    // oxlint-disable-next-line no-unsafe-type-assertion
     embeddingsIndex: (type.options as ReferenceOptions)?.aiAssist?.embeddingsIndex,
   })
   return removeUndef({
     options: Object.keys(schemaOptions).length ? schemaOptions : undefined,
     values: Array.isArray(type?.options?.list)
       ? type?.options?.list.map((v: string | {value: string; title: string}) =>
-          typeof v === 'string' ? v : (v.value ?? `${v.title}`),
+          typeof v === 'string' ? v : (v.value ?? v.title),
         )
       : undefined,
     of: 'of' in type && typeName === 'array' ? arrayOf(type, schema, options) : undefined,
-    to:
-      'to' in type && typeName === 'reference'
-        ? refToTypeNames(type as ReferenceSchemaType)
-        : undefined,
+    to: 'to' in type && typeName === 'reference' ? refToTypeNames(type) : undefined,
     fields:
       'fields' in type && inlineTypes.includes(typeName)
         ? serializeFields(schema, type, options)

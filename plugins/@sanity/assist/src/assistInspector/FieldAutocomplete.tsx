@@ -1,11 +1,11 @@
 import {SearchIcon} from '@sanity/icons'
 import {Autocomplete, Box, Breadcrumbs, Card, Flex, Text} from '@sanity/ui'
 import {createElement, useCallback, useMemo} from 'react'
-import {ObjectSchemaType} from 'sanity'
+import type {ObjectSchemaType} from 'sanity'
 
-import {isType} from '../helpers/typeUtils'
-import {FieldRef, getDocumentFieldRef} from './helpers'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
+import {isType} from '../helpers/typeUtils'
+import {type FieldRef, getDocumentFieldRef} from './helpers'
 
 interface FieldSelectorProps {
   id: string

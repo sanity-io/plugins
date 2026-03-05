@@ -1,6 +1,6 @@
 import {Box, Flex} from '@sanity/ui'
 import {useCallback} from 'react'
-import {BlockProps, PatchEvent, useFormCallbacks} from 'sanity'
+import {type BlockProps, PatchEvent, useFormCallbacks} from 'sanity'
 
 import {ErrorWrapper} from '../components/SafeValueInput'
 import {AiFieldPresence} from '../presence/AiFieldPresence'

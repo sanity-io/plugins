@@ -1,3 +1,4 @@
+// oxlint-disable no-accumulating-spread
 import {
   BlockContentIcon,
   BlockquoteIcon,
@@ -21,10 +22,11 @@ import {
   stringToPath,
 } from 'sanity'
 import {type PaneRouterContextValue, usePaneRouter} from 'sanity/structure'
+
+import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {isAssistSupported} from '../helpers/assistSupported'
 import {isPortableTextArray, isType} from '../helpers/typeUtils'
 import {type AssistInspectorRouteParams, documentRootKey} from '../types'
-import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 
 export interface FieldRef {
   key: string
@@ -82,28 +84,31 @@ export function getFieldRefs(
   if (depth >= maxDepth) {
     return []
   }
-  return schemaType.fields
-    .filter((f) => !f.name.startsWith('_'))
-    .flatMap((field) => {
-      const path: Path = parent ? [...parent.path, field.name] : [field.name]
-      const title = field.type.title ?? field.name
-      const fieldRef: FieldRef = {
-        key: patchableKey(pathToString(path)),
-        path,
-        title: parent ? [parent.title, title].join(' / ') : title,
-        schemaType: field.type,
-        icon: getTypeIcon(field.type),
-      }
-      const fields =
-        field.type.jsonType === 'object' ? getFieldRefs(field.type, fieldRef, depth + 1) : []
+  return (
+    schemaType.fields
+      .filter((f) => !f.name.startsWith('_'))
+      // oxlint-disable-next-line no-map-spread
+      .flatMap((field) => {
+        const path: Path = parent ? [...parent.path, field.name] : [field.name]
+        const title = field.type.title ?? field.name
+        const fieldRef: FieldRef = {
+          key: patchableKey(pathToString(path)),
+          path,
+          title: parent ? [parent.title, title].join(' / ') : title,
+          schemaType: field.type,
+          icon: getTypeIcon(field.type),
+        }
+        const fields =
+          field.type.jsonType === 'object' ? getFieldRefs(field.type, fieldRef, depth + 1) : []
 
-      const syntheticFields =
-        field.type.jsonType === 'array' ? getSyntheticFields(field.type, fieldRef, depth + 1) : []
-      if (!isAssistSupported(field.type)) {
-        return [...fields, ...syntheticFields]
-      }
-      return [fieldRef, ...fields, ...syntheticFields]
-    })
+        const syntheticFields =
+          field.type.jsonType === 'array' ? getSyntheticFields(field.type, fieldRef, depth + 1) : []
+        if (!isAssistSupported(field.type)) {
+          return [...fields, ...syntheticFields]
+        }
+        return [fieldRef, ...fields, ...syntheticFields]
+      })
+  )
 }
 
 function getSyntheticFields(schemaType: ArraySchemaType, parent?: FieldRef, depth = 0) {
@@ -111,28 +116,31 @@ function getSyntheticFields(schemaType: ArraySchemaType, parent?: FieldRef, dept
     return []
   }
 
-  return schemaType.of
-    .filter((itemType) => !isType(itemType, 'block'))
-    .flatMap((itemType) => {
-      const segment = {_key: itemType.name}
-      const title = itemType.title ?? itemType.name
-      const path: Path = parent ? [...parent.path, segment] : [segment]
-      const fieldRef: FieldRef = {
-        key: patchableKey(pathToString(path)),
-        path,
-        title: parent ? [parent.title, title].join(' / ') : title,
-        schemaType: itemType,
-        icon: getTypeIcon(itemType),
-        synthetic: true,
-      }
-      const fields =
-        itemType.jsonType === 'object' ? getFieldRefs(itemType, fieldRef, depth + 1) : []
+  return (
+    schemaType.of
+      .filter((itemType) => !isType(itemType, 'block'))
+      // oxlint-disable-next-line no-map-spread
+      .flatMap((itemType) => {
+        const segment = {_key: itemType.name}
+        const title = itemType.title ?? itemType.name
+        const path: Path = parent ? [...parent.path, segment] : [segment]
+        const fieldRef: FieldRef = {
+          key: patchableKey(pathToString(path)),
+          path,
+          title: parent ? [parent.title, title].join(' / ') : title,
+          schemaType: itemType,
+          icon: getTypeIcon(itemType),
+          synthetic: true,
+        }
+        const fields =
+          itemType.jsonType === 'object' ? getFieldRefs(itemType, fieldRef, depth + 1) : []
 
-      if (!isAssistSupported(itemType)) {
-        return fields
-      }
-      return [fieldRef, ...fields]
-    })
+        if (!isAssistSupported(itemType)) {
+          return fields
+        }
+        return [fieldRef, ...fields]
+      })
+  )
 }
 
 export function getTypePath(doc: SanityDocumentLike, pathString: string) {
@@ -150,6 +158,7 @@ export function getTypePath(doc: SanityDocumentLike, pathString: string) {
       const match = extractWithPath(pathToString(currentPath), doc)[0]
       const value = match?.value
       if (match && value && typeof value === 'object' && '_type' in value) {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         return {_key: value._type as string}
       }
       valid = false

@@ -1,13 +1,13 @@
 import {Card, Checkbox, Flex, Stack, Text} from '@sanity/ui'
 import {useCallback, useContext, useEffect, useMemo} from 'react'
 import {
-  ArrayOfObjectsInputProps,
-  ArraySchemaType,
-  FormPatch,
+  type ArrayOfObjectsInputProps,
+  type ArraySchemaType,
+  type FormPatch,
   insert,
   isArrayOfObjectsSchemaType,
   isObjectSchemaType,
-  ObjectSchemaType,
+  type ObjectSchemaType,
   PatchEvent,
   setIfMissing,
   typed,
@@ -16,7 +16,7 @@ import {
 
 import {isAssistSupported} from '../../../helpers/assistSupported'
 import {isType} from '../../../helpers/typeUtils'
-import {OutputFieldItem, outputFieldTypeName, OutputTypeItem} from '../../../types'
+import {type OutputFieldItem, outputFieldTypeName, type OutputTypeItem} from '../../../types'
 import {SelectedFieldContext} from '../SelectedFieldContext'
 
 export function InstructionOutputInput(props: ArrayOfObjectsInputProps) {
@@ -69,6 +69,7 @@ function ObjectOutputInput({
     [fieldSchema.fields],
   )
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   useEmptySelectAllValue(value as OutputTypeItem[], fields, onChange)
 
   const onSelectChange = useCallback(
@@ -109,6 +110,7 @@ function ObjectOutputInput({
             <Selectable
               value={field.name}
               title={field.type.title ?? field.name}
+              // oxlint-disable-next-line no-unsafe-type-assertion
               arrayValue={value as OutputFieldItem[]}
               onChange={onSelectChange}
             />
@@ -130,6 +132,7 @@ function ArrayOutputInput({
     [fieldSchema.of],
   )
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   useEmptySelectAllValue(value as OutputTypeItem[], ofItems, onChange)
 
   const onSelectChange = useCallback(
@@ -169,6 +172,7 @@ function ArrayOutputInput({
             <Selectable
               value={itemType.name}
               title={isType(itemType, 'block') ? 'Text' : (itemType.title ?? itemType.name)}
+              // oxlint-disable-next-line no-unsafe-type-assertion
               arrayValue={value as OutputTypeItem[] | undefined}
               onChange={onSelectChange}
             />

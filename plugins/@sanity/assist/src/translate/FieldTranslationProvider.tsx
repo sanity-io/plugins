@@ -65,7 +65,6 @@ function hasValuesToTranslate(
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
   const {config: assistConfig} = useAiAssistanceConfig()
 
@@ -196,7 +195,7 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
   const onRunTranslation = useCallback(() => {
     const translatePath = fieldTranslationParams?.translatePath
     if (fieldLanguageMaps && documentId && translatePath) {
-      runTranslate({
+      void runTranslate({
         documentId,
         translatePath,
         styleguide: createStyleGuideResolver(styleguide, {
@@ -207,7 +206,6 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
         }),
         fieldLanguageMap: fieldLanguageMaps.map((map) => ({
           ...map,
-          // eslint-disable-next-line max-nested-callbacks
           outputs: map.outputs.filter((out) => !!toLanguages?.find((l) => l.id === out.id)),
         })),
         conditionalMembers: fieldTranslationParams?.conditionalMembers,

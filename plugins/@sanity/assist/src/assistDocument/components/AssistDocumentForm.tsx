@@ -1,18 +1,18 @@
 import {Card, Stack, Text} from '@sanity/ui'
 import {useContext, useEffect, useMemo, useRef} from 'react'
 import {
-  FieldError,
+  type FieldError,
   FormCallbacksProvider,
-  FormCallbacksValue,
+  type FormCallbacksValue,
   FormInput,
   insert,
-  KeyedSegment,
+  type KeyedSegment,
   MemberFieldError,
-  ObjectInputProps,
-  ObjectSchemaType,
+  type ObjectInputProps,
+  type ObjectSchemaType,
   PatchEvent,
-  Path,
-  SchemaType,
+  type Path,
+  type SchemaType,
   set,
   setIfMissing,
   stringToPath,
@@ -24,18 +24,18 @@ import {
 import {useAiPaneRouter} from '../../assistInspector/helpers'
 import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'
 import {
-  AssistDocument,
-  AssistField,
+  type AssistDocument,
+  type AssistField,
   assistFieldTypeName,
-  AssistInspectorRouteParams,
+  type AssistInspectorRouteParams,
   documentRootKey,
   fieldPathParam,
   instructionParam,
-  StudioInstruction,
+  type StudioInstruction,
 } from '../../types'
 import {AssistTypeContext} from './AssistTypeContext'
 import {BackToInstructionListLink} from './instruction/BackToInstructionsLink'
-import {SelectedFieldContextProvider, SelectedFieldContextValue} from './SelectedFieldContext'
+import {SelectedFieldContextProvider, type SelectedFieldContextValue} from './SelectedFieldContext'
 
 const EMPTY_FIELDS: AssistField[] = []
 
@@ -51,6 +51,7 @@ export function AssistDocumentForm(props: ObjectInputProps) {
 }
 function AssistDocumentFormEditable(props: ObjectInputProps) {
   const {onChange} = props
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const value = props.value as AssistDocument | undefined
   const id = value?._id
   const fields = value?.fields
@@ -80,6 +81,7 @@ function AssistDocumentFormEditable(props: ObjectInputProps) {
     if (!targetDocumentType) {
       return undefined
     }
+    // oxlint-disable-next-line no-unsafe-type-assertion
     return schema.get(targetDocumentType) as ObjectSchemaType
   }, [schema, targetDocumentType])
 
@@ -93,7 +95,7 @@ function AssistDocumentFormEditable(props: ObjectInputProps) {
     [fieldSchema, documentSchema],
   )
 
-  const title = value?.title
+  const title = value?.['title']
 
   useEffect(() => {
     if (!title && documentSchema && !id?.startsWith('drafts.')) {
@@ -109,8 +111,10 @@ function AssistDocumentFormEditable(props: ObjectInputProps) {
       onPathOpen: (path) => {
         if (!instruction && path.length === 4 && path[2] === 'instructions') {
           setParams(
+            // oxlint-disable-next-line no-unsafe-type-assertion
             typed<AssistInspectorRouteParams>({
               ...params,
+              // oxlint-disable-next-line no-unsafe-type-assertion
               [instructionParam]: (path[3] as KeyedSegment)?._key,
             }) as Record<keyof AssistInspectorRouteParams, string | undefined>,
           )

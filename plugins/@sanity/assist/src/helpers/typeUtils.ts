@@ -1,4 +1,4 @@
-import {ArraySchemaType, ImageOptions, SchemaType} from 'sanity'
+import type {ArraySchemaType, ImageOptions, SchemaType} from 'sanity'
 
 export function isPortableTextArray(type: ArraySchemaType) {
   return type.of.find((t) => isType(t, 'block'))
@@ -30,6 +30,7 @@ export function getDescriptionFieldOption(
   if (!schemaType) {
     return undefined
   }
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const descriptionField = (schemaType.options as ImageOptions)?.aiAssist?.imageDescriptionField
   if (typeof descriptionField === 'string') {
     return {
@@ -51,6 +52,7 @@ export function getImageInstructionFieldOption(
   if (!schemaType) {
     return undefined
   }
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const imageInstructionField = (schemaType.options as ImageOptions)?.aiAssist
     ?.imageInstructionField
   if (imageInstructionField) {

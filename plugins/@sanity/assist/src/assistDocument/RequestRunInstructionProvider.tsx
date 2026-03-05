@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
-import {ObjectSchemaType, PatchEvent, SanityDocument, unset} from 'sanity'
+import {type ObjectSchemaType, PatchEvent, type SanityDocument, unset} from 'sanity'
 
 import {useRunInstruction} from '../assistLayout/RunInstructionProvider'
 
@@ -46,6 +46,7 @@ export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
   useEffect(() => {
     if (queuedArgs && isDocAssistable) {
       task(queuedArgs)
+      // oxlint-disable-next-line react-hooks-js/set-state-in-effect
       setQueuedArgs(undefined)
     }
   }, [queuedArgs, isDocAssistable, task])

@@ -1,5 +1,9 @@
-import {PortableTextBlock, PortableTextMarkDefinition, PortableTextSpan} from '@portabletext/types'
-import {SanityDocument} from 'sanity'
+import type {
+  PortableTextBlock,
+  PortableTextMarkDefinition,
+  PortableTextSpan,
+} from '@portabletext/types'
+import type {SanityDocument} from 'sanity'
 
 //id prefixes
 export const assistDocumentIdPrefix = 'sanity.assist.schemaType.'
@@ -57,7 +61,7 @@ export interface SerializedSchemaType {
   hidden?: boolean | 'function'
   readOnly?: boolean | 'function'
   options?: {
-    /** equivalent to options.aiAssist.imageDescriptionField - not renamed in the api for backwards compatability */
+    /** equivalent to options.aiAssist.imageDescriptionField - not renamed in the api for backwards compatibility */
     imagePromptField?: string
     embeddingsIndex?: string
   }
@@ -172,7 +176,6 @@ export interface InstructionTask {
   startedByUserId?: string
 
   //added by studio
-  // eslint-disable-next-line no-use-before-define
   instruction?: StudioInstruction
 }
 

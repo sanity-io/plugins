@@ -1,8 +1,8 @@
 import {SparklesIcon} from '@sanity/icons'
-import {DocumentInspector, typed} from 'sanity'
+import {type DocumentInspector, typed} from 'sanity'
 
 import {pluginTitle} from '../constants'
-import {AssistInspectorRouteParams, fieldPathParam, instructionParam} from '../types'
+import {type AssistInspectorRouteParams, fieldPathParam, instructionParam} from '../types'
 import {AssistInspectorWrapper} from './AssistInspector'
 import {aiInspectorId} from './constants'
 
@@ -17,6 +17,7 @@ export const assistInspector: DocumentInspector = {
   component: AssistInspectorWrapper,
   onClose({params}) {
     return {
+      // oxlint-disable-next-line no-unsafe-type-assertion
       params: typed<AssistInspectorRouteParams>({
         ...params,
         [fieldPathParam]: undefined,

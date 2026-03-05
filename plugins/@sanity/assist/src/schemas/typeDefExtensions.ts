@@ -1,5 +1,5 @@
+// oxlint-disable-next-line no-unassigned-import
 import 'sanity'
-/* eslint-disable no-unused-vars */
 export interface AssistOptions {
   aiAssist?: {
     /** Set to true to disable assistance for this field or type */

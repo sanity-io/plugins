@@ -1,7 +1,7 @@
 import {ImageIcon} from '@sanity/icons'
 import {Box, Spinner} from '@sanity/ui'
 import {useContext, useMemo} from 'react'
-import {DocumentFieldAction, DocumentFieldActionGroup, DocumentFieldActionItem} from 'sanity'
+import type {DocumentFieldAction, DocumentFieldActionGroup, DocumentFieldActionItem} from 'sanity'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
@@ -23,36 +23,35 @@ export const generateImagActions: DocumentFieldAction = {
     const {generateImage, loading} = useGenerateImage(apiClient)
 
     const imageContext = useContext(ImageContext)
+    const {assistableDocumentId} = useAssistDocumentContext()
 
-    if (imageContext && pathKey === imageContext?.imageInstructionPath) {
-      //if this is true, it is stable, and not breaking rules of hooks
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const {assistableDocumentId} = useAssistDocumentContext()
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useMemo(() => {
-        return node({
-          type: 'action',
-          icon: loading
-            ? () => (
-                <Box style={{height: 17}}>
-                  <Spinner style={{transform: 'translateY(6px)'}} />
-                </Box>
-              )
-            : ImageIcon,
-          title: 'Generate image from prompt',
-          onAction: () => {
-            if (loading) {
-              return
-            }
-            generateImage({path: pathKey, documentId: assistableDocumentId})
-          },
-          renderAsButton: true,
-          disabled: loading,
-        })
-      }, [generateImage, pathKey, assistableDocumentId, loading])
-    }
+    const isActive = !!imageContext && pathKey === imageContext?.imageInstructionPath
 
-    // works but not supported by types
-    return undefined as unknown as DocumentFieldActionItem
+    return useMemo(() => {
+      if (!isActive) {
+        // works but not supported by types
+        // oxlint-disable-next-line no-unsafe-type-assertion
+        return undefined as unknown as DocumentFieldActionItem
+      }
+      return node({
+        type: 'action',
+        icon: loading
+          ? () => (
+              <Box style={{height: 17}}>
+                <Spinner style={{transform: 'translateY(6px)'}} />
+              </Box>
+            )
+          : ImageIcon,
+        title: 'Generate image from prompt',
+        onAction: () => {
+          if (loading) {
+            return
+          }
+          void generateImage({path: pathKey, documentId: assistableDocumentId})
+        },
+        renderAsButton: true,
+        disabled: loading,
+      })
+    }, [isActive, generateImage, pathKey, assistableDocumentId, loading])
   },
 }

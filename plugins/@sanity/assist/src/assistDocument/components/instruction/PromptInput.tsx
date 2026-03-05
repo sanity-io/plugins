@@ -4,13 +4,7 @@ import {type ArrayOfObjectsInputProps, set, typed} from 'sanity'
 import {styled} from 'styled-components'
 
 import {randomKey} from '../../../_lib/randomKey'
-import type {
-  ContextBlock,
-  FieldRef,
-  PromptBlock,
-  PromptTextBlock,
-  UserInputBlock,
-} from '../../../types'
+import type {PromptBlock, PromptTextBlock} from '../../../types'
 
 const PteMods = styled(Box)`
   & [data-testid='pt-editor__toolbar-card'] > div > div:last-child {
@@ -34,6 +28,7 @@ export function PromptInput(props: ArrayOfObjectsInputProps) {
 function useOnlyInlineBlocks(props: ArrayOfObjectsInputProps) {
   useEffect(() => {
     let needsFix = false
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const val = ((props.value as PromptBlock[]) ?? []).map((block) => {
       if (block._type === 'block') {
         return block
@@ -46,7 +41,7 @@ function useOnlyInlineBlocks(props: ArrayOfObjectsInputProps) {
         level: 0,
         markDefs: [],
         style: 'normal',
-        children: [block as FieldRef | ContextBlock | UserInputBlock],
+        children: [block],
       })
     })
 
@@ -54,6 +49,6 @@ function useOnlyInlineBlocks(props: ArrayOfObjectsInputProps) {
       props.onChange(set(val))
     }
     // only run this once when loading the field
-    // eslint-disable-next-line
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }

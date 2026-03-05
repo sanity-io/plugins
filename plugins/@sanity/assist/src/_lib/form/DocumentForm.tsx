@@ -16,6 +16,7 @@ import {useDocumentPane} from 'sanity/structure'
 
 import {assistFormId} from './constants'
 
+// oxlint-disable-next-line no-deprecated
 const preventDefault = (ev: React.FormEvent) => ev.preventDefault()
 
 export function DocumentForm(
@@ -86,6 +87,7 @@ export function DocumentForm(
       })
     }
     // React to changes in hasRev only
+    // oxlint-disable-next-line react-hooks-js/rule-suppression
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasRev])
 
@@ -151,6 +153,7 @@ export function DocumentForm(
             readOnly={formState.readOnly}
             schemaType={formState.schemaType}
             validation={validation}
+            // oxlint-disable-next-line no-unsafe-type-assertion
             value={formState.value as any}
             hasUpstreamVersion={false}
           />

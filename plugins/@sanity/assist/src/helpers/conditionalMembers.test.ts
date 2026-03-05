@@ -1,5 +1,5 @@
 import {Schema} from '@sanity/schema'
-import {ArraySchemaType, defineField, defineType, ObjectSchemaType} from 'sanity'
+import {type ArraySchemaType, defineField, defineType, type ObjectSchemaType} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
 import {getConditionalMembers} from './conditionalMembers'
@@ -17,13 +17,14 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
       members: [
         {
           kind: 'field',
-          field: {path: [docSchema.fields[0].name], schemaType: docSchema.fields[0].type},
+          field: {path: [docSchema.fields[0]!.name], schemaType: docSchema.fields[0]!.type},
         },
       ],
     } as any
@@ -44,13 +45,14 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
       members: [
         {
           kind: 'field',
-          field: {path: [docSchema.fields[0].name], schemaType: docSchema.fields[0].type},
+          field: {path: [docSchema.fields[0]!.name], schemaType: docSchema.fields[0]!.type},
         },
       ],
     } as any
@@ -72,13 +74,14 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
       members: [
         {
           kind: 'field',
-          field: {path: [docSchema.fields[0].name], schemaType: docSchema.fields[0].type},
+          field: {path: [docSchema.fields[0]!.name], schemaType: docSchema.fields[0]!.type},
         },
       ],
     } as any
@@ -99,6 +102,7 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -106,14 +110,15 @@ describe('conditionalMembers', () => {
         {
           kind: 'field',
           field: {
-            path: [docSchema.fields[0].name],
-            schemaType: docSchema.fields[0].type,
+            path: [docSchema.fields[0]!.name],
+            schemaType: docSchema.fields[0]!.type,
             members: [
               {
                 kind: 'item',
                 item: {
-                  path: [docSchema.fields[0].name, 0],
-                  schemaType: (docSchema.fields[0].type as ArraySchemaType).of[0],
+                  path: [docSchema.fields[0]!.name, 0],
+                  // oxlint-disable-next-line no-unsafe-type-assertion
+                  schemaType: (docSchema.fields[0]!.type as ArraySchemaType).of[0],
                   readOnly: true,
                 },
               },
@@ -151,6 +156,7 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -158,14 +164,15 @@ describe('conditionalMembers', () => {
         {
           kind: 'field',
           field: {
-            path: [docSchema.fields[0].name],
-            schemaType: docSchema.fields[0].type,
+            path: [docSchema.fields[0]!.name],
+            schemaType: docSchema.fields[0]!.type,
             members: [
               {
                 kind: 'field',
                 field: {
-                  path: [docSchema.fields[0].name, 'title'],
-                  schemaType: (docSchema.fields[0].type as ObjectSchemaType).fields[0].type,
+                  path: [docSchema.fields[0]!.name, 'title'],
+                  // oxlint-disable-next-line no-unsafe-type-assertion
+                  schemaType: (docSchema.fields[0]!.type as ObjectSchemaType).fields[0]!.type,
                 },
               },
             ],
@@ -197,6 +204,7 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -209,7 +217,7 @@ describe('conditionalMembers', () => {
             members: [
               {
                 kind: 'field',
-                field: {path: [docSchema.fields[0].name], schemaType: docSchema.fields[0].type},
+                field: {path: [docSchema.fields[0]!.name], schemaType: docSchema.fields[0]!.type},
               },
             ],
           },
@@ -240,6 +248,7 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -252,7 +261,7 @@ describe('conditionalMembers', () => {
             members: [
               {
                 kind: 'field',
-                field: {path: [docSchema.fields[0].name], schemaType: docSchema.fields[0].type},
+                field: {path: [docSchema.fields[0]!.name], schemaType: docSchema.fields[0]!.type},
               },
             ],
           },
@@ -289,23 +298,24 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
       members: [
         {
           kind: 'field',
-          field: {path: [docSchema.fields[0].name], schemaType: docSchema.fields[0].type},
+          field: {path: [docSchema.fields[0]!.name], schemaType: docSchema.fields[0]!.type},
         },
         {
           kind: 'field',
           field: {
-            path: [docSchema.fields[1].name],
-            schemaType: docSchema.fields[1].type,
+            path: [docSchema.fields[1]!.name],
+            schemaType: docSchema.fields[1]!.type,
             members: [
               {
                 kind: 'field',
-                field: {path: ['object', 'title'], schemaType: docSchema.fields[0].type},
+                field: {path: ['object', 'title'], schemaType: docSchema.fields[0]!.type},
               },
             ],
           },

@@ -1,4 +1,4 @@
-import {PropsWithChildren} from 'react'
+import type {PropsWithChildren} from 'react'
 
 import {AssistDocumentContext} from './AssistDocumentContext'
 import {useAssistDocumentContextValue} from './hooks/useAssistDocumentContextValue'

@@ -1,6 +1,6 @@
-import {HTMLProps, useEffect} from 'react'
+import {type HTMLProps, useEffect} from 'react'
 
-import {ConnectorRegionRects} from './types'
+import type {ConnectorRegionRects} from './types'
 import {useRegionRects} from './useRegionRects'
 
 export function ConnectorRegion(

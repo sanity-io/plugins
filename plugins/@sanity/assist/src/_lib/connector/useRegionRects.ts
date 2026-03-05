@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
 
 import {hasOverflowScroll} from './helpers'
-import {Rect, Scroll} from './types'
+import type {Rect, Scroll} from './types'
 
 export function useRegionRects() {
   const ref = useRef<HTMLDivElement>(null)

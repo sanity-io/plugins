@@ -1,8 +1,8 @@
 import {useMemo} from 'react'
-import {Path, SchemaType} from 'sanity'
+import type {Path, SchemaType} from 'sanity'
 
 import {isAssistSupported} from './assistSupported'
 
-export function useAssistSupported(path: Path, schemaType: SchemaType) {
+export function useAssistSupported(_path: Path, schemaType: SchemaType) {
   return useMemo(() => isAssistSupported(schemaType), [schemaType])
 }

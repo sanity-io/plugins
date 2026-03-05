@@ -1,7 +1,8 @@
+// oxlint-disable no-deprecated
 import {rgba, useTheme} from '@sanity/ui'
 import {useMemo} from 'react'
 
-import {ConnectorOptions, mapConnectorToLine, Rect} from '../_lib/connector'
+import {type ConnectorOptions, mapConnectorToLine, type Rect} from '../_lib/connector'
 import {arrowPath} from './draw/arrowPath'
 import {drawConnectorPath} from './draw/connectorPath'
 

@@ -1,4 +1,4 @@
-/* eslint-disable max-depth */
+// oxlint-disable no-accumulating-spread
 import {
   type ArrayOfObjectsFormNode,
   type ArrayOfObjectsItemMember,
@@ -51,8 +51,8 @@ export function getConditionalMembers(
   return (
     [doc, ...extractConditionalPaths(docState, Math.min(maxDepth, ABSOLUTE_MAX_DEPTH))]
       .filter((v) => v.conditional)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .map(({conditional, ...state}) => ({...state}))
+      // oxlint-disable-next-line no-map-spread
+      .map(({conditional: _conditional, ...state}) => ({...state}))
   )
 }
 
@@ -90,9 +90,11 @@ function extractConditionalPaths(
       if (schemaType.jsonType === 'object') {
         const innerFields = member.field.readOnly
           ? []
-          : extractConditionalPaths(member.field as ObjectFormNode, maxDepth)
+          : // oxlint-disable-next-line no-unsafe-type-assertion
+            extractConditionalPaths(member.field as ObjectFormNode, maxDepth)
         return [...acc, conditionalState(member.field), ...innerFields]
       } else if (schemaType.jsonType === 'array') {
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const array = member.field as ArrayOfObjectsFormNode | ArrayOfPrimitivesFormNode
 
         let arrayPaths: ConditionalMemberInnerState[] = []
@@ -107,7 +109,8 @@ function extractConditionalPaths(
 
             const innerFields =
               isObjectsArray && !arrayMember.item.readOnly
-                ? extractConditionalPaths((arrayMember as ArrayOfObjectsItemMember).item, maxDepth)
+                ? // oxlint-disable-next-line no-unsafe-type-assertion
+                  extractConditionalPaths((arrayMember as ArrayOfObjectsItemMember).item, maxDepth)
                 : []
 
             arrayPaths = [...arrayPaths, conditionalState(arrayMember.item), ...innerFields]
@@ -118,9 +121,11 @@ function extractConditionalPaths(
 
       return [...acc, conditionalState(member.field)]
     } else if (member.kind === 'fieldSet') {
+      // oxlint-disable-next-line no-unsafe-type-assertion
       const conditionalFieldset = !!(node as ObjectFormNode).schemaType?.fieldsets?.some(
         (f) => !f.single && f.name === member.fieldSet.name && typeof f.hidden === 'function',
       )
+      // oxlint-disable-next-line no-map-spread
       const innerFields = extractConditionalPaths(member.fieldSet, maxDepth).map((f) => ({
         ...f,
         // if fieldset is conditional, visible fields must also be considered conditional

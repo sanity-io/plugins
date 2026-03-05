@@ -1,10 +1,10 @@
 import {useToast} from '@sanity/ui'
 import {addSeconds, isAfter} from 'date-fns'
 import {useEffect, useRef} from 'react'
-import {ObjectSchemaType, useCurrentUser} from 'sanity'
+import {type ObjectSchemaType, useCurrentUser} from 'sanity'
 
 import {getInstructionTitle} from '../../helpers/misc'
-import {InstructionTask} from '../../types'
+import type {InstructionTask} from '../../types'
 import {useStudioAssistDocument} from './useStudioAssistDocument'
 
 const NO_TASKS: InstructionTask[] = []

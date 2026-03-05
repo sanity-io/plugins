@@ -1,4 +1,4 @@
-import {get} from 'lodash'
+import get from 'lodash-es/get.js'
 import type {SanityDocumentLike} from 'sanity'
 
 export const getLanguageParams = (

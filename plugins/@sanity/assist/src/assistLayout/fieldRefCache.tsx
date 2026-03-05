@@ -1,9 +1,10 @@
+import type {ObjectSchemaType} from 'sanity'
+
 import {
   asFieldRefsByTypePath,
-  FieldRef,
+  type FieldRef,
   getFieldRefs as createFieldRefs,
 } from '../assistInspector/helpers'
-import type {ObjectSchemaType} from 'sanity'
 
 export function createFieldRefCache() {
   const byType: Record<

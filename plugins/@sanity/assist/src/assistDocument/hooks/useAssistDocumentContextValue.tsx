@@ -1,18 +1,20 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {getDraftId, getVersionId, type ObjectSchemaType, usePerspective, useSchema} from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
-import {fieldPathParam, InstructionTask} from '../../types'
-import {AssistDocumentContextValue} from '../AssistDocumentContext'
+
+import {useAiPaneRouter} from '../../assistInspector/helpers'
+import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'
+import {fieldPathParam, type InstructionTask} from '../../types'
+import type {AssistDocumentContextValue} from '../AssistDocumentContext'
 import {isDocAssistable} from '../RequestRunInstructionProvider'
 import {useStudioAssistDocument} from './useStudioAssistDocument'
-import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'
-import {useAiPaneRouter} from '../../assistInspector/helpers'
 
 export function useAssistDocumentContextValue(documentId: string, documentType: string) {
   const schema = useSchema()
 
   const {getFieldRefs, getFieldRefsByTypePath} = useAiAssistanceConfig()
   const documentSchemaType = useMemo(() => {
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const schemaType = schema.get(documentType) as ObjectSchemaType | undefined
     if (!schemaType) {
       throw new Error(`Schema type "${documentType}" not found`)
@@ -35,8 +37,6 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     editState,
   } = useDocumentPane()
   const {selectedReleaseId} = usePerspective()
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore this is a valid option available in `corel` - Remove after corel is merged to next
   const {draft, published, version} = editState || {}
 
   const assistableDocumentId = selectedReleaseId
@@ -116,6 +116,7 @@ function useSyntheticTasks(assistableDocumentId: string) {
   }, [])
 
   useEffect(() => {
+    // oxlint-disable-next-line react-hooks-js/set-state-in-effect
     setSyntheticTasks([])
   }, [assistableDocumentId])
 

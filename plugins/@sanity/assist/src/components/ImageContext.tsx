@@ -17,6 +17,7 @@ export const ImageContext = createContext<ImageContextValue>({})
 
 export function ImageContextProvider(props: InputProps) {
   const {schemaType, path, value, readOnly} = props
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const assetRef = (value as any)?.asset?._ref
   const {selectedReleaseId} = usePerspective()
   const [assetRefState, setAssetRefState] = useState<string | undefined>(assetRef)
@@ -33,7 +34,7 @@ export function ImageContextProvider(props: InputProps) {
   )
 
   const router = usePaneRouter()
-  const isShowingOlderRevision = !!router.params?.rev
+  const isShowingOlderRevision = !!router.params?.['rev']
 
   useEffect(() => {
     const descriptionField = getDescriptionFieldOption(schemaType)
@@ -46,9 +47,10 @@ export function ImageContextProvider(props: InputProps) {
       !isShowingOlderRevision &&
       !readOnly
     ) {
+      // oxlint-disable-next-line react-hooks-js/set-state-in-effect
       setAssetRefState(assetRef)
       if (canUseAssist(status)) {
-        generateCaption({
+        void generateCaption({
           path: pathToString([...path, descriptionField.path]),
           documentId: assistableDocumentId,
         })

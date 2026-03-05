@@ -1,9 +1,9 @@
 import {Box} from '@sanity/ui'
 import {useCallback, useContext, useEffect, useId, useRef} from 'react'
-import {set, StringInputProps} from 'sanity'
+import {set, type StringInputProps} from 'sanity'
 
 import {FieldAutocomplete} from '../../../assistInspector/FieldAutocomplete'
-import {FieldRef} from '../../../assistInspector/helpers'
+import type {FieldRef} from '../../../assistInspector/helpers'
 import {AssistTypeContext} from '../AssistTypeContext'
 import {SelectedFieldContext} from '../SelectedFieldContext'
 

@@ -1,4 +1,4 @@
-import {ObjectSchemaType, Path, SanityClient, SchemaType} from 'sanity'
+import type {ObjectSchemaType, Path, SanityClient, SchemaType} from 'sanity'
 
 export interface Language {
   id: string

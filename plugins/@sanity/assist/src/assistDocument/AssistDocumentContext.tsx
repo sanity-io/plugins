@@ -1,8 +1,8 @@
 import {createContext, useContext} from 'react'
-import {DocumentInspector, ObjectSchemaType, PatchEvent} from 'sanity'
+import {type DocumentInspector, type ObjectSchemaType, PatchEvent} from 'sanity'
 
-import {InstructionTask, StudioAssistDocument} from '../types'
-import {FieldRef} from '../assistInspector/helpers'
+import type {FieldRef} from '../assistInspector/helpers'
+import type {InstructionTask, StudioAssistDocument} from '../types'
 
 export type AssistDocumentContextValue = (
   | {assistDocument: StudioAssistDocument; loading: false}

@@ -4,9 +4,9 @@ import {
   isValidationErrorMarker,
   isValidationInfoMarker,
   isValidationWarningMarker,
-  ObjectSchemaType,
-  Path,
-  ValidationMarker,
+  type ObjectSchemaType,
+  type Path,
+  type ValidationMarker,
 } from 'sanity'
 
 import {ListItem} from './listItem'

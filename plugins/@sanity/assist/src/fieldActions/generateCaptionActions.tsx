@@ -26,52 +26,53 @@ export const generateCaptionsActions: DocumentFieldAction = {
     const apiClient = useApiClient(config?.__customApiClient)
     const {generateCaption, loading} = useGenerateCaption(apiClient)
     const imageContext = useContext(ImageContext)
+    const {assistableDocumentId} = useAssistDocumentContext()
 
-    if (imageContext && pathKey === imageContext?.imageDescriptionPath) {
-      //if this is true, it is stable, and not breaking rules of hooks
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const {assistableDocumentId} = useAssistDocumentContext()
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useMemo(() => {
-        return node({
-          type: 'action',
-          icon: loading
-            ? () => (
-                <Box style={{height: 17}}>
-                  <Spinner style={{transform: 'translateY(6px)'}} />
-                </Box>
-              )
-            : ImageIcon,
-          title: 'Generate image description',
-          onAction: () => {
-            if (loading) {
-              return
-            }
-            if (!canUseAssist(status)) {
-              openInspector(aiInspectorId, {
-                [fieldPathParam]: pathKey,
-                [instructionParam]: undefined as any,
-              })
-              return
-            }
-            generateCaption({path: pathKey, documentId: assistableDocumentId})
-          },
-          renderAsButton: true,
-          disabled: loading,
-          hidden: !imageContext.assetRef,
-        })
-      }, [
-        generateCaption,
-        pathKey,
-        assistableDocumentId,
-        loading,
-        imageContext,
-        status,
-        openInspector,
-      ])
-    }
+    const isActive = !!imageContext && pathKey === imageContext?.imageDescriptionPath
 
-    // works but not supported by types
-    return undefined as unknown as DocumentFieldActionItem
+    return useMemo(() => {
+      if (!isActive || !imageContext) {
+        // works but not supported by types
+        // oxlint-disable-next-line no-unsafe-type-assertion
+        return undefined as unknown as DocumentFieldActionItem
+      }
+      return node({
+        type: 'action',
+        icon: loading
+          ? () => (
+              <Box style={{height: 17}}>
+                <Spinner style={{transform: 'translateY(6px)'}} />
+              </Box>
+            )
+          : ImageIcon,
+        title: 'Generate image description',
+        onAction: () => {
+          if (loading) {
+            return
+          }
+          if (!canUseAssist(status)) {
+            openInspector(aiInspectorId, {
+              [fieldPathParam]: pathKey,
+              // oxlint-disable-next-line no-unsafe-type-assertion
+              [instructionParam]: undefined as any,
+            })
+            return
+          }
+          void generateCaption({path: pathKey, documentId: assistableDocumentId})
+        },
+        renderAsButton: true,
+        disabled: loading,
+        hidden: !imageContext.assetRef,
+      })
+    }, [
+      isActive,
+      imageContext,
+      generateCaption,
+      pathKey,
+      assistableDocumentId,
+      loading,
+      status,
+      openInspector,
+    ])
   },
 }

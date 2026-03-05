@@ -16,11 +16,13 @@ export function AssistDocumentInputWrapper(props: InputProps) {
     return <AssistInput {...props} />
   }
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const documentId = (props.value as any)?._id as string | undefined
   if (!documentId) {
     return props.renderDefault(props)
   }
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   return <AssistDocumentInput {...(props as ObjectInputProps)} documentId={documentId} />
 }
 
@@ -31,6 +33,7 @@ function AssistDocumentInput({documentId, ...props}: ObjectInputProps & {documen
     if (props.schemaType.name !== assistDocumentTypeName) {
       return props.schemaType
     }
+    // oxlint-disable-next-line no-unsafe-type-assertion
     return {
       ...props.schemaType,
       type: {

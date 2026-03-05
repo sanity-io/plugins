@@ -1,10 +1,10 @@
 import {useCallback, useContext, useState} from 'react'
 import {
-  ArrayFieldProps,
-  ArraySchemaType,
+  type ArrayFieldProps,
+  type ArraySchemaType,
   isArrayOfObjectsSchemaType,
   isObjectSchemaType,
-  ObjectSchemaType,
+  type ObjectSchemaType,
 } from 'sanity'
 
 import {SelectedFieldContext} from '../SelectedFieldContext'

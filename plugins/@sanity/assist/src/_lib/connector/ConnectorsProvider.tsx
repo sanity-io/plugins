@@ -1,8 +1,8 @@
-import {ReactNode, useEffect, useMemo} from 'react'
+import {type ReactNode, useEffect, useMemo} from 'react'
 
-import {ConnectorsStore, createConnectorsStore} from './ConnectorsStore'
+import {type ConnectorsStore, createConnectorsStore} from './ConnectorsStore'
 import {ConnectorsStoreContext} from './ConnectorsStoreContext'
-import {Connector} from './types'
+import type {Connector} from './types'
 
 export function ConnectorsProvider(props: {
   children?: ReactNode

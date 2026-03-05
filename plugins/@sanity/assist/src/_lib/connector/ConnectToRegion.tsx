@@ -1,7 +1,7 @@
-import {HTMLProps, useEffect, useState} from 'react'
+import {type HTMLProps, useEffect, useState} from 'react'
 
 import {ConnectorRegion} from './ConnectorRegion'
-import {ConnectorRegionRects} from './types'
+import type {ConnectorRegionRects} from './types'
 import {useConnectorsStore} from './useConnectorsStore'
 
 export function ConnectToRegion(props: {_key: string} & HTMLProps<HTMLDivElement>) {

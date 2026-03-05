@@ -1,7 +1,7 @@
 import {icons} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
-import {ElementType, ReactNode, useCallback, useId, useMemo} from 'react'
-import {set, StringInputProps} from 'sanity'
+import {type ElementType, type ReactNode, useCallback, useId, useMemo} from 'react'
+import {set, type StringInputProps} from 'sanity'
 
 export function IconInput(props: StringInputProps) {
   const {value, onChange} = props
@@ -34,6 +34,7 @@ function IconItem({
   onChange,
 }: {
   iconKey: string
+  // oxlint-disable-next-line no-redundant-type-constituents
   icon: ElementType | ReactNode
   onChange: StringInputProps['onChange']
 }) {

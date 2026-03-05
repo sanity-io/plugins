@@ -9,19 +9,19 @@ import {AssistInlineFormBlock} from './assistFormComponents/AssistInlineFormBloc
 import {AssistItem} from './assistFormComponents/AssistItem'
 import {assistInspector} from './assistInspector'
 import {AssistLayout} from './assistLayout/AssistLayout'
-import {AssistConfig} from './assistTypes'
+import type {AssistConfig} from './assistTypes'
 import {ImageContextProvider} from './components/ImageContext'
 import {SafeValueInput} from './components/SafeValueInput'
 import {packageName} from './constants'
 import {assistFieldActions} from './fieldActions/assistFieldActions'
+import type {AssistFieldActionNode, AssistFieldActionProps} from './fieldActions/customFieldActions'
 import {isSchemaAssistEnabled} from './helpers/assistSupported'
 import {validateStyleguide} from './helpers/styleguide'
 import {isImage} from './helpers/typeUtils'
 import {createAssistDocumentPresence} from './presence/AssistDocumentPresence'
 import {schemaTypes} from './schemas'
-import {TranslationConfig} from './translate/types'
-import {assistDocumentTypeName, AssistPreset} from './types'
-import {AssistFieldActionNode, AssistFieldActionProps} from './fieldActions/customFieldActions'
+import type {TranslationConfig} from './translate/types'
+import {assistDocumentTypeName, type AssistPreset} from './types'
 
 export interface AssistPluginConfig {
   translate?: TranslationConfig
@@ -68,7 +68,7 @@ export const assist = definePlugin<AssistPluginConfig | void>((config) => {
 
   if (temperature !== undefined && (temperature < 0 || temperature > 1)) {
     throw new Error(
-      `[${packageName}]: \`assist.maxPathDepth\` must be be in the range [0,1] inclusive, but was ${temperature}`,
+      `[${packageName}]: \`assist.temperature\` must be in the range [0,1] inclusive, but was ${temperature}`,
     )
   }
 
@@ -76,6 +76,7 @@ export const assist = definePlugin<AssistPluginConfig | void>((config) => {
     name: packageName,
     // the addition of global references broke auto updating studios
     // new versions of studio know to look for this prop on assist plugin, and filter + console.warn if it is missing
+    // oxlint-disable-next-line no-unsafe-type-assertion
     ...({handlesGDR: true} as any),
     schema: {
       types: schemaTypes,

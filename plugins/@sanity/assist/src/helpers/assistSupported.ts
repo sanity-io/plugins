@@ -1,9 +1,10 @@
-import {ReferenceOptions, SchemaType} from 'sanity'
+import type {ReferenceOptions, SchemaType} from 'sanity'
 
-import {AssistOptions} from '../schemas/typeDefExtensions'
+import type {AssistOptions} from '../schemas/typeDefExtensions'
 import {isType} from './typeUtils'
 
 export function isSchemaAssistEnabled(type: SchemaType) {
+  // oxlint-disable-next-line no-unsafe-type-assertion
   return !(type.options as AssistOptions | undefined)?.aiAssist?.exclude
 }
 
@@ -42,6 +43,7 @@ function isUnsupportedType(type: SchemaType) {
     type.name === 'sanity.imageHotspot' ||
     isType(type, 'globalDocumentReference') ||
     (isType(type, 'reference') &&
+      // oxlint-disable-next-line no-unsafe-type-assertion
       !(type?.options as ReferenceOptions)?.aiAssist?.embeddingsIndex) ||
     isType(type, 'crossDatasetReference') ||
     isType(type, 'file')

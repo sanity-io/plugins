@@ -1,13 +1,5 @@
 import {PlayIcon} from '@sanity/icons'
 import {Button, Dialog, Flex, Stack, Text, TextArea, Tooltip} from '@sanity/ui'
-import {FormFieldHeaderText} from 'sanity'
-
-import {getInstructionTitle} from '../helpers/misc'
-import {type UserInputBlock, userInputTypeName} from '../types'
-import {useApiClient, useRunInstructionApi} from '../useApiClient'
-import {useAiAssistanceConfig} from './AiAssistanceConfigContext'
-import type {RunInstructionArgs} from './AssistLayout'
-import {CustomInputResult, GetUserInput} from '../fieldActions/useUserInput'
 import {
   createContext,
   type Dispatch,
@@ -22,6 +14,14 @@ import {
   useRef,
   useState,
 } from 'react'
+import {FormFieldHeaderText} from 'sanity'
+
+import type {CustomInputResult, GetUserInput} from '../fieldActions/useUserInput'
+import {getInstructionTitle} from '../helpers/misc'
+import {type UserInputBlock, userInputTypeName} from '../types'
+import {useApiClient, useRunInstructionApi} from '../useApiClient'
+import {useAiAssistanceConfig} from './AiAssistanceConfigContext'
+import type {RunInstructionArgs} from './AssistLayout'
 
 type BlockInputs = Record<string, string>
 const NO_INPUT: BlockInputs = {}
@@ -46,7 +46,6 @@ function isUserInputBlock(block: {_type: string}): block is UserInputBlock {
   return block._type === userInputTypeName
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function RunInstructionProvider(props: PropsWithChildren<{}>) {
   const {config} = useAiAssistanceConfig()
   const apiClient = useApiClient(config?.__customApiClient)
@@ -99,7 +98,7 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
         .filter(isUserInputBlock)
 
       if (!userInputBlocks?.length) {
-        runInstructionRequest({
+        void runInstructionRequest({
           ...request,
           instructionKey,
           userTexts: undefined,
@@ -127,9 +126,8 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
   const runWithInput = useCallback(() => {
     if (runRequest) {
       if ('instruction' in runRequest) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const {instruction, userTexts, ...request} = runRequest
-        runInstructionRequest({
+        const {instruction, userInputBlocks: _, ...request} = runRequest
+        void runInstructionRequest({
           ...request,
           instructionKey: instruction._key,
           userTexts: Object.entries(inputs).map(([key, value]) => ({
@@ -139,7 +137,7 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
         })
       } else {
         const userInputs = Object.values(inputs).map((input, i) => {
-          const userInputBlock = runRequest.userInputBlocks[i]
+          const userInputBlock = runRequest.userInputBlocks[i]!
           return {
             input: {
               id: userInputBlock._key,
@@ -178,6 +176,7 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
 
   const contextValue: RunInstructionContextValue = useMemo(
     () => ({runInstruction, getUserInput, instructionLoading: loading}),
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
     [runInstruction, loading],
   )
 
@@ -242,6 +241,7 @@ export function UserInput(props: {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   const onChange = useCallback(
+    // oxlint-disable-next-line no-deprecated
     (e: FormEvent<HTMLTextAreaElement>) => {
       setInputs((current) => ({
         ...current,

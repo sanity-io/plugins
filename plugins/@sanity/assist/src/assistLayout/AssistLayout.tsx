@@ -1,21 +1,21 @@
 import {ThemeProvider} from '@sanity/ui'
 import {useState} from 'react'
-import {LayoutProps} from 'sanity'
+import type {LayoutProps} from 'sanity'
 
-import {Connector, ConnectorsProvider} from '../_lib/connector'
+import {type Connector, ConnectorsProvider} from '../_lib/connector'
 import {AssistConnectorsOverlay} from '../assistConnectors'
-import {AssistPluginConfig} from '../plugin'
+import type {AssistPluginConfig} from '../plugin'
 import {FieldTranslationProvider} from '../translate/FieldTranslationProvider'
-import {StudioInstruction} from '../types'
-import {RunInstructionRequest} from '../useApiClient'
-import {RunInstructionProvider} from './RunInstructionProvider'
+import type {StudioInstruction} from '../types'
+import type {RunInstructionRequest} from '../useApiClient'
 import {AiAssistanceConfigProvider} from './AiAssistanceConfigProvider'
+import {RunInstructionProvider} from './RunInstructionProvider'
 
 export interface AIStudioLayoutProps extends LayoutProps {
   config: AssistPluginConfig
 }
 
-export type RunInstructionArgs = Omit<RunInstructionRequest, 'instructionKey' | 'userText'> & {
+export type RunInstructionArgs = Omit<RunInstructionRequest, 'instructionKey' | 'userTexts'> & {
   instruction: StudioInstruction
 }
 

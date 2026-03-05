@@ -57,6 +57,7 @@ export function useStudioAssistDocument({
       return undefined
     }
     const tasks = assistTasksStatus?.tasks ?? []
+    // oxlint-disable-next-line no-map-spread
     const fields = (assistDocument?.fields ?? []).map((assistField): StudioAssistField => {
       return {
         ...assistField,
@@ -68,6 +69,7 @@ export function useStudioAssistDocument({
     })
     return typed<StudioAssistDocument>({
       ...assistDocument,
+      // oxlint-disable-next-line no-map-spread
       tasks: tasks?.map((task) => {
         const instruction = fields
           .find((f) => f.path === task.path)

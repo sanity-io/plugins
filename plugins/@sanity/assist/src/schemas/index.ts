@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-import {ArrayOfType, FieldProps, SchemaTypeDefinition} from 'sanity'
+import type {ArrayOfType, FieldProps, SchemaTypeDefinition} from 'sanity'
 
 import {
   assistDocumentSchema,
@@ -17,6 +16,7 @@ import {
 import {contextDocumentSchema} from './contextDocumentSchema'
 
 function excludeComments<T extends SchemaTypeDefinition | ArrayOfType>(type: T): T {
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const existingRender = (type as any)?.components?.field
   return {
     ...type,
@@ -25,7 +25,7 @@ function excludeComments<T extends SchemaTypeDefinition | ArrayOfType>(type: T):
           components: {
             ...type.components,
             field: (props: FieldProps) => {
-              const newProps = {...props, ...{__internal_comments: undefined}}
+              const newProps = {...props, __internal_comments: undefined}
               if (typeof existingRender === 'function') {
                 return existingRender(newProps)
               }

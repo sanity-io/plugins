@@ -1,6 +1,6 @@
 import {Fragment, useEffect, useState} from 'react'
 
-import {Connector, ConnectorOptions} from '../_lib/connector'
+import type {Connector, ConnectorOptions} from '../_lib/connector'
 import {ConnectorPath} from './ConnectorPath'
 
 const DEBUG = false
@@ -37,6 +37,7 @@ export function AssistConnectorsOverlay(props: {connectors: Connector[]}) {
   useEffect(() => {
     // hacky workaround to force redraw for connectors on initial render
     // this seem to improve initial measurements of elements
+    // oxlint-disable-next-line react-hooks-js/set-state-in-effect
     setRedraw(true)
   }, [])
 

@@ -1,13 +1,12 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import {TranslateIcon} from '@sanity/icons'
 import {Box, Spinner} from '@sanity/ui'
 import {useMemo, useRef} from 'react'
 import {
-  DocumentFieldAction,
-  DocumentFieldActionGroup,
-  DocumentFieldActionItem,
-  DocumentFieldActionProps,
-  ObjectSchemaType,
+  type DocumentFieldAction,
+  type DocumentFieldActionGroup,
+  type DocumentFieldActionItem,
+  type DocumentFieldActionProps,
+  type ObjectSchemaType,
   useClient,
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
@@ -46,10 +45,10 @@ export const translateActions: DocumentFieldAction = {
     const readOnly = fieldSchemaType.readOnly === true
 
     const docTransTypes = config.translate?.document?.documentTypes
+    // oxlint-disable-next-line no-unsafe-type-assertion
     const options = fieldSchemaType?.options as AssistOptions | undefined
     const addFieldAction = isDocumentLevel || options?.aiAssist?.translateAction
 
-    //All props used here MUST have the same value always, or we break the rules of hooks (conditional hook usage)
     const fieldTransEnabled =
       addFieldAction &&
       documentSchemaType &&
@@ -60,146 +59,144 @@ export const translateActions: DocumentFieldAction = {
       ((!docTransTypes && isAssistSupported(fieldSchemaType)) ||
         docTransTypes?.includes(documentSchemaType.name))
 
-    // these checks are stable (ie, does not change after mount), so not breaking rules of hooks
-    if (documentSchemaType && (documentTranslationEnabled || fieldTransEnabled)) {
-      const {value: documentValue, onChange: documentOnChange, formState} = useDocumentPane()
-      const docRef = useRef(documentValue)
-      docRef.current = documentValue
-      const formStateRef = useRef(formState)
-      formStateRef.current = formState
+    const isActive = !!(documentSchemaType && (documentTranslationEnabled || fieldTransEnabled))
 
-      const translationApi = useTranslate(apiClient)
-      const translate = useDraftDelayedTask({
-        documentOnChange,
-        isDocAssistable: documentIsAssistable ?? false,
-        task: translationApi.translate,
+    const {value: documentValue, onChange: documentOnChange, formState} = useDocumentPane()
+    const docRef = useRef(documentValue)
+    docRef.current = documentValue
+    const formStateRef = useRef(formState)
+    formStateRef.current = formState
+
+    const translationApi = useTranslate(apiClient)
+    const translate = useDraftDelayedTask({
+      documentOnChange,
+      isDocAssistable: documentIsAssistable ?? false,
+      task: translationApi.translate,
+    })
+
+    const styleguide = config.translate?.styleguide
+    const languagePath = config.translate?.document?.languageField
+
+    const translateDocumentAction = useMemo(() => {
+      if (!isActive || !languagePath || !documentTranslationEnabled) {
+        return undefined
+      }
+      const title = path.length ? `Translate` : `Translate document`
+      return node({
+        type: 'action',
+        icon: translationApi.loading
+          ? () => (
+              <Box style={{height: 17}}>
+                <Spinner style={{transform: 'translateY(6px)'}} />
+              </Box>
+            )
+          : TranslateIcon,
+        title,
+        onAction: () => {
+          if (translationApi.loading || !languagePath || !documentId) {
+            return
+          }
+          translate({
+            languagePath,
+            translatePath: path,
+            styleguide: createStyleGuideResolver(styleguide, {
+              client,
+              documentId,
+              schemaType: documentSchemaType,
+            }),
+            documentId: documentId ?? '',
+            conditionalMembers: formStateRef.current
+              ? getConditionalMembers(formStateRef.current)
+              : [],
+          })
+        },
+        renderAsButton: true,
+        disabled: translationApi.loading || readOnly,
       })
+    }, [
+      isActive,
+      languagePath,
+      translate,
+      styleguide,
+      documentId,
+      translationApi.loading,
+      documentTranslationEnabled,
+      path,
+      readOnly,
+      client,
+      documentSchemaType,
+    ])
+    const fieldTranslate = useFieldTranslation()
+    const openFieldTranslation = useDraftDelayedTask({
+      documentOnChange,
+      isDocAssistable: documentIsAssistable ?? false,
+      task: fieldTranslate.openFieldTranslation,
+    })
 
-      const styleguide = config.translate?.styleguide
-      const languagePath = config.translate?.document?.languageField
-
-      // if this is true, it is stable, and not breaking rules of hooks
-      const translateDocumentAction = useMemo(() => {
-        if (!languagePath || !documentTranslationEnabled) {
-          return undefined
-        }
-        const title = path.length ? `Translate` : `Translate document`
-        return node({
-          type: 'action',
-          icon: translationApi.loading
-            ? () => (
-                <Box style={{height: 17}}>
-                  <Spinner style={{transform: 'translateY(6px)'}} />
-                </Box>
-              )
-            : TranslateIcon,
-          title,
-          onAction: () => {
-            if (translationApi.loading || !languagePath || !documentId) {
-              return
-            }
-            translate({
-              languagePath,
-              translatePath: path,
-              styleguide: createStyleGuideResolver(styleguide, {
-                client,
-                documentId,
-                schemaType: documentSchemaType,
-              }),
-              documentId: documentId ?? '',
-              conditionalMembers: formStateRef.current
-                ? getConditionalMembers(formStateRef.current)
-                : [],
+    const maxDepth = config.translate?.field?.maxPathDepth
+    const translateFieldsAction = useMemo(
+      () =>
+        isActive && fieldTransEnabled
+          ? node({
+              type: 'action',
+              icon: fieldTranslate.translationLoading
+                ? () => (
+                    <Box style={{height: 17}}>
+                      <Spinner style={{transform: 'translateY(6px)'}} />
+                    </Box>
+                  )
+                : TranslateIcon,
+              title: `Translate fields...`,
+              onAction: () => {
+                if (fieldTranslate.translationLoading || !documentId) {
+                  return
+                }
+                if (formStateRef.current) {
+                  getConditionalMembers(formStateRef.current)
+                }
+                openFieldTranslation({
+                  document: {
+                    ...docRef.current,
+                    _id: documentId,
+                  },
+                  documentSchema: documentSchemaType,
+                  translatePath: path,
+                  conditionalMembers: formStateRef.current
+                    ? getConditionalMembers(formStateRef.current, maxDepth)
+                    : [],
+                })
+              },
+              renderAsButton: true,
+              disabled: fieldTranslate.translationLoading || readOnly,
             })
-          },
-          renderAsButton: true,
-          disabled: translationApi.loading || readOnly,
-        })
-      }, [
-        languagePath,
-        translate,
-        styleguide,
+          : undefined,
+      [
+        isActive,
+        openFieldTranslation,
+        documentSchemaType,
         documentId,
-        translationApi.loading,
-        documentTranslationEnabled,
+        fieldTranslate.translationLoading,
+        fieldTransEnabled,
         path,
         readOnly,
-        client,
-        documentSchemaType,
-      ])
-      const fieldTranslate = useFieldTranslation()
-      const openFieldTranslation = useDraftDelayedTask({
-        documentOnChange,
-        isDocAssistable: documentIsAssistable ?? false,
-        task: fieldTranslate.openFieldTranslation,
+        maxDepth,
+      ],
+    )
+
+    return useMemo(() => {
+      if (!isActive || !status?.initialized) {
+        // oxlint-disable-next-line no-unsafe-type-assertion
+        return undefined as unknown as DocumentFieldActionItem
+      }
+      return node({
+        type: 'group',
+        icon: () => null,
+        title: 'Translation',
+        children: [translateDocumentAction, translateFieldsAction].filter(
+          (c): c is DocumentFieldActionItem => !!c,
+        ),
+        expanded: true,
       })
-
-      const maxDepth = config.translate?.field?.maxPathDepth
-      const translateFieldsAction = useMemo(
-        () =>
-          fieldTransEnabled
-            ? node({
-                type: 'action',
-                icon: fieldTranslate.translationLoading
-                  ? () => (
-                      <Box style={{height: 17}}>
-                        <Spinner style={{transform: 'translateY(6px)'}} />
-                      </Box>
-                    )
-                  : TranslateIcon,
-                title: `Translate fields...`,
-                onAction: () => {
-                  if (fieldTranslate.translationLoading || !documentId) {
-                    return
-                  }
-                  if (formStateRef.current) {
-                    getConditionalMembers(formStateRef.current)
-                  }
-                  openFieldTranslation({
-                    document: {
-                      ...docRef.current,
-                      _id: documentId,
-                    },
-                    documentSchema: documentSchemaType,
-                    translatePath: path,
-                    conditionalMembers: formStateRef.current
-                      ? getConditionalMembers(formStateRef.current, maxDepth)
-                      : [],
-                  })
-                },
-                renderAsButton: true,
-                disabled: fieldTranslate.translationLoading || readOnly,
-              })
-            : undefined,
-        [
-          openFieldTranslation,
-          documentSchemaType,
-          documentId,
-          fieldTranslate.translationLoading,
-          fieldTransEnabled,
-          path,
-          readOnly,
-          maxDepth,
-        ],
-      )
-
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useMemo(() => {
-        if (!status?.initialized) {
-          return undefined as unknown as DocumentFieldActionItem
-        }
-        return node({
-          type: 'group',
-          icon: () => null,
-          title: 'Translation',
-          children: [translateDocumentAction, translateFieldsAction].filter(
-            (c): c is DocumentFieldActionItem => !!c,
-          ),
-          expanded: true,
-        })
-      }, [translateDocumentAction, translateFieldsAction, status])
-    }
-    // works but not supported by types
-    return undefined as unknown as DocumentFieldActionItem
+    }, [isActive, translateDocumentAction, translateFieldsAction, status])
   },
 }

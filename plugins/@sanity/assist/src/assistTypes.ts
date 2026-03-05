@@ -1,4 +1,4 @@
-import {CurrentUser} from 'sanity'
+import type {CurrentUser} from 'sanity'
 
 export interface AssistConfig {
   /**

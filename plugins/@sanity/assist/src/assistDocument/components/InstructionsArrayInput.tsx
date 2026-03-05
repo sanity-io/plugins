@@ -1,11 +1,12 @@
 import {useMemo} from 'react'
-import {ArrayOfObjectsInputProps, useCurrentUser} from 'sanity'
+import {type ArrayOfObjectsInputProps, useCurrentUser} from 'sanity'
 
-import {StudioInstruction} from '../../types'
+import type {StudioInstruction} from '../../types'
 
 export function InstructionsArrayInput(props: ArrayOfObjectsInputProps) {
   const user = useCurrentUser()
 
+  // oxlint-disable-next-line no-unsafe-type-assertion
   const originalValue = props.value as StudioInstruction[] | undefined
   const originalMembers = props.members
   const value = useMemo(
@@ -18,6 +19,7 @@ export function InstructionsArrayInput(props: ArrayOfObjectsInputProps) {
         if (v.kind === 'error') {
           return true
         }
+        // oxlint-disable-next-line no-unsafe-type-assertion
         const value = v?.item?.value as any
         return !value.userId || value.userId === user?.id
       }),

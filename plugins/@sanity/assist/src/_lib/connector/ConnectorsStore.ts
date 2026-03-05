@@ -1,4 +1,4 @@
-import {Connector, ConnectorRegionRects} from './types'
+import type {Connector, ConnectorRegionRects} from './types'
 
 export interface ConnectorsStore {
   connectors: {

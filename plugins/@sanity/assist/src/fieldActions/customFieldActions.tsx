@@ -1,27 +1,28 @@
+import type {AgentActionPath} from '@sanity/client/stega'
+import {type ToastParams, useToast} from '@sanity/ui'
+import {useMemo} from 'react'
 import {
-  DocumentFieldActionDivider,
-  DocumentFieldActionGroup,
-  DocumentFieldActionItem,
-  DocumentFieldActionNode,
-  ObjectSchemaType,
-  Path,
-  SanityDocumentLike,
-  SchemaType,
+  type DocumentFieldActionDivider,
+  type DocumentFieldActionGroup,
+  type DocumentFieldActionItem,
+  type DocumentFieldActionNode,
+  type ObjectSchemaType,
+  type Path,
+  type SanityDocumentLike,
+  type SchemaType,
   useWorkspaceSchemaId,
 } from 'sanity'
-import {useMemo} from 'react'
-import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
-import {ToastParams, useToast} from '@sanity/ui'
-import {AgentActionPath} from '@sanity/client/stega'
+
+import {randomKey} from '../_lib/randomKey'
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
+import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
+import {isDefined} from '../helpers/misc'
 import {
   documentRootKey,
   fieldPresenceTypeName,
-  InstructionTask,
+  type InstructionTask,
   instructionTaskTypeName,
 } from '../types'
-import {randomKey} from '../_lib/randomKey'
-import {isDefined} from '../helpers/misc'
 
 export interface AgentActionConditionalPath {
   path: AgentActionPath
@@ -216,9 +217,11 @@ export function useCustomFieldActions(
 
   const schemaId = useWorkspaceSchemaId()
   const {push: pushToast} = useToast()
+  // oxlint-disable-next-line react-hooks-js/hooks
   const configActions = fieldActions?.useFieldActions?.({
     ...props,
     schemaId,
+    // oxlint-disable-next-line no-unsafe-type-assertion
     path: props.path as AgentActionPath,
   })
 
@@ -250,6 +253,7 @@ export function useCustomFieldActions(
           ]
       : []
     return groups ?? []
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [configActions, fieldActions, pushToast])
 }
 
@@ -264,7 +268,6 @@ function createSafeNode(args: {
     case 'action':
       return createSafeAction({...args, action: node})
     case 'group':
-      // eslint-disable-next-line no-case-declarations
       const children = node.children
         ?.filter(isDefined)
         .map((child) => createSafeNode({...args, node: child}))
@@ -325,7 +328,7 @@ function createSafeAction(args: {
           removeSyntheticTask(task)
         }
       }
-      runAction()
+      void runAction()
     },
     renderAsButton: false,
     selected: false,

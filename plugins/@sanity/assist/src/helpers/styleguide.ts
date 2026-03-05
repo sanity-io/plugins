@@ -1,5 +1,5 @@
 import {packageName} from '../constants'
-import {TranslateStyleguide, TranslateStyleguideContext} from '../translate/types'
+import type {TranslateStyleguide, TranslateStyleguideContext} from '../translate/types'
 
 export function validateStyleguide(styleguide: string | undefined) {
   if (styleguide && styleguide.length > 2000) {

@@ -2,7 +2,7 @@ import {Schema} from '@sanity/schema'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
-import {AssistOptions} from '../typeDefExtensions'
+import type {AssistOptions} from '../typeDefExtensions'
 import {serializeSchema} from './serializeSchema'
 
 const mockStudioTypes = [
@@ -476,6 +476,7 @@ describe('serializeSchema', () => {
           name: 'list',
           of: [{type: 'string'}],
           options: {
+            // oxlint-disable-next-line no-unsafe-type-assertion
             list: new Promise(() => {}) as any, // Type usually only accepts array, but some plugins might use other types
           },
         }),
