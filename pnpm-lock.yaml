@@ -45,6 +45,9 @@ catalogs:
     react-dom:
       specifier: ^19.2.4
       version: 19.2.4
+    rxjs:
+      specifier: ^7.8.2
+      version: 7.8.2
     sanity:
       specifier: ^5.13.0
       version: 5.13.0
@@ -124,6 +127,9 @@ importers:
 
   dev/test-studio:
     dependencies:
+      '@sanity/assist':
+        specifier: workspace:*
+        version: link:../../plugins/@sanity/assist
       '@sanity/code-input':
         specifier: workspace:*
         version: link:../../plugins/@sanity/code-input
@@ -227,6 +233,82 @@ importers:
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.1.0
+
+  plugins/@sanity/assist:
+    dependencies:
+      '@portabletext/types':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@sanity/client':
+        specifier: ^7.14.0
+        version: 7.16.0(debug@4.4.3)
+      '@sanity/color':
+        specifier: ^3.0.6
+        version: 3.0.6
+      '@sanity/icons':
+        specifier: ^3.7.4
+        version: 3.7.4(react@19.2.4)
+      '@sanity/mutator':
+        specifier: ^5
+        version: 5.13.0(@types/react@19.2.14)
+      '@sanity/ui':
+        specifier: 'catalog:'
+        version: 3.1.13(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@19.2.4)(react@19.2.4)
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.23
+      react-fast-compare:
+        specifier: ^3.2.2
+        version: 3.2.2
+      rxjs:
+        specifier: 'catalog:'
+        version: 7.8.2
+      rxjs-exhaustmap-with-trailing:
+        specifier: ^2.1.1
+        version: 2.1.1(rxjs@7.8.2)
+      styled-components:
+        specifier: npm:@sanity/styled-components@latest
+        version: '@sanity/styled-components@6.1.24(react-dom@19.2.4(react@19.2.4))(react@19.2.4)'
+    devDependencies:
+      '@repo/package.config':
+        specifier: workspace:*
+        version: link:../../../packages/@repo/package.config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../../../packages/@repo/tsconfig
+      '@sanity/pkg-utils':
+        specifier: 'catalog:'
+        version: 10.4.6(@types/babel__core@7.20.5)(@types/node@25.3.3)(@typescript/native-preview@7.0.0-dev.20260301.1)(babel-plugin-react-compiler@1.0.0)(typescript@5.9.3)
+      '@sanity/schema':
+        specifier: ^5
+        version: 5.13.0(@types/react@19.2.14)(debug@4.4.3)
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.14)
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
+      babel-plugin-styled-components:
+        specifier: 'catalog:'
+        version: 2.1.4(@babel/core@7.29.0)(@sanity/styled-components@6.1.24(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
+      sanity:
+        specifier: 'catalog:'
+        version: 5.13.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.0.1)(@sanity/styled-components@6.1.24(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/node@25.3.3)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.31.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
 
   plugins/@sanity/code-input:
     dependencies:
@@ -4835,6 +4917,9 @@ packages:
   date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
+
+  date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
   date-fns@4.1.0:
     resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
@@ -13341,6 +13426,8 @@ snapshots:
   date-fns@2.30.0:
     dependencies:
       '@babel/runtime': 7.28.6
+
+  date-fns@3.6.0: {}
 
   date-fns@4.1.0: {}
 

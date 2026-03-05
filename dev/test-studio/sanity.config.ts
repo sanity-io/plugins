@@ -7,6 +7,7 @@ import {workspaceHomeConfig} from 'sanity-plugin-workspace-home'
 import {structureTool} from 'sanity/structure'
 
 import {aprimoExample} from '#aprimo'
+import {assistExample} from '#assist'
 import {bynderExample} from '#bynder'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
@@ -42,6 +43,7 @@ export default defineConfig([
     name: 'kitchen-sink',
     plugins: [
       structureTool(),
+      assistExample(),
       // add new plugins here
       studioSecretsExample(),
       documentInternationalizationExample(),
