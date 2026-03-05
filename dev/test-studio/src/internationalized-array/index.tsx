@@ -27,9 +27,32 @@ const internationalizedPost = defineType({
     }),
   ],
 })
+const person = defineType({
+  name: 'i18nArrayPerformanceTest',
+  title: 'I18n Array Performance Test',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'name',
+      title: 'Name',
+      type: 'internationalizedArrayString',
+    }),
+    defineField({
+      name: 'age',
+      title: 'Age',
+      type: 'number',
+    }),
+    ...Array.from({length: 30}, (_, i) =>
+      defineField({
+        name: 'field_' + i,
+        type: 'internationalizedArrayString',
+      }),
+    ),
+  ],
+})
 
 export const internationalizedArrayExample = definePlugin(() => ({
-  schema: {types: [internationalizedPost]},
+  schema: {types: [internationalizedPost, person]},
   plugins: [
     internationalizedArray({
       languages: [
@@ -37,6 +60,8 @@ export const internationalizedArrayExample = definePlugin(() => ({
         {id: 'es', title: 'Spanish'},
         {id: 'fr', title: 'French'},
         {id: 'de', title: 'German'},
+        {id: 'pt', title: 'Portuguese'},
+        {id: 'it', title: 'Italian'},
       ],
       defaultLanguages: ['en'],
       fieldTypes: ['string', 'text'],
@@ -48,6 +73,9 @@ export const internationalizedArrayExample = definePlugin(() => ({
         {id: 'en', title: 'English'},
         {id: 'es', title: 'Spanish'},
         {id: 'fr', title: 'French'},
+        {id: 'de', title: 'German'},
+        {id: 'pt', title: 'Portuguese'},
+        {id: 'it', title: 'Italian'},
       ],
       filterField: (enclosingType, member, selectedLanguageIds) => {
         // Filter internationalized arrays - follows readme example

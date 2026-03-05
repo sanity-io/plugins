@@ -7,7 +7,10 @@ import type {
   SanityDocument,
   SanityDocumentLike,
 } from 'sanity'
-import type {InternationalizedArrayItem} from 'sanity-plugin-internationalized-array'
+import type {
+  InternationalizedArrayItem,
+  PluginConfig as InternationalizedArrayPluginConfig,
+} from 'sanity-plugin-internationalized-array'
 
 export type Language = {
   id: Intl.UnicodeBCP47LocaleIdentifier
@@ -36,13 +39,24 @@ export type PluginConfig = {
   allowCreateMetaDoc?: boolean
   callback?: ((args: PluginCallbackArgs) => Promise<void>) | null
   hideLanguageFilter?: boolean | string[] | ((ctx: DocumentLanguageFilterContext) => boolean)
+  /**
+   * Allows configuring the behavior of the internationalized array for the metadata document.
+   */
+  metadataInternationalization?: Pick<
+    InternationalizedArrayPluginConfig,
+    'buttonLocations' | 'buttonAddAll' | 'languageDisplay'
+  >
 }
 
 // Context version of config
 // should have processed the
 // supportedLanguages function
-export type PluginConfigContext = Required<PluginConfig> & {
+export type PluginConfigContext = Required<Omit<PluginConfig, 'metadataInternationalization'>> & {
   supportedLanguages: Language[]
+  metadataInternationalization?: Pick<
+    InternationalizedArrayPluginConfig,
+    'buttonLocations' | 'buttonAddAll' | 'languageDisplay'
+  >
 }
 
 export type TranslationReference = InternationalizedArrayItem<Reference> & {

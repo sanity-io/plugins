@@ -5,10 +5,12 @@ import {LANGUAGE_FIELD_NAME} from '../constants'
 import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES} from '../test/helpers'
 
 const mockToastPush = vi.fn()
+const mockGetFormValue = vi.fn()
 
 // Mock sanity hooks and components
 vi.mock('sanity', () => ({
   useFormValue: vi.fn(() => 'article'),
+  useGetFormValue: vi.fn(() => mockGetFormValue),
   ArrayOfObjectsItem: () => <div data-testid="array-item" />,
   MemberItemError: () => <div data-testid="member-error" />,
   set: vi.fn((value: unknown) => ({type: 'set', value})),
@@ -81,14 +83,25 @@ function createMockArrayProps(overrides: Record<string, unknown> = {}) {
     value: undefined,
     schemaType: {name: 'internationalizedArrayString', readOnly: false},
     onChange: vi.fn(),
+    path: [],
     readOnly: false,
     ...overrides,
   }
 }
 
+function renderInternationalizedArray(props: ReturnType<typeof createMockArrayProps>) {
+  mockGetFormValue.mockImplementation(() => props.value)
+  return render(
+    // @ts-expect-error - simplified mock props
+    <InternationalizedArray {...props} />,
+    {wrapper: ThemeWrapper},
+  )
+}
+
 describe('InternationalizedArray', () => {
   beforeEach(() => {
     mockToastPush.mockClear()
+    mockGetFormValue.mockReset()
   })
 
   afterEach(() => {
@@ -105,11 +118,7 @@ describe('InternationalizedArray', () => {
 
     const props = createMockArrayProps()
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     expect(
       screen.getByText('This internationalized field currently has no translations.'),
@@ -125,11 +134,7 @@ describe('InternationalizedArray', () => {
     const value = createValues(['en'])
     const props = createMockArrayProps({value})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     expect(screen.getByTestId('add-en')).toHaveAttribute('data-disabled', 'true')
     expect(screen.getByTestId('add-fr')).toBeInTheDocument()
@@ -147,11 +152,7 @@ describe('InternationalizedArray', () => {
     const value = createValues(['en', 'fr', 'es', 'de'])
     const props = createMockArrayProps({value})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     expect(screen.queryByTestId('add-buttons')).not.toBeInTheDocument()
   })
@@ -165,11 +166,7 @@ describe('InternationalizedArray', () => {
 
     const props = createMockArrayProps()
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     expect(screen.getByTestId('feedback')).toBeInTheDocument()
   })
@@ -183,11 +180,7 @@ describe('InternationalizedArray', () => {
     const value = createValues(['en']) // missing languages, but button location is 'document'
     const props = createMockArrayProps({value})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     expect(screen.queryByTestId('add-buttons')).not.toBeInTheDocument()
   })
@@ -199,11 +192,7 @@ describe('InternationalizedArray', () => {
 
     const props = createMockArrayProps()
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     expect(screen.getByText('Add all languages')).toBeInTheDocument()
   })
@@ -217,11 +206,7 @@ describe('InternationalizedArray', () => {
     const value = createValues(['en', 'fr'])
     const props = createMockArrayProps({value})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     expect(screen.getByTestId('add-en')).toHaveAttribute('data-disabled', 'true')
     expect(screen.getByTestId('add-fr')).toHaveAttribute('data-disabled', 'true')
@@ -239,11 +224,7 @@ describe('InternationalizedArray', () => {
     const onChange = vi.fn()
     const props = createMockArrayProps({onChange})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     fireEvent.click(screen.getByTestId('add-en'))
     expect(onChange).toHaveBeenCalledWith([
@@ -273,11 +254,7 @@ describe('InternationalizedArray', () => {
     const onChange = vi.fn()
     const props = createMockArrayProps({onChange, value: []})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     fireEvent.click(screen.getByTestId('add-all-languages'))
 
@@ -323,11 +300,7 @@ describe('InternationalizedArray', () => {
     const value = createValues(['en', 'es'])
     const props = createMockArrayProps({onChange, value})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     fireEvent.click(screen.getByTestId('add-all-languages'))
 
@@ -361,11 +334,7 @@ describe('InternationalizedArray', () => {
     const value = createValues(['fr', 'en'])
     const props = createMockArrayProps({onChange, value})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     // The useEffect should detect out-of-order and call onChange(set(reordered))
     expect(onChange).toHaveBeenCalled()
@@ -396,11 +365,7 @@ describe('InternationalizedArray', () => {
     // readOnly at the document level (props.readOnly, mapped to documentReadOnly)
     const props = createMockArrayProps({onChange, value, readOnly: true})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     // Should NOT reorder because documentReadOnly is true
     expect(onChange).not.toHaveBeenCalled()
@@ -415,11 +380,7 @@ describe('InternationalizedArray', () => {
     const onChange = vi.fn()
     const props = createMockArrayProps({onChange})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     // The default language useEffect uses setTimeout, wait for it
     await waitFor(() => {
@@ -468,11 +429,7 @@ describe('InternationalizedArray', () => {
     const onChange = vi.fn()
     const props = createMockArrayProps({onChange})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     // Should not add defaults while deleting
     expect(onChange).not.toHaveBeenCalled()
@@ -487,11 +444,7 @@ describe('InternationalizedArray', () => {
     const onChange = vi.fn()
     const props = createMockArrayProps({onChange, readOnly: true})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     // Give the setTimeout a chance to fire
     await new Promise((r) => setTimeout(r, 10))
@@ -508,11 +461,7 @@ describe('InternationalizedArray', () => {
 
     const props = createMockArrayProps()
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
     expect(screen.getByTestId('add-en')).toBeInTheDocument()
     expect(screen.getByTestId('add-fr')).toBeInTheDocument()
     expect(screen.getByTestId('add-es')).toBeInTheDocument()
@@ -530,11 +479,7 @@ describe('InternationalizedArray', () => {
       schemaType: {name: 'internationalizedArrayString', readOnly: true},
     })
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     // Add buttons should be disabled
     expect(screen.getByTestId('add-en')).toHaveAttribute('data-disabled', 'true')
@@ -584,11 +529,7 @@ describe('InternationalizedArray', () => {
     const value = createValues(['en', 'fr'])
     const props = createMockArrayProps({members: mockMembers, value})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     // filterField should have been called for each member
     // since useFormValue returns 'article' which is in documentTypes
@@ -621,11 +562,7 @@ describe('InternationalizedArray', () => {
 
     const props = createMockArrayProps({members: mockMembers})
 
-    render(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-      {wrapper: ThemeWrapper},
-    )
+    renderInternationalizedArray(props)
 
     expect(screen.getByTestId('member-error')).toBeInTheDocument()
   })

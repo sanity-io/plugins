@@ -7,6 +7,8 @@ vi.mock('../components/InternationalizedInput', () => ({
   default: () => null,
 }))
 
+import type {FieldDefinition} from 'sanity'
+
 import objectFactory from './object'
 
 describe('object schema factory', () => {
@@ -67,5 +69,39 @@ describe('object schema factory', () => {
     expect(fields[0]!.name).toBe('value')
     // @ts-expect-error - to is not properly inherited from the FieldDefinition
     expect(fields[0]!.to).toEqual([{type: 'product'}])
+  })
+
+  test('sets object field renderer level to 0', () => {
+    const schema = objectFactory({type: 'string'})
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    const fieldComponent = schema.components?.field as
+      | ((props: Record<string, unknown>) => unknown)
+      | undefined
+    expect(fieldComponent).toBeTypeOf('function')
+
+    const renderDefault = vi.fn((props: Record<string, unknown>) => props)
+    const props = {title: 'Wrapper', level: 3, renderDefault}
+
+    fieldComponent?.(props)
+    expect(renderDefault).toHaveBeenCalledWith(
+      expect.objectContaining({level: 0, title: 'Wrapper'}),
+    )
+  })
+
+  test('value field renderer always hides title', () => {
+    const schema = objectFactory({type: 'string'})
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    const valueField = schema.fields?.[0] as FieldDefinition<'string'>
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    const fieldComponent = valueField?.components?.field as (
+      props: Record<string, unknown>,
+    ) => unknown
+    expect(fieldComponent).toBeTypeOf('function')
+
+    const renderDefault = vi.fn((props: Record<string, unknown>) => props)
+    const props = {title: 'Value', renderDefault}
+
+    fieldComponent?.(props)
+    expect(renderDefault).toHaveBeenCalledWith(expect.objectContaining({title: ''}))
   })
 })
