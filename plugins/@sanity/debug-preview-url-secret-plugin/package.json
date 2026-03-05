@@ -49,7 +49,6 @@
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
     "sanity": "catalog:"
   },
   "peerDependencies": {
