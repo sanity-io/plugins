@@ -124,5 +124,6 @@
         "babel-plugin-styled-components",
       ],
     },
+    // add new plugin workspaces here
   },
 }

@@ -442,6 +442,15 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         pattern: /(?<insertion>)\/\/ add new plugins here/,
         template: '{{ pluginNamedExport }}Example(),',
       },
+      // Add workspace to knip.jsonc
+      // The \n in the pattern ensures the template content is appended on a new line
+      // (the postgenerate formatter will clean up any whitespace)
+      {
+        type: 'append',
+        path: '{{ turbo.paths.root }}/knip.jsonc',
+        pattern: /(?<insertion>)\n    \/\/ add new plugin workspaces here/,
+        templateFile: 'templates/knip-workspace-entry.hbs',
+      },
     ],
   })
 
@@ -622,6 +631,15 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         path: '{{ turbo.paths.root }}/dev/test-studio/sanity.config.ts',
         pattern: /(?<insertion>)\/\/ add new plugins here/,
         template: '      {{ pluginNamedExport }}Example(),',
+      },
+      // Add workspace to knip.jsonc
+      // The \n in the pattern ensures the template content is appended on a new line
+      // (the postgenerate formatter will clean up any whitespace)
+      {
+        type: 'append',
+        path: '{{ turbo.paths.root }}/knip.jsonc',
+        pattern: /(?<insertion>)\n    \/\/ add new plugin workspaces here/,
+        templateFile: 'templates/knip-workspace-entry.hbs',
       },
     ],
   })
