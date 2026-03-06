@@ -259,8 +259,8 @@ importers:
         specifier: 'catalog:'
         version: 3.1.13(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@19.2.4)(react@19.2.4)
       date-fns:
-        specifier: ^3.6.0
-        version: 3.6.0
+        specifier: ^4.1.0
+        version: 4.1.0
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.23
@@ -530,6 +530,9 @@ importers:
 
   plugins/@sanity/rich-date-input:
     dependencies:
+      '@date-fns/tz':
+        specifier: ^1.4.1
+        version: 1.4.1
       '@sanity/icons':
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.4)
@@ -540,11 +543,8 @@ importers:
         specifier: ^6.198.0
         version: 6.198.0
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
-      date-fns-tz:
-        specifier: ^2.0.1
-        version: 2.0.1(date-fns@2.30.0)
+        specifier: ^4.1.0
+        version: 4.1.0
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*
@@ -4996,18 +4996,6 @@ packages:
 
   dataloader@2.2.3:
     resolution: {integrity: sha512-y2krtASINtPFS1rSDjacrFgn1dcUuoREVabwlOGOe4SdxenREqwjwjElAdwvbGM7kgZz9a3KVicWR7vcz8rnzA==}
-
-  date-fns-tz@2.0.1:
-    resolution: {integrity: sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==}
-    peerDependencies:
-      date-fns: 2.x
-
-  date-fns@2.30.0:
-    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
-    engines: {node: '>=0.11'}
-
-  date-fns@3.6.0:
-    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
   date-fns@4.1.0:
     resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
@@ -13591,16 +13579,6 @@ snapshots:
   dataloader@1.4.0: {}
 
   dataloader@2.2.3: {}
-
-  date-fns-tz@2.0.1(date-fns@2.30.0):
-    dependencies:
-      date-fns: 2.30.0
-
-  date-fns@2.30.0:
-    dependencies:
-      '@babel/runtime': 7.28.6
-
-  date-fns@3.6.0: {}
 
   date-fns@4.1.0: {}
 

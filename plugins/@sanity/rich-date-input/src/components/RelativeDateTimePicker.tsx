@@ -1,9 +1,10 @@
-import {formatInTimeZone, getTimezoneOffset, zonedTimeToUtc} from 'date-fns-tz'
+import {tz, TZDate} from '@date-fns/tz'
+import {format} from 'date-fns/format'
 import {type ReactNode, useCallback} from 'react'
 import {DateTimeInput, type FieldProps, type FormPatch, type PatchEvent, set, unset} from 'sanity'
 
 import type {RichDate} from '../types'
-import {getConstructedUTCDate, unlocalizeDateTime} from '../utils'
+import {getConstructedUTCDate, unlocalizeDateTime, zonedTimeToUtc} from '../utils'
 
 interface RelativeDateTimePickerProps extends Omit<FieldProps, 'renderDefault'> {
   dateValue?: RichDate
@@ -42,8 +43,8 @@ export const RelativeDateTimePicker = (props: RelativeDateTimePickerProps): Reac
 
       const newUtcDateObject = zonedTimeToUtc(desiredDateTime, timezone)
       // offset may have changed based on DST, capture that
-      const newOffset = getTimezoneOffset(timezone, newUtcDateObject) / 60 / 1000
-      const localDate = formatInTimeZone(newUtcDateObject, timezone, "yyyy-MM-dd'T'HH:mm:ssXXX")
+      const newOffset = -new TZDate(newUtcDateObject, timezone).getTimezoneOffset()
+      const localDate = format(newUtcDateObject, "yyyy-MM-dd'T'HH:mm:ssXXX", {in: tz(timezone)})
 
       const patches = []
 
@@ -66,7 +67,7 @@ export const RelativeDateTimePicker = (props: RelativeDateTimePickerProps): Reac
   // Dynamically calculate the offset for the actual event date to handle DST correctly
   const displayOffset =
     value?.utc && value?.timezone
-      ? getTimezoneOffset(value.timezone, new Date(value.utc)) / 60 / 1000
+      ? -new TZDate(new Date(value.utc), value.timezone).getTimezoneOffset()
       : (value?.offset ?? 0)
 
   const dateToDisplay = value?.utc ? getConstructedUTCDate(value.utc, displayOffset) : ''

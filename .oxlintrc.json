@@ -31,6 +31,10 @@
             "message": "Import from individual modules instead, e.g. `import debounce from 'lodash-es/debounce.js'`. Barrel imports are ~55% slower."
           },
           {
+            "name": "date-fns",
+            "message": "Import from individual modules instead, e.g. `import {startOfDay} from 'date-fns/startOfDay'`. Barrel imports are ~50% slower."
+          },
+          {
             "name": "react",
             "importNames": ["createElement"],
             "message": "Please use JSX instead of createElement, for example `createElement(Icon)` should be `<Icon />`"

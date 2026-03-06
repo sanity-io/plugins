@@ -1,11 +1,12 @@
+import {tz, TZDate} from '@date-fns/tz'
 import {SearchIcon} from '@sanity/icons'
 import {Autocomplete, Box, Card, Text} from '@sanity/ui'
-import {formatInTimeZone, getTimezoneOffset, zonedTimeToUtc} from 'date-fns-tz'
+import {format} from 'date-fns/format'
 import {type ReactNode, useCallback} from 'react'
 import {type ObjectInputProps, set} from 'sanity'
 
 import type {RichDate} from '../types'
-import {allTimezones, unlocalizeDateTime} from '../utils'
+import {allTimezones, unlocalizeDateTime, zonedTimeToUtc} from '../utils'
 
 interface TimezoneSelectorProps {
   onChange: Pick<ObjectInputProps, 'onChange'>['onChange']
@@ -31,12 +32,10 @@ export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
       if (value?.utc) {
         const desiredDateTime = unlocalizeDateTime(value.utc, value.timezone)
         const newUtcDateObject = zonedTimeToUtc(desiredDateTime, newTimezone.name)
-        const newOffset = getTimezoneOffset(newTimezone.name, newUtcDateObject) / 60 / 1000
-        const newLocalDate = formatInTimeZone(
-          newUtcDateObject.toISOString(),
-          newTimezone.name,
-          "yyyy-MM-dd'T'HH:mm:ssXXX",
-        )
+        const newOffset = -new TZDate(newUtcDateObject, newTimezone.name).getTimezoneOffset()
+        const newLocalDate = format(newUtcDateObject, "yyyy-MM-dd'T'HH:mm:ssXXX", {
+          in: tz(newTimezone.name),
+        })
         patches.push(set(newUtcDateObject.toISOString(), ['utc']))
         patches.push(set(newLocalDate, ['local']))
         patches.push(set(newOffset, ['offset']))

@@ -1,10 +1,29 @@
+import {tz, TZDate} from '@date-fns/tz'
 import {getTimeZones} from '@vvo/tzdb'
-import {formatInTimeZone} from 'date-fns-tz'
+import {format} from 'date-fns/format'
 
 import type {NormalizedTimeZone} from '../types'
 
 export const unlocalizeDateTime = (datetime: string, timezone: string): string => {
-  return formatInTimeZone(datetime, timezone, 'yyyy-MM-dd HH:mm:ss')
+  return format(new Date(datetime), 'yyyy-MM-dd HH:mm:ss', {in: tz(timezone)})
+}
+
+/**
+ * Interprets a local datetime string as being in the given timezone
+ * and returns the equivalent UTC Date.
+ *
+ * Replacement for `zonedTimeToUtc` from `date-fns-tz`.
+ */
+export const zonedTimeToUtc = (dateStr: string, timezone: string): Date => {
+  const parts = dateStr.split(/[- :]/).map(Number)
+  const year = parts[0] ?? 0
+  const month = parts[1] ?? 1
+  const day = parts[2] ?? 1
+  const hours = parts[3] ?? 0
+  const minutes = parts[4] ?? 0
+  const seconds = parts[5] ?? 0
+  const tzDate = new TZDate(year, month - 1, day, hours, minutes, seconds, 0, timezone)
+  return new Date(tzDate.getTime())
 }
 
 /* We have to "fake" a UTC date to make the datepicker look "right"
