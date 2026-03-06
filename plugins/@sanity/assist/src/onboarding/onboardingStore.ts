@@ -2,7 +2,7 @@ import {useCallback, useState} from 'react'
 
 export const inspectorOnboardingKey = 'sanityStudio:assist:inspector:onboarding:dismissed'
 
-export function isFeatureOnboardingDismissed(featureKey: string): boolean {
+function isFeatureOnboardingDismissed(featureKey: string): boolean {
   if (typeof localStorage === 'undefined') {
     return false
   }
@@ -11,7 +11,7 @@ export function isFeatureOnboardingDismissed(featureKey: string): boolean {
   return value === 'true'
 }
 
-export function dismissFeatureOnboarding(featureKey: string) {
+function dismissFeatureOnboarding(featureKey: string) {
   if (typeof localStorage === 'undefined') {
     return
   }

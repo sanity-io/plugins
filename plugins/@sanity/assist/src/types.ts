@@ -34,7 +34,7 @@ export const outputFieldTypeName = 'sanity.assist.output.field' as const
 export const outputTypeTypeName = 'sanity.assist.output.type' as const
 
 //url params
-export const inspectParam = 'inspect' as const
+const inspectParam = 'inspect' as const
 export const fieldPathParam = 'pathKey' as const
 export const instructionParam = 'instruction' as const
 
