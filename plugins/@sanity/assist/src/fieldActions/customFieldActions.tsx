@@ -253,8 +253,7 @@ export function useCustomFieldActions(
           ]
       : []
     return groups ?? []
-    // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [configActions, fieldActions, pushToast])
+  }, [configActions, fieldActions, pushToast, addSyntheticTask, removeSyntheticTask])
 }
 
 function createSafeNode(args: {

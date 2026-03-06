@@ -70,13 +70,13 @@ export const listenQuery = (
       if (isFirst && !isWelcomeEvent(ev)) {
         // if the first event is not welcome, it is most likely a reconnect and
         // if it's not a reconnect something is very wrong
-        // oxlint-disable-next-line no-deprecated
         return throwError(
-          new Error(
-            ev.type === 'reconnect'
-              ? 'Could not establish EventSource connection'
-              : `Received unexpected type of first event "${ev.type}"`,
-          ),
+          () =>
+            new Error(
+              ev.type === 'reconnect'
+                ? 'Could not establish EventSource connection'
+                : `Received unexpected type of first event "${ev.type}"`,
+            ),
         )
       }
       return of(ev)

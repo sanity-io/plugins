@@ -1,6 +1,5 @@
 import {Box, type BoxProps, Flex, focusFirstDescendant, Spinner, Text} from '@sanity/ui'
-import type React from 'react'
-import {type HTMLProps, useEffect, useMemo, useRef} from 'react'
+import {type HTMLProps, type SyntheticEvent, useEffect, useMemo, useRef} from 'react'
 import {tap} from 'rxjs/operators'
 import {
   createPatchChannel,
@@ -16,8 +15,7 @@ import {useDocumentPane} from 'sanity/structure'
 
 import {assistFormId} from './constants'
 
-// oxlint-disable-next-line no-deprecated
-const preventDefault = (ev: React.FormEvent) => ev.preventDefault()
+const preventDefault = (ev: SyntheticEvent) => ev.preventDefault()
 
 export function DocumentForm(
   props: Omit<BoxProps, 'as'> & Omit<HTMLProps<HTMLDivElement>, 'as' | 'onSubmit' | 'ref'>,
@@ -87,8 +85,7 @@ export function DocumentForm(
       })
     }
     // React to changes in hasRev only
-    // oxlint-disable-next-line react-hooks-js/rule-suppression
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [hasRev])
 
   const formRef = useRef<null | HTMLDivElement>(null)

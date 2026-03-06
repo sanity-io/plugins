@@ -3,7 +3,7 @@ import {Button, Dialog, Flex, Stack, Text, TextArea, Tooltip} from '@sanity/ui'
 import {
   createContext,
   type Dispatch,
-  type FormEvent,
+  type ChangeEvent,
   type PropsWithChildren,
   type SetStateAction,
   useCallback,
@@ -176,8 +176,7 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
 
   const contextValue: RunInstructionContextValue = useMemo(
     () => ({runInstruction, getUserInput, instructionLoading: loading}),
-    // oxlint-disable-next-line react-hooks/exhaustive-deps
-    [runInstruction, loading],
+    [runInstruction, getUserInput, loading],
   )
 
   return (
@@ -241,11 +240,10 @@ export function UserInput(props: {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   const onChange = useCallback(
-    // oxlint-disable-next-line no-deprecated
-    (e: FormEvent<HTMLTextAreaElement>) => {
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
       setInputs((current) => ({
         ...current,
-        [key]: (e.currentTarget ?? e.target).value,
+        [key]: e.currentTarget.value,
       }))
     },
     [key, setInputs],

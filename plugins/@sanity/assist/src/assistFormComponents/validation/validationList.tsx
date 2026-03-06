@@ -6,6 +6,7 @@ import {
   isValidationWarningMarker,
   type ObjectSchemaType,
   type Path,
+  pathToString,
   type ValidationMarker,
 } from 'sanity'
 
@@ -53,10 +54,9 @@ export function ValidationList(props: ValidationListProps) {
   return (
     <Container width={0} data-kind={kind} data-testid="validation-list">
       {hasErrors &&
-        errors.map((_error, i) => (
+        errors.map((_error) => (
           <ListItem
-            // eslint-disable-next-line react/no-array-index-key
-            key={i}
+            key={`error-${pathToString(_error.path)}-${_error.message ?? ''}`}
             truncate={truncate}
             path={resolvePathTitle(_error.path)}
             marker={_error}
@@ -64,10 +64,9 @@ export function ValidationList(props: ValidationListProps) {
           />
         ))}
       {hasWarnings &&
-        warnings.map((_warning, i) => (
+        warnings.map((_warning) => (
           <ListItem
-            // eslint-disable-next-line react/no-array-index-key
-            key={i}
+            key={`warning-${pathToString(_warning.path)}-${_warning.message ?? ''}`}
             truncate={truncate}
             path={resolvePathTitle(_warning.path)}
             marker={_warning}
@@ -75,10 +74,9 @@ export function ValidationList(props: ValidationListProps) {
           />
         ))}
       {hasInfo &&
-        info.map((_info, i) => (
+        info.map((_info) => (
           <ListItem
-            // eslint-disable-next-line react/no-array-index-key
-            key={i}
+            key={`info-${pathToString(_info.path)}-${_info.message ?? ''}`}
             truncate={truncate}
             path={resolvePathTitle(_info.path)}
             marker={_info}
