@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.0.10
+
+### Patch Changes
+
+- [#647](https://github.com/sanity-io/plugins/pull/647) [`8b48f7a`](https://github.com/sanity-io/plugins/commit/8b48f7a9bc99893bc74aa31013aeb4eabccf5285) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update CodeMirror
+
 ## 7.0.9
 
 ### Patch Changes
