@@ -252,7 +252,7 @@ importers:
         specifier: ^5
         version: 5.13.0(@types/react@19.2.14)
       '@sanity/schema':
-        specifier: ^5
+        specifier: ^5.13.0
         version: 5.13.0(@types/react@19.2.14)(debug@4.4.3)
       '@sanity/ui':
         specifier: 'catalog:'
