@@ -1,5 +1,13 @@
 # sanity-plugin-workflow
 
+## 3.0.11
+
+### Patch Changes
+
+- [#693](https://github.com/sanity-io/plugins/pull/693) [`922881c`](https://github.com/sanity-io/plugins/commit/922881c9dcd67c69381755446f62ca97329d55e0) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency motion to ^12.34.5
+
+- [#677](https://github.com/sanity-io/plugins/pull/677) [`1f8fe29`](https://github.com/sanity-io/plugins/commit/1f8fe2964767506dc85a1e44baf7eedbe6023ab2) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Remove unused dependency `react-fast-compare` and remove unused exported `DragData` type.
+
 ## 3.0.10
 
 ### Patch Changes

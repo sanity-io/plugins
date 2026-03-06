@@ -1,5 +1,7 @@
 # @sanity/document-internationalization
 
+## 5.1.2
+
 ## 5.1.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @sanity/code-input
 
+## 7.0.11
+
+### Patch Changes
+
+- [#677](https://github.com/sanity-io/plugins/pull/677) [`1f8fe29`](https://github.com/sanity-io/plugins/commit/1f8fe2964767506dc85a1e44baf7eedbe6023ab2) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Remove unused direct dependencies: `@codemirror/autocomplete`, `@codemirror/commands`, `@codemirror/search`, and `@juggle/resize-observer` are not imported directly and are available via `@uiw/react-codemirror`.
+
+- [#690](https://github.com/sanity-io/plugins/pull/690) [`214934e`](https://github.com/sanity-io/plugins/commit/214934ee8cb23998a9403e0a61b3f766bb7ad0b2) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @uiw/codemirror-themes to ^4.25.7
+
+- [#691](https://github.com/sanity-io/plugins/pull/691) [`abe2af1`](https://github.com/sanity-io/plugins/commit/abe2af1426b9dc980007ab14c885efe83eef6a11) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @uiw/react-codemirror to ^4.25.7
+
 ## 7.0.10
 
 ### Patch Changes
