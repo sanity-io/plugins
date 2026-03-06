@@ -63,7 +63,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "@uiw/codemirror-themes": "^4.25.7",
-    "@uiw/react-codemirror": "^4.25.5"
+    "@uiw/react-codemirror": "^4.25.7"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
