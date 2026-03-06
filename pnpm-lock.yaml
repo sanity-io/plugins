@@ -579,6 +579,9 @@ importers:
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.1.13(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.4(react@19.2.4))(react-is@19.2.4)(react@19.2.4)(styled-components@6.3.8(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
+      react-rx:
+        specifier: ^4.2.2
+        version: 4.2.2(react@19.2.4)(rxjs@7.8.2)
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
@@ -616,9 +619,6 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.4(react@19.2.4)
-      react-rx:
-        specifier: ^4.2.2
-        version: 4.2.2(react@19.2.4)(rxjs@7.8.2)
       sanity:
         specifier: 'catalog:'
         version: 5.13.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.0.1)(@types/node@25.3.3)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.6.1)(lightningcss@1.31.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(styled-components@6.3.8(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
