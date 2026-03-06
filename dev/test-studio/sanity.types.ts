@@ -266,6 +266,52 @@ export type RichDate = {
   offset?: number
 }
 
+export type I18nArrayPerformanceTest = {
+  _id: string
+  _type: 'i18nArrayPerformanceTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: InternationalizedArrayString
+  age?: number
+  field_0?: InternationalizedArrayString
+  field_1?: InternationalizedArrayString
+  field_2?: InternationalizedArrayString
+  field_3?: InternationalizedArrayString
+  field_4?: InternationalizedArrayString
+  field_5?: InternationalizedArrayString
+  field_6?: InternationalizedArrayString
+  field_7?: InternationalizedArrayString
+  field_8?: InternationalizedArrayString
+  field_9?: InternationalizedArrayString
+  field_10?: InternationalizedArrayString
+  field_11?: InternationalizedArrayString
+  field_12?: InternationalizedArrayString
+  field_13?: InternationalizedArrayString
+  field_14?: InternationalizedArrayString
+  field_15?: InternationalizedArrayString
+  field_16?: InternationalizedArrayString
+  field_17?: InternationalizedArrayString
+  field_18?: InternationalizedArrayString
+  field_19?: InternationalizedArrayString
+  field_20?: InternationalizedArrayString
+  field_21?: InternationalizedArrayString
+  field_22?: InternationalizedArrayString
+  field_23?: InternationalizedArrayString
+  field_24?: InternationalizedArrayString
+  field_25?: InternationalizedArrayString
+  field_26?: InternationalizedArrayString
+  field_27?: InternationalizedArrayString
+  field_28?: InternationalizedArrayString
+  field_29?: InternationalizedArrayString
+}
+
+export type InternationalizedArrayString = Array<
+  {
+    _key: string
+  } & InternationalizedArrayStringValue
+>
+
 export type InternationalizedPost = {
   _id: string
   _type: 'internationalizedPost'
@@ -287,12 +333,6 @@ export type InternationalizedArrayText = Array<
   {
     _key: string
   } & InternationalizedArrayTextValue
->
-
-export type InternationalizedArrayString = Array<
-  {
-    _key: string
-  } & InternationalizedArrayStringValue
 >
 
 export type InternationalizedArrayTextValue = {
@@ -342,6 +382,143 @@ export type Lesson = {
   title?: string
   language?: string
   content?: string
+}
+
+export type SanityAssistInstructionTask = {
+  _type: 'sanity.assist.instructionTask'
+  path?: string
+  instructionKey?: string
+  started?: string
+  updated?: string
+  info?: string
+}
+
+export type SanityAssistTaskStatus = {
+  _type: 'sanity.assist.task.status'
+  tasks?: Array<
+    {
+      _key: string
+    } & SanityAssistInstructionTask
+  >
+}
+
+export type SanityAssistSchemaTypeAnnotations = {
+  _type: 'sanity.assist.schemaType.annotations'
+  title?: string
+  fields?: Array<
+    {
+      _key: string
+    } & SanityAssistSchemaTypeField
+  >
+}
+
+export type SanityAssistOutputType = {
+  _type: 'sanity.assist.output.type'
+  type?: string
+}
+
+export type SanityAssistOutputField = {
+  _type: 'sanity.assist.output.field'
+  path?: string
+}
+
+export type AssistInstructionContextReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'assist.instruction.context'
+}
+
+export type SanityAssistInstructionContext = {
+  _type: 'sanity.assist.instruction.context'
+  reference: AssistInstructionContextReference
+}
+
+export type AssistInstructionContext = {
+  _id: string
+  _type: 'assist.instruction.context'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  context?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal'
+    listItem?: never
+    markDefs?: null
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type SanityAssistInstructionUserInput = {
+  _type: 'sanity.assist.instruction.userInput'
+  message: string
+  description?: string
+}
+
+export type SanityAssistInstructionPrompt = Array<{
+  children?: Array<
+    | {
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }
+    | ({
+        _key: string
+      } & SanityAssistInstructionFieldRef)
+    | ({
+        _key: string
+      } & SanityAssistInstructionContext)
+    | ({
+        _key: string
+      } & SanityAssistInstructionUserInput)
+  >
+  style?: 'normal'
+  listItem?: never
+  markDefs?: null
+  level?: number
+  _type: 'block'
+  _key: string
+}>
+
+export type SanityAssistInstructionFieldRef = {
+  _type: 'sanity.assist.instruction.fieldRef'
+  path?: string
+}
+
+export type SanityAssistInstruction = {
+  _type: 'sanity.assist.instruction'
+  prompt?: SanityAssistInstructionPrompt
+  icon?: string
+  title?: string
+  userId?: string
+  createdById?: string
+  output?: Array<
+    | ({
+        _key: string
+      } & SanityAssistOutputField)
+    | ({
+        _key: string
+      } & SanityAssistOutputType)
+  >
+}
+
+export type SanityAssistSchemaTypeField = {
+  _type: 'sanity.assist.schemaType.field'
+  path?: string
+  instructions?: Array<
+    {
+      _key: string
+    } & SanityAssistInstruction
+  >
 }
 
 export type SanityImagePaletteSwatch = {
@@ -466,10 +643,11 @@ export type AllSanitySchemaTypes =
   | Code
   | RichDateTest
   | RichDate
+  | I18nArrayPerformanceTest
+  | InternationalizedArrayString
   | InternationalizedPost
   | Slug
   | InternationalizedArrayText
-  | InternationalizedArrayString
   | InternationalizedArrayTextValue
   | InternationalizedArrayStringValue
   | TranslationMetadata
@@ -477,6 +655,19 @@ export type AllSanitySchemaTypes =
   | LessonReference
   | InternationalizedArrayReferenceValue
   | Lesson
+  | SanityAssistInstructionTask
+  | SanityAssistTaskStatus
+  | SanityAssistSchemaTypeAnnotations
+  | SanityAssistOutputType
+  | SanityAssistOutputField
+  | AssistInstructionContextReference
+  | SanityAssistInstructionContext
+  | AssistInstructionContext
+  | SanityAssistInstructionUserInput
+  | SanityAssistInstructionPrompt
+  | SanityAssistInstructionFieldRef
+  | SanityAssistInstruction
+  | SanityAssistSchemaTypeField
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions

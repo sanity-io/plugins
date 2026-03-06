@@ -1,8 +1,9 @@
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import {ThemeWrapper} from '../test/component-helpers'
-import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES} from '../test/helpers'
+import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT} from '../test/helpers'
 import type {Language} from '../types'
 import AddButtons from './AddButtons'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
@@ -31,15 +32,9 @@ describe('AddButtons', () => {
     vi.restoreAllMocks()
   })
   test('renders a button for each language', () => {
-    render(
-      <AddButtons
-        languages={MOCK_LANGUAGES}
-        readOnly={false}
-        value={undefined}
-        handleClick={vi.fn()}
-      />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
     const buttons = screen.getAllByRole('button')
     expect(buttons).toHaveLength(4)
@@ -52,17 +47,13 @@ describe('AddButtons', () => {
   })
 
   test('disables buttons for languages already present in value via LANGUAGE_FIELD_NAME', () => {
-    const value = createValues(['en', 'fr'])
-
-    render(
-      <AddButtons
-        languages={MOCK_LANGUAGES}
-        readOnly={false}
-        value={value}
-        handleClick={vi.fn()}
-      />,
-      {wrapper: ThemeWrapper},
+    const languagesInUse = createValues(['en', 'fr']).map((item) =>
+      String(item[LANGUAGE_FIELD_NAME]),
     )
+
+    render(<AddButtons readOnly={false} languagesInUse={languagesInUse} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
     // EN and FR already in value → disabled (data-disabled="true")
     expect(getButtonByValue('en')).toHaveAttribute('data-disabled', 'true')
@@ -73,10 +64,9 @@ describe('AddButtons', () => {
   })
 
   test('enables all buttons when value is empty', () => {
-    render(
-      <AddButtons languages={MOCK_LANGUAGES} readOnly={false} value={[]} handleClick={vi.fn()} />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
     const buttons = screen.getAllByRole('button')
     buttons.forEach((button) => {
@@ -85,15 +75,9 @@ describe('AddButtons', () => {
   })
 
   test('disables all buttons when readOnly is true', () => {
-    render(
-      <AddButtons
-        languages={MOCK_LANGUAGES}
-        readOnly={true}
-        value={undefined}
-        handleClick={vi.fn()}
-      />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons readOnly={true} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
     const buttons = screen.getAllByRole('button')
     buttons.forEach((button) => {
@@ -102,8 +86,13 @@ describe('AddButtons', () => {
   })
 
   test('renders null when languages array is empty', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      filteredLanguages: [],
+    })
+
     const {container} = render(
-      <AddButtons languages={[]} readOnly={false} value={undefined} handleClick={vi.fn()} />,
+      <AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />,
       {wrapper: ThemeWrapper},
     )
 
@@ -112,15 +101,9 @@ describe('AddButtons', () => {
 
   test('calls handleClick when a button is clicked', () => {
     const handleClick = vi.fn()
-    render(
-      <AddButtons
-        languages={MOCK_LANGUAGES}
-        readOnly={false}
-        value={undefined}
-        handleClick={handleClick}
-      />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={handleClick} />, {
+      wrapper: ThemeWrapper,
+    })
 
     fireEvent.click(getButtonByValue('fr'))
     expect(handleClick).toHaveBeenCalledTimes(1)
@@ -132,15 +115,9 @@ describe('AddButtons', () => {
       languageDisplay: 'titleOnly',
     })
 
-    render(
-      <AddButtons
-        languages={MOCK_LANGUAGES}
-        readOnly={false}
-        value={undefined}
-        handleClick={vi.fn()}
-      />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
     expect(screen.getByText('English')).toBeInTheDocument()
     expect(screen.getByText('French')).toBeInTheDocument()
@@ -157,15 +134,14 @@ describe('AddButtons', () => {
       {id: 'pt', title: 'Portuguese'},
     ]
 
-    render(
-      <AddButtons
-        languages={manyLanguages}
-        readOnly={false}
-        value={undefined}
-        handleClick={vi.fn()}
-      />,
-      {wrapper: ThemeWrapper},
-    )
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      filteredLanguages: manyLanguages,
+    })
+
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
     const buttons = screen.getAllByRole('button')
     // None of the buttons should have an icon (data-sanity-icon="add")
@@ -175,11 +151,6 @@ describe('AddButtons', () => {
   })
 
   test('shows AddIcon when languages exceed MAX_COLUMNS but display is not codeOnly', () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
-      languageDisplay: 'titleOnly',
-    })
-
     // MAX_COLUMNS.titleOnly = 4, so 5 languages exceeds it — but since
     // display is not 'codeOnly', AddIcon should still be shown
     const manyLanguages: Language[] = [
@@ -189,16 +160,15 @@ describe('AddButtons', () => {
       {id: 'de', title: 'German'},
       {id: 'it', title: 'Italian'},
     ]
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      languageDisplay: 'titleOnly',
+      filteredLanguages: manyLanguages,
+    })
 
-    render(
-      <AddButtons
-        languages={manyLanguages}
-        readOnly={false}
-        value={undefined}
-        handleClick={vi.fn()}
-      />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
     const buttons = screen.getAllByRole('button')
     // All buttons should have the AddIcon
@@ -210,15 +180,9 @@ describe('AddButtons', () => {
   test('shows AddIcon when languages fit within MAX_COLUMNS in codeOnly mode', () => {
     // Default mock is codeOnly. MOCK_LANGUAGES has 4 items, MAX_COLUMNS.codeOnly = 5
     // 4 <= 5, so icons should be shown
-    render(
-      <AddButtons
-        languages={MOCK_LANGUAGES}
-        readOnly={false}
-        value={undefined}
-        handleClick={vi.fn()}
-      />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
     const buttons = screen.getAllByRole('button')
     buttons.forEach((button) => {
@@ -231,16 +195,11 @@ describe('AddButtons', () => {
     // When the constant changes from '_key' to 'language', this test verifies
     // that button disabled state still works correctly.
     const singleValue = createValues(['es'])
+    const languagesInUse = singleValue.map((item) => String(item[LANGUAGE_FIELD_NAME]))
 
-    render(
-      <AddButtons
-        languages={MOCK_LANGUAGES}
-        readOnly={false}
-        value={singleValue}
-        handleClick={vi.fn()}
-      />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons readOnly={false} languagesInUse={languagesInUse} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
     // Only ES should be disabled
     expect(getButtonByValue('en')).toHaveAttribute('data-disabled', 'false')

@@ -1,5 +1,15 @@
 # sanity-plugin-internationalized-array
 
+## 4.0.4
+
+### Patch Changes
+
+- [#624](https://github.com/sanity-io/plugins/pull/624) [`dbfe998`](https://github.com/sanity-io/plugins/commit/dbfe9982f69f173cc67bcec0a3a38ca57cd9dcb8) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Import lodash-es functions from subpaths instead of barrel export for better performance
+
+- [#633](https://github.com/sanity-io/plugins/pull/633) [`cdef1a3`](https://github.com/sanity-io/plugins/commit/cdef1a3dd351d3b4e3783937b7d65090adabaf75) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - # Changes
+
+  Improve form performance by reducing unnecessary subscriptions and on-render work, including on-demand form value reads and targeted document-level translation scanning. Also align form/layout handling with shared document-type guards so integration with translation metadata is more predictable.
+
 ## 4.0.3
 
 ### Patch Changes

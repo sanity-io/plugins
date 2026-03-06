@@ -1,0 +1,34 @@
+import {isArraySchemaType, isObjectSchemaType, type ObjectItem, type SchemaType} from 'sanity'
+
+import {randomKey} from '../randomKey'
+
+export function createProtoValue(type: SchemaType): any {
+  if (isObjectSchemaType(type)) {
+    return type.name === 'object' ? {} : {_type: type.name}
+  }
+  if (isArraySchemaType(type)) {
+    return []
+  }
+  if (type.jsonType === 'string') {
+    return ''
+  }
+  if (type.jsonType === 'number') {
+    return 0
+  }
+  if (type.jsonType === 'boolean') {
+    return false
+  }
+  return undefined
+}
+
+export function createProtoArrayValue<Item extends ObjectItem>(type: SchemaType): Item {
+  if (!isObjectSchemaType(type)) {
+    throw new Error(
+      // oxlint-disable-next-line no-base-to-string, restrict-template-expressions
+      `Invalid item type: "${type.type}". Default array input can only contain objects (for now)`,
+    )
+  }
+
+  // oxlint-disable-next-line no-unsafe-type-assertion
+  return {...createProtoValue(type), _key: randomKey(12)} as Item
+}

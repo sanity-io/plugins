@@ -1,4 +1,4 @@
-import {defineField, type FieldDefinition, type Rule} from 'sanity'
+import {defineField, type FieldDefinition, type FieldProps, type Rule} from 'sanity'
 
 import {getFunctionCache, peek, setFunctionCache} from '../cache'
 import {createFieldName} from '../components/createFieldName'
@@ -29,6 +29,12 @@ export default (config: ArrayFactoryConfig) => {
     title: 'Internationalized array',
     type: 'array',
     components: {
+      field: (props: FieldProps) =>
+        props.renderDefault({
+          ...props,
+          // Reset the level to avoid nested styling
+          level: 0,
+        }),
       input: InternationalizedArray,
     },
     options: {
