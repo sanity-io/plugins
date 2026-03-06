@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 4.0.5
+
+### Patch Changes
+
+- [#677](https://github.com/sanity-io/plugins/pull/677) [`1f8fe29`](https://github.com/sanity-io/plugins/commit/1f8fe2964767506dc85a1e44baf7eedbe6023ab2) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Remove unused dependency `fast-deep-equal`. Clean up internal cache module by removing dead code (exported functions that were never imported).
+
 ## 4.0.4
 
 ### Patch Changes

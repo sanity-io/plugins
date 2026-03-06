@@ -1,5 +1,11 @@
 # sanity-plugin-asset-source-unsplash
 
+## 7.0.5
+
+### Patch Changes
+
+- [#683](https://github.com/sanity-io/plugins/pull/683) [`1deccd8`](https://github.com/sanity-io/plugins/commit/1deccd816abe530766d2188393d5514ae15594b9) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - fix(deps): Update dependency react-photo-album to ^3.5.1 and add CSS type declarations
+
 ## 7.0.4
 
 ### Patch Changes

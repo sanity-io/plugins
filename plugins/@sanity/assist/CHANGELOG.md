@@ -1,5 +1,19 @@
 # 📓 Changelog
 
+## 6.0.1
+
+### Patch Changes
+
+- [#677](https://github.com/sanity-io/plugins/pull/677) [`1f8fe29`](https://github.com/sanity-io/plugins/commit/1f8fe2964767506dc85a1e44baf7eedbe6023ab2) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Remove dead code: unused internal files, unexported internal-only symbols, and unused barrel re-exports.
+
+- [#681](https://github.com/sanity-io/plugins/pull/681) [`c022994`](https://github.com/sanity-io/plugins/commit/c022994399f2df1054ac166671712dc0bb7199e0) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Replace `createElement` calls with JSX syntax
+
+- [#688](https://github.com/sanity-io/plugins/pull/688) [`658b61a`](https://github.com/sanity-io/plugins/commit/658b61aeb488d356e905f760969552cb17833297) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @portabletext/types to ^4.0.2
+
+- [#689](https://github.com/sanity-io/plugins/pull/689) [`f95f6eb`](https://github.com/sanity-io/plugins/commit/f95f6eb402dfc5e93e691956630e95e989b9814a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/client to ^7.16.0
+
+- [#692](https://github.com/sanity-io/plugins/pull/692) [`0af5810`](https://github.com/sanity-io/plugins/commit/0af581023b8c8c2142d5e35dc0afd87c69fa6d9a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency lodash-es to ^4.17.23
+
 ## 6.0.0
 
 ### Major Changes
