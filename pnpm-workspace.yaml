@@ -57,6 +57,9 @@ minimumReleaseAgeExclude:
 overrides:
   styled-components: npm:@sanity/styled-components@latest
 
+patchedDependencies:
+  '@bynder/compact-view@5.2.3': patches/@bynder__compact-view.patch
+
 trustPolicy: no-downgrade
 
 trustPolicyExclude:
