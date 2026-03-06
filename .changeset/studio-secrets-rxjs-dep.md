@@ -2,4 +2,4 @@
 "@sanity/studio-secrets": patch
 ---
 
-Move `rxjs` from `peerDependencies` to `dependencies`
+Move `rxjs` and `react-rx` from `peerDependencies` to `dependencies`
