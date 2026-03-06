@@ -31,6 +31,30 @@ export interface AssistPluginConfig {
    */
   assist?: AssistConfig
 
+  /**
+   * Set to `true` to hide the instructions UI from the AI Assist field action menu.
+   *
+   * When enabled, the "Manage instructions" action and existing instruction items
+   * will not appear in field action menus. Translation, image, and custom field actions
+   * will still be shown.
+   *
+   * This is useful when you only want to use specific features like translations
+   * without exposing the full instruction management interface.
+   *
+   * @example
+   * ```ts
+   * assist({
+   *   hideInstructions: true,
+   *   translate: {
+   *     document: {
+   *       languageField: 'language',
+   *     },
+   *   },
+   * })
+   * ```
+   */
+  hideInstructions?: boolean
+
   fieldActions?: {
     title?: string
     /**

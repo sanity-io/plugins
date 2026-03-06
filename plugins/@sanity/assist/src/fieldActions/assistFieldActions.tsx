@@ -17,6 +17,7 @@ import {getIcon} from '../assistDocument/components/instruction/appearance/IconI
 import {useRequestRunInstruction} from '../assistDocument/RequestRunInstructionProvider'
 import {aiInspectorId} from '../assistInspector/constants'
 import {getTypePath, useSelectedField, useTypePath} from '../assistInspector/helpers'
+import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {pluginTitleShort} from '../constants'
 import {isSchemaAssistEnabled} from '../helpers/assistSupported'
 import {getConditionalMembers} from '../helpers/conditionalMembers'
@@ -37,6 +38,9 @@ export const assistFieldActions: DocumentFieldAction = {
   name: 'sanity-assist-actions',
   useAction(props) {
     const {schemaType} = props
+
+    const {config} = useAiAssistanceConfig()
+    const hideInstructions = config?.hideInstructions ?? false
 
     const {
       assistDocument,
@@ -153,13 +157,14 @@ export const assistFieldActions: DocumentFieldAction = {
     )
 
     const runInstructionsGroup = useMemo(() => {
-      return instructions?.length || imageCaptionAction || translateAction || imageGenAction
+      const visibleInstructions = hideInstructions ? [] : instructions
+      return visibleInstructions?.length || imageCaptionAction || translateAction || imageGenAction
         ? node({
             type: 'group',
             icon: () => null,
             title: 'Run instructions',
             children: [
-              ...(instructions?.map((instruction) =>
+              ...(visibleInstructions?.map((instruction) =>
                 instructionItem({
                   instruction,
                   isPrivate: Boolean(instruction.userId && instruction.userId === currentUser?.id),
@@ -177,6 +182,7 @@ export const assistFieldActions: DocumentFieldAction = {
         : undefined
     }, [
       instructions,
+      hideInstructions,
       currentUser?.id,
       onInstructionAction,
       isHidden,
@@ -253,7 +259,7 @@ export const assistFieldActions: DocumentFieldAction = {
             runInstructionsGroup,
             translateAction,
             ...customActions,
-            assistSupported && manageInstructionsItem,
+            assistSupported && !hideInstructions && manageInstructionsItem,
           ]
             .filter((c): c is DocumentFieldActionItem | DocumentFieldActionGroup => !!c)
             .filter((c) => (c.type === 'group' ? c.children.length : true)),
@@ -265,6 +271,7 @@ export const assistFieldActions: DocumentFieldAction = {
         //documentIsNew,
         runInstructionsGroup,
         manageInstructionsItem,
+        hideInstructions,
         assistSupported,
         imageCaptionAction,
         translateAction,
@@ -277,19 +284,20 @@ export const assistFieldActions: DocumentFieldAction = {
       () =>
         node({
           type: 'action',
-          hidden: !assistSupported,
+          hidden: !assistSupported || hideInstructions,
           icon: SparklesIcon,
           onAction: manageInstructions,
           renderAsButton: true,
           title: pluginTitleShort,
           selected: isSelected,
         }),
-      [assistSupported, manageInstructions, isSelected],
+      [assistSupported, hideInstructions, manageInstructions, isSelected],
     )
 
-    // If there are no instructions, we don't want to render the group
+    // If there are no actions to show, render the empty action (sparkle button)
+    const visibleInstructions = hideInstructions ? [] : instructions
     if (
-      !instructions?.length &&
+      !visibleInstructions?.length &&
       !imageCaptionAction &&
       !translateAction &&
       !imageGenAction &&

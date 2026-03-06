@@ -156,6 +156,30 @@ assist({
 - `temperature`: Influences how much the output of an instruction will vary between runs.
   For more details, please review the TSDocs of the individual config parameters in [assistTypes.ts](./src/assistTypes.ts)
 
+### Hiding the instructions UI
+
+If you only want to use specific AI Assist features like translations without exposing the full instruction management interface, set `hideInstructions` to `true`:
+
+```ts
+assist({
+  hideInstructions: true,
+  translate: {
+    document: {
+      languageField: 'language',
+    },
+  },
+})
+```
+
+When `hideInstructions` is enabled:
+
+- The "Manage instructions" action is hidden from all field action menus
+- Existing instruction items will not appear in the action menus
+- Translation, image, and custom field actions remain available
+- The sparkle icon (✨) will only appear on fields that have non-instruction actions (e.g., translate)
+
+This is useful when you want to provide translation capabilities to your team without exposing the instruction creation and management interface.
+
 ## Schema configuration
 
 By default, most string, object, and array field types (including Portable Text!) have AI writing assistance enabled. Your assistant can write to all compatible fields that it detects.
