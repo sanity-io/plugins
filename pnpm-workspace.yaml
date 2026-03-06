@@ -51,14 +51,13 @@ minimumReleaseAgeExclude:
   - sanity
   - vite
   - vitest
-  # Renovate security update: lodash-es@4.17.23
   - lodash-es@4.17.23
 
 overrides:
   styled-components: npm:@sanity/styled-components@latest
 
 patchedDependencies:
-  '@bynder/compact-view': patches/@bynder__compact-view.patch
+  '@bynder/compact-view@5.2.3': patches/@bynder__compact-view@5.2.3.patch
 
 trustPolicy: no-downgrade
 
