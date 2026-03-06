@@ -22,7 +22,7 @@
     "typegen": "pnpm --filter=test-studio run typegen && pnpm format"
   },
   "dependencies": {
-    "@changesets/changelog-github": "^0.5.2",
+    "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.29.8",
     "@turbo/gen": "^2.8.12",
     "@types/hosted-git-info": "^3.0.5",
