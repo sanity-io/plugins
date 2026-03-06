@@ -20,11 +20,11 @@ This guide is for AI agents working on this codebase. Follow these instructions 
 
 ### Node.js Version
 
-Use Node.js **v24** (latest LTS). The engines field in packages specifies `>=20.19 <22 || >=22.12`, but the test studio targets Node 24.
+Use the **latest LTS** release of Node.js.
 
 ### pnpm Version
 
-The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v10 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified (currently `pnpm@10.28.1`).
+The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v10 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
 
 ```bash
 # Enable corepack to automatically use the correct pnpm version
@@ -174,7 +174,7 @@ The CI pipeline runs on every PR:
 ### Lint Specifics
 
 - **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors). React Compiler rules run via the react-hooks-js plugin.
-- **TypeScript type checking** is included in `pnpm lint` (via oxlint's `--type-check --type-aware` flags) — no separate `tsc` needed
+- **TypeScript type checking** is included in `pnpm lint` via oxlint — no separate `tsc` needed
 - Run `pnpm lint:fix` to auto-fix issues when possible
 
 ## Testing
@@ -315,17 +315,12 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 **For brand new packages (not yet on npm):**
 
 - Use the "Setup a new npm package with Trusted Publishing" GitHub Actions workflow
-- The workflow will create the package and provide setup instructions
+- Then run locally: `npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins` (requires npm >= 11.10.0)
 
 **For existing packages (already on npm):**
 
 - ⚠️ DO NOT use the setup workflow
-- Manually configure trusted publishing at: `https://www.npmjs.com/package/PACKAGE-NAME/access`
-- Add GitHub Actions as trusted publisher with:
-  - Owner: `sanity-io`
-  - Repository: `plugins`
-  - Workflow: `release.yml`
-  - Environment: _(leave empty)_
+- Run: `npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins` (requires npm >= 11.10.0)
 
 ## Code Style
 

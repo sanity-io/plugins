@@ -3,7 +3,6 @@ import {type ReactNode, useCallback} from 'react'
 import {DateTimeInput, type FieldProps, type FormPatch, type PatchEvent, set, unset} from 'sanity'
 
 import type {RichDate} from '../types'
-
 import {getConstructedUTCDate, unlocalizeDateTime} from '../utils'
 
 interface RelativeDateTimePickerProps extends Omit<FieldProps, 'renderDefault'> {

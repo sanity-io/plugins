@@ -2,10 +2,9 @@ import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/reac
 import {type SanityDocument} from 'sanity'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
-import type {Language} from '../types'
-
 import {createMockSanityClient, ThemeWrapper} from '../test/component-helpers'
 import {createMockDocument, MOCK_PLUGIN_CONFIG} from '../test/helpers'
+import type {Language} from '../types'
 import {useDocumentInternationalizationContext} from './DocumentInternationalizationContext'
 import LanguagePatch from './LanguagePatch'
 

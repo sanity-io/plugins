@@ -1,7 +1,6 @@
-import type {PropsWithChildren} from 'react'
-
 import {Card, Grid} from '@sanity/ui'
 import {AnimatePresence, motion} from 'motion/react'
+import type {PropsWithChildren} from 'react'
 import {styled} from 'styled-components'
 
 const StyledFloatingCard = styled(Card)`

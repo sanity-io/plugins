@@ -1,5 +1,4 @@
 import type {TranslationReference} from '../../types'
-
 import ReferencePatcher from './ReferencePatcher'
 
 type OptimisticallyStrengthenProps = {

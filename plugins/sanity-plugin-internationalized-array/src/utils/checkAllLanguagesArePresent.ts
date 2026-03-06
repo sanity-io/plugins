@@ -1,6 +1,5 @@
-import type {Language, InternationalizedArrayItem} from '../types'
-
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 /**
  * Checks whether every language in the provided list has a corresponding entry

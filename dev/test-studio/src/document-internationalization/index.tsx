@@ -53,6 +53,9 @@ export const documentInternationalizationExample = definePlugin(() => ({
       ],
       schemaTypes: ['lesson'],
       bulkPublish: true,
+      metadataInternationalization: {
+        languageDisplay: 'titleAndCode',
+      },
     }),
   ],
 }))

@@ -1,8 +1,7 @@
 import {definePlugin, type Plugin} from 'sanity'
 
-import type {CodeMode} from './codemirror/defaultCodeModes'
-
 import {CodeInputConfigContext} from './codemirror/CodeModeContext'
+import type {CodeMode} from './codemirror/defaultCodeModes'
 import {codeSchema} from './schema'
 
 export interface CodeInputConfig {

@@ -1,6 +1,5 @@
-import type {Color, ColorChangeHandler} from 'react-color'
-
 import {Flex} from '@sanity/ui'
+import type {Color, ColorChangeHandler} from 'react-color'
 import {styled} from 'styled-components'
 import tinycolor from 'tinycolor2'
 
@@ -29,6 +28,7 @@ const ColorBox = styled.div`
 `
 
 interface ValidatedColor {
+  key: string
   color: Color
   backgroundColor: string
 }
@@ -38,26 +38,30 @@ interface ColorListProps {
   onChange: ColorChangeHandler<Color>
 }
 
-const validateColors = (colors: Array<Color>) =>
-  colors.reduce((cls: Array<ValidatedColor>, c) => {
+const validateColors = (colors: Array<Color>) => {
+  const seen = new Set<string>()
+  return colors.reduce((cls: Array<ValidatedColor>, c) => {
     // @ts-expect-error fix types later
     const color = c.hex ? tinycolor(c.hex) : tinycolor(c)
     if (color.isValid()) {
-      cls.push({
-        color: c,
-        backgroundColor: color.toRgbString(),
-      })
+      const backgroundColor = color.toRgbString()
+      const key = JSON.stringify({color: c, backgroundColor})
+      if (!seen.has(key)) {
+        seen.add(key)
+        cls.push({key, color: c, backgroundColor})
+      }
     }
     return cls
   }, [])
+}
 
 export function ColorList({colors, onChange}: ColorListProps): React.JSX.Element | null {
   if (!colors) return null
   return (
     <ColorListWrap wrap="wrap">
-      {validateColors(colors).map(({color, backgroundColor}, idx) => (
+      {validateColors(colors).map(({key, color, backgroundColor}) => (
         <ColorBoxContainer
-          key={`${backgroundColor}-${idx}`}
+          key={key}
           onClick={() => {
             onChange(color)
           }}

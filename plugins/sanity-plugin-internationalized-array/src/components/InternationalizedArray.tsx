@@ -1,8 +1,7 @@
-import type React from 'react'
-
 import {AddIcon} from '@sanity/icons'
 import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Button, Card, Stack, Text, useToast} from '@sanity/ui'
+import type React from 'react'
 import {useCallback, useEffect, useMemo} from 'react'
 import {
   type ArrayOfObjectsInputProps,
@@ -11,12 +10,12 @@ import {
   set,
   setIfMissing,
   useFormValue,
+  useGetFormValue,
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import type {InternationalizedArrayItem} from '../types'
-
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {InternationalizedArrayItem} from '../types'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
@@ -55,6 +54,7 @@ export default function InternationalizedArray(
   const readOnly = typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false
   const toast = useToast()
 
+  const getFormValue = useGetFormValue()
   const {languages, filteredLanguages, defaultLanguages, buttonAddAll, buttonLocations} =
     useInternationalizedArrayContext()
 
@@ -93,8 +93,10 @@ export default function InternationalizedArray(
     [languageFilterEnabled, members, languageFilterOptions, selectedLanguageIds, value],
   )
 
-  const handleAddLanguage = useCallback(
+  const handleAddLanguages = useCallback(
     (addLanguageKeys: string[] | string) => {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+      const formValue = getFormValue(props.path) as InternationalizedArrayItem[]
       if (!filteredLanguages?.length) {
         return
       }
@@ -104,40 +106,49 @@ export default function InternationalizedArray(
         schemaTypeName: schemaType.name,
         languages,
         filteredLanguages,
-        value,
+        value: formValue,
       })
 
       onChange([setIfMissing([]), ...patches])
     },
-    [filteredLanguages, languages, onChange, schemaType, value],
+    [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path],
   )
 
   const {isDeleting} = useDocumentPane()
 
+  // Create a stable dependency string that only changes when language keys change
+  const languageKeysFromValue = value
+    ?.map((v) => v[LANGUAGE_FIELD_NAME] ?? v._key)
+    .filter(Boolean)
+    .join(',')
+
   const addedLanguages = useMemo(() => {
-    if (!value?.length) return []
-    return value.map((v) => v[LANGUAGE_FIELD_NAME] ?? v._key).filter(Boolean)
-  }, [value])
-  const hasAddedDefaultLanguages = defaultLanguages
-    .filter((language) => languages.find((l) => l.id === language))
-    .every((language) => addedLanguages.includes(language))
+    const languageKeys = languageKeysFromValue?.split(',') || []
+    if (!languageKeys?.length) return []
+    if (!languages?.length) return []
+
+    return languages.filter((l) => languageKeys?.find((key) => key === l.id)).map((l) => l.id)
+  }, [languageKeysFromValue, languages])
 
   useEffect(() => {
+    const hasAddedDefaultLanguages = defaultLanguages
+      .filter((language) => languages.find((l) => l.id === language))
+      .every((language) => addedLanguages.includes(language))
+
     if (!isDeleting && !hasAddedDefaultLanguages) {
       const languagesToAdd = defaultLanguages
         .filter((language) => !addedLanguages.includes(language))
         .filter((language) => languages.find((l) => l.id === language))
       // Account for strict mode by scheduling the update
       const timeout = setTimeout(() => {
-        if (!documentReadOnly) handleAddLanguage(languagesToAdd)
+        if (!documentReadOnly) handleAddLanguages(languagesToAdd)
       })
       return () => clearTimeout(timeout)
     }
     return undefined
   }, [
     isDeleting,
-    hasAddedDefaultLanguages,
-    handleAddLanguage,
+    handleAddLanguages,
     defaultLanguages,
     addedLanguages,
     languages,
@@ -182,26 +193,19 @@ export default function InternationalizedArray(
     return value?.every((v) => languages.find((l) => l?.id === v?.[LANGUAGE_FIELD_NAME]))
   }, [value, languages])
 
-  // Check languages are in the correct order
-  const languagesInUse = useMemo(
-    () =>
-      languages && languages.length > 1
-        ? languages.filter((l) => value?.find((v) => v[LANGUAGE_FIELD_NAME] === l.id))
-        : [],
-    [languages, value],
-  )
-
   const languagesOutOfOrder = useMemo(() => {
-    if (!value?.length || !languagesInUse.length) {
+    if (!value?.length || !addedLanguages.length) {
       return []
     }
 
     return value
       .map((v, vIndex) =>
-        vIndex === languagesInUse.findIndex((l) => l.id === v[LANGUAGE_FIELD_NAME]) ? null : v,
+        vIndex === addedLanguages.findIndex((language) => language === v[LANGUAGE_FIELD_NAME])
+          ? null
+          : v,
       )
       .filter(Boolean)
-  }, [value, languagesInUse])
+  }, [value, addedLanguages])
 
   const languagesAreValid = useMemo(
     () =>
@@ -221,6 +225,9 @@ export default function InternationalizedArray(
     () => checkAllLanguagesArePresent(filteredLanguages, value),
     [filteredLanguages, value],
   )
+  const addAllMissingLanguages = useCallback(() => {
+    handleAddLanguages(filteredLanguages.map((language) => language.id))
+  }, [filteredLanguages, handleAddLanguages])
 
   if (!languagesAreValid) {
     return <Feedback />
@@ -234,20 +241,16 @@ export default function InternationalizedArray(
     // Not every language has a value yet
     !allLanguagesArePresent
   const fieldHasMembers = members?.length > 0
+  const addAllTitle = createAddAllTitle(value, filteredLanguages)
 
   return (
     <Stack space={2}>
-      {fieldHasMembers ? (
-        <>
-          {filteredMembers.map((member) => {
-            if (member.kind === 'item') {
-              return <ArrayOfObjectsItem {...props} key={member.key} member={member} />
-            }
-
-            return <MemberItemError key={member.key} member={member} />
-          })}
-        </>
-      ) : null}
+      {filteredMembers.map((member) => {
+        if (member.kind === 'item') {
+          return <ArrayOfObjectsItem {...props} key={member.key} member={member} />
+        }
+        return <MemberItemError key={member.key} member={member} />
+      })}
 
       {/* Give some feedback in the UI so the field doesn't look "missing" */}
       {!addButtonsAreVisible && !fieldHasMembers ? (
@@ -259,10 +262,9 @@ export default function InternationalizedArray(
       {addButtonsAreVisible ? (
         <Stack space={2}>
           <AddButtons
-            languages={filteredLanguages}
-            value={value}
+            languagesInUse={addedLanguages}
             readOnly={readOnly}
-            handleClick={handleAddLanguage}
+            handleClick={handleAddLanguages}
           />
           {buttonAddAll ? (
             <Button
@@ -271,8 +273,8 @@ export default function InternationalizedArray(
               data-testid="add-all-languages"
               disabled={readOnly || allLanguagesArePresent}
               icon={AddIcon}
-              text={createAddAllTitle(value, filteredLanguages)}
-              onClick={() => handleAddLanguage(filteredLanguages.map((language) => language.id))}
+              text={addAllTitle}
+              onClick={addAllMissingLanguages}
             />
           ) : null}
         </Stack>

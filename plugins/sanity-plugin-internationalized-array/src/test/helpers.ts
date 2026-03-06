@@ -1,7 +1,6 @@
 import type {InternationalizedArrayContextProps} from '../components/InternationalizedArrayContext'
-import type {Language, InternationalizedArrayItem} from '../types'
-
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {Language, InternationalizedArrayItem} from '../types'
 
 /**
  * Shared mock language definitions for tests.
@@ -52,4 +51,5 @@ export const MOCK_INTERNATIONALIZED_ARRAY_CONTEXT: InternationalizedArrayContext
   apiVersion: '2025-10-15',
   select: {},
   fieldTypes: [],
+  includeForDocumentType: () => true,
 }

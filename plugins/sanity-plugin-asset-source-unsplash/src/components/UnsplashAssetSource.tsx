@@ -1,11 +1,10 @@
 import {Dialog, Stack, Box} from '@sanity/ui'
-import {memoize} from 'lodash-es'
+import memoize from 'lodash-es/memoize.js'
 import {lazy, Suspense, useMemo, useRef, useState} from 'react'
 import {type AssetSourceComponentProps, useClient} from 'sanity'
 import {styled} from 'styled-components'
 
 import type {FetcherResult, UnsplashPhoto} from '../types'
-
 import {Loader} from './Loader'
 import {SearchInput} from './SearchInput'
 

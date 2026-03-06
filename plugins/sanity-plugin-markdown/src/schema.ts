@@ -1,5 +1,4 @@
 import type {SanityImageAssetDocument} from '@sanity/client'
-
 import {defineType, type StringDefinition} from 'sanity'
 
 import {MarkdownInput} from './components/MarkdownInput'

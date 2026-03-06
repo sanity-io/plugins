@@ -2,8 +2,6 @@ import {Stack} from '@sanity/ui'
 import {defineField, definePlugin, isSanityDocument} from 'sanity'
 import {internationalizedArray, LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
-import type {PluginConfig, TranslationReference} from './types'
-
 import {useDeleteMetadataAction} from './actions/DeleteMetadataAction'
 import {LanguageBadge} from './badges'
 import BulkPublish from './components/BulkPublish'
@@ -13,10 +11,19 @@ import OptimisticallyStrengthen from './components/OptimisticallyStrengthen'
 import {API_VERSION, DEFAULT_CONFIG, METADATA_SCHEMA_NAME} from './constants'
 import {documentInternationalizationUsEnglishLocaleBundle} from './i18n'
 import metadata from './schema/translation/metadata'
+import type {PluginConfig, TranslationReference} from './types'
 
 export const documentInternationalization = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...DEFAULT_CONFIG, ...config}
-  const {supportedLanguages, schemaTypes, languageField, bulkPublish, metadataFields} = pluginConfig
+  const {
+    supportedLanguages,
+    schemaTypes,
+    languageField,
+    bulkPublish,
+    metadataFields,
+    hideLanguageFilter,
+    metadataInternationalization,
+  } = pluginConfig
 
   if (schemaTypes.length === 0) {
     throw new Error(
@@ -85,6 +92,14 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
       unstable_languageFilter: (prev, ctx) => {
         const {schemaType, documentId} = ctx
 
+        if (typeof hideLanguageFilter === 'function') {
+          if (hideLanguageFilter(ctx)) return prev
+        } else if (Array.isArray(hideLanguageFilter)) {
+          if (hideLanguageFilter.includes(schemaType)) return prev
+        } else if (hideLanguageFilter) {
+          return prev
+        }
+
         return schemaTypes.includes(schemaType) && documentId
           ? [...prev, (props) => DocumentInternationalizationMenu({...props, documentId})]
           : prev
@@ -150,8 +165,10 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
       // Translation metadata stores its references using this plugin
       // It cuts down on attribute usage and gives UI conveniences to add new translations
       internationalizedArray({
+        ...metadataInternationalization,
         apiVersion: pluginConfig.apiVersion,
         languages: supportedLanguages,
+        includeForDocumentType: (documentType) => documentType === METADATA_SCHEMA_NAME,
         fieldTypes: [
           defineField(
             {

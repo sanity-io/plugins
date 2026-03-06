@@ -1,13 +1,13 @@
 import {Box, Text} from '@sanity/ui'
 import {use, Activity} from 'react'
+
 import 'react-photo-album/rows.css'
 import {RowsPhotoAlbum} from 'react-photo-album'
 import InfiniteScroll from 'react-photo-album/scroll'
 import {type AssetFromSource, type AssetSourceComponentProps, type SanityClient} from 'sanity'
 
-import type {FetcherResult, UnsplashPhoto} from '../types'
-
 import {fetchDownloadUrl} from '../datastores/unsplash'
+import type {FetcherResult, UnsplashPhoto} from '../types'
 import {Loader} from './Loader'
 import {UnsplashCreditLine} from './UnsplashCreditLine'
 

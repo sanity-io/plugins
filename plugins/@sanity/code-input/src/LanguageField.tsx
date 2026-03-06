@@ -7,9 +7,8 @@ import {
   type PrimitiveInputElementProps,
 } from 'sanity'
 
-import type {CodeInputLanguage} from './types'
-
 import {LanguageInput} from './LanguageInput'
+import type {CodeInputLanguage} from './types'
 
 export function LanguageField(
   props: MemberFieldProps & {member: FieldMember; language: string; languages: CodeInputLanguage[]},

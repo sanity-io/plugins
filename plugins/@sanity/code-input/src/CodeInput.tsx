@@ -10,12 +10,11 @@ import {
 } from 'sanity'
 import {css, styled} from 'styled-components'
 
-import type {CodeInputValue, CodeSchemaType} from './types'
-
 import {CodeMirrorProxy, useMounted} from './codemirror/useCodeMirror'
 import {useLanguageMode} from './codemirror/useLanguageMode'
 import {PATH_CODE} from './config'
 import {LanguageField} from './LanguageField'
+import type {CodeInputValue, CodeSchemaType} from './types'
 import {focusRingBorderStyle, focusRingStyle} from './ui/focusRingStyle'
 import {useFieldMember} from './useFieldMember'
 

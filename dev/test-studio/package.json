@@ -12,6 +12,7 @@
     "typegen": "sanity schema extract --enforce-required-fields --workspace kitchen-sink && sanity typegen generate"
   },
   "dependencies": {
+    "@sanity/assist": "workspace:*",
     "@sanity/code-input": "workspace:*",
     "@sanity/color-input": "workspace:*",
     "@sanity/debug-preview-url-secret-plugin": "workspace:*",

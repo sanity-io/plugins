@@ -3,7 +3,6 @@ import {useEffect, useState, useMemo} from 'react'
 import {PatchEvent, type ObjectInputProps, set, unset} from 'sanity'
 
 import type {AprimoCDNAsset, AprimoAsset, AprimoConfig} from '../types'
-
 import {openSelector} from '../utils'
 import {AprimoCDNPreview} from './AprimoCDNPreview'
 import {AprimoFilePreview} from './AprimoFilePreview'

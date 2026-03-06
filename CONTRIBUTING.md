@@ -17,7 +17,7 @@ Thank you for your interest in contributing to the Sanity Plugins monorepo! This
 
 ### Prerequisites
 
-- Node.js **v24** (latest LTS) — packages support `>=20.19 <22 || >=22.12` but we recommend v24
+- Node.js (latest LTS)
 - [pnpm](https://pnpm.io/) v10 or later — the exact version is managed via `packageManager` in root `package.json`
 
 ### Initial Setup
@@ -152,21 +152,13 @@ If you're creating a package that has never been published to npm before:
 2. Find the **"Setup a new npm package with Trusted Publishing"** workflow
 3. Click **"Run workflow"**
 4. Enter the package name (e.g., `@sanity/my-new-plugin` or `sanity-plugin-my-feature`)
-5. The workflow will create the package on npm and output instructions for configuring trusted publishing
+5. Click **"Run workflow"** — the workflow will create the package on npm
 
-After the workflow completes, go to the package settings on npm and configure trusted publishing with these values:
+Then, configure trusted publishing by running locally (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
 
-| Setting       | Value           |
-| ------------- | --------------- |
-| Organization  | `sanity-io`     |
-| Repository    | `plugins`       |
-| Workflow name | `release.yml`   |
-| Environment   | _(leave blank)_ |
-
-Under token settings, configure:
-
-- **Require 2FA** for publishing
-- **Disallow tokens** (granular and automation tokens)
+```bash
+npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins
+```
 
 This sets up [OIDC-based trusted publishing](https://docs.npmjs.com/generating-provenance-statements) so the release workflow can publish packages without storing npm tokens.
 
@@ -174,7 +166,16 @@ This sets up [OIDC-based trusted publishing](https://docs.npmjs.com/generating-p
 
 ⚠️ **Do NOT use the "Setup a new npm package with Trusted Publishing" workflow for existing packages!** That workflow is only for brand new packages that don't have an npm settings page yet.
 
-For packages that are already published to npm, manually configure trusted publishing:
+For packages that are already published to npm, configure trusted publishing using the npm CLI (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
+
+```bash
+npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins
+```
+
+<details>
+<summary>Alternative: Configure via npm website</summary>
+
+If you don't have npm >= 11.10.0, you can configure trusted publishing manually:
 
 1. Go to your package's access settings page: `https://www.npmjs.com/package/YOUR-PACKAGE-NAME/access`
 2. Under **"Publishing access"**, click **"Add a trusted publisher"** and select **"GitHub Actions"**
@@ -188,9 +189,8 @@ For packages that are already published to npm, manually configure trusted publi
 | **Environment name** | _(leave empty)_ |
 
 4. Click **"Add trusted publisher"**
-5. Under **"Token settings"**, ensure:
-   - ✅ **Require 2FA** for publishing is enabled
-   - ✅ **Disallow tokens** (both granular and automation tokens)
+
+</details>
 
 ### 2. Init the plugin workspace
 
@@ -226,7 +226,13 @@ Commit the changeset file with your PR.
 
 ### 1. Set Up Trusted Publishing
 
-Since the plugin is already published to npm, you need to manually configure trusted publishing. See [For Existing Packages](#for-existing-packages-already-on-npm) above for detailed instructions.
+Since the plugin is already published to npm, configure trusted publishing using the npm CLI (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
+
+```bash
+npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins
+```
+
+See [For Existing Packages](#for-existing-packages-already-on-npm) above for alternative manual instructions.
 
 ### 2. Init the plugin workspace
 
@@ -274,9 +280,68 @@ When prompted:
 
 Commit the changeset file with your PR.
 
+### 5. Update the original repository
+
+After the plugin has been successfully migrated and published from the monorepo, update the original repository to inform users about the move:
+
+1. **Update the README** in the original repository to include a notice at the top:
+
+   ```markdown
+   > **Note:** This repository has been moved to the [sanity-io/plugins](https://github.com/sanity-io/plugins) monorepo.
+   >
+   > All future development, issues, and releases will be managed there.
+   >
+   > - New location: `plugins/PLUGIN-NAME` (e.g., `plugins/@sanity/document-internationalization`)
+   > - npm package: The package name remains the same
+   > - Issues: Please open new issues in the [monorepo](https://github.com/sanity-io/plugins/issues)
+   ```
+
+2. **Migrate existing issues** to the monorepo:
+   - Review all open issues in the original repository
+   - Add a label matching the plugin name to each issue for organization (example: an issue that was once in the `@sanity/color-input` repo will have a tag `color-input` in this repo)
+   - Move the issues to the monorepo's issue tracker
+   - Update issue references as needed
+
+3. **Archive the repository**: Archive the original repository on GitHub to prevent new issues and PRs while keeping the history accessible.
+
+See [this example PR](https://github.com/sanity-io/document-internationalization/pull/214) for reference.
+
 ## Publishing Packages
 
 This monorepo uses [Changesets](https://github.com/changesets/changesets) for version management and publishing.
+
+### Preview Packages in a PR (`pkg-pr-new`)
+
+You can publish preview versions of changed plugin packages directly from a PR using [`pkg.pr.new`](https://pkg.pr.new).
+
+#### How it is triggered
+
+The preview workflow runs on PR events **only when the PR has the `trigger: preview` label**.
+
+1. Open your PR
+2. Add the `trigger: preview` label
+3. Wait for the `Publish` workflow (`.github/workflows/pkg-pr-new.yml`) to finish
+
+#### What gets preview-published
+
+The workflow detects changed packages from `.changeset/*.md` files in your PR diff and publishes only matching plugin packages.
+
+- It ignores `.changeset/README.md`
+- It supports package names that map to:
+  - `@sanity/*` -> `plugins/@sanity/*`
+  - `sanity-plugin-*` -> `plugins/sanity-plugin-*`
+
+If no valid changesets are found, no packages are published.
+
+#### How to use the preview
+
+After the workflow runs, it posts (or updates) a PR comment titled **"Preview this PR with pkg.pr.new"** that includes install commands for each published package (for both `pnpm` and `npm`).
+
+Use the provided command in another project to test the preview package version, for example:
+
+```bash
+pnpm install <pkg.pr.new url from the PR comment>
+```
 
 ### Creating a Changeset
 

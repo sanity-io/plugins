@@ -5,7 +5,6 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {type SchemaType, type ValidationMarker, useSchema, Preview} from 'sanity'
 
 import type {SanityDocumentWithMetadata, State, User} from '../../types'
-
 import UserDisplay from '../UserDisplay'
 import CompleteButton from './CompleteButton'
 import {DraftStatus} from './core/DraftStatus'

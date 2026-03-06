@@ -1,6 +1,6 @@
 {
   "name": "@sanity/document-internationalization",
-  "version": "5.0.1",
+  "version": "5.1.1",
   "description": "Create unique translations of a document based on its language, joined by a shared reference document.",
   "keywords": [
     "sanity",
@@ -42,11 +42,11 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/mutator": "^5.0.1",
-    "@sanity/ui": "^3.1.11",
+    "@sanity/mutator": "^5.13.0",
+    "@sanity/ui": "^3.1.13",
     "@sanity/uuid": "^3.0.2",
-    "rxjs": "^7.8.1",
-    "sanity-plugin-utils": "^1.7.0"
+    "rxjs": "catalog:",
+    "sanity-plugin-utils": "^1.8.0"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
@@ -57,7 +57,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "jsdom": "^28.0.0",
+    "jsdom": "^28.1.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",

@@ -4,7 +4,6 @@ import {useCallback} from 'react'
 import {type SanityDocument, useClient} from 'sanity'
 
 import type {Language} from '../types'
-
 import {useDocumentInternationalizationContext} from './DocumentInternationalizationContext'
 
 type LanguagePatchProps = {

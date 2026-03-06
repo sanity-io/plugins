@@ -3,9 +3,8 @@ import {useCallback} from 'react'
 import {useClient} from 'sanity'
 import {UserSelectMenu} from 'sanity-plugin-utils'
 
-import type {User} from '../types'
-
 import {API_VERSION} from '../constants'
+import type {User} from '../types'
 
 type UserAssignmentProps = {
   userList: User[]

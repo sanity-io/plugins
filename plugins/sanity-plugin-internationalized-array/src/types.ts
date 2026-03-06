@@ -145,4 +145,14 @@ export type PluginConfig = {
    * @defaultValue 'code'
    * */
   languageDisplay?: LanguageDisplay
+  /**
+   * @internal
+   * Function to determine if the plugin layout and root input should be included for a given document type.
+   * @defaultValue (documentType) => documentType !== 'translation.metadata'
+   * @example
+   * {
+   *   includeForDocumentType: (documentType) => documentType === 'translation.metadata'
+   * }
+   */
+  includeForDocumentType?: (documentType: string) => boolean
 }

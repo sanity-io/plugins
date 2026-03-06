@@ -1,7 +1,6 @@
+import {act, renderHook, waitFor} from '@testing-library/react'
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import type {SanityDocument} from 'sanity'
-
-import {act, renderHook, waitFor} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {createMockSanityClient} from '../test/component-helpers'

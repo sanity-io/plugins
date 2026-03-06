@@ -1,10 +1,9 @@
 import {useMemo} from 'react'
 
+import {LANGUAGE_ALIASES, SUPPORTED_LANGUAGES} from '../config'
 import type {CodeInputLanguage, CodeInputValue, CodeSchemaType} from '../types'
 
-import {LANGUAGE_ALIASES, SUPPORTED_LANGUAGES} from '../config'
-
-export const defaultLanguageMode = 'text'
+const defaultLanguageMode = 'text'
 
 export function useLanguageMode(
   schemaType: CodeSchemaType,

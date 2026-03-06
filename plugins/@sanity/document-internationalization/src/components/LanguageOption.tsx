@@ -5,10 +5,9 @@ import {useCallback, useState} from 'react'
 import {type ObjectSchemaType, type SanityDocument, useClient} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
-import type {Language, Metadata, MetadataDocument, TranslationReference} from '../types'
-
 import {METADATA_SCHEMA_NAME} from '../constants'
 import {useOpenInNewPane} from '../hooks/useOpenInNewPane'
+import type {Language, Metadata, MetadataDocument, TranslationReference} from '../types'
 import {createReference} from '../utils/createReference'
 import {removeExcludedPaths} from '../utils/excludePaths'
 import {useDocumentInternationalizationContext} from './DocumentInternationalizationContext'

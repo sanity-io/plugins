@@ -1,9 +1,8 @@
-import type {Color, ColorChangeHandler, HSLColor, RGBColor} from 'react-color'
-import type {EditableInputStyles} from 'react-color/lib/components/common/EditableInput'
-
 import {Box, Flex, useTheme} from '@sanity/ui'
 import {useCallback, useMemo} from 'react'
+import type {Color, ColorChangeHandler, HSLColor, RGBColor} from 'react-color'
 import {EditableInput} from 'react-color/lib/components/common'
+import type {EditableInputStyles} from 'react-color/lib/components/common/EditableInput'
 // @ts-expect-error missing export
 import {isValidHex} from 'react-color/lib/helpers/color'
 

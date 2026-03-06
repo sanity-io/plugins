@@ -1,6 +1,5 @@
-import type {FieldMember, ObjectMember} from 'sanity'
-
 import {useMemo} from 'react'
+import type {FieldMember, ObjectMember} from 'sanity'
 
 /** @internal */
 export function useFieldMember(

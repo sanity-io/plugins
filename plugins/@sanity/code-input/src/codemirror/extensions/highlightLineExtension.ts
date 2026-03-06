@@ -1,17 +1,16 @@
-import type {ThemeContextValue} from '@sanity/ui'
-
 import {type Extension, StateEffect, StateField} from '@codemirror/state'
 import {Decoration, type DecorationSet, EditorView, lineNumbers} from '@codemirror/view'
+import type {ThemeContextValue} from '@sanity/ui'
 import {rgba} from '@sanity/ui/theme'
 
 import {getBackwardsCompatibleTone} from './backwardsCompatibleTone'
 
 const highlightLineClass = 'cm-highlight-line'
 
-export const addLineHighlight = StateEffect.define<number>()
-export const removeLineHighlight = StateEffect.define<number>()
+const addLineHighlight = StateEffect.define<number>()
+const removeLineHighlight = StateEffect.define<number>()
 
-export const lineHighlightField = StateField.define({
+const lineHighlightField = StateField.define({
   create() {
     return Decoration.none
   },

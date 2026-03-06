@@ -1,4 +1,5 @@
 import {fileURLToPath} from 'node:url'
+
 import {expect, test} from 'vitest'
 import {getPackageExportsManifest} from 'vitest-package-exports'
 

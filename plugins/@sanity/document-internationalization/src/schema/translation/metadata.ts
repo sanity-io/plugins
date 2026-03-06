@@ -2,9 +2,8 @@ import {TranslateIcon} from '@sanity/icons'
 import {defineField, defineType, type DocumentDefinition, type FieldDefinition} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
-import type {TranslationReference} from '../../types'
-
 import {METADATA_SCHEMA_NAME, TRANSLATIONS_ARRAY_NAME} from '../../constants'
+import type {TranslationReference} from '../../types'
 
 /**
  * Creates the `translation.metadata` document schema definition. This schema

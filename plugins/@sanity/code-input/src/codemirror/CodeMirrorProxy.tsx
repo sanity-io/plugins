@@ -1,5 +1,4 @@
 import type {Extension} from '@codemirror/state'
-
 import {EditorView} from '@codemirror/view'
 import {useRootTheme} from '@sanity/ui'
 import CodeMirror, {type ReactCodeMirrorProps, type ReactCodeMirrorRef} from '@uiw/react-codemirror'

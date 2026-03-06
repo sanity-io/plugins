@@ -1,17 +1,15 @@
 import {AddIcon} from '@sanity/icons'
 import {Button, Grid} from '@sanity/ui'
 
-import type {Language, InternationalizedArrayItem} from '../types'
-
-import {LANGUAGE_FIELD_NAME, MAX_COLUMNS} from '../constants'
+import {MAX_COLUMNS} from '../constants'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
 type AddButtonsProps = {
-  languages: Language[]
   readOnly: boolean
-  value: InternationalizedArrayItem[] | undefined
   handleClick: (languageId: string) => void
+  // Keys of languages that are already in use
+  languagesInUse: string[]
 }
 
 /**
@@ -30,10 +28,12 @@ type AddButtonsProps = {
  * and the display mode is `'codeOnly'`.
  */
 function AddButtons(props: AddButtonsProps) {
-  const {languages, readOnly, value, handleClick} = props
-  const {languageDisplay} = useInternationalizedArrayContext()
+  const {readOnly, languagesInUse, handleClick} = props
+  const {languageDisplay, filteredLanguages: languages} = useInternationalizedArrayContext()
 
-  return languages.length > 0 ? (
+  if (!languages.length) return null
+
+  return (
     <Grid columns={Math.min(languages.length, MAX_COLUMNS[languageDisplay])} gap={2}>
       {languages.map((language) => {
         const languageTitle: string = getLanguageDisplay(
@@ -48,9 +48,7 @@ function AddButtons(props: AddButtonsProps) {
             mode="ghost"
             fontSize={1}
             data-testid={`add-${language.id}`}
-            disabled={
-              readOnly || Boolean(value?.find((item) => item[LANGUAGE_FIELD_NAME] === language.id))
-            }
+            disabled={readOnly || languagesInUse.includes(language.id)}
             text={languageTitle}
             // Only show plus icon if there's one row or less AND only showing codes
             icon={
@@ -64,7 +62,7 @@ function AddButtons(props: AddButtonsProps) {
         )
       })}
     </Grid>
-  ) : null
+  )
 }
 
 export default AddButtons

@@ -1,17 +1,15 @@
-import type {CustomPickerInjectedProps} from 'react-color/lib/components/common/ColorWrap'
-
 import {AddIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {startTransition, useOptimistic, useRef} from 'react'
 import {type Color, CustomPicker} from 'react-color'
 import {Alpha, Checkboard, Hue, Saturation} from 'react-color/lib/components/common'
+import type {CustomPickerInjectedProps} from 'react-color/lib/components/common/ColorWrap'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
 import {styled} from 'styled-components'
 
-import type {ColorSchemaType, ColorValue} from './types'
-
 import {ColorList} from './ColorList'
 import {ColorPickerFields} from './ColorPickerFields'
+import type {ColorSchemaType, ColorValue} from './types'
 
 const ColorBox = styled(Box)`
   position: absolute;

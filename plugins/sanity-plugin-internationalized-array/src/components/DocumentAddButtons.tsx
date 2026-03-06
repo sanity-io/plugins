@@ -7,20 +7,16 @@ import {
   isSanityDocument,
   PatchEvent,
   setIfMissing,
+  useGetFormValue,
   useSchema,
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
-
 import {LANGUAGE_FIELD_NAME} from '../constants'
+import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import {getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
-import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
-type DocumentAddButtonsProps = {
-  value: Record<string, unknown> | undefined
-}
 /**
  * Document-level "add translation" panel that appears outside individual
  * internationalized array fields (when `buttonLocations` includes `'document'`).
@@ -39,15 +35,12 @@ type DocumentAddButtonsProps = {
  * For Portable Text and other array-based value fields, the initial value
  * is set to an empty array (`[]`) rather than `undefined`.
  */
-export default function DocumentAddButtons(props: DocumentAddButtonsProps): ReactElement {
-  const {filteredLanguages} = useInternationalizedArrayContext()
-  const value = isSanityDocument(props.value) ? props.value : undefined
+export default function DocumentAddButtons(): ReactElement {
+  const getFormValue = useGetFormValue()
 
   const toast = useToast()
   const {onChange} = useDocumentPane()
   const schema = useSchema()
-
-  const documentsToTranslation = getDocumentsToTranslate(value, [])
 
   // Helper function to determine if a field should be initialized as an array
   const getInitialValueForType = useCallback(
@@ -99,6 +92,16 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
 
   const handleDocumentButtonClick = useCallback(
     async (languageId: string) => {
+      const value = getFormValue([])
+      if (!isSanityDocument(value)) {
+        toast.push({
+          status: 'error',
+          title: 'No document value found',
+        })
+        return
+      }
+      const documentsToTranslation = getDocumentsToTranslate(value, [])
+
       const alreadyTranslated = documentsToTranslation.filter(
         (translation) => translation?.[LANGUAGE_FIELD_NAME] === languageId,
       )
@@ -158,7 +161,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
 
       onChange(PatchEvent.from(patches.flat()))
     },
-    [documentsToTranslation, getInitialValueForType, onChange, toast],
+    [getInitialValueForType, onChange, toast, getFormValue],
   )
   return (
     <Stack space={3}>
@@ -167,12 +170,7 @@ export default function DocumentAddButtons(props: DocumentAddButtonsProps): Reac
           Add translation to internationalized fields
         </Text>
       </Box>
-      <AddButtons
-        languages={filteredLanguages}
-        readOnly={false}
-        value={undefined}
-        handleClick={handleDocumentButtonClick}
-      />
+      <AddButtons readOnly={false} handleClick={handleDocumentButtonClick} languagesInUse={[]} />
     </Stack>
   )
 }

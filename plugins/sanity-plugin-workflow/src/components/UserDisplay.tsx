@@ -3,7 +3,6 @@ import {Button, Grid, Popover, useClickOutsideEvent} from '@sanity/ui'
 import {useCallback, useRef, useState} from 'react'
 
 import type {User} from '../types'
-
 import AvatarGroup from './DocumentCard/AvatarGroup'
 import UserAssignment from './UserAssignment'
 

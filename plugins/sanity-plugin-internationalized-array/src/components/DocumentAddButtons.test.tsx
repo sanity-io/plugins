@@ -8,6 +8,7 @@ import DocumentAddButtons from './DocumentAddButtons'
 
 const mockOnChange = vi.fn()
 const mockToastPush = vi.fn()
+const mockGetFormValue = vi.fn()
 
 vi.mock('sanity', () => ({
   isSanityDocument: vi.fn(
@@ -26,6 +27,7 @@ vi.mock('sanity', () => ({
     value,
     path,
   })),
+  useGetFormValue: vi.fn(() => mockGetFormValue),
   useSchema: vi.fn(() => ({get: vi.fn(() => undefined)})),
 }))
 
@@ -65,10 +67,12 @@ describe('DocumentAddButtons', () => {
   beforeEach(() => {
     mockOnChange.mockClear()
     mockToastPush.mockClear()
+    mockGetFormValue.mockReset()
   })
 
   test('renders heading and add buttons', () => {
-    render(<DocumentAddButtons value={undefined} />, {wrapper: ThemeWrapper})
+    mockGetFormValue.mockReturnValue(undefined)
+    render(<DocumentAddButtons />, {wrapper: ThemeWrapper})
 
     expect(screen.getByText('Add translation to internationalized fields')).toBeInTheDocument()
     expect(screen.getByTestId('add-fr')).toBeInTheDocument()
@@ -88,7 +92,8 @@ describe('DocumentAddButtons', () => {
       title: 'Just a plain string',
     }
 
-    render(<DocumentAddButtons value={docValue} />, {wrapper: ThemeWrapper})
+    mockGetFormValue.mockReturnValue(docValue)
+    render(<DocumentAddButtons />, {wrapper: ThemeWrapper})
     fireEvent.click(screen.getByTestId('add-fr'))
 
     expect(mockToastPush).toHaveBeenCalledWith({
@@ -115,7 +120,8 @@ describe('DocumentAddButtons', () => {
       ],
     }
 
-    render(<DocumentAddButtons value={docValue} />, {wrapper: ThemeWrapper})
+    mockGetFormValue.mockReturnValue(docValue)
+    render(<DocumentAddButtons />, {wrapper: ThemeWrapper})
 
     fireEvent.click(screen.getByTestId('add-fr'))
 
@@ -167,7 +173,8 @@ describe('DocumentAddButtons', () => {
       ],
     }
 
-    render(<DocumentAddButtons value={docValue} />, {wrapper: ThemeWrapper})
+    mockGetFormValue.mockReturnValue(docValue)
+    render(<DocumentAddButtons />, {wrapper: ThemeWrapper})
     fireEvent.click(screen.getByTestId('add-fr'))
     // onChange should have been called with patches
     expect(mockOnChange).toHaveBeenCalledWith([
@@ -224,7 +231,8 @@ describe('DocumentAddButtons', () => {
       ],
     }
 
-    render(<DocumentAddButtons value={docValue} />, {wrapper: ThemeWrapper})
+    mockGetFormValue.mockReturnValue(docValue)
+    render(<DocumentAddButtons />, {wrapper: ThemeWrapper})
     // Add 'en' again - should be filtered out as already existing
     fireEvent.click(screen.getByTestId('add-en'))
 

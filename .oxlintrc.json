@@ -12,12 +12,39 @@
   ],
   "jsPlugins": [{"name": "react-hooks-js", "specifier": "eslint-plugin-react-hooks"}],
   "ignorePatterns": ["**/.sanity/*", "**/dist/*", "**/sanity.types.ts"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
   "categories": {
     "correctness": "error",
     "suspicious": "error",
     "perf": "error"
   },
   "rules": {
+    "eslint/no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "lodash-es",
+            "message": "Import from individual modules instead, e.g. `import debounce from 'lodash-es/debounce.js'`. Barrel imports are ~55% slower."
+          },
+          {
+            "name": "react",
+            "importNames": ["createElement"],
+            "message": "Please use JSX instead of createElement, for example `createElement(Icon)` should be `<Icon />`"
+          }
+        ],
+        "patterns": [
+          {
+            "group": ["lodash.*", "lodash/*", "lodash"],
+            "message": "Please use individual imports from 'lodash-es' instead, e.g. `import debounce from 'lodash-es/debounce.js'`."
+          }
+        ]
+      }
+    ],
+
     // React Compiler checks
     // Recommended rules (from LintRulePreset.Recommended)
     "react-hooks-js/component-hook-factories": "error",
@@ -80,7 +107,9 @@
     "eslint/no-console": ["error", {"allow": ["warn", "error"]}],
     // Requires polyfills for older browsers
     "no-array-reverse": "off",
-    "no-array-sort": "off"
+    "no-array-sort": "off",
+    // Too noisy, common in callbacks/closures
+    "no-shadow": "off"
   },
   "overrides": [
     {

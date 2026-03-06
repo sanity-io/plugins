@@ -1,15 +1,14 @@
 import {definePlugin, isObjectInputProps} from 'sanity'
 
-import type {PluginConfig} from './types'
-
-import {InternationalizedArrayProvider} from './components/InternationalizedArrayContext'
-import InternationalizedField from './components/InternationalizedField'
+import {InternationalizedArrayFormInput} from './components/InternationalizedArrayFormInput'
+import {InternationalizedArrayLayout} from './components/InternationalizedArrayLayout'
 import Preload from './components/Preload'
 import {CONFIG_DEFAULT} from './constants'
 import {internationalizedArrayFieldAction} from './fieldActions'
 import array from './schema/array'
 import object from './schema/object'
-import {flattenSchemaType} from './utils/flattenSchemaType'
+import type {PluginConfig} from './types'
+import {hasInternationalizedArrayField} from './utils/hasInternationalizedArrayField'
 
 export const internationalizedArray = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...CONFIG_DEFAULT, ...config}
@@ -39,6 +38,11 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
         },
     // Optional: render "add language" buttons as field actions
     document: {
+      components: {
+        unstable_layout: (props) => (
+          <InternationalizedArrayLayout {...props} pluginConfig={pluginConfig} />
+        ),
+      },
       unstable_fieldActions: buttonLocations.includes('unstable__fieldAction')
         ? (prev) => [...prev, internationalizedArrayFieldAction]
         : undefined,
@@ -46,8 +50,6 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
     // Wrap document editor with a language provider
     form: {
       components: {
-        field: (props) => <InternationalizedField {...props} />,
-
         input: (props) => {
           const isRootInput = props.id === 'root' && isObjectInputProps(props)
 
@@ -55,18 +57,15 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
             return props.renderDefault(props)
           }
 
-          const flatFieldTypeNames = flattenSchemaType(props.schemaType).map(
-            (field) => field.type.name,
-          )
-          const hasInternationalizedArray = flatFieldTypeNames.some((name) =>
-            name.startsWith('internationalizedArray'),
-          )
+          const hasInternationalizedArray = hasInternationalizedArrayField(props.schemaType)
 
-          if (!hasInternationalizedArray) {
-            return props.renderDefault(props)
+          if (
+            hasInternationalizedArray &&
+            pluginConfig.includeForDocumentType(props.schemaType.name)
+          ) {
+            return <InternationalizedArrayFormInput {...props} pluginConfig={pluginConfig} />
           }
-
-          return <InternationalizedArrayProvider {...props} internationalizedArray={pluginConfig} />
+          return props.renderDefault(props)
         },
       },
     },

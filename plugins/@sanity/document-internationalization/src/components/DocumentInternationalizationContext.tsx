@@ -1,11 +1,9 @@
-import type {LayoutProps} from 'sanity'
-
 import {createContext, use, useContext, useMemo} from 'react'
+import type {LayoutProps} from 'sanity'
 import {useClient, useWorkspace} from 'sanity'
 
-import type {PluginConfig, PluginConfigContext} from '../types'
-
 import {DEFAULT_CONFIG} from '../constants'
+import type {PluginConfig, PluginConfigContext} from '../types'
 
 const DocumentInternationalizationContext = createContext<PluginConfigContext>(DEFAULT_CONFIG)
 
@@ -14,7 +12,8 @@ export function useDocumentInternationalizationContext(): PluginConfigContext {
 }
 
 type DocumentInternationalizationProviderProps = LayoutProps & {
-  pluginConfig: Required<PluginConfig>
+  pluginConfig: Required<Omit<PluginConfig, 'metadataInternationalization'>> &
+    Pick<PluginConfig, 'metadataInternationalization'>
 }
 
 // Simple promise cache for React.use
@@ -75,8 +74,13 @@ export function DocumentInternationalizationProvider(
     : // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
       (pluginConfig.supportedLanguages as PluginConfigContext['supportedLanguages'])
 
+  const contextValue = useMemo(
+    () => ({...pluginConfig, supportedLanguages}),
+    [pluginConfig, supportedLanguages],
+  )
+
   return (
-    <DocumentInternationalizationContext.Provider value={{...pluginConfig, supportedLanguages}}>
+    <DocumentInternationalizationContext.Provider value={contextValue}>
       {props.renderDefault(props)}
     </DocumentInternationalizationContext.Provider>
   )

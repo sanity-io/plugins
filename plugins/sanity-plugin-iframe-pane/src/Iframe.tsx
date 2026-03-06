@@ -1,10 +1,9 @@
-import type {HTMLAttributeReferrerPolicy} from 'react'
-
 import {WarningOutlineIcon} from '@sanity/icons'
 import {createPreviewSecret} from '@sanity/preview-url-secret/create-secret'
 import {definePreviewUrl} from '@sanity/preview-url-secret/define-preview-url'
 import {Box, Card, Container, Flex, Spinner, Stack, Text, usePrefersReducedMotion} from '@sanity/ui'
 import {AnimatePresence, motion, MotionConfig} from 'motion/react'
+import type {HTMLAttributeReferrerPolicy} from 'react'
 import {
   forwardRef,
   memo,
@@ -25,9 +24,8 @@ import {
 } from 'sanity'
 import {suspend} from 'suspend-react'
 
-import type {IframeSizeKey} from './types'
-
 import {DEFAULT_SIZE, sizes, Toolbar} from './Toolbar'
+import type {IframeSizeKey} from './types'
 
 export type UrlResolver = (
   document: SanityDocument | null,
@@ -410,7 +408,7 @@ function Loading({iframeSize}: {iframeSize: IframeSizeKey}) {
   )
 }
 
-export function ErrorCard({error}: {error: Error}) {
+function ErrorCard({error}: {error: Error}) {
   return (
     <Card height="fill">
       <Flex align="center" height="fill" justify="center" padding={4} sizing="border">
