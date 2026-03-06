@@ -156,8 +156,12 @@ export const assistFieldActions: DocumentFieldAction = {
       [privateInstructions, sharedInstructions],
     )
 
+    const visibleInstructions = useMemo(
+      () => (hideInstructions ? [] : instructions),
+      [hideInstructions, instructions],
+    )
+
     const runInstructionsGroup = useMemo(() => {
-      const visibleInstructions = hideInstructions ? [] : instructions
       return visibleInstructions?.length || imageCaptionAction || translateAction || imageGenAction
         ? node({
             type: 'group',
@@ -181,8 +185,7 @@ export const assistFieldActions: DocumentFieldAction = {
           })
         : undefined
     }, [
-      instructions,
-      hideInstructions,
+      visibleInstructions,
       currentUser?.id,
       onInstructionAction,
       isHidden,
@@ -295,7 +298,6 @@ export const assistFieldActions: DocumentFieldAction = {
     )
 
     // If there are no actions to show, render the empty action (sparkle button)
-    const visibleInstructions = hideInstructions ? [] : instructions
     if (
       !visibleInstructions?.length &&
       !imageCaptionAction &&
