@@ -30,6 +30,4 @@ export const SUPPORTED_LANGUAGES: CodeInputLanguage[] = [
 
 export const LANGUAGE_ALIASES: Record<string, string | undefined> = {js: 'javascript'}
 
-export const PATH_LANGUAGE = ['language']
 export const PATH_CODE = ['code']
-export const PATH_FILENAME = ['filename']

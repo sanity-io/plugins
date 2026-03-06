@@ -44,13 +44,6 @@ export type User = {
   updatedAt: string
 }
 
-export type DragData = {
-  documentId?: string
-  x?: number
-  y?: number
-  state?: string
-}
-
 export type Metadata = SanityDocumentLike & {
   _rev: string
   assignees: string[]

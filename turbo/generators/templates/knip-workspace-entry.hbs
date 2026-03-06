@@ -1,0 +1,8 @@
+    "plugins/{{ name }}": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],{{#if hasStyledComponents}}
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],{{/if}}
+    },

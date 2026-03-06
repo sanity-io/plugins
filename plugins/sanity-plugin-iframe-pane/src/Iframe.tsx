@@ -408,7 +408,7 @@ function Loading({iframeSize}: {iframeSize: IframeSizeKey}) {
   )
 }
 
-export function ErrorCard({error}: {error: Error}) {
+function ErrorCard({error}: {error: Error}) {
   return (
     <Card height="fill">
       <Flex align="center" height="fill" justify="center" padding={4} sizing="border">
