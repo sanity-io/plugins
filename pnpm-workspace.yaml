@@ -12,7 +12,7 @@ catalog:
   '@sanity/tsconfig': ^2.1.0
   '@sanity/ui': ^3.1.13
   '@sanity/vision': ^5.13.0
-  '@types/node': ^24.11.0
+  '@types/node': ^24.12.0
   '@types/react': ^19.2.14
   '@types/react-dom': ^19.2.3
   '@typescript/native-preview': 7.0.0-dev.20260301.1
