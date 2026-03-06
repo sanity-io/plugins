@@ -228,6 +228,8 @@ export default function InternationalizedArray(
   }, [value, languages])
 
   const languagesOutOfOrder = useMemo(() => {
+    // TODO: This is temporary to not remove the items created incorrectly by ai assist
+    return []
     if (!value?.length || !addedLanguages.length) {
       return []
     }

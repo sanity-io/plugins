@@ -8,8 +8,20 @@ export interface Language {
 export interface DocumentMember {
   schemaType: SchemaType
   path: Path
+  /**
+   * Path-segment identifier for this member.
+   *
+   * For array members this is the array item's `_key` value, not a language id.
+   */
   name: string
   value: unknown
+  /**
+   * Parent container value for this member.
+   *
+   * For array members this is the full array value, which can be used by
+   * `translationOutputs` implementations to resolve sibling items.
+   */
+  parentValue?: unknown
 }
 
 export interface TranslationOutput {
@@ -92,10 +104,14 @@ export interface FieldTranslationConfig {
    *
    * ## Default function
    *
-   * The default function for `translationOutputs` is configured to be automatically compatible with sanity-plugin-internationalized-array
-   * and object types prefixed with "locale".
+   * The default function for `translationOutputs` is configured to be automatically compatible with
+   * `sanity-plugin-internationalized-array` and object types prefixed with "locale".
    *
-   * See <link to source for defaultTranslationOutputs> implementation details.
+   * For `internationalizedArray*` item objects, the default implementation resolves language from
+   * `documentMember.value.language` (v5+) with a fallback to legacy `_key`-based language identity.
+   * Mixed datasets containing both shapes are supported.
+   *
+   * See `defaultLanguageOutputs` implementation details.
    *
    * ## Example
    * A document has the following document members:

@@ -534,6 +534,7 @@ assist({
 ```
 These documents will get a **Translate fields** instruction added to the document AI Assist dropdown.
 Out of the box, this is sufficient config for document types using the `internationalizedArray*` types provided by [sanity-plugin-internationalized-array](https://github.com/sanity-io/sanity-plugin-internationalized-array?tab=readme-ov-file#sanity-plugin-internationalized-array).
+For internationalized arrays, the default mapping resolves language by `item.language` (v5+) and falls back to legacy `_key` language identity (v4 and older) for compatibility during migration.
 It will also work without further config for object types named `locale*`, (e.g. `localeTitle`, `localeDescription`) with one field per language:
 _Example locale object supported by default_
 ```ts
@@ -646,9 +647,23 @@ It determines the relationships between document paths: Given a document path an
 The function should return a `TranslationOutput[]` array that contains all the paths where translations from `documentMember` (in the language received in `translateFromLanguageId`) should be output.
 The function should return `undefined` for all document members that should not be directly translated, or are nested fields under a translated path.
 #### Default function
-The default `translationOutputs` is available using `import {defaultTranslationOutputs} from '@sanity/assist`.
+The default `translationOutputs` is available using `import {defaultLanguageOutputs} from '@sanity/assist'`.
+
+#### Out-of-the-box i18n-array compatibility
+
+`defaultLanguageOutputs` supports both data models from `sanity-plugin-internationalized-array`:
+
+- **v5+ (preferred):** language identity comes from `item.language` while `_key` is typically random.
+- **v4 and older (legacy):** language identity comes from `_key`.
+- **Mixed documents:** both shapes can coexist while migrating.
+
+When resolving target siblings for translation output paths, `defaultLanguageOutputs` first looks for array items by `item.language`, then falls back to `_key` for legacy data.
+This aligns with the `sanity-plugin-internationalized-array` v5 migration from `_key` language identity to `language` ([PR #567](https://github.com/sanity-io/plugins/pull/567)).
+
 #### Example
+
 Given the following document:
+
 ```ts
 {
 	titles: {
@@ -664,19 +679,23 @@ Given the following document:
 	}
 }
 ```
+
 When translating from English to German, `translationOutputs` will be
 invoked multiple times.
 The following parameters will be the same every invocation:
+
 - `translateFromLanguageId` will be `'en'`
 - `translateToLanguageIds` will be `['de']`
-`documentMember` and `enclosingType` will change between each invocation, and take the following values:
+  `documentMember` and `enclosingType` will change between each invocation, and take the following values:
+
 1. `{path: 'titles', name: 'titles', schemaType: ObjectSchemaType}`, `ObjectSchemaType`
 2. `{path: 'titles.en', name: 'en', schemaType: ObjectSchemaType}`, `ObjectSchemaType`
 3. `{path: 'titles.en.title', name: 'title', schemaType: StringSchemaType}`, `ObjectSchemaType`
 4. `{path: 'titles.en.subtitle', name: 'subtitle', schemaType: StringSchemaType}`, `ObjectSchemaType`
 5. `{path: 'titles.de', name: 'de', schemaType: ObjectSchemaType}`, `ObjectSchemaType`
-To indicate that you want everything under `title.en` to be translated into `title.de`, `translationOutputs` needs to return `[id: 'de', outputPath: 'titles.de']` when invoked with `documentMember.path: 'titles.en'`.
-The following function enables this:
+   To indicate that you want everything under `title.en` to be translated into `title.de`, `translationOutputs` needs to return `[id: 'de', outputPath: 'titles.de']` when invoked with `documentMember.path: 'titles.en'`.
+   The following function enables this:
+
 ```ts
 function translationOutputs(
   member,
@@ -699,7 +718,9 @@ function translationOutputs(
   return undefined
 }
 ```
+
 [### Full field translation configuration example]()
+
 ```ts
 assist({
   translate: {
@@ -733,7 +754,9 @@ assist({
   },
 })
 ```
+
 ## Adding translation actions to fields
+
 <img width="250" alt="Translate action on field" src="https://github.com/sanity-io/assist/assets/835514/e6dc0860-90a7-4f7a-b3d2-71893b09862f">
 <img width="250" alt="Translate fields action on field" src="https://github.com/sanity-io/assist/assets/835514/acc5fa23-2022-4eae-922d-5c83dda7379c">
 By default, **Translate document** and **Translate fields…** instructions are only added to the top-level document instruction menu.
@@ -928,7 +951,7 @@ function useExampleFieldActions(props: AssistFieldActionProps) {
             instructionParams: {
               doc: {type: 'document'},
               field: {type: 'field', path},
-              lang: {type: 'field', path: ['language']},
+              lang: {type: 'field', path: ['language']}, // use your configured document language field path
             },
             target: {
               path,

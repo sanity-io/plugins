@@ -9,6 +9,7 @@ import {
   type SanityDocumentLike,
 } from 'sanity'
 
+import {randomKey} from '../_lib/randomKey'
 import type {DocumentMember, TranslationOutput, TranslationOutputsFunction} from './types'
 
 export interface FieldLanguageMap {
@@ -47,6 +48,9 @@ function extractPaths(
     const fieldPath = [...path, field.name]
     const fieldSchema = field.type
     const {value} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
+    const parentValue = path.length
+      ? (extractWithPath(pathToString(path), doc)[0]?.value ?? undefined)
+      : doc
     if (value === undefined || value === null) {
       return acc
     }
@@ -56,6 +60,7 @@ function extractPaths(
       name: field.name,
       schemaType: fieldSchema,
       value,
+      parentValue,
     }
 
     if (fieldSchema.jsonType === 'object') {
@@ -102,6 +107,7 @@ function extractPaths(
               name: item._key,
               schemaType: itemSchema,
               value: item,
+              parentValue: arrayValue,
             }
             arrayPaths = [...arrayPaths, arrayMember, ...innerFields]
           }
@@ -115,11 +121,17 @@ function extractPaths(
   }, [])
 }
 
-/**
- * Default implementation for plugin config `translate.field.translationOutputs`
- *
- * @see FieldTranslationConfig#translationOutputs
- */
+type InternationalizedArrayItemValue = {
+  language?: string
+  _key?: string
+  value?: unknown
+}
+
+const isInternationalizedArrayItemValue = (
+  value: unknown,
+): value is InternationalizedArrayItemValue =>
+  typeof value === 'object' && value !== null && ('language' in value || '_key' in value)
+
 export const defaultLanguageOutputs: TranslationOutputsFunction = function (
   member,
   enclosingType,
@@ -128,11 +140,34 @@ export const defaultLanguageOutputs: TranslationOutputsFunction = function (
 ) {
   if (
     member.schemaType.jsonType === 'object' &&
-    member.schemaType.name.startsWith('internationalizedArray')
+    member.schemaType.name.startsWith('internationalizedArray') &&
+    isInternationalizedArrayItemValue(member.value)
   ) {
     const pathEnd = member.path.slice(-1)
 
-    const language = pathEnd[0] && isKeySegment(pathEnd[0]) ? pathEnd[0]._key : null
+    const language =
+      member.value.language ??
+      member.value._key ??
+      (pathEnd[0] && isKeySegment(pathEnd[0]) ? pathEnd[0]._key : null)
+    const isV5InternationalizedArrayItem = member.value.language !== undefined
+
+    if (isV5InternationalizedArrayItem) {
+      return language === translateFromLanguageId
+        ? translateToLanguageIds.map((translateToId) => {
+            const outputPathKey =
+              (Array.isArray(member.parentValue)
+                ? member.parentValue
+                : ([] as InternationalizedArrayItemValue[])
+              ).find((item) => item.language === translateToId)?._key || randomKey()
+
+            return {
+              id: translateToId,
+              outputPath: [...member.path.slice(0, -1), {_key: outputPathKey}],
+            }
+          })
+        : undefined
+    }
+
     return language === translateFromLanguageId
       ? translateToLanguageIds.map((translateToId) => ({
           id: translateToId,
