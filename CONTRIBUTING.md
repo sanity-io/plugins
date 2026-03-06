@@ -152,21 +152,13 @@ If you're creating a package that has never been published to npm before:
 2. Find the **"Setup a new npm package with Trusted Publishing"** workflow
 3. Click **"Run workflow"**
 4. Enter the package name (e.g., `@sanity/my-new-plugin` or `sanity-plugin-my-feature`)
-5. The workflow will create the package on npm and output instructions for configuring trusted publishing
+5. Click **"Run workflow"** — the workflow will create the package on npm
 
-After the workflow completes, go to the package settings on npm and configure trusted publishing with these values:
+Then, configure trusted publishing by running locally (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
 
-| Setting       | Value           |
-| ------------- | --------------- |
-| Organization  | `sanity-io`     |
-| Repository    | `plugins`       |
-| Workflow name | `release.yml`   |
-| Environment   | _(leave blank)_ |
-
-Under token settings, configure:
-
-- **Require 2FA** for publishing
-- **Disallow tokens** (granular and automation tokens)
+```bash
+npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins
+```
 
 This sets up [OIDC-based trusted publishing](https://docs.npmjs.com/generating-provenance-statements) so the release workflow can publish packages without storing npm tokens.
 
@@ -174,7 +166,16 @@ This sets up [OIDC-based trusted publishing](https://docs.npmjs.com/generating-p
 
 ⚠️ **Do NOT use the "Setup a new npm package with Trusted Publishing" workflow for existing packages!** That workflow is only for brand new packages that don't have an npm settings page yet.
 
-For packages that are already published to npm, manually configure trusted publishing:
+For packages that are already published to npm, configure trusted publishing using the npm CLI (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
+
+```bash
+npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins
+```
+
+<details>
+<summary>Alternative: Configure via npm website</summary>
+
+If you don't have npm >= 11.10.0, you can configure trusted publishing manually:
 
 1. Go to your package's access settings page: `https://www.npmjs.com/package/YOUR-PACKAGE-NAME/access`
 2. Under **"Publishing access"**, click **"Add a trusted publisher"** and select **"GitHub Actions"**
@@ -188,9 +189,8 @@ For packages that are already published to npm, manually configure trusted publi
 | **Environment name** | _(leave empty)_ |
 
 4. Click **"Add trusted publisher"**
-5. Under **"Token settings"**, ensure:
-   - ✅ **Require 2FA** for publishing is enabled
-   - ✅ **Disallow tokens** (both granular and automation tokens)
+
+</details>
 
 ### 2. Init the plugin workspace
 
@@ -226,7 +226,13 @@ Commit the changeset file with your PR.
 
 ### 1. Set Up Trusted Publishing
 
-Since the plugin is already published to npm, you need to manually configure trusted publishing. See [For Existing Packages](#for-existing-packages-already-on-npm) above for detailed instructions.
+Since the plugin is already published to npm, configure trusted publishing using the npm CLI (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
+
+```bash
+npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins
+```
+
+See [For Existing Packages](#for-existing-packages-already-on-npm) above for alternative manual instructions.
 
 ### 2. Init the plugin workspace
 

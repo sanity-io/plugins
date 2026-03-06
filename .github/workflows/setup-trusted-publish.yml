@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: 'The package name name, for example @sanity/foo-bar'
+        description: 'The package name, for example @sanity/foo-bar'
         required: true
 
 permissions:
@@ -18,3 +18,11 @@ jobs:
       - uses: ./.github/actions/setup
       - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ~/.npmrc
       - run: pnpm setup-npm-trusted-publish ${{ inputs.package }}
+      - name: Configure trusted publishing
+        run: |
+          echo "📦 Package ${{ inputs.package }} has been created on npm."
+          echo ""
+          echo "Next, configure trusted publishing by running locally (requires npm >= 11.10.0):"
+          echo ""
+          echo "  npm trust github ${{ inputs.package }} --file=release.yml --repository=sanity-io/plugins"
+          echo ""

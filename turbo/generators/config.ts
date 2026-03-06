@@ -50,16 +50,11 @@ First, create the package on npm by running the setup-trusted-publish workflow:
 2. Click "Run workflow"
 3. Enter "${name}" in "The package name"
 4. Click "Run workflow" in the popover
-5. Wait for the workflow to complete - this creates the initial package on npm
+5. Wait for the workflow to complete
 
-Then, configure trusted publishing so releases can be automated:
+Then, configure trusted publishing by running locally (requires npm >= 11.10.0):
 
-6. Open https://www.npmjs.com/package/${name}/access
-7. Under "Trusted Publisher", click "GitHub Actions"
-8. In "Organization or user", enter: sanity-io
-9. In "Repository", enter: plugins
-10. In "Workflow filename", enter: release.yml
-11. Click "Set up connection"
+  npm trust github ${name} --file=release.yml --repository=sanity-io/plugins
 
 After completing these steps, run this generator again.
 `
