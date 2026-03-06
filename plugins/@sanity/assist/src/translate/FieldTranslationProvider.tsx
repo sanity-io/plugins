@@ -43,7 +43,7 @@ export interface FieldTranslationContextValue {
   translationLoading: boolean
 }
 
-export const FieldTranslationContext = createContext<FieldTranslationContextValue>({
+const FieldTranslationContext = createContext<FieldTranslationContextValue>({
   openFieldTranslation: () => {},
   translationLoading: false,
 })

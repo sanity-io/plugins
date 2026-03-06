@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignoreWorkspaces": ["dev/*", "plugins/@sanity/assist"],
+  "ignoreWorkspaces": ["dev/*"],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,
@@ -27,6 +27,14 @@
     "packages/@repo/tsconfig": {},
     "packages/@repo/package.config": {
       "project": ["src/**/*.ts"],
+    },
+    "plugins/@sanity/assist": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
     },
     "plugins/@sanity/code-input": {
       "entry": ["package.config.ts"],

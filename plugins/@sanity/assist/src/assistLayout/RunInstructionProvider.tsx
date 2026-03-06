@@ -32,7 +32,7 @@ export interface RunInstructionContextValue {
   instructionLoading: boolean
 }
 
-export const RunInstructionContext = createContext<RunInstructionContextValue>({
+const RunInstructionContext = createContext<RunInstructionContextValue>({
   runInstruction: () => {},
   getUserInput: async () => undefined,
   instructionLoading: false,
@@ -230,7 +230,7 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
   )
 }
 
-export function UserInput(props: {
+function UserInput(props: {
   block: UserInputBlock
   inputs: BlockInputs
   setInputs: Dispatch<SetStateAction<BlockInputs>>

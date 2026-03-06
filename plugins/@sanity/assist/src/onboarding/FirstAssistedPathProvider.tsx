@@ -3,7 +3,7 @@ import {type FieldMember, type ObjectInputProps, pathToString} from 'sanity'
 
 import {isAssistSupported} from '../helpers/assistSupported'
 
-export const FirstAssistedPathContext = createContext<string | undefined>(undefined)
+const FirstAssistedPathContext = createContext<string | undefined>(undefined)
 
 export interface FirstAssistedPathProviderProps {
   members: ObjectInputProps['members']

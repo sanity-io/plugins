@@ -39,7 +39,7 @@ export interface FieldRef {
 
 const maxDepth = 6
 
-export function getTypeIcon(schemaType: SchemaType): ComponentType {
+function getTypeIcon(schemaType: SchemaType): ComponentType {
   let t: SchemaType | undefined = schemaType
 
   while (t) {

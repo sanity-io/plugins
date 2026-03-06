@@ -1,18 +1,5 @@
 import type {ConnectorLine, ConnectorOptions} from '../../_lib/connector'
 
-export function drawArrowPath(
-  options: ConnectorOptions,
-  x: number,
-  y: number,
-  dir: number,
-): string {
-  return [
-    `M ${x - options.arrow.size} ${y - options.arrow.size * dir} `,
-    `L ${x} ${y}`,
-    `L ${x + options.arrow.size} ${y - options.arrow.size * dir}`,
-  ].join('')
-}
-
 function moveTo(x: number, y: number) {
   return `M${x} ${y}`
 }

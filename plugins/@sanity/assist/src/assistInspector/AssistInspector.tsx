@@ -191,7 +191,7 @@ export function AssistInspectorWrapper(props: DocumentInspectorProps) {
   return <AssistInspector {...props} />
 }
 
-export function AssistInspector(props: DocumentInspectorProps) {
+function AssistInspector(props: DocumentInspectorProps) {
   const {params} = useAiPaneRouter()
 
   const boundary = useRef<HTMLDivElement | null>(null)
