@@ -255,9 +255,6 @@ importers:
       '@sanity/mutator':
         specifier: ^5
         version: 5.13.0(@types/react@19.2.14)
-      '@sanity/schema':
-        specifier: ^5
-        version: 5.13.0(@types/react@19.2.14)(debug@4.4.3)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.1.13(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-is@19.2.4)(react@19.2.4)
@@ -289,6 +286,9 @@ importers:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
         version: 10.4.7(@types/babel__core@7.20.5)(@types/node@25.3.3)(@typescript/native-preview@7.0.0-dev.20260303.1)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.19.1)(typescript@5.9.3)
+      '@sanity/schema':
+        specifier: ^5
+        version: 5.13.0(@types/react@19.2.14)(debug@4.4.3)
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
