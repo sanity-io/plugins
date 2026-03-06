@@ -41,7 +41,8 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/ui": "catalog:"
+    "@sanity/ui": "catalog:",
+    "rxjs": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
@@ -62,7 +63,6 @@
     "react": "^19.2",
     "react-dom": "^19.2",
     "react-rx": "^4",
-    "rxjs": "catalog:",
     "sanity": "^5"
   },
   "engines": {
