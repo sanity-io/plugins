@@ -1,5 +1,6 @@
 import type {FilterFieldFunction} from '@sanity/language-filter'
 
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import {isInternationalizedArrayItemType} from '../types'
 
 /**
@@ -14,7 +15,9 @@ export const internationalizedArrayLanguageFilter: FilterFieldFunction = (
 ) => {
   if (isInternationalizedArrayItemType(enclosingType.name)) {
     const language =
-      typeof parentValue?.['language'] === 'string' ? parentValue?.['language'] : null
+      typeof parentValue?.[LANGUAGE_FIELD_NAME] === 'string'
+        ? parentValue?.[LANGUAGE_FIELD_NAME]
+        : null
     return language ? selectedLanguageIds.includes(language) : false
   }
   return true
