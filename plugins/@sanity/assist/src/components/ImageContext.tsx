@@ -1,4 +1,4 @@
-import {createContext, useEffect, useMemo, useState} from 'react'
+import {createContext, useEffect, useMemo, useRef} from 'react'
 import {getPublishedId, type InputProps, pathToString, usePerspective, useSyncState} from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
 
@@ -20,7 +20,7 @@ export function ImageContextProvider(props: InputProps) {
   // oxlint-disable-next-line no-unsafe-type-assertion
   const assetRef = (value as any)?.asset?._ref
   const {selectedReleaseId} = usePerspective()
-  const [assetRefState, setAssetRefState] = useState<string | undefined>(assetRef)
+  const lastAssetRef = useRef<string | undefined>(assetRef)
 
   const {assistableDocumentId, documentSchemaType} = useAssistDocumentContext()
   const {config, status} = useAiAssistanceConfig()
@@ -42,13 +42,12 @@ export function ImageContextProvider(props: InputProps) {
       assetRef &&
       assistableDocumentId &&
       descriptionField?.updateOnImageChange &&
-      assetRef !== assetRefState &&
+      assetRef !== lastAssetRef.current &&
       !isSyncing &&
       !isShowingOlderRevision &&
       !readOnly
     ) {
-      // oxlint-disable-next-line react-hooks-js/set-state-in-effect
-      setAssetRefState(assetRef)
+      lastAssetRef.current = assetRef
       if (canUseAssist(status)) {
         void generateCaption({
           path: pathToString([...path, descriptionField.path]),
@@ -60,7 +59,6 @@ export function ImageContextProvider(props: InputProps) {
     schemaType,
     path,
     assetRef,
-    assetRefState,
     assistableDocumentId,
     generateCaption,
     isSyncing,

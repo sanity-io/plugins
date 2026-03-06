@@ -15,13 +15,12 @@ export function createAssistDocumentPresence(documentId: string | undefined) {
 function AssistDocumentPresence() {
   const {assistDocument, syntheticTasks} = useAssistDocumentContext()
   const anyPresence = useMemo(() => {
-    // oxlint-disable-next-line react-hooks-js/todo
-    const anyPresence = [...(assistDocument?.tasks ?? []), ...(syntheticTasks ?? [])]
-      ?.filter((run) => !run.ended && !run.reason)
-      ?.flatMap((run) => run.presence ?? [])
+    const matchingPresence = [...(assistDocument?.tasks ?? []), ...(syntheticTasks ?? [])]
+      .filter((run) => !run.ended && !run.reason)
+      .flatMap((run) => run.presence ?? [])
       .find((f) => f.started && new Date().getTime() - new Date(f.started).getTime() < 30000)
-    if (anyPresence) {
-      return aiPresence(anyPresence, [])
+    if (matchingPresence) {
+      return aiPresence(matchingPresence, [])
     }
     const anyRun = assistDocument?.tasks
       ?.filter((run) => !run.ended && !run.reason)
