@@ -48,7 +48,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "date-fns": "^3.6.0",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "react-fast-compare": "^3.2.2",
     "rxjs": "catalog:",
     "rxjs-exhaustmap-with-trailing": "^2.1.1"
