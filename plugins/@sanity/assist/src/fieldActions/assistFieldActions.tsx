@@ -23,6 +23,7 @@ import {isSchemaAssistEnabled} from '../helpers/assistSupported'
 import {getConditionalMembers} from '../helpers/conditionalMembers'
 import {getInstructionTitle, usePathKey} from '../helpers/misc'
 import {useAssistSupported} from '../helpers/useAssistSupported'
+import type {AssistOptions} from '../schemas/typeDefExtensions'
 import {translateActions, type TranslateProps} from '../translate/translateActions'
 import {documentRootKey, fieldPathParam, instructionParam, type StudioInstruction} from '../types'
 import {type AgentActionConditionalPath, useCustomFieldActions} from './customFieldActions'
@@ -40,7 +41,10 @@ export const assistFieldActions: DocumentFieldAction = {
     const {schemaType} = props
 
     const {config} = useAiAssistanceConfig()
-    const hideInstructions = config?.hideInstructions ?? false
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const fieldOptions = schemaType?.options as AssistOptions | undefined
+    const hideInstructions =
+      fieldOptions?.aiAssist?.hideInstructions ?? config?.hideInstructions ?? false
 
     const {
       assistDocument,

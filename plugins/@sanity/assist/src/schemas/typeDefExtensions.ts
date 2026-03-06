@@ -10,6 +10,18 @@ export interface AssistOptions {
      * Only has an effect in document types configured for document or field level translations.
      */
     translateAction?: boolean
+
+    /**
+     * Set to true to hide instruction management UI for this field or type.
+     *
+     * When enabled, the "Manage instructions" action and existing instruction items
+     * will not appear in the field action menu for this field. Translation, image,
+     * and custom field actions remain available.
+     *
+     * This overrides the plugin-level `hideInstructions` setting for this specific field.
+     * Set to `false` to explicitly show instructions on a field even when hidden globally.
+     */
+    hideInstructions?: boolean
   }
 }
 

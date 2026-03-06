@@ -180,6 +180,55 @@ When `hideInstructions` is enabled:
 
 This is useful when you want to provide translation capabilities to your team without exposing the instruction creation and management interface.
 
+#### Field-level `hideInstructions`
+
+You can also control instruction visibility per field using `options.aiAssist.hideInstructions`. This overrides the plugin-level setting for that specific field or type.
+
+Hide instructions on a specific field:
+
+```ts
+defineField({
+  name: 'subtitle',
+  type: 'internationalizedArrayString',
+  options: {
+    aiAssist: {
+      hideInstructions: true,
+      translateAction: true,
+    },
+  },
+})
+```
+
+Or, hide instructions globally but re-enable them on specific fields:
+
+```ts
+// In plugin config: hide instructions everywhere
+assist({
+  hideInstructions: true,
+  translate: {
+    field: {
+      documentTypes: ['article'],
+      languages: [
+        {id: 'en', title: 'English'},
+        {id: 'de', title: 'German'},
+      ],
+    },
+  },
+})
+
+// In schema: re-enable instructions for a specific field
+defineField({
+  name: 'body',
+  type: 'array',
+  of: [{type: 'block'}],
+  options: {
+    aiAssist: {
+      hideInstructions: false,
+    },
+  },
+})
+```
+
 ## Schema configuration
 
 By default, most string, object, and array field types (including Portable Text!) have AI writing assistance enabled. Your assistant can write to all compatible fields that it detects.
