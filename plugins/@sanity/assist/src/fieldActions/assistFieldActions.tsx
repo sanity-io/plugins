@@ -192,7 +192,6 @@ export const assistFieldActions: DocumentFieldAction = {
     }, [])
 
     const getConditionalPaths: () => AgentActionConditionalPath[] = useCallback(() => {
-      // oxlint-disable-next-line no-map-spread
       return (formStateRef.current ? getConditionalMembers(formStateRef.current) : []).flatMap(
         (cm) => {
           const path = stringToPath(cm.path)
@@ -201,9 +200,10 @@ export const assistFieldActions: DocumentFieldAction = {
             return []
           }
           return {
-            ...cm,
             // oxlint-disable-next-line no-unsafe-type-assertion
             path: path as AgentActionPath,
+            readOnly: cm.readOnly,
+            hidden: cm.hidden,
           }
         },
       )

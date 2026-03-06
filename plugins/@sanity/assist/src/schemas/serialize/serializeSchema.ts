@@ -25,8 +25,7 @@ interface Options {
   leanFormat?: boolean
 }
 
-// oxlint-disable-next-line prefer-set-has
-const inlineTypes = ['document', 'object', 'image', 'file']
+const inlineTypes = new Set(['document', 'object', 'image', 'file'])
 
 export function serializeSchema(schema: Schema, options?: Options): SerializedSchemaType[] {
   const list = schema
@@ -98,7 +97,7 @@ function getBaseFields(
     of: 'of' in type && typeName === 'array' ? arrayOf(type, schema, options) : undefined,
     to: 'to' in type && typeName === 'reference' ? refToTypeNames(type) : undefined,
     fields:
-      'fields' in type && inlineTypes.includes(typeName)
+      'fields' in type && inlineTypes.has(typeName)
         ? serializeFields(schema, type, options)
         : undefined,
     annotations:

@@ -1,4 +1,3 @@
-// oxlint-disable no-accumulating-spread
 import {extractWithPath} from '@sanity/mutator'
 import {
   isDocumentSchemaType,
@@ -61,7 +60,8 @@ function extractPaths(
     if (fieldSchema.jsonType === 'object') {
       const innerFields = extractPaths(doc, fieldSchema, fieldPath, maxDepth)
 
-      return [...acc, thisFieldWithPath, ...innerFields]
+      acc.push(thisFieldWithPath, ...innerFields)
+      return acc
     } else if (
       fieldSchema.jsonType === 'array' &&
       fieldSchema.of.length &&
@@ -71,7 +71,7 @@ function extractPaths(
     ) {
       const {value: arrayValue} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
 
-      let arrayPaths: DocumentMember[] = []
+      acc.push(thisFieldWithPath)
       // oxlint-disable-next-line no-unsafe-type-assertion
       if ((arrayValue as any)?.length) {
         // oxlint-disable-next-line no-unsafe-type-assertion
@@ -103,15 +103,16 @@ function extractPaths(
               schemaType: itemSchema,
               value: item,
             }
-            arrayPaths = [...arrayPaths, arrayMember, ...innerFields]
+            acc.push(arrayMember, ...innerFields)
           }
         }
       }
 
-      return [...acc, thisFieldWithPath, ...arrayPaths]
+      return acc
     }
 
-    return [...acc, thisFieldWithPath]
+    acc.push(thisFieldWithPath)
+    return acc
   }, [])
 }
 

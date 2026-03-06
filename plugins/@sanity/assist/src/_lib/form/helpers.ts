@@ -24,8 +24,7 @@ export function createProtoValue(type: SchemaType): any {
 export function createProtoArrayValue<Item extends ObjectItem>(type: SchemaType): Item {
   if (!isObjectSchemaType(type)) {
     throw new Error(
-      // oxlint-disable-next-line no-base-to-string, restrict-template-expressions
-      `Invalid item type: "${type.type}". Default array input can only contain objects (for now)`,
+      `Invalid item type: "${type.type?.name ?? 'unknown'}". Default array input can only contain objects (for now)`,
     )
   }
 

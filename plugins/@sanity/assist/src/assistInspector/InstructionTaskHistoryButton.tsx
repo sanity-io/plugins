@@ -108,14 +108,12 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
             task.started &&
             new Date().getTime() - new Date(task.started).getTime() < maxHistoryVisibilityMs,
         )
-        // oxlint-disable-next-line no-map-spread
         .map((task): CancelableInstructionTask => {
           const instruction = instructions?.find((i) => i._key === task.instructionKey)
-          return {
-            ...task,
+          return Object.assign({}, task, {
             title: showTitles ? (task.title ?? getInstructionTitle(instruction)) : undefined,
             cancel: () => cancelRun(task._key),
-          }
+          })
         }) ?? []
     t.sort((a, b) => new Date(b.started ?? '').getTime() - new Date(a.started ?? '').getTime())
     return t

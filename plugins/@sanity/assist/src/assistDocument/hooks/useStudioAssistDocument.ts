@@ -57,27 +57,23 @@ export function useStudioAssistDocument({
       return undefined
     }
     const tasks = assistTasksStatus?.tasks ?? []
-    // oxlint-disable-next-line no-map-spread
     const fields = (assistDocument?.fields ?? []).map((assistField): StudioAssistField => {
-      return {
-        ...assistField,
+      return Object.assign({}, assistField, {
         tasks: tasks.filter((task) => task.path === assistField.path),
         instructions: assistField.instructions
           ?.filter((p) => !p.userId || p.userId === currentUser?.id)
           .map((instruction) => asStudioInstruction(instruction, tasks)),
-      }
+      })
     })
     return typed<StudioAssistDocument>({
       ...assistDocument,
-      // oxlint-disable-next-line no-map-spread
       tasks: tasks?.map((task) => {
         const instruction = fields
           .find((f) => f.path === task.path)
           ?.instructions?.find((i) => i._key === task.instructionKey)
-        return {
-          ...task,
+        return Object.assign({}, task, {
           instruction,
-        }
+        })
       }),
       fields: fields,
     })
