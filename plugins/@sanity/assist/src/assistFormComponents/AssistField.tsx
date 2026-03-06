@@ -32,7 +32,7 @@ export function AssistFieldWrapper(props: FieldProps) {
   return props.renderDefault(props)
 }
 
-export function AssistField(props: FieldProps) {
+function AssistField(props: FieldProps) {
   const isPortableText = useMemo(
     () => !!(isArraySchemaType(props.schemaType) && isPortableTextArray(props.schemaType)),
     [props.schemaType],

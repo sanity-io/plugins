@@ -9,7 +9,7 @@ export function usePathKey(path: Path | string) {
   }, [path])
 }
 
-export function getPathKey(path: Path | string) {
+function getPathKey(path: Path | string) {
   if (path.length) {
     return Array.isArray(path) ? pathToString(path) : path
   }

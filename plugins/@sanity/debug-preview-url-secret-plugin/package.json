@@ -49,8 +49,6 @@
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@types/react": "catalog:",
-    "react": "catalog:",
     "sanity": "catalog:"
   },
   "peerDependencies": {

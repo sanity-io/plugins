@@ -1,4 +1,4 @@
-export const toFieldLanguagesKeyPrefix = 'sanityStudio:assist:field-languages:from:'
+const toFieldLanguagesKeyPrefix = 'sanityStudio:assist:field-languages:from:'
 
 export function getPreferredToFieldLanguages(fromLanguageId: string): string[] {
   if (typeof localStorage === 'undefined') {
