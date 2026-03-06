@@ -9,7 +9,6 @@ import {
   ThListIcon,
 } from '@sanity/icons'
 import {Box, Flex, Stack, Text, Tooltip} from '@sanity/ui'
-import {createElement} from 'react'
 import {defineArrayMember, defineField, defineType, type ObjectSchemaType} from 'sanity'
 
 import {AssistDocumentForm} from '../assistDocument/components/AssistDocumentForm'
@@ -273,11 +272,14 @@ export const instruction = defineType({
   components: {
     input: InstructionInput,
     preview: (props: any) => {
+      const Icon = props.icon
       return (
         <Flex gap={3} align="center" padding={2}>
-          {props.icon && (
+          {Icon && (
             <Box flex="none">
-              <Text size={1}>{createElement(props.icon)}</Text>
+              <Text size={1}>
+                <Icon />
+              </Text>
             </Box>
           )}
 

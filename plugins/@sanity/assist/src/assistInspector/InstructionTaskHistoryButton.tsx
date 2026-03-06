@@ -18,7 +18,7 @@ import {
   useGlobalKeyDown,
   useLayer,
 } from '@sanity/ui'
-import {createElement, type ForwardedRef, forwardRef, useCallback, useMemo, useState} from 'react'
+import {type ForwardedRef, forwardRef, useCallback, useMemo, useState} from 'react'
 import {StatusButton, type StatusButtonProps, typed, useClient} from 'sanity'
 import {keyframes, styled} from 'styled-components'
 
@@ -231,13 +231,14 @@ function TaskItem(props: {task: CancelableInstructionTask}) {
   const {task} = props
 
   const taskType = task.reason && TASK_CONFIG[task.reason]
+  const TaskIcon = taskType ? taskType.icon : null
   return (
     <Card radius={2} tone={taskType && taskType?.tone}>
       <Flex align="center" gap={1}>
         <Flex align="flex-start" flex={1} gap={3} padding={3}>
           <Box flex="none">
             <Text size={1}>
-              {taskType && createElement(taskType.icon)}
+              {TaskIcon && <TaskIcon />}
               {!task.reason && <Spinner />}
             </Text>
           </Box>

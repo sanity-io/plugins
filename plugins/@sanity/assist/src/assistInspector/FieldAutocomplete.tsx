@@ -1,6 +1,6 @@
 import {SearchIcon} from '@sanity/icons'
 import {Autocomplete, Box, Breadcrumbs, Card, Flex, Text} from '@sanity/ui'
-import {createElement, useCallback, useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import type {ObjectSchemaType} from 'sanity'
 
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
@@ -69,7 +69,9 @@ export function FieldAutocomplete(props: FieldSelectorProps) {
     return (
       <Card as="button" padding={3} radius={1}>
         <Flex gap={3}>
-          <Text size={1}>{createElement(field.icon)}</Text>
+          <Text size={1}>
+            <field.icon />
+          </Text>
 
           <FieldTitle field={field} />
         </Flex>
