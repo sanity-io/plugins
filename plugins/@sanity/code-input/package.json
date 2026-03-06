@@ -48,8 +48,6 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@codemirror/autocomplete": "^6.20.1",
-    "@codemirror/commands": "^6.10.2",
     "@codemirror/lang-html": "^6.4.11",
     "@codemirror/lang-java": "^6.0.2",
     "@codemirror/lang-javascript": "^6.2.5",
@@ -61,7 +59,6 @@
     "@codemirror/legacy-modes": "^6.5.2",
     "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.39.16",
-    "@juggle/resize-observer": "^3.4.0",
     "@lezer/highlight": "^1.2.3",
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
