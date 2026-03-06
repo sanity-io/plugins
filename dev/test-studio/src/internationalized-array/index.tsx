@@ -11,11 +11,21 @@ const internationalizedPost = defineType({
       name: 'title',
       title: 'Title',
       type: 'internationalizedArrayString',
+      options: {
+        aiAssist: {
+          translateAction: true,
+        },
+      },
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'internationalizedArrayText',
+      options: {
+        aiAssist: {
+          translateAction: true,
+        },
+      },
     }),
     defineField({
       name: 'slug',
