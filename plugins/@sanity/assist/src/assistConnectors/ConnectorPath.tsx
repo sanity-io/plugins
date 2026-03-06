@@ -1,5 +1,5 @@
-// oxlint-disable no-deprecated
-import {rgba, useTheme} from '@sanity/ui'
+import {useTheme_v2} from '@sanity/ui'
+import {rgba} from '@sanity/ui/theme'
 import {useMemo} from 'react'
 
 import {type ConnectorOptions, mapConnectorToLine, type Rect} from '../_lib/connector'
@@ -13,7 +13,7 @@ export function ConnectorPath(props: {
 }) {
   const {from, options, to} = props
   const {strokeWidth} = options.path
-  const theme = useTheme()
+  const theme = useTheme_v2()
 
   const line = useMemo(() => mapConnectorToLine(options, {from, to}), [from, options, to])
 
@@ -21,13 +21,13 @@ export function ConnectorPath(props: {
     <>
       <path
         d={drawConnectorPath(options, line)}
-        stroke={theme.sanity.color.base.bg}
+        stroke={theme.color.bg}
         strokeWidth={strokeWidth + 4}
       />
 
       <path
         d={drawConnectorPath(options, line)}
-        stroke={rgba(theme.sanity.color.base.border, 0.5)}
+        stroke={rgba(theme.color.border, 0.5)}
         strokeWidth={strokeWidth}
       />
 
@@ -39,7 +39,7 @@ export function ConnectorPath(props: {
             line.from.bounds.y - options.arrow.threshold + options.arrow.marginY,
             -1,
           )}
-          stroke={theme.sanity.color.base.border}
+          stroke={theme.color.border}
           strokeWidth={strokeWidth}
         />
       )}
@@ -55,7 +55,7 @@ export function ConnectorPath(props: {
               options.arrow.marginY,
             1,
           )}
-          stroke={theme.sanity.color.base.border}
+          stroke={theme.color.border}
           strokeWidth={strokeWidth}
         />
       )}

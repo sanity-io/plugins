@@ -30,22 +30,24 @@ export function SchemaTypeTool() {
     let canSave = true
     async function store() {
       setSyncTitle(`Syncing 0/${types.length}`)
-      const transaction = client.transaction()
-      for (let i = 0; i < types.length; i++) {
+
+      // Process types in batches of 50
+      for (let batchStart = 0; batchStart < types.length; batchStart += 50) {
         if (!canSave) {
           break
         }
-        const type = types[i]!
-        // oxlint-disable-next-line no-await-in-loop, no-unsafe-type-assertion, await-thenable
-        await transaction.createOrReplace(type as Required<typeof type>)
-        if (i > 0 && i % 50 === 0) {
-          // oxlint-disable-next-line no-await-in-loop
-          await transaction.commit()
-          transaction.reset()
-          setSyncTitle(`Syncing ${i}/${types.length}`)
+        const batchEnd = Math.min(batchStart + 50, types.length)
+        const transaction = client.transaction()
+        for (let i = batchStart; i < batchEnd; i++) {
+          const type = types[i]!
+          // oxlint-disable-next-line no-unsafe-type-assertion
+          transaction.createOrReplace(type as Required<typeof type>)
         }
+        // oxlint-disable-next-line no-await-in-loop
+        await transaction.commit()
+        transaction.reset()
+        setSyncTitle(`Syncing ${batchEnd}/${types.length}`)
       }
-      await transaction.commit()
     }
     store()
       .catch(console.error)

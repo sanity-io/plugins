@@ -14,11 +14,19 @@ import {
   Spinner,
   Stack,
   Text,
-  useClickOutside,
+  useClickOutsideEvent,
   useGlobalKeyDown,
   useLayer,
 } from '@sanity/ui'
-import {createElement, type ForwardedRef, forwardRef, useCallback, useMemo, useState} from 'react'
+import {
+  createElement,
+  type ForwardedRef,
+  forwardRef,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {StatusButton, type StatusButtonProps, typed, useClient} from 'sanity'
 import {keyframes, styled} from 'styled-components'
 
@@ -131,20 +139,19 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
 
   const toggleOpen = useCallback(() => setOpen((v) => !v), [])
 
-  const [button, setButton] = useState<HTMLButtonElement | null>(null)
-  const [popover, setPopover] = useState<HTMLDivElement | null>(null)
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const popoverRef = useRef<HTMLDivElement | null>(null)
 
   const handleClickOutside = useCallback(() => {
     setOpen(false)
   }, [])
 
-  // oxlint-disable-next-line no-deprecated
-  useClickOutside(handleClickOutside, [button, popover])
+  useClickOutsideEvent(handleClickOutside, () => [buttonRef.current, popoverRef.current])
 
   const handleEscape = useCallback(() => {
     setOpen(false)
-    button?.focus()
-  }, [button])
+    buttonRef.current?.focus()
+  }, [])
 
   return (
     <Popover
@@ -153,7 +160,7 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
       open={open && !!titledTasks?.length}
       placement="top"
       portal
-      ref={setPopover}
+      ref={popoverRef}
       width={0}
     >
       <TaskStatusButton
@@ -161,7 +168,7 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
         hasErrors={hasErrors}
         isRunning={isRunning}
         onClick={toggleOpen}
-        ref={setButton}
+        ref={buttonRef}
         selected={open}
       />
     </Popover>
