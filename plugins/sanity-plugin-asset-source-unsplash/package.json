@@ -48,7 +48,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "lodash-es": "^4.17.23",
-    "react-photo-album": "^3.4.0"
+    "react-photo-album": "^3.5.1"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
