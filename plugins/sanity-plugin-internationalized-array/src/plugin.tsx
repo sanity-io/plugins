@@ -85,7 +85,14 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
             languageFilter({
               documentTypes: languageFilterConfig.documentTypes,
               supportedLanguages: languages,
-              filterField: internationalizedArrayLanguageFilter,
+              filterField: (enclosingType, _member, selectedLanguageIds, parentValue) =>
+                internationalizedArrayLanguageFilter(
+                  enclosingType,
+                  _member,
+                  selectedLanguageIds,
+                  parentValue,
+                  languages,
+                ),
             }),
           ]
         : undefined,
