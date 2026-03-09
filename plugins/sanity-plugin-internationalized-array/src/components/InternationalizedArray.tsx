@@ -86,7 +86,6 @@ export default function InternationalizedArray(
               member.item.schemaType,
               valueMember,
               selectedLanguageIds,
-              undefined,
             )
           })
         : members,
