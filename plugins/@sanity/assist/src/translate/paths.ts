@@ -9,12 +9,14 @@ import {
   type SanityDocumentLike,
 } from 'sanity'
 
+import {randomKey} from '../_lib/randomKey'
 import type {DocumentMember, TranslationOutput, TranslationOutputsFunction} from './types'
 
 export interface FieldLanguageMap {
   inputLanguageId: string
   inputPath: Path
   outputs: TranslationOutput[]
+  relativeLanguagePath?: Path
 }
 
 const DEFAULT_MAX_DEPTH = 6
@@ -47,6 +49,9 @@ function extractPaths(
     const fieldPath = [...path, field.name]
     const fieldSchema = field.type
     const {value} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
+    const {value: parentValue} = path.length
+      ? (extractWithPath(pathToString(path), doc)[0] ?? {})
+      : doc
     if (value === undefined || value === null) {
       return acc
     }
@@ -56,6 +61,7 @@ function extractPaths(
       name: field.name,
       schemaType: fieldSchema,
       value,
+      parentValue,
     }
 
     if (fieldSchema.jsonType === 'object') {
@@ -102,6 +108,7 @@ function extractPaths(
               name: item._key,
               schemaType: itemSchema,
               value: item,
+              parentValue: arrayValue,
             }
             arrayPaths = [...arrayPaths, arrayMember, ...innerFields]
           }
@@ -115,11 +122,17 @@ function extractPaths(
   }, [])
 }
 
-/**
- * Default implementation for plugin config `translate.field.translationOutputs`
- *
- * @see FieldTranslationConfig#translationOutputs
- */
+type InternationalizedArrayItemValue = {
+  language?: string // Available in >=v5
+  _key?: string // In <v5 this represents the language identifier
+  value?: unknown
+}
+
+const isInternationalizedArrayItemValue = (
+  value: unknown,
+): value is InternationalizedArrayItemValue =>
+  typeof value === 'object' && value !== null && ('language' in value || '_key' in value)
+
 export const defaultLanguageOutputs: TranslationOutputsFunction = function (
   member,
   enclosingType,
@@ -128,8 +141,31 @@ export const defaultLanguageOutputs: TranslationOutputsFunction = function (
 ) {
   if (
     member.schemaType.jsonType === 'object' &&
-    member.schemaType.name.startsWith('internationalizedArray')
+    member.schemaType.name.startsWith('internationalizedArray') &&
+    isInternationalizedArrayItemValue(member.value)
   ) {
+    const isV5InternationalizedArrayItem = member.value.language !== undefined
+
+    if (isV5InternationalizedArrayItem) {
+      const language = member.value.language
+      return language === translateFromLanguageId
+        ? translateToLanguageIds.map((translateToId) => {
+            const outputPathKey =
+              (Array.isArray(member.parentValue)
+                ? member.parentValue
+                : ([] as InternationalizedArrayItemValue[])
+              )
+                // Uses parent value to verify if the item is already translated to the target language and reuse the key if it is
+                .find((item) => item.language === translateToId)?._key || randomKey()
+
+            return {
+              id: translateToId,
+              outputPath: [...member.path.slice(0, -1), {_key: outputPathKey}],
+            }
+          })
+        : undefined
+    }
+
     const pathEnd = member.path.slice(-1)
 
     const language = pathEnd[0] && isKeySegment(pathEnd[0]) ? pathEnd[0]._key : null
@@ -167,6 +203,12 @@ export function getFieldLanguageMap(
       documentMembers.find((m) => pathToString(m.path) === pathToString(parentPath))?.schemaType ??
       documentSchema
 
+    const isV5InternationalizedArrayItem =
+      member.schemaType.jsonType === 'object' &&
+      member.schemaType.name.startsWith('internationalizedArray') &&
+      isInternationalizedArrayItemValue(member.value) &&
+      member.value.language !== undefined
+
     const translations = langFn(
       member,
       enclosingType,
@@ -179,6 +221,7 @@ export function getFieldLanguageMap(
         inputLanguageId: translateFromLanguageId,
         inputPath: member.path,
         outputs: translations,
+        ...(isV5InternationalizedArrayItem ? {relativeLanguagePath: ['language']} : {}),
       })
     }
   }
