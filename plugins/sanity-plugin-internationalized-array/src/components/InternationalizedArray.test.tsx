@@ -2,7 +2,12 @@ import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/reac
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
-import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES} from '../test/helpers'
+import {
+  createValue,
+  createValues,
+  MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+  MOCK_LANGUAGES,
+} from '../test/helpers'
 
 const mockToastPush = vi.fn()
 const mockGetFormValue = vi.fn()
@@ -507,6 +512,9 @@ describe('InternationalizedArray', () => {
       MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
     )
 
+    const enValue = createValue('en')
+    const frValue = createValue('fr')
+
     const mockMembers = [
       {
         kind: 'item',
@@ -514,6 +522,7 @@ describe('InternationalizedArray', () => {
         item: {
           schemaType: {name: 'internationalizedArrayStringValue'},
           members: [{kind: 'field', name: 'value'}],
+          value: enValue,
         },
       },
       {
@@ -522,6 +531,7 @@ describe('InternationalizedArray', () => {
         item: {
           schemaType: {name: 'internationalizedArrayStringValue'},
           members: [{kind: 'field', name: 'value'}],
+          value: frValue,
         },
       },
     ]
@@ -534,6 +544,19 @@ describe('InternationalizedArray', () => {
     // filterField should have been called for each member
     // since useFormValue returns 'article' which is in documentTypes
     expect(mockFilterField).toHaveBeenCalledTimes(2)
+    // Verify the 4th argument (parentValue) is correctly passed for each member
+    expect(mockFilterField).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      ['en'],
+      enValue,
+    )
+    expect(mockFilterField).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      ['en'],
+      frValue,
+    )
   })
 
   test('renders MemberItemError for members with kind !== "item"', () => {
