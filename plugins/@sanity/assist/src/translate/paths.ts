@@ -1,5 +1,4 @@
 // oxlint-disable no-accumulating-spread
-import {extractWithPath} from '@sanity/mutator'
 import {
   isDocumentSchemaType,
   isKeySegment,
@@ -40,6 +39,8 @@ function extractPaths(
   schemaType: ObjectSchemaType,
   path: Path,
   maxDepth: number,
+  // Value at `path` — passed down to avoid repeated extractWithPath calls
+  containerValue: unknown = doc,
 ): DocumentMember[] {
   if (path.length >= maxDepth) {
     return []
@@ -48,10 +49,8 @@ function extractPaths(
   return schemaType.fields.reduce<DocumentMember[]>((acc, field) => {
     const fieldPath = [...path, field.name]
     const fieldSchema = field.type
-    const {value} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
-    const {value: parentValue} = path.length
-      ? (extractWithPath(pathToString(path), doc)[0] ?? {})
-      : doc
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const value = (containerValue as any)?.[field.name]
     if (value === undefined || value === null) {
       return acc
     }
@@ -61,11 +60,11 @@ function extractPaths(
       name: field.name,
       schemaType: fieldSchema,
       value,
-      parentValue,
+      parentValue: containerValue,
     }
 
     if (fieldSchema.jsonType === 'object') {
-      const innerFields = extractPaths(doc, fieldSchema, fieldPath, maxDepth)
+      const innerFields = extractPaths(doc, fieldSchema, fieldPath, maxDepth, value)
 
       return [...acc, thisFieldWithPath, ...innerFields]
     } else if (
@@ -75,13 +74,9 @@ function extractPaths(
       // no reason to drill into arrays if the item fields will be culled by maxDepth, ie we need 1 extra path headroom
       path.length + 1 < maxDepth
     ) {
-      const {value: arrayValue} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
-
       let arrayPaths: DocumentMember[] = []
-      // oxlint-disable-next-line no-unsafe-type-assertion
-      if ((arrayValue as any)?.length) {
-        // oxlint-disable-next-line no-unsafe-type-assertion
-        for (const item of arrayValue as any[]) {
+      if (Array.isArray(value) && value.length > 0) {
+        for (const item of value) {
           const itemPath = [...fieldPath, {_key: item._key}]
           let itemSchema = fieldSchema.of.find((t) => t.name === item._type)
           if (!item._type) {
@@ -102,13 +97,14 @@ function extractPaths(
               itemSchema as ObjectSchemaType,
               itemPath,
               maxDepth,
+              item,
             )
             const arrayMember = {
               path: itemPath,
               name: item._key,
               schemaType: itemSchema,
               value: item,
-              parentValue: arrayValue,
+              parentValue: value,
             }
             arrayPaths = [...arrayPaths, arrayMember, ...innerFields]
           }
@@ -156,7 +152,7 @@ export const defaultLanguageOutputs: TranslationOutputsFunction = function (
                 : ([] as InternationalizedArrayItemValue[])
               )
                 // Uses parent value to verify if the item is already translated to the target language and reuse the key if it is
-                .find((item) => item.language === translateToId)?._key || randomKey()
+                .find((item) => item.language === translateToId)?._key || randomKey(12)
 
             return {
               id: translateToId,
