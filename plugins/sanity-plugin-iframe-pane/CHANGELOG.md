@@ -1,5 +1,11 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.8
+
+### Patch Changes
+
+- [#693](https://github.com/sanity-io/plugins/pull/693) [`922881c`](https://github.com/sanity-io/plugins/commit/922881c9dcd67c69381755446f62ca97329d55e0) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency motion to ^12.34.5
+
 ## 5.0.7
 
 ### Patch Changes

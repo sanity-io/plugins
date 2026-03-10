@@ -1,5 +1,11 @@
 # @sanity/studio-secrets
 
+## 4.0.2
+
+### Patch Changes
+
+- [#685](https://github.com/sanity-io/plugins/pull/685) [`8f5f8c8`](https://github.com/sanity-io/plugins/commit/8f5f8c83eb4acd2f75be73becf6efeed5b567d8f) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Move `rxjs` and `react-rx` from `peerDependencies` to `dependencies`
+
 ## 4.0.1
 
 ### Patch Changes

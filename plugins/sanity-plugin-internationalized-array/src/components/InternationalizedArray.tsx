@@ -86,11 +86,11 @@ export default function InternationalizedArray(
               member.item.schemaType,
               valueMember,
               selectedLanguageIds,
-              value[member.index],
+              member.item.value,
             )
           })
         : members,
-    [languageFilterEnabled, members, languageFilterOptions, selectedLanguageIds, value],
+    [languageFilterEnabled, members, languageFilterOptions, selectedLanguageIds],
   )
 
   const handleAddLanguages = useCallback(

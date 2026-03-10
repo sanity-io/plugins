@@ -1,6 +1,6 @@
 {
   "name": "@sanity/studio-secrets",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "React hooks and UI for reading and managing secrets in a Sanity Studio. This is a good pattern for keeping configuration secret. Instead of using environment variables which would be bundled with the Studio source (it is an SPA), we store secret information in a separate, access-controlled dataset that is only queried at runtime.",
   "keywords": [
     "sanity",
@@ -41,7 +41,9 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/ui": "catalog:"
+    "@sanity/ui": "catalog:",
+    "react-rx": "^4.2.2",
+    "rxjs": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
@@ -61,8 +63,6 @@
   "peerDependencies": {
     "react": "^19.2",
     "react-dom": "^19.2",
-    "react-rx": "^4",
-    "rxjs": "catalog:",
     "sanity": "^5"
   },
   "engines": {

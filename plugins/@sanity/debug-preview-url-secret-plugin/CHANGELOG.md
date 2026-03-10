@@ -1,5 +1,11 @@
 # @sanity/debug-preview-url-secret-plugin
 
+## 2.0.7
+
+### Patch Changes
+
+- [#677](https://github.com/sanity-io/plugins/pull/677) [`1f8fe29`](https://github.com/sanity-io/plugins/commit/1f8fe2964767506dc85a1e44baf7eedbe6023ab2) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Remove redundant devDependencies: `@types/react` and `react` are already provided via peerDependencies.
+
 ## 2.0.6
 
 ### Patch Changes
