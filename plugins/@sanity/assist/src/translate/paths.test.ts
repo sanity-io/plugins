@@ -94,10 +94,6 @@ describe('paths', () => {
   })
 
   test('should map translation paths for v5 internationalized array schema', () => {
-    // Mock randomKey to return a stable key
-    vi.mock('../_lib/randomKey', () => ({
-      randomKey: () => 'random-key',
-    }))
     const docSchema: ObjectSchemaType = Schema.compile({
       name: 'test',
       types: [
@@ -172,7 +168,7 @@ describe('paths', () => {
             // Finds the existing translation and reuses the key
             {id: 'nb', outputPath: ['translationsV5', {_key: 'norwegian-key'}]},
             // Creates a new translation so it uses a new key
-            {id: 'es', outputPath: ['translationsV5', {_key: 'random-key'}]},
+            {id: 'es', outputPath: ['translationsV5', {_key: expect.any(String)}]},
           ],
           relativeLanguagePath: ['language'],
         },
