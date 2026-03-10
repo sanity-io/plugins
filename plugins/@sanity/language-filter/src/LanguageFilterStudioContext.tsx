@@ -72,11 +72,13 @@ export function LanguageFilterStudioProvider(
   }, [props.options, languages])
 
   const [selectedLanguageIds, setSelectedLanguageIds] = useSelectedLanguageIds(options)
+  const value = useMemo(
+    () => ({options, selectedLanguageIds, setSelectedLanguageIds}),
+    [options, selectedLanguageIds, setSelectedLanguageIds],
+  )
 
   return (
-    <LanguageFilterStudioContext.Provider
-      value={{options, selectedLanguageIds, setSelectedLanguageIds}}
-    >
+    <LanguageFilterStudioContext.Provider value={value}>
       {props.renderDefault(props)}
     </LanguageFilterStudioContext.Provider>
   )
