@@ -3,7 +3,7 @@ import {useState} from 'react'
 import type {Language, LanguageFilterConfig} from './types'
 const storageKey = '@sanity/plugin/language-filter/selected-languages'
 
-export function getPersistedLanguageIds(options: LanguageFilterConfig): string[] {
+function getPersistedLanguageIds(options: LanguageFilterConfig): string[] {
   const selectableLangs = getSelectableLanguages(options).map((l) => l.id)
 
   let selected: string[] = selectableLangs

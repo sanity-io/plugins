@@ -16,7 +16,7 @@ export function FilteredObjectWrapper(props: ObjectInputProps) {
 }
 
 // Modify the object members based on selected languages in the filter
-export function FilteredObjectInput(props: ObjectInputProps) {
+function FilteredObjectInput(props: ObjectInputProps) {
   const {members: membersProp, schemaType, renderDefault, ...restProps} = props
   const {selectedLanguageIds, options} = useLanguageFilterStudioContext()
   const {filterField} = options

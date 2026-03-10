@@ -1,5 +1,4 @@
 import type {FieldMember, ObjectSchemaType} from 'sanity'
-
 import {describe, expect, it} from 'vitest'
 
 import {defaultFilterField, isLanguageFilterEnabled} from './filterField'

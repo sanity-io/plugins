@@ -5,12 +5,11 @@ import {
   type ObjectInputProps,
 } from 'sanity'
 
-import type {LanguageFilterConfig} from './types'
-
 import {isLanguageFilterEnabled} from './filterField'
 import {LanguageFilterMenuButton} from './LanguageFilterMenuButton'
 import {FilteredObjectWrapper} from './LanguageFilterObjectInput'
 import {defaultContextValue, LanguageFilterStudioProvider} from './LanguageFilterStudioContext'
+import type {LanguageFilterConfig} from './types'
 
 /**
  * ## Usage in sanity.config.ts (or .js)
