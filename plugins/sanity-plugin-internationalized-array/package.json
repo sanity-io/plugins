@@ -68,10 +68,16 @@
     "sanity": "catalog:"
   },
   "peerDependencies": {
+    "@sanity/assist": "^6.0.2",
     "@sanity/language-filter": "^4.1.0",
     "react": "^19.2",
     "react-dom": "^19.2",
     "sanity": "^5"
+  },
+  "peerDependenciesMeta": {
+    "@sanity/assist": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
