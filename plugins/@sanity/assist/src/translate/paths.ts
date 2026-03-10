@@ -49,9 +49,7 @@ function extractPaths(
     const fieldPath = [...path, field.name]
     const fieldSchema = field.type
     const {value} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
-    const {value: parentValue} = path.length
-      ? (extractWithPath(pathToString(path), doc)[0] ?? {})
-      : doc
+    const parentValue = path.length ? extractWithPath(pathToString(path), doc)[0]?.value : doc
     if (value === undefined || value === null) {
       return acc
     }
