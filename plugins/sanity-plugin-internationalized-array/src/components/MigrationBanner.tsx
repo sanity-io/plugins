@@ -9,22 +9,7 @@ export type MigrationBannerProps = {
 }
 
 /**
- * Migration banner component that detects and helps migrate items from
- * the old data format (language stored in `_key`) to the new format
- * (language stored in dedicated `language` field).
- *
- * The component automatically determines whether to render based on
- * whether any items need migration.
- *
- * @example
- * ```tsx
- * <MigrationBanner
- *   value={value}
- *   languages={languages}
- *   onChange={onChange}
- *   readOnly={readOnly}
- * />
- * ```
+ * Migration banner component that displays a warning if the items need to be migrated to the v5 format.
  */
 export function MigrationBanner({
   itemsNeedingMigration,

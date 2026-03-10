@@ -73,21 +73,19 @@ const person = defineType({
   ],
 })
 
-const SUPPORTED_LANGUAGES = [
-  {id: 'en', title: 'English'},
-  {id: 'es', title: 'Spanish'},
-  {id: 'fr', title: 'French'},
-  {id: 'de', title: 'German'},
-  {id: 'pt', title: 'Portuguese'},
-  {id: 'it', title: 'Italian'},
-]
-
 export const internationalizedArrayExample = definePlugin(() => ({
   schema: {types: [internationalizedPost, person]},
   plugins: [
     internationalizedArray({
-      languages: SUPPORTED_LANGUAGES,
-      defaultLanguages: [SUPPORTED_LANGUAGES[0].id],
+      languages: [
+        {id: 'en', title: 'English'},
+        {id: 'es', title: 'Spanish'},
+        {id: 'fr', title: 'French'},
+        {id: 'de', title: 'German'},
+        {id: 'pt', title: 'Portuguese'},
+        {id: 'it', title: 'Italian'},
+      ],
+      defaultLanguages: ['en'],
       fieldTypes: ['string', 'text'],
       buttonLocations: ['document', 'field'],
       languageFilter: {
