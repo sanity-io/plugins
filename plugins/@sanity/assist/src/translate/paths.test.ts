@@ -6,7 +6,7 @@ import {
   type SanityDocumentLike,
   typed,
 } from 'sanity'
-import {describe, expect, test, vi} from 'vitest'
+import {describe, expect, test} from 'vitest'
 
 import {
   defaultLanguageOutputs,
