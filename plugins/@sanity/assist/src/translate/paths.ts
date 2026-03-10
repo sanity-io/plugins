@@ -7,6 +7,7 @@ import {
   type Path,
   pathToString,
   type SanityDocumentLike,
+  isRecord,
 } from 'sanity'
 
 import {randomKey} from '../_lib/randomKey'
@@ -48,8 +49,9 @@ function extractPaths(
   return schemaType.fields.reduce<DocumentMember[]>((acc, field) => {
     const fieldPath = [...path, field.name]
     const fieldSchema = field.type
-    const {value} = extractWithPath(pathToString(fieldPath), doc)[0] ?? {}
     const parentValue = path.length ? extractWithPath(pathToString(path), doc)[0]?.value : doc
+    const value = isRecord(parentValue) ? parentValue[field.name] : undefined
+
     if (value === undefined || value === null) {
       return acc
     }
