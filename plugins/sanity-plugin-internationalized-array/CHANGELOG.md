@@ -1,5 +1,21 @@
 # sanity-plugin-internationalized-array
 
+## 4.0.6
+
+### Patch Changes
+
+- [#712](https://github.com/sanity-io/plugins/pull/712) [`bf6a7d5`](https://github.com/sanity-io/plugins/commit/bf6a7d531875bf43e11f4df57f680d839b36e4f5) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update `@sanity/language-filter` to `4.1.0` and adjust language segment matching to pass the current item value, updating language filtering behavior with the new parameter.
+
+  Now when using language filter in the internationalized array you will receive a 4th parameter with the value of the object containing the field you are trying to filter.
+  For example:
+
+  ```ts
+  {
+      _key: "en",
+      value: "Hello world"
+  }
+  ```
+
 ## 4.0.5
 
 ### Patch Changes
