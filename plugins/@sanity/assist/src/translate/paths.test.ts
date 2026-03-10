@@ -6,7 +6,7 @@ import {
   type SanityDocumentLike,
   typed,
 } from 'sanity'
-import {describe, expect, test} from 'vitest'
+import {describe, expect, test, vi} from 'vitest'
 
 import {
   defaultLanguageOutputs,
@@ -88,6 +88,93 @@ describe('paths', () => {
           inputLanguageId: 'en',
           inputPath: ['translations', {_key: 'en'}],
           outputs: [{id: 'nb', outputPath: ['translations', {_key: 'nb'}]}],
+        },
+      ]),
+    )
+  })
+
+  test('should map translation paths for v5 internationalized array schema', () => {
+    // Mock randomKey to return a stable key
+    vi.mock('../_lib/randomKey', () => ({
+      randomKey: () => 'random-key',
+    }))
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'document',
+          name: 'article',
+          fields: [
+            {
+              type: 'array',
+              name: 'translationsV5',
+              of: [
+                {
+                  type: 'object',
+                  name: 'internationalizedArrayStringValue',
+                  fields: [
+                    {type: 'string', name: 'language'},
+                    {type: 'string', name: 'value'},
+                  ],
+                },
+              ],
+            },
+          ],
+        }),
+      ],
+    }).get('article')
+
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'article',
+      translationsV5: [
+        {
+          _type: 'internationalizedArrayStringValue',
+          _key: 'english-key',
+          language: 'en',
+          value: 'v5 english',
+        },
+        {
+          _type: 'internationalizedArrayStringValue',
+          _key: 'norwegian-key',
+          language: 'nb',
+          value: 'v5 norwegian',
+        },
+      ],
+    }
+
+    const members = getDocumentMembersFlat(doc, docSchema)
+
+    expect(members.map((p) => pathToString(p.path))).toEqual([
+      'translationsV5',
+      'translationsV5[_key=="english-key"]',
+      'translationsV5[_key=="english-key"].language',
+      'translationsV5[_key=="english-key"].value',
+      'translationsV5[_key=="norwegian-key"]',
+      'translationsV5[_key=="norwegian-key"].language',
+      'translationsV5[_key=="norwegian-key"].value',
+    ])
+
+    const transMap = getFieldLanguageMap(
+      docSchema,
+      members,
+      'en',
+      ['nb', 'es'],
+      defaultLanguageOutputs,
+    )
+
+    expect(transMap).toEqual(
+      typed<FieldLanguageMap[]>([
+        {
+          inputLanguageId: 'en',
+          inputPath: ['translationsV5', {_key: 'english-key'}],
+          outputs: [
+            // Finds the existing translation and reuses the key
+            {id: 'nb', outputPath: ['translationsV5', {_key: 'norwegian-key'}]},
+            // Creates a new translation so it uses a new key
+            {id: 'es', outputPath: ['translationsV5', {_key: 'random-key'}]},
+          ],
+          relativeLanguagePath: ['language'],
         },
       ]),
     )
