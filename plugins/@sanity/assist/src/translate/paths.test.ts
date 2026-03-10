@@ -93,6 +93,89 @@ describe('paths', () => {
     )
   })
 
+  test('should map translation paths for v5 internationalized array schema', () => {
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'document',
+          name: 'article',
+          fields: [
+            {
+              type: 'array',
+              name: 'translationsV5',
+              of: [
+                {
+                  type: 'object',
+                  name: 'internationalizedArrayStringValue',
+                  fields: [
+                    {type: 'string', name: 'language'},
+                    {type: 'string', name: 'value'},
+                  ],
+                },
+              ],
+            },
+          ],
+        }),
+      ],
+    }).get('article')
+
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'article',
+      translationsV5: [
+        {
+          _type: 'internationalizedArrayStringValue',
+          _key: 'english-key',
+          language: 'en',
+          value: 'v5 english',
+        },
+        {
+          _type: 'internationalizedArrayStringValue',
+          _key: 'norwegian-key',
+          language: 'nb',
+          value: 'v5 norwegian',
+        },
+      ],
+    }
+
+    const members = getDocumentMembersFlat(doc, docSchema)
+
+    expect(members.map((p) => pathToString(p.path))).toEqual([
+      'translationsV5',
+      'translationsV5[_key=="english-key"]',
+      'translationsV5[_key=="english-key"].language',
+      'translationsV5[_key=="english-key"].value',
+      'translationsV5[_key=="norwegian-key"]',
+      'translationsV5[_key=="norwegian-key"].language',
+      'translationsV5[_key=="norwegian-key"].value',
+    ])
+
+    const transMap = getFieldLanguageMap(
+      docSchema,
+      members,
+      'en',
+      ['nb', 'es'],
+      defaultLanguageOutputs,
+    )
+
+    expect(transMap).toEqual(
+      typed<FieldLanguageMap[]>([
+        {
+          inputLanguageId: 'en',
+          inputPath: ['translationsV5', {_key: 'english-key'}],
+          outputs: [
+            // Finds the existing translation and reuses the key
+            {id: 'nb', outputPath: ['translationsV5', {_key: 'norwegian-key'}]},
+            // Creates a new translation so it uses a new key
+            {id: 'es', outputPath: ['translationsV5', {_key: expect.any(String)}]},
+          ],
+          relativeLanguagePath: ['language'],
+        },
+      ]),
+    )
+  })
+
   test('should use first type in array when array item is missing _type', () => {
     const docSchema: ObjectSchemaType = Schema.compile({
       name: 'test',
