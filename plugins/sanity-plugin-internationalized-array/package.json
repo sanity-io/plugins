@@ -28,11 +28,17 @@
       "development": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./migrations": {
+      "source": "./migrations/index.ts",
+      "development": "./migrations/index.ts",
+      "default": "./dist/migrations/index.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./migrations": "./dist/migrations/index.js",
       "./package.json": "./package.json"
     }
   },
@@ -44,6 +50,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/language-filter": "^4.1.0",
     "@sanity/ui": "^3.1.13",
+    "@sanity/util": "catalog:",
     "lodash-es": "^4.17.23"
   },
   "devDependencies": {
@@ -62,9 +69,16 @@
     "sanity": "catalog:"
   },
   "peerDependencies": {
+    "@sanity/assist": "^6.0.2",
+    "@sanity/language-filter": "^4.1.0",
     "react": "^19.2",
     "react-dom": "^19.2",
     "sanity": "^5"
+  },
+  "peerDependenciesMeta": {
+    "@sanity/assist": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

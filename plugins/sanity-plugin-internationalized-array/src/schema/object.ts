@@ -35,6 +35,14 @@ export default (config: ObjectFactoryConfig) => {
           field: (props: FieldProps) => props.renderDefault({...props, title: ''}),
         },
       }),
+      // Hidden language field - stores the language identifier (e.g., 'en', 'fr')
+      // This replaces the previous pattern of storing language in _key
+      defineField({
+        name: 'language',
+        type: 'string',
+        hidden: true,
+        validation: (Rule) => Rule.required(),
+      }),
     ],
     preview: {
       select: {

@@ -24,6 +24,8 @@ export type ArrayConfig = {
  */
 export type Value = {
   _key: string
+  /** Language identifier (e.g., 'en', 'fr'). Added in v5. */
+  language: string
   value?: unknown
 }
 
@@ -36,6 +38,8 @@ export function isInternationalizedArrayItemType(
 export type InternationalizedArrayItem<T = unknown> = {
   _key: string
   value?: T
+  /** Language identifier (e.g., 'en', 'fr'). Added in v5. */
+  language: string
   /**
    * string that starts with "internationalizedArray" and ends with "Value"
    */
@@ -155,4 +159,17 @@ export type PluginConfig = {
    * }
    */
   includeForDocumentType?: (documentType: string) => boolean
+  /**
+   * Configure the language filter for the plugin by providing the document types that should show the filter.
+   * ```tsx
+   * {
+   *   languageFilter: {
+   *     documentTypes: ['internationalizedPost', 'lesson']
+   *   }
+   * }
+   * ```
+   */
+  languageFilter?: {
+    documentTypes: string[]
+  }
 }

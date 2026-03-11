@@ -47,11 +47,99 @@ A good use of **field-level** translation could be a `person` schema. It could h
 
 ## Upgrade
 
+### Migrating to v6
+
+This plugin uses [sanity-plugin-internationalized-array](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-internationalized-array) for the `translations` array on `translation.metadata` documents. In v5, the internationalized-array plugin moved the language identifier from `_key` to a dedicated `language` field.
+
+**If you have existing translation metadata documents**, you must run the migration to update the data format. See the [internationalized-array migration guide](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-internationalized-array#migrate-from-v4-to-v5).
+
+**Important:** When configuring the migration, include `'translation.metadata'` in the document types so that your translation metadata documents are migrated:
+
+### 1. Backup your data.
+
+You can manually backup your data using the sanity CLI.
+
+```
+sanity dataset export production
+```
+
+This creates a production.tar.gz file in your current directory containing all your documents and assets.
+
+You can also specify a custom filename and location:
+
+```
+sanity dataset export production ./backups/backup-2026-02-16.tar.gz
+```
+
+If you ever need to restore, use the import command:
+
+```
+sanity dataset import backup-2026-02-16.tar.gz production
+```
+
+Or you can use the backup service, read more at https://www.sanity.io/docs/content-lake/backups
+
+### 2. Update your GROQ queries.
+
+Use a backwards compatible query until your migration is ready and has been executed.
+
+```diff
+*[_type == "person"] {
+-  "greeting": greeting[_key == "en"][0].value
++  "greeting": greeting[language == "en" || _key == "en"][0].value
+}
+```
+
+### 3. Data migration
+
+The sanity-plugin-internationalized-array package exports a migration helper that you can run with the [migration CLI](https://www.sanity.io/docs/cli-reference/cli-migration).
+
+Create a migration file in your project and export it:
+
+```ts
+import {migrateToLanguageField} from 'sanity-plugin-internationalized-array/migrations'
+
+const DOCUMENT_TYPES: string[] = ['translation.metadata']
+export default migrateToLanguageField(DOCUMENT_TYPES)
+```
+
+Then verify your migration with a dry run:
+
+```bash
+pnpm sanity migration run migrateToLanguageField
+```
+
+Once ready, run the migration:
+
+```bash
+pnpm sanity migration run migrateToLanguageField --no-dry-run
+```
+
+### 4. Update your GROQ queries
+
+Previously we updated the GROQ queries to support both locations for the language field. Once migration is complete, update the GROQ queries again to only use `language` and remove the dependency on `_key`.
+
+```diff
+*[_type == "person"] {
+-  "greeting": greeting[language == "en" || _key == "en"][0].value
++  "greeting": greeting[language == "en"][0].value
+}
+```
+
+## Upgrade from V1
+
 If upgrading from a previous version (v1), please see the [upgrade documentation](https://github.com/sanity-io/document-internationalization/blob/main/docs/00-upgrade-from-v1.md) in the original repository.
+And change `_key: doc[LANGUAGE_FIELD]` to `language: doc[LANGUAGE_FIELD]` in https://github.com/sanity-io/document-internationalization/blob/main/scripts/createMetadata.ts#L80
+
+```diff
+// https://github.com/sanity-io/document-internationalization/blob/main/scripts/createMetadata.ts#L80
+-  _key: doc[LANGUAGE_FIELD]
++  language: doc[LANGUAGE_FIELD]
+```
 
 ## Install
 
-```
+```bash
 npm install --save @sanity/document-internationalization
 ```
 

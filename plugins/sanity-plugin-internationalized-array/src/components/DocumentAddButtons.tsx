@@ -1,4 +1,5 @@
 import {Box, Stack, Text, useToast} from '@sanity/ui'
+import {randomKey} from '@sanity/util/content'
 import {type ReactElement, useCallback} from 'react'
 import {
   type FormInsertPatch,
@@ -16,6 +17,7 @@ import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import {getDocumentsToTranslate} from '../utils/getDocumentsToTranslate'
 import AddButtons from './AddButtons'
+import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
 /**
  * Document-level "add translation" panel that appears outside individual
@@ -37,6 +39,7 @@ import AddButtons from './AddButtons'
  */
 export default function DocumentAddButtons(): ReactElement {
   const getFormValue = useGetFormValue()
+  const {filteredLanguages} = useInternationalizedArrayContext()
 
   const toast = useToast()
   const {onChange} = useDocumentPane()
@@ -127,9 +130,10 @@ export default function DocumentAddButtons(): ReactElement {
         [],
       )
       if (removeDuplicates.length === 0) {
+        const language = filteredLanguages.find((l) => l.id === languageId)
         toast.push({
-          status: 'error',
-          title: 'No internationalizedArray fields found in document root',
+          status: 'warning',
+          title: `No missing translations for ${language?.title || languageId} found.`,
         })
         return
       }
@@ -147,6 +151,7 @@ export default function DocumentAddButtons(): ReactElement {
         const insertValue = insert(
           [
             {
+              _key: randomKey(),
               [LANGUAGE_FIELD_NAME]: languageId,
               _type: toTranslate._type,
               value: initialValue, // Use the determined initial value instead of undefined
@@ -161,7 +166,7 @@ export default function DocumentAddButtons(): ReactElement {
 
       onChange(PatchEvent.from(patches.flat()))
     },
-    [getInitialValueForType, onChange, toast, getFormValue],
+    [getInitialValueForType, onChange, toast, getFormValue, filteredLanguages],
   )
   return (
     <Stack space={3}>

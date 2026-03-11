@@ -97,8 +97,8 @@ describe('DocumentAddButtons', () => {
     fireEvent.click(screen.getByTestId('add-fr'))
 
     expect(mockToastPush).toHaveBeenCalledWith({
-      status: 'error',
-      title: 'No internationalizedArray fields found in document root',
+      status: 'warning',
+      title: 'No missing translations for French found.',
     })
   })
 
@@ -112,8 +112,7 @@ describe('DocumentAddButtons', () => {
       title: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
-          // @ts-expect-error - LANGUAGE_FIELD_NAME is '_key' in v4.x, 'language' in v5.x
-          ...(LANGUAGE_FIELD_NAME === 'language' ? {_key: 'random-key'} : {}),
+          _key: 'random-key',
           _type: 'internationalizedArrayStringValue',
           value: 'Hello',
         },
@@ -137,6 +136,7 @@ describe('DocumentAddButtons', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'fr',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -156,8 +156,7 @@ describe('DocumentAddButtons', () => {
       title: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
-          // @ts-expect-error - LANGUAGE_FIELD_NAME is '_key' in v4.x, 'language' in v5.x
-          ...(LANGUAGE_FIELD_NAME === 'language' ? {_key: 'random-key'} : {}),
+          _key: 'random-key',
           _type: 'internationalizedArrayStringValue',
           value: 'Hello',
         },
@@ -165,8 +164,7 @@ describe('DocumentAddButtons', () => {
       description: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
-          // @ts-expect-error - LANGUAGE_FIELD_NAME is '_key' in v4.x, 'language' in v5.x
-          ...(LANGUAGE_FIELD_NAME === 'language' ? {_key: 'random-key'} : {}),
+          _key: 'random-key',
           _type: 'internationalizedArrayStringValue',
           value: 'Description',
         },
@@ -188,6 +186,7 @@ describe('DocumentAddButtons', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'fr',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -204,6 +203,7 @@ describe('DocumentAddButtons', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'fr',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -223,8 +223,7 @@ describe('DocumentAddButtons', () => {
       title: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
-          // @ts-expect-error - LANGUAGE_FIELD_NAME is '_key' in v4.x, 'language' in v5.x
-          ...(LANGUAGE_FIELD_NAME === 'language' ? {_key: 'random-key'} : {}),
+          _key: 'random-key',
           _type: 'internationalizedArrayStringValue',
           value: 'Hello',
         },
@@ -239,8 +238,8 @@ describe('DocumentAddButtons', () => {
     // Since all fields already have 'en', the toast should show an error
     // (the filter reduces to 0 items)
     expect(mockToastPush).toHaveBeenCalledWith({
-      status: 'error',
-      title: 'No internationalizedArray fields found in document root',
+      status: 'warning',
+      title: 'No missing translations for English found.',
     })
   })
 })

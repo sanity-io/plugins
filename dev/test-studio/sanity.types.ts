@@ -338,11 +338,13 @@ export type InternationalizedArrayText = Array<
 export type InternationalizedArrayTextValue = {
   _type: 'internationalizedArrayTextValue'
   value?: string
+  language: string
 }
 
 export type InternationalizedArrayStringValue = {
   _type: 'internationalizedArrayStringValue'
   value?: string
+  language: string
 }
 
 export type TranslationMetadata = {
@@ -371,6 +373,7 @@ export type LessonReference = {
 export type InternationalizedArrayReferenceValue = {
   _type: 'internationalizedArrayReferenceValue'
   value?: LessonReference
+  language: string
 }
 
 export type Lesson = {
