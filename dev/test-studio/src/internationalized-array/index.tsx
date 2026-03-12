@@ -1,4 +1,4 @@
-import {definePlugin, defineType, defineField} from 'sanity'
+import {defineArrayMember, definePlugin, defineType, defineField} from 'sanity'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 
 const internationalizedPost = defineType({
@@ -73,8 +73,58 @@ const person = defineType({
   ],
 })
 
+const bodyContent = defineType({
+  name: 'i18nArrayCircularBodyContent',
+  title: 'I18n Array Circular Body Content',
+  type: 'array',
+  of: [
+    defineArrayMember({
+      type: 'object',
+      name: 'tabs',
+      fields: [
+        defineField({
+          name: 'tabs',
+          title: 'Tabs',
+          type: 'array',
+          of: [
+            defineArrayMember({
+              type: 'object',
+              name: 'tab',
+              fields: [
+                defineField({
+                  name: 'body',
+                  title: 'Body',
+                  type: 'i18nArrayCircularBodyContent',
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    }),
+  ],
+})
+
+const circularSchemaRepro = defineType({
+  name: 'i18nArrayCircularSchemaRepro',
+  title: 'I18n Array Circular Schema Repro',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+    }),
+    defineField({
+      name: 'body',
+      title: 'Body',
+      type: 'i18nArrayCircularBodyContent',
+    }),
+  ],
+})
+
 export const internationalizedArrayExample = definePlugin(() => ({
-  schema: {types: [internationalizedPost, person]},
+  schema: {types: [internationalizedPost, person, bodyContent, circularSchemaRepro]},
   plugins: [
     internationalizedArray({
       languages: [
