@@ -14,13 +14,24 @@ export function hasInternationalizedArrayField(schemaType: SchemaType): boolean 
   return hasInternationalizedArrayInFields(schemaType.fields)
 }
 
-function hasInternationalizedArrayInFields(fields: ObjectField[]): boolean {
+function hasInternationalizedArrayInFields(
+  fields: ObjectField[],
+  visited = new Set<unknown>(),
+): boolean {
   for (const field of fields) {
+    if (visited.has(field.type)) {
+      continue
+    }
+    visited.add(field.type)
+
     if (field.type.name.startsWith('internationalizedArray')) {
       return true
     }
 
-    if (field.type.jsonType === 'object' && hasInternationalizedArrayInFields(field.type.fields)) {
+    if (
+      field.type.jsonType === 'object' &&
+      hasInternationalizedArrayInFields(field.type.fields, visited)
+    ) {
       return true
     }
 
@@ -35,7 +46,12 @@ function hasInternationalizedArrayInFields(fields: ObjectField[]): boolean {
         }
 
         if ('fields' in item && Array.isArray(item.fields)) {
-          if (hasInternationalizedArrayInFields(item.fields)) {
+          if (visited.has(item)) {
+            continue
+          }
+          visited.add(item)
+
+          if (hasInternationalizedArrayInFields(item.fields, visited)) {
             return true
           }
         }
