@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 4.0.6-hotfix.0
+
+### Patch Changes
+
+- [#719](https://github.com/sanity-io/plugins/pull/719) [`9ebd48c`](https://github.com/sanity-io/plugins/commit/9ebd48c91ee8501e365f01de3246e83a5e763180) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Prevent stack overflow when traversing document schemas that contain circular inline object/array nesting.
+
 ## 4.0.6
 
 ### Patch Changes
