@@ -3,8 +3,34 @@ import {readdirSync, rmSync} from 'node:fs'
 import {join} from 'node:path'
 
 import type {PlopTypes} from '@turbo/gen'
-import hostedGitInfo from 'hosted-git-info'
-import validateNpmPackageName from 'validate-npm-package-name'
+
+// Helper functions that call external scripts to avoid bundling issues
+function validatePackageName(name: string): {errors?: string[]} {
+  try {
+    // oxlint-disable-next-line no-restricted-globals
+    const scriptPath = join(__dirname, 'scripts/validate-package-name.cjs')
+    execSync(`node "${scriptPath}" "${name}"`, {encoding: 'utf-8', stdio: 'pipe'})
+    return {}
+  } catch (error: any) {
+    const errorMessage = error.stderr?.toString().trim() || error.message
+    return {errors: [errorMessage]}
+  }
+}
+
+function parseRepositoryUrl(
+  repoUrl: string,
+  directory?: string,
+): {repositoryUrl: string | undefined; sourceUrl: string | undefined} {
+  try {
+    // oxlint-disable-next-line no-restricted-globals
+    const scriptPath = join(__dirname, 'scripts/parse-repo-url.cjs')
+    const dirArg = directory ? ` "${directory}"` : ''
+    const result = execSync(`node "${scriptPath}" "${repoUrl}"${dirArg}`, {encoding: 'utf-8'})
+    return JSON.parse(result.trim())
+  } catch {
+    return {repositoryUrl: undefined, sourceUrl: undefined}
+  }
+}
 
 interface NpmPackageJson {
   name: string
@@ -118,16 +144,8 @@ function getRepositoryUrls(packageJson: NpmPackageJson): RepositoryUrls {
   const repoString = typeof repo === 'string' ? repo : repo.url
   if (!repoString) return {repositoryUrl: undefined, sourceUrl: undefined}
 
-  const info = hostedGitInfo.fromUrl(repoString)
-  if (!info) return {repositoryUrl: undefined, sourceUrl: undefined}
-
-  const repositoryUrl = info.browse()
   const directory = typeof repo === 'object' ? repo.directory : undefined
-
-  // If there's a directory, construct a URL to that path in the repo
-  const sourceUrl = directory ? `${repositoryUrl}/tree/main/${directory}` : repositoryUrl
-
-  return {repositoryUrl, sourceUrl}
+  return parseRepositoryUrl(repoString, directory)
 }
 
 /**
@@ -175,7 +193,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     // Plugin names are already validated by npm package name rules, but double-check
     // oxlint-disable-next-line no-unsafe-type-assertion
     const pluginName = String((answers as any).name)
-    const {errors} = validateNpmPackageName(pluginName)
+    const {errors} = validatePackageName(pluginName)
     if (errors?.length) {
       throw new Error(`Invalid plugin name: ${pluginName}\n${errors.join(', ')}`)
     }
@@ -279,7 +297,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           if (!input) {
             return 'Plugin name is required'
           }
-          const {errors} = validateNpmPackageName(input)
+          const {errors} = validatePackageName(input)
           if (errors?.length) {
             return errors.join(', ')
           }
@@ -461,7 +479,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           if (!input) {
             return 'Plugin name is required'
           }
-          const {errors} = validateNpmPackageName(input)
+          const {errors} = validatePackageName(input)
           if (errors?.length) {
             return errors.join(', ')
           }

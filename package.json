@@ -24,8 +24,6 @@
   "dependencies": {
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.30.0",
-    "@turbo/gen": "^2.8.13",
-    "@types/hosted-git-info": "^3.0.5",
     "@types/validate-npm-package-name": "^4.0.2",
     "@typescript/native-preview": "catalog:",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -36,14 +34,15 @@
     "oxlint": "^1.51.0",
     "oxlint-tsgolint": "^0.16.0",
     "setup-npm-trusted-publish": "^1.0.3",
-    "turbo": "^2.8.13",
     "typescript": "catalog:",
     "validate-npm-package-name": "^7.0.2",
     "vitest": "^4.0.18",
     "vitest-package-exports": "^1.2.0"
   },
   "devDependencies": {
-    "knip": "^5.85.0"
+    "@turbo/gen": "^2.8.13",
+    "knip": "^5.85.0",
+    "turbo": "^2.8.13"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,jsonc,md}": [

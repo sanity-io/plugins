@@ -18,6 +18,10 @@
         "eslint-plugin-react-hooks",
         // TypeScript native compiler, used as a dev tool not imported
         "@typescript/native-preview",
+        // Used by turbo/generators/scripts/*.cjs via require(), which knip cannot trace
+        "@types/validate-npm-package-name",
+        "hosted-git-info",
+        "validate-npm-package-name",
       ],
       "ignoreBinaries": [
         // Provided by sanity package in dev/test-studio, which is an ignored workspace
