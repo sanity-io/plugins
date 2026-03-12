@@ -125,6 +125,34 @@ const schema = createSchema({
       fields: [defineField({name: 'level1', type: 'level1'})],
     }),
     defineType({
+      name: 'bodyContent',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'tabs',
+          fields: [
+            defineField({
+              name: 'tabs',
+              type: 'array',
+              of: [
+                defineArrayMember({
+                  type: 'object',
+                  name: 'tab',
+                  fields: [defineField({name: 'body', type: 'bodyContent'})],
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    }),
+    defineType({
+      name: 'articleCircularInlineObjectNesting',
+      type: 'document',
+      fields: [defineField({name: 'body', type: 'bodyContent'})],
+    }),
+    defineType({
       name: 'plainObject',
       type: 'object',
       fields: [defineField({name: 'description', type: 'text'})],
@@ -175,5 +203,16 @@ describe('hasInternationalizedArrayField', () => {
   test('finds deeply nested matches', () => {
     const schemaType = getSchemaType('articleDeepNested')
     expect(hasInternationalizedArrayField(schemaType)).toBe(true)
+  })
+
+  test('does not overflow on circular inline object nesting', () => {
+    const schemaType = getSchemaType('articleCircularInlineObjectNesting')
+    let result: boolean | undefined
+
+    expect(() => {
+      result = hasInternationalizedArrayField(schemaType)
+    }).not.toThrow()
+
+    expect(result).toBe(false)
   })
 })
