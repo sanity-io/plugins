@@ -1,6 +1,6 @@
 # sanity-plugin-internationalized-array
 
-## 4.0.6-hotfix.0
+## 4.0.7
 
 ### Patch Changes
 
