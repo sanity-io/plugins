@@ -266,6 +266,26 @@ export type RichDate = {
   offset?: number
 }
 
+export type I18nArrayCircularSchemaRepro = {
+  _id: string
+  _type: 'i18nArrayCircularSchemaRepro'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  body?: I18nArrayCircularBodyContent
+}
+
+export type I18nArrayCircularBodyContent = Array<{
+  tabs?: Array<{
+    body?: I18nArrayCircularBodyContent
+    _type: 'tab'
+    _key: string
+  }>
+  _type: 'tabs'
+  _key: string
+}>
+
 export type I18nArrayPerformanceTest = {
   _id: string
   _type: 'i18nArrayPerformanceTest'
@@ -646,6 +666,8 @@ export type AllSanitySchemaTypes =
   | Code
   | RichDateTest
   | RichDate
+  | I18nArrayCircularSchemaRepro
+  | I18nArrayCircularBodyContent
   | I18nArrayPerformanceTest
   | InternationalizedArrayString
   | InternationalizedPost
