@@ -133,5 +133,9 @@
       ],
     },
     // add new plugin workspaces here
+    "plugins/@sanity/presets": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
   },
 }
