@@ -63,6 +63,56 @@ describe('linkField', () => {
     expect(fieldNames).toEqual(['linkType', 'reference', 'url', 'openInNewTab'])
   })
 
+  test('uses custom name when provided', () => {
+    const result = linkField({name: 'navLink', internalTypes: ['page']})
+
+    expect(result.types).toHaveLength(1)
+    expect(result.types[0]?.name).toBe('navLink')
+  })
+
+  test('custom-named preset retains the same field structure', () => {
+    const fields = getFields(linkField({name: 'footerLink', internalTypes: ['page', 'post']}))
+
+    expect(fields).toHaveLength(4)
+
+    const fieldNames = fields.map((field) => field.name)
+    expect(fieldNames).toEqual(['linkType', 'reference', 'url', 'openInNewTab'])
+  })
+
+  test('custom-named preset maps internalTypes to reference targets', () => {
+    const fields = getFields(linkField({name: 'footerLink', internalTypes: ['page', 'post']}))
+    const referenceField = getField(fields, 'reference')
+
+    expect(referenceField).toHaveProperty('to', [{type: 'page'}, {type: 'post'}])
+  })
+
+  test('custom-named preset hidden callbacks behave identically', () => {
+    const fields = getFields(linkField({name: 'footerLink', internalTypes: ['page']}))
+
+    expect(evaluateHidden(getField(fields, 'reference'), {linkType: 'external'})).toBe(true)
+    expect(evaluateHidden(getField(fields, 'url'), {linkType: 'internal'})).toBe(true)
+    expect(evaluateHidden(getField(fields, 'reference'), {linkType: 'internal'})).toBe(false)
+    expect(evaluateHidden(getField(fields, 'url'), {linkType: 'external'})).toBe(false)
+  })
+
+  test('custom-named preset preview.prepare works correctly', () => {
+    const preset = linkField({name: 'footerLink', internalTypes: ['page']})
+
+    const internalResult = callPrepare(preset, {
+      linkType: 'internal',
+      referenceTitle: 'Home',
+      url: undefined,
+    })
+    expect(internalResult).toEqual({title: 'Home', subtitle: 'Internal link'})
+
+    const externalResult = callPrepare(preset, {
+      linkType: 'external',
+      url: 'https://example.com',
+      referenceTitle: undefined,
+    })
+    expect(externalResult).toEqual({title: 'https://example.com', subtitle: 'External link'})
+  })
+
   test('throws when internalTypes is empty', () => {
     expect(() => linkField({internalTypes: []})).toThrow(
       '[@sanity/presets] linkField requires at least one internalTypes entry.',
