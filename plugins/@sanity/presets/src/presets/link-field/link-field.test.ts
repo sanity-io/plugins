@@ -70,7 +70,7 @@ describe('linkField', () => {
     expect(result.types[0]?.name).toBe('navLink')
   })
 
-  test('custom-named preset retains the same field structure', () => {
+  test('custom-named preset has the same fields', () => {
     const fields = getFields(linkField({name: 'footerLink', internalTypes: ['page', 'post']}))
 
     expect(fields).toHaveLength(4)
@@ -86,7 +86,7 @@ describe('linkField', () => {
     expect(referenceField).toHaveProperty('to', [{type: 'page'}, {type: 'post'}])
   })
 
-  test('custom-named preset hidden callbacks behave identically', () => {
+  test('custom-named preset has identical hidden logic', () => {
     const fields = getFields(linkField({name: 'footerLink', internalTypes: ['page']}))
 
     expect(evaluateHidden(getField(fields, 'reference'), {linkType: 'external'})).toBe(true)
@@ -95,7 +95,7 @@ describe('linkField', () => {
     expect(evaluateHidden(getField(fields, 'url'), {linkType: 'external'})).toBe(false)
   })
 
-  test('custom-named preset preview.prepare works correctly', () => {
+  test('custom-named preset resolves preview titles', () => {
     const preset = linkField({name: 'footerLink', internalTypes: ['page']})
 
     const internalResult = callPrepare(preset, {
@@ -126,7 +126,7 @@ describe('linkField', () => {
     expect(referenceField).toHaveProperty('to', [{type: 'page'}, {type: 'post'}])
   })
 
-  test('hidden callbacks show correct fields for internal type', () => {
+  test('hides external-only fields for internal type', () => {
     const fields = getFields(linkField(defaultConfig))
     const internalParent = {linkType: 'internal'}
 
@@ -135,7 +135,7 @@ describe('linkField', () => {
     expect(evaluateHidden(getField(fields, 'openInNewTab'), internalParent)).toBe(true)
   })
 
-  test('hidden callbacks show correct fields for external type', () => {
+  test('hides internal-only fields for external type', () => {
     const fields = getFields(linkField(defaultConfig))
     const externalParent = {linkType: 'external'}
 
@@ -144,7 +144,7 @@ describe('linkField', () => {
     expect(evaluateHidden(getField(fields, 'openInNewTab'), externalParent)).toBe(false)
   })
 
-  test('hidden callbacks show conditional fields when linkType is undefined', () => {
+  test('shows all fields when linkType is undefined', () => {
     const fields = getFields(linkField(defaultConfig))
     const emptyParent = {linkType: undefined}
 
@@ -155,7 +155,7 @@ describe('linkField', () => {
 })
 
 describe('linkField preview.select', () => {
-  test('selects correct paths for preview', () => {
+  test('selects preview paths', () => {
     const typeDef = linkField(defaultConfig).types[0]
     const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
 
@@ -210,7 +210,7 @@ describe('linkField preview.prepare', () => {
     expect(result).toEqual({title: 'No URL', subtitle: 'External link'})
   })
 
-  test('undefined linkType defaults to internal link fallback', () => {
+  test('falls back to internal link when linkType is undefined', () => {
     const result = callPrepare(preset, {
       linkType: undefined,
       url: undefined,

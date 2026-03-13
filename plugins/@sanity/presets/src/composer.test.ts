@@ -46,7 +46,7 @@ describe('collectTypes', () => {
     expect(types).toEqual([])
   })
 
-  test('deduplicates when the same preset appears multiple times', () => {
+  test('deduplicates repeated preset instances', () => {
     const preset = createPreset(['link.type'])
 
     const types = collectTypes([preset, preset])
@@ -80,7 +80,7 @@ describe('collectTypes', () => {
     )
   })
 
-  test('keeps unique names and drops duplicates across three presets', () => {
+  test('deduplicates across three presets with overlapping types', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
     const types = collectTypes([
