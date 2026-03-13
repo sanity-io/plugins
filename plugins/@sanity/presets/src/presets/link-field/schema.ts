@@ -3,10 +3,7 @@ import {defineField, defineType, type SchemaTypeDefinition} from 'sanity'
 import {LINK_FIELD_TYPE} from './constants'
 
 export function createLinkFieldType(internalTypes: string[]): SchemaTypeDefinition {
-  const referenceTargets =
-    internalTypes.length > 0
-      ? internalTypes.map((typeName) => ({type: typeName}))
-      : [{type: 'document'}]
+  const referenceTargets = internalTypes.map((typeName) => ({type: typeName}))
 
   return defineType({
     name: LINK_FIELD_TYPE,
@@ -14,7 +11,7 @@ export function createLinkFieldType(internalTypes: string[]): SchemaTypeDefiniti
     title: 'Link',
     fields: [
       defineField({
-        name: 'type',
+        name: 'linkType',
         type: 'string',
         title: 'Link Type',
         initialValue: 'internal',
@@ -31,13 +28,13 @@ export function createLinkFieldType(internalTypes: string[]): SchemaTypeDefiniti
         type: 'reference',
         title: 'Internal Link',
         to: referenceTargets,
-        hidden: ({parent}) => parent?.type !== 'internal',
+        hidden: ({parent}) => parent?.linkType === 'external',
       }),
       defineField({
         name: 'url',
         type: 'url',
         title: 'URL',
-        hidden: ({parent}) => parent?.type !== 'external',
+        hidden: ({parent}) => parent?.linkType === 'internal',
         validation: (rule) =>
           rule.uri({
             scheme: ['http', 'https', 'mailto', 'tel'],
@@ -48,21 +45,21 @@ export function createLinkFieldType(internalTypes: string[]): SchemaTypeDefiniti
         type: 'boolean',
         title: 'Open in New Tab',
         initialValue: false,
-        hidden: ({parent}) => parent?.type !== 'external',
+        hidden: ({parent}) => parent?.linkType === 'internal',
       }),
     ],
     preview: {
       select: {
-        type: 'type',
+        linkType: 'linkType',
         url: 'url',
         referenceTitle: 'reference.title',
       },
-      prepare({type, url, referenceTitle}) {
-        const title = type === 'external' ? url || 'No URL' : referenceTitle || 'No reference'
+      prepare({linkType, url, referenceTitle}) {
+        const title = linkType === 'external' ? url || 'No URL' : referenceTitle || 'No reference'
 
         return {
           title,
-          subtitle: type === 'external' ? 'External link' : 'Internal link',
+          subtitle: linkType === 'external' ? 'External link' : 'Internal link',
         }
       },
     },

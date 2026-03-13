@@ -4,13 +4,15 @@ import {createLinkFieldType} from './schema'
 export {LINK_FIELD_TYPE} from './constants'
 
 export interface LinkFieldConfig {
-  internalTypes?: string[]
+  internalTypes: string[]
 }
 
-export function linkField(config: LinkFieldConfig = {}): PresetResult {
-  const internalTypes = config.internalTypes ?? []
+export function linkField(config: LinkFieldConfig): PresetResult {
+  if (config.internalTypes.length === 0) {
+    throw new Error('[@sanity/presets] linkField requires at least one internalTypes entry.')
+  }
 
   return {
-    types: [createLinkFieldType(internalTypes)],
+    types: [createLinkFieldType(config.internalTypes)],
   }
 }

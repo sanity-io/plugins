@@ -1,5 +1,5 @@
 import {defineType} from 'sanity'
-import {describe, expect, test, vi} from 'vitest'
+import {afterEach, describe, expect, test, vi} from 'vitest'
 
 import {collectTypes, presetsComposer} from './composer'
 import type {PresetResult} from './types'
@@ -11,36 +11,35 @@ function createPreset(typeNames: string[]): PresetResult {
 }
 
 describe('presetsComposer', () => {
-  test('returns plugin with no types for empty array', () => {
+  afterEach(() => vi.restoreAllMocks())
+
+  test('returns plugin with correct name', () => {
     const result = presetsComposer([])
 
     expect(result.name).toBe('@sanity/presets')
-    expect(result.schema?.types).toEqual([])
   })
 
-  test('aggregates types from a single preset', () => {
+  test('includes schema types from presets', () => {
     const result = presetsComposer([createPreset(['test.type'])])
 
     expect(result.schema?.types).toEqual([expect.objectContaining({name: 'test.type'})])
   })
 
-  test('aggregates types from multiple presets', () => {
-    const result = presetsComposer([
-      createPreset(['type.a']),
-      createPreset(['type.b']),
-      createPreset(['type.c', 'type.d']),
-    ])
+  test('deduplicates types across presets', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const preset = createPreset(['shared.type'])
 
-    expect(result.schema?.types).toEqual([
-      expect.objectContaining({name: 'type.a'}),
-      expect.objectContaining({name: 'type.b'}),
-      expect.objectContaining({name: 'type.c'}),
-      expect.objectContaining({name: 'type.d'}),
-    ])
+    presetsComposer([preset, preset])
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      '[@sanity/presets] Dropped duplicate type "shared.type". Keeping first definition.',
+    )
   })
 })
 
 describe('collectTypes', () => {
+  afterEach(() => vi.restoreAllMocks())
+
   test('returns empty array for empty input', () => {
     const types = collectTypes([])
 
@@ -56,7 +55,7 @@ describe('collectTypes', () => {
     expect(typeNames).toEqual(['link.type'])
   })
 
-  test('deduplicates separately created presets with matching type names', () => {
+  test('deduplicates matching type names across presets', () => {
     const first = createPreset(['link.type'])
     const second = createPreset(['link.type'])
 
@@ -66,7 +65,7 @@ describe('collectTypes', () => {
     expect(typeNames).toEqual(['link.type'])
   })
 
-  test('deduplicates by type name across different presets and warns', () => {
+  test('deduplicates by type name across presets and warns', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
     const presetA = createPreset(['shared.type', 'alpha.type'])
@@ -77,13 +76,11 @@ describe('collectTypes', () => {
 
     expect(typeNames).toEqual(['shared.type', 'alpha.type', 'beta.type'])
     expect(warnSpy).toHaveBeenCalledWith(
-      '[@sanity/presets] Duplicate type "shared.type" was dropped. The first definition will be used.',
+      '[@sanity/presets] Dropped duplicate type "shared.type". Keeping first definition.',
     )
-
-    warnSpy.mockRestore()
   })
 
-  test('keeps unique names and drops repeated ones across three presets', () => {
+  test('keeps unique names and drops duplicates across three presets', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
     const types = collectTypes([
@@ -95,7 +92,5 @@ describe('collectTypes', () => {
 
     expect(typeNames).toEqual(['core.presets.link', 'core.presets.seo'])
     expect(warnSpy).toHaveBeenCalledTimes(3)
-
-    warnSpy.mockRestore()
   })
 })

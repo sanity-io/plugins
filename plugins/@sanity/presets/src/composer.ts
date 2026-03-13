@@ -1,4 +1,4 @@
-import {definePlugin, type PluginOptions, type SchemaTypeDefinition} from 'sanity'
+import {definePlugin, type SchemaTypeDefinition} from 'sanity'
 
 import type {PresetResult} from './types'
 
@@ -9,7 +9,7 @@ export function collectTypes(presets: PresetResult[]): SchemaTypeDefinition[] {
     preset.types.filter((typeDef) => {
       if (seen.has(typeDef.name)) {
         console.warn(
-          `[@sanity/presets] Duplicate type "${typeDef.name}" was dropped. The first definition will be used.`,
+          `[@sanity/presets] Dropped duplicate type "${typeDef.name}". Keeping first definition.`,
         )
         return false
       }
@@ -19,11 +19,7 @@ export function collectTypes(presets: PresetResult[]): SchemaTypeDefinition[] {
   )
 }
 
-export function presetsComposer(presets: PresetResult[]): PluginOptions {
-  const types = collectTypes(presets)
-
-  return definePlugin({
-    name: '@sanity/presets',
-    schema: {types},
-  })()
-}
+export const presetsComposer = definePlugin<PresetResult[]>((presetFields) => ({
+  name: '@sanity/presets',
+  schema: {types: collectTypes(presetFields)},
+}))
