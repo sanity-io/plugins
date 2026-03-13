@@ -1,35 +1,18 @@
 # @sanity/presets
 
-Production ready preset patterns for Sanity Studio
+> **This package is under active development and is not ready for use.**
+> The API is unstable and will change without notice. Do not install it as a dependency.
 
-## Installation
+## Status
 
-```bash
-npm install --save @sanity/presets
-```
+This plugin is a work in progress. There are no stable APIs, no published releases intended for production, and no guarantees of backward compatibility.
 
-or
+When the package is ready, this README will be updated with installation and usage instructions.
 
-```bash
-pnpm add @sanity/presets
-```
+## Do not use this package
 
-or
+- It is not published to npm as a usable release
+- It contains no stable public API
+- It will change without notice
 
-```
-yarn add @sanity/presets
-```
-
-## Usage
-
-Add it as a plugin in sanity.config.ts:
-
-```js
-import {defineConfig} from 'sanity'
-import {presets} from '@sanity/presets'
-
-export default defineConfig({
-  // ...
-  plugins: [presets()],
-})
-```
+Check back later, or watch the repository for updates.
