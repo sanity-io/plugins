@@ -1,4 +1,4 @@
-import {execSync} from 'node:child_process'
+import {execFileSync, execSync} from 'node:child_process'
 import {readdirSync, rmSync} from 'node:fs'
 import {join} from 'node:path'
 
@@ -9,7 +9,7 @@ function validatePackageName(name: string): {errors?: string[]} {
   try {
     // oxlint-disable-next-line no-restricted-globals
     const scriptPath = join(__dirname, 'scripts/validate-package-name.cjs')
-    execSync(`node "${scriptPath}" "${name}"`, {encoding: 'utf-8', stdio: 'pipe'})
+    execFileSync(process.execPath, [scriptPath, name], {encoding: 'utf-8', stdio: 'pipe'})
     return {}
   } catch (error: any) {
     const errorMessage = error.stderr?.toString().trim() || error.message
@@ -24,9 +24,16 @@ function parseRepositoryUrl(
   try {
     // oxlint-disable-next-line no-restricted-globals
     const scriptPath = join(__dirname, 'scripts/parse-repo-url.cjs')
-    const dirArg = directory ? ` "${directory}"` : ''
-    const result = execSync(`node "${scriptPath}" "${repoUrl}"${dirArg}`, {encoding: 'utf-8'})
-    return JSON.parse(result.trim())
+    const args = [scriptPath, repoUrl]
+    if (directory) {
+      args.push(directory)
+    }
+    const result = execFileSync(process.execPath, args, {encoding: 'utf-8'})
+    const parsed = JSON.parse(result.trim())
+    return {
+      repositoryUrl: parsed.repositoryUrl ?? undefined,
+      sourceUrl: parsed.sourceUrl ?? undefined,
+    }
   } catch {
     return {repositoryUrl: undefined, sourceUrl: undefined}
   }
