@@ -29,7 +29,7 @@
     "vitest": {
       "source": "antfu/skills",
       "sourceType": "github",
-      "computedHash": "669c7275f7e1479b06b2bcfa593603aead4c983b951c7e8edbc09640aa38d0a1"
+      "computedHash": "669c7275f7e1379b06b2bcfa593603aead4c983b951c7e8edbc09640aa38d0a1"
     }
   }
 }
