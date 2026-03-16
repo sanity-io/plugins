@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@portabletext/types": "^4.0.2",
-    "@sanity/client": "^7.16.0",
+    "@sanity/client": "catalog:",
     "@sanity/color": "^3.0.6",
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
@@ -57,7 +57,7 @@
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@sanity/schema": "^5",
+    "@sanity/schema": "^5.16.0",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

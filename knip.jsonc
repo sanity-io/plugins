@@ -5,6 +5,12 @@
     "interface": true,
     "type": true,
   },
+  "ignoreIssues": {
+    // IntrinsicDefinitions in `declare module 'sanity'` is a declaration merging pattern, not unused
+    "plugins/**/src/schema.{ts,tsx}": ["types", "nsTypes"],
+    "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
+    "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
+  },
   "rules": {
     // dev/* workspaces are ignored, so their catalog entries appear unused
     "catalog": "warn",
