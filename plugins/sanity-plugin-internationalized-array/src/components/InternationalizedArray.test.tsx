@@ -458,9 +458,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('does not auto-add default languages when document is being deleted', () => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: true,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
@@ -578,9 +578,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('renders MemberItemError for members with kind !== "item"', () => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: false,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useLanguageFilterStudioContext).mockReturnValue({
