@@ -1,5 +1,11 @@
 # sanity-plugin-workflow
 
+## 3.0.13
+
+### Patch Changes
+
+- [#733](https://github.com/sanity-io/plugins/pull/733) [`1d3c018`](https://github.com/sanity-io/plugins/commit/1d3c018d963e1cba2affd008ceb4efcd1c938ec0) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade @tanstack/react-virtual to ^3.13.22
+
 ## 3.0.12
 
 ### Patch Changes
