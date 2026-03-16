@@ -1,9 +1,11 @@
-import {Box} from '@sanity/ui'
+import {ArrowRightIcon} from '@sanity/icons'
+import {Box, Stack, Text} from '@sanity/ui'
 import {useEffect} from 'react'
 import {type ArrayOfObjectsInputProps, set, typed} from 'sanity'
 import {styled} from 'styled-components'
 
 import {randomKey} from '../../../_lib/randomKey'
+import {instructionGuideUrl} from '../../../constants'
 import type {PromptBlock, PromptTextBlock} from '../../../types'
 
 const PteMods = styled(Box)`
@@ -22,7 +24,22 @@ export function PromptInput(props: ArrayOfObjectsInputProps) {
   // quickfixes the model (converts blocks to inline blocks for alpha customers)
   // backend supports both types, but this prevents "missing block" schema errors
   useOnlyInlineBlocks(props)
-  return <PteMods>{props.renderDefault(props)}</PteMods>
+  return (
+    <PteMods>
+      <Stack space={3}>
+        <Box paddingBottom={1}>
+          <Text size={1} muted>
+            Learn from{' '}
+            <a href={instructionGuideUrl} target="_blank" rel="noreferrer">
+              our instruction guide <ArrowRightIcon />
+            </a>
+          </Text>
+        </Box>
+
+        {props.renderDefault(props)}
+      </Stack>
+    </PteMods>
+  )
 }
 
 function useOnlyInlineBlocks(props: ArrayOfObjectsInputProps) {

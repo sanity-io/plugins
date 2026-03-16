@@ -1,5 +1,4 @@
 import {
-  ArrowRightIcon,
   CodeIcon,
   ComposeIcon,
   icons,
@@ -24,7 +23,6 @@ import {PromptInput} from '../assistDocument/components/instruction/PromptInput'
 import {InstructionsArrayField} from '../assistDocument/components/InstructionsArrayField'
 import {InstructionsArrayInput} from '../assistDocument/components/InstructionsArrayInput'
 import {createFieldRefCache} from '../assistLayout/fieldRefCache'
-import {instructionGuideUrl} from '../constants'
 import {getInstructionTitle} from '../helpers/misc'
 import {
   assistDocumentIdPrefix,
@@ -310,14 +308,6 @@ export const instruction = defineType({
       type: prompt.name,
       name: 'prompt',
       title: 'Instruction',
-      description: (
-        <>
-          Learn from{' '}
-          <a href={instructionGuideUrl} target="_blank" rel="noreferrer">
-            our instruction guide <ArrowRightIcon />
-          </a>
-        </>
-      ),
       components: {
         input: PromptInput,
       },
