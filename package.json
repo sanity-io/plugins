@@ -34,7 +34,7 @@
     "lint-staged": "^16.3.3",
     "oxfmt": "^0.36.0",
     "oxlint": "^1.56.0",
-    "oxlint-tsgolint": "^0.16.0",
+    "oxlint-tsgolint": "^0.17.0",
     "setup-npm-trusted-publish": "^1.0.3",
     "turbo": "^2.8.16",
     "typescript": "catalog:",
