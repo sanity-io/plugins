@@ -5,6 +5,7 @@ packages:
   - packages/@sanity/*
   - plugins/*
   - plugins/@sanity/*
+  - turbo/generators
 
 catalog:
   '@sanity/client': ^7.17.0

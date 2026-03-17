@@ -17,8 +17,8 @@
   },
   "workspaces": {
     ".": {
-      "entry": ["*.{ts,mts,mjs}", "turbo/generators/**/*.ts"],
-      "project": ["*.{ts,mts,mjs}", "turbo/generators/**/*.ts"],
+      "entry": ["*.{ts,mts,mjs}"],
+      "project": ["*.{ts,mts,mjs}"],
       "ignoreDependencies": [
         // Used via .oxlintrc.json jsPlugins specifier, not directly imported
         "eslint-plugin-react-hooks",
@@ -29,6 +29,9 @@
         // Provided by sanity package in dev/test-studio, which is an ignored workspace
         "sanity",
       ],
+    },
+    "turbo/generators": {
+      "project": ["src/**/*.ts"],
     },
     "packages/@repo/tsconfig": {},
     "packages/@repo/package.config": {
