@@ -23,7 +23,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm build --filter=test-studio^...
       - run: pnpm typegen
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: generate-token
         with:
           app-id: ${{ secrets.ECOSPARK_APP_ID }}

@@ -24,7 +24,7 @@ jobs:
       - run: pnpm dlx skills add https://github.com/vercel-labs/skills --skill find-skills --agent claude-code cursor --yes
       - run: pnpm dlx skills update
       - run: pnpm format
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: generate-token
         with:
           app-id: ${{ secrets.ECOSPARK_APP_ID }}
