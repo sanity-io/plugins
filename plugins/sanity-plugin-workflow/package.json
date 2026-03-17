@@ -46,7 +46,7 @@
     "@sanity/ui": "catalog:",
     "@tanstack/react-virtual": "^3.13.22",
     "lexorank": "^1.0.5",
-    "motion": "^12.35.0",
+    "motion": "^12.36.0",
     "sanity-plugin-utils": "^1.8.0"
   },
   "devDependencies": {
