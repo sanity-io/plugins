@@ -443,6 +443,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         path: '{{ turbo.paths.root }}/knip.jsonc',
         pattern: /(?<insertion>)\n    \/\/ add new plugin workspaces here/,
         templateFile: 'templates/knip-workspace-entry.hbs',
+        unique: false,
       },
     ],
   })
@@ -633,6 +634,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         path: '{{ turbo.paths.root }}/knip.jsonc',
         pattern: /(?<insertion>)\n    \/\/ add new plugin workspaces here/,
         templateFile: 'templates/knip-workspace-entry.hbs',
+        unique: false,
       },
     ],
   })
