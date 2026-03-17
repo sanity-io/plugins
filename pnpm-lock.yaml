@@ -350,10 +350,10 @@ importers:
         specifier: ^6.5.2
         version: 6.5.2
       '@codemirror/state':
-        specifier: ^6.5.4
+        specifier: ^6.6.0
         version: 6.6.0
       '@codemirror/view':
-        specifier: ^6.39.16
+        specifier: ^6.40.0
         version: 6.40.0
       '@lezer/highlight':
         specifier: ^1.2.3
