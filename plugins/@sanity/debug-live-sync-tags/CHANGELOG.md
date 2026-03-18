@@ -1,5 +1,11 @@
 # @sanity/debug-live-sync-tags
 
+## 1.0.1
+
+### Patch Changes
+
+- [`41dabd7`](https://github.com/sanity-io/plugins/commit/41dabd715dc5606541f746a3935bda414df0a6bf) Thanks [@stipsan](https://github.com/stipsan)! - Do not include all documents by default
+
 ## 1.0.0
 
 ### Major Changes
