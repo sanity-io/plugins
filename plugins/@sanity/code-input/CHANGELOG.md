@@ -1,5 +1,15 @@
 # @sanity/code-input
 
+## 7.0.12
+
+### Patch Changes
+
+- [#739](https://github.com/sanity-io/plugins/pull/739) [`adb1e41`](https://github.com/sanity-io/plugins/commit/adb1e41a7306adcc619c0325591ac02433afd20f) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update CodeMirror
+
+- [#742](https://github.com/sanity-io/plugins/pull/742) [`fcbeb10`](https://github.com/sanity-io/plugins/commit/fcbeb10c2f8fbcfd384591aa2f6d13b8b7a25e41) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @uiw/codemirror-themes to ^4.25.8
+
+- [#743](https://github.com/sanity-io/plugins/pull/743) [`19a6b2b`](https://github.com/sanity-io/plugins/commit/19a6b2b1ec9655d68544ddf6130b92da51856a74) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @uiw/react-codemirror to ^4.25.8
+
 ## 7.0.11
 
 ### Patch Changes

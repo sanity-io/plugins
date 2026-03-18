@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.0.3
+
+### Patch Changes
+
+- [#741](https://github.com/sanity-io/plugins/pull/741) [`5a1bea4`](https://github.com/sanity-io/plugins/commit/5a1bea46d82aa69192e63313552014f51f2a52d2) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to ^3.1.14
+
 ## 5.0.2
 
 ## 5.0.1

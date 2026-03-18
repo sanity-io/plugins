@@ -1,5 +1,13 @@
 # @sanity/document-internationalization
 
+## 6.0.3
+
+### Patch Changes
+
+- [#740](https://github.com/sanity-io/plugins/pull/740) [`3f68f56`](https://github.com/sanity-io/plugins/commit/3f68f5605075409de4a76bfff51d96f7ead0a20e) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/mutator to ^5.16.0
+
+- [#741](https://github.com/sanity-io/plugins/pull/741) [`5a1bea4`](https://github.com/sanity-io/plugins/commit/5a1bea46d82aa69192e63313552014f51f2a52d2) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to ^3.1.14
+
 ## 6.0.2
 
 ## 6.0.1
