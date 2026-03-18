@@ -19,6 +19,7 @@
     "@sanity/document-internationalization": "workspace:*",
     "@sanity/icons": "^3.7.4",
     "@sanity/language-filter": "workspace:*",
+    "@sanity/presets": "workspace:*",
     "@sanity/rich-date-input": "workspace:*",
     "@sanity/studio-secrets": "workspace:*",
     "@sanity/ui": "catalog:",

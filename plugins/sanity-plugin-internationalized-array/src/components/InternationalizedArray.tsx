@@ -19,9 +19,11 @@ import type {InternationalizedArrayItem} from '../types'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
+import {internationalizedArrayLanguageFilter} from '../utils/internationalizedArrayLanguageFilter'
 import AddButtons from './AddButtons'
 import Feedback from './Feedback'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
+import {MigrationBanner} from './MigrationBanner'
 
 /**
  * Main array input component for internationalized array fields.
@@ -51,22 +53,33 @@ export default function InternationalizedArray(
   const {members, value: _value, schemaType, onChange, readOnly: documentReadOnly} = props
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const value = _value as InternationalizedArrayItem[]
+  const itemsNeedingMigration = value?.filter((v) => !v[LANGUAGE_FIELD_NAME]) ?? []
+  const shouldMigrateArray = itemsNeedingMigration.length > 0
   const readOnly = typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false
   const toast = useToast()
 
   const getFormValue = useGetFormValue()
-  const {languages, filteredLanguages, defaultLanguages, buttonAddAll, buttonLocations} =
-    useInternationalizedArrayContext()
+  const {
+    languages,
+    filteredLanguages,
+    defaultLanguages,
+    buttonAddAll,
+    buttonLocations,
+    languageFilter: builtInLanguageFilter,
+  } = useInternationalizedArrayContext()
 
   // Support updating the UI if languageFilter is installed
   const {selectedLanguageIds, options: languageFilterOptions} = useLanguageFilterStudioContext()
   const documentType = useFormValue(['_type'])
-  const languageFilterEnabled =
+  const usingLanguageFilterPlugin =
     typeof documentType === 'string' && languageFilterOptions.documentTypes.includes(documentType)
+  const usingBuiltInLanguageFilter =
+    typeof documentType === 'string' && builtInLanguageFilter.documentTypes.includes(documentType)
 
+  // TODO:Is this redundant? The filter plugin is already filtering the members, why do we also need to call it at this level.
   const filteredMembers = useMemo(
     () =>
-      languageFilterEnabled
+      usingLanguageFilterPlugin || usingBuiltInLanguageFilter
         ? members.filter((member) => {
             // This member is the outer object created by the plugin
             // Satisfy TS
@@ -81,16 +94,35 @@ export default function InternationalizedArray(
             if (!valueMember || valueMember.kind !== 'field') {
               return false
             }
-
-            return languageFilterOptions.filterField(
-              member.item.schemaType,
-              valueMember,
-              selectedLanguageIds,
-              member.item.value,
-            )
+            // Yes, this is a mess but it's necessary to support both the built-in language filter and the language filter plugin.
+            // If they are using the built-in method it's better to pass the languages to the filter so we can return the fields that are
+            // not using a valid language id instead of hiding them from the users.
+            // We can't do that with the language filter plugin.
+            // Also, the built in method is better because the filter function will only run once.
+            return usingBuiltInLanguageFilter
+              ? internationalizedArrayLanguageFilter(
+                  member.item.schemaType,
+                  valueMember,
+                  selectedLanguageIds,
+                  member.item.value,
+                  languages,
+                )
+              : languageFilterOptions.filterField(
+                  member.item.schemaType,
+                  valueMember,
+                  selectedLanguageIds,
+                  member.item.value,
+                )
           })
         : members,
-    [languageFilterEnabled, members, languageFilterOptions, selectedLanguageIds],
+    [
+      usingLanguageFilterPlugin,
+      usingBuiltInLanguageFilter,
+      members,
+      selectedLanguageIds,
+      languages,
+      languageFilterOptions,
+    ],
   )
 
   const handleAddLanguages = useCallback(
@@ -135,7 +167,7 @@ export default function InternationalizedArray(
       .filter((language) => languages.find((l) => l.id === language))
       .every((language) => addedLanguages.includes(language))
 
-    if (!isDeleting && !hasAddedDefaultLanguages) {
+    if (!isDeleting && !hasAddedDefaultLanguages && !shouldMigrateArray) {
       const languagesToAdd = defaultLanguages
         .filter((language) => !addedLanguages.includes(language))
         .filter((language) => languages.find((l) => l.id === language))
@@ -153,6 +185,7 @@ export default function InternationalizedArray(
     addedLanguages,
     languages,
     documentReadOnly,
+    shouldMigrateArray,
   ])
 
   // NOTE: This is reordering and re-setting the whole array, it could be surgical
@@ -234,6 +267,7 @@ export default function InternationalizedArray(
   }
 
   const addButtonsAreVisible =
+    !shouldMigrateArray &&
     // Plugin was configured to display buttons here (default!)
     buttonLocations.includes('field') &&
     // There's at least one language visible
@@ -251,6 +285,7 @@ export default function InternationalizedArray(
         }
         return <MemberItemError key={member.key} member={member} />
       })}
+      <MigrationBanner itemsNeedingMigration={itemsNeedingMigration} />
 
       {/* Give some feedback in the UI so the field doesn't look "missing" */}
       {!addButtonsAreVisible && !fieldHasMembers ? (

@@ -1,0 +1,5 @@
+{
+  "extends": ["@sanity/tsconfig/strictest"],
+  "include": ["src/*.ts"],
+  "exclude": ["node_modules"]
+}

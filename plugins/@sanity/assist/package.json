@@ -1,6 +1,6 @@
 {
   "name": "@sanity/assist",
-  "version": "6.0.1",
+  "version": "6.0.3",
   "description": "You create the instructions; Sanity AI Assist does the rest.",
   "keywords": [
     "ai",
@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@portabletext/types": "^4.0.2",
-    "@sanity/client": "^7.16.0",
+    "@sanity/client": "catalog:",
     "@sanity/color": "^3.0.6",
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
@@ -57,7 +57,7 @@
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@sanity/schema": "^5",
+    "@sanity/schema": "^5.17.1",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

@@ -236,6 +236,7 @@ describe('InternationalizedArray', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'en',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -264,25 +265,49 @@ describe('InternationalizedArray', () => {
         value: [],
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'en', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'en',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'fr', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'fr',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'es', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'es',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'de', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'de',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',
@@ -310,13 +335,25 @@ describe('InternationalizedArray', () => {
         value: [],
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'fr', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'fr',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [1],
         position: 'before',
         type: 'insert',
       },
       {
-        items: [{[LANGUAGE_FIELD_NAME]: 'de', _type: 'internationalizedArrayStringValue'}],
+        items: [
+          {
+            _key: expect.any(String),
+            [LANGUAGE_FIELD_NAME]: 'de',
+            _type: 'internationalizedArrayStringValue',
+          },
+        ],
         path: [-1],
         position: 'after',
         type: 'insert',
@@ -343,11 +380,13 @@ describe('InternationalizedArray', () => {
       value: [
         {
           [LANGUAGE_FIELD_NAME]: 'en',
+          _key: expect.any(String),
           _type: 'internationalizedArrayStringValue',
           value: undefined,
         },
         {
           [LANGUAGE_FIELD_NAME]: 'fr',
+          _key: expect.any(String),
           _type: 'internationalizedArrayStringValue',
           value: undefined,
         },
@@ -395,6 +434,7 @@ describe('InternationalizedArray', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'en',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -406,6 +446,7 @@ describe('InternationalizedArray', () => {
         items: [
           {
             [LANGUAGE_FIELD_NAME]: 'fr',
+            _key: expect.any(String),
             _type: 'internationalizedArrayStringValue',
           },
         ],
@@ -417,9 +458,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('does not auto-add default languages when document is being deleted', () => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: true,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
@@ -537,9 +578,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('renders MemberItemError for members with kind !== "item"', () => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: false,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useLanguageFilterStudioContext).mockReturnValue({

@@ -1,5 +1,19 @@
 # 📓 Changelog
 
+## 6.0.3
+
+### Patch Changes
+
+- [#733](https://github.com/sanity-io/plugins/pull/733) [`1d3c018`](https://github.com/sanity-io/plugins/commit/1d3c018d963e1cba2affd008ceb4efcd1c938ec0) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade @sanity/client to ^7.17.0
+
+- [#731](https://github.com/sanity-io/plugins/pull/731) [`4f8e399`](https://github.com/sanity-io/plugins/commit/4f8e399b6a50d887e22057f575a33b2c9d1761cb) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Replace non string description on assist instructions, fix https://github.com/sanity-io/plugins/issues/730
+
+## 6.0.2
+
+### Patch Changes
+
+- [#714](https://github.com/sanity-io/plugins/pull/714) [`e205d3a`](https://github.com/sanity-io/plugins/commit/e205d3a97bab3849cf4c99773ade1db0b15bc32b) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix field translation path mapping for v5 internationalized array values, including stable output key resolution and language path metadata for translated items.
+
 ## 6.0.1
 
 ### Patch Changes

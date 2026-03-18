@@ -91,12 +91,11 @@ describe('AddButtons', () => {
       filteredLanguages: [],
     })
 
-    const {container} = render(
-      <AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
 
-    expect(container.innerHTML).toBe('')
+    expect(screen.queryByTestId('add-buttons-grid')).not.toBeInTheDocument()
   })
 
   test('calls handleClick when a button is clicked', () => {

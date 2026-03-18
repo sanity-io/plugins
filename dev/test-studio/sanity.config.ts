@@ -15,6 +15,7 @@ import {documentInternationalizationExample} from '#document-internationalizatio
 import {iframePaneExample} from '#iframe-pane'
 import {internationalizedArrayExample} from '#internationalized-array'
 import {markdownExample} from '#markdown'
+import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
 import {studioSecretsExample} from '#studio-secrets'
 import {unsplashExample} from '#unsplash'
@@ -39,6 +40,11 @@ export default defineConfig([
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
+  createWorkspace({
+    name: 'presets-studio',
+    title: 'Presets Studio',
+    plugins: [structureTool(), presetsWorkspace()],
+  }),
   createWorkspace({
     name: 'kitchen-sink',
     plugins: [

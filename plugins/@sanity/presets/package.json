@@ -1,0 +1,55 @@
+{
+  "name": "@sanity/presets",
+  "version": "0.0.2",
+  "description": "Production ready preset patterns for Sanity Studio",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/presets#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/presets"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "prepack": "turbo run build"
+  },
+  "devDependencies": {
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "sanity": "catalog:"
+  },
+  "peerDependencies": {
+    "sanity": "^5"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

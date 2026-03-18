@@ -1,5 +1,17 @@
 # sanity-plugin-workflow
 
+## 3.0.13
+
+### Patch Changes
+
+- [#733](https://github.com/sanity-io/plugins/pull/733) [`1d3c018`](https://github.com/sanity-io/plugins/commit/1d3c018d963e1cba2affd008ceb4efcd1c938ec0) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade @tanstack/react-virtual to ^3.13.22
+
+## 3.0.12
+
+### Patch Changes
+
+- [#709](https://github.com/sanity-io/plugins/pull/709) [`799ed07`](https://github.com/sanity-io/plugins/commit/799ed0797f1074ea20b438d2f13590a8ad8c400a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency motion to ^12.35.0
+
 ## 3.0.11
 
 ### Patch Changes

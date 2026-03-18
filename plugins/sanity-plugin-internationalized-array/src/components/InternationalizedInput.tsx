@@ -223,13 +223,13 @@ export default function InternationalizedInput(
   )
 
   const {validation, value, readOnly} = inlineProps
-
   // The parent array contains the languages from the plugin config
   const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
 
   const keyIsValid = languages?.length
     ? languages.find((l) => l.id === value[LANGUAGE_FIELD_NAME])
     : false
+  const itemNeedsMigration = !value[LANGUAGE_FIELD_NAME]
 
   if (!languages) {
     return <Spinner />
@@ -244,13 +244,18 @@ export default function InternationalizedInput(
   return (
     <Card paddingTop={2} tone={getToneFromValidation(validation)}>
       <Stack space={2}>
-        {keyIsValid ? (
-          <Label muted size={1}>
-            {languageTitle}
-          </Label>
-        ) : (
-          <ChangeLanguageButton value={value} path={props.path} onChange={originalOnChange} />
+        {!itemNeedsMigration && (
+          <Card tone="inherit">
+            {keyIsValid ? (
+              <Label muted size={1}>
+                {languageTitle}
+              </Label>
+            ) : (
+              <ChangeLanguageButton value={value} path={props.path} onChange={originalOnChange} />
+            )}
+          </Card>
         )}
+
         <Flex align="center" gap={2}>
           <Box flex={1}>{props.inputProps.renderInput(inlineProps)}</Box>
           <RemoveButton

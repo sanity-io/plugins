@@ -15,7 +15,11 @@ test('package exports', {timeout: 30_000}, async () => {
         "LANGUAGE_FIELD_NAME": "string",
         "clear": "function",
         "internationalizedArray": "function",
+        "internationalizedArrayLanguageFilter": "function",
         "isInternationalizedArrayItemType": "function",
+      },
+      "./migrations": {
+        "migrateToLanguageField": "function",
       },
     }
   `)

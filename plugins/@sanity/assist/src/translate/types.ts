@@ -10,6 +10,7 @@ export interface DocumentMember {
   path: Path
   name: string
   value: unknown
+  parentValue?: unknown
 }
 
 export interface TranslationOutput {

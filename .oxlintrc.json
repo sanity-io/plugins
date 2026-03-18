@@ -11,7 +11,12 @@
     "promise"
   ],
   "jsPlugins": [{"name": "react-hooks-js", "specifier": "eslint-plugin-react-hooks"}],
-  "ignorePatterns": ["**/.sanity/*", "**/dist/*", "**/sanity.types.ts"],
+  "ignorePatterns": [
+    "**/.sanity/*",
+    "**/dist/*",
+    "**/sanity.types.ts",
+    "turbo/generators/config.ts"
+  ],
   "options": {
     "typeAware": true,
     "typeCheck": true

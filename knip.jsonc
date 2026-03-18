@@ -5,14 +5,20 @@
     "interface": true,
     "type": true,
   },
+  "ignoreIssues": {
+    // IntrinsicDefinitions in `declare module 'sanity'` is a declaration merging pattern, not unused
+    "plugins/**/src/schema.{ts,tsx}": ["types", "nsTypes"],
+    "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
+    "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
+  },
   "rules": {
     // dev/* workspaces are ignored, so their catalog entries appear unused
     "catalog": "warn",
   },
   "workspaces": {
     ".": {
-      "entry": ["*.{ts,mts,mjs}", "turbo/generators/**/*.ts"],
-      "project": ["*.{ts,mts,mjs}", "turbo/generators/**/*.ts"],
+      "entry": ["*.{ts,mts,mjs}"],
+      "project": ["*.{ts,mts,mjs}"],
       "ignoreDependencies": [
         // Used via .oxlintrc.json jsPlugins specifier, not directly imported
         "eslint-plugin-react-hooks",
@@ -23,6 +29,9 @@
         // Provided by sanity package in dev/test-studio, which is an ignored workspace
         "sanity",
       ],
+    },
+    "turbo/generators": {
+      "project": ["src/**/*.ts"],
     },
     "packages/@repo/tsconfig": {},
     "packages/@repo/package.config": {
@@ -138,5 +147,9 @@
     },
 
     // add new plugin workspaces here
+    "plugins/@sanity/presets": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
   },
 }
