@@ -202,7 +202,7 @@ export default function Tool() {
   }, [client])
 
   const [whichList, setWhichList] = useState<'liveEvents' | 'liveEventsIncludingAllDocuments'>(
-    'liveEventsIncludingAllDocuments',
+    'liveEvents',
   )
   const [showTimestamp, setShowTimestamp] = useState(true)
   const [showEventId, setShowEventId] = useState(false)
