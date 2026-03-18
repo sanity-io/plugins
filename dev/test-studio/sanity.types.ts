@@ -86,10 +86,17 @@ export type MarkdownTest = {
   _updatedAt: string
   _rev: string
   title?: string
+  slug?: Slug
   markdown?: Markdown
 }
 
 export type Markdown = string
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
+}
 
 export type ColorTest = {
   _id: string
@@ -343,12 +350,6 @@ export type InternationalizedPost = {
   title?: InternationalizedArrayString
   description?: InternationalizedArrayText
   slug?: Slug
-}
-
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
 }
 
 export type InternationalizedArrayText = Array<
@@ -653,6 +654,7 @@ export type AllSanitySchemaTypes =
   | SanityPreviewUrlSecret
   | MarkdownTest
   | Markdown
+  | Slug
   | ColorTest
   | Color
   | RgbaColor
@@ -673,7 +675,6 @@ export type AllSanitySchemaTypes =
   | I18nArrayPerformanceTest
   | InternationalizedArrayString
   | InternationalizedPost
-  | Slug
   | InternationalizedArrayText
   | InternationalizedArrayTextValue
   | InternationalizedArrayStringValue
