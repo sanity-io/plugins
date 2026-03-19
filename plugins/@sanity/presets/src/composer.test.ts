@@ -1,8 +1,8 @@
-import {defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 import {afterEach, assert, describe, expect, test, vi} from 'vitest'
 
 import {collectTypes, presets} from './composer'
-import {presetProvider} from './definePresetType'
+import {definePresetType, presetProvider} from './definePresetType'
 import type {PresetResult} from './types'
 
 function createPreset(typeNames: string[]): PresetResult[] {
@@ -41,6 +41,40 @@ describe('presets', () => {
     expect(warnSpy).toHaveBeenCalledWith(
       '[@sanity/presets] Dropped duplicate type "shared.type". Keeping first definition.',
     )
+  })
+
+  test('tags composed presets with the correct provider', () => {
+    const alphaPreset = definePresetType(() => ({
+      schemaType: defineType({
+        name: 'alpha',
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'alphaName',
+            type: 'string',
+          }),
+        ],
+      }),
+    }))
+
+    const betaPreset = definePresetType(() => ({
+      composes: [alphaPreset],
+      schemaType: defineType({
+        name: 'beta',
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'betaName',
+            type: 'string',
+          }),
+        ],
+      }),
+    }))
+
+    expect(alphaPreset().find(({type}) => type.name === 'alpha')?.[presetProvider]).toEqual('user')
+
+    expect(betaPreset().find(({type}) => type.name === 'alpha')?.[presetProvider]).toEqual('system')
+    expect(betaPreset().find(({type}) => type.name === 'beta')?.[presetProvider]).toEqual('user')
   })
 })
 

@@ -11,6 +11,10 @@ export type PresetProvider = 'user' | 'system'
 
 export type PresetResultFactory = (...args: any[]) => PresetResult[]
 
+export interface BaseContext {
+  [presetProvider]?: PresetProvider
+}
+
 export interface PresetTypeContext {
   [presetProvider]?: PresetProvider
   schemaType: SchemaTypeDefinition
@@ -19,7 +23,7 @@ export interface PresetTypeContext {
 
 export function definePresetType<Context = void>(
   factory: (context?: Context) => PresetTypeContext,
-): (context?: Context) => PresetResult[] {
+): (context?: BaseContext & Context) => PresetResult[] {
   return function define(context) {
     const {schemaType, composes = []} = factory(context)
 
@@ -31,7 +35,7 @@ export function definePresetType<Context = void>(
 
     return dependencies.concat({
       type: schemaType,
-      [presetProvider]: 'user',
+      [presetProvider]: context?.[presetProvider] ?? 'user',
     })
   }
 }
