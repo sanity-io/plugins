@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
-import {getCliClient} from 'sanity/cli'
 import {randomKey} from '@sanity/util/content'
+import {getCliClient} from 'sanity/cli'
 
 const client = getCliClient({apiVersion: '2023-06-30'})
 
@@ -45,6 +45,7 @@ const client = getCliClient({apiVersion: '2023-06-30'})
 
 const TYPE = `presenter`
 const FIELD_NAME = `title`
+const ARRAY_ITEM_TYPE = `internationalizedArrayStringValue`
 
 // 3. Run this script with:
 // `npx sanity@latest exec ./migrations/transformObjectToArray.ts --with-user-token`
@@ -68,6 +69,7 @@ const buildPatches = (docs: any[]) =>
           .filter((key) => key !== '_type')
           .map((key) => ({
             _key: randomKey(),
+            _type: ARRAY_ITEM_TYPE,
             language: key,
             value: doc[FIELD_NAME][key],
           })),
