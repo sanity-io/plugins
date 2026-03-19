@@ -1,13 +1,17 @@
 import {defineType} from 'sanity'
-import {afterEach, describe, expect, test, vi} from 'vitest'
+import {afterEach, assert, describe, expect, test, vi} from 'vitest'
 
 import {collectTypes, presets} from './composer'
+import {presetProvider} from './definePresetType'
 import type {PresetResult} from './types'
 
-function createPreset(typeNames: string[]): PresetResult {
-  return {
-    types: typeNames.map((name) => defineType({name, type: 'object', fields: []})),
-  }
+function createPreset(typeNames: string[]): PresetResult[] {
+  return typeNames.map((name) => {
+    return {
+      type: defineType({name, type: 'object', fields: []}),
+      [presetProvider]: 'user',
+    }
+  })
 }
 
 describe('presets', () => {
@@ -28,8 +32,11 @@ describe('presets', () => {
   test('deduplicates types across presets', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const preset = createPreset(['shared.type'])
+    const resolvedPresets = presets(preset, preset)
 
-    presets(preset, preset)
+    assert(Array.isArray(resolvedPresets.schema?.types))
+
+    expect(resolvedPresets.schema.types.map(({name}) => name)).toEqual(['shared.type'])
 
     expect(warnSpy).toHaveBeenCalledWith(
       '[@sanity/presets] Dropped duplicate type "shared.type". Keeping first definition.',
