@@ -1,4 +1,4 @@
-import {linkField, LINK_FIELD_TYPE, presetsComposer} from '@sanity/presets'
+import {linkType, LINK_TYPE_NAME, presetsComposer} from '@sanity/presets'
 import {definePlugin, defineType} from 'sanity'
 
 const corePresetsTest = defineType({
@@ -14,12 +14,12 @@ const corePresetsTest = defineType({
     {
       name: 'link',
       title: 'Link',
-      type: LINK_FIELD_TYPE,
+      type: LINK_TYPE_NAME,
     },
   ],
 })
 
 export const presetsWorkspace = definePlugin(() => ({
   schema: {types: [corePresetsTest]},
-  plugins: [presetsComposer([linkField({internalTypes: ['corePresetsTest']})])],
+  plugins: [presetsComposer([linkType({internalTypes: ['corePresetsTest']})])],
 }))

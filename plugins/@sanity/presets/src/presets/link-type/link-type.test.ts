@@ -1,12 +1,12 @@
 import type {FieldDefinition, PreviewValue} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
-import {LINK_FIELD_TYPE} from './constants'
-import {linkField} from './index'
+import {LINK_TYPE_NAME} from './constants'
+import {linkType} from './index'
 
 const defaultConfig = {internalTypes: ['page']}
 
-function getFields(result: ReturnType<typeof linkField>): FieldDefinition[] {
+function getFields(result: ReturnType<typeof linkType>): FieldDefinition[] {
   const typeDef = result.types[0]
   if (!typeDef || !('fields' in typeDef) || !typeDef.fields) {
     throw new Error('Expected an object type definition with fields')
@@ -36,7 +36,7 @@ function evaluateHidden(field: FieldDefinition, parent: Record<string, unknown>)
 }
 
 function callPrepare(
-  result: ReturnType<typeof linkField>,
+  result: ReturnType<typeof linkType>,
   selection: Record<string, unknown>,
 ): PreviewValue {
   const typeDef = result.types[0]
@@ -46,16 +46,16 @@ function callPrepare(
   return prepare(selection)
 }
 
-describe('linkField', () => {
+describe('linkType', () => {
   test('returns one type named core.presets.link', () => {
-    const result = linkField(defaultConfig)
+    const result = linkType(defaultConfig)
 
     expect(result.types).toHaveLength(1)
-    expect(result.types[0]?.name).toBe(LINK_FIELD_TYPE)
+    expect(result.types[0]?.name).toBe(LINK_TYPE_NAME)
   })
 
   test('type is an object with 4 fields', () => {
-    const fields = getFields(linkField(defaultConfig))
+    const fields = getFields(linkType(defaultConfig))
 
     expect(fields).toHaveLength(4)
 
@@ -64,20 +64,20 @@ describe('linkField', () => {
   })
 
   test('throws when internalTypes is empty', () => {
-    expect(() => linkField({internalTypes: []})).toThrow(
-      '[@sanity/presets] linkField requires at least one internalTypes entry.',
+    expect(() => linkType({internalTypes: []})).toThrow(
+      '[@sanity/presets] linkType requires at least one internalTypes entry.',
     )
   })
 
   test('maps internalTypes to reference targets', () => {
-    const fields = getFields(linkField({internalTypes: ['page', 'post']}))
+    const fields = getFields(linkType({internalTypes: ['page', 'post']}))
     const referenceField = getField(fields, 'reference')
 
     expect(referenceField).toHaveProperty('to', [{type: 'page'}, {type: 'post'}])
   })
 
   test('hidden callbacks show correct fields for internal type', () => {
-    const fields = getFields(linkField(defaultConfig))
+    const fields = getFields(linkType(defaultConfig))
     const internalParent = {linkType: 'internal'}
 
     expect(evaluateHidden(getField(fields, 'reference'), internalParent)).toBe(false)
@@ -86,7 +86,7 @@ describe('linkField', () => {
   })
 
   test('hidden callbacks show correct fields for external type', () => {
-    const fields = getFields(linkField(defaultConfig))
+    const fields = getFields(linkType(defaultConfig))
     const externalParent = {linkType: 'external'}
 
     expect(evaluateHidden(getField(fields, 'reference'), externalParent)).toBe(true)
@@ -95,7 +95,7 @@ describe('linkField', () => {
   })
 
   test('hidden callbacks show conditional fields when linkType is undefined', () => {
-    const fields = getFields(linkField(defaultConfig))
+    const fields = getFields(linkType(defaultConfig))
     const emptyParent = {linkType: undefined}
 
     expect(evaluateHidden(getField(fields, 'reference'), emptyParent)).toBe(false)
@@ -104,9 +104,9 @@ describe('linkField', () => {
   })
 })
 
-describe('linkField preview.select', () => {
+describe('linkType preview.select', () => {
   test('selects correct paths for preview', () => {
-    const typeDef = linkField(defaultConfig).types[0]
+    const typeDef = linkType(defaultConfig).types[0]
     const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
 
     expect(select).toEqual({
@@ -117,8 +117,8 @@ describe('linkField preview.select', () => {
   })
 })
 
-describe('linkField preview.prepare', () => {
-  const preset = linkField(defaultConfig)
+describe('linkType preview.prepare', () => {
+  const preset = linkType(defaultConfig)
 
   test('internal link with a reference title', () => {
     const result = callPrepare(preset, {
