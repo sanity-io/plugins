@@ -14,13 +14,13 @@ describe('presets', () => {
   afterEach(() => vi.restoreAllMocks())
 
   test('returns plugin with correct name', () => {
-    const result = presets([])
+    const result = presets()
 
     expect(result.name).toBe('@sanity/presets')
   })
 
   test('includes schema types from presets', () => {
-    const result = presets([createPreset(['test.type'])])
+    const result = presets(createPreset(['test.type']))
 
     expect(result.schema?.types).toEqual([expect.objectContaining({name: 'test.type'})])
   })
@@ -29,7 +29,7 @@ describe('presets', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const preset = createPreset(['shared.type'])
 
-    presets([preset, preset])
+    presets(preset, preset)
 
     expect(warnSpy).toHaveBeenCalledWith(
       '[@sanity/presets] Dropped duplicate type "shared.type". Keeping first definition.',

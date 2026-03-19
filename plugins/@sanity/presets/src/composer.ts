@@ -1,4 +1,4 @@
-import {definePlugin, type SchemaTypeDefinition} from 'sanity'
+import {type PluginOptions, type SchemaTypeDefinition} from 'sanity'
 
 import type {PresetResult} from './types'
 
@@ -19,7 +19,9 @@ export function collectTypes(presets: PresetResult[]): SchemaTypeDefinition[] {
   )
 }
 
-export const presets = definePlugin<PresetResult[]>((presetFields) => ({
-  name: '@sanity/presets',
-  schema: {types: collectTypes(presetFields)},
-}))
+export function presets(...types: PresetResult[]): PluginOptions {
+  return {
+    name: '@sanity/presets',
+    schema: {types: collectTypes(types)},
+  }
+}

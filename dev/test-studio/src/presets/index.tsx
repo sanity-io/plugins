@@ -21,5 +21,5 @@ const corePresetsTest = defineType({
 
 export const presetsWorkspace = definePlugin(() => ({
   schema: {types: [corePresetsTest]},
-  plugins: [presets([linkType({internalTypes: ['corePresetsTest']})])],
+  plugins: [presets(linkType({internalTypes: ['corePresetsTest']}))],
 }))
