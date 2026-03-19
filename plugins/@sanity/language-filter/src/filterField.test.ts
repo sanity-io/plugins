@@ -62,6 +62,7 @@ describe('filterField', () => {
       kind: 'field',
       open: true,
       index: 0,
+      path: [],
       field: {
         schemaType: {name: 'string', jsonType: 'string'},
         level: 1,
