@@ -40,6 +40,9 @@
     "build": "pkg build --strict --check --clean",
     "prepack": "turbo run build"
   },
+  "dependencies": {
+    "@sanity/asset-utils": "^2.3.0"
+  },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",

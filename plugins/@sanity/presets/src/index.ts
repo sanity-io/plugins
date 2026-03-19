@@ -1,5 +1,6 @@
 export {presets} from './composer'
 export {linkType, LINK_TYPE_NAME} from './presets/link-type'
 export {ctaType} from './presets/cta-type'
+export {seoType} from './presets/seo-type'
 export type {LinkTypeConfig} from './presets/link-type'
 export type {PresetResult} from './types'
