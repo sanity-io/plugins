@@ -16,8 +16,8 @@ const client = getCliClient({apiVersion: '2023-06-30'})
 
 // To:
 // "greeting": [
-//   { "_key": "abc-def-ghi-jkl", "language":"en", "value": "hello" },
-//   { "_key": "zxy-vwx-rst-qpo", "language":"fr", "value": "bonjour" },
+//   { "_key": "abcdefghijkl", "language":"en", "value": "hello" },
+//   { "_key": "zxyvwxrstqpo", "language":"fr", "value": "bonjour" },
 // ]
 
 // This will migrate documents in batches of 100 and continue patching until no more documents are
