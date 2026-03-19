@@ -41,13 +41,15 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/asset-utils": "^2.3.0"
+    "@sanity/asset-utils": "^2.3.0",
+    "@sanity/telemetry": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
+    "react": "catalog:",
     "sanity": "catalog:"
   },
   "peerDependencies": {
