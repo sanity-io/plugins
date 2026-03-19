@@ -1,5 +1,6 @@
 import {type PluginOptions, type SchemaTypeDefinition} from 'sanity'
 
+import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
 import {presetProvider} from './definePresetType'
 import type {PresetResult} from './types'
 
@@ -44,6 +45,11 @@ export function presets(...types: PresetResult[][]): PluginOptions {
   return {
     name: '@sanity/presets',
     schema: {types: collectTypes(types)},
+    studio: {
+      components: {
+        layout: (props) => <PresetsTelemetryCollector {...props} presets={types} />,
+      },
+    },
   }
 }
 
