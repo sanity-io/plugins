@@ -368,7 +368,7 @@ Use a backwards compatible query until your migration is ready and has been exec
 }
 ```
 
-If you use AI agents in your code, you can copy [this skill](../../.claude/skills/i18n-array-groq-query-migration/SKILL.md) to your project to guide your agents and help you with the migration.
+If you use AI agents in your code, you can copy [this skill](./skills/i18n-array-groq-query-migration/SKILL.md) to your project to guide your agents and help you with the migration.
 
 Use this pre migration prompt
 
@@ -447,7 +447,7 @@ Before running any migration steps, ask the user to create a backup and confirm 
 Use this context:
 - Document internationalization (v5 -> v6): https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/README.md#migrating-to-v6
 - Internationalized array README: https://github.com/sanity-io/plugins/blob/main/plugins/sanity-plugin-internationalized-array/README.md
-- Skill source to copy from: https://github.com/sanity-io/plugins/blob/main/.claude/skills/i18n-array-groq-query-migration/SKILL.md
+- Skill source to copy from: https://github.com/sanity-io/plugins/blob/main/plugins/sanity-plugin-internationalized-array/skills/i18n-array-groq-query-migration/SKILL.md
 
 Then execute this workflow:
 ## Pre migration:
