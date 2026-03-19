@@ -1,7 +1,7 @@
 import {defineType} from 'sanity'
 import {afterEach, describe, expect, test, vi} from 'vitest'
 
-import {collectTypes, presetsComposer} from './composer'
+import {collectTypes, presets} from './composer'
 import type {PresetResult} from './types'
 
 function createPreset(typeNames: string[]): PresetResult {
@@ -10,17 +10,17 @@ function createPreset(typeNames: string[]): PresetResult {
   }
 }
 
-describe('presetsComposer', () => {
+describe('presets', () => {
   afterEach(() => vi.restoreAllMocks())
 
   test('returns plugin with correct name', () => {
-    const result = presetsComposer([])
+    const result = presets([])
 
     expect(result.name).toBe('@sanity/presets')
   })
 
   test('includes schema types from presets', () => {
-    const result = presetsComposer([createPreset(['test.type'])])
+    const result = presets([createPreset(['test.type'])])
 
     expect(result.schema?.types).toEqual([expect.objectContaining({name: 'test.type'})])
   })
@@ -29,7 +29,7 @@ describe('presetsComposer', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const preset = createPreset(['shared.type'])
 
-    presetsComposer([preset, preset])
+    presets([preset, preset])
 
     expect(warnSpy).toHaveBeenCalledWith(
       '[@sanity/presets] Dropped duplicate type "shared.type". Keeping first definition.',

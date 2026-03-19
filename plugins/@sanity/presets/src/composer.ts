@@ -19,7 +19,7 @@ export function collectTypes(presets: PresetResult[]): SchemaTypeDefinition[] {
   )
 }
 
-export const presetsComposer = definePlugin<PresetResult[]>((presetFields) => ({
+export const presets = definePlugin<PresetResult[]>((presetFields) => ({
   name: '@sanity/presets',
   schema: {types: collectTypes(presetFields)},
 }))

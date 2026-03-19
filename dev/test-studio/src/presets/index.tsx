@@ -1,4 +1,4 @@
-import {linkType, LINK_TYPE_NAME, presetsComposer} from '@sanity/presets'
+import {linkType, LINK_TYPE_NAME, presets} from '@sanity/presets'
 import {definePlugin, defineType} from 'sanity'
 
 const corePresetsTest = defineType({
@@ -21,5 +21,5 @@ const corePresetsTest = defineType({
 
 export const presetsWorkspace = definePlugin(() => ({
   schema: {types: [corePresetsTest]},
-  plugins: [presetsComposer([linkType({internalTypes: ['corePresetsTest']})])],
+  plugins: [presets([linkType({internalTypes: ['corePresetsTest']})])],
 }))

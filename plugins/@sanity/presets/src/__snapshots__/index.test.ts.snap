@@ -5,7 +5,7 @@ exports[`package exports 1`] = `
   ".": {
     "LINK_FIELD_TYPE": "string",
     "linkType": "function",
-    "presetsComposer": "function",
+    "presets": "function",
   },
 }
 `;
