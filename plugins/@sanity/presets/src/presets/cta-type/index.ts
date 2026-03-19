@@ -10,6 +10,7 @@ export const ctaType = definePresetType<{}, 'object'>((context) => {
   const {fields, ...objectConfig} = context ?? {}
 
   return {
+    name: 'core.presets.cta',
     composes: [linkType],
     schemaType: defineType({
       name: CTA_TYPE_NAME,

@@ -10,6 +10,7 @@ export const seoType = definePresetType<{}, 'object'>((context) => {
   const {fields, ...objectConfig} = context ?? {}
 
   return {
+    name: 'core.presets.seo',
     schemaType: defineType({
       name: SEO_TYPE_NAME,
       title: 'Web page metadata (SEO)',

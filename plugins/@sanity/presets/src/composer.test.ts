@@ -10,6 +10,7 @@ function createPreset(typeNames: string[]): PresetResult[] {
     return {
       type: defineType({name, type: 'object', fields: []}),
       [presetProvider]: 'user',
+      name,
     }
   })
 }
@@ -45,6 +46,7 @@ describe('presets', () => {
 
   test('tags composed presets with the correct provider', () => {
     const alphaPreset = definePresetType(() => ({
+      name: 'alpha',
       schemaType: defineType({
         name: 'alpha',
         type: 'object',
@@ -58,6 +60,7 @@ describe('presets', () => {
     }))
 
     const betaPreset = definePresetType(() => ({
+      name: 'beta',
       composes: [alphaPreset],
       schemaType: defineType({
         name: 'beta',
