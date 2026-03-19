@@ -3,4 +3,5 @@
   onboarding: false,
   requireConfig: 'optional',
   autodiscover: true,
+  postUpdateOptions: ["pnpmDedupe"]
 }
