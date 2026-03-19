@@ -1,5 +1,5 @@
-import {linkType, LINK_TYPE_NAME, presets} from '@sanity/presets'
-import {definePlugin, defineType} from 'sanity'
+import {linkType, LINK_TYPE_NAME, presets, pageType} from '@sanity/presets'
+import {definePlugin, defineType, defineField} from 'sanity'
 
 const corePresetsTest = defineType({
   name: 'corePresetsTest',
@@ -20,6 +20,30 @@ const corePresetsTest = defineType({
 })
 
 export const presetsWorkspace = definePlugin(() => ({
-  schema: {types: [corePresetsTest]},
-  plugins: [presets(linkType({internalTypes: ['corePresetsTest']}))],
+  plugins: [
+    presets(
+      linkType({
+        internalTypes: ['core.presets.page'],
+      }),
+      pageType({
+        pageBuilderBlocks: ['core.presets.cta', 'blockquote'],
+      }),
+    ),
+  ],
+  schema: {
+    types: [
+      corePresetsTest,
+      defineType({
+        name: 'blockquote',
+        title: 'Blockquote',
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'quote',
+            type: 'text',
+          }),
+        ],
+      }),
+    ],
+  },
 }))
