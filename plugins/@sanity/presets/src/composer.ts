@@ -1,27 +1,60 @@
 import {type PluginOptions, type SchemaTypeDefinition} from 'sanity'
 
+import {presetProvider} from './definePresetType'
 import type {PresetResult} from './types'
 
-export function collectTypes(presets: PresetResult[]): SchemaTypeDefinition[] {
-  const seen = new Set<string>()
+export function collectTypes(presets: PresetResult[][]): SchemaTypeDefinition[] {
+  const userSeen = new Set<string>()
+  const systemSeen = new Set<string>()
 
-  return presets.flatMap((preset) =>
-    preset.types.filter((typeDef) => {
-      if (seen.has(typeDef.name)) {
-        console.warn(
-          `[@sanity/presets] Dropped duplicate type "${typeDef.name}". Keeping first definition.`,
-        )
+  return presets
+    .flat()
+    .toSorted(sortUserPrecedence)
+    .filter((preset) => {
+      const {type} = preset
+      const provider = preset[presetProvider]
+
+      if (userSeen.has(type.name)) {
+        if (provider === 'user') {
+          console.warn(
+            `[@sanity/presets] Dropped duplicate type "${type.name}". Keeping first definition.`,
+          )
+        }
         return false
       }
-      seen.add(typeDef.name)
+
+      if (systemSeen.has(type.name)) {
+        return false
+      }
+
+      if (provider === 'user') {
+        userSeen.add(type.name)
+      }
+
+      if (provider === 'system') {
+        systemSeen.add(type.name)
+      }
+
       return true
-    }),
-  )
+    })
+    .map(({type}) => type)
 }
 
-export function presets(...types: PresetResult[]): PluginOptions {
+export function presets(...types: PresetResult[][]): PluginOptions {
   return {
     name: '@sanity/presets',
     schema: {types: collectTypes(types)},
   }
+}
+
+function sortUserPrecedence(a: PresetResult, b: PresetResult): number {
+  if (a[presetProvider] === 'user' && b[presetProvider] === 'system') {
+    return -1
+  }
+
+  if (a[presetProvider] === 'system' && b[presetProvider] === 'user') {
+    return 1
+  }
+
+  return 0
 }

@@ -1,5 +1,8 @@
 import type {SchemaTypeDefinition} from 'sanity'
 
+import type {PresetProvider, presetProvider} from './definePresetType'
+
 export interface PresetResult {
-  types: SchemaTypeDefinition[]
+  type: SchemaTypeDefinition
+  [presetProvider]: PresetProvider
 }

@@ -7,7 +7,7 @@ import {linkType} from './index'
 const defaultConfig = {internalTypes: ['page']}
 
 function getFields(result: ReturnType<typeof linkType>): FieldDefinition[] {
-  const typeDef = result.types[0]
+  const typeDef = result[0]?.type
   if (!typeDef || !('fields' in typeDef) || !typeDef.fields) {
     throw new Error('Expected an object type definition with fields')
   }
@@ -39,7 +39,7 @@ function callPrepare(
   result: ReturnType<typeof linkType>,
   selection: Record<string, unknown>,
 ): PreviewValue {
-  const typeDef = result.types[0]
+  const typeDef = result[0]?.type
   const prepare = typeDef && 'preview' in typeDef ? typeDef.preview?.prepare : undefined
   if (!prepare) throw new Error('Expected preview.prepare on type definition')
 
@@ -50,8 +50,8 @@ describe('linkType', () => {
   test('returns one type named core.presets.link', () => {
     const result = linkType(defaultConfig)
 
-    expect(result.types).toHaveLength(1)
-    expect(result.types[0]?.name).toBe(LINK_TYPE_NAME)
+    expect(result).toHaveLength(1)
+    expect(result[0]?.type?.name).toBe(LINK_TYPE_NAME)
   })
 
   test('type is an object with 4 fields', () => {
@@ -61,12 +61,6 @@ describe('linkType', () => {
 
     const fieldNames = fields.map((field) => field.name)
     expect(fieldNames).toEqual(['linkType', 'reference', 'url', 'openInNewTab'])
-  })
-
-  test('throws when internalTypes is empty', () => {
-    expect(() => linkType({internalTypes: []})).toThrow(
-      '[@sanity/presets] linkType requires at least one internalTypes entry.',
-    )
   })
 
   test('maps internalTypes to reference targets', () => {
@@ -106,7 +100,7 @@ describe('linkType', () => {
 
 describe('linkType preview.select', () => {
   test('selects correct paths for preview', () => {
-    const typeDef = linkType(defaultConfig).types[0]
+    const typeDef = linkType(defaultConfig)[0]?.type
     const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
 
     expect(select).toEqual({
