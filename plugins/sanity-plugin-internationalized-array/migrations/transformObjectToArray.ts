@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
 import {getCliClient} from 'sanity/cli'
+import {randomKey} from '@sanity/util/content'
 
 const client = getCliClient({apiVersion: '2023-06-30'})
 
@@ -15,8 +16,8 @@ const client = getCliClient({apiVersion: '2023-06-30'})
 
 // To:
 // "greeting": [
-//   { "_key": "en", "value": "hello" },
-//   { "_key": "fr", "value": "bonjour" },
+//   { "_key": "abc-def-ghi-jkl", "language":"en", "value": "hello" },
+//   { "_key": "zxy-vwx-rst-qpo", "language":"fr", "value": "bonjour" },
 // ]
 
 // This will migrate documents in batches of 100 and continue patching until no more documents are
@@ -66,7 +67,8 @@ const buildPatches = (docs: any[]) =>
         [FIELD_NAME]: Object.keys(doc[FIELD_NAME])
           .filter((key) => key !== '_type')
           .map((key) => ({
-            _key: key,
+            _key: randomKey(),
+            language: key,
             value: doc[FIELD_NAME][key],
           })),
       },
