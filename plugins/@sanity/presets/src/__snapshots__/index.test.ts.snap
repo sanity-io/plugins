@@ -6,6 +6,7 @@ exports[`package exports 1`] = `
     "LINK_TYPE_NAME": "string",
     "ctaType": "function",
     "linkType": "function",
+    "pageType": "function",
     "presets": "function",
     "seoType": "function",
   },
