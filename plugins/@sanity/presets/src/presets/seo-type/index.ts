@@ -6,12 +6,15 @@ import {SEO_TYPE_NAME} from './constants'
 
 export {SEO_TYPE_NAME} from './constants'
 
-export const seoType = definePresetType(() => {
+export const seoType = definePresetType<{}, 'object'>((context) => {
+  const {fields, ...objectConfig} = context ?? {}
+
   return {
     schemaType: defineType({
       name: SEO_TYPE_NAME,
-      type: 'object',
       title: 'Web page metadata (SEO)',
+      ...objectConfig,
+      type: 'object',
       fields: [
         defineField({
           name: 'title',
@@ -55,6 +58,7 @@ export const seoType = definePresetType(() => {
               return true
             }),
         }),
+        ...(fields ?? []),
       ],
     }),
   }

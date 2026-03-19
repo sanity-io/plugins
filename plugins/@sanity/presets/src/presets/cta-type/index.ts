@@ -6,13 +6,16 @@ import {CTA_TYPE_NAME} from './constants'
 
 export {CTA_TYPE_NAME} from './constants'
 
-export const ctaType = definePresetType(() => {
+export const ctaType = definePresetType<{}, 'object'>((context) => {
+  const {fields, ...objectConfig} = context ?? {}
+
   return {
     composes: [linkType],
     schemaType: defineType({
       name: CTA_TYPE_NAME,
-      type: 'object',
       title: 'Call to action',
+      ...objectConfig,
+      type: 'object',
       fields: [
         defineField({
           name: 'link',
@@ -28,6 +31,7 @@ export const ctaType = definePresetType(() => {
             list: [1, 2, 3],
           },
         }),
+        ...(fields ?? []),
       ],
     }),
   }
