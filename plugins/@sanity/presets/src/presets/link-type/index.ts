@@ -9,15 +9,16 @@ export interface LinkTypeConfig {
   internalTypes?: string[]
 }
 
-export const linkType = definePresetType<LinkTypeConfig>((context) => {
-  const internalTypes = context?.internalTypes ?? []
+export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>((context) => {
+  const {internalTypes, fields, ...objectConfig} = context ?? {}
   const referenceTargets = (internalTypes ?? []).map((typeName) => ({type: typeName}))
 
   return {
     schemaType: defineType({
       name: LINK_TYPE_NAME,
-      type: 'object',
       title: 'Link',
+      ...objectConfig,
+      type: 'object',
       fields: [
         defineField({
           name: 'linkType',
@@ -56,6 +57,7 @@ export const linkType = definePresetType<LinkTypeConfig>((context) => {
           initialValue: false,
           hidden: ({parent}) => parent?.linkType === 'internal',
         }),
+        ...(fields ?? []),
       ],
       preview: {
         select: {

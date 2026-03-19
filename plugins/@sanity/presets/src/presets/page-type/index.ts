@@ -10,15 +10,16 @@ export interface PageTypeConfig {
   pageBuilderBlocks: string[]
 }
 
-export const pageType = definePresetType<PageTypeConfig>((context) => {
-  const pageBuilderBlocks = context?.pageBuilderBlocks ?? []
+export const pageType = definePresetType<PageTypeConfig, 'document'>((context) => {
+  const {pageBuilderBlocks, groups, fields, ...documentConfig} = context ?? {}
 
   return {
     composes: [seoType],
     schemaType: defineType({
       name: PAGE_TYPE_NAME,
-      type: 'document',
       title: 'Page',
+      ...documentConfig,
+      type: 'document',
       groups: [
         {
           ...ALL_FIELDS_GROUP,
@@ -33,6 +34,7 @@ export const pageType = definePresetType<PageTypeConfig>((context) => {
           name: 'metadata',
           title: 'Metadata',
         },
+        ...(groups ?? []),
       ],
       fields: [
         defineField({
@@ -56,7 +58,7 @@ export const pageType = definePresetType<PageTypeConfig>((context) => {
           title: 'Content',
           group: 'main',
           type: 'array',
-          of: pageBuilderBlocks.map((typeName) =>
+          of: (pageBuilderBlocks ?? []).map((typeName) =>
             defineArrayMember({
               type: typeName,
             }),
@@ -68,6 +70,7 @@ export const pageType = definePresetType<PageTypeConfig>((context) => {
           type: SEO_TYPE_NAME,
           group: 'metadata',
         }),
+        ...(fields ?? []),
       ],
     }),
   }
