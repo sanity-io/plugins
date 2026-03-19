@@ -3,8 +3,9 @@ import type {DefineSchemaBase, IntrinsicTypeName, PreviewConfig, SchemaTypeDefin
 import type {PresetProvider, presetProvider} from './definePresetType'
 
 export interface PresetResult {
-  type: SchemaTypeDefinition
+  name: string
   [presetProvider]: PresetProvider
+  type: SchemaTypeDefinition
 }
 
 export type PartialSchemaDefinition<TypeName extends IntrinsicTypeName> = Partial<

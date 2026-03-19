@@ -14,6 +14,7 @@ export const pageType = definePresetType<PageTypeConfig, 'document'>((context) =
   const {pageBuilderBlocks, groups, fields, ...documentConfig} = context ?? {}
 
   return {
+    name: 'core.presets.page',
     composes: [seoType],
     schemaType: defineType({
       name: PAGE_TYPE_NAME,

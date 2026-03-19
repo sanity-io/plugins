@@ -20,6 +20,7 @@ export interface BaseContext {
 
 export interface PresetTypeContext {
   [presetProvider]?: PresetProvider
+  name: string
   schemaType: SchemaTypeDefinition
   composes?: PresetResultFactory[]
 }
@@ -93,7 +94,7 @@ export function definePresetType<
   factory: (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetTypeContext,
 ): (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetResult[] {
   return function define(context) {
-    const {schemaType, composes = []} = factory(context)
+    const {schemaType, composes = [], ...attributes} = factory(context)
     const visited = context?.[visitedFactories] ?? new WeakSet()
 
     if (visited.has(factory)) {
@@ -122,6 +123,7 @@ export function definePresetType<
     }
 
     return dependencies.concat({
+      ...attributes,
       type: schemaType,
       [presetProvider]: context?.[presetProvider] ?? 'user',
     })
