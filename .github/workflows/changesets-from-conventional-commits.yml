@@ -12,5 +12,5 @@ permissions:
 jobs:
   call:
     uses: sanity-io/.github/.github/workflows/changesets-from-conventional-commits.yml@main
-    if: github.event.pull_request.user.login == 'renovate[bot]'
+    if: github.event.pull_request.user.login == 'renovate[bot]' || github.event.pull_request.user.login == 'squiggler-app[bot]'
     secrets: inherit
