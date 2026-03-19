@@ -76,6 +76,27 @@ describe('presets', () => {
     expect(betaPreset().find(({type}) => type.name === 'alpha')?.[presetProvider]).toEqual('system')
     expect(betaPreset().find(({type}) => type.name === 'beta')?.[presetProvider]).toEqual('user')
   })
+
+  test('errors upon circular dependencies', () => {
+    // @ts-expect-error contrived example possible at runtime
+    const alphaPreset = definePresetType(() => ({
+      composes: [alphaPreset],
+      schemaType: defineType({
+        name: 'alpha',
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'alphaName',
+            type: 'string',
+          }),
+        ],
+      }),
+    }))
+
+    expect(alphaPreset).toThrowErrorMatchingInlineSnapshot(
+      `[Error: Found circular dependency resolving preset \`alpha\`.]`,
+    )
+  })
 })
 
 describe('collectTypes', () => {
