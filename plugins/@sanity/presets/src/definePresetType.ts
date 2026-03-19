@@ -7,12 +7,15 @@ import type {PresetResult} from './types'
  */
 export const presetProvider: unique symbol = Symbol('presetProvider')
 
+const visitedFactories: unique symbol = Symbol('visitedFactories')
+
 export type PresetProvider = 'user' | 'system'
 
 export type PresetResultFactory = (...args: any[]) => PresetResult[]
 
 export interface BaseContext {
   [presetProvider]?: PresetProvider
+  [visitedFactories]?: WeakSet<WeakKey>
 }
 
 export interface PresetTypeContext {
@@ -26,10 +29,18 @@ export function definePresetType<Context = void>(
 ): (context?: BaseContext & Context) => PresetResult[] {
   return function define(context) {
     const {schemaType, composes = []} = factory(context)
+    const visited = context?.[visitedFactories] ?? new WeakSet()
+
+    if (visited.has(factory)) {
+      throw new Error(`Found circular dependency resolving preset \`${schemaType.name}\`.`)
+    }
+
+    visited.add(factory)
 
     const dependencies = composes.flatMap<PresetResult>((composedFactory) =>
       composedFactory({
         [presetProvider]: 'system',
+        [visitedFactories]: visited,
       }),
     )
 
