@@ -1,4 +1,4 @@
-export {presetsComposer} from './composer'
-export {linkField, LINK_FIELD_TYPE} from './presets/link-field'
-export type {LinkFieldConfig} from './presets/link-field'
+export {presets} from './composer'
+export {linkType, LINK_TYPE_NAME} from './presets/link-type'
+export type {LinkTypeConfig} from './presets/link-type'
 export type {PresetResult} from './types'

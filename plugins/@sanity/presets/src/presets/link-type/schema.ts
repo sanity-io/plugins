@@ -1,12 +1,12 @@
 import {defineField, defineType, type SchemaTypeDefinition} from 'sanity'
 
-import {LINK_FIELD_TYPE} from './constants'
+import {LINK_TYPE_NAME} from './constants'
 
-export function createLinkFieldType(internalTypes: string[]): SchemaTypeDefinition {
+export function createLinkType(internalTypes: string[]): SchemaTypeDefinition {
   const referenceTargets = internalTypes.map((typeName) => ({type: typeName}))
 
   return defineType({
-    name: LINK_FIELD_TYPE,
+    name: LINK_TYPE_NAME,
     type: 'object',
     title: 'Link',
     fields: [

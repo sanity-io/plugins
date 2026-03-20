@@ -4,8 +4,8 @@ exports[`package exports 1`] = `
 {
   ".": {
     "LINK_FIELD_TYPE": "string",
-    "linkField": "function",
-    "presetsComposer": "function",
+    "linkType": "function",
+    "presets": "function",
   },
 }
 `;
