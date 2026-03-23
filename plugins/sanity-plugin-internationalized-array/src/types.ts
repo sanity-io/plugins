@@ -1,5 +1,5 @@
+import type {LanguageFilterConfig} from '@sanity/language-filter'
 import type {FieldDefinition, Rule, RuleTypeConstraint, SanityClient} from 'sanity'
-
 export type Language = {
   id: Intl.UnicodeBCP47LocaleIdentifier
   title: string
@@ -165,11 +165,13 @@ export type PluginConfig = {
    * {
    *   languageFilter: {
    *     documentTypes: ['internationalizedPost', 'lesson']
+   *     defaultLanguages: ['en']
    *   }
    * }
    * ```
    */
   languageFilter?: {
-    documentTypes: string[]
+    documentTypes: Required<LanguageFilterConfig>['documentTypes']
+    defaultLanguages?: LanguageFilterConfig['defaultLanguages']
   }
 }

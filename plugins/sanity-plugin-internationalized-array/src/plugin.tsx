@@ -84,6 +84,7 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
             languageFilter({
               documentTypes: languageFilterConfig.documentTypes,
               supportedLanguages: languages,
+              defaultLanguages: languageFilterConfig.defaultLanguages,
               // This is specifically not adding filterField avoid the default filter field implementation.
               // It will be filtered in `internationalizedArray` component and will have access to the resolved languages.
               // Rendering the fields if the language key is incorrect, providing an improved UX
