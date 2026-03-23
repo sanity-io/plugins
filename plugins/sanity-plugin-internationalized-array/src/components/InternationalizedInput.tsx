@@ -9,7 +9,6 @@ import {
   MenuButton,
   MenuItem,
   Spinner,
-  Stack,
   Text,
   Tooltip,
 } from '@sanity/ui'
@@ -101,7 +100,7 @@ function RemoveButton({
       placement="top"
       portal
     >
-      <span>
+      <span style={{paddingBottom: '2px'}}>
         <Button
           mode="bleed"
           icon={RemoveCircleIcon}
@@ -211,60 +210,82 @@ export default function InternationalizedInput(
     [originalOnChange, props.value?.value],
   )
 
-  const inlineProps = useMemo(
-    () => ({
-      ...props.inputProps,
-      members: props.inputProps.members.filter((m) => m.kind === 'field' && m.name === 'value'),
-      value: props.value,
-      // Use our wrapped onChange handler
-      onChange: wrappedOnChange,
-    }),
-    [props.inputProps, props.value, wrappedOnChange],
-  )
-
-  const {validation, value, readOnly} = inlineProps
   // The parent array contains the languages from the plugin config
   const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
 
   const keyIsValid = languages?.length
-    ? languages.find((l) => l.id === value[LANGUAGE_FIELD_NAME])
+    ? languages.find((l) => l.id === props.value[LANGUAGE_FIELD_NAME])
     : false
-  const itemNeedsMigration = !value[LANGUAGE_FIELD_NAME]
+
+  const language = languages?.find((l) => l.id === props.value[LANGUAGE_FIELD_NAME])
+  const languageTitle: string =
+    keyIsValid && language ? getLanguageDisplay(languageDisplay, language.title, language.id) : ''
+
+  const inlineProps = useMemo(
+    () => ({
+      ...props.inputProps,
+      members: props.inputProps.members
+        .filter((m) => m.kind === 'field' && m.name === 'value')
+        .map((member) => {
+          if (member.kind !== 'field') {
+            return member
+          }
+
+          const field = member.field
+          const schemaType = field?.schemaType
+          const itemNeedsMigration = !props.value[LANGUAGE_FIELD_NAME]
+
+          const title = itemNeedsMigration ? null : keyIsValid ? (
+            <Label muted size={1}>
+              {languageTitle}
+            </Label>
+          ) : (
+            <ChangeLanguageButton
+              value={props.value}
+              path={props.path}
+              onChange={originalOnChange}
+            />
+          )
+
+          return Object.assign({}, member, {
+            field: Object.assign({}, field, {
+              schemaType: Object.assign({}, schemaType, {title}),
+            }),
+          })
+        }),
+      value: props.value,
+      // Use our wrapped onChange handler
+      onChange: wrappedOnChange,
+    }),
+    [
+      props.inputProps,
+      props.value,
+      wrappedOnChange,
+      languageTitle,
+      keyIsValid,
+      originalOnChange,
+      props.path,
+    ],
+  )
+
+  const {validation, value, readOnly} = inlineProps
 
   if (!languages) {
     return <Spinner />
   }
 
-  const language = languages.find((l) => l.id === value[LANGUAGE_FIELD_NAME])
-  const languageTitle: string =
-    keyIsValid && language ? getLanguageDisplay(languageDisplay, language.title, language.id) : ''
-
   const isDefault = defaultLanguages.includes(value[LANGUAGE_FIELD_NAME])
 
   return (
     <Card paddingTop={2} tone={getToneFromValidation(validation)}>
-      <Stack space={2}>
-        {!itemNeedsMigration && (
-          <Card tone="inherit">
-            {keyIsValid ? (
-              <Label muted size={1}>
-                {languageTitle}
-              </Label>
-            ) : (
-              <ChangeLanguageButton value={value} path={props.path} onChange={originalOnChange} />
-            )}
-          </Card>
-        )}
-
-        <Flex align="center" gap={2}>
-          <Box flex={1}>{props.inputProps.renderInput(inlineProps)}</Box>
-          <RemoveButton
-            isDefault={isDefault}
-            readOnly={Boolean(readOnly)}
-            onChange={originalOnChange}
-          />
-        </Flex>
-      </Stack>
+      <Flex align="flex-end" gap={2}>
+        <Box flex={1}>{props.inputProps.renderInput(inlineProps)}</Box>
+        <RemoveButton
+          isDefault={isDefault}
+          readOnly={Boolean(readOnly)}
+          onChange={originalOnChange}
+        />
+      </Flex>
     </Card>
   )
 }
