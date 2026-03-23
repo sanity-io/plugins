@@ -1,5 +1,11 @@
 # @sanity/vercel-protection-bypass
 
+## 5.0.6
+
+### Patch Changes
+
+- [`377a170`](https://github.com/sanity-io/plugins/commit/377a1703a3cfd9d370e647b1a1030e98881f03af) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/preview-url-secret` to ^4.0.4
+
 ## 5.0.5
 
 ### Patch Changes

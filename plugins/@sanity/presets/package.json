@@ -1,6 +1,6 @@
 {
   "name": "@sanity/presets",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Production ready preset patterns for Sanity Studio",
   "keywords": [
     "sanity",

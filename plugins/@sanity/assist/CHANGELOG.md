@@ -1,5 +1,11 @@
 # 📓 Changelog
 
+## 6.0.4
+
+### Patch Changes
+
+- [`377a170`](https://github.com/sanity-io/plugins/commit/377a1703a3cfd9d370e647b1a1030e98881f03af) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/client` to ^7.18.0
+
 ## 6.0.3
 
 ### Patch Changes
