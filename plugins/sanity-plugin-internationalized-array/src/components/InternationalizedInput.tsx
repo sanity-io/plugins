@@ -214,7 +214,7 @@ export default function InternationalizedInput(
   const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
 
   const keyIsValid = languages?.length
-    ? languages.find((l) => l.id === props.value[LANGUAGE_FIELD_NAME])
+    ? Boolean(languages.find((l) => l.id === props.value[LANGUAGE_FIELD_NAME]))
     : false
 
   const language = languages?.find((l) => l.id === props.value[LANGUAGE_FIELD_NAME])
