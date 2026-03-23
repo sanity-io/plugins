@@ -164,7 +164,7 @@ export type PluginConfig = {
    * ```tsx
    * {
    *   languageFilter: {
-   *     documentTypes: ['internationalizedPost', 'lesson']
+   *     documentTypes: ['internationalizedPost', 'lesson'],
    *     defaultLanguages: ['en']
    *   }
    * }
