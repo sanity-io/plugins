@@ -1,5 +1,30 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 5.0.0
+
+### Major Changes
+
+- [#586](https://github.com/sanity-io/plugins/pull/586) [`1978fb4`](https://github.com/sanity-io/plugins/commit/1978fb442137427270d1573f8e01541311bfb05c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port @sanity/language-filter to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+  - **React Compiler enabled**: The plugin is now optimized with React Compiler targeting React 19
+  - **ESM-only**: CommonJS support has been removed. The plugin now only exports ES modules
+  - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the minimum version
+  - **React 19 required**: The plugin now requires React 19.2 or later
+  - **Node.js 20.19+ required**: The plugin now requires Node.js 20.19 or later (or 22.12+)
+  - **styled-components removed**: Removed styled-components dependency - styles now use inline styles
+  - **Language subscription bus removed**: The `languageSubscription.ts` module and its exports (`createSelectedLanguageIdsBus`, `SelectedLanguageIdsBus`, `LanguageSubscription`, `Unsubscribe`, `LanguageSubscribe`) have been removed. State management now uses React Context via `LanguageFilterStudioContext` instead of the subscription bus pattern.
+
+  **Modernization:**
+  - Replaced deprecated `useClickOutside` hook with `useClickOutsideEvent`
+  - Fixed FormEvent usage with proper React.ChangeEvent
+  - Added explicit return type annotations for better TypeScript compatibility
+  - Removed styled-components
+
+  **Testing:**
+  - Converted from Jest to Vitest for testing
+  - Added package exports validation test
+
 # 📓 Changelog
 
 All notable changes to this project will be documented in this file. See
