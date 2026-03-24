@@ -81,6 +81,10 @@
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
+    "plugins/@sanity/language-filter": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
     "plugins/sanity-plugin-aprimo": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
@@ -141,6 +145,7 @@
         "babel-plugin-styled-components",
       ],
     },
+
     // add new plugin workspaces here
     "plugins/@sanity/debug-live-sync-tags": {
       "entry": ["package.config.ts"],
