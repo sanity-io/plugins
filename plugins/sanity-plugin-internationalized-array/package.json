@@ -70,7 +70,7 @@
   },
   "peerDependencies": {
     "@sanity/assist": "^6.0.2",
-    "@sanity/language-filter": "^4.1.0",
+    "@sanity/language-filter": "^5.0.0",
     "react": "^19.2",
     "react-dom": "^19.2",
     "sanity": "^5"
