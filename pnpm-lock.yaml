@@ -586,6 +586,9 @@ importers:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
         version: 10.4.11(@types/babel__core@7.20.5)(@types/node@25.5.0)(@typescript/native-preview@7.0.0-dev.20260315.1)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.19.1)(typescript@5.9.3)
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.14
