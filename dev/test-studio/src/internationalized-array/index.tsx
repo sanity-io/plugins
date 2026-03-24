@@ -1,5 +1,13 @@
 import {languageFilter} from '@sanity/language-filter'
-import {definePlugin, defineType, defineField, isKeySegment, defineArrayMember} from 'sanity'
+import {Card, Text} from '@sanity/ui'
+import {
+  definePlugin,
+  defineType,
+  defineField,
+  isKeySegment,
+  defineArrayMember,
+  type ObjectInputProps,
+} from 'sanity'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 
 const internationalizedPost = defineType({
@@ -37,6 +45,7 @@ const internationalizedPost = defineType({
     }),
   ],
 })
+
 const person = defineType({
   name: 'i18nArrayPerformanceTest',
   title: 'I18n Array Performance Test',
@@ -111,8 +120,59 @@ const circularSchemaRepro = defineType({
   ],
 })
 
+const movie = defineType({
+  name: 'movieDocument',
+  title: 'Movie',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'table',
+      title: 'Table',
+      type: 'internationalizedArrayTable',
+      description: 'Table content',
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'text',
+    },
+    prepare(selection) {
+      const {title} = selection
+      return {
+        title: title ? title[0]?.value : 'No title',
+      }
+    },
+  },
+})
+
+const CustomInput = (props: ObjectInputProps) => {
+  return (
+    <Card padding={1} border>
+      <Text size={1} muted>
+        Wrapping with a custom input
+      </Text>
+      {props.renderDefault(props)}
+    </Card>
+  )
+}
+
+const table = defineType({
+  name: 'table',
+  title: 'Table',
+  type: 'object',
+  components: {
+    input: CustomInput,
+  },
+  fields: [
+    defineField({name: 'title', type: 'string'}),
+    defineField({name: 'description', type: 'internationalizedArrayString'}),
+  ],
+})
+
 export const internationalizedArrayExample = definePlugin(() => ({
-  schema: {types: [internationalizedPost, person, bodyContent, circularSchemaRepro]},
+  schema: {
+    types: [internationalizedPost, person, bodyContent, circularSchemaRepro, table, movie],
+  },
   plugins: [
     internationalizedArray({
       languages: [
@@ -124,7 +184,7 @@ export const internationalizedArrayExample = definePlugin(() => ({
         {id: 'it', title: 'Italian'},
       ],
       defaultLanguages: ['en'],
-      fieldTypes: ['string', 'text'],
+      fieldTypes: ['string', 'text', 'table'],
       buttonLocations: ['document', 'field'],
     }),
     languageFilter({
