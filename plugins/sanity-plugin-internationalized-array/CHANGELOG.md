@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.0.5
+
+### Patch Changes
+
+- [#779](https://github.com/sanity-io/plugins/pull/779) [`f7f610f`](https://github.com/sanity-io/plugins/commit/f7f610f9866a09c8f4d411a030473186e5a265c1) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Require `@sanity/language-filter` v5.
+
 ## 5.0.4
 
 ### Patch Changes
