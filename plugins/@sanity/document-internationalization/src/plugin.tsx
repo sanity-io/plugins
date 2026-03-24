@@ -23,6 +23,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
     metadataFields,
     hideLanguageFilter,
     metadataInternationalization,
+    addTemplates,
   } = pluginConfig
 
   if (schemaTypes.length === 0) {
@@ -129,6 +130,10 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
       // For every schema type this plugin is enabled on
       // Create an initial value template to set the language
       templates: (prev, {schema}) => {
+        if (!addTemplates) {
+          return prev
+        }
+
         // Templates are not setup for async languages
         if (!Array.isArray(supportedLanguages)) {
           return prev

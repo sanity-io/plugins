@@ -46,6 +46,10 @@ export type PluginConfig = {
     InternationalizedArrayPluginConfig,
     'buttonLocations' | 'buttonAddAll' | 'languageDisplay'
   >
+  /**
+   * Set to false to prevent templates from being created for each schemaType and language.
+   */
+  addTemplates?: boolean
 }
 
 // Context version of config
