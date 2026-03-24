@@ -1,4 +1,5 @@
 import {cleanup, render, screen} from '@testing-library/react'
+import type {ReactNode} from 'react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {ThemeWrapper} from '../test/component-helpers'
@@ -42,13 +43,32 @@ function createMockProps(
 
   const onChange = vi.fn()
 
+  const renderInput = vi.fn(
+    (inputProps: {members?: Array<{kind: string; field?: {schemaType?: {title?: ReactNode}}}>}) => {
+      const titles = inputProps.members?.flatMap((m) =>
+        m.kind === 'field' && m.field?.schemaType?.title != null ? [m.field.schemaType.title] : [],
+      )
+      return <div data-testid="mock-input">{titles?.[0] ?? null}</div>
+    },
+  )
+
   return {
     path: ['title', {_key: itemValue._key ?? languageId}],
     value: itemValue,
     inputProps: {
       onChange,
-      members: [{kind: 'field' as const, name: 'value'}],
-      renderInput: vi.fn(() => <div data-testid="mock-input" />),
+      members: [
+        {
+          kind: 'field' as const,
+          name: 'value',
+          field: {
+            schemaType: {
+              title: 'Value',
+            },
+          },
+        },
+      ],
+      renderInput,
       validation: [],
       readOnly: overrides?.readOnly ?? false,
     },

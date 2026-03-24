@@ -31,9 +31,6 @@ export default (config: ObjectFactoryConfig) => {
       defineField({
         ...(typeof type === 'string' ? {type} : type),
         name: 'value',
-        components: {
-          field: (props: FieldProps) => props.renderDefault({...props, title: ''}),
-        },
       }),
     ],
     preview: {

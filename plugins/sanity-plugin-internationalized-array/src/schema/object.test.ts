@@ -88,20 +88,11 @@ describe('object schema factory', () => {
     )
   })
 
-  test('value field renderer always hides title', () => {
+  test('value field renderer has no components overrides', () => {
     const schema = objectFactory({type: 'string'})
     // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     const valueField = schema.fields?.[0] as FieldDefinition<'string'>
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    const fieldComponent = valueField?.components?.field as (
-      props: Record<string, unknown>,
-    ) => unknown
-    expect(fieldComponent).toBeTypeOf('function')
-
-    const renderDefault = vi.fn((props: Record<string, unknown>) => props)
-    const props = {title: 'Value', renderDefault}
-
-    fieldComponent?.(props)
-    expect(renderDefault).toHaveBeenCalledWith(expect.objectContaining({title: ''}))
+    const fieldComponent = valueField?.components
+    expect(fieldComponent).toBeTypeOf('undefined')
   })
 })
