@@ -1,16 +1,37 @@
-name: Add changeset to Renovate updates
-
+name: Renovate
 on:
-  pull_request_target:
-    types: [opened, synchronize]
+  # schedule:
+  #   - cron: "0 * * * *"
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}
 
 permissions:
-  contents: read # for checkout
+  contents: write
+  pull-requests: write
 
 jobs:
-  call:
-    uses: sanity-io/.github/.github/workflows/changesets-from-conventional-commits.yml@main
-    if: github.event.pull_request.user.login == 'renovate[bot]'
-    secrets: inherit
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.ECOSPARK_APP_ID }}
+          private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@abd08c7549b2a864af5df4a2e369c43f035a6a9d # v46.1.5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          configurationFile: .github/renovate-config.json5
+        env:
+          LOG_LEVEL: 'debug'

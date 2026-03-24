@@ -1,5 +1,19 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.11
+
+### Patch Changes
+
+- [`377a170`](https://github.com/sanity-io/plugins/commit/377a1703a3cfd9d370e647b1a1030e98881f03af) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/preview-url-secret` to ^4.0.4
+
+## 5.0.10
+
+### Patch Changes
+
+- [#741](https://github.com/sanity-io/plugins/pull/741) [`5a1bea4`](https://github.com/sanity-io/plugins/commit/5a1bea46d82aa69192e63313552014f51f2a52d2) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to ^3.1.14
+
+- [#746](https://github.com/sanity-io/plugins/pull/746) [`3da9ca3`](https://github.com/sanity-io/plugins/commit/3da9ca37674933eb4a385f1783b479f5109ae76c) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency motion to ^12.36.0
+
 ## 5.0.9
 
 ### Patch Changes

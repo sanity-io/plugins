@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`package exports 1`] = `
+{
+  ".": {
+    "LINK_TYPE_NAME": "string",
+    "linkType": "function",
+    "presets": "function",
+  },
+}
+`;

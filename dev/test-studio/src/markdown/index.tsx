@@ -7,6 +7,14 @@ const markdownTest = defineType({
   title: 'Markdown',
   fields: [
     {type: 'string', name: 'title', title: 'Title'},
+    {
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+      },
+    },
     {type: 'markdown', name: 'markdown', title: 'Markdown'},
   ],
 })

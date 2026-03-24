@@ -11,6 +11,7 @@ import {assistExample} from '#assist'
 import {bynderExample} from '#bynder'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
+import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
 import {iframePaneExample} from '#iframe-pane'
 import {internationalizedArrayExample} from '#internationalized-array'
@@ -51,6 +52,7 @@ export default defineConfig([
       structureTool(),
       assistExample(),
       // add new plugins here
+      debugLiveSyncTagsExample(),
       studioSecretsExample(),
       documentInternationalizationExample(),
       internationalizedArrayExample(),

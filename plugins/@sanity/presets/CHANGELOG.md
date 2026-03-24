@@ -1,5 +1,18 @@
 # @sanity/presets
 
+## 0.1.0
+
+### Minor Changes
+
+- [#727](https://github.com/sanity-io/plugins/pull/727) [`14412b2`](https://github.com/sanity-io/plugins/commit/14412b22b8da4aca3a14285367ee7bd397c1c975) Thanks [@jordanl17](https://github.com/jordanl17)! - Add link field preset and preset composer plugin
+
+- [#763](https://github.com/sanity-io/plugins/pull/763) [`ba1277e`](https://github.com/sanity-io/plugins/commit/ba1277e91ffecdf1d85e96674aac18dd2cff7b30) Thanks [@juice49](https://github.com/juice49)! - Refactor preset composer and link type APIs:
+
+  ```diff
+  -presetsComposer([linkField({internalTypes: ['corePresetsTest']})])
+  +presets(linkType({internalTypes: ['corePresetsTest']}))
+  ```
+
 ## 0.0.2
 
 ### Patch Changes

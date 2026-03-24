@@ -1,5 +1,18 @@
 # sanity-plugin-internationalized-array
 
+## 5.0.4
+
+### Patch Changes
+
+- [#773](https://github.com/sanity-io/plugins/pull/773) [`e14f460`](https://github.com/sanity-io/plugins/commit/e14f460d237686e4367d6c8d935ec31966186213) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix custom object (and other) input components not rendering for types registered in the plugin `fieldTypes`. The inner `value` field no longer overrides `components.field`, so Studio shows your custom input inside each language row again.
+  Now, internationalized array inputs will have the option to add comments, show validation, and field actions.
+
+## 5.0.3
+
+### Patch Changes
+
+- [#741](https://github.com/sanity-io/plugins/pull/741) [`5a1bea4`](https://github.com/sanity-io/plugins/commit/5a1bea46d82aa69192e63313552014f51f2a52d2) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/ui to ^3.1.14
+
 ## 5.0.2
 
 ## 5.0.1

@@ -15,6 +15,7 @@
     "@sanity/assist": "workspace:*",
     "@sanity/code-input": "workspace:*",
     "@sanity/color-input": "workspace:*",
+    "@sanity/debug-live-sync-tags": "workspace:*",
     "@sanity/debug-preview-url-secret-plugin": "workspace:*",
     "@sanity/document-internationalization": "workspace:*",
     "@sanity/icons": "^3.7.4",

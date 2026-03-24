@@ -1,6 +1,6 @@
 {
   "name": "@sanity/code-input",
-  "version": "7.0.11",
+  "version": "7.0.12",
   "description": "Sanity input component for code, powered by CodeMirror",
   "keywords": [
     "cms",
