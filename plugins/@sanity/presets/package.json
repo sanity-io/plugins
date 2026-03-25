@@ -44,9 +44,17 @@
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "jsdom": "^28.1.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "sanity": "catalog:"
   },
   "peerDependencies": {
+    "react": "^19.2",
     "sanity": "^5"
   },
   "engines": {

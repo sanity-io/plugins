@@ -1,6 +1,54 @@
 import {defineField, defineType, type SchemaTypeDefinition} from 'sanity'
 
 import {LINK_FIELD_TYPE} from './constants'
+import {LinkFieldInput} from './LinkFieldInput'
+
+function getParentLinkType(parent: unknown): string | undefined {
+  if (typeof parent === 'object' && parent !== null && 'linkType' in parent) {
+    const linkType = parent.linkType
+    return typeof linkType === 'string' ? linkType : undefined
+  }
+  return undefined
+}
+
+function isExternalLink({parent}: {parent?: Record<string, unknown>}): boolean {
+  return parent?.['linkType'] === 'external'
+}
+
+function isInternalLink({parent}: {parent?: Record<string, unknown>}): boolean {
+  return parent?.['linkType'] === 'internal'
+}
+
+function requireReferenceForInternal(value: unknown, context: {parent?: unknown}): string | true {
+  if (getParentLinkType(context.parent) === 'internal' && !value) {
+    return 'A reference is required for internal links'
+  }
+  return true
+}
+
+function requireUrlForExternal(value: unknown, context: {parent?: unknown}): string | true {
+  if (getParentLinkType(context.parent) === 'external' && !value) {
+    return 'A URL is required for external links'
+  }
+  return true
+}
+
+function prepareLinkPreview({
+  linkType,
+  url,
+  referenceTitle,
+}: {
+  linkType?: string
+  url?: string
+  referenceTitle?: string
+}) {
+  const title = linkType === 'external' ? url || 'No URL' : referenceTitle || 'No reference'
+
+  return {
+    title,
+    subtitle: linkType === 'external' ? 'External link' : 'Internal link',
+  }
+}
 
 export function createLinkFieldType(internalTypes: string[]): SchemaTypeDefinition {
   const referenceTargets = internalTypes.map((typeName) => ({type: typeName}))
@@ -9,6 +57,7 @@ export function createLinkFieldType(internalTypes: string[]): SchemaTypeDefiniti
     name: LINK_FIELD_TYPE,
     type: 'object',
     title: 'Link',
+    components: {input: LinkFieldInput},
     fields: [
       defineField({
         name: 'linkType',
@@ -28,24 +77,23 @@ export function createLinkFieldType(internalTypes: string[]): SchemaTypeDefiniti
         type: 'reference',
         title: 'Internal Link',
         to: referenceTargets,
-        hidden: ({parent}) => parent?.linkType === 'external',
+        hidden: isExternalLink,
+        validation: (rule) => rule.custom(requireReferenceForInternal),
       }),
       defineField({
         name: 'url',
         type: 'url',
         title: 'URL',
-        hidden: ({parent}) => parent?.linkType === 'internal',
+        hidden: isInternalLink,
         validation: (rule) =>
-          rule.uri({
-            scheme: ['http', 'https', 'mailto', 'tel'],
-          }),
+          rule.uri({scheme: ['http', 'https', 'mailto', 'tel']}).custom(requireUrlForExternal),
       }),
       defineField({
         name: 'openInNewTab',
         type: 'boolean',
         title: 'Open in New Tab',
         initialValue: false,
-        hidden: ({parent}) => parent?.linkType === 'internal',
+        hidden: isInternalLink,
       }),
     ],
     preview: {
@@ -54,14 +102,7 @@ export function createLinkFieldType(internalTypes: string[]): SchemaTypeDefiniti
         url: 'url',
         referenceTitle: 'reference.title',
       },
-      prepare({linkType, url, referenceTitle}) {
-        const title = linkType === 'external' ? url || 'No URL' : referenceTitle || 'No reference'
-
-        return {
-          title,
-          subtitle: linkType === 'external' ? 'External link' : 'Internal link',
-        }
-      },
+      prepare: prepareLinkPreview,
     },
   })
 }

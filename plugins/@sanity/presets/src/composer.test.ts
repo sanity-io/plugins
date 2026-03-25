@@ -1,7 +1,7 @@
 import {defineType} from 'sanity'
 import {afterEach, describe, expect, test, vi} from 'vitest'
 
-import {collectTypes, presetsComposer} from './composer'
+import {_resetWarnings, collectTypes, presetsComposer} from './composer'
 import type {PresetResult} from './types'
 
 function createPreset(typeNames: string[]): PresetResult {
@@ -11,7 +11,10 @@ function createPreset(typeNames: string[]): PresetResult {
 }
 
 describe('presetsComposer', () => {
-  afterEach(() => vi.restoreAllMocks())
+  afterEach(() => {
+    _resetWarnings()
+    vi.restoreAllMocks()
+  })
 
   test('returns plugin with correct name', () => {
     const result = presetsComposer([])
@@ -38,7 +41,10 @@ describe('presetsComposer', () => {
 })
 
 describe('collectTypes', () => {
-  afterEach(() => vi.restoreAllMocks())
+  afterEach(() => {
+    _resetWarnings()
+    vi.restoreAllMocks()
+  })
 
   test('returns empty array for empty input', () => {
     const types = collectTypes([])
@@ -91,6 +97,6 @@ describe('collectTypes', () => {
     const typeNames = types.map((type) => type.name)
 
     expect(typeNames).toEqual(['core.presets.link', 'core.presets.seo'])
-    expect(warnSpy).toHaveBeenCalledTimes(3)
+    expect(warnSpy).toHaveBeenCalledTimes(2)
   })
 })

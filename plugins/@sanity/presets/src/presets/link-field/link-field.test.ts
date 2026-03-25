@@ -117,6 +117,74 @@ describe('linkField preview.select', () => {
   })
 })
 
+type ValidationFn = (value: unknown, context: {parent?: {linkType?: string}}) => string | true
+
+function extractCustomValidator(field: FieldDefinition): ValidationFn {
+  let validator!: ValidationFn
+  const mockRule = {
+    custom: (fn: ValidationFn) => {
+      validator = fn
+      return mockRule
+    },
+    uri: () => mockRule,
+  }
+
+  if (typeof field.validation === 'function') {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    field.validation(mockRule as any)
+  }
+
+  return validator
+}
+
+describe('linkField validation', () => {
+  test('reference field requires value when linkType is internal', () => {
+    const fields = getFields(linkField(defaultConfig))
+    const validate = extractCustomValidator(getField(fields, 'reference'))
+
+    expect(validate(undefined, {parent: {linkType: 'internal'}})).toBe(
+      'A reference is required for internal links',
+    )
+  })
+
+  test('reference field passes when linkType is internal and value is present', () => {
+    const fields = getFields(linkField(defaultConfig))
+    const validate = extractCustomValidator(getField(fields, 'reference'))
+
+    expect(validate({_ref: 'doc-123'}, {parent: {linkType: 'internal'}})).toBe(true)
+  })
+
+  test('reference field passes when linkType is external regardless of value', () => {
+    const fields = getFields(linkField(defaultConfig))
+    const validate = extractCustomValidator(getField(fields, 'reference'))
+
+    expect(validate(undefined, {parent: {linkType: 'external'}})).toBe(true)
+  })
+
+  test('url field requires value when linkType is external', () => {
+    const fields = getFields(linkField(defaultConfig))
+    const validate = extractCustomValidator(getField(fields, 'url'))
+
+    expect(validate(undefined, {parent: {linkType: 'external'}})).toBe(
+      'A URL is required for external links',
+    )
+  })
+
+  test('url field passes when linkType is external and value is present', () => {
+    const fields = getFields(linkField(defaultConfig))
+    const validate = extractCustomValidator(getField(fields, 'url'))
+
+    expect(validate('https://example.com', {parent: {linkType: 'external'}})).toBe(true)
+  })
+
+  test('url field passes when linkType is internal regardless of value', () => {
+    const fields = getFields(linkField(defaultConfig))
+    const validate = extractCustomValidator(getField(fields, 'url'))
+
+    expect(validate(undefined, {parent: {linkType: 'internal'}})).toBe(true)
+  })
+})
+
 describe('linkField preview.prepare', () => {
   const preset = linkField(defaultConfig)
 

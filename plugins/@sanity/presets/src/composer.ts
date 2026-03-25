@@ -2,15 +2,24 @@ import {definePlugin, type SchemaTypeDefinition} from 'sanity'
 
 import type {PresetResult} from './types'
 
+const warnedDuplicates = new Set<string>()
+
+export function _resetWarnings(): void {
+  warnedDuplicates.clear()
+}
+
 export function collectTypes(presets: PresetResult[]): SchemaTypeDefinition[] {
   const seen = new Set<string>()
 
   return presets.flatMap((preset) =>
     preset.types.filter((typeDef) => {
       if (seen.has(typeDef.name)) {
-        console.warn(
-          `[@sanity/presets] Dropped duplicate type "${typeDef.name}". Keeping first definition.`,
-        )
+        if (!warnedDuplicates.has(typeDef.name)) {
+          warnedDuplicates.add(typeDef.name)
+          console.warn(
+            `[@sanity/presets] Dropped duplicate type "${typeDef.name}". Keeping first definition.`,
+          )
+        }
         return false
       }
       seen.add(typeDef.name)
