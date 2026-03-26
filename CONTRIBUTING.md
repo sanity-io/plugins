@@ -141,7 +141,7 @@ pnpm changeset add
 
 ## Adding a New Plugin
 
-## Plugin Ownership Model
+### Plugin Ownership Model
 
 All new official Studio plugins should be added to this monorepo.
 
