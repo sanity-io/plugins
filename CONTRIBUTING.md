@@ -10,6 +10,7 @@ Thank you for your interest in contributing to the Sanity Plugins monorepo! This
 - [Running the Test Studio](#running-the-test-studio)
 - [Code Quality](#code-quality)
 - [Adding a New Plugin](#adding-a-new-plugin)
+- [Plugin Ownership Model](#plugin-ownership-model)
 - [Publishing Packages](#publishing-packages)
 - [Commit Guidelines](#commit-guidelines)
 
@@ -139,6 +140,48 @@ pnpm changeset add
 ```
 
 ## Adding a New Plugin
+
+### Plugin Ownership Model
+
+All new official Studio plugins should be added to this monorepo.
+
+The plugins monorepo is the canonical home for all Studio plugins, whether built by the Studio App Team or any other team at Sanity.
+
+Being in this monorepo does **not** mean the Studio team owns the plugin. The monorepo is a collaborative space. The Studio team owns the repository, tooling, and cross-cutting maintenance work, while the creating team owns the plugin itself.
+
+You build it, you own it — The team or individual who builds a plugin is responsible for bugs, new features, and user support. This must be explicit from day one.
+
+### Ownership Principles
+
+- **Official plugin home:** New official Studio plugins should be created in this monorepo instead of standalone repositories
+- **You build it, you own it:** The team that creates the plugin is responsible for plugin-specific bugs, features, issue triage, and community support
+- **Studio team role:** The Studio team maintains monorepo infrastructure, CI/release automation, and compatibility updates needed for Studio majors
+- **Owner is required:** Every new plugin must add a dedicated owner entry in `.github/CODEOWNERS` (prefer a GitHub team, not an individual) before merge
+
+### Responsibilities
+
+| Responsibility                                   | Studio team | Plugin owner team |
+| ------------------------------------------------ | ----------- | ----------------- |
+| Monorepo tooling and CI                          | ✅          |                   |
+| Release automation and publishing workflow       | ✅          |                   |
+| Studio major compatibility updates               | ✅          |                   |
+| PR review for monorepo standards and consistency | ✅          |                   |
+| PR review for plugin domain correctness          |             | ✅                |
+| Plugin-specific bug fixes                        |             | ✅                |
+| Plugin feature development                       |             | ✅                |
+| Issue triage and response for the plugin         |             | ✅                |
+| Community support for plugin behavior and usage  |             | ✅                |
+
+### New Plugin Checklist (Ownership + Release)
+
+For any new plugin PR, make sure all of the following are included:
+
+1. Plugin scaffold/code in `plugins/...`
+2. A `.changeset/*.md` file for release automation
+3. A `CODEOWNERS` rule that assigns the plugin path to the owning team
+4. Clear ownership details in the plugin `README.md` (owning team and support expectations)
+
+Without an explicit owner, new plugins should not be merged.
 
 ### 1. Set Up Trusted Publishing
 
