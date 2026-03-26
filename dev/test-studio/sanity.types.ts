@@ -275,6 +275,27 @@ export type RichDate = {
   offset?: number
 }
 
+export type MovieDocument = {
+  _id: string
+  _type: 'movieDocument'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  table?: InternationalizedArrayTable
+}
+
+export type InternationalizedArrayTable = Array<
+  {
+    _key: string
+  } & InternationalizedArrayTableValue
+>
+
+export type Table = {
+  _type: 'table'
+  title?: string
+  description?: InternationalizedArrayString
+}
+
 export type I18nArrayCircularSchemaRepro = {
   _id: string
   _type: 'i18nArrayCircularSchemaRepro'
@@ -357,6 +378,12 @@ export type InternationalizedArrayText = Array<
     _key: string
   } & InternationalizedArrayTextValue
 >
+
+export type InternationalizedArrayTableValue = {
+  _type: 'internationalizedArrayTableValue'
+  value?: Table
+  language: string
+}
 
 export type InternationalizedArrayTextValue = {
   _type: 'internationalizedArrayTextValue'
@@ -670,12 +697,16 @@ export type AllSanitySchemaTypes =
   | Code
   | RichDateTest
   | RichDate
+  | MovieDocument
+  | InternationalizedArrayTable
+  | Table
   | I18nArrayCircularSchemaRepro
   | I18nArrayCircularBodyContent
   | I18nArrayPerformanceTest
   | InternationalizedArrayString
   | InternationalizedPost
   | InternationalizedArrayText
+  | InternationalizedArrayTableValue
   | InternationalizedArrayTextValue
   | InternationalizedArrayStringValue
   | TranslationMetadata
