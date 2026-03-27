@@ -14,7 +14,10 @@ import {colorExample} from '#color'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
 import {iframePaneExample} from '#iframe-pane'
-import {internationalizedArrayExample} from '#internationalized-array'
+import {
+  internationalizedArrayAsyncLanguages,
+  internationalizedArrayExample,
+} from '#internationalized-array'
 import {markdownExample} from '#markdown'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
@@ -67,5 +70,9 @@ export default defineConfig([
       vercelProtectionBypassTool(),
       visionTool(),
     ],
+  }),
+  createWorkspace({
+    name: 'internationalized-array-async-languages',
+    plugins: [internationalizedArrayAsyncLanguages()],
   }),
 ])

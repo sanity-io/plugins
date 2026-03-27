@@ -7,6 +7,7 @@ import {
   type ObjectInputProps,
 } from 'sanity'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
+import {structureTool} from 'sanity/structure'
 
 const internationalizedPost = defineType({
   type: 'document',
@@ -202,5 +203,68 @@ export const internationalizedArrayExample = definePlugin(() => ({
         defaultLanguages: ['en'],
       },
     }),
+  ],
+}))
+
+export const internationalizedArrayAsyncLanguages = definePlugin(() => ({
+  schema: {
+    types: [
+      defineType({
+        name: 'language',
+        title: 'Language',
+        type: 'document',
+        fields: [
+          defineField({
+            name: 'title',
+            title: 'Title',
+            type: 'string',
+          }),
+          defineField({
+            name: 'locale',
+            title: 'Locale',
+            type: 'slug',
+            options: {
+              source: 'title',
+            },
+          }),
+          defineField({
+            name: 'orderRank',
+            title: 'Order Rank',
+            type: 'number',
+          }),
+        ],
+      }),
+      defineType({
+        name: 'page',
+        title: 'Page',
+        type: 'document',
+        fields: [
+          defineField({
+            name: 'title',
+            title: 'Title',
+            type: 'string',
+          }),
+          defineField({
+            name: 'content',
+            title: 'Content',
+            type: 'internationalizedArrayString',
+          }),
+        ],
+      }),
+    ],
+  },
+  plugins: [
+    internationalizedArray({
+      languages: async (client) =>
+        client.fetch(
+          `*[_type == 'language'] | order(orderRank asc){ title, 'id': locale.current }`,
+        ),
+      languageDisplay: 'titleAndCode',
+      fieldTypes: ['string'],
+      languageFilter: {
+        documentTypes: ['page'],
+      },
+    }),
+    structureTool(),
   ],
 }))
