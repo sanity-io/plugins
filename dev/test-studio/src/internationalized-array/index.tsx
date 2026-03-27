@@ -199,6 +199,7 @@ export const internationalizedArrayExample = definePlugin(() => ({
       buttonLocations: ['document', 'field'],
       languageFilter: {
         documentTypes: ['internationalizedPost', 'lesson'],
+        defaultLanguages: ['en'],
       },
     }),
   ],
