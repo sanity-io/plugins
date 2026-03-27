@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.1.0
+
+### Minor Changes
+
+- [#774](https://github.com/sanity-io/plugins/pull/774) [`3a65363`](https://github.com/sanity-io/plugins/commit/3a65363e53045c3b21f3a2dce0801e5dbd1d8fa6) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add support for configuring default languages in internationalized arrays language filter.
+
 ## 5.0.5
 
 ### Patch Changes
