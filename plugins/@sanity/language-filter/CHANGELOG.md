@@ -1,5 +1,13 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 5.0.1
+
+### Patch Changes
+
+- [#781](https://github.com/sanity-io/plugins/pull/781) [`97be48d`](https://github.com/sanity-io/plugins/commit/97be48d860bb9422e933c7865b019a7fe4e977ef) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Improve language filter initialization when `supportedLanguages` is resolved asynchronously.
+
+  Selected language hydration now consistently combines default languages with persisted language selections, and keeps filtering constrained to supported/selectable languages.
+
 ## 5.0.0
 
 ### Major Changes
