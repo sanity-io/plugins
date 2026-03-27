@@ -1,5 +1,13 @@
 # @sanity/presets
 
+## 0.2.0
+
+### Minor Changes
+
+- [#783](https://github.com/sanity-io/plugins/pull/783) [`aa6b2a2`](https://github.com/sanity-io/plugins/commit/aa6b2a221984fa1f9b3ee487c21b013b63f5f02a) Thanks [@juice49](https://github.com/juice49)! - - Presets factories are now created using the definePresetType function.
+  - Presets can specify a composes array; these types will automatically be included if the user has not included them themselves.
+  - Added `ctaType`, `seoType`, and `pageType`.
+
 ## 0.1.0
 
 ### Minor Changes
