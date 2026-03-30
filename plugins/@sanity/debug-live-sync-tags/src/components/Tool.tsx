@@ -223,21 +223,21 @@ export default function Tool() {
     )
   function findResolvedTag(tag: string): string {
     if (tag === syncTagForEverything) {
-      return 'any:*'
+      return 'ALL'
     }
     for (const [documentType, resolvedDocumentType] of allDocumentTypes.entries()) {
       if (resolvedDocumentType === tag) {
-        return `type:${documentType}`
+        return `t:${documentType}`
       }
     }
     for (const [documentId, resolvedDocumentId] of documentIdToTagMap.entries()) {
       if (resolvedDocumentId === tag) {
-        return `id:${documentId}`
+        return `i:${documentId}`
       }
     }
     for (const [slug, resolvedSlug] of documentSlugToTagMap.entries()) {
       if (resolvedSlug === tag) {
-        return `slug:${slug}`
+        return `s:${slug}`
       }
     }
     return tag
