@@ -39,8 +39,9 @@ Comprehensive performance optimization guide for React and Next.js applications,
    - 3.4 [Hoist Static I/O to Module Level](#34-hoist-static-io-to-module-level)
    - 3.5 [Minimize Serialization at RSC Boundaries](#35-minimize-serialization-at-rsc-boundaries)
    - 3.6 [Parallel Data Fetching with Component Composition](#36-parallel-data-fetching-with-component-composition)
-   - 3.7 [Per-Request Deduplication with React.cache()](#37-per-request-deduplication-with-reactcache)
-   - 3.8 [Use after() for Non-Blocking Operations](#38-use-after-for-non-blocking-operations)
+   - 3.7 [Parallel Nested Data Fetching](#37-parallel-nested-data-fetching)
+   - 3.8 [Per-Request Deduplication with React.cache()](#38-per-request-deduplication-with-reactcache)
+   - 3.9 [Use after() for Non-Blocking Operations](#39-use-after-for-non-blocking-operations)
 4. [Client-Side Data Fetching](#4-client-side-data-fetching) — **MEDIUM-HIGH**
    - 4.1 [Deduplicate Global Event Listeners](#41-deduplicate-global-event-listeners)
    - 4.2 [Use Passive Event Listeners for Scrolling Performance](#42-use-passive-event-listeners-for-scrolling-performance)
@@ -55,11 +56,13 @@ Comprehensive performance optimization guide for React and Next.js applications,
    - 5.6 [Extract to Memoized Components](#56-extract-to-memoized-components)
    - 5.7 [Narrow Effect Dependencies](#57-narrow-effect-dependencies)
    - 5.8 [Put Interaction Logic in Event Handlers](#58-put-interaction-logic-in-event-handlers)
-   - 5.9 [Subscribe to Derived State](#59-subscribe-to-derived-state)
-   - 5.10 [Use Functional setState Updates](#510-use-functional-setstate-updates)
-   - 5.11 [Use Lazy State Initialization](#511-use-lazy-state-initialization)
-   - 5.12 [Use Transitions for Non-Urgent Updates](#512-use-transitions-for-non-urgent-updates)
-   - 5.13 [Use useRef for Transient Values](#513-use-useref-for-transient-values)
+   - 5.9 [Split Combined Hook Computations](#59-split-combined-hook-computations)
+   - 5.10 [Subscribe to Derived State](#510-subscribe-to-derived-state)
+   - 5.11 [Use Functional setState Updates](#511-use-functional-setstate-updates)
+   - 5.12 [Use Lazy State Initialization](#512-use-lazy-state-initialization)
+   - 5.13 [Use Transitions for Non-Urgent Updates](#513-use-transitions-for-non-urgent-updates)
+   - 5.14 [Use useDeferredValue for Expensive Derived Renders](#514-use-usedeferredvalue-for-expensive-derived-renders)
+   - 5.15 [Use useRef for Transient Values](#515-use-useref-for-transient-values)
 6. [Rendering Performance](#6-rendering-performance) — **MEDIUM**
    - 6.1 [Animate SVG Wrapper Instead of SVG Element](#61-animate-svg-wrapper-instead-of-svg-element)
    - 6.2 [CSS content-visibility for Long Lists](#62-css-content-visibility-for-long-lists)
@@ -79,13 +82,14 @@ Comprehensive performance optimization guide for React and Next.js applications,
    - 7.4 [Cache Repeated Function Calls](#74-cache-repeated-function-calls)
    - 7.5 [Cache Storage API Calls](#75-cache-storage-api-calls)
    - 7.6 [Combine Multiple Array Iterations](#76-combine-multiple-array-iterations)
-   - 7.7 [Early Length Check for Array Comparisons](#77-early-length-check-for-array-comparisons)
-   - 7.8 [Early Return from Functions](#78-early-return-from-functions)
-   - 7.9 [Hoist RegExp Creation](#79-hoist-regexp-creation)
-   - 7.10 [Use flatMap to Map and Filter in One Pass](#710-use-flatmap-to-map-and-filter-in-one-pass)
-   - 7.11 [Use Loop for Min/Max Instead of Sort](#711-use-loop-for-minmax-instead-of-sort)
-   - 7.12 [Use Set/Map for O(1) Lookups](#712-use-setmap-for-o1-lookups)
-   - 7.13 [Use toSorted() Instead of sort() for Immutability](#713-use-tosorted-instead-of-sort-for-immutability)
+   - 7.7 [Defer Non-Critical Work with requestIdleCallback](#77-defer-non-critical-work-with-requestidlecallback)
+   - 7.8 [Early Length Check for Array Comparisons](#78-early-length-check-for-array-comparisons)
+   - 7.9 [Early Return from Functions](#79-early-return-from-functions)
+   - 7.10 [Hoist RegExp Creation](#710-hoist-regexp-creation)
+   - 7.11 [Use flatMap to Map and Filter in One Pass](#711-use-flatmap-to-map-and-filter-in-one-pass)
+   - 7.12 [Use Loop for Min/Max Instead of Sort](#712-use-loop-for-minmax-instead-of-sort)
+   - 7.13 [Use Set/Map for O(1) Lookups](#713-use-setmap-for-o1-lookups)
+   - 7.14 [Use toSorted() Instead of sort() for Immutability](#714-use-tosorted-instead-of-sort-for-immutability)
 8. [Advanced Patterns](#8-advanced-patterns) — **LOW**
    - 8.1 [Initialize App Once, Not Per Mount](#81-initialize-app-once-not-per-mount)
    - 8.2 [Store Event Handlers in Refs](#82-store-event-handlers-in-refs)
@@ -397,35 +401,27 @@ import {Button, TextField} from '@mui/material'
 // Loads 2,225 modules, takes ~4.2s extra in dev
 ```
 
-**Correct: imports only what you need**
+**Correct - Next.js 13.5+ (recommended):**
 
 ```tsx
-import Check from 'lucide-react/dist/esm/icons/check'
-import X from 'lucide-react/dist/esm/icons/x'
-import Menu from 'lucide-react/dist/esm/icons/menu'
-// Loads only 3 modules (~2KB vs ~1MB)
+// Keep the standard imports - Next.js transforms them to direct imports
+import {Check, X, Menu} from 'lucide-react'
+// Full TypeScript support, no manual path wrangling
+```
 
+This is the recommended approach because it preserves TypeScript type safety and editor autocompletion while still eliminating the barrel import cost.
+
+**Correct - Direct imports (non-Next.js projects):**
+
+```tsx
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 // Loads only what you use
 ```
 
-**Alternative: Next.js 13.5+**
+> **TypeScript warning:** Some libraries (notably `lucide-react`) don't ship `.d.ts` files for their deep import paths. Importing from `lucide-react/dist/esm/icons/check` resolves to an implicit `any` type, causing errors under `strict` or `noImplicitAny`. Prefer `optimizePackageImports` when available, or verify the library exports types for its subpaths before using direct imports.
 
-```js
-// next.config.js - use optimizePackageImports
-module.exports = {
-  experimental: {
-    optimizePackageImports: ['lucide-react', '@mui/material'],
-  },
-}
-
-// Then you can keep the ergonomic barrel imports:
-import {Check, X, Menu} from 'lucide-react'
-// Automatically transformed to direct imports at build time
-```
-
-Direct imports provide 15-70% faster dev boot, 28% faster builds, 40% faster cold starts, and significantly faster HMR.
+These optimizations provide 15-70% faster dev boot, 28% faster builds, 40% faster cold starts, and significantly faster HMR.
 
 Libraries commonly affected: `lucide-react`, `@mui/material`, `@mui/icons-material`, `@tabler/icons-react`, `react-icons`, `@headlessui/react`, `@radix-ui/react-*`, `lodash`, `ramda`, `date-fns`, `rxjs`, `react-use`.
 
@@ -927,7 +923,33 @@ export default function Page() {
 }
 ```
 
-### 3.7 Per-Request Deduplication with React.cache()
+### 3.7 Parallel Nested Data Fetching
+
+**Impact: CRITICAL (eliminates server-side waterfalls)**
+
+When fetching nested data in parallel, chain dependent fetches within each item's promise so a slow item doesn't block the rest.
+
+**Incorrect: a single slow item blocks all nested fetches**
+
+```tsx
+const chats = await Promise.all(chatIds.map((id) => getChat(id)))
+
+const chatAuthors = await Promise.all(chats.map((chat) => getUser(chat.author)))
+```
+
+If one `getChat(id)` out of 100 is extremely slow, the authors of the other 99 chats can't start loading even though their data is ready.
+
+**Correct: each item chains its own nested fetch**
+
+```tsx
+const chatAuthors = await Promise.all(
+  chatIds.map((id) => getChat(id).then((chat) => getUser(chat.author))),
+)
+```
+
+Each item independently chains `getChat` → `getUser`, so a slow chat doesn't block author fetches for the others.
+
+### 3.8 Per-Request Deduplication with React.cache()
 
 **Impact: MEDIUM (deduplicates within request)**
 
@@ -993,7 +1015,7 @@ Use `React.cache()` to deduplicate these operations across your component tree.
 
 Reference: [https://react.dev/reference/react/cache](https://react.dev/reference/react/cache)
 
-### 3.8 Use after() for Non-Blocking Operations
+### 3.9 Use after() for Non-Blocking Operations
 
 **Impact: MEDIUM (faster response times)**
 
@@ -1652,7 +1674,67 @@ function Form() {
 
 Reference: [https://react.dev/learn/removing-effect-dependencies#should-this-code-move-to-an-event-handler](https://react.dev/learn/removing-effect-dependencies#should-this-code-move-to-an-event-handler)
 
-### 5.9 Subscribe to Derived State
+### 5.9 Split Combined Hook Computations
+
+**Impact: MEDIUM (avoids recomputing independent steps)**
+
+When a hook contains multiple independent tasks with different dependencies, split them into separate hooks. A combined hook reruns all tasks when any dependency changes, even if some tasks don't use the changed value.
+
+**Incorrect: changing `sortOrder` recomputes filtering**
+
+```tsx
+const sortedProducts = useMemo(() => {
+  const filtered = products.filter((p) => p.category === category)
+  const sorted = filtered.toSorted((a, b) =>
+    sortOrder === 'asc' ? a.price - b.price : b.price - a.price,
+  )
+  return sorted
+}, [products, category, sortOrder])
+```
+
+**Correct: filtering only recomputes when products or category change**
+
+```tsx
+const filteredProducts = useMemo(
+  () => products.filter((p) => p.category === category),
+  [products, category],
+)
+
+const sortedProducts = useMemo(
+  () =>
+    filteredProducts.toSorted((a, b) =>
+      sortOrder === 'asc' ? a.price - b.price : b.price - a.price,
+    ),
+  [filteredProducts, sortOrder],
+)
+```
+
+This pattern also applies to `useEffect` when combining unrelated side effects:
+
+**Incorrect: both effects run when either dependency changes**
+
+```tsx
+useEffect(() => {
+  analytics.trackPageView(pathname)
+  document.title = `${pageTitle} | My App`
+}, [pathname, pageTitle])
+```
+
+**Correct: effects run independently**
+
+```tsx
+useEffect(() => {
+  analytics.trackPageView(pathname)
+}, [pathname])
+
+useEffect(() => {
+  document.title = `${pageTitle} | My App`
+}, [pageTitle])
+```
+
+**Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, it automatically optimizes dependency tracking and may handle some of these cases for you.
+
+### 5.10 Subscribe to Derived State
 
 **Impact: MEDIUM (reduces re-render frequency)**
 
@@ -1677,7 +1759,7 @@ function Sidebar() {
 }
 ```
 
-### 5.10 Use Functional setState Updates
+### 5.11 Use Functional setState Updates
 
 **Impact: MEDIUM (prevents stale closures and unnecessary callback recreations)**
 
@@ -1758,7 +1840,7 @@ function TodoList() {
 
 **Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, the compiler can automatically optimize some cases, but functional updates are still recommended for correctness and to prevent stale closure bugs.
 
-### 5.11 Use Lazy State Initialization
+### 5.12 Use Lazy State Initialization
 
 **Impact: MEDIUM (wasted computation on every render)**
 
@@ -1810,7 +1892,7 @@ Use lazy initialization when computing initial values from localStorage/sessionS
 
 For simple primitives (`useState(0)`), direct references (`useState(props.value)`), or cheap literals (`useState({})`), the function form is unnecessary.
 
-### 5.12 Use Transitions for Non-Urgent Updates
+### 5.13 Use Transitions for Non-Urgent Updates
 
 **Impact: MEDIUM (maintains UI responsiveness)**
 
@@ -1846,7 +1928,64 @@ function ScrollTracker() {
 }
 ```
 
-### 5.13 Use useRef for Transient Values
+### 5.14 Use useDeferredValue for Expensive Derived Renders
+
+**Impact: MEDIUM (keeps input responsive during heavy computation)**
+
+When user input triggers expensive computations or renders, use `useDeferredValue` to keep the input responsive. The deferred value lags behind, allowing React to prioritize the input update and render the expensive result when idle.
+
+**Incorrect: input feels laggy while filtering**
+
+```tsx
+function Search({items}: {items: Item[]}) {
+  const [query, setQuery] = useState('')
+  const filtered = items.filter((item) => fuzzyMatch(item, query))
+
+  return (
+    <>
+      <input value={query} onChange={(e) => setQuery(e.target.value)} />
+      <ResultsList results={filtered} />
+    </>
+  )
+}
+```
+
+**Correct: input stays snappy, results render when ready**
+
+```tsx
+function Search({items}: {items: Item[]}) {
+  const [query, setQuery] = useState('')
+  const deferredQuery = useDeferredValue(query)
+  const filtered = useMemo(
+    () => items.filter((item) => fuzzyMatch(item, deferredQuery)),
+    [items, deferredQuery],
+  )
+  const isStale = query !== deferredQuery
+
+  return (
+    <>
+      <input value={query} onChange={(e) => setQuery(e.target.value)} />
+      <div style={{opacity: isStale ? 0.7 : 1}}>
+        <ResultsList results={filtered} />
+      </div>
+    </>
+  )
+}
+```
+
+**When to use:**
+
+- Filtering/searching large lists
+
+- Expensive visualizations (charts, graphs) reacting to input
+
+- Any derived state that causes noticeable render delays
+
+**Note:** Wrap the expensive computation in `useMemo` with the deferred value as a dependency, otherwise it still runs on every render.
+
+Reference: [https://react.dev/reference/react/useDeferredValue](https://react.dev/reference/react/useDeferredValue)
+
+### 5.15 Use useRef for Transient Values
 
 **Impact: MEDIUM (avoids unnecessary re-renders on frequent updates)**
 
@@ -2717,7 +2856,109 @@ for (const user of users) {
 }
 ```
 
-### 7.7 Early Length Check for Array Comparisons
+### 7.7 Defer Non-Critical Work with requestIdleCallback
+
+**Impact: MEDIUM (keeps UI responsive during background tasks)**
+
+Use `requestIdleCallback()` to schedule non-critical work during browser idle periods. This keeps the main thread free for user interactions and animations, reducing jank and improving perceived performance.
+
+**Incorrect: blocks main thread during user interaction**
+
+```typescript
+function handleSearch(query: string) {
+  const results = searchItems(query)
+  setResults(results)
+
+  // These block the main thread immediately
+  analytics.track('search', {query})
+  saveToRecentSearches(query)
+  prefetchTopResults(results.slice(0, 3))
+}
+```
+
+**Correct: defers non-critical work to idle time**
+
+```typescript
+function handleSearch(query: string) {
+  const results = searchItems(query)
+  setResults(results)
+
+  // Defer non-critical work to idle periods
+  requestIdleCallback(() => {
+    analytics.track('search', {query})
+  })
+
+  requestIdleCallback(() => {
+    saveToRecentSearches(query)
+  })
+
+  requestIdleCallback(() => {
+    prefetchTopResults(results.slice(0, 3))
+  })
+}
+```
+
+**With timeout for required work:**
+
+```typescript
+// Ensure analytics fires within 2 seconds even if browser stays busy
+requestIdleCallback(() => analytics.track('page_view', {path: location.pathname}), {timeout: 2000})
+```
+
+**Chunking large tasks:**
+
+```typescript
+function processLargeDataset(items: Item[]) {
+  let index = 0
+
+  function processChunk(deadline: IdleDeadline) {
+    // Process items while we have idle time (aim for <50ms chunks)
+    while (index < items.length && deadline.timeRemaining() > 0) {
+      processItem(items[index])
+      index++
+    }
+
+    // Schedule next chunk if more items remain
+    if (index < items.length) {
+      requestIdleCallback(processChunk)
+    }
+  }
+
+  requestIdleCallback(processChunk)
+}
+```
+
+**With fallback for unsupported browsers:**
+
+```typescript
+const scheduleIdleWork = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1))
+
+scheduleIdleWork(() => {
+  // Non-critical work
+})
+```
+
+**When to use:**
+
+- Analytics and telemetry
+
+- Saving state to localStorage/IndexedDB
+
+- Prefetching resources for likely next actions
+
+- Processing non-urgent data transformations
+
+- Lazy initialization of non-critical features
+
+**When NOT to use:**
+
+- User-initiated actions that need immediate feedback
+
+- Rendering updates the user is waiting for
+
+- Time-sensitive operations
+
+### 7.8 Early Length Check for Array Comparisons
 
 **Impact: MEDIUM-HIGH (avoids expensive operations when lengths differ)**
 
@@ -2766,7 +3007,7 @@ This new approach is more efficient because:
 
 - It returns early when a difference is found
 
-### 7.8 Early Return from Functions
+### 7.9 Early Return from Functions
 
 **Impact: LOW-MEDIUM (avoids unnecessary computation)**
 
@@ -2812,7 +3053,7 @@ function validateUsers(users: User[]) {
 }
 ```
 
-### 7.9 Hoist RegExp Creation
+### 7.10 Hoist RegExp Creation
 
 **Impact: LOW-MEDIUM (avoids recreation)**
 
@@ -2853,7 +3094,7 @@ regex.test('foo') // false, lastIndex = 0
 
 Global regex (`/g`) has mutable `lastIndex` state:
 
-### 7.10 Use flatMap to Map and Filter in One Pass
+### 7.11 Use flatMap to Map and Filter in One Pass
 
 **Impact: LOW-MEDIUM (eliminates intermediate array)**
 
@@ -2900,7 +3141,7 @@ const numbers = strings.flatMap((s) => {
 
 - Parsing/validating where invalid inputs should be skipped
 
-### 7.11 Use Loop for Min/Max Instead of Sort
+### 7.12 Use Loop for Min/Max Instead of Sort
 
 **Impact: LOW (O(n) instead of O(n log n))**
 
@@ -2978,7 +3219,7 @@ const max = Math.max(...numbers)
 
 This works for small arrays, but can be slower or just throw an error for very large arrays due to spread operator limitations. Maximal array length is approximately 124000 in Chrome 143 and 638000 in Safari 18; exact numbers may vary - see [the fiddle](https://jsfiddle.net/qw1jabsx/4/). Use the loop approach for reliability.
 
-### 7.12 Use Set/Map for O(1) Lookups
+### 7.13 Use Set/Map for O(1) Lookups
 
 **Impact: LOW-MEDIUM (O(n) to O(1))**
 
@@ -2998,7 +3239,7 @@ const allowedIds = new Set(['a', 'b', 'c', ...])
 items.filter(item => allowedIds.has(item.id))
 ```
 
-### 7.13 Use toSorted() Instead of sort() for Immutability
+### 7.14 Use toSorted() Instead of sort() for Immutability
 
 **Impact: MEDIUM-HIGH (prevents mutation bugs in React state)**
 

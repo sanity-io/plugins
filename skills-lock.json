@@ -14,12 +14,12 @@
     "turborepo": {
       "source": "vercel/turborepo",
       "sourceType": "github",
-      "computedHash": "fa46b4bc06589ff6acdd0a5837ab280302908f6c817be2caa8cbae1989feb434"
+      "computedHash": "753d6e471529e30c48bf6802b9531e6e86e5df8b4d25cfe542989cf414b3f4e2"
     },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
-      "computedHash": "afeca00ac2f492d88fdd010e73d91719a5b57c564bb4a73325b0bd77e11323ab"
+      "computedHash": "bbc31a48537b473ff4feea6360ef0de3bfdcbef26c14f4967a5deefe8ca801d3"
     },
     "vite": {
       "source": "antfu/skills",
