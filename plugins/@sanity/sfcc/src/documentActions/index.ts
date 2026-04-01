@@ -1,1 +1,0 @@
-export {createSfccDeleteAction} from './sfccDelete'
