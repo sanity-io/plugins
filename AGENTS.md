@@ -298,6 +298,8 @@ Use the generator:
 pnpm generate "new plugin"
 ```
 
+When adding a new plugin, also update the root `README.md` `## Current Plugins` table so the monorepo plugin list stays current.
+
 Or to migrate an existing plugin:
 
 ```bash
