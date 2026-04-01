@@ -1,0 +1,72 @@
+{
+  "name": "@sanity/sfcc",
+  "version": "0.0.1",
+  "description": "Sanity plugin for Salesforce Commerce Cloud (SFCC) integration — synced product and category data with editorial enrichment.",
+  "keywords": [
+    "salesforce-commerce-cloud",
+    "sanity",
+    "sanity-plugin",
+    "sfcc"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/sfcc#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/sfcc"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.4",
+    "@sanity/ui": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "babel-plugin-styled-components": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "sanity-plugin-internationalized-array": "workspace:^",
+    "styled-components": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^19.2",
+    "react-dom": "^19.2",
+    "sanity": "^5",
+    "sanity-plugin-internationalized-array": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

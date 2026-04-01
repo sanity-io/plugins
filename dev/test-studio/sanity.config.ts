@@ -21,6 +21,7 @@ import {
 import {markdownExample} from '#markdown'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
+import {sfccExample} from '#sfcc'
 import {studioSecretsExample} from '#studio-secrets'
 import {unsplashExample} from '#unsplash'
 import {workflowExample} from '#workflow'
@@ -48,6 +49,11 @@ export default defineConfig([
     name: 'presets-studio',
     title: 'Presets Studio',
     plugins: [structureTool(), presetsWorkspace()],
+  }),
+  createWorkspace({
+    name: 'sfcc-example',
+    title: 'Salesforce Commerce Cloud',
+    plugins: [sfccExample()],
   }),
   createWorkspace({
     name: 'kitchen-sink',
