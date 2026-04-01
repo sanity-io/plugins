@@ -26,7 +26,7 @@ export const presetsWorkspace = definePlugin(() => ({
         internalTypes: ['core.presets.page'],
       }),
       pageType({
-        pageBuilderBlocks: ['core.presets.cta', 'blockquote'],
+        pageBuilderBlocks: ['blockquote'],
       }),
     ),
   ],
