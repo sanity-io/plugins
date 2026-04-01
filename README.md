@@ -59,17 +59,28 @@ pnpm format
 
 ## Current Plugins
 
-| Plugin                                                                                         | Description                                               |
-| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| [`@sanity/color-input`](./plugins/@sanity/color-input)                                         | Color picker input for Sanity Studio                      |
-| [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin) | Debug plugin for preview URL secrets                      |
-| [`@sanity/vercel-protection-bypass`](./plugins/@sanity/vercel-protection-bypass)               | Tool for bypassing Vercel authentication in preview       |
-| [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo)                                       | Aprimo DAM integration                                    |
-| [`sanity-plugin-bynder-input`](./plugins/sanity-plugin-bynder-input)                           | Bynder DAM integration                                    |
-| [`sanity-plugin-graph-view`](./plugins/sanity-plugin-graph-view)                               | Visual graph view of document references                  |
-| [`sanity-plugin-markdown`](./plugins/sanity-plugin-markdown)                                   | Markdown editor input                                     |
-| [`sanity-plugin-workflow`](./plugins/sanity-plugin-workflow)                                   | Custom workflow management example for content publishing |
-| [`sanity-plugin-workspace-home`](./plugins/sanity-plugin-workspace-home)                       | Workspace home screen customization                       |
+| Plugin | Description |
+| --- | --- |
+| [`@sanity/assist`](./plugins/@sanity/assist) | AI Assist for Sanity Studio |
+| [`@sanity/code-input`](./plugins/@sanity/code-input) | Code input component powered by CodeMirror |
+| [`@sanity/color-input`](./plugins/@sanity/color-input) | Color picker input |
+| [`@sanity/debug-live-sync-tags`](./plugins/@sanity/debug-live-sync-tags) | Debug plugin for live sync tags |
+| [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin) | Debug plugin for preview URL secrets |
+| [`@sanity/document-internationalization`](./plugins/@sanity/document-internationalization) | Document-level translation management |
+| [`@sanity/language-filter`](./plugins/@sanity/language-filter) | Filter localized fields by language |
+| [`@sanity/presets`](./plugins/@sanity/presets) | Preset patterns for Sanity Studio |
+| [`@sanity/rich-date-input`](./plugins/@sanity/rich-date-input) | Timezone-aware datetime input |
+| [`@sanity/studio-secrets`](./plugins/@sanity/studio-secrets) | Manage secrets in Sanity Studio |
+| [`@sanity/vercel-protection-bypass`](./plugins/@sanity/vercel-protection-bypass) | Bypass Vercel authentication in preview |
+| [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo) | Aprimo DAM integration |
+| [`sanity-plugin-asset-source-unsplash`](./plugins/sanity-plugin-asset-source-unsplash) | Unsplash image asset source |
+| [`sanity-plugin-bynder-input`](./plugins/sanity-plugin-bynder-input) | Bynder DAM integration |
+| [`sanity-plugin-graph-view`](./plugins/sanity-plugin-graph-view) | Visual graph view of document references |
+| [`sanity-plugin-iframe-pane`](./plugins/sanity-plugin-iframe-pane) | Display any URL in a View Pane |
+| [`sanity-plugin-internationalized-array`](./plugins/sanity-plugin-internationalized-array) | Store localized fields in arrays |
+| [`sanity-plugin-markdown`](./plugins/sanity-plugin-markdown) | Markdown editor input |
+| [`sanity-plugin-workflow`](./plugins/sanity-plugin-workflow) | Custom content publishing workflow example |
+| [`sanity-plugin-workspace-home`](./plugins/sanity-plugin-workspace-home) | Workspace home screen customization |
 
 ## Contributing
 
