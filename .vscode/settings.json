@@ -1,6 +1,5 @@
 {
   "typescript.experimental.useTsgo": true,
-  "oxc.fmt.experimental": true,
-  "oxc.fmt.configPath": ".oxfmtrc.jsonc",
+  "oxc.fmt.configPath": ".oxfmtrc.json",
   "oxc.typeAware": true
 }
