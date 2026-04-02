@@ -145,7 +145,14 @@
         "babel-plugin-styled-components",
       ],
     },
-
+    "plugins/@sanity/sfcc": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
     // add new plugin workspaces here
     "plugins/@sanity/debug-live-sync-tags": {
       "entry": ["package.config.ts"],

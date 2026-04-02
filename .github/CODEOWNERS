@@ -9,3 +9,5 @@
 
 # -- Others --
 
+# Salesforce Commerce Cloud plugin
+/plugins/@sanity/sfcc/ @sanity-io/solutions
