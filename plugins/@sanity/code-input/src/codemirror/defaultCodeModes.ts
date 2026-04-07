@@ -10,8 +10,7 @@ export type ModeLoader = () => Promise<Extension | undefined> | Extension | unde
 export const defaultCodeModes: CodeMode[] = [
   {
     name: 'groq',
-    loader: () =>
-      import('@codemirror/lang-javascript').then(({javascriptLanguage}) => javascriptLanguage),
+    loader: () => import('@sanity/lezer-groq').then(({groq}) => groq()),
   },
   {
     name: 'javascript',
