@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.1.0
+
+### Minor Changes
+
+- [#798](https://github.com/sanity-io/plugins/pull/798) [`ad6ff98`](https://github.com/sanity-io/plugins/commit/ad6ff98bc1e079332bacdf7265b455f9a8f8583e) Thanks [@rexxars](https://github.com/rexxars)! - Use dedicated GROQ grammar for syntax highlighting instead of falling back to JavaScript
+
 ## 7.0.12
 
 ### Patch Changes
