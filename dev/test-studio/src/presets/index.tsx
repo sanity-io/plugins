@@ -1,4 +1,12 @@
-import {linkType, LINK_TYPE_NAME, presets, pageType} from '@sanity/presets'
+import {
+  CTA_TYPE_NAME,
+  LINK_TYPE_NAME,
+  linkType,
+  PAGE_TYPE_NAME,
+  pageType,
+  presets,
+  SEO_TYPE_NAME,
+} from '@sanity/presets'
 import {definePlugin, defineType, defineField} from 'sanity'
 
 const corePresetsTest = defineType({
@@ -16,6 +24,16 @@ const corePresetsTest = defineType({
       title: 'Link',
       type: LINK_TYPE_NAME,
     },
+    {
+      name: 'seo',
+      title: 'SEO',
+      type: SEO_TYPE_NAME,
+    },
+    {
+      name: 'cta',
+      title: 'CTA',
+      type: CTA_TYPE_NAME,
+    },
   ],
 })
 
@@ -23,7 +41,7 @@ export const presetsWorkspace = definePlugin(() => ({
   plugins: [
     presets(
       linkType({
-        internalTypes: ['core.presets.page'],
+        internalTypes: [PAGE_TYPE_NAME],
       }),
       pageType({
         pageBuilderBlocks: ['blockquote'],

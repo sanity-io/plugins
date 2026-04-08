@@ -3,7 +3,10 @@
 exports[`package exports 1`] = `
 {
   ".": {
+    "CTA_TYPE_NAME": "string",
     "LINK_TYPE_NAME": "string",
+    "PAGE_TYPE_NAME": "string",
+    "SEO_TYPE_NAME": "string",
     "ctaType": "function",
     "linkType": "function",
     "pageType": "function",
