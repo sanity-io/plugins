@@ -1,5 +1,11 @@
 # @sanity/document-internationalization
 
+## 6.1.0
+
+### Minor Changes
+
+- [#780](https://github.com/sanity-io/plugins/pull/780) [`c6463af`](https://github.com/sanity-io/plugins/commit/c6463affecf89c5efad2714a510b0e784c5b1d1a) Thanks [@Jamiewarb](https://github.com/Jamiewarb)! - Add support for disabling the automatic template creation via the `addTemplates` config option
+
 ## 6.0.6
 
 ## 6.0.5
