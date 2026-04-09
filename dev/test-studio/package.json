@@ -42,6 +42,7 @@
     "styled-components": "catalog:"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tsconfig/vite-react": "^7.0.2",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

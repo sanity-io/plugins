@@ -144,3 +144,8 @@ vite.config.ts.timestamp-*
 
 # Sanity Studio
 .sanity
+
+# Playwright
+**/e2e/results/
+**/playwright-report/
+**/blob-report/
