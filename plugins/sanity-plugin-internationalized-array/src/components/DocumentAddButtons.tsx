@@ -42,10 +42,10 @@ export default function DocumentAddButtons(): ReactElement {
   const {filteredLanguages} = useInternationalizedArrayContext()
 
   const toast = useToast()
-  const {onChange} = useDocumentPane()
+  const {onChange, formState} = useDocumentPane()
   const schema = useSchema()
 
-  // Helper function to determine if a field should be initialized as an array
+  // Array-based types (e.g. Portable Text) need [] as initial value, not undefined
   const getInitialValueForType = useCallback(
     (typeName: string): unknown => {
       if (!typeName) return undefined
@@ -138,13 +138,12 @@ export default function DocumentAddButtons(): ReactElement {
         return
       }
 
-      // Write a new patch for each empty field
+      // Build patches for each field missing the selected language
       const patches: (FormSetIfMissingPatch | FormInsertPatch)[] = []
 
       for (const toTranslate of removeDuplicates) {
         const path = toTranslate.path
 
-        // Get the appropriate initial value for this field type
         const initialValue = getInitialValueForType(toTranslate._type)
 
         const ifMissing = setIfMissing([], path)
@@ -154,7 +153,7 @@ export default function DocumentAddButtons(): ReactElement {
               _key: randomKey(),
               [LANGUAGE_FIELD_NAME]: languageId,
               _type: toTranslate._type,
-              value: initialValue, // Use the determined initial value instead of undefined
+              value: initialValue,
             },
           ],
           'after',
@@ -175,7 +174,11 @@ export default function DocumentAddButtons(): ReactElement {
           Add translation to internationalized fields
         </Text>
       </Box>
-      <AddButtons readOnly={false} handleClick={handleDocumentButtonClick} languagesInUse={[]} />
+      <AddButtons
+        readOnly={Boolean(formState?.readOnly)}
+        handleClick={handleDocumentButtonClick}
+        languagesInUse={[]}
+      />
     </Stack>
   )
 }

@@ -55,7 +55,7 @@ export default function InternationalizedArray(
   const value = _value as InternationalizedArrayItem[]
   const itemsNeedingMigration = value?.filter((v) => !v[LANGUAGE_FIELD_NAME]) ?? []
   const shouldMigrateArray = itemsNeedingMigration.length > 0
-  const readOnly = typeof schemaType.readOnly === 'boolean' ? schemaType.readOnly : false
+  const readOnly = Boolean(documentReadOnly) || schemaType.readOnly === true
   const toast = useToast()
 
   const getFormValue = useGetFormValue()
@@ -76,7 +76,7 @@ export default function InternationalizedArray(
   const usingBuiltInLanguageFilter =
     typeof documentType === 'string' && builtInLanguageFilter.documentTypes.includes(documentType)
 
-  // TODO:Is this redundant? The filter plugin is already filtering the members, why do we also need to call it at this level.
+  // TODO: Is this redundant? The filter plugin already filters members at its own level.
   const filteredMembers = useMemo(
     () =>
       usingLanguageFilterPlugin || usingBuiltInLanguageFilter
@@ -94,11 +94,9 @@ export default function InternationalizedArray(
             if (!valueMember || valueMember.kind !== 'field') {
               return false
             }
-            // Yes, this is a mess but it's necessary to support both the built-in language filter and the language filter plugin.
-            // If they are using the built-in method it's better to pass the languages to the filter so we can return the fields that are
-            // not using a valid language id instead of hiding them from the users.
-            // We can't do that with the language filter plugin.
-            // Also, the built in method is better because the filter function will only run once.
+            // The built-in filter receives the full languages list so it can
+            // surface fields with invalid language IDs rather than hiding them.
+            // The language filter plugin does not support this.
             return usingBuiltInLanguageFilter
               ? internationalizedArrayLanguageFilter(
                   member.item.schemaType,
@@ -173,7 +171,7 @@ export default function InternationalizedArray(
         .filter((language) => languages.find((l) => l.id === language))
       // Account for strict mode by scheduling the update
       const timeout = setTimeout(() => {
-        if (!documentReadOnly) handleAddLanguages(languagesToAdd)
+        if (!readOnly) handleAddLanguages(languagesToAdd)
       })
       return () => clearTimeout(timeout)
     }
@@ -184,7 +182,7 @@ export default function InternationalizedArray(
     defaultLanguages,
     addedLanguages,
     languages,
-    documentReadOnly,
+    readOnly,
     shouldMigrateArray,
   ])
 
@@ -248,10 +246,10 @@ export default function InternationalizedArray(
 
   // Automatically restore order of fields
   useEffect(() => {
-    if (languagesOutOfOrder.length > 0 && allKeysAreLanguages && !documentReadOnly) {
+    if (languagesOutOfOrder.length > 0 && allKeysAreLanguages && !readOnly) {
       handleRestoreOrder()
     }
-  }, [languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, documentReadOnly])
+  }, [languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, readOnly])
 
   // compare value keys with possible languages
   const allLanguagesArePresent = useMemo(

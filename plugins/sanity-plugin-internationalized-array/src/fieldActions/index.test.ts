@@ -13,6 +13,7 @@ import {internationalizedArrayFieldAction} from './index'
 
 const mockUseFormValue = vi.fn()
 const mockOnChange = vi.fn()
+let mockFormState: Record<string, unknown> | undefined
 
 vi.mock('sanity', async (importOriginal) => {
   const original = await importOriginal<typeof import('sanity')>()
@@ -25,6 +26,7 @@ vi.mock('sanity', async (importOriginal) => {
 vi.mock('sanity/structure', () => ({
   useDocumentPane: vi.fn(() => ({
     onChange: mockOnChange,
+    formState: mockFormState,
   })),
 }))
 
@@ -60,6 +62,7 @@ describe('internationalizedArrayFieldAction', () => {
   beforeEach(() => {
     mockUseFormValue.mockReturnValue(undefined)
     mockOnChange.mockClear()
+    mockFormState = undefined
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
       MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
     )
@@ -379,5 +382,38 @@ describe('internationalizedArrayFieldAction', () => {
         },
       ],
     })
+  })
+
+  test('all translate actions disabled when document is readOnly', () => {
+    mockFormState = {readOnly: true}
+    mockUseFormValue.mockReturnValue(undefined)
+
+    const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
+
+    const fieldGroup = result.current.type === 'group' ? result.current : undefined
+    if (!fieldGroup) {
+      throw new Error('Field group not found')
+    }
+
+    fieldGroup.children.filter(isActionItem).forEach((action) => {
+      expect(action.disabled).toBe(true)
+    })
+  })
+
+  test('add-missing action disabled when document is readOnly', () => {
+    mockFormState = {readOnly: true}
+    mockUseFormValue.mockReturnValue(undefined)
+
+    const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
+
+    const fieldGroup = result.current.type === 'group' ? result.current : undefined
+    if (!fieldGroup) {
+      throw new Error('Field group not found')
+    }
+    const addMissing = fieldGroup.children[fieldGroup.children.length - 1]!
+    if (!isActionItem(addMissing)) {
+      throw new Error('Add missing action is not an action item')
+    }
+    expect(addMissing.disabled).toBe(true)
   })
 })
