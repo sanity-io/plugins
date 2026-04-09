@@ -2,11 +2,14 @@ import {getImageDimensions} from '@sanity/asset-utils'
 import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
+import {SEO_TYPE_NAME} from './constants'
+
+export {SEO_TYPE_NAME} from './constants'
 
 export const seoType = definePresetType(() => {
   return {
     schemaType: defineType({
-      name: 'core.presets.seo',
+      name: SEO_TYPE_NAME,
       type: 'object',
       title: 'Web page metadata (SEO)',
       fields: [
