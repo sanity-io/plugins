@@ -1,5 +1,6 @@
 import {
   CTA_TYPE_NAME,
+  ctaType,
   LINK_TYPE_NAME,
   linkType,
   PAGE_TYPE_NAME,
@@ -43,6 +44,7 @@ export const presetsWorkspace = definePlugin(() => ({
       linkType({
         internalTypes: [PAGE_TYPE_NAME],
       }),
+      ctaType(),
       pageType({
         pageBuilderBlocks: ['blockquote'],
       }),
