@@ -52,6 +52,8 @@ export default defineConfig({
 
   webServer: {
     command: CI ? 'pnpm sanity start' : 'pnpm sanity dev',
+    // The config lives in e2e/ but sanity CLI must run from the studio root (dev/test-studio/)
+    cwd: '..',
     port: 3333,
     reuseExistingServer: !CI,
     stdout: 'pipe',

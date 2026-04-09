@@ -27,8 +27,10 @@ jobs:
 
       - uses: ./.github/actions/setup
 
-      - name: Build plugins
-        run: pnpm turbo run build --filter=test-studio^...
+      - name: Build plugins and test studio
+        # Uses test-studio... (not test-studio^...) to include test-studio itself in the build,
+        # which is required for `sanity start` to serve the pre-built studio.
+        run: pnpm turbo run build --filter=test-studio...
 
       - name: Cache Playwright browsers
         id: playwright-cache
