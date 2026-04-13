@@ -148,7 +148,6 @@ export function Iframe(props: IframeProps): React.JSX.Element {
         }
         if (!previewSecretRef.current) {
           const {secret, expiresAt} = await createPreviewSecret(
-            // @ts-expect-error - SanityClient type version mismatch between sanity and @sanity/preview-url-secret peer dep resolution
             client,
             'sanity-plugin-iframe-pane',
             location.href,
