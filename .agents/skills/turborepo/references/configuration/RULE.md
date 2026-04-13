@@ -73,7 +73,7 @@ When you run `turbo run lint`, Turborepo finds all packages with a `lint` script
 
 ```json
 {
-  "$schema": "https://v2-9-4-canary-7.turborepo.dev/schema.json",
+  "$schema": "https://v2-8-18-canary-7.turborepo.dev/schema.json",
   "globalEnv": ["CI"],
   "globalDependencies": ["tsconfig.json"],
   "tasks": {
@@ -91,36 +91,12 @@ When you run `turbo run lint`, Turborepo finds all packages with a `lint` script
 
 The `$schema` key enables IDE autocompletion and validation.
 
-### With `futureFlags.globalConfiguration`
-
-When the `globalConfiguration` future flag is enabled, global options move under a `global` key with cleaner names:
-
-```json
-{
-  "$schema": "https://v2-9-4-canary-7.turborepo.dev/schema.json",
-  "futureFlags": {"globalConfiguration": true},
-  "global": {
-    "inputs": ["tsconfig.json"],
-    "env": ["CI"],
-    "ui": "tui"
-  },
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    }
-  }
-}
-```
-
-See the [global options reference](./global-options.md) for the full rename mapping and behavior changes.
-
 ## Configuration Sections
 
 **Global options** - Settings affecting all tasks:
 
-- Without flag: `globalEnv`, `globalDependencies`, `globalPassThroughEnv`, `cacheDir`, `daemon`, `envMode`, `ui`, `remoteCache`
-- With `globalConfiguration` flag: all of the above move under the `global` key (see [global options](./global-options.md))
+- `globalEnv`, `globalDependencies`, `globalPassThroughEnv`
+- `cacheDir`, `daemon`, `envMode`, `ui`, `remoteCache`
 
 **Task definitions** - Per-task settings in `tasks` object:
 
