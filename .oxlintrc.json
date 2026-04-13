@@ -87,7 +87,7 @@
     "typescript/no-unnecessary-type-assertion": "error",
     "typescript/no-unnecessary-type-arguments": "error",
     "typescript/prefer-ts-expect-error": "error",
-    "import/no-commonjs ": "error",
+    "import/no-commonjs": "error",
     "import/no-unassigned-import": ["error", {"allow": ["**/*.css"]}],
     "no-restricted-globals": [
       "error",
