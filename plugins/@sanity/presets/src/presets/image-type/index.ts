@@ -12,11 +12,7 @@ export interface ImageTypeConfig {
 }
 
 export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>((context) => {
-  const {altText, caption, hotspot, fields, ...objectConfig} = context ?? {}
-
-  const altTextEnabled = altText !== false
-  const captionEnabled = caption !== false
-  const hotspotEnabled = hotspot !== false
+  const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = context ?? {}
 
   return {
     name: IMAGE_TYPE_NAME,
@@ -31,10 +27,10 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
           title: 'Image',
           type: 'image',
           options: {
-            hotspot: hotspotEnabled,
+            hotspot,
           },
         }),
-        ...(altTextEnabled
+        ...(altText
           ? [
               defineField({
                 name: 'altText',
@@ -44,7 +40,7 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
               }),
             ]
           : []),
-        ...(captionEnabled
+        ...(caption
           ? [
               defineField({
                 name: 'caption',
@@ -57,11 +53,7 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
       ],
       preview: {
         select: {
-          title: altTextEnabled
-            ? 'altText'
-            : captionEnabled
-              ? 'caption'
-              : 'image.asset.originalFilename',
+          title: altText ? 'altText' : caption ? 'caption' : 'image.asset.originalFilename',
           media: 'image',
         },
       },
