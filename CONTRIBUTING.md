@@ -180,6 +180,7 @@ For any new plugin PR, make sure all of the following are included:
 2. A `.changeset/*.md` file for release automation
 3. A `CODEOWNERS` rule that assigns the plugin path to the owning team
 4. Clear ownership details in the plugin `README.md` (owning team and support expectations)
+5. An entry in the root `README.md` `## Current Plugins` table
 
 Without an explicit owner, new plugins should not be merged.
 
@@ -248,6 +249,8 @@ You can now iterate on the plugin with hot reloading in the test studio:
 ```bash
 pnpm dev
 ```
+
+Before opening your PR, add the new package to the root `README.md` `## Current Plugins` table so the monorepo plugin list stays current.
 
 ### 3. Create the Initial Release Changeset
 
