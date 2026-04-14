@@ -1,6 +1,8 @@
 import {
   CTA_TYPE_NAME,
   ctaType,
+  IMAGE_TYPE_NAME,
+  imageType,
   LINK_TYPE_NAME,
   linkType,
   PAGE_TYPE_NAME,
@@ -35,6 +37,11 @@ const corePresetsTest = defineType({
       title: 'CTA',
       type: CTA_TYPE_NAME,
     },
+    {
+      name: 'featuredImage',
+      title: 'Featured image',
+      type: IMAGE_TYPE_NAME,
+    },
   ],
 })
 
@@ -45,6 +52,16 @@ export const presetsWorkspace = definePlugin(() => ({
         internalTypes: [PAGE_TYPE_NAME],
       }),
       ctaType(),
+      imageType({
+        map: {
+          fields: (fields = []) =>
+            fields.map((field) =>
+              field.name === 'caption'
+                ? {...field, name: 'description', title: 'Description'}
+                : field,
+            ),
+        },
+      }),
       pageType({
         pageBuilderBlocks: ['blockquote'],
       }),
