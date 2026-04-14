@@ -57,7 +57,11 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
       ],
       preview: {
         select: {
-          title: 'altText',
+          title: altTextEnabled
+            ? 'altText'
+            : captionEnabled
+              ? 'caption'
+              : 'image.asset.originalFilename',
           media: 'image',
         },
       },

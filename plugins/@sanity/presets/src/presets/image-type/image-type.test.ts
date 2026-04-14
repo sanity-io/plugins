@@ -107,17 +107,39 @@ describe('imageType map hooks', () => {
 
     const fieldNames = fields.map((field) => field.name)
     expect(fieldNames).toEqual(['image', 'altText', 'description'])
+    expect(getField(fields, 'image').type).toBe('image')
+    expect(getField(fields, 'altText').type).toBe('string')
     expect(getField(fields, 'description').title).toBe('Description')
   })
 })
 
 describe('imageType preview.select', () => {
-  test('selects altText as title and image as media', () => {
+  test('selects altText as title by default', () => {
     const typeDef = imageType()[0]?.type
     const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
 
     expect(select).toEqual({
       title: 'altText',
+      media: 'image',
+    })
+  })
+
+  test('selects caption as title when altText is disabled', () => {
+    const typeDef = imageType({altText: false})[0]?.type
+    const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
+
+    expect(select).toEqual({
+      title: 'caption',
+      media: 'image',
+    })
+  })
+
+  test('selects filename as title when altText and caption are disabled', () => {
+    const typeDef = imageType({altText: false, caption: false})[0]?.type
+    const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
+
+    expect(select).toEqual({
+      title: 'image.asset.originalFilename',
       media: 'image',
     })
   })
