@@ -59,6 +59,7 @@ minimumReleaseAgeExclude:
   - lodash-es@4.17.23
 
 overrides:
+  '@sanity/client': ^7.21.0
   styled-components: npm:@sanity/styled-components@latest
 
 patchedDependencies:
