@@ -1,17 +1,11 @@
 import {createPresetsRegistry} from '@sanity/presets'
 import {definePlugin, defineType, defineField} from 'sanity'
 
-const registry = createPresetsRegistry({
+const {defineLink, defineCta, defineSeo, defineImage, definePage} = createPresetsRegistry({
   link: {
     internalTypes: ['marketingPage'],
   },
 })
-
-const defineLink = registry['defineLink']
-const defineCta = registry['defineCta']
-const defineSeo = registry['defineSeo']
-const defineImage = registry['defineImage']
-const definePage = registry['definePage']
 
 export const presetsWorkspace = definePlugin(() => ({
   schema: {
