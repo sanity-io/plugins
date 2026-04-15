@@ -1,9 +1,6 @@
 import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
-import {IMAGE_TYPE_NAME} from './constants'
-
-export {IMAGE_TYPE_NAME} from './constants'
 
 export interface ImageTypeConfig {
   altText?: boolean
@@ -15,9 +12,10 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
   const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = context ?? {}
 
   return {
-    name: IMAGE_TYPE_NAME,
+    name: 'image',
+    identifier: 'core.presets.image',
     schemaType: defineType({
-      name: IMAGE_TYPE_NAME,
+      name: 'core.presets.image',
       title: 'Image',
       ...objectConfig,
       type: 'object',

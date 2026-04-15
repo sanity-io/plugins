@@ -2,17 +2,15 @@ import {getImageDimensions} from '@sanity/asset-utils'
 import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
-import {SEO_TYPE_NAME} from './constants'
-
-export {SEO_TYPE_NAME} from './constants'
 
 export const seoType = definePresetType<{}, 'object'>((context) => {
   const {fields, ...objectConfig} = context ?? {}
 
   return {
-    name: 'core.presets.seo',
+    name: 'seo',
+    identifier: 'core.presets.seo',
     schemaType: defineType({
-      name: SEO_TYPE_NAME,
+      name: 'core.presets.seo',
       title: 'Web page metadata (SEO)',
       ...objectConfig,
       type: 'object',

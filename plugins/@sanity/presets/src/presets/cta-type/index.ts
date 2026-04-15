@@ -1,19 +1,15 @@
 import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
-import {LINK_TYPE_NAME, linkType} from '../link-type'
-import {CTA_TYPE_NAME} from './constants'
-
-export {CTA_TYPE_NAME} from './constants'
 
 export const ctaType = definePresetType<{}, 'object'>((context) => {
   const {fields, ...objectConfig} = context ?? {}
 
   return {
-    name: 'core.presets.cta',
-    composes: [linkType],
+    name: 'cta',
+    identifier: 'core.presets.cta',
     schemaType: defineType({
-      name: CTA_TYPE_NAME,
+      name: 'core.presets.cta',
       title: 'Call to action',
       ...objectConfig,
       type: 'object',
@@ -21,7 +17,46 @@ export const ctaType = definePresetType<{}, 'object'>((context) => {
         defineField({
           name: 'link',
           title: 'Link',
-          type: LINK_TYPE_NAME,
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'linkType',
+              type: 'string',
+              title: 'Link Type',
+              initialValue: 'internal',
+              options: {
+                layout: 'radio',
+                list: [
+                  {title: 'Internal', value: 'internal'},
+                  {title: 'External', value: 'external'},
+                ],
+              },
+            }),
+            defineField({
+              name: 'reference',
+              type: 'reference',
+              title: 'Internal Link',
+              to: [],
+              hidden: ({parent}) => parent?.linkType === 'external',
+            }),
+            defineField({
+              name: 'url',
+              type: 'url',
+              title: 'URL',
+              hidden: ({parent}) => parent?.linkType === 'internal',
+              validation: (rule) =>
+                rule.uri({
+                  scheme: ['http', 'https', 'mailto', 'tel'],
+                }),
+            }),
+            defineField({
+              name: 'openInNewTab',
+              type: 'boolean',
+              title: 'Open in New Tab',
+              initialValue: false,
+              hidden: ({parent}) => parent?.linkType === 'internal',
+            }),
+          ],
         }),
         defineField({
           name: 'level',

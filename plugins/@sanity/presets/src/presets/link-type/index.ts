@@ -1,9 +1,6 @@
 import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
-import {LINK_TYPE_NAME} from './constants'
-
-export {LINK_TYPE_NAME} from './constants'
 
 export interface LinkTypeConfig {
   internalTypes?: string[]
@@ -14,9 +11,10 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>((c
   const referenceTargets = (internalTypes ?? []).map((typeName) => ({type: typeName}))
 
   return {
-    name: LINK_TYPE_NAME,
+    name: 'link',
+    identifier: 'core.presets.link',
     schemaType: defineType({
-      name: LINK_TYPE_NAME,
+      name: 'core.presets.link',
       title: 'Link',
       ...objectConfig,
       type: 'object',
