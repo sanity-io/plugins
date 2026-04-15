@@ -12,21 +12,55 @@ import type {LinkConfig} from './types'
 
 const systemPresets = [linkType, ctaType, seoType, imageType, pageType] as const
 
+type SystemPresets = typeof systemPresets
+
 export interface PresetsRegistryConfig {
   link?: LinkConfig
   extensions?: PresetResultFactory[]
 }
 
-type DefineFunction = (context?: Record<string, unknown>) => SchemaTypeDefinition
+/**
+ * Extract the user-facing context type from a preset, omitting the
+ * registryConfig that is injected internally by createDefiner.
+ */
+type PresetContext<Preset> = Preset extends (context?: infer C) => unknown
+  ? Omit<NonNullable<C>, 'registryConfig'>
+  : never
 
-export type PresetsRegistry = Record<string, DefineFunction>
+/**
+ * Derive the registry key from a preset's name property.
+ * E.g. a preset whose name is 'link' produces key 'defineLink'.
+ */
+type PresetName<Preset> = Preset extends (...args: never[]) => Array<infer R>
+  ? R extends {name: infer N extends string}
+    ? N
+    : never
+  : never
 
-export function createPresetsRegistry(config: PresetsRegistryConfig = {}): PresetsRegistry {
+type RegistryKey<Preset> = `define${Capitalize<Lowercase<PresetName<Preset>>>}`
+
+/**
+ * The registry type: a mapped type over all presets (system + extensions).
+ * Each entry's key, parameter type, and return type are derived from the preset.
+ */
+export type PresetsRegistry<Extensions extends readonly PresetResultFactory[] = readonly []> = {
+  [Preset in [...SystemPresets, ...Extensions][number] as RegistryKey<Preset>]: (
+    context?: PresetContext<Preset>,
+  ) => SchemaTypeDefinition
+}
+
+export function createPresetsRegistry<
+  const Extensions extends readonly PresetResultFactory[] = readonly [],
+>(
+  config: PresetsRegistryConfig & {extensions?: Extensions} = {} as PresetsRegistryConfig & {
+    extensions?: Extensions
+  },
+): PresetsRegistry<Extensions> {
   const registryId = crypto.randomUUID()
   registerRegistry(registryId)
 
   const allPresets = [...systemPresets, ...(config.extensions ?? [])]
-  const registry: PresetsRegistry = {}
+  const registry: Record<string, (context?: Record<string, unknown>) => SchemaTypeDefinition> = {}
 
   for (const preset of allPresets) {
     const presetName = getPresetName(preset)
@@ -35,7 +69,8 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
     registry[key] = createDefiner(registryId, preset, config)
   }
 
-  return registry
+  // oxlint-disable-next-line no-unsafe-type-assertion
+  return registry as PresetsRegistry<Extensions>
 }
 
 function getPresetName(preset: PresetResultFactory): string {
@@ -81,7 +116,7 @@ function createDefiner(
   registryId: string,
   preset: PresetResultFactory,
   config: PresetsRegistryConfig,
-): DefineFunction {
+): (context?: Record<string, unknown>) => SchemaTypeDefinition {
   const identifier = getPresetIdentifier(preset)
 
   return function define(context?: Record<string, unknown>): SchemaTypeDefinition {

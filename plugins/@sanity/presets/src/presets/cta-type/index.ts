@@ -3,7 +3,7 @@ import {defineField, defineType} from 'sanity'
 import {definePresetType} from '../../definePresetType'
 import type {PresetsRegistryConfig} from '../../registry'
 
-interface CtaTypeConfig {
+export interface CtaTypeConfig {
   registryConfig?: PresetsRegistryConfig
 }
 
