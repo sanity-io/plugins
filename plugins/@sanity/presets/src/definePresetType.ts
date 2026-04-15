@@ -7,7 +7,6 @@ import type {PartialSchemaDefinition, PresetResult} from './types'
  */
 export const presetProvider: unique symbol = Symbol('presetProvider')
 
-const visitedFactories: unique symbol = Symbol('visitedFactories')
 export const registryConfig: unique symbol = Symbol('registryConfig')
 
 export type PresetProvider = 'user' | 'system'
@@ -16,7 +15,6 @@ export type PresetResultFactory = (...args: any[]) => PresetResult[]
 
 export interface BaseContext {
   [presetProvider]?: PresetProvider
-  [visitedFactories]?: WeakSet<WeakKey>
   [registryConfig]?: unknown
 }
 
@@ -27,7 +25,6 @@ export interface PresetTypeContext {
   /** Optional telemetry identifier. If set, recorded when the preset is used. */
   identifier?: string
   schemaType: SchemaTypeDefinition
-  composes?: PresetResultFactory[]
 }
 
 /**
@@ -99,21 +96,7 @@ export function definePresetType<
   factory: (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetTypeContext,
 ): (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetResult[] {
   return function define(context) {
-    const {schemaType, composes = [], ...attributes} = factory(context)
-    const visited = context?.[visitedFactories] ?? new WeakSet()
-
-    if (visited.has(factory)) {
-      throw new Error(`Found circular dependency resolving preset \`${schemaType.name}\`.`)
-    }
-
-    visited.add(factory)
-
-    const dependencies = composes.flatMap<PresetResult>((composedFactory) =>
-      composedFactory({
-        [presetProvider]: 'system',
-        [visitedFactories]: visited,
-      }),
-    )
+    const {schemaType, ...attributes} = factory(context)
 
     for (const [configName, configValue] of Object.entries(context?.map ?? {})) {
       if (typeof configValue !== 'function') {
@@ -127,10 +110,12 @@ export function definePresetType<
       )
     }
 
-    return dependencies.concat({
-      ...attributes,
-      type: schemaType,
-      [presetProvider]: context?.[presetProvider] ?? 'user',
-    })
+    return [
+      {
+        ...attributes,
+        type: schemaType,
+        [presetProvider]: context?.[presetProvider] ?? 'user',
+      },
+    ]
   }
 }
