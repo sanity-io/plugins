@@ -3,17 +3,8 @@
 exports[`package exports 1`] = `
 {
   ".": {
-    "CTA_TYPE_NAME": "string",
-    "IMAGE_TYPE_NAME": "string",
-    "LINK_TYPE_NAME": "string",
-    "PAGE_TYPE_NAME": "string",
-    "SEO_TYPE_NAME": "string",
-    "ctaType": "function",
-    "imageType": "function",
-    "linkType": "function",
-    "pageType": "function",
-    "presets": "function",
-    "seoType": "function",
+    "createPresetsRegistry": "function",
+    "definePresetType": "function",
   },
 }
 `;

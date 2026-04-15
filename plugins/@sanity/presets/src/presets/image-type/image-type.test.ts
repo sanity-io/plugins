@@ -1,7 +1,6 @@
 import type {FieldDefinition} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
-import {IMAGE_TYPE_NAME} from './constants'
 import {imageType} from './index'
 
 function getFields(result: ReturnType<typeof imageType>): FieldDefinition[] {
@@ -25,7 +24,7 @@ describe('imageType', () => {
     const result = imageType()
 
     expect(result).toHaveLength(1)
-    expect(result[0]?.type?.name).toBe(IMAGE_TYPE_NAME)
+    expect(result[0]?.type?.name).toBe('core.presets.image')
   })
 
   test('default config includes image, altText, and caption fields', () => {

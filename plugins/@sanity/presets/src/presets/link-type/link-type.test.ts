@@ -1,7 +1,6 @@
 import type {FieldDefinition, PreviewValue} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
-import {LINK_TYPE_NAME} from './constants'
 import {linkType} from './index'
 
 const defaultConfig = {internalTypes: ['page']}
@@ -51,7 +50,7 @@ describe('linkType', () => {
     const result = linkType(defaultConfig)
 
     expect(result).toHaveLength(1)
-    expect(result[0]?.type?.name).toBe(LINK_TYPE_NAME)
+    expect(result[0]?.type?.name).toBe('core.presets.link')
   })
 
   test('type is an object with 4 fields', () => {
