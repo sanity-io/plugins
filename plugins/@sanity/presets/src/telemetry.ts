@@ -34,15 +34,6 @@ export function collectPresetsRegistryTelemetry(registryId: string, telemetry: T
 }
 
 /** @internal */
-export function _resetRegistryForTesting(registryId: string): void {
-  const record = registries.get(registryId)
-  if (record) {
-    record.presets.clear()
-    record.logged = false
-  }
-}
-
-/** @internal */
 export function _clearAllRegistriesForTesting(): void {
   registries.clear()
 }
