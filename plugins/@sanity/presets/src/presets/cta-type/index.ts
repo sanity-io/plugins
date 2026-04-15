@@ -1,9 +1,16 @@
 import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
+import type {PresetsRegistryConfig} from '../../registry'
 
-export const ctaType = definePresetType<{}, 'object'>((context) => {
-  const {fields, ...objectConfig} = context ?? {}
+interface CtaTypeConfig {
+  registryConfig?: PresetsRegistryConfig
+}
+
+export const ctaType = definePresetType<CtaTypeConfig, 'object'>((context) => {
+  const {registryConfig, fields, ...objectConfig} = context ?? {}
+  const internalTypes = registryConfig?.link?.internalTypes ?? []
+  const referenceTargets = internalTypes.map((typeName) => ({type: typeName}))
 
   return {
     name: 'cta',
@@ -36,7 +43,7 @@ export const ctaType = definePresetType<{}, 'object'>((context) => {
               name: 'reference',
               type: 'reference',
               title: 'Internal Link',
-              to: [],
+              to: referenceTargets,
               hidden: ({parent}) => parent?.linkType === 'external',
             }),
             defineField({

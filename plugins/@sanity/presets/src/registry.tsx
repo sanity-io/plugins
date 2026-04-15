@@ -91,7 +91,7 @@ function createDefiner(
 
     const results = preset({
       ...context,
-      ...(config.link?.internalTypes ? {internalTypes: config.link.internalTypes} : {}),
+      registryConfig: config,
     })
 
     const last = results[results.length - 1]
