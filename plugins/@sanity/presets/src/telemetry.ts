@@ -26,9 +26,11 @@ export function recordPresetUsage(registryId: string, identifier: string): void 
 
 export function collectPresetsRegistryTelemetry(registryId: string, telemetry: TelemetryLog): void {
   const record = registries.get(registryId)
+  console.log('[telemetry maybe]', registryId, [...(record?.presets ?? [])])
   if (!record || record.logged) return
   record.logged = true
   if (record.presets.size > 0) {
+    console.log('[telemetry]', registryId, [...record.presets])
     telemetry.log(PresetsAdded, {presetNames: [...record.presets]})
   }
 }

@@ -16,7 +16,6 @@ type SystemPresets = typeof systemPresets
 
 export interface PresetsRegistryConfig {
   link?: LinkConfig
-  extensions?: PresetResultFactory[]
 }
 
 type PresetContext<Preset> = Preset extends (context?: infer C) => unknown ? NonNullable<C> : never
@@ -109,7 +108,7 @@ function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: str
 function createDefiner(
   registryId: string,
   preset: PresetResultFactory,
-  config: PresetsRegistryConfig,
+  config: PresetsRegistryConfig & {extensions?: readonly PresetResultFactory[]},
 ): (context?: Record<string, unknown>) => SchemaTypeDefinition {
   const identifier = getPresetIdentifier(preset)
 
