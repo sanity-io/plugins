@@ -3,11 +3,11 @@ import {afterEach, describe, expect, test} from 'vitest'
 
 import {definePresetType} from './definePresetType'
 import {createPresetsRegistry} from './registry'
-import {_resetRegistries} from './telemetry'
+import {resetRegistries} from './telemetry'
 
 describe('createPresetsRegistry', () => {
   afterEach(() => {
-    _resetRegistries()
+    resetRegistries()
   })
 
   test('returns an object with define<Name> functions for all system presets', () => {
