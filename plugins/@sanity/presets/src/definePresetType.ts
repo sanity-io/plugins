@@ -8,6 +8,7 @@ import type {PartialSchemaDefinition, PresetResult} from './types'
 export const presetProvider: unique symbol = Symbol('presetProvider')
 
 const visitedFactories: unique symbol = Symbol('visitedFactories')
+export const registryConfig: unique symbol = Symbol('registryConfig')
 
 export type PresetProvider = 'user' | 'system'
 
@@ -16,6 +17,7 @@ export type PresetResultFactory = (...args: any[]) => PresetResult[]
 export interface BaseContext {
   [presetProvider]?: PresetProvider
   [visitedFactories]?: WeakSet<WeakKey>
+  [registryConfig]?: unknown
 }
 
 export interface PresetTypeContext {

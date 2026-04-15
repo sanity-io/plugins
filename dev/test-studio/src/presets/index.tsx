@@ -18,6 +18,19 @@ export const presetsWorkspace = definePlugin(() => ({
         name: 'marketingPage',
         title: 'Marketing Page',
         pageBuilderBlocks: ['blockquote'],
+        fields: [
+          defineField({
+            name: 'appended1',
+            type: 'string',
+            group: 'main',
+          }),
+        ],
+        map: {
+          fields: (fields = []) => [
+            defineField({name: 'appended2', type: 'string', group: 'main'}),
+            ...fields,
+          ],
+        },
       }),
       defineType({
         name: 'corePresetsTest',

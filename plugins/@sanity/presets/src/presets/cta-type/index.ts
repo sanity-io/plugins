@@ -1,15 +1,13 @@
 import {defineField, defineType} from 'sanity'
 
-import {definePresetType} from '../../definePresetType'
+import {definePresetType, registryConfig} from '../../definePresetType'
 import type {PresetsRegistryConfig} from '../../registry'
 
-export interface CtaTypeConfig {
-  registryConfig?: PresetsRegistryConfig
-}
-
-export const ctaType = definePresetType<CtaTypeConfig, 'object'>((context) => {
-  const {registryConfig, fields, ...objectConfig} = context ?? {}
-  const internalTypes = registryConfig?.link?.internalTypes ?? []
+export const ctaType = definePresetType<{}, 'object'>((context) => {
+  const {fields, ...objectConfig} = context ?? {}
+  // oxlint-disable-next-line no-unsafe-type-assertion
+  const config = context?.[registryConfig] as PresetsRegistryConfig | undefined
+  const internalTypes = config?.link?.internalTypes ?? []
   const referenceTargets = internalTypes.map((typeName) => ({type: typeName}))
 
   return {

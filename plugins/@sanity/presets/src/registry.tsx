@@ -1,7 +1,7 @@
 import type {InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
-import type {PresetResultFactory} from './definePresetType'
+import {registryConfig as registryConfigSymbol, type PresetResultFactory} from './definePresetType'
 import {ctaType} from './presets/cta-type'
 import {imageType} from './presets/image-type'
 import {linkType} from './presets/link-type'
@@ -19,13 +19,7 @@ export interface PresetsRegistryConfig {
   extensions?: PresetResultFactory[]
 }
 
-/**
- * Extract the user-facing context type from a preset, omitting the
- * registryConfig that is injected internally by createDefiner.
- */
-type PresetContext<Preset> = Preset extends (context?: infer C) => unknown
-  ? Omit<NonNullable<C>, 'registryConfig'>
-  : never
+type PresetContext<Preset> = Preset extends (context?: infer C) => unknown ? NonNullable<C> : never
 
 /**
  * Derive the registry key from a preset's name property.
@@ -126,7 +120,7 @@ function createDefiner(
 
     const results = preset({
       ...context,
-      registryConfig: config,
+      [registryConfigSymbol]: config,
     })
 
     const last = results[results.length - 1]
