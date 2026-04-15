@@ -9,6 +9,7 @@ import DocumentAddButtons from './DocumentAddButtons'
 const mockOnChange = vi.fn()
 const mockToastPush = vi.fn()
 const mockGetFormValue = vi.fn()
+let mockFormState: Record<string, unknown> | undefined
 
 vi.mock('sanity', () => ({
   isSanityDocument: vi.fn(
@@ -34,6 +35,7 @@ vi.mock('sanity', () => ({
 vi.mock('sanity/structure', () => ({
   useDocumentPane: vi.fn(() => ({
     onChange: mockOnChange,
+    formState: mockFormState,
   })),
 }))
 
@@ -68,6 +70,7 @@ describe('DocumentAddButtons', () => {
     mockOnChange.mockClear()
     mockToastPush.mockClear()
     mockGetFormValue.mockReset()
+    mockFormState = undefined
   })
 
   test('renders heading and add buttons', () => {
@@ -81,8 +84,7 @@ describe('DocumentAddButtons', () => {
     expect(screen.getByTestId('add-de')).toBeInTheDocument()
   })
 
-  test('shows error toast when document has no internationalized fields', async () => {
-    // Document with no internationalized array fields
+  test('shows warning toast when document has no internationalized fields', async () => {
     const docValue = {
       _id: 'doc1',
       _type: 'article',
@@ -124,7 +126,6 @@ describe('DocumentAddButtons', () => {
 
     fireEvent.click(screen.getByTestId('add-fr'))
 
-    // onChange should have been called with patches
     expect(mockOnChange).toHaveBeenCalledWith([
       {
         type: 'setIfMissing',
@@ -174,7 +175,7 @@ describe('DocumentAddButtons', () => {
     mockGetFormValue.mockReturnValue(docValue)
     render(<DocumentAddButtons />, {wrapper: ThemeWrapper})
     fireEvent.click(screen.getByTestId('add-fr'))
-    // onChange should have been called with patches
+
     expect(mockOnChange).toHaveBeenCalledWith([
       {
         type: 'setIfMissing',
@@ -213,6 +214,17 @@ describe('DocumentAddButtons', () => {
     ])
   })
 
+  test('disables add buttons when document formState is readOnly', () => {
+    mockFormState = {readOnly: true}
+    mockGetFormValue.mockReturnValue(undefined)
+    render(<DocumentAddButtons />, {wrapper: ThemeWrapper})
+
+    expect(screen.getByTestId('add-en')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-fr')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-es')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-de')).toHaveAttribute('data-disabled', 'true')
+  })
+
   test('skips fields that already have the selected language translation', async () => {
     const docValue = {
       _id: 'doc1',
@@ -235,8 +247,7 @@ describe('DocumentAddButtons', () => {
     // Add 'en' again - should be filtered out as already existing
     fireEvent.click(screen.getByTestId('add-en'))
 
-    // Since all fields already have 'en', the toast should show an error
-    // (the filter reduces to 0 items)
+    // All fields already have 'en', so no eligible fields remain
     expect(mockToastPush).toHaveBeenCalledWith({
       status: 'warning',
       title: 'No missing translations for English found.',

@@ -27,13 +27,13 @@ const createTranslateFieldActions: (
   languages.map((language) => {
     // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     const value = useFormValue(fieldActionProps.path) as InternationalizedArrayItem[]
+    const {onChange, formState} = useDocumentPane()
     const disabled =
-      value && Array.isArray(value)
+      Boolean(formState?.readOnly) ||
+      (value && Array.isArray(value)
         ? Boolean(value?.find((item) => item[LANGUAGE_FIELD_NAME] === language.id))
-        : false
+        : false)
     const hidden = !filteredLanguages.some((f) => f.id === language.id)
-
-    const {onChange} = useDocumentPane()
 
     const onAction = useCallback(() => {
       const {schemaType, path} = fieldActionProps
@@ -70,10 +70,10 @@ const AddMissingTranslationsFieldAction: (
 ) => DocumentFieldActionItem = (fieldActionProps, {languages, filteredLanguages}) => {
   // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
   const value = useFormValue(fieldActionProps.path) as InternationalizedArrayItem[]
-  const disabled = value && value.length === filteredLanguages.length
+  const {onChange, formState} = useDocumentPane()
+  const disabled =
+    Boolean(formState?.readOnly) || (value && value.length === filteredLanguages.length)
   const hidden = checkAllLanguagesArePresent(filteredLanguages, value)
-
-  const {onChange} = useDocumentPane()
 
   const onAction = useCallback(() => {
     const {schemaType, path} = fieldActionProps

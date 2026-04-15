@@ -7,7 +7,6 @@ import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES} from
 const mockToastPush = vi.fn()
 const mockGetFormValue = vi.fn()
 
-// Mock sanity hooks and components
 vi.mock('sanity', () => ({
   useFormValue: vi.fn(() => 'article'),
   useGetFormValue: vi.fn(() => mockGetFormValue),
@@ -54,7 +53,6 @@ vi.mock('./InternationalizedArrayContext', () => ({
   })),
 }))
 
-// Mock useToast from @sanity/ui to avoid missing ToastProvider context
 vi.mock('@sanity/ui', async (importOriginal) => {
   const original = await importOriginal<typeof import('@sanity/ui')>()
   return {
@@ -373,7 +371,6 @@ describe('InternationalizedArray', () => {
 
     renderInternationalizedArray(props)
 
-    // The useEffect should detect out-of-order and call onChange(set(reordered))
     expect(onChange).toHaveBeenCalled()
     expect(onChange).toHaveBeenCalledWith({
       type: 'set',
@@ -406,7 +403,6 @@ describe('InternationalizedArray', () => {
 
     renderInternationalizedArray(props)
 
-    // Should NOT reorder because documentReadOnly is true
     expect(onChange).not.toHaveBeenCalled()
   })
 
@@ -472,7 +468,6 @@ describe('InternationalizedArray', () => {
 
     renderInternationalizedArray(props)
 
-    // Should not add defaults while deleting
     expect(onChange).not.toHaveBeenCalled()
   })
 
@@ -487,10 +482,9 @@ describe('InternationalizedArray', () => {
 
     renderInternationalizedArray(props)
 
-    // Give the setTimeout a chance to fire
-    await new Promise((r) => setTimeout(r, 10))
+    // Allow the scheduled setTimeout in the useEffect to fire
+    await new Promise((resolve) => setTimeout(resolve, 10))
 
-    // Should not add defaults when documentReadOnly is true
     expect(onChange).not.toHaveBeenCalled()
   })
 
@@ -507,7 +501,6 @@ describe('InternationalizedArray', () => {
     expect(screen.getByTestId('add-fr')).toBeInTheDocument()
     expect(screen.getByTestId('add-es')).toBeInTheDocument()
     expect(screen.getByTestId('add-de')).toBeInTheDocument()
-    // Add buttons should still be visible (individual language buttons)
     expect(screen.queryByTestId('add-all-languages')).not.toBeInTheDocument()
   })
 
@@ -522,7 +515,25 @@ describe('InternationalizedArray', () => {
 
     renderInternationalizedArray(props)
 
-    // Add buttons should be disabled
+    expect(screen.getByTestId('add-en')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-fr')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-es')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-de')).toHaveAttribute('data-disabled', 'true')
+    expect(screen.getByTestId('add-all-languages')).toHaveAttribute('data-disabled', 'true')
+  })
+
+  test('disables add buttons when document is readOnly (props.readOnly)', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
+
+    const props = createMockArrayProps({
+      readOnly: true,
+      schemaType: {name: 'internationalizedArrayString', readOnly: false},
+    })
+
+    renderInternationalizedArray(props)
+
     expect(screen.getByTestId('add-en')).toHaveAttribute('data-disabled', 'true')
     expect(screen.getByTestId('add-fr')).toHaveAttribute('data-disabled', 'true')
     expect(screen.getByTestId('add-es')).toHaveAttribute('data-disabled', 'true')
