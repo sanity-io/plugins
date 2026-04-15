@@ -34,6 +34,6 @@ export function collectPresetsRegistryTelemetry(registryId: string, telemetry: T
 }
 
 /** @internal */
-export function _clearAllRegistriesForTesting(): void {
+export function _resetRegistries(): void {
   registries.clear()
 }

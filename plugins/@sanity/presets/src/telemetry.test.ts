@@ -1,7 +1,7 @@
 import {afterEach, describe, expect, test, vi} from 'vitest'
 
 import {
-  _clearAllRegistriesForTesting,
+  _resetRegistries,
   collectPresetsRegistryTelemetry,
   recordPresetUsage,
   registerRegistry,
@@ -16,7 +16,7 @@ function createMockTelemetry() {
 
 describe('telemetry', () => {
   afterEach(() => {
-    _clearAllRegistriesForTesting()
+    _resetRegistries()
   })
 
   test('registerRegistry creates a new registry record', () => {
