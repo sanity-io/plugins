@@ -20,7 +20,10 @@ export interface BaseContext {
 
 export interface PresetTypeContext {
   [presetProvider]?: PresetProvider
+  /** Used to derive the define<Name> function on the registry. Must be a simple identifier. */
   name: string
+  /** Optional telemetry identifier. If set, recorded when the preset is used. */
+  identifier?: string
   schemaType: SchemaTypeDefinition
   composes?: PresetResultFactory[]
 }
