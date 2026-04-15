@@ -1,29 +1,27 @@
 import {useTelemetry} from '@sanity/telemetry/react'
 import {useEffect, type ComponentType} from 'react'
-import type {LayoutProps} from 'sanity'
+import type {InputProps} from 'sanity'
 
-import {PresetsAdded} from '../__telemetry__/presets.telemetry'
-import type {PresetResult} from '../types'
+import {collectPresetsRegistryTelemetry} from '../telemetry'
 
-interface Props extends LayoutProps {
-  presets: PresetResult[][]
+type Props = InputProps & {
+  registryId: string
 }
 
 /**
- * Submit telemetry describing configured presets when Studio workspace renders.
+ * A transparent input component wrapper that triggers telemetry collection
+ * for the presets registry. Renders the default input component unchanged.
  *
- * The name of each preset is logged, rather than the name of the resulting
- * schema type (which can be changed by user configuration).
+ * Attached to every schema type produced by a define<Type> function via
+ * components.input. The first instance to render for a given registry id
+ * submits the PresetsAdded telemetry event; subsequent renders are no-ops.
  */
-export const PresetsTelemetryCollector: ComponentType<Props> = ({presets, ...props}) => {
+export const PresetsTelemetryCollector: ComponentType<Props> = ({registryId, ...props}) => {
   const telemetry = useTelemetry()
 
   useEffect(() => {
-    if (presets.length !== 0) {
-      const presetNames = [...new Set(presets.flat().map((preset) => preset.name))]
-      telemetry.log(PresetsAdded, {presetNames})
-    }
-  }, [presets, telemetry])
+    collectPresetsRegistryTelemetry(registryId, telemetry)
+  }, [registryId, telemetry])
 
   return props.renderDefault(props)
 }
