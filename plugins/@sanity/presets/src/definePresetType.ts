@@ -2,24 +2,15 @@ import type {IntrinsicTypeName, SchemaTypeDefinition} from 'sanity'
 
 import type {PartialSchemaDefinition, PresetResult} from './types'
 
-/**
- * @internal
- */
-export const presetProvider: unique symbol = Symbol('presetProvider')
-
 export const registryConfig: unique symbol = Symbol('registryConfig')
-
-export type PresetProvider = 'user' | 'system'
 
 export type PresetResultFactory = (...args: any[]) => PresetResult
 
 export interface BaseContext {
-  [presetProvider]?: PresetProvider
   [registryConfig]?: unknown
 }
 
 export interface PresetTypeContext {
-  [presetProvider]?: PresetProvider
   /** Used to derive the define<Name> function on the registry. Must be a simple identifier. */
   name: string
   /** Optional telemetry identifier. If set, recorded when the preset is used. */
@@ -113,7 +104,6 @@ export function definePresetType<
     return {
       ...attributes,
       type: schemaType,
-      [presetProvider]: context?.[presetProvider] ?? 'user',
     }
   }
 }

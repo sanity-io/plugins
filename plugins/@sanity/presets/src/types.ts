@@ -1,11 +1,8 @@
 import type {DefineSchemaBase, IntrinsicTypeName, PreviewConfig, SchemaTypeDefinition} from 'sanity'
 
-import type {PresetProvider, presetProvider} from './definePresetType'
-
 export interface PresetResult {
   name: string
   identifier?: string
-  [presetProvider]: PresetProvider
   type: SchemaTypeDefinition
 }
 
