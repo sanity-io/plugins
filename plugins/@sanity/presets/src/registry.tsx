@@ -19,21 +19,14 @@ export interface PresetsRegistryConfig {
 
 type DefineFunction = (context?: Record<string, unknown>) => SchemaTypeDefinition
 
-export interface PresetsRegistry {
-  defineLink: DefineFunction
-  defineCta: DefineFunction
-  defineSeo: DefineFunction
-  defineImage: DefineFunction
-  definePage: DefineFunction
-  [key: string]: DefineFunction
-}
+export type PresetsRegistry = Record<string, DefineFunction>
 
 export function createPresetsRegistry(config: PresetsRegistryConfig = {}): PresetsRegistry {
   const registryId = crypto.randomUUID()
   registerRegistry(registryId)
 
   const allPresets = [...systemPresets, ...(config.extensions ?? [])]
-  const registry: Record<string, DefineFunction> = {}
+  const registry: PresetsRegistry = {}
 
   for (const preset of allPresets) {
     const presetName = getPresetName(preset)
@@ -42,8 +35,7 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
     registry[key] = createDefiner(registryId, preset, config)
   }
 
-  // oxlint-disable-next-line no-unsafe-type-assertion -- registry is built dynamically
-  return registry as PresetsRegistry
+  return registry
 }
 
 function getPresetName(preset: PresetResultFactory): string {
@@ -74,6 +66,17 @@ function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
+function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: string): void {
+  const existing = 'components' in schemaType ? schemaType.components : undefined
+  Object.assign(schemaType, {
+    components: Object.assign({}, existing, {
+      input: (props: InputProps) => (
+        <PresetsTelemetryCollector {...props} registryId={registryId} />
+      ),
+    }),
+  })
+}
+
 function createDefiner(
   registryId: string,
   preset: PresetResultFactory,
@@ -91,24 +94,11 @@ function createDefiner(
       ...(config.link?.internalTypes ? {internalTypes: config.link.internalTypes} : {}),
     })
 
-    for (const result of results) {
-      // oxlint-disable-next-line no-unsafe-type-assertion -- attaching components to schema type
-      const schemaType = result.type as SchemaTypeDefinition & {
-        components?: {input?: (props: InputProps) => React.JSX.Element}
-      }
-
-      schemaType.components = {
-        ...schemaType.components,
-        input: (props: InputProps) => (
-          <PresetsTelemetryCollector {...props} registryId={registryId} />
-        ),
-      }
-    }
-
     const last = results[results.length - 1]
     if (!last) {
       throw new Error('Preset returned no results.')
     }
+    addTelemetryComponent(last.type, registryId)
     return last.type
   }
 }

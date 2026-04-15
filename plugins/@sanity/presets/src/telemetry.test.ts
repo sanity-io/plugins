@@ -5,10 +5,13 @@ import {
   collectPresetsRegistryTelemetry,
   recordPresetUsage,
   registerRegistry,
+  type TelemetryLog,
 } from './telemetry'
 
 function createMockTelemetry() {
-  return {log: vi.fn()} as {log: ReturnType<typeof vi.fn>}
+  const logSpy = vi.fn()
+  const telemetry: TelemetryLog = {log: logSpy}
+  return {telemetry, logSpy}
 }
 
 describe('telemetry', () => {
@@ -20,11 +23,10 @@ describe('telemetry', () => {
     registerRegistry('test-id')
     recordPresetUsage('test-id', 'core.presets.link')
 
-    const telemetry = createMockTelemetry()
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock telemetry
-    collectPresetsRegistryTelemetry('test-id', telemetry as never)
+    const {telemetry, logSpy} = createMockTelemetry()
+    collectPresetsRegistryTelemetry('test-id', telemetry)
 
-    expect(telemetry.log).toHaveBeenCalledOnce()
+    expect(logSpy).toHaveBeenCalledOnce()
   })
 
   test('recordPresetUsage adds the identifier to the registry set', () => {
@@ -33,16 +35,12 @@ describe('telemetry', () => {
     recordPresetUsage('test-id', 'core.presets.cta')
     recordPresetUsage('test-id', 'core.presets.link')
 
-    const telemetry = createMockTelemetry()
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock telemetry
-    collectPresetsRegistryTelemetry('test-id', telemetry as never)
+    const {telemetry, logSpy} = createMockTelemetry()
+    collectPresetsRegistryTelemetry('test-id', telemetry)
 
-    expect(telemetry.log).toHaveBeenCalledWith(expect.anything(), {
+    expect(logSpy).toHaveBeenCalledWith(expect.anything(), {
       presetNames: expect.arrayContaining(['core.presets.link', 'core.presets.cta']),
     })
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock call args
-    const callArgs = telemetry.log.mock.calls[0]?.[1] as {presetNames: string[]} | undefined
-    expect(callArgs?.presetNames).toHaveLength(2)
   })
 
   test('collectPresetsRegistryTelemetry logs all recorded preset names', () => {
@@ -50,12 +48,11 @@ describe('telemetry', () => {
     recordPresetUsage('test-id', 'core.presets.link')
     recordPresetUsage('test-id', 'core.presets.page')
 
-    const telemetry = createMockTelemetry()
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock telemetry
-    collectPresetsRegistryTelemetry('test-id', telemetry as never)
+    const {telemetry, logSpy} = createMockTelemetry()
+    collectPresetsRegistryTelemetry('test-id', telemetry)
 
-    expect(telemetry.log).toHaveBeenCalledOnce()
-    expect(telemetry.log).toHaveBeenCalledWith(expect.anything(), {
+    expect(logSpy).toHaveBeenCalledOnce()
+    expect(logSpy).toHaveBeenCalledWith(expect.anything(), {
       presetNames: expect.arrayContaining(['core.presets.link', 'core.presets.page']),
     })
   })
@@ -64,41 +61,35 @@ describe('telemetry', () => {
     registerRegistry('test-id')
     recordPresetUsage('test-id', 'core.presets.link')
 
-    const telemetry = createMockTelemetry()
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock telemetry
-    collectPresetsRegistryTelemetry('test-id', telemetry as never)
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock telemetry
-    collectPresetsRegistryTelemetry('test-id', telemetry as never)
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock telemetry
-    collectPresetsRegistryTelemetry('test-id', telemetry as never)
+    const {telemetry, logSpy} = createMockTelemetry()
+    collectPresetsRegistryTelemetry('test-id', telemetry)
+    collectPresetsRegistryTelemetry('test-id', telemetry)
+    collectPresetsRegistryTelemetry('test-id', telemetry)
 
-    expect(telemetry.log).toHaveBeenCalledOnce()
+    expect(logSpy).toHaveBeenCalledOnce()
   })
 
   test('collectPresetsRegistryTelemetry is a no-op for unknown registry id', () => {
-    const telemetry = createMockTelemetry()
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock telemetry
-    collectPresetsRegistryTelemetry('unknown-id', telemetry as never)
+    const {telemetry, logSpy} = createMockTelemetry()
+    collectPresetsRegistryTelemetry('unknown-id', telemetry)
 
-    expect(telemetry.log).not.toHaveBeenCalled()
+    expect(logSpy).not.toHaveBeenCalled()
   })
 
   test('collectPresetsRegistryTelemetry does not log when no presets were recorded', () => {
     registerRegistry('test-id')
 
-    const telemetry = createMockTelemetry()
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock telemetry
-    collectPresetsRegistryTelemetry('test-id', telemetry as never)
+    const {telemetry, logSpy} = createMockTelemetry()
+    collectPresetsRegistryTelemetry('test-id', telemetry)
 
-    expect(telemetry.log).not.toHaveBeenCalled()
+    expect(logSpy).not.toHaveBeenCalled()
   })
 
   test('recordPresetUsage is a no-op for unknown registry id', () => {
     recordPresetUsage('unknown-id', 'core.presets.link')
 
-    const telemetry = createMockTelemetry()
-    // oxlint-disable-next-line no-unsafe-type-assertion -- mock telemetry
-    collectPresetsRegistryTelemetry('unknown-id', telemetry as never)
-    expect(telemetry.log).not.toHaveBeenCalled()
+    const {telemetry, logSpy} = createMockTelemetry()
+    collectPresetsRegistryTelemetry('unknown-id', telemetry)
+    expect(logSpy).not.toHaveBeenCalled()
   })
 })

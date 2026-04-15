@@ -1,15 +1,30 @@
 import {createPresetsRegistry} from '@sanity/presets'
-import {definePlugin, defineType, defineField, type SchemaTypeDefinition} from 'sanity'
+import {definePlugin, defineType, defineField} from 'sanity'
 
-const {defineLink, defineCta, defineSeo, defineImage, definePage} = createPresetsRegistry({
+const registry = createPresetsRegistry({
   link: {
     internalTypes: ['marketingPage'],
   },
 })
 
+const defineLink = registry['defineLink']
+const defineCta = registry['defineCta']
+const defineSeo = registry['defineSeo']
+const defineImage = registry['defineImage']
+const definePage = registry['definePage']
+
 export const presetsWorkspace = definePlugin(() => ({
   schema: {
     types: [
+      defineLink({name: 'presetsLink', title: 'Link'}),
+      defineSeo({name: 'presetsSeo', title: 'SEO'}),
+      defineCta({name: 'presetsCta', title: 'CTA'}),
+      defineImage({name: 'presetsImage', title: 'Image'}),
+      definePage({
+        name: 'marketingPage',
+        title: 'Marketing Page',
+        pageBuilderBlocks: ['blockquote'],
+      }),
       defineType({
         name: 'corePresetsTest',
         type: 'document',
@@ -20,20 +35,27 @@ export const presetsWorkspace = definePlugin(() => ({
             title: 'Title',
             type: 'string',
           }),
-          // oxlint-disable-next-line no-unsafe-type-assertion -- preset returns SchemaTypeDefinition used as inline field
-          defineLink({name: 'link', title: 'Link'}) as never,
-          // oxlint-disable-next-line no-unsafe-type-assertion -- preset returns SchemaTypeDefinition used as inline field
-          defineSeo({name: 'seo', title: 'SEO'}) as never,
-          // oxlint-disable-next-line no-unsafe-type-assertion -- preset returns SchemaTypeDefinition used as inline field
-          defineCta({name: 'cta', title: 'CTA'}) as never,
-          // oxlint-disable-next-line no-unsafe-type-assertion -- preset returns SchemaTypeDefinition used as inline field
-          defineImage({name: 'featuredImage', title: 'Featured image'}) as never,
+          defineField({
+            name: 'link',
+            title: 'Link',
+            type: 'presetsLink',
+          }),
+          defineField({
+            name: 'seo',
+            title: 'SEO',
+            type: 'presetsSeo',
+          }),
+          defineField({
+            name: 'cta',
+            title: 'CTA',
+            type: 'presetsCta',
+          }),
+          defineField({
+            name: 'featuredImage',
+            title: 'Featured image',
+            type: 'presetsImage',
+          }),
         ],
-      }),
-      definePage({
-        name: 'marketingPage',
-        title: 'Marketing Page',
-        pageBuilderBlocks: ['blockquote'],
       }),
       defineType({
         name: 'blockquote',
@@ -46,6 +68,6 @@ export const presetsWorkspace = definePlugin(() => ({
           }),
         ],
       }),
-    ] as SchemaTypeDefinition[],
+    ],
   },
 }))

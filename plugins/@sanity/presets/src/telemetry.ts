@@ -1,6 +1,12 @@
-import type {TelemetryLogger} from '@sanity/telemetry'
-
 import {PresetsAdded} from './__telemetry__/presets.telemetry'
+
+/**
+ * Minimal interface for the subset of TelemetryLogger we need.
+ * Avoids forcing callers to satisfy the full generic TelemetryLogger type.
+ */
+export interface TelemetryLog {
+  log(event: unknown, data: unknown): void
+}
 
 interface RegistryRecord {
   id: string
@@ -18,10 +24,7 @@ export function recordPresetUsage(registryId: string, identifier: string): void 
   registries.get(registryId)?.presets.add(identifier)
 }
 
-export function collectPresetsRegistryTelemetry(
-  registryId: string,
-  telemetry: TelemetryLogger<Record<string, never>>,
-): void {
+export function collectPresetsRegistryTelemetry(registryId: string, telemetry: TelemetryLog): void {
   const record = registries.get(registryId)
   if (!record || record.logged) return
   record.logged = true
