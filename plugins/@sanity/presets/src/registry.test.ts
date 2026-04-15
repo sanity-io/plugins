@@ -11,12 +11,6 @@ describe('createPresetsRegistry', () => {
   test('returns an object with define<Name> functions for all system presets', () => {
     const registry = createPresetsRegistry()
 
-    expect(registry).toHaveProperty('defineLink')
-    expect(registry).toHaveProperty('defineCta')
-    expect(registry).toHaveProperty('defineSeo')
-    expect(registry).toHaveProperty('defineImage')
-    expect(registry).toHaveProperty('definePage')
-
     expect(typeof registry.defineLink).toBe('function')
     expect(typeof registry.defineCta).toBe('function')
     expect(typeof registry.defineSeo).toBe('function')
@@ -28,7 +22,6 @@ describe('createPresetsRegistry', () => {
     const registry = createPresetsRegistry()
     const result = registry.defineLink({name: 'testLink'})
 
-    expect(result).toBeDefined()
     expect(result).toHaveProperty('name', 'testLink')
     expect(result).toHaveProperty('type', 'object')
   })
@@ -37,11 +30,11 @@ describe('createPresetsRegistry', () => {
     const registry = createPresetsRegistry({
       link: {internalTypes: ['marketingPage']},
     })
-    const result = registry.defineLink({name: 'testLink'}) as Record<string, unknown>
+    const result = registry.defineLink({name: 'testLink'})
 
-    // The reference field should have the configured internal types
-    const fields = result.fields as Array<{name: string; to?: Array<{type: string}>}>
-    const referenceField = fields.find((f) => f.name === 'reference')
+    // oxlint-disable-next-line no-unsafe-type-assertion -- narrowing result to access fields
+    const fields = (result as {fields?: Array<{name: string; to?: Array<{type: string}>}>}).fields
+    const referenceField = fields?.find((f) => f.name === 'reference')
     expect(referenceField?.to).toEqual([{type: 'marketingPage'}])
   })
 
@@ -49,7 +42,6 @@ describe('createPresetsRegistry', () => {
     const registry = createPresetsRegistry()
     const result = registry.defineCta({name: 'testCta'})
 
-    expect(result).toBeDefined()
     expect(result).toHaveProperty('name', 'testCta')
     expect(result).toHaveProperty('type', 'object')
   })
@@ -58,7 +50,6 @@ describe('createPresetsRegistry', () => {
     const registry = createPresetsRegistry()
     const result = registry.defineSeo({name: 'testSeo'})
 
-    expect(result).toBeDefined()
     expect(result).toHaveProperty('name', 'testSeo')
     expect(result).toHaveProperty('type', 'object')
   })
@@ -67,7 +58,6 @@ describe('createPresetsRegistry', () => {
     const registry = createPresetsRegistry()
     const result = registry.defineImage({name: 'testImage'})
 
-    expect(result).toBeDefined()
     expect(result).toHaveProperty('name', 'testImage')
     expect(result).toHaveProperty('type', 'object')
   })
@@ -76,7 +66,6 @@ describe('createPresetsRegistry', () => {
     const registry = createPresetsRegistry()
     const result = registry.definePage({name: 'testPage'})
 
-    expect(result).toBeDefined()
     expect(result).toHaveProperty('name', 'testPage')
     expect(result).toHaveProperty('type', 'document')
   })
@@ -85,9 +74,9 @@ describe('createPresetsRegistry', () => {
     expect(() =>
       createPresetsRegistry({
         extensions: [
-          // A preset with an invalid name (contains period)
+          // oxlint-disable-next-line no-unsafe-type-assertion -- test invalid input
           Object.assign(
-            (context?: Record<string, unknown>) => [
+            () => [
               {
                 name: 'invalid.name',
                 type: {name: 'test', type: 'object' as const, fields: []},

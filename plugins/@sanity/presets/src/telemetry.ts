@@ -4,14 +4,7 @@ import {PresetsAdded} from './__telemetry__/presets.telemetry'
 
 interface RegistryRecord {
   id: string
-  /**
-   * Identifiers for all preset instances created by this registry's define<Type> functions.
-   * The identifier is separate from the user-assigned schema type name — e.g. a user may
-   * name a page schema type "marketingPage", but for measurement purposes, the identifier
-   * "core.presets.page" is stored here.
-   */
   presets: Set<string>
-  /** True once telemetry has been submitted for this registry. */
   logged: boolean
 }
 
@@ -27,7 +20,7 @@ export function recordPresetUsage(registryId: string, identifier: string): void 
 
 export function collectPresetsRegistryTelemetry(
   registryId: string,
-  telemetry: TelemetryLogger,
+  telemetry: TelemetryLogger<Record<string, never>>,
 ): void {
   const record = registries.get(registryId)
   if (!record || record.logged) return
@@ -37,10 +30,7 @@ export function collectPresetsRegistryTelemetry(
   }
 }
 
-/**
- * Reset a registry's telemetry state. Exposed for testing only.
- * @internal
- */
+/** @internal */
 export function _resetRegistryForTesting(registryId: string): void {
   const record = registries.get(registryId)
   if (record) {
@@ -49,10 +39,7 @@ export function _resetRegistryForTesting(registryId: string): void {
   }
 }
 
-/**
- * Clear all registries. Exposed for testing only.
- * @internal
- */
+/** @internal */
 export function _clearAllRegistriesForTesting(): void {
   registries.clear()
 }

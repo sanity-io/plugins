@@ -1,5 +1,5 @@
 import {createPresetsRegistry} from '@sanity/presets'
-import {definePlugin, defineType, defineField} from 'sanity'
+import {definePlugin, defineType, defineField, type SchemaTypeDefinition} from 'sanity'
 
 const {defineLink, defineCta, defineSeo, defineImage, definePage} = createPresetsRegistry({
   link: {
@@ -20,10 +20,14 @@ export const presetsWorkspace = definePlugin(() => ({
             title: 'Title',
             type: 'string',
           }),
-          defineLink({name: 'link', title: 'Link'}),
-          defineSeo({name: 'seo', title: 'SEO'}),
-          defineCta({name: 'cta', title: 'CTA'}),
-          defineImage({name: 'featuredImage', title: 'Featured image'}),
+          // oxlint-disable-next-line no-unsafe-type-assertion -- preset returns SchemaTypeDefinition used as inline field
+          defineLink({name: 'link', title: 'Link'}) as never,
+          // oxlint-disable-next-line no-unsafe-type-assertion -- preset returns SchemaTypeDefinition used as inline field
+          defineSeo({name: 'seo', title: 'SEO'}) as never,
+          // oxlint-disable-next-line no-unsafe-type-assertion -- preset returns SchemaTypeDefinition used as inline field
+          defineCta({name: 'cta', title: 'CTA'}) as never,
+          // oxlint-disable-next-line no-unsafe-type-assertion -- preset returns SchemaTypeDefinition used as inline field
+          defineImage({name: 'featuredImage', title: 'Featured image'}) as never,
         ],
       }),
       definePage({
@@ -42,6 +46,6 @@ export const presetsWorkspace = definePlugin(() => ({
           }),
         ],
       }),
-    ],
+    ] as SchemaTypeDefinition[],
   },
 }))
