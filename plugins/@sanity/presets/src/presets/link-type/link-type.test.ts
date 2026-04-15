@@ -46,11 +46,11 @@ function callPrepare(
 }
 
 describe('linkType', () => {
-  test('returns one type named core.presets.link', () => {
+  test('returns one type named link', () => {
     const result = linkType(defaultConfig)
 
     expect(result).toHaveLength(1)
-    expect(result[0]?.type?.name).toBe('core.presets.link')
+    expect(result[0]?.type?.name).toBe('link')
   })
 
   test('type is an object with 4 fields', () => {

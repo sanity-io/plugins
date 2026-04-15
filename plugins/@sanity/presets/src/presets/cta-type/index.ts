@@ -16,7 +16,7 @@ export const ctaType = definePresetType<CtaTypeConfig, 'object'>((context) => {
     name: 'cta',
     identifier: 'core.presets.cta',
     schemaType: defineType({
-      name: 'core.presets.cta',
+      name: 'cta',
       title: 'Call to action',
       ...objectConfig,
       type: 'object',

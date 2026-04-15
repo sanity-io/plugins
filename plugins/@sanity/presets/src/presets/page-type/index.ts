@@ -14,7 +14,7 @@ export const pageType = definePresetType<PageTypeConfig, 'document'>((context) =
     name: 'page',
     identifier: 'core.presets.page',
     schemaType: defineType({
-      name: 'core.presets.page',
+      name: 'page',
       title: 'Page',
       ...documentConfig,
       type: 'document',

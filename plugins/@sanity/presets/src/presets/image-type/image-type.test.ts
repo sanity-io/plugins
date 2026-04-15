@@ -20,11 +20,11 @@ function getField(fields: FieldDefinition[], name: string): FieldDefinition {
 }
 
 describe('imageType', () => {
-  test('returns one type named core.presets.image', () => {
+  test('returns one type named image', () => {
     const result = imageType()
 
     expect(result).toHaveLength(1)
-    expect(result[0]?.type?.name).toBe('core.presets.image')
+    expect(result[0]?.type?.name).toBe('image')
   })
 
   test('default config includes image, altText, and caption fields', () => {

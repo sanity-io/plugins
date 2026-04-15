@@ -15,7 +15,7 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
     name: 'image',
     identifier: 'core.presets.image',
     schemaType: defineType({
-      name: 'core.presets.image',
+      name: 'image',
       title: 'Image',
       ...objectConfig,
       type: 'object',
