@@ -4,7 +4,7 @@ import {describe, expect, test} from 'vitest'
 import {imageType} from './index'
 
 function getFields(result: ReturnType<typeof imageType>): FieldDefinition[] {
-  const typeDef = result[0]?.type
+  const typeDef = result.type
   if (!typeDef || !('fields' in typeDef) || !typeDef.fields) {
     throw new Error('Expected an object type definition with fields')
   }
@@ -20,11 +20,10 @@ function getField(fields: FieldDefinition[], name: string): FieldDefinition {
 }
 
 describe('imageType', () => {
-  test('returns one type named image', () => {
+  test('returns a result with type named image', () => {
     const result = imageType()
 
-    expect(result).toHaveLength(1)
-    expect(result[0]?.type?.name).toBe('image')
+    expect(result.type.name).toBe('image')
   })
 
   test('default config includes image, altText, and caption fields', () => {
@@ -114,7 +113,7 @@ describe('imageType map hooks', () => {
 
 describe('imageType preview.select', () => {
   test('selects altText as title by default', () => {
-    const typeDef = imageType()[0]?.type
+    const typeDef = imageType().type
     const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
 
     expect(select).toEqual({
@@ -124,7 +123,7 @@ describe('imageType preview.select', () => {
   })
 
   test('selects caption as title when altText is disabled', () => {
-    const typeDef = imageType({altText: false})[0]?.type
+    const typeDef = imageType({altText: false}).type
     const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
 
     expect(select).toEqual({
@@ -134,7 +133,7 @@ describe('imageType preview.select', () => {
   })
 
   test('selects filename as title when altText and caption are disabled', () => {
-    const typeDef = imageType({altText: false, caption: false})[0]?.type
+    const typeDef = imageType({altText: false, caption: false}).type
     const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
 
     expect(select).toEqual({

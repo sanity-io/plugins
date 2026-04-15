@@ -6,7 +6,7 @@ import {linkType} from './index'
 const defaultConfig = {internalTypes: ['page']}
 
 function getFields(result: ReturnType<typeof linkType>): FieldDefinition[] {
-  const typeDef = result[0]?.type
+  const typeDef = result.type
   if (!typeDef || !('fields' in typeDef) || !typeDef.fields) {
     throw new Error('Expected an object type definition with fields')
   }
@@ -38,7 +38,7 @@ function callPrepare(
   result: ReturnType<typeof linkType>,
   selection: Record<string, unknown>,
 ): PreviewValue {
-  const typeDef = result[0]?.type
+  const typeDef = result.type
   const prepare = typeDef && 'preview' in typeDef ? typeDef.preview?.prepare : undefined
   if (!prepare) throw new Error('Expected preview.prepare on type definition')
 
@@ -46,11 +46,10 @@ function callPrepare(
 }
 
 describe('linkType', () => {
-  test('returns one type named link', () => {
+  test('returns a result with type named link', () => {
     const result = linkType(defaultConfig)
 
-    expect(result).toHaveLength(1)
-    expect(result[0]?.type?.name).toBe('link')
+    expect(result.type.name).toBe('link')
   })
 
   test('type is an object with 4 fields', () => {
@@ -99,7 +98,7 @@ describe('linkType', () => {
 
 describe('linkType preview.select', () => {
   test('selects correct paths for preview', () => {
-    const typeDef = linkType(defaultConfig)[0]?.type
+    const typeDef = linkType(defaultConfig).type
     const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
 
     expect(select).toEqual({

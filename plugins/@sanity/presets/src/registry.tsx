@@ -24,10 +24,8 @@ type PresetContext<Preset> = Preset extends (context?: infer C) => unknown ? Non
  * Derive the registry key from a preset's name property.
  * E.g. a preset whose name is 'link' produces key 'defineLink'.
  */
-type PresetName<Preset> = Preset extends (...args: never[]) => Array<infer R>
-  ? R extends {name: infer N extends string}
-    ? N
-    : never
+type PresetName<Preset> = Preset extends (...args: never[]) => {name: infer N extends string}
+  ? N
   : never
 
 type RegistryKey<Preset> = `define${Capitalize<Lowercase<PresetName<Preset>>>}`
@@ -67,18 +65,15 @@ export function createPresetsRegistry<
 }
 
 function getPresetName(preset: PresetResultFactory): string {
-  const results = preset()
-  const last = results[results.length - 1]
-  if (!last?.name) {
-    throw new Error('Preset must return at least one result with a name property.')
+  const result = preset()
+  if (!result?.name) {
+    throw new Error('Preset must return a result with a name property.')
   }
-  return last.name
+  return result.name
 }
 
 function getPresetIdentifier(preset: PresetResultFactory): string | undefined {
-  const results = preset()
-  const last = results[results.length - 1]
-  return last?.identifier
+  return preset()?.identifier
 }
 
 function validatePresetName(name: string): void {
@@ -117,16 +112,12 @@ function createDefiner(
       recordPresetUsage(registryId, identifier)
     }
 
-    const results = preset({
+    const result = preset({
       ...context,
       [registryConfigSymbol]: config,
     })
 
-    const last = results[results.length - 1]
-    if (!last) {
-      throw new Error('Preset returned no results.')
-    }
-    addTelemetryComponent(last.type, registryId)
-    return last.type
+    addTelemetryComponent(result.type, registryId)
+    return result.type
   }
 }

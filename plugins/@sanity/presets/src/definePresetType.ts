@@ -11,7 +11,7 @@ export const registryConfig: unique symbol = Symbol('registryConfig')
 
 export type PresetProvider = 'user' | 'system'
 
-export type PresetResultFactory = (...args: any[]) => PresetResult[]
+export type PresetResultFactory = (...args: any[]) => PresetResult
 
 export interface BaseContext {
   [presetProvider]?: PresetProvider
@@ -94,7 +94,7 @@ export function definePresetType<
   LockedProperties extends string | undefined = undefined,
 >(
   factory: (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetTypeContext,
-): (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetResult[] {
+): (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetResult {
   return function define(context) {
     const {schemaType, ...attributes} = factory(context)
 
@@ -110,12 +110,10 @@ export function definePresetType<
       )
     }
 
-    return [
-      {
-        ...attributes,
-        type: schemaType,
-        [presetProvider]: context?.[presetProvider] ?? 'user',
-      },
-    ]
+    return {
+      ...attributes,
+      type: schemaType,
+      [presetProvider]: context?.[presetProvider] ?? 'user',
+    }
   }
 }
