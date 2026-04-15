@@ -2,37 +2,37 @@ import {createPresetsRegistry, definePresetType} from '@sanity/presets'
 import {definePlugin, defineType, defineField} from 'sanity'
 
 const customPreset = definePresetType<{}, 'object'>((context) => {
+  const {fields, ...objectConfig} = context ?? {}
+
   return {
     name: 'custom',
     identifier: 'custom.preset',
     schemaType: defineType({
       name: 'custom',
-      ...context,
+      ...objectConfig,
       type: 'object',
       fields: [
         defineField({
           name: 'test',
           type: 'string',
         }),
+        ...(fields ?? []),
       ],
     }),
   }
 })
 
-const {defineLink, defineCta, defineSeo, defineImage, definePage, defineCustom} =
-  createPresetsRegistry({
-    link: {
-      internalTypes: ['marketingPage'],
-    },
-    extensions: [customPreset],
-  })
+const {defineImage, definePage, defineCustom} = createPresetsRegistry({
+  link: {
+    internalTypes: ['marketingPage'],
+  },
+  extensions: [customPreset],
+})
 
 export const presetsWorkspace = definePlugin(() => ({
   schema: {
     types: [
-      // defineLink({name: 'presetsLink', title: 'Link'}),
-      // defineSeo({name: 'presetsSeo', title: 'SEO'}),
-      // defineCta({name: 'presetsCta', title: 'CTA'}),
+      defineCustom({name: 'presetsCustom', title: 'My Custom'}),
       defineImage({name: 'presetsImage', title: 'Image'}),
       definePage({
         name: 'marketingPage',
@@ -44,9 +44,10 @@ export const presetsWorkspace = definePlugin(() => ({
             type: 'string',
             group: 'main',
           }),
-          defineCustom({
+          defineField({
             name: 'myCustom',
             title: 'My Custom',
+            type: 'presetsCustom',
             group: 'main',
           }),
         ],
@@ -67,21 +68,6 @@ export const presetsWorkspace = definePlugin(() => ({
             title: 'Title',
             type: 'string',
           }),
-          // defineField({
-          //   name: 'link',
-          //   title: 'Link',
-          //   type: 'presetsLink',
-          // }),
-          // defineField({
-          //   name: 'seo',
-          //   title: 'SEO',
-          //   type: 'presetsSeo',
-          // }),
-          // defineField({
-          //   name: 'cta',
-          //   title: 'CTA',
-          //   type: 'presetsCta',
-          // }),
           defineField({
             name: 'featuredImage',
             title: 'Featured image',
