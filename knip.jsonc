@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "$schema": "https://unpkg.com/knip@6/schema.json",
   "ignoreWorkspaces": ["dev/*"],
   "ignoreExportsUsedInFile": {
     "interface": true,
@@ -20,8 +20,6 @@
       "entry": ["*.{ts,mts,mjs}"],
       "project": ["*.{ts,mts,mjs}"],
       "ignoreDependencies": [
-        // Used via .oxlintrc.json jsPlugins specifier, not directly imported
-        "eslint-plugin-react-hooks",
         // TypeScript native compiler, used as a dev tool not imported
         "@typescript/native-preview",
       ],
