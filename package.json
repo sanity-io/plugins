@@ -39,7 +39,7 @@
     "vitest-package-exports": "^1.2.0"
   },
   "devDependencies": {
-    "knip": "^5.86.0"
+    "knip": "^6.4.1"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,jsonc,md}": [
