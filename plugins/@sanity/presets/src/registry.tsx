@@ -1,11 +1,7 @@
 import type {InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
-import {
-  registryConfig as registryConfigSymbol,
-  resolvePreset as resolvePresetSymbol,
-  type PresetResultFactory,
-} from './definePresetType'
+import {registryConfig as registryConfigSymbol, type PresetResultFactory} from './definePresetType'
 import {ctaType} from './presets/cta-type'
 import {imageType} from './presets/image-type'
 import {linkType} from './presets/link-type'
@@ -120,7 +116,7 @@ function createDefiner(
     const result = preset({
       ...context,
       [registryConfigSymbol]: config,
-      [resolvePresetSymbol]: (presetName: string, presetContext?: Record<string, unknown>) => {
+      getPreset: (presetName: string, presetContext?: Record<string, unknown>) => {
         const key = `define${capitalize(presetName.toLowerCase())}`
         const definer = registry[key]
         if (!definer) {

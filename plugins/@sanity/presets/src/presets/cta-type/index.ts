@@ -1,14 +1,13 @@
 import {defineField, defineType} from 'sanity'
 
-import {definePresetType, resolvePreset} from '../../definePresetType'
+import {definePresetType} from '../../definePresetType'
 
 export const ctaType = definePresetType<{}, 'object'>((context) => {
   const {fields, ...objectConfig} = context ?? {}
-  const resolve = context?.[resolvePreset]
 
   const linkField = Object.assign(
     defineField({name: 'link', title: 'Link', type: 'object', fields: []}),
-    resolve?.('link', {name: 'link', title: 'Link'}),
+    context?.getPreset?.('link', {name: 'link', title: 'Link'}),
   )
 
   return {

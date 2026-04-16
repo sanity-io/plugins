@@ -3,16 +3,12 @@ import type {IntrinsicTypeName, SchemaTypeDefinition} from 'sanity'
 import type {PartialSchemaDefinition, PresetResult} from './types'
 
 export const registryConfig: unique symbol = Symbol('registryConfig')
-export const resolvePreset: unique symbol = Symbol('resolvePreset')
 
 export type PresetResultFactory = (...args: any[]) => PresetResult
 
 export interface BaseContext {
   [registryConfig]?: unknown
-  [resolvePreset]?: (
-    presetName: string,
-    context?: Record<string, unknown>,
-  ) => Record<string, unknown>
+  getPreset?: (presetName: string, context?: Record<string, unknown>) => Record<string, unknown>
 }
 
 export interface PresetTypeContext {

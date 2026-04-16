@@ -1,6 +1,6 @@
 import {ALL_FIELDS_GROUP, defineArrayMember, defineField, defineType} from 'sanity'
 
-import {definePresetType, resolvePreset} from '../../definePresetType'
+import {definePresetType} from '../../definePresetType'
 
 export interface PageTypeConfig {
   pageBuilderBlocks?: string[]
@@ -8,11 +8,9 @@ export interface PageTypeConfig {
 
 export const pageType = definePresetType<PageTypeConfig, 'document'>((context) => {
   const {pageBuilderBlocks, groups, fields, ...documentConfig} = context ?? {}
-  const resolve = context?.[resolvePreset]
-
   const seoField = Object.assign(
     defineField({name: 'seo', title: 'SEO', type: 'object', group: 'metadata', fields: []}),
-    resolve?.('seo', {name: 'seo', title: 'SEO'}),
+    context?.getPreset?.('seo', {name: 'seo', title: 'SEO'}),
     {group: 'metadata' as const},
   )
 
