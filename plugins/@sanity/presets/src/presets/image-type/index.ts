@@ -9,7 +9,7 @@ export interface ImageTypeConfig {
 }
 
 export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>((context) => {
-  const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = context ?? {}
+  const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = context
 
   return {
     name: 'image',

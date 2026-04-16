@@ -8,9 +8,9 @@ export interface LinkTypeConfig {
 }
 
 export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>((context) => {
-  const {internalTypes, fields, ...objectConfig} = context ?? {}
+  const {internalTypes, fields, ...objectConfig} = context
   // oxlint-disable-next-line no-unsafe-type-assertion
-  const config = context?.[registryConfig] as PresetsRegistryConfig | undefined
+  const config = context[registryConfig] as PresetsRegistryConfig | undefined
   const resolvedInternalTypes = internalTypes ?? config?.link?.internalTypes ?? []
   const referenceTargets = resolvedInternalTypes.map((typeName) => ({type: typeName}))
 

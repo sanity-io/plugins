@@ -8,7 +8,7 @@ export type PresetResultFactory = (...args: any[]) => PresetResult
 
 export interface BaseContext {
   [registryConfig]?: unknown
-  getPreset?: (presetName: string, context?: Record<string, unknown>) => Record<string, unknown>
+  getPreset: (presetName: string, context?: Record<string, unknown>) => Record<string, unknown>
 }
 
 export interface PresetTypeContext {
@@ -72,7 +72,7 @@ type DerivedContext<
   }
 
 export function definePresetType<
-  Context = undefined,
+  Context = {},
   AliasedType extends IntrinsicTypeName | undefined = undefined,
   /**
    * If a property is locked, users are not permitted to provide a value for
@@ -85,12 +85,12 @@ export function definePresetType<
    */
   LockedProperties extends string | undefined = undefined,
 >(
-  factory: (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetTypeContext,
-): (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetResult {
+  factory: (context: DerivedContext<Context, AliasedType, LockedProperties>) => PresetTypeContext,
+): (context: DerivedContext<Context, AliasedType, LockedProperties>) => PresetResult {
   return function define(context) {
     const {schemaType, ...attributes} = factory(context)
 
-    for (const [configName, configValue] of Object.entries(context?.map ?? {})) {
+    for (const [configName, configValue] of Object.entries(context.map ?? {})) {
       if (typeof configValue !== 'function') {
         continue
       }

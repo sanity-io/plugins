@@ -4,7 +4,7 @@ import {defineField, defineType} from 'sanity'
 import {definePresetType} from '../../definePresetType'
 
 export const seoType = definePresetType<{}, 'object'>((context) => {
-  const {fields, ...objectConfig} = context ?? {}
+  const {fields, ...objectConfig} = context
 
   return {
     name: 'seo',

@@ -1,7 +1,11 @@
 import type {InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
-import {registryConfig as registryConfigSymbol, type PresetResultFactory} from './definePresetType'
+import {
+  type BaseContext,
+  registryConfig as registryConfigSymbol,
+  type PresetResultFactory,
+} from './definePresetType'
 import {ctaType} from './presets/cta-type'
 import {imageType} from './presets/image-type'
 import {linkType} from './presets/link-type'
@@ -18,7 +22,7 @@ export interface PresetsRegistryConfig {
   link?: LinkConfig
 }
 
-type PresetContext<Preset> = Preset extends (context?: infer C) => unknown ? NonNullable<C> : never
+type PresetContext<Preset> = Preset extends (context: infer C) => unknown ? C : never
 
 /**
  * Derive the registry key from a preset's name property.
@@ -36,7 +40,7 @@ type RegistryKey<Preset> = `define${Capitalize<Lowercase<PresetName<Preset>>>}`
  */
 export type PresetsRegistry<Extensions extends readonly PresetResultFactory[] = readonly []> = {
   [Preset in [...SystemPresets, ...Extensions][number] as RegistryKey<Preset>]: (
-    context?: PresetContext<Preset>,
+    context: Omit<PresetContext<Preset>, keyof BaseContext>,
   ) => SchemaTypeDefinition
 }
 
@@ -61,11 +65,13 @@ export function createPresetsRegistry<
   }
 
   // oxlint-disable-next-line no-unsafe-type-assertion
-  return registry as PresetsRegistry<Extensions>
+  return registry as unknown as PresetsRegistry<Extensions>
 }
 
+const stubContext = {getPreset: () => ({})} as Record<string, unknown>
+
 function getPresetName(preset: PresetResultFactory): string {
-  const result = preset()
+  const result = preset(stubContext)
   if (!result?.name) {
     throw new Error('Preset must return a result with a name property.')
   }
@@ -73,7 +79,7 @@ function getPresetName(preset: PresetResultFactory): string {
 }
 
 function getPresetIdentifier(preset: PresetResultFactory): string | undefined {
-  return preset()?.identifier
+  return preset(stubContext)?.identifier
 }
 
 function validatePresetName(name: string): void {
@@ -108,7 +114,7 @@ function createDefiner(
 ): (context?: Record<string, unknown>) => SchemaTypeDefinition {
   const identifier = getPresetIdentifier(preset)
 
-  return function define(context?: Record<string, unknown>): SchemaTypeDefinition {
+  return function define(context: Record<string, unknown> = {}): SchemaTypeDefinition {
     if (identifier) {
       recordPresetUsage(registryId, identifier)
     }

@@ -85,7 +85,7 @@ describe('createPresetsRegistry', () => {
   })
 
   test('throws for invalid preset name with periods', () => {
-    const invalidPreset = definePresetType(() => ({
+    const invalidPreset = definePresetType((_context) => ({
       name: 'invalid.name',
       schemaType: defineType({name: 'test', type: 'object', fields: []}),
     }))

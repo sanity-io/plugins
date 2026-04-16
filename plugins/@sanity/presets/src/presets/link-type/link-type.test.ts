@@ -3,7 +3,8 @@ import {describe, expect, test} from 'vitest'
 
 import {linkType} from './index'
 
-const defaultConfig = {internalTypes: ['page']}
+const getPreset = (): Record<string, unknown> => ({})
+const defaultConfig = {internalTypes: ['page'], getPreset}
 
 function getFields(result: ReturnType<typeof linkType>): FieldDefinition[] {
   const typeDef = result.type
@@ -62,7 +63,7 @@ describe('linkType', () => {
   })
 
   test('maps internalTypes to reference targets', () => {
-    const fields = getFields(linkType({internalTypes: ['page', 'post']}))
+    const fields = getFields(linkType({internalTypes: ['page', 'post'], getPreset}))
     const referenceField = getField(fields, 'reference')
 
     expect(referenceField).toHaveProperty('to', [{type: 'page'}, {type: 'post'}])
