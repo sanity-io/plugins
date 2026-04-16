@@ -2,13 +2,11 @@ import type {IntrinsicTypeName, SchemaTypeDefinition} from 'sanity'
 
 import type {PartialSchemaDefinition, PresetResult} from './types'
 
-export const registryConfig: unique symbol = Symbol('registryConfig')
-
 export type PresetResultFactory = (...args: any[]) => PresetResult
 
-export interface BaseContext {
-  [registryConfig]?: unknown
-  getPreset: (presetName: string, context?: Record<string, unknown>) => Record<string, unknown>
+export interface RegistryContext {
+  getPreset: (presetName: string, config?: Record<string, unknown>) => Record<string, unknown>
+  registryConfig: Record<string, unknown>
 }
 
 export interface PresetTypeContext {
@@ -34,14 +32,13 @@ type SanitizeProperties<Properties, ExcludedProperties extends string | undefine
   : Properties
 
 /**
- * Derive context that may be assigned when preset is used.
+ * Derive the user-facing config type from Context and AliasedType.
  */
-type DerivedContext<
+type DerivedConfig<
   Context,
   AliasedType extends IntrinsicTypeName | undefined = undefined,
   LockedProperties extends string | undefined = undefined,
-> = BaseContext &
-  Context &
+> = Context &
   (AliasedType extends string
     ? SanitizeProperties<
         PartialSchemaDefinition<AliasedType>,
@@ -54,13 +51,6 @@ type DerivedContext<
      *
      * Each hook receives the value created by the preset, and may return any
      * compatible value.
-     *
-     * Map hooks are able to override any schema option. They always receive
-     * the value produced by the preset, including any other customisations
-     * made in the configuration. For example, if a preset supports appending
-     * fields by specifying the `fields` array, `map.fields` will receive all
-     * of the fields created by the preset in addition to those defined in the
-     * `fields` array.
      */
     map?: AliasedType extends string
       ? {
@@ -74,23 +64,20 @@ type DerivedContext<
 export function definePresetType<
   Context = {},
   AliasedType extends IntrinsicTypeName | undefined = undefined,
-  /**
-   * If a property is locked, users are not permitted to provide a value for
-   * that property when creating an instance of the preset. This should be used
-   * when a preset does not consider a user-provided property, or does not pass
-   * it to the underlying schema definition.
-   *
-   * Users may still ultimately override any property, including locked
-   * properties, by using the map hooks.
-   */
   LockedProperties extends string | undefined = undefined,
 >(
-  factory: (context: DerivedContext<Context, AliasedType, LockedProperties>) => PresetTypeContext,
-): (context: DerivedContext<Context, AliasedType, LockedProperties>) => PresetResult {
-  return function define(context) {
-    const {schemaType, ...attributes} = factory(context)
+  factory: (
+    config: DerivedConfig<Context, AliasedType, LockedProperties>,
+    registry: RegistryContext,
+  ) => PresetTypeContext,
+): (
+  config: DerivedConfig<Context, AliasedType, LockedProperties>,
+  registry: RegistryContext,
+) => PresetResult {
+  return function define(config, registry) {
+    const {schemaType, ...attributes} = factory(config, registry)
 
-    for (const [configName, configValue] of Object.entries(context.map ?? {})) {
+    for (const [configName, configValue] of Object.entries(config.map ?? {})) {
       if (typeof configValue !== 'function') {
         continue
       }

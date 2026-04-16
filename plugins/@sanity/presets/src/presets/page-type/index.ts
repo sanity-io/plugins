@@ -6,11 +6,12 @@ export interface PageTypeConfig {
   pageBuilderBlocks?: string[]
 }
 
-export const pageType = definePresetType<PageTypeConfig, 'document'>((context) => {
-  const {pageBuilderBlocks, groups, fields, ...documentConfig} = context
+export const pageType = definePresetType<PageTypeConfig, 'document'>((config, registry) => {
+  const {pageBuilderBlocks, groups, fields, ...documentConfig} = config
+
   const seoField = Object.assign(
     defineField({name: 'seo', title: 'SEO', type: 'object', group: 'metadata', fields: []}),
-    context.getPreset('seo', {name: 'seo', title: 'SEO'}),
+    registry.getPreset('seo', {name: 'seo', title: 'SEO'}),
     {group: 'metadata' as const},
   )
 

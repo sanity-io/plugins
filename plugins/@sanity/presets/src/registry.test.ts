@@ -85,7 +85,7 @@ describe('createPresetsRegistry', () => {
   })
 
   test('throws for invalid preset name with periods', () => {
-    const invalidPreset = definePresetType((_context) => ({
+    const invalidPreset = definePresetType((_config, _registry) => ({
       name: 'invalid.name',
       schemaType: defineType({name: 'test', type: 'object', fields: []}),
     }))
@@ -190,10 +190,10 @@ describe('preset composition via getPreset', () => {
   })
 
   test('extension preset can use getPreset to compose system presets', () => {
-    const heroType = definePresetType<{}, 'object'>((context) => {
+    const heroType = definePresetType<{}, 'object'>((_config, registry) => {
       const linkField = Object.assign(
         defineField({name: 'heroLink', title: 'Hero Link', type: 'object', fields: []}),
-        context.getPreset('link', {name: 'heroLink', title: 'Hero Link'}),
+        registry.getPreset('link', {name: 'heroLink', title: 'Hero Link'}),
       )
 
       return {
@@ -235,8 +235,8 @@ describe('preset composition via getPreset', () => {
   })
 
   test('getPreset throws for non-existent preset name', () => {
-    const badPreset = definePresetType<{}, 'object'>((context) => {
-      context.getPreset('nonExistent', {name: 'test'})
+    const badPreset = definePresetType<{}, 'object'>((_config, registry) => {
+      registry.getPreset('nonExistent', {name: 'test'})
 
       return {
         name: 'bad',

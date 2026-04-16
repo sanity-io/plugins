@@ -8,8 +8,8 @@ export interface ImageTypeConfig {
   hotspot?: boolean
 }
 
-export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>((context) => {
-  const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = context
+export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>((config) => {
+  const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = config
 
   return {
     name: 'image',

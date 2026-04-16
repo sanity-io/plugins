@@ -3,8 +3,8 @@ import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
 
-export const seoType = definePresetType<{}, 'object'>((context) => {
-  const {fields, ...objectConfig} = context
+export const seoType = definePresetType<{}, 'object'>((config) => {
+  const {fields, ...objectConfig} = config
 
   return {
     name: 'seo',

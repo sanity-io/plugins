@@ -1,8 +1,8 @@
 import {createPresetsRegistry, definePresetType} from '@sanity/presets'
 import {definePlugin, defineType, defineField} from 'sanity'
 
-const customPreset = definePresetType<{}, 'object'>((context) => {
-  const {fields, ...objectConfig} = context
+const customPreset = definePresetType<{}, 'object'>((config) => {
+  const {fields, ...objectConfig} = config
 
   return {
     name: 'custom',
