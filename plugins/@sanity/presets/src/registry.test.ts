@@ -1,4 +1,4 @@
-import {defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 import {afterEach, describe, expect, test} from 'vitest'
 
 import {definePresetType} from './definePresetType'
@@ -95,5 +95,160 @@ describe('createPresetsRegistry', () => {
         extensions: [invalidPreset],
       }),
     ).toThrow(/Invalid preset name/)
+  })
+})
+
+describe('preset composition via getPreset', () => {
+  afterEach(() => {
+    resetRegistries()
+  })
+
+  test('defineCta resolves link fields from the registry', () => {
+    const registry = createPresetsRegistry()
+    const defineCta = registry['defineCta']!
+    const result = defineCta({name: 'testCta'})
+
+    // The link field should have its own fields resolved from linkType, not be empty
+    expect(result).toEqual(
+      expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({
+            name: 'link',
+            fields: expect.arrayContaining([
+              expect.objectContaining({name: 'linkType'}),
+              expect.objectContaining({name: 'reference'}),
+              expect.objectContaining({name: 'url'}),
+              expect.objectContaining({name: 'openInNewTab'}),
+            ]),
+          }),
+        ]),
+      }),
+    )
+  })
+
+  test('defineCta link field inherits internalTypes from registry config', () => {
+    const registry = createPresetsRegistry({
+      link: {internalTypes: ['article', 'page']},
+    })
+    const defineCta = registry['defineCta']!
+    const result = defineCta({name: 'testCta'})
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({
+            name: 'link',
+            fields: expect.arrayContaining([
+              expect.objectContaining({
+                name: 'reference',
+                to: [{type: 'article'}, {type: 'page'}],
+              }),
+            ]),
+          }),
+        ]),
+      }),
+    )
+  })
+
+  test('definePage resolves seo fields from the registry', () => {
+    const registry = createPresetsRegistry()
+    const definePage = registry['definePage']!
+    const result = definePage({name: 'testPage'})
+
+    // The seo field should have its own fields resolved from seoType, not be empty
+    expect(result).toEqual(
+      expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({
+            name: 'seo',
+            fields: expect.arrayContaining([
+              expect.objectContaining({name: 'title'}),
+              expect.objectContaining({name: 'description'}),
+              expect.objectContaining({name: 'ogImage'}),
+            ]),
+          }),
+        ]),
+      }),
+    )
+  })
+
+  test('definePage seo field retains group assignment after composition', () => {
+    const registry = createPresetsRegistry()
+    const definePage = registry['definePage']!
+    const result = definePage({name: 'testPage'})
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({
+            name: 'seo',
+            group: 'metadata',
+          }),
+        ]),
+      }),
+    )
+  })
+
+  test('extension preset can use getPreset to compose system presets', () => {
+    const heroType = definePresetType<{}, 'object'>((context) => {
+      const linkField = Object.assign(
+        defineField({name: 'heroLink', title: 'Hero Link', type: 'object', fields: []}),
+        context.getPreset('link', {name: 'heroLink', title: 'Hero Link'}),
+      )
+
+      return {
+        name: 'hero',
+        schemaType: defineType({
+          name: 'hero',
+          title: 'Hero',
+          type: 'object',
+          fields: [defineField({name: 'heading', type: 'string', title: 'Heading'}), linkField],
+        }),
+      }
+    })
+
+    const registry = createPresetsRegistry({
+      link: {internalTypes: ['landingPage']},
+      extensions: [heroType],
+    })
+    const defineHero = registry['defineHero']!
+    const result = defineHero({name: 'testHero'})
+
+    // Should have link fields resolved from linkType
+    expect(result).toEqual(
+      expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({
+            name: 'heroLink',
+            fields: expect.arrayContaining([
+              expect.objectContaining({name: 'linkType'}),
+              // Should inherit internalTypes from registry config
+              expect.objectContaining({
+                name: 'reference',
+                to: [{type: 'landingPage'}],
+              }),
+            ]),
+          }),
+        ]),
+      }),
+    )
+  })
+
+  test('getPreset throws for non-existent preset name', () => {
+    const badPreset = definePresetType<{}, 'object'>((context) => {
+      context.getPreset('nonExistent', {name: 'test'})
+
+      return {
+        name: 'bad',
+        schemaType: defineType({name: 'bad', type: 'object', fields: []}),
+      }
+    })
+
+    const registry = createPresetsRegistry({
+      extensions: [badPreset],
+    })
+    const defineBad = registry['defineBad']!
+
+    expect(() => defineBad({name: 'test'})).toThrow(/Cannot resolve preset "nonExistent"/)
   })
 })
