@@ -55,7 +55,7 @@ export function createPresetsRegistry<
     registry[key] = createDefiner(registryId, preset, config, registry)
   }
 
-  // oxlint-disable-next-line no-unsafe-type-assertion
+  // oxlint-disable-next-line no-unsafe-type-assertion -- dynamically built object with computed keys
   return registry as unknown as PresetsRegistry<Extensions>
 }
 
