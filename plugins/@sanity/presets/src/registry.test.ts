@@ -96,6 +96,25 @@ describe('createPresetsRegistry', () => {
       }),
     ).toThrow(/Invalid preset name/)
   })
+
+  test('extension without identifier records telemetry as "unnamed"', () => {
+    const noIdentifierPreset = definePresetType<{}, 'object'>((config) => ({
+      name: 'widget',
+      // no identifier set
+      schemaType: defineType({name: 'widget', ...config, type: 'object', fields: []}),
+    }))
+
+    const registry = createPresetsRegistry({
+      extensions: [noIdentifierPreset],
+    })
+
+    const defineWidget = registry['defineWidget']!
+    expect(typeof defineWidget).toBe('function')
+
+    // Calling the define function should not throw — telemetry records 'unnamed'
+    const result = defineWidget({name: 'testWidget'})
+    expect(result).toHaveProperty('name', 'testWidget')
+  })
 })
 
 describe('preset composition via getPreset', () => {

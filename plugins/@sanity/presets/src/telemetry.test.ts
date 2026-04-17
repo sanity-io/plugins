@@ -92,4 +92,30 @@ describe('telemetry', () => {
     collectPresetsRegistryTelemetry('unknown-id', telemetry)
     expect(logSpy).not.toHaveBeenCalled()
   })
+
+  test('records "unnamed" when preset has no identifier', () => {
+    registerRegistry('test-id')
+    recordPresetUsage('test-id', 'unnamed')
+
+    const {telemetry, logSpy} = createMockTelemetry()
+    collectPresetsRegistryTelemetry('test-id', telemetry)
+
+    expect(logSpy).toHaveBeenCalledWith(expect.anything(), {
+      presetNames: ['unnamed'],
+    })
+  })
+
+  test('records mix of named and unnamed presets', () => {
+    registerRegistry('test-id')
+    recordPresetUsage('test-id', 'core.presets.link')
+    recordPresetUsage('test-id', 'unnamed')
+    recordPresetUsage('test-id', 'core.presets.page')
+
+    const {telemetry, logSpy} = createMockTelemetry()
+    collectPresetsRegistryTelemetry('test-id', telemetry)
+
+    expect(logSpy).toHaveBeenCalledWith(expect.anything(), {
+      presetNames: expect.arrayContaining(['core.presets.link', 'unnamed', 'core.presets.page']),
+    })
+  })
 })
