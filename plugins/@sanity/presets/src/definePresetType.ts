@@ -1,4 +1,4 @@
-import type {IntrinsicTypeName, SchemaTypeDefinition} from 'sanity'
+import type {FieldDefinitionBase, IntrinsicTypeName, SchemaTypeDefinition} from 'sanity'
 
 import type {PartialSchemaDefinition, PresetResult} from './types'
 
@@ -39,15 +39,13 @@ type DerivedConfig<
   AliasedType extends IntrinsicTypeName | undefined = undefined,
   LockedProperties extends string | undefined = undefined,
 > = Context &
+  FieldDefinitionBase &
   (AliasedType extends string
     ? SanitizeProperties<
         PartialSchemaDefinition<AliasedType>,
         ProhibitedProperties | LockedProperties
       >
     : {}) & {
-    /** Field-level properties, used when the preset is placed inline in a fields array. */
-    fieldset?: string
-    group?: string | string[]
     /**
      * Map hooks allow any schema property created by the preset to be
      * overridden.
