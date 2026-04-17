@@ -107,9 +107,7 @@ function createDefiner(
   return function define(
     userConfig: Record<string, unknown> = {},
   ): SchemaTypeDefinition & FieldDefinition {
-    if (identifier) {
-      recordPresetUsage(registryId, identifier)
-    }
+    recordPresetUsage(registryId, identifier ?? 'unnamed')
 
     const registryContext: RegistryContext = {
       // oxlint-disable-next-line no-unsafe-type-assertion
