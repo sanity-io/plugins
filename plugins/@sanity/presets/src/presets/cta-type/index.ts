@@ -5,6 +5,7 @@ import {definePresetType} from '../../definePresetType'
 export const ctaType = definePresetType<{}, 'object'>((config, registry) => {
   const {fields, ...objectConfig} = config
 
+  // xxx debug
   const linkField = Object.assign(
     defineField({name: 'link', title: 'Link', type: 'object', fields: []}),
     registry.getPreset('link', {name: 'link', title: 'Link'}),
