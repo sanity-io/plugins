@@ -1,4 +1,3 @@
-import capitalize from 'lodash-es/capitalize.js'
 import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
@@ -27,7 +26,7 @@ type PresetName<Preset> = Preset extends (...args: never[]) => {name: infer N ex
   ? N
   : never
 
-type RegistryKey<Preset> = `define${Capitalize<Lowercase<PresetName<Preset>>>}`
+type RegistryKey<Preset> = `define${Capitalize<PresetName<Preset>>}`
 
 export type PresetsRegistry<Extensions extends readonly PresetResultFactory[] = readonly []> = {
   [Preset in [...SystemPresets, ...Extensions][number] as RegistryKey<Preset>]: (
@@ -51,7 +50,7 @@ export function createPresetsRegistry<
   for (const preset of allPresets) {
     const presetName = getPresetName(preset)
     validatePresetName(presetName)
-    const key = `define${capitalize(presetName.toLowerCase())}`
+    const key = `define${presetName.charAt(0).toUpperCase()}${presetName.slice(1)}`
     registry[key] = createDefiner(registryId, preset, config, registry)
   }
 
@@ -113,7 +112,7 @@ function createDefiner(
       // oxlint-disable-next-line no-unsafe-type-assertion
       registryConfig: config as unknown as Record<string, unknown>,
       getPreset: (presetName: string, presetConfig?: Record<string, unknown>) => {
-        const key = `define${capitalize(presetName.toLowerCase())}`
+        const key = `define${presetName.charAt(0).toUpperCase()}${presetName.slice(1)}`
         const definer = registry[key]
         if (!definer) {
           throw new Error(`Cannot resolve preset "${presetName}". No such preset in this registry.`)
