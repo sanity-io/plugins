@@ -3,21 +3,36 @@ import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
 import type {PresetResultFactory, RegistryContext} from './definePresetType'
 import {ctaType} from './presets/cta-type'
-import {imageType} from './presets/image-type'
-import {linkType} from './presets/link-type'
-import {pageType} from './presets/page-type'
+import {imageType, type ImageTypeConfig} from './presets/image-type'
+import {linkType, type LinkTypeConfig} from './presets/link-type'
+import {pageType, type PageTypeConfig} from './presets/page-type'
 import {seoType} from './presets/seo-type'
 import {recordPresetUsage, registerRegistry} from './telemetry'
-import type {LinkConfig} from './types'
 
 const systemPresets = [linkType, ctaType, seoType, imageType, pageType] as const
 
 type SystemPresets = typeof systemPresets
 
-export interface PresetsRegistryConfig {
-  link?: LinkConfig
-  [key: string]: unknown
+/**
+ * System preset configuration keys — declared explicitly to avoid
+ * a circular reference between PresetsRegistryConfig, SystemPresets,
+ * and the preset factories that read from registryConfig.
+ */
+interface SystemPresetsConfig {
+  link?: LinkTypeConfig
+  cta?: {}
+  seo?: {}
+  image?: ImageTypeConfig
+  page?: PageTypeConfig
 }
+
+/**
+ * Registry configuration derived from system presets and user extensions.
+ * System preset keys (link, cta, seo, image, page) are declared explicitly.
+ * Extension keys are accepted via an index signature — extensions read
+ * their config from registry.registryConfig at runtime.
+ */
+export type PresetsRegistryConfig = SystemPresetsConfig & Record<string, unknown>
 
 type PresetConfig<Preset> = Preset extends (config: infer C, registry: RegistryContext) => unknown
   ? C
@@ -99,7 +114,7 @@ function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: str
 function createDefiner(
   registryId: string,
   preset: PresetResultFactory,
-  config: PresetsRegistryConfig & {extensions?: readonly PresetResultFactory[]},
+  config: Record<string, unknown>,
   registry: Record<string, (config?: Record<string, unknown>) => SchemaTypeDefinition>,
 ): (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition {
   const identifier = getPresetIdentifier(preset)

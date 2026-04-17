@@ -9,7 +9,3 @@ export interface PresetResult {
 export type PartialSchemaDefinition<TypeName extends IntrinsicTypeName> = Partial<
   DefineSchemaBase<TypeName, TypeName> & {preview: PreviewConfig}
 >
-
-export interface LinkConfig {
-  internalTypes?: string[]
-}
