@@ -117,6 +117,7 @@ function createDefiner(
   config: Record<string, unknown>,
   registry: Record<string, (config?: Record<string, unknown>) => SchemaTypeDefinition>,
 ): (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition {
+  const presetName = getPresetName(preset)
   const identifier = getPresetIdentifier(preset)
 
   return function define(
@@ -139,7 +140,16 @@ function createDefiner(
     }
 
     const {group, fieldset, ...presetConfig} = userConfig
-    const result = preset(presetConfig, registryContext)
+
+    // Merge the preset's registry config entry as defaults under
+    // the user's call-site config. Call-site values take precedence.
+    const registryDefaults = config[presetName]
+    const mergedConfig =
+      typeof registryDefaults === 'object' && registryDefaults !== null
+        ? {...registryDefaults, ...presetConfig}
+        : presetConfig
+
+    const result = preset(mergedConfig, registryContext)
 
     addTelemetryComponent(result.type, registryId)
 
