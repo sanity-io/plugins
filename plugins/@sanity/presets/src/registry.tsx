@@ -16,6 +16,7 @@ type SystemPresets = typeof systemPresets
 
 export interface PresetsRegistryConfig {
   link?: LinkConfig
+  [key: string]: unknown
 }
 
 type PresetConfig<Preset> = Preset extends (config: infer C, registry: RegistryContext) => unknown
