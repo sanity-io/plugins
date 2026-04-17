@@ -45,6 +45,9 @@ type DerivedConfig<
         ProhibitedProperties | LockedProperties
       >
     : {}) & {
+    /** Field-level properties, used when the preset is placed inline in a fields array. */
+    fieldset?: string
+    group?: string | string[]
     /**
      * Map hooks allow any schema property created by the preset to be
      * overridden.

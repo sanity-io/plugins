@@ -1,5 +1,5 @@
 import capitalize from 'lodash-es/capitalize.js'
-import type {InputProps, SchemaTypeDefinition} from 'sanity'
+import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
 import type {PresetResultFactory, RegistryContext} from './definePresetType'
@@ -32,7 +32,7 @@ type RegistryKey<Preset> = `define${Capitalize<Lowercase<PresetName<Preset>>>}`
 export type PresetsRegistry<Extensions extends readonly PresetResultFactory[] = readonly []> = {
   [Preset in [...SystemPresets, ...Extensions][number] as RegistryKey<Preset>]: (
     config: PresetConfig<Preset>,
-  ) => SchemaTypeDefinition
+  ) => SchemaTypeDefinition & FieldDefinition
 }
 
 export function createPresetsRegistry<
@@ -101,10 +101,12 @@ function createDefiner(
   preset: PresetResultFactory,
   config: PresetsRegistryConfig & {extensions?: readonly PresetResultFactory[]},
   registry: Record<string, (config?: Record<string, unknown>) => SchemaTypeDefinition>,
-): (config?: Record<string, unknown>) => SchemaTypeDefinition {
+): (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition {
   const identifier = getPresetIdentifier(preset)
 
-  return function define(userConfig: Record<string, unknown> = {}): SchemaTypeDefinition {
+  return function define(
+    userConfig: Record<string, unknown> = {},
+  ): SchemaTypeDefinition & FieldDefinition {
     if (identifier) {
       recordPresetUsage(registryId, identifier)
     }
@@ -123,9 +125,15 @@ function createDefiner(
       },
     }
 
-    const result = preset(userConfig, registryContext)
+    const {group, fieldset, ...presetConfig} = userConfig
+    const result = preset(presetConfig, registryContext)
 
     addTelemetryComponent(result.type, registryId)
-    return result.type
+
+    const output = result.type
+    if (group !== undefined) Object.assign(output, {group})
+    if (fieldset !== undefined) Object.assign(output, {fieldset})
+    // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
+    return output as SchemaTypeDefinition & FieldDefinition
   }
 }
