@@ -1,3 +1,4 @@
+import capitalize from 'lodash-es/capitalize.js'
 import type {InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
@@ -82,10 +83,6 @@ function validatePresetName(name: string): void {
         `(no periods, spaces, or special characters).`,
     )
   }
-}
-
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: string): void {
