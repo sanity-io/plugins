@@ -33,8 +33,8 @@ Check back later, or watch the repository for updates.
 **When to use presets:**
 
 - You want opinionated defaults to get started quickly
-- Advanced content modelling isn't a priority for your project
-- You prefer a hands-on approach to schema configuration over generating schemas with AI tools
+- You don't yet have a need for highly custom content modelling
+- You have not chosen to use LLMs for schema generation
 
 Presets are designed to be extended — add fields, groups, and map hooks as your needs evolve. When a preset no longer fits, replace it with your own schema type using `defineType` directly.
 
