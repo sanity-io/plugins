@@ -17,6 +17,27 @@ When the package is ready, this README will be updated with installation and usa
 
 Check back later, or watch the repository for updates.
 
+## Overview
+
+`@sanity/presets` provides ready-made schema type factories for common content patterns in Sanity Studio. Instead of modelling pages, links, images, and metadata from scratch, call a `define<Type>` function and get a working schema type with sensible defaults.
+
+**Included presets:**
+
+- `definePage` — document type for page building (content blocks, slug, SEO metadata)
+- `defineLink` — internal and external links with conditional fields
+- `defineCta` — call-to-action with an inline link and visual hierarchy level
+- `defineSeo` — search engine metadata (title, description, Open Graph image)
+- `defineImage` — image with optional alt text, caption, and hotspot
+- `defineRichText` — Portable Text with configurable annotations and blocks _(coming soon)_
+
+**When to use presets:**
+
+- You want opinionated defaults to get started quickly
+- Advanced content modelling isn't a priority for your project
+- You prefer a hands-on approach to schema configuration over generating schemas with AI tools
+
+Presets are designed to be extended — add fields, groups, and map hooks as your needs evolve. When a preset no longer fits, replace it with your own schema type using `defineType` directly.
+
 ## Installation
 
 ```sh
