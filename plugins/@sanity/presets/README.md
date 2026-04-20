@@ -11,9 +11,9 @@ When the package is ready, this README will be updated with installation and usa
 
 ## Do not use this package
 
-- It is not published to npm as a usable release
-- It contains no stable public API
-- It will change without notice
+- It is not published to npm as a usable release.
+- It contains no stable public API.
+- It will change without notice.
 
 Check back later, or watch the repository for updates.
 
@@ -32,9 +32,9 @@ Check back later, or watch the repository for updates.
 
 **When to use presets:**
 
-- You want opinionated defaults to get started quickly
-- You don't yet have a need for highly custom content modelling
-- You have not chosen to use LLMs for schema generation
+- You want opinionated defaults to get started quickly.
+- You don't yet have a need for highly custom content modelling.
+- You have not chosen to use LLMs for schema generation.
 
 Presets are designed to be extended — add fields, groups, and map hooks as your needs evolve. When a preset no longer fits, replace it with your own schema type using `defineType` directly.
 
