@@ -150,7 +150,7 @@ definePage({
 })
 ```
 
-**Default fields:**
+**Fields:**
 
 | Field     | Type     | Group    | Description                                                                      |
 | --------- | -------- | -------- | -------------------------------------------------------------------------------- |
@@ -159,7 +159,7 @@ definePage({
 | `content` | `array`  | Main     | Page builder blocks. Types are specified via `pageBuilderBlocks`.                |
 | `seo`     | `object` | Metadata | SEO fields (title, description, Open Graph image). Composed from the SEO preset. |
 
-**Default groups:** Main (default), Metadata.
+**Groups:** Main (default), Metadata.
 
 **Options:**
 
@@ -184,7 +184,7 @@ defineLink({
 })
 ```
 
-**Default fields:**
+**Fields:**
 
 | Field          | Type        | Description                                                                                              |
 | -------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
@@ -209,7 +209,7 @@ defineCta({
 })
 ```
 
-**Default fields:**
+**Fields:**
 
 | Field   | Type     | Description                                                                                |
 | ------- | -------- | ------------------------------------------------------------------------------------------ |
@@ -227,7 +227,7 @@ defineSeo({
 })
 ```
 
-**Default fields:**
+**Fields:**
 
 | Field         | Type     | Description                                                                                        |
 | ------------- | -------- | -------------------------------------------------------------------------------------------------- |
@@ -250,7 +250,7 @@ defineImage({
 })
 ```
 
-**Default fields:**
+**Fields:**
 
 | Field     | Type     | Description                                                                            |
 | --------- | -------- | -------------------------------------------------------------------------------------- |
