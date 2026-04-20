@@ -117,10 +117,16 @@ Map hooks exist as an escape hatch. They give you full control over the schema t
 ```ts
 definePage({
   name: 'marketingPage',
+  title: 'Marketing Page',
   map: {
-    // Prepend a "Type" field before all other fields.
+    // Prepend a "Subtitle" field before all other fields.
     fields: (fields = []) => [
-      defineField({name: 'type', type: 'string', group: 'main'}),
+      defineField({
+        name: 'subtitle',
+        title: 'Subtitle',
+        type: 'string',
+        group: 'main',
+      }),
       ...fields,
     ],
   },
@@ -177,10 +183,12 @@ The link preset produces an object type for internal and external links. It incl
 
 ```ts
 defineLink({
-  name: 'primaryLink',
+  name: "primaryLink",
+  title: "Primary Link",
   // Document types available for internal links. Falls back to
   // the registry-level link.internalTypes if not provided here.
-  internalTypes: ['page', 'post'],
+  internalTypes: ["page", "post"],
+});
 })
 ```
 
@@ -285,10 +293,11 @@ Custom types and presets work well together. You can use presets inside custom t
 // This type must be added to schema.types alongside your presets.
 defineType({
   name: 'blockquote',
+  title: 'Blockquote',
   type: 'object',
   fields: [
-    defineField({name: 'quote', type: 'text'}),
-    defineField({name: 'author', type: 'string'}),
+    defineField({name: 'quote', title: 'Quote', type: 'text'}),
+    defineField({name: 'author', title: 'Author', type: 'string'}),
     defineLink({name: 'source', title: 'Source'}),
   ],
 })
@@ -303,6 +312,7 @@ Rather than reaching for map hooks, use the `fields` and `groups` options to ext
 ```ts
 definePage({
   name: 'blogPost',
+  title: 'Blog Post',
   // These types must be defined in your schema.
   // See "Use presets alongside custom types" for more.
   pageBuilderBlocks: ['richText', 'image'],
@@ -310,11 +320,13 @@ definePage({
   fields: [
     defineField({
       name: 'publishedAt',
+      title: 'Published at',
       type: 'datetime',
       group: 'metadata',
     }),
     defineField({
       name: 'featured',
+      title: 'Featured',
       type: 'boolean',
       group: 'settings',
     }),
@@ -329,16 +341,15 @@ The `fields` option is sufficient for adding new fields to a preset. Use map hoo
 ```ts
 definePage({
   name: 'marketingPage',
+  title: 'Marketing Page',
   map: {
-    // Prepend a "Type" field before all other fields.
+    // Prepend a "Subtitle" field before all other fields.
     fields: (fields = []) => [
       defineField({
-        name: 'type',
+        name: 'subtitle',
+        title: 'Subtitle',
         type: 'string',
         group: 'main',
-        options: {
-          list: ['landing', 'marketing', 'documentation'],
-        },
       }),
       ...fields,
     ],
