@@ -23,6 +23,14 @@ Check back later, or watch the repository for updates.
 npm install @sanity/presets
 ```
 
+```sh
+pnpm add @sanity/presets
+```
+
+```sh
+yarn add @sanity/presets
+```
+
 Import `createPresetsRegistry` and create a registry instance. The registry returns `define<Type>` functions that produce schema types:
 
 ```ts
@@ -47,6 +55,8 @@ export default defineConfig({
       definePage({
         name: 'marketingPage',
         title: 'Marketing Page',
+        // Each page builder block must be a type you've defined in your
+        // schema. See "Use presets alongside custom types" for more.
         pageBuilderBlocks: ['hero', 'featureGrid'],
       }),
       // your other types...
@@ -100,7 +110,7 @@ This means you configure link behaviour once, and every preset that uses links i
 
 ### Map hooks
 
-Every preset accepts a `map` option containing **map hooks** — functions that receive the schema configuration produced by the preset and return a modified version.
+Every preset accepts a `map` option containing **map hooks** — functions that receive the produced schema type and return a modified version.
 
 Map hooks exist as an escape hatch. They give you full control over the schema type a preset produces, including the ability to reorder, rename, or remove fields.
 
@@ -117,11 +127,11 @@ definePage({
 })
 ```
 
-Each hook receives the value produced by the preset (after any `fields`, `groups`, or other options have been applied) and must return a compatible value.
+Each hook receives the value from the produced schema type (after any `fields`, `groups`, or other options have been applied) and must return a compatible value.
 
-**Use map hooks carefully.** They have the final say in the produced schema, which means they can break a preset's intended functionality if used carelessly. A few guidelines:
+**Use map hooks carefully.** They have the final say in the produced schema type, which means they can break a preset's intended functionality if used carelessly. A few guidelines:
 
-- If you find yourself heavily rewriting a preset's output with map hooks, it may be a sign that you should model the schema type yourself using `defineType` and `defineField` directly.
+- If you find yourself heavily rewriting the produced schema type with map hooks, it may be a sign that you should model the content type yourself using `defineType` and `defineField` directly. See the [schema type documentation](https://www.sanity.io/docs/apis-and-sdks/introduction-to-schemas) for more.
 - If you use map hooks to rename fields, existing documents may need to be migrated. See the [schema and content migrations documentation](https://www.sanity.io/docs/content-lake/schema-and-content-migrations).
 
 ## Usage
@@ -134,6 +144,8 @@ The page preset produces a document type designed for page building. It includes
 definePage({
   name: 'marketingPage',
   title: 'Marketing Page',
+  // Each page builder block must be a type you've defined in your schema.
+  // See "Use presets alongside custom types" for more.
   pageBuilderBlocks: ['hero', 'featureGrid', 'testimonial'],
 })
 ```
@@ -166,6 +178,8 @@ The link preset produces an object type for internal and external links. It incl
 ```ts
 defineLink({
   name: 'primaryLink',
+  // Document types available for internal links. Falls back to
+  // the registry-level link.internalTypes if not provided here.
   internalTypes: ['page', 'post'],
 })
 ```
@@ -268,6 +282,7 @@ Custom types and presets work well together. You can use presets inside custom t
 
 ```ts
 // A custom "blockquote" type that includes a link preset.
+// This type must be added to schema.types alongside your presets.
 defineType({
   name: 'blockquote',
   type: 'object',
@@ -279,6 +294,8 @@ defineType({
 })
 ```
 
+When a preset references a custom type — for example, passing `pageBuilderBlocks: ["blockquote"]` to `definePage` — that type must be defined in your schema. Presets don't create these types for you.
+
 ### Extend presets with fields and groups
 
 Rather than reaching for map hooks, use the `fields` and `groups` options to extend a preset. Fields and groups added this way are appended after the preset's own fields and groups:
@@ -286,6 +303,8 @@ Rather than reaching for map hooks, use the `fields` and `groups` options to ext
 ```ts
 definePage({
   name: 'blogPost',
+  // These types must be defined in your schema.
+  // See "Use presets alongside custom types" for more.
   pageBuilderBlocks: ['richText', 'image'],
   groups: [{name: 'settings', title: 'Settings'}],
   fields: [
@@ -303,58 +322,34 @@ definePage({
 })
 ```
 
-### Use presets inline or as named types
+### Reserve map hooks for when you need full control
 
-Presets can be used in two ways:
-
-1. **As named types** in `schema.types` — the preset is registered as a top-level type and can be referenced by name from any field:
-
-   ```ts
-   schema: {
-     types: [
-       defineLink({name: 'link'}),
-       defineType({
-         name: 'banner',
-         type: 'object',
-         fields: [
-           defineField({name: 'cta', type: 'link'}),
-         ],
-       }),
-     ],
-   }
-   ```
-
-2. **Inline** in a `fields` array — the preset produces an anonymous object field directly:
-
-   ```ts
-   definePage({
-     name: 'landingPage',
-     fields: [
-       defineImage({
-         name: 'heroImage',
-         group: 'main',
-       }),
-     ],
-   })
-   ```
-
-When used inline, the preset accepts `group` and `fieldset` properties for placement within the parent type's editor layout.
-
-### Reserve map hooks for structural changes
-
-The `fields` option is sufficient for adding new fields to a preset. Use map hooks only when you need to change the structure of the preset's output — for example, reordering fields, wrapping existing fields, or conditionally removing them:
+The `fields` option is sufficient for adding new fields to a preset. Use map hooks when you need full control over the produced schema type — for example, reordering or wrapping existing fields:
 
 ```ts
 definePage({
-  name: 'simplePage',
+  name: 'marketingPage',
   map: {
-    // Remove the slug field entirely.
-    fields: (fields = []) => fields.filter((f) => f.name !== 'slug'),
+    // Prepend a "Type" field before all other fields.
+    fields: (fields = []) => [
+      defineField({
+        name: 'type',
+        type: 'string',
+        group: 'main',
+        options: {
+          list: ['landing', 'marketing', 'documentation'],
+        },
+      }),
+      ...fields,
+    ],
   },
 })
 ```
 
-If you find yourself rewriting most of a preset's fields with map hooks, consider creating the schema type directly with `defineType` instead. Presets are most valuable when their defaults align closely with what you need.
+A few guidelines for using map hooks:
+
+- If you find yourself heavily rewriting the produced schema type with map hooks, it may be a sign that you should model the content type yourself. See the [schema type documentation](https://www.sanity.io/docs/apis-and-sdks/introduction-to-schemas) for more.
+- If you use map hooks to rename fields, existing documents may need to be migrated to reflect the new field names. See the [schema and content migrations documentation](https://www.sanity.io/docs/content-lake/schema-and-content-migrations).
 
 ### Configure links globally
 
