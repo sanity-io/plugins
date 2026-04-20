@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 
+import {randomKey} from '@sanity/util/content'
 import {getCliClient} from 'sanity/cli'
 
 const client = getCliClient({apiVersion: '2023-06-30'})
@@ -15,8 +16,8 @@ const client = getCliClient({apiVersion: '2023-06-30'})
 
 // To:
 // "greeting": [
-//   { "_key": "en", "value": "hello" },
-//   { "_key": "fr", "value": "bonjour" },
+//   { "_key": "abcdefghijkl", "language":"en", "value": "hello" },
+//   { "_key": "zxyvwxrstqpo", "language":"fr", "value": "bonjour" },
 // ]
 
 // This will migrate documents in batches of 100 and continue patching until no more documents are
@@ -44,6 +45,7 @@ const client = getCliClient({apiVersion: '2023-06-30'})
 
 const TYPE = `presenter`
 const FIELD_NAME = `title`
+const ARRAY_ITEM_TYPE = `internationalizedArrayStringValue`
 
 // 3. Run this script with:
 // `npx sanity@latest exec ./migrations/transformObjectToArray.ts --with-user-token`
@@ -66,7 +68,9 @@ const buildPatches = (docs: any[]) =>
         [FIELD_NAME]: Object.keys(doc[FIELD_NAME])
           .filter((key) => key !== '_type')
           .map((key) => ({
-            _key: key,
+            _key: randomKey(),
+            _type: ARRAY_ITEM_TYPE,
+            language: key,
             value: doc[FIELD_NAME][key],
           })),
       },
