@@ -19,7 +19,7 @@ Check back later, or watch the repository for updates.
 
 ## Overview
 
-`@sanity/presets` provides ready-made schema type factories for common content patterns in Sanity Studio. Instead of modelling pages, links, images, and metadata from scratch, call a `define<Type>` function and get a working schema type with sensible defaults.
+`@sanity/presets` provides ready-made helpers for creating schema types for common content patterns in Sanity Studio. Instead of modelling pages, links, images, and metadata from scratch, call a `define<Type>` function and get a working schema type with sensible defaults.
 
 **Included presets:**
 
