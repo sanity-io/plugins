@@ -11,16 +11,15 @@ describe('createPresetsRegistry', () => {
   test('returns an object with define<Name> functions for all system presets', () => {
     const registry = createPresetsRegistry()
 
-    expect(typeof registry['defineLink']).toBe('function')
-    expect(typeof registry['defineCta']).toBe('function')
-    expect(typeof registry['defineSeo']).toBe('function')
-    expect(typeof registry['defineImage']).toBe('function')
-    expect(typeof registry['definePage']).toBe('function')
+    expect(typeof registry.defineLink).toBe('function')
+    expect(typeof registry.defineCta).toBe('function')
+    expect(typeof registry.defineSeo).toBe('function')
+    expect(typeof registry.defineImage).toBe('function')
+    expect(typeof registry.definePage).toBe('function')
   })
 
   test('defineLink returns a schema type definition', () => {
-    const registry = createPresetsRegistry()
-    const defineLink = registry['defineLink']!
+    const {defineLink} = createPresetsRegistry()
     const result = defineLink({name: 'testLink'})
 
     expect(result).toHaveProperty('name', 'testLink')
@@ -28,10 +27,9 @@ describe('createPresetsRegistry', () => {
   })
 
   test('defineLink reflects registry-level internalTypes', () => {
-    const registry = createPresetsRegistry({
+    const {defineLink} = createPresetsRegistry({
       link: {internalTypes: ['marketingPage']},
     })
-    const defineLink = registry['defineLink']!
     const result = defineLink({name: 'testLink'})
 
     expect(result).toEqual(
@@ -47,8 +45,7 @@ describe('createPresetsRegistry', () => {
   })
 
   test('defineCta returns a schema type definition', () => {
-    const registry = createPresetsRegistry()
-    const defineCta = registry['defineCta']!
+    const {defineCta} = createPresetsRegistry()
     const result = defineCta({name: 'testCta'})
 
     expect(result).toHaveProperty('name', 'testCta')
@@ -56,8 +53,7 @@ describe('createPresetsRegistry', () => {
   })
 
   test('defineSeo returns a schema type definition', () => {
-    const registry = createPresetsRegistry()
-    const defineSeo = registry['defineSeo']!
+    const {defineSeo} = createPresetsRegistry()
     const result = defineSeo({name: 'testSeo'})
 
     expect(result).toHaveProperty('name', 'testSeo')
@@ -65,8 +61,7 @@ describe('createPresetsRegistry', () => {
   })
 
   test('defineImage returns a schema type definition', () => {
-    const registry = createPresetsRegistry()
-    const defineImage = registry['defineImage']!
+    const {defineImage} = createPresetsRegistry()
     const result = defineImage({name: 'testImage'})
 
     expect(result).toHaveProperty('name', 'testImage')
@@ -74,8 +69,7 @@ describe('createPresetsRegistry', () => {
   })
 
   test('definePage returns a schema type definition', () => {
-    const registry = createPresetsRegistry()
-    const definePage = registry['definePage']!
+    const {definePage} = createPresetsRegistry()
     const result = definePage({name: 'testPage'})
 
     expect(result).toHaveProperty('name', 'testPage')
@@ -89,8 +83,7 @@ describe('preset composition via getPreset', () => {
   })
 
   test('defineCta resolves link fields from the registry', () => {
-    const registry = createPresetsRegistry()
-    const defineCta = registry['defineCta']!
+    const {defineCta} = createPresetsRegistry()
     const result = defineCta({name: 'testCta'})
 
     expect(result).toEqual(
@@ -111,10 +104,9 @@ describe('preset composition via getPreset', () => {
   })
 
   test('defineCta link field inherits internalTypes from registry config', () => {
-    const registry = createPresetsRegistry({
+    const {defineCta} = createPresetsRegistry({
       link: {internalTypes: ['article', 'page']},
     })
-    const defineCta = registry['defineCta']!
     const result = defineCta({name: 'testCta'})
 
     expect(result).toEqual(
@@ -135,8 +127,7 @@ describe('preset composition via getPreset', () => {
   })
 
   test('definePage resolves seo fields from the registry', () => {
-    const registry = createPresetsRegistry()
-    const definePage = registry['definePage']!
+    const {definePage} = createPresetsRegistry()
     const result = definePage({name: 'testPage'})
 
     expect(result).toEqual(
@@ -156,8 +147,7 @@ describe('preset composition via getPreset', () => {
   })
 
   test('definePage seo field retains group assignment after composition', () => {
-    const registry = createPresetsRegistry()
-    const definePage = registry['definePage']!
+    const {definePage} = createPresetsRegistry()
     const result = definePage({name: 'testPage'})
 
     expect(result).toEqual(

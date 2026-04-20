@@ -12,8 +12,6 @@ import {recordPresetUsage, registerRegistry} from './telemetry'
 
 const systemPresets = [linkType, ctaType, seoType, imageType, pageType] as const
 
-type SystemPresets = typeof systemPresets
-
 export interface PresetsRegistryConfig {
   link?: LinkTypeConfig
   cta?: {}
@@ -22,23 +20,16 @@ export interface PresetsRegistryConfig {
   page?: PageTypeConfig
 }
 
-type PresetConfig<Preset> = Preset extends (
-  config: infer Config,
-  registry: RegistryContext,
-) => unknown
-  ? Config
-  : never
+type DefineFunction<Preset extends PresetResultFactory> = (
+  config: Parameters<Preset>[0],
+) => SchemaTypeDefinition & FieldDefinition
 
-type PresetName<Preset> = Preset extends (...args: never[]) => {name: infer Name extends string}
-  ? Name
-  : never
-
-type RegistryKey<Preset> = `define${Capitalize<PresetName<Preset>>}`
-
-export type PresetsRegistry = {
-  [Preset in SystemPresets[number] as RegistryKey<Preset>]: (
-    config: PresetConfig<Preset>,
-  ) => SchemaTypeDefinition & FieldDefinition
+export interface PresetsRegistry {
+  defineLink: DefineFunction<typeof linkType>
+  defineCta: DefineFunction<typeof ctaType>
+  defineSeo: DefineFunction<typeof seoType>
+  defineImage: DefineFunction<typeof imageType>
+  definePage: DefineFunction<typeof pageType>
 }
 
 export function createPresetsRegistry(config: PresetsRegistryConfig = {}): PresetsRegistry {
