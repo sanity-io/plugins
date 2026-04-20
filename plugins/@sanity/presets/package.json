@@ -42,7 +42,8 @@
   },
   "dependencies": {
     "@sanity/asset-utils": "^2.3.0",
-    "@sanity/telemetry": "catalog:"
+    "@sanity/telemetry": "catalog:",
+    "@sanity/uuid": "^3.0.2"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

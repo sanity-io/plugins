@@ -667,6 +667,9 @@ importers:
       '@sanity/telemetry':
         specifier: 'catalog:'
         version: 1.0.0(react@19.2.5)
+      '@sanity/uuid':
+        specifier: ^3.0.2
+        version: 3.0.2
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*

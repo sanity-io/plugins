@@ -1,3 +1,4 @@
+import {uuid} from '@sanity/uuid'
 import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
@@ -41,7 +42,7 @@ export type PresetsRegistry = {
 }
 
 export function createPresetsRegistry(config: PresetsRegistryConfig = {}): PresetsRegistry {
-  const registryId = crypto.randomUUID()
+  const registryId = uuid()
   registerRegistry(registryId)
 
   const registry: Record<string, (config?: Record<string, unknown>) => SchemaTypeDefinition> = {}
