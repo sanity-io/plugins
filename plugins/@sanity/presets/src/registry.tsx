@@ -21,12 +21,15 @@ export interface PresetsRegistryConfig {
   page?: PageTypeConfig
 }
 
-type PresetConfig<Preset> = Preset extends (config: infer C, registry: RegistryContext) => unknown
-  ? C
+type PresetConfig<Preset> = Preset extends (
+  config: infer Config,
+  registry: RegistryContext,
+) => unknown
+  ? Config
   : never
 
-type PresetName<Preset> = Preset extends (...args: never[]) => {name: infer N extends string}
-  ? N
+type PresetName<Preset> = Preset extends (...args: never[]) => {name: infer Name extends string}
+  ? Name
   : never
 
 type RegistryKey<Preset> = `define${Capitalize<PresetName<Preset>>}`
