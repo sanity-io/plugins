@@ -9,31 +9,20 @@ export interface RegistryContext {
   registryConfig: Record<string, unknown>
 }
 
-export interface PresetTypeContext {
-  /** Used to derive the define<Name> function on the registry. Must be a simple identifier. */
+interface PresetTypeContext {
   name: string
-  /** Optional telemetry identifier. If set, recorded when the preset is used. */
   identifier?: string
   schemaType: SchemaTypeDefinition
 }
 
-/**
- * Properties that are never be permitted to be overridden when using any preset.
- */
 type ProhibitedProperties = 'type'
 
-/**
- * Prevent excluded properties being assigned to the object.
- */
 type SanitizeProperties<Properties, ExcludedProperties extends string | undefined> = [
   ExcludedProperties,
 ] extends [PropertyKey]
   ? Omit<Properties, ExcludedProperties>
   : Properties
 
-/**
- * Derive the user-facing config type from Context and AliasedType.
- */
 type DerivedConfig<
   Context,
   AliasedType extends IntrinsicTypeName | undefined = undefined,
@@ -46,13 +35,6 @@ type DerivedConfig<
         ProhibitedProperties | LockedProperties
       >
     : {}) & {
-    /**
-     * Map hooks allow any schema property created by the preset to be
-     * overridden.
-     *
-     * Each hook receives the value created by the preset, and may return any
-     * compatible value.
-     */
     map?: AliasedType extends string
       ? {
           [Key in keyof PartialSchemaDefinition<AliasedType>]?: (

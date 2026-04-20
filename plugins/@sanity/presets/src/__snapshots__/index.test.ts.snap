@@ -4,7 +4,6 @@ exports[`package exports 1`] = `
 {
   ".": {
     "createPresetsRegistry": "function",
-    "definePresetType": "function",
   },
 }
 `;

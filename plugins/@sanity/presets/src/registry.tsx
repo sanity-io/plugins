@@ -13,26 +13,13 @@ const systemPresets = [linkType, ctaType, seoType, imageType, pageType] as const
 
 type SystemPresets = typeof systemPresets
 
-/**
- * System preset configuration keys — declared explicitly to avoid
- * a circular reference between PresetsRegistryConfig, SystemPresets,
- * and the preset factories that read from registryConfig.
- */
-interface SystemPresetsConfig {
+export interface PresetsRegistryConfig {
   link?: LinkTypeConfig
   cta?: {}
   seo?: {}
   image?: ImageTypeConfig
   page?: PageTypeConfig
 }
-
-/**
- * Registry configuration derived from system presets and user extensions.
- * System preset keys (link, cta, seo, image, page) are declared explicitly.
- * Extension keys are accepted via an index signature — extensions read
- * their config from registry.registryConfig at runtime.
- */
-export type PresetsRegistryConfig = SystemPresetsConfig & Record<string, unknown>
 
 type PresetConfig<Preset> = Preset extends (config: infer C, registry: RegistryContext) => unknown
   ? C
@@ -44,34 +31,26 @@ type PresetName<Preset> = Preset extends (...args: never[]) => {name: infer N ex
 
 type RegistryKey<Preset> = `define${Capitalize<PresetName<Preset>>}`
 
-export type PresetsRegistry<Extensions extends readonly PresetResultFactory[] = readonly []> = {
-  [Preset in [...SystemPresets, ...Extensions][number] as RegistryKey<Preset>]: (
+export type PresetsRegistry = {
+  [Preset in SystemPresets[number] as RegistryKey<Preset>]: (
     config: PresetConfig<Preset>,
   ) => SchemaTypeDefinition & FieldDefinition
 }
 
-export function createPresetsRegistry<
-  const Extensions extends readonly PresetResultFactory[] = readonly [],
->(
-  config: PresetsRegistryConfig & {extensions?: Extensions} = {} as PresetsRegistryConfig & {
-    extensions?: Extensions
-  },
-): PresetsRegistry<Extensions> {
+export function createPresetsRegistry(config: PresetsRegistryConfig = {}): PresetsRegistry {
   const registryId = crypto.randomUUID()
   registerRegistry(registryId)
 
-  const allPresets = [...systemPresets, ...(config.extensions ?? [])]
   const registry: Record<string, (config?: Record<string, unknown>) => SchemaTypeDefinition> = {}
 
-  for (const preset of allPresets) {
+  for (const preset of systemPresets) {
     const presetName = getPresetName(preset)
-    validatePresetName(presetName)
     const key = `define${presetName.charAt(0).toUpperCase()}${presetName.slice(1)}`
     registry[key] = createDefiner(registryId, preset, config, registry)
   }
 
   // oxlint-disable-next-line no-unsafe-type-assertion -- dynamically built object with computed keys
-  return registry as unknown as PresetsRegistry<Extensions>
+  return registry as unknown as PresetsRegistry
 }
 
 const stubRegistryContext: RegistryContext = {
@@ -91,15 +70,6 @@ function getPresetIdentifier(preset: PresetResultFactory): string | undefined {
   return preset({}, stubRegistryContext)?.identifier
 }
 
-function validatePresetName(name: string): void {
-  if (!/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(name)) {
-    throw new Error(
-      `Invalid preset name "${name}". The name must be a valid JavaScript identifier ` +
-        `(no periods, spaces, or special characters).`,
-    )
-  }
-}
-
 function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: string): void {
   const existing = 'components' in schemaType ? schemaType.components : undefined
   Object.assign(schemaType, {
@@ -114,7 +84,7 @@ function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: str
 function createDefiner(
   registryId: string,
   preset: PresetResultFactory,
-  config: Record<string, unknown>,
+  config: PresetsRegistryConfig,
   registry: Record<string, (config?: Record<string, unknown>) => SchemaTypeDefinition>,
 ): (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition {
   const presetName = getPresetName(preset)
@@ -141,9 +111,8 @@ function createDefiner(
 
     const {group, fieldset, ...presetConfig} = userConfig
 
-    // Merge the preset's registry config entry as defaults under
-    // the user's call-site config. Call-site values take precedence.
-    const registryDefaults = config[presetName]
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const registryDefaults = (config as unknown as Record<string, unknown>)[presetName]
     const mergedConfig =
       typeof registryDefaults === 'object' && registryDefaults !== null
         ? {...registryDefaults, ...presetConfig}

@@ -1,38 +1,15 @@
-import {createPresetsRegistry, definePresetType} from '@sanity/presets'
+import {createPresetsRegistry} from '@sanity/presets'
 import {definePlugin, defineType, defineField} from 'sanity'
 
-const customPreset = definePresetType<{}, 'object'>((config) => {
-  const {fields, ...objectConfig} = config
-
-  return {
-    name: 'custom',
-    identifier: 'custom.preset',
-    schemaType: defineType({
-      name: 'custom',
-      ...objectConfig,
-      type: 'object',
-      fields: [
-        defineField({
-          name: 'test',
-          type: 'string',
-        }),
-        ...(fields ?? []),
-      ],
-    }),
-  }
-})
-
-const {defineImage, definePage, defineCustom} = createPresetsRegistry({
+const {defineImage, definePage} = createPresetsRegistry({
   link: {
     internalTypes: ['marketingPage'],
   },
-  extensions: [customPreset],
 })
 
 export const presetsWorkspace = definePlugin(() => ({
   schema: {
     types: [
-      defineCustom({name: 'presetsCustom', title: 'My Custom'}),
       defineImage({name: 'presetsImage', title: 'Image'}),
       definePage({
         name: 'marketingPage',
@@ -53,7 +30,7 @@ export const presetsWorkspace = definePlugin(() => ({
         ],
         map: {
           fields: (fields = []) => [
-            defineField({name: 'appended2', type: 'string', group: 'main'}),
+            defineField({name: 'appended', type: 'string', group: 'main'}),
             ...fields,
           ],
         },

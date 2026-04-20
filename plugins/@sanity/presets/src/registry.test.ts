@@ -1,7 +1,5 @@
-import {defineField, defineType} from 'sanity'
 import {afterEach, describe, expect, test} from 'vitest'
 
-import {definePresetType} from './definePresetType'
 import {createPresetsRegistry} from './registry'
 import {resetRegistries} from './telemetry'
 
@@ -83,38 +81,6 @@ describe('createPresetsRegistry', () => {
     expect(result).toHaveProperty('name', 'testPage')
     expect(result).toHaveProperty('type', 'document')
   })
-
-  test('throws for invalid preset name with periods', () => {
-    const invalidPreset = definePresetType((_config, _registry) => ({
-      name: 'invalid.name',
-      schemaType: defineType({name: 'test', type: 'object', fields: []}),
-    }))
-
-    expect(() =>
-      createPresetsRegistry({
-        extensions: [invalidPreset],
-      }),
-    ).toThrow(/Invalid preset name/)
-  })
-
-  test('extension without identifier records telemetry as "unnamed"', () => {
-    const noIdentifierPreset = definePresetType<{}, 'object'>((config) => ({
-      name: 'widget',
-      // no identifier set
-      schemaType: defineType({name: 'widget', ...config, type: 'object', fields: []}),
-    }))
-
-    const registry = createPresetsRegistry({
-      extensions: [noIdentifierPreset],
-    })
-
-    const defineWidget = registry['defineWidget']!
-    expect(typeof defineWidget).toBe('function')
-
-    // Calling the define function should not throw — telemetry records 'unnamed'
-    const result = defineWidget({name: 'testWidget'})
-    expect(result).toHaveProperty('name', 'testWidget')
-  })
 })
 
 describe('preset composition via getPreset', () => {
@@ -127,7 +93,6 @@ describe('preset composition via getPreset', () => {
     const defineCta = registry['defineCta']!
     const result = defineCta({name: 'testCta'})
 
-    // The link field should have its own fields resolved from linkType, not be empty
     expect(result).toEqual(
       expect.objectContaining({
         fields: expect.arrayContaining([
@@ -174,7 +139,6 @@ describe('preset composition via getPreset', () => {
     const definePage = registry['definePage']!
     const result = definePage({name: 'testPage'})
 
-    // The seo field should have its own fields resolved from seoType, not be empty
     expect(result).toEqual(
       expect.objectContaining({
         fields: expect.arrayContaining([
@@ -206,68 +170,5 @@ describe('preset composition via getPreset', () => {
         ]),
       }),
     )
-  })
-
-  test('extension preset can use getPreset to compose system presets', () => {
-    const heroType = definePresetType<{}, 'object'>((_config, registry) => {
-      const linkField = Object.assign(
-        defineField({name: 'heroLink', title: 'Hero Link', type: 'object', fields: []}),
-        registry.getPreset('link', {name: 'heroLink', title: 'Hero Link'}),
-      )
-
-      return {
-        name: 'hero',
-        schemaType: defineType({
-          name: 'hero',
-          title: 'Hero',
-          type: 'object',
-          fields: [defineField({name: 'heading', type: 'string', title: 'Heading'}), linkField],
-        }),
-      }
-    })
-
-    const registry = createPresetsRegistry({
-      link: {internalTypes: ['landingPage']},
-      extensions: [heroType],
-    })
-    const defineHero = registry['defineHero']!
-    const result = defineHero({name: 'testHero'})
-
-    // Should have link fields resolved from linkType
-    expect(result).toEqual(
-      expect.objectContaining({
-        fields: expect.arrayContaining([
-          expect.objectContaining({
-            name: 'heroLink',
-            fields: expect.arrayContaining([
-              expect.objectContaining({name: 'linkType'}),
-              // Should inherit internalTypes from registry config
-              expect.objectContaining({
-                name: 'reference',
-                to: [{type: 'landingPage'}],
-              }),
-            ]),
-          }),
-        ]),
-      }),
-    )
-  })
-
-  test('getPreset throws for non-existent preset name', () => {
-    const badPreset = definePresetType<{}, 'object'>((_config, registry) => {
-      registry.getPreset('nonExistent', {name: 'test'})
-
-      return {
-        name: 'bad',
-        schemaType: defineType({name: 'bad', type: 'object', fields: []}),
-      }
-    })
-
-    const registry = createPresetsRegistry({
-      extensions: [badPreset],
-    })
-    const defineBad = registry['defineBad']!
-
-    expect(() => defineBad({name: 'test'})).toThrow(/Cannot resolve preset "nonExistent"/)
   })
 })

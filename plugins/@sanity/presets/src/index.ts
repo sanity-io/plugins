@@ -1,4 +1,2 @@
 export {createPresetsRegistry} from './registry'
 export type {PresetsRegistryConfig, PresetsRegistry} from './registry'
-export {definePresetType} from './definePresetType'
-export type {PresetTypeContext, PresetResultFactory, RegistryContext} from './definePresetType'
