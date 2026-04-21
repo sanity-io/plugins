@@ -160,7 +160,7 @@ definePage({
 
 Each hook receives the value from the produced schema type (after any `fields`, `groups`, or other options have been applied) and must return a compatible value.
 
-**Use map hooks carefully.** They have the final say in the produced schema type, which means they can break a preset's intended functionality if used carelessly. A few guidelines:
+**Use map hooks carefully.** They have the final say in the produced schema type, which means they can unintentionally break a preset's intended functionality. A few guidelines:
 
 - If you find yourself heavily rewriting the produced schema type with map hooks, it may be a sign that you should model the content type yourself using `defineType` and `defineField` directly. See the [schema type documentation](https://www.sanity.io/docs/apis-and-sdks/introduction-to-schemas) for more.
 - If you use map hooks to rename fields, existing documents may need to be migrated. See the [schema and content migrations documentation](https://www.sanity.io/docs/content-lake/schema-and-content-migrations).
