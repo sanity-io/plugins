@@ -97,9 +97,8 @@ function createDefiner(
   ): SchemaTypeDefinition & FieldDefinition {
     recordPresetUsage(registryId, identifier ?? 'unnamed')
 
-    const registryContext: RegistryContext = {
-      // oxlint-disable-next-line no-unsafe-type-assertion
-      registryConfig: config as unknown as Record<string, unknown>,
+    const registryContext: RegistryContext<PresetsRegistryConfig> = {
+      registryConfig: config,
       getPreset: (presetName: string, presetConfig?: Record<string, unknown>) => {
         const key = `define${presetName.charAt(0).toUpperCase()}${presetName.slice(1)}`
         const definer = registry[key]
