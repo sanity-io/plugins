@@ -12,8 +12,8 @@ export const linkType = definePresetType<
   'object',
   'preview',
   PresetsRegistryConfig
->(({internalTypes, fields, ...objectConfig}, {config}) => {
-  const registryLinkConfig = config.link
+>(({internalTypes, fields, ...objectConfig}, registry) => {
+  const registryLinkConfig = registry.config.link
   const resolvedInternalTypes = internalTypes ?? registryLinkConfig?.internalTypes ?? []
   const referenceTargets = resolvedInternalTypes.map((typeName) => ({type: typeName}))
 
