@@ -271,6 +271,7 @@ export default function Verify(props: VerifyProps) {
             tone="caution"
             mode="ghost"
             onClick={() =>
+              // oxlint-disable-next-line no-unnecessary-type-conversion
               resetOrderOfAllDocuments(data.map((doc) => String(doc._metadata?.documentId)))
             }
             text={

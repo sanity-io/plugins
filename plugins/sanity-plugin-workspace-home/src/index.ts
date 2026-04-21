@@ -23,8 +23,8 @@ type WorkspaceHomeConfigProps = {
 }
 
 export const workspaceHomeConfig = ({
-  projectId = ``,
-  dataset = ``,
+  projectId,
+  dataset,
 }: WorkspaceHomeConfigProps): WorkspaceOptions => ({
   name: 'home',
   title: 'Home',

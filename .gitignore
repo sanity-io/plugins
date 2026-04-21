@@ -144,3 +144,6 @@ vite.config.ts.timestamp-*
 
 # Sanity Studio
 .sanity
+
+# pnpm
+.pnpm-store

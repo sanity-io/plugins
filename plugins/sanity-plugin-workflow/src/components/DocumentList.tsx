@@ -53,6 +53,7 @@ function getStyle(
 
 export default function DocumentList(props: DocumentListProps) {
   const {
+    // oxlint-disable-next-line no-useless-default-assignment
     data = [],
     invalidDocumentIds,
     patchingIds,

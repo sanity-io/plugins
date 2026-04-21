@@ -203,6 +203,7 @@ export default function WorkflowTool(props: WorkflowToolProps) {
   // Used for the user filter UI
   const uniqueAssignedUsers = useMemo(() => {
     const uniqueUserIds = data.reduce((acc, item) => {
+      // oxlint-disable-next-line no-useless-default-assignment
       const {assignees = []} = item._metadata ?? {}
       const newAssignees = assignees?.length ? assignees.filter((a) => !acc.includes(a)) : []
       if (newAssignees.length) {

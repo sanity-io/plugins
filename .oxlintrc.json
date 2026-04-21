@@ -52,7 +52,6 @@
 
     // React Compiler checks
     // Recommended rules (from LintRulePreset.Recommended)
-    "react-hooks-js/component-hook-factories": "error",
     "react-hooks-js/config": "error",
     "react-hooks-js/error-boundaries": "error",
     "react-hooks-js/gating": "error",
@@ -70,12 +69,12 @@
     // Recommended-latest rules (from LintRulePreset.RecommendedLatest)
     "react-hooks-js/void-use-memo": "error",
     // Off rules (LintRulePreset.Off) - not enabled by default
-    "react-hooks-js/automatic-effect-dependencies": "error",
     "react-hooks-js/capitalized-calls": "error",
+    "react-hooks-js/exhaustive-effect-dependencies": "error",
     "react-hooks-js/fbt": "error",
-    "react-hooks-js/fire": "error",
     "react-hooks-js/hooks": "error",
     "react-hooks-js/invariant": "error",
+    "react-hooks-js/memo-dependencies": "error",
     "react-hooks-js/memoized-effect-dependencies": "error",
     "react-hooks-js/no-deriving-state-in-effects": "error",
     "react-hooks-js/rule-suppression": "error",

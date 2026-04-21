@@ -165,6 +165,7 @@ export const assistFieldActions: DocumentFieldAction = {
                   isPrivate: Boolean(instruction.userId && instruction.userId === currentUser?.id),
                   onInstructionAction,
                   hidden: isHidden,
+                  // oxlint-disable-next-line no-unnecessary-type-conversion
                   documentIsNew: !!documentIsNew,
                   assistSupported,
                 }),

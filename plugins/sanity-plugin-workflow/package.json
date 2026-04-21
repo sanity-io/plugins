@@ -53,6 +53,7 @@
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",

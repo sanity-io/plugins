@@ -48,12 +48,14 @@
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/video.js": "^7.3.58",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "sanity": "catalog:"
+    "sanity": "catalog:",
+    "styled-components": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",

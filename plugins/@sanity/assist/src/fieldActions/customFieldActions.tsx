@@ -233,6 +233,7 @@ export function useCustomFieldActions(
         return createSafeNode({
           node,
           pushToast,
+          // oxlint-disable-next-line react-hooks-js/memo-dependencies
           addSyntheticTask,
           removeSyntheticTask,
         })
@@ -253,7 +254,7 @@ export function useCustomFieldActions(
           ]
       : []
     return groups ?? []
-    // oxlint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
   }, [configActions, fieldActions, pushToast])
 }
 
