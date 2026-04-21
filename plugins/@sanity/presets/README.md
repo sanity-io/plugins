@@ -40,6 +40,8 @@ Presets are designed to be extended — add fields, groups, and map hooks as you
 
 ## Installation
 
+**Prerequisites:** A Sanity Studio project with `sanity` installed. See the [getting started guide](https://www.sanity.io/docs/getting-started) if you're starting from scratch.
+
 ```sh
 npm install @sanity/presets
 ```
@@ -136,6 +138,8 @@ Every preset accepts a `map` option containing **map hooks** — functions that 
 Map hooks exist as an escape hatch. They give you full control over the schema type a preset produces, including the ability to reorder, rename, or remove fields.
 
 ```ts
+import {defineField} from 'sanity'
+
 definePage({
   name: 'marketingPage',
   title: 'Marketing Page',
@@ -204,12 +208,11 @@ The link preset produces an object type for internal and external links. It incl
 
 ```ts
 defineLink({
-  name: "primaryLink",
-  title: "Primary Link",
+  name: 'primaryLink',
+  title: 'Primary Link',
   // Document types available for internal links. Falls back to
   // the registry-level link.internalTypes if not provided here.
-  internalTypes: ["page", "post"],
-});
+  internalTypes: ['page', 'post'],
 })
 ```
 
@@ -235,6 +238,7 @@ The CTA preset produces an object type for call-to-action elements. It includes 
 ```ts
 defineCta({
   name: 'heroCta',
+  title: 'Hero CTA',
 })
 ```
 
@@ -252,6 +256,7 @@ The SEO preset produces an object type for search engine metadata. It includes f
 ```ts
 defineSeo({
   name: 'metadata',
+  title: 'Metadata',
   group: 'metadata',
 })
 ```
@@ -273,6 +278,7 @@ The image preset produces an object type for images with optional alt text and c
 ```ts
 defineImage({
   name: 'heroImage',
+  title: 'Hero Image',
   altText: true,
   caption: false,
   hotspot: true,
@@ -310,6 +316,8 @@ Presets are not intended to replace all content modelling. They provide opiniona
 Custom types and presets work well together. You can use presets inside custom types, and reference custom types from presets:
 
 ```ts
+import {defineType, defineField} from 'sanity'
+
 // A custom "blockquote" type that includes a link preset.
 // This type must be added to schema.types alongside your presets.
 defineType({
@@ -328,7 +336,7 @@ When a preset references a custom type — for example, passing `pageBuilderBloc
 
 ### Extend presets with fields and groups
 
-Rather than reaching for map hooks, use the `fields` and `groups` options to extend a preset. Fields and groups added this way are appended after the preset's own fields and groups:
+Rather than reaching for [map hooks](#map-hooks), use the `fields` and `groups` options to extend a preset. Fields and groups added this way are appended after the preset's own fields and groups:
 
 ```ts
 definePage({
@@ -357,9 +365,11 @@ definePage({
 
 ### Reserve map hooks for when you need full control
 
-The `fields` option is sufficient for adding new fields to a preset. Use map hooks when you need full control over the produced schema type — for example, reordering or wrapping existing fields:
+The [`fields` option](#extend-presets-with-fields-and-groups) is sufficient for adding new fields to a preset. Use map hooks when you need full control over the produced schema type — for example, reordering or wrapping existing fields:
 
 ```ts
+import {defineField} from 'sanity'
+
 definePage({
   name: 'marketingPage',
   title: 'Marketing Page',
@@ -385,7 +395,7 @@ A few guidelines for using map hooks:
 
 ### Configure links globally
 
-The link preset is used by multiple other presets (CTA, rich text). Configure `internalTypes` at the registry level so all links share the same set of linkable document types:
+The [link preset](#link) is used by multiple other presets ([CTA](#cta-call-to-action), [rich text](#rich-text)). Configure `internalTypes` at the registry level so all links share the same set of linkable document types:
 
 ```ts
 const {defineLink, defineCta, definePage} = createPresetsRegistry({
