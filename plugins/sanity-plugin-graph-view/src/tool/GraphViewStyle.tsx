@@ -22,7 +22,7 @@ export const GraphWrapper: React.FC<Style> = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-` as React.FC<Style>
+`
 
 export const HoverNode: React.FC<Style> = styled.div`
   font-family: ${({theme}: Style) => theme.fonts.text.family};
