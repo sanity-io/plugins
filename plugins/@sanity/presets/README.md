@@ -25,7 +25,7 @@ Check back later, or watch the repository for updates.
 
 - `definePage` — document type for page building (content blocks, slug, SEO metadata)
 - `defineLink` — internal and external links with conditional fields
-- `defineCta` — call-to-action with an inline link and visual hierarchy level
+- `defineCta` — call-to-action with an inline link and semantic importance level
 - `defineSeo` — search engine metadata (title, description, Open Graph image)
 - `defineImage` — image with optional alt text, caption, and hotspot
 - `defineRichText` — Portable Text with configurable annotations and blocks _(coming soon)_
@@ -233,7 +233,7 @@ defineLink({
 
 ### CTA (call to action)
 
-The CTA preset produces an object type for call-to-action elements. It includes an inline link field (composed from the link preset) and a level selector for visual hierarchy.
+The CTA preset produces an object type for call-to-action elements. It includes an inline link field (composed from the link preset) and a level selector for semantic importance.
 
 ```ts
 defineCta({
@@ -247,7 +247,7 @@ defineCta({
 | Field   | Type     | Description                                                                                |
 | ------- | -------- | ------------------------------------------------------------------------------------------ |
 | `link`  | `object` | An inline link, composed from the link preset. Inherits `internalTypes` from the registry. |
-| `level` | `number` | Visual hierarchy level (1, 2, or 3). Displayed as radio buttons.                           |
+| `level` | `number` | Semantic importance level (1, 2, or 3). Displayed as radio buttons.                        |
 
 ### SEO (search engine optimization)
 
