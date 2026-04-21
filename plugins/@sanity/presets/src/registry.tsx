@@ -54,7 +54,7 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
 
 const stubRegistryContext: RegistryContext = {
   getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
-  registryConfig: {},
+  config: {},
 }
 
 function getPresetName(preset: PresetResultFactory): string {
@@ -98,7 +98,7 @@ function createDefiner(
     recordPresetUsage(registryId, identifier ?? 'unnamed')
 
     const registryContext: RegistryContext<PresetsRegistryConfig> = {
-      registryConfig: config,
+      config,
       getPreset: (presetName: string, presetConfig?: Record<string, unknown>) => {
         const key = `define${presetName.charAt(0).toUpperCase()}${presetName.slice(1)}`
         const definer = registry[key]

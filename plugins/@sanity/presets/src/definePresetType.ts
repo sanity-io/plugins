@@ -11,7 +11,7 @@ export type PresetResultFactory = (...args: any[]) => PresetResult
 
 export interface RegistryContext<Config = Record<string, unknown>> {
   getPreset: (presetName: string, config?: Record<string, unknown>) => FieldDefinition
-  registryConfig: Config
+  config: Config
 }
 
 interface PresetTypeContext {
