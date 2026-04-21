@@ -43,7 +43,7 @@
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
-    "react-is": "^19.2.4"
+    "react-is": "^19.2.5"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
