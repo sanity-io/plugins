@@ -9,6 +9,7 @@ type OptimisticallyStrengthenProps = {
 // There's no good reason to leave published references as weak
 // So this component will run on every render and strengthen them
 export default function OptimisticallyStrengthen(props: OptimisticallyStrengthenProps) {
+  // oxlint-disable-next-line no-useless-default-assignment
   const {translations = [], metadataId} = props
 
   if (!translations.length) {

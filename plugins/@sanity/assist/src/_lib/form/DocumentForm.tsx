@@ -1,6 +1,6 @@
 import {Box, type BoxProps, Flex, focusFirstDescendant, Spinner, Text} from '@sanity/ui'
 import type React from 'react'
-import {type HTMLProps, useEffect, useMemo, useRef} from 'react'
+import {type HTMLProps, useEffect, useEffectEvent, useMemo, useRef} from 'react'
 import {tap} from 'rxjs/operators'
 import {
   createPatchChannel,
@@ -74,21 +74,22 @@ export function DocumentForm(
   }, [documentId, documentStore, documentType, patchChannel])
 
   const hasRev = Boolean(value?._rev)
+  const patchChannelPublish = useEffectEvent(() => {
+    // this is a workaround for an issue that caused the document pushed to withDocument to get
+    // stuck at the first initial value.
+    // This effect is triggered only when the document goes from not having a revision, to getting one
+    // so it will kick in as soon as the document is received from the backend
+    patchChannel.publish({
+      type: 'mutation',
+      patches: [],
+      snapshot: value,
+    })
+  })
   useEffect(() => {
     if (hasRev) {
-      // this is a workaround for an issue that caused the document pushed to withDocument to get
-      // stuck at the first initial value.
-      // This effect is triggered only when the document goes from not having a revision, to getting one
-      // so it will kick in as soon as the document is received from the backend
-      patchChannel.publish({
-        type: 'mutation',
-        patches: [],
-        snapshot: value,
-      })
+      // React to changes in hasRev only
+      patchChannelPublish()
     }
-    // React to changes in hasRev only
-    // oxlint-disable-next-line react-hooks-js/rule-suppression
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasRev])
 
   const formRef = useRef<null | HTMLDivElement>(null)

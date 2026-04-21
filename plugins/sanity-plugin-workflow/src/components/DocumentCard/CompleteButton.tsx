@@ -12,6 +12,7 @@ type CompleteButtonProps = {
 }
 
 export default function CompleteButton(props: CompleteButtonProps) {
+  // oxlint-disable-next-line no-useless-default-assignment
   const {documentId, disabled = false} = props
   const client = useClient({apiVersion: API_VERSION})
   const toast = useToast()

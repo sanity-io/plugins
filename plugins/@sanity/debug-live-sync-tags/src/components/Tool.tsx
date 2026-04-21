@@ -282,7 +282,7 @@ export default function Tool() {
 
   useEffect(() => {
     if (allDocumentTypesArray.length === 0) {
-      return
+      return undefined
     }
 
     const listener = client
@@ -428,7 +428,7 @@ function ResolveDocumentType({
     const localStorageValue = localStorage.getItem(localStorageKey)
     if (localStorageValue && typeof localStorageValue === 'string') {
       setDocumentType(documentType, localStorageValue)
-      return
+      return undefined
     }
 
     const controller = new AbortController()
@@ -483,7 +483,7 @@ function ResolveDocumentId({
     const localStorageValue = localStorage.getItem(localStorageKey)
     if (localStorageValue && typeof localStorageValue === 'string') {
       setDocumentIdTag(documentId, localStorageValue)
-      return
+      return undefined
     }
     const controller = new AbortController()
     void client
@@ -536,7 +536,7 @@ function ResolveDocumentSlug({
     const localStorageValue = localStorage.getItem(localStorageKey)
     if (localStorageValue && typeof localStorageValue === 'string') {
       setDocumentSlugTag(slug, localStorageValue)
-      return
+      return undefined
     }
     const controller = new AbortController()
     void client

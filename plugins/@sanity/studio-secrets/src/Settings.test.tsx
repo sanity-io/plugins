@@ -69,7 +69,7 @@ function renderSettingsView(overrides?: {
     title = 'Configure',
     namespace = 'test-plugin',
     loading = false,
-    secrets = undefined,
+    secrets,
   } = overrides ?? {}
 
   mockUseSecrets.mockReturnValue({

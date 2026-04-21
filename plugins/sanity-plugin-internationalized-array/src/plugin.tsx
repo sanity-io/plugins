@@ -14,6 +14,7 @@ import {hasInternationalizedArrayField} from './utils/hasInternationalizedArrayF
 export const internationalizedArray = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...CONFIG_DEFAULT, ...config}
   const {
+    // oxlint-disable-next-line no-useless-default-assignment
     apiVersion = '2025-10-15',
     select,
     languages,

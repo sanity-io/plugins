@@ -16,6 +16,7 @@ type FiltersProps = {
 
 export default function Filters(props: FiltersProps) {
   const {
+    // oxlint-disable-next-line no-useless-default-assignment
     uniqueAssignedUsers = [],
     selectedUserIds,
     schemaTypes,

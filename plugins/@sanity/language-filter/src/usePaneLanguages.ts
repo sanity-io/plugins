@@ -13,6 +13,7 @@ export function usePaneLanguages(): {
   toggleLanguage: (languageId: string) => void
 } {
   const {selectedLanguageIds, setSelectedLanguageIds, options} = useLanguageFilterStudioContext()
+  // oxlint-disable-next-line no-useless-default-assignment
   const {defaultLanguages = []} = options
 
   const selectableLanguages = useMemo(() => getSelectableLanguages(options), [options])

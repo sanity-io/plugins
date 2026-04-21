@@ -93,6 +93,7 @@ export const useDuplicateWithTranslationsAction = ({
       // 1. Duplicate the document and its localized versions
       const translations = new Map<string, Id>()
       await Promise.all(
+        // oxlint-disable-next-line consistent-return
         translationsArray.map(async (translation) => {
           const dupeId = uuid()
           const locale = translation[LANGUAGE_FIELD_NAME]

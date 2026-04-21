@@ -15,7 +15,6 @@ export function createAssistDocumentPresence(documentId: string | undefined) {
 function AssistDocumentPresence() {
   const {assistDocument, syntheticTasks} = useAssistDocumentContext()
   const anyPresence = useMemo(() => {
-    // oxlint-disable-next-line react-hooks-js/todo
     const anyPresence = [...(assistDocument?.tasks ?? []), ...(syntheticTasks ?? [])]
       ?.filter((run) => !run.ended && !run.reason)
       ?.flatMap((run) => run.presence ?? [])

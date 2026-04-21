@@ -7,6 +7,7 @@ type ValidationStatusProps = {
 }
 
 export function ValidationStatus(props: ValidationStatusProps) {
+  // oxlint-disable-next-line no-useless-default-assignment
   const {validation = []} = props
 
   if (!validation.length) {

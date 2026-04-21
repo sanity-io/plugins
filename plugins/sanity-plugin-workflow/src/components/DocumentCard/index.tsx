@@ -35,6 +35,7 @@ export function DocumentCard(props: DocumentCardProps) {
     toggleInvalidDocumentId,
     userList,
   } = props
+  // oxlint-disable-next-line no-useless-default-assignment
   const {assignees = [], documentId} = item._metadata ?? {}
   const schema = useSchema()
   const state = states.find((s) => s.id === item._metadata?.state)

@@ -48,6 +48,7 @@ describe('AddButtons', () => {
 
   test('disables buttons for languages already present in value via LANGUAGE_FIELD_NAME', () => {
     const languagesInUse = createValues(['en', 'fr']).map((item) =>
+      // oxlint-disable-next-line no-unnecessary-type-conversion
       String(item[LANGUAGE_FIELD_NAME]),
     )
 
@@ -194,6 +195,7 @@ describe('AddButtons', () => {
     // When the constant changes from '_key' to 'language', this test verifies
     // that button disabled state still works correctly.
     const singleValue = createValues(['es'])
+    // oxlint-disable-next-line no-unnecessary-type-conversion
     const languagesInUse = singleValue.map((item) => String(item[LANGUAGE_FIELD_NAME]))
 
     render(<AddButtons readOnly={false} languagesInUse={languagesInUse} handleClick={vi.fn()} />, {

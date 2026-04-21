@@ -28,6 +28,7 @@ export const SettingsView = ({
   namespace,
   keys,
   onClose,
+  // oxlint-disable-next-line no-useless-default-assignment
   title = 'Configure',
 }: SettingsViewProps): ReactElement => {
   const {loading, secrets, storeSecrets} = useSecrets<Record<string, any>>(namespace)
