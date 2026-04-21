@@ -204,7 +204,7 @@ The page preset is not the only way to create page documents. It provides opinio
 
 ### Link
 
-The link preset produces an object type for internal and external links. It includes fields for the link type (internal or external), a reference field for internal links, a URL field for external links, and an "open in new tab" toggle.
+The link preset produces an object type for internal and external links. It includes fields for the link type (internal or external), a reference field for internal links, a URL field for external links, and an "open in new tab" option.
 
 ```ts
 defineLink({
@@ -220,7 +220,7 @@ defineLink({
 
 | Field          | Type        | Description                                                                                              |
 | -------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
-| `linkType`     | `string`    | Radio selector: "Internal" or "External". Defaults to "Internal".                                        |
+| `linkType`     | `string`    | "Internal" or "External". Defaults to "Internal".                                                        |
 | `reference`    | `reference` | Internal link. Hidden when link type is external. Targets configured via `internalTypes`.                |
 | `url`          | `url`       | External URL. Hidden when link type is internal. Validates `http`, `https`, `mailto`, and `tel` schemes. |
 | `openInNewTab` | `boolean`   | Whether to open in a new tab. Hidden for internal links.                                                 |
@@ -247,7 +247,7 @@ defineCta({
 | Field   | Type     | Description                                                                                |
 | ------- | -------- | ------------------------------------------------------------------------------------------ |
 | `link`  | `object` | An inline link, composed from the link preset. Inherits `internalTypes` from the registry. |
-| `level` | `number` | Semantic importance level (1, 2, or 3). Displayed as radio buttons.                        |
+| `level` | `number` | Semantic importance level (1, 2, or 3).                                                    |
 
 ### SEO (search engine optimization)
 
@@ -263,11 +263,11 @@ defineSeo({
 
 **Fields:**
 
-| Field         | Type     | Description                                                                                        |
-| ------------- | -------- | -------------------------------------------------------------------------------------------------- |
-| `title`       | `string` | Page title for search engines. Warns when exceeding 70 characters.                                 |
-| `description` | `text`   | Meta description. Warns when exceeding 150 characters.                                             |
-| `ogImage`     | `image`  | Open Graph image. Validates dimensions are exactly 1200×630. Includes a landscape hotspot preview. |
+| Field         | Type     | Description                                                        |
+| ------------- | -------- | ------------------------------------------------------------------ |
+| `title`       | `string` | Page title for search engines. Warns when exceeding 70 characters. |
+| `description` | `text`   | Meta description. Warns when exceeding 150 characters.             |
+| `ogImage`     | `image`  | Open Graph image. Validates dimensions are exactly 1200×630.       |
 
 The SEO preset is also composed into the page preset, where it appears as an inline object field in the Metadata group.
 
