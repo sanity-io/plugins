@@ -13,8 +13,8 @@ catalogs:
       specifier: ^10.4.17
       version: 10.4.17
     '@sanity/telemetry':
-      specifier: ^0.9.0
-      version: 0.9.0
+      specifier: ^1.0.0
+      version: 1.0.0
     '@sanity/tsconfig':
       specifier: ^2.1.0
       version: 2.1.0
@@ -666,7 +666,7 @@ importers:
         version: 2.3.0
       '@sanity/telemetry':
         specifier: 'catalog:'
-        version: 0.9.0(react@19.2.5)
+        version: 1.0.0(react@19.2.5)
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*
@@ -4402,6 +4402,12 @@ packages:
 
   '@sanity/telemetry@0.9.0':
     resolution: {integrity: sha512-CcV1VwcztIRUTv4JON7MK5mIuywcqoNEmYERNTzIqQHmF/HePU7wY3tR6i8A84Fd+4RrwqfG92Exgim2Q/7CcQ==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      react: ^18.2 || ^19.0.0
+
+  '@sanity/telemetry@1.0.0':
+    resolution: {integrity: sha512-3rhfq4AyDVqqIWPe5Izlu/3v5bcktLvc/jBKu0Umy2bovIImilcgcQKMdp4aq9T2ZCL7BDZm/Ng3Hhws/tOV3g==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       react: ^18.2 || ^19.0.0
@@ -12511,6 +12517,12 @@ snapshots:
       stylis: 4.3.6
 
   '@sanity/telemetry@0.9.0(react@19.2.5)':
+    dependencies:
+      react: 19.2.5
+      rxjs: 7.8.2
+      typeid-js: 0.3.0
+
+  '@sanity/telemetry@1.0.0(react@19.2.5)':
     dependencies:
       react: 19.2.5
       rxjs: 7.8.2
