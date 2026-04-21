@@ -1,11 +1,12 @@
 import type {FieldDefinition, PreviewValue} from 'sanity'
+import {defineField} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
 import type {RegistryContext} from '../../definePresetType'
 import {linkType} from './index'
 
 const stubRegistry: RegistryContext = {
-  getPreset: () => ({}),
+  getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
   registryConfig: {},
 }
 const defaultConfig = {internalTypes: ['page']}

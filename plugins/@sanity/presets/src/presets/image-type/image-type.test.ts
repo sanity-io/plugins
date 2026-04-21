@@ -1,11 +1,12 @@
 import type {FieldDefinition} from 'sanity'
+import {defineField} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
 import type {RegistryContext} from '../../definePresetType'
 import {imageType} from './index'
 
 const stubRegistry: RegistryContext = {
-  getPreset: () => ({}),
+  getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
   registryConfig: {},
 }
 

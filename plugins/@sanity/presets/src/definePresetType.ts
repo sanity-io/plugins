@@ -1,11 +1,16 @@
-import type {FieldDefinitionBase, IntrinsicTypeName, SchemaTypeDefinition} from 'sanity'
+import type {
+  FieldDefinition,
+  FieldDefinitionBase,
+  IntrinsicTypeName,
+  SchemaTypeDefinition,
+} from 'sanity'
 
 import type {PartialSchemaDefinition, PresetResult} from './types'
 
 export type PresetResultFactory = (...args: any[]) => PresetResult
 
 export interface RegistryContext {
-  getPreset: (presetName: string, config?: Record<string, unknown>) => Record<string, unknown>
+  getPreset: (presetName: string, config?: Record<string, unknown>) => FieldDefinition
   registryConfig: Record<string, unknown>
 }
 

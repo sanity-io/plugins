@@ -1,4 +1,5 @@
 import {uuid} from '@sanity/uuid'
+import {defineField} from 'sanity'
 import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
@@ -36,7 +37,10 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
   const registryId = uuid()
   registerRegistry(registryId)
 
-  const registry: Record<string, (config?: Record<string, unknown>) => SchemaTypeDefinition> = {}
+  const registry: Record<
+    string,
+    (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
+  > = {}
 
   for (const preset of systemPresets) {
     const presetName = getPresetName(preset)
@@ -49,7 +53,7 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
 }
 
 const stubRegistryContext: RegistryContext = {
-  getPreset: () => ({}),
+  getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
   registryConfig: {},
 }
 
@@ -80,7 +84,10 @@ function createDefiner(
   registryId: string,
   preset: PresetResultFactory,
   config: PresetsRegistryConfig,
-  registry: Record<string, (config?: Record<string, unknown>) => SchemaTypeDefinition>,
+  registry: Record<
+    string,
+    (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
+  >,
 ): (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition {
   const presetName = getPresetName(preset)
   const identifier = getPresetIdentifier(preset)
@@ -99,8 +106,7 @@ function createDefiner(
         if (!definer) {
           throw new Error(`Cannot resolve preset "${presetName}". No such preset in this registry.`)
         }
-        // oxlint-disable-next-line no-unsafe-type-assertion
-        return definer(presetConfig) as unknown as Record<string, unknown>
+        return definer(presetConfig)
       },
     }
 
