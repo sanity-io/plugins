@@ -5,8 +5,6 @@ import {definePresetType} from '../../definePresetType'
 export const ctaType = definePresetType<{}, 'object'>((config, {getPreset}) => {
   const {fields, ...objectConfig} = config
 
-  const linkField = getPreset('link', {name: 'link', title: 'Link'})
-
   return {
     name: 'cta',
     identifier: 'core.presets.cta',
@@ -16,7 +14,7 @@ export const ctaType = definePresetType<{}, 'object'>((config, {getPreset}) => {
       ...objectConfig,
       type: 'object',
       fields: [
-        linkField,
+        getPreset('link', {name: 'link', title: 'Link'}),
         defineField({
           name: 'level',
           title: 'Level',
