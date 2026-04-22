@@ -1,20 +1,14 @@
 import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
-import type {PresetsRegistryConfig} from '../../registry'
 
 export interface LinkTypeConfig {
   internalTypes?: string[]
 }
 
-export const linkType = definePresetType<
-  LinkTypeConfig,
-  'object',
-  'preview',
-  PresetsRegistryConfig
->(({internalTypes, fields, ...objectConfig}, registry) => {
-  const registryLinkConfig = registry.config.link
-  const resolvedInternalTypes = internalTypes ?? registryLinkConfig?.internalTypes ?? []
+export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>(
+  ({internalTypes, fields, ...objectConfig}) => {
+  const resolvedInternalTypes = internalTypes ?? []
   const referenceTargets = resolvedInternalTypes.map((type) => ({type}))
 
   return {

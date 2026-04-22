@@ -52,7 +52,6 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
 
 const stubRegistryContext: RegistryContext = {
   getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
-  config: {},
 }
 
 function getPresetName(preset: PresetResultFactory): string {
@@ -79,17 +78,14 @@ function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: str
 }
 
 function createRegistryContext({
-  config,
   registry,
 }: {
-  config: PresetsRegistryConfig
   registry: Record<
     string,
     (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
   >
-}): RegistryContext<PresetsRegistryConfig> {
+}): RegistryContext {
   return {
-    config,
     getPreset: (name: string, presetConfig?: Record<string, unknown>) => {
       const key = `define${name.charAt(0).toUpperCase()}${name.slice(1)}`
       const definer = registry[key]
@@ -118,7 +114,7 @@ function createDefiner(
   ): SchemaTypeDefinition & FieldDefinition {
     recordPresetUsage(registryId, identifier ?? 'unnamed')
 
-    const registryContext = createRegistryContext({config, registry})
+    const registryContext = createRegistryContext({registry})
 
     const {group, fieldset, ...presetConfig} = userConfig
 

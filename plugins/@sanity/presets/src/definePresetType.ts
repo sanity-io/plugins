@@ -9,9 +9,8 @@ import type {PartialSchemaDefinition, PresetResult} from './types'
 
 export type PresetResultFactory = (...args: any[]) => PresetResult
 
-export interface RegistryContext<Config = Record<string, unknown>> {
+export interface RegistryContext {
   getPreset: (presetName: string, config?: Record<string, unknown>) => FieldDefinition
-  config: Config
 }
 
 interface PresetTypeContext {
@@ -53,15 +52,14 @@ export function definePresetType<
   Context = {},
   AliasedType extends IntrinsicTypeName | undefined = undefined,
   LockedProperties extends string | undefined = undefined,
-  RegistryConfig = Record<string, unknown>,
 >(
   factory: (
     config: DerivedConfig<Context, AliasedType, LockedProperties>,
-    registry: RegistryContext<RegistryConfig>,
+    registry: RegistryContext,
   ) => PresetTypeContext,
 ): (
   config: DerivedConfig<Context, AliasedType, LockedProperties>,
-  registry: RegistryContext<RegistryConfig>,
+  registry: RegistryContext,
 ) => PresetResult {
   return function define(config, registry) {
     const {schemaType, ...attributes} = factory(config, registry)

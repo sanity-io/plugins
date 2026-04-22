@@ -7,7 +7,6 @@ import {linkType} from './index'
 
 const stubRegistry: RegistryContext = {
   getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
-  config: {},
 }
 const defaultConfig = {internalTypes: ['page']}
 

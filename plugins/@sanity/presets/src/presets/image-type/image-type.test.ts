@@ -7,7 +7,6 @@ import {imageType} from './index'
 
 const stubRegistry: RegistryContext = {
   getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
-  config: {},
 }
 
 function getFields(result: ReturnType<typeof imageType>): FieldDefinition[] {
