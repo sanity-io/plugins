@@ -42,7 +42,7 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
 
   for (const preset of systemPresets) {
     const presetName = getPresetName(preset)
-    const key = `define${presetName.charAt(0).toUpperCase()}${presetName.slice(1)}`
+    const key = getPresetKey(presetName)
     registry[key] = createDefiner(registryId, preset, config, registry)
   }
 
@@ -61,6 +61,10 @@ function getPresetName(preset: PresetResultFactory): string {
     throw new Error('Preset must return a schema type with a name property.')
   }
   return name
+}
+
+export function getPresetKey(name: string): string {
+  return `define${name.charAt(0).toUpperCase()}${name.slice(1)}`
 }
 
 function getPresetIdentifier(preset: PresetResultFactory): string | undefined {
@@ -88,7 +92,7 @@ function createRegistryContext({
 }): RegistryContext {
   return {
     getPreset: (name: string, presetConfig?: Record<string, unknown>) => {
-      const key = `define${name.charAt(0).toUpperCase()}${name.slice(1)}`
+      const key = getPresetKey(name)
       const definer = registry[key]
       if (!definer) {
         throw new Error(`Cannot resolve preset "${name}". No such preset in this registry.`)

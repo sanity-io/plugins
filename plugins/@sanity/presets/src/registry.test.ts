@@ -1,7 +1,7 @@
 import {test as baseTest, describe, expect} from 'vitest'
 
 import type {PresetsRegistry, PresetsRegistryConfig} from './registry'
-import {createPresetsRegistry} from './registry'
+import {createPresetsRegistry, getPresetKey} from './registry'
 import {resetRegistries} from './telemetry'
 
 const test = baseTest
@@ -152,5 +152,32 @@ describe('preset composition via getPreset', () => {
         ]),
       }),
     )
+  })
+})
+
+describe('getPresetKey', () => {
+  test('capitalizes the first letter and prepends "define"', () => {
+    expect(getPresetKey('link')).toBe('defineLink')
+    expect(getPresetKey('cta')).toBe('defineCta')
+    expect(getPresetKey('seo')).toBe('defineSeo')
+    expect(getPresetKey('image')).toBe('defineImage')
+    expect(getPresetKey('page')).toBe('definePage')
+  })
+
+  test('handles multi-word names by capitalizing only the first character', () => {
+    expect(getPresetKey('richText')).toBe('defineRichText')
+    expect(getPresetKey('customBlock')).toBe('defineCustomBlock')
+  })
+
+  test('handles single-character names', () => {
+    expect(getPresetKey('x')).toBe('defineX')
+  })
+
+  test('handles already-capitalized names', () => {
+    expect(getPresetKey('Link')).toBe('defineLink')
+  })
+
+  test('returns "define" for an empty string', () => {
+    expect(getPresetKey('')).toBe('define')
   })
 })
