@@ -7,7 +7,6 @@ export const seoType = definePresetType<{}, 'object'>((config) => {
   const {fields, ...objectConfig} = config
 
   return {
-    name: 'seo',
     identifier: 'core.seo',
     schemaType: defineType({
       name: 'seo',

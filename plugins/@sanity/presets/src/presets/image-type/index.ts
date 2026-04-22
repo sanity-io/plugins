@@ -12,7 +12,6 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
   const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = config
 
   return {
-    name: 'image',
     identifier: 'core.image',
     schemaType: defineType({
       name: 'image',

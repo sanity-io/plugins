@@ -14,7 +14,6 @@ export interface RegistryContext {
 }
 
 interface PresetTypeContext {
-  name: string
   identifier?: string
   schemaType: SchemaTypeDefinition
 }

@@ -1,7 +1,6 @@
 import type {DefineSchemaBase, IntrinsicTypeName, PreviewConfig, SchemaTypeDefinition} from 'sanity'
 
 export interface PresetResult {
-  name: string
   identifier?: string
   type: SchemaTypeDefinition
 }

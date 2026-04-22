@@ -10,7 +10,6 @@ export const pageType = definePresetType<PageTypeConfig, 'document'>((config, re
   const {pageBuilderBlocks, groups, fields, ...documentConfig} = config
 
   return {
-    name: 'page',
     identifier: 'core.page',
     schemaType: defineType({
       name: 'page',

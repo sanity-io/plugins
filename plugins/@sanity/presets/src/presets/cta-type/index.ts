@@ -6,7 +6,6 @@ export const ctaType = definePresetType<{}, 'object'>((config, registry) => {
   const {fields, ...objectConfig} = config
 
   return {
-    name: 'cta',
     identifier: 'core.cta',
     schemaType: defineType({
       name: 'cta',

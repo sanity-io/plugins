@@ -12,7 +12,6 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>(
     const referenceTargets = resolvedInternalTypes.map((type) => ({type}))
 
     return {
-      name: 'link',
       identifier: 'core.link',
       schemaType: defineType({
         name: 'link',

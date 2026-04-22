@@ -56,10 +56,11 @@ const stubRegistryContext: RegistryContext = {
 
 function getPresetName(preset: PresetResultFactory): string {
   const result = preset({}, stubRegistryContext)
-  if (!result?.name) {
-    throw new Error('Preset must return a result with a name property.')
+  const name = result?.type?.name
+  if (!name) {
+    throw new Error('Preset must return a schema type with a name property.')
   }
-  return result.name
+  return name
 }
 
 function getPresetIdentifier(preset: PresetResultFactory): string | undefined {
