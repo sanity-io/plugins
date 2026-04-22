@@ -15,8 +15,6 @@ const systemPresets = [linkType, ctaType, seoType, imageType, pageType] as const
 
 export interface PresetsRegistryConfig {
   link?: LinkTypeConfig
-  cta?: {}
-  seo?: {}
   image?: ImageTypeConfig
   page?: PageTypeConfig
 }
