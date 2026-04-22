@@ -80,6 +80,29 @@ function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: str
   })
 }
 
+function createRegistryContext({
+  config,
+  registry,
+}: {
+  config: PresetsRegistryConfig
+  registry: Record<
+    string,
+    (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
+  >
+}): RegistryContext<PresetsRegistryConfig> {
+  return {
+    config,
+    getPreset: (name: string, presetConfig?: Record<string, unknown>) => {
+      const key = `define${name.charAt(0).toUpperCase()}${name.slice(1)}`
+      const definer = registry[key]
+      if (!definer) {
+        throw new Error(`Cannot resolve preset "${name}". No such preset in this registry.`)
+      }
+      return definer(presetConfig)
+    },
+  }
+}
+
 function createDefiner(
   registryId: string,
   preset: PresetResultFactory,
@@ -97,17 +120,7 @@ function createDefiner(
   ): SchemaTypeDefinition & FieldDefinition {
     recordPresetUsage(registryId, identifier ?? 'unnamed')
 
-    const registryContext: RegistryContext<PresetsRegistryConfig> = {
-      config,
-      getPreset: (presetName: string, presetConfig?: Record<string, unknown>) => {
-        const key = `define${presetName.charAt(0).toUpperCase()}${presetName.slice(1)}`
-        const definer = registry[key]
-        if (!definer) {
-          throw new Error(`Cannot resolve preset "${presetName}". No such preset in this registry.`)
-        }
-        return definer(presetConfig)
-      },
-    }
+    const registryContext = createRegistryContext({config, registry})
 
     const {group, fieldset, ...presetConfig} = userConfig
 
