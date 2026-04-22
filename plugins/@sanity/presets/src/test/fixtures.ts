@@ -9,6 +9,7 @@ import {resetRegistries} from '../telemetry'
 import type {PresetResult} from '../types'
 
 export const test = baseTest
+  // oxlint-disable-next-line no-empty-pattern
   .extend('_resetRegistries', {auto: true}, ({}, {onCleanup}): void => {
     onCleanup(() => resetRegistries())
   })
