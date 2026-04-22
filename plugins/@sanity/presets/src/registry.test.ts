@@ -1,16 +1,18 @@
-import {afterEach, describe, expect, test} from 'vitest'
+import {test as baseTest, describe, expect} from 'vitest'
 
+import type {PresetsRegistry, PresetsRegistryConfig} from './registry'
 import {createPresetsRegistry} from './registry'
 import {resetRegistries} from './telemetry'
 
-describe('createPresetsRegistry', () => {
-  afterEach(() => {
-    resetRegistries()
+const test = baseTest
+  .extend('registryConfig', (): PresetsRegistryConfig => ({}))
+  .extend('registry', ({registryConfig}, {onCleanup}): PresetsRegistry => {
+    onCleanup(() => resetRegistries())
+    return createPresetsRegistry(registryConfig)
   })
 
-  test('returns an object with define<Name> functions for all system presets', () => {
-    const registry = createPresetsRegistry()
-
+describe('createPresetsRegistry', () => {
+  test('returns an object with define<Name> functions for all system presets', ({registry}) => {
     expect(typeof registry.defineLink).toBe('function')
     expect(typeof registry.defineCta).toBe('function')
     expect(typeof registry.defineSeo).toBe('function')
@@ -18,59 +20,55 @@ describe('createPresetsRegistry', () => {
     expect(typeof registry.definePage).toBe('function')
   })
 
-  test('defineLink returns a schema type definition', () => {
-    const {defineLink} = createPresetsRegistry()
-    const result = defineLink({name: 'testLink'})
+  test('defineLink returns a schema type definition', ({registry}) => {
+    const result = registry.defineLink({name: 'testLink'})
 
     expect(result).toHaveProperty('name', 'testLink')
     expect(result).toHaveProperty('type', 'object')
   })
 
-  test('defineLink reflects registry-level internalTypes', () => {
-    const {defineLink} = createPresetsRegistry({
-      link: {internalTypes: ['marketingPage']},
-    })
-    const result = defineLink({name: 'testLink'})
+  describe('with registry-level internalTypes', () => {
+    test.override('registryConfig', {link: {internalTypes: ['marketingPage']}})
 
-    expect(result).toEqual(
-      expect.objectContaining({
-        fields: expect.arrayContaining([
-          expect.objectContaining({
-            name: 'reference',
-            to: [{type: 'marketingPage'}],
-          }),
-        ]),
-      }),
-    )
+    test('defineLink reflects registry-level internalTypes', ({registry}) => {
+      const result = registry.defineLink({name: 'testLink'})
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          fields: expect.arrayContaining([
+            expect.objectContaining({
+              name: 'reference',
+              to: [{type: 'marketingPage'}],
+            }),
+          ]),
+        }),
+      )
+    })
   })
 
-  test('defineCta returns a schema type definition', () => {
-    const {defineCta} = createPresetsRegistry()
-    const result = defineCta({name: 'testCta'})
+  test('defineCta returns a schema type definition', ({registry}) => {
+    const result = registry.defineCta({name: 'testCta'})
 
     expect(result).toHaveProperty('name', 'testCta')
     expect(result).toHaveProperty('type', 'object')
   })
 
-  test('defineSeo returns a schema type definition', () => {
-    const {defineSeo} = createPresetsRegistry()
-    const result = defineSeo({name: 'testSeo'})
+  test('defineSeo returns a schema type definition', ({registry}) => {
+    const result = registry.defineSeo({name: 'testSeo'})
 
     expect(result).toHaveProperty('name', 'testSeo')
     expect(result).toHaveProperty('type', 'object')
   })
 
-  test('defineImage returns a schema type definition', () => {
-    const {defineImage} = createPresetsRegistry()
-    const result = defineImage({name: 'testImage'})
+  test('defineImage returns a schema type definition', ({registry}) => {
+    const result = registry.defineImage({name: 'testImage'})
 
     expect(result).toHaveProperty('name', 'testImage')
     expect(result).toHaveProperty('type', 'object')
   })
 
-  test('definePage returns a schema type definition', () => {
-    const {definePage} = createPresetsRegistry()
-    const result = definePage({name: 'testPage'})
+  test('definePage returns a schema type definition', ({registry}) => {
+    const result = registry.definePage({name: 'testPage'})
 
     expect(result).toHaveProperty('name', 'testPage')
     expect(result).toHaveProperty('type', 'document')
@@ -78,13 +76,8 @@ describe('createPresetsRegistry', () => {
 })
 
 describe('preset composition via getPreset', () => {
-  afterEach(() => {
-    resetRegistries()
-  })
-
-  test('defineCta resolves link fields from the registry', () => {
-    const {defineCta} = createPresetsRegistry()
-    const result = defineCta({name: 'testCta'})
+  test('defineCta resolves link fields from the registry', ({registry}) => {
+    const result = registry.defineCta({name: 'testCta'})
 
     expect(result).toEqual(
       expect.objectContaining({
@@ -103,32 +96,32 @@ describe('preset composition via getPreset', () => {
     )
   })
 
-  test('defineCta link field inherits internalTypes from registry config', () => {
-    const {defineCta} = createPresetsRegistry({
-      link: {internalTypes: ['article', 'page']},
-    })
-    const result = defineCta({name: 'testCta'})
+  describe('with registry-level internalTypes', () => {
+    test.override('registryConfig', {link: {internalTypes: ['article', 'page']}})
 
-    expect(result).toEqual(
-      expect.objectContaining({
-        fields: expect.arrayContaining([
-          expect.objectContaining({
-            name: 'link',
-            fields: expect.arrayContaining([
-              expect.objectContaining({
-                name: 'reference',
-                to: [{type: 'article'}, {type: 'page'}],
-              }),
-            ]),
-          }),
-        ]),
-      }),
-    )
+    test('defineCta link field inherits internalTypes from registry config', ({registry}) => {
+      const result = registry.defineCta({name: 'testCta'})
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          fields: expect.arrayContaining([
+            expect.objectContaining({
+              name: 'link',
+              fields: expect.arrayContaining([
+                expect.objectContaining({
+                  name: 'reference',
+                  to: [{type: 'article'}, {type: 'page'}],
+                }),
+              ]),
+            }),
+          ]),
+        }),
+      )
+    })
   })
 
-  test('definePage resolves seo fields from the registry', () => {
-    const {definePage} = createPresetsRegistry()
-    const result = definePage({name: 'testPage'})
+  test('definePage resolves seo fields from the registry', ({registry}) => {
+    const result = registry.definePage({name: 'testPage'})
 
     expect(result).toEqual(
       expect.objectContaining({
@@ -146,9 +139,8 @@ describe('preset composition via getPreset', () => {
     )
   })
 
-  test('definePage seo field retains group assignment after composition', () => {
-    const {definePage} = createPresetsRegistry()
-    const result = definePage({name: 'testPage'})
+  test('definePage seo field retains group assignment after composition', ({registry}) => {
+    const result = registry.definePage({name: 'testPage'})
 
     expect(result).toEqual(
       expect.objectContaining({
