@@ -1,12 +1,12 @@
 import {describe, expect, vi} from 'vitest'
 
-import {test} from './test/fixtures'
 import {
   collectPresetsRegistryTelemetry,
   recordPresetUsage,
   registerRegistry,
   type TelemetryLog,
 } from './telemetry'
+import {test} from './test/fixtures'
 
 function createMockTelemetry() {
   const logSpy = vi.fn()
