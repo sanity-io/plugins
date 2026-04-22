@@ -7,7 +7,7 @@ export const ctaType = definePresetType<{}, 'object'>((config, registry) => {
 
   return {
     name: 'cta',
-    identifier: 'core.presets.cta',
+    identifier: 'core.cta',
     schemaType: defineType({
       name: 'cta',
       title: 'Call to action',

@@ -21,7 +21,7 @@ describe('telemetry', () => {
 
   test('registerRegistry creates a new registry record', () => {
     registerRegistry('test-id')
-    recordPresetUsage('test-id', 'core.presets.link')
+    recordPresetUsage('test-id', 'core.link')
 
     const {telemetry, logSpy} = createMockTelemetry()
     collectPresetsRegistryTelemetry('test-id', telemetry)
@@ -31,35 +31,35 @@ describe('telemetry', () => {
 
   test('recordPresetUsage adds the identifier to the registry set', () => {
     registerRegistry('test-id')
-    recordPresetUsage('test-id', 'core.presets.link')
-    recordPresetUsage('test-id', 'core.presets.cta')
-    recordPresetUsage('test-id', 'core.presets.link')
+    recordPresetUsage('test-id', 'core.link')
+    recordPresetUsage('test-id', 'core.cta')
+    recordPresetUsage('test-id', 'core.link')
 
     const {telemetry, logSpy} = createMockTelemetry()
     collectPresetsRegistryTelemetry('test-id', telemetry)
 
     expect(logSpy).toHaveBeenCalledWith(expect.anything(), {
-      presetNames: expect.arrayContaining(['core.presets.link', 'core.presets.cta']),
+      presetNames: expect.arrayContaining(['core.link', 'core.cta']),
     })
   })
 
   test('collectPresetsRegistryTelemetry logs all recorded preset names', () => {
     registerRegistry('test-id')
-    recordPresetUsage('test-id', 'core.presets.link')
-    recordPresetUsage('test-id', 'core.presets.page')
+    recordPresetUsage('test-id', 'core.link')
+    recordPresetUsage('test-id', 'core.page')
 
     const {telemetry, logSpy} = createMockTelemetry()
     collectPresetsRegistryTelemetry('test-id', telemetry)
 
     expect(logSpy).toHaveBeenCalledOnce()
     expect(logSpy).toHaveBeenCalledWith(expect.anything(), {
-      presetNames: expect.arrayContaining(['core.presets.link', 'core.presets.page']),
+      presetNames: expect.arrayContaining(['core.link', 'core.page']),
     })
   })
 
   test('collectPresetsRegistryTelemetry does not log twice for the same registry', () => {
     registerRegistry('test-id')
-    recordPresetUsage('test-id', 'core.presets.link')
+    recordPresetUsage('test-id', 'core.link')
 
     const {telemetry, logSpy} = createMockTelemetry()
     collectPresetsRegistryTelemetry('test-id', telemetry)
@@ -86,7 +86,7 @@ describe('telemetry', () => {
   })
 
   test('recordPresetUsage is a no-op for unknown registry id', () => {
-    recordPresetUsage('unknown-id', 'core.presets.link')
+    recordPresetUsage('unknown-id', 'core.link')
 
     const {telemetry, logSpy} = createMockTelemetry()
     collectPresetsRegistryTelemetry('unknown-id', telemetry)
@@ -107,15 +107,15 @@ describe('telemetry', () => {
 
   test('records mix of named and unnamed presets', () => {
     registerRegistry('test-id')
-    recordPresetUsage('test-id', 'core.presets.link')
+    recordPresetUsage('test-id', 'core.link')
     recordPresetUsage('test-id', 'unnamed')
-    recordPresetUsage('test-id', 'core.presets.page')
+    recordPresetUsage('test-id', 'core.page')
 
     const {telemetry, logSpy} = createMockTelemetry()
     collectPresetsRegistryTelemetry('test-id', telemetry)
 
     expect(logSpy).toHaveBeenCalledWith(expect.anything(), {
-      presetNames: expect.arrayContaining(['core.presets.link', 'unnamed', 'core.presets.page']),
+      presetNames: expect.arrayContaining(['core.link', 'unnamed', 'core.page']),
     })
   })
 })

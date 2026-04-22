@@ -13,7 +13,7 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>(
 
     return {
       name: 'link',
-      identifier: 'core.presets.link',
+      identifier: 'core.link',
       schemaType: defineType({
         name: 'link',
         title: 'Link',
