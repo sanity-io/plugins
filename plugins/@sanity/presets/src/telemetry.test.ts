@@ -1,7 +1,7 @@
-import {afterEach, describe, expect, test, vi} from 'vitest'
+import {describe, expect, vi} from 'vitest'
 
+import {test} from './test/fixtures'
 import {
-  resetRegistries,
   collectPresetsRegistryTelemetry,
   recordPresetUsage,
   registerRegistry,
@@ -15,10 +15,6 @@ function createMockTelemetry() {
 }
 
 describe('telemetry', () => {
-  afterEach(() => {
-    resetRegistries()
-  })
-
   test('registerRegistry creates a new registry record', () => {
     registerRegistry('test-id')
     recordPresetUsage('test-id', 'core.link')

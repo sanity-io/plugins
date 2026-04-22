@@ -1,15 +1,7 @@
-import {test as baseTest, describe, expect} from 'vitest'
+import {describe, expect} from 'vitest'
 
-import type {PresetsRegistry, PresetsRegistryConfig} from './registry'
-import {createPresetsRegistry, getPresetKey} from './registry'
-import {resetRegistries} from './telemetry'
-
-const test = baseTest
-  .extend('registryConfig', (): PresetsRegistryConfig => ({}))
-  .extend('registry', ({registryConfig}, {onCleanup}): PresetsRegistry => {
-    onCleanup(() => resetRegistries())
-    return createPresetsRegistry(registryConfig)
-  })
+import {getPresetKey} from './registry'
+import {test} from './test/fixtures'
 
 describe('createPresetsRegistry', () => {
   test('returns an object with define<Name> functions for all system presets', ({registry}) => {
