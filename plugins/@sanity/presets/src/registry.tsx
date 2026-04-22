@@ -121,23 +121,18 @@ function createDefiner(
 
     const registryContext = createRegistryContext({registry})
 
-    const {group, fieldset, ...presetConfig} = userConfig
-
     // oxlint-disable-next-line no-unsafe-type-assertion
     const registryDefaults = (config as unknown as Record<string, unknown>)[presetName]
     const mergedConfig =
       typeof registryDefaults === 'object' && registryDefaults !== null
-        ? {...registryDefaults, ...presetConfig}
-        : presetConfig
+        ? {...registryDefaults, ...userConfig}
+        : userConfig
 
     const result = preset(mergedConfig, registryContext)
 
     addTelemetryComponent(result.type, registryId)
 
-    const output = result.type
-    if (group !== undefined) Object.assign(output, {group})
-    if (fieldset !== undefined) Object.assign(output, {fieldset})
     // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
-    return output as SchemaTypeDefinition & FieldDefinition
+    return result.type as SchemaTypeDefinition & FieldDefinition
   }
 }
