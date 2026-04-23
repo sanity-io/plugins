@@ -26,7 +26,7 @@ type SanitizeProperties<Properties, ExcludedProperties extends string | undefine
   ? Omit<Properties, ExcludedProperties>
   : Properties
 
-type FactoryConfig<
+type DerivedConfig<
   Context,
   AliasedType extends IntrinsicTypeName | undefined = undefined,
   LockedProperties extends string | undefined = undefined,
@@ -37,21 +37,15 @@ type FactoryConfig<
         PartialSchemaDefinition<AliasedType>,
         ProhibitedProperties | LockedProperties
       >
-    : {})
-
-type DerivedConfig<
-  Context,
-  AliasedType extends IntrinsicTypeName | undefined = undefined,
-  LockedProperties extends string | undefined = undefined,
-> = FactoryConfig<Context, AliasedType, LockedProperties> & {
-  map?: AliasedType extends string
-    ? {
-        [Key in keyof PartialSchemaDefinition<AliasedType>]?: (
-          input: PartialSchemaDefinition<AliasedType>[Key],
-        ) => PartialSchemaDefinition<AliasedType>[Key]
-      }
-    : {}
-}
+    : {}) & {
+    map?: AliasedType extends string
+      ? {
+          [Key in keyof PartialSchemaDefinition<AliasedType>]?: (
+            input: PartialSchemaDefinition<AliasedType>[Key],
+          ) => PartialSchemaDefinition<AliasedType>[Key]
+        }
+      : {}
+  }
 
 export function definePresetType<
   Context = {},
@@ -59,7 +53,7 @@ export function definePresetType<
   LockedProperties extends string | undefined = undefined,
 >(
   factory: (
-    config: FactoryConfig<Context, AliasedType, LockedProperties>,
+    config: Omit<DerivedConfig<Context, AliasedType, LockedProperties>, 'map'>,
     registry: RegistryContext,
   ) => PresetTypeContext,
 ): (
@@ -68,11 +62,7 @@ export function definePresetType<
 ) => PresetResult {
   return function define(config, registry) {
     const {map, ...factoryConfig} = config
-    const {schemaType, ...attributes} = factory(
-      // oxlint-disable-next-line no-unsafe-type-assertion -- TypeScript cannot structurally verify that `Omit<DerivedConfig, 'map'>` equals `FactoryConfig` when `Context` is generic; at runtime the rest pattern produces exactly the factory's expected shape
-      factoryConfig as FactoryConfig<Context, AliasedType, LockedProperties>,
-      registry,
-    )
+    const {schemaType, ...attributes} = factory(factoryConfig, registry)
 
     for (const [configName, configValue] of Object.entries(map ?? {})) {
       if (typeof configValue !== 'function') {
