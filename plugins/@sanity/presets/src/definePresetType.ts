@@ -5,17 +5,10 @@ import type {
   SchemaTypeDefinition,
 } from 'sanity'
 
-import type {PartialSchemaDefinition, PresetResult} from './types'
-
-export type PresetResultFactory = (...args: any[]) => PresetResult
+import type {PartialSchemaDefinition} from './types'
 
 export interface RegistryContext {
   getPreset: (presetName: string, config?: Record<string, unknown>) => FieldDefinition
-}
-
-interface PresetTypeContext {
-  identifier?: string
-  schemaType: SchemaTypeDefinition
 }
 
 type ProhibitedProperties = 'type'
@@ -26,7 +19,7 @@ type SanitizeProperties<Properties, ExcludedProperties extends string | undefine
   ? Omit<Properties, ExcludedProperties>
   : Properties
 
-type DerivedConfig<
+export type DerivedConfig<
   Context,
   AliasedType extends IntrinsicTypeName | undefined = undefined,
   LockedProperties extends string | undefined = undefined,
@@ -47,38 +40,65 @@ type DerivedConfig<
       : {}
   }
 
+/**
+ * The public-facing config shape that a registry's `define<Name>` function
+ * accepts at the call site. Includes the full `DerivedConfig` (with optional
+ * `map` and optional `name` — the registry falls back to the preset's default
+ * name when `name` is omitted).
+ */
+export type UserConfig<
+  Context = {},
+  AliasedType extends IntrinsicTypeName | undefined = undefined,
+  LockedProperties extends string | undefined = undefined,
+> = DerivedConfig<Context, AliasedType, LockedProperties>
+
+/**
+ * A preset definition describes how to produce a Sanity schema type.
+ *
+ * - `name` is the default schema type name. Consumers can override this at the
+ *   call site (e.g. `defineLink({name: 'myLink'})`); the registry will make
+ *   sure the override reaches the `schemaType` factory via its config.
+ * - `identifier` is an optional stable identifier used for telemetry.
+ * - `schemaType` is the factory that produces the Sanity schema type. It
+ *   receives the merged config (minus `map`, with `name` guaranteed by the
+ *   registry) and the registry context, and returns a `SchemaTypeDefinition`.
+ */
+export interface PresetDefinition<
+  Context = {},
+  AliasedType extends IntrinsicTypeName | undefined = undefined,
+  LockedProperties extends string | undefined = undefined,
+> {
+  name: string
+  identifier?: string
+  schemaType: (
+    config: Omit<DerivedConfig<Context, AliasedType, LockedProperties>, 'map' | 'name'> & {
+      name: string
+    },
+    registry: RegistryContext,
+  ) => SchemaTypeDefinition
+}
+
+/**
+ * A typed passthrough for defining a preset. Given a `PresetDefinition`, it
+ * returns the same value, narrowed to its concrete generic parameters so
+ * downstream code can infer the preset's config type from it.
+ *
+ * This is intentionally lightweight: it performs no work at call time. The
+ * registry is responsible for invoking `schemaType` when a preset is
+ * instantiated, and for applying `map` hooks to the produced schema type.
+ */
 export function definePresetType<
   Context = {},
   AliasedType extends IntrinsicTypeName | undefined = undefined,
   LockedProperties extends string | undefined = undefined,
 >(
-  factory: (
-    config: Omit<DerivedConfig<Context, AliasedType, LockedProperties>, 'map'>,
-    registry: RegistryContext,
-  ) => PresetTypeContext,
-): (
-  config: DerivedConfig<Context, AliasedType, LockedProperties>,
-  registry: RegistryContext,
-) => PresetResult {
-  return function define(config, registry) {
-    const {map, ...factoryConfig} = config
-    const {schemaType, ...attributes} = factory(factoryConfig, registry)
-
-    for (const [configName, configValue] of Object.entries(map ?? {})) {
-      if (typeof configValue !== 'function') {
-        continue
-      }
-
-      // oxlint-disable-next-line no-unsafe-type-assertion
-      schemaType[configName as keyof typeof schemaType] = configValue(
-        // oxlint-disable-next-line no-unsafe-type-assertion
-        schemaType[configName as keyof typeof schemaType],
-      )
-    }
-
-    return {
-      ...attributes,
-      type: schemaType,
-    }
-  }
+  preset: PresetDefinition<Context, AliasedType, LockedProperties>,
+): PresetDefinition<Context, AliasedType, LockedProperties> {
+  return preset
 }
+
+/**
+ * A preset definition with its generic parameters erased, for use in code
+ * that handles presets generically (e.g. the registry).
+ */
+export type AnyPresetDefinition = PresetDefinition<any, any, any>

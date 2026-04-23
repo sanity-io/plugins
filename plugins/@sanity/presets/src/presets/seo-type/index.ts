@@ -3,13 +3,13 @@ import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
 
-export const seoType = definePresetType<{}, 'object'>((config) => {
-  const {fields, ...objectConfig} = config
+export const seoType = definePresetType<{}, 'object'>({
+  name: 'seo',
+  identifier: 'core.seo',
+  schemaType: (config) => {
+    const {fields, ...objectConfig} = config
 
-  return {
-    identifier: 'core.seo',
-    schemaType: defineType({
-      name: 'seo',
+    return defineType({
       title: 'Web page metadata (SEO)',
       ...objectConfig,
       type: 'object',
@@ -58,6 +58,6 @@ export const seoType = definePresetType<{}, 'object'>((config) => {
         }),
         ...(fields ?? []),
       ],
-    }),
-  }
+    })
+  },
 })

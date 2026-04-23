@@ -2,13 +2,13 @@ import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
 
-export const ctaType = definePresetType<{}, 'object'>((config, registry) => {
-  const {fields, ...objectConfig} = config
+export const ctaType = definePresetType<{}, 'object'>({
+  name: 'cta',
+  identifier: 'core.cta',
+  schemaType: (config, registry) => {
+    const {fields, ...objectConfig} = config
 
-  return {
-    identifier: 'core.cta',
-    schemaType: defineType({
-      name: 'cta',
+    return defineType({
       title: 'Call to action',
       ...objectConfig,
       type: 'object',
@@ -25,6 +25,6 @@ export const ctaType = definePresetType<{}, 'object'>((config, registry) => {
         }),
         ...(fields ?? []),
       ],
-    }),
-  }
+    })
+  },
 })

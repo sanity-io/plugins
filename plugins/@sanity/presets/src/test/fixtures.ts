@@ -1,4 +1,4 @@
-import type {FieldDefinition} from 'sanity'
+import type {FieldDefinition, SchemaTypeDefinition} from 'sanity'
 import {defineField} from 'sanity'
 import {test as baseTest} from 'vitest'
 
@@ -6,7 +6,6 @@ import type {RegistryContext} from '../definePresetType'
 import type {PresetsRegistry, PresetsRegistryConfig} from '../registry'
 import {createPresetsRegistry} from '../registry'
 import {resetRegistries} from '../telemetry'
-import type {PresetResult} from '../types'
 
 export const test = baseTest
   // oxlint-disable-next-line no-empty-pattern
@@ -23,12 +22,11 @@ export const test = baseTest
     return createPresetsRegistry(registryConfig)
   })
 
-export function getFields(result: PresetResult): FieldDefinition[] {
-  const typeDef = result.type
-  if (!typeDef || !('fields' in typeDef) || !typeDef.fields) {
+export function getFields(schemaType: SchemaTypeDefinition): FieldDefinition[] {
+  if (!('fields' in schemaType) || !schemaType.fields) {
     throw new Error('Expected an object type definition with fields')
   }
-  return typeDef.fields
+  return schemaType.fields
 }
 
 export function getField(fields: FieldDefinition[], name: string): FieldDefinition {

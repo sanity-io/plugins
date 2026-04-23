@@ -1,10 +1,10 @@
-import type {FieldDefinition, PreviewValue} from 'sanity'
+import type {FieldDefinition, PreviewValue, SchemaTypeDefinition} from 'sanity'
 import {describe, expect} from 'vitest'
 
 import {getField, getFields, test} from '../../test/fixtures'
 import {linkType} from './index'
 
-const defaultConfig = {internalTypes: ['page']}
+const defaultConfig = {name: 'link', internalTypes: ['page']}
 
 function evaluateHidden(field: FieldDefinition, parent: Record<string, unknown>): unknown {
   if (typeof field.hidden === 'function') {
@@ -20,25 +20,29 @@ function evaluateHidden(field: FieldDefinition, parent: Record<string, unknown>)
 }
 
 function callPrepare(
-  result: ReturnType<typeof linkType>,
+  schemaType: SchemaTypeDefinition,
   selection: Record<string, unknown>,
 ): PreviewValue {
-  const typeDef = result.type
-  const prepare = typeDef && 'preview' in typeDef ? typeDef.preview?.prepare : undefined
+  const prepare = 'preview' in schemaType ? schemaType.preview?.prepare : undefined
   if (!prepare) throw new Error('Expected preview.prepare on type definition')
 
   return prepare(selection)
 }
 
 describe('linkType', () => {
-  test('returns a result with type named link', ({stubRegistry}) => {
-    const result = linkType(defaultConfig, stubRegistry)
+  test('has the expected name and identifier', () => {
+    expect(linkType.name).toBe('link')
+    expect(linkType.identifier).toBe('core.link')
+  })
 
-    expect(result.type.name).toBe('link')
+  test('returns a result with type named link', ({stubRegistry}) => {
+    const result = linkType.schemaType(defaultConfig, stubRegistry)
+
+    expect(result.name).toBe('link')
   })
 
   test('type is an object with 4 fields', ({stubRegistry}) => {
-    const fields = getFields(linkType(defaultConfig, stubRegistry))
+    const fields = getFields(linkType.schemaType(defaultConfig, stubRegistry))
 
     expect(fields).toHaveLength(4)
 
@@ -47,14 +51,16 @@ describe('linkType', () => {
   })
 
   test('maps internalTypes to reference targets', ({stubRegistry}) => {
-    const fields = getFields(linkType({internalTypes: ['page', 'post']}, stubRegistry))
+    const fields = getFields(
+      linkType.schemaType({name: 'link', internalTypes: ['page', 'post']}, stubRegistry),
+    )
     const referenceField = getField(fields, 'reference')
 
     expect(referenceField).toHaveProperty('to', [{type: 'page'}, {type: 'post'}])
   })
 
   test('hidden callbacks show correct fields for internal type', ({stubRegistry}) => {
-    const fields = getFields(linkType(defaultConfig, stubRegistry))
+    const fields = getFields(linkType.schemaType(defaultConfig, stubRegistry))
     const internalParent = {linkType: 'internal'}
 
     expect(evaluateHidden(getField(fields, 'reference'), internalParent)).toBe(false)
@@ -63,7 +69,7 @@ describe('linkType', () => {
   })
 
   test('hidden callbacks show correct fields for external type', ({stubRegistry}) => {
-    const fields = getFields(linkType(defaultConfig, stubRegistry))
+    const fields = getFields(linkType.schemaType(defaultConfig, stubRegistry))
     const externalParent = {linkType: 'external'}
 
     expect(evaluateHidden(getField(fields, 'reference'), externalParent)).toBe(true)
@@ -72,7 +78,7 @@ describe('linkType', () => {
   })
 
   test('hidden callbacks show conditional fields when linkType is undefined', ({stubRegistry}) => {
-    const fields = getFields(linkType(defaultConfig, stubRegistry))
+    const fields = getFields(linkType.schemaType(defaultConfig, stubRegistry))
     const emptyParent = {linkType: undefined}
 
     expect(evaluateHidden(getField(fields, 'reference'), emptyParent)).toBe(false)
@@ -83,8 +89,8 @@ describe('linkType', () => {
 
 describe('linkType preview.select', () => {
   test('selects correct paths for preview', ({stubRegistry}) => {
-    const typeDef = linkType(defaultConfig, stubRegistry).type
-    const select = typeDef && 'preview' in typeDef ? typeDef.preview?.select : undefined
+    const typeDef = linkType.schemaType(defaultConfig, stubRegistry)
+    const select = 'preview' in typeDef ? typeDef.preview?.select : undefined
 
     expect(select).toEqual({
       linkType: 'linkType',
@@ -96,8 +102,8 @@ describe('linkType preview.select', () => {
 
 describe('linkType preview.prepare', () => {
   test('internal link with a reference title', ({stubRegistry}) => {
-    const preset = linkType(defaultConfig, stubRegistry)
-    const result = callPrepare(preset, {
+    const schemaType = linkType.schemaType(defaultConfig, stubRegistry)
+    const result = callPrepare(schemaType, {
       linkType: 'internal',
       referenceTitle: 'About Us',
       url: undefined,
@@ -107,8 +113,8 @@ describe('linkType preview.prepare', () => {
   })
 
   test('internal link without reference title shows fallback', ({stubRegistry}) => {
-    const preset = linkType(defaultConfig, stubRegistry)
-    const result = callPrepare(preset, {
+    const schemaType = linkType.schemaType(defaultConfig, stubRegistry)
+    const result = callPrepare(schemaType, {
       linkType: 'internal',
       referenceTitle: undefined,
       url: undefined,
@@ -118,8 +124,8 @@ describe('linkType preview.prepare', () => {
   })
 
   test('external link with a URL', ({stubRegistry}) => {
-    const preset = linkType(defaultConfig, stubRegistry)
-    const result = callPrepare(preset, {
+    const schemaType = linkType.schemaType(defaultConfig, stubRegistry)
+    const result = callPrepare(schemaType, {
       linkType: 'external',
       url: 'https://example.com',
       referenceTitle: undefined,
@@ -129,8 +135,8 @@ describe('linkType preview.prepare', () => {
   })
 
   test('external link without URL shows fallback', ({stubRegistry}) => {
-    const preset = linkType(defaultConfig, stubRegistry)
-    const result = callPrepare(preset, {
+    const schemaType = linkType.schemaType(defaultConfig, stubRegistry)
+    const result = callPrepare(schemaType, {
       linkType: 'external',
       url: undefined,
       referenceTitle: undefined,
@@ -140,8 +146,8 @@ describe('linkType preview.prepare', () => {
   })
 
   test('undefined linkType defaults to internal link fallback', ({stubRegistry}) => {
-    const preset = linkType(defaultConfig, stubRegistry)
-    const result = callPrepare(preset, {
+    const schemaType = linkType.schemaType(defaultConfig, stubRegistry)
+    const result = callPrepare(schemaType, {
       linkType: undefined,
       url: undefined,
       referenceTitle: undefined,

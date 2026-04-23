@@ -8,13 +8,13 @@ export interface ImageTypeConfig {
   hotspot?: boolean
 }
 
-export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>((config) => {
-  const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = config
+export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>({
+  name: 'image',
+  identifier: 'core.image',
+  schemaType: (config) => {
+    const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = config
 
-  return {
-    identifier: 'core.image',
-    schemaType: defineType({
-      name: 'image',
+    return defineType({
       title: 'Image',
       ...objectConfig,
       type: 'object',
@@ -54,6 +54,6 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
           media: 'image',
         },
       },
-    }),
-  }
+    })
+  },
 })

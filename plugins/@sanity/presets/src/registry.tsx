@@ -1,10 +1,14 @@
 import {uuid} from '@sanity/uuid'
 import type {ComponentType} from 'react'
-import {defineField} from 'sanity'
 import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
-import type {PresetResultFactory, RegistryContext} from './definePresetType'
+import type {
+  AnyPresetDefinition,
+  PresetDefinition,
+  RegistryContext,
+  UserConfig,
+} from './definePresetType'
 import {ctaType} from './presets/cta-type'
 import {imageType, type ImageTypeConfig} from './presets/image-type'
 import {linkType, type LinkTypeConfig} from './presets/link-type'
@@ -20,9 +24,12 @@ export interface PresetsRegistryConfig {
   page?: PageTypeConfig
 }
 
-type DefineFunction<Preset extends PresetResultFactory> = (
-  config: Parameters<Preset>[0],
-) => SchemaTypeDefinition & FieldDefinition
+type DefineFunction<Preset extends AnyPresetDefinition> =
+  Preset extends PresetDefinition<infer Context, infer AliasedType, infer LockedProperties>
+    ? (
+        config?: UserConfig<Context, AliasedType, LockedProperties>,
+      ) => SchemaTypeDefinition & FieldDefinition
+    : never
 
 export interface PresetsRegistry {
   defineLink: DefineFunction<typeof linkType>
@@ -36,40 +43,84 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
   const registryId = uuid()
   registerRegistry(registryId)
 
-  const registry: Record<
-    string,
-    (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
-  > = {}
+  // oxlint-disable-next-line no-unsafe-type-assertion -- seeding reduce with an empty object that is populated by each iteration
+  const seed = {} as DefinerRecord & PresetsRegistry
 
-  for (const preset of systemPresets) {
-    const presetName = getPresetName(preset)
-    const key = getPresetKey(presetName)
-    registry[key] = createDefiner(registryId, preset, config, registry)
-  }
-
-  // oxlint-disable-next-line no-unsafe-type-assertion -- dynamically built object with computed keys
-  return registry as unknown as PresetsRegistry
-}
-
-const stubRegistryContext: RegistryContext = {
-  getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
-}
-
-function getPresetName(preset: PresetResultFactory): string {
-  const result = preset({}, stubRegistryContext)
-  const name = result?.type?.name
-  if (!name) {
-    throw new Error('Preset must return a schema type with a name property.')
-  }
-  return name
+  return systemPresets.reduce((registry, preset) => {
+    const key = getPresetKey(preset.name)
+    registry[key] = createDefiner({registryId, preset, config, registry})
+    return registry
+  }, seed)
 }
 
 export function getPresetKey(name: string): string {
   return `define${name.charAt(0).toUpperCase()}${name.slice(1)}`
 }
 
-function getPresetIdentifier(preset: PresetResultFactory): string | undefined {
-  return preset({}, stubRegistryContext)?.identifier
+type Definer = (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
+type DefinerRecord = Record<string, Definer>
+
+function createRegistryContext({registry}: {registry: DefinerRecord}): RegistryContext {
+  return {
+    getPreset: (name, presetConfig) => {
+      const key = getPresetKey(name)
+      const definer = registry[key]
+      if (!definer) {
+        throw new Error(`Cannot resolve preset "${name}". No such preset in this registry.`)
+      }
+      return definer(presetConfig)
+    },
+  }
+}
+
+interface CreateDefinerOptions {
+  registryId: string
+  preset: AnyPresetDefinition
+  config: PresetsRegistryConfig
+  registry: DefinerRecord
+}
+
+function createDefiner({registryId, preset, config, registry}: CreateDefinerOptions): Definer {
+  return function define(userConfig = {}) {
+    recordPresetUsage(registryId, preset.identifier ?? 'unnamed')
+
+    const registryContext = createRegistryContext({registry})
+
+    // oxlint-disable-next-line no-unsafe-type-assertion -- PresetsRegistryConfig is keyed by preset name; dynamic lookup is safe
+    const registryDefaults = (config as Record<string, unknown>)[preset.name]
+    const mergedConfig: Record<string, unknown> = {
+      name: preset.name,
+      ...(typeof registryDefaults === 'object' && registryDefaults !== null ? registryDefaults : {}),
+      ...userConfig,
+    }
+
+    const {map, ...factoryConfig} = mergedConfig
+
+    // oxlint-disable-next-line no-unsafe-type-assertion -- factoryConfig is the merged user config minus `map`, matching what the preset's schemaType factory expects
+    const schemaType = preset.schemaType(factoryConfig as Parameters<AnyPresetDefinition['schemaType']>[0], registryContext)
+
+    applyMapHooks(schemaType, map)
+    addTelemetryComponent(schemaType, registryId)
+
+    // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
+    return schemaType as SchemaTypeDefinition & FieldDefinition
+  }
+}
+
+function applyMapHooks(schemaType: SchemaTypeDefinition, map: unknown): void {
+  if (!map || typeof map !== 'object') return
+
+  for (const [configName, configValue] of Object.entries(map)) {
+    if (typeof configValue !== 'function') {
+      continue
+    }
+
+    // oxlint-disable-next-line no-unsafe-type-assertion -- map hooks operate on arbitrary schema type properties
+    schemaType[configName as keyof typeof schemaType] = configValue(
+      // oxlint-disable-next-line no-unsafe-type-assertion
+      schemaType[configName as keyof typeof schemaType],
+    )
+  }
 }
 
 function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: string): void {
@@ -88,57 +139,5 @@ function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: str
   })
 }
 
-function createRegistryContext({
-  registry,
-}: {
-  registry: Record<
-    string,
-    (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
-  >
-}): RegistryContext {
-  return {
-    getPreset: (name: string, presetConfig?: Record<string, unknown>) => {
-      const key = getPresetKey(name)
-      const definer = registry[key]
-      if (!definer) {
-        throw new Error(`Cannot resolve preset "${name}". No such preset in this registry.`)
-      }
-      return definer(presetConfig)
-    },
-  }
-}
-
-function createDefiner(
-  registryId: string,
-  preset: PresetResultFactory,
-  config: PresetsRegistryConfig,
-  registry: Record<
-    string,
-    (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
-  >,
-): (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition {
-  const presetName = getPresetName(preset)
-  const identifier = getPresetIdentifier(preset)
-
-  return function define(
-    userConfig: Record<string, unknown> = {},
-  ): SchemaTypeDefinition & FieldDefinition {
-    recordPresetUsage(registryId, identifier ?? 'unnamed')
-
-    const registryContext = createRegistryContext({registry})
-
-    // oxlint-disable-next-line no-unsafe-type-assertion
-    const registryDefaults = (config as unknown as Record<string, unknown>)[presetName]
-    const mergedConfig =
-      typeof registryDefaults === 'object' && registryDefaults !== null
-        ? {...registryDefaults, ...userConfig}
-        : userConfig
-
-    const result = preset(mergedConfig, registryContext)
-
-    addTelemetryComponent(result.type, registryId)
-
-    // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
-    return result.type as SchemaTypeDefinition & FieldDefinition
-  }
-}
+// Re-export for consumers that previously used these types.
+export type {PresetDefinition, AnyPresetDefinition}

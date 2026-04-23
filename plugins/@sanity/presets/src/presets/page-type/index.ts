@@ -6,13 +6,13 @@ export interface PageTypeConfig {
   pageBuilderBlocks?: string[]
 }
 
-export const pageType = definePresetType<PageTypeConfig, 'document'>((config, registry) => {
-  const {pageBuilderBlocks, groups, fields, ...documentConfig} = config
+export const pageType = definePresetType<PageTypeConfig, 'document'>({
+  name: 'page',
+  identifier: 'core.page',
+  schemaType: (config, registry) => {
+    const {pageBuilderBlocks, groups, fields, ...documentConfig} = config
 
-  return {
-    identifier: 'core.page',
-    schemaType: defineType({
-      name: 'page',
+    return defineType({
       title: 'Page',
       ...documentConfig,
       type: 'document',
@@ -67,6 +67,6 @@ export const pageType = definePresetType<PageTypeConfig, 'document'>((config, re
         }),
         ...(fields ?? []),
       ],
-    }),
-  }
+    })
+  },
 })
