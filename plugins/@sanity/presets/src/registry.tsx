@@ -90,14 +90,19 @@ function createDefiner({registryId, preset, config, registry}: CreateDefinerOpti
     const registryDefaults = (config as Record<string, unknown>)[preset.name]
     const mergedConfig: Record<string, unknown> = {
       name: preset.name,
-      ...(typeof registryDefaults === 'object' && registryDefaults !== null ? registryDefaults : {}),
+      ...(typeof registryDefaults === 'object' && registryDefaults !== null
+        ? registryDefaults
+        : {}),
       ...userConfig,
     }
 
     const {map, ...factoryConfig} = mergedConfig
 
     // oxlint-disable-next-line no-unsafe-type-assertion -- factoryConfig is the merged user config minus `map`, matching what the preset's schemaType factory expects
-    const schemaType = preset.schemaType(factoryConfig as Parameters<AnyPresetDefinition['schemaType']>[0], registryContext)
+    const schemaType = preset.schemaType(
+      factoryConfig as Parameters<AnyPresetDefinition['schemaType']>[0],
+      registryContext,
+    )
 
     applyMapHooks(schemaType, map)
     addTelemetryComponent(schemaType, registryId)
