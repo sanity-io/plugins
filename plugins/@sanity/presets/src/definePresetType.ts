@@ -26,7 +26,7 @@ type SanitizeProperties<Properties, ExcludedProperties extends string | undefine
   ? Omit<Properties, ExcludedProperties>
   : Properties
 
-type DerivedConfig<
+type FactoryConfig<
   Context,
   AliasedType extends IntrinsicTypeName | undefined = undefined,
   LockedProperties extends string | undefined = undefined,
@@ -37,15 +37,21 @@ type DerivedConfig<
         PartialSchemaDefinition<AliasedType>,
         ProhibitedProperties | LockedProperties
       >
-    : {}) & {
-    map?: AliasedType extends string
-      ? {
-          [Key in keyof PartialSchemaDefinition<AliasedType>]?: (
-            input: PartialSchemaDefinition<AliasedType>[Key],
-          ) => PartialSchemaDefinition<AliasedType>[Key]
-        }
-      : {}
-  }
+    : {})
+
+type DerivedConfig<
+  Context,
+  AliasedType extends IntrinsicTypeName | undefined = undefined,
+  LockedProperties extends string | undefined = undefined,
+> = FactoryConfig<Context, AliasedType, LockedProperties> & {
+  map?: AliasedType extends string
+    ? {
+        [Key in keyof PartialSchemaDefinition<AliasedType>]?: (
+          input: PartialSchemaDefinition<AliasedType>[Key],
+        ) => PartialSchemaDefinition<AliasedType>[Key]
+      }
+    : {}
+}
 
 export function definePresetType<
   Context = {},
@@ -53,7 +59,7 @@ export function definePresetType<
   LockedProperties extends string | undefined = undefined,
 >(
   factory: (
-    config: DerivedConfig<Context, AliasedType, LockedProperties>,
+    config: FactoryConfig<Context, AliasedType, LockedProperties>,
     registry: RegistryContext,
   ) => PresetTypeContext,
 ): (
@@ -61,9 +67,14 @@ export function definePresetType<
   registry: RegistryContext,
 ) => PresetResult {
   return function define(config, registry) {
-    const {schemaType, ...attributes} = factory(config, registry)
+    const {map, ...factoryConfig} = config
+    const {schemaType, ...attributes} = factory(
+      // oxlint-disable-next-line no-unsafe-type-assertion -- TypeScript cannot structurally verify that `Omit<DerivedConfig, 'map'>` equals `FactoryConfig` when `Context` is generic; at runtime the rest pattern produces exactly the factory's expected shape
+      factoryConfig as FactoryConfig<Context, AliasedType, LockedProperties>,
+      registry,
+    )
 
-    for (const [configName, configValue] of Object.entries(config.map ?? {})) {
+    for (const [configName, configValue] of Object.entries(map ?? {})) {
       if (typeof configValue !== 'function') {
         continue
       }

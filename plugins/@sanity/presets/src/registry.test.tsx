@@ -153,6 +153,19 @@ describe('preset composition via getPreset', () => {
       }),
     )
   })
+
+  test('non-standard config properties (like map) do not leak into the schema type', ({
+    registry,
+  }) => {
+    const result = registry.definePage({
+      name: 'testPage',
+      map: {
+        fields: (fields = []) => fields,
+      },
+    })
+
+    expect(result).not.toHaveProperty('map')
+  })
 })
 
 describe('createPresetsRegistry components.input wrapping', () => {
