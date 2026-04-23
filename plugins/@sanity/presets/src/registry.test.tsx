@@ -19,13 +19,15 @@ describe('createPresetsRegistry components.input wrapping', () => {
       components: {input: userInput},
     })
 
-    assert('components' in schemaType, 'Expected schemaType to have components')
-    assert(schemaType.components, 'Expected components to be set')
-    assert('input' in schemaType.components, 'Expected components.input to be set')
-    const rawInput = schemaType.components.input
-    assert(typeof rawInput === 'function', 'Expected components.input to be a function')
+    assert(
+      'components' in schemaType &&
+        schemaType.components &&
+        'input' in schemaType.components &&
+        typeof schemaType.components.input === 'function',
+      'Expected components.input to be a function set by the registry',
+    )
     // oxlint-disable-next-line no-unsafe-type-assertion -- the registry installs a FunctionComponent<InputProps> wrapper on every preset it produces
-    const TelemetryWrapper = rawInput as unknown as FunctionComponent<InputProps>
+    const TelemetryWrapper = schemaType.components.input as unknown as FunctionComponent<InputProps>
 
     // The registry must not replace the user's input with the telemetry wrapper —
     // it must render the user's input inside the wrapper so both behaviours run.
@@ -48,13 +50,15 @@ describe('createPresetsRegistry components.input wrapping', () => {
   }) => {
     const schemaType = registry.defineLink({name: 'myLink'})
 
-    assert('components' in schemaType, 'Expected schemaType to have components')
-    assert(schemaType.components, 'Expected components to be set')
-    assert('input' in schemaType.components, 'Expected components.input to be set')
-    const rawInput = schemaType.components.input
-    assert(typeof rawInput === 'function', 'Expected components.input to be a function')
+    assert(
+      'components' in schemaType &&
+        schemaType.components &&
+        'input' in schemaType.components &&
+        typeof schemaType.components.input === 'function',
+      'Expected components.input to be a function set by the registry',
+    )
     // oxlint-disable-next-line no-unsafe-type-assertion -- the registry installs a FunctionComponent<InputProps> wrapper on every preset it produces
-    const TelemetryWrapper = rawInput as unknown as FunctionComponent<InputProps>
+    const TelemetryWrapper = schemaType.components.input as unknown as FunctionComponent<InputProps>
 
     const renderDefault = vi.fn(() => <div data-testid="default-input">Default input</div>)
 
