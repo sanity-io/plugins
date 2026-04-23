@@ -82,11 +82,7 @@ function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: str
   Object.assign(schemaType, {
     components: Object.assign({}, existing, {
       input: (props: InputProps) => (
-        <PresetsTelemetryCollector
-          {...props}
-          registryId={registryId}
-          userInput={existingInput}
-        />
+        <PresetsTelemetryCollector {...props} registryId={registryId} userInput={existingInput} />
       ),
     }),
   })
