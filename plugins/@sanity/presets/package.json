@@ -61,6 +61,8 @@
     "styled-components": "catalog:"
   },
   "peerDependencies": {
+    "react": "^19.2",
+    "react-dom": "^19.2",
     "sanity": "^5"
   },
   "engines": {

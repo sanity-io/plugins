@@ -1,5 +1,6 @@
 import {uuid} from '@sanity/uuid'
-import type {FieldDefinition, SchemaTypeDefinition} from 'sanity'
+import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
+import {type ComponentType} from 'react'
 
 import type {
   AnyPresetDefinition,
@@ -13,6 +14,7 @@ import {linkType, type LinkTypeConfig} from './presets/link-type'
 import {pageType, type PageTypeConfig} from './presets/page-type'
 import {seoType} from './presets/seo-type'
 import {recordPresetUsage, registerRegistry} from './telemetry'
+import { PresetsTelemetryCollector } from './components/PresetsTelemetryCollector'
 
 const systemPresets = [linkType, ctaType, seoType, imageType, pageType] as const
 
@@ -103,6 +105,7 @@ function createDefiner({registryId, preset, config, registry}: CreateDefinerOpti
     )
 
     applyMapHooks(schemaType, map)
+    addTelemetryComponent(schemaType, registryId)
 
     // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
     return schemaType as SchemaTypeDefinition & FieldDefinition
@@ -123,6 +126,22 @@ function applyMapHooks(schemaType: SchemaTypeDefinition, map: unknown): void {
       schemaType[configName as keyof typeof schemaType],
     )
   }
+}
+
+function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: string): void {
+  const existing = 'components' in schemaType ? schemaType.components : undefined
+  const existingInput =
+    existing && 'input' in existing && typeof existing.input === 'function'
+      ? // oxlint-disable-next-line no-unsafe-type-assertion -- presets only produce object/document schema types, whose input components are assignable to ComponentType<InputProps>
+        (existing.input as ComponentType<InputProps>)
+      : undefined
+  Object.assign(schemaType, {
+    components: Object.assign({}, existing, {
+      input: (props: InputProps) => (
+        <PresetsTelemetryCollector {...props} registryId={registryId} userInput={existingInput} />
+      ),
+    }),
+  })
 }
 
 // Re-export for consumers that previously used these types.
