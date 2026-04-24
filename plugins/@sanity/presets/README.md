@@ -28,7 +28,7 @@ Check back later, or watch the repository for updates.
 - `defineCta` — call-to-action with an inline link and semantic importance level
 - `defineSeo` — search engine metadata (title, description, Open Graph image)
 - `defineImage` — image with optional alt text, caption, and hotspot
-- `defineRichText` — Portable Text with configurable annotations and blocks _(coming soon)_
+- `defineRichText` — Portable Text with link annotations, image blocks, and CTA inline objects; embeds default on, opt out with `embeds: false` or `embeds: {link: false}`
 
 **When to use presets:**
 
@@ -303,9 +303,64 @@ defineImage({
 
 ### Rich text
 
-> The rich text preset is under development on a separate branch and is not yet available. This section will be updated when it ships.
+The rich text preset produces a Portable Text array type with link annotations, image blocks, and inline call-to-action (CTA) objects. All three embeds are on by default.
 
-The rich text preset will produce a Portable Text array type with configurable block styles, decorators, annotations (including links composed from the link preset), and inline/block-level objects.
+```ts
+defineRichText({
+  name: 'body',
+  title: 'Body',
+})
+```
+
+**Embeds:**
+
+| Embed   | Type                     | Description                                                 |
+| ------- | ------------------------ | ----------------------------------------------------------- |
+| `link`  | Portable Text annotation | Adds the link preset as an inline annotation on blocks.     |
+| `image` | Array member             | Adds the image preset as a block-level member of the array. |
+| `cta`   | Inline object            | Adds the CTA preset as an inline object within blocks.      |
+
+**Options:**
+
+| Option   | Type                                                          | Default | Description                                                                    |
+| -------- | ------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------ |
+| `embeds` | `boolean \| {link?: boolean, image?: boolean, cta?: boolean}` | `true`  | Toggles embeds on or off. Pass `false` to disable all, or an object per embed. |
+
+To disable all embeds for a plain Portable Text field:
+
+```ts
+defineRichText({
+  name: 'plainBody',
+  embeds: false,
+})
+```
+
+To disable individual embeds:
+
+```ts
+defineRichText({
+  name: 'body',
+  embeds: {cta: false},
+})
+```
+
+#### Configuring the embedded presets
+
+Configure each embed's options (link `internalTypes`, image `altText`, and so on) at the registry level. Those options cascade into every rich text field:
+
+```ts
+const {defineRichText} = createPresetsRegistry({
+  link: {
+    internalTypes: ['page', 'post'],
+  },
+  image: {
+    altText: true,
+    caption: false,
+  },
+})
+```
+
+The `embeds` option only toggles embeds on or off. To reshape the array members on a specific rich text field, use the [map hooks escape hatch](#reserve-map-hooks-for-when-you-need-full-control).
 
 ## Recommended patterns
 

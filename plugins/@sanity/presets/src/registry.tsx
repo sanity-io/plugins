@@ -11,10 +11,11 @@ import {ctaType} from './presets/cta-type'
 import {imageType, type ImageTypeConfig} from './presets/image-type'
 import {linkType, type LinkTypeConfig} from './presets/link-type'
 import {pageType, type PageTypeConfig} from './presets/page-type'
+import {richTextType} from './presets/rich-text-type'
 import {seoType} from './presets/seo-type'
 import {recordPresetUsage, registerRegistry} from './telemetry'
 
-const systemPresets = [linkType, ctaType, seoType, imageType, pageType] as const
+const systemPresets = [linkType, ctaType, seoType, imageType, pageType, richTextType] as const
 
 export interface PresetsRegistryConfig {
   link?: LinkTypeConfig
@@ -35,6 +36,7 @@ export interface PresetsRegistry {
   defineSeo: DefineFunction<typeof seoType>
   defineImage: DefineFunction<typeof imageType>
   definePage: DefineFunction<typeof pageType>
+  defineRichText: DefineFunction<typeof richTextType>
 }
 
 export function createPresetsRegistry(config: PresetsRegistryConfig = {}): PresetsRegistry {
