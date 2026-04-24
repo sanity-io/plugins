@@ -168,7 +168,7 @@ describe('preset composition via getPreset', () => {
   })
 })
 
-describe.skip('createPresetsRegistry components.input wrapping', () => {
+describe('createPresetsRegistry components.input wrapping', () => {
   test('user-provided components.input is rendered inside the telemetry wrapper', ({registry}) => {
     const userInput = vi.fn(() => <div data-testid="user-input">User input</div>)
 
