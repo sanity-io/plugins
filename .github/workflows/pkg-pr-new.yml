@@ -106,7 +106,7 @@ jobs:
         run: pnpm dlx pkg-pr-new publish ${{ steps.changed-packages.outputs.package_paths }} --pnpm --no-template --comment=off --json output.json
 
       - name: Post or update comment
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           HAS_CHANGED_PACKAGES: ${{ steps.changed-packages.outputs.has_changed_packages }}
         with:
