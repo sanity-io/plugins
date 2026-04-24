@@ -1,22 +1,19 @@
 import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
-import {LINK_TYPE_NAME} from './constants'
-
-export {LINK_TYPE_NAME} from './constants'
 
 export interface LinkTypeConfig {
   internalTypes?: string[]
 }
 
-export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>((context) => {
-  const {internalTypes, fields, ...objectConfig} = context ?? {}
-  const referenceTargets = (internalTypes ?? []).map((typeName) => ({type: typeName}))
+export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
+  name: 'link',
+  identifier: 'core.link',
+  schemaType: ({internalTypes, fields, ...objectConfig}) => {
+    const resolvedInternalTypes = internalTypes ?? []
+    const referenceTargets = resolvedInternalTypes.map((type) => ({type}))
 
-  return {
-    name: LINK_TYPE_NAME,
-    schemaType: defineType({
-      name: LINK_TYPE_NAME,
+    return defineType({
       title: 'Link',
       ...objectConfig,
       type: 'object',
@@ -75,6 +72,6 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>((c
           }
         },
       },
-    }),
-  }
+    })
+  },
 })

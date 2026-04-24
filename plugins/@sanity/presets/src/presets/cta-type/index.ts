@@ -1,28 +1,19 @@
 import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
-import {LINK_TYPE_NAME, linkType} from '../link-type'
-import {CTA_TYPE_NAME} from './constants'
 
-export {CTA_TYPE_NAME} from './constants'
+export const ctaType = definePresetType<{}, 'object'>({
+  name: 'cta',
+  identifier: 'core.cta',
+  schemaType: (config, registry) => {
+    const {fields, ...objectConfig} = config
 
-export const ctaType = definePresetType<{}, 'object'>((context) => {
-  const {fields, ...objectConfig} = context ?? {}
-
-  return {
-    name: 'core.presets.cta',
-    composes: [linkType],
-    schemaType: defineType({
-      name: CTA_TYPE_NAME,
+    return defineType({
       title: 'Call to action',
       ...objectConfig,
       type: 'object',
       fields: [
-        defineField({
-          name: 'link',
-          title: 'Link',
-          type: LINK_TYPE_NAME,
-        }),
+        registry.getPreset('link', {name: 'link', title: 'Link'}),
         defineField({
           name: 'level',
           title: 'Level',
@@ -34,6 +25,6 @@ export const ctaType = definePresetType<{}, 'object'>((context) => {
         }),
         ...(fields ?? []),
       ],
-    }),
-  }
+    })
+  },
 })

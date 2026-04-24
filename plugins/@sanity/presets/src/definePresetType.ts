@@ -1,73 +1,36 @@
-import type {IntrinsicTypeName, SchemaTypeDefinition} from 'sanity'
+import type {
+  FieldDefinition,
+  FieldDefinitionBase,
+  IntrinsicTypeName,
+  SchemaTypeDefinition,
+} from 'sanity'
 
-import type {PartialSchemaDefinition, PresetResult} from './types'
+import type {PartialSchemaDefinition} from './types'
 
-/**
- * @internal
- */
-export const presetProvider: unique symbol = Symbol('presetProvider')
-
-const visitedFactories: unique symbol = Symbol('visitedFactories')
-
-export type PresetProvider = 'user' | 'system'
-
-export type PresetResultFactory = (...args: any[]) => PresetResult[]
-
-export interface BaseContext {
-  [presetProvider]?: PresetProvider
-  [visitedFactories]?: WeakSet<WeakKey>
+export interface RegistryContext {
+  getPreset: (presetName: string, config?: Record<string, unknown>) => FieldDefinition
 }
 
-export interface PresetTypeContext {
-  [presetProvider]?: PresetProvider
-  name: string
-  schemaType: SchemaTypeDefinition
-  composes?: PresetResultFactory[]
-}
-
-/**
- * Properties that are never be permitted to be overridden when using any preset.
- */
 type ProhibitedProperties = 'type'
 
-/**
- * Prevent excluded properties being assigned to the object.
- */
 type SanitizeProperties<Properties, ExcludedProperties extends string | undefined> = [
   ExcludedProperties,
 ] extends [PropertyKey]
   ? Omit<Properties, ExcludedProperties>
   : Properties
 
-/**
- * Derive context that may be assigned when preset is used.
- */
-type DerivedContext<
+export type DerivedConfig<
   Context,
   AliasedType extends IntrinsicTypeName | undefined = undefined,
   LockedProperties extends string | undefined = undefined,
-> = BaseContext &
-  Context &
+> = Context &
+  FieldDefinitionBase &
   (AliasedType extends string
     ? SanitizeProperties<
         PartialSchemaDefinition<AliasedType>,
         ProhibitedProperties | LockedProperties
       >
     : {}) & {
-    /**
-     * Map hooks allow any schema property created by the preset to be
-     * overridden.
-     *
-     * Each hook receives the value created by the preset, and may return any
-     * compatible value.
-     *
-     * Map hooks are able to override any schema option. They always receive
-     * the value produced by the preset, including any other customisations
-     * made in the configuration. For example, if a preset supports appending
-     * fields by specifying the `fields` array, `map.fields` will receive all
-     * of the fields created by the preset in addition to those defined in the
-     * `fields` array.
-     */
     map?: AliasedType extends string
       ? {
           [Key in keyof PartialSchemaDefinition<AliasedType>]?: (
@@ -77,55 +40,65 @@ type DerivedContext<
       : {}
   }
 
-export function definePresetType<
-  Context = undefined,
+/**
+ * The public-facing config shape that a registry's `define<Name>` function
+ * accepts at the call site. Includes the full `DerivedConfig` (with optional
+ * `map` and optional `name` — the registry falls back to the preset's default
+ * name when `name` is omitted).
+ */
+export type UserConfig<
+  Context = {},
   AliasedType extends IntrinsicTypeName | undefined = undefined,
-  /**
-   * If a property is locked, users are not permitted to provide a value for
-   * that property when creating an instance of the preset. This should be used
-   * when a preset does not consider a user-provided property, or does not pass
-   * it to the underlying schema definition.
-   *
-   * Users may still ultimately override any property, including locked
-   * properties, by using the map hooks.
-   */
+  LockedProperties extends string | undefined = undefined,
+> = DerivedConfig<Context, AliasedType, LockedProperties>
+
+/**
+ * A preset definition describes how to produce a Sanity schema type.
+ *
+ * - `name` is the default schema type name. Consumers can override this at the
+ *   call site (e.g. `defineLink({name: 'myLink'})`); the registry will make
+ *   sure the override reaches the `schemaType` factory via its config.
+ * - `identifier` is an optional stable identifier used for telemetry.
+ * - `schemaType` is the factory that produces the Sanity schema type. It
+ *   receives the merged config (minus `map`, with `name` guaranteed by the
+ *   registry) and the registry context, and returns a `SchemaTypeDefinition`.
+ */
+export interface PresetDefinition<
+  Context = {},
+  AliasedType extends IntrinsicTypeName | undefined = undefined,
+  LockedProperties extends string | undefined = undefined,
+> {
+  name: string
+  identifier?: string
+  schemaType: (
+    config: Omit<DerivedConfig<Context, AliasedType, LockedProperties>, 'map' | 'name'> & {
+      name: string
+    },
+    registry: RegistryContext,
+  ) => SchemaTypeDefinition
+}
+
+/**
+ * A typed passthrough for defining a preset. Given a `PresetDefinition`, it
+ * returns the same value, narrowed to its concrete generic parameters so
+ * downstream code can infer the preset's config type from it.
+ *
+ * This is intentionally lightweight: it performs no work at call time. The
+ * registry is responsible for invoking `schemaType` when a preset is
+ * instantiated, and for applying `map` hooks to the produced schema type.
+ */
+export function definePresetType<
+  Context = {},
+  AliasedType extends IntrinsicTypeName | undefined = undefined,
   LockedProperties extends string | undefined = undefined,
 >(
-  factory: (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetTypeContext,
-): (context?: DerivedContext<Context, AliasedType, LockedProperties>) => PresetResult[] {
-  return function define(context) {
-    const {schemaType, composes = [], ...attributes} = factory(context)
-    const visited = context?.[visitedFactories] ?? new WeakSet()
-
-    if (visited.has(factory)) {
-      throw new Error(`Found circular dependency resolving preset \`${schemaType.name}\`.`)
-    }
-
-    visited.add(factory)
-
-    const dependencies = composes.flatMap<PresetResult>((composedFactory) =>
-      composedFactory({
-        [presetProvider]: 'system',
-        [visitedFactories]: visited,
-      }),
-    )
-
-    for (const [configName, configValue] of Object.entries(context?.map ?? {})) {
-      if (typeof configValue !== 'function') {
-        continue
-      }
-
-      // oxlint-disable-next-line no-unsafe-type-assertion
-      schemaType[configName as keyof typeof schemaType] = configValue(
-        // oxlint-disable-next-line no-unsafe-type-assertion
-        schemaType[configName as keyof typeof schemaType],
-      )
-    }
-
-    return dependencies.concat({
-      ...attributes,
-      type: schemaType,
-      [presetProvider]: context?.[presetProvider] ?? 'user',
-    })
-  }
+  preset: PresetDefinition<Context, AliasedType, LockedProperties>,
+): PresetDefinition<Context, AliasedType, LockedProperties> {
+  return preset
 }
+
+/**
+ * A preset definition with its generic parameters erased, for use in code
+ * that handles presets generically (e.g. the registry).
+ */
+export type AnyPresetDefinition = PresetDefinition<any, any, any>

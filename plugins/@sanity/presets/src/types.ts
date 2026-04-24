@@ -1,12 +1,4 @@
-import type {DefineSchemaBase, IntrinsicTypeName, PreviewConfig, SchemaTypeDefinition} from 'sanity'
-
-import type {PresetProvider, presetProvider} from './definePresetType'
-
-export interface PresetResult {
-  name: string
-  [presetProvider]: PresetProvider
-  type: SchemaTypeDefinition
-}
+import type {DefineSchemaBase, IntrinsicTypeName, PreviewConfig} from 'sanity'
 
 export type PartialSchemaDefinition<TypeName extends IntrinsicTypeName> = Partial<
   DefineSchemaBase<TypeName, TypeName> & {preview: PreviewConfig}

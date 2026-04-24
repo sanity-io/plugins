@@ -1,23 +1,18 @@
 import {ALL_FIELDS_GROUP, defineArrayMember, defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
-import {SEO_TYPE_NAME, seoType} from '../seo-type'
-import {PAGE_TYPE_NAME} from './constants'
-
-export {PAGE_TYPE_NAME} from './constants'
 
 export interface PageTypeConfig {
-  pageBuilderBlocks: string[]
+  pageBuilderBlocks?: string[]
 }
 
-export const pageType = definePresetType<PageTypeConfig, 'document'>((context) => {
-  const {pageBuilderBlocks, groups, fields, ...documentConfig} = context ?? {}
+export const pageType = definePresetType<PageTypeConfig, 'document'>({
+  name: 'page',
+  identifier: 'core.page',
+  schemaType: (config, registry) => {
+    const {pageBuilderBlocks, groups, fields, ...documentConfig} = config
 
-  return {
-    name: 'core.presets.page',
-    composes: [seoType],
-    schemaType: defineType({
-      name: PAGE_TYPE_NAME,
+    return defineType({
       title: 'Page',
       ...documentConfig,
       type: 'document',
@@ -65,14 +60,13 @@ export const pageType = definePresetType<PageTypeConfig, 'document'>((context) =
             }),
           ),
         }),
-        defineField({
+        registry.getPreset('seo', {
           name: 'seo',
           title: 'SEO',
-          type: SEO_TYPE_NAME,
           group: 'metadata',
         }),
         ...(fields ?? []),
       ],
-    }),
-  }
+    })
+  },
 })
