@@ -96,6 +96,7 @@ describe('linkType preview.select', () => {
       linkType: 'linkType',
       url: 'url',
       referenceTitle: 'reference.title',
+      referenceName: 'reference.name',
     })
   })
 })
@@ -112,11 +113,24 @@ describe('linkType preview.prepare', () => {
     expect(result).toEqual({title: 'About Us', subtitle: 'Internal link'})
   })
 
-  test('internal link without reference title shows fallback', ({stubRegistry}) => {
+  test('internal link falls back to reference name when title is missing', ({stubRegistry}) => {
     const schemaType = linkType.schemaType(defaultConfig, stubRegistry)
     const result = callPrepare(schemaType, {
       linkType: 'internal',
       referenceTitle: undefined,
+      referenceName: 'about-us',
+      url: undefined,
+    })
+
+    expect(result).toEqual({title: 'about-us', subtitle: 'Internal link'})
+  })
+
+  test('internal link without reference title or name shows fallback', ({stubRegistry}) => {
+    const schemaType = linkType.schemaType(defaultConfig, stubRegistry)
+    const result = callPrepare(schemaType, {
+      linkType: 'internal',
+      referenceTitle: undefined,
+      referenceName: undefined,
       url: undefined,
     })
 
