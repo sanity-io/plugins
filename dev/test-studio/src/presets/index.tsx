@@ -6,7 +6,7 @@ import {definePlugin, defineType, defineField} from 'sanity'
 // functions (such as `definePage`) that produce schema types.
 //
 // A convenient pattern is to destructure the `define<type>` functions.
-const {defineImage, definePage, defineLink} = createPresetsRegistry({
+const {defineImage, definePage, defineLink, defineRichText} = createPresetsRegistry({
   link: {
     // Presets can be globally configured. Here, `link.internalTypes` is
     // configured to include the "corePresetsTest" document type in all
@@ -84,6 +84,12 @@ export const presetsWorkspace = definePlugin(() => ({
             // created by the preset itself.
             group: 'metadata',
           }),
+          defineField({
+            name: 'body',
+            title: 'Body',
+            type: 'richTextDefaults',
+            group: 'main',
+          }),
         ],
         map: {
           // Map hooks serve as an escape hatch, allowing developers to override
@@ -130,6 +136,16 @@ export const presetsWorkspace = definePlugin(() => ({
             ...fields,
           ],
         },
+      }),
+      // Defaults enable all three embedded objects: link, image, and cta.
+      defineRichText({
+        name: 'richTextDefaults',
+        title: 'Rich text (defaults)',
+      }),
+      defineRichText({
+        name: 'richTextMinimal',
+        title: 'Rich text (minimal)',
+        objects: false,
       }),
       // Presets aren't intend to replace all content modelling. You'll likely
       // still need to use `defineDocument` and `defineType` to add custom

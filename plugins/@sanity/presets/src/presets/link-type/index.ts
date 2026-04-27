@@ -62,9 +62,11 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
           linkType: 'linkType',
           url: 'url',
           referenceTitle: 'reference.title',
+          referenceName: 'reference.name',
         },
-        prepare({linkType, url, referenceTitle}) {
-          const title = linkType === 'external' ? url || 'No URL' : referenceTitle || 'No reference'
+        prepare({linkType, url, referenceTitle, referenceName}) {
+          const referenceLabel = referenceTitle || referenceName || 'No reference'
+          const title = linkType === 'external' ? url || 'No URL' : referenceLabel
 
           return {
             title,
