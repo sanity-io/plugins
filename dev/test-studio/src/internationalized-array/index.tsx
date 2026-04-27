@@ -143,6 +143,11 @@ const movie = defineType({
       type: 'internationalizedArrayTable',
       description: 'Table content',
     }),
+    defineField({
+      name: 'video',
+      title: 'Video',
+      type: 'internationalizedArrayVideo',
+    }),
   ],
   preview: {
     select: {
@@ -196,7 +201,7 @@ export const internationalizedArrayExample = definePlugin(() => ({
         {id: 'it', title: 'Italian'},
       ],
       defaultLanguages: ['en'],
-      fieldTypes: ['string', 'text', 'table'],
+      fieldTypes: ['string', 'text', 'table', defineField({name: 'video', type: 'sanity.video'})],
       buttonLocations: ['document', 'field'],
       languageFilter: {
         documentTypes: ['internationalizedPost', 'lesson'],

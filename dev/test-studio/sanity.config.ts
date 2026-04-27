@@ -57,6 +57,9 @@ export default defineConfig([
   }),
   createWorkspace({
     name: 'kitchen-sink',
+    mediaLibrary: {
+      enabled: true,
+    },
     plugins: [
       structureTool(),
       assistExample(),
