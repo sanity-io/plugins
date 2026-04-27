@@ -57,6 +57,8 @@ minimumReleaseAgeExclude:
   - vitest
   # Renovate security update: lodash-es@4.17.23
   - lodash-es@4.17.23
+  # Renovate security update: uuid@14.0.0
+  - uuid@14.0.0
 
 overrides:
   styled-components: npm:@sanity/styled-components@latest
