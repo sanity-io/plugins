@@ -13,8 +13,8 @@ catalogs:
       specifier: ^10.4.17
       version: 10.4.17
     '@sanity/telemetry':
-      specifier: ^1.0.0
-      version: 1.0.0
+      specifier: ^1.1.0
+      version: 1.1.0
     '@sanity/tsconfig':
       specifier: ^2.1.0
       version: 2.1.0
@@ -666,7 +666,7 @@ importers:
         version: 2.3.0
       '@sanity/telemetry':
         specifier: 'catalog:'
-        version: 1.0.0(react@19.2.5)
+        version: 1.1.0(react@19.2.5)
       '@sanity/uuid':
         specifier: ^3.0.2
         version: 3.0.2
@@ -4424,11 +4424,14 @@ packages:
     peerDependencies:
       react: ^18.2 || ^19.0.0
 
-  '@sanity/telemetry@1.0.0':
-    resolution: {integrity: sha512-3rhfq4AyDVqqIWPe5Izlu/3v5bcktLvc/jBKu0Umy2bovIImilcgcQKMdp4aq9T2ZCL7BDZm/Ng3Hhws/tOV3g==}
+  '@sanity/telemetry@1.1.0':
+    resolution: {integrity: sha512-ch8fLXjQi1p49rIj7yrvx6tDb0320hnzwQJBOk4Ik7MkWCE7hUjtZrhtjQaSOXJd5n/piUjK+krKxy6wFkm5TA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       react: ^18.2 || ^19.0.0
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@sanity/template-validator@3.1.0':
     resolution: {integrity: sha512-pIy9yXosuA2duaJH0J1V8RYrabGB/Jh77FGYozr2pGwmCFwnLw/W/FS99qbcsJZa3wXHSMhMRyYq7IbulbijZw==}
@@ -12544,11 +12547,12 @@ snapshots:
       rxjs: 7.8.2
       typeid-js: 0.3.0
 
-  '@sanity/telemetry@1.0.0(react@19.2.5)':
+  '@sanity/telemetry@1.1.0(react@19.2.5)':
     dependencies:
-      react: 19.2.5
       rxjs: 7.8.2
       typeid-js: 0.3.0
+    optionalDependencies:
+      react: 19.2.5
 
   '@sanity/template-validator@3.1.0':
     dependencies:
