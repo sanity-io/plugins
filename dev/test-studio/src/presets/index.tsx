@@ -137,7 +137,7 @@ export const presetsWorkspace = definePlugin(() => ({
           ],
         },
       }),
-      // Defaults enable all three embeds: link, image, and cta.
+      // Defaults enable all three embedded objects: link, image, and cta.
       defineRichText({
         name: 'richTextDefaults',
         title: 'Rich text (defaults)',
@@ -145,7 +145,7 @@ export const presetsWorkspace = definePlugin(() => ({
       defineRichText({
         name: 'richTextMinimal',
         title: 'Rich text (minimal)',
-        embeds: false,
+        objects: false,
       }),
       // Presets aren't intend to replace all content modelling. You'll likely
       // still need to use `defineDocument` and `defineType` to add custom

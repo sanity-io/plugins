@@ -68,15 +68,15 @@ describe('richTextType', () => {
     const ofMembers = getOf(typeDef)
 
     expect(block.marks?.annotations?.[0]).toMatchObject({__preset: 'link', name: 'link'})
-    expect(block.of?.[0]).toMatchObject({__preset: 'cta', name: 'richTextCta'})
+    expect(block.of?.[0]).toMatchObject({__preset: 'cta', name: 'cta'})
     expect(ofMembers).toHaveLength(2)
     expect(ofMembers[0]).toHaveProperty('type', 'block')
     expect(ofMembers[1]).toMatchObject({__preset: 'image', name: 'richTextImage'})
   })
 
-  test('embeds: {image: false, cta: false} disables image and inline cta but keeps link', () => {
+  test('objects: {image: false, cta: false} disables image and inline cta but keeps link', () => {
     const typeDef = richTextType.schemaType(
-      {name: 'richText', embeds: {image: false, cta: false}},
+      {name: 'richText', objects: {image: false, cta: false}},
       makeStubRegistry(),
     )
     const block = getBlock(typeDef)
@@ -88,8 +88,8 @@ describe('richTextType', () => {
     expect(block.marks?.annotations?.[0]).toMatchObject({__preset: 'link'})
   })
 
-  test('embeds: false disables every embed', () => {
-    const typeDef = richTextType.schemaType({name: 'richText', embeds: false}, makeStubRegistry())
+  test('objects: false disables every embedded object', () => {
+    const typeDef = richTextType.schemaType({name: 'richText', objects: false}, makeStubRegistry())
     const block = getBlock(typeDef)
     const ofMembers = getOf(typeDef)
 
@@ -98,9 +98,9 @@ describe('richTextType', () => {
     expect(ofMembers).toHaveLength(1)
   })
 
-  test('embeds: {link: false} disables only the link annotation', () => {
+  test('objects: {link: false} disables only the link annotation', () => {
     const typeDef = richTextType.schemaType(
-      {name: 'richText', embeds: {link: false}},
+      {name: 'richText', objects: {link: false}},
       makeStubRegistry(),
     )
     const block = getBlock(typeDef)
@@ -139,7 +139,7 @@ describe('richTextType via the registry', () => {
       fields: expect.arrayContaining([expect.objectContaining({name: 'linkType'})]),
     })
     expect(block.of?.[0]).toMatchObject({
-      name: 'richTextCta',
+      name: 'cta',
       fields: expect.arrayContaining([expect.objectContaining({name: 'link'})]),
     })
   })
