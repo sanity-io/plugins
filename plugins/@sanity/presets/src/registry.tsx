@@ -1,7 +1,8 @@
 import {uuid} from '@sanity/uuid'
-import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 import {type ComponentType} from 'react'
+import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 
+import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
 import type {
   AnyPresetDefinition,
   PresetDefinition,
@@ -14,7 +15,6 @@ import {linkType, type LinkTypeConfig} from './presets/link-type'
 import {pageType, type PageTypeConfig} from './presets/page-type'
 import {seoType} from './presets/seo-type'
 import {recordPresetUsage, registerRegistry} from './telemetry'
-import { PresetsTelemetryCollector } from './components/PresetsTelemetryCollector'
 
 const systemPresets = [linkType, ctaType, seoType, imageType, pageType] as const
 
@@ -104,44 +104,53 @@ function createDefiner({registryId, preset, config, registry}: CreateDefinerOpti
       registryContext,
     )
 
-    applyMapHooks(schemaType, map)
-    addTelemetryComponent(schemaType, registryId)
-
     // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
-    return schemaType as SchemaTypeDefinition & FieldDefinition
+    return applyMapHooks(
+      addTelemetryComponent(schemaType, registryId),
+      map,
+    ) as SchemaTypeDefinition & FieldDefinition
   }
 }
 
-function applyMapHooks(schemaType: SchemaTypeDefinition, map: unknown): void {
-  if (!map || typeof map !== 'object') return
+function applyMapHooks(schemaType: SchemaTypeDefinition, map: unknown): SchemaTypeDefinition {
+  if (!map || typeof map !== 'object') return schemaType
+
+  const mappedSchemaType: Record<string, unknown> = {}
 
   for (const [configName, configValue] of Object.entries(map)) {
     if (typeof configValue !== 'function') {
       continue
     }
 
-    // oxlint-disable-next-line no-unsafe-type-assertion -- map hooks operate on arbitrary schema type properties
-    schemaType[configName as keyof typeof schemaType] = configValue(
-      // oxlint-disable-next-line no-unsafe-type-assertion
+    mappedSchemaType[configName] = configValue(
+      // oxlint-disable-next-line no-unsafe-type-assertion -- map hooks operate on arbitrary schema type properties
       schemaType[configName as keyof typeof schemaType],
     )
   }
+
+  return {...schemaType, ...mappedSchemaType}
 }
 
-function addTelemetryComponent(schemaType: SchemaTypeDefinition, registryId: string): void {
+function addTelemetryComponent(
+  schemaType: SchemaTypeDefinition,
+  registryId: string,
+): SchemaTypeDefinition {
   const existing = 'components' in schemaType ? schemaType.components : undefined
   const existingInput =
     existing && 'input' in existing && typeof existing.input === 'function'
       ? // oxlint-disable-next-line no-unsafe-type-assertion -- presets only produce object/document schema types, whose input components are assignable to ComponentType<InputProps>
         (existing.input as ComponentType<InputProps>)
       : undefined
-  Object.assign(schemaType, {
-    components: Object.assign({}, existing, {
+  // oxlint-disable-next-line no-unsafe-type-assertion -- spreading a discriminated union loses the discriminant; the runtime shape is still a valid SchemaTypeDefinition
+  return {
+    ...schemaType,
+    components: {
+      ...existing,
       input: (props: InputProps) => (
         <PresetsTelemetryCollector {...props} registryId={registryId} userInput={existingInput} />
       ),
-    }),
-  })
+    },
+  } as SchemaTypeDefinition
 }
 
 // Re-export for consumers that previously used these types.
