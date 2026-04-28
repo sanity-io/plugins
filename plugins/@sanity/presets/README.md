@@ -346,6 +346,20 @@ The `objects` option only toggles embedded objects on or off. To reshape the arr
 
 ## Recommended patterns
 
+### Configure links globally
+
+The [link preset](#link) is used by multiple other presets ([CTA](#cta-call-to-action), [rich text](#rich-text)). Configure `internalTypes` at the registry level so all links share the same set of linkable document types:
+
+```ts
+const {defineLink, defineCta, definePage} = createPresetsRegistry({
+  link: {
+    internalTypes: ['page', 'post', 'product'],
+  },
+})
+```
+
+This single configuration flows into every `defineLink`, `defineCta`, and `defineRichText` call from this registry. Override at the call site only when a specific instance needs different behaviour.
+
 ### Use presets alongside custom types
 
 Presets are not intended to replace all content modelling. They provide opinionated defaults for common patterns — pages, links, images, metadata — but your schema will likely include custom types that are specific to your project.
@@ -429,17 +443,3 @@ A few guidelines for using map hooks:
 
 - If you find yourself heavily rewriting the produced schema type with map hooks, it may be a sign that you should model the content type yourself. See the [schema type documentation](https://www.sanity.io/docs/apis-and-sdks/introduction-to-schemas) for more.
 - If you use map hooks to rename fields, existing documents may need to be migrated to reflect the new field names. See the [schema and content migrations documentation](https://www.sanity.io/docs/content-lake/schema-and-content-migrations).
-
-### Configure links globally
-
-The [link preset](#link) is used by multiple other presets ([CTA](#cta-call-to-action), [rich text](#rich-text)). Configure `internalTypes` at the registry level so all links share the same set of linkable document types:
-
-```ts
-const {defineLink, defineCta, definePage} = createPresetsRegistry({
-  link: {
-    internalTypes: ['page', 'post', 'product'],
-  },
-})
-```
-
-This single configuration flows into every `defineLink`, `defineCta`, and `defineRichText` call from this registry. Override at the call site only when a specific instance needs different behaviour.
