@@ -17,7 +17,6 @@
 
 - You want opinionated defaults to get started quickly.
 - You don't yet have a need for highly custom content modelling.
-- You have not chosen to use LLMs for schema generation.
 
 Presets are designed to be extended — add fields, groups, and map hooks as your needs evolve. When a preset no longer fits, replace it with your own schema type using `defineType` directly.
 
