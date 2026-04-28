@@ -1,5 +1,13 @@
 # sanity-plugin-internationalized-array
 
+## 5.1.1
+
+### Patch Changes
+
+- [`d37a6cb`](https://github.com/sanity-io/plugins/commit/d37a6cb1792745be66349201f7e9815daae3be38) Thanks [@jordanl17](https://github.com/jordanl17)! - Fix document-level read-only state not being respected by add-language buttons and field actions
+
+- [#761](https://github.com/sanity-io/plugins/pull/761) [`7c3fdff`](https://github.com/sanity-io/plugins/commit/7c3fdff43eb28417c8e02ae0523f9f95248fc012) Thanks [@jjburbridge](https://github.com/jjburbridge)! - Object to Array Migration script update to match v5
+
 ## 5.1.0
 
 ### Minor Changes

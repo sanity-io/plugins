@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 5.0.6
+
+### Patch Changes
+
+- [#848](https://github.com/sanity-io/plugins/pull/848) [`f00244d`](https://github.com/sanity-io/plugins/commit/f00244d56ea7ea20903f7a22202dff061e4502ea) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency uuid to v14 [SECURITY]
+
 ## 5.0.5
 
 ### Patch Changes

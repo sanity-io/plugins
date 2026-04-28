@@ -1,5 +1,43 @@
 # @sanity/presets
 
+## 0.3.0
+
+### Minor Changes
+
+- [#788](https://github.com/sanity-io/plugins/pull/788) [`cff0c6d`](https://github.com/sanity-io/plugins/commit/cff0c6d24a0de9c709ab3087ccec4853497f4a4a) Thanks [@juice49](https://github.com/juice49)! - Presets now provide methods for extending and overriding the created schema type.
+
+- [#828](https://github.com/sanity-io/plugins/pull/828) [`6de1330`](https://github.com/sanity-io/plugins/commit/6de13306c0b3916154299fdbbdae70c440d232a8) Thanks [@juice49](https://github.com/juice49)! - Replace plugin-based API with a registry-based API. `createPresetsRegistry()` is the new entry point — it returns `define<Type>` functions that produce schema types directly, added to `schema.types` instead of `plugins`.
+
+  Key changes:
+  - **Registry-level configuration.** Configure `link.internalTypes` once and it cascades to every preset that composes a link (CTA, rich text).
+  - **User-defined type names.** All `name` values are provided at the call site.
+  - **Inline composition.** Composed presets (e.g. the link inside a CTA) are inlined as anonymous object fields via `registry.getPreset()`, replacing the previous `composes` mechanism.
+  - **Map hooks.** Every preset accepts a `map` option for full control over the produced schema type.
+
+- [#844](https://github.com/sanity-io/plugins/pull/844) [`80b0a6f`](https://github.com/sanity-io/plugins/commit/80b0a6f115168438103e90b4c23fa7dbfd5d00b9) Thanks [@jordanl17](https://github.com/jordanl17)! - Add `defineRichText` for Portable Text fields with composable link annotations, image blocks, and inline CTA objects. Embedded objects are on by default and can be disabled via `objects: false` or toggled individually (e.g. `objects: {cta: false}`). Embedded presets inherit registry-level configuration.
+
+- [#856](https://github.com/sanity-io/plugins/pull/856) [`4f80525`](https://github.com/sanity-io/plugins/commit/4f8052541aaff67d4902749b2e4220e47315d99b) Thanks [@juice49](https://github.com/juice49)! - Initial release.
+
+  This is the first `@sanity/presets` release, and should be considered
+  experimental as we work towards version 1. We aim to keep the API
+  stable, but may make adjustments to address feedback.
+
+  The following presets are available:
+  - page
+  - link
+  - cta
+  - seo
+  - image
+  - richText
+
+  Since the last changelog entry:
+  - The API is now based on inline type factories, rather than composing
+    global types based on their name.
+  - `defineRichText` has been added to create Portable Text fields that
+    include link, CTA, and image objects based on global configuration.
+
+- [#789](https://github.com/sanity-io/plugins/pull/789) [`a4094da`](https://github.com/sanity-io/plugins/commit/a4094da9cb5b84862df8dc81a128ca21bca4b277) Thanks [@juice49](https://github.com/juice49)! - The presets plugin now logs a telemetry event when a workspace is rendered, if that workspace has presets installed. The event includes a list of the installed preset names.
+
 ## 0.2.0
 
 ### Minor Changes

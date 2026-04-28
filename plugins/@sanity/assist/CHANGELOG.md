@@ -1,5 +1,11 @@
 # 📓 Changelog
 
+## 6.0.5
+
+### Patch Changes
+
+- [#827](https://github.com/sanity-io/plugins/pull/827) [`44c2900`](https://github.com/sanity-io/plugins/commit/44c2900d2b45f3b9bc10184cef81cf1bcc22badd) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update @sanity/client to ^7.21.0
+
 ## 6.0.4
 
 ### Patch Changes
