@@ -376,9 +376,20 @@ defineType({
   title: 'Blockquote',
   type: 'object',
   fields: [
-    defineField({name: 'quote', title: 'Quote', type: 'text'}),
-    defineField({name: 'author', title: 'Author', type: 'string'}),
-    defineLink({name: 'source', title: 'Source'}),
+    defineField({
+      name: 'quote',
+      title: 'Quote',
+      type: 'text',
+    }),
+    defineField({
+      name: 'author',
+      title: 'Author',
+      type: 'string',
+    }),
+    defineLink({
+      name: 'source',
+      title: 'Source',
+    }),
   ],
 })
 ```
