@@ -19,6 +19,7 @@ import {
   internationalizedArrayExample,
 } from '#internationalized-array'
 import {markdownExample} from '#markdown'
+import {mediaExample} from '#media'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
 import {sfccExample} from '#sfcc'
@@ -61,6 +62,7 @@ export default defineConfig([
       structureTool(),
       assistExample(),
       // add new plugins here
+      mediaExample(),
       debugLiveSyncTagsExample(),
       studioSecretsExample(),
       documentInternationalizationExample(),

@@ -37,6 +37,7 @@
     "sanity-plugin-iframe-pane": "workspace:*",
     "sanity-plugin-internationalized-array": "workspace:*",
     "sanity-plugin-markdown": "workspace:*",
+    "sanity-plugin-media": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
     "styled-components": "catalog:"
