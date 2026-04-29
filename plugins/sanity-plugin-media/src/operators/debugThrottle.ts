@@ -7,17 +7,17 @@ const debugThrottle = (throttled?: boolean) => {
       () => !!throttled,
       source.pipe(
         delay(3000),
-        mergeMap(v => {
+        mergeMap((v) => {
           if (Math.random() > 0.5) {
-            return throwError({
+            return throwError(() => ({
               message: 'Test error',
-              statusCode: 500
-            })
+              statusCode: 500,
+            }))
           }
           return of(v)
-        })
+        }),
       ),
-      source
+      source,
     )
   }
 }

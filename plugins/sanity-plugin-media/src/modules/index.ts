@@ -1,9 +1,4 @@
-import {
-  type ActionFromReducersMapObject,
-  type Reducer,
-  type StateFromReducersMapObject,
-  combineReducers
-} from '@reduxjs/toolkit'
+import {type Reducer, type StateFromReducersMapObject, combineReducers} from '@reduxjs/toolkit'
 import {combineEpics} from 'redux-observable'
 
 import assetsReducer, {
@@ -21,15 +16,14 @@ import assetsReducer, {
   assetsTagsAddEpic,
   assetsTagsRemoveEpic,
   assetsUnpickEpic,
-  assetsUpdateEpic
+  assetsUpdateEpic,
 } from './assets'
 import debugReducer from './debug'
 import dialogReducer, {
   dialogClearOnAssetUpdateEpic,
   dialogTagCreateEpic,
-  dialogTagDeleteEpic
+  dialogTagDeleteEpic,
 } from './dialog'
-import selectedReducer from './selected'
 import notificationsReducer, {
   notificationsAssetsDeleteErrorEpic,
   notificationsAssetsDeleteCompleteEpic,
@@ -39,9 +33,10 @@ import notificationsReducer, {
   notificationsGenericErrorEpic,
   notificationsTagCreateCompleteEpic,
   notificationsTagDeleteCompleteEpic,
-  notificationsTagUpdateCompleteEpic
+  notificationsTagUpdateCompleteEpic,
 } from './notifications'
 import searchReducer, {searchFacetTagUpdateEpic} from './search'
+import selectedReducer from './selected'
 import tagsReducer, {
   tagsCreateEpic,
   tagsDeleteEpic,
@@ -50,13 +45,13 @@ import tagsReducer, {
   tagsListenerDeleteQueueEpic,
   tagsListenerUpdateQueueEpic,
   tagsSortEpic,
-  tagsUpdateEpic
+  tagsUpdateEpic,
 } from './tags'
 import uploadsReducer, {
   uploadsAssetStartEpic,
   uploadsAssetUploadEpic,
   uploadsCheckRequestEpic,
-  uploadsCompleteQueueEpic
+  uploadsCompleteQueueEpic,
 } from './uploads'
 
 export const rootEpic = combineEpics(
@@ -99,7 +94,7 @@ export const rootEpic = combineEpics(
   uploadsAssetStartEpic,
   uploadsAssetUploadEpic,
   uploadsCheckRequestEpic,
-  uploadsCompleteQueueEpic
+  uploadsCompleteQueueEpic,
 )
 
 const reducers = {
@@ -110,7 +105,7 @@ const reducers = {
   search: searchReducer,
   selected: selectedReducer,
   tags: tagsReducer,
-  uploads: uploadsReducer
+  uploads: uploadsReducer,
 }
 
 type ReducersMapObject = typeof reducers
@@ -118,7 +113,5 @@ type ReducersMapObject = typeof reducers
 // Workaround to avoid `$CombinedState` ts errors
 // source: https://github.com/reduxjs/redux-toolkit/issues/2068#issuecomment-1130796500
 // TODO: remove once we use `redux-toolkit` v2
-export const rootReducer: Reducer<
-  StateFromReducersMapObject<ReducersMapObject>,
-  ActionFromReducersMapObject<ReducersMapObject>
-> = combineReducers(reducers)
+export const rootReducer: Reducer<StateFromReducersMapObject<ReducersMapObject>> =
+  combineReducers(reducers)
