@@ -1,6 +1,8 @@
+// oxlint-disable no-unsafe-type-assertion -- localized error field casts are safe here
 import {Card, Stack, Tab, TabList, TabPanel} from '@sanity/ui'
 import {useState} from 'react'
 import {type Control, type FieldErrors, type UseFormRegister} from 'react-hook-form'
+
 import type {Asset, AssetFormData, Locale, TagSelectOption} from '../../types'
 import FormFieldInputTags from '../FormFieldInputTags'
 import FormFieldInputText from '../FormFieldInputText'
@@ -12,7 +14,8 @@ type LocalizedErrors = Record<string, {message?: string} | undefined>
 function toStringField(value: unknown): string | undefined {
   if (typeof value === 'string') return value
   if (typeof value === 'object' && value !== null) {
-    const found = Object.values(value as Record<string, string>).find(v => v)
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const found = Object.values(value as Record<string, string>).find((v) => v)
     return found || undefined
   }
   return undefined
@@ -44,7 +47,7 @@ export default function Details({
   assetTagOptions,
   currentAsset,
   creditLine,
-  locales
+  locales,
 }: DetailsProps) {
   const hasLocales = locales && locales.length > 0
   const [activeLocaleTab, setActiveLocaleTab] = useState(0)
@@ -125,7 +128,7 @@ export default function Details({
                       name={`creditLine.${locale.id}`}
                       disabled={
                         formUpdating ||
-                        creditLine?.excludeSources?.includes(currentAsset?.source?.name)
+                        creditLine?.excludeSources?.includes(currentAsset?.['source']?.name)
                       }
                     />
                   )}
@@ -169,7 +172,7 @@ export default function Details({
               name="creditLine"
               value={toStringField(currentAsset?.creditLine)}
               disabled={
-                formUpdating || creditLine?.excludeSources?.includes(currentAsset?.source?.name)
+                formUpdating || creditLine?.excludeSources?.includes(currentAsset?.['source']?.name)
               }
             />
           )}

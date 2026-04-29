@@ -1,18 +1,20 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Stack, Tab, TabList, TabPanel, Text} from '@sanity/ui'
-import type {Asset, AssetFormData, DialogAssetEditProps, TagSelectOption} from '../../types'
 import groq from 'groq'
 import {type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
 import {useDispatch} from 'react-redux'
 import {WithReferringDocuments, useColorSchemeValue, useDocumentStore} from 'sanity'
+
+import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import {getAssetFormSchema} from '../../formSchema'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import useVersionedClient from '../../hooks/useVersionedClient'
 import {assetsActions, selectAssetById} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {selectTags, selectTagSelectOptions, tagsActions} from '../../modules/tags'
+import type {Asset, AssetFormData, DialogAssetEditProps, TagSelectOption} from '../../types'
 import getTagSelectOptions from '../../utils/getTagSelectOptions'
 import {getUniqueDocuments} from '../../utils/getUniqueDocuments'
 import imageDprUrl from '../../utils/imageDprUrl'
@@ -24,7 +26,6 @@ import DocumentList from '../DocumentList'
 import FileAssetPreview from '../FileAssetPreview'
 import FormSubmitButton from '../FormSubmitButton'
 import Image from '../Image'
-import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import Details, {type DetailsProps} from './Details'
 
 function renderDefaultDetails(props: DetailsProps) {
@@ -39,7 +40,7 @@ type Props = {
 const DialogAssetEdit = (props: Props) => {
   const {
     children,
-    dialog: {assetId, id, lastCreatedTag, lastRemovedTagIds}
+    dialog: {assetId, id, lastCreatedTag, lastRemovedTagIds},
   } = props
 
   const client = useVersionedClient()
@@ -48,7 +49,7 @@ const DialogAssetEdit = (props: Props) => {
   const documentStore = useDocumentStore()
 
   const dispatch = useDispatch()
-  const assetItem = useTypedSelector(state => selectAssetById(state, String(assetId))) // TODO: check casting
+  const assetItem = useTypedSelector((state) => selectAssetById(state, String(assetId))) // TODO: check casting
   const tags = useTypedSelector(selectTags)
 
   const assetUpdatedPrev = useRef<string | undefined>(undefined)
@@ -71,9 +72,9 @@ const DialogAssetEdit = (props: Props) => {
         const makeLocaleObj = (field?: Record<string, string> | string) => {
           const obj: Record<string, string> = {}
           for (let i = 0; i < locales.length; i++) {
-            const locale = locales[i]
+            const locale = locales[i]!
             if (typeof field === 'object' && field && field[locale.id]) {
-              obj[locale.id] = field[locale.id]
+              obj[locale.id] = field[locale.id]!
             } else if (typeof field === 'string') {
               // Only populate the first locale to avoid spreading a legacy value
               // across all languages; the user should fill in other translations manually
@@ -90,15 +91,16 @@ const DialogAssetEdit = (props: Props) => {
           description: makeLocaleObj(asset?.description),
           originalFilename: asset?.originalFilename || '',
           opt: {media: {tags: assetTagOptions}},
-          title: makeLocaleObj(asset?.title)
+          title: makeLocaleObj(asset?.title),
         }
       }
       // Normalize: if a field is a localized object but locales are disabled, pick first non-empty value
       const flattenField = (field: unknown): string => {
         if (typeof field === 'string') return field
         if (typeof field === 'object' && field !== null) {
+          // oxlint-disable-next-line no-unsafe-type-assertion
           const values = Object.values(field as Record<string, string>)
-          return values.find(v => v) || ''
+          return values.find((v) => v) || ''
         }
         return ''
       }
@@ -108,10 +110,10 @@ const DialogAssetEdit = (props: Props) => {
         description: flattenField(asset?.description),
         originalFilename: asset?.originalFilename || '',
         opt: {media: {tags: assetTagOptions}},
-        title: flattenField(asset?.title)
+        title: flattenField(asset?.title),
       }
     },
-    [assetTagOptions, locales]
+    [assetTagOptions, locales],
   )
 
   const {
@@ -122,11 +124,11 @@ const DialogAssetEdit = (props: Props) => {
     handleSubmit,
     register,
     reset,
-    setValue
+    setValue,
   } = useForm<AssetFormData>({
     defaultValues: generateDefaultValues(assetItem?.asset),
     mode: 'onChange',
-    resolver: zodResolver(getAssetFormSchema(locales))
+    resolver: zodResolver(getAssetFormSchema(locales)),
   })
 
   const formUpdating = !assetItem || assetItem?.updating
@@ -143,8 +145,8 @@ const DialogAssetEdit = (props: Props) => {
     dispatch(
       dialogActions.showConfirmDeleteAssets({
         assets: [assetItem],
-        closeDialogId: assetItem?.asset._id
-      })
+        closeDialogId: assetItem?.asset._id,
+      }),
     )
   }, [assetItem, dispatch])
 
@@ -152,6 +154,7 @@ const DialogAssetEdit = (props: Props) => {
     const {result, transition} = update
     if (result && transition === 'update') {
       // Regenerate asset snapshot
+      // oxlint-disable-next-line no-unsafe-type-assertion
       setAssetSnapshot(result as Asset)
     }
   }, [])
@@ -162,31 +165,31 @@ const DialogAssetEdit = (props: Props) => {
       dispatch(
         tagsActions.createRequest({
           assetId: currentAsset?._id,
-          name: tagName
-        })
+          name: tagName,
+        }),
       )
     },
-    [currentAsset?._id, dispatch]
+    [currentAsset?._id, dispatch],
   )
 
   // Detect if asset has localized fields (objects) with keys not in the configured locales
   const hasOrphanedLocales = useMemo(() => {
     if (!currentAsset) return false
-    const isLocaleObj = (v: unknown) =>
-      typeof v === 'object' && v !== null && !Array.isArray(v)
+    const isLocaleObj = (v: unknown) => typeof v === 'object' && v !== null && !Array.isArray(v)
     const fields = [
       currentAsset.title,
       currentAsset.altText,
       currentAsset.description,
-      ...(currentAsset._type === 'sanity.imageAsset' ? [currentAsset.creditLine] : [])
+      ...(currentAsset._type === 'sanity.imageAsset' ? [currentAsset.creditLine] : []),
     ]
-    const anyLocalized = fields.some(f => isLocaleObj(f))
+    const anyLocalized = fields.some((f) => isLocaleObj(f))
     if (!anyLocalized) return false
     if (!locales || locales.length === 0) return true
-    const configuredIds = new Set(locales.map(l => l.id))
-    return fields.some(f => {
+    const configuredIds = new Set(locales.map((l) => l.id))
+    return fields.some((f) => {
       if (!isLocaleObj(f)) return false
-      return Object.keys(f as object).some(k => !configuredIds.has(k))
+      // oxlint-disable-next-line no-unsafe-type-assertion
+      return Object.keys(f as object).some((k) => !configuredIds.has(k))
     })
   }, [currentAsset, locales])
 
@@ -195,13 +198,14 @@ const DialogAssetEdit = (props: Props) => {
 
     const cleanField = (field: unknown): unknown => {
       if (typeof field !== 'object' || field === null || Array.isArray(field)) return field
+      // oxlint-disable-next-line no-unsafe-type-assertion
       const obj = field as Record<string, string>
       if (!locales || locales.length === 0) {
         // Pick the first non-empty value sorted by key for determinism
         const sorted = Object.keys(obj).sort()
-        return sorted.map(k => obj[k]).find(v => v) || ''
+        return sorted.map((k) => obj[k]).find((v) => v) || ''
       }
-      const configuredIds = new Set(locales.map(l => l.id))
+      const configuredIds = new Set(locales.map((l) => l.id))
       const cleaned: Record<string, string> = {}
       for (const [key, val] of Object.entries(obj)) {
         if (configuredIds.has(key)) cleaned[key] = val
@@ -216,15 +220,15 @@ const DialogAssetEdit = (props: Props) => {
         altText: cleanField(currentAsset.altText),
         description: cleanField(currentAsset.description),
         ...(currentAsset._type === 'sanity.imageAsset' && {
-          creditLine: cleanField(currentAsset.creditLine)
-        })
+          creditLine: cleanField(currentAsset.creditLine),
+        }),
       })
       .commit()
   }, [client, currentAsset, locales])
 
   // Submit react-hook-form
   const onSubmit: SubmitHandler<AssetFormData> = useCallback(
-    formData => {
+    (formData) => {
       if (!assetItem?.asset) {
         return
       }
@@ -240,20 +244,20 @@ const DialogAssetEdit = (props: Props) => {
             // Map tags to sanity references
             opt: {
               media: {
-                ...sanitizedFormData.opt.media,
+                ...sanitizedFormData['opt'].media,
                 tags:
-                  sanitizedFormData.opt.media.tags?.map((tag: TagSelectOption) => ({
+                  sanitizedFormData['opt'].media.tags?.map((tag: TagSelectOption) => ({
                     _ref: tag.value,
                     _type: 'reference',
-                    _weak: true
-                  })) || null
-              }
-            }
-          }
-        })
+                    _weak: true,
+                  })) || null,
+              },
+            },
+          },
+        }),
       )
     },
-    [assetItem?.asset, dispatch]
+    [assetItem?.asset, dispatch],
   )
 
   // Listen for asset mutations and update snapshot
@@ -275,6 +279,7 @@ const DialogAssetEdit = (props: Props) => {
   // Update tags form field (react-select) when a new _inline_ tag has been created
   useEffect(() => {
     if (lastCreatedTag) {
+      // oxlint-disable-next-line no-unsafe-type-assertion
       const existingTags = (getValues('opt.media.tags') as TagSelectOption[]) || []
       const updatedTags = existingTags.concat([lastCreatedTag])
       setValue('opt.media.tags', updatedTags, {shouldDirty: true})
@@ -284,8 +289,9 @@ const DialogAssetEdit = (props: Props) => {
   // Update tags form field (react-select) when an _inline_ tag has been removed elsewhere
   useEffect(() => {
     if (lastRemovedTagIds) {
+      // oxlint-disable-next-line no-unsafe-type-assertion
       const existingTags = (getValues('opt.media.tags') as TagSelectOption[]) || []
-      const updatedTags = existingTags.filter(tag => {
+      const updatedTags = existingTags.filter((tag) => {
         return !lastRemovedTagIds.includes(tag.value)
       })
 
@@ -301,7 +307,7 @@ const DialogAssetEdit = (props: Props) => {
     assetUpdatedPrev.current = assetItem?.asset._updatedAt
   }, [assetItem?.asset, generateDefaultValues, reset])
 
-  const Footer = () => (
+  const footerElement = (
     <Box padding={3}>
       <Stack space={3}>
         {hasOrphanedLocales && (
@@ -359,13 +365,13 @@ const DialogAssetEdit = (props: Props) => {
     handleCreateTag,
     currentAsset,
     creditLine,
-    locales
+    locales,
   }
 
   return (
     <Dialog
       animate
-      footer={<Footer />}
+      footer={footerElement}
       header="Asset details"
       id={id}
       onClose={handleClose}
@@ -378,6 +384,7 @@ const DialogAssetEdit = (props: Props) => {
       */}
       <Flex direction={['column-reverse', 'column-reverse', 'row-reverse']}>
         <Box flex={1} marginTop={[5, 5, 0]} padding={4}>
+          {/* oxlint-disable-next-line no-deprecated */}
           <WithReferringDocuments documentStore={documentStore} id={currentAsset._id}>
             {({isLoading, referringDocuments}) => {
               const uniqueReferringDocuments = getUniqueDocuments(referringDocuments)

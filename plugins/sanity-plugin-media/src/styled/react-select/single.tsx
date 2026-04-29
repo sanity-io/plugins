@@ -1,16 +1,19 @@
 import {CloseIcon} from '@sanity/icons'
-import {Box, Card, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
+import {Box, Card, rem, Text} from '@sanity/ui'
+import {buildTheme, type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {components, type StylesConfig} from 'react-select'
 import {Virtuoso} from 'react-virtuoso'
+
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
+const defaultTheme = buildTheme()
 const {
-  fonts: {
-    text: {sizes: themeTextSizes}
+  font: {
+    text: {sizes: themeTextSizes},
   },
   radius: themeRadius,
-  space: themeSpace
-} = studioTheme
+  space: themeSpace,
+} = defaultTheme.v2!
 
 export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => {
   return {
@@ -24,70 +27,70 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
 
       return {
         ...styles,
-        backgroundColor: 'var(--card-bg-color)',
-        color: 'inherit',
-        border: 'none',
-        borderRadius: themeRadius[2],
+        'backgroundColor': 'var(--card-bg-color)',
+        'color': 'inherit',
+        'border': 'none',
+        'borderRadius': themeRadius[2] ?? 0,
         boxShadow,
-        fontSize: themeTextSizes[1].fontSize,
-        minHeight: '25px',
-        opacity: isDisabled ? 0.5 : 'inherit',
-        outline: 'none',
-        transition: 'none',
+        'fontSize': themeTextSizes[1]?.fontSize,
+        'minHeight': '25px',
+        'opacity': isDisabled ? 0.5 : 'inherit',
+        'outline': 'none',
+        'transition': 'none',
         '&:hover': {
-          boxShadow: `inset 0 0 0 1px ${getSchemeColor(scheme, 'inputHoveredBorder')}`
-        }
+          boxShadow: `inset 0 0 0 1px ${getSchemeColor(scheme, 'inputHoveredBorder')}`,
+        },
       }
     },
-    input: styles => ({
+    input: (styles) => ({
       ...styles,
       color: 'var(--card-fg-color)',
-      fontFamily: studioTheme.fonts.text.family,
-      fontSize: themeTextSizes[1].fontSize,
-      marginLeft: rem(themeSpace[2])
+      fontFamily: defaultTheme.v2!.font.text.family,
+      fontSize: themeTextSizes[1]?.fontSize,
+      marginLeft: rem(themeSpace[2] ?? 0),
     }),
-    menuList: styles => ({
+    menuList: (styles) => ({
       ...styles,
-      padding: 0
+      padding: 0,
     }),
-    noOptionsMessage: styles => ({
+    noOptionsMessage: (styles) => ({
       ...styles,
-      fontFamily: studioTheme.fonts.text.family,
-      fontSize: themeTextSizes[1].fontSize,
-      lineHeight: '1em'
+      fontFamily: defaultTheme.v2!.font.text.family,
+      fontSize: themeTextSizes[1]?.fontSize,
+      lineHeight: '1em',
     }),
     option: (styles, {isFocused}) => ({
       ...styles,
-      backgroundColor: isFocused ? getSchemeColor(scheme, 'spotBlue') : 'transparent',
-      borderRadius: themeRadius[2],
-      color: isFocused ? getSchemeColor(scheme, 'bg') : 'inherit',
-      fontSize: themeTextSizes[1].fontSize,
-      lineHeight: '1em',
-      margin: 0,
-      padding: rem(themeSpace[1]),
+      'backgroundColor': isFocused ? getSchemeColor(scheme, 'spotBlue') : 'transparent',
+      'borderRadius': themeRadius[2] ?? 0,
+      'color': isFocused ? getSchemeColor(scheme, 'bg') : 'inherit',
+      'fontSize': themeTextSizes[1]?.fontSize,
+      'lineHeight': '1em',
+      'margin': 0,
+      'padding': rem(themeSpace[1] ?? 0),
       '&:hover': {
         backgroundColor: getSchemeColor(scheme, 'spotBlue'),
-        color: getSchemeColor(scheme, 'bg')
-      }
+        color: getSchemeColor(scheme, 'bg'),
+      },
     }),
-    placeholder: styles => ({
+    placeholder: (styles) => ({
       ...styles,
-      fontSize: themeTextSizes[1].fontSize,
-      marginLeft: rem(themeSpace[2]),
-      paddingLeft: 0
+      fontSize: themeTextSizes[1]?.fontSize,
+      marginLeft: rem(themeSpace[2] ?? 0),
+      paddingLeft: 0,
     }),
-    singleValue: styles => ({
+    singleValue: (styles) => ({
       ...styles,
       alignItems: 'center',
       display: 'inline-flex',
       height: '100%',
-      marginLeft: rem(themeSpace[2])
+      marginLeft: rem(themeSpace[2] ?? 0),
     }),
-    valueContainer: styles => ({
+    valueContainer: (styles) => ({
       ...styles,
       margin: 0,
-      padding: 0
-    })
+      padding: 0,
+    }),
   }
 }
 
@@ -97,7 +100,7 @@ const ClearIndicator = (props: any) => {
       <Box
         paddingRight={1}
         style={{
-          transform: 'scale(0.85)'
+          transform: 'scale(0.85)',
         }}
       >
         <Text muted size={0}>
@@ -131,7 +134,7 @@ const MenuList = (props: any) => {
     return (
       <Virtuoso
         className="media__custom-scrollbar"
-        itemContent={index => {
+        itemContent={(index) => {
           const item = children[index]
           return <Option {...item.props} />
         }}
@@ -179,5 +182,5 @@ export const reactSelectComponents = {
   MenuList,
   NoOptionsMessage,
   Option,
-  SingleValue
+  SingleValue,
 }
