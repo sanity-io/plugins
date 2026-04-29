@@ -1,10 +1,11 @@
 import {type PayloadAction, createSlice} from '@reduxjs/toolkit'
-import type {AnyAction} from 'redux'
-import type {HttpError, ImageAsset, MyEpic} from '../../types'
 import pluralize from 'pluralize'
+import type {UnknownAction} from 'redux'
 import {ofType} from 'redux-observable'
 import {of} from 'rxjs'
 import {bufferTime, filter, mergeMap} from 'rxjs/operators'
+
+import type {ImageAsset, MyEpic} from '../../types'
 import {assetsActions} from '../assets'
 import {ASSETS_ACTIONS} from '../assets/actions'
 import {tagsActions} from '../tags'
@@ -31,16 +32,16 @@ function messageFromGenericErrorPayload(payload: unknown): string {
     payload.error !== null &&
     'message' in payload.error
   ) {
-    return String((payload.error as HttpError).message)
+    return String(payload.error.message)
   }
-  if ('message' in payload && typeof (payload as HttpError).message === 'string') {
-    return String((payload as HttpError).message)
+  if ('message' in payload && typeof payload.message === 'string') {
+    return payload.message
   }
   return 'Unknown error'
 }
 
 const initialState = {
-  items: []
+  items: [],
 } as NotificationsReducerState
 
 const notificationsSlice = createSlice({
@@ -52,33 +53,33 @@ const notificationsSlice = createSlice({
       state.items.push({
         asset,
         status,
-        title
+        title,
       })
-    }
-  }
+    },
+  },
 })
 
 // Epics
 
-export const notificationsAssetsDeleteCompleteEpic: MyEpic = action$ =>
+export const notificationsAssetsDeleteCompleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(assetsActions.deleteComplete.match),
-    mergeMap(action => {
+    mergeMap((action) => {
       const {assetIds} = action.payload
       const deletedCount = assetIds.length
       return of(
         notificationsSlice.actions.add({
           status: 'info',
-          title: `${deletedCount} ${pluralize('asset', deletedCount)} deleted`
-        })
+          title: `${deletedCount} ${pluralize('asset', deletedCount)} deleted`,
+        }),
       )
-    })
+    }),
   )
 
-export const notificationsAssetsDeleteErrorEpic: MyEpic = action$ =>
+export const notificationsAssetsDeleteErrorEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(assetsActions.deleteError.match),
-    mergeMap(action => {
+    mergeMap((action) => {
       const {assetIds} = action.payload
       const count = assetIds.length
       return of(
@@ -86,74 +87,74 @@ export const notificationsAssetsDeleteErrorEpic: MyEpic = action$ =>
           status: 'error',
           title: `Unable to delete ${count} ${pluralize(
             'asset',
-            count
-          )}. Please review any asset errors and try again.`
-        })
+            count,
+          )}. Please review any asset errors and try again.`,
+        }),
       )
-    })
+    }),
   )
 
-export const notificationsAssetsUploadCompleteEpic: MyEpic = action$ =>
+export const notificationsAssetsUploadCompleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(uploadsActions.checkComplete.match),
-    mergeMap(action => {
+    mergeMap((action) => {
       const {results} = action.payload
 
       const count = Object.keys(results).length
       return of(
         notificationsSlice.actions.add({
           status: 'info',
-          title: `Uploaded ${count} ${pluralize('asset', count)}`
-        })
+          title: `Uploaded ${count} ${pluralize('asset', count)}`,
+        }),
       )
-    })
+    }),
   )
 
-export const notificationsAssetsTagsAddCompleteEpic: MyEpic = action$ =>
+export const notificationsAssetsTagsAddCompleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(ASSETS_ACTIONS.tagsAddComplete.match),
-    mergeMap(action => {
+    mergeMap((action) => {
       const count = action?.payload?.assets?.length
       return of(
         notificationsSlice.actions.add({
           status: 'info',
-          title: `Tag added to ${count} ${pluralize('asset', count)}`
-        })
+          title: `Tag added to ${count} ${pluralize('asset', count)}`,
+        }),
       )
-    })
+    }),
   )
 
-export const notificationsAssetsTagsRemoveCompleteEpic: MyEpic = action$ =>
+export const notificationsAssetsTagsRemoveCompleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(ASSETS_ACTIONS.tagsRemoveComplete.match),
-    mergeMap(action => {
+    mergeMap((action) => {
       const count = action?.payload?.assets?.length
       return of(
         notificationsSlice.actions.add({
           status: 'info',
-          title: `Tag removed from ${count} ${pluralize('asset', count)}`
-        })
+          title: `Tag removed from ${count} ${pluralize('asset', count)}`,
+        }),
       )
-    })
+    }),
   )
 
-export const notificationsAssetsUpdateCompleteEpic: MyEpic = action$ =>
+export const notificationsAssetsUpdateCompleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(assetsActions.updateComplete.match),
     bufferTime(2000),
-    filter(actions => actions.length > 0),
-    mergeMap(actions => {
+    filter((actions) => actions.length > 0),
+    mergeMap((actions) => {
       const updatedCount = actions.length
       return of(
         notificationsSlice.actions.add({
           status: 'info',
-          title: `${updatedCount} ${pluralize('asset', updatedCount)} updated`
-        })
+          title: `${updatedCount} ${pluralize('asset', updatedCount)} updated`,
+        }),
       )
-    })
+    }),
   )
 
-export const notificationsGenericErrorEpic: MyEpic = action$ =>
+export const notificationsGenericErrorEpic: MyEpic = (action$) =>
   action$.pipe(
     ofType(
       assetsActions.fetchError.type,
@@ -162,35 +163,35 @@ export const notificationsGenericErrorEpic: MyEpic = action$ =>
       tagsActions.deleteError.type,
       tagsActions.fetchError.type,
       tagsActions.updateError.type,
-      uploadsActions.uploadError.type
+      uploadsActions.uploadError.type,
     ),
-    mergeMap((action: AnyAction) => {
-      const title = `An error occurred: ${messageFromGenericErrorPayload(action.payload)}`
+    mergeMap((action: UnknownAction) => {
+      const title = `An error occurred: ${messageFromGenericErrorPayload(action['payload'])}`
       return of(
         notificationsSlice.actions.add({
           status: 'error',
-          title
-        })
+          title,
+        }),
       )
-    })
+    }),
   )
 
-export const notificationsTagCreateCompleteEpic: MyEpic = action$ =>
+export const notificationsTagCreateCompleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsActions.createComplete.match),
-    mergeMap(() => of(notificationsSlice.actions.add({status: 'info', title: `Tag created`})))
+    mergeMap(() => of(notificationsSlice.actions.add({status: 'info', title: `Tag created`}))),
   )
 
-export const notificationsTagDeleteCompleteEpic: MyEpic = action$ =>
+export const notificationsTagDeleteCompleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsActions.deleteComplete.match),
-    mergeMap(() => of(notificationsSlice.actions.add({status: 'info', title: `Tag deleted`})))
+    mergeMap(() => of(notificationsSlice.actions.add({status: 'info', title: `Tag deleted`}))),
   )
 
-export const notificationsTagUpdateCompleteEpic: MyEpic = action$ =>
+export const notificationsTagUpdateCompleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsActions.updateComplete.match),
-    mergeMap(() => of(notificationsSlice.actions.add({status: 'info', title: `Tag updated`})))
+    mergeMap(() => of(notificationsSlice.actions.add({status: 'info', title: `Tag updated`}))),
   )
 
 export const notificationsActions = {...notificationsSlice.actions}

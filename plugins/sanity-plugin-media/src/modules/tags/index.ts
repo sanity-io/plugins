@@ -1,14 +1,15 @@
 import {createSelector, createSlice, isAnyOf, type PayloadAction} from '@reduxjs/toolkit'
 import type {ClientError, Transaction} from '@sanity/client'
-import type {Asset, HttpError, MyEpic, TagSelectOption, Tag, TagItem} from '../../types'
 import groq from 'groq'
 import type {Selector} from 'react-redux'
 import {ofType} from 'redux-observable'
 import {from, Observable, of} from 'rxjs'
 import {bufferTime, catchError, filter, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators'
+
 import {TAG_DOCUMENT_NAME} from '../../constants'
 import checkTagName from '../../operators/checkTagName'
 import debugThrottle from '../../operators/debugThrottle'
+import type {Asset, HttpError, MyEpic, TagSelectOption, Tag, TagItem} from '../../types'
 import getTagSelectOptions from '../../utils/getTagSelectOptions'
 import {ASSETS_ACTIONS} from '../assets/actions'
 import {DIALOG_ACTIONS} from '../dialog/actions'
@@ -34,39 +35,48 @@ const initialState = {
   fetchCount: -1,
   fetching: false,
   fetchingError: undefined,
-  panelVisible: true
+  panelVisible: true,
 } as TagsReducerState
 
 const tagsSlice = createSlice({
   name: 'tags',
   initialState,
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(DIALOG_ACTIONS.showTagCreate, state => {
+      .addCase(DIALOG_ACTIONS.showTagCreate, (state) => {
         delete state.creatingError
       })
       .addCase(DIALOG_ACTIONS.showTagEdit, (state, action) => {
         const {tagId} = action.payload
-        delete state.byIds[tagId].error
+        const tagItem = state.byIds[tagId]
+        if (tagItem) {
+          delete tagItem.error
+        }
       })
       .addMatcher(
         isAnyOf(
           ASSETS_ACTIONS.tagsAddComplete,
           ASSETS_ACTIONS.tagsAddError,
           ASSETS_ACTIONS.tagsRemoveComplete,
-          ASSETS_ACTIONS.tagsRemoveError
+          ASSETS_ACTIONS.tagsRemoveError,
         ),
         (state, action) => {
           const {tag} = action.payload
-          state.byIds[tag._id].updating = false
-        }
+          const tagItem = state.byIds[tag._id]
+          if (tagItem) {
+            tagItem.updating = false
+          }
+        },
       )
       .addMatcher(
         isAnyOf(ASSETS_ACTIONS.tagsAddRequest, ASSETS_ACTIONS.tagsRemoveRequest),
         (state, action) => {
           const {tag} = action.payload
-          state.byIds[tag._id].updating = true
-        }
+          const tagItem = state.byIds[tag._id]
+          if (tagItem) {
+            tagItem.updating = true
+          }
+        },
       )
   },
   reducers: {
@@ -80,7 +90,7 @@ const tagsSlice = createSlice({
         _type: 'tag',
         picked: false,
         tag,
-        updating: false
+        updating: false,
       }
     },
     createError(state, action: PayloadAction<{error: HttpError; name: string}>) {
@@ -103,28 +113,37 @@ const tagsSlice = createSlice({
       const {error, tag} = action.payload
 
       const tagId = tag?._id
-      state.byIds[tagId].error = error
-      state.byIds[tagId].updating = false
+      const tagItem = tagId ? state.byIds[tagId] : undefined
+      if (tagItem) {
+        tagItem.error = error
+        tagItem.updating = false
+      }
     },
     deleteRequest(state, action: PayloadAction<{tag: Tag}>) {
       const tagId = action.payload?.tag?._id
-      state.byIds[tagId].picked = false
-      state.byIds[tagId].updating = true
+      const deleteTagItem = tagId ? state.byIds[tagId] : undefined
+      if (deleteTagItem) {
+        deleteTagItem.picked = false
+        deleteTagItem.updating = true
+      }
 
-      Object.keys(state.byIds).forEach(key => {
-        delete state.byIds[key].error
+      Object.keys(state.byIds).forEach((key) => {
+        const item = state.byIds[key]
+        if (item) {
+          delete item.error
+        }
       })
     },
     fetchComplete(state, action: PayloadAction<{tags: Tag[]}>) {
       const {tags} = action.payload
 
-      tags?.forEach(tag => {
+      tags?.forEach((tag) => {
         state.allIds.push(tag._id)
         state.byIds[tag._id] = {
           _type: 'tag',
           picked: false,
           tag,
-          updating: false
+          updating: false,
         }
       })
 
@@ -160,7 +179,7 @@ const tagsSlice = createSlice({
           }
         `
         return {payload: {query}}
-      }
+      },
     },
     // Queue batch tag creation
     listenerCreateQueue(_state, _action: PayloadAction<{tag: Tag}>) {
@@ -170,12 +189,12 @@ const tagsSlice = createSlice({
     listenerCreateQueueComplete(state, action: PayloadAction<{tags: Tag[]}>) {
       const {tags} = action.payload
 
-      tags?.forEach(tag => {
+      tags?.forEach((tag) => {
         state.byIds[tag._id] = {
           _type: 'tag',
           picked: false,
           tag,
-          updating: false
+          updating: false,
         }
         if (!state.allIds.includes(tag._id)) {
           state.allIds.push(tag._id)
@@ -190,7 +209,7 @@ const tagsSlice = createSlice({
     listenerDeleteQueueComplete(state, action: PayloadAction<{tagIds: string[]}>) {
       const {tagIds} = action.payload
 
-      tagIds?.forEach(tagId => {
+      tagIds?.forEach((tagId) => {
         const deleteIndex = state.allIds.indexOf(tagId)
         if (deleteIndex >= 0) {
           state.allIds.splice(deleteIndex, 1)
@@ -206,9 +225,10 @@ const tagsSlice = createSlice({
     listenerUpdateQueueComplete(state, action: PayloadAction<{tags: Tag[]}>) {
       const {tags} = action.payload
 
-      tags?.forEach(tag => {
-        if (state.byIds[tag._id]) {
-          state.byIds[tag._id].tag = tag
+      tags?.forEach((tag) => {
+        const tagItem = state.byIds[tag._id]
+        if (tagItem) {
+          tagItem.tag = tag
         }
       })
     },
@@ -220,8 +240,8 @@ const tagsSlice = createSlice({
     // Sort all tags by name
     sort(state) {
       state.allIds.sort((a, b) => {
-        const tagA = state.byIds[a].tag.name.current
-        const tagB = state.byIds[b].tag.name.current
+        const tagA = state.byIds[a]?.tag.name.current ?? ''
+        const tagB = state.byIds[b]?.tag.name.current ?? ''
 
         if (tagA < tagB) {
           return -1
@@ -233,14 +253,20 @@ const tagsSlice = createSlice({
     },
     updateComplete(state, action: PayloadAction<{closeDialogId?: string; tag: Tag}>) {
       const {tag} = action.payload
-      state.byIds[tag._id].tag = tag
-      state.byIds[tag._id].updating = false
+      const updateItem = state.byIds[tag._id]
+      if (updateItem) {
+        updateItem.tag = tag
+        updateItem.updating = false
+      }
     },
     updateError(state, action: PayloadAction<{tag: Tag; error: HttpError}>) {
       const {error, tag} = action.payload
       const tagId = tag?._id
-      state.byIds[tagId].error = error
-      state.byIds[tagId].updating = false
+      const errorItem = tagId ? state.byIds[tagId] : undefined
+      if (errorItem) {
+        errorItem.error = error
+        errorItem.updating = false
+      }
     },
     updateRequest(
       state,
@@ -248,12 +274,15 @@ const tagsSlice = createSlice({
         closeDialogId?: string
         formData: Record<string, any>
         tag: Tag
-      }>
+      }>,
     ) {
       const {tag} = action.payload
-      state.byIds[tag?._id].updating = true
-    }
-  }
+      const reqItem = state.byIds[tag._id]
+      if (reqItem) {
+        reqItem.updating = true
+      }
+    },
+  },
 })
 
 // Epics
@@ -277,24 +306,25 @@ export const tagsCreateEpic: MyEpic = (action$, state$, {client}) =>
             _type: TAG_DOCUMENT_NAME,
             name: {
               _type: 'slug',
-              current: name
-            }
-          })
+              current: name,
+            },
+          }),
         ),
-        mergeMap(result => of(tagsSlice.actions.createComplete({assetId, tag: result as Tag}))),
+        // oxlint-disable-next-line no-unsafe-type-assertion -- result from Sanity client create is typed as Tag
+        mergeMap((result) => of(tagsSlice.actions.createComplete({assetId, tag: result as Tag}))),
         catchError((error: ClientError) =>
           of(
             tagsSlice.actions.createError({
               error: {
                 message: error?.message || 'Internal error',
-                statusCode: error?.statusCode || 500
+                statusCode: error?.statusCode || 500,
               },
-              name
-            })
-          )
-        )
+              name,
+            }),
+          ),
+        ),
       )
-    })
+    }),
   )
 
 // On tag delete request
@@ -320,23 +350,23 @@ export const tagsDeleteEpic: MyEpic = (action$, state$, {client}) =>
               _rev,
               opt
             }`,
-            {tagName: tag.name.current}
-          )
+            {tagName: tag.name.current},
+          ),
         ),
         // Create transaction which remove tag references from all matched assets and delete tag
-        mergeMap(assets => {
-          const patches = assets.map(asset => ({
+        mergeMap((assets) => {
+          const patches = assets.map((asset) => ({
             id: asset._id,
             patch: {
               // this will cause the transaction to fail if the document has been modified since it was fetched.
               ifRevisionID: asset._rev,
-              unset: [`opt.media.tags[_ref == "${tag._id}"]`]
-            }
+              unset: [`opt.media.tags[_ref == "${tag._id}"]`],
+            },
           }))
 
           const transaction: Transaction = patches.reduce(
             (tx, patch) => tx.patch(patch.id, patch.patch),
-            client.transaction()
+            client.transaction(),
           )
 
           transaction.delete(tag._id)
@@ -350,14 +380,14 @@ export const tagsDeleteEpic: MyEpic = (action$, state$, {client}) =>
             tagsSlice.actions.deleteError({
               error: {
                 message: error?.message || 'Internal error',
-                statusCode: error?.statusCode || 500
+                statusCode: error?.statusCode || 500,
               },
-              tag
-            })
-          )
-        )
+              tag,
+            }),
+          ),
+        ),
       )
-    })
+    }),
   )
 
 // Async fetch tags
@@ -375,10 +405,10 @@ export const tagsFetchEpic: MyEpic = (action$, state$, {client}) =>
         mergeMap(() =>
           client.observable.fetch<{
             items: Tag[]
-          }>(query)
+          }>(query),
         ),
         // Dispatch complete action
-        mergeMap(result => {
+        mergeMap((result) => {
           const {items} = result
           return of(tagsSlice.actions.fetchComplete({tags: items}))
         }),
@@ -387,65 +417,65 @@ export const tagsFetchEpic: MyEpic = (action$, state$, {client}) =>
             tagsSlice.actions.fetchError({
               error: {
                 message: error?.message || 'Internal error',
-                statusCode: error?.statusCode || 500
-              }
-            })
-          )
-        )
+                statusCode: error?.statusCode || 500,
+              },
+            }),
+          ),
+        ),
       )
-    })
+    }),
   )
 
 // TODO: merge all buffer epics
 // Buffer tag creation via sanity subscriber
-export const tagsListenerCreateQueueEpic: MyEpic = action$ =>
+export const tagsListenerCreateQueueEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsSlice.actions.listenerCreateQueue.match),
     bufferTime(2000),
-    filter(actions => actions.length > 0),
-    mergeMap(actions => {
-      const tags = actions?.map(action => action.payload.tag)
+    filter((actions) => actions.length > 0),
+    mergeMap((actions) => {
+      const tags = actions?.map((action) => action.payload.tag)
       return of(tagsSlice.actions.listenerCreateQueueComplete({tags}))
-    })
+    }),
   )
 
 // TODO: merge all buffer epics
 // Buffer tag deletion via sanity subscriber
-export const tagsListenerDeleteQueueEpic: MyEpic = action$ =>
+export const tagsListenerDeleteQueueEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsSlice.actions.listenerDeleteQueue.match),
     bufferTime(2000),
-    filter(actions => actions.length > 0),
-    mergeMap(actions => {
-      const tagIds = actions?.map(action => action.payload.tagId)
+    filter((actions) => actions.length > 0),
+    mergeMap((actions) => {
+      const tagIds = actions?.map((action) => action.payload.tagId)
       return of(tagsSlice.actions.listenerDeleteQueueComplete({tagIds}))
-    })
+    }),
   )
 
 // TODO: merge all buffer epics
 // Buffer tag update via sanity subscriber
-export const tagsListenerUpdateQueueEpic: MyEpic = action$ =>
+export const tagsListenerUpdateQueueEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsSlice.actions.listenerUpdateQueue.match),
     bufferTime(2000),
-    filter(actions => actions.length > 0),
-    mergeMap(actions => {
-      const tags = actions?.map(action => action.payload.tag)
+    filter((actions) => actions.length > 0),
+    mergeMap((actions) => {
+      const tags = actions?.map((action) => action.payload.tag)
       return of(tagsSlice.actions.listenerUpdateQueueComplete({tags}))
-    })
+    }),
   )
 
 // On successful tag creation or updates:
 // - Re-sort all tags
-export const tagsSortEpic: MyEpic = action$ =>
+export const tagsSortEpic: MyEpic = (action$) =>
   action$.pipe(
     ofType(
       tagsSlice.actions.listenerCreateQueueComplete.type,
-      tagsSlice.actions.listenerUpdateQueueComplete.type
+      tagsSlice.actions.listenerUpdateQueueComplete.type,
     ),
     bufferTime(1000),
-    filter(actions => actions.length > 0),
-    mergeMap(() => of(tagsSlice.actions.sort()))
+    filter((actions) => actions.length > 0),
+    mergeMap(() => of(tagsSlice.actions.sort())),
   )
 
 // On tag update request
@@ -463,24 +493,25 @@ export const tagsUpdateEpic: MyEpic = (action$, state$, {client}) =>
         // Optionally throttle
         debugThrottle(state.debug.badConnection),
         // Check if tag name is available, throw early if not
-        checkTagName(client, formData?.name?.current),
+        checkTagName(client, formData?.['name']?.current),
         // Patch document (Update tag)
+        // oxlint-disable-next-line no-unsafe-type-assertion -- Sanity client commit returns Tag
         mergeMap(
           () =>
             from(
               client
                 .patch(tag._id)
-                .set({name: {_type: 'slug', current: formData?.name.current}})
-                .commit()
-            ) as Observable<Tag>
+                .set({name: {_type: 'slug', current: formData?.['name'].current}})
+                .commit(),
+            ) as Observable<Tag>,
         ),
         // Dispatch complete action
         mergeMap((updatedTag: Tag) => {
           return of(
             tagsSlice.actions.updateComplete({
               closeDialogId,
-              tag: updatedTag
-            })
+              tag: updatedTag,
+            }),
           )
         }),
         catchError((error: ClientError) =>
@@ -488,14 +519,14 @@ export const tagsUpdateEpic: MyEpic = (action$, state$, {client}) =>
             tagsSlice.actions.updateError({
               error: {
                 message: error?.message || 'Internal error',
-                statusCode: error?.statusCode || 500
+                statusCode: error?.statusCode || 500,
               },
-              tag
-            })
-          )
-        )
+              tag,
+            }),
+          ),
+        ),
       )
-    })
+    }),
   )
 
 // Selectors
@@ -506,12 +537,12 @@ const selectTagsAllIds = (state: RootReducerState) => state.tags.allIds
 
 export const selectTags: Selector<RootReducerState, TagItem[]> = createSelector(
   [selectTagsByIds, selectTagsAllIds],
-  (byIds, allIds) => allIds.map(id => byIds[id])
+  (byIds, allIds) => allIds.map((id) => byIds[id]).filter((item): item is TagItem => !!item),
 )
 
 export const selectTagById = createSelector(
   [selectTagsByIds, (_state: RootReducerState, tagId: string) => tagId],
-  (byIds, tagId) => byIds[tagId]
+  (byIds, tagId) => byIds[tagId],
 )
 
 // TODO: use createSelector
