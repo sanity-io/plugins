@@ -1,18 +1,17 @@
 import {SelectIcon} from '@sanity/icons'
 import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
+import {useDispatch} from 'react-redux'
+
+import {operators} from '../../config/searchFacets'
+import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
+import {searchActions} from '../../modules/search'
 import type {
   SearchFacetInputSelectListItemProps,
   SearchFacetInputSelectProps,
   SearchFacetOperatorType,
-  WithId
+  WithId,
 } from '../../types'
-
-import {useDispatch} from 'react-redux'
-
-import {operators} from '../../config/searchFacets'
-import {searchActions} from '../../modules/search'
 import SearchFacet from '../SearchFacet'
-import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
 
 type Props = {
   facet: WithId<SearchFacetInputSelectProps>
@@ -26,7 +25,7 @@ const SearchFacetSelect = ({facet}: Props) => {
 
   const options = facet?.options
 
-  const selectedItem = options?.find(v => v.name === facet?.value)
+  const selectedItem = options?.find((v) => v.name === facet?.value)
 
   const handleListItemClick = (option: SearchFacetInputSelectListItemProps) => {
     dispatch(searchActions.facetsUpdate({name: facet.name, value: option.name}))
@@ -71,6 +70,7 @@ const SearchFacetSelect = ({facet}: Props) => {
                   )
                 }
 
+                // oxlint-disable-next-line no-array-index-key
                 return <MenuDivider key={index} />
               })}
             </Menu>
@@ -94,7 +94,10 @@ const SearchFacetSelect = ({facet}: Props) => {
                   disabled={selected}
                   fontSize={1}
                   key={item.name}
-                  onClick={() => handleListItemClick(options[index])}
+                  onClick={() => {
+                    const option = options[index]
+                    if (option) handleListItemClick(option)
+                  }}
                   padding={2}
                   text={item.title}
                 />

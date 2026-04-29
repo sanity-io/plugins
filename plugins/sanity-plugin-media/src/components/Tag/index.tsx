@@ -1,9 +1,9 @@
 import {ArrowDownIcon, ArrowUpIcon, CloseIcon, EditIcon, SearchIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Container, Flex, Text, Tooltip} from '@sanity/ui'
-import type {SearchFacetInputSearchableProps, TagActions, TagItem} from '../../types'
 import {type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'
 import {styled} from 'styled-components'
+
 import {inputs} from '../../config/searchFacets'
 import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -11,6 +11,7 @@ import {selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
 import {searchActions, selectIsSearchFacetTag} from '../../modules/search'
+import type {SearchFacetInputSearchableProps, TagActions, TagItem} from '../../types'
 
 type Props = {
   actions?: TagActions[]
@@ -77,7 +78,7 @@ const Tag = (props: Props) => {
   // Redux
   const dispatch = useDispatch()
   const assetsPicked = useTypedSelector(selectAssetsPicked)
-  const isSearchFacetTag = useTypedSelector(state => selectIsSearchFacetTag(state, tag?.tag?._id))
+  const isSearchFacetTag = useTypedSelector((state) => selectIsSearchFacetTag(state, tag?.tag?._id))
 
   // Callbacks
   const handleSearchFacetTagRemove = () => {
@@ -105,8 +106,9 @@ const Tag = (props: Props) => {
       ...inputs.tag,
       value: {
         label: tag?.tag?.name?.current,
-        value: tag?.tag?._id
-      }
+        value: tag?.tag?._id,
+      },
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as SearchFacetInputSearchableProps
 
     if (isSearchFacetTag) {
@@ -114,8 +116,8 @@ const Tag = (props: Props) => {
         searchActions.facetsUpdate({
           name: 'tag',
           operatorType: 'references',
-          value: searchFacet.value
-        })
+          value: searchFacet.value,
+        }),
       )
     } else {
       dispatch(searchActions.facetsAdd({facet: searchFacet}))
@@ -130,7 +132,7 @@ const Tag = (props: Props) => {
           size={1}
           style={{
             opacity: tag?.updating ? 0.5 : 1.0,
-            userSelect: 'none'
+            userSelect: 'none',
           }}
           textOverflow="ellipsis"
         >

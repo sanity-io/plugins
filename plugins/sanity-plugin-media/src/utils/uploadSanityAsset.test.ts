@@ -1,5 +1,6 @@
-import {afterEach, describe, expect, it} from 'vitest'
 import {firstValueFrom} from 'rxjs'
+import {afterEach, describe, expect, it} from 'vitest'
+
 import {hashFile$} from './uploadSanityAsset'
 
 describe('hashFile$', () => {
@@ -9,7 +10,7 @@ describe('hashFile$', () => {
     Object.defineProperty(globalThis, 'crypto', {
       value: cryptoRef,
       configurable: true,
-      writable: true
+      writable: true,
     })
   })
 
@@ -17,12 +18,12 @@ describe('hashFile$', () => {
     Object.defineProperty(globalThis, 'crypto', {
       value: undefined,
       configurable: true,
-      writable: true
+      writable: true,
     })
 
     await expect(firstValueFrom(hashFile$(new File(['x'], 'blob.bin')))).rejects.toMatchObject({
       message: expect.stringMatching(/secure contexts/i),
-      statusCode: 500
+      statusCode: 500,
     })
   })
 })

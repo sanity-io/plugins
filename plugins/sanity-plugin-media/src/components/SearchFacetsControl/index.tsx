@@ -1,20 +1,20 @@
 import {AddIcon} from '@sanity/icons'
 import {Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem} from '@sanity/ui'
-import type {SearchFacetDivider, SearchFacetGroup, SearchFacetInputProps} from '../../types'
-
 import {useDispatch} from 'react-redux'
+
 import {FACETS} from '../../constants'
+import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {searchActions} from '../../modules/search'
-import {useToolOptions} from '../../contexts/ToolOptionsContext'
+import type {SearchFacetDivider, SearchFacetGroup, SearchFacetInputProps} from '../../types'
 
 const SearchFacetsControl = () => {
   // Redux
   const dispatch = useDispatch()
-  const assetTypes = useTypedSelector(state => state.assets.assetTypes)
-  const searchFacets = useTypedSelector(state => state.search.facets)
-  const selectedDocument = useTypedSelector(state => state.selected.document)
+  const assetTypes = useTypedSelector((state) => state.assets.assetTypes)
+  const searchFacets = useTypedSelector((state) => state.search.facets)
+  const selectedDocument = useTypedSelector((state) => state.selected.document)
 
   const popoverProps = usePortalPopoverProps()
 
@@ -24,7 +24,7 @@ const SearchFacetsControl = () => {
 
   const filteredFacets = FACETS
     // Filter facets based on current context, whether it's invoked as a tool, or via selection through via custom asset source.
-    .filter(facet => {
+    .filter((facet) => {
       // Remove credit line filter if it's not enabled
       if (!creditLine?.enabled && facet?.type === 'string' && facet?.name === 'creditLine') {
         return false
@@ -38,8 +38,8 @@ const SearchFacetsControl = () => {
         return !facet?.selectOnly
       }
 
-      const matchingAssetTypes = facet.assetTypes.filter(assetType =>
-        assetTypes.includes(assetType)
+      const matchingAssetTypes = facet.assetTypes.filter((assetType) =>
+        assetTypes.includes(assetType),
       )
       return matchingAssetTypes.length > 0
     })
@@ -61,18 +61,20 @@ const SearchFacetsControl = () => {
 
   const renderMenuFacets = (
     facets: (SearchFacetDivider | SearchFacetGroup | SearchFacetInputProps)[],
-    level: number = 0
+    level: number = 0,
   ) => {
     return (
       <>
         {facets?.map((facet, index) => {
           if (facet.type === 'divider') {
+            // oxlint-disable-next-line no-array-index-key
             return <MenuDivider key={index} />
           }
 
           // Recursively render menu facets
           if (facet.type === 'group') {
             return (
+              {/* oxlint-disable-next-line no-array-index-key */}
               <MenuGroup key={`group-${level}-${index}`} text={facet.title} title={facet.title}>
                 {renderMenuFacets(facet.facets, level + 1)}
               </MenuGroup>
@@ -80,7 +82,8 @@ const SearchFacetsControl = () => {
           }
 
           if (facet) {
-            const disabled = !facet.operatorTypes && !!searchFacets.find(v => v.name === facet.name)
+            const disabled =
+              !facet.operatorTypes && !!searchFacets.find((v) => v.name === facet.name)
 
             return (
               <MenuItem
@@ -119,7 +122,7 @@ const SearchFacetsControl = () => {
         menu={<Menu>{renderMenuFacets(filteredFacets)}</Menu>}
         popover={{
           ...popoverProps,
-          placement: 'right-start'
+          placement: 'right-start',
         }}
       />
 

@@ -1,7 +1,7 @@
 import {ChevronDownIcon, ChevronUpIcon} from '@sanity/icons'
 import {Box, Label} from '@sanity/ui'
-
 import {useDispatch} from 'react-redux'
+
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions} from '../../modules/assets'
 
@@ -15,7 +15,7 @@ const TableHeaderItem = (props: Props) => {
 
   // Redux
   const dispatch = useDispatch()
-  const order = useTypedSelector(state => state.assets.order)
+  const order = useTypedSelector((state) => state.assets.order)
 
   const isActive = order.field === field
 
@@ -40,12 +40,12 @@ const TableHeaderItem = (props: Props) => {
         style={{
           cursor: field ? 'pointer' : 'default',
           display: 'inline',
-          whiteSpace: 'nowrap'
+          whiteSpace: 'nowrap',
         }}
       >
         <span
           style={{
-            marginRight: '0.4em'
+            marginRight: '0.4em',
           }}
         >
           {title}

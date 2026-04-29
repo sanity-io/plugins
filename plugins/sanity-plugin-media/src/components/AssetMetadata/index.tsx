@@ -1,9 +1,10 @@
 import {DownloadIcon} from '@sanity/icons'
 import {Box, Button, Flex, Inline, Stack, Text} from '@sanity/ui'
-import type {Asset, AssetItem} from '../../types'
-import { format } from 'date-fns'
+import {format} from 'date-fns'
 import filesize from 'filesize'
 import {type ReactNode} from 'react'
+
+import type {Asset, AssetItem} from '../../types'
 import getAssetResolution from '../../utils/getAssetResolution'
 import {isImageAsset} from '../../utils/typeGuards'
 import ButtonAssetCopy from '../ButtonAssetCopy'
@@ -20,7 +21,7 @@ const Row = ({label, value}: {label: string; value: ReactNode}) => {
         size={1}
         style={{
           opacity: 0.8,
-          width: '40%'
+          width: '40%',
         }}
         textOverflow="ellipsis"
       >
@@ -31,7 +32,7 @@ const Row = ({label, value}: {label: string; value: ReactNode}) => {
         style={{
           opacity: 0.4,
           textAlign: 'right',
-          width: '60%'
+          width: '60%',
         }}
         textOverflow="ellipsis"
       >
@@ -58,7 +59,7 @@ const AssetMetadata = (props: Props) => {
         <Stack space={3}>
           <Row label="Size" value={filesize(asset?.size, {base: 10, round: 0})} />
           <Row label="MIME type" value={asset?.mimeType} />
-          <Row label="Extension" value={(asset?.extension).toUpperCase()} />
+          <Row label="Extension" value={asset?.extension ? asset.extension.toUpperCase() : ''} />
           {isImageAsset(asset) && <Row label="Dimensions" value={getAssetResolution(asset)} />}
         </Stack>
       </Box>
@@ -76,7 +77,7 @@ const AssetMetadata = (props: Props) => {
               style={{
                 background: 'var(--card-border-color)',
                 height: '1px',
-                width: '100%'
+                width: '100%',
               }}
             />
             <Box>
@@ -84,7 +85,7 @@ const AssetMetadata = (props: Props) => {
                 {exif.ISO && <Row label="ISO" value={exif.ISO} />}
                 {exif.FNumber && <Row label="Aperture" value={`ƒ/${exif.FNumber}`} />}
                 {exif.FocalLength && <Row label="Focal length" value={`${exif.FocalLength}mm`} />}
-                {exif.ExposureTime && (
+                {exif.ExposureTime && exif.ExposureTime !== 0 && (
                   <Row label="Exposure time" value={`1/${1 / exif.ExposureTime}`} />
                 )}
                 {exif.DateTimeOriginal && (

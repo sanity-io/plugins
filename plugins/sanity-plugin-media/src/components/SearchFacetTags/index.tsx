@@ -1,20 +1,21 @@
 import {SelectIcon} from '@sanity/icons'
 import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
-import type {
-  TagSelectOption,
-  SearchFacetInputSearchableProps,
-  SearchFacetOperatorType,
-  WithId
-} from '../../types'
 import {useDispatch} from 'react-redux'
 import Select from 'react-select'
 import {useColorSchemeValue} from 'sanity'
+
 import {operators} from '../../config/searchFacets'
 import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {searchActions} from '../../modules/search'
 import {selectTags} from '../../modules/tags'
 import {reactSelectComponents, reactSelectStyles} from '../../styled/react-select/single'
+import type {
+  TagSelectOption,
+  SearchFacetInputSearchableProps,
+  SearchFacetOperatorType,
+  WithId,
+} from '../../types'
 import getTagSelectOptions from '../../utils/getTagSelectOptions'
 import SearchFacet from '../SearchFacet'
 
@@ -27,8 +28,8 @@ const SearchFacetTags = ({facet}: Props) => {
 
   // Redux
   const dispatch = useDispatch()
-  const tags = useTypedSelector(state => selectTags(state))
-  const tagsFetching = useTypedSelector(state => state.tags.fetching)
+  const tags = useTypedSelector((state) => selectTags(state))
+  const tagsFetching = useTypedSelector((state) => state.tags.fetching)
   const allTagOptions = getTagSelectOptions(tags)
 
   const popoverProps = usePortalPopoverProps()
@@ -37,8 +38,8 @@ const SearchFacetTags = ({facet}: Props) => {
     dispatch(
       searchActions.facetsUpdateById({
         id: facet.id,
-        value: option
-      })
+        value: option,
+      }),
     )
   }
 
@@ -46,8 +47,8 @@ const SearchFacetTags = ({facet}: Props) => {
     dispatch(
       searchActions.facetsUpdateById({
         id: facet.id,
-        operatorType
-      })
+        operatorType,
+      }),
     )
   }
 
@@ -86,6 +87,7 @@ const SearchFacetTags = ({facet}: Props) => {
                   )
                 }
 
+                // oxlint-disable-next-line no-array-index-key
                 return <MenuDivider key={index} />
               })}
             </Menu>
@@ -105,6 +107,7 @@ const SearchFacetTags = ({facet}: Props) => {
             isSearchable
             name="tags"
             noOptionsMessage={() => 'No tags'}
+            // oxlint-disable-next-line no-unsafe-type-assertion
             onChange={(value: any) => handleChange(value as TagSelectOption)}
             options={allTagOptions}
             placeholder={tagsFetching ? 'Loading...' : 'Select...'}

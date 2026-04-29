@@ -1,6 +1,14 @@
 // @vitest-environment node
 
 import {describe, expect, it, vi} from 'vitest'
+
+import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
+import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
+import type {AssetItem, AssetType, ImageAsset, Tag} from '../../types'
+import {assetsActions, initialState as assetsInitialState} from '../assets'
+import {ASSETS_ACTIONS} from '../assets/actions'
+import {tagsActions} from '../tags'
+import {uploadsActions} from '../uploads'
 import {
   notificationsAssetsDeleteCompleteEpic,
   notificationsAssetsDeleteErrorEpic,
@@ -11,15 +19,8 @@ import {
   notificationsGenericErrorEpic,
   notificationsTagCreateCompleteEpic,
   notificationsTagDeleteCompleteEpic,
-  notificationsTagUpdateCompleteEpic
+  notificationsTagUpdateCompleteEpic,
 } from './index'
-import {assetsActions, initialState as assetsInitialState} from '../assets'
-import {ASSETS_ACTIONS} from '../assets/actions'
-import {tagsActions} from '../tags'
-import {uploadsActions} from '../uploads'
-import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
-import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
-import type {AssetItem, AssetType, ImageAsset, Tag} from '../../types'
 
 const sampleAsset = {
   _id: 'a1',
@@ -30,12 +31,12 @@ const sampleAsset = {
   originalFilename: 'x.png',
   size: 1,
   mimeType: 'image/png',
-  url: 'https://example.com/x.png'
+  url: 'https://example.com/x.png',
 } as ImageAsset
 
 const sampleAsset2 = {
   ...sampleAsset,
-  _id: 'a2'
+  _id: 'a2',
 } as ImageAsset
 
 const sampleTag: Tag = {
@@ -44,14 +45,14 @@ const sampleTag: Tag = {
   _createdAt: '',
   _updatedAt: '',
   _rev: 'tr',
-  name: {_type: 'slug', current: 'alpha'}
+  name: {_type: 'slug', current: 'alpha'},
 }
 
 const assetItem = (asset: ImageAsset): AssetItem => ({
   _type: 'asset',
   asset,
   picked: false,
-  updating: false
+  updating: false,
 })
 
 function assetsWithRows(rows: Record<string, AssetItem>) {
@@ -59,7 +60,7 @@ function assetsWithRows(rows: Record<string, AssetItem>) {
     ...assetsInitialState,
     assetTypes: ['image'] as AssetType[],
     allIds: Object.keys(rows),
-    byIds: rows
+    byIds: rows,
   }
 }
 
@@ -68,12 +69,12 @@ describe('notificationsAssetsDeleteCompleteEpic', () => {
     const store = createEpicTestStore(
       notificationsAssetsDeleteCompleteEpic,
       createMockSanityClient({}),
-      {}
+      {},
     )
     store.dispatch(assetsActions.deleteComplete({assetIds: ['x', 'y']}))
     await vi.waitFor(() => {
       expect(store.getState().notifications.items).toEqual([
-        {asset: undefined, status: 'info', title: '2 assets deleted'}
+        {asset: undefined, status: 'info', title: '2 assets deleted'},
       ])
     })
   })
@@ -86,16 +87,16 @@ describe('notificationsAssetsDeleteErrorEpic', () => {
       createMockSanityClient({}),
       {
         assets: assetsWithRows({
-          a1: {...assetItem(sampleAsset), updating: true}
-        })
-      }
+          a1: {...assetItem(sampleAsset), updating: true},
+        }),
+      },
     )
     store.dispatch(assetsActions.deleteError({assetIds: ['a1'], error: {} as any}))
     await vi.waitFor(() => {
       const [n] = store.getState().notifications.items
       expect(n.status).toBe('error')
       expect(n.title).toBe(
-        'Unable to delete 1 asset. Please review any asset errors and try again.'
+        'Unable to delete 1 asset. Please review any asset errors and try again.',
       )
     })
   })
@@ -106,16 +107,16 @@ describe('notificationsAssetsUploadCompleteEpic', () => {
     const store = createEpicTestStore(
       notificationsAssetsUploadCompleteEpic,
       createMockSanityClient({}),
-      {}
+      {},
     )
     store.dispatch(
       uploadsActions.checkComplete({
-        results: {h1: 'id1', h2: null}
-      })
+        results: {h1: 'id1', h2: null},
+      }),
     )
     await vi.waitFor(() => {
       expect(store.getState().notifications.items).toEqual([
-        {asset: undefined, status: 'info', title: 'Uploaded 2 assets'}
+        {asset: undefined, status: 'info', title: 'Uploaded 2 assets'},
       ])
     })
   })
@@ -124,12 +125,12 @@ describe('notificationsAssetsUploadCompleteEpic', () => {
 const tagsWithTagUpdating = {
   allIds: ['t1'],
   byIds: {
-    t1: {_type: 'tag' as const, tag: sampleTag, picked: false, updating: true}
+    t1: {_type: 'tag' as const, tag: sampleTag, picked: false, updating: true},
   },
   creating: false,
   fetchCount: -1,
   fetching: false,
-  panelVisible: true
+  panelVisible: true,
 }
 
 describe('notificationsAssetsTagsAddCompleteEpic', () => {
@@ -140,20 +141,20 @@ describe('notificationsAssetsTagsAddCompleteEpic', () => {
       {
         assets: assetsWithRows({
           a1: {...assetItem(sampleAsset), updating: true},
-          a2: {...assetItem(sampleAsset2), updating: true}
+          a2: {...assetItem(sampleAsset2), updating: true},
         }),
-        tags: tagsWithTagUpdating
-      }
+        tags: tagsWithTagUpdating,
+      },
     )
     store.dispatch(
       ASSETS_ACTIONS.tagsAddComplete({
         assets: [assetItem(sampleAsset), assetItem(sampleAsset2)],
-        tag: sampleTag
-      })
+        tag: sampleTag,
+      }),
     )
     await vi.waitFor(() => {
       expect(store.getState().notifications.items).toEqual([
-        {asset: undefined, status: 'info', title: 'Tag added to 2 assets'}
+        {asset: undefined, status: 'info', title: 'Tag added to 2 assets'},
       ])
     })
   })
@@ -166,20 +167,20 @@ describe('notificationsAssetsTagsRemoveCompleteEpic', () => {
       createMockSanityClient({}),
       {
         assets: assetsWithRows({
-          a1: {...assetItem(sampleAsset), updating: true}
+          a1: {...assetItem(sampleAsset), updating: true},
         }),
-        tags: tagsWithTagUpdating
-      }
+        tags: tagsWithTagUpdating,
+      },
     )
     store.dispatch(
       ASSETS_ACTIONS.tagsRemoveComplete({
         assets: [assetItem(sampleAsset)],
-        tag: sampleTag
-      })
+        tag: sampleTag,
+      }),
     )
     await vi.waitFor(() => {
       expect(store.getState().notifications.items).toEqual([
-        {asset: undefined, status: 'info', title: 'Tag removed from 1 asset'}
+        {asset: undefined, status: 'info', title: 'Tag removed from 1 asset'},
       ])
     })
   })
@@ -194,9 +195,9 @@ describe('notificationsAssetsUpdateCompleteEpic', () => {
       {
         assets: assetsWithRows({
           a1: {...assetItem(sampleAsset), updating: true},
-          a2: {...assetItem(sampleAsset2), updating: true}
-        })
-      }
+          a2: {...assetItem(sampleAsset2), updating: true},
+        }),
+      },
     )
 
     store.dispatch(assetsActions.updateComplete({asset: sampleAsset}))
@@ -204,7 +205,7 @@ describe('notificationsAssetsUpdateCompleteEpic', () => {
     await vi.advanceTimersByTimeAsync(2000)
 
     expect(store.getState().notifications.items).toEqual([
-      {asset: undefined, status: 'info', title: '2 assets updated'}
+      {asset: undefined, status: 'info', title: '2 assets updated'},
     ])
     vi.useRealTimers()
   })
@@ -217,9 +218,9 @@ describe('notificationsAssetsUpdateCompleteEpic', () => {
       {
         assets: assetsWithRows({
           a1: {...assetItem(sampleAsset), updating: true},
-          a2: {...assetItem(sampleAsset2), updating: true}
-        })
-      }
+          a2: {...assetItem(sampleAsset2), updating: true},
+        }),
+      },
     )
 
     store.dispatch(assetsActions.updateComplete({asset: sampleAsset}))
@@ -229,7 +230,7 @@ describe('notificationsAssetsUpdateCompleteEpic', () => {
 
     expect(store.getState().notifications.items).toEqual([
       {asset: undefined, status: 'info', title: '1 asset updated'},
-      {asset: undefined, status: 'info', title: '1 asset updated'}
+      {asset: undefined, status: 'info', title: '1 asset updated'},
     ])
     vi.useRealTimers()
   })
@@ -239,18 +240,18 @@ describe('notificationsGenericErrorEpic', () => {
   it('maps assets.updateError to error notification title', async () => {
     const store = createEpicTestStore(notificationsGenericErrorEpic, createMockSanityClient({}), {
       assets: assetsWithRows({
-        a1: {...assetItem(sampleAsset), updating: true}
-      })
+        a1: {...assetItem(sampleAsset), updating: true},
+      }),
     })
     store.dispatch(
       assetsActions.updateError({
         asset: sampleAsset,
-        error: {message: 'patch failed', statusCode: 500}
-      })
+        error: {message: 'patch failed', statusCode: 500},
+      }),
     )
     await vi.waitFor(() => {
       expect(store.getState().notifications.items).toEqual([
-        {asset: undefined, status: 'error', title: 'An error occurred: patch failed'}
+        {asset: undefined, status: 'error', title: 'An error occurred: patch failed'},
       ])
     })
   })
@@ -260,14 +261,14 @@ describe('notificationsGenericErrorEpic', () => {
       assets: {
         ...assetsInitialState,
         assetTypes: ['image'] as AssetType[],
-        fetching: true
-      }
+        fetching: true,
+      },
     })
     store.dispatch(
       assetsActions.fetchError({
         message: 'fetch failed',
-        statusCode: 503
-      })
+        statusCode: 503,
+      }),
     )
     await vi.waitFor(() => {
       expect(store.getState().notifications.items[0].title).toBe('An error occurred: fetch failed')
@@ -283,14 +284,14 @@ describe('notificationsGenericErrorEpic', () => {
         byIds: {},
         fetchCount: -1,
         fetching: false,
-        panelVisible: true
-      } as any
+        panelVisible: true,
+      } as any,
     })
     store.dispatch(
       tagsActions.createError({
         name: 'n',
-        error: {message: 'tag create', statusCode: 400}
-      })
+        error: {message: 'tag create', statusCode: 400},
+      }),
     )
     await vi.waitFor(() => {
       expect(store.getState().notifications.items[0].title).toBe('An error occurred: tag create')
@@ -299,13 +300,13 @@ describe('notificationsGenericErrorEpic', () => {
 
   it('maps uploads.uploadError to error notification title', async () => {
     const store = createEpicTestStore(notificationsGenericErrorEpic, createMockSanityClient({}), {
-      uploads: {allIds: ['h'], byIds: {h: {} as any}}
+      uploads: {allIds: ['h'], byIds: {h: {} as any}},
     })
     store.dispatch(
       uploadsActions.uploadError({
         hash: 'h',
-        error: {message: 'upload bad', statusCode: 413}
-      })
+        error: {message: 'upload bad', statusCode: 413},
+      }),
     )
     await vi.waitFor(() => {
       expect(store.getState().notifications.items[0].title).toBe('An error occurred: upload bad')
@@ -318,12 +319,12 @@ describe('notificationsTagCreateCompleteEpic', () => {
     const store = createEpicTestStore(
       notificationsTagCreateCompleteEpic,
       createMockSanityClient({}),
-      {}
+      {},
     )
     store.dispatch(tagsActions.createComplete({tag: sampleTag}))
     await vi.waitFor(() => {
       expect(store.getState().notifications.items).toEqual([
-        {asset: undefined, status: 'info', title: 'Tag created'}
+        {asset: undefined, status: 'info', title: 'Tag created'},
       ])
     })
   })
@@ -334,12 +335,12 @@ describe('notificationsTagDeleteCompleteEpic', () => {
     const store = createEpicTestStore(
       notificationsTagDeleteCompleteEpic,
       createMockSanityClient({}),
-      {}
+      {},
     )
     store.dispatch(tagsActions.deleteComplete({tagId: 't1'}))
     await vi.waitFor(() => {
       expect(store.getState().notifications.items).toEqual([
-        {asset: undefined, status: 'info', title: 'Tag deleted'}
+        {asset: undefined, status: 'info', title: 'Tag deleted'},
       ])
     })
   })
@@ -354,19 +355,19 @@ describe('notificationsTagUpdateCompleteEpic', () => {
         tags: {
           allIds: ['t1'],
           byIds: {
-            t1: {_type: 'tag', tag: sampleTag, picked: false, updating: true}
+            t1: {_type: 'tag', tag: sampleTag, picked: false, updating: true},
           },
           creating: false,
           fetchCount: -1,
           fetching: false,
-          panelVisible: true
-        }
-      }
+          panelVisible: true,
+        },
+      },
     )
     store.dispatch(tagsActions.updateComplete({tag: sampleTag}))
     await vi.waitFor(() => {
       expect(store.getState().notifications.items).toEqual([
-        {asset: undefined, status: 'info', title: 'Tag updated'}
+        {asset: undefined, status: 'info', title: 'Tag updated'},
       ])
     })
   })

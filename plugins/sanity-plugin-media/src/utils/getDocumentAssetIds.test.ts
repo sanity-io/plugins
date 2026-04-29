@@ -1,6 +1,7 @@
 // @vitest-environment node
 
 import {describe, expect, it} from 'vitest'
+
 import getDocumentAssetIds from './getDocumentAssetIds'
 
 describe('getDocumentAssetIds', () => {
@@ -15,9 +16,9 @@ describe('getDocumentAssetIds', () => {
       body: [
         {
           _type: 'block',
-          asset: {_type: 'reference', _ref: 'image-asset-1'}
-        }
-      ]
+          asset: {_type: 'reference', _ref: 'image-asset-1'},
+        },
+      ],
     } as any
 
     expect(getDocumentAssetIds(doc)).toEqual(['image-asset-1'])
@@ -30,8 +31,8 @@ describe('getDocumentAssetIds', () => {
       modules: [
         {image: {asset: {_type: 'reference', _ref: 'b'}}},
         {image: {asset: {_type: 'reference', _ref: 'a'}}},
-        {image: {asset: {_type: 'reference', _ref: 'b'}}}
-      ]
+        {image: {asset: {_type: 'reference', _ref: 'b'}}},
+      ],
     } as any
 
     expect(getDocumentAssetIds(doc)).toEqual(['a', 'b'])
@@ -41,7 +42,7 @@ describe('getDocumentAssetIds', () => {
     const doc = {
       _id: 'doc1',
       _type: 'post',
-      author: {_type: 'reference', _ref: 'person-1'}
+      author: {_type: 'reference', _ref: 'person-1'},
     } as any
 
     expect(getDocumentAssetIds(doc)).toEqual([])

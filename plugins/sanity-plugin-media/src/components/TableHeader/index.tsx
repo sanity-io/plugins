@@ -1,35 +1,37 @@
-import {Checkbox, Flex, Grid, type ThemeColorSchemeKey, useMediaIndex} from '@sanity/ui'
+import {Checkbox, Flex, Grid, useMediaIndex} from '@sanity/ui'
+import type {ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {type MouseEvent} from 'react'
 import {useDispatch} from 'react-redux'
+import {useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
+
 import {GRID_TEMPLATE_COLUMNS, PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions, selectAssetsLength, selectAssetsPickedLength} from '../../modules/assets'
-import TableHeaderItem from '../TableHeaderItem'
-import {useColorSchemeValue} from 'sanity'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+import TableHeaderItem from '../TableHeaderItem'
 
 // TODO: DRY
-const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(
-  ({$scheme}) => {
-    return css`
-      cursor: pointer;
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          background: ${getSchemeColor($scheme, 'bg')};
-        }
+const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
+  $scheme,
+}) => {
+  return css`
+    cursor: pointer;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: ${getSchemeColor($scheme, 'bg')};
       }
-    `
-  }
-)
+    }
+  `
+})
 
 const TableHeader = () => {
   const scheme = useColorSchemeValue()
 
   // Redux
   const dispatch = useDispatch()
-  const fetching = useTypedSelector(state => state.assets.fetching)
+  const fetching = useTypedSelector((state) => state.assets.fetching)
   const itemsLength = useTypedSelector(selectAssetsLength)
   const numPickedAssets = useTypedSelector(selectAssetsPickedLength)
 
@@ -67,7 +69,7 @@ const TableHeader = () => {
         top: 0,
         visibility: mediaIndex < 3 ? 'hidden' : 'visible',
         width: '100%',
-        zIndex: 1 // force stacking context
+        zIndex: 1, // force stacking context
       }}
     >
       {onSelect ? (
@@ -80,7 +82,7 @@ const TableHeader = () => {
           $scheme={scheme}
           style={{
             height: '100%',
-            position: 'relative'
+            position: 'relative',
           }}
         >
           <Checkbox
@@ -88,7 +90,7 @@ const TableHeader = () => {
             readOnly
             style={{
               pointerEvents: 'none', // TODO: consider alternative for usability
-              transform: 'scale(0.8)'
+              transform: 'scale(0.8)',
             }}
           />
         </ContextActionContainer>

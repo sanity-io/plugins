@@ -1,11 +1,12 @@
 // @vitest-environment node
 
-import {describe, expect, it, vi} from 'vitest'
 import {of, throwError} from 'rxjs'
-import {assetsActions, assetsFetchEpic} from './index'
+import {describe, expect, it, vi} from 'vitest'
+
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
 import type {ImageAsset} from '../../types'
+import {assetsActions, assetsFetchEpic} from './index'
 
 function assertFetchSucceeded(store: ReturnType<typeof createEpicTestStore>, asset: ImageAsset) {
   expect(store.getState().assets.byIds.a1?.asset).toEqual(asset)
@@ -25,15 +26,15 @@ const sampleAsset = {
   originalFilename: 'x.png',
   size: 1,
   mimeType: 'image/png',
-  url: ''
+  url: '',
 } as ImageAsset
 
 describe('assetsFetchEpic', () => {
   it('dispatches fetchComplete when observable.fetch succeeds', async () => {
     const client = createMockSanityClient({
       observable: {
-        fetch: vi.fn(() => of({items: [sampleAsset]}))
-      }
+        fetch: vi.fn(() => of({items: [sampleAsset]})),
+      },
     })
 
     const store = createEpicTestStore(assetsFetchEpic, client)
@@ -42,8 +43,8 @@ describe('assetsFetchEpic', () => {
         params: {},
         queryFilter: '_type == "sanity.imageAsset"',
         selector: '',
-        sort: ''
-      })
+        sort: '',
+      }),
     )
 
     await vi.waitFor(() => assertFetchSucceeded(store, sampleAsset))
@@ -53,8 +54,8 @@ describe('assetsFetchEpic', () => {
     const fetchErr = throwError(() => ({message: 'boom', statusCode: 500}))
     const client = createMockSanityClient({
       observable: {
-        fetch: vi.fn(() => fetchErr)
-      }
+        fetch: vi.fn(() => fetchErr),
+      },
     })
 
     const store = createEpicTestStore(assetsFetchEpic, client)
@@ -63,8 +64,8 @@ describe('assetsFetchEpic', () => {
         params: {},
         queryFilter: '_type == "sanity.imageAsset"',
         selector: '',
-        sort: ''
-      })
+        sort: '',
+      }),
     )
 
     await vi.waitFor(() => assertFetchFailed(store))

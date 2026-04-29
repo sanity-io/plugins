@@ -10,14 +10,14 @@ const Progress = (props: Props) => {
 
   const {animationDuration, isFinished, progress} = useNProgress({
     animationDuration: 300,
-    isAnimating: loading
+    isAnimating: loading,
   })
 
   return (
     <Box
       style={{
         opacity: isFinished ? 0 : 1,
-        transition: `opacity ${animationDuration}ms linear`
+        transition: `opacity ${animationDuration}ms linear`,
       }}
     >
       <Box
@@ -28,7 +28,7 @@ const Progress = (props: Props) => {
           left: 0,
           top: 0,
           transition: `width ${animationDuration}ms linear`,
-          width: `${progress * 100}%`
+          width: `${progress * 100}%`,
         }}
       />
     </Box>

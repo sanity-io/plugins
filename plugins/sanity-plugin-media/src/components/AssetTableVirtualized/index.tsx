@@ -1,8 +1,9 @@
-import type {CardAssetData, CardUploadData} from '../../types'
 import {Box} from '@sanity/ui'
 import {memo} from 'react'
 import {GroupedVirtuoso} from 'react-virtuoso'
+
 import useTypedSelector from '../../hooks/useTypedSelector'
+import type {CardAssetData, CardUploadData} from '../../types'
 import TableHeader from '../TableHeader'
 import TableRowAsset from '../TableRowAsset'
 import TableRowUpload from '../TableRowUpload'
@@ -31,16 +32,16 @@ const VirtualRow = memo(
     }
 
     return null
-  }
+  },
 )
 
 const AssetTableVirtualized = (props: Props) => {
   const {items, onLoadMore} = props
 
   // Redux
-  const selectedAssets = useTypedSelector(state => state.selected.assets)
+  const selectedAssets = useTypedSelector((state) => state.selected.assets)
 
-  const selectedIds = (selectedAssets && selectedAssets.map(asset => asset._id)) || []
+  const selectedIds = (selectedAssets && selectedAssets.map((asset) => asset._id)) || []
   const totalCount = items?.length
 
   if (totalCount === 0) {
@@ -50,18 +51,19 @@ const AssetTableVirtualized = (props: Props) => {
   return (
     <GroupedVirtuoso
       className="media__custom-scrollbar"
-      computeItemKey={index => {
+      computeItemKey={(index) => {
         const item = items[index]
-        return item?.id || index
+        return item?.id ?? String(index)
       }}
       endReached={onLoadMore}
       groupCounts={Array(1).fill(totalCount)}
       groupContent={() => {
         return <TableHeader />
       }}
-      itemContent={index => {
+      itemContent={(index) => {
         const item = items[index]
-        const selected = selectedIds.includes(item?.id)
+        if (!item) return null
+        const selected = selectedIds.includes(item.id)
         return <VirtualRow item={item} selected={selected} />
       }}
       style={{overflowX: 'hidden'}}

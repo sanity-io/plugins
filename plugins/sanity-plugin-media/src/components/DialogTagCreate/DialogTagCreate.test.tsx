@@ -1,11 +1,12 @@
-import userEvent from '@testing-library/user-event'
 import {screen, waitFor} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import {describe, expect, it, vi} from 'vitest'
-import DialogTagCreate from './index'
+
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
 import {createTestRootState} from '../../__tests__/fixtures/rootState'
 import {getDialogRoot, inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
 import {tagsActions} from '../../modules/tags'
+import DialogTagCreate from './index'
 
 describe('DialogTagCreate', () => {
   it('dispatches tag create flow when form is valid', async () => {
@@ -13,7 +14,7 @@ describe('DialogTagCreate', () => {
     const {store} = renderWithProviders(
       <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
         <span />
-      </DialogTagCreate>
+      </DialogTagCreate>,
     )
 
     const dlg = withinDialog(/create tag/i, screen)
@@ -28,7 +29,7 @@ describe('DialogTagCreate', () => {
     const {store} = renderWithProviders(
       <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
         <span />
-      </DialogTagCreate>
+      </DialogTagCreate>,
     )
     const dispatchSpy = vi.spyOn(store, 'dispatch')
     const dlg = withinDialog(/create tag/i, screen)
@@ -55,11 +56,11 @@ describe('DialogTagCreate', () => {
     renderWithProviders(
       <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
         <span />
-      </DialogTagCreate>
+      </DialogTagCreate>,
     )
 
     expect(
-      withinDialog(/create tag/i, screen).getByRole('button', {name: /save and close/i})
+      withinDialog(/create tag/i, screen).getByRole('button', {name: /save and close/i}),
     ).toBeDisabled()
 
     const nameInput = inputByName(/create tag/i, screen, 'name')
@@ -67,7 +68,7 @@ describe('DialogTagCreate', () => {
     await user.tab()
     await waitFor(() => {
       expect(
-        withinDialog(/create tag/i, screen).getByRole('button', {name: /save and close/i})
+        withinDialog(/create tag/i, screen).getByRole('button', {name: /save and close/i}),
       ).not.toBeDisabled()
     })
   })
@@ -78,16 +79,16 @@ describe('DialogTagCreate', () => {
       dialog: {
         items: [
           {id: 'dlg-1', type: 'tagCreate'},
-          {id: 'tags', type: 'tags'}
-        ]
-      }
+          {id: 'tags', type: 'tags'},
+        ],
+      },
     })
 
     const {store} = renderWithProviders(
       <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
         <span />
       </DialogTagCreate>,
-      {preloaded: base}
+      {preloaded: base},
     )
 
     const dlg = withinDialog(/create tag/i, screen)
@@ -100,20 +101,20 @@ describe('DialogTagCreate', () => {
     const base = createTestRootState({
       tags: {
         ...createTestRootState().tags,
-        creatingError: {message: 'Tag already exists', statusCode: 409}
-      }
+        creatingError: {message: 'Tag already exists', statusCode: 409},
+      },
     })
 
     renderWithProviders(
       <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
         <span />
       </DialogTagCreate>,
-      {preloaded: base}
+      {preloaded: base},
     )
 
     await waitFor(() => {
       expect(
-        getDialogRoot(/create tag/i, screen).querySelector('[data-sanity-icon="error-outline"]')
+        getDialogRoot(/create tag/i, screen).querySelector('[data-sanity-icon="error-outline"]'),
       ).toBeTruthy()
     })
   })

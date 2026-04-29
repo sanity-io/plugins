@@ -6,8 +6,8 @@ export const UPLOADS_ACTIONS = {
     'uploads/uploadComplete',
     function prepare({asset}: {asset: SanityAssetDocument | SanityImageAssetDocument}) {
       return {
-        payload: {asset}
+        payload: {asset},
       }
-    }
-  )
+    },
+  ),
 }

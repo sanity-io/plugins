@@ -6,7 +6,7 @@ const getTagSelectOptions = (tags: TagItem[]): TagSelectOption[] => {
     if (tag) {
       acc.push({
         label: tag?.name?.current,
-        value: tag?._id
+        value: tag?._id,
       })
     }
     return acc

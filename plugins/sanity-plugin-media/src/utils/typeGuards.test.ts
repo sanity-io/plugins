@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest'
-import {isFileAsset, isImageAsset} from './typeGuards'
+
 import type {Asset} from '../types'
+import {isFileAsset, isImageAsset} from './typeGuards'
 
 describe('typeGuards', () => {
   it('isFileAsset narrows sanity.fileAsset', () => {

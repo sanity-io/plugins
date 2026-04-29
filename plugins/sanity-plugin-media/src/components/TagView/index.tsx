@@ -9,11 +9,11 @@ import TagViewHeader from '../TagViewHeader'
 const TagView = () => {
   const numPickedAssets = useTypedSelector(selectAssetsPickedLength)
   const tags = useTypedSelector(selectTags)
-  const fetching = useTypedSelector(state => state.tags.fetching)
-  const fetchCount = useTypedSelector(state => state.tags.fetchCount)
+  const fetching = useTypedSelector((state) => state.tags.fetching)
+  const fetchCount = useTypedSelector((state) => state.tags.fetchCount)
   const fetchComplete = fetchCount !== -1
   const hasTags = !fetching && tags?.length > 0
-  const hasPicked = !!(numPickedAssets > 0)
+  const hasPicked = numPickedAssets > 0
 
   return (
     <Flex direction="column" flex={1} height="fill">

@@ -2,6 +2,7 @@ import {TextInput} from '@sanity/ui'
 import {type ChangeEvent} from 'react'
 
 // TODO: use correct type
+// oxlint-disable-next-line no-redundant-type-constituents
 type Props = any & {
   onValueChange: (value: number) => void
   value?: number

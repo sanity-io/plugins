@@ -1,22 +1,23 @@
 // @vitest-environment node
 
 import {describe, expect, it, vi, beforeEach, afterEach} from 'vitest'
+
+import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
+import {
+  createMockSanityClient,
+  mockTransactionCommit,
+} from '../../__tests__/fixtures/mockSanityClient'
+import type {ImageAsset, Tag} from '../../types'
+import {ASSETS_ACTIONS} from './actions'
 import {
   assetsActions,
   assetsListenerCreateQueueEpic,
   assetsListenerDeleteQueueEpic,
   assetsListenerUpdateQueueEpic,
   assetsTagsAddEpic,
-  assetsTagsRemoveEpic
+  assetsTagsRemoveEpic,
 } from './index'
-import {ASSETS_ACTIONS} from './actions'
-import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
-import {
-  createMockSanityClient,
-  mockTransactionCommit
-} from '../../__tests__/fixtures/mockSanityClient'
 import {initialState as assetsInitialState} from './index'
-import type {ImageAsset, Tag} from '../../types'
 
 const sampleAsset = {
   _id: 'a1',
@@ -27,7 +28,7 @@ const sampleAsset = {
   originalFilename: 'x.png',
   size: 1,
   mimeType: 'image/png',
-  url: ''
+  url: '',
 } as ImageAsset
 
 const sampleTag: Tag = {
@@ -36,21 +37,21 @@ const sampleTag: Tag = {
   _createdAt: '',
   _updatedAt: '',
   _rev: 'tr',
-  name: {_type: 'slug', current: 'tag-a'}
+  name: {_type: 'slug', current: 'tag-a'},
 }
 
 describe('assetsTagsAddEpic', () => {
   it('runs transaction.commit when adding tag to picked assets', async () => {
     const tx = mockTransactionCommit(undefined)
     const client = createMockSanityClient({
-      transaction: vi.fn(() => tx)
+      transaction: vi.fn(() => tx),
     })
 
     const assetItem = {
       _type: 'asset' as const,
       asset: sampleAsset,
       picked: true,
-      updating: false
+      updating: false,
     }
 
     const store = createEpicTestStore(assetsTagsAddEpic, client, {
@@ -58,25 +59,25 @@ describe('assetsTagsAddEpic', () => {
         ...assetsInitialState,
         assetTypes: ['image'],
         allIds: ['a1'],
-        byIds: {a1: assetItem}
+        byIds: {a1: assetItem},
       },
       tags: {
         allIds: ['t1'],
         byIds: {
-          t1: {_type: 'tag', tag: sampleTag, picked: false, updating: false}
+          t1: {_type: 'tag', tag: sampleTag, picked: false, updating: false},
         },
         creating: false,
         fetchCount: -1,
         fetching: false,
-        panelVisible: true
-      }
+        panelVisible: true,
+      },
     })
 
     store.dispatch(
       ASSETS_ACTIONS.tagsAddRequest({
         assets: [assetItem],
-        tag: sampleTag
-      })
+        tag: sampleTag,
+      }),
     )
 
     await vi.waitFor(() => {
@@ -89,14 +90,14 @@ describe('assetsTagsRemoveEpic', () => {
   it('runs transaction.commit for tag removal', async () => {
     const tx = mockTransactionCommit(undefined)
     const client = createMockSanityClient({
-      transaction: vi.fn(() => tx)
+      transaction: vi.fn(() => tx),
     })
 
     const assetItem = {
       _type: 'asset' as const,
       asset: sampleAsset,
       picked: true,
-      updating: false
+      updating: false,
     }
 
     const store = createEpicTestStore(assetsTagsRemoveEpic, client, {
@@ -104,25 +105,25 @@ describe('assetsTagsRemoveEpic', () => {
         ...assetsInitialState,
         assetTypes: ['image'],
         allIds: ['a1'],
-        byIds: {a1: assetItem}
+        byIds: {a1: assetItem},
       },
       tags: {
         allIds: ['t1'],
         byIds: {
-          t1: {_type: 'tag', tag: sampleTag, picked: false, updating: false}
+          t1: {_type: 'tag', tag: sampleTag, picked: false, updating: false},
         },
         creating: false,
         fetchCount: -1,
         fetching: false,
-        panelVisible: true
-      }
+        panelVisible: true,
+      },
     })
 
     store.dispatch(
       ASSETS_ACTIONS.tagsRemoveRequest({
         assets: [assetItem],
-        tag: sampleTag
-      })
+        tag: sampleTag,
+      }),
     )
 
     await vi.waitFor(() => {
@@ -147,9 +148,9 @@ describe('assets listener queue epics', () => {
         assetTypes: ['image'],
         allIds: ['a1'],
         byIds: {
-          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false}
-        }
-      }
+          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false},
+        },
+      },
     })
 
     const updated = {...sampleAsset, title: 'L'}
@@ -169,9 +170,9 @@ describe('assets listener queue epics', () => {
         assetTypes: ['image'],
         allIds: ['a1'],
         byIds: {
-          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false}
-        }
-      }
+          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false},
+        },
+      },
     })
 
     store.dispatch(assetsActions.listenerDeleteQueue({assetId: 'a1'}))
@@ -189,9 +190,9 @@ describe('assets listener queue epics', () => {
         assetTypes: ['image'],
         allIds: ['a1'],
         byIds: {
-          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false}
-        }
-      }
+          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false},
+        },
+      },
     })
 
     const updated = {...sampleAsset, title: 'Buffered'}

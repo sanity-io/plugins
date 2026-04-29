@@ -4,8 +4,8 @@ import pluralize from 'pluralize'
 
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import {useDropzoneActions} from '../../contexts/DropzoneDispatchContext'
-import useTypedSelector from '../../hooks/useTypedSelector'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
+import useTypedSelector from '../../hooks/useTypedSelector'
 
 type Props = {
   onClose?: () => void
@@ -18,8 +18,8 @@ const Header = (props: Props) => {
   const {onSelect} = useAssetSourceActions()
 
   // Redux
-  const assetTypes = useTypedSelector(state => state.assets.assetTypes)
-  const selectedDocument = useTypedSelector(state => state.selected.document)
+  const assetTypes = useTypedSelector((state) => state.assets.assetTypes)
+  const selectedDocument = useTypedSelector((state) => state.selected.document)
 
   const {directUploads} = useToolOptions()
 
@@ -55,7 +55,7 @@ const Header = (props: Props) => {
               icon={UploadIcon}
               mode="bleed"
               onClick={open}
-              text={`Upload ${assetTypes.length === 1 ? pluralize(assetTypes[0]) : 'assets'}`}
+              text={`Upload ${assetTypes.length === 1 ? pluralize(assetTypes[0] ?? '') : 'assets'}`}
             />
           )}
 

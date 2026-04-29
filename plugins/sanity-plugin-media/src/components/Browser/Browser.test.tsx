@@ -1,16 +1,17 @@
-import {describe, expect, it, vi, beforeEach} from 'vitest'
-import {render, screen, waitFor} from '@testing-library/react'
 import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
-import {ColorSchemeProvider} from 'sanity'
+import {render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
-import Browser from './index'
+import {ColorSchemeProvider} from 'sanity'
+import {describe, expect, it, vi, beforeEach} from 'vitest'
+
 import {createListenMock} from '../../__tests__/fixtures/listenMock'
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
 import {ToolOptionsProvider} from '../../contexts/ToolOptionsContext'
 import useVersionedClient from '../../hooks/useVersionedClient'
+import Browser from './index'
 
 vi.mock('../../hooks/useVersionedClient', () => ({
-  default: vi.fn()
+  default: vi.fn(),
 }))
 
 describe('Browser', () => {
@@ -19,8 +20,8 @@ describe('Browser', () => {
     vi.mocked(useVersionedClient).mockReturnValue(
       createMockSanityClient({
         listen: createListenMock(),
-        observable: {fetch}
-      })
+        observable: {fetch},
+      }),
     )
   })
 
@@ -34,7 +35,7 @@ describe('Browser', () => {
             </ToolOptionsProvider>
           </ToastProvider>
         </ThemeProvider>
-      </ColorSchemeProvider>
+      </ColorSchemeProvider>,
     )
 
     await waitFor(() => {

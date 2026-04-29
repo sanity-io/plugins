@@ -1,16 +1,16 @@
 import {SelectIcon} from '@sanity/icons'
 import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
+import {useDispatch} from 'react-redux'
+
+import {operators} from '../../config/searchFacets'
+import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
+import {searchActions} from '../../modules/search'
 import type {
   SearchFacetInputNumberModifier,
   SearchFacetInputNumberProps,
   SearchFacetOperatorType,
-  WithId
+  WithId,
 } from '../../types'
-
-import {useDispatch} from 'react-redux'
-import {operators} from '../../config/searchFacets'
-import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
-import {searchActions} from '../../modules/search'
 import SearchFacet from '../SearchFacet'
 import TextInputNumber from '../TextInputNumber'
 
@@ -26,7 +26,7 @@ const SearchFacetNumber = ({facet}: Props) => {
 
   const modifiers = facet?.modifiers
   const selectedModifier = facet?.modifier
-    ? modifiers?.find(modifier => modifier.name === facet?.modifier)
+    ? modifiers?.find((modifier) => modifier.name === facet?.modifier)
     : modifiers?.[0]
 
   const handleOperatorItemClick = (operatorType: SearchFacetOperatorType) => {
@@ -74,6 +74,7 @@ const SearchFacetNumber = ({facet}: Props) => {
                   )
                 }
 
+                // oxlint-disable-next-line no-array-index-key
                 return <MenuDivider key={index} />
               })}
             </Menu>
@@ -108,7 +109,7 @@ const SearchFacetNumber = ({facet}: Props) => {
           id="modifier"
           menu={
             <Menu>
-              {modifiers.map(modifier => {
+              {modifiers.map((modifier) => {
                 const selected = modifier.name === facet.modifier
                 return (
                   <MenuItem

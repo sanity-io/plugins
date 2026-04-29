@@ -1,5 +1,6 @@
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {firstValueFrom} from 'rxjs'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
+
 import {generatePreviewBlobUrl$} from './generatePreviewBlobUrl'
 
 describe('generatePreviewBlobUrl$', () => {
@@ -25,7 +26,7 @@ describe('generatePreviewBlobUrl$', () => {
       if (tagName === 'canvas') {
         const el = origCreateElement('canvas')
         vi.spyOn(el, 'getContext').mockReturnValue({
-          drawImage: vi.fn()
+          drawImage: vi.fn(),
         } as unknown as CanvasRenderingContext2D)
         /* eslint-disable callback-return, consistent-return -- HTMLCanvasElement#toBlob sync test stub */
         el.toBlob = function toBlob(cb: ((blob: Blob | null) => void) | null | undefined) {
@@ -44,12 +45,12 @@ describe('generatePreviewBlobUrl$', () => {
     Object.defineProperty(URL, 'createObjectURL', {
       configurable: true,
       writable: true,
-      value: createObjectURL
+      value: createObjectURL,
     })
     Object.defineProperty(URL, 'revokeObjectURL', {
       configurable: true,
       writable: true,
-      value: revokeObjectURL
+      value: revokeObjectURL,
     })
   })
 
@@ -62,7 +63,7 @@ describe('generatePreviewBlobUrl$', () => {
 
   it('emits a blob URL when canvas preview succeeds', async () => {
     const url = await firstValueFrom(
-      generatePreviewBlobUrl$(new File(['x'], 'photo.jpg', {type: 'image/jpeg'}))
+      generatePreviewBlobUrl$(new File(['x'], 'photo.jpg', {type: 'image/jpeg'})),
     )
     expect(url).toBe('blob:mock-preview')
   })

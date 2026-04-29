@@ -10,13 +10,13 @@ type SelectedReducerState = {
 const initialState = {
   assets: [],
   document: undefined,
-  documentAssetIds: []
+  documentAssetIds: [],
 } as SelectedReducerState
 
 const selectedSlice = createSlice({
   name: 'selected',
   initialState,
-  reducers: {}
+  reducers: {},
 })
 
 export default selectedSlice.reducer

@@ -1,6 +1,7 @@
 // @vitest-environment node
 
 import {describe, expect, it} from 'vitest'
+
 import type {UploadItem} from '../../types'
 import uploadsReducer, {uploadsActions} from './index'
 
@@ -13,15 +14,15 @@ describe('uploads slice', () => {
       hash: 'abc',
       name: 'x.png',
       size: 1,
-      status: 'queued'
+      status: 'queued',
     } as UploadItem
 
     state = uploadsReducer(
       state,
       uploadsActions.uploadStart({
         file: new File([], 'x.png'),
-        uploadItem
-      })
+        uploadItem,
+      }),
     )
 
     expect(state.allIds).toEqual(['abc'])
@@ -37,19 +38,19 @@ describe('uploads slice', () => {
       name: 'x.png',
       size: 1,
       status: 'queued',
-      percent: 0
+      percent: 0,
     } as UploadItem
 
     state = uploadsReducer(
       state,
-      uploadsActions.uploadStart({file: new File([], 'x.png'), uploadItem})
+      uploadsActions.uploadStart({file: new File([], 'x.png'), uploadItem}),
     )
     state = uploadsReducer(
       state,
       uploadsActions.uploadProgress({
         uploadHash: 'h1',
-        event: {percent: 42, stage: 'upload'} as any
-      })
+        event: {percent: 42, stage: 'upload'} as any,
+      }),
     )
 
     expect(state.byIds.h1.percent).toBe(42)

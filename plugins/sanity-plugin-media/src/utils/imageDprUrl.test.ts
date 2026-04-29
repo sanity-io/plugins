@@ -1,6 +1,7 @@
 import {afterEach, describe, expect, it} from 'vitest'
-import imageDprUrl from './imageDprUrl'
+
 import type {ImageAsset} from '../types'
+import imageDprUrl from './imageDprUrl'
 
 const asset = {
   _id: 'a1',
@@ -12,7 +13,7 @@ const asset = {
   size: 1,
   mimeType: 'image/png',
   url: 'https://cdn.test/image.png',
-  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true}
+  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
 } as ImageAsset
 
 describe('imageDprUrl', () => {
@@ -37,7 +38,7 @@ describe('imageDprUrl', () => {
   it('uses multiplier 1 when devicePixelRatio is missing', () => {
     Object.defineProperty(window, 'devicePixelRatio', {
       value: undefined as unknown as number,
-      configurable: true
+      configurable: true,
     })
     const url = imageDprUrl(asset, {width: 100})
     expect(url).toBe('https://cdn.test/image.png?fit=max&w=100')

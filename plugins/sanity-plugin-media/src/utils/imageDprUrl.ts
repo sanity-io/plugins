@@ -5,7 +5,7 @@ const imageDprUrl = (
   options: {
     width: number
     height?: number
-  }
+  },
 ): string => {
   const dpi =
     typeof window === 'undefined' || !window.devicePixelRatio

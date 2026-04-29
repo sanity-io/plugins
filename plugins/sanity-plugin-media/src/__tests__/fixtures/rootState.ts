@@ -1,11 +1,11 @@
-import type {RootReducerState} from '../../modules/types'
 import {initialState as assetsInitialState} from '../../modules/assets'
+import type {RootReducerState} from '../../modules/types'
 
 export function createTestRootState(overrides: Partial<RootReducerState> = {}): RootReducerState {
   const base: RootReducerState = {
     assets: {
       ...assetsInitialState,
-      assetTypes: ['file', 'image']
+      assetTypes: ['file', 'image'],
     },
     debug: {badConnection: false, enabled: false},
     dialog: {items: []},
@@ -18,9 +18,9 @@ export function createTestRootState(overrides: Partial<RootReducerState> = {}): 
       creating: false,
       fetchCount: -1,
       fetching: false,
-      panelVisible: true
+      panelVisible: true,
     },
-    uploads: {allIds: [], byIds: {}}
+    uploads: {allIds: [], byIds: {}},
   }
 
   return {...base, ...overrides} as RootReducerState

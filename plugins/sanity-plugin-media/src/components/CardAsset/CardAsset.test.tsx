@@ -1,11 +1,12 @@
-import type {RefObject} from 'react'
-import userEvent from '@testing-library/user-event'
 import {screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import type {RefObject} from 'react'
 import {beforeEach, describe, expect, it, vi} from 'vitest'
-import CardAsset from './index'
+
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
 import {initialState as assetsInitialState} from '../../modules/assets'
 import type {AssetItem, AssetType, FileAsset, ImageAsset} from '../../types'
+import CardAsset from './index'
 
 const SHIFT_FLAG = '__CARD_ASSET_TEST_SHIFT__'
 
@@ -23,25 +24,25 @@ vi.mock('../../hooks/useKeyPress', () => ({
     ({
       get current() {
         return Boolean((globalThis as unknown as Record<string, unknown>)[SHIFT_FLAG])
-      }
-    } as RefObject<boolean>)
+      },
+    }) as RefObject<boolean>,
 }))
 
 vi.mock('../Image', () => ({
-  default: () => <div data-testid="card-image" />
+  default: () => <div data-testid="card-image" />,
 }))
 
 vi.mock('../FileIcon', () => ({
   default: ({extension}: {extension?: string}) => (
     <div data-testid="card-file-icon" data-extension={extension ?? ''} />
-  )
+  ),
 }))
 
-vi.mock('sanity', async importOriginal => {
+vi.mock('sanity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('sanity')>()
   return {
     ...actual,
-    useColorSchemeValue: () => 'light'
+    useColorSchemeValue: () => 'light',
   }
 })
 
@@ -55,7 +56,7 @@ const imageAsset = {
   size: 1,
   mimeType: 'image/png',
   url: 'https://example.com/photo.png',
-  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true}
+  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
 } as ImageAsset
 
 const fileAsset = {
@@ -68,7 +69,7 @@ const fileAsset = {
   extension: 'pdf',
   size: 1,
   mimeType: 'application/pdf',
-  url: 'https://example.com/doc.pdf'
+  url: 'https://example.com/doc.pdf',
 } as FileAsset
 
 function assetItem(asset: ImageAsset | FileAsset, partial?: Partial<AssetItem>): AssetItem {
@@ -77,7 +78,7 @@ function assetItem(asset: ImageAsset | FileAsset, partial?: Partial<AssetItem>):
     asset,
     picked: false,
     updating: false,
-    ...partial
+    ...partial,
   }
 }
 
@@ -87,7 +88,7 @@ function assetsState(byIds: Record<string, AssetItem>, extra?: Partial<typeof as
     assetTypes: ['file', 'image'] as AssetType[],
     allIds: Object.keys(byIds),
     byIds,
-    ...extra
+    ...extra,
   }
 }
 
@@ -121,8 +122,8 @@ describe('CardAsset', () => {
   it('renders nothing when the asset id is not in the store', () => {
     renderWithProviders(<CardAsset id="missing" selected={false} />, {
       preloaded: {
-        assets: assetsState({})
-      }
+        assets: assetsState({}),
+      },
     })
     expect(screen.queryAllByTestId('card-image')).toHaveLength(0)
     expect(screen.queryAllByTestId('card-file-icon')).toHaveLength(0)
@@ -131,8 +132,8 @@ describe('CardAsset', () => {
   it('renders image preview and original filename for an image asset', () => {
     renderWithProviders(<CardAsset id="img-1" selected={false} />, {
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset)})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset)}),
+      },
     })
     expect(screen.getAllByTestId('card-image').length).toBeGreaterThan(0)
     expect(screen.getAllByText('photo.png').length).toBeGreaterThan(0)
@@ -141,8 +142,8 @@ describe('CardAsset', () => {
   it('renders file icon with extension for a file asset', () => {
     renderWithProviders(<CardAsset id="file-1" selected={false} />, {
       preloaded: {
-        assets: assetsState({'file-1': assetItem(fileAsset)})
-      }
+        assets: assetsState({'file-1': assetItem(fileAsset)}),
+      },
     })
     const icon = screen.getAllByTestId('card-file-icon').at(-1)!
     expect(icon).toHaveAttribute('data-extension', 'pdf')
@@ -153,14 +154,14 @@ describe('CardAsset', () => {
     const user = userEvent.setup()
     const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset)})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset)}),
+      },
     })
 
     await user.click(clickPreview())
 
     expect(
-      store.getState().dialog.items.some(d => d.type === 'assetEdit' && d.assetId === 'img-1')
+      store.getState().dialog.items.some((d) => d.type === 'assetEdit' && d.assetId === 'img-1'),
     ).toBe(true)
   })
 
@@ -170,8 +171,8 @@ describe('CardAsset', () => {
     renderWithProviders(<CardAsset id="img-1" selected={false} />, {
       onSelect,
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset)})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset)}),
+      },
     })
 
     await user.click(clickPreview())
@@ -179,8 +180,8 @@ describe('CardAsset', () => {
     expect(onSelect).toHaveBeenCalledWith([
       {
         kind: 'assetDocumentId',
-        value: 'img-1'
-      }
+        value: 'img-1',
+      },
     ])
   })
 
@@ -188,8 +189,8 @@ describe('CardAsset', () => {
     const user = userEvent.setup()
     const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: false})})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: false})}),
+      },
     })
 
     await user.click(clickFooterFilename('photo.png'))
@@ -203,15 +204,15 @@ describe('CardAsset', () => {
     const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
       onSelect,
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset)})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset)}),
+      },
     })
 
     await user.click(clickFooterFilename('photo.png'))
 
     expect(onSelect).not.toHaveBeenCalled()
     expect(
-      store.getState().dialog.items.some(d => d.type === 'assetEdit' && d.assetId === 'img-1')
+      store.getState().dialog.items.some((d) => d.type === 'assetEdit' && d.assetId === 'img-1'),
     ).toBe(true)
   })
 
@@ -219,8 +220,8 @@ describe('CardAsset', () => {
     const user = userEvent.setup()
     const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+      },
     })
 
     setShiftPressed(true)
@@ -238,11 +239,11 @@ describe('CardAsset', () => {
         assets: assetsState(
           {
             'prev-1': assetItem(prevAsset),
-            'img-1': assetItem(imageAsset, {picked: false})
+            'img-1': assetItem(imageAsset, {picked: false}),
           },
-          {lastPicked: 'prev-1'}
-        )
-      }
+          {lastPicked: 'prev-1'},
+        ),
+      },
     })
 
     setShiftPressed(true)
@@ -258,18 +259,18 @@ describe('CardAsset', () => {
     const anchorAsset = {
       ...imageAsset,
       _id: 'anchor-9',
-      originalFilename: 'anchor.png'
+      originalFilename: 'anchor.png',
     } as ImageAsset
     const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
       preloaded: {
         assets: assetsState(
           {
             'anchor-9': assetItem(anchorAsset),
-            'img-1': assetItem(imageAsset, {picked: false})
+            'img-1': assetItem(imageAsset, {picked: false}),
           },
-          {lastPicked: 'anchor-9'}
-        )
-      }
+          {lastPicked: 'anchor-9'},
+        ),
+      },
     })
 
     setShiftPressed(true)
@@ -283,19 +284,19 @@ describe('CardAsset', () => {
   it('shows the selection checkmark when selected and not updating', () => {
     const {container} = renderWithProviders(<CardAsset id="img-1" selected />, {
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {updating: false})})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset, {updating: false})}),
+      },
     })
     expect(
-      container.querySelectorAll('[data-sanity-icon="checkmark-circle"]').length
+      container.querySelectorAll('[data-sanity-icon="checkmark-circle"]').length,
     ).toBeGreaterThan(0)
   })
 
   it('does not show the checkmark overlay while updating even if selected', () => {
     const {container} = renderWithProviders(<CardAsset id="img-1" selected />, {
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {updating: true})})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset, {updating: true})}),
+      },
     })
     expect(container.querySelectorAll('[data-sanity-icon="checkmark-circle"]')).toHaveLength(0)
   })
@@ -303,8 +304,8 @@ describe('CardAsset', () => {
   it('shows a spinner while updating', () => {
     renderWithProviders(<CardAsset id="img-1" selected={false} />, {
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {updating: true})})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset, {updating: true})}),
+      },
     })
     expect(document.body.querySelectorAll('[data-ui="Spinner"]').length).toBeGreaterThan(0)
   })
@@ -312,11 +313,11 @@ describe('CardAsset', () => {
   it('shows a warning icon when the asset item has an error', () => {
     const {container} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
       preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {error: 'Upload failed'})})
-      }
+        assets: assetsState({'img-1': assetItem(imageAsset, {error: 'Upload failed'})}),
+      },
     })
     expect(
-      container.querySelectorAll('[data-sanity-icon="warning-filled"]').length
+      container.querySelectorAll('[data-sanity-icon="warning-filled"]').length,
     ).toBeGreaterThan(0)
   })
 })
