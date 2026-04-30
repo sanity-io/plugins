@@ -55,9 +55,11 @@ export type UserConfig<
 /**
  * A preset definition describes how to produce a Sanity schema type.
  *
- * - `name` is the default schema type name. Consumers can override this at the
- *   call site (e.g. `defineLink({name: 'myLink'})`); the registry will make
- *   sure the override reaches the `schemaType` factory via its config.
+ * - `name` is the registry key for the preset (it determines the
+ *   `define<Name>` function and the `PresetsRegistryConfig` key).
+ * - `defaultName` is the schema type name used when the caller does not pass
+ *   one. Falls back to `name` when omitted. Use this when `name` would
+ *   collide with a Sanity reserved type name (e.g. `image`).
  * - `identifier` is an optional stable identifier used for telemetry.
  * - `schemaType` is the factory that produces the Sanity schema type. It
  *   receives the merged config (minus `map`, with `name` guaranteed by the
@@ -69,6 +71,7 @@ export interface PresetDefinition<
   LockedProperties extends string | undefined = undefined,
 > {
   name: string
+  defaultName?: string
   identifier?: string
   schemaType: (
     config: Omit<DerivedConfig<Context, AliasedType, LockedProperties>, 'map' | 'name'> & {

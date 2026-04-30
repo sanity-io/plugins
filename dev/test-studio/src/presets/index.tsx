@@ -53,8 +53,9 @@ export const presetsWorkspace = definePlugin(() => ({
         // presentation, the page preset doesn't include any page builder blocks
         // by default.
         //
-        // Here, the "Blockquote" type is included.
-        pageBuilderBlocks: ['blockquote'],
+        // Here, the "Blockquote" type and the default `defineImage()` block
+        // (registered below as `imageObject`) are included.
+        pageBuilderBlocks: ['blockquote', 'imageObject'],
         // The page preset includes "Main" and "Metadata" groups for structuring
         // the document editor. Additional groups can be created by adding them
         // to the `groups` array.
@@ -137,6 +138,10 @@ export const presetsWorkspace = definePlugin(() => ({
           ],
         },
       }),
+      // Calling `defineImage()` with no arguments registers the preset's
+      // default top-level image type (named `imageObject`). The default
+      // intentionally avoids Sanity's reserved `image` type name.
+      defineImage(),
       // Defaults enable all three embedded objects: link, image, and cta.
       defineRichText({
         name: 'richTextDefaults',

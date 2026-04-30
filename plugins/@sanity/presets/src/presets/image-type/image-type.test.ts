@@ -6,6 +6,7 @@ import {imageType} from './index'
 describe('imageType', () => {
   test('has the expected name and identifier', () => {
     expect(imageType.name).toBe('image')
+    expect(imageType.defaultName).toBe('imageObject')
     expect(imageType.identifier).toBe('core.image')
   })
 

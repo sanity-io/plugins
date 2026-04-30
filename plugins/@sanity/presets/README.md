@@ -257,6 +257,8 @@ The SEO preset is also composed into the page preset, where it appears as an inl
 
 The image preset produces an object type for images with optional alt text and caption fields. It includes built-in preview configuration.
 
+When `name` is omitted, the preset defaults to `imageObject`. The default avoids `image`, which Sanity reserves for the built-in image type and cannot be used as a custom schema type name.
+
 ```ts
 defineImage({
   name: 'heroImage',
@@ -277,11 +279,12 @@ defineImage({
 
 **Options:**
 
-| Option    | Type      | Default | Description                 |
-| --------- | --------- | ------- | --------------------------- |
-| `altText` | `boolean` | `true`  | Include the alt text field. |
-| `caption` | `boolean` | `true`  | Include the caption field.  |
-| `hotspot` | `boolean` | `true`  | Enable image hotspot.       |
+| Option    | Type      | Default       | Description                                                                                       |
+| --------- | --------- | ------------- | ------------------------------------------------------------------------------------------------- |
+| `name`    | `string`  | `imageObject` | Schema type name. Override when registering multiple image types or composing inside other types. |
+| `altText` | `boolean` | `true`        | Include the alt text field.                                                                       |
+| `caption` | `boolean` | `true`        | Include the caption field.                                                                        |
+| `hotspot` | `boolean` | `true`        | Enable image hotspot.                                                                             |
 
 ### Rich text
 
@@ -406,7 +409,7 @@ definePage({
   title: 'Blog Post',
   // These types must be defined in your schema.
   // See "Use presets alongside custom types" for more.
-  pageBuilderBlocks: ['richText', 'image'],
+  pageBuilderBlocks: ['richText', 'imageObject'],
   groups: [{name: 'settings', title: 'Settings'}],
   fields: [
     defineField({

@@ -91,7 +91,7 @@ function createDefiner({registryId, preset, config, registry}: CreateDefinerOpti
     // oxlint-disable-next-line no-unsafe-type-assertion -- PresetsRegistryConfig is keyed by preset name; dynamic lookup is safe
     const registryDefaults = (config as Record<string, unknown>)[preset.name]
     const mergedConfig: Record<string, unknown> = {
-      name: preset.name,
+      name: preset.defaultName ?? preset.name,
       ...(typeof registryDefaults === 'object' && registryDefaults !== null
         ? registryDefaults
         : {}),

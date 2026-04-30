@@ -10,6 +10,7 @@ export interface ImageTypeConfig {
 
 export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>({
   name: 'image',
+  defaultName: 'imageObject',
   identifier: 'core.image',
   schemaType: (config) => {
     const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = config
