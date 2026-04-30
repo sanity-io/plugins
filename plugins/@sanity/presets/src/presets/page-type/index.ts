@@ -1,9 +1,18 @@
-import {ALL_FIELDS_GROUP, defineArrayMember, defineField, defineType} from 'sanity'
+import {
+  ALL_FIELDS_GROUP,
+  defineArrayMember,
+  defineField,
+  defineType,
+  type FieldDefinition,
+  type SchemaTypeDefinition,
+} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
 
+export type PageBuilderBlock = string | (SchemaTypeDefinition & FieldDefinition)
+
 export interface PageTypeConfig {
-  pageBuilderBlocks?: string[]
+  pageBuilderBlocks?: PageBuilderBlock[]
 }
 
 export const pageType = definePresetType<PageTypeConfig, 'document'>({
@@ -54,10 +63,8 @@ export const pageType = definePresetType<PageTypeConfig, 'document'>({
           title: 'Content',
           group: 'main',
           type: 'array',
-          of: (pageBuilderBlocks ?? []).map((typeName) =>
-            defineArrayMember({
-              type: typeName,
-            }),
+          of: (pageBuilderBlocks ?? []).map((block) =>
+            typeof block === 'string' ? defineArrayMember({type: block}) : defineArrayMember(block),
           ),
         }),
         registry.getPreset('seo', {

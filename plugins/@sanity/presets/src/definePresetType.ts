@@ -42,9 +42,8 @@ export type DerivedConfig<
 
 /**
  * The public-facing config shape that a registry's `define<Name>` function
- * accepts at the call site. Includes the full `DerivedConfig` (with optional
- * `map` and optional `name` — the registry falls back to the preset's default
- * name when `name` is omitted).
+ * accepts at the call site. Includes the full `DerivedConfig` with required
+ * `name` (inherited from `FieldDefinitionBase`) and optional `map`.
  */
 export type UserConfig<
   Context = {},
@@ -57,13 +56,10 @@ export type UserConfig<
  *
  * - `name` is the registry key for the preset (it determines the
  *   `define<Name>` function and the `PresetsRegistryConfig` key).
- * - `defaultName` is the schema type name used when the caller does not pass
- *   one. Falls back to `name` when omitted. Use this when `name` would
- *   collide with a Sanity reserved type name (e.g. `image`).
  * - `identifier` is an optional stable identifier used for telemetry.
  * - `schemaType` is the factory that produces the Sanity schema type. It
- *   receives the merged config (minus `map`, with `name` guaranteed by the
- *   registry) and the registry context, and returns a `SchemaTypeDefinition`.
+ *   receives the merged config (minus `map`) and the registry context, and
+ *   returns a `SchemaTypeDefinition`.
  */
 export interface PresetDefinition<
   Context = {},
@@ -71,7 +67,6 @@ export interface PresetDefinition<
   LockedProperties extends string | undefined = undefined,
 > {
   name: string
-  defaultName?: string
   identifier?: string
   schemaType: (
     config: Omit<DerivedConfig<Context, AliasedType, LockedProperties>, 'map' | 'name'> & {

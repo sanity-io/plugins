@@ -163,6 +163,8 @@ definePage({
 })
 ```
 
+`pageBuilderBlocks` accepts string type-name references for types defined elsewhere in your schema, or inline preset instances such as `defineImage({name: 'imageBlock'})`. Mix both in the same array.
+
 **Fields:**
 
 | Field     | Type     | Group    | Description                                                                      |
@@ -176,11 +178,11 @@ definePage({
 
 **Options:**
 
-| Option              | Type                     | Description                                     |
-| ------------------- | ------------------------ | ----------------------------------------------- |
-| `pageBuilderBlocks` | `string[]`               | Type names to include in the content array.     |
-| `fields`            | `FieldDefinition[]`      | Additional fields to append.                    |
-| `groups`            | `FieldGroupDefinition[]` | Additional groups to append after the defaults. |
+| Option              | Type                                 | Description                                                            |
+| ------------------- | ------------------------------------ | ---------------------------------------------------------------------- |
+| `pageBuilderBlocks` | `(string \| SchemaTypeDefinition)[]` | Type names or inline preset instances to include in the content array. |
+| `fields`            | `FieldDefinition[]`                  | Additional fields to append.                                           |
+| `groups`            | `FieldGroupDefinition[]`             | Additional groups to append after the defaults.                        |
 
 The page preset is not the only way to create page documents. It provides opinionated defaults to get started quickly. For specialised page types, use `defineType` directly. See the [document type documentation](https://www.sanity.io/docs/studio/document-type).
 
@@ -257,8 +259,6 @@ The SEO preset is also composed into the page preset, where it appears as an inl
 
 The image preset produces an object type for images with optional alt text and caption fields. It includes built-in preview configuration.
 
-When `name` is omitted, the preset defaults to `imageObject`. The default avoids `image`, which Sanity reserves for the built-in image type and cannot be used as a custom schema type name.
-
 ```ts
 defineImage({
   name: 'heroImage',
@@ -279,12 +279,11 @@ defineImage({
 
 **Options:**
 
-| Option    | Type      | Default       | Description                                                                                       |
-| --------- | --------- | ------------- | ------------------------------------------------------------------------------------------------- |
-| `name`    | `string`  | `imageObject` | Schema type name. Override when registering multiple image types or composing inside other types. |
-| `altText` | `boolean` | `true`        | Include the alt text field.                                                                       |
-| `caption` | `boolean` | `true`        | Include the caption field.                                                                        |
-| `hotspot` | `boolean` | `true`        | Enable image hotspot.                                                                             |
+| Option    | Type      | Default | Description                 |
+| --------- | --------- | ------- | --------------------------- |
+| `altText` | `boolean` | `true`  | Include the alt text field. |
+| `caption` | `boolean` | `true`  | Include the caption field.  |
+| `hotspot` | `boolean` | `true`  | Enable image hotspot.       |
 
 ### Rich text
 
@@ -409,7 +408,7 @@ definePage({
   title: 'Blog Post',
   // These types must be defined in your schema.
   // See "Use presets alongside custom types" for more.
-  pageBuilderBlocks: ['richText', 'imageObject'],
+  pageBuilderBlocks: ['richText', defineImage({name: 'imageBlock'})],
   groups: [{name: 'settings', title: 'Settings'}],
   fields: [
     defineField({

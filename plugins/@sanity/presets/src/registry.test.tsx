@@ -1,7 +1,7 @@
 /// <reference types="@testing-library/jest-dom" />
 import {cleanup, render, screen} from '@testing-library/react'
 import type {FunctionComponent} from 'react'
-import type {IntrinsicTypeName, InputProps} from 'sanity'
+import type {InputProps} from 'sanity'
 import {afterEach, assert, describe, expect, vi} from 'vitest'
 
 import {getPresetKey} from './registry'
@@ -20,47 +20,20 @@ describe('createPresetsRegistry', () => {
     expect(typeof registry.definePage).toBe('function')
   })
 
-  // Mirrors Sanity's `IntrinsicTypeName` union. The `Record` shape is
-  // exhaustive over `IntrinsicTypeName`, so adding a new intrinsic upstream
-  // surfaces here as a TypeScript error instead of as a Studio boot error
-  // when a preset default silently collides with the new built-in.
-  const RESERVED_NAME_RECORD: Record<IntrinsicTypeName, true> = {
-    array: true,
-    block: true,
-    boolean: true,
-    crossDatasetReference: true,
-    date: true,
-    datetime: true,
-    document: true,
-    email: true,
-    file: true,
-    geopoint: true,
-    globalDocumentReference: true,
-    image: true,
-    number: true,
-    object: true,
-    reference: true,
-    slug: true,
-    string: true,
-    text: true,
-    url: true,
-  }
-  const RESERVED_TYPE_NAMES = new Set(Object.keys(RESERVED_NAME_RECORD))
-
-  test('every define<Name>() with no args produces a non-reserved schema name', ({registry}) => {
+  test('every define<Name>() throws when called with no args', ({registry}) => {
     const definers = Object.entries(registry).filter(
-      (entry): entry is [string, (config?: Record<string, unknown>) => {name: string}] =>
+      (entry): entry is [string, (config: Record<string, unknown>) => {name: string}] =>
         entry[0].startsWith('define') && typeof entry[1] === 'function',
     )
 
     expect(definers.length).toBeGreaterThan(0)
 
     definers.forEach(([key, define]) => {
-      const result = define()
-      expect(
-        RESERVED_TYPE_NAMES.has(result.name),
-        `${key}() produced reserved schema name "${result.name}"`,
-      ).toBe(false)
+      // oxlint-disable-next-line no-unsafe-type-assertion -- exercising the runtime guard for missing config
+      const callWithNoArgs = define as () => unknown
+      expect(callWithNoArgs, `${key}() should throw when called with no args`).toThrow(
+        /define\w+: "name" is required/,
+      )
     })
   })
 
