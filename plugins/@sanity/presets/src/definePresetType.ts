@@ -42,9 +42,8 @@ export type DerivedConfig<
 
 /**
  * The public-facing config shape that a registry's `define<Name>` function
- * accepts at the call site. Includes the full `DerivedConfig` (with optional
- * `map` and optional `name` — the registry falls back to the preset's default
- * name when `name` is omitted).
+ * accepts at the call site. Includes the full `DerivedConfig` with required
+ * `name` (inherited from `FieldDefinitionBase`) and optional `map`.
  */
 export type UserConfig<
   Context = {},
@@ -55,13 +54,12 @@ export type UserConfig<
 /**
  * A preset definition describes how to produce a Sanity schema type.
  *
- * - `name` is the default schema type name. Consumers can override this at the
- *   call site (e.g. `defineLink({name: 'myLink'})`); the registry will make
- *   sure the override reaches the `schemaType` factory via its config.
+ * - `name` is the registry key for the preset (it determines the
+ *   `define<Name>` function and the `PresetsRegistryConfig` key).
  * - `identifier` is an optional stable identifier used for telemetry.
  * - `schemaType` is the factory that produces the Sanity schema type. It
- *   receives the merged config (minus `map`, with `name` guaranteed by the
- *   registry) and the registry context, and returns a `SchemaTypeDefinition`.
+ *   receives the merged config (minus `map`) and the registry context, and
+ *   returns a `SchemaTypeDefinition`.
  */
 export interface PresetDefinition<
   Context = {},

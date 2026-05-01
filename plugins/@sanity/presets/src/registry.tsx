@@ -28,7 +28,7 @@ export interface PresetsRegistryConfig {
 type DefineFunction<Preset extends AnyPresetDefinition> =
   Preset extends PresetDefinition<infer Context, infer AliasedType, infer LockedProperties>
     ? (
-        config?: UserConfig<Context, AliasedType, LockedProperties>,
+        config: UserConfig<Context, AliasedType, LockedProperties>,
       ) => SchemaTypeDefinition & FieldDefinition
     : never
 
@@ -84,6 +84,13 @@ interface CreateDefinerOptions {
 
 function createDefiner({registryId, preset, config, registry}: CreateDefinerOptions): Definer {
   return function define(userConfig = {}) {
+    const name = userConfig['name']
+    if (typeof name !== 'string' || name.length === 0) {
+      throw new Error(
+        `${getPresetKey(preset.name)}: "name" is required. Pass {name: "yourTypeName"}.`,
+      )
+    }
+
     recordPresetUsage(registryId, preset.identifier ?? 'unnamed')
 
     const registryContext = createRegistryContext({registry})
@@ -91,7 +98,6 @@ function createDefiner({registryId, preset, config, registry}: CreateDefinerOpti
     // oxlint-disable-next-line no-unsafe-type-assertion -- PresetsRegistryConfig is keyed by preset name; dynamic lookup is safe
     const registryDefaults = (config as Record<string, unknown>)[preset.name]
     const mergedConfig: Record<string, unknown> = {
-      name: preset.name,
       ...(typeof registryDefaults === 'object' && registryDefaults !== null
         ? registryDefaults
         : {}),

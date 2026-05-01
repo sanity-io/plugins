@@ -20,6 +20,23 @@ describe('createPresetsRegistry', () => {
     expect(typeof registry.definePage).toBe('function')
   })
 
+  test('every define<Name>() throws when called with no args', ({registry}) => {
+    const definers = Object.entries(registry).filter(
+      (entry): entry is [string, (config: Record<string, unknown>) => {name: string}] =>
+        entry[0].startsWith('define') && typeof entry[1] === 'function',
+    )
+
+    expect(definers.length).toBeGreaterThan(0)
+
+    definers.forEach(([key, define]) => {
+      // oxlint-disable-next-line no-unsafe-type-assertion -- exercising the runtime guard for missing config
+      const callWithNoArgs = define as () => unknown
+      expect(callWithNoArgs, `${key}() should throw when called with no args`).toThrow(
+        /define\w+: "name" is required/,
+      )
+    })
+  })
+
   test('defineLink returns a schema type definition', ({registry}) => {
     const result = registry.defineLink({name: 'testLink'})
 

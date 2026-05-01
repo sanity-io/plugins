@@ -163,6 +163,8 @@ definePage({
 })
 ```
 
+Each entry in `pageBuilderBlocks` is either a string referencing a type in your schema, or an inline schema type definition - typically a preset instance such as `defineImage({name: 'imageBlock'})`. Mix both freely.
+
 **Fields:**
 
 | Field     | Type     | Group    | Description                                                                      |
@@ -176,11 +178,11 @@ definePage({
 
 **Options:**
 
-| Option              | Type                     | Description                                     |
-| ------------------- | ------------------------ | ----------------------------------------------- |
-| `pageBuilderBlocks` | `string[]`               | Type names to include in the content array.     |
-| `fields`            | `FieldDefinition[]`      | Additional fields to append.                    |
-| `groups`            | `FieldGroupDefinition[]` | Additional groups to append after the defaults. |
+| Option              | Type                     | Description                                                                   |
+| ------------------- | ------------------------ | ----------------------------------------------------------------------------- |
+| `pageBuilderBlocks` | `PageBuilderBlock[]`     | Type names or inline schema type definitions to include in the content array. |
+| `fields`            | `FieldDefinition[]`      | Additional fields to append.                                                  |
+| `groups`            | `FieldGroupDefinition[]` | Additional groups to append after the defaults.                               |
 
 The page preset is not the only way to create page documents. It provides opinionated defaults to get started quickly. For specialised page types, use `defineType` directly. See the [document type documentation](https://www.sanity.io/docs/studio/document-type).
 
@@ -406,7 +408,7 @@ definePage({
   title: 'Blog Post',
   // These types must be defined in your schema.
   // See "Use presets alongside custom types" for more.
-  pageBuilderBlocks: ['richText', 'image'],
+  pageBuilderBlocks: ['richText', defineImage({name: 'imageBlock'})],
   groups: [{name: 'settings', title: 'Settings'}],
   fields: [
     defineField({
