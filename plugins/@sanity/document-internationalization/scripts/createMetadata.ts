@@ -1,5 +1,5 @@
 import {randomKey} from '@sanity/util/content'
-import {Reference, SanityDocumentLike} from 'sanity'
+import {type Reference, type SanityDocumentLike} from 'sanity'
 import {getCliClient} from 'sanity/cli'
 
 /**
@@ -103,11 +103,6 @@ const buildMetadata = (docs: DocumentWithRefs[]) => {
     }))
 }
 
-const createTransaction = (patches) =>
-  patches.reduce((tx, patch) => tx.patch(patch.id, patch.patch), client.transaction())
-
-const commitTransaction = (tx) => tx.commit()
-
 const migrateNextBatch = async () => {
   // Get all docs that match query
   const documents = await fetchDocuments()
@@ -138,12 +133,11 @@ const migrateNextBatch = async () => {
     patches.map((patch) => `${patch.id} => ${JSON.stringify(patch.patch)}`).join('\n'),
   )
 
-  await commitTransaction(tx)
+  await tx.commit()
   return migrateNextBatch()
 }
 
 migrateNextBatch().catch((err) => {
   console.error(err)
-  // eslint-disable-next-line no-process-exit
   process.exit(1)
 })

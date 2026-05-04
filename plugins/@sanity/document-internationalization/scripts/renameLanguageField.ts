@@ -1,4 +1,4 @@
-import {SanityDocumentLike} from 'sanity'
+import {type SanityDocumentLike} from 'sanity'
 import {getCliClient} from 'sanity/cli'
 
 /**
@@ -52,11 +52,6 @@ const buildPatches = (docs: SanityDocumentLike[]) =>
     },
   }))
 
-const createTransaction = (patches) =>
-  patches.reduce((tx, patch) => tx.patch(patch.id, patch.patch), client.transaction())
-
-const commitTransaction = (tx) => tx.commit()
-
 const migrateNextBatch = async () => {
   const documents = await fetchDocuments()
   const patches = buildPatches(documents)
@@ -70,13 +65,15 @@ const migrateNextBatch = async () => {
     `Migrating batch:\n %s`,
     patches.map((patch) => `${patch.id} => ${JSON.stringify(patch.patch)}`).join('\n'),
   )
-  const transaction = createTransaction(patches)
-  await commitTransaction(transaction)
+  const transaction = patches.reduce(
+    (tx, patch) => tx.patch(patch.id, patch.patch),
+    client.transaction(),
+  )
+  await transaction.commit()
   return migrateNextBatch()
 }
 
 migrateNextBatch().catch((err) => {
   console.error(err)
-  // eslint-disable-next-line no-process-exit
   process.exit(1)
 })

@@ -55,11 +55,11 @@ This plugin uses [sanity-plugin-internationalized-array](https://github.com/sani
 
 **Important:** When configuring the migration, include `'translation.metadata'` in the document types so that your translation metadata documents are migrated:
 
-### 1. Backup your data.
+### 1. Backup your data
 
 You can manually backup your data using the sanity CLI.
 
-```
+```bash
 sanity dataset export production
 ```
 
@@ -67,19 +67,19 @@ This creates a production.tar.gz file in your current directory containing all y
 
 You can also specify a custom filename and location:
 
-```
+```bash
 sanity dataset export production ./backups/backup-2026-02-16.tar.gz
 ```
 
 If you ever need to restore, use the import command:
 
-```
+```bash
 sanity dataset import backup-2026-02-16.tar.gz production
 ```
 
-Or you can use the backup service, read more at https://www.sanity.io/docs/content-lake/backups
+Or you can use the backup service, read more in the [Content Lake backups documentation](https://www.sanity.io/docs/content-lake/backups).
 
-### 2. Update your GROQ queries.
+### 2. Update your GROQ queries
 
 Use a backwards compatible query until your migration is ready and has been executed.
 
