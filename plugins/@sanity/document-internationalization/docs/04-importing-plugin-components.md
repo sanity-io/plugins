@@ -38,6 +38,8 @@ export function MyComponent({_id, _type}) {
 
   if (!schemaType) return null
 
-  return <DocumentInternationalizationMenu documentId={getPublishedId(_id)} schemaType={schemaType} />
+  return (
+    <DocumentInternationalizationMenu documentId={getPublishedId(_id)} schemaType={schemaType} />
+  )
 }
 ```
