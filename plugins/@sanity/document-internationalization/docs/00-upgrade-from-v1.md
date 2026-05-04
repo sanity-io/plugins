@@ -5,7 +5,7 @@
 **I'm on Sanity Studio v3 and upgrading from plugin v1.0.0 and above**
 
 - You will need to perform a content migration to upgrade. See ["Upgrading from v1 to v2"](#upgrading-from-v1-to-v2)
-- Your queries will also need to change, as translation references have moved. See the [Querying](#querying-with-groq) and [Querying with GraphQL](#querying-with-graphql) sections below. [GraphQL](#)
+- Your queries will also need to change, as translation references have moved. See ["Upgrading from v1 to v2"](#upgrading-from-v1-to-v2) below for migration guidance, including query updates.
 
 **I'm on Sanity Studio v3 but will stay with the older plugin for now**
 
