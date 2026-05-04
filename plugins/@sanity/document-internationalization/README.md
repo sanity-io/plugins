@@ -128,11 +128,11 @@ Previously we updated the GROQ queries to support both locations for the languag
 
 ## Upgrade from V1
 
-If upgrading from a previous version (v1), please see the [upgrade documentation](https://github.com/sanity-io/document-internationalization/blob/main/docs/00-upgrade-from-v1.md) in the original repository.
-And change `_key: doc[LANGUAGE_FIELD]` to `language: doc[LANGUAGE_FIELD]` in https://github.com/sanity-io/document-internationalization/blob/main/scripts/createMetadata.ts#L80
+If upgrading from a previous version (v1), please see the [upgrade documentation](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/00-upgrade-from-v1.md) in this repository.
+And change `_key: doc[LANGUAGE_FIELD]` to `language: doc[LANGUAGE_FIELD]` in [`scripts/createMetadata.ts`](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/scripts/createMetadata.ts#L80).
 
 ```diff
-// https://github.com/sanity-io/document-internationalization/blob/main/scripts/createMetadata.ts#L80
+// https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/scripts/createMetadata.ts#L80
 -  _key: doc[LANGUAGE_FIELD]
 +  language: doc[LANGUAGE_FIELD]
 ```
@@ -392,15 +392,15 @@ This means if you have 100 documents and they are all translated into 3 language
 
 ## Documentation
 
-For more advanced topics see the [original repository documentation](https://github.com/sanity-io/document-internationalization/tree/main/docs).
+For more advanced topics see the [repository documentation](https://github.com/sanity-io/plugins/tree/main/plugins/%40sanity/document-internationalization/docs).
 
-- [Upgrade from v1](https://github.com/sanity-io/document-internationalization/blob/main/docs/00-upgrade-from-v1.md)
-- [Creating translations of singleton documents](https://github.com/sanity-io/document-internationalization/blob/main/docs/01-singleton-documents.md)
-- [Importing and creating documents](https://github.com/sanity-io/document-internationalization/blob/main/docs/02-importing-and-creating-documents.md)
-- [Deleting translated documents](https://github.com/sanity-io/document-internationalization/blob/main/docs/03-deleting-translated-documents.md)
-- [Importing plugin components](https://github.com/sanity-io/document-internationalization/blob/main/docs/04-importing-plugin-components.md)
-- [Allowing the same slug on different language versions](https://github.com/sanity-io/document-internationalization/blob/main/docs/05-allowing-the-same-slug-for-translations.md)
-- [Remove default new document template](https://github.com/sanity-io/document-internationalization/blob/main/docs/06-remove-default-new-document-template.md)
+- [Upgrade from v1](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/00-upgrade-from-v1.md)
+- [Creating translations of singleton documents](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/01-singleton-documents.md)
+- [Importing and creating documents](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/02-importing-and-creating-documents.md)
+- [Deleting translated documents](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/03-deleting-translated-documents.md)
+- [Importing plugin components](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/04-importing-plugin-components.md)
+- [Allowing the same slug on different language versions](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/05-allowing-the-same-slug-for-translations.md)
+- [Remove default new document template](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/06-remove-default-new-document-template.md)
 
 ## License
 
