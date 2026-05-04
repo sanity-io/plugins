@@ -129,13 +129,6 @@ Previously we updated the GROQ queries to support both locations for the languag
 ## Upgrade from V1
 
 If upgrading from a previous version (v1), please see the [upgrade documentation](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/00-upgrade-from-v1.md) in this repository.
-And change `_key: doc[LANGUAGE_FIELD]` to `language: doc[LANGUAGE_FIELD]` in [`scripts/createMetadata.ts`](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/scripts/createMetadata.ts#L80).
-
-```diff
-// https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/scripts/createMetadata.ts#L80
--  _key: doc[LANGUAGE_FIELD]
-+  language: doc[LANGUAGE_FIELD]
-```
 
 ## Install
 
