@@ -83,7 +83,7 @@ The resultant document looks like this:
   "_type": "translation.metadata",
   "translations": [
     {
-      "_key": "en",
+      "_key": "kjjNvZHK8Y2QpTEf3K5jc",
       "_type": "internationalizedArrayReferenceValue",
       "language": "en",
       "value": {
@@ -92,7 +92,7 @@ The resultant document looks like this:
       }
     },
     {
-      "_key": "no",
+      "_key": "9Hw3I5BNXZ72mCfJW6Pq1",
       "_type": "internationalizedArrayReferenceValue",
       "language": "no",
       "value": {

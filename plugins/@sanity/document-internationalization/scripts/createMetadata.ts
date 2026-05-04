@@ -1,3 +1,4 @@
+import {randomKey} from '@sanity/util/content'
 import {Reference, SanityDocumentLike} from 'sanity'
 import {getCliClient} from 'sanity/cli'
 
@@ -77,7 +78,7 @@ const buildMetadata = (docs: DocumentWithRefs[]) => {
       _type: 'translation.metadata',
       translations: [
         {
-          _key: doc[LANGUAGE_FIELD],
+          _key: randomKey(12),
           _type: 'internationalizedArrayReferenceValue',
           language: doc[LANGUAGE_FIELD],
           value: {
@@ -88,10 +89,10 @@ const buildMetadata = (docs: DocumentWithRefs[]) => {
               : {}),
           },
         },
-        ...doc[UNSET_REFS_FIELD].map(({_ref, _key, _weak}) => ({
-          _key,
+        ...doc[UNSET_REFS_FIELD].map(({_ref, _key: legacyKey, _weak}) => ({
+          _key: randomKey(12),
           _type: 'internationalizedArrayReferenceValue',
-          language: _key,
+          language: legacyKey,
           value: {
             _type: 'reference',
             _ref,

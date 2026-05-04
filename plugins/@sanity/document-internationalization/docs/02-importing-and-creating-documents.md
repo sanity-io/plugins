@@ -46,7 +46,7 @@ Once created as Sanity documents, they should look like this with an additional 
     "_type": "translation.metadata",
     "translations": [
         {
-            "_key": "en",
+            "_key": "kjjNvZHK8Y2QpTEf3K5jc",
             "_type": "internationalizedArrayReferenceValue",
             "language": "en",
             "value": {
@@ -55,7 +55,7 @@ Once created as Sanity documents, they should look like this with an additional 
             }
         },
         {
-            "_key": "no",
+            "_key": "9Hw3I5BNXZ72mCfJW6Pq1",
             "_type": "internationalizedArrayReferenceValue",
             "language": "no",
             "value": {
@@ -92,6 +92,7 @@ Here's an example script which could be run from the Sanity CLI to create these 
 
 import {getCliClient} from 'sanity/cli'
 import {uuid} from '@sanity/uuid'
+import {randomKey} from '@sanity/util/content'
 
 /**
  * This script is an example of how to create
@@ -126,7 +127,7 @@ async function importPosts() {
         _type: 'translation.metadata',
         // Use `documents` created above, not `DATA`!
         translations: documents.map((doc) => ({
-            _key: doc.language,
+            _key: randomKey(12),
             _type: 'internationalizedArrayReferenceValue',
             language: doc.language,
             value: {

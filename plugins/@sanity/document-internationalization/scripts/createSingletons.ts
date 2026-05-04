@@ -1,3 +1,4 @@
+import {randomKey} from '@sanity/util/content'
 import {getCliClient} from 'sanity/cli'
 
 /**
@@ -42,7 +43,7 @@ async function createSingletons() {
       _id: `${singleton.id}-translation-metadata`,
       _type: `translation.metadata`,
       translations: translations.map((translation) => ({
-        _key: translation.language,
+        _key: randomKey(12),
         _type: 'internationalizedArrayReferenceValue',
         language: translation.language,
         value: {
