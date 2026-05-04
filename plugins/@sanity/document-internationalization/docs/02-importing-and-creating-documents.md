@@ -45,24 +45,24 @@ Once created as Sanity documents, they should look like this with an additional 
     "_id": "89f8e852-2146-429b-83a9-4895cca84cb7",
     "_type": "translation.metadata",
     "translations": [
-        {
-            "_key": "kjjNvZHK8Y2QpTEf3K5jc",
-            "_type": "internationalizedArrayReferenceValue",
-            "language": "en",
-            "value": {
-                "_type": "reference",
-                "_ref": "9b4c2d23-0434-4a2d-be39-84674060d3de"
-            }
-        },
-        {
-            "_key": "9Hw3I5BNXZ72mCfJW6Pq1",
-            "_type": "internationalizedArrayReferenceValue",
-            "language": "no",
-            "value": {
-                "_type": "reference",
-                "_ref": "0fcdc874-84f3-4981-9721-cb4c125011b8"
-            }
+      {
+        "_key": "kjjNvZHK8Y2QpTEf3K5jc",
+        "_type": "internationalizedArrayReferenceValue",
+        "language": "en",
+        "value": {
+          "_type": "reference",
+          "_ref": "9b4c2d23-0434-4a2d-be39-84674060d3de"
         }
+      },
+      {
+        "_key": "9Hw3I5BNXZ72mCfJW6Pq1",
+        "_type": "internationalizedArrayReferenceValue",
+        "language": "no",
+        "value": {
+          "_type": "reference",
+          "_ref": "0fcdc874-84f3-4981-9721-cb4c125011b8"
+        }
+      }
     ]
   }
 ]
