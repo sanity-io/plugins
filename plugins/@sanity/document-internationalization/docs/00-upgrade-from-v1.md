@@ -214,4 +214,4 @@ You can now remove the `i18n` key from all document schemas, as the schema types
 
 The previous version of the plugin wrote language details to document `_id`s. This behavior was changed in a previous version of the plugin. Matching against the string `_id` of a document is an unreliable and slow way to query for documents.
 
-See the [GROQ and GraphQL examples in the README](../README.md#code-examples) for how to query for translations.
+See the [GROQ examples in the README](../README.md#querying-with-groq) and [GraphQL examples in the README](../README.md#querying-with-graphql) for how to query for translations.
