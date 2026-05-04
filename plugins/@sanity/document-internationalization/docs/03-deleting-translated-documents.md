@@ -13,7 +13,7 @@ Import into your Studio's config file
 ```ts
 import {
   documentInternationalization,
-  DeleteTranslationAction,
+  useDeleteTranslationAction,
 } from '@sanity/document-internationalization'
 
 export default defineConfig({
@@ -23,7 +23,7 @@ export default defineConfig({
       // Add to the same schema types you use for internationalization
       if (['page'].includes(schemaType)) {
         // You might also like to filter out the built-in "delete" action
-        return [...prev, DeleteTranslationAction]
+        return [...prev, useDeleteTranslationAction]
       }
 
       return prev

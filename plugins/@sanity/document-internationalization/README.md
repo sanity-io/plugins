@@ -401,6 +401,7 @@ For more advanced topics see the [repository documentation](https://github.com/s
 - [Importing plugin components](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/04-importing-plugin-components.md)
 - [Allowing the same slug on different language versions](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/05-allowing-the-same-slug-for-translations.md)
 - [Remove default new document template](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/06-remove-default-new-document-template.md)
+- [Duplicating translated documents](https://github.com/sanity-io/plugins/blob/main/plugins/%40sanity/document-internationalization/docs/07-duplicating-translated-documents.md)
 
 ## License
 

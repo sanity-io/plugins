@@ -43,6 +43,8 @@ async function createSingletons() {
       _type: `translation.metadata`,
       translations: translations.map((translation) => ({
         _key: translation.language,
+        _type: 'internationalizedArrayReferenceValue',
+        language: translation.language,
         value: {
           _type: 'reference',
           _ref: translation._id,

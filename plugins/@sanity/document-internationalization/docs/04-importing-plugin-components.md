@@ -30,9 +30,14 @@ The menu button shown at the top of documents can be imported anywhere and requi
 
 ```tsx
 import {DocumentInternationalizationMenu} from '@sanity/document-internationalization'
-import {getPublishedId} from 'sanity'
+import {getPublishedId, useSchema} from 'sanity'
 
 export function MyComponent({_id, _type}) {
-  return <DocumentInternationalizationMenu documentId={getPublishedId(_id)} schemaType={_type} />
+  const schema = useSchema()
+  const schemaType = schema.get(_type)
+
+  if (!schemaType) return null
+
+  return <DocumentInternationalizationMenu documentId={getPublishedId(_id)} schemaType={schemaType} />
 }
 ```

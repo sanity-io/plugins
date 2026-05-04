@@ -78,6 +78,8 @@ const buildMetadata = (docs: DocumentWithRefs[]) => {
       translations: [
         {
           _key: doc[LANGUAGE_FIELD],
+          _type: 'internationalizedArrayReferenceValue',
+          language: doc[LANGUAGE_FIELD],
           value: {
             _type: 'reference',
             _ref: doc._id.replace(`drafts.`, ``),
@@ -88,6 +90,8 @@ const buildMetadata = (docs: DocumentWithRefs[]) => {
         },
         ...doc[UNSET_REFS_FIELD].map(({_ref, _key, _weak}) => ({
           _key,
+          _type: 'internationalizedArrayReferenceValue',
+          language: _key,
           value: {
             _type: 'reference',
             _ref,
@@ -107,15 +111,8 @@ const migrateNextBatch = async () => {
   // Get all docs that match query
   const documents = await fetchDocuments()
 
-  // Create new metadata documents before unsetting
+  // Build metadata documents and patches
   const metadatas = buildMetadata(documents)
-  if (metadatas.length) {
-    const tx = client.transaction()
-    metadatas.forEach((metadata) => tx.create(metadata))
-    await commitTransaction(tx)
-  }
-
-  // Patch-out fields to remove
   const patches = buildPatches(documents)
 
   if (patches.length === 0) {
@@ -123,10 +120,16 @@ const migrateNextBatch = async () => {
     console.debug('No more documents to create or patch!')
     // eslint-disable-next-line no-console
     console.debug(
-      'Be sure to migrate your "language" field using the "renameLanguageField.ts" script or update your plugin configuration\'s "Langage Field" setting',
+      'Be sure to migrate your "language" field using the "renameLanguageField.ts" script or update your plugin configuration\'s "Language Field" setting',
     )
     return null
   }
+
+  // Combine metadata creation and field removal in a single transaction
+  // so that a partial failure cannot leave orphaned metadata documents
+  const tx = client.transaction()
+  metadatas.forEach((metadata) => tx.create(metadata))
+  patches.reduce((t, patch) => t.patch(patch.id, patch.patch), tx)
 
   // eslint-disable-next-line no-console
   console.debug(
@@ -134,8 +137,7 @@ const migrateNextBatch = async () => {
     patches.map((patch) => `${patch.id} => ${JSON.stringify(patch.patch)}`).join('\n'),
   )
 
-  const transaction = createTransaction(patches)
-  await commitTransaction(transaction)
+  await commitTransaction(tx)
   return migrateNextBatch()
 }
 

@@ -43,10 +43,12 @@ Once created as Sanity documents, they should look like this with an additional 
   },
   {
     "_id": "89f8e852-2146-429b-83a9-4895cca84cb7",
-    "_type": "translation.metadata"
+    "_type": "translation.metadata",
     "translations": [
         {
             "_key": "en",
+            "_type": "internationalizedArrayReferenceValue",
+            "language": "en",
             "value": {
                 "_type": "reference",
                 "_ref": "9b4c2d23-0434-4a2d-be39-84674060d3de"
@@ -54,6 +56,8 @@ Once created as Sanity documents, they should look like this with an additional 
         },
         {
             "_key": "no",
+            "_type": "internationalizedArrayReferenceValue",
+            "language": "no",
             "value": {
                 "_type": "reference",
                 "_ref": "0fcdc874-84f3-4981-9721-cb4c125011b8"
@@ -123,11 +127,13 @@ async function importPosts() {
         // Use `documents` created above, not `DATA`!
         translations: documents.map((doc) => ({
             _key: doc.language,
+            _type: 'internationalizedArrayReferenceValue',
+            language: doc.language,
             value: {
                 _type: 'reference',
                 _ref: doc._id
             }
-        }))
+        })),
         // Optional, used to filter references in the `translations` field
         schemaTypes: [documents[0]._type],
     }

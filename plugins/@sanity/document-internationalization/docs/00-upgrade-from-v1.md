@@ -50,9 +50,9 @@ In this repository are two scripts to help migrate content. One is required, the
 
 Please backup your dataset before running migration scripts.
 
-Instructions for how to perform this migration are written in the script itself: [https://github.com/sanity-io/document-internationalization/blob/main/scripts/createMetadata.ts](https://github.com/sanity-io/document-internationalization/blob/main/scripts/createMetadata.ts)
+Instructions for how to perform this migration are written in the script itself: [scripts/createMetadata.ts](../scripts/createMetadata.ts)
 
-The [createMetadata.ts](https://github.com/sanity-io/document-internationalization/blob/main/scripts/createMetadata.ts) script will look for all documents of a specific `_type` that contain the previous plugin's `__i18n_refs` array of references. Those arrays were written by the plugin and should look like this:
+The [createMetadata.ts](../scripts/createMetadata.ts) script will look for all documents of a specific `_type` that contain the previous plugin's `__i18n_refs` array of references. Those arrays were written by the plugin and should look like this:
 
 ```json
 "__i18n_refs": [
@@ -84,6 +84,8 @@ The resultant document looks like this:
   "translations": [
     {
       "_key": "en",
+      "_type": "internationalizedArrayReferenceValue",
+      "language": "en",
       "value": {
         "_ref": "32cb7277-1cfb-4ab1-ae1e-ab844dc8ab72__i18n_en_GB",
         "_type": "reference"
@@ -91,6 +93,8 @@ The resultant document looks like this:
     },
     {
       "_key": "no",
+      "_type": "internationalizedArrayReferenceValue",
+      "language": "no",
       "value": {
         "_ref": "32cb7277-1cfb-4ab1-ae1e-ab844dc8ab72__i18n_nl",
         "_type": "reference"
@@ -108,13 +112,13 @@ Make sure to configure the new plugin with your existing `languageField` setting
 
 Please backup your dataset before running migration scripts.
 
-Instructions for how to perform this migration are written in the script itself: [https://github.com/sanity-io/document-internationalization/blob/main/scripts/renameLanguageField.ts](https://github.com/sanity-io/document-internationalization/blob/main/scripts/renameLanguageField.ts)
+Instructions for how to perform this migration are written in the script itself: [scripts/renameLanguageField.ts](../scripts/renameLanguageField.ts)
 
 The previous plugin by default would write fields with double underscore prefixes (example: `__lang`) which did not work with GraphQL deployments.
 
 For data hygiene, you may prefer to have a normalized field name for the language field in your translated documents. The default field name for a document's language in the new plugin is `language`.
 
-[This script will update the field name](https://github.com/sanity-io/document-internationalization/blob/main/scripts/renameLanguageField.ts) `__i18n_lang` to `language` or can be customized to use the field name you used in the previous version of the plugin.
+[This script will update the field name](../scripts/renameLanguageField.ts) `__i18n_lang` to `language` or can be customized to use the field name you used in the previous version of the plugin.
 
 ## 2. Updating `sanity.config.ts`
 
@@ -128,7 +132,7 @@ npm install @sanity/document-internationalization@latest
 
 The previous version of the plugin recommended you wrap your plugins array and modify your desk structure using the `withDocumentI18nPlugin()` function. This is no longer required.
 
-Update your plugins array to load the plugin like you would any other. For configuration options see the [plugin documentation](https://github.com/sanity-io/document-internationalization/blob/main/README.md).:
+Update your plugins array to load the plugin like you would any other. For configuration options see the [plugin README](../README.md).:
 
 >
 
@@ -210,4 +214,4 @@ You can now remove the `i18n` key from all document schemas, as the schema types
 
 The previous version of the plugin wrote language details to document `_id`s. This behavior was changed in a previous version of the plugin. Matching against the string `_id` of a document is an unreliable and slow way to query for documents.
 
-See the [GROQ and GraphQL examples in the README](https://github.com/sanity-io/document-internationalization/tree/main#code-examples) for how to query for translations.
+See the [GROQ and GraphQL examples in the README](../README.md#code-examples) for how to query for translations.

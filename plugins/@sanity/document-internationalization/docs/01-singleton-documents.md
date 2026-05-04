@@ -13,7 +13,7 @@ For translated singletons you will need to:
 
 ## 1. Create the documents
 
-Instructions for how to perform this migration are written in the script itself: [https://github.com/sanity-io/document-internationalization/blob/main/scripts/createSingletons.ts](https://github.com/sanity-io/document-internationalization/blob/main/scripts/createSingletons.ts)
+Instructions for how to perform this migration are written in the script itself: [scripts/createSingletons.ts](../scripts/createSingletons.ts)
 
 This script will create a document for each singleton you need, and a translations document that will be used to bind them together.
 
@@ -52,7 +52,7 @@ export const structure: StructureResolver = (S) =>
               .items(
                 LANGUAGES.map((language) =>
                   S.documentListItem()
-                    .schemaType(`page`)
+                    .schemaType(singleton._type)
                     .id(`${singleton.id}-${language.id}`)
                     .title(`${singleton.title} (${language.id.toLocaleUpperCase()})`)
                 )

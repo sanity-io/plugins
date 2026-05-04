@@ -9,17 +9,19 @@ Import the document action and configure which document types will use it:
 ```ts
 import {
   documentInternationalization,
-  DuplicateWithTranslationsAction,
+  useDuplicateWithTranslationsAction,
 } from '@sanity/document-internationalization'
+
+// The schema types you're passing to the plugin configuration
+const translatedSchemaTypes = ['article', 'page']
 
 export default defineConfig({
   // ...all other config
   document: {
     actions(prev, {schemaType}) {
-      // these will be the schema types you're passing to the plugin configuration
-      return schemaTypes.includes(schemaType)
+      return translatedSchemaTypes.includes(schemaType)
         ? prev.map((action) =>
-            action.action === 'duplicate' ? DuplicateWithTranslationsAction : action,
+            action.action === 'duplicate' ? useDuplicateWithTranslationsAction : action,
           )
         : prev
     },
