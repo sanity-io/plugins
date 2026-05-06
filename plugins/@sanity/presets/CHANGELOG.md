@@ -1,5 +1,13 @@
 # @sanity/presets
 
+## 0.4.0
+
+### Minor Changes
+
+- [#859](https://github.com/sanity-io/plugins/pull/859) [`d9a9f21`](https://github.com/sanity-io/plugins/commit/d9a9f21af2b20dd55a3772ab10a3a6d439853319) Thanks [@jordanl17](https://github.com/jordanl17)! - `name` is now required on every `define<Type>` factory (`defineLink`, `defineCta`, `defineSeo`, `defineImage`, `definePage`, `defineRichText`). Calls without a name fail at the type level and throw at runtime.
+
+  `definePage`'s `pageBuilderBlocks` now accepts inline preset instances alongside string type-name references, so you can mix both: `pageBuilderBlocks: ['hero', defineImage({name: 'imageBlock'})]`.
+
 ## 0.3.0
 
 ### Minor Changes
