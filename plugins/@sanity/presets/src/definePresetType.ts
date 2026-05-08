@@ -1,4 +1,5 @@
 import type {
+  ArrayDefinition,
   FieldDefinition,
   FieldDefinitionBase,
   IntrinsicTypeName,
@@ -9,6 +10,15 @@ import type {PartialSchemaDefinition} from './types'
 
 export interface RegistryContext {
   getPreset: (presetName: string, config?: Record<string, unknown>) => FieldDefinition
+  /**
+   * Internal accessor used by built-in presets that wrap array members at
+   * composition boundaries (`pageType` wrapping array presets in
+   * `pageBuilderBlocks`). Returns the array schema if a registered preset
+   * with that name produced an array type, otherwise `undefined`. Not
+   * intended as a stable API for custom preset authors; durable dependencies
+   * on it should not be built.
+   */
+  lookupArrayPreset: (name: string) => ArrayDefinition | undefined
 }
 
 type ProhibitedProperties = 'type'

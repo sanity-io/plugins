@@ -1,6 +1,6 @@
 import {uuid} from '@sanity/uuid'
 import {type ComponentType} from 'react'
-import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
+import type {ArrayDefinition, FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
 import type {
@@ -48,9 +48,15 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
   // oxlint-disable-next-line no-unsafe-type-assertion -- seeding reduce with an empty object that is populated by each iteration
   const seed = {} as DefinerRecord & PresetsRegistry
 
+  // Tracks the schema produced under each defined preset name so `definePage`
+  // can resolve string references in `pageBuilderBlocks` regardless of
+  // definition order, and wrap array-typed presets at the page builder
+  // boundary.
+  const registeredSchemas = new Map<string, SchemaTypeDefinition>()
+
   return systemPresets.reduce((registry, preset) => {
     const key = getPresetKey(preset.name)
-    registry[key] = createDefiner({registryId, preset, config, registry})
+    registry[key] = createDefiner({registryId, preset, config, registry, registeredSchemas})
     return registry
   }, seed)
 }
@@ -62,7 +68,13 @@ export function getPresetKey(name: string): string {
 type Definer = (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
 type DefinerRecord = Record<string, Definer>
 
-function createRegistryContext({registry}: {registry: DefinerRecord}): RegistryContext {
+function createRegistryContext({
+  registry,
+  registeredSchemas,
+}: {
+  registry: DefinerRecord
+  registeredSchemas: Map<string, SchemaTypeDefinition>
+}): RegistryContext {
   return {
     getPreset: (name, presetConfig) => {
       const key = getPresetKey(name)
@@ -72,6 +84,11 @@ function createRegistryContext({registry}: {registry: DefinerRecord}): RegistryC
       }
       return definer(presetConfig)
     },
+    lookupArrayPreset: (name) => {
+      const registered = registeredSchemas.get(name)
+      // oxlint-disable-next-line no-unsafe-type-assertion -- discriminating on `type` does not narrow the intersected union
+      return registered?.type === 'array' ? (registered as ArrayDefinition) : undefined
+    },
   }
 }
 
@@ -80,9 +97,16 @@ interface CreateDefinerOptions {
   preset: AnyPresetDefinition
   config: PresetsRegistryConfig
   registry: DefinerRecord
+  registeredSchemas: Map<string, SchemaTypeDefinition>
 }
 
-function createDefiner({registryId, preset, config, registry}: CreateDefinerOptions): Definer {
+function createDefiner({
+  registryId,
+  preset,
+  config,
+  registry,
+  registeredSchemas,
+}: CreateDefinerOptions): Definer {
   return function define(userConfig = {}) {
     const name = userConfig['name']
     if (typeof name !== 'string' || name.length === 0) {
@@ -93,7 +117,7 @@ function createDefiner({registryId, preset, config, registry}: CreateDefinerOpti
 
     recordPresetUsage(registryId, preset.identifier ?? 'unnamed')
 
-    const registryContext = createRegistryContext({registry})
+    const registryContext = createRegistryContext({registry, registeredSchemas})
 
     // oxlint-disable-next-line no-unsafe-type-assertion -- PresetsRegistryConfig is keyed by preset name; dynamic lookup is safe
     const registryDefaults = (config as Record<string, unknown>)[preset.name]
@@ -111,6 +135,8 @@ function createDefiner({registryId, preset, config, registry}: CreateDefinerOpti
       factoryConfig as unknown as Parameters<AnyPresetDefinition['schemaType']>[0],
       registryContext,
     )
+
+    registeredSchemas.set(name, schemaType)
 
     // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
     return applyMapHooks(
