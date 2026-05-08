@@ -15,7 +15,6 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
     const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = config
 
     return defineType({
-      title: 'Image',
       ...objectConfig,
       type: 'object',
       fields: [

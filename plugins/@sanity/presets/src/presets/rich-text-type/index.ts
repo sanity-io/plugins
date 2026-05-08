@@ -51,7 +51,6 @@ export const richTextType = definePresetType<RichTextTypeConfig, 'array', 'of'>(
     })
 
     return defineType({
-      title: 'Rich text',
       ...arrayConfig,
       type: 'array',
       of: imageMember ? [blockMember, imageMember] : [blockMember],
