@@ -22,7 +22,6 @@ export const pageType = definePresetType<PageTypeConfig, 'document'>({
     const {pageBuilderBlocks, groups, fields, ...documentConfig} = config
 
     return defineType({
-      title: 'Page',
       ...documentConfig,
       type: 'document',
       groups: [

@@ -9,7 +9,6 @@ export const ctaType = definePresetType<{}, 'object', 'preview'>({
     const {fields, ...objectConfig} = config
 
     return defineType({
-      title: 'Call to action',
       ...objectConfig,
       type: 'object',
       fields: [

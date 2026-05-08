@@ -10,7 +10,6 @@ export const seoType = definePresetType<{}, 'object'>({
     const {fields, ...objectConfig} = config
 
     return defineType({
-      title: 'Web page metadata (SEO)',
       ...objectConfig,
       type: 'object',
       fields: [
