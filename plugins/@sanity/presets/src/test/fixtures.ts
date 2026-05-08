@@ -15,7 +15,6 @@ export const test = baseTest
   .extend('stubRegistry', (): RegistryContext => {
     return {
       getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
-      lookupArrayPreset: () => undefined,
     }
   })
   .extend('registryConfig', (): PresetsRegistryConfig => ({}))

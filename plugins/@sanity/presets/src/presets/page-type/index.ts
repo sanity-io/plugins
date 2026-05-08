@@ -8,9 +8,15 @@ import {
   type SchemaTypeDefinition,
 } from 'sanity'
 
-import {definePresetType, type RegistryContext} from '../../definePresetType'
+import {definePresetType} from '../../definePresetType'
 
 export type PageBuilderBlock = string | (SchemaTypeDefinition & FieldDefinition)
+
+// Resolves a string reference in `pageBuilderBlocks` to its registered schema
+// only when that name resolves to an array preset (otherwise `undefined`).
+// The registry injects this via `createPageType` so it can read the registered
+// schema map; standalone use of `pageType` falls back to a no-op lookup.
+type LookupArrayPreset = (name: string) => ArrayDefinition | undefined
 
 // Sanity rejects array members whose `type` resolves to another array. When a
 // page builder block is an array preset (e.g. `defineRichText`), wrap it in
@@ -36,9 +42,9 @@ function wrapArrayAsPageBuilderBlock(arraySchema: ArrayDefinition) {
   })
 }
 
-function toPageBuilderArrayMember(block: PageBuilderBlock, registry: RegistryContext) {
+function toPageBuilderArrayMember(block: PageBuilderBlock, lookupArrayPreset: LookupArrayPreset) {
   if (typeof block === 'string') {
-    const arrayPreset = registry.lookupArrayPreset(block)
+    const arrayPreset = lookupArrayPreset(block)
     if (arrayPreset) {
       return wrapArrayAsPageBuilderBlock(arrayPreset)
     }
@@ -58,7 +64,7 @@ function toPageBuilderArrayMember(block: PageBuilderBlock, registry: RegistryCon
 // reads `of` repeatedly and expects a stable array identity.
 function defineLazyContentField(
   blocks: PageBuilderBlock[],
-  registry: RegistryContext,
+  lookupArrayPreset: LookupArrayPreset,
 ): FieldDefinition {
   let cached: ReturnType<typeof toPageBuilderArrayMember>[] | undefined
   return defineField({
@@ -67,7 +73,7 @@ function defineLazyContentField(
     group: 'main',
     type: 'array',
     get of() {
-      cached ??= blocks.map((block) => toPageBuilderArrayMember(block, registry))
+      cached ??= blocks.map((block) => toPageBuilderArrayMember(block, lookupArrayPreset))
       return cached
     },
   })
@@ -77,57 +83,67 @@ export interface PageTypeConfig {
   pageBuilderBlocks?: PageBuilderBlock[]
 }
 
-export const pageType = definePresetType<PageTypeConfig, 'document'>({
-  name: 'page',
-  identifier: 'core.page',
-  schemaType: (config, registry) => {
-    const {pageBuilderBlocks, groups, fields, ...documentConfig} = config
+// Builds the page preset with an injected `lookupArrayPreset`. The registry
+// uses this to give `pageType` access to its registered schema map without
+// widening the public `RegistryContext` for all preset authors.
+export function createPageType({lookupArrayPreset}: {lookupArrayPreset: LookupArrayPreset}) {
+  return definePresetType<PageTypeConfig, 'document'>({
+    name: 'page',
+    identifier: 'core.page',
+    schemaType: (config, registry) => {
+      const {pageBuilderBlocks, groups, fields, ...documentConfig} = config
 
-    return defineType({
-      title: 'Page',
-      ...documentConfig,
-      type: 'document',
-      groups: [
-        {
-          ...ALL_FIELDS_GROUP,
-          hidden: true,
-        },
-        {
-          name: 'main',
-          title: 'Main',
-          default: true,
-        },
-        {
-          name: 'metadata',
-          title: 'Metadata',
-        },
-        ...(groups ?? []),
-      ],
-      fields: [
-        defineField({
-          name: 'name',
-          title: 'Name',
-          type: 'string',
-          group: 'main',
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: 'slug',
-          title: 'Slug',
-          type: 'slug',
-          group: 'main',
-          options: {
-            source: 'name',
+      return defineType({
+        title: 'Page',
+        ...documentConfig,
+        type: 'document',
+        groups: [
+          {
+            ...ALL_FIELDS_GROUP,
+            hidden: true,
           },
-        }),
-        defineLazyContentField(pageBuilderBlocks ?? [], registry),
-        registry.getPreset('seo', {
-          name: 'seo',
-          title: 'SEO',
-          group: 'metadata',
-        }),
-        ...(fields ?? []),
-      ],
-    })
-  },
-})
+          {
+            name: 'main',
+            title: 'Main',
+            default: true,
+          },
+          {
+            name: 'metadata',
+            title: 'Metadata',
+          },
+          ...(groups ?? []),
+        ],
+        fields: [
+          defineField({
+            name: 'name',
+            title: 'Name',
+            type: 'string',
+            group: 'main',
+            validation: (rule) => rule.required(),
+          }),
+          defineField({
+            name: 'slug',
+            title: 'Slug',
+            type: 'slug',
+            group: 'main',
+            options: {
+              source: 'name',
+            },
+          }),
+          defineLazyContentField(pageBuilderBlocks ?? [], lookupArrayPreset),
+          registry.getPreset('seo', {
+            name: 'seo',
+            title: 'SEO',
+            group: 'metadata',
+          }),
+          ...(fields ?? []),
+        ],
+      })
+    },
+  })
+}
+
+// Default instance used when `pageType` is imported directly (tests,
+// standalone composition). The registry replaces this at composition time
+// with an instance whose `lookupArrayPreset` reads its registered schemas.
+export const pageType = createPageType({lookupArrayPreset: () => undefined})

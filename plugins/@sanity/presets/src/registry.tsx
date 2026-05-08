@@ -12,12 +12,10 @@ import type {
 import {ctaType} from './presets/cta-type'
 import {imageType, type ImageTypeConfig} from './presets/image-type'
 import {linkType, type LinkTypeConfig} from './presets/link-type'
-import {pageType, type PageTypeConfig} from './presets/page-type'
+import {createPageType, pageType, type PageTypeConfig} from './presets/page-type'
 import {richTextType} from './presets/rich-text-type'
 import {seoType} from './presets/seo-type'
 import {recordPresetUsage, registerRegistry} from './telemetry'
-
-const systemPresets = [linkType, ctaType, seoType, imageType, pageType, richTextType] as const
 
 export interface PresetsRegistryConfig {
   link?: LinkTypeConfig
@@ -48,11 +46,28 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
   // oxlint-disable-next-line no-unsafe-type-assertion -- seeding reduce with an empty object that is populated by each iteration
   const seed = {} as DefinerRecord & PresetsRegistry
 
-  // Tracks the schema produced under each defined preset name so `definePage`
+  // Tracks the schema produced under each defined preset name so `pageType`
   // can resolve string references in `pageBuilderBlocks` regardless of
   // definition order, and wrap array-typed presets at the page builder
-  // boundary.
+  // boundary. Closure-injected into `pageType` via `createPageType` so it
+  // does not need to live on the public `RegistryContext`.
   const registeredSchemas = new Map<string, SchemaTypeDefinition>()
+  const pageTypeWithLookup = createPageType({
+    lookupArrayPreset: (name) => {
+      const registered = registeredSchemas.get(name)
+      // oxlint-disable-next-line no-unsafe-type-assertion -- discriminating on `type` does not narrow the intersected union
+      return registered?.type === 'array' ? (registered as ArrayDefinition) : undefined
+    },
+  })
+
+  const systemPresets = [
+    linkType,
+    ctaType,
+    seoType,
+    imageType,
+    pageTypeWithLookup,
+    richTextType,
+  ] as const
 
   return systemPresets.reduce((registry, preset) => {
     const key = getPresetKey(preset.name)
@@ -68,13 +83,7 @@ export function getPresetKey(name: string): string {
 type Definer = (config?: Record<string, unknown>) => SchemaTypeDefinition & FieldDefinition
 type DefinerRecord = Record<string, Definer>
 
-function createRegistryContext({
-  registry,
-  registeredSchemas,
-}: {
-  registry: DefinerRecord
-  registeredSchemas: Map<string, SchemaTypeDefinition>
-}): RegistryContext {
+function createRegistryContext({registry}: {registry: DefinerRecord}): RegistryContext {
   return {
     getPreset: (name, presetConfig) => {
       const key = getPresetKey(name)
@@ -83,11 +92,6 @@ function createRegistryContext({
         throw new Error(`Cannot resolve preset "${name}". No such preset in this registry.`)
       }
       return definer(presetConfig)
-    },
-    lookupArrayPreset: (name) => {
-      const registered = registeredSchemas.get(name)
-      // oxlint-disable-next-line no-unsafe-type-assertion -- discriminating on `type` does not narrow the intersected union
-      return registered?.type === 'array' ? (registered as ArrayDefinition) : undefined
     },
   }
 }
@@ -117,7 +121,7 @@ function createDefiner({
 
     recordPresetUsage(registryId, preset.identifier ?? 'unnamed')
 
-    const registryContext = createRegistryContext({registry, registeredSchemas})
+    const registryContext = createRegistryContext({registry})
 
     // oxlint-disable-next-line no-unsafe-type-assertion -- PresetsRegistryConfig is keyed by preset name; dynamic lookup is safe
     const registryDefaults = (config as Record<string, unknown>)[preset.name]

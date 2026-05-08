@@ -29,7 +29,7 @@ function makeStubRegistry(): RegistryContext & {
       })
     },
   )
-  return {getPreset, lookupArrayPreset: () => undefined}
+  return {getPreset}
 }
 
 function getOf(typeDef: SchemaTypeDefinition): Member[] {
