@@ -12,19 +12,10 @@ import {definePresetType} from '../../definePresetType'
 
 export type PageBuilderBlock = string | (SchemaTypeDefinition & FieldDefinition)
 
-// Resolves a string reference in `pageBuilderBlocks` to its registered schema
-// only when that name resolves to an array preset (otherwise `undefined`).
-// The registry injects this via `createPageType` so it can read the registered
-// schema map; standalone use of `pageType` falls back to a no-op lookup.
 type LookupArrayPreset = (name: string) => ArrayDefinition | undefined
 
-// Sanity rejects array members whose `type` resolves to another array. When a
-// page builder block is an array preset (e.g. `defineRichText`), wrap it in
-// an object whose `content` field holds the portable text array. The source
-// array's `components` (carrying the registry's telemetry collector) move to
-// the inner `content` field so usage tracking still fires when the editor
-// opens. Accepts the structural shape both call sites already produce so the
-// inline branch can pass an `ArrayDefinition` without an extra cast.
+// Sanity rejects array members whose `type` resolves to another array. Wrap
+// array presets in an object so they can serve as page-builder members.
 function wrapArrayAsPageBuilderBlock(arraySchema: ArrayDefinition) {
   const components = 'components' in arraySchema ? arraySchema.components : undefined
   return defineArrayMember({
@@ -57,11 +48,8 @@ function toPageBuilderArrayMember(block: PageBuilderBlock, lookupArrayPreset: Lo
   return defineArrayMember(block)
 }
 
-// `pageBuilderBlocks` may include string references to presets the user
-// defines later in their module. Defer materialising `content.of` until first
-// access via a getter, so the registry is fully populated by the time we
-// resolve names. The result is memoised because Sanity's schema compiler
-// reads `of` repeatedly and expects a stable array identity.
+// Defer building `content.of` so by-name references resolve after every
+// `define<X>` has run. Memoised for stable array identity across reads.
 function defineLazyContentField(
   blocks: PageBuilderBlock[],
   lookupArrayPreset: LookupArrayPreset,
@@ -83,9 +71,8 @@ export interface PageTypeConfig {
   pageBuilderBlocks?: PageBuilderBlock[]
 }
 
-// Builds the page preset with an injected `lookupArrayPreset`. The registry
-// uses this to give `pageType` access to its registered schema map without
-// widening the public `RegistryContext` for all preset authors.
+// `lookupArrayPreset` is closure-injected by the registry to keep it off
+// the public `RegistryContext`. The default `pageType` below uses a no-op.
 export function createPageType({lookupArrayPreset}: {lookupArrayPreset: LookupArrayPreset}) {
   return definePresetType<PageTypeConfig, 'document'>({
     name: 'page',
@@ -143,7 +130,4 @@ export function createPageType({lookupArrayPreset}: {lookupArrayPreset: LookupAr
   })
 }
 
-// Default instance used when `pageType` is imported directly (tests,
-// standalone composition). The registry replaces this at composition time
-// with an instance whose `lookupArrayPreset` reads its registered schemas.
 export const pageType = createPageType({lookupArrayPreset: () => undefined})
