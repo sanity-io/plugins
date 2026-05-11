@@ -81,7 +81,6 @@ export function createPageType({lookupArrayPreset}: {lookupArrayPreset: LookupAr
       const {pageBuilderBlocks, groups, fields, ...documentConfig} = config
 
       return defineType({
-        title: 'Page',
         ...documentConfig,
         type: 'document',
         groups: [
