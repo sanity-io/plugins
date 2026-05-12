@@ -28,6 +28,29 @@ export type PluginCallbackArgs = {
   client: SanityClient
 }
 
+/**
+ * Context passed to `languageFilter` when the Translations menu renders.
+ * Receives the schema type name of the document the menu is being rendered
+ * against, plus the fully resolved list of supported languages (the same
+ * list `supportedLanguages` produces).
+ */
+export type LanguageFilterContext = {
+  schemaType: string
+  defaultLanguages: Language[]
+}
+
+/**
+ * Synchronous filter applied to the language list shown in the Translations
+ * menu, scoped per document type. Receives the resolved `defaultLanguages`
+ * and must return a (possibly reordered, possibly empty) subset.
+ *
+ * The filter only affects the menu UI. Templates, badges, language patches
+ * driven from `supportedLanguages` and the data layer all keep using the
+ * full, unfiltered list, so existing translated documents never lose their
+ * badges or become unrouteable.
+ */
+export type LanguageFilter = (context: LanguageFilterContext) => Language[]
+
 export type PluginConfig = {
   supportedLanguages: SupportedLanguages
   schemaTypes: string[]
@@ -38,6 +61,15 @@ export type PluginConfig = {
   apiVersion?: string
   allowCreateMetaDoc?: boolean
   callback?: ((args: PluginCallbackArgs) => Promise<void>) | null
+  /**
+   * Restrict which languages appear in the Translations menu for a given
+   * schema type. Runs at menu render time, after `supportedLanguages` has
+   * been resolved. Returning an empty array yields a menu with no language
+   * options (the Manage Translations button still renders).
+   *
+   * Only the menu is affected. See {@link LanguageFilter} for details.
+   */
+  languageFilter?: LanguageFilter | null
   hideLanguageFilter?: boolean | string[] | ((ctx: DocumentLanguageFilterContext) => boolean)
   /**
    * Allows configuring the behavior of the internationalized array for the metadata document.

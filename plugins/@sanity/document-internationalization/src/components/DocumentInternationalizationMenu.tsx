@@ -19,7 +19,8 @@ export function DocumentInternationalizationMenu(
 ): React.JSX.Element | null {
   const {documentId} = props
   const schemaType = props.schemaType
-  const {languageField, supportedLanguages} = useDocumentInternationalizationContext()
+  const {languageField, supportedLanguages, languageFilter} =
+    useDocumentInternationalizationContext()
 
   // Search filter query
   const [query, setQuery] = useState(``)
@@ -78,6 +79,19 @@ export function DocumentInternationalizationMenu(
     return valid
   }, [supportedLanguages])
 
+  // Apply per-schemaType language filter (if configured). This affects ONLY
+  // what's rendered in the menu — validity checks above still run against the
+  // full, plugin-wide supportedLanguages list. See PluginConfig.languageFilter.
+  const menuLanguages = useMemo(() => {
+    if (typeof languageFilter !== 'function') {
+      return supportedLanguages
+    }
+    return languageFilter({
+      schemaType: schemaType.name,
+      defaultLanguages: supportedLanguages,
+    })
+  }, [languageFilter, schemaType.name, supportedLanguages])
+
   const content = (
     <Box padding={1}>
       {error ? (
@@ -93,10 +107,10 @@ export function DocumentInternationalizationMenu(
             schemaType={schemaType}
             sourceLanguageId={sourceLanguageId}
           />
-          {supportedLanguages.length > 4 ? (
+          {menuLanguages.length > 4 ? (
             <TextInput onChange={handleQuery} value={query} placeholder="Filter languages" />
           ) : null}
-          {supportedLanguages.length > 0 ? (
+          {menuLanguages.length > 0 ? (
             <>
               {/* Once metadata is loaded, there may be issues */}
               {loading ? null : (
@@ -127,7 +141,7 @@ export function DocumentInternationalizationMenu(
                   ) : null}
                 </>
               )}
-              {supportedLanguages
+              {menuLanguages
                 .filter((language) => {
                   if (query) {
                     return language.title.toLowerCase().includes(query.toLowerCase())

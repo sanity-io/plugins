@@ -229,4 +229,140 @@ describe('DocumentInternationalizationMenu', () => {
     })
     expect(screen.getByText('pt:other:enabled')).toBeInTheDocument()
   })
+
+  describe('languageFilter', () => {
+    test('renders the full supportedLanguages list when no languageFilter is configured', async () => {
+      vi.mocked(useTranslationMetadata).mockReturnValue({
+        data: [{_id: 'meta-1', _createdAt: '2024-01-01', translations: []}],
+        loading: false,
+        error: null,
+      })
+
+      render(
+        <DocumentInternationalizationMenu documentId="doc-1" schemaType={articleSchemaType} />,
+        {wrapper: ThemeWrapper},
+      )
+      fireEvent.click(screen.getByRole('button', {name: 'Translations'}))
+
+      await waitFor(() => {
+        expect(screen.getAllByTestId('language-option')).toHaveLength(MOCK_LANGUAGES.length)
+      })
+    })
+
+    test('restricts the menu to languages returned by languageFilter', async () => {
+      const languageFilter = vi.fn(({defaultLanguages}: {defaultLanguages: Language[]}) =>
+        defaultLanguages.filter((l) => l.id === 'en' || l.id === 'fr'),
+      )
+      vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
+        ...MOCK_PLUGIN_CONFIG,
+        languageFilter,
+      })
+      vi.mocked(useTranslationMetadata).mockReturnValue({
+        data: [{_id: 'meta-1', _createdAt: '2024-01-01', translations: []}],
+        loading: false,
+        error: null,
+      })
+
+      render(
+        <DocumentInternationalizationMenu documentId="doc-1" schemaType={articleSchemaType} />,
+        {wrapper: ThemeWrapper},
+      )
+      fireEvent.click(screen.getByRole('button', {name: 'Translations'}))
+
+      await waitFor(() => {
+        expect(screen.getAllByTestId('language-option')).toHaveLength(2)
+      })
+      const ids = screen
+        .getAllByTestId('language-option')
+        .map((node) => node.textContent?.split(':')[0])
+      expect(ids).toEqual(['en', 'fr'])
+    })
+
+    test('passes the document schemaType and resolved defaultLanguages to languageFilter', async () => {
+      const languageFilter = vi.fn(
+        ({defaultLanguages}: {defaultLanguages: Language[]}) => defaultLanguages,
+      )
+      vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
+        ...MOCK_PLUGIN_CONFIG,
+        languageFilter,
+      })
+      vi.mocked(useTranslationMetadata).mockReturnValue({
+        data: [{_id: 'meta-1', _createdAt: '2024-01-01', translations: []}],
+        loading: false,
+        error: null,
+      })
+
+      render(
+        <DocumentInternationalizationMenu documentId="doc-1" schemaType={articleSchemaType} />,
+        {wrapper: ThemeWrapper},
+      )
+      fireEvent.click(screen.getByRole('button', {name: 'Translations'}))
+
+      await waitFor(() => {
+        expect(languageFilter).toHaveBeenCalled()
+      })
+      expect(languageFilter).toHaveBeenCalledWith({
+        schemaType: 'article',
+        defaultLanguages: MOCK_LANGUAGES,
+      })
+    })
+
+    test('renders Manage Translations but no language options when languageFilter returns []', async () => {
+      const languageFilter = vi.fn(() => [] as Language[])
+      vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
+        ...MOCK_PLUGIN_CONFIG,
+        languageFilter,
+      })
+      vi.mocked(useTranslationMetadata).mockReturnValue({
+        data: [{_id: 'meta-1', _createdAt: '2024-01-01', translations: []}],
+        loading: false,
+        error: null,
+      })
+
+      render(
+        <DocumentInternationalizationMenu documentId="doc-1" schemaType={articleSchemaType} />,
+        {wrapper: ThemeWrapper},
+      )
+      fireEvent.click(screen.getByRole('button', {name: 'Translations'}))
+
+      // The Manage Translations button (mocked) still renders.
+      expect(screen.getByTestId('language-manage')).toBeInTheDocument()
+      // No language options.
+      expect(screen.queryAllByTestId('language-option')).toHaveLength(0)
+      expect(screen.queryAllByTestId('language-patch')).toHaveLength(0)
+    })
+
+    test('uses filtered count to decide whether to show the search input', async () => {
+      const manyLanguages: Language[] = [
+        ...MOCK_LANGUAGES,
+        {id: 'pt', title: 'Portuguese'},
+        {id: 'it', title: 'Italian'},
+        {id: 'nl', title: 'Dutch'},
+      ]
+      // 7 languages globally, but filter narrows to 3 so the search input
+      // should disappear (threshold is > 4).
+      vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
+        ...MOCK_PLUGIN_CONFIG,
+        supportedLanguages: manyLanguages,
+        languageFilter: ({defaultLanguages}) =>
+          defaultLanguages.filter((l) => ['en', 'fr', 'es'].includes(l.id)),
+      })
+      vi.mocked(useTranslationMetadata).mockReturnValue({
+        data: [{_id: 'meta-1', _createdAt: '2024-01-01', translations: []}],
+        loading: false,
+        error: null,
+      })
+
+      render(
+        <DocumentInternationalizationMenu documentId="doc-1" schemaType={articleSchemaType} />,
+        {wrapper: ThemeWrapper},
+      )
+      fireEvent.click(screen.getByRole('button', {name: 'Translations'}))
+
+      await waitFor(() => {
+        expect(screen.getAllByTestId('language-option')).toHaveLength(3)
+      })
+      expect(screen.queryByPlaceholderText('Filter languages')).not.toBeInTheDocument()
+    })
+  })
 })

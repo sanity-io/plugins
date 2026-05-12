@@ -13,6 +13,7 @@ export const DEFAULT_CONFIG: PluginConfigContext = {
   apiVersion: API_VERSION,
   allowCreateMetaDoc: false,
   callback: null,
+  languageFilter: null,
   hideLanguageFilter: false,
   addTemplates: true,
 }

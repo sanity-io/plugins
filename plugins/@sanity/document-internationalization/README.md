@@ -250,10 +250,73 @@ export const defineConfig({
       // - An array of schema type names: `hideLanguageFilter: ['lesson']`
       // - A function for dynamic control: `hideLanguageFilter: (ctx) => ctx.schemaType === 'lesson'`
       hideLanguageFilter: true, // defaults to false
+
+      // Optional
+      // Restrict which languages appear in the Translations menu for a given
+      // document type. Receives the schemaType name and the resolved
+      // supportedLanguages list, and returns the subset to show in the menu.
+      // Only affects the menu UI - badges, templates, and the underlying data
+      // continue to use the full supportedLanguages list.
+      languageFilter: ({schemaType, defaultLanguages}) => {
+        // Example: a per-schemaType allowlist
+        const allowlist = {
+          lesson: ['en', 'es', 'fr'],
+          recipe: ['en', 'it'],
+        }
+        const allowed = allowlist[schemaType]
+        return allowed
+          ? defaultLanguages.filter((l) => allowed.includes(l.id))
+          : defaultLanguages
+      },
     })
   ]
 })
 ```
+
+### Per-document-type language filtering
+
+By default the Translations menu shows every entry in `supportedLanguages` for every document type that has the plugin enabled. The optional `languageFilter` option lets you narrow that list per schema type at render time.
+
+```ts
+documentInternationalization({
+  supportedLanguages: [
+    {id: 'en', title: 'English'},
+    {id: 'es', title: 'Spanish'},
+    {id: 'fr', title: 'French'},
+    {id: 'de', title: 'German'},
+    // ...many more
+  ],
+  schemaTypes: ['lesson', 'recipe'],
+  languageFilter: ({schemaType, defaultLanguages}) => {
+    if (schemaType === 'recipe') {
+      return defaultLanguages.filter((l) => ['en', 'it'].includes(l.id))
+    }
+    return defaultLanguages
+  },
+})
+```
+
+**Signature**
+
+```ts
+type LanguageFilterContext = {
+  schemaType: string // The document's schema type name
+  defaultLanguages: Language[] // The resolved supportedLanguages list
+}
+
+type LanguageFilter = (context: LanguageFilterContext) => Language[]
+```
+
+- The filter runs **synchronously** at menu render time, after `supportedLanguages` has been resolved (including when it is supplied as an async function).
+- Returning an empty array yields a menu with no language options. The "Manage Translations" button still renders so existing translation metadata is reachable.
+- Returning a reordered list reorders the menu.
+
+**What `languageFilter` does _not_ affect**
+
+- **Badges.** Documents in any supported language still show their language badge in lists. A document that is already translated into a language you later remove from the menu keeps its badge and remains reachable through the metadata document.
+- **Templates** generated for the New Document menu — these continue to be generated from the full `supportedLanguages` × `schemaTypes` matrix.
+- **Validity checks.** The "source language is supported" check still uses the full list, so a document whose language is valid plugin-wide will not surface a warning just because the menu filter excludes it.
+- **`translation.metadata` documents.** The shared metadata document's `translations` array is not constrained by this option. Filtering metadata languages per type is a separate concern because metadata documents can span multiple schema types.
 
 ### Language field
 
