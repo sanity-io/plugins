@@ -618,4 +618,43 @@ describe('InternationalizedArray', () => {
 
     expect(screen.getByTestId('member-error')).toBeInTheDocument()
   })
+
+  // Reproduction for https://github.com/sanity-io/plugins/issues/520
+  //
+  // When a user opens the *published* version of a document that was just
+  // released with an internationalized array whose items are in a different
+  // order than the master `languages` config, Studio shows the field as
+  // read-only but `props.readOnly` arrives at this component as falsy. The
+  // auto-reorder useEffect then fires `onChange(set(...))` against the
+  // read-only document and Studio throws:
+  //
+  //   "Attempted to patch a read-only document"
+  //
+  // We simulate Studio's behaviour by passing an `onChange` that throws that
+  // exact error. With the bug present, the throw escapes the render call.
+  // With a fix in place (a try/catch around the auto-reorder onChange, or a
+  // tighter readOnly check that covers the published/release perspective),
+  // the render should complete cleanly.
+  test('does not crash when onChange rejects with a read-only error during auto-reorder (issue #520)', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
+
+    // Out of order: matches the user's API push order in the issue.
+    // languages config is [en, fr, es, de]; value is pushed as [es, en, de, fr].
+    const value = createValues(['es', 'en', 'de', 'fr'])
+
+    // Studio's real onChange for a read-only document throws synchronously.
+    const readOnlyError = new Error('Attempted to patch a read-only document')
+    const onChange = vi.fn(() => {
+      throw readOnlyError
+    })
+
+    // props.readOnly is falsy — this is the heart of the bug. Studio
+    // considers the document read-only (published perspective) but the
+    // prop arriving here does not reflect that.
+    const props = createMockArrayProps({onChange, value, readOnly: false})
+
+    expect(() => renderInternationalizedArray(props)).not.toThrow()
+  })
 })
