@@ -55,7 +55,15 @@ export default function InternationalizedArray(
   const value = _value as InternationalizedArrayItem[]
   const itemsNeedingMigration = value?.filter((v) => !v[LANGUAGE_FIELD_NAME]) ?? []
   const shouldMigrateArray = itemsNeedingMigration.length > 0
-  const readOnly = Boolean(documentReadOnly) || schemaType.readOnly === true
+  // `props.readOnly` doesn't catch every case where Studio considers the
+  // document read-only — most notably, viewing the published version of a
+  // doc that was created/updated via a release. In those cases the patch
+  // would be rejected by Studio with "Attempted to patch a read-only
+  // document". See issue #520. `useDocumentPane().formState.readOnly` is
+  // the source of truth Studio itself uses, so derive from that.
+  const {isDeleting, formState} = useDocumentPane()
+  const readOnly =
+    Boolean(documentReadOnly) || schemaType.readOnly === true || formState?.readOnly === true
   const toast = useToast()
 
   const getFormValue = useGetFormValue()
@@ -143,8 +151,6 @@ export default function InternationalizedArray(
     },
     [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path],
   )
-
-  const {isDeleting} = useDocumentPane()
 
   // Create a stable dependency string that only changes when language keys change
   const languageKeysFromValue = value
@@ -247,9 +253,20 @@ export default function InternationalizedArray(
   // Automatically restore order of fields
   useEffect(() => {
     if (languagesOutOfOrder.length > 0 && allKeysAreLanguages && !readOnly) {
-      handleRestoreOrder()
+      // Belt-and-braces: even with the readOnly check above, Studio may still
+      // reject the patch in edge cases (permission changes between render and
+      // effect, etc.). Surface as a toast rather than crashing the field.
+      try {
+        handleRestoreOrder()
+      } catch (err) {
+        toast.push({
+          title: 'Could not auto-reorder languages',
+          description: err instanceof Error ? err.message : String(err),
+          status: 'warning',
+        })
+      }
     }
-  }, [languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, readOnly])
+  }, [languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, readOnly, toast])
 
   // compare value keys with possible languages
   const allLanguagesArePresent = useMemo(

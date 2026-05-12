@@ -657,4 +657,36 @@ describe('InternationalizedArray', () => {
 
     expect(() => renderInternationalizedArray(props)).not.toThrow()
   })
+
+  // Companion to the test above. With the fix in place, the auto-reorder
+  // effect should never call `onChange` at all when the document pane
+  // reports the form as read-only. The previous test exercises the
+  // belt-and-braces try/catch; this one exercises the primary fix:
+  // deriving `readOnly` from `useDocumentPane().formState.readOnly`,
+  // which is the same signal Studio itself uses to decide whether to
+  // accept patches.
+  test('does not call onChange when formState.readOnly is true (issue #520)', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
+
+    // Simulate Studio reporting the document-pane form as read-only.
+    // This is what happens when the user is viewing the published version
+    // of a doc that was created/updated via a release, among other cases.
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: false,
+      formState: {readOnly: true},
+    } as ReturnType<typeof useDocumentPane>)
+
+    const onChange = vi.fn()
+    const value = createValues(['es', 'en', 'de', 'fr'])
+    // props.readOnly is falsy — that's the bug; formState.readOnly is the
+    // signal we should be honouring instead.
+    const props = createMockArrayProps({onChange, value, readOnly: false})
+
+    renderInternationalizedArray(props)
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
 })
