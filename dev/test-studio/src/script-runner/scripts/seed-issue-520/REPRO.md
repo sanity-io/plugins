@@ -18,22 +18,9 @@ throws.
 
 ## Unit test
 
-A failing unit test that reproduces the read-only patch attempt without
-needing a backend is committed in this same branch:
-
-```
-plugins/sanity-plugin-internationalized-array/src/components/InternationalizedArray.test.tsx
-# test name: "does not crash when onChange rejects with a read-only error during auto-reorder (issue #520)"
-```
-
-Run it from the repo root:
-
-```bash
-pnpm --filter sanity-plugin-internationalized-array test InternationalizedArray
-```
-
-The test fails with `Error: Attempted to patch a read-only document` (the
-exact error from the issue).
+There is currently no committed unit test fixture for this repro in this
+branch. Use the end-to-end repro below to verify the issue in the dev
+test-studio instead.
 
 ## End-to-end repro in the dev test-studio
 
