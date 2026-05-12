@@ -33,12 +33,15 @@ A dedicated document type `issue520Repro` is added in
 into the `kitchen-sink` workspace via the existing
 `internationalizedArrayExample` plugin export.
 
-### 2. Seed script
+### 2. Studio runner script
 
-`dev/test-studio/scripts/seed-issue-520.mjs` uses `@sanity/client` to:
+Use the Studio Script Runner entrypoint at
+`dev/test-studio/src/script-runner/scripts/seed-issue-520/index.ts`. It runs
+inside the `kitchen-sink` Studio workspace with the logged-in user's Studio
+client and:
 
 1. Create an asap release.
-2. Add a version of `issue-520-repro` with the internationalized array in
+2. Add a version of the provided published document id with the internationalized array in
    deliberately misordered `_key` order (`[es, en, de, fr]` against config
    order `[en, es, fr, de, pt, it]`).
 3. Publish the release immediately.
@@ -50,33 +53,31 @@ This mirrors the exact reproduction steps from the issue.
 From the monorepo root:
 
 ```bash
-# Get a write+publish token from
-#   https://www.sanity.io/manage/project/<your-project-id>/api#tokens
-export SANITY_AUTH_TOKEN='sk...'
-
-# Optional, defaults are 'ppsg7ml5' / 'plugins'
-export SANITY_STUDIO_PROJECT_ID='ppsg7ml5'
-export SANITY_STUDIO_DATASET='plugins'
-
 pnpm install
-pnpm --filter test-studio seed:issue-520
-```
-
-The script prints the release id it creates and confirms when it has
-published.
-
-### 4. Observe the crash in Studio
-
-```bash
 pnpm --filter test-studio dev
 ```
 
+Then run the Studio script:
+
 1. Open the studio at `http://localhost:3333/kitchen-sink`.
-2. Navigate to the `Issue #520 reproduction` document type and open the
+2. Open the `Scripts` tool from the Studio tools menu.
+3. Open `Seed issue #520 repro` at `/kitchen-sink/scripts/seed-issue-520`.
+4. Set `Published document ID` to the document id you want to reproduce with
+   (defaults to `issue-520-repro`).
+5. Click `Run script`.
+
+The script output panel prints the release id it creates and confirms when it
+has published. Do not use the old `pnpm --filter test-studio seed:issue-520`
+CLI script for this repro; this repro should run through the Studio so it uses
+the same authenticated Studio client path as the script runner.
+
+### 4. Observe the crash in Studio
+
+1. Navigate to the `Issue #520 reproduction` document type and open the
    `issue-520-repro` document.
-3. Make sure the perspective is the _published_ version (the seed script
+2. Make sure the perspective is the _published_ version (the Studio script
    publishes via a release, so there is no draft).
-4. The "Localized text" field crashes with
+3. The "Localized text" field crashes with
    `Attempted to patch a read-only document`, matching the screenshot in
    the issue.
 
