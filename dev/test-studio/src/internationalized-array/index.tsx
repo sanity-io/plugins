@@ -9,6 +9,8 @@ import {
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 import {structureTool} from 'sanity/structure'
 
+import {issue520Repro} from './issue-520-repro'
+
 const internationalizedPost = defineType({
   type: 'document',
   name: 'internationalizedPost',
@@ -183,7 +185,15 @@ const table = defineType({
 
 export const internationalizedArrayExample = definePlugin(() => ({
   schema: {
-    types: [internationalizedPost, person, bodyContent, circularSchemaRepro, table, movie],
+    types: [
+      internationalizedPost,
+      person,
+      bodyContent,
+      circularSchemaRepro,
+      table,
+      movie,
+      issue520Repro,
+    ],
   },
   plugins: [
     internationalizedArray({
