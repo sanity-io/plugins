@@ -21,6 +21,7 @@ import {
 import {markdownExample} from '#markdown'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
+import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
 import {studioSecretsExample} from '#studio-secrets'
 import {unsplashExample} from '#unsplash'
@@ -73,6 +74,7 @@ export default defineConfig([
       markdownExample(),
       debugSecrets(),
       unsplashExample(),
+      scriptRunnerTool(),
       vercelProtectionBypassTool(),
       visionTool(),
     ],
