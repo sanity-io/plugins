@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@sanity/assist": "workspace:*",
+    "@sanity/client": "catalog:",
     "@sanity/code-input": "workspace:*",
     "@sanity/color-input": "workspace:*",
     "@sanity/debug-live-sync-tags": "workspace:*",
