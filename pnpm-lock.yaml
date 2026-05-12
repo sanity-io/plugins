@@ -125,6 +125,9 @@ importers:
       '@sanity/assist':
         specifier: workspace:*
         version: link:../../plugins/@sanity/assist
+      '@sanity/client':
+        specifier: 'catalog:'
+        version: 7.21.0
       '@sanity/code-input':
         specifier: workspace:*
         version: link:../../plugins/@sanity/code-input
