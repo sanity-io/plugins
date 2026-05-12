@@ -308,6 +308,55 @@ export default defineConfig({
 
 If you need more control, you can continue using `@sanity/language-filter` directly and pass `internationalizedArrayLanguageFilter` from this package as your `filterField`.
 
+## Restricting languages per document type
+
+If different document types should only support specific subsets of your configured `languages`, use the `filterLanguages` option to narrow the list of add-language buttons (and the "add missing languages" action) per schema type.
+
+```ts
+import {defineConfig} from 'sanity'
+import {internationalizedArray} from 'sanity-plugin-internationalized-array'
+
+export default defineConfig({
+  // ...
+  plugins: [
+    internationalizedArray({
+      languages: [
+        {id: 'en', title: 'English'},
+        {id: 'es', title: 'Spanish'},
+        {id: 'fr', title: 'French'},
+        {id: 'it', title: 'Italian'},
+        // ...many more
+      ],
+      fieldTypes: ['string', 'text'],
+      filterLanguages: ({schemaType, defaultLanguages}) => {
+        if (schemaType === 'recipe') {
+          return defaultLanguages.filter((l) => ['en', 'it'].includes(l.id))
+        }
+        return defaultLanguages
+      },
+    }),
+  ],
+})
+```
+
+**Signature**
+
+```ts
+type FilterLanguagesContext = {
+  schemaType: string // The document type currently in the form
+  defaultLanguages: Language[] // The resolved languages list
+}
+
+type FilterLanguages = (context: FilterLanguagesContext) => Language[]
+```
+
+- The filter runs **synchronously** after `languages` has been resolved (including when supplied as an async function).
+- It composes with `@sanity/language-filter`: `filterLanguages` runs first to narrow the universe of candidates, then the user's per-session toggle is applied on top.
+- It only affects which add-language buttons render. Existing values in an `internationalizedArray*` field are never removed or hidden by it, so documents that already contain a language you later filter out keep their data and continue to render normally.
+- Returning `[]` results in no add-language buttons being rendered for that document type.
+
+For the document-level Translations menu (the popover added by `@sanity/document-internationalization`), use the parallel `languageFilter` option on that plugin. The two filters cover different UI surfaces and can be set independently.
+
 ## Shape of stored data
 
 The custom input contains buttons which will add new array items with a random `_key` and the language stored in a dedicated `language` field. Data returned from this array will look like this:

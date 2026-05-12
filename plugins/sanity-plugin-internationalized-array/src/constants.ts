@@ -44,4 +44,5 @@ export const CONFIG_DEFAULT: Required<PluginConfig> = {
   languageFilter: {
     documentTypes: [],
   },
+  filterLanguages: null,
 }

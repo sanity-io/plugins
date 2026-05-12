@@ -53,6 +53,32 @@ export type LanguageCallback = (
 
 export type LanguageDisplay = 'titleOnly' | 'codeOnly' | 'titleAndCode'
 
+/**
+ * Context passed to `filterLanguages` when the plugin is computing the list
+ * of languages to render in the add-language buttons (and to use for "add
+ * missing languages"). The `schemaType` is the document type currently in
+ * the form; `defaultLanguages` is the fully-resolved list from the plugin's
+ * `languages` option (after any async function has settled and after any
+ * `@sanity/language-filter` user selection has been applied).
+ */
+export type FilterLanguagesContext = {
+  schemaType: string
+  defaultLanguages: Language[]
+}
+
+/**
+ * Synchronous, per-schemaType filter applied to the language list used by
+ * the add-language buttons and the "add missing languages" action. Receives
+ * the resolved `defaultLanguages` and returns a (possibly reordered, possibly
+ * empty) subset.
+ *
+ * The filter affects the UI surface only. Existing values in an
+ * `internationalizedArray*` field are never removed or hidden by it, so
+ * documents that already contain a language you later filter out keep their
+ * data and continue to render normally.
+ */
+export type FilterLanguages = (context: FilterLanguagesContext) => Language[]
+
 export type PluginConfig = {
   /**
    * https://www.sanity.io/docs/api-versioning
@@ -174,4 +200,28 @@ export type PluginConfig = {
     documentTypes: Required<LanguageFilterConfig>['documentTypes']
     defaultLanguages?: LanguageFilterConfig['defaultLanguages']
   }
+  /**
+   * Narrow the list of languages shown in the add-language buttons (and used
+   * by "add missing languages") per document type. Receives the document's
+   * `schemaType` name and the resolved `defaultLanguages` list, and returns
+   * the subset to render.
+   *
+   * Composes with `@sanity/language-filter` (configured via `languageFilter`
+   * above): the static filter runs first to narrow the universe of
+   * candidates, then the user's per-session language toggle is applied on
+   * top. The filter only affects which buttons render; existing values in
+   * the array are not removed or hidden.
+   *
+   * ```tsx
+   * {
+   *   filterLanguages: ({schemaType, defaultLanguages}) => {
+   *     if (schemaType === 'recipe') {
+   *       return defaultLanguages.filter((l) => ['en', 'it'].includes(l.id))
+   *     }
+   *     return defaultLanguages
+   *   }
+   * }
+   * ```
+   */
+  filterLanguages?: FilterLanguages | null
 }

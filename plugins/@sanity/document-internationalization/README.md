@@ -318,6 +318,31 @@ type LanguageFilter = (context: LanguageFilterContext) => Language[]
 - **Validity checks.** The "source language is supported" check still uses the full list, so a document whose language is valid plugin-wide will not surface a warning just because the menu filter excludes it.
 - **`translation.metadata` documents.** The shared metadata document's `translations` array is not constrained by this option. Filtering metadata languages per type is a separate concern because metadata documents can span multiple schema types.
 
+### Restricting field-level languages too
+
+`languageFilter` above only narrows the **document-level Translations menu**. If you also use [`sanity-plugin-internationalized-array`](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-internationalized-array) for field-level translations, that plugin has a parallel `filterLanguages` option which narrows the add-language buttons rendered on each `internationalizedArray*` field. The two options cover different UI surfaces and can be set independently, but it usually makes sense to keep them aligned:
+
+```ts
+const recipeLanguages = ['en', 'it']
+
+documentInternationalization({
+  supportedLanguages: [...],
+  schemaTypes: ['recipe', 'lesson'],
+  languageFilter: ({schemaType, defaultLanguages}) =>
+    schemaType === 'recipe'
+      ? defaultLanguages.filter((l) => recipeLanguages.includes(l.id))
+      : defaultLanguages,
+}),
+internationalizedArray({
+  languages: [...],
+  fieldTypes: ['string', 'text'],
+  filterLanguages: ({schemaType, defaultLanguages}) =>
+    schemaType === 'recipe'
+      ? defaultLanguages.filter((l) => recipeLanguages.includes(l.id))
+      : defaultLanguages,
+}),
+```
+
 ### Language field
 
 The schema types that use document internationalization must also have a `string` field type with the same name configured in the `languageField` setting. Unless you want content creators to be able to change the language of a document, you may hide or disable this field since the plugin will handle writing patches to it.

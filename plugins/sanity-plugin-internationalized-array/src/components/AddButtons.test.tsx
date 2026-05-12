@@ -208,4 +208,41 @@ describe('AddButtons', () => {
     expect(getButtonByValue('es')).toHaveAttribute('data-disabled', 'true')
     expect(getButtonByValue('de')).toHaveAttribute('data-disabled', 'false')
   })
+
+  test('renders only the languages remaining after filterLanguages narrows the context', () => {
+    // Simulates what InternationalizedArrayProvider does: filterLanguages
+    // has already narrowed the list before reaching AddButtons.
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      filteredLanguages: [
+        {id: 'en', title: 'English'},
+        {id: 'it', title: 'Italian'},
+      ],
+    })
+
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
+
+    const buttons = screen.getAllByRole('button')
+    expect(buttons).toHaveLength(2)
+    expect(getButtonByValue('en')).toBeInTheDocument()
+    expect(getButtonByValue('it')).toBeInTheDocument()
+  })
+
+  test('renders no buttons when filterLanguages reduces the context to an empty list', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      filteredLanguages: [],
+    })
+
+    render(<AddButtons readOnly={false} languagesInUse={[]} handleClick={vi.fn()} />, {
+      wrapper: ThemeWrapper,
+    })
+
+    // AddButtons returns null when languages is empty, so the grid is absent
+    // and no language buttons are rendered.
+    expect(screen.queryByTestId('add-buttons-grid')).not.toBeInTheDocument()
+    expect(screen.queryAllByRole('button')).toHaveLength(0)
+  })
 })

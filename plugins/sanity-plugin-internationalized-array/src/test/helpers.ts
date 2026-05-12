@@ -55,4 +55,5 @@ export const MOCK_INTERNATIONALIZED_ARRAY_CONTEXT: InternationalizedArrayContext
   languageFilter: {
     documentTypes: [],
   },
+  filterLanguages: null,
 }

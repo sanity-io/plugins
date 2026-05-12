@@ -6,7 +6,7 @@ import {useDocumentPane} from 'sanity/structure'
 
 import {createCacheKey, createOrGetPromise, setFunctionCache} from '../cache'
 import {CONFIG_DEFAULT} from '../constants'
-import type {Language, PluginConfig} from '../types'
+import type {FilterLanguages, Language, PluginConfig} from '../types'
 import {getSelectedValue} from './getSelectedValue'
 
 // This provider makes the plugin config available to all components in the document form
@@ -15,6 +15,34 @@ import {getSelectedValue} from './getSelectedValue'
 export type InternationalizedArrayContextProps = Required<PluginConfig> & {
   languages: Language[]
   filteredLanguages: Language[]
+}
+
+/**
+ * Pure compose helper: applies the optional static `filterLanguages` from
+ * plugin config first, then the per-user runtime selection from
+ * `@sanity/language-filter`. Exported for testing — the provider below is
+ * the only production caller.
+ */
+export function composeFilteredLanguages(input: {
+  languages: Language[]
+  schemaType: string
+  filterLanguages: FilterLanguages | null
+  selectedLanguageIds: string[]
+  languageFilterDocumentTypes: string[]
+}): Language[] {
+  const {languages, schemaType, filterLanguages, selectedLanguageIds, languageFilterDocumentTypes} =
+    input
+
+  const staticallyFiltered =
+    typeof filterLanguages === 'function'
+      ? filterLanguages({schemaType, defaultLanguages: languages})
+      : languages
+
+  const languageFilterEnabled = languageFilterDocumentTypes.includes(schemaType)
+
+  return languageFilterEnabled
+    ? staticallyFiltered.filter((language) => selectedLanguageIds.includes(language.id))
+    : staticallyFiltered
 }
 
 const InternationalizedArrayContext = createContext<InternationalizedArrayContextProps>({
@@ -94,13 +122,23 @@ export function InternationalizedArrayProvider(
   // Filter out some languages if language filter is enabled
   const {selectedLanguageIds, options: languageFilterOptions} = useLanguageFilterStudioContext()
 
-  const filteredLanguages = useMemo(() => {
-    const languageFilterEnabled = languageFilterOptions.documentTypes.includes(documentType)
-
-    return languageFilterEnabled
-      ? languages.filter((language) => selectedLanguageIds.includes(language.id))
-      : languages
-  }, [documentType, languageFilterOptions, languages, selectedLanguageIds])
+  const filteredLanguages = useMemo(
+    () =>
+      composeFilteredLanguages({
+        languages,
+        schemaType: documentType,
+        filterLanguages: internationalizedArray.filterLanguages,
+        selectedLanguageIds,
+        languageFilterDocumentTypes: languageFilterOptions.documentTypes,
+      }),
+    [
+      documentType,
+      internationalizedArray.filterLanguages,
+      languageFilterOptions,
+      languages,
+      selectedLanguageIds,
+    ],
+  )
 
   const context = useMemo(
     () => ({...internationalizedArray, languages, filteredLanguages}),
