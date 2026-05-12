@@ -56,7 +56,11 @@ export const presetsWorkspace = definePlugin(() => ({
         // `pageBuilderBlocks` accepts both string references to types defined
         // elsewhere (like `'blockquote'`, defined further down in this file)
         // and inline preset instances created with a `define<Type>` factory.
-        pageBuilderBlocks: ['blockquote', defineImage({name: 'imageBlock', title: 'Image'})],
+        pageBuilderBlocks: [
+          'blockquote',
+          defineImage({name: 'imageBlock', title: 'Image'}),
+          'richTextDefaults',
+        ],
         // The page preset includes "Main" and "Metadata" groups for structuring
         // the document editor. Additional groups can be created by adding them
         // to the `groups` array.

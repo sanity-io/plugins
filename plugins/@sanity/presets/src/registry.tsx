@@ -1,6 +1,6 @@
 import {uuid} from '@sanity/uuid'
 import {type ComponentType} from 'react'
-import type {FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
+import type {ArrayDefinition, FieldDefinition, InputProps, SchemaTypeDefinition} from 'sanity'
 
 import {PresetsTelemetryCollector} from './components/PresetsTelemetryCollector'
 import type {
@@ -12,12 +12,10 @@ import type {
 import {ctaType} from './presets/cta-type'
 import {imageType, type ImageTypeConfig} from './presets/image-type'
 import {linkType, type LinkTypeConfig} from './presets/link-type'
-import {pageType, type PageTypeConfig} from './presets/page-type'
+import {createPageType, pageType, type PageTypeConfig} from './presets/page-type'
 import {richTextType} from './presets/rich-text-type'
 import {seoType} from './presets/seo-type'
 import {recordPresetUsage, registerRegistry} from './telemetry'
-
-const systemPresets = [linkType, ctaType, seoType, imageType, pageType, richTextType] as const
 
 export interface PresetsRegistryConfig {
   link?: LinkTypeConfig
@@ -48,9 +46,32 @@ export function createPresetsRegistry(config: PresetsRegistryConfig = {}): Prese
   // oxlint-disable-next-line no-unsafe-type-assertion -- seeding reduce with an empty object that is populated by each iteration
   const seed = {} as DefinerRecord & PresetsRegistry
 
+  // Tracks the schema produced under each defined preset name so `pageType`
+  // can resolve string references in `pageBuilderBlocks` regardless of
+  // definition order, and wrap array-typed presets at the page builder
+  // boundary. Closure-injected into `pageType` via `createPageType` so it
+  // does not need to live on the public `RegistryContext`.
+  const registeredSchemas = new Map<string, SchemaTypeDefinition>()
+  const pageTypeWithLookup = createPageType({
+    lookupArrayPreset: (name) => {
+      const registered = registeredSchemas.get(name)
+      // oxlint-disable-next-line no-unsafe-type-assertion -- discriminating on `type` does not narrow the intersected union
+      return registered?.type === 'array' ? (registered as ArrayDefinition) : undefined
+    },
+  })
+
+  const systemPresets = [
+    linkType,
+    ctaType,
+    seoType,
+    imageType,
+    pageTypeWithLookup,
+    richTextType,
+  ] as const
+
   return systemPresets.reduce((registry, preset) => {
     const key = getPresetKey(preset.name)
-    registry[key] = createDefiner({registryId, preset, config, registry})
+    registry[key] = createDefiner({registryId, preset, config, registry, registeredSchemas})
     return registry
   }, seed)
 }
@@ -80,9 +101,16 @@ interface CreateDefinerOptions {
   preset: AnyPresetDefinition
   config: PresetsRegistryConfig
   registry: DefinerRecord
+  registeredSchemas: Map<string, SchemaTypeDefinition>
 }
 
-function createDefiner({registryId, preset, config, registry}: CreateDefinerOptions): Definer {
+function createDefiner({
+  registryId,
+  preset,
+  config,
+  registry,
+  registeredSchemas,
+}: CreateDefinerOptions): Definer {
   return function define(userConfig = {}) {
     const name = userConfig['name']
     if (typeof name !== 'string' || name.length === 0) {
@@ -111,6 +139,8 @@ function createDefiner({registryId, preset, config, registry}: CreateDefinerOpti
       factoryConfig as unknown as Parameters<AnyPresetDefinition['schemaType']>[0],
       registryContext,
     )
+
+    registeredSchemas.set(name, schemaType)
 
     // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
     return applyMapHooks(

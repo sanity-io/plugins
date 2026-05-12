@@ -165,6 +165,8 @@ definePage({
 
 Each entry in `pageBuilderBlocks` is either a string referencing a type in your schema, or an inline schema type definition - typically a preset instance such as `defineImage({name: 'imageBlock'})`. Mix both freely.
 
+Rich text presets work in `pageBuilderBlocks`, both inline (`defineRichText({...})`) and by name (`'richText'`). Documents store each rich text block under `content[].content`.
+
 **Fields:**
 
 | Field     | Type     | Group    | Description                                                                      |

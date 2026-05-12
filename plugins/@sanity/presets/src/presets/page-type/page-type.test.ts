@@ -31,6 +31,64 @@ describe('pageType', () => {
     expect(contentField.of).toEqual([{type: 'hero'}, {type: 'callout'}])
   })
 
+  test('pageBuilderBlocks wraps inline array presets in an object so they can render', ({
+    registry,
+  }) => {
+    const result = registry.definePage({
+      name: 'landingPage',
+      pageBuilderBlocks: [registry.defineRichText({name: 'inlineRichText', title: 'Inline rich'})],
+    })
+    const contentField = getField(getFields(result), 'content')
+
+    assertArrayField(contentField)
+    expect(contentField.of).toHaveLength(1)
+    const wrapped = contentField.of[0]
+    assertDefined(wrapped)
+    expect(wrapped).toEqual(
+      expect.objectContaining({name: 'inlineRichText', type: 'object', title: 'Inline rich'}),
+    )
+    expect(wrapped).toHaveProperty('fields')
+    expect(wrapped.fields).toEqual([expect.objectContaining({name: 'content', type: 'array'})])
+  })
+
+  test('pageBuilderBlocks wraps a by-name string reference to an array preset registered before the page', ({
+    registry,
+  }) => {
+    registry.defineRichText({name: 'richText', title: 'Rich text'})
+    const result = registry.definePage({
+      name: 'landingPage',
+      pageBuilderBlocks: ['richText'],
+    })
+    const contentField = getField(getFields(result), 'content')
+
+    assertArrayField(contentField)
+    const wrapped = contentField.of[0]
+    assertDefined(wrapped)
+    expect(wrapped).toEqual(
+      expect.objectContaining({name: 'richText', type: 'object', title: 'Rich text'}),
+    )
+    expect(wrapped).toHaveProperty('fields')
+    expect(wrapped.fields).toEqual([expect.objectContaining({name: 'content', type: 'array'})])
+  })
+
+  test('pageBuilderBlocks wraps a by-name string reference even when the array preset is registered AFTER the page', ({
+    registry,
+  }) => {
+    const page = registry.definePage({
+      name: 'landingPage',
+      pageBuilderBlocks: ['richText'],
+    })
+    registry.defineRichText({name: 'richText', title: 'Rich text'})
+
+    const contentField = getField(getFields(page), 'content')
+    assertArrayField(contentField)
+    const wrapped = contentField.of[0]
+    assertDefined(wrapped)
+    expect(wrapped).toEqual(
+      expect.objectContaining({name: 'richText', type: 'object', title: 'Rich text'}),
+    )
+  })
+
   test('pageBuilderBlocks accepts inline preset instances alongside string references', ({
     registry,
   }) => {
