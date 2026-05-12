@@ -13,7 +13,7 @@ Use this skill when working with the `Scripts` tool in `dev/test-studio`.
 - Runner UI: `dev/test-studio/src/script-runner/ScriptRunnerTool.tsx`
 - Script registry: `dev/test-studio/src/script-runner/registry.ts`
 - Script contract: `dev/test-studio/src/script-runner/types.ts`
-- Script modules: `dev/test-studio/src/script-runner/scripts/*.ts`
+- Script modules: `dev/test-studio/src/script-runner/scripts/*/index.ts`
 - Agent-facing docs: `dev/test-studio/src/script-runner/README.md`
 
 Read `README.md` and `types.ts` before changing the runner or adding scripts.

@@ -12,11 +12,21 @@ The route segment comes from the script's `name`.
 
 ## Adding a Script
 
-Add a TypeScript file in `dev/test-studio/src/script-runner/scripts/`. Files are discovered at build
-time with Vite `import.meta.glob`, so each script must default export a `StudioScript` object:
+Add a folder in `dev/test-studio/src/script-runner/scripts/`. The folder name should match the
+script name. Each folder must have an `index.ts` file that default exports a `StudioScript` object:
+
+```text
+scripts/
+  my-script-name/
+    index.ts
+    helpers.ts
+```
+
+Only `scripts/*/index.ts` files are discovered at build time with Vite `import.meta.glob`, so helper
+files can live beside the entrypoint without becoming standalone scripts.
 
 ```ts
-import type {StudioScript} from '../types'
+import type {StudioScript} from '../../types'
 
 const script: StudioScript = {
   name: 'my-script-name',
@@ -44,8 +54,8 @@ const script: StudioScript = {
 export default script
 ```
 
-Script names must be unique and use lowercase letters, numbers, and hyphens. The tool sorts scripts
-by title on the home screen.
+Script names must be unique and use lowercase letters, numbers, and hyphens. Keep the folder name
+and script `name` aligned. The tool sorts scripts by title on the home screen.
 
 ## Runtime Contract
 

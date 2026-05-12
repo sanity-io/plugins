@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-const scriptModules = import.meta.glob<{default: StudioScript}>('./scripts/*.ts', {
+const scriptModules = import.meta.glob<{default: StudioScript}>('./scripts/*/index.ts', {
   eager: true,
 })
 
