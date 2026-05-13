@@ -13,11 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     # Only run when:
+    # - The event is for an issue, not a pull request
     # - The issue has the "needs-more-info" label
     # - The commenter is the original issue author (not someone else)
     # - The commenter is a human (not a bot)
     if: >-
-      contains(github.event.issue.labels.*.name, 'needs-more-info')
+      github.event.issue.pull_request == null
+      && contains(github.event.issue.labels.*.name, 'needs-more-info')
       && github.event.comment.user.login == github.event.issue.user.login
       && github.event.comment.user.type != 'Bot'
 
