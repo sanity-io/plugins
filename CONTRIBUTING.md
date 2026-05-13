@@ -12,6 +12,7 @@ Thank you for your interest in contributing to the Sanity Plugins monorepo! This
 - [Adding a New Plugin](#adding-a-new-plugin)
 - [Plugin Ownership Model](#plugin-ownership-model)
 - [Publishing Packages](#publishing-packages)
+- [Issue Follow-Ups](#issue-follow-ups)
 - [Commit Guidelines](#commit-guidelines)
 
 ## Development Setup
@@ -410,6 +411,27 @@ This creates a changeset file in `.changeset/` that should be committed with you
 1. Merge PRs that include changeset files to `main`
 2. The release workflow automatically creates a **"Version Packages"** PR that bumps versions and updates changelogs
 3. When the "Version Packages" PR is merged, packages are automatically published to npm with provenance
+
+## Issue Follow-Ups
+
+We're grateful for every issue you report and value your contributions to making Sanity plugins better. To help us manage the community's needs effectively, we use an automated follow-up process for issues where we need additional information from you.
+
+### If we need more details
+
+When we need more context or clarification, a team member will add the `needs-more-info` label and leave a comment explaining what would be helpful. Here's what happens next:
+
+- **After 10 days**: If we haven't received the information, you'll get a friendly automated reminder, and we'll add a `stale-warned` label to help us track the follow-up
+- **After 14 days total**: If we still haven't heard back, the issue will be automatically closed to keep our tracker organized
+
+**Please don't worry** - this isn't permanent! You're always welcome to reopen the issue or create a new one when you have the information ready. We understand that life gets busy and sometimes issues become less relevant over time.
+
+### If you respond
+
+As soon as you comment with the requested information, both labels are automatically removed, you'll receive a thank you message, and your issue moves back into our active review queue.
+
+### Need more time?
+
+If you need more time to gather information, just leave a quick comment letting us know - even a simple "I'm working on this" will reset the timer and keep your issue active.
 
 ## Commit Guidelines
 
