@@ -46,8 +46,8 @@ jobs:
             waiting for some more details to look into this properly. Since we didn't hear
             back, we are going to close this issue at this current time. However, please
             do either reopen or raise another issue if you find this is still causing concern.
-            We really thank you for the time to help us make Studio a better experience for
-            all users!
+            We really thank you for taking the time to help us make Sanity plugins better
+            for all users!
 
           days-before-pr-stale: -1
           days-before-pr-close: -1

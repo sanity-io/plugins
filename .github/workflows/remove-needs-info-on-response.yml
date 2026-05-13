@@ -37,4 +37,4 @@ jobs:
       - name: Post thank you comment
         run: |
           gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body \
-            "Hi there, thanks for providing the additional information! We've received your update and will review it shortly. We appreciate your help in making Sanity better!"
+            "Hi there, thanks for providing the additional information! We've received your update and will review it shortly. We appreciate your help in making Sanity plugins better!"
