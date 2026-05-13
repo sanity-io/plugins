@@ -83,6 +83,34 @@ const colorTest = defineType({
       },
     },
     {
+      // Reproduction for sanity-io/plugins#881.
+      // User's initialValue: only `_type`, `hex`, `alpha`. Picker renders empty
+      // because ColorPickerInner returns null when `hsl` or `hsv` is missing.
+      name: 'issue881UsersInitialValue',
+      title: 'Issue #881 — user’s initialValue (partial)',
+      description:
+        "User's setup from issue #881: only _type, hex, alpha. Expect: picker renders empty.",
+      type: 'color',
+      initialValue: {_type: 'color', hex: '#f5f1e6', alpha: 1},
+    },
+    {
+      // Same hex as above, but with the full color shape including hsl/hsv/rgb
+      // sub-objects. Expect: picker renders with the color preselected.
+      name: 'issue881SuggestedInitialValue',
+      title: 'Issue #881 — suggested initialValue (complete)',
+      description:
+        'Same hex (#f5f1e6) with full color shape (hsl/hsv/rgb). Expect: picker renders normally.',
+      type: 'color',
+      initialValue: {
+        _type: 'color',
+        hex: '#f5f1e6',
+        alpha: 1,
+        hsl: {_type: 'hslaColor', h: 44, s: 0.4286, l: 0.9314, a: 1},
+        hsv: {_type: 'hsvaColor', h: 44, s: 0.0612, v: 0.9608, a: 1},
+        rgb: {_type: 'rgbaColor', r: 245, g: 241, b: 230, a: 1},
+      },
+    },
+    {
       name: 'colorList',
       title: 'List of colors',
       description: 'An array of colors with the built in color preview',
