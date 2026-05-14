@@ -3,6 +3,7 @@ name: Issue Triage
 on:
   issues:
     types:
+      - closed
       - opened
       - labeled
   workflow_dispatch:
@@ -19,7 +20,7 @@ permissions:
 jobs:
   trigger:
     name: Trigger Miriad triage
-    if: github.event_name == 'workflow_dispatch' || github.event.action == 'opened' || (github.event.action == 'labeled' && github.event.label.name == 'needs-triage')
+    if: github.event_name == 'workflow_dispatch' || github.event.action == 'opened' || github.event.action == 'closed' || (github.event.action == 'labeled' && github.event.label.name == 'needs-triage')
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ github.token }}
@@ -35,4 +36,9 @@ jobs:
           node-version: lts/*
 
       - name: Trigger issue triage
+        if: github.event.action != 'closed'
         run: node scripts/trigger-triage/src/index.ts --verbose "$ISSUE_URL"
+
+      - name: Archive issue triage channel
+        if: github.event.action == 'closed'
+        run: node scripts/trigger-triage/src/archive.ts --verbose "$ISSUE_URL"

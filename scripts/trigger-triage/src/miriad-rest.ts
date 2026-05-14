@@ -9,6 +9,7 @@ export interface MiriadChannel {
   id: string
   name: string
   displayName: string | null
+  archived: boolean
 }
 
 export interface MiriadAgent {
@@ -90,6 +91,14 @@ export class MiriadRestClient {
       method: 'POST',
       body: JSON.stringify({content}),
     })
+  }
+
+  async archiveChannel(channelId: string): Promise<MiriadChannel> {
+    this.log(`archiving channel ${channelId}`)
+    const body = await this.request(`/channels/${channelId}/archive`, {
+      method: 'POST',
+    })
+    return parseChannel(body)
   }
 
   private async request(path: string, options: RequestInit = {}): Promise<unknown> {
@@ -188,6 +197,7 @@ function toChannel(value: unknown): MiriadChannel | null {
     id: value.id,
     name: value.name,
     displayName: typeof value.displayName === 'string' ? value.displayName : null,
+    archived: typeof value.archived === 'boolean' ? value.archived : false,
   }
 }
 

@@ -10,7 +10,9 @@ newer locally.
 
 ## How It Works
 
-Given a GitHub issue URL, the CLI:
+### On new issues
+
+Given a GitHub issue URL, the default CLI path:
 
 1. Parses the owner, repo, and issue number.
 2. Fetches the issue from the GitHub REST API.
@@ -21,6 +23,16 @@ Given a GitHub issue URL, the CLI:
 6. Posts a kickoff message tagging `@triager`.
 
 The trigger does not post back to GitHub. It only starts the Miriad workflow.
+
+### On closed issues
+
+A separate archive entrypoint handles closed issues. It skips issue fetching,
+derives the expected channel name from the issue URL, finds that channel in
+Miriad, and archives it:
+
+```bash
+node scripts/trigger-triage/src/archive.ts https://github.com/sanity-io/plugins/issues/725
+```
 
 ## GitHub Workflow
 
@@ -34,6 +46,7 @@ It runs when:
 
 - A new issue is opened.
 - The `needs-triage` label is added to an existing issue.
+- An issue is closed, which archives the matching Miriad channel.
 - A developer manually runs the workflow from the GitHub Actions UI and provides
   an `issue_url` input.
 
@@ -42,6 +55,19 @@ For manual runs, it passes the `issue_url` input instead.
 
 ```bash
 node scripts/trigger-triage/src/index.ts "$ISSUE_URL"
+```
+
+Closed issue events run the archive mode:
+
+```bash
+node scripts/trigger-triage/src/archive.ts "$ISSUE_URL"
+```
+
+Archive mode calls the Miriad REST API equivalent of:
+
+```bash
+curl -X POST "$MIRIAD_URL/channels/$CHANNEL_ID/archive" \
+  -H "Authorization: Bearer $MIRIAD_TOKEN"
 ```
 
 To trigger it manually, open the `Issue Triage` workflow in GitHub Actions, click
@@ -67,6 +93,12 @@ Verbose mode prints debug logs:
 
 ```bash
 pnpm issue-triage --verbose https://github.com/sanity-io/plugins/issues/725
+```
+
+Archive the Miriad channel for a closed issue:
+
+```bash
+node scripts/trigger-triage/src/archive.ts https://github.com/sanity-io/plugins/issues/725
 ```
 
 ## Required GitHub Actions Secrets
@@ -145,3 +177,4 @@ To reuse this setup in another repository, such as the main `sanity` repo:
 8. Run a local dry-run against a real issue URL.
 9. Smoke-test the workflow by opening a test issue or adding `needs-triage` to
    an existing issue.
+10. Close the test issue and confirm the matching Miriad channel is archived.

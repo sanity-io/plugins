@@ -1,16 +1,10 @@
 #!/usr/bin/env node
-import {existsSync, readFileSync} from 'node:fs'
-import {dirname, resolve} from 'node:path'
-import {fileURLToPath} from 'node:url'
-
+import {getMiriadEnv, loadLocalEnv} from './env.ts'
 import {fetchIssue, parseIssueUrl, type GitHubIssue} from './github.ts'
+import {channelNameFor} from './issue-channel.ts'
 import {MiriadRestClient} from './miriad-rest.ts'
 
 const AGENT_NAMES = ['triager', 'squigler'] as const
-const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url))
-const PACKAGE_DIR = resolve(SCRIPT_DIR, '..')
-const REPO_ROOT_DIR = resolve(PACKAGE_DIR, '../..')
-const LOCAL_ENV_FILES = [resolve(PACKAGE_DIR, '.env'), resolve(REPO_ROOT_DIR, '.env')]
 
 const isTTY = process.stdout.isTTY
 const color = (code: string, value: string): string =>
@@ -81,48 +75,6 @@ function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err)
 }
 
-function loadLocalEnv(log: (msg: string) => void): void {
-  for (const envFile of LOCAL_ENV_FILES) {
-    if (!existsSync(envFile)) continue
-
-    log(`loading local env from ${envFile}`)
-    const contents = readFileSync(envFile, 'utf8')
-    for (const rawLine of contents.split(/\r?\n/)) {
-      const parsed = parseEnvLine(rawLine)
-      if (!parsed) continue
-
-      const {key, value} = parsed
-      if (process.env[key] === undefined) process.env[key] = value
-    }
-  }
-}
-
-function parseEnvLine(rawLine: string): {key: string; value: string} | null {
-  const line = rawLine.trim()
-  if (!line || line.startsWith('#')) return null
-
-  const normalized = line.startsWith('export ') ? line.slice('export '.length).trim() : line
-  const separator = normalized.indexOf('=')
-  if (separator <= 0) return null
-
-  const key = normalized.slice(0, separator).trim()
-  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) return null
-
-  const rawValue = normalized.slice(separator + 1).trim()
-  return {key, value: unquoteEnvValue(rawValue)}
-}
-
-function unquoteEnvValue(value: string): string {
-  if (
-    (value.startsWith('"') && value.endsWith('"')) ||
-    (value.startsWith("'") && value.endsWith("'"))
-  ) {
-    return value.slice(1, -1)
-  }
-
-  return value
-}
-
 const IGNORED_LABELS = new Set(['automated', 'dependencies', 'duplicate', 'wontfix'])
 const DEPENDENCY_DASHBOARD = /^Dependency Dashboard/
 
@@ -165,11 +117,6 @@ function composeKickoff(owner: string, repo: string, issue: GitHubIssue): string
     'Apply the filters (bot authors, dependency dashboards, ignored labels) yourself.',
     'Follow the workflow in your SKILL.md end to end.',
   ].join('\n')
-}
-
-function channelNameFor(repo: string, issueNumber: number): string {
-  if (repo === 'plugins') return `plugins-issue-${issueNumber}`
-  return `${repo}-issue-${issueNumber}`
 }
 
 async function main(): Promise<void> {
@@ -241,19 +188,13 @@ async function main(): Promise<void> {
     return
   }
 
-  const miriadUrl = process.env.MIRIAD_URL
-  const miriadToken = process.env.MIRIAD_TOKEN
-  const miriadSpaceId = process.env.MIRIAD_SPACE_ID
-
-  if (!miriadUrl) die('MIRIAD_URL is not set (see scripts/trigger-triage/README.md)')
-  if (!miriadToken) die('MIRIAD_TOKEN is not set (see scripts/trigger-triage/README.md)')
-  if (!miriadSpaceId) die('MIRIAD_SPACE_ID is not set (see scripts/trigger-triage/README.md)')
+  const env = getMiriadEnv()
 
   try {
     const client = new MiriadRestClient({
-      url: miriadUrl,
-      token: miriadToken,
-      spaceId: miriadSpaceId,
+      url: env.url,
+      token: env.token,
+      spaceId: env.spaceId,
       log,
     })
     const channel = await client.ensureChannel(channelName)

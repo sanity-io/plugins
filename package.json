@@ -10,6 +10,7 @@
     "format": "oxfmt . --no-error-on-unmatched-pattern",
     "generate": "turbo gen",
     "issue-triage": "node scripts/trigger-triage/src/index.ts",
+    "issue-triage:archive": "node scripts/trigger-triage/src/archive.ts",
     "knip": "knip",
     "lint": "pnpm run oxlint",
     "lint:fix": "pnpm lint --fix --fix-suggestions",
