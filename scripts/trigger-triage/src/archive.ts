@@ -3,8 +3,14 @@ import {pathToFileURL} from 'node:url'
 
 import {createLog, die, errorMessage, parseArgs, writeResult, type CliResult} from './cli.ts'
 import {type MiriadEnvSource, loadLocalEnv, resolveMiriadEnv} from './env.ts'
-import {parseIssueUrl} from './github.ts'
+import {
+  fetchIssue as fetchGitHubIssue,
+  parseIssueUrl,
+  type FetchIssueOptions,
+  type GitHubIssue,
+} from './github.ts'
 import {channelNameFor} from './issue-channel.ts'
+import {shouldIgnore} from './issue-filter.ts'
 import {type MiriadChannel, MiriadRestClient} from './miriad-rest.ts'
 
 export interface ArchiveMiriadClient {
@@ -17,8 +23,9 @@ export interface RunArchiveOptions {
   argv?: string[] | undefined
   dryRun?: boolean | undefined
   verbose?: boolean | undefined
-  env?: MiriadEnvSource | undefined
+  env?: (MiriadEnvSource & {GITHUB_TOKEN?: string | undefined}) | undefined
   loadEnv?: ((log: (msg: string) => void) => void) | undefined
+  fetchIssue?: ((opts: FetchIssueOptions) => Promise<GitHubIssue>) | undefined
   createMiriadClient?:
     | ((opts: {
         url: string
@@ -76,11 +83,26 @@ export async function runArchive(opts: RunArchiveOptions): Promise<CliResult> {
 
   const log = opts.log ?? createLog(args, stderr)
   opts.loadEnv?.(log)
+  const fetchIssue = opts.fetchIssue ?? fetchGitHubIssue
 
   const {owner, repo, issueNumber} = parseIssueUrl(args.url)
   const channelName = channelNameFor(repo, issueNumber)
   log(`parsed: owner=${owner} repo=${repo} issue=${issueNumber}`)
   log(`channel: ${channelName}`)
+
+  const issue = await fetchIssue({
+    owner,
+    repo,
+    issueNumber,
+    token: env.GITHUB_TOKEN,
+    log,
+  })
+
+  const filter = shouldIgnore(issue)
+  if (filter.ignore) {
+    stdout.push(`ignored: ${filter.reason}\n`)
+    return {stdout, stderr, exitCode: 0}
+  }
 
   if (args.dryRun) {
     stdout.push('DRY RUN\n')

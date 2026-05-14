@@ -26,9 +26,9 @@ The trigger does not post back to GitHub. It only starts the Miriad workflow.
 
 ### On closed issues
 
-A separate archive entrypoint handles closed issues. It skips issue fetching,
-derives the expected channel name from the issue URL, finds that channel in
-Miriad, and archives it:
+A separate archive entrypoint handles closed issues. It fetches the issue to
+apply the same ignore filters as triage, derives the expected channel name from
+the issue URL, finds that channel in Miriad, and archives it:
 
 ```bash
 node scripts/trigger-triage/src/archive.ts https://github.com/sanity-io/plugins/issues/725

@@ -101,8 +101,8 @@ describe('runTriage', () => {
 
     expect(client.calls.ensureChannel).toEqual(['plugins-issue-660'])
     expect(client.calls.addAgent).toEqual([
-      {channelId: 'existing-channel', name: 'triager'},
       {channelId: 'existing-channel', name: 'squiggler'},
+      {channelId: 'existing-channel', name: 'triager'},
     ])
     expect(client.calls.sendMessage).toHaveLength(1)
     expect(client.calls.sendMessage[0]?.content).toContain('@triager New issue')

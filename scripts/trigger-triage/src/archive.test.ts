@@ -1,6 +1,7 @@
 import {describe, expect, test, vi} from 'vitest'
 
 import {runArchive, type ArchiveMiriadClient} from './archive.ts'
+import type {FetchIssueOptions, GitHubIssue} from './github.ts'
 import type {MiriadChannel} from './miriad-rest.ts'
 
 const env = {
@@ -29,18 +30,41 @@ describe('archive CLI args', () => {
 
 describe('runArchive', () => {
   test('dry-run derives the channel name without calling Miriad', async () => {
+    const fetchIssue = vi.fn(async (_opts: FetchIssueOptions): Promise<GitHubIssue> => issue())
     const createMiriadClient = vi.fn((): ArchiveMiriadClient => createArchiveClient(channel()))
 
     const result = await runArchive({
       issueUrl: issueUrl(660),
       dryRun: true,
       env,
+      fetchIssue,
+      createMiriadClient,
+    })
+
+    expect(fetchIssue).toHaveBeenCalledWith(
+      expect.objectContaining({owner: 'sanity-io', repo: 'plugins', issueNumber: 660}),
+    )
+    expect(createMiriadClient).not.toHaveBeenCalled()
+    expect(result.stdout.join('')).toContain('DRY RUN')
+    expect(result.stdout.join('')).toContain('plugins-issue-660')
+  })
+
+  test('ignored issues do not query Miriad', async () => {
+    const fetchIssue = vi.fn(
+      async (_opts: FetchIssueOptions): Promise<GitHubIssue> =>
+        issue({labels: [{name: 'dependencies'}]}),
+    )
+    const createMiriadClient = vi.fn((): ArchiveMiriadClient => createArchiveClient(channel()))
+
+    const result = await runArchive({
+      issueUrl: issueUrl(660),
+      env,
+      fetchIssue,
       createMiriadClient,
     })
 
     expect(createMiriadClient).not.toHaveBeenCalled()
-    expect(result.stdout.join('')).toContain('DRY RUN')
-    expect(result.stdout.join('')).toContain('plugins-issue-660')
+    expect(result.stdout.join('')).toContain('ignored: label "dependencies"')
   })
 
   test('archives a matching active channel', async () => {
@@ -49,6 +73,7 @@ describe('runArchive', () => {
     const result = await runArchive({
       issueUrl: issueUrl(660),
       env,
+      fetchIssue: async () => issue(),
       createMiriadClient: () => client,
     })
 
@@ -63,6 +88,7 @@ describe('runArchive', () => {
     const result = await runArchive({
       issueUrl: issueUrl(660),
       env,
+      fetchIssue: async () => issue(),
       createMiriadClient: () => client,
     })
 
@@ -78,6 +104,7 @@ describe('runArchive', () => {
       runArchive({
         issueUrl: issueUrl(660),
         env: {},
+        fetchIssue: async () => issue(),
         createMiriadClient: () => client,
       }),
     ).rejects.toThrow('MIRIAD_URL is not set')
@@ -96,6 +123,7 @@ describe('runArchive', () => {
       runArchive({
         issueUrl: issueUrl(660),
         env,
+        fetchIssue: async () => issue(),
         createMiriadClient: () => client,
       }),
     ).rejects.toThrow('archive failed')
@@ -104,6 +132,20 @@ describe('runArchive', () => {
 
 function issueUrl(issueNumber: number): string {
   return `https://github.com/sanity-io/plugins/issues/${issueNumber}`
+}
+
+function issue(overrides: Partial<GitHubIssue> = {}): GitHubIssue {
+  return {
+    number: 660,
+    title: 'Example issue',
+    body: null,
+    html_url: issueUrl(overrides.number ?? 660),
+    state: 'closed',
+    created_at: '2026-05-14T00:00:00Z',
+    user: {login: 'pedrobonamin', type: 'User'},
+    labels: [],
+    ...overrides,
+  }
 }
 
 function channel(overrides: Partial<MiriadChannel> = {}): MiriadChannel {

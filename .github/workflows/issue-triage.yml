@@ -17,11 +17,16 @@ permissions:
   contents: read
   issues: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.issue.node_id || inputs.issue_url || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   trigger:
     name: Trigger Miriad triage
     if: github.event_name == 'workflow_dispatch' || github.event.action == 'opened' || github.event.action == 'closed' || (github.event.action == 'labeled' && github.event.label.name == 'needs-triage')
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       GITHUB_TOKEN: ${{ github.token }}
       ISSUE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.issue_url || github.event.issue.html_url }}

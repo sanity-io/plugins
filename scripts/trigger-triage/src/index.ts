@@ -10,9 +10,10 @@ import {
   type GitHubIssue,
 } from './github.ts'
 import {channelNameFor} from './issue-channel.ts'
+import {shouldIgnore} from './issue-filter.ts'
 import {type MiriadChannel, MiriadRestClient} from './miriad-rest.ts'
 
-export const AGENT_NAMES = ['triager', 'squiggler'] as const
+export const AGENT_NAMES = ['squiggler', 'triager'] as const
 
 export interface TriageMiriadClient {
   ensureChannel(name: string): Promise<MiriadChannel>
@@ -40,9 +41,6 @@ export interface RunTriageOptions {
     | undefined
   log?: ((msg: string) => void) | undefined
 }
-
-const IGNORED_LABELS = new Set(['automated', 'dependencies', 'duplicate', 'wontfix'])
-const DEPENDENCY_DASHBOARD = /^Dependency Dashboard/
 
 function helpText(): string {
   return `trigger-triage - kick off the Miriad triage workflow for a GitHub issue
@@ -164,21 +162,6 @@ async function main(): Promise<void> {
   } catch (err) {
     die(errorMessage(err))
   }
-}
-
-function shouldIgnore(issue: GitHubIssue): {ignore: boolean; reason?: string} {
-  if (issue.user.type === 'Bot' || issue.user.login.endsWith('[bot]')) {
-    return {ignore: true, reason: `bot author (@${issue.user.login})`}
-  }
-
-  const hit = issue.labels.find((label) => IGNORED_LABELS.has(label.name.toLowerCase()))
-  if (hit) return {ignore: true, reason: `label "${hit.name}"`}
-
-  if (DEPENDENCY_DASHBOARD.test(issue.title)) {
-    return {ignore: true, reason: 'dependency dashboard title'}
-  }
-
-  return {ignore: false}
 }
 
 function composeKickoff(owner: string, repo: string, issue: GitHubIssue): string {
