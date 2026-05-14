@@ -13,6 +13,12 @@ export interface MiriadEnv {
   spaceId: string
 }
 
+export interface MiriadEnvSource {
+  MIRIAD_URL?: string | undefined
+  MIRIAD_TOKEN?: string | undefined
+  MIRIAD_SPACE_ID?: string | undefined
+}
+
 export function loadLocalEnv(log: (msg: string) => void): void {
   for (const envFile of LOCAL_ENV_FILES) {
     if (!existsSync(envFile)) continue
@@ -29,16 +35,20 @@ export function loadLocalEnv(log: (msg: string) => void): void {
   }
 }
 
-export function getMiriadEnv(): MiriadEnv {
-  const url = process.env.MIRIAD_URL
-  const token = process.env.MIRIAD_TOKEN
-  const spaceId = process.env.MIRIAD_SPACE_ID
+export function resolveMiriadEnv(source: MiriadEnvSource): MiriadEnv {
+  const url = source.MIRIAD_URL
+  const token = source.MIRIAD_TOKEN
+  const spaceId = source.MIRIAD_SPACE_ID
 
   if (!url) throw new Error('MIRIAD_URL is not set (see scripts/trigger-triage/README.md)')
   if (!token) throw new Error('MIRIAD_TOKEN is not set (see scripts/trigger-triage/README.md)')
   if (!spaceId) throw new Error('MIRIAD_SPACE_ID is not set (see scripts/trigger-triage/README.md)')
 
   return {url, token, spaceId}
+}
+
+export function getMiriadEnv(): MiriadEnv {
+  return resolveMiriadEnv(process.env)
 }
 
 function parseEnvLine(rawLine: string): {key: string; value: string} | null {

@@ -1,52 +1,51 @@
 #!/usr/bin/env node
-import {getMiriadEnv, loadLocalEnv} from './env.ts'
-import {fetchIssue, parseIssueUrl, type GitHubIssue} from './github.ts'
+import {pathToFileURL} from 'node:url'
+
+import {createLog, die, errorMessage, parseArgs, writeResult, type CliResult} from './cli.ts'
+import {type MiriadEnvSource, loadLocalEnv, resolveMiriadEnv} from './env.ts'
+import {
+  fetchIssue as fetchGitHubIssue,
+  parseIssueUrl,
+  type FetchIssueOptions,
+  type GitHubIssue,
+} from './github.ts'
 import {channelNameFor} from './issue-channel.ts'
-import {MiriadRestClient} from './miriad-rest.ts'
+import {type MiriadChannel, MiriadRestClient} from './miriad-rest.ts'
 
-const AGENT_NAMES = ['triager', 'squigler'] as const
+export const AGENT_NAMES = ['triager', 'squiggler'] as const
 
-const isTTY = process.stdout.isTTY
-const color = (code: string, value: string): string =>
-  isTTY ? `\x1b[${code}m${value}\x1b[0m` : value
-const c = {
-  blue: (value: string) => color('34', value),
-  bold: (value: string) => color('1', value),
-  gray: (value: string) => color('90', value),
-  green: (value: string) => color('32', value),
-  red: (value: string) => color('31', value),
-  yellow: (value: string) => color('33', value),
+export interface TriageMiriadClient {
+  ensureChannel(name: string): Promise<MiriadChannel>
+  addAgent(channelId: string, name: string): Promise<unknown>
+  sendMessage(channelId: string, content: string): Promise<void>
 }
 
-interface Args {
-  url: string | null
-  dryRun: boolean
-  verbose: boolean
-  help: boolean
+export type TriageResult = CliResult
+
+export interface RunTriageOptions {
+  issueUrl?: string | undefined
+  argv?: string[] | undefined
+  dryRun?: boolean | undefined
+  verbose?: boolean | undefined
+  env?: (MiriadEnvSource & {GITHUB_TOKEN?: string | undefined}) | undefined
+  loadEnv?: ((log: (msg: string) => void) => void) | undefined
+  fetchIssue?: ((opts: FetchIssueOptions) => Promise<GitHubIssue>) | undefined
+  createMiriadClient?:
+    | ((opts: {
+        url: string
+        token: string
+        spaceId: string
+        log: (msg: string) => void
+      }) => TriageMiriadClient)
+    | undefined
+  log?: ((msg: string) => void) | undefined
 }
 
-function parseArgs(argv: string[]): Args {
-  const args: Args = {url: null, dryRun: false, verbose: false, help: false}
+const IGNORED_LABELS = new Set(['automated', 'dependencies', 'duplicate', 'wontfix'])
+const DEPENDENCY_DASHBOARD = /^Dependency Dashboard/
 
-  if (argv.includes('--help') || argv.includes('-h')) {
-    return {...args, help: true}
-  }
-
-  for (const arg of argv) {
-    if (arg === '--dry-run') args.dryRun = true
-    else if (arg === '--verbose' || arg === '-v') args.verbose = true
-    else if (arg.startsWith('-')) die(`Unknown flag: ${arg}. Run with --help for usage.`)
-    else {
-      if (args.url) die(`Unexpected extra argument: ${arg}`)
-      args.url = arg
-    }
-  }
-
-  return args
-}
-
-function printHelp(): void {
-  process.stdout.write(`trigger-triage - kick off the Miriad triage workflow for a GitHub issue
+function helpText(): string {
+  return `trigger-triage - kick off the Miriad triage workflow for a GitHub issue
 
 Usage:
   trigger-triage <github-issue-url>
@@ -66,27 +65,108 @@ Agents:
 Examples:
   trigger-triage https://github.com/sanity-io/plugins/issues/725
   trigger-triage --dry-run https://github.com/sanity-io/plugins/issues/725
-`)
+`
 }
 
-function die(msg: string): never {
-  process.stderr.write(c.red(`error: ${msg}\n`))
-  process.exit(1)
+export async function runTriage(opts: RunTriageOptions): Promise<TriageResult> {
+  const stdout: string[] = []
+  const stderr: string[] = []
+  const args = opts.argv
+    ? parseArgs(opts.argv)
+    : {
+        url: opts.issueUrl ?? null,
+        dryRun: opts.dryRun ?? false,
+        verbose: opts.verbose ?? false,
+        help: false,
+      }
+  const env = opts.env ?? process.env
+
+  if (args.help) {
+    stdout.push(helpText())
+    return {stdout, stderr, exitCode: 0}
+  }
+
+  if (!args.url) {
+    stdout.push(helpText())
+    stderr.push('error: missing <github-issue-url>\n')
+    return {stdout, stderr, exitCode: 1}
+  }
+
+  const log = opts.log ?? createLog(args, stderr)
+  opts.loadEnv?.(log)
+
+  const fetchIssue = opts.fetchIssue ?? fetchGitHubIssue
+
+  const {owner, repo, issueNumber} = parseIssueUrl(args.url)
+  log(`parsed: owner=${owner} repo=${repo} issue=${issueNumber}`)
+
+  const channelName = channelNameFor(repo, issueNumber)
+  const issue = await fetchIssue({
+    owner,
+    repo,
+    issueNumber,
+    token: env.GITHUB_TOKEN,
+    log,
+  })
+
+  log(`fetched issue: "${issue.title}" by @${issue.user.login} (${issue.state})`)
+
+  const filter = shouldIgnore(issue)
+  if (filter.ignore) {
+    stdout.push(`ignored: ${filter.reason}\n`)
+    return {stdout, stderr, exitCode: 0}
+  }
+
+  if (issue.state === 'closed') {
+    stderr.push('warning: issue is closed - proceeding because needs-triage can be intentional\n')
+  }
+
+  const kickoff = composeKickoff(owner, repo, issue)
+
+  if (args.dryRun) {
+    stdout.push('DRY RUN\n')
+    stdout.push(`channel: ${channelName}\n`)
+    stdout.push('--- kickoff message ---\n')
+    stdout.push(`${kickoff}\n`)
+    stdout.push('--- end ---\n')
+    stdout.push('dry-run complete (no Miriad REST call made)\n')
+    return {stdout, stderr, exitCode: 0}
+  }
+
+  const miriadEnv = resolveMiriadEnv(env)
+  const createMiriadClient =
+    opts.createMiriadClient ?? ((clientOpts) => new MiriadRestClient(clientOpts))
+  const client = createMiriadClient({
+    url: miriadEnv.url,
+    token: miriadEnv.token,
+    spaceId: miriadEnv.spaceId,
+    log,
+  })
+  const channel = await client.ensureChannel(channelName)
+
+  await Promise.all(AGENT_NAMES.map((agentName) => client.addAgent(channel.id, agentName)))
+  await client.sendMessage(channel.id, kickoff)
+
+  stdout.push(`Triggered triage for ${owner}/${repo}#${issue.number} - channel: ${channelName}\n`)
+  return {stdout, stderr, exitCode: 0}
 }
 
-function errorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : String(err)
+async function main(): Promise<void> {
+  try {
+    const result = await runTriage({
+      argv: process.argv.slice(2),
+      env: process.env,
+      loadEnv: loadLocalEnv,
+    })
+
+    writeResult(result)
+    if (result.exitCode !== 0) process.exit(result.exitCode)
+  } catch (err) {
+    die(errorMessage(err))
+  }
 }
 
-const IGNORED_LABELS = new Set(['automated', 'dependencies', 'duplicate', 'wontfix'])
-const DEPENDENCY_DASHBOARD = /^Dependency Dashboard/
-
-interface FilterResult {
-  ignore: boolean
-  reason?: string
-}
-
-function shouldIgnore(issue: GitHubIssue): FilterResult {
+function shouldIgnore(issue: GitHubIssue): {ignore: boolean; reason?: string} {
   if (issue.user.type === 'Bot' || issue.user.login.endsWith('[bot]')) {
     return {ignore: true, reason: `bot author (@${issue.user.login})`}
   }
@@ -117,105 +197,12 @@ function composeKickoff(owner: string, repo: string, issue: GitHubIssue): string
     `| URL | ${issue.html_url} |`,
     '',
     'Please read the issue and all of its comments in full before forming a verdict.',
-    'Apply the filters (bot authors, dependency dashboards, ignored labels) yourself.',
     'Follow the workflow in your SKILL.md end to end.',
   ].join('\n')
 }
 
-async function main(): Promise<void> {
-  const args = parseArgs(process.argv.slice(2))
-
-  if (args.help) {
-    printHelp()
-    return
-  }
-
-  if (!args.url) {
-    printHelp()
-    die('missing <github-issue-url>')
-  }
-
-  const log = (msg: string): void => {
-    if (args.verbose) process.stderr.write(c.gray(`[debug] ${msg}\n`))
-  }
-  loadLocalEnv(log)
-
-  let parsed: {owner: string; repo: string; issueNumber: number}
-  try {
-    parsed = parseIssueUrl(args.url)
-  } catch (err) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err: unknown) => {
     die(errorMessage(err))
-  }
-
-  const {owner, repo, issueNumber} = parsed
-  log(`parsed: owner=${owner} repo=${repo} issue=${issueNumber}`)
-
-  const channelName = channelNameFor(repo, issueNumber)
-
-  let issue: GitHubIssue
-  try {
-    issue = await fetchIssue({
-      owner,
-      repo,
-      issueNumber,
-      token: process.env.GITHUB_TOKEN,
-      log,
-    })
-  } catch (err) {
-    die(`failed to fetch issue: ${errorMessage(err)}`)
-  }
-
-  log(`fetched issue: "${issue.title}" by @${issue.user.login} (${issue.state})`)
-
-  const filter = shouldIgnore(issue)
-  if (filter.ignore) {
-    process.stdout.write(c.yellow(`ignored: ${filter.reason}\n`))
-    return
-  }
-
-  if (issue.state === 'closed') {
-    process.stderr.write(
-      c.yellow('warning: issue is closed - proceeding because needs-triage can be intentional\n'),
-    )
-  }
-
-  const kickoff = composeKickoff(owner, repo, issue)
-
-  if (args.dryRun) {
-    process.stdout.write(c.blue(c.bold('DRY RUN\n')))
-    process.stdout.write(c.gray(`channel: ${channelName}\n`))
-    process.stdout.write(c.gray('--- kickoff message ---\n'))
-    process.stdout.write(`${kickoff}\n`)
-    process.stdout.write(c.gray('--- end ---\n'))
-    process.stdout.write(c.green('dry-run complete (no Miriad REST call made)\n'))
-    return
-  }
-
-  const env = getMiriadEnv()
-
-  try {
-    const client = new MiriadRestClient({
-      url: env.url,
-      token: env.token,
-      spaceId: env.spaceId,
-      log,
-    })
-    const channel = await client.ensureChannel(channelName)
-
-    await Promise.all(AGENT_NAMES.map((agentName) => client.addAgent(channel.id, agentName)))
-
-    await client.sendMessage(channel.id, kickoff)
-  } catch (err) {
-    die(`Miriad REST dispatch failed: ${errorMessage(err)}`)
-  }
-
-  process.stdout.write(
-    c.green(`Triggered triage for ${owner}/${repo}#${issue.number} - channel: ${channelName}\n`),
-  )
+  })
 }
-
-main().catch((err: unknown) => {
-  const msg = err instanceof Error ? err.message : String(err)
-  process.stderr.write(c.red(`error: ${msg}\n`))
-  process.exit(1)
-})

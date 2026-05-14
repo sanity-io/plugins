@@ -1,50 +1,37 @@
 #!/usr/bin/env node
-import {getMiriadEnv, loadLocalEnv} from './env.ts'
+import {pathToFileURL} from 'node:url'
+
+import {createLog, die, errorMessage, parseArgs, writeResult, type CliResult} from './cli.ts'
+import {type MiriadEnvSource, loadLocalEnv, resolveMiriadEnv} from './env.ts'
 import {parseIssueUrl} from './github.ts'
 import {channelNameFor} from './issue-channel.ts'
-import {MiriadRestClient} from './miriad-rest.ts'
+import {type MiriadChannel, MiriadRestClient} from './miriad-rest.ts'
 
-const isTTY = process.stdout.isTTY
-const color = (code: string, value: string): string =>
-  isTTY ? `\x1b[${code}m${value}\x1b[0m` : value
-const c = {
-  blue: (value: string) => color('34', value),
-  bold: (value: string) => color('1', value),
-  gray: (value: string) => color('90', value),
-  green: (value: string) => color('32', value),
-  red: (value: string) => color('31', value),
-  yellow: (value: string) => color('33', value),
+export interface ArchiveMiriadClient {
+  findChannelByName(name: string): Promise<MiriadChannel | null>
+  archiveChannel(channelId: string): Promise<MiriadChannel>
 }
 
-interface Args {
-  url: string | null
-  dryRun: boolean
-  verbose: boolean
-  help: boolean
+export interface RunArchiveOptions {
+  issueUrl?: string | undefined
+  argv?: string[] | undefined
+  dryRun?: boolean | undefined
+  verbose?: boolean | undefined
+  env?: MiriadEnvSource | undefined
+  loadEnv?: ((log: (msg: string) => void) => void) | undefined
+  createMiriadClient?:
+    | ((opts: {
+        url: string
+        token: string
+        spaceId: string
+        log: (msg: string) => void
+      }) => ArchiveMiriadClient)
+    | undefined
+  log?: ((msg: string) => void) | undefined
 }
 
-function parseArgs(argv: string[]): Args {
-  const args: Args = {url: null, dryRun: false, verbose: false, help: false}
-
-  if (argv.includes('--help') || argv.includes('-h')) {
-    return {...args, help: true}
-  }
-
-  for (const arg of argv) {
-    if (arg === '--dry-run') args.dryRun = true
-    else if (arg === '--verbose' || arg === '-v') args.verbose = true
-    else if (arg.startsWith('-')) die(`Unknown flag: ${arg}. Run with --help for usage.`)
-    else {
-      if (args.url) die(`Unexpected extra argument: ${arg}`)
-      args.url = arg
-    }
-  }
-
-  return args
-}
-
-function printHelp(): void {
-  process.stdout.write(`archive-triage-channel - archive the Miriad channel for a GitHub issue
+function helpText(): string {
+  return `archive-triage-channel - archive the Miriad channel for a GitHub issue
 
 Usage:
   archive-triage-channel <github-issue-url>
@@ -60,84 +47,88 @@ Environment:
 Examples:
   archive-triage-channel https://github.com/sanity-io/plugins/issues/660
   archive-triage-channel --dry-run https://github.com/sanity-io/plugins/issues/660
-`)
+`
 }
 
-function die(msg: string): never {
-  process.stderr.write(c.red(`error: ${msg}\n`))
-  process.exit(1)
-}
-
-function errorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : String(err)
-}
-
-async function main(): Promise<void> {
-  const args = parseArgs(process.argv.slice(2))
+export async function runArchive(opts: RunArchiveOptions): Promise<CliResult> {
+  const stdout: string[] = []
+  const stderr: string[] = []
+  const args = opts.argv
+    ? parseArgs(opts.argv)
+    : {
+        url: opts.issueUrl ?? null,
+        dryRun: opts.dryRun ?? false,
+        verbose: opts.verbose ?? false,
+        help: false,
+      }
+  const env = opts.env ?? process.env
 
   if (args.help) {
-    printHelp()
-    return
+    stdout.push(helpText())
+    return {stdout, stderr, exitCode: 0}
   }
 
   if (!args.url) {
-    printHelp()
-    die('missing <github-issue-url>')
+    stdout.push(helpText())
+    stderr.push('error: missing <github-issue-url>\n')
+    return {stdout, stderr, exitCode: 1}
   }
 
-  const log = (msg: string): void => {
-    if (args.verbose) process.stderr.write(c.gray(`[debug] ${msg}\n`))
-  }
-  loadLocalEnv(log)
+  const log = opts.log ?? createLog(args, stderr)
+  opts.loadEnv?.(log)
 
-  let parsed: {owner: string; repo: string; issueNumber: number}
-  try {
-    parsed = parseIssueUrl(args.url)
-  } catch (err) {
-    die(errorMessage(err))
-  }
-
-  const {owner, repo, issueNumber} = parsed
+  const {owner, repo, issueNumber} = parseIssueUrl(args.url)
   const channelName = channelNameFor(repo, issueNumber)
   log(`parsed: owner=${owner} repo=${repo} issue=${issueNumber}`)
   log(`channel: ${channelName}`)
 
   if (args.dryRun) {
-    process.stdout.write(c.blue(c.bold('DRY RUN\n')))
-    process.stdout.write(c.gray(`channel: ${channelName}\n`))
-    process.stdout.write(c.green('dry-run complete (no Miriad archive call made)\n'))
-    return
+    stdout.push('DRY RUN\n')
+    stdout.push(`channel: ${channelName}\n`)
+    stdout.push('dry-run complete (no Miriad archive call made)\n')
+    return {stdout, stderr, exitCode: 0}
   }
 
+  const miriadEnv = resolveMiriadEnv(env)
+  const createMiriadClient =
+    opts.createMiriadClient ?? ((clientOpts) => new MiriadRestClient(clientOpts))
+  const client = createMiriadClient({
+    url: miriadEnv.url,
+    token: miriadEnv.token,
+    spaceId: miriadEnv.spaceId,
+    log,
+  })
+
+  const channel = await client.findChannelByName(channelName)
+  if (!channel) {
+    stdout.push(
+      `No active Miriad channel found for ${owner}/${repo}#${issueNumber}; it may already be archived\n`,
+    )
+    return {stdout, stderr, exitCode: 0}
+  }
+
+  await client.archiveChannel(channel.id)
+  stdout.push(`Archived Miriad channel for ${owner}/${repo}#${issueNumber}: ${channelName}\n`)
+  return {stdout, stderr, exitCode: 0}
+}
+
+async function main(): Promise<void> {
   try {
-    const env = getMiriadEnv()
-    const client = new MiriadRestClient({
-      url: env.url,
-      token: env.token,
-      spaceId: env.spaceId,
-      log,
+    const result = await runArchive({
+      argv: process.argv.slice(2),
+      env: process.env,
+      loadEnv: loadLocalEnv,
     })
 
-    const channel = await client.findChannelByName(channelName)
-    if (!channel) {
-      process.stdout.write(
-        c.yellow(
-          `No active Miriad channel found for ${owner}/${repo}#${issueNumber}; it may already be archived\n`,
-        ),
-      )
-      return
-    }
-
-    await client.archiveChannel(channel.id)
-    process.stdout.write(
-      c.green(`Archived Miriad channel for ${owner}/${repo}#${issueNumber}: ${channelName}\n`),
-    )
+    writeResult(result)
+    if (result.exitCode !== 0) process.exit(result.exitCode)
   } catch (err) {
-    die(`Miriad archive failed: ${errorMessage(err)}`)
+    die(errorMessage(err))
   }
 }
 
-main().catch((err: unknown) => {
-  process.stderr.write(c.red(`error: ${errorMessage(err)}\n`))
-  process.exit(1)
-})
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err: unknown) => {
+    die(errorMessage(err))
+  })
+}

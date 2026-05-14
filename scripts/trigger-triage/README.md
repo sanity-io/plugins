@@ -149,7 +149,7 @@ this helper. The root `.env` fallback exists for convenience in this repo.
 The Miriad agents are intentionally hardcoded in `src/index.ts`:
 
 ```ts
-const AGENT_NAMES = ['triager', 'squigler'] as const
+const AGENT_NAMES = ['triager', 'squiggler'] as const
 ```
 
 This keeps the GitHub workflow and repository settings small: agent assignment
