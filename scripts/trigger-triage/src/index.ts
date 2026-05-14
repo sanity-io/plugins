@@ -28,9 +28,12 @@ interface Args {
 function parseArgs(argv: string[]): Args {
   const args: Args = {url: null, dryRun: false, verbose: false, help: false}
 
+  if (argv.includes('--help') || argv.includes('-h')) {
+    return {...args, help: true}
+  }
+
   for (const arg of argv) {
-    if (arg === '--help' || arg === '-h') args.help = true
-    else if (arg === '--dry-run') args.dryRun = true
+    if (arg === '--dry-run') args.dryRun = true
     else if (arg === '--verbose' || arg === '-v') args.verbose = true
     else if (arg.startsWith('-')) die(`Unknown flag: ${arg}. Run with --help for usage.`)
     else {
