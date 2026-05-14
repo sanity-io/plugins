@@ -5,6 +5,7 @@ packages:
   - packages/@sanity/*
   - plugins/*
   - plugins/@sanity/*
+  - scripts/*
   - turbo/generators
 
 catalog:
