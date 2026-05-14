@@ -1,0 +1,38 @@
+name: Issue Triage
+
+on:
+  issues:
+    types:
+      - opened
+      - labeled
+  workflow_dispatch:
+    inputs:
+      issue_url:
+        description: GitHub issue URL to triage
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  trigger:
+    name: Trigger Miriad triage
+    if: github.event_name == 'workflow_dispatch' || github.event.action == 'opened' || (github.event.action == 'labeled' && github.event.label.name == 'needs-triage')
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      ISSUE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.issue_url || github.event.issue.html_url }}
+      MIRIAD_SPACE_ID: ${{ secrets.MIRIAD_SPACE_ID }}
+      MIRIAD_TOKEN: ${{ secrets.MIRIAD_TOKEN }}
+      MIRIAD_URL: ${{ secrets.MIRIAD_URL }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+
+      - name: Trigger issue triage
+        run: node scripts/trigger-triage/src/index.ts --verbose "$ISSUE_URL"
