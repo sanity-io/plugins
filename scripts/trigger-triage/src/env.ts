@@ -47,10 +47,6 @@ export function resolveMiriadEnv(source: MiriadEnvSource): MiriadEnv {
   return {url, token, spaceId}
 }
 
-export function getMiriadEnv(): MiriadEnv {
-  return resolveMiriadEnv(process.env)
-}
-
 function parseEnvLine(rawLine: string): {key: string; value: string} | null {
   const line = rawLine.trim()
   if (!line || line.startsWith('#')) return null
