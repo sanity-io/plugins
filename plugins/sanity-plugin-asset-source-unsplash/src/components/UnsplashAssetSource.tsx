@@ -73,7 +73,7 @@ export function UnsplashAssetSource({onClose, onSelect}: AssetSourceComponentPro
     >
       <Stack
         ref={scrollContainerRef}
-        space={1}
+        gap={1}
         paddingLeft={3}
         height="stretch"
         style={{overflow: 'hidden scroll', overflowX: 'clip', overflowY: 'scroll'}}

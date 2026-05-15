@@ -49,7 +49,7 @@ export const SettingsView = ({
   return (
     <Dialog animate id="studio-secrets-settings" onClose={onClose} header={title}>
       <Card padding={3}>
-        <Stack space={3}>
+        <Stack gap={3}>
           {keys.map((keyEntry) => (
             <SettingsKeyEntry
               key={keyEntry.key}
@@ -96,7 +96,7 @@ function SettingsKeyEntry({loading, setNewSecrets, newSecrets, keyEntry}: Settin
   const descriptionId = `${inputId}-description`
 
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       <Text as="label" htmlFor={inputId} weight="semibold" size={1}>
         {keyEntry.title}
       </Text>

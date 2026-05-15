@@ -51,7 +51,7 @@ export function createSfccDeleteAction(
       dialog: dialogOpen && {
         type: 'confirm',
         message: (
-          <Stack space={4}>
+          <Stack gap={4}>
             <Text size={1}>{config.message}</Text>
             <Text size={1} weight="medium">
               No data on SFCC will be deleted.

@@ -337,7 +337,7 @@ export default function Tool() {
 
   return (
     <Layout>
-      <Sidebar space={4}>
+      <Sidebar gap={4}>
         <Flex as="label" align="center" gap={2}>
           <Checkbox
             checked={whichList === 'liveEventsIncludingAllDocuments'}

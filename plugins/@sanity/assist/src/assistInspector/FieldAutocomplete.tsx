@@ -127,7 +127,7 @@ export function FieldTitle(props: {field: FieldRef}) {
             </Text>
           </Box>
         }
-        space={1}
+        gap={1}
       >
         {splitTitle.slice(0, splitTitle.length - 1).map((pt, i) => (
           // eslint-disable-next-line react/no-array-index-key

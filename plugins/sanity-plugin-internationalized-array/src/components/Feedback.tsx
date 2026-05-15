@@ -11,7 +11,7 @@ const schemaExample = {
 export default function Feedback(): React.ReactElement {
   return (
     <Card tone="caution" border radius={2} padding={3}>
-      <Stack space={4}>
+      <Stack gap={4}>
         <Text>
           An array of language objects must be passed into the <code>internationalizedArray</code>{' '}
           helper function, each with an <code>id</code> and <code>title</code> field. Example:

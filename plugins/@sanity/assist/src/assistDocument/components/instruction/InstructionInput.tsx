@@ -6,7 +6,7 @@ import {findFieldMember, findFieldsetMember} from '../helpers'
 
 export function InstructionInput(props: ObjectInputProps) {
   return (
-    <Stack space={[4, 4, 4, 5]}>
+    <Stack gap={[4, 4, 4, 5]}>
       <NameField {...props} />
       <ShareField {...props} />
       <ObjectMember fieldName={'prompt'} {...props} />
@@ -51,8 +51,8 @@ function NameField(props: ObjectInputProps) {
   }, [titleMember, titlePlaceholder])
 
   return (
-    <Stack space={5}>
-      <Stack space={2}>
+    <Stack gap={5}>
+      <Stack gap={2}>
         <Flex gap={1}>
           <Text as="label" weight="semibold" size={1} htmlFor={titleId}>
             Name

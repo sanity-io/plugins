@@ -281,7 +281,7 @@ export const instruction = defineType({
             </Box>
           )}
 
-          <Stack flex={1} space={2}>
+          <Stack flex={1} gap={2}>
             <Text size={1} textOverflow="ellipsis" weight="medium">
               {getInstructionTitle(props)}
             </Text>

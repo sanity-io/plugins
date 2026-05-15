@@ -149,7 +149,7 @@ export function CodeInput(props: CodeInputProps): React.JSX.Element {
   )
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       {languageFieldMember && (
         <LanguageField
           member={languageFieldMember}

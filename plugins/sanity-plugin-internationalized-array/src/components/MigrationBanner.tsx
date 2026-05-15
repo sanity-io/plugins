@@ -27,7 +27,7 @@ export function MigrationBanner({
             <WarningOutlineIcon />
           </Text>
         </Box>
-        <Stack space={2} flex={1}>
+        <Stack gap={2} flex={1}>
           <Text size={1} weight="semibold">
             Data migration required
           </Text>

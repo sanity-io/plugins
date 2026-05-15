@@ -276,7 +276,7 @@ export default function InternationalizedArray(
   const addAllTitle = createAddAllTitle(value, filteredLanguages)
 
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       {filteredMembers.map((member) => {
         if (member.kind === 'item') {
           return <ArrayOfObjectsItem {...props} key={member.key} member={member} />
@@ -293,7 +293,7 @@ export default function InternationalizedArray(
       ) : null}
 
       {addButtonsAreVisible ? (
-        <Stack space={2}>
+        <Stack gap={2}>
           <AddButtons
             languagesInUse={addedLanguages}
             readOnly={readOnly}
