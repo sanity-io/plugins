@@ -20,7 +20,7 @@ Given a GitHub issue URL, the default CLI path:
    ignored labels.
 4. Creates or reuses a Miriad channel named after the repo and issue number.
 5. Adds the configured Miriad agents to the channel.
-6. Posts a kickoff message tagging `@triager`.
+6. Posts a kickoff message that mentions `@triager`.
 
 The trigger does not post back to GitHub. It only starts the Miriad workflow.
 
