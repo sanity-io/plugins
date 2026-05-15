@@ -119,7 +119,15 @@ export default function WorkflowTool(props: WorkflowToolProps) {
       }
 
       // Find all items in current state
-      const destinationStateItems = [...filterItemsAndSort(data, destination.droppableId, [], null)]
+      let destinationStateItems = [...filterItemsAndSort(data, destination.droppableId, [], null)]
+
+      // Filter out the dragged item when reordering within the same column
+      if (source.droppableId === destination.droppableId) {
+        destinationStateItems = destinationStateItems.filter(
+          (item) => item._metadata?.documentId !== draggableId,
+        )
+      }
+
       const destinationStateIndex = states.findIndex((s) => s.id === destination.droppableId)
       const globalStateMinimumRank = data?.[0]?._metadata.orderRank
       const globalStateMaximumRank = data?.[data?.length - 1]?._metadata.orderRank
@@ -149,7 +157,7 @@ export default function WorkflowTool(props: WorkflowToolProps) {
           // Otherwise create the next rank between min and the globally minimum rank
           newOrder = LexoRank.parse(globalStateMinimumRank!).between(LexoRank.min()).toString()
         }
-      } else if (destination.index + 1 === destinationStateItems.length) {
+      } else if (destination.index >= destinationStateItems.length) {
         // Now last item in order
         const lastItemOrderRank = [...destinationStateItems].pop()?._metadata?.orderRank
 
