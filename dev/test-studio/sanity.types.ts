@@ -275,6 +275,22 @@ export type RichDate = {
   offset?: number
 }
 
+export type Issue520Repro = {
+  _id: string
+  _type: 'issue520Repro'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  localized?: InternationalizedArrayString
+}
+
+export type InternationalizedArrayString = Array<
+  {
+    _key: string
+  } & InternationalizedArrayStringValue
+>
+
 export type MovieDocument = {
   _id: string
   _type: 'movieDocument'
@@ -355,12 +371,6 @@ export type I18nArrayPerformanceTest = {
   field_28?: InternationalizedArrayString
   field_29?: InternationalizedArrayString
 }
-
-export type InternationalizedArrayString = Array<
-  {
-    _key: string
-  } & InternationalizedArrayStringValue
->
 
 export type InternationalizedPost = {
   _id: string
@@ -697,13 +707,14 @@ export type AllSanitySchemaTypes =
   | Code
   | RichDateTest
   | RichDate
+  | Issue520Repro
+  | InternationalizedArrayString
   | MovieDocument
   | InternationalizedArrayTable
   | Table
   | I18nArrayCircularSchemaRepro
   | I18nArrayCircularBodyContent
   | I18nArrayPerformanceTest
-  | InternationalizedArrayString
   | InternationalizedPost
   | InternationalizedArrayText
   | InternationalizedArrayTableValue
