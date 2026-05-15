@@ -103,7 +103,7 @@ function ObjectOutputInput({
   )
 
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       {fields.map((field) => {
         return (
           <Flex key={field.name} align="center" gap={2}>
@@ -165,7 +165,7 @@ function ArrayOutputInput({
     [onChange, value, ofItems],
   )
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       {ofItems.map((itemType) => {
         return (
           <Flex key={itemType.name}>

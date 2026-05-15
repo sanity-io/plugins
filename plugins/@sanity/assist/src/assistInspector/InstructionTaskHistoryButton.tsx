@@ -219,7 +219,7 @@ function TaskList(props: {onEscape: () => void; tasks: CancelableInstructionTask
   )
 
   return (
-    <Stack padding={1} space={1}>
+    <Stack padding={1} gap={1}>
       {tasks.map((task) => (
         <TaskItem key={task._key} task={task} />
       ))}
@@ -242,7 +242,7 @@ function TaskItem(props: {task: CancelableInstructionTask}) {
               {!task.reason && <Spinner />}
             </Text>
           </Box>
-          <Stack flex={1} space={2}>
+          <Stack flex={1} gap={2}>
             <Text size={1} weight="medium">
               {taskType ? taskType.title : 'Running'}
               {task.title && <>: {task.title}</>}

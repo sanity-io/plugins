@@ -307,7 +307,7 @@ export default function WorkflowTool(props: WorkflowToolProps) {
         toggleSelectedSchemaType={toggleSelectedSchemaType}
       />
       <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <Grid columns={states.length} height="fill">
+        <Grid gridTemplateColumns={states.length} height="fill">
           {states.map((state: State, stateIndex: number) => {
             const userRoleCanDrop = state?.roles?.length
               ? arraysContainMatchingString(state.roles, userRoleNames)

@@ -26,7 +26,7 @@ export function PromptInput(props: ArrayOfObjectsInputProps) {
   useOnlyInlineBlocks(props)
   return (
     <PteMods>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Box paddingBottom={1}>
           <Text size={1} muted>
             Learn from{' '}

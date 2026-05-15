@@ -59,11 +59,11 @@ export default function WorkspaceHome(): React.JSX.Element {
     <TallCard tone="transparent">
       <Flex direction="column" padding={[4, 5, 6, 6]}>
         <Container>
-          <Stack space={4}>
+          <Stack gap={4}>
             <Heading>Workspaces</Heading>
             <Card padding={[2, 3, 4, 4]} radius={3} shadow={2}>
-              <Stack space={3}>
-                <Stack space={2}>
+              <Stack gap={3}>
+                <Stack gap={2}>
                   <Text size={1} weight="semibold">
                     Search
                   </Text>

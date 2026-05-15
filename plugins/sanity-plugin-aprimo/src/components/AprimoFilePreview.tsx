@@ -19,7 +19,7 @@ export function AprimoFilePreview({value, tenantName}: AprimoFilePreviewProps): 
     <Box paddingY={1}>
       <Card paddingY={3} paddingX={3} radius={1} shadow={1}>
         <Flex align="center" justify="space-between" gap={1}>
-          <Stack space={3}>
+          <Stack gap={3}>
             <Label as="p">Aprimo File Asset</Label>
             <Text as="p">{assetName}</Text>
           </Stack>

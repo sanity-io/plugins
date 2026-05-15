@@ -16,7 +16,7 @@ export function InspectorOnboarding(props: {onDismiss: () => void}) {
   return (
     <Box padding={4}>
       <Container width={0}>
-        <Stack space={4}>
+        <Stack gap={4}>
           <div style={{textAlign: 'center'}}>
             <SparklesIllustration />
           </div>

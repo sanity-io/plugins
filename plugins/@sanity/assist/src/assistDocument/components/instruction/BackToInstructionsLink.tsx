@@ -23,7 +23,7 @@ export function BackToInstructionListLink() {
         icon={ArrowLeftIcon}
         mode="bleed"
         padding={1}
-        space={2}
+        gap={2}
         onClick={goBack}
         text="  Instructions"
         textAlign="left"

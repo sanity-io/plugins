@@ -49,14 +49,14 @@ export default function WorkspacePreview(props: WorkspacePreviewProps): React.JS
 
   return (
     <Card borderTop={Boolean(index)} tone="default">
-      <Grid columns={5} gap={[2, 3, 4, 4]} paddingY={1}>
-        <Card columnStart={1} columnEnd={4}>
+      <Grid gridTemplateColumns={5} gap={[2, 3, 4, 4]} paddingY={1}>
+        <Card gridColumnStart={1} gridColumnEnd={4}>
           <Stack>
             <Button mode="bleed" tone="default" onClick={() => setActiveWorkspace(name)}>
               <Flex align="center" gap={[2, 3, 4, 4]}>
                 {iconComponent ? <MediaCard>{createIcon(iconComponent)}</MediaCard> : null}
                 <Box flex={1}>
-                  <Stack space={[1, 2, 3, 3]}>
+                  <Stack gap={[1, 2, 3, 3]}>
                     <Text size={3} weight="semibold" textOverflow="ellipsis">
                       {title || name}
                     </Text>
@@ -67,7 +67,7 @@ export default function WorkspacePreview(props: WorkspacePreviewProps): React.JS
             </Button>
           </Stack>
         </Card>
-        <Card columnStart={4} columnEnd={5}>
+        <Card gridColumnStart={4} gridColumnEnd={5}>
           <Flex height="fill" align="center" gap={2}>
             <Text size={1} weight="semibold">
               <DatabaseIcon />

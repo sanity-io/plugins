@@ -213,7 +213,7 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
             </Flex>
           }
         >
-          <Stack padding={4} space={2}>
+          <Stack padding={4} gap={2}>
             {runRequest?.userInputBlocks?.map((block, i) => (
               <UserInput
                 key={block._key}
@@ -262,7 +262,7 @@ function UserInput(props: {
   }, [autoFocus])
 
   return (
-    <Stack padding={2} space={3}>
+    <Stack padding={2} gap={3}>
       <FormFieldHeaderText
         title={block?.message ?? 'Provide more context'}
         description={block.description}

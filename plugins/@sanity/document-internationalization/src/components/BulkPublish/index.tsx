@@ -85,8 +85,8 @@ export default function BulkPublish(props: BulkPublishProps) {
 
   return translations?.length > 0 ? (
     <Card padding={4} border radius={2}>
-      <Stack space={3}>
-        <Inline space={3}>
+      <Stack gap={3}>
+        <Inline gap={3}>
           <Text weight="bold" size={1}>
             Bulk publishing
           </Text>
@@ -106,9 +106,9 @@ export default function BulkPublish(props: BulkPublishProps) {
             zOffset={1000}
             width={3}
           >
-            <Stack space={4} padding={4}>
+            <Stack gap={4} padding={4}>
               {draftIds.length > 0 ? (
-                <Stack space={2}>
+                <Stack gap={2}>
                   <Text size={1}>
                     There{' '}
                     {draftIds.length === 1
@@ -131,7 +131,7 @@ export default function BulkPublish(props: BulkPublishProps) {
                 </Stack>
               ) : null}
 
-              <Stack space={1}>
+              <Stack gap={1}>
                 {translations
                   .filter((translation) => translation?.value?._ref)
                   .map((translation) => (
