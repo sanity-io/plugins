@@ -32,9 +32,11 @@ jobs:
 
       - name: Detect changed plugin packages from changesets
         id: changed-packages
+        env:
+          BASE_REF: ${{ github.base_ref }}
         run: |
           mapfile -t changeset_files < <(
-            git diff --name-only "origin/${{ github.base_ref }}"...HEAD -- '.changeset/*.md'
+            git diff --name-only "origin/$BASE_REF"...HEAD -- '.changeset/*.md'
           )
 
           filtered_changeset_files=()
@@ -103,7 +105,9 @@ jobs:
 
       - name: Publish preview packages
         if: steps.changed-packages.outputs.has_changed_packages == 'true'
-        run: pnpm dlx pkg-pr-new publish ${{ steps.changed-packages.outputs.package_paths }} --pnpm --no-template --comment=off --json output.json
+        env:
+          PACKAGE_PATHS: ${{ steps.changed-packages.outputs.package_paths }}
+        run: pnpm dlx pkg-pr-new publish $PACKAGE_PATHS --pnpm --no-template --comment=off --json output.json
 
       - name: Post or update comment
         uses: actions/github-script@v9
