@@ -36,6 +36,46 @@ const internationalizedPost = defineType({
         },
       },
     }),
+    // ---------------------------------------------------------------------
+    // Issue #886 — verifying how to set initialValue on internationalized
+    // array fields. Create a new `internationalizedPost` document and
+    // compare these two greeting fields side by side:
+    //   - issue886UsersSetup: no initialValue (the reporter's current setup).
+    //     Renders as an empty array; only the "Add language" buttons show.
+    //   - issue886SuggestedInitialValue: standard Sanity `initialValue` shaped
+    //     to match the stored item shape, i.e. each row is
+    //     { _key, language, value, _type: 'internationalizedArray<Type>Value' }.
+    //     Renders pre-filled with "en" → "Hello" and "fr" → "Bonjour",
+    //     both editable.
+    // ---------------------------------------------------------------------
+    defineField({
+      name: 'issue886UsersSetup',
+      title: 'Greeting (user setup, no initialValue) — issue #886',
+      description:
+        "The reporter's current setup: no initialValue. New docs render an empty array with only the Add-language buttons.",
+      type: 'internationalizedArrayString',
+    }),
+    defineField({
+      name: 'issue886SuggestedInitialValue',
+      title: 'Greeting (suggested initialValue) — issue #886',
+      description:
+        'With the suggested initialValue shape, new docs render pre-filled with "en" → "Hello" and "fr" → "Bonjour".',
+      type: 'internationalizedArrayString',
+      initialValue: [
+        {
+          _key: 'en',
+          _type: 'internationalizedArrayStringValue',
+          language: 'en',
+          value: 'Hello',
+        },
+        {
+          _key: 'fr',
+          _type: 'internationalizedArrayStringValue',
+          language: 'fr',
+          value: 'Bonjour',
+        },
+      ],
+    }),
     defineField({
       name: 'slug',
       title: 'Slug',
