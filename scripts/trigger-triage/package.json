@@ -1,0 +1,24 @@
+{
+  "name": "@sanity/issue-trigger-triage",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CLI and GitHub Actions helper that triggers the Miriad issue triage workflow for a GitHub issue URL.",
+  "bin": {
+    "trigger-triage": "./src/index.ts"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "node src/index.ts",
+    "start": "node src/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "^4.1.0"
+  },
+  "engines": {
+    "node": ">=22.18"
+  }
+}
