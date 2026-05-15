@@ -146,7 +146,7 @@ function AssistDocumentFormEditable(props: ObjectInputProps) {
 
   return (
     <SelectedFieldContextProvider value={context}>
-      <Stack space={5}>
+      <Stack gap={5}>
         <FieldsInitializer
           key={typePath}
           pathKey={typePath}

@@ -53,7 +53,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
   return (
     <div style={{width}}>
       <Card padding={1} border radius={1}>
-        <Stack space={2}>
+        <Stack gap={2}>
           {!readOnly && (
             <>
               <Card overflow="hidden" style={{position: 'relative', height: '5em'}}>
@@ -108,12 +108,12 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                   sizing="border"
                   justify="space-between"
                 >
-                  <Stack space={3} marginTop={1}>
+                  <Stack gap={3} marginTop={1}>
                     <Text size={3} weight="bold">
                       {hex}
                     </Text>
 
-                    <Inline space={3}>
+                    <Inline gap={3}>
                       <Text size={1}>
                         <strong>RGB: </strong>
                         {rgb?.r} {rgb?.g} {rgb?.b}

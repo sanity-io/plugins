@@ -266,7 +266,7 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
         >
           {languages ? (
             <Flex padding={4} gap={5} align="flex-start" justify="center">
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Box marginBottom={2}>
                   <Text weight="semibold">From</Text>
                 </Box>
@@ -284,7 +284,7 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
                 ))}
               </Stack>
 
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Box marginBottom={2}>
                   <Text weight="semibold">To</Text>
                 </Box>

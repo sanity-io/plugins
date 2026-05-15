@@ -168,7 +168,7 @@ export default function DocumentAddButtons(): ReactElement {
     [getInitialValueForType, onChange, toast, getFormValue, filteredLanguages],
   )
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       <Box>
         <Text size={1} weight="semibold">
           Add translation to internationalized fields

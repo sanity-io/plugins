@@ -6,7 +6,7 @@ import InfoIcon from './InfoIcon'
 export default function Info() {
   return (
     <InfoIcon icon={InfoOutlineIcon} tone="primary">
-      <Stack padding={3} space={4} style={{maxWidth: 250}}>
+      <Stack padding={3} gap={4} style={{maxWidth: 250}}>
         <Box>
           <Text size={1}>Bulk publishing uses the Scheduling API.</Text>
         </Box>

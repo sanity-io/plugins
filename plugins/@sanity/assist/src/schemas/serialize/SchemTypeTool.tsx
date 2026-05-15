@@ -62,7 +62,7 @@ export function SchemaTypeTool() {
 
   return (
     <Card padding={4} overflow="auto" style={{height: 'calc(100vh - 81px)'}}>
-      <Stack space={4}>
+      <Stack gap={4}>
         <Box>
           <Button
             icon={saving ? <Spinner style={{marginTop: 5}} /> : SyncIcon}
@@ -72,7 +72,7 @@ export function SchemaTypeTool() {
           />
         </Box>
         <Flex gap={2}>
-          <Stack space={2}>
+          <Stack gap={2}>
             <Label>Studio schema</Label>
             <ul>
               {types.map((type) => (
@@ -83,7 +83,7 @@ export function SchemaTypeTool() {
             </ul>
           </Stack>
 
-          <Stack space={2}>
+          <Stack gap={2}>
             <Label>Stored schema</Label>
             <ul>
               {(data ?? NO_DATA).map((type) => (

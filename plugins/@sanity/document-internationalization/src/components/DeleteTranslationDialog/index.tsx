@@ -44,7 +44,7 @@ export default function DeleteTranslationDialog(props: DeleteTranslationDialogPr
   }
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       {translations && translations.length > 0 ? (
         <Text>
           This document is a language-specific version which other translations depend on.
@@ -53,7 +53,7 @@ export default function DeleteTranslationDialog(props: DeleteTranslationDialogPr
         <Text>This document does not have connected translations.</Text>
       )}
       <Card border padding={3}>
-        <Stack space={4}>
+        <Stack gap={4}>
           <Text size={1} weight="semibold">
             {translations && translations.length > 0 ? (
               <>Before this document can be deleted</>

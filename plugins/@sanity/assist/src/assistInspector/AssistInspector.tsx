@@ -75,7 +75,7 @@ export function AssistInspectorWrapper(props: DocumentInspectorProps) {
   if (context.statusLoading) {
     return (
       <Flex align="center" height="fill" justify="center" padding={4} sizing="border">
-        <Stack space={3} style={{textAlign: 'center'}}>
+        <Stack gap={3} style={{textAlign: 'center'}}>
           <Spinner muted />
           <Text muted size={1}>
             Loading {pluginTitle}...
@@ -96,7 +96,7 @@ export function AssistInspectorWrapper(props: DocumentInspectorProps) {
           title={pluginTitle}
         />
 
-        <Stack flex={1} overflow="auto" padding={4} space={3}>
+        <Stack flex={1} overflow="auto" padding={4} gap={3}>
           <Text as="p" size={1} weight="semibold">
             {pluginTitle} is not available
           </Text>
@@ -125,7 +125,7 @@ export function AssistInspectorWrapper(props: DocumentInspectorProps) {
           title={pluginTitle}
         />
 
-        <Stack padding={4} space={3}>
+        <Stack padding={4} gap={3}>
           {context.error ? (
             <Text size={1} weight="semibold">
               Failed to start {pluginTitle}

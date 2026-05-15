@@ -42,7 +42,7 @@ function SecretsDemo(): ReactElement {
 
   return (
     <Card padding={4}>
-      <Stack space={5}>
+      <Stack gap={5}>
         <Heading as="h1" size={2}>
           @sanity/studio-secrets Demo
         </Heading>
@@ -54,13 +54,13 @@ function SecretsDemo(): ReactElement {
         </Text>
 
         <Card border padding={4} radius={2} tone="primary">
-          <Stack space={4}>
+          <Stack gap={4}>
             <Heading as="h2" size={1}>
               Current Secrets
             </Heading>
 
             {secrets ? (
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Box>
                   <Text size={1} weight="semibold">
                     API Key:
@@ -88,7 +88,7 @@ function SecretsDemo(): ReactElement {
         </Card>
 
         <Card border padding={4} radius={2} tone="caution">
-          <Stack space={3}>
+          <Stack gap={3}>
             <Heading as="h2" size={1}>
               Usage in Your Plugin
             </Heading>

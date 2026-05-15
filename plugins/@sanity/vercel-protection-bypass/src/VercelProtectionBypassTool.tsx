@@ -170,9 +170,9 @@ function Layout({
           flexDirection: 'column',
         }}
       >
-        <Stack space={5}>
+        <Stack gap={5}>
           <Card padding={4} style={{maxWidth: 640}}>
-            <Stack space={4} style={{justifyItems: 'flex-start', textWrap: 'pretty'}}>
+            <Stack gap={4} style={{justifyItems: 'flex-start', textWrap: 'pretty'}}>
               <Heading>Vercel Protection Bypass</Heading>
               {enabled ? (
                 <>
@@ -255,8 +255,8 @@ function Layout({
       <Activity mode={isDialogOpen ? 'visible' : 'hidden'}>
         <Dialog animate id="add-secret-dialog" onClickOutside={() => setIsDialogOpen(false)}>
           <Card as="form" action={formAction} padding={3}>
-            <Stack space={3}>
-              <Stack space={2}>
+            <Stack gap={3}>
+              <Stack gap={2}>
                 <Text as="label" weight="semibold" size={1}>
                   Add bypass secret
                 </Text>

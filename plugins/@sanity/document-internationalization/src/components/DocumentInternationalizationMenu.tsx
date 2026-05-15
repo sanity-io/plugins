@@ -85,7 +85,7 @@ export function DocumentInternationalizationMenu(
           <Text>There was an error returning translations metadata</Text>
         </Card>
       ) : (
-        <Stack space={1}>
+        <Stack gap={1}>
           <LanguageManage
             id={metadata?._id}
             documentId={documentId}

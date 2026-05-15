@@ -79,7 +79,7 @@ export function LanguageFilterMenuButton(): React.JSX.Element {
 
   const content = (
     <Box overflow="auto" style={{maxHeight: 'calc(100vh - 200px)'}}>
-      <Stack padding={1} space={1}>
+      <Stack padding={1} gap={1}>
         {defaultLanguages.length > 0 && (
           <>
             {defaultLanguages.map((l) => (

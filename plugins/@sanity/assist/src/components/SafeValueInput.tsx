@@ -38,7 +38,7 @@ export function ErrorWrapper(
 
   return error ? (
     <Card border tone="critical" padding={2} contentEditable={false}>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Text muted weight="semibold">
           An error occurred.
         </Text>

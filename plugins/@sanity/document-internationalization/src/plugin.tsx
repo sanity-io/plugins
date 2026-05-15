@@ -67,7 +67,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
             )
 
             return (
-              <Stack space={5}>
+              <Stack gap={5}>
                 {bulkPublish ? <BulkPublish translations={translations} /> : null}
                 {weakAndTypedTranslations.length > 0 ? (
                   <OptimisticallyStrengthen

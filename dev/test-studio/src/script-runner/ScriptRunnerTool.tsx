@@ -93,8 +93,8 @@ function ScriptsHome(props: {
 
   return (
     <Box padding={4}>
-      <Stack space={5}>
-        <Stack space={3}>
+      <Stack gap={5}>
+        <Stack gap={3}>
           <Heading as="h1" size={3}>
             Scripts
           </Heading>
@@ -108,11 +108,11 @@ function ScriptsHome(props: {
             <Text muted>No scripts have been registered yet.</Text>
           </Card>
         ) : (
-          <Stack space={3}>
+          <Stack gap={3}>
             {registeredScripts.map((script) => (
               <Card border key={script.name} padding={4} radius={2}>
                 <Flex align="center" gap={4} justify="space-between">
-                  <Stack space={3}>
+                  <Stack gap={3}>
                     <Heading as="h2" size={1}>
                       {script.title}
                     </Heading>
@@ -140,10 +140,10 @@ function UnknownScript(props: {onBack: () => void; scriptName: string}) {
 
   return (
     <Box padding={4}>
-      <Stack space={4}>
+      <Stack gap={4}>
         <Button icon={ArrowLeftIcon} mode="ghost" onClick={onBack} text="Back to scripts" />
         <Card border padding={4} radius={2} tone="critical">
-          <Stack space={3}>
+          <Stack gap={3}>
             <Heading as="h1" size={2}>
               Unknown script
             </Heading>
@@ -172,12 +172,12 @@ function ScriptRunView(props: {
 
   return (
     <Box padding={4}>
-      <Stack space={5}>
+      <Stack gap={5}>
         <Button icon={ArrowLeftIcon} mode="ghost" onClick={onBack} text="Back to scripts" />
 
         <Card border padding={4} radius={2}>
           <Flex align="center" gap={4} justify="space-between">
-            <Stack space={3}>
+            <Stack gap={3}>
               <Heading as="h1" size={3}>
                 {script.title}
               </Heading>
@@ -197,13 +197,13 @@ function ScriptRunView(props: {
 
         {script.inputs?.length ? (
           <Card border padding={4} radius={2}>
-            <Stack space={4}>
+            <Stack gap={4}>
               <Heading as="h2" size={1}>
                 Variables
               </Heading>
-              <Stack space={4}>
+              <Stack gap={4}>
                 {script.inputs.map((input) => (
-                  <Stack key={input.name} space={2}>
+                  <Stack key={input.name} gap={2}>
                     <Flex align="center" gap={2}>
                       <Text size={1} weight="semibold">
                         {input.title}
@@ -234,7 +234,7 @@ function ScriptRunView(props: {
           </Card>
         ) : null}
 
-        <Stack space={3}>
+        <Stack gap={3}>
           <Heading as="h2" size={1}>
             Output
           </Heading>
@@ -243,10 +243,10 @@ function ScriptRunView(props: {
               <Text muted>Run the script to see output here.</Text>
             </Card>
           ) : (
-            <Stack space={2}>
+            <Stack gap={2}>
               {output.map((entry) => (
                 <Card border key={entry.id} padding={3} radius={2} tone={logTone(entry.level)}>
-                  <Stack space={2}>
+                  <Stack gap={2}>
                     <Flex align="center" gap={2}>
                       {entry.level === 'error' ? <ErrorOutlineIcon /> : null}
                       {entry.level === 'success' ? <CheckmarkCircleIcon /> : null}
