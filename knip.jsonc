@@ -26,6 +26,8 @@
       "ignoreBinaries": [
         // Provided by sanity package in dev/test-studio, which is an ignored workspace
         "sanity",
+        // Installed externally (not an npm package); used in lint:workflows script
+        "zizmor",
       ],
     },
     "turbo/generators": {
