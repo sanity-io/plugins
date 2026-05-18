@@ -1,5 +1,11 @@
 # @sanity/vercel-protection-bypass
 
+## 5.0.7
+
+### Patch Changes
+
+- [#869](https://github.com/sanity-io/plugins/pull/869) [`2a3f19d`](https://github.com/sanity-io/plugins/commit/2a3f19d835dbc75e79cce2a0ccd72b3c561170dd) Thanks [@renovate](https://github.com/apps/renovate)! - Replace deprecated `space` prop with `gap` to address @sanity/ui v3.2.0 deprecation warnings
+
 ## 5.0.6
 
 ### Patch Changes

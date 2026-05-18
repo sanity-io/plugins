@@ -1,5 +1,13 @@
 # @sanity/presets
 
+## 0.4.1
+
+### Patch Changes
+
+- [#874](https://github.com/sanity-io/plugins/pull/874) [`91a7140`](https://github.com/sanity-io/plugins/commit/91a7140b4bfd80cc04a45eba41b7a8e4cd01ffaf) Thanks [@jordanl17](https://github.com/jordanl17)! - `definePage` now accepts rich text presets in `pageBuilderBlocks`, both inline (`defineRichText({...})`) and by name (`'richText'`). Documents store each rich text block as `{_type, content: [...]}`.
+
+- [#873](https://github.com/sanity-io/plugins/pull/873) [`8c00079`](https://github.com/sanity-io/plugins/commit/8c00079781ee21b5fd67751f8d18856ed3107c9f) Thanks [@juice49](https://github.com/juice49)! - Preset schema type titles are now correctly inferred based on the user-provided `name`.
+
 ## 0.4.0
 
 ### Minor Changes
