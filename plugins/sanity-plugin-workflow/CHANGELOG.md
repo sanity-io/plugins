@@ -1,5 +1,19 @@
 # sanity-plugin-workflow
 
+## 3.0.15
+
+### Patch Changes
+
+- [#869](https://github.com/sanity-io/plugins/pull/869) [`2a3f19d`](https://github.com/sanity-io/plugins/commit/2a3f19d835dbc75e79cce2a0ccd72b3c561170dd) Thanks [@renovate](https://github.com/apps/renovate)! - Replace deprecated `columns` prop with `gridTemplateColumns` to address @sanity/ui v3.2.0 deprecation warnings
+
+- [#888](https://github.com/sanity-io/plugins/pull/888) [`6f62cbf`](https://github.com/sanity-io/plugins/commit/6f62cbf8cc5f2a41522032f1bd47d27ca5e65a6a) Thanks [@mdinning](https://github.com/mdinning)! - Fix drag-and-drop item positioning issue in workflow columns
+
+  Workflow items would drop one position off from where they were visually placed when dragging within the same column. This was caused by the dragged item remaining in the destination items array during rank calculation.
+
+  **Changes:**
+  - Filter out the dragged item when reordering within the same column, aligning with dnd library expectations
+  - Fix boundary check for end-of-list drops to correctly identify when dropping at or past the last position
+
 ## 3.0.14
 
 ### Patch Changes

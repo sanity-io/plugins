@@ -1,5 +1,13 @@
 # @sanity/code-input
 
+## 7.1.1
+
+### Patch Changes
+
+- [#890](https://github.com/sanity-io/plugins/pull/890) [`093c646`](https://github.com/sanity-io/plugins/commit/093c6460aed6be649fe5bdaee510071f9122b746) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update CodeMirror
+
+- [#869](https://github.com/sanity-io/plugins/pull/869) [`2a3f19d`](https://github.com/sanity-io/plugins/commit/2a3f19d835dbc75e79cce2a0ccd72b3c561170dd) Thanks [@renovate](https://github.com/apps/renovate)! - Replace deprecated `space` prop with `gap` to address @sanity/ui v3.2.0 deprecation warnings
+
 ## 7.1.0
 
 ### Minor Changes
