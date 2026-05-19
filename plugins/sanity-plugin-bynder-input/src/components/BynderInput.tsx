@@ -11,6 +11,13 @@ const BynderModalLayout = lazy(() => import('./BynderModalLayout'))
 export interface BynderConfig {
   portalConfig: PortalConfig
   compactViewOptions: Omit<CompactViewProps, 'onSuccess'>
+  /**
+   * Studio-wide default for whether the full raw Bynder asset payload is
+   * persisted onto documents (in addition to the canonical schema fields).
+   * Field-level `persistRawFields` in `BynderAssetOptions` overrides this.
+   * Defaults to `true` to preserve existing behavior.
+   */
+  persistRawFields?: boolean
 }
 
 export interface BynderInputProps extends ObjectInputProps<BynderAssetValue> {
@@ -92,17 +99,23 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
         })
       : undefined
 
-    // Spread all raw Bynder asset fields first, then override with
-    // computed/mapped fields for backward compatibility
-    const mediaData = {
-      // 1. Spread ALL raw Bynder fields at top level
-      ...asset,
+    const persistRawFields = fieldOptions?.persistRawFields ?? pluginConfig.persistRawFields ?? true
 
-      // 2. Required Sanity fields (override any conflicts)
+    const mediaData = {
+      // When `persistRawFields` is true (the default), spread the full raw Bynder
+      // asset payload first; explicit fields below then override with the
+      // canonical, computed, or mapped values declared in the schema.
+      ...(persistRawFields ? asset : {}),
+
       _key: value?._key,
       _type: schemaType.name,
 
-      // 3. Backward-compatible computed fields (override raw values)
+      id: asset['id'],
+      name: asset['name'],
+      databaseId: asset['databaseId'],
+      type: asset['type'],
+      description: asset['description'],
+
       previewUrl: getPreviewUrl(asset, addInfo),
       previewImg: webImage?.url,
       datUrl: asset['files']?.['transformBaseUrl']?.url,

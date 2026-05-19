@@ -121,6 +121,61 @@ type BynderAssetFilterJson = {
 }
 ```
 
+## Limiting persisted fields
+
+By default the plugin spreads the full raw Bynder asset payload onto the persisted document, alongside the canonical fields declared on the `bynder.asset` schema. Set `persistRawFields: false` to skip the spread and persist only the canonical subset (`id`, `name`, `databaseId`, `type`, `description`, `previewUrl`, `previewImg`, `datUrl`, `videoUrl`, `aspectRatio`, `selectedUrl`, `width`, `height`).
+
+This is useful if you want to avoid storing tags, metaproperties, derivatives, timestamps, and other Bynder-side metadata in your Sanity documents.
+
+### Studio-wide default
+
+Set `persistRawFields` when configuring the plugin to change the default for every `bynder.asset` field in the Studio.
+
+```ts
+import {defineConfig} from 'sanity'
+import {bynderInputPlugin} from 'sanity-plugin-bynder-input'
+
+export default defineConfig({
+  // ...other config
+  plugins: [
+    bynderInputPlugin({
+      portalConfig: {url: 'https://wave-trial.getbynder.com/'},
+      compactViewOptions: {language: 'en_US'},
+      // Default for all bynder.asset fields — can be overridden per field
+      persistRawFields: false,
+    }),
+  ],
+})
+```
+
+### Per-field override
+
+Set `persistRawFields` on a field's `options` to override the Studio-wide default for that field.
+
+```javascript
+import {defineType, defineField} from 'sanity'
+
+export const myDocumentSchema = defineType({
+  type: 'document',
+  name: 'article',
+  fields: [
+    defineField({
+      type: 'bynder.asset',
+      name: 'image',
+      options: {
+        // Persist only the fields declared on the bynder.asset schema,
+        // regardless of the Studio-wide default
+        persistRawFields: false,
+      },
+    }),
+  ],
+})
+```
+
+Resolution order is field-level → plugin-level → `true` (the back-compatible default).
+
+Documents written before this option was set retain any extra fields they were saved with — the option only affects new writes.
+
 ## License
 
 [MIT](LICENSE) © Sanity.io

@@ -19,6 +19,13 @@ type BynderAssetFilterJson = {
 export interface BynderAssetOptions extends ObjectOptions {
   assetTypes?: ('image' | 'video' | 'audio' | (string & {}))[]
   assetFilter?: BynderAssetFilterJson
+  /**
+   * When `true` (the default) the full raw Bynder asset payload is spread onto
+   * the persisted document alongside the canonical fields declared in the
+   * `bynder.asset` schema. Set to `false` to persist only the canonical subset
+   * (the fields enumerated in `BynderAssetValue` / the schema definition).
+   */
+  persistRawFields?: boolean
 }
 
 /**

@@ -14,6 +14,7 @@ export const bynderInputPlugin: Plugin<Partial<BynderConfig>> = definePlugin(
         language: 'en_US',
         ...config?.compactViewOptions,
       },
+      persistRawFields: config?.persistRawFields,
     }
 
     return {
