@@ -14,5 +14,6 @@ export const DEFAULT_CONFIG: PluginConfigContext = {
   allowCreateMetaDoc: false,
   callback: null,
   hideLanguageFilter: false,
+  metadataOmnisearchVisibility: true,
   addTemplates: true,
 }

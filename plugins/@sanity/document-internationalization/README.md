@@ -250,6 +250,10 @@ export const defineConfig({
       // - An array of schema type names: `hideLanguageFilter: ['lesson']`
       // - A function for dynamic control: `hideLanguageFilter: (ctx) => ctx.schemaType === 'lesson'`
       hideLanguageFilter: true, // defaults to false
+
+      // Optional
+      // Controls whether translation.metadata documents are visible in Omnisearch
+      metadataOmnisearchVisibility: true, // defaults to true
     })
   ]
 })
