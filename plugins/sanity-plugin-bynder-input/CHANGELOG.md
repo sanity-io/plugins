@@ -1,5 +1,11 @@
 # sanity-plugin-bynder-input
 
+## 4.1.0
+
+### Minor Changes
+
+- [#889](https://github.com/sanity-io/plugins/pull/889) [`be9fc64`](https://github.com/sanity-io/plugins/commit/be9fc64b996e10abff53f94947ac0d19d554cd8a) Thanks [@estreske](https://github.com/estreske)! - Add `persistRawFields` option to opt out of persisting the full raw Bynder asset payload. Available both on `bynderInputPlugin({...})` as a Studio-wide default and on a `bynder.asset` field's `options` as a per-field override. Defaults to `true` so existing documents and behavior are unchanged.
+
 ## 4.0.4
 
 ### Patch Changes
