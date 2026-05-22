@@ -1,5 +1,11 @@
 # @sanity/document-internationalization
 
+## 6.2.0
+
+### Minor Changes
+
+- [#893](https://github.com/sanity-io/plugins/pull/893) [`83f7d74`](https://github.com/sanity-io/plugins/commit/83f7d74602069e0e2e5553b24285c684a9768b9c) Thanks [@RobbertST](https://github.com/RobbertST)! - Add a `metadataOmnisearchVisibility` option to control whether translation metadata documents appear in Omnisearch.
+
 ## 6.1.2
 
 ### Patch Changes
