@@ -40,6 +40,12 @@ export type PluginConfig = {
   callback?: ((args: PluginCallbackArgs) => Promise<void>) | null
   hideLanguageFilter?: boolean | string[] | ((ctx: DocumentLanguageFilterContext) => boolean)
   /**
+   * Controls whether the translation metadata document type appears in Omnisearch.
+   *
+   * Set to false to hide `translation.metadata` documents from Omnisearch.
+   */
+  metadataOmnisearchVisibility?: boolean
+  /**
    * Allows configuring the behavior of the internationalized array for the metadata document.
    */
   metadataInternationalization?: Pick<

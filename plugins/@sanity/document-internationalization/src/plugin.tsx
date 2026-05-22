@@ -22,6 +22,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
     bulkPublish,
     metadataFields,
     hideLanguageFilter,
+    metadataOmnisearchVisibility,
     metadataInternationalization,
     addTemplates,
   } = pluginConfig
@@ -125,7 +126,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
     // - The `Translations metadata` document type to the schema
     schema: {
       // Create the metadata document type
-      types: [metadata(schemaTypes, metadataFields)],
+      types: [metadata(schemaTypes, metadataFields, metadataOmnisearchVisibility)],
 
       // For every schema type this plugin is enabled on
       // Create an initial value template to set the language

@@ -6,6 +6,10 @@ import {describe, expect, test} from 'vitest'
 import {METADATA_SCHEMA_NAME, TRANSLATIONS_ARRAY_NAME} from '../../constants'
 import createMetadataSchema from './metadata'
 
+type MetadataSchema = ReturnType<typeof createMetadataSchema> & {
+  __experimental_omnisearch_visibility?: boolean
+}
+
 describe('metadata schema', () => {
   const schemaTypes = ['article', 'page']
 
@@ -93,6 +97,24 @@ describe('metadata schema', () => {
     const schema = createMetadataSchema(schemaTypes, [])
 
     expect(schema.liveEdit).toBe(true)
+  })
+
+  test('sets Omnisearch visibility to true by default', () => {
+    const schema = createMetadataSchema(schemaTypes, []) as MetadataSchema
+
+    expect(schema.__experimental_omnisearch_visibility).toBe(true)
+  })
+
+  test('configures Omnisearch visibility when provided', () => {
+    const schema = createMetadataSchema(schemaTypes, [], true) as MetadataSchema
+
+    expect(schema.__experimental_omnisearch_visibility).toBe(true)
+  })
+
+  test('configures Omnisearch visibility when provided false', () => {
+    const schema = createMetadataSchema(schemaTypes, [], false) as MetadataSchema
+
+    expect(schema.__experimental_omnisearch_visibility).toBe(false)
   })
 
   test('uses TranslateIcon', () => {
