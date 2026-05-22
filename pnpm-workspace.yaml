@@ -60,6 +60,8 @@ minimumReleaseAgeExclude:
   - lodash-es@4.17.23
   # Renovate security update: uuid@14.0.0
   - uuid@14.0.0
+  # Renovate security update: turbo@2.9.14
+  - turbo@2.9.14
 
 overrides:
   styled-components: npm:@sanity/styled-components@latest
