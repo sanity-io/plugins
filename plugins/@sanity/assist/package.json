@@ -70,10 +70,10 @@
     "styled-components": "catalog:"
   },
   "peerDependencies": {
-    "@sanity/mutator": "^5",
+    "@sanity/mutator": "^5 || ^6.0.0-0",
     "react": "^19.2",
     "react-dom": "^19.2",
-    "sanity": "^5",
+    "sanity": "^5 || ^6.0.0-0",
     "styled-components": "^6.1"
   },
   "engines": {

@@ -74,7 +74,7 @@
   "peerDependencies": {
     "easymde": "^2.18",
     "react": "^19.2",
-    "sanity": "^5",
+    "sanity": "^5 || ^6.0.0-0",
     "styled-components": "^6.1"
   },
   "engines": {
