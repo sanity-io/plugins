@@ -13,6 +13,7 @@ import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
+import {googleTranslateExample} from '#google-translate'
 import {iframePaneExample} from '#iframe-pane'
 import {
   internationalizedArrayAsyncLanguages,
@@ -61,6 +62,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       assistExample(),
+      googleTranslateExample(),
       // add new plugins here
       debugLiveSyncTagsExample(),
       studioSecretsExample(),

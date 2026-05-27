@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-plugin-google-translate
 
 ## [3.0.3](https://github.com/sanity-io/sanity-plugin-google-translate/compare/v3.0.2...v3.0.3) (2025-12-29)
 

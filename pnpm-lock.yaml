@@ -188,6 +188,9 @@ importers:
       sanity-plugin-bynder-input:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-bynder-input
+      sanity-plugin-google-translate:
+        specifier: workspace:*
+        version: link:../../plugins/sanity-plugin-google-translate
       sanity-plugin-graph-view:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-graph-view
@@ -776,7 +779,7 @@ importers:
         version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)
       sanity-plugin-internationalized-array:
         specifier: ^4.0.0 || ^5.0.0
-        version: 5.1.0(e3b1d17c240c3f45d83d949d6642ff8a)
+        version: 5.1.0(a29ca4d06917b5b5b86be5c24778ae5d)
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*
@@ -1041,6 +1044,49 @@ importers:
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5)'
+
+  plugins/sanity-plugin-google-translate:
+    dependencies:
+      '@sanity/icons':
+        specifier: ^3.7.4
+        version: 3.7.4(react@19.2.5)
+      '@sanity/ui':
+        specifier: 'catalog:'
+        version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)
+      styled-components:
+        specifier: npm:@sanity/styled-components@latest
+        version: '@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5)'
+    devDependencies:
+      '@repo/package.config':
+        specifier: workspace:*
+        version: link:../../packages/@repo/package.config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/@repo/tsconfig
+      '@sanity/pkg-utils':
+        specifier: 'catalog:'
+        version: 10.5.0(@types/babel__core@7.20.5)(@types/node@25.6.0)(@typescript/native-preview@7.0.0-dev.20260418.1)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.19.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))(typescript@5.9.3)
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.14)
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
+      babel-plugin-styled-components:
+        specifier: 'catalog:'
+        version: 2.1.4(@babel/core@7.29.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+      react:
+        specifier: 'catalog:'
+        version: 19.2.5
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.5(react@19.2.5)
+      sanity:
+        specifier: 'catalog:'
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@25.6.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-graph-view:
     dependencies:
@@ -4315,14 +4361,14 @@ packages:
       sanity: ^5
       styled-components: ^6.1
 
-  '@sanity/assist@6.0.6':
-    resolution: {integrity: sha512-jiT49lHTunlDVEHyDyR/7cbQpZozW8QKMGU0Ahhtj8YW1tDux3pSKCLpahrhEDd00kkmkpVyjKtqfjMhoNIscA==}
+  '@sanity/assist@6.0.7':
+    resolution: {integrity: sha512-kNTh8iWGtMcNhvFnflJ/0yUZD0lcyumhWYIuxCQ6kZcE9F8B2rG47IYnt36gM85qSKnKylGzjeBPZ1zIO+VgSg==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
-      '@sanity/mutator': ^5
+      '@sanity/mutator': ^5 || ^6.0.0-0
       react: ^19.2
       react-dom: ^19.2
-      sanity: ^5
+      sanity: ^5 || ^6.0.0-0
       styled-components: ^6.1
 
   '@sanity/bifur-client@0.4.1':
@@ -4444,13 +4490,13 @@ packages:
     resolution: {integrity: sha512-skhIX8gT/hLritEBkjfc7+TBlJNu/NLisyA8noKceCk28OatFK0wX7dIuFawkt3pfhTYVomVPykAYFcIm2OqJg==}
     engines: {node: '>=18.2'}
 
-  '@sanity/language-filter@5.0.2':
-    resolution: {integrity: sha512-Ct7KSQqtO/MdygJX+PNaWSQgrZBB+6f89MkYdDusmm5uj90EPH9YAaT21EBB7q5RNApgaCpjPfM2i7YO0yaG0Q==}
+  '@sanity/language-filter@5.0.3':
+    resolution: {integrity: sha512-QR1Orff5ZG84XcKjKSAJh2JxECNFNySx90GKUZQHDGch8bJLTpAgmqXY51c5a0b416T+z3rGWpi6bZnBkCSwyg==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       react: ^19.2
       react-dom: ^19.2
-      sanity: ^5
+      sanity: ^5 || ^6.0.0-0
 
   '@sanity/lezer-groq@1.0.3':
     resolution: {integrity: sha512-Vw27wIH+eoqcefadRTmeV2f6hnpocwUk3f2HhkQ15beCy8YkzEeV8Gp+gG/nJP8Y4nYzjbK1XOSP88ju2T8YEA==}
@@ -10814,6 +10860,16 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/checkbox@4.3.2(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+      yoctocolors-cjs: 2.1.3
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/checkbox@5.1.3(@types/node@24.12.4)':
     dependencies:
       '@inquirer/ansi': 2.0.5
@@ -10823,6 +10879,15 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/checkbox@5.1.3(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/ansi': 2.0.5
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/figures': 2.0.5
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/confirm@5.1.21(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 10.3.2(@types/node@24.12.4)
@@ -10830,12 +10895,26 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/confirm@5.1.21(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/confirm@6.0.11(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 11.1.8(@types/node@24.12.4)
       '@inquirer/type': 4.0.5(@types/node@24.12.4)
     optionalDependencies:
       '@types/node': 24.12.4
+
+  '@inquirer/confirm@6.0.11(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
 
   '@inquirer/core@10.3.2(@types/node@24.12.4)':
     dependencies:
@@ -10850,6 +10929,19 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/core@10.3.2(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+      cli-width: 4.1.0
+      mute-stream: 2.0.0
+      signal-exit: 4.1.0
+      wrap-ansi: 6.2.0
+      yoctocolors-cjs: 2.1.3
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/core@11.1.8(@types/node@24.12.4)':
     dependencies:
       '@inquirer/ansi': 2.0.5
@@ -10862,6 +10954,18 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/core@11.1.8(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/ansi': 2.0.5
+      '@inquirer/figures': 2.0.5
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+      cli-width: 4.1.0
+      fast-wrap-ansi: 0.2.0
+      mute-stream: 3.0.0
+      signal-exit: 4.1.0
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/editor@4.2.23(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 10.3.2(@types/node@24.12.4)
@@ -10869,6 +10973,14 @@ snapshots:
       '@inquirer/type': 3.0.10(@types/node@24.12.4)
     optionalDependencies:
       '@types/node': 24.12.4
+
+  '@inquirer/editor@4.2.23(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/external-editor': 1.0.3(@types/node@25.6.0)
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
 
   '@inquirer/editor@5.1.0(@types/node@24.12.4)':
     dependencies:
@@ -10878,6 +10990,14 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/editor@5.1.0(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/external-editor': 3.0.0(@types/node@25.6.0)
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/expand@4.0.23(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 10.3.2(@types/node@24.12.4)
@@ -10886,12 +11006,27 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/expand@4.0.23(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+      yoctocolors-cjs: 2.1.3
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/expand@5.0.12(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 11.1.8(@types/node@24.12.4)
       '@inquirer/type': 4.0.5(@types/node@24.12.4)
     optionalDependencies:
       '@types/node': 24.12.4
+
+  '@inquirer/expand@5.0.12(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
 
   '@inquirer/external-editor@1.0.3(@types/node@24.12.4)':
     dependencies:
@@ -10914,6 +11049,13 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/external-editor@3.0.0(@types/node@25.6.0)':
+    dependencies:
+      chardet: 2.1.1
+      iconv-lite: 0.7.2
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/figures@1.0.15': {}
 
   '@inquirer/figures@2.0.5': {}
@@ -10925,12 +11067,26 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/input@4.3.1(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/input@5.0.11(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 11.1.8(@types/node@24.12.4)
       '@inquirer/type': 4.0.5(@types/node@24.12.4)
     optionalDependencies:
       '@types/node': 24.12.4
+
+  '@inquirer/input@5.0.11(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
 
   '@inquirer/number@3.0.23(@types/node@24.12.4)':
     dependencies:
@@ -10939,12 +11095,26 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/number@3.0.23(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/number@4.0.11(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 11.1.8(@types/node@24.12.4)
       '@inquirer/type': 4.0.5(@types/node@24.12.4)
     optionalDependencies:
       '@types/node': 24.12.4
+
+  '@inquirer/number@4.0.11(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
 
   '@inquirer/password@4.0.23(@types/node@24.12.4)':
     dependencies:
@@ -10954,6 +11124,14 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/password@4.0.23(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/password@5.0.11(@types/node@24.12.4)':
     dependencies:
       '@inquirer/ansi': 2.0.5
@@ -10961,6 +11139,14 @@ snapshots:
       '@inquirer/type': 4.0.5(@types/node@24.12.4)
     optionalDependencies:
       '@types/node': 24.12.4
+
+  '@inquirer/password@5.0.11(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/ansi': 2.0.5
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
 
   '@inquirer/prompts@7.10.1(@types/node@24.12.4)':
     dependencies:
@@ -10977,6 +11163,21 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/prompts@7.10.1(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/checkbox': 4.3.2(@types/node@25.6.0)
+      '@inquirer/confirm': 5.1.21(@types/node@25.6.0)
+      '@inquirer/editor': 4.2.23(@types/node@25.6.0)
+      '@inquirer/expand': 4.0.23(@types/node@25.6.0)
+      '@inquirer/input': 4.3.1(@types/node@25.6.0)
+      '@inquirer/number': 3.0.23(@types/node@25.6.0)
+      '@inquirer/password': 4.0.23(@types/node@25.6.0)
+      '@inquirer/rawlist': 4.1.11(@types/node@25.6.0)
+      '@inquirer/search': 3.2.2(@types/node@25.6.0)
+      '@inquirer/select': 4.4.2(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/prompts@8.4.1(@types/node@24.12.4)':
     dependencies:
       '@inquirer/checkbox': 5.1.3(@types/node@24.12.4)
@@ -10992,6 +11193,21 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/prompts@8.4.1(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/checkbox': 5.1.3(@types/node@25.6.0)
+      '@inquirer/confirm': 6.0.11(@types/node@25.6.0)
+      '@inquirer/editor': 5.1.0(@types/node@25.6.0)
+      '@inquirer/expand': 5.0.12(@types/node@25.6.0)
+      '@inquirer/input': 5.0.11(@types/node@25.6.0)
+      '@inquirer/number': 4.0.11(@types/node@25.6.0)
+      '@inquirer/password': 5.0.11(@types/node@25.6.0)
+      '@inquirer/rawlist': 5.2.7(@types/node@25.6.0)
+      '@inquirer/search': 4.1.7(@types/node@25.6.0)
+      '@inquirer/select': 5.1.3(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/rawlist@4.1.11(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 10.3.2(@types/node@24.12.4)
@@ -11000,12 +11216,27 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/rawlist@4.1.11(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+      yoctocolors-cjs: 2.1.3
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/rawlist@5.2.7(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 11.1.8(@types/node@24.12.4)
       '@inquirer/type': 4.0.5(@types/node@24.12.4)
     optionalDependencies:
       '@types/node': 24.12.4
+
+  '@inquirer/rawlist@5.2.7(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
 
   '@inquirer/search@3.2.2(@types/node@24.12.4)':
     dependencies:
@@ -11016,6 +11247,15 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/search@3.2.2(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+      yoctocolors-cjs: 2.1.3
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/search@4.1.7(@types/node@24.12.4)':
     dependencies:
       '@inquirer/core': 11.1.8(@types/node@24.12.4)
@@ -11023,6 +11263,14 @@ snapshots:
       '@inquirer/type': 4.0.5(@types/node@24.12.4)
     optionalDependencies:
       '@types/node': 24.12.4
+
+  '@inquirer/search@4.1.7(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/figures': 2.0.5
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
 
   '@inquirer/select@4.4.2(@types/node@24.12.4)':
     dependencies:
@@ -11034,6 +11282,16 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/select@4.4.2(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/core': 10.3.2(@types/node@25.6.0)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@25.6.0)
+      yoctocolors-cjs: 2.1.3
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/select@5.1.3(@types/node@24.12.4)':
     dependencies:
       '@inquirer/ansi': 2.0.5
@@ -11043,13 +11301,30 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/select@5.1.3(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/ansi': 2.0.5
+      '@inquirer/core': 11.1.8(@types/node@25.6.0)
+      '@inquirer/figures': 2.0.5
+      '@inquirer/type': 4.0.5(@types/node@25.6.0)
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/type@3.0.10(@types/node@24.12.4)':
     optionalDependencies:
       '@types/node': 24.12.4
 
+  '@inquirer/type@3.0.10(@types/node@25.6.0)':
+    optionalDependencies:
+      '@types/node': 25.6.0
+
   '@inquirer/type@4.0.5(@types/node@24.12.4)':
     optionalDependencies:
       '@types/node': 24.12.4
+
+  '@inquirer/type@4.0.5(@types/node@25.6.0)':
+    optionalDependencies:
+      '@types/node': 25.6.0
 
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
@@ -11322,6 +11597,15 @@ snapshots:
   '@oclif/plugin-not-found@3.2.80(@types/node@24.12.4)':
     dependencies:
       '@inquirer/prompts': 7.10.1(@types/node@24.12.4)
+      '@oclif/core': 4.10.5
+      ansis: 3.17.0
+      fast-levenshtein: 3.0.0
+    transitivePeerDependencies:
+      - '@types/node'
+
+  '@oclif/plugin-not-found@3.2.80(@types/node@25.6.0)':
+    dependencies:
+      '@inquirer/prompts': 7.10.1(@types/node@25.6.0)
       '@oclif/core': 4.10.5
       ansis: 3.17.0
       fast-levenshtein: 3.0.0
@@ -12146,7 +12430,7 @@ snapshots:
       - '@emotion/is-prop-valid'
       - react-is
 
-  '@sanity/assist@6.0.6(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.21.0(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@24.12.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
+  '@sanity/assist@6.0.7(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.21.0(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@24.12.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
     dependencies:
       '@portabletext/types': 4.0.2
       '@sanity/client': 7.21.0
@@ -12205,6 +12489,43 @@ snapshots:
       tsx: 4.21.0
       vite: 7.3.2(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
       vite-node: 5.3.0(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
+      zod: 4.3.6
+    transitivePeerDependencies:
+      - '@noble/hashes'
+      - '@types/node'
+      - canvas
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - yaml
+
+  '@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3)':
+    dependencies:
+      '@inquirer/prompts': 8.4.1(@types/node@25.6.0)
+      '@oclif/core': 4.10.5
+      '@rexxars/jiti': 2.6.2
+      '@sanity/client': 7.21.0
+      babel-plugin-react-compiler: 1.0.0
+      boxen: 8.0.1
+      debug: 4.4.3(supports-color@8.1.1)
+      get-it: 8.7.2
+      get-tsconfig: 4.14.0
+      import-meta-resolve: 4.2.0
+      jsdom: 29.0.2(@noble/hashes@2.2.0)
+      json-lexer: 1.2.0
+      log-symbols: 7.0.1
+      ora: 9.3.0
+      read-package-up: 12.0.0
+      rxjs: 7.8.2
+      tsx: 4.21.0
+      vite: 7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
+      vite-node: 5.3.0(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
       zod: 4.3.6
     transitivePeerDependencies:
       - '@noble/hashes'
@@ -12316,6 +12637,101 @@ snapshots:
       - utf-8-validate
       - xstate
 
+  '@sanity/cli@6.3.2(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@25.6.0)(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)(xstate@5.30.0)':
+    dependencies:
+      '@oclif/core': 4.10.5
+      '@oclif/plugin-help': 6.2.44
+      '@oclif/plugin-not-found': 3.2.80(@types/node@25.6.0)
+      '@sanity/cli-core': 1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3)
+      '@sanity/client': 7.21.0
+      '@sanity/codegen': 6.0.2(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/telemetry@0.9.0(react@19.2.5))
+      '@sanity/descriptors': 1.3.0
+      '@sanity/export': 6.1.0
+      '@sanity/generate-help-url': 4.0.0
+      '@sanity/id-utils': 1.0.0
+      '@sanity/import': 6.0.1(@sanity/client@7.21.0)(@types/react@19.2.14)
+      '@sanity/migrate': 6.1.1(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@types/react@19.2.14)(xstate@5.30.0)
+      '@sanity/runtime-cli': 14.13.3(@types/node@25.6.0)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      '@sanity/schema': 5.21.0(@types/react@19.2.14)
+      '@sanity/telemetry': 0.9.0(react@19.2.5)
+      '@sanity/template-validator': 3.1.0
+      '@sanity/types': 5.21.0(@types/react@19.2.14)
+      '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)
+      '@sanity/worker-channels': 2.0.0
+      '@vercel/frameworks': 3.21.1
+      '@vitejs/plugin-react': 5.2.0(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
+      chokidar: 5.0.0
+      console-table-printer: 2.15.0
+      date-fns: 4.1.0
+      debug: 4.4.3(supports-color@8.1.1)
+      dotenv: 17.4.2
+      eventsource: 4.1.0
+      execa: 9.6.1
+      form-data: 4.0.5
+      get-latest-version: 6.0.1
+      groq-js: 1.30.0
+      gunzip-maybe: 1.4.2
+      import-meta-resolve: 4.2.0
+      is-installed-globally: 1.0.0
+      isomorphic-dompurify: 2.36.0(@noble/hashes@2.2.0)
+      json5: 2.2.3
+      jsonc-parser: 3.3.1
+      lodash-es: 4.18.1
+      minimist: 1.2.8
+      nanoid: 5.1.9
+      node-html-parser: 7.1.0
+      oneline: 2.0.0
+      open: 11.0.0
+      p-map: 7.0.4
+      package-directory: 8.2.0
+      peek-stream: 1.1.3
+      picomatch: 4.0.4
+      pluralize-esm: 9.0.5
+      preferred-pm: 5.0.0(ts-toolbelt@9.6.0)
+      pretty-ms: 9.3.0
+      promise-props-recursive: 2.0.2
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+      react-is: 19.2.5
+      read-package-up: 12.0.0
+      rxjs: 7.8.2
+      semver: 7.7.4
+      smol-toml: 1.6.1
+      tar: 7.5.13
+      tar-fs: 3.1.2
+      tar-stream: 3.1.8
+      tinyglobby: 0.2.16
+      tsx: 4.21.0
+      typeid-js: 1.2.0
+      vite: 7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
+      which: 6.0.1
+      yaml: 2.8.3
+      zod: 4.3.6
+    transitivePeerDependencies:
+      - '@emotion/is-prop-valid'
+      - '@noble/hashes'
+      - '@types/node'
+      - '@types/react'
+      - bare-abort-controller
+      - bare-buffer
+      - bufferutil
+      - canvas
+      - jiti
+      - less
+      - lightningcss
+      - react-native-b4a
+      - sass
+      - sass-embedded
+      - styled-components
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - ts-toolbelt
+      - typescript
+      - utf-8-validate
+      - xstate
+
   '@sanity/client@7.21.0':
     dependencies:
       '@sanity/eventsource': 5.0.2
@@ -12335,6 +12751,34 @@ snapshots:
       '@babel/types': 7.29.0
       '@oclif/core': 4.10.5
       '@sanity/cli-core': 1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3)
+      '@sanity/telemetry': 0.9.0(react@19.2.5)
+      '@sanity/worker-channels': 2.0.0
+      chokidar: 3.6.0
+      debug: 4.4.3(supports-color@8.1.1)
+      globby: 11.1.0
+      groq: 5.21.0
+      groq-js: 1.30.0
+      json5: 2.2.3
+      lodash-es: 4.18.1
+      prettier: 3.8.3
+      reselect: 5.1.1
+      tsconfig-paths: 4.2.0
+      zod: 4.3.6
+    transitivePeerDependencies:
+      - supports-color
+
+  '@sanity/codegen@6.0.2(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/telemetry@0.9.0(react@19.2.5))':
+    dependencies:
+      '@babel/core': 7.29.0
+      '@babel/generator': 7.29.1
+      '@babel/preset-env': 7.29.2(@babel/core@7.29.0)
+      '@babel/preset-react': 7.28.5(@babel/core@7.29.0)
+      '@babel/preset-typescript': 7.28.5(@babel/core@7.29.0)
+      '@babel/register': 7.28.6(@babel/core@7.29.0)
+      '@babel/traverse': 7.29.0
+      '@babel/types': 7.29.0
+      '@oclif/core': 4.10.5
+      '@sanity/cli-core': 1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3)
       '@sanity/telemetry': 0.9.0(react@19.2.5)
       '@sanity/worker-channels': 2.0.0
       chokidar: 3.6.0
@@ -12459,7 +12903,7 @@ snapshots:
 
   '@sanity/json-match@1.0.5': {}
 
-  '@sanity/language-filter@5.0.2(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@24.12.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
+  '@sanity/language-filter@5.0.3(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@24.12.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
     dependencies:
       '@sanity/icons': 3.7.4(react@19.2.5)
       '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)
@@ -12499,6 +12943,25 @@ snapshots:
     dependencies:
       '@oclif/core': 4.10.5
       '@sanity/cli-core': 1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3)
+      '@sanity/client': 7.21.0
+      '@sanity/mutate': 0.16.1(xstate@5.30.0)
+      '@sanity/types': 5.21.0(@types/react@19.2.14)
+      '@sanity/util': 5.21.0(@types/react@19.2.14)
+      arrify: 2.0.1
+      console-table-printer: 2.15.0
+      debug: 4.4.3(supports-color@8.1.1)
+      fast-fifo: 1.3.2
+      groq-js: 1.30.0
+      p-map: 7.0.4
+    transitivePeerDependencies:
+      - '@types/react'
+      - supports-color
+      - xstate
+
+  '@sanity/migrate@6.1.1(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@types/react@19.2.14)(xstate@5.30.0)':
+    dependencies:
+      '@oclif/core': 4.10.5
+      '@sanity/cli-core': 1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3)
       '@sanity/client': 7.21.0
       '@sanity/mutate': 0.16.1(xstate@5.30.0)
       '@sanity/types': 5.21.0(@types/react@19.2.14)
@@ -12704,6 +13167,49 @@ snapshots:
       tar-stream: 3.1.8
       vite: 7.3.2(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
       vite-tsconfig-paths: 6.1.1(typescript@5.9.3)(vite@7.3.2(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
+      ws: 8.20.0
+      xdg-basedir: 5.1.0
+    transitivePeerDependencies:
+      - '@types/node'
+      - bare-abort-controller
+      - bare-buffer
+      - bufferutil
+      - less
+      - lightningcss
+      - react-native-b4a
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - typescript
+      - utf-8-validate
+      - yaml
+
+  '@sanity/runtime-cli@14.13.3(@types/node@25.6.0)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)':
+    dependencies:
+      '@architect/hydrate': 5.0.2
+      '@architect/inventory': 5.0.0
+      '@inquirer/prompts': 8.4.1(@types/node@25.6.0)
+      '@oclif/core': 4.10.5
+      '@oclif/plugin-help': 6.2.44
+      '@sanity/blueprints': 0.15.2
+      '@sanity/blueprints-parser': 0.4.0
+      '@sanity/client': 7.21.0
+      adm-zip: 0.5.17
+      array-treeify: 0.1.5
+      cardinal: 2.1.1
+      empathic: 2.0.0
+      eventsource: 4.1.0
+      groq-js: 1.30.0
+      jiti: 2.6.1
+      mime-types: 3.0.2
+      ora: 9.3.0
+      tar-stream: 3.1.8
+      vite: 7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
+      vite-tsconfig-paths: 6.1.1(typescript@5.9.3)(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
       ws: 8.20.0
       xdg-basedir: 5.1.0
     transitivePeerDependencies:
@@ -13348,6 +13854,18 @@ snapshots:
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
       vite: 7.3.2(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vitejs/plugin-react@5.2.0(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))':
+    dependencies:
+      '@babel/core': 7.29.0
+      '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
+      '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.29.0)
+      '@rolldown/pluginutils': 1.0.0-rc.3
+      '@types/babel__core': 7.20.5
+      react-refresh: 0.18.0
+      vite: 7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -16773,10 +17291,10 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sanity-plugin-internationalized-array@5.1.0(e3b1d17c240c3f45d83d949d6642ff8a):
+  sanity-plugin-internationalized-array@5.1.0(a29ca4d06917b5b5b86be5c24778ae5d):
     dependencies:
       '@sanity/icons': 3.7.4(react@19.2.5)
-      '@sanity/language-filter': 5.0.2(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@24.12.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
+      '@sanity/language-filter': 5.0.3(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@24.12.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
       '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)
       '@sanity/util': 5.21.0(@types/react@19.2.14)
       lodash-es: 4.18.1
@@ -16784,7 +17302,7 @@ snapshots:
       react-dom: 19.2.5(react@19.2.5)
       sanity: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@24.12.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
     optionalDependencies:
-      '@sanity/assist': 6.0.6(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.21.0(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@24.12.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
+      '@sanity/assist': 6.0.7(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.21.0(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@24.12.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - '@types/react'
@@ -16846,6 +17364,141 @@ snapshots:
       '@sanity/media-library-types': 1.3.0
       '@sanity/message-protocol': 0.23.0
       '@sanity/migrate': 6.1.1(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@types/react@19.2.14)(xstate@5.30.0)
+      '@sanity/mutate': 0.16.1(xstate@5.30.0)
+      '@sanity/mutator': 5.21.0(@types/react@19.2.14)
+      '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.21.0)(@sanity/types@5.21.0(@types/react@19.2.14))
+      '@sanity/preview-url-secret': 4.0.5(@sanity/client@7.21.0)
+      '@sanity/prism-groq': 1.1.2
+      '@sanity/schema': 5.21.0(@types/react@19.2.14)
+      '@sanity/sdk': 2.8.0(@types/react@19.2.14)(react@19.2.5)(use-sync-external-store@1.6.0(react@19.2.5))
+      '@sanity/telemetry': 0.9.0(react@19.2.5)
+      '@sanity/types': 5.21.0(@types/react@19.2.14)
+      '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)
+      '@sanity/util': 5.21.0(@types/react@19.2.14)
+      '@sanity/uuid': 3.0.2
+      '@sentry/react': 8.55.1(react@19.2.5)
+      '@tanstack/react-table': 8.21.3(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@tanstack/react-virtual': 3.13.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@xstate/react': 6.1.0(@types/react@19.2.14)(react@19.2.5)(xstate@5.30.0)
+      classnames: 2.5.1
+      color2k: 2.0.3
+      dataloader: 2.2.3
+      date-fns: 4.1.0
+      debug: 4.4.3(supports-color@8.1.1)
+      exif-component: 1.0.1
+      fast-deep-equal: 3.1.3
+      groq-js: 1.30.0
+      history: 5.3.0
+      i18next: 25.10.10(typescript@5.9.3)
+      is-hotkey-esm: 1.0.0
+      isomorphic-dompurify: 2.26.0
+      json-reduce: 3.0.0
+      json-stable-stringify: 1.3.0
+      lodash-es: 4.18.1
+      mendoza: 3.0.8
+      motion: 12.38.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      nano-pubsub: 3.0.0
+      nanoid: 3.3.11
+      observable-callback: 1.0.3(rxjs@7.8.2)
+      path-to-regexp: 6.3.0
+      player.style: 0.1.10(react@19.2.5)
+      polished: 4.3.1
+      quick-lru: 7.3.0
+      raf: 3.4.1
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+      react-fast-compare: 3.2.2
+      react-focus-lock: 2.13.7(@types/react@19.2.14)(react@19.2.5)
+      react-i18next: 15.6.1(i18next@25.10.10(typescript@5.9.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@5.9.3)
+      react-is: 19.2.5
+      react-refractor: 4.0.0(react@19.2.5)
+      react-rx: 4.2.2(react@19.2.5)(rxjs@7.8.2)
+      refractor: 5.0.0
+      rxjs: 7.8.2
+      rxjs-exhaustmap-with-trailing: 2.1.1(rxjs@7.8.2)
+      rxjs-mergemap-array: 0.1.0(rxjs@7.8.2)
+      scroll-into-view-if-needed: 3.1.0
+      scrollmirror: 1.2.4
+      semver: 7.7.4
+      shallow-equals: 1.0.0
+      speakingurl: 14.0.1
+      styled-components: '@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5)'
+      urlpattern-polyfill: 10.1.0
+      use-device-pixel-ratio: 1.1.2(react@19.2.5)
+      use-hot-module-reload: 2.0.0(react@19.2.5)
+      use-sync-external-store: 1.6.0(react@19.2.5)
+      uuid: 11.1.0
+      web-vitals: 5.2.0
+      xstate: 5.30.0
+    transitivePeerDependencies:
+      - '@emotion/is-prop-valid'
+      - '@noble/hashes'
+      - '@oclif/core'
+      - '@sanity/cli-core'
+      - '@types/node'
+      - '@types/react'
+      - '@types/react-dom'
+      - bare-abort-controller
+      - bare-buffer
+      - bufferutil
+      - canvas
+      - immer
+      - jiti
+      - less
+      - lightningcss
+      - prismjs
+      - react-native
+      - react-native-b4a
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - ts-toolbelt
+      - typescript
+      - utf-8-validate
+
+  sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@25.6.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
+    dependencies:
+      '@algorithm.ts/lcs': 4.0.6
+      '@date-fns/tz': 1.4.1
+      '@dnd-kit/core': 6.3.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@dnd-kit/modifiers': 6.0.1(@dnd-kit/core@6.3.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)
+      '@dnd-kit/sortable': 7.0.2(@dnd-kit/core@6.3.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)
+      '@dnd-kit/utilities': 3.2.2(react@19.2.5)
+      '@isaacs/ttlcache': 1.4.1
+      '@mux/mux-player-react': 3.11.8(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@portabletext/editor': 6.6.2(@types/react@19.2.14)(react@19.2.5)
+      '@portabletext/html': 1.0.1
+      '@portabletext/patches': 2.0.4
+      '@portabletext/plugin-markdown-shortcuts': 7.0.25(@portabletext/editor@6.6.2(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
+      '@portabletext/plugin-one-line': 6.0.25(@portabletext/editor@6.6.2(@types/react@19.2.14)(react@19.2.5))(react@19.2.5)
+      '@portabletext/plugin-paste-link': 3.0.25(@portabletext/editor@6.6.2(@types/react@19.2.14)(react@19.2.5))(react@19.2.5)
+      '@portabletext/plugin-typography': 7.0.25(@portabletext/editor@6.6.2(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
+      '@portabletext/react': 6.0.3(react@19.2.5)
+      '@portabletext/sanity-bridge': 3.0.0(@types/react@19.2.14)
+      '@portabletext/to-html': 5.0.2
+      '@portabletext/toolkit': 5.0.2
+      '@rexxars/react-json-inspector': 9.0.1(react@19.2.5)
+      '@sanity/asset-utils': 2.3.0
+      '@sanity/bifur-client': 1.0.0
+      '@sanity/cli': 6.3.2(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@25.6.0)(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)(xstate@5.30.0)
+      '@sanity/client': 7.21.0
+      '@sanity/color': 3.0.6
+      '@sanity/comlink': 4.0.1
+      '@sanity/diff': 5.21.0
+      '@sanity/diff-match-patch': 3.2.0
+      '@sanity/diff-patch': 5.0.0
+      '@sanity/eventsource': 5.0.2
+      '@sanity/icons': 3.7.4(react@19.2.5)
+      '@sanity/id-utils': 1.0.0
+      '@sanity/image-url': 2.1.1
+      '@sanity/insert-menu': 3.0.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@sanity/types@5.21.0(@types/react@19.2.14))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@sanity/logos': 2.2.2(react@19.2.5)
+      '@sanity/media-library-types': 1.3.0
+      '@sanity/message-protocol': 0.23.0
+      '@sanity/migrate': 6.1.1(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@types/react@19.2.14)(xstate@5.30.0)
       '@sanity/mutate': 0.16.1(xstate@5.30.0)
       '@sanity/mutator': 5.21.0(@types/react@19.2.14)
       '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.21.0)(@sanity/types@5.21.0(@types/react@19.2.14))
@@ -17638,12 +18291,42 @@ snapshots:
       - tsx
       - yaml
 
+  vite-node@5.3.0(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3):
+    dependencies:
+      cac: 6.7.14
+      es-module-lexer: 2.0.0
+      obug: 2.1.1
+      pathe: 2.0.3
+      vite: 7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
+
   vite-tsconfig-paths@6.1.1(typescript@5.9.3)(vite@7.3.2(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)):
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.9.3)
       vite: 7.3.2(@types/node@24.12.4)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  vite-tsconfig-paths@6.1.1(typescript@5.9.3)(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)):
+    dependencies:
+      debug: 4.4.3(supports-color@8.1.1)
+      globrex: 0.1.2
+      tsconfck: 3.1.6(typescript@5.9.3)
+      vite: 7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
     transitivePeerDependencies:
       - supports-color
       - typescript

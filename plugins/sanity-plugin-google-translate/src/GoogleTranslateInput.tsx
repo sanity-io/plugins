@@ -2,10 +2,11 @@ import {Box, Button, Text, Flex, Stack, Tooltip, useToast} from '@sanity/ui'
 import React from 'react'
 import {FieldMember, InputProps, set, unset} from 'sanity'
 import {MemberField, MemberFieldSet, MemberFieldError, ObjectInputProps} from 'sanity'
-import {FieldNameLangPair, TranslationConfig} from './types'
-import {getLanguageFromMember} from './helpers/getLanguageFromMember'
+
 import {extractLanguageFromCode} from './helpers/extractLanguageFromCode'
+import {getLanguageFromMember} from './helpers/getLanguageFromMember'
 import {htmlDecode} from './helpers/htmlDecode'
+import {FieldNameLangPair, TranslationConfig} from './types'
 
 export function GoogleTranslateInput(props: ObjectInputProps) {
   const {renderDefault, members, onChange, value} = props
@@ -53,7 +54,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
 
               return memberAcc
             },
-            []
+            [],
           )
 
           return [...acc, ...pairsFromMembers]
@@ -111,16 +112,13 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
               const {data} = res
 
               if (data?.translations?.length) {
-                data.translations.forEach(
-                  // eslint-disable-next-line max-nested-callbacks
-                  ({translatedText}: {translatedText: string}) => {
-                    // Convert html entities returned in translation to a string
-                    const decoded = htmlDecode(translatedText)
+                data.translations.forEach(({translatedText}: {translatedText: string}) => {
+                  // Convert html entities returned in translation to a string
+                  const decoded = htmlDecode(translatedText)
 
-                    // Write translation into the correct language field
-                    onChange(decoded ? set(decoded, [item.fieldName]) : unset([item.fieldName]))
-                  }
-                )
+                  // Write translation into the correct language field
+                  onChange(decoded ? set(decoded, [item.fieldName]) : unset([item.fieldName]))
+                })
               }
             }
           })
@@ -131,7 +129,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
 
       return Promise.all(translations).then(() => setIsTranslating(false))
     },
-    [apiKey, members, onChange, toast]
+    [apiKey, members, onChange, toast],
   )
 
   const renderInput = React.useCallback(
@@ -189,7 +187,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
         </Flex>
       )
     },
-    [handleTranslation, isTranslating, members, renderDefault, value]
+    [handleTranslation, isTranslating, members, renderDefault, value],
   )
 
   return (

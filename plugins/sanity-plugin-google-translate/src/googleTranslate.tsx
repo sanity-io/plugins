@@ -1,4 +1,5 @@
 import {definePlugin} from 'sanity'
+
 import {GoogleTranslateInput} from './GoogleTranslateInput'
 
 export const googleTranslate = definePlugin<void>(() => {
@@ -10,7 +11,7 @@ export const googleTranslate = definePlugin<void>(() => {
           if (props?.schemaType?.options?.translate) {
             if (props.schemaType.jsonType !== 'object') {
               throw new Error(
-                `The translate option is only supported on object type fields, but got ${props.schemaType.jsonType}`
+                `The translate option is only supported on object type fields, but got ${props.schemaType.jsonType}`,
               )
             }
 
