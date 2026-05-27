@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-latex-input",
-  "version": "2.0.7",
+  "version": "3.0.0",
   "description": "LaTeX input for Portable Text Editor in Sanity Studio.",
   "keywords": [
     "latex",
