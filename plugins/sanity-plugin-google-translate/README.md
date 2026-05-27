@@ -1,93 +1,114 @@
-# TODO: Manual Steps for `sanity-plugin-google-translate`
-
-This plugin was scaffolded using `pnpm generate "copy plugin"`.
-
-**Original repository:** https://github.com/sanity-io/sanity-plugin-google-translate
-
-## 1. Configure Trusted Publishing (CRITICAL)
-
-⚠️ **If trusted publishing is not configured correctly, the plugin will fail to publish from this monorepo.**
-
-Run this command locally (requires [npm >= 11.10.0](https://docs.npmjs.com/cli/v11/commands/npm-trust)):
-
-```bash
-npm trust github sanity-plugin-google-translate --file=release.yml --repository=sanity-io/plugins
-```
-
-This sets up OIDC-based trusted publishing so the GitHub Actions release workflow can publish this package without storing npm tokens.
-
-<details>
-<summary>Alternative: Configure via npm website</summary>
-
-If you don't have npm >= 11.10.0, you can configure trusted publishing manually:
-
-1. Go to **https://www.npmjs.com/package/sanity-plugin-google-translate/access**
-2. Under **"Publishing access"**, click **"Add a trusted publisher"** and select **"GitHub Actions"**
-3. Fill in the fields:
-
-| Setting              | Value           |
-| -------------------- | --------------- |
-| **Owner**            | `sanity-io`     |
-| **Repository**       | `plugins`       |
-| **Workflow**         | `release.yml`   |
-| **Environment name** | _(leave empty)_ |
-
-4. Click **"Add trusted publisher"**
-
-</details>
-
-## 2. Update package.json Dependencies
-
-Manually update `package.json` with any missing dependencies from the original plugin:
-
-- `dependencies`
-- `devDependencies`
-- `peerDependencies`
-- `exports` (if the original has custom export paths)
-
-**Do NOT copy over:**
-
-- `@sanity/incompatible-plugin`
-- `@sanity/plugin-kit`
-
-## 3. Source Files
-
-The `src/` directory was automatically imported from the original repository with full git history preserved.
-
-After reviewing, update the test studio example at:
-
-`dev/test-studio/src/google-translate/index.tsx`
-
-Add any required options, schemas, or configuration needed to properly test the plugin in the test studio.
-
-## 4. Update CHANGELOG.md
-
-The `CHANGELOG.md` was automatically copied from the original repository.
-
-Update the top of the file - **remove this header if present:**
-
-```md
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
-```
-
-**Replace with:**
-
-```md
 # sanity-plugin-google-translate
+
+This plugin lets you connect Sanity fields to Google Cloud Translate API, giving you instant machine translations for 108 languages and counting! Enable it for all of them! ...or just the ones you need.
+
+## Installation
+
+```
+npm install --save sanity-plugin-google-translate
+
+OR
+
+yarn add sanity-plugin-google-translate
 ```
 
-## 5. Verify Setup
+## Usage
 
-1. Run `pnpm install` from the monorepo root
-2. Run `pnpm build` to verify the plugin builds correctly
-3. Run `pnpm dev` to test in the test studio
-4. Create a changeset: `pnpm changeset add`
+First, add it as a plugin in `sanity.config.ts/js`
 
-## 6. Copy README.md (Final Step)
+```ts
+// ./sanity.config.ts
 
-Copy the `README.md` from the original plugin and replace this file with it.
+import {createConfig} from 'sanity'
+import {googleTranslate} from 'sanity-plugin-google-translate'
+
+export const createConfig({
+    // ...all other config settings
+    plugins: [
+       // ...all other plugins
+       googleTranslate()
+    ]
+})
+```
+
+This plugin is designed to work with <a href="https://www.sanity.io/docs/localization#cd568b11a09c">field-level translated objects</a> and replace the default input component with a Google Translate-powered one. By setting `options.translate = true` on an object field definition.
+
+These objects should be registered in the way recommended by the <a href="https://www.npmjs.com/package/@sanity/language-filter">@sanity/language-filter plugin</a>. With a field for each language. The base language at the top level, and all other languages inside a fieldset.
+
+Note: This will not translate Portable Text content, as that schema type should not be mapped over multiple times in a single document. If you need multiple languages of Portable Text, you are best to use <a href="https://github.com/sanity-io/document-internationalization">document-level translation</a>.
+
+### Example: Add Google Translate to all localized `string` objects
+
+```js
+// ./schemas/fields/localizedString.ts
+
+const languages = [
+  {id: 'en', title: 'English', isDefault: true},
+  {id: 'es', title: 'Spanish'},
+  {id: 'fr', title: 'French'},
+]
+
+export default defineField({
+  name: 'localizedString',
+  type: 'object',
+  options: {
+    // This will replace the default input component
+    translate: true,
+    // This API key will be bundled with your studio
+    // and so should be restricted by hostname
+    // See: https://www.sanity.io/docs/studio-environment-variables
+    apiKey: process.env.SANITY_STUDIO_GOOGLE_TRANSLATE_API_KEY,
+  },
+  fieldsets: [
+    {
+      title: 'Translations',
+      name: 'translations',
+      options: {collapsible: true, collapsed: false},
+    },
+  ],
+  fields: languages.map((lang) => ({
+    name: lang.id,
+    title: lang.title,
+    type: 'string', // or `text`, etc
+    fieldset: lang.isDefault ? null : 'translations',
+  })),
+})
+```
+
+### Example: Extend some localized `string` objects with Google Translate
+
+Alternatively, you could selectively extend specific uses of `localizedString`, by registering another object to your schema which uses it as a base. This is helpful if you only need Google Translate on specific fields.
+
+```ts
+// ./schemas/fields/localizedGoogleTranslateString.ts
+
+export default defineField({
+  name: 'localizedGoogleTranslateString',
+  title: 'Localized String',
+  type: 'localizedString',
+  options: {
+    translate: true,
+    apiKey: process.env.SANITY_STUDIO_GOOGLE_TRANSLATE_API_KEY,
+  },
+})
+```
+
+## API Key security
+
+By including your Google Cloud Translation API key in the schema definition it becomes part of the Studio bundle which is hosted as static files on web servers.
+
+To avoid others using your key you should restrict it to hosts where your studio runs, like
+
+- `http://localhost:3333/*`
+- `http://<your-project>.sanity.studio/*`
+- ...or custom domain you may be hosting the Studio
+
+<a href="https://cloud.google.com/docs/authentication/api-keys#adding_http_restrictions">More info on adding HTTP restrictions</a>
+## License
+
+MIT © Sanity.io
+See LICENSE
+
+## License
+
+<a>MIT</a> © Sanity.io
