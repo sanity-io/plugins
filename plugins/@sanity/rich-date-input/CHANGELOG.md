@@ -1,5 +1,11 @@
 # @sanity/rich-date-input
 
+## 4.0.4
+
+### Patch Changes
+
+- [#903](https://github.com/sanity-io/plugins/pull/903) [`2f03c8d`](https://github.com/sanity-io/plugins/commit/2f03c8d98039c29b9d4fd9bc6cd7c09c909c8cc4) Thanks [@bjoerge](https://github.com/bjoerge)! - Widen `sanity` peer-dependency range to `^5 || ^6.0.0-0` to support Sanity Studio v6 (including v6 pre-releases).
+
 ## 4.0.3
 
 ### Patch Changes
