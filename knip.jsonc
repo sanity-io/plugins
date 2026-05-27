@@ -160,6 +160,11 @@
         "babel-plugin-styled-components",
       ],
     },
+    "plugins/sanity-plugin-latex-input": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
     "plugins/@sanity/debug-live-sync-tags": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],

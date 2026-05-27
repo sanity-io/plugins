@@ -19,6 +19,7 @@ import {
   internationalizedArrayAsyncLanguages,
   internationalizedArrayExample,
 } from '#internationalized-array'
+import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
@@ -64,6 +65,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      latexInputExample(),
       debugLiveSyncTagsExample(),
       studioSecretsExample(),
       documentInternationalizationExample(),
