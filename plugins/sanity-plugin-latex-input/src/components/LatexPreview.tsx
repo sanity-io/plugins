@@ -8,6 +8,8 @@ export interface LatexPreviewProps {
   layout?: string
 }
 
+// KaTeX's renderToString sanitizes its output and does not execute scripts,
+// making it safe to use with dangerouslySetInnerHTML for trusted LaTeX source content.
 export const LatexPreview = (props: LatexPreviewProps) => {
   const latex = props?.body || ''
   const isInline = props.layout === 'inline'
