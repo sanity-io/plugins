@@ -20,7 +20,10 @@ import {
 } from '#internationalized-array'
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
-import {orderableDocumentListExample} from '#orderable-document-list'
+import {
+  orderableDocumentListExample,
+  orderableDocumentListExampleStructure,
+} from '#orderable-document-list'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
 import {scriptRunnerTool} from '#script-runner'
@@ -48,6 +51,11 @@ export default defineConfig([
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
+  createWorkspace({
+    name: 'orderable-document-list-example',
+    title: 'Orderable Document List',
+    plugins: [orderableDocumentListExample(), orderableDocumentListExampleStructure()],
+  }),
   createWorkspace({
     name: 'presets-studio',
     title: 'Presets Studio',
