@@ -152,6 +152,11 @@
       ],
     },
     // add new plugin workspaces here
+    "plugins/sanity-plugin-latex-input": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
     "plugins/@sanity/debug-live-sync-tags": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],

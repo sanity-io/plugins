@@ -12,7 +12,11 @@ import type {TranslationReference} from '../../types'
  * metadata fields provided by the plugin consumer. The document uses `liveEdit`
  * so changes are published immediately without drafts.
  */
-export default (schemaTypes: string[], metadataFields: FieldDefinition[], omnisearchVisibility = true): DocumentDefinition =>
+export default (
+  schemaTypes: string[],
+  metadataFields: FieldDefinition[],
+  omnisearchVisibility = true,
+): DocumentDefinition =>
   defineType({
     type: 'document',
     name: METADATA_SCHEMA_NAME,
