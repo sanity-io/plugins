@@ -1,5 +1,5 @@
-import {describe, expect, it} from 'vitest'
 import {LexoRank} from 'lexorank'
+import {describe, expect, it} from 'vitest'
 
 import {parseOrderRank} from '../parseOrderRank'
 

@@ -1,11 +1,11 @@
-import {describe, expect, it} from 'vitest'
 import {LexoRank} from 'lexorank'
+import {describe, expect, it} from 'vitest'
 
 import {initialRank} from '../initialRank'
 
 describe('initialRank', () => {
   it('handles invalid/non-string compareRankValue without throwing', () => {
-    const action = () => initialRank(1 as unknown as string)
+    const action = () => initialRank(1)
     expect(action).not.toThrow()
 
     const rank = action()

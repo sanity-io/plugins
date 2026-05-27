@@ -1,10 +1,10 @@
 import {GenerateIcon, SortIcon} from '@sanity/icons'
+import {type ComponentType} from 'react'
 import type {ConfigContext} from 'sanity'
+import {type ListItem, type MenuItem, type StructureBuilder} from 'sanity/structure'
 
-import type {ComponentType} from 'react'
-import {StructureBuilder, type ListItem, type MenuItem} from 'sanity/structure'
-import {OrderableDocumentList} from '../OrderableDocumentList'
 import {API_VERSION} from '../helpers/constants'
+import {OrderableDocumentList} from '../OrderableDocumentList'
 
 export interface OrderableListConfig {
   type: string
@@ -30,8 +30,12 @@ export function orderableDocumentListDeskItem(config: OrderableListConfig): List
 
   const {type, filter, menuItems = [], createIntent, params, title, icon, id, context, S} = config
   const {schema, getClient} = context
-  // 'perspectiveStack' may not exist on ConfigContext in some versions
-  const perspectiveStack = (context as any).perspectiveStack || []
+  const maybePerspectiveStack: unknown = Reflect.get(context, 'perspectiveStack')
+  const perspectiveStack =
+    Array.isArray(maybePerspectiveStack) &&
+    maybePerspectiveStack.every((item): item is string => typeof item === 'string')
+      ? maybePerspectiveStack
+      : []
   const client = getClient({apiVersion: API_VERSION})
   // the first position in the perspective stack is the current version
   const currentVersion = perspectiveStack[0]
@@ -40,15 +44,17 @@ export function orderableDocumentListDeskItem(config: OrderableListConfig): List
   const listId = id ?? `orderable-${type}`
   const listIcon = icon ?? SortIcon
   const typeTitle = schema.get(type)?.title ?? type
+  const defaultMenuItems = [...menuItems]
 
   if (createIntent !== false) {
-    menuItems.push(
+    defaultMenuItems.push(
       S.menuItem()
         .title(`Create new ${typeTitle}`)
         .intent({type: 'create', params: {type}})
         .serialize(),
     )
   }
+
   return S.listItem()
     .title(listTitle)
     .id(listId)
@@ -57,7 +63,7 @@ export function orderableDocumentListDeskItem(config: OrderableListConfig): List
     .child(
       Object.assign(
         S.documentTypeList(type)
-          .canHandleIntent(() => !!createIntent)
+          .canHandleIntent(() => createIntent !== false)
           .serialize(),
         {
           // Prevents the component from re-rendering when switching documents
@@ -69,7 +75,7 @@ export function orderableDocumentListDeskItem(config: OrderableListConfig): List
           component: OrderableDocumentList,
           options: {type, filter, params, client, currentVersion},
           menuItems: [
-            ...menuItems,
+            ...defaultMenuItems,
             S.menuItem().title(`Reset Order`).icon(GenerateIcon).action(`resetOrder`).serialize(),
             S.menuItem()
               .title(`Toggle Increments`)

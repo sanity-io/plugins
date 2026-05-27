@@ -20,6 +20,7 @@ import {
 } from '#internationalized-array'
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
+import {orderableDocumentListExample} from '#orderable-document-list'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
 import {scriptRunnerTool} from '#script-runner'
@@ -63,6 +64,7 @@ export default defineConfig([
       structureTool(),
       assistExample(),
       // add new plugins here
+      orderableDocumentListExample(),
       latexInputExample(),
       debugLiveSyncTagsExample(),
       studioSecretsExample(),

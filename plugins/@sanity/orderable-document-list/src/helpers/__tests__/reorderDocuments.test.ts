@@ -1,7 +1,7 @@
-import {describe, expect, it} from 'vitest'
 import {LexoRank} from 'lexorank'
+import {describe, expect, it} from 'vitest'
 
-import {SanityDocumentWithOrder} from '../../types'
+import type {SanityDocumentWithOrder} from '../../types'
 import {ORDER_FIELD_NAME} from '../constants'
 import {reorderDocuments} from '../reorderDocuments'
 
@@ -19,7 +19,8 @@ describe('reorderDocuments', () => {
       {
         _id: 'b',
         _type: 'orderableCategory',
-        orderRank: 1 as unknown as any,
+        // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+        orderRank: 1 as unknown as SanityDocumentWithOrder['orderRank'],
         _createdAt: new Date().toISOString(),
         _updatedAt: new Date().toISOString(),
         _rev: '1',
@@ -30,8 +31,8 @@ describe('reorderDocuments', () => {
       reorderDocuments({
         entities: [...entities],
         selectedIds: ['b'],
-        source: {index: 1},
-        destination: {index: 0},
+        source: {index: 1, droppableId: 'documentSortZone'},
+        destination: {index: 0, droppableId: 'documentSortZone'},
       })
 
     expect(action).not.toThrow()
@@ -40,6 +41,9 @@ describe('reorderDocuments', () => {
     const updatedRank = result.patches.find(([id]) => id === 'b')?.[1].set?.[ORDER_FIELD_NAME]
 
     expect(typeof updatedRank).toBe('string')
-    expect(() => LexoRank.parse(updatedRank as string)).not.toThrow()
+    if (typeof updatedRank !== 'string') {
+      throw new Error('Expected reordered rank to be a string')
+    }
+    expect(() => LexoRank.parse(updatedRank)).not.toThrow()
   })
 })

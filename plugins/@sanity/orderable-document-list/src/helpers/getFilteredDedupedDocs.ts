@@ -1,5 +1,6 @@
 import {getPublishedId, getVersionFromId, isDraftId, isPublishedId, isVersionId} from 'sanity'
-import {type SanityDocumentWithOrder} from '../types'
+
+import type {SanityDocumentWithOrder} from '../types'
 
 const isVersionForCurrentPerspective = (
   document: SanityDocumentWithOrder,
@@ -22,10 +23,11 @@ export const getFilteredDedupedDocs = (
 ): SanityDocumentWithOrder[] => {
   // Flatten the documents array in case it's nested (like in test data)
   const flatDocuments = documents.flat()
+  const dedupedDocuments: SanityDocumentWithOrder[] = []
 
-  return flatDocuments.reduce<SanityDocumentWithOrder[]>((acc, cur) => {
+  for (const cur of flatDocuments) {
     if (!cur._id) {
-      return acc
+      continue
     }
 
     // Handle version-only documents
@@ -40,25 +42,23 @@ export const getFilteredDedupedDocs = (
         perspectiveName !== 'published' &&
         isCorrectVersion
       ) {
-        return [...acc, cur]
+        dedupedDocuments.push(cur)
       }
-      return acc
+      continue
     }
 
     // Handle published perspective - only include published documents
     if (perspectiveName === 'published') {
       if (isPublishedId(cur._id)) {
-        return [...acc, cur]
+        dedupedDocuments.push(cur)
       }
-      return acc
+      continue
     }
 
     // in situations where the document is not a draft, we need to check if
     // the version should override a published document or a draft
     if (!isDraftId(cur._id)) {
       const publishedId = getPublishedId(cur._id)
-
-      const countNrPublished = JSON.stringify(flatDocuments).match(`/${publishedId}/g`)
 
       // Check if there's a version that matches the perspectiveName
       const hasMatchingVersion =
@@ -70,16 +70,14 @@ export const getFilteredDedupedDocs = (
 
       // Check if there's a draft
       const hasDraft = flatDocuments.some((doc) => doc._id === `drafts.${cur._id}`)
+      const hasDuplicatePublished = flatDocuments.some((doc) => doc !== cur && doc._id === cur._id)
 
       // Priority: version > draft > published
       // If there's a matching version, skip published
-      if (hasMatchingVersion) {
-        return acc
+      if (!hasMatchingVersion && !hasDraft && !hasDuplicatePublished) {
+        dedupedDocuments.push(cur)
       }
-
-      // eslint-disable-next-line max-nested-callbacks
-      const alsoHasDraft = hasDraft || countNrPublished
-      return alsoHasDraft ? acc : [...acc, cur]
+      continue
     }
 
     // For drafts, check if there's a version for this document in version perspective
@@ -91,13 +89,15 @@ export const getFilteredDedupedDocs = (
 
       // If there's a version for this document, skip the draft
       if (hasVersion) {
-        return acc
+        continue
       }
     }
 
     // Check if the draft has a published version
     cur.hasPublished = flatDocuments.some((doc) => doc._id === cur._id.replace(`drafts.`, ``))
 
-    return [...acc, cur]
-  }, [])
+    dedupedDocuments.push(cur)
+  }
+
+  return dedupedDocuments
 }

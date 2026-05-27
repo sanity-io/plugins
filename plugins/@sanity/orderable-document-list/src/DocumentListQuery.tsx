@@ -1,16 +1,15 @@
-import {useEffect, useMemo, useState} from 'react'
 import {Box, Flex, Container, Spinner, Stack, Text} from '@sanity/ui'
-
+import {useMemo, useState} from 'react'
 import {useListeningQuery, Feedback} from 'sanity-plugin-utils'
+
 import {DraggableList} from './DraggableList'
 import {ORDER_FIELD_NAME} from './helpers/constants'
-import type {SanityDocumentWithOrder} from './types'
-import {DocumentListQueryProps, getDocumentQuery} from './helpers/query'
 import {getFilteredDedupedDocs} from './helpers/getFilteredDedupedDocs'
+import {getDocumentQuery, type DocumentListQueryProps} from './helpers/query'
+import type {SanityDocumentWithOrder} from './types'
 
 export function DocumentListQuery(props: DocumentListQueryProps) {
   const [listIsUpdating, setListIsUpdating] = useState(false)
-  const [data, setData] = useState<SanityDocumentWithOrder[] | null>([])
 
   const {query, queryParams} = getDocumentQuery(props)
 
@@ -22,20 +21,16 @@ export function DocumentListQuery(props: DocumentListQueryProps) {
     params: queryParams,
     initialValue: [],
   })
-  // @ts-expect-error Should not be needed to "cast", but sanity-plugin-utils is not typed correctly
-  const queryData: SanityDocumentWithOrder[] = _queryData
 
-  useEffect(() => {
-    if (queryData) {
-      const filteredDocuments = getFilteredDedupedDocs(queryData, props.currentVersion)
-      setData(filteredDocuments)
-    } else {
-      setData([])
-    }
-  }, [queryData])
+  const queryData = useMemo(() => (Array.isArray(_queryData) ? _queryData : []), [_queryData])
+
+  const data = useMemo(
+    () => getFilteredDedupedDocs(queryData, props.currentVersion),
+    [props.currentVersion, queryData],
+  )
 
   const unorderedDataCount = useMemo(
-    () => (data?.length ? data.filter((doc) => !doc[ORDER_FIELD_NAME]).length : 0),
+    () => data.filter((doc) => !doc[ORDER_FIELD_NAME]).length,
     [data],
   )
 
@@ -55,7 +50,7 @@ export function DocumentListQuery(props: DocumentListQueryProps) {
     )
   }
 
-  if (!data || data?.length == 0)
+  if (data.length === 0) {
     return (
       <Flex align="center" direction="column" height="fill" justify="center">
         <Container width={1}>
@@ -67,9 +62,10 @@ export function DocumentListQuery(props: DocumentListQueryProps) {
         </Container>
       </Flex>
     )
+  }
 
   return (
-    <Stack space={1} style={{overflow: `auto`, height: `100%`}}>
+    <Stack gap={1} style={{overflow: `auto`, height: `100%`}}>
       <Box padding={2}>
         {unorderedDataCount > 0 && (
           <Box marginBottom={2}>
@@ -77,7 +73,7 @@ export function DocumentListQuery(props: DocumentListQueryProps) {
               tone="caution"
               description={
                 <>
-                  {unorderedDataCount}/{data?.length} documents have no order. Select{' '}
+                  {unorderedDataCount}/{data.length} documents have no order. Select{' '}
                   <strong>Reset Order</strong> from the menu above to fix.
                 </>
               }

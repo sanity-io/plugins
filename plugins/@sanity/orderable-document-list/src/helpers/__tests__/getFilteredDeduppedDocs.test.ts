@@ -1,5 +1,6 @@
 import {describe, it, expect} from 'vitest'
-import {type SanityDocumentWithOrder} from '../../types'
+
+import type {SanityDocumentWithOrder} from '../../types'
 import {getFilteredDedupedDocs} from '../getFilteredDedupedDocs'
 
 describe('getFilteredDedupedDocs', () => {
@@ -173,10 +174,7 @@ describe('getFilteredDedupedDocs', () => {
   ]
 
   it('should filter and deduplicate documents in draft perspective', () => {
-    const result = getFilteredDedupedDocs(
-      mockDocumentsInDraftsPerspective as SanityDocumentWithOrder[],
-      'drafts',
-    )
+    const result = getFilteredDedupedDocs(mockDocumentsInDraftsPerspective, 'drafts')
 
     // Should only include drafts and published (if it doesn't have a published)
     expect(result).toHaveLength(6)
@@ -214,7 +212,8 @@ describe('getFilteredDedupedDocs', () => {
 
     // Should only show the draft version
     expect(result).toHaveLength(1)
-    expect(result[0]._id).toBe('drafts.123')
+    const [firstResult] = result
+    expect(firstResult?._id).toBe('drafts.123')
   })
 
   it('should filter and deduplicate documents in published perspective', () => {
@@ -226,10 +225,7 @@ describe('getFilteredDedupedDocs', () => {
   })
 
   it('should filter and deduplicate documents in version perspective', () => {
-    const result = getFilteredDedupedDocs(
-      mockDocumentsFromVersionPerspective as SanityDocumentWithOrder[],
-      'rmWGG9z1W',
-    )
+    const result = getFilteredDedupedDocs(mockDocumentsFromVersionPerspective, 'rmWGG9z1W')
 
     // Should include versions for the specific release, drafts, and published
     expect(result).toHaveLength(8)

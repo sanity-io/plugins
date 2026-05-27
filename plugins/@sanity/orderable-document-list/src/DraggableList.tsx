@@ -1,13 +1,19 @@
-import {useEffect, useState, useMemo, useCallback, type CSSProperties} from 'react'
-import {DragDropContext, Draggable, Droppable, type DropResult} from '@hello-pangea/dnd'
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  type DropResult,
+  type DraggableLocation,
+} from '@hello-pangea/dnd'
 import {Box, Card, useToast} from '@sanity/ui'
+import {useEffect, useState, useMemo, useCallback, type CSSProperties} from 'react'
 import type {PatchOperations} from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
 
 import {Document} from './Document'
-import {reorderDocuments} from './helpers/reorderDocuments'
-import {ORDER_FIELD_NAME} from './helpers/constants'
 import {useSanityClient} from './helpers/client'
+import {ORDER_FIELD_NAME} from './helpers/constants'
+import {reorderDocuments} from './helpers/reorderDocuments'
 import type {SanityDocumentWithOrder} from './types'
 
 interface ListSetting {
@@ -15,6 +21,12 @@ interface ListSetting {
   isGhosting: boolean
   isDragging: boolean
   isSelected: boolean
+}
+
+interface DragResultLike {
+  draggableId: string
+  source: DraggableLocation
+  destination: DraggableLocation | null
 }
 
 export interface DraggableListProps {
@@ -53,12 +65,7 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
 
   // Maintains local state order before transaction completes
   const [orderedData, setOrderedData] = useState<SanityDocumentWithOrder[]>(data)
-
-  // Update local state when documents change from an outside source
-  useEffect(() => {
-    if (!listIsUpdating) setOrderedData(data)
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [data])
+  const displayedData = listIsUpdating ? orderedData : data
 
   const [draggingId, setDraggingId] = useState('')
   const [selectedIds, setSelectedIds] = useState<string[]>(currentDoc ? [currentDoc] : [])
@@ -72,7 +79,7 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
       const isUsingWindows = navigator.appVersion.indexOf('Win') !== -1
       const selectAdditional = isUsingWindows ? nativeEvent.ctrlKey : nativeEvent.metaKey
 
-      let updatedIds = []
+      let updatedIds: string[] = []
 
       // No modifier keys pressed during click:
       // - update selected to just this one
@@ -89,14 +96,14 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
       // Shift key was held, add id's between last selected and this one
       // ...before adding this one
       if (selectMultiple && !isSelected) {
-        const lastSelectedId = selectedIds[selectedIds.length - 1]
-        const lastSelectedIndex = orderedData.findIndex((item) => item._id === lastSelectedId)
+        const lastSelectedId = selectedIds[selectedIds.length - 1] ?? clickedId
+        const lastSelectedIndex = displayedData.findIndex((item) => item._id === lastSelectedId)
 
         const firstSelected = index < lastSelectedIndex ? index : lastSelectedIndex
         const lastSelected = index > lastSelectedIndex ? index : lastSelectedIndex
 
-        const betweenIds = orderedData
-          .filter((item, itemIndex) => itemIndex > firstSelected && itemIndex < lastSelected)
+        const betweenIds = displayedData
+          .filter((_, itemIndex) => itemIndex > firstSelected && itemIndex < lastSelected)
           .map((item) => item._id)
 
         updatedIds = [...selectedIds, ...betweenIds, clickedId]
@@ -110,7 +117,7 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
 
       return setSelectedIds(updatedIds)
     },
-    [setSelectedIds, orderedData, selectedIds],
+    [displayedData, selectedIds],
   )
 
   const client = useSanityClient()
@@ -119,7 +126,9 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
     async (patches: [string, PatchOperations][], message: string) => {
       const transaction = client.transaction()
 
-      patches.forEach(([docId, ops]) => transaction.patch(docId, ops))
+      patches.forEach(([docId, ops]) => {
+        transaction.patch(docId, ops)
+      })
 
       try {
         const updated = await transaction.commit({
@@ -136,7 +145,7 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
           status: 'success',
           description: message,
         })
-      } catch (err) {
+      } catch {
         setDraggingId('')
         setListIsUpdating(false)
         toast.push({
@@ -145,11 +154,11 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
         })
       }
     },
-    [client, setDraggingId, clearSelected, setListIsUpdating, toast],
+    [client, clearSelected, setListIsUpdating, toast],
   )
 
   const handleDragEnd = useCallback(
-    (result: DropResult | undefined, entities: SanityDocumentWithOrder[]) => {
+    (result: DragResultLike | undefined, entities: SanityDocumentWithOrder[]) => {
       setDraggingId('')
 
       const {source, destination, draggableId} = result ?? {}
@@ -158,13 +167,13 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
       if (source?.index === destination?.index) return
 
       // Don't do anything if we don't have the entitites
-      if (!entities?.length || !draggableId) return
+      if (!entities.length || !draggableId || !source || !destination) return
 
       // A document can be dragged without being one-of-many-selected
-      const effectedIds = selectedIds?.length ? selectedIds : [draggableId]
+      const effectedIds = selectedIds.length > 0 ? selectedIds : [draggableId]
 
       // Don't do anything if we don't have ids to effect
-      if (!effectedIds?.length) return
+      if (effectedIds.length === 0) return
 
       // Update state to update styles + prevent data refetching
       setListIsUpdating(true)
@@ -178,16 +187,16 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
       })
 
       // Update local state
-      if (newOrder?.length) {
+      if (newOrder.length > 0) {
         setOrderedData(newOrder)
       }
 
       // Transact new order patches
-      if (patches?.length) {
-        transactPatches(patches, message)
+      if (patches.length > 0) {
+        void transactPatches(patches, message)
       }
     },
-    [selectedIds, setDraggingId, setSelectedIds, transactPatches, setListIsUpdating],
+    [selectedIds, transactPatches, setListIsUpdating],
   )
 
   const handleDragStart = useCallback(
@@ -200,19 +209,19 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
 
       setDraggingId(id)
     },
-    [selectedIds, clearSelected, setDraggingId],
+    [selectedIds, clearSelected],
   )
 
   // Move one document up or down one place, by fake invoking the drag function
   const incrementIndex = useCallback(
     (shiftFrom: number, shiftTo: number, id: string, entities: SanityDocumentWithOrder[]) => {
-      const result = {
+      const result: DragResultLike = {
         draggableId: id,
-        source: {index: shiftFrom},
-        destination: {index: shiftTo},
+        source: {droppableId: 'documentSortZone', index: shiftFrom},
+        destination: {droppableId: 'documentSortZone', index: shiftTo},
       }
 
-      return handleDragEnd(result as DropResult, entities)
+      return handleDragEnd(result, entities)
     },
     [handleDragEnd],
   )
@@ -236,16 +245,16 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
 
   // Find all items with duplicate order field
   const duplicateOrders = useMemo(() => {
-    if (!orderedData.length) return []
+    if (displayedData.length === 0) return []
 
-    const orderField = orderedData.map((item) => item[ORDER_FIELD_NAME])
+    const orderField = displayedData.map((item) => item[ORDER_FIELD_NAME])
 
     return orderField.filter((item, index) => orderField.indexOf(item) !== index)
-  }, [orderedData])
+  }, [displayedData])
 
   const onDragEnd = useCallback(
-    (result: DropResult) => handleDragEnd(result, orderedData),
-    [orderedData, handleDragEnd],
+    (result: DropResult) => handleDragEnd(result, displayedData),
+    [displayedData, handleDragEnd],
   )
 
   return (
@@ -253,19 +262,18 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
       <Droppable droppableId="documentSortZone">
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
-            {orderedData.map((item, index) => (
+            {displayedData.map((item, index) => (
               <Draggable
                 key={`${item._id}-${item[ORDER_FIELD_NAME]}`}
                 draggableId={item._id}
                 index={index}
-                // onClick={(event) => handleDraggableClick(event, provided, snapshot)}
               >
                 {(innerProvided, innerSnapshot) => {
                   const isSelected = selectedIds.includes(item._id)
                   const isDragging = innerSnapshot.isDragging
                   const isGhosting = Boolean(!isDragging && draggingId && isSelected)
                   const isUpdating = listIsUpdating && isSelected
-                  const isDisabled = Boolean(!item[ORDER_FIELD_NAME])
+                  const isDisabled = !item[ORDER_FIELD_NAME]
                   const isDuplicate = duplicateOrders.includes(item[ORDER_FIELD_NAME])
                   const tone = cardTone({isDuplicate, isGhosting, isDragging, isSelected})
                   const selectedCount = selectedIds.length
@@ -288,16 +296,15 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
                           tone={tone}
                           shadow={isDragging ? 2 : undefined}
                           radius={2}
-                          // eslint-disable-next-line react/jsx-no-bind
                           onClick={(e) => handleSelect(item._id, index, e.nativeEvent)}
                         >
                           <Document
                             doc={item}
-                            entities={orderedData}
+                            entities={displayedData}
                             increment={incrementIndex}
                             index={index}
                             isFirst={index === 0}
-                            isLast={index === orderedData.length - 1}
+                            isLast={index === displayedData.length - 1}
                             dragBadge={dragBadge}
                           />
                         </Card>

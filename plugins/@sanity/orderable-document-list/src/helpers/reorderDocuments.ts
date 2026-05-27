@@ -1,3 +1,4 @@
+import type {DraggableLocation} from '@hello-pangea/dnd'
 import {LexoRank} from 'lexorank'
 import type {PatchOperations} from 'sanity'
 
@@ -5,26 +6,17 @@ import type {SanityDocumentWithOrder} from '../types'
 import {ORDER_FIELD_NAME} from './constants'
 import {parseOrderRank} from './parseOrderRank'
 
-export interface MaifestArgs {
-  entities: SanityDocumentWithOrder[]
-  selectedItems: SanityDocumentWithOrder[]
-  isMovingUp: boolean
-  curIndex: number
-  nextIndex: number
-  prevIndex: number
-}
-
 export interface ReorderArgs {
   entities: SanityDocumentWithOrder[]
   selectedIds: string[]
-  source: any
-  destination: any
+  source: DraggableLocation
+  destination: DraggableLocation
 }
 
 export interface ReorderReturn {
   newOrder: SanityDocumentWithOrder[]
   patches: [string, PatchOperations][]
-  message: any
+  message: string
 }
 
 function lexicographicalSort(a: SanityDocumentWithOrder, b: SanityDocumentWithOrder) {
@@ -70,17 +62,15 @@ export const reorderDocuments = ({
       if (curIndex === endIndex) {
         const prevIndex = curIndex - 1
         const prevRank = parseOrderRank(entities[prevIndex]?.[ORDER_FIELD_NAME], LexoRank.min())
-
-        const curRank = parseOrderRank(entities[curIndex][ORDER_FIELD_NAME], LexoRank.min())
-
+        const curRank = parseOrderRank(cur[ORDER_FIELD_NAME], LexoRank.min())
         const nextIndex = curIndex + 1
         const nextRank = parseOrderRank(entities[nextIndex]?.[ORDER_FIELD_NAME], LexoRank.max())
 
         let betweenRank = isMovingUp ? prevRank.between(curRank) : curRank.between(nextRank)
 
         // For each selected item, assign a new orderRank between now and next
-        for (let selectedIndex = 0; selectedIndex < selectedItems.length; selectedIndex += 1) {
-          selectedItems[selectedIndex][ORDER_FIELD_NAME] = betweenRank.toString()
+        for (const selectedItem of selectedItems) {
+          selectedItem[ORDER_FIELD_NAME] = betweenRank.toString()
           betweenRank = isMovingUp ? betweenRank.between(curRank) : betweenRank.between(nextRank)
         }
 

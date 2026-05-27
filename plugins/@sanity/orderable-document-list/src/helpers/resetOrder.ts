@@ -1,7 +1,8 @@
-import {LexoRank} from 'lexorank'
 import type {MultipleMutationResult, SanityClient} from '@sanity/client'
+import {LexoRank} from 'lexorank'
+
 import {ORDER_FIELD_NAME} from './constants'
-import {DocumentListQueryProps, getDocumentQuery} from './query'
+import {getDocumentQuery, type DocumentListQueryProps} from './query'
 
 export interface ResetOrderParams extends DocumentListQueryProps {
   client: SanityClient

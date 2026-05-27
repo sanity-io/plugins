@@ -1,9 +1,8 @@
-import {useContext, useMemo, type ReactNode} from 'react'
 import {ChevronDownIcon, ChevronUpIcon, DragHandleIcon} from '@sanity/icons'
 import {AvatarCounter, Card, Box, Button, Flex, Text, Tooltip} from '@sanity/ui'
+import {useContext, useMemo, type ReactNode} from 'react'
 import {
   useSchema,
-  SchemaType,
   PreviewCard,
   Preview,
   DocumentStatusIndicator,
@@ -49,6 +48,7 @@ export function Document({
   const currentDoc = routerPanesState[groupIndex + 1]?.[0]?.id || false
   const pressed = currentDoc === doc._id || currentDoc === doc._id.replace(`drafts.`, ``)
   const selected = pressed && routerPanesState.length === groupIndex + 2
+  const schemaType = schema.get(doc._type)
 
   const Link = useMemo(
     () =>
@@ -57,6 +57,10 @@ export function Document({
       },
     [ChildLink, doc._id],
   )
+
+  if (!schemaType) {
+    return null
+  }
 
   const tooltip = (
     <DocumentStatus
@@ -69,7 +73,7 @@ export function Document({
   return (
     <PreviewCard
       __unstable_focusRing
-      // @ts-expect-error
+      // @ts-expect-error PreviewCard's polymorphic `as` prop does not accept ChildLink's type.
       as={Link}
       data-as="a"
       data-ui="PaneItem"
@@ -93,8 +97,7 @@ export function Document({
             <Button
               padding={2}
               mode="ghost"
-              // eslint-disable-next-line react/jsx-no-bind
-              onClick={() => increment(index, index + -1, doc._id, entities)}
+              onClick={() => increment(index, index - 1, doc._id, entities)}
               disabled={isFirst}
               icon={ChevronUpIcon}
             />
@@ -102,7 +105,6 @@ export function Document({
               padding={2}
               mode="ghost"
               disabled={isLast}
-              // eslint-disable-next-line react/jsx-no-bind
               onClick={() => increment(index, index + 1, doc._id, entities)}
               icon={ChevronDownIcon}
             />
@@ -110,11 +112,7 @@ export function Document({
         )}
         <Box style={{width: `100%`}}>
           <Flex flex={1} align="center" justify="space-between" paddingRight={3}>
-            <Preview
-              layout="default"
-              value={doc}
-              schemaType={schema.get(doc._type) as SchemaType}
-            />
+            <Preview layout="default" value={doc} schemaType={schemaType} />
 
             <Tooltip content={tooltip} portal placement="right" boundaryElement={null}>
               <Flex align="center" style={{flexShrink: 0}}>

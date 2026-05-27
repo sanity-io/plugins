@@ -1,22 +1,18 @@
-import {useEffect, useMemo} from 'react'
 import {useToast, Box, type ToastParams} from '@sanity/ui'
-
+import {useEffect, useMemo} from 'react'
 import {useSchema} from 'sanity'
 import {Feedback} from 'sanity-plugin-utils'
-import {DocumentListQuery} from './DocumentListQuery'
-import {OrderableContext} from './OrderableContext'
 
+import {DocumentListQuery} from './DocumentListQuery'
 import {ORDER_FIELD_NAME} from './helpers/constants'
+import {OrderableContext} from './OrderableContext'
 
 export interface DocumentListWrapperProps {
   showIncrements: boolean
   type: string
   resetOrderTransaction: ToastParams
-  // eslint-disable-next-line react/require-default-props
   filter?: string
-  // eslint-disable-next-line react/require-default-props
   params?: Record<string, unknown>
-  // eslint-disable-next-line react/require-default-props
   currentVersion?: string
 }
 
@@ -32,6 +28,7 @@ export function DocumentListWrapper({
 }: DocumentListWrapperProps) {
   const toast = useToast()
   const schema = useSchema()
+  const orderableContextValue = useMemo(() => ({showIncrements}), [showIncrements])
 
   useEffect(() => {
     if (resetOrderTransaction?.title && resetOrderTransaction?.status) {
@@ -100,7 +97,7 @@ export function DocumentListWrapper({
   }
 
   return (
-    <OrderableContext.Provider value={{showIncrements}}>
+    <OrderableContext.Provider value={orderableContextValue}>
       <DocumentListQuery
         type={type}
         filter={filter}

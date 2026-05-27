@@ -1,7 +1,7 @@
-import {Component} from 'react'
-
 import type {SanityClient} from '@sanity/client'
 import type {ToastParams} from '@sanity/ui'
+import {Component} from 'react'
+
 import {DocumentListWrapper} from './DocumentListWrapper'
 import {resetOrder} from './helpers/resetOrder'
 
@@ -62,19 +62,22 @@ export class OrderableDocumentList extends Component<OrderableDocumentListProps,
     },
   }
 
-  render() {
-    const type = this?.props?.options?.type
+  override render() {
+    const {options} = this.props
+    const {type, filter, params, currentVersion} = options
+
     if (!type) {
       return null
     }
+
     return (
       <DocumentListWrapper
-        filter={this?.props?.options?.filter}
-        params={this?.props?.options?.params}
+        filter={filter}
+        params={params}
         type={type}
         showIncrements={this.state.showIncrements}
         resetOrderTransaction={this.state.resetOrderTransaction}
-        currentVersion={this?.props?.options?.currentVersion}
+        currentVersion={currentVersion}
       />
     )
   }
