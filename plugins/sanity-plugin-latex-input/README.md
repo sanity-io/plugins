@@ -11,7 +11,7 @@ sanity-plugin-latex-input adds support for `latex` schema type, so it can be use
 ## Installation
 
 ```sh
-npm install sanity-plugin-latex-input katex
+npm install sanity-plugin-latex-input
 ```
 
 ## Usage
