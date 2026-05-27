@@ -1228,8 +1228,8 @@ importers:
   plugins/sanity-plugin-latex-input:
     dependencies:
       katex:
-        specifier: ^0.16.0
-        version: 0.16.47
+        specifier: ^0.17.0
+        version: 0.17.0
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*
@@ -6993,8 +6993,8 @@ packages:
     resolution: {integrity: sha512-4+5mNNf4vZDSwPhKprKwz3330iisPrb08JyMgbsdFrimBCKNHecua/WBwvVg3n7vwx0C1ARjfhwIpbrbd9n5wg==}
     engines: {node: '>=12'}
 
-  katex@0.16.47:
-    resolution: {integrity: sha512-Eeo8Ys1doU1z+x8AZsPpQu+p/QcZBI5PeOo7QGQdy2x2m0MU/hYagBbGOmXwr5KVbEfVuWv9LpnQWeehogurjg==}
+  katex@0.17.0:
+    resolution: {integrity: sha512-Vdw0ATsQ9V+LuegM/BTwQqV/6cTl5lbGcIrU+BCgLxyf6bo38ybOr372tuSIxir3CN720flu1meYR6XzNMwQnw==}
     hasBin: true
 
   keycode@2.2.1:
@@ -15934,7 +15934,7 @@ snapshots:
     dependencies:
       lodash-es: 4.18.1
 
-  katex@0.16.47:
+  katex@0.17.0:
     dependencies:
       commander: 8.3.0
 

@@ -42,7 +42,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "katex": "^0.16.0"
+    "katex": "^0.17.0"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
