@@ -11,6 +11,7 @@ const localizedString = defineType({
   name: 'localizedString',
   type: 'object',
   options: {
+    // @ts-expect-error - plugin-specific object option
     translate: true,
     apiKey: 'DEMO_KEY',
   },

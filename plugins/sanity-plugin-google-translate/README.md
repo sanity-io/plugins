@@ -104,6 +104,7 @@ To avoid others using your key you should restrict it to hosts where your studio
 - ...or custom domain you may be hosting the Studio
 
 <a href="https://cloud.google.com/docs/authentication/api-keys#adding_http_restrictions">More info on adding HTTP restrictions</a>
+
 ## License
 
 MIT © Sanity.io

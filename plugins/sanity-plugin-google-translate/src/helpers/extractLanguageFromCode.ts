@@ -1,3 +1,8 @@
 export function extractLanguageFromCode(code = ``): string {
-  return code.length > 2 ? code.split(/[-_]/)[0].toLowerCase() : code.toLowerCase()
+  if (code.length <= 2) {
+    return code.toLowerCase()
+  }
+
+  const [languageCode] = code.split(/[-_]/)
+  return (languageCode ?? code).toLowerCase()
 }

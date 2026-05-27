@@ -1,16 +1,44 @@
 import {Box, Button, Text, Flex, Stack, Tooltip, useToast} from '@sanity/ui'
 import React from 'react'
-import {FieldMember, InputProps, set, unset} from 'sanity'
-import {MemberField, MemberFieldSet, MemberFieldError, ObjectInputProps} from 'sanity'
+import {MemberField, MemberFieldSet, MemberFieldError, set, unset} from 'sanity'
+import type {FieldMember, InputProps, ObjectInputProps} from 'sanity'
 
 import {extractLanguageFromCode} from './helpers/extractLanguageFromCode'
 import {getLanguageFromMember} from './helpers/getLanguageFromMember'
 import {htmlDecode} from './helpers/htmlDecode'
-import {FieldNameLangPair, TranslationConfig} from './types'
+import type {FieldNameLangPair, GoogleTranslateSchemaOptions, TranslationConfig} from './types'
+
+function collectLanguageFields(members: ObjectInputProps['members']): FieldNameLangPair[] {
+  const allLanguageFields: FieldNameLangPair[] = []
+
+  for (const cur of members) {
+    if (cur.kind === 'field') {
+      const language = getLanguageFromMember(cur)
+      if (language && cur.name) {
+        allLanguageFields.push({
+          fieldName: cur.name,
+          fieldLang: language,
+        })
+      }
+    } else if (cur.kind === 'fieldSet') {
+      for (const memberCur of cur.fieldSet.members) {
+        if (memberCur.kind === 'field') {
+          allLanguageFields.push({
+            fieldName: memberCur.name,
+            fieldLang: getLanguageFromMember(memberCur),
+          })
+        }
+      }
+    }
+  }
+
+  return allLanguageFields
+}
 
 export function GoogleTranslateInput(props: ObjectInputProps) {
   const {renderDefault, members, onChange, value} = props
-  const {apiKey} = props.schemaType.options
+  // oxlint-disable-next-line no-unsafe-type-assertion - plugin-specific object options
+  const {apiKey} = (props.schemaType.options ?? {}) as GoogleTranslateSchemaOptions
 
   const [isTranslating, setIsTranslating] = React.useState(false)
   const toast = useToast()
@@ -27,40 +55,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
       // Get all unique language field names and codes
       // Maybe this should be recursive, but the recommendation is only to nest 1 level deep
       // TODO: Remove hidden/filtered-out fields as this currently will write to all fields
-      let allLanguageFields = members.reduce<FieldNameLangPair[]>((acc, cur) => {
-        if (cur.kind === 'field') {
-          const language = getLanguageFromMember(cur)
-          if (language && cur.name) {
-            return [
-              ...acc,
-              {
-                fieldName: cur.name,
-                fieldLang: language,
-              },
-            ]
-          }
-        } else if (cur.kind === 'fieldSet') {
-          const pairsFromMembers = cur.fieldSet.members.reduce<FieldNameLangPair[]>(
-            (memberAcc, memberCur) => {
-              if (memberCur.kind === 'field') {
-                return [
-                  ...memberAcc,
-                  {
-                    fieldName: memberCur.name,
-                    fieldLang: getLanguageFromMember(memberCur),
-                  },
-                ]
-              }
-
-              return memberAcc
-            },
-            [],
-          )
-
-          return [...acc, ...pairsFromMembers]
-        }
-        return acc
-      }, [])
+      let allLanguageFields = collectLanguageFields(members)
 
       // If this isn't a "translate all" operation, just target the passed-in language
       if (config.language !== config.baseLanguage) {
@@ -70,7 +65,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
       setIsTranslating(true)
 
       const url = new URL(`https://translation.googleapis.com/language/translate/v2`)
-      url.searchParams.set(`key`, apiKey)
+      url.searchParams.set(`key`, apiKey ?? ``)
       url.searchParams.set(`q`, config.content)
 
       // Language code might be a country/language pair like en_US
@@ -102,25 +97,28 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
                 status: `error`,
                 description: res.error.message,
               })
-            } else {
-              toast.push({
-                title: `Translation Complete`,
-                status: `success`,
-                description: `Translated from "${source.toLocaleUpperCase()}" to "${item.fieldLang.toLocaleUpperCase()}"`,
-              })
-
-              const {data} = res
-
-              if (data?.translations?.length) {
-                data.translations.forEach(({translatedText}: {translatedText: string}) => {
-                  // Convert html entities returned in translation to a string
-                  const decoded = htmlDecode(translatedText)
-
-                  // Write translation into the correct language field
-                  onChange(decoded ? set(decoded, [item.fieldName]) : unset([item.fieldName]))
-                })
-              }
+              return undefined
             }
+
+            toast.push({
+              title: `Translation Complete`,
+              status: `success`,
+              description: `Translated from "${source.toLocaleUpperCase()}" to "${item.fieldLang.toLocaleUpperCase()}"`,
+            })
+
+            const {data} = res
+
+            if (data?.translations?.length) {
+              data.translations.forEach(({translatedText}: {translatedText: string}) => {
+                // Convert html entities returned in translation to a string
+                const decoded = htmlDecode(translatedText)
+
+                // Write translation into the correct language field
+                onChange(decoded ? set(decoded, [item.fieldName]) : unset([item.fieldName]))
+              })
+            }
+
+            return undefined
           })
           .catch((err) => {
             console.error(err)
@@ -139,9 +137,10 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
       }
 
       const language = getLanguageFromMember(member)
-      const baseMember = members.find((item) => item.kind === 'field') as FieldMember
+      const baseMember = members.find((item): item is FieldMember => item.kind === 'field')
       const baseLanguage = baseMember ? getLanguageFromMember(baseMember) : ``
-      const baseContent = baseMember.field.value ? String(baseMember.field.value) : ``
+      const baseFieldValue = baseMember?.field.value
+      const baseContent = typeof baseFieldValue === 'string' ? baseFieldValue : ``
       const isBaseLanguage = language === baseLanguage
 
       if (!language) {
@@ -191,7 +190,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
   )
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       {props.members.map((member) => {
         switch (member.kind) {
           case 'field':
@@ -199,7 +198,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
               <MemberField
                 key={member.key}
                 member={member}
-                // @ts-expect-error
+                // @ts-expect-error - MemberField renderInput typings do not match custom callback
                 renderInput={renderInput}
                 renderPreview={props.renderPreview}
                 renderField={props.renderField}
@@ -211,7 +210,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
               <MemberFieldSet
                 key={member.key}
                 member={member}
-                // @ts-expect-error
+                // @ts-expect-error - MemberFieldSet renderInput typings do not match custom callback
                 renderInput={renderInput}
                 renderPreview={props.renderPreview}
                 renderField={props.renderField}

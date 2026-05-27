@@ -1,4 +1,4 @@
-import {InputProps, ObjectMember} from 'sanity'
+import {type InputProps, type ObjectMember} from 'sanity'
 
 export function getLanguageFromMember(member: InputProps | ObjectMember): string {
   // Member is undefined
