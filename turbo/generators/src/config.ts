@@ -236,9 +236,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       stdio: 'inherit',
     })
 
-    // Clean up: keep only src/ and CHANGELOG.md
+    // Clean up: keep only src/, CHANGELOG.md, and README.md
     const entries = readdirSync(pluginDir)
-    const keepList = new Set(['src', 'CHANGELOG.md'])
+    const keepList = new Set(['src', 'CHANGELOG.md', 'README.md'])
     const deleted: string[] = []
 
     for (const entry of entries) {
@@ -565,7 +565,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/README.md',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/README.todo.md',
         templateFile: 'templates/README.todo.md.hbs',
       },
       {

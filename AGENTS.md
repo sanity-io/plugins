@@ -306,6 +306,16 @@ Or to migrate an existing plugin:
 pnpm generate "copy plugin"
 ```
 
+For agent-specific transfer guidance, use the `plugin-transfer` skill in `.agents/skills/plugin-transfer/SKILL.md`.
+
+When migrating a plugin, agents should ensure:
+
+- `README.md` from the original repository is preserved
+- A test-studio example is present and wired in `dev/test-studio/sanity.config.ts`
+- `.github/CODEOWNERS` is not updated unless explicitly requested
+- The transfer includes a **major** changeset
+- Only monorepo-required plugin config files are maintained (`package.json`, `package.config.ts`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`)
+
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 
 - Setting up npm trusted publishing (different process for new vs existing packages)
