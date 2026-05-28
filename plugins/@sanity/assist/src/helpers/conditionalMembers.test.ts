@@ -326,4 +326,59 @@ describe('conditionalMembers', () => {
 
     expect(conditionalMembers).toEqual([{path: 'title', hidden: false, readOnly: false}])
   })
+
+  // Regression test for https://github.com/sanity-io/plugins/issues/912
+  //
+  // Statically `readOnly: true` fields are intentionally filtered out of
+  // `getConditionalMembers` because `serializeSchema` is supposed to convey
+  // the same information to the backend via the schema. This test pins that
+  // contract down so a future change here is paired with a verification that
+  // the backend translate handler still honours the schema-level readOnly
+  // flag. The user-facing bug is that the Translate fields action overwrites
+  // `readOnly: true` fields anyway, see issue #912.
+  test('issue #912: statically readOnly fields are NOT included in conditional members', () => {
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'document',
+          name: 'article',
+          fields: [
+            {type: 'string', name: 'title'},
+            {type: 'string', name: 'subtitle', readOnly: true},
+          ],
+        }),
+      ],
+    }).get('article')
+
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const docState = {
+      path: [],
+      schemaType: docSchema,
+      members: [
+        {
+          kind: 'field',
+          field: {
+            path: [docSchema.fields[0]!.name],
+            schemaType: docSchema.fields[0]!.type,
+          },
+        },
+        {
+          kind: 'field',
+          field: {
+            path: [docSchema.fields[1]!.name],
+            schemaType: docSchema.fields[1]!.type,
+            readOnly: true,
+          },
+        },
+      ],
+    } as any
+    const conditionalMembers = getConditionalMembers(docState)
+
+    // No conditional members because no schema has a function readOnly/hidden.
+    // The static `readOnly: true` on `subtitle` is conveyed via the serialized
+    // schema, not here, so the backend handler MUST consult the schema to
+    // honour the docs/README contract.
+    expect(conditionalMembers).toEqual([])
+  })
 })

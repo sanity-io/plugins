@@ -261,4 +261,69 @@ describe('paths', () => {
     const members = getDocumentMembersFlat(doc, docSchema, 1)
     expect(members.map((p) => pathToString(p.path))).toEqual(['translations'])
   })
+
+  // Regression test for https://github.com/sanity-io/plugins/issues/912
+  //
+  // The README and docs promise that AI Assist will ignore fields marked
+  // statically `readOnly: true` when running the Translate fields action.
+  // In practice, `getFieldLanguageMap` does not consult the schema's
+  // `readOnly` flag at all when building translation targets, so the
+  // server-side handler receives the readOnly field as a write target.
+  //
+  // This test fails on `main` and demonstrates the contract violation.
+  test('issue #912: should not include statically readOnly fields in field language map', () => {
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'document',
+          name: 'article',
+          fields: [
+            {
+              type: 'array',
+              name: 'title',
+              of: [
+                {
+                  type: 'object',
+                  name: 'internationalizedArrayString',
+                  fields: [{type: 'string', name: 'value'}],
+                },
+              ],
+            },
+            {
+              type: 'array',
+              name: 'subtitle',
+              // README contract: literal `readOnly: true` fields must be ignored
+              // by Translate fields. They are not.
+              readOnly: true,
+              of: [
+                {
+                  type: 'object',
+                  name: 'internationalizedArrayString',
+                  fields: [{type: 'string', name: 'value'}],
+                },
+              ],
+            },
+          ],
+        }),
+      ],
+    }).get('article')
+
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'article',
+      title: [{_type: 'internationalizedArrayString', _key: 'en', value: 'Hello'}],
+      subtitle: [{_type: 'internationalizedArrayString', _key: 'en', value: 'Read-only original'}],
+    }
+
+    const members = getDocumentMembersFlat(doc, docSchema)
+    const transMap = getFieldLanguageMap(docSchema, members, 'en', ['nb'], defaultLanguageOutputs)
+
+    const inputPaths = transMap.map((m) => pathToString(m.inputPath))
+
+    // Translate fields should pick up `title` (writable) but skip
+    // `subtitle` (statically readOnly). On `main`, both are included.
+    expect(inputPaths).toContain('title[_key=="en"]')
+    expect(inputPaths).not.toContain('subtitle[_key=="en"]')
+  })
 })
