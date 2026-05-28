@@ -77,7 +77,7 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
       '@changesets/cli':
-        specifier: ^2.30.0
+        specifier: ^2.31.0
         version: 2.31.0(@types/node@25.6.0)
       '@typescript/native-preview':
         specifier: 'catalog:'
@@ -6994,6 +6994,7 @@ packages:
   json-2-csv@5.5.10:
     resolution: {integrity: sha512-Dep8wO3Fr5wNjQevO2Z8Y7yeee/nYSGRsi7q6zJDKEVHxXkXT+v21vxHmDX923UzmCXXkSo62HaTz6eTWzFLaw==}
     engines: {node: '>= 16'}
+    deprecated: A security vulnerability has been reported with the preventCsvInjection option which has been fixed in version 5.5.11. Please upgrade as soon as possible.
 
   json-buffer@3.0.0:
     resolution: {integrity: sha512-CuUqjv0FUZIdXkHPI8MezCnFCdaTAacej1TZYulLoAg1h/PhwkdXFN4V/gzY4g+fMBCOV2xF+rp7t2XD2ns/NQ==}
