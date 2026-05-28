@@ -298,12 +298,24 @@ The generator will:
   - `styled-components` (should always be a peer dependency)
   - `sanity` (should always be a peer/dev dependency)
 - Detect if the plugin uses `styled-components` based on `devDependencies` and `peerDependencies`
+- Preserve `README.md` from the original repository
+- Add a plugin example in `dev/test-studio/src/<plugin-example>/index.tsx` and wire it in `dev/test-studio/sanity.config.ts`
 
 **Note:** You'll need to manually review and copy over any relevant `peerDependencies` and `devDependencies` as needed.
 
+Required monorepo config files for the transferred plugin:
+
+- `package.json`
+- `package.config.ts`
+- `tsconfig.json`
+- `tsconfig.build.json`
+- `vitest.config.ts`
+
+Do not copy standalone-repo root CI/build/lint/test config files that are already handled by this monorepo.
+
 ### 3. Manually port over files
 
-Refer to the generated `README.md` file in the plugin workspace for how to complete the last manual steps.
+Refer to the generated `README.todo.md` file in the plugin workspace for how to complete the remaining manual steps.
 
 You can run `pnpm dev` to quickly see how the plugin works in the test studio as you migrate code.
 
@@ -327,7 +339,11 @@ When prompted:
 
 Commit the changeset file with your PR.
 
-### 5. Update the original repository
+### 5. CODEOWNERS
+
+When maintainers request an ownership update, add the matching plugin path entry in `.github/CODEOWNERS`.
+
+### 6. Update the original repository
 
 After the plugin has been successfully migrated and published from the monorepo, update the original repository to inform users about the move:
 

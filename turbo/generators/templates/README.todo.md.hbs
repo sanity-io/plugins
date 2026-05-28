@@ -40,7 +40,19 @@ If you don't have npm >= 11.10.0, you can configure trusted publishing manually:
 
 </details>
 
-## 2. Update package.json Dependencies
+## 2. Verify Required Config Files
+
+These files are required for monorepo conventions and are scaffolded for you:
+
+- `package.json`
+- `package.config.ts`
+- `tsconfig.json`
+- `tsconfig.build.json`
+- `vitest.config.ts`
+
+Do not bring over standalone-repo config that is not used here (for example custom root build/lint/test configs and CI files).
+
+## 3. Update package.json Dependencies
 
 Manually update `package.json` with any missing dependencies from the original plugin:
 
@@ -54,7 +66,7 @@ Manually update `package.json` with any missing dependencies from the original p
 - `@sanity/incompatible-plugin`
 - `@sanity/plugin-kit`
 
-## 3. Source Files
+## 4. Source Files
 
 The `src/` directory was automatically imported from the original repository with full git history preserved.
 
@@ -64,7 +76,7 @@ After reviewing, update the test studio example at:
 
 Add any required options, schemas, or configuration needed to properly test the plugin in the test studio.
 
-## 4. Update CHANGELOG.md
+## 5. Update CHANGELOG.md
 
 The `CHANGELOG.md` was automatically copied from the original repository.
 
@@ -85,13 +97,17 @@ All notable changes to this project will be documented in this file. See
 # {{ name }}
 ```
 
-## 5. Verify Setup
+## 6. Do Not Update CODEOWNERS
+
+Do not update `.github/CODEOWNERS` as part of plugin transfer unless explicitly requested by maintainers.
+
+## 7. Verify Setup
 
 1. Run `pnpm install` from the monorepo root
 2. Run `pnpm build` to verify the plugin builds correctly
 3. Run `pnpm dev` to test in the test studio
-4. Create a changeset: `pnpm changeset add`
+4. Create a changeset: `pnpm changeset add` (**major**)
 
-## 6. Copy README.md (Final Step)
+## 8. README.md (Already copied)
 
-Copy the `README.md` from the original plugin and replace this file with it.
+`README.md` from the original repository was preserved during import. Keep this `README.todo.md` file for migration notes until the transfer is complete.

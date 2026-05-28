@@ -151,6 +151,10 @@
         "babel-plugin-styled-components",
       ],
     },
+    "plugins/@sanity/orderable-document-list": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
     // add new plugin workspaces here
     "plugins/sanity-plugin-latex-input": {
       "entry": ["package.config.ts"],
