@@ -21,7 +21,7 @@ catalog:
   '@types/react-dom': ^19.2.3
   '@typescript/native-preview': 7.0.0-dev.20260418.1
   babel-plugin-react-compiler: ^1.0.0
-  babel-plugin-styled-components: ^2.1.4
+  babel-plugin-styled-components: ^2.3.0
   react: ^19.2.5
   react-dom: ^19.2.5
   rxjs: ^7.8.2
