@@ -43,7 +43,6 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
               defineField({
                 name: 'caption',
                 title: 'Caption',
-                description: 'Visible caption displayed below the image in the rendered layout.',
                 type: 'text',
               }),
             ]
