@@ -1,4 +1,4 @@
-import {defineField, type FieldDefinition, type SchemaTypeDefinition} from 'sanity'
+import type {FieldDefinition, SchemaTypeDefinition} from 'sanity'
 import {describe, expect, vi} from 'vitest'
 
 import type {RegistryContext} from '../../definePresetType'
@@ -21,14 +21,11 @@ interface BlockMember extends Member {
 function makeStubRegistry(): RegistryContext & {
   getPreset: ReturnType<typeof vi.fn>
 } {
-  const getPreset = vi.fn(
-    (presetName: string, presetConfig?: Record<string, unknown>): FieldDefinition => {
-      const name = typeof presetConfig?.['name'] === 'string' ? presetConfig['name'] : presetName
-      return Object.assign(defineField({name, type: 'object', fields: []}), {
-        __preset: presetName,
-      })
-    },
-  )
+  const getPreset = vi.fn((presetName: string, presetConfig?: Record<string, unknown>) => {
+    const name = typeof presetConfig?.['name'] === 'string' ? presetConfig['name'] : presetName
+    return {name, type: 'object', fields: [], __preset: presetName} as SchemaTypeDefinition &
+      FieldDefinition
+  })
   return {getPreset}
 }
 

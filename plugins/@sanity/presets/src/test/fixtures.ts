@@ -1,5 +1,4 @@
 import type {FieldDefinition, SchemaTypeDefinition} from 'sanity'
-import {defineField} from 'sanity'
 import {test as baseTest} from 'vitest'
 
 import type {RegistryContext} from '../definePresetType'
@@ -14,7 +13,7 @@ export const test = baseTest
   })
   .extend('stubRegistry', (): RegistryContext => {
     return {
-      getPreset: () => defineField({name: 'stub', type: 'object', fields: []}),
+      getPreset: () => ({name: 'stub', type: 'object', fields: []}),
     }
   })
   .extend('registryConfig', (): PresetsRegistryConfig => ({}))
