@@ -85,8 +85,8 @@ The registry serves two purposes:
 ```ts
 const {defineLink, defineCta, definePage} = createPresetsRegistry({
   link: {
-    // Every link in this registry - standalone, inside CTAs,
-    // inside rich text - will offer these types for internal links.
+    // Every link in this registry — standalone, inside CTAs,
+    // inside rich text — will offer these types for internal links.
     to: ['marketingPage', 'blogPost'],
   },
 })
