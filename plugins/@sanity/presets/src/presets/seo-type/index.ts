@@ -49,7 +49,7 @@ export const seoType = definePresetType<{}, 'object'>({
               const {height, width} = getImageDimensions(value.asset?._ref)
 
               if (height !== 630 || width !== 1200) {
-                return 'Open Graph images are recommended to be 1200x630 (1.91:1) for optimal social sharing previews.'
+                return 'Open Graph images are recommended to be exactly 1200x630 (1.91:1) for the best social sharing previews.'
               }
 
               return true
