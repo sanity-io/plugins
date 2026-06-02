@@ -14,7 +14,7 @@ export interface RichTextTypeConfig {
    * Defaults to all enabled. Pass `false` to disable every object, or an
    * object to toggle individual ones (e.g. `{link: false}`).
    *
-   * Each object's options (link `internalTypes`, image `altText`, …) are
+   * Each object's options (link `to`, image `altText`, …) are
    * configured on `createPresetsRegistry` and cascade into every rich text
    * field. Use `map.of` for per-field structural changes.
    */

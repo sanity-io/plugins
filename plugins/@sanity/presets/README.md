@@ -43,7 +43,7 @@ import {createPresetsRegistry} from '@sanity/presets'
 
 const {defineLink, defineCta, defineSeo, defineImage, definePage} = createPresetsRegistry({
   link: {
-    internalTypes: ['page', 'post'],
+    to: ['page', 'post'],
   },
 })
 ```
@@ -78,16 +78,16 @@ The **presets registry** is the entry point to `@sanity/presets`. Call `createPr
 
 The registry serves two purposes:
 
-1. **Global configuration.** Presets can be configured at the registry level, providing defaults that apply everywhere a preset is used. For example, configuring `link.internalTypes` once means every link — whether standalone, inside a CTA, or inside rich text — knows which document types are available for internal links.
+1. **Global configuration.** Presets can be configured at the registry level, providing defaults that apply everywhere a preset is used. For example, configuring `link.to` once means every link — whether standalone, inside a CTA, or inside rich text — knows which document types are available for internal links.
 
 2. **Composition.** Some presets compose other presets internally. The CTA preset includes a link field; the page preset includes SEO fields. The registry ensures these composed presets share the same global configuration.
 
 ```ts
 const {defineLink, defineCta, definePage} = createPresetsRegistry({
   link: {
-    // Every link in this registry — standalone, inside CTAs,
-    // inside rich text — will offer these types for internal links.
-    internalTypes: ['marketingPage', 'blogPost'],
+    // Every link in this registry - standalone, inside CTAs,
+    // inside rich text - will offer these types for internal links.
+    to: ['marketingPage', 'blogPost'],
   },
 })
 ```
@@ -97,8 +97,8 @@ Global configuration can be overridden at the call site. If a specific link inst
 ```ts
 defineLink({
   name: 'specialLink',
-  // Overrides the registry-level internalTypes for this instance only.
-  internalTypes: ['product'],
+  // Overrides the registry-level to for this instance only.
+  to: ['product'],
 })
 ```
 
@@ -106,10 +106,10 @@ defineLink({
 
 Presets can compose other presets. This means configuring one preset can affect others that depend on it.
 
-The **link** preset is the clearest example. When you configure `link.internalTypes` at the registry level, that configuration cascades to:
+The **link** preset is the clearest example. When you configure `link.to` at the registry level, that configuration cascades to:
 
-- **CTA (call to action)** — the CTA preset includes an inline link field. The link field automatically uses the registry-level `internalTypes` configuration.
-- **Rich text** — the rich text preset includes link annotations. Those annotations also use the registry-level `internalTypes` configuration.
+- **CTA (call to action)** — the CTA preset includes an inline link field. The link field automatically uses the registry-level `to` configuration.
+- **Rich text** — the rich text preset includes link annotations. Those annotations also use the registry-level `to` configuration.
 
 This means you configure link behaviour once, and every preset that uses links inherits that configuration automatically.
 
@@ -197,8 +197,8 @@ defineLink({
   name: 'primaryLink',
   title: 'Primary Link',
   // Document types available for internal links. Falls back to
-  // the registry-level link.internalTypes if not provided here.
-  internalTypes: ['page', 'post'],
+  // the registry-level link.to if not provided here.
+  to: ['page', 'post'],
 })
 ```
 
@@ -207,15 +207,15 @@ defineLink({
 | Field          | Type        | Description                                                                                              |
 | -------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
 | `linkType`     | `string`    | "Internal" or "External". Defaults to "Internal".                                                        |
-| `reference`    | `reference` | Internal link. Hidden when link type is external. Targets configured via `internalTypes`.                |
+| `reference`    | `reference` | Internal link. Hidden when link type is external. Targets configured via `to`.                           |
 | `url`          | `url`       | External URL. Hidden when link type is internal. Validates `http`, `https`, `mailto`, and `tel` schemes. |
 | `openInNewTab` | `boolean`   | Whether to open in a new tab. Hidden for internal links.                                                 |
 
 **Options:**
 
-| Option          | Type       | Description                                                                                         |
-| --------------- | ---------- | --------------------------------------------------------------------------------------------------- |
-| `internalTypes` | `string[]` | Document types available for internal links. Falls back to the registry-level `link.internalTypes`. |
+| Option | Type                           | Description                                                                                                                                                         |
+| ------ | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `to`   | `(string \| {type: string})[]` | Document types available for internal links. Accepts string shorthand (`['page']`) or object form (`[{type: 'page'}]`). Falls back to the registry-level `link.to`. |
 
 ### CTA (call to action)
 
@@ -230,10 +230,10 @@ defineCta({
 
 **Fields:**
 
-| Field   | Type     | Description                                                                                |
-| ------- | -------- | ------------------------------------------------------------------------------------------ |
-| `link`  | `object` | An inline link, composed from the link preset. Inherits `internalTypes` from the registry. |
-| `level` | `number` | Semantic importance level (1, 2, or 3).                                                    |
+| Field   | Type     | Description                                                                     |
+| ------- | -------- | ------------------------------------------------------------------------------- |
+| `link`  | `object` | An inline link, composed from the link preset. Inherits `to` from the registry. |
+| `level` | `number` | Semantic importance level (1, 2, or 3).                                         |
 
 ### SEO (search engine optimization)
 
@@ -332,12 +332,12 @@ defineRichText({
 
 #### Configuring the embedded presets
 
-Configure each object's options (link `internalTypes`, image `altText`, and so on) at the registry level. Those options cascade into every rich text field:
+Configure each object's options (link `to`, image `altText`, and so on) at the registry level. Those options cascade into every rich text field:
 
 ```ts
 const {defineRichText} = createPresetsRegistry({
   link: {
-    internalTypes: ['page', 'post'],
+    to: ['page', 'post'],
   },
   image: {
     altText: true,
@@ -352,12 +352,12 @@ The `objects` option only toggles embedded objects on or off. To reshape the arr
 
 ### Configure links globally
 
-The [link preset](#link) is used by multiple other presets ([CTA](#cta-call-to-action), [rich text](#rich-text)). Configure `internalTypes` at the registry level so all links share the same set of linkable document types:
+The [link preset](#link) is used by multiple other presets ([CTA](#cta-call-to-action), [rich text](#rich-text)). Configure `to` at the registry level so all links share the same set of linkable document types:
 
 ```ts
 const {defineLink, defineCta, definePage} = createPresetsRegistry({
   link: {
-    internalTypes: ['page', 'post', 'product'],
+    to: ['page', 'post', 'product'],
   },
 })
 ```

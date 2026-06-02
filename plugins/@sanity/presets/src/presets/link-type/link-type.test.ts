@@ -4,7 +4,7 @@ import {describe, expect} from 'vitest'
 import {getField, getFields, test} from '../../test/fixtures'
 import {linkType} from './index'
 
-const defaultConfig = {name: 'link', internalTypes: ['page']}
+const defaultConfig = {name: 'link', to: ['page']}
 
 function evaluateHidden(field: FieldDefinition, parent: Record<string, unknown>): unknown {
   if (typeof field.hidden === 'function') {
@@ -50,13 +50,29 @@ describe('linkType', () => {
     expect(fieldNames).toEqual(['linkType', 'reference', 'url', 'openInNewTab'])
   })
 
-  test('maps internalTypes to reference targets', ({stubRegistry}) => {
+  test('maps to entries to reference targets', ({stubRegistry}) => {
     const fields = getFields(
-      linkType.schemaType({name: 'link', internalTypes: ['page', 'post']}, stubRegistry),
+      linkType.schemaType({name: 'link', to: ['page', 'post']}, stubRegistry),
     )
     const referenceField = getField(fields, 'reference')
 
     expect(referenceField).toHaveProperty('to', [{type: 'page'}, {type: 'post'}])
+  })
+
+  test('accepts object-form entries in to', ({stubRegistry}) => {
+    const fields = getFields(
+      linkType.schemaType({name: 'link', to: [{type: 'page'}, {type: 'post'}]}, stubRegistry),
+    )
+
+    expect(getField(fields, 'reference')).toHaveProperty('to', [{type: 'page'}, {type: 'post'}])
+  })
+
+  test('accepts mixed string and object entries in to', ({stubRegistry}) => {
+    const fields = getFields(
+      linkType.schemaType({name: 'link', to: ['page', {type: 'post'}]}, stubRegistry),
+    )
+
+    expect(getField(fields, 'reference')).toHaveProperty('to', [{type: 'page'}, {type: 'post'}])
   })
 
   test('hidden callbacks show correct fields for internal type', ({stubRegistry}) => {
