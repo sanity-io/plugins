@@ -32,7 +32,7 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
                 name: 'altText',
                 title: 'Alt text',
                 description:
-                  'Describes the image for screen readers and search engines. Required for accessibility.',
+                  'Describes the image for screen readers and search engines. Important for accessibility.',
                 type: 'string',
                 validation: (rule) => rule.warning('Alt text improves accessibility.'),
               }),
