@@ -31,6 +31,8 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
               defineField({
                 name: 'altText',
                 title: 'Alt text',
+                description:
+                  'Describes the image for screen readers and search engines. Required for accessibility.',
                 type: 'string',
                 validation: (rule) => rule.warning('Alt text improves accessibility.'),
               }),
@@ -41,6 +43,7 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
               defineField({
                 name: 'caption',
                 title: 'Caption',
+                description: 'Visible caption displayed below the image in the rendered layout.',
                 type: 'text',
               }),
             ]

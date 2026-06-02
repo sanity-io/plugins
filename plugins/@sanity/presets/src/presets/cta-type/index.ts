@@ -16,6 +16,8 @@ export const ctaType = definePresetType<{}, 'object', 'preview'>({
         defineField({
           name: 'level',
           title: 'Level',
+          description:
+            'Visual prominence: 1 is the primary (most prominent) button style, 3 is the least prominent.',
           type: 'number',
           options: {
             layout: 'radio',
