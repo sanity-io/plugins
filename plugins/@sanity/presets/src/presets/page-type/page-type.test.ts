@@ -109,14 +109,12 @@ describe('pageType', () => {
     expect(inlineMember).toEqual(
       expect.objectContaining({
         name: 'heroImage',
-        type: 'object',
+        type: 'image',
       }),
     )
+    expect(inlineMember).toHaveProperty('options.hotspot', true)
     expect(inlineMember).toHaveProperty('fields')
-    expect(inlineMember.fields).toEqual(
-      expect.arrayContaining([expect.objectContaining({name: 'image', type: 'image'})]),
-    )
-    expect(inlineMember.fields).toHaveLength(1)
+    expect(inlineMember.fields).toHaveLength(0)
   })
 })
 

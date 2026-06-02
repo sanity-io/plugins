@@ -1,6 +1,6 @@
 import {describe, expect} from 'vitest'
 
-import {getField, getFields, test} from '../../test/fixtures'
+import {getFields, test} from '../../test/fixtures'
 import {imageType} from './index'
 
 describe('imageType', () => {
@@ -15,56 +15,54 @@ describe('imageType', () => {
     expect(result.name).toBe('image')
   })
 
-  test('default config includes image, altText, and caption fields', ({stubRegistry}) => {
+  test('default config includes altText and caption fields', ({stubRegistry}) => {
     const fields = getFields(imageType.schemaType({name: 'image'}, stubRegistry))
 
-    expect(fields).toHaveLength(3)
+    expect(fields).toHaveLength(2)
 
     const fieldNames = fields.map((field) => field.name)
-    expect(fieldNames).toEqual(['image', 'altText', 'caption'])
+    expect(fieldNames).toEqual(['altText', 'caption'])
   })
 
   test('altText: false excludes the altText field', ({stubRegistry}) => {
     const fields = getFields(imageType.schemaType({name: 'image', altText: false}, stubRegistry))
 
-    expect(fields).toHaveLength(2)
+    expect(fields).toHaveLength(1)
 
     const fieldNames = fields.map((field) => field.name)
-    expect(fieldNames).toEqual(['image', 'caption'])
+    expect(fieldNames).toEqual(['caption'])
   })
 
   test('caption: false excludes the caption field', ({stubRegistry}) => {
     const fields = getFields(imageType.schemaType({name: 'image', caption: false}, stubRegistry))
 
-    expect(fields).toHaveLength(2)
+    expect(fields).toHaveLength(1)
 
     const fieldNames = fields.map((field) => field.name)
-    expect(fieldNames).toEqual(['image', 'altText'])
+    expect(fieldNames).toEqual(['altText'])
   })
 
-  test('both altText and caption disabled leaves only the image field', ({stubRegistry}) => {
+  test('both altText and caption disabled leaves no fields', ({stubRegistry}) => {
     const fields = getFields(
       imageType.schemaType({name: 'image', altText: false, caption: false}, stubRegistry),
     )
 
-    expect(fields).toHaveLength(1)
+    expect(fields).toHaveLength(0)
 
     const fieldNames = fields.map((field) => field.name)
-    expect(fieldNames).toEqual(['image'])
+    expect(fieldNames).toEqual([])
   })
 
   test('hotspot is enabled by default', ({stubRegistry}) => {
-    const fields = getFields(imageType.schemaType({name: 'image'}, stubRegistry))
-    const imageField = getField(fields, 'image')
+    const typeDef = imageType.schemaType({name: 'image'}, stubRegistry)
 
-    expect(imageField).toHaveProperty('options.hotspot', true)
+    expect(typeDef).toHaveProperty('options.hotspot', true)
   })
 
-  test('hotspot: false disables hotspot on the image field', ({stubRegistry}) => {
-    const fields = getFields(imageType.schemaType({name: 'image', hotspot: false}, stubRegistry))
-    const imageField = getField(fields, 'image')
+  test('hotspot: false disables hotspot on the image type', ({stubRegistry}) => {
+    const typeDef = imageType.schemaType({name: 'image', hotspot: false}, stubRegistry)
 
-    expect(imageField).toHaveProperty('options.hotspot', false)
+    expect(typeDef).toHaveProperty('options.hotspot', false)
   })
 
   test('user-provided fields are appended', ({stubRegistry}) => {
@@ -77,10 +75,10 @@ describe('imageType', () => {
     )
     const fields = getFields(result)
 
-    expect(fields).toHaveLength(4)
+    expect(fields).toHaveLength(3)
 
     const fieldNames = fields.map((field) => field.name)
-    expect(fieldNames).toEqual(['image', 'altText', 'caption', 'credit'])
+    expect(fieldNames).toEqual(['altText', 'caption', 'credit'])
   })
 })
 
@@ -91,7 +89,6 @@ describe('imageType preview.select', () => {
 
     expect(select).toEqual({
       title: 'altText',
-      media: 'image',
     })
   })
 
@@ -101,7 +98,6 @@ describe('imageType preview.select', () => {
 
     expect(select).toEqual({
       title: 'caption',
-      media: 'image',
     })
   })
 
@@ -113,8 +109,7 @@ describe('imageType preview.select', () => {
     const select = 'preview' in typeDef ? typeDef.preview?.select : undefined
 
     expect(select).toEqual({
-      title: 'image.asset.originalFilename',
-      media: 'image',
+      title: 'asset.originalFilename',
     })
   })
 })

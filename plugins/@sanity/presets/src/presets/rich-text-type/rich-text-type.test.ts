@@ -129,10 +129,8 @@ describe('richTextType via the registry', () => {
     expect(ofMembers[0]).toHaveProperty('type', 'block')
     expect(ofMembers[1]).toMatchObject({
       name: 'richTextImage',
-      fields: expect.arrayContaining([
-        expect.objectContaining({name: 'image'}),
-        expect.objectContaining({name: 'altText'}),
-      ]),
+      type: 'image',
+      fields: expect.arrayContaining([expect.objectContaining({name: 'altText'})]),
     })
     expect(block.marks?.annotations?.[0]).toMatchObject({
       name: 'link',
