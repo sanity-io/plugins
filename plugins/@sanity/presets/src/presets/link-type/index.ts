@@ -2,6 +2,8 @@ import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
 
+// Object entries are limited to {type} shorthand by design; richer reference.to
+// target props (title, options, icon) can be added later if needed.
 type LinkToEntry = string | {type: string}
 
 export interface LinkTypeConfig {
