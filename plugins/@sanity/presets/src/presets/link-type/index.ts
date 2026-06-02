@@ -16,6 +16,21 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
     return defineType({
       ...objectConfig,
       type: 'object',
+      validation: (rule) =>
+        rule.custom((value) => {
+          if (value === null || value === undefined) return true
+          if (typeof value !== 'object') return true
+
+          const linkValue = value as {linkType?: string; reference?: unknown; url?: unknown}
+
+          if (linkValue.linkType === 'internal') {
+            return linkValue.reference ? true : 'An internal link requires a reference'
+          }
+          if (linkValue.linkType === 'external') {
+            return linkValue.url ? true : 'An external link requires a URL'
+          }
+          return 'Select a link type'
+        }),
       fields: [
         defineField({
           name: 'linkType',
@@ -29,6 +44,7 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
               {title: 'External', value: 'external'},
             ],
           },
+          validation: (rule) => rule.required(),
         }),
         defineField({
           name: 'reference',

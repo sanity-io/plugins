@@ -1,4 +1,4 @@
-import type {FieldDefinition, PreviewValue, SchemaTypeDefinition} from 'sanity'
+import type {FieldDefinition, PreviewValue, Rule, SchemaTypeDefinition} from 'sanity'
 import {describe, expect} from 'vitest'
 
 import {getField, getFields, test} from '../../test/fixtures'
@@ -168,5 +168,116 @@ describe('linkType preview.prepare', () => {
     })
 
     expect(result).toEqual({title: 'No reference', subtitle: 'Internal link'})
+  })
+})
+
+type CustomValidator = (value: unknown) => true | string
+
+function createRequiredSpyRule(): {rule: Rule; wasRequiredCalled: () => boolean} {
+  let requiredCalled = false
+  const stub = {
+    required() {
+      requiredCalled = true
+      return stub
+    },
+  }
+  // oxlint-disable-next-line no-unsafe-type-assertion -- minimal stub recording whether required() is called
+  return {rule: stub as unknown as Rule, wasRequiredCalled: () => requiredCalled}
+}
+
+function captureObjectValidator(schemaType: SchemaTypeDefinition): CustomValidator {
+  const {validation} = schemaType
+  if (typeof validation !== 'function') {
+    throw new Error('Expected a validation function on the object type')
+  }
+
+  let captured: CustomValidator | undefined
+  const stub = {
+    custom(validator: CustomValidator) {
+      captured = validator
+      return stub
+    },
+  }
+
+  // oxlint-disable-next-line no-unsafe-type-assertion -- minimal stub capturing the custom validator callback
+  validation(stub as unknown as Rule)
+
+  if (!captured) {
+    throw new Error('Expected object validation to register a custom validator')
+  }
+  return captured
+}
+
+describe('linkType validation', () => {
+  test('linkType field has required validation', ({stubRegistry}) => {
+    const fields = getFields(linkType.schemaType(defaultConfig, stubRegistry))
+    const linkTypeField = getField(fields, 'linkType')
+
+    if (typeof linkTypeField.validation !== 'function') {
+      throw new Error('Expected a validation function on the linkType field')
+    }
+
+    const {rule, wasRequiredCalled} = createRequiredSpyRule()
+    linkTypeField.validation(rule)
+
+    expect(wasRequiredCalled()).toBe(true)
+  })
+
+  test('object validation returns true for null value', ({stubRegistry}) => {
+    const validate = captureObjectValidator(linkType.schemaType(defaultConfig, stubRegistry))
+
+    expect(validate(null)).toBe(true)
+  })
+
+  test('object validation returns true for undefined value', ({stubRegistry}) => {
+    const validate = captureObjectValidator(linkType.schemaType(defaultConfig, stubRegistry))
+
+    expect(validate(undefined)).toBe(true)
+  })
+
+  test('object validation returns true for a valid internal link', ({stubRegistry}) => {
+    const validate = captureObjectValidator(linkType.schemaType(defaultConfig, stubRegistry))
+
+    expect(validate({linkType: 'internal', reference: {_ref: 'abc', _type: 'reference'}})).toBe(
+      true,
+    )
+  })
+
+  test('object validation returns error for internal link missing reference', ({stubRegistry}) => {
+    const validate = captureObjectValidator(linkType.schemaType(defaultConfig, stubRegistry))
+
+    expect(validate({linkType: 'internal'})).toBe('An internal link requires a reference')
+  })
+
+  test('object validation returns true for a valid external link', ({stubRegistry}) => {
+    const validate = captureObjectValidator(linkType.schemaType(defaultConfig, stubRegistry))
+
+    expect(validate({linkType: 'external', url: 'https://example.com'})).toBe(true)
+  })
+
+  test('object validation returns error for external link missing url', ({stubRegistry}) => {
+    const validate = captureObjectValidator(linkType.schemaType(defaultConfig, stubRegistry))
+
+    expect(validate({linkType: 'external'})).toBe('An external link requires a URL')
+  })
+
+  test('object validation returns error when linkType is not set', ({stubRegistry}) => {
+    const validate = captureObjectValidator(linkType.schemaType(defaultConfig, stubRegistry))
+
+    expect(validate({})).toBe('Select a link type')
+  })
+
+  test('object validation does not error when external link still carries a stale reference', ({
+    stubRegistry,
+  }) => {
+    const validate = captureObjectValidator(linkType.schemaType(defaultConfig, stubRegistry))
+
+    expect(
+      validate({
+        linkType: 'external',
+        url: 'https://example.com',
+        reference: {_ref: 'abc', _type: 'reference'},
+      }),
+    ).toBe(true)
   })
 })
