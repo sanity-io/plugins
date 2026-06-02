@@ -29,7 +29,7 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
           if (linkValue.linkType === 'external') {
             return linkValue.url ? true : 'An external link requires a URL'
           }
-          return 'Select a link type'
+          return true
         }),
       fields: [
         defineField({

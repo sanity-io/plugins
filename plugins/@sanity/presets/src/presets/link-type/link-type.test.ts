@@ -261,10 +261,12 @@ describe('linkType validation', () => {
     expect(validate({linkType: 'external'})).toBe('An external link requires a URL')
   })
 
-  test('object validation returns error when linkType is not set', ({stubRegistry}) => {
+  test('object validation defers the missing link type to field-level required()', ({
+    stubRegistry,
+  }) => {
     const validate = captureObjectValidator(linkType.schemaType(defaultConfig, stubRegistry))
 
-    expect(validate({})).toBe('Select a link type')
+    expect(validate({})).toBe(true)
   })
 
   test('object validation does not error when external link still carries a stale reference', ({
