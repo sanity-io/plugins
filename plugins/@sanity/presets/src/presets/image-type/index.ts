@@ -17,6 +17,7 @@ export const imageType = definePresetType<ImageTypeConfig, 'image', 'preview'>({
     return defineType({
       ...imageConfig,
       type: 'image',
+      // hotspot is the curated default; callers override other image options (accept, sources, storeOriginalFilename) via the map.options hook
       options: {
         hotspot,
       },
