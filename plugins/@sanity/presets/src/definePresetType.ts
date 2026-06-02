@@ -8,7 +8,10 @@ import type {
 import type {PartialSchemaDefinition} from './types'
 
 export interface RegistryContext {
-  getPreset: (presetName: string, config?: Record<string, unknown>) => FieldDefinition
+  getPreset: (
+    presetName: string,
+    config?: Record<string, unknown>,
+  ) => SchemaTypeDefinition & FieldDefinition
 }
 
 type ProhibitedProperties = 'type'
