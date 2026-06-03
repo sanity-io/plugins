@@ -18,17 +18,13 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
       type: 'object',
       validation: (rule) =>
         rule.custom((value) => {
-          const isLinkObject = typeof value === 'object' && value !== null
+          const link = value as {linkType?: string; reference?: unknown; url?: unknown} | undefined
 
-          if (isLinkObject) {
-            const linkValue = value as {linkType?: string; reference?: unknown; url?: unknown}
-
-            if (linkValue.linkType === 'internal') {
-              return linkValue.reference ? true : 'An internal link requires a reference'
-            }
-            if (linkValue.linkType === 'external') {
-              return linkValue.url ? true : 'An external link requires a URL'
-            }
+          if (link?.linkType === 'internal') {
+            return link.reference ? true : 'An internal link requires a reference'
+          }
+          if (link?.linkType === 'external') {
+            return link.url ? true : 'An external link requires a URL'
           }
 
           return true
