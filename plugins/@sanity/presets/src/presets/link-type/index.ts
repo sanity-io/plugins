@@ -18,8 +18,8 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
       type: 'object',
       validation: (rule) =>
         rule.custom((value) => {
-          if (value === null || value === undefined) return true
-          if (typeof value !== 'object') return true
+          const isLinkObject = typeof value === 'object' && value !== null
+          if (!isLinkObject) return true
 
           const linkValue = value as {linkType?: string; reference?: unknown; url?: unknown}
 
