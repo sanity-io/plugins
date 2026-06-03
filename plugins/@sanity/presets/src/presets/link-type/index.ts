@@ -6,6 +6,12 @@ export interface LinkTypeConfig {
   internalTypes?: string[]
 }
 
+type LinkValue = {
+  linkType?: string
+  reference?: unknown
+  url?: unknown
+}
+
 export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
   name: 'link',
   identifier: 'core.link',
@@ -17,14 +23,12 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
       ...objectConfig,
       type: 'object',
       validation: (rule) =>
-        rule.custom((value) => {
-          const link = value as {linkType?: string; reference?: unknown; url?: unknown} | undefined
-
-          if (link?.linkType === 'internal') {
-            return link.reference ? true : 'An internal link requires a reference'
+        rule.custom<LinkValue>((value) => {
+          if (value?.linkType === 'internal' && !value.reference) {
+            return 'An internal link requires a reference'
           }
-          if (link?.linkType === 'external') {
-            return link.url ? true : 'An external link requires a URL'
+          if (value?.linkType === 'external' && !value.url) {
+            return 'An external link requires a URL'
           }
 
           return true
