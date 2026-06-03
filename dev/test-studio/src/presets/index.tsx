@@ -8,9 +8,9 @@ import {definePlugin, defineType, defineField} from 'sanity'
 // A convenient pattern is to destructure the `define<type>` functions.
 const {defineImage, definePage, defineLink, defineRichText} = createPresetsRegistry({
   link: {
-    // Presets can be globally configured. Here, `link.internalTypes` is
+    // Presets can be globally configured. Here, `link.to` is
     // configured to include the "corePresetsTest" document type in all
-    // link objects (unless the `internalTypes` is overridden when `defineLink`
+    // link objects (unless the `to` is overridden when `defineLink`
     // is called).
     //
     // Globally configuring a preset is useful, because the configuration
@@ -19,7 +19,7 @@ const {defineImage, definePage, defineLink, defineRichText} = createPresetsRegis
     // `defineRichText`, the link type it composes will automatically be
     // configured to allow internal links to the "corePresetsTest" document
     // type.
-    internalTypes: ['corePresetsTest'],
+    to: ['corePresetsTest'],
   },
 })
 

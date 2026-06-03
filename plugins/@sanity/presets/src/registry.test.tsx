@@ -44,10 +44,10 @@ describe('createPresetsRegistry', () => {
     expect(result).toHaveProperty('type', 'object')
   })
 
-  describe('with registry-level internalTypes', () => {
-    test.override('registryConfig', {link: {internalTypes: ['marketingPage']}})
+  describe('with registry-level to', () => {
+    test.override('registryConfig', {link: {to: ['marketingPage']}})
 
-    test('defineLink reflects registry-level internalTypes', ({registry}) => {
+    test('defineLink reflects registry-level to', ({registry}) => {
       const result = registry.defineLink({name: 'testLink'})
 
       expect(result).toEqual(
@@ -113,10 +113,10 @@ describe('preset composition via getPreset', () => {
     )
   })
 
-  describe('with registry-level internalTypes', () => {
-    test.override('registryConfig', {link: {internalTypes: ['article', 'page']}})
+  describe('with registry-level to', () => {
+    test.override('registryConfig', {link: {to: ['article', 'page']}})
 
-    test('defineCta link field inherits internalTypes from registry config', ({registry}) => {
+    test('defineCta link field inherits to from registry config', ({registry}) => {
       const result = registry.defineCta({name: 'testCta'})
 
       expect(result).toEqual(

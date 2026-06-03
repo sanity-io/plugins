@@ -141,10 +141,10 @@ describe('richTextType via the registry', () => {
     })
   })
 
-  describe('with registry-level internalTypes', () => {
-    test.override('registryConfig', {link: {internalTypes: ['marketingPage']}})
+  describe('with registry-level to', () => {
+    test.override('registryConfig', {link: {to: ['marketingPage']}})
 
-    test('link annotations inherit internalTypes from registry config', ({registry}) => {
+    test('link annotations inherit to from registry config', ({registry}) => {
       const result = registry.defineRichText({name: 'body'})
       const block = getBlock(result)
 

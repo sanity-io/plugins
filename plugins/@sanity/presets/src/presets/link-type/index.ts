@@ -2,16 +2,21 @@ import {defineField, defineType} from 'sanity'
 
 import {definePresetType} from '../../definePresetType'
 
+type LinkToEntry = string | {type: string}
+
 export interface LinkTypeConfig {
-  internalTypes?: string[]
+  to?: LinkToEntry[]
+}
+
+function normalizeToTargets(entries: LinkToEntry[]): {type: string}[] {
+  return entries.map((entry) => (typeof entry === 'string' ? {type: entry} : entry))
 }
 
 export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
   name: 'link',
   identifier: 'core.link',
-  schemaType: ({internalTypes, fields, ...objectConfig}) => {
-    const resolvedInternalTypes = internalTypes ?? []
-    const referenceTargets = resolvedInternalTypes.map((type) => ({type}))
+  schemaType: ({to, fields, ...objectConfig}) => {
+    const referenceTargets = normalizeToTargets(to ?? [])
 
     return defineType({
       ...objectConfig,
