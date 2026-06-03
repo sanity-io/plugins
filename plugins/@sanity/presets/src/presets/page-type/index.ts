@@ -59,7 +59,7 @@ function defineLazyContentField(
     name: 'content',
     title: 'Content',
     description:
-      'Page sections rendered in order. Add, remove, or reorder blocks to build the layout.',
+      'Page sections rendered in order. Add, remove, or reorder blocks to build the page.',
     group: 'main',
     type: 'array',
     get of() {
@@ -113,8 +113,6 @@ export function createPageType({lookupArrayPreset}: {lookupArrayPreset: LookupAr
           defineField({
             name: 'slug',
             title: 'Slug',
-            description:
-              'The URL path for this page. Generated from the name - regenerate after renaming.',
             type: 'slug',
             group: 'main',
             options: {

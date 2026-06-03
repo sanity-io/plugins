@@ -17,7 +17,7 @@ export const ctaType = definePresetType<{}, 'object', 'preview'>({
           name: 'level',
           title: 'Level',
           description:
-            'Visual prominence: 1 is the primary (most prominent) button style, 3 is the least prominent.',
+            'The importance of the action relative to its siblings: level 1 being the primary action, 2 the secondary action, and so on.',
           type: 'number',
           options: {
             layout: 'radio',
