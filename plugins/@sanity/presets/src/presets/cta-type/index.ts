@@ -16,6 +16,8 @@ export const ctaType = definePresetType<{}, 'object', 'preview'>({
         defineField({
           name: 'level',
           title: 'Level',
+          description:
+            'The importance of the action relative to its siblings: level 1 being the primary action, 2 the secondary action, and so on.',
           type: 'number',
           options: {
             layout: 'radio',

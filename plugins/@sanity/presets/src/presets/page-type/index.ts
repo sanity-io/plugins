@@ -58,6 +58,8 @@ function defineLazyContentField(
   return defineField({
     name: 'content',
     title: 'Content',
+    description:
+      'Page sections rendered in order. Add, remove, or reorder blocks to build the page.',
     group: 'main',
     type: 'array',
     get of() {
@@ -103,6 +105,7 @@ export function createPageType({lookupArrayPreset}: {lookupArrayPreset: LookupAr
           defineField({
             name: 'name',
             title: 'Name',
+            description: 'Used as the page title and as the source for the auto-generated slug.',
             type: 'string',
             group: 'main',
             validation: (rule) => rule.required(),

@@ -26,6 +26,8 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
           name: 'linkType',
           type: 'string',
           title: 'Link Type',
+          description:
+            'Internal links point to a page in this project. External links point to a full URL.',
           initialValue: 'internal',
           options: {
             layout: 'radio',
@@ -46,6 +48,8 @@ export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
           name: 'url',
           type: 'url',
           title: 'URL',
+          description:
+            'Full URL including protocol, e.g. https://example.com. Supports http, https, mailto, and tel.',
           hidden: ({parent}) => parent?.linkType === 'internal',
           validation: (rule) =>
             rule.uri({
