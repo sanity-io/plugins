@@ -12,7 +12,7 @@ type LinkValue = {
   url?: unknown
 }
 
-export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview'>({
+export const linkType = definePresetType<LinkTypeConfig, 'object', 'preview' | 'validation'>({
   name: 'link',
   identifier: 'core.link',
   schemaType: ({internalTypes, fields, ...objectConfig}) => {
