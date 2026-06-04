@@ -81,7 +81,7 @@ describe('createPresetsRegistry', () => {
     const result = registry.defineImage({name: 'testImage'})
 
     expect(result).toHaveProperty('name', 'testImage')
-    expect(result).toHaveProperty('type', 'object')
+    expect(result).toHaveProperty('type', 'image')
   })
 
   test('definePage returns a schema type definition', ({registry}) => {

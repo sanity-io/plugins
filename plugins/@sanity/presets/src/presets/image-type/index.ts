@@ -8,24 +8,20 @@ export interface ImageTypeConfig {
   hotspot?: boolean
 }
 
-export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>({
+export const imageType = definePresetType<ImageTypeConfig, 'image', 'preview'>({
   name: 'image',
   identifier: 'core.image',
   schemaType: (config) => {
-    const {altText = true, caption = true, hotspot = true, fields, ...objectConfig} = config
+    const {altText = true, caption = true, hotspot = true, fields, ...imageConfig} = config
 
     return defineType({
-      ...objectConfig,
-      type: 'object',
+      ...imageConfig,
+      type: 'image',
+      // hotspot is the curated default; callers override other image options (accept, sources, storeOriginalFilename) via the map.options hook
+      options: {
+        hotspot,
+      },
       fields: [
-        defineField({
-          name: 'image',
-          title: 'Image',
-          type: 'image',
-          options: {
-            hotspot,
-          },
-        }),
         ...(altText
           ? [
               defineField({
@@ -51,8 +47,7 @@ export const imageType = definePresetType<ImageTypeConfig, 'object', 'preview'>(
       ],
       preview: {
         select: {
-          title: altText ? 'altText' : caption ? 'caption' : 'image.asset.originalFilename',
-          media: 'image',
+          title: altText ? 'altText' : caption ? 'caption' : 'asset.originalFilename',
         },
       },
     })
