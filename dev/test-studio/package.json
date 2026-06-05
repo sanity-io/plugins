@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "sanity build",
-    "dev": "sanity dev",
+    "dev": "sanity dev --no-auto-updates",
     "typegen": "sanity schema extract --enforce-required-fields --workspace kitchen-sink && sanity typegen generate"
   },
   "dependencies": {

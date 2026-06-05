@@ -400,6 +400,46 @@ corepack enable
 2. Verify you have access to the project
 3. Check the browser console for specific errors
 
+## Cursor Cloud specific instructions
+
+### Services
+
+| Service                  | Port | Purpose                                       |
+| ------------------------ | ---- | --------------------------------------------- |
+| Test Studio (`pnpm dev`) | 3333 | Local Sanity Studio for manual plugin testing |
+
+No Docker, databases, or other local services are required. CI-style verification (`pnpm lint`, `pnpm build`, `pnpm test run`) runs entirely in-process.
+
+### Starting the dev server
+
+The test studio dev script uses `sanity dev --no-auto-updates`, so `pnpm dev` starts non-interactively (no version-upgrade prompt). The studio serves at `http://localhost:3333`.
+
+### Sanity authentication
+
+The test studio connects to Sanity Cloud (project `ppsg7ml5`, dataset `plugins` by default). For cloud agents, use the injected `STUDIO_AUTH_TOKEN` secret instead of interactive login.
+
+Navigate to the studio with the token in the URL hash (Sanity consumes it on load and removes it from the address bar):
+
+```
+http://localhost:3333/kitchen-sink#token=<STUDIO_AUTH_TOKEN>
+```
+
+Build the URL from the secret:
+
+```bash
+node -e "const t=process.env.STUDIO_AUTH_TOKEN; console.log('http://localhost:3333/kitchen-sink#token=' + encodeURIComponent(t))"
+```
+
+Open that URL in the browser to authenticate and land directly in the Kitchen Sink workspace. Without a token, workspaces show as "Signed out".
+
+### Node.js version notes
+
+`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 22 works for build/lint/test with engine warnings. Node 24 is preferred when available.
+
+### Lint / build / test
+
+Standard commands from the Quick Reference table apply. Run `pnpm build` before `pnpm lint` if type errors reference missing `dist/` output. `pretest` automatically builds all packages except `dev/*` before Vitest runs.
+
 ## Related Documentation
 
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Human contributor guide
