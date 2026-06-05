@@ -22,6 +22,5 @@ export function useTranslationMetadata(id: string): {
     params: {id, translationSchema: METADATA_SCHEMA_NAME},
   })
 
-  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-  return {data: data as Metadata[] | null, loading, error}
+  return {data, loading, error}
 }
