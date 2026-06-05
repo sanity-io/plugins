@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "sanity build",
-    "dev": "sanity dev",
+    "dev": "sanity dev --no-auto-updates",
     "typegen": "sanity schema extract --enforce-required-fields --workspace kitchen-sink && sanity typegen generate"
   },
   "dependencies": {
@@ -35,11 +35,13 @@
     "sanity-plugin-aprimo": "workspace:*",
     "sanity-plugin-asset-source-unsplash": "workspace:*",
     "sanity-plugin-bynder-input": "workspace:*",
+    "sanity-plugin-google-translate": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
     "sanity-plugin-iframe-pane": "workspace:*",
     "sanity-plugin-internationalized-array": "workspace:*",
     "sanity-plugin-latex-input": "workspace:*",
     "sanity-plugin-markdown": "workspace:*",
+    "sanity-plugin-utils": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
     "sanity-translations-tab": "workspace:*",

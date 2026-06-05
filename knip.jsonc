@@ -164,6 +164,22 @@
       "project": ["src/**/*.{ts,tsx}"],
     },
     // add new plugin workspaces here
+    "plugins/sanity-plugin-utils": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-google-translate": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
     "plugins/sanity-plugin-latex-input": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],

@@ -1,12 +1,12 @@
 {
-  "name": "sanity-plugin-workflow",
-  "version": "3.0.16",
-  "description": "A demonstration of a custom content publishing workflow using Sanity.",
+  "name": "sanity-plugin-google-translate",
+  "version": "3.0.3",
+  "description": "Translate your content with Google Translate directly from your Sanity Studio",
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
-  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-workflow#readme",
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-google-translate#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
   },
@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
-    "directory": "plugins/sanity-plugin-workflow"
+    "directory": "plugins/sanity-plugin-google-translate"
   },
   "files": [
     "dist"
@@ -24,8 +24,8 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "development": "./src/index.ts",
       "source": "./src/index.ts",
+      "development": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -41,28 +41,24 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@hello-pangea/dnd": "^18.0.1",
-    "@sanity/icons": "^3.7.4",
-    "@sanity/ui": "catalog:",
-    "@tanstack/react-virtual": "^3.13.22",
-    "lexorank": "^1.0.5",
-    "motion": "^12.36.0",
-    "sanity-plugin-utils": "workspace:*"
+    "@sanity/ui": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@types/node": "catalog:",
     "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
+    "react-dom": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",
+    "react-dom": "^19.2",
     "sanity": "^5 || ^6.0.0-0",
     "styled-components": "^6.1"
   },

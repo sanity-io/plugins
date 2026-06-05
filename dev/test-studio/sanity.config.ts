@@ -13,6 +13,7 @@ import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
+import {googleTranslateExample} from '#google-translate'
 import {iframePaneExample} from '#iframe-pane'
 import {
   internationalizedArrayAsyncLanguages,
@@ -31,6 +32,7 @@ import {sfccExample} from '#sfcc'
 import {studioSecretsExample} from '#studio-secrets'
 import {translationsTabExample} from '#translations-tab'
 import {unsplashExample} from '#unsplash'
+import {utilsExample} from '#utils'
 import {workflowExample} from '#workflow'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
@@ -50,6 +52,7 @@ function createWorkspace(
 export default defineConfig([
   workspaceHomeConfig({projectId, dataset}),
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
+  createWorkspace({name: 'utils-example', title: 'Utils Example', plugins: [utilsExample()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
   createWorkspace({
     name: 'translations-tab-example',
@@ -77,6 +80,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       assistExample(),
+      googleTranslateExample(),
       // add new plugins here
       orderableDocumentListExample(),
       latexInputExample(),

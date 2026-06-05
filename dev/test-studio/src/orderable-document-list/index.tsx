@@ -1,10 +1,27 @@
 import {
   orderableDocumentListDeskItem,
+  type OrderableListConfig,
   orderRankField,
   orderRankOrdering,
 } from '@sanity/orderable-document-list'
-import {definePlugin, defineType} from 'sanity'
-import {structureTool} from 'sanity/structure'
+import {definePlugin, defineType, type ConfigContext} from 'sanity'
+import {structureTool, type StructureBuilder} from 'sanity/structure'
+
+type StructureListItem = Parameters<ReturnType<StructureBuilder['list']>['items']>[0][number]
+
+function orderableDeskItem(
+  config: Pick<OrderableListConfig, 'type' | 'title'>,
+  S: StructureBuilder,
+  context: ConfigContext,
+): StructureListItem {
+  /* oxlint-disable no-unsafe-type-assertion -- workspace packages can resolve duplicate sanity instances under pnpm */
+  return orderableDocumentListDeskItem({
+    ...config,
+    S: S as unknown as OrderableListConfig['S'],
+    context: context as unknown as OrderableListConfig['context'],
+  }) as unknown as StructureListItem
+  /* oxlint-enable no-unsafe-type-assertion */
+}
 
 const orderableCategory = defineType({
   name: 'orderableCategory',
@@ -49,25 +66,11 @@ export const orderableDocumentListExampleStructure = definePlugin(() => ({
   plugins: [
     structureTool({
       structure: (S, context) => {
-        const pluginContext = context as Parameters<
-          typeof orderableDocumentListDeskItem
-        >[0]['context']
-
         return S.list()
           .title('Content')
           .items([
-            orderableDocumentListDeskItem({
-              type: 'orderableCategory',
-              title: 'Categories',
-              S,
-              context: pluginContext,
-            }),
-            orderableDocumentListDeskItem({
-              type: 'orderableProject',
-              title: 'Projects',
-              S,
-              context: pluginContext,
-            }),
+            orderableDeskItem({type: 'orderableCategory', title: 'Categories'}, S, context),
+            orderableDeskItem({type: 'orderableProject', title: 'Projects'}, S, context),
           ])
       },
     }),
