@@ -39,13 +39,15 @@ export const i18nArrayPatch = async (
 
   const transaction = client.transaction()
 
-  ;// oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- mutation shape from BaseDocumentMerger
-  (
-    mutations as Array<{at: 'after' | 'before' | 'replace'; selector: string; items: unknown[]}>
-  ).forEach((mutation) => {
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- mutation shape from BaseDocumentMerger
+  for (const mutation of mutations as Array<{
+    at: 'after' | 'before' | 'replace'
+    selector: string
+    items: unknown[]
+  }>) {
     const {at, selector, items} = mutation
     transaction.patch(client.patch(baseDoc._id).insert(at, selector, items))
-  })
+  }
 
   void transaction.commit()
 }
