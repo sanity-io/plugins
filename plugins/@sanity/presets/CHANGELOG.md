@@ -1,5 +1,37 @@
 # @sanity/presets
 
+## 0.5.0
+
+### Minor Changes
+
+- [#917](https://github.com/sanity-io/plugins/pull/917) [`d370188`](https://github.com/sanity-io/plugins/commit/d3701886b1c582f85a5e5c3bfde82356bbb50dc3) Thanks [@jordanl17](https://github.com/jordanl17)! - `defineImage` now returns a native Sanity `image` type instead of an `object` wrapper. `altText` and `caption` are added via the image type's `fields` array; `hotspot` is controlled via the top-level `options`.
+
+  **Migration note - data path changes**
+
+  If you have content saved with an earlier pre-release of this package, the asset, hotspot, and crop paths have moved:
+
+  | Property | Before                  | After             |
+  | -------- | ----------------------- | ----------------- |
+  | Asset    | `<field>.image.asset`   | `<field>.asset`   |
+  | Hotspot  | `<field>.image.hotspot` | `<field>.hotspot` |
+  | Crop     | `<field>.image.crop`    | `<field>.crop`    |
+
+  `altText` and `caption` remain at `<field>.altText` and `<field>.caption` - their paths are unchanged.
+
+  **Schema type change**
+
+  The `map` hook for `defineImage` now targets `ImageDefinition` keys (e.g. `fields`, `options`) rather than `ObjectDefinition` keys.
+
+- [#919](https://github.com/sanity-io/plugins/pull/919) [`a8d0e57`](https://github.com/sanity-io/plugins/commit/a8d0e57540e4750cce154e87a14fe28dd68e5fd8) Thanks [@jordanl17](https://github.com/jordanl17)! - Rename `link.internalTypes` to `link.to`, aligning with the Schema API's `reference.to`. The `to` option now accepts both string shorthand (`['page', 'post']`) and the object form (`[{type: 'page'}]`) used natively by `reference.to`.
+
+### Patch Changes
+
+- [#915](https://github.com/sanity-io/plugins/pull/915) [`d08dcf5`](https://github.com/sanity-io/plugins/commit/d08dcf52585ed2185c3256a437dead20f2c65754) Thanks [@jordanl17](https://github.com/jordanl17)! - Add author-facing descriptions to preset fields to improve in-Studio guidance
+
+- [#918](https://github.com/sanity-io/plugins/pull/918) [`1616c4a`](https://github.com/sanity-io/plugins/commit/1616c4aaef367fd62a77833bef0647fc11bb7227) Thanks [@jordanl17](https://github.com/jordanl17)! - Demote OG image dimension validation from error to warning so non-1200×630 images (e.g. square product images for JSON-LD) no longer block document publishing
+
+- [#914](https://github.com/sanity-io/plugins/pull/914) [`f507d65`](https://github.com/sanity-io/plugins/commit/f507d656227a90f04ececa9938ff3941f2cc0532) Thanks [@jordanl17](https://github.com/jordanl17)! - Tighten `RegistryContext.getPreset` return type to `SchemaTypeDefinition & FieldDefinition` to reflect what the registry actually returns
+
 ## 0.4.2
 
 ### Patch Changes

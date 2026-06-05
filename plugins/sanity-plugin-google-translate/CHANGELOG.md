@@ -1,5 +1,19 @@
 # sanity-plugin-google-translate
 
+## 4.0.0
+
+### Major Changes
+
+- [#906](https://github.com/sanity-io/plugins/pull/906) [`7af01cc`](https://github.com/sanity-io/plugins/commit/7af01cc02b854fc5130d368dedff5228be6a2556) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port sanity-plugin-google-translate to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+  - **React Compiler enabled**: The plugin is now optimized with React Compiler targeting React 19
+  - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
+  - **React 19.2+ required**: Minimum React version is now 19.2
+  - **Sanity Studio v5+ required**: Minimum Sanity version is now v5
+  - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19
+  - **styled-components 6.1+ required**: Peer dependency on styled-components ^6.1
+
 ## [3.0.3](https://github.com/sanity-io/sanity-plugin-google-translate/compare/v3.0.2...v3.0.3) (2025-12-29)
 
 ### Bug Fixes
