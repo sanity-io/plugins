@@ -31,6 +31,7 @@ import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
 import {studioSecretsExample} from '#studio-secrets'
 import {unsplashExample} from '#unsplash'
+import {utilsExample} from '#utils'
 import {workflowExample} from '#workflow'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
@@ -50,6 +51,7 @@ function createWorkspace(
 export default defineConfig([
   workspaceHomeConfig({projectId, dataset}),
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
+  createWorkspace({name: 'utils-example', title: 'Utils Example', plugins: [utilsExample()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
   createWorkspace({

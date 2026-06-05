@@ -1,4 +1,4 @@
-import {Box, Card, CardTone, Flex, Stack, Text} from '@sanity/ui'
+import {Box, Card, Flex, Stack, Text, type CardTone} from '@sanity/ui'
 import type {ReactNode} from 'react'
 
 type FeedbackChildren = {
@@ -36,7 +36,7 @@ export function Feedback(props: FeedbackProps) {
           children
         ) : (
           <Box flex={1}>
-            <Stack space={4}>
+            <Stack gap={4}>
               {title ? <Text weight="semibold">{title}</Text> : null}
               {description ? <Text size={2}>{description}</Text> : null}
             </Stack>

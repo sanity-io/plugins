@@ -20,7 +20,7 @@ const StyledTable = styled(TableWrapper)(
       display: table;
       border-collapse: collapse;
     }
-  `
+  `,
 )
 
 type TableProps = PropsWithChildren<CardProps>
@@ -43,7 +43,7 @@ const StyledRow = styled(RowWrapper)(
     &:not([hidden]) {
       display: table-row;
     }
-  `
+  `,
 )
 
 type TableRowProps = PropsWithChildren<CardProps>
@@ -66,7 +66,7 @@ const StyledCell = styled(CellWrapper)(
     &:not([hidden]) {
       display: table-cell;
     }
-  `
+  `,
 )
 
 type TableCellProps = PropsWithChildren<

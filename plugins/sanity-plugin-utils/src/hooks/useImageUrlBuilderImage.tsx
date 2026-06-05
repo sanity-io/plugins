@@ -6,13 +6,10 @@ import {useImageUrlBuilder} from './useImageUrlBuilder'
 
 export function useImageUrlBuilderImage(
   source: SanityImageSource,
-  clientOptions: SourceClientOptions
+  clientOptions: SourceClientOptions,
 ): ImageUrlBuilder | null {
   const builder = useImageUrlBuilder(clientOptions)
-  const image = useMemo(
-    () => (source && builder ? builder.image(source) : null),
-    [builder, source]
-  )
+  const image = useMemo(() => (source && builder ? builder.image(source) : null), [builder, source])
 
   return image
 }

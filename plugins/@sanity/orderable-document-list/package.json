@@ -46,7 +46,7 @@
     "@sanity/icons": "^3.5.3",
     "@sanity/ui": "catalog:",
     "lexorank": "^1.0.4",
-    "sanity-plugin-utils": "^1.8.0"
+    "sanity-plugin-utils": "workspace:*"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

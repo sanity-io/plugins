@@ -41,6 +41,7 @@
     "sanity-plugin-internationalized-array": "workspace:*",
     "sanity-plugin-latex-input": "workspace:*",
     "sanity-plugin-markdown": "workspace:*",
+    "sanity-plugin-utils": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
     "styled-components": "catalog:"

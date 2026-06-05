@@ -26,13 +26,10 @@ The `data` variable will be constantly updated as changes are made to the data r
 import {useListeningQuery} from 'sanity-plugin-utils'
 
 export default function DocumentList() {
-  const {data, loading, error} = useListeningQuery<SanityDocument[]>(
-    `*[_type == $type]`,
-    {
-      params: {type: 'pet'},
-      initialValue: [],
-    }
-  )
+  const {data, loading, error} = useListeningQuery<SanityDocument[]>(`*[_type == $type]`, {
+    params: {type: 'pet'},
+    initialValue: [],
+  })
 
   if (loading) {
     return <Spinner />
@@ -108,10 +105,7 @@ export default function PetPics(pet: SanityDocument) {
     <ul>
       {pet.pics.map((pic) => (
         <li key={pic._key}>
-          <img
-            src={builder.source(pic).width(200).height(200).url()}
-            alt={pic.altText}
-          />
+          <img src={builder.source(pic).width(200).height(200).url()} alt={pic.altText} />
         </li>
       ))}
     </ul>
@@ -143,42 +137,22 @@ Component for consistently displaying feedback in a card with a title, text and 
 import {Feedback, useListeningQuery} from 'sanity-plugin-utils'
 
 export default function DocumentList() {
-  const {data, loading, error} = useListeningQuery(
-    `*[_type == "task" && !complete]`
-  )
+  const {data, loading, error} = useListeningQuery(`*[_type == "task" && !complete]`)
 
   if (loading) {
-    return (
-      <Feedback
-        tone="primary"
-        title="Please hold"
-        description="Fetching tasks..."
-      />
-    )
+    return <Feedback tone="primary" title="Please hold" description="Fetching tasks..." />
   }
 
   if (error) {
     return (
-      <Feedback
-        tone="critical"
-        title="There was an error"
-        description="Please try again later"
-      />
+      <Feedback tone="critical" title="There was an error" description="Please try again later" />
     )
   }
 
   return data?.length > 0 ? (
-    <Feedback
-      tone="caution"
-      title="There are unfinished tasks"
-      description="Please get to work"
-    />
+    <Feedback tone="caution" title="There are unfinished tasks" description="Please get to work" />
   ) : (
-    <Feedback
-      tone="success"
-      title="You're all done"
-      description="You should feel accomplished"
-    />
+    <Feedback tone="success" title="You're all done" description="You should feel accomplished" />
   )
 }
 ```

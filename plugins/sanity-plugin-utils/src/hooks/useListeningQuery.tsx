@@ -2,9 +2,7 @@ import {useEffect, useMemo, useRef, useState} from 'react'
 import isEqual from 'react-fast-compare'
 import {Subscription} from 'rxjs'
 import {catchError, distinctUntilChanged} from 'rxjs/operators'
-import {ListenQueryOptions, ListenQueryParams, useDocumentStore} from 'sanity'
-
-type Value = unknown
+import {type ListenQueryOptions, type ListenQueryParams, useDocumentStore} from 'sanity'
 
 interface Config<V> {
   params?: ListenQueryParams
@@ -12,25 +10,18 @@ interface Config<V> {
   initialValue?: null | V
 }
 
-// make generic optional
-interface Return<V = Value> {
+interface Return<V> {
   loading: boolean
-  error: boolean | unknown | ProgressEvent
-  data: unknown | V
-  initialValue?: Value
+  error: unknown
+  data: V | null
 }
 
 const DEFAULT_PARAMS = {}
 const DEFAULT_OPTIONS = {apiVersion: `v2023-05-01`}
 const DEFAULT_INITIAL_VALUE = null
 
-function useParams(
-  params?: undefined | null | ListenQueryParams | ListenQueryOptions
-): ListenQueryParams {
-  const stringifiedParams = useMemo(
-    () => JSON.stringify(params || {}),
-    [params]
-  )
+function useParams(params?: null | ListenQueryParams | ListenQueryOptions): ListenQueryParams {
+  const stringifiedParams = useMemo(() => JSON.stringify(params || {}), [params])
   return useMemo(() => JSON.parse(stringifiedParams), [stringifiedParams])
 }
 
@@ -40,11 +31,11 @@ export function useListeningQuery<V>(
     params = DEFAULT_PARAMS,
     options = DEFAULT_OPTIONS,
     initialValue = DEFAULT_INITIAL_VALUE,
-  }: Config<V>
+  }: Config<V>,
 ): Return<V> {
-  const [loading, setLoading] = useState<Return['loading']>(true)
-  const [error, setError] = useState<Return['error']>(false)
-  const [data, setData] = useState<Return['data']>(initialValue)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<unknown>(null)
+  const [data, setData] = useState<Return<V>['data']>(initialValue)
   const memoParams = useParams(params)
   const memoOptions = useParams(options)
 
@@ -65,17 +56,23 @@ export function useListeningQuery<V>(
               setData(null)
 
               return err
-            })
+            }),
           )
           .subscribe((documents) => {
-            setData((current: Value) =>
-              isEqual(current, documents) ? current : documents
-            )
+            setData((current) => {
+              if (isEqual(current, documents)) {
+                return current
+              }
+
+              // oxlint-disable-next-line no-unsafe-type-assertion -- listenQuery result is typed by caller
+              return documents as V
+            })
             setLoading(false)
-            setError(false)
+            setError(null)
           })
       } catch (err) {
         console.error(err)
+        // oxlint-disable-next-line react-hooks-js/set-state-in-effect -- sync error handling for subscription setup
         setLoading(false)
         setError(err)
       }

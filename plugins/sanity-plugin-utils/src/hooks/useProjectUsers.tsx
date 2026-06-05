@@ -1,6 +1,11 @@
 import {useEffect, useState} from 'react'
 import {useClient, useWorkspace} from 'sanity'
 
+type UserRole = {
+  name: string
+  title: string
+}
+
 export type UserExtended = {
   createdAt: string
   displayName: string
@@ -13,13 +18,9 @@ export type UserExtended = {
   middleName: string
   projectId: string
   provider: string
+  roles?: UserRole[]
   sanityUserId: string
   updatedAt: string
-}
-
-type UserRole = {
-  name: string
-  title: string
 }
 
 type UserResponse = {
@@ -59,29 +60,25 @@ export function useProjectUsers({apiVersion}: HookConfig): UserExtended[] {
 
         const userIdChunks = chunkArray(userIds, 200)
 
-        let usersData: UserExtended[] = []
+        const userResponses = await Promise.all(
+          userIdChunks.map((chunk) =>
+            client.request({
+              url: `/projects/${projectId}/users/${chunk.join(',')}`,
+            }),
+          ),
+        )
 
-        // Fetch users in batches of 200
-        for (const chunk of userIdChunks) {
-          const chunkedUserIds = chunk.join(',')
-          const response = await client.request({
-            url: `/projects/${projectId}/users/${chunkedUserIds}`,
-          })
-          usersData = [...usersData, ...response]
-        }
+        const usersData: UserExtended[] = userResponses.flat()
 
         // Combine user details with roles
-        const usersWithRoles = usersData.map((user: UserExtended) => {
+        const usersWithRoles = usersData.map((user) => {
           const userRoles =
-            aclData.find(
-              (aclUser: UserResponse) => aclUser.projectUserId === user.id
-            )?.roles || []
+            aclData.find((aclUser: UserResponse) => aclUser.projectUserId === user.id)?.roles || []
 
-          return {
-            ...user,
+          return Object.assign(user, {
             isCurrentUser: user.id === currentUser?.id,
             roles: userRoles,
-          }
+          })
         })
 
         setUsers(usersWithRoles)
@@ -91,7 +88,7 @@ export function useProjectUsers({apiVersion}: HookConfig): UserExtended[] {
     }
 
     if (!users.length) {
-      getUsersWithRoles()
+      void getUsersWithRoles()
     }
   }, [client, currentUser?.id, users.length])
 

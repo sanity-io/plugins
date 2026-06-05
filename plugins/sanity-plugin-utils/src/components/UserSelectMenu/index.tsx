@@ -3,12 +3,9 @@ import {Badge, Box, Flex, Menu, MenuItem, Text, TextInput} from '@sanity/ui'
 import {type ChangeEvent, useRef, useState} from 'react'
 import {UserAvatar} from 'sanity'
 
-import {UserExtended} from '../../hooks/useProjectUsers'
+import {type UserExtended} from '../../hooks/useProjectUsers'
 
-function searchUsers(
-  users: UserExtended[],
-  searchString: string
-): UserExtended[] {
+function searchUsers(users: UserExtended[], searchString: string): UserExtended[] {
   return users.filter((user) => {
     const displayName = (user.displayName || '').toLowerCase()
     if (displayName.startsWith(searchString)) return true
@@ -50,14 +47,7 @@ const LABELS: Labels = {
 }
 
 export function UserSelectMenu(props: UserSelectMenuProps) {
-  const {
-    value = [],
-    userList = [],
-    onAdd,
-    onRemove,
-    onClear,
-    style = {},
-  } = props
+  const {value, userList, onAdd, onRemove, onClear, style = {}} = props
   const labels = props?.labels ? {...LABELS, ...props.labels} : LABELS
 
   const [searchString, setSearchString] = useState('')
@@ -133,9 +123,7 @@ export function UserSelectMenu(props: UserSelectMenuProps) {
         />
       </Box>
 
-      {searchString && searchResults?.length === 0 && (
-        <MenuItem disabled text={labels.notFound} />
-      )}
+      {searchString && searchResults?.length === 0 && <MenuItem disabled text={labels.notFound} />}
 
       {searchResults &&
         searchResults.map((user) => (
@@ -150,7 +138,7 @@ export function UserSelectMenu(props: UserSelectMenuProps) {
                 <Text>{user.displayName}</Text>
               </Box>
               {user.isCurrentUser && (
-                <Badge fontSize={1} tone="positive" mode="outline">
+                <Badge fontSize={1} tone="positive">
                   Me
                 </Badge>
               )}

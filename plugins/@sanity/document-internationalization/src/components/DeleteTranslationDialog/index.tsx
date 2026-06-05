@@ -24,11 +24,7 @@ export default function DeleteTranslationDialog(props: DeleteTranslationDialogPr
       initialValue: [],
     },
   )
-  const {translations, otherReferences} = useMemo(
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    () => separateReferences(data as SanityDocument[] | null),
-    [data],
-  )
+  const {translations, otherReferences} = useMemo(() => separateReferences(data), [data])
 
   useEffect(() => {
     // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion

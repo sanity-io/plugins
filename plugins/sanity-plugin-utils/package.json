@@ -6,97 +6,69 @@
     "sanity",
     "sanity-plugin"
   ],
-  "homepage": "https://github.com/SimeonGriggs/sanity-plugin-utils#readme",
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-utils#readme",
   "bugs": {
-    "url": "https://github.com/SimeonGriggs/sanity-plugin-utils/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:SimeonGriggs/sanity-plugin-utils.git"
+    "url": "https://github.com/sanity-io/plugins/issues"
   },
   "license": "MIT",
-  "author": "Simeon Griggs <simeon@sanity.io>",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-utils"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
-  "sideEffects": false,
-  "browserslist": "extends @sanity/browserslist-config",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "import": "./lib/index.js",
-      "require": "./lib/index.cjs",
-      "default": "./lib/index.js"
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./lib/index.cjs",
-  "module": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "files": [
-    "lib",
-    "sanity.json",
-    "src",
-    "v2-incompatible.js"
-  ],
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
   "scripts": {
-    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
-    "clean": "rimraf lib",
-    "compile": "tsc --noEmit",
-    "eslint": "eslint --ext=.js,.jsx,.mjs,.ts,.tsx --quiet",
-    "link-watch": "plugin-kit link-watch",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --quiet --fix",
-    "prepare": "husky install",
-    "prepublishOnly": "npm run build",
-    "watch": "pkg-utils watch --strict",
-    "format": "prettier --write --cache --ignore-unknown ."
+    "build": "pkg build --strict --check --clean",
+    "prepack": "turbo run build"
   },
   "dependencies": {
+    "@sanity/asset-utils": "^2.3.0",
     "@sanity/icons": "^3.7.4",
-    "@sanity/incompatible-plugin": "^1.0.5",
-    "@sanity/ui": "^3.1.8",
+    "@sanity/image-url": "^2.0.3",
+    "@sanity/ui": "catalog:",
     "react-fast-compare": "^3.2.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.3.0",
-    "@commitlint/config-conventional": "^19.2.2",
-    "@sanity/pkg-utils": "^6.12.0",
-    "@sanity/plugin-kit": "^4.0.18",
-    "@sanity/semantic-release-preset": "^4.1.7",
-    "@types/react": "^18.3.3",
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
-    "@typescript-eslint/parser": "^6.14.0",
-    "eslint": "^8.55.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-config-sanity": "^7.0.1",
-    "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.5",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^3.1.1",
-    "prettier-plugin-packagejson": "^2.4.7",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-is": "^18.3.1",
-    "rimraf": "^4.4.1",
-    "sanity": "^3.67.1",
-    "semantic-release": "^22.0.0",
-    "styled-components": "^6.1",
-    "typescript": "^5.4.5"
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "babel-plugin-styled-components": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rxjs": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:"
   },
   "peerDependencies": {
-    "react": "^18 || ^19",
-    "rxjs": "^7.8.1",
-    "sanity": "^3.67.1 || ^4.0.0 || ^5.0.0 || ^6.0.0-0",
+    "react": "^19.2",
+    "react-dom": "^19.2",
+    "rxjs": "^7.8",
+    "sanity": "^5 || ^6.0.0-0",
     "styled-components": "^6.1"
   },
   "engines": {
-    "node": ">=18"
-  },
-  "sanityPlugin": {
-    "verifyPackage": {
-      "nodeEngine": false
-    }
+    "node": ">=20.19 <22 || >=22.12"
   }
 }
