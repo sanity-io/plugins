@@ -400,6 +400,38 @@ corepack enable
 2. Verify you have access to the project
 3. Check the browser console for specific errors
 
+## Cursor Cloud specific instructions
+
+### Services
+
+| Service                  | Port | Purpose                                       |
+| ------------------------ | ---- | --------------------------------------------- |
+| Test Studio (`pnpm dev`) | 3333 | Local Sanity Studio for manual plugin testing |
+
+No Docker, databases, or other local services are required. CI-style verification (`pnpm lint`, `pnpm build`, `pnpm test run`) runs entirely in-process.
+
+### Starting the dev server non-interactively
+
+`pnpm dev` may block on an interactive prompt when local Sanity package versions differ from the auto-update runtime (`Do you want to upgrade local versions?`). In headless/cloud environments, start with:
+
+```bash
+CI=true pnpm dev
+```
+
+This skips the prompt and serves the studio at `http://localhost:3333`.
+
+### Sanity authentication
+
+The test studio connects to Sanity Cloud (project `ppsg7ml5`, dataset `plugins` by default). Full end-to-end studio testing requires **browser-based Sanity login** and project access. Without login, the studio still loads and shows the workspace picker, but all workspaces appear as "Signed out".
+
+### Node.js version notes
+
+`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 22 works for build/lint/test with engine warnings. Node 24 is preferred when available.
+
+### Lint / build / test
+
+Standard commands from the Quick Reference table apply. Run `pnpm build` before `pnpm lint` if type errors reference missing `dist/` output. `pretest` automatically builds all packages except `dev/*` before Vitest runs.
+
 ## Related Documentation
 
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Human contributor guide
