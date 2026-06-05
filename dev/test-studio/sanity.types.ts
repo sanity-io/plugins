@@ -510,6 +510,24 @@ export type OrderableCategory = {
   title?: string
 }
 
+export type GoogleTranslateTest = {
+  _id: string
+  _type: 'googleTranslateTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  greeting?: LocalizedString
+  description?: LocalizedString
+}
+
+export type LocalizedString = {
+  _type: 'localizedString'
+  en?: string
+  es?: string
+  fr?: string
+}
+
 export type SanityAssistInstructionTask = {
   _type: 'sanity.assist.instructionTask'
   path?: string
@@ -792,6 +810,8 @@ export type AllSanitySchemaTypes =
   | Latex
   | OrderableProject
   | OrderableCategory
+  | GoogleTranslateTest
+  | LocalizedString
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus
   | SanityAssistSchemaTypeAnnotations
