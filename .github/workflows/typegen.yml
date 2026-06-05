@@ -28,6 +28,8 @@ jobs:
         with:
           app-id: ${{ secrets.ECOSPARK_APP_ID }}
           private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
       - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
         id: pr
         with:
@@ -40,6 +42,7 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
       - name: Enable automerge on Pull Request
         if: steps.pr.outputs.pull-request-operation == 'created'
-        run: gh pr merge --squash --auto "${{ steps.pr.outputs.pull-request-number }}"
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          PR_NUMBER: ${{ steps.pr.outputs.pull-request-number }}
+        run: gh pr merge --squash --auto "$PR_NUMBER"

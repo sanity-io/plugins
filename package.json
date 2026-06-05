@@ -14,6 +14,7 @@
     "knip": "knip",
     "lint": "pnpm run oxlint",
     "lint:fix": "pnpm lint --fix --fix-suggestions",
+    "lint:workflows": "if command -v zizmor >/dev/null 2>&1; then zizmor .github --min-severity high; else echo 'zizmor not found. Install it: https://docs.zizmor.sh/installation/'; exit 1; fi",
     "oxlint": "oxlint --deny-warnings --disable-nested-config --report-unused-disable-directives",
     "postgenerate": "pnpm install && pnpm format && pnpm build",
     "postinstall": "husky",
