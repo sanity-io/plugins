@@ -1,9 +1,10 @@
-import React, {useState, useContext, ChangeEvent, useCallback} from 'react'
-import styled from 'styled-components'
 import {Button, Box, Flex, Grid, Select, Stack, Switch, Text, useToast} from '@sanity/ui'
+import {useState, useContext, useCallback} from 'react'
+import type {ChangeEvent} from 'react'
+import {styled} from 'styled-components'
 
+import type {TranslationLocale} from '../types'
 import {TranslationContext} from './TranslationContext'
-import {TranslationLocale} from '../types'
 
 type Props = {
   locales: TranslationLocale[]
@@ -51,7 +52,7 @@ const LocaleCheckbox = ({locale, toggle, checked}: LocaleCheckboxProps) => {
 export const NewTask = ({locales, refreshTask}: Props) => {
   // Lets just stick to the canonical document id for keeping track of
   // translations
-  const [selectedLocales, setSelectedLocales] = useState<React.ReactText[]>([])
+  const [selectedLocales, setSelectedLocales] = useState<string[]>([])
   const [selectedWorkflowUid, setSelectedWorkflowUid] = useState<string>()
   const [isBusy, setIsBusy] = useState(false)
 
@@ -87,7 +88,7 @@ export const NewTask = ({locales, refreshTask}: Props) => {
         context.adapter.createTask(
           context.documentId,
           serialized,
-          selectedLocales as string[],
+          selectedLocales,
           context.secrets,
           selectedWorkflowUid,
           context.callbackUrl,
@@ -105,7 +106,8 @@ export const NewTask = ({locales, refreshTask}: Props) => {
         setSelectedWorkflowUid('')
 
         /** Update task data in TranslationView */
-        refreshTask()
+        void refreshTask()
+        return undefined
       })
       .catch((err) => {
         let errorMsg
@@ -154,11 +156,11 @@ export const NewTask = ({locales, refreshTask}: Props) => {
   )
 
   return (
-    <Stack paddingTop={4} space={4}>
+    <Stack paddingTop={4} gap={4}>
       <Text as="h2" weight="semibold" size={2}>
         Create New Translation Job
       </Text>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Flex align="center" justify="space-between">
           <Text weight="semibold" size={1}>
             {possibleLocales.length === 1 ? `Select locale` : `Select locales`}
@@ -167,7 +169,7 @@ export const NewTask = ({locales, refreshTask}: Props) => {
           <Button fontSize={1} padding={2} text="Toggle All" onClick={onClick} />
         </Flex>
 
-        <Grid columns={[1, 1, 2, 3]} gap={1}>
+        <Grid gridTemplateColumns={[1, 1, 2, 3]} gap={1}>
           {(locales || []).map((l) => (
             <LocaleCheckbox
               key={l.localeId}
@@ -180,11 +182,11 @@ export const NewTask = ({locales, refreshTask}: Props) => {
       </Stack>
 
       {context?.workflowOptions && context.workflowOptions.length > 0 && (
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text weight="semibold" size={1} as="label" htmlFor="workflow-select">
             Select translation workflow
           </Text>
-          <Grid columns={[1, 1, 2]}>
+          <Grid gridTemplateColumns={[1, 1, 2]}>
             <Select id="workflowSelect" onChange={onWorkflowChange}>
               <option>Default locale workflows</option>
               {context.workflowOptions.map((w) => (

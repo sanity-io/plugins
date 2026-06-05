@@ -1,10 +1,10 @@
-import {useCallback, useContext, useState} from 'react'
-import {Box, Button, Flex, Text, Stack, useToast} from '@sanity/ui'
 import {ArrowTopRightIcon} from '@sanity/icons'
+import {Box, Button, Flex, Text, Stack, useToast} from '@sanity/ui'
+import {useCallback, useContext, useState} from 'react'
 
-import {TranslationContext} from './TranslationContext'
-import {TranslationLocale, TranslationTask} from '../types'
+import type {TranslationLocale, TranslationTask} from '../types'
 import {LanguageStatus} from './LanguageStatus'
+import {TranslationContext} from './TranslationContext'
 
 type JobProps = {
   task: TranslationTask
@@ -49,19 +49,32 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
           ? await context.localeIdAdapter(localeId)
           : localeId
 
-        await context.importTranslation(sanityId, translation)
+        if (translation == null) {
+          toast.push({
+            title: `Error getting ${localeTitle} translation`,
+            description: 'No translation returned',
+            status: 'error',
+            closable: true,
+          })
+        } else {
+          const document =
+            typeof translation === 'string' ? translation : JSON.stringify(translation)
+          await context.importTranslation(sanityId, document)
 
-        toast.push({
-          title: `Imported ${localeTitle} translation`,
-          status: 'success',
-          closable: true,
-        })
+          toast.push({
+            title: `Imported ${localeTitle} translation`,
+            status: 'success',
+            closable: true,
+          })
+        }
       } catch (err) {
-        let errorMsg
+        let errorMsg: string | null = null
         if (err instanceof Error) {
           errorMsg = err.message
-        } else {
-          errorMsg = err ? String(err) : null
+        } else if (typeof err === 'string') {
+          errorMsg = err
+        } else if (err != null) {
+          errorMsg = JSON.stringify(err)
         }
 
         toast.push({
@@ -70,13 +83,13 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
           status: 'error',
           closable: true,
         })
-      } finally {
-        setImportingLocaleIds((prev) => {
-          const next = new Set(prev)
-          next.delete(localeId)
-          return next
-        })
       }
+
+      setImportingLocaleIds((prev) => {
+        const next = new Set(prev)
+        next.delete(localeId)
+        return next
+      })
     },
     [locales, context, task.taskId, toast],
   )
@@ -88,32 +101,31 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
 
   const runWithConcurrency = useCallback(
     async (localeIds: string[]) => {
-      let index = 0
-      const runOne = async (): Promise<void> => {
-        const i = index++
-        if (i >= localeIds.length) return
-        await importFile(localeIds[i])
-        await runOne()
-      }
-      await Promise.all(
-        Array.from({length: Math.min(concurrency, localeIds.length)}, () => runOne()),
+      const workerCount = Math.min(concurrency, localeIds.length)
+      const workers = Array.from({length: workerCount}, (_, workerIndex) =>
+        Promise.all(
+          localeIds
+            .filter((_, index) => index % workerCount === workerIndex)
+            .map((localeId) => importFile(localeId)),
+        ),
       )
+      await Promise.all(workers)
     },
-    [importFile, concurrency],
+    [concurrency, importFile],
   )
 
   const handleImportAllClick = useCallback(() => {
-    runWithConcurrency(localesAt100.map((l) => l.localeId))
+    void runWithConcurrency(localesAt100.map((l) => l.localeId))
   }, [runWithConcurrency, localesAt100])
 
   const handleRefreshClick = useCallback(async () => {
     setIsRefreshing(true)
     await refreshTask()
     setIsRefreshing(false)
-  }, [refreshTask, setIsRefreshing])
+  }, [refreshTask])
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       <Flex align="center" justify="space-between">
         <Text as="h2" weight="semibold" size={2}>
           Current Job Progress
@@ -160,7 +172,6 @@ export const TaskView = ({task, locales, refreshTask}: JobProps) => {
           return (
             <LanguageStatus
               key={[task.taskId, localeTask.localeId].join('.')}
-              // eslint-disable-next-line react/jsx-no-bind
               importFile={async () => {
                 await importFile(localeTask.localeId)
               }}

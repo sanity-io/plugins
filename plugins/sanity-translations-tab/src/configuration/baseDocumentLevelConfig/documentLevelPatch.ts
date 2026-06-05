@@ -1,4 +1,4 @@
-import {SanityClient, SanityDocument, SanityDocumentLike} from 'sanity'
+import type {SanityClient, SanityDocument, SanityDocumentLike} from 'sanity'
 import {BaseDocumentMerger} from 'sanity-naive-html-serializer'
 
 import {findLatestDraft, findDocumentAtRevision} from '../utils'
@@ -9,6 +9,11 @@ import {
   patchI18nDoc,
 } from './helpers'
 
+type TranslationEntry = Record<string, unknown> & {
+  _key?: string
+  value?: {_ref?: string}
+}
+
 export const documentLevelPatch = async (
   documentId: string,
   translatedFields: SanityDocument,
@@ -17,7 +22,6 @@ export const documentLevelPatch = async (
   baseLanguage: string = 'en',
   languageField: string = 'language',
   mergeWithTargetLocale: boolean = false,
-  // eslint-disable-next-line max-params
 ): Promise<void> => {
   //this is the document we use to merge with the translated fields
   let baseDoc: SanityDocument | null = null
@@ -46,9 +50,10 @@ export const documentLevelPatch = async (
   }
 
   //the id of the translated document should be on the metadata if it exists
-  const i18nDocId = (translationMetadata.translations as Array<Record<string, any>>).find(
-    (translation) => translation._key === localeId,
-  )?.value?._ref
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- translation metadata shape from i18n plugin
+  const translations = translationMetadata['translations'] as TranslationEntry[]
+  const i18nDocId = translations.find((translation) => translation['_key'] === localeId)?.value
+    ?._ref
 
   if (i18nDocId) {
     //get draft or published
@@ -76,6 +81,7 @@ export const documentLevelPatch = async (
    * to create a document that contains the translation and everything
    * that wasn't sent over for translation
    */
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentMerger returns a loosely typed object
   const merged = BaseDocumentMerger.documentLevelMerge(
     translatedFields,
     baseDoc,

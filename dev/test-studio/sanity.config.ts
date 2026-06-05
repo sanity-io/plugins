@@ -29,6 +29,7 @@ import {richDateInputExample} from '#rich-date-input'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
 import {studioSecretsExample} from '#studio-secrets'
+import {translationsTabExample} from '#translations-tab'
 import {unsplashExample} from '#unsplash'
 import {workflowExample} from '#workflow'
 
@@ -50,6 +51,11 @@ export default defineConfig([
   workspaceHomeConfig({projectId, dataset}),
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
+  createWorkspace({
+    name: 'translations-tab-example',
+    title: 'Translations Tab',
+    plugins: [translationsTabExample()],
+  }),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
   createWorkspace({
     name: 'orderable-document-list-example',

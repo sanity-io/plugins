@@ -1,17 +1,18 @@
-import {ExportForTranslation, ImportTranslation} from '../../types'
-import {SanityDocument} from 'sanity'
-import {findLatestDraft} from '../utils'
-import {documentLevelPatch} from './documentLevelPatch'
-import {legacyDocumentLevelPatch} from './legacyDocumentLevelPatch'
+import type {SanityDocument} from 'sanity'
 import {
-  SerializedDocument,
   BaseDocumentDeserializer,
   BaseDocumentSerializer,
   defaultStopTypes,
   customSerializers,
   customBlockDeserializers,
 } from 'sanity-naive-html-serializer'
+import type {SerializedDocument} from 'sanity-naive-html-serializer'
+
 import {DummyAdapter} from '../../adapter'
+import type {ExportForTranslation, ImportTranslation} from '../../types'
+import {findLatestDraft} from '../utils'
+import {documentLevelPatch} from './documentLevelPatch'
+import {legacyDocumentLevelPatch} from './legacyDocumentLevelPatch'
 
 export const baseDocumentLevelConfig = {
   exportForTranslation: async (
@@ -29,8 +30,8 @@ export const baseDocumentLevelConfig = {
     const serializers = {
       ...customSerializers,
       types: {
-        ...customSerializers.types,
-        ...(serializationOptions.additionalSerializers ?? {}),
+        ...customSerializers['types'],
+        ...serializationOptions.additionalSerializers,
       },
     }
     const doc = await findLatestDraft(id, client)
@@ -59,7 +60,7 @@ export const baseDocumentLevelConfig = {
     const {client} = context
     const deserializers = {
       types: {
-        ...(serializationOptions.additionalDeserializers ?? {}),
+        ...serializationOptions.additionalDeserializers,
       },
     }
     const blockDeserializers = [
@@ -67,6 +68,7 @@ export const baseDocumentLevelConfig = {
       ...customBlockDeserializers,
     ]
 
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
       deserializers,
@@ -94,7 +96,7 @@ export const legacyDocumentLevelConfig = {
     const {client} = context
     const deserializers = {
       types: {
-        ...(serializationOptions.additionalDeserializers ?? {}),
+        ...serializationOptions.additionalDeserializers,
       },
     }
     const blockDeserializers = [
@@ -102,6 +104,7 @@ export const legacyDocumentLevelConfig = {
       ...customBlockDeserializers,
     ]
 
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
       deserializers,

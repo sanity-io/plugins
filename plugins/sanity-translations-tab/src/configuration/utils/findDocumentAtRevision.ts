@@ -1,4 +1,4 @@
-import {SanityClient, SanityDocument} from 'sanity'
+import type {SanityClient, SanityDocument} from 'sanity'
 
 //revision fetch
 export const findDocumentAtRevision = async (
@@ -13,10 +13,15 @@ export const findDocumentAtRevision = async (
     .then((req) => req.json())
     .then((req) => {
       if (req.documents && req.documents.length) {
-        return req.documents[0]
+        // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- history API response is untyped
+        return req.documents[0] as SanityDocument
       }
       return null
     })
+
+  if (!revisionDoc) {
+    throw new Error(`Document revision not found: ${documentId}@${rev}`)
+  }
 
   return revisionDoc
 }

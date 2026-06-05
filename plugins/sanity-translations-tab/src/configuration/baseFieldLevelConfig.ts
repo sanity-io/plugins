@@ -1,16 +1,16 @@
-import {SanityClient, SanityDocument} from 'sanity'
+import type {SanityClient, SanityDocument} from 'sanity'
 import {
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
   BaseDocumentMerger,
-  SerializedDocument,
   defaultStopTypes,
   customSerializers,
   customBlockDeserializers,
 } from 'sanity-naive-html-serializer'
+import type {SerializedDocument} from 'sanity-naive-html-serializer'
 
 import {DummyAdapter} from '../adapter'
-import {ExportForTranslation, ImportTranslation} from '../types'
+import type {ExportForTranslation, ImportTranslation} from '../types'
 import {findLatestDraft, findDocumentAtRevision} from './utils'
 
 export const fieldLevelPatch = async (
@@ -20,7 +20,6 @@ export const fieldLevelPatch = async (
   client: SanityClient,
   baseLanguage: string = 'en',
   mergeWithTargetLocale: boolean = false,
-  // eslint-disable-next-line max-params
 ): Promise<void> => {
   let baseDoc: SanityDocument
   if (translatedFields._rev && translatedFields._id) {
@@ -49,8 +48,8 @@ export const baseFieldLevelConfig = {
     const serializers = {
       ...customSerializers,
       types: {
-        ...customSerializers.types,
-        ...(serializationOptions.additionalSerializers ?? {}),
+        ...customSerializers['types'],
+        ...serializationOptions.additionalSerializers,
       },
     }
     const doc = await findLatestDraft(id, client)
@@ -78,7 +77,7 @@ export const baseFieldLevelConfig = {
     const {client} = context
     const deserializers = {
       types: {
-        ...(serializationOptions.additionalDeserializers ?? {}),
+        ...serializationOptions.additionalDeserializers,
       },
     }
     const blockDeserializers = [
@@ -86,6 +85,7 @@ export const baseFieldLevelConfig = {
       ...customBlockDeserializers,
     ]
 
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
       deserializers,

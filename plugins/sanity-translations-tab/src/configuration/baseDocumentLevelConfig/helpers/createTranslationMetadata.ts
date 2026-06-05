@@ -1,4 +1,4 @@
-import {KeyedObject, Reference, SanityClient, SanityDocumentLike} from 'sanity'
+import type {KeyedObject, Reference, SanityClient, SanityDocumentLike} from 'sanity'
 
 type TranslationReference = KeyedObject & {
   _type: 'internationalizedArrayReferenceValue'

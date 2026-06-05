@@ -1,4 +1,4 @@
-import {SanityClient, SanityDocument, SanityDocumentLike} from 'sanity'
+import type {SanityClient, SanityDocument, SanityDocumentLike} from 'sanity'
 import {BaseDocumentMerger} from 'sanity-naive-html-serializer'
 
 import {findLatestDraft, findDocumentAtRevision} from '../utils'
@@ -28,6 +28,7 @@ export const legacyDocumentLevelPatch = async (
    * to create a document that contains the translation and everything
    * that wasn't sent over for translation
    */
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentMerger returns a loosely typed object
   const merged = BaseDocumentMerger.documentLevelMerge(
     translatedFields,
     baseDoc,
@@ -39,7 +40,7 @@ export const legacyDocumentLevelPatch = async (
   const targetId = `drafts.${documentId}__i18n_${localeId}`
   const i18nDoc = await findLatestDraft(targetId, client)
   if (i18nDoc) {
-    const cleanedMerge: Record<string, any> = {}
+    const cleanedMerge: Record<string, unknown> = {}
     //don't overwrite any existing system values on the i18n doc
     Object.entries(merged).forEach(([key, value]) => {
       if (
@@ -52,13 +53,11 @@ export const legacyDocumentLevelPatch = async (
 
     await client
       .transaction()
-      //@ts-ignore
       .patch(i18nDoc._id, (p) => p.set(cleanedMerge))
       .commit()
   } else {
     merged._id = targetId
-    //eslint-disable-next-line camelcase -- this is configured by another plugin
-    merged.__i18n_lang = localeId
-    client.create(merged)
+    merged['__i18n_lang'] = localeId
+    void client.create(merged)
   }
 }

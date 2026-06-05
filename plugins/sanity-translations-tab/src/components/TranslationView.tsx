@@ -2,13 +2,13 @@
  * Add cleanup function to cancel async tasks
  */
 
-import {useCallback, useContext, useEffect, useState} from 'react'
 import {Stack, useToast} from '@sanity/ui'
-import {TranslationContext} from './TranslationContext'
+import {useCallback, useContext, useEffect, useState} from 'react'
 
+import type {TranslationTask, TranslationLocale} from '../types'
 import {NewTask} from './NewTask'
 import {TaskView} from './TaskView'
-import {TranslationTask, TranslationLocale} from '../types'
+import {TranslationContext} from './TranslationContext'
 
 export const TranslationView = () => {
   const [locales, setLocales] = useState<TranslationLocale[]>([])
@@ -58,7 +58,7 @@ export const TranslationView = () => {
   }, [context, setTask])
 
   return (
-    <Stack space={6}>
+    <Stack gap={6}>
       <NewTask locales={locales} refreshTask={refreshTask} />
       {task && <TaskView task={task} locales={locales} refreshTask={refreshTask} />}
     </Stack>

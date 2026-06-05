@@ -1,6 +1,7 @@
 import React from 'react'
-import {SerializedDocument} from 'sanity-naive-html-serializer'
-import {Adapter, Secrets, WorkflowIdentifiers} from '../types'
+import type {SerializedDocument} from 'sanity-naive-html-serializer'
+
+import type {Adapter, Secrets, WorkflowIdentifiers} from '../types'
 
 export type ContextProps = {
   documentId: string

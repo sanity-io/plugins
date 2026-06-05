@@ -1,7 +1,7 @@
+import type {DeserializerRule} from '@portabletext/block-tools'
+import type {PortableTextTypeComponent} from '@portabletext/to-html'
 import type {SanityClient, Schema, TypedObject} from 'sanity'
 import type {SerializedDocument} from 'sanity-naive-html-serializer'
-import type {PortableTextTypeComponent} from '@portabletext/to-html'
-import type {DeserializerRule} from '@portabletext/block-tools'
 
 export type TranslationTaskLocaleStatus = {
   localeId: string
@@ -49,7 +49,7 @@ export interface Adapter {
     workflowUid?: string,
     callbackUrl?: string,
   ) => Promise<TranslationTask>
-  getTranslation: (taskid: string, localeId: string, secrets: Secrets | null) => Promise<any | null>
+  getTranslation: (taskid: string, localeId: string, secrets: Secrets | null) => Promise<unknown>
 }
 
 export interface TranslationFunctionContext {

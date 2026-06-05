@@ -1,4 +1,4 @@
-import {SanityClient, SanityDocumentLike} from 'sanity'
+import type {SanityClient, SanityDocumentLike} from 'sanity'
 
 export const getTranslationMetadata = (
   id: string,

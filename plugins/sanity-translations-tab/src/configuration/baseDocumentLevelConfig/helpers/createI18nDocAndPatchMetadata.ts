@@ -1,4 +1,8 @@
-import {SanityClient, SanityDocumentLike} from 'sanity'
+import type {SanityClient, SanityDocumentLike} from 'sanity'
+
+type TranslationEntry = Record<string, unknown> & {
+  _key?: string
+}
 
 export const createI18nDocAndPatchMetadata = (
   translatedDoc: SanityDocumentLike,
@@ -8,16 +12,17 @@ export const createI18nDocAndPatchMetadata = (
   languageField: string = 'language',
 ): void => {
   translatedDoc[languageField] = localeId
-  const translations = translationMetadata.translations as Record<string, any>[]
-  const existingLocaleKey = translations.find((translation) => translation._key === localeId)
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- translation metadata shape from i18n plugin
+  const translations = translationMetadata['translations'] as TranslationEntry[]
+  const existingLocaleKey = translations.find((translation) => translation['_key'] === localeId)
   const operation = existingLocaleKey ? 'replace' : 'after'
   const location = existingLocaleKey ? `translations[_key == "${localeId}"]` : 'translations[-1]'
 
   //remove system fields
   const {_updatedAt, _createdAt, ...rest} = translatedDoc
-  client.create({...rest, _id: 'drafts.'}).then((doc) => {
+  void client.create({...rest, _id: 'drafts.'}).then((doc) => {
     const _ref = doc._id.replace('drafts.', '')
-    client
+    return client
       .transaction()
       .patch(translationMetadata._id, (p) =>
         p.insert(operation, location, [

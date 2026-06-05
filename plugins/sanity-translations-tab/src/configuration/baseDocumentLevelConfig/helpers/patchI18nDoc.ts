@@ -1,12 +1,12 @@
-import {SanityClient, SanityDocumentLike} from 'sanity'
+import type {SanityClient, SanityDocumentLike} from 'sanity'
 
 export const patchI18nDoc = (
   i18nDocId: string,
   mergedDocument: SanityDocumentLike,
-  translatedFields: Record<string, any>,
+  translatedFields: Record<string, unknown>,
   client: SanityClient,
 ): void => {
-  const cleanedMerge: Record<string, any> = {}
+  const cleanedMerge: Record<string, unknown> = {}
   Object.entries(mergedDocument).forEach(([key, value]) => {
     if (
       //only patch those fields that had translated strings
@@ -18,7 +18,7 @@ export const patchI18nDoc = (
     }
   })
 
-  client
+  void client
     .transaction()
     .patch(i18nDocId, (p) => p.set(cleanedMerge))
     .commit()

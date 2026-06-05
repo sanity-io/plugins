@@ -1,16 +1,16 @@
-import {SanityClient, SanityDocument} from 'sanity'
+import type {SanityClient, SanityDocument} from 'sanity'
 import {
   BaseDocumentSerializer,
   BaseDocumentDeserializer,
   BaseDocumentMerger,
-  SerializedDocument,
   defaultStopTypes,
   customSerializers,
   customBlockDeserializers,
 } from 'sanity-naive-html-serializer'
+import type {SerializedDocument} from 'sanity-naive-html-serializer'
 
 import {DummyAdapter} from '../adapter'
-import {ExportForTranslation, ImportTranslation} from '../types'
+import type {ExportForTranslation, ImportTranslation} from '../types'
 import {findLatestDraft, findDocumentAtRevision} from './utils'
 
 export const i18nArrayPatch = async (
@@ -39,12 +39,15 @@ export const i18nArrayPatch = async (
 
   const transaction = client.transaction()
 
-  mutations.forEach((mutation: Record<string, any>) => {
+  ;// oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- mutation shape from BaseDocumentMerger
+  (
+    mutations as Array<{at: 'after' | 'before' | 'replace'; selector: string; items: unknown[]}>
+  ).forEach((mutation) => {
     const {at, selector, items} = mutation
     transaction.patch(client.patch(baseDoc._id).insert(at, selector, items))
   })
 
-  transaction.commit()
+  void transaction.commit()
 }
 
 export const baseI18nArrayConfig = {
@@ -57,8 +60,8 @@ export const baseI18nArrayConfig = {
     const serializers = {
       ...customSerializers,
       types: {
-        ...customSerializers.types,
-        ...(serializationOptions.additionalSerializers ?? {}),
+        ...customSerializers['types'],
+        ...serializationOptions.additionalSerializers,
       },
     }
     const doc = await findLatestDraft(id, client)
@@ -77,7 +80,7 @@ export const baseI18nArrayConfig = {
     const {client} = context
     const deserializers = {
       types: {
-        ...(serializationOptions.additionalDeserializers ?? {}),
+        ...serializationOptions.additionalDeserializers,
       },
     }
     const blockDeserializers = [
@@ -85,6 +88,7 @@ export const baseI18nArrayConfig = {
       ...customBlockDeserializers,
     ]
 
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
       deserializers,

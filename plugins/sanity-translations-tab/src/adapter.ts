@@ -1,4 +1,4 @@
-import {Adapter, TranslationTask} from './types'
+import type {Adapter, TranslationTask} from './types'
 
 // Dummy operation just reading previous translation tasks from localStorage
 const getTasks = (): TranslationTask[] => {
@@ -71,8 +71,7 @@ export const DummyAdapter: Adapter = {
   getTranslation: async (taskId: string, localeId: string) => {
     //eslint-disable-next-line no-console -- this is for testing reasons
     console.debug('Fetching translation for locale', localeId)
-    //eslint-disable-next-line no-empty-function
-    await setTimeout(() => {}, 1000)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     const task = getTaskDetails(taskId)
     if (!task) {
       return null
