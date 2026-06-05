@@ -410,15 +410,9 @@ corepack enable
 
 No Docker, databases, or other local services are required. CI-style verification (`pnpm lint`, `pnpm build`, `pnpm test run`) runs entirely in-process.
 
-### Starting the dev server non-interactively
+### Starting the dev server
 
-`pnpm dev` may block on an interactive prompt when local Sanity package versions differ from the auto-update runtime (`Do you want to upgrade local versions?`). In headless/cloud environments, start with:
-
-```bash
-CI=true pnpm dev
-```
-
-This skips the prompt and serves the studio at `http://localhost:3333`.
+The test studio dev script uses `sanity dev --no-auto-updates`, so `pnpm dev` starts non-interactively (no version-upgrade prompt). The studio serves at `http://localhost:3333`.
 
 ### Sanity authentication
 
