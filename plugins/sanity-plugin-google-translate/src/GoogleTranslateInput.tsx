@@ -62,31 +62,32 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
         allLanguageFields = allLanguageFields.filter((code) => code.fieldName === config.language)
       }
 
+      const source = extractLanguageFromCode(config.baseLanguage)
+      const translatableLanguageFields = allLanguageFields
+        .map((item) => ({
+          ...item,
+          target: extractLanguageFromCode(item.fieldLang),
+        }))
+        .filter((item) => item.target !== source)
+
+      if (translatableLanguageFields.length === 0) {
+        return toast.push({
+          title: `Bad language pair`,
+          status: `warning`,
+          description: `Cannot translate from "${source.toLocaleUpperCase()}" because all destination fields resolve to the same language`,
+        })
+      }
+
       setIsTranslating(true)
 
       const url = new URL(`https://translation.googleapis.com/language/translate/v2`)
       url.searchParams.set(`key`, apiKey ?? ``)
       url.searchParams.set(`q`, config.content)
-
-      // Language code might be a country/language pair like en_US
-      const target = extractLanguageFromCode(config.language)
-      const source = extractLanguageFromCode(config.baseLanguage)
       url.searchParams.set(`source`, source)
 
-      if (allLanguageFields.length === 1 && target === source) {
-        return toast.push({
-          title: `Bad language pair`,
-          status: `warning`,
-          description: `Cannot translate from "${source.toLocaleUpperCase()}" to "${target.toLocaleUpperCase()}"`,
-        })
-      }
-
-      const translations = allLanguageFields.map(async (item) => {
-        url.searchParams.set(`target`, item.fieldLang)
-
-        if (item.fieldLang === source) {
-          return null
-        }
+      const translations = translatableLanguageFields.map((item) => {
+        const {target} = item
+        url.searchParams.set(`target`, target)
 
         return fetch(url.toString())
           .then((res) => res.json())
@@ -103,7 +104,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
             toast.push({
               title: `Translation Complete`,
               status: `success`,
-              description: `Translated from "${source.toLocaleUpperCase()}" to "${item.fieldLang.toLocaleUpperCase()}"`,
+              description: `Translated from "${source.toLocaleUpperCase()}" to "${target.toLocaleUpperCase()}"`,
             })
 
             const {data} = res

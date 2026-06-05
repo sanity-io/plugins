@@ -19,15 +19,15 @@ First, add it as a plugin in `sanity.config.ts/js`
 ```ts
 // ./sanity.config.ts
 
-import {createConfig} from 'sanity'
+import {defineConfig} from 'sanity'
 import {googleTranslate} from 'sanity-plugin-google-translate'
 
-export const createConfig({
-    // ...all other config settings
-    plugins: [
-       // ...all other plugins
-       googleTranslate()
-    ]
+export default defineConfig({
+  // ...all other config settings
+  plugins: [
+    // ...all other plugins
+    googleTranslate(),
+  ],
 })
 ```
 
