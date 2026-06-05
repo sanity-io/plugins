@@ -1,5 +1,11 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 2.0.0
+
+### Major Changes
+
+- [#928](https://github.com/sanity-io/plugins/pull/928) [`cd2bc3c`](https://github.com/sanity-io/plugins/commit/cd2bc3c3e39c3cb357dd456bc205d1d6d57f441a) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Migrate sanity-plugin-utils to the Sanity plugins monorepo
+
 # 📓 Changelog
 
 All notable changes to this project will be documented in this file. See
