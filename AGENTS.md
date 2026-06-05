@@ -416,17 +416,21 @@ The test studio dev script uses `sanity dev --no-auto-updates`, so `pnpm dev` st
 
 ### Sanity authentication
 
-The test studio connects to Sanity Cloud (project `ppsg7ml5`, dataset `plugins` by default). For cloud agents, use the injected `__studio_auth_token_ppsg7ml5` secret instead of interactive login.
+The test studio connects to Sanity Cloud (project `ppsg7ml5`, dataset `plugins` by default). For cloud agents, use the injected `STUDIO_AUTH_TOKEN` secret instead of interactive login.
 
-Sanity stores auth in browser `localStorage` under key `__studio_auth_token_ppsg7ml5` as JSON: `{"token":"<token>","time":"<iso-timestamp>"}`.
+Navigate to the studio with the token in the URL hash (Sanity consumes it on load and removes it from the address bar):
 
-Generate a one-liner for the browser console on `http://localhost:3333`:
-
-```bash
-node -e "const t=process.env.__studio_auth_token_ppsg7ml5; console.log(\"localStorage.setItem('__studio_auth_token_ppsg7ml5', \"+JSON.stringify(JSON.stringify({token:t,time:new Date().toISOString()}))+\"); location.href='http://localhost:3333/kitchen-sink';\")" > /tmp/studio-auth-console.js
+```
+http://localhost:3333/kitchen-sink#token=<STUDIO_AUTH_TOKEN>
 ```
 
-Paste the output into the browser DevTools console (type `allow pasting` first if Chrome blocks paste). Reload or navigate to `/kitchen-sink` to confirm authentication. Without a token, workspaces show as "Signed out".
+Build the URL from the secret:
+
+```bash
+node -e "const t=process.env.STUDIO_AUTH_TOKEN; console.log('http://localhost:3333/kitchen-sink#token=' + encodeURIComponent(t))"
+```
+
+Open that URL in the browser to authenticate and land directly in the Kitchen Sink workspace. Without a token, workspaces show as "Signed out".
 
 ### Node.js version notes
 
