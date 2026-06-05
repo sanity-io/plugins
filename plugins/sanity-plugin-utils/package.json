@@ -1,0 +1,102 @@
+{
+  "name": "sanity-plugin-utils",
+  "version": "1.8.0",
+  "description": "Handy hooks and clever components for Sanity Studio v3",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/SimeonGriggs/sanity-plugin-utils#readme",
+  "bugs": {
+    "url": "https://github.com/SimeonGriggs/sanity-plugin-utils/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:SimeonGriggs/sanity-plugin-utils.git"
+  },
+  "license": "MIT",
+  "author": "Simeon Griggs <simeon@sanity.io>",
+  "type": "module",
+  "sideEffects": false,
+  "browserslist": "extends @sanity/browserslist-config",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs",
+      "default": "./lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "clean": "rimraf lib",
+    "compile": "tsc --noEmit",
+    "eslint": "eslint --ext=.js,.jsx,.mjs,.ts,.tsx --quiet",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --quiet --fix",
+    "prepare": "husky install",
+    "prepublishOnly": "npm run build",
+    "watch": "pkg-utils watch --strict",
+    "format": "prettier --write --cache --ignore-unknown ."
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.4",
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "@sanity/ui": "^3.1.8",
+    "react-fast-compare": "^3.2.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@sanity/pkg-utils": "^6.12.0",
+    "@sanity/plugin-kit": "^4.0.18",
+    "@sanity/semantic-release-preset": "^4.1.7",
+    "@types/react": "^18.3.3",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-sanity": "^7.0.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.5",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.1.1",
+    "prettier-plugin-packagejson": "^2.4.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-is": "^18.3.1",
+    "rimraf": "^4.4.1",
+    "sanity": "^3.67.1",
+    "semantic-release": "^22.0.0",
+    "styled-components": "^6.1",
+    "typescript": "^5.4.5"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "rxjs": "^7.8.1",
+    "sanity": "^3.67.1 || ^4.0.0 || ^5.0.0 || ^6.0.0-0",
+    "styled-components": "^6.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+      "nodeEngine": false
+    }
+  }
+}
