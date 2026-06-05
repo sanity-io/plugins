@@ -191,6 +191,9 @@ importers:
       sanity-plugin-bynder-input:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-bynder-input
+      sanity-plugin-google-translate:
+        specifier: workspace:*
+        version: link:../../plugins/sanity-plugin-google-translate
       sanity-plugin-graph-view:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-graph-view
@@ -1099,6 +1102,46 @@ importers:
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5)'
+
+  plugins/sanity-plugin-google-translate:
+    dependencies:
+      '@sanity/ui':
+        specifier: 'catalog:'
+        version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)
+      styled-components:
+        specifier: npm:@sanity/styled-components@latest
+        version: '@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5)'
+    devDependencies:
+      '@repo/package.config':
+        specifier: workspace:*
+        version: link:../../packages/@repo/package.config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/@repo/tsconfig
+      '@sanity/pkg-utils':
+        specifier: 'catalog:'
+        version: 10.5.0(@types/babel__core@7.20.5)(@types/node@25.6.0)(@typescript/native-preview@7.0.0-dev.20260418.1)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.19.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))(typescript@5.9.3)
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.14)
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
+      babel-plugin-styled-components:
+        specifier: 'catalog:'
+        version: 2.1.4(@babel/core@7.29.0)(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))
+      react:
+        specifier: 'catalog:'
+        version: 19.2.5
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.5(react@19.2.5)
+      sanity:
+        specifier: 'catalog:'
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.10.5)(@sanity/cli-core@1.3.1(@noble/hashes@2.2.0)(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(@sanity/styled-components@6.1.24(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/node@25.6.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-graph-view:
     dependencies:
