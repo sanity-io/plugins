@@ -447,6 +447,69 @@ export type Lesson = {
   content?: string
 }
 
+export type LatexTest = {
+  _id: string
+  _type: 'latexTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  body?: Array<
+    | {
+        children?: Array<
+          | {
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }
+          | ({
+              _key: string
+            } & Latex)
+        >
+        style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<{
+          href?: string
+          _type: 'link'
+          _key: string
+        }>
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | ({
+        _key: string
+      } & Latex)
+  >
+}
+
+export type Latex = {
+  _type: 'latex'
+  body?: string
+}
+
+export type OrderableProject = {
+  _id: string
+  _type: 'orderableProject'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  orderRank?: string
+  title?: string
+  description?: string
+}
+
+export type OrderableCategory = {
+  _id: string
+  _type: 'orderableCategory'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  orderRank?: string
+  title?: string
+}
+
 export type SanityAssistInstructionTask = {
   _type: 'sanity.assist.instructionTask'
   path?: string
@@ -725,6 +788,10 @@ export type AllSanitySchemaTypes =
   | LessonReference
   | InternationalizedArrayReferenceValue
   | Lesson
+  | LatexTest
+  | Latex
+  | OrderableProject
+  | OrderableCategory
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus
   | SanityAssistSchemaTypeAnnotations
