@@ -62,29 +62,34 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
         allLanguageFields = allLanguageFields.filter((code) => code.fieldName === config.language)
       }
 
-      setIsTranslating(true)
+      const source = extractLanguageFromCode(config.baseLanguage)
+
+      if (allLanguageFields.length === 1) {
+        const singleField = allLanguageFields[0]!
+        const target = extractLanguageFromCode(singleField.fieldLang)
+        if (target !== source) {
+          setIsTranslating(true)
+        } else {
+          return toast.push({
+            title: `Bad language pair`,
+            status: `warning`,
+            description: `Cannot translate from "${source.toLocaleUpperCase()}" to "${target.toLocaleUpperCase()}"`,
+          })
+        }
+      } else {
+        setIsTranslating(true)
+      }
 
       const url = new URL(`https://translation.googleapis.com/language/translate/v2`)
       url.searchParams.set(`key`, apiKey ?? ``)
       url.searchParams.set(`q`, config.content)
-
-      // Language code might be a country/language pair like en_US
-      const target = extractLanguageFromCode(config.language)
-      const source = extractLanguageFromCode(config.baseLanguage)
       url.searchParams.set(`source`, source)
 
-      if (allLanguageFields.length === 1 && target === source) {
-        return toast.push({
-          title: `Bad language pair`,
-          status: `warning`,
-          description: `Cannot translate from "${source.toLocaleUpperCase()}" to "${target.toLocaleUpperCase()}"`,
-        })
-      }
-
       const translations = allLanguageFields.map((item) => {
-        url.searchParams.set(`target`, item.fieldLang)
+        const target = extractLanguageFromCode(item.fieldLang)
+        url.searchParams.set(`target`, target)
 
-        if (item.fieldLang === source) {
+        if (target === source) {
           return null
         }
 
@@ -103,7 +108,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
             toast.push({
               title: `Translation Complete`,
               status: `success`,
-              description: `Translated from "${source.toLocaleUpperCase()}" to "${item.fieldLang.toLocaleUpperCase()}"`,
+              description: `Translated from "${source.toLocaleUpperCase()}" to "${target.toLocaleUpperCase()}"`,
             })
 
             const {data} = res

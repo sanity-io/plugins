@@ -3,6 +3,10 @@ export type GoogleTranslateSchemaOptions = {
   apiKey?: string
 }
 
+declare module 'sanity' {
+  interface ObjectOptions extends GoogleTranslateSchemaOptions {}
+}
+
 export type FieldNameLangPair = {
   fieldName: string
   fieldLang: string
