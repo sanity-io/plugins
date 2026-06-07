@@ -1,0 +1,184 @@
+{
+  "_createdAt": "2021-10-10T23:00:13Z",
+  "_id": "drafts.2947533e-1ea5-4116-955b-339608d3445d",
+  "_rev": "l58oha-n06-1s4-f6i-74g6cuakl",
+  "_type": "internationalizedArrayArticle",
+  "_updatedAt": "2021-10-10T23:02:05Z",
+  "slug": {
+    "_type": "slug",
+    "current": "happy-kitchen-hamburger"
+  },
+  "config": [
+    {
+      "_key": "en",
+      "_type": "internationalizedArrayObjectFieldValue",
+      "value": {
+        "_type": "objectField",
+        "nestedArrayField": [
+          {
+            "_key": "4a58adc7c507",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "4f6bc15ae261",
+                "_type": "span",
+                "marks": [],
+                "text": "This is block text 1 level deep"
+              }
+            ],
+            "markDefs": [],
+            "style": "normal"
+          }
+        ],
+        "objectAsField": {
+          "_type": "childObjectField",
+          "content": [
+            {
+              "_key": "869168fe3a2a",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "10d423df228a",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "This is block text 2 levels deep"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "title": "This is one level deeper"
+        },
+        "title": "This is an object nested in a document"
+      }
+    }
+  ],
+  "content": [
+    {
+      "_key": "en",
+      "_type": "internationalizedArrayPortableTextValue",
+      "value": [
+        {
+          "_key": "e2a39d768ff8",
+          "_type": "block",
+          "children": [
+            {
+              "_key": "216e97c5a5cc",
+              "_type": "span",
+              "marks": [],
+              "text": "This is block text at the top level."
+            }
+          ],
+          "markDefs": [],
+          "style": "normal"
+        },
+        {
+          "_key": "271b0c6ee984",
+          "_type": "objectField",
+          "objectAsField": {
+            "_type": "childObjectField",
+            "content": [
+              {
+                "_key": "4f24f6fbfae7",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "d68f4288f5b7",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "This is block text in a nested object in an object in top-level block text."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "title": "This is a nested object in an object in top-level block text."
+          },
+          "title": "This is an object in top-level block text."
+        }
+      ]
+    }
+  ],
+  "hidden": true,
+  "meta": "Do not translate this",
+  "snippet": [
+    {
+      "_key": "en",
+      "_type": "internationalizedArrayStringFieldValue",
+      "value": "This is text in my text field"
+    }
+  ],
+  "tags": [
+    {
+      "_key": "en",
+      "_type": "internationalizedArrayTagsValue",
+      "value": [
+        "tag 1",
+        "tag 2",
+        "tag 3"
+      ]
+    }
+  ],
+  "title": [
+    {
+      "_key": "en",
+      "_type": "internationalizedArrayStringFieldValue",
+      "value": "My Internationalized Array Article"
+    }
+  ],
+  "slices": [
+    {
+      "_key": "6b9d0b28810f",
+      "_type": "nestedlocaleBlock",
+      "content": [
+        {
+          "_type": "internationalizedArrayBlockValue",
+          "_key": "en",
+          "value": [
+            {
+              "_type": "block",
+              "_key": "e2a39d768ff8",
+              "children": [
+                {
+                  "_key": "a6170f21181c",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "This is block text 1 level deep"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ]
+        },
+        {
+          "_type": "internationalizedArrayBlockValue",
+          "_key": "fr_FR",
+          "value": [
+            {
+              "_type": "block",
+              "_key": "e2a39d768ff8",
+              "children": [
+                {
+                  "_key": "44954c1912e1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Ceci est une texte du bloque en mon slice"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "reference",
+      "_key": "13ed4b8013e4",
+      "_ref": "66dd1434-23c3-4d94-9e5a-d117775be828"
+    }
+  ]
+}

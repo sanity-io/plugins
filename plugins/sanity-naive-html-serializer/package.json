@@ -1,0 +1,100 @@
+{
+  "name": "sanity-naive-html-serializer",
+  "version": "4.1.0",
+  "description": "This is the source for tooling for naively turning documents and rich text fields into HTML, deserializing them, combining them with source documents, and patching them back. Ideally, this should take in objects that are in portable text, text arrays, or objects with text fields without knowing their specific names or types, and be able to patch them back without additional work on the part of the developer.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/sanity-naive-html-serializer#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity-naive-html-serializer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/sanity-naive-html-serializer.git"
+  },
+  "license": "MIT",
+  "author": "Sanity.io",
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.esm.d.ts",
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "lint": "eslint .",
+    "test": "vitest",
+    "clean": "rimraf dist",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "prepublishOnly": "npm run build",
+    "watch": "pkg-utils watch --strict"
+  },
+  "dependencies": {
+    "@portabletext/to-html": "^2.0.14",
+    "@portabletext/block-tools": "^4.0.2",
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "@sanity/mutator": "^4.15.0",
+    "@sanity/schema": "^4.15.0"
+  },
+  "devDependencies": {
+    "@portabletext/types": "^2.0.2",
+    "@sanity/eslint-config-no-v2-imports": "^0.0.1-studio-v3.3",
+    "@sanity/pkg-utils": "^8.1.29",
+    "@sanity/plugin-kit": "^4.0.20",
+    "@sanity/semantic-release-preset": "^5.0.0",
+    "@types/react": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "conventional-changelog-conventionalcommits": "^9.0.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "jsdom": "^26.1.0",
+    "just-clone": "^6.2.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.4",
+    "prettier-plugin-packagejson": "^2.4.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.2.0",
+    "react-is": "^19.2.0",
+    "rimraf": "^4.1.2",
+    "sanity": "^4.15.0",
+    "semantic-release": "^25.0.1",
+    "size-limit": "8.1.2",
+    "styled-components": "^6.1.9",
+    "tslib": "2.5.0",
+    "typescript": "5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "sanity": "^3 || ^4.0.0-0 || ^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+      "packageName": false
+    }
+  }
+}
