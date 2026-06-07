@@ -2,6 +2,7 @@ name: Add changeset to Renovate updates
 
 on:
   pull_request_target: # zizmor: ignore[dangerous-triggers] gated to renovate[bot]/squiggler-app[bot]; no PR code is checked out or executed in the reusable workflow
+
     types: [opened, synchronize]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
