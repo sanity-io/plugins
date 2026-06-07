@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-plugin-transifex
 
 ## [4.0.3](https://github.com/sanity-io/sanity-plugin-transifex/compare/v4.0.2...v4.0.3) (2026-01-07)
 

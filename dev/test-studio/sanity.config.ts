@@ -30,6 +30,7 @@ import {richDateInputExample} from '#rich-date-input'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
 import {studioSecretsExample} from '#studio-secrets'
+import {transifexExample} from '#transifex'
 import {unsplashExample} from '#unsplash'
 import {utilsExample} from '#utils'
 import {workflowExample} from '#workflow'
@@ -75,6 +76,7 @@ export default defineConfig([
       structureTool(),
       assistExample(),
       googleTranslateExample(),
+      transifexExample(),
       // add new plugins here
       orderableDocumentListExample(),
       latexInputExample(),

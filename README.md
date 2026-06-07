@@ -81,6 +81,7 @@ pnpm format
 | [`sanity-plugin-internationalized-array`](./plugins/sanity-plugin-internationalized-array)     | Store localized fields in arrays to save attributes                 |
 | [`sanity-plugin-latex-input`](./plugins/sanity-plugin-latex-input)                             | LaTeX input for Portable Text Editor                                |
 | [`sanity-plugin-markdown`](./plugins/sanity-plugin-markdown)                                   | Markdown editor input                                               |
+| [`sanity-plugin-transifex`](./plugins/sanity-plugin-transifex)                                 | In-studio integration with Transifex for content translation        |
 | [`sanity-plugin-utils`](./plugins/sanity-plugin-utils)                                         | Handy hooks and components for Sanity Studio plugins                |
 | [`sanity-plugin-workflow`](./plugins/sanity-plugin-workflow)                                   | Custom content publishing workflow example                          |
 | [`sanity-plugin-workspace-home`](./plugins/sanity-plugin-workspace-home)                       | Home screen for multi-workspace studios                             |
