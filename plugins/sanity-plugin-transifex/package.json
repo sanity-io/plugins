@@ -1,0 +1,104 @@
+{
+  "name": "sanity-plugin-transifex",
+  "version": "4.0.3",
+  "description": "This plugin provides an in-studio integration with Transifex. It allows your editors to send any document to Transifex with the click of a button, monitor ongoing translations, and import partial or complete translations back into the studio.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/sanity-plugin-transifex#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity-plugin-transifex/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sanity-io/sanity-plugin-transifex.git"
+  },
+  "license": "MIT",
+  "author": "Sanity.io",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "lint": "eslint .",
+    "prepare": "husky install",
+    "analyze": "size-limit --why",
+    "clean": "rimraf dist",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "prepublishOnly": "npm run build",
+    "watch": "pkg-utils watch --strict"
+  },
+  "dependencies": {
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "sanity-translations-tab": "^5.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.3",
+    "@commitlint/config-conventional": "^17.4.3",
+    "@sanity/pkg-utils": "^7.9.3",
+    "@sanity/plugin-kit": "^4.0.19",
+    "@sanity/semantic-release-preset": "^4.0.0",
+    "@types/react": "^18.0.28",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.4",
+    "prettier-plugin-packagejson": "^2.4.3",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "react-is": "^18.3.0",
+    "rimraf": "^4.1.2",
+    "sanity": "^3.98.1",
+    "semantic-release": "^20.1.0",
+    "size-limit": "^4.7.0",
+    "tslib": "^2.0.3",
+    "typescript": "5.8.3"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "react-dom": "^18.3 || ^19",
+    "sanity": "^3.3.1 || ^4.0.0-0 || ^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "rules": {
+      "@typescript-eslint/no-redeclare": "off",
+      "no-redeclare": "off"
+    }
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+      "tsconfig": false
+    }
+  }
+}
