@@ -64,10 +64,10 @@ exports[`Global internationalized array snapshot test 1`] = `
             "_type": "block",
             "children": [
               {
-                "_key": "216e97c5a5cc",
+                "_key": "randomKey-8",
                 "_type": "span",
                 "marks": [],
-                "text": "This is block text at the top level.",
+                "text": "New block text",
               },
             ],
             "markDefs": [],

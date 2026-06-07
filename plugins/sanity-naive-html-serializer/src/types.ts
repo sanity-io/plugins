@@ -49,6 +49,18 @@ export interface Deserializer {
   ) => Record<string, any> | any[]
 }
 
+export interface I18nArrayItem {
+  _key: string
+  _type: string
+  value: Record<string, any> | string | Array<any>
+}
+
+export interface I18nArrayInsert {
+  at: 'before' | 'after' | 'replace'
+  selector: string
+  items: Array<I18nArrayItem>
+}
+
 export interface Merger {
   fieldLevelMerge: (
     translatedFields: Record<string, any>,
@@ -62,7 +74,7 @@ export interface Merger {
     localeId: string,
     baseLang: string,
     localeArrayPosition: number,
-  ) => Record<string, any>
+  ) => I18nArrayInsert[]
   documentLevelMerge: (
     translatedFields: Record<string, any>,
     baseDoc: SanityDocument,

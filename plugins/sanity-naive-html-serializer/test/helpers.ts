@@ -27,7 +27,7 @@ export const getDeserialized = (
   return deserializer.deserializeDocument(serialized.content)
 }
 
-export const getValidFields = (field: Record<string, any>): Record<string, any> => {
+export const getValidFields = (field: Record<string, any>): string[] => {
   const invalidFields = new Set(['_type', '_key'])
   return Object.keys(field).filter((key) => !invalidFields.has(key))
 }

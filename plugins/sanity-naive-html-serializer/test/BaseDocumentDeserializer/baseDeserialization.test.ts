@@ -308,6 +308,24 @@ test('&nbsp; whitespace should not be escaped', () => {
   expect(result.content[1].nestedArrayField[0].title).toEqual('Det här är en dragspels titeln')
 })
 
+test('Array deserialization skips entries that fail to deserialize', () => {
+  vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+  const deserialized = BaseDocumentDeserializer.deserializeHTML(
+    '<div data-type="array"><div class="throws"></div></div>',
+    {
+      types: {
+        throws: () => {
+          throw new Error('deserialize failure')
+        },
+      },
+    },
+    customBlockDeserializers,
+  )
+
+  expect(deserialized).toEqual([])
+})
+
 /*
  * V2 functionality -- be able to operate without a strict schema
  */

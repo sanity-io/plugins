@@ -32,7 +32,9 @@ const deserializeArray = (
         `Tried to deserialize block: ${child.outerHTML} in an array but failed to identify it! Error: ${e}`,
       )
     }
-    output.push(deserializedObject)
+    if (deserializedObject !== undefined) {
+      output.push(deserializedObject)
+    }
   })
   return output
 }

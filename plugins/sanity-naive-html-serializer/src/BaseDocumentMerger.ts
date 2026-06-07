@@ -1,21 +1,10 @@
 import {extractWithPath, arrayToJSONMatchPath, extract} from '@sanity/mutator'
 import {SanityDocument} from 'sanity'
 
-import {Merger} from './types'
+import {I18nArrayInsert, I18nArrayItem, Merger} from './types'
 
 //based on args required for a sanityClient.insert operation
 //https://github.com/sanity-io/client/blob/d061e116cea10096c262fe3a8b0926d4fecdb6f3/src/data/patch.ts#L102
-
-interface I18nArrayItem {
-  _key: string
-  _type: string
-  value: Record<string, any> | string | Array<any>
-}
-interface I18nArrayInsert {
-  at: 'before' | 'after' | 'replace'
-  selector: string
-  items: Array<I18nArrayItem>
-}
 
 const reconcileArray = (origArray: any[], translatedArray: any[]): any[] => {
   //arrays of strings don't have keys, so just replace the array and return
@@ -129,7 +118,7 @@ const internationalizedArrayMerge = (
   localeId: string,
   baseLang: string = 'en',
   localeArrayPosition: number = 0,
-): Record<string, any> => {
+): I18nArrayInsert[] => {
   const patches: I18nArrayInsert[] = []
 
   //get all keys that match the base language from the translated doc,

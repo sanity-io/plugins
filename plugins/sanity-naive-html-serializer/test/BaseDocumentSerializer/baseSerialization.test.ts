@@ -322,3 +322,9 @@ test('Values in a field are not repeated (indicating serializers are stateless)'
   expect(HTMLList?.innerHTML).toContain(tags[1])
   expect(HTMLList?.innerHTML).toContain(tags[2])
 })
+
+test('Serialized object wrappers include a space before id attribute', () => {
+  const serialized = getSerialized(documentLevelArticle, 'document')
+  expect(serialized.content).toContain('class="objectField" id="')
+  expect(serialized.content).not.toContain('class="objectField"id="')
+})

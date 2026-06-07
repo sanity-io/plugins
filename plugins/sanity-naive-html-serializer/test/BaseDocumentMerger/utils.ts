@@ -58,6 +58,6 @@ export const getInternationalizedArrayDocument = (): Record<string, any> => {
   newDocument.config[0].value = getNewObject()
   const newBlockText = newDocument.content[0].value[0]
   newBlockText.children[0].text = 'New block text'
-  newDocument.content[0].value[0] = [newBlockText]
+  newDocument.content[0].value[0] = newBlockText
   return newDocument
 }

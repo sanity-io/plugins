@@ -114,7 +114,7 @@ export const BaseDocumentSerializer: SerializerClosure = (schemas: Schema) => {
     newSerializationMethods[tempType] = ({value}: {value: TypedObject}) => {
       let div = `<div class="${value._type.split('__temp_type__')[0]}"`
       if (value._key || value._id) {
-        div += `id="${value._key ?? value._id}"`
+        div += ` id="${value._key ?? value._id}"`
       }
 
       return [div, ` data-type="object">${innerHTML}</div>`].join('')
