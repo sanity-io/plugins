@@ -54,6 +54,7 @@ export default defineConfig([
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
   createWorkspace({name: 'utils-example', title: 'Utils Example', plugins: [utilsExample()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
+  createWorkspace({name: 'transifex-example', title: 'Transifex', plugins: [transifexExample()]}),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
   createWorkspace({
     name: 'orderable-document-list-example',
@@ -76,7 +77,6 @@ export default defineConfig([
       structureTool(),
       assistExample(),
       googleTranslateExample(),
-      transifexExample(),
       // add new plugins here
       orderableDocumentListExample(),
       latexInputExample(),
