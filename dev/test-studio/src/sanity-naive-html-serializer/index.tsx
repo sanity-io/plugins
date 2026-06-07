@@ -1,6 +1,6 @@
-import {DocumentTextIcon} from '@sanity/icons'
-import {Box, Card, Code, Stack, Text} from '@sanity/ui'
-import {useMemo} from 'react'
+import {CopyIcon, DocumentTextIcon} from '@sanity/icons'
+import {Box, Button, Card, Code, Flex, Stack, Text, Tooltip, useToast} from '@sanity/ui'
+import {useCallback, useMemo} from 'react'
 import type {SanityDocument} from 'sanity'
 import {definePlugin, defineType, useSchema} from 'sanity'
 import {
@@ -9,6 +9,7 @@ import {
   type UserViewComponent,
 } from 'sanity/structure'
 
+import {formatHtml} from './formatHtml'
 import {serializeDocumentToHtml} from './serializeDocumentToHtml'
 
 const naiveHtmlSerializerArticle = defineType({
@@ -39,6 +40,7 @@ const naiveHtmlSerializerArticle = defineType({
 const HtmlSerializeView: UserViewComponent = ({document}) => {
   const schema = useSchema()
   const doc = document.displayed
+  const {push: pushToast} = useToast()
 
   const serialized = useMemo(() => {
     if (!doc?._id || !doc._type) return null
@@ -46,7 +48,33 @@ const HtmlSerializeView: UserViewComponent = ({document}) => {
     return serializeDocumentToHtml(schema, doc as SanityDocument)
   }, [schema, doc])
 
-  if (!serialized) {
+  const rawHtml = serialized?.content
+
+  const formattedHtml = useMemo(() => {
+    if (!rawHtml) return null
+    return formatHtml(rawHtml)
+  }, [rawHtml])
+
+  const handleCopy = useCallback(async () => {
+    if (!rawHtml) return
+
+    try {
+      await navigator.clipboard.writeText(rawHtml)
+      pushToast({
+        closable: true,
+        status: 'success',
+        title: 'HTML copied to clipboard',
+      })
+    } catch {
+      pushToast({
+        closable: true,
+        status: 'error',
+        title: 'Failed to copy HTML to clipboard',
+      })
+    }
+  }, [pushToast, rawHtml])
+
+  if (!serialized || !formattedHtml) {
     return (
       <Card padding={4}>
         <Text>Save the document to preview serialized HTML.</Text>
@@ -55,14 +83,48 @@ const HtmlSerializeView: UserViewComponent = ({document}) => {
   }
 
   return (
-    <Box padding={4}>
-      <Stack gap={4}>
-        <Text size={1} weight="semibold">
-          Serialized HTML
-        </Text>
-        <Card padding={3} border tone="transparent">
-          <Code language="html" size={1}>
-            {serialized.content}
+    <Box padding={4} height="fill">
+      <Stack gap={4} height="fill">
+        <Flex align="center" gap={3} justify="space-between">
+          <Text size={1} weight="semibold">
+            Serialized HTML
+          </Text>
+          <Tooltip
+            content={
+              <Text size={1} style={{whiteSpace: 'nowrap'}}>
+                Copy raw HTML
+              </Text>
+            }
+            padding={2}
+            placement="left"
+          >
+            <Button
+              aria-label="Copy HTML"
+              icon={CopyIcon}
+              mode="ghost"
+              onClick={() => void handleCopy()}
+              text="Copy"
+            />
+          </Tooltip>
+        </Flex>
+        <Card
+          border
+          padding={3}
+          radius={2}
+          style={{flex: 1, minHeight: 0, overflow: 'auto'}}
+          tone="transparent"
+        >
+          <Code
+            language="html"
+            size={1}
+            style={{
+              margin: 0,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              overflowWrap: 'anywhere',
+            }}
+          >
+            {formattedHtml}
           </Code>
         </Card>
       </Stack>
