@@ -15,7 +15,9 @@ Always start with:
 pnpm generate "copy plugin"
 ```
 
-This is the canonical transfer flow and scaffolds monorepo-compatible files, test-studio wiring, and migration TODOs.
+This is the canonical transfer flow and scaffolds monorepo-compatible files and test-studio wiring.
+
+**Do not keep migration TODOs in the repo.** If the generator creates `README.todo.md`, delete it after moving its contents into the transfer PR description. Maintainers can update PR checklists directly on GitHub without a code change.
 
 ## Required vs Unnecessary Config
 
@@ -37,7 +39,7 @@ Do not copy standalone-repo-only setup such as custom root CI/build/lint/test co
 4. Do **not** update `.github/CODEOWNERS` during transfer unless explicitly requested.
 5. Add a changeset with a **major** bump for the transferred plugin (see [Changesets](#changesets)).
 6. Update the root `README.md` plugins table with the transferred plugin.
-7. Add **Maintainer follow-up** TODOs to the transfer PR description (see [Maintainer follow-up](#maintainer-follow-up)).
+7. Add pending transfer TODOs to the transfer PR description only (see [PR description checklist](#pr-description-checklist)—not in a README or other repo file).
 8. Run the full pre-PR verification suite (see [Before Submitting a PR](#before-submitting-a-pr)).
 
 ## Before Submitting a PR
@@ -131,19 +133,33 @@ This major release includes several breaking changes as part of the migration to
 - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=18)
 ```
 
-## Maintainer follow-up
+## PR description checklist
 
-Agents cannot complete these steps themselves. Ask the maintainer to handle them, and add the following as unchecked TODOs in the transfer PR description (fill in the links and plugin name for each transfer):
+Put all pending transfer work in the **PR description** as unchecked checkboxes. Do not create `README.todo.md` or similar todo files in the plugin workspace—the maintainer should be able to check items off on GitHub without opening a PR to edit repo files.
 
-- Update the original repo README (`<link to readme>`) and replace it with: `# [This plugin has moved](<new location>)`
-- Transfer pending issues from the original repo to this monorepo and label them as `<plugin-name>`
-- Archive the original repo: `<repo link>/settings`
+Include these sections in every transfer PR:
+
+### Transfer verification
+
+- [ ] Trusted publishing configured: `npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins`
+- [ ] `package.json` dependencies/peerDependencies/exports verified against original repo
+- [ ] Test studio example wired and manually verified (`pnpm dev`)
+- [ ] `pnpm format`, `pnpm knip`, `pnpm lint`, `pnpm build`, `pnpm test run` all pass
+- [ ] Major changeset added with validated breaking changes
+
+### Maintainer follow-up
+
+Agents cannot complete these steps themselves. Ask the maintainer to handle them:
+
+- [ ] Update the original repo README (`<link to readme>`) and replace it with: `# [This plugin has moved](<new location>)`
+- [ ] Transfer pending issues from the original repo to this monorepo and label them as `<plugin-name>`
+- [ ] Archive the original repo: `<repo link>/settings`
 
 Example for `sanity-naive-html-serializer`:
 
-- Update the original repo README (https://github.com/sanity-io/sanity-naive-html-serializer/blob/main/README.md) and replace it with: `# [This plugin has moved](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-naive-html-serializer)`
-- Transfer pending issues from the original repo to this monorepo and label them as `naive-html-serializer`
-- Archive the original repo: https://github.com/sanity-io/sanity-naive-html-serializer/settings
+- [ ] Update the original repo README (https://github.com/sanity-io/sanity-naive-html-serializer/blob/main/README.md) and replace it with: `# [This plugin has moved](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-naive-html-serializer)`
+- [ ] Transfer pending issues from the original repo to this monorepo and label them as `naive-html-serializer`
+- [ ] Archive the original repo: https://github.com/sanity-io/sanity-naive-html-serializer/settings
 
 ## Anything Else To Consider
 
