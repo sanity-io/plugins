@@ -44,6 +44,10 @@ export const createTask: Adapter['createTask'] = async (
   _localeIds: string[],
   secrets: Secrets | null,
 ) => {
+  if (!documentId || !secrets) {
+    throw Error('Missing documentId or Transifex secrets.')
+  }
+
   let resourceId = await fetch(
     `${baseTransifexUrl}/resources/${projOrgSlug(secrets)}:r:${documentId}`,
     {headers: getHeaders(secrets)},

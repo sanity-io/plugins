@@ -158,7 +158,6 @@ on how to run this plugin with hotreload in the studio.
 
 ### Release new version
 
-Run ["CI & Release" workflow](https://github.com/sanity-io/sanity-plugin-transifex/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
+Releases are handled from the [`sanity-io/plugins`](https://github.com/sanity-io/plugins) monorepo using Changesets.
 
-Semantic release will only release on configured branches, so it is safe to run release on any branch.
+Add a changeset in your PR, then follow the monorepo release workflow to publish from `main`.

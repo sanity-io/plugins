@@ -33,14 +33,18 @@ export const getTranslationTask: Adapter['getTranslationTask'] = async (
     .then((res) => ({
       taskId: `${projOrgSlug(secrets)}:r:${documentId}`,
       documentId: documentId,
-      locales: res.data.map((locale: Record<string, any>) => ({
-        localeId: locale['relationships']['language']['data']['id'].split(':')[1],
-        progress: Math.floor(
-          100 *
-            (locale['attributes']['reviewed_strings'] /
-              parseFloat(locale['attributes']['total_strings'])),
-        ),
-      })),
+      locales: res.data.map((locale: Record<string, any>) => {
+        const reviewedStrings = Number(locale['attributes']['reviewed_strings'])
+        const totalStrings = Number(locale['attributes']['total_strings'])
+
+        return {
+          localeId: locale['relationships']['language']['data']['id'].split(':')[1],
+          progress:
+            Number.isFinite(reviewedStrings) && Number.isFinite(totalStrings) && totalStrings > 0
+              ? Math.floor((100 * reviewedStrings) / totalStrings)
+              : 0,
+        }
+      }),
     }))
 
   const locales = await getLocales(secrets)

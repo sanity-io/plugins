@@ -31,6 +31,10 @@ const pollForFileDownloadLocation = async (
     )
     await new Promise((resolve) => setTimeout(resolve, 3000))
     return pollForFileDownloadLocation(resourceDownloadUrl, translationDownloadId, headers)
+  } else if (response.status === 401 || response.status === 403) {
+    throw Error(
+      `Failed to retrieve download location for translation download ID ${translationDownloadId}. Status: ${response.status}`,
+    )
   }
   console.error(
     `Transifex plugin message: Requested download location for translation download ID ${translationDownloadId} but received error code ${response.status}. Waiting and trying again.`,
@@ -48,6 +52,10 @@ export const getTranslation: Adapter['getTranslation'] = async (
   localeId: string,
   secrets: Secrets | null,
 ) => {
+  if (!secrets) {
+    throw Error('Missing Transifex secrets.')
+  }
+
   const resourceDownloadBody = {
     data: {
       attributes: {
