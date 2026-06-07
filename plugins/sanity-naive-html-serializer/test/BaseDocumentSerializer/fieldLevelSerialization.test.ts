@@ -1,5 +1,6 @@
 import {PortableTextBlock} from 'sanity'
 import {describe, expect, test} from 'vitest'
+
 import {getSerialized, getValidFields, toPlainText} from '../helpers'
 import {fieldLevelArticle, findByClass, getHTMLNode, nestedLanguageFields} from './utils'
 
@@ -86,8 +87,8 @@ describe('Presence and accurancy of fields in "vanilla" deserialization -- array
     const objectInArray = findByClass(arrayField!.children, 'objectField')
     const fieldNames = getValidFields(
       fieldLevelArticle.content.en.find(
-        (block: Record<string, any>) => block._type === 'objectField'
-      )
+        (block: Record<string, any>) => block._type === 'objectField',
+      ),
     )
     const foundFieldNames = Array.from(objectInArray!.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
@@ -97,12 +98,12 @@ describe('Presence and accurancy of fields in "vanilla" deserialization -- array
     const objectInArray = findByClass(arrayField!.children, 'objectField')
     const nestedObject = findByClass(objectInArray!.children, 'objectAsField')
     const title = fieldLevelArticle.content.en.find(
-      (block: Record<string, any>) => block._type === 'objectField'
+      (block: Record<string, any>) => block._type === 'objectField',
     ).objectAsField.title
     const blockText = toPlainText(
       fieldLevelArticle.content.en.find(
-        (block: Record<string, any>) => block._type === 'objectField'
-      ).objectAsField.content
+        (block: Record<string, any>) => block._type === 'objectField',
+      ).objectAsField.content,
     ).trim()
     expect(nestedObject?.innerHTML).toContain(title)
     expect(nestedObject?.innerHTML).toContain(blockText)

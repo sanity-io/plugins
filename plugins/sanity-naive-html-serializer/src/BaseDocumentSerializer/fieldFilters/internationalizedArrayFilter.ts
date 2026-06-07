@@ -27,7 +27,7 @@ const filterToBaseLang = (arr: TypedObject[], baseLang: string) => {
  */
 const findArraysWithBaseLang = (
   childObj: Record<string, any>,
-  baseLang: string
+  baseLang: string,
 ): Record<string, any> => {
   const filteredObj: Record<string, any> = {}
   META_FIELDS.forEach((field) => {
@@ -53,7 +53,7 @@ const findArraysWithBaseLang = (
           //that's not default system value it passed the filter
           const filtered = findArraysWithBaseLang(objInArray, baseLang)
           const nonMetaFields = Object.keys(filtered).filter(
-            (objInArrayKey) => !META_FIELDS.includes(objInArrayKey)
+            (objInArrayKey) => !META_FIELDS.includes(objInArrayKey),
           )
           if (nonMetaFields.length) {
             validArr.push(filtered)
@@ -68,7 +68,7 @@ const findArraysWithBaseLang = (
       else if (typeof value === 'object') {
         const nestedLangObj = findArraysWithBaseLang(value, baseLang)
         const nonMetaFields = Object.keys(nestedLangObj).filter(
-          (nestedObjKey) => !META_FIELDS.includes(nestedObjKey)
+          (nestedObjKey) => !META_FIELDS.includes(nestedObjKey),
         )
         if (nonMetaFields.length) {
           filteredObj[key] = nestedLangObj
@@ -86,7 +86,7 @@ const findArraysWithBaseLang = (
  */
 export const internationalizedArrayFilter = (
   document: SanityDocument,
-  baseLang: string
+  baseLang: string,
 ): Record<string, any> => {
   //send top level object into recursive function
   return findArraysWithBaseLang(document, baseLang)

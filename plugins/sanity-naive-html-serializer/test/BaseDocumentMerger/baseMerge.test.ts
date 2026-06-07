@@ -1,6 +1,8 @@
 import {createRequire} from 'module'
+
 import {PortableTextBlock} from 'sanity'
 import {expect, test} from 'vitest'
+
 import {BaseDocumentMerger} from '../../src'
 import {getNewDocument} from './utils'
 
@@ -15,16 +17,16 @@ test('Merged document should maintain style tags', () => {
   const newDocument = getNewDocument()
   const mergedDocument = BaseDocumentMerger.documentLevelMerge(newDocument, documentLevelArticle)
   const origH1Block = documentLevelArticle.content.find(
-    (block: PortableTextBlock) => block.style === 'h1'
+    (block: PortableTextBlock) => block.style === 'h1',
   )
   const origH2Block = documentLevelArticle.content.find(
-    (block: PortableTextBlock) => block.style === 'h2'
+    (block: PortableTextBlock) => block.style === 'h2',
   )
   const mergedH1Block = mergedDocument.content.find(
-    (block: PortableTextBlock) => block.style === 'h1'
+    (block: PortableTextBlock) => block.style === 'h1',
   )
   const mergedH2Block = mergedDocument.content.find(
-    (block: PortableTextBlock) => block.style === 'h2'
+    (block: PortableTextBlock) => block.style === 'h2',
   )
   expect(mergedH1Block).toBeDefined()
   expect(mergedH2Block).toBeDefined()

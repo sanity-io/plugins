@@ -1,6 +1,7 @@
-import {Merger} from './types'
-import {SanityDocument} from 'sanity'
 import {extractWithPath, arrayToJSONMatchPath, extract} from '@sanity/mutator'
+import {SanityDocument} from 'sanity'
+
+import {Merger} from './types'
 
 //based on args required for a sanityClient.insert operation
 //https://github.com/sanity-io/client/blob/d061e116cea10096c262fe3a8b0926d4fecdb6f3/src/data/patch.ts#L102
@@ -31,11 +32,10 @@ const reconcileArray = (origArray: any[], translatedArray: any[]): any[] => {
     }
     const foundBlockIdx = origArray.findIndex((origBlock) => origBlock._key === block._key)
     if (foundBlockIdx < 0) {
-      //eslint-disable-next-line no-console
       console.warn(
         `This block no longer exists on the original document. Was it removed? ${JSON.stringify(
-          block
-        )}`
+          block,
+        )}`,
       )
     } else if (
       origArray[foundBlockIdx]._type === 'block' ||
@@ -45,7 +45,6 @@ const reconcileArray = (origArray: any[], translatedArray: any[]): any[] => {
     } else if (Array.isArray(origArray[foundBlockIdx])) {
       combined[foundBlockIdx] = reconcileArray(origArray[foundBlockIdx], block)
     } else {
-      //eslint-disable-next-line no-use-before-define -- this is a recursive function
       combined[foundBlockIdx] = reconcileObject(origArray[foundBlockIdx], block)
     }
   })
@@ -54,7 +53,7 @@ const reconcileArray = (origArray: any[], translatedArray: any[]): any[] => {
 
 const reconcileObject = (
   origObject: Record<string, any>,
-  translatedObject: Record<string, any>
+  translatedObject: Record<string, any>,
 ): Record<string, any> => {
   if (typeof translatedObject !== 'object' || !Object.keys(translatedObject).length) {
     return origObject
@@ -68,7 +67,6 @@ const reconcileObject = (
     if (typeof value === 'string') {
       updatedObj[key] = value
     } else if (Array.isArray(value)) {
-      //eslint-disable-next-line @typescript-eslint/no-use-before-define -- this is a recursive function
       updatedObj[key] = reconcileArray(origObject[key] ?? [], value)
     } else {
       updatedObj[key] = reconcileObject(origObject[key] ?? {}, value)
@@ -82,7 +80,7 @@ const fieldLevelMerge = (
   //should be fetched according to the revision and id of the translated obj above
   baseDoc: SanityDocument,
   localeId: string,
-  baseLang: string = 'en'
+  baseLang: string = 'en',
 ): Record<string, any> => {
   const merged: Record<string, any> = {}
   const metaKeys = ['_rev', '_id', '_type']
@@ -95,9 +93,13 @@ const fieldLevelMerge = (
   //get any field that matches the base language, because it's been translated
   const originPaths = extractWithPath(`..${baseLang}`, translatedFields)
   originPaths.forEach((match) => {
-    const origVal = extractWithPath(arrayToJSONMatchPath(match.path), baseDoc)[0].value
-    const translatedVal = extractWithPath(arrayToJSONMatchPath(match.path), translatedFields)[0]
-      .value
+    const origMatch = extractWithPath(arrayToJSONMatchPath(match.path), baseDoc)[0]
+    const translatedMatch = extractWithPath(arrayToJSONMatchPath(match.path), translatedFields)[0]
+    if (!origMatch || !translatedMatch) {
+      return
+    }
+    const origVal = origMatch.value
+    const translatedVal = translatedMatch.value
     let valToPatch
     if (typeof translatedVal === 'string') {
       valToPatch = translatedVal
@@ -126,7 +128,7 @@ const internationalizedArrayMerge = (
   baseDoc: SanityDocument,
   localeId: string,
   baseLang: string = 'en',
-  localeArrayPosition: number = 0
+  localeArrayPosition: number = 0,
 ): Record<string, any> => {
   const patches: I18nArrayInsert[] = []
 
@@ -146,11 +148,15 @@ const internationalizedArrayMerge = (
   Array.from(new Set(i18nArrayPaths)).forEach((path) => {
     //we need to merge the translated values with those things
     //that were not set off for translation. Get the original first
-    const origArray = extract(path, baseDoc)[0] as Array<I18nArrayItem>
+    const origArray = extract(path, baseDoc)[0] as Array<I18nArrayItem> | undefined
+    if (!origArray?.length) {
+      return
+    }
     const origVal = origArray.find((item: I18nArrayItem) => item._key === baseLang)?.value
 
-    const translatedVal = (extract(path, translatedItems)[0] as Array<I18nArrayItem>).find(
-      (item: I18nArrayItem) => item._key === baseLang
+    const translatedArray = extract(path, translatedItems)[0] as Array<I18nArrayItem> | undefined
+    const translatedVal = translatedArray?.find(
+      (item: I18nArrayItem) => item._key === baseLang,
     )?.value
 
     //then, combine the translated values with the original recursively
@@ -165,7 +171,7 @@ const internationalizedArrayMerge = (
     ) {
       valToPatch = reconcileObject(
         (origVal as Record<string, any>) ?? {},
-        translatedVal as Record<string, any>
+        translatedVal as Record<string, any>,
       )
     }
 
@@ -183,7 +189,7 @@ const internationalizedArrayMerge = (
       patches.push({
         at,
         selector,
-        items: [{_key: localeId, _type: origArray[0]._type, value: valToPatch}],
+        items: [{_key: localeId, _type: origArray[0]!._type, value: valToPatch}],
       })
     }
   })
@@ -194,7 +200,7 @@ const internationalizedArrayMerge = (
 const documentLevelMerge = (
   translatedFields: Record<string, any>,
   //should be fetched according to the revision and id of the translated obj above
-  baseDoc: SanityDocument
+  baseDoc: SanityDocument,
 ): Record<string, any> => {
   return reconcileObject(baseDoc, translatedFields)
 }

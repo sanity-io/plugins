@@ -5,7 +5,7 @@ let mockTestKey = 0
 
 vi.mock('@portabletext/block-tools', async () => {
   const originalModule = await vi.importActual<typeof import('@portabletext/block-tools')>(
-    '@portabletext/block-tools'
+    '@portabletext/block-tools',
   )
   return {
     ...originalModule,

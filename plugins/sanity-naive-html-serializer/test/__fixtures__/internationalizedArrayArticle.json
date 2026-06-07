@@ -114,11 +114,7 @@
     {
       "_key": "en",
       "_type": "internationalizedArrayTagsValue",
-      "value": [
-        "tag 1",
-        "tag 2",
-        "tag 3"
-      ]
+      "value": ["tag 1", "tag 2", "tag 3"]
     }
   ],
   "title": [

@@ -1,4 +1,5 @@
 import {readFileSync} from 'fs'
+
 import {
   PortableTextBlock,
   PortableTextObject,
@@ -6,6 +7,7 @@ import {
   PortableTextTextBlock,
 } from 'sanity'
 import {beforeEach, expect, test, vi} from 'vitest'
+
 import {
   BaseDocumentDeserializer,
   BaseDocumentSerializer,
@@ -32,7 +34,7 @@ let mockTestKey = 0
 
 vi.mock('@portabletext/block-tools', async () => {
   const originalModule = await vi.importActual<typeof import('@portabletext/block-tools')>(
-    '@portabletext/block-tools'
+    '@portabletext/block-tools',
   )
   return {
     ...originalModule,
@@ -84,22 +86,22 @@ test('Custom deserialization should manifest at all levels', () => {
     'document',
     'en',
     defaultStopTypes,
-    addedCustomSerializers
+    addedCustomSerializers,
   )
 
   const deserialized = BaseDocumentDeserializer.deserializeDocument(
     serialized.content,
     addedCustomDeserializers,
-    customBlockDeserializers
+    customBlockDeserializers,
   )
   expect(deserialized.config.title).toEqual(documentLevelArticle.config.title)
   expect(deserialized.config._type).toEqual(documentLevelArticle.config._type)
 
   const origArrayObj = documentLevelArticle.content.find(
-    (b: Record<string, any>) => b._type === 'objectField'
+    (b: Record<string, any>) => b._type === 'objectField',
   )
   const deserializedArrayObj = deserialized.content.find(
-    (b: Record<string, any>) => b._type === 'objectField'
+    (b: Record<string, any>) => b._type === 'objectField',
   )
 
   expect(deserializedArrayObj.title).toEqual(origArrayObj.title)
@@ -117,31 +119,31 @@ test('Content with custom styles deserializes correctly and maintains style', ()
 
   const serialized = BaseDocumentSerializer(schema).serializeDocument(
     customStyledDocument,
-    'document'
+    'document',
   )
 
   const deserialized = BaseDocumentDeserializer.deserializeDocument(serialized.content)
   const origCustomStyleBlock = customStyledDocument.content.find(
-    (b: Record<string, any>) => b._type === 'block' && b.style === 'custom1'
+    (b: Record<string, any>) => b._type === 'block' && b.style === 'custom1',
   )
   const origCustomStyleListItem = customStyledDocument.content.find(
     (b: Record<string, any>) =>
-      b._type === 'block' && b.listItem === 'number' && b.style === 'custom1'
+      b._type === 'block' && b.listItem === 'number' && b.style === 'custom1',
   )
   const deserializedCustomStyleBlock = deserialized.content.find(
-    (b: Record<string, any>) => b._type === 'block' && b.style === 'custom1'
+    (b: Record<string, any>) => b._type === 'block' && b.style === 'custom1',
   )
   const deserializedCustomStyleListItem = deserialized.content.find(
     (b: Record<string, any>) =>
-      b._type === 'block' && b.listItem === 'number' && b.style === 'custom1'
+      b._type === 'block' && b.listItem === 'number' && b.style === 'custom1',
   )
 
   expect(deserializedCustomStyleBlock.children[0].text).toEqual(
-    origCustomStyleBlock.children[0].text
+    origCustomStyleBlock.children[0].text,
   )
 
   expect(deserializedCustomStyleListItem.children[0].text).toEqual(
-    origCustomStyleListItem.children[0].text
+    origCustomStyleListItem.children[0].text,
   )
 })
 
@@ -157,13 +159,13 @@ test('Handled inline objects should be accurately deserialized', () => {
     'document',
     'en',
     defaultStopTypes,
-    addedCustomSerializers
+    addedCustomSerializers,
   )
 
   const deserialized = BaseDocumentDeserializer.deserializeDocument(
     serialized.content,
     addedCustomDeserializers,
-    addedBlockDeserializers
+    addedBlockDeserializers,
   )
 
   const getInlineObj = (content: PortableTextBlock[], level: number | undefined = undefined) => {
@@ -212,13 +214,13 @@ test('Handled annotations should be accurately deserialized', () => {
     'document',
     'en',
     defaultStopTypes,
-    addedCustomSerializers
+    addedCustomSerializers,
   )
 
   const deserialized = BaseDocumentDeserializer.deserializeDocument(
     serialized.content,
     addedCustomDeserializers,
-    addedBlockDeserializers
+    addedBlockDeserializers,
   )
 
   let origAnnotation: Record<string, any> | null = null
@@ -253,16 +255,16 @@ test('Handled annotations should be accurately deserialized', () => {
 test('Deserialized content should preserve style tags', () => {
   const deserialized = getDeserialized(documentLevelArticle, 'document')
   const origH1 = documentLevelArticle.content.find(
-    (block: PortableTextBlock) => block.style === 'h1'
+    (block: PortableTextBlock) => block.style === 'h1',
   )
   const deserializedH1 = deserialized.content.find(
-    (block: PortableTextBlock) => block.style === 'h1'
+    (block: PortableTextBlock) => block.style === 'h1',
   )
   const origH2 = documentLevelArticle.content.find(
-    (block: PortableTextBlock) => block.style === 'h2'
+    (block: PortableTextBlock) => block.style === 'h2',
   )
   const deserializedH2 = deserialized.content.find(
-    (block: PortableTextBlock) => block.style === 'h2'
+    (block: PortableTextBlock) => block.style === 'h2',
   )
   expect(deserializedH1).toBeDefined()
   expect(deserializedH2).toBeDefined()
@@ -278,16 +280,16 @@ test('Deserialized content should preserve style tags', () => {
 test('Deserialized list items should preserve level, style and tag', () => {
   const deserialized = getDeserialized(documentLevelArticle, 'document')
   const origListItem = documentLevelArticle.content.find(
-    (block: PortableTextBlock) => block.listItem === 'bullet' && block.style === 'h2'
+    (block: PortableTextBlock) => block.listItem === 'bullet' && block.style === 'h2',
   )
   const deserializedListItem = deserialized.content.find(
-    (block: PortableTextBlock) => block.listItem === 'bullet' && block.style === 'h2'
+    (block: PortableTextBlock) => block.listItem === 'bullet' && block.style === 'h2',
   )
   const origNestedListItem = documentLevelArticle.content.find(
-    (block: PortableTextBlock) => block.listItem === 'bullet' && block.level === 2
+    (block: PortableTextBlock) => block.listItem === 'bullet' && block.level === 2,
   )
   const deserializedNestedListItem = deserialized.content.find(
-    (block: PortableTextBlock) => block.listItem === 'bullet' && block.level === 2
+    (block: PortableTextBlock) => block.listItem === 'bullet' && block.level === 2,
   )
   expect(deserializedListItem).toBeDefined()
   expect(deserializedNestedListItem).toBeDefined()
@@ -321,7 +323,7 @@ test('Content with anonymous inline objects deserializes all fields, at any dept
 
   const serialized = BaseDocumentSerializer(inlineSchema).serializeDocument(
     inlineDocumentLevelArticle,
-    'document'
+    'document',
   )
 
   const deserialized = BaseDocumentDeserializer.deserializeDocument(serialized.content)
@@ -330,26 +332,26 @@ test('Content with anonymous inline objects deserializes all fields, at any dept
 
   //array in object in object
   expect(deserialized.tabs.config.objectAsField.content[0].children[0].text).toEqual(
-    inlineDocumentLevelArticle.tabs.config.objectAsField.content[0].children[0].text
+    inlineDocumentLevelArticle.tabs.config.objectAsField.content[0].children[0].text,
   )
 
   //arrays
   expect(deserialized.tabs.content).toBeInstanceOf(Array)
   expect(deserialized.tabs.content.map((block: any) => block._key)).toEqual(
-    inlineDocumentLevelArticle.tabs.content.map((block: any) => block._key)
+    inlineDocumentLevelArticle.tabs.content.map((block: any) => block._key),
   )
 
   //object in array
   const origObj = inlineDocumentLevelArticle.tabs.content.find(
-    (block: any) => block._type === 'objectField'
+    (block: any) => block._type === 'objectField',
   )
   const deserializedObj = deserialized.tabs.content.find(
-    (block: any) => block._type === 'objectField'
+    (block: any) => block._type === 'objectField',
   )
 
   expect(deserializedObj.title).toEqual(origObj.title)
   expect(deserializedObj.objectAsField.content[0].children[0].text).toEqual(
-    origObj.objectAsField.content[0].children[0].text
+    origObj.objectAsField.content[0].children[0].text,
   )
 
   //anonymous object in array

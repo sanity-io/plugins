@@ -1,5 +1,6 @@
 import {PortableTextBlock} from 'sanity'
 import {expect, test, describe} from 'vitest'
+
 import {getI18nArrayItem, getSerialized, getValidFields, toPlainText} from '../helpers'
 import {findByClass, getHTMLNode, internationalizedArrayArticle} from './utils'
 
@@ -26,11 +27,11 @@ test('String and text types get serialized correctly at top-level -- internation
   const englishSnippetValueHTML = findByClass(englishSnippetHTML?.children!, 'value')
 
   expect(englishTitleValueHTML?.innerHTML).toEqual(
-    getI18nArrayItem(internationalizedArrayArticle.title, 'en')?.value
+    getI18nArrayItem(internationalizedArrayArticle.title, 'en')?.value,
   )
 
   expect(englishSnippetValueHTML?.innerHTML).toEqual(
-    getI18nArrayItem(internationalizedArrayArticle.snippet, 'en')?.value
+    getI18nArrayItem(internationalizedArrayArticle.snippet, 'en')?.value,
   )
 })
 
@@ -104,7 +105,7 @@ describe('Presence and accurancy of fields in "vanilla" deserialization -- array
   test('Object in array contains all serializable fields -- internationalized array', () => {
     const objectInArray = findByClass(arrayField!.children, 'objectField')
     const fieldNames = getValidFields(
-      origArrayField.find((block: Record<string, any>) => block._type === 'objectField')
+      origArrayField.find((block: Record<string, any>) => block._type === 'objectField'),
     )
     const foundFieldNames = Array.from(objectInArray!.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
@@ -117,7 +118,7 @@ describe('Presence and accurancy of fields in "vanilla" deserialization -- array
       .objectAsField.title
     const blockText = toPlainText(
       origArrayField.find((block: Record<string, any>) => block._type === 'objectField')
-        .objectAsField.content
+        .objectAsField.content,
     ).trim()
     expect(nestedObject?.innerHTML).toContain(title)
     expect(nestedObject?.innerHTML).toContain(blockText)

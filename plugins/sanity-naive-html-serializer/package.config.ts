@@ -1,11 +1,8 @@
+import config from '@repo/package.config'
 import {defineConfig} from '@sanity/pkg-utils'
 
 export default defineConfig({
-  dist: 'dist',
-  tsconfig: 'tsconfig.dist.json',
-  extract: {
-    rules: {
-      'ae-missing-release-tag': 'off',
-    },
-  },
+  ...config,
+  babel: {reactCompiler: true},
+  reactCompilerOptions: {target: '19'},
 })

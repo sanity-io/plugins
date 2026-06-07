@@ -121,6 +121,13 @@
       "rules": {
         "no-console": "off"
       }
+    },
+    {
+      "files": ["plugins/sanity-naive-html-serializer/src/**/*.ts"],
+      "rules": {
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off"
+      }
     }
   ]
 }

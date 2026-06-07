@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-naive-html-serializer
 
 ## [4.1.0](https://github.com/sanity-io/sanity-naive-html-serializer/compare/v4.0.2...v4.1.0) (2026-02-08)
 

@@ -1,6 +1,8 @@
-import clone from 'just-clone'
 import {createRequire} from 'module'
+
+import clone from 'just-clone'
 import {expect, test} from 'vitest'
+
 import {BaseDocumentMerger} from '../../src'
 import {getDeserialized} from '../helpers'
 import {getNewFieldLevelDocument, getNewObject} from './utils'
@@ -15,7 +17,7 @@ const fieldLevelPatches = BaseDocumentMerger.fieldLevelMerge(
   newDocument,
   fieldLevelArticle,
   'es_ES',
-  'en'
+  'en',
 )
 test('Global field level snapshot test', () => {
   expect(fieldLevelPatches).toMatchSnapshot()
@@ -37,16 +39,16 @@ test('Nested object fields override old object fields', () => {
   expect(fieldLevelPatches['config.es_ES'].title).toEqual(newDocument.config.en.title)
   expect(fieldLevelPatches['config.es_ES'].title).not.toEqual(fieldLevelArticle.config.en.title)
   expect(fieldLevelPatches['config.es_ES'].nestedArrayField[0].children[0].text).toEqual(
-    newDocument.config.en.nestedArrayField[0].children[0].text
+    newDocument.config.en.nestedArrayField[0].children[0].text,
   )
   expect(fieldLevelPatches['config.es_ES'].nestedArrayField[0].children[0].text).not.toEqual(
-    fieldLevelArticle.config.en.nestedArrayField[0].children[0].text
+    fieldLevelArticle.config.en.nestedArrayField[0].children[0].text,
   )
 })
 
 test('Nested object merge uses old fields when not present on new object', () => {
   expect(fieldLevelPatches['config.es_ES'].objectAsField.content).toEqual(
-    fieldLevelArticle.config.en.objectAsField.content
+    fieldLevelArticle.config.en.objectAsField.content,
   )
 })
 
@@ -55,10 +57,10 @@ test('Nested object merge uses old fields when not present on new object', () =>
  */
 test('Arrays will use new objects when they exist', () => {
   expect(fieldLevelPatches['content.es_ES'][0].children[0].text).toEqual(
-    newDocument.content.en[0].children[0].text
+    newDocument.content.en[0].children[0].text,
   )
   expect(fieldLevelPatches['content.es_ES'][0].children[0].text).not.toEqual(
-    fieldLevelArticle.content.en[0].children[0].text
+    fieldLevelArticle.content.en[0].children[0].text,
   )
 })
 
@@ -84,14 +86,14 @@ test('Arrays will merge objects in the array', () => {
     documentWithIncompleteObj,
     fieldLevelArticle,
     'es_ES',
-    'en'
+    'en',
   )
 
   expect(fieldDocWithMergedObj['content.es_ES'][1].title).toEqual(
-    documentWithIncompleteObj.content.en[1].title
+    documentWithIncompleteObj.content.en[1].title,
   )
   expect(fieldDocWithMergedObj['content.es_ES'][1].objectAsField.title).toEqual(
-    documentWithIncompleteObj.content.en[1].objectAsField.title
+    documentWithIncompleteObj.content.en[1].objectAsField.title,
   )
   //"content" field existed on old doc but not new, so the two coexist happily
   expect(documentWithIncompleteObj.content.en[1].objectAsField.content).toBeUndefined()
@@ -105,19 +107,19 @@ test('nested locale fields will be merged', () => {
   const baseDocumentWithNestedFields = {...fieldLevelArticle, ...nestedLanguageFields}
   const newDocumentWithNestedFields = getDeserialized(
     {...fieldLevelArticle, ...newNestedFields},
-    'field'
+    'field',
   )
   const nestedFieldLevelPatches = BaseDocumentMerger.fieldLevelMerge(
     newDocumentWithNestedFields,
     baseDocumentWithNestedFields,
     'es_ES',
-    'en'
+    'en',
   )
 
   expect(nestedFieldLevelPatches['slices[0].es_ES'][0].children[0].text).toEqual(
-    newDocumentWithNestedFields.slices[0].en[0].children[0].text
+    newDocumentWithNestedFields.slices[0].en[0].children[0].text,
   )
   expect(nestedFieldLevelPatches['pageFields.name.es_ES']).toEqual(
-    newDocumentWithNestedFields.pageFields.name.en
+    newDocumentWithNestedFields.pageFields.name.en,
   )
 })

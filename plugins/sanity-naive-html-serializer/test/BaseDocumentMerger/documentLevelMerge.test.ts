@@ -1,5 +1,7 @@
 import {createRequire} from 'module'
+
 import {expect, test} from 'vitest'
+
 import {BaseDocumentMerger} from '../../src'
 import {getNewDocument, getNewObject} from './utils'
 
@@ -28,10 +30,10 @@ test('Nested object fields override old object fields', () => {
   expect(mergedDocument.config.title).toEqual(newDocument.config.title)
   expect(mergedDocument.config.title).not.toEqual(documentLevelArticle.config.title)
   expect(mergedDocument.config.nestedArrayField[0].children[0].text).toEqual(
-    newDocument.config.nestedArrayField[0].children[0].text
+    newDocument.config.nestedArrayField[0].children[0].text,
   )
   expect(mergedDocument.config.nestedArrayField[0].children[0].text).not.toEqual(
-    documentLevelArticle.config.nestedArrayField[0].children[0].text
+    documentLevelArticle.config.nestedArrayField[0].children[0].text,
   )
 })
 
@@ -45,10 +47,10 @@ test('Nested object merge uses old fields when not present on new object', () =>
  */
 test('Arrays will use new objects when they exist', () => {
   expect(mergedDocument.content[0].children[0].text).toEqual(
-    newDocument.content[0].children[0].text
+    newDocument.content[0].children[0].text,
   )
   expect(mergedDocument.content[0].children[0].text).not.toEqual(
-    documentLevelArticle.content[0].children[0].text
+    documentLevelArticle.content[0].children[0].text,
   )
 })
 
@@ -70,12 +72,12 @@ test('Arrays will merge objects in the array', () => {
   })
   const documentWithMergedObj = BaseDocumentMerger.documentLevelMerge(
     documentWithIncompleteObj,
-    documentLevelArticle
+    documentLevelArticle,
   )
 
   expect(documentWithMergedObj.content[1].title).toEqual(documentWithIncompleteObj.content[1].title)
   expect(documentWithMergedObj.content[1].objectAsField.title).toEqual(
-    documentWithIncompleteObj.content[1].objectAsField.title
+    documentWithIncompleteObj.content[1].objectAsField.title,
   )
   //content existed on old doc but not new, so the two coexist happily
   expect(documentWithIncompleteObj.content[1].objectAsField.content).toBeUndefined()

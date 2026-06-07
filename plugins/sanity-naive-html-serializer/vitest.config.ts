@@ -4,5 +4,10 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./test/global.setup.ts'],
+    server: {
+      deps: {
+        inline: ['vitest-package-exports'],
+      },
+    },
   },
 })

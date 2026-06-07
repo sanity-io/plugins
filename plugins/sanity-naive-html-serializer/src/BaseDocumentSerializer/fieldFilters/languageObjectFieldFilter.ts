@@ -51,7 +51,7 @@ const findBaseLang = (childObj: Record<string, any>, baseLang: string): Record<s
           } else {
             const filtered = findBaseLang(objInArray, baseLang)
             const nonMetaFields = Object.keys(filtered).filter(
-              (objInArrayKey) => !META_FIELDS.includes(objInArrayKey)
+              (objInArrayKey) => !META_FIELDS.includes(objInArrayKey),
             )
             if (nonMetaFields.length) {
               validArr.push(filtered)
@@ -67,7 +67,7 @@ const findBaseLang = (childObj: Record<string, any>, baseLang: string): Record<s
       else if (typeof value === 'object') {
         const nestedLangObj = findBaseLang(value, baseLang)
         const nonMetaFields = Object.keys(nestedLangObj).filter(
-          (nestedObjKey) => META_FIELDS.indexOf(nestedObjKey) === -1
+          (nestedObjKey) => META_FIELDS.indexOf(nestedObjKey) === -1,
         )
         if (nonMetaFields.length) {
           filteredObj[key] = nestedLangObj
@@ -85,7 +85,7 @@ const findBaseLang = (childObj: Record<string, any>, baseLang: string): Record<s
  */
 export const languageObjectFieldFilter = (
   document: SanityDocument,
-  baseLang: string
+  baseLang: string,
 ): Record<string, any> => {
   //send top level object into recursive function
   return findBaseLang(document, baseLang)

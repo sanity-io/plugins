@@ -1,14 +1,13 @@
-import {PortableTextBlockStyle} from '@portabletext/types'
-
+import {htmlToBlocks} from '@portabletext/block-tools'
 import {
   PortableTextBlockComponent,
   PortableTextListComponent,
   PortableTextListItemComponent,
 } from '@portabletext/to-html'
-
-import {htmlToBlocks} from '@portabletext/block-tools'
-import {blockContentType} from './BaseDocumentDeserializer/helpers'
+import {PortableTextBlockStyle} from '@portabletext/types'
 import {PortableTextTextBlock, TypedObject} from 'sanity'
+
+import {blockContentType} from './BaseDocumentDeserializer/helpers'
 
 export const defaultStopTypes = [
   'reference',
@@ -69,7 +68,7 @@ export const customBlockDeserializers: Array<any> = [
   {
     deserialize(
       el: HTMLParagraphElement,
-      next: (elements: Node | Node[] | NodeList) => TypedObject | TypedObject[] | undefined
+      next: (elements: Node | Node[] | NodeList) => TypedObject | TypedObject[] | undefined,
     ): PortableTextTextBlock | TypedObject | undefined {
       if (!el.hasChildNodes()) {
         return undefined
@@ -86,14 +85,14 @@ export const customBlockDeserializers: Array<any> = [
         ...block,
         style,
         children: next(el.childNodes),
-      }
+      } as PortableTextTextBlock
     },
   },
   //handle list items
   {
     deserialize(
       el: HTMLParagraphElement,
-      next: (elements: Node | Node[] | NodeList) => TypedObject | TypedObject[] | undefined
+      next: (elements: Node | Node[] | NodeList) => TypedObject | TypedObject[] | undefined,
     ): PortableTextTextBlock | TypedObject | undefined {
       if (!el.hasChildNodes()) {
         return undefined
@@ -149,7 +148,7 @@ export const customBlockDeserializers: Array<any> = [
         _key,
         listItem,
         children: next(el.childNodes),
-      }
+      } as PortableTextTextBlock
     },
   },
 ]

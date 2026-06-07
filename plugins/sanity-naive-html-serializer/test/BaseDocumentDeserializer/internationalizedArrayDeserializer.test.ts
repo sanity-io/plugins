@@ -1,7 +1,8 @@
 import {PortableTextBlock} from 'sanity'
+import {expect, test, describe} from 'vitest'
+
 import {internationalizedArrayArticle} from '../BaseDocumentSerializer/utils'
 import {getDeserialized, getI18nArrayItem, toPlainText} from '../helpers'
-import {expect, test, describe} from 'vitest'
 
 const deserialized = getDeserialized(internationalizedArrayArticle, 'internationalizedArray')
 
@@ -55,12 +56,12 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
 
     const origKeys = origNestedObject.content.map((block: PortableTextBlock) => block._key)
     const deserializedKeys = deserializedNestedObject.content.map(
-      (block: PortableTextBlock) => block._key
+      (block: PortableTextBlock) => block._key,
     )
 
     expect(origKeys.sort()).toEqual(deserializedKeys.sort())
     expect(toPlainText(deserializedNestedObject.content)).toEqual(
-      toPlainText(origNestedObject.content)
+      toPlainText(origNestedObject.content),
     )
   })
 })
@@ -81,21 +82,21 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- arrays
 
   test('Object in array contains accurate values in nested object', () => {
     const origTitle = origContent.find(
-      (block: Record<string, any>) => block._type === 'objectField'
+      (block: Record<string, any>) => block._type === 'objectField',
     ).objectAsField.title
     const deserializedTitle = deserializedContent.find(
-      (block: Record<string, any>) => block._type === 'objectField'
+      (block: Record<string, any>) => block._type === 'objectField',
     ).objectAsField.title
     expect(deserializedTitle).toEqual(origTitle)
 
     const origBlockText = toPlainText(
       origContent.find((block: Record<string, any>) => block._type === 'objectField').objectAsField
-        .content
+        .content,
     ).trim()
 
     const deserializedBlockText = toPlainText(
       deserializedContent.find((block: Record<string, any>) => block._type === 'objectField')
-        .objectAsField.content
+        .objectAsField.content,
     ).trim()
 
     expect(deserializedBlockText).toEqual(origBlockText)

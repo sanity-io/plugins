@@ -1,8 +1,9 @@
-import {defaultStopTypes, customSerializers} from '../BaseSerializationConfig'
+import {PortableTextTypeComponent, toHTML} from '@portabletext/to-html'
 import {SanityDocument, TypedObject, Schema} from 'sanity'
+
+import {defaultStopTypes, customSerializers} from '../BaseSerializationConfig'
 import {TranslationLevel, SerializerClosure} from '../types'
 import {fieldFilter, internationalizedArrayFilter, languageObjectFieldFilter} from './fieldFilters'
-import {PortableTextTypeComponent, toHTML} from '@portabletext/to-html'
 
 const META_FIELDS = ['_key', '_type', '_id', '_weak']
 
@@ -15,7 +16,7 @@ export const BaseDocumentSerializer: SerializerClosure = (schemas: Schema) => {
   const serializeObject = (
     obj: TypedObject,
     stopTypes: string[],
-    serializers: Record<string, any>
+    serializers: Record<string, any>,
   ) => {
     if (stopTypes.includes(obj._type)) {
       return ''
@@ -81,7 +82,6 @@ export const BaseDocumentSerializer: SerializerClosure = (schemas: Schema) => {
 
         // Array fields get filtered and its children serialized.
         else if (Array.isArray(value)) {
-          //eslint-disable-next-line no-use-before-define -- this is a recursive function
           htmlField = serializeArray(value, fieldName, stopTypes, {
             ...serializers,
             types: {...serializers.types},
@@ -132,9 +132,8 @@ export const BaseDocumentSerializer: SerializerClosure = (schemas: Schema) => {
         },
       })
     } catch (err) {
-      //eslint-disable-next-line no-console -- this is a warning
       console.warn(
-        `Had issues serializing block of type "${obj._type}". Please specify a serialization method for this block in your serialization config. Received error: ${err}`
+        `Had issues serializing block of type "${obj._type}". Please specify a serialization method for this block in your serialization config. Received error: ${err}`,
       )
     }
 
@@ -145,7 +144,7 @@ export const BaseDocumentSerializer: SerializerClosure = (schemas: Schema) => {
     fieldContent: Record<string, any>[],
     fieldName: string,
     stopTypes: string[],
-    serializers: Record<string, any>
+    serializers: Record<string, any>,
   ) => {
     // Filter for any blocks that user has indicated
     // should not be sent for translation.
@@ -183,7 +182,7 @@ export const BaseDocumentSerializer: SerializerClosure = (schemas: Schema) => {
     translationLevel: TranslationLevel = 'document',
     baseLang = 'en',
     stopTypes = defaultStopTypes,
-    serializers = customSerializers
+    serializers = customSerializers,
   ) => {
     const schema = getSchema(doc._type)
     let filteredObj: Record<string, any> = {}
@@ -207,7 +206,7 @@ export const BaseDocumentSerializer: SerializerClosure = (schemas: Schema) => {
     const serializedFields: Record<string, any> = {}
 
     for (const key in filteredObj) {
-      if (filteredObj.hasOwnProperty(key) === false) continue
+      if (!filteredObj.hasOwnProperty(key)) continue
       const value: Record<string, any> | Array<any> | string = filteredObj[key]
 
       if (typeof value === 'string') {

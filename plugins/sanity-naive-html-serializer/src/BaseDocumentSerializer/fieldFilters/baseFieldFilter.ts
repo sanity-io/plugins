@@ -9,7 +9,7 @@ const META_FIELDS = ['_key', '_type', '_id']
 export const fieldFilter = (
   obj: Record<string, any>,
   objFields: ObjectField[],
-  stopTypes: string[]
+  stopTypes: string[],
 ): TypedObject => {
   const filteredObj: TypedObject = {_type: obj._type}
 
@@ -28,7 +28,7 @@ export const fieldFilter = (
 
   const validFields = [
     ...META_FIELDS,
-    ...objFields?.filter(fieldFilterFunc)?.map((field) => field.name),
+    ...(objFields ?? []).filter(fieldFilterFunc).map((field) => field.name),
   ]
   validFields.forEach((field) => {
     if (obj[field]) {

@@ -73,14 +73,14 @@ const myCustomConfig = {
       'document',
       'en',
       defaultStopTypes,
-      myCustomSerializers
+      myCustomSerializers,
     ),
   importTranslation: (id, localeId, document) => {
     return BaseDocumentDeserializer.deserializeDocument(
       id,
       document,
       myCustomDeserializer,
-      myBlockDeserializationRules
+      myBlockDeserializationRules,
     ).then((deserialized) => documentLevelPatch(deserialized, id, localeId))
   },
 }

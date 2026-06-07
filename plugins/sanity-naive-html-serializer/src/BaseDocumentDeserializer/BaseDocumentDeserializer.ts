@@ -1,4 +1,5 @@
 import {htmlToBlocks} from '@portabletext/block-tools'
+
 import {customDeserializers, customBlockDeserializers} from '../BaseSerializationConfig'
 import {Deserializer} from '../types'
 import {blockContentType, preprocess} from './helpers'
@@ -6,7 +7,7 @@ import {blockContentType, preprocess} from './helpers'
 const deserializeArray = (
   arrayHTML: Element,
   deserializers: Record<string, any> = customDeserializers,
-  blockDeserializers = customBlockDeserializers
+  blockDeserializers = customBlockDeserializers,
 ) => {
   const output: any[] = []
   const children = Array.from(arrayHTML.children)
@@ -18,7 +19,6 @@ const deserializeArray = (
       }
       //has specific class name or data type, so it's an obj
       else if (child.className || child.getAttribute('data-type') === 'object') {
-        //eslint-disable-next-line no-use-before-define -- this is a recursive function
         deserializedObject = deserializeObject(child, deserializers, blockDeserializers)
         deserializedObject._key = child.id
       } else {
@@ -28,9 +28,8 @@ const deserializeArray = (
         deserializedObject._key = child.id
       }
     } catch (e) {
-      //eslint-disable-next-line no-console
-      console.debug(
-        `Tried to deserialize block: ${child.outerHTML} in an array but failed to identify it! Error: ${e}`
+      console.warn(
+        `Tried to deserialize block: ${child.outerHTML} in an array but failed to identify it! Error: ${e}`,
       )
     }
     output.push(deserializedObject)
@@ -41,7 +40,7 @@ const deserializeArray = (
 const deserializeObject = (
   objectHTML: Element,
   deserializers: Record<string, any> = customDeserializers,
-  blockDeserializers = customBlockDeserializers
+  blockDeserializers = customBlockDeserializers,
 ) => {
   const deserialize = deserializers.types[objectHTML.className]
   if (deserialize) {
@@ -62,13 +61,11 @@ const deserializeObject = (
     }
     //richer field, either object or array
     else if (child.getAttribute('data-level') === 'field') {
-      //eslint-disable-next-line no-use-before-define -- this is a recursive function
       const deserialized = deserializeHTML(child.outerHTML, deserializers, blockDeserializers)
       if (deserialized && Object.keys(deserialized).length) {
         output[child.className] = deserialized
       } else {
-        //eslint-disable-next-line no-console
-        console.debug(`Deserializer: Skipping empty or unreadable HTML: ${child.outerHTML}`)
+        console.warn(`Deserializer: Skipping empty or unreadable HTML: ${child.outerHTML}`)
       }
     } else if (child.getAttribute('data-type') === 'array') {
       output[child.className] = deserializeArray(child, deserializers, blockDeserializers)
@@ -80,7 +77,7 @@ const deserializeObject = (
 const deserializeHTML = (
   html: string,
   deserializers: Record<string, any>,
-  blockDeserializers: Array<any>
+  blockDeserializers: Array<any>,
 ): Record<string, any> | any[] => {
   //parent node is always div with classname of field -- get its child
   let HTMLnode = new DOMParser().parseFromString(html, 'text/html').body.children[0]
@@ -116,7 +113,7 @@ const deserializeHTML = (
 const deserializeDocument = (
   serializedDoc: string,
   deserializers: Record<string, any> = customDeserializers,
-  blockDeserializers = customBlockDeserializers
+  blockDeserializers = customBlockDeserializers,
 ): Record<string, any> => {
   const metadata: Record<string, any> = {}
   const head = new DOMParser().parseFromString(serializedDoc, 'text/html').head
@@ -132,7 +129,7 @@ const deserializeDocument = (
   const content: Record<string, any> = deserializeHTML(
     serializedDoc,
     deserializers,
-    blockDeserializers
+    blockDeserializers,
   )
 
   return {

@@ -12,12 +12,12 @@ export interface Serializer {
     translationLevel: TranslationLevel,
     baseLang?: string,
     stopTypes?: string[],
-    serializers?: Record<string, any>
+    serializers?: Record<string, any>,
   ) => SerializedDocument
   fieldFilter: (
     obj: Record<string, any>,
     objFields: ObjectField[],
-    stopTypes: string[]
+    stopTypes: string[],
   ) => TypedObject
   languageObjectFieldFilter: (document: SanityDocument, baseLang: string) => Record<string, any>
   internationalizedArrayFilter: (document: SanityDocument, baseLang: string) => Record<string, any>
@@ -25,12 +25,12 @@ export interface Serializer {
     fieldContent: Record<string, any>[],
     fieldName: string,
     stopTypes: string[],
-    serializers: Record<string, any>
+    serializers: Record<string, any>,
   ) => string
   serializeObject: (
     obj: TypedObject,
     stopTypes: string[],
-    serializers: Record<string, any>
+    serializers: Record<string, any>,
   ) => string
 }
 
@@ -40,12 +40,12 @@ export interface Deserializer {
   deserializeDocument: (
     serializedDoc: string,
     deserializers?: Record<string, any>,
-    blockDeserializers?: Array<any>
+    blockDeserializers?: Array<any>,
   ) => Record<string, any>
   deserializeHTML: (
     html: string,
     deserializers: Record<string, any>,
-    blockDeserializers: Array<any>
+    blockDeserializers: Array<any>,
   ) => Record<string, any> | any[]
 }
 
@@ -54,22 +54,22 @@ export interface Merger {
     translatedFields: Record<string, any>,
     baseDoc: SanityDocument,
     localeId: string,
-    baseLang: string
+    baseLang: string,
   ) => Record<string, any>
   internationalizedArrayMerge: (
     translatedFields: Record<string, any>,
     baseDoc: SanityDocument,
     localeId: string,
     baseLang: string,
-    localeArrayPosition: number
+    localeArrayPosition: number,
   ) => Record<string, any>
   documentLevelMerge: (
     translatedFields: Record<string, any>,
-    baseDoc: SanityDocument
+    baseDoc: SanityDocument,
   ) => Record<string, any>
   reconcileArray: (origArray: any[], translatedArray: any[]) => any[]
   reconcileObject: (
     origObject: Record<string, any>,
-    translatedObject: Record<string, any>
+    translatedObject: Record<string, any>,
   ) => Record<string, any>
 }

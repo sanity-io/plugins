@@ -1,17 +1,18 @@
+import clone from 'just-clone'
+import {PortableTextBlock, SanityDocument, TypedObject} from 'sanity'
+
 import {BaseDocumentSerializer, BaseDocumentDeserializer} from '../src'
 import {
   customSerializers,
   customDeserializers,
   customBlockDeserializers,
 } from '../src/BaseSerializationConfig'
-import {PortableTextBlock, SanityDocument, TypedObject} from 'sanity'
-import clone from 'just-clone'
 import {SerializedDocument, TranslationLevel} from '../src/types'
 import schema from './__fixtures__/schema'
 
 export const getSerialized = (
   document: SanityDocument,
-  level: TranslationLevel
+  level: TranslationLevel,
 ): SerializedDocument => {
   const serializer = BaseDocumentSerializer(schema)
   return serializer.serializeDocument(document, level)
@@ -19,7 +20,7 @@ export const getSerialized = (
 
 export const getDeserialized = (
   document: SanityDocument,
-  level: TranslationLevel
+  level: TranslationLevel,
 ): Record<string, any> => {
   const serialized = getSerialized(document, level)
   const deserializer = BaseDocumentDeserializer
@@ -121,7 +122,7 @@ export const addedBlockDeserializers = [
     deserialize(
       el: HTMLElement,
       //eslint-disable-next-line no-undef -- not picking up NodeListOf/ChildNode
-      next: (nodes: NodeListOf<ChildNode>) => any
+      next: (nodes: NodeListOf<ChildNode>) => any,
     ): TypedObject | undefined {
       if (!el.className || el.className?.toLowerCase() !== 'annotation') {
         return undefined

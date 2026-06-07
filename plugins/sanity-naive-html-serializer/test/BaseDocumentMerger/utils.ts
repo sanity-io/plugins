@@ -1,7 +1,9 @@
-import clone from 'just-clone'
-import {getDeserialized} from '../helpers'
 import {createRequire} from 'module'
+
+import clone from 'just-clone'
+
 import {internationalizedArrayArticle} from '../BaseDocumentSerializer/utils'
+import {getDeserialized} from '../helpers'
 
 const require = createRequire(import.meta.url)
 

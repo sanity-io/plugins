@@ -32,10 +32,14 @@ export const noSchemaWarning = (obj: Element): string =>
 export const preprocess = (html: string): string => {
   const intermediateBlocks = htmlToBlocks(
     `<p>${html}</p>`,
-    blockContentType
+    blockContentType,
   ) as PortableTextTextBlock<PortableTextSpan>[]
   if (!intermediateBlocks.length) {
     throw new Error(`Error parsing string '${html}'`)
   }
-  return intermediateBlocks[0].children[0].text
+  const firstChild = intermediateBlocks[0]?.children?.[0]
+  if (!firstChild || !('text' in firstChild)) {
+    throw new Error(`Error parsing string '${html}'`)
+  }
+  return firstChild.text
 }
