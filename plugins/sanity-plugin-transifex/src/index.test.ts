@@ -9,5 +9,24 @@ test('package exports', {timeout: 30_000}, async () => {
     cwd: fileURLToPath(import.meta.url),
   })
 
-  expect(manifest.exports).toMatchInlineSnapshot()
+  expect(manifest.exports).toMatchInlineSnapshot(`
+    {
+      ".": {
+        "BaseDocumentDeserializer": "object",
+        "BaseDocumentMerger": "object",
+        "BaseDocumentSerializer": "function",
+        "TransifexAdapter": "object",
+        "TranslationsTab": "function",
+        "customSerializers": "object",
+        "defaultDocumentLevelConfig": "object",
+        "defaultFieldLevelConfig": "object",
+        "defaultStopTypes": "object",
+        "documentLevelPatch": "function",
+        "fieldLevelPatch": "function",
+        "findLatestDraft": "function",
+        "legacyDocumentLevelConfig": "object",
+        "legacyDocumentLevelPatch": "function",
+      },
+    }
+  `)
 })

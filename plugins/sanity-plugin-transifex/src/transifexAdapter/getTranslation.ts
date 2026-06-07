@@ -1,10 +1,11 @@
-import {Adapter, Secrets} from 'sanity-translations-tab'
+import type {Adapter, Secrets} from 'sanity-translations-tab'
+
 import {baseTransifexUrl, getHeaders} from './helpers'
 
 const pollForFileDownloadLocation = async (
   resourceDownloadUrl: string,
   translationDownloadId: string,
-  headers: Record<string, any>
+  headers: Record<string, any>,
 ): Promise<string> => {
   const response = await fetch(`${resourceDownloadUrl}/${translationDownloadId}`, {
     headers: headers,
@@ -13,27 +14,26 @@ const pollForFileDownloadLocation = async (
   if (response.status === 500) {
     //eslint-disable-next-line no-console -- this is for developer feedback/debugging
     console.info(
-      `Transifex plugin message: Received 500 for translation download ID ${translationDownloadId}. Trying to reconnect...`
+      `Transifex plugin message: Received 500 for translation download ID ${translationDownloadId}. Trying to reconnect...`,
     )
     await new Promise((resolve) => setTimeout(resolve, 3000))
     return pollForFileDownloadLocation(resourceDownloadUrl, translationDownloadId, headers)
   } else if (response.redirected) {
     //eslint-disable-next-line no-console -- this is for developer feedback/debugging
     console.info(
-      `Transifex plugin message: Received redirect for translation download ID ${translationDownloadId}. Following redirect now for file download.`
+      `Transifex plugin message: Received redirect for translation download ID ${translationDownloadId}. Following redirect now for file download.`,
     )
     return response.url
   } else if (response.status === 200) {
     //eslint-disable-next-line no-console -- this is for developer feedback/debugging
     console.info(
-      `Transifex plugin message: Requested download location for translation download ID ${translationDownloadId}. Location is still pending, trying again.`
+      `Transifex plugin message: Requested download location for translation download ID ${translationDownloadId}. Location is still pending, trying again.`,
     )
     await new Promise((resolve) => setTimeout(resolve, 3000))
     return pollForFileDownloadLocation(resourceDownloadUrl, translationDownloadId, headers)
   }
-  //eslint-disable-next-line no-console -- this is for developer feedback/debugging
   console.error(
-    `Transifex plugin message: Requested download location for translation download ID ${translationDownloadId} but received error code ${response.status}. Waiting and trying again.`
+    `Transifex plugin message: Requested download location for translation download ID ${translationDownloadId} but received error code ${response.status}. Waiting and trying again.`,
   )
   await new Promise((resolve) => setTimeout(resolve, 3000))
   return pollForFileDownloadLocation(resourceDownloadUrl, translationDownloadId, headers)
@@ -46,7 +46,7 @@ const handleFileDownload = (url: string) => {
 export const getTranslation: Adapter['getTranslation'] = async (
   taskId: string,
   localeId: string,
-  secrets: Secrets | null
+  secrets: Secrets | null,
 ) => {
   const resourceDownloadBody = {
     data: {
@@ -84,7 +84,7 @@ export const getTranslation: Adapter['getTranslation'] = async (
   const location = await pollForFileDownloadLocation(
     resourceDownloadUrl,
     translationDownloadId,
-    headers
+    headers,
   )
   return handleFileDownload(location)
 }

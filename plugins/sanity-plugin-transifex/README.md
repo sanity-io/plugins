@@ -1,4 +1,3 @@
-
 ## Installation
 
 ```sh
@@ -6,7 +5,6 @@ npm install sanity-plugin-transifex
 ```
 
 ![2023-02-15 10 06 06](https://user-images.githubusercontent.com/3969996/219130146-8d34c5a6-f11c-4647-826d-e3c07eaf7144.gif)
-
 
 # Sanity + Transifex = 🌍
 
@@ -31,7 +29,7 @@ _Recent updates for v4:_ We've added support for the new document internationali
 npm install sanity-plugin-transifex
 ```
 
-2. Ensure the plugin has access to your Transifex secrets. You'll want to create a document that includes your project name, organization name, and a token with appropriate access. 
+2. Ensure the plugin has access to your Transifex secrets. You'll want to create a document that includes your project name, organization name, and a token with appropriate access.
 
 [Please refer to the Transifex documentation on creating a token if you don't have one already.](https://docs.transifex.com/account/authentication)
 
@@ -53,19 +51,19 @@ client.createOrReplace({
   // Replace these with your values
   organization: 'YOUR_TRANSIFEX_ORG_HERE',
   project: 'YOUR_TRANSIFEX_PROJECT_HERE',
-  token: 'YOUR_TRANSIFEX_TOKEN_HERE'
+  token: 'YOUR_TRANSIFEX_TOKEN_HERE',
 })
 ```
 
-On the command line, run the file: 
+On the command line, run the file:
 
 ```sh
 npx sanity exec populateTransifexSecrets.js --with-user-token
 ```
-  
+
 Verify that the document was created using the Vision Tool in the Studio and query `*[_id == 'transifex.secrets']`. Note: If you have multiple datasets, you'll have to do this across all of them.
 
-If the document was found in your dataset(s), delete `populateTransifexSecrets.js`. 
+If the document was found in your dataset(s), delete `populateTransifexSecrets.js`.
 
 If you have concerns about this being exposed to authenticated users of your studio, you can control access to this path with [role-based access control](https://www.sanity.io/docs/access-control).
 
@@ -140,7 +138,7 @@ There are several reasons to override these functions. More general cases are of
 
 ## Migrating to Sanity Studio v3
 
-You should not have to do anything to migrate to Sanity Studio v3. If you are using the default configs, you should be able to upgrade without any changes. If you are using custom serialization, you may need to update how `BaseDocumentSerializer` receives your schema. 
+You should not have to do anything to migrate to Sanity Studio v3. If you are using the default configs, you should be able to upgrade without any changes. If you are using custom serialization, you may need to update how `BaseDocumentSerializer` receives your schema.
 
 These are outlined in the serializer README [here](https://github.com/sanity-io/sanity-naive-html-serializer#v2-to-v3-changes).
 

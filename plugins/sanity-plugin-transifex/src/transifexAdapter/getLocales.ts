@@ -1,4 +1,5 @@
-import {Adapter, Secrets} from 'sanity-translations-tab'
+import type {Adapter, Secrets} from 'sanity-translations-tab'
+
 import {baseTransifexUrl, projOrgSlug, getHeaders} from './helpers'
 
 export const getLocales: Adapter['getLocales'] = async (secrets: Secrets | null) => {
@@ -11,9 +12,9 @@ export const getLocales: Adapter['getLocales'] = async (secrets: Secrets | null)
       .then((res) =>
         res.data.map((lang: Record<string, any>) => ({
           enabled: true,
-          description: lang.attributes.name,
-          localeId: lang.attributes.code,
-        }))
+          description: lang['attributes']['name'],
+          localeId: lang['attributes']['code'],
+        })),
       )
   }
   return locales

@@ -2,9 +2,9 @@ import {
   baseDocumentLevelConfig,
   legacyDocumentLevelConfig as baseLegacyDocumentLevelConfig,
   baseFieldLevelConfig,
-  Adapter,
-  TranslationFunctionContext,
 } from 'sanity-translations-tab'
+import type {Adapter, TranslationFunctionContext} from 'sanity-translations-tab'
+
 import {TransifexAdapter} from './transifexAdapter'
 
 export {
@@ -25,13 +25,13 @@ interface ConfigOptions {
   secretsNamespace: string | null
   exportForTranslation: (
     id: string,
-    context: TranslationFunctionContext
+    context: TranslationFunctionContext,
   ) => Promise<Record<string, any>>
   importTranslation: (
     id: string,
     localeId: string,
     doc: string,
-    context: TranslationFunctionContext
+    context: TranslationFunctionContext,
   ) => Promise<void>
 }
 const defaultDocumentLevelConfig: ConfigOptions = {

@@ -1,9 +1,9 @@
-import {Secrets} from 'sanity-translations-tab'
+import type {Secrets} from 'sanity-translations-tab'
 
 export const baseTransifexUrl = 'https://rest.api.transifex.com'
 
 export const getHeaders = (secrets: Secrets | null): Record<string, string> => ({
-  Authorization: `Bearer ${secrets?.token}`,
+  'Authorization': `Bearer ${secrets?.token}`,
   'Content-Type': 'application/vnd.api+json',
 })
 

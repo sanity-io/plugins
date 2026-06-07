@@ -1,13 +1,14 @@
-import {Adapter, Secrets} from 'sanity-translations-tab'
-import {baseTransifexUrl, projOrgSlug, getHeaders} from './helpers'
+import type {Adapter, Secrets} from 'sanity-translations-tab'
+
 import {getTranslationTask} from './getTranslationTask'
+import {baseTransifexUrl, projOrgSlug, getHeaders} from './helpers'
 
 const createResource = (doc: Record<string, any>, documentId: string, secrets: Secrets | null) => {
   const resourceCreateBody = {
     data: {
       attributes: {
         accept_translations: true,
-        name: doc.name,
+        name: doc['name'],
         slug: documentId,
       },
       relationships: {
@@ -37,16 +38,15 @@ const createResource = (doc: Record<string, any>, documentId: string, secrets: S
     .then((res) => res.data.id)
 }
 
-//@ts-ignore until we resolve the TranslationTask return type
 export const createTask: Adapter['createTask'] = async (
   documentId: string,
   document: Record<string, any>,
-  localeIds: string[],
-  secrets: Secrets | null
+  _localeIds: string[],
+  secrets: Secrets | null,
 ) => {
   let resourceId = await fetch(
     `${baseTransifexUrl}/resources/${projOrgSlug(secrets)}:r:${documentId}`,
-    {headers: getHeaders(secrets)}
+    {headers: getHeaders(secrets)},
   )
     .then((res) => res.json())
     .then((res) => (res.data ? res.data.id : null))
@@ -59,7 +59,7 @@ export const createTask: Adapter['createTask'] = async (
   const resourceUploadBody = {
     data: {
       attributes: {
-        content: document.content,
+        content: document['content'],
         content_encoding: 'text',
       },
       relationships: {

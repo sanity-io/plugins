@@ -1,9 +1,9 @@
-import {Adapter} from 'sanity-translations-tab'
+import type {Adapter} from 'sanity-translations-tab'
 
-import {getLocales} from './getLocales'
-import {getTranslationTask} from './getTranslationTask'
-import {getTranslation} from './getTranslation'
 import {createTask} from './createTask'
+import {getLocales} from './getLocales'
+import {getTranslation} from './getTranslation'
+import {getTranslationTask} from './getTranslationTask'
 
 export const TransifexAdapter: Adapter = {
   getLocales,
