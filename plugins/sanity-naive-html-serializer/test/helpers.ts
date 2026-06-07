@@ -28,8 +28,8 @@ export const getDeserialized = (
 }
 
 export const getValidFields = (field: Record<string, any>): Record<string, any> => {
-  const invalidFields = ['_type', '_key']
-  return Object.keys(field).filter((key) => !invalidFields.includes(key))
+  const invalidFields = new Set(['_type', '_key'])
+  return Object.keys(field).filter((key) => !invalidFields.has(key))
 }
 
 export const toPlainText = (blocks: PortableTextBlock[]): string => {
@@ -121,7 +121,6 @@ export const addedBlockDeserializers = [
   {
     deserialize(
       el: HTMLElement,
-      //eslint-disable-next-line no-undef -- not picking up NodeListOf/ChildNode
       next: (nodes: NodeListOf<ChildNode>) => any,
     ): TypedObject | undefined {
       if (!el.className || el.className?.toLowerCase() !== 'annotation') {

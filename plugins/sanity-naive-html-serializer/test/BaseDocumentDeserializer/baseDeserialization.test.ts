@@ -1,11 +1,8 @@
-import {readFileSync} from 'fs'
+import {readFileSync} from 'node:fs'
+import {dirname, join} from 'node:path'
+import {fileURLToPath} from 'node:url'
 
-import {
-  PortableTextBlock,
-  PortableTextObject,
-  PortableTextSpan,
-  PortableTextTextBlock,
-} from 'sanity'
+import {PortableTextBlock, PortableTextTextBlock} from 'sanity'
 import {beforeEach, expect, test, vi} from 'vitest'
 
 import {
@@ -14,6 +11,7 @@ import {
   customBlockDeserializers,
   defaultStopTypes,
 } from '../../src'
+import customStyles from '../__fixtures__/customStyles.json'
 import {
   annotationAndInlineBlocks,
   documentLevelArticle,
@@ -28,7 +26,7 @@ import {
   getDeserialized,
 } from '../helpers'
 
-const customStyles = require('../__fixtures__/customStyles')
+const fixturesDir = join(dirname(fileURLToPath(import.meta.url)), '../__fixtures__')
 
 let mockTestKey = 0
 
@@ -42,12 +40,10 @@ vi.mock('@portabletext/block-tools', async () => {
     htmlToBlocks: (html: string, blockContentType: any, options: any) => {
       const blocks = originalModule.htmlToBlocks(html, blockContentType, options)
       const newBlocks = blocks.map((block) => {
-        const newChildren = (
-          block as unknown as PortableTextTextBlock<PortableTextSpan | PortableTextObject>
-        ).children.map((child) => {
-          return {...child, _key: `randomKey-${mockTestKey++}`}
+        const newChildren = (block as unknown as PortableTextTextBlock).children.map((child) => {
+          return Object.assign(child, {_key: `randomKey-${mockTestKey++}`})
         })
-        return {...block, children: newChildren, _key: `randomKey-${mockTestKey++}`}
+        return Object.assign(block, {children: newChildren, _key: `randomKey-${mockTestKey++}`})
       })
       return newBlocks
     },
@@ -109,7 +105,6 @@ test('Custom deserialization should manifest at all levels', () => {
 })
 
 test('Content with custom styles deserializes correctly and maintains style', () => {
-  //eslint-disable-next-line no-empty-function -- unhandled style throws a warn -- ignore it in this case
   vi.spyOn(console, 'warn').mockImplementation(() => {})
 
   const customStyledDocument = {
@@ -168,7 +163,7 @@ test('Handled inline objects should be accurately deserialized', () => {
     addedBlockDeserializers,
   )
 
-  const getInlineObj = (content: PortableTextBlock[], level: number | undefined = undefined) => {
+  const getInlineObj = (content: PortableTextBlock[], level?: number | undefined) => {
     let child: Record<string, any> = {}
     const blocks = content.filter((block: PortableTextBlock) => {
       if (level) {
@@ -303,10 +298,9 @@ test('Deserialized list items should preserve level, style and tag', () => {
  * MESSY INPUT
  */
 test('&nbsp; whitespace should not be escaped', () => {
-  //eslint-disable-next-line no-empty-function -- unhandled style throws a warn -- ignore it in this case
   vi.spyOn(console, 'debug').mockImplementation(() => {})
 
-  const content = readFileSync('test/__fixtures__/messy-html.html', {
+  const content = readFileSync(join(fixturesDir, 'messy-html.html'), {
     encoding: 'utf-8',
   })
   const result = BaseDocumentDeserializer.deserializeDocument(content)
@@ -318,7 +312,6 @@ test('&nbsp; whitespace should not be escaped', () => {
  * V2 functionality -- be able to operate without a strict schema
  */
 test('Content with anonymous inline objects deserializes all fields, at any depth', () => {
-  //eslint-disable-next-line no-empty-function -- unhandled style throws a warn -- ignore it in this case
   vi.spyOn(console, 'debug').mockImplementation(() => {})
 
   const serialized = BaseDocumentSerializer(inlineSchema).serializeDocument(

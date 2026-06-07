@@ -5,6 +5,7 @@
   "compilerOptions": {
     "verbatimModuleSyntax": false,
     "noPropertyAccessFromIndexSignature": false,
+    "resolveJsonModule": true,
     "types": ["node"]
   }
 }

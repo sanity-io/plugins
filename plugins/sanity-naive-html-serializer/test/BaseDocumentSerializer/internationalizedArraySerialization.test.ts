@@ -20,11 +20,11 @@ test('Global test of working internationalized array-level functionality and sna
 test('String and text types get serialized correctly at top-level -- internationalized array', () => {
   const titleObj = findByClass(docTree.children, 'title')
   const englishTitleHTML = findById(titleObj!.children, 'en')
-  const englishTitleValueHTML = findByClass(englishTitleHTML?.children!, 'value')
+  const englishTitleValueHTML = findByClass(englishTitleHTML?.children, 'value')
 
   const snippetObj = findByClass(docTree.children, 'snippet')
   const englishSnippetHTML = findById(snippetObj!.children, 'en')
-  const englishSnippetValueHTML = findByClass(englishSnippetHTML?.children!, 'value')
+  const englishSnippetValueHTML = findByClass(englishSnippetHTML?.children, 'value')
 
   expect(englishTitleValueHTML?.innerHTML).toEqual(
     getI18nArrayItem(internationalizedArrayArticle.title, 'en')?.value,
@@ -56,7 +56,7 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
   test('Nested object in object contains all serializable fields -- internationalized array', () => {
     const nestedObject = findByClass(objectField!.children, 'objectAsField')!.children[0]
     const fieldNames = getValidFields(origObjectField.objectAsField)
-    const foundFieldNames = Array.from(nestedObject!.children).map((child) => child.className)
+    const foundFieldNames = Array.from(nestedObject.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
   })
 
@@ -131,8 +131,8 @@ test('Nested locale fields make it to serialization, but only base lang', () => 
   const origSlices = internationalizedArrayArticle.slices[0].content
   const engSlice = getI18nArrayItem(origSlices, 'en').value
   const frenchSlice = getI18nArrayItem(origSlices, 'fr_FR').value
-  //@ts-ignore
+  //@ts-expect-error
   expect(slices?.innerHTML).toContain(engSlice[0]!.children![0].text)
-  //@ts-ignore
+  //@ts-expect-error
   expect(slices?.innerHTML).not.toContain(frenchSlice[0]!.children![0].text)
 })

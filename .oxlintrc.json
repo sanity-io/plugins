@@ -15,7 +15,8 @@
     "**/.sanity/*",
     "**/dist/*",
     "**/sanity.types.ts",
-    "turbo/generators/config.ts"
+    "turbo/generators/config.ts",
+    "plugins/sanity-naive-html-serializer/test/**"
   ],
   "options": {
     "typeAware": true,
@@ -124,6 +125,13 @@
     },
     {
       "files": ["plugins/sanity-naive-html-serializer/src/**/*.ts"],
+      "rules": {
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off"
+      }
+    },
+    {
+      "files": ["plugins/sanity-naive-html-serializer/test/**/*.ts"],
       "rules": {
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off"

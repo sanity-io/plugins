@@ -134,7 +134,6 @@ test('Expect custom stop types to be absent at all levels', () => {
  */
 
 test('Unhandled inline objects and annotations should not hinder translation flows', () => {
-  //eslint-disable-next-line no-empty-function -- we're just silencing the console.warn
   vi.spyOn(console, 'warn').mockImplementation(() => {})
 
   const inlineDocument = {
@@ -267,16 +266,16 @@ test('Content with anonymous inline objects serializes all fields, at any depth'
   )
   const docTree = getHTMLNode(serialized).body.children[0]
   const tabs = findByClass(docTree.children, 'tabs')!.children[0]
-  const config = findByClass(tabs!.children, 'config')!.children[0]
+  const config = findByClass(tabs.children, 'config')!.children[0]
   const fieldNames = getValidFields(inlineDocumentLevelArticle.tabs.config)
-  const foundFieldNames = Array.from(config!.children).map((child) => child.className)
+  const foundFieldNames = Array.from(config.children).map((child) => child.className)
   expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
-  const nestedObjHTML = findByClass(config!.children, 'objectAsField')!.children[0]
+  const nestedObjHTML = findByClass(config.children, 'objectAsField')!.children[0]
   const nestedObj = inlineDocumentLevelArticle.tabs.config.objectAsField
-  const nestedFieldNames = Array.from(nestedObjHTML!.children).map((child) => child.className)
+  const nestedFieldNames = Array.from(nestedObjHTML.children).map((child) => child.className)
   expect(nestedFieldNames.sort()).toEqual(getValidFields(nestedObj).sort())
 
-  const content = findByClass(tabs!.children, 'content')!
+  const content = findByClass(tabs.children, 'content')!
   const keysHTML = Array.from(content.children).map((child) => child.id)
   const keysJSON = inlineDocumentLevelArticle.tabs.content.map((child: any) => child._key)
   expect(keysHTML.sort()).toEqual(keysJSON.sort())

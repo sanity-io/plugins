@@ -1,14 +1,11 @@
-import {createRequire} from 'module'
-
 import clone from 'just-clone'
 
-import {internationalizedArrayArticle} from '../BaseDocumentSerializer/utils'
+import {
+  documentLevelArticle,
+  fieldLevelArticle,
+  internationalizedArrayArticle,
+} from '../BaseDocumentSerializer/utils'
 import {getDeserialized} from '../helpers'
-
-const require = createRequire(import.meta.url)
-
-const documentLevelArticle = require('../__fixtures__/documentLevelArticle.json')
-const fieldLevelArticle = require('../__fixtures__/fieldLevelArticle.json')
 
 export const getNewObject = (): Record<string, any> => {
   const newObject = {

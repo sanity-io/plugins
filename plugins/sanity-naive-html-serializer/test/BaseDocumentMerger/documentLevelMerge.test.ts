@@ -1,13 +1,8 @@
-import {createRequire} from 'module'
-
 import {expect, test} from 'vitest'
 
 import {BaseDocumentMerger} from '../../src'
+import {documentLevelArticle} from '../BaseDocumentSerializer/utils'
 import {getNewDocument, getNewObject} from './utils'
-
-const require = createRequire(import.meta.url)
-
-const documentLevelArticle = require('../__fixtures__/documentLevelArticle.json')
 
 const newDocument = getNewDocument()
 const mergedDocument = BaseDocumentMerger.documentLevelMerge(newDocument, documentLevelArticle)

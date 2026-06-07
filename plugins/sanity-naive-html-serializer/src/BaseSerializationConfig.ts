@@ -25,7 +25,7 @@ export const defaultStopTypes = [
   'code',
 ]
 
-export const defaultPortableTextBlockStyles: Record<
+const defaultPortableTextBlockStyles: Record<
   PortableTextBlockStyle,
   PortableTextBlockComponent | undefined
 > = {

@@ -31,14 +31,14 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
 
   test('Top-level nested objects contain all serializable fields -- document level', () => {
     const fieldNames = getValidFields(documentLevelArticle.config)
-    const foundFieldNames = Array.from(objectField!.children).map((child) => child.className)
+    const foundFieldNames = Array.from(objectField.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
   })
 
   test('Nested object in object contains all serializable fields -- document level', () => {
-    const nestedObject = findByClass(objectField!.children, 'objectAsField')!.children[0]
+    const nestedObject = findByClass(objectField.children, 'objectAsField')!.children[0]
     const fieldNames = getValidFields(documentLevelArticle.config.objectAsField)
-    const foundFieldNames = Array.from(nestedObject!.children).map((child) => child.className)
+    const foundFieldNames = Array.from(nestedObject.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
   })
 
@@ -51,7 +51,7 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
   })
 
   test('Nested object in an object contains accurate values -- document level', () => {
-    const nestedObject = findByClass(objectField!.children, 'objectAsField')!.children[0]
+    const nestedObject = findByClass(objectField.children, 'objectAsField')!.children[0]
     const title = documentLevelArticle.config.objectAsField.title
     const blockText = toPlainText(documentLevelArticle.config.objectAsField.content)
 

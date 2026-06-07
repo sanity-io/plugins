@@ -1,17 +1,21 @@
-import {createRequire} from 'module'
-
 import {SerializedDocument} from '../../src'
-
-const require = createRequire(import.meta.url)
+import annotationAndInlineBlocks from '../__fixtures__/annotationAndInlineBlocks.json'
+import documentLevelArticle from '../__fixtures__/documentLevelArticle.json'
+import fieldLevelArticle from '../__fixtures__/fieldLevelArticle.json'
+import inlineDocumentLevelArticle from '../__fixtures__/inlineDocumentLevelArticle.json'
+import internationalizedArrayArticle from '../__fixtures__/internationalizedArrayArticle.json'
+import nestedLanguageFields from '../__fixtures__/nestedLanguageFields.json'
 
 export {default as inlineSchema} from '../__fixtures__/inlineSchema'
 export {default as schema} from '../__fixtures__/schema'
-export const documentLevelArticle = require('../__fixtures__/documentLevelArticle.json')
-export const inlineDocumentLevelArticle = require('../__fixtures__/inlineDocumentLevelArticle.json')
-export const fieldLevelArticle = require('../__fixtures__/fieldLevelArticle.json')
-export const annotationAndInlineBlocks = require('../__fixtures__/annotationAndInlineBlocks.json')
-export const nestedLanguageFields = require('../__fixtures__/nestedLanguageFields.json')
-export const internationalizedArrayArticle = require('../__fixtures__/internationalizedArrayArticle.json')
+export {
+  annotationAndInlineBlocks,
+  documentLevelArticle,
+  fieldLevelArticle,
+  inlineDocumentLevelArticle,
+  internationalizedArrayArticle,
+  nestedLanguageFields,
+}
 
 export const getHTMLNode = (serialized: SerializedDocument): Document => {
   const htmlString = serialized.content

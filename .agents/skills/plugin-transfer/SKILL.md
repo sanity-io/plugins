@@ -38,6 +38,51 @@ Do not copy standalone-repo-only setup such as custom root CI/build/lint/test co
 5. Add a changeset with a **major** bump for the transferred plugin (see [Changesets](#changesets)).
 6. Update the root `README.md` plugins table with the transferred plugin.
 7. Add **Maintainer follow-up** TODOs to the transfer PR description (see [Maintainer follow-up](#maintainer-follow-up)).
+8. Run the full pre-PR verification suite (see [Before Submitting a PR](#before-submitting-a-pr)).
+
+## Before Submitting a PR
+
+Run these commands in order. **All must pass** or CI will fail:
+
+```bash
+# 1. Format code
+pnpm format
+
+# 2. Check for unused exports, dependencies, and catalog entries
+pnpm knip
+
+# 3. Run linters (includes TypeScript type checking)
+pnpm lint
+
+# 4. Build all packages
+pnpm build
+
+# 5. Run tests
+pnpm test run
+```
+
+### Knip
+
+The copy-plugin generator adds a workspace entry to `knip.jsonc`. After transfer, fix any knip issues in the plugin:
+
+- Remove unused exports (e.g. helpers only used internally should not be exported).
+- Remove dead code flagged as unused.
+
+Catalog warnings for `dev/*` workspaces (e.g. `@sanity/vision` used only by `dev/test-studio`) are expected—the root `knip.jsonc` sets `"catalog": "warn"` for those.
+
+### Lint
+
+Transferred plugins may carry legacy patterns that fail monorepo lint rules. Fix what you can; for remaining issues in legacy `src/` or `test/` code, add targeted `.oxlintrc.json` overrides or `ignorePatterns` rather than disabling rules repo-wide.
+
+Common legacy fixes:
+
+- Replace `createRequire` / `require()` with ESM `import` (add `"resolveJsonModule": true` to the plugin `tsconfig.json` for JSON imports).
+- Use `import.meta.url` with `fileURLToPath` instead of `__dirname` in tests.
+- Remove stale `eslint-disable` comments that oxlint reports as unused.
+
+### Tests
+
+Vitest runs against built `dist/` output (`pretest` builds packages automatically). Fix path resolution and module import issues in legacy test files. The plugin's own `test/` suite (if present) runs via the root vitest config when included in the plugin workspace.
 
 ## Changesets
 
@@ -103,4 +148,5 @@ Example for `sanity-naive-html-serializer`:
 ## Anything Else To Consider
 
 - Review copied dependencies and peer dependencies carefully.
-- Run `pnpm build`, `pnpm test`, and `pnpm dev` to verify migration quality.
+- Run the [Before Submitting a PR](#before-submitting-a-pr) verification suite—not just `pnpm build` and `pnpm dev`.
+- Use `pnpm dev` to manually verify the test-studio example after the automated checks pass.

@@ -40,7 +40,7 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
   test('Nested object in object contains all serializable fields -- field Level', () => {
     const nestedObject = findByClass(objectField!.children, 'objectAsField')!.children[0]
     const fieldNames = getValidFields(fieldLevelArticle.config.en.objectAsField)
-    const foundFieldNames = Array.from(nestedObject!.children).map((child) => child.className)
+    const foundFieldNames = Array.from(nestedObject.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
   })
 
