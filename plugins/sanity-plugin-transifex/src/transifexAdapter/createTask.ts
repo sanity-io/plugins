@@ -3,7 +3,11 @@ import type {Adapter, Secrets} from 'sanity-translations-tab'
 import {getTranslationTask} from './getTranslationTask'
 import {baseTransifexUrl, projOrgSlug, getHeaders} from './helpers'
 
-const createResource = (doc: Record<string, any>, documentId: string, secrets: Secrets | null) => {
+const createResource = async (
+  doc: Record<string, any>,
+  documentId: string,
+  secrets: Secrets | null,
+) => {
   const resourceCreateBody = {
     data: {
       attributes: {
@@ -29,13 +33,24 @@ const createResource = (doc: Record<string, any>, documentId: string, secrets: S
     },
   }
 
-  return fetch(`${baseTransifexUrl}/resources`, {
+  const response = await fetch(`${baseTransifexUrl}/resources`, {
     headers: getHeaders(secrets),
     method: 'POST',
     body: JSON.stringify(resourceCreateBody),
   })
-    .then((res) => res.json())
-    .then((res) => res.data.id)
+
+  if (!response.ok) {
+    throw Error(`Failed to create Transifex resource. Status: ${response.status}`)
+  }
+
+  const res = await response.json()
+  const resourceId = res?.data?.id
+
+  if (!resourceId) {
+    throw Error('Failed to create Transifex resource. Missing resource id in response.')
+  }
+
+  return resourceId
 }
 
 export const createTask: Adapter['createTask'] = async (
@@ -48,12 +63,20 @@ export const createTask: Adapter['createTask'] = async (
     throw Error('Missing documentId or Transifex secrets.')
   }
 
-  let resourceId = await fetch(
+  const resourceResponse = await fetch(
     `${baseTransifexUrl}/resources/${projOrgSlug(secrets)}:r:${documentId}`,
     {headers: getHeaders(secrets)},
   )
-    .then((res) => res.json())
-    .then((res) => (res.data ? res.data.id : null))
+  let resourceId: string | null = null
+
+  if (resourceResponse.status === 404) {
+    resourceId = null
+  } else if (!resourceResponse.ok) {
+    throw Error(`Failed to retrieve Transifex resource. Status: ${resourceResponse.status}`)
+  } else {
+    const resource = await resourceResponse.json()
+    resourceId = resource.data ? resource.data.id : null
+  }
 
   if (!resourceId) {
     resourceId = await createResource(document, documentId, secrets)
@@ -78,9 +101,15 @@ export const createTask: Adapter['createTask'] = async (
     },
   }
 
-  return fetch(resourceUploadUrl, {
+  const uploadResponse = await fetch(resourceUploadUrl, {
     method: 'POST',
     body: JSON.stringify(resourceUploadBody),
     headers: getHeaders(secrets),
-  }).then(() => getTranslationTask(documentId, secrets))
+  })
+
+  if (!uploadResponse.ok) {
+    throw Error(`Failed to upload resource strings to Transifex. Status: ${uploadResponse.status}`)
+  }
+
+  return getTranslationTask(documentId, secrets)
 }

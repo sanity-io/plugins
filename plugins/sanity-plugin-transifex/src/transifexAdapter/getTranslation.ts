@@ -6,10 +6,18 @@ const pollForFileDownloadLocation = async (
   resourceDownloadUrl: string,
   translationDownloadId: string,
   headers: Record<string, any>,
+  retryCount = 0,
+  maxRetries = 20,
 ): Promise<string> => {
   const response = await fetch(`${resourceDownloadUrl}/${translationDownloadId}`, {
     headers: headers,
   })
+
+  if (retryCount >= maxRetries) {
+    throw Error(
+      `Failed to retrieve download location for translation download ID ${translationDownloadId} after ${maxRetries} retries.`,
+    )
+  }
 
   if (response.status === 500) {
     //eslint-disable-next-line no-console -- this is for developer feedback/debugging
@@ -17,7 +25,13 @@ const pollForFileDownloadLocation = async (
       `Transifex plugin message: Received 500 for translation download ID ${translationDownloadId}. Trying to reconnect...`,
     )
     await new Promise((resolve) => setTimeout(resolve, 3000))
-    return pollForFileDownloadLocation(resourceDownloadUrl, translationDownloadId, headers)
+    return pollForFileDownloadLocation(
+      resourceDownloadUrl,
+      translationDownloadId,
+      headers,
+      retryCount + 1,
+      maxRetries,
+    )
   } else if (response.redirected) {
     //eslint-disable-next-line no-console -- this is for developer feedback/debugging
     console.info(
@@ -30,7 +44,13 @@ const pollForFileDownloadLocation = async (
       `Transifex plugin message: Requested download location for translation download ID ${translationDownloadId}. Location is still pending, trying again.`,
     )
     await new Promise((resolve) => setTimeout(resolve, 3000))
-    return pollForFileDownloadLocation(resourceDownloadUrl, translationDownloadId, headers)
+    return pollForFileDownloadLocation(
+      resourceDownloadUrl,
+      translationDownloadId,
+      headers,
+      retryCount + 1,
+      maxRetries,
+    )
   } else if (response.status === 401 || response.status === 403) {
     throw Error(
       `Failed to retrieve download location for translation download ID ${translationDownloadId}. Status: ${response.status}`,
@@ -40,7 +60,13 @@ const pollForFileDownloadLocation = async (
     `Transifex plugin message: Requested download location for translation download ID ${translationDownloadId} but received error code ${response.status}. Waiting and trying again.`,
   )
   await new Promise((resolve) => setTimeout(resolve, 3000))
-  return pollForFileDownloadLocation(resourceDownloadUrl, translationDownloadId, headers)
+  return pollForFileDownloadLocation(
+    resourceDownloadUrl,
+    translationDownloadId,
+    headers,
+    retryCount + 1,
+    maxRetries,
+  )
 }
 
 const handleFileDownload = (url: string) => {
@@ -80,13 +106,24 @@ export const getTranslation: Adapter['getTranslation'] = async (
   }
 
   const resourceDownloadUrl = `${baseTransifexUrl}/resource_translations_async_downloads`
-  const translationDownloadId = await fetch(resourceDownloadUrl, {
+  const downloadResponse = await fetch(resourceDownloadUrl, {
     headers: getHeaders(secrets),
     method: 'POST',
     body: JSON.stringify(resourceDownloadBody),
   })
-    .then((res) => res.json())
-    .then((res) => res.data.id)
+
+  if (!downloadResponse.ok) {
+    throw Error(
+      `Failed to create translation download request in Transifex. Status: ${downloadResponse.status}`,
+    )
+  }
+
+  const download = await downloadResponse.json()
+  const translationDownloadId = download?.data?.id
+
+  if (!translationDownloadId) {
+    throw Error('Failed to create translation download request in Transifex. Missing download id.')
+  }
 
   const headers = getHeaders(secrets)
   const location = await pollForFileDownloadLocation(
