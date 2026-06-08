@@ -32,6 +32,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
+    "sanity-naive-html-serializer": "workspace:*",
     "sanity-plugin-aprimo": "workspace:*",
     "sanity-plugin-asset-source-unsplash": "workspace:*",
     "sanity-plugin-bynder-input": "workspace:*",

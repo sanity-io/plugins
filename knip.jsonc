@@ -200,5 +200,9 @@
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
+    "plugins/sanity-naive-html-serializer": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
   },
 }
