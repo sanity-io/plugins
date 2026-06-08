@@ -67,14 +67,14 @@ If the document was found in your dataset(s), delete `populateTransifexSecrets.j
 
 If you have concerns about this being exposed to authenticated users of your studio, you can control access to this path with [role-based access control](https://www.sanity.io/docs/access-control).
 
-4. Get the Transifex tab on your desired document type, using whatever pattern you like. You'll use the [desk structure](https://www.sanity.io/docs/structure-builder-introduction) for this. The options for translation will be nested under this desired document type's views. Here's an example:
+3. Get the Transifex tab on your desired document type, using whatever pattern you like. You'll use the [desk structure](https://www.sanity.io/docs/structure-builder-introduction) for this. The options for translation will be nested under this desired document type's views. Here's an example:
 
 ```javascript
 import {DefaultDocumentNodeResolver} from 'sanity/desk'
 //...your other desk structure imports...
 import {TranslationsTab, defaultDocumentLevelConfig} from 'sanity-plugin-transifex'
 //if you are using field-level translations, you can import the field-level config instead:
-//import {TranslationsTab, defaultFieldLevelConfig} from 'sanity-plugin-studio-smartling'
+//import {TranslationsTab, defaultFieldLevelConfig} from 'sanity-plugin-transifex'
 //if you're not sure which, please look at the document-level and field-level sections below
 
 export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
