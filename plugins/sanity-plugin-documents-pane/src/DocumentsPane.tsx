@@ -38,7 +38,7 @@ export default function DocumentsPane(props: DocumentsPaneProps) {
     document,
   })
 
-  if (!paramValues || Object.keys(paramValues).length === 0) {
+  if (!paramValues) {
     return (
       <Stack gap={5} padding={4}>
         <Feedback>

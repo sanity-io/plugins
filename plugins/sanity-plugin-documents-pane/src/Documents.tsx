@@ -71,7 +71,7 @@ export default function Documents(props: DocumentsProps) {
   if (error) {
     return (
       <Stack gap={5} padding={4}>
-        <Feedback>There was en error performing this query</Feedback>
+        <Feedback>There was an error performing this query</Feedback>
         {debug ? <Debug params={params} query={query} /> : null}
       </Stack>
     )

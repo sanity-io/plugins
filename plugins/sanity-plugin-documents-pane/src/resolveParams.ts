@@ -10,7 +10,9 @@ interface ResolveParamsOptions {
 
 type ResolveParamsReturn = undefined | Record<string, string>
 
-function defaultResolver(options: ResolveParamsOptions): Record<string, string | undefined> {
+function defaultResolver(
+  options: ResolveParamsOptions,
+): Record<string, string | undefined> | undefined {
   const {params, document, useDraft} = options
 
   if (!params || typeof params === 'function') {
@@ -20,7 +22,7 @@ function defaultResolver(options: ResolveParamsOptions): Record<string, string |
   const doc = useDraft ? document.displayed : document.published
 
   if (!doc) {
-    return {}
+    return undefined
   }
 
   const resolved: Record<string, string | undefined> = {}

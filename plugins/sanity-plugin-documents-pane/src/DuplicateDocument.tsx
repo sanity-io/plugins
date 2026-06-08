@@ -2,7 +2,7 @@ import {CopyIcon} from '@sanity/icons'
 import {Box, Button, Text, Tooltip} from '@sanity/ui'
 import {fromString as pathFromString} from '@sanity/util/paths'
 import {uuid} from '@sanity/uuid'
-import {useCallback, useState} from 'react'
+import {useCallback, useState, type MouseEvent} from 'react'
 import {filter, firstValueFrom} from 'rxjs'
 import {
   useDocumentOperation,
@@ -34,7 +34,7 @@ export default function DuplicateDocument(props: DuplicateDocumentProps) {
   const {t} = useTranslation(structureLocaleNamespace)
 
   const handle = useCallback(
-    async (event: React.MouseEvent<HTMLElement>) => {
+    async (event: MouseEvent<HTMLElement>) => {
       event.stopPropagation()
       const dupeId = uuid()
 
