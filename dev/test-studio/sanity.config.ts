@@ -13,6 +13,7 @@ import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
+import {documentsPaneExample} from '#documents-pane'
 import {googleTranslateExample} from '#google-translate'
 import {iframePaneExample} from '#iframe-pane'
 import {
@@ -59,6 +60,7 @@ export default defineConfig([
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
   createWorkspace({name: 'utils-example', title: 'Utils Example', plugins: [utilsExample()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
+  createWorkspace({name: 'documents-pane-example', plugins: [documentsPaneExample()]}),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
   createWorkspace({
     name: 'orderable-document-list-example',
