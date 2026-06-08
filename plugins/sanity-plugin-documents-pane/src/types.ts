@@ -1,22 +1,24 @@
-import React from 'react'
-import {ListenQueryOptions} from 'sanity'
-import {UserViewComponent} from 'sanity/structure'
+import type {ComponentProps} from 'react'
+import type {ListenQueryOptions} from 'sanity'
+import type {UserViewComponent} from 'sanity/structure'
 
-export type DocumentVersionsCollection = React.ComponentProps<UserViewComponent>['document']
+export type DocumentVersionsCollection = ComponentProps<UserViewComponent>['document']
 
-// eslint-disable-next-line prettier/prettier
-export type DocumentsPaneQueryParams = (params: {
+export type DocumentsPaneQueryParamsObject = Record<string, string>
+
+export type DocumentsPaneQueryParamsFn = (params: {
   document: DocumentVersionsCollection
-}) => {[key: string]: string} | {[key: string]: string}
+}) => Record<string, string> | null | undefined
+
+export type DocumentsPaneQueryParams = DocumentsPaneQueryParamsObject | DocumentsPaneQueryParamsFn
 
 export interface DocumentsPaneInitialValueTemplate {
   schemaType: string
   template?: string
-  parameters?: {[key: string]: any}
+  parameters?: Record<string, string | number | boolean>
   title: string
 }
 
-// eslint-disable-next-line prettier/prettier
 export type DocumentsPaneInitialValueTemplateResolver = (params: {
   document: DocumentVersionsCollection
 }) => DocumentsPaneInitialValueTemplate[]
@@ -31,4 +33,4 @@ export type DocumentsPaneOptions = {
   duplicate?: boolean
 }
 
-export type DocumentsPaneProps = React.ComponentProps<UserViewComponent<DocumentsPaneOptions>>
+export type DocumentsPaneProps = ComponentProps<UserViewComponent<DocumentsPaneOptions>>

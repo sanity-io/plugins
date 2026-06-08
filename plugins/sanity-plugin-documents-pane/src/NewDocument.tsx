@@ -1,23 +1,23 @@
-import {Button, Card, Flex} from '@sanity/ui'
-import React from 'react'
-import {DocumentsPaneInitialValueTemplate} from './types'
 import {ComposeIcon} from '@sanity/icons'
-import {usePaneRouter} from 'sanity/structure'
+import {Button, Card, Flex} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
+import {usePaneRouter} from 'sanity/structure'
+
+import type {DocumentsPaneInitialValueTemplate} from './types'
 
 interface NewDocumentProps {
   initialValueTemplates: DocumentsPaneInitialValueTemplate[]
 }
 
 export default function NewDocument(props: NewDocumentProps) {
-  const {initialValueTemplates = []} = props
+  const {initialValueTemplates} = props
   const {ReferenceChildLink} = usePaneRouter()
 
   if (!initialValueTemplates.length) return null
 
   return (
     <Card borderBottom padding={2}>
-      <Flex justify="flex-end" gap={1}>
+      <Flex gap={1} justify="flex-end">
         {initialValueTemplates.map((template) => {
           if (!template.template) {
             return null
@@ -26,11 +26,14 @@ export default function NewDocument(props: NewDocumentProps) {
             <ReferenceChildLink
               documentId={uuid()}
               documentType={template.schemaType}
-              template={{id: template.template, params: template.parameters}}
-              parentRefPath={[]}
               key={`${template.schemaType}-${template.template}`}
+              parentRefPath={[]}
+              template={{
+                id: template.template,
+                params: template.parameters ?? {},
+              }}
             >
-              <Button icon={<ComposeIcon />} text={template.title} mode="bleed" as="span" />
+              <Button as="span" icon={ComposeIcon} mode="bleed" text={template.title} />
             </ReferenceChildLink>
           )
         })}

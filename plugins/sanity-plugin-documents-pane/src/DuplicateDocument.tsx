@@ -1,25 +1,24 @@
-import {Box, Button, Tooltip, Text} from '@sanity/ui'
-import React, {useState, useCallback} from 'react'
-import {filter, firstValueFrom} from 'rxjs'
 import {CopyIcon} from '@sanity/icons'
+import {Box, Button, Text, Tooltip} from '@sanity/ui'
+import {fromString as pathFromString} from '@sanity/util/paths'
+import {uuid} from '@sanity/uuid'
+import {useCallback, useState} from 'react'
+import {filter, firstValueFrom} from 'rxjs'
 import {
   useDocumentOperation,
   useDocumentPairPermissions,
   useDocumentStore,
   useTranslation,
 } from 'sanity'
-import {usePaneRouter} from 'sanity/structure'
-import {uuid} from '@sanity/uuid'
-import {fromString as pathFromString} from '@sanity/util/paths'
-
 import {structureLocaleNamespace} from 'sanity/structure'
+import {usePaneRouter} from 'sanity/structure'
 
-interface NewDocumentProps {
+interface DuplicateDocumentProps {
   id: string
   type: string
 }
 
-export default function DuplicateDocument(props: NewDocumentProps) {
+export default function DuplicateDocument(props: DuplicateDocumentProps) {
   const {id, type} = props
 
   const documentStore = useDocumentStore()
@@ -41,33 +40,31 @@ export default function DuplicateDocument(props: NewDocumentProps) {
 
       setDuplicating(true)
 
-      // set up the listener before executing
       const duplicateSuccess = firstValueFrom(
         documentStore.pair
           .operationEvents(id, type)
-          .pipe(filter((e) => e.op === 'duplicate' && e.type === 'success'))
+          .pipe(filter((e) => e.op === 'duplicate' && e.type === 'success')),
       )
       duplicate.execute(dupeId)
 
-      // only navigate to the duplicated document when the operation is successful
       await duplicateSuccess
       setDuplicating(false)
 
-      const childParams = routerPanesState[groupIndex + 1]?.[0].params || {}
+      const childParams = routerPanesState[groupIndex + 1]?.[0]?.params || {}
       const {parentRefPath} = childParams
 
       handleEditReference({
         id: dupeId,
         type,
-        parentRefPath: parentRefPath ? pathFromString(parentRefPath) : [``],
+        parentRefPath: parentRefPath ? pathFromString(parentRefPath) : [''],
         template: {id: dupeId},
       })
     },
-    [documentStore.pair, duplicate, groupIndex, handleEditReference, id, routerPanesState, type]
+    [documentStore.pair, duplicate, groupIndex, handleEditReference, id, routerPanesState, type],
   )
 
   if (isPermissionsLoading || !permissions?.granted) {
-    return <></>
+    return null
   }
 
   return (
@@ -83,16 +80,16 @@ export default function DuplicateDocument(props: NewDocumentProps) {
       portal
     >
       <Button
+        aria-label={t('action.duplicate.label')}
+        as={Box}
+        disabled={isDuplicating || Boolean(duplicate.disabled) || isPermissionsLoading}
+        fontSize={1}
+        icon={CopyIcon}
+        mode="ghost"
         onClick={handle}
         padding={2}
-        fontSize={1}
-        as={Box}
-        icon={<CopyIcon />}
-        mode="ghost"
-        tone="default"
-        aria-label={t('action.duplicate.label')}
         style={{cursor: 'pointer'}}
-        disabled={isDuplicating || Boolean(duplicate.disabled) || isPermissionsLoading}
+        tone="default"
       />
     </Tooltip>
   )

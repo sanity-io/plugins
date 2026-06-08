@@ -1,12 +1,11 @@
-import React from 'react'
 import {Stack} from '@sanity/ui'
 import {Feedback} from 'sanity-plugin-utils'
 
-import Documents from './Documents'
 import Debug from './Debug'
-import {DocumentsPaneProps} from './types'
-import resolveParams from './resolveParams'
+import Documents from './Documents'
 import resolveInitialValueTemplates from './resolveInitialValueTemplates'
+import resolveParams from './resolveParams'
+import type {DocumentsPaneProps} from './types'
 
 export default function DocumentsPane(props: DocumentsPaneProps) {
   const {document} = props
@@ -22,12 +21,12 @@ export default function DocumentsPane(props: DocumentsPaneProps) {
 
   if (useDraft && typeof params === 'function') {
     return (
-      <Stack padding={4} space={5}>
+      <Stack gap={5} padding={4}>
         <Feedback>
           <code>useDraft</code> should not be <code>true</code> when supplying a function for
           <code>params</code>
         </Feedback>
-        {debug && <Debug query={query} />}
+        {debug ? <Debug query={query} /> : null}
       </Stack>
     )
   }
@@ -39,14 +38,14 @@ export default function DocumentsPane(props: DocumentsPaneProps) {
     document,
   })
 
-  if (!paramValues) {
+  if (!paramValues || Object.keys(paramValues).length === 0) {
     return (
-      <Stack padding={4} space={5}>
+      <Stack gap={5} padding={4}>
         <Feedback>
           Parameters for this query could not be resolved. This may mean the document does not yet
           exist, or is incomplete.
         </Feedback>
-        {debug && <Debug query={query} />}
+        {debug ? <Debug query={query} /> : null}
       </Stack>
     )
   }

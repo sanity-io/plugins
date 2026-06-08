@@ -1,5 +1,6 @@
-import {DocumentsPaneQueryParams, DocumentVersionsCollection} from './types'
 import delve from 'dlv'
+
+import type {DocumentVersionsCollection, DocumentsPaneQueryParams} from './types'
 
 interface ResolveParamsOptions {
   params?: DocumentsPaneQueryParams
@@ -7,44 +8,47 @@ interface ResolveParamsOptions {
   useDraft: boolean
 }
 
-type ResolveParamsReturn = undefined | {[key: string]: string}
+type ResolveParamsReturn = undefined | Record<string, string>
 
-function defaultResolver(options: ResolveParamsOptions): {
-  [key: string]: string | undefined
-} {
+function defaultResolver(options: ResolveParamsOptions): Record<string, string | undefined> {
   const {params, document, useDraft} = options
 
-  // params is optional
-  if (!params) {
+  if (!params || typeof params === 'function') {
     return {}
   }
 
-  // legacy useDraft behaviour
   const doc = useDraft ? document.displayed : document.published
 
   if (!doc) {
     return {}
   }
 
-  return Object.keys(params).reduce(
-    (acc, key) => ({
-      ...acc,
-      [key]: delve(doc, params[key as keyof DocumentsPaneQueryParams]),
-    }),
-    {}
-  )
+  const resolved: Record<string, string | undefined> = {}
+
+  for (const [key, path] of Object.entries(params)) {
+    resolved[key] = delve(doc, path)
+  }
+
+  return resolved
 }
 
 export default function resolveParams(options: ResolveParamsOptions): ResolveParamsReturn {
   const {params, document} = options
 
-  const resolvedParams = typeof params == 'function' ? params({document}) : defaultResolver(options)
+  const resolvedParams =
+    typeof params === 'function' ? params({document}) : defaultResolver(options)
 
-  // if any of the parameters are undefined, the query will error
-  // so return undefined so the UI can show a more appropriate message
-  if (Object.values(resolvedParams).includes(undefined)) return undefined
+  if (!resolvedParams) {
+    return undefined
+  }
 
-  // Typescript can't tell that we've guarded against any value being undefined,
-  // so forcing the type
-  return resolvedParams as {[key: string]: string}
+  const entries = Object.entries(resolvedParams)
+
+  if (entries.some(([, value]) => value === undefined)) {
+    return undefined
+  }
+
+  return Object.fromEntries(
+    entries.filter((entry): entry is [string, string] => entry[1] !== undefined),
+  )
 }

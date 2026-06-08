@@ -1,7 +1,7 @@
-import {
+import type {
+  DocumentVersionsCollection,
   DocumentsPaneInitialValueTemplate,
   DocumentsPaneInitialValueTemplateResolver,
-  DocumentVersionsCollection,
 } from './types'
 
 interface ResolveInitialValueTemplatesOptions {
@@ -10,9 +10,9 @@ interface ResolveInitialValueTemplatesOptions {
 }
 
 export default function resolveInitialValueTemplates(
-  options: ResolveInitialValueTemplatesOptions
+  options: ResolveInitialValueTemplatesOptions,
 ): DocumentsPaneInitialValueTemplate[] {
-  const {resolver, document} = options || {}
+  const {resolver, document} = options
 
   if (!resolver) return []
 

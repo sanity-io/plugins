@@ -1,10 +1,9 @@
-import React from 'react'
-import {Code, Box, Label, Stack} from '@sanity/ui'
+import {Box, Code, Label, Stack} from '@sanity/ui'
 
-export default function Debug({query, params}: {query: string; params?: {[key: string]: string}}) {
+export default function Debug({query, params}: {query: string; params?: Record<string, string>}) {
   return (
     <>
-      <Stack space={4}>
+      <Stack gap={4}>
         <Box>
           <Label>Query</Label>
         </Box>
@@ -12,8 +11,8 @@ export default function Debug({query, params}: {query: string; params?: {[key: s
           <Code>{query}</Code>
         </Box>
       </Stack>
-      {params && (
-        <Stack space={4}>
+      {params ? (
+        <Stack gap={4}>
           <Box>
             <Label>Params</Label>
           </Box>
@@ -21,7 +20,7 @@ export default function Debug({query, params}: {query: string; params?: {[key: s
             <Code>{JSON.stringify(params)}</Code>
           </Box>
         </Stack>
-      )}
+      ) : null}
     </>
   )
 }
