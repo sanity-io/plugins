@@ -1,5 +1,19 @@
 # sanity-naive-html-serializer
 
+## 5.0.0
+
+### Major Changes
+
+- [#931](https://github.com/sanity-io/plugins/pull/931) [`5a9204f`](https://github.com/sanity-io/plugins/commit/5a9204fcf31f00eb5c96c1368ab21cef088cf8f4) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Port sanity-naive-html-serializer to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+  - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
+  - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
+  - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18.3 || ^19)
+  - **react-dom 19.2+ required**: `react-dom` is now a required peer dependency
+  - **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported)
+  - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=18)
+
 ## [4.1.0](https://github.com/sanity-io/sanity-naive-html-serializer/compare/v4.0.2...v4.1.0) (2026-02-08)
 
 ### Features
