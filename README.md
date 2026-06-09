@@ -76,11 +76,13 @@ pnpm format
 | [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo)                                       | Aprimo asset selector integration                                   |
 | [`sanity-plugin-asset-source-unsplash`](./plugins/sanity-plugin-asset-source-unsplash)         | Use Unsplash images directly in Sanity Studio                       |
 | [`sanity-plugin-bynder-input`](./plugins/sanity-plugin-bynder-input)                           | Bynder asset picker integration                                     |
+| [`sanity-plugin-documents-pane`](./plugins/sanity-plugin-documents-pane)                       | Display GROQ-queried document lists in a view pane                  |
 | [`sanity-plugin-graph-view`](./plugins/sanity-plugin-graph-view)                               | Visual graph tool for exploring content relationships               |
 | [`sanity-plugin-iframe-pane`](./plugins/sanity-plugin-iframe-pane)                             | Display external URLs in a Studio pane                              |
 | [`sanity-plugin-internationalized-array`](./plugins/sanity-plugin-internationalized-array)     | Store localized fields in arrays to save attributes                 |
 | [`sanity-plugin-latex-input`](./plugins/sanity-plugin-latex-input)                             | LaTeX input for Portable Text Editor                                |
 | [`sanity-plugin-markdown`](./plugins/sanity-plugin-markdown)                                   | Markdown editor input                                               |
+| [`sanity-naive-html-serializer`](./plugins/sanity-naive-html-serializer)                       | Serialize Sanity documents and rich text fields to HTML             |
 | [`sanity-plugin-utils`](./plugins/sanity-plugin-utils)                                         | Handy hooks and components for Sanity Studio plugins                |
 | [`sanity-translations-tab`](./plugins/sanity-translations-tab)                                 | Base module for translation vendor integrations in Studio           |
 | [`sanity-plugin-workflow`](./plugins/sanity-plugin-workflow)                                   | Custom content publishing workflow example                          |

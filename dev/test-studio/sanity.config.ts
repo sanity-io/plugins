@@ -13,6 +13,7 @@ import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
+import {documentsPaneExample} from '#documents-pane'
 import {googleTranslateExample} from '#google-translate'
 import {iframePaneExample} from '#iframe-pane'
 import {
@@ -27,6 +28,7 @@ import {
 } from '#orderable-document-list'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
+import {sanityNaiveHtmlSerializerExample} from '#sanity-naive-html-serializer'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
 import {studioSecretsExample} from '#studio-secrets'
@@ -51,9 +53,15 @@ function createWorkspace(
 
 export default defineConfig([
   workspaceHomeConfig({projectId, dataset}),
+  createWorkspace({
+    name: 'naive-html-serializer-example',
+    title: 'Naive HTML Serializer',
+    plugins: [sanityNaiveHtmlSerializerExample()],
+  }),
   createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
   createWorkspace({name: 'utils-example', title: 'Utils Example', plugins: [utilsExample()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
+  createWorkspace({name: 'documents-pane-example', plugins: [documentsPaneExample()]}),
   createWorkspace({
     name: 'translations-tab-example',
     title: 'Translations Tab',

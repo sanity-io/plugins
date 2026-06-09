@@ -9,14 +9,14 @@ packages:
   - turbo/generators
 
 catalog:
-  '@sanity/client': ^7.21.0
+  '@sanity/client': ^7.22.1
   '@sanity/pkg-utils': ^10.5.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.1.0
   '@sanity/ui': ^3.2.0
   '@sanity/util': ^5.21.0
   '@sanity/vision': ^5.21.0
-  '@types/node': ^24.12.4
+  '@types/node': ^24.13.1
   '@types/react': ^19.2.14
   '@types/react-dom': ^19.2.3
   '@typescript/native-preview': 7.0.0-dev.20260418.1

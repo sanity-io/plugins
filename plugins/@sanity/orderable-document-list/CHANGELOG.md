@@ -1,5 +1,27 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 2.0.0
+
+### Major Changes
+
+- [#908](https://github.com/sanity-io/plugins/pull/908) [`96796ed`](https://github.com/sanity-io/plugins/commit/96796ed94ebf9a9d3270464100f4b97dcc9007dc) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Migrate to sanity-io/plugins monorepo
+
+  **Breaking Changes:**
+  - React 19.2+ required
+  - Sanity Studio v5+ required
+  - ESM-only (CommonJS removed)
+  - Node.js 20.19+ required
+  - styled-components ^6.1 required as peer dependency
+  - Removed `@sanity/incompatible-plugin` dependency
+  - Enabled React Compiler
+
+### Patch Changes
+
+- [#920](https://github.com/sanity-io/plugins/pull/920) [`c8c392a`](https://github.com/sanity-io/plugins/commit/c8c392a0ea5185d3f92fa5c2f4b4f3c0edd0df60) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency sanity-plugin-utils to ^1.8.0
+
+- Updated dependencies [[`cd2bc3c`](https://github.com/sanity-io/plugins/commit/cd2bc3c3e39c3cb357dd456bc205d1d6d57f441a)]:
+  - sanity-plugin-utils@2.0.0
+
 # 📓 Changelog
 
 All notable changes to this project will be documented in this file. See
