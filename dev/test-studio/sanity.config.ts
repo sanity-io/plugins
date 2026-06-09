@@ -32,6 +32,7 @@ import {sanityNaiveHtmlSerializerExample} from '#sanity-naive-html-serializer'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
 import {studioSecretsExample} from '#studio-secrets'
+import {translationsTabExample} from '#translations-tab'
 import {unsplashExample} from '#unsplash'
 import {utilsExample} from '#utils'
 import {workflowExample} from '#workflow'
@@ -61,6 +62,11 @@ export default defineConfig([
   createWorkspace({name: 'utils-example', title: 'Utils Example', plugins: [utilsExample()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
   createWorkspace({name: 'documents-pane-example', plugins: [documentsPaneExample()]}),
+  createWorkspace({
+    name: 'translations-tab-example',
+    title: 'Translations Tab',
+    plugins: [translationsTabExample()],
+  }),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
   createWorkspace({
     name: 'orderable-document-list-example',

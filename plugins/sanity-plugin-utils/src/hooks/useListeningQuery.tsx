@@ -64,7 +64,7 @@ export function useListeningQuery<V>(
                 return current
               }
 
-              // oxlint-disable-next-line no-unsafe-type-assertion -- listenQuery result is typed by caller
+              // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
               return documents as V
             })
             setLoading(false)

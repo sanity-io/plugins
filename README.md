@@ -84,6 +84,7 @@ pnpm format
 | [`sanity-plugin-markdown`](./plugins/sanity-plugin-markdown)                                   | Markdown editor input                                               |
 | [`sanity-naive-html-serializer`](./plugins/sanity-naive-html-serializer)                       | Serialize Sanity documents and rich text fields to HTML             |
 | [`sanity-plugin-utils`](./plugins/sanity-plugin-utils)                                         | Handy hooks and components for Sanity Studio plugins                |
+| [`sanity-translations-tab`](./plugins/sanity-translations-tab)                                 | Base module for translation vendor integrations in Studio           |
 | [`sanity-plugin-workflow`](./plugins/sanity-plugin-workflow)                                   | Custom content publishing workflow example                          |
 | [`sanity-plugin-workspace-home`](./plugins/sanity-plugin-workspace-home)                       | Home screen for multi-workspace studios                             |
 

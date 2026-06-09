@@ -46,6 +46,7 @@
     "sanity-plugin-utils": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
+    "sanity-translations-tab": "workspace:*",
     "styled-components": "catalog:"
   },
   "devDependencies": {
