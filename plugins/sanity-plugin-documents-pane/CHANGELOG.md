@@ -1,5 +1,11 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 4.1.0
+
+### Minor Changes
+
+- [#949](https://github.com/sanity-io/plugins/pull/949) [`bde3e70`](https://github.com/sanity-io/plugins/commit/bde3e70bfe1438768a4f4d349a3c0d2b3313fd3d) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Show document count in the documents pane view
+
 ## 4.0.0
 
 ### Major Changes
