@@ -1,5 +1,5 @@
 import {WarningOutlineIcon} from '@sanity/icons'
-import {Box, Button, Card, Flex, Spinner, Stack} from '@sanity/ui'
+import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {fromString as pathFromString} from '@sanity/util/paths'
 import {useCallback} from 'react'
 import {
@@ -81,7 +81,8 @@ export default function Documents(props: DocumentsProps) {
     return (
       <>
         <NewDocument initialValueTemplates={initialValueTemplates} />
-        <Stack gap={5} padding={4}>
+        <Stack gap={4} padding={4}>
+          <DocumentsCount count={0} />
           <Feedback>No Documents found</Feedback>
           {debug ? <Debug params={params} query={query} /> : null}
         </Stack>
@@ -92,6 +93,11 @@ export default function Documents(props: DocumentsProps) {
   return (
     <>
       <NewDocument initialValueTemplates={initialValueTemplates} />
+      <Box paddingX={3} paddingTop={3} paddingBottom={1}>
+        <Box paddingLeft={1}>
+          <DocumentsCount count={data.length} />
+        </Box>
+      </Box>
       <Stack gap={1} padding={2}>
         {data.map((doc) => {
           const schemaType = schema.get(doc._type)
@@ -128,5 +134,15 @@ export default function Documents(props: DocumentsProps) {
         })}
       </Stack>
     </>
+  )
+}
+
+function DocumentsCount({count}: {count: number}) {
+  const label = count === 1 ? 'document' : 'documents'
+
+  return (
+    <Text muted size={1}>
+      {count} {label}
+    </Text>
   )
 }
