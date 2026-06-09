@@ -1,3 +1,4 @@
+import {getDraftId, getPublishedId} from 'sanity'
 import type {KeyedObject, Reference, SanityClient, SanityDocumentLike} from 'sanity'
 
 type TranslationReference = KeyedObject & {
@@ -10,16 +11,18 @@ export const createTranslationMetadata = (
   client: SanityClient,
   baseLanguage: string,
 ): Promise<SanityDocumentLike> => {
+  const publishedId = getPublishedId(document._id)
+  const isDraft = document._id === getDraftId(publishedId)
   const baseLangEntry: TranslationReference = {
     _key: baseLanguage,
     _type: 'internationalizedArrayReferenceValue',
     value: {
       _type: 'reference',
-      _ref: document._id.replace('drafts.', ''),
+      _ref: publishedId,
     },
   }
 
-  if (document._id.startsWith('drafts.')) {
+  if (isDraft) {
     baseLangEntry.value = {
       ...baseLangEntry.value,
       _weak: true,

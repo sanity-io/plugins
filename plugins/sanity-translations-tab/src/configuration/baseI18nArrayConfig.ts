@@ -49,7 +49,7 @@ export const i18nArrayPatch = async (
     transaction.patch(client.patch(baseDoc._id).insert(at, selector, items))
   }
 
-  void transaction.commit()
+  await transaction.commit()
 }
 
 export const baseI18nArrayConfig = {

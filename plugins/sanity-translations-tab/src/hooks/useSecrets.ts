@@ -13,21 +13,47 @@ export function useSecrets<T>(id: string): ReturnProps<T> {
   const client = useClient()
 
   useEffect(() => {
-    function fetchData() {
-      void client.fetch('* [_id == $id][0]', {id}).then((doc: SanityDocumentLike) => {
-        const result: Record<string, unknown> = {}
-        for (const key in doc) {
-          if (key[0] !== '_') {
-            result[key] = doc[key]
+    let isMounted = true
+
+    async function fetchData() {
+      return client
+        .fetch<SanityDocumentLike | null>('* [_id == $id][0]', {id})
+        .then((doc: SanityDocumentLike | null) => {
+          if (!isMounted) {
+            return undefined
           }
-        }
-        // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- secrets document shape is defined by the consumer's Secrets type
-        setSecrets(result as T)
-        setLoading(false)
-        return undefined
-      })
+
+          if (!doc) {
+            setSecrets(null)
+            setLoading(false)
+            return undefined
+          }
+
+          const result: Record<string, unknown> = {}
+          for (const key in doc) {
+            if (key[0] !== '_') {
+              result[key] = doc[key]
+            }
+          }
+          // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- secrets document shape is defined by the consumer's Secrets type
+          setSecrets(result as T)
+          setLoading(false)
+          return undefined
+        })
+        .catch(() => {
+          if (!isMounted) {
+            return
+          }
+          setSecrets(null)
+          setLoading(false)
+        })
     }
-    fetchData()
+
+    void fetchData()
+
+    return () => {
+      isMounted = false
+    }
   }, [id, client])
 
   return {loading, secrets}

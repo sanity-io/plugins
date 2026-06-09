@@ -1,7 +1,3 @@
-/**
- * Add cleanup function to cancel async tasks
- */
-
 import {Stack, useToast} from '@sanity/ui'
 import {useCallback, useContext, useEffect, useState} from 'react'
 
@@ -18,7 +14,9 @@ export const TranslationView = () => {
   const toast = useToast()
 
   useEffect(() => {
-    function fetchData() {
+    let isMounted = true
+
+    async function fetchData() {
       if (!context) {
         toast.push({
           title: 'Unable to load translation data: missing context',
@@ -28,29 +26,48 @@ export const TranslationView = () => {
         return
       }
 
-      context.adapter
-        .getLocales(context.secrets)
-        .then(setLocales)
-        .then(() => context?.adapter.getTranslationTask(context.documentId, context.secrets))
-        .then(setTask)
-        .catch((err) => {
-          let errorMsg
-          if (err instanceof Error) {
-            errorMsg = err.message
-          } else {
-            errorMsg = err ? String(err) : null
-          }
+      try {
+        const fetchedLocales = await context.adapter.getLocales(context.secrets)
+        if (!isMounted) {
+          return
+        }
+        setLocales(fetchedLocales)
 
-          toast.push({
-            title: `Error creating translation job`,
-            description: errorMsg,
-            status: 'error',
-            closable: true,
-          })
+        const fetchedTask = await context.adapter.getTranslationTask(
+          context.documentId,
+          context.secrets,
+        )
+        if (!isMounted) {
+          return
+        }
+        setTask(fetchedTask)
+      } catch (err) {
+        if (!isMounted) {
+          return
+        }
+        let errorMsg
+        if (err instanceof Error) {
+          errorMsg = err.message
+        } else if (typeof err === 'string') {
+          errorMsg = err
+        } else {
+          errorMsg = null
+        }
+
+        toast.push({
+          title: `Error loading translation data`,
+          description: errorMsg,
+          status: 'error',
+          closable: true,
         })
+      }
     }
 
-    fetchData()
+    void fetchData()
+
+    return () => {
+      isMounted = false
+    }
   }, [context, toast])
 
   const refreshTask = useCallback(async () => {

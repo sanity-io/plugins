@@ -60,7 +60,7 @@ export const getDefaultDocumentNode = ({schemaType}) => {
            * match Sanity's. Receives the vendor locale ID and returns the
            * corresponding Sanity ID.
            */
-          localeIdAdapter: (translationVendorId) => sanityId,
+          localeIdAdapter: (translationVendorId) => translationVendorId,
 
           /**
            * the key for the "source content" (for field level) or the code in the

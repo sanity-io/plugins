@@ -1,16 +1,23 @@
+import {getDraftId, getPublishedId} from 'sanity'
 import type {SanityClient, SanityDocumentLike} from 'sanity'
 
 type TranslationEntry = Record<string, unknown> & {
   _key?: string
 }
 
-export const createI18nDocAndPatchMetadata = (
+export const createI18nDocAndPatchMetadata = async (
   translatedDoc: SanityDocumentLike,
   localeId: string,
   client: SanityClient,
   translationMetadata: SanityDocumentLike,
   languageField: string = 'language',
-): void => {
+): Promise<void> => {
+  if (!translatedDoc._id) {
+    throw new Error('Missing _id on translated document')
+  }
+
+  const sourceId = getPublishedId(translatedDoc._id)
+  const i18nDocumentId = `${sourceId}__i18n_${localeId}`
   translatedDoc[languageField] = localeId
   // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- translation metadata shape from i18n plugin
   const translations = translationMetadata['translations'] as TranslationEntry[]
@@ -19,27 +26,26 @@ export const createI18nDocAndPatchMetadata = (
   const location = existingLocaleKey ? `translations[_key == "${localeId}"]` : 'translations[-1]'
 
   //remove system fields
-  const {_updatedAt, _createdAt, ...rest} = translatedDoc
-  void client.create({...rest, _id: 'drafts.'}).then((doc) => {
-    const _ref = doc._id.replace('drafts.', '')
-    return client
-      .transaction()
-      .patch(translationMetadata._id, (p) =>
-        p.insert(operation, location, [
-          {
-            _key: localeId,
-            _type: 'internationalizedArrayReferenceValue',
-            value: {
-              _type: 'reference',
-              _ref,
-              _weak: true,
-              _strengthenOnPublish: {
-                type: doc._type,
-              },
+  const {_id, _rev, _updatedAt, _createdAt, ...rest} = translatedDoc
+  const doc = await client.create({...rest, _id: getDraftId(i18nDocumentId)})
+  const _ref = getPublishedId(doc._id)
+  await client
+    .transaction()
+    .patch(translationMetadata._id, (p) =>
+      p.insert(operation, location, [
+        {
+          _key: localeId,
+          _type: 'internationalizedArrayReferenceValue',
+          value: {
+            _type: 'reference',
+            _ref,
+            _weak: true,
+            _strengthenOnPublish: {
+              type: doc._type,
             },
           },
-        ]),
-      )
-      .commit()
-  })
+        },
+      ]),
+    )
+    .commit()
 }

@@ -187,8 +187,8 @@ export const NewTask = ({locales, refreshTask}: Props) => {
             Select translation workflow
           </Text>
           <Grid gridTemplateColumns={[1, 1, 2]}>
-            <Select id="workflowSelect" onChange={onWorkflowChange}>
-              <option>Default locale workflows</option>
+            <Select id="workflow-select" onChange={onWorkflowChange}>
+              <option value="">Default locale workflows</option>
               {context.workflowOptions.map((w) => (
                 <option key={`workflow-opt-${w.workflowUid}`} value={w.workflowUid}>
                   {w.workflowName}

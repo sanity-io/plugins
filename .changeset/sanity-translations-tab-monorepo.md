@@ -13,4 +13,4 @@ This major release includes several breaking changes as part of the migration to
 - **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported; previously `^3 || ^4 || ^5`)
 - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously `>=14`)
 - **styled-components 6.1+ required**: Unchanged peer requirement, now enforced as part of the monorepo build
-- **Removed `@sanity/incompatible-plugin`**: Legacy Sanity v2 compatibility dependency dropped
+- **Removed direct `@sanity/incompatible-plugin` dependency**: Legacy Sanity v2 compatibility dependency was removed from this package

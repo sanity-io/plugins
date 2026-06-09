@@ -11,6 +11,7 @@ import {
 } from '@sanity/ui'
 import {randomKey} from '@sanity/util/content'
 import {useMemo} from 'react'
+import {getPublishedId} from 'sanity'
 import type {SanityDocument} from 'sanity'
 import {useSchema} from 'sanity'
 
@@ -32,7 +33,7 @@ const TranslationTab = (props: TranslationTabProps) => {
   const client = useClient()
   const schema = useSchema()
 
-  const documentId = displayed?._id?.split('drafts.').pop() ?? ''
+  const documentId = displayed?._id ? getPublishedId(displayed._id) : ''
 
   const {errors, importTranslation, exportForTranslation} = useMemo(() => {
     const {serializationOptions, baseLanguage, languageField, mergeWithTargetLocale} = props.options
