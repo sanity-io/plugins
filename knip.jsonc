@@ -121,6 +121,14 @@
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
+    "plugins/sanity-translations-tab": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
     "plugins/sanity-plugin-markdown": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
@@ -166,6 +174,14 @@
       ],
     },
     // add new plugin workspaces here
+    "plugins/sanity-plugin-documents-pane": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
     "plugins/sanity-plugin-utils": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
@@ -197,6 +213,10 @@
     },
 
     "plugins/@sanity/presets": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-naive-html-serializer": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },

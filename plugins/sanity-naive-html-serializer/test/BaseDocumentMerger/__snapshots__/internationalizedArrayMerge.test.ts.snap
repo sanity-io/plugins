@@ -1,0 +1,170 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Global internationalized array snapshot test 1`] = `
+[
+  {
+    "at": "after",
+    "items": [
+      {
+        "_key": "es_ES",
+        "_type": "internationalizedArrayObjectFieldValue",
+        "value": {
+          "_type": "objectField",
+          "nestedArrayField": [
+            {
+              "_key": "4a58adc7c507",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "4f6bc15ae261",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "New text",
+                },
+              ],
+              "markDefs": [],
+              "style": "normal",
+            },
+          ],
+          "objectAsField": {
+            "_type": "childObjectField",
+            "content": [
+              {
+                "_key": "869168fe3a2a",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "10d423df228a",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "This is block text 2 levels deep",
+                  },
+                ],
+                "markDefs": [],
+                "style": "normal",
+              },
+            ],
+            "title": "A new nested title",
+          },
+          "title": "A new title",
+        },
+      },
+    ],
+    "selector": "config[-1]",
+  },
+  {
+    "at": "after",
+    "items": [
+      {
+        "_key": "es_ES",
+        "_type": "internationalizedArrayPortableTextValue",
+        "value": [
+          {
+            "_key": "e2a39d768ff8",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "216e97c5a5cc",
+                "_type": "span",
+                "marks": [],
+                "text": "This is block text at the top level.",
+              },
+            ],
+            "markDefs": [],
+            "style": "normal",
+          },
+          {
+            "_key": "271b0c6ee984",
+            "_type": "objectField",
+            "objectAsField": {
+              "_type": "childObjectField",
+              "content": [
+                {
+                  "_key": "4f24f6fbfae7",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "randomKey-14",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "This is block text in a nested object in an object in top-level block text.",
+                    },
+                  ],
+                  "markDefs": [],
+                  "style": "normal",
+                },
+              ],
+              "title": "This is a nested object in an object in top-level block text.",
+            },
+            "title": "This is an object in top-level block text.",
+          },
+        ],
+      },
+    ],
+    "selector": "content[-1]",
+  },
+  {
+    "at": "after",
+    "items": [
+      {
+        "_key": "es_ES",
+        "_type": "internationalizedArrayStringFieldValue",
+        "value": "A new document snippet",
+      },
+    ],
+    "selector": "snippet[-1]",
+  },
+  {
+    "at": "after",
+    "items": [
+      {
+        "_key": "es_ES",
+        "_type": "internationalizedArrayTagsValue",
+        "value": [
+          "tag 1",
+          "tag 2",
+          "tag 3",
+        ],
+      },
+    ],
+    "selector": "tags[-1]",
+  },
+  {
+    "at": "after",
+    "items": [
+      {
+        "_key": "es_ES",
+        "_type": "internationalizedArrayStringFieldValue",
+        "value": "A new document title",
+      },
+    ],
+    "selector": "title[-1]",
+  },
+  {
+    "at": "after",
+    "items": [
+      {
+        "_key": "es_ES",
+        "_type": "internationalizedArrayBlockValue",
+        "value": [
+          {
+            "_key": "e2a39d768ff8",
+            "_type": "block",
+            "children": [
+              {
+                "_key": "randomKey-26",
+                "_type": "span",
+                "marks": [],
+                "text": "This is block text 1 level deep",
+              },
+            ],
+            "markDefs": [],
+            "style": "normal",
+          },
+        ],
+      },
+    ],
+    "selector": "slices[0].content[-1]",
+  },
+]
+`;

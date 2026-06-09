@@ -32,9 +32,11 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
+    "sanity-naive-html-serializer": "workspace:*",
     "sanity-plugin-aprimo": "workspace:*",
     "sanity-plugin-asset-source-unsplash": "workspace:*",
     "sanity-plugin-bynder-input": "workspace:*",
+    "sanity-plugin-documents-pane": "workspace:*",
     "sanity-plugin-google-translate": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
     "sanity-plugin-iframe-pane": "workspace:*",
@@ -45,6 +47,7 @@
     "sanity-plugin-utils": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
+    "sanity-translations-tab": "workspace:*",
     "styled-components": "catalog:"
   },
   "devDependencies": {
