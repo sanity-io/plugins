@@ -1003,6 +1003,9 @@ importers:
       '@sanity/schema':
         specifier: ^5.21.0
         version: 5.21.0(@types/react@19.2.14)
+      '@sanity/util':
+        specifier: 'catalog:'
+        version: 5.21.0(@types/react@19.2.14)
     devDependencies:
       '@portabletext/types':
         specifier: ^2.0.2

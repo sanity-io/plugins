@@ -6,5 +6,6 @@ export {
   customSerializers,
   customBlockDeserializers,
 } from './BaseSerializationConfig'
+export {getItemLanguage, usesLanguageField, LANGUAGE_FIELD} from './internationalizedArrayHelpers'
 
 export type {SerializedDocument, Serializer, SerializerClosure, Deserializer, Merger} from './types'

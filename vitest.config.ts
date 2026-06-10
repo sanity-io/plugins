@@ -8,6 +8,7 @@ export default defineConfig({
       'plugins/@sanity/*',
       'plugins/sanity-plugin-*',
       'plugins/sanity-naive-html-serializer',
+      'plugins/sanity-translations-tab',
       'scripts/*',
     ],
   },

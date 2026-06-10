@@ -1,6 +1,7 @@
 import type {SanityClient, SanityDocument, SanityDocumentLike} from 'sanity'
-import {BaseDocumentMerger} from 'sanity-naive-html-serializer'
+import {BaseDocumentMerger, getItemLanguage} from 'sanity-naive-html-serializer'
 
+import type {MetadataFormat} from '../../types'
 import {findLatestDraft, findDocumentAtRevision} from '../utils'
 import {
   createI18nDocAndPatchMetadata,
@@ -11,6 +12,7 @@ import {
 
 type TranslationEntry = Record<string, unknown> & {
   _key?: string
+  language?: string
   value?: {_ref?: string}
 }
 
@@ -22,6 +24,7 @@ export const documentLevelPatch = async (
   baseLanguage: string = 'en',
   languageField: string = 'language',
   mergeWithTargetLocale: boolean = false,
+  newMetadataFormat: MetadataFormat = 'language-field',
 ): Promise<void> => {
   //this is the document we use to merge with the translated fields
   let baseDoc: SanityDocument | null = null
@@ -46,14 +49,19 @@ export const documentLevelPatch = async (
    */
   let translationMetadata = await getTranslationMetadata(documentId, client, baseLanguage)
   if (!translationMetadata) {
-    translationMetadata = await createTranslationMetadata(baseDoc, client, baseLanguage)
+    translationMetadata = await createTranslationMetadata(
+      baseDoc,
+      client,
+      baseLanguage,
+      newMetadataFormat,
+    )
   }
 
   //the id of the translated document should be on the metadata if it exists
   // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- translation metadata shape from i18n plugin
   const translations = translationMetadata['translations'] as TranslationEntry[]
-  const i18nDocId = translations.find((translation) => translation['_key'] === localeId)?.value
-    ?._ref
+  const i18nDocId = translations.find((translation) => getItemLanguage(translation) === localeId)
+    ?.value?._ref
 
   if (i18nDocId) {
     //get draft or published
@@ -93,6 +101,13 @@ export const documentLevelPatch = async (
   //otherwise, create a new document
   //and add the document reference to the metadata document
   else {
-    createI18nDocAndPatchMetadata(merged, localeId, client, translationMetadata, languageField)
+    createI18nDocAndPatchMetadata(
+      merged,
+      localeId,
+      client,
+      translationMetadata,
+      languageField,
+      newMetadataFormat,
+    )
   }
 }

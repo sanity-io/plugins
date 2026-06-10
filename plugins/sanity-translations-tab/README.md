@@ -68,6 +68,17 @@ export const getDefaultDocumentNode = ({schemaType}) => {
            *  (e.g. "en" or "en_US").
            */
           baseLanguage: 'en_US',
+
+          /**
+           * Format used when writing NEW `translation.metadata` documents.
+           * - 'language-field' (default): stores the language in a dedicated `language`
+           *   field with a random `_key`, matching `@sanity/document-internationalization` v6.
+           * - 'legacy': stores the language id in `_key`, for projects still on the
+           *   pre-v6 format.
+           * Existing metadata documents keep their detected format regardless of this
+           * option. Both formats are read transparently.
+           */
+          newMetadataFormat: 'language-field',
         }),
     ])
   }
