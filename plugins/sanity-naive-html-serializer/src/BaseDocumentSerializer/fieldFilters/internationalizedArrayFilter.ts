@@ -2,24 +2,48 @@ import {SanityDocument, TypedObject} from 'sanity'
 
 const META_FIELDS = ['_key', '_type', '_id']
 
+/*
+ * sanity-plugin-internationalized-array v4 stores the language in `_key`.
+ * v5+ stores it in a dedicated `language` field with a random `_key`.
+ * Support both formats by preferring `language` and falling back to `_key`.
+ */
+const getItemLanguage = (item: Record<string, any>): string | undefined =>
+  typeof item.language === 'string' ? item.language : item._key
+
 const isValidInternationalizedArray = (arr: any[], baseLang: string): boolean => {
   const internationalizedRegex = /^internationalizedArray/
   return (
     arr.length > 0 &&
     typeof arr[0] === 'object' &&
     internationalizedRegex.test(arr[0]._type) &&
-    arr.filter((obj) => obj._key === baseLang).length > 0
+    arr.filter((obj) => getItemLanguage(obj) === baseLang).length > 0
   )
 }
 
 const filterToBaseLang = (arr: TypedObject[], baseLang: string) => {
-  return arr.filter((obj) => obj._key === baseLang)
+  return arr
+    .filter((obj) => getItemLanguage(obj) === baseLang)
+    .map((obj) => {
+      //v5 items carry a `language` field and a random `_key`. Normalize them
+      //to the v4 shape (language in `_key`) before serializing so the
+      //serialized file is identical for both formats and the language code
+      //is never sent out as translatable text.
+      const {language, ...rest} = obj
+      if (typeof language === 'string') {
+        return Object.assign(rest, {_key: language})
+      }
+      return obj
+    })
 }
 
 /*
  * Reduces an array like [
  * {_key: 'en', _type: 'internationalizedArrayStringValue', value: 'eng text'},
  * {_key: 'es', _type: 'internationalizedArrayStringValue', value: 'spanish text'}
+ * ]
+ * or, in the v5 format, [
+ * {_key: 'rl3km9', _type: 'internationalizedArrayStringValue', language: 'en', value: 'eng text'},
+ * {_key: 'fjwl27', _type: 'internationalizedArrayStringValue', language: 'es', value: 'spanish text'}
  * ]
  * to [{value: 'eng text', _key, _type}]
  * (for any base language, not just english)

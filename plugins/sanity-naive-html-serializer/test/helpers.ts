@@ -44,7 +44,37 @@ export const toPlainText = (blocks: PortableTextBlock[]): string => {
 }
 
 export const getI18nArrayItem = (array: TypedObject[], key: string): TypedObject => {
-  return array.find((item) => item._key === key)!
+  //v4 of sanity-plugin-internationalized-array stores the language in `_key`,
+  //v5+ in a dedicated `language` field
+  return array.find((item) => ((item.language as string | undefined) ?? item._key) === key)!
+}
+
+/*
+ * Converts a fixture using the v4 internationalized array format
+ * ({_key: 'en', value}) into the v5 format
+ * ({_key: 'randomkey', language: 'en', value}).
+ */
+let v5KeyCounter = 0
+export const toV5InternationalizedArray = <T>(node: T): T => {
+  if (Array.isArray(node)) {
+    return node.map(toV5InternationalizedArray) as T
+  }
+  if (node && typeof node === 'object') {
+    const transformed: Record<string, any> = {}
+    Object.entries(node as Record<string, any>).forEach(([key, value]) => {
+      transformed[key] = toV5InternationalizedArray(value)
+    })
+    if (
+      typeof transformed._type === 'string' &&
+      transformed._type.startsWith('internationalizedArray') &&
+      typeof transformed._key === 'string'
+    ) {
+      transformed.language = transformed._key
+      transformed._key = `v5key${v5KeyCounter++}`
+    }
+    return transformed as T
+  }
+  return node
 }
 
 export const createCustomInnerHTML = (title: string): string =>

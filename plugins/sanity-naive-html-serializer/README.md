@@ -8,6 +8,7 @@
 - [What this package solves](#what-this-package-solves)
 - [What this package does](#what-this-package-does)
 - [Quick start](#quick-start)
+- [Internationalized array formats](#internationalized-array-formats)
 - [v2-to-v3-changes](#v2-to-v3-changes)
 
 ## What this package solves
@@ -45,6 +46,15 @@ import {
   BaseDocumentMerger,
 } from 'sanity-naive-html-serializer'
 ```
+
+## Internationalized array formats
+
+When serializing and merging with the `internationalizedArray` translation level, both data formats of [sanity-plugin-internationalized-array](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-internationalized-array) are supported:
+
+- **v4 and below**: the language lives in the item's `_key`, e.g. `{"_key": "en", "_type": "internationalizedArrayStringValue", "value": "hello"}`
+- **v5 and above**: the language lives in a dedicated `language` field and `_key` is a random string, e.g. `{"_key": "abc123", "_type": "internationalizedArrayStringValue", "language": "en", "value": "hello"}`
+
+Serialized files are identical for both formats (items are identified by their language code), and `BaseDocumentMerger.internationalizedArrayMerge` writes patches in whichever format the target document already uses.
 
 ## v2-to-v3-changes
 
