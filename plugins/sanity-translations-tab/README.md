@@ -12,6 +12,13 @@ This is the base module for implementing common translation vendor tasks from a 
 
 Unless you are involved in developing this module or a translation plugin, you probably do not need to interact with this package. You likely want to use a vendor-specific plugin, such as [sanity-plugin-studio-smartling](https://github.com/sanity-io/sanity-plugin-studio-smartling)
 
+## Compatibility with internationalization plugins
+
+The base configurations exported from this package support both data formats used by Sanity's internationalization plugins:
+
+- `baseDocumentLevelConfig` works with `translation.metadata` documents created by [@sanity/document-internationalization](https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/document-internationalization) v5 and below (language in `_key`) as well as v6 and above (language in a dedicated `language` field). Newly created metadata entries set both, so either version of the plugin can read them.
+- `baseI18nArrayConfig` works with fields created by [sanity-plugin-internationalized-array](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-internationalized-array) v4 and below (language in `_key`) as well as v5 and above (language in a dedicated `language` field). Imported translations are written in whichever format the target document already uses.
+
 ## Develop & test
 
 This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)

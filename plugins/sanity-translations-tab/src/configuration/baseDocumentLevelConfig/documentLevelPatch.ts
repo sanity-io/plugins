@@ -11,6 +11,7 @@ import {
 
 type TranslationEntry = Record<string, unknown> & {
   _key?: string
+  language?: string
   value?: {_ref?: string}
 }
 
@@ -49,11 +50,14 @@ export const documentLevelPatch = async (
     translationMetadata = await createTranslationMetadata(baseDoc, client, baseLanguage)
   }
 
-  //the id of the translated document should be on the metadata if it exists
+  //the id of the translated document should be on the metadata if it exists.
+  //document-internationalization v5 and below stores the language in `_key`,
+  //v6+ stores it in a dedicated `language` field. Match both.
   // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- translation metadata shape from i18n plugin
   const translations = translationMetadata['translations'] as TranslationEntry[]
-  const i18nDocId = translations.find((translation) => translation['_key'] === localeId)?.value
-    ?._ref
+  const i18nDocId = translations.find(
+    (translation) => (translation.language ?? translation['_key']) === localeId,
+  )?.value?._ref
 
   if (i18nDocId) {
     //get draft or published

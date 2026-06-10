@@ -2,6 +2,7 @@ import type {KeyedObject, Reference, SanityClient, SanityDocumentLike} from 'san
 
 type TranslationReference = KeyedObject & {
   _type: 'internationalizedArrayReferenceValue'
+  language?: string
   value: Reference
 }
 
@@ -10,9 +11,13 @@ export const createTranslationMetadata = (
   client: SanityClient,
   baseLanguage: string,
 ): Promise<SanityDocumentLike> => {
+  //set the language in both `_key` (document-internationalization v5 and
+  //below) and `language` (v6+) so either version of the plugin can read
+  //the metadata document
   const baseLangEntry: TranslationReference = {
     _key: baseLanguage,
     _type: 'internationalizedArrayReferenceValue',
+    language: baseLanguage,
     value: {
       _type: 'reference',
       _ref: document._id.replace('drafts.', ''),
