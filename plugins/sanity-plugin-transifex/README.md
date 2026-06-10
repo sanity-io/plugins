@@ -75,6 +75,8 @@ import {DefaultDocumentNodeResolver} from 'sanity/desk'
 import {TranslationsTab, defaultDocumentLevelConfig} from 'sanity-plugin-transifex'
 //if you are using field-level translations, you can import the field-level config instead:
 //import {TranslationsTab, defaultFieldLevelConfig} from 'sanity-plugin-transifex'
+//if your fields use sanity-plugin-internationalized-array, use the internationalized array config:
+//import {TranslationsTab, defaultI18nArrayConfig} from 'sanity-plugin-transifex'
 //if you're not sure which, please look at the document-level and field-level sections below
 
 export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
@@ -112,9 +114,45 @@ For example, on a document you don't want to be translated, you may have a "titl
 }
 ```
 
+If your fields use [sanity-plugin-internationalized-array](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-internationalized-array), use the `defaultI18nArrayConfig` configuration instead. Both data formats of that plugin are supported -- v4 and below, where the language lives in the item's `_key`:
+
+```javascript
+{
+  //...other document fields,
+  title: [
+    {_key: 'en', _type: 'internationalizedArrayStringValue', value: 'My title is here.'},
+    {_key: 'es', _type: 'internationalizedArrayStringValue', value: 'Mi título está aquí.'},
+  ]
+}
+```
+
+and v5 and above, where the language lives in a dedicated `language` field:
+
+```javascript
+{
+  //...other document fields,
+  title: [
+    {
+      _key: 'abc123',
+      _type: 'internationalizedArrayStringValue',
+      language: 'en',
+      value: 'My title is here.',
+    },
+    {
+      _key: 'def456',
+      _type: 'internationalizedArrayStringValue',
+      language: 'es',
+      value: 'Mi título está aquí.',
+    },
+  ]
+}
+```
+
+Imported translations will be written back in whichever format the document already uses.
+
 ### Document level translations
 
-Since we often find users want to use the [Document internationalization plugin](https://www.sanity.io/plugins/document-internationalization) if they're using document-level translations, we assume that any documents you want in different languages will be present in a `translation.metadata` document.
+Since we often find users want to use the [Document internationalization plugin](https://www.sanity.io/plugins/document-internationalization) if they're using document-level translations, we assume that any documents you want in different languages will be present in a `translation.metadata` document. Both metadata formats are supported: version 5 and below of that plugin, where the language lives in the `_key` of each entry in the `translations` array, and version 6 and above, where the language lives in a dedicated `language` field.
 
 _Important_: The above is true if you are using the Document Internationalization Plugin at version 2 or above. If you are using version 1 please use the `legacyDocumentLevelConfig` configuration exported from this plugin. This configuration assumes your translations follow the pattern `{id-of-base-language-document}__i18n_{locale}`
 
