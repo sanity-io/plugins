@@ -56,6 +56,16 @@ describe('Serialization supports v5 (language field) internationalized arrays', 
   test('The `language` code is not exposed as a translatable string', () => {
     expect(serialized.content).not.toContain('class="language"')
   })
+
+  test('v5 documents serialize identically to v4 documents', () => {
+    const serializedV4 = getSerialized(internationalizedArrayArticle, 'internationalizedArray')
+    expect(serialized.content).toEqual(serializedV4.content)
+  })
+
+  test('Items are identified by language code, not by random key', () => {
+    expect(serialized.content).toContain('id="en"')
+    expect(serialized.content).not.toContain('v5-')
+  })
 })
 
 describe('Merge mirrors the document format', () => {
@@ -114,5 +124,32 @@ describe('Merge mirrors the document format', () => {
     const titlePatch = patches.find((patch) => patch.selector.startsWith('title'))
     expect(titlePatch?.at).toEqual('replace')
     expect(titlePatch?.selector).toContain('existing-es-key')
+    //the replaced item keeps its `_key`, so item identity stays stable
+    //across repeated imports
+    expect(titlePatch?.items[0]._key).toEqual('existing-es-key')
+    expect(titlePatch?.items[0].language).toEqual('es_ES')
+  })
+
+  test('Reads translated values from a raw v5-format translated document', () => {
+    //a translated document that never round-tripped through the serializer
+    //and still stores its base language in the v5 format
+    const rawV5Translated = toV5(internationalizedArrayArticle)
+    const titleItem = rawV5Translated.title.find(
+      (item: Record<string, any>) => item.language === 'en',
+    )
+    titleItem.value = 'A raw v5 translated title'
+
+    const patches = BaseDocumentMerger.internationalizedArrayMerge(
+      rawV5Translated,
+      v5Article,
+      'es_ES',
+      'en',
+      0,
+    ) as Array<Record<string, any>>
+
+    const titlePatch = patches.find((patch) => patch.selector.startsWith('title'))
+    expect(titlePatch?.at).toEqual('after')
+    expect(titlePatch?.items[0].language).toEqual('es_ES')
+    expect(titlePatch?.items[0].value).toEqual('A raw v5 translated title')
   })
 })

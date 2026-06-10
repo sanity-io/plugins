@@ -135,10 +135,14 @@ const internationalizedArrayMerge = (
 ): Record<string, any> => {
   const patches: I18nArrayInsert[] = []
 
-  //get all keys that match the base language from the translated doc,
-  //since those are the strings that have been translated
-  const extractionKey = `..[_key == "${baseLang}"]`
-  const originPaths = extractWithPath(extractionKey, translatedItems)
+  //get all items that match the base language from the translated doc,
+  //since those are the strings that have been translated.
+  //translated files produced by the serializer hold the language in `_key`,
+  //but raw v5-format documents hold it in `language` -- extract both
+  const extractionKeys = [`..[_key == "${baseLang}"]`, `..[${LANGUAGE_FIELD} == "${baseLang}"]`]
+  const originPaths = extractionKeys.flatMap((extractionKey) =>
+    extractWithPath(extractionKey, translatedItems),
+  )
 
   //slice off the index to get the arrays at which all the translated fields live
   //then transform to string so we can extract
@@ -196,9 +200,11 @@ const internationalizedArrayMerge = (
       : `${path}[${localeArrayPosition - 1}]`
 
     if (valToPatch) {
+      //preserve the existing item's `_key` when replacing, so item identity
+      //stays stable across repeated imports
       const newItem: I18nArrayItem = isLanguageField
         ? {
-            _key: randomKey(),
+            _key: existingLocaleKey?._key ?? randomKey(),
             _type: origArray[0]!._type,
             [LANGUAGE_FIELD]: localeId,
             value: valToPatch,

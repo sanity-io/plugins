@@ -49,9 +49,11 @@ export const createI18nDocAndPatchMetadata = (
   void client.create({...rest, _id: 'drafts.'}).then((doc) => {
     value._ref = doc._id.replace('drafts.', '')
     value._strengthenOnPublish.type = doc._type
+    //preserve the existing entry's `_key` when replacing, so entry identity
+    //stays stable across repeated imports
     const newEntry: TranslationEntry = useLanguageField
       ? {
-          _key: randomKey(),
+          _key: existingLocaleKey?._key ?? randomKey(),
           _type: 'internationalizedArrayReferenceValue',
           [LANGUAGE_FIELD]: localeId,
           value,
