@@ -5,6 +5,25 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0](https://github.com/sanity-io/sanity-plugin-hotspot-array/compare/v3.0.2...v4.0.0) (2026-06-11)
+
+### ⚠ BREAKING CHANGES
+
+- sanity v4/v5 and react 18 are no longer supported. The
+  peer dependencies now require sanity ^6 and react ^19.2, node >=22.12 is
+  required, and the package is now ESM-only.
+
+- chore: add sanity.cli.ts required by sanity v6 CLI
+
+- chore!: remove sanity v2 incompatible-plugin shim
+- v2-incompatible.js and sanity.json are no longer
+  shipped, and @sanity/incompatible-plugin was removed as a dependency.
+  The sanityV2Json check is disabled in plugin-kit's verifyPackage config.
+
+### Features
+
+- require sanity v6, react ^19.2 and node >=22.12 ([#47](https://github.com/sanity-io/sanity-plugin-hotspot-array/issues/47)) ([7141334](https://github.com/sanity-io/sanity-plugin-hotspot-array/commit/71413348be38aa2c0b863c4d8a97f6f06b7685b9))
+
 ## [3.0.2](https://github.com/sanity-io/sanity-plugin-hotspot-array/compare/v3.0.1...v3.0.2) (2025-12-18)
 
 ### Bug Fixes
