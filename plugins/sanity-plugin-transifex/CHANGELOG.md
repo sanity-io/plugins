@@ -1,5 +1,16 @@
 # sanity-plugin-transifex
 
+## 5.1.0
+
+### Minor Changes
+
+- [#957](https://github.com/sanity-io/plugins/pull/957) [`310b5fe`](https://github.com/sanity-io/plugins/commit/310b5fe3070eafe89f3cafea48568a3577a3a118) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add a `defaultI18nArrayConfig` export (and `i18nArrayPatch` re-export) for documents using `sanity-plugin-internationalized-array` fields, and support both the legacy and new internationalized array / `translation.metadata` data formats via updated `sanity-translations-tab` and `sanity-naive-html-serializer` dependencies.
+
+### Patch Changes
+
+- Updated dependencies [[`310b5fe`](https://github.com/sanity-io/plugins/commit/310b5fe3070eafe89f3cafea48568a3577a3a118)]:
+  - sanity-translations-tab@6.1.0
+
 ## 5.0.0
 
 ### Major Changes

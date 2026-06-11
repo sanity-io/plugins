@@ -1,5 +1,16 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 6.1.0
+
+### Minor Changes
+
+- [#957](https://github.com/sanity-io/plugins/pull/957) [`310b5fe`](https://github.com/sanity-io/plugins/commit/310b5fe3070eafe89f3cafea48568a3577a3a118) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Support both `translation.metadata` data formats. Document-level translation now reads the language from either the legacy `_key` or the new `language` field (`@sanity/document-internationalization` v6), and mirrors the existing document's format when writing. New metadata documents default to the `language` field format, configurable via the new `newMetadataFormat` option (`'language-field' | 'legacy'`).
+
+### Patch Changes
+
+- Updated dependencies [[`310b5fe`](https://github.com/sanity-io/plugins/commit/310b5fe3070eafe89f3cafea48568a3577a3a118)]:
+  - sanity-naive-html-serializer@5.1.0
+
 ## 6.0.0
 
 ### Major Changes
