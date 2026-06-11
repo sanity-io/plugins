@@ -1,5 +1,11 @@
 # sanity-naive-html-serializer
 
+## 5.1.0
+
+### Minor Changes
+
+- [#957](https://github.com/sanity-io/plugins/pull/957) [`310b5fe`](https://github.com/sanity-io/plugins/commit/310b5fe3070eafe89f3cafea48568a3577a3a118) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Support both internationalized array data formats. The serializer, deserializer, and merger now read the language from either the legacy `_key` or the new `language` field (`sanity-plugin-internationalized-array` v5), and write merged translations back in whichever format the source document already uses.
+
 ## 5.0.0
 
 ### Major Changes

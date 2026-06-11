@@ -1,6 +1,6 @@
 {
   "name": "sanity-naive-html-serializer",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "This is the source for tooling for naively turning documents and rich text fields into HTML, deserializing them, combining them with source documents, and patching them back. Ideally, this should take in objects that are in portable text, text arrays, or objects with text fields without knowing their specific names or types, and be able to patch them back without additional work on the part of the developer.",
   "keywords": [
     "sanity",
