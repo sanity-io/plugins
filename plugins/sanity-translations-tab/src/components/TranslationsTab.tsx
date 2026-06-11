@@ -35,7 +35,13 @@ const TranslationTab = (props: TranslationTabProps) => {
   const documentId = displayed?._id?.split('drafts.').pop() ?? ''
 
   const {errors, importTranslation, exportForTranslation} = useMemo(() => {
-    const {serializationOptions, baseLanguage, languageField, mergeWithTargetLocale} = props.options
+    const {
+      serializationOptions,
+      baseLanguage,
+      languageField,
+      mergeWithTargetLocale,
+      newMetadataFormat,
+    } = props.options
     const ctx = {
       client,
       schema,
@@ -65,6 +71,7 @@ const TranslationTab = (props: TranslationTabProps) => {
         serializationOptions,
         languageField,
         mergeWithTargetLocale,
+        newMetadataFormat,
       )
     }
 

@@ -1,5 +1,7 @@
 import {SanityDocument, TypedObject} from 'sanity'
 
+import {getItemLanguage, LANGUAGE_FIELD} from '../../internationalizedArrayHelpers'
+
 const META_FIELDS = ['_key', '_type', '_id']
 
 const isValidInternationalizedArray = (arr: any[], baseLang: string): boolean => {
@@ -8,12 +10,27 @@ const isValidInternationalizedArray = (arr: any[], baseLang: string): boolean =>
     arr.length > 0 &&
     typeof arr[0] === 'object' &&
     internationalizedRegex.test(arr[0]._type) &&
-    arr.filter((obj) => obj._key === baseLang).length > 0
+    arr.filter((obj) => getItemLanguage(obj) === baseLang).length > 0
   )
 }
 
-const filterToBaseLang = (arr: TypedObject[], baseLang: string) => {
-  return arr.filter((obj) => obj._key === baseLang)
+/*
+ * Filters an internationalized array down to the base language item, and normalizes
+ * it to the legacy shape (`_key` = language, no `language` field) so the existing
+ * serialize -> id -> deserialize -> _key round trip works for both v4 and v5 data,
+ * and the language code is never exposed to translators as a translatable string.
+ */
+const filterToBaseLang = (arr: TypedObject[], baseLang: string): TypedObject[] => {
+  const filtered: TypedObject[] = []
+  for (const obj of arr) {
+    if (getItemLanguage(obj) !== baseLang) {
+      continue
+    }
+    const normalized: TypedObject = {...obj, _key: baseLang}
+    delete normalized[LANGUAGE_FIELD]
+    filtered.push(normalized)
+  }
+  return filtered
 }
 
 /*

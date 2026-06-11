@@ -44,7 +44,8 @@
     "@portabletext/block-tools": "^4.0.2",
     "@portabletext/to-html": "^2.0.14",
     "@sanity/mutator": "^5.21.0",
-    "@sanity/schema": "^5.21.0"
+    "@sanity/schema": "^5.21.0",
+    "@sanity/util": "catalog:"
   },
   "devDependencies": {
     "@portabletext/types": "^2.0.2",
