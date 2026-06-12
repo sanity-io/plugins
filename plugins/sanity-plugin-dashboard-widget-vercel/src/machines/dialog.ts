@@ -1,4 +1,5 @@
 import {assertEvent, assign, setup} from 'xstate'
+
 import {Sanity} from '../types'
 
 type Context = {

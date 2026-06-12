@@ -1,6 +1,6 @@
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {Box, Inline, Text, Tooltip} from '@sanity/ui'
-import React, {FC} from 'react'
+import type {FC} from 'react'
 import {FieldError} from 'react-hook-form'
 import {styled} from 'styled-components'
 

@@ -1,17 +1,16 @@
 import {AddIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Text, ToastProvider, Tooltip} from '@sanity/ui'
-import {useMachine} from '@xstate/react'
-import React from 'react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {useMachine} from '@xstate/react'
 
+import {useSanityClient} from './client'
+import DeploymentTargets from './components/DeploymentTargets'
+import DialogForm from './components/DialogForm'
 import StateDebug from './components/StateDebug'
 import {Z_INDEX_TOAST_PROVIDER} from './constants'
 import {deploymentTargetListMachine} from './machines/deploymentTargetList'
-import DeploymentTargets from './components/DeploymentTargets'
-import DialogForm from './components/DialogForm'
 import {dialogMachine} from './machines/dialog'
 import {Sanity} from './types'
-import {useSanityClient} from './client'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,7 +26,7 @@ const Widget = () => {
 
   const [deploymentTargetListState, deploymentTargetListStateTransition] = useMachine(
     deploymentTargetListMachine,
-    {input: {client}}
+    {input: {client}},
   )
   const [dialogState, dialogStateTransition] = useMachine(dialogMachine)
 

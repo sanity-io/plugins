@@ -1,9 +1,9 @@
 import {EditIcon} from '@sanity/icons'
 import {Box, Button, Flex, Text, Tooltip} from '@sanity/ui'
-import React, {FC} from 'react'
+import type {FC} from 'react'
 
-import Deployments from '../Deployments'
 import {Sanity} from '../../types'
+import Deployments from '../Deployments'
 
 type Props = {
   item: Sanity.DeploymentTarget

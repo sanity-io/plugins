@@ -1,7 +1,7 @@
 import {UploadIcon} from '@sanity/icons'
 import {Box, Button, useToast} from '@sanity/ui'
 import {useMachine} from '@xstate/react'
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 
 import {WIDGET_NAME} from '../../constants'
 import {deployMachine} from '../../machines/deploy'

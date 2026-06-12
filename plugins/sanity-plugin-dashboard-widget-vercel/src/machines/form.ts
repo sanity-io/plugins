@@ -1,8 +1,9 @@
-import type {SanityClient} from 'sanity'
 import {uuid} from '@sanity/uuid'
+import type {SanityClient} from 'sanity'
 import {assertEvent, assign, fromPromise, setup} from 'xstate'
-import type {Sanity} from '../types'
+
 import {DEPLOYMENT_TARGET_DOCUMENT_TYPE} from '../constants'
+import type {Sanity} from '../types'
 
 type Context = {
   client: SanityClient
@@ -77,12 +78,12 @@ export const formMachine = setup({
           _type: DEPLOYMENT_TARGET_DOCUMENT_TYPE,
           ...input.formData,
         })
-      }
+      },
     ),
     'update document': fromPromise(
       ({input}: {input: Required<Pick<Context, 'client' | 'id' | 'formData'>>}) => {
         return input.client.patch(input.id).set(input.formData).commit()
-      }
+      },
     ),
     'delete document': fromPromise(({input}: {input: Required<Pick<Context, 'client' | 'id'>>}) => {
       return input.client.delete(input.id)

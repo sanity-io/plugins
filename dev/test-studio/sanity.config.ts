@@ -41,6 +41,7 @@ import {transifexExample} from '#transifex'
 import {translationsTabExample} from '#translations-tab'
 import {unsplashExample} from '#unsplash'
 import {utilsExample} from '#utils'
+import {vercelWidgetExample} from '#vercel-widget'
 import {workflowExample} from '#workflow'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
@@ -107,6 +108,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      vercelWidgetExample(),
       netlifyWidgetExample(),
       documentListWidgetExample(),
       dashboardToolExample(),

@@ -1,5 +1,6 @@
 import {Box, Label} from '@sanity/ui'
-import React, {ReactNode} from 'react'
+import type {ReactNode} from 'react'
+
 import {Sanity} from '../../types'
 import {useCardColor} from '../../utils/useCardColor'
 

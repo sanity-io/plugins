@@ -1,5 +1,5 @@
 import {Box, Stack, Text} from '@sanity/ui'
-import React from 'react'
+
 import {useCardColor} from '../../utils/useCardColor'
 
 type Props = {

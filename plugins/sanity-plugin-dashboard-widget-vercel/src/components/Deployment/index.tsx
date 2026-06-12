@@ -1,11 +1,11 @@
+import {LinkIcon} from '@sanity/icons'
 import {Box, Flex, Stack, Text} from '@sanity/ui'
-import React, {useRef} from 'react'
+import {useRef} from 'react'
 import ReactTimeAgo from 'react-time-ago'
 
-import TableCell from '../TableCell'
-import StatusDot from '../StatusDot'
-import {LinkIcon} from '@sanity/icons'
 import {Vercel} from '../../types'
+import StatusDot from '../StatusDot'
+import TableCell from '../TableCell'
 
 type Props = {
   deployment: Vercel.DeploymentWithAlias

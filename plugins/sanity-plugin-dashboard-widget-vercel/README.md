@@ -2,7 +2,6 @@
 
 > For the v2 version, please refer to the [v2-branch](https://github.com/sanity-io/anity-plugin-dashboard-widget-vercel/tree/studio-v2).
 
-
 View your recent [Vercel](https://vercel.com/) deployments and manually trigger builds directly from your [Sanity](https://www.sanity.io/) dashboard.
 
 ![image](https://user-images.githubusercontent.com/209129/112195398-d0bf8380-8c01-11eb-8857-60c37ae50326.jpg)
@@ -35,19 +34,16 @@ Ensure that you have followed install and usage instructions for [@sanity/dashbo
 Add it as a widget to @sanity/dashboard plugin in sanity.config.ts (or .js):
 
 ```js
-import { dashboardTool } from "@sanity/dashboard";
-import { vercelWidget } from "sanity-plugin-dashboard-widget-vercel";
+import {dashboardTool} from '@sanity/dashboard'
+import {vercelWidget} from 'sanity-plugin-dashboard-widget-vercel'
 
 export default defineConfig({
   // ...
   plugins: [
-     dashboardTool({
-             widgets: [
-               vercelWidget(),
-             ],
-         }
-     ),
-  ] 
+    dashboardTool({
+      widgets: [vercelWidget()],
+    }),
+  ],
 })
 ```
 
@@ -57,11 +53,8 @@ The widget size can be controlled using layout.width:
 
 ```js
 dashboardTool({
-        widgets: [
-          vercelWidget({ layout: { width: "full" /* default and reccomended */ } }),
-        ],
-    }
-)
+  widgets: [vercelWidget({layout: {width: 'full' /* default and reccomended */}})],
+})
 ```
 
 ### Add a deployment target

@@ -1,5 +1,5 @@
 import {Box, TextInput} from '@sanity/ui'
-import React, {forwardRef} from 'react'
+import {type ChangeEventHandler, type FocusEventHandler, forwardRef} from 'react'
 import {FieldError} from 'react-hook-form'
 
 import FormFieldInputLabel from '../FormFieldInputLabel'
@@ -12,8 +12,8 @@ type Props = {
   name: string
   placeholder?: string
   value?: string
-  onChange?: React.ChangeEventHandler<HTMLInputElement>
-  onBlur?: React.FocusEventHandler<HTMLInputElement>
+  onChange?: ChangeEventHandler<HTMLInputElement>
+  onBlur?: FocusEventHandler<HTMLInputElement>
 }
 
 const FormFieldInputText = forwardRef<HTMLInputElement, Props>((props: Props, ref) => {

@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-plugin-dashboard-widget-vercel
 
 ## [3.1.6](https://github.com/sanity-io/sanity-plugin-dashboard-widget-vercel/compare/v3.1.5...v3.1.6) (2026-01-07)
 

@@ -1,5 +1,6 @@
-import {useTheme} from '@sanity/ui'
+import {useTheme_v2} from '@sanity/ui'
 
-export function useCardColor() {
-  return useTheme().sanity.color.card.enabled
+export function useCardColor(): {border: string} {
+  const {color} = useTheme_v2()
+  return {border: color.border}
 }

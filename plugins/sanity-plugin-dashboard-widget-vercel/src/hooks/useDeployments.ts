@@ -1,9 +1,9 @@
-import hash from 'object-hash'
 import {useQuery} from '@tanstack/react-query'
+import hash from 'object-hash'
 
-import fetcher from '../utils/fetcher'
 import {API_ENDPOINT_ALIASES, API_ENDPOINT_DEPLOYMENTS} from '../constants'
 import {Sanity, Vercel} from '../types'
+import fetcher from '../utils/fetcher'
 
 type Options = {
   enabled?: boolean

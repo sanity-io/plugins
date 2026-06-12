@@ -1,7 +1,8 @@
-import {assign, setup, fromPromise, assertEvent} from 'xstate'
-import {Sanity} from '../types'
 import type {SanityClient} from 'sanity'
+import {assign, setup, fromPromise, assertEvent} from 'xstate'
+
 import {DEPLOYMENT_TARGET_DOCUMENT_TYPE} from '../constants'
+import {Sanity} from '../types'
 
 type Context = {
   client: SanityClient
@@ -80,7 +81,7 @@ export const deploymentTargetListMachine = setup({
             {
               type: DEPLOYMENT_TARGET_DOCUMENT_TYPE,
             },
-            {signal}
+            {signal},
           )
           .catch((error) => {
             if (error instanceof Error && error.name === 'AbortError') {
@@ -89,7 +90,7 @@ export const deploymentTargetListMachine = setup({
             console.error('Failed to fetch deployment targets', error)
             throw error
           })
-      }
+      },
     ),
   },
 }).createMachine({

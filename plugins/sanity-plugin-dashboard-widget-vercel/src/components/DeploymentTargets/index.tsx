@@ -1,8 +1,7 @@
-import React from 'react'
 import {Stack} from '@sanity/ui'
 
-import DeploymentTarget from '../DeploymentTarget'
 import {Sanity} from '../../types'
+import DeploymentTarget from '../DeploymentTarget'
 
 type Props = {
   items: Sanity.DeploymentTarget[]

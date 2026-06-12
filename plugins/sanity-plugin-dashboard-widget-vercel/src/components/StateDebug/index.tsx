@@ -1,5 +1,4 @@
 import {Box, Card, Stack, Text} from '@sanity/ui'
-import React from 'react'
 
 import {DEBUG_MODE} from '../../constants'
 

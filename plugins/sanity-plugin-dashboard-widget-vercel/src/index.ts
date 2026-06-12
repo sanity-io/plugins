@@ -1,9 +1,9 @@
-import Widget from './app'
-
+import {DashboardWidget, type LayoutConfig} from '@sanity/dashboard'
 // Initialize `javascript-time-ago` locale (required for react-time-ago)
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import {DashboardWidget, type LayoutConfig} from '@sanity/dashboard'
+
+import Widget from './app'
 
 TimeAgo.addDefaultLocale(en)
 

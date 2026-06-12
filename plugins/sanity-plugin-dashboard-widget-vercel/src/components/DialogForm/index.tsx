@@ -1,17 +1,17 @@
 import {yupResolver} from '@hookform/resolvers/yup'
 import {Box, Button, Dialog, Flex, Stack, useToast} from '@sanity/ui'
 import {useActor} from '@xstate/react'
-import React, {FC, useEffect} from 'react'
+import {type FC, useEffect} from 'react'
 import {useForm} from 'react-hook-form'
+import {toPromise} from 'xstate'
 import * as yup from 'yup'
 
+import {useSanityClient} from '../../client'
 import {Z_INDEX_DIALOG} from '../../constants'
 import {formMachine} from '../../machines/form'
+import {Sanity} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
 import FormFieldInputText from '../FormFieldInputText'
-import {Sanity} from '../../types'
-import {useSanityClient} from '../../client'
-import {toPromise} from 'xstate'
 
 type Props = {
   deploymentTarget?: Sanity.DeploymentTarget

@@ -1,5 +1,4 @@
 import {Box} from '@sanity/ui'
-import React from 'react'
 
 import {VERCEL_STATUS_COLORS} from '../../constants'
 import {Vercel} from '../../types'

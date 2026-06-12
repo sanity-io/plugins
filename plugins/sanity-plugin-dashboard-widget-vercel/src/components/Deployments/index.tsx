@@ -1,18 +1,18 @@
 import {Box, Text, useToast} from '@sanity/ui'
 import {useMachine} from '@xstate/react'
-import React, {useEffect, useRef} from 'react'
+import {useEffect, useRef} from 'react'
 import useDeepCompareEffect from 'use-deep-compare-effect'
 
 import {WIDGET_NAME} from '../../constants'
 import useDeployments from '../../hooks/useDeployments'
 import refreshMachine from '../../machines/refresh'
-import Deployment from '../Deployment'
+import {Sanity} from '../../types'
+import {useCardColor} from '../../utils/useCardColor'
 import DeployButton from '../DeployButton'
+import Deployment from '../Deployment'
 import DeploymentPlaceholder from '../DeploymentPlaceholder'
 import StateDebug from '../StateDebug'
 import TableCell from '../TableCell'
-import {Sanity} from '../../types'
-import {useCardColor} from '../../utils/useCardColor'
 
 type Props = {
   deploymentTarget: Sanity.DeploymentTarget
