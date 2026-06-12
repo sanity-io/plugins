@@ -1,5 +1,6 @@
-import React, {FunctionComponent, useCallback, useEffect, useRef, useState} from 'react'
 import {Button, Flex, Box, Card, Text, Stack, Label} from '@sanity/ui'
+import {type FunctionComponent, useCallback, useEffect, useRef, useState} from 'react'
+
 import {DeployAction, Site} from '../../types'
 import Links from './Links'
 
@@ -18,9 +19,9 @@ const getImageUrl = (siteId: string, branchName?: string) => {
   return branchName ? `${baseUrl}?${time}&${branch}` : `${baseUrl}?${time}`
 }
 
-const useBadgeImage = (siteId: string, branchName?: string ) => {
+const useBadgeImage = (siteId: string, branchName?: string) => {
   const [src, setSrc] = useState(() => getImageUrl(siteId, branchName))
-  const update = useCallback(() => setSrc(getImageUrl(siteId, branchName)), [siteId])
+  const update = useCallback(() => setSrc(getImageUrl(siteId, branchName)), [siteId, branchName])
 
   useEffect(() => {
     const interval = window.setInterval(update, IMAGE_PULL_INTERVAL)
@@ -62,7 +63,13 @@ const SiteItem: FunctionComponent<Props> = (props) => {
 
           <Flex justify="flex-start">
             {!hasBadgeError && <img src={badge} onError={handleBadgeError} alt="Badge" />}
-            {hasBadgeError && <Card tone="critical" radius={2} padding={2}><Label size={0} muted>Failed to load badge</Label></Card>}
+            {hasBadgeError && (
+              <Card tone="critical" radius={2} padding={2}>
+                <Label size={0} muted>
+                  Failed to load badge
+                </Label>
+              </Card>
+            )}
           </Flex>
         </Stack>
       </Box>

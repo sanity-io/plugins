@@ -1,7 +1,7 @@
-import React from 'react'
-import Widget from './widget'
-import {WidgetOptions} from './types'
 import {DashboardWidget, LayoutConfig} from '@sanity/dashboard'
+
+import {WidgetOptions} from './types'
+import Widget from './widget'
 
 export type NetlifyWidgetConfig = WidgetOptions & {layout?: LayoutConfig}
 

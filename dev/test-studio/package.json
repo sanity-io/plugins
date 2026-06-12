@@ -38,6 +38,7 @@
     "sanity-plugin-asset-source-unsplash": "workspace:*",
     "sanity-plugin-bynder-input": "workspace:*",
     "sanity-plugin-dashboard-widget-document-list": "workspace:*",
+    "sanity-plugin-dashboard-widget-netlify": "workspace:*",
     "sanity-plugin-documents-pane": "workspace:*",
     "sanity-plugin-google-translate": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",

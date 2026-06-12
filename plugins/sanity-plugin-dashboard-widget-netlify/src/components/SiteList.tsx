@@ -1,7 +1,7 @@
-import React from 'react'
+import {Flex, Box, Card, Text, Spinner, Stack} from '@sanity/ui'
+
 import {DeployAction, Site} from '../types'
 import SiteItem from './SiteItem'
-import {Flex, Box, Card, Text, Spinner, Stack} from '@sanity/ui'
 
 interface Props {
   isLoading: boolean

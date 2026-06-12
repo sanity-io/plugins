@@ -1,4 +1,4 @@
-import React, {FunctionComponent, PropsWithChildren} from 'react'
+import type {FunctionComponent, PropsWithChildren} from 'react'
 
 const Link = (props: PropsWithChildren<{url: string}>) => {
   const {url, children} = props

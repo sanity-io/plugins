@@ -1,9 +1,9 @@
-import React from 'react'
+import {DashboardWidgetContainer} from '@sanity/dashboard'
+import {Button, Flex, Card, Text, Box} from '@sanity/ui'
+import {styled} from 'styled-components'
+
 import {NetlifyWidgetProps} from '../types'
 import SiteList from './SiteList'
-import {DashboardWidgetContainer} from '@sanity/dashboard'
-import {styled} from 'styled-components'
-import {Button, Flex, Card, Text, Box} from '@sanity/ui'
 
 const ContentCard = styled(Card)`
   min-height: 66px;

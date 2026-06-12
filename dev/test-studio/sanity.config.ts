@@ -26,6 +26,7 @@ import {
 } from '#internationalized-array'
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
+import {netlifyWidgetExample} from '#netlify-widget'
 import {
   orderableDocumentListExample,
   orderableDocumentListExampleStructure,
@@ -106,6 +107,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      netlifyWidgetExample(),
       documentListWidgetExample(),
       dashboardToolExample(),
       orderableDocumentListExample(),
