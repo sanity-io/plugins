@@ -1,5 +1,6 @@
-import {describe, expect, it} from 'vitest'
 import {Observable, firstValueFrom} from 'rxjs'
+import {describe, expect, it} from 'vitest'
+
 import {createThrottler, withMaxConcurrency} from './withMaxConcurrency'
 
 describe('createThrottler', () => {
@@ -9,7 +10,7 @@ describe('createThrottler', () => {
     const request = createThrottler(2)
 
     const mk = () =>
-      new Observable<number>(sub => {
+      new Observable<number>((sub) => {
         active++
         maxActive = Math.max(maxActive, active)
         queueMicrotask(() => {
@@ -22,7 +23,7 @@ describe('createThrottler', () => {
     await Promise.all([
       firstValueFrom(request(mk())),
       firstValueFrom(request(mk())),
-      firstValueFrom(request(mk()))
+      firstValueFrom(request(mk())),
     ])
 
     expect(maxActive).toBe(2)
@@ -32,7 +33,7 @@ describe('createThrottler', () => {
 describe('withMaxConcurrency', () => {
   it('wraps a function so each call returns a single-value observable', async () => {
     const fn = (n: number) =>
-      new Observable<number>(sub => {
+      new Observable<number>((sub) => {
         sub.next(n)
         sub.complete()
       })

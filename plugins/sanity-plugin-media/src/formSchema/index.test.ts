@@ -1,6 +1,7 @@
 // @vitest-environment node
 
 import {describe, expect, it} from 'vitest'
+
 import {assetFormSchema, tagFormSchema, tagOptionSchema} from './index'
 
 describe('tagOptionSchema', () => {
@@ -28,7 +29,7 @@ describe('assetFormSchema', () => {
     description: '',
     opt: {media: {tags: null}},
     originalFilename: 'file.png',
-    title: ''
+    title: '',
   }
 
   it('accepts valid asset form payload', () => {
@@ -39,8 +40,8 @@ describe('assetFormSchema', () => {
     expect(
       assetFormSchema.safeParse({
         ...base,
-        originalFilename: '   '
-      }).success
+        originalFilename: '   ',
+      }).success,
     ).toBe(false)
   })
 
@@ -48,8 +49,8 @@ describe('assetFormSchema', () => {
     expect(
       assetFormSchema.safeParse({
         ...base,
-        opt: {media: {tags: [{label: '', value: 'v'}]}}
-      }).success
+        opt: {media: {tags: [{label: '', value: 'v'}]}},
+      }).success,
     ).toBe(false)
   })
 })

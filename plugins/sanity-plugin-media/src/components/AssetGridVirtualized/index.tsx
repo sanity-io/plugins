@@ -1,8 +1,9 @@
-import type {CardAssetData, CardUploadData} from '../../types'
 import {memo, forwardRef} from 'react'
 import {VirtuosoGrid} from 'react-virtuoso'
 import {styled} from 'styled-components'
+
 import useTypedSelector from '../../hooks/useTypedSelector'
+import type {CardAssetData, CardUploadData} from '../../types'
 import CardAsset from '../CardAsset'
 import CardUpload from '../CardUpload'
 
@@ -25,7 +26,7 @@ const VirtualCell = memo(
     }
 
     return null
-  }
+  },
 )
 
 const StyledItemContainer = styled.div`
@@ -57,9 +58,9 @@ const AssetGridVirtualized = (props: Props) => {
   const {items, onLoadMore} = props
 
   // Redux
-  const selectedAssets = useTypedSelector(state => state.selected.assets)
+  const selectedAssets = useTypedSelector((state) => state.selected.assets)
 
-  const selectedIds = (selectedAssets && selectedAssets.map(asset => asset._id)) || []
+  const selectedIds = (selectedAssets && selectedAssets.map((asset) => asset._id)) || []
   const totalCount = items?.length
 
   if (totalCount === 0) {
@@ -69,16 +70,16 @@ const AssetGridVirtualized = (props: Props) => {
   return (
     <VirtuosoGrid
       className="media__custom-scrollbar"
-      computeItemKey={index => {
+      computeItemKey={(index) => {
         const item = items[index]
         return item?.id
       }}
       components={{
         Item: ItemContainer,
-        List: ListContainer
+        List: ListContainer,
       }}
       endReached={onLoadMore}
-      itemContent={index => {
+      itemContent={(index) => {
         const item = items[index]
         const selected = selectedIds.includes(item?.id)
         return <VirtualCell item={item} selected={selected} />

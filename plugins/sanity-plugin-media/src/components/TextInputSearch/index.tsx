@@ -2,12 +2,13 @@ import {CloseIcon, SearchIcon} from '@sanity/icons'
 import {Box, Flex, TextInput} from '@sanity/ui'
 import {type ChangeEvent} from 'react'
 import {useDispatch} from 'react-redux'
+
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {searchActions} from '../../modules/search'
 
 const TextInputSearch = () => {
   // Redux
-  const searchQuery = useTypedSelector(state => state.search.query)
+  const searchQuery = useTypedSelector((state) => state.search.query)
 
   // Redux
   const dispatch = useDispatch()
@@ -46,7 +47,7 @@ const TextInputSearch = () => {
             right: 0,
             top: 0,
             width: '2em',
-            zIndex: 1 // force stacking context
+            zIndex: 1, // force stacking context
           }}
         >
           <CloseIcon />

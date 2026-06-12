@@ -5,11 +5,11 @@ import {useEffect, useState} from 'react'
 // - create MediaQueryLists from every breakpoint defined in our sanity studio theme
 // - for each MQL, listen to change events and return the selected breakpoint index
 const useBreakpointIndex = (): number => {
-  const mediaQueryLists = studioTheme?.container?.map(width =>
-    window.matchMedia(`(max-width: ${width}px)`)
+  const mediaQueryLists = studioTheme?.container?.map((width) =>
+    window.matchMedia(`(max-width: ${width}px)`),
   )
 
-  const getBreakpointIndex = () => mediaQueryLists.findIndex(mql => mql.matches)
+  const getBreakpointIndex = () => mediaQueryLists.findIndex((mql) => mql.matches)
 
   const [value, setValue] = useState(getBreakpointIndex())
 
@@ -19,7 +19,7 @@ const useBreakpointIndex = (): number => {
     }
 
     // NOTE: older versions of Safari use the older `addListener` and `removeListener` methods
-    mediaQueryLists.forEach(mql => {
+    mediaQueryLists.forEach((mql) => {
       try {
         mql.addEventListener('change', handleBreakpoint)
       } catch (err) {
@@ -32,10 +32,10 @@ const useBreakpointIndex = (): number => {
     })
     return () => {
       try {
-        mediaQueryLists.forEach(mql => mql.removeEventListener('change', handleBreakpoint))
+        mediaQueryLists.forEach((mql) => mql.removeEventListener('change', handleBreakpoint))
       } catch (err) {
         try {
-          mediaQueryLists.forEach(mql => mql.removeListener(handleBreakpoint))
+          mediaQueryLists.forEach((mql) => mql.removeListener(handleBreakpoint))
         } catch (_err) {
           // Do nothing
         }

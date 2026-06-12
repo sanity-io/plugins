@@ -1,5 +1,6 @@
 import {Box, Button, Flex, Inline, useMediaIndex} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
+
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {dialogActions} from '../../modules/dialog'
 import {tagsActions} from '../../modules/tags'
@@ -14,10 +15,10 @@ import TextInputSearch from '../TextInputSearch'
 const Controls = () => {
   // Redux
   const dispatch = useDispatch()
-  const fetching = useTypedSelector(state => state.assets.fetching)
-  const pageIndex = useTypedSelector(state => state.assets.pageIndex)
-  const searchFacets = useTypedSelector(state => state.search.facets)
-  const tagsPanelVisible = useTypedSelector(state => state.tags.panelVisible)
+  const fetching = useTypedSelector((state) => state.assets.fetching)
+  const pageIndex = useTypedSelector((state) => state.assets.pageIndex)
+  const searchFacets = useTypedSelector((state) => state.search.facets)
+  const tagsPanelVisible = useTypedSelector((state) => state.tags.panelVisible)
 
   const mediaIndex = useMediaIndex()
 
@@ -39,7 +40,7 @@ const Controls = () => {
       paddingY={2}
       style={{
         borderBottom: '1px solid var(--card-border-color)',
-        zIndex: 2
+        zIndex: 2,
       }}
     >
       {/* Rows: search / filters / orders  */}
@@ -58,7 +59,7 @@ const Controls = () => {
               height: '100%',
               justifyContent: mediaIndex < 2 ? 'space-between' : 'flex-start',
               position: 'relative',
-              width: '100%'
+              width: '100%',
             }}
           >
             <Box marginX={2} style={{minWidth: '200px'}}>

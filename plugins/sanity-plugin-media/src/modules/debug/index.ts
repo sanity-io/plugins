@@ -7,7 +7,7 @@ type DebugReducerState = {
 
 const initialState = {
   badConnection: false,
-  enabled: false
+  enabled: false,
 } as DebugReducerState
 
 const debugSlice = createSlice({
@@ -19,8 +19,8 @@ const debugSlice = createSlice({
     },
     toggleEnabled(state) {
       state.enabled = !state.enabled
-    }
-  }
+    },
+  },
 })
 
 export const debugActions = {...debugSlice.actions}

@@ -6,7 +6,7 @@ const isPlainObject = (value: any) =>
 // Recursively search node for any linked asset ids (`asset._type === 'reference'`)
 const getAssetIds = (node: Record<string, any>, acc: string[] = []) => {
   if (Array.isArray(node)) {
-    node.forEach(v => {
+    node.forEach((v) => {
       getAssetIds(v, acc)
     })
   }
@@ -16,7 +16,7 @@ const getAssetIds = (node: Record<string, any>, acc: string[] = []) => {
       acc.push(node.asset._ref)
     }
 
-    Object.values(node).forEach(val => {
+    Object.values(node).forEach((val) => {
       getAssetIds(val, acc)
     })
   }

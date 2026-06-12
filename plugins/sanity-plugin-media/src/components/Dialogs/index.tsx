@@ -1,6 +1,5 @@
-import type {Dialog} from '../../types'
-
 import useTypedSelector from '../../hooks/useTypedSelector'
+import type {Dialog} from '../../types'
 import DialogAssetEdit from '../DialogAssetEdit'
 import DialogConfirm from '../DialogConfirm'
 import DialogSearchFacets from '../DialogSearchFacets'
@@ -10,7 +9,7 @@ import DialogTags from '../DialogTags'
 
 const Dialogs = () => {
   // Redux
-  const currentDialogs = useTypedSelector(state => state.dialog.items)
+  const currentDialogs = useTypedSelector((state) => state.dialog.items)
 
   const renderDialogs = (dialogs: Dialog[], index: number) => {
     if (dialogs.length === 0 || index >= dialogs.length) {

@@ -1,5 +1,5 @@
-import {TAG_DOCUMENT_NAME} from '../constants'
 import TagIcon from '../components/TagIcon'
+import {TAG_DOCUMENT_NAME} from '../constants'
 
 export default {
   title: 'Media Tag',
@@ -10,19 +10,19 @@ export default {
     {
       title: 'Name',
       name: 'name',
-      type: 'slug'
-    }
+      type: 'slug',
+    },
   ],
   preview: {
     select: {
-      name: 'name'
+      name: 'name',
     },
     prepare(selection: any) {
       const {name} = selection
       return {
         media: TagIcon,
-        title: name?.current
+        title: name?.current,
       }
-    }
-  }
+    },
+  },
 }

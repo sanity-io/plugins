@@ -1,6 +1,7 @@
 // @vitest-environment node
 
 import {describe, expect, it} from 'vitest'
+
 import type {AssetType, ImageAsset} from '../../types'
 import assetsReducer, {assetsActions, initialState, type AssetsReducerState} from './index'
 
@@ -13,7 +14,7 @@ const minimalImage = {
   originalFilename: 'a.png',
   size: 1,
   mimeType: 'image/png',
-  url: 'https://example.com/a.png'
+  url: 'https://example.com/a.png',
 } as ImageAsset
 
 describe('assets slice', () => {
@@ -27,9 +28,9 @@ describe('assets slice', () => {
           _type: 'asset',
           asset: minimalImage,
           picked: false,
-          updating: false
-        }
-      }
+          updating: false,
+        },
+      },
     }
   }
 
@@ -50,7 +51,7 @@ describe('assets slice', () => {
 
   it('fetchComplete merges assets', () => {
     let state = assetsReducer({...initialState, assetTypes: ['image'] as AssetType[]}, {
-      type: '@@INIT'
+      type: '@@INIT',
     } as never)
     state = assetsReducer(state, assetsActions.fetchComplete({assets: [minimalImage]}))
     expect(state.allIds).toContain('img-1')
@@ -62,13 +63,13 @@ describe('assets slice', () => {
     let state: AssetsReducerState = {
       ...initialState,
       assetTypes: ['image'] as AssetType[],
-      pageIndex: 3
+      pageIndex: 3,
     }
     state = assetsReducer(
       state,
       assetsActions.orderSet({
-        order: {field: 'size', direction: 'asc'}
-      })
+        order: {field: 'size', direction: 'asc'},
+      }),
     )
     expect(state.pageIndex).toBe(0)
     expect(state.order.field).toBe('size')

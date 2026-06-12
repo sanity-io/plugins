@@ -20,7 +20,7 @@ export function createMockSanityClient(
     observable?: Partial<MockSanityClient['observable']> & {
       assets?: Partial<MockSanityClient['observable']['assets']>
     }
-  } = {}
+  } = {},
 ): SanityClient {
   const {observable: observableOverrides, ...restOverrides} = overrides
 
@@ -29,8 +29,8 @@ export function createMockSanityClient(
     delete: vi.fn(() => of({})),
     create: vi.fn(() => of({_id: 'new'})),
     assets: {
-      upload: vi.fn(() => of({type: 'complete', body: {document: {_id: 'up'}}}))
-    }
+      upload: vi.fn(() => of({type: 'complete', body: {document: {_id: 'up'}}})),
+    },
   }
 
   const observable: MockSanityClient['observable'] = {
@@ -38,8 +38,8 @@ export function createMockSanityClient(
     ...(observableOverrides ?? {}),
     assets: {
       ...observableBase.assets,
-      ...(observableOverrides?.assets ?? {})
-    }
+      ...(observableOverrides?.assets ?? {}),
+    },
   }
 
   const client: MockSanityClient = {
@@ -48,7 +48,7 @@ export function createMockSanityClient(
     listen: vi.fn(() => new Subject()),
     patch: vi.fn(),
     transaction: vi.fn(),
-    ...restOverrides
+    ...restOverrides,
   }
 
   return client as unknown as SanityClient
@@ -63,7 +63,7 @@ export function mockPatchChain(result: unknown): {
   const chain = {
     set: vi.fn(),
     setIfMissing: vi.fn(),
-    commit
+    commit,
   }
   chain.set.mockImplementation(() => chain)
   chain.setIfMissing.mockImplementation(() => chain)
@@ -78,7 +78,7 @@ export function mockTransactionCommit(resolved: unknown = undefined): {
   const tx = {
     patch: vi.fn().mockReturnThis(),
     delete: vi.fn().mockReturnThis(),
-    commit: vi.fn().mockResolvedValue(resolved)
+    commit: vi.fn().mockResolvedValue(resolved),
   }
   return tx
 }

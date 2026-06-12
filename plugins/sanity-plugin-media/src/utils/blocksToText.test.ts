@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest'
-import blocksToText from './blocksToText'
+
 import type {Block} from '../types'
+import blocksToText from './blocksToText'
 
 describe('blocksToText', () => {
   it('returns plain strings unchanged', () => {
@@ -18,14 +19,14 @@ describe('blocksToText', () => {
         _type: 'block',
         _key: 'a',
         markDefs: [],
-        children: [{_key: 'a1', text: 'Line one', marks: []}]
+        children: [{_key: 'a1', text: 'Line one', marks: []}],
       },
       {
         _type: 'block',
         _key: 'b',
         markDefs: [],
-        children: [{_key: 'b1', text: 'Line two', marks: []}]
-      }
+        children: [{_key: 'b1', text: 'Line two', marks: []}],
+      },
     ]
     expect(blocksToText(blocks)).toBe('Line one\n\nLine two')
   })

@@ -1,6 +1,6 @@
 import {Flex} from '@sanity/ui'
-import type {Asset} from '../../types'
 
+import type {Asset} from '../../types'
 import FileIcon from '../FileIcon'
 
 type Props = {
@@ -25,7 +25,7 @@ const FileAssetPreview = (props: Props) => {
         src={asset.url}
         style={{
           height: '100%',
-          width: '100%'
+          width: '100%',
         }}
       />
     )

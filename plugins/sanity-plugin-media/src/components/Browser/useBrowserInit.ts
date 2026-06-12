@@ -2,22 +2,22 @@ import type {MutationEvent, SanityClient} from '@sanity/client'
 import groq from 'groq'
 import {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import type {AssetSourceComponentProps} from 'sanity'
 import type {Dispatch} from 'redux'
+import type {AssetSourceComponentProps} from 'sanity'
 
 import {inputs} from '../../config/searchFacets'
 import {TAG_DOCUMENT_NAME} from '../../constants'
+import {assetsActions} from '../../modules/assets'
 import {searchActions} from '../../modules/search'
 import {tagsActions} from '../../modules/tags'
 import type {RootReducerState} from '../../modules/types'
 import type {Asset, Tag} from '../../types'
-import {assetsActions} from '../../modules/assets'
 
 function getMediaTagNames(schemaType?: AssetSourceComponentProps['schemaType']): string[] {
   const mediaTags = (schemaType?.options as {mediaTags?: string[]} | undefined)?.mediaTags
   if (!mediaTags?.length) return []
   const unique = new Set(
-    mediaTags.map(t => t?.trim()).filter((t): t is string => Boolean(t?.length))
+    mediaTags.map((t) => t?.trim()).filter((t): t is string => Boolean(t?.length)),
   )
   return Array.from(unique)
 }
@@ -64,7 +64,7 @@ function createTagHandler(dispatch: Dispatch) {
 
 export function useBrowserInit(
   client: SanityClient,
-  schemaType?: AssetSourceComponentProps['schemaType']
+  schemaType?: AssetSourceComponentProps['schemaType'],
 ): void {
   const dispatch = useDispatch()
   const tagsByIds = useSelector((state: RootReducerState) => state.tags.byIds)
@@ -82,7 +82,7 @@ export function useBrowserInit(
 
     const assetSubscription = client
       .listen(
-        groq`*[_type in ["sanity.fileAsset", "sanity.imageAsset"] && !(_id in path("drafts.**"))]`
+        groq`*[_type in ["sanity.fileAsset", "sanity.imageAsset"] && !(_id in path("drafts.**"))]`,
       )
       .subscribe(createAssetHandler(dispatch))
 
@@ -106,7 +106,7 @@ export function useBrowserInit(
     if (tagFacetInput.type !== 'searchable') return
 
     const resolvedTags = tagNames
-      .map(name => Object.values(tagsByIds).find(item => item.tag.name.current === name))
+      .map((name) => Object.values(tagsByIds).find((item) => item.tag.name.current === name))
       .filter((item): item is NonNullable<typeof item> => Boolean(item))
 
     dispatch(searchActions.facetsClear())
@@ -117,9 +117,9 @@ export function useBrowserInit(
           facet: {
             ...tagFacetInput,
             operatorType: 'references',
-            value: {label: tagItem.tag.name.current, value: tagItem.tag._id}
-          }
-        })
+            value: {label: tagItem.tag.name.current, value: tagItem.tag._id},
+          },
+        }),
       )
     }
   }, [tagsFetchCount, hasMediaTags]) // eslint-disable-line react-hooks/exhaustive-deps

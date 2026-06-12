@@ -8,6 +8,6 @@ export function usePortalPopoverProps(): PopoverProps {
     constrainSize: true,
     floatingBoundary: portal.element,
     portal: true,
-    referenceBoundary: portal.element
+    referenceBoundary: portal.element,
   }
 }

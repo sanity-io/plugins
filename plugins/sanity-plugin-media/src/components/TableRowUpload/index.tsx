@@ -3,6 +3,7 @@ import {Box, Button, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
 import filesize from 'filesize'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
+
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {selectUploadById, uploadsActions} from '../../modules/uploads'
@@ -21,7 +22,7 @@ const TableRowUpload = (props: Props) => {
 
   // Redux
   const dispatch = useDispatch()
-  const item = useTypedSelector(state => selectUploadById(state, id))
+  const item = useTypedSelector((state) => selectUploadById(state, id))
 
   const mediaIndex = useMediaIndex()
 
@@ -63,7 +64,7 @@ const TableRowUpload = (props: Props) => {
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
         gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',
         height: '100%',
-        position: 'relative'
+        position: 'relative',
       }}
     >
       {/* Progress bar */}
@@ -77,7 +78,7 @@ const TableRowUpload = (props: Props) => {
           width: '100%',
           transform: `scaleX(${percentLoaded * 0.01})`,
           transformOrigin: 'bottom left',
-          transition: 'all 1000ms ease-out'
+          transition: 'all 1000ms ease-out',
         }}
       />
 
@@ -88,7 +89,7 @@ const TableRowUpload = (props: Props) => {
           gridRowStart: mediaIndex < 3 ? 1 : 'auto',
           gridRowEnd: mediaIndex < 3 ? 'span 4' : 'auto',
           height: '90px',
-          width: '100px'
+          width: '100px',
         }}
       >
         <Box style={{height: '100%', position: 'relative'}}>
@@ -122,7 +123,7 @@ const TableRowUpload = (props: Props) => {
                 height: '100%',
                 left: 0,
                 top: 0,
-                width: '100%'
+                width: '100%',
               }}
             >
               <Button
@@ -144,7 +145,7 @@ const TableRowUpload = (props: Props) => {
         style={{
           gridColumn: mediaIndex < 3 ? 3 : '3/8',
           gridRow: mediaIndex < 3 ? '2/4' : 'auto',
-          marginLeft: mediaIndex < 3 ? 3 : 0
+          marginLeft: mediaIndex < 3 ? 3 : 0,
         }}
       >
         <Stack space={3}>

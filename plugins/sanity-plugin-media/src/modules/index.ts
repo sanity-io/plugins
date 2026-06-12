@@ -2,7 +2,7 @@ import {
   type ActionFromReducersMapObject,
   type Reducer,
   type StateFromReducersMapObject,
-  combineReducers
+  combineReducers,
 } from '@reduxjs/toolkit'
 import {combineEpics} from 'redux-observable'
 
@@ -21,15 +21,14 @@ import assetsReducer, {
   assetsTagsAddEpic,
   assetsTagsRemoveEpic,
   assetsUnpickEpic,
-  assetsUpdateEpic
+  assetsUpdateEpic,
 } from './assets'
 import debugReducer from './debug'
 import dialogReducer, {
   dialogClearOnAssetUpdateEpic,
   dialogTagCreateEpic,
-  dialogTagDeleteEpic
+  dialogTagDeleteEpic,
 } from './dialog'
-import selectedReducer from './selected'
 import notificationsReducer, {
   notificationsAssetsDeleteErrorEpic,
   notificationsAssetsDeleteCompleteEpic,
@@ -39,9 +38,10 @@ import notificationsReducer, {
   notificationsGenericErrorEpic,
   notificationsTagCreateCompleteEpic,
   notificationsTagDeleteCompleteEpic,
-  notificationsTagUpdateCompleteEpic
+  notificationsTagUpdateCompleteEpic,
 } from './notifications'
 import searchReducer, {searchFacetTagUpdateEpic} from './search'
+import selectedReducer from './selected'
 import tagsReducer, {
   tagsCreateEpic,
   tagsDeleteEpic,
@@ -50,13 +50,13 @@ import tagsReducer, {
   tagsListenerDeleteQueueEpic,
   tagsListenerUpdateQueueEpic,
   tagsSortEpic,
-  tagsUpdateEpic
+  tagsUpdateEpic,
 } from './tags'
 import uploadsReducer, {
   uploadsAssetStartEpic,
   uploadsAssetUploadEpic,
   uploadsCheckRequestEpic,
-  uploadsCompleteQueueEpic
+  uploadsCompleteQueueEpic,
 } from './uploads'
 
 export const rootEpic = combineEpics(
@@ -99,7 +99,7 @@ export const rootEpic = combineEpics(
   uploadsAssetStartEpic,
   uploadsAssetUploadEpic,
   uploadsCheckRequestEpic,
-  uploadsCompleteQueueEpic
+  uploadsCompleteQueueEpic,
 )
 
 const reducers = {
@@ -110,7 +110,7 @@ const reducers = {
   search: searchReducer,
   selected: selectedReducer,
   tags: tagsReducer,
-  uploads: uploadsReducer
+  uploads: uploadsReducer,
 }
 
 type ReducersMapObject = typeof reducers

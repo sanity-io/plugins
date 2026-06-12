@@ -1,6 +1,7 @@
 import {Card, Stack, Tab, TabList, TabPanel} from '@sanity/ui'
 import {useState} from 'react'
 import {type Control, type FieldErrors, type UseFormRegister} from 'react-hook-form'
+
 import type {Asset, AssetFormData, Locale, TagSelectOption} from '../../types'
 import FormFieldInputTags from '../FormFieldInputTags'
 import FormFieldInputText from '../FormFieldInputText'
@@ -12,7 +13,7 @@ type LocalizedErrors = Record<string, {message?: string} | undefined>
 function toStringField(value: unknown): string | undefined {
   if (typeof value === 'string') return value
   if (typeof value === 'object' && value !== null) {
-    const found = Object.values(value as Record<string, string>).find(v => v)
+    const found = Object.values(value as Record<string, string>).find((v) => v)
     return found || undefined
   }
   return undefined
@@ -44,7 +45,7 @@ export default function Details({
   assetTagOptions,
   currentAsset,
   creditLine,
-  locales
+  locales,
 }: DetailsProps) {
   const hasLocales = locales && locales.length > 0
   const [activeLocaleTab, setActiveLocaleTab] = useState(0)

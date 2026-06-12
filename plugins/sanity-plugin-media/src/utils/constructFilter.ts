@@ -1,12 +1,12 @@
-import type {AssetType, SearchFacetInputProps} from '../types'
 import groq from 'groq'
 
 import {operators} from '../config/searchFacets'
+import type {AssetType, SearchFacetInputProps} from '../types'
 
 const constructFilter = ({
   assetTypes,
   searchFacets,
-  searchQuery
+  searchQuery,
 }: {
   assetTypes: AssetType[]
   searchFacets: SearchFacetInputProps[]
@@ -15,7 +15,7 @@ const constructFilter = ({
   // Fetch asset types depending on current context.
   // Either limit to a specific type (if being used as a custom asset source) or fetch both files and images (if being used as a tool)
   // Sanity will crash if you try and insert incompatible asset types into fields!
-  const documentAssetTypes = assetTypes.map(type => `sanity.${type}Asset`)
+  const documentAssetTypes = assetTypes.map((type) => `sanity.${type}Asset`)
 
   const baseFilter = groq`
     _type in ${JSON.stringify(documentAssetTypes)} && !(_id in path("drafts.**"))
@@ -27,7 +27,7 @@ const constructFilter = ({
       const operator = operators[operatorType]
 
       // Get current modifier
-      const currentModifier = modifiers?.find(m => m.name === modifier)
+      const currentModifier = modifiers?.find((m) => m.name === modifier)
 
       // Apply field modifier function (if present)
       const facetField = currentModifier?.fieldModifier
@@ -54,7 +54,7 @@ const constructFilter = ({
       const {field, operatorType, options, value} = facet
       const operator = operators[operatorType]
 
-      const currentOptionValue = options?.find(l => l.name === value)?.value
+      const currentOptionValue = options?.find((l) => l.name === value)?.value
 
       const fragment = operator.fn(currentOptionValue, field)
       if (fragment) {
@@ -85,11 +85,11 @@ const constructFilter = ({
     // references(*[_type == "media.tag" && name.current == "${searchQuery.trim()}"]._id)
     ...(searchQuery
       ? [
-          groq`[_id, altText, assetId, creditLine, description, originalFilename, title, url] match '*${searchQuery.trim()}*'`
+          groq`[_id, altText, assetId, creditLine, description, originalFilename, title, url] match '*${searchQuery.trim()}*'`,
         ]
       : []),
     // Search facets
-    ...searchFacetFragments
+    ...searchFacetFragments,
   ].join(' && ')
 
   return constructedQuery

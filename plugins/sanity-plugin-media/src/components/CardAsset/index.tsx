@@ -8,23 +8,24 @@ import {
   Text,
   type Theme,
   type ThemeColorSchemeKey,
-  Tooltip
+  Tooltip,
 } from '@sanity/ui'
 import {memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
+
 import {PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import useKeyPress from '../../hooks/useKeyPress'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions, selectAssetById} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
+import {getSchemeColor} from '../../utils/getSchemeColor'
 import imageDprUrl from '../../utils/imageDprUrl'
 import {isFileAsset, isImageAsset} from '../../utils/typeGuards'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
-import {getSchemeColor} from '../../utils/getSchemeColor'
 
 type Props = {
   id: string
@@ -39,51 +40,53 @@ const CardWrapper = styled(Flex)`
   width: 100%;
 `
 
-const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?: boolean}>(
-  ({$picked, theme, $updating}) => {
-    return css`
-      border: 1px solid transparent;
-      height: 100%;
-      pointer-events: ${$updating ? 'none' : 'auto'};
-      position: relative;
-      transition: all 300ms;
-      user-select: none;
-      width: 100%;
+const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?: boolean}>(({
+  $picked,
+  theme,
+  $updating,
+}) => {
+  return css`
+    border: 1px solid transparent;
+    height: 100%;
+    pointer-events: ${$updating ? 'none' : 'auto'};
+    position: relative;
+    transition: all 300ms;
+    user-select: none;
+    width: 100%;
 
-      border: ${$picked
-        ? `1px solid ${theme.sanity.color.spot.orange} !important`
-        : '1px solid inherit'};
+    border: ${$picked
+      ? `1px solid ${theme.sanity.color.spot.orange} !important`
+      : '1px solid inherit'};
 
-      ${!$updating &&
-      css`
-        @media (hover: hover) and (pointer: fine) {
-          &:hover {
-            border: 1px solid var(--card-border-color);
-          }
-        }
-      `}
-    `
-  }
-)
-
-const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(
-  ({$scheme}) => {
-    return css`
-      cursor: pointer;
-      height: ${PANEL_HEIGHT}px;
-      transition: all 300ms;
+    ${!$updating &&
+    css`
       @media (hover: hover) and (pointer: fine) {
         &:hover {
-          background: ${getSchemeColor($scheme, 'bg')};
+          border: 1px solid var(--card-border-color);
         }
       }
-    `
-  }
-)
+    `}
+  `
+})
+
+const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
+  $scheme,
+}) => {
+  return css`
+    cursor: pointer;
+    height: ${PANEL_HEIGHT}px;
+    transition: all 300ms;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: ${getSchemeColor($scheme, 'bg')};
+      }
+    }
+  `
+})
 
 const StyledWarningOutlineIcon = styled(WarningFilledIcon)(({theme}) => {
   return {
-    color: theme.sanity.color.spot.red
+    color: theme.sanity.color.spot.red,
   }
 })
 
@@ -97,8 +100,8 @@ const CardAsset = (props: Props) => {
 
   // Redux
   const dispatch = useDispatch()
-  const lastPicked = useTypedSelector(state => state.assets.lastPicked)
-  const item = useTypedSelector(state => selectAssetById(state, id))
+  const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
+  const item = useTypedSelector((state) => selectAssetById(state, id))
 
   const asset = item?.asset
   const error = item?.error
@@ -121,8 +124,8 @@ const CardAsset = (props: Props) => {
       onSelect([
         {
           kind: 'assetDocumentId',
-          value: asset._id
-        }
+          value: asset._id,
+        },
       ])
     } else if (shiftPressed.current) {
       if (picked) {
@@ -158,7 +161,7 @@ const CardAsset = (props: Props) => {
           flex={1}
           style={{
             cursor: selected ? 'default' : 'pointer',
-            position: 'relative'
+            position: 'relative',
           }}
         >
           <div onClick={handleAssetClick} style={{height: '100%', opacity: opacityPreview}}>
@@ -174,7 +177,7 @@ const CardAsset = (props: Props) => {
                 src={imageDprUrl(asset, {height: 250, width: 250})}
                 style={{
                   draggable: false,
-                  transition: 'opacity 1000ms'
+                  transition: 'opacity 1000ms',
                 }}
               />
             )}
@@ -191,7 +194,7 @@ const CardAsset = (props: Props) => {
                 opacity: opacityContainer,
                 position: 'absolute',
                 top: 0,
-                width: '100%'
+                width: '100%',
               }}
             >
               <Text size={2}>
@@ -210,7 +213,7 @@ const CardAsset = (props: Props) => {
                 left: 0,
                 position: 'absolute',
                 top: 0,
-                width: '100%'
+                width: '100%',
               }}
             >
               <Spinner />
@@ -230,7 +233,7 @@ const CardAsset = (props: Props) => {
             <EditIcon
               style={{
                 flexShrink: 0,
-                opacity: 0.5
+                opacity: 0.5,
               }}
             />
           ) : (
@@ -240,7 +243,7 @@ const CardAsset = (props: Props) => {
               style={{
                 flexShrink: 0,
                 pointerEvents: 'none',
-                transform: 'scale(0.8)'
+                transform: 'scale(0.8)',
               }}
             />
           )}
@@ -260,7 +263,7 @@ const CardAsset = (props: Props) => {
             style={{
               position: 'absolute',
               right: 0,
-              top: 0
+              top: 0,
             }}
           >
             <Tooltip

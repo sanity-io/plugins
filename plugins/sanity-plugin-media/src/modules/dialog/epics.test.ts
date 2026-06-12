@@ -1,12 +1,13 @@
 // @vitest-environment node
 
 import {describe, expect, it, vi} from 'vitest'
-import {dialogClearOnAssetUpdateEpic, dialogTagCreateEpic, dialogTagDeleteEpic} from './index'
-import {assetsActions, initialState as assetsInitialState} from '../assets'
-import {tagsActions} from '../tags'
+
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
 import type {ImageAsset, Tag} from '../../types'
+import {assetsActions, initialState as assetsInitialState} from '../assets'
+import {tagsActions} from '../tags'
+import {dialogClearOnAssetUpdateEpic, dialogTagCreateEpic, dialogTagDeleteEpic} from './index'
 
 const sampleAsset = {
   _id: 'a1',
@@ -17,7 +18,7 @@ const sampleAsset = {
   originalFilename: 'x.png',
   size: 1,
   mimeType: 'image/png',
-  url: 'https://example.com/x.png'
+  url: 'https://example.com/x.png',
 } as ImageAsset
 
 const sampleTag: Tag = {
@@ -26,12 +27,12 @@ const sampleTag: Tag = {
   _createdAt: '',
   _updatedAt: '',
   _rev: 'tr',
-  name: {_type: 'slug', current: 'alpha'}
+  name: {_type: 'slug', current: 'alpha'},
 }
 
 const tagWithId = (id: string): Tag => ({
   ...sampleTag,
-  _id: id
+  _id: id,
 })
 
 describe('dialogClearOnAssetUpdateEpic', () => {
@@ -42,12 +43,12 @@ describe('dialogClearOnAssetUpdateEpic', () => {
         assetTypes: ['image'],
         allIds: ['a1'],
         byIds: {
-          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: true}
-        }
+          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: true},
+        },
       },
       dialog: {
-        items: [{id: 'a1', type: 'assetEdit', assetId: 'a1'}]
-      }
+        items: [{id: 'a1', type: 'assetEdit', assetId: 'a1'}],
+      },
     })
 
     store.dispatch(assetsActions.updateComplete({asset: sampleAsset, closeDialogId: 'a1'}))
@@ -62,16 +63,16 @@ describe('dialogClearOnAssetUpdateEpic', () => {
       tags: {
         allIds: ['t1'],
         byIds: {
-          t1: {_type: 'tag', tag: sampleTag, picked: false, updating: true}
+          t1: {_type: 'tag', tag: sampleTag, picked: false, updating: true},
         },
         creating: false,
         fetchCount: -1,
         fetching: false,
-        panelVisible: true
+        panelVisible: true,
       },
       dialog: {
-        items: [{id: 't1', type: 'tagEdit', tagId: 't1'}]
-      }
+        items: [{id: 't1', type: 'tagEdit', tagId: 't1'}],
+      },
     })
 
     store.dispatch(tagsActions.updateComplete({tag: sampleTag, closeDialogId: 't1'}))
@@ -88,12 +89,12 @@ describe('dialogClearOnAssetUpdateEpic', () => {
         assetTypes: ['image'],
         allIds: ['a1'],
         byIds: {
-          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: true}
-        }
+          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: true},
+        },
       },
       dialog: {
-        items: [{id: 'a1', type: 'assetEdit', assetId: 'a1'}]
-      }
+        items: [{id: 'a1', type: 'assetEdit', assetId: 'a1'}],
+      },
     })
 
     store.dispatch(assetsActions.updateComplete({asset: sampleAsset}))
@@ -106,8 +107,8 @@ describe('dialogTagCreateEpic', () => {
   it('dispatches inlineTagCreate when createComplete includes assetId', async () => {
     const store = createEpicTestStore(dialogTagCreateEpic, createMockSanityClient({}), {
       dialog: {
-        items: [{id: 'a1', type: 'assetEdit', assetId: 'a1'}]
-      }
+        items: [{id: 'a1', type: 'assetEdit', assetId: 'a1'}],
+      },
     })
 
     store.dispatch(tagsActions.createComplete({assetId: 'a1', tag: sampleTag}))
@@ -117,7 +118,7 @@ describe('dialogTagCreateEpic', () => {
       expect(item?.type).toBe('assetEdit')
       expect('lastCreatedTag' in item && item.lastCreatedTag).toEqual({
         label: 'alpha',
-        value: 't1'
+        value: 't1',
       })
     })
   })
@@ -125,8 +126,8 @@ describe('dialogTagCreateEpic', () => {
   it('removes tag create dialog when createComplete has no assetId', async () => {
     const store = createEpicTestStore(dialogTagCreateEpic, createMockSanityClient({}), {
       dialog: {
-        items: [{id: 'tagCreate', type: 'tagCreate'}]
-      }
+        items: [{id: 'tagCreate', type: 'tagCreate'}],
+      },
     })
 
     store.dispatch(tagsActions.createComplete({tag: sampleTag}))
@@ -143,16 +144,16 @@ describe('dialogTagDeleteEpic', () => {
       tags: {
         allIds: ['t9'],
         byIds: {
-          t9: {_type: 'tag', tag: tagWithId('t9'), picked: false, updating: false}
+          t9: {_type: 'tag', tag: tagWithId('t9'), picked: false, updating: false},
         },
         creating: false,
         fetchCount: -1,
         fetching: false,
-        panelVisible: true
+        panelVisible: true,
       },
       dialog: {
-        items: [{id: 'a1', type: 'assetEdit', assetId: 'a1'}]
-      }
+        items: [{id: 'a1', type: 'assetEdit', assetId: 'a1'}],
+      },
     })
 
     store.dispatch(tagsActions.listenerDeleteQueueComplete({tagIds: ['t9']}))
@@ -160,7 +161,7 @@ describe('dialogTagDeleteEpic', () => {
     await vi.waitFor(() => {
       expect(store.getState().dialog.items[0]).toMatchObject({
         type: 'assetEdit',
-        lastRemovedTagIds: ['t9']
+        lastRemovedTagIds: ['t9'],
       })
     })
   })

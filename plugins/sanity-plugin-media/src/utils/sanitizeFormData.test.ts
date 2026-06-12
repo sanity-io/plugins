@@ -1,6 +1,7 @@
 // @vitest-environment node
 
 import {describe, expect, it} from 'vitest'
+
 import sanitizeFormData from './sanitizeFormData'
 
 describe('sanitizeFormData', () => {
@@ -9,12 +10,12 @@ describe('sanitizeFormData', () => {
       sanitizeFormData({
         a: '',
         b: undefined,
-        c: []
-      })
+        c: [],
+      }),
     ).toEqual({
       a: null,
       b: null,
-      c: null
+      c: null,
     })
   })
 
@@ -27,16 +28,16 @@ describe('sanitizeFormData', () => {
       sanitizeFormData({
         opt: {
           media: {
-            tags: []
-          }
-        }
-      })
+            tags: [],
+          },
+        },
+      }),
     ).toEqual({
       opt: {
         media: {
-          tags: null
-        }
-      }
+          tags: null,
+        },
+      },
     })
   })
 
@@ -44,11 +45,11 @@ describe('sanitizeFormData', () => {
     expect(
       sanitizeFormData({
         kept: null,
-        tags: [{_ref: 't1'}]
-      })
+        tags: [{_ref: 't1'}],
+      }),
     ).toEqual({
       kept: null,
-      tags: [{_ref: 't1'}]
+      tags: [{_ref: 't1'}],
     })
   })
 

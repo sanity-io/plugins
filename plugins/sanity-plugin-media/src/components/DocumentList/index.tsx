@@ -1,6 +1,5 @@
 import type {SanityDocument} from '@sanity/client'
 import {Box, Button, Card, Stack, Text} from '@sanity/ui'
-
 import {Preview, type SchemaType, useSchema} from 'sanity'
 import {useIntentLink} from 'sanity/router'
 
@@ -31,7 +30,7 @@ const DocumentList = ({documents, isLoading}: Props) => {
   return (
     <Card flex={1} marginBottom={2} padding={2} radius={2} shadow={1}>
       <Stack space={2}>
-        {documents?.map(doc => (
+        {documents?.map((doc) => (
           <ReferringDocument doc={doc} key={doc._id} schemaType={schema.get(doc._type)} />
         ))}
       </Stack>
@@ -44,7 +43,7 @@ const ReferringDocument = (props: {doc: SanityDocument; schemaType?: SchemaType}
 
   const {onClick} = useIntentLink({
     intent: 'edit',
-    params: {id: doc._id}
+    params: {id: doc._id},
   })
 
   return schemaType ? (

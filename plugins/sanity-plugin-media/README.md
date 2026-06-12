@@ -68,7 +68,7 @@ import {media} from 'sanity-plugin-media'
 
 export default defineConfig({
   // ...
-  plugins: [media()]
+  plugins: [media()],
 })
 ```
 
@@ -87,11 +87,11 @@ export default defineConfig({
   form: {
     // Don't use this plugin when selecting files only (but allow all other enabled asset sources)
     file: {
-      assetSources: previousAssetSources => {
-        return previousAssetSources.filter(assetSource => assetSource !== mediaAssetSource)
-      }
-    }
-  }
+      assetSources: (previousAssetSources) => {
+        return previousAssetSources.filter((assetSource) => assetSource !== mediaAssetSource)
+      },
+    },
+  },
 })
 ```
 
@@ -110,7 +110,7 @@ export default defineConfig({
         enabled: true,
         // boolean - enables an optional "Credit Line" field in the plugin.
         // Used to store credits e.g. photographer, licence information
-        excludeSources: ['unsplash']
+        excludeSources: ['unsplash'],
         // string | string[] - when used with 3rd party asset sources, you may
         // wish to prevent users overwriting the creditLine based on the `source.name`
       },
@@ -119,7 +119,7 @@ export default defineConfig({
       directUploads: true,
       // boolean - enable / disable direct uploads through the plugin interface (default true)
       components: {
-        details: CustomDetails
+        details: CustomDetails,
         // Custom component for asset details (see below)
       },
       // Custom components to override default UI (see below)
@@ -135,10 +135,10 @@ export default defineConfig({
         {id: 'ja', title: 'Japanese'},
         {id: 'zh', title: 'Chinese'},
         {id: 'ru', title: 'Russian'},
-        {id: 'ar', title: 'Arabic'}
-      ]
-    })
-  ]
+        {id: 'ar', title: 'Arabic'},
+      ],
+    }),
+  ],
 })
 ```
 

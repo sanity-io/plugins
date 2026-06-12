@@ -9,7 +9,7 @@ export default defineConfig({
     rules: {
       'ae-incompatible-release-tags': 'off',
       'ae-internal-missing-underscore': 'off',
-      'ae-missing-release-tag': 'off'
-    }
-  }
+      'ae-missing-release-tag': 'off',
+    },
+  },
 })

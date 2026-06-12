@@ -1,6 +1,7 @@
 import {Box, Text} from '@sanity/ui'
 import {useEffect} from 'react'
 import {useDispatch} from 'react-redux'
+
 import useBreakpointIndex from '../../hooks/useBreakpointIndex'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions} from '../../modules/assets'
@@ -12,10 +13,10 @@ import AssetTableVirtualized from '../AssetTableVirtualized'
 const Items = () => {
   // Redux
   const dispatch = useDispatch()
-  const fetchCount = useTypedSelector(state => state.assets.fetchCount)
-  const fetching = useTypedSelector(state => state.assets.fetching)
-  const tagsPanelVisible = useTypedSelector(state => state.tags.panelVisible)
-  const view = useTypedSelector(state => state.assets.view)
+  const fetchCount = useTypedSelector((state) => state.assets.fetchCount)
+  const fetching = useTypedSelector((state) => state.assets.fetching)
+  const tagsPanelVisible = useTypedSelector((state) => state.tags.panelVisible)
+  const view = useTypedSelector((state) => state.assets.view)
   const combinedItems = useTypedSelector(selectCombinedItems)
 
   const breakpointIndex = useBreakpointIndex()

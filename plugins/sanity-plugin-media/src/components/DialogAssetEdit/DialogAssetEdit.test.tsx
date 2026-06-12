@@ -1,7 +1,8 @@
-import userEvent from '@testing-library/user-event'
 import {fireEvent, screen, waitFor} from '@testing-library/react'
-import {describe, expect, it, vi} from 'vitest'
+import userEvent from '@testing-library/user-event'
 import {Subject} from 'rxjs'
+import {describe, expect, it, vi} from 'vitest'
+
 import DialogAssetEdit from './index'
 
 vi.mock('../Image', () => ({default: () => null}))
@@ -12,8 +13,8 @@ import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
 import {createTestRootState} from '../../__tests__/fixtures/rootState'
 import {inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
-import type {RootReducerState} from '../../modules/types'
 import {assetsActions, initialState as assetsInitialState} from '../../modules/assets'
+import type {RootReducerState} from '../../modules/types'
 import type {AssetType, ImageAsset, MediaToolOptions} from '../../types'
 
 const asset = {
@@ -26,7 +27,7 @@ const asset = {
   size: 1,
   mimeType: 'image/png',
   url: 'https://example.com/x.png',
-  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true}
+  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
 } as ImageAsset
 
 const assetsPreloaded = {
@@ -34,25 +35,25 @@ const assetsPreloaded = {
   assetTypes: ['image'] as AssetType[],
   allIds: ['a1'],
   byIds: {
-    a1: {_type: 'asset' as const, asset, picked: false, updating: false}
-  }
+    a1: {_type: 'asset' as const, asset, picked: false, updating: false},
+  },
 }
 
-vi.mock('sanity', async importOriginal => {
+vi.mock('sanity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('sanity')>()
   return {
     ...actual,
     WithReferringDocuments: ({children}: {children: (args: unknown) => unknown}) =>
       children({isLoading: false, referringDocuments: []}),
-    useDocumentStore: () => ({})
+    useDocumentStore: () => ({}),
   }
 })
 
 vi.mock('../../hooks/useVersionedClient', () => ({
   default: () =>
     createMockSanityClient({
-      listen: vi.fn(() => new Subject())
-    })
+      listen: vi.fn(() => new Subject()),
+    }),
 }))
 
 function renderAssetDialog(
@@ -60,7 +61,7 @@ function renderAssetDialog(
   opts: {
     preloaded?: Partial<RootReducerState>
     toolOptions?: Partial<MediaToolOptions>
-  } = {}
+  } = {},
 ) {
   const {preloaded: extraPreloaded, toolOptions} = opts
   return renderWithProviders(
@@ -70,10 +71,10 @@ function renderAssetDialog(
     {
       preloaded: {
         assets: assetsPreloaded,
-        ...extraPreloaded
+        ...extraPreloaded,
       },
-      toolOptions: {creditLine: {enabled: true}, ...toolOptions}
-    }
+      toolOptions: {creditLine: {enabled: true}, ...toolOptions},
+    },
   )
 }
 
@@ -82,7 +83,7 @@ describe('DialogAssetEdit', () => {
     renderAssetDialog({
       id: 'dlg-1',
       type: 'assetEdit',
-      assetId: 'a1'
+      assetId: 'a1',
     })
 
     const dlg = withinDialog(/asset details/i, screen)
@@ -94,7 +95,7 @@ describe('DialogAssetEdit', () => {
     renderAssetDialog({
       id: 'dlg-1',
       type: 'assetEdit',
-      assetId: 'a1'
+      assetId: 'a1',
     })
 
     const dlg = withinDialog(/asset details/i, screen)
@@ -106,7 +107,7 @@ describe('DialogAssetEdit', () => {
     const {store} = renderAssetDialog({
       id: 'dlg-1',
       type: 'assetEdit',
-      assetId: 'a1'
+      assetId: 'a1',
     })
     const dispatchSpy = vi.spyOn(store, 'dispatch')
     const dlg = withinDialog(/asset details/i, screen)
@@ -131,8 +132,8 @@ describe('DialogAssetEdit', () => {
         closeDialogId: 'a1',
         formData: expect.objectContaining({
           title: 'Hero image',
-          originalFilename: 'x.png'
-        })
+          originalFilename: 'x.png',
+        }),
       })
     })
   })
@@ -143,10 +144,10 @@ describe('DialogAssetEdit', () => {
       dialog: {
         items: [
           {id: 'dlg-1', type: 'assetEdit', assetId: 'a1'},
-          {id: 'tags', type: 'tags'}
-        ]
+          {id: 'tags', type: 'tags'},
+        ],
       },
-      assets: assetsPreloaded
+      assets: assetsPreloaded,
     })
 
     const {store} = renderWithProviders(
@@ -154,15 +155,15 @@ describe('DialogAssetEdit', () => {
         dialog={{
           id: 'dlg-1',
           type: 'assetEdit',
-          assetId: 'a1'
+          assetId: 'a1',
         }}
       >
         <span />
       </DialogAssetEdit>,
       {
         preloaded: base,
-        toolOptions: {creditLine: {enabled: true}}
-      }
+        toolOptions: {creditLine: {enabled: true}},
+      },
     )
 
     const dlg = withinDialog(/asset details/i, screen)
@@ -175,7 +176,7 @@ describe('DialogAssetEdit', () => {
     const {store} = renderAssetDialog({
       id: 'dlg-1',
       type: 'assetEdit',
-      assetId: 'a1'
+      assetId: 'a1',
     })
 
     const dlg = withinDialog(/asset details/i, screen)
@@ -200,7 +201,7 @@ describe('DialogAssetEdit', () => {
     renderAssetDialog({
       id: 'dlg-1',
       type: 'assetEdit',
-      assetId: 'a1'
+      assetId: 'a1',
     })
 
     const dlg = withinDialog(/asset details/i, screen)

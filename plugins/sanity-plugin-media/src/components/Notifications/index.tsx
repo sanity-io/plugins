@@ -1,9 +1,10 @@
 import {useToast} from '@sanity/ui'
 import {useEffect} from 'react'
+
 import useTypedSelector from '../../hooks/useTypedSelector'
 
 const Notifications = () => {
-  const items = useTypedSelector(state => state.notifications.items)
+  const items = useTypedSelector((state) => state.notifications.items)
   const toast = useToast()
 
   useEffect(() => {
@@ -12,7 +13,7 @@ const Notifications = () => {
       toast.push({
         closable: true,
         status: lastItem.status,
-        title: lastItem.title
+        title: lastItem.title,
       })
     }
   }, [items.length])

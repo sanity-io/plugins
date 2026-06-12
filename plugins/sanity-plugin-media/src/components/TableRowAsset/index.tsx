@@ -9,9 +9,9 @@ import {
   Text,
   type ThemeColorSchemeKey,
   Tooltip,
-  useMediaIndex
+  useMediaIndex,
 } from '@sanity/ui'
-import { formatRelative } from 'date-fns'
+import {formatRelative} from 'date-fns'
 import filesize from 'filesize'
 import {
   memo,
@@ -20,11 +20,12 @@ import {
   useCallback,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react'
 import {useDispatch} from 'react-redux'
 import {WithReferringDocuments, useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
+
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import useKeyPress from '../../hooks/useKeyPress'
@@ -32,12 +33,12 @@ import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions, selectAssetById} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import getAssetResolution from '../../utils/getAssetResolution'
+import {getSchemeColor} from '../../utils/getSchemeColor'
+import {getUniqueDocuments} from '../../utils/getUniqueDocuments'
 import imageDprUrl from '../../utils/imageDprUrl'
 import {isFileAsset, isImageAsset} from '../../utils/typeGuards'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
-import {getUniqueDocuments} from '../../utils/getUniqueDocuments'
-import {getSchemeColor} from '../../utils/getSchemeColor'
 
 // Duration (ms) to wait before reference counts (and associated listeners) are rendered
 const REFERENCE_COUNT_VISIBILITY_DELAY = 750
@@ -70,22 +71,22 @@ const ContainerGrid = styled<
   `
 })
 
-const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(
-  ({$scheme}) => {
-    return css`
-      cursor: pointer;
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          background: ${getSchemeColor($scheme, 'bg2')};
-        }
+const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
+  $scheme,
+}) => {
+  return css`
+    cursor: pointer;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: ${getSchemeColor($scheme, 'bg2')};
       }
-    `
-  }
-)
+    }
+  `
+})
 
 const StyledWarningIcon = styled(WarningFilledIcon)(({theme}) => {
   return {
-    color: theme.sanity.color.spot.red
+    color: theme.sanity.color.spot.red,
   }
 })
 
@@ -101,8 +102,8 @@ const TableRowAsset = (props: Props) => {
   const refCountVisibleTimeout = useRef<ReturnType<typeof window.setTimeout>>(null)
 
   const dispatch = useDispatch()
-  const lastPicked = useTypedSelector(state => state.assets.lastPicked)
-  const item = useTypedSelector(state => selectAssetById(state, id))
+  const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
+  const item = useTypedSelector((state) => selectAssetById(state, id))
 
   const mediaIndex = useMediaIndex()
 
@@ -127,7 +128,7 @@ const TableRowAsset = (props: Props) => {
         dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
       }
     },
-    [asset, dispatch, lastPicked, onSelect, picked, shiftPressed]
+    [asset, dispatch, lastPicked, onSelect, picked, shiftPressed],
   )
 
   const handleClick = useCallback(
@@ -147,7 +148,7 @@ const TableRowAsset = (props: Props) => {
         dispatch(dialogActions.showAssetEdit({assetId: asset._id}))
       }
     },
-    [asset, dispatch, lastPicked, onSelect, picked, shiftPressed]
+    [asset, dispatch, lastPicked, onSelect, picked, shiftPressed],
   )
 
   const opacityCell = updating ? 0.5 : 1
@@ -157,7 +158,7 @@ const TableRowAsset = (props: Props) => {
   useEffect(() => {
     refCountVisibleTimeout.current = setTimeout(
       () => setReferenceCountVisible(true),
-      REFERENCE_COUNT_VISIBILITY_DELAY
+      REFERENCE_COUNT_VISIBILITY_DELAY,
     )
     return () => {
       if (refCountVisibleTimeout.current) {
@@ -181,7 +182,7 @@ const TableRowAsset = (props: Props) => {
         gridRowGap: 0,
         gridTemplateColumns:
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
-        gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr'
+        gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',
       }}
       $updating={item.updating}
     >
@@ -197,14 +198,14 @@ const TableRowAsset = (props: Props) => {
           height: '100%',
           justifyContent: 'center',
           opacity: opacityCell,
-          position: 'relative'
+          position: 'relative',
         }}
       >
         {onSelect ? (
           <EditIcon
             style={{
               flexShrink: 0,
-              opacity: 0.5
+              opacity: 0.5,
             }}
           />
         ) : (
@@ -213,7 +214,7 @@ const TableRowAsset = (props: Props) => {
             readOnly
             style={{
               pointerEvents: 'none', // TODO: consider alternative for usability
-              transform: 'scale(0.8)'
+              transform: 'scale(0.8)',
             }}
           />
         )}
@@ -226,7 +227,7 @@ const TableRowAsset = (props: Props) => {
           gridRowStart: 1,
           gridRowEnd: 'span 5',
           height: '90px',
-          width: '100px'
+          width: '100px',
         }}
       >
         <Flex align="center" justify="center" style={{height: '100%', position: 'relative'}}>
@@ -255,7 +256,7 @@ const TableRowAsset = (props: Props) => {
                 left: 0,
                 position: 'absolute',
                 top: 0,
-                width: '100%'
+                width: '100%',
               }}
             >
               <Spinner />
@@ -272,7 +273,7 @@ const TableRowAsset = (props: Props) => {
                 left: 0,
                 position: 'absolute',
                 top: 0,
-                width: '100%'
+                width: '100%',
               }}
             >
               <Text size={2}>
@@ -289,7 +290,7 @@ const TableRowAsset = (props: Props) => {
         style={{
           gridColumn: 3,
           gridRow: mediaIndex < 3 ? 2 : 'auto',
-          opacity: opacityCell
+          opacity: opacityCell,
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
@@ -303,7 +304,7 @@ const TableRowAsset = (props: Props) => {
         style={{
           gridColumn: mediaIndex < 3 ? 3 : 4,
           gridRow: mediaIndex < 3 ? 3 : 'auto',
-          opacity: opacityCell
+          opacity: opacityCell,
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
@@ -317,7 +318,7 @@ const TableRowAsset = (props: Props) => {
           display: mediaIndex < 3 ? 'none' : 'block',
           gridColumn: 5,
           gridRow: 'auto',
-          opacity: opacityCell
+          opacity: opacityCell,
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
@@ -331,7 +332,7 @@ const TableRowAsset = (props: Props) => {
           display: mediaIndex < 3 ? 'none' : 'block',
           gridColumn: 6,
           gridRow: 'auto',
-          opacity: opacityCell
+          opacity: opacityCell,
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
@@ -345,7 +346,7 @@ const TableRowAsset = (props: Props) => {
         style={{
           gridColumn: mediaIndex < 3 ? 3 : 7,
           gridRow: mediaIndex < 3 ? 4 : 'auto',
-          opacity: opacityCell
+          opacity: opacityCell,
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
@@ -359,7 +360,7 @@ const TableRowAsset = (props: Props) => {
           display: mediaIndex < 3 ? 'none' : 'block',
           gridColumn: 8,
           gridRow: 'auto',
-          opacity: opacityCell
+          opacity: opacityCell,
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
@@ -388,7 +389,7 @@ const TableRowAsset = (props: Props) => {
           gridColumn: mediaIndex < 3 ? 4 : 9,
           gridRowStart: '1',
           gridRowEnd: mediaIndex < 3 ? 'span 5' : 'auto',
-          opacity: opacityCell
+          opacity: opacityCell,
         }}
       >
         {/* TODO: DRY */}

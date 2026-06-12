@@ -2,6 +2,7 @@ import {Box, Button, Flex, Label} from '@sanity/ui'
 import pluralize from 'pluralize'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
+
 import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions, selectAssetsPicked} from '../../modules/assets'
@@ -37,7 +38,7 @@ const PickedBar = () => {
         borderBottom: '1px solid var(--card-border-color)',
         height: `${PANEL_HEIGHT}px`,
         position: 'relative',
-        width: '100%'
+        width: '100%',
       }}
     >
       <Flex align="center" paddingX={3}>

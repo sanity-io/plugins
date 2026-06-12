@@ -1,10 +1,11 @@
+import groq from 'groq'
+
 import type {
   SearchFacetDivider,
   SearchFacetInputProps,
   SearchFacetName,
-  SearchFacetOperators
+  SearchFacetOperators,
 } from '../types'
-import groq from 'groq'
 
 export const divider: SearchFacetDivider = {type: 'divider'}
 
@@ -17,7 +18,7 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
     operatorTypes: ['empty', 'notEmpty', null, 'includes', 'doesNotInclude'],
     title: 'Alt text',
     type: 'string',
-    value: ''
+    value: '',
   },
   creditLine: {
     assetTypes: ['file', 'image'],
@@ -27,7 +28,7 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
     operatorTypes: ['empty', 'notEmpty', null, 'includes', 'doesNotInclude'],
     title: 'Credit',
     type: 'string',
-    value: ''
+    value: '',
   },
   description: {
     assetTypes: ['file', 'image'],
@@ -37,7 +38,7 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
     operatorTypes: ['empty', 'notEmpty', null, 'includes', 'doesNotInclude'],
     title: 'Description',
     type: 'string',
-    value: ''
+    value: '',
   },
   fileName: {
     assetTypes: ['file', 'image'],
@@ -47,7 +48,7 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
     operatorTypes: ['includes', 'doesNotInclude'],
     title: 'File name',
     type: 'string',
-    value: ''
+    value: '',
   },
   height: {
     assetTypes: ['image'],
@@ -60,11 +61,11 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
       'lessThan',
       'lessThanOrEqualTo',
       null,
-      'equalTo'
+      'equalTo',
     ],
     title: 'Height',
     type: 'number',
-    value: 400
+    value: 400,
   },
   inCurrentDocument: {
     assetTypes: ['file', 'image'],
@@ -74,18 +75,18 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
       {
         name: 'true',
         title: 'True',
-        value: groq`_id in $documentAssetIds`
+        value: groq`_id in $documentAssetIds`,
       },
       {
         name: 'false',
         title: 'False',
-        value: groq`!(_id in $documentAssetIds)`
-      }
+        value: groq`!(_id in $documentAssetIds)`,
+      },
     ],
     selectOnly: true,
     title: 'In use in current document',
     type: 'select',
-    value: 'true'
+    value: 'true',
   },
   inUse: {
     assetTypes: ['file', 'image'],
@@ -95,17 +96,17 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
       {
         name: 'true',
         title: 'True',
-        value: groq`count(*[references(^._id)]) > 0`
+        value: groq`count(*[references(^._id)]) > 0`,
       },
       {
         name: 'false',
         title: 'False',
-        value: groq`count(*[references(^._id)]) == 0`
-      }
+        value: groq`count(*[references(^._id)]) == 0`,
+      },
     ],
     title: 'In use',
     type: 'select',
-    value: 'true'
+    value: 'true',
   },
   isOpaque: {
     assetTypes: ['image'],
@@ -116,17 +117,17 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
       {
         name: 'true',
         title: 'True',
-        value: `false`
+        value: `false`,
       },
       {
         name: 'false',
         title: 'False',
-        value: `true`
-      }
+        value: `true`,
+      },
     ],
     title: 'Has transparency',
     type: 'select',
-    value: 'true'
+    value: 'true',
   },
   orientation: {
     assetTypes: ['image'],
@@ -137,22 +138,22 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
       {
         name: 'portrait',
         title: 'Portrait',
-        value: 'metadata.dimensions.aspectRatio < 1'
+        value: 'metadata.dimensions.aspectRatio < 1',
       },
       {
         name: 'landscape',
         title: 'Landscape',
-        value: 'metadata.dimensions.aspectRatio > 1'
+        value: 'metadata.dimensions.aspectRatio > 1',
       },
       {
         name: 'square',
         title: 'Square',
-        value: 'metadata.dimensions.aspectRatio == 1'
-      }
+        value: 'metadata.dimensions.aspectRatio == 1',
+      },
     ],
     title: 'Orientation',
     type: 'select',
-    value: 'portrait'
+    value: 'portrait',
   },
   size: {
     assetTypes: ['file', 'image'],
@@ -162,13 +163,13 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
       {
         name: 'kb',
         title: 'KB',
-        fieldModifier: fieldName => `round(${fieldName} / 1000)`
+        fieldModifier: (fieldName) => `round(${fieldName} / 1000)`,
       },
       {
         name: 'mb',
         title: 'MB',
-        fieldModifier: fieldName => `round(${fieldName} / 1000000)`
-      }
+        fieldModifier: (fieldName) => `round(${fieldName} / 1000000)`,
+      },
     ],
     name: 'size',
     operatorType: 'greaterThan',
@@ -178,11 +179,11 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
       'lessThan',
       'lessThanOrEqualTo',
       null,
-      'equalTo'
+      'equalTo',
     ],
     title: 'File size',
     type: 'number',
-    value: 0
+    value: 0,
   },
   tag: {
     assetTypes: ['file', 'image'],
@@ -191,7 +192,7 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
     operatorType: 'references',
     operatorTypes: ['references', 'doesNotReference', null, 'empty', 'notEmpty'],
     title: 'Tags',
-    type: 'searchable'
+    type: 'searchable',
   },
   title: {
     assetTypes: ['file', 'image'],
@@ -201,7 +202,7 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
     operatorTypes: ['empty', 'notEmpty', null, 'includes', 'doesNotInclude'],
     title: 'Title',
     type: 'string',
-    value: ''
+    value: '',
   },
   type: {
     assetTypes: ['file', 'image'],
@@ -212,27 +213,27 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
       {
         name: 'image',
         title: 'Image',
-        value: 'mimeType match "image*"'
+        value: 'mimeType match "image*"',
       },
       {
         name: 'video',
         title: 'Video',
-        value: 'mimeType match "video*"'
+        value: 'mimeType match "video*"',
       },
       {
         name: 'audio',
         title: 'Audio',
-        value: 'mimeType match "audio*"'
+        value: 'mimeType match "audio*"',
       },
       {
         name: 'pdf',
         title: 'PDF',
-        value: 'mimeType == "application/pdf"'
-      }
+        value: 'mimeType == "application/pdf"',
+      },
     ],
     title: 'File type',
     type: 'select',
-    value: 'image'
+    value: 'image',
   },
   width: {
     assetTypes: ['image'],
@@ -245,67 +246,67 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
       'lessThan',
       'lessThanOrEqualTo',
       null,
-      'equalTo'
+      'equalTo',
     ],
     title: 'Width',
     type: 'number',
-    value: 400
-  }
+    value: 400,
+  },
 }
 
 export const operators: SearchFacetOperators = {
   doesNotInclude: {
     fn: (value, field) => (value ? `!(${field} match '*${value}*')` : undefined),
-    label: 'does not include'
+    label: 'does not include',
   },
   doesNotReference: {
     fn: (value, _field) => (value ? `!references('${value}')` : undefined),
-    label: 'does not include'
+    label: 'does not include',
   },
   empty: {
     fn: (_value, field) => `!defined(${field})`,
     hideInput: true,
-    label: 'is empty'
+    label: 'is empty',
   },
   equalTo: {
     fn: (value, field) => (value ? `${field} == ${value}` : undefined),
-    label: 'is equal to'
+    label: 'is equal to',
   },
   greaterThan: {
     fn: (value, field) => (value ? `${field} > ${value}` : undefined),
-    label: 'is greater than'
+    label: 'is greater than',
   },
   greaterThanOrEqualTo: {
     fn: (value, field) => (value ? `${field} >= ${value}` : undefined),
-    label: 'is greater than or equal to'
+    label: 'is greater than or equal to',
   },
   includes: {
     fn: (value, field) => (value ? `${field} match '*${value}*'` : undefined),
-    label: 'includes'
+    label: 'includes',
   },
   is: {
     fn: (value, _field) => `${value}`,
-    label: 'is'
+    label: 'is',
   },
   isNot: {
     fn: (value, _field) => `!(${value})`,
-    label: 'is not'
+    label: 'is not',
   },
   lessThan: {
     fn: (value, field) => (value ? `${field} < ${value}` : undefined),
-    label: 'is less than'
+    label: 'is less than',
   },
   lessThanOrEqualTo: {
     fn: (value, field) => (value ? `${field} <= ${value}` : undefined),
-    label: 'is less than or equal to'
+    label: 'is less than or equal to',
   },
   notEmpty: {
     fn: (_value, field) => `defined(${field})`,
     hideInput: true,
-    label: 'is not empty'
+    label: 'is not empty',
   },
   references: {
     fn: (value, _field) => (value ? `references('${value}')` : undefined),
-    label: 'includes'
-  }
+    label: 'includes',
+  },
 }

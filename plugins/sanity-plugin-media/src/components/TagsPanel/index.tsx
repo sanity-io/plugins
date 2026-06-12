@@ -5,7 +5,7 @@ import useTypedSelector from '../../hooks/useTypedSelector'
 import TagView from '../TagView'
 
 const TagsPanel = () => {
-  const tagsPanelVisible = useTypedSelector(state => state.tags.panelVisible)
+  const tagsPanelVisible = useTypedSelector((state) => state.tags.panelVisible)
 
   if (!tagsPanelVisible) {
     return null
@@ -15,7 +15,7 @@ const TagsPanel = () => {
     <Box
       style={{
         position: 'relative',
-        width: TAGS_PANEL_WIDTH
+        width: TAGS_PANEL_WIDTH,
       }}
     >
       <Box
@@ -28,7 +28,7 @@ const TagsPanel = () => {
           position: 'absolute',
           right: 0,
           top: 0,
-          width: '100%'
+          width: '100%',
         }}
       >
         <TagView />

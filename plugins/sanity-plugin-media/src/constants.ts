@@ -1,15 +1,16 @@
 import type {AssetSourceComponentProps} from 'sanity'
+
+import {divider, inputs} from './config/searchFacets'
 import type {
   SearchFacetInputProps,
   SearchFacetDivider,
   SearchFacetGroup,
-  OrderDirection
+  OrderDirection,
 } from './types'
-import {divider, inputs} from './config/searchFacets'
 
 export const SUPPORTED_ASSET_TYPES = [
   'file',
-  'image'
+  'image',
 ] as const satisfies AssetSourceComponentProps['assetType'][]
 
 // Sort order dropdown options
@@ -17,42 +18,42 @@ export const SUPPORTED_ASSET_TYPES = [
 export const ORDER_OPTIONS: ({direction: OrderDirection; field: string} | null)[] = [
   {
     direction: 'desc',
-    field: '_createdAt'
+    field: '_createdAt',
   },
   {
     direction: 'asc',
-    field: '_createdAt'
+    field: '_createdAt',
   },
   // Divider
   null,
   {
     direction: 'desc',
-    field: '_updatedAt'
+    field: '_updatedAt',
   },
   {
     direction: 'asc' as OrderDirection,
-    field: '_updatedAt'
+    field: '_updatedAt',
   },
   // Divider
   null,
   {
     direction: 'asc',
-    field: 'originalFilename'
+    field: 'originalFilename',
   },
   {
     direction: 'desc',
-    field: 'originalFilename'
+    field: 'originalFilename',
   },
   // Divider
   null,
   {
     direction: 'desc',
-    field: 'size'
+    field: 'size',
   },
   {
     direction: 'asc',
-    field: 'size'
-  }
+    field: 'size',
+  },
 ]
 
 export const FACETS: (SearchFacetDivider | SearchFacetGroup | SearchFacetInputProps)[] = [
@@ -74,12 +75,12 @@ export const FACETS: (SearchFacetDivider | SearchFacetGroup | SearchFacetInputPr
   divider,
   inputs.orientation,
   inputs.width,
-  inputs.height
+  inputs.height,
 ]
 
 export const GRID_TEMPLATE_COLUMNS = {
   SMALL: '3rem 100px auto 1.5rem',
-  LARGE: '3rem 100px auto 5.5rem 5.5rem 3.5rem 8.5rem 4.75rem 2rem'
+  LARGE: '3rem 100px auto 5.5rem 5.5rem 3.5rem 8.5rem 4.75rem 2rem',
 }
 export const PANEL_HEIGHT = 32 // px
 export const TAG_DOCUMENT_NAME = 'media.tag'

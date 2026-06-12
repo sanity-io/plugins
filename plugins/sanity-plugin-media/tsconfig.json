@@ -1,11 +1,7 @@
 {
   "extends": "./tsconfig.settings",
   "include": ["./src", "./package.config.ts"],
-  "exclude": [
-    "./src/**/*.test.ts",
-    "./src/**/*.test.tsx",
-    "./src/**/__tests__"
-  ],
+  "exclude": ["./src/**/*.test.ts", "./src/**/*.test.tsx", "./src/**/__tests__"],
   "compilerOptions": {
     "rootDir": "."
   }

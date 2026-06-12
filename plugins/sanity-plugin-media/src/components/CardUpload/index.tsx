@@ -4,12 +4,13 @@ import filesize from 'filesize'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {styled} from 'styled-components'
+
 import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {selectUploadById, uploadsActions} from '../../modules/uploads'
+import {getSchemeColor} from '../../utils/getSchemeColor'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
-import {getSchemeColor} from '../../utils/getSchemeColor'
 
 type Props = {
   id: string
@@ -30,7 +31,7 @@ const CardUpload = (props: Props) => {
 
   // Redux
   const dispatch = useDispatch()
-  const item = useTypedSelector(state => selectUploadById(state, id))
+  const item = useTypedSelector((state) => selectUploadById(state, id))
 
   if (!item) {
     return null
@@ -68,7 +69,7 @@ const CardUpload = (props: Props) => {
           background: getSchemeColor(scheme, 'bg'),
           border: '1px solid transparent',
           height: '100%',
-          position: 'relative'
+          position: 'relative',
         }}
       >
         {/* Progress bar */}
@@ -82,7 +83,7 @@ const CardUpload = (props: Props) => {
             width: '100%',
             transform: `scaleX(${percentLoaded * 0.01})`,
             transformOrigin: 'bottom left',
-            transition: 'all 1000ms ease-out'
+            transition: 'all 1000ms ease-out',
           }}
         />
 
@@ -93,7 +94,7 @@ const CardUpload = (props: Props) => {
               $scheme={scheme}
               src={item.objectUrl}
               style={{
-                opacity: 0.4
+                opacity: 0.4,
               }}
             />
           )}
@@ -120,7 +121,7 @@ const CardUpload = (props: Props) => {
                 left: 0,
                 position: 'absolute',
                 top: 0,
-                width: '100%'
+                width: '100%',
               }}
             >
               <Button

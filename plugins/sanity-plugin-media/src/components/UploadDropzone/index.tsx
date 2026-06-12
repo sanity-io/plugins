@@ -4,12 +4,13 @@ import {type ReactNode} from 'react'
 import {type DropEvent, type DropzoneOptions, useDropzone} from 'react-dropzone'
 import {useDispatch} from 'react-redux'
 import {styled} from 'styled-components'
+
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import {DropzoneDispatchProvider} from '../../contexts/DropzoneDispatchContext'
+import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {notificationsActions} from '../../modules/notifications'
 import {uploadsActions} from '../../modules/uploads'
-import {useToolOptions} from '../../contexts/ToolOptionsContext'
 
 type Props = {
   children: ReactNode
@@ -65,38 +66,38 @@ const UploadDropzone = (props: Props) => {
 
   const {
     dropzone: {maxSize},
-    directUploads
+    directUploads,
   } = useToolOptions()
 
   const {onSelect} = useAssetSourceActions()
 
   // Redux
   const dispatch = useDispatch()
-  const assetTypes = useTypedSelector(state => state.assets.assetTypes)
+  const assetTypes = useTypedSelector((state) => state.assets.assetTypes)
 
   const isImageAssetType = assetTypes.length === 1 && assetTypes[0] === 'image'
 
   // Callbacks
   const handleDrop = async (acceptedFiles: File[]) => {
-    acceptedFiles.forEach(file =>
+    acceptedFiles.forEach((file) =>
       dispatch(
         uploadsActions.uploadRequest({
           file,
-          forceAsAssetType: assetTypes.length === 1 ? assetTypes[0] : undefined
-        })
-      )
+          forceAsAssetType: assetTypes.length === 1 ? assetTypes[0] : undefined,
+        }),
+      ),
     )
   }
 
-  const handleDropRejected: DropzoneOptions['onDropRejected'] = rejections => {
+  const handleDropRejected: DropzoneOptions['onDropRejected'] = (rejections) => {
     const errorCodes = rejections.flatMap(({errors}) => errors.map(({code}) => code))
 
     if (errorCodes.includes('file-too-large')) {
       dispatch(
         notificationsActions.add({
           status: 'error',
-          title: 'One or more files exceed the maximum upload size.'
-        })
+          title: 'One or more files exceed the maximum upload size.',
+        }),
       )
     }
   }
@@ -126,8 +127,8 @@ const UploadDropzone = (props: Props) => {
       dispatch(
         notificationsActions.add({
           status: 'error',
-          title: `Unable to upload some items (folders and packages aren't supported)`
-        })
+          title: `Unable to upload some items (folders and packages aren't supported)`,
+        }),
       )
     }
 
@@ -145,7 +146,7 @@ const UploadDropzone = (props: Props) => {
     onDrop: handleDrop,
     maxSize,
     onDropRejected: handleDropRejected,
-    disabled: !directUploads
+    disabled: !directUploads,
   })
 
   return (

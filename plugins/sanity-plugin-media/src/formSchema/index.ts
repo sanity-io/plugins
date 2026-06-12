@@ -14,7 +14,7 @@ export function localizedStringSchema(locales?: {id: string}[]) {
 
 export const tagOptionSchema = z.object({
   label: z.string().trim().min(1, {message: 'Label cannot be empty'}),
-  value: z.string().trim().min(1, {message: 'Value cannot be empty'})
+  value: z.string().trim().min(1, {message: 'Value cannot be empty'}),
 })
 
 export function getAssetFormSchema(locales?: {id: string}[]) {
@@ -24,16 +24,16 @@ export function getAssetFormSchema(locales?: {id: string}[]) {
     description: localizedStringSchema(locales),
     opt: z.object({
       media: z.object({
-        tags: z.array(tagOptionSchema).nullable()
-      })
+        tags: z.array(tagOptionSchema).nullable(),
+      }),
     }),
     originalFilename: z.string().trim().min(1, {message: 'Filename cannot be empty'}),
-    title: localizedStringSchema(locales)
+    title: localizedStringSchema(locales),
   })
 }
 
 export const assetFormSchema = getAssetFormSchema()
 
 export const tagFormSchema = z.object({
-  name: z.string().min(1, {message: 'Name cannot be empty'})
+  name: z.string().min(1, {message: 'Name cannot be empty'}),
 })

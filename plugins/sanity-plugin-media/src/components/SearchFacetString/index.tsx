@@ -1,12 +1,12 @@
 import {SelectIcon} from '@sanity/icons'
 import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem, TextInput} from '@sanity/ui'
-import type {SearchFacetInputStringProps, SearchFacetOperatorType, WithId} from '../../types'
 import {type ChangeEvent} from 'react'
 import {useDispatch} from 'react-redux'
 
 import {operators} from '../../config/searchFacets'
 import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
 import {searchActions} from '../../modules/search'
+import type {SearchFacetInputStringProps, SearchFacetOperatorType, WithId} from '../../types'
 import SearchFacet from '../SearchFacet'
 
 type Props = {

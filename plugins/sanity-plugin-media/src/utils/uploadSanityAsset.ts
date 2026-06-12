@@ -2,26 +2,27 @@
 // https://github.com/sanity-io/sanity/blob/ccb777e115a8cdf20d81a9a2bc9d8c228568faff/packages/%40sanity/form-builder/src/sanity/inputs/client-adapters/assets.ts
 
 import type {SanityAssetDocument, SanityClient, SanityImageAssetDocument} from '@sanity/client'
-import type {HttpError} from '../types'
 import {Observable, of, throwError} from 'rxjs'
 import {map, mergeMap} from 'rxjs/operators'
+
+import type {HttpError} from '../types'
 import {withMaxConcurrency} from './withMaxConcurrency'
 
 const fetchExisting$ = (client: SanityClient, type: string, hash: string) => {
   return client.observable.fetch('*[_type == $documentType && sha1hash == $hash][0]', {
     documentType: type,
-    hash
+    hash,
   })
 }
 
 const readFile$ = (file: File): Observable<ArrayBuffer> => {
-  return new Observable(subscriber => {
+  return new Observable((subscriber) => {
     const reader = new FileReader()
     reader.onload = () => {
       subscriber.next(reader.result as ArrayBuffer)
       subscriber.complete()
     }
-    reader.onerror = err => {
+    reader.onerror = (err) => {
       subscriber.error(err)
     }
     reader.readAsArrayBuffer(file)
@@ -33,7 +34,7 @@ const readFile$ = (file: File): Observable<ArrayBuffer> => {
 
 const hexFromBuffer = (buffer: ArrayBuffer): string => {
   return Array.prototype.map
-    .call(new Uint8Array(buffer), x => `00${x.toString(16)}`.slice(-2))
+    .call(new Uint8Array(buffer), (x) => `00${x.toString(16)}`.slice(-2))
     .join('')
 }
 
@@ -41,12 +42,12 @@ export const hashFile$ = (file: File): Observable<string> => {
   if (!window.crypto || !window.crypto.subtle || !window.FileReader) {
     return throwError({
       message: 'Unable to generate hash: uploads are only allowed in secure contexts',
-      statusCode: 500
+      statusCode: 500,
     })
   }
   return readFile$(file).pipe(
-    mergeMap(arrayBuffer => window.crypto.subtle.digest('SHA-1', arrayBuffer)),
-    map(hexFromBuffer)
+    mergeMap((arrayBuffer) => window.crypto.subtle.digest('SHA-1', arrayBuffer)),
+    map(hexFromBuffer),
   )
 }
 
@@ -54,7 +55,7 @@ const uploadSanityAsset$ = (
   client: SanityClient,
   assetType: 'file' | 'image',
   file: File,
-  hash: string
+  hash: string,
 ) => {
   return of(null).pipe(
     // NOTE: the sanity api will still dedupe unique files, but this saves us from uploading the asset file entirely
@@ -64,7 +65,7 @@ const uploadSanityAsset$ = (
       if (existingAsset) {
         return throwError({
           message: 'Asset already exists',
-          statusCode: 409
+          statusCode: 409,
         } as HttpError)
       }
 
@@ -75,21 +76,21 @@ const uploadSanityAsset$ = (
       return client.observable.assets
         .upload(assetType, file, {
           extract: ['blurhash', 'exif', 'location', 'lqip', 'palette'],
-          preserveFilename: true
+          preserveFilename: true,
         })
         .pipe(
-          map(event =>
+          map((event) =>
             event.type === 'response'
               ? {
                   // rewrite to a 'complete' event
                   asset: event.body.document,
                   id: event.body.document._id,
-                  type: 'complete'
+                  type: 'complete',
                 }
-              : event
-          )
+              : event,
+          ),
         )
-    })
+    }),
   )
 }
 

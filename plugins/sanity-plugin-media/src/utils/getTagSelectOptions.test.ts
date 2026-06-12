@@ -1,13 +1,14 @@
 import {describe, expect, it} from 'vitest'
-import getTagSelectOptions from './getTagSelectOptions'
+
 import type {Tag, TagItem} from '../types'
+import getTagSelectOptions from './getTagSelectOptions'
 
 function tagItem(partial: Partial<TagItem> & Pick<TagItem, 'tag'>): TagItem {
   return {
     _type: 'tag',
     picked: false,
     updating: false,
-    ...partial
+    ...partial,
   }
 }
 
@@ -17,7 +18,7 @@ const makeTag = (id: string, name: string): Tag => ({
   _createdAt: '',
   _updatedAt: '',
   _rev: 'r1',
-  name: {_type: 'slug', current: name}
+  name: {_type: 'slug', current: name},
 })
 
 describe('getTagSelectOptions', () => {
@@ -25,7 +26,7 @@ describe('getTagSelectOptions', () => {
     const tags = [tagItem({tag: makeTag('t1', 'alpha')}), tagItem({tag: makeTag('t2', 'beta')})]
     expect(getTagSelectOptions(tags)).toEqual([
       {label: 'alpha', value: 't1'},
-      {label: 'beta', value: 't2'}
+      {label: 'beta', value: 't2'},
     ])
   })
 
@@ -36,7 +37,7 @@ describe('getTagSelectOptions', () => {
   it('skips items without a tag', () => {
     const tags = [
       tagItem({tag: makeTag('t1', 'ok')}),
-      {_type: 'tag', tag: undefined, picked: false, updating: false} as unknown as TagItem
+      {_type: 'tag', tag: undefined, picked: false, updating: false} as unknown as TagItem,
     ]
     expect(getTagSelectOptions(tags)).toEqual([{label: 'ok', value: 't1'}])
   })

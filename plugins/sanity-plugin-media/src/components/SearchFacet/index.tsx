@@ -1,11 +1,12 @@
 import {CloseIcon} from '@sanity/icons'
 import {Box, Flex, Label, rem, Text, type ThemeColorSchemeKey} from '@sanity/ui'
-import type {SearchFacetInputProps, WithId} from '../../types'
 import {type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
+
 import {searchActions} from '../../modules/search'
+import type {SearchFacetInputProps, WithId} from '../../types'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
 type Props = {
@@ -40,7 +41,7 @@ const SearchFacet = (props: Props) => {
           <Label
             size={0}
             style={{
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
             }}
           >
             {facet.title}

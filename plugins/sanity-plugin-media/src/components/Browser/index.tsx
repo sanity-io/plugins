@@ -1,6 +1,7 @@
 import {Card, Flex, PortalProvider} from '@sanity/ui'
 import {useState} from 'react'
 import {type AssetSourceComponentProps, type SanityDocument} from 'sanity'
+
 import {AssetBrowserDispatchProvider} from '../../contexts/AssetSourceDispatchContext'
 import useVersionedClient from '../../hooks/useVersionedClient'
 import GlobalStyle from '../../styled/GlobalStyles'
@@ -27,7 +28,7 @@ type Props = {
 
 const BrowserContent = ({
   onClose,
-  schemaType
+  schemaType,
 }: {
   onClose?: AssetSourceComponentProps['onClose']
   schemaType?: AssetSourceComponentProps['schemaType']

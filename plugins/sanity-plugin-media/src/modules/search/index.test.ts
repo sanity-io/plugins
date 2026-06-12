@@ -1,8 +1,9 @@
 // @vitest-environment node
 
 import {describe, expect, it} from 'vitest'
-import searchReducer, {searchActions} from './index'
+
 import {inputs} from '../../config/searchFacets'
+import searchReducer, {searchActions} from './index'
 
 describe('search slice', () => {
   it('facetsAdd assigns an id and appends facet', () => {

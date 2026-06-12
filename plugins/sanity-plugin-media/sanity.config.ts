@@ -1,7 +1,8 @@
-import {defineConfig} from 'sanity'
-import {mediaField, media} from './src'
-import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
+import {defineConfig} from 'sanity'
+import {structureTool} from 'sanity/structure'
+
+import {mediaField, media} from './src'
 
 export default defineConfig({
   name: 'sanity-plugin-media',
@@ -19,11 +20,11 @@ export default defineConfig({
             name: 'image',
             title: 'Image',
             type: 'image',
-            mediaTags: ['product']
-          })
-        ]
-      }
-    ]
+            mediaTags: ['product'],
+          }),
+        ],
+      },
+    ],
   },
-  plugins: [media(), structureTool({}), visionTool()]
+  plugins: [media(), structureTool({}), visionTool()],
 })

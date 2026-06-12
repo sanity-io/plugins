@@ -1,9 +1,10 @@
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {AssetItem, Dialog, MyEpic, Tag} from '../../types'
 import pluralize from 'pluralize'
 import {ofType} from 'redux-observable'
 import {EMPTY, of} from 'rxjs'
 import {filter, mergeMap} from 'rxjs/operators'
+
+import type {AssetItem, Dialog, MyEpic, Tag} from '../../types'
 import {assetsActions} from '../assets'
 import {ASSETS_ACTIONS} from '../assets/actions'
 import {tagsActions} from '../tags'
@@ -14,17 +15,17 @@ type DialogReducerState = {
 }
 
 const initialState = {
-  items: []
+  items: [],
 } as DialogReducerState
 
 const dialogSlice = createSlice({
   name: 'dialog',
   initialState,
-  extraReducers: builder => {
-    builder.addCase(DIALOG_ACTIONS.showTagCreate, state => {
+  extraReducers: (builder) => {
+    builder.addCase(DIALOG_ACTIONS.showTagCreate, (state) => {
       state.items.push({
         id: 'tagCreate',
-        type: 'tagCreate'
+        type: 'tagCreate',
       })
     })
     builder.addCase(DIALOG_ACTIONS.showTagEdit, (state, action) => {
@@ -32,7 +33,7 @@ const dialogSlice = createSlice({
       state.items.push({
         id: tagId,
         tagId,
-        type: 'tagEdit'
+        type: 'tagEdit',
       })
     })
   },
@@ -45,11 +46,11 @@ const dialogSlice = createSlice({
     inlineTagCreate(state, action: PayloadAction<{assetId: string; tag: Tag}>) {
       const {assetId, tag} = action.payload
 
-      state.items.forEach(item => {
+      state.items.forEach((item) => {
         if (item.type === 'assetEdit' && item.assetId === assetId) {
           item.lastCreatedTag = {
             label: tag.name.current,
-            value: tag._id
+            value: tag._id,
           }
         }
       })
@@ -58,7 +59,7 @@ const dialogSlice = createSlice({
     inlineTagRemove(state, action: PayloadAction<{tagIds: string[]}>) {
       const {tagIds} = action.payload
 
-      state.items.forEach(item => {
+      state.items.forEach((item) => {
         if (item.type === 'assetEdit') {
           item.lastRemovedTagIds = tagIds
         }
@@ -67,7 +68,7 @@ const dialogSlice = createSlice({
     // Remove dialog by id
     remove(state, action: PayloadAction<{id: string}>) {
       const id = action.payload?.id
-      state.items = state.items.filter(item => item.id !== id)
+      state.items = state.items.filter((item) => item.id !== id)
     },
     showConfirmAssetsTagAdd(
       state,
@@ -75,7 +76,7 @@ const dialogSlice = createSlice({
         assetsPicked: AssetItem[]
         closeDialogId?: string
         tag: Tag
-      }>
+      }>,
     ) {
       const {assetsPicked, closeDialogId, tag} = action.payload
 
@@ -85,14 +86,14 @@ const dialogSlice = createSlice({
         closeDialogId,
         confirmCallbackAction: ASSETS_ACTIONS.tagsAddRequest({
           assets: assetsPicked,
-          tag
+          tag,
         }),
         confirmText: `Yes, add tag to ${suffix}`,
         title: `Add tag ${tag.name.current} to ${suffix}?`,
         id: 'confirm',
         headerTitle: 'Confirm tag addition',
         tone: 'primary',
-        type: 'confirm'
+        type: 'confirm',
       })
     },
     showConfirmAssetsTagRemove(
@@ -101,7 +102,7 @@ const dialogSlice = createSlice({
         assetsPicked: AssetItem[]
         closeDialogId?: string
         tag: Tag
-      }>
+      }>,
     ) {
       const {assetsPicked, closeDialogId, tag} = action.payload
 
@@ -115,12 +116,12 @@ const dialogSlice = createSlice({
         id: 'confirm',
         title: `Remove tag ${tag.name.current} from ${suffix}?`,
         tone: 'critical',
-        type: 'confirm'
+        type: 'confirm',
       })
     },
     showConfirmDeleteAssets(
       state,
-      action: PayloadAction<{assets: AssetItem[]; closeDialogId?: string}>
+      action: PayloadAction<{assets: AssetItem[]; closeDialogId?: string}>,
     ) {
       const {assets, closeDialogId} = action.payload
 
@@ -129,7 +130,7 @@ const dialogSlice = createSlice({
       state.items.push({
         closeDialogId,
         confirmCallbackAction: assetsActions.deleteRequest({
-          assets: assets.map(assetItem => assetItem.asset)
+          assets: assets.map((assetItem) => assetItem.asset),
         }),
         confirmText: `Yes, delete ${suffix}`,
         description: 'This operation cannot be reversed. Are you sure you want to continue?',
@@ -137,7 +138,7 @@ const dialogSlice = createSlice({
         id: 'confirm',
         headerTitle: 'Confirm deletion',
         tone: 'critical',
-        type: 'confirm'
+        type: 'confirm',
       })
     },
     showConfirmDeleteTag(state, action: PayloadAction<{closeDialogId?: string; tag: Tag}>) {
@@ -154,7 +155,7 @@ const dialogSlice = createSlice({
         id: 'confirm',
         headerTitle: 'Confirm deletion',
         tone: 'critical',
-        type: 'confirm'
+        type: 'confirm',
       })
     },
     showAssetEdit(state, action: PayloadAction<{assetId: string}>) {
@@ -162,52 +163,52 @@ const dialogSlice = createSlice({
       state.items.push({
         assetId,
         id: assetId,
-        type: 'assetEdit'
+        type: 'assetEdit',
       })
     },
     showSearchFacets(state) {
       state.items.push({
         id: 'searchFacets',
-        type: 'searchFacets'
+        type: 'searchFacets',
       })
     },
     showTags(state) {
       state.items.push({
         id: 'tags',
-        type: 'tags'
+        type: 'tags',
       })
-    }
-  }
+    },
+  },
 })
 
 // Epics
 
-export const dialogClearOnAssetUpdateEpic: MyEpic = action$ =>
+export const dialogClearOnAssetUpdateEpic: MyEpic = (action$) =>
   action$.pipe(
     ofType(
       assetsActions.deleteComplete.type,
       assetsActions.updateComplete.type,
       tagsActions.deleteComplete.type,
-      tagsActions.updateComplete.type
+      tagsActions.updateComplete.type,
     ),
     filter(
       (action: {
         payload: {closeDialogId?: string}
-      }): action is PayloadAction<{closeDialogId?: string}> => !!action?.payload?.closeDialogId
+      }): action is PayloadAction<{closeDialogId?: string}> => !!action?.payload?.closeDialogId,
     ),
-    mergeMap(action => {
+    mergeMap((action) => {
       const dialogId = action?.payload?.closeDialogId
       if (dialogId) {
         return of(dialogSlice.actions.remove({id: dialogId}))
       }
       return EMPTY
-    })
+    }),
   )
 
-export const dialogTagCreateEpic: MyEpic = action$ =>
+export const dialogTagCreateEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsActions.createComplete.match),
-    mergeMap(action => {
+    mergeMap((action) => {
       const {assetId, tag} = action?.payload
 
       if (assetId) {
@@ -219,17 +220,17 @@ export const dialogTagCreateEpic: MyEpic = action$ =>
       }
 
       return EMPTY
-    })
+    }),
   )
 
-export const dialogTagDeleteEpic: MyEpic = action$ =>
+export const dialogTagDeleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsActions.listenerDeleteQueueComplete.match),
-    mergeMap(action => {
+    mergeMap((action) => {
       const {tagIds} = action?.payload
 
       return of(dialogSlice.actions.inlineTagRemove({tagIds}))
-    })
+    }),
   )
 
 export const dialogActions = {...dialogSlice.actions}

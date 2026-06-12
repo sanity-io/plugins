@@ -1,6 +1,7 @@
 // @vitest-environment node
 
 import {describe, expect, it} from 'vitest'
+
 import type {Tag} from '../../types'
 import tagsReducer, {tagsActions} from './index'
 
@@ -10,7 +11,7 @@ const sampleTag: Tag = {
   _createdAt: '2020-01-01',
   _updatedAt: '2020-01-01',
   _rev: 'r1',
-  name: {_type: 'slug', current: 'alpha'}
+  name: {_type: 'slug', current: 'alpha'},
 }
 
 describe('tags slice', () => {

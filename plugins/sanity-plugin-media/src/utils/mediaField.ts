@@ -3,8 +3,9 @@ import type {
   FileDefinition,
   ImageDefinition,
   WidenInitialValue,
-  WidenValidation
+  WidenValidation,
 } from 'sanity'
+
 import {AutoTagInput} from '../components/AutoTagInputWrapper'
 
 type ImageMediaFieldConfig = Omit<ImageDefinition, 'options'> &
@@ -59,7 +60,7 @@ type FileMediaFieldResult = Omit<FileDefinition, 'options'> &
 export function mediaField(config: ImageMediaFieldConfig): ImageMediaFieldResult
 export function mediaField(config: FileMediaFieldConfig): FileMediaFieldResult
 export function mediaField(
-  config: ImageMediaFieldConfig | FileMediaFieldConfig
+  config: ImageMediaFieldConfig | FileMediaFieldConfig,
 ): ImageMediaFieldResult | FileMediaFieldResult {
   const {mediaTags, options, components, ...rest} = config as ImageMediaFieldConfig & {
     components?: Record<string, unknown>
@@ -67,6 +68,6 @@ export function mediaField(
   return {
     ...rest,
     options: {...options, mediaTags},
-    components: {...components, input: AutoTagInput}
+    components: {...components, input: AutoTagInput},
   } as unknown as ImageMediaFieldResult
 }

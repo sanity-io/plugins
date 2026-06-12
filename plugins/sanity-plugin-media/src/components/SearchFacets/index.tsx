@@ -1,5 +1,4 @@
 import {Box, Flex, Inline, rem, type Theme} from '@sanity/ui'
-
 import {styled, css} from 'styled-components'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -24,9 +23,9 @@ const SearchFacets = (props: Props) => {
   const {layout = 'inline'} = props
 
   // Redux
-  const searchFacets = useTypedSelector(state => state.search.facets)
+  const searchFacets = useTypedSelector((state) => state.search.facets)
 
-  const Items = searchFacets.map(facet => {
+  const Items = searchFacets.map((facet) => {
     const key = facet.id
     if (facet.type === 'number') {
       return <SearchFacetNumber facet={facet} key={key} />

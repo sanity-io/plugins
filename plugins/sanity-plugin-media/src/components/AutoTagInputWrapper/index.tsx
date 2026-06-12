@@ -1,9 +1,10 @@
 import {useToast} from '@sanity/ui'
 import {useEffect, useRef} from 'react'
 import {type InputProps} from 'sanity'
-import {applyMediaTags} from '../../utils/applyMediaTags'
+
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import useVersionedClient from '../../hooks/useVersionedClient'
+import {applyMediaTags} from '../../utils/applyMediaTags'
 
 type AssetValue = {
   _type: 'image' | 'file'
@@ -68,11 +69,15 @@ export function AutoTagInput(props: AutoTagInputProps) {
       client,
       assetId: currentAssetRef,
       mediaTags,
-      createTagsOnUpload
-    }).catch(err => {
+      createTagsOnUpload,
+    }).catch((err) => {
       console.error('[sanity-plugin-media] Failed to apply auto-tags:', err)
       const label = mediaTags.length === 1 ? 'tag' : 'tags'
-      toast.push({closable: true, status: 'error', title: `Failed to apply the media ${label} ${mediaTags.join(', ')}`})
+      toast.push({
+        closable: true,
+        status: 'error',
+        title: `Failed to apply the media ${label} ${mediaTags.join(', ')}`,
+      })
     })
   }, [currentAssetRef, mediaTags, client, createTagsOnUpload])
 

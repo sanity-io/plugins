@@ -1,13 +1,14 @@
 // @vitest-environment node
 
 import {describe, expect, it} from 'vitest'
-import {DIALOG_ACTIONS} from './actions'
-import dialogReducer, {dialogActions} from './index'
+
+import {createTestRootState} from '../../__tests__/fixtures/rootState'
+import type {AssetItem, ImageAsset, Tag} from '../../types'
 import {assetsActions} from '../assets'
 import {ASSETS_ACTIONS} from '../assets/actions'
 import {tagsActions} from '../tags'
-import type {AssetItem, ImageAsset, Tag} from '../../types'
-import {createTestRootState} from '../../__tests__/fixtures/rootState'
+import {DIALOG_ACTIONS} from './actions'
+import dialogReducer, {dialogActions} from './index'
 
 const sampleAsset = {
   _id: 'a1',
@@ -18,7 +19,7 @@ const sampleAsset = {
   originalFilename: 'x.png',
   size: 1,
   mimeType: 'image/png',
-  url: 'https://example.com/x.png'
+  url: 'https://example.com/x.png',
 } as ImageAsset
 
 const sampleTag: Tag = {
@@ -27,14 +28,14 @@ const sampleTag: Tag = {
   _createdAt: '',
   _updatedAt: '',
   _rev: 'tr',
-  name: {_type: 'slug', current: 'alpha'}
+  name: {_type: 'slug', current: 'alpha'},
 }
 
 const assetItem = (asset: ImageAsset = sampleAsset): AssetItem => ({
   _type: 'asset',
   asset,
   picked: false,
-  updating: false
+  updating: false,
 })
 
 function dialogState() {
@@ -45,7 +46,7 @@ describe('dialog slice reducers', () => {
   it('clear removes all items', () => {
     const state = dialogReducer(
       {...dialogState(), items: [{id: 'x', type: 'tags'}]},
-      dialogActions.clear()
+      dialogActions.clear(),
     )
     expect(state.items).toEqual([])
   })
@@ -56,10 +57,10 @@ describe('dialog slice reducers', () => {
         ...dialogState(),
         items: [
           {id: 'a', type: 'tags'},
-          {id: 'b', type: 'searchFacets'}
-        ]
+          {id: 'b', type: 'searchFacets'},
+        ],
       },
-      dialogActions.remove({id: 'a'})
+      dialogActions.remove({id: 'a'}),
     )
     expect(state.items).toEqual([{id: 'b', type: 'searchFacets'}])
   })
@@ -74,7 +75,7 @@ describe('dialog slice reducers', () => {
     state = dialogReducer(state, dialogActions.showTags())
     expect(state.items).toEqual([
       {id: 'searchFacets', type: 'searchFacets'},
-      {id: 'tags', type: 'tags'}
+      {id: 'tags', type: 'tags'},
     ])
   })
 
@@ -84,16 +85,16 @@ describe('dialog slice reducers', () => {
         ...dialogState(),
         items: [
           {id: 'a1', type: 'assetEdit', assetId: 'a1'},
-          {id: 'a2', type: 'assetEdit', assetId: 'a2'}
-        ]
+          {id: 'a2', type: 'assetEdit', assetId: 'a2'},
+        ],
       },
-      dialogActions.inlineTagCreate({assetId: 'a1', tag: sampleTag})
+      dialogActions.inlineTagCreate({assetId: 'a1', tag: sampleTag}),
     )
-    const a1 = state.items.find(i => i.type === 'assetEdit' && i.assetId === 'a1')
-    const a2 = state.items.find(i => i.type === 'assetEdit' && i.assetId === 'a2')
+    const a1 = state.items.find((i) => i.type === 'assetEdit' && i.assetId === 'a1')
+    const a2 = state.items.find((i) => i.type === 'assetEdit' && i.assetId === 'a2')
     expect(a1 && 'lastCreatedTag' in a1 && a1.lastCreatedTag).toEqual({
       label: 'alpha',
-      value: 't1'
+      value: 't1',
     })
     expect(a2).toBeDefined()
     expect(Object.prototype.hasOwnProperty.call(a2, 'lastCreatedTag')).toBe(false)
@@ -105,14 +106,14 @@ describe('dialog slice reducers', () => {
         ...dialogState(),
         items: [
           {id: 'a1', type: 'assetEdit', assetId: 'a1'},
-          {id: 'tags', type: 'tags'}
-        ]
+          {id: 'tags', type: 'tags'},
+        ],
       },
-      dialogActions.inlineTagRemove({tagIds: ['x', 'y']})
+      dialogActions.inlineTagRemove({tagIds: ['x', 'y']}),
     )
-    const edit = state.items.find(i => i.type === 'assetEdit')
+    const edit = state.items.find((i) => i.type === 'assetEdit')
     expect(edit && 'lastRemovedTagIds' in edit && edit.lastRemovedTagIds).toEqual(['x', 'y'])
-    const tagsPanel = state.items.find(i => i.type === 'tags')
+    const tagsPanel = state.items.find((i) => i.type === 'tags')
     expect(tagsPanel && 'lastRemovedTagIds' in tagsPanel).toBeFalsy()
   })
 
@@ -120,7 +121,7 @@ describe('dialog slice reducers', () => {
     const item = assetItem()
     const state = dialogReducer(
       dialogState(),
-      dialogActions.showConfirmDeleteAssets({assets: [item], closeDialogId: 'a1'})
+      dialogActions.showConfirmDeleteAssets({assets: [item], closeDialogId: 'a1'}),
     )
     const confirm = state.items[0]
     expect(confirm?.type).toBe('confirm')
@@ -132,7 +133,7 @@ describe('dialog slice reducers', () => {
   it('showConfirmDeleteTag pushes a confirm dialog wired to tags deleteRequest', () => {
     const state = dialogReducer(
       dialogState(),
-      dialogActions.showConfirmDeleteTag({closeDialogId: 't1', tag: sampleTag})
+      dialogActions.showConfirmDeleteTag({closeDialogId: 't1', tag: sampleTag}),
     )
     const confirm = state.items[0]
     expect(confirm?.type).toBe('confirm')
@@ -147,14 +148,14 @@ describe('dialog slice reducers', () => {
       dialogState(),
       dialogActions.showConfirmAssetsTagAdd({
         assetsPicked: [assetItem(), assetItem(a2)],
-        tag: sampleTag
-      })
+        tag: sampleTag,
+      }),
     )
     const confirm = state.items[0]
     expect(confirm && 'title' in confirm && confirm.title).toContain('2 assets')
     const cb = confirm && 'confirmCallbackAction' in confirm ? confirm.confirmCallbackAction : null
     expect(cb).toEqual(
-      ASSETS_ACTIONS.tagsAddRequest({assets: [assetItem(), assetItem(a2)], tag: sampleTag})
+      ASSETS_ACTIONS.tagsAddRequest({assets: [assetItem(), assetItem(a2)], tag: sampleTag}),
     )
   })
 
@@ -163,8 +164,8 @@ describe('dialog slice reducers', () => {
       dialogState(),
       dialogActions.showConfirmAssetsTagRemove({
         assetsPicked: [assetItem()],
-        tag: sampleTag
-      })
+        tag: sampleTag,
+      }),
     )
     const confirm = state.items[0]
     expect(confirm && 'tone' in confirm && confirm.tone).toBe('critical')

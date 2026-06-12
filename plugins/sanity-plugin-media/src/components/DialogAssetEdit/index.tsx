@@ -1,18 +1,20 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Stack, Tab, TabList, TabPanel, Text} from '@sanity/ui'
-import type {Asset, AssetFormData, DialogAssetEditProps, TagSelectOption} from '../../types'
 import groq from 'groq'
 import {type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
 import {useDispatch} from 'react-redux'
 import {WithReferringDocuments, useColorSchemeValue, useDocumentStore} from 'sanity'
+
+import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import {getAssetFormSchema} from '../../formSchema'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import useVersionedClient from '../../hooks/useVersionedClient'
 import {assetsActions, selectAssetById} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {selectTags, selectTagSelectOptions, tagsActions} from '../../modules/tags'
+import type {Asset, AssetFormData, DialogAssetEditProps, TagSelectOption} from '../../types'
 import getTagSelectOptions from '../../utils/getTagSelectOptions'
 import {getUniqueDocuments} from '../../utils/getUniqueDocuments'
 import imageDprUrl from '../../utils/imageDprUrl'
@@ -24,7 +26,6 @@ import DocumentList from '../DocumentList'
 import FileAssetPreview from '../FileAssetPreview'
 import FormSubmitButton from '../FormSubmitButton'
 import Image from '../Image'
-import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import Details, {type DetailsProps} from './Details'
 
 function renderDefaultDetails(props: DetailsProps) {
@@ -39,7 +40,7 @@ type Props = {
 const DialogAssetEdit = (props: Props) => {
   const {
     children,
-    dialog: {assetId, id, lastCreatedTag, lastRemovedTagIds}
+    dialog: {assetId, id, lastCreatedTag, lastRemovedTagIds},
   } = props
 
   const client = useVersionedClient()
@@ -48,7 +49,7 @@ const DialogAssetEdit = (props: Props) => {
   const documentStore = useDocumentStore()
 
   const dispatch = useDispatch()
-  const assetItem = useTypedSelector(state => selectAssetById(state, String(assetId))) // TODO: check casting
+  const assetItem = useTypedSelector((state) => selectAssetById(state, String(assetId))) // TODO: check casting
   const tags = useTypedSelector(selectTags)
 
   const assetUpdatedPrev = useRef<string | undefined>(undefined)
@@ -90,7 +91,7 @@ const DialogAssetEdit = (props: Props) => {
           description: makeLocaleObj(asset?.description),
           originalFilename: asset?.originalFilename || '',
           opt: {media: {tags: assetTagOptions}},
-          title: makeLocaleObj(asset?.title)
+          title: makeLocaleObj(asset?.title),
         }
       }
       // Normalize: if a field is a localized object but locales are disabled, pick first non-empty value
@@ -98,7 +99,7 @@ const DialogAssetEdit = (props: Props) => {
         if (typeof field === 'string') return field
         if (typeof field === 'object' && field !== null) {
           const values = Object.values(field as Record<string, string>)
-          return values.find(v => v) || ''
+          return values.find((v) => v) || ''
         }
         return ''
       }
@@ -108,10 +109,10 @@ const DialogAssetEdit = (props: Props) => {
         description: flattenField(asset?.description),
         originalFilename: asset?.originalFilename || '',
         opt: {media: {tags: assetTagOptions}},
-        title: flattenField(asset?.title)
+        title: flattenField(asset?.title),
       }
     },
-    [assetTagOptions, locales]
+    [assetTagOptions, locales],
   )
 
   const {
@@ -122,11 +123,11 @@ const DialogAssetEdit = (props: Props) => {
     handleSubmit,
     register,
     reset,
-    setValue
+    setValue,
   } = useForm<AssetFormData>({
     defaultValues: generateDefaultValues(assetItem?.asset),
     mode: 'onChange',
-    resolver: zodResolver(getAssetFormSchema(locales))
+    resolver: zodResolver(getAssetFormSchema(locales)),
   })
 
   const formUpdating = !assetItem || assetItem?.updating
@@ -143,8 +144,8 @@ const DialogAssetEdit = (props: Props) => {
     dispatch(
       dialogActions.showConfirmDeleteAssets({
         assets: [assetItem],
-        closeDialogId: assetItem?.asset._id
-      })
+        closeDialogId: assetItem?.asset._id,
+      }),
     )
   }, [assetItem, dispatch])
 
@@ -162,31 +163,30 @@ const DialogAssetEdit = (props: Props) => {
       dispatch(
         tagsActions.createRequest({
           assetId: currentAsset?._id,
-          name: tagName
-        })
+          name: tagName,
+        }),
       )
     },
-    [currentAsset?._id, dispatch]
+    [currentAsset?._id, dispatch],
   )
 
   // Detect if asset has localized fields (objects) with keys not in the configured locales
   const hasOrphanedLocales = useMemo(() => {
     if (!currentAsset) return false
-    const isLocaleObj = (v: unknown) =>
-      typeof v === 'object' && v !== null && !Array.isArray(v)
+    const isLocaleObj = (v: unknown) => typeof v === 'object' && v !== null && !Array.isArray(v)
     const fields = [
       currentAsset.title,
       currentAsset.altText,
       currentAsset.description,
-      ...(currentAsset._type === 'sanity.imageAsset' ? [currentAsset.creditLine] : [])
+      ...(currentAsset._type === 'sanity.imageAsset' ? [currentAsset.creditLine] : []),
     ]
-    const anyLocalized = fields.some(f => isLocaleObj(f))
+    const anyLocalized = fields.some((f) => isLocaleObj(f))
     if (!anyLocalized) return false
     if (!locales || locales.length === 0) return true
-    const configuredIds = new Set(locales.map(l => l.id))
-    return fields.some(f => {
+    const configuredIds = new Set(locales.map((l) => l.id))
+    return fields.some((f) => {
       if (!isLocaleObj(f)) return false
-      return Object.keys(f as object).some(k => !configuredIds.has(k))
+      return Object.keys(f as object).some((k) => !configuredIds.has(k))
     })
   }, [currentAsset, locales])
 
@@ -199,9 +199,9 @@ const DialogAssetEdit = (props: Props) => {
       if (!locales || locales.length === 0) {
         // Pick the first non-empty value sorted by key for determinism
         const sorted = Object.keys(obj).sort()
-        return sorted.map(k => obj[k]).find(v => v) || ''
+        return sorted.map((k) => obj[k]).find((v) => v) || ''
       }
-      const configuredIds = new Set(locales.map(l => l.id))
+      const configuredIds = new Set(locales.map((l) => l.id))
       const cleaned: Record<string, string> = {}
       for (const [key, val] of Object.entries(obj)) {
         if (configuredIds.has(key)) cleaned[key] = val
@@ -216,15 +216,15 @@ const DialogAssetEdit = (props: Props) => {
         altText: cleanField(currentAsset.altText),
         description: cleanField(currentAsset.description),
         ...(currentAsset._type === 'sanity.imageAsset' && {
-          creditLine: cleanField(currentAsset.creditLine)
-        })
+          creditLine: cleanField(currentAsset.creditLine),
+        }),
       })
       .commit()
   }, [client, currentAsset, locales])
 
   // Submit react-hook-form
   const onSubmit: SubmitHandler<AssetFormData> = useCallback(
-    formData => {
+    (formData) => {
       if (!assetItem?.asset) {
         return
       }
@@ -245,15 +245,15 @@ const DialogAssetEdit = (props: Props) => {
                   sanitizedFormData.opt.media.tags?.map((tag: TagSelectOption) => ({
                     _ref: tag.value,
                     _type: 'reference',
-                    _weak: true
-                  })) || null
-              }
-            }
-          }
-        })
+                    _weak: true,
+                  })) || null,
+              },
+            },
+          },
+        }),
       )
     },
-    [assetItem?.asset, dispatch]
+    [assetItem?.asset, dispatch],
   )
 
   // Listen for asset mutations and update snapshot
@@ -285,7 +285,7 @@ const DialogAssetEdit = (props: Props) => {
   useEffect(() => {
     if (lastRemovedTagIds) {
       const existingTags = (getValues('opt.media.tags') as TagSelectOption[]) || []
-      const updatedTags = existingTags.filter(tag => {
+      const updatedTags = existingTags.filter((tag) => {
         return !lastRemovedTagIds.includes(tag.value)
       })
 
@@ -359,7 +359,7 @@ const DialogAssetEdit = (props: Props) => {
     handleCreateTag,
     currentAsset,
     creditLine,
-    locales
+    locales,
   }
 
   return (

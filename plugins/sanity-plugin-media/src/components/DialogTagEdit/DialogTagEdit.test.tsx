@@ -1,14 +1,15 @@
-import userEvent from '@testing-library/user-event'
 import {fireEvent, screen, waitFor} from '@testing-library/react'
-import {describe, expect, it, vi} from 'vitest'
+import userEvent from '@testing-library/user-event'
 import {Subject} from 'rxjs'
-import DialogTagEdit from './index'
+import {describe, expect, it, vi} from 'vitest'
+
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
 import {createTestRootState} from '../../__tests__/fixtures/rootState'
 import {inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
 import {tagsActions} from '../../modules/tags'
 import type {Tag} from '../../types'
+import DialogTagEdit from './index'
 
 const tag: Tag = {
   _id: 't1',
@@ -16,25 +17,25 @@ const tag: Tag = {
   _createdAt: '',
   _updatedAt: '',
   _rev: 'r1',
-  name: {_type: 'slug', current: 'alpha'}
+  name: {_type: 'slug', current: 'alpha'},
 }
 
 const tagsPreloaded = {
   allIds: ['t1'],
   byIds: {
-    t1: {_type: 'tag' as const, tag, picked: false, updating: false}
+    t1: {_type: 'tag' as const, tag, picked: false, updating: false},
   },
   creating: false,
   fetchCount: -1,
   fetching: false,
-  panelVisible: true
+  panelVisible: true,
 }
 
 vi.mock('../../hooks/useVersionedClient', () => ({
   default: () =>
     createMockSanityClient({
-      listen: vi.fn(() => new Subject())
-    })
+      listen: vi.fn(() => new Subject()),
+    }),
 }))
 
 describe('DialogTagEdit', () => {
@@ -46,9 +47,9 @@ describe('DialogTagEdit', () => {
       </DialogTagEdit>,
       {
         preloaded: {
-          tags: tagsPreloaded
-        }
-      }
+          tags: tagsPreloaded,
+        },
+      },
     )
 
     const dlg = withinDialog(/edit tag/i, screen)
@@ -68,9 +69,9 @@ describe('DialogTagEdit', () => {
       </DialogTagEdit>,
       {
         preloaded: {
-          tags: tagsPreloaded
-        }
-      }
+          tags: tagsPreloaded,
+        },
+      },
     )
     const dispatchSpy = vi.spyOn(store, 'dispatch')
     const dlg = withinDialog(/edit tag/i, screen)
@@ -93,9 +94,9 @@ describe('DialogTagEdit', () => {
       expect(updateAction?.payload).toMatchObject({
         closeDialogId: 't1',
         formData: {
-          name: {_type: 'slug', current: 'gamma'}
+          name: {_type: 'slug', current: 'gamma'},
         },
-        tag
+        tag,
       })
     })
   })
@@ -107,9 +108,9 @@ describe('DialogTagEdit', () => {
       </DialogTagEdit>,
       {
         preloaded: {
-          tags: tagsPreloaded
-        }
-      }
+          tags: tagsPreloaded,
+        },
+      },
     )
 
     const dlg = withinDialog(/edit tag/i, screen)
@@ -122,17 +123,17 @@ describe('DialogTagEdit', () => {
       dialog: {
         items: [
           {id: 'dlg-1', type: 'tagEdit', tagId: 't1'},
-          {id: 'tags', type: 'tags'}
-        ]
+          {id: 'tags', type: 'tags'},
+        ],
       },
-      tags: tagsPreloaded
+      tags: tagsPreloaded,
     })
 
     const {store} = renderWithProviders(
       <DialogTagEdit dialog={{id: 'dlg-1', type: 'tagEdit', tagId: 't1'}}>
         <span />
       </DialogTagEdit>,
-      {preloaded: base}
+      {preloaded: base},
     )
 
     const dlg = withinDialog(/edit tag/i, screen)
@@ -148,15 +149,15 @@ describe('DialogTagEdit', () => {
       </DialogTagEdit>,
       {
         preloaded: {
-          tags: tagsPreloaded
-        }
-      }
+          tags: tagsPreloaded,
+        },
+      },
     )
 
     const dlg = withinDialog(/edit tag/i, screen)
     fireEvent.click(dlg.getByRole('button', {name: /^delete$/i}))
 
-    const confirm = store.getState().dialog.items.find(d => d.type === 'confirm')
+    const confirm = store.getState().dialog.items.find((d) => d.type === 'confirm')
     expect(confirm).toBeDefined()
     expect(confirm?.title).toMatch(/permanently delete/i)
     expect(confirm?.headerTitle).toBe('Confirm deletion')

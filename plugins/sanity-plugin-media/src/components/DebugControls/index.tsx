@@ -2,6 +2,7 @@ import {PlugIcon} from '@sanity/icons'
 import {Box, Flex, Switch, Text, Tooltip} from '@sanity/ui'
 import {type ChangeEvent} from 'react'
 import {useDispatch} from 'react-redux'
+
 import useKeyPress from '../../hooks/useKeyPress'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {debugActions} from '../../modules/debug'
@@ -9,8 +10,8 @@ import {debugActions} from '../../modules/debug'
 const DebugControls = () => {
   // Redux
   const dispatch = useDispatch()
-  const badConnection = useTypedSelector(state => state.debug.badConnection)
-  const debugEnabled = useTypedSelector(state => state.debug.enabled)
+  const badConnection = useTypedSelector((state) => state.debug.badConnection)
+  const debugEnabled = useTypedSelector((state) => state.debug.enabled)
 
   // Callbacks
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +39,7 @@ const DebugControls = () => {
         left: 0,
         pointerEvents: 'none',
         position: 'fixed',
-        width: '100%'
+        width: '100%',
       }}
     >
       {/* Bad connection toggle */}
@@ -67,7 +68,7 @@ const DebugControls = () => {
             checked={badConnection}
             onChange={handleChange}
             style={{
-              pointerEvents: 'auto'
+              pointerEvents: 'auto',
             }}
           />
         </Tooltip>

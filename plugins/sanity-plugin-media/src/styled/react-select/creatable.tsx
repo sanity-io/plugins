@@ -2,6 +2,7 @@ import {AddIcon, ChevronDownIcon, CloseIcon} from '@sanity/icons'
 import {Box, Card, Flex, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {components, type StylesConfig} from 'react-select'
 import {Virtuoso} from 'react-virtuoso'
+
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
 const {radius: themeRadius, space: themeSpace} = studioTheme
@@ -18,79 +19,79 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
 
       return {
         ...styles,
-        backgroundColor: 'var(--card-bg-color)',
-        color: 'inherit',
-        border: 'none',
-        borderRadius: themeRadius[1],
+        'backgroundColor': 'var(--card-bg-color)',
+        'color': 'inherit',
+        'border': 'none',
+        'borderRadius': themeRadius[1],
         boxShadow,
-        margin: 0,
-        minHeight: '35px',
-        outline: 'none',
-        padding: rem(themeSpace[1]),
-        transition: 'none',
+        'margin': 0,
+        'minHeight': '35px',
+        'outline': 'none',
+        'padding': rem(themeSpace[1]),
+        'transition': 'none',
         '&:hover': {
-          boxShadow: `inset 0 0 0 1px ${getSchemeColor(scheme, 'inputHoveredBorder')}`
-        }
+          boxShadow: `inset 0 0 0 1px ${getSchemeColor(scheme, 'inputHoveredBorder')}`,
+        },
       }
     },
     indicatorsContainer: (styles, {isDisabled}) => ({
       ...styles,
-      opacity: isDisabled ? 0.25 : 1
+      opacity: isDisabled ? 0.25 : 1,
     }),
-    input: styles => ({
+    input: (styles) => ({
       ...styles,
       color: 'var(--card-fg-color)',
       fontFamily: studioTheme.fonts.text.family,
-      marginLeft: rem(themeSpace[2])
+      marginLeft: rem(themeSpace[2]),
     }),
-    menuList: styles => ({
-      ...styles
+    menuList: (styles) => ({
+      ...styles,
     }),
     multiValue: (styles, {isDisabled}) => ({
       ...styles,
       backgroundColor: getSchemeColor(scheme, 'mutedHoveredBg'),
       borderRadius: themeRadius[2],
-      opacity: isDisabled ? 0.5 : 1
+      opacity: isDisabled ? 0.5 : 1,
     }),
     multiValueLabel: () => ({
       color: getSchemeColor(scheme, 'mutedHoveredFg'),
       fontSize: 'inherit',
-      padding: 0
+      padding: 0,
     }),
-    multiValueRemove: styles => ({
+    multiValueRemove: (styles) => ({
       ...styles,
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      svg: {color: getSchemeColor(scheme, 'mutedHoveredFg')},
+      'borderTopLeftRadius': 0,
+      'borderBottomLeftRadius': 0,
+      'svg': {color: getSchemeColor(scheme, 'mutedHoveredFg')},
       '&:hover': {
-        backgroundColor: getSchemeColor(scheme, 'mutedSelectedBg')
-      }
+        backgroundColor: getSchemeColor(scheme, 'mutedSelectedBg'),
+      },
     }),
-    noOptionsMessage: styles => ({
+    noOptionsMessage: (styles) => ({
       ...styles,
       fontFamily: studioTheme.fonts.text.family,
-      lineHeight: '1em'
+      lineHeight: '1em',
     }),
     option: (styles, {isFocused}) => ({
       ...styles,
-      backgroundColor: isFocused ? getSchemeColor(scheme, 'spotBlue') : 'transparent',
-      borderRadius: themeRadius[2],
-      color: isFocused ? getSchemeColor(scheme, 'bg') : 'inherit',
-      padding: `${rem(themeSpace[1])} ${rem(themeSpace[2])}`,
+      'backgroundColor': isFocused ? getSchemeColor(scheme, 'spotBlue') : 'transparent',
+      'borderRadius': themeRadius[2],
+      'color': isFocused ? getSchemeColor(scheme, 'bg') : 'inherit',
+      'padding': `${rem(themeSpace[1])} ${rem(themeSpace[2])}`,
       '&:hover': {
         backgroundColor: getSchemeColor(scheme, 'spotBlue'),
-        color: getSchemeColor(scheme, 'bg')
-      }
+        color: getSchemeColor(scheme, 'bg'),
+      },
     }),
-    placeholder: styles => ({
+    placeholder: (styles) => ({
       ...styles,
-      marginLeft: rem(themeSpace[2])
+      marginLeft: rem(themeSpace[2]),
     }),
-    valueContainer: styles => ({
+    valueContainer: (styles) => ({
       ...styles,
       margin: 0,
-      padding: 0
-    })
+      padding: 0,
+    }),
   }
 }
 
@@ -129,7 +130,7 @@ const MenuList = (props: any) => {
     return (
       <Virtuoso
         className="media__custom-scrollbar"
-        itemContent={index => {
+        itemContent={(index) => {
           const item = children[index]
           return <Option {...item.props} />
         }}
@@ -179,5 +180,5 @@ export const reactSelectComponents = {
   MenuList,
   MultiValueLabel,
   MultiValueRemove,
-  Option
+  Option,
 }

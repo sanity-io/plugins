@@ -5,7 +5,7 @@ export default showIncompatiblePluginDialog({
   name: name,
   versions: {
     v3: version,
-    v2: '^1.4.13'
+    v2: '^1.4.13',
   },
-  sanityExchangeUrl: 'https://www.sanity.io/plugins/sanity-plugin-media'
+  sanityExchangeUrl: 'https://www.sanity.io/plugins/sanity-plugin-media',
 })

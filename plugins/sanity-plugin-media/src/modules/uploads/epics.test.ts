@@ -1,15 +1,16 @@
 // @vitest-environment jsdom
 
-import {describe, expect, it, vi, beforeEach, afterEach} from 'vitest'
+import type {SanityImageAssetDocument} from '@sanity/client'
 import {of} from 'rxjs'
-import {uploadsAssetStartEpic, uploadsCheckRequestEpic, uploadsActions} from './index'
+import {describe, expect, it, vi, beforeEach, afterEach} from 'vitest'
+
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
 import {initialState as assetsInitialState} from '../assets'
-import type {SanityImageAssetDocument} from '@sanity/client'
+import {uploadsAssetStartEpic, uploadsCheckRequestEpic, uploadsActions} from './index'
 
 vi.mock('../../utils/generatePreviewBlobUrl', () => ({
-  generatePreviewBlobUrl$: () => of('blob:http://preview')
+  generatePreviewBlobUrl$: () => of('blob:http://preview'),
 }))
 
 const uploadedAsset = {
@@ -22,17 +23,17 @@ const uploadedAsset = {
   originalFilename: 'f.png',
   mimeType: 'image/png',
   size: 10,
-  url: ''
+  url: '',
 } as SanityImageAssetDocument
 
 vi.mock('../../utils/uploadSanityAsset', () => ({
   uploadAsset$: () =>
     of({
       type: 'complete' as const,
-      asset: uploadedAsset
+      asset: uploadedAsset,
     }),
   hashFile$: () => of('deadbeef'),
-  withMaxConcurrency: (fn: unknown) => fn
+  withMaxConcurrency: (fn: unknown) => fn,
 }))
 
 describe('uploadsAssetStartEpic', () => {
@@ -48,7 +49,7 @@ describe('uploadsAssetStartEpic', () => {
       hash: 'deadbeef',
       name: 'f.png',
       size: file.size,
-      status: 'queued' as const
+      status: 'queued' as const,
     }
 
     store.dispatch(uploadsActions.uploadStart({file, uploadItem}))
@@ -75,12 +76,12 @@ describe('uploadsCheckRequestEpic', () => {
   it('after delay, fetches sha hashes and dispatches checkComplete + insertUploads', async () => {
     const client = createMockSanityClient({
       observable: {
-        fetch: vi.fn(() => of(['hh']))
-      }
+        fetch: vi.fn(() => of(['hh'])),
+      },
     })
 
     const store = createEpicTestStore(uploadsCheckRequestEpic, client, {
-      assets: {...assetsInitialState, assetTypes: ['image']}
+      assets: {...assetsInitialState, assetTypes: ['image']},
     })
 
     const asset = {
@@ -93,7 +94,7 @@ describe('uploadsCheckRequestEpic', () => {
       originalFilename: 'f.png',
       mimeType: 'image/png',
       size: 1,
-      url: ''
+      url: '',
     } as SanityImageAssetDocument
 
     store.dispatch(uploadsActions.checkRequest({assets: [asset]}))

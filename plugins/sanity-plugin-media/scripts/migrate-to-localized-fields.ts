@@ -45,6 +45,6 @@ export default defineMigration({
       }
 
       return ops
-    }
-  }
+    },
+  },
 })

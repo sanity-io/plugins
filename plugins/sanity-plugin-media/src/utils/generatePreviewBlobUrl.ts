@@ -4,7 +4,7 @@ import {mergeMap} from 'rxjs/operators'
 const PREVIEW_WIDTH = 180 // px
 
 const createBlob = (img: HTMLImageElement): Promise<Blob | null> => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const imageAspect = img.width / img.height
 
     // Create a canvas element which we'll use to generate a low resolution preview.
@@ -26,7 +26,7 @@ const createBlob = (img: HTMLImageElement): Promise<Blob | null> => {
 }
 
 const createImageEl = (file: File): Promise<HTMLImageElement> => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const blobUrlLarge = window.URL.createObjectURL(file)
     const img = new Image()
     img.onload = () => {

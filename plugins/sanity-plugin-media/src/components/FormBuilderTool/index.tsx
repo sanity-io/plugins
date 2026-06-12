@@ -1,6 +1,7 @@
 import {Box, Portal, PortalProvider, useLayer} from '@sanity/ui'
 import {type SyntheticEvent, useEffect, useState} from 'react'
 import {type AssetSourceComponentProps, type SanityDocument, useFormValue} from 'sanity'
+
 import useKeyPress from '../../hooks/useKeyPress'
 import Browser from '../Browser'
 
@@ -41,7 +42,7 @@ const FormBuilderTool = (props: AssetSourceComponentProps) => {
             position: 'fixed',
             top: 0,
             width: '100%',
-            zIndex
+            zIndex,
           }}
         >
           <Browser document={currentDocument} schemaType={props.schemaType} {...props} />

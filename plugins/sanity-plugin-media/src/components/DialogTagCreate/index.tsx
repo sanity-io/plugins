@@ -1,13 +1,14 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {Box, Flex} from '@sanity/ui'
-import type {DialogTagCreateProps, TagFormData} from '../../types'
 import {type ReactNode, useEffect} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
 import {useDispatch} from 'react-redux'
+
 import {tagFormSchema} from '../../formSchema'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {dialogActions} from '../../modules/dialog'
 import {tagsActions} from '../../modules/tags'
+import type {DialogTagCreateProps, TagFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
 import Dialog from '../Dialog'
 import FormFieldInputText from '../FormFieldInputText'
@@ -21,26 +22,26 @@ type Props = {
 const DialogTagCreate = (props: Props) => {
   const {
     children,
-    dialog: {id}
+    dialog: {id},
   } = props
 
   const dispatch = useDispatch()
 
-  const creating = useTypedSelector(state => state.tags.creating)
-  const creatingError = useTypedSelector(state => state.tags.creatingError)
+  const creating = useTypedSelector((state) => state.tags.creating)
+  const creatingError = useTypedSelector((state) => state.tags.creatingError)
 
   const {
     // Read the formState before render to subscribe the form state through Proxy
     formState: {errors, isDirty, isValid},
     handleSubmit,
     register,
-    setError
+    setError,
   } = useForm<TagFormData>({
     defaultValues: {
-      name: ''
+      name: '',
     },
     mode: 'onChange',
-    resolver: zodResolver(tagFormSchema)
+    resolver: zodResolver(tagFormSchema),
   })
 
   const formUpdating = creating
@@ -50,7 +51,7 @@ const DialogTagCreate = (props: Props) => {
   }
 
   // - submit react-hook-form
-  const onSubmit: SubmitHandler<TagFormData> = formData => {
+  const onSubmit: SubmitHandler<TagFormData> = (formData) => {
     const sanitizedFormData = sanitizeFormData(formData)
 
     dispatch(tagsActions.createRequest({name: sanitizedFormData.name}))
@@ -59,7 +60,7 @@ const DialogTagCreate = (props: Props) => {
   useEffect(() => {
     if (creatingError) {
       setError('name', {
-        message: creatingError?.message
+        message: creatingError?.message,
       })
     }
   }, [creatingError, setError])

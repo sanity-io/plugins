@@ -1,16 +1,17 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Text} from '@sanity/ui'
-import type {DialogTagEditProps, Tag, TagFormData} from '../../types'
 import groq from 'groq'
 import {type ReactNode, useCallback, useEffect, useState} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
 import {useDispatch} from 'react-redux'
+
 import {tagFormSchema} from '../../formSchema'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import useVersionedClient from '../../hooks/useVersionedClient'
 import {dialogActions} from '../../modules/dialog'
 import {selectTagById, tagsActions} from '../../modules/tags'
+import type {DialogTagEditProps, Tag, TagFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
 import Dialog from '../Dialog'
 import FormFieldInputText from '../FormFieldInputText'
@@ -24,20 +25,20 @@ type Props = {
 const DialogTagEdit = (props: Props) => {
   const {
     children,
-    dialog: {id, tagId}
+    dialog: {id, tagId},
   } = props
 
   const client = useVersionedClient()
 
   const dispatch = useDispatch()
-  const tagItem = useTypedSelector(state => selectTagById(state, String(tagId))) // TODO: double check string cast
+  const tagItem = useTypedSelector((state) => selectTagById(state, String(tagId))) // TODO: double check string cast
 
   // - Generate a snapshot of the current tag
   const [tagSnapshot, setTagSnapshot] = useState(tagItem?.tag)
 
   const currentTag = tagItem ? tagItem?.tag : tagSnapshot
   const generateDefaultValues = (tag?: Tag) => ({
-    name: tag?.name?.current || ''
+    name: tag?.name?.current || '',
   })
 
   const {
@@ -46,11 +47,11 @@ const DialogTagEdit = (props: Props) => {
     handleSubmit,
     register,
     reset,
-    setError
+    setError,
   } = useForm<TagFormData>({
     defaultValues: generateDefaultValues(tagItem?.tag),
     mode: 'onChange',
-    resolver: zodResolver(tagFormSchema)
+    resolver: zodResolver(tagFormSchema),
   })
 
   const formUpdating = !tagItem || tagItem?.updating
@@ -60,7 +61,7 @@ const DialogTagEdit = (props: Props) => {
   }
 
   // Submit react-hook-form
-  const onSubmit: SubmitHandler<TagFormData> = formData => {
+  const onSubmit: SubmitHandler<TagFormData> = (formData) => {
     if (!tagItem?.tag) {
       return
     }
@@ -71,11 +72,11 @@ const DialogTagEdit = (props: Props) => {
         formData: {
           name: {
             _type: 'slug',
-            current: sanitizedFormData.name
-          }
+            current: sanitizedFormData.name,
+          },
         },
-        tag: tagItem?.tag
-      })
+        tag: tagItem?.tag,
+      }),
     )
   }
 
@@ -87,8 +88,8 @@ const DialogTagEdit = (props: Props) => {
     dispatch(
       dialogActions.showConfirmDeleteTag({
         closeDialogId: tagItem?.tag?._id,
-        tag: tagItem?.tag
-      })
+        tag: tagItem?.tag,
+      }),
     )
   }
 
@@ -102,13 +103,13 @@ const DialogTagEdit = (props: Props) => {
         reset(generateDefaultValues(result as Tag))
       }
     },
-    [reset]
+    [reset],
   )
 
   useEffect(() => {
     if (tagItem?.error) {
       setError('name', {
-        message: tagItem.error?.message
+        message: tagItem.error?.message,
       })
     }
   }, [setError, tagItem.error])

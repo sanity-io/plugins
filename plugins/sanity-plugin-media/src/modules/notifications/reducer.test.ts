@@ -1,9 +1,10 @@
 // @vitest-environment node
 
 import {describe, expect, it} from 'vitest'
-import notificationsReducer, {notificationsActions} from './index'
-import type {ImageAsset} from '../../types'
+
 import {createTestRootState} from '../../__tests__/fixtures/rootState'
+import type {ImageAsset} from '../../types'
+import notificationsReducer, {notificationsActions} from './index'
 
 const sampleAsset = {
   _id: 'a1',
@@ -14,7 +15,7 @@ const sampleAsset = {
   originalFilename: 'x.png',
   size: 1,
   mimeType: 'image/png',
-  url: 'https://example.com/x.png'
+  url: 'https://example.com/x.png',
 } as ImageAsset
 
 describe('notificationsReducer', () => {
@@ -30,14 +31,14 @@ describe('notificationsReducer', () => {
       notificationsActions.add({
         asset: sampleAsset,
         status: 'success',
-        title: 'Done'
-      })
+        title: 'Done',
+      }),
     )
     expect(next.items).toHaveLength(1)
     expect(next.items[0]).toEqual({
       asset: sampleAsset,
       status: 'success',
-      title: 'Done'
+      title: 'Done',
     })
   })
 
@@ -47,7 +48,7 @@ describe('notificationsReducer', () => {
     state = notificationsReducer(state, notificationsActions.add({title: 'Y'}))
     expect(state.items).toEqual([
       {asset: undefined, status: 'error', title: 'X'},
-      {asset: undefined, status: undefined, title: 'Y'}
+      {asset: undefined, status: undefined, title: 'Y'},
     ])
   })
 })

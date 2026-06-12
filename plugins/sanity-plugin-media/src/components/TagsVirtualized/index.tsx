@@ -1,17 +1,18 @@
 import {Flex, Label} from '@sanity/ui'
-import type {TagActions, TagItem} from '../../types'
 import {memo, useState} from 'react'
 import {Virtuoso} from 'react-virtuoso'
+
 import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {selectAssetsPicked} from '../../modules/assets'
 import {selectTags} from '../../modules/tags'
+import type {TagActions, TagItem} from '../../types'
 import Tag from '../Tag'
 
 const VirtualRow = memo(
   ({
     isScrolling,
-    item
+    item,
   }: {
     isScrolling?: boolean
     item:
@@ -37,7 +38,7 @@ const VirtualRow = memo(
 
     // Render tag - only display actions if we're not in the process of scrolling
     return <Tag actions={isScrolling ? undefined : item.actions} key={item.tag?._id} tag={item} />
-  }
+  },
 )
 
 const TagsVirtualized = () => {
@@ -51,7 +52,7 @@ const TagsVirtualized = () => {
 
   // Filter out all tag IDS used (across all) and dedupe
   const pickedTagIds = assetsPicked?.reduce((acc: string[], val) => {
-    const assetTagIds = val?.asset?.opt?.media?.tags?.map(tag => tag._ref) || []
+    const assetTagIds = val?.asset?.opt?.media?.tags?.map((tag) => tag._ref) || []
     acc = acc.concat(assetTagIds)
     return acc
   }, [])
@@ -62,9 +63,9 @@ const TagsVirtualized = () => {
   // 2. those which exist in some picked assets ('applied to some')
   const tagIdsSegmented = pickedTagIdsUnique.reduce(
     (acc: {appliedToAll: string[]; appliedToSome: string[]}, tagId) => {
-      const tagIsInEveryAsset = assetsPicked.every(assetItem => {
+      const tagIsInEveryAsset = assetsPicked.every((assetItem) => {
         const tagIndex =
-          assetItem.asset.opt?.media?.tags?.findIndex(tag => tag._ref === tagId) ?? -1
+          assetItem.asset.opt?.media?.tags?.findIndex((tag) => tag._ref === tagId) ?? -1
         return tagIndex >= 0
       })
 
@@ -78,27 +79,27 @@ const TagsVirtualized = () => {
     },
     {
       appliedToAll: [],
-      appliedToSome: []
-    }
+      appliedToSome: [],
+    },
   )
 
   const tagsAppliedToAll = tags
-    .filter(tag => tagIdsSegmented.appliedToAll.includes(tag.tag._id))
-    .map(tagItem => ({
+    .filter((tag) => tagIdsSegmented.appliedToAll.includes(tag.tag._id))
+    .map((tagItem) => ({
       ...tagItem,
-      actions: ['delete', 'edit', 'removeAll', 'search'] as TagActions[]
+      actions: ['delete', 'edit', 'removeAll', 'search'] as TagActions[],
     }))
   const tagsAppliedToSome = tags
-    .filter(tag => tagIdsSegmented.appliedToSome.includes(tag.tag._id))
-    .map(tagItem => ({
+    .filter((tag) => tagIdsSegmented.appliedToSome.includes(tag.tag._id))
+    .map((tagItem) => ({
       ...tagItem,
-      actions: ['applyAll', 'delete', 'edit', 'removeAll', 'search'] as TagActions[]
+      actions: ['applyAll', 'delete', 'edit', 'removeAll', 'search'] as TagActions[],
     }))
   const tagsUnused = tags
-    .filter(tag => !pickedTagIdsUnique.includes(tag.tag._id))
-    .map(tagItem => ({
+    .filter((tag) => !pickedTagIdsUnique.includes(tag.tag._id))
+    .map((tagItem) => ({
       ...tagItem,
-      actions: ['applyAll', 'delete', 'edit', 'search'] as TagActions[]
+      actions: ['applyAll', 'delete', 'edit', 'search'] as TagActions[],
     }))
 
   let items: (
@@ -108,30 +109,30 @@ const TagsVirtualized = () => {
       })
   )[] = []
   if (assetsPicked.length === 0) {
-    items = tags.map(tagItem => ({
+    items = tags.map((tagItem) => ({
       ...tagItem,
-      actions: ['delete', 'edit', 'search'] as TagActions[]
+      actions: ['delete', 'edit', 'search'] as TagActions[],
     }))
   } else {
     if (tagsAppliedToAll?.length > 0) {
       items = [
         ...items, //
         assetsPicked.length === 1 ? 'Used' : 'Used by all',
-        ...tagsAppliedToAll
+        ...tagsAppliedToAll,
       ]
     }
     if (tagsAppliedToSome?.length > 0) {
       items = [
         ...items, //
         'Used by some',
-        ...tagsAppliedToSome
+        ...tagsAppliedToSome,
       ]
     }
     if (tagsUnused?.length > 0) {
       items = [
         ...items, //
         'Unused',
-        ...tagsUnused
+        ...tagsUnused,
       ]
     }
   }
@@ -139,7 +140,7 @@ const TagsVirtualized = () => {
   return (
     <Virtuoso
       className="media__custom-scrollbar"
-      computeItemKey={index => {
+      computeItemKey={(index) => {
         const item = items[index]
         if (typeof item === 'string') {
           return item
@@ -147,7 +148,7 @@ const TagsVirtualized = () => {
         return item.tag._id
       }}
       isScrolling={setIsScrolling}
-      itemContent={index => {
+      itemContent={(index) => {
         return <VirtualRow isScrolling={isScrolling} item={items[index]} />
       }}
       style={{flex: 1, overflowX: 'hidden'}}
