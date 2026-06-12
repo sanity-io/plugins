@@ -1,5 +1,4 @@
-import {Flex, Text, Stack} from '@sanity/ui'
-import React from 'react'
+import {Flex, Stack, Text} from '@sanity/ui'
 import {DiffFromTo} from 'sanity'
 
 import type {Asset} from '../types'
@@ -8,7 +7,7 @@ type Props = {
   value: Asset | undefined
 }
 
-const CloudinaryDiffPreview = ({value}: Props) => {
+const ShopifyAssetDiffPreview = ({value}: Props) => {
   if (!value) {
     return null
   }
@@ -16,7 +15,7 @@ const CloudinaryDiffPreview = ({value}: Props) => {
   if (value?.preview?.url) {
     return (
       <Flex justify="center" align="center" height="fill" width="fill">
-        <Stack space={2}>
+        <Stack gap={2}>
           <img
             alt="preview"
             src={value?.preview?.url}
@@ -50,7 +49,7 @@ const AssetDiff = ({diff, schemaType}: DiffProps) => {
     <DiffFromTo
       diff={diff}
       schemaType={schemaType}
-      previewComponent={CloudinaryDiffPreview}
+      previewComponent={ShopifyAssetDiffPreview}
       layout={'grid'}
     />
   )

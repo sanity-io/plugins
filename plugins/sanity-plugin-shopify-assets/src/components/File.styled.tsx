@@ -1,16 +1,22 @@
 import {Card} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {styled} from 'styled-components'
 
 export const Root = styled.div`
+  ${({theme}) => {
+    const v2 = getTheme_v2({sanity: theme.sanity})
+    return `
+      background-color: ${v2.color.muted.bg};
+      border: 1px solid ${v2.color.border};
+    `
+  }};
   overflow: hidden;
   background-origin: content-box;
   background-repeat: no-repeat;
   background-clip: border-box;
   background-size: cover;
-  background-color: ${({theme}) => theme.sanity.color.card.enabled.bg2};
   position: relative;
   outline: none !important;
-  border: ${({theme}) => `1px solid ${theme.sanity.color.card.enabled.border}`};
   box-sizing: content-box;
   user-drag: none;
 
@@ -26,10 +32,13 @@ export const Root = styled.div`
 `
 
 export const InfoLine = styled(Card)`
-  ${({theme}) => `
-    --infoline-fg: ${theme.sanity.color.card.enabled.fg};
-    --infoline-bg: ${theme.sanity.color.card.enabled.bg};
-  `};
+  ${({theme}) => {
+    const v2 = getTheme_v2({sanity: theme.sanity})
+    return `
+      --infoline-fg: ${v2.color.fg};
+      --infoline-bg: ${v2.color.bg};
+    `
+  }};
   user-drag: none;
   position: absolute;
   background-color: var(--infoline-bg);
@@ -44,10 +53,13 @@ export const InfoLine = styled(Card)`
 `
 
 export const DurationLine = styled(Card)`
-  ${({theme}) => `
-    --durationline-fg: ${theme.sanity.color.card.enabled.bg};
-    --durationline-bg: ${theme.sanity.color.card.enabled.fg};
-  `};
+  ${({theme}) => {
+    const v2 = getTheme_v2({sanity: theme.sanity})
+    return `
+      --durationline-fg: ${v2.color.bg};
+      --durationline-bg: ${v2.color.fg};
+    `
+  }};
   user-drag: none;
   position: absolute;
   background-color: var(--durationline-bg);

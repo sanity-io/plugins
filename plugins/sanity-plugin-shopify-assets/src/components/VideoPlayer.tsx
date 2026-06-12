@@ -1,4 +1,4 @@
-import React, {type CSSProperties, type MouseEvent, useCallback, useEffect} from 'react'
+import {type CSSProperties, type MouseEvent, useCallback, useEffect, useRef} from 'react'
 import videojs, {type VideoJsPlayer} from 'video.js'
 
 type PlayerKind = 'player' | 'diff'
@@ -9,8 +9,8 @@ interface VideoProps {
 }
 
 const VideoPlayer = ({src, kind}: VideoProps) => {
-  const videoNode = React.useRef<HTMLVideoElement>(null)
-  const player = React.useRef<VideoJsPlayer>()
+  const videoNode = useRef<HTMLVideoElement>(null)
+  const player = useRef<VideoJsPlayer | undefined>(undefined)
 
   useEffect(() => {
     player.current = videojs(videoNode.current ?? '', {
@@ -36,6 +36,8 @@ const VideoPlayer = ({src, kind}: VideoProps) => {
     <div>
       <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
       <div data-vjs-player>
+        {/* Shopify assets do not provide caption tracks */}
+        {/* oxlint-disable-next-line jsx-a11y/media-has-caption */}
         <video
           onClick={stopPropagation}
           style={kind === 'diff' ? style : {}}

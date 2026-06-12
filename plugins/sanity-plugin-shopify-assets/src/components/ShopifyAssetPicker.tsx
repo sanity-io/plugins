@@ -1,10 +1,10 @@
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {Card, Dialog, Flex, Inline, Spinner, Stack, Text, TextInput} from '@sanity/ui'
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import {type ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import PhotoAlbum from 'react-photo-album'
-import {BehaviorSubject, Subscription} from 'rxjs'
-import {PatchEvent, set, useProjectId, ObjectInputProps, useDataset, useClient} from 'sanity'
+import {PhotoAlbum} from 'react-photo-album'
+import {BehaviorSubject, type Subscription} from 'rxjs'
+import {type ObjectInputProps, PatchEvent, set, useClient, useDataset, useProjectId} from 'sanity'
 
 import {search} from '../datastores/shopify'
 import type {Asset, PageInfo, ShopifyAPIResponse, ShopifyFile} from '../types'
@@ -29,18 +29,18 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
   const client = useClient({apiVersion: '2021-06-07'})
   const token = client.config().token
 
-  const [error, setError] = useState('')
+  const [apiError, setApiError] = useState('')
   const [query, setQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchResults, setSearchResults] = useState<ShopifyFile[]>([])
   const [pageInfo, setPageInfo] = useState<PageInfo>()
   const [isLoading, setIsLoading] = useState(true)
 
+  const error = shopifyDomain
+    ? apiError
+    : 'Please configure your Shopify domain in the plugin config'
+
   const searchSubject$ = useMemo(() => new BehaviorSubject(''), [])
   const cursorSubject$ = useMemo(() => new BehaviorSubject(''), [])
-
-  useEffect(() => {
-    if (!shopifyDomain) setError('Please configure your Shopify domain in the plugin config')
-  }, [shopifyDomain])
 
   useEffect(() => {
     const searchSubscription: Subscription = search({
@@ -58,7 +58,7 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
         setIsLoading(false)
       },
       error: (err) => {
-        setError(
+        setApiError(
           `${
             err.response?.data?.message || err.message || 'An error occurred'
           } - check plugin configuration`,
@@ -70,7 +70,7 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
   }, [searchSubject$, cursorSubject$, shopifyDomain, projectId, dataset, token])
 
   const handleSearchTermChanged = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       const newQuery = event.currentTarget.value
       setQuery(newQuery)
       setSearchResults([])
@@ -128,14 +128,14 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
       open={isOpen}
       width={4}
     >
-      <Stack space={3} padding={4}>
+      <Stack gap={3} padding={4}>
         {error ? (
           <Card overflow="hidden" padding={4} radius={2} shadow={1} tone="critical">
             <Flex align="center" gap={3}>
               <Text size={2}>
                 <ErrorOutlineIcon />
               </Text>
-              <Inline space={2}>
+              <Inline gap={2}>
                 <Text size={1}>{error}</Text>
               </Inline>
             </Flex>
@@ -143,7 +143,7 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
         ) : (
           <>
             <Card>
-              <Search space={3}>
+              <Search gap={3}>
                 <Text size={1} weight="semibold">
                   Search Shopify for assets
                 </Text>

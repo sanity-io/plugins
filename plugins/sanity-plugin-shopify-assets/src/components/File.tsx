@@ -1,9 +1,9 @@
 import {Text} from '@sanity/ui'
 import prettyBytes from 'pretty-bytes'
 import prettyMilliseconds from 'pretty-ms'
-import React, {useCallback, useRef} from 'react'
+import {useCallback, useRef} from 'react'
 
-import {Asset, ShopifyFile} from '../types'
+import type {Asset, ShopifyFile} from '../types'
 import {extractName} from '../utils/helpers'
 import {DurationLine, InfoLine, Root} from './File.styled'
 
@@ -28,7 +28,7 @@ export default function File(props: Props) {
   return (
     <Root
       ref={rootElm}
-      title={`${filename}`}
+      title={filename}
       tabIndex={0}
       style={{
         width: `${width}px`,

@@ -1,23 +1,27 @@
 import {Box, Flex, Text} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import prettyBytes from 'pretty-bytes'
 import prettyMilliseconds from 'pretty-ms'
-import React from 'react'
 import {styled} from 'styled-components'
 
-import {Asset} from '../types'
+import type {Asset} from '../types'
 import {DurationLine, InfoLine} from './File.styled'
 import VideoPlayer from './VideoPlayer'
 
 interface ComponentProps {
-  value: Asset
+  value: Asset | undefined
 }
 
-export const StyledBox = styled(Box)`
-  background-color: ${({theme}) => theme.sanity.color?.card?.enabled?.bg2};
-  border: ${({theme}) => `1px solid ${theme.sanity?.color?.card?.enabled?.border}`};
+const StyledBox = styled(Box)`
+  ${({theme}) => {
+    const v2 = getTheme_v2({sanity: theme.sanity})
+    return `
+      background-color: ${v2.color.muted.bg};
+      border: 1px solid ${v2.color.border};
+    `
+  }};
   display: flex;
   justify-content: center;
-  margin-bottom: ${({theme}) => theme.sanity.space[4]};
   position: relative;
 `
 

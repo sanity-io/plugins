@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-plugin-shopify-assets
 
 ## [1.2.3](https://github.com/sanity-io/sanity-plugin-shopify-assets/compare/v1.2.2...v1.2.3) (2025-12-29)
 

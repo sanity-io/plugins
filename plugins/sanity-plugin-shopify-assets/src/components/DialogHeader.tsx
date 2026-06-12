@@ -1,6 +1,6 @@
 import {LaunchIcon} from '@sanity/icons'
-import {Box, Flex, Button} from '@sanity/ui'
-import React, {useCallback} from 'react'
+import {Box, Button, Flex} from '@sanity/ui'
+import {useCallback} from 'react'
 
 interface Props {
   title: string
