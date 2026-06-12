@@ -403,6 +403,7 @@ pnpm lint:fix    # Auto-fix what's possible
 plugins/
 ├── dev/test-studio/      # Test Sanity Studio (localhost:3333)
 ├── packages/@repo/       # Internal shared packages
+├── packages/@sanity/     # Published tooling packages (e.g. @sanity/plugin-kit)
 ├── plugins/              # Published plugins
 │   ├── @sanity/          # @sanity/* scoped packages
 │   └── sanity-plugin-*   # Community-style packages

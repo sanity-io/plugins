@@ -16,7 +16,9 @@
     "**/dist/*",
     "**/sanity.types.ts",
     "turbo/generators/config.ts",
-    "plugins/sanity-naive-html-serializer/test/**"
+    "plugins/sanity-naive-html-serializer/test/**",
+    "packages/@sanity/plugin-kit/assets/**",
+    "packages/@sanity/plugin-kit/test/fixtures/**"
   ],
   "options": {
     "typeAware": true,
@@ -135,6 +137,26 @@
       "rules": {
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off"
+      }
+    },
+    {
+      "files": ["packages/@sanity/plugin-kit/**/*.ts"],
+      "rules": {
+        // plugin-kit is a Node CLI tool ported from sanity-io/plugin-kit; console is its UI
+        // and the legacy codebase predates these stylistic rules
+        "no-await-in-loop": "off",
+        "no-console": "off",
+        "no-map-spread": "off",
+        "no-misused-spread": "off",
+        "no-named-as-default": "off",
+        "no-unnecessary-boolean-literal-compare": "off",
+        "no-unnecessary-template-expression": "off",
+        "no-unnecessary-type-parameters": "off",
+        "no-unsafe-type-assertion": "off",
+        "no-useless-fallback-in-spread": "off",
+        "prefer-set-has": "off",
+        "preserve-caught-error": "off",
+        "unbound-method": "off"
       }
     }
   ]
