@@ -1,21 +1,28 @@
 import {
-  TranslationsTab,
   baseDocumentLevelConfig,
-  legacyDocumentLevelConfig as baseLegacyDocumentLevelConfig,
   baseFieldLevelConfig,
-  findLatestDraft,
+  legacyDocumentLevelConfig as baseLegacyDocumentLevelConfig,
+} from 'sanity-translations-tab'
+import type {TranslationsTabConfigOptions} from 'sanity-translations-tab'
+
+import {SmartlingAdapter} from './adapter'
+
+export {
   BaseDocumentDeserializer,
-  BaseDocumentSerializer,
   BaseDocumentMerger,
-  defaultStopTypes,
+  BaseDocumentSerializer,
   customSerializers,
-  legacyDocumentLevelPatch,
+  defaultStopTypes,
   documentLevelPatch,
   fieldLevelPatch,
+  findLatestDraft,
+  legacyDocumentLevelPatch,
+  TranslationsTab,
+} from 'sanity-translations-tab'
+export type {
   TranslationFunctionContext,
   TranslationsTabConfigOptions,
 } from 'sanity-translations-tab'
-import {SmartlingAdapter} from './adapter'
 
 const defaultDocumentLevelConfig: TranslationsTabConfigOptions = {
   ...baseDocumentLevelConfig,
@@ -33,20 +40,8 @@ const defaultFieldLevelConfig: TranslationsTabConfigOptions = {
 }
 
 export {
-  TranslationsTab,
-  findLatestDraft,
-  legacyDocumentLevelPatch,
-  documentLevelPatch,
-  fieldLevelPatch,
-  BaseDocumentDeserializer,
-  BaseDocumentSerializer,
-  BaseDocumentMerger,
-  defaultStopTypes,
-  customSerializers,
-  SmartlingAdapter,
-  legacyDocumentLevelConfig,
   defaultDocumentLevelConfig,
   defaultFieldLevelConfig,
+  legacyDocumentLevelConfig,
+  SmartlingAdapter,
 }
-
-export type {TranslationFunctionContext, TranslationsTabConfigOptions}

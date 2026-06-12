@@ -1,11 +1,8 @@
-
 ## Installation
 
 ```sh
 npm install sanity-plugin-studio-smartling
 ```
-
-## Usage
 
 # Studio Plugin for Sanity & Smartling
 
@@ -59,7 +56,7 @@ client.createOrReplace({
   organization: 'YOUR_SMARTLING_ORGANIZATION_HERE',
   project: 'YOUR_SMARTLING_PROJECT_HERE',
   secret: '{"userIdentifier":"xxxxxx","userSecret":"xxxx"}', //in this format from Smartling when you press the button "copy token" on creation
-  proxy: 'my-proxy-endpoint.com/api/proxy' //the endpoint you set up in step 2
+  proxy: 'my-proxy-endpoint.com/api/proxy', //the endpoint you set up in step 2
 })
 ```
 
@@ -125,7 +122,6 @@ _Important_: Smartling's locale representation includes hyphens, like `fr-FR`. T
 Since we often find users want to use the [Document internationalization plugin](https://www.sanity.io/plugins/document-internationalization) if they're using document-level translations, we assume that any documents you want in different languages will be present in a `translation.metadata` document.
 
 _Important_: The above is true if you are using the Document Internationalization Plugin at version 2 or above. If you are using version 1 please use the `legacyDocumentLevelConfig` configuration exported from this plugin. This configuration assumes your translations follow the pattern `{id-of-base-language-document}__i18n_{locale}`
-
 
 ### Final note
 

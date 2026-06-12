@@ -1,8 +1,4 @@
-import {Secrets} from 'sanity-translations-tab'
-
-interface Headers {
-  [key: string]: string
-}
+import type {Secrets} from 'sanity-translations-tab'
 
 export const authenticate = (secrets: Secrets): Promise<string> => {
   const url = 'https://api.smartling.com/auth-api/v2/authenticate'
@@ -25,8 +21,8 @@ export const authenticate = (secrets: Secrets): Promise<string> => {
     .then((res) => res.response.data.accessToken)
 }
 
-export const getHeaders = (url: string, accessToken: string): Headers => ({
-  Authorization: `Bearer ${accessToken}`,
+export const getHeaders = (url: string, accessToken: string): Record<string, string> => ({
+  'Authorization': `Bearer ${accessToken}`,
   'X-URL': url,
 })
 

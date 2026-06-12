@@ -1,7 +1,7 @@
-import {authenticate, getHeaders, findExistingJob} from './helpers'
-import {Adapter, Secrets, SerializedDocument} from 'sanity-translations-tab'
+import type {Adapter, Secrets, SerializedDocument} from 'sanity-translations-tab'
+
 import {getTranslationTask} from './getTranslationTask'
-import {Buffer} from 'buffer'
+import {authenticate, getHeaders, findExistingJob} from './helpers'
 
 const createJob = (
   jobName: string,
@@ -47,7 +47,6 @@ const createJobBatch = (
   accessToken: string,
   localeIds: string[],
   workflowUid?: string,
-  //eslint-disable-next-line max-params
 ) => {
   const {project, proxy} = secrets
   if (!project || !proxy) {
@@ -94,7 +93,6 @@ const uploadFileToBatch = (
   localeIds: string[],
   accessToken: string,
   callbackUrl?: string,
-  //eslint-disable-next-line max-params
 ) => {
   const {project, proxy} = secrets
   if (!project || !proxy) {
@@ -106,8 +104,7 @@ const uploadFileToBatch = (
   const formData = new FormData()
   formData.append('fileUri', documentId)
   formData.append('fileType', 'html')
-  const htmlBuffer = Buffer.from(document.content, 'utf-8')
-  formData.append('file', new Blob([htmlBuffer]), `${document.name}.html`)
+  formData.append('file', new Blob([document.content]), `${document.name}.html`)
   localeIds.forEach((localeId) => formData.append('localeIdsToAuthorize[]', localeId))
   if (callbackUrl) {
     formData.append('callbackUrl', callbackUrl)
@@ -127,7 +124,6 @@ export const createTask: Adapter['createTask'] = async (
   secrets: Secrets | null,
   workflowUid?: string,
   callbackUrl?: string,
-  // eslint-disable-next-line max-params
 ) => {
   if (!secrets?.project || !secrets?.secret || !secrets?.proxy) {
     throw new Error(
@@ -150,7 +146,7 @@ export const createTask: Adapter['createTask'] = async (
     localeIds,
     workflowUid,
   )
-  const uploadFileRes = await uploadFileToBatch(
+  await uploadFileToBatch(
     batchUid,
     documentId,
     document,
@@ -159,8 +155,6 @@ export const createTask: Adapter['createTask'] = async (
     accessToken,
     callbackUrl,
   )
-  //eslint-disable-next-line no-console -- for developer debugging
-  console.info('Upload status from Smartling: ', uploadFileRes)
 
   return getTranslationTask(documentId, secrets)
 }

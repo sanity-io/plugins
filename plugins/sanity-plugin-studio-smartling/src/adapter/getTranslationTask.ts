@@ -1,5 +1,6 @@
+import type {Adapter, Secrets} from 'sanity-translations-tab'
+
 import {authenticate, getHeaders, findExistingJob} from './helpers'
-import {Adapter, Secrets} from 'sanity-translations-tab'
 
 interface WorkflowProgressItem {
   workflowStepSummaryReportItemList: {
@@ -52,13 +53,9 @@ export const getTranslationTask: Adapter['getTranslationTask'] = async (
   if (smartlingTask && smartlingTask.contentProgressReport) {
     locales = smartlingTask.contentProgressReport.map((item: SmartlingProgressItem) => {
       let progress = item.progress ? item.progress.percentComplete : 0
-      if (
-        item.workflowProgressReportList &&
-        item.workflowProgressReportList.length > 0 &&
-        item.progress
-      ) {
-        //default to the first workflow -- it's likely what is being used
-        const progressItem = item.workflowProgressReportList[0]
+      //default to the first workflow -- it's likely what is being used
+      const progressItem = item.workflowProgressReportList?.[0]
+      if (progressItem && item.progress) {
         //this is a list of the various steps in the workflow
         if (
           progressItem.workflowStepSummaryReportItemList &&

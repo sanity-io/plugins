@@ -1,5 +1,6 @@
+import type {Adapter, Secrets} from 'sanity-translations-tab'
+
 import {authenticate, getHeaders} from './helpers'
-import {Adapter, Secrets} from 'sanity-translations-tab'
 
 export const getTranslation: Adapter['getTranslation'] = async (
   taskId: string,

@@ -1,6 +1,6 @@
+import type {Adapter, Secrets} from 'sanity-translations-tab'
+
 import {authenticate, getHeaders} from './helpers'
-import {Secrets} from 'sanity-translations-tab'
-import {Adapter} from 'sanity-translations-tab'
 
 export const getLocales: Adapter['getLocales'] = async (secrets: Secrets | null) => {
   if (!secrets?.project || !secrets?.secret || !secrets?.proxy) {

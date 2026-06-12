@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-plugin-studio-smartling
 
 ## [4.3.3](https://github.com/sanity-io/sanity-plugin-studio-smartling/compare/v4.3.2...v4.3.3) (2026-01-07)
 
