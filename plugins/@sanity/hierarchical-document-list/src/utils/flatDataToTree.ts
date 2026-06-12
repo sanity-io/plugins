@@ -1,5 +1,3 @@
-import {getTreeFromFlatData} from '@nosferatu500/react-sortable-tree'
-
 import type {StoredTreeItem} from '../types'
 
 interface TreeItemWithChildren extends StoredTreeItem {
@@ -8,16 +6,26 @@ interface TreeItemWithChildren extends StoredTreeItem {
   children?: TreeItemWithChildren[]
 }
 
+/**
+ * Converts the flat array stored in the Sanity document into a nested tree,
+ * nesting items under their `parent` _key. Items without a `parent` are roots.
+ */
 export default function flatDataToTree(data: StoredTreeItem[]): TreeItemWithChildren[] {
-  return getTreeFromFlatData({
-    flatData: data.map((item) => ({
-      ...item,
-      // if parent: undefined, the tree won't be constructed
-      parent: item.parent || null,
-    })),
-    getKey: (item) => item._key,
-    getParentKey: (item) => item.parent,
-    // without rootKey: null, the tree won't be constructed
-    rootKey: null,
-  }) as TreeItemWithChildren[]
+  const childrenByParent = new Map<string | null, StoredTreeItem[]>()
+  for (const item of data) {
+    const parentKey = item.parent || null
+    const siblings = childrenByParent.get(parentKey)
+    if (siblings) {
+      siblings.push(item)
+    } else {
+      childrenByParent.set(parentKey, [item])
+    }
+  }
+
+  const buildNode = (item: StoredTreeItem): TreeItemWithChildren => {
+    const children = childrenByParent.get(item._key)
+    return children ? {...item, children: children.map(buildNode)} : {...item}
+  }
+
+  return (childrenByParent.get(null) || []).map(buildNode)
 }

@@ -15,7 +15,7 @@ const TreeNodeRenderer: any = (props: any) => {
   const scaffoldBlockCount = lowerSiblingCounts.length
 
   return (
-    <div ref={connectDropTarget} style={props.style}>
+    <div ref={connectDropTarget} style={props.style} data-tree-row="">
       <div
         style={{
           // prettier-ignore

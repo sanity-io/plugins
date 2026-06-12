@@ -1,4 +1,7 @@
-import {SortableTree} from '@nosferatu500/react-sortable-tree'
+import {
+  SortableTreeWithoutDndContext as SortableTree,
+  type TreeItem,
+} from '@nosferatu500/react-sortable-tree'
 import {AddCircleIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Spinner, Stack, Text, Tooltip} from '@sanity/ui'
 import {useCallback, useEffect, useMemo, useState} from 'react'
@@ -49,8 +52,8 @@ function TreeEditor(props: TreeEditorProps) {
   const documentId = props.options.documentId
 
   const updateTreeViewHeight = useCallback(() => {
-    const el = document.querySelector<HTMLElement>(`#${documentId} [data-known-size]`)
-    const rowHeight = Number(el?.dataset['knownSize'] || 51)
+    const el = document.querySelector<HTMLElement>(`#${documentId} [data-tree-row]`)
+    const rowHeight = el?.offsetHeight || 51
     setTreeViewHeight(getTreeHeight(localTree, rowHeight))
   }, [documentId, localTree])
 
@@ -100,7 +103,13 @@ function TreeEditor(props: TreeEditorProps) {
                     onVisibilityToggle={handleVisibilityToggle}
                     canDrop={canDrop}
                     onMoveNode={onMoveNode}
+                    // Stable keys keep row identity (and their DOM nodes) intact while
+                    // rows are repositioned during a drag
+                    getNodeKey={getNodeKey}
                     treeData={localTree}
+                    // The tree renders inside a virtualized list which requires
+                    // a definite height (percentages would resolve to 0)
+                    style={treeViewHeight ? {height: treeViewHeight} : undefined}
                     {...treeProps}
                   />
                 </Card>
@@ -174,5 +183,7 @@ function canDrop({nextPath, prevPath}: {nextPath: number[]; prevPath: number[]})
 const doNothingOnChange = () => {
   // Do nothing. onMoveNode will do all the work
 }
+
+const getNodeKey = (data: {node: TreeItem}) => data.node['_key'] as string
 
 export default TreeEditor
