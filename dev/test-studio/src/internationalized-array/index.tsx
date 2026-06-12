@@ -142,7 +142,7 @@ const movie = defineType({
     defineField({
       name: 'table',
       title: 'Table',
-      type: 'internationalizedArrayTable',
+      type: 'internationalizedArrayDemoTable',
       description: 'Table content',
     }),
   ],
@@ -170,9 +170,10 @@ const CustomInput = (props: ObjectInputProps) => {
   )
 }
 
-const table = defineType({
-  name: 'table',
-  title: 'Table',
+// Named `demoTable` to avoid clashing with the `table` type from @sanity/table
+const demoTable = defineType({
+  name: 'demoTable',
+  title: 'Demo Table',
   type: 'object',
   components: {
     input: CustomInput,
@@ -190,7 +191,7 @@ export const internationalizedArrayExample = definePlugin(() => ({
       person,
       bodyContent,
       circularSchemaRepro,
-      table,
+      demoTable,
       movie,
       issue520Repro,
     ],
@@ -206,7 +207,7 @@ export const internationalizedArrayExample = definePlugin(() => ({
         {id: 'it', title: 'Italian'},
       ],
       defaultLanguages: ['en'],
-      fieldTypes: ['string', 'text', 'table'],
+      fieldTypes: ['string', 'text', 'demoTable'],
       buttonLocations: ['document', 'field'],
       languageFilter: {
         documentTypes: ['internationalizedPost', 'lesson'],

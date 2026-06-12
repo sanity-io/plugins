@@ -19,6 +19,13 @@ const tableTest = defineType({
       description: 'A table input',
       type: 'table',
     },
+    {
+      name: 'moreTables',
+      title: 'More tables',
+      description: 'An array of tables, items render with the table preview component',
+      type: 'array',
+      of: [{type: 'table'}],
+    },
   ],
 })
 
