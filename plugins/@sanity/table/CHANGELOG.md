@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# @sanity/table
 
 ## [2.0.1](https://github.com/sanity-io/table/compare/v2.0.0...v2.0.1) (2025-12-29)
 

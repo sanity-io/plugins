@@ -10,5 +10,5 @@ export function TableIcon() {
     >
       <path d="M3 3h18v18H3zM21 9H3M21 15H3M12 3v18" />
     </svg>
-  );
+  )
 }

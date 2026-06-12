@@ -40,9 +40,9 @@ Add the plugin to your project configuration. Then use the type in your schemas
 ```js
 // sanity.config.ts
 
-import { defineConfig } from 'sanity';
+import {defineConfig} from 'sanity'
 
-import { table } from '@sanity/table';
+import {table} from '@sanity/table'
 
 export default defineConfig({
   name: 'default',
@@ -71,7 +71,7 @@ export default defineConfig({
       },
     ],
   },
-});
+})
 ```
 
 ## Configuration
@@ -87,7 +87,7 @@ export default defineConfig({
     }),
   ],
   // ...
-});
+})
 ```
 
 ## License

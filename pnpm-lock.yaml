@@ -164,6 +164,9 @@ importers:
       '@sanity/studio-secrets':
         specifier: workspace:*
         version: link:../../plugins/@sanity/studio-secrets
+      '@sanity/table':
+        specifier: workspace:*
+        version: link:../../plugins/@sanity/table
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)
@@ -945,6 +948,46 @@ importers:
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
+
+  plugins/@sanity/table:
+    dependencies:
+      '@sanity/icons':
+        specifier: ^3.7.4
+        version: 3.7.4(react@19.2.7)
+      '@sanity/ui':
+        specifier: 'catalog:'
+        version: 3.2.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+      '@sanity/uuid':
+        specifier: ^3.0.2
+        version: 3.0.2
+    devDependencies:
+      '@repo/package.config':
+        specifier: workspace:*
+        version: link:../../../packages/@repo/package.config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../../../packages/@repo/tsconfig
+      '@sanity/pkg-utils':
+        specifier: 'catalog:'
+        version: 10.5.0(@types/babel__core@7.20.5)(@types/node@25.9.2)(@typescript/native-preview@7.0.0-dev.20260418.1)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.19.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))(typescript@5.9.3)
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.14)
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
+      react:
+        specifier: 'catalog:'
+        version: 19.2.7
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.7(react@19.2.7)
+      sanity:
+        specifier: 'catalog:'
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/@sanity/vercel-protection-bypass:
     dependencies:
