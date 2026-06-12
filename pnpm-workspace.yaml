@@ -64,6 +64,8 @@ minimumReleaseAgeExclude:
   - turbo@2.9.14
 
 overrides:
+  '@types/node': 'catalog:'
+  sanity: 'catalog:'
   styled-components: npm:@sanity/styled-components@latest
 
 packageExtensions:
@@ -96,3 +98,9 @@ trustPolicyExclude:
   - ts-api-utils@2.3.0
   - undici@5.29.0
   - vite@6.4.1
+
+dedupePeers: true
+linkWorkspacePackages: deep
+
+allowBuilds:
+  esbuild: false
