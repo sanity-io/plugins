@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "module": "preserve",
+    "esModuleInterop": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "strict": true,
+    "sourceMap": false,
+    "inlineSourceMap": false,
+    "downlevelIteration": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "checkJs": false,
+    "rootDir": ".",
+    "noEmit": true
+  },
+  "include": ["src/**/*", ".eslintrc.cjs"]
+}
