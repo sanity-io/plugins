@@ -1,0 +1,104 @@
+{
+  "name": "@sanity/personalization-plugin",
+  "version": "2.5.0",
+  "description": "Plugin to help with personalization, a/b testing when using Sanity",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/sanity-plugin-personalization#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity-plugin-personalization/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sanity-io/sanity-plugin-personalization.git"
+  },
+  "license": "MIT",
+  "author": "Sanity <hello@sanity.io>",
+  "sideEffects": false,
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./launchDarkly": {
+      "source": "./src/launchDarkly/index.ts",
+      "import": "./dist/launchDarkly/index.mjs",
+      "default": "./dist/launchDarkly/index.js"
+    },
+    "./growthbook": {
+      "source": "./src/growthbook/index.ts",
+      "import": "./dist/growthbook/index.mjs",
+      "default": "./dist/growthbook/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint . --fix",
+    "prepublishOnly": "npm run build",
+    "watch": "pkg-utils watch --strict",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "@sanity/studio-secrets": "^3.0.2",
+    "@sanity/ui": "^2.16.12",
+    "@sanity/uuid": "^3.0.2",
+    "fast-deep-equal": "^3.1.3",
+    "react-icons": "^5.5.0",
+    "suspend-react": "^0.1.3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@sanity/pkg-utils": "^6.13.4",
+    "@sanity/plugin-kit": "^4.0.19",
+    "@sanity/semantic-release-preset": "^5.0.0",
+    "@types/react": "^18.3.23",
+    "@typescript-eslint/eslint-plugin": "^8.39.1",
+    "@typescript-eslint/parser": "^8.39.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-config-sanity": "^7.1.4",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.6.2",
+    "prettier-plugin-packagejson": "^2.5.19",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "sanity": "^5.0.1",
+    "semantic-release": "^24.2.7",
+    "styled-components": "^6.1.19",
+    "typescript": "^5.9.2"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "sanity": "^3 || ^4.0.0-0 || ^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "resolutions": {
+    "conventional-changelog-conventionalcommits": ">= 8.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
