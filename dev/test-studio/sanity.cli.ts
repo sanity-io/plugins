@@ -1,5 +1,5 @@
+import {DevTools} from '@vitejs/devtools'
 import {defineCliConfig} from 'sanity/cli'
-import {mergeConfig, type InlineConfig} from 'vite'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'plugins'
@@ -29,16 +29,8 @@ export default defineCliConfig({
   },
   studioHost: 'plugins',
   typegen: {formatGeneratedCode: false},
-  async vite(viteConfig: InlineConfig): Promise<InlineConfig> {
-    if (!isViteDevToolsEnabled) {
-      return viteConfig
-    }
-    // Lazy import so the devtools package is only loaded when the flag is enabled
-    const {DevTools} = await import('@vitejs/devtools')
-    return mergeConfig(viteConfig, {
-      plugins: [DevTools()],
-      // `devtools: {}` makes `sanity build` emit a Rolldown build session that the DevTools dock can inspect
-      build: {rolldownOptions: {devtools: {}}},
-    } satisfies InlineConfig)
-  },
+  // `devtools: {}` makes `sanity build` emit a Rolldown build session that the DevTools dock can inspect
+  vite: isViteDevToolsEnabled
+    ? {plugins: [DevTools()], build: {rolldownOptions: {devtools: {}}}}
+    : {},
 })

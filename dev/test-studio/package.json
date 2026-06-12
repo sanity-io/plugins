@@ -56,8 +56,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/devtools": "^0.3.1",
-    "babel-plugin-react-compiler": "catalog:",
-    "vite": "^8.0.16"
+    "babel-plugin-react-compiler": "catalog:"
   },
   "engines": {
     "node": "24"
