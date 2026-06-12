@@ -1,0 +1,95 @@
+{
+  "name": "sanity-plugin-cloudinary",
+  "version": "1.4.1",
+  "description": "Cloudinary integration for Sanity Studio V3.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/sanity-plugin-cloudinary#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity-plugin-cloudinary/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sanity-io/sanity-plugin-cloudinary.git"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "source": "./src/index.ts",
+      "require": "./lib/index.js",
+      "import": "./lib/index.esm.js",
+      "default": "./lib/index.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./lib/index.js",
+  "module": "./lib/index.esm.js",
+  "source": "./src/index.ts",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "run-s clean && plugin-kit verify-package --silent && pkg-utils build --strict && pkg-utils --strict",
+    "clean": "rimraf lib",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint .",
+    "prepare": "husky install",
+    "prepublishOnly": "run-s build",
+    "watch": "pkg-utils watch --strict",
+    "format": "prettier --write --cache --ignore-unknown ."
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.0",
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "@sanity/studio-secrets": "^3.0.3",
+    "@sanity/ui": "^2.15.2",
+    "nanoid": "^4.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@sanity/pkg-utils": "^2.4.10",
+    "@sanity/plugin-kit": "^3.1.10",
+    "@sanity/semantic-release-preset": "^4.1.6",
+    "@types/react": "^19.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "eslint": "^8.52.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.0.0",
+    "prettier": "^2.8.8",
+    "prettier-plugin-packagejson": "^2.4.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-is": "^19.0.0",
+    "rimraf": "^5.0.0",
+    "sanity": "^3.78.1",
+    "semantic-release": "^22.0.12",
+    "styled-components": "^6.1.15",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "react-dom": "^18.3 || ^19",
+    "sanity": "^3 || ^4.0.0-0 || ^5.0.0",
+    "styled-components": "^6.0"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
