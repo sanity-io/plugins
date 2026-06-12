@@ -1,6 +1,6 @@
 import {PlayIcon} from '@sanity/icons'
 import {Card, Box, Heading, Flex, Text, Stack} from '@sanity/ui'
-import React from 'react'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {styled} from 'styled-components'
 
 const PlayIconBox = styled(Box)`
@@ -18,7 +18,7 @@ const PlayIconBox = styled(Box)`
     width: 2.75em;
     height: 2.75em;
     border-radius: 50%;
-    background: ${({theme}) => theme.sanity.color.card.enabled.bg};
+    background: ${({theme}) => getTheme_v2(theme).color.bg};
     opacity: 0.75;
   }
 `
@@ -96,7 +96,7 @@ export function Tutorial(props: TutorialProps) {
               {title}
             </Heading>
             <Box marginTop={4}>
-              <Stack space={2} flex={1}>
+              <Stack gap={2} flex={1}>
                 <Text size={1}>{presenterName}</Text>
                 <Text size={0} style={{opacity: 0.7}}>
                   {presenterSubtitle}

@@ -1,6 +1,5 @@
 import {RobotIcon} from '@sanity/icons'
 import {Box, Flex, rem, Stack, Text} from '@sanity/ui'
-import React from 'react'
 import {useListFormat, type User, UserAvatar} from 'sanity'
 import {styled} from 'styled-components'
 
@@ -30,7 +29,7 @@ export function ProjectUser({user, isRobot, roles}: ProjectUserProps) {
           )}
         </Box>
 
-        <Stack flex={1} space={2}>
+        <Stack flex={1} gap={2}>
           <Text size={1} style={{color: 'inherit'}} textOverflow="ellipsis" weight="medium">
             {user.displayName}
           </Text>

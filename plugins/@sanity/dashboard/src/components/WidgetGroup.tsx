@@ -1,18 +1,18 @@
 import {Box, Card, Grid, Text} from '@sanity/ui'
-import React from 'react'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {styled, css} from 'styled-components'
 
 import {WidgetContainer} from '../containers/WidgetContainer'
-import {DashboardConfig, LayoutConfig, DashboardWidget} from '../types'
+import {type DashboardConfig, type LayoutConfig, type DashboardWidget} from '../types'
 
 const media = {
   small: (...args: Parameters<typeof css>) => css`
-    @media (min-width: ${({theme}) => theme.sanity.media[0]}px) {
+    @media (min-width: ${({theme}) => getTheme_v2(theme).media[0]}px) {
       ${css(...args)}
     }
   `,
   medium: (...args: Parameters<typeof css>) => css`
-    @media (min-width: ${({theme}) => theme.sanity.media[2]}px) {
+    @media (min-width: ${({theme}) => getTheme_v2(theme).media[2]}px) {
       ${css(...args)}
     }
   `,
@@ -95,11 +95,14 @@ export function WidgetGroup(props: WidgetGroupProps) {
       )}
       {widgets.map((widgetConfig, index) => {
         if (widgetConfig.type === '__experimental_group') {
+          // eslint-disable-next-line react/no-array-index-key -- static widget config never reorders
           return <WidgetGroup key={index} config={widgetConfig} />
         }
         if (widgetConfig.component) {
+          // eslint-disable-next-line react/no-array-index-key -- static widget config never reorders
           return <WidgetContainer key={index} {...widgetConfig} />
         }
+        // eslint-disable-next-line react/no-array-index-key -- static widget config never reorders
         return <Box key={index}>{widgetConfig.name} is missing widget component</Box>
       })}
     </Root>

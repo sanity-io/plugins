@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^4.0.0",
+    "@sanity/color": "^3.0.6",
     "@sanity/icons": "^3.7.0",
     "@sanity/ui": "catalog:",
     "@sanity/uuid": "^3.0.2",
@@ -63,6 +64,7 @@
     "@repo/tsconfig": "workspace:*",
     "@sanity/dashboard": "workspace:^",
     "@sanity/pkg-utils": "catalog:",
+    "@types/object-hash": "^3.0.6",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",

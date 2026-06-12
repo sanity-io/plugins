@@ -1,6 +1,6 @@
 import {Box, TextInput} from '@sanity/ui'
 import {type ChangeEventHandler, type FocusEventHandler, forwardRef} from 'react'
-import {FieldError} from 'react-hook-form'
+import {type FieldError} from 'react-hook-form'
 
 import FormFieldInputLabel from '../FormFieldInputLabel'
 

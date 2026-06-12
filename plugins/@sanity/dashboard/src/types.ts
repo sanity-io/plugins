@@ -1,4 +1,4 @@
-import {ComponentClass, FunctionComponent} from 'react'
+import {type ComponentClass, type FunctionComponent} from 'react'
 
 export interface DashboardWidget {
   name: string

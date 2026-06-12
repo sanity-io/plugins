@@ -10,7 +10,7 @@ import StateDebug from './components/StateDebug'
 import {Z_INDEX_TOAST_PROVIDER} from './constants'
 import {deploymentTargetListMachine} from './machines/deploymentTargetList'
 import {dialogMachine} from './machines/dialog'
-import {Sanity} from './types'
+import {type Sanity} from './types'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -85,14 +85,15 @@ const Widget = () => {
             )}
 
             {deploymentTargetListState.matches({ready: 'withoutData'}) && (
-              <Box paddingX={3} paddingY={4}>
-                <Text>
-                  No deployment targets found.{' '}
-                  <a onClick={handleDialogShowCreate} style={{cursor: 'pointer'}}>
-                    Create a new target?
-                  </a>
-                </Text>
-              </Box>
+              <Flex align="center" gap={3} paddingX={3} paddingY={4}>
+                <Text>No deployment targets found.</Text>
+                <Button
+                  fontSize={1}
+                  mode="ghost"
+                  onClick={handleDialogShowCreate}
+                  text="Create a new target"
+                />
+              </Flex>
             )}
 
             {deploymentTargetListState.matches({ready: 'withData'}) && (

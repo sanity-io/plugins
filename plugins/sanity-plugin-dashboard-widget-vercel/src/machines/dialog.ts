@@ -1,6 +1,6 @@
 import {assertEvent, assign, setup} from 'xstate'
 
-import {Sanity} from '../types'
+import {type Sanity} from '../types'
 
 type Context = {
   editDeploymentTarget?: Sanity.DeploymentTarget

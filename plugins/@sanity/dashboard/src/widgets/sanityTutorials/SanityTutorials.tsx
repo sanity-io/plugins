@@ -1,8 +1,8 @@
 import {Flex} from '@sanity/ui'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 
 import {DashboardWidgetContainer} from '../../components/DashboardWidgetContainer'
-import {FeedItem, Guide, useDataAdapter} from './dataAdapter'
+import {type FeedItem, type Guide, useDataAdapter} from './dataAdapter'
 import {Tutorial} from './Tutorial'
 
 function createUrl(slug: {current: string}, type?: string) {

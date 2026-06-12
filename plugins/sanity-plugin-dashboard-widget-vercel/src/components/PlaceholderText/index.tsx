@@ -18,8 +18,8 @@ const PlaceholderText = (props: Props) => {
         width: '100%',
       }}
     >
-      <Stack space={2}>
-        {new Array(rows).fill(undefined).map((_, index) => (
+      <Stack gap={2}>
+        {Array.from({length: rows}, (_, index) => (
           <Text key={index} size={1}>
             &nbsp;
           </Text>

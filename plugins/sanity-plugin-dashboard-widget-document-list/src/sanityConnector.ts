@@ -1,4 +1,4 @@
-import {uniqBy} from 'lodash-es'
+import uniqBy from 'lodash-es/uniqBy.js'
 import {type Observable, of as observableOf} from 'rxjs'
 import {delay, mergeMap, switchMap, tap} from 'rxjs/operators'
 import type {SanityClient, SanityDocument} from 'sanity'
@@ -26,13 +26,12 @@ function prepareDocumentList(
       return uniqBy(outgoing, '_id')
     })
     .catch((error) => {
-      throw new Error(`Problems fetching docs ${ids}. Error: ${error.message}`)
+      throw new Error(`Problems fetching docs ${ids.join(', ')}. Error: ${error.message}`)
     })
 }
 
 export function getSubscription(
   query: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params: Record<string, any>,
   client: SanityClient,
 ): Observable<SanityDocument[]> {

@@ -1,15 +1,15 @@
 import {Box, Card, Stack, Heading, Grid, Label, Text, Code, Button} from '@sanity/ui'
-import React, {useEffect, useMemo, useState} from 'react'
-import {Subscription} from 'rxjs'
+import {useEffect, useMemo, useState} from 'react'
+import {type Subscription} from 'rxjs'
 
 import {DashboardWidgetContainer} from '../../components/DashboardWidgetContainer'
 import {WidgetContainer} from '../../containers/WidgetContainer'
 import {type DashboardWidget} from '../../types'
 import {useVersionedClient} from '../../versionedClient'
-import {type App, type ProjectInfoProps, type ProjectData, UserApplication} from './types'
+import {type App, type ProjectInfoProps, type ProjectData, type UserApplication} from './types'
 
 function isUrl(url?: string) {
-  return url && /^https?:\/\//.test(`${url}`)
+  return url && /^https?:\/\//.test(url)
 }
 
 function getGraphQLUrl(projectId: string, dataset: string) {
@@ -125,10 +125,9 @@ export function ProjectInfo(props: ProjectInfoProps) {
     const otherStuff: Record<string, ProjectData[]> = {}
     data.forEach((item) => {
       if (item.category && item.category !== 'apps' && item.category !== 'apis') {
-        if (!otherStuff[item.category]) {
-          otherStuff[item.category] = []
-        }
-        otherStuff[item.category].push(item)
+        const group = otherStuff[item.category] ?? []
+        group.push(item)
+        otherStuff[item.category] = group
       }
     })
     Object.keys(otherStuff).forEach((category) => {
@@ -141,6 +140,7 @@ export function ProjectInfo(props: ProjectInfoProps) {
   return (
     <>
       {__experimental_before.map((widgetConfig, idx) => (
+        // eslint-disable-next-line react/no-array-index-key -- static widget config never reorders
         <WidgetContainer key={idx} {...widgetConfig} />
       ))}
       <Box height="fill" marginTop={__experimental_before?.length > 0 ? 4 : 0}>
@@ -165,7 +165,7 @@ export function ProjectInfo(props: ProjectInfoProps) {
             aria-label="Project info"
             aria-describedby="project_info_table"
           >
-            <Stack space={4}>
+            <Stack gap={4}>
               <Box paddingX={3} as="header">
                 <Heading size={1} as="h2" id="project_info_table">
                   Project info
@@ -177,16 +177,21 @@ export function ProjectInfo(props: ProjectInfoProps) {
                 }
 
                 return (
-                  <Stack key={item.title} space={3}>
+                  <Stack key={item.title} gap={3}>
                     <Card borderBottom padding={3}>
                       <Label size={0} muted role="columnheader">
                         {item.title}
                       </Label>
                     </Card>
-                    <Stack space={4} paddingX={3} role="rowgroup">
+                    <Stack gap={4} paddingX={3}>
                       {item.rows.map((row) => {
+                        const rowValue = typeof row.value === 'object' ? row.value.error : row.value
                         return (
-                          <Grid key={`${row.value}-${row.title}`} columns={2} role="row">
+                          <Grid
+                            key={`${rowValue ?? ''}-${row.title}`}
+                            gridTemplateColumns={2}
+                            role="row"
+                          >
                             <Text weight="medium" role="rowheader">
                               {row.title}
                             </Text>

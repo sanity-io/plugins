@@ -1,7 +1,7 @@
 import {Button, Flex, Box, Card, Text, Stack, Label} from '@sanity/ui'
 import {type FunctionComponent, useCallback, useEffect, useRef, useState} from 'react'
 
-import {DeployAction, Site} from '../../types'
+import {type DeployAction, type Site} from '../../types'
 import Links from './Links'
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
   onDeploy: DeployAction
 }
 
-export const IMAGE_PULL_INTERVAL = 10000
+const IMAGE_PULL_INTERVAL = 10000
 
 const getImageUrl = (siteId: string, branchName?: string) => {
   const baseUrl = `https://api.netlify.com/api/v1/badges/${siteId}/deploy-status`
@@ -55,7 +55,7 @@ const SiteItem: FunctionComponent<Props> = (props) => {
   return (
     <Flex as="li">
       <Box flex={1} paddingY={2} paddingX={3}>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text as="h4">
             {title || name}
             <Links url={url} adminUrl={adminUrl} />

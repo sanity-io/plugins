@@ -2,7 +2,7 @@ import {EditIcon} from '@sanity/icons'
 import {Box, Button, Flex, Text, Tooltip} from '@sanity/ui'
 import type {FC} from 'react'
 
-import {Sanity} from '../../types'
+import {type Sanity} from '../../types'
 import Deployments from '../Deployments'
 
 type Props = {
@@ -13,14 +13,14 @@ type Props = {
 const DeploymentTarget: FC<Props> = (props: Props) => {
   const {item, onDialogEdit} = props
 
-  const deploymentTarget = {
+  const deploymentTarget: Sanity.DeploymentTargetConfig = {
     deployHook: item.deployHook,
     deployLimit: item.deployLimit,
     name: item.name,
     projectId: item.projectId,
     teamId: item.teamId,
     token: item.token,
-  } as Sanity.DeploymentTarget
+  }
 
   return (
     <Box style={{position: 'relative'}}>

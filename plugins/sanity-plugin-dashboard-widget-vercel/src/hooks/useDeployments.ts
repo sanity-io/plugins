@@ -2,14 +2,14 @@ import {useQuery} from '@tanstack/react-query'
 import hash from 'object-hash'
 
 import {API_ENDPOINT_ALIASES, API_ENDPOINT_DEPLOYMENTS} from '../constants'
-import {Sanity, Vercel} from '../types'
+import {type Sanity, type Vercel} from '../types'
 import fetcher from '../utils/fetcher'
 
 type Options = {
   enabled?: boolean
 }
 
-const useDeployments = (deploymentTarget: Sanity.DeploymentTarget, options?: Options) => {
+const useDeployments = (deploymentTarget: Sanity.DeploymentTargetConfig, options?: Options) => {
   const fetchUrl = fetcher(deploymentTarget)
 
   // Fetch deployments
@@ -22,7 +22,7 @@ const useDeployments = (deploymentTarget: Sanity.DeploymentTarget, options?: Opt
     isSuccess: deploymentsIsSuccess,
     error: deploymentsError,
     refetch,
-  } = useQuery<{deployments: Vercel.Deployment[]}, Error>({
+  } = useQuery<{deployments: Vercel.Deployment[]}>({
     queryKey: [hash(deploymentTarget)],
     queryFn: () => fetchUrl(API_ENDPOINT_DEPLOYMENTS, deployParams),
     enabled: options?.enabled ?? true,
@@ -43,17 +43,14 @@ const useDeployments = (deploymentTarget: Sanity.DeploymentTarget, options?: Opt
     isFetching: aliasesIsFetching,
     isSuccess: aliasesIsSuccess,
     error: aliasesError,
-  } = useQuery<
-    {
-      aliases: Vercel.Alias[]
-      pagination: {
-        count: number
-        next?: number
-        prev?: number
-      }
-    },
-    Error
-  >({
+  } = useQuery<{
+    aliases: Vercel.Alias[]
+    pagination: {
+      count: number
+      next?: number
+      prev?: number
+    }
+  }>({
     queryKey: [hash(deploymentTarget), 'aliases'],
     queryFn: () => fetchUrl(API_ENDPOINT_ALIASES, aliasParams),
     enabled: !!deploymentsData,
@@ -63,17 +60,14 @@ const useDeployments = (deploymentTarget: Sanity.DeploymentTarget, options?: Opt
     retry: false,
   })
 
-  const aliases = aliasesData?.aliases as Vercel.Alias[]
+  const aliases = aliasesData?.aliases
 
   let deploymentsWithAlias: Vercel.DeploymentWithAlias[] | undefined
 
   if (aliases) {
     deploymentsWithAlias = deploymentsData?.deployments?.map((val: Vercel.DeploymentWithAlias) => {
       const alias = aliases.find((a) => a.deploymentId === val.uid)
-      return {
-        ...val,
-        alias: alias?.alias,
-      }
+      return Object.assign(val, {alias: alias?.alias})
     })
   }
 

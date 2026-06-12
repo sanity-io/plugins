@@ -2,7 +2,7 @@ import {DashboardWidgetContainer} from '@sanity/dashboard'
 import {Button, Flex, Card, Text, Box} from '@sanity/ui'
 import {styled} from 'styled-components'
 
-import {NetlifyWidgetProps} from '../types'
+import {type NetlifyWidgetProps} from '../types'
 import SiteList from './SiteList'
 
 const ContentCard = styled(Card)`

@@ -33,7 +33,7 @@ const StateDebug = (props: Props) => {
       }}
     >
       <Box padding={2}>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={0}>Name: {name}</Text>
           <Text size={0}>state.value: {JSON.stringify(state.value)}</Text>
         </Stack>

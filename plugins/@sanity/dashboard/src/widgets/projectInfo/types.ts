@@ -2,7 +2,7 @@ import {type DashboardWidget} from '../../types'
 
 export interface ProjectInfoProps {
   __experimental_before?: DashboardWidget[]
-  data: ProjectData[]
+  data?: ProjectData[]
 }
 
 export interface App {

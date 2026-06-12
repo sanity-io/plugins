@@ -1,7 +1,7 @@
-import {Sanity} from '../types'
+import {type Sanity} from '../types'
 
 const fetcher =
-  (deploymentTarget: Sanity.DeploymentTarget) =>
+  (deploymentTarget: Sanity.DeploymentTargetConfig) =>
   async (url: string, extraParams?: URLSearchParams) => {
     const params = new URLSearchParams()
     params.set('projectId', deploymentTarget.projectId)
@@ -30,7 +30,7 @@ const fetcher =
     try {
       return response.json()
     } catch (err) {
-      throw new Error(err as string)
+      throw new Error('Unable to parse response as JSON', {cause: err})
     }
   }
 

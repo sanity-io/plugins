@@ -1,6 +1,6 @@
 import {assign, setup, fromPromise} from 'xstate'
 
-import {Vercel} from '../types'
+import {type Vercel} from '../types'
 
 type Context = {
   deployHook: string
@@ -29,9 +29,9 @@ export const deployMachine = setup({
           throw new Error('No deployHook URL defined')
         }
         const res = await fetch(input.deployHook, {method: 'POST', signal})
-        const data = await res.json()
+        const data: {error?: Vercel.Error} | null = await res.json()
         if (!res.ok) {
-          const errorMessage = (data?.error as Vercel.Error).message || res.statusText
+          const errorMessage = data?.error?.message || res.statusText
           throw errorMessage
         }
       } catch (err) {
@@ -39,7 +39,7 @@ export const deployMachine = setup({
           throw err
         }
         console.error('Unable to deploy with error:', err)
-        throw new Error('Please check the developer console for more information')
+        throw new Error('Please check the developer console for more information', {cause: err})
       }
     }),
   },
@@ -86,7 +86,13 @@ export const deployMachine = setup({
           actions: assign({
             error: ({event}) => {
               if ('error' in event) {
-                return event.error as unknown as string
+                const {error} = event
+                if (typeof error === 'string') {
+                  return error
+                }
+                if (error instanceof Error) {
+                  return error.message
+                }
               }
               return 'Unknown error'
             },

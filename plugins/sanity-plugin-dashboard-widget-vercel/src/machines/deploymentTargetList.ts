@@ -2,7 +2,7 @@ import type {SanityClient} from 'sanity'
 import {assign, setup, fromPromise, assertEvent} from 'xstate'
 
 import {DEPLOYMENT_TARGET_DOCUMENT_TYPE} from '../constants'
-import {Sanity} from '../types'
+import {type Sanity} from '../types'
 
 type Context = {
   client: SanityClient

@@ -1,9 +1,9 @@
 import {LinkIcon} from '@sanity/icons'
 import {Box, Flex, Stack, Text} from '@sanity/ui'
-import {useRef} from 'react'
+import {useMemo} from 'react'
 import ReactTimeAgo from 'react-time-ago'
 
-import {Vercel} from '../../types'
+import {type Vercel} from '../../types'
 import StatusDot from '../StatusDot'
 import TableCell from '../TableCell'
 
@@ -14,10 +14,10 @@ type Props = {
 const Deployment = (props: Props) => {
   const {deployment} = props
 
-  const date = useRef(new Date(deployment.created))
+  const date = useMemo(() => new Date(deployment.created), [deployment.created])
 
-  const commitMessage = deployment?.meta?.githubCommitMessage
-  const commitRef = deployment?.meta?.githubCommitRef
+  const commitMessage = deployment?.meta?.['githubCommitMessage']
+  const commitRef = deployment?.meta?.['githubCommitRef']
 
   const targetUrl = deployment.alias ?? deployment.url
 
@@ -84,7 +84,7 @@ const Deployment = (props: Props) => {
 
       {/* Branch */}
       <TableCell variant="branch">
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={1} textOverflow="ellipsis">
             {commitRef}
           </Text>
@@ -100,7 +100,7 @@ const Deployment = (props: Props) => {
       <TableCell variant="age">
         <Flex align="center">
           <Text size={1}>
-            <ReactTimeAgo date={date.current} locale="en-US" timeStyle="mini" />
+            <ReactTimeAgo date={date} locale="en-US" timeStyle="mini" />
           </Text>
         </Flex>
       </TableCell>
@@ -109,6 +109,7 @@ const Deployment = (props: Props) => {
       <TableCell variant="creator">
         <Flex align="center" justify="center">
           <img
+            alt={deployment?.creator?.username || 'Deployment creator avatar'}
             draggable={false}
             src={`https://vercel.com/api/www/avatar/${deployment?.creator?.uid}?&s=48`}
             style={{

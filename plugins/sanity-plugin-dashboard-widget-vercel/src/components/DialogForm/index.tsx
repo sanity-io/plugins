@@ -9,7 +9,7 @@ import * as yup from 'yup'
 import {useSanityClient} from '../../client'
 import {Z_INDEX_DIALOG} from '../../constants'
 import {formMachine} from '../../machines/form'
-import {Sanity} from '../../types'
+import {type Sanity} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
 import FormFieldInputText from '../FormFieldInputText'
 
@@ -140,6 +140,7 @@ const DialogForm: FC<Props> = (props: Props) => {
               loading={formState.matches('creating') || formState.matches('updating')}
               disabled={!isDirty || !isValid}
               fontSize={1}
+              // @ts-expect-error - yup 0.32 schema types do not line up with @hookform/resolvers, fix typings later
               onClick={handleSubmit(onSubmit)}
               text={deploymentTarget ? 'Update and close' : 'Create'}
               tone="primary"
@@ -154,12 +155,17 @@ const DialogForm: FC<Props> = (props: Props) => {
       zOffset={Z_INDEX_DIALOG}
     >
       {/* We reverse direction to ensure that inline links dont autofocus before other form elements */}
-      <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
+      <Box
+        as="form"
+        padding={4}
+        // @ts-expect-error - yup 0.32 schema types do not line up with @hookform/resolvers, fix typings later
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {/* Hidden button to enable enter key submissions */}
         <button style={{display: 'none'}} tabIndex={-1} type="submit" />
 
         {/* Form fields */}
-        <Stack space={5}>
+        <Stack gap={5}>
           {/* Title */}
           <FormFieldInputText
             disabled={formUpdating}

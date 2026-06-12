@@ -1,8 +1,8 @@
+import {red} from '@sanity/color'
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {Box, Inline, Text, Tooltip} from '@sanity/ui'
 import type {FC} from 'react'
-import {FieldError} from 'react-hook-form'
-import {styled} from 'styled-components'
+import {type FieldError} from 'react-hook-form'
 
 type Props = {
   description?: string
@@ -11,11 +11,7 @@ type Props = {
   name: string
 }
 
-const StyledErrorOutlineIcon = styled(ErrorOutlineIcon)(({theme}) => {
-  return {
-    color: theme.sanity.color.spot.red,
-  }
-})
+const errorIconStyle = {color: red[500].hex}
 
 const FormFieldInputLabel: FC<Props> = (props: Props) => {
   const {description, error, label, name} = props
@@ -23,7 +19,7 @@ const FormFieldInputLabel: FC<Props> = (props: Props) => {
   return (
     <Box marginBottom={3}>
       {/* Label */}
-      <Inline space={2}>
+      <Inline gap={2}>
         <Text as="label" htmlFor={name} size={1} weight="semibold">
           {label}
         </Text>
@@ -35,7 +31,7 @@ const FormFieldInputLabel: FC<Props> = (props: Props) => {
               content={
                 <Box padding={2}>
                   <Text muted size={1}>
-                    <StyledErrorOutlineIcon style={{marginRight: '0.1em'}} />
+                    <ErrorOutlineIcon style={{...errorIconStyle, marginRight: '0.1em'}} />
                     {error.message}
                   </Text>
                 </Box>
@@ -44,7 +40,7 @@ const FormFieldInputLabel: FC<Props> = (props: Props) => {
               placement="right"
               portal
             >
-              <StyledErrorOutlineIcon />
+              <ErrorOutlineIcon style={errorIconStyle} />
             </Tooltip>
           </Text>
         )}

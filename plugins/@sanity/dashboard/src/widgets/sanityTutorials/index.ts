@@ -1,4 +1,4 @@
-import {LayoutConfig, DashboardWidget} from '../../types'
+import {type LayoutConfig, type DashboardWidget} from '../../types'
 import {SanityTutorials} from './SanityTutorials'
 
 export function sanityTutorialsWidget(config?: {layout?: LayoutConfig}): DashboardWidget {

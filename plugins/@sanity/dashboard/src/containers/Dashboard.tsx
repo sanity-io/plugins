@@ -1,8 +1,6 @@
-import React from 'react'
-
 import {DashboardLayout} from '../components/DashboardLayout'
 import {WidgetGroup} from '../components/WidgetGroup'
-import {DashboardConfig} from '../types'
+import {type DashboardConfig} from '../types'
 import {DashboardContext} from './DashboardContext'
 
 export function Dashboard({config}: {config: DashboardConfig}) {

@@ -1,6 +1,6 @@
 import {createContext, useContext} from 'react'
 
-import {DashboardConfig} from '../types'
+import {type DashboardConfig} from '../types'
 
 export const DashboardContext = createContext<DashboardConfig>({widgets: []})
 

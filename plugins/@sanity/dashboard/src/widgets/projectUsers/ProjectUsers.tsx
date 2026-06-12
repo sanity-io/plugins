@@ -1,9 +1,8 @@
 import {Stack, Spinner, Box, Text, Button} from '@sanity/ui'
-import React, {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {from} from 'rxjs'
 import {map, switchMap} from 'rxjs/operators'
-import {Role, useUserStore} from 'sanity'
-import {User} from 'sanity'
+import {type Role, type User, useUserStore} from 'sanity'
 
 import {DashboardWidgetContainer} from '../../components/DashboardWidgetContainer'
 import {useVersionedClient} from '../../versionedClient'
@@ -73,13 +72,17 @@ export function ProjectUsers() {
     return (
       <DashboardWidgetContainer header="Project users">
         <Box padding={4}>
-          <Text>
-            Something went wrong while fetching data. You could{' '}
-            <a onClick={handleRetryFetch} title="Retry users fetch" style={{cursor: 'pointer'}}>
-              retry
-            </a>
-            ..?
-          </Text>
+          <Stack gap={3}>
+            <Text>Something went wrong while fetching data.</Text>
+            <Box>
+              <Button
+                mode="ghost"
+                text="Retry"
+                title="Retry users fetch"
+                onClick={handleRetryFetch}
+              />
+            </Box>
+          </Stack>
         </Box>
       </DashboardWidgetContainer>
     )
@@ -104,7 +107,7 @@ export function ProjectUsers() {
     >
       {isLoading && (
         <Box paddingY={5} paddingX={2}>
-          <Stack space={4}>
+          <Stack gap={4}>
             <Text align="center" muted size={1}>
               <Spinner />
             </Text>
@@ -116,7 +119,7 @@ export function ProjectUsers() {
       )}
 
       {!isLoading && (
-        <Stack space={3} padding={3}>
+        <Stack gap={3} padding={3}>
           {users?.map((user) => {
             const membership = project.members.find((member) => member.id === user.id)
             return (

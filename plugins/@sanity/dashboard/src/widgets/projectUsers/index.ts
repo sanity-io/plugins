@@ -1,4 +1,4 @@
-import {LayoutConfig, DashboardWidget} from '../../types'
+import {type LayoutConfig, type DashboardWidget} from '../../types'
 import {ProjectUsers} from './ProjectUsers'
 
 export function projectUsersWidget(config?: {layout?: LayoutConfig}): DashboardWidget {

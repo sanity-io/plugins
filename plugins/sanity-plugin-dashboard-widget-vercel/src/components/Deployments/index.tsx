@@ -6,7 +6,7 @@ import useDeepCompareEffect from 'use-deep-compare-effect'
 import {WIDGET_NAME} from '../../constants'
 import useDeployments from '../../hooks/useDeployments'
 import refreshMachine from '../../machines/refresh'
-import {Sanity} from '../../types'
+import {type Sanity} from '../../types'
 import {useCardColor} from '../../utils/useCardColor'
 import DeployButton from '../DeployButton'
 import Deployment from '../Deployment'
@@ -15,7 +15,7 @@ import StateDebug from '../StateDebug'
 import TableCell from '../TableCell'
 
 type Props = {
-  deploymentTarget: Sanity.DeploymentTarget
+  deploymentTarget: Sanity.DeploymentTargetConfig
 }
 
 const Deployments = (props: Props) => {
@@ -40,7 +40,7 @@ const Deployments = (props: Props) => {
       clearTimeout(refTimeout.current)
     }
     refTimeout.current = setTimeout(() => {
-      refetch({
+      void refetch({
         cancelRefetch: true,
         throwOnError: true,
       })
@@ -138,9 +138,9 @@ const Deployments = (props: Props) => {
             <Box as="tbody" style={{display: 'table-header-group'}}>
               {/* Placeholders */}
               {!deployments &&
-                new Array(deploymentTarget?.deployLimit)
-                  .fill(undefined)
-                  .map((_, index) => <DeploymentPlaceholder key={index} />)}
+                Array.from({length: deploymentTarget.deployLimit}, (_, index) => (
+                  <DeploymentPlaceholder key={index} />
+                ))}
               {/* Deployments */}
               {hasDeployments &&
                 deployments?.map((deployment) => (

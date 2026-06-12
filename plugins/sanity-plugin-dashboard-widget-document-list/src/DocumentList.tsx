@@ -1,6 +1,6 @@
 import {DashboardWidgetContainer} from '@sanity/dashboard'
 import {Card, Flex, Spinner, Stack} from '@sanity/ui'
-import {intersection} from 'lodash-es'
+import intersection from 'lodash-es/intersection.js'
 import {type ReactNode, useEffect, useMemo, useState} from 'react'
 import {
   getPublishedId,
@@ -17,7 +17,6 @@ export interface DocumentListConfig {
   title?: string
   types?: string[]
   query?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   queryParams?: Record<string, any>
   order?: string
   limit?: number
@@ -35,7 +34,7 @@ const defaultProps = {
   apiVersion: 'v1',
 }
 
-export function DocumentList(props: DocumentListConfig): ReactNode {
+function DocumentList(props: DocumentListConfig): ReactNode {
   const {
     query,
     limit,
@@ -126,7 +125,7 @@ export function DocumentList(props: DocumentListConfig): ReactNode {
           </Card>
         )}
         {!error && !documents && !loading && <div>Could not locate any documents :/</div>}
-        <Stack space={2}>
+        <Stack gap={2}>
           {documents && documents.map((doc) => <MenuEntry key={doc._id} doc={doc} />)}
         </Stack>
       </Card>

@@ -1,6 +1,6 @@
 import {Flex, Box, Card, Text, Spinner, Stack} from '@sanity/ui'
 
-import {DeployAction, Site} from '../types'
+import {type DeployAction, type Site} from '../types'
 import SiteItem from './SiteItem'
 
 interface Props {
@@ -32,9 +32,9 @@ export default function SiteList(props: Props) {
   }
   return (
     <Box paddingY={2}>
-      <Stack as="ul" space={2}>
-        {sites.map((site, index) => {
-          return <SiteItem onDeploy={onDeploy} site={site} key={`site-${index}`} />
+      <Stack as="ul" gap={2}>
+        {sites.map((site) => {
+          return <SiteItem onDeploy={onDeploy} site={site} key={site.id} />
         })}
       </Stack>
     </Box>

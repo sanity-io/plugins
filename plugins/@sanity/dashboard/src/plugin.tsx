@@ -1,8 +1,8 @@
-import React, {ComponentType, CSSProperties} from 'react'
+import {type ComponentType, type CSSProperties} from 'react'
 import {definePlugin} from 'sanity'
 
 import {Dashboard} from './containers/Dashboard'
-import {DashboardConfig, DashboardWidget, LayoutConfig} from './types'
+import {type DashboardConfig, type DashboardWidget, type LayoutConfig} from './types'
 
 const strokeStyle: CSSProperties = {
   stroke: 'currentColor',
@@ -58,7 +58,7 @@ export const dashboardTool = definePlugin<DashboardPluginConfig>((config = {}) =
 
   return {
     name: 'dashboard',
-    tools: (prev, context) => {
+    tools: (prev) => {
       return [
         ...prev,
         {

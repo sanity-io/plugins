@@ -1,5 +1,4 @@
-import type {SanityClient} from '@sanity/client'
-import {useClient} from 'sanity'
+import {type SanityClient, useClient} from 'sanity'
 
 import {API_VERSION} from './constants'
 

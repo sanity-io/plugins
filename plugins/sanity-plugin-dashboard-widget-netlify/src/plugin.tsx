@@ -1,6 +1,6 @@
-import {DashboardWidget, LayoutConfig} from '@sanity/dashboard'
+import {type DashboardWidget, type LayoutConfig} from '@sanity/dashboard'
 
-import {WidgetOptions} from './types'
+import {type WidgetOptions} from './types'
 import Widget from './widget'
 
 export type NetlifyWidgetConfig = WidgetOptions & {layout?: LayoutConfig}

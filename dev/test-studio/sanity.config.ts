@@ -102,16 +102,23 @@ export default defineConfig([
     plugins: [sfccExample()],
   }),
   createWorkspace({
+    name: 'dashboard-example',
+    title: 'Dashboard',
+    plugins: [
+      structureTool(),
+      dashboardToolExample(),
+      documentListWidgetExample(),
+      netlifyWidgetExample(),
+      vercelWidgetExample(),
+    ],
+  }),
+  createWorkspace({
     name: 'kitchen-sink',
     plugins: [
       structureTool(),
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
-      vercelWidgetExample(),
-      netlifyWidgetExample(),
-      documentListWidgetExample(),
-      dashboardToolExample(),
       orderableDocumentListExample(),
       latexInputExample(),
       debugLiveSyncTagsExample(),

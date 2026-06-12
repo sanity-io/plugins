@@ -1,7 +1,7 @@
 import {Box, Label} from '@sanity/ui'
 import type {ReactNode} from 'react'
 
-import {Sanity} from '../../types'
+import {type Sanity} from '../../types'
 import {useCardColor} from '../../utils/useCardColor'
 
 type Props = {
@@ -43,7 +43,7 @@ const TableCell = (props: Props) => {
       <Box
         as="th"
         colSpan={colSpan}
-        // @ts-ignore
+        // @ts-expect-error -- `colSpan` is not part of @sanity/ui Box props, but is forwarded to the `th` element
         display={display}
         paddingX={3}
         paddingY={2}
@@ -62,7 +62,7 @@ const TableCell = (props: Props) => {
     <Box
       as="td"
       colSpan={colSpan}
-      // @ts-ignore
+      // @ts-expect-error -- `colSpan` is not part of @sanity/ui Box props, but is forwarded to the `td` element
       display={display}
       paddingX={3}
       paddingY={[2, 2, 3]}

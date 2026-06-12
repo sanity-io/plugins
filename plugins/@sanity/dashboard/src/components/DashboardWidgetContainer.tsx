@@ -1,4 +1,5 @@
 import {Card, Box, Heading} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import React, {forwardRef} from 'react'
 import {styled} from 'styled-components'
 
@@ -35,7 +36,7 @@ const Content = styled(Box)`
   height: stretch;
   min-height: 21.5em;
 
-  @media (min-width: ${({theme}) => theme.sanity.media[0]}px) {
+  @media (min-width: ${({theme}) => getTheme_v2(theme).media[0]}px) {
     overflow-y: auto;
     outline: none;
   }
