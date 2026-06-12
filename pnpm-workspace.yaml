@@ -64,8 +64,8 @@ minimumReleaseAgeExclude:
   - turbo@2.9.14
 
 overrides:
-  '@sanity/types': latest
-  sanity: latest
+  '@types/node': 'catalog:'
+  sanity: 'catalog:'
   styled-components: npm:@sanity/styled-components@latest
 
 patchedDependencies:
