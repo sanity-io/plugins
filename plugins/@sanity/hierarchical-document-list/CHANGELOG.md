@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# @sanity/hierarchical-document-list
 
 ## [2.1.3](https://github.com/sanity-io/hierarchical-document-list/compare/v2.1.2...v2.1.3) (2025-12-18)
 

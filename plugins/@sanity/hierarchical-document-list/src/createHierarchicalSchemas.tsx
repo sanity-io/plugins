@@ -78,7 +78,7 @@ function createHierarchicalArrayType(options: SchemaOptions) {
   }
 }
 
-export function createHierarchicalField({name, title, options, ...rest}: TreeFieldSchema): Omit<
+function createHierarchicalField({name, title, options, ...rest}: TreeFieldSchema): Omit<
   ArraySchemaType,
   'type' | 'jsonType' | 'of'
 > & {

@@ -16,7 +16,10 @@ import {documentInternationalizationExample} from '#document-internationalizatio
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
 import {documentsPaneExample} from '#documents-pane'
 import {googleTranslateExample} from '#google-translate'
-import {hierarchicalDocumentListExample} from '#hierarchical-document-list'
+import {
+  hierarchicalDocumentListExample,
+  hierarchicalDocumentListExampleStructure,
+} from '#hierarchical-document-list'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
 import {iframePaneExample} from '#iframe-pane'
 import {
@@ -87,6 +90,11 @@ export default defineConfig([
     name: 'orderable-document-list-example',
     title: 'Orderable Document List',
     plugins: [orderableDocumentListExample(), orderableDocumentListExampleStructure()],
+  }),
+  createWorkspace({
+    name: 'hierarchical-document-list-example',
+    title: 'Hierarchical Document List',
+    plugins: [hierarchicalDocumentListExample(), hierarchicalDocumentListExampleStructure()],
   }),
   createWorkspace({
     name: 'presets-studio',

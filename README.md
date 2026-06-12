@@ -67,6 +67,7 @@ pnpm format
 | [`@sanity/debug-live-sync-tags`](./plugins/@sanity/debug-live-sync-tags)                       | Debug tool for inspecting live sync tags                            |
 | [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin) | Debug tool for preview URL secrets and their status                 |
 | [`@sanity/document-internationalization`](./plugins/@sanity/document-internationalization)     | Document-level translations linked by a shared reference            |
+| [`@sanity/hierarchical-document-list`](./plugins/@sanity/hierarchical-document-list)           | Edit and persist hierarchical document trees                        |
 | [`@sanity/language-filter`](./plugins/@sanity/language-filter)                                 | Filter localized fields by language                                 |
 | [`@sanity/orderable-document-list`](./plugins/@sanity/orderable-document-list)                 | Drag-and-drop document ordering without leaving the editing surface |
 | [`@sanity/presets`](./plugins/@sanity/presets)                                                 | Experimental preset patterns for Sanity Studio                      |
