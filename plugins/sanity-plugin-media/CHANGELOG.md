@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-plugin-media
 
 ## [4.3.1](https://github.com/sanity-io/sanity-plugin-media/compare/v4.3.0...v4.3.1) (2026-06-09)
 
