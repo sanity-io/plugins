@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-google-translate",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Translate your content with Google Translate directly from your Sanity Studio",
   "keywords": [
     "sanity",
