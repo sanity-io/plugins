@@ -1,5 +1,0 @@
----
-'@sanity/vercel-protection-bypass': patch
----
-
-Update `@sanity/pkg-utils` to pick up a DTS generation bug fix.
