@@ -65,6 +65,7 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@sanity/types': latest
+  sanity: latest
   styled-components: npm:@sanity/styled-components@latest
 
 patchedDependencies:
