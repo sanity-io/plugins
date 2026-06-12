@@ -1,5 +1,13 @@
 # sanity-plugin-internationalized-array
 
+## 5.1.5
+
+### Patch Changes
+
+- [#965](https://github.com/sanity-io/plugins/pull/965) [`064dc6b`](https://github.com/sanity-io/plugins/commit/064dc6b75c755dfd35f5be2441ed29cf295acfb8) Thanks [@SamHemingway](https://github.com/SamHemingway)! - Fix deleted documents being recreated as empty drafts when `defaultLanguages` is configured. The auto-add effect now only patches documents that exist in the dataset (have a `_rev`) and skips documents the pane reports as deleted. This also means new documents no longer get a draft created just by opening the form — default languages are added after the user's first edit.
+
+- [#964](https://github.com/sanity-io/plugins/pull/964) [`4226408`](https://github.com/sanity-io/plugins/commit/4226408594d2717cf2503866f5d5216991701d38) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/util` dependency to v6, in line with Sanity Studio v6
+
 ## 5.1.4
 
 ## 5.1.3

@@ -1,5 +1,14 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 6.1.1
+
+### Patch Changes
+
+- [#964](https://github.com/sanity-io/plugins/pull/964) [`4226408`](https://github.com/sanity-io/plugins/commit/4226408594d2717cf2503866f5d5216991701d38) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/util` dependency to v6, in line with Sanity Studio v6
+
+- Updated dependencies [[`4226408`](https://github.com/sanity-io/plugins/commit/4226408594d2717cf2503866f5d5216991701d38)]:
+  - sanity-naive-html-serializer@5.1.1
+
 ## 6.1.0
 
 ### Minor Changes

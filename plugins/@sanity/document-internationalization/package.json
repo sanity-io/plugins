@@ -1,6 +1,6 @@
 {
   "name": "@sanity/document-internationalization",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "description": "Create unique translations of a document based on its language, joined by a shared reference document.",
   "keywords": [
     "sanity",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/mutator": "^5.21.0",
+    "@sanity/mutator": "^6.0.0",
     "@sanity/ui": "^3.2.0",
     "@sanity/util": "catalog:",
     "@sanity/uuid": "^3.0.2",

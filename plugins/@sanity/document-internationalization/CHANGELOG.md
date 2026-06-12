@@ -1,5 +1,11 @@
 # @sanity/document-internationalization
 
+## 6.2.4
+
+### Patch Changes
+
+- [#964](https://github.com/sanity-io/plugins/pull/964) [`4226408`](https://github.com/sanity-io/plugins/commit/4226408594d2717cf2503866f5d5216991701d38) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/mutator` and `@sanity/util` dependencies to v6, in line with Sanity Studio v6
+
 ## 6.2.3
 
 ## 6.2.2
