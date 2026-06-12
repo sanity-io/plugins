@@ -88,3 +88,6 @@ trustPolicyExclude:
 
 dedupePeers: true
 linkWorkspacePackages: deep
+
+allowBuilds:
+  esbuild: false
