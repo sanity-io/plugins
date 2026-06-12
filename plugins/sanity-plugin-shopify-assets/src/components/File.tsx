@@ -1,10 +1,10 @@
-import React, {useCallback, useRef} from 'react'
 import {Text} from '@sanity/ui'
 import prettyBytes from 'pretty-bytes'
 import prettyMilliseconds from 'pretty-ms'
+import React, {useCallback, useRef} from 'react'
 
-import {extractName} from '../utils/helpers'
 import {Asset, ShopifyFile} from '../types'
+import {extractName} from '../utils/helpers'
 import {DurationLine, InfoLine, Root} from './File.styled'
 
 type Props = {

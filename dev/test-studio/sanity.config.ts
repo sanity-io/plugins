@@ -33,6 +33,7 @@ import {richDateInputExample} from '#rich-date-input'
 import {sanityNaiveHtmlSerializerExample} from '#sanity-naive-html-serializer'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
+import {shopifyAssetsExample} from '#shopify-assets'
 import {studioSecretsExample} from '#studio-secrets'
 import {transifexExample} from '#transifex'
 import {translationsTabExample} from '#translations-tab'
@@ -104,6 +105,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      shopifyAssetsExample(),
       orderableDocumentListExample(),
       latexInputExample(),
       debugLiveSyncTagsExample(),

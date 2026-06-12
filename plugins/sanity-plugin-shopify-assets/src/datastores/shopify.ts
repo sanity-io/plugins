@@ -1,7 +1,6 @@
+import axios from 'axios'
 import {BehaviorSubject, Observable, concat, defer} from 'rxjs'
 import {debounceTime, distinctUntilChanged, map, switchMap, withLatestFrom} from 'rxjs/operators'
-
-import axios from 'axios'
 
 type SearchSubject = BehaviorSubject<string>
 type CursorSubject = BehaviorSubject<any>
@@ -30,7 +29,7 @@ const fetchSearch = (props: searchProps): Observable<any> => {
   return defer(() => {
     return axios.get(
       `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?shop=${shop}&query=${encodeURIComponent(
-        query
+        query,
       )}${cursor && `&cursor=${cursor}`}&limit=${resultsPerPage}`,
       {
         withCredentials: true,
@@ -40,7 +39,7 @@ const fetchSearch = (props: searchProps): Observable<any> => {
               Authorization: `Bearer ${token}`,
             }
           : {},
-      }
+      },
     )
   }).pipe(map((result) => result.data))
 }
@@ -61,8 +60,8 @@ const fetchList = (props: listProps): Observable<any> => {
               Authorization: `Bearer ${token}`,
             }
           : {},
-      }
-    )
+      },
+    ),
   ).pipe(map((result) => result.data))
 }
 
@@ -87,7 +86,7 @@ export const search = (props: fetchProps): Observable<any> => {
           }).pipe(distinctUntilChanged())
         }
         return fetchList({projectId, dataset, shop, cursor: c, resultsPerPage, token})
-      })
-    )
+      }),
+    ),
   )
 }

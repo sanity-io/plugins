@@ -1,7 +1,8 @@
 import {definePlugin, type ObjectDefinition} from 'sanity'
-import {shopifyAssetSchema} from './schema/shopifyAssetSchema'
-import {shopifyAssetPreviewSchema} from './schema/shopifyAssetPreviewSchema'
+
 import {shopifyAssetMetadataSchema} from './schema/shopifyAssetMetadataSchema'
+import {shopifyAssetPreviewSchema} from './schema/shopifyAssetPreviewSchema'
+import {shopifyAssetSchema} from './schema/shopifyAssetSchema'
 import type {PluginConfig} from './types'
 
 export * from './types'

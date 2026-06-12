@@ -1,8 +1,8 @@
-import React from 'react'
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {Button, Card, Flex, Grid, Inline, Stack, Text} from '@sanity/ui'
-import {ObjectInputProps, PatchEvent, unset} from 'sanity'
+import React from 'react'
 import {useCallback, useState} from 'react'
+import {ObjectInputProps, PatchEvent, unset} from 'sanity'
 
 import {Asset} from '../types'
 import AssetPreview from './AssetPreview'

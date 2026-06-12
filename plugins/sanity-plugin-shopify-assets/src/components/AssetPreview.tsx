@@ -1,8 +1,8 @@
-import React from 'react'
+import {Box, Flex, Text} from '@sanity/ui'
 import prettyBytes from 'pretty-bytes'
 import prettyMilliseconds from 'pretty-ms'
+import React from 'react'
 import {styled} from 'styled-components'
-import {Box, Flex, Text} from '@sanity/ui'
 
 import {Asset} from '../types'
 import {DurationLine, InfoLine} from './File.styled'

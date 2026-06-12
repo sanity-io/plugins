@@ -69,14 +69,14 @@ defineField({
     "alt": "",
     "width": 3169,
     "height": 3169,
-    "duration": 60 // video only
+    "duration": 60, // video only
   },
   "preview": {
     "url": "https://cdn.shopify.com/s/files/1/0555/4906/7569/files/Green_1.jpg?v=1665668073",
     "width": 3169,
-    "height": 3169
+    "height": 3169,
   },
-  "filename": "Green_1.jpg"
+  "filename": "Green_1.jpg",
 }
 ```
 

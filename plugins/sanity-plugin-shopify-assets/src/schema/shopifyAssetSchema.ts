@@ -1,8 +1,9 @@
-/* eslint-disable */
-import ShopifyAssetInput from '../components/ShopifyAssetInput'
+import {defineField, defineType} from 'sanity'
+
 import AssetDiff from '../components/AssetDiff'
 import AssetPreview from '../components/AssetPreview'
-import {defineField, defineType} from 'sanity'
+/* eslint-disable */
+import ShopifyAssetInput from '../components/ShopifyAssetInput'
 
 interface ObjectConfig {
   shopifyDomain: string

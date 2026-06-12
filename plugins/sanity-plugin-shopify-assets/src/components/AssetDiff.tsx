@@ -1,6 +1,6 @@
+import {Flex, Text, Stack} from '@sanity/ui'
 import React from 'react'
 import {DiffFromTo} from 'sanity'
-import {Flex, Text, Stack} from '@sanity/ui'
 
 import type {Asset} from '../types'
 

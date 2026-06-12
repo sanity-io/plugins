@@ -1,10 +1,10 @@
-import {BehaviorSubject, Subscription} from 'rxjs'
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {Card, Dialog, Flex, Inline, Spinner, Stack, Text, TextInput} from '@sanity/ui'
-import {PatchEvent, set, useProjectId, ObjectInputProps, useDataset, useClient} from 'sanity'
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import PhotoAlbum from 'react-photo-album'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import PhotoAlbum from 'react-photo-album'
+import {BehaviorSubject, Subscription} from 'rxjs'
+import {PatchEvent, set, useProjectId, ObjectInputProps, useDataset, useClient} from 'sanity'
 
 import {search} from '../datastores/shopify'
 import type {Asset, PageInfo, ShopifyAPIResponse, ShopifyFile} from '../types'
@@ -61,7 +61,7 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
         setError(
           `${
             err.response?.data?.message || err.message || 'An error occurred'
-          } - check plugin configuration`
+          } - check plugin configuration`,
         )
       },
     })
@@ -80,7 +80,7 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
       cursorSubject$.next('')
       searchSubject$.next(newQuery)
     },
-    [cursorSubject$, searchSubject$]
+    [cursorSubject$, searchSubject$],
   )
 
   const handleScollerLoadMore = useCallback(() => {
@@ -96,7 +96,7 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
       onChange(PatchEvent.from([set(file)]))
       onClose()
     },
-    [onChange, onClose, schemaType.name, value?._key]
+    [onChange, onClose, schemaType.name, value?._key],
   )
 
   const renderFile = useCallback(
@@ -111,7 +111,7 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
         />
       )
     },
-    [handleSelect]
+    [handleSelect],
   )
 
   const handleWidth = useCallback((width: number) => {
