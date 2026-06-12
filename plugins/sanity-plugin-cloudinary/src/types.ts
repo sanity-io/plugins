@@ -1,4 +1,4 @@
-import {CloudinaryAssetDerived} from './schema/cloudinaryAssetDerived'
+import type {CloudinaryAssetDerived} from './schema/cloudinaryAssetDerived'
 
 export type CloudinaryDerivative = {
   url: string
@@ -62,7 +62,6 @@ export type AssetDocument = {
 }
 
 declare global {
-  // eslint-disable-next-line no-unused-vars
   interface Window {
     cloudinary: {
       openMediaLibrary: (config: any, callbacks: any) => void

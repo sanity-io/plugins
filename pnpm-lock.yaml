@@ -172,7 +172,7 @@ importers:
         version: link:../../plugins/@sanity/vercel-protection-bypass
       '@sanity/vision':
         specifier: 'catalog:'
-        version: 5.30.0(@babel/runtime@7.29.7)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(codemirror@5.65.21)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
+        version: 5.30.0(@babel/runtime@7.29.7)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(codemirror@5.65.21)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -181,7 +181,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       sanity-naive-html-serializer:
         specifier: workspace:*
         version: link:../../plugins/sanity-naive-html-serializer
@@ -194,6 +194,9 @@ importers:
       sanity-plugin-bynder-input:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-bynder-input
+      sanity-plugin-cloudinary:
+        specifier: workspace:*
+        version: link:../../plugins/sanity-plugin-cloudinary
       sanity-plugin-documents-pane:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-documents-pane
@@ -342,7 +345,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/@sanity/code-input:
     dependencies:
@@ -427,7 +430,7 @@ importers:
         version: 19.2.7
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/@sanity/color-input:
     dependencies:
@@ -479,7 +482,7 @@ importers:
         version: 19.2.7
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/@sanity/debug-live-sync-tags:
     dependencies:
@@ -525,7 +528,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/@sanity/debug-preview-url-secret-plugin:
     dependencies:
@@ -553,7 +556,7 @@ importers:
         version: 24.13.2
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
@@ -620,7 +623,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       sanity-plugin-internationalized-array:
         specifier: workspace:^
         version: link:../../sanity-plugin-internationalized-array
@@ -681,7 +684,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
@@ -736,7 +739,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/@sanity/presets:
     dependencies:
@@ -785,7 +788,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
@@ -837,7 +840,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
@@ -852,7 +855,7 @@ importers:
         version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)
       sanity-plugin-internationalized-array:
         specifier: ^4.0.0 || ^5.0.0
-        version: 5.1.0(18c826a020801f3ca57b7bff711f1c02)
+        version: 5.1.0(889ad2721ead0d954780f912201b1847)
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*
@@ -886,7 +889,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
@@ -941,7 +944,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
@@ -984,7 +987,7 @@ importers:
         version: 19.2.7
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
@@ -1045,7 +1048,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-aprimo:
     dependencies:
@@ -1076,7 +1079,7 @@ importers:
         version: 19.2.7
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
@@ -1128,7 +1131,7 @@ importers:
         version: 19.2.7
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-bynder-input:
     dependencies:
@@ -1171,10 +1174,59 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
+
+  plugins/sanity-plugin-cloudinary:
+    dependencies:
+      '@sanity/icons':
+        specifier: ^3.7.4
+        version: 3.7.4(react@19.2.7)
+      '@sanity/studio-secrets':
+        specifier: workspace:*
+        version: link:../@sanity/studio-secrets
+      '@sanity/ui':
+        specifier: 'catalog:'
+        version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)
+      nanoid:
+        specifier: ^4.0.0
+        version: 4.0.2
+      styled-components:
+        specifier: npm:@sanity/styled-components@latest
+        version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
+    devDependencies:
+      '@repo/package.config':
+        specifier: workspace:*
+        version: link:../../packages/@repo/package.config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/@repo/tsconfig
+      '@sanity/pkg-utils':
+        specifier: 'catalog:'
+        version: 10.5.0(@types/babel__core@7.20.5)(@types/node@25.9.2)(@typescript/native-preview@7.0.0-dev.20260418.1)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.19.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0))(typescript@5.9.3)
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.14)
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
+      babel-plugin-styled-components:
+        specifier: 'catalog:'
+        version: 2.3.0(@babel/core@7.29.7)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+      react:
+        specifier: 'catalog:'
+        version: 19.2.7
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.7(react@19.2.7)
+      sanity:
+        specifier: 'catalog:'
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-documents-pane:
     dependencies:
@@ -1235,7 +1287,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-google-translate:
     dependencies:
@@ -1275,7 +1327,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-graph-view:
     dependencies:
@@ -1333,7 +1385,7 @@ importers:
         version: 19.2.7
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-iframe-pane:
     dependencies:
@@ -1388,13 +1440,13 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-internationalized-array:
     dependencies:
       '@sanity/assist':
         specifier: ^6.0.2
-        version: 6.1.0(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.31.0-next.12(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
+        version: 6.1.0(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.31.0-next.12(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
       '@sanity/icons':
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
@@ -1452,7 +1504,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
@@ -1489,7 +1541,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-markdown:
     dependencies:
@@ -1535,7 +1587,7 @@ importers:
         version: 19.2.7
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-transifex:
     dependencies:
@@ -1575,7 +1627,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-utils:
     dependencies:
@@ -1630,7 +1682,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-workflow:
     dependencies:
@@ -1685,7 +1737,7 @@ importers:
         version: 19.2.7
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-plugin-workspace-home:
     dependencies:
@@ -1731,7 +1783,7 @@ importers:
         version: 19.2.7
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   plugins/sanity-translations-tab:
     dependencies:
@@ -1786,7 +1838,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: 'catalog:'
-        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+        version: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
 
   scripts/trigger-triage:
     devDependencies:
@@ -7816,6 +7868,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@4.0.2:
+    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
+    engines: {node: ^14 || ^16 || >=18}
+    hasBin: true
+
   nanoid@5.1.11:
     resolution: {integrity: sha512-v+KEsUv2ps74PaSKv0gHTxTCgMXOIfBEbaqa6w6ISIGC7ZsvHN4N9oJ8d4cmf0n5oTzQz2SLmThbQWhjd/8eKg==}
     engines: {node: ^18 || >=20}
@@ -8235,6 +8292,10 @@ packages:
   pretty-ms@9.3.0:
     resolution: {integrity: sha512-gjVS5hOP+M3wMm5nmNOucbIrqudzs9v/57bWRHQWLYklXqoXKrVfYW2W9+glfGsqtPgpiz5WwyEEB+ksXIx3gQ==}
     engines: {node: '>=18'}
+
+  prismjs@1.27.0:
+    resolution: {integrity: sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA==}
+    engines: {node: '>=6'}
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -12861,7 +12922,7 @@ snapshots:
 
   '@sanity/asset-utils@2.3.0': {}
 
-  '@sanity/assist@6.1.0(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.31.0-next.12(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
+  '@sanity/assist@6.1.0(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.31.0-next.12(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
     dependencies:
       '@portabletext/types': 4.0.2
       '@sanity/client': 7.22.1
@@ -12876,7 +12937,7 @@ snapshots:
       react-fast-compare: 3.2.2
       rxjs: 7.8.2
       rxjs-exhaustmap-with-trailing: 2.1.1(rxjs@7.8.2)
-      sanity: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+      sanity: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
@@ -13537,7 +13598,7 @@ snapshots:
 
   '@sanity/json-match@1.0.5': {}
 
-  '@sanity/language-filter@5.0.3(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
+  '@sanity/language-filter@5.0.3(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
     dependencies:
       '@sanity/icons': 3.7.4(react@19.2.7)
       '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)
@@ -13545,7 +13606,7 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
       react-rx: 4.2.2(react@19.2.7)(rxjs@7.8.2)
       rxjs: 7.8.2
-      sanity: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+      sanity: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - react-is
@@ -13788,7 +13849,9 @@ snapshots:
       '@sanity/client': 7.22.1
       '@sanity/uuid': 3.0.2
 
-  '@sanity/prism-groq@1.1.2': {}
+  '@sanity/prism-groq@1.1.2(prismjs@1.27.0)':
+    optionalDependencies:
+      prismjs: 1.27.0
 
   '@sanity/runtime-cli@14.13.3(@types/node@24.13.2)(lightningcss@1.32.0)(terser@5.46.1)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)':
     dependencies:
@@ -14038,7 +14101,7 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/vision@5.30.0(@babel/runtime@7.29.7)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(codemirror@5.65.21)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
+  '@sanity/vision@5.30.0(@babel/runtime@7.29.7)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(codemirror@5.65.21)(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))':
     dependencies:
       '@codemirror/autocomplete': 6.20.3
       '@codemirror/commands': 6.10.3
@@ -14064,7 +14127,7 @@ snapshots:
       react: 19.2.7
       react-rx: 4.2.2(react@19.2.7)(rxjs@7.8.2)
       rxjs: 7.8.2
-      sanity: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+      sanity: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
       styled-components: '@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7)'
     transitivePeerDependencies:
       - '@babel/runtime'
@@ -16964,6 +17027,8 @@ snapshots:
 
   nanoid@3.3.12: {}
 
+  nanoid@4.0.2: {}
+
   nanoid@5.1.11: {}
 
   natural-compare@1.4.0: {}
@@ -17498,6 +17563,9 @@ snapshots:
     dependencies:
       parse-ms: 4.0.0
 
+  prismjs@1.27.0:
+    optional: true
+
   process-nextick-args@2.0.1: {}
 
   process@0.11.10: {}
@@ -17990,25 +18058,25 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sanity-plugin-internationalized-array@5.1.0(18c826a020801f3ca57b7bff711f1c02):
+  sanity-plugin-internationalized-array@5.1.0(889ad2721ead0d954780f912201b1847):
     dependencies:
       '@sanity/icons': 3.7.4(react@19.2.7)
-      '@sanity/language-filter': 5.0.3(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
+      '@sanity/language-filter': 5.0.3(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
       '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)
       '@sanity/util': 5.21.0(@types/react@19.2.14)
       lodash-es: 4.18.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      sanity: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
+      sanity: 5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3)
     optionalDependencies:
-      '@sanity/assist': 6.1.0(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.31.0-next.12(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
+      '@sanity/assist': 6.1.0(@emotion/is-prop-valid@1.4.0)(@sanity/mutator@5.31.0-next.12(@types/react@19.2.14))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-is@19.2.7)(react@19.2.7)(sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3))
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - '@types/react'
       - react-is
       - styled-components
 
-  sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
+  sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.4.1
@@ -18052,7 +18120,7 @@ snapshots:
       '@sanity/mutator': 5.21.0(@types/react@19.2.14)
       '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.22.1)(@sanity/types@5.21.0(@types/react@19.2.14))
       '@sanity/preview-url-secret': 4.0.5(@sanity/client@7.22.1)
-      '@sanity/prism-groq': 1.1.2
+      '@sanity/prism-groq': 1.1.2(prismjs@1.27.0)
       '@sanity/schema': 5.21.0(@types/react@19.2.14)
       '@sanity/sdk': 2.8.0(@types/react@19.2.14)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       '@sanity/telemetry': 0.9.0(react@19.2.7)
@@ -18144,7 +18212,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
+  sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@24.13.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@types/node@24.13.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.4.1
@@ -18188,7 +18256,7 @@ snapshots:
       '@sanity/mutator': 5.21.0(@types/react@19.2.14)
       '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.22.1)(@sanity/types@5.21.0(@types/react@19.2.14))
       '@sanity/preview-url-secret': 4.0.5(@sanity/client@7.22.1)
-      '@sanity/prism-groq': 1.1.2
+      '@sanity/prism-groq': 1.1.2(prismjs@1.27.0)
       '@sanity/schema': 5.21.0(@types/react@19.2.14)
       '@sanity/sdk': 2.8.0(@types/react@19.2.14)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       '@sanity/telemetry': 0.9.0(react@19.2.7)
@@ -18280,7 +18348,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
+  sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@sanity/styled-components@6.1.24(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.4.1
@@ -18324,7 +18392,7 @@ snapshots:
       '@sanity/mutator': 5.21.0(@types/react@19.2.14)
       '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.22.1)(@sanity/types@5.21.0(@types/react@19.2.14))
       '@sanity/preview-url-secret': 4.0.5(@sanity/client@7.22.1)
-      '@sanity/prism-groq': 1.1.2
+      '@sanity/prism-groq': 1.1.2(prismjs@1.27.0)
       '@sanity/schema': 5.21.0(@types/react@19.2.14)
       '@sanity/sdk': 2.8.0(@types/react@19.2.14)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       '@sanity/telemetry': 0.9.0(react@19.2.7)
@@ -18416,7 +18484,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
+  sanity@5.21.0(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@1.3.4(@noble/hashes@2.2.0)(@types/node@25.9.2)(babel-plugin-react-compiler@1.0.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))(@types/node@25.9.2)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(babel-plugin-react-compiler@1.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(prismjs@1.27.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(terser@5.46.1)(ts-toolbelt@9.6.0)(typescript@5.9.3):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.4.1
@@ -18460,7 +18528,7 @@ snapshots:
       '@sanity/mutator': 5.21.0(@types/react@19.2.14)
       '@sanity/presentation-comlink': 2.0.1(@sanity/client@7.22.1)(@sanity/types@5.21.0(@types/react@19.2.14))
       '@sanity/preview-url-secret': 4.0.5(@sanity/client@7.22.1)
-      '@sanity/prism-groq': 1.1.2
+      '@sanity/prism-groq': 1.1.2(prismjs@1.27.0)
       '@sanity/schema': 5.21.0(@types/react@19.2.14)
       '@sanity/sdk': 2.8.0(@types/react@19.2.14)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
       '@sanity/telemetry': 0.9.0(react@19.2.7)

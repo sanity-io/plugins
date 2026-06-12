@@ -1,16 +1,12 @@
-import {cloudinaryAssetSchema} from './schema/cloudinaryAsset'
-import {cloudinaryAssetDerivedSchema} from './schema/cloudinaryAssetDerived'
-import {
-  definePlugin,
-  AssetSource,
-  ArrayOfObjectsInputProps,
-  isArrayOfObjectsSchemaType,
-} from 'sanity'
-import {CloudinaryIcon} from './components/asset-source/Icon'
+import {type AssetSource, definePlugin, isArrayOfObjectsInputProps} from 'sanity'
+
 import {CloudinaryAssetSource} from './components/asset-source/CloudinaryAssetSource'
+import {CloudinaryIcon} from './components/asset-source/Icon'
+import {AssetListFunctions} from './components/AssetListFunctions'
+import {cloudinaryAssetSchema} from './schema/cloudinaryAsset'
 import {cloudinaryAssetContext} from './schema/cloudinaryAssetContext'
 import {cloudinaryAssetContextCustom} from './schema/cloudinaryAssetContextCustom'
-import {AssetListFunctions} from './components/AssetListFunctions'
+import {cloudinaryAssetDerivedSchema} from './schema/cloudinaryAssetDerived'
 
 export {type CloudinaryAssetContext} from './schema/cloudinaryAssetContext'
 export {type CloudinaryAssetDerived} from './schema/cloudinaryAssetDerived'
@@ -30,14 +26,12 @@ export const cloudinarySchemaPlugin = definePlugin({
   form: {
     components: {
       input: (props) => {
-        const {schemaType} = props
-        if (isArrayOfObjectsSchemaType(schemaType)) {
-          const arrayProps = props as ArrayOfObjectsInputProps
-          const cloudinaryType = arrayProps.schemaType.of.find(
-            (t: {name: string}) => t.name === cloudinaryAssetSchema.name
+        if (isArrayOfObjectsInputProps(props)) {
+          const cloudinaryType = props.schemaType.of.find(
+            (t: {name: string}) => t.name === cloudinaryAssetSchema.name,
           )
           if (cloudinaryType) {
-            return arrayProps.renderDefault({...arrayProps, arrayFunctions: AssetListFunctions})
+            return props.renderDefault({...props, arrayFunctions: AssetListFunctions})
           }
         }
         return props.renderDefault(props)

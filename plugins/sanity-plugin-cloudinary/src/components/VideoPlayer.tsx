@@ -1,10 +1,9 @@
-import React, {CSSProperties} from 'react'
+import type {CSSProperties} from 'react'
 
 type PlayerKind = 'player' | 'diff'
 
 export type VideoPlayerProps = {
   src: string
-  // eslint-disable-next-line react/no-unused-prop-types
   kind: PlayerKind
 }
 
@@ -19,6 +18,7 @@ export default function VideoPlayer(props: VideoPlayerProps) {
   return (
     <video controls style={style}>
       <source src={src} type="video/mp4" />
+      <track kind="captions" />
     </video>
   )
 }

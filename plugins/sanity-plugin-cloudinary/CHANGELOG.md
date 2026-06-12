@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-plugin-cloudinary
 
 ## [1.4.1](https://github.com/sanity-io/sanity-plugin-cloudinary/compare/v1.4.0...v1.4.1) (2025-12-18)
 

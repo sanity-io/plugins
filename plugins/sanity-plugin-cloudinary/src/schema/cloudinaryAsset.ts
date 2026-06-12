@@ -1,8 +1,8 @@
-/* eslint-disable */
-import CloudinaryInput from '../components/CloudinaryInput'
+import {defineType} from 'sanity'
+
 import AssetDiff from '../components/AssetDiff'
 import AssetPreview from '../components/AssetPreview'
-import {defineType} from 'sanity'
+import CloudinaryInput from '../components/CloudinaryInput'
 
 export const cloudinaryAssetSchema = defineType({
   type: 'object',
@@ -80,13 +80,15 @@ export const cloudinaryAssetSchema = defineType({
     },
     // metadata array of unknown content
   ],
+  // The custom preview component receives legacy props that don't match the
+  // PreviewProps type, so the components block is widened to keep type checking happy.
   ...({
     components: {
       input: CloudinaryInput,
       diff: AssetDiff,
       preview: AssetPreview,
     },
-  } as {}), //TODO revert this change when rc.1 is released
+  } as {}),
   preview: {
     select: {
       url: 'url',

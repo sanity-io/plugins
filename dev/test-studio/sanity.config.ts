@@ -9,6 +9,7 @@ import {structureTool} from 'sanity/structure'
 import {aprimoExample} from '#aprimo'
 import {assistExample} from '#assist'
 import {bynderExample} from '#bynder'
+import {cloudinaryExample} from '#cloudinary'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
@@ -104,6 +105,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      cloudinaryExample(),
       orderableDocumentListExample(),
       latexInputExample(),
       debugLiveSyncTagsExample(),

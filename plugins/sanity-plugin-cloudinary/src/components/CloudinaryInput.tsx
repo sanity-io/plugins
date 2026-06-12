@@ -1,20 +1,20 @@
-import React, {useCallback, useState} from 'react'
-import WidgetInput from './WidgetInput'
-import {nanoid} from 'nanoid'
-import {ObjectInputProps, PatchEvent, set} from 'sanity'
-import {CloudinaryAsset, CloudinaryAssetResponse} from '../types'
 import {useSecrets} from '@sanity/studio-secrets'
-import {InsertHandlerParams} from '../types'
+import {nanoid} from 'nanoid'
+import {useCallback, useState} from 'react'
+import {type ObjectInputProps, PatchEvent, set} from 'sanity'
+
+import type {CloudinaryAsset, CloudinaryAssetResponse, InsertHandlerParams} from '../types'
 import {openMediaSelector} from '../utils'
-import SecretsConfigView, {namespace, Secrets} from './SecretsConfigView'
+import SecretsConfigView, {namespace, type Secrets} from './SecretsConfigView'
+import WidgetInput from './WidgetInput'
 
 const CloudinaryInput = (props: ObjectInputProps) => {
   const [showSettings, setShowSettings] = useState(false)
   const {secrets} = useSecrets<Secrets>(namespace)
   const {onChange, schemaType: type} = props
   const value = (props.value as CloudinaryAsset) || undefined
+  const valueKey = value?._key
 
-  /* eslint-disable camelcase */
   const handleSelect = useCallback(
     (payload: InsertHandlerParams) => {
       const [asset] = payload.assets
@@ -27,7 +27,7 @@ const CloudinaryInput = (props: ObjectInputProps) => {
 
       // Update the asset with the new custom values
       const assetWithoutNulls = Object.fromEntries(
-        Object.entries(asset).filter(([_, assetValue]) => assetValue !== null)
+        Object.entries(asset).filter(([_, assetValue]) => assetValue !== null),
       ) as CloudinaryAssetResponse
 
       // Ensure we preserve the required fields from the original asset
@@ -54,7 +54,7 @@ const CloudinaryInput = (props: ObjectInputProps) => {
         const objectWithRenamedKeys = Object.fromEntries(
           Object.entries(asset.context.custom).map(([contextKey, contextValue]) => {
             return [contextKey.replace(/[^a-zA-Z0-9_]|-/g, '_'), contextValue]
-          })
+          }),
         )
 
         // Update the asset with the new custom values
@@ -70,8 +70,10 @@ const CloudinaryInput = (props: ObjectInputProps) => {
       // Handle derived field - only include if not null
       if (asset.derived) {
         const derivedWithType = asset.derived.map((derivedItem) => ({
-          ...derivedItem,
           _type: 'derived',
+          url: derivedItem.url,
+          secure_url: derivedItem.secure_url,
+          raw_transformation: derivedItem.raw_transformation,
         }))
 
         updatedAsset = {
@@ -87,15 +89,15 @@ const CloudinaryInput = (props: ObjectInputProps) => {
               {
                 _type: type.name,
                 _version: 1,
-                ...(value?._key ? {_key: value._key} : {_key: nanoid()}),
+                _key: valueKey || nanoid(),
               },
-              updatedAsset
-            )
+              updatedAsset,
+            ),
           ),
-        ])
+        ]),
       )
     },
-    [onChange, type, value?._key]
+    [onChange, type, valueKey],
   )
 
   const action = secrets
@@ -105,7 +107,7 @@ const CloudinaryInput = (props: ObjectInputProps) => {
           secrets.apiKey,
           false, // single selection
           handleSelect,
-          value
+          value,
         )
     : () => setShowSettings(true)
 
@@ -115,7 +117,6 @@ const CloudinaryInput = (props: ObjectInputProps) => {
       <WidgetInput onSetup={() => setShowSettings(true)} openMediaSelector={action} {...props} />
     </>
   )
-  /* eslint-enable camelcase */
 }
 
 export default CloudinaryInput

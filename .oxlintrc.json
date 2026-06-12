@@ -131,6 +131,12 @@
       }
     },
     {
+      "files": ["plugins/sanity-plugin-cloudinary/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unsafe-type-assertion": "off"
+      }
+    },
+    {
       "files": ["plugins/sanity-naive-html-serializer/test/**/*.ts"],
       "rules": {
         "no-unsafe-type-assertion": "off",

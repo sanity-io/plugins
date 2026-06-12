@@ -1,10 +1,11 @@
-import React, {useCallback} from 'react'
-import {ObjectInputProps, PatchEvent, unset} from 'sanity'
-import {Button, Flex, Grid, Stack} from '@sanity/ui'
 import {PlugIcon} from '@sanity/icons'
+import {Button, Flex, Grid, Stack} from '@sanity/ui'
+import {useCallback} from 'react'
+import {type ObjectInputProps, PatchEvent, unset} from 'sanity'
 import {styled} from 'styled-components'
+
+import type {CloudinaryAsset} from '../types'
 import AssetPreview from './AssetPreview'
-import {CloudinaryAsset} from '../types'
 
 const SetupButtonContainer = styled.div`
   position: relative;
@@ -32,7 +33,7 @@ const WidgetInput = (props: WidgetInputProps) => {
             mode="bleed"
             title="Configure"
             onClick={props.onSetup}
-            tabIndex={1}
+            tabIndex={0}
           />
         </Flex>
       </SetupButtonContainer>

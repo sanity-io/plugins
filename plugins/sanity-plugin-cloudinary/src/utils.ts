@@ -1,5 +1,4 @@
-/* eslint-disable camelcase,@typescript-eslint/explicit-module-boundary-types */
-import {
+import type {
   CloudinaryAsset,
   CloudinaryAssetResponse,
   CloudinaryMediaLibrary,
@@ -9,8 +8,8 @@ import {
 const widgetSrc = 'https://media-library.cloudinary.com/global/all.js'
 
 export function assetUrl(asset: Partial<Pick<CloudinaryAsset, 'url' | 'secure_url' | 'derived'>>) {
-  if (asset.derived && asset.derived.length > 0) {
-    const [derived] = asset.derived
+  const [derived] = asset.derived ?? []
+  if (derived) {
     if (derived.secure_url) {
       return derived.secure_url
     }
@@ -27,7 +26,7 @@ export const openMediaSelector = (
   apiKey: string,
   multiple: boolean,
   insertHandler: (params: InsertHandlerParams) => void,
-  selectedAsset?: CloudinaryAsset
+  selectedAsset?: CloudinaryAsset,
 ) => {
   loadJS(widgetSrc, () => {
     const options: Record<string, any> = {
@@ -38,7 +37,7 @@ export const openMediaSelector = (
     }
 
     if (selectedAsset) {
-      options.asset = {
+      options['asset'] = {
         public_id: selectedAsset.public_id,
         type: selectedAsset.type,
         resource_type: selectedAsset.resource_type,
@@ -75,19 +74,16 @@ export const createMediaLibrary = ({
   })
 }
 
-export function loadJS(url: string, callback: () => void) {
+function loadJS(url: string, callback: () => void) {
   const existingScript = document.getElementById('damWidget')
   if (!existingScript) {
     const script = document.createElement('script')
     script.src = url
     script.id = 'damWidget'
     document.body.appendChild(script)
-    script.onload = () => {
-      if (callback) {
-        return callback()
-      }
-      return true
-    }
+    script.addEventListener('load', () => {
+      callback()
+    })
   }
   if (existingScript && callback) {
     return callback()
@@ -108,7 +104,7 @@ export function decodeSourceId(sourceId: string): CloudinaryAssetResponse | unde
   let sourceIdDecoded: any
   try {
     sourceIdDecoded = JSON.parse(atob(sourceId))
-  } catch (err) {
+  } catch {
     // Do nothing
   }
   return sourceIdDecoded

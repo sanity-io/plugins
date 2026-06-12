@@ -1,9 +1,9 @@
-import React from 'react'
-import VideoPlayer from './VideoPlayer'
-import {assetUrl} from '../utils'
-import {Flex, Text} from '@sanity/ui'
-import {CloudinaryAsset} from '../types'
 import {DocumentIcon} from '@sanity/icons'
+import {Flex, Text} from '@sanity/ui'
+
+import type {CloudinaryAsset} from '../types'
+import {assetUrl} from '../utils'
+import VideoPlayer from './VideoPlayer'
 
 interface ComponentProps {
   layout?: 'default' | 'block'
@@ -49,7 +49,7 @@ const AssetPreview = ({value, layout}: ComponentProps) => {
               value.format === 'pdf'
                 ? url?.replace(
                     'image/upload',
-                    'image/upload/f_jpg,pg_1,l_text:Verdana_75_letter_spacing_14:PDF'
+                    'image/upload/f_jpg,pg_1,l_text:Verdana_75_letter_spacing_14:PDF',
                   )
                 : url
             }

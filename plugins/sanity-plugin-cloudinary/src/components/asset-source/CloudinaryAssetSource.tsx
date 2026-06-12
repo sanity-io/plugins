@@ -1,15 +1,15 @@
-/* eslint-disable camelcase */
-import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {Box, Button, Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
-import {CloudinaryMediaLibrary, InsertHandlerParams} from '../../types'
-import {createMediaLibrary, decodeSourceId, encodeFilename, encodeSourceId} from '../../utils'
-import {styled} from 'styled-components'
-import {useSecrets} from '@sanity/studio-secrets'
-import SecretsConfigView, {namespace, Secrets} from '../SecretsConfigView'
-import {AssetSourceComponentProps, ImageAsset} from 'sanity'
 import {PlugIcon} from '@sanity/icons'
+import {useSecrets} from '@sanity/studio-secrets'
+import {Box, Button, Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
+import {useCallback, useEffect, useRef, useState} from 'react'
+import type {AssetSourceComponentProps, ImageAsset} from 'sanity'
+import {styled} from 'styled-components'
 
-export const Widget = styled.div`
+import type {CloudinaryMediaLibrary, InsertHandlerParams} from '../../types'
+import {createMediaLibrary, decodeSourceId, encodeFilename, encodeSourceId} from '../../utils'
+import SecretsConfigView, {namespace, type Secrets} from '../SecretsConfigView'
+
+const Widget = styled.div`
   height: 70vh;
 `
 
@@ -17,7 +17,7 @@ export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
   const {onClose, dialogHeaderTitle} = props
 
   const [loadingMessage, setLoadingMessage] = useState<string | undefined>(
-    'Loading Cloudinary Media Libary'
+    'Loading Cloudinary Media Libary',
   )
   const library = useRef<CloudinaryMediaLibrary | undefined>(undefined)
   const contentRef = useRef<HTMLDivElement | null>(null)
@@ -57,7 +57,6 @@ export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
         const selectedAssets = propsRef.current.selectedAssets
         const firstSelectedAsset = selectedAssets ? selectedAssets[0] : null
 
-        // eslint-disable-next-line no-undef
         const iframe: ChildNode | null | undefined =
           contentRef.current && contentRef.current.firstChild
         if (iframe && iframe instanceof HTMLIFrameElement) {
@@ -108,7 +107,7 @@ export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
                 },
               } as ImageAsset,
             }
-          })
+          }),
         )
       },
     })
@@ -132,13 +131,13 @@ export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
             mode="bleed"
             title="Configure"
             onClick={() => setShowSettings(true)}
-            tabIndex={1}
+            tabIndex={0}
             text={hasConfig ? undefined : 'Configure Cloudinary plugin'}
           />
         </Flex>
 
         {hasConfig && loadingMessage && (
-          <Stack space={3}>
+          <Stack gap={3}>
             <Flex align="center" justify="center">
               <Spinner muted />
             </Flex>

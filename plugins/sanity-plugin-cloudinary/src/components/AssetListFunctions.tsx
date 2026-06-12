@@ -1,21 +1,21 @@
-import React, {useCallback} from 'react'
+import {PlugIcon} from '@sanity/icons'
+import {useSecrets} from '@sanity/studio-secrets'
 import {Box, Button, Flex} from '@sanity/ui'
+import {useCallback, useState} from 'react'
 import {
-  ArrayInputFunctionsProps,
+  type ArrayInputFunctionsProps,
   ArrayOfObjectsFunctions,
-  ArraySchemaType,
+  type ArraySchemaType,
   insert,
-  ObjectSchemaType,
+  type ObjectSchemaType,
   PatchEvent,
   setIfMissing,
 } from 'sanity'
 
-import {useSecrets} from '@sanity/studio-secrets'
-import SecretsConfigView, {namespace} from './SecretsConfigView'
 import {cloudinaryAssetSchema} from '../schema/cloudinaryAsset'
+import type {InsertHandlerParams} from '../types'
 import {openMediaSelector} from '../utils'
-import {InsertHandlerParams} from '../types'
-import {PlugIcon} from '@sanity/icons'
+import SecretsConfigView, {namespace} from './SecretsConfigView'
 
 interface ApiConfig {
   cloudName: string
@@ -23,25 +23,25 @@ interface ApiConfig {
 }
 
 export const AssetListFunctions = (
-  props: ArrayInputFunctionsProps<{_key: string}, ArraySchemaType>
+  props: ArrayInputFunctionsProps<{_key: string}, ArraySchemaType>,
 ) => {
   const {onValueCreate, onChange} = props
 
   const {secrets, loading} = useSecrets<ApiConfig>(namespace)
-  const [showSettings, setShowSettings] = React.useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   const show = useCallback(() => setShowSettings(true), [setShowSettings])
   const hide = useCallback(() => setShowSettings(false), [setShowSettings])
 
   const cloudinaryType = props.schemaType.of.find(
-    (t: {name: string}) => t.name === cloudinaryAssetSchema.name
+    (t: {name: string}) => t.name === cloudinaryAssetSchema.name,
   ) as ObjectSchemaType | undefined
 
   if (!cloudinaryType) {
     throw new Error(`AssetListFunctions can only be used in array.of ${
       cloudinaryAssetSchema.name
     }, but it was array.of
-    ${props.schemaType.of.map((t) => t.name)}`)
+    ${props.schemaType.of.map((t) => t.name).join(', ')}`)
   }
 
   const handleSelect = useCallback(
@@ -54,12 +54,12 @@ export const AssetListFunctions = (
             // Schema version. In case we ever change our schema.
             _version: 1,
           },
-          onValueCreate(cloudinaryType as any) // onValueCreate is mistyped
-        )
+          onValueCreate(cloudinaryType as any), // onValueCreate is mistyped
+        ),
       )
       onChange(PatchEvent.from([setIfMissing([]), insert(items, 'after', [-1])]))
     },
-    [onValueCreate, onChange, cloudinaryType]
+    [onValueCreate, onChange, cloudinaryType],
   )
 
   const handleOpenSelector = useCallback(
@@ -69,9 +69,9 @@ export const AssetListFunctions = (
         secrets.cloudName,
         secrets.apiKey,
         true, // multi-selection
-        handleSelect
+        handleSelect,
       ),
-    [secrets, handleSelect]
+    [secrets, handleSelect],
   )
   return (
     <Flex gap={2} flex={1}>
