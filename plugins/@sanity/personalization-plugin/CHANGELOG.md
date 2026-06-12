@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# @sanity/personalization-plugin
 
 ## [2.5.0](https://github.com/sanity-io/sanity-plugin-personalization/compare/v2.4.3...v2.5.0) (2026-01-19)
 

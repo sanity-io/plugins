@@ -10,7 +10,6 @@ This plugin allows users to add a/b/n testing experiments to individual fields a
 >
 > 🎬 Watch the [video walkthrough](https://www.loom.com/share/3e1314575b23434eb0aa35ccad9b9592) to see how the plugin works in a Next.js project.
 
-
 ![image](./overview.gif)
 
 For this plugin you need to define the experiments you are running and the variations those experiments have. Each experiment needs to have an id, a label, and an array of variants that have an id and a label. You can either pass an array of experiments in the plugin config, or you can use and async function to retrieve the experiments and variants from an external service like growthbook, Amplitude, LaunchDarkly... You could even store the experiments in your sanity dataset.
@@ -66,17 +65,19 @@ npm install @sanity/personalization-plugin
 
 This plugin supports two types of A/B testing:
 
-| Type | Use Case | Example |
-|------|----------|---------|
-| **Field-Level** | Test different content values on the same page | Different headlines, CTAs, or descriptions |
-| **Page-Level** | Test entirely different page layouts | Different homepage designs or landing pages |
+| Type            | Use Case                                       | Example                                     |
+| --------------- | ---------------------------------------------- | ------------------------------------------- |
+| **Field-Level** | Test different content values on the same page | Different headlines, CTAs, or descriptions  |
+| **Page-Level**  | Test entirely different page layouts           | Different homepage designs or landing pages |
 
 **Choose Field-Level when:**
+
 - You want to test a single element (headline, button text, image)
 - The page structure stays the same
 - You need fine-grained control over individual content pieces
 
 **Choose Page-Level when:**
+
 - You want to test completely different page designs
 - Multiple elements change together as part of a cohesive variant
 - You're running landing page optimization tests
@@ -157,6 +158,7 @@ fields: [
 ```
 
 When editors open a document with this field, they can:
+
 1. Enter a **default value** (shown to users not in an experiment)
 2. Click the <img src="./beaker.svg" alt="beaker icon" width="28"> **beaker icon** ("Add experiment") to assign an experiment
 3. Enter **variant-specific values** for each variant in the experiment
@@ -181,17 +183,17 @@ experiments: [
     id: 'homepage-headline',
     label: 'Homepage Headline Test',
     variants: [
-      { id: 'control', label: 'Control' },
-      { id: 'emotional', label: 'Emotional Appeal' },
+      {id: 'control', label: 'Control'},
+      {id: 'emotional', label: 'Emotional Appeal'},
     ],
   },
   {
     id: 'signup-cta',
     label: 'Signup CTA Test',
     variants: [
-      { id: 'control', label: 'Control' },
-      { id: 'urgent', label: 'Urgency Messaging' },
-      { id: 'benefit', label: 'Benefit Focused' },
+      {id: 'control', label: 'Control'},
+      {id: 'urgent', label: 'Urgency Messaging'},
+      {id: 'benefit', label: 'Benefit Focused'},
     ],
   },
 ]
@@ -289,8 +291,8 @@ const homepageExperiment = {
   id: 'homepage-redesign',
   label: 'Homepage Redesign Test',
   variants: [
-    { id: 'control', label: 'Control (Current Design)' },
-    { id: 'variant-a', label: 'Variant A (New Design)' },
+    {id: 'control', label: 'Control (Current Design)'},
+    {id: 'variant-a', label: 'Variant A (New Design)'},
   ],
 }
 
@@ -390,24 +392,24 @@ import type {NextRequest} from 'next/server'
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname
-  
+
   // Get user's assigned variant from cookie
   const variantId = request.cookies.get('ab-variant')?.value || 'control'
-  
+
   // Fetch the experiment configuration
   const data = await client.fetch(ROUTE_EXPERIMENT_QUERY, {
     path: pathname,
     experimentId: 'homepage-redesign',
     variantId: variantId,
   })
-  
+
   if (data?.page) {
     // Rewrite to the selected page (same URL, pass pageId)
     const url = request.nextUrl.clone()
     url.searchParams.set('pageId', data.page._id)
     return NextResponse.rewrite(url)
   }
-  
+
   return NextResponse.next()
 }
 ```
@@ -415,13 +417,13 @@ export async function proxy(request: NextRequest) {
 **Option B: Slug-based path rewrite** — Rewrites the URL to the variant page's slug. Use when your app routes by slug (e.g. `app/[[...slug]]/page.tsx`) and you want the URL to reflect the variant.
 
 ```ts
-  if (data?.page?.slug?.current) {
-    // Rewrite to the variant's slug path
-    const url = request.nextUrl.clone()
-    url.pathname = `/${data.page.slug.current}`
-    return NextResponse.rewrite(url)
-  }
-  // If slug is missing, the request continues without rewriting
+if (data?.page?.slug?.current) {
+  // Rewrite to the variant's slug path
+  const url = request.nextUrl.clone()
+  url.pathname = `/${data.page.slug.current}`
+  return NextResponse.rewrite(url)
+}
+// If slug is missing, the request continues without rewriting
 ```
 
 ## Validation of individual array items
@@ -476,6 +478,7 @@ The custom input contains buttons which will add new array items with the experi
 ```
 
 In this example:
+
 - `default` is shown to users not in an experiment
 - `control` variant shows "Welcome to Our Platform"
 - `emotional` variant shows "Transform Your Life Today"
@@ -505,6 +508,7 @@ const posts = await client.fetch(query, {
 ```
 
 This pattern ensures:
+
 1. Users in the experiment see their assigned variant's content
 2. Users not in an experiment see the default value
 3. The query works even if no variants are defined (falls back to default)
@@ -522,8 +526,8 @@ For experiments to work, your frontend must assign users to variants and pass th
 const experiment = {
   id: 'homepage-headline',
   variants: [
-    { id: 'control', label: 'Control' },      // ID: 'control'
-    { id: 'variant-a', label: 'Variant A' },  // ID: 'variant-a'
+    {id: 'control', label: 'Control'}, // ID: 'control'
+    {id: 'variant-a', label: 'Variant A'}, // ID: 'variant-a'
   ],
 }
 ```
@@ -543,10 +547,10 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
 export function proxy(request: NextRequest) {
   const response = NextResponse.next()
-  
+
   // Check if user already has a variant
   let variant = request.cookies.get('ab-variant')?.value
-  
+
   if (!variant) {
     // Use logged-in user ID if available, else persisted or new anonymous ID
     const userId =
@@ -557,27 +561,27 @@ export function proxy(request: NextRequest) {
     // Deterministic variant from hash (same userId → same variant)
     variant = MurmurHash3(userId).result() % 2 ? 'control' : 'variant-a'
 
-    response.cookies.set('ab-variant', variant, { maxAge: COOKIE_MAX_AGE, path: '/' })
+    response.cookies.set('ab-variant', variant, {maxAge: COOKIE_MAX_AGE, path: '/'})
     // Persist anonymous ID when we created a new one (stable until user logs in)
     if (!getUserIdFromSession(request) && !request.cookies.get('ab-user-id')?.value) {
-      response.cookies.set('ab-user-id', userId, { maxAge: COOKIE_MAX_AGE, path: '/' })
+      response.cookies.set('ab-user-id', userId, {maxAge: COOKIE_MAX_AGE, path: '/'})
     }
   }
-  
+
   return response
 }
 ```
 
 > **Tip:** Install with `npm install uuid imurmurhash`. When a user logs in, update the `ab-user-id` cookie to their real user ID so variant assignment stays consistent across sessions.
-> >
-> **Auth integration:** Implement `getUserIdFromSession(request)` to return the logged-in user's ID (e.g. `getServerSession()?.user?.id` with NextAuth). If your app has no auth, leave it as a stub that returns `undefined` so anonymous users get a UUID-based assignment.
+>
+> > **Auth integration:** Implement `getUserIdFromSession(request)` to return the logged-in user's ID (e.g. `getServerSession()?.user?.id` with NextAuth). If your app has no auth, leave it as a stub that returns `undefined` so anonymous users get a UUID-based assignment.
 
 ### Reading Variants in Page Components
 
 In your page components, read the variant from cookies:
 
 ```ts
-import { cookies } from 'next/headers'
+import {cookies} from 'next/headers'
 
 async function getVariant(): Promise<string> {
   const cookieStore = await cookies()
@@ -587,12 +591,12 @@ async function getVariant(): Promise<string> {
 
 export default async function Page() {
   const variant = await getVariant()
-  
+
   const data = await client.fetch(query, {
     experimentId: 'homepage-headline',
     variantId: variant,
   })
-  
+
   // Render with experiment-aware content
 }
 ```
@@ -701,10 +705,10 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname
-  
+
   // Get user's variant from cookie (set on first visit)
   let variantId = request.cookies.get('ab-variant')?.value
-  
+
   const response = NextResponse.next()
 
   if (!variantId) {
@@ -714,10 +718,10 @@ export async function proxy(request: NextRequest) {
       v4()
     variantId = MurmurHash3(userId).result() % 2 ? 'control' : 'variant-a'
     if (!getUserIdFromSession(request) && !request.cookies.get('ab-user-id')?.value) {
-      response.cookies.set('ab-user-id', userId, { maxAge: COOKIE_MAX_AGE, path: '/' })
+      response.cookies.set('ab-user-id', userId, {maxAge: COOKIE_MAX_AGE, path: '/'})
     }
   }
-  response.cookies.set('ab-variant', variantId, { maxAge: COOKIE_MAX_AGE, path: '/' })
+  response.cookies.set('ab-variant', variantId, {maxAge: COOKIE_MAX_AGE, path: '/'})
 
   // Query for URL routing experiments
   const data = await client.fetch(ROUTING_QUERY, {
@@ -725,13 +729,13 @@ export async function proxy(request: NextRequest) {
     experimentId: 'landing-page-test',
     variantId: variantId,
   })
-  
+
   if (data?.route && data.route !== pathname) {
     const url = request.nextUrl.clone()
     url.pathname = data.route
     const rewrite = NextResponse.rewrite(url)
     // Preserve the cookie on the rewrite response
-    rewrite.cookies.set('ab-variant', variantId, { maxAge: COOKIE_MAX_AGE, path: '/' })
+    rewrite.cookies.set('ab-variant', variantId, {maxAge: COOKIE_MAX_AGE, path: '/'})
     return rewrite
   }
 
@@ -801,18 +805,18 @@ const audiences = [
     id: 'customer-type',
     label: 'Customer Type',
     variants: [
-      { id: 'enterprise', label: 'Enterprise' },
-      { id: 'small-business', label: 'Small Business' },
-      { id: 'individual', label: 'Individual' },
+      {id: 'enterprise', label: 'Enterprise'},
+      {id: 'small-business', label: 'Small Business'},
+      {id: 'individual', label: 'Individual'},
     ],
   },
   {
     id: 'subscription-tier',
     label: 'Subscription Tier',
     variants: [
-      { id: 'free', label: 'Free Tier' },
-      { id: 'pro', label: 'Pro Tier' },
-      { id: 'enterprise', label: 'Enterprise Tier' },
+      {id: 'free', label: 'Free Tier'},
+      {id: 'pro', label: 'Pro Tier'},
+      {id: 'enterprise', label: 'Enterprise Tier'},
     ],
   },
 ]
