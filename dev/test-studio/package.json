@@ -39,6 +39,7 @@
     "sanity-plugin-documents-pane": "workspace:*",
     "sanity-plugin-google-translate": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
+    "sanity-plugin-hotspot-array": "workspace:*",
     "sanity-plugin-iframe-pane": "workspace:*",
     "sanity-plugin-internationalized-array": "workspace:*",
     "sanity-plugin-latex-input": "workspace:*",
