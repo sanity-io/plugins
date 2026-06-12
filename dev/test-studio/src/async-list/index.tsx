@@ -46,7 +46,14 @@ export const asyncListExample = definePlugin(() => ({
             ? [result.data]
             : []
 
-        return characters.map((item) => ({value: item.name}))
+        // The API can return multiple characters with the same name, but
+        // option values must be unique
+        const names = new Set<string>()
+        return characters.flatMap((item) => {
+          if (names.has(item.name)) return []
+          names.add(item.name)
+          return [{value: item.name}]
+        })
       },
     }),
   ],
