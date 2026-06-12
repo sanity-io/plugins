@@ -22,6 +22,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/language-filter": "workspace:*",
     "@sanity/orderable-document-list": "workspace:*",
+    "@sanity/personalization-plugin": "workspace:*",
     "@sanity/presets": "workspace:*",
     "@sanity/rich-date-input": "workspace:*",
     "@sanity/sfcc": "workspace:*",
