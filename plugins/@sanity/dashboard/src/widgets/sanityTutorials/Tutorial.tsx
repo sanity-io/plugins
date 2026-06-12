@@ -1,6 +1,6 @@
-import React from 'react'
-import {Card, Box, Heading, Flex, Text, Stack} from '@sanity/ui'
 import {PlayIcon} from '@sanity/icons'
+import {Card, Box, Heading, Flex, Text, Stack} from '@sanity/ui'
+import React from 'react'
 import {styled} from 'styled-components'
 
 const PlayIconBox = styled(Box)`

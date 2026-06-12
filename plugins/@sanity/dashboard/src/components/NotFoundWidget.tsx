@@ -1,5 +1,5 @@
-import React, {PropsWithChildren, ReactNode} from 'react'
 import {Card, Stack, Heading, Box} from '@sanity/ui'
+import React, {PropsWithChildren, ReactNode} from 'react'
 import {styled} from 'styled-components'
 
 const Root = styled(Card)`

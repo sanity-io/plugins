@@ -1,10 +1,11 @@
-import React, {useEffect, useMemo, useState} from 'react'
 import {Box, Card, Stack, Heading, Grid, Label, Text, Code, Button} from '@sanity/ui'
-import {useVersionedClient} from '../../versionedClient'
+import React, {useEffect, useMemo, useState} from 'react'
 import {Subscription} from 'rxjs'
-import {WidgetContainer} from '../../containers/WidgetContainer'
+
 import {DashboardWidgetContainer} from '../../components/DashboardWidgetContainer'
+import {WidgetContainer} from '../../containers/WidgetContainer'
 import {type DashboardWidget} from '../../types'
+import {useVersionedClient} from '../../versionedClient'
 import {type App, type ProjectInfoProps, type ProjectData, UserApplication} from './types'
 
 function isUrl(url?: string) {

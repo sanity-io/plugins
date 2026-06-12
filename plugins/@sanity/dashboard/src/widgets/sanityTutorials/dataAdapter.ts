@@ -1,6 +1,7 @@
-import {useMemo} from 'react'
-import {useVersionedClient} from '../../versionedClient'
 import imageUrlBuilder from '@sanity/image-url'
+import {useMemo} from 'react'
+
+import {useVersionedClient} from '../../versionedClient'
 
 const tutorialsProjectConfig = {
   projectId: '3do82whm',

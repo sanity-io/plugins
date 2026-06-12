@@ -1,6 +1,7 @@
+import {Box, Card, Grid, Text} from '@sanity/ui'
 import React from 'react'
 import {styled, css} from 'styled-components'
-import {Box, Card, Grid, Text} from '@sanity/ui'
+
 import {WidgetContainer} from '../containers/WidgetContainer'
 import {DashboardConfig, LayoutConfig, DashboardWidget} from '../types'
 

@@ -11,6 +11,7 @@ import {assistExample} from '#assist'
 import {bynderExample} from '#bynder'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
+import {dashboardToolExample} from '#dashboard-tool'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
@@ -104,6 +105,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      dashboardToolExample(),
       orderableDocumentListExample(),
       latexInputExample(),
       debugLiveSyncTagsExample(),

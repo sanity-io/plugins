@@ -1,5 +1,5 @@
-import React, {forwardRef} from 'react'
 import {Card, Box, Heading} from '@sanity/ui'
+import React, {forwardRef} from 'react'
 import {styled} from 'styled-components'
 
 const Root = styled(Card)`

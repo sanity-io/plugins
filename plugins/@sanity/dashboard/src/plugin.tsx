@@ -1,6 +1,7 @@
 import React, {ComponentType, CSSProperties} from 'react'
-import {Dashboard} from './containers/Dashboard'
 import {definePlugin} from 'sanity'
+
+import {Dashboard} from './containers/Dashboard'
 import {DashboardConfig, DashboardWidget, LayoutConfig} from './types'
 
 const strokeStyle: CSSProperties = {

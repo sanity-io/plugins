@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react'
 import {Flex} from '@sanity/ui'
-import {Tutorial} from './Tutorial'
-import {FeedItem, Guide, useDataAdapter} from './dataAdapter'
+import React, {useEffect, useState} from 'react'
+
 import {DashboardWidgetContainer} from '../../components/DashboardWidgetContainer'
+import {FeedItem, Guide, useDataAdapter} from './dataAdapter'
+import {Tutorial} from './Tutorial'
 
 function createUrl(slug: {current: string}, type?: string) {
   if (type === 'tutorial') {

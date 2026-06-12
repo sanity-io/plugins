@@ -1,5 +1,5 @@
-import {SanityTutorials} from './SanityTutorials'
 import {LayoutConfig, DashboardWidget} from '../../types'
+import {SanityTutorials} from './SanityTutorials'
 
 export function sanityTutorialsWidget(config?: {layout?: LayoutConfig}): DashboardWidget {
   return {

@@ -1,8 +1,8 @@
-import React from 'react'
-import {Box, Flex, rem, Stack, Text} from '@sanity/ui'
-import {styled} from 'styled-components'
-import {useListFormat, type User, UserAvatar} from 'sanity'
 import {RobotIcon} from '@sanity/icons'
+import {Box, Flex, rem, Stack, Text} from '@sanity/ui'
+import React from 'react'
+import {useListFormat, type User, UserAvatar} from 'sanity'
+import {styled} from 'styled-components'
 
 const Root = styled(Flex)`
   height: ${rem(33)}; // 33 = PREVIEW_SIZES.default.media.height

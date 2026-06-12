@@ -1,5 +1,5 @@
-import React, {PropsWithChildren} from 'react'
 import {Container} from '@sanity/ui'
+import React, {PropsWithChildren} from 'react'
 
 export function DashboardLayout(props: PropsWithChildren<{}>) {
   return (

@@ -1,7 +1,8 @@
-import React, {createElement, useMemo} from 'react'
-import {useDashboardConfig} from './DashboardContext'
 import {Card} from '@sanity/ui'
+import React, {createElement, useMemo} from 'react'
+
 import {DashboardWidget} from '../types'
+import {useDashboardConfig} from './DashboardContext'
 
 export function WidgetContainer(props: DashboardWidget) {
   const config = useDashboardConfig()

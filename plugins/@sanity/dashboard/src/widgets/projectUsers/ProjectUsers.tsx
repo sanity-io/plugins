@@ -1,11 +1,12 @@
+import {Stack, Spinner, Box, Text, Button} from '@sanity/ui'
 import React, {useCallback, useEffect, useState} from 'react'
 import {from} from 'rxjs'
 import {map, switchMap} from 'rxjs/operators'
-import {Stack, Spinner, Box, Text, Button} from '@sanity/ui'
 import {Role, useUserStore} from 'sanity'
-import {useVersionedClient} from '../../versionedClient'
 import {User} from 'sanity'
+
 import {DashboardWidgetContainer} from '../../components/DashboardWidgetContainer'
+import {useVersionedClient} from '../../versionedClient'
 import {ProjectUser} from './ProjectUser'
 
 function getInviteUrl(projectId: string) {
