@@ -13,7 +13,7 @@ export function tsconfigTemplate(options: {flags: InitFlags}): InjectTemplate {
     value: outdent`
       {
         "extends": "./tsconfig.settings",
-        "include": ["./src", "./package.config.ts"]
+        "include": ["./src", "./package.config.mts"]
       }
     `,
   }
