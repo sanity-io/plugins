@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.settings",
-  "include": ["./package.config.ts", "./src", "./test"],
-  "compilerOptions": {
-    "rootDir": ".",
-    "jsx": "react-jsx",
-    "noEmit": true
-  }
-}
