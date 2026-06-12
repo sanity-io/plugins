@@ -1,13 +1,15 @@
-import {Box, Card, CardTone, Stack, Text} from '@sanity/ui'
-import * as React from 'react'
+import {Box, Card, type CardTone, Stack, Text} from '@sanity/ui'
+import type {ReactNode} from 'react'
 
-const PlaceholderDropzone: React.FC<
-  {
-    tone?: CardTone
-    title: string
-    subtitle?: string
-  } & any
-> = (props) => {
+interface PlaceholderDropzoneProps {
+  title: string
+  subtitle?: string
+  isOver?: boolean
+  canDrop?: boolean
+  children?: ReactNode
+}
+
+const PlaceholderDropzone = (props: PlaceholderDropzoneProps) => {
   const isValid = props.isOver && props.canDrop
   const isInvalid = props.isOver && !props.canDrop
   let tone: CardTone = 'transparent'
@@ -28,7 +30,7 @@ const PlaceholderDropzone: React.FC<
           borderStyle: props.isOver ? undefined : 'dashed',
         }}
       >
-        <Stack space={2} style={{textAlign: 'center'}}>
+        <Stack gap={2} style={{textAlign: 'center'}}>
           <Text size={2} as="h2" muted>
             {!props.isOver && props.title}
             {isValid && 'Drop here'}

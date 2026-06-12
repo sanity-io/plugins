@@ -1,10 +1,8 @@
 import {AddIcon} from '@sanity/icons'
-import * as React from 'react'
-import type {ConfigContext} from 'sanity'
-import {StructureBuilder} from 'sanity/desk'
+import type {FC} from 'react'
 
 import TreeDeskStructure from './TreeDeskStructure'
-import {TreeDeskStructureProps} from './types'
+import type {TreeDeskStructureProps} from './types'
 import throwError from './utils/throwError'
 
 export interface TreeProps extends TreeDeskStructureProps {
@@ -19,15 +17,21 @@ export interface TreeProps extends TreeDeskStructureProps {
    */
   icon?: any
 
-  context?: ConfigContext | any
-  S?: StructureBuilder | any
+  /**
+   * The `ConfigContext` available as the second parameter of the structure resolver.
+   */
+  context?: any
+  /**
+   * The `StructureBuilder` (`S`) available as the first parameter of the structure resolver.
+   */
+  S?: any
   /**
    * Restrict document types that can be created.
    */
   creatableTypes?: string[]
 }
 
-const deskTreeValidator = (props: TreeProps): React.FC => {
+const deskTreeValidator = (props: TreeProps): FC => {
   const {documentId, referenceTo} = props
   if (typeof documentId !== 'string' && !documentId) {
     throwError('invalidDocumentId')
@@ -42,9 +46,11 @@ const deskTreeValidator = (props: TreeProps): React.FC => {
 export default function createDeskHierarchy(props: TreeProps) {
   const {documentId, referenceTo, referenceOptions, context, S, creatableTypes} = props
   if (!S || !context) {
-    throw new Error('Invalid configuration. S or context props are undefined. ' +
-      'These props are available as function parameters when configuring structure, and must be passed along to createDeskHierarchy. ' +
-      'Confer the plugin README for example usage.')
+    throw new Error(
+      'Invalid configuration. S or context props are undefined. ' +
+        'These props are available as function parameters when configuring structure, and must be passed along to createDeskHierarchy. ' +
+        'Confer the plugin README for example usage.',
+    )
   }
 
   const {schema} = context
@@ -65,19 +71,20 @@ export default function createDeskHierarchy(props: TreeProps) {
         S.menuItem()
           .intent({
             type: 'create',
-            params: {type: schemaType}
+            params: {type: schemaType},
           })
           .title(`Create ${schema.get(schemaType)?.title}`)
-          .icon(schema.get(schemaType)?.icon || AddIcon)
-      )
+          .icon(schema.get(schemaType)?.icon || AddIcon),
+      ),
     )
     .canHandleIntent((intent: string, c: Record<string, unknown>) => {
       // Can edit itself
-      if (intent === 'edit' && c.id === props.documentId) {
+      if (intent === 'edit' && c['id'] === props.documentId) {
         return true
       }
       // Can create & edit referenced document types
-      if (safelyCreatableTypes.includes(c.type as string)) {
+      const intentType = c['type']
+      if (typeof intentType === 'string' && safelyCreatableTypes.includes(intentType)) {
         return true
       }
       return false
@@ -102,9 +109,9 @@ export default function createDeskHierarchy(props: TreeProps) {
           type: 'component',
           component: deskTreeValidator(props),
           options: props,
-          __preserveInstance: true
+          __preserveInstance: true,
         },
-        props.title ? {title: props.title} : {}
-      )
+        props.title ? {title: props.title} : {},
+      ),
     )
 }

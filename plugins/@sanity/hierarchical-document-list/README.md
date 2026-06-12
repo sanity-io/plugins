@@ -12,9 +12,7 @@ Plugin for visually organizing documents as hierarchies in the [Sanity studio](h
 
 If you're looking for a way to order documents on a flat list, refer to [@sanity/orderable-document-list](https://github.com/sanity-io/orderable-document-list).
 
-
 ## Installation
-
 
 ```bash
 # From the root of your sanity project
@@ -29,17 +27,16 @@ npm i @sanity/hierarchical-document-list
 // sanity.config.js
 import {defineConfig} from 'sanity'
 import {hierarchicalDocumentList, hierarchyTree} from '@sanity/hierarchical-document-list'
- 
+
 export default defineConfig({
-   // ...
-   plugins: [hierarchicalDocumentList()],
-   schema: {
+  // ...
+  plugins: [hierarchicalDocumentList()],
+  schema: {
     types: [
       //...,
-      hierarchyTree
-    ]
-   }
-
+      hierarchyTree,
+    ],
+  },
 })
 ```
 
@@ -51,14 +48,19 @@ export default defineConfig({
 // sanity.config.ts
 import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
-import {createDeskHierarchy, hierarchicalDocumentList, hierarchyTree} from '@sanity/hierarchical-document-list'
+import {
+  createDeskHierarchy,
+  hierarchicalDocumentList,
+  hierarchyTree,
+} from '@sanity/hierarchical-document-list'
 
 export default defineConfig({
   // ...
   plugins: [
     deskTool({
       // NOTE: I'n V3 you MUST pass S and Context along to createDeskHierarchy as props
-      structure: (S, context) =>  S.list()
+      structure: (S, context) =>
+        S.list()
           .title('Content')
           .items([
             ...S.documentTypeListItems(), // or whatever other structure you have
@@ -81,26 +83,26 @@ export default defineConfig({
               referenceOptions: {
                 filter: 'status in $acceptedStatuses',
                 filterParams: {
-                  acceptedStatuses: ['published', 'approved']
-                }
+                  acceptedStatuses: ['published', 'approved'],
+                },
               },
 
               // ❓ Optional: limit the depth of your hierarachies
               maxDepth: 3,
 
               // ❓ Optional: subarray of referenceTo, when it should not be possible to create new types from all referenceTo types
-              creatableTypes: ['site.page']
-            })
-          ])
+              creatableTypes: ['site.page'],
+            }),
+          ]),
     }),
-    hierarchicalDocumentList()
+    hierarchicalDocumentList(),
   ],
   schema: {
     types: [
       //...,
-      hierarchyTree
-    ]
-  }
+      hierarchyTree,
+    ],
+  },
 })
 ```
 
@@ -285,12 +287,12 @@ export const hierarchicalOptions = {
   referenceOptions: {
     filter: 'status in $acceptedStatuses',
     filterParams: {
-      acceptedStatuses: ['published', 'approved']
-    }
+      acceptedStatuses: ['published', 'approved'],
+    },
   },
 
   // ❓ Optional: limit the depth of your hierarachies
-  maxDept: 3
+  maxDept: 3,
 }
 
 export default createHierarchicalSchemas(hierarchicalOptions)
@@ -307,8 +309,8 @@ export default createSchema({
   name: 'default',
   types: schemaTypes.concat([
     // ...Other schemas
-    ...hierarchicalSchemas // add all items in the array of hierarchical schemas
-  ])
+    ...hierarchicalSchemas, // add all items in the array of hierarchical schemas
+  ]),
 })
 ```
 
@@ -318,7 +320,7 @@ Then, in your desk structure where you added the hierarchical document(s), inclu
 createDeskHierarchy({
   // Include whatever values you defined in your schema in the step above
   documentType: 'myCustomHierarchicalType', // the name of your document type
-  fieldKeyInDocument: 'customTreeDataKey' // the name of the hierarchical field
+  fieldKeyInDocument: 'customTreeDataKey', // the name of the hierarchical field
   // ...
 })
 
@@ -326,7 +328,7 @@ createDeskHierarchy({
 import {hierarchicalOptions} from './hierarchicalSchemas'
 
 createDeskHierarchy({
-  ...hierarchicalOptions
+  ...hierarchicalOptions,
   // ...
 })
 ```

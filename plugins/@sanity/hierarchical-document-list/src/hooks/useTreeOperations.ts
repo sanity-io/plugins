@@ -1,6 +1,7 @@
-import * as React from 'react'
-import useAllItems from './useAllItems'
-import useTreeOperationsProvider from './useTreeOperationsProvider'
+import {createContext, useContext} from 'react'
+
+import type useAllItems from './useAllItems'
+import type useTreeOperationsProvider from './useTreeOperationsProvider'
 
 type ContextValue = ReturnType<typeof useTreeOperationsProvider> & {
   allItemsStatus: ReturnType<typeof useAllItems>['status']
@@ -10,7 +11,7 @@ function placeholder() {
   // no-op
 }
 
-export const TreeOperationsContext = React.createContext<ContextValue>({
+export const TreeOperationsContext = createContext<ContextValue>({
   addItem: placeholder,
   duplicateItem: placeholder,
   removeItem: placeholder,
@@ -21,5 +22,5 @@ export const TreeOperationsContext = React.createContext<ContextValue>({
 })
 
 export default function useTreeOperations(): ContextValue {
-  return React.useContext(TreeOperationsContext)
+  return useContext(TreeOperationsContext)
 }

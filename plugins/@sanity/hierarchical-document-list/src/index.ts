@@ -1,10 +1,12 @@
 import {definePlugin} from 'sanity'
+
 import {default as createDeskHierarchy, type TreeProps} from './createDeskHierarchy'
 import {default as createHierarchicalSchemas} from './createHierarchicalSchemas'
 import {default as hierarchyTree} from './schemas/hierarchy.tree'
 import {default as flatDataToTree} from './utils/flatDataToTree'
 
-export {createDeskHierarchy, createHierarchicalSchemas, flatDataToTree, hierarchyTree, TreeProps}
+export {createDeskHierarchy, createHierarchicalSchemas, flatDataToTree, hierarchyTree}
+export type {TreeProps}
 
 /**
  * Usage in `sanity.config.ts` (or .js)
@@ -21,5 +23,5 @@ export {createDeskHierarchy, createHierarchicalSchemas, flatDataToTree, hierarch
  */
 
 export const hierarchicalDocumentList = definePlugin({
-  name: 'sanity-plugin-hierarchical-document-list'
+  name: 'sanity-plugin-hierarchical-document-list',
 })

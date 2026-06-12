@@ -1,13 +1,14 @@
-import {PatchEvent, PathSegment, prefixPath, setIfMissing} from 'sanity'
-import {LocalTreeItem, NodeProps} from '../types'
+import {PatchEvent, type PathSegment, prefixPath, setIfMissing} from 'sanity'
+
+import type {LocalTreeItem, NodeProps} from '../types'
 import {
-  HandleMovedNode,
-  HandleMovedNodeData,
+  type HandleMovedNode,
+  type HandleMovedNodeData,
   getAddItemPatch,
   getDuplicateItemPatch,
   getMoveItemPatch,
   getMovedNodePatch,
-  getRemoveItemPatch
+  getRemoveItemPatch,
 } from '../utils/treePatches'
 
 export default function useTreeOperationsProvider(props: {
@@ -28,18 +29,17 @@ export default function useTreeOperationsProvider(props: {
     const finalPatches = [
       // Ensure tree array exists before any operation
       setIfMissing([]),
-      ...(patches || [])
+      ...(patches || []),
     ]
+    const prefix: PathSegment | undefined = props.patchPrefix
     let patchEvent = PatchEvent.from(finalPatches)
-    if (props.patchPrefix) {
-      patchEvent = PatchEvent.from(
-        finalPatches.map((patch) => prefixPath(patch, props.patchPrefix as PathSegment))
-      )
+    if (prefix) {
+      patchEvent = PatchEvent.from(finalPatches.map((patch) => prefixPath(patch, prefix)))
     }
     props.onChange(patchEvent)
   }
 
-  function handleMovedNode(data: HandleMovedNodeData & {node: LocalTreeItem}) {
+  function handleMovedNode(data: HandleMovedNodeData) {
     runPatches(getMovedNodePatch(data))
   }
 
@@ -47,7 +47,7 @@ export default function useTreeOperationsProvider(props: {
     runPatches(getAddItemPatch(item))
   }
 
-  function duplicateItem(nodeProps: NodeProps & {node: LocalTreeItem}) {
+  function duplicateItem(nodeProps: NodeProps) {
     runPatches(getDuplicateItemPatch(nodeProps))
   }
 
@@ -60,8 +60,8 @@ export default function useTreeOperationsProvider(props: {
       getMoveItemPatch({
         nodeProps,
         localTree,
-        direction: 'up'
-      })
+        direction: 'up',
+      }),
     )
   }
 
@@ -70,8 +70,8 @@ export default function useTreeOperationsProvider(props: {
       getMoveItemPatch({
         nodeProps,
         localTree,
-        direction: 'down'
-      })
+        direction: 'down',
+      }),
     )
   }
 
@@ -81,6 +81,6 @@ export default function useTreeOperationsProvider(props: {
     removeItem,
     moveItemUp,
     moveItemDown,
-    duplicateItem
+    duplicateItem,
   }
 }

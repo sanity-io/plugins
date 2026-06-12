@@ -1,7 +1,10 @@
 import {getTreeFromFlatData} from '@nosferatu500/react-sortable-tree'
-import {StoredTreeItem} from '../types'
+
+import type {StoredTreeItem} from '../types'
 
 interface TreeItemWithChildren extends StoredTreeItem {
+  // Index signature for structural compatibility with react-sortable-tree's TreeItem
+  [key: string]: unknown
   children?: TreeItemWithChildren[]
 }
 
@@ -14,7 +17,7 @@ export default function flatDataToTree(data: StoredTreeItem[]): TreeItemWithChil
     })),
     getKey: (item) => item._key,
     getParentKey: (item) => item.parent,
-    // without rootKey, the tree won't be constructed
-    rootKey: null as any,
+    // without rootKey: null, the tree won't be constructed
+    rootKey: null,
   }) as TreeItemWithChildren[]
 }

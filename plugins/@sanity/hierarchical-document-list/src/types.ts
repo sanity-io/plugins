@@ -1,6 +1,7 @@
-import {TreeItem} from '@nosferatu500/react-sortable-tree'
-import {ArraySchemaType, ObjectSchemaType, SanityDocument} from 'sanity'
-import {INTERNAL_NODE_TYPE, INTERNAL_NODE_VALUE_TYPE} from './utils/injectNodeTypeInPatches'
+import type {TreeItem} from '@nosferatu500/react-sortable-tree'
+import type {ArraySchemaType, SanityDocument} from 'sanity'
+
+import type {INTERNAL_NODE_TYPE, INTERNAL_NODE_VALUE_TYPE} from './utils/injectNodeTypeInPatches'
 
 interface SanityReference {
   _type: 'reference'
@@ -13,9 +14,9 @@ interface SanityReference {
  */
 export interface StoredTreeItem {
   _key: string
-  _type: typeof INTERNAL_NODE_TYPE | string
+  _type: typeof INTERNAL_NODE_TYPE
   value?: {
-    _type: typeof INTERNAL_NODE_VALUE_TYPE | string
+    _type: typeof INTERNAL_NODE_VALUE_TYPE
     reference?: SanityReference
     docType?: string
   }
@@ -32,6 +33,8 @@ export interface StoredTreeItem {
  * See `useLocalTree.ts` and `dataToEditorTree()`.
  */
 export interface EnhancedTreeItem extends StoredTreeItem {
+  // Index signature for structural compatibility with react-sortable-tree's TreeItem
+  [key: string]: unknown
   expanded?: boolean | undefined
   /**
    * Used by DocumentInNode to render the preview for drafts if they exist.
@@ -87,14 +90,11 @@ export interface TreeInputOptions {
   documentType?: string
 }
 
-export interface TreeFieldSchema
-  extends Omit<ArraySchemaType, 'of' | 'type' | 'inputComponent' | 'jsonType'> {
+export interface TreeFieldSchema extends Omit<
+  ArraySchemaType,
+  'of' | 'type' | 'inputComponent' | 'jsonType'
+> {
   options: ArraySchemaType['options'] & TreeInputOptions
-}
-
-export interface TreeNodeObjectSchema
-  extends Omit<ObjectSchemaType, 'name' | 'fields' | 'type' | 'inputComponent' | 'jsonType'> {
-  options: ObjectSchemaType['options'] & TreeInputOptions
 }
 
 export interface TreeDeskStructureProps extends TreeInputOptions {
@@ -143,6 +143,7 @@ export interface VisibilityMap {
 
 export interface NodeProps {
   node: LocalTreeItem
+  treeIndex: number
 }
 
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>

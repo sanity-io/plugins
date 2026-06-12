@@ -1,16 +1,15 @@
-import {TreeItem} from '@nosferatu500/react-sortable-tree'
 import {randomKey} from '@sanity/util/content'
-import {SanityDocument} from 'sanity'
+
 import DocumentInNode from '../components/DocumentInNode'
 import NodeActions from '../components/NodeActions'
-import {
+import type {
   AllItems,
   DocumentPair,
   EnhancedTreeItem,
   LocalTreeItem,
   NodeProps,
   StoredTreeItem,
-  VisibilityMap
+  VisibilityMap,
 } from '../types'
 import flatDataToTree from './flatDataToTree'
 import {INTERNAL_NODE_TYPE, INTERNAL_NODE_VALUE_TYPE} from './injectNodeTypeInPatches'
@@ -18,7 +17,7 @@ import {INTERNAL_NODE_TYPE, INTERNAL_NODE_VALUE_TYPE} from './injectNodeTypeInPa
 export const dataToEditorTree = ({
   tree,
   allItems,
-  visibilityMap
+  visibilityMap,
 }: {
   tree: StoredTreeItem[]
   allItems: AllItems
@@ -33,21 +32,23 @@ export const dataToEditorTree = ({
       const publishedDoc = docPair?.published
 
       const enhancedItem: LocalTreeItem = {
-        ...item,
+        _key: item._key,
+        _type: item._type,
+        value: item.value,
+        parent: item.parent,
         expanded: visibilityMap[item._key] !== false,
         draftId: draftDoc?._id,
         publishedId: publishedDoc?._id,
         draftUpdatedAt: draftDoc?._updatedAt,
-        publishedUpdatedAt: publishedDoc?._updatedAt
+        publishedUpdatedAt: publishedDoc?._updatedAt,
       }
 
-      return {
-        ...enhancedItem,
+      return Object.assign(enhancedItem, {
         title: (nodeProps: NodeProps) => (
           <DocumentInNode item={enhancedItem} action={<NodeActions nodeProps={nodeProps} />} />
         ),
-        children: []
-      }
+        children: [],
+      })
     })
   return flatDataToTree(itemsWithTitle)
 }
@@ -69,23 +70,11 @@ const documentPairToNode = (doc?: DocumentPair): EnhancedTreeItem | undefined =>
       reference: {
         _ref: doc.published._id,
         _type: 'reference',
-        _weak: true
+        _weak: true,
       },
-      docType: doc.published._type
-    }
+      docType: doc.published._type,
+    },
   }
-}
-
-export const flatTree = (tree: TreeItem[]): TreeItem[] => {
-  return tree.reduce((flattened, item) => {
-    const {children, ...node} = item
-    return [...flattened, node, ...(Array.isArray(children) ? flatTree(children) : [])]
-  }, [] as TreeItem[])
-}
-
-export interface FetchData {
-  mainTree?: LocalTreeItem[]
-  allItems?: SanityDocument[]
 }
 
 export const getUnaddedItems = (data: {
@@ -93,9 +82,10 @@ export const getUnaddedItems = (data: {
   tree: StoredTreeItem[]
 }): EnhancedTreeItem[] => {
   if (!data.tree) {
-    return Object.entries(data.allItems)
-      .map((value) => documentPairToNode(value[1]))
-      .filter(Boolean) as EnhancedTreeItem[]
+    return Object.values(data.allItems).flatMap((documentPair) => {
+      const node = documentPairToNode(documentPair)
+      return node ? [node] : []
+    })
   }
 
   return Object.entries(data.allItems)
@@ -103,10 +93,12 @@ export const getUnaddedItems = (data: {
       ([publishedId]) =>
         publishedId &&
         // unadded items shouldn't be in the tree
-        !data.tree.some((treeItem) => treeItem?.value?.reference?._ref === publishedId)
+        !data.tree.some((treeItem) => treeItem?.value?.reference?._ref === publishedId),
     )
-    .map(([, documentPair]) => documentPairToNode(documentPair))
-    .filter(Boolean) as EnhancedTreeItem[]
+    .flatMap(([, documentPair]) => {
+      const node = documentPairToNode(documentPair)
+      return node ? [node] : []
+    })
 }
 
 export function normalizeNodeForStorage(item: LocalTreeItem): StoredTreeItem {
@@ -114,6 +106,6 @@ export function normalizeNodeForStorage(item: LocalTreeItem): StoredTreeItem {
     _key: item._key,
     _type: item._type || INTERNAL_NODE_TYPE,
     value: item.value,
-    parent: item.parent
+    parent: item.parent,
   }
 }

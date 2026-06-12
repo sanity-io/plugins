@@ -1,48 +1,47 @@
 import {HelpCircleIcon} from '@sanity/icons'
 import {Box, Card, Flex, Stack, Text, Tooltip} from '@sanity/ui'
-import * as React from 'react'
-import {Preview, SanityDocument, SchemaType, TextWithTone, useSchema} from 'sanity'
-import {RouterPaneGroup, usePaneRouter} from 'sanity/desk'
+import {type ReactNode, forwardRef, useMemo} from 'react'
+import {Preview, type SanityDocument, type SchemaType, TextWithTone, useSchema} from 'sanity'
+import {type RouterPaneGroup, usePaneRouter} from 'sanity/structure'
+
 import useTreeOperations from '../hooks/useTreeOperations'
-import {LocalTreeItem} from '../types'
+import type {LocalTreeItem} from '../types'
 import DocumentPreviewStatus from './DocumentPreviewStatus'
 
 /**
  * Renders a preview for each referenced document.
  * Nested inside TreeNode.tsx
  */
-const DocumentInNode: React.FC<{
-  item: LocalTreeItem
-  action?: React.ReactNode
-}> = (props) => {
+const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
   const {value: {reference, docType} = {}, draftId, publishedId} = props.item
+  const referenceId = reference?._ref
   const {routerPanesState, ChildLink} = usePaneRouter()
   const {allItemsStatus} = useTreeOperations()
   const schema = useSchema()
-  const isActive = React.useMemo(() => {
+  const isActive = useMemo(() => {
     // If some pane is active with the current document `_id`, it's active
     return routerPanesState.some((pane: RouterPaneGroup) =>
-      pane.some((group) => group.id === reference?._ref)
+      pane.some((group) => group.id === referenceId),
     )
-  }, [routerPanesState])
+  }, [referenceId, routerPanesState])
 
-  const type = React.useMemo(() => {
+  const type = useMemo(() => {
     return docType ? schema.get(docType) : undefined
-  }, [docType])
+  }, [docType, schema])
 
-  const LinkComponent = React.useMemo(
+  const LinkComponent = useMemo(
     () =>
-      React.forwardRef((linkProps: any, ref: any) => (
+      forwardRef((linkProps: any, ref: any) => (
         <ChildLink
           {...linkProps}
-          childId={reference?._ref}
+          childId={referenceId}
           ref={ref}
           childParameters={{
-            type: docType
+            type: docType,
           }}
         />
       )),
-    [ChildLink, reference?._ref]
+    [ChildLink, docType, referenceId],
   )
 
   if (!reference?._ref) {
@@ -75,7 +74,7 @@ const DocumentInNode: React.FC<{
                     ? ({
                         _id: draftId,
                         _type: docType,
-                        _updatedAt: props.item.draftUpdatedAt
+                        _updatedAt: props.item.draftUpdatedAt,
                       } as SanityDocument)
                     : undefined
                 }
@@ -83,7 +82,7 @@ const DocumentInNode: React.FC<{
                   {
                     _id: reference?._ref,
                     _type: docType,
-                    _updatedAt: props.item.publishedUpdatedAt
+                    _updatedAt: props.item.publishedUpdatedAt,
                   } as SanityDocument
                 }
               />
@@ -105,7 +104,7 @@ const DocumentInNode: React.FC<{
                     <TextWithTone tone="default" size={3}>
                       <HelpCircleIcon />
                     </TextWithTone>
-                    <Stack space={3}>
+                    <Stack gap={3}>
                       <Text as="h2" size={1} weight="semibold">
                         This document is not valid
                       </Text>

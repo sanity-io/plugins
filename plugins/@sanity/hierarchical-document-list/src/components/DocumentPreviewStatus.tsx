@@ -1,11 +1,11 @@
 import {EditIcon, PublishIcon} from '@sanity/icons'
 import {Box, Inline, Text, Tooltip} from '@sanity/ui'
-import * as React from 'react'
-import {SanityDocument, TextWithTone, useTimeAgo} from 'sanity'
-import {DocumentPair} from '../types'
+import {type SanityDocument, TextWithTone, useRelativeTime} from 'sanity'
 
-export function TimeAgo({time}: {time: string | Date}) {
-  const timeAgo = useTimeAgo(time)
+import type {DocumentPair} from '../types'
+
+function TimeAgo({time}: {time: string | Date}) {
+  const timeAgo = useRelativeTime(time)
 
   return (
     <span title={timeAgo}>
@@ -58,9 +58,9 @@ const DraftStatus = ({document}: {document?: SanityDocument | null}) => (
 )
 
 // Adapted from @sanity\desk-tool\src\components\paneItem\helpers.tsx
-const DocumentPreviewStatus: React.FC<DocumentPair> = ({draft, published}) => {
+const DocumentPreviewStatus = ({draft, published}: DocumentPair) => {
   return (
-    <Inline space={4}>
+    <Inline gap={4}>
       <PublishedStatus document={published} />
       <DraftStatus document={draft} />
     </Inline>

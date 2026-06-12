@@ -1,5 +1,6 @@
-import * as React from 'react'
-import {AllItems, LocalTreeItem, StoredTreeItem, VisibilityMap} from '../types'
+import {useState} from 'react'
+
+import type {AllItems, LocalTreeItem, StoredTreeItem, VisibilityMap} from '../types'
 import {dataToEditorTree} from '../utils/treeData'
 
 /**
@@ -20,13 +21,13 @@ export default function useLocalTree({
   handleVisibilityToggle: (data: any) => void
   localTree: LocalTreeItem[]
 } {
-  const [visibilityMap, setVisibilityMap] = React.useState<VisibilityMap>({})
+  const [visibilityMap, setVisibilityMap] = useState<VisibilityMap>({})
 
   function handleVisibilityToggle(data: any) {
-    setVisibilityMap({
-      ...visibilityMap,
+    setVisibilityMap((currentMap) => ({
+      ...currentMap,
       [data.node._key]: data.expanded,
-    })
+    }))
   }
 
   return {

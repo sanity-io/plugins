@@ -1,9 +1,10 @@
 import {Box, Flex, Spinner} from '@sanity/ui'
-import * as React from 'react'
-import {PatchEvent, useDocumentOperation, useEditState} from 'sanity'
+import {useCallback, useEffect} from 'react'
+import {type PatchEvent, useDocumentOperation, useEditState} from 'sanity'
+
 import DeskWarning from './components/DeskWarning'
 import TreeEditor from './components/TreeEditor'
-import {DocumentOperations, StoredTreeItem, TreeDeskStructureProps} from './types'
+import type {DocumentOperations, StoredTreeItem, TreeDeskStructureProps} from './types'
 import {toGradient} from './utils/gradientPatchAdapter'
 import injectNodeTypeInPatches, {DEFAULT_DOC_TYPE} from './utils/injectNodeTypeInPatches'
 
@@ -13,7 +14,7 @@ interface ComponentProps {
 
 export const DEFAULT_FIELD_KEY = 'tree'
 
-const TreeDeskStructure: React.FC<ComponentProps> = (props) => {
+const TreeDeskStructure = (props: ComponentProps) => {
   const treeDocType = props.options.documentType || DEFAULT_DOC_TYPE
   const treeFieldKey = props.options.fieldKeyInDocument || DEFAULT_FIELD_KEY
   const {published, draft, liveEdit} = useEditState(props.options.documentId, treeDocType)
@@ -21,22 +22,24 @@ const TreeDeskStructure: React.FC<ComponentProps> = (props) => {
 
   const treeValue = (published?.[treeFieldKey] || []) as StoredTreeItem[]
 
-  const handleChange = React.useCallback(
+  const handleChange = useCallback(
     (patchEvent: PatchEvent) => {
       if (!patch?.execute) {
         return
       }
       patch.execute(toGradient(injectNodeTypeInPatches(patchEvent.patches, treeDocType)))
     },
-    [patch]
+    [patch, treeDocType],
   )
 
-  React.useEffect(() => {
-    if (!published?._id && patch?.execute && !patch?.disabled) {
+  const publishedId = published?._id
+
+  useEffect(() => {
+    if (!publishedId && patch?.execute && !patch?.disabled) {
       // If no published document, create it
       patch.execute([{setIfMissing: {[treeFieldKey]: []}}])
     }
-  }, [published?._id, patch])
+  }, [publishedId, patch, treeFieldKey])
 
   if (!liveEdit) {
     return (

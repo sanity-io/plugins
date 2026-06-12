@@ -12,15 +12,13 @@ export default function moveItemInArray<ItemType = unknown>({
   }
 
   const newArray = [...array]
+  const [target] = newArray.splice(fromIndex, 1)
 
-  const target = newArray[fromIndex]
-  const inc = toIndex < fromIndex ? -1 : 1
-
-  for (let i = fromIndex; i !== toIndex; i += inc) {
-    newArray[i] = newArray[i + inc]
+  if (target === undefined) {
+    return array
   }
 
-  newArray[toIndex] = target
+  newArray.splice(toIndex, 0, target)
 
   return newArray
 }

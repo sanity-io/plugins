@@ -1,43 +1,64 @@
 import {
-  FlatDataItem,
-  FullTree,
+  type FlatDataItem,
+  type TreeItem,
   getFlatDataFromTree,
-  NodeData,
-  TreeItem
 } from '@nosferatu500/react-sortable-tree'
 import {randomKey} from '@sanity/util/content'
 import * as Patch from 'sanity'
-import {LocalTreeItem, NodeProps} from '../types'
+
+import type {LocalTreeItem, NodeProps} from '../types'
 import getAdjescentNodes from './getAdjescentNodes'
 import moveItemInArray from './moveItemInArray'
 import {normalizeNodeForStorage} from './treeData'
 
-export type HandleMovedNodeData = Omit<
-  NodeData & FullTree & any,
-  'prevPath' | 'prevTreeIndex' | 'path' | 'treeIndex' | 'node'
-> & {node: LocalTreeItem}
+/**
+ * A {@link FlatDataItem} whose nodes are known to be the plugin's own tree items.
+ */
+export interface LocalFlatDataItem extends Omit<FlatDataItem, 'node' | 'parentNode'> {
+  node: LocalTreeItem
+  parentNode?: LocalTreeItem | null
+}
+
+/**
+ * Data received from react-sortable-tree's `onMoveNode` callback.
+ * `nextPath` is undefined / null when the node is removed from the tree.
+ */
+export interface HandleMovedNodeData {
+  treeData: TreeItem[]
+  node: LocalTreeItem
+  nextParentNode?: LocalTreeItem | null
+  nextPath?: number[] | null
+  nextTreeIndex: number
+}
 
 export type HandleMovedNode = (moveData: HandleMovedNodeData) => void
+
+function getLocalFlatDataFromTree(treeData: TreeItem[]): LocalFlatDataItem[] {
+  return getFlatDataFromTree({
+    treeData,
+    getNodeKey: (t) => t.node['_key'] as string,
+  }) as LocalFlatDataItem[]
+}
 
 export function getAddItemPatch(item: LocalTreeItem): unknown[] {
   const normalizedNode = normalizeNodeForStorage(item)
 
   return [
     // Add the node to the end of the tree
-    Patch.insert([normalizedNode], 'after', [-1])
+    Patch.insert([normalizedNode], 'after', [-1]),
   ]
 }
 
 export function getDuplicateItemPatch(nodeProps: NodeProps): unknown[] {
   const newItem = {
     ...nodeProps.node,
-    _key: randomKey(12)
+    _key: randomKey(12),
   }
   const normalizedNode = normalizeNodeForStorage(newItem)
 
   return [
     // Add duplicated node before the existing one
-    Patch.insert([normalizedNode], 'before', [{_key: nodeProps.node._key}])
+    Patch.insert([normalizedNode], 'before', [{_key: nodeProps.node._key}]),
   ]
 }
 
@@ -50,7 +71,7 @@ export function getRemoveItemPatch({node}: Pick<NodeProps, 'node'>): unknown[] {
     Patch.unset([keyPath]),
 
     // 2. Unset its children
-    ...children.map((path) => Patch.unset([{_key: path}]))
+    ...children.map((path) => Patch.unset([{_key: path}])),
   ]
 }
 
@@ -59,21 +80,18 @@ export function getMovedNodePatch(data: HandleMovedNodeData): unknown[] {
   const keyPath = {_key: data.node._key}
 
   // === REMOVING NODE FROM TREE ===
-  // `nextPath` will be null if the item is removed from tree
+  // `nextPath` will be undefined / null if the item is removed from tree
   if (!Array.isArray(data.nextPath)) {
     return getRemoveItemPatch({node: data.node})
   }
 
-  const nextFlatTree = getFlatDataFromTree({
-    treeData: data.treeData,
-    getNodeKey: (t) => t.node._key
-  })
+  const nextFlatTree = getLocalFlatDataFromTree(data.treeData)
   const normalizedNode = normalizeNodeForStorage(data.node)
 
   const {leadingNode, followingNode} = getAdjescentNodes({
     flatTree: nextFlatTree,
     node: data.node,
-    treeIndex: data.nextTreeIndex
+    treeIndex: data.nextTreeIndex,
   })
 
   return [
@@ -96,49 +114,49 @@ export function getMovedNodePatch(data: HandleMovedNodeData): unknown[] {
       ? // If it has a parent node, set that parent's _key
         Patch.set(nextParentNode._key, [keyPath, 'parent'])
       : // Else remove the parent key entirely
-        Patch.unset([keyPath, 'parent'])
+        Patch.unset([keyPath, 'parent']),
   ]
 }
 
-function getChildrenPaths(node: TreeItem): string[] {
+function getChildrenPaths(node: LocalTreeItem): string[] {
   if (!Array.isArray(node.children)) {
     return []
   }
 
-  return node.children
-    .reduce(
-      (keyPaths, child) => [...keyPaths, child._key, ...getChildrenPaths(child)],
-      [] as string[]
-    )
-    .filter(Boolean)
+  const keyPaths: string[] = []
+  for (const child of node.children) {
+    const childKey: unknown = child['_key']
+    if (typeof childKey === 'string' && childKey) {
+      keyPaths.push(childKey)
+    }
+    keyPaths.push(...getChildrenPaths(child as LocalTreeItem))
+  }
+  return keyPaths
 }
 
 export function getMoveItemPatch({
   nodeProps: {node, treeIndex},
   localTree,
-  direction = 'up'
+  direction,
 }: {
-  nodeProps: any
-  localTree: TreeItem[]
+  nodeProps: NodeProps
+  localTree: LocalTreeItem[]
   direction: 'up' | 'down'
 }): unknown[] {
   const keyPath = {_key: node._key}
 
   const nextTreeIndex = treeIndex + (direction === 'up' ? -1 : 1)
 
-  const flatTree = getFlatDataFromTree({
-    treeData: localTree,
-    getNodeKey: (t) => t.node._key
-  })
-  const nextFlatTree = moveItemInArray<FlatDataItem>({
+  const flatTree = getLocalFlatDataFromTree(localTree)
+  const nextFlatTree = moveItemInArray<LocalFlatDataItem>({
     array: flatTree,
     fromIndex: treeIndex,
-    toIndex: nextTreeIndex
+    toIndex: nextTreeIndex,
   })
   const {leadingNode, followingNode} = getAdjescentNodes({
     flatTree: nextFlatTree,
     node,
-    treeIndex: nextTreeIndex
+    treeIndex: nextTreeIndex,
   })
 
   const normalizedNode = normalizeNodeForStorage(node)
@@ -158,7 +176,7 @@ export function getMoveItemPatch({
         Patch.insert([normalizedNode], 'after', [{_key: leadingNode.node._key}])
       : // Or before the sibling right after it, in case there's no leading sibling node
         Patch.insert([normalizedNode], 'before', [
-          followingNode?.node?._key ? {_key: followingNode.node._key} : nextTreeIndex
+          followingNode?.node?._key ? {_key: followingNode.node._key} : nextTreeIndex,
         ]),
 
     // 3. Patch the new node with its new `parent`
@@ -166,6 +184,6 @@ export function getMoveItemPatch({
       ? // If it has a parent node, set that parent's _key
         Patch.set(nextParentNode._key, [keyPath, 'parent'])
       : // Else remove the parent key entirely
-        Patch.unset([keyPath, 'parent'])
+        Patch.unset([keyPath, 'parent']),
   ]
 }

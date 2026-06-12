@@ -1,7 +1,8 @@
-import * as React from 'react'
-import {FormField, FormNodePresence, PatchEvent, Path} from 'sanity'
+import {useCallback} from 'react'
+import {FormField, type FormNodePresence, PatchEvent, type Path} from 'sanity'
+
 import TreeEditor from './components/TreeEditor'
-import {StoredTreeItem, TreeFieldSchema} from './types'
+import type {StoredTreeItem, TreeFieldSchema} from './types'
 import injectNodeTypeInPatches, {DEFAULT_DOC_TYPE} from './utils/injectNodeTypeInPatches'
 
 export interface TreeInputComponentProps {
@@ -16,15 +17,18 @@ export interface TreeInputComponentProps {
   presence: FormNodePresence[]
 }
 
-const TreeInputComponent: React.FC<TreeInputComponentProps> = (props) => {
-  const documentType = props.type.options.documentType || DEFAULT_DOC_TYPE
+const EMPTY_PATH: Path = []
 
-  const onChange = React.useCallback(
+const TreeInputComponent = (props: TreeInputComponentProps) => {
+  const documentType = props.type.options.documentType || DEFAULT_DOC_TYPE
+  const {onChange: onFieldChange} = props
+
+  const onChange = useCallback(
     (patch: any) => {
       const patches = injectNodeTypeInPatches(patch?.patches, documentType)
-      props.onChange(new PatchEvent(patches))
+      onFieldChange(new PatchEvent(patches))
     },
-    [props.onChange]
+    [documentType, onFieldChange],
   )
 
   return (
@@ -32,6 +36,7 @@ const TreeInputComponent: React.FC<TreeInputComponentProps> = (props) => {
       description={props.type.description} // Creates description from schema
       title={props.type.title} // Creates label from schema title
       __unstable_presence={props.presence} // Handles presence avatars
+      path={EMPTY_PATH}
     >
       <TreeEditor options={props.type.options} tree={props.value || []} onChange={onChange} />
     </FormField>

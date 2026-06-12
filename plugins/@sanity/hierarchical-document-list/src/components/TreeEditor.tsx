@@ -1,100 +1,94 @@
-import SortableTree, {FullTree, NodeData} from '@nosferatu500/react-sortable-tree'
+import {SortableTree} from '@nosferatu500/react-sortable-tree'
 import {AddCircleIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Spinner, Stack, Text, Tooltip} from '@sanity/ui'
-import * as React from 'react'
-import {useCallback, useMemo} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
-import {PatchEvent} from 'sanity'
+import type {PatchEvent} from 'sanity'
+
 import useAllItems from '../hooks/useAllItems'
 import useLocalTree from '../hooks/useLocalTree'
 import {TreeOperationsContext} from '../hooks/useTreeOperations'
 import useTreeOperationsProvider from '../hooks/useTreeOperationsProvider'
-import {Optional, StoredTreeItem, TreeDeskStructureProps} from '../types'
+import type {Optional, StoredTreeItem, TreeDeskStructureProps} from '../types'
 import getCommonTreeProps from '../utils/getCommonTreeProps'
 import getTreeHeight from '../utils/getTreeHeight'
 import {getUnaddedItems} from '../utils/treeData'
-import {HandleMovedNodeData} from '../utils/treePatches'
+import type {HandleMovedNodeData} from '../utils/treePatches'
 import DocumentInNode from './DocumentInNode'
 import {TreeEditorErrorBoundary} from './TreeEditorErrorBoundary'
 
-/**
- * The loaded tree users interact with
- */
-const TreeEditor: React.FC<{
+interface TreeEditorProps {
   tree: StoredTreeItem[]
   onChange: (patch: PatchEvent) => void
   options: Optional<TreeDeskStructureProps, 'documentId'>
   patchPrefix?: string
-}> = (props) => {
+}
+
+/**
+ * The loaded tree users interact with
+ */
+function TreeEditor(props: TreeEditorProps) {
   const {status: allItemsStatus, allItems} = useAllItems(props.options)
   const unAddedItems = getUnaddedItems({tree: props.tree, allItems})
 
   const {localTree, handleVisibilityToggle} = useLocalTree({
     tree: props.tree,
-    allItems
+    allItems,
   })
 
   const operations = useTreeOperationsProvider({
     patchPrefix: props.patchPrefix,
     onChange: props.onChange,
-    localTree
+    localTree,
   })
 
-  const [context, setContext] = React.useState<HTMLElement | null>(null)
-  const [treeViewHeight, setTreeViewHeight] = React.useState<string>('')
+  const [context, setContext] = useState<HTMLElement | null>(null)
+  const [treeViewHeight, setTreeViewHeight] = useState<string>('')
 
-  const updateTreeViewHeight = () => {
-    const el = document.querySelector(`#${props.options.documentId} [data-known-size]`) as HTMLElement | null
-    const rowHeight = Number(el?.dataset.knownSize || 51)
+  const documentId = props.options.documentId
+
+  const updateTreeViewHeight = useCallback(() => {
+    const el = document.querySelector<HTMLElement>(`#${documentId} [data-known-size]`)
+    const rowHeight = Number(el?.dataset['knownSize'] || 51)
     setTreeViewHeight(getTreeHeight(localTree, rowHeight))
-  }
+  }, [documentId, localTree])
 
-  React.useEffect(() => {
-    if (props.options.documentId) {
-      setContext(document.getElementById(props.options.documentId))
-    }
-  }, [props.options.documentId])
-
-  React.useEffect(() => {
-    // Wait for dom to load before initial execution.
-    setTimeout(updateTreeViewHeight)
-  }, [])
-
-  React.useEffect(() => {
-    // Immediately update when changes are detected.
-    updateTreeViewHeight()
-  }, [props.options.documentId, localTree])
+  useEffect(() => {
+    // Wait for dom to load before (re)calculating the tree height.
+    const timeout = setTimeout(updateTreeViewHeight)
+    return () => clearTimeout(timeout)
+  }, [updateTreeViewHeight])
 
   const onMoveNode = useCallback(
-    (data: NodeData & FullTree & any) =>
-      operations.handleMovedNode(data as unknown as HandleMovedNodeData),
-    [operations]
+    // The tree nodes are always our own LocalTreeItem objects
+    (data: unknown) => operations.handleMovedNode(data as HandleMovedNodeData),
+    [operations],
   )
 
   const treeProps = useMemo(
     () =>
       getCommonTreeProps({
         placeholder: {
-          title: 'Add items from the list below'
-        }
+          title: 'Add items from the list below',
+        },
       }),
-    []
+    [],
   )
 
   const operationContext = useMemo(
     () => ({...operations, allItemsStatus}),
-    [operations, allItemsStatus]
+    [operations, allItemsStatus],
   )
 
   return (
     <TreeEditorErrorBoundary>
       {/*Use this Box-wrapper to get a context Element to prevent DndProvider to have to HTML% backend at the same time https://github.com/react-dnd/react-dnd/issues/186#issuecomment-978206387 */}
-      <Box id={props.options.documentId}>
+      <Box id={documentId} ref={setContext}>
         {context ? (
           <DndProvider backend={HTML5Backend} options={{rootElement: context}}>
             <TreeOperationsContext.Provider value={operationContext}>
-              <Stack space={4} paddingTop={4}>
+              <Stack gap={4} paddingTop={4}>
                 <Card
                   style={{minHeight: treeViewHeight}}
                   // Only include borderBottom if there's something to show in unadded items
@@ -112,8 +106,8 @@ const TreeEditor: React.FC<{
                 </Card>
 
                 {allItemsStatus === 'success' && unAddedItems?.length > 0 && (
-                  <Stack space={1} paddingX={2} paddingTop={3}>
-                    <Stack space={2} paddingX={2} paddingBottom={3}>
+                  <Stack gap={1} paddingX={2} paddingTop={3}>
+                    <Stack gap={2} paddingX={2} paddingBottom={3}>
                       <Text size={2} as="h2" weight="semibold">
                         Add more items
                       </Text>
@@ -170,10 +164,10 @@ const TreeEditor: React.FC<{
   )
 }
 
-function canDrop({nextPath, prevPath}: any & NodeData) {
+function canDrop({nextPath, prevPath}: {nextPath: number[]; prevPath: number[]}) {
   const insideItself =
     nextPath.length >= prevPath.length &&
-    prevPath.every((pathIndex: any, index: string | number) => nextPath[index] === pathIndex)
+    prevPath.every((pathIndex, index) => nextPath[index] === pathIndex)
   return !insideItself
 }
 

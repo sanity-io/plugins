@@ -1,7 +1,13 @@
 // Adapted from @sanity/form-builder/src/sanity/utils/gradientPatchAdapter.ts
 import {arrayToJSONMatchPath} from '@sanity/mutator'
 
-type Patch = Record<string, any>
+interface Patch {
+  type?: string
+  path?: any[]
+  position?: string
+  items?: unknown[]
+  value?: unknown
+}
 
 type GradientPatch = Record<string, any>
 
@@ -15,7 +21,7 @@ function toGradientPatch(patch: Patch): GradientPatch {
     const {position, items} = patch
     return {
       insert: {
-        [position]: matchPath,
+        [position as string]: matchPath,
         items: items,
       },
     }

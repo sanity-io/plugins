@@ -1,4 +1,5 @@
-import * as React from 'react'
+import {Children, type ReactElement, cloneElement} from 'react'
+
 import TreeNodeRendererScaffold from './TreeNodeRendererScaffold'
 
 /**
@@ -13,20 +14,20 @@ const TreeNodeRenderer: any = (props: any) => {
   // Construct the scaffold representing the structure of the tree
   const scaffoldBlockCount = lowerSiblingCounts.length
 
-  return connectDropTarget(
-    <div style={props.style}>
+  return (
+    <div ref={connectDropTarget} style={props.style}>
       <div
         style={{
           // prettier-ignore
-          paddingLeft: `${BASE_LEFT_PADDING + (NESTING_PADDING * scaffoldBlockCount)}px`
+          paddingLeft: `${BASE_LEFT_PADDING + (NESTING_PADDING * scaffoldBlockCount)}px`,
         }}
       >
-        {React.Children.map(children, (child) =>
-          React.cloneElement(child as React.ReactElement<any>, {
+        {Children.map(children, (child) =>
+          cloneElement(child as ReactElement<any>, {
             isOver,
             canDrop,
-            draggedNode
-          })
+            draggedNode,
+          }),
         )}
       </div>
       <TreeNodeRendererScaffold {...props} />

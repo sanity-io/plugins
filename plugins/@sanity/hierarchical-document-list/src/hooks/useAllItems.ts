@@ -1,6 +1,7 @@
-import * as React from 'react'
-import {SanityDocument, useClient} from 'sanity'
-import {AllItems, TreeInputOptions} from '../types'
+import {useEffect, useReducer, useState} from 'react'
+import {type SanityDocument, useClient} from 'sanity'
+
+import type {AllItems, TreeInputOptions} from '../types'
 import {isDraft, unprefixId} from '../utils/idUtils'
 
 function getDeskFilter({referenceTo, referenceOptions}: TreeInputOptions): {
@@ -16,9 +17,9 @@ function getDeskFilter({referenceTo, referenceOptions}: TreeInputOptions): {
   return {
     filter: filterParts.join(' && '),
     params: {
-      ...(referenceOptions?.filterParams || {}),
-      docTypes: referenceTo.map((schemaType) => schemaType)
-    }
+      ...referenceOptions?.filterParams,
+      docTypes: referenceTo.map((schemaType) => schemaType),
+    },
   }
 }
 
@@ -33,8 +34,8 @@ function updateItemInState(state: AllItems, item: SanityDocument): AllItems {
   const newState = {...state}
   const publishedId = unprefixId(item._id)
   newState[publishedId] = {
-    ...(newState[publishedId] || {}),
-    [isDraft(item._id) ? 'draft' : 'published']: item
+    ...newState[publishedId],
+    [isDraft(item._id) ? 'draft' : 'published']: item,
   }
   return newState
 }
@@ -51,16 +52,16 @@ function allItemsReducer(state: AllItems, action: ACTIONTYPE): AllItems {
       [publishedId]: isDraft(action.itemId)
         ? // If a draft, keep only published
           {
-            published: state[publishedId]?.published
+            published: state[publishedId]?.published,
           }
         : {
-            draft: state[publishedId]?.draft
-          }
+            draft: state[publishedId]?.draft,
+          },
     }
   }
 
   if (action.type === 'setInitialData') {
-    return action.items.reduce(updateItemInState, {} as AllItems)
+    return action.items.reduce(updateItemInState, {})
   }
   return state
 }
@@ -70,50 +71,50 @@ export default function useAllItems(options: TreeInputOptions): {
   allItems: AllItems
 } {
   const client = useClient({
-    apiVersion: '2021-09-01'
+    apiVersion: '2021-09-01',
   })
-  const [status, setStatus] = React.useState<Status>('loading')
-  const [allItems, dispatch] = React.useReducer(allItemsReducer, {})
+  const [status, setStatus] = useState<Status>('loading')
+  const [allItems, dispatch] = useReducer(allItemsReducer, {})
 
-  function handleListener(event: any) {
-    if (event.type !== 'mutation') {
-      return
+  useEffect(() => {
+    function handleListener(event: {type?: string; result?: SanityDocument; documentId?: string}) {
+      if (event.type !== 'mutation') {
+        return
+      }
+
+      if (event.result) {
+        dispatch({type: 'addOrEditItem', item: event.result})
+      } else if (event.documentId) {
+        dispatch({type: 'removeItem', itemId: event.documentId})
+      }
     }
 
-    if (event.result) {
-      dispatch({type: 'addOrEditItem', item: event.result})
-    } else {
-      dispatch({type: 'removeItem', itemId: event.documentId})
-    }
-  }
-
-  function handleFirstLoad(items: SanityDocument[]) {
-    dispatch({type: 'setInitialData', items})
-    setStatus('success')
-  }
-
-  React.useEffect(() => {
     const {filter, params} = getDeskFilter(options)
     const query = `*[${filter}] {
       _id,
       _type,
       _updatedAt,
     }`
-    client
-      .fetch<SanityDocument[]>(query, params)
-      .then(handleFirstLoad)
-      .catch(() => {
+
+    async function fetchInitialData() {
+      try {
+        const items = await client.fetch<SanityDocument[]>(query, params)
+        dispatch({type: 'setInitialData', items})
+        setStatus('success')
+      } catch {
         setStatus('error')
-      })
+      }
+    }
+    void fetchInitialData()
 
     const listener = client.listen(query, params).subscribe(handleListener)
     return () => {
       listener.unsubscribe()
     }
-  }, [])
+  }, [client, options])
 
   return {
     status,
-    allItems
+    allItems,
   }
 }

@@ -1,6 +1,6 @@
 export function getSchemaTypeName(
   documentType: string,
-  type: 'document' | 'node' | 'nodeValue' | 'array'
+  type: 'document' | 'node' | 'nodeValue' | 'array',
 ): string {
   switch (type) {
     case 'document':
@@ -27,13 +27,13 @@ export const INTERNAL_NODE_ARRAY_TYPE = getSchemaTypeName(DEFAULT_DOC_TYPE, 'arr
 /**
  * Barebones recursive utility to inject the desired nodeObjectType in patches generated in deeply nested components and utilities.
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function injectNodeTypeInPatches(patchData: any, documentType: string): any {
   if (Array.isArray(patchData)) {
     return patchData.map((child) => injectNodeTypeInPatches(child, documentType))
   }
   if (typeof patchData === 'object' && patchData !== null) {
-    return Object.keys(patchData).reduce((newObject, key) => {
+    const newObject: Record<string, unknown> = {}
+    for (const key of Object.keys(patchData)) {
       const value = patchData[key as keyof typeof patchData]
 
       if (
@@ -41,20 +41,15 @@ export default function injectNodeTypeInPatches(patchData: any, documentType: st
         typeof value === 'string' &&
         [INTERNAL_NODE_TYPE, INTERNAL_NODE_VALUE_TYPE].includes(value)
       ) {
-        return {
-          ...newObject,
-          [key]: getSchemaTypeName(
-            documentType,
-            value === INTERNAL_NODE_TYPE ? 'node' : 'nodeValue'
-          ),
-        }
+        newObject[key] = getSchemaTypeName(
+          documentType,
+          value === INTERNAL_NODE_TYPE ? 'node' : 'nodeValue',
+        )
+      } else {
+        newObject[key] = injectNodeTypeInPatches(value, documentType)
       }
-
-      return {
-        ...newObject,
-        [key]: injectNodeTypeInPatches(value, documentType),
-      }
-    }, {})
+    }
+    return newObject
   }
   return patchData
 }

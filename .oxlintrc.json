@@ -136,6 +136,15 @@
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off"
       }
+    },
+    {
+      "files": ["plugins/@sanity/hierarchical-document-list/src/**"],
+      "rules": {
+        // Legacy code interfaces with the loosely-typed react-sortable-tree API
+        "no-unsafe-type-assertion": "off",
+        // Scaffold blocks and split text segments are purely positional
+        "react/no-array-index-key": "off"
+      }
     }
   ]
 }

@@ -2,8 +2,8 @@ import {isDescendant} from '@nosferatu500/react-sortable-tree'
 import {cyan, gray, red} from '@sanity/color'
 import {ChevronDownIcon, ChevronRightIcon, DragHandleIcon} from '@sanity/icons'
 import {Box, Button, Flex, Spinner} from '@sanity/ui'
-import * as React from 'react'
-import styled from 'styled-components'
+import {useMemo} from 'react'
+import {styled} from 'styled-components'
 
 const Root = styled.div`
   // Adapted from react-sortable-tree/style.css
@@ -36,9 +36,21 @@ const Root = styled.div`
  * Reference: https://github.com/frontend-collective/react-sortable-tree/blob/master/src/node-renderer-default.js
  */
 const NodeContentRenderer: any = (props: any) => {
-  const {node, path, treeIndex, canDrag = false} = props
+  const {
+    node,
+    path,
+    treeIndex,
+    canDrag = false,
+    canDrop,
+    connectDragSource,
+    connectDragPreview,
+    toggleChildrenVisibility,
+    draggedNode,
+    didDrop,
+    isDragging,
+  } = props
   const nodeTitle = node.title
-  const Handle = React.useMemo(() => {
+  const Handle = useMemo(() => {
     if (!canDrag) {
       return null
     }
@@ -48,42 +60,38 @@ const NodeContentRenderer: any = (props: any) => {
       return <Spinner />
     }
 
-    const BtnElement = (
-      <div>
-        <Button
-          mode="bleed"
-          paddingX={0}
-          paddingY={1}
-          style={{
-            cursor: node.publishedId ? 'grab' : 'default',
-            fontSize: '1.5625rem'
-          }}
-          data-ui="DragHandleButton"
-          data-drag-handle={canDrag}
-          disabled={!node.publishedId}
-        >
-          <DragHandleIcon style={{marginBottom: '-0.1em'}} />
-        </Button>
-      </div>
+    const button = (
+      <Button
+        mode="bleed"
+        paddingX={0}
+        paddingY={1}
+        style={{
+          cursor: node.publishedId ? 'grab' : 'default',
+          fontSize: '1.5625rem',
+        }}
+        data-ui="DragHandleButton"
+        data-drag-handle={canDrag}
+        disabled={!node.publishedId}
+      >
+        <DragHandleIcon style={{marginBottom: '-0.1em'}} />
+      </Button>
     )
 
     // Don't allow editors to drag invalid documents
     if (!node.publishedId) {
-      return BtnElement
+      return <div>{button}</div>
     }
 
     // Show the handle used to initiate a drag-and-drop
-    return props.connectDragSource(BtnElement, {
-      dropEffect: 'copy'
-    })
-  }, [canDrag, node, typeof node.children === 'function'])
+    return <div ref={connectDragSource}>{button}</div>
+  }, [canDrag, node, connectDragSource])
 
-  const isDraggedDescendant = props.draggedNode && isDescendant(props.draggedNode, node)
-  const isLandingPadActive = !props.didDrop && props.isDragging
+  const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node)
+  const isLandingPadActive = !didDrop && isDragging
 
   return (
     <Box style={{position: 'relative'}}>
-      {props.toggleChildrenVisibility &&
+      {toggleChildrenVisibility &&
         node.children &&
         (node.children.length > 0 || typeof node.children === 'function') && (
           <div
@@ -91,7 +99,7 @@ const NodeContentRenderer: any = (props: any) => {
               position: 'absolute',
               left: '-2px',
               top: '40%',
-              transform: 'translate(-100%, -50%)'
+              transform: 'translate(-100%, -50%)',
             }}
           >
             <Button
@@ -108,32 +116,30 @@ const NodeContentRenderer: any = (props: any) => {
               padding={1}
               type="button"
               onClick={() =>
-                props.toggleChildrenVisibility?.({
+                toggleChildrenVisibility?.({
                   node,
                   path,
-                  treeIndex
+                  treeIndex,
                 })
               }
             />
           </div>
         )}
 
-      {props.connectDragPreview(
-        <div>
-          <Root
-            data-landing={isLandingPadActive}
-            data-cancel={isLandingPadActive && !props.canDrop}
-            style={{
-              opacity: isDraggedDescendant ? 0.5 : 1
-            }}
-          >
-            <Flex align="center">
-              {Handle}
-              {typeof nodeTitle === 'function' ? nodeTitle(props) : nodeTitle}
-            </Flex>
-          </Root>
-        </div>
-      )}
+      <div ref={connectDragPreview}>
+        <Root
+          data-landing={isLandingPadActive}
+          data-cancel={isLandingPadActive && !canDrop}
+          style={{
+            opacity: isDraggedDescendant ? 0.5 : 1,
+          }}
+        >
+          <Flex align="center">
+            {Handle}
+            {typeof nodeTitle === 'function' ? nodeTitle({node, path, treeIndex}) : nodeTitle}
+          </Flex>
+        </Root>
+      </div>
     </Box>
   )
 }
