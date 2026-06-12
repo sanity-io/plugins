@@ -7,6 +7,8 @@
     "build": "turbo build",
     "check:deps": "knip --dependencies",
     "dev": "pnpm turbo dev --filter=test-studio",
+    "devtools:test-studio": "pnpm devtools:test-studio:build && ENABLE_VITE_DEVTOOLS=true pnpm dev",
+    "devtools:test-studio:build": "pnpm build && ENABLE_VITE_DEVTOOLS=true pnpm --filter=test-studio build",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
     "generate": "turbo gen",
     "issue-triage": "node scripts/trigger-triage/src/index.ts",

@@ -290,6 +290,36 @@ The test studio is a real Sanity Studio that connects to Sanity APIs. You must:
 
 Simply accessing `http://localhost:3333` is not enough—the studio requires browser-based Sanity authentication to function.
 
+### Inspecting Production Builds with Vite DevTools
+
+The test studio can run with [Vite DevTools](https://devtools.vite.dev) enabled, which lets you inspect the output of `sanity build` runs (module graph, chunks, plugin timings, bundle treemaps, session diffing) from inside a long-running `sanity dev` server—no restart needed.
+
+```bash
+# Builds the test studio with devtools enabled, then starts the dev server
+# (so there's a build session to inspect right away)
+pnpm devtools:test-studio
+```
+
+Open `http://localhost:3333` and use the Vite DevTools dock to explore the recorded Rolldown build session, or open the full-page DevTools UI directly at `http://localhost:3333/__devtools/`. See the [DevTools for Rolldown features guide](https://devtools.vite.dev/rolldown/features.html) for how to use the module graph, chunk, asset, and plugin panels.
+
+The first time a browser connects, the dock asks for a one-time permission grant (a prompt in the `sanity dev` terminal, or a manual auth URL printed there). Trusted clients are remembered in `~/.vite/devtools/auth.json`.
+
+To inspect a **new** build after making changes—while `pnpm devtools:test-studio` is still running—run in a second terminal:
+
+```bash
+# Creates a fresh build session that shows up in the running DevTools dock
+pnpm devtools:test-studio:build
+```
+
+Builds are not hooked into HMR; `sanity build` must be invoked manually (via the command above) each time you want a new session to inspect. Sessions can be compared against each other in the DevTools UI to diff bundle changes.
+
+How it works:
+
+- Both commands set `ENABLE_VITE_DEVTOOLS=true`, which makes `dev/test-studio/sanity.cli.ts` add the `DevTools()` Vite plugin and enable `build.rolldownOptions.devtools`
+- Build sessions are written to `dev/test-studio/node_modules/.rolldown` (gitignored)
+- The flag is declared in `dev/test-studio/turbo.jsonc` so turbo-cached builds are invalidated when it changes (and so turbo's strict env mode passes it through to `pnpm dev`)
+- Enabling devtools makes `sanity build` noticeably slower; that's why it's opt-in via the env flag
+
 ## Creating a New Plugin
 
 Use the generator:
