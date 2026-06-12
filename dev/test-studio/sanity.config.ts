@@ -15,6 +15,7 @@ import {dashboardToolExample} from '#dashboard-tool'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
+import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
 import {googleTranslateExample} from '#google-translate'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
@@ -105,6 +106,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      documentListWidgetExample(),
       dashboardToolExample(),
       orderableDocumentListExample(),
       latexInputExample(),

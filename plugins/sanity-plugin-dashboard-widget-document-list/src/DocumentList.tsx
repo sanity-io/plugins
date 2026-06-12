@@ -1,6 +1,6 @@
 import {DashboardWidgetContainer} from '@sanity/dashboard'
 import {Card, Flex, Spinner, Stack} from '@sanity/ui'
-import {intersection} from 'lodash'
+import {intersection} from 'lodash-es'
 import {type ReactNode, useEffect, useMemo, useState} from 'react'
 import {
   getPublishedId,

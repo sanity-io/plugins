@@ -1,8 +1,7 @@
-import type {SanityClient} from '@sanity/client'
-import uniqBy from 'lodash/uniqBy'
+import {uniqBy} from 'lodash-es'
 import {type Observable, of as observableOf} from 'rxjs'
 import {delay, mergeMap, switchMap, tap} from 'rxjs/operators'
-import type {SanityDocument} from 'sanity'
+import type {SanityClient, SanityDocument} from 'sanity'
 
 const draftId = (nonDraftDoc: SanityDocument) => `drafts.${nonDraftDoc._id}`
 
