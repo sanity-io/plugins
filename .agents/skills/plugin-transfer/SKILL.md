@@ -82,6 +82,17 @@ Common legacy fixes:
 - Use `import.meta.url` with `fileURLToPath` instead of `__dirname` in tests.
 - Remove stale `eslint-disable` comments that oxlint reports as unused.
 
+#### Duplicate `sanity` peer variants break type-aware lint
+
+Type-aware lint can fail (sometimes intermittently, especially on cold installs) with errors like `Type 'import(".../.pnpm/sanity@X_<hashA>/...").D' is not assignable to type 'import(".../.pnpm/sanity@X_<hashB>/...").D'` in `dev/test-studio/src/**` examples. This happens when the transferred plugin resolves `sanity` to a different pnpm peer-variant than the other plugins, creating an extra duplicate copy of sanity's type definitions.
+
+To keep the plugin on the shared `sanity` variant, declare these in the plugin `devDependencies`:
+
+- `"@types/node": "catalog:"`
+- `"styled-components": "catalog:"` (when the plugin depends on `@sanity/ui`, which peers on styled-components; without the declaration pnpm auto-installs the peer and bypasses the workspace `@sanity/styled-components` override)
+
+Verify alignment by checking that the plugin importer's `sanity` version string in `pnpm-lock.yaml` matches other plugins (e.g. `plugins/@sanity/sfcc`).
+
 ### Tests
 
 Vitest runs against built `dist/` output (`pretest` builds packages automatically). Fix path resolution and module import issues in legacy test files. The plugin's own `test/` suite (if present) runs via the root vitest config when included in the plugin workspace.
