@@ -1,4 +1,4 @@
-import {ComponentType} from 'react'
+import {type ComponentType} from 'react'
 import {type ArrayOfObjectsInputProps, definePlugin} from 'sanity'
 
 import {type HotspotItem, ImageHotspotArray} from './ImageHotspotArray'
@@ -27,6 +27,7 @@ export const imageHotspotArrayPlugin = definePlugin({
           if (imageHotspotOptions) {
             return (
               <ImageHotspotArray
+                // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- narrowed by the jsonType/options checks above
                 {...(props as unknown as ArrayOfObjectsInputProps<HotspotItem>)}
                 imageHotspotOptions={imageHotspotOptions}
               />

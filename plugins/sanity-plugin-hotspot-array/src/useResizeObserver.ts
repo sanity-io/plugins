@@ -85,7 +85,9 @@ export function useResizeObserver<T extends Element>(
 ): void {
   const ro = enabled && getResizeObserver()
   const cb = useRef(callback)
-  cb.current = callback
+  useEffect(() => {
+    cb.current = callback
+  }, [callback])
 
   const tgt = target && 'current' in target ? target.current : target
 

@@ -7,13 +7,14 @@ import {type DependencyList, useEffect, useMemo, useRef} from 'react'
  *
  * @param effect Effector to run on unmount
  */
-export function useUnmountEffect(effect: CallableFunction): void {
+function useUnmountEffect(effect: CallableFunction): void {
   const effectRef = useRef(effect)
-  effectRef.current = effect
+  useEffect(() => {
+    effectRef.current = effect
+  }, [effect])
   useEffect(() => () => effectRef.current(), [])
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DebouncedFunction<Fn extends (...args: any[]) => any> = (
   this: ThisParameterType<Fn>,
   ...args: Parameters<Fn>
@@ -29,7 +30,6 @@ export type DebouncedFunction<Fn extends (...args: any[]) => any> = (
  * @param maxWait The maximum time `callback` is allowed to be delayed before
  * it's invoked. 0 means no max wait.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
   callback: Fn,
   deps: DependencyList,

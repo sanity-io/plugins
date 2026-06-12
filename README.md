@@ -78,6 +78,7 @@ pnpm format
 | [`sanity-plugin-bynder-input`](./plugins/sanity-plugin-bynder-input)                           | Bynder asset picker integration                                     |
 | [`sanity-plugin-documents-pane`](./plugins/sanity-plugin-documents-pane)                       | Display GROQ-queried document lists in a view pane                  |
 | [`sanity-plugin-graph-view`](./plugins/sanity-plugin-graph-view)                               | Visual graph tool for exploring content relationships               |
+| [`sanity-plugin-hotspot-array`](./plugins/sanity-plugin-hotspot-array)                         | Add and update array items by clicking on an image                  |
 | [`sanity-plugin-iframe-pane`](./plugins/sanity-plugin-iframe-pane)                             | Display external URLs in a Studio pane                              |
 | [`sanity-plugin-internationalized-array`](./plugins/sanity-plugin-internationalized-array)     | Store localized fields in arrays to save attributes                 |
 | [`sanity-plugin-latex-input`](./plugins/sanity-plugin-latex-input)                             | LaTeX input for Portable Text Editor                                |

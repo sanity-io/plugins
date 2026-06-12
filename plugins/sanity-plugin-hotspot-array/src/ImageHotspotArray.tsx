@@ -1,16 +1,15 @@
 import {getImageDimensions} from '@sanity/asset-utils'
-import imageUrlBuilder from '@sanity/image-url'
+import {createImageUrlBuilder} from '@sanity/image-url'
 import {Card, Flex, Stack} from '@sanity/ui'
 import {randomKey} from '@sanity/util/content'
-import {get} from 'lodash-es'
+import get from 'lodash-es/get.js'
 import {type MouseEvent, type ReactNode, useCallback, useMemo, useRef, useState} from 'react'
 import {
-  ArrayOfObjectsInputProps,
-  ImageValue,
+  type ArrayOfObjectsInputProps,
+  type ImageValue,
   insert,
-  ObjectSchemaType,
+  type ObjectSchemaType,
   PatchEvent,
-  SchemaType,
   set,
   setIfMissing,
   useClient,
@@ -19,7 +18,7 @@ import {
 } from 'sanity'
 
 import Feedback from './Feedback'
-import {ImageHotspotOptions} from './plugin'
+import {type ImageHotspotOptions} from './plugin'
 import Spot from './Spot'
 import {useDebouncedCallback} from './useDebouncedCallback'
 import {useResizeObserver} from './useResizeObserver'
@@ -56,7 +55,7 @@ export function ImageHotspotArray(
   const resolveInitialValueForType = useResolveInitialValueForType()
   const resolveInitialValue = useCallback(
     async (type: ObjectSchemaType) => {
-      return resolveInitialValueForType(type as unknown as SchemaType, {})
+      return resolveInitialValueForType(type, {})
         .then((initialValue) => {
           return initialValue
         })
@@ -75,13 +74,14 @@ export function ImageHotspotArray(
    * check if there are any changes to the hotspotImage and update the reference
    */
   const hotspotImage = useMemo(() => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- the configured imagePath is expected to point to an image field
     return (
       imageHotspotOptions.imagePath ? get(rootObject, imageHotspotOptions.imagePath) : rootObject
     ) as ImageValue | undefined
   }, [rootObject, imageHotspotOptions.imagePath])
 
   const displayImage = useMemo(() => {
-    const builder = imageUrlBuilder(sanityClient).dataset(sanityClient.config().dataset ?? '')
+    const builder = createImageUrlBuilder(sanityClient).dataset(sanityClient.config().dataset ?? '')
     const urlFor = (source: ImageValue) => builder.image(source)
 
     if (hotspotImage?.asset?._ref) {
@@ -98,6 +98,11 @@ export function ImageHotspotArray(
 
   const handleHotspotImageClick = useCallback(
     async (event: MouseEvent<HTMLImageElement>) => {
+      const spotType = schemaType.of[0]
+      if (!spotType) {
+        return
+      }
+
       const {nativeEvent, currentTarget} = event
 
       // Calculate the x/y percentage of the click position
@@ -105,11 +110,12 @@ export function ImageHotspotArray(
       const y = Number(((nativeEvent.offsetY * 100) / currentTarget.height).toFixed(2))
       const description = `New Hotspot at ${x}% x ${y}%`
 
-      const initialValues = await resolveInitialValue(schemaType.of[0].type as ObjectSchemaType)
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- hotspot arrays contain a single object type
+      const initialValues = await resolveInitialValue(spotType.type as ObjectSchemaType)
 
       const newRow: HotspotItem = {
         _key: randomKey(12),
-        _type: schemaType.of[0].name,
+        _type: spotType.name,
         ...initialValues,
         x,
         y,
@@ -152,7 +158,7 @@ export function ImageHotspotArray(
   )
 
   return (
-    <Stack space={[2, 2, 3]}>
+    <Stack gap={[2, 2, 3]}>
       {displayImage?.url ? (
         <div style={{position: `relative`}}>
           {imageRect &&
@@ -167,12 +173,14 @@ export function ImageHotspotArray(
                 hotspotDescriptionPath={imageHotspotOptions?.descriptionPath}
                 tooltip={imageHotspotOptions?.tooltip}
                 renderPreview={renderPreview}
+                // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- hotspot arrays contain a single object type
                 schemaType={schemaType.of[0] as ObjectSchemaType}
               />
             ))}
 
           <Card __unstable_checkered shadow={1}>
             <Flex align="center" justify="center">
+              {/* oxlint-disable-next-line jsx-a11y/click-events-have-key-events -- hotspots are placed via pointer coordinates, which have no keyboard equivalent */}
               <img
                 ref={hotspotImageRef}
                 src={displayImage.url}
@@ -206,6 +214,7 @@ export function ImageHotspotArray(
           {VALID_ROOT_PATHS.join(', ')}&quot;.
         </Feedback>
       )}
+      {/* oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- renderDefault expects the base input props */}
       {props.renderDefault(props as unknown as ArrayOfObjectsInputProps)}
     </Stack>
   )

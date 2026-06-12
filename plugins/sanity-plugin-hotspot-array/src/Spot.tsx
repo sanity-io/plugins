@@ -1,18 +1,17 @@
 import {Box, Text, Tooltip} from '@sanity/ui'
 import {motion, useMotionValue} from 'framer-motion'
-import {get} from 'lodash-es'
+import get from 'lodash-es/get.js'
 import {
-  ComponentType,
-  createElement,
-  CSSProperties,
-  ReactNode,
+  type ComponentType,
+  type CSSProperties,
+  type ReactNode,
   useCallback,
   useEffect,
   useState,
 } from 'react'
 import {type ObjectSchemaType, type RenderPreviewCallback} from 'sanity'
 
-import {FnHotspotMove, HotspotItem} from './ImageHotspotArray'
+import {type FnHotspotMove, type HotspotItem} from './ImageHotspotArray'
 
 const dragStyle: CSSProperties = {
   width: '1.4rem',
@@ -95,7 +94,7 @@ export default function Spot({
   bounds,
   update,
   hotspotDescriptionPath,
-  tooltip,
+  tooltip: TooltipComponent,
   index,
   schemaType,
   renderPreview,
@@ -164,13 +163,14 @@ export default function Spot({
         disabled={isDragging}
         portal
         content={
-          tooltip && typeof tooltip === 'function' ? (
-            createElement(tooltip, {value, renderPreview, schemaType})
+          TooltipComponent && typeof TooltipComponent === 'function' ? (
+            <TooltipComponent value={value} renderPreview={renderPreview} schemaType={schemaType} />
           ) : (
             <Box padding={2} style={{maxWidth: 200, pointerEvents: `none`}}>
               <Text textOverflow="ellipsis">
                 {hotspotDescriptionPath
-                  ? (get(value, hotspotDescriptionPath) as string)
+                  ? // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- the configured descriptionPath is expected to point to a string field
+                    (get(value, hotspotDescriptionPath) as string)
                   : `${value.x}% x ${value.y}%`}
               </Text>
             </Box>
