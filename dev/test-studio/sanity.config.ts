@@ -24,6 +24,7 @@ import {
 } from '#internationalized-array'
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
+import {mediaExample} from '#media'
 import {
   orderableDocumentListExample,
   orderableDocumentListExampleStructure,
@@ -103,6 +104,7 @@ export default defineConfig([
       structureTool(),
       assistExample(),
       googleTranslateExample(),
+      mediaExample(),
       // add new plugins here
       orderableDocumentListExample(),
       latexInputExample(),

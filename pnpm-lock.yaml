@@ -217,6 +217,9 @@ importers:
       sanity-plugin-markdown:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-markdown
+      sanity-plugin-media:
+        specifier: workspace:*
+        version: link:../../plugins/sanity-plugin-media
       sanity-plugin-transifex:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-transifex
