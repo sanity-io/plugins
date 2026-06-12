@@ -1,0 +1,88 @@
+{
+  "name": "sanity-plugin-studio-smartling",
+  "version": "4.3.3",
+  "description": "!smartling gif",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/sanity-plugin-studio-smartling#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity-plugin-studio-smartling/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sanity-io/sanity-plugin-studio-smartling.git"
+  },
+  "license": "MIT",
+  "author": "Sanity.io",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "source": "./src/index.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.esm.js",
+      "default": "./dist/index.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "run-s clean && plugin-kit verify-package --silent && pkg-utils build --strict && pkg-utils --strict",
+    "lint": "eslint . --fix",
+    "clean": "rimraf dist",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "prepublishOnly": "run-s build",
+    "watch": "pkg-utils watch --strict",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "sanity-translations-tab": "^5.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "@sanity/pkg-utils": "^2.4.8",
+    "@sanity/plugin-kit": "^3.1.10",
+    "@sanity/semantic-release-preset": "^4.1.4",
+    "@types/react": "^18.2.21",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "eslint": "^8.48.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.3",
+    "prettier-plugin-packagejson": "^2.4.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-is": "^18.3.1",
+    "rimraf": "^5.0.1",
+    "sanity": "^3.40.0",
+    "styled-components": "^6.1",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "sanity": "^3 || ^4.0.0-0 || ^5.0.0"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
