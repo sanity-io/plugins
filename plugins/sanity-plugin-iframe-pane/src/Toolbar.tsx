@@ -38,6 +38,7 @@ export function Toolbar(props: ToolbarProps) {
   return (
     <>
       <textarea
+        aria-hidden
         style={{position: 'absolute', pointerEvents: 'none', opacity: 0}}
         ref={input}
         value={validUrl ? url.toString() : ''}
