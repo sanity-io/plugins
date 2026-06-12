@@ -26,7 +26,7 @@ interface FormSchemaPluginOptions {
   fields?: FieldsOption
 }
 
-export const formSchema = definePlugin((options: FormSchemaPluginOptions | undefined) => {
+export const formSchema = definePlugin<FormSchemaPluginOptions | void>((options) => {
   return {
     name: 'form-toolkit_form-schema',
     schema: schema(options?.fields ?? []),

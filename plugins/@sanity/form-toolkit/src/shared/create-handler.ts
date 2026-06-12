@@ -1,17 +1,18 @@
+import type {IncomingMessage, ServerResponse} from 'node:http'
+
 import {defineEventHandler, type H3Event} from 'h3' // For Nuxt.js/Nitro
-import type {IncomingMessage, ServerResponse} from 'http'
 
 // Utility function to detect the framework at runtime
 const detectFramework = (): string => {
-  if (process.env.NEXT_RUNTIME) {
+  if (process.env['NEXT_RUNTIME']) {
     return 'nextjs'
-  } else if (process.env.NUXT_ENV) {
+  } else if (process.env['NUXT_ENV']) {
     return 'nuxt'
-  } else if (process.env.SVELTEKIT_ENV) {
+  } else if (process.env['SVELTEKIT_ENV']) {
     return 'sveltekit'
-  } else if (process.env.REMIX_ENV) {
+  } else if (process.env['REMIX_ENV']) {
     return 'remix'
-  } else if (process.env.ASTRO_ENV) {
+  } else if (process.env['ASTRO_ENV']) {
     return 'astro'
   }
   throw new Error('Unable to detect framework.')
@@ -23,8 +24,6 @@ const createHandler = (handlerFunc: () => Promise<unknown>) => {
 
   // Handler logic to fetch Mailchimp data
   const handlerLogic = async ({
-    // eslint-disable-next-line
-    req,
     res,
   }: {
     req: IncomingMessage | Request

@@ -40,7 +40,9 @@ export const hubSpotInput = definePlugin<HubSpotInputConfig>((options) => {
           return body
         },
         autocompleteProps: {
-          renderOption: (option) => Option(option as ExtendedOption),
+          renderOption: (option) =>
+            // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- HubSpot loader returns options with a name property
+            Option(option as ExtendedOption),
           renderValue(value, option) {
             // @ts-expect-error can't extend default type?
             return option?.name ?? value

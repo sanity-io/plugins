@@ -1,6 +1,9 @@
-import type {ChangeEvent, FC, LegacyRef} from 'react'
+import type {ChangeEvent, FC, Ref} from 'react'
 
 import type {FieldComponentProps} from './types'
+
+// oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- FieldState.ref is loosely typed so refs from any form library can be passed through
+const toRef = <T extends HTMLElement>(ref: unknown) => ref as Ref<T> | undefined
 
 export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}) => {
   const {type, label, name, options = {}, choices = [], validation = []} = field
@@ -35,7 +38,7 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
       case 'textarea':
         return (
           <textarea
-            ref={ref as LegacyRef<HTMLTextAreaElement>}
+            ref={toRef<HTMLTextAreaElement>(ref)}
             name={name}
             onChange={handleChange}
             onBlur={onBlur}
@@ -48,15 +51,15 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
       case 'select':
         return (
           <select
-            ref={ref as LegacyRef<HTMLSelectElement>}
+            ref={toRef<HTMLSelectElement>(ref)}
             name={name}
             value={value ?? ''}
             onChange={handleChange}
             {...validationRules}
             onBlur={onBlur}
           >
-            {choices?.map((choice, i) => (
-              <option key={i} value={choice.value}>
+            {choices?.map((choice) => (
+              <option key={choice.value} value={choice.value}>
                 {choice.label}
               </option>
             ))}
@@ -64,12 +67,12 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
         )
 
       case 'radio':
-        return choices?.map((choice, i) => (
-          <label key={i}>
+        return choices?.map((choice) => (
+          <label key={choice.value}>
             <input
               type="radio"
               name={name}
-              ref={ref as LegacyRef<HTMLInputElement>}
+              ref={toRef<HTMLInputElement>(ref)}
               value={choice.value}
               checked={value === choice.value}
               onChange={handleChange}
@@ -81,12 +84,12 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
         ))
 
       case 'checkbox':
-        return choices?.map((choice, i) => (
-          <label key={i}>
+        return choices?.map((choice) => (
+          <label key={choice.value}>
             <input
               type="checkbox"
               name={name}
-              ref={ref as LegacyRef<HTMLInputElement>}
+              ref={toRef<HTMLInputElement>(ref)}
               value={choice.value}
               checked={Array.isArray(value) ? value.includes(choice.value) : value === choice.value}
               onChange={(e) => handleCheckboxChange(e, choice.value)}
@@ -101,7 +104,7 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
         return (
           <input
             type={type}
-            ref={ref as LegacyRef<HTMLInputElement>}
+            ref={toRef<HTMLInputElement>(ref)}
             name={name}
             value={value ?? options.defaultValue ?? ''}
             onChange={handleChange}

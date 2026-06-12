@@ -11,24 +11,37 @@ interface ValidationContextDocument {
 
 // Validation options by field type
 export const validationTypesByFieldType: Record<string, string[]> = {
-  checkbox: ['minSelectedCount', 'maxSelectedCount'],
-  color: [],
-  date: ['minDate', 'maxDate'],
+  'checkbox': ['minSelectedCount', 'maxSelectedCount'],
+  'color': [],
+  'date': ['minDate', 'maxDate'],
   'datetime-local': ['minDate', 'maxDate'],
-  email: ['pattern'],
-  file: ['maxSize', 'fileType'],
-  hidden: [],
-  number: ['min', 'max'],
+  'email': ['pattern'],
+  'file': ['maxSize', 'fileType'],
+  'hidden': [],
+  'number': ['min', 'max'],
   // password: ['minLength', 'pattern'],
-  radio: [],
-  range: ['min', 'max', 'step'],
-  select: [],
-  tel: ['pattern'],
-  text: ['minLength', 'maxLength', 'pattern'],
-  textarea: ['minLength', 'maxLength'],
-  time: [],
-  url: ['pattern'],
+  'radio': [],
+  'range': ['min', 'max', 'step'],
+  'select': [],
+  'tel': ['pattern'],
+  'text': ['minLength', 'maxLength', 'pattern'],
+  'textarea': ['minLength', 'maxLength'],
+  'time': [],
+  'url': ['pattern'],
 }
+const fieldTypeTitle = (fieldType: string): string => {
+  switch (fieldType) {
+    case 'datetime-local':
+      return 'Date & Time'
+    case 'textarea':
+      return 'Text Area'
+    case 'tel':
+      return 'Phone Number'
+    default:
+      return fieldType.charAt(0).toUpperCase() + fieldType.slice(1)
+  }
+}
+
 export const formFieldType = defineType({
   name: 'formField',
   title: 'Form Field',
@@ -41,19 +54,7 @@ export const formFieldType = defineType({
       type: 'string',
       options: {
         list: Object.keys(validationTypesByFieldType).map((type) => {
-          const title = (fieldType: string) => {
-            switch (fieldType) {
-              case 'datetime-local':
-                return 'Date & Time'
-              case 'textarea':
-                return 'Text Area'
-              case 'tel':
-                return 'Phone Number'
-              default:
-                return fieldType.charAt(0).toUpperCase() + fieldType.slice(1)
-            }
-          }
-          return {title: title(type), value: type}
+          return {title: fieldTypeTitle(type), value: type}
         }),
       },
     }),
@@ -79,6 +80,7 @@ export const formFieldType = defineType({
           }
 
           // Check uniqueness across all fields
+          // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- document shape is defined by the form schema type
           const doc = context.document as ValidationContextDocument
           const allFieldNames = doc?.fields?.map((field) => field.name) || []
 

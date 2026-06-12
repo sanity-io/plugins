@@ -13,16 +13,20 @@ interface FormRendererProps extends HTMLProps<HTMLFormElement> {
   fieldComponents?: Record<string, ComponentType<FieldComponentProps>>
 }
 
+const defaultGetFieldState = (name: string) => ({
+  value: undefined,
+  onChange: () => {},
+  name, // Pass name to field for native form handling
+})
+
+const defaultFieldComponents: Record<string, ComponentType<FieldComponentProps>> = {}
+
 export const FormRenderer: FC<FormRendererProps> = (props) => {
   const {
     formData,
-    getFieldState = (name) => ({
-      value: undefined,
-      onChange: () => {},
-      name, // Pass name to field for native form handling
-    }),
+    getFieldState = defaultGetFieldState,
     getFieldError,
-    fieldComponents = {},
+    fieldComponents = defaultFieldComponents,
     children,
   } = props
   const renderField = (field: FormField) => {

@@ -33,8 +33,8 @@ export const formiumInput = definePlugin<FormiumInputConfig | void>(() => {
           ],
         },
         loader: async ({secrets}) => {
-          const formium = createClient(secrets?.projectId || '', {
-            apiToken: secrets?.token,
+          const formium = createClient(secrets?.['projectId'] || '', {
+            apiToken: secrets?.['token'],
           })
           const {data}: {data: Form[]} = await formium.findForms()
           return data && data.length

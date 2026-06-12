@@ -22,10 +22,7 @@ export async function fetchHubSpotData({token}: {token: string}): Promise<Mapped
 
     const {results}: {results: HubSpotForm[]} = await apiResponse.json()
 
-    return results.map((result) => ({
-      ...result,
-      value: result.id,
-    }))
+    return results.map((result) => Object.assign(result, {value: result.id}))
   } catch (e: unknown) {
     console.error(e)
     return null // Explicitly return null on error
