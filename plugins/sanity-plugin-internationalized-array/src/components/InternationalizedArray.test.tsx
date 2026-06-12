@@ -66,6 +66,7 @@ vi.mock('./Feedback', () => ({
 }))
 
 import {useLanguageFilterStudioContext} from '@sanity/language-filter'
+import {useFormValue} from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
 import {ThemeWrapper} from '../test/component-helpers'
@@ -467,6 +468,52 @@ describe('InternationalizedArray', () => {
     const props = createMockArrayProps({onChange})
 
     renderInternationalizedArray(props)
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not auto-add default languages when document has been deleted', async () => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleted: true,
+      isDeleting: false,
+    } as ReturnType<typeof useDocumentPane>)
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    renderInternationalizedArray(props)
+
+    // Allow the scheduled setTimeout in the useEffect to fire
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not auto-add default languages when the document does not exist yet (no _rev)', async () => {
+    // _type resolves as usual, but the document has no revision: it is either
+    // brand new (unsaved) or was just deleted while the pane is still open
+    vi.mocked(useFormValue).mockImplementation((path) =>
+      Array.isArray(path) && path[0] === '_rev' ? undefined : 'article',
+    )
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    renderInternationalizedArray(props)
+
+    // Allow the scheduled setTimeout in the useEffect to fire
+    await new Promise((resolve) => setTimeout(resolve, 10))
 
     expect(onChange).not.toHaveBeenCalled()
   })
