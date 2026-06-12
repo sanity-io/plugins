@@ -1,11 +1,11 @@
 import {ApiIcon, SearchIcon, SpinnerIcon} from '@sanity/icons'
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {Autocomplete, Button, Card, Flex, Text} from '@sanity/ui'
-import {debounce} from 'lodash'
+import debounce from 'lodash-es/debounce.js'
 import {type JSX, useCallback, useEffect, useState} from 'react'
 import {set, type StringInputProps, unset, useClient} from 'sanity'
 
-import type {AsyncListPluginConfig} from '..'
+import type {AsyncListPluginConfig} from '../types'
 
 // Object for Autocomplpete's `options` prop
 interface OptionsItem {
@@ -78,7 +78,7 @@ export const AsyncList = (
     if (options?.secrets?.keys && !secrets) return
     // fetch the initial data, but only if the field doesn't have a value
     if (!props.value && !data) {
-      fetchData()
+      void fetchData()
     }
   }, [fetchData, data, secrets, options.secrets, props.value])
 
@@ -102,11 +102,11 @@ export const AsyncList = (
         (!query && !props.value && prevQuery) // they cleared out an existing value or query
       ) {
         if (!data) {
-          fetchData()
+          void fetchData()
         }
       }
       if (query) {
-        fetchData(query)
+        void fetchData(query)
       }
       setPrevQuery(query)
     },
@@ -139,9 +139,7 @@ export const AsyncList = (
     <Card>
       <Autocomplete
         id={`async-list-${options.schemaType}`}
-        // eslint-disable-next-line react/jsx-no-bind
         filterOption={options.loaderType === 'search' ? () => true : undefined}
-        // eslint-disable-next-line react/jsx-no-bind
         icon={
           loading
             ? () => (
@@ -180,7 +178,6 @@ export const AsyncList = (
           title={options.secrets.title ?? 'Secrets'}
           namespace={namespace}
           keys={options.secrets?.keys}
-          // eslint-disable-next-line react/jsx-no-bind
           onClose={() => setShowSettings(false)}
         />
       )}
@@ -193,7 +190,6 @@ export const AsyncList = (
             padding={2}
             radius="full"
             text="Manage keys"
-            // eslint-disable-next-line react/jsx-no-bind
             onClick={() => setShowSettings(true)}
           />
         </Flex>

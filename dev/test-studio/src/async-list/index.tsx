@@ -1,0 +1,53 @@
+import {asyncList} from '@sanity/sanity-plugin-async-list'
+import {definePlugin, defineType} from 'sanity'
+
+const asyncListTest = defineType({
+  type: 'document',
+  name: 'asyncListTest',
+  title: 'Async List',
+  fields: [
+    {type: 'string', name: 'title', title: 'Title'},
+    {type: 'pokemon', name: 'pokemon', title: 'Pokemon (seed loader)'},
+    {type: 'disneyCharacter', name: 'disneyCharacter', title: 'Disney Character (search loader)'},
+  ],
+})
+
+export const asyncListExample = definePlugin(() => ({
+  name: 'async-list-example',
+  schema: {types: [asyncListTest]},
+  plugins: [
+    // Seed loader: fetches the options once when the field is rendered
+    asyncList({
+      schemaType: 'pokemon',
+      loader: async () => {
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151&offset=0')
+        const result: {results: {name: string}[]} = await response.json()
+
+        return result.results.map((item) => ({value: item.name}))
+      },
+      autocompleteProps: {
+        placeholder: 'Search Pokemon',
+      },
+    }),
+    // Search loader: re-runs the loader with the user's query as they type
+    asyncList({
+      schemaType: 'disneyCharacter',
+      loaderType: 'search',
+      loader: async ({query}) => {
+        const url = query
+          ? `https://api.disneyapi.dev/character?name=${encodeURIComponent(query)}`
+          : 'https://api.disneyapi.dev/character'
+
+        const response = await fetch(url)
+        const result: {data: {name: string}[] | {name: string} | null} = await response.json()
+        const characters = Array.isArray(result.data)
+          ? result.data
+          : result.data
+            ? [result.data]
+            : []
+
+        return characters.map((item) => ({value: item.name}))
+      },
+    }),
+  ],
+}))

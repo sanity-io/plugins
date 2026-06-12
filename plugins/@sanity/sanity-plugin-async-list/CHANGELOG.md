@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# @sanity/sanity-plugin-async-list
 
 ## [1.3.3](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.3.2...v1.3.3) (2025-12-29)
 
