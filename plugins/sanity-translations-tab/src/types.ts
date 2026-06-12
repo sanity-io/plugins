@@ -57,6 +57,17 @@ export interface TranslationFunctionContext {
   schema: Schema
 }
 
+/*
+ * Format used when writing new `translation.metadata` entries:
+ * - 'language-field': the new `@sanity/document-internationalization` v6 format, where the
+ *   language is stored in a dedicated `language` field with a random `_key`
+ * - 'legacy': the pre-v6 format, where the language id is stored in `_key`
+ *
+ * When an existing metadata document already has entries, their format is detected and
+ * mirrored regardless of this option. This only controls brand-new metadata documents.
+ */
+export type MetadataFormat = 'language-field' | 'legacy'
+
 export type ExportForTranslation = (
   id: string,
   context: TranslationFunctionContext,
@@ -80,6 +91,7 @@ export type ImportTranslation = (
   },
   languageField?: string,
   mergeWithTargetLocale?: boolean,
+  newMetadataFormat?: MetadataFormat,
 ) => Promise<void>
 
 export type TranslationsTabConfigOptions = {
@@ -100,4 +112,5 @@ export type TranslationsTabConfigOptions = {
   callbackUrl?: string
   mergeWithTargetLocale?: boolean
   importAllConcurrency?: number
+  newMetadataFormat?: MetadataFormat
 }

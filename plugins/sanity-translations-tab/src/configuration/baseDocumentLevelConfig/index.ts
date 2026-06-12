@@ -56,6 +56,7 @@ export const baseDocumentLevelConfig = {
       serializationOptions = {},
       languageField = 'language',
       mergeWithTargetLocale = false,
+      newMetadataFormat = 'language-field',
     ] = params
     const {client} = context
     const deserializers = {
@@ -82,6 +83,7 @@ export const baseDocumentLevelConfig = {
       baseLanguage,
       languageField,
       mergeWithTargetLocale,
+      newMetadataFormat,
     )
   },
   adapter: DummyAdapter,

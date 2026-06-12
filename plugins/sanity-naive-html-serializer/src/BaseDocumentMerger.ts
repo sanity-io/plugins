@@ -1,6 +1,8 @@
 import {extractWithPath, arrayToJSONMatchPath, extract} from '@sanity/mutator'
+import {randomKey} from '@sanity/util/content'
 import {SanityDocument} from 'sanity'
 
+import {getItemLanguage, LANGUAGE_FIELD, usesLanguageField} from './internationalizedArrayHelpers'
 import {Merger} from './types'
 
 //based on args required for a sanityClient.insert operation
@@ -9,6 +11,7 @@ import {Merger} from './types'
 interface I18nArrayItem {
   _key: string
   _type: string
+  language?: string
   value: Record<string, any> | string | Array<any>
 }
 interface I18nArrayInsert {
@@ -132,10 +135,14 @@ const internationalizedArrayMerge = (
 ): Record<string, any> => {
   const patches: I18nArrayInsert[] = []
 
-  //get all keys that match the base language from the translated doc,
-  //since those are the strings that have been translated
-  const extractionKey = `..[_key == "${baseLang}"]`
-  const originPaths = extractWithPath(extractionKey, translatedItems)
+  //get all items that match the base language from the translated doc,
+  //since those are the strings that have been translated.
+  //translated files produced by the serializer hold the language in `_key`,
+  //but raw v5-format documents hold it in `language` -- extract both
+  const extractionKeys = [`..[_key == "${baseLang}"]`, `..[${LANGUAGE_FIELD} == "${baseLang}"]`]
+  const originPaths = extractionKeys.flatMap((extractionKey) =>
+    extractWithPath(extractionKey, translatedItems),
+  )
 
   //slice off the index to get the arrays at which all the translated fields live
   //then transform to string so we can extract
@@ -152,11 +159,13 @@ const internationalizedArrayMerge = (
     if (!origArray?.length) {
       return
     }
-    const origVal = origArray.find((item: I18nArrayItem) => item._key === baseLang)?.value
+    const origVal = origArray.find(
+      (item: I18nArrayItem) => getItemLanguage(item) === baseLang,
+    )?.value
 
     const translatedArray = extract(path, translatedItems)[0] as Array<I18nArrayItem> | undefined
     const translatedVal = translatedArray?.find(
-      (item: I18nArrayItem) => item._key === baseLang,
+      (item: I18nArrayItem) => getItemLanguage(item) === baseLang,
     )?.value
 
     //then, combine the translated values with the original recursively
@@ -177,19 +186,35 @@ const internationalizedArrayMerge = (
 
     //check if the array is long enough for it to have a position
 
+    //mirror the format of the existing data: v5 stores the language in a
+    //`language` field with a random `_key`, while v4 stores it in `_key`.
+    const isLanguageField = usesLanguageField(origArray)
+
     //check the original array to see what operation we should run
     //(we don't want duplicates of locale keys)
-    const existingLocaleKey = origArray.find((item) => item._key === localeId)
+    const existingLocaleKey = origArray.find((item) => getItemLanguage(item) === localeId)
     const at = existingLocaleKey ? 'replace' : 'after'
+    //target the existing entry by its real `_key` so it works for both formats
     const selector: string = existingLocaleKey
-      ? `${path}[_key == "${localeId}"]`
+      ? `${path}[_key == "${existingLocaleKey._key}"]`
       : `${path}[${localeArrayPosition - 1}]`
 
     if (valToPatch) {
+      //preserve the existing item's `_key` when replacing, so item identity
+      //stays stable across repeated imports
+      const newItem: I18nArrayItem = isLanguageField
+        ? {
+            _key: existingLocaleKey?._key ?? randomKey(),
+            _type: origArray[0]!._type,
+            [LANGUAGE_FIELD]: localeId,
+            value: valToPatch,
+          }
+        : {_key: localeId, _type: origArray[0]!._type, value: valToPatch}
+
       patches.push({
         at,
         selector,
-        items: [{_key: localeId, _type: origArray[0]!._type, value: valToPatch}],
+        items: [newItem],
       })
     }
   })

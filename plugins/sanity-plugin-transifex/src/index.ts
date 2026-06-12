@@ -2,6 +2,7 @@ import {
   baseDocumentLevelConfig,
   legacyDocumentLevelConfig as baseLegacyDocumentLevelConfig,
   baseFieldLevelConfig,
+  baseI18nArrayConfig,
 } from 'sanity-translations-tab'
 import type {Adapter, TranslationFunctionContext} from 'sanity-translations-tab'
 
@@ -17,6 +18,7 @@ export {
   legacyDocumentLevelPatch,
   documentLevelPatch,
   fieldLevelPatch,
+  i18nArrayPatch,
   TranslationsTab,
 } from 'sanity-translations-tab'
 
@@ -52,9 +54,17 @@ const defaultFieldLevelConfig: ConfigOptions = {
   secretsNamespace: 'transifex',
 }
 
+//for documents using sanity-plugin-internationalized-array fields
+const defaultI18nArrayConfig: ConfigOptions = {
+  ...baseI18nArrayConfig,
+  adapter: TransifexAdapter,
+  secretsNamespace: 'transifex',
+}
+
 export {
   TransifexAdapter,
   defaultDocumentLevelConfig,
   defaultFieldLevelConfig,
+  defaultI18nArrayConfig,
   legacyDocumentLevelConfig,
 }

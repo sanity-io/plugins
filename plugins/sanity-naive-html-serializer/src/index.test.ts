@@ -15,9 +15,12 @@ test('package exports', {timeout: 30_000}, async () => {
         "BaseDocumentDeserializer": "object",
         "BaseDocumentMerger": "object",
         "BaseDocumentSerializer": "function",
+        "LANGUAGE_FIELD": "string",
         "customBlockDeserializers": "object",
         "customSerializers": "object",
         "defaultStopTypes": "object",
+        "getItemLanguage": "function",
+        "usesLanguageField": "function",
       },
     }
   `)

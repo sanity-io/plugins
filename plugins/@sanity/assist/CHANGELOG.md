@@ -1,5 +1,11 @@
 # 📓 Changelog
 
+## 6.1.0
+
+### Minor Changes
+
+- [#959](https://github.com/sanity-io/plugins/pull/959) [`fa78668`](https://github.com/sanity-io/plugins/commit/fa7866815837c11f5cd84a1c005581629fdc5615) Thanks [@stipsan](https://github.com/stipsan)! - Update date-fns to v4
+
 ## 6.0.7
 
 ### Patch Changes

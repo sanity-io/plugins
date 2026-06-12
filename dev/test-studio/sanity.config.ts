@@ -13,8 +13,10 @@ import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
+import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
 import {documentsPaneExample} from '#documents-pane'
 import {googleTranslateExample} from '#google-translate'
+import {i18nArrayTranslationExample} from '#i18n-array-translation'
 import {iframePaneExample} from '#iframe-pane'
 import {
   internationalizedArrayAsyncLanguages,
@@ -68,6 +70,16 @@ export default defineConfig([
     name: 'translations-tab-example',
     title: 'Translations Tab',
     plugins: [translationsTabExample()],
+  }),
+  createWorkspace({
+    name: 'i18n-array-translation-example',
+    title: 'i18n Array Translation',
+    plugins: [i18nArrayTranslationExample()],
+  }),
+  createWorkspace({
+    name: 'doc-i18n-translation-example',
+    title: 'Doc i18n + Translations',
+    plugins: [documentInternationalizationTranslationExample()],
   }),
   createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
   createWorkspace({
