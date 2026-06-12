@@ -426,7 +426,8 @@ This creates a changeset file in `.changeset/` that should be committed with you
 
 1. Merge PRs that include changeset files to `main`
 2. The release workflow automatically creates a **"Version Packages"** PR that bumps versions and updates changelogs
-3. When the "Version Packages" PR is merged, packages are automatically published to npm with provenance
+3. The **"Version Packages"** PR gets an automated comment with `npmdiff.dev` links for each package version bump
+4. When the "Version Packages" PR is merged, packages are automatically published to npm with provenance
 
 ## Issue Follow-Ups
 
