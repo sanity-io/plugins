@@ -109,7 +109,10 @@ const DialogForm: FC<Props> = (props: Props) => {
   }
 
   const handleDelete = async () => {
-    const id = deploymentTarget!._id
+    if (!deploymentTarget) {
+      return
+    }
+    const id = deploymentTarget._id
     formStateTransition({type: 'DELETE', id})
     await toPromise(formStateActorRef)
     if (formStateActorRef.getSnapshot().matches('deleted')) {
