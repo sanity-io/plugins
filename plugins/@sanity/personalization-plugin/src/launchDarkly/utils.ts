@@ -1,7 +1,7 @@
-import {SanityClient} from 'sanity'
+import type {SanityClient} from 'sanity'
 
-import {ExperimentType} from '../types'
-import {LaunchDarklyFieldLevelConfig, LaunchDarklyFlagItem} from './types'
+import type {ExperimentType} from '../types'
+import type {LaunchDarklyFieldLevelConfig, LaunchDarklyFlagItem} from './types'
 
 export const getExperiments = async ({
   client,

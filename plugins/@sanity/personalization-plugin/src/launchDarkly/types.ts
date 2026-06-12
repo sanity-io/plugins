@@ -1,4 +1,4 @@
-import {FieldDefinition} from 'sanity'
+import type {FieldDefinition} from 'sanity'
 
 export type LaunchDarklyFieldLevelConfig = {
   fields: (string | FieldDefinition)[]

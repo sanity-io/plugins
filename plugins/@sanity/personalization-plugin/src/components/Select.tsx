@@ -1,14 +1,14 @@
 import {Select as SanitySelect} from '@sanity/ui'
-import {FormEvent} from 'react'
-import {FormPatch, PatchEvent, Path, StringInputProps} from 'sanity'
+import type {ChangeEvent} from 'react'
+import type {FormPatch, PatchEvent, Path, StringInputProps} from 'sanity'
 
-import {SelectOption} from './ExperimentInput'
+import type {SelectOption} from './ExperimentInput'
 
 export const Select = (
   props: StringInputProps & {
     listOptions: SelectOption[]
     handleChange: (
-      event: FormEvent,
+      event: ChangeEvent<HTMLSelectElement>,
       onChange: (patch: FormPatch | FormPatch[] | PatchEvent) => void,
     ) => void
     aditionalChangePath?: Path
@@ -28,7 +28,7 @@ export const Select = (
       {...elementProps}
       fontSize={2}
       padding={3}
-      space={[3, 3, 4]}
+      gap={[3, 3, 4]}
       value={value || ''} // Current field value
       onChange={(event) => handleChange(event, onChange)} // A function to call when the input value changes
     >

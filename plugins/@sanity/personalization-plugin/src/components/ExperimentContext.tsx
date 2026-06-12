@@ -3,7 +3,7 @@ import {createContext, useContext, useMemo} from 'react'
 import {type ObjectInputProps, useClient, useWorkspace} from 'sanity'
 import {suspend} from 'suspend-react'
 
-import {ExperimentContextProps, FieldPluginConfig} from '../types'
+import type {ExperimentContextProps, FieldPluginConfig} from '../types'
 
 // This provider makes the plugin config available to all components in the document form
 // But with experiments resolved
@@ -18,7 +18,7 @@ export const CONFIG_DEFAULT = {
   experimentId: 'experimentId',
 }
 
-export const ExperimentContext = createContext<ExperimentContextProps>({
+const ExperimentContext = createContext<ExperimentContextProps>({
   ...CONFIG_DEFAULT,
   experiments: [],
 })
@@ -41,7 +41,6 @@ export function ExperimentProvider(props: ExperimentProps) {
   const experiments = Array.isArray(experimentFieldPluginConfig.experiments)
     ? experimentFieldPluginConfig.experiments
     : suspend(
-        // eslint-disable-next-line require-await
         async () => {
           if (typeof experimentFieldPluginConfig.experiments === 'function') {
             return experimentFieldPluginConfig.experiments(client)

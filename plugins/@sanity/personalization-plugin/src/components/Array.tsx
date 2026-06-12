@@ -3,7 +3,7 @@ import {uuid} from '@sanity/uuid'
 import {useCallback} from 'react'
 import {useFormValue} from 'sanity'
 
-import {ArrayInputProps, VariantType} from '../types'
+import type {ArrayInputProps, VariantType} from '../types'
 import {useExperimentContext} from './ExperimentContext'
 
 export const ArrayInput = (props: ArrayInputProps) => {
@@ -35,7 +35,7 @@ export const ArrayInput = (props: ArrayInputProps) => {
 
   type Value = {
     value?: unknown
-    [key: string]: string | unknown
+    [key: string]: unknown
     variantId: string
     _key: string
     _type: string
@@ -47,10 +47,10 @@ export const ArrayInput = (props: ArrayInputProps) => {
   const usedVariants = values?.map((variant) => variant[variantId])
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {props.renderDefault({...props, arrayFunctions: () => null})}
 
-      <Inline space={1}>
+      <Inline gap={1}>
         {filteredVariants.map((variant) => {
           return (
             <Button

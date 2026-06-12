@@ -1,6 +1,6 @@
 import {isDocumentSchemaType, type ObjectField, type Path, type SchemaType} from 'sanity'
 
-import {ObjectFieldWithPath} from '../types'
+import type {ObjectFieldWithPath} from '../types'
 
 /**
  * Flattens a document's schema type into a flat array of fields and includes their path
@@ -15,7 +15,7 @@ export function flattenSchemaType(schemaType: SchemaType): ObjectFieldWithPath[]
 }
 
 function extractInnerFields(
-  fields: ObjectField<SchemaType>[],
+  fields: ObjectField[],
   path: Path,
   maxDepth: number,
 ): ObjectFieldWithPath[] {
@@ -23,25 +23,23 @@ function extractInnerFields(
     return []
   }
 
-  return fields.reduce<ObjectFieldWithPath[]>((acc, field) => {
-    const thisFieldWithPath = {path: [...path, field.name], ...field}
+  const result: ObjectFieldWithPath[] = []
+
+  for (const field of fields) {
+    result.push({path: [...path, field.name], ...field})
 
     if (field.type.jsonType === 'object') {
-      const innerFields = extractInnerFields(field.type.fields, [...path, field.name], maxDepth)
-      return [...acc, thisFieldWithPath, ...innerFields]
+      result.push(...extractInnerFields(field.type.fields, [...path, field.name], maxDepth))
     } else if (field.type.jsonType === 'array') {
       // Handle array types by checking each possible type in the array
       const arrayTypes = field.type.of || []
-      const innerFields = arrayTypes.reduce<ObjectFieldWithPath[]>((arrayAcc, arrayType) => {
+      for (const arrayType of arrayTypes) {
         if ('fields' in arrayType) {
-          const typeFields = extractInnerFields(arrayType.fields, [...path, field.name], maxDepth)
-          return [...arrayAcc, ...typeFields]
+          result.push(...extractInnerFields(arrayType.fields, [...path, field.name], maxDepth))
         }
-        return arrayAcc
-      }, [])
-      return [...acc, thisFieldWithPath, ...innerFields]
+      }
     }
+  }
 
-    return [...acc, thisFieldWithPath]
-  }, [])
+  return result
 }

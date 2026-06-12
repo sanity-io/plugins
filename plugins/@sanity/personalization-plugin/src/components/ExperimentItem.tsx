@@ -1,4 +1,4 @@
-import {ObjectItem, ObjectItemProps, set} from 'sanity'
+import {type ObjectItem, type ObjectItemProps, set} from 'sanity'
 
 export const ExperimentItem = (props: ObjectItemProps) => {
   const {active} = props.value as ObjectItem & {active: boolean}

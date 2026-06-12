@@ -1,17 +1,17 @@
 import {Card, Text} from '@sanity/ui'
-import {FormEvent, useCallback, useMemo} from 'react'
+import {type ChangeEvent, useCallback, useMemo} from 'react'
 import {
-  FormPatch,
+  type FormPatch,
   getPublishedId,
-  PatchEvent,
+  type PatchEvent,
   set,
-  StringInputProps,
+  type StringInputProps,
   unset,
   useDocumentOperation,
   useFormValue,
 } from 'sanity'
 
-import {ExperimentType} from '..'
+import type {ExperimentType} from '..'
 import {useExperimentContext} from './ExperimentContext'
 import {Select} from './Select'
 
@@ -38,11 +38,10 @@ export const ExperimentInput = (
 
   const handleChange = useCallback(
     (
-      event: FormEvent<Element>,
+      event: ChangeEvent<HTMLSelectElement>,
       onChange: (patchchange: FormPatch | FormPatch[] | PatchEvent) => void,
     ) => {
-      const target = event.currentTarget as HTMLSelectElement
-      const inputValue = target.value
+      const inputValue = event.currentTarget.value
 
       if (inputValue) {
         onChange(set(inputValue))

@@ -1,14 +1,15 @@
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {useEffect, useState} from 'react'
-import {ObjectInputProps} from 'sanity'
+import type {ObjectInputProps} from 'sanity'
 
 import {useGrowthbookContext} from './GrowthbookContext'
 
 export const namespace = 'growthbook'
+export const apiKeyName = 'apiKey'
 
-export const pluginConfigKeys = [
+const pluginConfigKeys = [
   {
-    key: 'apiKey',
+    key: apiKeyName,
     title: 'Your secret API key',
   },
 ]

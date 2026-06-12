@@ -2,19 +2,18 @@ import {useEffect, useState} from 'react'
 import {
   isImage,
   isReference,
-  ObjectSchemaType,
-  PreviewProps,
-  ReferenceSchemaType,
+  type ObjectSchemaType,
+  type PreviewProps,
+  type ReferenceSchemaType,
   useClient,
 } from 'sanity'
 
-import {VariantPreviewProps} from '../types'
+import type {VariantPreviewProps} from '../types'
 import {useExperimentContext} from './ExperimentContext'
 
 export const VariantPreview = (props: PreviewProps) => {
   const [subtitle, setSubtitle] = useState<string | undefined>(undefined)
   const [title, setTitle] = useState<string | undefined>(undefined)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [media, setMedia] = useState<any>(undefined)
   const client = useClient({apiVersion: '2025-01-01'})
   const {experiments} = useExperimentContext()
@@ -53,15 +52,15 @@ export const VariantPreview = (props: PreviewProps) => {
         })
 
         const previewContent = referenceType?.preview?.prepare?.(selectFields)
-        setMedia(previewContent?.media || selectFields.media)
-        return setSubtitle(previewContent?.title || (selectFields?.title as string))
+        setMedia(previewContent?.media || selectFields['media'])
+        return setSubtitle(previewContent?.title || (selectFields['title'] as string))
       }
       if (isImage(value)) {
         setMedia(value)
       }
       return ''
     }
-    getSubtitle()
+    void getSubtitle()
   }, [value, client, selectedExperiment?.label, selectedVariant?.label, props.schemaType])
 
   const previewProps = {

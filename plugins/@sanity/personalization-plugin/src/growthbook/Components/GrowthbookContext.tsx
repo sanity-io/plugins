@@ -1,14 +1,14 @@
 import {createContext, useContext, useMemo, useState} from 'react'
-import {ObjectInputProps} from 'sanity'
+import type {ObjectInputProps} from 'sanity'
 
-import {GrowthbookContextProps, GrowthbookExperimentFieldPluginConfig} from '../types'
+import type {GrowthbookContextProps, GrowthbookExperimentFieldPluginConfig} from '../types'
 import {Secrets} from './Secrets'
 
 export const GROWTHBOOK_CONFIG_DEFAULT = {
   baseUrl: 'https://api.growthbook.io/api/v1',
 }
 
-export const GrowthbookContext = createContext<GrowthbookContextProps>({
+const GrowthbookContext = createContext<GrowthbookContextProps>({
   setSecret: () => undefined,
   secret: undefined,
 })

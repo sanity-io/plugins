@@ -3,7 +3,7 @@ import {definePlugin, isObjectInputProps} from 'sanity'
 import {fieldLevelExperiments as baseFieldLevelExperiments} from '../fieldExperiments'
 import {flattenSchemaType} from '../utils/flattenSchemaType'
 import {LAUNCHDARKLY_CONFIG_DEFAULT, LaunchDarklyProvider} from './components/LaunchDarklyContext'
-import {LaunchDarklyFieldLevelConfig} from './types'
+import type {LaunchDarklyFieldLevelConfig} from './types'
 import {getExperiments} from './utils'
 
 export const fieldLevelExperiments = definePlugin<LaunchDarklyFieldLevelConfig>((config) => {

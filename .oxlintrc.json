@@ -131,6 +131,16 @@
       }
     },
     {
+      "files": ["plugins/@sanity/personalization-plugin/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off",
+        "no-base-to-string": "off",
+        "no-await-in-loop": "off",
+        "react-hooks-js/set-state-in-effect": "off"
+      }
+    },
+    {
       "files": ["plugins/sanity-naive-html-serializer/test/**/*.ts"],
       "rules": {
         "no-unsafe-type-assertion": "off",

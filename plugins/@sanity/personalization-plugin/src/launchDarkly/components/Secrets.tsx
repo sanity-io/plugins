@@ -1,6 +1,6 @@
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {useEffect, useState} from 'react'
-import {ObjectInputProps} from 'sanity'
+import type {ObjectInputProps} from 'sanity'
 
 import {useLaunchDarklyContext} from './LaunchDarklyContext'
 

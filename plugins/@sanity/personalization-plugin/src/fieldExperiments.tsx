@@ -1,9 +1,9 @@
 import {
-  ArrayOfObjectsInputProps,
+  type ArrayOfObjectsInputProps,
   defineField,
   definePlugin,
   defineType,
-  FieldDefinition,
+  type FieldDefinition,
   isObjectInputProps,
 } from 'sanity'
 
@@ -14,7 +14,7 @@ import {ExperimentInput} from './components/ExperimentInput'
 import {ExperimentItem} from './components/ExperimentItem'
 import {VariantInput} from './components/VariantInput'
 import {VariantPreview} from './components/VariantPreview'
-import {FieldPluginConfig} from './types'
+import type {FieldPluginConfig} from './types'
 import {flattenSchemaType} from './utils/flattenSchemaType'
 
 const createExperimentType = ({
@@ -33,7 +33,7 @@ const createExperimentType = ({
   experimentId: string
 }) => {
   const typeName = typeof field === `string` ? field : field.name
-  const usedName = String(typeName[0]).toUpperCase() + String(typeName).slice(1)
+  const usedName = String(typeName[0]).toUpperCase() + typeName.slice(1)
   const variantName = `${variantNameOverride}${usedName}`
 
   return defineType({
@@ -139,7 +139,7 @@ const createVariantType = ({
   experimentId: string
 }) => {
   const typeName = typeof field === `string` ? field : field.name
-  const usedName = String(typeName[0]).toUpperCase() + String(typeName).slice(1)
+  const usedName = String(typeName[0]).toUpperCase() + typeName.slice(1)
   return defineType({
     name: `${variantNameOverride}${usedName}`,
     title: `${variantNameOverride} array ${usedName}`,

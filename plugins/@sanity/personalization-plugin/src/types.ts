@@ -1,11 +1,10 @@
-import {
+import type {
   ArrayOfObjectsInputProps,
   FieldDefinition,
   ObjectField,
   Path,
   PreviewProps,
   SanityClient,
-  SchemaType,
 } from 'sanity'
 
 export type VariantType = {
@@ -31,7 +30,6 @@ export type FieldPluginConfig = {
 
 export type VariantPreviewProps = Omit<PreviewProps, 'SchemaType'> & {
   [key: string]: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any
 }
 
@@ -45,7 +43,7 @@ export type ArrayInputProps = ArrayOfObjectsInputProps & {
   experimentId: string
 }
 
-export type ObjectFieldWithPath = ObjectField<SchemaType> & {path: Path}
+export type ObjectFieldWithPath = ObjectField & {path: Path}
 
 export type VariantGeneric<T> = {
   [key: string]: string | T | undefined

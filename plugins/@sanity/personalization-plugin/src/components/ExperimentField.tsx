@@ -3,11 +3,11 @@ import {useCallback, useMemo} from 'react'
 import {GiSoapExperiment} from 'react-icons/gi'
 import {
   defineDocumentFieldAction,
-  DocumentFieldActionItem,
-  DocumentFieldActionProps,
-  FormPatch,
-  ObjectFieldProps,
-  PatchEvent,
+  type DocumentFieldActionItem,
+  type DocumentFieldActionProps,
+  type FormPatch,
+  type ObjectFieldProps,
+  type PatchEvent,
   set,
   unset,
 } from 'sanity'
@@ -108,7 +108,7 @@ export const ExperimentField = (
 ) => {
   const {onChange} = props.inputProps
   const {inputId, experimentNameOverride, experimentId, variantNameOverride} = props
-  const active = props.value?.active as boolean | undefined
+  const active = props.value?.['active'] as boolean | undefined
 
   const actionProps = useMemo(
     () => ({

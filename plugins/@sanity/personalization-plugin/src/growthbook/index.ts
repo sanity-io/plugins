@@ -3,7 +3,7 @@ import {definePlugin, isObjectInputProps} from 'sanity'
 import {fieldLevelExperiments as baseFieldLevelExperiments} from '../fieldExperiments'
 import {flattenSchemaType} from '../utils/flattenSchemaType'
 import {GROWTHBOOK_CONFIG_DEFAULT, GrowthbookProvider} from './Components/GrowthbookContext'
-import {GrowthbookExperimentFieldPluginConfig} from './types'
+import type {GrowthbookExperimentFieldPluginConfig} from './types'
 import {getExperiments} from './utils'
 
 export const fieldLevelExperiments = definePlugin<GrowthbookExperimentFieldPluginConfig>(
