@@ -30,6 +30,8 @@
     "perf": "error"
   },
   "rules": {
+    "no-underscore-dangle": "off",
+    "consistent-function-scoping": "off",
     "eslint/no-restricted-imports": [
       "error",
       {
