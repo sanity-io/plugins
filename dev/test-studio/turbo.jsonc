@@ -1,0 +1,14 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // ENABLE_VITE_DEVTOOLS opts into Vite DevTools (see sanity.cli.ts); declaring it here
+    // invalidates turbo-cached builds when it flips and passes it through in strict env mode
+    "build": {
+      "env": ["ENABLE_VITE_DEVTOOLS"],
+    },
+    "dev": {
+      "env": ["ENABLE_VITE_DEVTOOLS"],
+    },
+  },
+}
