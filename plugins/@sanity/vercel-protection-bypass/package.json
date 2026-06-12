@@ -1,6 +1,6 @@
 {
   "name": "@sanity/vercel-protection-bypass",
-  "version": "5.0.8",
+  "version": "5.0.9",
   "keywords": [
     "sanity",
     "sanity-plugin",

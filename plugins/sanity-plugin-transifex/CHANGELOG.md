@@ -1,5 +1,21 @@
 # sanity-plugin-transifex
 
+## 5.1.2
+
+### Patch Changes
+
+- [#980](https://github.com/sanity-io/plugins/pull/980) [`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/pkg-utils` to pick up a DTS generation bug fix.
+
+- Updated dependencies [[`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c)]:
+  - sanity-translations-tab@6.1.2
+
+## 5.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`4226408`](https://github.com/sanity-io/plugins/commit/4226408594d2717cf2503866f5d5216991701d38)]:
+  - sanity-translations-tab@6.1.1
+
 ## 5.1.0
 
 ### Minor Changes
