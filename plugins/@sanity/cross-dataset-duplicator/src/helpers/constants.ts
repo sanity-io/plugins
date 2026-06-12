@@ -1,4 +1,4 @@
-import {PluginConfig} from '../types'
+import type {PluginConfig} from '../types'
 
 export const SECRET_NAMESPACE = `CrossDatasetDuplicator`
 

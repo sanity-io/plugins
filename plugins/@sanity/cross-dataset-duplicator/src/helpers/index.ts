@@ -1,4 +1,4 @@
-import {CSSProperties} from 'react'
+import type {CSSProperties} from 'react'
 
 export function createInitialMessage(docCount = 0, refsCount = 0): string {
   const message = [

@@ -4,7 +4,7 @@ import {DuplicateToAction} from './actions/DuplicateToAction'
 import {ConfigProvider} from './context/ConfigProvider'
 import {DEFAULT_CONFIG} from './helpers/constants'
 import {crossDatasetDuplicatorTool} from './tool'
-import {PluginConfig} from './types'
+import type {PluginConfig} from './types'
 
 /**
  * Plugin: Cross Dataset Duplicator
@@ -19,7 +19,7 @@ export const crossDatasetDuplicator = definePlugin<Partial<PluginConfig> | void>
     tools: (prev) => (pluginConfig.tool ? [...prev, crossDatasetDuplicatorTool()] : prev),
     studio: {
       components: {
-        layout: (props) => ConfigProvider({...props, pluginConfig}),
+        layout: (props) => <ConfigProvider {...props} pluginConfig={pluginConfig} />,
       },
     },
     document: {

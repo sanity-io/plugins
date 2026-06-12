@@ -1,19 +1,7 @@
-/* eslint-disable react/jsx-no-bind */
-import React, {useState, useEffect} from 'react'
-import {
-  useClient,
-  Preview,
-  useSchema,
-  useWorkspaces,
-  WorkspaceSummary,
-  SanityDocument,
-} from 'sanity'
-// @ts-ignore
-import mapLimit from 'async/mapLimit'
-// @ts-ignore
-import asyncify from 'async/asyncify'
+import {isAssetId, isSanityFileAsset} from '@sanity/asset-utils'
+import type {SanityAssetDocument} from '@sanity/client'
+import {ArrowRightIcon, SearchIcon, LaunchIcon} from '@sanity/icons'
 import {extractWithPath} from '@sanity/mutator'
-import {dset} from 'dset'
 import {
   Card,
   Container,
@@ -25,25 +13,31 @@ import {
   Select,
   Flex,
   Checkbox,
-  CardTone,
+  type CardTone,
   useTheme,
   Spinner,
 } from '@sanity/ui'
-import {ArrowRightIcon, SearchIcon, LaunchIcon} from '@sanity/icons'
-import {SanityAssetDocument} from '@sanity/client'
-import {isAssetId, isSanityFileAsset} from '@sanity/asset-utils'
+import {getTheme_v2} from '@sanity/ui/theme'
+import {dset} from 'dset'
+import {type ChangeEvent, Fragment, useEffect, useEffectEvent, useMemo, useState} from 'react'
+import {
+  useClient,
+  Preview,
+  useSchema,
+  useWorkspaces,
+  type WorkspaceSummary,
+  type SanityDocument,
+} from 'sanity'
 
 import {stickyStyles, createInitialMessage} from '../helpers'
 import {getDocumentsInArray} from '../helpers/getDocumentsInArray'
-import SelectButtons from './SelectButtons'
-import StatusBadge, {MessageTypes} from './StatusBadge'
+import type {PluginConfig} from '../types'
 import Feedback from './Feedback'
-import {PluginConfig} from '../types'
+import SelectButtons from './SelectButtons'
+import StatusBadge, {type MessageTypes} from './StatusBadge'
 
 export type DuplicatorProps = {
   docs: SanityDocument[]
-  // TODO: Find out if this is even used?
-  // draftIds: string[]
   token: string
   pluginConfig: Required<PluginConfig>
   onDuplicated?: () => Promise<void>
@@ -65,9 +59,39 @@ type Message = {
   tone: CardTone
 }
 
+function isAssetDocument(doc: SanityDocument): doc is SanityDocument & SanityAssetDocument {
+  return isAssetId(doc._id)
+}
+
+// Run an async function over every item with a maximum concurrency
+async function mapWithConcurrency<T>(
+  items: T[],
+  limit: number,
+  fn: (item: T) => Promise<void>,
+): Promise<void> {
+  const queue = [...items]
+
+  async function work(): Promise<void> {
+    const item = queue.shift()
+
+    if (item === undefined) {
+      return undefined
+    }
+
+    await fn(item)
+
+    return work()
+  }
+
+  const workers = Array.from({length: Math.min(limit, queue.length)}, () => work())
+
+  await Promise.all(workers)
+}
+
 export default function Duplicator(props: DuplicatorProps) {
   const {docs, token, pluginConfig, onDuplicated} = props
-  const isDarkMode = useTheme().sanity.color.dark
+  const theme = useTheme()
+  const isDarkMode = getTheme_v2({sanity: theme.sanity}).color._dark
 
   // Prepare origin (this Studio) client
   const originClient = useClient({apiVersion: pluginConfig.apiVersion})
@@ -85,136 +109,125 @@ export default function Duplicator(props: DuplicatorProps) {
   }))
 
   const [destination, setDestination] = useState<WorkspaceOption | null>(
-    workspaces.length ? workspacesOptions.find((space) => !space.disabled) ?? null : null
+    workspaces.length ? (workspacesOptions.find((space) => !space.disabled) ?? null) : null,
   )
   const [message, setMessage] = useState<Message | null>(null)
   const [payload, setPayload] = useState<PayloadItem[]>([])
 
-  const [hasReferences, setHasReferences] = useState(false)
   const [isDuplicating, setIsDuplicating] = useState(false)
   const [isGathering, setIsGathering] = useState(false)
-  const [progress, setProgress] = useState<number[]>([0, 0])
+  const [progress, setProgress] = useState<[number, number]>([0, 0])
 
-  // Check for References and update message
-  useEffect(() => {
-    const expr = `.._ref`
-    const initialRefs = []
-    const initialPayload: PayloadItem[] = []
-
-    docs.forEach((doc) => {
-      const refs = extractWithPath(expr, doc).map((ref) => ref.value)
-      initialRefs.push(...refs)
-      initialPayload.push({include: true, doc})
-    })
-
-    updatePayloadStatuses(initialPayload)
-
-    const docCount = docs.length
-    const refsCount = initialRefs.length
-
-    if (initialRefs.length) {
-      setHasReferences(true)
-
-      setMessage({
-        tone: `caution`,
-        text: createInitialMessage(docCount, refsCount),
-      })
-    }
-  }, [docs])
-
-  // Re-check payload on destination when value changes
-  // (On initial render + select change)
-  useEffect(() => {
-    updatePayloadStatuses()
-  }, [destination])
+  // References found in the initial docs
+  const initialRefsCount = useMemo(
+    () => docs.reduce((acc, doc) => acc + extractWithPath(`.._ref`, doc).length, 0),
+    [docs],
+  )
+  const hasReferences = initialRefsCount > 0
+  const initialMessage: Message | null = hasReferences
+    ? {tone: `caution`, text: createInitialMessage(docs.length, initialRefsCount)}
+    : null
+  const displayMessage = message ?? initialMessage
 
   // Check if payload documents exist at destination
-  async function updatePayloadStatuses(newPayload: PayloadItem[] = []) {
-    const payloadActual = newPayload.length ? newPayload : payload
-
-    if (!payloadActual.length || !destination?.name) {
+  async function updatePayloadStatuses(payloadActual: PayloadItem[], dest: WorkspaceOption | null) {
+    if (!payloadActual.length || !dest?.name) {
       return
     }
 
     const payloadIds = payloadActual.map(({doc}) => doc._id)
     const destinationClient = originClient.withConfig({
-      dataset: destination.dataset,
-      projectId: destination.projectId,
+      dataset: dest.dataset,
+      projectId: dest.projectId,
     })
-    const destinationData: SanityDocument[] = await destinationClient.fetch(
+    const destinationData = await destinationClient.fetch<SanityDocument[]>(
       `*[_id in $payloadIds]{ _id, _updatedAt }`,
-      {payloadIds}
+      {payloadIds},
     )
 
-    const updatedPayload = payloadActual.map((item) => {
-      const existingDoc = destinationData.find((doc) => doc._id === item.doc._id)
+    setPayload(
+      payloadActual.map((item) => {
+        const existingDoc = destinationData.find((doc) => doc._id === item.doc._id)
+        let status: keyof MessageTypes = 'CREATE'
 
-      if (existingDoc?._updatedAt && item?.doc?._updatedAt) {
-        if (existingDoc._updatedAt === item.doc._updatedAt) {
-          // Exact same document exists at destination
-          // We don't compare by _rev because that is updated in a transaction
-          item.status = `EXISTS`
-        } else if (existingDoc._updatedAt && item.doc._updatedAt) {
-          item.status =
-            new Date(existingDoc._updatedAt) > new Date(item.doc._updatedAt)
-              ? // Document at destination is newer
-                `OVERWRITE`
-              : // Document at destination is older
-                `UPDATE`
+        if (existingDoc?._updatedAt && item.doc._updatedAt) {
+          if (existingDoc._updatedAt === item.doc._updatedAt) {
+            // Exact same document exists at destination
+            // We don't compare by _rev because that is updated in a transaction
+            status = `EXISTS`
+          } else {
+            status =
+              new Date(existingDoc._updatedAt) > new Date(item.doc._updatedAt)
+                ? // Document at destination is newer
+                  `OVERWRITE`
+                : // Document at destination is older
+                  `UPDATE`
+          }
         }
-      } else {
-        item.status = 'CREATE'
-      }
 
-      return item
-    })
-
-    setPayload(updatedPayload)
+        return {...item, status}
+      }),
+    )
   }
 
+  // Build the initial payload and check statuses at the current destination
+  const initializePayload = useEffectEvent((nextDocs: SanityDocument[]) => {
+    const initialPayload: PayloadItem[] = nextDocs.map((doc) => ({include: true, doc}))
+    updatePayloadStatuses(initialPayload, destination).catch(console.error)
+  })
+
+  // Sync the payload with the docs prop and the destination dataset.
+  // setPayload only runs after fetching document statuses from the
+  // destination resolves, not synchronously within the effect.
+  // See: https://github.com/facebook/react/issues/34743
+  useEffect(() => {
+    // oxlint-disable-next-line react-hooks-js/set-state-in-effect
+    initializePayload(docs)
+  }, [docs])
+
   function handleCheckbox(_id: string) {
-    const updatedPayload = payload.map((item) => {
-      if (item.doc._id === _id) {
-        item.include = !item.include
-      }
-
-      return item
-    })
-
-    setPayload(updatedPayload)
+    setPayload((current) =>
+      current.map((item) => (item.doc._id === _id ? {...item, include: !item.include} : item)),
+    )
   }
 
   // Find and recursively follow references beginning with this document
   async function handleReferences() {
     setIsGathering(true)
-    const docIds = docs.map((doc) => doc._id)
 
-    const payloadDocs = await getDocumentsInArray({
-      fetchIds: docIds,
-      client: originClient,
-      pluginConfig,
-    })
-    const draftDocs = await getDocumentsInArray({
-      fetchIds: docIds.map((id) => `drafts.${id}`),
-      client: originClient,
-      projection: `{_id}`,
-      pluginConfig,
-    })
-    const draftDocsIds = new Set(draftDocs.map(({_id}) => _id))
+    try {
+      const docIds = docs.map((doc) => doc._id)
 
-    // Shape it up
-    const payloadShaped = payloadDocs.map((doc) => ({
-      doc,
-      // Include this in the transaction?
-      include: true,
-      // Does it exist at the destination?
-      status: undefined,
-      // Does it have any drafts?
-      hasDraft: draftDocsIds.has(`drafts.${doc._id}`),
-    }))
+      const payloadDocs = await getDocumentsInArray({
+        fetchIds: docIds,
+        client: originClient,
+        pluginConfig,
+      })
+      const draftDocs = await getDocumentsInArray({
+        fetchIds: docIds.map((id) => `drafts.${id}`),
+        client: originClient,
+        projection: `{_id}`,
+        pluginConfig,
+      })
+      const draftDocsIds = new Set(draftDocs.map(({_id}) => _id))
 
-    setPayload(payloadShaped)
-    updatePayloadStatuses(payloadShaped)
+      // Shape it up
+      const payloadShaped: PayloadItem[] = payloadDocs.map((doc) => ({
+        doc,
+        // Include this in the transaction?
+        include: true,
+        // Does it exist at the destination?
+        status: undefined,
+        // Does it have any drafts?
+        hasDraft: draftDocsIds.has(`drafts.${doc._id}`),
+      }))
+
+      setPayload(payloadShaped)
+      updatePayloadStatuses(payloadShaped, destination).catch(console.error)
+    } catch (err) {
+      console.error(err)
+    }
+
     setIsGathering(false)
   }
 
@@ -242,72 +255,64 @@ export default function Duplicator(props: DuplicatorProps) {
     const svgMaps: {old: string; new: string}[] = []
 
     // Upload assets and then add to transaction
-    async function fetchDoc(doc: SanityAssetDocument) {
-      if (isAssetId(doc._id)) {
-        // Download and upload asset
-        // Get the *original* image with this dlRaw param to create the same deterministic _id
-        const typeIsFile = isSanityFileAsset(doc)
-        const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
-        const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
+    async function processDoc(doc: SanityDocument): Promise<void> {
+      if (!isAssetDocument(doc)) {
+        transactionDocs.push(doc)
 
-        await fetch(downloadUrl, downloadConfig).then(async (res) => {
-          const assetData = await res.blob()
-
-          const options = {filename: doc.originalFilename}
-          const assetDoc = await destinationClient.assets.upload(
-            typeIsFile ? `file` : `image`,
-            assetData,
-            options
-          )
-
-          // SVG _id's need remapping before transaction
-          if (doc?.extension === 'svg') {
-            svgMaps.push({old: doc._id, new: assetDoc._id})
-          }
-
-          // This adds the newly created asset document to the transaction but ...
-          // it doesn't have some of the original asset's metadata like `altText` or `title`
-          transactionDocs.push(assetDoc)
-
-          // So the original `doc` is added to the transaction as well below
-          // However, we don't want to retain `url` or `path` keys
-          // because these strings contain the origin's dataset name
-          doc.url = assetDoc.url
-          doc.path = assetDoc.path
-        })
-
-        currentProgress += 1
-        setMessage({
-          text: `Duplicating ${currentProgress}/${assetsCount} ${
-            assetsCount === 1 ? `Assets` : `Assets`
-          }`,
-          tone: 'default',
-        })
-
-        setProgress([currentProgress, assetsCount])
+        return
       }
 
-      return transactionDocs.push(doc)
+      // Download and upload asset
+      // Get the *original* image with this dlRaw param to create the same deterministic _id
+      const typeIsFile = isSanityFileAsset(doc)
+      const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
+      const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
+
+      const res = await fetch(downloadUrl, downloadConfig)
+      const assetData = await res.blob()
+
+      const options = {filename: doc.originalFilename}
+      const assetDoc = await destinationClient.assets.upload(
+        typeIsFile ? `file` : `image`,
+        assetData,
+        options,
+      )
+
+      // SVG _id's need remapping before transaction
+      if (doc.extension === 'svg') {
+        svgMaps.push({old: doc._id, new: assetDoc._id})
+      }
+
+      // This adds the newly created asset document to the transaction but ...
+      // it doesn't have some of the original asset's metadata like `altText` or `title`
+      transactionDocs.push(assetDoc)
+
+      // So the original `doc` is added to the transaction as well below
+      // However, we don't want to retain the original `url` or `path` values
+      // because these strings contain the origin's dataset name
+      transactionDocs.push({...doc, url: assetDoc.url, path: assetDoc.path})
+
+      currentProgress += 1
+      setMessage({
+        text: `Duplicating ${currentProgress}/${assetsCount} Assets`,
+        tone: 'default',
+      })
+      setProgress([currentProgress, assetsCount])
     }
 
-    // Promises are limited to three at once
-    const result = new Promise((resolve, reject) => {
+    try {
       const payloadIncludedDocs = payload.filter((item) => item.include).map((item) => item.doc)
 
-      mapLimit(payloadIncludedDocs, 3, asyncify(fetchDoc), (err: Error) => {
-        if (err) {
-          setIsDuplicating(false)
-          setMessage({tone: 'critical', text: `Duplication Failed`})
-          console.error(err)
-          reject(new Error('Duplication Failed'))
-        }
+      // Promises are limited to three at once
+      await mapWithConcurrency(payloadIncludedDocs, 3, processDoc)
+    } catch (err) {
+      console.error(err)
+      setIsDuplicating(false)
+      setProgress([0, 0])
+      setMessage({tone: 'critical', text: `Duplication Failed`})
 
-        // @ts-ignore
-        resolve()
-      })
-    })
-
-    await result
+      return
+    }
 
     // Remap SVG references to new _id's
     const transactionDocsMapped = transactionDocs.map((doc) => {
@@ -339,16 +344,17 @@ export default function Duplicator(props: DuplicatorProps) {
       transaction.createOrReplace(doc)
     })
 
-    await transaction
-      .commit()
-      .then((res) => {
-        setMessage({tone: 'positive', text: 'Duplication complete!'})
+    try {
+      await transaction.commit()
+      setMessage({tone: 'positive', text: 'Duplication complete!'})
 
-        updatePayloadStatuses()
+      updatePayloadStatuses(payload, destination).catch(console.error)
+    } catch (err) {
+      setMessage({
+        tone: 'critical',
+        text: err instanceof Error ? err.message : `Duplication Failed`,
       })
-      .catch((err) => {
-        setMessage({tone: 'critical', text: err.details.description})
-      })
+    }
 
     setIsDuplicating(false)
     setProgress([0, 0])
@@ -356,12 +362,13 @@ export default function Duplicator(props: DuplicatorProps) {
       try {
         await onDuplicated()
       } catch (error) {
-        setMessage({tone: 'critical', text: `Error in onDuplicated hook: ${error}`})
+        const text = error instanceof Error ? error.message : String(error)
+        setMessage({tone: 'critical', text: `Error in onDuplicated hook: ${text}`})
       }
     }
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+  function handleChange(e: ChangeEvent<HTMLSelectElement>) {
     if (!workspacesOptions.length) {
       return
     }
@@ -370,16 +377,17 @@ export default function Duplicator(props: DuplicatorProps) {
 
     if (targeted) {
       setDestination(targeted)
+      updatePayloadStatuses(payload, targeted).catch(console.error)
     }
   }
 
   const payloadCount = payload.length
-  const firstSvgIndex = payload.findIndex(({doc}) => doc.extension === 'svg')
+  const firstSvgIndex = payload.findIndex(({doc}) => doc['extension'] === 'svg')
   const selectedDocumentsCount = payload.filter(
-    (item) => item.include && !isAssetId(item.doc._id)
+    (item) => item.include && !isAssetId(item.doc._id),
   ).length
   const selectedAssetsCount = payload.filter(
-    (item) => item.include && isAssetId(item.doc._id)
+    (item) => item.include && isAssetId(item.doc._id),
   ).length
   const selectedTotal = selectedDocumentsCount + selectedAssetsCount
   const destinationTitle = destination?.title ?? destination?.name
@@ -388,34 +396,30 @@ export default function Duplicator(props: DuplicatorProps) {
 
   const headingText = [selectedTotal, `/`, payloadCount, `Documents and Assets selected`].join(` `)
 
-  const buttonText = React.useMemo(() => {
-    const text = [`Duplicate`]
+  const buttonTextParts = [`Duplicate`]
 
-    if (selectedDocumentsCount > 1) {
-      text.push(
-        String(selectedDocumentsCount),
-        selectedDocumentsCount === 1 ? `Document` : `Documents`
-      )
-    }
+  if (selectedDocumentsCount > 1) {
+    buttonTextParts.push(
+      String(selectedDocumentsCount),
+      selectedDocumentsCount === 1 ? `Document` : `Documents`,
+    )
+  }
 
-    if (selectedAssetsCount > 1) {
-      text.push(`and`, String(selectedAssetsCount), selectedAssetsCount === 1 ? `Asset` : `Assets`)
-    }
+  if (selectedAssetsCount > 1) {
+    buttonTextParts.push(
+      `and`,
+      String(selectedAssetsCount),
+      selectedAssetsCount === 1 ? `Asset` : `Assets`,
+    )
+  }
 
-    if (originClient.config().projectId !== destination?.projectId) {
-      text.push(`between Projects`)
-    }
+  if (originClient.config().projectId !== destination?.projectId) {
+    buttonTextParts.push(`between Projects`)
+  }
 
-    text.push(`to`, String(destinationTitle))
+  buttonTextParts.push(`to`, String(destinationTitle))
 
-    return text.join(` `)
-  }, [
-    selectedDocumentsCount,
-    selectedAssetsCount,
-    originClient,
-    destination?.projectId,
-    destinationTitle,
-  ])
+  const buttonText = buttonTextParts.join(` `)
 
   if (workspacesOptions.length < 2) {
     return (
@@ -430,9 +434,9 @@ export default function Duplicator(props: DuplicatorProps) {
       <Card border>
         <Stack>
           <Card padding={4} style={stickyStyles(isDarkMode)}>
-            <Stack space={4}>
+            <Stack gap={4}>
               <Flex gap={3}>
-                <Stack style={{flex: 1}} space={3}>
+                <Stack style={{flex: 1}} gap={3}>
                   <Label>Duplicate from</Label>
                   <Select readOnly value={workspacesOptions.find((space) => space.disabled)?.name}>
                     {workspacesOptions
@@ -450,7 +454,7 @@ export default function Duplicator(props: DuplicatorProps) {
                     <ArrowRightIcon />
                   </Text>
                 </Box>
-                <Stack style={{flex: 1}} space={3}>
+                <Stack style={{flex: 1}} gap={3}>
                   <Label>To Destination</Label>
                   <Select onChange={handleChange}>
                     {workspacesOptions.map((space) => (
@@ -488,10 +492,10 @@ export default function Duplicator(props: DuplicatorProps) {
             </Stack>
           </Card>
           <Card borderTop padding={4}>
-            <Stack space={3}>
-              {message && (
-                <Card padding={3} radius={2} shadow={1} tone={message.tone}>
-                  <Text size={1}>{message.text}</Text>
+            <Stack gap={3}>
+              {displayMessage && (
+                <Card padding={3} radius={2} shadow={1} tone={displayMessage.tone}>
+                  <Text size={1}>{displayMessage.text}</Text>
                 </Card>
               )}
               {payload.length > 0 ? (
@@ -500,7 +504,7 @@ export default function Duplicator(props: DuplicatorProps) {
                     const schemaType = schema.get(doc._type)
 
                     return (
-                      <React.Fragment key={doc._id}>
+                      <Fragment key={doc._id}>
                         <Flex align="center">
                           <Checkbox checked={include} onChange={() => handleCheckbox(doc._id)} />
                           <Box flex={1} paddingX={3}>
@@ -515,7 +519,7 @@ export default function Duplicator(props: DuplicatorProps) {
                             <StatusBadge status={status} isAsset={isAssetId(doc._id)} />
                           </Flex>
                         </Flex>
-                        {doc?.extension === 'svg' && index === firstSvgIndex && (
+                        {doc['extension'] === 'svg' && index === firstSvgIndex && (
                           <Card padding={3} radius={2} shadow={1} tone="caution">
                             <Text size={1}>
                               Due to how SVGs are sanitized after first uploaded, duplicated SVG
@@ -527,7 +531,7 @@ export default function Duplicator(props: DuplicatorProps) {
                             </Text>
                           </Card>
                         )}
-                      </React.Fragment>
+                      </Fragment>
                     )
                   })}
                 </Stack>
@@ -536,7 +540,7 @@ export default function Duplicator(props: DuplicatorProps) {
                   <Spinner />
                 </Flex>
               )}
-              <Stack space={2}>
+              <Stack gap={2}>
                 {hasReferences && (
                   <Button
                     fontSize={2}
@@ -544,7 +548,7 @@ export default function Duplicator(props: DuplicatorProps) {
                     tone="positive"
                     mode="ghost"
                     icon={SearchIcon}
-                    onClick={handleReferences}
+                    onClick={() => void handleReferences()}
                     text="Gather References"
                     disabled={isDuplicating || !selectedTotal || isGathering}
                   />
@@ -554,7 +558,7 @@ export default function Duplicator(props: DuplicatorProps) {
                   padding={4}
                   tone="positive"
                   icon={LaunchIcon}
-                  onClick={handleDuplicate}
+                  onClick={() => void handleDuplicate()}
                   text={buttonText}
                   disabled={isDuplicating || !selectedTotal || isGathering}
                 />

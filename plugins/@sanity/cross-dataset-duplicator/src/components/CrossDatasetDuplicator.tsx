@@ -1,14 +1,13 @@
-import {useEffect, useState} from 'react'
 import {useSecrets, SettingsView} from '@sanity/studio-secrets'
 import {Flex, Box, Spinner} from '@sanity/ui'
-import {SanityDocument} from 'sanity'
+import type {SanityDocument} from 'sanity'
 
+import {useCrossDatasetDuplicatorConfig} from '../context/ConfigProvider'
+import {SECRET_NAMESPACE} from '../helpers/constants'
 import DuplicatorQuery from './DuplicatorQuery'
 import DuplicatorWrapper from './DuplicatorWrapper'
-import ResetSecret from './ResetSecret'
 import Feedback from './Feedback'
-import {SECRET_NAMESPACE} from '../helpers/constants'
-import {useCrossDatasetDuplicatorConfig} from '../context/ConfigProvider'
+import ResetSecret from './ResetSecret'
 
 // Check for auth secret (required for asset uploads)
 const secretConfigKeys = [
@@ -31,17 +30,10 @@ type CrossDatasetDuplicatorProps = {
 }
 
 export default function CrossDatasetDuplicator(props: CrossDatasetDuplicatorProps) {
-  const {mode = `tool`, docs = [], onDuplicated} = props ?? {}
+  const {mode, docs, onDuplicated} = props
   const pluginConfig = useCrossDatasetDuplicatorConfig()
 
   const {loading, secrets} = useSecrets<Secrets>(SECRET_NAMESPACE)
-  const [showSecretsPrompt, setShowSecretsPrompt] = useState(false)
-
-  useEffect(() => {
-    if (secrets) {
-      setShowSecretsPrompt(!secrets?.bearerToken)
-    }
-  }, [secrets])
 
   if (loading) {
     return (
@@ -53,14 +45,15 @@ export default function CrossDatasetDuplicator(props: CrossDatasetDuplicatorProp
     )
   }
 
-  if ((!loading && showSecretsPrompt) || !secrets?.bearerToken) {
+  // A bearer token is required to duplicate assets, so the prompt cannot be
+  // dismissed until one is saved
+  if (!secrets?.bearerToken) {
     return (
       <SettingsView
         title="Token Required"
         namespace={SECRET_NAMESPACE}
         keys={secretConfigKeys}
-        // eslint-disable-next-line react/jsx-no-bind
-        onClose={() => setShowSecretsPrompt(false)}
+        onClose={() => null}
       />
     )
   }
@@ -68,7 +61,7 @@ export default function CrossDatasetDuplicator(props: CrossDatasetDuplicatorProp
   if (mode === 'tool' && pluginConfig) {
     return (
       <>
-        <DuplicatorQuery token={secrets?.bearerToken} pluginConfig={pluginConfig} />
+        <DuplicatorQuery token={secrets.bearerToken} pluginConfig={pluginConfig} />
         <ResetSecret apiVersion={pluginConfig.apiVersion} />
       </>
     )
@@ -85,7 +78,7 @@ export default function CrossDatasetDuplicator(props: CrossDatasetDuplicatorProp
   return (
     <DuplicatorWrapper
       docs={docs}
-      token={secrets?.bearerToken}
+      token={secrets.bearerToken}
       pluginConfig={pluginConfig}
       onDuplicated={onDuplicated}
     />

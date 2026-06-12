@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# @sanity/cross-dataset-duplicator
 
 ## [1.5.1](https://github.com/sanity-io/cross-dataset-duplicator/compare/v1.5.0...v1.5.1) (2025-12-29)
 

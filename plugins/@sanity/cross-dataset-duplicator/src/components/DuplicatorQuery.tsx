@@ -1,9 +1,9 @@
-import {useEffect, useState} from 'react'
 import {Button, Stack, Box, Label, Text, Card, Flex, Grid, Container, TextInput} from '@sanity/ui'
-import {useSchema, useClient, SanityDocument} from 'sanity'
+import {type SubmitEvent, useState} from 'react'
+import {useSchema, useClient, type SanityDocument} from 'sanity'
 
+import type {PluginConfig} from '../types'
 import Duplicator from './Duplicator'
-import {PluginConfig} from '../types'
 
 type DuplicatorQueryProps = {
   token: string
@@ -28,42 +28,39 @@ export default function DuplicatorQuery(props: DuplicatorQueryProps) {
   const [initialData, setInitialData] = useState<InitialData>({
     docs: [],
   })
-  function handleSubmit(e?: any) {
-    if (e) e.preventDefault()
 
-    originClient
-      .fetch(value)
-      .then((res: SanityDocument[]) => {
-        // Ensure queried docs are registered to the schema
-        const registeredAndPublishedDocs = res.length
-          ? res
-              .filter((doc) => schemaTypes.includes(doc._type))
-              .filter((doc) => !doc._id.startsWith(`drafts.`))
-          : []
+  async function runQuery() {
+    try {
+      const res = await originClient.fetch<SanityDocument[]>(value)
 
-        setInitialData({
-          docs: registeredAndPublishedDocs,
-        })
-        setFetched(true)
+      // Ensure queried docs are registered to the schema
+      const registeredAndPublishedDocs = res.length
+        ? res
+            .filter((doc) => schemaTypes.includes(doc._type))
+            .filter((doc) => !doc._id.startsWith(`drafts.`))
+        : []
+
+      setInitialData({
+        docs: registeredAndPublishedDocs,
       })
-      .catch((err) => console.error(err))
+      setFetched(true)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
-  // Auto-load initial textinput value
-  useEffect(() => {
-    if (!initialData.docs?.length && value) {
-      handleSubmit()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  function handleSubmit(e?: SubmitEvent<HTMLFormElement>) {
+    if (e) e.preventDefault()
+    void runQuery()
+  }
 
   return (
     <Card padding={[0, 0, 0, 5]}>
       <Container>
-        <Grid columns={[1, 1, 1, 2]} gap={[1, 1, 1, 4]}>
+        <Grid gridTemplateColumns={[1, 1, 1, 2]} gap={[1, 1, 1, 4]}>
           <Box padding={[2, 2, 2, 0]}>
             <Card padding={4} radius={3} border>
-              <Stack space={4}>
+              <Stack gap={4}>
                 <Box>
                   <Label>Initial Documents Query</Label>
                 </Box>
@@ -79,7 +76,6 @@ export default function DuplicatorQuery(props: DuplicatorQueryProps) {
                       <TextInput
                         style={{fontFamily: 'monospace'}}
                         fontSize={2}
-                        // eslint-disable-next-line react/jsx-no-bind
                         onChange={(event) => setValue(event.currentTarget.value)}
                         padding={4}
                         placeholder={`*[_type == "article"]`}
@@ -90,7 +86,7 @@ export default function DuplicatorQuery(props: DuplicatorQueryProps) {
                       padding={2}
                       paddingX={4}
                       tone="primary"
-                      onClick={handleSubmit}
+                      onClick={() => handleSubmit()}
                       text="Query"
                       disabled={!value}
                     />
@@ -101,11 +97,11 @@ export default function DuplicatorQuery(props: DuplicatorQueryProps) {
             {preDefinedQueries && preDefinedQueries?.length > 0 && (
               <Card marginTop={2} padding={4} radius={3} border>
                 <Box>
-                  <Stack space={4}>
+                  <Stack gap={4}>
                     <Box>
                       <Label>Predefined Queries</Label>
                     </Box>
-                    <Stack space={2}>
+                    <Stack gap={2}>
                       {preDefinedQueries.map((query) => (
                         <Button
                           key={query.label.replace(/\s+/g, '-')}
@@ -130,12 +126,7 @@ export default function DuplicatorQuery(props: DuplicatorQueryProps) {
             </Container>
           )}
           {initialData.docs?.length > 0 && (
-            <Duplicator
-              docs={initialData.docs}
-              // draftIds={initialData.draftIds}
-              token={token}
-              pluginConfig={pluginConfig}
-            />
+            <Duplicator docs={initialData.docs} token={token} pluginConfig={pluginConfig} />
           )}
         </Grid>
       </Container>

@@ -1,9 +1,8 @@
-import {useContext} from 'react'
-import {createContext} from 'react'
-import {LayoutProps} from 'sanity'
+import {createContext, useContext} from 'react'
+import type {LayoutProps} from 'sanity'
 
 import {DEFAULT_CONFIG} from '../helpers/constants'
-import {PluginConfig} from '../types'
+import type {PluginConfig} from '../types'
 
 const CrossDatasetDuplicatorContext = createContext(DEFAULT_CONFIG)
 

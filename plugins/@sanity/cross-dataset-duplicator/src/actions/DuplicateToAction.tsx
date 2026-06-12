@@ -1,6 +1,6 @@
-import {useState} from 'react'
 import {LaunchIcon} from '@sanity/icons'
-import {DocumentActionProps} from 'sanity'
+import {useState} from 'react'
+import type {DocumentActionProps} from 'sanity'
 
 import {CrossDatasetDuplicatorAction} from '../components/CrossDatasetDuplicatorAction'
 
@@ -9,11 +9,11 @@ import {CrossDatasetDuplicatorAction} from '../components/CrossDatasetDuplicator
  * @public
  */
 export const DuplicateToAction = (props: DocumentActionProps) => {
-  const {draft, published, onComplete} = props
+  const {draft, published} = props
   const [dialogOpen, setDialogOpen] = useState(false)
 
   return {
-    disabled: draft,
+    disabled: Boolean(draft),
     title: draft ? `Document must be Published to begin` : null,
     label: 'Duplicate to...',
     dialog: dialogOpen &&
@@ -21,10 +21,7 @@ export const DuplicateToAction = (props: DocumentActionProps) => {
         type: 'modal',
         title: 'Cross Dataset Duplicator',
         content: <CrossDatasetDuplicatorAction docs={[published]} />,
-        onClose: () => {
-          onComplete()
-          setDialogOpen(false)
-        },
+        onClose: () => setDialogOpen(false),
       },
     onHandle: () => setDialogOpen(true),
     icon: LaunchIcon,

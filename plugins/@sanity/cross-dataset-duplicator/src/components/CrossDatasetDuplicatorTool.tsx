@@ -1,4 +1,4 @@
-import {SanityDocument, Tool} from 'sanity'
+import type {SanityDocument, Tool} from 'sanity'
 
 import CrossDatasetDuplicator from './CrossDatasetDuplicator'
 

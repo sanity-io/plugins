@@ -1,6 +1,7 @@
 import {extractWithPath} from '@sanity/mutator'
-import {SanityClient, SanityDocument} from 'sanity'
-import {PluginConfig} from '../types'
+import type {SanityClient, SanityDocument} from 'sanity'
+
+import type {PluginConfig} from '../types'
 
 type OptionsBag = {
   fetchIds: string[]
@@ -19,7 +20,7 @@ export async function getDocumentsInArray(options: OptionsBag): Promise<SanityDo
   // Find initial docs
   const filter = ['_id in $fetchIds', pluginConfig.filter].filter(Boolean).join(' && ')
   const query = `*[${filter}]${projection ?? ``}`
-  const data: SanityDocument[] = await client.fetch(query, {
+  const data = await client.fetch<SanityDocument[]>(query, {
     fetchIds: fetchIds ?? [],
   })
 
@@ -34,24 +35,27 @@ export async function getDocumentsInArray(options: OptionsBag): Promise<SanityDo
   const newDataIds = new Set<string>(
     data
       .map((dataDoc) => dataDoc._id)
-      .filter((id) => (currentIds?.size ? !localCurrentIds.has(id) : Boolean(id)))
+      .filter((id) => (currentIds?.size ? !localCurrentIds.has(id) : Boolean(id))),
   )
 
   if (newDataIds.size) {
     collection.push(...data)
-    // @ts-ignore
-    localCurrentIds.add(...newDataIds)
+    for (const id of newDataIds) {
+      localCurrentIds.add(id)
+    }
 
     // Check new data for more references
     await Promise.all(
       data.map(async (doc) => {
         const expr = `.._ref`
-        const references: string[] = extractWithPath(expr, doc).map((ref) => ref.value as string)
+        const references = extractWithPath(expr, doc).flatMap((ref) =>
+          typeof ref.value === 'string' ? [ref.value] : [],
+        )
 
         if (references.length) {
           // Find references not already in the Collection
           const newReferenceIds = new Set<string>(
-            references.filter((ref) => !localCurrentIds.has(ref))
+            references.filter((ref) => !localCurrentIds.has(ref)),
           )
 
           if (newReferenceIds.size) {
@@ -68,19 +72,20 @@ export async function getDocumentsInArray(options: OptionsBag): Promise<SanityDo
             }
           }
         }
-      })
+      }),
     )
   }
 
-  // Create a unique array of objects from collection
-  // Set() wasn't working for unique id's ¯\_(ツ)_/¯
-  const uniqueCollection = collection.filter(Boolean).reduce((acc: SanityDocument[], cur) => {
-    if (acc.some((doc) => doc._id === cur._id)) {
-      return acc
-    }
+  // Create a unique array of documents, keeping the first occurrence of each _id
+  const seenIds = new Set<string>()
+  const uniqueCollection: SanityDocument[] = []
 
-    return [...acc, cur]
-  }, [])
+  for (const doc of collection) {
+    if (doc && !seenIds.has(doc._id)) {
+      seenIds.add(doc._id)
+      uniqueCollection.push(doc)
+    }
+  }
 
   return uniqueCollection
 }

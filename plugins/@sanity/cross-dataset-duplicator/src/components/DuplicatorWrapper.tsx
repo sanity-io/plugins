@@ -1,6 +1,6 @@
-import {useState, useEffect} from 'react'
 import {Grid, Card, Container, Button} from '@sanity/ui'
-import {SanityDocument, useClient} from 'sanity'
+import {useState, useEffect} from 'react'
+import {type SanityDocument, useClient} from 'sanity'
 
 import type {DuplicatorProps} from './Duplicator'
 import Duplicator from './Duplicator'
@@ -8,31 +8,38 @@ import Duplicator from './Duplicator'
 export default function DuplicatorWrapper(props: DuplicatorProps) {
   const {docs, token, pluginConfig, onDuplicated} = props
   const [inbound, setInbound] = useState<SanityDocument[]>([])
-  const {follow = [], apiVersion} = pluginConfig
+  const {follow, apiVersion} = pluginConfig
 
   // Make the first mode the default if there's only one
   const [mode, setMode] = useState<'inbound' | 'outbound'>(
-    follow.length === 1 ? follow[0] : `outbound`
+    follow.length === 1 ? (follow[0] ?? 'outbound') : 'outbound',
   )
   const client = useClient({apiVersion})
 
   // "Inbound" will start with all documents that reference the first one
   // And then you can gather "Outbound" references thereafter
   useEffect(() => {
-    ;(async () => {
-      if (follow.includes(`inbound`)) {
-        const inboundReferences = await client.fetch(`*[references($id)]`, {id: docs[0]._id})
-        setInbound([...props.docs, ...inboundReferences])
+    async function fetchInbound() {
+      const firstDocId = docs[0]?._id
+
+      if (!follow.includes(`inbound`) || !firstDocId) {
+        return
       }
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+
+      const inboundReferences = await client.fetch<SanityDocument[]>(`*[references($id)]`, {
+        id: firstDocId,
+      })
+      setInbound([...docs, ...inboundReferences])
+    }
+
+    fetchInbound().catch(console.error)
+  }, [client, docs, follow])
 
   return (
     <Container>
       {follow.length > 1 && (follow.includes(`inbound`) || follow.includes(`outbound`)) ? (
         <Card paddingX={4} paddingBottom={4} marginBottom={4} borderBottom>
-          <Grid columns={2} gap={4}>
+          <Grid gridTemplateColumns={2} gap={4}>
             {follow.includes(`outbound`) ? (
               <Button
                 mode="ghost"
@@ -58,7 +65,6 @@ export default function DuplicatorWrapper(props: DuplicatorProps) {
       <Duplicator
         docs={mode === 'outbound' ? docs : inbound}
         token={token}
-        // draftIds={[]}
         pluginConfig={pluginConfig}
         onDuplicated={onDuplicated}
       />

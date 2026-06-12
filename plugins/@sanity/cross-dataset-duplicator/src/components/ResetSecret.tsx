@@ -1,6 +1,6 @@
+import {Button, Flex} from '@sanity/ui'
 import {useCallback} from 'react'
 import {useClient} from 'sanity'
-import {Button, Flex} from '@sanity/ui'
 
 import {SECRET_NAMESPACE} from '../helpers/constants'
 
@@ -12,7 +12,7 @@ export default function ResetSecret({apiVersion}: ResetSecretProps) {
   const client = useClient({apiVersion})
 
   const handleClick = useCallback(() => {
-    client.delete({query: `*[_id == "secrets.${SECRET_NAMESPACE}"]`})
+    client.delete({query: `*[_id == "secrets.${SECRET_NAMESPACE}"]`}).catch(console.error)
   }, [client])
 
   return (

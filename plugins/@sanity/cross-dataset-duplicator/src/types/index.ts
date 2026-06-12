@@ -1,4 +1,4 @@
-import {SanityDocument} from 'sanity'
+import type {SanityDocument} from 'sanity'
 
 type PreDefinedQuery = {
   label: string
