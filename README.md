@@ -57,6 +57,25 @@ pnpm build
 pnpm format
 ```
 
+### Inspecting Builds with Vite DevTools
+
+The test studio can run with [Vite DevTools](https://devtools.vite.dev) enabled to inspect what `sanity build` produces: module graph, chunk composition, plugin timings, and bundle treemaps.
+
+```bash
+# Build the test studio with devtools enabled, then start the dev server
+pnpm devtools:test-studio
+```
+
+Open `http://localhost:3333` and use the DevTools dock (or the full-page UI at `http://localhost:3333/__devtools/`) to explore the recorded build session. The first time a browser connects, approve the one-time permission prompt shown in the terminal.
+
+To record a fresh build session after making changes—while the dev server is still running—run in a second terminal:
+
+```bash
+pnpm devtools:test-studio:build
+```
+
+Sessions can be compared in the DevTools UI to diff bundle changes between builds. DevTools is opt-in (via the `ENABLE_VITE_DEVTOOLS=true` env flag these scripts set) because it makes builds slower and writes large session logs to `dev/test-studio/node_modules/.rolldown`. See [AGENTS.md](./AGENTS.md#inspecting-production-builds-with-vite-devtools) for more details.
+
 ## Current Plugins
 
 | Plugin                                                                                         | Description                                                         |
