@@ -510,6 +510,29 @@ export type OrderableCategory = {
   title?: string
 }
 
+export type HotspotArrayDemo = {
+  _id: string
+  _type: 'hotspotArrayDemo'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  featureImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  hotspots?: Array<{
+    details?: string
+    x: number
+    y: number
+    _type: 'spot'
+    _key: string
+  }>
+}
+
 export type GoogleTranslateTest = {
   _id: string
   _type: 'googleTranslateTest'
@@ -810,6 +833,7 @@ export type AllSanitySchemaTypes =
   | Latex
   | OrderableProject
   | OrderableCategory
+  | HotspotArrayDemo
   | GoogleTranslateTest
   | LocalizedString
   | SanityAssistInstructionTask
