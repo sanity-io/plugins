@@ -180,7 +180,7 @@ export function ImageHotspotArray(
 
           <Card __unstable_checkered shadow={1}>
             <Flex align="center" justify="center">
-              {/* oxlint-disable-next-line jsx-a11y/click-events-have-key-events -- hotspots are placed via pointer coordinates, which have no keyboard equivalent */}
+              {/* oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- hotspots are placed via pointer coordinates, which have no keyboard equivalent */}
               <img
                 ref={hotspotImageRef}
                 src={displayImage.url}
