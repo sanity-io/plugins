@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@portabletext/block-tools": "^4.0.2",
-    "@portabletext/to-html": "^2.0.14",
+    "@portabletext/to-html": "^4.0.1",
     "@sanity/mutator": "^6.0.0",
     "@sanity/schema": "^6.0.0",
     "@sanity/util": "catalog:"
