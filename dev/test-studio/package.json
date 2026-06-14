@@ -52,7 +52,7 @@
     "styled-components": "catalog:"
   },
   "devDependencies": {
-    "@tsconfig/vite-react": "^7.0.2",
+    "@tsconfig/vite-react": "^8.0.6",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

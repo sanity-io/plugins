@@ -235,8 +235,8 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
     devDependencies:
       '@tsconfig/vite-react':
-        specifier: ^7.0.2
-        version: 7.0.2
+        specifier: ^8.0.6
+        version: 8.0.6
       '@types/node':
         specifier: ^24.13.2
         version: 24.13.2
@@ -5281,8 +5281,8 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@tsconfig/vite-react@7.0.2':
-    resolution: {integrity: sha512-lEj4y5SPRcH+bjw0tyuxrEnPqQUwfQzBKgd1YamD9xyet9zLwh2gwy5F8w/Nxg5DjdgYVjjKo5aLJUf0BTDz4w==}
+  '@tsconfig/vite-react@8.0.6':
+    resolution: {integrity: sha512-O+Eg45m/oNBY9r0EsI/N3VnXvrT4SZbcjTYW5M50eoBVnIUXL+W+ha0uDkK1WqezflsBrHkBSEyn+WdewFJJmw==}
 
   '@turbo/darwin-64@2.9.14':
     resolution: {integrity: sha512-t7QiPflaEyBE4oayeZtSmu4mEfjgIrcNlNNl1z1dmIVPqEdtA7+CfTf8d7KXsOGPh6aNgWjKxyvQg9uGfDQF+A==}
@@ -9232,7 +9232,7 @@ packages:
     resolution: {integrity: sha512-vlLytXkeP4xvEq2otHeJfSQIRyWxo/oZGEbXrtEEF9Hnmrdly59sUbzZ/QgyWuLYHctCHxFF4tRQZNQ9k60ExQ==}
 
   three-bmfont-text@https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/eed4878795be9b3e38cf6aec6b903f56acd1f695:
-    resolution: {gitHosted: true, integrity: sha512-iYdv5kZmgr+mugaLGsTV28QDwh31DWgalwL/U/ZX68ZLL27jXIiqKzbJ4Y6HEQLc/bqPQHE62eHqu3R0+Ioc4g==, tarball: https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/eed4878795be9b3e38cf6aec6b903f56acd1f695}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/eed4878795be9b3e38cf6aec6b903f56acd1f695}
     version: 3.0.0
 
   three-forcegraph@1.43.4:
@@ -13745,7 +13745,7 @@ snapshots:
       '@types/react': 19.2.17
       '@types/react-dom': 19.2.3(@types/react@19.2.17)
 
-  '@tsconfig/vite-react@7.0.2': {}
+  '@tsconfig/vite-react@8.0.6': {}
 
   '@turbo/darwin-64@2.9.14':
     optional: true
