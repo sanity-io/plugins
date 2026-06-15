@@ -48,7 +48,7 @@
     "@sanity/util": "catalog:"
   },
   "devDependencies": {
-    "@portabletext/types": "^2.0.2",
+    "@portabletext/types": "^2.0.15",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
