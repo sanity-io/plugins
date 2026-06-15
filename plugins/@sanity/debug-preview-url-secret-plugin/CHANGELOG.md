@@ -1,5 +1,11 @@
 # @sanity/debug-preview-url-secret-plugin
 
+## 2.0.11
+
+### Patch Changes
+
+- [#994](https://github.com/sanity-io/plugins/pull/994) [`3694754`](https://github.com/sanity-io/plugins/commit/3694754a3abc1b435356a87e03c322efd3125266) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/preview-url-secret to ^4.0.7
+
 ## 2.0.10
 
 ### Patch Changes

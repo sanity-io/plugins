@@ -179,9 +179,41 @@
       ],
     },
     // add new plugin workspaces here
+    "plugins/sanity-plugin-dashboard-widget-vercel": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
+    "plugins/sanity-plugin-dashboard-widget-netlify": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
+    "plugins/sanity-plugin-dashboard-widget-document-list": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
     "plugins/sanity-plugin-hotspot-array": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/dashboard": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
     },
 
     "plugins/sanity-plugin-documents-pane": {
