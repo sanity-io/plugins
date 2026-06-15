@@ -78,37 +78,41 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 
 ## Current Plugins
 
-| Plugin                                                                                         | Description                                                         |
-| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| [`@sanity/assist`](./plugins/@sanity/assist)                                                   | AI-powered writing and translation assistance for Studio            |
-| [`@sanity/code-input`](./plugins/@sanity/code-input)                                           | Code editor input powered by CodeMirror                             |
-| [`@sanity/color-input`](./plugins/@sanity/color-input)                                         | Color picker input for Sanity Studio                                |
-| [`@sanity/debug-live-sync-tags`](./plugins/@sanity/debug-live-sync-tags)                       | Debug tool for inspecting live sync tags                            |
-| [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin) | Debug tool for preview URL secrets and their status                 |
-| [`@sanity/document-internationalization`](./plugins/@sanity/document-internationalization)     | Document-level translations linked by a shared reference            |
-| [`@sanity/language-filter`](./plugins/@sanity/language-filter)                                 | Filter localized fields by language                                 |
-| [`@sanity/orderable-document-list`](./plugins/@sanity/orderable-document-list)                 | Drag-and-drop document ordering without leaving the editing surface |
-| [`@sanity/presets`](./plugins/@sanity/presets)                                                 | Experimental preset patterns for Sanity Studio                      |
-| [`@sanity/rich-date-input`](./plugins/@sanity/rich-date-input)                                 | Timezone-aware datetime input for Sanity Studio                     |
-| [`@sanity/studio-secrets`](./plugins/@sanity/studio-secrets)                                   | Manage Studio secrets at runtime                                    |
-| [`@sanity/vercel-protection-bypass`](./plugins/@sanity/vercel-protection-bypass)               | Setup tool for Vercel Deployment Protection in previews             |
-| [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo)                                       | Aprimo asset selector integration                                   |
-| [`sanity-plugin-asset-source-unsplash`](./plugins/sanity-plugin-asset-source-unsplash)         | Use Unsplash images directly in Sanity Studio                       |
-| [`sanity-plugin-bynder-input`](./plugins/sanity-plugin-bynder-input)                           | Bynder asset picker integration                                     |
-| [`sanity-plugin-cloudinary`](./plugins/sanity-plugin-cloudinary)                               | Cloudinary asset source and schema integration                      |
-| [`sanity-plugin-documents-pane`](./plugins/sanity-plugin-documents-pane)                       | Display GROQ-queried document lists in a view pane                  |
-| [`sanity-plugin-graph-view`](./plugins/sanity-plugin-graph-view)                               | Visual graph tool for exploring content relationships               |
-| [`sanity-plugin-hotspot-array`](./plugins/sanity-plugin-hotspot-array)                         | Add and update array items by clicking on an image                  |
-| [`sanity-plugin-iframe-pane`](./plugins/sanity-plugin-iframe-pane)                             | Display external URLs in a Studio pane                              |
-| [`sanity-plugin-internationalized-array`](./plugins/sanity-plugin-internationalized-array)     | Store localized fields in arrays to save attributes                 |
-| [`sanity-plugin-latex-input`](./plugins/sanity-plugin-latex-input)                             | LaTeX input for Portable Text Editor                                |
-| [`sanity-plugin-markdown`](./plugins/sanity-plugin-markdown)                                   | Markdown editor input                                               |
-| [`sanity-plugin-transifex`](./plugins/sanity-plugin-transifex)                                 | In-studio integration with Transifex for content translation        |
-| [`sanity-naive-html-serializer`](./plugins/sanity-naive-html-serializer)                       | Serialize Sanity documents and rich text fields to HTML             |
-| [`sanity-plugin-utils`](./plugins/sanity-plugin-utils)                                         | Handy hooks and components for Sanity Studio plugins                |
-| [`sanity-translations-tab`](./plugins/sanity-translations-tab)                                 | Base module for translation vendor integrations in Studio           |
-| [`sanity-plugin-workflow`](./plugins/sanity-plugin-workflow)                                   | Custom content publishing workflow example                          |
-| [`sanity-plugin-workspace-home`](./plugins/sanity-plugin-workspace-home)                       | Home screen for multi-workspace studios                             |
+| Plugin                                                                                                   | Description                                                         |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [`@sanity/assist`](./plugins/@sanity/assist)                                                             | AI-powered writing and translation assistance for Studio            |
+| [`@sanity/code-input`](./plugins/@sanity/code-input)                                                     | Code editor input powered by CodeMirror                             |
+| [`@sanity/color-input`](./plugins/@sanity/color-input)                                                   | Color picker input for Sanity Studio                                |
+| [`@sanity/dashboard`](./plugins/@sanity/dashboard)                                                       | Tool for rendering dashboard widgets                                |
+| [`@sanity/debug-live-sync-tags`](./plugins/@sanity/debug-live-sync-tags)                                 | Debug tool for inspecting live sync tags                            |
+| [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin)           | Debug tool for preview URL secrets and their status                 |
+| [`@sanity/document-internationalization`](./plugins/@sanity/document-internationalization)               | Document-level translations linked by a shared reference            |
+| [`@sanity/language-filter`](./plugins/@sanity/language-filter)                                           | Filter localized fields by language                                 |
+| [`@sanity/orderable-document-list`](./plugins/@sanity/orderable-document-list)                           | Drag-and-drop document ordering without leaving the editing surface |
+| [`@sanity/presets`](./plugins/@sanity/presets)                                                           | Experimental preset patterns for Sanity Studio                      |
+| [`@sanity/rich-date-input`](./plugins/@sanity/rich-date-input)                                           | Timezone-aware datetime input for Sanity Studio                     |
+| [`@sanity/studio-secrets`](./plugins/@sanity/studio-secrets)                                             | Manage Studio secrets at runtime                                    |
+| [`@sanity/vercel-protection-bypass`](./plugins/@sanity/vercel-protection-bypass)                         | Setup tool for Vercel Deployment Protection in previews             |
+| [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo)                                                 | Aprimo asset selector integration                                   |
+| [`sanity-plugin-asset-source-unsplash`](./plugins/sanity-plugin-asset-source-unsplash)                   | Use Unsplash images directly in Sanity Studio                       |
+| [`sanity-plugin-bynder-input`](./plugins/sanity-plugin-bynder-input)                                     | Bynder asset picker integration                                     |
+| [`sanity-plugin-cloudinary`](./plugins/sanity-plugin-cloudinary)                                         | Cloudinary asset source and schema integration                      |
+| [`sanity-plugin-dashboard-widget-document-list`](./plugins/sanity-plugin-dashboard-widget-document-list) | Dashboard widget for displaying document lists                      |
+| [`sanity-plugin-dashboard-widget-netlify`](./plugins/sanity-plugin-dashboard-widget-netlify)             | Dashboard widget for triggering Netlify builds                      |
+| [`sanity-plugin-dashboard-widget-vercel`](./plugins/sanity-plugin-dashboard-widget-vercel)               | Dashboard widget for managing Vercel deployments                    |
+| [`sanity-plugin-documents-pane`](./plugins/sanity-plugin-documents-pane)                                 | Display GROQ-queried document lists in a view pane                  |
+| [`sanity-plugin-graph-view`](./plugins/sanity-plugin-graph-view)                                         | Visual graph tool for exploring content relationships               |
+| [`sanity-plugin-hotspot-array`](./plugins/sanity-plugin-hotspot-array)                                   | Add and update array items by clicking on an image                  |
+| [`sanity-plugin-iframe-pane`](./plugins/sanity-plugin-iframe-pane)                                       | Display external URLs in a Studio pane                              |
+| [`sanity-plugin-internationalized-array`](./plugins/sanity-plugin-internationalized-array)               | Store localized fields in arrays to save attributes                 |
+| [`sanity-plugin-latex-input`](./plugins/sanity-plugin-latex-input)                                       | LaTeX input for Portable Text Editor                                |
+| [`sanity-plugin-markdown`](./plugins/sanity-plugin-markdown)                                             | Markdown editor input                                               |
+| [`sanity-plugin-transifex`](./plugins/sanity-plugin-transifex)                                           | In-studio integration with Transifex for content translation        |
+| [`sanity-naive-html-serializer`](./plugins/sanity-naive-html-serializer)                                 | Serialize Sanity documents and rich text fields to HTML             |
+| [`sanity-plugin-utils`](./plugins/sanity-plugin-utils)                                                   | Handy hooks and components for Sanity Studio plugins                |
+| [`sanity-translations-tab`](./plugins/sanity-translations-tab)                                           | Base module for translation vendor integrations in Studio           |
+| [`sanity-plugin-workflow`](./plugins/sanity-plugin-workflow)                                             | Custom content publishing workflow example                          |
+| [`sanity-plugin-workspace-home`](./plugins/sanity-plugin-workspace-home)                                 | Home screen for multi-workspace studios                             |
 
 ## Contributing
 

@@ -1,5 +1,13 @@
 # @sanity/sfcc
 
+## 1.0.8
+
+## 1.0.7
+
+### Patch Changes
+
+- [#1014](https://github.com/sanity-io/plugins/pull/1014) [`c463249`](https://github.com/sanity-io/plugins/commit/c463249aa0d7b9d7b81f9378cf28c24eeefaa986) Thanks [@renovate](https://github.com/apps/renovate)! - Relax structure helper typing to avoid lint type conflicts when consuming SFCC structure builders in other workspaces.
+
 ## 1.0.6
 
 ### Patch Changes
