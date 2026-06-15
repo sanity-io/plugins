@@ -125,7 +125,8 @@
     {
       "files": ["turbo/generators/**/*.ts"],
       "rules": {
-        "no-console": "off"
+        "no-console": "off",
+        "no-unsafe-type-assertion": "off"
       }
     },
     {
@@ -140,6 +141,13 @@
       "rules": {
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off"
+      }
+    },
+    {
+      // XState v5's canonical typing pattern relies on `{} as Context` style assertions
+      "files": ["plugins/sanity-plugin-dashboard-widget-vercel/src/machines/*.ts"],
+      "rules": {
+        "no-unsafe-type-assertion": "off"
       }
     }
   ]

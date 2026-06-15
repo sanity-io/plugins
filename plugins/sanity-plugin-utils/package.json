@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-utils",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "Handy hooks and clever components for Sanity Studio v3",
   "keywords": [
     "sanity",
@@ -43,9 +43,10 @@
   "dependencies": {
     "@sanity/asset-utils": "^2.3.0",
     "@sanity/icons": "^3.7.4",
-    "@sanity/image-url": "^2.0.3",
+    "@sanity/image-url": "^2.1.1",
     "@sanity/ui": "catalog:",
-    "react-fast-compare": "^3.2.2"
+    "react-fast-compare": "^3.2.2",
+    "rxjs": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
@@ -57,14 +58,12 @@
     "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rxjs": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",
     "react-dom": "^19.2",
-    "rxjs": "^7.8",
     "sanity": "^5 || ^6.0.0-0",
     "styled-components": "^6.1"
   },

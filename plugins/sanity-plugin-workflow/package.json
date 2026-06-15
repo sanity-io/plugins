@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-workflow",
-  "version": "3.0.18",
+  "version": "3.0.20",
   "description": "A demonstration of a custom content publishing workflow using Sanity.",
   "keywords": [
     "sanity",
@@ -47,7 +47,7 @@
     "@tanstack/react-virtual": "^3.13.22",
     "lexorank": "^1.0.5",
     "motion": "^12.36.0",
-    "sanity-plugin-utils": "workspace:*"
+    "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

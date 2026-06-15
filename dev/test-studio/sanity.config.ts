@@ -11,11 +11,14 @@ import {assistExample} from '#assist'
 import {bynderExample} from '#bynder'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
+import {dashboardToolExample} from '#dashboard-tool'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
+import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
 import {googleTranslateExample} from '#google-translate'
+import {hotspotArrayExample} from '#hotspot-array'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
 import {iframePaneExample} from '#iframe-pane'
 import {
@@ -25,6 +28,7 @@ import {
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
 import {mediaExample} from '#media'
+import {netlifyWidgetExample} from '#netlify-widget'
 import {
   orderableDocumentListExample,
   orderableDocumentListExampleStructure,
@@ -39,6 +43,7 @@ import {transifexExample} from '#transifex'
 import {translationsTabExample} from '#translations-tab'
 import {unsplashExample} from '#unsplash'
 import {utilsExample} from '#utils'
+import {vercelWidgetExample} from '#vercel-widget'
 import {workflowExample} from '#workflow'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
@@ -99,6 +104,17 @@ export default defineConfig([
     plugins: [sfccExample()],
   }),
   createWorkspace({
+    name: 'dashboard-example',
+    title: 'Dashboard',
+    plugins: [
+      structureTool(),
+      dashboardToolExample(),
+      documentListWidgetExample(),
+      netlifyWidgetExample(),
+      vercelWidgetExample(),
+    ],
+  }),
+  createWorkspace({
     name: 'kitchen-sink',
     plugins: [
       structureTool(),
@@ -106,6 +122,7 @@ export default defineConfig([
       googleTranslateExample(),
       mediaExample(),
       // add new plugins here
+      hotspotArrayExample(),
       orderableDocumentListExample(),
       latexInputExample(),
       debugLiveSyncTagsExample(),

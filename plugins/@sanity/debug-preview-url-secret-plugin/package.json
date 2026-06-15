@@ -1,6 +1,6 @@
 {
   "name": "@sanity/debug-preview-url-secret-plugin",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "keywords": [
     "sanity",
     "sanity-plugin",
@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/preview-url-secret": "^4.0.4"
+    "@sanity/preview-url-secret": "^4.0.7"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

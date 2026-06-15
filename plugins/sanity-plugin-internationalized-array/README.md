@@ -19,9 +19,6 @@ A plugin to register array fields with a custom input component to store field v
   - [Migrate from objects to arrays](#migrate-from-objects-to-arrays)
     - [Why store localized field data like this?](#why-store-localized-field-data-like-this)
   - [License](#license)
-  - [Develop \& test](#develop--test)
-    - [Release new version](#release-new-version)
-  - [License](#license-1)
 
 ## Installation
 
