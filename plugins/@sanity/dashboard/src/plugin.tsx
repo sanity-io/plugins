@@ -58,16 +58,13 @@ export const dashboardTool = definePlugin<DashboardPluginConfig>((config = {}) =
 
   return {
     name: 'dashboard',
-    tools: (prev) => {
-      return [
-        ...prev,
-        {
-          title,
-          name,
-          icon,
-          component: () => <Dashboard config={pluginConfig} />,
-        },
-      ]
-    },
+    tools: [
+      {
+        title,
+        name,
+        icon,
+        component: () => <Dashboard config={pluginConfig} />,
+      },
+    ],
   }
 })
