@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-transifex",
-  "version": "5.1.2",
+  "version": "5.1.3",
   "description": "This plugin provides an in-studio integration with Transifex. It allows your editors to send any document to Transifex with the click of a button, monitor ongoing translations, and import partial or complete translations back into the studio.",
   "keywords": [
     "sanity",
@@ -41,7 +41,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "sanity-translations-tab": "workspace:*"
+    "sanity-translations-tab": "workspace:^"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

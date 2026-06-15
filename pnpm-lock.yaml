@@ -10,9 +10,15 @@ catalogs:
     '@sanity/client':
       specifier: ^7.22.1
       version: 7.22.1
+    '@sanity/mutator':
+      specifier: ^6.0.0
+      version: 6.0.0
     '@sanity/pkg-utils':
       specifier: ^10.5.5
       version: 10.5.5
+    '@sanity/schema':
+      specifier: ^6.0.0
+      version: 6.0.0
     '@sanity/telemetry':
       specifier: ^1.1.0
       version: 1.1.0
@@ -295,7 +301,7 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/mutator':
-        specifier: ^5 || ^6.0.0-0
+        specifier: 'catalog:'
         version: 6.0.0(@types/react@19.2.17)
       '@sanity/ui':
         specifier: 'catalog:'
@@ -628,7 +634,7 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/mutator':
-        specifier: ^6.0.0
+        specifier: 'catalog:'
         version: 6.0.0(@types/react@19.2.17)
       '@sanity/ui':
         specifier: ^3.2.0
@@ -643,7 +649,7 @@ importers:
         specifier: 'catalog:'
         version: 7.8.2
       sanity-plugin-utils:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../sanity-plugin-utils
     devDependencies:
       '@repo/package.config':
@@ -686,7 +692,7 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@2.0.1)(@sanity/styled-components@6.1.24)(@types/node@24.13.2)(@types/react-dom@19.2.3)(@types/react@19.2.17)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(oxfmt@0.54.0)(prismjs@1.27.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.1)(terser@5.46.1)(typescript@5.9.3)
       sanity-plugin-internationalized-array:
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../sanity-plugin-internationalized-array
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -768,7 +774,7 @@ importers:
         specifier: ^1.0.4
         version: 1.0.5
       sanity-plugin-utils:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../sanity-plugin-utils
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -1062,10 +1068,10 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       '@sanity/mutator':
-        specifier: ^6.0.0
+        specifier: 'catalog:'
         version: 6.0.0(@types/react@19.2.17)
       '@sanity/schema':
-        specifier: ^6.0.0
+        specifier: 'catalog:'
         version: 6.0.0(@types/react@19.2.17)
       '@sanity/util':
         specifier: 'catalog:'
@@ -1435,7 +1441,7 @@ importers:
         specifier: 'catalog:'
         version: 7.8.2
       sanity-plugin-utils:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../sanity-plugin-utils
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -1711,7 +1717,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/@repo/tsconfig
       '@sanity/language-filter':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../@sanity/language-filter
       '@sanity/pkg-utils':
         specifier: 'catalog:'
@@ -1836,7 +1842,7 @@ importers:
   plugins/sanity-plugin-transifex:
     dependencies:
       sanity-translations-tab:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../sanity-translations-tab
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -1890,6 +1896,9 @@ importers:
       react-fast-compare:
         specifier: ^3.2.2
         version: 3.2.2
+      rxjs:
+        specifier: 'catalog:'
+        version: 7.8.2
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
@@ -1921,9 +1930,6 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.2.7(react@19.2.7)
-      rxjs:
-        specifier: 'catalog:'
-        version: 7.8.2
       sanity:
         specifier: ^6.0.0
         version: 6.0.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@2.0.1)(@sanity/styled-components@6.1.24)(@types/node@24.13.2)(@types/react-dom@19.2.3)(@types/react@19.2.17)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(oxfmt@0.54.0)(prismjs@1.27.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.1)(terser@5.46.1)(typescript@5.9.3)
@@ -1949,7 +1955,7 @@ importers:
         specifier: ^12.36.0
         version: 12.40.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7)(react@19.2.7)
       sanity-plugin-utils:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../sanity-plugin-utils
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -2047,7 +2053,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.0(@types/react@19.2.17)
       sanity-naive-html-serializer:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../sanity-naive-html-serializer
       styled-components:
         specifier: npm:@sanity/styled-components@latest

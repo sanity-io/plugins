@@ -1,6 +1,6 @@
 {
   "name": "sanity-translations-tab",
-  "version": "6.1.2",
+  "version": "6.1.3",
   "description": "This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but vendor-specific plugins will use this for its chrome.",
   "keywords": [
     "sanity",
@@ -46,7 +46,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "@sanity/util": "catalog:",
-    "sanity-naive-html-serializer": "workspace:*"
+    "sanity-naive-html-serializer": "workspace:^"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

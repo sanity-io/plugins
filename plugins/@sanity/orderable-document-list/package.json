@@ -1,6 +1,6 @@
 {
   "name": "@sanity/orderable-document-list",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Drag-and-drop Document Ordering without leaving the Editing surface",
   "keywords": [
     "sanity",
@@ -46,7 +46,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "lexorank": "^1.0.4",
-    "sanity-plugin-utils": "workspace:*"
+    "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

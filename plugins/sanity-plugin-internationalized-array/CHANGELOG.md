@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.1.7
+
+### Patch Changes
+
+- [#984](https://github.com/sanity-io/plugins/pull/984) [`d723da8`](https://github.com/sanity-io/plugins/commit/d723da8cfe195b5fda540b17c708c2eeca1a07ee) Thanks [@stipsan](https://github.com/stipsan)! - Bump `@sanity/assist` peer range
+
 ## 5.1.6
 
 ### Patch Changes
