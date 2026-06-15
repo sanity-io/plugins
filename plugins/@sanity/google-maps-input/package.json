@@ -1,0 +1,109 @@
+{
+  "name": "@sanity/google-maps-input",
+  "version": "4.2.1",
+  "description": "Sanity plugin providing input handlers for geo-related input types using Google Maps",
+  "keywords": [
+    "sanity",
+    "cms",
+    "headless",
+    "realtime",
+    "content",
+    "google-maps-input",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/google-maps-input#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/google-maps-input/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sanity-io/google-maps-input.git"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "browserslist": "extends @sanity/browserslist-config",
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "build:studio": "sanity build studio -y",
+    "dev": "sanity dev",
+    "prepublishOnly": "npm run build",
+    "clean": "rimraf dist",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint .",
+    "watch": "pkg-utils watch --strict",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.5.2",
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/ui": "^3.0.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@sanity/pkg-utils": "^6.12.0",
+    "@sanity/plugin-kit": "^4.0.18",
+    "@sanity/semantic-release-preset": "^5.0.0",
+    "@types/google.maps": "^3.58.1",
+    "@types/react": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.11",
+    "prettier": "^3.4.2",
+    "prettier-plugin-packagejson": "^2.5.6",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "rimraf": "^6.0.1",
+    "sanity": "^5.0.1",
+    "semantic-release": "^24.2.0",
+    "styled-components": "^6.1.13",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "sanity": "^3.19.0 || ^4.0.0-0 || ^5.0.0",
+    "styled-components": "^6.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "alias": {
+    "google": {
+      "global": "google"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "overrides": {
+    "conventional-changelog-conventionalcommits": ">= 8.0.0"
+  }
+}
