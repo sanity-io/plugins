@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.1.8
+
+### Patch Changes
+
+- [`68fb45a`](https://github.com/sanity-io/plugins/commit/68fb45ae05271006813424506fb995cc84f79885) Thanks [@stipsan](https://github.com/stipsan)! - Use concistent peer dep definition
+
 ## 5.1.7
 
 ### Patch Changes

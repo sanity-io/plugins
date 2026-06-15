@@ -1,5 +1,11 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 2.0.3
+
+### Patch Changes
+
+- [`7c1a95c`](https://github.com/sanity-io/plugins/commit/7c1a95c2213555c50bca2fde2af3590abc57c444) Thanks [@stipsan](https://github.com/stipsan)! - Make `rxjs` a regular dependency
+
 ## 2.0.2
 
 ### Patch Changes

@@ -1,7 +1,5 @@
 # sanity-plugin-latex-input
 
-> For the v2 version, please refer to the [v2-branch](https://github.com/sanity-io/latex-input/tree/studio-v2).
-
 ## What is it?
 
 sanity-plugin-latex-input adds support for `latex` schema type, so it can be used in Portable Text Editor (PTE) in Sanity Studio.
