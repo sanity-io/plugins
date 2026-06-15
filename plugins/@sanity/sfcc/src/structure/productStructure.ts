@@ -1,9 +1,7 @@
-import type {ListItemBuilder} from 'sanity/structure'
-
 import {API_VERSION} from '../constants'
 import {defineStructure} from './index'
 
-export const productStructure = defineStructure<ListItemBuilder>((S, context) => {
+export const productStructure = defineStructure((S, context) => {
   const client = context.getClient({apiVersion: API_VERSION})
 
   return S.listItem()

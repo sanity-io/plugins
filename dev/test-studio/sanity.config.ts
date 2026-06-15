@@ -20,6 +20,7 @@ import {
   hierarchicalDocumentListExample,
   hierarchicalDocumentListExampleStructure,
 } from '#hierarchical-document-list'
+import {hotspotArrayExample} from '#hotspot-array'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
 import {iframePaneExample} from '#iframe-pane'
 import {
@@ -114,6 +115,7 @@ export default defineConfig([
       googleTranslateExample(),
       // add new plugins here
       hierarchicalDocumentListExample(),
+      hotspotArrayExample(),
       orderableDocumentListExample(),
       latexInputExample(),
       debugLiveSyncTagsExample(),
