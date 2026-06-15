@@ -43,7 +43,7 @@
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "@sanity/client": "catalog:",
-    "@sanity/icons": "^3.5.3",
+    "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "lexorank": "^1.0.4",
     "sanity-plugin-utils": "workspace:*"

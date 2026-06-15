@@ -71,7 +71,7 @@
     "styled-components": "catalog:"
   },
   "peerDependencies": {
-    "@sanity/assist": "^6.0.2",
+    "@sanity/assist": "workspace:^",
     "@sanity/language-filter": "^5.0.0",
     "react": "^19.2",
     "react-dom": "^19.2",
