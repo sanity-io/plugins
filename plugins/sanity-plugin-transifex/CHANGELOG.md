@@ -1,5 +1,21 @@
 # sanity-plugin-transifex
 
+## 5.1.4
+
+### Patch Changes
+
+- [`7a37fd1`](https://github.com/sanity-io/plugins/commit/7a37fd1653681de5f892de2dea29b83e9b119ff1) Thanks [@stipsan](https://github.com/stipsan)! - use `workspace:^` for prod deps
+
+- Updated dependencies [[`7a37fd1`](https://github.com/sanity-io/plugins/commit/7a37fd1653681de5f892de2dea29b83e9b119ff1)]:
+  - sanity-translations-tab@6.1.4
+
+## 5.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`f63f575`](https://github.com/sanity-io/plugins/commit/f63f5755a25584af6ac41b7f2ef466eb8318584a)]:
+  - sanity-translations-tab@6.1.3
+
 ## 5.1.2
 
 ### Patch Changes

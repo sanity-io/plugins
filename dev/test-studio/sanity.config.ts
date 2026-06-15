@@ -11,9 +11,11 @@ import {assistExample} from '#assist'
 import {bynderExample} from '#bynder'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
+import {dashboardToolExample} from '#dashboard-tool'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
+import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
 import {googleTranslateExample} from '#google-translate'
 import {
@@ -29,6 +31,7 @@ import {
 } from '#internationalized-array'
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
+import {netlifyWidgetExample} from '#netlify-widget'
 import {
   orderableDocumentListExample,
   orderableDocumentListExampleStructure,
@@ -43,6 +46,7 @@ import {transifexExample} from '#transifex'
 import {translationsTabExample} from '#translations-tab'
 import {unsplashExample} from '#unsplash'
 import {utilsExample} from '#utils'
+import {vercelWidgetExample} from '#vercel-widget'
 import {workflowExample} from '#workflow'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
@@ -106,6 +110,17 @@ export default defineConfig([
     name: 'sfcc-example',
     title: 'Salesforce Commerce Cloud',
     plugins: [sfccExample()],
+  }),
+  createWorkspace({
+    name: 'dashboard-example',
+    title: 'Dashboard',
+    plugins: [
+      structureTool(),
+      dashboardToolExample(),
+      documentListWidgetExample(),
+      netlifyWidgetExample(),
+      vercelWidgetExample(),
+    ],
   }),
   createWorkspace({
     name: 'kitchen-sink',

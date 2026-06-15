@@ -151,6 +151,13 @@
         // Sanity's own PaneItem pattern); identity is stable via useMemo
         "react/no-unstable-nested-components": "off"
       }
+    },
+    {
+      // XState v5's canonical typing pattern relies on `{} as Context` style assertions
+      "files": ["plugins/sanity-plugin-dashboard-widget-vercel/src/machines/*.ts"],
+      "rules": {
+        "no-unsafe-type-assertion": "off"
+      }
     }
   ]
 }
