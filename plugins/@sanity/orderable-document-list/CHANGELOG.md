@@ -1,5 +1,14 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 2.0.2
+
+### Patch Changes
+
+- [#995](https://github.com/sanity-io/plugins/pull/995) [`657ce09`](https://github.com/sanity-io/plugins/commit/657ce09ba7d6453b771fd60668a409b9a5c0f2fd) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
+- Updated dependencies [[`c66b926`](https://github.com/sanity-io/plugins/commit/c66b9269394b2ec45c320580a39069e6fd39dd4d)]:
+  - sanity-plugin-utils@2.0.2
+
 ## 2.0.1
 
 ### Patch Changes

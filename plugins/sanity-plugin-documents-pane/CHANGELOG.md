@@ -1,5 +1,12 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 4.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`c66b926`](https://github.com/sanity-io/plugins/commit/c66b9269394b2ec45c320580a39069e6fd39dd4d)]:
+  - sanity-plugin-utils@2.0.2
+
 ## 4.1.2
 
 ### Patch Changes

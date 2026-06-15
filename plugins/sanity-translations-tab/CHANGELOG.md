@@ -1,5 +1,14 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 6.1.3
+
+### Patch Changes
+
+- [#998](https://github.com/sanity-io/plugins/pull/998) [`f63f575`](https://github.com/sanity-io/plugins/commit/f63f5755a25584af6ac41b7f2ef466eb8318584a) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @portabletext/block-tools to v5
+
+- Updated dependencies [[`a57034d`](https://github.com/sanity-io/plugins/commit/a57034d68067548b6366f0f6b2478e1ab4e79875), [`f63f575`](https://github.com/sanity-io/plugins/commit/f63f5755a25584af6ac41b7f2ef466eb8318584a), [`143b038`](https://github.com/sanity-io/plugins/commit/143b0384c48e01d7417676f35a23b23c212a8dce)]:
+  - sanity-naive-html-serializer@5.1.3
+
 ## 6.1.2
 
 ### Patch Changes
