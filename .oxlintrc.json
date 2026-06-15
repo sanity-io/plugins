@@ -122,7 +122,8 @@
     {
       "files": ["turbo/generators/**/*.ts"],
       "rules": {
-        "no-console": "off"
+        "no-console": "off",
+        "no-unsafe-type-assertion": "off"
       }
     },
     {
