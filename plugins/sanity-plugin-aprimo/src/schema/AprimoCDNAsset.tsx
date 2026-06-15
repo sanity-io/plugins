@@ -1,5 +1,3 @@
-import type React from 'react'
-
 import {AprimoDiff} from '../components/AprimoDiff'
 import {AprimoWidget} from '../components/AprimoWidget'
 
@@ -39,9 +37,7 @@ export const AprimoCDNAssetSchema = {
     prepare({url, title}: {url: string; title: string}) {
       return {
         title,
-        media: (
-          <img src={url} alt="" style={{height: '100%', width: '100%'}} />
-        ) as React.JSX.Element,
+        media: <img src={url} alt="" style={{height: '100%', width: '100%'}} />,
       }
     },
   },
