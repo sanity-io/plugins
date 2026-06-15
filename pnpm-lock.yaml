@@ -536,7 +536,7 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/preview-url-secret':
-        specifier: ^4.0.4
+        specifier: ^4.0.7
         version: 4.0.7(@sanity/client@7.22.1)
       react:
         specifier: ^19.2
@@ -955,7 +955,7 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/preview-url-secret':
-        specifier: ^4.0.4
+        specifier: ^4.0.7
         version: 4.0.7(@sanity/client@7.22.1)
       '@sanity/ui':
         specifier: 'catalog:'
@@ -1402,7 +1402,7 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/preview-url-secret':
-        specifier: ^4.0.4
+        specifier: ^4.0.7
         version: 4.0.7(@sanity/client@7.22.1)
       '@sanity/ui':
         specifier: ^3.2.0
