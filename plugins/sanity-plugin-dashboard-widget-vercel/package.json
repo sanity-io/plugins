@@ -62,7 +62,7 @@
   "devDependencies": {
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
-    "@sanity/dashboard": "workspace:^",
+    "@sanity/dashboard": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@types/object-hash": "^3.0.6",
     "@types/react": "catalog:",
@@ -75,7 +75,7 @@
     "styled-components": "catalog:"
   },
   "peerDependencies": {
-    "@sanity/dashboard": "^5 || ^6.0.0-0",
+    "@sanity/dashboard": "workspace:^",
     "react": "^19.2",
     "react-dom": "^19.2",
     "sanity": "^5 || ^6.0.0-0",
