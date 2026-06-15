@@ -25,7 +25,13 @@ const DialogHeader = (props: Props) => {
         To get around this, we include a pseudo-hidden input to ensure our tooltip-enabled button remains
         unfocused on initial mount.
         */}
-      <input style={{opacity: 0}} tabIndex={-1} type="button" />
+      <input
+        aria-hidden="true"
+        aria-label="Focus trap"
+        style={{opacity: 0}}
+        tabIndex={-1}
+        type="button"
+      />
       <Box style={{position: 'absolute', right: '-1.5em'}}>
         <Box className="button-large">
           <Button

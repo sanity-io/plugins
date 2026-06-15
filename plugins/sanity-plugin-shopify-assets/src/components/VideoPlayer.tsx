@@ -39,6 +39,7 @@ const VideoPlayer = ({src, kind}: VideoProps) => {
         {/* Shopify assets do not provide caption tracks */}
         {/* oxlint-disable-next-line jsx-a11y/media-has-caption */}
         <video
+          aria-label="Video preview"
           onClick={stopPropagation}
           style={kind === 'diff' ? style : {}}
           className={className[kind]}
