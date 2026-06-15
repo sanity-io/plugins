@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-dashboard-widget-document-list",
-  "version": "2.1.3",
+  "version": "3.0.0",
   "description": "Dashboard widget for the Sanity Content Studio which displays a list of documents.",
   "keywords": [
     "dashboard",
