@@ -1011,8 +1011,8 @@ importers:
         version: 6.0.0(@types/react@19.2.17)
     devDependencies:
       '@portabletext/types':
-        specifier: ^2.0.15
-        version: 2.0.15
+        specifier: ^4.0.2
+        version: 4.0.2
       '@repo/package.config':
         specifier: workspace:*
         version: link:../../packages/@repo/package.config
@@ -4455,10 +4455,6 @@ packages:
   '@portabletext/toolkit@5.0.2':
     resolution: {integrity: sha512-Njc1LE1PMJkTx/wEPqZ6sOWGgFgX2B47fxpOQ/Ia4ByhsZoA5Sq8dNvvV5F052j/xE8TbOLiBEjS848FkKADDQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
-
-  '@portabletext/types@2.0.15':
-    resolution: {integrity: sha512-2e6i2gSQsrA/5OL5Gm4/9bxB9MNO73Fa47zj+0mT93xkoQUCGCWX5fZh1YBJ86hszaRYlqvqG08oULxvvPPp/Q==}
-    engines: {node: ^14.13.1 || >=16.0.0 || >=18.0.0}
 
   '@portabletext/types@4.0.2':
     resolution: {integrity: sha512-djfIGU9n6DRrunlvj2nIDAp17URo/nA4jSXGvf+Gupx8NLLy9fmJBZ3GL8yhqn9lSVc+cKCharjOa3aOBnWbRw==}
@@ -12636,8 +12632,6 @@ snapshots:
   '@portabletext/toolkit@5.0.2':
     dependencies:
       '@portabletext/types': 4.0.2
-
-  '@portabletext/types@2.0.15': {}
 
   '@portabletext/types@4.0.2': {}
 
