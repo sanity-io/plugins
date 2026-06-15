@@ -92,3 +92,7 @@ linkWorkspacePackages: deep
 
 allowBuilds:
   esbuild: false
+
+publicHoistPattern:
+  # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
+  - 'vite'
