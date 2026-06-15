@@ -698,7 +698,7 @@ importers:
         specifier: 'catalog:'
         version: 7.22.1
       '@sanity/icons':
-        specifier: ^3.5.3
+        specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
