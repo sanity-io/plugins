@@ -1,5 +1,23 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 2.0.3
+
+### Patch Changes
+
+- [`7a37fd1`](https://github.com/sanity-io/plugins/commit/7a37fd1653681de5f892de2dea29b83e9b119ff1) Thanks [@stipsan](https://github.com/stipsan)! - use `workspace:^` for prod deps
+
+- Updated dependencies [[`7c1a95c`](https://github.com/sanity-io/plugins/commit/7c1a95c2213555c50bca2fde2af3590abc57c444)]:
+  - sanity-plugin-utils@2.0.3
+
+## 2.0.2
+
+### Patch Changes
+
+- [#995](https://github.com/sanity-io/plugins/pull/995) [`657ce09`](https://github.com/sanity-io/plugins/commit/657ce09ba7d6453b771fd60668a409b9a5c0f2fd) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
+- Updated dependencies [[`c66b926`](https://github.com/sanity-io/plugins/commit/c66b9269394b2ec45c320580a39069e6fd39dd4d)]:
+  - sanity-plugin-utils@2.0.2
+
 ## 2.0.1
 
 ### Patch Changes

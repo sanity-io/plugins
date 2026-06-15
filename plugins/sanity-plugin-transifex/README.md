@@ -18,8 +18,8 @@ _Recent updates for v4:_ We've added support for the new document internationali
 - [Assumptions](#assumptions)
 - [Studio experience](#studio-experience)
 - [Overriding defaults](#overriding-defaults)
-- [License](#license)
 - [Develop and test](#develop-and-test)
+- [License](#license)
 
 ## Quickstart
 
@@ -174,28 +174,16 @@ To personalize this configuration it's useful to know what arguments go into `Tr
 
 There are several reasons to override these functions. More general cases are often around ensuring documents serialize and deserialize correctly. Since the serialization functions are used across all our translation plugins currently, you can find some frequently encountered scenarios at [their repository here](https://github.com/sanity-io/sanity-naive-html-serializer), along with code examples for new config.
 
-## Migrating to Sanity Studio v3
-
-You should not have to do anything to migrate to Sanity Studio v3. If you are using the default configs, you should be able to upgrade without any changes. If you are using custom serialization, you may need to update how `BaseDocumentSerializer` receives your schema.
-
-These are outlined in the serializer README [here](https://github.com/sanity-io/sanity-naive-html-serializer#v2-to-v3-changes).
-
-## License
-
-[MIT](LICENSE) © Sanity.io
-
 ## Develop & test
 
 This plugin is in early stages. We plan on improving some of the user-facing chrome, sorting out some quiet bugs, figuring out where things don't fail elegantly, etc. Please be a part of our development process!
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
 
 ### Release new version
 
 Releases are handled from the [`sanity-io/plugins`](https://github.com/sanity-io/plugins) monorepo using Changesets.
 
 Add a changeset in your PR, then follow the monorepo release workflow to publish from `main`.
+
+## License
+
+[MIT](LICENSE) © Sanity.io
