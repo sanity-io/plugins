@@ -922,7 +922,7 @@ importers:
         version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       sanity-plugin-internationalized-array:
         specifier: ^4.0.0 || ^5.0.0
-        version: 5.1.0(@emotion/is-prop-valid@1.4.0)(@sanity/assist@plugins+@sanity+assist)(@sanity/language-filter@plugins+@sanity+language-filter)(@sanity/styled-components@6.1.24)(@types/react@19.2.17)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)(sanity@6.0.0)
+        version: link:../../sanity-plugin-internationalized-array
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*
@@ -3883,12 +3883,6 @@ packages:
   '@mux/playback-core@0.35.0':
     resolution: {integrity: sha512-7Zi1EJ9sQNIUlQVBjJCXV0CB+rUVEsU3vNRElRV4xnD7dbpoioIAhe1SjZNBifjnK5aBKLDwQHypbnL3Cw3a5A==}
 
-  '@napi-rs/wasm-runtime@1.1.4':
-    resolution: {integrity: sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==}
-    peerDependencies:
-      '@emnapi/core': ^1.7.1
-      '@emnapi/runtime': ^1.7.1
-
   '@napi-rs/wasm-runtime@1.1.5':
     resolution: {integrity: sha512-AWPoBRJ9tsnVhor4sjO7rkni+7p+2IAEFj6cx06UgP10jkQHqay/36uRV/bFkgrh18D9vb4cr8Q0Pthskgzy+Q==}
     peerDependencies:
@@ -5545,11 +5539,6 @@ packages:
   '@sanity/tsconfig@2.1.0':
     resolution: {integrity: sha512-Cnz0EycMsfeILkxL/gYzzfPs511OzP3sjQxU4XkDtujdiFAc+bteMYXi4/SJ83m98cXLum63HbHDk+he6AbbIA==}
 
-  '@sanity/types@5.21.0':
-    resolution: {integrity: sha512-hgNNO4DCdTvq7h3uVUYGVEplByCpSS9vJw5VjJFlA/a/sNvSxYUVQomjZanx2U0Ru3Ju0dNcRTNm26ZkMIgSrQ==}
-    peerDependencies:
-      '@types/react': ^19.2
-
   '@sanity/types@5.31.1':
     resolution: {integrity: sha512-Tl5+C6KTfGO1+QdbHFFaJd9Wyncbz2yznGg1P06JvBfzpexSdBVz476QyDtWBQaCtSkTk8eXzrwPVvW5emA8/g==}
     peerDependencies:
@@ -5568,10 +5557,6 @@ packages:
       react-dom: ^18 || >=19.0.0-0
       react-is: ^18 || >=19.0.0-0
       styled-components: ^5.2 || ^6
-
-  '@sanity/util@5.21.0':
-    resolution: {integrity: sha512-ppc5XzCkxCTyWhjk1eT27RbUtdQSkxS9b9nOM1dcJRo9vUYZCv3A3MSCDigx5At8jMGCcfjpTWx0mKmLEsVWvQ==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
 
   '@sanity/util@6.0.0':
     resolution: {integrity: sha512-cSB15y4h8R/hztWlc6u44HKm/i7Urjy57ZuAUQFxJFK55+bZ8/IYpsGkD3W7nzfiFyUuCQWy3x9dfcioKJsUVQ==}
@@ -5742,9 +5727,6 @@ packages:
 
   '@tweenjs/tween.js@25.0.0':
     resolution: {integrity: sha512-XKLA6syeBUaPzx4j3qwMqzzq+V4uo72BnlbOjmuljLrRqdsd3qnzvZZoxvMHZ23ndsRS4aufU6JOZYpCbU6T1A==}
-
-  '@tybys/wasm-util@0.10.1':
-    resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
 
   '@tybys/wasm-util@0.10.2':
     resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
@@ -8516,9 +8498,6 @@ packages:
     peerDependencies:
       rxjs: ^6.5 || ^7
 
-  obug@2.1.1:
-    resolution: {integrity: sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ==}
-
   obug@2.1.2:
     resolution: {integrity: sha512-AWGB9WFcRXOQs48Z/udjI5ZcZMHXwX8XPByNpOydgcGsDLIzjGizhoMWJyKAWze7AVW/2W1i+/gPX4YtKe5cyg==}
     engines: {node: '>=12.20.0'}
@@ -8824,11 +8803,6 @@ packages:
   prettier@2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
-    hasBin: true
-
-  prettier@3.8.3:
-    resolution: {integrity: sha512-7igPTM53cGHMW8xWuVTydi2KO233VFiTNyF5hLJqpilHfmn8C8gPf+PS7dUT64YcXFbiMGZxS9pCSxL/Dxm/Jw==}
-    engines: {node: '>=14'}
     hasBin: true
 
   prettier@3.8.4:
@@ -9296,19 +9270,6 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  sanity-plugin-internationalized-array@5.1.0:
-    resolution: {integrity: sha512-y38PjoOtZUcxoKppzzehMbYdIVNLYgR6nrd1GwgWHgOuW1PLEQl+xg1SdjVIwjzrphSBQHjhs/GgByjQacmkJg==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      '@sanity/assist': ^6.0.2
-      '@sanity/language-filter': ^5.0.0
-      react: ^19.2
-      react-dom: ^19.2
-      sanity: ^6.0.0
-    peerDependenciesMeta:
-      '@sanity/assist':
-        optional: true
-
   sanity@6.0.0:
     resolution: {integrity: sha512-h+LWZQUgdH6IiA6TKwhnrqoODG/2mJLAiJf+eyQSlpPcW69S7GVgjv3VdxpL9lTZmIaO259iDnoij9umJeXfqg==}
     engines: {node: '>=22.12'}
@@ -9630,7 +9591,7 @@ packages:
     resolution: {integrity: sha512-vlLytXkeP4xvEq2otHeJfSQIRyWxo/oZGEbXrtEEF9Hnmrdly59sUbzZ/QgyWuLYHctCHxFF4tRQZNQ9k60ExQ==}
 
   three-bmfont-text@https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/eed4878795be9b3e38cf6aec6b903f56acd1f695:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/eed4878795be9b3e38cf6aec6b903f56acd1f695}
+    resolution: {gitHosted: true, integrity: sha512-iYdv5kZmgr+mugaLGsTV28QDwh31DWgalwL/U/ZX68ZLL27jXIiqKzbJ4Y6HEQLc/bqPQHE62eHqu3R0+Ioc4g==, tarball: https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/eed4878795be9b3e38cf6aec6b903f56acd1f695}
     version: 3.0.0
 
   three-forcegraph@1.43.4:
@@ -12477,24 +12438,24 @@ snapshots:
       hls.js: 1.6.16
       mux-embed: 5.18.0
 
-  '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
+  '@napi-rs/wasm-runtime@1.1.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:
       '@emnapi/core': 1.10.0
       '@emnapi/runtime': 1.10.0
-      '@tybys/wasm-util': 0.10.1
-    optional: true
-
-  '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)':
-    dependencies:
-      '@emnapi/core': 1.9.2
-      '@emnapi/runtime': 1.9.2
-      '@tybys/wasm-util': 0.10.1
+      '@tybys/wasm-util': 0.10.2
     optional: true
 
   '@napi-rs/wasm-runtime@1.1.5(@emnapi/core@1.11.0)(@emnapi/runtime@1.11.0)':
     dependencies:
       '@emnapi/core': 1.11.0
       '@emnapi/runtime': 1.11.0
+      '@tybys/wasm-util': 0.10.2
+    optional: true
+
+  '@napi-rs/wasm-runtime@1.1.5(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)':
+    dependencies:
+      '@emnapi/core': 1.9.2
+      '@emnapi/runtime': 1.9.2
       '@tybys/wasm-util': 0.10.2
     optional: true
 
@@ -12711,14 +12672,14 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.10.0
       '@emnapi/runtime': 1.10.0
-      '@napi-rs/wasm-runtime': 1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
+      '@napi-rs/wasm-runtime': 1.1.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
     optional: true
 
   '@oxc-parser/binding-wasm32-wasi@0.133.0':
     dependencies:
       '@emnapi/core': 1.10.0
       '@emnapi/runtime': 1.10.0
-      '@napi-rs/wasm-runtime': 1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
+      '@napi-rs/wasm-runtime': 1.1.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
     optional: true
 
   '@oxc-parser/binding-win32-arm64-msvc@0.132.0':
@@ -12799,7 +12760,7 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.10.0
       '@emnapi/runtime': 1.10.0
-      '@napi-rs/wasm-runtime': 1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
+      '@napi-rs/wasm-runtime': 1.1.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
     optional: true
 
   '@oxc-resolver/binding-win32-arm64-msvc@11.20.0':
@@ -13200,14 +13161,14 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.9.2
       '@emnapi/runtime': 1.9.2
-      '@napi-rs/wasm-runtime': 1.1.4(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
+      '@napi-rs/wasm-runtime': 1.1.5(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
     optional: true
 
   '@rolldown/binding-wasm32-wasi@1.0.3':
     dependencies:
       '@emnapi/core': 1.10.0
       '@emnapi/runtime': 1.10.0
-      '@napi-rs/wasm-runtime': 1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
+      '@napi-rs/wasm-runtime': 1.1.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
     optional: true
 
   '@rolldown/binding-wasm32-wasi@1.1.1':
@@ -13654,7 +13615,7 @@ snapshots:
       groq-js: 1.30.2
       json5: 2.2.3
       lodash-es: 4.18.1
-      prettier: 3.8.3
+      prettier: 3.8.4
       reselect: 5.2.0
       tsconfig-paths: 4.2.0
       zod: 4.4.3
@@ -14032,12 +13993,6 @@ snapshots:
 
   '@sanity/tsconfig@2.1.0': {}
 
-  '@sanity/types@5.21.0(@types/react@19.2.17)':
-    dependencies:
-      '@sanity/client': 7.22.1
-      '@sanity/media-library-types': 1.4.0
-      '@types/react': 19.2.17
-
   '@sanity/types@5.31.1(@types/react@19.2.17)':
     dependencies:
       '@sanity/client': 7.22.1
@@ -14085,17 +14040,6 @@ snapshots:
       use-effect-event: 2.0.3(react@19.2.7)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
-
-  '@sanity/util@5.21.0(@types/react@19.2.17)':
-    dependencies:
-      '@date-fns/tz': 1.5.0
-      '@date-fns/utc': 2.1.1
-      '@sanity/client': 7.22.1
-      '@sanity/types': 5.21.0(@types/react@19.2.17)
-      date-fns: 4.4.0
-      rxjs: 7.8.2
-    transitivePeerDependencies:
-      - '@types/react'
 
   '@sanity/util@6.0.0(@types/react@19.2.17)':
     dependencies:
@@ -14288,11 +14232,6 @@ snapshots:
     optional: true
 
   '@tweenjs/tween.js@25.0.0': {}
-
-  '@tybys/wasm-util@0.10.1':
-    dependencies:
-      tslib: 2.8.1
-    optional: true
 
   '@tybys/wasm-util@0.10.2':
     dependencies:
@@ -17250,8 +17189,6 @@ snapshots:
     dependencies:
       rxjs: 7.8.2
 
-  obug@2.1.1: {}
-
   obug@2.1.2: {}
 
   ofetch@1.5.1:
@@ -17637,8 +17574,6 @@ snapshots:
 
   prettier@2.8.8: {}
 
-  prettier@3.8.3: {}
-
   prettier@3.8.4: {}
 
   pretty-bytes@7.1.0: {}
@@ -18013,7 +17948,7 @@ snapshots:
       birpc: 4.0.0
       dts-resolver: 2.1.3(oxc-resolver@11.20.0)
       get-tsconfig: 4.14.0
-      obug: 2.1.1
+      obug: 2.1.2
       picomatch: 4.0.4
       rolldown: 1.0.0-rc.16
     optionalDependencies:
@@ -18031,7 +17966,7 @@ snapshots:
       birpc: 4.0.0
       dts-resolver: 3.0.0(oxc-resolver@11.20.0)
       get-tsconfig: 5.0.0-beta.5
-      obug: 2.1.1
+      obug: 2.1.2
       rolldown: 1.1.1
     optionalDependencies:
       '@typescript/native-preview': 7.0.0-dev.20260421.2
@@ -18189,24 +18124,6 @@ snapshots:
       is-regex: 1.2.1
 
   safer-buffer@2.1.2: {}
-
-  sanity-plugin-internationalized-array@5.1.0(@emotion/is-prop-valid@1.4.0)(@sanity/assist@plugins+@sanity+assist)(@sanity/language-filter@plugins+@sanity+language-filter)(@sanity/styled-components@6.1.24)(@types/react@19.2.17)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)(sanity@6.0.0):
-    dependencies:
-      '@sanity/icons': 3.7.4(react@19.2.7)
-      '@sanity/language-filter': link:plugins/@sanity/language-filter
-      '@sanity/ui': 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
-      '@sanity/util': 5.21.0(@types/react@19.2.17)
-      lodash-es: 4.18.1
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      sanity: 6.0.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@2.0.1)(@sanity/styled-components@6.1.24)(@types/node@24.13.2)(@types/react-dom@19.2.3)(@types/react@19.2.17)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(oxfmt@0.54.0)(prismjs@1.27.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.1)(terser@5.46.1)(typescript@5.9.3)
-    optionalDependencies:
-      '@sanity/assist': link:plugins/@sanity/assist
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - react-is
-      - styled-components
 
   sanity@6.0.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@2.0.1)(@sanity/styled-components@6.1.24)(@types/node@24.13.2)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.3)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.0)(jiti@2.7.0)(oxfmt@0.54.0)(prismjs@1.27.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.1)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
@@ -19056,7 +18973,7 @@ snapshots:
       empathic: 2.0.1
       hookable: 6.1.1
       import-without-cache: 0.3.3
-      obug: 2.1.1
+      obug: 2.1.2
       picomatch: 4.0.4
       rolldown: 1.0.0-rc.16
       rolldown-plugin-dts: 0.23.2(@typescript/native-preview@7.0.0-dev.20260421.2)(oxc-resolver@11.20.0)(rolldown@1.0.0-rc.16)(typescript@5.9.3)
@@ -19329,7 +19246,7 @@ snapshots:
     dependencies:
       cac: 7.0.0
       es-module-lexer: 2.0.0
-      obug: 2.1.1
+      obug: 2.1.2
       pathe: 2.0.3
       vite: 8.0.16(@types/node@24.13.2)(@vitejs/devtools@0.3.3)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0)
     transitivePeerDependencies:
@@ -19380,7 +19297,7 @@ snapshots:
       es-module-lexer: 2.0.0
       expect-type: 1.3.0
       magic-string: 0.30.21
-      obug: 2.1.1
+      obug: 2.1.2
       pathe: 2.0.3
       picomatch: 4.0.4
       std-env: 4.1.0
