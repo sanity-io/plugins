@@ -25,6 +25,7 @@ import {
 } from '#internationalized-array'
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
+import {muxInputExample} from '#mux-input'
 import {
   orderableDocumentListExample,
   orderableDocumentListExampleStructure,
@@ -105,6 +106,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      muxInputExample(),
       hotspotArrayExample(),
       orderableDocumentListExample(),
       latexInputExample(),
