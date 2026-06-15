@@ -6,6 +6,10 @@ import type {PlopTypes} from '@turbo/gen'
 import hostedGitInfo from 'hosted-git-info'
 import validateNpmPackageName from 'validate-npm-package-name'
 
+interface Inquirer {
+  prompt<T>(question: PlopTypes.PromptQuestion): Promise<T>
+}
+
 interface NpmPackageJson {
   name: string
   version: string
@@ -34,7 +38,6 @@ async function fetchNpmPackage(name: string): Promise<NpmPackageData | null> {
     throw new Error(`Failed to fetch npm package: ${response.statusText}`)
   }
 
-  // oxlint-disable-next-line no-unsafe-type-assertion
   return response.json() as Promise<NpmPackageData>
 }
 
@@ -171,7 +174,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
     // Validate plugin name to prevent command injection
     // Plugin names are already validated by npm package name rules, but double-check
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const pluginName = String((answers as any).name)
     const {errors} = validateNpmPackageName(pluginName)
     if (errors?.length) {
@@ -180,7 +182,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
     const pluginDir = join(rootPath, 'plugins', pluginName)
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const repoUrl = (answers as any).originalRepositoryUrl
     if (!repoUrl) {
       throw new Error(
@@ -267,7 +268,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
   plop.setGenerator('new plugin', {
     description: 'Generates a new Sanity Studio plugin',
-    prompts: async (inquirer) => {
+    prompts: async (_inquirer) => {
+      const inquirer = _inquirer as Inquirer
       // Step 1: Get and validate the plugin name
       const {name} = await inquirer.prompt<{name: string}>({
         type: 'input',
@@ -450,7 +452,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
   plop.setGenerator('copy plugin', {
     description: 'Copies an existing Sanity Studio plugin into the monorepo',
-    prompts: async (inquirer) => {
+    prompts: async (_inquirer) => {
+      const inquirer = _inquirer as Inquirer
       // Step 1: Get and validate the plugin name
       const {name} = await inquirer.prompt<{name: string}>({
         type: 'input',
