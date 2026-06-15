@@ -1,6 +1,11 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignoreWorkspaces": ["dev/*"],
+  "ignoreWorkspaces": [
+    "dev/*",
+    // Moved verbatim from sanity-io/sanity-plugin-mux-input; legacy dead-code
+    // and phantom-dependency cleanup is deferred to a follow-up PR.
+    "plugins/sanity-plugin-mux-input",
+  ],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,

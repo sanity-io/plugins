@@ -16,7 +16,8 @@
     "**/dist/*",
     "**/sanity.types.ts",
     "turbo/generators/config.ts",
-    "plugins/sanity-naive-html-serializer/test/**"
+    "plugins/sanity-naive-html-serializer/test/**",
+    "plugins/sanity-plugin-mux-input/**"
   ],
   "options": {
     "typeAware": true,
