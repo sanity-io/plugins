@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-workspace-home",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "A home screen for your multi-workspace Sanity Studio",
   "keywords": [
     "sanity",
@@ -43,7 +43,7 @@
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
-    "react-is": "^19.2.5"
+    "react-is": "^19.2.7"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

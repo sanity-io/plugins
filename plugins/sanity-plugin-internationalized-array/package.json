@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-internationalized-array",
-  "version": "5.1.5",
+  "version": "5.1.6",
   "description": "Store localized fields in an array to save on attributes",
   "keywords": [
     "sanity",
@@ -71,7 +71,7 @@
     "styled-components": "catalog:"
   },
   "peerDependencies": {
-    "@sanity/assist": "^6.0.2",
+    "@sanity/assist": "workspace:^",
     "@sanity/language-filter": "^5.0.0",
     "react": "^19.2",
     "react-dom": "^19.2",

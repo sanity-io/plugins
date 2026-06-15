@@ -10,20 +10,20 @@ packages:
 
 catalog:
   '@sanity/client': ^7.22.1
-  '@sanity/pkg-utils': ^10.5.0
+  '@sanity/pkg-utils': ^10.5.5
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.1.0
   '@sanity/ui': ^3.2.0
   '@sanity/util': ^6.0.0
   '@sanity/vision': ^6.0.0
   '@types/node': ^24.13.2
-  '@types/react': ^19.2.14
+  '@types/react': ^19.2.17
   '@types/react-dom': ^19.2.3
-  '@typescript/native-preview': 7.0.0-dev.20260418.1
+  '@typescript/native-preview': beta
   babel-plugin-react-compiler: ^1.0.0
   babel-plugin-styled-components: ^2.3.0
-  react: ^19.2.5
-  react-dom: ^19.2.5
+  react: ^19.2.7
+  react-dom: ^19.2.7
   rxjs: ^7.8.2
   sanity: ^6.0.0
   styled-components: ^6.4.2
@@ -64,6 +64,8 @@ minimumReleaseAgeExclude:
   - turbo@2.9.14
 
 overrides:
+  '@types/node': 'catalog:'
+  sanity: 'catalog:'
   styled-components: npm:@sanity/styled-components@latest
 
 patchedDependencies:
@@ -84,3 +86,13 @@ trustPolicyExclude:
   - ts-api-utils@2.3.0
   - undici@5.29.0
   - vite@6.4.1
+
+dedupePeers: true
+linkWorkspacePackages: deep
+
+allowBuilds:
+  esbuild: false
+
+publicHoistPattern:
+  # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
+  - 'vite'
