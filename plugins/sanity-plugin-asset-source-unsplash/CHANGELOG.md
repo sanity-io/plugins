@@ -1,5 +1,11 @@
 # sanity-plugin-asset-source-unsplash
 
+## 7.0.9
+
+### Patch Changes
+
+- [#1007](https://github.com/sanity-io/plugins/pull/1007) [`cfb07c2`](https://github.com/sanity-io/plugins/commit/cfb07c2e7c58d49ad81e00271e5348a3cd37a92b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency react-photo-album to ^3.6.0
+
 ## 7.0.8
 
 ### Patch Changes
