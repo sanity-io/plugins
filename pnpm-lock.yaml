@@ -582,7 +582,7 @@ importers:
         specifier: 'catalog:'
         version: 7.8.2
       sanity-plugin-utils:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../sanity-plugin-utils
     devDependencies:
       '@repo/package.config':
@@ -707,7 +707,7 @@ importers:
         specifier: ^1.0.4
         version: 1.0.5
       sanity-plugin-utils:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../sanity-plugin-utils
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -1200,7 +1200,7 @@ importers:
         specifier: 'catalog:'
         version: 7.8.2
       sanity-plugin-utils:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../sanity-plugin-utils
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -1601,7 +1601,7 @@ importers:
   plugins/sanity-plugin-transifex:
     dependencies:
       sanity-translations-tab:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../sanity-translations-tab
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -1714,7 +1714,7 @@ importers:
         specifier: ^12.36.0
         version: 12.40.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7)(react@19.2.7)
       sanity-plugin-utils:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../sanity-plugin-utils
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -1812,7 +1812,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.0(@types/react@19.2.17)
       sanity-naive-html-serializer:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../sanity-naive-html-serializer
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -9265,7 +9265,7 @@ packages:
     resolution: {integrity: sha512-vlLytXkeP4xvEq2otHeJfSQIRyWxo/oZGEbXrtEEF9Hnmrdly59sUbzZ/QgyWuLYHctCHxFF4tRQZNQ9k60ExQ==}
 
   three-bmfont-text@https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/eed4878795be9b3e38cf6aec6b903f56acd1f695:
-    resolution: {gitHosted: true, integrity: sha512-iYdv5kZmgr+mugaLGsTV28QDwh31DWgalwL/U/ZX68ZLL27jXIiqKzbJ4Y6HEQLc/bqPQHE62eHqu3R0+Ioc4g==, tarball: https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/eed4878795be9b3e38cf6aec6b903f56acd1f695}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/eed4878795be9b3e38cf6aec6b903f56acd1f695}
     version: 3.0.0
 
   three-forcegraph@1.43.4:

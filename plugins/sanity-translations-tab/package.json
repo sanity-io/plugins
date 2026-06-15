@@ -46,7 +46,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "@sanity/util": "catalog:",
-    "sanity-naive-html-serializer": "workspace:*"
+    "sanity-naive-html-serializer": "workspace:^"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

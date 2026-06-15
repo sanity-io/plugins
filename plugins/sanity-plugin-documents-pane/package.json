@@ -47,7 +47,7 @@
     "@sanity/uuid": "^3.0.2",
     "dlv": "^1.1.3",
     "rxjs": "catalog:",
-    "sanity-plugin-utils": "workspace:*"
+    "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
