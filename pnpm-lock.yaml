@@ -995,8 +995,8 @@ importers:
   plugins/sanity-naive-html-serializer:
     dependencies:
       '@portabletext/block-tools':
-        specifier: ^4.0.2
-        version: 4.1.11(@types/react@19.2.17)
+        specifier: ^5.1.4
+        version: 5.1.4(@types/react@19.2.17)
       '@portabletext/to-html':
         specifier: ^5.0.2
         version: 5.0.2
@@ -1797,8 +1797,8 @@ importers:
   plugins/sanity-translations-tab:
     dependencies:
       '@portabletext/block-tools':
-        specifier: ^4.1.11
-        version: 4.1.11(@types/react@19.2.17)
+        specifier: ^5.1.4
+        version: 5.1.4(@types/react@19.2.17)
       '@portabletext/to-html':
         specifier: ^5.0.2
         version: 5.0.2
@@ -4210,8 +4210,8 @@ packages:
     resolution: {integrity: sha512-h104Kh26rR8tm+a3Qkc5S4VLYint3FE48as7+/5oCEcKR2idC/pF1G6AhIXKI+eHPJa/3J9i5z0Al47IeGHPkA==}
     engines: {node: '>=12'}
 
-  '@portabletext/block-tools@4.1.11':
-    resolution: {integrity: sha512-5etEyPbkYqIdCoCERPGuWGYlAKjtzm+B9KV/EEQQhLZ8Ecl25vdwg8akAbLG5wq0JpoA8DbIeqqQikSfy9WQAg==}
+  '@portabletext/block-tools@5.1.4':
+    resolution: {integrity: sha512-zQCj1FUkvjaf3EO40Me6zQxaYwjbBMXmXI2J+eFOwiajjHTqoAMgSRXHvwrUPhaiLbPtn3C5edXbbTp0g70TSQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
   '@portabletext/editor@7.3.4':
@@ -4283,10 +4283,6 @@ packages:
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       react: ^18.2 || ^19
-
-  '@portabletext/sanity-bridge@1.2.14':
-    resolution: {integrity: sha512-Is4ggV86dEMm1XjTJVLswsCeWobJm5E61T9jzm64eyr9d25oVEr9lqskxPuXemap6m9t3lnKDln/Ey/qEaAeCw==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
 
   '@portabletext/sanity-bridge@3.1.2':
     resolution: {integrity: sha512-Cf4Jkr2n99OkLUzAFE/Cwm4Fj+ONn1tjHpYAS/bEsNGtGyeMbRfs6OMlNKYATfzcp5cgch3eDeG5xYCKJdM+kg==}
@@ -4987,9 +4983,6 @@ packages:
     engines: {node: '>=20.19 <22 || >=22.12'}
     hasBin: true
 
-  '@sanity/generate-help-url@3.0.1':
-    resolution: {integrity: sha512-bKqCEqFP7qXpNcHxJZnXFLrti8/HYQhhJtMRYFSNJ8bkUXCuUmhHKckzoyiH1n1WAZpI2Y05z2h5yZWbi3gThQ==}
-
   '@sanity/generate-help-url@4.0.0':
     resolution: {integrity: sha512-Ooa4xkLT3TLaX+mw/13fq3IeGdnAkx4rbpVASvRVixzBBvvcL6jPqj50fjlCd+EhgB5GRXBCNNAy/hWXwjZEUA==}
 
@@ -5096,9 +5089,6 @@ packages:
     engines: {node: '>=20.19'}
     hasBin: true
 
-  '@sanity/schema@4.22.0':
-    resolution: {integrity: sha512-39cH5XwMsdLPuntLJyX+bre7FJyZvB3foDhHL7hUx4GCCOZ41X+6QV/yj8mbPzLSTbyhH7nNDBXrBYhvjig84Q==}
-
   '@sanity/schema@6.0.0':
     resolution: {integrity: sha512-Y283RL4pKgbsfn5y3JM68picjzvy5oHVdL6yWlYo0re25tOryz90JAFxvg+xBih9B7he9PmuWECHQiccaQ4zRQ==}
 
@@ -5131,11 +5121,6 @@ packages:
 
   '@sanity/tsconfig@2.1.0':
     resolution: {integrity: sha512-Cnz0EycMsfeILkxL/gYzzfPs511OzP3sjQxU4XkDtujdiFAc+bteMYXi4/SJ83m98cXLum63HbHDk+he6AbbIA==}
-
-  '@sanity/types@4.22.0':
-    resolution: {integrity: sha512-VWAUc8Xtj4IipQt99SzudRldJWHfBVnde+g5qnLZ/Nc1MpFjGiRWu/3smRN5mPOqlrtUfrr0ho/fBZnjE1CEMg==}
-    peerDependencies:
-      '@types/react': 18 || 19
 
   '@sanity/types@6.0.0':
     resolution: {integrity: sha512-VnNk5Hyeytr71pei4Do4xapIObDP0ZC32ce1kLKdJRGzz93tkJZNzrAYXZld/r8j4d6TYfJlxDP+VxacTtIKKQ==}
@@ -12420,11 +12405,12 @@ snapshots:
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
 
-  '@portabletext/block-tools@4.1.11(@types/react@19.2.17)':
+  '@portabletext/block-tools@5.1.4(@types/react@19.2.17)':
     dependencies:
-      '@portabletext/sanity-bridge': 1.2.14(@types/react@19.2.17)
+      '@portabletext/html': 1.0.2
+      '@portabletext/sanity-bridge': 3.1.2(@types/react@19.2.17)
       '@portabletext/schema': 2.2.0
-      '@sanity/types': 4.22.0(@types/react@19.2.17)
+      '@sanity/types': 6.0.0(@types/react@19.2.17)
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
@@ -12515,15 +12501,6 @@ snapshots:
       '@portabletext/toolkit': 5.0.2
       '@portabletext/types': 4.0.2
       react: 19.2.7
-
-  '@portabletext/sanity-bridge@1.2.14(@types/react@19.2.17)':
-    dependencies:
-      '@portabletext/schema': 2.2.0
-      '@sanity/schema': 4.22.0(@types/react@19.2.17)
-      '@sanity/types': 4.22.0(@types/react@19.2.17)
-    transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
 
   '@portabletext/sanity-bridge@3.1.2(@types/react@19.2.17)':
     dependencies:
@@ -13188,8 +13165,6 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  '@sanity/generate-help-url@3.0.1': {}
-
   '@sanity/generate-help-url@4.0.0': {}
 
   '@sanity/icons@3.7.4(react@19.2.7)':
@@ -13434,21 +13409,6 @@ snapshots:
       - utf-8-validate
       - yaml
 
-  '@sanity/schema@4.22.0(@types/react@19.2.17)':
-    dependencies:
-      '@sanity/descriptors': 1.3.0
-      '@sanity/generate-help-url': 3.0.1
-      '@sanity/types': 4.22.0(@types/react@19.2.17)
-      arrify: 2.0.1
-      groq-js: 1.30.2
-      humanize-list: 1.0.1
-      leven: 3.1.0
-      lodash: 4.18.1
-      object-inspect: 1.13.4
-    transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
-
   '@sanity/schema@6.0.0(@types/react@19.2.17)':
     dependencies:
       '@sanity/descriptors': 1.3.0
@@ -13521,12 +13481,6 @@ snapshots:
       yaml: 2.9.0
 
   '@sanity/tsconfig@2.1.0': {}
-
-  '@sanity/types@4.22.0(@types/react@19.2.17)':
-    dependencies:
-      '@sanity/client': 7.22.1
-      '@sanity/media-library-types': 1.4.0
-      '@types/react': 19.2.17
 
   '@sanity/types@6.0.0(@types/react@19.2.17)':
     dependencies:
