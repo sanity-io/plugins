@@ -90,6 +90,7 @@ trustPolicyExclude:
   - vite@6.4.1
 
 dedupePeers: true
+dedupeDirectDeps: true
 linkWorkspacePackages: deep
 
 allowBuilds:
