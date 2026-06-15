@@ -74,7 +74,7 @@ jobs:
                   name: headPkg.name,
                   fromVersion: basePkg.version,
                   toVersion: headPkg.version,
-                  url: `https://npmdiff.dev/compare/${encodeURIComponent(headPkg.name)}/${basePkg.version}...${headPkg.version}`,
+                  url: `https://npmdiff.dev/compare/${encodeURIComponent(headPkg.name)}/${encodeURIComponent(basePkg.version)}...${encodeURIComponent(headPkg.version)}`,
                 })
               } catch (error) {
                 console.warn(`Failed to process ${file.filename}:`, error.message)
