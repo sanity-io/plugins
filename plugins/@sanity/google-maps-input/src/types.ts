@@ -1,3 +1,4 @@
+/// <reference types="google.maps" />
 import type {DiffComponent, DiffComponentOptions, ObjectDiff} from 'sanity'
 import type {ObjectSchemaType} from 'sanity'
 

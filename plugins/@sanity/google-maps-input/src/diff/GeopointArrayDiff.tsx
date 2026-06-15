@@ -5,12 +5,13 @@ import type {
   DiffProps as GenericDiffProps,
   ObjectDiff,
 } from 'sanity'
+
+import {getGeoConfig} from '../global-workaround'
 import {GoogleMapsLoadProxy} from '../loader/GoogleMapsLoadProxy'
 import {GoogleMap} from '../map/Map'
 import type {Geopoint} from '../types'
-import {getGeoConfig} from '../global-workaround'
-import {GeopointMove} from './GeopointMove'
 import {RootContainer} from './GeopointFieldDiff.styles'
+import {GeopointMove} from './GeopointMove'
 
 export type DiffProps = GenericDiffProps<ArrayDiff<Geopoint>>
 

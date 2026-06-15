@@ -1,7 +1,8 @@
 import {definePlugin, type SchemaType} from 'sanity'
+
+import {setGeoConfig} from './global-workaround'
 import {GeopointInput, type GeopointInputProps} from './input/GeopointInput'
 import {GeopointRadiusInput, type GeopointRadiusInputProps} from './input/GeopointRadiusInput'
-import {setGeoConfig} from './global-workaround'
 import type {GeopointSchemaType, GeopointRadiusSchemaType, GoogleMapsInputConfig} from './types'
 
 export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
@@ -84,7 +85,6 @@ function isGeopointRadius(schemaType: SchemaType): schemaType is GeopointRadiusS
 function isType(name: string, schema?: SchemaType): boolean {
   if (schema?.name === name) {
     return true
-    // eslint-disable-next-line no-negated-condition
   } else if (!schema?.name) {
     return false
   }

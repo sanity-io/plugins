@@ -1,8 +1,7 @@
 declare global {
-  // eslint-disable-next-line
   interface Window {
-    gm_authFailure: any
-    ___sanity_googleMapsApiCallback: any
+    gm_authFailure: unknown
+    ___sanity_googleMapsApiCallback: unknown
   }
 }
 
@@ -22,16 +21,10 @@ function _loadGoogleMapsApi(config: {locale: string; apiKey: string}) {
     }
 
     const script = document.createElement('script')
-    script.onerror = (
-      event: Event | string,
-      source?: string,
-      lineno?: number,
-      colno?: number,
-      error?: Error,
-    ) => reject(new Error(coeerceError(event, error)))
+    script.addEventListener('error', (event) => reject(new Error(coeerceError(event))))
 
     script.src = `https://maps.googleapis.com/maps/api/js?key=${config.apiKey}&libraries=places&callback=${callbackName}&language=${config.locale}`
-    document.getElementsByTagName('head')[0].appendChild(script)
+    document.head.appendChild(script)
   }).finally(() => {
     delete window[callbackName]
     delete window[authFailureCallbackName]
@@ -73,5 +66,5 @@ function isErrorEvent(event: unknown): event is ErrorEvent {
     return false
   }
 
-  return typeof (event as ErrorEvent).message === 'string'
+  return typeof event.message === 'string'
 }

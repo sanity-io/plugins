@@ -1,7 +1,8 @@
 import {useRef} from 'react'
 import {useUserColor, type ObjectDiff} from 'sanity'
-import {Marker} from '../map/Marker'
+
 import {Arrow} from '../map/Arrow'
+import {Marker} from '../map/Marker'
 import type {Geopoint} from '../types'
 
 interface GeopointMoveProps {

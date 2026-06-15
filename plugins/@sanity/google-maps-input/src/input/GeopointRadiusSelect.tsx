@@ -1,10 +1,13 @@
 import React, {type FC, useCallback, useEffect, useRef} from 'react'
-import {SearchInput} from '../map/SearchInput'
+
 import {GoogleMap} from '../map/Map'
 import {Marker} from '../map/Marker'
+import {SearchInput} from '../map/SearchInput'
 import type {LatLng, GeopointRadius} from '../types'
 
 const fallbackLatLng: LatLng = {lat: 40.7058254, lng: -74.1180863}
+
+const defaultMapLocation: LatLng = {lng: 10.74609, lat: 59.91273}
 
 // Component to sync marker drag with circle position
 const MarkerDragSync: FC<{
@@ -47,7 +50,7 @@ export const GeopointRadiusSelect: FC<SelectProps> = ({
   api,
   value,
   onChange,
-  defaultLocation = {lng: 10.74609, lat: 59.91273},
+  defaultLocation = defaultMapLocation,
   defaultRadiusZoom = 12,
   defaultRadius = 1000,
 }) => {

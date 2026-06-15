@@ -1,7 +1,8 @@
 import {createRef, PureComponent, type ReactElement} from 'react'
+
 import type {LatLng} from '../types'
-import {latLngAreEqual} from './util'
 import {MapContainer} from './Map.styles'
+import {latLngAreEqual} from './util'
 
 interface MapProps {
   api: typeof window.google.maps
@@ -25,12 +26,12 @@ export class GoogleMap extends PureComponent<MapProps, MapState> {
     scrollWheel: true,
   }
 
-  state: MapState = {map: undefined}
+  override state: MapState = {map: undefined}
   clickHandler: google.maps.MapsEventListener | undefined
   mapRef = createRef<HTMLDivElement>()
   mapEl: HTMLDivElement | null = null
 
-  componentDidMount() {
+  override componentDidMount() {
     this.attachClickHandler()
   }
 
@@ -52,7 +53,7 @@ export class GoogleMap extends PureComponent<MapProps, MapState> {
     }
   }
 
-  componentDidUpdate(prevProps: MapProps) {
+  override componentDidUpdate(prevProps: MapProps) {
     const map = this.state.map
     if (!map) {
       return
@@ -73,7 +74,7 @@ export class GoogleMap extends PureComponent<MapProps, MapState> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.clickHandler) {
       this.clickHandler.remove()
     }
@@ -112,7 +113,7 @@ export class GoogleMap extends PureComponent<MapProps, MapState> {
     this.mapEl = element
   }
 
-  render() {
+  override render() {
     const {children} = this.props
     const {map} = this.state
     return (

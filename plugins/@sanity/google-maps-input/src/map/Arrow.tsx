@@ -1,4 +1,5 @@
 import {type MutableRefObject, PureComponent} from 'react'
+
 import type {LatLng} from '../types'
 import {latLngAreEqual} from './util'
 
@@ -20,7 +21,7 @@ export class Arrow extends PureComponent<Props> {
     click?: google.maps.MapsEventListener
   } = {}
 
-  componentDidMount() {
+  override componentDidMount() {
     const {from, to, api, map, zIndex, onClick, color, arrowRef} = this.props
     const lineSymbol = {
       path: api.SymbolPath.FORWARD_OPEN_ARROW,
@@ -44,7 +45,7 @@ export class Arrow extends PureComponent<Props> {
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
+  override componentDidUpdate(prevProps: Props) {
     if (!this.line) {
       return
     }
@@ -59,7 +60,7 @@ export class Arrow extends PureComponent<Props> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.line) {
       this.line.setMap(null)
     }
@@ -69,8 +70,7 @@ export class Arrow extends PureComponent<Props> {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  render(): any {
+  override render(): null {
     return null
   }
 }

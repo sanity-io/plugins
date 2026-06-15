@@ -5,12 +5,13 @@ import {
   DiffTooltip,
   getAnnotationAtPath,
 } from 'sanity'
+
+import {getGeoConfig} from '../global-workaround'
 import {GoogleMapsLoadProxy} from '../loader/GoogleMapsLoadProxy'
 import {GoogleMap} from '../map/Map'
 import type {GeopointRadius} from '../types'
-import {getGeoConfig} from '../global-workaround'
-import {GeopointRadiusMove} from './GeopointRadiusMove'
 import {RootContainer} from './GeopointFieldDiff.styles'
+import {GeopointRadiusMove} from './GeopointRadiusMove'
 
 export type DiffProps = GenericDiffProps<ObjectDiff<GeopointRadius>>
 

@@ -15,6 +15,7 @@ import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
 import {documentsPaneExample} from '#documents-pane'
+import {googleMapsInputExample} from '#google-maps-input'
 import {googleTranslateExample} from '#google-translate'
 import {hotspotArrayExample} from '#hotspot-array'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
@@ -105,6 +106,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      googleMapsInputExample(),
       hotspotArrayExample(),
       orderableDocumentListExample(),
       latexInputExample(),

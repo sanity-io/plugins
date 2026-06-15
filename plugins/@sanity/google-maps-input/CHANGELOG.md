@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# @sanity/google-maps-input
 
 ## [4.2.1](https://github.com/sanity-io/google-maps-input/compare/v4.2.0...v4.2.1) (2025-12-18)
 

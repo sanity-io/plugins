@@ -1,4 +1,5 @@
 import {PureComponent, type MutableRefObject} from 'react'
+
 import type {LatLng} from '../types'
 import {latLngAreEqual} from './util'
 
@@ -26,7 +27,7 @@ export class Marker extends PureComponent<Props> {
     click?: google.maps.MapsEventListener
   } = {}
 
-  componentDidMount() {
+  override componentDidMount() {
     const {position, api, map, onMove, zIndex, opacity, label, markerRef, color} = this.props
     const {Marker: GMarker} = api
 
@@ -61,7 +62,7 @@ export class Marker extends PureComponent<Props> {
     this.attachClickHandler()
   }
 
-  componentDidUpdate(prevProps: Props) {
+  override componentDidUpdate(prevProps: Props) {
     if (!this.marker) {
       return
     }
@@ -93,7 +94,7 @@ export class Marker extends PureComponent<Props> {
     }
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.eventHandlers.move) {
       this.eventHandlers.move.remove()
     }
@@ -123,8 +124,7 @@ export class Marker extends PureComponent<Props> {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  render(): any {
+  override render(): null {
     return null
   }
 }

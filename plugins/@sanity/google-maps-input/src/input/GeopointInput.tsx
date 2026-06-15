@@ -1,10 +1,11 @@
-import {useCallback, useEffect, useId, useRef, useState} from 'react'
-import {Box, Button, Dialog, Grid, Stack} from '@sanity/ui'
 import {EditIcon, TrashIcon} from '@sanity/icons'
-import {ObjectInputProps, set, setIfMissing, unset, ChangeIndicator, Path} from 'sanity'
+import {Box, Button, Dialog, Grid, Stack} from '@sanity/ui'
+import {useCallback, useEffect, useId, useRef, useState} from 'react'
+import {type ObjectInputProps, set, setIfMissing, unset, ChangeIndicator, type Path} from 'sanity'
+
+import {getGeoConfig} from '../global-workaround'
 import {GoogleMapsLoadProxy} from '../loader/GoogleMapsLoadProxy'
 import type {Geopoint, GeopointSchemaType, GoogleMapsInputConfig, LatLng} from '../types'
-import {getGeoConfig} from '../global-workaround'
 import {DialogInnerContainer, PreviewImage} from './GeopointInput.styles'
 import {GeopointSelect} from './GeopointSelect'
 

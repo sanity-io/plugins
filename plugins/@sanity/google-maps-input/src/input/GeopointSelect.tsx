@@ -1,10 +1,13 @@
 import {type FC, useCallback} from 'react'
-import {SearchInput} from '../map/SearchInput'
+
 import {GoogleMap} from '../map/Map'
 import {Marker} from '../map/Marker'
+import {SearchInput} from '../map/SearchInput'
 import type {LatLng, Geopoint} from '../types'
 
 const fallbackLatLng: LatLng = {lat: 40.7058254, lng: -74.1180863}
+
+const defaultMapLocation: LatLng = {lng: 10.74609, lat: 59.91273}
 
 interface SelectProps {
   api: typeof window.google.maps
@@ -18,7 +21,7 @@ export const GeopointSelect: FC<SelectProps> = ({
   api,
   value,
   onChange,
-  defaultLocation = {lng: 10.74609, lat: 59.91273},
+  defaultLocation = defaultMapLocation,
   defaultZoom = 8,
 }) => {
   const getCenter = useCallback(() => {

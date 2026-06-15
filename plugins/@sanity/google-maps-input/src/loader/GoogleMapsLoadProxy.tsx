@@ -1,7 +1,8 @@
 import {type ReactElement, useEffect, useState} from 'react'
+
 import type {GoogleMapsInputConfig} from '../types'
-import {AuthError, loadGoogleMapsApi} from './loadGoogleMapsApi'
 import {LoadError as LoadErrorView} from './LoadError'
+import {AuthError, loadGoogleMapsApi} from './loadGoogleMapsApi'
 
 interface LoadProps {
   children: (api: typeof window.google.maps) => ReactElement

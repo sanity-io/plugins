@@ -1,6 +1,7 @@
 import {TextInput} from '@sanity/ui'
-import {WrapperContainer} from './SearchInput.styles'
 import {createRef, PureComponent} from 'react'
+
+import {WrapperContainer} from './SearchInput.styles'
 
 interface Props {
   api: typeof window.google.maps
@@ -24,7 +25,7 @@ export class SearchInput extends PureComponent<Props> {
     }
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     const input = this.searchInputRef.current
     if (!input) {
       return
@@ -41,7 +42,7 @@ export class SearchInput extends PureComponent<Props> {
     event.addListener(this.autoComplete, 'place_changed', this.handleChange)
   }
 
-  render() {
+  override render() {
     return (
       <WrapperContainer>
         <TextInput
