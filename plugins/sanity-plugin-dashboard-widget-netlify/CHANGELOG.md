@@ -1,5 +1,26 @@
 # sanity-plugin-dashboard-widget-netlify
 
+## 3.0.0
+
+### Major Changes
+
+- [#977](https://github.com/sanity-io/plugins/pull/977) [`52d3d1c`](https://github.com/sanity-io/plugins/commit/52d3d1cb2c79ae78d5d2d505e9303532e2c827e7) Thanks [@stipsan](https://github.com/stipsan)! - Port sanity-plugin-dashboard-widget-netlify to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+  - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
+  - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
+  - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18.3 || ^19.2)
+  - **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported)
+  - **@sanity/dashboard v5+ required**: The `@sanity/dashboard` peer dependency range is now ^5 || ^6 (previously ^4.1.4 || ^5)
+  - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=18)
+
+  The widget internals were also modernized: the `rxjs`, `react-props-stream`, and `abort-controller` dependencies have been removed in favor of plain React and the Fetch API, with no change in widget behavior.
+
+### Patch Changes
+
+- Updated dependencies [[`52d3d1c`](https://github.com/sanity-io/plugins/commit/52d3d1cb2c79ae78d5d2d505e9303532e2c827e7)]:
+  - @sanity/dashboard@6.0.0
+
 ## [2.0.4](https://github.com/sanity-io/sanity-plugin-dashboard-widget-netlify/compare/v2.0.3...v2.0.4) (2026-01-07)
 
 ### Bug Fixes
