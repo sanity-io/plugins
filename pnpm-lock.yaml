@@ -995,7 +995,7 @@ importers:
   plugins/sanity-naive-html-serializer:
     dependencies:
       '@portabletext/block-tools':
-        specifier: ^4.0.2
+        specifier: ^4.1.11
         version: 4.1.11(@types/react@19.2.17)
       '@portabletext/to-html':
         specifier: ^5.0.2
