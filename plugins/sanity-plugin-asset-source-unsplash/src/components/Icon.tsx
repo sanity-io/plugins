@@ -3,7 +3,14 @@
  */
 export function UnsplashIcon(): React.JSX.Element {
   return (
-    <svg role="img" viewBox="0 0 25 25" width="1em" height="1em" fill="currentColor">
+    <svg
+      // oxlint-disable-next-line prefer-tag-over-role
+      role="img"
+      viewBox="0 0 25 25"
+      width="1em"
+      height="1em"
+      fill="currentColor"
+    >
       <title>Unsplash</title>
       <path d="M9 9V4h7v5H9Zm7 3h5v9H4v-9h5v5h7v-5Z" />
     </svg>
