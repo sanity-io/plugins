@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>sanity-io/renovate-config", "github>sanity-io/renovate-config:studio-v3"],
+  "packageRules": [
+    {
+      "matchFileNames": ["example/package.json"],
+      "extends": [":semanticCommitTypeAll(chore)"],
+      "ignorePresets": ["github>sanity-io/renovate-config:group-recommended"],
+      "groupName": "example dependencies",
+      "groupSlug": "example",
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "matchPackageNames": ["*"]
+    }
+  ]
+}
