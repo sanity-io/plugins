@@ -109,7 +109,3 @@ To avoid others using your key you should restrict it to hosts where your studio
 
 MIT © Sanity.io
 See LICENSE
-
-## License
-
-<a>MIT</a> © Sanity.io
