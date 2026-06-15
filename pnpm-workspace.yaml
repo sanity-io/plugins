@@ -10,7 +10,9 @@ packages:
 
 catalog:
   '@sanity/client': ^7.22.1
+  '@sanity/mutator': ^6.0.0
   '@sanity/pkg-utils': ^10.5.5
+  '@sanity/schema': ^6.0.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.1.0
   '@sanity/ui': ^3.2.0

@@ -1,5 +1,11 @@
 # 📓 Changelog
 
+## 6.1.2
+
+### Patch Changes
+
+- [`e84a208`](https://github.com/sanity-io/plugins/commit/e84a208da1cf1854563b504181d055cafb43e007) Thanks [@stipsan](https://github.com/stipsan)! - Make `@sanity/mutator` a regular dependency
+
 ## 6.1.1
 
 ### Patch Changes

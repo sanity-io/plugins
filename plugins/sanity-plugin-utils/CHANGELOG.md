@@ -1,5 +1,17 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+## 2.0.3
+
+### Patch Changes
+
+- [`7c1a95c`](https://github.com/sanity-io/plugins/commit/7c1a95c2213555c50bca2fde2af3590abc57c444) Thanks [@stipsan](https://github.com/stipsan)! - Make `rxjs` a regular dependency
+
+## 2.0.2
+
+### Patch Changes
+
+- [#996](https://github.com/sanity-io/plugins/pull/996) [`c66b926`](https://github.com/sanity-io/plugins/commit/c66b9269394b2ec45c320580a39069e6fd39dd4d) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/image-url to ^2.1.1
+
 ## 2.0.1
 
 ### Patch Changes
