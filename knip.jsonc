@@ -196,6 +196,11 @@
       ],
     },
     // add new plugin workspaces here
+    "plugins/sanity-plugin-hotspot-array": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
     "plugins/sanity-plugin-documents-pane": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],

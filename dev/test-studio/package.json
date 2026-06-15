@@ -39,6 +39,7 @@
     "sanity-plugin-documents-pane": "workspace:*",
     "sanity-plugin-google-translate": "workspace:*",
     "sanity-plugin-graph-view": "workspace:*",
+    "sanity-plugin-hotspot-array": "workspace:*",
     "sanity-plugin-iframe-pane": "workspace:*",
     "sanity-plugin-internationalized-array": "workspace:*",
     "sanity-plugin-latex-input": "workspace:*",
@@ -51,11 +52,11 @@
     "styled-components": "catalog:"
   },
   "devDependencies": {
-    "@tsconfig/vite-react": "^7.0.2",
+    "@tsconfig/vite-react": "^8.0.6",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/devtools": "^0.3.1",
+    "@vitejs/devtools": "^0.3.3",
     "babel-plugin-react-compiler": "catalog:"
   },
   "engines": {

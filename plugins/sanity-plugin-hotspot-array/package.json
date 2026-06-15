@@ -1,12 +1,12 @@
 {
-  "name": "sanity-naive-html-serializer",
-  "version": "5.1.2",
-  "description": "This is the source for tooling for naively turning documents and rich text fields into HTML, deserializing them, combining them with source documents, and patching them back. Ideally, this should take in objects that are in portable text, text arrays, or objects with text fields without knowing their specific names or types, and be able to patch them back without additional work on the part of the developer.",
+  "name": "sanity-plugin-hotspot-array",
+  "version": "4.0.0",
+  "description": "A configurable Custom Input for Arrays that will add and update items by clicking on an Image",
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
-  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-naive-html-serializer#readme",
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-hotspot-array#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
   },
@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
-    "directory": "plugins/sanity-naive-html-serializer"
+    "directory": "plugins/sanity-plugin-hotspot-array"
   },
   "files": [
     "dist"
@@ -41,26 +41,26 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@portabletext/block-tools": "^5.1.4",
-    "@portabletext/to-html": "^5.0.2",
-    "@sanity/mutator": "^6.0.0",
-    "@sanity/schema": "^6.0.0",
-    "@sanity/util": "catalog:"
+    "@sanity/asset-utils": "^2.3.0",
+    "@sanity/image-url": "^2.1.1",
+    "@sanity/ui": "catalog:",
+    "@sanity/util": "catalog:",
+    "framer-motion": "^12.23.12",
+    "lodash-es": "^4.17.23"
   },
   "devDependencies": {
-    "@portabletext/types": "^4.0.2",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "jsdom": "^26.1.0",
-    "just-clone": "^6.2.0",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "sanity": "catalog:"
+    "sanity": "catalog:",
+    "styled-components": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",
