@@ -339,7 +339,6 @@ export default function GraphView({
                 const y = node.y + (Math.cos(angle) * distance) / globalScale
 
                 ctx.save()
-                // oxlint-disable-next-line react-hooks-js/todo
                 try {
                   ctx.globalAlpha = fadeEasing(
                     1 -

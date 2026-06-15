@@ -232,7 +232,6 @@ export function useGetInstructStatus(apiClient: SanityClient) {
     setLoading(true)
 
     const projectId = apiClient.config().projectId
-    // oxlint-disable-next-line react-hooks-js/todo
     try {
       const status = await apiClient.request<InstructStatus>({
         method: 'GET',

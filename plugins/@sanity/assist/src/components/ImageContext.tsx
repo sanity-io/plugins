@@ -47,7 +47,7 @@ export function ImageContextProvider(props: InputProps) {
       !isShowingOlderRevision &&
       !readOnly
     ) {
-      // oxlint-disable-next-line react-hooks-js/set-state-in-effect
+      // oxlint-disable-next-line react/react-compiler
       setAssetRefState(assetRef)
       if (canUseAssist(status)) {
         void generateCaption({
