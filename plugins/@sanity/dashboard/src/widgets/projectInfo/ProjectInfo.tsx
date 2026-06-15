@@ -158,13 +158,7 @@ export function ProjectInfo(props: ProjectInfoProps) {
             />
           }
         >
-          <Card
-            paddingY={4}
-            radius={2}
-            role="table"
-            aria-label="Project info"
-            aria-describedby="project_info_table"
-          >
+          <Card paddingY={4} radius={2} aria-label="Project info">
             <Stack gap={4}>
               <Box paddingX={3} as="header">
                 <Heading size={1} as="h2" id="project_info_table">
@@ -179,7 +173,7 @@ export function ProjectInfo(props: ProjectInfoProps) {
                 return (
                   <Stack key={item.title} gap={3}>
                     <Card borderBottom padding={3}>
-                      <Label size={0} muted role="columnheader">
+                      <Label size={0} muted>
                         {item.title}
                       </Label>
                     </Card>
@@ -187,25 +181,19 @@ export function ProjectInfo(props: ProjectInfoProps) {
                       {item.rows.map((row) => {
                         const rowValue = typeof row.value === 'object' ? row.value.error : row.value
                         return (
-                          <Grid
-                            key={`${rowValue ?? ''}-${row.title}`}
-                            gridTemplateColumns={2}
-                            role="row"
-                          >
-                            <Text weight="medium" role="rowheader">
-                              {row.title}
-                            </Text>
+                          <Grid key={`${rowValue ?? ''}-${row.title}`} gridTemplateColumns={2}>
+                            <Text weight="medium">{row.title}</Text>
                             {typeof row.value === 'object' && (
                               <Text size={1}>{row.value?.error}</Text>
                             )}
                             {typeof row.value === 'string' && (
                               <>
                                 {isUrl(row.value) ? (
-                                  <Text size={1} role="cell" style={{wordBreak: 'break-word'}}>
+                                  <Text size={1} style={{wordBreak: 'break-word'}}>
                                     <a href={row.value}>{row.value}</a>
                                   </Text>
                                 ) : (
-                                  <Code size={1} role="cell" style={{wordBreak: 'break-word'}}>
+                                  <Code size={1} style={{wordBreak: 'break-word'}}>
                                     {row.value}
                                   </Code>
                                 )}

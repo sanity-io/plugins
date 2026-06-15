@@ -197,6 +197,11 @@
       "project": ["src/**/*.{ts,tsx}"],
     },
 
+    "plugins/sanity-plugin-hotspot-array": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
     "plugins/@sanity/dashboard": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],

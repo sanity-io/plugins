@@ -1,6 +1,6 @@
 import {ChevronDownIcon, ChevronUpIcon, DragHandleIcon} from '@sanity/icons'
 import {AvatarCounter, Card, Box, Button, Flex, Text, Tooltip} from '@sanity/ui'
-import {useContext, useMemo, type ReactNode} from 'react'
+import {useContext} from 'react'
 import {
   useSchema,
   PreviewCard,
@@ -50,14 +50,6 @@ export function Document({
   const selected = pressed && routerPanesState.length === groupIndex + 2
   const schemaType = schema.get(doc._type)
 
-  const Link = useMemo(
-    () =>
-      function LinkComponent(linkProps: {children: ReactNode}) {
-        return <ChildLink {...linkProps} childId={doc._id} />
-      },
-    [ChildLink, doc._id],
-  )
-
   if (!schemaType) {
     return null
   }
@@ -74,7 +66,7 @@ export function Document({
     <PreviewCard
       __unstable_focusRing
       // @ts-expect-error PreviewCard's polymorphic `as` prop does not accept ChildLink's type.
-      as={Link}
+      as={ChildLink}
       data-as="a"
       data-ui="PaneItem"
       radius={2}
@@ -85,6 +77,7 @@ export function Document({
       tone="inherit"
       width="100%"
       flex={1}
+      childId={doc._id}
     >
       <Flex align="center">
         <Box paddingX={2} style={{flexShrink: 0}}>

@@ -165,7 +165,7 @@ const DialogForm: FC<Props> = (props: Props) => {
         onSubmit={handleSubmit(onSubmit)}
       >
         {/* Hidden button to enable enter key submissions */}
-        <button style={{display: 'none'}} tabIndex={-1} type="submit" />
+        <button aria-label="Submit" style={{display: 'none'}} tabIndex={-1} type="submit" />
 
         {/* Form fields */}
         <Stack gap={5}>

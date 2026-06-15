@@ -81,7 +81,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
         })
       }
 
-      const translations = allLanguageFields.map((item) => {
+      const translations = allLanguageFields.map(async (item) => {
         url.searchParams.set(`target`, item.fieldLang)
 
         if (item.fieldLang === source) {
