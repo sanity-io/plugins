@@ -1647,7 +1647,7 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/image-url':
-        specifier: ^2.0.3
+        specifier: ^2.1.1
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
