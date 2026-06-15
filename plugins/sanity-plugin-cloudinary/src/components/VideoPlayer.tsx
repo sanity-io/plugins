@@ -16,7 +16,7 @@ export default function VideoPlayer(props: VideoPlayerProps) {
   }
 
   return (
-    <video controls style={style}>
+    <video controls aria-label="Cloudinary video preview" style={style}>
       <source src={src} type="video/mp4" />
       <track kind="captions" />
     </video>

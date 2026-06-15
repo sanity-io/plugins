@@ -1,11 +1,5 @@
 import type {RegisteredStudioScript, StudioScript} from './types'
 
-declare global {
-  interface ImportMeta {
-    glob<Module>(pattern: string, options: {eager: true}): Record<string, Module>
-  }
-}
-
 const scriptModules = import.meta.glob<{default: StudioScript}>('./scripts/*/index.ts', {
   eager: true,
 })
