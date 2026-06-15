@@ -7,6 +7,32 @@ import {set, type StringInputProps, unset, useClient} from 'sanity'
 
 import type {AsyncListPluginConfig} from '../types'
 
+// Spinner shown in the Autocomplete `icon` slot while the loader is fetching.
+// Defined at module scope so it has a stable identity across renders.
+function LoadingIcon(): JSX.Element {
+  return (
+    <>
+      <style>
+        {`
+          @keyframes spin {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        `}
+      </style>
+      <SpinnerIcon
+        style={{
+          animation: 'spin 2s linear infinite',
+        }}
+      />
+    </>
+  )
+}
+
 // Object for Autocomplpete's `options` prop
 interface OptionsItem {
   value: string
@@ -140,31 +166,7 @@ export const AsyncList = (
       <Autocomplete
         id={`async-list-${options.schemaType}`}
         filterOption={options.loaderType === 'search' ? () => true : undefined}
-        icon={
-          loading
-            ? () => (
-                <>
-                  <style>
-                    {`
-                      @keyframes spin {
-                        from {
-                          transform: rotate(0deg);
-                        }
-                        to {
-                          transform: rotate(360deg);
-                        }
-                      }
-                    `}
-                  </style>
-                  <SpinnerIcon
-                    style={{
-                      animation: 'spin 2s linear infinite',
-                    }}
-                  />
-                </>
-              )
-            : SearchIcon
-        }
+        icon={loading ? LoadingIcon : SearchIcon}
         openButton
         onChange={handleChange}
         options={data ?? []}

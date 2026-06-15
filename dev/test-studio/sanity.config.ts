@@ -17,6 +17,7 @@ import {documentInternationalizationExample} from '#document-internationalizatio
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
 import {documentsPaneExample} from '#documents-pane'
 import {googleTranslateExample} from '#google-translate'
+import {hotspotArrayExample} from '#hotspot-array'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
 import {iframePaneExample} from '#iframe-pane'
 import {
@@ -106,6 +107,7 @@ export default defineConfig([
       googleTranslateExample(),
       // add new plugins here
       asyncListExample(),
+      hotspotArrayExample(),
       orderableDocumentListExample(),
       latexInputExample(),
       debugLiveSyncTagsExample(),
