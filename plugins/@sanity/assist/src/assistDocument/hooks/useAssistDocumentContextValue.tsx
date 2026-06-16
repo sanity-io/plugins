@@ -116,7 +116,7 @@ function useSyntheticTasks(assistableDocumentId: string) {
   }, [])
 
   useEffect(() => {
-    // oxlint-disable-next-line react-hooks-js/set-state-in-effect
+    // oxlint-disable-next-line react/react-compiler
     setSyntheticTasks([])
   }, [assistableDocumentId])
 
