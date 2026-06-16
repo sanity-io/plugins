@@ -209,7 +209,7 @@ export const TableComponent = (props: TableProps & {rowType?: string}) => {
                 fontSize={1}
                 padding={2}
                 icon={AddIcon}
-                text="Row"
+                text="Add row"
                 mode="ghost"
                 onClick={() => addRows(1)}
               />
@@ -217,7 +217,7 @@ export const TableComponent = (props: TableProps & {rowType?: string}) => {
                 fontSize={1}
                 padding={2}
                 icon={AddIcon}
-                text="Column"
+                text="Add column"
                 mode="ghost"
                 onClick={() => addColumns(1)}
               />
