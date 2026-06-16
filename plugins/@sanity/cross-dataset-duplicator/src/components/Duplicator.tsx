@@ -181,7 +181,7 @@ export default function Duplicator(props: DuplicatorProps) {
   // destination resolves, not synchronously within the effect.
   // See: https://github.com/facebook/react/issues/34743
   useEffect(() => {
-    // oxlint-disable-next-line react-hooks-js/set-state-in-effect
+    // oxlint-disable-next-line react/react-compiler
     initializePayload(docs)
   }, [docs])
 
