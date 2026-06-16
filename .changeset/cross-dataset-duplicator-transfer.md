@@ -2,6 +2,16 @@
 '@sanity/cross-dataset-duplicator': major
 ---
 
+author: @SimeonGriggs
+author: @lukejacksonn
+author: @stipsan
+author: @fernandolucchesi
+author: @iJackWilson
+author: @jjburbridge
+author: @KJHeartbreaker
+author: @randhi-tnf
+author: @wkentdag
+
 Port @sanity/cross-dataset-duplicator to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
