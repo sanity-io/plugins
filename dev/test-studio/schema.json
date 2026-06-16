@@ -3032,6 +3032,80 @@
     }
   },
   {
+    "name": "asyncListTest",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "asyncListTest"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "title": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "pokemon": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "pokemon"
+        },
+        "optional": true
+      },
+      "disneyCharacter": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "disneyCharacter"
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "disneyCharacter",
+    "type": "type",
+    "value": {
+      "type": "string"
+    }
+  },
+  {
+    "name": "pokemon",
+    "type": "type",
+    "value": {
+      "type": "string"
+    }
+  },
+  {
     "name": "googleTranslateTest",
     "type": "document",
     "attributes": {
