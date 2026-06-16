@@ -1,4 +1,4 @@
-import imageUrlBuilder from '@sanity/image-url'
+import {createImageUrlBuilder} from '@sanity/image-url'
 import {useMemo} from 'react'
 
 import {useVersionedClient} from '../../versionedClient'
@@ -43,7 +43,7 @@ export function useDataAdapter() {
           withCredentials: false,
         })
       },
-      urlBuilder: imageUrlBuilder(tutorialsProjectConfig),
+      urlBuilder: createImageUrlBuilder(tutorialsProjectConfig),
     }),
     [versionedClient],
   )
