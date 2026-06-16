@@ -38,6 +38,7 @@ import {sanityNaiveHtmlSerializerExample} from '#sanity-naive-html-serializer'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
 import {studioSecretsExample} from '#studio-secrets'
+import {tableExample} from '#table'
 import {transifexExample} from '#transifex'
 import {translationsTabExample} from '#translations-tab'
 import {unsplashExample} from '#unsplash'
@@ -120,6 +121,7 @@ export default defineConfig([
       assistExample(),
       googleTranslateExample(),
       // add new plugins here
+      tableExample(),
       hotspotArrayExample(),
       orderableDocumentListExample(),
       latexInputExample(),
