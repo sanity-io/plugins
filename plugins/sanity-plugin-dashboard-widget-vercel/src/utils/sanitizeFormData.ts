@@ -1,6 +1,6 @@
 // Recursively sanitize form data:
 // - convert empty strings, undefined values and empty arrays to null (to correctly unset / delete fields)
-// - trim whitespace on string fleids
+// - trim whitespace on string fields
 
 type FormData = Record<string, any>
 

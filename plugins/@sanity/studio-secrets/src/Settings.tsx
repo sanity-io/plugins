@@ -39,7 +39,7 @@ export const SettingsView = ({
   // See: https://github.com/facebook/react/issues/34743
   useEffect(() => {
     if (secrets) {
-      // oxlint-disable-next-line react-hooks-js/set-state-in-effect
+      // oxlint-disable-next-line react/react-compiler
       setNewSecrets(secrets)
     }
   }, [secrets])

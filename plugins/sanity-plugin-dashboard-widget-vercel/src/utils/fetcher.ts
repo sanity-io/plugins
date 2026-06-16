@@ -28,7 +28,7 @@ const fetcher =
     }
 
     try {
-      return response.json()
+      return await response.json()
     } catch (err) {
       throw new Error('Unable to parse response as JSON', {cause: err})
     }

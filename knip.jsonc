@@ -179,6 +179,10 @@
       "project": ["src/**/*.{ts,tsx}"],
     },
 
+    "plugins/@sanity/table": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
     "plugins/sanity-plugin-dashboard-widget-vercel": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
