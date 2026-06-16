@@ -72,7 +72,7 @@ export function useListeningQuery<V>(
           })
       } catch (err) {
         console.error(err)
-        // oxlint-disable-next-line react-hooks-js/set-state-in-effect -- sync error handling for subscription setup
+        // oxlint-disable-next-line react/react-compiler -- sync error handling for subscription setup
         setLoading(false)
         setError(err)
       }

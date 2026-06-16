@@ -43,7 +43,7 @@ const TableCell = (props: Props) => {
       <Box
         as="th"
         colSpan={colSpan}
-        // @ts-expect-error -- `colSpan` is not part of @sanity/ui Box props, but is forwarded to the `th` element
+        // @ts-expect-error -- local `display` allows 'table-cell', which is not part of @sanity/ui's `BoxDisplay` union
         display={display}
         paddingX={3}
         paddingY={2}
@@ -62,7 +62,7 @@ const TableCell = (props: Props) => {
     <Box
       as="td"
       colSpan={colSpan}
-      // @ts-expect-error -- `colSpan` is not part of @sanity/ui Box props, but is forwarded to the `td` element
+      // @ts-expect-error -- local `display` allows 'table-cell', which is not part of @sanity/ui's `BoxDisplay` union
       display={display}
       paddingX={3}
       paddingY={[2, 2, 3]}

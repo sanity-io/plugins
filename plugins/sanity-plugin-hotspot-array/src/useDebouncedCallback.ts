@@ -61,6 +61,7 @@ export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 
+  // oxlint-disable react/react-compiler
   return useMemo(() => {
     const execute = () => {
       clear()
@@ -99,4 +100,5 @@ export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
     return wrapped
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [delay, maxWait, ...deps])
+  // oxlint-enable react/react-compiler
 }

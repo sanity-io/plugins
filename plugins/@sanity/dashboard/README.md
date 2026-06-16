@@ -58,7 +58,7 @@ dashboardTool({
 Widgets can be configured by passing widget-specific config:
 
 ```ts
-projectUsersWidget({layout: 'medium'})
+projectUsersWidget({layout: {width: 'medium'}})
 ```
 
 You can change the name, title and icon of the dashboard tool should you want to - which also allows you to configure multiple dashboards with different configurations:
