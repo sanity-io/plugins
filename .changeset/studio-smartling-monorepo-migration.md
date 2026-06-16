@@ -2,6 +2,13 @@
 'sanity-plugin-studio-smartling': major
 ---
 
+author: @cngonzalez
+author: @apennell
+author: @stipsan
+author: @arthur-pinner
+author: @KJHeartbreaker
+author: @RitaDias
+
 Port sanity-plugin-studio-smartling to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
