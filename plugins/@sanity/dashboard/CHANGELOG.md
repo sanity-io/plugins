@@ -1,5 +1,11 @@
 # @sanity/dashboard
 
+## 6.0.2
+
+### Patch Changes
+
+- [#1050](https://github.com/sanity-io/plugins/pull/1050) [`64578a5`](https://github.com/sanity-io/plugins/commit/64578a54eaaf6b24b9d3061b5d5acd704cc2e679) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/image-url to v2
+
 ## 6.0.1
 
 ### Patch Changes
