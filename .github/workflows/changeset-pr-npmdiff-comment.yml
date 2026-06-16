@@ -87,7 +87,7 @@ jobs:
               ? [
                   '## Package diff links for this Changesets PR',
                   '',
-                  'Use these links to compare what will be published when this PR is merged:',
+                  'These links start working after this PR is merged and the release is published to npm, and can be used to verify that published packages did not include unexpected changes:',
                   '',
                   ...packageDiffs.map(
                     (pkg) =>
