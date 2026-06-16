@@ -51,6 +51,7 @@ function getStyle(
   }
 }
 
+// oxlint-disable-next-line react/react-compiler
 export default function DocumentList(props: DocumentListProps) {
   const {
     // oxlint-disable-next-line no-useless-default-assignment
@@ -75,7 +76,6 @@ export default function DocumentList(props: DocumentListProps) {
 
   const parentRef = useRef(null)
 
-  // oxlint-disable-next-line react-hooks-js/incompatible-library
   const virtualizer = useVirtualizer({
     count: dataFiltered.length,
     getScrollElement: useCallback(() => parentRef.current, []),

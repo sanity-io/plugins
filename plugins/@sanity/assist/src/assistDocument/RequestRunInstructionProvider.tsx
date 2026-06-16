@@ -46,7 +46,7 @@ export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
   useEffect(() => {
     if (queuedArgs && isDocAssistable) {
       task(queuedArgs)
-      // oxlint-disable-next-line react-hooks-js/set-state-in-effect
+      // oxlint-disable-next-line react/react-compiler
       setQueuedArgs(undefined)
     }
   }, [queuedArgs, isDocAssistable, task])
