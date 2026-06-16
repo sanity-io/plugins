@@ -15,6 +15,7 @@ import {
 import {type ChangeEventHandler, useState} from 'react'
 
 interface TableMenuProps {
+  id: string
   addColumns: (count: number) => void
   addColumnAt: (index: number) => void
   addRows: (count: number) => void
@@ -24,13 +25,13 @@ interface TableMenuProps {
 }
 
 export const TableMenu = (props: TableMenuProps) => {
-  const {remove: handleRemove} = props
+  const {id, remove: handleRemove} = props
   const [dialog, setDialog] = useState<{
     type: string
     callback: (count: number) => void
   } | null>(null)
 
-  const [count, setCount] = useState<string | undefined>('')
+  const [count, setCount] = useState('')
 
   const updateCount: ChangeEventHandler<HTMLInputElement> = (e) => {
     setCount(e.currentTarget.value)
@@ -56,12 +57,12 @@ export const TableMenu = (props: TableMenuProps) => {
   }
 
   const onConfirm = () => {
-    const parsedCount = parseInt(count ?? '0', 10)
+    const parsedCount = parseInt(count, 10)
 
     if (parsedCount < 100) {
       setDialog(null)
       dialog?.callback(parsedCount)
-      setCount(undefined)
+      setCount('')
     }
   }
 
@@ -70,7 +71,7 @@ export const TableMenu = (props: TableMenuProps) => {
       {dialog && (
         <Dialog
           header={`Add ${dialog.type}`}
-          id="dialog-add"
+          id={`${id}-dialog-add`}
           onClose={() => setDialog(null)}
           zOffset={1000}
         >
@@ -94,7 +95,7 @@ export const TableMenu = (props: TableMenuProps) => {
       )}
       <MenuButton
         button={<Button icon={ControlsIcon} fontSize={1} padding={2} mode="ghost" />}
-        id="menu-button-example"
+        id={`${id}-menu-button`}
         menu={
           <Menu>
             <MenuItem icon={AddIcon} fontSize={1} text="Add Row(s)" onClick={addRows} />

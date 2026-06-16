@@ -18,7 +18,7 @@ const Table = ({rows}: {rows: TableRow[]}) => {
           // Cells are plain strings; the cell position is the only stable identity
           // eslint-disable-next-line react/no-array-index-key
           <Card key={row._key + i} padding={2} style={{outline: '1px solid #DFE2E9'}}>
-            <Text style={{textOverflow: 'elipsis'}}>{cell}</Text>
+            <Text textOverflow="ellipsis">{cell}</Text>
           </Card>
         )),
       )}
