@@ -2,6 +2,16 @@
 '@sanity/google-maps-input': major
 ---
 
+author: @snorrees
+author: @bjoerge
+author: @rexxars
+author: @stipsan
+author: @SimeonGriggs
+author: @pedrobonamin
+author: @pierrenel
+author: @RitaDias
+author: @liamb13
+
 Port @sanity/google-maps-input to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
