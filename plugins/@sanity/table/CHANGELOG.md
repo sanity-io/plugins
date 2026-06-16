@@ -1,5 +1,20 @@
 # @sanity/table
 
+## 3.0.0
+
+### Major Changes
+
+- [#973](https://github.com/sanity-io/plugins/pull/973) [`5fc4a71`](https://github.com/sanity-io/plugins/commit/5fc4a719915b8df9df597f6a10fd69ba3f3642f5) Thanks [@stipsan](https://github.com/stipsan)! - Port @sanity/table to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+
+  - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
+  - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
+  - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18 || ^19)
+  - **react-dom 19.2+ required**: `react-dom` is now a required peer dependency
+  - **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported)
+  - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=18)
+
 ## [2.0.1](https://github.com/sanity-io/table/compare/v2.0.0...v2.0.1) (2025-12-29)
 
 ### Bug Fixes
