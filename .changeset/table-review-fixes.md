@@ -2,4 +2,4 @@
 '@sanity/table': patch
 ---
 
-Fix table input rendering issues: apply ellipsis truncation in the preview, keep the row/column count input controlled, and derive dialog/menu DOM ids from the input id so multiple table inputs (e.g. arrays of tables) don't produce duplicate ids
+Fix table preview cell truncation (use the `ellipsis` text-overflow), derive the menu/dialog DOM ids from the input id so multiple table inputs (e.g. arrays of tables) don't collide on duplicate ids, and validate the add row/column count by disabling Confirm and showing a validity message for empty or out-of-range values

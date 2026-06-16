@@ -24,14 +24,15 @@ interface TableMenuProps {
   placement: Placement
 }
 
-export const TableMenu = (props: TableMenuProps) => {
+export const TableMenu = (props: TableMenuProps): React.JSX.Element => {
   const {id, remove: handleRemove} = props
   const [dialog, setDialog] = useState<{
     type: string
     callback: (count: number) => void
   } | null>(null)
 
-  const [count, setCount] = useState('')
+  // Keep `count` always a string so the TextInput is controlled for the component lifetime.
+  const [count, setCount] = useState<string>('')
 
   const updateCount: ChangeEventHandler<HTMLInputElement> = (e) => {
     setCount(e.currentTarget.value)
@@ -39,10 +40,12 @@ export const TableMenu = (props: TableMenuProps) => {
 
   const addRows = () => {
     setDialog({type: 'rows', callback: (c) => props.addRows(c)})
+    setCount('') // ensure input starts controlled when dialog opens
   }
 
   const addRowAt = () => {
     setDialog({type: 'rows', callback: (index) => props.addRowAt(index)})
+    setCount('')
   }
 
   const addColumns = () => {
@@ -50,10 +53,12 @@ export const TableMenu = (props: TableMenuProps) => {
       type: 'columns',
       callback: (c) => props.addColumns(c),
     })
+    setCount('')
   }
 
   const addColumnsAt = () => {
     setDialog({type: 'columns', callback: (index) => props.addColumnAt(index)})
+    setCount('')
   }
 
   // The dialog is reused for "add N rows/columns" (a count) and "add at index"
@@ -76,7 +81,10 @@ export const TableMenu = (props: TableMenuProps) => {
         <Dialog
           header={`Add ${dialog.type}`}
           id={`${id}-dialog-add`}
-          onClose={() => setDialog(null)}
+          onClose={() => {
+            setDialog(null)
+            setCount('')
+          }}
           zOffset={1000}
         >
           <Card padding={4}>
@@ -93,7 +101,14 @@ export const TableMenu = (props: TableMenuProps) => {
             />
             <Box marginTop={4}>
               <Inline gap={1} style={{textAlign: 'right'}}>
-                <Button text="Cancel" mode="ghost" onClick={() => setDialog(null)} />
+                <Button
+                  text="Cancel"
+                  mode="ghost"
+                  onClick={() => {
+                    setDialog(null)
+                    setCount('')
+                  }}
+                />
                 <Button
                   text="Confirm"
                   tone="critical"
