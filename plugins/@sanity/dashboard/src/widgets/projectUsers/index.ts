@@ -3,7 +3,7 @@ import {ProjectUsers} from './ProjectUsers'
 
 export function projectUsersWidget(config?: {layout?: LayoutConfig}): DashboardWidget {
   return {
-    name: 'project-info',
+    name: 'project-users',
     component: ProjectUsers,
     layout: config?.layout,
   }
