@@ -2,6 +2,12 @@
 '@sanity/personalization-plugin': major
 ---
 
+author: @jjburbridge
+author: @netmagik
+author: @RitaDias
+author: @pedrobonamin
+author: @ChrisLaRocque
+
 Port @sanity/personalization-plugin to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
