@@ -340,7 +340,11 @@ For agent-specific transfer guidance, use the `plugin-transfer` skill in `.agent
 
 When migrating a plugin, agents should ensure:
 
-- `README.md` from the original repository is preserved
+- `README.md` from the original repository is preserved, but cleaned up for the monorepo:
+  - Remove stale standalone-repo sections such as `## Develop & test` (usually references `@sanity/plugin-kit`) and `### Release new version` (references the original repo's release workflow / semantic-release). Building, testing, and releasing are handled centrally by the monorepo.
+  - Remove links to old/forked versions (e.g. "for the v2 version, see this other repo").
+  - Do not reference a specific Sanity Studio major: drop mentions of the current latest major (e.g. "Sanity Studio v6", which ages quickly) and of long-gone majors like v3. Reword to be version-agnostic (e.g. "maintained by Sanity.io"); only mention a version when truly necessary, at most as `v2 - legacy`, and usually not at all.
+- `LICENSE` from the original repository is preserved when it credits authors beyond Sanity.io alone (the copy-plugin generator removes it by default); if kept, update the copyright year(s) to the current year
 - A test-studio example is present and wired in `dev/test-studio/sanity.config.ts`
 - `.github/CODEOWNERS` is not updated unless explicitly requested
 - The transfer includes a **major** changeset

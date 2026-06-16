@@ -26,6 +26,7 @@ export default function NetlifyWidget(props: NetlifyWidgetProps) {
         text="Manage sites at Netlify"
         loading={isLoading}
         target="_blank"
+        rel="noopener noreferrer"
       />
     </Flex>
   )

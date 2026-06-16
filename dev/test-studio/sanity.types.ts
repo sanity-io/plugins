@@ -297,17 +297,17 @@ export type MovieDocument = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  table?: InternationalizedArrayTable
+  table?: InternationalizedArrayDemoTable
 }
 
-export type InternationalizedArrayTable = Array<
+export type InternationalizedArrayDemoTable = Array<
   {
     _key: string
-  } & InternationalizedArrayTableValue
+  } & InternationalizedArrayDemoTableValue
 >
 
-export type Table = {
-  _type: 'table'
+export type DemoTable = {
+  _type: 'demoTable'
   title?: string
   description?: InternationalizedArrayString
 }
@@ -389,9 +389,9 @@ export type InternationalizedArrayText = Array<
   } & InternationalizedArrayTextValue
 >
 
-export type InternationalizedArrayTableValue = {
-  _type: 'internationalizedArrayTableValue'
-  value?: Table
+export type InternationalizedArrayDemoTableValue = {
+  _type: 'internationalizedArrayDemoTableValue'
+  value?: DemoTable
   language: string
 }
 
@@ -531,6 +531,35 @@ export type HotspotArrayDemo = {
     _type: 'spot'
     _key: string
   }>
+}
+
+export type TableTest = {
+  _id: string
+  _type: 'tableTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  sizeChart?: Table
+  moreTables?: Array<
+    {
+      _key: string
+    } & Table
+  >
+}
+
+export type Table = {
+  _type: 'table'
+  rows?: Array<
+    {
+      _key: string
+    } & TableRow
+  >
+}
+
+export type TableRow = {
+  _type: 'tableRow'
+  cells?: Array<string>
 }
 
 export type GoogleTranslateTest = {
@@ -814,14 +843,14 @@ export type AllSanitySchemaTypes =
   | Issue520Repro
   | InternationalizedArrayString
   | MovieDocument
-  | InternationalizedArrayTable
-  | Table
+  | InternationalizedArrayDemoTable
+  | DemoTable
   | I18nArrayCircularSchemaRepro
   | I18nArrayCircularBodyContent
   | I18nArrayPerformanceTest
   | InternationalizedPost
   | InternationalizedArrayText
-  | InternationalizedArrayTableValue
+  | InternationalizedArrayDemoTableValue
   | InternationalizedArrayTextValue
   | InternationalizedArrayStringValue
   | TranslationMetadata
@@ -834,6 +863,9 @@ export type AllSanitySchemaTypes =
   | OrderableProject
   | OrderableCategory
   | HotspotArrayDemo
+  | TableTest
+  | Table
+  | TableRow
   | GoogleTranslateTest
   | LocalizedString
   | SanityAssistInstructionTask
