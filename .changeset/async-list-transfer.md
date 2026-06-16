@@ -2,6 +2,10 @@
 '@sanity/sanity-plugin-async-list': major
 ---
 
+author: @ChrisLaRocque
+author: @RitaDias
+author: @KJHeartbreaker
+
 Port @sanity/sanity-plugin-async-list to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
