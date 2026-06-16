@@ -2,6 +2,12 @@
 '@sanity/form-toolkit': major
 ---
 
+author: @ChrisLaRocque
+author: @RitaDias
+author: @nkgentile
+author: @KJHeartbreaker
+author: @bjoerge
+
 Port @sanity/form-toolkit to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
