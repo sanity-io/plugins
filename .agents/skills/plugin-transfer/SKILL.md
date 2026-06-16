@@ -31,9 +31,19 @@ Keep and maintain these monorepo config files in the transferred plugin:
 
 Do not copy standalone-repo-only setup such as custom root CI/build/lint/test configs that are already handled by this monorepo.
 
+## Clean Up the Transferred README
+
+The original `README.md` is preserved, but old standalone-repo content is almost always stale in the monorepo. Remove or rewrite the following before opening the PR:
+
+- **Old release/development sections.** Delete sections that describe the original repo's release or dev tooling, e.g. `## Develop & test` (typically references `@sanity/plugin-kit`) and `### Release new version` (references the original repo's GitHub Actions / semantic-release). The monorepo handles building, testing, and releasing centrally, so these instructions are wrong here.
+- **Links to old/forked versions.** Remove pointers like "for the v2 version, see this other repo" that link to pre-transfer forks or legacy repositories.
+- **Specific Sanity Studio major versions.** Do not reference the current latest Studio major (e.g. "Sanity Studio v6") since it ages quickly, and do not mention long-gone majors like v3. Reword phrasing such as "migrated to Sanity Studio V3" / "only the v3 version is maintained" to a version-agnostic statement (e.g. "maintained by Sanity.io"). Only mention a version when genuinely necessary—at most as `v2 - legacy` to disambiguate a legacy line—and usually omit it entirely.
+
+Keep the substance that is still accurate: intro/description, screenshots, acknowledgements, install, usage, configuration, and license sections.
+
 ## Required Transfer Checks
 
-1. Keep the original plugin `README.md` in the new plugin workspace.
+1. Keep the original plugin `README.md` in the new plugin workspace, but clean it up (see [Clean Up the Transferred README](#clean-up-the-transferred-readme)).
 2. Restore `LICENSE` from the original repository when it credits authors beyond Sanity.io alone (the copy-plugin generator deletes it during cleanup). If kept, update the copyright year(s) to the current year.
 3. Add and verify the generated test-studio example under `dev/test-studio/src/<plugin-example>/index.tsx`.
 4. Confirm the plugin is wired in `dev/test-studio/sanity.config.ts`.
