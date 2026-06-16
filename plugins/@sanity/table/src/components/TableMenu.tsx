@@ -56,14 +56,18 @@ export const TableMenu = (props: TableMenuProps) => {
     setDialog({type: 'columns', callback: (index) => props.addColumnAt(index)})
   }
 
-  const onConfirm = () => {
-    const parsedCount = parseInt(count, 10)
+  // The dialog is reused for "add N rows/columns" (a count) and "add at index"
+  // (a position where 0 is valid), so allow 0 but reject NaN/negative/too-large.
+  const parsedCount = Number.parseInt(count, 10)
+  const isValidCount = Number.isInteger(parsedCount) && parsedCount >= 0 && parsedCount < 100
 
-    if (parsedCount < 100) {
-      setDialog(null)
-      dialog?.callback(parsedCount)
-      setCount('')
+  const onConfirm = () => {
+    if (!isValidCount) {
+      return
     }
+    setDialog(null)
+    dialog?.callback(parsedCount)
+    setCount('')
   }
 
   return (
@@ -83,11 +87,19 @@ export const TableMenu = (props: TableMenuProps) => {
               type="number"
               value={count}
               onChange={updateCount}
+              customValidity={
+                count !== '' && !isValidCount ? 'Enter a whole number from 0 to 99' : undefined
+              }
             />
             <Box marginTop={4}>
               <Inline gap={1} style={{textAlign: 'right'}}>
                 <Button text="Cancel" mode="ghost" onClick={() => setDialog(null)} />
-                <Button text="Confirm" tone="critical" onClick={onConfirm} />
+                <Button
+                  text="Confirm"
+                  tone="critical"
+                  onClick={onConfirm}
+                  disabled={!isValidCount}
+                />
               </Inline>
             </Box>
           </Card>
