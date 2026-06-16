@@ -1,4 +1,4 @@
-import {asyncList} from '@sanity/sanity-plugin-async-list'
+import {asyncList, createAsyncListInput} from '@sanity/sanity-plugin-async-list'
 import {definePlugin, defineType} from 'sanity'
 
 const asyncListTest = defineType({
@@ -9,6 +9,23 @@ const asyncListTest = defineType({
     {type: 'string', name: 'title', title: 'Title'},
     {type: 'pokemon', name: 'pokemon', title: 'Pokemon (seed loader)'},
     {type: 'disneyCharacter', name: 'disneyCharacter', title: 'Disney Character (search loader)'},
+    {
+      // Plain string field wired directly via `createAsyncListInput` (no plugin
+      // schemaType) to exercise the component API and the stable per-field id.
+      type: 'string',
+      name: 'componentBerry',
+      title: 'Berry (component usage, seed loader)',
+      components: {
+        input: createAsyncListInput({
+          loader: async () => {
+            const response = await fetch('https://pokeapi.co/api/v2/berry?limit=50&offset=0')
+            const result: {results: {name: string}[]} = await response.json()
+
+            return result.results.map((item) => ({value: item.name}))
+          },
+        }),
+      },
+    },
   ],
 })
 
