@@ -66,7 +66,7 @@
   "dependencies": {
     "@formium/client": "^0.1.4",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
-    "@sanity/sanity-plugin-async-list": "^1.3.0",
+    "@sanity/sanity-plugin-async-list": "workspace:^",
     "@sanity/ui": "catalog:",
     "h3": "^1.13.0",
     "react-icons": "^5.4.0"

@@ -562,6 +562,21 @@ export type TableRow = {
   cells?: Array<string>
 }
 
+export type AsyncListTest = {
+  _id: string
+  _type: 'asyncListTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  pokemon?: Pokemon
+  disneyCharacter?: DisneyCharacter
+}
+
+export type DisneyCharacter = string
+
+export type Pokemon = string
+
 export type GoogleTranslateTest = {
   _id: string
   _type: 'googleTranslateTest'
@@ -866,6 +881,9 @@ export type AllSanitySchemaTypes =
   | TableTest
   | Table
   | TableRow
+  | AsyncListTest
+  | DisneyCharacter
+  | Pokemon
   | GoogleTranslateTest
   | LocalizedString
   | SanityAssistInstructionTask
