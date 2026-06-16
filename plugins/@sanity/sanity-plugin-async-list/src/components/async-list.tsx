@@ -2,7 +2,7 @@ import {ApiIcon, SearchIcon, SpinnerIcon} from '@sanity/icons'
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {Autocomplete, Button, Card, Flex, Text} from '@sanity/ui'
 import debounce from 'lodash-es/debounce.js'
-import {type JSX, useCallback, useEffect, useState} from 'react'
+import {type JSX, useCallback, useEffect, useMemo, useState} from 'react'
 import {set, type StringInputProps, unset, useClient} from 'sanity'
 
 import type {AsyncListPluginConfig} from '../types'
@@ -139,8 +139,12 @@ export const AsyncList = (
     [fetchData, data, props.value, prevQuery],
   )
 
-  // Debounce query events so we don't spam the loader
-  const debouncedHandler = debounce((value) => handleQueryChange(value), 300)
+  // Debounce query events so we don't spam the loader. Memoized so the debounce
+  // timer is stable across renders.
+  const debouncedHandler = useMemo(
+    () => debounce((value: string | null) => handleQueryChange(value), 300),
+    [handleQueryChange],
+  )
 
   // Render error state as a readonly string field
   if (error) {
