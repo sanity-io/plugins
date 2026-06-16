@@ -62,30 +62,31 @@ The field created by this plugin shares the same options as the default string f
 
 ### As a component
 
-Or access the component directly:
+Or wire the input directly with `createAsyncListInput`, which binds your options and returns a Sanity input component:
 
 ```ts
-import {AsyncList} from '@sanity/sanity-plugin-async-list'
+import {createAsyncListInput} from '@sanity/sanity-plugin-async-list'
 
 defineField({
   name: 'myString',
   type: 'string',
   components: {
-    // Must pass the default props as the first argument
-    input: (props) =>
-      AsyncList(props, {
-        loader: async () => {
-          const response = await fetch('https://api.disneyapi.dev/character')
-          const result: {data: {name: string}[]} = await response.json()
+    input: createAsyncListInput({
+      loader: async () => {
+        const response = await fetch('https://api.disneyapi.dev/character')
+        const result: {data: {name: string}[]} = await response.json()
 
-          return result.data.map((item) => {
-            return {value: item.name, ...item}
-          })
-        },
-      }),
+        return result.data.map((item) => {
+          return {value: item.name, ...item}
+        })
+      },
+    }),
   },
 })
 ```
+
+> [!NOTE]
+> When using the component directly with `secrets`, set an explicit `secrets.namespace`. Unlike the plugin (which derives the namespace from `schemaType`), component usage has no `schemaType`, so without an explicit namespace all such fields would share the same secrets store.
 
 ### Example configurations
 
