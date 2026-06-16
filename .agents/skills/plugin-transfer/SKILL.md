@@ -34,13 +34,14 @@ Do not copy standalone-repo-only setup such as custom root CI/build/lint/test co
 ## Required Transfer Checks
 
 1. Keep the original plugin `README.md` in the new plugin workspace.
-2. Add and verify the generated test-studio example under `dev/test-studio/src/<plugin-example>/index.tsx`.
-3. Confirm the plugin is wired in `dev/test-studio/sanity.config.ts`.
-4. Do **not** update `.github/CODEOWNERS` during transfer unless explicitly requested.
-5. Add a changeset with a **major** bump for the transferred plugin (see [Changesets](#changesets)).
-6. Update the root `README.md` plugins table with the transferred plugin.
-7. Add pending transfer TODOs to the transfer PR description only (see [PR description checklist](#pr-description-checklist)—not in a README or other repo file).
-8. Run the full pre-PR verification suite (see [Before Submitting a PR](#before-submitting-a-pr)).
+2. Restore `LICENSE` from the original repository when it credits authors beyond Sanity.io alone (the copy-plugin generator deletes it during cleanup). If kept, update the copyright year(s) to the current year.
+3. Add and verify the generated test-studio example under `dev/test-studio/src/<plugin-example>/index.tsx`.
+4. Confirm the plugin is wired in `dev/test-studio/sanity.config.ts`.
+5. Do **not** update `.github/CODEOWNERS` during transfer unless explicitly requested.
+6. Add a changeset with a **major** bump for the transferred plugin (see [Changesets](#changesets)).
+7. Update the root `README.md` plugins table with the transferred plugin.
+8. Add pending transfer TODOs to the transfer PR description only (see [PR description checklist](#pr-description-checklist)—not in a README or other repo file).
+9. Run the full pre-PR verification suite (see [Before Submitting a PR](#before-submitting-a-pr)).
 
 ## Before Submitting a PR
 

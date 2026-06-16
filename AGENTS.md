@@ -341,6 +341,7 @@ For agent-specific transfer guidance, use the `plugin-transfer` skill in `.agent
 When migrating a plugin, agents should ensure:
 
 - `README.md` from the original repository is preserved
+- `LICENSE` from the original repository is preserved when it credits authors beyond Sanity.io alone (the copy-plugin generator removes it by default); if kept, update the copyright year(s) to the current year
 - A test-studio example is present and wired in `dev/test-studio/sanity.config.ts`
 - `.github/CODEOWNERS` is not updated unless explicitly requested
 - The transfer includes a **major** changeset
