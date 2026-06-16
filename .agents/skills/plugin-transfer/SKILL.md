@@ -112,12 +112,42 @@ Vitest runs against built `dist/` output (`pretest` builds packages automaticall
 
 Every transferred plugin needs a **major** changeset. Compare the transferred plugin's `package.json` (peer dependencies, engines, exports, and build config) against the last published version on npm. Do not copy a template blindly—only list breaking changes that actually apply.
 
-Use this format:
+### Credit every contributor
+
+Because the transfer PR is opened by someone else (often the `🤖 bot`), the generated release would otherwise thank the wrong person. Add an `author:` directive so the changelog credits the people who actually built the plugin. [Multiple `author:` lines are supported](https://github.com/changesets/changesets/blob/c2db1dd5d2da6c6eb514d86bbe05cbb7227b067f/packages/changelog-github/src/index.test.ts#L229-L243), so list **everyone** who worked on the plugin being ported — not just the latest author — so they all get their thanks in the release notes.
+
+- Use the contributors' **GitHub usernames**, always with a leading `@` (e.g. `author: @stipsan`).
+- Put each `author:` line on its own line, before the summary text. The lines are stripped from the rendered changelog.
+- Gather contributors from the original repo's commit history, `package.json` `author`/`contributors`, and the README acknowledgements.
 
 ```markdown
 ---
 'package-name': major
 ---
+
+author: @stipsan
+author: @rexxars
+
+Port PACKAGE-NAME to the Sanity plugins monorepo
+```
+
+This produces a release line thanking each contributor:
+
+> Thanks [@stipsan](https://github.com/stipsan), [@rexxars](https://github.com/rexxars)! - Port PACKAGE-NAME to the Sanity plugins monorepo
+
+See [AGENTS.md → Crediting Original Authors](../../../AGENTS.md) for the full rationale.
+
+### Format
+
+Use this format (add the `author:` lines from [Credit every contributor](#credit-every-contributor) above the summary):
+
+```markdown
+---
+'package-name': major
+---
+
+author: @stipsan
+author: @rexxars
 
 Port PACKAGE-NAME to the Sanity plugins monorepo
 
@@ -142,6 +172,9 @@ Example for `sanity-naive-html-serializer`:
 ---
 'sanity-naive-html-serializer': major
 ---
+
+author: @stipsan
+author: @rexxars
 
 Port sanity-naive-html-serializer to the Sanity plugins monorepo
 
