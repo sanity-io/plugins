@@ -1,12 +1,12 @@
 {
-  "name": "@sanity/table",
-  "version": "3.1.1",
-  "description": "Table schema type and input component for Sanity Studio",
+  "name": "@sanity/sanity-plugin-async-list",
+  "version": "2.0.0",
+  "description": "This plugin fetches data from an external API and returns that data as options in a selectable list of strings in your Sanity Studio.",
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
-  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/table#readme",
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/sanity-plugin-async-list#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
   },
@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
-    "directory": "plugins/@sanity/table"
+    "directory": "plugins/@sanity/sanity-plugin-async-list"
   },
   "files": [
     "dist"
@@ -42,17 +42,19 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
+    "@sanity/studio-secrets": "workspace:^",
     "@sanity/ui": "catalog:",
-    "@sanity/uuid": "^3.0.2"
+    "lodash-es": "^4.17.23"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@types/node": "catalog:",
+    "@types/lodash-es": "^4.17.12",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
+    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
@@ -61,7 +63,8 @@
   "peerDependencies": {
     "react": "^19.2",
     "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"
+    "sanity": "^5 || ^6.0.0-0",
+    "styled-components": "^6.1"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

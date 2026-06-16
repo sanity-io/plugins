@@ -183,6 +183,15 @@
       ],
     },
 
+    "plugins/@sanity/sanity-plugin-async-list": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
     "plugins/@sanity/table": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
