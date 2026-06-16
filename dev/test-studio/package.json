@@ -26,6 +26,7 @@
     "@sanity/orderable-document-list": "workspace:*",
     "@sanity/presets": "workspace:*",
     "@sanity/rich-date-input": "workspace:*",
+    "@sanity/sanity-plugin-async-list": "workspace:*",
     "@sanity/sfcc": "workspace:*",
     "@sanity/studio-secrets": "workspace:*",
     "@sanity/table": "workspace:*",

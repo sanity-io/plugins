@@ -30,11 +30,20 @@ They run inside Sanity Studio with the logged-in user's permissions and receive 
 
 ## Adding A Script
 
-Add a `.ts` file under `dev/test-studio/src/script-runner/scripts/` with a default `StudioScript`
-export.
+Add a folder under `dev/test-studio/src/script-runner/scripts/`. The folder name should match the
+script name. Put the registered entrypoint in `index.ts`; any helper files can live beside it.
+
+```text
+scripts/
+  my-script-name/
+    index.ts
+    helpers.ts
+```
+
+Only `scripts/*/index.ts` files are discovered at build time.
 
 ```ts
-import type {StudioScript} from '../types'
+import type {StudioScript} from '../../types'
 
 const script: StudioScript = {
   name: 'my-script-name',
@@ -59,8 +68,8 @@ const script: StudioScript = {
 export default script
 ```
 
-Script names must be unique and use lowercase letters, numbers, and hyphens. The script name becomes
-the URL segment.
+Script names must be unique and use lowercase letters, numbers, and hyphens. Keep the folder name
+and script `name` aligned. The script name becomes the URL segment.
 
 ## Runtime Contract
 
