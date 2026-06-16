@@ -1,6 +1,6 @@
 {
   "name": "@sanity/dashboard",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "description": "Tool for rendering dashboard widgets",
   "keywords": [
     "cms",
@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.5.2",
-    "@sanity/image-url": "^1.1.0",
+    "@sanity/image-url": "^2.1.1",
     "@sanity/ui": "catalog:",
     "rxjs": "catalog:"
   },

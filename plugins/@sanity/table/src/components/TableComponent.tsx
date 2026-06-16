@@ -204,14 +204,32 @@ export const TableComponent = (props: TableProps & {rowType?: string}) => {
       <Box>
         <Flex justify="flex-end">
           {value?.rows?.length ? (
-            <TableMenu
-              addColumns={addColumns}
-              addColumnAt={addColumnAt}
-              addRows={addRows}
-              addRowAt={addRowAt}
-              remove={confirmRemoveTable}
-              placement="left"
-            />
+            <Inline gap={1}>
+              <Button
+                fontSize={1}
+                padding={2}
+                icon={AddIcon}
+                text="Add row"
+                mode="ghost"
+                onClick={() => addRows(1)}
+              />
+              <Button
+                fontSize={1}
+                padding={2}
+                icon={AddIcon}
+                text="Add column"
+                mode="ghost"
+                onClick={() => addColumns(1)}
+              />
+              <TableMenu
+                addColumns={addColumns}
+                addColumnAt={addColumnAt}
+                addRows={addRows}
+                addRowAt={addRowAt}
+                remove={confirmRemoveTable}
+                placement="left"
+              />
+            </Inline>
           ) : null}
         </Flex>
       </Box>
