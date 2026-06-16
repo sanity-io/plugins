@@ -155,6 +155,7 @@ Include these sections in every transfer PR:
 
 - [ ] Trusted publishing configured: `npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins`
 - [ ] `package.json` dependencies/peerDependencies/exports verified against original repo
+- [ ] `LICENSE` restored with updated copyright year when the original credits authors beyond Sanity.io alone
 - [ ] Test studio example wired and manually verified (`pnpm dev`)
 - [ ] `pnpm format`, `pnpm knip`, `pnpm lint`, `pnpm build`, `pnpm test run` all pass
 - [ ] Major changeset added with validated breaking changes
