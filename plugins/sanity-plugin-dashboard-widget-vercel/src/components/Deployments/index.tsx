@@ -129,13 +129,13 @@ const Deployments = (props: Props) => {
                 </TableCell>
 
                 {/* Creator */}
-                <TableCell header variant="age">
+                <TableCell header variant="creator">
                   Creator
                 </TableCell>
               </tr>
             </Box>
 
-            <Box as="tbody" style={{display: 'table-header-group'}}>
+            <Box as="tbody" style={{display: 'table-row-group'}}>
               {/* Placeholders */}
               {!deployments &&
                 Array.from({length: deploymentTarget.deployLimit}, (_, index) => (
