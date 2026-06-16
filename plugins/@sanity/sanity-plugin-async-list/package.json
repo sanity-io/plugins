@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
-    "@sanity/studio-secrets": "workspace:*",
+    "@sanity/studio-secrets": "workspace:^",
     "@sanity/ui": "catalog:",
     "lodash-es": "^4.17.23"
   },
