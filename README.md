@@ -93,6 +93,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`@sanity/rich-date-input`](./plugins/@sanity/rich-date-input)                                           | Timezone-aware datetime input for Sanity Studio                     |
 | [`@sanity/sanity-plugin-async-list`](./plugins/@sanity/sanity-plugin-async-list)                         | Autocomplete string input with options loaded from an external API  |
 | [`@sanity/studio-secrets`](./plugins/@sanity/studio-secrets)                                             | Manage Studio secrets at runtime                                    |
+| [`@sanity/table`](./plugins/@sanity/table)                                                               | Table schema type and input component for Sanity Studio             |
 | [`@sanity/vercel-protection-bypass`](./plugins/@sanity/vercel-protection-bypass)                         | Setup tool for Vercel Deployment Protection in previews             |
 | [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo)                                                 | Aprimo asset selector integration                                   |
 | [`sanity-plugin-asset-source-unsplash`](./plugins/sanity-plugin-asset-source-unsplash)                   | Use Unsplash images directly in Sanity Studio                       |

@@ -28,6 +28,7 @@
     "@sanity/sanity-plugin-async-list": "workspace:*",
     "@sanity/sfcc": "workspace:*",
     "@sanity/studio-secrets": "workspace:*",
+    "@sanity/table": "workspace:*",
     "@sanity/ui": "catalog:",
     "@sanity/vercel-protection-bypass": "workspace:*",
     "@sanity/vision": "catalog:",

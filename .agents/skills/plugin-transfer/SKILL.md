@@ -31,16 +31,27 @@ Keep and maintain these monorepo config files in the transferred plugin:
 
 Do not copy standalone-repo-only setup such as custom root CI/build/lint/test configs that are already handled by this monorepo.
 
+## Clean Up the Transferred README
+
+The original `README.md` is preserved, but old standalone-repo content is almost always stale in the monorepo. Remove or rewrite the following before opening the PR:
+
+- **Old release/development sections.** Delete sections that describe the original repo's release or dev tooling, e.g. `## Develop & test` (typically references `@sanity/plugin-kit`) and `### Release new version` (references the original repo's GitHub Actions / semantic-release). The monorepo handles building, testing, and releasing centrally, so these instructions are wrong here.
+- **Links to old/forked versions.** Remove pointers like "for the v2 version, see this other repo" that link to pre-transfer forks or legacy repositories.
+- **Specific Sanity Studio major versions.** Do not reference the current latest Studio major (e.g. "Sanity Studio v6") since it ages quickly, and do not mention long-gone majors like v3. Reword phrasing such as "migrated to Sanity Studio V3" / "only the v3 version is maintained" to a version-agnostic statement (e.g. "maintained by Sanity.io"). Only mention a version when genuinely necessary—at most as `v2 - legacy` to disambiguate a legacy line—and usually omit it entirely.
+
+Keep the substance that is still accurate: intro/description, screenshots, acknowledgements, install, usage, configuration, and license sections.
+
 ## Required Transfer Checks
 
-1. Keep the original plugin `README.md` in the new plugin workspace.
-2. Add and verify the generated test-studio example under `dev/test-studio/src/<plugin-example>/index.tsx`.
-3. Confirm the plugin is wired in `dev/test-studio/sanity.config.ts`.
-4. Do **not** update `.github/CODEOWNERS` during transfer unless explicitly requested.
-5. Add a changeset with a **major** bump for the transferred plugin (see [Changesets](#changesets)).
-6. Update the root `README.md` plugins table with the transferred plugin.
-7. Add pending transfer TODOs to the transfer PR description only (see [PR description checklist](#pr-description-checklist)—not in a README or other repo file).
-8. Run the full pre-PR verification suite (see [Before Submitting a PR](#before-submitting-a-pr)).
+1. Keep the original plugin `README.md` in the new plugin workspace, but clean it up (see [Clean Up the Transferred README](#clean-up-the-transferred-readme)).
+2. Restore `LICENSE` from the original repository when it credits authors beyond Sanity.io alone (the copy-plugin generator deletes it during cleanup). If kept, update the copyright year(s) to the current year.
+3. Add and verify the generated test-studio example under `dev/test-studio/src/<plugin-example>/index.tsx`.
+4. Confirm the plugin is wired in `dev/test-studio/sanity.config.ts`.
+5. Do **not** update `.github/CODEOWNERS` during transfer unless explicitly requested.
+6. Add a changeset with a **major** bump for the transferred plugin (see [Changesets](#changesets)).
+7. Update the root `README.md` plugins table with the transferred plugin.
+8. Add pending transfer TODOs to the transfer PR description only (see [PR description checklist](#pr-description-checklist)—not in a README or other repo file).
+9. Run the full pre-PR verification suite (see [Before Submitting a PR](#before-submitting-a-pr)).
 
 ## Before Submitting a PR
 
@@ -81,6 +92,17 @@ Common legacy fixes:
 - Replace `createRequire` / `require()` with ESM `import` (add `"resolveJsonModule": true` to the plugin `tsconfig.json` for JSON imports).
 - Use `import.meta.url` with `fileURLToPath` instead of `__dirname` in tests.
 - Remove stale `eslint-disable` comments that oxlint reports as unused.
+
+#### Duplicate `sanity` peer variants break type-aware lint
+
+Type-aware lint can fail (sometimes intermittently, especially on cold installs) with errors like `Type 'import(".../.pnpm/sanity@X_<hashA>/...").D' is not assignable to type 'import(".../.pnpm/sanity@X_<hashB>/...").D'` in `dev/test-studio/src/**` examples. This happens when the transferred plugin resolves `sanity` to a different pnpm peer-variant than the other plugins, creating an extra duplicate copy of sanity's type definitions.
+
+To keep the plugin on the shared `sanity` variant, declare these in the plugin `devDependencies`:
+
+- `"@types/node": "catalog:"`
+- `"styled-components": "catalog:"` (when the plugin depends on `@sanity/ui`, which peers on styled-components; without the declaration pnpm auto-installs the peer and bypasses the workspace `@sanity/styled-components` override)
+
+Verify alignment by checking that the plugin importer's `sanity` version string in `pnpm-lock.yaml` matches other plugins (e.g. `plugins/@sanity/sfcc`).
 
 ### Tests
 
@@ -143,6 +165,7 @@ Include these sections in every transfer PR:
 
 - [ ] Trusted publishing configured: `npm trust github <package-name> --file=release.yml --repository=sanity-io/plugins`
 - [ ] `package.json` dependencies/peerDependencies/exports verified against original repo
+- [ ] `LICENSE` restored with updated copyright year when the original credits authors beyond Sanity.io alone
 - [ ] Test studio example wired and manually verified (`pnpm dev`)
 - [ ] `pnpm format`, `pnpm knip`, `pnpm lint`, `pnpm build`, `pnpm test run` all pass
 - [ ] Major changeset added with validated breaking changes

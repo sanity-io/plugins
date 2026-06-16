@@ -1,5 +1,11 @@
 # @sanity/dashboard
 
+## 6.0.1
+
+### Patch Changes
+
+- [#1047](https://github.com/sanity-io/plugins/pull/1047) [`050cc51`](https://github.com/sanity-io/plugins/commit/050cc51e260151b459dbe5d1d79d78302117210e) Thanks [@stipsan](https://github.com/stipsan)! - Give `projectUsersWidget` a unique `name` (`project-users`) so it no longer collides with `projectInfoWidget`, and fix the widget config example in the README.
+
 ## 6.0.0
 
 ### Major Changes
@@ -7,6 +13,7 @@
 - [#977](https://github.com/sanity-io/plugins/pull/977) [`52d3d1c`](https://github.com/sanity-io/plugins/commit/52d3d1cb2c79ae78d5d2d505e9303532e2c827e7) Thanks [@stipsan](https://github.com/stipsan)! - Port @sanity/dashboard to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
   - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
   - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18 || >=19.0.0-0)
