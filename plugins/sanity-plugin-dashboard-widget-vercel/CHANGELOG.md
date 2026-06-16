@@ -1,5 +1,7 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.2
+
 ## 4.0.1
 
 ### Patch Changes

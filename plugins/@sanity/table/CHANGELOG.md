@@ -1,5 +1,11 @@
 # @sanity/table
 
+## 3.1.0
+
+### Minor Changes
+
+- [#1068](https://github.com/sanity-io/plugins/pull/1068) [`1bf92b0`](https://github.com/sanity-io/plugins/commit/1bf92b0dff4cc1192fdfb8bf415246ac1d623a05) Thanks [@matthewwyndham](https://github.com/matthewwyndham)! - Add quick "Row" and "Column" buttons to the table input toolbar so a single row or column can be added without opening the menu
+
 ## 3.0.0
 
 ### Major Changes
