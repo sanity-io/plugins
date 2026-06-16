@@ -2,6 +2,15 @@
 'sanity-plugin-shopify-assets': major
 ---
 
+author: @thebiggianthead
+author: @rexxars
+author: @RitaDias
+author: @stipsan
+author: @bjoerge
+author: @KJHeartbreaker
+author: @Mtillmann
+author: @tobiasvielmetter
+
 Port sanity-plugin-shopify-assets to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
