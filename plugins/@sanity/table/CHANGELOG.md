@@ -1,5 +1,11 @@
 # @sanity/table
 
+## 3.1.1
+
+### Patch Changes
+
+- [#1069](https://github.com/sanity-io/plugins/pull/1069) [`65ecb1b`](https://github.com/sanity-io/plugins/commit/65ecb1b3f724776d7ca7032697e1649dbcf34a28) Thanks [@mehmetyildizdev](https://github.com/mehmetyildizdev)! - Keep the Table menu "Add …" dialog input controlled, silencing the React controlled/uncontrolled input warning
+
 ## 3.1.0
 
 ### Minor Changes
