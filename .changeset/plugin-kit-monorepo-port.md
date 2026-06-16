@@ -2,6 +2,17 @@
 '@sanity/plugin-kit': major
 ---
 
+author: @rexxars
+author: @snorrees
+author: @stipsan
+author: @mariuslundgard
+author: @hdoro
+author: @nkgentile
+author: @runeb
+author: @dorelljames
+author: @geball
+author: @rcmaples
+
 Port @sanity/plugin-kit to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
