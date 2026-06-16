@@ -217,7 +217,7 @@ export function useCustomFieldActions(
 
   const schemaId = useWorkspaceSchemaId()
   const {push: pushToast} = useToast()
-  // oxlint-disable-next-line react-hooks-js/hooks
+  // oxlint-disable-next-line react/react-compiler
   const configActions = fieldActions?.useFieldActions?.({
     ...props,
     schemaId,
@@ -233,7 +233,7 @@ export function useCustomFieldActions(
         return createSafeNode({
           node,
           pushToast,
-          // oxlint-disable-next-line react-hooks-js/memo-dependencies
+          // oxlint-disable-next-line react/react-compiler
           addSyntheticTask,
           removeSyntheticTask,
         })
