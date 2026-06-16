@@ -2,6 +2,17 @@
 'sanity-plugin-cloudinary': major
 ---
 
+author: @runeb
+author: @snorrees
+author: @stipsan
+author: @SimeonGriggs
+author: @binoy14
+author: @azaxarov
+author: @pedrobonamin
+author: @ninaandal
+author: @jasonb194
+author: @ankitkandari
+
 Port sanity-plugin-cloudinary to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
