@@ -1,11 +1,12 @@
 import {definePlugin} from 'sanity'
 
-import {AsyncList} from './components/async-list'
+import {AsyncList, createAsyncListInput} from './components/async-list'
 import {schema} from './schema-types'
 import type {AsyncListPluginConfig} from './types'
 
-export {AsyncList}
-export type {AsyncListPluginConfig}
+export {AsyncList, createAsyncListInput}
+export type {AsyncListInputProps} from './components/async-list'
+export type {AsyncListInputOptions, AsyncListPluginConfig} from './types'
 
 /**
  * Usage in `sanity.config.ts` (or .js)

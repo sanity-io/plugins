@@ -72,3 +72,13 @@ export interface AsyncListPluginConfig {
       }
   >
 }
+
+/**
+ * Options for the `AsyncList` input component / `createAsyncListInput` factory.
+ *
+ * Same as {@link AsyncListPluginConfig}, but `schemaType` is optional because it
+ * is only required when registering the `asyncList()` plugin (it is unused when
+ * the input is wired manually as a component).
+ */
+export type AsyncListInputOptions = Omit<AsyncListPluginConfig, 'schemaType'> &
+  Partial<Pick<AsyncListPluginConfig, 'schemaType'>>

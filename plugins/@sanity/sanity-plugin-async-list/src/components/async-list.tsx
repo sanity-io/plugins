@@ -5,7 +5,7 @@ import debounce from 'lodash-es/debounce.js'
 import {type JSX, useCallback, useEffect, useMemo, useState} from 'react'
 import {set, type StringInputProps, unset, useClient} from 'sanity'
 
-import type {AsyncListPluginConfig} from '../types'
+import type {AsyncListInputOptions} from '../types'
 
 // Spinner shown in the Autocomplete `icon` slot while the loader is fetching.
 // Defined at module scope so it has a stable identity across renders.
@@ -42,22 +42,59 @@ interface OptionsItem {
 // Autocomplete options validation
 function validOptions(arr: unknown): arr is OptionsItem[] {
   return (
-    (Array.isArray(arr) && arr.length === 0) ||
-    (Array.isArray(arr) &&
-      arr.length > 0 &&
-      arr.every((item) => typeof item === 'object' && item !== null && 'value' in item))
+    Array.isArray(arr) &&
+    arr.every(
+      (item: unknown) =>
+        typeof item === 'object' &&
+        item !== null &&
+        'value' in item &&
+        typeof item.value === 'string',
+    )
   )
 }
+
 /**
+ * Props for the {@link AsyncList} input component: the standard Sanity string
+ * input props plus the async-list `options`.
+ *
+ * @public
+ */
+export interface AsyncListInputProps extends StringInputProps {
+  options: AsyncListInputOptions
+}
+
+/**
+ * The async-list input component. It is a regular React component that takes a
+ * single `props` argument, so it is safe under the Rules of Hooks and gets
+ * optimized by the React Compiler.
+ *
+ * For the `components.input` slot, prefer {@link createAsyncListInput}, which
+ * binds the options for you.
+ *
  * TODO:
  * - Cache fetchData call w/o arguments
+ *
+ * @public
  */
-export const AsyncList = (
-  props: StringInputProps,
-  options: Omit<AsyncListPluginConfig, 'schemaType'> &
-    Partial<Pick<AsyncListPluginConfig, 'schemaType'>>,
-): JSX.Element => {
-  const namespace = options.secrets?.namespace ?? `async-list-${options.schemaType}`
+export function AsyncList(props: AsyncListInputProps): JSX.Element {
+  const {options} = props
+  const namespace =
+    options.secrets?.namespace ??
+    (options.schemaType ? `async-list-${options.schemaType}` : 'async-list')
+
+  // Warn (in dev) when secrets are configured but there is nothing stable to
+  // derive a namespace from. Without an explicit `secrets.namespace` (or a
+  // `schemaType` from the plugin), multiple component-usage fields would share
+  // the same default namespace and collide.
+  useEffect(() => {
+    if (options.secrets?.keys && !options.secrets.namespace && !options.schemaType) {
+      console.warn(
+        'sanity-plugin-async-list: `secrets` is configured without `schemaType` or `secrets.namespace`. ' +
+          'Set an explicit `secrets.namespace` to avoid collisions between fields.',
+      )
+    }
+  }, [options])
+
   const {secrets} = useSecrets<Record<string, string> | undefined>(namespace)
   const [data, setData] = useState<OptionsItem[] | null>(null)
   const [loading, setLoading] = useState(false)
@@ -104,22 +141,16 @@ export const AsyncList = (
     if (options?.secrets?.keys && !secrets) return
     // fetch the initial data, but only if the field doesn't have a value
     if (!props.value && !data) {
+      // Kicking off the initial load intentionally sets loading/error state on
+      // mount so the field shows a spinner while the loader resolves.
+      // oxlint-disable-next-line react/react-compiler
       void fetchData()
     }
   }, [fetchData, data, secrets, options.secrets, props.value])
 
-  // If config declares secrets, show settings when no secrets found by useSecrets()
-  // useEffect(() => {
-  //   if (options.secrets) {
-  //     setShowSettings(!secrets)
-  //   }
-  // }, [secrets, options.secrets])
-
-  // Set field value in content lake
-  const handleChange = useCallback(
-    (value?: string) => props.onChange(value ? set(value) : unset()),
-    [props],
-  )
+  // Set field value in content lake. Plain function: with React Compiler enabled
+  // this is memoized automatically based on the `props.onChange` it captures.
+  const handleChange = (value?: string) => props.onChange(value ? set(value) : unset())
   // Handle searching in 'search' mode
   const handleQueryChange = useCallback(
     (query: string | null) => {
@@ -146,6 +177,10 @@ export const AsyncList = (
     [handleQueryChange],
   )
 
+  // Cancel any pending debounced call when the handler is replaced or the input
+  // unmounts, so we never run async work / set state on an unmounted tree.
+  useEffect(() => () => debouncedHandler.cancel(), [debouncedHandler])
+
   // Render error state as a readonly string field
   if (error) {
     const readOnlyProps = {
@@ -168,7 +203,7 @@ export const AsyncList = (
   return (
     <Card>
       <Autocomplete
-        id={`async-list-${options.schemaType}`}
+        id={props.elementProps.id}
         filterOption={options.loaderType === 'search' ? () => true : undefined}
         icon={loading ? LoadingIcon : SearchIcon}
         openButton
@@ -202,4 +237,36 @@ export const AsyncList = (
       )}
     </Card>
   )
+}
+
+/**
+ * Create a Sanity string input component bound to the given async-list
+ * `options`. Use this for the `components.input` slot when wiring the input
+ * manually (i.e. without the `asyncList()` plugin):
+ *
+ * ```ts
+ * import {defineField} from 'sanity'
+ * import {createAsyncListInput} from '@sanity/sanity-plugin-async-list'
+ *
+ * defineField({
+ *   name: 'myString',
+ *   type: 'string',
+ *   components: {
+ *     input: createAsyncListInput({
+ *       loader: async () => {
+ *         // ...return [{value: 'a'}, {value: 'b'}]
+ *       },
+ *     }),
+ *   },
+ * })
+ * ```
+ *
+ * @public
+ */
+export function createAsyncListInput(
+  options: AsyncListInputOptions,
+): (props: StringInputProps) => JSX.Element {
+  return function AsyncListInput(props: StringInputProps): JSX.Element {
+    return <AsyncList {...props} options={options} />
+  }
 }
