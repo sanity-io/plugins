@@ -33,7 +33,7 @@ function LoadingIcon(): JSX.Element {
   )
 }
 
-// Object for Autocomplpete's `options` prop
+// Object for Autocomplete's `options` prop
 interface OptionsItem {
   value: string
   [key: string]: unknown

@@ -174,7 +174,7 @@ A note on the `client` argument: there are absolutely some valid use cases for w
 
 ### secrets
 
-`secrets` allows you to specify what secrets should be fetched using `@sanity/studio-secrets` and passed to the `loader function.
+`secrets` allows you to specify what secrets should be fetched using `@sanity/studio-secrets` and passed to the `loader` function.
 
 ```ts
 asyncList({
@@ -198,7 +198,7 @@ Provide options for the `client` passed to `loader`.
 
 ### autocompleteProps
 
-`AutoCompleteProps` - Passthrough for the underlying Autocomplete component from @sanity/ui: https://www.sanity.io/ui/docs/component/autocomplete.
+`AutocompleteProps` - Passthrough for the underlying Autocomplete component from @sanity/ui: https://www.sanity.io/ui/docs/component/autocomplete.
 
 ## License
 
