@@ -2,6 +2,15 @@
 '@sanity/hierarchical-document-list': major
 ---
 
+author: @hdoro
+author: @snorrees
+author: @stipsan
+author: @mariuslundgard
+author: @pedrobonamin
+author: @RitaDias
+author: @tine-krueger
+author: @apokaliptis
+
 Port @sanity/hierarchical-document-list to the Sanity plugins monorepo
 
 This major release includes several breaking changes as part of the migration to the monorepo:
