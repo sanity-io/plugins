@@ -210,7 +210,7 @@ function AssistInspector(props: DocumentInspectorProps) {
   const {assistableDocumentId, documentIsAssistable} = useAssistDocumentContext()
 
   const formStateRef = useRef(formState)
-  // oxlint-disable-next-line react-hooks-js/refs
+  // oxlint-disable-next-line react/react-compiler
   formStateRef.current = formState
 
   const {instructionLoading, requestRunInstruction} = useRequestRunInstruction({
@@ -322,7 +322,7 @@ function AssistInspector(props: DocumentInspectorProps) {
                 {selectedField && (
                   <AssistTypeContext.Provider value={assistTypeContext}>
                     <VirtualizerScrollInstanceProvider
-                      // oxlint-disable-next-line react-hooks-js/refs
+                      // oxlint-disable-next-line react/react-compiler
                       scrollElement={boundary.current}
                       containerElement={boundary}
                     >
