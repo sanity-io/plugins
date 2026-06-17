@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 4.3.2
+
+### Patch Changes
+
+- [#978](https://github.com/sanity-io/plugins/pull/978) [`72976d5`](https://github.com/sanity-io/plugins/commit/72976d5012a09821198ddfb910de375e69f14855) Thanks [@robinpyon](https://github.com/robinpyon), [@stipsan](https://github.com/stipsan), [@snorrees](https://github.com/snorrees), [@rexxars](https://github.com/rexxars), [@bjoerge](https://github.com/bjoerge), [@Grsmto](https://github.com/Grsmto), [@Shastel](https://github.com/Shastel), [@RitaDias](https://github.com/RitaDias), [@SimeonGriggs](https://github.com/SimeonGriggs), [@thebiggianthead](https://github.com/thebiggianthead), [@osnoser1](https://github.com/osnoser1), [@Hahlh](https://github.com/Hahlh), [@coreyward](https://github.com/coreyward), [@tractorcow](https://github.com/tractorcow), [@einarlove](https://github.com/einarlove), [@hdoro](https://github.com/hdoro), [@joshuaellis](https://github.com/joshuaellis), [@LucaArgentieri](https://github.com/LucaArgentieri), [@mxmzb](https://github.com/mxmzb), [@nickrttn](https://github.com/nickrttn), [@nkgentile](https://github.com/nkgentile), [@oleg1357](https://github.com/oleg1357), [@pedrobonamin](https://github.com/pedrobonamin), [@r3nanp](https://github.com/r3nanp), [@wiiiimm](https://github.com/wiiiimm)! - Move sanity-plugin-media to the [sanity-io/plugins](https://github.com/sanity-io/plugins) monorepo. No functional changes.
+
 ## [4.3.1](https://github.com/sanity-io/sanity-plugin-media/compare/v4.3.0...v4.3.1) (2026-06-09)
 
 ### Bug Fixes
