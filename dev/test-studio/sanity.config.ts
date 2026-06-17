@@ -29,6 +29,11 @@ import {
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
 import {mediaExample} from '#media'
+// issue-1153 verify: import `media` directly so we can wire up two side-by-side
+// workspaces (one with the suggested `__experimental_omnisearch_visibility`
+// callback applied to `media.tag`, one without) without disturbing the
+// `mediaExample` plugin that the rest of test-studio depends on.
+import {media as mediaPluginForIssue1153} from 'sanity-plugin-media'
 import {muxInputExample} from '#mux-input'
 import {netlifyWidgetExample} from '#netlify-widget'
 import {
@@ -151,5 +156,45 @@ export default defineConfig([
   createWorkspace({
     name: 'internationalized-array-async-languages',
     plugins: [internationalizedArrayAsyncLanguages()],
+  }),
+  // -----------------------------------------------------------------------
+  // sanity-io/plugins#1153 verify - "Exclude `media.tag` from search"
+  //
+  // The user (issue #1153) wants to hide the plugin-injected `media.tag`
+  // document from Studio global search (Cmd/Ctrl+K). The plugin doesn't
+  // expose a `MediaToolOptions` flag for this and the schema in
+  // plugins/sanity-plugin-media/src/schemas/tag.ts has no
+  // `__experimental_omnisearch_visibility: false` of its own.
+  //
+  // The drafted reply tells them to map over `prev` in `schema.types` and
+  // tag the `media.tag` entry themselves. These two workspaces verify that
+  // claim. Switch between them in the Studio sidebar and open global
+  // search to compare:
+  //
+  //   - `issue-1153-default`: plain `media()` plugin (user's status quo).
+  //     Global search filter list includes "Media Tag"; `media.tag`
+  //     documents show up in results.
+  //
+  //   - `issue-1153-hidden`: same `media()` plugin plus the `schema.types`
+  //     callback from the drafted reply. Global search filter list should
+  //     NOT include "Media Tag" and tag docs should NOT appear in results.
+  // -----------------------------------------------------------------------
+  createWorkspace({
+    name: 'issue-1153-default',
+    title: '#1153 default (media.tag visible)',
+    plugins: [structureTool(), mediaPluginForIssue1153()],
+  }),
+  createWorkspace({
+    name: 'issue-1153-hidden',
+    title: '#1153 hidden (media.tag excluded from search)',
+    plugins: [structureTool(), mediaPluginForIssue1153()],
+    schema: {
+      types: (prev) =>
+        prev.map((type) =>
+          type.name === 'media.tag'
+            ? {...type, __experimental_omnisearch_visibility: false}
+            : type,
+        ),
+    },
   }),
 ])
