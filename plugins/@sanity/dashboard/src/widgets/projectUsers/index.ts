@@ -1,5 +1,8 @@
-import {type LayoutConfig, type DashboardWidget} from '../../types'
-import {ProjectUsers} from './ProjectUsers'
+import {lazy} from 'react'
+
+import type {LayoutConfig, DashboardWidget} from '../../types'
+
+const ProjectUsers = lazy(() => import('./ProjectUsers'))
 
 export function projectUsersWidget(config?: {layout?: LayoutConfig}): DashboardWidget {
   return {

@@ -3,7 +3,7 @@ import {WidgetGroup} from '../components/WidgetGroup'
 import {type DashboardConfig} from '../types'
 import {DashboardContext} from './DashboardContext'
 
-export function Dashboard({config}: {config: DashboardConfig}) {
+export default function Dashboard({config}: {config: DashboardConfig}) {
   if (!config) {
     return null
   }

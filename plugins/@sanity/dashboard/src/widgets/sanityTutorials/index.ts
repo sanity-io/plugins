@@ -1,5 +1,8 @@
-import {type LayoutConfig, type DashboardWidget} from '../../types'
-import {SanityTutorials} from './SanityTutorials'
+import {lazy} from 'react'
+
+import type {LayoutConfig, DashboardWidget} from '../../types'
+
+const SanityTutorials = lazy(() => import('./SanityTutorials'))
 
 export function sanityTutorialsWidget(config?: {layout?: LayoutConfig}): DashboardWidget {
   return {

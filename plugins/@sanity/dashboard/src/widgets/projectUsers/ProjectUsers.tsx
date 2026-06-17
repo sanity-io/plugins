@@ -25,7 +25,7 @@ interface Project {
   members: Member[]
 }
 
-export function ProjectUsers() {
+export default function ProjectUsers() {
   const [project, setProject] = useState<Project | undefined>()
   const [users, setUsers] = useState<User[] | undefined>()
   const [error, setError] = useState<Error | undefined>()

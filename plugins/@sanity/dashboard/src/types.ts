@@ -19,3 +19,9 @@ export interface DashboardConfig {
   widgets: DashboardWidget[]
   layout?: LayoutConfig
 }
+
+export interface DashboardWidgetProps {
+  header?: string
+  children: React.ReactNode
+  footer?: React.ReactNode
+}

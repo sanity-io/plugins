@@ -1,4 +1,4 @@
-export * from './types'
+export type * from './types'
 export * from './components/DashboardWidgetContainer'
 export * from './widgets/projectInfo'
 export * from './widgets/projectUsers'

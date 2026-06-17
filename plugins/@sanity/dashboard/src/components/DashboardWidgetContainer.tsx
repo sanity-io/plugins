@@ -3,6 +3,8 @@ import {getTheme_v2} from '@sanity/ui/theme'
 import React, {forwardRef} from 'react'
 import {styled} from 'styled-components'
 
+import type {DashboardWidgetProps} from '../types'
+
 const Root = styled(Card)`
   display: flex;
   flex-direction: column;
@@ -41,12 +43,6 @@ const Content = styled(Box)`
     outline: none;
   }
 `
-
-interface DashboardWidgetProps {
-  header?: string
-  children: React.ReactNode
-  footer?: React.ReactNode
-}
 
 export const DashboardWidgetContainer = forwardRef(function DashboardWidgetContainer(
   props: DashboardWidgetProps,

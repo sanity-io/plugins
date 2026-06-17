@@ -18,7 +18,7 @@ export interface SanityTutorialsProps {
   templateRepoId: string
 }
 
-export function SanityTutorials(props: SanityTutorialsProps) {
+export default function SanityTutorials(props: SanityTutorialsProps) {
   const {templateRepoId} = props
   const [feedItems, setFeedItems] = useState<FeedItem[]>([])
 

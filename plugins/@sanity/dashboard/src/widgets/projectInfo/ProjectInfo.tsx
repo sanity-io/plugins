@@ -27,7 +27,7 @@ function getManageUrl(projectId: string) {
 const NO_EXPERIMENTAL: DashboardWidget[] = []
 const NO_DATA: ProjectData[] = []
 
-export function ProjectInfo(props: ProjectInfoProps) {
+export default function ProjectInfo(props: ProjectInfoProps) {
   const {__experimental_before = NO_EXPERIMENTAL, data = NO_DATA} = props
   const [studioApps, setStudioApps] = useState<UserApplication[] | {error: string} | undefined>()
   const [graphQLApi, setGraphQLApi] = useState<string | {error: string} | undefined>()

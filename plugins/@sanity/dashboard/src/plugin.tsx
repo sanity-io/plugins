@@ -1,13 +1,14 @@
-import {type ComponentType, type CSSProperties} from 'react'
+import {type ComponentType, lazy} from 'react'
 import {definePlugin} from 'sanity'
 
-import {Dashboard} from './containers/Dashboard'
 import {type DashboardConfig, type DashboardWidget, type LayoutConfig} from './types'
 
-const strokeStyle: CSSProperties = {
+const Dashboard = lazy(() => import('./containers/Dashboard'))
+
+const strokeStyle = {
   stroke: 'currentColor',
   strokeWidth: 1.2,
-}
+} as const satisfies React.CSSProperties
 
 const DashboardIcon = () => (
   <svg
