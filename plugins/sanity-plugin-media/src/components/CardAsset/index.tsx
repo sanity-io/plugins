@@ -9,6 +9,7 @@ import {
   type Theme,
   type ThemeColorSchemeKey,
   Tooltip,
+  useToast,
 } from '@sanity/ui'
 import {memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
@@ -30,6 +31,7 @@ import Image from '../Image'
 type Props = {
   id: string
   selected: boolean
+  source?: string
 }
 
 const CardWrapper = styled(Flex)`
@@ -91,9 +93,10 @@ const StyledWarningOutlineIcon = styled(WarningFilledIcon)(({theme}) => {
 })
 
 const CardAsset = (props: Props) => {
-  const {id, selected} = props
+  const {id, selected, source} = props
 
   const scheme = useColorSchemeValue()
+  const toast = useToast()
 
   // Refs
   const shiftPressed: RefObject<boolean> = useKeyPress('shift')
@@ -140,6 +143,17 @@ const CardAsset = (props: Props) => {
 
   const handleContextActionClick = (e: MouseEvent) => {
     e.stopPropagation()
+
+    if (source === 'replace-asset' && lastPicked) {
+      dispatch(assetsActions.updateImageReferences({asset, id: lastPicked}))
+      toast.push({
+        status: 'info',
+        title:
+          'Updating in progress. Depending on the amount of changes, this could take a few minutes.',
+      })
+      dispatch(dialogActions.clear())
+      return
+    }
 
     if (onSelect) {
       dispatch(dialogActions.showAssetEdit({assetId: asset._id}))

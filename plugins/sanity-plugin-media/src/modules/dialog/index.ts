@@ -158,6 +158,12 @@ const dialogSlice = createSlice({
         type: 'confirm',
       })
     },
+    showAllAssetsDialog(state) {
+      state.items.push({
+        id: 'dialogAllAssets',
+        type: 'dialogAllAssets',
+      })
+    },
     showAssetEdit(state, action: PayloadAction<{assetId: string}>) {
       const {assetId} = action.payload
       state.items.push({

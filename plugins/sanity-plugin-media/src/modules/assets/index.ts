@@ -1,5 +1,5 @@
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {ClientError, Patch, Transaction} from '@sanity/client'
+import type {AttributeSet, ClientError, Patch, SanityDocument, Transaction} from '@sanity/client'
 import groq from 'groq'
 import {nanoid} from 'nanoid'
 import type {Selector} from 'react-redux'
@@ -30,6 +30,7 @@ import type {
   Tag,
 } from '../../types'
 import constructFilter from '../../utils/constructFilter'
+import {findImageAssets} from '../../utils/ReplaceImages'
 import {searchActions} from '../search'
 import type {RootReducerState} from '../types'
 import {UPLOADS_ACTIONS} from '../uploads/actions'
@@ -376,6 +377,14 @@ const assetsSlice = createSlice({
       const assetId = asset?._id
       state.byIds[assetId].error = error.message
       state.byIds[assetId].updating = false
+    },
+    updateImageReferences(state, action: PayloadAction<{asset: Asset; id: string}>) {
+      const assetId = action.payload?.id
+      state.byIds[assetId].updating = true
+    },
+    updateImageReferencesComplete(state, action: PayloadAction<{id: string}>) {
+      const {id} = action.payload
+      state.byIds[id].updating = false
     },
     updateRequest(
       state,
@@ -772,6 +781,44 @@ export const assetsUpdateEpic: MyEpic = (action$, state$, {client}) =>
             }),
           ),
         ),
+        catchError((error: ClientError) =>
+          of(
+            assetsActions.updateError({
+              asset,
+              error: {
+                message: error?.message || 'Internal error',
+                statusCode: error?.statusCode || 500,
+              },
+            }),
+          ),
+        ),
+      )
+    }),
+  )
+
+export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.updateImageReferences.match),
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
+      const {asset, id} = action.payload
+
+      return of(action).pipe(
+        debugThrottle(state.debug.badConnection),
+        mergeMap(() => client.observable.fetch<SanityDocument[]>(groq`*[references($id)]`, {id})),
+        mergeMap(async (documents) => {
+          for (const document of documents) {
+            const clonedDocument = JSON.parse(JSON.stringify(document)) as Record<string, unknown>
+            const assetsToReplace = findImageAssets(clonedDocument, asset, id)
+            for (const assetToReplace of assetsToReplace) {
+              await client
+                .patch(document._id)
+                .set(assetToReplace as AttributeSet)
+                .commit()
+            }
+          }
+          return assetsActions.updateImageReferencesComplete({id})
+        }),
         catchError((error: ClientError) =>
           of(
             assetsActions.updateError({

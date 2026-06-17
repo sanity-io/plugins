@@ -105,6 +105,7 @@ export type CardUploadData = {
 }
 
 export type Dialog =
+  | DialogAllAssetsProps
   | DialogAssetEditProps
   | DialogConfirmProps
   | DialogSearchFacetsProps
@@ -113,6 +114,12 @@ export type Dialog =
   | DialogTagsProps
 
 export type DialogAction = 'deleteAsset' | 'deleteTag'
+
+export type DialogAllAssetsProps = {
+  closeDialogId?: string
+  id: string
+  type: 'dialogAllAssets'
+}
 
 export type DialogAssetEditProps = {
   assetId?: string

@@ -10,15 +10,24 @@ import CardUpload from '../CardUpload'
 type Props = {
   items: (CardAssetData | CardUploadData)[]
   onLoadMore?: () => void
+  source?: string
 }
 
 const CARD_HEIGHT = 220
 const CARD_WIDTH = 240
 
 const VirtualCell = memo(
-  ({item, selected}: {item: CardAssetData | CardUploadData; selected: boolean}) => {
+  ({
+    item,
+    selected,
+    source,
+  }: {
+    item: CardAssetData | CardUploadData
+    selected: boolean
+    source?: string
+  }) => {
     if (item?.type === 'asset') {
-      return <CardAsset id={item.id} selected={selected} />
+      return <CardAsset id={item.id} selected={selected} source={source} />
     }
 
     if (item?.type === 'upload') {
@@ -55,7 +64,7 @@ const ListContainer = forwardRef<HTMLDivElement, any>((props, ref) => {
 })
 
 const AssetGridVirtualized = (props: Props) => {
-  const {items, onLoadMore} = props
+  const {items, onLoadMore, source} = props
 
   // Redux
   const selectedAssets = useTypedSelector((state) => state.selected.assets)
@@ -82,7 +91,7 @@ const AssetGridVirtualized = (props: Props) => {
       itemContent={(index) => {
         const item = items[index]
         const selected = selectedIds.includes(item?.id)
-        return <VirtualCell item={item} selected={selected} />
+        return <VirtualCell item={item} selected={selected} source={source} />
       }}
       overscan={48}
       style={{overflowX: 'hidden', overflowY: 'scroll'}}

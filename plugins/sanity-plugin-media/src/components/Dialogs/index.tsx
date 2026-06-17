@@ -1,6 +1,7 @@
 import useTypedSelector from '../../hooks/useTypedSelector'
 import type {Dialog} from '../../types'
 import DialogAssetEdit from '../DialogAssetEdit'
+import DialogAllAssets from '../DialogAssetsOverView'
 import DialogConfirm from '../DialogConfirm'
 import DialogSearchFacets from '../DialogSearchFacets'
 import DialogTagCreate from '../DialogTagCreate'
@@ -64,6 +65,14 @@ const Dialogs = () => {
         <DialogTags dialog={dialog} key={index}>
           {childDialogs}
         </DialogTags>
+      )
+    }
+
+    if (dialog.type === 'dialogAllAssets') {
+      return (
+        <DialogAllAssets dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogAllAssets>
       )
     }
 
