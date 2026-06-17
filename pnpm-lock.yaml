@@ -1832,12 +1832,12 @@ importers:
       '@sanity/util':
         specifier: 'catalog:'
         version: 6.1.0(@types/react@19.2.17)
-      framer-motion:
-        specifier: ^12.23.12
-        version: 12.40.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7)(react@19.2.7)
       lodash-es:
         specifier: ^4.18.1
         version: 4.18.1
+      motion:
+        specifier: ^12.40.0
+        version: 12.40.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7)(react@19.2.7)
     devDependencies:
       '@repo/package.config':
         specifier: workspace:*
