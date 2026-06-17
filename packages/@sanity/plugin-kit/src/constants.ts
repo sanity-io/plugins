@@ -13,3 +13,12 @@ export const urls = {
 export const incompatiblePluginPackage = '@sanity/incompatible-plugin'
 
 export const defaultOutDir = 'dist'
+
+/**
+ * Minimum major version of `@sanity/pkg-utils` required in userland.
+ *
+ * plugin-kit loads `package.config.ts` via the plugin's own `@sanity/pkg-utils` (a peer
+ * dependency) using the `loadConfig({cwd, pkgPath})` signature introduced in v10. Older majors
+ * expose an incompatible `loadConfig({cwd})` and cannot reliably load ESM TypeScript configs.
+ */
+export const minPkgUtilsMajor = 10

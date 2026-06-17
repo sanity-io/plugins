@@ -290,16 +290,14 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     license: license ? license.id : 'UNLICENSED',
     author: user?.email ? `${user.name} <${user.email}>` : user?.name,
     sideEffects: false,
-    type: 'commonjs',
+    type: 'module',
     exports: {
       '.': {
         source,
-        import: `./${outDir}/index.mjs`,
         default: `./${outDir}/index.js`,
       },
       './package.json': './package.json',
     },
-    main: `./${outDir}/index.js`,
     ...(flags.typescript ? {types: `./${outDir}/index.d.ts`} : {}),
     files,
     scripts: {...prev.scripts},

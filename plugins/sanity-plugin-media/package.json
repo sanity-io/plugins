@@ -29,16 +29,15 @@
     "src",
     "v2-incompatible.js"
   ],
-  "type": "commonjs",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "type": "module",
+  "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.mjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -76,7 +75,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@sanity/pkg-utils": "^7.1.1",
+    "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
     "@sanity/vision": "catalog:",
     "@testing-library/jest-dom": "^6.6.3",

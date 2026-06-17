@@ -18,13 +18,11 @@
     "v2-incompatible.js",
     "sanity.json"
   ],
-  "type": "commonjs",
-  "main": "./dist/index.js",
+  "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "import": "./dist/index.mjs",
       "default": "./dist/index.js"
     }
   },

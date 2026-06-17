@@ -1,3 +1,4 @@
+import {createRequire} from 'node:module'
 import path from 'path'
 
 import chalk from 'chalk'
@@ -7,7 +8,7 @@ import {ParsedCommandLine} from 'typescript'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import {deprecatedDevDeps, mergedPackages} from '../../configs/banned-packages'
-import {incompatiblePluginPackage, urls} from '../../constants'
+import {incompatiblePluginPackage, minPkgUtilsMajor, urls} from '../../constants'
 import {fileExists, readJson5File} from '../../util/files'
 import {PackageJson, SanityStudioJson, SanityV2Json} from './types'
 
@@ -133,6 +134,30 @@ export async function validateTsConfig(
   return errors
 }
 
+/**
+ * Hard requirement: plugins must be ESM (`"type": "module"`).
+ *
+ * plugin-kit loads `package.config.ts` through `@sanity/pkg-utils`, which can only load ESM
+ * TypeScript configs reliably when the plugin itself is ESM. CommonJS (or an omitted `type`)
+ * is not supported and cannot be opted out of.
+ */
+export function validatePackageType({type}: PackageJson): string[] {
+  if (type === 'module') {
+    return []
+  }
+
+  return [
+    outdent`
+      package.json must set "type": "module" — plugins built with @sanity/plugin-kit are ESM-only.
+      Found: ${type ? `"type": "${type}"` : 'no "type" field (defaults to "commonjs")'}
+
+      Please add the following to package.json:
+
+      "type": "module"
+  `.trimStart(),
+  ]
+}
+
 export function validatePkgUtilsDependency({devDependencies}: PackageJson): string[] {
   if (!devDependencies?.['@sanity/pkg-utils']) {
     return [
@@ -144,6 +169,43 @@ export function validatePkgUtilsDependency({devDependencies}: PackageJson): stri
     `.trimStart(),
     ]
   }
+  return []
+}
+
+/**
+ * Verifies that the installed `@sanity/pkg-utils` (the peer dependency plugin-kit loads
+ * `package.config.ts` with) is recent enough to expose the `loadConfig({cwd, pkgPath})` API.
+ */
+export function validatePkgUtilsVersion({basePath}: {basePath: string}): string[] {
+  const require = createRequire(path.join(basePath, 'package.json'))
+
+  let installedVersion: string | undefined
+  try {
+    const pkgUtilsManifest = require('@sanity/pkg-utils/package.json') as {version?: string}
+    installedVersion = pkgUtilsManifest.version
+  } catch {
+    return [
+      outdent`
+        @sanity/pkg-utils is not installed.
+        plugin-kit loads package.config.ts through @sanity/pkg-utils (a peer dependency).
+
+        Please install it by running 'npm install --save-dev @sanity/pkg-utils'.
+    `.trimStart(),
+    ]
+  }
+
+  const major = Number.parseInt(installedVersion?.split('.')[0] ?? '', 10)
+  if (!Number.isFinite(major) || major < minPkgUtilsMajor) {
+    return [
+      outdent`
+        @sanity/pkg-utils ${installedVersion} is too old.
+        plugin-kit requires @sanity/pkg-utils >=${minPkgUtilsMajor} to load package.config.ts.
+
+        Please upgrade it by running 'npm install --save-dev @sanity/pkg-utils@latest'.
+    `.trimStart(),
+    ]
+  }
+
   return []
 }
 

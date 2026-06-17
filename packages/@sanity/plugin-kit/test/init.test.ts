@@ -83,14 +83,13 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
         description: '',
         // author: 'Omitted from validation',
         license: 'MIT',
+        type: 'module',
         exports: {
           '.': {
             source: './src/index.ts',
-            import: './dist/index.mjs',
             default: './dist/index.js',
           },
         },
-        main: './dist/index.js',
         types: './dist/index.d.ts',
         files: ['dist', 'sanity.json', 'src', 'v2-incompatible.js'],
         scripts: {
