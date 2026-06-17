@@ -1,5 +1,13 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.3
+
+### Patch Changes
+
+- [#1085](https://github.com/sanity-io/plugins/pull/1085) [`59909e9`](https://github.com/sanity-io/plugins/commit/59909e9ddb0261dbae585e087cd9f0af12f1e775) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update xstate monorepo to ^5.32.1
+
+- [#1088](https://github.com/sanity-io/plugins/pull/1088) [`ca9dc55`](https://github.com/sanity-io/plugins/commit/ca9dc556c3a79aefea1ba613a72833d83ea4a05c) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update xstate monorepo to v6
+
 ## 4.0.2
 
 ## 4.0.1
@@ -172,10 +180,6 @@
 ### Bug Fixes
 
 - v3 version ([ed8b793](https://github.com/sanity-io/sanity-plugin-dashboard-widget-vercel/commit/ed8b79337dab47316efe8620f5f109edd8381d65))
-
-# Changelog
-
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 ### [1.1.1](https://github.com/robinpyon/sanity-plugin-dashboard-widget-vercel/compare/v1.1.0...v1.1.1) (2022-01-03)
 
