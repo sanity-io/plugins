@@ -493,7 +493,16 @@ Open that URL in the browser to authenticate and land directly in the Kitchen Si
 
 ### Node.js version notes
 
-`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 22 works for build/lint/test with engine warnings. Node 24 is preferred when available.
+`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 24 is preferred when available.
+
+The cloud VM's default `node` (first on `PATH`, e.g. `/exec-daemon/node`) can be older than the toolchain needs. `tsdown` (used by `@repo/generators`) requires Node `^22.18.0 || >=24.0.0`, so on an older Node (e.g. `v22.14.0`) the full `pnpm build` and `pnpm test run` fail at `@repo/generators#build` with `Failed to import module "unrun"`. `pnpm lint` and individual plugin builds/tests (e.g. `pnpm --filter sanity-plugin-media... build`, running a plugin's Vitest directly) still work on the older Node.
+
+If you hit this, put a new-enough Node (the VM ships one via nvm) first on `PATH` before running the full build/test:
+
+```bash
+export PATH="$(ls -d "$HOME"/.nvm/versions/node/v* 2>/dev/null | sort -V | tail -1)/bin:$PATH"
+node -v   # confirm >= 22.18 (or >= 24)
+```
 
 ### Lint / build / test
 
