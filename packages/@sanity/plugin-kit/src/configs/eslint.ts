@@ -1,0 +1,51 @@
+import {InitFlags} from '../actions/init'
+import {InjectTemplate} from '../actions/inject'
+
+export function eslintrcTemplate(options: {flags: InitFlags}): InjectTemplate {
+  const {flags} = options
+
+  const eslintConfig = {
+    root: true,
+    env: {
+      node: true,
+      browser: true,
+    },
+    extends: [
+      'sanity',
+      flags.typescript && 'sanity/typescript',
+      'sanity/react',
+      'plugin:react-hooks/recommended',
+      flags.prettier && 'plugin:prettier/recommended',
+      'plugin:react/jsx-runtime',
+    ].filter(Boolean),
+  }
+
+  return {
+    type: 'template',
+    force: flags.force,
+    to: '.eslintrc',
+    value: JSON.stringify(eslintConfig, null, 2),
+  }
+}
+
+export function eslintignoreTemplate(options: {flags: InitFlags; outDir: string}): InjectTemplate {
+  const {flags, outDir} = options
+
+  const patterns = [
+    '.eslintrc.js',
+    'commitlint.config.js',
+    outDir,
+    'lint-staged.config.js',
+    'package.config.ts',
+    flags.typescript ? '*.js' : '',
+  ].filter(Boolean)
+
+  patterns.sort()
+
+  return {
+    type: 'template',
+    force: flags.force,
+    to: '.eslintignore',
+    value: patterns.join('\n'),
+  }
+}

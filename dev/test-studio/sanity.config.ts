@@ -28,6 +28,8 @@ import {
 } from '#internationalized-array'
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
+import {mediaExample} from '#media'
+import {muxInputExample} from '#mux-input'
 import {netlifyWidgetExample} from '#netlify-widget'
 import {
   orderableDocumentListExample,
@@ -121,7 +123,9 @@ export default defineConfig([
       structureTool(),
       assistExample(),
       googleTranslateExample(),
+      mediaExample(),
       // add new plugins here
+      muxInputExample(),
       asyncListExample(),
       tableExample(),
       hotspotArrayExample(),
