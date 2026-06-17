@@ -6,8 +6,9 @@ import type {Dispatch} from 'redux'
 import type {AssetSourceComponentProps} from 'sanity'
 
 import {inputs} from '../../config/searchFacets'
-import {TAG_DOCUMENT_NAME} from '../../constants'
+import {FOLDER_DOCUMENT_NAME, TAG_DOCUMENT_NAME} from '../../constants'
 import {assetsActions} from '../../modules/assets'
+import {foldersActions} from '../../modules/folders'
 import {searchActions} from '../../modules/search'
 import {tagsActions} from '../../modules/tags'
 import type {RootReducerState} from '../../modules/types'
@@ -80,6 +81,9 @@ export function useBrowserInit(
 
     dispatch(tagsActions.fetchRequest())
 
+    // Fetch all folders
+    dispatch(foldersActions.fetchRequest())
+
     const assetSubscription = client
       .listen(
         groq`*[_type in ["sanity.fileAsset", "sanity.imageAsset"] && !(_id in path("drafts.**"))]`,
@@ -90,9 +94,14 @@ export function useBrowserInit(
       .listen(groq`*[_type == "${TAG_DOCUMENT_NAME}" && !(_id in path("drafts.**"))]`)
       .subscribe(createTagHandler(dispatch))
 
+    const folderSubscription = client
+      .listen(groq`*[_type == "${FOLDER_DOCUMENT_NAME}" && !(_id in path("drafts.**"))]`)
+      .subscribe(() => dispatch(foldersActions.fetchRequest()))
+
     return () => {
       assetSubscription.unsubscribe()
       tagSubscription.unsubscribe()
+      folderSubscription.unsubscribe()
     }
   }, [client, dispatch, hasMediaTags])
 

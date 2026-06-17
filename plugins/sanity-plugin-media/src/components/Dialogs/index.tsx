@@ -2,6 +2,9 @@ import useTypedSelector from '../../hooks/useTypedSelector'
 import type {Dialog} from '../../types'
 import DialogAssetEdit from '../DialogAssetEdit'
 import DialogConfirm from '../DialogConfirm'
+import DialogFolderCreate from '../DialogFolderCreate'
+import DialogFolderMove from '../DialogFolderMove'
+import DialogFolderRename from '../DialogFolderRename'
 import DialogSearchFacets from '../DialogSearchFacets'
 import DialogTagCreate from '../DialogTagCreate'
 import DialogTagEdit from '../DialogTagEdit'
@@ -32,6 +35,30 @@ const Dialogs = () => {
         <DialogConfirm dialog={dialog} key={index}>
           {childDialogs}
         </DialogConfirm>
+      )
+    }
+
+    if (dialog.type === 'folderCreate') {
+      return (
+        <DialogFolderCreate dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogFolderCreate>
+      )
+    }
+
+    if (dialog.type === 'folderMove') {
+      return (
+        <DialogFolderMove dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogFolderMove>
+      )
+    }
+
+    if (dialog.type === 'folderRename') {
+      return (
+        <DialogFolderRename dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogFolderRename>
       )
     }
 

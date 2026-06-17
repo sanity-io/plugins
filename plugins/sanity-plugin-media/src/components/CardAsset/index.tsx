@@ -109,7 +109,7 @@ const CardAsset = (props: Props) => {
   const picked = item?.picked
   const updating = item?.updating
 
-  const {onSelect} = useAssetSourceActions()
+  const {isMultiSelect, onSelect} = useAssetSourceActions()
 
   // Short circuit if no asset is available
   if (!asset) {
@@ -120,13 +120,23 @@ const CardAsset = (props: Props) => {
   const handleAssetClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
 
-    if (onSelect) {
+    if (selected) {
+      return
+    }
+
+    if (onSelect && !isMultiSelect) {
       onSelect([
         {
           kind: 'assetDocumentId',
           value: asset._id,
         },
       ])
+    } else if (onSelect && isMultiSelect) {
+      if (shiftPressed.current && !picked) {
+        dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
+      } else {
+        dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
+      }
     } else if (shiftPressed.current) {
       if (picked) {
         dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
@@ -141,7 +151,11 @@ const CardAsset = (props: Props) => {
   const handleContextActionClick = (e: MouseEvent) => {
     e.stopPropagation()
 
-    if (onSelect) {
+    if (selected) {
+      return
+    }
+
+    if (onSelect && !isMultiSelect) {
       dispatch(dialogActions.showAssetEdit({assetId: asset._id}))
     } else if (shiftPressed.current && !picked) {
       dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
@@ -229,7 +243,7 @@ const CardAsset = (props: Props) => {
           $scheme={scheme}
           style={{opacity: opacityContainer}}
         >
-          {onSelect ? (
+          {onSelect && !isMultiSelect ? (
             <EditIcon
               style={{
                 flexShrink: 0,

@@ -24,6 +24,7 @@ _Individual asset view_
 
 - Support for batch uploads with drag and drop support
 - Edit text fields native to Sanity's asset documents, such as `title`, `description`, `altText` and `originalFilename`
+- Organise assets into nested folders with a dedicated sidebar, breadcrumb navigation and bulk move actions
 - View asset metadata and a limited subset of EXIF data, if present
 - Tag your assets individually or in bulk
 - Manage tags directly within the plugin
@@ -32,7 +33,7 @@ _Individual asset view_
 
 #### Granular search tools
 
-- Refine your search with any combination of search facets such as filtering by tag name, asset usage, file size, orientation, type (and more)
+- Refine your search with any combination of search facets such as filtering by tag name, folder, asset usage, file size, orientation, type (and more)
 - Use text search for a quick lookup by title, description and alt text
 
 #### Built for large datasets and collaborative editing in mind
@@ -286,6 +287,7 @@ export function CustomDetails(props) {
 <summary>Limitations when using Sanity's GraphQL endpoints</summary>
 
 - Currently, `opt.media.tags` on assets aren't accessible via GraphQL. This is because `opt` is a custom object used by this plugin and not part of Sanity's asset schema.
+- The same limitation applies to `opt.media.folder`.
 
 </details>
 
@@ -307,9 +309,9 @@ export function CustomDetails(props) {
 <details>
 <summary>How can I query asset fields I've set in this plugin?</summary>
 
-The following GROQ query will return an image with additional asset text fields as well as an array of tag names.
+The following GROQ query will return an image with additional asset text fields, the name of the folder it belongs to, as well as an array of tag names.
 
-Note that tags are namespaced within `opt.media` and tag names are accessed via the `current` property (as they're defined as slugs on the `tag.media` document schema).
+Note that tags and folders are namespaced within `opt.media`. Tag names are accessed via the `current` property (as they're defined as slugs on the `tag.media` document schema), and the folder is a single weak reference you can dereference for its `name`.
 
 ```
 *[_id == 'my-document-id'] {
@@ -319,6 +321,7 @@ Note that tags are namespaced within `opt.media` and tag names are accessed via 
       _type,
       altText,
       description,
+      "folder": opt.media.folder->name,
       "tags": opt.media.tags[]->name.current,
       title
     }
@@ -335,6 +338,19 @@ Note that tags are namespaced within `opt.media` and tag names are accessed via 
 - By default, Sanity won't automatically extract EXIF data unless you explicitly tell it to
 - Manually tell Sanity to process EXIF metadata by [updating your image field options accordingly](https://www.sanity.io/docs/image-type#metadata-5fe564e516d8)
 - Note that all images uploaded directly within the plugin will include all metadata by default
+
+</details>
+
+#### Folders
+
+<details>
+<summary>How do folders work?</summary>
+
+- Folders are stored as their own `media.folder` documents, each with a `name` and an optional weak `parent` reference to another `media.folder` (a `null` parent means the folder lives at the root)
+- Assets reference the folder they live in via a single weak reference at `opt.media.folder` — the same pattern already used for tags (`opt.media.tags`)
+- Because the link is a reference (not a path string), renaming or moving a folder is a single one-field write, regardless of how many assets it contains
+- The folder sidebar shows the full tree with per-folder asset counts. Selecting **Home** shows assets that aren't assigned to any folder; opening a folder filters the grid to the assets assigned to it
+- You can move selected assets into a folder from the selection bar, and deleting a folder recursively removes its nested folders and every asset inside that subtree
 
 </details>
 
