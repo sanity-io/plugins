@@ -58,7 +58,7 @@
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@sanity/schema": "^6.0.0",
+    "@sanity/schema": "^6.1.0",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
