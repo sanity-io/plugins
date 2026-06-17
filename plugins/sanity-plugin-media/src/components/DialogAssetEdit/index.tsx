@@ -1,4 +1,3 @@
-import {zodResolver} from '@hookform/resolvers/zod'
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Stack, Tab, TabList, TabPanel, Text} from '@sanity/ui'
 import groq from 'groq'
@@ -20,6 +19,7 @@ import {getUniqueDocuments} from '../../utils/getUniqueDocuments'
 import imageDprUrl from '../../utils/imageDprUrl'
 import sanitizeFormData from '../../utils/sanitizeFormData'
 import {isFileAsset, isImageAsset} from '../../utils/typeGuards'
+import zodFormResolver from '../../utils/zodFormResolver'
 import AssetMetadata from '../AssetMetadata'
 import Dialog from '../Dialog'
 import DocumentList from '../DocumentList'
@@ -127,7 +127,7 @@ const DialogAssetEdit = (props: Props) => {
   } = useForm<AssetFormData>({
     defaultValues: generateDefaultValues(assetItem?.asset),
     mode: 'onChange',
-    resolver: zodResolver(getAssetFormSchema(locales)),
+    resolver: zodFormResolver<AssetFormData>(getAssetFormSchema(locales)),
   })
 
   const formUpdating = !assetItem || assetItem?.updating

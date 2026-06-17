@@ -70,18 +70,6 @@ overrides:
   sanity: 'catalog:'
   styled-components: npm:@sanity/styled-components@latest
 
-packageExtensions:
-  # @hookform/resolvers ships a zod resolver without declaring zod, so its types
-  # resolve against whatever zod version pnpm hidden-hoists (currently v4).
-  # Declare it as an optional peer so it links against the dependent's zod
-  # (zod v3 for sanity-plugin-media).
-  '@hookform/resolvers':
-    peerDependencies:
-      zod: '*'
-    peerDependenciesMeta:
-      zod:
-        optional: true
-
 patchedDependencies:
   '@bynder/compact-view': patches/@bynder__compact-view.patch
 

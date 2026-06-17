@@ -1,4 +1,3 @@
-import {zodResolver} from '@hookform/resolvers/zod'
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Text} from '@sanity/ui'
 import groq from 'groq'
@@ -13,6 +12,7 @@ import {dialogActions} from '../../modules/dialog'
 import {selectTagById, tagsActions} from '../../modules/tags'
 import type {DialogTagEditProps, Tag, TagFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
+import zodFormResolver from '../../utils/zodFormResolver'
 import Dialog from '../Dialog'
 import FormFieldInputText from '../FormFieldInputText'
 import FormSubmitButton from '../FormSubmitButton'
@@ -51,7 +51,7 @@ const DialogTagEdit = (props: Props) => {
   } = useForm<TagFormData>({
     defaultValues: generateDefaultValues(tagItem?.tag),
     mode: 'onChange',
-    resolver: zodResolver(tagFormSchema),
+    resolver: zodFormResolver<TagFormData>(tagFormSchema),
   })
 
   const formUpdating = !tagItem || tagItem?.updating
