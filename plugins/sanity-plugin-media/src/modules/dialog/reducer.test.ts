@@ -79,6 +79,11 @@ describe('dialog slice reducers', () => {
     ])
   })
 
+  it('showAllAssetsDialog appends the replace-asset overview dialog', () => {
+    const state = dialogReducer(dialogState(), dialogActions.showAllAssetsDialog())
+    expect(state.items).toEqual([{id: 'dialogAllAssets', type: 'dialogAllAssets'}])
+  })
+
   it('inlineTagCreate sets lastCreatedTag on matching assetEdit items', () => {
     const state = dialogReducer(
       {

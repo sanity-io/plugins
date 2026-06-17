@@ -88,4 +88,23 @@ describe('assets slice', () => {
     state = assetsReducer(state, assetsActions.listenerUpdateQueueComplete({assets: [updated]}))
     expect(state.byIds['img-1'].asset.title).toBe('New')
   })
+
+  it('updateImageReferences marks the targeted asset as updating', () => {
+    let state = stateWithOneAsset()
+    state = assetsReducer(
+      state,
+      assetsActions.updateImageReferences({asset: minimalImage, id: 'img-1'}),
+    )
+    expect(state.byIds['img-1'].updating).toBe(true)
+  })
+
+  it('updateImageReferencesComplete clears the updating flag', () => {
+    let state = stateWithOneAsset()
+    state = assetsReducer(
+      state,
+      assetsActions.updateImageReferences({asset: minimalImage, id: 'img-1'}),
+    )
+    state = assetsReducer(state, assetsActions.updateImageReferencesComplete({id: 'img-1'}))
+    expect(state.byIds['img-1'].updating).toBe(false)
+  })
 })

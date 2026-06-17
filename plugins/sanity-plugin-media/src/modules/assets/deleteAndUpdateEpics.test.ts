@@ -10,6 +10,7 @@ import {
   assetsActions,
   assetsDeleteEpic,
   assetsUpdateEpic,
+  assetsUpdateImageReferencesEpic,
   initialState as assetsInitialState,
 } from './index'
 
@@ -82,6 +83,49 @@ describe('assetsUpdateEpic', () => {
     await vi.waitFor(() => {
       expect(chain.commit).toHaveBeenCalled()
       expect(store.getState().assets.byIds.a1.asset.title).toBe('Updated')
+    })
+  })
+})
+
+describe('assetsUpdateImageReferencesEpic', () => {
+  it('patches referencing documents and dispatches updateImageReferencesComplete', async () => {
+    const referencingDocument = {
+      _id: 'doc-1',
+      _type: 'post',
+      hero: {_type: 'image', asset: {_ref: 'a1', _type: 'reference'}},
+    }
+    const chain = mockPatchChain({})
+    const client = createMockSanityClient({
+      observable: {
+        fetch: vi.fn(() => of([referencingDocument])),
+      },
+      patch: vi.fn(() => chain),
+    })
+
+    const replacementAsset = {...sampleAsset, _id: 'a2'}
+
+    const store = createEpicTestStore(assetsUpdateImageReferencesEpic, client, {
+      assets: {
+        ...assetsInitialState,
+        assetTypes: ['image'],
+        allIds: ['a1'],
+        byIds: {
+          a1: {_type: 'asset', asset: sampleAsset, picked: true, updating: false},
+        },
+        lastPicked: 'a1',
+      },
+    })
+
+    store.dispatch(assetsActions.updateImageReferences({asset: replacementAsset, id: 'a1'}))
+
+    await vi.waitFor(() => {
+      expect(client.observable.fetch).toHaveBeenCalled()
+      expect(client.patch).toHaveBeenCalledWith('doc-1')
+      expect(chain.set).toHaveBeenCalledWith({
+        hero: {_type: 'image', asset: {_ref: 'a2', _type: 'reference'}},
+      })
+      expect(chain.commit).toHaveBeenCalled()
+      expect(store.getState().assets.byIds.a1.updating).toBe(false)
     })
   })
 })
