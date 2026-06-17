@@ -1,4 +1,10 @@
-# 📓 Changelog
+# @sanity/assist
+
+## 6.1.3
+
+### Patch Changes
+
+- [#1083](https://github.com/sanity-io/plugins/pull/1083) [`7e65764`](https://github.com/sanity-io/plugins/commit/7e65764c026879d6156e49d8380e3bd6d85f0697) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update lodash monorepo to ^4.18.1
 
 ## 6.1.2
 
@@ -77,6 +83,7 @@
 - [#644](https://github.com/sanity-io/plugins/pull/644) [`c563001`](https://github.com/sanity-io/plugins/commit/c563001d4f4d4edd079c8f11024db01edeb46702) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port `@sanity/assist` to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The plugin is now optimized with React Compiler for better performance
   - **ESM-only**: CommonJS is no longer supported (removed dual module format)
   - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the baseline
@@ -85,9 +92,6 @@
   - **Updated dependencies**: All dependencies updated to latest compatible versions
 
   The plugin functionality remains the same, but the new build process and dependencies require these breaking changes for compatibility with the monorepo's tooling and conventions.
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## [5.0.4](https://github.com/sanity-io/assist/compare/v5.0.3...v5.0.4) (2026-01-16)
 

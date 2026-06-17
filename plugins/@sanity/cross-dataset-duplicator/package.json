@@ -43,7 +43,7 @@
   "dependencies": {
     "@sanity/asset-utils": "^2.3.0",
     "@sanity/icons": "^3.7.4",
-    "@sanity/mutator": "^6.0.0",
+    "@sanity/mutator": "catalog:",
     "@sanity/studio-secrets": "workspace:*",
     "@sanity/ui": "catalog:",
     "dset": "^3.1.0"

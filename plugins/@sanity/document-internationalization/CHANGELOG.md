@@ -1,5 +1,7 @@
 # @sanity/document-internationalization
 
+## 6.2.8
+
 ## 6.2.7
 
 ### Patch Changes
@@ -95,6 +97,7 @@
   **Breaking change:** Translation reference items in `translation.metadata` documents now use a dedicated `language` field instead of `_key` for the language identifier. The `_key` is now a random unique ID.
 
   **How to upgrade:**
+
   1. Update `sanity-plugin-internationalized-array` to v5 first.
   2. Backup your data.
   3. Create a migration file using the new bundled helper from `sanity-plugin-internationalized-array/migrations`, and **include `'translation.metadata'` in your `documentTypes` array** so translation metadata documents are also migrated:
@@ -185,6 +188,7 @@
 - [#562](https://github.com/sanity-io/plugins/pull/562) [`bc342c5`](https://github.com/sanity-io/plugins/commit/bc342c59a49810ae6289546af049a8c3a8a57e43) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Port @sanity/document-internationalization to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The plugin is now optimized with React Compiler for better performance
   - **ESM-only**: CommonJS is no longer supported (removed dual module format)
   - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the baseline
