@@ -16,6 +16,9 @@
     "**/sanity.types.ts",
     "turbo/generators/config.ts",
     "plugins/sanity-naive-html-serializer/test/**",
+    // Moved as-is from the standalone repo; legacy code will be brought up to
+    // monorepo lint standards in a follow-up PR
+    "plugins/sanity-plugin-media/**",
     "plugins/sanity-plugin-mux-input/**"
   ],
   "options": {
