@@ -646,7 +646,7 @@ importers:
   plugins/@sanity/dashboard:
     dependencies:
       '@sanity/icons':
-        specifier: ^3.5.2
+        specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/image-url':
         specifier: ^2.1.1
@@ -1583,7 +1583,7 @@ importers:
         specifier: ^3.0.6
         version: 3.0.6
       '@sanity/icons':
-        specifier: ^3.7.0
+        specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
@@ -2093,7 +2093,7 @@ importers:
         specifier: ^3.0.6
         version: 3.0.6
       '@sanity/icons':
-        specifier: ^3.7.0
+        specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/incompatible-plugin':
         specifier: ^1.0.5
@@ -2223,7 +2223,7 @@ importers:
         specifier: ^3.4.0
         version: 3.5.0
       '@sanity/icons':
-        specifier: ^3.0.0
+        specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/incompatible-plugin':
         specifier: ^1.0.4
