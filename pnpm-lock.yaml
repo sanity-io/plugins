@@ -336,8 +336,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       nodemon:
-        specifier: ^3.1.0
-        version: 3.1.14
+        specifier: 3.1.0
+        version: 3.1.0
       npm-run-path:
         specifier: ^4.0.1
         version: 4.0.1
@@ -9202,8 +9202,8 @@ packages:
     resolution: {integrity: sha512-Uzmd6LXpouKo8EUK68IjH4+E01w/hXyV3R3g/geCJo+rXLNfh1xucB+LOzYEOQPSiUK3h/xZf0cQGcSsmyL2Og==}
     engines: {node: '>=18'}
 
-  nodemon@3.1.14:
-    resolution: {integrity: sha512-jakjZi93UtB3jHMWsXL68FXSAosbLfY0In5gtKq3niLSkrWznrVBzXFNOEMJUfc9+Ke7SHWoAZsiMkNP3vq6Jw==}
+  nodemon@3.1.0:
+    resolution: {integrity: sha512-xqlktYlDMCepBJd43ZQhjWwMw2obW/JRvkrLxq5RCNcuDDX1DbcPT+qT1IlIIdf+DhnWs90JpTMe+Y5KxOchvA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -18726,12 +18726,12 @@ snapshots:
 
   node-releases@2.0.47: {}
 
-  nodemon@3.1.14:
+  nodemon@3.1.0:
     dependencies:
       chokidar: 3.6.0
       debug: 4.4.3(supports-color@5.5.0)
       ignore-by-default: 1.0.1
-      minimatch: 10.2.5
+      minimatch: 3.1.5
       pstree.remy: 1.1.8
       semver: 7.8.4
       simple-update-notifier: 2.0.0
