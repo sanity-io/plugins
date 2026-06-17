@@ -67,6 +67,8 @@ overrides:
   sanity: ^6.1.0
   styled-components: npm:@sanity/styled-components@latest
 
+packageExtensionsChecksum: sha256-QdsDQ365DNzG5j0yKBdbmCG5qJluk5hWMfq/xNOQOao=
+
 patchedDependencies:
   '@bynder/compact-view':
     hash: c71de21a98b99e126cf6a513070404932603d4254f3614440c3a5f5ee7e7e8a6
@@ -20606,6 +20608,7 @@ snapshots:
 
   recast@0.23.11:
     dependencies:
+      '@babel/parser': 7.29.7
       ast-types: 0.16.1
       esprima: 4.0.1
       source-map: 0.6.1
