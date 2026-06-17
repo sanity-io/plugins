@@ -83,14 +83,13 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
         description: '',
         // author: 'Omitted from validation',
         license: 'MIT',
+        type: 'module',
         exports: {
           '.': {
             source: './src/index.ts',
-            import: './dist/index.mjs',
             default: './dist/index.js',
           },
         },
-        main: './dist/index.js',
         types: './dist/index.d.ts',
         files: ['dist', 'sanity.json', 'src', 'v2-incompatible.js'],
         scripts: {
@@ -105,7 +104,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
           url: 'https://github.com/sanity-io/sanity',
         },
         engines: {
-          node: '>=18',
+          node: '>=20.19 <22 || >=22.12',
         },
         bugs: {
           url: 'https://github.com/sanity-io/sanity/issues',

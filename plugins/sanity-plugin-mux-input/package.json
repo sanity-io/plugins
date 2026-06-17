@@ -23,16 +23,17 @@
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
   "sideEffects": false,
-  "type": "commonjs",
+  "type": "module",
   "exports": {
     ".": {
       "source": "./src/_exports/index.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "files": [
     "src",
@@ -66,7 +67,7 @@
   },
   "devDependencies": {
     "@sanity/client": "^7.12.1",
-    "@sanity/pkg-utils": "^8.1.29",
+    "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
     "@types/lodash": "^4.17.15",
     "@types/node": "catalog:",
@@ -86,7 +87,7 @@
     "styled-components": "^5 || ^6"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.19 <22 || >=22.12"
   },
   "publishConfig": {
     "access": "public"
