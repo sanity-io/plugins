@@ -102,5 +102,5 @@
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
   },
-  "binname": "sanity-plugin"
+  "binname": "plugin-kit"
 }
