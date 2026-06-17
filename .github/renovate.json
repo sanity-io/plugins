@@ -3,7 +3,6 @@
   "extends": ["github>sanity-io/renovate-config"],
   "automerge": true,
   "ignorePresets": [
-    ":ignoreModulesAndTests",
     "github>sanity-io/renovate-config:group-non-major",
     "github>sanity-io/renovate-config:workarounds-esm"
   ]
