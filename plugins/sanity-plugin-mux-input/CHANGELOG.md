@@ -1,5 +1,13 @@
 # sanity-plugin-mux-input
 
+## 3.0.1
+
+### Patch Changes
+
+- [#1024](https://github.com/sanity-io/plugins/pull/1024) [`985978b`](https://github.com/sanity-io/plugins/commit/985978b54c0028de549197006a0b9753e2e30be9) Thanks [@stipsan](https://github.com/stipsan), [@skogsmaskin](https://github.com/skogsmaskin), [@rexxars](https://github.com/rexxars), [@erikpena](https://github.com/erikpena), [@R-Delfino95](https://github.com/R-Delfino95), [@snorrees](https://github.com/snorrees), [@KimPaow](https://github.com/KimPaow), [@hdoro](https://github.com/hdoro), [@dylanjha](https://github.com/dylanjha), [@RitaDias](https://github.com/RitaDias), [@bjoerge](https://github.com/bjoerge), [@spuppo-mux](https://github.com/spuppo-mux), [@Pintorado](https://github.com/Pintorado), [@y-dpi](https://github.com/y-dpi), [@sgulseth](https://github.com/sgulseth), [@jonabc](https://github.com/jonabc), [@runeb](https://github.com/runeb), [@robinpyon](https://github.com/robinpyon), [@phmasek](https://github.com/phmasek), [@pedrobonamin](https://github.com/pedrobonamin), [@ottob](https://github.com/ottob), [@olivierverwoerd](https://github.com/olivierverwoerd), [@mariuslundgard](https://github.com/mariuslundgard), [@larixk](https://github.com/larixk), [@kmelve](https://github.com/kmelve), [@Jorflo](https://github.com/Jorflo), [@JesperBry](https://github.com/JesperBry), [@Jerricho93](https://github.com/Jerricho93), [@javangriff](https://github.com/javangriff), [@jaredsmith](https://github.com/jaredsmith), [@jakobsen](https://github.com/jakobsen), [@israelroldan](https://github.com/israelroldan), [@iJackWilson](https://github.com/iJackWilson), [@goellner](https://github.com/goellner), [@edwin-mejia](https://github.com/edwin-mejia), [@donalffons](https://github.com/donalffons), [@danilo-arioli](https://github.com/danilo-arioli), [@amazinglalu](https://github.com/amazinglalu)! - Move sanity-plugin-mux-input into the sanity-io/plugins monorepo
+
+  No API or behavioral changes — this patch release verifies the plugin can be published from the monorepo. The only dependency change is that `@mux/mux-player` and `use-device-pixel-ratio` are now declared explicitly (they were already used at runtime, previously resolved transitively). Exports, peer dependencies, supported engines, and the dual CJS+ESM build output are unchanged. Adopting monorepo conventions (ESM-only build, React Compiler, lint fixes) will follow in subsequent releases.
+
 ## [3.0.0](https://github.com/sanity-io/sanity-plugin-mux-input/compare/v2.19.1...v3.0.0) (2026-06-11)
 
 ### ⚠ BREAKING CHANGES

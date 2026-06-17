@@ -1,5 +1,11 @@
 # @sanity/sanity-plugin-async-list
 
+## 2.0.1
+
+### Patch Changes
+
+- [#1083](https://github.com/sanity-io/plugins/pull/1083) [`7e65764`](https://github.com/sanity-io/plugins/commit/7e65764c026879d6156e49d8380e3bd6d85f0697) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update lodash monorepo to ^4.18.1
+
 ## 2.0.0
 
 ### Major Changes
