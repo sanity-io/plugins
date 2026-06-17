@@ -44,7 +44,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/studio-secrets": "workspace:^",
     "@sanity/ui": "catalog:",
-    "lodash-es": "^4.17.23"
+    "lodash-es": "^4.18.1"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

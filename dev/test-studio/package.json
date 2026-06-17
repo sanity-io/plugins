@@ -51,6 +51,7 @@
     "sanity-plugin-latex-input": "workspace:*",
     "sanity-plugin-markdown": "workspace:*",
     "sanity-plugin-media": "workspace:*",
+    "sanity-plugin-mux-input": "workspace:*",
     "sanity-plugin-transifex": "workspace:*",
     "sanity-plugin-utils": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
