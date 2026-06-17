@@ -1,0 +1,113 @@
+{
+  "name": "sanity-plugin-media",
+  "version": "4.3.1",
+  "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
+  "keywords": [
+    "asset",
+    "browser",
+    "cms",
+    "content",
+    "headless",
+    "realtime",
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-media#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-media"
+  },
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "prepack": "turbo run build",
+    "watch": "pkg-utils watch --strict"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.1.1",
+    "@reduxjs/toolkit": "^2.6.0",
+    "@sanity/client": "catalog:",
+    "@sanity/color": "^3.0.6",
+    "@sanity/icons": "^3.7.0",
+    "@sanity/incompatible-plugin": "^1.0.5",
+    "@sanity/ui": "^3.0.5",
+    "@sanity/uuid": "^3.0.1",
+    "@tanem/react-nprogress": "^5.0.55",
+    "copy-to-clipboard": "^3.3.1",
+    "date-fns": "^4.0.0",
+    "filesize": "^9.0.0",
+    "groq": "^3.0.0",
+    "is-hotkey-esm": "^1.0.0",
+    "nanoid": "^3.3.8",
+    "pluralize": "^8.0.0",
+    "react-dropzone": "^11.3.1",
+    "react-file-icon": "^1.6.0",
+    "react-hook-form": "^7.54.2",
+    "react-redux": "^9.2.0",
+    "react-select": "^5.10.1",
+    "react-virtuoso": "^4.12.5",
+    "redux": "^5.0.1",
+    "redux-observable": "3.0.0-rc.2",
+    "rxjs": "^7.8.1",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@sanity/pkg-utils": "^7.1.1",
+    "@sanity/plugin-kit": "^4.0.19",
+    "@sanity/vision": "catalog:",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/pluralize": "^0.0.33",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@types/react-file-icon": "^1.0.4",
+    "jsdom": "^25.0.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-is": "^19.0.0",
+    "sanity": "catalog:",
+    "styled-components": "catalog:",
+    "typescript": "5.8.2"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "react-dom": "^18.3 || ^19",
+    "react-is": "^18.3 || ^19",
+    "sanity": "^3.78 || ^4.0.0-0 || ^5 || ^6.0.0-0",
+    "styled-components": "^6.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+      "eslintImports": false,
+      "scripts": false
+    }
+  }
+}

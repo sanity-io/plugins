@@ -1,6 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignoreWorkspaces": ["dev/*"],
+  "ignoreWorkspaces": [
+    "dev/*",
+    // Moved as-is from the standalone repo; will be brought up to monorepo
+    // standards (and into knip coverage) in a follow-up PR
+    "plugins/sanity-plugin-media",
+    // Moved verbatim from sanity-io/sanity-plugin-mux-input; legacy dead-code
+    // and phantom-dependency cleanup is deferred to a follow-up PR.
+    "plugins/sanity-plugin-mux-input",
+  ],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,
