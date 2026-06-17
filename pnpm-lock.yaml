@@ -5956,11 +5956,6 @@ packages:
   '@sanity/tsconfig@2.1.0':
     resolution: {integrity: sha512-Cnz0EycMsfeILkxL/gYzzfPs511OzP3sjQxU4XkDtujdiFAc+bteMYXi4/SJ83m98cXLum63HbHDk+he6AbbIA==}
 
-  '@sanity/types@6.0.0':
-    resolution: {integrity: sha512-VnNk5Hyeytr71pei4Do4xapIObDP0ZC32ce1kLKdJRGzz93tkJZNzrAYXZld/r8j4d6TYfJlxDP+VxacTtIKKQ==}
-    peerDependencies:
-      '@types/react': ^19.2
-
   '@sanity/types@6.1.0':
     resolution: {integrity: sha512-EtkC/oB1585wkTEiVyuBsIJYLGlbNldWzMuYPvi91WKBGhMyJ1OJqMfpZDcqWpsvTqjV8TH+/YlVwi+CQBKcTA==}
     peerDependencies:
@@ -13687,7 +13682,7 @@ snapshots:
       '@portabletext/html': 1.0.2
       '@portabletext/sanity-bridge': 3.1.2(@types/react@19.2.17)
       '@portabletext/schema': 2.2.0
-      '@sanity/types': 6.0.0(@types/react@19.2.17)
+      '@sanity/types': 6.1.0(@types/react@19.2.17)
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
@@ -15487,12 +15482,6 @@ snapshots:
       yaml: 2.9.0
 
   '@sanity/tsconfig@2.1.0': {}
-
-  '@sanity/types@6.0.0(@types/react@19.2.17)':
-    dependencies:
-      '@sanity/client': 7.23.0
-      '@sanity/media-library-types': 1.4.0
-      '@types/react': 19.2.17
 
   '@sanity/types@6.1.0(@types/react@19.2.17)':
     dependencies:
