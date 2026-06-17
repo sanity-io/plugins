@@ -1,9 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+# sanity-plugin-mux-input
 
 ## [3.0.0](https://github.com/sanity-io/sanity-plugin-mux-input/compare/v2.19.1...v3.0.0) (2026-06-11)
 
