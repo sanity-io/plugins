@@ -51,7 +51,7 @@
     "@reduxjs/toolkit": "^2.6.0",
     "@sanity/client": "catalog:",
     "@sanity/color": "^3.0.6",
-    "@sanity/icons": "^3.7.0",
+    "@sanity/icons": "^3.7.4",
     "@sanity/incompatible-plugin": "^1.0.5",
     "@sanity/ui": "^3.0.5",
     "@sanity/uuid": "^3.0.1",
