@@ -22,6 +22,7 @@ import path from 'path'
 
 import chalk from 'chalk'
 import concurrently from 'concurrently'
+// @ts-expect-error missing types
 import nodemon from 'nodemon'
 import outdent from 'outdent'
 
