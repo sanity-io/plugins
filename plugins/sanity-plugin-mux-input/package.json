@@ -67,7 +67,7 @@
   "devDependencies": {
     "@sanity/client": "^7.12.1",
     "@sanity/pkg-utils": "^8.1.29",
-    "@sanity/plugin-kit": "^4.0.20",
+    "@sanity/plugin-kit": "workspace:*",
     "@types/lodash": "^4.17.15",
     "@types/node": "catalog:",
     "@types/react": "^19.0.10",
