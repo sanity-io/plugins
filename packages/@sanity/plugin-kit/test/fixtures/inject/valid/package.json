@@ -65,7 +65,8 @@
   },
   "sanityPlugin": {
     "verifyPackage": {
-      "tsc": false
+      "tsc": false,
+      "renovate": false
     }
   }
 }

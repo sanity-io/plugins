@@ -78,7 +78,6 @@
     "@types/eslint": "^8.56.11",
     "@types/inquirer": "^9.0.3",
     "@types/node": "catalog:",
-    "@types/nodemon": "^1.19.6",
     "@types/react": "catalog:",
     "@typescript-eslint/eslint-plugin": "^8.26.0",
     "@typescript-eslint/parser": "^8.26.0",

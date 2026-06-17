@@ -74,6 +74,7 @@
       "sanityV2Json": false,
       "scripts": false,
       "pkg-utils": false,
+      "renovate": false,
       "nodeEngine": false,
       "studioConfig": false
     }
