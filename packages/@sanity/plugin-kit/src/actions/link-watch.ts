@@ -54,12 +54,14 @@ export async function linkWatch({basePath}: {basePath: string}) {
     ...packageJson.sanityPlugin?.linkWatch,
   }
 
-  nodemon({
+  const nodemonSettings = {
     watch: [outDir],
     ext: watch.extensions,
     exec: 'yalc push --changed',
     //delay: 1000
-  })
+  } as Parameters<typeof nodemon>[0]
+
+  nodemon(nodemonSettings)
 
   // ensure the folder exits so it can be watched
   const folder = path.join(basePath, outDir)
