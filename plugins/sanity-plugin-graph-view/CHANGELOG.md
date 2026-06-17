@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 5.0.9
+
+### Patch Changes
+
+- [#1093](https://github.com/sanity-io/plugins/pull/1093) [`2afa5b9`](https://github.com/sanity-io/plugins/commit/2afa5b9cd7a565faf4c838f78e2093620aca05d2) Thanks [@stipsan](https://github.com/stipsan)! - Fix crash on load by importing `ForceGraph2D` from `react-force-graph-2d` instead of the umbrella `react-force-graph` package, which pulled in VR/AR builds that reference an undefined global `AFRAME`
+
 ## 5.0.8
 
 ### Patch Changes
