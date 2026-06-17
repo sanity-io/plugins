@@ -83,7 +83,7 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
         - Reference documentation: ${urls.refDocs}
 
         ${chalk.grey(
-          `To fail-fast on first detected issue run:\nnpx ${cliName} verify-package' --single`,
+          `To fail-fast on first detected issue run:\nnpx ${cliName} verify-package --single`,
         )}
       `.trimStart(),
     )

@@ -122,7 +122,7 @@ async function readmeSnippets(options: InjectOptions) {
 }
 
 /**
- * Returns sections that does not exists "close enough" in readme
+ * Returns sections that do not exist "close enough" in readme
  */
 export function missingSections(readme: string, sections: string[]) {
   return sections.filter((section) => !closeEnough(section, readme))

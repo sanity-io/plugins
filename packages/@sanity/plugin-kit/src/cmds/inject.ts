@@ -26,7 +26,7 @@ Options
   --no-scripts            Disables scripts from being added to package.json
 
   --license [spdx]        Use the license with the given SPDX identifier
-  --force                 No promt when overwriting files
+  --force                 No prompt when overwriting files
 
   --preset [preset-name]  Adds config and files from a named preset. --preset can be supplied multiple times.
                           The following presets are available:
