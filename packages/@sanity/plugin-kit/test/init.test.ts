@@ -104,7 +104,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
           url: 'https://github.com/sanity-io/sanity',
         },
         engines: {
-          node: '>=18',
+          node: '>=20.19 <22 || >=22.12',
         },
         bugs: {
           url: 'https://github.com/sanity-io/sanity/issues',

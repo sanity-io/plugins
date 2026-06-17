@@ -22,3 +22,9 @@ export const defaultOutDir = 'dist'
  * expose an incompatible `loadConfig({cwd})` and cannot reliably load ESM TypeScript configs.
  */
 export const minPkgUtilsMajor = 10
+
+/**
+ * Required `engines.node` range for plugins, matching `@sanity/pkg-utils` so plugins declare the
+ * same Node.js support as the build tool they use.
+ */
+export const requiredNodeEngine = '>=20.19 <22 || >=22.12'

@@ -24,6 +24,7 @@ This major release includes several breaking changes as part of the migration to
 - **`typescript` is now a peer dependency** (`5.8.x || 5.9.x || 6.0.x`) instead of a direct dependency, matching how `@sanity/pkg-utils` declares it
 - **`cliEntry()` signature change**: The unused `autoExit` parameter has been removed; the new signature is `cliEntry(argv)`
 - **`init` always generates `package.config.ts`** (instead of `package.config.ts`/`.js`/`.mts`/`.mjs`) and scaffolds plugins as ESM (`"type": "module"`) with ESM-only `exports`
+- **Generated plugins require Node.js `>=20.19 <22 || >=22.12`** (was `>=18`), matching `@sanity/pkg-utils`. `verify-package` validates this `engines.node` range
 
 Other changes:
 

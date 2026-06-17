@@ -73,13 +73,13 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
-Expected package.json to contain engines.node: ">=18" to ensure Studio compatible builds,
+Expected package.json to contain engines.node: ">=20.19 <22 || >=22.12" to match @sanity/pkg-utils,
 but it was: undefined
 
 Please add the following to package.json:
 
 "engines": {
-  "node": ">=18"
+  "node": ">=20.19 <22 || >=22.12"
 }
 
 To skip this validation add the following to your package.json:

@@ -15,7 +15,7 @@ import {
   forcedPackageVersions,
   forcedPeerPackageVersions,
 } from '../configs/forced-package-versions'
-import {cliName, incompatiblePluginPackage} from '../constants'
+import {cliName, incompatiblePluginPackage, requiredNodeEngine} from '../constants'
 import {getPaths, ManifestOptions} from '../sanity/manifest'
 import {hasSourceEquivalent, writeJsonFile} from '../util/files'
 import log from '../util/log'
@@ -305,7 +305,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     devDependencies: sortKeys(devDependencies),
     peerDependencies: sortKeys(peerDependencies),
     engines: {
-      node: '>=18',
+      node: requiredNodeEngine,
     },
   }
 

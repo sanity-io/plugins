@@ -8,7 +8,12 @@ import {ParsedCommandLine} from 'typescript'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import {deprecatedDevDeps, mergedPackages} from '../../configs/banned-packages'
-import {incompatiblePluginPackage, minPkgUtilsMajor, urls} from '../../constants'
+import {
+  incompatiblePluginPackage,
+  minPkgUtilsMajor,
+  requiredNodeEngine,
+  urls,
+} from '../../constants'
 import {fileExists, readJson5File} from '../../util/files'
 import {PackageJson, SanityStudioJson, SanityV2Json} from './types'
 
@@ -24,17 +29,16 @@ function filesWithSuffixes(fileBases: string[], suffixes: string[]): string[] {
 }
 
 export function validateNodeEngine(packageJson: PackageJson) {
-  const nodeVersionRange = '>=18'
-  if (!packageJson.engines?.node?.startsWith(nodeVersionRange)) {
+  if (packageJson.engines?.node !== requiredNodeEngine) {
     return [
       outdent`
-        Expected package.json to contain engines.node: ">=18" to ensure Studio compatible builds,
+        Expected package.json to contain engines.node: "${requiredNodeEngine}" to match @sanity/pkg-utils,
         but it was: ${packageJson.engines?.node}
 
         Please add the following to package.json:
 
         "engines": {
-          "node": "${nodeVersionRange}"
+          "node": "${requiredNodeEngine}"
         }`.trimStart(),
     ]
   }
