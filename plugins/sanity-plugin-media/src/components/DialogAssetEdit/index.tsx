@@ -68,8 +68,13 @@ const DialogAssetEdit = (props: Props) => {
 
   const generateDefaultValues = useCallback(
     (asset?: Asset): AssetFormData => {
+      const imageDescription =
+        asset && isImageAsset(asset)
+          ? (asset.metadata?.image?.ImageDescription as string | undefined)
+          : undefined
+
       if (locales && locales.length > 0) {
-        const makeLocaleObj = (field?: Record<string, string> | string) => {
+        const makeLocaleObj = (field?: Record<string, string> | string, fallback = '') => {
           const obj: Record<string, string> = {}
           for (let i = 0; i < locales.length; i++) {
             const locale = locales[i]
@@ -80,7 +85,7 @@ const DialogAssetEdit = (props: Props) => {
               // across all languages; the user should fill in other translations manually
               obj[locale.id] = i === 0 ? field : ''
             } else {
-              obj[locale.id] = ''
+              obj[locale.id] = i === 0 ? fallback : ''
             }
           }
           return obj
@@ -88,25 +93,25 @@ const DialogAssetEdit = (props: Props) => {
         return {
           altText: makeLocaleObj(asset?.altText),
           creditLine: makeLocaleObj(asset?.creditLine),
-          description: makeLocaleObj(asset?.description),
+          description: makeLocaleObj(asset?.description, imageDescription),
           originalFilename: asset?.originalFilename || '',
           opt: {media: {tags: assetTagOptions}},
           title: makeLocaleObj(asset?.title),
         }
       }
       // Normalize: if a field is a localized object but locales are disabled, pick first non-empty value
-      const flattenField = (field: unknown): string => {
+      const flattenField = (field: unknown, fallback = ''): string => {
         if (typeof field === 'string') return field
         if (typeof field === 'object' && field !== null) {
           const values = Object.values(field as Record<string, string>)
-          return values.find((v) => v) || ''
+          return values.find((v) => v) || fallback
         }
-        return ''
+        return fallback
       }
       return {
         altText: flattenField(asset?.altText),
         creditLine: flattenField(asset?.creditLine),
-        description: flattenField(asset?.description),
+        description: flattenField(asset?.description, imageDescription),
         originalFilename: asset?.originalFilename || '',
         opt: {media: {tags: assetTagOptions}},
         title: flattenField(asset?.title),
