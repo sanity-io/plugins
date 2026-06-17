@@ -38,8 +38,8 @@ jobs:
 
       - uses: pnpm/setup@v1
         with:
-          runtime: node@lts/*
           install: false
+          runtime: node@lts
 
       - name: Trigger issue triage
         if: github.event.action != 'closed'
