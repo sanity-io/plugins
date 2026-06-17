@@ -23,11 +23,11 @@ export type TableRow = {
   cells: string[]
 }
 
-// TODO refactor deeplone stuff to use proper patches
+// TODO refactor deepClone stuff to use proper patches
 // TODO use callback all the things
 
 export const TableComponent = (props: TableProps & {rowType?: string}) => {
-  const {rowType = 'tableRow', value, onChange} = props
+  const {id, rowType = 'tableRow', value, onChange} = props
   const [dialog, setDialog] = useState<{
     type: string
     callback: () => void
@@ -186,7 +186,7 @@ export const TableComponent = (props: TableProps & {rowType?: string}) => {
       {dialog && (
         <Dialog
           header={`Remove ${dialog.type}`}
-          id="dialog-remove"
+          id={`${id}-dialog-remove`}
           onClose={() => setDialog(null)}
           zOffset={1000}
         >
@@ -222,6 +222,7 @@ export const TableComponent = (props: TableProps & {rowType?: string}) => {
                 onClick={() => addColumns(1)}
               />
               <TableMenu
+                id={id}
                 addColumns={addColumns}
                 addColumnAt={addColumnAt}
                 addRows={addRows}

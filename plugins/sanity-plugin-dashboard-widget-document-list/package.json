@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@sanity/ui": "catalog:",
-    "lodash-es": "^4.17.23",
+    "lodash-es": "^4.18.1",
     "rxjs": "catalog:"
   },
   "devDependencies": {

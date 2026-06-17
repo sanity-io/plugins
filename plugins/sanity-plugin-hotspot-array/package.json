@@ -46,7 +46,7 @@
     "@sanity/ui": "catalog:",
     "@sanity/util": "catalog:",
     "framer-motion": "^12.23.12",
-    "lodash-es": "^4.17.23"
+    "lodash-es": "^4.18.1"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
