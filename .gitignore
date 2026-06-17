@@ -139,6 +139,15 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
+# Editors
+.vscode
+.idea
+*.iml
+
+# Yalc
+.yalc
+yalc.lock
+
 # Turborepo
 .turbo
 

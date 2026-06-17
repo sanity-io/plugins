@@ -1,4 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
+# @sanity/language-filter
 
 ## 5.0.4
 
@@ -50,11 +50,6 @@
   **Testing:**
   - Converted from Jest to Vitest for testing
   - Added package exports validation test
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 4.1.0 (2026-02-17)
 
