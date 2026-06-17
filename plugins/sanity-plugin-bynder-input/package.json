@@ -44,7 +44,7 @@
     "video.js": "^7.21.7"
   },
   "devDependencies": {
-    "@bynder/compact-view": "5.1.2",
+    "@bynder/compact-view": "5.4.0",
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
