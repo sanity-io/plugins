@@ -690,6 +690,43 @@ export type MuxTrack = {
   text_type?: string
 }
 
+export type SanityFileAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+}
+
+export type MediaProduct = {
+  _id: string
+  _type: 'mediaProduct'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  attachment?: {
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+  }
+}
+
+export type MediaTag = {
+  _id: string
+  _type: 'media.tag'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: Slug
+}
+
 export type GoogleTranslateTest = {
   _id: string
   _type: 'googleTranslateTest'
@@ -1006,6 +1043,9 @@ export type AllSanitySchemaTypes =
   | MuxStaticRenditionFile
   | MuxPlaybackId
   | MuxTrack
+  | SanityFileAssetReference
+  | MediaProduct
+  | MediaTag
   | GoogleTranslateTest
   | LocalizedString
   | SanityAssistInstructionTask
