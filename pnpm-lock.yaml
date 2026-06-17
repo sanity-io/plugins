@@ -1478,7 +1478,7 @@ importers:
         specifier: ^1.8.1
         version: 1.8.1(react@19.2.7)
       xstate:
-        specifier: ^5.19.2
+        specifier: ^5.32.1
         version: 5.32.1
       yup:
         specifier: ^0.32.11
