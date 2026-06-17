@@ -1,5 +1,11 @@
 # sanity-plugin-hotspot-array
 
+## 5.0.1
+
+### Patch Changes
+
+- [#1083](https://github.com/sanity-io/plugins/pull/1083) [`7e65764`](https://github.com/sanity-io/plugins/commit/7e65764c026879d6156e49d8380e3bd6d85f0697) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update lodash monorepo to ^4.18.1
+
 ## 5.0.0
 
 ### Major Changes
@@ -7,10 +13,12 @@
 - [#969](https://github.com/sanity-io/plugins/pull/969) [`ef85699`](https://github.com/sanity-io/plugins/commit/ef85699132bca8c3a0aea772719cff70ec14b7c6) Thanks [@stipsan](https://github.com/stipsan)! - Port sanity-plugin-hotspot-array to the Sanity plugins monorepo
 
   This major release includes breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
   - **react-dom 19.2+ required**: `react-dom` is now a required peer dependency
 
   Other changes:
+
   - **Sanity Studio v5 support restored**: The `sanity` peer dependency range is now `^5 || ^6.0.0-0` (v4.0.0 required `^6`)
   - **Node.js 20.19+ supported**: The engines range is now `>=20.19 <22 || >=22.12` (previously `>=22.12`)
 

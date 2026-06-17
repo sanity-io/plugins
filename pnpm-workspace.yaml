@@ -9,15 +9,15 @@ packages:
   - turbo/generators
 
 catalog:
-  '@sanity/client': ^7.22.1
-  '@sanity/mutator': ^6.0.0
+  '@sanity/client': ^7.23.0
+  '@sanity/mutator': ^6.1.0
   '@sanity/pkg-utils': ^10.5.6
-  '@sanity/schema': ^6.0.0
+  '@sanity/schema': ^6.1.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.1.0
   '@sanity/ui': ^3.2.0
-  '@sanity/util': ^6.0.0
-  '@sanity/vision': ^6.0.0
+  '@sanity/util': ^6.1.0
+  '@sanity/vision': ^6.1.0
   '@types/node': ^24.13.2
   '@types/react': ^19.2.17
   '@types/react-dom': ^19.2.3
@@ -27,7 +27,7 @@ catalog:
   react: ^19.2.7
   react-dom: ^19.2.7
   rxjs: ^7.8.2
-  sanity: ^6.0.0
+  sanity: ^6.1.0
   styled-components: ^6.4.2
   typescript: 5.9.3
 
@@ -70,6 +70,16 @@ overrides:
   sanity: 'catalog:'
   styled-components: npm:@sanity/styled-components@latest
 
+packageExtensions:
+  # recast (bundled by @sanity/pkg-utils for d.ts generation) lazily requires
+  # @babel/parser without declaring it, so it only resolves when @babel/parser
+  # happens to be hoisted. Declare it as a dependency so the d.ts build works
+  # under any hoisting configuration. (sanity-plugin-media/-mux-input build with
+  # the recast-based pkg-utils v7/v8 toolchain.)
+  recast:
+    dependencies:
+      '@babel/parser': ^7.28.0
+
 patchedDependencies:
   '@bynder/compact-view': patches/@bynder__compact-view.patch
 
@@ -99,3 +109,8 @@ allowBuilds:
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
   - 'vite'
+  # Keep @types/node resolvable for every package's d.ts build regardless of how
+  # the dependency graph hoists it (the recast-based pkg-utils v7/v8 toolchain used
+  # by sanity-plugin-media/-mux-input needs the NodeJS/process globals during
+  # api-extractor type extraction).
+  - '@types/node'

@@ -1,4 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
+# @sanity/orderable-document-list
 
 ## 2.0.3
 
@@ -48,11 +48,6 @@
 
 - Updated dependencies [[`cd2bc3c`](https://github.com/sanity-io/plugins/commit/cd2bc3c3e39c3cb357dd456bc205d1d6d57f441a)]:
   - sanity-plugin-utils@2.0.0
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## [1.5.1](https://github.com/sanity-io/orderable-document-list/compare/v1.5.0...v1.5.1) (2026-02-25)
 
