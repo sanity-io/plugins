@@ -300,61 +300,61 @@ importers:
   packages/@sanity/plugin-kit:
     dependencies:
       '@rexxars/choosealicense-list':
-        specifier: 1.1.2
+        specifier: ^1.1.2
         version: 1.1.2
       chalk:
-        specifier: 4.1.2
+        specifier: ^4.1.2
         version: 4.1.2
       concurrently:
-        specifier: 8.2.2
+        specifier: ^8.2.2
         version: 8.2.2
       email-validator:
-        specifier: 2.0.4
+        specifier: ^2.0.4
         version: 2.0.4
       execa:
-        specifier: 5.1.1
+        specifier: ^5.1.1
         version: 5.1.1
       get-it:
-        specifier: 8.6.3
-        version: 8.6.3
+        specifier: ^8.6.3
+        version: 8.8.0
       get-latest-version:
-        specifier: 5.1.0
+        specifier: ^5.1.0
         version: 5.1.0
       git-remote-origin-url:
-        specifier: 3.1.0
+        specifier: ^3.1.0
         version: 3.1.0
       github-url-to-object:
-        specifier: 4.0.6
+        specifier: ^4.0.6
         version: 4.0.6
       inquirer:
-        specifier: 8.2.6
+        specifier: ^8.2.6
         version: 8.2.6
       json5:
-        specifier: 2.2.3
+        specifier: ^2.2.3
         version: 2.2.3
       meow:
-        specifier: 9.0.0
+        specifier: ^9.0.0
         version: 9.0.0
       nodemon:
-        specifier: 3.1.0
+        specifier: ^3.1.0
         version: 3.1.0
       npm-run-path:
-        specifier: 4.0.1
+        specifier: ^4.0.1
         version: 4.0.1
       outdent:
-        specifier: 0.8.0
+        specifier: ^0.8.0
         version: 0.8.0
       p-any:
-        specifier: 3.0.0
+        specifier: ^3.0.0
         version: 3.0.0
       p-props:
-        specifier: 4.0.0
+        specifier: ^4.0.0
         version: 4.0.0
       validate-npm-package-name:
-        specifier: 5.0.0
+        specifier: ^5.0.0
         version: 5.0.0
       xdg-basedir:
-        specifier: 4.0.0
+        specifier: ^4.0.0
         version: 4.0.0
       yalc:
         specifier: 1.0.0-pre.53
@@ -7894,15 +7894,6 @@ packages:
     resolution: {integrity: sha512-Ik/6OCk9RQQ0T5Xw+hKNLWrjSMtv51dD4GRmJjbD5a58TIEpI5a5iXagKVl3Z5UuyslMCA8Xwnu76jQob62Yhg==}
     engines: {node: '>=10'}
 
-  follow-redirects@1.16.0:
-    resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-
   for-each@0.3.5:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
     engines: {node: '>= 0.4'}
@@ -7983,10 +7974,6 @@ packages:
   get-intrinsic@1.3.0:
     resolution: {integrity: sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==}
     engines: {node: '>= 0.4'}
-
-  get-it@8.6.3:
-    resolution: {integrity: sha512-I7AKP1Xl2q2j4ucvU0yMtiM+xZKgzD1Fvyh1YcZCT66i+wNrxJAonV+H1yynB3gerZ17uA00IXg61LVLdDeiCg==}
-    engines: {node: '>=14.0.0'}
 
   get-it@8.8.0:
     resolution: {integrity: sha512-vRyooMBzoIdEbARGT3JcvWqMD67YzC5SKlMqofyfck1ebLh2zzlpD4hVQ3xiuuiADk4jNs0rTezVlxCMqOlZfA==}
@@ -9684,9 +9671,6 @@ packages:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
 
-  progress-stream@2.0.0:
-    resolution: {integrity: sha512-xJwOWR46jcXUq6EH9yYyqp+I52skPySOeHfkxOZ2IY1AiBi/sFJhbhAKHoV3OTw/omQ45KTio9215dRJ2Yxd3Q==}
-
   promise-props-recursive@2.0.2:
     resolution: {integrity: sha512-WEIk/0/BOOE14sBgF5RCtqs2oxtsjRnxhrqjqSOzlHEt7VejW5qUGrgor9674Gzotmy56OmotEHXCZKk7Z3WoQ==}
     engines: {node: '>=12'}
@@ -10390,9 +10374,6 @@ packages:
   speakingurl@14.0.1:
     resolution: {integrity: sha512-1POYv7uv2gXoyGFpBCmpDVSNV74IfsWlDW216UPjbWufNf+bSU6GdbDsxdcxtfwb4xlI3yxzOTKClUosxARYrQ==}
     engines: {node: '>=0.10.0'}
-
-  speedometer@1.0.0:
-    resolution: {integrity: sha512-lgxErLl/7A5+vgIIXsh9MbeukOaCb2axgQ+bKCdIE+ibNT4XNYGNCR1qFEGq6F+YDASXK3Fh/c5FgtZchFolxw==}
 
   sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
@@ -17435,8 +17416,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  follow-redirects@1.16.0: {}
-
   for-each@0.3.5:
     dependencies:
       is-callable: 1.2.7
@@ -17541,16 +17520,6 @@ snapshots:
       hasown: 2.0.4
       math-intrinsics: 1.1.0
 
-  get-it@8.6.3:
-    dependencies:
-      decompress-response: 7.0.0
-      follow-redirects: 1.16.0
-      is-retry-allowed: 2.2.0
-      progress-stream: 2.0.0
-      tunnel-agent: 0.6.0
-    transitivePeerDependencies:
-      - debug
-
   get-it@8.8.0:
     dependencies:
       decompress-response: 7.0.0
@@ -17560,12 +17529,10 @@ snapshots:
 
   get-latest-version@5.1.0:
     dependencies:
-      get-it: 8.6.3
+      get-it: 8.8.0
       registry-auth-token: 5.1.1
       registry-url: 5.1.0
       semver: 7.8.4
-    transitivePeerDependencies:
-      - debug
 
   get-latest-version@6.0.1:
     dependencies:
@@ -19360,11 +19327,6 @@ snapshots:
 
   process@0.11.10: {}
 
-  progress-stream@2.0.0:
-    dependencies:
-      speedometer: 1.0.0
-      through2: 2.0.5
-
   promise-props-recursive@2.0.2:
     dependencies:
       lodash.isplainobject: 4.0.6
@@ -20726,8 +20688,6 @@ snapshots:
   spdx-license-ids@3.0.23: {}
 
   speakingurl@14.0.1: {}
-
-  speedometer@1.0.0: {}
 
   sprintf-js@1.0.3: {}
 
