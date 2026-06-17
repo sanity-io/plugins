@@ -10,12 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v6
-
-    - uses: actions/setup-node@v6
+    - uses: pnpm/setup@v1
       with:
         cache: pnpm
-        node-version: ${{ inputs.node-version }}
-
-    - run: pnpm install
-      shell: bash
+        runtime: node@${{ inputs.node-version }}
