@@ -181,10 +181,6 @@
 
 - v3 version ([ed8b793](https://github.com/sanity-io/sanity-plugin-dashboard-widget-vercel/commit/ed8b79337dab47316efe8620f5f109edd8381d65))
 
-# Changelog
-
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
-
 ### [1.1.1](https://github.com/robinpyon/sanity-plugin-dashboard-widget-vercel/compare/v1.1.0...v1.1.1) (2022-01-03)
 
 ### Bug Fixes

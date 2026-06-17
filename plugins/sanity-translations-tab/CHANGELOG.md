@@ -1,4 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
+# sanity-translations-tab
 
 ## 6.1.4
 
@@ -59,11 +59,6 @@
   - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously `>=14`)
   - **styled-components 6.1+ required**: Unchanged peer requirement, now enforced as part of the monorepo build
   - **Removed `@sanity/incompatible-plugin`**: Legacy Sanity v2 compatibility dependency dropped
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## [5.2.0](https://github.com/sanity-io/sanity-translations-tab/compare/v5.1.0...v5.2.0) (2026-02-16)
 
