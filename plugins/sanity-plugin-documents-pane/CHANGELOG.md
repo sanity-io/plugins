@@ -1,4 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
+# sanity-plugin-documents-pane
 
 ## 4.1.4
 
@@ -50,11 +50,6 @@
   - **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported)
   - **sanity-plugin-utils 2.x required**: The plugin now depends on sanity-plugin-utils v2 from the monorepo (previously ^1.7.0)
   - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=18)
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## [3.0.2](https://github.com/sanity-io/sanity-plugin-documents-pane/compare/v3.0.1...v3.0.2) (2025-12-29)
 

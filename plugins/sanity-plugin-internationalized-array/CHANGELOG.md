@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.1.9
+
+### Patch Changes
+
+- [#1083](https://github.com/sanity-io/plugins/pull/1083) [`7e65764`](https://github.com/sanity-io/plugins/commit/7e65764c026879d6156e49d8380e3bd6d85f0697) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update lodash monorepo to ^4.18.1
+
 ## 5.1.8
 
 ### Patch Changes
@@ -104,6 +110,7 @@
   ## How to upgrade
 
   Full details in [README Migrate from v4 to v5](https://github.com/sanity-io/plugins/blob/main/plugins/sanity-plugin-internationalized-array/README.md#migrate-from-v4-to-v5) section of the README.
+
   1. Update GROQ queries from `_key == "en"` to `language == "en"  || _key == "en"` until the migration is completed.
   2. Run the new bundled migration helper to update existing documents. Create a migration file in your project that imports from `sanity-plugin-internationalized-array/migrations`, configures your `documentTypes`, and exports the migration:
 
@@ -218,6 +225,7 @@
 - [#493](https://github.com/sanity-io/plugins/pull/493) [`4d9e6bb`](https://github.com/sanity-io/plugins/commit/4d9e6bb044c80db8cec386e36fcddab94d5102f5) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port sanity-plugin-internationalized-array to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The plugin is now optimized with React Compiler for better performance
   - **ESM-only**: CommonJS is no longer supported (removed dual module format)
   - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the baseline
