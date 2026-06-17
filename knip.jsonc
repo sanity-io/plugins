@@ -51,6 +51,8 @@
       "ignoreDependencies": [
         // Spawned as a CLI (`yalc push`) by the link-watch command, never imported
         "yalc",
+        // Provides ambient typings consumed by nodemon APIs, not runtime imported
+        "@types/nodemon",
         // Resolved at runtime by ESLint/tsc when verifying generated plugin fixtures in tests
         "eslint-config-prettier",
         "eslint-config-sanity",
