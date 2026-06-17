@@ -12,5 +12,5 @@ runs:
   steps:
     - uses: pnpm/setup@v1
       with:
-        cache: pnpm
+        cache: true
         runtime: node@${{ inputs.node-version }}
