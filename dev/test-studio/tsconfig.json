@@ -3,6 +3,10 @@
   "extends": "@tsconfig/vite-react/tsconfig.json",
   "include": ["src/**/*", "migrations/**/*.ts", "sanity.cli.ts", "sanity.config.ts"],
   "compilerOptions": {
-    "customConditions": ["development"]
+    // `source` lets TypeScript resolve workspace plugins that only expose a
+    // `source` export condition (e.g. sanity-plugin-mux-input) from their TS
+    // source, without requiring a build. Plugins exposing `development` still
+    // match it first, so this is additive.
+    "customConditions": ["development", "source"]
   }
 }
