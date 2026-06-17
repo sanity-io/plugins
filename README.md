@@ -117,6 +117,12 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`sanity-plugin-workflow`](./plugins/sanity-plugin-workflow)                                             | Custom content publishing workflow example                          |
 | [`sanity-plugin-workspace-home`](./plugins/sanity-plugin-workspace-home)                                 | Home screen for multi-workspace studios                             |
 
+## Tooling Packages
+
+| Package                                               | Description                                             |
+| ----------------------------------------------------- | ------------------------------------------------------- |
+| [`@sanity/plugin-kit`](./packages/@sanity/plugin-kit) | CLI toolkit for developing and verifying Sanity plugins |
+
 ## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines on:
