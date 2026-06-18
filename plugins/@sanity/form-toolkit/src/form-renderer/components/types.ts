@@ -39,7 +39,9 @@ export type FormDataProps = {
 
 export interface FieldState {
   value?: string | number | readonly string[]
-  onChange: (value: unknown) => void
+  // Optional: when omitted (e.g. the default native-form usage), fields render
+  // as uncontrolled inputs so the browser manages their state.
+  onChange?: (value: unknown) => void
   onBlur?: () => void
   ref?: unknown
 }

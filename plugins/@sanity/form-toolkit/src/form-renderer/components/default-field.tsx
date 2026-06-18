@@ -13,11 +13,15 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
     return acc
   }, {})
   const {value, onChange, onBlur, ref} = fieldState
+  // Without an onChange handler the fields render as uncontrolled inputs, so the
+  // browser keeps them interactive (e.g. the default native-form usage). When a
+  // handler is provided (react-hook-form, TanStack Form, etc.) they're controlled.
+  const isControlled = typeof onChange === 'function'
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
-    onChange(e.target.value)
+    onChange?.(e.target.value)
   }
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>, choiceValue: string) => {
@@ -25,11 +29,17 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
       const newValue = e.target.checked
         ? [...value, choiceValue]
         : value.filter((v: string) => v !== choiceValue)
-      onChange(newValue)
+      onChange?.(newValue)
     } else {
-      onChange(e.target.checked ? choiceValue : '')
+      onChange?.(e.target.checked ? choiceValue : '')
     }
   }
+
+  // Controlled inputs bind `value`/`onChange`; uncontrolled ones use `defaultValue`.
+  const textValueProps = (fallback?: string) =>
+    isControlled
+      ? {value: value ?? fallback ?? '', onChange: handleChange}
+      : {defaultValue: fallback}
 
   const renderInput = () => {
     switch (type) {
@@ -40,11 +50,10 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
           <textarea
             ref={toRef<HTMLTextAreaElement>(ref)}
             name={name}
-            onChange={handleChange}
             onBlur={onBlur}
             placeholder={options.placeholder}
             {...validationRules}
-            value={value ?? ''}
+            {...textValueProps()}
           />
         )
 
@@ -53,8 +62,7 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
           <select
             ref={toRef<HTMLSelectElement>(ref)}
             name={name}
-            value={value ?? ''}
-            onChange={handleChange}
+            {...textValueProps()}
             {...validationRules}
             onBlur={onBlur}
           >
@@ -74,10 +82,9 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
               name={name}
               ref={toRef<HTMLInputElement>(ref)}
               value={choice.value}
-              checked={value === choice.value}
-              onChange={handleChange}
               onBlur={onBlur}
               {...validationRules}
+              {...(isControlled ? {checked: value === choice.value, onChange: handleChange} : {})}
             />
             {choice.label}
           </label>
@@ -91,10 +98,17 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
               name={name}
               ref={toRef<HTMLInputElement>(ref)}
               value={choice.value}
-              checked={Array.isArray(value) ? value.includes(choice.value) : value === choice.value}
-              onChange={(e) => handleCheckboxChange(e, choice.value)}
               onBlur={onBlur}
               {...validationRules}
+              {...(isControlled
+                ? {
+                    checked: Array.isArray(value)
+                      ? value.includes(choice.value)
+                      : value === choice.value,
+                    onChange: (e: ChangeEvent<HTMLInputElement>) =>
+                      handleCheckboxChange(e, choice.value),
+                  }
+                : {})}
             />
             {choice.label}
           </label>
@@ -106,8 +120,7 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
             type={type}
             ref={toRef<HTMLInputElement>(ref)}
             name={name}
-            value={value ?? options.defaultValue ?? ''}
-            onChange={handleChange}
+            {...textValueProps(options.defaultValue)}
             {...validationRules}
             onBlur={onBlur}
             placeholder={options.placeholder}
