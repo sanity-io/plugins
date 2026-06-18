@@ -56,10 +56,10 @@ The plugin has some configuration options. These can be set by adding a config f
 ```ts
 // ./sanity.config.ts
 
- import {defineConfig} from 'sanity'
- import {crossDatasetDuplicator} from '@sanity/cross-dataset-duplicator'
+import {defineConfig} from 'sanity'
+import {crossDatasetDuplicator} from '@sanity/cross-dataset-duplicator'
 
- export const defineConfig({
+export default defineConfig({
   // all other settings...
   plugins: [
     // all other plugins...
@@ -71,15 +71,15 @@ The plugin has some configuration options. These can be set by adding a config f
       tool: true,
       filter: '_type != "product"',
       follow: [],
-      queries:[
+      queries: [
         {
-          label: "All articles",
-          query: '_type == "article"'
-        }
-      ]
-    })
-  ]
- })
+          label: 'All articles',
+          query: '_type == "article"',
+        },
+      ],
+    }),
+  ],
+})
 ```
 
 #### Options:
@@ -158,25 +158,6 @@ If you want to duplicate data across different projects, you need to enable CORS
 - Save predefined GROQ queries in the Tool to make bulk repeated Migrations simpler
 - Config options for allowed migrations (eg Dev -> Staging but not Dev -> Live)
 - Config options for permissions/user role checks
-
-## License
-
-MIT-licensed. See LICENSE.
-
-## Develop & test
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/cross-dataset-duplicator/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
-
-Semantic release will only release on configured branches, so it is safe to run release on any branch.
 
 ## License
 
