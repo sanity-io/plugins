@@ -42,6 +42,7 @@ import {richDateInputExample} from '#rich-date-input'
 import {sanityNaiveHtmlSerializerExample} from '#sanity-naive-html-serializer'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
+import {shopifyAssetsExample} from '#shopify-assets'
 import {studioSecretsExample} from '#studio-secrets'
 import {tableExample} from '#table'
 import {transifexExample} from '#transifex'
@@ -127,6 +128,7 @@ export default defineConfig([
       googleTranslateExample(),
       mediaExample(),
       // add new plugins here
+      shopifyAssetsExample(),
       personalizationExample(),
       cloudinaryExample(),
       muxInputExample(),
