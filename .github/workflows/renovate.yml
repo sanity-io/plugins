@@ -27,7 +27,7 @@ jobs:
       (github.event_name == 'issues' && github.event.sender.type != 'Bot')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v3
+      - uses: actions/create-github-app-token@v3 # zizmor: ignore[github-app]
         id: app-token
         with:
           app-id: ${{ secrets.ECOSPARK_APP_ID }}
