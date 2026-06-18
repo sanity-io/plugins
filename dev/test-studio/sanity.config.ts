@@ -21,6 +21,7 @@ import {documentInternationalizationTranslationExample} from '#document-internat
 import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
 import {formToolkitExample} from '#form-toolkit'
+import {googleMapsInputExample} from '#google-maps-input'
 import {googleTranslateExample} from '#google-translate'
 import {
   hierarchicalDocumentListExample,
@@ -142,6 +143,7 @@ export default defineConfig([
       mediaExample(),
       // add new plugins here
       formToolkitExample(),
+      googleMapsInputExample(),
       crossDatasetDuplicatorExample(),
       hierarchicalDocumentListExample(),
       shopifyAssetsExample(),

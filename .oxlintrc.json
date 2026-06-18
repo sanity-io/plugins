@@ -114,6 +114,17 @@
       }
     },
     {
+      // The plugin is built on the classic Google Maps JS API (google.maps.Marker,
+      // google.maps.places.Autocomplete), which Google deprecated in favor of newer
+      // APIs but still supports. Migrating to the new APIs is out of scope for the port.
+      // Casting Sanity input props to the plugin's input component props is a known pattern.
+      "files": ["plugins/@sanity/google-maps-input/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-deprecated": "off",
+        "no-unsafe-type-assertion": "off"
+      }
+    },
+    {
       "files": ["plugins/@sanity/personalization-plugin/src/**/*.{ts,tsx}"],
       "rules": {
         "no-unsafe-type-assertion": "off",

@@ -22,6 +22,7 @@
     "@sanity/debug-preview-url-secret-plugin": "workspace:*",
     "@sanity/document-internationalization": "workspace:*",
     "@sanity/form-toolkit": "workspace:*",
+    "@sanity/google-maps-input": "workspace:*",
     "@sanity/hierarchical-document-list": "workspace:*",
     "@sanity/icons": "^3.7.4",
     "@sanity/language-filter": "workspace:*",
