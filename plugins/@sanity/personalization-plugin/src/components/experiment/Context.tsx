@@ -3,7 +3,7 @@ import {createContext, useContext, useMemo} from 'react'
 import {type ObjectInputProps, useClient, useWorkspace} from 'sanity'
 import {suspend} from 'suspend-react'
 
-import type {ExperimentContextProps, FieldPluginConfig} from '../types'
+import type {ExperimentContextProps, ExperimentFieldPluginConfig} from '../../types'
 
 // This provider makes the plugin config available to all components in the document form
 // But with experiments resolved
@@ -28,7 +28,7 @@ export function useExperimentContext() {
 }
 
 type ExperimentProps = ObjectInputProps & {
-  experimentFieldPluginConfig: Required<FieldPluginConfig>
+  experimentFieldPluginConfig: Required<ExperimentFieldPluginConfig>
 }
 
 export function ExperimentProvider(props: ExperimentProps) {

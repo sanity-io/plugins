@@ -11,9 +11,9 @@ import {
   useFormValue,
 } from 'sanity'
 
-import type {ExperimentType} from '..'
-import {useExperimentContext} from './ExperimentContext'
-import {Select} from './Select'
+import type {ExperimentType} from '../..'
+import {Select} from '../Select'
+import {useExperimentContext} from './Context'
 
 export type SelectOption = {title: string; value: string}
 const formatlistOptions = (experiments: ExperimentType[]): SelectOption[] =>
@@ -22,7 +22,7 @@ const formatlistOptions = (experiments: ExperimentType[]): SelectOption[] =>
     value: experiment.id,
   }))
 
-export const ExperimentInput = (
+export const Input = (
   props: StringInputProps & {variantNameOverride: string; experimentNameOverride: string},
 ) => {
   const {experiments} = useExperimentContext()

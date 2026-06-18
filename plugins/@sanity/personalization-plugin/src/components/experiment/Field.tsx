@@ -11,6 +11,9 @@ import {
   set,
   unset,
 } from 'sanity'
+
+import {clearChildrenGroups} from '../../utils/clearChildGroups'
+
 type PatchStuff = {onChange: (patch: FormPatch | FormPatch[] | PatchEvent) => void; inputId: string}
 
 const useAddExperimentAction = (
@@ -99,7 +102,7 @@ const createActions = ({
   return active ? removeAction : addAction
 }
 
-export const ExperimentField = (
+export const Field = (
   props: ObjectFieldProps & {
     experimentNameOverride: string
     experimentId: string
@@ -127,12 +130,13 @@ export const ExperimentField = (
     return [createActions(actionProps), ...oldActions]
   }, [actionProps, props.actions])
 
-  const withActionProps = useMemo(
-    () => ({
-      ...props,
+  const enhancedProps = useMemo(() => {
+    const propsWithClearedGroups = clearChildrenGroups(props)
+    return {
+      ...propsWithClearedGroups,
       actions: memoizedActions,
-    }),
-    [props, memoizedActions],
-  )
-  return props.renderDefault(withActionProps)
+    }
+  }, [props, memoizedActions])
+
+  return props.renderDefault(enhancedProps)
 }

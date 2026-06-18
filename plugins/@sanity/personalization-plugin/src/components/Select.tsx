@@ -2,7 +2,7 @@ import {Select as SanitySelect} from '@sanity/ui'
 import type {ChangeEvent} from 'react'
 import type {FormPatch, PatchEvent, Path, StringInputProps} from 'sanity'
 
-import type {SelectOption} from './ExperimentInput'
+import type {SelectOption} from './experiment/Input'
 
 export const Select = (
   props: StringInputProps & {

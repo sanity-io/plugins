@@ -8,8 +8,8 @@ import {
   useClient,
 } from 'sanity'
 
-import type {VariantPreviewProps} from '../types'
-import {useExperimentContext} from './ExperimentContext'
+import type {VariantPreviewProps} from '../../types'
+import {useExperimentContext} from './Context'
 
 export const VariantPreview = (props: PreviewProps) => {
   const [subtitle, setSubtitle] = useState<string | undefined>(undefined)

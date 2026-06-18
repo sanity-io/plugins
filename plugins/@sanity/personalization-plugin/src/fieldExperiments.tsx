@@ -7,14 +7,17 @@ import {
   isObjectInputProps,
 } from 'sanity'
 
-import {ArrayInput} from './components/Array'
-import {CONFIG_DEFAULT, ExperimentProvider} from './components/ExperimentContext'
-import {ExperimentField} from './components/ExperimentField'
-import {ExperimentInput} from './components/ExperimentInput'
-import {ExperimentItem} from './components/ExperimentItem'
-import {VariantInput} from './components/VariantInput'
-import {VariantPreview} from './components/VariantPreview'
-import type {FieldPluginConfig} from './types'
+import {ArrayItem} from './components/ArrayItem'
+import {
+  ArrayInput,
+  CONFIG_DEFAULT,
+  ExperimentProvider,
+  Field,
+  Input,
+  VariantInput,
+  VariantPreview,
+} from './components/experiment'
+import type {ExperimentFieldPluginConfig} from './types'
 import {flattenSchemaType} from './utils/flattenSchemaType'
 
 const createExperimentType = ({
@@ -39,16 +42,39 @@ const createExperimentType = ({
   return defineType({
     name: `${experimentNameOverride}${usedName}`,
     type: 'object',
+    groups: [
+      {
+        name: 'default',
+        title: 'Default',
+        hidden: ({parent}) => {
+          return !Array.isArray(parent)
+        },
+      },
+      {
+        name: 'experiments',
+        title: 'Experiments',
+        hidden: ({parent}) => {
+          return !Array.isArray(parent)
+        },
+      },
+      {
+        name: 'all-fields',
+        title: 'All fields',
+        hidden: ({parent}) => {
+          return Array.isArray(parent)
+        },
+      },
+    ],
     components: {
       field: (props) => (
-        <ExperimentField
+        <Field
           {...props}
           experimentId={experimentId}
           experimentNameOverride={experimentNameOverride}
           variantNameOverride={variantNameOverride}
         />
       ),
-      item: ExperimentItem,
+      item: ArrayItem,
     },
     fields: [
       typeof field === `string`
@@ -56,11 +82,13 @@ const createExperimentType = ({
           defineField({
             name: 'default',
             type: field,
+            group: 'default',
           })
         : // Pass in the configured options, but overwrite the name
           {
             ...field,
             name: 'default',
+            group: 'default',
           },
       defineField({
         name: 'active',
@@ -71,9 +99,10 @@ const createExperimentType = ({
       defineField({
         name: experimentId,
         type: 'string',
+        group: 'experiments',
         components: {
           input: (props) => (
-            <ExperimentInput
+            <Input
               {...props}
               experimentNameOverride={experimentNameOverride}
               variantNameOverride={variantNameOverride}
@@ -87,6 +116,7 @@ const createExperimentType = ({
       defineField({
         name: variantArrayName,
         type: 'array',
+        group: 'experiments',
         hidden: ({parent}) => {
           return !parent?.[experimentId]
         },
@@ -190,7 +220,7 @@ const fieldSchema = ({
   variantId,
   variantArrayName,
   experimentId,
-}: Required<Omit<FieldPluginConfig, 'apiVersion' | 'experiments'>>) => {
+}: Required<Omit<ExperimentFieldPluginConfig, 'apiVersion' | 'experiments'>>) => {
   return [
     ...fields.map((field) =>
       createVariantType({field, variantNameOverride, variantId, experimentId}),
@@ -208,7 +238,7 @@ const fieldSchema = ({
   ]
 }
 
-export const fieldLevelExperiments = definePlugin<FieldPluginConfig>((config) => {
+export const fieldLevelExperiments = definePlugin<ExperimentFieldPluginConfig>((config) => {
   const pluginConfig = {...CONFIG_DEFAULT, ...config}
   const {fields, experimentNameOverride, variantNameOverride} = pluginConfig
 

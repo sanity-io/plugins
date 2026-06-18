@@ -17,7 +17,7 @@ export type ExperimentType = {
   variants: VariantType[]
 }
 
-export type FieldPluginConfig = {
+export type ExperimentFieldPluginConfig = {
   fields: (string | FieldDefinition)[]
   experiments: ExperimentType[] | ((client: SanityClient) => Promise<ExperimentType[]>)
   apiVersion?: string
@@ -28,19 +28,38 @@ export type FieldPluginConfig = {
   experimentId?: string
 }
 
+export type PersonalizationFieldPluginConfig = {
+  fields: (string | FieldDefinition)[]
+  segments: VariantType[] | ((client: SanityClient) => Promise<VariantType[]>)
+  apiVersion?: string
+  personalizationNameOverride?: string
+  segmentNameOverride?: string
+  segmentId?: string
+  segmentArrayName?: string
+}
+
 export type VariantPreviewProps = Omit<PreviewProps, 'SchemaType'> & {
   [key: string]: string
   value: any
 }
 
-export type ExperimentContextProps = Required<FieldPluginConfig> & {
+export type ExperimentContextProps = Required<ExperimentFieldPluginConfig> & {
   experiments: ExperimentType[]
+}
+
+export type PersonalizationContextProps = Required<PersonalizationFieldPluginConfig> & {
+  segments: VariantType[]
 }
 
 export type ArrayInputProps = ArrayOfObjectsInputProps & {
   variantName: string
   variantId: string
   experimentId: string
+}
+
+export type PersonalizationArrayInputProps = ArrayOfObjectsInputProps & {
+  segmentName: string
+  segmentId: string
 }
 
 export type ObjectFieldWithPath = ObjectField & {path: Path}
