@@ -48,6 +48,7 @@ import {sanityNaiveHtmlSerializerExample} from '#sanity-naive-html-serializer'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
 import {shopifyAssetsExample} from '#shopify-assets'
+import {smartlingExample} from '#smartling'
 import {studioSecretsExample} from '#studio-secrets'
 import {tableExample} from '#table'
 import {transifexExample} from '#transifex'
@@ -82,6 +83,7 @@ export default defineConfig([
   createWorkspace({name: 'utils-example', title: 'Utils Example', plugins: [utilsExample()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
   createWorkspace({name: 'transifex-example', title: 'Transifex', plugins: [transifexExample()]}),
+  createWorkspace({name: 'smartling-example', title: 'Smartling', plugins: [smartlingExample()]}),
   createWorkspace({name: 'documents-pane-example', plugins: [documentsPaneExample()]}),
   createWorkspace({
     name: 'translations-tab-example',

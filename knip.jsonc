@@ -211,6 +211,11 @@
       "project": ["src/**/*.{ts,tsx}"],
     },
 
+    "plugins/sanity-plugin-studio-smartling": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
     "plugins/@sanity/hierarchical-document-list": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
@@ -219,7 +224,6 @@
         "babel-plugin-styled-components",
       ],
     },
-
     "plugins/sanity-plugin-shopify-assets": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
@@ -228,12 +232,10 @@
         "babel-plugin-styled-components",
       ],
     },
-
     "plugins/@sanity/personalization-plugin": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
-
     "plugins/sanity-plugin-cloudinary": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
@@ -242,7 +244,6 @@
         "babel-plugin-styled-components",
       ],
     },
-
     "plugins/@sanity/sanity-plugin-async-list": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
