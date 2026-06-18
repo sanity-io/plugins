@@ -1,5 +1,9 @@
 import {defineField, definePlugin, defineType} from 'sanity'
-import {cloudinaryAssetSourcePlugin, cloudinarySchemaPlugin} from 'sanity-plugin-cloudinary'
+import {
+  cloudinaryAssetSourcePlugin,
+  cloudinaryReferencePlugin,
+  cloudinarySchemaPlugin,
+} from 'sanity-plugin-cloudinary'
 
 const cloudinaryTest = defineType({
   type: 'document',
@@ -26,10 +30,16 @@ const cloudinaryTest = defineType({
       title: 'Image',
       description: 'Sanity image with Cloudinary as an asset source',
     }),
+    defineField({
+      type: 'cloudinaryAssetReference',
+      name: 'assetReference',
+      title: 'Cloudinary asset reference',
+      description: 'A reference to a shared Cloudinary asset document',
+    }),
   ],
 })
 
 export const cloudinaryExample = definePlugin(() => ({
   schema: {types: [cloudinaryTest]},
-  plugins: [cloudinarySchemaPlugin(), cloudinaryAssetSourcePlugin()],
+  plugins: [cloudinarySchemaPlugin(), cloudinaryAssetSourcePlugin(), cloudinaryReferencePlugin()],
 }))

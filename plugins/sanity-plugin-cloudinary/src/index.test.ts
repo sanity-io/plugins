@@ -15,9 +15,12 @@ test('package exports', {timeout: 30_000}, async () => {
         "cloudinaryAssetContext": "object",
         "cloudinaryAssetContextCustom": "object",
         "cloudinaryAssetDerivedSchema": "object",
+        "cloudinaryAssetDocument": "object",
+        "cloudinaryAssetReference": "object",
         "cloudinaryAssetSchema": "object",
         "cloudinaryAssetSourcePlugin": "function",
         "cloudinaryImageSource": "object",
+        "cloudinaryReferencePlugin": "function",
         "cloudinarySchemaPlugin": "function",
       },
     }
