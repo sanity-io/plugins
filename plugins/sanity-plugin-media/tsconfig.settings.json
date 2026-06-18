@@ -1,13 +1,22 @@
 {
-  "extends": "@sanity/pkg-utils/tsconfig/strictest.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "dist",
-    // Fresh dependency resolution in the monorepo (newer immer/@reduxjs/toolkit and
-    // Sanity v6 types) surfaces exactOptionalPropertyTypes violations that the old
-    // standalone lockfile masked. Type-check only; does not affect emitted code.
-    "exactOptionalPropertyTypes": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "noUncheckedIndexedAccess": false
+    "outDir": "./dist",
+
+    "target": "esnext",
+    "jsx": "preserve",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    // Don't emit by default, pkg-utils will ignore this when generating .d.ts files
+    "noEmit": true
   }
 }

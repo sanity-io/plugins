@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-media",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
   "keywords": [
     "asset",
@@ -29,16 +29,15 @@
     "src",
     "v2-incompatible.js"
   ],
-  "type": "commonjs",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "type": "module",
+  "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "default": "./dist/index.mjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -52,9 +51,9 @@
     "@reduxjs/toolkit": "^2.6.0",
     "@sanity/client": "catalog:",
     "@sanity/color": "^3.0.6",
-    "@sanity/icons": "^3.7.0",
+    "@sanity/icons": "^3.7.4",
     "@sanity/incompatible-plugin": "^1.0.5",
-    "@sanity/ui": "^3.0.5",
+    "@sanity/ui": "^3.2.0",
     "@sanity/uuid": "^3.0.1",
     "@tanem/react-nprogress": "^5.0.55",
     "copy-to-clipboard": "^3.3.1",
@@ -76,7 +75,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@sanity/pkg-utils": "^7.1.1",
+    "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
     "@sanity/vision": "catalog:",
     "@testing-library/jest-dom": "^6.6.3",
@@ -102,7 +101,7 @@
     "styled-components": "^6.1"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.19 <22 || >=22.12"
   },
   "sanityPlugin": {
     "verifyPackage": {

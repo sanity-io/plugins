@@ -10,6 +10,7 @@ import {aprimoExample} from '#aprimo'
 import {assistExample} from '#assist'
 import {asyncListExample} from '#async-list'
 import {bynderExample} from '#bynder'
+import {cloudinaryExample} from '#cloudinary'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {dashboardToolExample} from '#dashboard-tool'
@@ -135,6 +136,7 @@ export default defineConfig([
       mediaExample(),
       // add new plugins here
       hierarchicalDocumentListExample(),
+      cloudinaryExample(),
       muxInputExample(),
       asyncListExample(),
       tableExample(),
