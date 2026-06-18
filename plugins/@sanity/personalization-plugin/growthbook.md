@@ -2,7 +2,7 @@
 
 ## Previously know as @sanity/personalisation-plugin
 
-> This is a **Sanity Studio v3** plugin.
+> This is a **Sanity Studio** plugin.
 
 This plugin allows users to add a/b/n testing experiments to individual fields connecting to the [Growthbook](https://www.growthbook.io/) A/B testing service.
 
@@ -17,10 +17,6 @@ This plugin is built on top of the `fieldLevelExperiments` export so see the mai
 - [Validation of individual array items](/#validation-of-individual-array-items)
 - [Shape of stored data](/#shape-of-stored-data)
 - [Querying data](/#querying-data)
-- [License](#license)
-- [Develop \& test](#develop--test)
-  - [Release new version](#release-new-version)
-- [License](#license-1)
 
 ## Installation
 
@@ -43,7 +39,7 @@ export default defineConfig({
     fieldLevelExperiments({
       fields: ['string'],
       environment: 'production', // the growthbook environment
-      projectId: 'string', // optional filter parameter for fetching features/experiments
+      project: 'string', // optional filter parameter for fetching features/experiments
       convertBooleans: true, // convert boolean experiments to store values of "control"/"variant" default to false
       tags: ['string'], // optional filter, if included feature must have at least one of the tag specified
     }),

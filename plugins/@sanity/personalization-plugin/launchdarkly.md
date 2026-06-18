@@ -2,7 +2,7 @@
 
 ## Previously know as @sanity/personalisation-plugin
 
-> This is a **Sanity Studio v3** plugin.
+> This is a **Sanity Studio** plugin.
 
 This plugin allows users to add a/b/n testing experiments to individual fields connecting to the [LaunchDarkly](https://launchdarkly.com//) A/B testing service.
 
@@ -17,10 +17,6 @@ This plugin is built on top of the `fieldLevelExperiments` export so see the mai
 - [Validation of individual array items](/#validation-of-individual-array-items)
 - [Shape of stored data](/#shape-of-stored-data)
 - [Querying data](/#querying-data)
-- [License](#license)
-- [Develop \& test](#develop--test)
-  - [Release new version](#release-new-version)
-- [License](#license-1)
 
 ## Installation
 
@@ -40,7 +36,7 @@ export default defineConfig({
   //...
   plugins: [
     //...
-    launchDarklyFieldLevel({
+    fieldLevelExperiments({
       fields: ['string'],
       projectKey: 'string', // required filter parameter for fetching features/variants
       tags: ['string'], //optional parameter that filters the list to flags that have all of the tags in the list
