@@ -1,4 +1,4 @@
-import {createRef, PureComponent, type ReactElement} from 'react'
+import {PureComponent, type ReactElement} from 'react'
 
 import type {LatLng} from '../types'
 import {MapContainer} from './Map.styles'
@@ -28,7 +28,6 @@ export class GoogleMap extends PureComponent<MapProps, MapState> {
 
   override state: MapState = {map: undefined}
   clickHandler: google.maps.MapsEventListener | undefined
-  mapRef = createRef<HTMLDivElement>()
   mapEl: HTMLDivElement | null = null
 
   override componentDidMount() {

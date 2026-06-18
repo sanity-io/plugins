@@ -16,8 +16,8 @@ export function GeopointMove({diff, api, map, label}: GeopointMoveProps) {
   const {fromValue: from, toValue: to} = diff
   const annotation = diff.isChanged ? diff.annotation : undefined
   const userColor = useUserColor(annotation ? annotation.author : null) || undefined
-  const fromRef = useRef<google.maps.Marker>(undefined)
-  const toRef = useRef<google.maps.Marker>(undefined)
+  const fromRef = useRef<google.maps.Marker | undefined>(undefined)
+  const toRef = useRef<google.maps.Marker | undefined>(undefined)
 
   return (
     <>
