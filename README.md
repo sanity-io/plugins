@@ -113,6 +113,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`sanity-plugin-markdown`](./plugins/sanity-plugin-markdown)                                             | Markdown editor input                                               |
 | [`sanity-plugin-media`](./plugins/sanity-plugin-media)                                                   | Asset management with tagging, filtering and batch operations       |
 | [`sanity-plugin-mux-input`](./plugins/sanity-plugin-mux-input)                                           | Upload and play Mux-hosted video from Sanity Studio                 |
+| [`sanity-plugin-shopify-assets`](./plugins/sanity-plugin-shopify-assets)                                 | Choose assets from your Shopify store in your Sanity Studio         |
 | [`sanity-plugin-transifex`](./plugins/sanity-plugin-transifex)                                           | In-studio integration with Transifex for content translation        |
 | [`sanity-naive-html-serializer`](./plugins/sanity-naive-html-serializer)                                 | Serialize Sanity documents and rich text fields to HTML             |
 | [`sanity-plugin-utils`](./plugins/sanity-plugin-utils)                                                   | Handy hooks and components for Sanity Studio plugins                |
