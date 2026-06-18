@@ -10,6 +10,7 @@ import {aprimoExample} from '#aprimo'
 import {assistExample} from '#assist'
 import {asyncListExample} from '#async-list'
 import {bynderExample} from '#bynder'
+import {cloudinaryExample} from '#cloudinary'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
 import {crossDatasetDuplicatorExample} from '#cross-dataset-duplicator'
@@ -127,6 +128,7 @@ export default defineConfig([
       mediaExample(),
       // add new plugins here
       crossDatasetDuplicatorExample(),
+      cloudinaryExample(),
       muxInputExample(),
       asyncListExample(),
       tableExample(),

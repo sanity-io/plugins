@@ -1,21 +1,30 @@
 name: Renovate
+
 on:
-  # schedule:
-  #   - cron: "0 * * * *"
-  # push:
-  #   branches:
-  #     - main
+  schedule:
+    - cron: '0 */2 * * *' # Every 2 hours
+  pull_request:
+    types: [closed]
+    branches: [main]
+  issues:
+    types: [edited]
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   renovate:
+    # Filter out noise: only run for schedule, manual dispatch, merged Renovate PRs,
+    # and human-edited issues (not bot updates to the Dependency Dashboard).
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'renovate/')) ||
+      (github.event_name == 'issues' && github.event.sender.type != 'Bot')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/create-github-app-token@v3
@@ -25,15 +34,38 @@ jobs:
           private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
+          permission-issues: write
 
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
+      - name: Generate Renovate runner config
+        id: config
+        env:
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          CONFIG_FILE="$GITHUB_WORKSPACE/.renovate-runner-config.json5"
+
+          cat > "$CONFIG_FILE" <<'EOF'
+          {
+            $schema: "https://docs.renovatebot.com/renovate-schema.json",
+            onboarding: false,
+            requireConfig: "optional",
+          EOF
+
+          echo "  repositories: [\"$REPOSITORY\"]," >> "$CONFIG_FILE"
+          echo '}' >> "$CONFIG_FILE"
+
+          echo "Generated config:"
+          cat "$CONFIG_FILE"
+
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@8217b3fc286df088d7c27f3255fe8414463bc0fd # v46.1.15
+        uses: renovatebot/github-action@3633cede7d4d4598438e654eac4a695e46004420 # v46.1.7
         with:
           token: ${{ steps.app-token.outputs.token }}
-          configurationFile: .github/renovate-config.json5
+          configurationFile: .renovate-runner-config.json5
         env:
-          LOG_LEVEL: 'debug'
+          GITHUB_COM_TOKEN: ${{ github.token }}
+          NODE_OPTIONS: '--max-old-space-size=4096'
+          LOG_LEVEL: debug

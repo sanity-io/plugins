@@ -59,17 +59,7 @@ test('plugin-kit init -> verify-package -> tsc > pkg-utils build', {timeout: 600
       expect(
         await contents(path.join(outputDir, 'dist')),
         'should output expected files to dist',
-      ).toEqual(
-        [
-          'index.d.mts',
-          'index.d.ts',
-          'index.js',
-          'index.js.map',
-          'index.mjs',
-          'index.mjs.map',
-          'tsconfig.tsbuildinfo',
-        ].map(normalize),
-      )
+      ).toEqual(['index.d.ts', 'index.js', 'index.js.map', 'tsconfig.tsbuildinfo'].map(normalize))
     },
   })
 })

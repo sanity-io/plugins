@@ -134,7 +134,7 @@ async function injectBase(options: InjectOptions) {
   didWrite = await addBuildScripts(newPkg, options)
   info(didWrite, 'Added build scripts to package.json')
 
-  didWrite = await addCompileDirToGitIgnore(data, options)
+  didWrite = await addCompileDirToGitIgnore(options)
   info(didWrite, 'Added compilation output directory to .gitignore')
 }
 
@@ -371,20 +371,14 @@ async function findAssetsDir(): Promise<string> {
   return assetsDir
 }
 
-async function addCompileDirToGitIgnore(data: PackageData, options: InjectOptions) {
+async function addCompileDirToGitIgnore(options: InjectOptions) {
   const gitIgnorePath = path.join(options.basePath, '.gitignore')
   const gitignore = await readFile(gitIgnorePath, 'utf8').catch(errorToUndefined)
   if (!gitignore) {
     return false
   }
 
-  const output = data.pkg?.main ?? data.pkg?.module
-  if (!output) {
-    return false
-  }
-
-  const ignorePath = output.replace(/^[./]+/, '')
-  const ignore = ignorePath.split('/')[0]
+  const ignore = options.outDir.replace(/^[./]+/, '').split('/')[0]
   if (!ignore) {
     return false
   }

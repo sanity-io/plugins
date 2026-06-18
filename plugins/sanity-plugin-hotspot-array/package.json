@@ -45,8 +45,8 @@
     "@sanity/image-url": "^2.1.1",
     "@sanity/ui": "catalog:",
     "@sanity/util": "catalog:",
-    "framer-motion": "^12.23.12",
-    "lodash-es": "^4.18.1"
+    "lodash-es": "^4.18.1",
+    "motion": "^12.40.0"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
