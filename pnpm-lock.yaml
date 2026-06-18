@@ -2498,7 +2498,7 @@ importers:
         specifier: 3.0.0-rc.2
         version: 3.0.0-rc.2(redux@5.0.1)(rxjs@7.8.2)
       rxjs:
-        specifier: ^7.8.1
+        specifier: ^7.8.2
         version: 7.8.2
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -2589,7 +2589,7 @@ importers:
         specifier: ^4.2.2
         version: 4.2.2(react@19.2.7)(rxjs@7.8.2)
       rxjs:
-        specifier: ^7.8.1
+        specifier: ^7.8.2
         version: 7.8.2
       scroll-into-view-if-needed:
         specifier: ^3.1.0
