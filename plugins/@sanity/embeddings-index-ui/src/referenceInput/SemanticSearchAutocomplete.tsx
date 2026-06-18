@@ -93,7 +93,6 @@ export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAuto
           if (queryRef.current === queryString) {
             setSearching(false)
             setOptions([])
-            setOptions([])
             const resultOptions = result
               .filter((hit) => (filterResult ? filterResult(hit) : true))
               .map((r) => typed<Option>({result: r, value: r.value.documentId}))
@@ -104,11 +103,12 @@ export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAuto
             }
           }
         })
-        .catch((e) => {
+.catch((e) => {
+          console.error(e)
           if (queryRef.current === queryString) {
             setSearching(false)
+            setOptions([{value: NO_RESULTS_VALUE}])
           }
-          throw e
         })
     },
     [client, indexConfig, getEmptySearchValue, filterResult, typeFilter],
