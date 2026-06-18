@@ -206,6 +206,11 @@
       ],
     },
     // add new plugin workspaces here
+    "plugins/@sanity/personalization-plugin": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
     "plugins/sanity-plugin-cloudinary": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],

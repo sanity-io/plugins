@@ -12,5 +12,8 @@
 # Salesforce Commerce Cloud plugin
 /plugins/@sanity/sfcc/ @sanity-io/solutions
 
+# Personalization plugin
+/plugins/@sanity/personalization-plugin/ @sanity-io/solutions
+
 # The Mux input integration
 /plugins/sanity-plugin-mux-input @sanity-io/mux
