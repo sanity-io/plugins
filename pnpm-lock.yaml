@@ -2596,7 +2596,7 @@ importers:
         specifier: 'catalog:'
         version: 19.2.7(react@19.2.7)
       react-is:
-        specifier: ^19.0.0
+        specifier: ^19.2.7
         version: 19.2.7
       sanity:
         specifier: ^6.1.0
@@ -2681,19 +2681,19 @@ importers:
         specifier: ^24.13.2
         version: 24.13.2
       '@types/react':
-        specifier: ^19.0.10
+        specifier: ^19.2.17
         version: 19.2.17
       '@types/react-is':
-        specifier: ^19.0.0
+        specifier: ^19.2.0
         version: 19.2.0
       react:
-        specifier: ^19.0.0
+        specifier: ^19.2.7
         version: 19.2.7
       react-dom:
-        specifier: ^19.0.0
+        specifier: ^19.2.7
         version: 19.2.7(react@19.2.7)
       react-is:
-        specifier: ^19.0.0
+        specifier: ^19.2.7
         version: 19.2.7
       sanity:
         specifier: ^6.1.0
