@@ -11,7 +11,7 @@ import ShopifyIcon from './ShopifyIcon'
 export default function ShopifyAssetInput(props: ObjectInputProps<Asset>) {
   const {onChange, readOnly, value, schemaType} = props
   const {options} = schemaType
-  const {shopifyDomain} = options
+  const shopifyDomain = options?.shopifyDomain
 
   const [dialogOpen, setDialogOpen] = useState(false)
 
