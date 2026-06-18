@@ -21,6 +21,10 @@ import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
 import {formToolkitExample} from '#form-toolkit'
 import {googleTranslateExample} from '#google-translate'
+import {
+  hierarchicalDocumentListExample,
+  hierarchicalDocumentListExampleStructure,
+} from '#hierarchical-document-list'
 import {hotspotArrayExample} from '#hotspot-array'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
 import {iframePaneExample} from '#iframe-pane'
@@ -43,6 +47,7 @@ import {richDateInputExample} from '#rich-date-input'
 import {sanityNaiveHtmlSerializerExample} from '#sanity-naive-html-serializer'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
+import {shopifyAssetsExample} from '#shopify-assets'
 import {studioSecretsExample} from '#studio-secrets'
 import {tableExample} from '#table'
 import {transifexExample} from '#transifex'
@@ -100,6 +105,11 @@ export default defineConfig([
     plugins: [orderableDocumentListExample(), orderableDocumentListExampleStructure()],
   }),
   createWorkspace({
+    name: 'hierarchical-document-list-example',
+    title: 'Hierarchical Document List',
+    plugins: [hierarchicalDocumentListExample(), hierarchicalDocumentListExampleStructure()],
+  }),
+  createWorkspace({
     name: 'presets-studio',
     title: 'Presets Studio',
     plugins: [structureTool(), presetsWorkspace()],
@@ -129,6 +139,8 @@ export default defineConfig([
       mediaExample(),
       // add new plugins here
       formToolkitExample(),
+      hierarchicalDocumentListExample(),
+      shopifyAssetsExample(),
       personalizationExample(),
       cloudinaryExample(),
       muxInputExample(),

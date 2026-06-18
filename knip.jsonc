@@ -211,6 +211,24 @@
       "project": ["src/**/*.{ts,tsx}"],
     },
 
+    "plugins/@sanity/hierarchical-document-list": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
+    "plugins/sanity-plugin-shopify-assets": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
     "plugins/@sanity/personalization-plugin": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
