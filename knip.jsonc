@@ -206,6 +206,15 @@
       ],
     },
     // add new plugin workspaces here
+    "plugins/@sanity/google-maps-input": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
     "plugins/@sanity/cross-dataset-duplicator": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],

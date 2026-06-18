@@ -20,6 +20,7 @@ import {documentInternationalizationExample} from '#document-internationalizatio
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
 import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
+import {googleMapsInputExample} from '#google-maps-input'
 import {googleTranslateExample} from '#google-translate'
 import {
   hierarchicalDocumentListExample,
@@ -140,6 +141,7 @@ export default defineConfig([
       googleTranslateExample(),
       mediaExample(),
       // add new plugins here
+      googleMapsInputExample(),
       crossDatasetDuplicatorExample(),
       hierarchicalDocumentListExample(),
       shopifyAssetsExample(),
