@@ -143,7 +143,10 @@ function SemanticSearchInput(props: ObjectInputProps & {indexConfig: EmbeddingsI
   )
 
   const filterResult = useCallback(
-    (r: QueryResult) => r.value.documentId !== publicId(docRef.current._id),
+    (r: QueryResult) => {
+      const currentId = docRef.current?._id
+      return !currentId || r.value.documentId !== publicId(currentId)
+    },
     [docRef],
   )
 

@@ -7,9 +7,12 @@ export interface EmbeddingsIndexConfig {
   indexName: string
   maxResults?: number
   /**
-   * Determines if which search mode is enabled by default for the reference field.
-   * Default is the studio default search, while 'embeddings' enables
-   * Defaults to 'default' behaviour
+   * Determines which search mode is enabled by default for the reference field.
+   *
+   * - 'default': Studio's standard reference search
+   * - 'embeddings': Semantic search backed by the embeddings index
+   *
+   * Defaults to 'default'.
    */
   searchMode?: 'embeddings' | 'default'
 }
@@ -20,7 +23,8 @@ declare module 'sanity' {
     /**
      * Enables toggleable semantic search for a reference field.
      *
-     * When `true`: will use default plugin configuration (if no config has been for the plugin provided ,this will throw an error)
+     * When set to `true`, the plugin will use the default plugin configuration.
+     * If no default configuration is provided, an error will be thrown.
      */
     embeddingsIndex?: true | EmbeddingsIndexConfig
   }
