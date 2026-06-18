@@ -259,6 +259,9 @@ importers:
       sanity-plugin-shopify-assets:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-shopify-assets
+      sanity-plugin-studio-smartling:
+        specifier: workspace:*
+        version: link:../../plugins/sanity-plugin-studio-smartling
       sanity-plugin-transifex:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-transifex
@@ -2597,6 +2600,43 @@ importers:
       babel-plugin-styled-components:
         specifier: 'catalog:'
         version: 2.3.0(@babel/core@7.29.7)(@sanity/styled-components@6.1.24)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.7
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.7(react@19.2.7)
+      sanity:
+        specifier: ^6.1.0
+        version: 6.1.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.4)(@sanity/cli-core@2.0.1)(@sanity/styled-components@6.1.24)(@types/node@24.13.2)(@types/react-dom@19.2.3)(@types/react@19.2.17)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.55.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.1)(terser@5.48.0)(typescript@5.9.3)
+
+  plugins/sanity-plugin-studio-smartling:
+    dependencies:
+      sanity-translations-tab:
+        specifier: workspace:*
+        version: link:../sanity-translations-tab
+      styled-components:
+        specifier: npm:@sanity/styled-components@latest
+        version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
+    devDependencies:
+      '@repo/package.config':
+        specifier: workspace:*
+        version: link:../../packages/@repo/package.config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/@repo/tsconfig
+      '@sanity/pkg-utils':
+        specifier: 'catalog:'
+        version: 10.5.7(@types/node@24.13.2)(@typescript/native-preview@7.0.0-dev.20260421.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.20.0)(typescript@5.9.3)
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
       react:
         specifier: 'catalog:'
         version: 19.2.7
