@@ -1,7 +1,5 @@
 # @sanity/google-maps-input
 
-> For the v2 version, please refer to the [v2-branch](https://github.com/sanity-io/google-maps-input/tree/studio-v2).
-
 ## What is it?
 
 Plugin for [Sanity Studio](https://www.sanity.io) providing input handlers for geo-related input types using Google Maps.
@@ -10,11 +8,9 @@ This plugin will replace the default `geopoint` input component and adds support
 
 ![Google maps input](assets/google-maps-input.png)
 
-## Known issues in Studio V3
+## Known limitations
 
-- Diff-preview is not implemented.
-
-These will be re-added well before Studio V3 GA.
+- Diff-preview is not currently implemented.
 
 ## Installation
 
@@ -124,18 +120,3 @@ Join [Sanity’s developer community](https://slack.sanity.io) or ping us [on tw
 ## License
 
 MIT-licensed. See LICENSE.
-
-## Develop & test
-
-Add a Google Maps API key to `.env.local` (see `.env.example` for example format).
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/google-maps-input/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
