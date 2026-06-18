@@ -3,6 +3,7 @@ import type {
   CloudinaryAssetResponse,
   CloudinaryMediaLibrary,
   InsertHandlerParams,
+  ShowHandlerParams,
 } from './types'
 
 const widgetSrc = 'https://media-library.cloudinary.com/global/all.js'
@@ -27,6 +28,8 @@ export const openMediaSelector = (
   multiple: boolean,
   insertHandler: (params: InsertHandlerParams) => void,
   selectedAsset?: CloudinaryAsset,
+  showHandler?: (params: ShowHandlerParams) => void,
+  folder?: {resource_type?: 'image' | 'video'; path?: string},
 ) => {
   loadJS(widgetSrc, () => {
     const options: Record<string, any> = {
@@ -44,7 +47,23 @@ export const openMediaSelector = (
       }
     }
 
-    window.cloudinary.openMediaLibrary(options, {insertHandler})
+    if (folder) {
+      options['folder'] = {
+        path: folder.path,
+        resource_type: folder.resource_type,
+      }
+    }
+
+    const callbacks: {
+      insertHandler: (params: InsertHandlerParams) => void
+      showHandler?: (params: ShowHandlerParams) => void
+    } = {insertHandler}
+
+    if (showHandler) {
+      callbacks.showHandler = showHandler
+    }
+
+    window.cloudinary.openMediaLibrary(options, callbacks)
   })
 }
 

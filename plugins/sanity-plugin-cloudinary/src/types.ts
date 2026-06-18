@@ -8,6 +8,7 @@ export type CloudinaryDerivative = {
 
 export type CloudinaryAssetResponse = {
   public_id: string
+  id: string
   resource_type: string
   type: string
   url: string
@@ -27,6 +28,10 @@ export type InsertHandlerParams = {
   assets: CloudinaryAssetResponse[]
 }
 
+export type ShowHandlerParams = {
+  isOpen: boolean
+}
+
 export interface CloudinaryMediaLibrary {
   show: (config?: {asset: any; folder: any}) => void
   hide: () => void
@@ -43,6 +48,8 @@ export type CloudinaryAsset = {
   version: number
   url: string
   secure_url: string
+  width: number
+  height: number
   derived?: CloudinaryAssetDerived[]
   display_name?: string
 }
