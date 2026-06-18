@@ -1,7 +1,6 @@
-import {type MutableRefObject, PureComponent} from 'react'
+import {type MutableRefObject, useEffect} from 'react'
 
 import type {LatLng} from '../types'
-import {latLngAreEqual} from './util'
 
 interface Props {
   api: typeof window.google.maps
@@ -14,20 +13,13 @@ interface Props {
   onClick?: (event: google.maps.MapMouseEvent) => void
 }
 
-export class Arrow extends PureComponent<Props> {
-  line: google.maps.Polyline | undefined
-
-  eventHandlers: {
-    click?: google.maps.MapsEventListener
-  } = {}
-
-  override componentDidMount() {
-    const {from, to, api, map, zIndex, onClick, color, arrowRef} = this.props
+export function Arrow({api, map, from, to, color, zIndex, arrowRef, onClick}: Props) {
+  useEffect(() => {
     const lineSymbol = {
       path: api.SymbolPath.FORWARD_OPEN_ARROW,
     }
 
-    this.line = new api.Polyline({
+    const line = new api.Polyline({
       map,
       zIndex,
       path: [from, to],
@@ -36,41 +28,23 @@ export class Arrow extends PureComponent<Props> {
       strokeColor: color ? color.text : 'black',
     })
 
+    let clickHandler: google.maps.MapsEventListener | undefined
     if (onClick) {
-      this.eventHandlers.click = api.event.addListener(this.line, 'click', onClick)
+      clickHandler = api.event.addListener(line, 'click', onClick)
     }
 
     if (arrowRef) {
-      arrowRef.current = this.line
-    }
-  }
-
-  override componentDidUpdate(prevProps: Props) {
-    if (!this.line) {
-      return
+      arrowRef.current = line
     }
 
-    const {from, to, map} = this.props
-    if (!latLngAreEqual(prevProps.from, from) || !latLngAreEqual(prevProps.to, to)) {
-      this.line.setPath([from, to])
+    return () => {
+      line.setMap(null)
+      clickHandler?.remove()
+      if (arrowRef) {
+        arrowRef.current = undefined
+      }
     }
+  }, [api, map, from, to, color, zIndex, arrowRef, onClick])
 
-    if (prevProps.map !== map) {
-      this.line.setMap(map)
-    }
-  }
-
-  override componentWillUnmount() {
-    if (this.line) {
-      this.line.setMap(null)
-    }
-
-    if (this.eventHandlers.click) {
-      this.eventHandlers.click.remove()
-    }
-  }
-
-  override render(): null {
-    return null
-  }
+  return null
 }

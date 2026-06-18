@@ -1,5 +1,5 @@
 import {TextInput} from '@sanity/ui'
-import {createRef, PureComponent} from 'react'
+import {useEffect, useEffectEvent, useRef} from 'react'
 
 import {WrapperContainer} from './SearchInput.styles'
 
@@ -9,49 +9,47 @@ interface Props {
   onChange: (result: google.maps.places.PlaceResult) => void
 }
 
-export class SearchInput extends PureComponent<Props> {
-  searchInputRef = createRef<HTMLInputElement>()
-  autoComplete: google.maps.places.Autocomplete | undefined
+export function SearchInput({api, map, onChange}: Props) {
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
-  handleChange = () => {
-    if (!this.autoComplete) {
-      return
+  const handlePlaceChanged = useEffectEvent((autoComplete: google.maps.places.Autocomplete) => {
+    onChange(autoComplete.getPlace())
+
+    if (searchInputRef.current) {
+      searchInputRef.current.value = ''
     }
+  })
 
-    this.props.onChange(this.autoComplete.getPlace())
-
-    if (this.searchInputRef.current) {
-      this.searchInputRef.current.value = ''
-    }
-  }
-
-  override componentDidMount() {
-    const input = this.searchInputRef.current
+  useEffect(() => {
+    const input = searchInputRef.current
     if (!input) {
-      return
+      return undefined
     }
 
-    const {api, map} = this.props
     const {Circle, places, event} = api
     const searchBounds = new Circle({center: map.getCenter(), radius: 100}).getBounds()!
-    this.autoComplete = new places.Autocomplete(input, {
+    const autoComplete = new places.Autocomplete(input, {
       bounds: searchBounds,
       types: [], // return all kinds of places
     })
 
-    event.addListener(this.autoComplete, 'place_changed', this.handleChange)
-  }
+    const listener = event.addListener(autoComplete, 'place_changed', () => {
+      handlePlaceChanged(autoComplete)
+    })
 
-  override render() {
-    return (
-      <WrapperContainer>
-        <TextInput
-          name="place"
-          ref={this.searchInputRef}
-          placeholder="Search for place or address"
-          padding={4}
-        />
-      </WrapperContainer>
-    )
-  }
+    return () => {
+      listener.remove()
+    }
+  }, [api, map])
+
+  return (
+    <WrapperContainer>
+      <TextInput
+        name="place"
+        ref={searchInputRef}
+        placeholder="Search for place or address"
+        padding={4}
+      />
+    </WrapperContainer>
+  )
 }
