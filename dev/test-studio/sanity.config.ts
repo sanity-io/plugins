@@ -13,6 +13,7 @@ import {bynderExample} from '#bynder'
 import {cloudinaryExample} from '#cloudinary'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
+import {crossDatasetDuplicatorExample} from '#cross-dataset-duplicator'
 import {dashboardToolExample} from '#dashboard-tool'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
@@ -141,6 +142,7 @@ export default defineConfig([
       mediaExample(),
       // add new plugins here
       formToolkitExample(),
+      crossDatasetDuplicatorExample(),
       hierarchicalDocumentListExample(),
       shopifyAssetsExample(),
       personalizationExample(),
@@ -172,4 +174,14 @@ export default defineConfig([
     name: 'internationalized-array-async-languages',
     plugins: [internationalizedArrayAsyncLanguages()],
   }),
+  // Destination workspace for @sanity/cross-dataset-duplicator: uses a
+  // different dataset so it can be picked as a duplication target
+  {
+    projectId,
+    dataset: 'test',
+    name: 'cross-dataset-duplicator-target',
+    title: 'Cross Dataset Duplicator Target',
+    basePath: '/cross-dataset-duplicator-target',
+    plugins: [structureTool(), crossDatasetDuplicatorExample()],
+  },
 ])

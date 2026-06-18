@@ -211,6 +211,15 @@
       "project": ["src/**/*.{ts,tsx}"],
     },
 
+    "plugins/@sanity/cross-dataset-duplicator": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
     "plugins/sanity-plugin-studio-smartling": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
