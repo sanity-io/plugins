@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 3.0.2
+
+### Patch Changes
+
+- [#1128](https://github.com/sanity-io/plugins/pull/1128) [`fd78991`](https://github.com/sanity-io/plugins/commit/fd7899182e4d591365ac77589113e2e41ad693c3) Thanks [@stipsan](https://github.com/stipsan)! - Migrate to ESM (`"type": "module"`) and upgrade `@sanity/pkg-utils` to v10, as required by `@sanity/plugin-kit`. The package still ships both ESM and CommonJS builds via the `exports` map, so consumers are unaffected.
+
 ## 3.0.1
 
 ### Patch Changes

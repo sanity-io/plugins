@@ -11,7 +11,6 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
     {
       ".": {
-        "default": "object",
         "defaultConfig": "object",
         "muxInput": "function",
       },
