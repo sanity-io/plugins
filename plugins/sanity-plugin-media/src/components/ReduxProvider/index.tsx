@@ -1,6 +1,6 @@
 import {type AnyAction, configureStore, type Store} from '@reduxjs/toolkit'
 import type {SanityClient} from '@sanity/client'
-import {Component, type ReactNode} from 'react'
+import {type ReactNode, useState} from 'react'
 import {Provider} from 'react-redux'
 import {createEpicMiddleware} from 'redux-observable'
 import type {AssetSourceComponentProps, SanityDocument} from 'sanity'
@@ -22,19 +22,15 @@ type Props = {
   selectedAssets?: AssetSourceComponentProps['selectedAssets']
 }
 
-class ReduxProvider extends Component<Props> {
-  store: Store
-
-  constructor(props: Props) {
-    super(props)
-
+function ReduxProvider(props: Props) {
+  const [store] = useState<Store>(() => {
     // Initialize redux store + middleware
     const epicMiddleware = createEpicMiddleware<AnyAction, AnyAction, RootReducerState>({
       dependencies: {
         client: props.client, // inject sanity client as a dependency to all epics
       },
     })
-    this.store = configureStore({
+    const configuredStore = configureStore({
       reducer: rootReducer,
       middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -86,11 +82,10 @@ class ReduxProvider extends Component<Props> {
       },
     })
     epicMiddleware.run(rootEpic)
-  }
+    return configuredStore
+  })
 
-  override render() {
-    return <Provider store={this.store}>{this.props.children}</Provider>
-  }
+  return <Provider store={store}>{props.children}</Provider>
 }
 
 export default ReduxProvider
