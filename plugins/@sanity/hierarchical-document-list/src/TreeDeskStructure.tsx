@@ -45,7 +45,7 @@ const TreeDeskStructure = (props: ComponentProps) => {
     return (
       <DeskWarning
         title="Invalid configuration"
-        subtitle="The `documentType` passed to `createDeskHierarchy` isn't live editable.\nTo continue using this plugin, add `liveEdit: true` to your custom schema type or unset `documentType` in your hierarchy configuration."
+        subtitle="The `documentType` passed to `createStructureHierarchy` isn't live editable.\nTo continue using this plugin, add `liveEdit: true` to your custom schema type or unset `documentType` in your hierarchy configuration."
       />
     )
   }
