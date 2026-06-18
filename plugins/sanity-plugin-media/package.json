@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-media",
-  "version": "4.3.3",
+  "version": "4.3.4",
   "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
   "keywords": [
     "asset",
@@ -77,7 +77,6 @@
   "devDependencies": {
     "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
-    "@sanity/vision": "catalog:",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
