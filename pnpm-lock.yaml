@@ -2614,7 +2614,7 @@ importers:
         version: 2.0.6(react-dom@19.2.7)(react@19.2.7)
     devDependencies:
       '@sanity/client':
-        specifier: ^7.12.1
+        specifier: ^7.23.0
         version: 7.23.0
       '@sanity/pkg-utils':
         specifier: 'catalog:'
