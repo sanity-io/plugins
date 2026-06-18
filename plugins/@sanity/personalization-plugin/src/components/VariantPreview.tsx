@@ -1,3 +1,6 @@
+// Casting the generic Sanity preview props and schema types to the concrete shapes this preview
+// expects is a known pattern; the values are guaranteed by how the preview component is registered.
+// oxlint-disable typescript/no-unsafe-type-assertion
 import {useEffect, useState} from 'react'
 import {
   isImage,

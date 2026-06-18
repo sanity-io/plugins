@@ -1,3 +1,7 @@
+// plugin-kit is a Node CLI ported from sanity-io/plugin-kit; the legacy code casts loosely-typed
+// filesystem/JSON values and rethrows IO errors without a `cause`, predating these rules.
+// oxlint-disable typescript/no-unsafe-type-assertion
+// oxlint-disable preserve-caught-error
 import crypto from 'crypto'
 import fs from 'fs'
 import path from 'path'
@@ -213,6 +217,8 @@ export async function ensureDir(dirPath: string) {
 }
 
 export async function isEmptyish(dirPath: string) {
+  // Tiny fixed list checked once; a Set adds no meaningful lookup benefit here
+  // oxlint-disable-next-line unicorn/prefer-set-has
   const ignoredFiles = ['.git', '.gitignore', 'license', 'readme.md']
   const allFiles = await readdir(dirPath).catch(() => [])
   const files = allFiles.filter((file) => !ignoredFiles.includes(file.toLowerCase()))
@@ -253,6 +259,8 @@ export async function readJson5File<T>({
   return parseJson5<T>(content, filename)
 }
 
+// Generic return type lets callers specify the parsed JSON5 shape at the call site
+// oxlint-disable-next-line typescript/no-unnecessary-type-parameters
 function parseJson5<T>(content: string, errorKey: string): T {
   try {
     return json5.parse<T>(content)

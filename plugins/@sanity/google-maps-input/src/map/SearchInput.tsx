@@ -1,3 +1,6 @@
+// Built on the classic google.maps.places.Autocomplete API, which Google still supports;
+// migrating to the new Places API is out of scope for the port.
+// oxlint-disable typescript/no-deprecated
 import {TextInput} from '@sanity/ui'
 import {createRef, PureComponent} from 'react'
 

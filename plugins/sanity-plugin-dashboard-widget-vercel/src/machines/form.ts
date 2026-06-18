@@ -1,3 +1,5 @@
+// XState v5's canonical typing pattern relies on `{} as Context` style assertions
+// oxlint-disable typescript/no-unsafe-type-assertion
 import {uuid} from '@sanity/uuid'
 import type {SanityClient} from 'sanity'
 import {assertEvent, assign, fromPromise, setup} from 'xstate'

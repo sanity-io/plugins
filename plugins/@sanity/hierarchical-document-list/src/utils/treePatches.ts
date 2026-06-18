@@ -1,3 +1,6 @@
+// Interfaces with the loosely-typed react-sortable-tree data shapes; the runtime values are
+// guaranteed to be our own LocalTreeItem/LocalFlatDataItem objects.
+// oxlint-disable typescript/no-unsafe-type-assertion
 import {
   type FlatDataItem,
   type TreeItem,

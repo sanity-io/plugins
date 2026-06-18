@@ -35,6 +35,7 @@ preferred approach, and `Incorrect` / `Correct` examples grounded in real plugin
 | Area            | What it covers                                                                               | Reference                                          |
 | --------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------- |
 | Styling and CSS | Why raw `<style>` tags hurt performance; prefer static CSS, fall back to `styled-components` | [`references/styling.md`](./references/styling.md) |
+| Linting         | Suppress lint rules with inline `oxlint-disable` comments, never `overrides` in the config   | [`references/linting.md`](./references/linting.md) |
 
 > This skill is intended to grow. When you find a plugin pattern worth standardizing (or an
 > anti-pattern worth banning), add a focused reference file and a row to the table above rather than
@@ -67,5 +68,10 @@ See [`references/styling.md`](./references/styling.md) for the full rationale an
   override (a single styled-components instance — required for theming and SSR). See
   [`references/styling.md`](./references/styling.md#dependency-setup).
 - **Use `lodash-es`, never `lodash`** (matches `AGENTS.md`).
+- **Suppress lint rules inline, never via config `overrides`.** When a rule genuinely cannot be
+  satisfied, add an `// oxlint-disable-next-line <rule>` comment (with a reason) at the offending
+  line — or a file-level `// oxlint-disable <rule>` when the same rule fires throughout a file for
+  the same reason. Do not turn rules `off` in `.oxlintrc.json`. See
+  [`references/linting.md`](./references/linting.md).
 - **Apply the React performance rules** from `vercel-react-best-practices` (don't define components
   inside components, batch DOM/CSS writes, hoist static JSX, etc.).

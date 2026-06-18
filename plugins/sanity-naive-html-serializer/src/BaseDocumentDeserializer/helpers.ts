@@ -26,6 +26,8 @@ export const blockContentType = defaultSchema
 //helper to handle messy input -- take advantage
 //of blockTools' sanitizing behavior for single strings
 export const preprocess = (html: string): string => {
+  // block-tools returns sanitized portable-text blocks for the wrapped HTML string
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const intermediateBlocks = htmlToBlocks(
     `<p>${html}</p>`,
     blockContentType,

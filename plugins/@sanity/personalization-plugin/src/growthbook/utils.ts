@@ -1,3 +1,6 @@
+// Paginates the Growthbook API sequentially: each page depends on the previous request's
+// cursor (`nextOffset`/`hasMore`), so the awaits cannot be parallelized.
+// oxlint-disable no-await-in-loop
 import type {SanityClient} from 'sanity'
 
 import type {ExperimentType, GrowthbookFeature, VariantType} from '../types'

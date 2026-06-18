@@ -1,3 +1,8 @@
+// plugin-kit is a Node CLI ported from sanity-io/plugin-kit; the legacy code runs sequential
+// dependent awaits, casts loosely-typed values, and uses redundant template literals.
+// oxlint-disable no-await-in-loop
+// oxlint-disable typescript/no-unsafe-type-assertion
+// oxlint-disable typescript/no-unnecessary-template-expression
 import path from 'path'
 import {fileURLToPath} from 'url'
 
@@ -162,6 +167,8 @@ async function writeLicense(
 ) {
   const {basePath, flags} = options
 
+  // Explicit `=== false` distinguishes the disabled flag from an unset/undefined flag
+  // oxlint-disable-next-line typescript/no-unnecessary-boolean-literal-compare
   if ((flags.license as unknown as boolean) === false || !license) {
     return false
   }

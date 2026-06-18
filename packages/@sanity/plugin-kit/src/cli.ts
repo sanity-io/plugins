@@ -64,6 +64,8 @@ export async function cliEntry(argv = process.argv) {
   }
 
   // Lazy-load command
+  // commandName has been validated against the known command keys above
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const cmd = commands[commandName as keyof typeof commands]
 
   try {

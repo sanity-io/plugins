@@ -1,3 +1,6 @@
+// Scaffold blocks are purely positional indentation guides with no stable identity,
+// so the array index is the correct React key here.
+// oxlint-disable react/no-array-index-key
 import {blue} from '@sanity/color'
 import type {ReactNode} from 'react'
 import {createGlobalStyle} from 'styled-components'

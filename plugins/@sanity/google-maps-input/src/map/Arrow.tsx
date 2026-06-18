@@ -10,6 +10,8 @@ interface Props {
   to: LatLng
   color?: {background: string; border: string; text: string}
   zIndex?: number
+  // React's MutableRefObject is deprecated but still supported; keeping it matches the ported API
+  // oxlint-disable-next-line typescript/no-deprecated
   arrowRef?: MutableRefObject<google.maps.Polyline | undefined>
   onClick?: (event: google.maps.MapMouseEvent) => void
 }

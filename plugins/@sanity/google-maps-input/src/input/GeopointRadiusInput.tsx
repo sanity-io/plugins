@@ -1,3 +1,6 @@
+// Uses the deprecated @sanity/ui layout props (`space`/`columns`) that are removed in v4;
+// updating to `gap`/`gridTemplateColumns` is a follow-up migration, out of scope for the port.
+// oxlint-disable typescript/no-deprecated
 import {EditIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Dialog, Grid, Stack, TextInput, Label} from '@sanity/ui'
 import React, {useCallback, useEffect, useId, useRef, useState} from 'react'

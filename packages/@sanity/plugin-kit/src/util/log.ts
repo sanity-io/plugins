@@ -1,6 +1,8 @@
 // Note: This is _specifically_ meant for CLI usage,
 // I realize that "singletons" are bad.
 
+// console is this CLI's user-facing output; logging to stdout/stderr is intentional here
+// oxlint-disable no-console
 import chalk from 'chalk'
 
 let beQuiet = false

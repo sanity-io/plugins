@@ -1,3 +1,7 @@
+// Ported serializer that casts loosely-typed Portable Text values to their concrete shapes and
+// interpolates them into HTML templates; the runtime values are guaranteed by the schema.
+// oxlint-disable typescript/no-unsafe-type-assertion
+// oxlint-disable typescript/restrict-template-expressions
 import {PortableTextTypeComponent, toHTML} from '@portabletext/to-html'
 import {SanityDocument, TypedObject, Schema} from 'sanity'
 

@@ -1,3 +1,6 @@
+// Interpolates the experiment value (a primitive) into a JSX `key` template; the violation sits
+// inside a JSX attribute where a line-level directive cannot be placed.
+// oxlint-disable typescript/restrict-template-expressions
 import {Button, Inline, Stack} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import {useCallback} from 'react'
@@ -42,6 +45,7 @@ export const ArrayInput = (props: ArrayInputProps) => {
   }
 
   // there is probably some better was of getting the type of this?
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const values = (props.value as Value[]) || []
 
   const usedVariants = values?.map((variant) => variant[variantId])

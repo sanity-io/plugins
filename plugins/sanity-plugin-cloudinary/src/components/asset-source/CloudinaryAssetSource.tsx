@@ -98,6 +98,8 @@ export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
             return {
               kind: 'url',
               value: url,
+              // Partial asset document props; Sanity fills in the rest of the ImageAsset shape
+              // oxlint-disable-next-line typescript/no-unsafe-type-assertion
               assetDocumentProps: {
                 _type: 'sanity.imageAsset',
                 originalFilename: encodeFilename(asset),

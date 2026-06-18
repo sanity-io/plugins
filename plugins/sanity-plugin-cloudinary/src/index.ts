@@ -63,3 +63,5 @@ export const cloudinaryAssetSourcePlugin = definePlugin({
     },
   },
 })
+
+export const __probeAny = (JSON.parse('{}') as {a: number}).a

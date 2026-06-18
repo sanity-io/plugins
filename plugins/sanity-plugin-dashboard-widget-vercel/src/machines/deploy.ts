@@ -1,3 +1,5 @@
+// XState v5's canonical typing pattern relies on `{} as Context` style assertions
+// oxlint-disable typescript/no-unsafe-type-assertion
 import {assign, setup, fromPromise} from 'xstate'
 
 import {type Vercel} from '../types'

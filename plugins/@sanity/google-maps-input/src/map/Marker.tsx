@@ -1,3 +1,6 @@
+// Built on the classic google.maps.Marker API (and React's deprecated MutableRefObject),
+// which Google still supports; migrating to AdvancedMarkerElement is out of scope for the port.
+// oxlint-disable typescript/no-deprecated
 import {PureComponent, type MutableRefObject} from 'react'
 
 import type {LatLng} from '../types'

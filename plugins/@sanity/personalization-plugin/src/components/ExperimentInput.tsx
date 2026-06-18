@@ -27,6 +27,8 @@ export const ExperimentInput = (
 ) => {
   const {experiments} = useExperimentContext()
 
+  // The document `_id` form value is always a string
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const id = useFormValue(['_id']) as string
   const additionalChangePath = useMemo(
     () => [...props.path.slice(0, -1), `${props.variantNameOverride}s`],
@@ -51,6 +53,8 @@ export const ExperimentInput = (
 
       if (subValues) {
         const patchEvent = {
+          // additionalChangePath is an array of path segment strings, safe to join
+          // oxlint-disable-next-line typescript/no-base-to-string
           unset: [additionalChangePath.join('.')],
         }
         patch.execute([patchEvent])

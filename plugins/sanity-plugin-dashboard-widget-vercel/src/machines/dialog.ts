@@ -14,6 +14,8 @@ type Event =
 export const dialogMachine = setup({
   types: {
     context: {} as Context,
+    // XState v5's canonical typing pattern relies on `{} as Event` style assertions
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     events: {} as Event,
   },
   actions: {

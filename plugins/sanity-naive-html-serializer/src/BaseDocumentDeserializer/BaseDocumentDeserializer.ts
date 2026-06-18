@@ -29,6 +29,8 @@ const deserializeArray = (
       }
     } catch (e) {
       console.warn(
+        // The caught error is unknown; interpolating it into the warning message is intentional
+        // oxlint-disable-next-line typescript/restrict-template-expressions
         `Tried to deserialize block: ${child.outerHTML} in an array but failed to identify it! Error: ${e}`,
       )
     }
