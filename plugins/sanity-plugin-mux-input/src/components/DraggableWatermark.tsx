@@ -208,7 +208,7 @@ export default function DraggableWatermark({
         onChange(newWatermark)
       }, 300)
     },
-    [onChange]
+    [onChange],
   )
 
   useEffect(() => {
@@ -232,7 +232,7 @@ export default function DraggableWatermark({
       setDragStart({x: e.clientX, y: e.clientY})
       setStartPosition({x: position.x, y: position.y})
     },
-    [position]
+    [position],
   )
 
   const handleMouseMove = useCallback(
@@ -271,7 +271,7 @@ export default function DraggableWatermark({
       watermark,
       debouncedOnChange,
       getVideoContentBox,
-    ]
+    ],
   )
 
   const handleMouseUp = useCallback(() => {
@@ -364,7 +364,7 @@ export function WatermarkControls({
   const [isValid, setIsValid] = useState<boolean | null>(null)
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [mode, setMode] = useState<'canvas' | 'manual'>(
-    watermark.overlay_settings ? 'manual' : 'canvas'
+    watermark.overlay_settings ? 'manual' : 'canvas',
   )
 
   const isUpdatingRef = useRef(false)
@@ -461,7 +461,7 @@ export function WatermarkControls({
         }
       }, 500)
     },
-    [watermark, onChange, onValidationChange]
+    [watermark, onChange, onValidationChange],
   )
 
   useEffect(() => {

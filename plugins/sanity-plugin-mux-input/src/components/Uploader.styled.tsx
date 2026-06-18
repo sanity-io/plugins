@@ -51,7 +51,7 @@ export const UploadCard = forwardRef<HTMLDivElement, UploadCardProps>(
         {children}
       </UploadCardWithFocusRing>
     )
-  }
+  },
 )
 
 const HiddenInput = styled.input.attrs({type: 'text'})`

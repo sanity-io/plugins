@@ -89,7 +89,7 @@ export default function Uploader(props: Props) {
         observable: events$.asObservable(),
         handleClick: ((event) => events$.next(event)) as React.MouseEventHandler<HTMLButtonElement>,
       }
-    })()
+    })(),
   ).current
 
   const uploadRef = useRef<Subscription | null>(null)
@@ -135,7 +135,7 @@ export default function Uploader(props: Props) {
           let error = action.error
           if (isServerError(action.error) && hasPlaybackPolicy(action.settings, 'drm')) {
             error = new Error(
-              'Unknown Error while uploading DRM protected content. Make sure your DRM configuration ID is valid and set correctly'
+              'Unknown Error while uploading DRM protected content. Make sure your DRM configuration ID is valid and set correctly',
             )
           }
 
@@ -149,7 +149,7 @@ export default function Uploader(props: Props) {
       stagedUpload: null,
       uploadStatus: null,
       error: null,
-    }
+    },
   )
 
   // Make sure we close out the upload observer on dismount
@@ -202,7 +202,7 @@ export default function Uploader(props: Props) {
    */
   const startUpload = (
     settings: MuxNewAssetSettings,
-    watermark?: import('../util/types').WatermarkConfig
+    watermark?: import('../util/types').WatermarkConfig,
   ) => {
     const {stagedUpload} = state
     if (!stagedUpload || uploadRef.current) return
@@ -232,9 +232,9 @@ export default function Uploader(props: Props) {
                   props.client.delete(uploadingDocumentId.current)
                   uploadingDocumentId.current = null
                 }
-              })
-            )
-          )
+              }),
+            ),
+          ),
         )
         break
     }
@@ -260,7 +260,7 @@ export default function Uploader(props: Props) {
               PatchEvent.from([
                 setIfMissing({asset: {}}),
                 set({_type: 'reference', _weak: true, _ref: event.asset._id}, ['asset']),
-              ])
+              ]),
             )
             break
           case 'pause':

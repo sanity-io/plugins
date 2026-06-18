@@ -39,7 +39,7 @@ type PageResult = (
  */
 async function fetchMuxAssetsPage(
   client: SanityClient,
-  cursor: string | null
+  cursor: string | null,
 ): Promise<PageResult> {
   try {
     const response = await listAssets(client, {
@@ -62,7 +62,7 @@ async function fetchMuxAssetsPage(
 
 function accumulateIntermediateState(
   currentState: MuxAssetsState,
-  pageResult: PageResult
+  pageResult: PageResult,
 ): MuxAssetsState {
   const currentData = ('data' in currentState && currentState.data) || []
   const newAssets = ('data' in pageResult && pageResult.data) || []
@@ -86,7 +86,7 @@ function accumulateIntermediateState(
 
       return acc
     },
-    {validAssets: [], skippedInThisPage: false}
+    {validAssets: [], skippedInThisPage: false},
   )
 
   return {
@@ -128,8 +128,10 @@ export default function useMuxAssets({client, enabled}: {client: SanityClient; e
       fetchMuxAssetsPage(
         client,
         // When we've already successfully loaded before (fully or partially), we start from the next cursor to avoid re-fetching
-        'data' in state && state.data && state.data.length > 0 && !state.error ? state.cursor : null
-      )
+        'data' in state && state.data && state.data.length > 0 && !state.error
+          ? state.cursor
+          : null,
+      ),
     )
       .pipe(
         // Here we use "expand" to recursively fetch next pages
@@ -143,10 +145,10 @@ export default function useMuxAssets({client, enabled}: {client: SanityClient; e
                 defer(() =>
                   fetchMuxAssetsPage(
                     client,
-                    'next_cursor' in pageResult ? pageResult.next_cursor : null
-                  )
-                )
-              )
+                    'next_cursor' in pageResult ? pageResult.next_cursor : null,
+                  ),
+                ),
+              ),
             )
           }
 
@@ -156,8 +158,8 @@ export default function useMuxAssets({client, enabled}: {client: SanityClient; e
 
         // On each iteration, persist intermediate states to give feedback to users
         tap((pageResult) =>
-          setState((prevState) => accumulateIntermediateState(prevState, pageResult))
-        )
+          setState((prevState) => accumulateIntermediateState(prevState, pageResult)),
+        ),
       )
       .subscribe({
         // Once done, let the user know we've stopped loading

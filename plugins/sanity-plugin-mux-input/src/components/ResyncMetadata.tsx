@@ -69,7 +69,7 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
   const videosToUpdate = props.matchedAssets?.filter((m) => m.muxAsset).length || 0
   const videosWithEmptyOrPlaceholder =
     props.matchedAssets?.filter(
-      (m) => m.muxAsset && m.muxTitle && isEmptyOrPlaceholderTitle(m.currentTitle, m.muxAsset.id)
+      (m) => m.muxAsset && m.muxTitle && isEmptyOrPlaceholderTitle(m.currentTitle, m.muxAsset.id),
     ).length || 0
 
   const hasEmptyTitles = videosWithEmptyOrPlaceholder > 0

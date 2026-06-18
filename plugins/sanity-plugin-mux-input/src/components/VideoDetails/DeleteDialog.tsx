@@ -121,7 +121,7 @@ export default function DeleteDialog({
                     tone="critical"
                     onClick={confirmDelete}
                     disabled={['processing_deletion', 'checkingReferences', 'cantDelete'].some(
-                      (s) => s === state
+                      (s) => s === state,
                     )}
                   />
                 </Box>

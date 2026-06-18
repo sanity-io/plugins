@@ -21,7 +21,7 @@ export function saveSecrets(
   enableSignedUrls: boolean,
   signingKeyId: string,
   signingKeyPrivate: string,
-  drmConfigId: string
+  drmConfigId: string,
 ): Promise<SecretsDocument> {
   const doc: SecretsDocument = {
     _id: 'secrets.mux',
@@ -74,7 +74,7 @@ export function testSecrets(client: SanityClient) {
 export async function haveValidSigningKeys(
   client: SanityClient,
   signingKeyId: string,
-  signingKeyPrivate: string
+  signingKeyPrivate: string,
 ) {
   if (!(signingKeyId && signingKeyPrivate)) {
     return false
@@ -106,6 +106,6 @@ export function testSecretsObservable(client: SanityClient) {
       withCredentials: true,
       method: 'GET',
       query: PLUGIN_VERSION_QUERY,
-    })
+    }),
   )
 }

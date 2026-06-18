@@ -52,7 +52,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
     () => {
       const baseCode = track.language_code?.split('-')[0]
       const found = LANGUAGE_OPTIONS.find(
-        (opt) => opt.value === track.language_code || opt.value === baseCode
+        (opt) => opt.value === track.language_code || opt.value === baseCode,
       )
       if (found) return found
       if (track.name) {
@@ -60,7 +60,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
         if (foundByName) return foundByName
       }
       return null
-    }
+    },
   )
   const [name, setName] = useState(track.name || '')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -74,7 +74,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
     setVttUrl('')
     const baseCode = track.language_code?.split('-')[0]
     const foundByCode = LANGUAGE_OPTIONS.find(
-      (opt) => opt.value === track.language_code || opt.value === baseCode
+      (opt) => opt.value === track.language_code || opt.value === baseCode,
     )
     const foundByName = track.name ? LANGUAGE_OPTIONS.find((opt) => opt.label === track.name) : null
     setSelectedLanguage(foundByCode || foundByName || null)

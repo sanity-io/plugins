@@ -89,7 +89,7 @@ export function uploadUrl({
                   'Content-Type': 'application/json',
                 },
                 query: {...query, ...PLUGIN_VERSION_QUERY},
-              })
+              }),
             ).pipe(
               mergeMap((result) => {
                 const asset =
@@ -100,12 +100,12 @@ export function uploadUrl({
                   return throwError(new Error('No asset document returned'))
                 }
                 return of({type: 'success' as const, id: uuid, asset})
-              })
+              }),
             )
-          })
-        )
+          }),
+        ),
       )
-    })
+    }),
   )
 }
 
@@ -156,7 +156,7 @@ export function uploadFile({
                   },
                   body,
                   query: PLUGIN_VERSION_QUERY,
-                })
+                }),
               ).pipe(
                 mergeMap((result) => {
                   return createUpChunkObservable(uuid, result.upload.url, file).pipe(
@@ -169,22 +169,22 @@ export function uploadFile({
                       }
                       return from(updateAssetDocumentFromUpload(client, uuid, watermark)).pipe(
                         // eslint-disable-next-line max-nested-callbacks
-                        mergeMap((doc) => of({...event, asset: doc}))
+                        mergeMap((doc) => of({...event, asset: doc})),
                       )
                     }),
                     // eslint-disable-next-line max-nested-callbacks
                     catchError((err) => {
                       // Delete asset document
                       return cancelUpload(client, uuid).pipe(mergeMapTo(throwError(err)))
-                    })
+                    }),
                   )
-                })
-              )
+                }),
+              ),
             )
-          })
-        )
+          }),
+        ),
       )
-    })
+    }),
   )
 }
 
@@ -243,7 +243,7 @@ function pollUpload(client: SanityClient, uuid: string): Promise<UploadResponse>
 async function updateAssetDocumentFromUpload(
   client: SanityClient,
   uuid: string,
-  _watermark?: WatermarkConfig
+  _watermark?: WatermarkConfig,
 ) {
   let upload: UploadResponse
   let asset: {data: MuxAsset}

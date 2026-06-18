@@ -63,7 +63,7 @@ export default function VideoPlayer({
       (e: Error) => {
         setError(e)
         return undefined
-      }
+      },
     )
   }, [muxPlaybackId, playbackId, client])
 
@@ -73,7 +73,7 @@ export default function VideoPlayer({
       (e: Error) => {
         setError(e)
         return undefined
-      }
+      },
     )
   }, [asset, client, thumbnailWidth])
 
@@ -94,7 +94,7 @@ export default function VideoPlayer({
       (e: Error) => {
         setError(e)
         return undefined
-      }
+      },
     )
   }, [client, muxPlaybackId?.policy, playbackId])
   const tokens:

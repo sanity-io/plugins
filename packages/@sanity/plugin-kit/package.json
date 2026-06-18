@@ -1,6 +1,6 @@
 {
   "name": "@sanity/plugin-kit",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Enhanced Sanity.io plugin development experience",
   "keywords": [
     "bootstrap",
@@ -55,7 +55,7 @@
     "concurrently": "^8.2.2",
     "email-validator": "^2.0.4",
     "execa": "^5.1.1",
-    "get-it": "^8.6.3",
+    "get-it": "^8.8.0",
     "get-latest-version": "^5.1.0",
     "git-remote-origin-url": "^3.1.0",
     "github-url-to-object": "^4.0.6",

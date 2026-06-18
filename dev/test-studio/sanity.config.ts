@@ -20,6 +20,7 @@ import {documentInternationalizationExample} from '#document-internationalizatio
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
 import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
+import {embeddingsIndexUiExample} from '#embeddings-index-ui'
 import {formToolkitExample} from '#form-toolkit'
 import {googleMapsInputExample} from '#google-maps-input'
 import {googleTranslateExample} from '#google-translate'
@@ -142,6 +143,7 @@ export default defineConfig([
       googleTranslateExample(),
       mediaExample(),
       // add new plugins here
+      embeddingsIndexUiExample(),
       formToolkitExample(),
       googleMapsInputExample(),
       crossDatasetDuplicatorExample(),

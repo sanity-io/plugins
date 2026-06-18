@@ -24,7 +24,8 @@
     // Moved as-is from the standalone repo; legacy code will be brought up to
     // monorepo lint standards in a follow-up PR
     "plugins/sanity-plugin-media/**",
-    "plugins/sanity-plugin-mux-input/**"
+    "plugins/sanity-plugin-mux-input/**",
+    "plugins/@sanity/embeddings-index-ui/**"
   ],
   "options": {
     "typeAware": true,

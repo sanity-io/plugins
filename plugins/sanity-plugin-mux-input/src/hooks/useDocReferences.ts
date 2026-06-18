@@ -14,7 +14,7 @@ const useDocReferences = createHookFromObservableFactory<
     {id},
     {
       apiVersion: SANITY_API_VERSION,
-    }
+    },
   )
 })
 

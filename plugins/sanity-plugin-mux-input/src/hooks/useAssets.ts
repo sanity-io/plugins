@@ -31,7 +31,7 @@ const useAssetDocuments = createHookFromObservableFactory<
     search.params,
     {
       apiVersion: SANITY_API_VERSION,
-    }
+    },
   )
 })
 
@@ -41,7 +41,7 @@ export default function useAssets() {
   const [searchQuery, setSearchQuery] = useState('')
 
   const [assetDocuments = [], isLoading] = useAssetDocuments(
-    useMemo(() => ({documentStore, sort, searchQuery}), [documentStore, sort, searchQuery])
+    useMemo(() => ({documentStore, sort, searchQuery}), [documentStore, sort, searchQuery]),
   )
 
   const assets = useMemo(
@@ -52,9 +52,9 @@ export default function useAssets() {
           ({
             ...(collated.draft || collated.published || {}),
             _id: collated.id,
-          }) as VideoAssetDocument
+          }) as VideoAssetDocument,
       ),
-    [assetDocuments]
+    [assetDocuments],
   )
 
   return {

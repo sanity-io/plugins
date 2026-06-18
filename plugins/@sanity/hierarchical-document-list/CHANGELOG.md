@@ -1,5 +1,11 @@
 # @sanity/hierarchical-document-list
 
+## 3.0.1
+
+### Patch Changes
+
+- [#1206](https://github.com/sanity-io/plugins/pull/1206) [`989b4f4`](https://github.com/sanity-io/plugins/commit/989b4f49ea29954cc5a2bb072c79f1b44eec25d3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update sanity monorepo
+
 ## 3.0.0
 
 ### Major Changes

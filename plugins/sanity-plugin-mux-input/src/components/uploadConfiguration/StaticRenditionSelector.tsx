@@ -28,13 +28,13 @@ export const StaticRenditionSelector = ({
   // Determine if user is in advanced mode based on selected renditions
   const isAdvancedMode = useMemo(() => {
     const specificResolutions = config.static_renditions.filter(
-      (r) => r !== 'highest' && r !== 'audio-only'
+      (r) => r !== 'highest' && r !== 'audio-only',
     )
     return specificResolutions.length > 0
   }, [config.static_renditions])
 
   const [renditionMode, setRenditionMode] = useState<'standard' | 'advanced'>(
-    isAdvancedMode ? 'advanced' : 'standard'
+    isAdvancedMode ? 'advanced' : 'standard',
   )
 
   // Helper to toggle a rendition

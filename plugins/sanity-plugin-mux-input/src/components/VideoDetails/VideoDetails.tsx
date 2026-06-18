@@ -229,7 +229,7 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
                 tracks={
                   displayInfo?.text_tracks ||
                   props.asset.data?.tracks?.filter(
-                    (track): track is MuxTextTrack => track.type === 'text'
+                    (track): track is MuxTextTrack => track.type === 'text',
                   ) ||
                   []
                 }

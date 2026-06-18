@@ -9,7 +9,7 @@ type IntersectionOptions = {
 
 export function useInView(
   ref: React.RefObject<HTMLDivElement | null>,
-  options: IntersectionOptions = {}
+  options: IntersectionOptions = {},
 ) {
   const [inView, setInView] = useState(false)
 
