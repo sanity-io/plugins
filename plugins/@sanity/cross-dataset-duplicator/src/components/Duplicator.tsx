@@ -1,5 +1,5 @@
 import {isAssetId, isSanityFileAsset} from '@sanity/asset-utils'
-import type {SanityAssetDocument} from '@sanity/client'
+import type {SanityAssetDocument, SanityClient} from '@sanity/client'
 import {ArrowRightIcon, SearchIcon, LaunchIcon} from '@sanity/icons'
 import {extractWithPath} from '@sanity/mutator'
 import {
@@ -86,6 +86,183 @@ async function mapWithConcurrency<T>(
   const workers = Array.from({length: Math.min(limit, queue.length)}, () => work())
 
   await Promise.all(workers)
+}
+
+type SetMessage = (msg: Message) => void
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function isUnknownArray(value: unknown): value is unknown[] {
+  return Array.isArray(value)
+}
+
+// Pull a human-readable description out of a Sanity mutation error
+function getErrorDescription(err: unknown): string {
+  if (!isRecord(err)) {
+    return ''
+  }
+
+  const details = err['details']
+
+  if (isRecord(details)) {
+    const description = details['description']
+
+    if (typeof description === 'string') {
+      return description
+    }
+  }
+
+  const message = err['message']
+
+  return typeof message === 'string' ? message : ''
+}
+
+// Collect the _id's of referenced documents that are missing at the destination,
+// reading both the structured error payload and the human-readable description
+function getMissingReferenceIds(err: unknown, description: string): string[] {
+  const missingIds: string[] = []
+
+  const details = isRecord(err) ? err['details'] : undefined
+  const rawItems = isRecord(details) ? details['items'] : undefined
+  const items = isUnknownArray(rawItems) ? rawItems : []
+
+  for (const item of items) {
+    if (isRecord(item)) {
+      const error = item['error']
+
+      if (isRecord(error)) {
+        // Sanity returns `referenceID`; keep the other spellings as fallbacks
+        const refId = error['referenceID'] ?? error['referencedId'] ?? error['referenceId']
+
+        if (typeof refId === 'string' && !missingIds.includes(refId)) {
+          missingIds.push(refId)
+        }
+      }
+    }
+  }
+
+  const refRegex = /references non-existent document [`'"]?([^`'"\s)]+)[`'"]?/gi
+  let match = refRegex.exec(description)
+
+  while (match !== null) {
+    const id = match[1]
+
+    if (id && !missingIds.includes(id)) {
+      missingIds.push(id)
+    }
+
+    match = refRegex.exec(description)
+  }
+
+  return missingIds
+}
+
+// Commit documents individually so a single failing document doesn't block the rest.
+// Runs sequentially (concurrency 1) so referenced documents can land before the
+// documents that point at them.
+async function commitOneByOne(
+  docs: SanityDocument[],
+  client: SanityClient,
+  setMessage: SetMessage,
+  onSuccess: () => void,
+): Promise<void> {
+  let successCount = 0
+  let failCount = 0
+
+  await mapWithConcurrency(docs, 1, async (doc) => {
+    try {
+      const tx = client.transaction()
+      tx.createOrReplace(doc)
+      await tx.commit()
+      successCount += 1
+    } catch {
+      failCount += 1
+    }
+  })
+
+  if (failCount === 0) {
+    setMessage({tone: 'positive', text: 'Duplication complete!'})
+    onSuccess()
+
+    return
+  }
+
+  setMessage({
+    tone: 'critical',
+    text: `Duplication finished with ${failCount} error(s). ${successCount} document(s) duplicated successfully.`,
+  })
+
+  if (successCount > 0) {
+    onSuccess()
+  }
+}
+
+type ReferenceErrorOptions = {
+  err: unknown
+  transactionDocs: SanityDocument[]
+  originClient: SanityClient
+  destinationClient: SanityClient
+  setMessage: SetMessage
+  onSuccess: () => void
+}
+
+// When a transaction fails because of missing references, fetch the referenced
+// documents from the origin and retry, falling back to one-by-one commits
+async function handleReferenceError(options: ReferenceErrorOptions): Promise<void> {
+  const {err, transactionDocs, originClient, destinationClient, setMessage, onSuccess} = options
+  const description = getErrorDescription(err)
+  const missingIds = getMissingReferenceIds(err, description)
+
+  if (!missingIds.length) {
+    // Couldn't parse the missing _id's, retry each document on its own
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(transactionDocs, destinationClient, setMessage, onSuccess)
+
+    return
+  }
+
+  setMessage({
+    tone: 'default',
+    text: `Fetching ${missingIds.length} missing referenced document(s) and retrying...`,
+  })
+
+  let missingDocs: SanityDocument[] = []
+
+  try {
+    missingDocs = await originClient.fetch<SanityDocument[]>(`*[_id in $ids]`, {ids: missingIds})
+  } catch (fetchErr) {
+    setMessage({
+      tone: 'critical',
+      text: description || (fetchErr instanceof Error ? fetchErr.message : 'Duplication Failed'),
+    })
+
+    return
+  }
+
+  if (!missingDocs.length) {
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(transactionDocs, destinationClient, setMessage, onSuccess)
+
+    return
+  }
+
+  const allDocs = [...transactionDocs, ...missingDocs]
+
+  setMessage({tone: 'default', text: `Duplicating ${missingDocs.length} missing document(s)...`})
+
+  const retryTransaction = destinationClient.transaction()
+  allDocs.forEach((doc) => retryTransaction.createOrReplace(doc))
+
+  try {
+    await retryTransaction.commit()
+    setMessage({tone: 'positive', text: 'Duplication complete!'})
+    onSuccess()
+  } catch {
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(allDocs, destinationClient, setMessage, onSuccess)
+  }
 }
 
 export default function Duplicator(props: DuplicatorProps) {
@@ -344,16 +521,36 @@ export default function Duplicator(props: DuplicatorProps) {
       transaction.createOrReplace(doc)
     })
 
+    const onCommitSuccess = () => {
+      updatePayloadStatuses(payload, destination).catch(console.error)
+    }
+
     try {
       await transaction.commit()
       setMessage({tone: 'positive', text: 'Duplication complete!'})
 
-      updatePayloadStatuses(payload, destination).catch(console.error)
+      onCommitSuccess()
     } catch (err) {
-      setMessage({
-        tone: 'critical',
-        text: err instanceof Error ? err.message : `Duplication Failed`,
-      })
+      const description = getErrorDescription(err)
+      const isReferenceError =
+        description.toLowerCase().includes('references non-existent document') ||
+        description.toLowerCase().includes('reference non-existent')
+
+      if (isReferenceError) {
+        await handleReferenceError({
+          err,
+          transactionDocs: transactionDocsMapped,
+          originClient,
+          destinationClient,
+          setMessage,
+          onSuccess: onCommitSuccess,
+        })
+      } else {
+        setMessage({
+          tone: 'critical',
+          text: description || `Duplication Failed`,
+        })
+      }
     }
 
     setIsDuplicating(false)
