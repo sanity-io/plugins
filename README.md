@@ -88,6 +88,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`@sanity/debug-live-sync-tags`](./plugins/@sanity/debug-live-sync-tags)                                 | Debug tool for inspecting live sync tags                            |
 | [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin)           | Debug tool for preview URL secrets and their status                 |
 | [`@sanity/document-internationalization`](./plugins/@sanity/document-internationalization)               | Document-level translations linked by a shared reference            |
+| [`@sanity/embeddings-index-ui`](./plugins/@sanity/embeddings-index-ui)                                   | Studio plugins for the embeddings index API (deprecated)            |
 | [`@sanity/form-toolkit`](./plugins/@sanity/form-toolkit)                                                 | Toolkit for integrating forms with a Sanity Studio                  |
 | [`@sanity/google-maps-input`](./plugins/@sanity/google-maps-input)                                       | Google Maps input for geopoint and geopointRadius fields            |
 | [`@sanity/hierarchical-document-list`](./plugins/@sanity/hierarchical-document-list)                     | Edit and persist hierarchical document trees                        |
