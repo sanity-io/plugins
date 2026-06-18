@@ -2462,8 +2462,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.11
       groq:
-        specifier: ^3.99.0
-        version: 3.99.0
+        specifier: ^5.31.1
+        version: 5.31.1
       is-hotkey-esm:
         specifier: ^1.0.0
         version: 1.0.0
@@ -8625,9 +8625,9 @@ packages:
     resolution: {integrity: sha512-6TZD6H1y3P7zk0BQharjFa7BOivV9nFL6KKVZbRZRH0yOSSyu2xHglTO48b1/2mCEdYoBQpvE7rjCDUf6XmQYQ==}
     engines: {node: '>=18'}
 
-  groq@3.99.0:
-    resolution: {integrity: sha512-ZwKAWzvVCw51yjmIf5484KgsAzZAlGTM4uy9lki4PjAYxcEME2Xf93d31LhHzgUAr2JI79H+cNKoRjDHdv1BXQ==}
-    engines: {node: '>=18'}
+  groq@5.31.1:
+    resolution: {integrity: sha512-Gr/0LosgbleFl98iv3eaY7jkfEIc+fubAqg8Bhg2InK1ZRttExNk6OACKVacB3pEaOoOAs2if+gLt9TWX0SmAQ==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
 
   groq@6.0.0:
     resolution: {integrity: sha512-NPvl5mh4Y05WF80dEi8WPObeSxXjV3l2/SbfI7LPkoHH5tOdXnfHPpcsD60p/lIBioU/cn+ZkxwrAIyTVgqiew==}
@@ -18396,7 +18396,7 @@ snapshots:
 
   groq@3.88.1-typegen-experimental.0: {}
 
-  groq@3.99.0: {}
+  groq@5.31.1: {}
 
   groq@6.0.0: {}
 

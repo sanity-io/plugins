@@ -59,7 +59,7 @@
     "copy-to-clipboard": "^3.3.1",
     "date-fns": "^4.0.0",
     "filesize": "^9.0.0",
-    "groq": "^3.99.0",
+    "groq": "^5.31.1",
     "is-hotkey-esm": "^1.0.0",
     "nanoid": "^3.3.8",
     "pluralize": "^8.0.0",
