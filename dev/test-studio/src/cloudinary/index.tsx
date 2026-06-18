@@ -1,7 +1,8 @@
 import {defineField, definePlugin, defineType} from 'sanity'
 import {
+  cloudinaryAssetDocument,
+  cloudinaryAssetReference,
   cloudinaryAssetSourcePlugin,
-  cloudinaryReferencePlugin,
   cloudinarySchemaPlugin,
 } from 'sanity-plugin-cloudinary'
 
@@ -39,7 +40,11 @@ const cloudinaryTest = defineType({
   ],
 })
 
+// `cloudinaryReferencePlugin()` bundles the base Cloudinary schema types, which would
+// collide with `cloudinarySchemaPlugin()`. To demonstrate both inline assets (with array
+// functions) and reference assets in one workspace, register the reference schema types
+// directly alongside the schema plugin instead of loading the reference plugin.
 export const cloudinaryExample = definePlugin(() => ({
-  schema: {types: [cloudinaryTest]},
-  plugins: [cloudinarySchemaPlugin(), cloudinaryAssetSourcePlugin(), cloudinaryReferencePlugin()],
+  schema: {types: [cloudinaryTest, cloudinaryAssetDocument, cloudinaryAssetReference]},
+  plugins: [cloudinarySchemaPlugin(), cloudinaryAssetSourcePlugin()],
 }))
