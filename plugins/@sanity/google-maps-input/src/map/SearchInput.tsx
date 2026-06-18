@@ -12,6 +12,7 @@ interface Props {
 export class SearchInput extends PureComponent<Props> {
   searchInputRef = createRef<HTMLInputElement>()
   autoComplete: google.maps.places.Autocomplete | undefined
+  placeChangedListener: google.maps.MapsEventListener | undefined
 
   handleChange = () => {
     if (!this.autoComplete) {
@@ -39,7 +40,21 @@ export class SearchInput extends PureComponent<Props> {
       types: [], // return all kinds of places
     })
 
-    event.addListener(this.autoComplete, 'place_changed', this.handleChange)
+    this.placeChangedListener = event.addListener(
+      this.autoComplete,
+      'place_changed',
+      this.handleChange,
+    )
+  }
+
+  override componentWillUnmount() {
+    if (this.placeChangedListener) {
+      this.placeChangedListener.remove()
+    }
+
+    if (this.autoComplete) {
+      this.props.api.event.clearInstanceListeners(this.autoComplete)
+    }
   }
 
   override render() {

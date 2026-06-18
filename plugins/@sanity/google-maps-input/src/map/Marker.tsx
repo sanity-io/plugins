@@ -67,10 +67,15 @@ export class Marker extends PureComponent<Props> {
       return
     }
 
-    const {position, onMove, label, zIndex, opacity, map} = this.props
+    const {position, onMove, onClick, label, zIndex, opacity, map} = this.props
 
     if (prevProps.onMove !== onMove) {
+      this.marker.setDraggable(Boolean(onMove))
       this.attachMoveHandler()
+    }
+
+    if (prevProps.onClick !== onClick) {
+      this.attachClickHandler()
     }
 
     if (!latLngAreEqual(prevProps.position, position)) {
@@ -97,6 +102,10 @@ export class Marker extends PureComponent<Props> {
   override componentWillUnmount() {
     if (this.eventHandlers.move) {
       this.eventHandlers.move.remove()
+    }
+
+    if (this.eventHandlers.click) {
+      this.eventHandlers.click.remove()
     }
 
     if (this.marker) {
