@@ -7,5 +7,5 @@ const path = ['assetId', 'data', 'playbackId', 'status', 'thumbTime', 'filename'
 export const useAssetDocumentValues = (asset: Reference | null | undefined) =>
   useDocumentValues<VideoAssetDocument | null | undefined>(
     isReference(asset) ? asset._ref! : '',
-    path
+    path,
   )

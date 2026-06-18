@@ -22,7 +22,7 @@ interface DocumentPreviewProps {
 export function getIconWithFallback(
   icon: React.ComponentType<any> | false | undefined,
   schemaType: SchemaType | undefined,
-  defaultIcon: React.ComponentType<any>
+  defaultIcon: React.ComponentType<any>,
 ): React.ComponentType<any> | false {
   if (icon === false) {
     return false

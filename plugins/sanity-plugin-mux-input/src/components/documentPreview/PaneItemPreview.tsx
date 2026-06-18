@@ -46,7 +46,7 @@ export function PaneItemPreview(props: PaneItemPreviewProps) {
 
   const observable = useMemo(
     () => getPreviewStateObservable(props.documentPreviewStore, schemaType, value._id),
-    [props.documentPreviewStore, schemaType, value._id]
+    [props.documentPreviewStore, schemaType, value._id],
   )
   const {snapshot, original, isLoading} = useObservable(observable, {
     isLoading: true,

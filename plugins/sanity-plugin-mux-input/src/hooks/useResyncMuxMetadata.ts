@@ -46,7 +46,7 @@ export default function useResyncMuxMetadata() {
     return sanityAssets && muxAssets.data
       ? sanityAssets.map((sanityDoc) => {
           const muxAsset = muxAssets.data?.find(
-            (m) => m.id === sanityDoc.assetId || m.id === sanityDoc.data?.id
+            (m) => m.id === sanityDoc.assetId || m.id === sanityDoc.data?.id,
           )
           return {
             sanityDoc,
@@ -170,7 +170,7 @@ const useSanityAssets = createHookFromObservableFactory<VideoAssetDocument[], Do
       {},
       {
         apiVersion: SANITY_API_VERSION,
-      }
+      },
     )
-  }
+  },
 )

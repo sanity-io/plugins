@@ -8,7 +8,7 @@ export function isMuxInputProps(props: InputProps): props is MuxInputProps {
 }
 
 export function isMuxInputPreviewProps(
-  props: PreviewProps<PreviewLayoutKey>
+  props: PreviewProps<PreviewLayoutKey>,
 ): props is MuxInputPreviewProps {
   return props.schemaType?.type?.name === 'mux.video'
 }

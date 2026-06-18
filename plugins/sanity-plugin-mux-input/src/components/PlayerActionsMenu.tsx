@@ -61,7 +61,7 @@ function PlayerActionsMenu(
     setDialogState: SetDialogState
     config: PluginConfig
     accept: string
-  }
+  },
 ) {
   const {asset, readOnly, dialogState, setDialogState, onChange, onSelect, accept} = props
   const [open, setOpen] = useState(false)
@@ -85,7 +85,7 @@ function PlayerActionsMenu(
 
   useClickOutsideEvent(
     () => setOpen(false),
-    () => [menuElement]
+    () => [menuElement],
   )
 
   return (

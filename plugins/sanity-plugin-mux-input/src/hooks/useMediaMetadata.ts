@@ -67,7 +67,7 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
       const currentVideoSrc = videoEl?.src
       if (videoEl) {
         metadataListeners.forEach((listener) =>
-          videoEl.removeEventListener('loadedmetadata', listener)
+          videoEl.removeEventListener('loadedmetadata', listener),
         )
         videoEl.onerror = null
         videoEl.src = ''
@@ -86,7 +86,7 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
     }
 
     metadataListeners.forEach((listener) =>
-      videoElement.addEventListener('loadedmetadata', listener)
+      videoElement.addEventListener('loadedmetadata', listener),
     )
     videoElement.src = videoSrc
 

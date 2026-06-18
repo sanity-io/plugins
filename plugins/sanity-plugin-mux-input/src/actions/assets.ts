@@ -53,7 +53,7 @@ export function getAsset(client: SanityClient, assetId: string) {
 
 export function listAssets(
   client: SanityClient,
-  options: {limit?: number; cursor?: string | null}
+  options: {limit?: number; cursor?: string | null},
 ) {
   const {dataset} = client.config()
   const query: {limit?: string; cursor?: string} = {}
@@ -84,7 +84,7 @@ export function addTextTrackFromUrl(
     language_code: string
     name: string
     text_type?: 'subtitles'
-  }
+  },
 ) {
   const {dataset} = client.config()
 
@@ -116,7 +116,7 @@ export function generateSubtitles(
   options: {
     language_code: string
     name: string
-  }
+  },
 ) {
   const {dataset} = client.config()
   return client.request<{data: MuxAsset}>({

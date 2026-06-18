@@ -12,12 +12,12 @@ export function createUrlParamsObject(
   client: SanityClient,
   asset: AssetThumbnailOptions['asset'],
   params: object,
-  audience: Audience
+  audience: Audience,
 ) {
   const playbackId = getPlaybackId(asset)
 
   let searchParams = new URLSearchParams(
-    JSON.parse(JSON.stringify(params, (_, v) => v ?? undefined))
+    JSON.parse(JSON.stringify(params, (_, v) => v ?? undefined)),
   )
   const playbackPolicy = getPlaybackPolicyById(asset, playbackId)?.policy
   if (playbackPolicy === 'signed' || playbackPolicy === 'drm') {

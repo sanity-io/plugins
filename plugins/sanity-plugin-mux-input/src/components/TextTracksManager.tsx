@@ -225,7 +225,7 @@ export default function TextTracksManager({
   const activeTracks = realTracks.filter(
     (track) =>
       track.id &&
-      (track.status === 'ready' || track.status === 'preparing' || track.status === 'errored')
+      (track.status === 'ready' || track.status === 'preparing' || track.status === 'errored'),
   )
 
   const allTracks = useMemo(() => {
@@ -260,7 +260,7 @@ export default function TextTracksManager({
 
     const isTrackAlreadyInRealTracks = (
       addedTrack: MuxTextTrack,
-      realTracksList: MuxTextTrack[]
+      realTracksList: MuxTextTrack[],
     ) => {
       if (!addedTrack.id) return false
       if (addedTrack.id.startsWith('generating-')) {
@@ -335,7 +335,7 @@ export default function TextTracksManager({
 
         const isMockTrackReplaced = (
           mockTrack: MuxTextTrack,
-          fetchedTracksList: MuxTextTrack[]
+          fetchedTracksList: MuxTextTrack[],
         ) => {
           if (!mockTrack.id || !mockTrack.id.startsWith('generating-')) {
             return false
@@ -423,7 +423,7 @@ export default function TextTracksManager({
   const visibleTracks = allTracks
     .filter(
       (track) =>
-        track.status === 'ready' || track.status === 'preparing' || track.status === 'errored'
+        track.status === 'ready' || track.status === 'preparing' || track.status === 'errored',
     )
     .sort((a, b) => {
       const orderA = trackActivityOrder.get(a.id) || 0

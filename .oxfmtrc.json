@@ -7,11 +7,5 @@
   "quoteProps": "consistent",
   "experimentalSortImports": {},
   "sortPackageJson": {"sortScripts": true},
-  "ignorePatterns": [
-    "dist/**",
-    "pnpm-lock.yaml",
-    ".changeset/*.md",
-    "turbo/**/*.hbs",
-    "plugins/sanity-plugin-mux-input/**"
-  ]
+  "ignorePatterns": ["dist/**", "pnpm-lock.yaml", ".changeset/*.md", "turbo/**/*.hbs"]
 }

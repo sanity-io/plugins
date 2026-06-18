@@ -57,7 +57,7 @@ export default function VideoThumbnail({
       (err: Error) => {
         handleError(err.message)
         return undefined
-      }
+      },
     )
   }, [asset, client, posterWidth, staticImage])
 

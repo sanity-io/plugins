@@ -21,7 +21,7 @@ export default function useVideoDetails(props: VideoDetailsProps) {
   const client = useClient()
 
   const [references, referencesLoading] = useDocReferences(
-    useMemo(() => ({documentStore, id: props.asset._id}), [documentStore, props.asset._id])
+    useMemo(() => ({documentStore, id: props.asset._id}), [documentStore, props.asset._id]),
   )
 
   const [originalAsset, setOriginalAsset] = useState(() => props.asset)

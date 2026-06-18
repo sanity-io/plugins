@@ -14,7 +14,7 @@ export function isSigned(asset: VideoAssetDocument, secrets: Secrets): boolean {
     'Asset is signed',
     {asset},
     'but secrets are missing signingKeyId and signingKeyPrivate',
-    secrets
+    secrets,
   )
   throw new TypeError(`Unable to access asset as signing keys are missing`)
 }

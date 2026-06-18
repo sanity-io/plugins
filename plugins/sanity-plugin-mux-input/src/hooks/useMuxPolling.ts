@@ -31,7 +31,7 @@ export const useMuxPolling = (asset?: VideoAssetDocument) => {
 
   const shouldFetch = useMemo(
     () => !!asset?.assetId && (asset?.status === 'preparing' || isPreparingStaticRenditions),
-    [asset?.assetId, asset?.status, isPreparingStaticRenditions]
+    [asset?.assetId, asset?.status, isPreparingStaticRenditions],
   )
   return useSWR(
     shouldFetch ? `/${projectId}/addons/mux/assets/${dataset}/data/${asset?.assetId}` : null,
@@ -44,6 +44,6 @@ export const useMuxPolling = (asset?: VideoAssetDocument) => {
       })
       client.patch(asset!._id!).set({status: data.status, data}).commit({returnDocuments: false})
     },
-    {refreshInterval: 2000, refreshWhenHidden: true, dedupingInterval: 1000}
+    {refreshInterval: 2000, refreshWhenHidden: true, dedupingInterval: 1000},
   )
 }

@@ -24,7 +24,7 @@ export default function EditThumbnailDialog({asset, currentTime = 0}: Props) {
   const dialogId = `EditThumbnailDialog${useId()}`
 
   const [timeFormatted, setTimeFormatted] = useState<string>(() =>
-    formatSecondsToHHMMSS(currentTime)
+    formatSecondsToHHMMSS(currentTime),
   )
   const [nextTime, setNextTime] = useState<number>(currentTime)
   const [inputError, setInputError] = useState<string>('')
