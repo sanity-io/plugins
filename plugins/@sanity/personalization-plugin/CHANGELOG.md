@@ -1,5 +1,21 @@
 # @sanity/personalization-plugin
 
+## 3.0.0
+
+### Major Changes
+
+- [#971](https://github.com/sanity-io/plugins/pull/971) [`467facf`](https://github.com/sanity-io/plugins/commit/467facf4a3e53259bdf56596ac2a84367d85ad8c) Thanks [@jjburbridge](https://github.com/jjburbridge), [@netmagik](https://github.com/netmagik), [@RitaDias](https://github.com/RitaDias), [@pedrobonamin](https://github.com/pedrobonamin), [@ChrisLaRocque](https://github.com/ChrisLaRocque)! - Port @sanity/personalization-plugin to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+
+  - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
+  - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
+  - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18 || ^19)
+  - **react-dom 19.2+ required**: `react-dom` is now a required peer dependency
+  - **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported)
+  - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=18)
+  - **Sanity v2 compatibility shim removed**: The `@sanity/incompatible-plugin` dependency, `sanity.json`, and `v2-incompatible.js` are no longer shipped
+
 ## [2.5.0](https://github.com/sanity-io/sanity-plugin-personalization/compare/v2.4.3...v2.5.0) (2026-01-19)
 
 ### Features
