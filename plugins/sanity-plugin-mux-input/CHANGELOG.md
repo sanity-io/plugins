@@ -1,5 +1,13 @@
 # sanity-plugin-mux-input
 
+## 3.0.4
+
+### Patch Changes
+
+- [#1204](https://github.com/sanity-io/plugins/pull/1204) [`2625ff5`](https://github.com/sanity-io/plugins/commit/2625ff5f341d636886474a9e5a7a8c3e77c11280) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-rx to ^4.2.2
+
+- [#1205](https://github.com/sanity-io/plugins/pull/1205) [`a0c60af`](https://github.com/sanity-io/plugins/commit/a0c60af8b19d67cf8c4caaf6d166ff906fc6f73e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency rxjs to ^7.8.2
+
 ## 3.0.3
 
 ### Patch Changes

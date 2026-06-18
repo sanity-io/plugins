@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.1.4
+
+### Patch Changes
+
+- [#1201](https://github.com/sanity-io/plugins/pull/1201) [`557c209`](https://github.com/sanity-io/plugins/commit/557c2090126e26e141d5334298150d785b175fb7) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update CodeMirror to ^6.43.1
+
 ## 7.1.3
 
 ### Patch Changes
@@ -127,6 +133,7 @@
 - [#297](https://github.com/sanity-io/plugins/pull/297) [`21dd2ae`](https://github.com/sanity-io/plugins/commit/21dd2ae9da8aabadacd7eed74ffa174e2b1f189a) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port @sanity/code-input to the plugins monorepo
 
   This is a major release that migrates the plugin to the new monorepo structure with the following breaking changes:
+
   - **Requires Sanity Studio v5**: The plugin now requires Sanity Studio v5.0.0 or later
   - **Drops CommonJS support**: The plugin is now ESM-only
   - **React Compiler enabled**: The plugin now uses React Compiler for optimized performance

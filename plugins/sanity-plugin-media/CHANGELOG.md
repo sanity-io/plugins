@@ -1,5 +1,15 @@
 # sanity-plugin-media
 
+## 4.3.5
+
+### Patch Changes
+
+- [#1205](https://github.com/sanity-io/plugins/pull/1205) [`a0c60af`](https://github.com/sanity-io/plugins/commit/a0c60af8b19d67cf8c4caaf6d166ff906fc6f73e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency rxjs to ^7.8.2
+
+- [#1206](https://github.com/sanity-io/plugins/pull/1206) [`989b4f4`](https://github.com/sanity-io/plugins/commit/989b4f49ea29954cc5a2bb072c79f1b44eec25d3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update sanity monorepo
+
+- [#1215](https://github.com/sanity-io/plugins/pull/1215) [`d18625a`](https://github.com/sanity-io/plugins/commit/d18625a2a396f71b803814a11f1a72fde69885e6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update sanity monorepo to v6
+
 ## 4.3.4
 
 ### Patch Changes

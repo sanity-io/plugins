@@ -1,6 +1,6 @@
 {
   "name": "@sanity/embeddings-index-ui",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "Various Sanity Studio plugins for integrating with the embeddings index API",
   "keywords": [
     "sanity",
