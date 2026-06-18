@@ -29,7 +29,7 @@ const customConfig = {
       },
     },
     // Create a method to deserialize any custom serialization rules
-    additonalDeserializers: {
+    additionalDeserializers: {
       testObject: ({node}) => {
         return {
           _type: 'testObject',
