@@ -60,7 +60,7 @@ export default defineConfg({
           // only use cloudinary as an asset source
           return [cloudinaryImageSource]
         }
-        // don't add cloudinary as an asset sources
+        // don't add cloudinary as an asset source
         return previousAssetSources
       },
     },

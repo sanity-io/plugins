@@ -1,5 +1,5 @@
 ---
-'sanity-plugin-cloudinary': patch
+"sanity-plugin-cloudinary": patch
 ---
 
 author: @antonio-lopez
