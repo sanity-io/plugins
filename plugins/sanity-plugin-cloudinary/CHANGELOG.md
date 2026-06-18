@@ -1,5 +1,21 @@
 # sanity-plugin-cloudinary
 
+## 2.0.0
+
+### Major Changes
+
+- [#970](https://github.com/sanity-io/plugins/pull/970) [`5d42c4c`](https://github.com/sanity-io/plugins/commit/5d42c4ccdd3f7d8e9ed04b607d3d1cad71625ee2) Thanks [@runeb](https://github.com/runeb), [@snorrees](https://github.com/snorrees), [@stipsan](https://github.com/stipsan), [@SimeonGriggs](https://github.com/SimeonGriggs), [@binoy14](https://github.com/binoy14), [@azaxarov](https://github.com/azaxarov), [@pedrobonamin](https://github.com/pedrobonamin), [@ninaandal](https://github.com/ninaandal), [@jasonb194](https://github.com/jasonb194), [@ankitkandari](https://github.com/ankitkandari)! - Port sanity-plugin-cloudinary to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+
+  - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
+  - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
+  - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18.3 || ^19)
+  - **react-dom 19.2+ required**: Minimum react-dom version is now 19.2 (previously ^18.3 || ^19)
+  - **styled-components 6.1+ required**: Minimum styled-components version is now 6.1 (previously ^6.0)
+  - **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported)
+  - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=14)
+
 ## [1.4.1](https://github.com/sanity-io/sanity-plugin-cloudinary/compare/v1.4.0...v1.4.1) (2025-12-18)
 
 ### Bug Fixes

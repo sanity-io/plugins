@@ -11,7 +11,7 @@ packages:
 catalog:
   '@sanity/client': ^7.23.0
   '@sanity/mutator': ^6.1.0
-  '@sanity/pkg-utils': ^10.5.6
+  '@sanity/pkg-utils': ^10.5.7
   '@sanity/schema': ^6.1.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.1.0
