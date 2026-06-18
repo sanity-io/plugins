@@ -17,7 +17,6 @@
   - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=18)
   - **Dropped Sanity v2 compatibility**: Removed `v2-incompatible.js` and `sanity.json`
 
-
 ## [3.0.1](https://github.com/sanity-io/embeddings-index-ui/compare/v3.0.0...v3.0.1) (2025-12-29)
 
 ### Bug Fixes
