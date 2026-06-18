@@ -754,6 +754,55 @@ export type CloudinaryAssetDerived = {
   secure_url?: string
 }
 
+export type PersonalizationTest = {
+  _id: string
+  _type: 'personalizationTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  headline?: ExperimentString
+  description?: ExperimentText
+}
+
+export type ExperimentText = {
+  _type: 'experimentText'
+  default?: string
+  active?: boolean
+  experimentId?: string
+  variants?: Array<
+    {
+      _key: string
+    } & VariantText
+  >
+}
+
+export type ExperimentString = {
+  _type: 'experimentString'
+  default?: string
+  active?: boolean
+  experimentId?: string
+  variants?: Array<
+    {
+      _key: string
+    } & VariantString
+  >
+}
+
+export type VariantText = {
+  _type: 'variantText'
+  variantId?: string
+  experimentId?: string
+  value?: string
+}
+
+export type VariantString = {
+  _type: 'variantString'
+  variantId?: string
+  experimentId?: string
+  value?: string
+}
+
 export type SanityFileAssetReference = {
   _ref: string
   _type: 'reference'
@@ -1112,6 +1161,11 @@ export type AllSanitySchemaTypes =
   | CloudinaryAssetContextCustom
   | CloudinaryAssetContext
   | CloudinaryAssetDerived
+  | PersonalizationTest
+  | ExperimentText
+  | ExperimentString
+  | VariantText
+  | VariantString
   | SanityFileAssetReference
   | MediaProduct
   | MediaTag
