@@ -803,6 +803,78 @@ export type VariantString = {
   value?: string
 }
 
+export type ShopifyAssetsTest = {
+  _id: string
+  _type: 'shopifyAssetsTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  shopifyAsset?: ShopifyAsset
+  shopifyAssetFieldDomain?: ShopifyAsset
+}
+
+export type ShopifyAsset = {
+  _type: 'shopify.asset'
+  filename?: string
+  id?: string
+  meta?: ShopifyAssetMetadata
+  preview?: ShopifyAssetPreview
+  type?: string
+  url?: string
+}
+
+export type ShopifyAssetPreview = {
+  _type: 'shopify.assetPreview'
+  height?: number
+  width?: number
+  url?: string
+}
+
+export type ShopifyAssetMetadata = {
+  _type: 'shopify.assetMetadata'
+  alt?: string
+  duration?: number
+  fileSize?: number
+  height?: number
+  width?: number
+}
+
+export type HierarchyTree = {
+  _id: string
+  _type: 'hierarchy.tree'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  unusedField?: string
+}
+
+export type HierarchyAuthorReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'hierarchyAuthor'
+}
+
+export type HierarchyBook = {
+  _id: string
+  _type: 'hierarchyBook'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  author?: HierarchyAuthorReference
+}
+
+export type HierarchyAuthor = {
+  _id: string
+  _type: 'hierarchyAuthor'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+}
+
 export type SanityFileAssetReference = {
   _ref: string
   _type: 'reference'
@@ -1166,6 +1238,14 @@ export type AllSanitySchemaTypes =
   | ExperimentString
   | VariantText
   | VariantString
+  | ShopifyAssetsTest
+  | ShopifyAsset
+  | ShopifyAssetPreview
+  | ShopifyAssetMetadata
+  | HierarchyTree
+  | HierarchyAuthorReference
+  | HierarchyBook
+  | HierarchyAuthor
   | SanityFileAssetReference
   | MediaProduct
   | MediaTag
