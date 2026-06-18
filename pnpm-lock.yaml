@@ -1995,6 +1995,9 @@ importers:
 
   plugins/sanity-plugin-cloudinary:
     dependencies:
+      '@cloudinary/url-gen':
+        specifier: ^1.22.0
+        version: 1.22.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 5.2.1(react@19.2.8)
@@ -3940,6 +3943,12 @@ packages:
 
   '@changesets/write@0.4.0':
     resolution: {integrity: sha512-CdTLvIOPiCNuH71pyDu3rA+Q0n65cmAbXnwWH84rKGiFumFzkmHNT8KHTMEchcxN+Kl8I54xGUhJ7l3E7X396Q==}
+
+  '@cloudinary/transformation-builder-sdk@1.21.2':
+    resolution: {integrity: sha512-ehOgKUaP+Nvuf7B0TosmB8iilL0kdiVjzjl8tIK06cjvsNnwSJI3xP9nEJmKkvqNxwwFwvYXT+mxUTqnSv9JOA==}
+
+  '@cloudinary/url-gen@1.22.0':
+    resolution: {integrity: sha512-le8RMlgyC0JN3+FlC/YAlPYfvmJdtw8QGcSKDjCsfhS2CIem0mJl6ayti8bMoZ0P5wDvBewvRB0/dUQvhCzy3g==}
 
   '@codemirror/autocomplete@6.20.3':
     resolution: {integrity: sha512-tlosUqb+3BbxCxZdu4tKeRghPFC+QM7q4X5YhKV2eCmPG+1r2F3f4AaSz5sCrFqUtX4Jh20VFTKecl16MgiV9g==}
@@ -12945,6 +12954,14 @@ snapshots:
       fs-extra: 7.0.1
       human-id: 4.2.0
       prettier: 2.8.8
+
+  '@cloudinary/transformation-builder-sdk@1.21.2':
+    dependencies:
+      '@cloudinary/url-gen': 1.22.0
+
+  '@cloudinary/url-gen@1.22.0':
+    dependencies:
+      '@cloudinary/transformation-builder-sdk': 1.21.2
 
   '@codemirror/autocomplete@6.20.3':
     dependencies:

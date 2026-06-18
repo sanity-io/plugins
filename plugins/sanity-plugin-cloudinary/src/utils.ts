@@ -1,3 +1,6 @@
+import {CloudConfig, CloudinaryImage} from '@cloudinary/url-gen'
+import {scale} from '@cloudinary/url-gen/actions/resize'
+
 import type {
   CloudinaryAsset,
   CloudinaryAssetResponse,
@@ -7,7 +10,19 @@ import type {
 
 const widgetSrc = 'https://media-library.cloudinary.com/global/all.js'
 
-export function assetUrl(asset: Partial<Pick<CloudinaryAsset, 'url' | 'secure_url' | 'derived'>>) {
+export function assetUrl(
+  asset: Partial<Pick<CloudinaryAsset, 'url' | 'secure_url' | 'derived' | 'public_id' | 'format'>>,
+  cloudName?: string,
+): string | undefined {
+  // When the cloud name and public id are known, build an on-the-fly preview
+  // with url-gen instead of serving the full-size original. Scaling to a 400px
+  // width keeps previews crisp while avoiding multi-megabyte source downloads.
+  if (cloudName && asset.public_id) {
+    return new CloudinaryImage(asset.public_id, new CloudConfig({cloudName}))
+      .resize(scale().width(400))
+      .toURL()
+  }
+
   const [derived] = asset.derived ?? []
   if (derived) {
     if (derived.secure_url) {
