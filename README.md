@@ -99,6 +99,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo)                                                 | Aprimo asset selector integration                                   |
 | [`sanity-plugin-asset-source-unsplash`](./plugins/sanity-plugin-asset-source-unsplash)                   | Use Unsplash images directly in Sanity Studio                       |
 | [`sanity-plugin-bynder-input`](./plugins/sanity-plugin-bynder-input)                                     | Bynder asset picker integration                                     |
+| [`sanity-plugin-cloudinary`](./plugins/sanity-plugin-cloudinary)                                         | Cloudinary asset source and schema integration                      |
 | [`sanity-plugin-dashboard-widget-document-list`](./plugins/sanity-plugin-dashboard-widget-document-list) | Dashboard widget for displaying document lists                      |
 | [`sanity-plugin-dashboard-widget-netlify`](./plugins/sanity-plugin-dashboard-widget-netlify)             | Dashboard widget for triggering Netlify builds                      |
 | [`sanity-plugin-dashboard-widget-vercel`](./plugins/sanity-plugin-dashboard-widget-vercel)               | Dashboard widget for managing Vercel deployments                    |

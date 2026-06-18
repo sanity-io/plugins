@@ -15,7 +15,7 @@ import {
   forcedPackageVersions,
   forcedPeerPackageVersions,
 } from '../configs/forced-package-versions'
-import {cliName, incompatiblePluginPackage} from '../constants'
+import {cliName, incompatiblePluginPackage, requiredNodeEngine} from '../constants'
 import {getPaths, ManifestOptions} from '../sanity/manifest'
 import {hasSourceEquivalent, writeJsonFile} from '../util/files'
 import log from '../util/log'
@@ -290,16 +290,14 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     license: license ? license.id : 'UNLICENSED',
     author: user?.email ? `${user.name} <${user.email}>` : user?.name,
     sideEffects: false,
-    type: 'commonjs',
+    type: 'module',
     exports: {
       '.': {
         source,
-        import: `./${outDir}/index.mjs`,
         default: `./${outDir}/index.js`,
       },
       './package.json': './package.json',
     },
-    main: `./${outDir}/index.js`,
     ...(flags.typescript ? {types: `./${outDir}/index.d.ts`} : {}),
     files,
     scripts: {...prev.scripts},
@@ -307,7 +305,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     devDependencies: sortKeys(devDependencies),
     peerDependencies: sortKeys(peerDependencies),
     engines: {
-      node: '>=18',
+      node: requiredNodeEngine,
     },
   }
 

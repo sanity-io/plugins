@@ -36,7 +36,7 @@ export function eslintignoreTemplate(options: {flags: InitFlags; outDir: string}
     'commitlint.config.js',
     outDir,
     'lint-staged.config.js',
-    flags.typescript ? 'package.config.mts' : 'package.config.mjs',
+    'package.config.ts',
     flags.typescript ? '*.js' : '',
   ].filter(Boolean)
 

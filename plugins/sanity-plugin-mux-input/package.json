@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-mux-input",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "An input component that integrates Sanity Studio with Mux video encoding/hosting service.",
   "keywords": [
     "sanity",
@@ -23,16 +23,17 @@
   "license": "MIT",
   "author": "Sanity.io <hello@sanity.io>",
   "sideEffects": false,
-  "type": "commonjs",
+  "type": "module",
   "exports": {
     ".": {
       "source": "./src/_exports/index.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "files": [
     "src",
@@ -48,7 +49,7 @@
     "@mux/mux-player": "^3.8.0",
     "@mux/mux-player-react": "^3.8.0",
     "@mux/upchunk": "^3.4.0",
-    "@sanity/icons": "^3.0.0",
+    "@sanity/icons": "^3.7.4",
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^3.2.0",
     "@sanity/uuid": "^3.0.2",
@@ -66,7 +67,7 @@
   },
   "devDependencies": {
     "@sanity/client": "^7.12.1",
-    "@sanity/pkg-utils": "^8.1.29",
+    "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
     "@types/lodash": "^4.17.15",
     "@types/node": "catalog:",
@@ -86,7 +87,7 @@
     "styled-components": "^5 || ^6"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.19 <22 || >=22.12"
   },
   "publishConfig": {
     "access": "public"
