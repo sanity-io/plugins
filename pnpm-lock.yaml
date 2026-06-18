@@ -339,7 +339,7 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       get-it:
-        specifier: ^8.6.3
+        specifier: ^8.8.0
         version: 8.8.0
       get-latest-version:
         specifier: ^5.1.0
