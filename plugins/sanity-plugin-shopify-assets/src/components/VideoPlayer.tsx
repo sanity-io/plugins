@@ -12,13 +12,24 @@ const VideoPlayer = ({src, kind}: VideoProps) => {
   const videoNode = useRef<HTMLVideoElement>(null)
   const player = useRef<VideoJsPlayer | undefined>(undefined)
 
+  // Initialize the player once the <video> node is mounted, and dispose it on
+  // unmount so DOM nodes and event handlers aren't leaked.
   useEffect(() => {
-    player.current = videojs(videoNode.current ?? '', {
-      sources: [{src}],
-      controls: true,
-    })
+    const videoElement = videoNode.current
+    if (!videoElement) return undefined
 
-    player.current.src({src})
+    const vjsPlayer = videojs(videoElement, {controls: true})
+    player.current = vjsPlayer
+
+    return () => {
+      vjsPlayer.dispose()
+      player.current = undefined
+    }
+  }, [])
+
+  // Update the source on the existing player instead of recreating it.
+  useEffect(() => {
+    player.current?.src({src})
   }, [src])
 
   const stopPropagation = useCallback((event: MouseEvent) => {
