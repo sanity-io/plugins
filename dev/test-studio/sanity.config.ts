@@ -40,6 +40,7 @@ import {
   orderableDocumentListExample,
   orderableDocumentListExampleStructure,
 } from '#orderable-document-list'
+import {personalizationExample} from '#personalization'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
 import {sanityNaiveHtmlSerializerExample} from '#sanity-naive-html-serializer'
@@ -136,6 +137,7 @@ export default defineConfig([
       mediaExample(),
       // add new plugins here
       hierarchicalDocumentListExample(),
+      personalizationExample(),
       cloudinaryExample(),
       muxInputExample(),
       asyncListExample(),
