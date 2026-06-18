@@ -57,6 +57,7 @@
     "sanity-plugin-media": "workspace:*",
     "sanity-plugin-mux-input": "workspace:*",
     "sanity-plugin-shopify-assets": "workspace:*",
+    "sanity-plugin-studio-smartling": "workspace:*",
     "sanity-plugin-transifex": "workspace:*",
     "sanity-plugin-utils": "workspace:*",
     "sanity-plugin-workflow": "workspace:*",
