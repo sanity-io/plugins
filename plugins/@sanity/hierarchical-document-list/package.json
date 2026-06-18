@@ -1,6 +1,6 @@
 {
   "name": "@sanity/hierarchical-document-list",
-  "version": "2.1.3",
+  "version": "3.0.0",
   "description": "Sanity Plugin - Hierarchical Document List",
   "keywords": [
     "sanity",

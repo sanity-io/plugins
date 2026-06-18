@@ -1,5 +1,21 @@
 # @sanity/hierarchical-document-list
 
+## 3.0.0
+
+### Major Changes
+
+- [#985](https://github.com/sanity-io/plugins/pull/985) [`dae1385`](https://github.com/sanity-io/plugins/commit/dae13853914458025c244f703ac29bf714b5b2d5) Thanks [@hdoro](https://github.com/hdoro), [@snorrees](https://github.com/snorrees), [@stipsan](https://github.com/stipsan), [@mariuslundgard](https://github.com/mariuslundgard), [@pedrobonamin](https://github.com/pedrobonamin), [@RitaDias](https://github.com/RitaDias), [@tine-krueger](https://github.com/tine-krueger), [@apokaliptis](https://github.com/apokaliptis)! - Port @sanity/hierarchical-document-list to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+
+  - **react-dnd 16 compatibility fixed**: `@nosferatu500/react-sortable-tree` is upgraded to v5 and declared as a regular dependency instead of being bundled, fixing the Studio crash caused by importing the removed `DragSource`/`DropTarget` APIs from react-dnd 16
+  - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
+  - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
+  - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18.3 || ^19)
+  - **react-is peer dependency removed**: `react-is` is no longer required as a peer dependency
+  - **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported)
+  - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=14)
+
 ## [2.1.3](https://github.com/sanity-io/hierarchical-document-list/compare/v2.1.2...v2.1.3) (2025-12-18)
 
 ### Bug Fixes

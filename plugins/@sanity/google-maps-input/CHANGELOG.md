@@ -1,5 +1,20 @@
 # @sanity/google-maps-input
 
+## 5.0.0
+
+### Major Changes
+
+- [#1026](https://github.com/sanity-io/plugins/pull/1026) [`62b695b`](https://github.com/sanity-io/plugins/commit/62b695b340fa33feaea8f71fbb7545bfcd48804c) Thanks [@snorrees](https://github.com/snorrees), [@bjoerge](https://github.com/bjoerge), [@rexxars](https://github.com/rexxars), [@stipsan](https://github.com/stipsan), [@SimeonGriggs](https://github.com/SimeonGriggs), [@pedrobonamin](https://github.com/pedrobonamin), [@pierrenel](https://github.com/pierrenel), [@RitaDias](https://github.com/RitaDias), [@liamb13](https://github.com/liamb13)! - Port @sanity/google-maps-input to the Sanity plugins monorepo
+
+  This major release includes several breaking changes as part of the migration to the monorepo:
+
+  - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
+  - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
+  - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18 || ^19)
+  - **react-dom 19.2+ required**: `react-dom` is now a required peer dependency
+  - **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported)
+  - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=18)
+
 ## [4.2.1](https://github.com/sanity-io/google-maps-input/compare/v4.2.0...v4.2.1) (2025-12-18)
 
 ### Bug Fixes
