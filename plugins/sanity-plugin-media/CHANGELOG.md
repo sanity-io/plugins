@@ -1,5 +1,13 @@
 # sanity-plugin-media
 
+## 4.3.4
+
+### Patch Changes
+
+- [#1184](https://github.com/sanity-io/plugins/pull/1184) [`0e56680`](https://github.com/sanity-io/plugins/commit/0e56680d767d3c4974d1d2fe860d962e9953269d) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
+- [#1185](https://github.com/sanity-io/plugins/pull/1185) [`91055eb`](https://github.com/sanity-io/plugins/commit/91055ebe32d5e78dfbf717bcc0b55387be46bb9d) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/ui to ^3.2.0
+
 ## 4.3.3
 
 ### Patch Changes
