@@ -41,7 +41,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "sanity-translations-tab": "workspace:*"
+    "sanity-translations-tab": "workspace:^"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

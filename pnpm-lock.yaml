@@ -679,7 +679,7 @@ importers:
         specifier: 'catalog:'
         version: 6.1.0(@types/react@19.2.17)
       '@sanity/studio-secrets':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
@@ -1199,7 +1199,7 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/studio-secrets':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
@@ -2720,7 +2720,7 @@ importers:
   plugins/sanity-plugin-studio-smartling:
     dependencies:
       sanity-translations-tab:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../sanity-translations-tab
       styled-components:
         specifier: npm:@sanity/styled-components@latest
