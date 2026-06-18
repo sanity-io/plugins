@@ -2,7 +2,7 @@ name: Renovate
 
 on:
   schedule:
-    - cron: "0 */2 * * *" # Every 2 hours
+    - cron: '0 */2 * * *' # Every 2 hours
   pull_request:
     types: [closed]
     branches: [main]
@@ -67,5 +67,5 @@ jobs:
           configurationFile: .renovate-runner-config.json5
         env:
           GITHUB_COM_TOKEN: ${{ github.token }}
-          NODE_OPTIONS: "--max-old-space-size=4096"
+          NODE_OPTIONS: '--max-old-space-size=4096'
           LOG_LEVEL: debug
