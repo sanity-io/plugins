@@ -1,5 +1,5 @@
 ---
-'@sanity/hierarchical-document-list': major
+"@sanity/hierarchical-document-list": major
 ---
 
 Require Node.js 24.11 or later, to match the `engines.node` constraint of the `@nosferatu500/react-sortable-tree@5` runtime dependency (previously the package advertised a wider range that could fail engine-strict installs and mislead users).
