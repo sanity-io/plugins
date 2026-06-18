@@ -1,10 +1,11 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import {createRequire} from 'node:module'
+import path from 'node:path'
+import {pathToFileURL} from 'node:url'
 
-import {PkgConfigOptions} from '@sanity/pkg-utils'
-import {createJiti} from 'jiti'
+import type {loadConfig as LoadConfig, PkgConfigOptions} from '@sanity/pkg-utils'
 
-// Mirrors the config file candidates supported by `@sanity/pkg-utils`
+// Config file candidates supported by `@sanity/pkg-utils`.
 const CONFIG_FILE_NAMES = [
   'package.config.ts',
   'package.config.js',
@@ -13,28 +14,31 @@ const CONFIG_FILE_NAMES = [
   'package.config.mjs',
 ]
 
-const jiti = createJiti(import.meta.url)
-
 /**
  * Loads the `@sanity/pkg-utils` package.config file for the plugin in `basePath`.
  *
- * Loads the config with jiti instead of `loadConfig` from `@sanity/pkg-utils`: the latter is
- * tsx-based and cannot load TypeScript config files from CommonJS plugins on Node 24
- * (`ERR_MODULE_NOT_FOUND` with a `?namespace=` suffix), and returns the config double-wrapped
- * in `default` on older Node versions. Most plugins built with plugin-kit are CommonJS packages.
+ * `@sanity/pkg-utils` is a peer dependency, so we resolve `loadConfig` from the plugin's own
+ * installation (relative to `basePath`). This guarantees the config is parsed with the exact
+ * same pkg-utils version the plugin builds with, and lets plugin-kit run via `npx` without
+ * bundling its own copy of pkg-utils.
  */
 export async function loadPackageConfig(options: {
   basePath: string
 }): Promise<PkgConfigOptions | undefined> {
   const {basePath} = options
-  const configFile = CONFIG_FILE_NAMES.map((file) => path.join(basePath, file)).find((file) =>
-    fs.existsSync(file),
-  )
 
-  if (!configFile) {
+  // Cheap check first: avoid resolving the pkg-utils peer when there's no config to load.
+  const hasConfigFile = CONFIG_FILE_NAMES.some((file) => fs.existsSync(path.join(basePath, file)))
+  if (!hasConfigFile) {
     return undefined
   }
 
-  const config = await jiti.import<PkgConfigOptions>(configFile, {default: true})
-  return config ?? undefined
+  const pkgPath = path.join(basePath, 'package.json')
+  const require = createRequire(pkgPath)
+  const pkgUtilsEntry = require.resolve('@sanity/pkg-utils')
+  const {loadConfig} = (await import(pathToFileURL(pkgUtilsEntry).href)) as {
+    loadConfig: typeof LoadConfig
+  }
+
+  return loadConfig({cwd: basePath, pkgPath})
 }

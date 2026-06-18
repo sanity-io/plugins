@@ -1,6 +1,6 @@
 import {Box, Text, Tooltip} from '@sanity/ui'
-import {motion, useMotionValue} from 'framer-motion'
 import get from 'lodash-es/get.js'
+import {motion, useMotionValue} from 'motion/react'
 import {
   type ComponentType,
   type CSSProperties,
