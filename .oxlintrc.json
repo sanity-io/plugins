@@ -122,6 +122,15 @@
       }
     },
     {
+      "files": ["plugins/@sanity/personalization-plugin/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off",
+        "no-base-to-string": "off",
+        "no-await-in-loop": "off"
+      }
+    },
+    {
       "files": ["plugins/sanity-plugin-cloudinary/src/**/*.{ts,tsx}"],
       "rules": {
         "no-unsafe-type-assertion": "off"
