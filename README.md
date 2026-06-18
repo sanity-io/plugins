@@ -88,6 +88,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin)           | Debug tool for preview URL secrets and their status                 |
 | [`@sanity/document-internationalization`](./plugins/@sanity/document-internationalization)               | Document-level translations linked by a shared reference            |
 | [`@sanity/google-maps-input`](./plugins/@sanity/google-maps-input)                                       | Google Maps input for geopoint and geopointRadius fields            |
+| [`@sanity/hierarchical-document-list`](./plugins/@sanity/hierarchical-document-list)                     | Edit and persist hierarchical document trees                        |
 | [`@sanity/language-filter`](./plugins/@sanity/language-filter)                                           | Filter localized fields by language                                 |
 | [`@sanity/orderable-document-list`](./plugins/@sanity/orderable-document-list)                           | Drag-and-drop document ordering without leaving the editing surface |
 | [`@sanity/personalization-plugin`](./plugins/@sanity/personalization-plugin)                             | Field-level personalization and A/B testing experiments             |

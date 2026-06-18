@@ -21,6 +21,10 @@ import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
 import {googleMapsInputExample} from '#google-maps-input'
 import {googleTranslateExample} from '#google-translate'
+import {
+  hierarchicalDocumentListExample,
+  hierarchicalDocumentListExampleStructure,
+} from '#hierarchical-document-list'
 import {hotspotArrayExample} from '#hotspot-array'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
 import {iframePaneExample} from '#iframe-pane'
@@ -101,6 +105,11 @@ export default defineConfig([
     plugins: [orderableDocumentListExample(), orderableDocumentListExampleStructure()],
   }),
   createWorkspace({
+    name: 'hierarchical-document-list-example',
+    title: 'Hierarchical Document List',
+    plugins: [hierarchicalDocumentListExample(), hierarchicalDocumentListExampleStructure()],
+  }),
+  createWorkspace({
     name: 'presets-studio',
     title: 'Presets Studio',
     plugins: [structureTool(), presetsWorkspace()],
@@ -130,6 +139,7 @@ export default defineConfig([
       mediaExample(),
       // add new plugins here
       googleMapsInputExample(),
+      hierarchicalDocumentListExample(),
       shopifyAssetsExample(),
       personalizationExample(),
       cloudinaryExample(),
