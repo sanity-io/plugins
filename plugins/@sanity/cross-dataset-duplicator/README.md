@@ -76,6 +76,12 @@ The plugin has some configuration options. These can be set by adding a config f
           label: "All articles",
           query: '_type == "article"'
         }
+      ],
+      migrationFilters: [
+        {
+          sourceDataset: 'production',
+          targets: [{dataset: 'staging'}],
+        },
       ]
     })
   ]
@@ -89,6 +95,7 @@ The plugin has some configuration options. These can be set by adding a config f
 - `filter` (String, default: undefined) - Set a predicate for documents when gathering dependencies.
 - `follow` (("inbound" | "outbound")[], default: ["outbound"]) – Add buttons to allow the user to begin with just the existing document or first fetch all inbound references.
 - `queries`(Array[{label: string, query: string}], default: []) - Add button to allow the query to be populate with predefined useful queries.
+- `migrationFilters` (Array[{ sourceDataset: string, targets: Array[{ projectId?: string, dataset: string }] }], default: []) – Restrict which Datasets and Projects are allowed as destinations when migrating from a given source Dataset. If no filter is configured for a source Dataset, all Workspaces are allowed as targets (the default behaviour). When a target omits `projectId`, only Workspaces in the same Project as the source are allowed. This helps prevent accidental duplication to the wrong Dataset.
 
 #### Action Options
 
@@ -156,7 +163,6 @@ If you want to duplicate data across different projects, you need to enable CORS
 ## Future feature ideas
 
 - Save predefined GROQ queries in the Tool to make bulk repeated Migrations simpler
-- Config options for allowed migrations (eg Dev -> Staging but not Dev -> Live)
 - Config options for permissions/user role checks
 
 ## License
