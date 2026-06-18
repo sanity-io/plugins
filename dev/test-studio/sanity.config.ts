@@ -26,6 +26,7 @@ import {
   internationalizedArrayAsyncLanguages,
   internationalizedArrayExample,
 } from '#internationalized-array'
+import {jokesWidgetExample} from '#jokes-widget'
 import {latexInputExample} from '#latex-input'
 import {markdownExample} from '#markdown'
 import {mediaExample} from '#media'
@@ -112,6 +113,7 @@ export default defineConfig([
     plugins: [
       structureTool(),
       dashboardToolExample(),
+      jokesWidgetExample(),
       documentListWidgetExample(),
       netlifyWidgetExample(),
       vercelWidgetExample(),

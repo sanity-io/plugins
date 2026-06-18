@@ -238,6 +238,11 @@
       ],
     },
 
+    "plugins/sanity-plugin-dashboard-dad-jokes": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
     "plugins/sanity-plugin-dashboard-widget-document-list": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
