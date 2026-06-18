@@ -11,3 +11,6 @@
 
 # Salesforce Commerce Cloud plugin
 /plugins/@sanity/sfcc/ @sanity-io/solutions
+
+# Personalization plugin
+/plugins/@sanity/personalization-plugin/ @sanity-io/solutions
