@@ -90,7 +90,7 @@
     "react-is": "^19.0.0",
     "sanity": "catalog:",
     "styled-components": "catalog:",
-    "typescript": "5.8.2"
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
     "react": "^18.3 || ^19",
