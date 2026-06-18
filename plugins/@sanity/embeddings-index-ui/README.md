@@ -7,6 +7,7 @@
 > The new Embeddings feature offers a more integrated experience with improved performance and full support going forward. **No new features or fixes will be made to this package.**
 >
 > If you have questions or need migration support, please [open an issue](https://github.com/sanity-io/plugins/issues) or reach out via [Sanity Community Discord](https://discord.com/servers/sanity-1304483263171264613).
+
 ---
 
 Sanity Studio plugins that interact with the `/embeddings-index` HTTP API.

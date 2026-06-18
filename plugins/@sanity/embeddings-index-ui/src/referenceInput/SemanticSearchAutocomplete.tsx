@@ -103,7 +103,7 @@ export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAuto
             }
           }
         })
-.catch((e) => {
+        .catch((e) => {
           console.error(e)
           if (queryRef.current === queryString) {
             setSearching(false)
