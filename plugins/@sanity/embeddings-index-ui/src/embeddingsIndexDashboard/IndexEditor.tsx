@@ -128,7 +128,9 @@ export function IndexEditor(props: {
             <Text>
               <ul style={{marginLeft: -10}}>
                 {/* eslint-disable-next-line react/no-array-index-key */}
-                {errors?.map((error, i) => <li key={`${error}-${i}`}>{error}</li>)}
+                {errors?.map((error, i) => (
+                  <li key={`${error}-${i}`}>{error}</li>
+                ))}
               </ul>
             </Text>
           </Card>

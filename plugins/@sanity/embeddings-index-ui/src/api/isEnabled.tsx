@@ -5,7 +5,7 @@ import {useProjectId} from 'sanity'
 import {useApiClient} from './embeddingsApiHooks'
 
 export type FeatureStatus = 'enabled' | 'disabled' | 'loading' | 'error'
-export const FeatureEnabledContext = createContext<FeatureStatus>('loading')
+const FeatureEnabledContext = createContext<FeatureStatus>('loading')
 
 export function useIsFeatureEnabled() {
   const client = useApiClient()

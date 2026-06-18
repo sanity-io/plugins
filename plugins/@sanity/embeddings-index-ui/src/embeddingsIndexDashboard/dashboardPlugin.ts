@@ -3,7 +3,7 @@ import {definePlugin, Tool} from 'sanity'
 
 import {EmbeddingsIndexTool} from './EmbeddingsIndexTool'
 
-export const embeddingsIndexTool: Tool = {
+const embeddingsIndexTool: Tool = {
   name: 'embeddings-index',
   title: 'Embeddings',
   icon: EarthGlobeIcon,

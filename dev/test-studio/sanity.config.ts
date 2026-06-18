@@ -18,6 +18,7 @@ import {documentInternationalizationExample} from '#document-internationalizatio
 import {documentInternationalizationTranslationExample} from '#document-internationalization-translation'
 import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
+import {embeddingsIndexUiExample} from '#embeddings-index-ui'
 import {googleTranslateExample} from '#google-translate'
 import {hotspotArrayExample} from '#hotspot-array'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
@@ -125,6 +126,7 @@ export default defineConfig([
       googleTranslateExample(),
       mediaExample(),
       // add new plugins here
+      embeddingsIndexUiExample(),
       muxInputExample(),
       asyncListExample(),
       tableExample(),

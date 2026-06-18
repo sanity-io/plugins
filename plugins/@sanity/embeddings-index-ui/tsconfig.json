@@ -1,4 +1,5 @@
 {
-  "extends": "./tsconfig.settings",
-  "include": ["./src", "./package.config.ts"]
+  "extends": "@repo/tsconfig/check.json",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "node_modules"]
 }

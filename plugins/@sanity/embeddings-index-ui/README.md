@@ -10,12 +10,11 @@
 >
 > If you have questions or need migration support, please [open a discussion](https://github.com/sanity-io/embeddings-index-ui/discussions) or reach out via [Sanity Community Discord](https://discord.com/servers/sanity-1304483263171264613).
 
-
 ---
 
-Sanity Studio v3 plugins that interact with the `/embeddings-index` HTTP API.
+Sanity Studio plugins that interact with the `/embeddings-index` HTTP API.
 
-The Embeddings Index API enables the creation, management, and search of named embeddings vector indexes. 
+The Embeddings Index API enables the creation, management, and search of named embeddings vector indexes.
 
 > Using this feature requires Sanity to send data to OpenAI.com, and Pinecone.io for storing vector interpretations of documents.
 
@@ -35,10 +34,10 @@ For a CLI alternative, check out the [Embeddings Index CLI](https://github.com/s
 npm install @sanity/embeddings-index-ui
 ```
 
-`@sanity/embeddings-index-ui` contains the following Sanity Studio plugins: 
+`@sanity/embeddings-index-ui` contains the following Sanity Studio plugins:
 
-* [embeddingsIndexReferenceInput](#embeddings-index-reference-input): semantic search mode for reference inputs
-* [embeddingsIndexDashboard](#embeddings-index-dashboard): manage indexes in a Sanity Studio UI tool
+- [embeddingsIndexReferenceInput](#embeddings-index-reference-input): semantic search mode for reference inputs
+- [embeddingsIndexDashboard](#embeddings-index-dashboard): manage indexes in a Sanity Studio UI tool
 
 For more information about using the plugins, see the relevant sections below.
 
@@ -74,19 +73,19 @@ defineField({
     embeddingsIndex: {
       indexName: 'my-index', // Name of the embeddings index
       maxResults: 10, // Maximum number of returned results per request. Default: 10
-      searchMode: 'embeddings' // Sets default search mode for the field. Enables toggling between 'embeddings' (semantic search) and 'default' (default search based on GROQ filter)
-    }
-  }
+      searchMode: 'embeddings', // Sets default search mode for the field. Enables toggling between 'embeddings' (semantic search) and 'default' (default search based on GROQ filter)
+    },
+  },
 })
 ```
 
 Setting `options.embeddings.indexName` on a reference field enables searching into the named index.
 
-*Note*: the search uses `to` types as a filter for the index. Therefore, the types that the
+_Note_: the search uses `to` types as a filter for the index. Therefore, the types that the
 the reference field expects must exist in the index: the GROQ query specified in the embeddings index
 `filter` must include one or more documents that are relevant to the reference field.
 
-*Caveats*: the semantic search functionality does not honor `options.filter`.
+_Caveats_: the semantic search functionality does not honor `options.filter`.
 
 ### Default embeddings index configuration
 
@@ -100,11 +99,13 @@ import {embeddingsIndexReferenceInput} from '@sanity/embeddings-index-ui'
 
 export default defineConfig({
   //...
-  plugins: [embeddingsIndexReferenceInput({
-    indexName: 'my-index', // Inputs use 'my-index' as the default index
-    maxResults: 15, // Inputs return max. 15 results per request
-    searchMode: 'embeddings' // Semantic search is the default search mode
-  })],
+  plugins: [
+    embeddingsIndexReferenceInput({
+      indexName: 'my-index', // Inputs use 'my-index' as the default index
+      maxResults: 15, // Inputs return max. 15 results per request
+      searchMode: 'embeddings', // Semantic search is the default search mode
+    }),
+  ],
 })
 ```
 
@@ -117,8 +118,8 @@ defineField({
   type: 'reference',
   to: [{type: 'myType'}],
   options: {
-    embeddingsIndex: true
-  }
+    embeddingsIndex: true,
+  },
 })
 ```
 
@@ -139,10 +140,10 @@ import {embeddingsIndexDashboard} from '@sanity/embeddings-index-ui'
 
 export default defineConfig({
   //...
-  plugins: [    
+  plugins: [
     process.env.NODE_ENV === 'development'
-    ? embeddingsIndexDashboard()
-    : {name: 'embeddings-index-dashboard-disabled'}
+      ? embeddingsIndexDashboard()
+      : {name: 'embeddings-index-dashboard-disabled'},
   ],
 })
 ```
@@ -172,18 +173,3 @@ export default defineConfig({
 ## License
 
 [MIT](LICENSE) © Sanity
-
-## Develop and test
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build and watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hot reload in the studio.
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/embeddings-plugin/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
-
-Semantic release will only release on configured branches, so it is safe to run release on any branch.

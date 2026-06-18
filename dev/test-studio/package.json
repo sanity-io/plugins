@@ -20,6 +20,7 @@
     "@sanity/debug-live-sync-tags": "workspace:*",
     "@sanity/debug-preview-url-secret-plugin": "workspace:*",
     "@sanity/document-internationalization": "workspace:*",
+    "@sanity/embeddings-index-ui": "workspace:*",
     "@sanity/icons": "^3.7.4",
     "@sanity/language-filter": "workspace:*",
     "@sanity/orderable-document-list": "workspace:*",

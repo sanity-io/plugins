@@ -9,7 +9,7 @@ import {
   setIfMissing,
   unset,
 } from 'sanity'
-import {useDocumentPane} from 'sanity/desk'
+import {useDocumentPane} from 'sanity/structure'
 
 import {QueryResult} from '../api/embeddingsApi'
 import {FeatureDisabledNotice, FeatureError, useIsFeatureEnabledContext} from '../api/isEnabled'
