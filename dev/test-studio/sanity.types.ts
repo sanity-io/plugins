@@ -15,6 +15,11 @@
 export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: schema.json
+export type Options = {
+  placeholder?: string
+  defaultValue?: string
+}
+
 export type Rendition = {
   publicuri?: string
 }
@@ -903,6 +908,91 @@ export type CrossDatasetDuplicatorArticle = {
   >
 }
 
+export type GoogleMapsTest = {
+  _id: string
+  _type: 'googleMapsTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  location?: Geopoint
+  serviceArea?: GeopointRadius
+  locations?: Array<
+    {
+      _key: string
+    } & Geopoint
+  >
+}
+
+export type GeopointRadius = {
+  _type: 'geopointRadius'
+  lat: number
+  lng: number
+  alt?: number
+  radius: number
+}
+
+export type Geopoint = {
+  _type: 'geopoint'
+  lat?: number
+  lng?: number
+  alt?: number
+}
+
+export type FormField = {
+  _type: 'formField'
+  type?:
+    | 'checkbox'
+    | 'color'
+    | 'date'
+    | 'datetime-local'
+    | 'email'
+    | 'file'
+    | 'hidden'
+    | 'number'
+    | 'radio'
+    | 'range'
+    | 'select'
+    | 'tel'
+    | 'text'
+    | 'textarea'
+    | 'time'
+    | 'url'
+  label?: string
+  name: string
+  required?: boolean
+  validation?: Array<{
+    type?: never
+    value?: string
+    message?: string
+    _key: string
+  }>
+  choices?: Array<{
+    label?: string
+    value?: string
+    _key: string
+  }>
+  options?: Options
+}
+
+export type Form = {
+  _id: string
+  _type: 'form'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  id?: Slug
+  fields?: Array<
+    {
+      _key: string
+    } & FormField
+  >
+  submitButton?: {
+    text?: string
+  }
+}
+
 export type SanityFileAssetReference = {
   _ref: string
   _type: 'reference'
@@ -1185,14 +1275,8 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData
 }
 
-export type Geopoint = {
-  _type: 'geopoint'
-  lat?: number
-  lng?: number
-  alt?: number
-}
-
 export type AllSanitySchemaTypes =
+  | Options
   | Rendition
   | SanityVercelProtectionBypass
   | SanityImageAssetReference
@@ -1276,6 +1360,11 @@ export type AllSanitySchemaTypes =
   | HierarchyAuthor
   | CrossDatasetDuplicatorArticleReference
   | CrossDatasetDuplicatorArticle
+  | GoogleMapsTest
+  | GeopointRadius
+  | Geopoint
+  | FormField
+  | Form
   | SanityFileAssetReference
   | MediaProduct
   | MediaTag
@@ -1301,4 +1390,3 @@ export type AllSanitySchemaTypes =
   | SanityFileAsset
   | SanityAssetSourceData
   | SanityImageAsset
-  | Geopoint
