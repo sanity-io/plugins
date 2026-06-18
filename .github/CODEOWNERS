@@ -1,6 +1,6 @@
 # By default, assign the Studio team.
 # Later matching rules will take precedence.
-* @sanity-io/studio
+* @sanity-io/studio @sanity-io/solutions
 
 # For areas of responsibility, assign the specific team
 # that is responsible. It is possible to assign to individuals,
