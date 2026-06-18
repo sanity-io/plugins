@@ -997,6 +997,12 @@ importers:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
         version: 10.5.7(@types/node@24.13.2)(@typescript/native-preview@7.0.0-dev.20260421.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.20.0)(typescript@5.9.3)
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.2
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.7)(react@19.2.7)
       '@types/google.maps':
         specifier: ^3.58.1
         version: 3.65.1
@@ -1012,6 +1018,9 @@ importers:
       babel-plugin-styled-components:
         specifier: 'catalog:'
         version: 2.3.0(@babel/core@7.29.7)(@sanity/styled-components@6.1.24)
+      jsdom:
+        specifier: ^29.0.1
+        version: 29.1.1(@noble/hashes@2.2.0)
       react:
         specifier: 'catalog:'
         version: 19.2.7
