@@ -1,6 +1,6 @@
 import type {SanityClient} from '@sanity/client'
 import type {ToastParams} from '@sanity/ui'
-import {Component} from 'react'
+import {type Ref, useImperativeHandle, useState} from 'react'
 
 import {DocumentListWrapper} from './DocumentListWrapper'
 import {resetOrder} from './helpers/resetOrder'
@@ -13,72 +13,68 @@ export interface OrderableDocumentListProps {
     params?: Record<string, unknown>
     currentVersion?: string
   }
+  ref?: Ref<OrderableDocumentListHandle>
 }
 
-interface State {
-  showIncrements: boolean
-  resetOrderTransaction: ToastParams
+export interface OrderableDocumentListHandle {
+  actionHandlers: {
+    showIncrements: () => void
+    resetOrder: () => Promise<void>
+  }
 }
 
-// Must use a Class Component here so the actionHandlers can be called
-export class OrderableDocumentList extends Component<OrderableDocumentListProps, State> {
-  constructor(props: OrderableDocumentListProps) {
-    super(props)
-    this.state = {
-      showIncrements: false,
-      resetOrderTransaction: {},
-    }
-  }
+// The structure tool reads `actionHandlers` off the pane component's ref to wire
+// up its menu items, so we expose them through `useImperativeHandle`.
+export function OrderableDocumentList({options, ref}: OrderableDocumentListProps) {
+  const [showIncrements, setShowIncrements] = useState(false)
+  const [resetOrderTransaction, setResetOrderTransaction] = useState<ToastParams>({})
 
-  actionHandlers = {
-    showIncrements: () => {
-      this.setState((state) => ({
-        showIncrements: !state.showIncrements,
-      }))
-    },
-
-    resetOrder: async () => {
-      this.setState(() => ({
-        resetOrderTransaction: {
-          status: `info`,
-          title: `Reordering started...`,
-          closable: true,
+  useImperativeHandle(
+    ref,
+    () => ({
+      actionHandlers: {
+        showIncrements: () => {
+          setShowIncrements((current) => !current)
         },
-      }))
 
-      const update = await resetOrder(this.props.options)
+        resetOrder: async () => {
+          setResetOrderTransaction({
+            status: `info`,
+            title: `Reordering started...`,
+            closable: true,
+          })
 
-      const reorderWasSuccessful = update?.results?.length
+          const update = await resetOrder(options)
 
-      this.setState(() => ({
-        resetOrderTransaction: {
-          status: reorderWasSuccessful ? `success` : `info`,
-          title: reorderWasSuccessful
-            ? `Reordered ${update.results.length === 1 ? `Document` : `Documents`}`
-            : `Reordering failed`,
-          closable: true,
+          const reorderWasSuccessful = update?.results?.length
+
+          setResetOrderTransaction({
+            status: reorderWasSuccessful ? `success` : `info`,
+            title: reorderWasSuccessful
+              ? `Reordered ${update.results.length === 1 ? `Document` : `Documents`}`
+              : `Reordering failed`,
+            closable: true,
+          })
         },
-      }))
-    },
+      },
+    }),
+    [options],
+  )
+
+  const {type, filter, params, currentVersion} = options
+
+  if (!type) {
+    return null
   }
 
-  override render() {
-    const {options} = this.props
-    const {type, filter, params, currentVersion} = options
-
-    if (!type) {
-      return null
-    }
-
-    return (
-      <DocumentListWrapper
-        filter={filter}
-        params={params}
-        type={type}
-        showIncrements={this.state.showIncrements}
-        resetOrderTransaction={this.state.resetOrderTransaction}
-        currentVersion={currentVersion}
-      />
-    )
-  }
+  return (
+    <DocumentListWrapper
+      filter={filter}
+      params={params}
+      type={type}
+      showIncrements={showIncrements}
+      resetOrderTransaction={resetOrderTransaction}
+      currentVersion={currentVersion}
+    />
+  )
 }
