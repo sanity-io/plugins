@@ -690,6 +690,70 @@ export type MuxTrack = {
   text_type?: string
 }
 
+export type CloudinaryTest = {
+  _id: string
+  _type: 'cloudinaryTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  asset?: CloudinaryAsset
+  assetList?: Array<
+    {
+      _key: string
+    } & CloudinaryAsset
+  >
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+}
+
+export type CloudinaryAsset = {
+  _type: 'cloudinary.asset'
+  public_id?: string
+  resource_type?: string
+  type?: string
+  format?: string
+  version?: number
+  url?: string
+  secure_url?: string
+  width?: number
+  height?: number
+  bytes?: number
+  duration?: number
+  tags?: Array<string>
+  created_at?: string
+  derived?: Array<
+    {
+      _key: string
+    } & CloudinaryAssetDerived
+  >
+  access_mode?: string
+  context?: CloudinaryAssetContext
+}
+
+export type CloudinaryAssetContextCustom = {
+  _type: 'cloudinary.assetContextCustom'
+  alt?: string
+  caption?: string
+}
+
+export type CloudinaryAssetContext = {
+  _type: 'cloudinary.assetContext'
+  custom?: CloudinaryAssetContextCustom
+}
+
+export type CloudinaryAssetDerived = {
+  _type: 'cloudinary.assetDerived'
+  raw_transformation?: string
+  url?: string
+  secure_url?: string
+}
+
 export type SanityFileAssetReference = {
   _ref: string
   _type: 'reference'
@@ -1043,6 +1107,11 @@ export type AllSanitySchemaTypes =
   | MuxStaticRenditionFile
   | MuxPlaybackId
   | MuxTrack
+  | CloudinaryTest
+  | CloudinaryAsset
+  | CloudinaryAssetContextCustom
+  | CloudinaryAssetContext
+  | CloudinaryAssetDerived
   | SanityFileAssetReference
   | MediaProduct
   | MediaTag
