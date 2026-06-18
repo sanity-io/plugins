@@ -214,6 +214,63 @@
         "babel-plugin-styled-components",
       ],
     },
+
+    "plugins/@sanity/form-toolkit": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/google-maps-input": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
+    "plugins/@sanity/cross-dataset-duplicator": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
+    "plugins/sanity-plugin-studio-smartling": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/hierarchical-document-list": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-shopify-assets": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/@sanity/personalization-plugin": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-cloudinary": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
     "plugins/@sanity/sanity-plugin-async-list": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],

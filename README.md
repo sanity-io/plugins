@@ -83,13 +83,18 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`@sanity/assist`](./plugins/@sanity/assist)                                                             | AI-powered writing and translation assistance for Studio            |
 | [`@sanity/code-input`](./plugins/@sanity/code-input)                                                     | Code editor input powered by CodeMirror                             |
 | [`@sanity/color-input`](./plugins/@sanity/color-input)                                                   | Color picker input for Sanity Studio                                |
+| [`@sanity/cross-dataset-duplicator`](./plugins/@sanity/cross-dataset-duplicator)                         | Migrate documents and assets between datasets from inside Studio    |
 | [`@sanity/dashboard`](./plugins/@sanity/dashboard)                                                       | Tool for rendering dashboard widgets                                |
 | [`@sanity/debug-live-sync-tags`](./plugins/@sanity/debug-live-sync-tags)                                 | Debug tool for inspecting live sync tags                            |
 | [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin)           | Debug tool for preview URL secrets and their status                 |
 | [`@sanity/document-internationalization`](./plugins/@sanity/document-internationalization)               | Document-level translations linked by a shared reference            |
 | [`@sanity/embeddings-index-ui`](./plugins/@sanity/embeddings-index-ui)                                   | Studio plugins for the embeddings index API (deprecated)            |
+| [`@sanity/form-toolkit`](./plugins/@sanity/form-toolkit)                                                 | Toolkit for integrating forms with a Sanity Studio                  |
+| [`@sanity/google-maps-input`](./plugins/@sanity/google-maps-input)                                       | Google Maps input for geopoint and geopointRadius fields            |
+| [`@sanity/hierarchical-document-list`](./plugins/@sanity/hierarchical-document-list)                     | Edit and persist hierarchical document trees                        |
 | [`@sanity/language-filter`](./plugins/@sanity/language-filter)                                           | Filter localized fields by language                                 |
 | [`@sanity/orderable-document-list`](./plugins/@sanity/orderable-document-list)                           | Drag-and-drop document ordering without leaving the editing surface |
+| [`@sanity/personalization-plugin`](./plugins/@sanity/personalization-plugin)                             | Field-level personalization and A/B testing experiments             |
 | [`@sanity/presets`](./plugins/@sanity/presets)                                                           | Experimental preset patterns for Sanity Studio                      |
 | [`@sanity/rich-date-input`](./plugins/@sanity/rich-date-input)                                           | Timezone-aware datetime input for Sanity Studio                     |
 | [`@sanity/sanity-plugin-async-list`](./plugins/@sanity/sanity-plugin-async-list)                         | Autocomplete string input with options loaded from an external API  |
@@ -99,6 +104,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo)                                                 | Aprimo asset selector integration                                   |
 | [`sanity-plugin-asset-source-unsplash`](./plugins/sanity-plugin-asset-source-unsplash)                   | Use Unsplash images directly in Sanity Studio                       |
 | [`sanity-plugin-bynder-input`](./plugins/sanity-plugin-bynder-input)                                     | Bynder asset picker integration                                     |
+| [`sanity-plugin-cloudinary`](./plugins/sanity-plugin-cloudinary)                                         | Cloudinary asset source and schema integration                      |
 | [`sanity-plugin-dashboard-widget-document-list`](./plugins/sanity-plugin-dashboard-widget-document-list) | Dashboard widget for displaying document lists                      |
 | [`sanity-plugin-dashboard-widget-netlify`](./plugins/sanity-plugin-dashboard-widget-netlify)             | Dashboard widget for triggering Netlify builds                      |
 | [`sanity-plugin-dashboard-widget-vercel`](./plugins/sanity-plugin-dashboard-widget-vercel)               | Dashboard widget for managing Vercel deployments                    |
@@ -111,6 +117,8 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`sanity-plugin-markdown`](./plugins/sanity-plugin-markdown)                                             | Markdown editor input                                               |
 | [`sanity-plugin-media`](./plugins/sanity-plugin-media)                                                   | Asset management with tagging, filtering and batch operations       |
 | [`sanity-plugin-mux-input`](./plugins/sanity-plugin-mux-input)                                           | Upload and play Mux-hosted video from Sanity Studio                 |
+| [`sanity-plugin-shopify-assets`](./plugins/sanity-plugin-shopify-assets)                                 | Choose assets from your Shopify store in your Sanity Studio         |
+| [`sanity-plugin-studio-smartling`](./plugins/sanity-plugin-studio-smartling)                             | In-studio integration with Smartling for content translation        |
 | [`sanity-plugin-transifex`](./plugins/sanity-plugin-transifex)                                           | In-studio integration with Transifex for content translation        |
 | [`sanity-naive-html-serializer`](./plugins/sanity-naive-html-serializer)                                 | Serialize Sanity documents and rich text fields to HTML             |
 | [`sanity-plugin-utils`](./plugins/sanity-plugin-utils)                                                   | Handy hooks and components for Sanity Studio plugins                |

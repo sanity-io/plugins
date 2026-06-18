@@ -1,0 +1,81 @@
+{
+  "name": "sanity-plugin-shopify-assets",
+  "version": "2.0.0",
+  "description": "Choose assets from your Shopify store in your Sanity Studio",
+  "keywords": [
+    "assets",
+    "images",
+    "sanity",
+    "sanity-plugin",
+    "shopify",
+    "source"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-shopify-assets#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-shopify-assets"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "pkg build --strict --check --clean",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.0",
+    "@sanity/ui": "catalog:",
+    "axios": "^1.2.2",
+    "pretty-bytes": "^6.0.0",
+    "pretty-ms": "^8.0.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-photo-album": "^2.0.0",
+    "rxjs": "catalog:",
+    "video.js": "^7.20.3"
+  },
+  "devDependencies": {
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/pkg-utils": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@types/video.js": "^7.3.58",
+    "babel-plugin-react-compiler": "catalog:",
+    "babel-plugin-styled-components": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^19.2",
+    "react-dom": "^19.2",
+    "sanity": "^5 || ^6.0.0-0",
+    "styled-components": "^6.1"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

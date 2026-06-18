@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-media",
-  "version": "4.3.3",
+  "version": "4.3.4",
   "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
   "keywords": [
     "asset",
@@ -59,7 +59,7 @@
     "copy-to-clipboard": "^3.3.1",
     "date-fns": "^4.0.0",
     "filesize": "^9.0.0",
-    "groq": "^3.0.0",
+    "groq": "^6.1.0",
     "is-hotkey-esm": "^1.0.0",
     "nanoid": "^3.3.8",
     "pluralize": "^8.0.0",
@@ -71,13 +71,12 @@
     "react-virtuoso": "^4.12.5",
     "redux": "^5.0.1",
     "redux-observable": "3.0.0-rc.2",
-    "rxjs": "^7.8.1",
+    "rxjs": "^7.8.2",
     "zod": "^3.21.4"
   },
   "devDependencies": {
     "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
-    "@sanity/vision": "catalog:",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",

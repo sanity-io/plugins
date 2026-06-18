@@ -10,8 +10,10 @@ import {aprimoExample} from '#aprimo'
 import {assistExample} from '#assist'
 import {asyncListExample} from '#async-list'
 import {bynderExample} from '#bynder'
+import {cloudinaryExample} from '#cloudinary'
 import {codeInputExample} from '#code-input'
 import {colorExample} from '#color'
+import {crossDatasetDuplicatorExample} from '#cross-dataset-duplicator'
 import {dashboardToolExample} from '#dashboard-tool'
 import {debugLiveSyncTagsExample} from '#debug-live-sync-tags'
 import {documentInternationalizationExample} from '#document-internationalization'
@@ -19,7 +21,13 @@ import {documentInternationalizationTranslationExample} from '#document-internat
 import {documentListWidgetExample} from '#document-list-widget'
 import {documentsPaneExample} from '#documents-pane'
 import {embeddingsIndexUiExample} from '#embeddings-index-ui'
+import {formToolkitExample} from '#form-toolkit'
+import {googleMapsInputExample} from '#google-maps-input'
 import {googleTranslateExample} from '#google-translate'
+import {
+  hierarchicalDocumentListExample,
+  hierarchicalDocumentListExampleStructure,
+} from '#hierarchical-document-list'
 import {hotspotArrayExample} from '#hotspot-array'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
 import {iframePaneExample} from '#iframe-pane'
@@ -36,11 +44,14 @@ import {
   orderableDocumentListExample,
   orderableDocumentListExampleStructure,
 } from '#orderable-document-list'
+import {personalizationExample} from '#personalization'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
 import {sanityNaiveHtmlSerializerExample} from '#sanity-naive-html-serializer'
 import {scriptRunnerTool} from '#script-runner'
 import {sfccExample} from '#sfcc'
+import {shopifyAssetsExample} from '#shopify-assets'
+import {smartlingExample} from '#smartling'
 import {studioSecretsExample} from '#studio-secrets'
 import {tableExample} from '#table'
 import {transifexExample} from '#transifex'
@@ -75,6 +86,7 @@ export default defineConfig([
   createWorkspace({name: 'utils-example', title: 'Utils Example', plugins: [utilsExample()]}),
   createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
   createWorkspace({name: 'transifex-example', title: 'Transifex', plugins: [transifexExample()]}),
+  createWorkspace({name: 'smartling-example', title: 'Smartling', plugins: [smartlingExample()]}),
   createWorkspace({name: 'documents-pane-example', plugins: [documentsPaneExample()]}),
   createWorkspace({
     name: 'translations-tab-example',
@@ -96,6 +108,11 @@ export default defineConfig([
     name: 'orderable-document-list-example',
     title: 'Orderable Document List',
     plugins: [orderableDocumentListExample(), orderableDocumentListExampleStructure()],
+  }),
+  createWorkspace({
+    name: 'hierarchical-document-list-example',
+    title: 'Hierarchical Document List',
+    plugins: [hierarchicalDocumentListExample(), hierarchicalDocumentListExampleStructure()],
   }),
   createWorkspace({
     name: 'presets-studio',
@@ -127,6 +144,13 @@ export default defineConfig([
       mediaExample(),
       // add new plugins here
       embeddingsIndexUiExample(),
+      formToolkitExample(),
+      googleMapsInputExample(),
+      crossDatasetDuplicatorExample(),
+      hierarchicalDocumentListExample(),
+      shopifyAssetsExample(),
+      personalizationExample(),
+      cloudinaryExample(),
       muxInputExample(),
       asyncListExample(),
       tableExample(),
@@ -154,4 +178,14 @@ export default defineConfig([
     name: 'internationalized-array-async-languages',
     plugins: [internationalizedArrayAsyncLanguages()],
   }),
+  // Destination workspace for @sanity/cross-dataset-duplicator: uses a
+  // different dataset so it can be picked as a duplication target
+  {
+    projectId,
+    dataset: 'test',
+    name: 'cross-dataset-duplicator-target',
+    title: 'Cross Dataset Duplicator Target',
+    basePath: '/cross-dataset-duplicator-target',
+    plugins: [structureTool(), crossDatasetDuplicatorExample()],
+  },
 ])

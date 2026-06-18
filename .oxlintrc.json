@@ -16,6 +16,9 @@
     "**/sanity.types.ts",
     "turbo/generators/config.ts",
     "plugins/sanity-naive-html-serializer/test/**",
+    // Illustrative docs referencing optional third-party form libraries
+    // (formik, react-hook-form, @tanstack/react-form, zod); not built or published
+    "plugins/@sanity/form-toolkit/examples/**",
     "packages/@sanity/plugin-kit/assets/**",
     "packages/@sanity/plugin-kit/test/fixtures/**",
     // Moved as-is from the standalone repo; legacy code will be brought up to
@@ -112,10 +115,48 @@
       }
     },
     {
+      // The plugin is built on the classic Google Maps JS API (google.maps.Marker,
+      // google.maps.places.Autocomplete), which Google deprecated in favor of newer
+      // APIs but still supports. Migrating to the new APIs is out of scope for the port.
+      // Casting Sanity input props to the plugin's input component props is a known pattern.
+      "files": ["plugins/@sanity/google-maps-input/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-deprecated": "off",
+        "no-unsafe-type-assertion": "off"
+      }
+    },
+    {
+      "files": ["plugins/@sanity/personalization-plugin/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off",
+        "no-base-to-string": "off",
+        "no-await-in-loop": "off"
+      }
+    },
+    {
+      "files": ["plugins/sanity-plugin-cloudinary/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unsafe-type-assertion": "off"
+      }
+    },
+    {
       "files": ["plugins/sanity-naive-html-serializer/test/**/*.ts"],
       "rules": {
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off"
+      }
+    },
+    {
+      "files": ["plugins/@sanity/hierarchical-document-list/src/**"],
+      "rules": {
+        // Legacy code interfaces with the loosely-typed react-sortable-tree API
+        "no-unsafe-type-assertion": "off",
+        // Scaffold blocks and split text segments are purely positional
+        "react/no-array-index-key": "off",
+        // Memoized forwardRef link wrappers passed via the `as` prop (mirrors
+        // Sanity's own PaneItem pattern); identity is stable via useMemo
+        "react/no-unstable-nested-components": "off"
       }
     },
     {
