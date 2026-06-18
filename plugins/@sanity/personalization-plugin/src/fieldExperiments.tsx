@@ -225,7 +225,7 @@ export const fieldLevelExperiments = definePlugin<FieldPluginConfig>((config) =>
     experimentId,
   })
   return {
-    name: 'sanity-personalistaion-plugin-field-level-experiments',
+    name: 'sanity-personalization-plugin-field-level-experiments',
     schema: {
       types: fieldSchemaConfig,
     },
