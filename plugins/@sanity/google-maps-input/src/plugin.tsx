@@ -1,4 +1,4 @@
-import {definePlugin, type SchemaType} from 'sanity'
+import {defineField, definePlugin, defineType, type SchemaType} from 'sanity'
 
 import {setGeoConfig} from './global-workaround'
 import {GeopointInput, type GeopointInputProps} from './input/GeopointInput'
@@ -11,34 +11,34 @@ export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
     name: 'google-maps-input',
     schema: {
       types: [
-        {
+        defineType({
           name: 'geopointRadius',
           title: 'Geopoint with Radius',
           type: 'object',
           fields: [
-            {
+            defineField({
               name: 'lat',
               title: 'Latitude',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(-90).max(90),
-            },
-            {
+              validation: (Rule) => Rule.required().min(-90).max(90),
+            }),
+            defineField({
               name: 'lng',
               title: 'Longitude',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(-180).max(180),
-            },
-            {
+              validation: (Rule) => Rule.required().min(-180).max(180),
+            }),
+            defineField({
               name: 'alt',
               title: 'Altitude',
               type: 'number',
-            },
-            {
+            }),
+            defineField({
               name: 'radius',
               title: 'Radius (meters)',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(1).max(50000),
-            },
+              validation: (Rule) => Rule.required().min(1).max(50000),
+            }),
           ],
           preview: {
             select: {
@@ -46,14 +46,17 @@ export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
               lng: 'lng',
               radius: 'radius',
             },
-            prepare({lat, lng, radius}: {lat: number; lng: number; radius: number}) {
+            prepare({lat, lng, radius}: {lat?: number; lng?: number; radius?: number}) {
               return {
-                title: `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
-                subtitle: radius ? `Radius: ${radius}m` : 'No radius set',
+                title:
+                  typeof lat === 'number' && typeof lng === 'number'
+                    ? `${lat.toFixed(6)}, ${lng.toFixed(6)}`
+                    : 'No location set',
+                subtitle: typeof radius === 'number' ? `Radius: ${radius}m` : 'No radius set',
               }
             },
           },
-        },
+        }),
       ],
     },
     form: {
