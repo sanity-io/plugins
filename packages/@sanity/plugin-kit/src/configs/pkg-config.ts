@@ -9,10 +9,9 @@ export function pkgConfigTemplate(options: {outDir: string; flags: InitFlags}): 
   return {
     type: 'template',
     force: flags.force,
-    // .mts/.mjs so the config is always interpreted as ESM, even in CommonJS plugins —
-    // the tsx-based config loader in @sanity/pkg-utils v10 cannot load CommonJS-interpreted
-    // config files on Node 24
-    to: flags.typescript ? 'package.config.mts' : 'package.config.mjs',
+    // Always a `.ts` config: plugins are ESM (`"type": "module"`), so `@sanity/pkg-utils`
+    // loads it without needing a `.mts`/`.mjs` extension to force ESM interpretation.
+    to: 'package.config.ts',
     value: outdent`
       import {defineConfig} from '@sanity/pkg-utils'
 

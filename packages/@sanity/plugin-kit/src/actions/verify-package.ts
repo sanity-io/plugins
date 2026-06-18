@@ -12,7 +12,9 @@ import {
   validateBabelConfig,
   validateNodeEngine,
   validatePackageName,
+  validatePackageType,
   validatePkgUtilsDependency,
+  validatePkgUtilsVersion,
   validatePluginSanityJson,
   validateDeprecatedDependencies,
   validateScripts,
@@ -34,7 +36,25 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
 
   const packageJson: PackageJson = await getPackage({basePath, validate: false})
   const verifyConfig: VerifyPackageConfig = packageJson.sanityPlugin?.verifyPackage || {}
-  const packageConfig = await loadPackageConfig({basePath})
+
+  // Hard requirements (not configurable via sanityPlugin.verifyPackage): plugins must be ESM and
+  // ship a compatible @sanity/pkg-utils, since plugin-kit loads package.config.ts through it.
+  for (const hardError of [
+    ...validatePackageType(packageJson),
+    ...validatePkgUtilsVersion({basePath}),
+  ]) {
+    errors.push(hardError)
+    log.error(`\n${hardError}`)
+  }
+
+  // Load defensively: if the config can't be loaded (e.g. incompatible/missing pkg-utils), fall
+  // back to defaults so the remaining checks still surface actionable issues.
+  let packageConfig
+  try {
+    packageConfig = await loadPackageConfig({basePath})
+  } catch (err) {
+    log.debug('Failed to load package.config: %s', err)
+  }
   const outDir = packageConfig?.dist ?? defaultOutDir
   const tsconfig = packageConfig?.tsconfig ?? 'tsconfig.json'
 
