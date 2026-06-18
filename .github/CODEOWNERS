@@ -11,3 +11,6 @@
 
 # Salesforce Commerce Cloud plugin
 /plugins/@sanity/sfcc/ @sanity-io/solutions
+
+# The Mux input integration
+/plugins/sanity-plugin-mux-input @sanity-io/mux
