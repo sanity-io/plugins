@@ -2330,7 +2330,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/@sanity/plugin-kit
       '@types/lodash':
-        specifier: ^4.17.15
+        specifier: ^4.17.24
         version: 4.17.24
       '@types/node':
         specifier: ^24.13.2

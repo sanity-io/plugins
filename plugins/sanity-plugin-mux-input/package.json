@@ -69,7 +69,7 @@
     "@sanity/client": "^7.12.1",
     "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
-    "@types/lodash": "^4.17.15",
+    "@types/lodash": "^4.17.24",
     "@types/node": "catalog:",
     "@types/react": "^19.0.10",
     "@types/react-is": "^19.0.0",
