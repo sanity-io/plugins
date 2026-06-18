@@ -44,7 +44,7 @@
     "@nosferatu500/react-sortable-tree": "^5.0.0",
     "@sanity/color": "^3.0.6",
     "@sanity/icons": "^3.7.4",
-    "@sanity/mutator": "^6.0.0",
+    "@sanity/mutator": "^6.1.0",
     "@sanity/ui": "catalog:",
     "@sanity/util": "catalog:",
     "react-dnd": "^16.0.1",

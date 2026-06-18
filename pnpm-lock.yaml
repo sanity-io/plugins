@@ -1034,7 +1034,7 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/mutator':
-        specifier: ^6.0.0
+        specifier: ^6.1.0
         version: 6.1.0(@types/react@19.2.17)
       '@sanity/ui':
         specifier: 'catalog:'
@@ -2462,7 +2462,7 @@ importers:
         specifier: ^9.0.0
         version: 9.0.11
       groq:
-        specifier: ^3.0.0
+        specifier: ^3.99.0
         version: 3.99.0
       is-hotkey-esm:
         specifier: ^1.0.0
