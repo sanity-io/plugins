@@ -71,7 +71,8 @@ export type AssetDocument = {
 
 declare global {
   interface Window {
-    cloudinary: {
+    // Only defined after the Cloudinary Media Library widget script has loaded.
+    cloudinary?: {
       openMediaLibrary: (config: any, callbacks: any) => void
       createMediaLibrary: (config: any, callbacks?: any) => CloudinaryMediaLibrary
     }
