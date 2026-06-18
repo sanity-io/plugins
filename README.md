@@ -83,6 +83,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`@sanity/assist`](./plugins/@sanity/assist)                                                             | AI-powered writing and translation assistance for Studio            |
 | [`@sanity/code-input`](./plugins/@sanity/code-input)                                                     | Code editor input powered by CodeMirror                             |
 | [`@sanity/color-input`](./plugins/@sanity/color-input)                                                   | Color picker input for Sanity Studio                                |
+| [`@sanity/cross-dataset-duplicator`](./plugins/@sanity/cross-dataset-duplicator)                         | Migrate documents and assets between datasets from inside Studio    |
 | [`@sanity/dashboard`](./plugins/@sanity/dashboard)                                                       | Tool for rendering dashboard widgets                                |
 | [`@sanity/debug-live-sync-tags`](./plugins/@sanity/debug-live-sync-tags)                                 | Debug tool for inspecting live sync tags                            |
 | [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin)           | Debug tool for preview URL secrets and their status                 |

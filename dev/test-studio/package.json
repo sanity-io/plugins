@@ -16,6 +16,7 @@
     "@sanity/client": "catalog:",
     "@sanity/code-input": "workspace:*",
     "@sanity/color-input": "workspace:*",
+    "@sanity/cross-dataset-duplicator": "workspace:*",
     "@sanity/dashboard": "workspace:*",
     "@sanity/debug-live-sync-tags": "workspace:*",
     "@sanity/debug-preview-url-secret-plugin": "workspace:*",
