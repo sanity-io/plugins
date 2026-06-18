@@ -364,7 +364,7 @@ and aims to standardize how this is done thought the community.
 
 **A:** Yes!
 
-Feel free to make any changes to `package.config.mts` as is needed.
+Feel free to make any changes to `package.config.ts` as is needed.
 `@sanity/plugin-sdk verify-package` output is only recommendations for defaults that has been tested to work in Sanity Studio.
 Your plugin may have other needs.
 
