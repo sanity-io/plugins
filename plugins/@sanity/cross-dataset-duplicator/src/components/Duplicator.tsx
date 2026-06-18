@@ -144,10 +144,13 @@ export default function Duplicator(props: DuplicatorProps) {
       `*[_id in $payloadIds]{ _id, _updatedAt }`,
       {payloadIds},
     )
+    // Index the destination docs by `_id` so status updates stay O(n) instead
+    // of O(n²) when looking them up for each payload item below.
+    const destinationById = new Map(destinationData.map((doc) => [doc._id, doc]))
 
     setPayload(
       payloadActual.map((item) => {
-        const existingDoc = destinationData.find((doc) => doc._id === item.doc._id)
+        const existingDoc = destinationById.get(item.doc._id)
         let status: keyof MessageTypes = 'CREATE'
 
         if (existingDoc?._updatedAt && item.doc._updatedAt) {
@@ -269,6 +272,15 @@ export default function Duplicator(props: DuplicatorProps) {
       const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
 
       const res = await fetch(downloadUrl, downloadConfig)
+
+      // Fail fast instead of uploading an error response (e.g. 401/403/404)
+      // body as the asset's binary data.
+      if (!res.ok) {
+        throw new Error(
+          `Failed to download asset "${doc.originalFilename ?? doc._id}" (${res.status} ${res.statusText})`,
+        )
+      }
+
       const assetData = await res.blob()
 
       const options = {filename: doc.originalFilename}
@@ -283,14 +295,15 @@ export default function Duplicator(props: DuplicatorProps) {
         svgMaps.push({old: doc._id, new: assetDoc._id})
       }
 
-      // This adds the newly created asset document to the transaction but ...
-      // it doesn't have some of the original asset's metadata like `altText` or `title`
-      transactionDocs.push(assetDoc)
-
-      // So the original `doc` is added to the transaction as well below
-      // However, we don't want to retain the original `url` or `path` values
-      // because these strings contain the origin's dataset name
-      transactionDocs.push({...doc, url: assetDoc.url, path: assetDoc.path})
+      // Merge the original asset document's editorial metadata (e.g. `altText`,
+      // `title`) — which the upload response omits — with the canonical fields of
+      // the freshly uploaded asset (`_id`, `url`, `path`, `assetId`, `sha1hash`,
+      // ...). The uploaded values win, so `url`/`path` no longer reference the
+      // origin dataset. For SVGs the uploaded `_id` differs from the source
+      // (the file is sanitized on upload), so pushing a single merged document at
+      // the new `_id` — and remapping references to it below — avoids leaving an
+      // orphaned asset document behind at the original `_id`.
+      transactionDocs.push({...doc, ...assetDoc})
 
       currentProgress += 1
       setMessage({
@@ -309,33 +322,48 @@ export default function Duplicator(props: DuplicatorProps) {
       console.error(err)
       setIsDuplicating(false)
       setProgress([0, 0])
-      setMessage({tone: 'critical', text: `Duplication Failed`})
+      setMessage({
+        tone: 'critical',
+        text: err instanceof Error ? err.message : `Duplication Failed`,
+      })
 
       return
     }
 
-    // Remap SVG references to new _id's
-    const transactionDocsMapped = transactionDocs.map((doc) => {
-      const expr = `.._ref`
-      const references = extractWithPath(expr, doc)
+    // Remap SVG references to new _id's. SVG assets are sanitized on upload, so
+    // their `_id` changes; references still pointing at the original `_id` must
+    // be updated to the uploaded one.
+    const svgIdRemap = new Map(svgMaps.map(({old, new: next}) => [old, next]))
+    const transactionDocsMapped =
+      svgIdRemap.size === 0
+        ? transactionDocs
+        : transactionDocs.map((doc) => {
+            const references = extractWithPath(`.._ref`, doc)
 
-      if (!references.length) {
-        return doc
-      }
+            if (!references.length) {
+              return doc
+            }
 
-      // For every found _ref, search for an SVG asset _id and update
-      references.forEach((ref) => {
-        const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
+            // Clone lazily before the first mutation: some of these docs are the
+            // same objects held in React state (`payload`), and `dset` mutates in
+            // place — which would corrupt state and trip up the React Compiler.
+            let mappedDoc = doc
 
-        if (newRefValue) {
-          const refPath = ref.path.join('.')
+            references.forEach((ref) => {
+              const newRefValue =
+                typeof ref.value === 'string' ? svgIdRemap.get(ref.value) : undefined
 
-          dset(doc, refPath, newRefValue)
-        }
-      })
+              if (newRefValue) {
+                if (mappedDoc === doc) {
+                  mappedDoc = structuredClone(doc)
+                }
 
-      return doc
-    })
+                dset(mappedDoc, ref.path.join('.'), newRefValue)
+              }
+            })
+
+            return mappedDoc
+          })
 
     // Create transaction
     const transaction = destinationClient.transaction()
@@ -398,16 +426,20 @@ export default function Duplicator(props: DuplicatorProps) {
 
   const buttonTextParts = [`Duplicate`]
 
-  if (selectedDocumentsCount > 1) {
+  if (selectedDocumentsCount > 0) {
     buttonTextParts.push(
       String(selectedDocumentsCount),
       selectedDocumentsCount === 1 ? `Document` : `Documents`,
     )
   }
 
-  if (selectedAssetsCount > 1) {
+  if (selectedAssetsCount > 0) {
+    // Only join with "and" when documents are also part of the selection.
+    if (selectedDocumentsCount > 0) {
+      buttonTextParts.push(`and`)
+    }
+
     buttonTextParts.push(
-      `and`,
       String(selectedAssetsCount),
       selectedAssetsCount === 1 ? `Asset` : `Assets`,
     )
@@ -473,7 +505,9 @@ export default function Duplicator(props: DuplicatorProps) {
                   <Card
                     style={{
                       width: '100%',
-                      transform: `scaleX(${progress[0] / progress[1]})`,
+                      // Guard against a 0-asset payload (progress[1] === 0),
+                      // which would make the ratio NaN and produce an invalid transform.
+                      transform: `scaleX(${progress[1] > 0 ? progress[0] / progress[1] : 0})`,
                       transformOrigin: 'left',
                       transition: 'transform .2s ease',
                       boxSizing: 'border-box',
