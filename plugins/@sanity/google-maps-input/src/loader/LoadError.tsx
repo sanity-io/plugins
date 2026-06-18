@@ -37,11 +37,11 @@ function AuthError() {
     <Stack space={3}>
       <Text>The error appears to be related to authentication</Text>
       <Text>Common causes include:</Text>
-      <Box as="ul" paddingLeft={4}>
+      <Stack as="ul" space={2} paddingLeft={4}>
         <Text as="li">Incorrect API key</Text>
         <Text as="li">Referer not allowed</Text>
         <Text as="li">Missing authentication scope</Text>
-      </Box>
+      </Stack>
       <Text>Check the browser developer tools for more information.</Text>
     </Stack>
   )
