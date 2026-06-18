@@ -3,7 +3,6 @@ import {Box, Button, Dialog, Grid, Stack} from '@sanity/ui'
 import {useCallback, useEffect, useId, useRef, useState} from 'react'
 import {type ObjectInputProps, set, setIfMissing, unset, ChangeIndicator, type Path} from 'sanity'
 
-import {getGeoConfig} from '../global-workaround'
 import {GoogleMapsLoadProxy} from '../loader/GoogleMapsLoadProxy'
 import type {Geopoint, GeopointSchemaType, GoogleMapsInputConfig, LatLng} from '../types'
 import {DialogInnerContainer, PreviewImage} from './GeopointInput.styles'
@@ -161,7 +160,7 @@ export function GeopointInput(props: GeopointInputProps) {
           width={1}
         >
           <DialogInnerContainer>
-            <GoogleMapsLoadProxy config={getGeoConfig()}>
+            <GoogleMapsLoadProxy config={config}>
               {(api) => (
                 <GeopointSelect
                   api={api}
