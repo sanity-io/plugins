@@ -32,10 +32,10 @@ function messageFromGenericErrorPayload(payload: unknown): string {
     payload.error !== null &&
     'message' in payload.error
   ) {
-    return String((payload.error as HttpError).message)
+    return (payload.error as HttpError).message
   }
   if ('message' in payload && typeof (payload as HttpError).message === 'string') {
-    return String((payload as HttpError).message)
+    return (payload as HttpError).message
   }
   return 'Unknown error'
 }

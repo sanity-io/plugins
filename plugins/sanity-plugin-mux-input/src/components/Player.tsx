@@ -70,7 +70,6 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
   useEffect(() => {
     if (asset?.status === 'errored') {
       handleCancelUpload()
-      // eslint-disable-next-line no-warning-comments
       // @TODO use better error handling
       throw new Error(asset.data?.errors?.messages?.join(' '))
     }

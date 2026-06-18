@@ -98,7 +98,6 @@ function MissingAsset({
   )
 }
 
-// eslint-disable-next-line complexity
 function ImportVideosDialog(props: ReturnType<typeof useImportMuxAssets>) {
   const {importState} = props
 

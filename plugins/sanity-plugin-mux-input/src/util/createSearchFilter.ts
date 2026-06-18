@@ -1,6 +1,10 @@
 // Adaptation of Sanity's createSearchQuery for our limited use case:
 // https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/core/search/weighted/createSearchQuery.ts
-import {compact, toLower, trim, uniq, words} from 'lodash'
+import compact from 'lodash-es/compact.js'
+import toLower from 'lodash-es/toLower.js'
+import trim from 'lodash-es/trim.js'
+import uniq from 'lodash-es/uniq.js'
+import words from 'lodash-es/words.js'
 
 const SPECIAL_CHARS = /([^!@#$%^&*(),\\/?";:{}|[\]+<>\s-])+/g
 const STRIP_EDGE_CHARS = /(^[.]+)|([.]+$)/

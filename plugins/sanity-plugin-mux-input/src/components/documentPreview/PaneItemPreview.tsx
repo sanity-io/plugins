@@ -1,11 +1,11 @@
 // Adapted from:
 // https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/paneItem/PaneItemPreview.tsx
 import {Inline} from '@sanity/ui'
-import {isNumber, isString} from 'lodash'
+import isNumber from 'lodash-es/isNumber.js'
+import isString from 'lodash-es/isString.js'
 import {isValidElement, useMemo} from 'react'
 import {useObservable} from 'react-rx'
 import type {SanityDocument, SchemaType} from 'sanity'
-import type {PreviewValue} from 'sanity'
 import {
   type DocumentPresence,
   DocumentPreviewPresence,
@@ -19,12 +19,6 @@ import {
 
 import {DraftStatus} from './DraftStatus'
 import {PublishedStatus} from './PublishedStatus'
-
-export interface PaneItemPreviewState {
-  isLoading?: boolean
-  draft?: PreviewValue | Partial<SanityDocument> | null
-  published?: PreviewValue | Partial<SanityDocument> | null
-}
 
 export interface PaneItemPreviewProps {
   documentPreviewStore: DocumentPreviewStore

@@ -94,7 +94,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
           title = 'Cannot download'
         }
       } else if (error === 'Track ID is missing' || error === 'Track is not ready yet') {
-        errorMessage = String(error)
+        errorMessage = error
         title = 'Cannot download'
       }
 

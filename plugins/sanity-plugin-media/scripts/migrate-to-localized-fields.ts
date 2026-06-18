@@ -11,7 +11,7 @@
  * string values should be mapped to.
  */
 
-import {defineMigration, patch} from 'sanity/migrate'
+import {at, defineMigration, patch, set} from 'sanity/migrate'
 
 const DEFAULT_LOCALE_ID = 'en' // Change to your default locale id
 
@@ -37,7 +37,7 @@ export default defineMigration({
 
         if (typeof value === 'string') {
           // Convert string → {[defaultLocale]: string}
-          ops.push(patch(doc._id, [{set: {[field]: {[DEFAULT_LOCALE_ID]: value}}}]))
+          ops.push(patch(doc._id, [at(field, set({[DEFAULT_LOCALE_ID]: value}))]))
         } else if (value === null || value === undefined) {
           // Leave missing fields alone
         }

@@ -1,14 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignoreWorkspaces": [
-    "dev/*",
-    // Moved as-is from the standalone repo; will be brought up to monorepo
-    // standards (and into knip coverage) in a follow-up PR
-    "plugins/sanity-plugin-media",
-    // Moved verbatim from sanity-io/sanity-plugin-mux-input; legacy dead-code
-    // and phantom-dependency cleanup is deferred to a follow-up PR.
-    "plugins/sanity-plugin-mux-input",
-  ],
+  "ignoreWorkspaces": ["dev/*"],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,
@@ -366,6 +358,14 @@
     },
     "plugins/sanity-naive-html-serializer": {
       "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-media": {
+      "entry": ["package.config.ts", "v2-incompatible.js"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-mux-input": {
+      "entry": ["package.config.ts", "v2-incompatible.js"],
       "project": ["src/**/*.{ts,tsx}"],
     },
   },

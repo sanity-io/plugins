@@ -1,7 +1,6 @@
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
 import type {ClientError, SanityAssetDocument, SanityImageAssetDocument} from '@sanity/client'
 import groq from 'groq'
-import type {Selector} from 'react-redux'
 import {empty, merge, of} from 'rxjs'
 import {catchError, delay, filter, mergeMap, takeUntil, withLatestFrom} from 'rxjs/operators'
 
@@ -260,21 +259,12 @@ export const uploadsCheckRequestEpic: MyEpic = (action$, state$, {client}) =>
 
 // Selectors
 
-const selectUploadsByIds = (state: RootReducerState) => state.uploads.byIds
-
-const selectUploadsAllIds = (state: RootReducerState) => state.uploads.allIds
-
 export const selectUploadById = createSelector(
   [
     (state: RootReducerState) => state.uploads.byIds,
     (_state: RootReducerState, uploadId: string) => uploadId,
   ],
   (byIds, uploadId) => byIds[uploadId],
-)
-
-export const selectUploads: Selector<RootReducerState, UploadItem[]> = createSelector(
-  [selectUploadsByIds, selectUploadsAllIds],
-  (byIds, allIds) => allIds.map((id) => byIds[id]),
 )
 
 export const uploadsActions = {...uploadsSlice.actions}

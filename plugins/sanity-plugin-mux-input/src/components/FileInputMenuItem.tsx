@@ -1,5 +1,5 @@
 import {Box, ButtonProps, Flex, Text} from '@sanity/ui'
-import React, {createElement, isValidElement, useId} from 'react'
+import React, {isValidElement, useId} from 'react'
 import {isValidElementType} from 'react-is'
 
 import {FileButton} from './FileInputMenuItem.styled'
@@ -33,6 +33,7 @@ export const FileInputMenuItem = React.forwardRef(function FileInputMenuItem(
   } = props
   const idHook = useId()
   const id = idProp || idHook
+  const IconComponent = isValidElementType(icon) ? icon : null
 
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +51,7 @@ export const FileInputMenuItem = React.forwardRef(function FileInputMenuItem(
         <Box marginRight={text ? space : undefined}>
           <Text size={fontSize}>
             {isValidElement(icon) && icon}
-            {isValidElementType(icon) && createElement(icon)}
+            {IconComponent && <IconComponent />}
           </Text>
         </Box>
       )}

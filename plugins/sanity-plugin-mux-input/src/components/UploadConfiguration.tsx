@@ -143,7 +143,6 @@ export default function UploadConfiguration({
         case 'track': {
           const text_tracks = [...prev.text_tracks]
           const target_track_i = text_tracks.findIndex(({_id}) => _id === action.id)
-          // eslint-disable-next-line default-case
           switch (action.subAction) {
             case 'add':
               // Exit early if track already exists

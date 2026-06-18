@@ -13,7 +13,6 @@ interface SecretsDocument {
   signingKeyPrivate: string
   drmConfigId: string
 }
-// eslint-disable-next-line max-params
 export function saveSecrets(
   client: SanityClient,
   token: string,
@@ -57,7 +56,7 @@ export async function createSigningKeys(client: SanityClient) {
       error.response?.statusCode === 401
         ? 'Unauthorized - Failed to create the Signing Key. Please ensure that the token has "System" permissions'
         : error.message
-    throw new Error(message)
+    throw new Error(message, {cause: error})
   }
 }
 
@@ -92,7 +91,7 @@ export async function haveValidSigningKeys(
     // if this signing key is valid it will return { data: { id: 'xxxx' } }
     //
     return !!(res.data && res.data.id)
-  } catch (e) {
+  } catch {
     console.error('Error fetching signingKeyId', signingKeyId, 'assuming it is not valid')
     return false
   }

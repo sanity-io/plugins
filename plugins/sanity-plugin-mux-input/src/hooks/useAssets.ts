@@ -50,7 +50,7 @@ export default function useAssets() {
       collate<VideoAssetDocument>(assetDocuments).map(
         (collated) =>
           ({
-            ...(collated.draft || collated.published || {}),
+            ...(collated.draft || collated.published),
             _id: collated.id,
           }) as VideoAssetDocument,
       ),

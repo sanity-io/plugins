@@ -14,7 +14,7 @@ export function useInView(
   const [inView, setInView] = useState(false)
 
   useEffect(() => {
-    if (!ref.current) return
+    if (!ref.current) return undefined
 
     const observer = new IntersectionObserver(([entry], obs) => {
       // ==== from react-intersection-observer ====
@@ -32,7 +32,6 @@ export function useInView(
     const toObserve = ref.current
     observer.observe(toObserve)
 
-    // eslint-disable-next-line
     return () => {
       if (toObserve) observer.unobserve(toObserve)
     }

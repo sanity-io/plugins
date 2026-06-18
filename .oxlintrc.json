@@ -21,10 +21,6 @@
     "plugins/@sanity/form-toolkit/examples/**",
     "packages/@sanity/plugin-kit/assets/**",
     "packages/@sanity/plugin-kit/test/fixtures/**",
-    // Moved as-is from the standalone repo; legacy code will be brought up to
-    // monorepo lint standards in a follow-up PR
-    "plugins/sanity-plugin-media/**",
-    "plugins/sanity-plugin-mux-input/**",
     "plugins/@sanity/embeddings-index-ui/**"
   ],
   "options": {
@@ -184,6 +180,64 @@
       "files": ["plugins/sanity-plugin-dashboard-widget-vercel/src/machines/*.ts"],
       "rules": {
         "no-unsafe-type-assertion": "off"
+      }
+    },
+    {
+      // sanity-plugin-mux-input was transferred verbatim from
+      // sanity-io/sanity-plugin-mux-input. These rules flag pre-existing legacy
+      // patterns (Sanity UI v2 theme deprecations, loose typing, and
+      // pre-React-Compiler code) that are out of scope for the monorepo move.
+      "files": ["plugins/sanity-plugin-mux-input/**/*.{ts,tsx}"],
+      "rules": {
+        "no-deprecated": "off",
+        "no-unsafe-type-assertion": "off",
+        "no-redundant-type-constituents": "off",
+        "restrict-template-expressions": "off",
+        "no-base-to-string": "off",
+        "no-await-in-loop": "off",
+        "no-map-spread": "off",
+        "react/react-compiler": "off",
+        "react/jsx-no-constructed-context-values": "off",
+        "react/no-unstable-nested-components": "off",
+        "unicorn/prefer-add-event-listener": "off",
+        "promise/always-return": "off",
+        "jsx_a11y/media-has-caption": "off",
+        "jsx_a11y/label-has-associated-control": "off"
+      }
+    },
+    {
+      // sanity-plugin-media was moved as-is from the standalone repo. These rules
+      // flag pre-existing legacy patterns (Sanity UI v2 theme deprecations, loose
+      // typing, and pre-React-Compiler code) that are out of scope for the move.
+      "files": ["plugins/sanity-plugin-media/**/*.{ts,tsx}"],
+      "rules": {
+        "no-deprecated": "off",
+        "no-unsafe-type-assertion": "off",
+        "no-redundant-type-constituents": "off",
+        "no-await-in-loop": "off",
+        "no-map-spread": "off",
+        "unbound-method": "off",
+        "react/react-compiler": "off",
+        "react/exhaustive-deps": "off",
+        "react/no-unstable-nested-components": "off",
+        "react/no-array-index-key": "off",
+        "react/jsx-no-constructed-context-values": "off",
+        "unicorn/prefer-add-event-listener": "off",
+        "jsx_a11y/media-has-caption": "off",
+        "jsx_a11y/control-has-associated-label": "off",
+        "jsx_a11y/no-static-element-interactions": "off",
+        "jsx_a11y/click-events-have-key-events": "off"
+      }
+    },
+    {
+      // Verbatim v2-incompatible shims shipped as-is for Sanity Studio v2 loaders,
+      // which resolve modules with CommonJS.
+      "files": [
+        "plugins/sanity-plugin-media/v2-incompatible.js",
+        "plugins/sanity-plugin-mux-input/v2-incompatible.js"
+      ],
+      "rules": {
+        "import/no-commonjs": "off"
       }
     }
   ]

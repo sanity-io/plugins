@@ -208,7 +208,6 @@ export default function Uploader(props: Props) {
     if (!stagedUpload || uploadRef.current) return
     dispatch({action: 'commitUpload'})
     let uploadObservable: Observable<UploadFileEvent | UploadUrlEvent>
-    // eslint-disable-next-line default-case
     switch (stagedUpload.type) {
       case 'url':
         uploadObservable = uploadUrl({
@@ -229,7 +228,7 @@ export default function Uploader(props: Props) {
             cancelUploadButton.observable.pipe(
               tap(() => {
                 if (uploadingDocumentId.current) {
-                  props.client.delete(uploadingDocumentId.current)
+                  void props.client.delete(uploadingDocumentId.current)
                   uploadingDocumentId.current = null
                 }
               }),
@@ -342,7 +341,7 @@ export default function Uploader(props: Props) {
       return
     }
     setDragState(null)
-    extractDroppedFiles(event.nativeEvent.dataTransfer!).then((files) => {
+    void extractDroppedFiles(event.nativeEvent.dataTransfer!).then((files) => {
       dispatch({
         action: 'stageUpload',
         input: {type: 'file', files},

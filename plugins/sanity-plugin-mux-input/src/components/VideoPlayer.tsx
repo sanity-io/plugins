@@ -44,7 +44,7 @@ export default function VideoPlayer({
   const playbackId = useMemo(() => {
     try {
       return getPlaybackId(asset, ['public', 'signed', 'drm'])
-    } catch (e) {
+    } catch {
       setError(new TypeError('Asset has no playback ID'))
       return undefined
     }

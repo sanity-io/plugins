@@ -39,7 +39,7 @@ export function useFetchFileSize(stagedUpload: StagedUpload, maxFileSize?: numbe
         }
       }
 
-      fetchFileSize()
+      void fetchFileSize()
     }
     if (stagedUpload.type === 'file') {
       setFileSize(stagedUpload.files[0].size)

@@ -38,7 +38,7 @@ function sanitizePxStringsInJson(json: string): string {
   })
 }
 
-export function cancelUpload(client: SanityClient, uuid: string) {
+function cancelUpload(client: SanityClient, uuid: string) {
   return client.observable.request({
     url: `/addons/mux/uploads/${client.config().dataset}/${uuid}`,
     withCredentials: true,
@@ -51,7 +51,6 @@ export function uploadUrl({
   url,
   settings,
   client,
-  watermark,
 }: {
   url: string
   settings: MuxNewAssetSettings
@@ -160,19 +159,15 @@ export function uploadFile({
               ).pipe(
                 mergeMap((result) => {
                   return createUpChunkObservable(uuid, result.upload.url, file).pipe(
-                    // eslint-disable-next-line no-warning-comments
                     // @TODO type the observable events
-                    // eslint-disable-next-line max-nested-callbacks
                     mergeMap((event) => {
                       if (event.type !== 'success') {
                         return of(event)
                       }
                       return from(updateAssetDocumentFromUpload(client, uuid, watermark)).pipe(
-                        // eslint-disable-next-line max-nested-callbacks
                         mergeMap((doc) => of({...event, asset: doc})),
                       )
                     }),
-                    // eslint-disable-next-line max-nested-callbacks
                     catchError((err) => {
                       // Delete asset document
                       return cancelUpload(client, uuid).pipe(mergeMapTo(throwError(err)))
@@ -202,7 +197,7 @@ type UploadResponse = {
     timeout: number
   }
 }
-export function getUpload(client: SanityClient, assetId: string) {
+function getUpload(client: SanityClient, assetId: string) {
   const {dataset} = client.config()
   return client.request<UploadResponse>({
     url: `/addons/mux/uploads/${dataset}/${assetId}`,
@@ -272,7 +267,7 @@ async function updateAssetDocumentFromUpload(
   })
 }
 
-export function testFile(file: File) {
+function testFile(file: File) {
   if (typeof window !== 'undefined' && file instanceof window.File) {
     const fileOptions = optionsFromFile({}, file)
     return of(fileOptions)
@@ -280,7 +275,7 @@ export function testFile(file: File) {
   return throwError(new Error('Invalid file'))
 }
 
-export function testUrl(url: string): Observable<string> {
+function testUrl(url: string): Observable<string> {
   const error = new Error('Invalid URL')
   if (typeof url !== 'string') {
     return throwError(error)
@@ -290,7 +285,7 @@ export function testUrl(url: string): Observable<string> {
   let parsed
   try {
     parsed = new URL(formattedUrl)
-  } catch (err) {
+  } catch {
     return throwError(error)
   }
   if (parsed && !parsed.protocol.match(/http:|https:/)) {

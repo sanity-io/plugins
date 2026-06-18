@@ -84,13 +84,13 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
   const handleSync = () => {
     switch (selectedOption) {
       case 'fillEmpty':
-        props.syncOnlyEmpty()
+        void props.syncOnlyEmpty()
         break
       case 'syncTitles':
-        props.syncAllVideos()
+        void props.syncAllVideos()
         break
       case 'fullResync':
-        props.syncFullData()
+        void props.syncFullData()
         break
       default:
         break

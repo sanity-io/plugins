@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unassigned-import -- jest-dom registers its matchers as a side effect
 import '@testing-library/jest-dom/vitest'
 import {vi} from 'vitest'
 
