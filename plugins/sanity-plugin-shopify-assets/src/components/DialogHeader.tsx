@@ -11,7 +11,7 @@ const DialogHeader = (props: Props) => {
   const {title, shopifyDomain} = props
 
   const handleOpenInNewTab = useCallback(() => {
-    window.open(`https://${shopifyDomain}/admin/content/files`, '_blank')
+    window.open(`https://${shopifyDomain}/admin/content/files`, '_blank', 'noopener,noreferrer')
   }, [shopifyDomain])
 
   return (
