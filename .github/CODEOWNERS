@@ -1,6 +1,6 @@
 # By default, assign the Studio team.
 # Later matching rules will take precedence.
-* @sanity-io/studio @sanity-io/solutions
+* @sanity-io/studio
 
 # For areas of responsibility, assign the specific team
 # that is responsible. It is possible to assign to individuals,
@@ -11,3 +11,6 @@
 
 # Salesforce Commerce Cloud plugin
 /plugins/@sanity/sfcc/ @sanity-io/solutions
+
+# Personalization plugin
+/plugins/@sanity/personalization-plugin/ @sanity-io/solutions
