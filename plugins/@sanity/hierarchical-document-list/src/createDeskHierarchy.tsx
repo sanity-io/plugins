@@ -33,7 +33,7 @@ export interface TreeProps extends TreeDeskStructureProps {
 
 const deskTreeValidator = (props: TreeProps): FC => {
   const {documentId, referenceTo} = props
-  if (typeof documentId !== 'string' && !documentId) {
+  if (typeof documentId !== 'string' || !documentId) {
     throwError('invalidDocumentId')
   }
   if (!Array.isArray(referenceTo)) {
@@ -56,7 +56,7 @@ export default function createDeskHierarchy(props: TreeProps) {
   const {schema} = context
 
   const safelyCreatableTypes =
-    creatableTypes && !creatableTypes.some((type) => referenceTo.indexOf(type))
+    creatableTypes && creatableTypes.every((type) => referenceTo.includes(type))
       ? creatableTypes
       : referenceTo
 
