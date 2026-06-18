@@ -1,5 +1,5 @@
 ---
-'@sanity/plugin-kit': patch
+"@sanity/plugin-kit": patch
 ---
 
 Fix CLI command name in messages, plus typos and a redundant tsconfig read
