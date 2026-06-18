@@ -235,7 +235,7 @@ More information is available here:
 - Reference documentation: https://beta.sanity.io/docs/reference
 
 To fail-fast on first detected issue run:
-npx @sanity/plugin-kit verify-package' --single"
+npx @sanity/plugin-kit verify-package --single"
 `;
 
 exports[`plugin-kit verify-package in package with invalid eslint config 1`] = `
@@ -288,7 +288,7 @@ More information is available here:
 - Reference documentation: https://beta.sanity.io/docs/reference
 
 To fail-fast on first detected issue run:
-npx @sanity/plugin-kit verify-package' --single"
+npx @sanity/plugin-kit verify-package --single"
 `;
 
 exports[`plugin-kit verify-studio in fresh v2 studio 1`] = `

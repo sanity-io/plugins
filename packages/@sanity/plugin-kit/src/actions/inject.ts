@@ -166,7 +166,7 @@ async function writeLicense(
     return false
   }
 
-  // Prefer whatever path the user is currenly using (LICENSE.md or LICENSE)
+  // Prefer whatever path the user is currently using (LICENSE.md or LICENSE)
   const hasLicenseMdFile = await fileExists(path.join(basePath, 'LICENSE.md'))
   const licensePath = path.join(basePath, hasLicenseMdFile ? 'LICENSE.md' : 'LICENSE')
 
@@ -211,7 +211,7 @@ async function getLicenseIdentifier(
     return null
   }
 
-  // --license becomes "", --license mit beocomes "mit"
+  // --license becomes "", --license mit becomes "mit"
   if (typeof flags.license === 'string') {
     const license = licenses.find(`${flags.license}`)
     if (!license) {

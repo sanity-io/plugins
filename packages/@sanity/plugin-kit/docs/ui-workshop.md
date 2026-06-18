@@ -16,9 +16,8 @@ Sets up your package with [@sanity/ui-workshop](https://github.com/sanity-io/ui-
 to make component testing a breeze.
 
 - Adds [@sanity/ui-workshop](https://github.com/sanity-io/ui-workshop) dev dependency.
-- Adds a example files for testing components using @sanity/ui-workshop
+- Adds example files for testing components using @sanity/ui-workshop
 - Adds .workshop to .gitignore
--
 
 ## Manual steps after inject
 
