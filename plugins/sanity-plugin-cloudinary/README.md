@@ -33,10 +33,10 @@ Also see notes below on how Cloudinary config should be provided.
 ### Add Cloudinary as an asset source to all images
 
 ```js
-import {defineConfg} from 'sanity'
+import {defineConfig} from 'sanity'
 import {cloudinaryAssetSourcePlugin} from 'sanity-plugin-cloudinary'
 
-export default defineConfg({
+export default defineConfig({
   /*...*/
   plugins: [cloudinaryAssetSourcePlugin()],
 })
@@ -45,10 +45,10 @@ export default defineConfg({
 ### Fine tune image sources
 
 ```js
-import {defineConfg} from 'sanity'
+import {defineConfig} from 'sanity'
 import {cloudinaryImageSource} from 'sanity-plugin-cloudinary'
 
-export default defineConfg({
+export default defineConfig({
   /*...*/
   form: {
     image: {
@@ -72,10 +72,10 @@ export default defineConfg({
 ## Cloudinary assets
 
 ```js
-import {defineConfg} from 'sanity'
+import {defineConfig} from 'sanity'
 import {cloudinarySchemaPlugin} from 'sanity-plugin-cloudinary'
 
-export default defineConfg({
+export default defineConfig({
   /*...*/
   plugins: [cloudinarySchemaPlugin()],
 })
@@ -255,18 +255,3 @@ Video assets gets a video player preview in the Studio
 ## License
 
 MIT-licensed. See LICENSE.
-
-## Develop & test
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/sanity-plugin-cloudinary/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
-
-Semantic release will only release on configured branches, so it is safe to run release on any branch.
