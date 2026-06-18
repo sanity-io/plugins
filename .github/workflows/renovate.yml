@@ -32,9 +32,18 @@ jobs:
         with:
           app-id: ${{ secrets.ECOSPARK_APP_ID }}
           private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
+          permission-secret-scanning-alerts: read
+          permission-security-events: read
+          permission-actions: write
+          permission-checks: write
+          permission-metadata: read
+          permission-statuses: write
           permission-contents: write
           permission-pull-requests: write
           permission-issues: write
+          permission-email-addresses: read
+          permission-vulnerability-alerts: read
+          permission-workflows: write
 
       - uses: actions/checkout@v6
         with:
