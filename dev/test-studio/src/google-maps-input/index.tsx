@@ -41,6 +41,7 @@ export const googleMapsInputExample = definePlugin(() => ({
     googleMapsInput({
       apiKey: process.env.SANITY_STUDIO_GOOGLE_MAPS_API_KEY || '',
       defaultZoom: 11,
+      saveZoom: true,
       defaultLocation: {lat: 59.91273, lng: 10.74609},
       defaultRadius: 1000,
     }),

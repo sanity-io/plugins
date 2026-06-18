@@ -13,6 +13,7 @@ interface SelectProps {
   api: typeof window.google.maps
   value?: Geopoint
   onChange?: (latLng: google.maps.LatLng) => void
+  onZoomChange?: (zoom: number) => void
   defaultLocation?: LatLng
   defaultZoom?: number
 }
@@ -21,6 +22,7 @@ export const GeopointSelect: FC<SelectProps> = ({
   api,
   value,
   onChange,
+  onZoomChange,
   defaultLocation = defaultMapLocation,
   defaultZoom = 8,
 }) => {
@@ -63,7 +65,13 @@ export const GeopointSelect: FC<SelectProps> = ({
   )
 
   return (
-    <GoogleMap api={api} location={getCenter()} onClick={handleMapClick} defaultZoom={defaultZoom}>
+    <GoogleMap
+      api={api}
+      location={getCenter()}
+      onClick={handleMapClick}
+      onZoomChange={onZoomChange}
+      defaultZoom={defaultZoom}
+    >
       {(map) => (
         <>
           <SearchInput api={api} map={map} onChange={handlePlaceChanged} />

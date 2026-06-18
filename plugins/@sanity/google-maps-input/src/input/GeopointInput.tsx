@@ -11,13 +11,13 @@ import {GeopointSelect} from './GeopointSelect'
 
 const EMPTY_PATH: Path = []
 
-const getStaticImageUrl = (value: LatLng, apiKey: string) => {
+const getStaticImageUrl = (value: LatLng, apiKey: string, zoom?: number) => {
   const loc = `${value.lat},${value.lng}`
   const qs = new URLSearchParams({
     key: apiKey,
     center: loc,
     markers: loc,
-    zoom: '13',
+    zoom: String(zoom || 13),
     scale: '2',
     size: '640x300',
   })
@@ -79,6 +79,13 @@ export function GeopointInput(props: GeopointInputProps) {
     [schemaTypeName, onChange],
   )
 
+  const handleZoomChange = useCallback(
+    (zoom: number) => {
+      onChange([setIfMissing({_type: schemaTypeName}), set(zoom, ['zoom'])])
+    },
+    [schemaTypeName, onChange],
+  )
+
   const handleClear = useCallback(() => {
     onChange(unset())
   }, [onChange])
@@ -114,7 +121,7 @@ export function GeopointInput(props: GeopointInputProps) {
       {value && (
         <ChangeIndicator path={path} isChanged={changed} hasFocus={!!focused}>
           <PreviewImage
-            src={getStaticImageUrl(value, config.apiKey)}
+            src={getStaticImageUrl(value, config.apiKey, value.zoom)}
             alt="Map location"
             onClick={handleFocusButton}
             onDoubleClick={handleToggleModal}
@@ -167,8 +174,9 @@ export function GeopointInput(props: GeopointInputProps) {
                   api={api}
                   value={value || undefined}
                   onChange={readOnly ? undefined : handleChange}
+                  onZoomChange={readOnly || !config.saveZoom ? undefined : handleZoomChange}
                   defaultLocation={config.defaultLocation}
-                  defaultZoom={config.defaultZoom}
+                  defaultZoom={value?.zoom || config.defaultZoom}
                 />
               )}
             </GoogleMapsLoadProxy>

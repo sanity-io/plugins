@@ -13,6 +13,7 @@ interface MapProps {
   scrollWheel?: boolean
   controlSize?: number
   onClick?: (event: google.maps.MapMouseEvent) => void
+  onZoomChange?: (zoom: number) => void
   children?: (map: google.maps.Map) => ReactElement
 }
 
@@ -28,6 +29,7 @@ export class GoogleMap extends PureComponent<MapProps, MapState> {
 
   override state: MapState = {map: undefined}
   clickHandler: google.maps.MapsEventListener | undefined
+  zoomHandler: google.maps.MapsEventListener | undefined
   mapRef = createRef<HTMLDivElement>()
   mapEl: HTMLDivElement | null = null
 
@@ -41,15 +43,30 @@ export class GoogleMap extends PureComponent<MapProps, MapState> {
       return
     }
 
-    const {api, onClick} = this.props
+    const {api, onClick, onZoomChange} = this.props
     const {event} = api
 
     if (this.clickHandler) {
       this.clickHandler.remove()
     }
 
+    if (this.zoomHandler) {
+      this.zoomHandler.remove()
+    }
+
     if (onClick) {
       this.clickHandler = event.addListener(map, 'click', onClick)
+    }
+
+    if (onZoomChange) {
+      this.zoomHandler = event.addListener(map, 'zoom_changed', this.handleZoomChange)
+    }
+  }
+
+  handleZoomChange = () => {
+    const zoom = this.state.map?.getZoom()
+    if (this.props.onZoomChange && Number.isInteger(zoom)) {
+      this.props.onZoomChange(zoom!)
     }
   }
 
@@ -59,9 +76,9 @@ export class GoogleMap extends PureComponent<MapProps, MapState> {
       return
     }
 
-    const {onClick, location, bounds} = this.props
+    const {onClick, onZoomChange, location, bounds} = this.props
 
-    if (prevProps.onClick !== onClick) {
+    if (prevProps.onClick !== onClick || prevProps.onZoomChange !== onZoomChange) {
       this.attachClickHandler()
     }
 
@@ -77,6 +94,10 @@ export class GoogleMap extends PureComponent<MapProps, MapState> {
   override componentWillUnmount() {
     if (this.clickHandler) {
       this.clickHandler.remove()
+    }
+
+    if (this.zoomHandler) {
+      this.zoomHandler.remove()
     }
   }
 
