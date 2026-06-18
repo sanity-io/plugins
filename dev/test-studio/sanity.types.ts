@@ -875,6 +875,34 @@ export type HierarchyAuthor = {
   name?: string
 }
 
+export type CrossDatasetDuplicatorArticleReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'crossDatasetDuplicatorArticle'
+}
+
+export type CrossDatasetDuplicatorArticle = {
+  _id: string
+  _type: 'crossDatasetDuplicatorArticle'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  references?: Array<
+    {
+      _key: string
+    } & CrossDatasetDuplicatorArticleReference
+  >
+}
+
 export type SanityFileAssetReference = {
   _ref: string
   _type: 'reference'
@@ -1246,6 +1274,8 @@ export type AllSanitySchemaTypes =
   | HierarchyAuthorReference
   | HierarchyBook
   | HierarchyAuthor
+  | CrossDatasetDuplicatorArticleReference
+  | CrossDatasetDuplicatorArticle
   | SanityFileAssetReference
   | MediaProduct
   | MediaTag
