@@ -454,6 +454,18 @@ Ensure you have pnpm v10+ installed, then run:
 corepack enable
 ```
 
+### Upgrading a recently published dependency
+
+`pnpm-workspace.yaml` sets `minimumReleaseAge` (currently 3 days), so a freshly published version cannot be installed until it reaches that age—`pnpm add`/`pnpm update` fails with `ERR_PNPM_NO_MATURE_MATCHING_VERSION`. A small set of trusted first-party/tooling packages is exempt via `minimumReleaseAgeExclude`.
+
+To intentionally upgrade a package whose newest version is still too recent, either wait until it ages past the threshold (Renovate does this automatically), or, for a one-time reviewed upgrade, bypass the check for that single install:
+
+```bash
+pnpm add -w <pkg>@<version> --config.minimumReleaseAge=0
+```
+
+The resolved version is written to the lockfile, and CI's frozen `pnpm install` does not re-check release age, so CI is unaffected. Avoid adding third-party packages to `minimumReleaseAgeExclude` solely to upgrade them—that permanently removes the safety delay.
+
 ### Test Studio Won't Load
 
 1. Check you're logged into Sanity in the browser
@@ -499,6 +511,8 @@ Open that URL in the browser to authenticate and land directly in the Kitchen Si
 ### Lint / build / test
 
 Standard commands from the Quick Reference table apply. Run `pnpm build` before `pnpm lint` if type errors reference missing `dist/` output. `pretest` automatically builds all packages except `dev/*` before Vitest runs.
+
+`@repo/generators` is the only package built with `tsdown`, which loads its config through tsdown's optional `unrun` peer (not declared as a dependency). Without the remote turbo cache (e.g. when `TURBO_TOKEN` is unset, as on a fresh cloud-agent VM) this build is a cache miss and fails with `Failed to import module "unrun"`; in CI the build is restored from the turbo cache, so it is not hit there. To build/test the rest of the monorepo locally, exclude that package—`pnpm turbo run build --filter='!./dev/*' --filter='!@repo/generators'`—or unblock it for the session with a one-off `pnpm add -w unrun --config.minimumReleaseAge=0` (revert before committing).
 
 ## Related Documentation
 
