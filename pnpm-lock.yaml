@@ -2233,7 +2233,7 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       motion:
-        specifier: ^12.36.0
+        specifier: ^12.40.0
         version: 12.40.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7)(react@19.2.7)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
@@ -2867,7 +2867,7 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5
       motion:
-        specifier: ^12.36.0
+        specifier: ^12.40.0
         version: 12.40.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7)(react@19.2.7)
       sanity-plugin-utils:
         specifier: workspace:^
