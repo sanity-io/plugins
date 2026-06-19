@@ -35,6 +35,7 @@ preferred approach, and `Incorrect` / `Correct` examples grounded in real plugin
 | Area            | What it covers                                                                               | Reference                                          |
 | --------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------- |
 | Styling and CSS | Why raw `<style>` tags hurt performance; prefer static CSS, fall back to `styled-components` | [`references/styling.md`](./references/styling.md) |
+| Component refs  | Don't use `forwardRef` — on React 19 `ref` is a regular prop (enforced by lint)              | [`references/refs.md`](./references/refs.md)       |
 
 > This skill is intended to grow. When you find a plugin pattern worth standardizing (or an
 > anti-pattern worth banning), add a focused reference file and a row to the table above rather than
@@ -67,5 +68,8 @@ See [`references/styling.md`](./references/styling.md) for the full rationale an
   override (a single styled-components instance — required for theming and SSR). See
   [`references/styling.md`](./references/styling.md#dependency-setup).
 - **Use `lodash-es`, never `lodash`** (matches `AGENTS.md`).
+- **Never use `forwardRef`.** On React 19 `ref` is a regular prop — declare `ref?: Ref<T>` in your
+  props and use it directly. The lint config bans the `forwardRef` import. See
+  [`references/refs.md`](./references/refs.md).
 - **Apply the React performance rules** from `vercel-react-best-practices` (don't define components
   inside components, batch DOM/CSS writes, hoist static JSX, etc.).
