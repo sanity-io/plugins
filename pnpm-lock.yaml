@@ -2004,7 +2004,7 @@ importers:
         specifier: ^7.79.0
         version: 7.79.0(react@19.2.7)
       react-time-ago:
-        specifier: ^7.2.1
+        specifier: ^7.4.4
         version: 7.4.4(react-dom@19.2.7)(react@19.2.7)
       styled-components:
         specifier: npm:@sanity/styled-components@latest
