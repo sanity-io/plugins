@@ -8,7 +8,7 @@
 
 const checkboardCache: Record<string, string | null> = {}
 
-export function render(
+function render(
   c1: string,
   c2: string,
   size: number,
