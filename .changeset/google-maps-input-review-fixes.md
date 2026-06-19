@@ -1,5 +1,5 @@
 ---
-'@sanity/google-maps-input': patch
+"@sanity/google-maps-input": patch
 ---
 
 Fix review feedback for the monorepo port:
