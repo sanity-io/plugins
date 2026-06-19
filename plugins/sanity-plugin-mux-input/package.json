@@ -23,7 +23,6 @@
     "directory": "plugins/sanity-plugin-mux-input"
   },
   "files": [
-    "src",
     "dist",
     "sanity.json",
     "v2-incompatible.js"
