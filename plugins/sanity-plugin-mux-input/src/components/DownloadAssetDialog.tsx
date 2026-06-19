@@ -10,7 +10,7 @@ import {DIALOGS_Z_INDEX} from '../util/constants'
 import {downloadFile} from '../util/downloadFile'
 import type {VideoAssetDocument} from '../util/types'
 
-type MuxMasterAccessStatus = 'idle' | 'preparing' | 'success' | 'error'
+type MuxMasterAccessStatus = 'preparing' | 'success' | 'error'
 
 const PREPARE_TIMEOUT_SECONDS = 120
 const PREPARE_INTERVAL_SECONDS = 5
@@ -24,7 +24,8 @@ export interface Props {
 export default function DownloadAssetDialog({asset, onClose, absolute}: Props) {
   const client = useClient()
 
-  const [status, setStatus] = useState<MuxMasterAccessStatus>('idle')
+  // Start in the preparing state so the initial run doesn't setState synchronously inside the effect.
+  const [status, setStatus] = useState<MuxMasterAccessStatus>('preparing')
   const interruptedRef = useRef<boolean>(false)
 
   const {setDialogState} = useDialogStateContext()
@@ -35,10 +36,9 @@ export default function DownloadAssetDialog({asset, onClose, absolute}: Props) {
     setDialogState(false)
   }, [onClose, setDialogState])
 
-  const prepareDownload = useCallback(async () => {
+  const runPreparation = useCallback(async () => {
     const assetId = asset.assetId ?? ''
     interruptedRef.current = false
-    setStatus('preparing')
 
     await enableMasterAccess(client, assetId)
     const link = await waitForMasterAccess(
@@ -46,12 +46,17 @@ export default function DownloadAssetDialog({asset, onClose, absolute}: Props) {
       assetId,
       PREPARE_TIMEOUT_SECONDS,
       PREPARE_INTERVAL_SECONDS,
-      () => interruptedRef.current
+      () => interruptedRef.current,
     )
 
     if (interruptedRef.current) return
     setStatus(link.length > 0 ? 'success' : 'error')
   }, [asset.assetId, client])
+
+  const retry = useCallback(() => {
+    setStatus('preparing')
+    void runPreparation()
+  }, [runPreparation])
 
   const handleDownload = useCallback(async () => {
     const assetId = asset.assetId ?? ''
@@ -64,11 +69,11 @@ export default function DownloadAssetDialog({asset, onClose, absolute}: Props) {
   }, [asset.assetId, asset.filename, client, closing])
 
   useEffect(() => {
-    void prepareDownload()
+    void runPreparation()
     return () => {
       interruptedRef.current = true
     }
-  }, [prepareDownload])
+  }, [runPreparation])
 
   const isSuccess = status === 'success'
   const isPreparing = status === 'preparing'
@@ -90,7 +95,7 @@ export default function DownloadAssetDialog({asset, onClose, absolute}: Props) {
             mode="ghost"
             disabled={isPreparing}
             loading={isPreparing}
-            onClick={isSuccess ? handleDownload : prepareDownload}
+            onClick={isSuccess ? handleDownload : retry}
           />
         </Stack>
       }

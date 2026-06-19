@@ -55,14 +55,3 @@ export function mimeToExt(mime: string): string | undefined {
   }
   return undefined
 }
-
-/** Resolves the first MIME type associated with the given file extension. */
-export function extToMime(ext: string): string | undefined {
-  const formattedExt = ext.trim().toLowerCase()
-  for (const [mimeType, extension] of mimeExtGraph) {
-    if (extension === formattedExt) {
-      return mimeType
-    }
-  }
-  return undefined
-}

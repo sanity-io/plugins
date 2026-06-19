@@ -1,5 +1,5 @@
 ---
-'sanity-plugin-mux-input': minor
+"sanity-plugin-mux-input": minor
 ---
 
 author: @y-dpi

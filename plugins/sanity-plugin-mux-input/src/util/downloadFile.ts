@@ -15,7 +15,7 @@ export async function downloadFile(url: string, name = 'untitled', extension = '
   const response = await fetch(url, {mode: 'cors'})
   if (!response.ok) {
     throw new Error(
-      `downloadFile() failed to fetch file: ${response.status} ${response.statusText}`
+      `downloadFile() failed to fetch file: ${response.status} ${response.statusText}`,
     )
   }
 

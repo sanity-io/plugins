@@ -22,30 +22,12 @@ export async function enableMasterAccess(client: SanityClient, assetId: string):
 }
 
 /**
- * Disables master access on a remote Mux asset.
- * @param client Sanity client (uses addon credentials).
- * @param assetId The target Mux asset ID.
- * @returns `true` on success.
- */
-export async function disableMasterAccess(client: SanityClient, assetId: string): Promise<boolean> {
-  try {
-    const secretsValid = await testSecrets(client)
-    if (!secretsValid?.status) return false
-
-    await updateMasterAccess(client, assetId, 'none')
-    return true
-  } catch {
-    return false
-  }
-}
-
-/**
  * Checks whether master access is enabled and available on a remote Mux asset.
  * @param client Sanity client (uses addon credentials).
  * @param assetId The target Mux asset ID.
  * @returns The master access link if available, otherwise an empty string.
  */
-export async function pollMasterAccess(client: SanityClient, assetId: string): Promise<string> {
+async function pollMasterAccess(client: SanityClient, assetId: string): Promise<string> {
   try {
     const res = await getAsset(client, assetId)
 
@@ -72,7 +54,7 @@ export async function waitForMasterAccess(
   assetId: string,
   timeout = 120,
   interval = 5,
-  interrupt: () => Promise<boolean> | boolean = () => false
+  interrupt: () => Promise<boolean> | boolean = () => false,
 ): Promise<string> {
   const limit = Date.now() + timeout * 1000
   while (Date.now() < limit && !(await interrupt())) {
