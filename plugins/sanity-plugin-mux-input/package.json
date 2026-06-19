@@ -110,7 +110,8 @@
       "tsconfig": false,
       "srcIndex": false,
       "scripts": false,
-      "eslintImports": false
+      "eslintImports": false,
+      "esmOnly": false
     }
   }
 }

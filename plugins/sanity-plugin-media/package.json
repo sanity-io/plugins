@@ -120,7 +120,8 @@
       "tsconfig": false,
       "tsc": false,
       "eslintImports": false,
-      "scripts": false
+      "scripts": false,
+      "esmOnly": false
     }
   }
 }
