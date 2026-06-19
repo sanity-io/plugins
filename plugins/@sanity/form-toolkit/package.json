@@ -69,7 +69,7 @@
     "@sanity/sanity-plugin-async-list": "workspace:^",
     "@sanity/ui": "catalog:",
     "h3": "^1.13.0",
-    "react-icons": "^5.4.0"
+    "react-icons": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

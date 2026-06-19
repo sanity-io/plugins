@@ -24,7 +24,7 @@
     "@sanity/form-toolkit": "workspace:*",
     "@sanity/google-maps-input": "workspace:*",
     "@sanity/hierarchical-document-list": "workspace:*",
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "catalog:",
     "@sanity/language-filter": "workspace:*",
     "@sanity/orderable-document-list": "workspace:*",
     "@sanity/personalization-plugin": "workspace:*",

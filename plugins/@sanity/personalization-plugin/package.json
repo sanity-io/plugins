@@ -53,13 +53,13 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "catalog:",
     "@sanity/studio-secrets": "workspace:^",
     "@sanity/ui": "catalog:",
-    "@sanity/uuid": "^3.0.2",
+    "@sanity/uuid": "catalog:",
     "fast-deep-equal": "^3.1.3",
-    "react-icons": "^5.5.0",
-    "suspend-react": "^0.1.3"
+    "react-icons": "catalog:",
+    "suspend-react": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

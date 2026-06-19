@@ -41,11 +41,11 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@hello-pangea/dnd": "^18.0.1",
+    "@hello-pangea/dnd": "catalog:",
     "@sanity/client": "catalog:",
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "lexorank": "^1.0.4",
+    "lexorank": "catalog:",
     "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {

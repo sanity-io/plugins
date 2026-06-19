@@ -46,7 +46,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
     "react-color": "^2.19.3",
     "tinycolor2": "^1.6.0"
