@@ -56,7 +56,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "jsdom": "^26.1.0",
+    "jsdom": "^28.1.0",
     "just-clone": "^6.2.0",
     "react": "catalog:",
     "react-dom": "catalog:",
