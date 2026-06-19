@@ -70,7 +70,7 @@ const DialogAssetEdit = (props: Props) => {
     (asset?: Asset): AssetFormData => {
       const imageDescription =
         asset && isImageAsset(asset)
-          ? (asset.metadata?.image?.ImageDescription as string | undefined)
+          ? (asset.metadata?.image?.['ImageDescription'] as string | undefined)
           : undefined
 
       if (locales && locales.length > 0) {
