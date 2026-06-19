@@ -1,4 +1,4 @@
-import {SerializedDocument} from '../../src'
+import type {SerializedDocument} from '../../src'
 import annotationAndInlineBlocks from '../__fixtures__/annotationAndInlineBlocks.json'
 import documentLevelArticle from '../__fixtures__/documentLevelArticle.json'
 import fieldLevelArticle from '../__fixtures__/fieldLevelArticle.json'

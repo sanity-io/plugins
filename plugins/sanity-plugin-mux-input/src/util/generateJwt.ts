@@ -25,7 +25,7 @@ export function generateJwt<T extends Audience>(
   client: SanityClient,
   playbackId: string,
   aud: T,
-  payload?: Payload<T>
+  payload?: Payload<T>,
 ): string {
   const {signingKeyId, signingKeyPrivate} = readSecrets(client)
   if (!signingKeyId) {
@@ -35,7 +35,7 @@ export function generateJwt<T extends Audience>(
     throw new TypeError("Missing `signingKeyPrivate`.\n Check your plugin's configuration")
   }
 
-  /* Using suspend means we need to use Suspense on parent components. 
+  /* Using suspend means we need to use Suspense on parent components.
   Also, this will throw a Promise under the hood (apparently common in React), 
   so if we want to catch errors we have to take this into account in catch blocks
   and rethrow promises. */
@@ -52,6 +52,6 @@ export function generateJwt<T extends Audience>(
       subject: playbackId,
       noTimestamp: true,
       expiresIn: '12h',
-    }
+    },
   )
 }

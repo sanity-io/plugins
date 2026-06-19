@@ -1,0 +1,1 @@
+export {cliEntry} from './cli'

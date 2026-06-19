@@ -208,7 +208,7 @@ export default function DraggableWatermark({
         onChange(newWatermark)
       }, 300)
     },
-    [onChange]
+    [onChange],
   )
 
   useEffect(() => {
@@ -221,6 +221,7 @@ export default function DraggableWatermark({
 
   useEffect(() => {
     if (!isDragging && watermark.position) {
+      // oxlint-disable-next-line react/react-compiler
       setLocalPosition(watermark.position)
     }
   }, [watermark.position, isDragging])
@@ -232,7 +233,7 @@ export default function DraggableWatermark({
       setDragStart({x: e.clientX, y: e.clientY})
       setStartPosition({x: position.x, y: position.y})
     },
-    [position]
+    [position],
   )
 
   const handleMouseMove = useCallback(
@@ -271,7 +272,7 @@ export default function DraggableWatermark({
       watermark,
       debouncedOnChange,
       getVideoContentBox,
-    ]
+    ],
   )
 
   const handleMouseUp = useCallback(() => {
@@ -306,6 +307,7 @@ export default function DraggableWatermark({
   const opacityForRender = hasManualOverlay
     ? (parseOpacityPercent(watermark.overlay_settings?.opacity) ?? opacity)
     : opacity
+  // oxlint-disable-next-line react/react-compiler
   const contentBox = getVideoContentBox()
   const hasContentBox = contentBox.width > 0 && contentBox.height > 0
 
@@ -336,6 +338,7 @@ export default function DraggableWatermark({
       ref={watermarkRef}
       $opacity={opacityForRender}
       onMouseDown={hasManualOverlay ? undefined : handleMouseDown}
+      // oxlint-disable-next-line react/react-compiler
       style={computeWatermarkStyle()}
     >
       <img src={watermark.imageUrl} alt="Watermark" draggable={false} />
@@ -364,14 +367,14 @@ export function WatermarkControls({
   const [isValid, setIsValid] = useState<boolean | null>(null)
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [mode, setMode] = useState<'canvas' | 'manual'>(
-    watermark.overlay_settings ? 'manual' : 'canvas'
+    watermark.overlay_settings ? 'manual' : 'canvas',
   )
 
   const isUpdatingRef = useRef(false)
 
-  const isValidExtension = (extension: string) => {
+  const isValidExtension = useCallback((extension: string) => {
     return extension.endsWith('.png') || extension.endsWith('.jpg') || extension.endsWith('.jpeg')
-  }
+  }, [])
 
   const validateUrl = useCallback(
     (url: string) => {
@@ -461,7 +464,7 @@ export function WatermarkControls({
         }
       }, 500)
     },
-    [watermark, onChange, onValidationChange]
+    [watermark, onChange, onValidationChange, isValidExtension],
   )
 
   useEffect(() => {
@@ -473,6 +476,7 @@ export function WatermarkControls({
   }, [])
 
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     setMode(watermark.overlay_settings ? 'manual' : 'canvas')
   }, [watermark.overlay_settings])
 
@@ -802,6 +806,7 @@ export function WatermarkControls({
             <>
               <Box>
                 <Text size={1} weight="medium">
+                  {/* oxlint-disable-next-line react/react-compiler */}
                   {(() => {
                     const sizePct = watermark.size || 20
                     const contentW = getVideoContentBox().width
@@ -812,17 +817,20 @@ export function WatermarkControls({
                 </Text>
                 <RangeInput
                   type="range"
+                  // oxlint-disable-next-line react/react-compiler
                   value={(() => {
                     const sizePct = watermark.size || 20
                     const contentW = getVideoContentBox().width
                     if (!contentW) return sizePct
                     return Math.max(1, Math.round((sizePct / 100) * contentW))
                   })()}
+                  // oxlint-disable-next-line react/react-compiler
                   min={(() => {
                     const contentW = getVideoContentBox().width
                     if (!contentW) return 5
                     return Math.max(1, Math.round(contentW * 0.05))
                   })()}
+                  // oxlint-disable-next-line react/react-compiler
                   max={(() => {
                     const contentW = getVideoContentBox().width
                     if (!contentW) return 50

@@ -24,7 +24,7 @@ export function convertWatermarkToMuxOverlay(
      * - '%' preserves existing behavior.
      */
     units?: '%' | 'px'
-  }
+  },
 ): MuxOverlaySettings | null {
   if (!watermark.enabled || !watermark.imageUrl) {
     return null
@@ -129,17 +129,17 @@ export function convertWatermarkToMuxOverlay(
   const imageAspectRatio = watermark.imageAspectRatio ?? 1
   const watermarkHeightPercentOfVideoHeight = Math.max(
     0,
-    Math.min(100, (size * videoAspectRatio) / imageAspectRatio)
+    Math.min(100, (size * videoAspectRatio) / imageAspectRatio),
   )
 
   const halfWidth = watermarkWidthPercentOfVideoWidth / 2
   const halfHeight = watermarkHeightPercentOfVideoHeight / 2
 
   const leftMargin = clampPercent(
-    Math.min(position.x - halfWidth, 100 - watermarkWidthPercentOfVideoWidth)
+    Math.min(position.x - halfWidth, 100 - watermarkWidthPercentOfVideoWidth),
   )
   const topMargin = clampPercent(
-    Math.min(position.y - halfHeight, 100 - watermarkHeightPercentOfVideoHeight)
+    Math.min(position.y - halfHeight, 100 - watermarkHeightPercentOfVideoHeight),
   )
 
   const units = options?.units ?? '%'

@@ -16,7 +16,7 @@ const Dialogs = () => {
       return null
     }
 
-    const dialog = dialogs[index]
+    const dialog = dialogs[index]!
     const childDialogs = renderDialogs(dialogs, index + 1)
 
     if (dialog.type === 'assetEdit') {

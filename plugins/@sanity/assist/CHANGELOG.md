@@ -1,4 +1,4 @@
-# 📓 Changelog
+# @sanity/assist
 
 ## 6.1.3
 
@@ -92,9 +92,6 @@
   - **Updated dependencies**: All dependencies updated to latest compatible versions
 
   The plugin functionality remains the same, but the new build process and dependencies require these breaking changes for compatibility with the monorepo's tooling and conventions.
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## [5.0.4](https://github.com/sanity-io/assist/compare/v5.0.3...v5.0.4) (2026-01-16)
 

@@ -58,7 +58,7 @@ describe('DialogTagEdit', () => {
     await user.type(input, 'beta')
     await user.click(dlg.getByRole('button', {name: /save and close/i}))
 
-    expect(store.getState().tags.byIds.t1.updating).toBe(true)
+    expect(store.getState().tags.byIds['t1']!.updating).toBe(true)
   })
 
   it('dispatches updateRequest with slug-shaped form data', async () => {
