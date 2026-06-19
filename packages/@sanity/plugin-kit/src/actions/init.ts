@@ -1,6 +1,6 @@
 import path from 'path'
 
-import {TypedFlags} from 'meow'
+import type {TypedFlags} from 'meow'
 
 import {defaultSourceJs, defaultSourceTs} from '../configs/default-source'
 import {defaultOutDir} from '../constants'

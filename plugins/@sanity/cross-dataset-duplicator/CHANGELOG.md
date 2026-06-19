@@ -1,5 +1,11 @@
 # @sanity/cross-dataset-duplicator
 
+## 2.0.1
+
+### Patch Changes
+
+- [#1311](https://github.com/sanity-io/plugins/pull/1311) [`f2b7f4d`](https://github.com/sanity-io/plugins/commit/f2b7f4d3647a73d353faf6015955c6b921e1aed2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency dset to ^3.1.4
+
 ## 2.0.0
 
 ### Major Changes

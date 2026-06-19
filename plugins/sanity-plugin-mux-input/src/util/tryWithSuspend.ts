@@ -8,7 +8,7 @@
  */
 export function tryWithSuspend<T, E>(
   block: () => T,
-  onError?: (error: Error) => E
+  onError?: (error: Error) => E,
 ): T | E | undefined {
   try {
     return block()

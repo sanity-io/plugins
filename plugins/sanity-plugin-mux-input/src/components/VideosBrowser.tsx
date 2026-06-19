@@ -28,7 +28,7 @@ export default function VideosBrowser({onSelect, config}: VideosBrowserProps) {
   const [editedAsset, setEditedAsset] = useState<VideoDetailsProps['asset'] | null>(null)
   const freshEditedAsset = useMemo(
     () => assets.find((a) => a._id === editedAsset?._id) || editedAsset,
-    [editedAsset, assets]
+    [editedAsset, assets],
   )
 
   const pageStart = page * pageLimit

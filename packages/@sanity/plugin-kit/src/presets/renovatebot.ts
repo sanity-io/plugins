@@ -1,5 +1,5 @@
-import {InjectOptions, writeAssets} from '../actions/inject'
-import {Preset} from './presets'
+import {type InjectOptions, writeAssets} from '../actions/inject'
+import type {Preset} from './presets'
 
 export const renovatePreset: Preset = {
   name: 'renovatebot',

@@ -15,7 +15,7 @@ const path = [
 export const useSecretsDocumentValues = () => {
   const {error, isLoading, value} = useDocumentValues<Partial<Secrets> | null | undefined>(
     muxSecretsDocumentId,
-    path
+    path,
   )
   const cache = useMemo(() => {
     const exists = Boolean(value)

@@ -8,7 +8,9 @@
     "sanity.json",
     "src"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@sanity/incompatible-plugin": "^1.0.5"
+  },
   "devDependencies": {
     "@sanity/base": "^2.30.1",
     "eslint": "^8.17.0",
