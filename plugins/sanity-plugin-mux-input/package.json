@@ -51,7 +51,7 @@
   "dependencies": {
     "@mux/mux-player": "^3.8.0",
     "@mux/mux-player-react": "^3.8.0",
-    "@mux/upchunk": "^3.4.0",
+    "@mux/upchunk": "^3.5.0",
     "@sanity/icons": "^3.7.4",
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^3.2.0",
