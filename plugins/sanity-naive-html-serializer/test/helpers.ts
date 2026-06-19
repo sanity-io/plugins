@@ -1,5 +1,5 @@
 import clone from 'just-clone'
-import {PortableTextBlock, SanityDocument, TypedObject} from 'sanity'
+import type {PortableTextBlock, SanityDocument, TypedObject} from 'sanity'
 
 import {BaseDocumentSerializer, BaseDocumentDeserializer} from '../src'
 import {

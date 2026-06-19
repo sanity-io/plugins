@@ -45,7 +45,7 @@ test('Arrays will use new objects when they exist', () => {
     newDocument.content[0].children[0].text,
   )
   expect(mergedDocument.content[0].children[0].text).not.toEqual(
-    documentLevelArticle.content[0].children[0].text,
+    documentLevelArticle.content[0].children![0].text,
   )
 })
 

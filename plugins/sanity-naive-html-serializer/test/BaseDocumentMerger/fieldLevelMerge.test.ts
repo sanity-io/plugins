@@ -54,7 +54,7 @@ test('Arrays will use new objects when they exist', () => {
     newDocument.content.en[0].children[0].text,
   )
   expect(fieldLevelPatches['content.es_ES'][0].children[0].text).not.toEqual(
-    fieldLevelArticle.content.en[0].children[0].text,
+    fieldLevelArticle.content.en[0].children![0].text,
   )
 })
 
@@ -97,7 +97,7 @@ test('Arrays will merge objects in the array', () => {
 test('nested locale fields will be merged', () => {
   const newNestedFields = clone(nestedLanguageFields)
   newNestedFields.pageFields.name.en = 'This is a new page field name'
-  newNestedFields.slices[0].en[0].children[0].text = 'This is new slice text'
+  ;(newNestedFields as any).slices[0].en[0].children[0].text = 'This is new slice text'
   const baseDocumentWithNestedFields = {...fieldLevelArticle, ...nestedLanguageFields}
   const newDocumentWithNestedFields = getDeserialized(
     {...fieldLevelArticle, ...newNestedFields},

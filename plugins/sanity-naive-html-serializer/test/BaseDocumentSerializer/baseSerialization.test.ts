@@ -1,4 +1,4 @@
-import {PortableTextBlock} from 'sanity'
+import type {PortableTextBlock} from 'sanity'
 import {describe, expect, test, vi} from 'vitest'
 
 import {BaseDocumentSerializer, customSerializers, defaultStopTypes} from '../../src'
@@ -80,9 +80,9 @@ test('Custom serialization should manifest at all levels', () => {
 
   const arrayField = findByClass(docTree.children, 'content')
   const nestedSerialized = findByClass(arrayField!.children, 'objectField')
-  const requiredNestedTitle = documentLevelArticle.content.find(
+  const requiredNestedTitle: any = documentLevelArticle.content.find(
     (b: Record<string, any>) => b._type === 'objectField',
-  ).title
+  )!.title
   expect(nestedSerialized?.innerHTML).toContain(createCustomInnerHTML(requiredNestedTitle))
 })
 
@@ -243,11 +243,11 @@ test('Serialized content should preserve style tags from Portable Text', () => {
   const serialized = getSerialized(documentLevelArticle, 'document')
   const docTree = getHTMLNode(serialized).body.children[0]
   const arrayField = findByClass(docTree.children, 'content')
-  const blockH1 = documentLevelArticle.content.find(
+  const blockH1: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.style === 'h1',
   )
   const serializedH1 = arrayField?.querySelector('h1')
-  const blockH2 = documentLevelArticle.content.find(
+  const blockH2: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.style === 'h2',
   )
   const serializedH2 = arrayField?.querySelector('h2')
@@ -277,14 +277,14 @@ test('Content with anonymous inline objects serializes all fields, at any depth'
 
   const content = findByClass(tabs.children, 'content')!
   const keysHTML = Array.from(content.children).map((child) => child.id)
-  const keysJSON = inlineDocumentLevelArticle.tabs.content.map((child: any) => child._key)
+  const keysJSON = inlineDocumentLevelArticle.tabs.content.map((child: any) => child._key as string)
   expect(keysHTML.sort()).toEqual(keysJSON.sort())
 
   const objectInArrayHTML = findByClass(content.children, 'objectField')
   const objectInArrayHTMLFieldNames = Array.from(objectInArrayHTML!.children).map(
     (child) => child.className,
   )
-  const objectInArray = inlineDocumentLevelArticle.tabs.content.find(
+  const objectInArray: any = inlineDocumentLevelArticle.tabs.content.find(
     (obj: any) => obj._type === 'objectField',
   )
   expect(objectInArrayHTMLFieldNames.sort()).toEqual(getValidFields(objectInArray).sort())
@@ -297,12 +297,12 @@ test('Serialized content should preserve list style and depth from Portable text
   const serialized = getSerialized(documentLevelArticle, 'document')
   const docTree = getHTMLNode(serialized).body.children[0]
   const arrayField = findByClass(docTree.children, 'content')
-  const listItem = documentLevelArticle.content.find(
+  const listItem: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.listItem === 'bullet' && block.style === 'h2',
   )
 
   const serializedListItem = arrayField?.querySelectorAll('li')[2]
-  const nestedListItem = documentLevelArticle.content.find(
+  const nestedListItem: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.listItem === 'bullet' && block.level === 2,
   )
   const serializedNestedListItem = arrayField?.querySelectorAll('li')[1]

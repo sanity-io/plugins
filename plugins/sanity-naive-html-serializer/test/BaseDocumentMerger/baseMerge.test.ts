@@ -11,10 +11,10 @@ import {getNewDocument} from './utils'
 test('Merged document should maintain style tags', () => {
   const newDocument = getNewDocument()
   const mergedDocument = BaseDocumentMerger.documentLevelMerge(newDocument, documentLevelArticle)
-  const origH1Block = documentLevelArticle.content.find(
+  const origH1Block: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.style === 'h1',
   )
-  const origH2Block = documentLevelArticle.content.find(
+  const origH2Block: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.style === 'h2',
   )
   const mergedH1Block = mergedDocument.content.find(

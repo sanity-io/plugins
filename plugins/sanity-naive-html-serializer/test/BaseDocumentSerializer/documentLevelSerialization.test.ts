@@ -80,7 +80,7 @@ describe('Presence and accuracy of fields in vanilla deserialization -- arrays',
     const fieldNames = getValidFields(
       documentLevelArticle.content.find(
         (block: Record<string, any>) => block._type === 'objectField',
-      ),
+      )!,
     )
     const foundFieldNames = Array.from(objectInArray!.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
@@ -91,11 +91,11 @@ describe('Presence and accuracy of fields in vanilla deserialization -- arrays',
     const nestedObject = findByClass(objectInArray!.children, 'objectAsField')
     const title = documentLevelArticle.content.find(
       (block: Record<string, any>) => block._type === 'objectField',
-    ).objectAsField.title
+    )!.objectAsField!.title
     const blockText = toPlainText(
       documentLevelArticle.content.find(
         (block: Record<string, any>) => block._type === 'objectField',
-      ).objectAsField.content,
+      )!.objectAsField!.content,
     ).trim()
     expect(nestedObject?.innerHTML).toContain(title)
     expect(nestedObject?.innerHTML).toContain(blockText)

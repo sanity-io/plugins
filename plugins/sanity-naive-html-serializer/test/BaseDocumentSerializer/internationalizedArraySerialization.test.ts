@@ -1,4 +1,4 @@
-import {PortableTextBlock} from 'sanity'
+import type {PortableTextBlock} from 'sanity'
 import {expect, test, describe} from 'vitest'
 
 import {getI18nArrayItem, getSerialized, getValidFields, toPlainText} from '../helpers'
@@ -20,11 +20,11 @@ test('Global test of working internationalized array-level functionality and sna
 test('String and text types get serialized correctly at top-level -- internationalized array', () => {
   const titleObj = findByClass(docTree.children, 'title')
   const englishTitleHTML = findById(titleObj!.children, 'en')
-  const englishTitleValueHTML = findByClass(englishTitleHTML?.children, 'value')
+  const englishTitleValueHTML = findByClass(englishTitleHTML!.children, 'value')
 
   const snippetObj = findByClass(docTree.children, 'snippet')
   const englishSnippetHTML = findById(snippetObj!.children, 'en')
-  const englishSnippetValueHTML = findByClass(englishSnippetHTML?.children, 'value')
+  const englishSnippetValueHTML = findByClass(englishSnippetHTML!.children, 'value')
 
   expect(englishTitleValueHTML?.innerHTML).toEqual(
     getI18nArrayItem(internationalizedArrayArticle.title, 'en')?.value,
@@ -128,11 +128,11 @@ describe('Presence and accurancy of fields in "vanilla" deserialization -- array
 //works, but requires another schema declaration. resolve later.
 test('Nested locale fields make it to serialization, but only base lang', () => {
   const slices = findByClass(docTree.children, 'slices')?.children[0]
-  const origSlices = internationalizedArrayArticle.slices[0].content
+  const origSlices: any = internationalizedArrayArticle.slices[0].content
   const engSlice = getI18nArrayItem(origSlices, 'en').value
   const frenchSlice = getI18nArrayItem(origSlices, 'fr_FR').value
-  //@ts-expect-error
+  // @ts-expect-error i18n array item value is typed as unknown
   expect(slices?.innerHTML).toContain(engSlice[0]!.children![0].text)
-  //@ts-expect-error
+  // @ts-expect-error i18n array item value is typed as unknown
   expect(slices?.innerHTML).not.toContain(frenchSlice[0]!.children![0].text)
 })

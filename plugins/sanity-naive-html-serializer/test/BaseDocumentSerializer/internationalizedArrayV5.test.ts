@@ -19,7 +19,7 @@ const toV5 = (value: any): any => {
       value.length > 0 &&
       typeof value[0] === 'object' &&
       value[0] !== null &&
-      /^internationalizedArray/.test(value[0]._type)
+      value[0]._type.startsWith('internationalizedArray')
 
     return value.map((item) => {
       if (isI18nArray && item && typeof item === 'object') {
@@ -46,7 +46,7 @@ describe('Serialization supports v5 (language field) internationalized arrays', 
   test('Base language string fields are exported for v5 data', () => {
     const titleObj = findByClass(docTree.children, 'title')
     const englishTitleHTML = findById(titleObj!.children, 'en')
-    const englishTitleValueHTML = findByClass(englishTitleHTML?.children, 'value')
+    const englishTitleValueHTML = findByClass(englishTitleHTML!.children, 'value')
 
     expect(englishTitleValueHTML?.innerHTML).toEqual(
       getI18nArrayItem(internationalizedArrayArticle.title, 'en')?.value,
