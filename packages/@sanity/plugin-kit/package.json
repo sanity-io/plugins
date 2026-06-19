@@ -103,7 +103,7 @@
     "typescript": "5.8.x || 5.9.x || 6.0.x"
   },
   "engines": {
-    "node": ">=22.12"
+    "node": ">=20.19 <22 || >=22.12"
   },
   "binname": "plugin-kit"
 }

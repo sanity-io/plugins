@@ -73,6 +73,6 @@
     "sanity-plugin-internationalized-array": "workspace:^"
   },
   "engines": {
-    "node": ">=22.12"
+    "node": ">=20.19 <22 || >=22.12"
   }
 }

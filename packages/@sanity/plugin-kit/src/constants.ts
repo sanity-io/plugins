@@ -26,5 +26,9 @@ export const minPkgUtilsMajor = 10
 /**
  * Required `engines.node` range for plugins, matching `sanity` so plugins declare the same Node.js
  * support as the Studio they integrate with.
+ *
+ * Plugins support a range of `sanity` majors (`^5 || ^6`), so this tracks the lowest supported
+ * major — currently `sanity` v5 — to stay installable wherever a supported Studio runs. When v5
+ * support is dropped, bump this to v6's range (`>=22.12`).
  */
-export const requiredNodeEngine = '>=22.12'
+export const requiredNodeEngine = '>=20.19 <22 || >=22.12'

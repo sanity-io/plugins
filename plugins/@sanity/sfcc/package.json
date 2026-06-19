@@ -67,6 +67,6 @@
     "sanity-plugin-internationalized-array": "^4.0.0 || ^5.0.0"
   },
   "engines": {
-    "node": ">=22.12"
+    "node": ">=20.19 <22 || >=22.12"
   }
 }
