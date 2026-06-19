@@ -465,6 +465,46 @@ export function validatePackageName(packageJson: PackageJson) {
   return []
 }
 
+/**
+ * Plugins built with @sanity/plugin-kit publish the compiled output (the `dist` directory) plus any
+ * v2-compatibility files. The `src` directory should not be published: it bloats the package and can
+ * cause bundlers that resolve the `source` export condition to pull in raw, uncompiled TypeScript.
+ */
+export function validateBannedFiles(packageJson: PackageJson): string[] {
+  const {files} = packageJson
+  if (!Array.isArray(files)) {
+    return []
+  }
+
+  const hasSrc = files.some((entry) => {
+    if (typeof entry !== 'string') {
+      return false
+    }
+    // Normalize entries like "./src", "src/", "/src" before comparing.
+    const normalized = entry
+      .trim()
+      .replace(/^\.?\/+/, '')
+      .replace(/\/+$/, '')
+    return normalized === 'src'
+  })
+
+  if (!hasSrc) {
+    return []
+  }
+
+  return [
+    outdent`
+      package.json "files" must not include "src".
+
+      Plugins built with @sanity/plugin-kit publish the compiled output in "dist" (and any v2-compatibility files).
+      Shipping the "src" directory bloats the published package and can cause bundlers that resolve the
+      "source" export condition to import raw, uncompiled TypeScript.
+
+      Please remove "src" from the "files" array in package.json.
+    `.trimStart(),
+  ]
+}
+
 export async function validateSrcIndexFile(basePath: string) {
   const paths = ['index.js', 'index.ts'].map((p) => path.join('src', p))
   const allowedIndexFiles = paths.map((file) => path.join(basePath, file))

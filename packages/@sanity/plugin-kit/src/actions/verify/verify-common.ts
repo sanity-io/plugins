@@ -23,6 +23,7 @@ export const verifyPackageConfigDefaults = {
   'nodeEngine': true,
   'studioConfig': true,
   'srcIndex': true,
+  'bannedFiles': true,
   'duplicateConfig': true,
 } as const
 

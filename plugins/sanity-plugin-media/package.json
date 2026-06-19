@@ -24,8 +24,7 @@
     "directory": "plugins/sanity-plugin-media"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "type": "module",
   "main": "./dist/index.cjs",

@@ -273,7 +273,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
 
   const source = flags.typescript ? './src/index.ts' : './src/index.js'
 
-  const files = [outDir, 'src']
+  const files = [outDir]
 
   // sort alphabetically for scanability
   files.sort()
