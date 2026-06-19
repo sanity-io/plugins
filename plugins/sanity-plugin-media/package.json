@@ -87,7 +87,7 @@
     "jsdom": "^25.0.1",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-is": "^19.0.0",
+    "react-is": "^19.2.7",
     "sanity": "catalog:",
     "styled-components": "catalog:",
     "typescript": "5.9.3"
