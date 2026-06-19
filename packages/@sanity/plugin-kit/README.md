@@ -124,7 +124,7 @@ Verify that the plugin package is configured correctly by running:
 
 - Check package.json for:
   - recommended script commands
-  - recommended cjs and esm configuration
+  - ESM-only configuration (bans CJS `main`/`module` fields and `require` export conditions)
   - sanity dependency compatibility
   - @sanity/pkg-utils devDependency
   - recommended usage of devDependencies/peerDependencies/dependencies for certain packages
@@ -421,27 +421,34 @@ Provide a sanityPlugin config in package.json (defaults shown):
     "linkWatch": {
       "command": "npm run watch",
       "extensions": "js,png,svg,gif,jpeg,css"
+    },
+    "verifyPackage": {
+      "packageName": true,
+      "esmOnly": true,
+      "tsconfig": true,
+      "tsc": true,
+      "dependencies": true,
+      "deprecatedDependencies": true,
+      "babelConfig": true,
+      "incompatiblePlugin": true,
+      "eslintImports": true,
+      "scripts": true,
+      "pkg-utils": true,
+      "nodeEngine": true,
+      "studioConfig": true,
+      "srcIndex": true,
+      "bannedFiles": true,
+      "duplicateConfig": true
     }
-  },
-  "verifyPackage": {
-    "packageName": true,
-    "module": true,
-    "tsconfig": true,
-    "tsc": true,
-    "dependencies": true,
-    "rollupConfig": true,
-    "babelConfig": true,
-    "incompatiblePlugin": true,
-    "eslintImports": true,
-    "scripts": true,
-    "pkg-utils": true,
-    "nodeEngine": true,
-    "srcIndex": true,
-    "bannedFiles": true,
-    "duplicateConfig": true
   }
 }
 ```
+
+Set `esmOnly` to `false` to allow CommonJS interop (a `require` export condition, or top-level
+`main`/`module` fields). This is discouraged: plugins target Sanity Studio v5+, which is pure ESM, and
+shipping a parallel CJS build can have unintended side-effects. The supported Node.js versions handle
+`require(esm)`, so a single published format keeps two copies of the plugin's code out of the module
+tree, avoiding bundle bloat and slower builds.
 
 ## License
 
