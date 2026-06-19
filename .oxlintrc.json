@@ -120,10 +120,7 @@
       }
     },
     {
-      "files": [
-        "plugins/sanity-plugin-mux-input/src/**/*.{ts,tsx}",
-        "plugins/sanity-plugin-mux-input/v2-incompatible.js"
-      ],
+      "files": ["plugins/sanity-plugin-mux-input/src/**/*.{ts,tsx}"],
       "rules": {
         "no-deprecated": "off",
         "no-unsafe-type-assertion": "off",
@@ -143,10 +140,7 @@
       }
     },
     {
-      "files": [
-        "plugins/sanity-plugin-media/src/**/*.{ts,tsx}",
-        "plugins/sanity-plugin-media/v2-incompatible.js"
-      ],
+      "files": ["plugins/sanity-plugin-media/src/**/*.{ts,tsx}"],
       "rules": {
         "no-deprecated": "off",
         "no-unsafe-type-assertion": "off",

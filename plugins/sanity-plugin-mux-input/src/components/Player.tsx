@@ -1,5 +1,5 @@
 import {Card, Text} from '@sanity/ui'
-import React, {useEffect, useMemo, useRef} from 'react'
+import {useEffect, useMemo, useRef} from 'react'
 
 import {useCancelUpload} from '../hooks/useCancelUpload'
 import type {MuxInputProps, PluginConfig, VideoAssetDocument} from '../util/types'
