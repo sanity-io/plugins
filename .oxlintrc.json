@@ -15,7 +15,6 @@
     "**/dist/*",
     "**/sanity.types.ts",
     "turbo/generators/config.ts",
-    "plugins/sanity-naive-html-serializer/test/**",
     // Illustrative docs referencing optional third-party form libraries
     // (formik, react-hook-form, @tanstack/react-form, zod); not built or published
     "plugins/@sanity/form-toolkit/examples/**",

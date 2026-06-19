@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.1.6
+
+### Patch Changes
+
+- [`a1aca4c`](https://github.com/sanity-io/plugins/commit/a1aca4cf86dacafdfce449465181253af6a550d3) Thanks [@stipsan](https://github.com/stipsan)! - Stop publishing the `assets` directory to npm and reference README images via absolute GitHub URLs
+
 ## 7.1.5
 
 ### Patch Changes

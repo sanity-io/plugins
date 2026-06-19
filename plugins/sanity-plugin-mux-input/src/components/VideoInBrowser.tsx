@@ -1,6 +1,6 @@
 import {CheckmarkIcon, EditIcon, LockIcon, PlayIcon} from '@sanity/icons'
 import {Button, Card, Stack, Text, Tooltip} from '@sanity/ui'
-import React, {useState} from 'react'
+import {useCallback, useState} from 'react'
 import {styled} from 'styled-components'
 
 import {DRMWarningDialog, useDrmPlaybackWarningContext} from '../context/DrmPlaybackWarningContext'
@@ -84,8 +84,8 @@ export default function VideoInBrowser({
   asset: VideoAssetDocument
 }) {
   const [renderVideo, setRenderVideo] = useState<RenderState>(false)
-  const select = React.useCallback(() => onSelect?.(asset), [onSelect, asset])
-  const edit = React.useCallback(() => onEdit?.(asset), [onEdit, asset])
+  const select = useCallback(() => onSelect?.(asset), [onSelect, asset])
+  const edit = useCallback(() => onEdit?.(asset), [onEdit, asset])
   const {hasShownWarning} = useDrmPlaybackWarningContext()
 
   if (!asset) {
