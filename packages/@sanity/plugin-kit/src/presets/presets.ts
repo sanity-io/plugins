@@ -1,8 +1,7 @@
-import {InjectOptions} from '../actions/inject'
+import type {InjectOptions} from '../actions/inject'
 import {renovatePreset} from './renovatebot'
 import {semverWorkflowPreset} from './semver-workflow'
 import {ui} from './ui'
-import {uiWorkshop} from './ui-workshop'
 
 export interface Preset {
   name: string
@@ -10,7 +9,7 @@ export interface Preset {
   apply: (options: InjectOptions) => Promise<void>
 }
 
-const presets: Preset[] = [semverWorkflowPreset, renovatePreset, ui, uiWorkshop]
+const presets: Preset[] = [semverWorkflowPreset, renovatePreset, ui]
 const presetNames = presets.map((p) => p?.name)
 
 export function presetHelpList(padStart: number) {

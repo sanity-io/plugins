@@ -54,6 +54,22 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
+package.json "files" must not include "src".
+
+Plugins built with @sanity/plugin-kit publish the compiled output in "dist" (and any v2-compatibility files).
+Shipping the "src" directory bloats the published package and can cause bundlers that resolve the
+"source" export condition to import raw, uncompiled TypeScript.
+
+Please remove "src" from the "files" array in package.json.
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "bannedFiles": false
+   }
+}
+----------------------------------------------------------
+[error] 
 The following script commands did not contain expected defaults: build, watch, link-watch, prepublishOnly
 
 This checks for that the commands-strings includes these terms.
@@ -136,22 +152,26 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
-Invalid sanity.json. It is used for compatibility checking in V2 studios:
+@sanity/incompatible-plugin is no longer used and should be removed.
 
-- The part should implement part:@sanity/base/sanity-root, but did not.
-- The file in "path", ./src/index.js, does not exist.
-- package.json should have @sanity/incompatible-plugin as a dependency, but did not.
-  Install it with: npm install --save @sanity/incompatible-plugin
+It only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin was
+installed there. That compatibility shim is now obsolete, so plugin-kit no longer adds it.
 
-sanity.json will only be used when incorrectly installing a v3 plugin in a v2 Studio.
+Found:
+- "@sanity/incompatible-plugin" listed in package.json
 
-This check ensures that sanity.json conforms with the usage section of
-https://github.com/sanity-io/incompatible-plugin
+To fix this:
+- Remove "@sanity/incompatible-plugin" from package.json (dependencies/devDependencies/peerDependencies)
+- Delete the v2-incompatible.js file
+- Delete sanity.json (if it only contains the v2-incompatible "part")
+- Remove "sanity.json" and "v2-incompatible.js" from the package.json "files" array
+
+For more, see https://github.com/sanity-io/incompatible-plugin
 
 To skip this validation add the following to your package.json:
 "sanityPlugin": {
    "verifyPackage": {
-      "sanityV2Json": false
+      "incompatiblePlugin": false
    }
 }
 ----------------------------------------------------------
@@ -235,7 +255,7 @@ More information is available here:
 - Reference documentation: https://beta.sanity.io/docs/reference
 
 To fail-fast on first detected issue run:
-npx @sanity/plugin-kit verify-package' --single"
+npx @sanity/plugin-kit verify-package --single"
 `;
 
 exports[`plugin-kit verify-package in package with invalid eslint config 1`] = `
@@ -246,6 +266,22 @@ Found: no "type" field (defaults to "commonjs")
 Please add the following to package.json:
 
 "type": "module"
+[error] 
+package.json "files" must not include "src".
+
+Plugins built with @sanity/plugin-kit publish the compiled output in "dist" (and any v2-compatibility files).
+Shipping the "src" directory bloats the published package and can cause bundlers that resolve the
+"source" export condition to import raw, uncompiled TypeScript.
+
+Please remove "src" from the "files" array in package.json.
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "bannedFiles": false
+   }
+}
+----------------------------------------------------------
 [error] Failed to run eslint check Error: Failed to load config "this-does-not-exist" to extend from.
 Referenced from: root/.eslintrc
     at configInvalidError root/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:2648:9)
@@ -288,7 +324,7 @@ More information is available here:
 - Reference documentation: https://beta.sanity.io/docs/reference
 
 To fail-fast on first detected issue run:
-npx @sanity/plugin-kit verify-package' --single"
+npx @sanity/plugin-kit verify-package --single"
 `;
 
 exports[`plugin-kit verify-studio in fresh v2 studio 1`] = `

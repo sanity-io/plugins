@@ -27,12 +27,12 @@ export default function SelectAssets({
           PatchEvent.from([
             setIfMissing({asset: {}, _type: 'mux.video'}),
             set({_type: 'reference', _weak: true, _ref: chosenAsset._id}, ['asset']),
-          ])
+          ]),
         )
       }
       setDialogState(false)
     },
-    [onChange, setDialogState, selectedAsset]
+    [onChange, setDialogState, selectedAsset],
   )
 
   return <VideosBrowser onSelect={handleSelect} config={config} />

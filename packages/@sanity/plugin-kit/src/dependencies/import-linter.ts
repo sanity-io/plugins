@@ -65,7 +65,7 @@ export async function validateImports({basePath}: {basePath: string}): Promise<s
       const formatter = await eslint.loadFormatter('stylish')
       const resultText = await formatter.format(onlyImportErrors)
 
-      const addtionalInfo = outdent`
+      const additionalInfo = outdent`
         ESLint detected Studio V2 imports that are no longer available.
         It is recommended configure @sanity/eslint-config-no-v2-imports for ESLint.
 
@@ -80,7 +80,7 @@ export async function validateImports({basePath}: {basePath: string}): Promise<s
 
         If the plugin package does not use eslint, disable this check.
     `
-      return [resultText + addtionalInfo]
+      return [resultText + additionalInfo]
     }
   } catch (e) {
     log.error('Failed to run eslint check', e)

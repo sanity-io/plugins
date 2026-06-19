@@ -2,25 +2,26 @@ import fs from 'fs'
 import path from 'path'
 import util from 'util'
 
-// @ts-expect-error missing types
 import githubUrl from 'github-url-to-object'
-// @ts-expect-error missing types
 import validateNpmPackageName from 'validate-npm-package-name'
 
-import {InjectOptions, PackageData} from '../actions/inject'
-import {PackageJson} from '../actions/verify/types'
+import type {InjectOptions, PackageData} from '../actions/inject'
+import type {PackageJson} from '../actions/verify/types'
 import {expectedScripts} from '../actions/verify/validations'
 import {
   forcedDevPackageVersions,
   forcedPackageVersions,
   forcedPeerPackageVersions,
 } from '../configs/forced-package-versions'
-import {cliName, incompatiblePluginPackage, requiredNodeEngine} from '../constants'
-import {getPaths, ManifestOptions} from '../sanity/manifest'
+import {cliName, requiredNodeEngine} from '../constants'
+import {getPaths, type ManifestOptions} from '../sanity/manifest'
 import {hasSourceEquivalent, writeJsonFile} from '../util/files'
 import log from '../util/log'
 import {resolveLatestVersions} from './resolveLatestVersions'
-const defaultDependencies = [incompatiblePluginPackage]
+
+// New plugins ship no runtime dependencies by default. The legacy `@sanity/incompatible-plugin`
+// shim (for Sanity Studio v2) is intentionally no longer added.
+const defaultDependencies: string[] = []
 
 const defaultDevDependencies = [
   'sanity',
@@ -109,11 +110,9 @@ function validatePackageName(manifest: PackageJson) {
     throw new Error(`Invalid package.json: "name" must be a string`)
   }
 
-  const valid: {validForNewPackages?: boolean; errors: string[]} = validateNpmPackageName(
-    manifest.name,
-  )
+  const valid = validateNpmPackageName(manifest.name)
   if (!valid.validForNewPackages) {
-    throw new Error(`Invalid package.json: "name" is invalid: ${valid.errors.join(', ')}`)
+    throw new Error(`Invalid package.json: "name" is invalid: ${(valid.errors ?? []).join(', ')}`)
   }
 
   const isScoped = manifest.name[0] === '@'
@@ -274,7 +273,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
 
   const source = flags.typescript ? './src/index.ts' : './src/index.js'
 
-  const files = [outDir, 'sanity.json', 'src', 'v2-incompatible.js']
+  const files = [outDir]
 
   // sort alphabetically for scanability
   files.sort()
@@ -327,7 +326,11 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
 }
 
 function urlsFromOrigin(gitOrigin?: string): {bugs?: {url: string}; homepage?: string} {
-  const details: {user: string; repo: string} | undefined = githubUrl(gitOrigin)
+  if (!gitOrigin) {
+    return {}
+  }
+
+  const details = githubUrl(gitOrigin)
   if (!details) {
     return {}
   }

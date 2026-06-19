@@ -26,7 +26,7 @@ describe('uploads slice', () => {
     )
 
     expect(state.allIds).toEqual(['abc'])
-    expect(state.byIds.abc).toMatchObject({hash: 'abc', status: 'queued'})
+    expect(state.byIds['abc']).toMatchObject({hash: 'abc', status: 'queued'})
   })
 
   it('uploadProgress updates percent and status', () => {
@@ -53,7 +53,7 @@ describe('uploads slice', () => {
       }),
     )
 
-    expect(state.byIds.h1.percent).toBe(42)
-    expect(state.byIds.h1.status).toBe('uploading')
+    expect(state.byIds['h1']!.percent).toBe(42)
+    expect(state.byIds['h1']!.status).toBe('uploading')
   })
 })

@@ -31,7 +31,7 @@ Options
   --author [name]         Use the provided author
   --repo [url]            Use the provided repo url
   --license [spdx]        Use the license with the given SPDX identifier
-  --force                 No promt when overwriting files
+  --force                 No prompt when overwriting files
 
   --preset [preset-name]  Adds config and files from a named preset. --preset can be supplied multiple times.
                           The following presets are available:
@@ -62,7 +62,7 @@ async function run({argv}: {argv: string[]}) {
   const {v3ConfigFile} = await findStudioV3Config(basePath)
   if (v3ConfigFile) {
     throw new Error(
-      `${v3ConfigFile} exsists - are you trying to init into a studio instead of a plugin?`,
+      `${v3ConfigFile} exists - are you trying to init into a studio instead of a plugin?`,
     )
   }
 
