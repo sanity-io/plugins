@@ -24,10 +24,7 @@
     "directory": "plugins/sanity-plugin-media"
   },
   "files": [
-    "dist",
-    "sanity.json",
-    "src",
-    "v2-incompatible.js"
+    "dist"
   ],
   "type": "module",
   "main": "./dist/index.cjs",
@@ -62,7 +59,6 @@
     "@sanity/client": "catalog:",
     "@sanity/color": "^3.0.6",
     "@sanity/icons": "^3.7.4",
-    "@sanity/incompatible-plugin": "^1.0.5",
     "@sanity/ui": "^3.2.0",
     "@sanity/uuid": "^3.0.3",
     "@tanem/react-nprogress": "^5.0.63",

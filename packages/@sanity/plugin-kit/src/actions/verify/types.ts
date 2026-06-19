@@ -35,12 +35,10 @@ export interface PackageJson {
 }
 
 export interface SanityV2Json {
-  parts?: [
-    {
-      implements?: string
-      path?: 'string'
-    },
-  ]
+  parts?: {
+    implements?: string
+    path?: string
+  }[]
 }
 
 export interface SanityStudioJson {

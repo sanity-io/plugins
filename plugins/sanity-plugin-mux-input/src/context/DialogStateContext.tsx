@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useMemo} from 'react'
+import {createContext, useContext, useMemo} from 'react'
 
 import {type DialogState, type SetDialogState} from '../hooks/useDialogState'
 
