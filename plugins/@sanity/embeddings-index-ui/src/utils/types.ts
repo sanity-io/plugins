@@ -1,4 +1,4 @@
-import {SchemaType} from 'sanity'
+import type {SchemaType} from 'sanity'
 
 export function isType(schemaType: SchemaType, typeName: string): boolean {
   if (schemaType.name === typeName) {

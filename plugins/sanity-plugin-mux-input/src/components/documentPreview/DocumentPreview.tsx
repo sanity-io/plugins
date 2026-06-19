@@ -52,7 +52,7 @@ export function DocumentPreview(props: DocumentPreviewProps) {
     if (!doc) return null
 
     if (!schemaType || !hasSchemaType) {
-      return <MissingSchemaType value={doc as SanityDocument} />
+      return <MissingSchemaType value={doc} />
     }
 
     return (
@@ -70,6 +70,7 @@ export function DocumentPreview(props: DocumentPreviewProps) {
   return (
     <PreviewCard
       __unstable_focusRing
+      // oxlint-disable-next-line react/react-compiler
       as={DocumentPreviewLink(props) as FIXME}
       data-as="a"
       data-ui="PaneItem"

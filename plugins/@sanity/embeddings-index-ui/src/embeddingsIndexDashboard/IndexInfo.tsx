@@ -13,7 +13,7 @@ import {
 } from '@sanity/ui'
 import {useCallback} from 'react'
 
-import {IndexState} from '../api/embeddingsApi'
+import {type IndexState} from '../api/embeddingsApi'
 import {IndexEditor} from './IndexEditor'
 import {QueryIndex} from './QueryIndex'
 

@@ -1,5 +1,5 @@
 import {EarthGlobeIcon} from '@sanity/icons'
-import {definePlugin, Tool} from 'sanity'
+import {definePlugin, type Tool} from 'sanity'
 
 import {EmbeddingsIndexTool} from './EmbeddingsIndexTool'
 

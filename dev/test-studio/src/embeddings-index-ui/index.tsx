@@ -1,7 +1,6 @@
 import {embeddingsIndexDashboard, embeddingsIndexReferenceInput} from '@sanity/embeddings-index-ui'
 import {EarthGlobeIcon} from '@sanity/icons'
 import {defineField, definePlugin, defineType} from 'sanity'
-import {structureTool} from 'sanity/structure'
 
 const embeddingsArticle = defineType({
   name: 'embeddingsArticle',
@@ -36,7 +35,6 @@ const embeddingsArticle = defineType({
 export const embeddingsIndexUiExample = definePlugin(() => ({
   schema: {types: [embeddingsArticle]},
   plugins: [
-    structureTool(),
     embeddingsIndexDashboard(),
     embeddingsIndexReferenceInput({
       indexName: 'demo-index',

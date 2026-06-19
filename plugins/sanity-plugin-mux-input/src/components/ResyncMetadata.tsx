@@ -84,13 +84,13 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
   const handleSync = () => {
     switch (selectedOption) {
       case 'fillEmpty':
-        props.syncOnlyEmpty()
+        void props.syncOnlyEmpty()
         break
       case 'syncTitles':
-        props.syncAllVideos()
+        void props.syncAllVideos()
         break
       case 'fullResync':
-        props.syncFullData()
+        void props.syncFullData()
         break
       default:
         break
@@ -271,10 +271,8 @@ export default function ResyncMetadata() {
   }
 
   if (resyncMetadata.dialogOpen) {
-    // eslint-disable-next-line consistent-return
     return <ResyncMetadataDialog {...resyncMetadata} />
   }
 
-  // eslint-disable-next-line consistent-return
   return <Button mode="bleed" text="Sync with Mux" onClick={resyncMetadata.openDialog} />
 }

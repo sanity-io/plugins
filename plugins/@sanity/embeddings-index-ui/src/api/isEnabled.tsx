@@ -1,5 +1,5 @@
 import {Card, Text} from '@sanity/ui'
-import {createContext, PropsWithChildren, useContext, useEffect, useState} from 'react'
+import {createContext, type PropsWithChildren, useContext, useEffect, useState} from 'react'
 import {useProjectId} from 'sanity'
 
 import {useApiClient} from './embeddingsApiHooks'

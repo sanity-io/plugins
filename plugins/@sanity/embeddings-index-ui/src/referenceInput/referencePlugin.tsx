@@ -1,7 +1,12 @@
-import {definePlugin, isObjectInputProps, ObjectInputProps, ReferenceSchemaType} from 'sanity'
+import {
+  definePlugin,
+  isObjectInputProps,
+  type ObjectInputProps,
+  type ReferenceSchemaType,
+} from 'sanity'
 
 import {FeatureEnabledProvider} from '../api/isEnabled'
-import {EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
+import {type EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
 import {isType} from '../utils/types'
 import {SemanticSearchReferenceInput} from './SemanticSearchReferenceInput'
 

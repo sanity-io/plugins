@@ -2,7 +2,7 @@ import {AddIcon, UndoIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Heading, Spinner, Stack} from '@sanity/ui'
 import {useCallback, useEffect, useState} from 'react'
 
-import {deleteIndex, getIndexes, IndexState, NamedIndex} from '../api/embeddingsApi'
+import {deleteIndex, getIndexes, type IndexState, type NamedIndex} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
 import {FeatureDisabledNotice, FeatureError, useIsFeatureEnabled} from '../api/isEnabled'
 import {EditIndexDialog} from './IndexEditor'
@@ -55,6 +55,7 @@ function Indexes() {
   const onCreateIndexClose = useCallback(() => setCreateIndexOpen(false), [])
 
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     setSelectedIndex(indexes.find((i) => i.indexName === selectedIndex?.indexName))
   }, [indexes, selectedIndex])
 
@@ -67,7 +68,6 @@ function Indexes() {
         setIndexes(response)
       })
       .catch((e) => {
-        // eslint-disable-next-line no-unused-expressions
         console.error(e)
         setError(true)
       })
@@ -79,7 +79,6 @@ function Indexes() {
   const deleteNamedIndex = useCallback(
     (index: NamedIndex) => {
       if (
-        // eslint-disable-next-line no-alert
         !confirm(`Are you sure you want to delete ${index.indexName} for dataset ${index.dataset}?`)
       ) {
         return
@@ -91,7 +90,6 @@ function Indexes() {
           setTimeout(() => updateIndexes())
         })
         .catch((e) => {
-          // eslint-disable-next-line no-unused-expressions
           console.error(e)
           setError(true)
         })
@@ -111,6 +109,7 @@ function Indexes() {
   )
 
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     updateIndexes()
   }, [updateIndexes])
 

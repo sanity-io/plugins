@@ -69,6 +69,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     setLanguageCode(track.language_code || '')
     setName(track.name || '')
     setVttUrl('')
@@ -94,7 +95,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
           title = 'Cannot download'
         }
       } else if (error === 'Track ID is missing' || error === 'Track is not ready yet') {
-        errorMessage = String(error)
+        errorMessage = error
         title = 'Cannot download'
       }
 
@@ -398,7 +399,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
               style={{display: 'none'}}
               onChange={(e) => {
                 if (e.target.files && e.target.files.length > 0 && !isSubmitting) {
-                  setSelectedFile(e.target.files[0])
+                  setSelectedFile(e.target.files[0]!)
                   setVttUrl('')
                 }
               }}

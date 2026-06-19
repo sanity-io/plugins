@@ -1,6 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignoreWorkspaces": ["dev/*"],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,
@@ -11,10 +10,6 @@
     "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
   },
-  "rules": {
-    // dev/* workspaces are ignored, so their catalog entries appear unused
-    "catalog": "warn",
-  },
   "workspaces": {
     ".": {
       "entry": ["*.{ts,mts,mjs}"],
@@ -24,11 +19,14 @@
         "@typescript/native-preview",
       ],
       "ignoreBinaries": [
-        // Provided by sanity package in dev/test-studio, which is an ignored workspace
-        "sanity",
         // Installed externally (not an npm package); used in lint:workflows script
         "zizmor",
       ],
+    },
+    "dev/test-studio": {
+      "entry": ["migrations/**/*.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["babel-plugin-react-compiler"],
     },
     "turbo/generators": {
       "project": ["src/**/*.ts"],
@@ -166,10 +164,18 @@
         "v2-incompatible.js",
       ],
       "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
     },
     "plugins/sanity-plugin-mux-input": {
       "entry": ["package.config.ts", "v2-incompatible.js"],
       "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
     },
     "plugins/sanity-plugin-workflow": {
       "entry": ["package.config.ts"],

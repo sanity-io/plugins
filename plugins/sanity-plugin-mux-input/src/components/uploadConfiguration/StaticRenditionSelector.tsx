@@ -1,9 +1,9 @@
 import {Checkbox, Flex, Label, Radio, Stack, Text} from '@sanity/ui'
-import {ActionDispatch, useMemo, useState} from 'react'
+import {type ActionDispatch, useMemo, useState} from 'react'
 import {FormField} from 'sanity'
 
 import {type StaticRenditionResolution, type UploadConfig} from '../../util/types'
-import {UploadConfigurationStateAction} from '../UploadConfiguration'
+import {type UploadConfigurationStateAction} from '../UploadConfiguration'
 
 const ADVANCED_RESOLUTIONS: {value: StaticRenditionResolution; label: string}[] = [
   {value: '270p', label: '270p'},

@@ -49,10 +49,10 @@ async function fetchMuxAssetsPage(
 
     return {
       cursor,
-      data: response.data as MuxAsset[],
+      data: response.data,
       next_cursor: response.next_cursor || null,
     }
-  } catch (error) {
+  } catch {
     return {
       cursor,
       error: {_tag: 'FetchError'},
@@ -141,7 +141,6 @@ export default function useMuxAssets({client, enabled}: {client: SanityClient; e
           if (hasMorePages(pageResult)) {
             return timer(2000).pipe(
               concatMap(() =>
-                // eslint-disable-next-line max-nested-callbacks
                 defer(() =>
                   fetchMuxAssetsPage(
                     client,
@@ -172,7 +171,6 @@ export default function useMuxAssets({client, enabled}: {client: SanityClient; e
       })
 
     // Unsubscribe on component unmount to prevent memory leaks or fetching unnecessarily
-    // eslint-disable-next-line consistent-return
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled])

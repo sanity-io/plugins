@@ -1,7 +1,7 @@
 import type {SanityClient} from 'sanity'
 
 import {getPlaybackId} from '../util/getPlaybackPolicy'
-import {Audience, generateJwt} from './generateJwt'
+import {type Audience, generateJwt} from './generateJwt'
 import {getPlaybackPolicyById} from './getPlaybackPolicy'
 import type {AssetThumbnailOptions} from './types'
 

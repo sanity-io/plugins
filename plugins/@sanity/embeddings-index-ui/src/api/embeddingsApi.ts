@@ -1,4 +1,4 @@
-import {SanityClient} from 'sanity'
+import {type SanityClient} from 'sanity'
 
 export interface NamedIndex {
   indexName: string

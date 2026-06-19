@@ -1,9 +1,4 @@
-import {
-  type ActionFromReducersMapObject,
-  type Reducer,
-  type StateFromReducersMapObject,
-  combineReducers,
-} from '@reduxjs/toolkit'
+import {type Reducer, type StateFromReducersMapObject, combineReducers} from '@reduxjs/toolkit'
 import {combineEpics} from 'redux-observable'
 
 import assetsReducer, {
@@ -118,7 +113,5 @@ type ReducersMapObject = typeof reducers
 // Workaround to avoid `$CombinedState` ts errors
 // source: https://github.com/reduxjs/redux-toolkit/issues/2068#issuecomment-1130796500
 // TODO: remove once we use `redux-toolkit` v2
-export const rootReducer: Reducer<
-  StateFromReducersMapObject<ReducersMapObject>,
-  ActionFromReducersMapObject<ReducersMapObject>
-> = combineReducers(reducers)
+export const rootReducer: Reducer<StateFromReducersMapObject<ReducersMapObject>> =
+  combineReducers(reducers)
