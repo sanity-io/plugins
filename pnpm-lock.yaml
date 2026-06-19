@@ -2556,7 +2556,7 @@ importers:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       zod:
-        specifier: ^3.21.4
+        specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
       '@sanity/pkg-utils':
