@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-unused-vars - legacy code will be lint-cleaned in a follow-up PR
 import {useMemo, useState} from 'react'
 import {
   createHookFromObservableFactory,
@@ -15,7 +16,7 @@ import {useSecretsDocumentValues} from './useSecretsDocumentValues'
 
 type ResyncState = 'closed' | 'idle' | 'syncing' | 'done' | 'error'
 
-export type MatchedAsset = {
+type MatchedAsset = {
   sanityDoc: VideoAssetDocument
   muxAsset: MuxAsset | undefined
   muxTitle: string | undefined

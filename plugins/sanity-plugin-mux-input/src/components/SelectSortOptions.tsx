@@ -5,7 +5,7 @@ import {useId} from 'react'
 
 import {ASSET_SORT_OPTIONS, SortOption} from '../hooks/useAssets'
 
-export const CONTEXT_MENU_POPOVER_PROPS: PopoverProps = {
+const CONTEXT_MENU_POPOVER_PROPS: PopoverProps = {
   constrainSize: true,
   placement: 'bottom',
   portal: true,

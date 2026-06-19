@@ -34,5 +34,3 @@ export const useAssetSourceActions = () => {
   }
   return context
 }
-
-export default AssetSourceDispatchContext

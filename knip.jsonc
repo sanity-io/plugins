@@ -1,14 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignoreWorkspaces": [
-    "dev/*",
-    // Moved as-is from the standalone repo; will be brought up to monorepo
-    // standards (and into knip coverage) in a follow-up PR
-    "plugins/sanity-plugin-media",
-    // Moved verbatim from sanity-io/sanity-plugin-mux-input; legacy dead-code
-    // and phantom-dependency cleanup is deferred to a follow-up PR.
-    "plugins/sanity-plugin-mux-input",
-  ],
+  "ignoreWorkspaces": ["dev/*"],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,
@@ -51,8 +43,6 @@
       "ignoreDependencies": [
         // Spawned as a CLI (`yalc push`) by the link-watch command, never imported
         "yalc",
-        // Provides ambient typings consumed by nodemon APIs, not runtime imported
-        "@types/nodemon",
         // Resolved at runtime by ESLint/tsc when verifying generated plugin fixtures in tests
         "eslint-config-prettier",
         "eslint-config-sanity",
@@ -168,6 +158,18 @@
         // Used by @sanity/pkg-utils babel transform, not directly imported
         "babel-plugin-styled-components",
       ],
+    },
+    "plugins/sanity-plugin-media": {
+      "entry": [
+        "package.config.ts",
+        "scripts/migrate-to-localized-fields.ts",
+        "v2-incompatible.js",
+      ],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-mux-input": {
+      "entry": ["package.config.ts", "v2-incompatible.js"],
+      "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-workflow": {
       "entry": ["package.config.ts"],

@@ -524,49 +524,6 @@ const patchOperationTagUnset =
   (patch: Patch) =>
     patch.ifRevisionId(asset?.asset?._rev).unset([`opt.media.tags[_ref == "${tag._id}"]`])
 
-export const assetsRemoveTagsEpic: MyEpic = (action$, state$, {client}) => {
-  return action$.pipe(
-    filter(ASSETS_ACTIONS.tagsAddRequest.match),
-    withLatestFrom(state$),
-    mergeMap(([action, state]) => {
-      const {assets, tag} = action.payload
-
-      return of(action).pipe(
-        // Optionally throttle
-        debugThrottle(state.debug.badConnection),
-        // Add tag references to all picked assets
-        mergeMap(() => {
-          const pickedAssets = selectAssetsPicked(state)
-
-          // Filter out picked assets which already include tag
-          const pickedAssetsFiltered = pickedAssets?.filter(filterAssetWithoutTag(tag))
-
-          const transaction: Transaction = pickedAssetsFiltered.reduce(
-            (tx, pickedAsset) => tx.patch(pickedAsset?.asset?._id, patchOperationTagAppend({tag})),
-            client.transaction(),
-          )
-
-          return from(transaction.commit())
-        }),
-        // Dispatch complete action
-        mergeMap(() => of(ASSETS_ACTIONS.tagsAddComplete({assets, tag}))),
-        catchError((error: ClientError) =>
-          of(
-            ASSETS_ACTIONS.tagsAddError({
-              assets,
-              error: {
-                message: error?.message || 'Internal error',
-                statusCode: error?.statusCode || 500,
-              },
-              tag,
-            }),
-          ),
-        ),
-      )
-    }),
-  )
-}
-
 export const assetsOrderSetEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(assetsActions.orderSet.match),
@@ -805,7 +762,7 @@ export const selectAssetById = createSelector(
   },
 )
 
-export const selectAssets: Selector<RootReducerState, AssetItem[]> = createSelector(
+const selectAssets: Selector<RootReducerState, AssetItem[]> = createSelector(
   [selectAssetsByIds, selectAssetsAllIds],
   (byIds, allIds) => allIds.map((id) => byIds[id]),
 )

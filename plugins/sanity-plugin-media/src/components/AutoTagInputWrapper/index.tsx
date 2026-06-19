@@ -84,5 +84,3 @@ export function AutoTagInput(props: AutoTagInputProps) {
 
   return renderDefault(props as InputProps)
 }
-
-export default AutoTagInput

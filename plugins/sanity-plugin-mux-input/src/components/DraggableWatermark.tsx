@@ -1,4 +1,4 @@
-// oxlint-disable react/react-compiler, typescript/no-deprecated, typescript/no-unsafe-type-assertion, unicorn/prefer-add-event-listener - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable react/react-compiler, typescript/no-deprecated, typescript/no-redundant-type-constituents, typescript/no-unsafe-type-assertion, unicorn/prefer-add-event-listener - legacy code will be lint-cleaned in a follow-up PR
 import {CheckmarkCircleIcon, ErrorOutlineIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Grid, Stack, Text, TextInput} from '@sanity/ui'
 import {useCallback, useEffect, useRef, useState} from 'react'
@@ -86,6 +86,8 @@ export default function DraggableWatermark({
   const [dragStart, setDragStart] = useState({x: 0, y: 0})
   const [startPosition, setStartPosition] = useState({x: 0, y: 0})
   const watermarkRef = useRef<HTMLDivElement>(null)
+  // oxlint-disable-next-line typescript/ban-ts-comment, typescript/prefer-ts-expect-error - @ts-ignore is needed because package tsc has Node globals
+  // @ts-ignore - legacy oxlint type-check config lacks Node globals
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [localPosition, setLocalPosition] = useState(watermark.position || {x: 50, y: 50})
 
@@ -363,6 +365,8 @@ export function WatermarkControls({
   const [urlError, setUrlError] = useState<string | null>(null)
   const [isValidating, setIsValidating] = useState(false)
   const [isValid, setIsValid] = useState<boolean | null>(null)
+  // oxlint-disable-next-line typescript/ban-ts-comment, typescript/prefer-ts-expect-error - @ts-ignore is needed because package tsc has Node globals
+  // @ts-ignore - legacy oxlint type-check config lacks Node globals
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [mode, setMode] = useState<'canvas' | 'manual'>(
     watermark.overlay_settings ? 'manual' : 'canvas',

@@ -31,5 +31,3 @@ export const useDropzoneActions = () => {
   }
   return context
 }
-
-export default DropzoneDispatchContext
