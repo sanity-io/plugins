@@ -51,7 +51,7 @@
     "@sanity/uuid": "^3.0.3",
     "@tanstack/react-query": "^5.67.2",
     "@xstate/react": "^6.1.0",
-    "javascript-time-ago": "^2.5.7",
+    "javascript-time-ago": "^2.6.4",
     "object-hash": "3.0.0",
     "react-hook-form": "^7.48.2",
     "react-time-ago": "^7.2.1",
