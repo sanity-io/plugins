@@ -1,5 +1,5 @@
 import {Card, Text} from '@sanity/ui'
-import React, {useEffect, useMemo, useRef} from 'react'
+import {useEffect, useMemo, useRef} from 'react'
 
 import {useCancelUpload} from '../hooks/useCancelUpload'
 import type {MuxInputProps, PluginConfig, VideoAssetDocument} from '../util/types'
@@ -33,6 +33,7 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
 
     return true
   }, [asset])
+  // oxlint-disable-next-line react/react-compiler
   const isPreparingStaticRenditions = useMemo<boolean>(() => {
     // Legacy: If static_renditions has a status field, it was created with mp4_support (deprecated)
     // We don't process this old format, just return false
@@ -70,7 +71,6 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
   useEffect(() => {
     if (asset?.status === 'errored') {
       handleCancelUpload()
-      // eslint-disable-next-line no-warning-comments
       // @TODO use better error handling
       throw new Error(asset.data?.errors?.messages?.join(' '))
     }

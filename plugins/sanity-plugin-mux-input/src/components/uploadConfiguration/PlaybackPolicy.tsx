@@ -1,8 +1,8 @@
 import {Code, Grid, Text} from '@sanity/ui'
-import {ActionDispatch} from 'react'
+import {type ActionDispatch} from 'react'
 
-import {Secrets, UploadConfig} from '../../util/types'
-import {UploadConfigurationStateAction} from '../UploadConfiguration'
+import {type Secrets, type UploadConfig} from '../../util/types'
+import {type UploadConfigurationStateAction} from '../UploadConfiguration'
 import PlaybackPolicyOption from './PlaybackPolicyOption'
 import PlaybackPolicyWarning from './PlaybackPolicyWarning'
 

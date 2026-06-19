@@ -72,9 +72,9 @@ const DialogAssetEdit = (props: Props) => {
         const makeLocaleObj = (field?: Record<string, string> | string) => {
           const obj: Record<string, string> = {}
           for (let i = 0; i < locales.length; i++) {
-            const locale = locales[i]
+            const locale = locales[i]!
             if (typeof field === 'object' && field && field[locale.id]) {
-              obj[locale.id] = field[locale.id]
+              obj[locale.id] = field[locale.id]!
             } else if (typeof field === 'string') {
               // Only populate the first locale to avoid spreading a legacy value
               // across all languages; the user should fill in other translations manually
@@ -240,9 +240,9 @@ const DialogAssetEdit = (props: Props) => {
             // Map tags to sanity references
             opt: {
               media: {
-                ...sanitizedFormData.opt.media,
+                ...sanitizedFormData['opt'].media,
                 tags:
-                  sanitizedFormData.opt.media.tags?.map((tag: TagSelectOption) => ({
+                  sanitizedFormData['opt'].media.tags?.map((tag: TagSelectOption) => ({
                     _ref: tag.value,
                     _type: 'reference',
                     _weak: true,
@@ -365,6 +365,7 @@ const DialogAssetEdit = (props: Props) => {
   return (
     <Dialog
       animate
+      // oxlint-disable-next-line react/react-compiler
       footer={<Footer />}
       header="Asset details"
       id={id}
