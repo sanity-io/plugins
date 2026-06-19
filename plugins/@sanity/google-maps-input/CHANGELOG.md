@@ -1,5 +1,11 @@
 # @sanity/google-maps-input
 
+## 5.0.2
+
+### Patch Changes
+
+- [`a1aca4c`](https://github.com/sanity-io/plugins/commit/a1aca4cf86dacafdfce449465181253af6a550d3) Thanks [@stipsan](https://github.com/stipsan)! - Stop publishing the `assets` directory to npm and reference README images via absolute GitHub URLs
+
 ## 5.0.1
 
 ### Patch Changes
