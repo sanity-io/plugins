@@ -1,5 +1,11 @@
 # sanity-naive-html-serializer
 
+## 5.1.5
+
+### Patch Changes
+
+- [`953cbf5`](https://github.com/sanity-io/plugins/commit/953cbf5c06d7c8a5191ee8534fa0d871b8f7cf0c) Thanks [@stipsan](https://github.com/stipsan)! - Use type-only imports for type references to satisfy `verbatimModuleSyntax`
+
 ## 5.1.4
 
 ### Patch Changes
