@@ -54,7 +54,7 @@ export const muxInput = definePlugin<Partial<PluginConfig> | void>((userConfig) 
   }
   const config: PluginConfig = {
     ...defaultConfig,
-    ...(userConfig || {}),
+    ...userConfig,
     ...convertLegacyConfig(userConfig || {}),
   }
   return {

@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 
-import {StagedUpload} from '../components/Uploader'
+import {type StagedUpload} from '../components/Uploader'
 
 export interface VideoAssetMetadata {
   width?: number
@@ -19,7 +19,7 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
     // Validate file uploads
     if (stagedUpload.type === 'file') {
       const file = stagedUpload.files[0]
-      videoSrc = URL.createObjectURL(file)
+      videoSrc = URL.createObjectURL(file!)
     }
 
     // Validate URL uploads
@@ -27,6 +27,7 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
       videoSrc = stagedUpload.url
     }
 
+    // oxlint-disable-next-line react/react-compiler
     setVideoAssetMetadata((old) => ({
       ...old,
       duration: undefined,
@@ -67,7 +68,7 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
       const currentVideoSrc = videoEl?.src
       if (videoEl) {
         metadataListeners.forEach((listener) =>
-          videoEl.removeEventListener('loadedmetadata', listener)
+          videoEl.removeEventListener('loadedmetadata', listener),
         )
         videoEl.onerror = null
         videoEl.src = ''
@@ -86,7 +87,7 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
     }
 
     metadataListeners.forEach((listener) =>
-      videoElement.addEventListener('loadedmetadata', listener)
+      videoElement.addEventListener('loadedmetadata', listener),
     )
     videoElement.src = videoSrc
 

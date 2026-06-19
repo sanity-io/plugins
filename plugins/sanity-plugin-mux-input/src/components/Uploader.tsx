@@ -1,6 +1,6 @@
 import {ErrorOutlineIcon} from '@sanity/icons'
-import {Button, CardTone, Flex, Text, useToast} from '@sanity/ui'
-import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react'
+import {Button, type CardTone, Flex, Text, useToast} from '@sanity/ui'
+import {useCallback, useEffect, useReducer, useRef, useState} from 'react'
 import {type Observable, Subject, Subscription} from 'rxjs'
 import {takeUntil, tap} from 'rxjs/operators'
 import type {SanityClient} from 'sanity'
@@ -89,12 +89,13 @@ export default function Uploader(props: Props) {
         observable: events$.asObservable(),
         handleClick: ((event) => events$.next(event)) as React.MouseEventHandler<HTMLButtonElement>,
       }
-    })()
+    })(),
   ).current
 
   const uploadRef = useRef<Subscription | null>(null)
   const uploadingDocumentId = useRef<string | null>(null)
   const [state, dispatch] = useReducer(
+    // oxlint-disable-next-line react/react-compiler
     (prev: State, action: UploaderStateAction) => {
       switch (action.action) {
         case 'stageUpload':
@@ -135,7 +136,7 @@ export default function Uploader(props: Props) {
           let error = action.error
           if (isServerError(action.error) && hasPlaybackPolicy(action.settings, 'drm')) {
             error = new Error(
-              'Unknown Error while uploading DRM protected content. Make sure your DRM configuration ID is valid and set correctly'
+              'Unknown Error while uploading DRM protected content. Make sure your DRM configuration ID is valid and set correctly',
             )
           }
 
@@ -149,7 +150,7 @@ export default function Uploader(props: Props) {
       stagedUpload: null,
       uploadStatus: null,
       error: null,
-    }
+    },
   )
 
   // Make sure we close out the upload observer on dismount
@@ -202,13 +203,12 @@ export default function Uploader(props: Props) {
    */
   const startUpload = (
     settings: MuxNewAssetSettings,
-    watermark?: import('../util/types').WatermarkConfig
+    watermark?: import('../util/types').WatermarkConfig,
   ) => {
     const {stagedUpload} = state
     if (!stagedUpload || uploadRef.current) return
     dispatch({action: 'commitUpload'})
     let uploadObservable: Observable<UploadFileEvent | UploadUrlEvent>
-    // eslint-disable-next-line default-case
     switch (stagedUpload.type) {
       case 'url':
         uploadObservable = uploadUrl({
@@ -221,7 +221,7 @@ export default function Uploader(props: Props) {
       case 'file':
         uploadObservable = uploadFile({
           client: props.client,
-          file: stagedUpload.files[0],
+          file: stagedUpload.files[0]!,
           settings,
           watermark,
         }).pipe(
@@ -229,12 +229,12 @@ export default function Uploader(props: Props) {
             cancelUploadButton.observable.pipe(
               tap(() => {
                 if (uploadingDocumentId.current) {
-                  props.client.delete(uploadingDocumentId.current)
+                  void props.client.delete(uploadingDocumentId.current)
                   uploadingDocumentId.current = null
                 }
-              })
-            )
-          )
+              }),
+            ),
+          ),
         )
         break
     }
@@ -260,7 +260,7 @@ export default function Uploader(props: Props) {
               PatchEvent.from([
                 setIfMissing({asset: {}}),
                 set({_type: 'reference', _weak: true, _ref: event.asset._id}, ['asset']),
-              ])
+              ]),
             )
             break
           case 'pause':
@@ -342,7 +342,7 @@ export default function Uploader(props: Props) {
       return
     }
     setDragState(null)
-    extractDroppedFiles(event.nativeEvent.dataTransfer!).then((files) => {
+    void extractDroppedFiles(event.nativeEvent.dataTransfer!).then((files) => {
       dispatch({
         action: 'stageUpload',
         input: {type: 'file', files},
@@ -367,7 +367,7 @@ export default function Uploader(props: Props) {
     const isValidType = mimeTypes?.some((acceptedType) => {
       // Convert mime type pattern to regex (e.g., 'video/*' -> /^video\/.*$/)
       const pattern = `^${acceptedType.replace('*', '.*')}$`
-      return new RegExp(pattern).test(type)
+      return new RegExp(pattern).test(type!)
     })
 
     setDragState(isValidType ? 'valid' : 'invalid')
@@ -410,6 +410,7 @@ export default function Uploader(props: Props) {
     const {uploadStatus} = state
     return (
       <UploadProgress
+        // oxlint-disable-next-line react/react-compiler
         onCancel={cancelUploadButton.handleClick}
         progress={uploadStatus.progress}
         filename={uploadStatus.file?.name || uploadStatus.url}

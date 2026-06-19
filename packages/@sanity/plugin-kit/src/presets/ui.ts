@@ -1,11 +1,11 @@
 import chalk from 'chalk'
 
-import {InjectOptions} from '../actions/inject'
+import type {InjectOptions} from '../actions/inject'
 import {forcedDevPackageVersions, forcedPackageVersions} from '../configs/forced-package-versions'
 import {forceDependencyVersions, getPackage, sortKeys, writePackageJsonDirect} from '../npm/package'
 import {resolveLatestVersions} from '../npm/resolveLatestVersions'
 import log from '../util/log'
-import {Preset} from './presets'
+import type {Preset} from './presets'
 
 export const ui: Preset = {
   name: 'ui',

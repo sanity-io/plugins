@@ -1,5 +1,17 @@
 # @sanity/google-maps-input
 
+## 5.0.2
+
+### Patch Changes
+
+- [`a1aca4c`](https://github.com/sanity-io/plugins/commit/a1aca4cf86dacafdfce449465181253af6a550d3) Thanks [@stipsan](https://github.com/stipsan)! - Stop publishing the `assets` directory to npm and reference README images via absolute GitHub URLs
+
+## 5.0.1
+
+### Patch Changes
+
+- [#1301](https://github.com/sanity-io/plugins/pull/1301) [`0ae4670`](https://github.com/sanity-io/plugins/commit/0ae46700585f4b91e133f02f0ce688b604482e5f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
 ## 5.0.0
 
 ### Major Changes
