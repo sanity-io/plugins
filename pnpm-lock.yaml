@@ -1031,7 +1031,7 @@ importers:
   plugins/@sanity/google-maps-input:
     dependencies:
       '@sanity/icons':
-        specifier: ^3.5.2
+        specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
@@ -2705,7 +2705,7 @@ importers:
   plugins/sanity-plugin-shopify-assets:
     dependencies:
       '@sanity/icons':
-        specifier: ^3.7.0
+        specifier: ^3.7.4
         version: 3.7.4(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'

@@ -45,7 +45,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.0",
+    "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "axios": "^1.2.2",
     "pretty-bytes": "^6.0.0",
