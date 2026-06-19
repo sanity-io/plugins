@@ -7,13 +7,13 @@ import {getPackage} from '../npm/package'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
 import {readTSConfig} from '../util/ts'
-import {PackageJson} from './verify/types'
+import type {PackageJson} from './verify/types'
 import {validateSanityDependencies, validateStudioConfig} from './verify/validations'
 import {
   createValidator,
   runTscMaybe,
-  VerifyFlags,
-  VerifyPackageConfig,
+  type VerifyFlags,
+  type VerifyPackageConfig,
 } from './verify/verify-common'
 
 export async function verifyStudio({basePath, flags}: {basePath: string; flags: VerifyFlags}) {

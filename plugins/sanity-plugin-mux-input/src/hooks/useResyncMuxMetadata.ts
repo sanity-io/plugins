@@ -8,19 +8,12 @@ import {
 
 import {addKeysToMuxData} from '../util/addKeysToMuxData'
 import {isEmptyOrPlaceholderTitle} from '../util/assetTitlePlaceholder'
-import type {MuxAsset, VideoAssetDocument} from '../util/types'
+import type {VideoAssetDocument} from '../util/types'
 import {SANITY_API_VERSION} from './useClient'
 import useMuxAssets from './useMuxAssets'
 import {useSecretsDocumentValues} from './useSecretsDocumentValues'
 
 type ResyncState = 'closed' | 'idle' | 'syncing' | 'done' | 'error'
-
-export type MatchedAsset = {
-  sanityDoc: VideoAssetDocument
-  muxAsset: MuxAsset | undefined
-  muxTitle: string | undefined
-  currentTitle: string | undefined
-}
 
 export default function useResyncMuxMetadata() {
   const documentStore = useDocumentStore()
@@ -46,7 +39,7 @@ export default function useResyncMuxMetadata() {
     return sanityAssets && muxAssets.data
       ? sanityAssets.map((sanityDoc) => {
           const muxAsset = muxAssets.data?.find(
-            (m) => m.id === sanityDoc.assetId || m.id === sanityDoc.data?.id
+            (m) => m.id === sanityDoc.assetId || m.id === sanityDoc.data?.id,
           )
           return {
             sanityDoc,
@@ -170,7 +163,7 @@ const useSanityAssets = createHookFromObservableFactory<VideoAssetDocument[], Do
       {},
       {
         apiVersion: SANITY_API_VERSION,
-      }
+      },
     )
-  }
+  },
 )

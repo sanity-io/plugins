@@ -1,5 +1,11 @@
 # sanity-plugin-cloudinary
 
+## 2.0.1
+
+### Patch Changes
+
+- [#1217](https://github.com/sanity-io/plugins/pull/1217) [`a0493e8`](https://github.com/sanity-io/plugins/commit/a0493e86e91ce93749c0a58d93b0ecab8f4a0468) Thanks [@antonio-lopez](https://github.com/antonio-lopez)! - Fix typos in README asset source example comments
+
 ## 2.0.0
 
 ### Major Changes

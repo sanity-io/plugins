@@ -1,7 +1,7 @@
 import chalk from 'chalk'
-import {TypedFlags} from 'meow'
+import type {TypedFlags} from 'meow'
 import outdent from 'outdent'
-import {ParsedCommandLine} from 'typescript'
+import type {ParsedCommandLine} from 'typescript'
 
 import sharedFlags from '../../sharedFlags'
 import {runCommand} from '../../util/command-parser'
@@ -11,18 +11,20 @@ const splitLine = `\n----------------------------------------------------------`
 
 export const verifyPackageConfigDefaults = {
   'packageName': true,
+  'esmOnly': true,
   'tsconfig': true,
   'tsc': true,
   'dependencies': true,
   'deprecatedDependencies': true,
   'babelConfig': true,
-  'sanityV2Json': true,
+  'incompatiblePlugin': true,
   'eslintImports': true,
   'scripts': true,
   'pkg-utils': true,
   'nodeEngine': true,
   'studioConfig': true,
   'srcIndex': true,
+  'bannedFiles': true,
   'duplicateConfig': true,
 } as const
 
@@ -83,7 +85,7 @@ export function createValidator(
 
 export async function runTscMaybe(verifyConfig: VerifyPackageConfig, ts?: ParsedCommandLine) {
   if (ts && verifyConfig.tsc !== false) {
-    log.info('All checks ok, running Typescript compiler.')
+    log.info('All checks ok, running TypeScript compiler.')
     const {code} = await runCommand('tsc --build')
     if (code !== 0) {
       throw new Error('Compilation failed. See output above.\n\n' + disableCheckText('tsc'))

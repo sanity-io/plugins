@@ -1,5 +1,51 @@
 # sanity-plugin-media
 
+## 4.3.6
+
+### Patch Changes
+
+- [#1295](https://github.com/sanity-io/plugins/pull/1295) [`3024eab`](https://github.com/sanity-io/plugins/commit/3024eab48dcc4ce3f0838a585fda6f5129a906b7) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @hookform/resolvers to ^3.10.0
+
+- [#1300](https://github.com/sanity-io/plugins/pull/1300) [`1899536`](https://github.com/sanity-io/plugins/commit/18995360fcf9f989bbff44be439682f874a5f977) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @reduxjs/toolkit to ^2.12.0
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
+- [#1305](https://github.com/sanity-io/plugins/pull/1305) [`daf9a60`](https://github.com/sanity-io/plugins/commit/daf9a606b851a12da1b96b51589645374978360b) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @tanem/react-nprogress to ^5.0.63
+
+- [#1310](https://github.com/sanity-io/plugins/pull/1310) [`c97c545`](https://github.com/sanity-io/plugins/commit/c97c54546a68e4c89dd0e6de655e49e573821046) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency copy-to-clipboard to ^3.3.3
+
+- [#1312](https://github.com/sanity-io/plugins/pull/1312) [`6c222d1`](https://github.com/sanity-io/plugins/commit/6c222d1508e3f560db21d51baaca397f5fc30cea) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency filesize to ^9.0.11
+
+- [#1318](https://github.com/sanity-io/plugins/pull/1318) [`24fe4d7`](https://github.com/sanity-io/plugins/commit/24fe4d751650a456640faa7517f5883b92a9102e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency nanoid to ^3.3.12
+
+- [#1320](https://github.com/sanity-io/plugins/pull/1320) [`7da3682`](https://github.com/sanity-io/plugins/commit/7da368238e0a26c364c22cf8b7e5dc94fddd48b6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-dropzone to ^11.7.1
+
+- [#1321](https://github.com/sanity-io/plugins/pull/1321) [`ca52ded`](https://github.com/sanity-io/plugins/commit/ca52dedfb0c15d71f9643bcaa7320fa6df61920d) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-hook-form to ^7.79.0
+
+- [#1325](https://github.com/sanity-io/plugins/pull/1325) [`a4cfd08`](https://github.com/sanity-io/plugins/commit/a4cfd085c8c226a3001a3357a0fc425af1cb8656) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-redux to ^9.3.0
+
+- [#1326](https://github.com/sanity-io/plugins/pull/1326) [`c9393a2`](https://github.com/sanity-io/plugins/commit/c9393a295e8ae5da7aaea62b276f89e9f4c63b29) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-select to ^5.10.2
+
+- [#1328](https://github.com/sanity-io/plugins/pull/1328) [`59dad41`](https://github.com/sanity-io/plugins/commit/59dad4101e6a8baf56495b4b2a6f54d816e06f94) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-virtuoso to ^4.18.7
+
+- [#1333](https://github.com/sanity-io/plugins/pull/1333) [`fd0a23c`](https://github.com/sanity-io/plugins/commit/fd0a23cba266df724c5e542aa471d0b111f16bf4) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency zod to ^3.25.76
+
+- [#1339](https://github.com/sanity-io/plugins/pull/1339) [`26ff1a7`](https://github.com/sanity-io/plugins/commit/26ff1a7a06b3837a08b7befee5486988cc45645e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @hookform/resolvers to v4.1.3
+
+- [#1342](https://github.com/sanity-io/plugins/pull/1342) [`9a60eae`](https://github.com/sanity-io/plugins/commit/9a60eae5de3cce25317b38c5d6fc070651a33c0d) Thanks [@stipsan](https://github.com/stipsan)! - Clean up unused internal files and exports now that the package is covered by knip.
+
+- [#1347](https://github.com/sanity-io/plugins/pull/1347) [`fabdc72`](https://github.com/sanity-io/plugins/commit/fabdc726bb1c9abee0e16252422ebd27a3d8e428) Thanks [@stipsan](https://github.com/stipsan)! - Adopt the shared monorepo TypeScript and lint conventions (shared `@repo/tsconfig`, type-aware linting, styled-components Babel transform) and fix the type errors surfaced by the stricter config.
+
+## 4.3.5
+
+### Patch Changes
+
+- [#1205](https://github.com/sanity-io/plugins/pull/1205) [`a0c60af`](https://github.com/sanity-io/plugins/commit/a0c60af8b19d67cf8c4caaf6d166ff906fc6f73e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency rxjs to ^7.8.2
+
+- [#1206](https://github.com/sanity-io/plugins/pull/1206) [`989b4f4`](https://github.com/sanity-io/plugins/commit/989b4f49ea29954cc5a2bb072c79f1b44eec25d3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update sanity monorepo
+
+- [#1215](https://github.com/sanity-io/plugins/pull/1215) [`d18625a`](https://github.com/sanity-io/plugins/commit/d18625a2a396f71b803814a11f1a72fde69885e6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update sanity monorepo to v6
+
 ## 4.3.4
 
 ### Patch Changes
