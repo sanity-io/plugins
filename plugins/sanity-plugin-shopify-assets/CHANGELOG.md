@@ -1,5 +1,21 @@
 # sanity-plugin-shopify-assets
 
+## 2.0.1
+
+### Patch Changes
+
+- [#1301](https://github.com/sanity-io/plugins/pull/1301) [`0ae4670`](https://github.com/sanity-io/plugins/commit/0ae46700585f4b91e133f02f0ce688b604482e5f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
+- [#1308](https://github.com/sanity-io/plugins/pull/1308) [`473a607`](https://github.com/sanity-io/plugins/commit/473a6078bb35f0328da1549cf11c17b2d3cc66f4) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency axios to ^1.18.0
+
+- [#1319](https://github.com/sanity-io/plugins/pull/1319) [`b1d1952`](https://github.com/sanity-io/plugins/commit/b1d1952026bede5c7e44ab00b4045f4b9bed0f92) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency pretty-bytes to ^6.1.1
+
+- [#1323](https://github.com/sanity-io/plugins/pull/1323) [`c502e3b`](https://github.com/sanity-io/plugins/commit/c502e3b7e7ecac673629776184aceff64468f564) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-infinite-scroll-component to ^6.1.1
+
+- [#1324](https://github.com/sanity-io/plugins/pull/1324) [`7db3761`](https://github.com/sanity-io/plugins/commit/7db3761bb1a594de526200e080cf2a084926af1c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-photo-album to ^2.4.1
+
+- [#1332](https://github.com/sanity-io/plugins/pull/1332) [`e2aa3d5`](https://github.com/sanity-io/plugins/commit/e2aa3d5a7cf0f7bb3e5cf67d9a21b1b19074d03f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency video.js to ^7.21.7
+
 ## 2.0.0
 
 ### Major Changes

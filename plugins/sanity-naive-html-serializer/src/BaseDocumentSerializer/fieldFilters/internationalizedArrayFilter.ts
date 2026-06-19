@@ -1,4 +1,4 @@
-import {SanityDocument, TypedObject} from 'sanity'
+import type {SanityDocument, TypedObject} from 'sanity'
 
 import {getItemLanguage, LANGUAGE_FIELD} from '../../internationalizedArrayHelpers'
 

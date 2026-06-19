@@ -55,7 +55,7 @@ const Header = (props: Props) => {
               icon={UploadIcon}
               mode="bleed"
               onClick={open}
-              text={`Upload ${assetTypes.length === 1 ? pluralize(assetTypes[0]) : 'assets'}`}
+              text={`Upload ${assetTypes.length === 1 ? pluralize(assetTypes[0]!) : 'assets'}`}
             />
           )}
 

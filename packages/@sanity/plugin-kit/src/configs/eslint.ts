@@ -1,5 +1,5 @@
-import {InitFlags} from '../actions/init'
-import {InjectTemplate} from '../actions/inject'
+import type {InitFlags} from '../actions/init'
+import type {InjectTemplate} from '../actions/inject'
 
 export function eslintrcTemplate(options: {flags: InitFlags}): InjectTemplate {
   const {flags} = options

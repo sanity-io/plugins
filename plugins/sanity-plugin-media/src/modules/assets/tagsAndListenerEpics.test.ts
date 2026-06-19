@@ -159,7 +159,7 @@ describe('assets listener queue epics', () => {
     await vi.advanceTimersByTimeAsync(2000)
 
     await vi.waitFor(() => {
-      expect(store.getState().assets.byIds.a1.asset.title).toBe('L')
+      expect(store.getState().assets.byIds['a1']!.asset.title).toBe('L')
     })
   })
 
@@ -179,7 +179,7 @@ describe('assets listener queue epics', () => {
     await vi.advanceTimersByTimeAsync(2000)
 
     await vi.waitFor(() => {
-      expect(store.getState().assets.byIds.a1).toBeUndefined()
+      expect(store.getState().assets.byIds['a1']).toBeUndefined()
     })
   })
 
@@ -200,7 +200,7 @@ describe('assets listener queue epics', () => {
     await vi.advanceTimersByTimeAsync(2000)
 
     await vi.waitFor(() => {
-      expect(store.getState().assets.byIds.a1.asset.title).toBe('Buffered')
+      expect(store.getState().assets.byIds['a1']!.asset.title).toBe('Buffered')
     })
   })
 })

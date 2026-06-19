@@ -19,6 +19,7 @@ type Props = {
 }
 
 export const ToolOptionsProvider = ({options, children}: PropsWithChildren<Props>) => {
+  // oxlint-disable-next-line react-compiler
   const value = useMemo<ContextProps>(() => {
     let creditLineExcludeSources
 
