@@ -272,7 +272,7 @@ export const selectUploadById = createSelector(
   (byIds, uploadId) => byIds[uploadId],
 )
 
-export const selectUploads: Selector<RootReducerState, UploadItem[]> = createSelector(
+const selectUploads: Selector<RootReducerState, UploadItem[]> = createSelector(
   [selectUploadsByIds, selectUploadsAllIds],
   (byIds, allIds) => allIds.map((id) => byIds[id]),
 )

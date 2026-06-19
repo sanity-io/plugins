@@ -38,7 +38,7 @@ function sanitizePxStringsInJson(json: string): string {
   })
 }
 
-export function cancelUpload(client: SanityClient, uuid: string) {
+function cancelUpload(client: SanityClient, uuid: string) {
   return client.observable.request({
     url: `/addons/mux/uploads/${client.config().dataset}/${uuid}`,
     withCredentials: true,
@@ -202,7 +202,7 @@ type UploadResponse = {
     timeout: number
   }
 }
-export function getUpload(client: SanityClient, assetId: string) {
+function getUpload(client: SanityClient, assetId: string) {
   const {dataset} = client.config()
   return client.request<UploadResponse>({
     url: `/addons/mux/uploads/${dataset}/${assetId}`,
@@ -272,7 +272,7 @@ async function updateAssetDocumentFromUpload(
   })
 }
 
-export function testFile(file: File) {
+function testFile(file: File) {
   if (typeof window !== 'undefined' && file instanceof window.File) {
     const fileOptions = optionsFromFile({}, file)
     return of(fileOptions)
@@ -280,7 +280,7 @@ export function testFile(file: File) {
   return throwError(new Error('Invalid file'))
 }
 
-export function testUrl(url: string): Observable<string> {
+function testUrl(url: string): Observable<string> {
   const error = new Error('Invalid URL')
   if (typeof url !== 'string') {
     return throwError(error)

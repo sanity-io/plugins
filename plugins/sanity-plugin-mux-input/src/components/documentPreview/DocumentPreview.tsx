@@ -19,7 +19,7 @@ interface DocumentPreviewProps {
  * Return `false` if we explicitly disable the icon.
  * Otherwise return the passed icon or the schema type icon as a backup.
  */
-export function getIconWithFallback(
+function getIconWithFallback(
   icon: React.ComponentType<any> | false | undefined,
   schemaType: SchemaType | undefined,
   defaultIcon: React.ComponentType<any>,
