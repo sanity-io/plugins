@@ -12,6 +12,8 @@ import useTypedSelector from '../../hooks/useTypedSelector'
 import useVersionedClient from '../../hooks/useVersionedClient'
 import {assetsActions, selectAssetById} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
+import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
+import {selectFolderPathById} from '../../modules/folders'
 import {selectTags, selectTagSelectOptions, tagsActions} from '../../modules/tags'
 import type {Asset, AssetFormData, DialogAssetEditProps, TagSelectOption} from '../../types'
 import getTagSelectOptions from '../../utils/getTagSelectOptions'
@@ -62,6 +64,10 @@ const DialogAssetEdit = (props: Props) => {
   const allTagOptions = getTagSelectOptions(tags)
 
   const assetTagOptions = useTypedSelector(selectTagSelectOptions(currentAsset))
+  const currentFolderId = currentAsset?.opt?.media?.folder?._ref ?? null
+  const currentFolderPath = useTypedSelector((state) =>
+    selectFolderPathById(state, currentFolderId),
+  )
 
   // Check if credit line options are configured
   const {creditLine, components: {details: CustomDetails} = {}, locales} = useToolOptions()
@@ -169,6 +175,22 @@ const DialogAssetEdit = (props: Props) => {
     },
     [currentAsset?._id, dispatch],
   )
+
+  const handleChangeFolder = useCallback(() => {
+    if (!assetItem) {
+      return
+    }
+
+    dispatch(DIALOG_ACTIONS.showFolderMove({assets: [assetItem], folderId: currentFolderId}))
+  }, [assetItem, currentFolderId, dispatch])
+
+  const handleRemoveFolder = useCallback(() => {
+    if (!assetItem || !currentFolderId) {
+      return
+    }
+
+    dispatch(assetsActions.folderSetRequest({assets: [assetItem], folderId: null}))
+  }, [assetItem, currentFolderId, dispatch])
 
   // Detect if asset has localized fields (objects) with keys not in the configured locales
   const hasOrphanedLocales = useMemo(() => {
@@ -358,6 +380,10 @@ const DialogAssetEdit = (props: Props) => {
     allTagOptions,
     handleCreateTag,
     currentAsset,
+    folderPath: currentFolderPath,
+    folderMissing: !!currentFolderId && !currentFolderPath,
+    onChangeFolder: handleChangeFolder,
+    onRemoveFolder: handleRemoveFolder,
     creditLine,
     locales,
   }

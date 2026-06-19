@@ -88,7 +88,7 @@ const DialogFolderRename = ({children, dialog}: Props) => {
 
         <Box marginBottom={3}>
           <Text muted size={1}>
-            {parentPath ? `Renaming inside ${parentPath}` : 'Renaming at Home'}
+            {parentPath ? `Renaming inside ${parentPath}` : 'Renaming at root'}
           </Text>
         </Box>
 

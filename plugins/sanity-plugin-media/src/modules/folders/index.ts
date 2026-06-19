@@ -1,5 +1,5 @@
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {ClientError} from '@sanity/client'
+import type {ClientError, Patch} from '@sanity/client'
 import groq from 'groq'
 import {nanoid} from 'nanoid'
 import {from, of} from 'rxjs'
@@ -38,8 +38,6 @@ type FoldersReducerState = {
   deleteError?: HttpError
   renaming: boolean
   renameError?: HttpError
-  moving: boolean
-  moveError?: HttpError
 }
 
 const initialState: FoldersReducerState = {
@@ -50,7 +48,7 @@ const initialState: FoldersReducerState = {
   unfiledCount: 0,
   currentFolderId: null,
   currentFolderUnfiled: false,
-  panelVisible: true,
+  panelVisible: false,
   fetching: false,
   fetchCount: -1,
   fetchingError: undefined,
@@ -60,8 +58,6 @@ const initialState: FoldersReducerState = {
   deleteError: undefined,
   renaming: false,
   renameError: undefined,
-  moving: false,
-  moveError: undefined,
 }
 
 const indexFolders = (folders: FolderDoc[]) => {
@@ -98,39 +94,6 @@ const indexFolders = (folders: FolderDoc[]) => {
   Object.values(childrenByParentId).forEach((ids) => sortByName(ids))
 
   return {byId, childrenByParentId, rootIds}
-}
-
-const collectDescendantIds = (
-  folderId: string,
-  childrenByParentId: Record<string, string[]>,
-): string[] => {
-  const stack = [...(childrenByParentId[folderId] || [])]
-  const out: string[] = []
-  while (stack.length) {
-    const id = stack.pop()!
-    out.push(id)
-    const children = childrenByParentId[id]
-    if (children) {
-      stack.push(...children)
-    }
-  }
-  return out
-}
-
-const isDescendant = (
-  ancestorId: string,
-  candidateId: string,
-  byId: Record<string, FolderDoc>,
-): boolean => {
-  let cursor: string | null = candidateId
-  const seen = new Set<string>()
-  while (cursor) {
-    if (seen.has(cursor)) return false
-    seen.add(cursor)
-    if (cursor === ancestorId) return true
-    cursor = byId[cursor]?.parentId ?? null
-  }
-  return false
 }
 
 const foldersSlice = createSlice({
@@ -204,17 +167,6 @@ const foldersSlice = createSlice({
     fetchRequest(state) {
       state.fetching = true
       delete state.fetchingError
-    },
-    moveComplete(state, _action: PayloadAction<{folderId: string; parentId: string | null}>) {
-      state.moving = false
-    },
-    moveError(state, action: PayloadAction<{error: HttpError; folderId: string}>) {
-      state.moving = false
-      state.moveError = action.payload.error
-    },
-    moveRequest(state, _action: PayloadAction<{folderId: string; parentId: string | null}>) {
-      state.moving = true
-      delete state.moveError
     },
     panelVisibleSet(state, action: PayloadAction<{panelVisible: boolean}>) {
       state.panelVisible = action.payload.panelVisible
@@ -314,7 +266,6 @@ export const foldersRefreshEpic: MyEpic = (action$) =>
         assetsActions.folderSetComplete.match(action) ||
         foldersSlice.actions.createComplete.match(action) ||
         foldersSlice.actions.deleteComplete.match(action) ||
-        foldersSlice.actions.moveComplete.match(action) ||
         foldersSlice.actions.renameComplete.match(action) ||
         assetsActions.listenerCreateQueueComplete.match(action) ||
         assetsActions.listenerDeleteQueueComplete.match(action) ||
@@ -342,6 +293,18 @@ export const foldersCurrentFolderEpic: MyEpic = (action$) =>
       ),
     ),
   )
+
+const patchOperationAssetFolderUnset = (patch: Patch) => patch.unset(['opt.media.folder'])
+
+const patchOperationFolderParentSet =
+  ({parentId}: {parentId: string | null}) =>
+  (patch: Patch) => {
+    if (parentId) {
+      return patch.set({parent: {_ref: parentId, _type: 'reference', _weak: true}})
+    }
+
+    return patch.unset(['parent'])
+  }
 
 export const foldersCreateEpic: MyEpic = (action$, state$, {client}) =>
   action$.pipe(
@@ -417,8 +380,8 @@ export const foldersDeleteEpic: MyEpic = (action$, state$, {client}) =>
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
       const folderId = action.payload.folderId
-      const descendantIds = collectDescendantIds(folderId, state.folders.childrenByParentId)
-      const folderIds = [folderId, ...descendantIds]
+      const childFolderIds = state.folders.childrenByParentId[folderId] || []
+      const parentId = state.folders.byId[folderId]?.parentId ?? null
 
       return of(action).pipe(
         debugThrottle(state.debug.badConnection),
@@ -430,27 +393,30 @@ export const foldersDeleteEpic: MyEpic = (action$, state$, {client}) =>
                   state.assets.assetTypes.map((type) => `sanity.${type}Asset`),
                 )}
                 && !(_id in path("drafts.**"))
-                && opt.media.folder._ref in $folderIds
+                && opt.media.folder._ref == $folderId
               ] {
                 _id
               }
             }`,
-            {folderIds},
+            {folderId},
           ),
         ),
         mergeMap((result) => {
           const tx = client.transaction()
-          // Unset folder ref on referencing assets first (weak refs are forgiving but we still
-          // delete the assets here to match v1 recursive-delete semantics — assets in a folder
-          // are removed with the folder).
-          result.assets.forEach((asset) => tx.delete(asset._id))
-          folderIds.forEach((id) => tx.delete(id))
+          // Deleting a folder only removes the folder document. Assets keep living in the
+          // library with their folder assignment cleared, and direct child folders are promoted
+          // to the deleted folder's parent (or root).
+          result.assets.forEach((asset) => tx.patch(asset._id, patchOperationAssetFolderUnset))
+          childFolderIds.forEach((childFolderId) =>
+            tx.patch(childFolderId, patchOperationFolderParentSet({parentId})),
+          )
+          tx.delete(folderId)
 
           return from(tx.commit()).pipe(
             map(() =>
               foldersSlice.actions.deleteComplete({
                 folderId,
-                deletedIds: folderIds,
+                deletedIds: [folderId],
               }),
             ),
           )
@@ -529,89 +495,6 @@ export const foldersRenameEpic: MyEpic = (action$, state$, {client}) =>
                 message: error?.message || 'Internal error',
                 statusCode: error?.statusCode || 500,
               },
-            }),
-          ),
-        ),
-      )
-    }),
-  )
-
-export const foldersMoveEpic: MyEpic = (action$, state$, {client}) =>
-  action$.pipe(
-    filter(foldersSlice.actions.moveRequest.match),
-    withLatestFrom(state$),
-    mergeMap(([action, state]) => {
-      const {folderId} = action.payload
-      const parentId = action.payload.parentId || null
-      const folder = state.folders.byId[folderId]
-
-      if (!folder) {
-        return of(
-          foldersSlice.actions.moveError({
-            error: {message: 'Folder not found', statusCode: 404},
-            folderId,
-          }),
-        )
-      }
-
-      if (parentId === folder.parentId) {
-        return of(
-          foldersSlice.actions.moveError({
-            error: {message: 'Folder is already in this location', statusCode: 400},
-            folderId,
-          }),
-        )
-      }
-
-      if (
-        parentId === folderId ||
-        (parentId && isDescendant(folderId, parentId, state.folders.byId))
-      ) {
-        return of(
-          foldersSlice.actions.moveError({
-            error: {
-              message: 'Cannot move a folder into itself or its descendants',
-              statusCode: 400,
-            },
-            folderId,
-          }),
-        )
-      }
-
-      const siblingIds = parentId
-        ? state.folders.childrenByParentId[parentId] || []
-        : state.folders.rootIds
-      const collision = siblingIds.some(
-        (id) =>
-          id !== folderId &&
-          state.folders.byId[id]?.name.toLowerCase() === folder.name.toLowerCase(),
-      )
-      if (collision) {
-        return of(
-          foldersSlice.actions.moveError({
-            error: {message: 'A folder with this name already exists here', statusCode: 409},
-            folderId,
-          }),
-        )
-      }
-
-      const patch = client.observable.patch(folderId)
-      const committed = parentId
-        ? patch.set({parent: {_ref: parentId, _type: 'reference', _weak: true}}).commit()
-        : patch.unset(['parent']).commit()
-
-      return of(action).pipe(
-        debugThrottle(state.debug.badConnection),
-        mergeMap(() => committed),
-        mergeMap(() => of(foldersSlice.actions.moveComplete({folderId, parentId}))),
-        catchError((error: ClientError) =>
-          of(
-            foldersSlice.actions.moveError({
-              error: {
-                message: error?.message || 'Internal error',
-                statusCode: error?.statusCode || 500,
-              },
-              folderId,
             }),
           ),
         ),
@@ -718,7 +601,7 @@ export const selectCurrentFolderChildren = createSelector(
     currentFolderId,
     currentFolderUnfiled,
   ): FolderTreeItem[] => {
-    if (currentFolderUnfiled) return []
+    if (currentFolderUnfiled || !currentFolderId) return []
     const ids = currentFolderId ? childrenByParentId[currentFolderId] || [] : rootIds
     const depth = currentFolderId ? buildFolderPath(currentFolderId, byId).split('/').length : 0
     return ids.map((id) => {

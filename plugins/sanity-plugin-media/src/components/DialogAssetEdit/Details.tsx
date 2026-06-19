@@ -1,8 +1,10 @@
-import {Card, Stack, Tab, TabList, TabPanel} from '@sanity/ui'
+import {FolderIcon, TrashIcon} from '@sanity/icons'
+import {Box, Button, Card, Flex, Stack, Tab, TabList, TabPanel, Text} from '@sanity/ui'
 import {useState} from 'react'
 import {type Control, type FieldErrors, type UseFormRegister} from 'react-hook-form'
 
 import type {Asset, AssetFormData, Locale, TagSelectOption} from '../../types'
+import FormFieldInputLabel from '../FormFieldInputLabel'
 import FormFieldInputTags from '../FormFieldInputTags'
 import FormFieldInputText from '../FormFieldInputText'
 import FormFieldInputTextarea from '../FormFieldInputTextarea'
@@ -19,6 +21,12 @@ function toStringField(value: unknown): string | undefined {
   return undefined
 }
 
+function truncateFolderPath(path?: string): string | undefined {
+  const segments = path?.split('/').filter(Boolean)
+  if (!segments || segments.length <= 3) return path
+  return [segments[0], '...', ...segments.slice(-2)].join('/')
+}
+
 export type DetailsProps = {
   formUpdating: boolean
   handleCreateTag: (title: string) => void
@@ -28,6 +36,10 @@ export type DetailsProps = {
   allTagOptions: TagSelectOption[]
   assetTagOptions: TagSelectOption[] | null
   currentAsset: Asset
+  folderPath?: string
+  folderMissing?: boolean
+  onChangeFolder: () => void
+  onRemoveFolder: () => void
   creditLine?: {
     enabled: boolean
     excludeSources?: string | string[] | undefined
@@ -44,11 +56,19 @@ export default function Details({
   allTagOptions,
   assetTagOptions,
   currentAsset,
+  folderPath,
+  folderMissing,
+  onChangeFolder,
+  onRemoveFolder,
   creditLine,
   locales,
 }: DetailsProps) {
   const hasLocales = locales && locales.length > 0
   const [activeLocaleTab, setActiveLocaleTab] = useState(0)
+  const folderId = currentAsset?.opt?.media?.folder?._ref
+  const folderLabel =
+    truncateFolderPath(folderPath) || (folderMissing ? 'Folder no longer exists' : 'No folder')
+
   return (
     <Stack space={3}>
       {/* Tags */}
@@ -63,6 +83,47 @@ export default function Details({
         placeholder="Select or create..."
         value={assetTagOptions}
       />
+      {/* Folder */}
+      <Box>
+        <FormFieldInputLabel label="Folder" name="folder" />
+        <Card border padding={2} radius={2}>
+          <Flex align="center" gap={3} justify="space-between">
+            <Flex
+              align="center"
+              gap={2}
+              flex={1}
+              style={{minWidth: 0, overflowX: 'auto', whiteSpace: 'nowrap', overflowY: 'hidden'}}
+            >
+              <FolderIcon />
+              <Text muted={!folderId} size={1}>
+                {folderLabel}
+              </Text>
+            </Flex>
+            {folderId && (
+              <Button
+                aria-label="Remove from folder"
+                disabled={formUpdating}
+                fontSize={1}
+                icon={TrashIcon}
+                mode="bleed"
+                onClick={onRemoveFolder}
+                padding={2}
+                tone="critical"
+                type="button"
+              />
+            )}
+            <Button
+              padding={2}
+              disabled={formUpdating}
+              fontSize={1}
+              mode="ghost"
+              onClick={onChangeFolder}
+              text={folderId ? 'Change folder' : 'Add to folder'}
+              type="button"
+            />
+          </Flex>
+        </Card>
+      </Box>
       {/* Filename */}
       <FormFieldInputText
         {...register('originalFilename')}

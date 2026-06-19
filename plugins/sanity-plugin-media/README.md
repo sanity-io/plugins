@@ -24,7 +24,7 @@ _Individual asset view_
 
 - Support for batch uploads with drag and drop support
 - Edit text fields native to Sanity's asset documents, such as `title`, `description`, `altText` and `originalFilename`
-- Organise assets into nested folders with a dedicated sidebar, breadcrumb navigation and bulk move actions
+- Browse folder documents in a dedicated sidebar and assign assets to folders individually or in bulk
 - View asset metadata and a limited subset of EXIF data, if present
 - Tag your assets individually or in bulk
 - Manage tags directly within the plugin
@@ -309,7 +309,7 @@ export function CustomDetails(props) {
 <details>
 <summary>How can I query asset fields I've set in this plugin?</summary>
 
-The following GROQ query will return an image with additional asset text fields, the name of the folder it belongs to, as well as an array of tag names.
+The following GROQ query will return an image with additional asset text fields, its folder reference, resolved folder name, and an array of tag names.
 
 Note that tags and folders are namespaced within `opt.media`. Tag names are accessed via the `current` property (as they're defined as slugs on the `tag.media` document schema), and the folder is a single weak reference you can dereference for its `name`.
 
@@ -321,7 +321,8 @@ Note that tags and folders are namespaced within `opt.media`. Tag names are acce
       _type,
       altText,
       description,
-      "folder": opt.media.folder->name,
+      "folder": opt.media.folder,
+      "folderName": opt.media.folder->name,
       "tags": opt.media.tags[]->name.current,
       title
     }
@@ -346,11 +347,12 @@ Note that tags and folders are namespaced within `opt.media`. Tag names are acce
 <details>
 <summary>How do folders work?</summary>
 
-- Folders are stored as their own `media.folder` documents, each with a `name` and an optional weak `parent` reference to another `media.folder` (a `null` parent means the folder lives at the root)
-- Assets reference the folder they live in via a single weak reference at `opt.media.folder` — the same pattern already used for tags (`opt.media.tags`)
-- Because the link is a reference (not a path string), renaming or moving a folder is a single one-field write, regardless of how many assets it contains
-- The folder sidebar shows the full tree with per-folder asset counts. Selecting **Home** shows assets that aren't assigned to any folder; opening a folder filters the grid to the assets assigned to it
-- You can move selected assets into a folder from the selection bar, and deleting a folder recursively removes its nested folders and every asset inside that subtree
+- This plugin defines the document type `media.folder`
+- Folder hierarchy is stored on folder documents using a `parent` reference to another `media.folder` document
+- Asset folder assignment is stored as a weak reference at `opt.media.folder`
+- The default asset browser view shows all assets. Opening a folder filters the asset list to assets assigned to that folder.
+- You can move selected assets to a folder from the selection bar, remove selected assets from the current folder, or change/remove an individual asset's folder from the asset details dialog
+- Deleting a folder deletes only the folder document. Assets assigned to it stay in the library and have their folder assignment removed; nested folders move up one level.
 
 </details>
 

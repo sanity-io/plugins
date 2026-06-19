@@ -32,6 +32,9 @@ const PickedBar = () => {
   const handleMovePicked = () =>
     dispatch(DIALOG_ACTIONS.showFolderMove({assets: assetsPicked, folderId: currentFolderId}))
 
+  const handleRemovePickedFromFolder = () =>
+    dispatch(assetsActions.folderSetRequest({assets: assetsPicked, folderId: null}))
+
   const handleInsertPicked = () => {
     if (!onSelect) {
       return
@@ -106,15 +109,28 @@ const PickedBar = () => {
         )}
 
         {!onSelect && (
-          <Button
-            mode="bleed"
-            onClick={handleMovePicked}
-            padding={2}
-            style={{background: 'none', boxShadow: 'none'}}
-            tone="primary"
-          >
-            <Label size={0}>Move to folder</Label>
-          </Button>
+          <>
+            <Button
+              mode="bleed"
+              onClick={handleMovePicked}
+              padding={2}
+              style={{background: 'none', boxShadow: 'none'}}
+              tone="primary"
+            >
+              <Label size={0}>Move to folder</Label>
+            </Button>
+            {currentFolderId && (
+              <Button
+                mode="bleed"
+                onClick={handleRemovePickedFromFolder}
+                padding={2}
+                style={{background: 'none', boxShadow: 'none'}}
+                tone="critical"
+              >
+                <Label size={0}>Remove from folder</Label>
+              </Button>
+            )}
+          </>
         )}
       </Flex>
     </Flex>

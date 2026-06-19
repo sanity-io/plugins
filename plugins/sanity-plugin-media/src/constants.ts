@@ -38,16 +38,6 @@ export const ORDER_OPTIONS: ({direction: OrderDirection; field: string} | null)[
   null,
   {
     direction: 'asc',
-    field: 'opt.media.folder',
-  },
-  {
-    direction: 'desc',
-    field: 'opt.media.folder',
-  },
-  // Divider
-  null,
-  {
-    direction: 'asc',
     field: 'originalFilename',
   },
   {
