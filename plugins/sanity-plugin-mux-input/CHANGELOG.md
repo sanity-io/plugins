@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 4.0.1
+
+### Patch Changes
+
+- [`cc31111`](https://github.com/sanity-io/plugins/commit/cc31111d34b128b130bf6223ab611cf1cc1a0344) Thanks [@stipsan](https://github.com/stipsan)! - Stop bundling `use-error-boundary` and treat it as an external dependency
+
 ## 4.0.0
 
 ### Major Changes
