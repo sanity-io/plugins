@@ -15,13 +15,15 @@
     "**/dist/*",
     "**/sanity.types.ts",
     "turbo/generators/config.ts",
-    "plugins/sanity-naive-html-serializer/test/**",
-    // Moved as-is from the standalone repo; legacy code will be brought up to
-    // monorepo lint standards in a follow-up PR
-    "plugins/sanity-plugin-media/**",
-    "plugins/sanity-plugin-mux-input/**"
+    // Illustrative docs referencing optional third-party form libraries
+    // (formik, react-hook-form, @tanstack/react-form, zod); not built or published
+    "plugins/@sanity/form-toolkit/examples/**",
+    "packages/@sanity/plugin-kit/assets/**",
+    "packages/@sanity/plugin-kit/test/fixtures/**"
   ],
   "options": {
+    "denyWarnings": true,
+    "reportUnusedDisableDirectives": "error",
     "typeAware": true,
     "typeCheck": true
   },
@@ -109,10 +111,125 @@
       }
     },
     {
+      "files": ["plugins/@sanity/embeddings-index-ui/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-deprecated": "off",
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off",
+        "promise/always-return": "off"
+      }
+    },
+    {
+      "files": [
+        "plugins/sanity-plugin-mux-input/src/**/*.{ts,tsx}",
+        "plugins/sanity-plugin-mux-input/v2-incompatible.js"
+      ],
+      "rules": {
+        "no-deprecated": "off",
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off",
+        "promise/always-return": "off",
+        "typescript/no-base-to-string": "off",
+        "typescript/no-useless-default-assignment": "off",
+        "typescript/no-redundant-type-constituents": "off",
+        "jsx-a11y/media-has-caption": "off",
+        "jsx-a11y/label-has-associated-control": "off",
+        "unicorn/prefer-add-event-listener": "off",
+        "no-restricted-imports": "off",
+        "no-await-in-loop": "off",
+        "typescript/consistent-return": "off",
+        "import/no-commonjs": "off",
+        "oxc/no-map-spread": "off"
+      }
+    },
+    {
+      "files": [
+        "plugins/sanity-plugin-media/src/**/*.{ts,tsx}",
+        "plugins/sanity-plugin-media/v2-incompatible.js"
+      ],
+      "rules": {
+        "no-deprecated": "off",
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off",
+        "promise/always-return": "off",
+        "typescript/unbound-method": "off",
+        "typescript/no-redundant-type-constituents": "off",
+        "typescript/no-unnecessary-type-conversion": "off",
+        "import/no-commonjs": "off",
+        "jsx-a11y/control-has-associated-label": "off",
+        "jsx-a11y/no-static-element-interactions": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "react/no-array-index-key": "off",
+        "jsx-a11y/media-has-caption": "off",
+        "oxc/no-map-spread": "off",
+        "unicorn/prefer-add-event-listener": "off",
+        "no-await-in-loop": "off",
+        "react/no-unstable-nested-components": "off"
+      }
+    },
+    {
+      // The plugin is built on the classic Google Maps JS API (google.maps.Marker,
+      // google.maps.places.Autocomplete), which Google deprecated in favor of newer
+      // APIs but still supports. Migrating to the new APIs is out of scope for the port.
+      // Casting Sanity input props to the plugin's input component props is a known pattern.
+      "files": ["plugins/@sanity/google-maps-input/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-deprecated": "off",
+        "no-unsafe-type-assertion": "off"
+      }
+    },
+    {
+      "files": ["plugins/@sanity/personalization-plugin/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unsafe-type-assertion": "off",
+        "restrict-template-expressions": "off",
+        "no-base-to-string": "off",
+        "no-await-in-loop": "off"
+      }
+    },
+    {
+      "files": ["plugins/sanity-plugin-cloudinary/src/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unsafe-type-assertion": "off"
+      }
+    },
+    {
       "files": ["plugins/sanity-naive-html-serializer/test/**/*.ts"],
       "rules": {
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off"
+      }
+    },
+    {
+      "files": ["plugins/@sanity/hierarchical-document-list/src/**"],
+      "rules": {
+        // Legacy code interfaces with the loosely-typed react-sortable-tree API
+        "no-unsafe-type-assertion": "off",
+        // Scaffold blocks and split text segments are purely positional
+        "react/no-array-index-key": "off",
+        // Memoized forwardRef link wrappers passed via the `as` prop (mirrors
+        // Sanity's own PaneItem pattern); identity is stable via useMemo
+        "react/no-unstable-nested-components": "off"
+      }
+    },
+    {
+      "files": ["packages/@sanity/plugin-kit/**/*.ts"],
+      "rules": {
+        // plugin-kit is a Node CLI tool ported from sanity-io/plugin-kit; console is its UI
+        // and the legacy codebase predates these stylistic rules
+        "no-await-in-loop": "off",
+        "no-console": "off",
+        "no-map-spread": "off",
+        "no-misused-spread": "off",
+        "no-named-as-default": "off",
+        "no-unnecessary-boolean-literal-compare": "off",
+        "no-unnecessary-template-expression": "off",
+        "no-unnecessary-type-parameters": "off",
+        "no-unsafe-type-assertion": "off",
+        "no-useless-fallback-in-spread": "off",
+        "prefer-set-has": "off",
+        "preserve-caught-error": "off",
+        "unbound-method": "off"
       }
     },
     {

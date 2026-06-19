@@ -1,0 +1,9 @@
+{
+  "extends": "@repo/tsconfig/build.json",
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules", "test"],
+  "compilerOptions": {
+    "isolatedDeclarations": false,
+    "resolveJsonModule": true
+  }
+}

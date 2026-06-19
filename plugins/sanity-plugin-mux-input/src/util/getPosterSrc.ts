@@ -2,7 +2,7 @@ import type {SanityClient} from 'sanity'
 
 import {createUrlParamsObject} from './createUrlParamsObject'
 import type {MuxThumbnailUrl, ThumbnailOptions} from './types'
-import {AssetThumbnailOptions} from './types'
+import {type AssetThumbnailOptions} from './types'
 
 export interface PosterSrcOptions extends ThumbnailOptions {
   asset: AssetThumbnailOptions['asset']

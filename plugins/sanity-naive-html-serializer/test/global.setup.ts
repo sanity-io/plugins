@@ -1,4 +1,4 @@
-import {PortableTextTextBlock} from 'sanity'
+import type {PortableTextTextBlock} from 'sanity'
 import {vi} from 'vitest'
 
 let mockTestKey = 0
