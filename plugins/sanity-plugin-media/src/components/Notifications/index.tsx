@@ -9,14 +9,14 @@ const Notifications = () => {
 
   useEffect(() => {
     if (items.length > 0) {
-      const lastItem = items[items.length - 1]
+      const lastItem = items[items.length - 1]!
       toast.push({
         closable: true,
         status: lastItem.status,
         title: lastItem.title,
       })
     }
-  }, [items.length])
+  }, [items, toast])
 
   return null
 }

@@ -207,7 +207,6 @@ As outlined above, the actual code is stored in a `code` property, so if your sc
 Here's an example using [react-refractor](https://github.com/rexxars/react-refractor):
 
 ```jsx
-import React from 'react'
 import Refractor from 'react-refractor'
 import js from 'refractor/lang/javascript'
 

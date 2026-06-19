@@ -1,4 +1,10 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
+# @sanity/orderable-document-list
+
+## 2.0.4
+
+### Patch Changes
+
+- [#1317](https://github.com/sanity-io/plugins/pull/1317) [`d25a910`](https://github.com/sanity-io/plugins/commit/d25a910f446e3585375cf02d83c97e4fcec609e5) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency lexorank to ^1.0.5
 
 ## 2.0.3
 
@@ -34,6 +40,7 @@
 - [#908](https://github.com/sanity-io/plugins/pull/908) [`96796ed`](https://github.com/sanity-io/plugins/commit/96796ed94ebf9a9d3270464100f4b97dcc9007dc) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Migrate to sanity-io/plugins monorepo
 
   **Breaking Changes:**
+
   - React 19.2+ required
   - Sanity Studio v5+ required
   - ESM-only (CommonJS removed)
@@ -48,11 +55,6 @@
 
 - Updated dependencies [[`cd2bc3c`](https://github.com/sanity-io/plugins/commit/cd2bc3c3e39c3cb357dd456bc205d1d6d57f441a)]:
   - sanity-plugin-utils@2.0.0
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## [1.5.1](https://github.com/sanity-io/orderable-document-list/compare/v1.5.0...v1.5.1) (2026-02-25)
 

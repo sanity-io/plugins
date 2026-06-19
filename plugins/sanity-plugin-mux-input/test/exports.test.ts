@@ -1,4 +1,5 @@
 import {fileURLToPath} from 'node:url'
+
 import {expect, test} from 'vitest'
 import {getPackageExportsManifest} from 'vitest-package-exports'
 
@@ -11,7 +12,6 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
     {
       ".": {
-        "default": "object",
         "defaultConfig": "object",
         "muxInput": "function",
       },

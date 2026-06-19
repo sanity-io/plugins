@@ -1,0 +1,67 @@
+{
+  "name": "sanity-plugin-test-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/sanity-io/sanity#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity/issues"
+  },
+  "license": "MIT",
+  "author": "Test Person <test.person@somewhere-on-the-internet.nowhere>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sanity-io/sanity"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "source": "./src/index.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build",
+    "watch": "pkg-utils watch --strict"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@sanity/pkg-utils": "^2.0.6",
+    "@sanity/plugin-kit": "^0.0.1-studio-v3.1",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-hooks": "^4.5.0",
+    "prettier": "^2.6.2",
+    "prettier-plugin-packagejson": "^2.3.0",
+    "react": "^18.2.0",
+    "sanity": "^3.0.0",
+    "typescript": "^4.7.3"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "sanity": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+      "tsc": false
+    }
+  }
+}
