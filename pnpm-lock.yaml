@@ -2629,7 +2629,7 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       iso-639-1:
-        specifier: ^3.1.2
+        specifier: ^3.1.5
         version: 3.1.5
       jsonwebtoken-esm:
         specifier: ^1.0.5
