@@ -13,12 +13,15 @@ import {
   forcedPackageVersions,
   forcedPeerPackageVersions,
 } from '../configs/forced-package-versions'
-import {cliName, incompatiblePluginPackage, requiredNodeEngine} from '../constants'
+import {cliName, requiredNodeEngine} from '../constants'
 import {getPaths, type ManifestOptions} from '../sanity/manifest'
 import {hasSourceEquivalent, writeJsonFile} from '../util/files'
 import log from '../util/log'
 import {resolveLatestVersions} from './resolveLatestVersions'
-const defaultDependencies = [incompatiblePluginPackage]
+
+// New plugins ship no runtime dependencies by default. The legacy `@sanity/incompatible-plugin`
+// shim (for Sanity Studio v2) is intentionally no longer added.
+const defaultDependencies: string[] = []
 
 const defaultDevDependencies = [
   'sanity',
@@ -270,7 +273,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
 
   const source = flags.typescript ? './src/index.ts' : './src/index.js'
 
-  const files = [outDir, 'sanity.json', 'src', 'v2-incompatible.js']
+  const files = [outDir, 'src']
 
   // sort alphabetically for scanability
   files.sort()

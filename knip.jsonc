@@ -158,11 +158,7 @@
       ],
     },
     "plugins/sanity-plugin-media": {
-      "entry": [
-        "package.config.ts",
-        "scripts/migrate-to-localized-fields.ts",
-        "v2-incompatible.js",
-      ],
+      "entry": ["package.config.ts", "scripts/migrate-to-localized-fields.ts"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         // Used by @sanity/pkg-utils babel transform, not directly imported
@@ -170,7 +166,7 @@
       ],
     },
     "plugins/sanity-plugin-mux-input": {
-      "entry": ["package.config.ts", "v2-incompatible.js"],
+      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         // Used by @sanity/pkg-utils babel transform, not directly imported
