@@ -12,8 +12,8 @@ const getAssetIds = (node: Record<string, any>, acc: string[] = []) => {
   }
 
   if (isPlainObject(node)) {
-    if (node?.asset?._type === 'reference' && node?.asset?._ref) {
-      acc.push(node.asset._ref)
+    if (node?.['asset']?._type === 'reference' && node?.['asset']?._ref) {
+      acc.push(node['asset']._ref)
     }
 
     Object.values(node).forEach((val) => {

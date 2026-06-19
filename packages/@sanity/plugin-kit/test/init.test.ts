@@ -2,8 +2,7 @@ import path from 'path'
 
 import {expect, test} from 'vitest'
 
-import {PackageJson} from '../src/actions/verify/types'
-import {incompatiblePluginPackage} from '../src/constants'
+import type {PackageJson} from '../src/actions/verify/types'
 import {fileExists} from '../src/util/files'
 import {
   fileContainsValidator,
@@ -67,13 +66,21 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
         '*.js',
       )
       await fileContains('.prettierrc', '"semi": false')
-      await fileContains('sanity.json', '"path": "./v2-incompatible.js"')
-      await fileContains('v2-incompatible.js', 'showIncompatiblePluginDialog')
       await fileContains('tsconfig.json', '"extends": "./tsconfig.settings"')
       await fileContains('tsconfig.dist.json', '"extends": "./tsconfig.settings"')
       await fileContains('tsconfig.settings.json', '"target": "esnext"')
 
       await fileContains('src/index.ts', `name: '${pluginTestName}'`)
+
+      // The legacy @sanity/incompatible-plugin v2 shim should no longer be scaffolded
+      expect(
+        await fileExists(path.join(outputDir, 'sanity.json')),
+        'sanity.json should not be scaffolded',
+      ).toBe(false)
+      expect(
+        await fileExists(path.join(outputDir, 'v2-incompatible.js')),
+        'v2-incompatible.js should not be scaffolded',
+      ).toBe(false)
 
       const pkg: PackageJson = JSON.parse(await readFile(path.join(outputDir, 'package.json')))
 
@@ -91,7 +98,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
           },
         },
         types: './dist/index.d.ts',
-        files: ['dist', 'sanity.json', 'src', 'v2-incompatible.js'],
+        files: ['dist'],
         scripts: {
           'lint': 'eslint .',
           'build': 'plugin-kit verify-package --silent && pkg-utils build --strict --check --clean',
@@ -112,9 +119,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
         homepage: 'https://github.com/sanity-io/sanity#readme',
       })
 
-      expect(Object.keys(pkg.dependencies ?? {}), 'should have empty dependencies').toEqual([
-        incompatiblePluginPackage,
-      ])
+      expect(Object.keys(pkg.dependencies ?? {}), 'should have empty dependencies').toEqual([])
       expect(
         Object.keys(pkg.peerDependencies ?? {}),
         'should have expected peerDependencies',
@@ -171,9 +176,7 @@ test(
         const pkg: PackageJson = JSON.parse(await readFile(path.join(outputDir, 'package.json')))
         expect(pkg.scripts, 'scripts should be an empty object').toEqual({})
 
-        expect(Object.keys(pkg.dependencies ?? {}), 'should have empty dependencies').toEqual([
-          incompatiblePluginPackage,
-        ])
+        expect(Object.keys(pkg.dependencies ?? {}), 'should have empty dependencies').toEqual([])
         expect(
           Object.keys(pkg.peerDependencies ?? {}),
           'should have expected peerDependencies',

@@ -1,71 +1,73 @@
 {
   "name": "sanity-plugin-mux-input",
-  "version": "3.0.3",
+  "version": "3.0.5",
   "description": "An input component that integrates Sanity Studio with Mux video encoding/hosting service.",
   "keywords": [
-    "sanity",
-    "video",
-    "mux",
     "input",
+    "media",
+    "mux",
     "plugin",
+    "sanity",
     "sanity-plugin",
-    "media"
+    "video"
   ],
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-mux-input#readme",
   "bugs": {
     "url": "https://github.com/sanity-io/plugins/issues"
   },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sanity-io/plugins.git",
     "directory": "plugins/sanity-plugin-mux-input"
   },
-  "license": "MIT",
-  "author": "Sanity.io <hello@sanity.io>",
-  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
   "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "source": "./src/_exports/index.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
+      "development": "./src/_exports/index.ts",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "src",
-    "dist",
-    "sanity.json",
-    "v2-incompatible.js"
-  ],
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
   "scripts": {
     "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@mux/mux-player": "^3.8.0",
-    "@mux/mux-player-react": "^3.8.0",
-    "@mux/upchunk": "^3.4.0",
+    "@mux/mux-player": "^3.13.0",
+    "@mux/mux-player-react": "^3.13.0",
+    "@mux/upchunk": "^3.5.0",
     "@sanity/icons": "catalog:",
-    "@sanity/incompatible-plugin": "catalog:",
     "@sanity/ui": "catalog:",
     "@sanity/uuid": "catalog:",
-    "iso-639-1": "^3.1.2",
+    "iso-639-1": "^3.1.5",
     "jsonwebtoken-esm": "^1.0.5",
     "lodash": "^4.17.21",
     "react-rx": "catalog:",
     "rxjs": "catalog:",
     "scroll-into-view-if-needed": "^3.1.0",
     "suspend-react": "catalog:",
-    "swr": "^2.2.5",
-    "type-fest": "^4.18.2",
+    "swr": "^2.4.1",
+    "type-fest": "^4.41.0",
     "use-device-pixel-ratio": "^1.1.2",
     "use-error-boundary": "^2.0.6"
   },
   "devDependencies": {
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
     "@sanity/client": "catalog:",
     "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
@@ -73,6 +75,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-is": "catalog:",
+    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-is": "catalog:",
@@ -83,19 +86,16 @@
   "peerDependencies": {
     "react": "^18.3 || ^19",
     "react-is": "^18.3 || ^19",
-    "sanity": "^4.0.0 || ^5.0.0 || ^6.0.0",
+    "sanity": "^5 || ^6.0.0-0",
     "styled-components": "^5 || ^6"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sanityExchangeUrl": "https://www.sanity.io/plugins/sanity-plugin-mux-input",
-  "browserslist": "extends @sanity/browserslist-config",
   "sanityPlugin": {
     "verifyPackage": {
+      "tsc": false,
+      "tsconfig": false,
       "srcIndex": false,
       "scripts": false,
       "eslintImports": false

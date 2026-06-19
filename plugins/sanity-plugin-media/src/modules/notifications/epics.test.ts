@@ -94,8 +94,8 @@ describe('notificationsAssetsDeleteErrorEpic', () => {
     store.dispatch(assetsActions.deleteError({assetIds: ['a1'], error: {} as any}))
     await vi.waitFor(() => {
       const [n] = store.getState().notifications.items
-      expect(n.status).toBe('error')
-      expect(n.title).toBe(
+      expect(n!.status).toBe('error')
+      expect(n!.title).toBe(
         'Unable to delete 1 asset. Please review any asset errors and try again.',
       )
     })
@@ -271,7 +271,7 @@ describe('notificationsGenericErrorEpic', () => {
       }),
     )
     await vi.waitFor(() => {
-      expect(store.getState().notifications.items[0].title).toBe('An error occurred: fetch failed')
+      expect(store.getState().notifications.items[0]!.title).toBe('An error occurred: fetch failed')
     })
   })
 
@@ -294,7 +294,7 @@ describe('notificationsGenericErrorEpic', () => {
       }),
     )
     await vi.waitFor(() => {
-      expect(store.getState().notifications.items[0].title).toBe('An error occurred: tag create')
+      expect(store.getState().notifications.items[0]!.title).toBe('An error occurred: tag create')
     })
   })
 
@@ -309,7 +309,7 @@ describe('notificationsGenericErrorEpic', () => {
       }),
     )
     await vi.waitFor(() => {
-      expect(store.getState().notifications.items[0].title).toBe('An error occurred: upload bad')
+      expect(store.getState().notifications.items[0]!.title).toBe('An error occurred: upload bad')
     })
   })
 })

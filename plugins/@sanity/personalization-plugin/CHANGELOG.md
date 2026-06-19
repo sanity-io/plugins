@@ -1,5 +1,13 @@
 # @sanity/personalization-plugin
 
+## 3.0.1
+
+### Patch Changes
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
+- [#1322](https://github.com/sanity-io/plugins/pull/1322) [`cf18f90`](https://github.com/sanity-io/plugins/commit/cf18f90835a7a6e3e1ce1009c8e620e5ee34ebab) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-icons to ^5.6.0
+
 ## 3.0.0
 
 ### Major Changes
