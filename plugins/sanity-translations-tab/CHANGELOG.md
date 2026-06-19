@@ -1,5 +1,16 @@
 # sanity-translations-tab
 
+## 6.1.5
+
+### Patch Changes
+
+- [#1299](https://github.com/sanity-io/plugins/pull/1299) [`eaa6280`](https://github.com/sanity-io/plugins/commit/eaa6280d729f6e3b4436e7b2fc2556b4580e4afe) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @portabletext/block-tools to ^5.1.5
+
+- [#1345](https://github.com/sanity-io/plugins/pull/1345) [`c6e8859`](https://github.com/sanity-io/plugins/commit/c6e88593379d8890246f212fb12916f3b99f78d5) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @portabletext/block-tools to ^5.1.6
+
+- Updated dependencies [[`eaa6280`](https://github.com/sanity-io/plugins/commit/eaa6280d729f6e3b4436e7b2fc2556b4580e4afe), [`c6e8859`](https://github.com/sanity-io/plugins/commit/c6e88593379d8890246f212fb12916f3b99f78d5)]:
+  - sanity-naive-html-serializer@5.1.4
+
 ## 6.1.4
 
 ### Patch Changes
@@ -51,6 +62,7 @@
 - [#925](https://github.com/sanity-io/plugins/pull/925) [`9f61083`](https://github.com/sanity-io/plugins/commit/9f6108313b213b5bd13238ee4339789b5c15a550) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Port sanity-translations-tab to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
   - **ESM-only**: CommonJS support has been removed. The package now ships only ESM (previously exposed `require` via `./dist/index.js`)
   - **React 19.2+ required**: Minimum React version is now 19.2 (previously `^18.3 || ^19`)
