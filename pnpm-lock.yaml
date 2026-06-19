@@ -1649,8 +1649,8 @@ importers:
   plugins/sanity-naive-html-serializer:
     dependencies:
       '@portabletext/block-tools':
-        specifier: ^5.1.4
-        version: 5.1.4(@types/react@19.2.17)
+        specifier: ^5.1.5
+        version: 5.1.5(@types/react@19.2.17)
       '@portabletext/to-html':
         specifier: ^5.0.2
         version: 5.0.2
@@ -3005,8 +3005,8 @@ importers:
   plugins/sanity-translations-tab:
     dependencies:
       '@portabletext/block-tools':
-        specifier: ^5.1.4
-        version: 5.1.4(@types/react@19.2.17)
+        specifier: ^5.1.5
+        version: 5.1.5(@types/react@19.2.17)
       '@portabletext/to-html':
         specifier: ^5.0.2
         version: 5.0.2
@@ -5601,8 +5601,8 @@ packages:
     resolution: {integrity: sha512-//0sR/cow/s4ICQaYoAobOl4aU8cjU6x/V24V7XkKotb9+O+3zySIYp146vpaobYHnxa4pZX8NkV54Z5AwbDKA==}
     engines: {node: '>=12'}
 
-  '@portabletext/block-tools@5.1.4':
-    resolution: {integrity: sha512-zQCj1FUkvjaf3EO40Me6zQxaYwjbBMXmXI2J+eFOwiajjHTqoAMgSRXHvwrUPhaiLbPtn3C5edXbbTp0g70TSQ==}
+  '@portabletext/block-tools@5.1.5':
+    resolution: {integrity: sha512-bqqVwDsoIxllafMRvw1ylYJcmFCbXg5tQm6zmP27HXZyCZkkWm9s9Wmk5uSv4JmnRUOeJK6PGKWlHTItivuDew==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
   '@portabletext/editor@7.5.0':
@@ -5677,6 +5677,10 @@ packages:
 
   '@portabletext/sanity-bridge@3.1.2':
     resolution: {integrity: sha512-Cf4Jkr2n99OkLUzAFE/Cwm4Fj+ONn1tjHpYAS/bEsNGtGyeMbRfs6OMlNKYATfzcp5cgch3eDeG5xYCKJdM+kg==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+
+  '@portabletext/sanity-bridge@3.1.3':
+    resolution: {integrity: sha512-mskaYEnHewCOA1m1n4inMc1yJ0lp1PDioP9vvEDCSuTHkJF1fDar66F0jCotUPpzm7E7rQUhtXFlox20HSsLrA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
   '@portabletext/schema@2.2.0':
@@ -14673,10 +14677,10 @@ snapshots:
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
 
-  '@portabletext/block-tools@5.1.4(@types/react@19.2.17)':
+  '@portabletext/block-tools@5.1.5(@types/react@19.2.17)':
     dependencies:
       '@portabletext/html': 1.0.2
-      '@portabletext/sanity-bridge': 3.1.2(@types/react@19.2.17)
+      '@portabletext/sanity-bridge': 3.1.3(@types/react@19.2.17)
       '@portabletext/schema': 2.2.0
       '@sanity/types': 6.1.0(@types/react@19.2.17)
     transitivePeerDependencies:
@@ -14771,6 +14775,15 @@ snapshots:
       react: 19.2.7
 
   '@portabletext/sanity-bridge@3.1.2(@types/react@19.2.17)':
+    dependencies:
+      '@portabletext/schema': 2.2.0
+      '@sanity/schema': 6.1.0(@types/react@19.2.17)
+      '@sanity/types': 6.1.0(@types/react@19.2.17)
+    transitivePeerDependencies:
+      - '@types/react'
+      - supports-color
+
+  '@portabletext/sanity-bridge@3.1.3(@types/react@19.2.17)':
     dependencies:
       '@portabletext/schema': 2.2.0
       '@sanity/schema': 6.1.0(@types/react@19.2.17)
