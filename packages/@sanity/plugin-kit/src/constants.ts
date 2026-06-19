@@ -24,7 +24,7 @@ export const defaultOutDir = 'dist'
 export const minPkgUtilsMajor = 10
 
 /**
- * Required `engines.node` range for plugins, matching `@sanity/pkg-utils` so plugins declare the
- * same Node.js support as the build tool they use.
+ * Required `engines.node` range for plugins, matching `sanity` so plugins declare the same Node.js
+ * support as the Studio they integrate with.
  */
-export const requiredNodeEngine = '>=20.19 <22 || >=22.12'
+export const requiredNodeEngine = '>=22.12'

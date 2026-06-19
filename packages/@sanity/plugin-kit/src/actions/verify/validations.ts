@@ -31,7 +31,7 @@ export function validateNodeEngine(packageJson: PackageJson) {
   if (packageJson.engines?.node !== requiredNodeEngine) {
     return [
       outdent`
-        Expected package.json to contain engines.node: "${requiredNodeEngine}" to match @sanity/pkg-utils,
+        Expected package.json to contain engines.node: "${requiredNodeEngine}" to match sanity,
         but it was: ${packageJson.engines?.node}
 
         Please add the following to package.json:
