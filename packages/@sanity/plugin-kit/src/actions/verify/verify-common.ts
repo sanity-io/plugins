@@ -11,6 +11,7 @@ const splitLine = `\n----------------------------------------------------------`
 
 export const verifyPackageConfigDefaults = {
   'packageName': true,
+  'esmOnly': true,
   'tsconfig': true,
   'tsc': true,
   'dependencies': true,

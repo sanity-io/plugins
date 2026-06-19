@@ -162,6 +162,86 @@ export function validatePackageType({type}: PackageJson): string[] {
   ]
 }
 
+/**
+ * Recursively collects the locations of any `require` condition within a package.json `exports`
+ * field. Conditions can be nested arbitrarily deep (and inside fallback arrays), so we walk the
+ * whole tree rather than only inspecting the first level.
+ *
+ * Subpath keys always start with `.` (e.g. `"./feature"`), while condition keys never do, so an
+ * exact `require` key is unambiguously a CommonJS export condition.
+ */
+function findRequireConditions(node: unknown, pathSegments: string[]): string[] {
+  if (Array.isArray(node)) {
+    return node.flatMap((entry, index) =>
+      findRequireConditions(entry, [...pathSegments, String(index)]),
+    )
+  }
+
+  if (!node || typeof node !== 'object') {
+    return []
+  }
+
+  const found: string[] = []
+  for (const [key, value] of Object.entries(node)) {
+    if (key === 'require') {
+      found.push(formatExportsPath(pathSegments))
+    }
+    found.push(...findRequireConditions(value, [...pathSegments, key]))
+  }
+  return found
+}
+
+function formatExportsPath(segments: string[]): string {
+  return `exports${segments.map((segment) => `[${JSON.stringify(segment)}]`).join('')}`
+}
+
+/**
+ * Bans CommonJS interop in package.json. The plugin baseline is Sanity Studio v5 or later, which is
+ * pure ESM, so there is no reason to publish a parallel CJS build anymore. This flags:
+ *
+ * - `require` export conditions
+ * - the top-level `main` field
+ * - the top-level `module` field
+ */
+export function validateEsmOnly(packageJson: PackageJson): string[] {
+  const offenders: string[] = []
+
+  if (typeof packageJson.main !== 'undefined') {
+    offenders.push(`- the top-level "main" field (${JSON.stringify(packageJson.main)})`)
+  }
+
+  if (typeof packageJson.module !== 'undefined') {
+    offenders.push(`- the top-level "module" field (${JSON.stringify(packageJson.module)})`)
+  }
+
+  const requireConditions = [...new Set(findRequireConditions(packageJson.exports, []))]
+  for (const conditionPath of requireConditions) {
+    offenders.push(`- a "require" export condition at ${conditionPath}`)
+  }
+
+  if (!offenders.length) {
+    return []
+  }
+
+  return [
+    outdent`
+      package.json ships CommonJS (CJS) output, but Sanity plugins target Sanity Studio v5+, which is pure ESM.
+
+      Remove the following so the package stays ESM-only:
+      ${offenders.join('\n')}
+
+      Supporting CJS is not worth it:
+      - It can have unintended side-effects.
+      - The Node.js versions plugin-kit supports (${requiredNodeEngine}) fully support require(esm), so a
+        consumer that still uses require() loads the ESM build directly — which is far more predictable.
+      - Publishing a single format guarantees two copies of the plugin's code (ESM + CJS) can't both end up
+        in the module tree, bloating bundles and slowing down builds.
+
+      Rely on "exports" together with "type": "module", and drop "main", "module" and any "require" conditions.
+  `.trimStart(),
+  ]
+}
+
 export function validatePkgUtilsDependency({devDependencies}: PackageJson): string[] {
   if (!devDependencies?.['@sanity/pkg-utils']) {
     return [

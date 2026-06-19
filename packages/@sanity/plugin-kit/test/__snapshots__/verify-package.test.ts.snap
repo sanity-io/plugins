@@ -28,6 +28,30 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
+package.json ships CommonJS (CJS) output, but Sanity plugins target Sanity Studio v5+, which is pure ESM.
+
+Remove the following so the package stays ESM-only:
+- the top-level "main" field ("./dist/index.cjs")
+- the top-level "module" field ("./dist/index.js")
+- a "require" export condition at exports["."]
+
+Supporting CJS is not worth it:
+- It can have unintended side-effects.
+- The Node.js versions plugin-kit supports (>=20.19 <22 || >=22.12) fully support require(esm), so a
+  consumer that still uses require() loads the ESM build directly — which is far more predictable.
+- Publishing a single format guarantees two copies of the plugin's code (ESM + CJS) can't both end up
+  in the module tree, bloating bundles and slowing down builds.
+
+Rely on "exports" together with "type": "module", and drop "main", "module" and any "require" conditions.
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "esmOnly": false
+   }
+}
+----------------------------------------------------------
+[error] 
 package.json does not list @sanity/pkg-utils as a devDependency.
 @sanity/pkg-utils replaced parcel as the recommended build tool in @sanity/plugin-kit 2.0.0
 

@@ -10,6 +10,7 @@ import {readTSConfig} from '../util/ts'
 import type {PackageJson} from './verify/types'
 import {
   validateBabelConfig,
+  validateEsmOnly,
   validateNodeEngine,
   validatePackageName,
   validatePackageType,
@@ -63,6 +64,7 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
   const ts = await readTSConfig({basePath, filename: tsconfig})
 
   await validation('packageName', async () => validatePackageName(packageJson))
+  await validation('esmOnly', async () => validateEsmOnly(packageJson))
   await validation('pkg-utils', async () => validatePkgUtilsDependency(packageJson))
   await validation('srcIndex', async () => validateSrcIndexFile(basePath))
   await validation('scripts', async () => validateScripts(packageJson))
