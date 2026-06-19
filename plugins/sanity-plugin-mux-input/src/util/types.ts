@@ -1,11 +1,6 @@
 import type MuxPlayerElement from '@mux/mux-player'
-import type {ObjectInputProps, PreviewLayoutKey, PreviewProps, SchemaType} from 'sanity'
+import type {ObjectInputProps} from 'sanity'
 import type {PartialDeep} from 'type-fest'
-
-/**
- * Standard static rendition options available for plugin configuration defaults
- */
-export type StandardRendition = 'highest' | 'audio-only'
 
 /**
  * All static rendition resolution options supported by Mux
@@ -231,12 +226,6 @@ export const SUPPORTED_MUX_LANGUAGES = [
   {label: 'Bulgarian', code: 'bg', state: 'Beta'},
 ] as const
 
-export const VIDEO_QUALITY_LEVELS = [
-  {label: 'Basic', value: 'basic'},
-  {label: 'Plus', value: 'plus'},
-  {label: 'Premium', value: 'premium'},
-] as const
-
 export const SUPPORTED_MUX_LANGUAGES_VALUES = SUPPORTED_MUX_LANGUAGES.map((l) => l.code)
 
 export type SupportedMuxLanguage = (typeof SUPPORTED_MUX_LANGUAGES_VALUES)[number]
@@ -393,20 +382,11 @@ export interface Secrets {
   drmConfigId: string | null
 }
 
-// This narrowed type indicates that there may be assets that are signed, and we have the secrets to access them
-// enabledSignedUrls might be false but that's only relevant for future uploads and their playback policy
-export interface SignableSecrets extends Omit<Secrets, 'signingKeyId' | 'signingKeyPrivate'> {
-  signingKeyId: string
-  signingKeyPrivate: string
-}
-
 export type MuxImageOrigin = `https://image.mux.com`
 export type MuxThumbnailUrl = `${MuxImageOrigin}/${string}/thumbnail.png?${string}`
 export type MuxAnimatedThumbnailUrl = `${MuxImageOrigin}/${string}/animated.gif?${string}`
-export type MuxStoryboardUrl = `${MuxImageOrigin}/${string}/storyboard.vtt?${string}`
 export type MuxVideoOrigin = `https://stream.mux.com`
 export type MuxVideoUrl = `${MuxVideoOrigin}/${string}.m3u8?${string}`
-export type MuxApiUrl = MuxThumbnailUrl | MuxAnimatedThumbnailUrl | MuxStoryboardUrl | MuxVideoUrl
 
 // 'preserve' by default
 // @url: https://docs.mux.com/guides/video/get-images-from-a-video#thumbnail-query-string-parameters
@@ -584,13 +564,3 @@ export type Reference = {_type: 'reference'; _ref: string}
 export type MuxInputProps = ObjectInputProps<{
   asset?: Reference
 }>
-
-export interface MuxInputPreviewProps extends Omit<PreviewProps<PreviewLayoutKey>, 'value'> {
-  schemaType: SchemaType
-  value?: {
-    asset?: Reference
-  } | null
-}
-
-/** Whether the VideosBrowser was opened from a field in a document, or from the standalone studio tool */
-export type PluginPlacement = 'input' | 'tool'

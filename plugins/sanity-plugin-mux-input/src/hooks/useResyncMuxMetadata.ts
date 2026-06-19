@@ -15,7 +15,7 @@ import {useSecretsDocumentValues} from './useSecretsDocumentValues'
 
 type ResyncState = 'closed' | 'idle' | 'syncing' | 'done' | 'error'
 
-export type MatchedAsset = {
+type MatchedAsset = {
   sanityDoc: VideoAssetDocument
   muxAsset: MuxAsset | undefined
   muxTitle: string | undefined
