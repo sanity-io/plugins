@@ -688,7 +688,7 @@ importers:
         specifier: 'catalog:'
         version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       dset:
-        specifier: ^3.1.0
+        specifier: ^3.1.4
         version: 3.1.4
       styled-components:
         specifier: npm:@sanity/styled-components@latest
