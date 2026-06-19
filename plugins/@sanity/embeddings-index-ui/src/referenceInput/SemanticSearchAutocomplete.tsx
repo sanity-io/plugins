@@ -1,7 +1,6 @@
-/* eslint-disable max-nested-callbacks */
-import {Autocomplete, AutocompleteOpenButtonProps, Box, Button, Flex, Text} from '@sanity/ui'
+import {Autocomplete, type AutocompleteOpenButtonProps, Box, Button, Flex, Text} from '@sanity/ui'
 import {
-  FocusEventHandler,
+  type FocusEventHandler,
   forwardRef,
   useCallback,
   useEffect,
@@ -12,10 +11,10 @@ import {
 } from 'react'
 import {typed} from 'sanity'
 
-import {queryIndex, QueryResult} from '../api/embeddingsApi'
+import {queryIndex, type QueryResult} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
 import {DocumentPreview} from '../preview/DocumentPreview'
-import {EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
+import {type EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
 
 export interface SemanticSearchAutocompleteProps {
   indexConfig: EmbeddingsIndexConfig
@@ -44,7 +43,6 @@ const NO_FILTER = () => true
 
 export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAutocomplete(
   props: SemanticSearchAutocompleteProps,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ref: any,
 ) {
   const {

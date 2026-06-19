@@ -110,37 +110,37 @@ const assetsSlice = createSlice({
       .addCase(ASSETS_ACTIONS.tagsAddComplete, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = false
+          state.byIds[asset.asset._id]!.updating = false
         })
       })
       .addCase(ASSETS_ACTIONS.tagsAddError, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = false
+          state.byIds[asset.asset._id]!.updating = false
         })
       })
       .addCase(ASSETS_ACTIONS.tagsAddRequest, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = true
+          state.byIds[asset.asset._id]!.updating = true
         })
       })
       .addCase(ASSETS_ACTIONS.tagsRemoveComplete, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = false
+          state.byIds[asset.asset._id]!.updating = false
         })
       })
       .addCase(ASSETS_ACTIONS.tagsRemoveError, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = false
+          state.byIds[asset.asset._id]!.updating = false
         })
       })
       .addCase(ASSETS_ACTIONS.tagsRemoveRequest, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = true
+          state.byIds[asset.asset._id]!.updating = true
         })
       })
   },
@@ -170,20 +170,20 @@ const assetsSlice = createSlice({
       )
 
       assetIds?.forEach((id) => {
-        state.byIds[id].updating = false
+        state.byIds[id]!.updating = false
       })
       itemErrors?.forEach((item) => {
-        state.byIds[item.id].error = item.description
+        state.byIds[item.id]!.error = item.description
       })
     },
     deleteRequest(state, action: PayloadAction<{assets: Asset[]; closeDialogId?: string}>) {
       const {assets} = action.payload
       assets.forEach((asset) => {
-        state.byIds[asset?._id].updating = true
+        state.byIds[asset?._id]!.updating = true
       })
 
       Object.keys(state.byIds).forEach((key) => {
-        delete state.byIds[key].error
+        delete state.byIds[key]!.error
       })
     },
     fetchComplete(state, action: PayloadAction<{assets: Asset[]}>) {
@@ -284,7 +284,7 @@ const assetsSlice = createSlice({
       const {assets} = action.payload
       assets?.forEach((asset) => {
         if (state.byIds[asset?._id]?.asset) {
-          state.byIds[asset._id].asset = asset
+          state.byIds[asset._id]!.asset = asset
         }
       })
     },
@@ -308,7 +308,7 @@ const assetsSlice = createSlice({
       const {assets} = action.payload
       assets?.forEach((asset) => {
         if (state.byIds[asset?._id]?.asset) {
-          state.byIds[asset._id].asset = asset
+          state.byIds[asset._id]!.asset = asset
         }
       })
     },
@@ -326,18 +326,18 @@ const assetsSlice = createSlice({
     pick(state, action: PayloadAction<{assetId: string; picked: boolean}>) {
       const {assetId, picked} = action.payload
 
-      state.byIds[assetId].picked = picked
+      state.byIds[assetId]!.picked = picked
       state.lastPicked = picked ? assetId : undefined
     },
     pickAll(state) {
       state.allIds.forEach((id) => {
-        state.byIds[id].picked = true
+        state.byIds[id]!.picked = true
       })
     },
     pickClear(state) {
       state.lastPicked = undefined
       Object.values(state.byIds).forEach((asset) => {
-        state.byIds[asset.asset._id].picked = false
+        state.byIds[asset.asset._id]!.picked = false
       })
     },
     pickRange(state, action: PayloadAction<{endId: string; startId: string}>) {
@@ -347,15 +347,15 @@ const assetsSlice = createSlice({
       // Sort numerically, ascending order
       const indices = [startIndex, endIndex].sort((a, b) => a - b)
 
-      state.allIds.slice(indices[0], indices[1] + 1).forEach((key) => {
-        state.byIds[key].picked = true
+      state.allIds.slice(indices[0], indices[1]! + 1).forEach((key) => {
+        state.byIds[key]!.picked = true
       })
       state.lastPicked = state.allIds[endIndex]
     },
     sort(state) {
       state.allIds.sort((a, b) => {
-        const tagA = state.byIds[a].asset[state.order.field]
-        const tagB = state.byIds[b].asset[state.order.field]
+        const tagA = state.byIds[a]!.asset[state.order.field]
+        const tagB = state.byIds[b]!.asset[state.order.field]
 
         if (tagA < tagB) {
           return state.order.direction === 'asc' ? -1 : 1
@@ -367,22 +367,22 @@ const assetsSlice = createSlice({
     },
     updateComplete(state, action: PayloadAction<{asset: Asset; closeDialogId?: string}>) {
       const {asset} = action.payload
-      state.byIds[asset._id].updating = false
-      state.byIds[asset._id].asset = asset
+      state.byIds[asset._id]!.updating = false
+      state.byIds[asset._id]!.asset = asset
     },
     updateError(state, action: PayloadAction<{asset: Asset; error: HttpError}>) {
       const {asset, error} = action.payload
 
       const assetId = asset?._id
-      state.byIds[assetId].error = error.message
-      state.byIds[assetId].updating = false
+      state.byIds[assetId]!.error = error.message
+      state.byIds[assetId]!.updating = false
     },
     updateRequest(
       state,
       action: PayloadAction<{asset: Asset; closeDialogId?: string; formData: Record<string, any>}>,
     ) {
       const assetId = action.payload?.asset?._id
-      state.byIds[assetId].updating = true
+      state.byIds[assetId]!.updating = true
     },
     viewSet(state, action: PayloadAction<{view: BrowserView}>) {
       state.view = action.payload?.view
@@ -763,7 +763,7 @@ export const selectAssetById = createSelector(
 
 const selectAssets: Selector<RootReducerState, AssetItem[]> = createSelector(
   [selectAssetsByIds, selectAssetsAllIds],
-  (byIds, allIds) => allIds.map((id) => byIds[id]),
+  (byIds, allIds) => allIds.map((id) => byIds[id]!),
 )
 
 export const selectAssetsLength = createSelector([selectAssets], (assets) => assets.length)

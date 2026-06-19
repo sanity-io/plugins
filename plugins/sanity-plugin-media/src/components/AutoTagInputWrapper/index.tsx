@@ -79,7 +79,7 @@ export function AutoTagInput(props: AutoTagInputProps) {
         title: `Failed to apply the media ${label} ${mediaTags.join(', ')}`,
       })
     })
-  }, [currentAssetRef, mediaTags, client, createTagsOnUpload])
+  }, [currentAssetRef, mediaTags, client, createTagsOnUpload, toast])
 
   return renderDefault(props as InputProps)
 }

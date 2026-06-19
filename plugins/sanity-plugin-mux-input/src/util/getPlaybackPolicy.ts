@@ -27,7 +27,7 @@ export function getPlaybackId(
         }
       }
 
-      return playbackIds[0].id
+      return playbackIds[0]!.id
     }
 
     throw new TypeError('Missing playbackId')

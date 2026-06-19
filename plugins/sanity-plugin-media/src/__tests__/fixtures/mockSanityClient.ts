@@ -35,10 +35,10 @@ export function createMockSanityClient(
 
   const observable: MockSanityClient['observable'] = {
     ...observableBase,
-    ...(observableOverrides ?? {}),
+    ...observableOverrides,
     assets: {
       ...observableBase.assets,
-      ...(observableOverrides?.assets ?? {}),
+      ...observableOverrides?.assets,
     },
   }
 
@@ -70,7 +70,7 @@ export function mockPatchChain(result: unknown): {
   return chain
 }
 
-export function mockTransactionCommit(resolved: unknown = undefined): {
+export function mockTransactionCommit(resolved?: unknown): {
   patch: ReturnType<typeof vi.fn>
   delete: ReturnType<typeof vi.fn>
   commit: ReturnType<typeof vi.fn>

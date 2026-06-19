@@ -127,9 +127,6 @@ importers:
       '@sanity/assist':
         specifier: workspace:*
         version: link:../../plugins/@sanity/assist
-      '@sanity/client':
-        specifier: 'catalog:'
-        version: 7.23.0
       '@sanity/code-input':
         specifier: workspace:*
         version: link:../../plugins/@sanity/code-input
@@ -2559,6 +2556,12 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@repo/package.config':
+        specifier: workspace:*
+        version: link:../../packages/@repo/package.config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/@repo/tsconfig
       '@sanity/pkg-utils':
         specifier: 'catalog:'
         version: 10.5.7(@types/node@24.13.2)(@typescript/native-preview@7.0.0-dev.20260421.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.20.0)(typescript@5.9.3)
@@ -2586,6 +2589,9 @@ importers:
       '@types/react-file-icon':
         specifier: ^1.0.4
         version: 1.0.5
+      babel-plugin-styled-components:
+        specifier: 'catalog:'
+        version: 2.3.0(@babel/core@7.29.7)(@sanity/styled-components@6.1.24)
       jsdom:
         specifier: ^29.1.1
         version: 29.1.1(@noble/hashes@2.2.0)
@@ -2665,6 +2671,12 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6(react-dom@19.2.7)(react@19.2.7)
     devDependencies:
+      '@repo/package.config':
+        specifier: workspace:*
+        version: link:../../packages/@repo/package.config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/@repo/tsconfig
       '@sanity/client':
         specifier: ^7.23.0
         version: 7.23.0
@@ -2686,6 +2698,9 @@ importers:
       '@types/react-is':
         specifier: ^19.2.0
         version: 19.2.0
+      babel-plugin-styled-components:
+        specifier: 'catalog:'
+        version: 2.3.0(@babel/core@7.29.7)(@sanity/styled-components@6.1.24)
       react:
         specifier: ^19.2.7
         version: 19.2.7

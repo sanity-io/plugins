@@ -1,4 +1,4 @@
-import {createHookFromObservableFactory, DocumentStore, SanityDocument} from 'sanity'
+import {createHookFromObservableFactory, type DocumentStore, type SanityDocument} from 'sanity'
 
 import {SANITY_API_VERSION} from './useClient'
 

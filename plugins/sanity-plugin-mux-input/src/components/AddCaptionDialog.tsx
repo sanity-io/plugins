@@ -326,7 +326,7 @@ export default function AddCaptionDialog({asset, onAdd, onClose}: Props) {
                   style={{display: 'none'}}
                   onChange={(e) => {
                     if (e.target.files && e.target.files.length > 0 && !isSubmitting) {
-                      setSelectedFile(e.target.files[0])
+                      setSelectedFile(e.target.files[0]!)
                       setVttUrl('')
                     }
                   }}

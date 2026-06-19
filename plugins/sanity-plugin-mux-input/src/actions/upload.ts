@@ -18,13 +18,13 @@ function sanitizeOverlaySettingsInPlace(settings: MuxNewAssetSettings) {
     const overlay = (input as {overlay_settings?: Record<string, unknown>}).overlay_settings
     if (!overlay) continue
 
-    const hm = roundPxString(overlay.horizontal_margin)
-    const vm = roundPxString(overlay.vertical_margin)
-    const w = roundPxString(overlay.width)
+    const hm = roundPxString(overlay['horizontal_margin'])
+    const vm = roundPxString(overlay['vertical_margin'])
+    const w = roundPxString(overlay['width'])
 
-    if (hm) overlay.horizontal_margin = hm
-    if (vm) overlay.vertical_margin = vm
-    if (w) overlay.width = w
+    if (hm) overlay['horizontal_margin'] = hm
+    if (vm) overlay['vertical_margin'] = vm
+    if (w) overlay['width'] = w
   }
 }
 
@@ -51,7 +51,6 @@ export function uploadUrl({
   url,
   settings,
   client,
-  watermark,
 }: {
   url: string
   settings: MuxNewAssetSettings
@@ -70,12 +69,15 @@ export function uploadUrl({
             const uuid = generateUuid()
             const muxBody = settings
             if (!muxBody.input) muxBody.input = [{type: 'video'}]
-            muxBody.input[0].url = validUrl
+            muxBody.input[0]!.url = validUrl
             sanitizeOverlaySettingsInPlace(muxBody)
 
-            const query = {
+            const query: Record<string, string> = {
               muxBody: sanitizePxStringsInJson(JSON.stringify(muxBody)),
-              filename: validUrl.split('/').slice(-1)[0],
+            }
+            const filename = validUrl.split('/').slice(-1)[0]
+            if (filename) {
+              query['filename'] = filename
             }
 
             const dataset = client.config().dataset
@@ -160,19 +162,15 @@ export function uploadFile({
               ).pipe(
                 mergeMap((result) => {
                   return createUpChunkObservable(uuid, result.upload.url, file).pipe(
-                    // eslint-disable-next-line no-warning-comments
                     // @TODO type the observable events
-                    // eslint-disable-next-line max-nested-callbacks
                     mergeMap((event) => {
                       if (event.type !== 'success') {
                         return of(event)
                       }
                       return from(updateAssetDocumentFromUpload(client, uuid, watermark)).pipe(
-                        // eslint-disable-next-line max-nested-callbacks
                         mergeMap((doc) => of({...event, asset: doc})),
                       )
                     }),
-                    // eslint-disable-next-line max-nested-callbacks
                     catchError((err) => {
                       // Delete asset document
                       return cancelUpload(client, uuid).pipe(mergeMapTo(throwError(err)))
@@ -264,7 +262,7 @@ async function updateAssetDocumentFromUpload(
     status: asset.data.status,
     data: asset.data,
     assetId: asset.data.id,
-    playbackId: asset.data.playback_ids[0].id,
+    playbackId: asset.data.playback_ids[0]?.id,
     uploadId: upload.data.id,
   }
   return client.createOrReplace(doc).then(() => {
@@ -290,7 +288,7 @@ function testUrl(url: string): Observable<string> {
   let parsed
   try {
     parsed = new URL(formattedUrl)
-  } catch (err) {
+  } catch {
     return throwError(error)
   }
   if (parsed && !parsed.protocol.match(/http:|https:/)) {
