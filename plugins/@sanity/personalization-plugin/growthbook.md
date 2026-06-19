@@ -1,12 +1,12 @@
 # @sanity/personalization-plugin - GrowthBook
 
-## Previously know as @sanity/personalisation-plugin
+## Previously known as @sanity/personalisation-plugin
 
 > This is a **Sanity Studio** plugin.
 
 This plugin allows users to add a/b/n testing experiments to individual fields connecting to the [Growthbook](https://www.growthbook.io/) A/B testing service.
 
-- [@sanity/personalization-plugin - GrowthBook](#sanitypersonalization-plugin---GrowthBook)
+- [@sanity/personalization-plugin - GrowthBook](#sanitypersonalization-plugin---growthbook)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Loading Experiments](#loading-experiments)

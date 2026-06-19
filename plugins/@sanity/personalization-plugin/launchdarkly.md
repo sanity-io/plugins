@@ -1,12 +1,12 @@
-# @sanity/personalization-plugin - launchDarklyFieldLevel
+# @sanity/personalization-plugin - LaunchDarkly
 
-## Previously know as @sanity/personalisation-plugin
+## Previously known as @sanity/personalisation-plugin
 
 > This is a **Sanity Studio** plugin.
 
-This plugin allows users to add a/b/n testing experiments to individual fields connecting to the [LaunchDarkly](https://launchdarkly.com//) A/B testing service.
+This plugin allows users to add a/b/n testing experiments to individual fields connecting to the [LaunchDarkly](https://launchdarkly.com/) A/B testing service.
 
-- [@sanity/personalization-plugin - launchDarklyFieldLevel](#sanitypersonalization-plugin---launchDarklyFieldLevel)
+- [@sanity/personalization-plugin - LaunchDarkly](#sanitypersonalization-plugin---launchdarkly)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Loading Experiments](#loading-experiments)
