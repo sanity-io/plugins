@@ -186,8 +186,6 @@ export default function VideoPlayer({
                 crossOrigin="anonymous"
                 metadata={{
                   player_name: 'Sanity Admin Dashboard',
-                  // oxlint-disable-next-line typescript/ban-ts-comment, typescript/prefer-ts-expect-error - @ts-ignore is needed because package tsc has Node globals
-                  // @ts-ignore - legacy oxlint type-check config lacks Node globals
                   player_version: process.env.PKG_VERSION,
                   page_type: 'Preview Player',
                 }}

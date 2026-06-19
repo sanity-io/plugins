@@ -10,6 +10,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "moduleDetection": "force",
+    "types": ["node"],
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,

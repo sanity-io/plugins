@@ -434,6 +434,7 @@ pnpm lint:fix    # Auto-fix what's possible
   - `// oxlint-disable offending-rule - explanation why it is disabled`
 - File-level `oxlint-disable` comments are acceptable when a legacy file has many diagnostics, but keep the rule list specific and remove the comment when the file is lint-cleaned.
 - For TypeScript compiler diagnostics emitted through oxlint type checking, use `// @ts-expect-error - explanation why it is disabled` on the affected line.
+- Never use TypeScript ignore comments; use `@ts-expect-error` with an explanation instead.
 
 ## Project Structure
 
