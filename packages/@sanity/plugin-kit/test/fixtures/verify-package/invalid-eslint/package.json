@@ -15,9 +15,7 @@
   "source": "./src/index.ts",
   "files": [
     "dist",
-    "sanity.json",
-    "src",
-    "v2-incompatible.js"
+    "src"
   ],
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -35,9 +33,7 @@
     "prepublishOnly": "npm run build",
     "watch": "pkg-utils watch --strict"
   },
-  "dependencies": {
-    "@sanity/incompatible-plugin": "^0.0.1-studio-v3.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@sanity/plugin-kit": "^0.0.1-studio-v3.1",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
@@ -71,7 +67,6 @@
       "dependencies": false,
       "rollupConfig": false,
       "babelConfig": false,
-      "incompatiblePlugin": false,
       "scripts": false,
       "pkg-utils": false,
       "nodeEngine": false,
