@@ -17,7 +17,7 @@ type Props = {
 const Container = styled<typeof Box, {$scheme: ThemeColorSchemeKey}>(Box)(({$scheme, theme}) => {
   return css`
     background: ${getSchemeColor($scheme, 'bg')};
-    border-radius: ${rem(theme.sanity.radius[2])};
+    border-radius: ${rem(theme.sanity.radius[2]!)};
   `
 })
 

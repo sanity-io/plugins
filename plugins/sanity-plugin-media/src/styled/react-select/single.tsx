@@ -30,7 +30,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
         'border': 'none',
         'borderRadius': themeRadius[2],
         boxShadow,
-        'fontSize': themeTextSizes[1].fontSize,
+        'fontSize': themeTextSizes[1]!.fontSize,
         'minHeight': '25px',
         'opacity': isDisabled ? 0.5 : 'inherit',
         'outline': 'none',
@@ -44,8 +44,8 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
       ...styles,
       color: 'var(--card-fg-color)',
       fontFamily: studioTheme.fonts.text.family,
-      fontSize: themeTextSizes[1].fontSize,
-      marginLeft: rem(themeSpace[2]),
+      fontSize: themeTextSizes[1]!.fontSize,
+      marginLeft: rem(themeSpace[2]!),
     }),
     menuList: (styles) => ({
       ...styles,
@@ -54,7 +54,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     noOptionsMessage: (styles) => ({
       ...styles,
       fontFamily: studioTheme.fonts.text.family,
-      fontSize: themeTextSizes[1].fontSize,
+      fontSize: themeTextSizes[1]!.fontSize,
       lineHeight: '1em',
     }),
     option: (styles, {isFocused}) => ({
@@ -62,10 +62,10 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
       'backgroundColor': isFocused ? getSchemeColor(scheme, 'spotBlue') : 'transparent',
       'borderRadius': themeRadius[2],
       'color': isFocused ? getSchemeColor(scheme, 'bg') : 'inherit',
-      'fontSize': themeTextSizes[1].fontSize,
+      'fontSize': themeTextSizes[1]!.fontSize,
       'lineHeight': '1em',
       'margin': 0,
-      'padding': rem(themeSpace[1]),
+      'padding': rem(themeSpace[1]!),
       '&:hover': {
         backgroundColor: getSchemeColor(scheme, 'spotBlue'),
         color: getSchemeColor(scheme, 'bg'),
@@ -73,8 +73,8 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     }),
     placeholder: (styles) => ({
       ...styles,
-      fontSize: themeTextSizes[1].fontSize,
-      marginLeft: rem(themeSpace[2]),
+      fontSize: themeTextSizes[1]!.fontSize,
+      marginLeft: rem(themeSpace[2]!),
       paddingLeft: 0,
     }),
     singleValue: (styles) => ({
@@ -82,7 +82,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
       alignItems: 'center',
       display: 'inline-flex',
       height: '100%',
-      marginLeft: rem(themeSpace[2]),
+      marginLeft: rem(themeSpace[2]!),
     }),
     valueContainer: (styles) => ({
       ...styles,

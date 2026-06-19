@@ -10,11 +10,8 @@ import type {Epic} from 'redux-observable'
 import * as z from 'zod'
 
 import type {DetailsProps} from '../components/DialogAssetEdit/Details'
-import type {SUPPORTED_ASSET_TYPES} from '../constants'
 import {getAssetFormSchema, tagFormSchema, tagOptionSchema} from '../formSchema'
 import type {RootReducerState} from '../modules/types'
-
-export type AssetTypes = (typeof SUPPORTED_ASSET_TYPES)[number]
 
 export type MediaTagsOptions = {
   mediaTags?: string[]
@@ -97,8 +94,6 @@ export type Block = {
 
 export type BrowserView = 'grid' | 'table'
 
-export type ButtonVariant = 'danger' | 'default' | 'secondary'
-
 // TODO: rename
 export type CardAssetData = {
   id: string
@@ -117,8 +112,6 @@ export type Dialog =
   | DialogTagCreateProps
   | DialogTagEditProps
   | DialogTagsProps
-
-export type DialogAction = 'deleteAsset' | 'deleteTag'
 
 export type DialogAssetEditProps = {
   assetId?: string
@@ -167,16 +160,6 @@ export type DialogTagEditProps = {
   id: string
   tagId?: string
   type: 'tagEdit'
-}
-
-export type Document = {
-  _createdAt: string
-  _id: string
-  _rev: string
-  _type: string
-  _updatedAt: string
-  name?: string
-  title?: string
 }
 
 export type HttpError = {
@@ -317,12 +300,6 @@ export type SearchFacetOperators = Record<
   }
 >
 
-export type SanityUploadCompleteEvent = {
-  asset: SanityAssetDocument | SanityImageAssetDocument
-  id: string
-  type: 'complete'
-}
-
 export type SanityUploadProgressEvent = {
   lengthComputable: boolean
   loaded: number
@@ -330,16 +307,6 @@ export type SanityUploadProgressEvent = {
   stage: 'download' | 'upload'
   total: number
   type: 'progress'
-}
-
-export type SanityUploadResponseEvent = {
-  body: {document: Partial<SanityAssetDocument | SanityImageAssetDocument>}
-  headers: Record<string, string>
-  method: string
-  statusCode: number
-  statusMessage: string
-  type: 'response'
-  url: string // preview image?
 }
 
 export type Span = {

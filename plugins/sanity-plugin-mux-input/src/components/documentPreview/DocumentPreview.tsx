@@ -2,7 +2,7 @@
 
 import {DocumentIcon} from '@sanity/icons'
 import type {PropsWithChildren} from 'react'
-import React, {useMemo} from 'react'
+import {useMemo} from 'react'
 import type {CollatedHit, FIXME, SanityDocument, SchemaType} from 'sanity'
 import {PreviewCard, useDocumentPresence, useDocumentPreviewStore, useSchema} from 'sanity'
 import {IntentLink} from 'sanity/router'
@@ -19,10 +19,10 @@ interface DocumentPreviewProps {
  * Return `false` if we explicitly disable the icon.
  * Otherwise return the passed icon or the schema type icon as a backup.
  */
-export function getIconWithFallback(
+function getIconWithFallback(
   icon: React.ComponentType<any> | false | undefined,
   schemaType: SchemaType | undefined,
-  defaultIcon: React.ComponentType<any>
+  defaultIcon: React.ComponentType<any>,
 ): React.ComponentType<any> | false {
   if (icon === false) {
     return false
@@ -52,7 +52,7 @@ export function DocumentPreview(props: DocumentPreviewProps) {
     if (!doc) return null
 
     if (!schemaType || !hasSchemaType) {
-      return <MissingSchemaType value={doc as SanityDocument} />
+      return <MissingSchemaType value={doc} />
     }
 
     return (
@@ -70,6 +70,7 @@ export function DocumentPreview(props: DocumentPreviewProps) {
   return (
     <PreviewCard
       __unstable_focusRing
+      // oxlint-disable-next-line react/react-compiler
       as={DocumentPreviewLink(props) as FIXME}
       data-as="a"
       data-ui="PaneItem"

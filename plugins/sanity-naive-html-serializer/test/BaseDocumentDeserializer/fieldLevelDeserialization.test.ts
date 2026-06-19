@@ -1,4 +1,4 @@
-import {PortableTextBlock} from 'sanity'
+import type {PortableTextBlock} from 'sanity'
 import {expect, test} from 'vitest'
 
 import {fieldLevelArticle} from '../BaseDocumentSerializer/utils'
@@ -76,19 +76,21 @@ test('Object in array contains accurate values in nested object -- field level',
   const deserialized = getDeserialized(fieldLevelArticle, 'field')
   const origTitle = fieldLevelArticle.content.en.find(
     (block: Record<string, any>) => block._type === 'objectField',
-  ).objectAsField.title
+  )!.objectAsField!.title
   const deserializedTitle = deserialized.content.en.find(
     (block: Record<string, any>) => block._type === 'objectField',
   ).objectAsField.title
   expect(deserializedTitle).toEqual(origTitle)
 
   const origBlockText = toPlainText(
-    fieldLevelArticle.content.en.find((block: Record<string, any>) => block._type === 'objectField')
-      .objectAsField.content,
+    fieldLevelArticle.content.en.find(
+      (block: Record<string, any>) => block._type === 'objectField',
+    )!.objectAsField!.content,
   ).trim()
   const deserializedBlockText = toPlainText(
-    fieldLevelArticle.content.en.find((block: Record<string, any>) => block._type === 'objectField')
-      .objectAsField.content,
+    fieldLevelArticle.content.en.find(
+      (block: Record<string, any>) => block._type === 'objectField',
+    )!.objectAsField!.content,
   ).trim()
   expect(deserializedBlockText).toEqual(origBlockText)
 })

@@ -1,5 +1,5 @@
 import clone from 'just-clone'
-import {PortableTextBlock, SanityDocument, TypedObject} from 'sanity'
+import type {PortableTextBlock, SanityDocument, TypedObject} from 'sanity'
 
 import {BaseDocumentSerializer, BaseDocumentDeserializer} from '../src'
 import {
@@ -7,7 +7,7 @@ import {
   customDeserializers,
   customBlockDeserializers,
 } from '../src/BaseSerializationConfig'
-import {SerializedDocument, TranslationLevel} from '../src/types'
+import type {SerializedDocument, TranslationLevel} from '../src/types'
 import schema from './__fixtures__/schema'
 
 export const getSerialized = (
@@ -88,7 +88,7 @@ export const addedCustomSerializers = tempSerializers
 
 export const addedDeserializerTypes = {
   objectField: (html: HTMLElement): TypedObject => {
-    const title = html.innerHTML.split(':')[1].replace(/'/g, '').trim()
+    const title = html.innerHTML.split(':')[1]!.replace(/'/g, '').trim()
     const _type = html.className
     const _key = html.id
     return {title, _type, _key}
@@ -111,7 +111,7 @@ export const addedBlockDeserializers = [
         return undefined
       }
 
-      const title = el.innerHTML.split(':')[1].replace(/'/g, '').trim()
+      const title = el.innerHTML.split(':')[1]!.replace(/'/g, '').trim()
       const _type = el.className
       const _key = el.id
 

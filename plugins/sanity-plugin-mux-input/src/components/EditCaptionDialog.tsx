@@ -52,7 +52,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
     () => {
       const baseCode = track.language_code?.split('-')[0]
       const found = LANGUAGE_OPTIONS.find(
-        (opt) => opt.value === track.language_code || opt.value === baseCode
+        (opt) => opt.value === track.language_code || opt.value === baseCode,
       )
       if (found) return found
       if (track.name) {
@@ -60,7 +60,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
         if (foundByName) return foundByName
       }
       return null
-    }
+    },
   )
   const [name, setName] = useState(track.name || '')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -69,12 +69,13 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     setLanguageCode(track.language_code || '')
     setName(track.name || '')
     setVttUrl('')
     const baseCode = track.language_code?.split('-')[0]
     const foundByCode = LANGUAGE_OPTIONS.find(
-      (opt) => opt.value === track.language_code || opt.value === baseCode
+      (opt) => opt.value === track.language_code || opt.value === baseCode,
     )
     const foundByName = track.name ? LANGUAGE_OPTIONS.find((opt) => opt.label === track.name) : null
     setSelectedLanguage(foundByCode || foundByName || null)
@@ -94,7 +95,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
           title = 'Cannot download'
         }
       } else if (error === 'Track ID is missing' || error === 'Track is not ready yet') {
-        errorMessage = String(error)
+        errorMessage = error
         title = 'Cannot download'
       }
 
@@ -398,7 +399,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
               style={{display: 'none'}}
               onChange={(e) => {
                 if (e.target.files && e.target.files.length > 0 && !isSubmitting) {
-                  setSelectedFile(e.target.files[0])
+                  setSelectedFile(e.target.files[0]!)
                   setVttUrl('')
                 }
               }}
