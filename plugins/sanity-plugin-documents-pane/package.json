@@ -44,7 +44,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
     "@sanity/util": "catalog:",
-    "@sanity/uuid": "^3.0.2",
+    "@sanity/uuid": "^3.0.3",
     "dlv": "^1.1.3",
     "rxjs": "catalog:",
     "sanity-plugin-utils": "workspace:^"

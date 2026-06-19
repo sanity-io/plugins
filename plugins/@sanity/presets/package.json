@@ -43,7 +43,7 @@
   "dependencies": {
     "@sanity/asset-utils": "^2.3.0",
     "@sanity/telemetry": "catalog:",
-    "@sanity/uuid": "^3.0.2"
+    "@sanity/uuid": "^3.0.3"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
