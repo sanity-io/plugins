@@ -354,7 +354,7 @@ importers:
         specifier: ^4.0.6
         version: 4.0.6
       inquirer:
-        specifier: ^8.2.6
+        specifier: ^8.2.7
         version: 8.2.7(@types/node@24.13.2)
       json5:
         specifier: ^2.2.3
