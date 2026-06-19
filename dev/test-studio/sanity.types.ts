@@ -15,6 +15,11 @@
 export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: schema.json
+export type Options = {
+  placeholder?: string
+  defaultValue?: string
+}
+
 export type Rendition = {
   publicuri?: string
 }
@@ -577,6 +582,472 @@ export type DisneyCharacter = string
 
 export type Pokemon = string
 
+export type MuxTrailer = {
+  _id: string
+  _type: 'muxTrailer'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  video?: MuxVideo
+}
+
+export type MuxVideoAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'mux.videoAsset'
+}
+
+export type MuxVideo = {
+  _type: 'mux.video'
+  asset?: MuxVideoAssetReference
+}
+
+export type MuxVideoAsset = {
+  _id: string
+  _type: 'mux.videoAsset'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  status?: string
+  assetId?: string
+  playbackId?: string
+  filename?: string
+  thumbTime?: number
+  data?: MuxAssetData
+}
+
+export type MuxAssetData = {
+  _type: 'mux.assetData'
+  resolution_tier?: string
+  upload_id?: string
+  created_at?: string
+  id?: string
+  status?: string
+  max_stored_resolution?: string
+  passthrough?: string
+  encoding_tier?: string
+  video_quality?: string
+  master_access?: string
+  aspect_ratio?: string
+  duration?: number
+  max_stored_frame_rate?: number
+  mp4_support?: string
+  max_resolution_tier?: string
+  tracks?: Array<
+    {
+      _key: string
+    } & MuxTrack
+  >
+  playback_ids?: Array<
+    {
+      _key: string
+    } & MuxPlaybackId
+  >
+  static_renditions?: MuxStaticRenditions
+}
+
+export type MuxStaticRenditions = {
+  _type: 'mux.staticRenditions'
+  status?: string
+  files?: Array<
+    {
+      _key: string
+    } & MuxStaticRenditionFile
+  >
+}
+
+export type MuxStaticRenditionFile = {
+  _type: 'mux.staticRenditionFile'
+  name?: string
+  ext?: string
+  height?: number
+  width?: number
+  bitrate?: number
+  filesize?: string
+  type?: string
+  status?: string
+  resolution_tier?: string
+  resolution?: string
+  id?: string
+  passthrough?: string
+}
+
+export type MuxPlaybackId = {
+  _type: 'mux.playbackId'
+  id?: string
+  policy?: string
+}
+
+export type MuxTrack = {
+  _type: 'mux.track'
+  id?: string
+  type?: string
+  max_width?: number
+  max_frame_rate?: number
+  duration?: number
+  max_height?: number
+  language_code?: string
+  name?: string
+  status?: string
+  text_source?: string
+  text_type?: string
+}
+
+export type CloudinaryTest = {
+  _id: string
+  _type: 'cloudinaryTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  asset?: CloudinaryAsset
+  assetList?: Array<
+    {
+      _key: string
+    } & CloudinaryAsset
+  >
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+}
+
+export type CloudinaryAsset = {
+  _type: 'cloudinary.asset'
+  public_id?: string
+  resource_type?: string
+  type?: string
+  format?: string
+  version?: number
+  url?: string
+  secure_url?: string
+  width?: number
+  height?: number
+  bytes?: number
+  duration?: number
+  tags?: Array<string>
+  created_at?: string
+  derived?: Array<
+    {
+      _key: string
+    } & CloudinaryAssetDerived
+  >
+  access_mode?: string
+  context?: CloudinaryAssetContext
+}
+
+export type CloudinaryAssetContextCustom = {
+  _type: 'cloudinary.assetContextCustom'
+  alt?: string
+  caption?: string
+}
+
+export type CloudinaryAssetContext = {
+  _type: 'cloudinary.assetContext'
+  custom?: CloudinaryAssetContextCustom
+}
+
+export type CloudinaryAssetDerived = {
+  _type: 'cloudinary.assetDerived'
+  raw_transformation?: string
+  url?: string
+  secure_url?: string
+}
+
+export type PersonalizationTest = {
+  _id: string
+  _type: 'personalizationTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  headline?: ExperimentString
+  description?: ExperimentText
+}
+
+export type ExperimentText = {
+  _type: 'experimentText'
+  default?: string
+  active?: boolean
+  experimentId?: string
+  variants?: Array<
+    {
+      _key: string
+    } & VariantText
+  >
+}
+
+export type ExperimentString = {
+  _type: 'experimentString'
+  default?: string
+  active?: boolean
+  experimentId?: string
+  variants?: Array<
+    {
+      _key: string
+    } & VariantString
+  >
+}
+
+export type VariantText = {
+  _type: 'variantText'
+  variantId?: string
+  experimentId?: string
+  value?: string
+}
+
+export type VariantString = {
+  _type: 'variantString'
+  variantId?: string
+  experimentId?: string
+  value?: string
+}
+
+export type ShopifyAssetsTest = {
+  _id: string
+  _type: 'shopifyAssetsTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  shopifyAsset?: ShopifyAsset
+  shopifyAssetFieldDomain?: ShopifyAsset
+}
+
+export type ShopifyAsset = {
+  _type: 'shopify.asset'
+  filename?: string
+  id?: string
+  meta?: ShopifyAssetMetadata
+  preview?: ShopifyAssetPreview
+  type?: string
+  url?: string
+}
+
+export type ShopifyAssetPreview = {
+  _type: 'shopify.assetPreview'
+  height?: number
+  width?: number
+  url?: string
+}
+
+export type ShopifyAssetMetadata = {
+  _type: 'shopify.assetMetadata'
+  alt?: string
+  duration?: number
+  fileSize?: number
+  height?: number
+  width?: number
+}
+
+export type HierarchyTree = {
+  _id: string
+  _type: 'hierarchy.tree'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  unusedField?: string
+}
+
+export type HierarchyAuthorReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'hierarchyAuthor'
+}
+
+export type HierarchyBook = {
+  _id: string
+  _type: 'hierarchyBook'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  author?: HierarchyAuthorReference
+}
+
+export type HierarchyAuthor = {
+  _id: string
+  _type: 'hierarchyAuthor'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+}
+
+export type CrossDatasetDuplicatorArticleReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'crossDatasetDuplicatorArticle'
+}
+
+export type CrossDatasetDuplicatorArticle = {
+  _id: string
+  _type: 'crossDatasetDuplicatorArticle'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  references?: Array<
+    {
+      _key: string
+    } & CrossDatasetDuplicatorArticleReference
+  >
+}
+
+export type GoogleMapsTest = {
+  _id: string
+  _type: 'googleMapsTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  location?: Geopoint
+  serviceArea?: GeopointRadius
+  locations?: Array<
+    {
+      _key: string
+    } & Geopoint
+  >
+}
+
+export type GeopointRadius = {
+  _type: 'geopointRadius'
+  lat: number
+  lng: number
+  alt?: number
+  radius: number
+}
+
+export type Geopoint = {
+  _type: 'geopoint'
+  lat?: number
+  lng?: number
+  alt?: number
+}
+
+export type FormField = {
+  _type: 'formField'
+  type?:
+    | 'checkbox'
+    | 'color'
+    | 'date'
+    | 'datetime-local'
+    | 'email'
+    | 'file'
+    | 'hidden'
+    | 'number'
+    | 'radio'
+    | 'range'
+    | 'select'
+    | 'tel'
+    | 'text'
+    | 'textarea'
+    | 'time'
+    | 'url'
+  label?: string
+  name: string
+  required?: boolean
+  validation?: Array<{
+    type?: never
+    value?: string
+    message?: string
+    _key: string
+  }>
+  choices?: Array<{
+    label?: string
+    value?: string
+    _key: string
+  }>
+  options?: Options
+}
+
+export type Form = {
+  _id: string
+  _type: 'form'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  id?: Slug
+  fields?: Array<
+    {
+      _key: string
+    } & FormField
+  >
+  submitButton?: {
+    text?: string
+  }
+}
+
+export type EmbeddingsArticleReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'embeddingsArticle'
+}
+
+export type EmbeddingsArticle = {
+  _id: string
+  _type: 'embeddingsArticle'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  related?: EmbeddingsArticleReference
+  relatedDefaultPlugin?: EmbeddingsArticleReference
+}
+
+export type SanityFileAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+}
+
+export type MediaProduct = {
+  _id: string
+  _type: 'mediaProduct'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  attachment?: {
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+  }
+}
+
+export type MediaTag = {
+  _id: string
+  _type: 'media.tag'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: Slug
+}
+
 export type GoogleTranslateTest = {
   _id: string
   _type: 'googleTranslateTest'
@@ -822,14 +1293,8 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData
 }
 
-export type Geopoint = {
-  _type: 'geopoint'
-  lat?: number
-  lng?: number
-  alt?: number
-}
-
 export type AllSanitySchemaTypes =
+  | Options
   | Rendition
   | SanityVercelProtectionBypass
   | SanityImageAssetReference
@@ -884,6 +1349,45 @@ export type AllSanitySchemaTypes =
   | AsyncListTest
   | DisneyCharacter
   | Pokemon
+  | MuxTrailer
+  | MuxVideoAssetReference
+  | MuxVideo
+  | MuxVideoAsset
+  | MuxAssetData
+  | MuxStaticRenditions
+  | MuxStaticRenditionFile
+  | MuxPlaybackId
+  | MuxTrack
+  | CloudinaryTest
+  | CloudinaryAsset
+  | CloudinaryAssetContextCustom
+  | CloudinaryAssetContext
+  | CloudinaryAssetDerived
+  | PersonalizationTest
+  | ExperimentText
+  | ExperimentString
+  | VariantText
+  | VariantString
+  | ShopifyAssetsTest
+  | ShopifyAsset
+  | ShopifyAssetPreview
+  | ShopifyAssetMetadata
+  | HierarchyTree
+  | HierarchyAuthorReference
+  | HierarchyBook
+  | HierarchyAuthor
+  | CrossDatasetDuplicatorArticleReference
+  | CrossDatasetDuplicatorArticle
+  | GoogleMapsTest
+  | GeopointRadius
+  | Geopoint
+  | FormField
+  | Form
+  | EmbeddingsArticleReference
+  | EmbeddingsArticle
+  | SanityFileAssetReference
+  | MediaProduct
+  | MediaTag
   | GoogleTranslateTest
   | LocalizedString
   | SanityAssistInstructionTask
@@ -906,4 +1410,3 @@ export type AllSanitySchemaTypes =
   | SanityFileAsset
   | SanityAssetSourceData
   | SanityImageAsset
-  | Geopoint

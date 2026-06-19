@@ -1,5 +1,17 @@
 # sanity-plugin-workflow
 
+## 3.0.22
+
+### Patch Changes
+
+- [#1203](https://github.com/sanity-io/plugins/pull/1203) [`20c5f35`](https://github.com/sanity-io/plugins/commit/20c5f35c0869a0375e515c53ee17b5160fed685e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency motion to ^12.40.0
+
+## 3.0.21
+
+### Patch Changes
+
+- [#1084](https://github.com/sanity-io/plugins/pull/1084) [`c4c28bc`](https://github.com/sanity-io/plugins/commit/c4c28bc4f3706ce57dd1b6fc7d639b20731c1740) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update tanstack-virtual monorepo to ^3.14.2
+
 ## 3.0.20
 
 ### Patch Changes
@@ -49,6 +61,7 @@
   Workflow items would drop one position off from where they were visually placed when dragging within the same column. This was caused by the dragged item remaining in the destination items array during rank calculation.
 
   **Changes:**
+
   - Filter out the dragged item when reordering within the same column, aligning with dnd library expectations
   - Fix boundary check for end-of-list drops to correctly identify when dropping at or past the last position
 

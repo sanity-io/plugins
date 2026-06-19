@@ -5,7 +5,13 @@
   "singleQuote": true,
   "bracketSpacing": false,
   "quoteProps": "consistent",
-  "experimentalSortImports": {},
+  "sortImports": true,
   "sortPackageJson": {"sortScripts": true},
-  "ignorePatterns": ["dist/**", "pnpm-lock.yaml", ".changeset/*.md", "turbo/**/*.hbs"]
+  "ignorePatterns": ["dist/**", "pnpm-lock.yaml", "turbo/**/*.hbs"],
+  "overrides": [
+    {
+      "files": [".changeset/*.md"],
+      "options": {"singleQuote": false}
+    }
+  ]
 }

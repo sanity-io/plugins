@@ -1,6 +1,6 @@
 {
   "name": "@sanity/presets",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Production ready preset patterns for Sanity Studio",
   "keywords": [
     "sanity",
@@ -43,7 +43,7 @@
   "dependencies": {
     "@sanity/asset-utils": "^2.3.0",
     "@sanity/telemetry": "catalog:",
-    "@sanity/uuid": "^3.0.2"
+    "@sanity/uuid": "^3.0.3"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
@@ -54,7 +54,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "jsdom": "^29.0.1",
+    "jsdom": "^29.1.1",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",

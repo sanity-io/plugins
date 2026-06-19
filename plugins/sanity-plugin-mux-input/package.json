@@ -1,0 +1,111 @@
+{
+  "name": "sanity-plugin-mux-input",
+  "version": "3.0.5",
+  "description": "An input component that integrates Sanity Studio with Mux video encoding/hosting service.",
+  "keywords": [
+    "input",
+    "media",
+    "mux",
+    "plugin",
+    "sanity",
+    "sanity-plugin",
+    "video"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-mux-input#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-mux-input"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/_exports/index.ts",
+      "development": "./src/_exports/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@mux/mux-player": "^3.13.0",
+    "@mux/mux-player-react": "^3.13.0",
+    "@mux/upchunk": "^3.5.0",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/ui": "^3.2.0",
+    "@sanity/uuid": "^3.0.3",
+    "iso-639-1": "^3.1.5",
+    "jsonwebtoken-esm": "^1.0.5",
+    "lodash": "^4.17.21",
+    "react-rx": "^4.2.2",
+    "rxjs": "^7.8.2",
+    "scroll-into-view-if-needed": "^3.1.0",
+    "suspend-react": "^0.1.3",
+    "swr": "^2.4.1",
+    "type-fest": "^4.41.0",
+    "use-device-pixel-ratio": "^1.1.2",
+    "use-error-boundary": "^2.0.6"
+  },
+  "devDependencies": {
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@sanity/client": "^7.23.0",
+    "@sanity/pkg-utils": "catalog:",
+    "@sanity/plugin-kit": "workspace:*",
+    "@types/lodash": "^4.17.24",
+    "@types/node": "catalog:",
+    "@types/react": "^19.2.17",
+    "@types/react-is": "^19.2.0",
+    "babel-plugin-styled-components": "catalog:",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-is": "^19.2.7",
+    "sanity": "^6.1.0",
+    "styled-components": "^6.4.2",
+    "typescript": "5.9.3"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "react-is": "^18.3 || ^19",
+    "sanity": "^4.0.0 || ^5.0.0 || ^6.0.0",
+    "styled-components": "^5 || ^6"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+      "tsc": false,
+      "tsconfig": false,
+      "srcIndex": false,
+      "scripts": false,
+      "eslintImports": false
+    }
+  }
+}

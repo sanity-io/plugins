@@ -15,6 +15,7 @@ import {
 import {type ChangeEventHandler, useState} from 'react'
 
 interface TableMenuProps {
+  id: string
   addColumns: (count: number) => void
   addColumnAt: (index: number) => void
   addRows: (count: number) => void
@@ -24,7 +25,7 @@ interface TableMenuProps {
 }
 
 export const TableMenu = (props: TableMenuProps): React.JSX.Element => {
-  const {remove: handleRemove} = props
+  const {id, remove: handleRemove} = props
   const [dialog, setDialog] = useState<{
     type: string
     callback: (count: number) => void
@@ -60,14 +61,18 @@ export const TableMenu = (props: TableMenuProps): React.JSX.Element => {
     setCount('')
   }
 
-  const onConfirm = () => {
-    const parsedCount = parseInt(count || '0', 10)
+  // The dialog is reused for "add N rows/columns" (a count) and "add at index"
+  // (a position where 0 is valid), so allow 0 but reject NaN/negative/too-large.
+  const parsedCount = Number.parseInt(count, 10)
+  const isValidCount = Number.isInteger(parsedCount) && parsedCount >= 0 && parsedCount < 100
 
-    if (parsedCount < 100) {
-      setDialog(null)
-      dialog?.callback(parsedCount)
-      setCount('')
+  const onConfirm = () => {
+    if (!isValidCount) {
+      return
     }
+    setDialog(null)
+    dialog?.callback(parsedCount)
+    setCount('')
   }
 
   return (
@@ -75,7 +80,7 @@ export const TableMenu = (props: TableMenuProps): React.JSX.Element => {
       {dialog && (
         <Dialog
           header={`Add ${dialog.type}`}
-          id="dialog-add"
+          id={`${id}-dialog-add`}
           onClose={() => {
             setDialog(null)
             setCount('')
@@ -90,6 +95,9 @@ export const TableMenu = (props: TableMenuProps): React.JSX.Element => {
               type="number"
               value={count}
               onChange={updateCount}
+              customValidity={
+                count !== '' && !isValidCount ? 'Enter a whole number from 0 to 99' : undefined
+              }
             />
             <Box marginTop={4}>
               <Inline gap={1} style={{textAlign: 'right'}}>
@@ -101,7 +109,12 @@ export const TableMenu = (props: TableMenuProps): React.JSX.Element => {
                     setCount('')
                   }}
                 />
-                <Button text="Confirm" tone="critical" onClick={onConfirm} />
+                <Button
+                  text="Confirm"
+                  tone="critical"
+                  onClick={onConfirm}
+                  disabled={!isValidCount}
+                />
               </Inline>
             </Box>
           </Card>
@@ -109,7 +122,7 @@ export const TableMenu = (props: TableMenuProps): React.JSX.Element => {
       )}
       <MenuButton
         button={<Button icon={ControlsIcon} fontSize={1} padding={2} mode="ghost" />}
-        id="menu-button-example"
+        id={`${id}-menu-button`}
         menu={
           <Menu>
             <MenuItem icon={AddIcon} fontSize={1} text="Add Row(s)" onClick={addRows} />

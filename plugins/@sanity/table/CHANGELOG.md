@@ -1,5 +1,17 @@
 # @sanity/table
 
+## 3.1.3
+
+### Patch Changes
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
+## 3.1.2
+
+### Patch Changes
+
+- [#1054](https://github.com/sanity-io/plugins/pull/1054) [`534d7b9`](https://github.com/sanity-io/plugins/commit/534d7b9b75a2aa62eed47a272c67615f5ab931a6) Thanks [@stipsan](https://github.com/stipsan)! - Fix table preview cell truncation (use the `ellipsis` text-overflow), derive the menu/dialog DOM ids from the input id so multiple table inputs (e.g. arrays of tables) don't collide on duplicate ids, and validate the add row/column count by disabling Confirm and showing a validity message for empty or out-of-range values
+
 ## 3.1.1
 
 ### Patch Changes
