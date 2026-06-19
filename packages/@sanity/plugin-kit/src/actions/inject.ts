@@ -1,7 +1,6 @@
 import path from 'path'
 import {fileURLToPath} from 'url'
 
-// @ts-expect-error missing types
 import licenses from '@rexxars/choosealicense-list'
 import gitRemoteOriginUrl from 'git-remote-origin-url'
 
@@ -194,9 +193,9 @@ async function getLicense(
   }
 
   const text = license.body
-    .replace(/\[fullname\]/g, user?.name)
-    .replace(/\[project\]/g, pluginName)
-    .replace(/\[year\]/g, new Date().getFullYear())
+    .replace(/\[fullname\]/g, user?.name ?? '')
+    .replace(/\[project\]/g, pluginName ?? '')
+    .replace(/\[year\]/g, String(new Date().getFullYear()))
 
   return {id: license.id, text}
 }
