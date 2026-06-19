@@ -46,6 +46,7 @@ minimumReleaseAgeExclude:
   - '@vitest/*'
   - '@vercel/stega'
   - csstype
+  - get-it
   - groq
   - groq-js
   - oxfmt
