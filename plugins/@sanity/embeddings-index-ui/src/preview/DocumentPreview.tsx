@@ -1,14 +1,14 @@
 import {ErrorOutlineIcon} from '@sanity/icons'
-import {Box, Button, ButtonProps, Card} from '@sanity/ui'
-import {CSSProperties, useMemo} from 'react'
+import {Box, Button, type ButtonProps, Card} from '@sanity/ui'
+import {type CSSProperties, useMemo} from 'react'
 import {useObservable} from 'react-rx'
 import {
   DefaultPreview,
   getPreviewStateObservable,
   getPreviewValueWithFallback,
   SanityDefaultPreview,
-  SanityDocument,
-  SchemaType,
+  type SanityDocument,
+  type SchemaType,
   useDocumentPreviewStore,
   useSchema,
 } from 'sanity'
@@ -50,7 +50,7 @@ export function DocumentPreview({
         <DefaultPreview
           withShadow={false}
           withBorder={false}
-          media={() => <ErrorOutlineIcon />}
+          media={<ErrorOutlineIcon />}
           title={
             <>
               Unknown type <code>{schemaTypeName ?? 'N/A'}</code> for {documentId}

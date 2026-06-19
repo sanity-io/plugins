@@ -4,7 +4,7 @@ import {useCallback} from 'react'
 
 import {useAccessControl} from '../hooks/useAccessControl'
 import type {SetDialogState} from '../hooks/useDialogState'
-import {PluginConfig} from '../util/types'
+import {type PluginConfig} from '../util/types'
 import MuxLogo from './MuxLogo'
 
 interface OnboardProps {

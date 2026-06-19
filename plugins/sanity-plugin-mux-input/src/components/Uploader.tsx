@@ -1,6 +1,6 @@
 import {ErrorOutlineIcon} from '@sanity/icons'
-import {Button, CardTone, Flex, Text, useToast} from '@sanity/ui'
-import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react'
+import {Button, type CardTone, Flex, Text, useToast} from '@sanity/ui'
+import {useCallback, useEffect, useReducer, useRef, useState} from 'react'
 import {type Observable, Subject, Subscription} from 'rxjs'
 import {takeUntil, tap} from 'rxjs/operators'
 import type {SanityClient} from 'sanity'
@@ -95,6 +95,7 @@ export default function Uploader(props: Props) {
   const uploadRef = useRef<Subscription | null>(null)
   const uploadingDocumentId = useRef<string | null>(null)
   const [state, dispatch] = useReducer(
+    // oxlint-disable-next-line react/react-compiler
     (prev: State, action: UploaderStateAction) => {
       switch (action.action) {
         case 'stageUpload':
@@ -208,7 +209,6 @@ export default function Uploader(props: Props) {
     if (!stagedUpload || uploadRef.current) return
     dispatch({action: 'commitUpload'})
     let uploadObservable: Observable<UploadFileEvent | UploadUrlEvent>
-    // eslint-disable-next-line default-case
     switch (stagedUpload.type) {
       case 'url':
         uploadObservable = uploadUrl({
@@ -221,7 +221,7 @@ export default function Uploader(props: Props) {
       case 'file':
         uploadObservable = uploadFile({
           client: props.client,
-          file: stagedUpload.files[0],
+          file: stagedUpload.files[0]!,
           settings,
           watermark,
         }).pipe(
@@ -229,7 +229,7 @@ export default function Uploader(props: Props) {
             cancelUploadButton.observable.pipe(
               tap(() => {
                 if (uploadingDocumentId.current) {
-                  props.client.delete(uploadingDocumentId.current)
+                  void props.client.delete(uploadingDocumentId.current)
                   uploadingDocumentId.current = null
                 }
               }),
@@ -342,7 +342,7 @@ export default function Uploader(props: Props) {
       return
     }
     setDragState(null)
-    extractDroppedFiles(event.nativeEvent.dataTransfer!).then((files) => {
+    void extractDroppedFiles(event.nativeEvent.dataTransfer!).then((files) => {
       dispatch({
         action: 'stageUpload',
         input: {type: 'file', files},
@@ -367,7 +367,7 @@ export default function Uploader(props: Props) {
     const isValidType = mimeTypes?.some((acceptedType) => {
       // Convert mime type pattern to regex (e.g., 'video/*' -> /^video\/.*$/)
       const pattern = `^${acceptedType.replace('*', '.*')}$`
-      return new RegExp(pattern).test(type)
+      return new RegExp(pattern).test(type!)
     })
 
     setDragState(isValidType ? 'valid' : 'invalid')
@@ -410,6 +410,7 @@ export default function Uploader(props: Props) {
     const {uploadStatus} = state
     return (
       <UploadProgress
+        // oxlint-disable-next-line react/react-compiler
         onCancel={cancelUploadButton.handleClick}
         progress={uploadStatus.progress}
         filename={uploadStatus.file?.name || uploadStatus.url}

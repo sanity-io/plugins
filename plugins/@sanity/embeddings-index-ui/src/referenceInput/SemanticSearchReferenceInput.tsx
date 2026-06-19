@@ -2,18 +2,18 @@ import {EarthGlobeIcon, LinkIcon} from '@sanity/icons'
 import {Box, Button, Flex, Spinner} from '@sanity/ui'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
-  ObjectInputProps,
-  ReferenceBaseOptions,
-  ReferenceSchemaType,
+  type ObjectInputProps,
+  type ReferenceBaseOptions,
+  type ReferenceSchemaType,
   set,
   setIfMissing,
   unset,
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import {QueryResult} from '../api/embeddingsApi'
+import {type QueryResult} from '../api/embeddingsApi'
 import {FeatureDisabledNotice, FeatureError, useIsFeatureEnabledContext} from '../api/isEnabled'
-import {EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
+import {type EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
 import {publicId} from '../utils/id'
 import {SemanticSearchAutocomplete} from './SemanticSearchAutocomplete'
 
@@ -110,7 +110,7 @@ function SemanticSearchInput(props: ObjectInputProps & {indexConfig: EmbeddingsI
 
   useEffect(() => {
     // if this component is rendered, and there is a value, replace was selected
-    if (value?._ref) {
+    if (value?.['_ref']) {
       autocompleteRef.current?.focus()
     }
     // intentional empty deps

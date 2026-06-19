@@ -1,9 +1,9 @@
 import {AddIcon} from '@sanity/icons'
 import {Box, Button, Card, Dialog, Spinner, Stack, Text} from '@sanity/ui'
-import {FormEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
+import {type FormEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
 import {useSchema} from 'sanity'
 
-import {IndexState, NamedIndex} from '../api/embeddingsApi'
+import {type IndexState, type NamedIndex} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
 import {useDefaultIndex} from './hooks'
 import {IndexFormInput} from './IndexFormInput'
@@ -57,6 +57,7 @@ export function IndexEditor(props: {
     ...selectedIndex,
   }))
 
+  // oxlint-disable-next-line react/react-compiler
   useEffect(() => setIndex(selectedIndex ?? {...defaultIndex}), [selectedIndex, defaultIndex])
 
   const handleSubmit = useCallback(
@@ -108,7 +109,6 @@ export function IndexEditor(props: {
             onSubmit(response.index)
           }
         })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .catch((err: any) => {
           console.error(err)
           setErrors([err.message])
@@ -127,9 +127,13 @@ export function IndexEditor(props: {
           <Card tone="critical" border padding={2}>
             <Text>
               <ul style={{marginLeft: -10}}>
-                {/* eslint-disable-next-line react/no-array-index-key */}
                 {errors?.map((error, i) => (
-                  <li key={`${error}-${i}`}>{error}</li>
+                  <li
+                    // oxlint-disable-next-line react/no-array-index-key
+                    key={`${error}-${i}`}
+                  >
+                    {error}
+                  </li>
                 ))}
               </ul>
             </Text>

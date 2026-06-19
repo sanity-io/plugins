@@ -26,14 +26,14 @@ export async function deleteAsset({
 
   try {
     await client.delete(asset._id)
-  } catch (error) {
+  } catch {
     return 'failed-sanity'
   }
 
   if (deleteOnMux && asset?.assetId) {
     try {
       await deleteAssetOnMux(client, asset.assetId)
-    } catch (error) {
+    } catch {
       return 'failed-mux'
     }
   }

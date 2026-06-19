@@ -1,14 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignoreWorkspaces": [
-    "dev/*",
-    // Moved as-is from the standalone repo; will be brought up to monorepo
-    // standards (and into knip coverage) in a follow-up PR
-    "plugins/sanity-plugin-media",
-    // Moved verbatim from sanity-io/sanity-plugin-mux-input; legacy dead-code
-    // and phantom-dependency cleanup is deferred to a follow-up PR.
-    "plugins/sanity-plugin-mux-input",
-  ],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,
@@ -19,10 +10,6 @@
     "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
   },
-  "rules": {
-    // dev/* workspaces are ignored, so their catalog entries appear unused
-    "catalog": "warn",
-  },
   "workspaces": {
     ".": {
       "entry": ["*.{ts,mts,mjs}"],
@@ -32,11 +19,14 @@
         "@typescript/native-preview",
       ],
       "ignoreBinaries": [
-        // Provided by sanity package in dev/test-studio, which is an ignored workspace
-        "sanity",
         // Installed externally (not an npm package); used in lint:workflows script
         "zizmor",
       ],
+    },
+    "dev/test-studio": {
+      "entry": ["migrations/**/*.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["babel-plugin-react-compiler"],
     },
     "turbo/generators": {
       "project": ["src/**/*.ts"],
@@ -51,8 +41,6 @@
       "ignoreDependencies": [
         // Spawned as a CLI (`yalc push`) by the link-watch command, never imported
         "yalc",
-        // Provides ambient typings consumed by nodemon APIs, not runtime imported
-        "@types/nodemon",
         // Resolved at runtime by ESLint/tsc when verifying generated plugin fixtures in tests
         "eslint-config-prettier",
         "eslint-config-sanity",
@@ -162,6 +150,22 @@
       ],
     },
     "plugins/sanity-plugin-markdown": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-media": {
+      "entry": ["package.config.ts", "scripts/migrate-to-localized-fields.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-mux-input": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignoreDependencies": [

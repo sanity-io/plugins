@@ -1,5 +1,13 @@
 # @sanity/form-toolkit
 
+## 3.0.1
+
+### Patch Changes
+
+- [#1313](https://github.com/sanity-io/plugins/pull/1313) [`ec872c6`](https://github.com/sanity-io/plugins/commit/ec872c6bc0d63b4f6d9622b7c5d39c4aec1b3661) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency h3 to ^1.15.11
+
+- [#1322](https://github.com/sanity-io/plugins/pull/1322) [`cf18f90`](https://github.com/sanity-io/plugins/commit/cf18f90835a7a6e3e1ce1009c8e620e5ee34ebab) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-icons to ^5.6.0
+
 ## 3.0.0
 
 ### Major Changes

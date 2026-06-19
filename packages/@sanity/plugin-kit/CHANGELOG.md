@@ -1,5 +1,24 @@
 # @sanity/plugin-kit
 
+## 5.0.3
+
+### Patch Changes
+
+- [`953cbf5`](https://github.com/sanity-io/plugins/commit/953cbf5c06d7c8a5191ee8534fa0d871b8f7cf0c) Thanks [@stipsan](https://github.com/stipsan)! - Use type-only imports for type references to satisfy `verbatimModuleSyntax`
+
+## 5.0.2
+
+### Patch Changes
+
+- [#1331](https://github.com/sanity-io/plugins/pull/1331) [`a32af06`](https://github.com/sanity-io/plugins/commit/a32af0671a5993c2efc414a84b1c4ace62f16c15) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency validate-npm-package-name to ^5.0.1
+
+- [#1120](https://github.com/sanity-io/plugins/pull/1120) [`05863d9`](https://github.com/sanity-io/plugins/commit/05863d99e2e19de98783cb2bf942c30c2ac1b759) Thanks [@stipsan](https://github.com/stipsan)! - Fix CLI command name in messages, plus typos and a redundant tsconfig read
+
+  - Correct `binname` to `plugin-kit` so the `version`/`link-watch` help text and the missing-`sanity.json` error suggest the executable that is actually installed
+  - Remove a stray apostrophe from the `verify-package --single` fail-fast hint so it can be copy-pasted as-is
+  - Fix user-facing typos in CLI help and error messages ("promt" → "prompt", "exsists" → "exists", "Typescript" → "TypeScript")
+  - Parse the tsconfig file once in `readTSConfig` instead of reading it twice
+
 ## 5.0.1
 
 ### Patch Changes

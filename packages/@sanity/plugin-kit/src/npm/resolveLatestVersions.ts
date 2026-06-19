@@ -1,4 +1,4 @@
-import getLatestVersion from 'get-latest-version'
+import {getLatestVersion} from 'get-latest-version'
 import pProps from 'p-props'
 
 // We may want to lock certain dependencies to specific versions

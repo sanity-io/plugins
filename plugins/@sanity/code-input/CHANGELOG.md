@@ -1,5 +1,21 @@
 # @sanity/code-input
 
+## 7.1.6
+
+### Patch Changes
+
+- [`a1aca4c`](https://github.com/sanity-io/plugins/commit/a1aca4cf86dacafdfce449465181253af6a550d3) Thanks [@stipsan](https://github.com/stipsan)! - Stop publishing the `assets` directory to npm and reference README images via absolute GitHub URLs
+
+## 7.1.5
+
+### Patch Changes
+
+- [#1303](https://github.com/sanity-io/plugins/pull/1303) [`b152773`](https://github.com/sanity-io/plugins/commit/b152773faf4817ee1a94334d5d324511409f07f4) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/lezer-groq to ^1.0.4
+
+- [#1306](https://github.com/sanity-io/plugins/pull/1306) [`0076839`](https://github.com/sanity-io/plugins/commit/00768391cd2fc8c21e0ede2a3c1cebe158438817) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @uiw/codemirror-themes to ^4.25.10
+
+- [#1307](https://github.com/sanity-io/plugins/pull/1307) [`915488a`](https://github.com/sanity-io/plugins/commit/915488a8c978899c697792e16a67c51696f9276f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @uiw/react-codemirror to ^4.25.10
+
 ## 7.1.4
 
 ### Patch Changes

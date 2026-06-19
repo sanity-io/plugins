@@ -1,5 +1,5 @@
 import {ErrorOutlineIcon} from '@sanity/icons'
-import {Box, Card, CardTone, Spinner, Stack, Text} from '@sanity/ui'
+import {Box, Card, type CardTone, Spinner, Stack, Text} from '@sanity/ui'
 import {Suspense, useMemo, useRef, useState} from 'react'
 import {styled} from 'styled-components'
 
@@ -9,7 +9,7 @@ import {THUMBNAIL_ASPECT_RATIO} from '../util/constants'
 import {getAnimatedPosterSrc} from '../util/getAnimatedPosterSrc'
 import {getPosterSrc} from '../util/getPosterSrc'
 import {tryWithSuspend} from '../util/tryWithSuspend'
-import {AssetThumbnailOptions, MuxAnimatedThumbnailUrl, MuxThumbnailUrl} from '../util/types'
+import type {AssetThumbnailOptions, MuxAnimatedThumbnailUrl, MuxThumbnailUrl} from '../util/types'
 
 const Image = styled.img`
   transition: opacity 0.175s ease-out 0s;
@@ -28,6 +28,7 @@ const STATUS_TO_TONE: Record<ImageStatus, CardTone> = {
   loaded: 'default',
 }
 
+// oxlint-disable-next-line react/react-compiler
 export default function VideoThumbnail({
   asset,
   width,
