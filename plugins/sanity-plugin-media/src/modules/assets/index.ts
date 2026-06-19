@@ -380,11 +380,11 @@ const assetsSlice = createSlice({
     },
     updateImageReferences(state, action: PayloadAction<{asset: Asset; id: string}>) {
       const assetId = action.payload?.id
-      state.byIds[assetId].updating = true
+      state.byIds[assetId]!.updating = true
     },
     updateImageReferencesComplete(state, action: PayloadAction<{id: string}>) {
       const {id} = action.payload
-      state.byIds[id].updating = false
+      state.byIds[id]!.updating = false
     },
     updateRequest(
       state,
@@ -776,17 +776,21 @@ export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client
           }
           return assetsActions.updateImageReferencesComplete({id})
         }),
-        catchError((error: ClientError) =>
-          of(
+        catchError((error: ClientError) => {
+          // The asset marked as `updating` is the original (being replaced), keyed
+          // by `id` — not the replacement `asset` that was clicked. Attach the error
+          // to (and clear the spinner on) the original asset.
+          const originalAsset = state.assets.byIds[id]?.asset ?? asset
+          return of(
             assetsActions.updateError({
-              asset,
+              asset: originalAsset,
               error: {
                 message: error?.message || 'Internal error',
                 statusCode: error?.statusCode || 500,
               },
             }),
-          ),
-        ),
+          )
+        }),
       )
     }),
   )

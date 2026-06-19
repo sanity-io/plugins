@@ -95,7 +95,7 @@ describe('assets slice', () => {
       state,
       assetsActions.updateImageReferences({asset: minimalImage, id: 'img-1'}),
     )
-    expect(state.byIds['img-1'].updating).toBe(true)
+    expect(state.byIds['img-1']!.updating).toBe(true)
   })
 
   it('updateImageReferencesComplete clears the updating flag', () => {
@@ -105,6 +105,6 @@ describe('assets slice', () => {
       assetsActions.updateImageReferences({asset: minimalImage, id: 'img-1'}),
     )
     state = assetsReducer(state, assetsActions.updateImageReferencesComplete({id: 'img-1'}))
-    expect(state.byIds['img-1'].updating).toBe(false)
+    expect(state.byIds['img-1']!.updating).toBe(false)
   })
 })

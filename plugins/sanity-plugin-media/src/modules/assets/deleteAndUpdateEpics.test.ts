@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import {of} from 'rxjs'
+import {of, throwError} from 'rxjs'
 import {describe, expect, it, vi} from 'vitest'
 
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
@@ -125,7 +125,42 @@ describe('assetsUpdateImageReferencesEpic', () => {
         hero: {_type: 'image', asset: {_ref: 'a2', _type: 'reference'}},
       })
       expect(chain.commit).toHaveBeenCalled()
-      expect(store.getState().assets.byIds.a1.updating).toBe(false)
+      expect(store.getState().assets.byIds['a1']!.updating).toBe(false)
+    })
+  })
+
+  it('on error clears the spinner and sets the error on the original asset, not the replacement', async () => {
+    const client = createMockSanityClient({
+      observable: {
+        fetch: vi.fn(() => throwError(() => ({message: 'boom', statusCode: 500}))),
+      },
+    })
+
+    const replacementAsset = {...sampleAsset, _id: 'a2'}
+
+    const store = createEpicTestStore(assetsUpdateImageReferencesEpic, client, {
+      assets: {
+        ...assetsInitialState,
+        assetTypes: ['image'],
+        allIds: ['a1', 'a2'],
+        byIds: {
+          a1: {_type: 'asset', asset: sampleAsset, picked: true, updating: false},
+          a2: {_type: 'asset', asset: replacementAsset, picked: false, updating: false},
+        },
+        lastPicked: 'a1',
+      },
+    })
+
+    store.dispatch(assetsActions.updateImageReferences({asset: replacementAsset, id: 'a1'}))
+
+    await vi.waitFor(() => {
+      const {byIds} = store.getState().assets
+      // Original asset: spinner cleared and error attached
+      expect(byIds['a1']!.updating).toBe(false)
+      expect(byIds['a1']!.error).toBe('boom')
+      // Replacement asset is untouched
+      expect(byIds['a2']!.updating).toBe(false)
+      expect(byIds['a2']!.error).toBeUndefined()
     })
   })
 })
