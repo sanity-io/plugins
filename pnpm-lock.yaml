@@ -2720,7 +2720,7 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       react-infinite-scroll-component:
-        specifier: ^6.1.0
+        specifier: ^6.1.1
         version: 6.1.1(react@19.2.7)
       react-photo-album:
         specifier: ^2.0.0
