@@ -1,9 +1,10 @@
 import {PortalProvider} from '@sanity/ui'
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useRef} from 'react'
 import {useDispatch} from 'react-redux'
 import {type AssetSourceComponentProps, type SanityDocument, useFormValue} from 'sanity'
 
 import {AssetBrowserDispatchProvider} from '../../contexts/AssetSourceDispatchContext'
+import useRootPortalElement from '../../hooks/useRootPortalElement'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import useVersionedClient from '../../hooks/useVersionedClient'
 import {assetsActions} from '../../modules/assets'
@@ -34,9 +35,9 @@ const EditAssetDialog = ({assetId, onClose}: {assetId: string; onClose: () => vo
     const queryFilter = `${constructFilter({
       assetTypes: ['file', 'image'],
       searchFacets: [],
-    })} && _id == $documentId`
+    })} && _id == $assetId`
 
-    dispatch(assetsActions.fetchRequest({params: {documentId: assetId}, queryFilter}))
+    dispatch(assetsActions.fetchRequest({params: {assetId}, queryFilter}))
     dispatch(dialogActions.showAssetEdit({assetId}))
   }, [assetId, dispatch])
 
@@ -61,8 +62,8 @@ const EditAssetTool = (props: AssetSourceComponentProps) => {
 
   const portalElement = useRootPortalElement()
 
-  // Get current Sanity document
-  const currentDocument = useFormValue([]) as SanityDocument
+  // `useFormValue` can return null/undefined (e.g. on a pristine/unsaved draft).
+  const currentDocument = useFormValue([]) as SanityDocument | null | undefined
 
   const client = useVersionedClient()
 
@@ -83,7 +84,7 @@ const EditAssetTool = (props: AssetSourceComponentProps) => {
     <ReduxProvider
       assetType={props.assetType}
       client={client}
-      document={currentDocument}
+      document={currentDocument ?? undefined}
       selectedAssets={selectedAssets}
     >
       <AssetBrowserDispatchProvider onSelect={props.onSelect}>
@@ -97,17 +98,3 @@ const EditAssetTool = (props: AssetSourceComponentProps) => {
 }
 
 export default EditAssetTool
-
-const useRootPortalElement = () => {
-  const [container] = useState(() => document.createElement('div'))
-
-  useEffect(() => {
-    container.classList.add('media-portal')
-    document.body.appendChild(container)
-    return () => {
-      document.body.removeChild(container)
-    }
-  }, [container])
-
-  return container
-}
