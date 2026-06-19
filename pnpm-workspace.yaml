@@ -11,7 +11,7 @@ packages:
 catalog:
   '@sanity/client': ^7.23.0
   '@sanity/mutator': ^6.1.0
-  '@sanity/pkg-utils': ^10.5.6
+  '@sanity/pkg-utils': ^10.5.7
   '@sanity/schema': ^6.1.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.1.0
@@ -46,6 +46,7 @@ minimumReleaseAgeExclude:
   - '@vitest/*'
   - '@vercel/stega'
   - csstype
+  - get-it
   - groq
   - groq-js
   - oxfmt
@@ -69,16 +70,6 @@ overrides:
   '@types/node': 'catalog:'
   sanity: 'catalog:'
   styled-components: npm:@sanity/styled-components@latest
-
-packageExtensions:
-  # recast (bundled by @sanity/pkg-utils for d.ts generation) lazily requires
-  # @babel/parser without declaring it, so it only resolves when @babel/parser
-  # happens to be hoisted. Declare it as a dependency so the d.ts build works
-  # under any hoisting configuration. (sanity-plugin-media/-mux-input build with
-  # the recast-based pkg-utils v7/v8 toolchain.)
-  recast:
-    dependencies:
-      '@babel/parser': ^7.28.0
 
 patchedDependencies:
   '@bynder/compact-view': patches/@bynder__compact-view.patch
@@ -109,8 +100,3 @@ allowBuilds:
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
   - 'vite'
-  # Keep @types/node resolvable for every package's d.ts build regardless of how
-  # the dependency graph hoists it (the recast-based pkg-utils v7/v8 toolchain used
-  # by sanity-plugin-media/-mux-input needs the NodeJS/process globals during
-  # api-extractor type extraction).
-  - '@types/node'

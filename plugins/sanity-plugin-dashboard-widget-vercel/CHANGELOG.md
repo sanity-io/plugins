@@ -1,5 +1,25 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.5
+
+### Patch Changes
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
+- [#1315](https://github.com/sanity-io/plugins/pull/1315) [`f171c85`](https://github.com/sanity-io/plugins/commit/f171c85b2988a3ab4146a4dae12db62c3712b61a) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency javascript-time-ago to ^2.6.4
+
+- [#1321](https://github.com/sanity-io/plugins/pull/1321) [`ca52ded`](https://github.com/sanity-io/plugins/commit/ca52dedfb0c15d71f9643bcaa7320fa6df61920d) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-hook-form to ^7.79.0
+
+- [#1327](https://github.com/sanity-io/plugins/pull/1327) [`cb214d2`](https://github.com/sanity-io/plugins/commit/cb214d2bc1216519407747fe8ba4e85a7bf35c63) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-time-ago to ^7.4.4
+
+- [#1339](https://github.com/sanity-io/plugins/pull/1339) [`26ff1a7`](https://github.com/sanity-io/plugins/commit/26ff1a7a06b3837a08b7befee5486988cc45645e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @hookform/resolvers to v4.1.3
+
+## 4.0.4
+
+### Patch Changes
+
+- [#1184](https://github.com/sanity-io/plugins/pull/1184) [`0e56680`](https://github.com/sanity-io/plugins/commit/0e56680d767d3c4974d1d2fe860d962e9953269d) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
 ## 4.0.3
 
 ### Patch Changes

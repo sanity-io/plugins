@@ -14,9 +14,7 @@
   },
   "files": [
     "dist",
-    "sanity.json",
-    "src",
-    "v2-incompatible.js"
+    "src"
   ],
   "type": "commonjs",
   "main": "./dist/index.js",
@@ -36,9 +34,7 @@
     "prepublishOnly": "npm run build",
     "watch": "pkg-utils watch --strict"
   },
-  "dependencies": {
-    "@sanity/incompatible-plugin": "^0.0.1-studio-v3.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@sanity/pkg-utils": "^2.0.6",
     "@sanity/plugin-kit": "^0.0.1-studio-v3.1",

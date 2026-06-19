@@ -1,5 +1,11 @@
 # sanity-plugin-hotspot-array
 
+## 5.0.2
+
+### Patch Changes
+
+- [#1130](https://github.com/sanity-io/plugins/pull/1130) [`2aca10f`](https://github.com/sanity-io/plugins/commit/2aca10ffaa129c3338df24206180bfc2f14f9e8f) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Replace `framer-motion` with `motion/react` in the hotspot spot component.
+
 ## 5.0.1
 
 ### Patch Changes

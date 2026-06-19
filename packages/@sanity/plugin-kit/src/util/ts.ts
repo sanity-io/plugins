@@ -11,11 +11,9 @@ export async function readTSConfig(options: {basePath: string; filename: string}
 
   if (!exists) return undefined
 
-  return ts.readConfigFile(filePath, ts.sys.readFile).config
-    ? ts.parseJsonConfigFileContent(
-        ts.readConfigFile(filePath, ts.sys.readFile).config,
-        ts.sys,
-        basePath,
-      )
-    : undefined
+  const {config} = ts.readConfigFile(filePath, ts.sys.readFile)
+
+  if (!config) return undefined
+
+  return ts.parseJsonConfigFileContent(config, ts.sys, basePath)
 }
