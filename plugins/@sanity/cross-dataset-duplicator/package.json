@@ -46,7 +46,7 @@
     "@sanity/mutator": "catalog:",
     "@sanity/studio-secrets": "workspace:^",
     "@sanity/ui": "catalog:",
-    "dset": "^3.1.0"
+    "dset": "^3.1.4"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
