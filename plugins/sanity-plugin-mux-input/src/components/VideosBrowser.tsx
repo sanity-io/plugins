@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {SearchIcon} from '@sanity/icons'
 import {Card, Flex, Grid, Inline, Label, Stack, Text, TextInput} from '@sanity/ui'
 import {useMemo, useState} from 'react'

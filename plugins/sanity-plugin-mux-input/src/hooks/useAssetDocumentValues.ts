@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unnecessary-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {isReference} from 'sanity'
 import {useDocumentValues} from 'sanity'
 

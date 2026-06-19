@@ -1,3 +1,4 @@
+// oxlint-disable jsx_a11y/media-has-caption, react/react-compiler, typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {DocumentVideoIcon, ErrorOutlineIcon, UploadIcon} from '@sanity/icons'
 import {Box, Button, Card, Dialog, Flex, Label, Radio, Stack, Text} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
@@ -143,7 +144,6 @@ export default function UploadConfiguration({
         case 'track': {
           const text_tracks = [...prev.text_tracks]
           const target_track_i = text_tracks.findIndex(({_id}) => _id === action.id)
-          // eslint-disable-next-line default-case
           switch (action.subAction) {
             case 'add':
               // Exit early if track already exists

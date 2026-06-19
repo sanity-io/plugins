@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-unused-vars - legacy code will be lint-cleaned in a follow-up PR
 import type {SanityClient} from 'sanity'
 
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'

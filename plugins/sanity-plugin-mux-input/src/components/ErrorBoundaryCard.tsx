@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 /* eslint-disable no-console */
 import {Button, Card, Flex, Grid, Heading, Inline, Text, useToast} from '@sanity/ui'
 import React, {memo, useCallback, useRef} from 'react'

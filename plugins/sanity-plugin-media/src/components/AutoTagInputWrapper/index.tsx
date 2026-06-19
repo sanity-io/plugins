@@ -1,3 +1,4 @@
+// oxlint-disable react/exhaustive-deps, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {useToast} from '@sanity/ui'
 import {useEffect, useRef} from 'react'
 import {type InputProps} from 'sanity'

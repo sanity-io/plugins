@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {assign, setup, fromPromise} from 'xstate'
 
 import {type Vercel} from '../types'

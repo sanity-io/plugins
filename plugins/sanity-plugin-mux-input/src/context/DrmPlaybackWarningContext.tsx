@@ -1,3 +1,4 @@
+// oxlint-disable react/jsx-no-constructed-context-values, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Button, Card, Dialog, Stack, Text} from '@sanity/ui'
 import React, {createContext, useContext, useState} from 'react'
 

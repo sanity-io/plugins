@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-meaningless-void-operator, typescript/no-unnecessary-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {Button, Dialog, Flex, Stack, Text, TextInput} from '@sanity/ui'
 import React, {useId, useMemo, useState} from 'react'
 import {getDevicePixelRatio} from 'use-device-pixel-ratio'
@@ -45,7 +46,6 @@ export default function EditThumbnailDialog({asset, currentTime = 0}: Props) {
   const width = 300 * getDevicePixelRatio({maxDpr: 2})
 
   if (saveThumbnailError) {
-    // eslint-disable-next-line no-warning-comments
     // @TODO handle errors more gracefully
     throw saveThumbnailError
   }

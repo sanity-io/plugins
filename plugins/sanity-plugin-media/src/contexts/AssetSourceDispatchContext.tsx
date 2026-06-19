@@ -1,3 +1,4 @@
+// oxlint-disable react/jsx-no-constructed-context-values - legacy code will be lint-cleaned in a follow-up PR
 import {type ReactNode, createContext, useContext} from 'react'
 import type {AssetSourceComponentProps} from 'sanity'
 

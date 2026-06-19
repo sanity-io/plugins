@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-await-in-loop, typescript/no-unnecessary-boolean-literal-compare, typescript/no-unnecessary-template-expression, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import path from 'path'
 import {fileURLToPath} from 'url'
 

@@ -1,3 +1,4 @@
+// oxlint-disable react/react-compiler, typescript/no-deprecated, typescript/no-unnecessary-type-conversion - legacy code will be lint-cleaned in a follow-up PR
 import {DownloadIcon, TranslateIcon, UploadIcon} from '@sanity/icons'
 import {
   Autocomplete,

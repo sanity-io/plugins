@@ -1,3 +1,4 @@
+// oxlint-disable react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
 import {type PropsWithChildren, createContext, useContext, useMemo} from 'react'
 import type {DropzoneOptions} from 'react-dropzone'
 

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unnecessary-type-arguments - legacy code will be lint-cleaned in a follow-up PR
 import {ServerError} from '@sanity/client'
 import {type InputProps, isObjectInputProps, type PreviewLayoutKey, type PreviewProps} from 'sanity'
 

@@ -1,3 +1,4 @@
+// oxlint-disable import/no-unassigned-import - legacy code will be lint-cleaned in a follow-up PR
 import 'sanity'
 
 export interface EmbeddingsIndexConfig {
@@ -17,7 +18,6 @@ export interface EmbeddingsIndexConfig {
   searchMode?: 'embeddings' | 'default'
 }
 
-/* eslint-disable no-unused-vars */
 declare module 'sanity' {
   interface ReferenceBaseOptions {
     /**

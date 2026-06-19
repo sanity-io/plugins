@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-unused-vars, typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {uuid as generateUuid} from '@sanity/uuid'
 import {concat, defer, from, type Observable, of, throwError} from 'rxjs'
 import {catchError, mergeMap, mergeMapTo, switchMap} from 'rxjs/operators'
@@ -160,19 +161,15 @@ export function uploadFile({
               ).pipe(
                 mergeMap((result) => {
                   return createUpChunkObservable(uuid, result.upload.url, file).pipe(
-                    // eslint-disable-next-line no-warning-comments
                     // @TODO type the observable events
-                    // eslint-disable-next-line max-nested-callbacks
                     mergeMap((event) => {
                       if (event.type !== 'success') {
                         return of(event)
                       }
                       return from(updateAssetDocumentFromUpload(client, uuid, watermark)).pipe(
-                        // eslint-disable-next-line max-nested-callbacks
                         mergeMap((doc) => of({...event, asset: doc})),
                       )
                     }),
-                    // eslint-disable-next-line max-nested-callbacks
                     catchError((err) => {
                       // Delete asset document
                       return cancelUpload(client, uuid).pipe(mergeMapTo(throwError(err)))

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, unicorn/no-useless-fallback-in-spread - legacy code will be lint-cleaned in a follow-up PR
 import {definePlugin} from 'sanity'
 
 import createStudioTool, {DEFAULT_TOOL_CONFIG} from '../components/StudioTool'

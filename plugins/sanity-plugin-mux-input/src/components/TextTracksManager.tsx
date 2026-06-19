@@ -1,3 +1,4 @@
+// oxlint-disable react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {
   AddIcon,
   ChevronDownIcon,

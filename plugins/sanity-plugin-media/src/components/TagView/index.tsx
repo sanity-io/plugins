@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unnecessary-type-conversion - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Flex, Text} from '@sanity/ui'
 
 import useTypedSelector from '../../hooks/useTypedSelector'

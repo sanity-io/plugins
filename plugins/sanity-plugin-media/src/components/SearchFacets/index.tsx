@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Flex, Inline, rem, type Theme} from '@sanity/ui'
 import {styled, css} from 'styled-components'
 

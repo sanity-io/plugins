@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-restricted-imports, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Box, ButtonProps, Flex, Text} from '@sanity/ui'
 import React, {createElement, isValidElement, useId} from 'react'
 import {isValidElementType} from 'react-is'

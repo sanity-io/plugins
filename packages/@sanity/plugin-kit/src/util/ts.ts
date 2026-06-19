@@ -1,3 +1,4 @@
+// oxlint-disable typescript/unbound-method - legacy code will be lint-cleaned in a follow-up PR
 import path from 'path'
 
 import * as ts from 'typescript'

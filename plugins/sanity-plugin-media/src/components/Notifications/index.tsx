@@ -1,3 +1,4 @@
+// oxlint-disable react/exhaustive-deps - legacy code will be lint-cleaned in a follow-up PR
 import {useToast} from '@sanity/ui'
 import {useEffect} from 'react'
 

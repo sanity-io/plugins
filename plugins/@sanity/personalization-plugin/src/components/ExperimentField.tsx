@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {CloseIcon} from '@sanity/icons'
 import {useCallback, useMemo} from 'react'
 import {GiSoapExperiment} from 'react-icons/gi'

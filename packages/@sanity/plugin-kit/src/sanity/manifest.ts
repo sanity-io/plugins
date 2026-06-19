@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-await-in-loop, eslint/preserve-caught-error, unicorn/prefer-set-has - legacy code will be lint-cleaned in a follow-up PR
 import fs from 'fs'
 import path from 'path'
 import util from 'util'

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-floating-promises, typescript/no-unnecessary-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {useMemo} from 'react'
 import {useDataset, useProjectId} from 'sanity'
 import useSWR from 'swr'

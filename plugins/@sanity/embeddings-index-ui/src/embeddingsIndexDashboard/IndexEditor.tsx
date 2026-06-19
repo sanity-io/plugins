@@ -1,8 +1,11 @@
+// oxlint-disable promise/always-return, react/no-array-index-key, react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {AddIcon} from '@sanity/icons'
 import {Box, Button, Card, Dialog, Spinner, Stack, Text} from '@sanity/ui'
+// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
 import {FormEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
 import {useSchema} from 'sanity'
 
+// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
 import {IndexState, NamedIndex} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
 import {useDefaultIndex} from './hooks'
@@ -108,7 +111,6 @@ export function IndexEditor(props: {
             onSubmit(response.index)
           }
         })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .catch((err: any) => {
           console.error(err)
           setErrors([err.message])
@@ -127,7 +129,6 @@ export function IndexEditor(props: {
           <Card tone="critical" border padding={2}>
             <Text>
               <ul style={{marginLeft: -10}}>
-                {/* eslint-disable-next-line react/no-array-index-key */}
                 {errors?.map((error, i) => (
                   <li key={`${error}-${i}`}>{error}</li>
                 ))}

@@ -1,3 +1,4 @@
+// oxlint-disable react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {TrashIcon} from '@sanity/icons'
 import {Box, Button, Card, Checkbox, Dialog, Flex, Heading, Stack, Text, useToast} from '@sanity/ui'
 import {useEffect, useState} from 'react'

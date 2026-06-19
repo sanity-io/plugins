@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {CalendarIcon, ClockIcon, TagIcon} from '@sanity/icons'
 import {Inline, Stack, Text} from '@sanity/ui'
 

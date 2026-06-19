@@ -1,3 +1,4 @@
+// oxlint-disable oxc/no-map-spread, typescript/no-unsafe-type-assertion, unicorn/no-useless-fallback-in-spread - legacy code will be lint-cleaned in a follow-up PR
 import {useMemo, useState} from 'react'
 import {collate, createHookFromObservableFactory, DocumentStore, useDocumentStore} from 'sanity'
 

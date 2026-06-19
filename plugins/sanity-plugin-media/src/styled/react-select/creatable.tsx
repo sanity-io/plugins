@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {AddIcon, ChevronDownIcon, CloseIcon} from '@sanity/icons'
 import {Box, Card, Flex, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {components, type StylesConfig} from 'react-select'

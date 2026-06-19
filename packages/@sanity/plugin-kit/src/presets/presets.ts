@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-await-in-loop - legacy code will be lint-cleaned in a follow-up PR
 import {InjectOptions} from '../actions/inject'
 import {renovatePreset} from './renovatebot'
 import {semverWorkflowPreset} from './semver-workflow'

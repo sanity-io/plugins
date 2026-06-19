@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {Flex, Radio, Text} from '@sanity/ui'
 import {ActionDispatch} from 'react'
 import {FormField} from 'sanity'

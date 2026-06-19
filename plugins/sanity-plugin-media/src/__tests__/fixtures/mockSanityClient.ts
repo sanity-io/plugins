@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion, typescript/no-useless-default-assignment, unicorn/no-useless-fallback-in-spread - legacy code will be lint-cleaned in a follow-up PR
 import type {SanityClient} from '@sanity/client'
 import {Subject, of} from 'rxjs'
 import {vi} from 'vitest'

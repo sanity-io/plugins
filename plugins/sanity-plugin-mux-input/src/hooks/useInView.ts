@@ -1,3 +1,4 @@
+// oxlint-disable typescript/consistent-return - legacy code will be lint-cleaned in a follow-up PR
 import {useEffect, useState} from 'react'
 
 type IntersectionOptions = {
@@ -32,7 +33,6 @@ export function useInView(
     const toObserve = ref.current
     observer.observe(toObserve)
 
-    // eslint-disable-next-line
     return () => {
       if (toObserve) observer.unobserve(toObserve)
     }

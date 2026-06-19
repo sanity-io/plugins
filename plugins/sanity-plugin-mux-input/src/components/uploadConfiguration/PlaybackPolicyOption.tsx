@@ -1,3 +1,4 @@
+// oxlint-disable jsx_a11y/label-has-associated-control - legacy code will be lint-cleaned in a follow-up PR
 import {Checkbox, Flex, Grid, Text} from '@sanity/ui'
 import {ActionDispatch, CSSProperties, ReactNode, useState} from 'react'
 

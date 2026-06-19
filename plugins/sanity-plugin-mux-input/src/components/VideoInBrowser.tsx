@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {CheckmarkIcon, EditIcon, LockIcon, PlayIcon} from '@sanity/icons'
 import {Button, Card, Stack, Text, Tooltip} from '@sanity/ui'
 import React, {useState} from 'react'

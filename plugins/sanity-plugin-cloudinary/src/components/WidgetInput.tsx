@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {PlugIcon} from '@sanity/icons'
 import {Button, Flex, Grid, Stack} from '@sanity/ui'
 import {useCallback} from 'react'

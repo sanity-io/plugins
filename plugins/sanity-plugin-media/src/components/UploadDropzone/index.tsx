@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-await-in-loop, eslint/no-unused-vars, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {white} from '@sanity/color'
 import {Flex, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'

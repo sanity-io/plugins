@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import type {ThemeColorSchemeKey} from '@sanity/ui'
 import type {MouseEvent} from 'react'
 import {styled, css} from 'styled-components'

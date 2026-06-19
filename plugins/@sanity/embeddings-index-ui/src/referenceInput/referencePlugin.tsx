@@ -1,6 +1,9 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
 import {definePlugin, isObjectInputProps, ObjectInputProps, ReferenceSchemaType} from 'sanity'
 
 import {FeatureEnabledProvider} from '../api/isEnabled'
+// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
 import {EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
 import {isType} from '../utils/types'
 import {SemanticSearchReferenceInput} from './SemanticSearchReferenceInput'

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import type {SanityClient} from '@sanity/client'
 import groq from 'groq'
 import {from, Observable, of, throwError} from 'rxjs'

@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-unused-vars, eslint/preserve-caught-error - legacy code will be lint-cleaned in a follow-up PR
 import {defer} from 'rxjs'
 import type {SanityClient} from 'sanity'
 
@@ -13,7 +14,6 @@ interface SecretsDocument {
   signingKeyPrivate: string
   drmConfigId: string
 }
-// eslint-disable-next-line max-params
 export function saveSecrets(
   client: SanityClient,
   token: string,

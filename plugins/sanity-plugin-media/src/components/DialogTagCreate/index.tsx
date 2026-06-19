@@ -1,3 +1,4 @@
+// oxlint-disable jsx_a11y/control-has-associated-label, react/no-unstable-nested-components, react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Flex} from '@sanity/ui'
 import {type ReactNode, useEffect} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'

@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-unsafe-optional-chaining - legacy code will be lint-cleaned in a follow-up PR
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
 import pluralize from 'pluralize'
 import {ofType} from 'redux-observable'

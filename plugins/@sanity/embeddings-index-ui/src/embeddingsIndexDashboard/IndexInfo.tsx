@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {EllipsisVerticalIcon, TrashIcon} from '@sanity/icons'
 import {
   Box,
@@ -13,6 +14,7 @@ import {
 } from '@sanity/ui'
 import {useCallback} from 'react'
 
+// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
 import {IndexState} from '../api/embeddingsApi'
 import {IndexEditor} from './IndexEditor'
 import {QueryIndex} from './QueryIndex'

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion, typescript/unbound-method - legacy code will be lint-cleaned in a follow-up PR
 // @vitest-environment jsdom
 
 import type {SanityImageAssetDocument} from '@sanity/client'

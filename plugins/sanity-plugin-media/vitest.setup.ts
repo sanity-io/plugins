@@ -1,3 +1,4 @@
+// oxlint-disable import/no-unassigned-import - legacy code will be lint-cleaned in a follow-up PR
 import '@testing-library/jest-dom/vitest'
 import {vi} from 'vitest'
 

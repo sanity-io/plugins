@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Checkbox, Flex, Label, Radio, Stack, Text} from '@sanity/ui'
 import {ActionDispatch, useMemo, useState} from 'react'
 import {FormField} from 'sanity'

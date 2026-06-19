@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-floating-promises - legacy code will be lint-cleaned in a follow-up PR
 import {useCallback} from 'react'
 import {PatchEvent, unset} from 'sanity'
 

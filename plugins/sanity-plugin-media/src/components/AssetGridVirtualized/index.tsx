@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components - legacy code will be lint-cleaned in a follow-up PR
 import {memo, forwardRef} from 'react'
 import {VirtuosoGrid} from 'react-virtuoso'
 import {styled} from 'styled-components'

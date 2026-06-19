@@ -1,3 +1,4 @@
+// oxlint-disable react/jsx-no-constructed-context-values - legacy code will be lint-cleaned in a follow-up PR
 import React, {createContext, useContext} from 'react'
 
 import {type DialogState, type SetDialogState} from '../hooks/useDialogState'

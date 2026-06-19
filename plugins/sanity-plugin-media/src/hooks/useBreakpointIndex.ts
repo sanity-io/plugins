@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-unused-vars, react/exhaustive-deps, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {studioTheme} from '@sanity/ui'
 import {useEffect, useState} from 'react'
 

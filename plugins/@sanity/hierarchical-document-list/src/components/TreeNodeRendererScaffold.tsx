@@ -1,3 +1,4 @@
+// oxlint-disable react/no-array-index-key - legacy code will be lint-cleaned in a follow-up PR
 import {blue} from '@sanity/color'
 import type {ReactNode} from 'react'
 import {createGlobalStyle} from 'styled-components'

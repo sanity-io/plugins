@@ -1,3 +1,4 @@
+// oxlint-disable promise/always-return, react/react-compiler, typescript/no-floating-promises, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {Button, CardTone, Flex, Text, useToast} from '@sanity/ui'
 import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react'
@@ -208,7 +209,6 @@ export default function Uploader(props: Props) {
     if (!stagedUpload || uploadRef.current) return
     dispatch({action: 'commitUpload'})
     let uploadObservable: Observable<UploadFileEvent | UploadUrlEvent>
-    // eslint-disable-next-line default-case
     switch (stagedUpload.type) {
       case 'url':
         uploadObservable = uploadUrl({

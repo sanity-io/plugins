@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-unused-vars, react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
 import {type MuxPlayerProps, type MuxPlayerRefAttributes} from '@mux/mux-player-react'
 import MuxPlayer from '@mux/mux-player-react/lazy'
 import {ErrorOutlineIcon} from '@sanity/icons'

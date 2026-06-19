@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {type MutableRefObject, PureComponent} from 'react'
 
 import type {LatLng} from '../types'

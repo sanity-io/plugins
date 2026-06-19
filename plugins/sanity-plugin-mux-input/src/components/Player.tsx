@@ -1,3 +1,4 @@
+// oxlint-disable react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
 import {Card, Text} from '@sanity/ui'
 import React, {useEffect, useMemo, useRef} from 'react'
 
@@ -70,7 +71,6 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
   useEffect(() => {
     if (asset?.status === 'errored') {
       handleCancelUpload()
-      // eslint-disable-next-line no-warning-comments
       // @TODO use better error handling
       throw new Error(asset.data?.errors?.messages?.join(' '))
     }

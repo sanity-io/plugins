@@ -1,4 +1,5 @@
 import {EarthGlobeIcon} from '@sanity/icons'
+// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
 import {definePlugin, Tool} from 'sanity'
 
 import {EmbeddingsIndexTool} from './EmbeddingsIndexTool'

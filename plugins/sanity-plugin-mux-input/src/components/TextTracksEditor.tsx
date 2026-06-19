@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {TranslateIcon} from '@sanity/icons'
 import {Autocomplete, Box, Card, Checkbox, Flex, Stack, Text} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'

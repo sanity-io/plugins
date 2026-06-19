@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-unused-vars, typescript/no-unnecessary-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {useEffect, useState} from 'react'
 import {defer, of, timer} from 'rxjs'
 import {concatMap, expand, tap} from 'rxjs/operators'
@@ -141,7 +142,6 @@ export default function useMuxAssets({client, enabled}: {client: SanityClient; e
           if (hasMorePages(pageResult)) {
             return timer(2000).pipe(
               concatMap(() =>
-                // eslint-disable-next-line max-nested-callbacks
                 defer(() =>
                   fetchMuxAssetsPage(
                     client,

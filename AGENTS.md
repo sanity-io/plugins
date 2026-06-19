@@ -426,6 +426,15 @@ pnpm lint        # Run the linter (includes type checking)
 pnpm lint:fix    # Auto-fix what's possible
 ```
 
+#### Lint Suppressions
+
+- Prefer local suppression comments over `.oxlintrc.json` `overrides` or broad `ignorePatterns`.
+- Use the narrowest practical scope, and always include the rule plus a short reason:
+  - `// oxlint-disable-next-line offending-rule - explanation why it is disabled`
+  - `// oxlint-disable offending-rule - explanation why it is disabled`
+- File-level `oxlint-disable` comments are acceptable when a legacy file has many diagnostics, but keep the rule list specific and remove the comment when the file is lint-cleaned.
+- For TypeScript compiler diagnostics emitted through oxlint type checking, use `// @ts-expect-error - explanation why it is disabled` on the affected line.
+
 ## Project Structure
 
 ```

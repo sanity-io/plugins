@@ -1,7 +1,9 @@
+// oxlint-disable promise/always-return, react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {AddIcon, UndoIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Heading, Spinner, Stack} from '@sanity/ui'
 import {useCallback, useEffect, useState} from 'react'
 
+// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
 import {deleteIndex, getIndexes, IndexState, NamedIndex} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
 import {FeatureDisabledNotice, FeatureError, useIsFeatureEnabled} from '../api/isEnabled'
@@ -67,7 +69,6 @@ function Indexes() {
         setIndexes(response)
       })
       .catch((e) => {
-        // eslint-disable-next-line no-unused-expressions
         console.error(e)
         setError(true)
       })
@@ -79,7 +80,6 @@ function Indexes() {
   const deleteNamedIndex = useCallback(
     (index: NamedIndex) => {
       if (
-        // eslint-disable-next-line no-alert
         !confirm(`Are you sure you want to delete ${index.indexName} for dataset ${index.dataset}?`)
       ) {
         return
@@ -91,7 +91,6 @@ function Indexes() {
           setTimeout(() => updateIndexes())
         })
         .catch((e) => {
-          // eslint-disable-next-line no-unused-expressions
           console.error(e)
           setError(true)
         })

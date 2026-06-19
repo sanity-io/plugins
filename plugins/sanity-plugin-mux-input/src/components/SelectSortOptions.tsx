@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {SortIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem, PopoverProps} from '@sanity/ui'
 import {useId} from 'react'

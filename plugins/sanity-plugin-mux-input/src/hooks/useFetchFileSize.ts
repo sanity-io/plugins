@@ -1,3 +1,4 @@
+// oxlint-disable react/react-compiler, typescript/no-floating-promises - legacy code will be lint-cleaned in a follow-up PR
 import {useEffect, useState} from 'react'
 
 import {StagedUpload} from '../components/Uploader'

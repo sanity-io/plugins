@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-base-to-string, typescript/no-deprecated, typescript/no-floating-promises, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
 import {CheckmarkCircleIcon, ErrorOutlineIcon, SyncIcon} from '@sanity/icons'
 import {Box, Button, Card, Dialog, Flex, Heading, Radio, Spinner, Stack, Text} from '@sanity/ui'
 import {useState} from 'react'

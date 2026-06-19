@@ -1,3 +1,4 @@
+// oxlint-disable import/no-commonjs - legacy code will be lint-cleaned in a follow-up PR
 const {showIncompatiblePluginDialog} = require('@sanity/incompatible-plugin')
 const {name, version, sanityExchangeUrl} = require('./package.json')
 

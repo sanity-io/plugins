@@ -1,3 +1,4 @@
+// oxlint-disable oxc/no-map-spread, typescript/no-misused-spread - legacy code will be lint-cleaned in a follow-up PR
 import path from 'path'
 
 import chalk from 'chalk'

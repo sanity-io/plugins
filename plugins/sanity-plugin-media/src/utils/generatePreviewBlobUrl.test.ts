@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {firstValueFrom} from 'rxjs'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
@@ -28,13 +29,11 @@ describe('generatePreviewBlobUrl$', () => {
         vi.spyOn(el, 'getContext').mockReturnValue({
           drawImage: vi.fn(),
         } as unknown as CanvasRenderingContext2D)
-        /* eslint-disable callback-return, consistent-return -- HTMLCanvasElement#toBlob sync test stub */
         el.toBlob = function toBlob(cb: ((blob: Blob | null) => void) | null | undefined) {
           if (cb) {
             cb(new Blob(['x'], {type: 'image/jpeg'}))
           }
         }
-        /* eslint-enable callback-return, consistent-return */
         return el
       }
       return origCreateElement(tagName)

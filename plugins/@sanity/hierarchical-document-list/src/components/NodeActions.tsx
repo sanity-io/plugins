@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components - legacy code will be lint-cleaned in a follow-up PR
 import {CopyIcon, EllipsisVerticalIcon, LaunchIcon, RemoveCircleIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
 import {type ComponentProps, type ForwardedRef, forwardRef, useMemo} from 'react'

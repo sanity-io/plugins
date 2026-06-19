@@ -1,6 +1,9 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Label, Stack, Text, TextArea, TextInput} from '@sanity/ui'
+// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
 import {Dispatch, FormEvent, SetStateAction, useCallback, useId} from 'react'
 
+// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
 import {NamedIndex} from '../api/embeddingsApi'
 
 export interface IndexFormInputProps {

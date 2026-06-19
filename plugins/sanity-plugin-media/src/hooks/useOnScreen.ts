@@ -1,3 +1,4 @@
+// oxlint-disable react/exhaustive-deps - legacy code will be lint-cleaned in a follow-up PR
 import {type RefObject, useEffect, useState} from 'react'
 
 const useOnScreen = (ref: RefObject<HTMLElement>, options = {}, once: boolean) => {

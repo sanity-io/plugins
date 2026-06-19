@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-base-to-string, typescript/no-deprecated, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
 import {
   CheckmarkCircleIcon,
   ErrorOutlineIcon,
@@ -98,7 +99,6 @@ function MissingAsset({
   )
 }
 
-// eslint-disable-next-line complexity
 function ImportVideosDialog(props: ReturnType<typeof useImportMuxAssets>) {
   const {importState} = props
 

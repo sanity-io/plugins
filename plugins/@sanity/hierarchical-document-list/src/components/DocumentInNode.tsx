@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {HelpCircleIcon} from '@sanity/icons'
 import {Box, Card, Flex, Stack, Text, Tooltip} from '@sanity/ui'
 import {type ReactNode, forwardRef, useMemo} from 'react'

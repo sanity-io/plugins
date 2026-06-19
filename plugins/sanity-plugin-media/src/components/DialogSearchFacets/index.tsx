@@ -1,3 +1,4 @@
+// oxlint-disable react/exhaustive-deps, react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
 import {Box} from '@sanity/ui'
 import {type ReactNode, useCallback} from 'react'
 import {useDispatch} from 'react-redux'

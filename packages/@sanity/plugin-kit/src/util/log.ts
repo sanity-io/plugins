@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-console - legacy code will be lint-cleaned in a follow-up PR
 // Note: This is _specifically_ meant for CLI usage,
 // I realize that "singletons" are bad.
 

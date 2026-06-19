@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {CheckmarkCircleIcon, EditIcon, WarningFilledIcon} from '@sanity/icons'
 import {
   Box,
@@ -90,7 +91,6 @@ const StyledWarningIcon = styled(WarningFilledIcon)(({theme}) => {
   }
 })
 
-// eslint-disable-next-line complexity
 const TableRowAsset = (props: Props) => {
   const {id, selected} = props
 

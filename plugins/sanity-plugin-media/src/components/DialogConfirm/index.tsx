@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components, react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {WarningOutlineIcon} from '@sanity/icons'
 import {Box, Button, Flex, Stack, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'

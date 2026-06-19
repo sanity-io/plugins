@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-await-in-loop, eslint/preserve-caught-error, typescript/no-unnecessary-boolean-literal-compare, typescript/no-unsafe-type-assertion, unicorn/no-useless-fallback-in-spread - legacy code will be lint-cleaned in a follow-up PR
 import fs from 'fs'
 import path from 'path'
 import util from 'util'

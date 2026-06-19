@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {extractWithPath, arrayToJSONMatchPath, extract} from '@sanity/mutator'
 import {randomKey} from '@sanity/util/content'
 import {SanityDocument} from 'sanity'
