@@ -2511,7 +2511,7 @@ importers:
         specifier: ^4.0.0
         version: 4.4.0
       filesize:
-        specifier: ^9.0.0
+        specifier: ^9.0.11
         version: 9.0.11
       groq:
         specifier: ^6.1.0
