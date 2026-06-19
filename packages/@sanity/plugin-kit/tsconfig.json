@@ -3,7 +3,6 @@
   "include": ["src/**/*.ts", "test/**/*.ts", "package.config.ts", "vitest.config.ts"],
   "exclude": ["dist", "node_modules", "test/fixtures"],
   "compilerOptions": {
-    "verbatimModuleSyntax": false,
     "noPropertyAccessFromIndexSignature": false,
     "noUncheckedIndexedAccess": false,
     "resolveJsonModule": true,

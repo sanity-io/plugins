@@ -1,4 +1,4 @@
-import {VerifyPackageConfig} from './verify-common'
+import type {VerifyPackageConfig} from './verify-common'
 
 export interface SanityPlugin {
   verifyPackage?: VerifyPackageConfig

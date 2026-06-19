@@ -7,7 +7,7 @@ import inquirer from 'inquirer'
 // @ts-expect-error missing types
 import validNpmName from 'validate-npm-package-name'
 
-import {InjectOptions} from '../actions/inject'
+import type {InjectOptions} from '../actions/inject'
 
 export async function prompt(
   message: string,

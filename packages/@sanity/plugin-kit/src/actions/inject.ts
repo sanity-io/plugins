@@ -24,8 +24,8 @@ import log from '../util/log'
 import {prompt, promptForPackageName, promptForRepoOrigin} from '../util/prompt'
 import {generateReadme, isDefaultGitHubReadme} from '../util/readme'
 import {getUserInfo} from '../util/user'
-import {InitFlags} from './init'
-import {PackageJson} from './verify/types'
+import type {InitFlags} from './init'
+import type {PackageJson} from './verify/types'
 
 const bannedFields = ['login', 'description', 'projecturl', 'email']
 const preferredLicenses = ['MIT', 'ISC', 'BSD-3-Clause']

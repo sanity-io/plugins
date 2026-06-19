@@ -7,8 +7,8 @@ import githubUrl from 'github-url-to-object'
 // @ts-expect-error missing types
 import validateNpmPackageName from 'validate-npm-package-name'
 
-import {InjectOptions, PackageData} from '../actions/inject'
-import {PackageJson} from '../actions/verify/types'
+import type {InjectOptions, PackageData} from '../actions/inject'
+import type {PackageJson} from '../actions/verify/types'
 import {expectedScripts} from '../actions/verify/validations'
 import {
   forcedDevPackageVersions,
@@ -16,7 +16,7 @@ import {
   forcedPeerPackageVersions,
 } from '../configs/forced-package-versions'
 import {cliName, incompatiblePluginPackage, requiredNodeEngine} from '../constants'
-import {getPaths, ManifestOptions} from '../sanity/manifest'
+import {getPaths, type ManifestOptions} from '../sanity/manifest'
 import {hasSourceEquivalent, writeJsonFile} from '../util/files'
 import log from '../util/log'
 import {resolveLatestVersions} from './resolveLatestVersions'

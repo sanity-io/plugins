@@ -1,7 +1,7 @@
 import chalk from 'chalk'
-import {TypedFlags} from 'meow'
+import type {TypedFlags} from 'meow'
 import outdent from 'outdent'
-import {ParsedCommandLine} from 'typescript'
+import type {ParsedCommandLine} from 'typescript'
 
 import sharedFlags from '../../sharedFlags'
 import {runCommand} from '../../util/command-parser'
