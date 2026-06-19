@@ -33,19 +33,26 @@ describe('findImageAssets', () => {
     expect(document.hero.asset._ref).toBe('some-other-asset')
   })
 
-  it('finds deeply nested images and keys them by the top-level field', () => {
+  it('repoints deeply nested images while preserving the full top-level field (no data loss)', () => {
     const document = {
       _id: 'doc-1',
       _type: 'post',
       content: {
+        title: 'Keep me',
         intro: {_type: 'image', asset: {_ref: 'old-asset', _type: 'reference'}},
       },
     }
 
     const result = findImageAssets(document, newAsset, 'old-asset')
 
+    // The patch sets the entire `content` field, so the sibling `title` is retained
     expect(result).toEqual([
-      {content: {_type: 'image', asset: {_ref: 'new-asset', _type: 'reference'}}},
+      {
+        content: {
+          title: 'Keep me',
+          intro: {_type: 'image', asset: {_ref: 'new-asset', _type: 'reference'}},
+        },
+      },
     ])
     expect(document.content.intro.asset._ref).toBe('new-asset')
   })

@@ -6,33 +6,34 @@ type ImageNode = {
 } & Record<string, unknown>
 
 /**
- * Walks a document and collects patch objects that re-point matching image
- * assets (those referencing `assetToReplaceId`) at the replacement asset.
+ * Re-points every image asset in `document` that references `assetToReplaceId`
+ * at `newAsset`, mutating the document in place, and returns one patch object
+ * per affected top-level field in the form `{[field]: <full mutated field value>}`.
  *
- * The matched image nodes are mutated in place (`asset._ref` is updated) and
- * returned keyed by the top-level field they were found under, ready to be
- * passed to `client.patch().set()`.
+ * Each patch carries the entire (mutated) top-level field value rather than just
+ * the matched image node, so `client.patch().set()` updates the references
+ * without discarding sibling data — including deeply nested image fields.
  *
- * NOTE: ported as-is from sanity-plugin-media#236. Because of GROQ limitations
- * the matching image objects are filtered out of the document manually rather
- * than via a projection.
+ * NOTE: ported from sanity-plugin-media#236. Because of GROQ limitations the
+ * matching image objects are filtered out of the document manually rather than
+ * via a projection.
  */
 export function findImageAssets(
   document: Record<string, unknown>,
   newAsset: Asset,
   assetToReplaceId: string,
 ): Record<string, unknown>[] {
-  const foundEntries: Record<string, unknown>[] = []
-  findNestedObjects(document, foundEntries, newAsset, assetToReplaceId)
-  return foundEntries
+  const matchedTopLevelFields = new Set<string>()
+  repointNestedImages(document, newAsset, assetToReplaceId, '', matchedTopLevelFields)
+  return [...matchedTopLevelFields].map((field) => ({[field]: document[field]}))
 }
 
-function findNestedObjects(
+function repointNestedImages(
   node: unknown,
-  foundEntries: Record<string, unknown>[],
   newAsset: Asset,
   assetToReplaceId: string,
-  currentPath = '',
+  topLevelField: string,
+  matchedTopLevelFields: Set<string>,
 ): void {
   if (typeof node !== 'object' || node === null) {
     return
@@ -41,16 +42,22 @@ function findNestedObjects(
   const candidate = node as ImageNode
   if (candidate._type === 'image' && candidate.asset && candidate.asset._ref === assetToReplaceId) {
     candidate.asset._ref = newAsset._id
-
-    if (!foundEntries.some((entry) => currentPath in entry)) {
-      foundEntries.push({[currentPath]: node})
+    if (topLevelField) {
+      matchedTopLevelFields.add(topLevelField)
     }
   }
 
   for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
     if (typeof value === 'object' && value !== null) {
-      const newPath = currentPath ? currentPath : key
-      findNestedObjects(value, foundEntries, newAsset, assetToReplaceId, newPath)
+      // Once we descend past the document root, keep attributing matches to the
+      // top-level field so the patch replaces that whole field.
+      repointNestedImages(
+        value,
+        newAsset,
+        assetToReplaceId,
+        topLevelField || key,
+        matchedTopLevelFields,
+      )
     }
   }
 }
