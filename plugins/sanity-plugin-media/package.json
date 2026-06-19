@@ -72,7 +72,7 @@
     "redux": "^5.0.1",
     "redux-observable": "3.0.0-rc.2",
     "rxjs": "^7.8.2",
-    "zod": "^3.21.4"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@sanity/pkg-utils": "catalog:",
