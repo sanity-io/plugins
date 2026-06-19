@@ -15,7 +15,7 @@ import {
   validatePackageType,
   validatePkgUtilsDependency,
   validatePkgUtilsVersion,
-  validatePluginSanityJson,
+  validateIncompatiblePlugin,
   validateDeprecatedDependencies,
   validateScripts,
   validateTsConfig,
@@ -80,7 +80,9 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
     await validation('tsconfig', async () => validateTsConfig(ts, {basePath, outDir, tsconfig}))
   }
 
-  await validation('sanityV2Json', async () => validatePluginSanityJson({basePath, packageJson}))
+  await validation('incompatiblePlugin', async () =>
+    validateIncompatiblePlugin({basePath, packageJson}),
+  )
 
   await validation('babelConfig', async () => validateBabelConfig({basePath}))
 
