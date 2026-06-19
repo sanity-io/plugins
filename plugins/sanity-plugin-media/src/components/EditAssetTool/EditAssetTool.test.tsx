@@ -2,7 +2,7 @@ import {LayerProvider, studioTheme, ThemeProvider, ToastProvider} from '@sanity/
 import {cleanup, render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {of, Subject} from 'rxjs'
-import {ColorSchemeProvider} from 'sanity'
+import {type AssetSourceComponentProps, ColorSchemeProvider} from 'sanity'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
 vi.mock('../Image', () => ({default: () => null}))
@@ -60,7 +60,7 @@ function renderTool(overrides: Record<string, unknown> = {}) {
         <ToastProvider>
           <LayerProvider>
             <ToolOptionsProvider options={{creditLine: {enabled: false}}}>
-              <EditAssetTool {...(props as never)} />
+              <EditAssetTool {...(props as unknown as AssetSourceComponentProps)} />
             </ToolOptionsProvider>
           </LayerProvider>
         </ToastProvider>
