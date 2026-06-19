@@ -378,7 +378,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       validate-npm-package-name:
-        specifier: ^5.0.0
+        specifier: ^5.0.1
         version: 5.0.1
       xdg-basedir:
         specifier: ^4.0.0
