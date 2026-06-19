@@ -41,7 +41,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@portabletext/block-tools": "^5.1.4",
+    "@portabletext/block-tools": "^5.1.5",
     "@portabletext/to-html": "^5.0.2",
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
