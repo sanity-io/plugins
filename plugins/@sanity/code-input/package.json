@@ -63,7 +63,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/lezer-groq": "^1.0.4",
     "@sanity/ui": "catalog:",
-    "@uiw/codemirror-themes": "^4.25.8",
+    "@uiw/codemirror-themes": "^4.25.10",
     "@uiw/react-codemirror": "^4.25.8"
   },
   "devDependencies": {
