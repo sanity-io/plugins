@@ -2001,7 +2001,7 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       react-hook-form:
-        specifier: ^7.48.2
+        specifier: ^7.79.0
         version: 7.79.0(react@19.2.7)
       react-time-ago:
         specifier: ^7.2.1
@@ -2532,7 +2532,7 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0(react-dom@19.2.7)(react@19.2.7)
       react-hook-form:
-        specifier: ^7.54.2
+        specifier: ^7.79.0
         version: 7.79.0(react@19.2.7)
       react-redux:
         specifier: ^9.2.0

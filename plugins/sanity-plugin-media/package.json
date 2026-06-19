@@ -65,7 +65,7 @@
     "pluralize": "^8.0.0",
     "react-dropzone": "^11.7.1",
     "react-file-icon": "^1.6.0",
-    "react-hook-form": "^7.54.2",
+    "react-hook-form": "^7.79.0",
     "react-redux": "^9.2.0",
     "react-select": "^5.10.1",
     "react-virtuoso": "^4.12.5",
