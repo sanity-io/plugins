@@ -83,7 +83,7 @@ async function getSanityUserInfo(): Promise<User | undefined> {
       return undefined
     }
 
-    const user = await request({
+    const user = await request<User>({
       url: 'https://api.sanity.io/v1/users/me',
       headers: {Authorization: `Bearer ${token}`},
     })
