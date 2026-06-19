@@ -54,7 +54,7 @@
     "javascript-time-ago": "^2.6.4",
     "object-hash": "3.0.0",
     "react-hook-form": "^7.79.0",
-    "react-time-ago": "^7.2.1",
+    "react-time-ago": "^7.4.4",
     "use-deep-compare-effect": "^1.8.1",
     "xstate": "^5.32.1",
     "yup": "^0.32.11"
