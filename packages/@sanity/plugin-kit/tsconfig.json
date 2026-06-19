@@ -1,6 +1,12 @@
 {
   "extends": "@repo/tsconfig/check.json",
-  "include": ["src/**/*.ts", "test/**/*.ts", "package.config.ts", "vitest.config.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/choosealicense-list.d.ts",
+    "test/**/*.ts",
+    "package.config.ts",
+    "vitest.config.ts"
+  ],
   "exclude": ["dist", "node_modules", "test/fixtures"],
   "compilerOptions": {
     "noPropertyAccessFromIndexSignature": false,

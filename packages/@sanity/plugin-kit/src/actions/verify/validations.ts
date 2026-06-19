@@ -4,7 +4,6 @@ import path from 'path'
 import chalk from 'chalk'
 import outdent from 'outdent'
 import type {ParsedCommandLine} from 'typescript'
-// @ts-expect-error missing types
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import {deprecatedDevDeps, mergedPackages} from '../../configs/banned-packages'
@@ -458,11 +457,10 @@ export async function validatePluginSanityJson({
 }
 
 export function validatePackageName(packageJson: PackageJson) {
-  const valid: {validForNewPackages?: boolean; errors: string[]} = validateNpmPackageName(
-    packageJson.name,
-  )
+  const valid = validateNpmPackageName(packageJson.name ?? '')
   if (!valid.validForNewPackages) {
-    return [`Invalid package.json: "name" is invalid: ${valid.errors.join(', ')}`]
+    const messages = valid.errors ?? valid.warnings ?? []
+    return [`Invalid package.json: "name" is invalid: ${messages.join(', ')}`]
   }
 
   const isScoped = packageJson.name?.startsWith('@')

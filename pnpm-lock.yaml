@@ -396,6 +396,9 @@ importers:
       '@types/eslint':
         specifier: ^8.56.11
         version: 8.56.12
+      '@types/github-url-to-object':
+        specifier: ^4.0.4
+        version: 4.0.4
       '@types/inquirer':
         specifier: ^9.0.3
         version: 9.0.10
@@ -408,6 +411,9 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
+      '@types/validate-npm-package-name':
+        specifier: ^4.0.2
+        version: 4.0.2
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.26.0
         version: 8.61.1(@typescript-eslint/parser@8.61.1)(eslint@8.57.1)(typescript@5.9.3)
@@ -6677,6 +6683,9 @@ packages:
 
   '@types/eventsource@1.1.15':
     resolution: {integrity: sha512-XQmGcbnxUNa06HR3VBVkc9+A2Vpi9ZyLJcdS5dwaQQ/4ZMWFO+5c90FnMUpbtMZwB/FChoYHwuVg8TvkECacTA==}
+
+  '@types/github-url-to-object@4.0.4':
+    resolution: {integrity: sha512-P2zPnqw2s272Sv+Gn7jHbyjhx9NBb6wQyM/D97wK2Fy1CXXm0D16dtSy87qzndzSwtRWq4i19ND3X1c72BleQA==}
 
   '@types/google.maps@3.65.1':
     resolution: {integrity: sha512-O9monmoXfyWsuyR4Wz3TZU26qai9y7jUV7DSRySluae6O5tQt3Obw5ETt0HKfNsjctnlF/yx/Tfn3WQNmKRXZA==}
@@ -15980,6 +15989,8 @@ snapshots:
   '@types/event-source-polyfill@1.0.5': {}
 
   '@types/eventsource@1.1.15': {}
+
+  '@types/github-url-to-object@4.0.4': {}
 
   '@types/google.maps@3.65.1': {}
 

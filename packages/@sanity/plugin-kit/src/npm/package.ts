@@ -2,9 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import util from 'util'
 
-// @ts-expect-error missing types
 import githubUrl from 'github-url-to-object'
-// @ts-expect-error missing types
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import type {InjectOptions, PackageData} from '../actions/inject'
@@ -109,11 +107,9 @@ function validatePackageName(manifest: PackageJson) {
     throw new Error(`Invalid package.json: "name" must be a string`)
   }
 
-  const valid: {validForNewPackages?: boolean; errors: string[]} = validateNpmPackageName(
-    manifest.name,
-  )
+  const valid = validateNpmPackageName(manifest.name)
   if (!valid.validForNewPackages) {
-    throw new Error(`Invalid package.json: "name" is invalid: ${valid.errors.join(', ')}`)
+    throw new Error(`Invalid package.json: "name" is invalid: ${(valid.errors ?? []).join(', ')}`)
   }
 
   const isScoped = manifest.name[0] === '@'
@@ -327,7 +323,11 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
 }
 
 function urlsFromOrigin(gitOrigin?: string): {bugs?: {url: string}; homepage?: string} {
-  const details: {user: string; repo: string} | undefined = githubUrl(gitOrigin)
+  if (!gitOrigin) {
+    return {}
+  }
+
+  const details = githubUrl(gitOrigin)
   if (!details) {
     return {}
   }
