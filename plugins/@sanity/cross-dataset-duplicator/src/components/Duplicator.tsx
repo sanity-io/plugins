@@ -145,9 +145,12 @@ export default function Duplicator(props: DuplicatorProps) {
       {payloadIds},
     )
 
+    // Index by `_id` once so status lookups stay O(1) instead of O(n) per item
+    const destinationById = new Map(destinationData.map((doc) => [doc._id, doc]))
+
     setPayload(
       payloadActual.map((item) => {
-        const existingDoc = destinationData.find((doc) => doc._id === item.doc._id)
+        const existingDoc = destinationById.get(item.doc._id)
         let status: keyof MessageTypes = 'CREATE'
 
         if (existingDoc?._updatedAt && item.doc._updatedAt) {
@@ -269,6 +272,14 @@ export default function Duplicator(props: DuplicatorProps) {
       const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
 
       const res = await fetch(downloadUrl, downloadConfig)
+
+      // Fail fast instead of uploading an error response body (e.g. 401/403/404) as an asset
+      if (!res.ok) {
+        throw new Error(
+          `Failed to download asset "${doc.originalFilename ?? doc._id}" (${res.status} ${res.statusText})`,
+        )
+      }
+
       const assetData = await res.blob()
 
       const options = {filename: doc.originalFilename}
@@ -283,14 +294,13 @@ export default function Duplicator(props: DuplicatorProps) {
         svgMaps.push({old: doc._id, new: assetDoc._id})
       }
 
-      // This adds the newly created asset document to the transaction but ...
-      // it doesn't have some of the original asset's metadata like `altText` or `title`
-      transactionDocs.push(assetDoc)
-
-      // So the original `doc` is added to the transaction as well below
-      // However, we don't want to retain the original `url` or `path` values
-      // because these strings contain the origin's dataset name
-      transactionDocs.push({...doc, url: assetDoc.url, path: assetDoc.path})
+      // The uploaded `assetDoc` has the correct destination `_id`, `url` and `path`,
+      // but it's missing original metadata like `altText` or `title`. Merge the original
+      // document's fields on top of the uploaded identifiers so a single, complete asset
+      // document is created. For SVGs the uploaded `_id` differs from the original; the SVG
+      // ref remap below repoints references to it, so we avoid leaving an orphaned document
+      // behind. The original `url`/`path` are dropped because they contain the origin dataset.
+      transactionDocs.push({...doc, _id: assetDoc._id, url: assetDoc.url, path: assetDoc.path})
 
       currentProgress += 1
       setMessage({
@@ -314,27 +324,28 @@ export default function Duplicator(props: DuplicatorProps) {
       return
     }
 
-    // Remap SVG references to new _id's
+    // Remap SVG references to new _id's.
+    // `transactionDocs` can contain objects taken directly from React state (`payload`),
+    // so never mutate them in place — clone before applying `dset`.
     const transactionDocsMapped = transactionDocs.map((doc) => {
-      const expr = `.._ref`
-      const references = extractWithPath(expr, doc)
+      // For every found _ref, search for an SVG asset _id that needs updating
+      const remaps = extractWithPath(`.._ref`, doc).flatMap((ref) => {
+        const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
 
-      if (!references.length) {
+        return newRefValue ? [{path: ref.path.join('.'), value: newRefValue}] : []
+      })
+
+      if (!remaps.length) {
         return doc
       }
 
-      // For every found _ref, search for an SVG asset _id and update
-      references.forEach((ref) => {
-        const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
+      const nextDoc = structuredClone(doc)
 
-        if (newRefValue) {
-          const refPath = ref.path.join('.')
-
-          dset(doc, refPath, newRefValue)
-        }
+      remaps.forEach(({path, value}) => {
+        dset(nextDoc, path, value)
       })
 
-      return doc
+      return nextDoc
     })
 
     // Create transaction
@@ -398,16 +409,20 @@ export default function Duplicator(props: DuplicatorProps) {
 
   const buttonTextParts = [`Duplicate`]
 
-  if (selectedDocumentsCount > 1) {
+  if (selectedDocumentsCount > 0) {
     buttonTextParts.push(
       String(selectedDocumentsCount),
       selectedDocumentsCount === 1 ? `Document` : `Documents`,
     )
   }
 
-  if (selectedAssetsCount > 1) {
+  if (selectedAssetsCount > 0) {
+    // Only join with "and" when documents were already added above
+    if (selectedDocumentsCount > 0) {
+      buttonTextParts.push(`and`)
+    }
+
     buttonTextParts.push(
-      `and`,
       String(selectedAssetsCount),
       selectedAssetsCount === 1 ? `Asset` : `Assets`,
     )
@@ -420,6 +435,10 @@ export default function Duplicator(props: DuplicatorProps) {
   buttonTextParts.push(`to`, String(destinationTitle))
 
   const buttonText = buttonTextParts.join(` `)
+
+  // Guard against dividing by zero when there are no assets to upload (progress[1] === 0),
+  // which would otherwise produce a NaN/Infinity `scaleX` and an invalid CSS transform.
+  const progressScaleX = progress[1] > 0 ? Math.min(progress[0] / progress[1], 1) : 0
 
   if (workspacesOptions.length < 2) {
     return (
@@ -473,7 +492,7 @@ export default function Duplicator(props: DuplicatorProps) {
                   <Card
                     style={{
                       width: '100%',
-                      transform: `scaleX(${progress[0] / progress[1]})`,
+                      transform: `scaleX(${progressScaleX})`,
                       transformOrigin: 'left',
                       transition: 'transform .2s ease',
                       boxSizing: 'border-box',
