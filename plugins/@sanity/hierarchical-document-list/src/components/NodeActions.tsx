@@ -1,6 +1,6 @@
 import {CopyIcon, EllipsisVerticalIcon, LaunchIcon, RemoveCircleIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
-import {type ComponentProps, type ForwardedRef, forwardRef, useMemo} from 'react'
+import {type ComponentProps, useMemo} from 'react'
 import {IntentButton as IntentLink} from 'sanity'
 
 import useTreeOperations from '../hooks/useTreeOperations'
@@ -19,10 +19,7 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
   // Adapted from @sanity\form-builder\src\inputs\ReferenceInput\ArrayItemReferenceInput.tsx
   const OpenLink = useMemo(
     () =>
-      forwardRef(function OpenLinkInner(
-        restProps: ComponentProps<typeof IntentLink>,
-        _ref: ForwardedRef<HTMLAnchorElement>,
-      ) {
+      function OpenLinkInner(restProps: ComponentProps<typeof IntentLink>) {
         return (
           <IntentLink
             {...restProps}
@@ -32,7 +29,7 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
             rel="noopener noreferrer"
           />
         )
-      }),
+      },
     [referenceId, docType],
   )
 

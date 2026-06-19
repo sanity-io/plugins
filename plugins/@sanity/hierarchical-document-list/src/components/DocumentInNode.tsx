@@ -1,6 +1,6 @@
 import {HelpCircleIcon} from '@sanity/icons'
 import {Box, Card, Flex, Stack, Text, Tooltip} from '@sanity/ui'
-import {type ReactNode, forwardRef, useMemo} from 'react'
+import {type ReactNode, useMemo} from 'react'
 import {Preview, type SanityDocument, type SchemaType, TextWithTone, useSchema} from 'sanity'
 import {type RouterPaneGroup, usePaneRouter} from 'sanity/structure'
 
@@ -31,16 +31,17 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
 
   const LinkComponent = useMemo(
     () =>
-      forwardRef((linkProps: any, ref: any) => (
-        <ChildLink
-          {...linkProps}
-          childId={referenceId}
-          ref={ref}
-          childParameters={{
-            type: docType,
-          }}
-        />
-      )),
+      function LinkComponentInner(linkProps: any) {
+        return (
+          <ChildLink
+            {...linkProps}
+            childId={referenceId}
+            childParameters={{
+              type: docType,
+            }}
+          />
+        )
+      },
     [ChildLink, docType, referenceId],
   )
 
