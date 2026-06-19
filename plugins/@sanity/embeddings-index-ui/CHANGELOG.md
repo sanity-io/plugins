@@ -1,5 +1,11 @@
 # @sanity/embeddings-index-ui
 
+## 4.0.1
+
+### Patch Changes
+
+- [#1347](https://github.com/sanity-io/plugins/pull/1347) [`fabdc72`](https://github.com/sanity-io/plugins/commit/fabdc726bb1c9abee0e16252422ebd27a3d8e428) Thanks [@stipsan](https://github.com/stipsan)! - Adopt the shared monorepo TypeScript and lint conventions (shared `@repo/tsconfig`, type-aware linting) and fix the type errors surfaced by the stricter config.
+
 ## 4.0.0
 
 ### Major Changes
