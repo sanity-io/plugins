@@ -60,10 +60,14 @@ export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
       components: {
         input(props) {
           if (isGeopoint(props.schemaType)) {
+            // Narrowing the generic Sanity input props to this input's props is a known pattern
+            // oxlint-disable-next-line typescript/no-unsafe-type-assertion
             const castedProps = props as unknown as Omit<GeopointInputProps, 'geoConfig'>
             return <GeopointInput {...castedProps} geoConfig={config} />
           }
           if (isGeopointRadius(props.schemaType)) {
+            // Narrowing the generic Sanity input props to this input's props is a known pattern
+            // oxlint-disable-next-line typescript/no-unsafe-type-assertion
             const castedProps = props as unknown as Omit<GeopointRadiusInputProps, 'geoConfig'>
             return <GeopointRadiusInput {...castedProps} geoConfig={config} />
           }

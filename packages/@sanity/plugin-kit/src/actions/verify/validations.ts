@@ -1,3 +1,6 @@
+// plugin-kit is a Node CLI ported from sanity-io/plugin-kit; these validations run a series of
+// dependent filesystem/network checks that are intentionally sequential.
+// oxlint-disable no-await-in-loop
 import {createRequire} from 'node:module'
 import path from 'path'
 
@@ -185,6 +188,8 @@ export function validatePkgUtilsVersion({basePath}: {basePath: string}): string[
 
   let installedVersion: string | undefined
   try {
+    // The pkg-utils package.json is known to expose an optional `version` string
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     const pkgUtilsManifest = require('@sanity/pkg-utils/package.json') as {version?: string}
     installedVersion = pkgUtilsManifest.version
   } catch {

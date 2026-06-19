@@ -51,6 +51,8 @@ export async function validateImports({basePath}: {basePath: string}): Promise<s
     const results = await eslint.lintFiles([path.join(basePath, '**/*.{js,jsx,ts,tsx}')])
 
     const onlyImportErrors = results
+      // Rebuilding each result with a filtered messages list; in-place mutation isn't worth it here
+      // oxlint-disable-next-line oxc/no-map-spread
       .map((r) => {
         const limitErrors = r.messages.filter((m) => m.ruleId === 'no-restricted-imports')
         return {

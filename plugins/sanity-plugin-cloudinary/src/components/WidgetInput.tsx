@@ -39,6 +39,8 @@ const WidgetInput = (props: WidgetInputProps) => {
       </SetupButtonContainer>
 
       <Flex style={{textAlign: 'center', width: '100%'}} marginBottom={2}>
+        {/* The field value is known to be a CloudinaryAsset at this point */}
+        {/* oxlint-disable-next-line typescript/no-unsafe-type-assertion */}
         <AssetPreview value={value as CloudinaryAsset} />
       </Flex>
 

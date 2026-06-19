@@ -15,6 +15,8 @@ const pluginConfigKeys = [
 ]
 
 export const Secrets = (props: ObjectInputProps) => {
+  // useSecrets is generic; the stored secret shape for this namespace is {apiKey: string}
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const {secrets, loading} = useSecrets(namespace) as {secrets: {apiKey: string}; loading: boolean}
   const {setSecret} = useGrowthbookContext()
   const [showSettings, setShowSettings] = useState<boolean>(false)

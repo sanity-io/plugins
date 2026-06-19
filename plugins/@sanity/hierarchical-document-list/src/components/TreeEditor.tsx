@@ -65,6 +65,7 @@ function TreeEditor(props: TreeEditorProps) {
 
   const onMoveNode = useCallback(
     // The tree nodes are always our own LocalTreeItem objects
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     (data: unknown) => operations.handleMovedNode(data as HandleMovedNodeData),
     [operations],
   )
@@ -184,6 +185,8 @@ const doNothingOnChange = () => {
   // Do nothing. onMoveNode will do all the work
 }
 
+// react-sortable-tree nodes always carry our own string `_key`
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 const getNodeKey = (data: {node: TreeItem}) => data.node['_key'] as string
 
 export default TreeEditor

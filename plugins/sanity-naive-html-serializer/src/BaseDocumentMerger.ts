@@ -1,3 +1,6 @@
+// Ported merger that casts loosely-typed document/array values (from @sanity/mutator extraction)
+// to their concrete shapes throughout; the runtime values are guaranteed by the merge logic.
+// oxlint-disable typescript/no-unsafe-type-assertion
 import {extractWithPath, arrayToJSONMatchPath, extract} from '@sanity/mutator'
 import {randomKey} from '@sanity/util/content'
 import {SanityDocument} from 'sanity'

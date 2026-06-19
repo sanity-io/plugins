@@ -1,3 +1,6 @@
+// Paginates the LaunchDarkly API sequentially: each page depends on the previous request's
+// result to decide whether to keep fetching, so the awaits cannot be parallelized.
+// oxlint-disable no-await-in-loop
 import type {SanityClient} from 'sanity'
 
 import type {ExperimentType} from '../types'

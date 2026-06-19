@@ -1,3 +1,11 @@
+// plugin-kit is a Node CLI ported from sanity-io/plugin-kit; the legacy code uses empty-object
+// spread fallbacks, boolean-literal comparisons, sequential awaits, casts, and rethrows without a
+// `cause`, all predating these rules.
+// oxlint-disable unicorn/no-useless-fallback-in-spread
+// oxlint-disable preserve-caught-error
+// oxlint-disable typescript/no-unnecessary-boolean-literal-compare
+// oxlint-disable no-await-in-loop
+// oxlint-disable typescript/no-unsafe-type-assertion
 import fs from 'fs'
 import path from 'path'
 import util from 'util'

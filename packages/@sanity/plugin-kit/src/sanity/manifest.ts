@@ -1,3 +1,7 @@
+// plugin-kit is a Node CLI ported from sanity-io/plugin-kit; the legacy code rethrows errors
+// without a `cause` and uses array `.includes()` lookups, predating these rules.
+// oxlint-disable preserve-caught-error
+// oxlint-disable unicorn/prefer-set-has
 import fs from 'fs'
 import path from 'path'
 import util from 'util'
@@ -192,6 +196,8 @@ async function validateParts(manifest: SanityV2Manifest, options: ManifestOption
 
   let i = 0
   for (const part of manifest.parts) {
+    // Parts are validated sequentially so errors are reported in document order
+    // oxlint-disable-next-line no-await-in-loop
     await validatePart(part, i, options)
     i++
   }

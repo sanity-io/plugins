@@ -1,3 +1,6 @@
+// Splits a static string into purely positional segments with no stable identity,
+// so the array index is the correct React key here.
+// oxlint-disable react/no-array-index-key
 import {Box, Card, Container, Heading, Stack, Text} from '@sanity/ui'
 import {Fragment, type PropsWithChildren} from 'react'
 

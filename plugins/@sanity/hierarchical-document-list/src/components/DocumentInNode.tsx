@@ -1,3 +1,6 @@
+// Casts the loosely-typed schema/document shapes (and react-sortable-tree node values) to the
+// concrete Sanity types this preview needs; several of these casts live inside JSX attributes.
+// oxlint-disable typescript/no-unsafe-type-assertion
 import {HelpCircleIcon} from '@sanity/icons'
 import {Box, Card, Flex, Stack, Text, Tooltip} from '@sanity/ui'
 import {type ReactNode, forwardRef, useMemo} from 'react'
@@ -31,6 +34,8 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
 
   const LinkComponent = useMemo(
     () =>
+      // Memoized forwardRef link wrapper (mirrors Sanity's PaneItem); identity is stable via useMemo
+      // oxlint-disable-next-line react/no-unstable-nested-components
       forwardRef((linkProps: any, ref: any) => (
         <ChildLink
           {...linkProps}

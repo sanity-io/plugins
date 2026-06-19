@@ -21,6 +21,8 @@ function toGradientPatch(patch: Patch): GradientPatch {
     const {position, items} = patch
     return {
       insert: {
+        // The insert position is always a string path segment
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion
         [position as string]: matchPath,
         items: items,
       },

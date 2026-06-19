@@ -33,6 +33,8 @@ const sortByTargetName = (items: Sanity.DeploymentTarget[]) => {
 }
 
 export const deploymentTargetListMachine = setup({
+  // XState v5's canonical typing pattern relies on `{} as {...}` style assertions
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   types: {} as {
     children: {fetchData: 'fetch data'}
     context: Context

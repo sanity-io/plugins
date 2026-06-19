@@ -156,10 +156,14 @@ function semverWorkflowFiles(): Injectable[] {
     {type: 'copy', from: ['lint-staged.template.js'], to: 'lint-staged.config.js'},
   ]
 
+  // Rebuilding each entry with a prefixed `from` path; in-place mutation isn't worth it here
+  // oxlint-disable-next-line oxc/no-map-spread
   return base.map((fromTo) => {
     if (fromTo.type === 'copy') {
       return {
         ...fromTo,
+        // `from` is always an array of path segments, never a string
+        // oxlint-disable-next-line typescript/no-misused-spread
         from: ['semver-workflow', ...fromTo.from],
       }
     }
@@ -179,6 +183,8 @@ async function semverWorkflowDependencies(): Promise<Record<string, string>> {
 }
 
 export function readmeBaseurl(pkg: PackageJson) {
+  // repository.url / homepage are string URLs (or the 'TODO' fallback)
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   return ((pkg.repository?.url ?? pkg.homepage ?? 'TODO') as string)
     .replace(/.+:\/\//g, 'https://')
     .replace(/\.git/g, '')

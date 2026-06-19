@@ -19,6 +19,8 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
   // Adapted from @sanity\form-builder\src\inputs\ReferenceInput\ArrayItemReferenceInput.tsx
   const OpenLink = useMemo(
     () =>
+      // Memoized forwardRef link wrapper (mirrors Sanity's PaneItem); identity is stable via useMemo
+      // oxlint-disable-next-line react/no-unstable-nested-components
       forwardRef(function OpenLinkInner(
         restProps: ComponentProps<typeof IntentLink>,
         _ref: ForwardedRef<HTMLAnchorElement>,

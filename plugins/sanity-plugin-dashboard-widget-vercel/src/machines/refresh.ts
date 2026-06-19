@@ -4,6 +4,8 @@ type Event = {type: 'ERROR'} | {type: 'REFRESH'} | {type: 'REFRESHED'} | {type: 
 
 const refreshMachine = setup({
   types: {
+    // XState v5's canonical typing pattern relies on `{} as Event` style assertions
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     events: {} as Event,
   },
 }).createMachine({

@@ -108,6 +108,8 @@ export const ExperimentField = (
 ) => {
   const {onChange} = props.inputProps
   const {inputId, experimentNameOverride, experimentId, variantNameOverride} = props
+  // The `active` field is a boolean flag on the experiment item value
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const active = props.value?.['active'] as boolean | undefined
 
   const actionProps = useMemo(

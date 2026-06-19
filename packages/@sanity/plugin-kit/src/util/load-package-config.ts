@@ -36,6 +36,8 @@ export async function loadPackageConfig(options: {
   const pkgPath = path.join(basePath, 'package.json')
   const require = createRequire(pkgPath)
   const pkgUtilsEntry = require.resolve('@sanity/pkg-utils')
+  // The dynamically imported pkg-utils entry is known to export `loadConfig`
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const {loadConfig} = (await import(pathToFileURL(pkgUtilsEntry).href)) as {
     loadConfig: typeof LoadConfig
   }

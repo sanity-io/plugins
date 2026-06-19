@@ -23,6 +23,8 @@ const TreeNodeRenderer: any = (props: any) => {
         }}
       >
         {Children.map(children, (child) =>
+          // Children are always React elements accepting the injected drag-and-drop props
+          // oxlint-disable-next-line typescript/no-unsafe-type-assertion
           cloneElement(child as ReactElement<any>, {
             isOver,
             canDrop,

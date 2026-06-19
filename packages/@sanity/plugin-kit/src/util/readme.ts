@@ -1,3 +1,6 @@
+// Narrows the user object to `User` when building README text; the cast sits inside a template
+// literal where a line-level directive cannot be placed.
+// oxlint-disable typescript/no-unsafe-type-assertion
 // @ts-expect-error missing types
 import licenses from '@rexxars/choosealicense-list'
 import outdent from 'outdent'

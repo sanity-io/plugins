@@ -1,3 +1,5 @@
+// Passing TypeScript's bound `ts.sys.readFile` to the compiler API is the documented usage
+// oxlint-disable typescript/unbound-method
 import path from 'path'
 
 import * as ts from 'typescript'

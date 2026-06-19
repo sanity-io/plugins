@@ -1,3 +1,6 @@
+// Ported serializer that casts loosely-typed Portable Text / DOM values to their concrete
+// shapes throughout; the runtime values are guaranteed by the serialization config.
+// oxlint-disable typescript/no-unsafe-type-assertion
 import {htmlToBlocks} from '@portabletext/block-tools'
 import {
   PortableTextBlockComponent,

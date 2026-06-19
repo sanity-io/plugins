@@ -50,10 +50,14 @@ function files(): Injectable[] {
     },
   ]
 
+  // Rebuilding each entry with a prefixed `from` path; in-place mutation isn't worth it here
+  // oxlint-disable-next-line oxc/no-map-spread
   return base.map((fromTo) => {
     if (fromTo.type === 'copy') {
       return {
         ...fromTo,
+        // `from` is always an array of path segments, never a string
+        // oxlint-disable-next-line typescript/no-misused-spread
         from: ['ui-workshop', ...fromTo.from],
       }
     }

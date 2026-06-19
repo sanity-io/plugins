@@ -1,3 +1,6 @@
+// Built on the classic google.maps.Marker API, which Google still supports;
+// migrating to AdvancedMarkerElement is out of scope for the port.
+// oxlint-disable typescript/no-deprecated
 import {useRef} from 'react'
 import {useUserColor, type ObjectDiff} from 'sanity'
 
