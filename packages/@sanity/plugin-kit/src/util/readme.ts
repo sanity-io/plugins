@@ -2,8 +2,8 @@
 import licenses from '@rexxars/choosealicense-list'
 import outdent from 'outdent'
 
-import {PackageData} from '../actions/inject'
-import {User} from './user'
+import type {PackageData} from '../actions/inject'
+import type {User} from './user'
 
 export function generateReadme(data: PackageData) {
   const {user, pluginName, license} = data

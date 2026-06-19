@@ -3,13 +3,13 @@ import path from 'path'
 import chalk from 'chalk'
 import outdent from 'outdent'
 
-import {Injectable, InjectOptions, writeAssets} from '../actions/inject'
+import {type Injectable, type InjectOptions, writeAssets} from '../actions/inject'
 import {getPackage, sortKeys, writePackageJsonDirect} from '../npm/package'
 import {resolveLatestVersions} from '../npm/resolveLatestVersions'
 import {errorToUndefined} from '../util/errorToUndefined'
 import {readFile, writeFile} from '../util/files'
 import log from '../util/log'
-import {Preset} from './presets'
+import type {Preset} from './presets'
 
 export const uiWorkshop: Preset = {
   name: 'ui-workshop',

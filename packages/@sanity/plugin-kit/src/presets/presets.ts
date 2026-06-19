@@ -1,4 +1,4 @@
-import {InjectOptions} from '../actions/inject'
+import type {InjectOptions} from '../actions/inject'
 import {renovatePreset} from './renovatebot'
 import {semverWorkflowPreset} from './semver-workflow'
 import {ui} from './ui'

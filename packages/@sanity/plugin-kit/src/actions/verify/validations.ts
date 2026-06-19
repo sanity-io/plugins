@@ -3,7 +3,7 @@ import path from 'path'
 
 import chalk from 'chalk'
 import outdent from 'outdent'
-import {ParsedCommandLine} from 'typescript'
+import type {ParsedCommandLine} from 'typescript'
 // @ts-expect-error missing types
 import validateNpmPackageName from 'validate-npm-package-name'
 
@@ -15,7 +15,7 @@ import {
   urls,
 } from '../../constants'
 import {fileExists, readJson5File} from '../../util/files'
-import {PackageJson, SanityStudioJson, SanityV2Json} from './types'
+import type {PackageJson, SanityStudioJson, SanityV2Json} from './types'
 
 export const expectedScripts = {
   'build': 'plugin-kit verify-package --silent && pkg-utils build --strict --check --clean',

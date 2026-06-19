@@ -3,7 +3,6 @@
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist", "node_modules", "test"],
   "compilerOptions": {
-    "verbatimModuleSyntax": false,
     "noPropertyAccessFromIndexSignature": false,
     "resolveJsonModule": true,
     "types": ["node"]

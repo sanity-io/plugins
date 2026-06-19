@@ -2,7 +2,7 @@ import path from 'path'
 
 import {expect, test} from 'vitest'
 
-import {PackageJson} from '../src/actions/verify/types'
+import type {PackageJson} from '../src/actions/verify/types'
 import {incompatiblePluginPackage} from '../src/constants'
 import {fileExists} from '../src/util/files'
 import {

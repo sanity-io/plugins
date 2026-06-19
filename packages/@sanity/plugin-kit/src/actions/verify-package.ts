@@ -7,7 +7,7 @@ import {getPackage} from '../npm/package'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
 import {readTSConfig} from '../util/ts'
-import {PackageJson} from './verify/types'
+import type {PackageJson} from './verify/types'
 import {
   validateBabelConfig,
   validateNodeEngine,
@@ -27,8 +27,8 @@ import {
 import {
   createValidator,
   runTscMaybe,
-  VerifyFlags,
-  VerifyPackageConfig,
+  type VerifyFlags,
+  type VerifyPackageConfig,
 } from './verify/verify-common'
 
 export async function verifyPackage({basePath, flags}: {basePath: string; flags: VerifyFlags}) {
