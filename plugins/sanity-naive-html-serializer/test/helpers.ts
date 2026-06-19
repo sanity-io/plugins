@@ -7,7 +7,7 @@ import {
   customDeserializers,
   customBlockDeserializers,
 } from '../src/BaseSerializationConfig'
-import {SerializedDocument, TranslationLevel} from '../src/types'
+import type {SerializedDocument, TranslationLevel} from '../src/types'
 import schema from './__fixtures__/schema'
 
 export const getSerialized = (

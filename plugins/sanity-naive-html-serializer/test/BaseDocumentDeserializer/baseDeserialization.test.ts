@@ -2,7 +2,7 @@ import {readFileSync} from 'node:fs'
 import {dirname, join} from 'node:path'
 import {fileURLToPath} from 'node:url'
 
-import {PortableTextBlock, PortableTextTextBlock} from 'sanity'
+import type {PortableTextBlock, PortableTextTextBlock} from 'sanity'
 import {beforeEach, expect, test, vi} from 'vitest'
 
 import {

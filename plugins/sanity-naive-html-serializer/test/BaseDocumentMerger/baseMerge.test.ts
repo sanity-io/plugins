@@ -1,4 +1,4 @@
-import {PortableTextBlock} from 'sanity'
+import type {PortableTextBlock} from 'sanity'
 import {expect, test} from 'vitest'
 
 import {BaseDocumentMerger} from '../../src'

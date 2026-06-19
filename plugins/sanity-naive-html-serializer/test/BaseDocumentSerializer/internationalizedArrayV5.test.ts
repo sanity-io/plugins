@@ -41,7 +41,7 @@ const v5Article = toV5(internationalizedArrayArticle)
 
 describe('Serialization supports v5 (language field) internationalized arrays', () => {
   const serialized = getSerialized(v5Article, 'internationalizedArray')
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
 
   test('Base language string fields are exported for v5 data', () => {
     const titleObj = findByClass(docTree.children, 'title')

@@ -5,7 +5,7 @@ import {getSerialized, getValidFields, toPlainText} from '../helpers'
 import {fieldLevelArticle, findByClass, getHTMLNode, nestedLanguageFields} from './utils'
 
 const serialized = getSerialized(fieldLevelArticle, 'field')
-const docTree = getHTMLNode(serialized).body.children[0]
+const docTree = getHTMLNode(serialized).body.children[0]!
 
 test('Global test of working field-level functionality and snapshot match', () => {
   expect(serialized).toMatchSnapshot()
@@ -40,7 +40,7 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
   test('Nested object in object contains all serializable fields -- field Level', () => {
     const nestedObject = findByClass(objectField!.children, 'objectAsField')!.children[0]
     const fieldNames = getValidFields(fieldLevelArticle.config.en.objectAsField)
-    const foundFieldNames = Array.from(nestedObject.children).map((child) => child.className)
+    const foundFieldNames = Array.from(nestedObject!.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
   })
 
@@ -57,8 +57,8 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
     const title = fieldLevelArticle.config.en.objectAsField.title
     const blockText = toPlainText(fieldLevelArticle.config.en.objectAsField.content)
 
-    expect(nestedObject.innerHTML).toContain(title)
-    expect(nestedObject.innerHTML).toContain(blockText)
+    expect(nestedObject!.innerHTML).toContain(title)
+    expect(nestedObject!.innerHTML).toContain(blockText)
   })
 })
 
@@ -113,7 +113,7 @@ describe('Presence and accurancy of fields in "vanilla" deserialization -- array
 test('Nested locale fields make it to serialization, but only base lang', () => {
   const nestedLocales = {...fieldLevelArticle, ...nestedLanguageFields}
   const nestedSerialized = getSerialized(nestedLocales, 'field')
-  const nestedDocTree = getHTMLNode(nestedSerialized).body.children[0]
+  const nestedDocTree = getHTMLNode(nestedSerialized).body.children[0]!
   const slices = findByClass(nestedDocTree.children, 'slices')
   const pageFields = findByClass(nestedDocTree.children, 'pageFields')
   expect(slices?.innerHTML).toContain(
