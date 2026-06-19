@@ -24,7 +24,7 @@ export default function EditThumbnailDialog({asset, currentTime = 0}: Props) {
   const dialogId = `EditThumbnailDialog${useId()}`
 
   const [timeFormatted, setTimeFormatted] = useState<string>(() =>
-    formatSecondsToHHMMSS(currentTime)
+    formatSecondsToHHMMSS(currentTime),
   )
   const [nextTime, setNextTime] = useState<number>(currentTime)
   const [inputError, setInputError] = useState<string>('')
@@ -35,17 +35,16 @@ export default function EditThumbnailDialog({asset, currentTime = 0}: Props) {
   const handleSave = () => {
     setSaving(true)
     client
-      .patch(asset._id!)
+      .patch(asset._id)
       .set({thumbTime: nextTime})
       .commit({returnDocuments: false})
-      .then(() => void setDialogState(false))
+      .then(() => setDialogState(false))
       .catch(setSaveThumbnailError)
-      .finally(() => void setSaving(false))
+      .finally(() => setSaving(false))
   }
   const width = 300 * getDevicePixelRatio({maxDpr: 2})
 
   if (saveThumbnailError) {
-    // eslint-disable-next-line no-warning-comments
     // @TODO handle errors more gracefully
     throw saveThumbnailError
   }

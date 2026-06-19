@@ -126,7 +126,7 @@ export default function Details({
                       name={`creditLine.${locale.id}`}
                       disabled={
                         formUpdating ||
-                        creditLine?.excludeSources?.includes(currentAsset?.source?.name)
+                        creditLine?.excludeSources?.includes(currentAsset?.['source']?.name)
                       }
                     />
                   )}
@@ -170,7 +170,7 @@ export default function Details({
               name="creditLine"
               value={toStringField(currentAsset?.creditLine)}
               disabled={
-                formUpdating || creditLine?.excludeSources?.includes(currentAsset?.source?.name)
+                formUpdating || creditLine?.excludeSources?.includes(currentAsset?.['source']?.name)
               }
             />
           )}

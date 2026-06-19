@@ -1,14 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignoreWorkspaces": [
-    "dev/*",
-    // Moved as-is from the standalone repo; will be brought up to monorepo
-    // standards (and into knip coverage) in a follow-up PR
-    "plugins/sanity-plugin-media",
-    // Moved verbatim from sanity-io/sanity-plugin-mux-input; legacy dead-code
-    // and phantom-dependency cleanup is deferred to a follow-up PR.
-    "plugins/sanity-plugin-mux-input",
-  ],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,
@@ -19,10 +10,6 @@
     "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
   },
-  "rules": {
-    // dev/* workspaces are ignored, so their catalog entries appear unused
-    "catalog": "warn",
-  },
   "workspaces": {
     ".": {
       "entry": ["*.{ts,mts,mjs}"],
@@ -32,11 +19,14 @@
         "@typescript/native-preview",
       ],
       "ignoreBinaries": [
-        // Provided by sanity package in dev/test-studio, which is an ignored workspace
-        "sanity",
         // Installed externally (not an npm package); used in lint:workflows script
         "zizmor",
       ],
+    },
+    "dev/test-studio": {
+      "entry": ["migrations/**/*.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["babel-plugin-react-compiler"],
     },
     "turbo/generators": {
       "project": ["src/**/*.ts"],
@@ -44,6 +34,28 @@
     "packages/@repo/tsconfig": {},
     "packages/@repo/package.config": {
       "project": ["src/**/*.ts"],
+    },
+    "packages/@sanity/plugin-kit": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": [
+        // Spawned as a CLI (`yalc push`) by the link-watch command, never imported
+        "yalc",
+        // Resolved at runtime by ESLint/tsc when verifying generated plugin fixtures in tests
+        "eslint-config-prettier",
+        "eslint-config-sanity",
+        "eslint-plugin-prettier",
+        "eslint-plugin-react",
+        "eslint-plugin-react-hooks",
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint/parser",
+        "prettier",
+        "react",
+        "react-dom",
+        "sanity",
+        "styled-components",
+        "@types/react",
+      ],
     },
     "plugins/@sanity/assist": {
       "entry": ["package.config.ts"],
@@ -145,6 +157,26 @@
         "babel-plugin-styled-components",
       ],
     },
+    "plugins/sanity-plugin-media": {
+      "entry": [
+        "package.config.ts",
+        "scripts/migrate-to-localized-fields.ts",
+        "v2-incompatible.js",
+      ],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-mux-input": {
+      "entry": ["package.config.ts", "v2-incompatible.js"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
     "plugins/sanity-plugin-workflow": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
@@ -182,6 +214,71 @@
       ],
     },
     // add new plugin workspaces here
+    "plugins/@sanity/embeddings-index-ui": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
+    "plugins/@sanity/form-toolkit": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/google-maps-input": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
+    "plugins/@sanity/cross-dataset-duplicator": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+
+    "plugins/sanity-plugin-studio-smartling": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/hierarchical-document-list": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/sanity-plugin-shopify-assets": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
+    "plugins/@sanity/personalization-plugin": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-cloudinary": {
+      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        // Used by @sanity/pkg-utils babel transform, not directly imported
+        "babel-plugin-styled-components",
+      ],
+    },
     "plugins/@sanity/sanity-plugin-async-list": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],

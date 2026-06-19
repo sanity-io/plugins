@@ -1,5 +1,5 @@
 ---
-'sanity-plugin-media': minor
+"sanity-plugin-media": minor
 ---
 
 author: @bobbygeo

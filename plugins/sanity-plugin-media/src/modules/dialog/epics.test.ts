@@ -116,7 +116,7 @@ describe('dialogTagCreateEpic', () => {
     await vi.waitFor(() => {
       const item = store.getState().dialog.items[0]
       expect(item?.type).toBe('assetEdit')
-      expect('lastCreatedTag' in item && item.lastCreatedTag).toEqual({
+      expect('lastCreatedTag' in item! && item.lastCreatedTag).toEqual({
         label: 'alpha',
         value: 't1',
       })

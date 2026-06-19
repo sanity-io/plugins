@@ -90,7 +90,6 @@ const StyledWarningIcon = styled(WarningFilledIcon)(({theme}) => {
   }
 })
 
-// eslint-disable-next-line complexity
 const TableRowAsset = (props: Props) => {
   const {id, selected} = props
 

@@ -51,7 +51,7 @@ const DialogFolderCreate = (props: Props) => {
     const sanitizedFormData = sanitizeFormData(formData)
     dispatch(
       foldersActions.createRequest({
-        name: sanitizedFormData.name,
+        name: sanitizedFormData['name'],
         parentId: parentFolderId || null,
       }),
     )
@@ -78,6 +78,7 @@ const DialogFolderCreate = (props: Props) => {
   return (
     <Dialog
       animate
+      // oxlint-disable-next-line react/react-compiler
       footer={<Footer />}
       header="Create Folder"
       id={id}

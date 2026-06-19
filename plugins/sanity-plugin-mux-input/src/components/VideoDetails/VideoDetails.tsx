@@ -28,7 +28,7 @@ import {
 import React, {useEffect, useState} from 'react'
 
 import {DIALOGS_Z_INDEX} from '../../util/constants'
-import {MuxPlaybackId, MuxTextTrack, PlaybackPolicy} from '../../util/types'
+import type {MuxPlaybackId, MuxTextTrack, PlaybackPolicy} from '../../util/types'
 import FormField from '../FormField'
 import IconInfo from '../IconInfo'
 import {ResolutionIcon} from '../icons/Resolution'
@@ -36,7 +36,7 @@ import {StopWatchIcon} from '../icons/StopWatch'
 import TextTracksManager from '../TextTracksManager'
 import VideoPlayer from '../VideoPlayer'
 import DeleteDialog from './DeleteDialog'
-import useVideoDetails, {VideoDetailsProps} from './useVideoDetails'
+import useVideoDetails, {type VideoDetailsProps} from './useVideoDetails'
 import VideoReferences from './VideoReferences'
 
 const AssetInput: React.FC<{
@@ -229,7 +229,7 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
                 tracks={
                   displayInfo?.text_tracks ||
                   props.asset.data?.tracks?.filter(
-                    (track): track is MuxTextTrack => track.type === 'text'
+                    (track): track is MuxTextTrack => track.type === 'text',
                   ) ||
                   []
                 }

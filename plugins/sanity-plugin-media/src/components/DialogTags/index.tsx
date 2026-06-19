@@ -24,7 +24,7 @@ const DialogTags = (props: Props) => {
   // Callbacks
   const handleClose = useCallback(() => {
     dispatch(dialogActions.clear())
-  }, [])
+  }, [dispatch])
 
   return (
     <Dialog animate header="All Tags" id={id} onClose={handleClose} width={1}>

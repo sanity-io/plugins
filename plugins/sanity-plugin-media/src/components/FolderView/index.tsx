@@ -23,9 +23,11 @@ const getExpandedIdSet = (
 ) => {
   const expanded = new Set<string>()
   let cursor: string | null = folderId
-  while (cursor && byId[cursor]) {
+  while (cursor) {
+    const node = byId[cursor]
+    if (!node) break
     expanded.add(cursor)
-    cursor = byId[cursor].parentId
+    cursor = node.parentId
   }
   return expanded
 }
@@ -202,7 +204,9 @@ const FolderView = () => {
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
 
+  // Auto-expand the ancestor chain of the current folder when it changes.
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     setExpandedIds(getExpandedIdSet(currentFolderId, byId))
   }, [currentFolderId, byId, folderTree])
 

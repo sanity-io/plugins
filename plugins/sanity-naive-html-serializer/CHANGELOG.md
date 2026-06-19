@@ -1,5 +1,13 @@
 # sanity-naive-html-serializer
 
+## 5.1.4
+
+### Patch Changes
+
+- [#1299](https://github.com/sanity-io/plugins/pull/1299) [`eaa6280`](https://github.com/sanity-io/plugins/commit/eaa6280d729f6e3b4436e7b2fc2556b4580e4afe) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @portabletext/block-tools to ^5.1.5
+
+- [#1345](https://github.com/sanity-io/plugins/pull/1345) [`c6e8859`](https://github.com/sanity-io/plugins/commit/c6e88593379d8890246f212fb12916f3b99f78d5) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @portabletext/block-tools to ^5.1.6
+
 ## 5.1.3
 
 ### Patch Changes
@@ -35,6 +43,7 @@
 - [#931](https://github.com/sanity-io/plugins/pull/931) [`5a9204f`](https://github.com/sanity-io/plugins/commit/5a9204fcf31f00eb5c96c1368ab21cef088cf8f4) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Port sanity-naive-html-serializer to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
   - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
   - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18.3 || ^19)

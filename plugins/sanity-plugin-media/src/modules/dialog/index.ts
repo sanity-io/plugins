@@ -262,7 +262,7 @@ export const dialogTagCreateEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsActions.createComplete.match),
     mergeMap((action) => {
-      const {assetId, tag} = action?.payload
+      const {assetId, tag} = action?.payload || {}
 
       if (assetId) {
         return of(dialogSlice.actions.inlineTagCreate({tag, assetId}))
@@ -280,7 +280,7 @@ export const dialogTagDeleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsActions.listenerDeleteQueueComplete.match),
     mergeMap((action) => {
-      const {tagIds} = action?.payload
+      const {tagIds} = action?.payload || {}
 
       return of(dialogSlice.actions.inlineTagRemove({tagIds}))
     }),

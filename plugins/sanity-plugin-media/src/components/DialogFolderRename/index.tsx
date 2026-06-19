@@ -52,7 +52,7 @@ const DialogFolderRename = ({children, dialog}: Props) => {
     const sanitizedFormData = sanitizeFormData(formData)
     dispatch(
       foldersActions.renameRequest({
-        name: sanitizedFormData.name,
+        name: sanitizedFormData['name'],
         folderId,
       }),
     )

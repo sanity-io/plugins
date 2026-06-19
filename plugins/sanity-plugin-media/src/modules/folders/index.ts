@@ -95,7 +95,7 @@ const indexFolders = (folders: FolderDoc[]) => {
     )
 
   sortByName(rootIds)
-  Object.keys(childrenByParentId).forEach((parentId) => sortByName(childrenByParentId[parentId]))
+  Object.values(childrenByParentId).forEach((ids) => sortByName(ids))
 
   return {byId, childrenByParentId, rootIds}
 }
@@ -630,10 +630,12 @@ const buildFolderPath = (folderId: string, byId: Record<string, FolderDoc>): str
   const segments: string[] = []
   let cursor: string | null = folderId
   const seen = new Set<string>()
-  while (cursor && byId[cursor] && !seen.has(cursor)) {
+  while (cursor && !seen.has(cursor)) {
+    const folder: FolderDoc | undefined = byId[cursor]
+    if (!folder) break
     seen.add(cursor)
-    segments.unshift(byId[cursor].name)
-    cursor = byId[cursor].parentId
+    segments.unshift(folder.name)
+    cursor = folder.parentId
   }
   return segments.join('/')
 }
@@ -673,10 +675,12 @@ export const selectCurrentFolderSegments = createSelector(
     const chain: string[] = []
     let cursor: string | null = currentFolderId
     const seen = new Set<string>()
-    while (cursor && byId[cursor] && !seen.has(cursor)) {
+    while (cursor && !seen.has(cursor)) {
+      const folder: FolderDoc | undefined = byId[cursor]
+      if (!folder) break
       seen.add(cursor)
       chain.unshift(cursor)
-      cursor = byId[cursor].parentId
+      cursor = folder.parentId
     }
     return chain.map((id, depth) => ({
       depth,

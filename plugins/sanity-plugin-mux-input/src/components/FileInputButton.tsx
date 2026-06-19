@@ -28,7 +28,7 @@ export const FileInputButton = ({onSelect, accept, ...props}: FileInputButtonPro
         onSelect(event.target.files!)
       }
     },
-    [onSelect]
+    [onSelect],
   )
   const handleButtonClick = useCallback(() => inputRef.current?.click(), [])
   return (

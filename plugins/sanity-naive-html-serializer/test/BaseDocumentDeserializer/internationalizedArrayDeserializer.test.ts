@@ -1,4 +1,4 @@
-import {PortableTextBlock} from 'sanity'
+import type {PortableTextBlock} from 'sanity'
 import {expect, test, describe} from 'vitest'
 
 import {internationalizedArrayArticle} from '../BaseDocumentSerializer/utils'

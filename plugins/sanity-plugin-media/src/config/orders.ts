@@ -28,5 +28,5 @@ const ORDER_DICTIONARY: Record<string, {asc: string; desc: string}> = {
 }
 
 export const getOrderTitle = (field: string, direction: OrderDirection): string => {
-  return ORDER_DICTIONARY[field][direction]
+  return ORDER_DICTIONARY[field]![direction]
 }

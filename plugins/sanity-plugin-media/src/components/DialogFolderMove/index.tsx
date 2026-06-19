@@ -17,9 +17,11 @@ const getExpandedIdSet = (
 ) => {
   const expanded = new Set<string>()
   let cursor: string | null = folderId
-  while (cursor && byId[cursor]) {
+  while (cursor) {
+    const node = byId[cursor]
+    if (!node) break
     expanded.add(cursor)
-    cursor = byId[cursor].parentId
+    cursor = node.parentId
   }
   return expanded
 }
@@ -129,7 +131,9 @@ const DialogFolderMove = ({children, dialog}: Props) => {
   const [selectedId, setSelectedId] = useState<string | null>(folderId || null)
   const selectedFolder = selectedId ? byId[selectedId] : null
 
+  // Auto-expand the ancestor chain of the selected destination when it changes.
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     setExpandedIds(getExpandedIdSet(selectedId, byId))
   }, [folderTree, byId, selectedId])
 

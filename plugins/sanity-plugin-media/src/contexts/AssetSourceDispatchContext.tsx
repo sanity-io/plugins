@@ -1,4 +1,4 @@
-import {type ReactNode, createContext, useContext} from 'react'
+import {type ReactNode, createContext, useContext, useMemo} from 'react'
 import type {AssetSourceComponentProps} from 'sanity'
 
 type ContextProps = {
@@ -17,10 +17,13 @@ const AssetSourceDispatchContext = createContext<ContextProps | undefined>(undef
 export const AssetBrowserDispatchProvider = (props: Props) => {
   const {children, isMultiSelect = false, onSelect} = props
 
-  const contextValue: ContextProps = {
-    isMultiSelect,
-    onSelect,
-  }
+  const contextValue: ContextProps = useMemo(
+    () => ({
+      isMultiSelect,
+      onSelect,
+    }),
+    [isMultiSelect, onSelect],
+  )
 
   return (
     <AssetSourceDispatchContext.Provider value={contextValue}>
@@ -36,5 +39,3 @@ export const useAssetSourceActions = () => {
   }
   return context
 }
-
-export default AssetSourceDispatchContext
