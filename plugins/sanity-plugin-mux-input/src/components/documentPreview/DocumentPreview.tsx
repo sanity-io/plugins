@@ -2,7 +2,7 @@
 
 import {DocumentIcon} from '@sanity/icons'
 import type {PropsWithChildren} from 'react'
-import React, {useMemo} from 'react'
+import {useMemo} from 'react'
 import type {CollatedHit, FIXME, SanityDocument, SchemaType} from 'sanity'
 import {PreviewCard, useDocumentPresence, useDocumentPreviewStore, useSchema} from 'sanity'
 import {IntentLink} from 'sanity/router'

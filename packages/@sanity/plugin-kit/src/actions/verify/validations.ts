@@ -4,7 +4,6 @@ import path from 'path'
 import chalk from 'chalk'
 import outdent from 'outdent'
 import type {ParsedCommandLine} from 'typescript'
-// @ts-expect-error missing types
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import {deprecatedDevDeps, mergedPackages} from '../../configs/banned-packages'
@@ -471,78 +470,70 @@ export async function validateStudioConfig({basePath}: {basePath: string}): Prom
   return errors.length ? [errors.join(`\n\n---\n\n`)] : []
 }
 
-export async function validatePluginSanityJson({
+/**
+ * Detects leftover usage of the legacy `@sanity/incompatible-plugin` shim and asks for its removal.
+ *
+ * The shim (a `sanity.json` + `v2-incompatible.js` entry point, plus the `@sanity/incompatible-plugin`
+ * dependency) only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin
+ * was installed there. plugin-kit no longer scaffolds it, so a plugin should not ship it anymore.
+ */
+export async function validateIncompatiblePlugin({
   basePath,
   packageJson,
 }: {
   basePath: string
   packageJson: PackageJson
-}) {
+}): Promise<string[]> {
+  const {dependencies, devDependencies, peerDependencies} = packageJson
+  const inDependencies = !!(
+    dependencies?.[incompatiblePluginPackage] ||
+    devDependencies?.[incompatiblePluginPackage] ||
+    peerDependencies?.[incompatiblePluginPackage]
+  )
+
+  const hasShimFile = await fileExists(path.normalize(path.join(basePath, 'v2-incompatible.js')))
+
   const sanityJson = await readJson5File<SanityV2Json>({basePath, filename: 'sanity.json'})
+  const sanityJsonReferencesShim = !!sanityJson?.parts?.some((part) =>
+    part?.path?.includes('v2-incompatible'),
+  )
 
-  const expectedDefaults = {
-    parts: [
-      {
-        implements: 'part:@sanity/base/sanity-root',
-        path: './v2-incompatible.js',
-      },
-    ],
+  if (!inDependencies && !hasShimFile && !sanityJsonReferencesShim) {
+    return []
   }
 
-  const hasSinglePart =
-    sanityJson &&
-    Object.keys(sanityJson).length === 1 &&
-    sanityJson?.parts &&
-    sanityJson.parts.length === 1
+  const found = [
+    inDependencies ? `- "${incompatiblePluginPackage}" listed in package.json` : null,
+    hasShimFile ? '- the v2-incompatible.js file' : null,
+    sanityJsonReferencesShim ? '- a sanity.json referencing v2-incompatible.js' : null,
+  ].filter((e): e is string => !!e)
 
-  const firstPart = hasSinglePart ? sanityJson?.parts?.[0] : undefined
-  const correctImplements = firstPart?.implements === expectedDefaults.parts[0].implements
-  const pathExists =
-    firstPart?.path && (await fileExists(path.normalize(path.join(basePath, firstPart.path))))
-  const hasDependency = !!packageJson.dependencies?.[incompatiblePluginPackage]
-  const isValid = sanityJson && hasSinglePart && correctImplements && pathExists && hasDependency
+  return [
+    outdent`
+      ${incompatiblePluginPackage} is no longer used and should be removed.
 
-  if (!isValid) {
-    const errors = [
-      !sanityJson ? 'sanity.json does not exist' : null,
-      !hasSinglePart ? 'sanity.json should have exactly one entry in "parts", but did not.' : null,
-      !correctImplements
-        ? `The part should implement ${expectedDefaults.parts[0].implements}, but did not.`
-        : null,
-      firstPart?.path && !pathExists
-        ? `The file in "path", ${firstPart?.path}, does not exist.`
-        : null,
+      It only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin was
+      installed there. That compatibility shim is now obsolete, so plugin-kit no longer adds it.
 
-      !hasDependency
-        ? outdent`
-      package.json should have ${incompatiblePluginPackage} as a dependency, but did not.
-        Install it with: npm install --save ${incompatiblePluginPackage}
-      `.trimStart()
-        : null,
-    ].filter((e): e is string => !!e)
+      Found:
+      ${found.join('\n')}
 
-    return [
-      outdent`
-        Invalid sanity.json. It is used for compatibility checking in V2 studios:
+      To fix this:
+      - Remove "${incompatiblePluginPackage}" from package.json (dependencies/devDependencies/peerDependencies)
+      - Delete the v2-incompatible.js file
+      - Delete sanity.json (if it only contains the v2-incompatible "part")
+      - Remove "sanity.json" and "v2-incompatible.js" from the package.json "files" array
 
-        - ${errors.join('\n- ')}
-
-        sanity.json will only be used when incorrectly installing a v3 plugin in a v2 Studio.
-
-        This check ensures that sanity.json conforms with the usage section of
-        ${urls.incompatiblePlugin}
+      For more, see ${urls.incompatiblePlugin}
     `.trimStart(),
-    ]
-  }
-  return []
+  ]
 }
 
 export function validatePackageName(packageJson: PackageJson) {
-  const valid: {validForNewPackages?: boolean; errors: string[]} = validateNpmPackageName(
-    packageJson.name,
-  )
+  const valid = validateNpmPackageName(packageJson.name ?? '')
   if (!valid.validForNewPackages) {
-    return [`Invalid package.json: "name" is invalid: ${valid.errors.join(', ')}`]
+    const messages = valid.errors ?? valid.warnings ?? []
+    return [`Invalid package.json: "name" is invalid: ${messages.join(', ')}`]
   }
 
   const isScoped = packageJson.name?.startsWith('@')

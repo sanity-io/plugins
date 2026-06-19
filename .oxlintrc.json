@@ -15,7 +15,6 @@
     "**/dist/*",
     "**/sanity.types.ts",
     "turbo/generators/config.ts",
-    "plugins/sanity-naive-html-serializer/test/**",
     // Illustrative docs referencing optional third-party form libraries
     // (formik, react-hook-form, @tanstack/react-form, zod); not built or published
     "plugins/@sanity/form-toolkit/examples/**",
@@ -121,10 +120,7 @@
       }
     },
     {
-      "files": [
-        "plugins/sanity-plugin-mux-input/src/**/*.{ts,tsx}",
-        "plugins/sanity-plugin-mux-input/v2-incompatible.js"
-      ],
+      "files": ["plugins/sanity-plugin-mux-input/src/**/*.{ts,tsx}"],
       "rules": {
         "no-deprecated": "off",
         "no-unsafe-type-assertion": "off",
@@ -144,10 +140,7 @@
       }
     },
     {
-      "files": [
-        "plugins/sanity-plugin-media/src/**/*.{ts,tsx}",
-        "plugins/sanity-plugin-media/v2-incompatible.js"
-      ],
+      "files": ["plugins/sanity-plugin-media/src/**/*.{ts,tsx}"],
       "rules": {
         "no-deprecated": "off",
         "no-unsafe-type-assertion": "off",

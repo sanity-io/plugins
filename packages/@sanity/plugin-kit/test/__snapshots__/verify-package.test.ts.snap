@@ -160,22 +160,26 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
-Invalid sanity.json. It is used for compatibility checking in V2 studios:
+@sanity/incompatible-plugin is no longer used and should be removed.
 
-- The part should implement part:@sanity/base/sanity-root, but did not.
-- The file in "path", ./src/index.js, does not exist.
-- package.json should have @sanity/incompatible-plugin as a dependency, but did not.
-  Install it with: npm install --save @sanity/incompatible-plugin
+It only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin was
+installed there. That compatibility shim is now obsolete, so plugin-kit no longer adds it.
 
-sanity.json will only be used when incorrectly installing a v3 plugin in a v2 Studio.
+Found:
+- "@sanity/incompatible-plugin" listed in package.json
 
-This check ensures that sanity.json conforms with the usage section of
-https://github.com/sanity-io/incompatible-plugin
+To fix this:
+- Remove "@sanity/incompatible-plugin" from package.json (dependencies/devDependencies/peerDependencies)
+- Delete the v2-incompatible.js file
+- Delete sanity.json (if it only contains the v2-incompatible "part")
+- Remove "sanity.json" and "v2-incompatible.js" from the package.json "files" array
+
+For more, see https://github.com/sanity-io/incompatible-plugin
 
 To skip this validation add the following to your package.json:
 "sanityPlugin": {
    "verifyPackage": {
-      "sanityV2Json": false
+      "incompatiblePlugin": false
    }
 }
 ----------------------------------------------------------

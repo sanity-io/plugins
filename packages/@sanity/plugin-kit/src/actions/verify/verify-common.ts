@@ -17,7 +17,7 @@ export const verifyPackageConfigDefaults = {
   'dependencies': true,
   'deprecatedDependencies': true,
   'babelConfig': true,
-  'sanityV2Json': true,
+  'incompatiblePlugin': true,
   'eslintImports': true,
   'scripts': true,
   'pkg-utils': true,
