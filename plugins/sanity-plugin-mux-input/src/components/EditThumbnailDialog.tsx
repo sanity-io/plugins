@@ -1,5 +1,5 @@
 import {Button, Dialog, Flex, Stack, Text, TextInput} from '@sanity/ui'
-import React, {useId, useMemo, useState} from 'react'
+import {useId, useMemo, useState} from 'react'
 import {getDevicePixelRatio} from 'use-device-pixel-ratio'
 
 import {useDialogStateContext} from '../context/DialogStateContext'

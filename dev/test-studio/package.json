@@ -7,7 +7,7 @@
     "#*": "./src/*/index.tsx"
   },
   "scripts": {
-    "build": "sanity build",
+    "build": "sanity build -y",
     "dev": "sanity dev --no-auto-updates",
     "typegen": "sanity schema extract --enforce-required-fields --workspace kitchen-sink && sanity typegen generate"
   },

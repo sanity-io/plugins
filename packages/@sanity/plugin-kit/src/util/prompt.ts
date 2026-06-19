@@ -1,10 +1,8 @@
 import path from 'path'
 import {URL} from 'url'
 
-// @ts-expect-error missing types
 import githubUrlToObject from 'github-url-to-object'
 import inquirer from 'inquirer'
-// @ts-expect-error missing types
 import validNpmName from 'validate-npm-package-name'
 
 import type {InjectOptions} from '../actions/inject'
@@ -53,7 +51,7 @@ export function promptForRepoOrigin(_options: InjectOptions, defaultVal?: string
     default: defaultVal,
     filter: (raw) => {
       const url = (raw || '').trim()
-      const gh: {user: string; repo: string} | undefined = githubUrlToObject(url)
+      const gh = githubUrlToObject(url)
       return gh ? `git+ssh://git@github.com/${gh.user}/${gh.repo}.git` : url
     },
     validate: (url) => {

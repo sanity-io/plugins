@@ -26,7 +26,7 @@ import {
   Text,
   TextInput,
 } from '@sanity/ui'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 
 import {DIALOGS_Z_INDEX} from '../../util/constants'
 import type {MuxPlaybackId, MuxTextTrack, PlaybackPolicy} from '../../util/types'
@@ -82,7 +82,7 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
 
   // Avoid layout shifts in large screens' 2-column dialog by setting their `minHeight` to the container's
   const [containerHeight, setContainerHeight] = useState<number | null>(null)
-  const contentsRef = React.useRef<HTMLDivElement>(null)
+  const contentsRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!contentsRef.current || !('getBoundingClientRect' in contentsRef.current)) return
 
