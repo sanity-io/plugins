@@ -2723,7 +2723,7 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1(react@19.2.7)
       react-photo-album:
-        specifier: ^2.0.0
+        specifier: ^2.4.1
         version: 2.4.1(react@19.2.7)
       rxjs:
         specifier: 'catalog:'
