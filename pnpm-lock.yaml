@@ -2535,7 +2535,7 @@ importers:
         specifier: ^7.79.0
         version: 7.79.0(react@19.2.7)
       react-redux:
-        specifier: ^9.2.0
+        specifier: ^9.3.0
         version: 9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1)
       react-select:
         specifier: ^5.10.2
