@@ -98,7 +98,6 @@ function MissingAsset({
   )
 }
 
-// eslint-disable-next-line complexity
 function ImportVideosDialog(props: ReturnType<typeof useImportMuxAssets>) {
   const {importState} = props
 
@@ -333,10 +332,8 @@ export default function ImportVideosFromMux() {
   }
 
   if (importAssets.dialogOpen) {
-    // eslint-disable-next-line consistent-return
     return <ImportVideosDialog {...importAssets} />
   }
 
-  // eslint-disable-next-line consistent-return
   return <Button mode="bleed" text="Import from Mux" onClick={importAssets.openDialog} />
 }

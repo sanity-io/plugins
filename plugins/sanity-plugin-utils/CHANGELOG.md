@@ -1,4 +1,4 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
+# sanity-plugin-utils
 
 ## 2.0.3
 
@@ -29,11 +29,6 @@
 - Sanity Studio v5+ required: Minimum Sanity version is now v5
 - Node.js 20.19+ required: Minimum Node.js version is now 20.19
 - styled-components 6.1+ required: Peer dependency on styled-components ^6.1
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## [1.8.0](https://github.com/SimeonGriggs/sanity-plugin-utils/compare/v1.7.1...v1.8.0) (2025-12-18)
 

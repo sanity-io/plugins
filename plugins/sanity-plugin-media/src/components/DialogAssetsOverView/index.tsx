@@ -24,7 +24,7 @@ const DialogAllAssets = (props: Props) => {
   // Callbacks
   const handleClose = useCallback(() => {
     dispatch(dialogActions.clear())
-  }, [])
+  }, [dispatch])
 
   return (
     <Dialog header="Choose an asset for replacing" id={id} onClose={handleClose} width={3}>

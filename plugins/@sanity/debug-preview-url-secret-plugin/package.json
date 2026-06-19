@@ -18,7 +18,6 @@
     "directory": "plugins/@sanity/debug-preview-url-secret-plugin"
   },
   "files": [
-    "CHANGELOG.md",
     "dist"
   ],
   "type": "module",

@@ -26,7 +26,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const COMMENT_MARKER = '<!-- changeset-pr-npmdiff-links -->'
-            const PACKAGE_JSON_PATTERN = /^plugins\/(?:@sanity\/[^/]+|sanity-plugin-[^/]+)\/package\.json$/
+            const PACKAGE_JSON_PATTERN =
+              /^(?:plugins\/(?:@sanity\/[^/]+|sanity-plugin-[^/]+)|packages\/@sanity\/plugin-kit)\/package\.json$/
 
             const {owner, repo} = context.repo
             const pr = context.payload.pull_request

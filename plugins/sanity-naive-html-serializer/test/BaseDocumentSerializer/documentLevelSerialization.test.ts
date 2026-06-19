@@ -1,11 +1,11 @@
-import {PortableTextBlock} from 'sanity'
+import type {PortableTextBlock} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
 import {getSerialized, getValidFields, toPlainText} from '../helpers'
 import {documentLevelArticle, findByClass, getHTMLNode} from './utils'
 
 const serialized = getSerialized(documentLevelArticle, 'document')
-const docTree = getHTMLNode(serialized).body.children[0]
+const docTree = getHTMLNode(serialized).body.children[0]!
 
 test('Global test of working doc-level functionality and snapshot match', () => {
   expect(serialized).toMatchSnapshot()
@@ -27,7 +27,7 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
   //parent node is always div with classname of field with a nested div
   //that has classname of obj type
   const configObj = findByClass(docTree.children, 'config')
-  const objectField = configObj!.children[0]
+  const objectField = configObj!.children[0]!
 
   test('Top-level nested objects contain all serializable fields -- document level', () => {
     const fieldNames = getValidFields(documentLevelArticle.config)
@@ -36,7 +36,7 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
   })
 
   test('Nested object in object contains all serializable fields -- document level', () => {
-    const nestedObject = findByClass(objectField.children, 'objectAsField')!.children[0]
+    const nestedObject = findByClass(objectField.children, 'objectAsField')!.children[0]!
     const fieldNames = getValidFields(documentLevelArticle.config.objectAsField)
     const foundFieldNames = Array.from(nestedObject.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
@@ -51,7 +51,7 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
   })
 
   test('Nested object in an object contains accurate values -- document level', () => {
-    const nestedObject = findByClass(objectField.children, 'objectAsField')!.children[0]
+    const nestedObject = findByClass(objectField.children, 'objectAsField')!.children[0]!
     const title = documentLevelArticle.config.objectAsField.title
     const blockText = toPlainText(documentLevelArticle.config.objectAsField.content)
 
@@ -80,7 +80,7 @@ describe('Presence and accuracy of fields in vanilla deserialization -- arrays',
     const fieldNames = getValidFields(
       documentLevelArticle.content.find(
         (block: Record<string, any>) => block._type === 'objectField',
-      ),
+      )!,
     )
     const foundFieldNames = Array.from(objectInArray!.children).map((child) => child.className)
     expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
@@ -91,11 +91,11 @@ describe('Presence and accuracy of fields in vanilla deserialization -- arrays',
     const nestedObject = findByClass(objectInArray!.children, 'objectAsField')
     const title = documentLevelArticle.content.find(
       (block: Record<string, any>) => block._type === 'objectField',
-    ).objectAsField.title
+    )!.objectAsField!.title
     const blockText = toPlainText(
       documentLevelArticle.content.find(
         (block: Record<string, any>) => block._type === 'objectField',
-      ).objectAsField.content,
+      )!.objectAsField!.content,
     ).trim()
     expect(nestedObject?.innerHTML).toContain(title)
     expect(nestedObject?.innerHTML).toContain(blockText)

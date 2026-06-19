@@ -81,7 +81,7 @@ const AssetGridVirtualized = (props: Props) => {
       className="media__custom-scrollbar"
       computeItemKey={(index) => {
         const item = items[index]
-        return item?.id
+        return item?.id ?? index
       }}
       components={{
         Item: ItemContainer,
@@ -89,8 +89,8 @@ const AssetGridVirtualized = (props: Props) => {
       }}
       endReached={onLoadMore}
       itemContent={(index) => {
-        const item = items[index]
-        const selected = selectedIds.includes(item?.id)
+        const item = items[index]!
+        const selected = selectedIds.includes(item.id)
         return <VirtualCell item={item} selected={selected} source={source} />
       }}
       overscan={48}

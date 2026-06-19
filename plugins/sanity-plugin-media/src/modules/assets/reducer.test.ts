@@ -37,7 +37,7 @@ describe('assets slice', () => {
   it('pick toggles picked flag', () => {
     let state = stateWithOneAsset()
     state = assetsReducer(state, assetsActions.pick({assetId: 'img-1', picked: true}))
-    expect(state.byIds['img-1'].picked).toBe(true)
+    expect(state.byIds['img-1']!.picked).toBe(true)
     expect(state.lastPicked).toBe('img-1')
   })
 
@@ -45,7 +45,7 @@ describe('assets slice', () => {
     let state = stateWithOneAsset()
     state = assetsReducer(state, assetsActions.pick({assetId: 'img-1', picked: true}))
     state = assetsReducer(state, assetsActions.pickClear())
-    expect(state.byIds['img-1'].picked).toBe(false)
+    expect(state.byIds['img-1']!.picked).toBe(false)
     expect(state.lastPicked).toBeUndefined()
   })
 
@@ -86,7 +86,7 @@ describe('assets slice', () => {
     let state = stateWithOneAsset()
     const updated = {...minimalImage, title: 'New'}
     state = assetsReducer(state, assetsActions.listenerUpdateQueueComplete({assets: [updated]}))
-    expect(state.byIds['img-1'].asset.title).toBe('New')
+    expect(state.byIds['img-1']!.asset.title).toBe('New')
   })
 
   it('updateImageReferences marks the targeted asset as updating', () => {

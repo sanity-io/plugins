@@ -1,5 +1,49 @@
 # sanity-plugin-mux-input
 
+## 3.0.5
+
+### Patch Changes
+
+- [#1296](https://github.com/sanity-io/plugins/pull/1296) [`707f3e8`](https://github.com/sanity-io/plugins/commit/707f3e88c6c06b50823671565e46c059e682ac42) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @mux/mux-player to ^3.13.0
+
+- [#1297](https://github.com/sanity-io/plugins/pull/1297) [`80c9178`](https://github.com/sanity-io/plugins/commit/80c917834aad7beca587112c9875cf020ce162c6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @mux/mux-player-react to ^3.13.0
+
+- [#1298](https://github.com/sanity-io/plugins/pull/1298) [`50181c1`](https://github.com/sanity-io/plugins/commit/50181c19cbb99b0f9328849ec72c240c4e3b4ca6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @mux/upchunk to ^3.5.0
+
+- [#1302](https://github.com/sanity-io/plugins/pull/1302) [`1b8f676`](https://github.com/sanity-io/plugins/commit/1b8f676d02d7c491d0b08fd0b26037f13449a7d9) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/incompatible-plugin to ^1.0.5
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
+- [#1316](https://github.com/sanity-io/plugins/pull/1316) [`23fedb0`](https://github.com/sanity-io/plugins/commit/23fedb0870b98d9b01bf0cff73b35bbb93e52715) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency iso-639-1 to ^3.1.5
+
+- [#1329](https://github.com/sanity-io/plugins/pull/1329) [`0d8d867`](https://github.com/sanity-io/plugins/commit/0d8d867fa51858233f086ae5fc85f6995ccd9dfd) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency swr to ^2.4.1
+
+- [#1330](https://github.com/sanity-io/plugins/pull/1330) [`597037c`](https://github.com/sanity-io/plugins/commit/597037cc115b0b0c98fb5d2780abe211fcf549af) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency type-fest to ^4.41.0
+
+- [#1342](https://github.com/sanity-io/plugins/pull/1342) [`9a60eae`](https://github.com/sanity-io/plugins/commit/9a60eae5de3cce25317b38c5d6fc070651a33c0d) Thanks [@stipsan](https://github.com/stipsan)! - Clean up unused internal files and exports now that the package is covered by knip.
+
+- [#1347](https://github.com/sanity-io/plugins/pull/1347) [`fabdc72`](https://github.com/sanity-io/plugins/commit/fabdc726bb1c9abee0e16252422ebd27a3d8e428) Thanks [@stipsan](https://github.com/stipsan)! - Adopt the shared monorepo TypeScript and lint conventions (shared `@repo/tsconfig`, type-aware linting, styled-components Babel transform) and fix the type errors surfaced by the stricter config.
+
+## 3.0.4
+
+### Patch Changes
+
+- [#1204](https://github.com/sanity-io/plugins/pull/1204) [`2625ff5`](https://github.com/sanity-io/plugins/commit/2625ff5f341d636886474a9e5a7a8c3e77c11280) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency react-rx to ^4.2.2
+
+- [#1205](https://github.com/sanity-io/plugins/pull/1205) [`a0c60af`](https://github.com/sanity-io/plugins/commit/a0c60af8b19d67cf8c4caaf6d166ff906fc6f73e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency rxjs to ^7.8.2
+
+## 3.0.3
+
+### Patch Changes
+
+- [#1184](https://github.com/sanity-io/plugins/pull/1184) [`0e56680`](https://github.com/sanity-io/plugins/commit/0e56680d767d3c4974d1d2fe860d962e9953269d) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
+## 3.0.2
+
+### Patch Changes
+
+- [#1128](https://github.com/sanity-io/plugins/pull/1128) [`fd78991`](https://github.com/sanity-io/plugins/commit/fd7899182e4d591365ac77589113e2e41ad693c3) Thanks [@stipsan](https://github.com/stipsan)! - Migrate to ESM (`"type": "module"`) and upgrade `@sanity/pkg-utils` to v10, as required by `@sanity/plugin-kit`. The package still ships both ESM and CommonJS builds via the `exports` map, so consumers are unaffected.
+
 ## 3.0.1
 
 ### Patch Changes

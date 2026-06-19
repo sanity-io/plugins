@@ -16,6 +16,7 @@ function ErrorBoundaryCard(props: Props) {
   const {push: pushToast} = useToast()
   const errorRef = useRef(null)
   const {ErrorBoundary, didCatch, error, reset} = useErrorBoundary({
+    // oxlint-disable-next-line no-unstable-nested-components
     onDidCatch: (err, errorInfo) => {
       console.group(err.toString())
       console.groupCollapsed('console.error')
