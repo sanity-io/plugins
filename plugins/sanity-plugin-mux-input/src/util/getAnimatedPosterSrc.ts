@@ -2,7 +2,7 @@ import type {SanityClient} from 'sanity'
 
 import {createUrlParamsObject} from './createUrlParamsObject'
 import type {AnimatedThumbnailOptions, MuxAnimatedThumbnailUrl} from './types'
-import {AssetThumbnailOptions} from './types'
+import {type AssetThumbnailOptions} from './types'
 
 export interface AnimatedPosterSrcOptions extends AnimatedThumbnailOptions {
   asset: AssetThumbnailOptions['asset']

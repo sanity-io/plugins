@@ -1,6 +1,6 @@
 import {Card, Box, Heading} from '@sanity/ui'
 import {getTheme_v2} from '@sanity/ui/theme'
-import React, {forwardRef} from 'react'
+import {forwardRef} from 'react'
 import {styled} from 'styled-components'
 
 const Root = styled(Card)`

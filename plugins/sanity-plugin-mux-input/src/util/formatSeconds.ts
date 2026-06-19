@@ -1,4 +1,3 @@
-/* eslint-disable */
 // From: https://stackoverflow.com/a/11486026/10433647
 export function formatSeconds(seconds: number): string {
   if (typeof seconds !== 'number' || Number.isNaN(seconds)) {

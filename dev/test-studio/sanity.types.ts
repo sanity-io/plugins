@@ -993,6 +993,24 @@ export type Form = {
   }
 }
 
+export type EmbeddingsArticleReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'embeddingsArticle'
+}
+
+export type EmbeddingsArticle = {
+  _id: string
+  _type: 'embeddingsArticle'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  related?: EmbeddingsArticleReference
+  relatedDefaultPlugin?: EmbeddingsArticleReference
+}
+
 export type SanityFileAssetReference = {
   _ref: string
   _type: 'reference'
@@ -1365,6 +1383,8 @@ export type AllSanitySchemaTypes =
   | Geopoint
   | FormField
   | Form
+  | EmbeddingsArticleReference
+  | EmbeddingsArticle
   | SanityFileAssetReference
   | MediaProduct
   | MediaTag

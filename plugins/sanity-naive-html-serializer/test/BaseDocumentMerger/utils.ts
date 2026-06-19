@@ -14,7 +14,7 @@ export const getNewObject = (): Record<string, any> => {
     objectAsField: {title: 'A new nested title'},
     _key: null,
   }
-  newObject.nestedArrayField[0].children[0].text = 'New text'
+  newObject.nestedArrayField[0]!.children[0]!.text = 'New text'
   return newObject
 }
 
@@ -36,7 +36,7 @@ export const getNewFieldLevelObject = (): Record<string, any> => {
     objectAsField: {title: 'A new nested title'},
     _key: null,
   }
-  newObject.nestedArrayField[0].children[0].text = 'New text'
+  newObject.nestedArrayField[0]!.children[0]!.text = 'New text'
   return newObject
 }
 

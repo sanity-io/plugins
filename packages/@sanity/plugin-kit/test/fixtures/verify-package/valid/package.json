@@ -13,10 +13,7 @@
     "url": "https://github.com/sanity-io/sanity"
   },
   "files": [
-    "src",
-    "dist",
-    "v2-incompatible.js",
-    "sanity.json"
+    "dist"
   ],
   "type": "module",
   "types": "./dist/index.d.ts",
@@ -33,9 +30,7 @@
     "prepublishOnly": "npm run build",
     "watch": "pkg-utils watch --strict"
   },
-  "dependencies": {
-    "@sanity/incompatible-plugin": "^0.0.1-studio-v3.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@sanity/pkg-utils": "^6.4.1",
     "@sanity/plugin-kit": "^0.0.1-studio-v3.1",
