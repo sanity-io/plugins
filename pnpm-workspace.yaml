@@ -99,8 +99,3 @@ allowBuilds:
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
   - 'vite'
-  # Keep @types/node resolvable for every package's d.ts build regardless of how
-  # the dependency graph hoists it (the recast-based pkg-utils v7/v8 toolchain used
-  # by sanity-plugin-media/-mux-input needs the NodeJS/process globals during
-  # api-extractor type extraction).
-  - '@types/node'
