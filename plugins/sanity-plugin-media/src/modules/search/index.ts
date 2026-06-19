@@ -103,7 +103,7 @@ const searchSlice = createSlice({
             facet.operatorType = operatorType
           }
           if (typeof value !== 'undefined') {
-            state.facets[index].value = value
+            state.facets[index]!.value = value
           }
         }
       })

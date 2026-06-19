@@ -47,7 +47,7 @@ describe('assetsDeleteEpic', () => {
     store.dispatch(assetsActions.deleteRequest({assets: [sampleAsset]}))
 
     await vi.waitFor(() => {
-      expect(store.getState().assets.byIds.a1).toBeUndefined()
+      expect(store.getState().assets.byIds['a1']).toBeUndefined()
       expect(client.observable.delete).toHaveBeenCalled()
     })
   })
@@ -81,7 +81,7 @@ describe('assetsUpdateEpic', () => {
 
     await vi.waitFor(() => {
       expect(chain.commit).toHaveBeenCalled()
-      expect(store.getState().assets.byIds.a1.asset.title).toBe('Updated')
+      expect(store.getState().assets.byIds['a1']!.asset.title).toBe('Updated')
     })
   })
 })
