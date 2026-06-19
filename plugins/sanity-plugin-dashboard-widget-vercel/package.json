@@ -44,7 +44,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@hookform/resolvers": "^4.0.0",
+    "@hookform/resolvers": "catalog:",
     "@sanity/color": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",

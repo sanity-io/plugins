@@ -2,4 +2,4 @@
 'sanity-plugin-media': patch
 ---
 
-Align `@sanity/uuid` and `rxjs` with the shared workspace catalog
+Align `@sanity/uuid`, `date-fns`, and `rxjs` with the shared workspace catalog

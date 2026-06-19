@@ -47,7 +47,7 @@
     "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.1.1",
+    "@hookform/resolvers": "catalog:hookform-resolvers-v3",
     "@reduxjs/toolkit": "^2.6.0",
     "@sanity/client": "catalog:",
     "@sanity/color": "catalog:",
@@ -57,11 +57,11 @@
     "@sanity/uuid": "catalog:",
     "@tanem/react-nprogress": "^5.0.55",
     "copy-to-clipboard": "^3.3.1",
-    "date-fns": "^4.0.0",
+    "date-fns": "catalog:",
     "filesize": "^9.0.0",
     "groq": "^3.0.0",
     "is-hotkey-esm": "^1.0.0",
-    "nanoid": "^3.3.8",
+    "nanoid": "catalog:nanoid-v3",
     "pluralize": "^8.0.0",
     "react-dropzone": "^11.3.1",
     "react-file-icon": "^1.6.0",

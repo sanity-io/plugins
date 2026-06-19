@@ -48,7 +48,7 @@
     "@sanity/icons": "catalog:",
     "@sanity/mutator": "catalog:",
     "@sanity/ui": "catalog:",
-    "date-fns": "^4.4.0",
+    "date-fns": "catalog:",
     "lodash-es": "catalog:",
     "react-fast-compare": "catalog:",
     "rxjs": "catalog:",
