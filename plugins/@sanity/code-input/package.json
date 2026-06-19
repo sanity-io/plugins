@@ -24,7 +24,6 @@
     "directory": "plugins/@sanity/code-input"
   },
   "files": [
-    "assets",
     "dist"
   ],
   "type": "module",
