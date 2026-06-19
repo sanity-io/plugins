@@ -436,7 +436,10 @@ Provide a sanityPlugin config in package.json (defaults shown):
     "eslintImports": true,
     "scripts": true,
     "pkg-utils": true,
-    "nodeEngine": true
+    "nodeEngine": true,
+    "srcIndex": true,
+    "bannedFiles": true,
+    "duplicateConfig": true
   }
 }
 ```

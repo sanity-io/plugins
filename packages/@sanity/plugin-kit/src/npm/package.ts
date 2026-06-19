@@ -274,7 +274,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
 
   const source = flags.typescript ? './src/index.ts' : './src/index.js'
 
-  const files = [outDir, 'sanity.json', 'src', 'v2-incompatible.js']
+  const files = [outDir, 'sanity.json', 'v2-incompatible.js']
 
   // sort alphabetically for scanability
   files.sort()

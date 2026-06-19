@@ -91,7 +91,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
           },
         },
         types: './dist/index.d.ts',
-        files: ['dist', 'sanity.json', 'src', 'v2-incompatible.js'],
+        files: ['dist', 'sanity.json', 'v2-incompatible.js'],
         scripts: {
           'lint': 'eslint .',
           'build': 'plugin-kit verify-package --silent && pkg-utils build --strict --check --clean',
