@@ -437,6 +437,7 @@ Provide a sanityPlugin config in package.json (defaults shown):
       "nodeEngine": true,
       "studioConfig": true,
       "srcIndex": true,
+      "bannedFiles": true,
       "duplicateConfig": true
     }
   }

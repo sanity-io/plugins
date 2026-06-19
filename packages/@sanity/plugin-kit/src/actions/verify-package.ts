@@ -22,6 +22,7 @@ import {
   validateTsConfig,
   validateSanityDependencies,
   validateSrcIndexFile,
+  validateBannedFiles,
   disallowDuplicateEslintConfig,
   disallowDuplicatePrettierConfig,
 } from './verify/validations'
@@ -67,6 +68,7 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
   await validation('esmOnly', async () => validateEsmOnly(packageJson))
   await validation('pkg-utils', async () => validatePkgUtilsDependency(packageJson))
   await validation('srcIndex', async () => validateSrcIndexFile(basePath))
+  await validation('bannedFiles', async () => validateBannedFiles(packageJson))
   await validation('scripts', async () => validateScripts(packageJson))
   await validation('nodeEngine', async () => validateNodeEngine(packageJson))
   await validation('duplicateConfig', async () =>

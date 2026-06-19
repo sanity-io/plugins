@@ -98,7 +98,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
           },
         },
         types: './dist/index.d.ts',
-        files: ['dist', 'src'],
+        files: ['dist'],
         scripts: {
           'lint': 'eslint .',
           'build': 'plugin-kit verify-package --silent && pkg-utils build --strict --check --clean',
