@@ -906,7 +906,7 @@ importers:
         specifier: 'catalog:'
         version: 1.0.0
       jsdom:
-        specifier: ^29.0.1
+        specifier: ^29.1.1
         version: 29.1.1(@noble/hashes@2.2.0)
       react:
         specifier: 'catalog:'
@@ -1178,7 +1178,7 @@ importers:
         specifier: 'catalog:'
         version: 1.0.0
       jsdom:
-        specifier: ^29.0.1
+        specifier: ^29.1.1
         version: 29.1.1(@noble/hashes@2.2.0)
       react:
         specifier: 'catalog:'
@@ -1334,7 +1334,7 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.17)
       jsdom:
-        specifier: ^29.0.1
+        specifier: ^29.1.1
         version: 29.1.1(@noble/hashes@2.2.0)
       react:
         specifier: 'catalog:'
@@ -1542,7 +1542,7 @@ importers:
         specifier: 'catalog:'
         version: 1.0.0
       jsdom:
-        specifier: ^29.0.1
+        specifier: ^29.1.1
         version: 29.1.1(@noble/hashes@2.2.0)
       react:
         specifier: 'catalog:'
@@ -1689,8 +1689,8 @@ importers:
         specifier: 'catalog:'
         version: 1.0.0
       jsdom:
-        specifier: ^28.1.0
-        version: 28.1.0(@noble/hashes@2.2.0)
+        specifier: ^29.1.1
+        version: 29.1.1(@noble/hashes@2.2.0)
       just-clone:
         specifier: ^6.2.0
         version: 6.2.0
@@ -2380,7 +2380,7 @@ importers:
         specifier: 'catalog:'
         version: 1.0.0
       jsdom:
-        specifier: ^29.0.1
+        specifier: ^29.1.1
         version: 29.1.1(@noble/hashes@2.2.0)
       react:
         specifier: 'catalog:'
@@ -2587,8 +2587,8 @@ importers:
         specifier: ^1.0.4
         version: 1.0.5
       jsdom:
-        specifier: ^28.1.0
-        version: 28.1.0(@noble/hashes@2.2.0)
+        specifier: ^29.1.1
+        version: 29.1.1(@noble/hashes@2.2.0)
       react:
         specifier: 'catalog:'
         version: 19.2.7

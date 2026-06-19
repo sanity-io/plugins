@@ -54,7 +54,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "jsdom": "^29.0.1",
+    "jsdom": "^29.1.1",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
