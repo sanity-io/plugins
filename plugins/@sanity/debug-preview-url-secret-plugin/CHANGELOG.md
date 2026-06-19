@@ -1,5 +1,11 @@
 # @sanity/debug-preview-url-secret-plugin
 
+## 2.0.12
+
+### Patch Changes
+
+- [`a1aca4c`](https://github.com/sanity-io/plugins/commit/a1aca4cf86dacafdfce449465181253af6a550d3) Thanks [@stipsan](https://github.com/stipsan)! - Stop publishing `CHANGELOG.md` to npm
+
 ## 2.0.11
 
 ### Patch Changes

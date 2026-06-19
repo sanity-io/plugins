@@ -23,10 +23,7 @@
     "directory": "plugins/sanity-plugin-mux-input"
   },
   "files": [
-    "src",
-    "dist",
-    "sanity.json",
-    "v2-incompatible.js"
+    "dist"
   ],
   "type": "module",
   "sideEffects": false,
@@ -61,7 +58,6 @@
     "@mux/mux-player-react": "^3.13.0",
     "@mux/upchunk": "^3.5.0",
     "@sanity/icons": "^3.7.4",
-    "@sanity/incompatible-plugin": "^1.0.5",
     "@sanity/ui": "^3.2.0",
     "@sanity/uuid": "^3.0.3",
     "iso-639-1": "^3.1.5",
@@ -103,7 +99,6 @@
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
   },
-  "sanityExchangeUrl": "https://www.sanity.io/plugins/sanity-plugin-mux-input",
   "sanityPlugin": {
     "verifyPackage": {
       "tsc": false,

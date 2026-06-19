@@ -15,12 +15,13 @@ import {
   validatePackageType,
   validatePkgUtilsDependency,
   validatePkgUtilsVersion,
-  validatePluginSanityJson,
+  validateIncompatiblePlugin,
   validateDeprecatedDependencies,
   validateScripts,
   validateTsConfig,
   validateSanityDependencies,
   validateSrcIndexFile,
+  validateBannedFiles,
   disallowDuplicateEslintConfig,
   disallowDuplicatePrettierConfig,
 } from './verify/validations'
@@ -65,6 +66,7 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
   await validation('packageName', async () => validatePackageName(packageJson))
   await validation('pkg-utils', async () => validatePkgUtilsDependency(packageJson))
   await validation('srcIndex', async () => validateSrcIndexFile(basePath))
+  await validation('bannedFiles', async () => validateBannedFiles(packageJson))
   await validation('scripts', async () => validateScripts(packageJson))
   await validation('nodeEngine', async () => validateNodeEngine(packageJson))
   await validation('duplicateConfig', async () =>
@@ -78,7 +80,9 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
     await validation('tsconfig', async () => validateTsConfig(ts, {basePath, outDir, tsconfig}))
   }
 
-  await validation('sanityV2Json', async () => validatePluginSanityJson({basePath, packageJson}))
+  await validation('incompatiblePlugin', async () =>
+    validateIncompatiblePlugin({basePath, packageJson}),
+  )
 
   await validation('babelConfig', async () => validateBabelConfig({basePath}))
 

@@ -1,5 +1,5 @@
 import {Button, type ButtonProps} from '@sanity/ui'
-import React, {useCallback, useId, useRef} from 'react'
+import {useCallback, useId, useRef} from 'react'
 import {styled} from 'styled-components'
 
 const HiddenInput = styled.input`

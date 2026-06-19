@@ -205,7 +205,7 @@ export default defineType({
 Finally, pass a `form` document to the `FormRenderer` component
 
 ```tsx
-import React, {type FC} from 'react'
+import {type FC} from 'react'
 import {FormRenderer, type FormDataProps} from '@sanity/form-toolkit/form-renderer'
 
 interface NativeFormExampleProps {

@@ -1,5 +1,5 @@
 import {Button, Card, Dialog, Stack, Text} from '@sanity/ui'
-import React, {createContext, useCallback, useContext, useMemo, useState} from 'react'
+import {createContext, useCallback, useContext, useMemo, useState} from 'react'
 
 import {type PluginConfig} from '../util/types'
 
