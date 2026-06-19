@@ -130,7 +130,7 @@ Verify that the plugin package is configured correctly by running:
   - recommended usage of devDependencies/peerDependencies/dependencies for certain packages
 - Check for redundant v2 config:
   - babel
-  - sanity.json
+  - the deprecated `@sanity/incompatible-plugin` v2 compatibility shim (`sanity.json` + `v2-incompatible.js`)
 - Check for sanity imports that has changed in v3, using eslint
 - Check tsconfig.json settings
 - Check for [SPDX](https://spdx.org/licenses/) compatible license definition
@@ -432,7 +432,7 @@ Provide a sanityPlugin config in package.json (defaults shown):
     "dependencies": true,
     "rollupConfig": true,
     "babelConfig": true,
-    "sanityV2Json": true,
+    "incompatiblePlugin": true,
     "eslintImports": true,
     "scripts": true,
     "pkg-utils": true,

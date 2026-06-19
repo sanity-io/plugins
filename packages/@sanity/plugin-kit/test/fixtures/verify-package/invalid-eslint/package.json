@@ -71,7 +71,7 @@
       "dependencies": false,
       "rollupConfig": false,
       "babelConfig": false,
-      "sanityV2Json": false,
+      "incompatiblePlugin": false,
       "scripts": false,
       "pkg-utils": false,
       "nodeEngine": false,

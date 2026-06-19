@@ -325,8 +325,6 @@ async function writeStaticAssets(options: InjectOptions) {
     flags.eslint && eslintrcTemplate({flags: options.flags}),
     flags.eslint && eslintignoreTemplate({outDir, flags: options.flags}),
     {type: 'copy', from: 'editorconfig', to: '.editorconfig'},
-    {type: 'copy', from: 'sanity.json', to: 'sanity.json'},
-    {type: 'copy', from: 'v2-incompatible.js.template', to: 'v2-incompatible.js'},
     pkgConfigTemplate({outDir, flags: options.flags}),
     flags.gitignore && gitignoreTemplate(),
     flags.typescript && tsconfigTemplate({flags: options.flags}),
