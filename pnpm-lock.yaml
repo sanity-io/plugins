@@ -2611,7 +2611,7 @@ importers:
         specifier: ^3.13.0
         version: 3.13.0(react@19.2.7)
       '@mux/mux-player-react':
-        specifier: ^3.8.0
+        specifier: ^3.13.0
         version: 3.13.0(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.7)(react@19.2.7)
       '@mux/upchunk':
         specifier: ^3.5.0
