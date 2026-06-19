@@ -1,12 +1,8 @@
-import {getIt} from 'get-it'
-import {jsonRequest, jsonResponse, httpErrors, headers, promise} from 'get-it/middleware'
+import {createRequester} from 'get-it'
 
 import pkg from '../../package.json'
 
-export const request = getIt([
-  promise({onlyBody: true}),
-  jsonRequest(),
-  jsonResponse(),
-  httpErrors(),
-  headers({'User-Agent': `${pkg.name}@${pkg.version}`}),
-])
+export const requester = createRequester({
+  headers: {'User-Agent': `${pkg.name}@${pkg.version}`},
+  as: 'json',
+})

@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-media",
-  "version": "4.3.4",
+  "version": "4.3.6",
   "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
   "keywords": [
     "asset",
@@ -24,10 +24,7 @@
     "directory": "plugins/sanity-plugin-media"
   },
   "files": [
-    "dist",
-    "sanity.json",
-    "src",
-    "v2-incompatible.js"
+    "dist"
   ],
   "type": "module",
   "main": "./dist/index.cjs",
@@ -35,62 +32,74 @@
   "exports": {
     ".": {
       "source": "./src/index.ts",
+      "development": "./src/index.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
+  },
   "scripts": {
     "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
-    "prepack": "turbo run build",
-    "watch": "pkg-utils watch --strict"
+    "prepack": "turbo run build"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.1.1",
-    "@reduxjs/toolkit": "^2.6.0",
+    "@hookform/resolvers": "^4.1.3",
+    "@reduxjs/toolkit": "^2.12.0",
     "@sanity/client": "catalog:",
     "@sanity/color": "^3.0.6",
     "@sanity/icons": "^3.7.4",
-    "@sanity/incompatible-plugin": "^1.0.5",
     "@sanity/ui": "^3.2.0",
-    "@sanity/uuid": "^3.0.1",
-    "@tanem/react-nprogress": "^5.0.55",
-    "copy-to-clipboard": "^3.3.1",
+    "@sanity/uuid": "^3.0.3",
+    "@tanem/react-nprogress": "^5.0.63",
+    "copy-to-clipboard": "^3.3.3",
     "date-fns": "^4.0.0",
-    "filesize": "^9.0.0",
-    "groq": "^3.0.0",
+    "filesize": "^9.0.11",
+    "groq": "^6.1.0",
     "is-hotkey-esm": "^1.0.0",
-    "nanoid": "^3.3.8",
+    "nanoid": "^3.3.12",
     "pluralize": "^8.0.0",
-    "react-dropzone": "^11.3.1",
+    "react-dropzone": "^11.7.1",
     "react-file-icon": "^1.6.0",
-    "react-hook-form": "^7.54.2",
-    "react-redux": "^9.2.0",
-    "react-select": "^5.10.1",
-    "react-virtuoso": "^4.12.5",
+    "react-hook-form": "^7.79.0",
+    "react-redux": "^9.3.0",
+    "react-select": "^5.10.2",
+    "react-virtuoso": "^4.18.7",
     "redux": "^5.0.1",
     "redux-observable": "3.0.0-rc.2",
-    "rxjs": "^7.8.1",
-    "zod": "^3.21.4"
+    "rxjs": "^7.8.2",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@repo/package.config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/pluralize": "^0.0.33",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/react-file-icon": "^1.0.4",
-    "jsdom": "^25.0.1",
+    "babel-plugin-styled-components": "catalog:",
+    "jsdom": "^29.1.1",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-is": "^19.0.0",
+    "react-is": "^19.2.7",
     "sanity": "catalog:",
     "styled-components": "catalog:",
-    "typescript": "5.8.2"
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
     "react": "^18.3 || ^19",
@@ -104,6 +113,8 @@
   },
   "sanityPlugin": {
     "verifyPackage": {
+      "tsconfig": false,
+      "tsc": false,
       "eslintImports": false,
       "scripts": false
     }
