@@ -28,10 +28,10 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
-package.json does not list sanity as a devDependency.
-sanity replaced parcel as the recommended build tool in @sanity/plugin-kit 2.0.0
+package.json does not list @sanity/pkg-utils as a devDependency.
+@sanity/pkg-utils replaced parcel as the recommended build tool in @sanity/plugin-kit 2.0.0
 
-Please add it by running 'npm install --save-dev sanity'.
+Please add it by running 'npm install --save-dev @sanity/pkg-utils'.
 
 To skip this validation add the following to your package.json:
 "sanityPlugin": {
@@ -43,7 +43,7 @@ To skip this validation add the following to your package.json:
 [error] 
 Expected one of [src/index.js, src/index.ts] to exist.
 
-sanity expects a non-jsx file to be the source entry-point for the plugin.
+@sanity/pkg-utils expects a non-jsx file to be the source entry-point for the plugin.
 If you currently have JSX in your index file, extract it into a separate file and import it.
 
 To skip this validation add the following to your package.json:
