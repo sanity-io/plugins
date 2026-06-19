@@ -1,9 +1,8 @@
 {
   "extends": "@repo/tsconfig/check.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["dist", "node_modules", "test"],
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "node_modules"],
   "compilerOptions": {
-    "verbatimModuleSyntax": false,
     "noPropertyAccessFromIndexSignature": false,
     "resolveJsonModule": true,
     "types": ["node"]

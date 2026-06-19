@@ -4,11 +4,11 @@ import path from 'path'
 import {validate as isValidEmail} from 'email-validator'
 import xdgBasedir from 'xdg-basedir'
 
-import {InjectOptions} from '../actions/inject'
-import {PackageJson} from '../actions/verify/types'
+import type {InjectOptions} from '../actions/inject'
+import type {PackageJson} from '../actions/verify/types'
 import {readJsonFile} from './files'
 import {prompt} from './prompt'
-import {request} from './request'
+import {requester} from './request'
 
 export interface User {
   name: string
@@ -83,8 +83,9 @@ async function getSanityUserInfo(): Promise<User | undefined> {
       return undefined
     }
 
-    const user = await request({
+    const {body: user} = await requester<User>({
       url: 'https://api.sanity.io/v1/users/me',
+      as: 'json',
       headers: {Authorization: `Bearer ${token}`},
     })
 

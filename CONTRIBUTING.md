@@ -294,7 +294,7 @@ The generator will:
 - Fetch metadata from the published npm package
 - Copy over `version`, `description`, and `keywords`
 - Copy over `dependencies`, automatically filtering out:
-  - `@sanity/incompatible-plugin` (test package)
+  - `@sanity/incompatible-plugin` (legacy Sanity Studio v2 compatibility shim, no longer needed)
   - `styled-components` (should always be a peer dependency)
   - `sanity` (should always be a peer/dev dependency)
 - Detect if the plugin uses `styled-components` based on `devDependencies` and `peerDependencies`

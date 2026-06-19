@@ -1,6 +1,6 @@
 import {WarningFilledIcon} from '@sanity/icons'
 import {Box, Flex, Text} from '@sanity/ui'
-import {CSSProperties} from 'react'
+import {type CSSProperties} from 'react'
 
 export default function PlaybackPolicyWarning() {
   const textStyle: CSSProperties = {

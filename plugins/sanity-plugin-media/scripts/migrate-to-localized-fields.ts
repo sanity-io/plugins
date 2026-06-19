@@ -37,6 +37,7 @@ export default defineMigration({
 
         if (typeof value === 'string') {
           // Convert string → {[defaultLocale]: string}
+          // @ts-expect-error - patch is not typed
           ops.push(patch(doc._id, [{set: {[field]: {[DEFAULT_LOCALE_ID]: value}}}]))
         } else if (value === null || value === undefined) {
           // Leave missing fields alone

@@ -5342,6 +5342,96 @@
   },
   {
     "type": "type",
+    "name": "embeddingsArticle.reference",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_ref": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          }
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "reference"
+          }
+        },
+        "_weak": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      },
+      "dereferencesTo": "embeddingsArticle"
+    }
+  },
+  {
+    "name": "embeddingsArticle",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "embeddingsArticle"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "title": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "related": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "embeddingsArticle.reference"
+        },
+        "optional": true
+      },
+      "relatedDefaultPlugin": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "embeddingsArticle.reference"
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "type": "type",
     "name": "sanity.fileAsset.reference",
     "value": {
       "type": "object",

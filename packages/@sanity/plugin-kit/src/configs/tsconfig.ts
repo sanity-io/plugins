@@ -1,7 +1,7 @@
 import {outdent} from 'outdent'
 
-import {InitFlags} from '../actions/init'
-import {InjectTemplate} from '../actions/inject'
+import type {InitFlags} from '../actions/init'
+import type {InjectTemplate} from '../actions/inject'
 
 export function tsconfigTemplate(options: {flags: InitFlags}): InjectTemplate {
   const {flags} = options
