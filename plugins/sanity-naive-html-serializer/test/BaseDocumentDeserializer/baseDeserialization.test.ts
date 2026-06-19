@@ -324,8 +324,8 @@ test('Content with anonymous inline objects deserializes all fields, at any dept
   expect(deserialized.tabs.config.title).toEqual(inlineDocumentLevelArticle.tabs.config.title)
 
   //array in object in object
-  expect(deserialized.tabs.config.objectAsField.content[0].children[0].text).toEqual(
-    inlineDocumentLevelArticle.tabs.config.objectAsField.content[0].children[0].text,
+  expect(deserialized.tabs.config.objectAsField.content[0]!.children[0]!.text).toEqual(
+    inlineDocumentLevelArticle.tabs.config.objectAsField.content[0]!.children[0]!.text,
   )
 
   //arrays
@@ -351,6 +351,6 @@ test('Content with anonymous inline objects deserializes all fields, at any dept
   const origArray = inlineDocumentLevelArticle.tabs.arrayWithAnonymousObjects
   const deserializedArray = deserialized.tabs.arrayWithAnonymousObjects
   expect(deserializedArray.length).toEqual(origArray.length)
-  expect(deserializedArray[0]._key).toEqual(origArray[0]._key)
+  expect(deserializedArray[0]!._key).toEqual(origArray[0]!._key)
   expect(Object.keys(deserializedArray[0])).not.toContain('span')
 })

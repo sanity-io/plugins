@@ -88,7 +88,7 @@ export const addedCustomSerializers = tempSerializers
 
 export const addedDeserializerTypes = {
   objectField: (html: HTMLElement): TypedObject => {
-    const title = html.innerHTML.split(':')[1].replace(/'/g, '').trim()
+    const title = html.innerHTML.split(':')[1]!.replace(/'/g, '').trim()
     const _type = html.className
     const _key = html.id
     return {title, _type, _key}
@@ -111,7 +111,7 @@ export const addedBlockDeserializers = [
         return undefined
       }
 
-      const title = el.innerHTML.split(':')[1].replace(/'/g, '').trim()
+      const title = el.innerHTML.split(':')[1]!.replace(/'/g, '').trim()
       const _type = el.className
       const _key = el.id
 

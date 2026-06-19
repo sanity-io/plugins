@@ -128,7 +128,7 @@ describe('Presence and accurancy of fields in "vanilla" deserialization -- array
 //works, but requires another schema declaration. resolve later.
 test('Nested locale fields make it to serialization, but only base lang', () => {
   const slices = findByClass(docTree.children, 'slices')?.children[0]
-  const origSlices: any = internationalizedArrayArticle.slices[0].content
+  const origSlices: any = internationalizedArrayArticle.slices[0]!.content
   const engSlice = getI18nArrayItem(origSlices, 'en').value
   const frenchSlice = getI18nArrayItem(origSlices, 'fr_FR').value
   // @ts-expect-error i18n array item value is typed as unknown
