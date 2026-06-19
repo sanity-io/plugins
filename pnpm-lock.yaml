@@ -2732,7 +2732,7 @@ importers:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       video.js:
-        specifier: ^7.20.3
+        specifier: ^7.21.7
         version: 7.21.7
     devDependencies:
       '@repo/package.config':

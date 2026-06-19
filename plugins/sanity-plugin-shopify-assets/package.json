@@ -53,7 +53,7 @@
     "react-infinite-scroll-component": "^6.1.1",
     "react-photo-album": "^2.0.0",
     "rxjs": "catalog:",
-    "video.js": "^7.20.3"
+    "video.js": "^7.21.7"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
