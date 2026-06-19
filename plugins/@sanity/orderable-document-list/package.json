@@ -45,7 +45,7 @@
     "@sanity/client": "catalog:",
     "@sanity/icons": "^3.7.4",
     "@sanity/ui": "catalog:",
-    "lexorank": "^1.0.4",
+    "lexorank": "^1.0.5",
     "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
