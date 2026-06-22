@@ -63,13 +63,7 @@ catalog:
   video.js: ^7.21.7
   vitest: ^4.1.9
 
-# Named catalogs for shared deps where one package still needs an older major.
-# The default catalog above tracks the latest major in use.
-catalogs:
-  date-fns-v2:
-    date-fns: ^2.30.0
-  react-photo-album-v2:
-    react-photo-album: ^2.4.1
+catalogMode: prefer
 
 minimumReleaseAge: 4320
 

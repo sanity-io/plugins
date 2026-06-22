@@ -6,10 +6,6 @@ settings:
   excludeLinksFromLockfile: false
 
 catalogs:
-  date-fns-v2:
-    date-fns:
-      specifier: ^2.30.0
-      version: 2.30.0
   default:
     '@hello-pangea/dnd':
       specifier: ^18.0.1
@@ -161,10 +157,6 @@ catalogs:
     vitest:
       specifier: ^4.1.9
       version: 4.1.9
-  react-photo-album-v2:
-    react-photo-album:
-      specifier: ^2.4.1
-      version: 2.4.1
 
 overrides:
   '@types/node': ^24.13.2
@@ -1466,7 +1458,7 @@ importers:
         specifier: ^6.198.0
         version: 6.198.0
       date-fns:
-        specifier: catalog:date-fns-v2
+        specifier: ^2.30.0
         version: 2.30.0
       date-fns-tz:
         specifier: ^2.0.1
@@ -2837,7 +2829,7 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1(react@19.2.7)
       react-photo-album:
-        specifier: catalog:react-photo-album-v2
+        specifier: ^2.4.1
         version: 2.4.1(react@19.2.7)
       rxjs:
         specifier: 'catalog:'
