@@ -32,10 +32,10 @@ export interface PaneItemPreviewProps {
 export function PaneItemPreview(props: PaneItemPreviewProps) {
   const {icon, layout, presence, schemaType, value} = props
   const title =
-    (isRecord(value.title) && isValidElement(value.title)) ||
-    isString(value.title) ||
-    isNumber(value.title)
-      ? value.title
+    (isRecord(value['title']) && isValidElement(value['title'])) ||
+    isString(value['title']) ||
+    isNumber(value['title'])
+      ? value['title']
       : null
 
   const observable = useMemo(

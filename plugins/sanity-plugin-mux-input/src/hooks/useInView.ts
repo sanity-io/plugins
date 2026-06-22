@@ -22,8 +22,8 @@ export function useInView(
       // While it would be nice if you could just look at isIntersecting to determine if the component is inside the viewport, browsers can't agree on how to use it.
       // -Firefox ignores `threshold` when considering `isIntersecting`, so it will never be false again if `threshold` is > 0
       const nowInView =
-        entry.isIntersecting &&
-        obs.thresholds.some((threshold) => entry.intersectionRatio >= threshold)
+        entry!.isIntersecting &&
+        obs.thresholds.some((threshold) => entry!.intersectionRatio >= threshold)
 
       // Update our state when observer callback fires
       setInView(nowInView)

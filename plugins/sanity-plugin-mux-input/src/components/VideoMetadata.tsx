@@ -30,7 +30,7 @@ const VideoMetadata = (props: {asset: VideoAssetDocument}) => {
           <IconInfo text={displayInfo.duration} icon={ClockIcon} size={1} muted />
         )}
         <IconInfo
-          text={displayInfo.createdAt.toISOString().split('T')[0]}
+          text={displayInfo.createdAt.toISOString().split('T')[0]!}
           icon={CalendarIcon}
           size={1}
           muted

@@ -1,5 +1,17 @@
 # @sanity/presets
 
+## 1.0.0
+
+### Major Changes
+
+- [#1390](https://github.com/sanity-io/plugins/pull/1390) [`747c44e`](https://github.com/sanity-io/plugins/commit/747c44ea2b75ed57f2b0c0c80139bc300621f0e7) Thanks [@jordanl17](https://github.com/jordanl17)! - Rework the README around the recommended registry-based setup: add a from-scratch getting-started walkthrough, document where to create the registry to avoid import cycles, explain inline vs named type usage, and correct the documented Image and SEO field behaviour
+
+## 0.5.2
+
+### Patch Changes
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
 ## 0.5.1
 
 ### Patch Changes
@@ -69,6 +81,7 @@
 - [#828](https://github.com/sanity-io/plugins/pull/828) [`6de1330`](https://github.com/sanity-io/plugins/commit/6de13306c0b3916154299fdbbdae70c440d232a8) Thanks [@juice49](https://github.com/juice49)! - Replace plugin-based API with a registry-based API. `createPresetsRegistry()` is the new entry point — it returns `define<Type>` functions that produce schema types directly, added to `schema.types` instead of `plugins`.
 
   Key changes:
+
   - **Registry-level configuration.** Configure `link.internalTypes` once and it cascades to every preset that composes a link (CTA, rich text).
   - **User-defined type names.** All `name` values are provided at the call site.
   - **Inline composition.** Composed presets (e.g. the link inside a CTA) are inlined as anonymous object fields via `registry.getPreset()`, replacing the previous `composes` mechanism.
@@ -83,6 +96,7 @@
   stable, but may make adjustments to address feedback.
 
   The following presets are available:
+
   - page
   - link
   - cta
@@ -91,6 +105,7 @@
   - richText
 
   Since the last changelog entry:
+
   - The API is now based on inline type factories, rather than composing
     global types based on their name.
   - `defineRichText` has been added to create Portable Text fields that

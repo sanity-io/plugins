@@ -1,6 +1,6 @@
 // oxlint-disable react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
 import {Card, Text} from '@sanity/ui'
-import React, {useEffect, useMemo, useRef} from 'react'
+import {useEffect, useMemo, useRef} from 'react'
 
 import {useCancelUpload} from '../hooks/useCancelUpload'
 import type {MuxInputProps, PluginConfig, VideoAssetDocument} from '../util/types'
@@ -34,6 +34,7 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
 
     return true
   }, [asset])
+  // oxlint-disable-next-line react/react-compiler
   const isPreparingStaticRenditions = useMemo<boolean>(() => {
     // Legacy: If static_renditions has a status field, it was created with mp4_support (deprecated)
     // We don't process this old format, just return false

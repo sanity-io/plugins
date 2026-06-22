@@ -1,6 +1,11 @@
-// oxlint-disable oxc/no-map-spread, typescript/no-unsafe-type-assertion, unicorn/no-useless-fallback-in-spread - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable oxc/no-map-spread, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {useMemo, useState} from 'react'
-import {collate, createHookFromObservableFactory, DocumentStore, useDocumentStore} from 'sanity'
+import {
+  collate,
+  createHookFromObservableFactory,
+  type DocumentStore,
+  useDocumentStore,
+} from 'sanity'
 
 import {SANITY_API_VERSION} from '../hooks/useClient'
 import {createSearchFilter} from '../util/createSearchFilter'
@@ -51,7 +56,7 @@ export default function useAssets() {
       collate<VideoAssetDocument>(assetDocuments).map(
         (collated) =>
           ({
-            ...(collated.draft || collated.published || {}),
+            ...(collated.draft || collated.published),
             _id: collated.id,
           }) as VideoAssetDocument,
       ),

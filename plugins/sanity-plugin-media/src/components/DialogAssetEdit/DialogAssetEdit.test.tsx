@@ -116,7 +116,7 @@ describe('DialogAssetEdit', () => {
     await user.type(inputByName(/asset details/i, screen, 'title'), 'Hero image')
     await user.click(dlg.getByRole('button', {name: /save and close/i}))
 
-    expect(store.getState().assets.byIds.a1.updating).toBe(true)
+    expect(store.getState().assets.byIds['a1']!.updating).toBe(true)
 
     await waitFor(() => {
       let updateAction

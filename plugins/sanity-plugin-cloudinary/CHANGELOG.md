@@ -1,5 +1,17 @@
 # sanity-plugin-cloudinary
 
+## 2.0.2
+
+### Patch Changes
+
+- [#1383](https://github.com/sanity-io/plugins/pull/1383) [`e4231ba`](https://github.com/sanity-io/plugins/commit/e4231bad0ca3ac4e1be0027aeaf55140d07269b8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to v5
+
+## 2.0.1
+
+### Patch Changes
+
+- [#1217](https://github.com/sanity-io/plugins/pull/1217) [`a0493e8`](https://github.com/sanity-io/plugins/commit/a0493e86e91ce93749c0a58d93b0ecab8f4a0468) Thanks [@antonio-lopez](https://github.com/antonio-lopez)! - Fix typos in README asset source example comments
+
 ## 2.0.0
 
 ### Major Changes

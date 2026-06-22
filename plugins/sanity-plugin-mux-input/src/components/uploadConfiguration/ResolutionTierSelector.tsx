@@ -1,10 +1,10 @@
 // oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {Flex, Radio, Text} from '@sanity/ui'
-import {ActionDispatch} from 'react'
+import {type ActionDispatch} from 'react'
 import {FormField} from 'sanity'
 
 import {type UploadConfig} from '../../util/types'
-import {UploadConfigurationStateAction} from '../UploadConfiguration'
+import {type UploadConfigurationStateAction} from '../UploadConfiguration'
 
 export const RESOLUTION_TIERS = [
   {value: '1080p', label: '1080p'},

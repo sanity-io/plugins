@@ -1,4 +1,3 @@
-// oxlint-disable eslint/no-unsafe-optional-chaining - legacy code will be lint-cleaned in a follow-up PR
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
 import pluralize from 'pluralize'
 import {ofType} from 'redux-observable'
@@ -210,7 +209,7 @@ export const dialogTagCreateEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsActions.createComplete.match),
     mergeMap((action) => {
-      const {assetId, tag} = action?.payload
+      const {assetId, tag} = action?.payload || {}
 
       if (assetId) {
         return of(dialogSlice.actions.inlineTagCreate({tag, assetId}))
@@ -228,7 +227,7 @@ export const dialogTagDeleteEpic: MyEpic = (action$) =>
   action$.pipe(
     filter(tagsActions.listenerDeleteQueueComplete.match),
     mergeMap((action) => {
-      const {tagIds} = action?.payload
+      const {tagIds} = action?.payload || {}
 
       return of(dialogSlice.actions.inlineTagRemove({tagIds}))
     }),

@@ -1,7 +1,7 @@
 // oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {htmlToBlocks} from '@portabletext/block-tools'
 import {Schema} from '@sanity/schema'
-import {ObjectField, PortableTextSpan, PortableTextTextBlock} from 'sanity'
+import type {ObjectField, PortableTextSpan, PortableTextTextBlock} from 'sanity'
 
 const defaultSchema = Schema.compile({
   name: 'default',

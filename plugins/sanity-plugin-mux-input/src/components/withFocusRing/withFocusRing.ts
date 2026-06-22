@@ -15,7 +15,7 @@ export function withFocusRing<Props>(component: ComponentType<Props>) {
     return css`
       --card-focus-box-shadow: ${focusRingBorderStyle(border)};
 
-      border-radius: ${rem(props.theme.sanity.radius[1])};
+      border-radius: ${rem(props.theme.sanity.radius[1]!)};
       outline: none;
       box-shadow: var(--card-focus-box-shadow);
 

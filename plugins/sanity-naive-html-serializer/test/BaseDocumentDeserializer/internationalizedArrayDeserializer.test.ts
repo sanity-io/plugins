@@ -1,4 +1,5 @@
-import {PortableTextBlock} from 'sanity'
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+import type {PortableTextBlock} from 'sanity'
 import {expect, test, describe} from 'vitest'
 
 import {internationalizedArrayArticle} from '../BaseDocumentSerializer/utils'

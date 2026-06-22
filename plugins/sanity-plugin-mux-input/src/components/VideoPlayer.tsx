@@ -1,4 +1,4 @@
-// oxlint-disable eslint/no-unused-vars, react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
 import {type MuxPlayerProps, type MuxPlayerRefAttributes} from '@mux/mux-player-react'
 import MuxPlayer from '@mux/mux-player-react/lazy'
 import {ErrorOutlineIcon} from '@sanity/icons'
@@ -46,7 +46,8 @@ export default function VideoPlayer({
     try {
       return getPlaybackId(asset, ['public', 'signed', 'drm'])
     } catch (e) {
-      setError(new TypeError('Asset has no playback ID'))
+      // oxlint-disable-next-line react/react-compiler
+      setError(new TypeError('Asset has no playback ID', {cause: e}))
       return undefined
     }
   }, [asset])
@@ -137,7 +138,7 @@ export default function VideoPlayer({
 
   const [width, height] = (asset?.data?.aspect_ratio ?? '16:9').split(':').map(Number)
   const targetAspectRatio =
-    props.forceAspectRatio || (Number.isNaN(width) ? 16 / 9 : width / height)
+    props.forceAspectRatio || (Number.isNaN(width) ? 16 / 9 : width! / height!)
   let aspectRatio = Math.max(MIN_ASPECT_RATIO, targetAspectRatio)
   if (isAudio) {
     aspectRatio = props.forceAspectRatio
@@ -186,6 +187,7 @@ export default function VideoPlayer({
                 crossOrigin="anonymous"
                 metadata={{
                   player_name: 'Sanity Admin Dashboard',
+                  // @ts-expect-error - this constant is search/replaced so must be exact, not accessed with an index signature
                   player_version: process.env.PKG_VERSION,
                   page_type: 'Preview Player',
                 }}
@@ -224,7 +226,11 @@ export default function VideoPlayer({
       </Card>
 
       {dialogState === 'edit-thumbnail' && (
-        <EditThumbnailDialog asset={asset} currentTime={muxPlayer?.current?.currentTime} />
+        <EditThumbnailDialog
+          asset={asset}
+          // oxlint-disable-next-line react/react-compiler
+          currentTime={muxPlayer?.current?.currentTime}
+        />
       )}
       {dialogState === 'edit-captions' && <CaptionsDialog asset={asset} />}
     </>

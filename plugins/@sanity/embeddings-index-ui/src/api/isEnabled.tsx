@@ -1,7 +1,6 @@
 // oxlint-disable promise/always-return - legacy code will be lint-cleaned in a follow-up PR
 import {Card, Text} from '@sanity/ui'
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {createContext, PropsWithChildren, useContext, useEffect, useState} from 'react'
+import {createContext, type PropsWithChildren, useContext, useEffect, useState} from 'react'
 import {useProjectId} from 'sanity'
 
 import {useApiClient} from './embeddingsApiHooks'

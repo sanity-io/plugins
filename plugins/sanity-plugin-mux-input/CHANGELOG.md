@@ -1,5 +1,55 @@
 # sanity-plugin-mux-input
 
+## 4.0.2
+
+### Patch Changes
+
+- [#1375](https://github.com/sanity-io/plugins/pull/1375) [`150147b`](https://github.com/sanity-io/plugins/commit/150147bb58b207060abb2a148237352abe0bb6fb) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update lodash monorepo
+
+## 4.0.1
+
+### Patch Changes
+
+- [`cc31111`](https://github.com/sanity-io/plugins/commit/cc31111d34b128b130bf6223ab611cf1cc1a0344) Thanks [@stipsan](https://github.com/stipsan)! - Stop bundling `use-error-boundary` and treat it as an external dependency
+
+## 4.0.0
+
+### Major Changes
+
+- [#1354](https://github.com/sanity-io/plugins/pull/1354) [`3217cf8`](https://github.com/sanity-io/plugins/commit/3217cf801b2e84f41336d6ffa097dd77289a0383) Thanks [@stipsan](https://github.com/stipsan)! - Drop the CommonJS build and require Sanity Studio v5 or v6
+
+  The plugin is now published as ESM only and no longer ships a CommonJS (`require`) build. The `sanity` peer dependency is also tightened to `^5 || ^6.0.0-0`, dropping declared support for Studio v4. Sanity Studio v5+ is pure ESM and the supported Node.js versions handle `require(esm)`, so a separate CommonJS build is no longer needed and only risks two copies of the code ending up in the module tree.
+
+### Patch Changes
+
+- [#1353](https://github.com/sanity-io/plugins/pull/1353) [`5ff7063`](https://github.com/sanity-io/plugins/commit/5ff70639f75bce2a4d7ef88aa2ec03d82cae4acc) Thanks [@stipsan](https://github.com/stipsan)! - Remove the obsolete `@sanity/incompatible-plugin` Sanity Studio v2 compatibility shim (`sanity.json` and `v2-incompatible.js`)
+
+- [#1352](https://github.com/sanity-io/plugins/pull/1352) [`2bae6e5`](https://github.com/sanity-io/plugins/commit/2bae6e5c958d7b90449a13a9ef57ea45f831a454) Thanks [@stipsan](https://github.com/stipsan)! - Remove `src` from the published `files` array; only the compiled `dist` output is published.
+
+## 3.0.5
+
+### Patch Changes
+
+- [#1296](https://github.com/sanity-io/plugins/pull/1296) [`707f3e8`](https://github.com/sanity-io/plugins/commit/707f3e88c6c06b50823671565e46c059e682ac42) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @mux/mux-player to ^3.13.0
+
+- [#1297](https://github.com/sanity-io/plugins/pull/1297) [`80c9178`](https://github.com/sanity-io/plugins/commit/80c917834aad7beca587112c9875cf020ce162c6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @mux/mux-player-react to ^3.13.0
+
+- [#1298](https://github.com/sanity-io/plugins/pull/1298) [`50181c1`](https://github.com/sanity-io/plugins/commit/50181c19cbb99b0f9328849ec72c240c4e3b4ca6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @mux/upchunk to ^3.5.0
+
+- [#1302](https://github.com/sanity-io/plugins/pull/1302) [`1b8f676`](https://github.com/sanity-io/plugins/commit/1b8f676d02d7c491d0b08fd0b26037f13449a7d9) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/incompatible-plugin to ^1.0.5
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
+- [#1316](https://github.com/sanity-io/plugins/pull/1316) [`23fedb0`](https://github.com/sanity-io/plugins/commit/23fedb0870b98d9b01bf0cff73b35bbb93e52715) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency iso-639-1 to ^3.1.5
+
+- [#1329](https://github.com/sanity-io/plugins/pull/1329) [`0d8d867`](https://github.com/sanity-io/plugins/commit/0d8d867fa51858233f086ae5fc85f6995ccd9dfd) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency swr to ^2.4.1
+
+- [#1330](https://github.com/sanity-io/plugins/pull/1330) [`597037c`](https://github.com/sanity-io/plugins/commit/597037cc115b0b0c98fb5d2780abe211fcf549af) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency type-fest to ^4.41.0
+
+- [#1342](https://github.com/sanity-io/plugins/pull/1342) [`9a60eae`](https://github.com/sanity-io/plugins/commit/9a60eae5de3cce25317b38c5d6fc070651a33c0d) Thanks [@stipsan](https://github.com/stipsan)! - Clean up unused internal files and exports now that the package is covered by knip.
+
+- [#1347](https://github.com/sanity-io/plugins/pull/1347) [`fabdc72`](https://github.com/sanity-io/plugins/commit/fabdc726bb1c9abee0e16252422ebd27a3d8e428) Thanks [@stipsan](https://github.com/stipsan)! - Adopt the shared monorepo TypeScript and lint conventions (shared `@repo/tsconfig`, type-aware linting, styled-components Babel transform) and fix the type errors surfaced by the stricter config.
+
 ## 3.0.4
 
 ### Patch Changes

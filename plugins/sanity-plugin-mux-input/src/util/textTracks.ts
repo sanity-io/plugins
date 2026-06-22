@@ -32,7 +32,7 @@ export function extractErrorMessage(
   if (message.includes('responded with')) {
     const parts = message.split('(')
     if (parts.length > 1) {
-      return parts[parts.length - 1].replace(')', '').trim()
+      return parts[parts.length - 1]!.replace(')', '').trim()
     }
   }
 

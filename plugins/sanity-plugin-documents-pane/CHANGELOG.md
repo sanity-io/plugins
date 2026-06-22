@@ -1,5 +1,11 @@
 # sanity-plugin-documents-pane
 
+## 4.1.5
+
+### Patch Changes
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
 ## 4.1.4
 
 ### Patch Changes
@@ -44,6 +50,7 @@
 - [#938](https://github.com/sanity-io/plugins/pull/938) [`5f8d73c`](https://github.com/sanity-io/plugins/commit/5f8d73cb898a336013b0d6c3be8ba674de62e26a) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Port sanity-plugin-documents-pane to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The package is now built with React Compiler targeting React 19
   - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
   - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18.3 || ^19)

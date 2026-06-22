@@ -20,7 +20,7 @@ describe('tags slice', () => {
     let state = tagsReducer(undefined, {type: '@@INIT'} as never)
     state = tagsReducer(state, tagsActions.createComplete({tag: sampleTag}))
     expect(state.allIds).toContain('tag-1')
-    expect(state.byIds['tag-1'].tag).toEqual(sampleTag)
+    expect(state.byIds['tag-1']!.tag).toEqual(sampleTag)
     expect(state.creating).toBe(false)
   })
 
@@ -38,6 +38,6 @@ describe('tags slice', () => {
     expect(state.fetching).toBe(true)
     state = tagsReducer(state, tagsActions.fetchComplete({tags: [sampleTag]}))
     expect(state.fetching).toBe(false)
-    expect(state.byIds['tag-1'].tag).toEqual(sampleTag)
+    expect(state.byIds['tag-1']!.tag).toEqual(sampleTag)
   })
 })

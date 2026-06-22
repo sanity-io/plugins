@@ -1,9 +1,9 @@
 // oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {SortIcon} from '@sanity/icons'
-import {Button, Menu, MenuButton, MenuItem, PopoverProps} from '@sanity/ui'
+import {Button, Menu, MenuButton, MenuItem, type PopoverProps} from '@sanity/ui'
 import {useId} from 'react'
 
-import {ASSET_SORT_OPTIONS, SortOption} from '../hooks/useAssets'
+import {ASSET_SORT_OPTIONS, type SortOption} from '../hooks/useAssets'
 
 const CONTEXT_MENU_POPOVER_PROPS: PopoverProps = {
   constrainSize: true,

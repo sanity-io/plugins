@@ -55,7 +55,7 @@ const DialogTagCreate = (props: Props) => {
   const onSubmit: SubmitHandler<TagFormData> = (formData) => {
     const sanitizedFormData = sanitizeFormData(formData)
 
-    dispatch(tagsActions.createRequest({name: sanitizedFormData.name}))
+    dispatch(tagsActions.createRequest({name: sanitizedFormData['name']}))
   }
 
   useEffect(() => {
@@ -80,7 +80,15 @@ const DialogTagCreate = (props: Props) => {
   )
 
   return (
-    <Dialog animate footer={<Footer />} header="Create Tag" id={id} onClose={handleClose} width={1}>
+    <Dialog
+      animate
+      // oxlint-disable-next-line react/react-compiler
+      footer={<Footer />}
+      header="Create Tag"
+      id={id}
+      onClose={handleClose}
+      width={1}
+    >
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Hidden button to enable enter key submissions */}

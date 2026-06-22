@@ -1,6 +1,6 @@
 // oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Flex, Stack, Text} from '@sanity/ui'
-import React, {memo} from 'react'
+import {memo} from 'react'
 
 // @TODO: get rid of this once v3 core is stable
 

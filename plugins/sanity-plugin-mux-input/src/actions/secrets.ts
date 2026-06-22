@@ -1,4 +1,3 @@
-// oxlint-disable eslint/no-unused-vars, eslint/preserve-caught-error - legacy code will be lint-cleaned in a follow-up PR
 import {defer} from 'rxjs'
 import type {SanityClient} from 'sanity'
 
@@ -57,7 +56,7 @@ export async function createSigningKeys(client: SanityClient) {
       error.response?.statusCode === 401
         ? 'Unauthorized - Failed to create the Signing Key. Please ensure that the token has "System" permissions'
         : error.message
-    throw new Error(message)
+    throw new Error(message, {cause: error})
   }
 }
 
@@ -93,7 +92,7 @@ export async function haveValidSigningKeys(
     //
     return !!(res.data && res.data.id)
   } catch (e) {
-    console.error('Error fetching signingKeyId', signingKeyId, 'assuming it is not valid')
+    console.error('Error fetching signingKeyId', signingKeyId, 'assuming it is not valid', e)
     return false
   }
 }

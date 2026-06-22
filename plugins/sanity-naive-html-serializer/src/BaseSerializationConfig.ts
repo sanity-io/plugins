@@ -1,12 +1,12 @@
 // oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {htmlToBlocks} from '@portabletext/block-tools'
-import {
+import type {
   PortableTextBlockComponent,
   PortableTextListComponent,
   PortableTextListItemComponent,
 } from '@portabletext/to-html'
-import {PortableTextBlockStyle} from '@portabletext/types'
-import {PortableTextTextBlock, TypedObject} from 'sanity'
+import type {PortableTextBlockStyle} from '@portabletext/types'
+import type {PortableTextTextBlock, TypedObject} from 'sanity'
 
 import {blockContentType} from './BaseDocumentDeserializer/helpers'
 

@@ -1,10 +1,10 @@
 // oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {extractWithPath, arrayToJSONMatchPath, extract} from '@sanity/mutator'
 import {randomKey} from '@sanity/util/content'
-import {SanityDocument} from 'sanity'
+import type {SanityDocument} from 'sanity'
 
 import {getItemLanguage, LANGUAGE_FIELD, usesLanguageField} from './internationalizedArrayHelpers'
-import {Merger} from './types'
+import type {Merger} from './types'
 
 //based on args required for a sanityClient.insert operation
 //https://github.com/sanity-io/client/blob/d061e116cea10096c262fe3a8b0926d4fecdb6f3/src/data/patch.ts#L102

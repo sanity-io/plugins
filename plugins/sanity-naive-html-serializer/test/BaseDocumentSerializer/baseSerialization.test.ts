@@ -1,4 +1,5 @@
-import {PortableTextBlock} from 'sanity'
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+import type {PortableTextBlock} from 'sanity'
 import {describe, expect, test, vi} from 'vitest'
 
 import {BaseDocumentSerializer, customSerializers, defaultStopTypes} from '../../src'
@@ -70,7 +71,7 @@ test('Custom serialization should manifest at all levels', () => {
     defaultStopTypes,
     addedCustomSerializers,
   )
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
 
   const topLevelCustomSerialized = findByClass(docTree.children, 'config')
   const requiredTopLevelTitle = documentLevelArticle.config.title
@@ -80,15 +81,15 @@ test('Custom serialization should manifest at all levels', () => {
 
   const arrayField = findByClass(docTree.children, 'content')
   const nestedSerialized = findByClass(arrayField!.children, 'objectField')
-  const requiredNestedTitle = documentLevelArticle.content.find(
+  const requiredNestedTitle: any = documentLevelArticle.content.find(
     (b: Record<string, any>) => b._type === 'objectField',
-  ).title
+  )!.title
   expect(nestedSerialized?.innerHTML).toContain(createCustomInnerHTML(requiredNestedTitle))
 })
 
 test('Fields marked "localize: false" should not be serialized', () => {
   const serialized = getSerialized(documentLevelArticle, 'document')
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
   //"meta" is localize: false field
   const meta = findByClass(docTree.children, 'meta')
   expect(documentLevelArticle.meta).toBeDefined()
@@ -97,7 +98,7 @@ test('Fields marked "localize: false" should not be serialized', () => {
 
 test('Expect default stop types to be absent', () => {
   const serialized = getSerialized(documentLevelArticle, 'document')
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
   //"hidden" is boolean field
   const hidden = findByClass(docTree.children, 'hidden')
   expect(documentLevelArticle.hidden).toBeDefined()
@@ -115,7 +116,7 @@ test('Expect custom stop types to be absent at all levels', () => {
     customSerializers,
   )
 
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
   const config = findByClass(docTree.children, 'config')
   expect(documentLevelArticle.config).toBeDefined()
   expect(config).toBeUndefined()
@@ -141,7 +142,7 @@ test('Unhandled inline objects and annotations should not hinder translation flo
     ...annotationAndInlineBlocks,
   }
   const serialized = getSerialized(inlineDocument, 'document')
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
   const arrayField = findByClass(docTree.children, 'content')
 
   //expect annotated object to have underlying text
@@ -174,7 +175,7 @@ test('Handled inline objects should be accurately represented per serializer', (
     defaultStopTypes,
     addedCustomSerializers,
   )
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
   const arrayField = findByClass(docTree.children, 'content')
   let inlineObject: Element | null = null
   let inlineObjectBlock: Record<string, any> | null = null
@@ -212,7 +213,7 @@ test('Handled annotations should be accurately represented per serializer', () =
     defaultStopTypes,
     addedCustomSerializers,
   )
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
   const arrayField = findByClass(docTree.children, 'content')
   let annotation: Element | null = null
   let annotationBlock: Record<string, any> | null = null
@@ -241,13 +242,13 @@ test('Handled annotations should be accurately represented per serializer', () =
  */
 test('Serialized content should preserve style tags from Portable Text', () => {
   const serialized = getSerialized(documentLevelArticle, 'document')
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
   const arrayField = findByClass(docTree.children, 'content')
-  const blockH1 = documentLevelArticle.content.find(
+  const blockH1: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.style === 'h1',
   )
   const serializedH1 = arrayField?.querySelector('h1')
-  const blockH2 = documentLevelArticle.content.find(
+  const blockH2: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.style === 'h2',
   )
   const serializedH2 = arrayField?.querySelector('h2')
@@ -264,27 +265,27 @@ test('Content with anonymous inline objects serializes all fields, at any depth'
     inlineDocumentLevelArticle,
     'document',
   )
-  const docTree = getHTMLNode(serialized).body.children[0]
-  const tabs = findByClass(docTree.children, 'tabs')!.children[0]
-  const config = findByClass(tabs.children, 'config')!.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
+  const tabs = findByClass(docTree.children, 'tabs')!.children[0]!
+  const config = findByClass(tabs.children, 'config')!.children[0]!
   const fieldNames = getValidFields(inlineDocumentLevelArticle.tabs.config)
   const foundFieldNames = Array.from(config.children).map((child) => child.className)
   expect(foundFieldNames.sort()).toEqual(fieldNames.sort())
-  const nestedObjHTML = findByClass(config.children, 'objectAsField')!.children[0]
+  const nestedObjHTML = findByClass(config.children, 'objectAsField')!.children[0]!
   const nestedObj = inlineDocumentLevelArticle.tabs.config.objectAsField
   const nestedFieldNames = Array.from(nestedObjHTML.children).map((child) => child.className)
   expect(nestedFieldNames.sort()).toEqual(getValidFields(nestedObj).sort())
 
   const content = findByClass(tabs.children, 'content')!
   const keysHTML = Array.from(content.children).map((child) => child.id)
-  const keysJSON = inlineDocumentLevelArticle.tabs.content.map((child: any) => child._key)
+  const keysJSON = inlineDocumentLevelArticle.tabs.content.map((child: any) => child._key as string)
   expect(keysHTML.sort()).toEqual(keysJSON.sort())
 
   const objectInArrayHTML = findByClass(content.children, 'objectField')
   const objectInArrayHTMLFieldNames = Array.from(objectInArrayHTML!.children).map(
     (child) => child.className,
   )
-  const objectInArray = inlineDocumentLevelArticle.tabs.content.find(
+  const objectInArray: any = inlineDocumentLevelArticle.tabs.content.find(
     (obj: any) => obj._type === 'objectField',
   )
   expect(objectInArrayHTMLFieldNames.sort()).toEqual(getValidFields(objectInArray).sort())
@@ -295,14 +296,14 @@ test('Content with anonymous inline objects serializes all fields, at any depth'
  */
 test('Serialized content should preserve list style and depth from Portable text', () => {
   const serialized = getSerialized(documentLevelArticle, 'document')
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
   const arrayField = findByClass(docTree.children, 'content')
-  const listItem = documentLevelArticle.content.find(
+  const listItem: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.listItem === 'bullet' && block.style === 'h2',
   )
 
   const serializedListItem = arrayField?.querySelectorAll('li')[2]
-  const nestedListItem = documentLevelArticle.content.find(
+  const nestedListItem: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.listItem === 'bullet' && block.level === 2,
   )
   const serializedNestedListItem = arrayField?.querySelectorAll('li')[1]
@@ -315,7 +316,7 @@ test('Serialized content should preserve list style and depth from Portable text
 
 test('Values in a field are not repeated (indicating serializers are stateless)', () => {
   const serialized = getSerialized(documentLevelArticle, 'document')
-  const docTree = getHTMLNode(serialized).body.children[0]
+  const docTree = getHTMLNode(serialized).body.children[0]!
   const HTMLList = findByClass(docTree.children, 'tags')
   const tags = documentLevelArticle.tags
   expect(HTMLList?.innerHTML).toContain(tags[0])

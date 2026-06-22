@@ -1,4 +1,3 @@
-// oxlint-disable typescript/no-floating-promises - legacy code will be lint-cleaned in a follow-up PR
 import {useCallback} from 'react'
 import {PatchEvent, unset} from 'sanity'
 
@@ -14,10 +13,10 @@ export const useCancelUpload = (asset: VideoAssetDocument, onChange: MuxInputPro
     }
     onChange(PatchEvent.from(unset()))
     if (asset.assetId) {
-      deleteAssetOnMux(client, asset.assetId)
+      void deleteAssetOnMux(client, asset.assetId)
     }
     if (asset._id) {
-      client.delete(asset._id)
+      void client.delete(asset._id)
     }
   }, [asset, client, onChange])
 }

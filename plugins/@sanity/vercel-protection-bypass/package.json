@@ -42,8 +42,8 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
-    "@sanity/preview-url-secret": "^4.0.7",
+    "@sanity/icons": "catalog:",
+    "@sanity/preview-url-secret": "catalog:",
     "@sanity/ui": "catalog:"
   },
   "devDependencies": {

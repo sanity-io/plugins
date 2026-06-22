@@ -1,4 +1,4 @@
-import {InjectTemplate} from '../actions/inject'
+import type {InjectTemplate} from '../actions/inject'
 
 export function prettierignoreTemplate(options: {outDir: string}): InjectTemplate {
   const {outDir} = options

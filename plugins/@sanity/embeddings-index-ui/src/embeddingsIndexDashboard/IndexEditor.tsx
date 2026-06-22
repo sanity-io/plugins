@@ -1,12 +1,10 @@
-// oxlint-disable promise/always-return, react/no-array-index-key, react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable promise/always-return, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {AddIcon} from '@sanity/icons'
 import {Box, Button, Card, Dialog, Spinner, Stack, Text} from '@sanity/ui'
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {FormEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
+import {type FormEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
 import {useSchema} from 'sanity'
 
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {IndexState, NamedIndex} from '../api/embeddingsApi'
+import {type IndexState, type NamedIndex} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
 import {useDefaultIndex} from './hooks'
 import {IndexFormInput} from './IndexFormInput'
@@ -60,6 +58,7 @@ export function IndexEditor(props: {
     ...selectedIndex,
   }))
 
+  // oxlint-disable-next-line react/react-compiler
   useEffect(() => setIndex(selectedIndex ?? {...defaultIndex}), [selectedIndex, defaultIndex])
 
   const handleSubmit = useCallback(
@@ -130,7 +129,12 @@ export function IndexEditor(props: {
             <Text>
               <ul style={{marginLeft: -10}}>
                 {errors?.map((error, i) => (
-                  <li key={`${error}-${i}`}>{error}</li>
+                  <li
+                    // oxlint-disable-next-line react/no-array-index-key
+                    key={`${error}-${i}`}
+                  >
+                    {error}
+                  </li>
                 ))}
               </ul>
             </Text>

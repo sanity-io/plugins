@@ -1,9 +1,9 @@
 // oxlint-disable typescript/no-unsafe-type-assertion, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
-import {PortableTextTypeComponent, toHTML} from '@portabletext/to-html'
-import {SanityDocument, TypedObject, Schema} from 'sanity'
+import {type PortableTextTypeComponent, toHTML} from '@portabletext/to-html'
+import type {SanityDocument, TypedObject, Schema} from 'sanity'
 
 import {defaultStopTypes, customSerializers} from '../BaseSerializationConfig'
-import {TranslationLevel, SerializerClosure} from '../types'
+import type {TranslationLevel, SerializerClosure} from '../types'
 import {fieldFilter, internationalizedArrayFilter, languageObjectFieldFilter} from './fieldFilters'
 
 const META_FIELDS = ['_key', '_type', '_id', '_weak']

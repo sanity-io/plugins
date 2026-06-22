@@ -1,5 +1,4 @@
-// oxlint-disable react/jsx-no-constructed-context-values - legacy code will be lint-cleaned in a follow-up PR
-import {type ReactNode, createContext, useContext} from 'react'
+import {type ReactNode, createContext, useContext, useMemo} from 'react'
 import type {AssetSourceComponentProps} from 'sanity'
 
 type ContextProps = {
@@ -16,9 +15,12 @@ const AssetSourceDispatchContext = createContext<ContextProps | undefined>(undef
 export const AssetBrowserDispatchProvider = (props: Props) => {
   const {children, onSelect} = props
 
-  const contextValue: ContextProps = {
-    onSelect,
-  }
+  const contextValue: ContextProps = useMemo(
+    () => ({
+      onSelect,
+    }),
+    [onSelect],
+  )
 
   return (
     <AssetSourceDispatchContext.Provider value={contextValue}>

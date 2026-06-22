@@ -1,4 +1,4 @@
-// oxlint-disable import/no-unassigned-import - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable-next-line import/no-unassigned-import
 import './schemas/typeDefExtensions'
 import {embeddingsIndexDashboard} from './embeddingsIndexDashboard/dashboardPlugin'
 import {embeddingsIndexReferenceInput} from './referenceInput/referencePlugin'

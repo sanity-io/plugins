@@ -1,4 +1,3 @@
-// oxlint-disable typescript/no-floating-promises, typescript/no-unnecessary-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {useMemo} from 'react'
 import {useDataset, useProjectId} from 'sanity'
 import useSWR from 'swr'
@@ -43,7 +42,10 @@ export const useMuxPolling = (asset?: VideoAssetDocument) => {
         method: 'GET',
         query: PLUGIN_VERSION_QUERY,
       })
-      client.patch(asset!._id!).set({status: data.status, data}).commit({returnDocuments: false})
+      await client
+        .patch(asset!._id)
+        .set({status: data.status, data})
+        .commit({returnDocuments: false})
     },
     {refreshInterval: 2000, refreshWhenHidden: true, dedupingInterval: 1000},
   )

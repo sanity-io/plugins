@@ -1,19 +1,15 @@
-// oxlint-disable react/no-unstable-nested-components, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {ErrorOutlineIcon} from '@sanity/icons'
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {Box, Button, ButtonProps, Card} from '@sanity/ui'
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {CSSProperties, useMemo} from 'react'
+import {Box, Button, type ButtonProps, Card} from '@sanity/ui'
+import {type CSSProperties, useMemo} from 'react'
 import {useObservable} from 'react-rx'
 import {
   DefaultPreview,
   getPreviewStateObservable,
   getPreviewValueWithFallback,
   SanityDefaultPreview,
-  // @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-  SanityDocument,
-  // @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-  SchemaType,
+  type SanityDocument,
+  type SchemaType,
   useDocumentPreviewStore,
   useSchema,
 } from 'sanity'
@@ -55,7 +51,7 @@ export function DocumentPreview({
         <DefaultPreview
           withShadow={false}
           withBorder={false}
-          media={() => <ErrorOutlineIcon />}
+          media={<ErrorOutlineIcon />}
           title={
             <>
               Unknown type <code>{schemaTypeName ?? 'N/A'}</code> for {documentId}

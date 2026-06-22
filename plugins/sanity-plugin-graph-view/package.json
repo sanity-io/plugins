@@ -37,7 +37,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/color": "^3.0.6",
+    "@sanity/color": "catalog:",
     "@sanity/ui": "catalog:",
     "bezier-easing": "^2.1.0",
     "deep-equal": "^2.2.3",

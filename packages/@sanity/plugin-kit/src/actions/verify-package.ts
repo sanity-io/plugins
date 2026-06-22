@@ -7,28 +7,30 @@ import {getPackage} from '../npm/package'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
 import {readTSConfig} from '../util/ts'
-import {PackageJson} from './verify/types'
+import type {PackageJson} from './verify/types'
 import {
   validateBabelConfig,
+  validateEsmOnly,
   validateNodeEngine,
   validatePackageName,
   validatePackageType,
   validatePkgUtilsDependency,
   validatePkgUtilsVersion,
-  validatePluginSanityJson,
+  validateIncompatiblePlugin,
   validateDeprecatedDependencies,
   validateScripts,
   validateTsConfig,
   validateSanityDependencies,
   validateSrcIndexFile,
+  validateBannedFiles,
   disallowDuplicateEslintConfig,
   disallowDuplicatePrettierConfig,
 } from './verify/validations'
 import {
   createValidator,
   runTscMaybe,
-  VerifyFlags,
-  VerifyPackageConfig,
+  type VerifyFlags,
+  type VerifyPackageConfig,
 } from './verify/verify-common'
 
 export async function verifyPackage({basePath, flags}: {basePath: string; flags: VerifyFlags}) {
@@ -63,8 +65,10 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
   const ts = await readTSConfig({basePath, filename: tsconfig})
 
   await validation('packageName', async () => validatePackageName(packageJson))
+  await validation('esmOnly', async () => validateEsmOnly(packageJson))
   await validation('pkg-utils', async () => validatePkgUtilsDependency(packageJson))
   await validation('srcIndex', async () => validateSrcIndexFile(basePath))
+  await validation('bannedFiles', async () => validateBannedFiles(packageJson))
   await validation('scripts', async () => validateScripts(packageJson))
   await validation('nodeEngine', async () => validateNodeEngine(packageJson))
   await validation('duplicateConfig', async () =>
@@ -78,7 +82,9 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
     await validation('tsconfig', async () => validateTsConfig(ts, {basePath, outDir, tsconfig}))
   }
 
-  await validation('sanityV2Json', async () => validatePluginSanityJson({basePath, packageJson}))
+  await validation('incompatiblePlugin', async () =>
+    validateIncompatiblePlugin({basePath, packageJson}),
+  )
 
   await validation('babelConfig', async () => validateBabelConfig({basePath}))
 

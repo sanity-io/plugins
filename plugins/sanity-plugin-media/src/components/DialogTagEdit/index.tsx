@@ -38,9 +38,12 @@ const DialogTagEdit = (props: Props) => {
   const [tagSnapshot, setTagSnapshot] = useState(tagItem?.tag)
 
   const currentTag = tagItem ? tagItem?.tag : tagSnapshot
-  const generateDefaultValues = (tag?: Tag) => ({
-    name: tag?.name?.current || '',
-  })
+  const generateDefaultValues = useCallback(
+    (tag?: Tag) => ({
+      name: tag?.name?.current || '',
+    }),
+    [],
+  )
 
   const {
     // Read the formState before render to subscribe the form state through Proxy
@@ -73,7 +76,7 @@ const DialogTagEdit = (props: Props) => {
         formData: {
           name: {
             _type: 'slug',
-            current: sanitizedFormData.name,
+            current: sanitizedFormData['name'],
           },
         },
         tag: tagItem?.tag,
@@ -104,7 +107,7 @@ const DialogTagEdit = (props: Props) => {
         reset(generateDefaultValues(result as Tag))
       }
     },
-    [reset],
+    [reset, generateDefaultValues],
   )
 
   useEffect(() => {
@@ -113,7 +116,7 @@ const DialogTagEdit = (props: Props) => {
         message: tagItem.error?.message,
       })
     }
-  }, [setError, tagItem.error])
+  }, [setError, tagItem?.error])
 
   // - Listen for asset mutations and update snapshot
   useEffect(() => {
@@ -160,7 +163,15 @@ const DialogTagEdit = (props: Props) => {
   }
 
   return (
-    <Dialog animate footer={<Footer />} header="Edit Tag" id={id} onClose={handleClose} width={1}>
+    <Dialog
+      animate
+      // oxlint-disable-next-line react/react-compiler
+      footer={<Footer />}
+      header="Edit Tag"
+      id={id}
+      onClose={handleClose}
+      width={1}
+    >
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Deleted notification */}

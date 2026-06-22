@@ -1,8 +1,8 @@
-// oxlint-disable react/jsx-no-constructed-context-values, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Button, Card, Dialog, Stack, Text} from '@sanity/ui'
-import React, {createContext, useContext, useState} from 'react'
+import {createContext, useCallback, useContext, useMemo, useState} from 'react'
 
-import {PluginConfig} from '../util/types'
+import {type PluginConfig} from '../util/types'
 
 const LOCAL_STORAGE_HAS_SHOWN_WARNING_KEY = 'mux-plugin-has-shown-drm-playback-warning'
 
@@ -32,17 +32,21 @@ export const DrmPlaybackWarningContextProvider = ({
     warningDisabled || window.localStorage.getItem(LOCAL_STORAGE_HAS_SHOWN_WARNING_KEY) === 'true'
   const [hasWarnedAboutDrmPlayback, setHasWarnedAboutDrmPlayback] = useState(hasWarned)
 
-  const setHasShownWarning = (b: boolean) => {
+  const setHasShownWarning = useCallback((b: boolean) => {
     window.localStorage.setItem(LOCAL_STORAGE_HAS_SHOWN_WARNING_KEY, b.toString())
     setHasWarnedAboutDrmPlayback(b)
-  }
+  }, [])
+
+  const value = useMemo(
+    () => ({
+      hasShownWarning: hasWarnedAboutDrmPlayback,
+      setHasWarnedAboutDrmPlayback: setHasShownWarning,
+    }),
+    [hasWarnedAboutDrmPlayback, setHasShownWarning],
+  )
+
   return (
-    <DrmPlaybackWarningContext.Provider
-      value={{
-        hasShownWarning: hasWarnedAboutDrmPlayback,
-        setHasWarnedAboutDrmPlayback: setHasShownWarning,
-      }}
-    >
+    <DrmPlaybackWarningContext.Provider value={value}>
       {children}
     </DrmPlaybackWarningContext.Provider>
   )

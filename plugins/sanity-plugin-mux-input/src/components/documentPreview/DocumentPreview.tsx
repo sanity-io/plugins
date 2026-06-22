@@ -1,9 +1,9 @@
-// oxlint-disable react/react-compiler, typescript/no-unnecessary-type-assertion, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable react/react-compiler, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 // Adapted from https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/paneItem/PaneItem.tsx
 
 import {DocumentIcon} from '@sanity/icons'
 import type {PropsWithChildren} from 'react'
-import React, {useMemo} from 'react'
+import {useMemo} from 'react'
 import type {CollatedHit, FIXME, SanityDocument, SchemaType} from 'sanity'
 import {PreviewCard, useDocumentPresence, useDocumentPreviewStore, useSchema} from 'sanity'
 import {IntentLink} from 'sanity/router'
@@ -53,7 +53,7 @@ export function DocumentPreview(props: DocumentPreviewProps) {
     if (!doc) return null
 
     if (!schemaType || !hasSchemaType) {
-      return <MissingSchemaType value={doc as SanityDocument} />
+      return <MissingSchemaType value={doc} />
     }
 
     return (
@@ -71,6 +71,7 @@ export function DocumentPreview(props: DocumentPreviewProps) {
   return (
     <PreviewCard
       __unstable_focusRing
+      // oxlint-disable-next-line react/react-compiler
       as={DocumentPreviewLink(props) as FIXME}
       data-as="a"
       data-ui="PaneItem"

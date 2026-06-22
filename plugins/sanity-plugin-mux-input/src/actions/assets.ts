@@ -1,4 +1,3 @@
-// oxlint-disable eslint/no-unused-vars - legacy code will be lint-cleaned in a follow-up PR
 import type {SanityClient} from 'sanity'
 
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
@@ -27,14 +26,14 @@ export async function deleteAsset({
 
   try {
     await client.delete(asset._id)
-  } catch (error) {
+  } catch {
     return 'failed-sanity'
   }
 
   if (deleteOnMux && asset?.assetId) {
     try {
       await deleteAssetOnMux(client, asset.assetId)
-    } catch (error) {
+    } catch {
       return 'failed-mux'
     }
   }

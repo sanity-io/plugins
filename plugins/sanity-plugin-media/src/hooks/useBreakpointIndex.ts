@@ -1,4 +1,4 @@
-// oxlint-disable eslint/no-unused-vars, react/exhaustive-deps, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable react/exhaustive-deps, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {studioTheme} from '@sanity/ui'
 import {useEffect, useState} from 'react'
 
@@ -23,10 +23,10 @@ const useBreakpointIndex = (): number => {
     mediaQueryLists.forEach((mql) => {
       try {
         mql.addEventListener('change', handleBreakpoint)
-      } catch (err) {
+      } catch {
         try {
           mql.addListener(handleBreakpoint)
-        } catch (_err) {
+        } catch {
           // Do nothing
         }
       }
@@ -34,14 +34,15 @@ const useBreakpointIndex = (): number => {
     return () => {
       try {
         mediaQueryLists.forEach((mql) => mql.removeEventListener('change', handleBreakpoint))
-      } catch (err) {
+      } catch {
         try {
           mediaQueryLists.forEach((mql) => mql.removeListener(handleBreakpoint))
-        } catch (_err) {
+        } catch {
           // Do nothing
         }
       }
     }
+    // oxlint-disable-next-line react-hooks/exhaustive-deps - use the hook from `@sanity/ui` instead of this home-rolled one
   }, [])
 
   return value

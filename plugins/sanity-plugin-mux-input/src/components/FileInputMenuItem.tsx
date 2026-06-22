@@ -1,6 +1,6 @@
-// oxlint-disable eslint/no-restricted-imports, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {Box, ButtonProps, Flex, Text} from '@sanity/ui'
-import React, {createElement, isValidElement, useId} from 'react'
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
+import {Box, type ButtonProps, Flex, Text} from '@sanity/ui'
+import {isValidElement, useId, forwardRef, useCallback} from 'react'
 import {isValidElementType} from 'react-is'
 
 import {FileButton} from './FileInputMenuItem.styled'
@@ -13,13 +13,13 @@ export interface FileInputMenuItemProps extends ButtonProps {
   disabled?: boolean
 }
 
-export const FileInputMenuItem = React.forwardRef(function FileInputMenuItem(
+export const FileInputMenuItem = forwardRef(function FileInputMenuItem(
   props: FileInputMenuItemProps &
     Omit<React.HTMLProps<HTMLButtonElement>, 'as' | 'ref' | 'type' | 'value' | 'onSelect'>,
   forwardedRef: React.ForwardedRef<HTMLInputElement>,
 ) {
   const {
-    icon,
+    icon: Icon,
     id: idProp,
     accept,
     capture,
@@ -35,7 +35,7 @@ export const FileInputMenuItem = React.forwardRef(function FileInputMenuItem(
   const idHook = useId()
   const id = idProp || idHook
 
-  const handleChange = React.useCallback(
+  const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (onSelect && event.target.files) {
         onSelect(Array.from(event.target.files))
@@ -47,11 +47,11 @@ export const FileInputMenuItem = React.forwardRef(function FileInputMenuItem(
   const content = (
     <Flex align="center" justify="flex-start">
       {/* Icon */}
-      {icon && (
+      {Icon && (
         <Box marginRight={text ? space : undefined}>
           <Text size={fontSize}>
-            {isValidElement(icon) && icon}
-            {isValidElementType(icon) && createElement(icon)}
+            {isValidElement(Icon) && Icon}
+            {isValidElementType(Icon) && <Icon />}
           </Text>
         </Box>
       )}

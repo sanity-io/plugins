@@ -1,4 +1,3 @@
-// oxlint-disable react/exhaustive-deps, react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
 import {Box} from '@sanity/ui'
 import {type ReactNode, useCallback} from 'react'
 import {useDispatch} from 'react-redux'
@@ -26,7 +25,7 @@ const DialogSearchFacets = (props: Props) => {
   // Callbacks
   const handleClose = useCallback(() => {
     dispatch(dialogActions.clear())
-  }, [])
+  }, [dispatch])
 
   return (
     <Dialog animate header="Filters" id={id} onClose={handleClose} width={1}>

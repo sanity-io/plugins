@@ -1,5 +1,4 @@
-// oxlint-disable react/jsx-no-constructed-context-values - legacy code will be lint-cleaned in a follow-up PR
-import {type ReactNode, createContext, useContext} from 'react'
+import {type ReactNode, createContext, useContext, useMemo} from 'react'
 
 type ContextProps = {
   open: () => void
@@ -15,7 +14,7 @@ const DropzoneDispatchContext = createContext<ContextProps | undefined>(undefine
 export const DropzoneDispatchProvider = (props: Props) => {
   const {children, open} = props
 
-  const contextValue: ContextProps = {open}
+  const contextValue: ContextProps = useMemo(() => ({open}), [open])
 
   return (
     <DropzoneDispatchContext.Provider value={contextValue}>

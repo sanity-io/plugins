@@ -1,7 +1,7 @@
 // oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {EditIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Dialog, Grid, Stack, TextInput, Label} from '@sanity/ui'
-import React, {useCallback, useEffect, useId, useRef, useState} from 'react'
+import {useCallback, useEffect, useId, useRef, useState} from 'react'
 import {type ObjectInputProps, set, setIfMissing, unset, ChangeIndicator, type Path} from 'sanity'
 
 import {getGeoConfig} from '../global-workaround'

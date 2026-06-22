@@ -1,8 +1,7 @@
-// oxlint-disable eslint/no-unused-vars, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
 import type {ClientError, SanityAssetDocument, SanityImageAssetDocument} from '@sanity/client'
 import groq from 'groq'
-import type {Selector} from 'react-redux'
 import {empty, merge, of} from 'rxjs'
 import {catchError, delay, filter, mergeMap, takeUntil, withLatestFrom} from 'rxjs/operators'
 
@@ -32,7 +31,7 @@ const uploadsSlice = createSlice({
       .addCase(UPLOADS_ACTIONS.uploadComplete, (state, action) => {
         const {asset} = action.payload
         if (state.byIds[asset.sha1hash]) {
-          state.byIds[asset.sha1hash].status = 'complete'
+          state.byIds[asset.sha1hash]!.status = 'complete'
         }
       })
   },
@@ -99,8 +98,8 @@ const uploadsSlice = createSlice({
       action: PayloadAction<{event: SanityUploadProgressEvent; uploadHash: string}>,
     ) {
       const {event, uploadHash} = action.payload
-      state.byIds[uploadHash].percent = event.percent
-      state.byIds[uploadHash].status = 'uploading'
+      state.byIds[uploadHash]!.percent = event.percent
+      state.byIds[uploadHash]!.status = 'uploading'
     },
     uploadStart(state, action: PayloadAction<{file: File; uploadItem: UploadItem}>) {
       const {uploadItem} = action.payload
@@ -261,21 +260,12 @@ export const uploadsCheckRequestEpic: MyEpic = (action$, state$, {client}) =>
 
 // Selectors
 
-const selectUploadsByIds = (state: RootReducerState) => state.uploads.byIds
-
-const selectUploadsAllIds = (state: RootReducerState) => state.uploads.allIds
-
 export const selectUploadById = createSelector(
   [
     (state: RootReducerState) => state.uploads.byIds,
     (_state: RootReducerState, uploadId: string) => uploadId,
   ],
   (byIds, uploadId) => byIds[uploadId],
-)
-
-const selectUploads: Selector<RootReducerState, UploadItem[]> = createSelector(
-  [selectUploadsByIds, selectUploadsAllIds],
-  (byIds, allIds) => allIds.map((id) => byIds[id]),
 )
 
 export const uploadsActions = {...uploadsSlice.actions}

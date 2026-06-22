@@ -1,9 +1,7 @@
 // oxlint-disable promise/always-return, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {Autocomplete, AutocompleteOpenButtonProps, Box, Button, Flex, Text} from '@sanity/ui'
+import {Autocomplete, type AutocompleteOpenButtonProps, Box, Button, Flex, Text} from '@sanity/ui'
 import {
-  // @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-  FocusEventHandler,
+  type FocusEventHandler,
   forwardRef,
   useCallback,
   useEffect,
@@ -14,12 +12,10 @@ import {
 } from 'react'
 import {typed} from 'sanity'
 
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {queryIndex, QueryResult} from '../api/embeddingsApi'
+import {queryIndex, type QueryResult} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
 import {DocumentPreview} from '../preview/DocumentPreview'
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
+import {type EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
 
 export interface SemanticSearchAutocompleteProps {
   indexConfig: EmbeddingsIndexConfig

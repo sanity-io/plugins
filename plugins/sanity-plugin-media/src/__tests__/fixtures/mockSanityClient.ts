@@ -1,4 +1,4 @@
-// oxlint-disable typescript/no-unsafe-type-assertion, typescript/no-useless-default-assignment, unicorn/no-useless-fallback-in-spread - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import type {SanityClient} from '@sanity/client'
 import {Subject, of} from 'rxjs'
 import {vi} from 'vitest'
@@ -36,10 +36,10 @@ export function createMockSanityClient(
 
   const observable: MockSanityClient['observable'] = {
     ...observableBase,
-    ...(observableOverrides ?? {}),
+    ...observableOverrides,
     assets: {
       ...observableBase.assets,
-      ...(observableOverrides?.assets ?? {}),
+      ...observableOverrides?.assets,
     },
   }
 
@@ -71,7 +71,7 @@ export function mockPatchChain(result: unknown): {
   return chain
 }
 
-export function mockTransactionCommit(resolved: unknown = undefined): {
+export function mockTransactionCommit(resolved?: unknown): {
   patch: ReturnType<typeof vi.fn>
   delete: ReturnType<typeof vi.fn>
   commit: ReturnType<typeof vi.fn>

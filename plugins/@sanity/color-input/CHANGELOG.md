@@ -1,5 +1,11 @@
 # @sanity/color-input
 
+## 6.0.8
+
+### Patch Changes
+
+- [#1364](https://github.com/sanity-io/plugins/pull/1364) [`7f44d48`](https://github.com/sanity-io/plugins/commit/7f44d482ffb86cf6a9cc6f1417247ff6cb46b02e) Thanks [@stipsan](https://github.com/stipsan)! - Inline a small, typed fork of the `react-color` building blocks used by the color input and drop the `react-color` and `@types/react-color` dependencies
+
 ## 6.0.7
 
 ### Patch Changes

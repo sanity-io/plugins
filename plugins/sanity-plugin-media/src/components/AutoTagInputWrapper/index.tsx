@@ -1,4 +1,4 @@
-// oxlint-disable react/exhaustive-deps, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {useToast} from '@sanity/ui'
 import {useEffect, useRef} from 'react'
 import {type InputProps} from 'sanity'
@@ -80,7 +80,7 @@ export function AutoTagInput(props: AutoTagInputProps) {
         title: `Failed to apply the media ${label} ${mediaTags.join(', ')}`,
       })
     })
-  }, [currentAssetRef, mediaTags, client, createTagsOnUpload])
+  }, [currentAssetRef, mediaTags, client, createTagsOnUpload, toast])
 
   return renderDefault(props as InputProps)
 }

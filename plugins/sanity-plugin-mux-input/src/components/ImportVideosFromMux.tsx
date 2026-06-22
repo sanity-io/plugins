@@ -1,4 +1,4 @@
-// oxlint-disable typescript/no-base-to-string, typescript/no-deprecated, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/consistent-return, typescript/no-base-to-string, typescript/no-deprecated, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
 import {
   CheckmarkCircleIcon,
   ErrorOutlineIcon,
@@ -333,10 +333,8 @@ export default function ImportVideosFromMux() {
   }
 
   if (importAssets.dialogOpen) {
-    // eslint-disable-next-line consistent-return
     return <ImportVideosDialog {...importAssets} />
   }
 
-  // eslint-disable-next-line consistent-return
   return <Button mode="bleed" text="Import from Mux" onClick={importAssets.openDialog} />
 }

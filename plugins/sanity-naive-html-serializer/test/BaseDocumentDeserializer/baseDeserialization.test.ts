@@ -1,8 +1,9 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {readFileSync} from 'node:fs'
 import {dirname, join} from 'node:path'
 import {fileURLToPath} from 'node:url'
 
-import {PortableTextBlock, PortableTextTextBlock} from 'sanity'
+import type {PortableTextBlock, PortableTextTextBlock} from 'sanity'
 import {beforeEach, expect, test, vi} from 'vitest'
 
 import {
@@ -93,7 +94,7 @@ test('Custom deserialization should manifest at all levels', () => {
   expect(deserialized.config.title).toEqual(documentLevelArticle.config.title)
   expect(deserialized.config._type).toEqual(documentLevelArticle.config._type)
 
-  const origArrayObj = documentLevelArticle.content.find(
+  const origArrayObj: any = documentLevelArticle.content.find(
     (b: Record<string, any>) => b._type === 'objectField',
   )
   const deserializedArrayObj = deserialized.content.find(
@@ -118,10 +119,10 @@ test('Content with custom styles deserializes correctly and maintains style', ()
   )
 
   const deserialized = BaseDocumentDeserializer.deserializeDocument(serialized.content)
-  const origCustomStyleBlock = customStyledDocument.content.find(
+  const origCustomStyleBlock: any = customStyledDocument.content.find(
     (b: Record<string, any>) => b._type === 'block' && b.style === 'custom1',
   )
-  const origCustomStyleListItem = customStyledDocument.content.find(
+  const origCustomStyleListItem: any = customStyledDocument.content.find(
     (b: Record<string, any>) =>
       b._type === 'block' && b.listItem === 'number' && b.style === 'custom1',
   )
@@ -163,7 +164,7 @@ test('Handled inline objects should be accurately deserialized', () => {
     addedBlockDeserializers,
   )
 
-  const getInlineObj = (content: PortableTextBlock[], level?: number | undefined) => {
+  const getInlineObj = (content: PortableTextBlock[], level?: number) => {
     let child: Record<string, any> = {}
     const blocks = content.filter((block: PortableTextBlock) => {
       if (level) {
@@ -249,13 +250,13 @@ test('Handled annotations should be accurately deserialized', () => {
  */
 test('Deserialized content should preserve style tags', () => {
   const deserialized = getDeserialized(documentLevelArticle, 'document')
-  const origH1 = documentLevelArticle.content.find(
+  const origH1: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.style === 'h1',
   )
   const deserializedH1 = deserialized.content.find(
     (block: PortableTextBlock) => block.style === 'h1',
   )
-  const origH2 = documentLevelArticle.content.find(
+  const origH2: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.style === 'h2',
   )
   const deserializedH2 = deserialized.content.find(
@@ -274,13 +275,13 @@ test('Deserialized content should preserve style tags', () => {
  */
 test('Deserialized list items should preserve level, style and tag', () => {
   const deserialized = getDeserialized(documentLevelArticle, 'document')
-  const origListItem = documentLevelArticle.content.find(
+  const origListItem: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.listItem === 'bullet' && block.style === 'h2',
   )
   const deserializedListItem = deserialized.content.find(
     (block: PortableTextBlock) => block.listItem === 'bullet' && block.style === 'h2',
   )
-  const origNestedListItem = documentLevelArticle.content.find(
+  const origNestedListItem: any = documentLevelArticle.content.find(
     (block: PortableTextBlock) => block.listItem === 'bullet' && block.level === 2,
   )
   const deserializedNestedListItem = deserialized.content.find(
@@ -324,8 +325,8 @@ test('Content with anonymous inline objects deserializes all fields, at any dept
   expect(deserialized.tabs.config.title).toEqual(inlineDocumentLevelArticle.tabs.config.title)
 
   //array in object in object
-  expect(deserialized.tabs.config.objectAsField.content[0].children[0].text).toEqual(
-    inlineDocumentLevelArticle.tabs.config.objectAsField.content[0].children[0].text,
+  expect(deserialized.tabs.config.objectAsField.content[0]!.children[0]!.text).toEqual(
+    inlineDocumentLevelArticle.tabs.config.objectAsField.content[0]!.children[0]!.text,
   )
 
   //arrays
@@ -335,7 +336,7 @@ test('Content with anonymous inline objects deserializes all fields, at any dept
   )
 
   //object in array
-  const origObj = inlineDocumentLevelArticle.tabs.content.find(
+  const origObj: any = inlineDocumentLevelArticle.tabs.content.find(
     (block: any) => block._type === 'objectField',
   )
   const deserializedObj = deserialized.tabs.content.find(
@@ -351,6 +352,6 @@ test('Content with anonymous inline objects deserializes all fields, at any dept
   const origArray = inlineDocumentLevelArticle.tabs.arrayWithAnonymousObjects
   const deserializedArray = deserialized.tabs.arrayWithAnonymousObjects
   expect(deserializedArray.length).toEqual(origArray.length)
-  expect(deserializedArray[0]._key).toEqual(origArray[0]._key)
+  expect(deserializedArray[0]!._key).toEqual(origArray[0]!._key)
   expect(Object.keys(deserializedArray[0])).not.toContain('span')
 })

@@ -3,10 +3,10 @@ import {TranslateIcon} from '@sanity/icons'
 import {Autocomplete, Box, Card, Checkbox, Flex, Stack, Text} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import LanguagesList from 'iso-639-1'
-import {Dispatch} from 'react'
+import {type Dispatch} from 'react'
 import {FormField} from 'sanity'
 
-import {type PluginConfig, SUPPORTED_MUX_LANGUAGES, UploadTextTrack} from '../util/types'
+import {type PluginConfig, SUPPORTED_MUX_LANGUAGES, type UploadTextTrack} from '../util/types'
 
 const ALL_LANGUAGE_CODES = LanguagesList.getAllCodes().map((code) => ({
   value: code,

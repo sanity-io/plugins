@@ -1,4 +1,4 @@
-// oxlint-disable eslint/no-await-in-loop, eslint/no-unused-vars, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable eslint/no-await-in-loop, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {white} from '@sanity/color'
 import {Flex, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'
@@ -54,7 +54,7 @@ async function filterFiles(fileList: FileList) {
     try {
       await file.slice(0, 1).arrayBuffer()
       filteredFiles.push(file)
-    } catch (err) {
+    } catch {
       // do nothing: file is a package or folder
     }
   }

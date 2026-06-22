@@ -167,7 +167,7 @@ export const notificationsGenericErrorEpic: MyEpic = (action$) =>
       uploadsActions.uploadError.type,
     ),
     mergeMap((action: AnyAction) => {
-      const title = `An error occurred: ${messageFromGenericErrorPayload(action.payload)}`
+      const title = `An error occurred: ${messageFromGenericErrorPayload(action['payload'])}`
       return of(
         notificationsSlice.actions.add({
           status: 'error',

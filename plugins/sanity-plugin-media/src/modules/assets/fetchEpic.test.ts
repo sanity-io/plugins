@@ -10,7 +10,7 @@ import type {ImageAsset} from '../../types'
 import {assetsActions, assetsFetchEpic} from './index'
 
 function assertFetchSucceeded(store: ReturnType<typeof createEpicTestStore>, asset: ImageAsset) {
-  expect(store.getState().assets.byIds.a1?.asset).toEqual(asset)
+  expect(store.getState().assets.byIds['a1']?.asset).toEqual(asset)
   expect(store.getState().assets.fetching).toBe(false)
 }
 

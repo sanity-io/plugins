@@ -1,4 +1,3 @@
-// oxlint-disable eslint/no-unused-vars - legacy code will be lint-cleaned in a follow-up PR
 /**
  * Utilities for extracting files from dataTransfer in a predictable cross-browser fashion.
  * Also recursively extracts files from a directory
@@ -23,7 +22,7 @@ function normalizeItems(items: DataTransferItem[]) {
         // Edge throws
         try {
           entry = item.webkitGetAsEntry()
-        } catch (err) {
+        } catch {
           return [item.getAsFile()]
         }
         if (!entry) {

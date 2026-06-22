@@ -7,13 +7,12 @@
     "#*": "./src/*/index.tsx"
   },
   "scripts": {
-    "build": "sanity build",
+    "build": "sanity build -y",
     "dev": "sanity dev --no-auto-updates",
     "typegen": "sanity schema extract --enforce-required-fields --workspace kitchen-sink && sanity typegen generate"
   },
   "dependencies": {
     "@sanity/assist": "workspace:*",
-    "@sanity/client": "catalog:",
     "@sanity/code-input": "workspace:*",
     "@sanity/color-input": "workspace:*",
     "@sanity/cross-dataset-duplicator": "workspace:*",
@@ -25,7 +24,7 @@
     "@sanity/form-toolkit": "workspace:*",
     "@sanity/google-maps-input": "workspace:*",
     "@sanity/hierarchical-document-list": "workspace:*",
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "catalog:",
     "@sanity/language-filter": "workspace:*",
     "@sanity/orderable-document-list": "workspace:*",
     "@sanity/personalization-plugin": "workspace:*",

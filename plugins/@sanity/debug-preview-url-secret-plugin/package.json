@@ -1,6 +1,6 @@
 {
   "name": "@sanity/debug-preview-url-secret-plugin",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "keywords": [
     "sanity",
     "sanity-plugin",
@@ -18,7 +18,6 @@
     "directory": "plugins/@sanity/debug-preview-url-secret-plugin"
   },
   "files": [
-    "CHANGELOG.md",
     "dist"
   ],
   "type": "module",
@@ -42,8 +41,8 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
-    "@sanity/preview-url-secret": "^4.0.7"
+    "@sanity/icons": "catalog:",
+    "@sanity/preview-url-secret": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

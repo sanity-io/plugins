@@ -11,8 +11,8 @@ describe('search slice', () => {
     let state = searchReducer(undefined, {type: '@@INIT'} as never)
     state = searchReducer(state, searchActions.facetsAdd({facet: {...inputs.title}}))
     expect(state.facets).toHaveLength(1)
-    expect(state.facets[0].name).toBe('title')
-    expect(state.facets[0].id).toBeDefined()
+    expect(state.facets[0]!.name).toBe('title')
+    expect(state.facets[0]!.id).toBeDefined()
   })
 
   it('querySet updates search string', () => {

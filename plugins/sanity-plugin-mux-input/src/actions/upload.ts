@@ -1,4 +1,4 @@
-// oxlint-disable eslint/no-unused-vars, typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {uuid as generateUuid} from '@sanity/uuid'
 import {concat, defer, from, type Observable, of, throwError} from 'rxjs'
 import {catchError, mergeMap, mergeMapTo, switchMap} from 'rxjs/operators'
@@ -19,13 +19,13 @@ function sanitizeOverlaySettingsInPlace(settings: MuxNewAssetSettings) {
     const overlay = (input as {overlay_settings?: Record<string, unknown>}).overlay_settings
     if (!overlay) continue
 
-    const hm = roundPxString(overlay.horizontal_margin)
-    const vm = roundPxString(overlay.vertical_margin)
-    const w = roundPxString(overlay.width)
+    const hm = roundPxString(overlay['horizontal_margin'])
+    const vm = roundPxString(overlay['vertical_margin'])
+    const w = roundPxString(overlay['width'])
 
-    if (hm) overlay.horizontal_margin = hm
-    if (vm) overlay.vertical_margin = vm
-    if (w) overlay.width = w
+    if (hm) overlay['horizontal_margin'] = hm
+    if (vm) overlay['vertical_margin'] = vm
+    if (w) overlay['width'] = w
   }
 }
 
@@ -52,7 +52,6 @@ export function uploadUrl({
   url,
   settings,
   client,
-  watermark,
 }: {
   url: string
   settings: MuxNewAssetSettings
@@ -71,12 +70,15 @@ export function uploadUrl({
             const uuid = generateUuid()
             const muxBody = settings
             if (!muxBody.input) muxBody.input = [{type: 'video'}]
-            muxBody.input[0].url = validUrl
+            muxBody.input[0]!.url = validUrl
             sanitizeOverlaySettingsInPlace(muxBody)
 
-            const query = {
+            const query: Record<string, string> = {
               muxBody: sanitizePxStringsInJson(JSON.stringify(muxBody)),
-              filename: validUrl.split('/').slice(-1)[0],
+            }
+            const filename = validUrl.split('/').slice(-1)[0]
+            if (filename) {
+              query['filename'] = filename
             }
 
             const dataset = client.config().dataset
@@ -261,7 +263,7 @@ async function updateAssetDocumentFromUpload(
     status: asset.data.status,
     data: asset.data,
     assetId: asset.data.id,
-    playbackId: asset.data.playback_ids[0].id,
+    playbackId: asset.data.playback_ids[0]?.id,
     uploadId: upload.data.id,
   }
   return client.createOrReplace(doc).then(() => {
@@ -287,7 +289,7 @@ function testUrl(url: string): Observable<string> {
   let parsed
   try {
     parsed = new URL(formattedUrl)
-  } catch (err) {
+  } catch {
     return throwError(error)
   }
   if (parsed && !parsed.protocol.match(/http:|https:/)) {

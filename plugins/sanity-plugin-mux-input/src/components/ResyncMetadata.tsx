@@ -1,4 +1,4 @@
-// oxlint-disable typescript/no-base-to-string, typescript/no-deprecated, typescript/no-floating-promises, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/consistent-return, typescript/no-base-to-string, typescript/no-deprecated, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
 import {CheckmarkCircleIcon, ErrorOutlineIcon, SyncIcon} from '@sanity/icons'
 import {Box, Button, Card, Dialog, Flex, Heading, Radio, Spinner, Stack, Text} from '@sanity/ui'
 import {useState} from 'react'
@@ -85,13 +85,13 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
   const handleSync = () => {
     switch (selectedOption) {
       case 'fillEmpty':
-        props.syncOnlyEmpty()
+        void props.syncOnlyEmpty()
         break
       case 'syncTitles':
-        props.syncAllVideos()
+        void props.syncAllVideos()
         break
       case 'fullResync':
-        props.syncFullData()
+        void props.syncFullData()
         break
       default:
         break
@@ -272,10 +272,8 @@ export default function ResyncMetadata() {
   }
 
   if (resyncMetadata.dialogOpen) {
-    // eslint-disable-next-line consistent-return
     return <ResyncMetadataDialog {...resyncMetadata} />
   }
 
-  // eslint-disable-next-line consistent-return
   return <Button mode="bleed" text="Sync with Mux" onClick={resyncMetadata.openDialog} />
 }

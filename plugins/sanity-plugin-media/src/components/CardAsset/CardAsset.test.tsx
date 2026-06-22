@@ -196,7 +196,7 @@ describe('CardAsset', () => {
 
     await user.click(clickFooterFilename('photo.png'))
 
-    expect(store.getState().assets.byIds['img-1'].picked).toBe(true)
+    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
   })
 
   it('opens asset edit from the footer when in picker mode', async () => {
@@ -229,7 +229,7 @@ describe('CardAsset', () => {
     await user.click(clickPreview())
     setShiftPressed(false)
 
-    expect(store.getState().assets.byIds['img-1'].picked).toBe(false)
+    expect(store.getState().assets.byIds['img-1']!.picked).toBe(false)
   })
 
   it('shift-clicks on preview to pick a range when not picked and lastPicked is set', async () => {
@@ -251,8 +251,8 @@ describe('CardAsset', () => {
     await user.click(clickPreview())
     setShiftPressed(false)
 
-    expect(store.getState().assets.byIds['img-1'].picked).toBe(true)
-    expect(store.getState().assets.byIds['prev-1'].picked).toBe(true)
+    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
+    expect(store.getState().assets.byIds['prev-1']!.picked).toBe(true)
   })
 
   it('shift-clicks on footer to pick a range when not picked', async () => {
@@ -278,8 +278,8 @@ describe('CardAsset', () => {
     await user.click(clickFooterFilename('photo.png'))
     setShiftPressed(false)
 
-    expect(store.getState().assets.byIds['img-1'].picked).toBe(true)
-    expect(store.getState().assets.byIds['anchor-9'].picked).toBe(true)
+    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
+    expect(store.getState().assets.byIds['anchor-9']!.picked).toBe(true)
   })
 
   it('shows the selection checkmark when selected and not updating', () => {

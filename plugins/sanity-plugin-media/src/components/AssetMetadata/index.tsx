@@ -1,4 +1,4 @@
-// oxlint-disable eslint/no-unsafe-optional-chaining, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {DownloadIcon} from '@sanity/icons'
 import {Box, Button, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {format} from 'date-fns'
@@ -60,7 +60,7 @@ const AssetMetadata = (props: Props) => {
         <Stack space={3}>
           <Row label="Size" value={filesize(asset?.size, {base: 10, round: 0})} />
           <Row label="MIME type" value={asset?.mimeType} />
-          <Row label="Extension" value={(asset?.extension).toUpperCase()} />
+          <Row label="Extension" value={asset?.extension?.toUpperCase()} />
           {isImageAsset(asset) && <Row label="Dimensions" value={getAssetResolution(asset)} />}
         </Stack>
       </Box>

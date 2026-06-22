@@ -7,9 +7,9 @@ import util from 'util'
 import json5 from 'json5'
 import pAny from 'p-any'
 
-import {InitFlags} from '../actions/init'
+import type {InitFlags} from '../actions/init'
 import {buildExtensions} from '../configs/buildExtensions'
-import {ManifestPaths} from '../sanity/manifest'
+import type {ManifestPaths} from '../sanity/manifest'
 import log from './log'
 import {prompt} from './prompt'
 

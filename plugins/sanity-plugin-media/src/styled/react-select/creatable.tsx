@@ -28,7 +28,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
         'margin': 0,
         'minHeight': '35px',
         'outline': 'none',
-        'padding': rem(themeSpace[1]),
+        'padding': rem(themeSpace[1]!),
         'transition': 'none',
         '&:hover': {
           boxShadow: `inset 0 0 0 1px ${getSchemeColor(scheme, 'inputHoveredBorder')}`,
@@ -43,7 +43,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
       ...styles,
       color: 'var(--card-fg-color)',
       fontFamily: studioTheme.fonts.text.family,
-      marginLeft: rem(themeSpace[2]),
+      marginLeft: rem(themeSpace[2]!),
     }),
     menuList: (styles) => ({
       ...styles,
@@ -78,7 +78,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
       'backgroundColor': isFocused ? getSchemeColor(scheme, 'spotBlue') : 'transparent',
       'borderRadius': themeRadius[2],
       'color': isFocused ? getSchemeColor(scheme, 'bg') : 'inherit',
-      'padding': `${rem(themeSpace[1])} ${rem(themeSpace[2])}`,
+      'padding': `${rem(themeSpace[1]!)} ${rem(themeSpace[2]!)}`,
       '&:hover': {
         backgroundColor: getSchemeColor(scheme, 'spotBlue'),
         color: getSchemeColor(scheme, 'bg'),
@@ -86,7 +86,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     }),
     placeholder: (styles) => ({
       ...styles,
-      marginLeft: rem(themeSpace[2]),
+      marginLeft: rem(themeSpace[2]!),
     }),
     valueContainer: (styles) => ({
       ...styles,

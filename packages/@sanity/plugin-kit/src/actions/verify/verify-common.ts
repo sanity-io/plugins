@@ -1,7 +1,7 @@
 import chalk from 'chalk'
-import {TypedFlags} from 'meow'
+import type {TypedFlags} from 'meow'
 import outdent from 'outdent'
-import {ParsedCommandLine} from 'typescript'
+import type {ParsedCommandLine} from 'typescript'
 
 import sharedFlags from '../../sharedFlags'
 import {runCommand} from '../../util/command-parser'
@@ -11,18 +11,20 @@ const splitLine = `\n----------------------------------------------------------`
 
 export const verifyPackageConfigDefaults = {
   'packageName': true,
+  'esmOnly': true,
   'tsconfig': true,
   'tsc': true,
   'dependencies': true,
   'deprecatedDependencies': true,
   'babelConfig': true,
-  'sanityV2Json': true,
+  'incompatiblePlugin': true,
   'eslintImports': true,
   'scripts': true,
   'pkg-utils': true,
   'nodeEngine': true,
   'studioConfig': true,
   'srcIndex': true,
+  'bannedFiles': true,
   'duplicateConfig': true,
 } as const
 

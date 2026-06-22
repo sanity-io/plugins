@@ -1,4 +1,4 @@
-// oxlint-disable typescript/no-deprecated, unicorn/no-useless-fallback-in-spread - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {definePlugin} from 'sanity'
 
 import createStudioTool, {DEFAULT_TOOL_CONFIG} from '../components/StudioTool'
@@ -55,7 +55,7 @@ export const muxInput = definePlugin<Partial<PluginConfig> | void>((userConfig) 
   }
   const config: PluginConfig = {
     ...defaultConfig,
-    ...(userConfig || {}),
+    ...userConfig,
     ...convertLegacyConfig(userConfig || {}),
   }
   return {

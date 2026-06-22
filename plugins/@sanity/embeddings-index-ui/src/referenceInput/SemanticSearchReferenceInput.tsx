@@ -3,23 +3,18 @@ import {EarthGlobeIcon, LinkIcon} from '@sanity/icons'
 import {Box, Button, Flex, Spinner} from '@sanity/ui'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
-  // @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-  ObjectInputProps,
-  // @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-  ReferenceBaseOptions,
-  // @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-  ReferenceSchemaType,
+  type ObjectInputProps,
+  type ReferenceBaseOptions,
+  type ReferenceSchemaType,
   set,
   setIfMissing,
   unset,
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {QueryResult} from '../api/embeddingsApi'
+import {type QueryResult} from '../api/embeddingsApi'
 import {FeatureDisabledNotice, FeatureError, useIsFeatureEnabledContext} from '../api/isEnabled'
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
+import {type EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
 import {publicId} from '../utils/id'
 import {SemanticSearchAutocomplete} from './SemanticSearchAutocomplete'
 
@@ -116,8 +111,7 @@ function SemanticSearchInput(props: ObjectInputProps & {indexConfig: EmbeddingsI
 
   useEffect(() => {
     // if this component is rendered, and there is a value, replace was selected
-    // @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-    if (value?._ref) {
+    if (value?.['_ref']) {
       autocompleteRef.current?.focus()
     }
     // intentional empty deps

@@ -1,10 +1,9 @@
-// oxlint-disable promise/always-return, react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable promise/always-return, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {AddIcon, UndoIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Heading, Spinner, Stack} from '@sanity/ui'
 import {useCallback, useEffect, useState} from 'react'
 
-// @ts-expect-error - legacy type-check issue will be lint-cleaned in a follow-up PR
-import {deleteIndex, getIndexes, IndexState, NamedIndex} from '../api/embeddingsApi'
+import {deleteIndex, getIndexes, type IndexState, type NamedIndex} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
 import {FeatureDisabledNotice, FeatureError, useIsFeatureEnabled} from '../api/isEnabled'
 import {EditIndexDialog} from './IndexEditor'
@@ -57,6 +56,7 @@ function Indexes() {
   const onCreateIndexClose = useCallback(() => setCreateIndexOpen(false), [])
 
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     setSelectedIndex(indexes.find((i) => i.indexName === selectedIndex?.indexName))
   }, [indexes, selectedIndex])
 
@@ -110,6 +110,7 @@ function Indexes() {
   )
 
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     updateIndexes()
   }, [updateIndexes])
 
