@@ -1,5 +1,13 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.6
+
+### Patch Changes
+
+- [#1376](https://github.com/sanity-io/plugins/pull/1376) [`ca14e36`](https://github.com/sanity-io/plugins/commit/ca14e36eb6d5cb1bffdc2d58393b8a39456c5dd2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update tanstack-query monorepo
+
+- [#1373](https://github.com/sanity-io/plugins/pull/1373) [`0f2e85c`](https://github.com/sanity-io/plugins/commit/0f2e85c3ccaf086efb2715ad5b9211bdc6d9c1cf) Thanks [@stipsan](https://github.com/stipsan)! - Remove direct `javascript-time-ago` dependency now that `react-time-ago` bundles it
+
 ## 4.0.5
 
 ### Patch Changes

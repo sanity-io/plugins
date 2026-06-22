@@ -41,9 +41,9 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "react-is": "^19.2.7"
+    "react-is": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
@@ -51,7 +51,7 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "@types/react-is": "^19.2.0",
+    "@types/react-is": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",

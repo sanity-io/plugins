@@ -1,5 +1,11 @@
 # sanity-plugin-workflow
 
+## 3.0.23
+
+### Patch Changes
+
+- [#1377](https://github.com/sanity-io/plugins/pull/1377) [`4f9c0d5`](https://github.com/sanity-io/plugins/commit/4f9c0d50983932fd48a1d2ab7514427c57fe0dcd) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update tanstack-virtual monorepo
+
 ## 3.0.22
 
 ### Patch Changes
