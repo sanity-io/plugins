@@ -1,6 +1,4 @@
 import {type DashboardWidget, type LayoutConfig} from '@sanity/dashboard'
-// oxlint-disable-next-line import/no-unassigned-import
-import 'react-time-ago/locale/en'
 
 import Widget from './app'
 
