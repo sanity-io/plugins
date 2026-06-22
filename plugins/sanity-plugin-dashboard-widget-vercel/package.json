@@ -49,7 +49,7 @@
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
     "@sanity/uuid": "catalog:",
-    "@tanstack/react-query": "^5.67.2",
+    "@tanstack/react-query": "^5.101.0",
     "@xstate/react": "^6.1.0",
     "object-hash": "3.0.0",
     "react-hook-form": "catalog:",
