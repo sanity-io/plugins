@@ -60,7 +60,7 @@
     "filesize": "^9.0.11",
     "groq": "^6.1.0",
     "is-hotkey-esm": "^1.0.0",
-    "nanoid": "catalog:nanoid-v3",
+    "nanoid": "catalog:",
     "pluralize": "^8.0.0",
     "react-dropzone": "^11.7.1",
     "react-file-icon": "^1.6.0",

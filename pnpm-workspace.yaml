@@ -68,8 +68,6 @@ catalog:
 catalogs:
   date-fns-v2:
     date-fns: ^2.30.0
-  nanoid-v3:
-    nanoid: ^3.3.12
   react-photo-album-v2:
     react-photo-album: ^2.4.1
 
