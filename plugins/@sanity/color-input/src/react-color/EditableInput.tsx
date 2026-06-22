@@ -55,7 +55,7 @@ export class EditableInput extends Component<EditableInputProps, EditableInputSt
 
   constructor(props: EditableInputProps) {
     super(props)
-    const initialValue = String(props.value).toUpperCase()
+    const initialValue = String(props.value ?? '').toUpperCase()
     this.state = {value: initialValue, blurValue: initialValue}
     this.inputId = `rc-editable-input-${idCounter++}`
   }
@@ -65,7 +65,7 @@ export class EditableInput extends Component<EditableInputProps, EditableInputSt
       this.props.value !== this.state.value &&
       (prevProps.value !== this.props.value || prevState.value !== this.state.value)
     ) {
-      const nextValue = String(this.props.value).toUpperCase()
+      const nextValue = String(this.props.value ?? '').toUpperCase()
       const isFocused = this.input === document.activeElement
       // Sync the controlled value into local state, but only when the input is
       // not focused so we don't clobber what the user is typing. This needs a
