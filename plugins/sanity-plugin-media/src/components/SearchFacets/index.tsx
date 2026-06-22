@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {Box, Flex, Inline, rem, type Theme} from '@sanity/ui'
 import {styled, css} from 'styled-components'
 

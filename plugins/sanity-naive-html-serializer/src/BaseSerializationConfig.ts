@@ -81,6 +81,7 @@ export const customBlockDeserializers: Array<any> = [
       const style = el.getAttribute('data-style') ?? ''
       const block = htmlToBlocks(el.outerHTML, blockContentType)[0]
 
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - block deserializer extends htmlToBlocks output
       return {
         ...block,
         style,
@@ -107,6 +108,7 @@ export const customBlockDeserializers: Array<any> = [
         ol: 'number',
       }
 
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - list item parent is expected to be ul or ol
       const parent = el.parentNode as HTMLUListElement | HTMLOListElement
       if (!parent || !parent.tagName) {
         return undefined
@@ -129,9 +131,11 @@ export const customBlockDeserializers: Array<any> = [
       if (regex.test(el.innerHTML)) {
         const newBlock = htmlToBlocks(el.innerHTML, blockContentType)[0]
         if (newBlock) {
+          // oxlint-disable-next-line typescript/no-unsafe-type-assertion - list deserializer merges htmlToBlocks output
           block = {
             ...block,
             ...newBlock,
+            // oxlint-disable-next-line typescript/no-unsafe-type-assertion - list deserializer merges htmlToBlocks output
             style: customStyle ?? (newBlock as PortableTextTextBlock).style,
           } as PortableTextTextBlock
 
@@ -142,6 +146,7 @@ export const customBlockDeserializers: Array<any> = [
         }
       }
 
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - list deserializer extends htmlToBlocks output
       return {
         ...block,
         level,

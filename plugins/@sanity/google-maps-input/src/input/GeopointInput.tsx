@@ -110,6 +110,7 @@ export function GeopointInput(props: GeopointInputProps) {
   }
 
   return (
+    // oxlint-disable-next-line typescript/no-deprecated - Sanity UI v3 Stack space prop pending gap migration
     <Stack space={3}>
       {value && (
         <ChangeIndicator path={path} isChanged={changed} hasFocus={!!focused}>
@@ -123,6 +124,7 @@ export function GeopointInput(props: GeopointInputProps) {
       )}
 
       <Box>
+        {/* oxlint-disable-next-line typescript/no-deprecated - Sanity UI v3 Grid columns prop pending gridTemplateColumns migration */}
         <Grid columns={value ? 2 : 1} gap={3}>
           <Button
             aria-describedby={ariaDescribedBy}

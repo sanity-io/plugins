@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {studioTheme} from '@sanity/ui'
 import {useEffect, useState} from 'react'
 

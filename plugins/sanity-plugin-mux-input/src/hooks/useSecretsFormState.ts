@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {useReducer} from 'react'
 
 import type {Secrets} from '../util/types'

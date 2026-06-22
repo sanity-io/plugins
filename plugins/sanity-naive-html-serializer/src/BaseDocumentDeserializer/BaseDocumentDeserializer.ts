@@ -29,6 +29,7 @@ const deserializeArray = (
       }
     } catch (e) {
       console.warn(
+        // oxlint-disable-next-line typescript/restrict-template-expressions - caught error value is logged for debugging
         `Tried to deserialize block: ${child.outerHTML} in an array but failed to identify it! Error: ${e}`,
       )
     }

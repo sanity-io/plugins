@@ -47,10 +47,12 @@ function FormInput(props: FormInputProps) {
   const {label, description, onChange, value, readOnly, placeholder, type = 'text'} = props
   const id = useId()
   const handleChange = useCallback(
+    // oxlint-disable-next-line typescript/no-deprecated - FormEvent deprecated in React types
     (e: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.currentTarget.value),
     [onChange],
   )
   return (
+    // oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4
     <Stack space={3}>
       <Label muted htmlFor={id}>
         {label}

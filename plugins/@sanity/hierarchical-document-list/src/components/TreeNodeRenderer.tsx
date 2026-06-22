@@ -23,6 +23,7 @@ const TreeNodeRenderer: any = (props: any) => {
         }}
       >
         {Children.map(children, (child) =>
+          // oxlint-disable-next-line typescript/no-unsafe-type-assertion - child element from react-sortable-tree renderer API
           cloneElement(child as ReactElement<any>, {
             isOver,
             canDrop,

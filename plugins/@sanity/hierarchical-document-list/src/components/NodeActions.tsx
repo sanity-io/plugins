@@ -19,6 +19,7 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
   // Adapted from @sanity\form-builder\src\inputs\ReferenceInput\ArrayItemReferenceInput.tsx
   const OpenLink = useMemo(
     () =>
+      // oxlint-disable-next-line react/no-unstable-nested-components - memoized forwardRef link wrapper passed via as prop
       forwardRef(function OpenLinkInner(
         restProps: ComponentProps<typeof IntentLink>,
         _ref: ForwardedRef<HTMLAnchorElement>,

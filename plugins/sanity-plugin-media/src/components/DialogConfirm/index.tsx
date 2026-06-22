@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components, typescript/no-deprecated - legacy media plugin ported code
 import {WarningOutlineIcon} from '@sanity/icons'
 import {Box, Button, Flex, Stack, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'

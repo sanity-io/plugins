@@ -18,8 +18,10 @@ const TreeDeskStructure = (props: ComponentProps) => {
   const treeDocType = props.options.documentType || DEFAULT_DOC_TYPE
   const treeFieldKey = props.options.fieldKeyInDocument || DEFAULT_FIELD_KEY
   const {published, draft, liveEdit} = useEditState(props.options.documentId, treeDocType)
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - useDocumentOperation return narrowed to DocumentOperations
   const {patch} = useDocumentOperation(props.options.documentId, treeDocType) as DocumentOperations
 
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - tree field value narrowed to StoredTreeItem array
   const treeValue = (published?.[treeFieldKey] || []) as StoredTreeItem[]
 
   const handleChange = useCallback(

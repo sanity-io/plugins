@@ -1,3 +1,5 @@
+// oxlint-disable promise/always-return, typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {Button, type CardTone, Flex, Text, useToast} from '@sanity/ui'
 import {useCallback, useEffect, useReducer, useRef, useState} from 'react'

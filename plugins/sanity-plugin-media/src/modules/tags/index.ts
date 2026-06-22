@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {createSelector, createSlice, isAnyOf, type PayloadAction} from '@reduxjs/toolkit'
 import type {ClientError, Transaction} from '@sanity/client'
 import groq from 'groq'

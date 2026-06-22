@@ -1,6 +1,7 @@
 import clone from 'just-clone'
 import type {PortableTextBlock, SanityDocument, TypedObject} from 'sanity'
 
+// oxlint-disable typescript/no-unsafe-type-assertion, typescript/restrict-template-expressions - test helpers use loosely typed fixture data
 import {BaseDocumentSerializer, BaseDocumentDeserializer} from '../src'
 import {
   customSerializers,

@@ -96,6 +96,7 @@ function DocumentPreviewInner({
   })
 
   const sanityDocument = useMemo(() => {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - minimal SanityDocument stub for preview fallback
     return {
       _id: documentId,
       _type: schemaType?.name,

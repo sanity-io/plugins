@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components, typescript/no-deprecated - legacy media plugin ported code
 import {CloseIcon} from '@sanity/icons'
 import {Box, Card, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {components, type StylesConfig} from 'react-select'

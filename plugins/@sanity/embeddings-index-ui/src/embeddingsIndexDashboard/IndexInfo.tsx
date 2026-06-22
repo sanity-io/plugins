@@ -28,6 +28,7 @@ export function IndexInfo({selectedIndex, onDeleteIndex}: IndexInfoProps) {
     [selectedIndex, onDeleteIndex],
   )
   return (
+    // oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4
     <Stack space={4} flex={1}>
       <Flex align="center" flex={1} gap={2}>
         <Box flex={1}>
@@ -60,6 +61,7 @@ export function IndexInfo({selectedIndex, onDeleteIndex}: IndexInfoProps) {
       </Flex>
 
       <Flex gap={6}>
+        {/* oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4 */}
         <Stack space={4} flex={1} style={{maxWidth: 600}}>
           <Box>
             <IndexEditor index={selectedIndex} readOnly />
@@ -67,6 +69,7 @@ export function IndexInfo({selectedIndex, onDeleteIndex}: IndexInfoProps) {
           <IndexStatus selectedIndex={selectedIndex} />
         </Stack>
 
+        {/* oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4 */}
         <Stack space={3} flex={1}>
           <Label muted>Query index</Label>
           <QueryIndex indexName={selectedIndex.indexName} key={selectedIndex.indexName} />
@@ -78,6 +81,7 @@ export function IndexInfo({selectedIndex, onDeleteIndex}: IndexInfoProps) {
 
 function IndexStatus({selectedIndex}: {selectedIndex: IndexState}) {
   return (
+    // oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4
     <Stack space={4} flex={1}>
       <Flex gap={2} align="center">
         <Box flex={1}>
@@ -85,6 +89,7 @@ function IndexStatus({selectedIndex}: {selectedIndex: IndexState}) {
             Status
           </Label>
         </Box>
+        {/* oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4 */}
         <Stack space={2}>
           <Text>{selectedIndex.status}</Text>
         </Stack>
@@ -95,6 +100,7 @@ function IndexStatus({selectedIndex}: {selectedIndex: IndexState}) {
             Indexing progress
           </Label>
         </Box>
+        {/* oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4 */}
         <Stack space={2}>
           <Text>
             {selectedIndex.startDocumentCount - selectedIndex.remainingDocumentCount} /{' '}
@@ -108,6 +114,7 @@ function IndexStatus({selectedIndex}: {selectedIndex: IndexState}) {
             Failed documents
           </Label>
         </Box>
+        {/* oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4 */}
         <Stack space={2}>
           <Text>{selectedIndex.failedDocumentCount}</Text>
         </Stack>

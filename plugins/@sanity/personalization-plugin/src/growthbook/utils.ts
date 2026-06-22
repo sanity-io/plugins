@@ -40,12 +40,14 @@ export const getExperiments = async ({
 
   while (hasMore) {
     url.searchParams.set('offset', offset.toString())
+    // oxlint-disable-next-line eslint/no-await-in-loop - paginate GrowthBook features sequentially
     const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${secret}`,
       },
     })
 
+    // oxlint-disable-next-line eslint/no-await-in-loop - paginate GrowthBook features sequentially
     const {features, hasMore: responseHasMore, nextOffset} = await response.json()
 
     hasMore = responseHasMore

@@ -17,6 +17,7 @@ export function useIsFeatureEnabled() {
         method: 'GET',
         url: `/embeddings-index/status`,
       })
+      // oxlint-disable-next-line promise/always-return - side-effect-only then callback
       .then((response) => {
         setStatus(response.enabled ? 'enabled' : 'disabled')
       })

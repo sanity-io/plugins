@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unnecessary-type-conversion, typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {type PayloadAction, createSlice} from '@reduxjs/toolkit'
 import pluralize from 'pluralize'
 import type {AnyAction} from 'redux'

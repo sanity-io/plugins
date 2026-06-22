@@ -26,6 +26,7 @@ export const embeddingsIndexReferenceInput = definePlugin<EmbeddingsIndexConfig 
       form: {
         components: {
           input: (props) => {
+            // oxlint-disable-next-line typescript/no-unsafe-type-assertion - schemaType narrowed to ReferenceSchemaType for embeddings options
             const embeddingsIndexConfig = (props.schemaType as ReferenceSchemaType)?.options
               ?.embeddingsIndex
             if (

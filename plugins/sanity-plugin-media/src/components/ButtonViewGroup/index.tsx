@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {ThLargeIcon, ThListIcon} from '@sanity/icons'
 import {Button, Inline} from '@sanity/ui'
 import {useDispatch} from 'react-redux'

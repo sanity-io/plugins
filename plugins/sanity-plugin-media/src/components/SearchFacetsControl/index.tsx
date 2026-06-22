@@ -1,3 +1,4 @@
+// oxlint-disable react/no-array-index-key, typescript/no-deprecated - legacy media plugin ported code
 import {AddIcon} from '@sanity/icons'
 import {Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem} from '@sanity/ui'
 import {useDispatch} from 'react-redux'

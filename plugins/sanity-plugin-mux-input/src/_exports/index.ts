@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {definePlugin} from 'sanity'
 
 import createStudioTool, {DEFAULT_TOOL_CONFIG} from '../components/StudioTool'

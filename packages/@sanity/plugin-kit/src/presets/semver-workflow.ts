@@ -156,16 +156,21 @@ function semverWorkflowFiles(): Injectable[] {
     {type: 'copy', from: ['lint-staged.template.js'], to: 'lint-staged.config.js'},
   ]
 
-  return base.map((fromTo) => {
-    if (fromTo.type === 'copy') {
-      return {
-        ...fromTo,
-        from: ['semver-workflow', ...fromTo.from],
-      }
-    }
+  return (
+    base
+      // oxlint-disable-next-line oxc/no-map-spread - legacy map callback pattern
+      .map((fromTo) => {
+        if (fromTo.type === 'copy') {
+          return {
+            ...fromTo,
+            // oxlint-disable-next-line typescript/no-misused-spread - spread builds nested asset path segments
+            from: ['semver-workflow', ...fromTo.from],
+          }
+        }
 
-    return fromTo
-  })
+        return fromTo
+      })
+  )
 }
 
 async function semverWorkflowDependencies(): Promise<Record<string, string>> {
@@ -179,6 +184,7 @@ async function semverWorkflowDependencies(): Promise<Record<string, string>> {
 }
 
 export function readmeBaseurl(pkg: PackageJson) {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - repository URL shape varies across package.json sources
   return ((pkg.repository?.url ?? pkg.homepage ?? 'TODO') as string)
     .replace(/.+:\/\//g, 'https://')
     .replace(/\.git/g, '')

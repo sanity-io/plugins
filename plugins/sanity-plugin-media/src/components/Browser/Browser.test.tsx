@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
 import {render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'

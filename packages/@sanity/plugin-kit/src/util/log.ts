@@ -1,3 +1,4 @@
+/* oxlint-disable eslint/no-console - CLI logging module intentionally uses console */
 // Note: This is _specifically_ meant for CLI usage,
 // I realize that "singletons" are bad.
 

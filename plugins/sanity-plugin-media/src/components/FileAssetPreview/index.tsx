@@ -1,3 +1,4 @@
+// oxlint-disable jsx-a11y/media-has-caption - legacy media plugin ported code
 import {Flex} from '@sanity/ui'
 
 import type {Asset} from '../../types'

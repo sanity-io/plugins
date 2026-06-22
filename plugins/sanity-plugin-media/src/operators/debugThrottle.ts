@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {iif, type Observable, of, throwError} from 'rxjs'
 import {delay, mergeMap} from 'rxjs/operators'
 

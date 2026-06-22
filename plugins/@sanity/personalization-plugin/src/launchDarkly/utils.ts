@@ -29,12 +29,14 @@ export const getExperiments = async ({
   while (hasMore) {
     url.searchParams.set('offset', offset.toString())
     url.searchParams.set('limit', limit.toString())
+    // oxlint-disable-next-line eslint/no-await-in-loop - paginate LaunchDarkly flags sequentially
     const responseFlags = await fetch(url, {
       headers: {
         Authorization: secret,
       },
     })
 
+    // oxlint-disable-next-line eslint/no-await-in-loop - paginate LaunchDarkly flags sequentially
     const {items} = await responseFlags.json()
     const experiments = items.map((flag: LaunchDarklyFlagItem) => ({
       id: flag.key,

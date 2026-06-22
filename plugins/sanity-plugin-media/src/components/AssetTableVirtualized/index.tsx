@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components - legacy media plugin ported code
 import {Box} from '@sanity/ui'
 import {memo} from 'react'
 import {GroupedVirtuoso} from 'react-virtuoso'

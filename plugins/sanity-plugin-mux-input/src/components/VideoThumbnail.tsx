@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {Box, Card, type CardTone, Spinner, Stack, Text} from '@sanity/ui'
 import {Suspense, useMemo, useRef, useState} from 'react'

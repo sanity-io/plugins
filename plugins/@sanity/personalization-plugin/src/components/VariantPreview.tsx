@@ -18,6 +18,7 @@ export const VariantPreview = (props: PreviewProps) => {
   const client = useClient({apiVersion: '2025-01-01'})
   const {experiments} = useExperimentContext()
 
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - preview props extended with experiment fields
   const {experiment, variant, value} = props as VariantPreviewProps
 
   const selectedExperiment = experiments.find((experimentItem) => {
@@ -36,8 +37,11 @@ export const VariantPreview = (props: PreviewProps) => {
       }
       if (isReference(value)) {
         const doc = await client.getDocument(value._ref)
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion - schema type from Sanity preview props
         const type = props.schemaType as ObjectSchemaType
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion - nested object field on variant schema
         const valueField = type.fields.find((field) => field.name === 'value') as ObjectSchemaType
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion - reference field on variant value schema
         const referenceField = valueField?.type as ReferenceSchemaType
         const referenceType = referenceField.to.find((field) => field.type?.name === doc?._type)
 
@@ -53,6 +57,7 @@ export const VariantPreview = (props: PreviewProps) => {
 
         const previewContent = referenceType?.preview?.prepare?.(selectFields)
         setMedia(previewContent?.media || selectFields['media'])
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion - title from reference preview select
         return setSubtitle(previewContent?.title || (selectFields['title'] as string))
       }
       if (isImage(value)) {

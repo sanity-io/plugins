@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {type AnyAction, configureStore, type Store} from '@reduxjs/toolkit'
 import type {SanityClient} from '@sanity/client'
 import {Component, type ReactNode} from 'react'

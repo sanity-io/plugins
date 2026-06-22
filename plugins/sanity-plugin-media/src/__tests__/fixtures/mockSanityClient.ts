@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import type {SanityClient} from '@sanity/client'
 import {Subject, of} from 'rxjs'
 import {vi} from 'vitest'

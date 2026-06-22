@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import type {Asset, FileAsset, ImageAsset} from '../types'
 
 export const isFileAsset = (asset: Asset): asset is FileAsset => {

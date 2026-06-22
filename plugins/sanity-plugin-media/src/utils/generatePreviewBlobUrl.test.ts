@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {firstValueFrom} from 'rxjs'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 

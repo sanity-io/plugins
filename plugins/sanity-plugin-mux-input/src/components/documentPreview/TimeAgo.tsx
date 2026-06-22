@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 // Adapted from https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/TimeAgo.tsx
 import {useTimeAgo} from 'sanity'
 

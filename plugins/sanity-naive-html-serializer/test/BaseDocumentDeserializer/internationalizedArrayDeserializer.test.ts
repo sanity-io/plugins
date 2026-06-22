@@ -26,10 +26,12 @@ test('String and text types get deserialized correctly at top-level -- internati
 })
 
 describe('Presence and accuracy of fields in "vanilla" deserialization -- objects', () => {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test reads i18n array item values from fixtures
   const origObject = getI18nArrayItem(internationalizedArrayArticle.config, 'en')?.value as Record<
     string,
     any
   >
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test reads i18n array item values from fixtures
   const deserializedObject = getI18nArrayItem(deserialized.config, 'en')?.value as Record<
     string,
     any
@@ -67,7 +69,9 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
 })
 
 describe('Presence and accuracy of fields in "vanilla" deserialization -- arrays', () => {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test reads i18n array item values from fixtures
   const origContent = getI18nArrayItem(internationalizedArrayArticle.content, 'en')?.value as any[]
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test reads i18n array item values from fixtures
   const deserializedContent = getI18nArrayItem(deserialized.content, 'en')?.value as any[]
 
   test('Array contains all serializable blocks with keys, in order', () => {

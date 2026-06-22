@@ -12,6 +12,7 @@ const CloudinaryInput = (props: ObjectInputProps) => {
   const [showSettings, setShowSettings] = useState(false)
   const {secrets} = useSecrets<Secrets>(namespace)
   const {onChange, schemaType: type} = props
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - object input value narrowed to CloudinaryAsset
   const value = (props.value as CloudinaryAsset) || undefined
   const valueKey = value?._key
 
@@ -26,6 +27,7 @@ const CloudinaryInput = (props: ObjectInputProps) => {
       let updatedAsset = asset
 
       // Update the asset with the new custom values
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - Cloudinary widget response filtered to schema shape
       const assetWithoutNulls = Object.fromEntries(
         Object.entries(asset).filter(([_, assetValue]) => assetValue !== null),
       ) as CloudinaryAssetResponse

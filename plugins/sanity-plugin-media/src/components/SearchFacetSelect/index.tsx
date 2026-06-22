@@ -1,3 +1,4 @@
+// oxlint-disable react/no-array-index-key - legacy media plugin ported code
 import {SelectIcon} from '@sanity/icons'
 import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
 import {useDispatch} from 'react-redux'

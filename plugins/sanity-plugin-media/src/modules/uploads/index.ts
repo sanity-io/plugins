@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
 import type {ClientError, SanityAssetDocument, SanityImageAssetDocument} from '@sanity/client'
 import groq from 'groq'

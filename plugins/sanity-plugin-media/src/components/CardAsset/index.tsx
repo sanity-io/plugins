@@ -1,3 +1,4 @@
+// oxlint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, typescript/no-deprecated - legacy media plugin ported code
 import {CheckmarkCircleIcon, EditIcon, WarningFilledIcon} from '@sanity/icons'
 import {
   Box,

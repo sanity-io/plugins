@@ -1,3 +1,5 @@
+// oxlint-disable typescript/consistent-return, typescript/no-base-to-string, typescript/no-deprecated, typescript/restrict-template-expressions - legacy Mux plugin patterns pending migration
+
 import {CheckmarkCircleIcon, ErrorOutlineIcon, SyncIcon} from '@sanity/icons'
 import {Box, Button, Card, Dialog, Flex, Heading, Radio, Spinner, Stack, Text} from '@sanity/ui'
 import {useState} from 'react'

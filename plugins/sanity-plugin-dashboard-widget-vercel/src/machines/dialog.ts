@@ -14,6 +14,7 @@ type Event =
 export const dialogMachine = setup({
   types: {
     context: {} as Context,
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - XState v5 setup types require type assertion
     events: {} as Event,
   },
   actions: {

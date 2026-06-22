@@ -98,6 +98,7 @@ export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
             return {
               kind: 'url',
               value: url,
+              // oxlint-disable-next-line typescript/no-unsafe-type-assertion - Cloudinary asset mapped to Sanity ImageAsset shape
               assetDocumentProps: {
                 _type: 'sanity.imageAsset',
                 originalFilename: encodeFilename(asset),

@@ -1,3 +1,4 @@
+/* oxlint-disable eslint/preserve-caught-error, eslint/no-await-in-loop, unicorn/no-useless-fallback-in-spread, typescript/no-unnecessary-boolean-literal-compare, typescript/no-unsafe-type-assertion - legacy CLI ported from sanity-io/plugin-kit */
 import fs from 'fs'
 import path from 'path'
 import util from 'util'

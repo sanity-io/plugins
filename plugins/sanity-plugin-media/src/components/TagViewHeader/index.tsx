@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {ComposeIcon} from '@sanity/icons'
 import {Box, Button, Flex, Inline, Label} from '@sanity/ui'
 import {useDispatch} from 'react-redux'

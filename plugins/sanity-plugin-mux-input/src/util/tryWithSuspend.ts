@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 /**
  * When running `suspend()` from react-suspend a function may throw a Promise
  * causing unexpected behavior when catching.

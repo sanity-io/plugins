@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-useless-default-assignment - legacy Mux plugin patterns pending migration
+
 // Lifted from sanity/form/inputs/files/common/UploadProgress
 
 import {Button, Card, Code, Flex, Inline, Stack, Text} from '@sanity/ui'

@@ -34,6 +34,7 @@ export function EditIndexDialog(props: {
 
   return open ? (
     <Dialog id={id} width={1} ref={ref} onClose={onClose} header="Create embeddings index">
+      {/* oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4 */}
       <Stack padding={4} space={5}>
         <IndexEditor readOnly={false} onSubmit={handleSubmit} />
       </Stack>
@@ -61,6 +62,7 @@ export function IndexEditor(props: {
   useEffect(() => setIndex(selectedIndex ?? {...defaultIndex}), [selectedIndex, defaultIndex])
 
   const handleSubmit = useCallback(
+    // oxlint-disable-next-line typescript/no-deprecated - FormEvent deprecated in React types
     (e: FormEvent) => {
       e.preventDefault()
       if (readOnly) {
@@ -104,6 +106,7 @@ export function IndexEditor(props: {
             filter: index.filter,
           },
         })
+        // oxlint-disable-next-line promise/always-return - side-effect-only then callback
         .then((response: {index: IndexState}) => {
           if (onSubmit) {
             onSubmit(response.index)
@@ -122,6 +125,7 @@ export function IndexEditor(props: {
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4 */}
       <Stack space={4}>
         {errors?.length ? (
           <Card tone="critical" border padding={2}>

@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {MenuItem} from '@sanity/ui'
 import {css, styled} from 'styled-components'
 

@@ -63,6 +63,7 @@ function Indexes() {
     setLoading(true)
     setError(false)
     getIndexes(client)
+      // oxlint-disable-next-line promise/always-return - side-effect-only then callback
       .then((response: IndexState[]) => {
         setLoading(false)
         setIndexes(response)
@@ -86,6 +87,7 @@ function Indexes() {
       setLoading(true)
       setError(false)
       deleteIndex(index.indexName, client)
+        // oxlint-disable-next-line promise/always-return - side-effect-only then callback
         .then(() => {
           setTimeout(() => updateIndexes())
         })
@@ -123,6 +125,7 @@ function Indexes() {
     [updateIndexes],
   )
   return (
+    // oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4
     <Stack space={4}>
       <Flex gap={2} align="center" style={{height: 30}}>
         <Box flex={1}>

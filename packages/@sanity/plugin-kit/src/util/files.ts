@@ -27,6 +27,7 @@ export function hasSourceEquivalent(compiledFile: string, paths: ManifestPaths) 
   }
 
   // /plugin/dist/MyComponent.js => /plugin/src
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - compiled path validated when paths.compiled is set
   const baseDir = path.dirname(compiledFile.replace(paths.compiled as string, paths.source))
 
   // /plugin/dist/MyComponent.js => MyComponent
@@ -104,6 +105,7 @@ export function fileExists(filePath: string) {
 
 export async function readJsonFile<T>(filePath: string) {
   const content = await readFile(filePath, 'utf8')
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - JSON.parse returns unknown; caller supplies T
   return JSON.parse(content) as T
 }
 
@@ -190,6 +192,7 @@ function getFileHash(filePath: string, allowMissing = true) {
     const hash = crypto.createHash('sha1')
     const stream = fs.createReadStream(filePath)
     stream.on('error', (err) => {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - Node stream errors expose optional code property
       if ((err as {code?: string}).code === 'ENOENT' && allowMissing) {
         resolve(null)
       } else {
@@ -206,6 +209,7 @@ export async function ensureDir(dirPath: string) {
   try {
     await mkdir(dirPath)
   } catch (err) {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - Node fs errors expose optional code property
     if ((err as {code?: string}).code !== 'EEXIST') {
       throw err
     }
@@ -213,6 +217,7 @@ export async function ensureDir(dirPath: string) {
 }
 
 export async function isEmptyish(dirPath: string) {
+  // oxlint-disable-next-line unicorn/prefer-set-has - small fixed ignore list
   const ignoredFiles = ['.git', '.gitignore', 'license', 'readme.md']
   const allFiles = await readdir(dirPath).catch(() => [])
   const files = allFiles.filter((file) => !ignoredFiles.includes(file.toLowerCase()))
@@ -234,6 +239,7 @@ async function readFileContent({
       log.debug(`No ${filename} file found.`)
       return undefined
     }
+    // oxlint-disable-next-line eslint/preserve-caught-error - legacy error message format
     throw new Error(`Failed to read "${filepath}": ${err.message}`)
   }
 }
@@ -253,10 +259,12 @@ export async function readJson5File<T>({
   return parseJson5<T>(content, filename)
 }
 
+// oxlint-disable-next-line typescript/no-unnecessary-type-parameters - generic T determined by caller context
 function parseJson5<T>(content: string, errorKey: string): T {
   try {
     return json5.parse<T>(content)
   } catch (err: any) {
+    // oxlint-disable-next-line eslint/preserve-caught-error - legacy error message format
     throw new Error(`Error parsing "${errorKey}": ${err.message}`)
   }
 }

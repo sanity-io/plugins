@@ -1,3 +1,5 @@
+// oxlint-disable typescript/consistent-return - legacy Mux plugin patterns pending migration
+
 import {useEffect, useState} from 'react'
 
 type IntersectionOptions = {

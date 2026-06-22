@@ -7,6 +7,7 @@ const WrapCodeBlocks = ({text}: {text: string}) => {
   return (
     <>
       {text.split('`').map((part, i) => (
+        // oxlint-disable-next-line react/no-array-index-key - split text segments are purely positional
         <Fragment key={i}>{i % 2 === 0 ? part : <code>{part}</code>}</Fragment>
       ))}
     </>

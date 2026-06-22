@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unnecessary-type-conversion - legacy media plugin ported code
 import {Box, Flex, Text} from '@sanity/ui'
 
 import useTypedSelector from '../../hooks/useTypedSelector'

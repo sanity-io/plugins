@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - classic google.maps.Marker API pending migration
 import {PureComponent, type MutableRefObject} from 'react'
 
 import type {LatLng} from '../types'

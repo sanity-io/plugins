@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 /* eslint-disable no-console */
 import {Button, Card, Flex, Grid, Heading, Inline, Text, useToast} from '@sanity/ui'
 import {memo, useCallback, useRef} from 'react'

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 // @vitest-environment node
 
 import {describe, expect, it, vi} from 'vitest'

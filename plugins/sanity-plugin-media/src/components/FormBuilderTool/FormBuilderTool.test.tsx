@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {LayerProvider, studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
 import {render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'

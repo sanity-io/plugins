@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {DownloadIcon} from '@sanity/icons'
 import {Box, Button, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {format} from 'date-fns'

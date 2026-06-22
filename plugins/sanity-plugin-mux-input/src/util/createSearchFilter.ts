@@ -1,3 +1,5 @@
+// oxlint-disable no-restricted-imports - legacy Mux plugin patterns pending migration
+
 // Adaptation of Sanity's createSearchQuery for our limited use case:
 // https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/core/search/weighted/createSearchQuery.ts
 import {compact, toLower, trim, uniq, words} from 'lodash'

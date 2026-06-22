@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-redundant-type-constituents - legacy media plugin ported code
 import {TextInput} from '@sanity/ui'
 import {type ChangeEvent} from 'react'
 

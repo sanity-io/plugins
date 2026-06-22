@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {useToast} from '@sanity/ui'
 import {useEffect, useRef} from 'react'
 import {type InputProps} from 'sanity'

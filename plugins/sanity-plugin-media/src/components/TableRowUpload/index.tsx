@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {CloseIcon} from '@sanity/icons'
 import {Box, Button, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
 import filesize from 'filesize'

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {Box, Inline, Text, Tooltip} from '@sanity/ui'
 import {styled} from 'styled-components'

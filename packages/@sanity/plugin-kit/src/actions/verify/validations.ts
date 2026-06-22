@@ -264,6 +264,7 @@ export function validatePkgUtilsVersion({basePath}: {basePath: string}): string[
 
   let installedVersion: string | undefined
   try {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - require resolves package.json from plugin base path
     const pkgUtilsManifest = require('@sanity/pkg-utils/package.json') as {version?: string}
     installedVersion = pkgUtilsManifest.version
   } catch {
@@ -342,6 +343,7 @@ export async function validateBabelConfig({basePath}: {basePath: string}) {
   const babelFiles: string[] = []
   for (const filename of filenames) {
     const filepath = path.normalize(path.join(basePath, filename))
+    // oxlint-disable-next-line eslint/no-await-in-loop - collect existing babel config files
     if (await fileExists(filepath)) {
       babelFiles.push(filename)
     }
@@ -371,6 +373,7 @@ export async function validateStudioConfig({basePath}: {basePath: string}): Prom
 
   for (const filename of filenames) {
     const filepath = path.normalize(path.join(basePath, filename))
+    // oxlint-disable-next-line eslint/no-await-in-loop - probe config file existence sequentially
     files[filename] = await fileExists(filepath)
   }
 
@@ -591,6 +594,7 @@ export async function validateSrcIndexFile(basePath: string) {
 
   let hasIndex = false
   for (const indexFile of allowedIndexFiles) {
+    // oxlint-disable-next-line eslint/no-await-in-loop - check candidate index files sequentially
     hasIndex = hasIndex || (await fileExists(indexFile))
   }
   if (!hasIndex) {
@@ -621,6 +625,7 @@ async function disallowDuplicateConfig({
   const found: string[] = []
   for (const file of files) {
     const filePath = path.join(basePath, file)
+    // oxlint-disable-next-line eslint/no-await-in-loop - collect duplicate config files sequentially
     const exits = await fileExists(filePath)
     if (exits) {
       found.push(file)

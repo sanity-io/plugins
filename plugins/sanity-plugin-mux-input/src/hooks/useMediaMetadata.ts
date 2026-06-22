@@ -1,3 +1,5 @@
+// oxlint-disable unicorn/prefer-add-event-listener - legacy Mux plugin patterns pending migration
+
 import {useEffect, useState} from 'react'
 
 import {type StagedUpload} from '../components/Uploader'

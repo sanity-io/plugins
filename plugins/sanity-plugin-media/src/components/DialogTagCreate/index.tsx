@@ -1,3 +1,4 @@
+// oxlint-disable jsx-a11y/control-has-associated-label, react/no-unstable-nested-components - legacy media plugin ported code
 import {Box, Flex} from '@sanity/ui'
 import {type ReactNode, useEffect} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
