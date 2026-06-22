@@ -117,8 +117,8 @@ catalogs:
       specifier: ^12.40.0
       version: 12.40.0
     nanoid:
-      specifier: ^4.0.0
-      version: 4.0.2
+      specifier: ^5.1.14
+      version: 5.1.14
     react:
       specifier: ^19.2.7
       version: 19.2.7
@@ -1951,7 +1951,7 @@ importers:
         version: 3.2.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       nanoid:
         specifier: 'catalog:'
-        version: 4.0.2
+        version: 5.1.14
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
@@ -2620,7 +2620,7 @@ importers:
         version: 1.0.0
       nanoid:
         specifier: 'catalog:'
-        version: 4.0.2
+        version: 5.1.14
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -9895,13 +9895,13 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@4.0.2:
-    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
-    engines: {node: ^14 || ^16 || >=18}
-    hasBin: true
-
   nanoid@5.1.11:
     resolution: {integrity: sha512-v+KEsUv2ps74PaSKv0gHTxTCgMXOIfBEbaqa6w6ISIGC7ZsvHN4N9oJ8d4cmf0n5oTzQz2SLmThbQWhjd/8eKg==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+
+  nanoid@5.1.14:
+    resolution: {integrity: sha512-5c8l8kVzqpnDPaicbEop/fV0Q1w16FmbWtVhMqugTozAwYdlIQojWH5a/M7UfziFmGdQRrUdV+EPzc9Xng3VAQ==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -19585,9 +19585,9 @@ snapshots:
 
   nanoid@3.3.12: {}
 
-  nanoid@4.0.2: {}
-
   nanoid@5.1.11: {}
+
+  nanoid@5.1.14: {}
 
   natural-compare@1.4.0: {}
 
