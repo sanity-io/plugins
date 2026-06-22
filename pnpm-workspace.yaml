@@ -20,7 +20,7 @@ catalog:
   '@sanity/icons': ^3.7.4
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.1.0
-  '@sanity/pkg-utils': ^10.5.7
+  '@sanity/pkg-utils': ^10.5.8
   '@sanity/preview-url-secret': ^4.0.7
   '@sanity/schema': ^6.1.0
   '@sanity/telemetry': '^1.1.0'
