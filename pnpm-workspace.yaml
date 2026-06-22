@@ -73,6 +73,10 @@ catalogs:
   react-photo-album-v2:
     react-photo-album: ^2.4.1
 
+# When running `pnpm add`, reuse a dependency's catalog version automatically if
+# it already exists in a catalog, so shared deps stay aligned on a single version.
+catalogMode: prefer
+
 minimumReleaseAge: 4320
 
 minimumReleaseAgeExclude:

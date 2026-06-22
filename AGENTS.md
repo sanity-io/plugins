@@ -409,6 +409,16 @@ pnpm add lodash-es
 pnpm add lodash
 ```
 
+**Catalog shared dependencies**
+
+When a dependency is used by more than one package (two or more), manage its version in the pnpm [catalog](https://pnpm.io/catalogs) instead of repeating a literal range in each `package.json`:
+
+1. Add the dependency and its version range to the default `catalog:` in `pnpm-workspace.yaml`.
+2. Reference it from each `package.json` as `"dep-name": "catalog:"`.
+3. If one package must stay on a different major than the rest, add a named catalog (e.g. `catalogs.date-fns-v2`) and reference it with `catalog:<name>`.
+
+Leave `peerDependencies` compatibility ranges and `workspace:` protocol deps as they are — do not replace them with `catalog:`. `pnpm add` runs with `catalogMode: prefer` (set in `pnpm-workspace.yaml`), so adding a dependency that already exists in a catalog reuses the catalog version automatically. pnpm has no built-in "used N times" enforcement, so apply this rule whenever you add or move shared dependencies.
+
 ### Formatting
 
 We use [oxfmt](https://oxc.rs/docs/formatter.html):
