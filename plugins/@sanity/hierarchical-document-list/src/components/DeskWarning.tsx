@@ -7,7 +7,12 @@ const WrapCodeBlocks = ({text}: {text: string}) => {
   return (
     <>
       {text.split('`').map((part, i) => (
-        <Fragment key={i}>{i % 2 === 0 ? part : <code>{part}</code>}</Fragment>
+        <Fragment
+          // eslint-disable-next-line react/no-array-index-key
+          key={i}
+        >
+          {i % 2 === 0 ? part : <code>{part}</code>}
+        </Fragment>
       ))}
     </>
   )

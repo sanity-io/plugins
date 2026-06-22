@@ -74,7 +74,12 @@ const SearchFacetNumber = ({facet}: Props) => {
                   )
                 }
 
-                return <MenuDivider key={index} />
+                return (
+                  <MenuDivider
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={index}
+                  />
+                )
               })}
             </Menu>
           }

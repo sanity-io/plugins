@@ -151,7 +151,6 @@
         "jsx-a11y/control-has-associated-label": "off",
         "jsx-a11y/no-static-element-interactions": "off",
         "jsx-a11y/click-events-have-key-events": "off",
-        "react/no-array-index-key": "off",
         "jsx-a11y/media-has-caption": "off",
         "oxc/no-map-spread": "off",
         "unicorn/prefer-add-event-listener": "off",
@@ -197,8 +196,6 @@
       "rules": {
         // Legacy code interfaces with the loosely-typed react-sortable-tree API
         "no-unsafe-type-assertion": "off",
-        // Scaffold blocks and split text segments are purely positional
-        "react/no-array-index-key": "off",
         // Memoized forwardRef link wrappers passed via the `as` prop (mirrors
         // Sanity's own PaneItem pattern); identity is stable via useMemo
         "react/no-unstable-nested-components": "off"

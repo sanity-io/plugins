@@ -67,13 +67,23 @@ const SearchFacetsControl = () => {
       <>
         {facets?.map((facet, index) => {
           if (facet.type === 'divider') {
-            return <MenuDivider key={index} />
+            return (
+              <MenuDivider
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+              />
+            )
           }
 
           // Recursively render menu facets
           if (facet.type === 'group') {
             return (
-              <MenuGroup key={`group-${level}-${index}`} text={facet.title} title={facet.title}>
+              <MenuGroup
+                // eslint-disable-next-line react/no-array-index-key
+                key={`group-${level}-${index}`}
+                text={facet.title}
+                title={facet.title}
+              >
                 {renderMenuFacets(facet.facets, level + 1)}
               </MenuGroup>
             )

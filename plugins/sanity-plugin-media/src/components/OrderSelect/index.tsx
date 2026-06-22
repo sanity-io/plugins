@@ -37,6 +37,7 @@ const OrderSelect = () => {
                   disabled={selected}
                   fontSize={1}
                   iconRight={selected}
+                  // eslint-disable-next-line react/no-array-index-key
                   key={index}
                   onClick={() =>
                     dispatch(
@@ -54,7 +55,12 @@ const OrderSelect = () => {
               )
             }
 
-            return <MenuDivider key={index} />
+            return (
+              <MenuDivider
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+              />
+            )
           })}
         </Menu>
       }
