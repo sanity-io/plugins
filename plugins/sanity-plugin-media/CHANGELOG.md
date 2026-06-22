@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 5.0.1
+
+### Patch Changes
+
+- [`6534752`](https://github.com/sanity-io/plugins/commit/653475267ee8bd378bd91fa543f259a04102852e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): Update nanoid from v3 to v4
+
 ## 5.0.0
 
 ### Major Changes

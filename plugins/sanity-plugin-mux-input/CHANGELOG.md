@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 4.0.2
+
+### Patch Changes
+
+- [#1375](https://github.com/sanity-io/plugins/pull/1375) [`150147b`](https://github.com/sanity-io/plugins/commit/150147bb58b207060abb2a148237352abe0bb6fb) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update lodash monorepo
+
 ## 4.0.1
 
 ### Patch Changes
