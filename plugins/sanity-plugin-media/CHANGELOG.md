@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 5.0.2
+
+### Patch Changes
+
+- [#1383](https://github.com/sanity-io/plugins/pull/1383) [`e4231ba`](https://github.com/sanity-io/plugins/commit/e4231bad0ca3ac4e1be0027aeaf55140d07269b8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to v5
+
 ## 5.0.1
 
 ### Patch Changes
