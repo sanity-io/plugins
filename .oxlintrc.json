@@ -113,7 +113,6 @@
     {
       "files": ["plugins/@sanity/embeddings-index-ui/src/**/*.{ts,tsx}"],
       "rules": {
-        "no-deprecated": "off",
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off",
         "promise/always-return": "off"
@@ -122,7 +121,6 @@
     {
       "files": ["plugins/sanity-plugin-mux-input/src/**/*.{ts,tsx}"],
       "rules": {
-        "no-deprecated": "off",
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off",
         "promise/always-return": "off",
@@ -141,7 +139,6 @@
     {
       "files": ["plugins/sanity-plugin-media/src/**/*.{ts,tsx}"],
       "rules": {
-        "no-deprecated": "off",
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off",
         "promise/always-return": "off",

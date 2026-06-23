@@ -110,7 +110,7 @@ export function GeopointInput(props: GeopointInputProps) {
   }
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {value && (
         <ChangeIndicator path={path} isChanged={changed} hasFocus={!!focused}>
           <PreviewImage
@@ -123,7 +123,7 @@ export function GeopointInput(props: GeopointInputProps) {
       )}
 
       <Box>
-        <Grid columns={value ? 2 : 1} gap={3}>
+        <Grid gridTemplateColumns={value ? 2 : 1} gap={3}>
           <Button
             aria-describedby={ariaDescribedBy}
             disabled={readOnly}
