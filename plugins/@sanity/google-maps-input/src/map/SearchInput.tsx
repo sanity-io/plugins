@@ -21,7 +21,7 @@ export function SearchInput({onSelect}: Props) {
   useEffect(() => {
     const element = ref.current
     if (!element) {
-      return
+      return undefined
     }
 
     const handleSelect = async (event: Event) => {
