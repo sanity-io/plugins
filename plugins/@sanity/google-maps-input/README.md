@@ -8,10 +8,6 @@ This plugin will replace the default `geopoint` input component and adds support
 
 ![Google maps input](assets/google-maps-input.png)
 
-## Known issues
-
-- Diff-preview (showing geopoint changes in the review-changes pane) is not currently implemented.
-
 ## Installation
 
 In your studio folder, run:
@@ -103,7 +99,24 @@ The `geopointRadius` field type extends the basic geopoint with:
 - Visual circle overlay on the map
 - Editable radius input field
 - Draggable circle for radius adjustment
-- Enhanced diff visualization showing radius changes
+
+### Reviewing changes
+
+In the document's **Review changes** pane, `geopoint` and `geopointRadius` values render as a before/after static map preview, matching the look of the built-in image diff.
+
+`geopointRadius` fields get this automatically. Because `geopoint` is a built-in Sanity type, attach the exported `GeopointDiff` component to your `geopoint` fields to opt in:
+
+```typescript
+import {GeopointDiff} from '@sanity/google-maps-input'
+
+// In your schema
+export default {
+  name: 'location',
+  title: 'Location',
+  type: 'geopoint',
+  components: {diff: GeopointDiff},
+}
+```
 
 ## License
 

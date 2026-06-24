@@ -1,5 +1,7 @@
 import {definePlugin, type SchemaType} from 'sanity'
 
+import {createGeoConfigLayout} from './diff/GeoConfigContext'
+import {GeopointDiff} from './diff/GeopointDiff'
 import {GeopointInput, type GeopointInputProps} from './input/GeopointInput'
 import {GeopointRadiusInput, type GeopointRadiusInputProps} from './input/GeopointRadiusInput'
 import type {GeopointSchemaType, GeopointRadiusSchemaType, GoogleMapsInputConfig} from './types'
@@ -7,12 +9,22 @@ import type {GeopointSchemaType, GeopointRadiusSchemaType, GoogleMapsInputConfig
 export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
   return {
     name: 'google-maps-input',
+    studio: {
+      components: {
+        // Make the config (API key) available to diff components, which are
+        // resolved outside of the form and so can't receive it as a prop.
+        layout: createGeoConfigLayout(config),
+      },
+    },
     schema: {
       types: [
         {
           name: 'geopointRadius',
           title: 'Geopoint with Radius',
           type: 'object',
+          // Only attach the map diff when there's a key to render it with;
+          // otherwise fall back to the default per-field (lat/lng/radius) diff.
+          components: config.apiKey ? {diff: GeopointDiff} : undefined,
           fields: [
             {
               name: 'lat',
