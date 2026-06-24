@@ -53,10 +53,10 @@ export default defineConfig({
 Ensure that the key has access to:
 
 - Google Maps JavaScript API (for the interactive map)
-- Google Places API Web Service (for the search feature)
 - Google Static Maps API (for previewing a location)
+- Google Places API (New) (for the search feature)
 
-And that the key allows web-access from the Studio URL(s) you are using the plugin in.
+And that the key allows web-access from the Studio URL(s) you are using the plugin in. If the key is missing or rejected, the input renders an inline message explaining what to fix.
 
 ### Configuration Options
 

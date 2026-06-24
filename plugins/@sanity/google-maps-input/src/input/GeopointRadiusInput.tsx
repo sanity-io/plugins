@@ -11,8 +11,10 @@ import type {
   GoogleMapsInputConfig,
   LatLng,
 } from '../types'
-import {DialogInnerContainer, PreviewImage} from './GeopointInput.styles'
+import {MissingApiKeyCard} from './ApiKeyMessages'
+import {DialogInnerContainer} from './GeopointInput.styles'
 import {GeopointRadiusSelect} from './GeopointRadiusSelect'
+import {StaticMapPreview} from './StaticMapPreview'
 
 const EMPTY_PATH: Path = []
 
@@ -153,31 +155,18 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
   }, [modalOpen, onPathFocus])
 
   if (!config || !config.apiKey) {
-    return (
-      <div>
-        <p>
-          The <a href="https://sanity.io/docs/schema-types/geopoint-type">Geopoint Radius type</a>{' '}
-          needs a Google Maps API key with access to:
-        </p>
-        <ul>
-          <li>Google Maps JavaScript API</li>
-          <li>Google Places API Web Service</li>
-          <li>Google Static Maps API</li>
-        </ul>
-        <p>
-          Please enter the API key with access to these services in your googleMapsInput plugin
-          config.
-        </p>
-      </div>
-    )
+    return <MissingApiKeyCard typeTitle="Geopoint Radius" />
   }
+
+  const staticImageUrl = value ? getStaticImageUrl(value, config.apiKey) : null
 
   return (
     <Stack space={3}>
-      {value && (
+      {value && staticImageUrl && (
         <ChangeIndicator path={path} isChanged={changed} hasFocus={!!focused}>
-          <PreviewImage
-            src={getStaticImageUrl(value, config.apiKey)}
+          <StaticMapPreview
+            key={staticImageUrl}
+            src={staticImageUrl}
             alt="Map location with radius"
             onClick={handleFocusButton}
             onDoubleClick={handleToggleModal}
