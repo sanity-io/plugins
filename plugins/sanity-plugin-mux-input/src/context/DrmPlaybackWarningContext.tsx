@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {Button, Card, Dialog, Stack, Text} from '@sanity/ui'
 import {createContext, useCallback, useContext, useMemo, useState} from 'react'
 

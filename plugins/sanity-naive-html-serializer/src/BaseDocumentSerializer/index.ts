@@ -1,6 +1,7 @@
 import {type PortableTextTypeComponent, toHTML} from '@portabletext/to-html'
 import type {SanityDocument, TypedObject, Schema} from 'sanity'
 
+// oxlint-disable typescript/no-unsafe-type-assertion, typescript/restrict-template-expressions - legacy HTML serializer type assertions pending refactor
 import {defaultStopTypes, customSerializers} from '../BaseSerializationConfig'
 import type {TranslationLevel, SerializerClosure} from '../types'
 import {fieldFilter, internationalizedArrayFilter, languageObjectFieldFilter} from './fieldFilters'

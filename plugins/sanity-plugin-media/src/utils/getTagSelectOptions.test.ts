@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {describe, expect, it} from 'vitest'
 
 import type {Tag, TagItem} from '../types'

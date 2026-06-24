@@ -1,3 +1,5 @@
+// oxlint-disable no-await-in-loop - legacy Mux plugin patterns pending migration
+
 import type {SanityClient} from '@sanity/client'
 
 import {getAsset} from '../actions/assets'

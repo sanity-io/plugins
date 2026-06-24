@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import type {ThemeColorSchemeKey} from '@sanity/ui'
 import type {MouseEvent} from 'react'
 import {styled, css} from 'styled-components'

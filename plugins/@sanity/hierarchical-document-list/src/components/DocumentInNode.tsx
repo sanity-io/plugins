@@ -31,6 +31,7 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
 
   const LinkComponent = useMemo(
     () =>
+      // oxlint-disable-next-line react/no-unstable-nested-components - memoized forwardRef link wrapper passed via as prop
       forwardRef((linkProps: any, ref: any) => (
         <ChildLink
           {...linkProps}
@@ -65,13 +66,15 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
         >
           <Preview
             layout="default"
+            // oxlint-disable-next-line typescript/no-unsafe-type-assertion - schema type from get() narrowed for Preview
             schemaType={type as SchemaType}
             value={{_ref: draftId || reference?._ref}}
             status={
               <DocumentPreviewStatus
                 draft={
                   draftId
-                    ? ({
+                    ? // oxlint-disable-next-line typescript/no-unsafe-type-assertion - minimal SanityDocument stub for preview status
+                      ({
                         _id: draftId,
                         _type: docType,
                         _updatedAt: props.item.draftUpdatedAt,
@@ -79,6 +82,7 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
                     : undefined
                 }
                 published={
+                  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - minimal SanityDocument stub for preview status
                   {
                     _id: reference?._ref,
                     _type: docType,

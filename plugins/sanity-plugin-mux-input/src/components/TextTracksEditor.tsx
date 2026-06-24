@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {TranslateIcon} from '@sanity/icons'
 import {Autocomplete, Box, Card, Checkbox, Flex, Stack, Text} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'

@@ -1,3 +1,5 @@
+// oxlint-disable promise/always-return, typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {
   Box,
   Button,

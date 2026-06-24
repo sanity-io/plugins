@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {CheckmarkCircleIcon, EditIcon, WarningFilledIcon} from '@sanity/icons'
 import {
   Box,

@@ -34,8 +34,10 @@ export interface HandleMovedNodeData {
 export type HandleMovedNode = (moveData: HandleMovedNodeData) => void
 
 function getLocalFlatDataFromTree(treeData: TreeItem[]): LocalFlatDataItem[] {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - react-sortable-tree flat data narrowed to LocalFlatDataItem
   return getFlatDataFromTree({
     treeData,
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - tree node _key from loosely-typed react-sortable-tree API
     getNodeKey: (t) => t.node['_key'] as string,
   }) as LocalFlatDataItem[]
 }
@@ -129,6 +131,7 @@ function getChildrenPaths(node: LocalTreeItem): string[] {
     if (typeof childKey === 'string' && childKey) {
       keyPaths.push(childKey)
     }
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - child nodes from loosely-typed react-sortable-tree API
     keyPaths.push(...getChildrenPaths(child as LocalTreeItem))
   }
   return keyPaths

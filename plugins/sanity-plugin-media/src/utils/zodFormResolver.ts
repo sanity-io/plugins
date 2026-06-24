@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {zodResolver} from '@hookform/resolvers/zod'
 import type {FieldValues, Resolver} from 'react-hook-form'
 

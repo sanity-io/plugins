@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import type {SanityClient} from '@sanity/client'
 import groq from 'groq'
 import {nanoid} from 'nanoid'

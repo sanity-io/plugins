@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {CloseIcon} from '@sanity/icons'
 import {Box, Flex, Label, rem, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {type ReactNode} from 'react'

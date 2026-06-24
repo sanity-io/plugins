@@ -1,3 +1,5 @@
+// oxlint-disable jsx-a11y/media-has-caption, typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {DocumentVideoIcon, ErrorOutlineIcon, UploadIcon} from '@sanity/icons'
 import {Box, Button, Card, Dialog, Flex, Label, Radio, Stack, Text} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'

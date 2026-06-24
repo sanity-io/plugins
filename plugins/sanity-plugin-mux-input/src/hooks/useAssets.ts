@@ -1,3 +1,5 @@
+// oxlint-disable no-map-spread, typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {useMemo, useState} from 'react'
 import {
   collate,

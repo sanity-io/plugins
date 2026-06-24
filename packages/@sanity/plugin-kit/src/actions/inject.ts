@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/no-unnecessary-boolean-literal-compare, typescript/no-unnecessary-template-expression, typescript/no-unsafe-type-assertion - legacy CLI ported from sanity-io/plugin-kit */
 import path from 'path'
 import {fileURLToPath} from 'url'
 
@@ -293,6 +294,7 @@ export async function writeAssets(injectables: Injectable[], {basePath, flags}: 
     if (injectable.type === 'copy') {
       const fromPath = asArray(injectable.from)
       const toPath = asArray(injectable.to)
+      // oxlint-disable-next-line eslint/no-await-in-loop - copy injectable assets sequentially
       if (await copyFileWithOverwritePrompt(from(...fromPath), to(...toPath), flags)) {
         writes.push(path.join(...toPath))
       }
@@ -302,6 +304,7 @@ export async function writeAssets(injectables: Injectable[], {basePath, flags}: 
     if (injectable.type === 'template') {
       const toPath = asArray(injectable.to)
 
+      // oxlint-disable-next-line eslint/no-await-in-loop - write injectable templates sequentially
       await writeFileWithOverwritePrompt(to(...toPath), `${injectable.value.trim()}\n`, {
         default: 'n',
         force: injectable.force || flags.force,
@@ -355,6 +358,7 @@ async function findAssetsDir(): Promise<string> {
   while (!assetsDir && maxBackpaddle) {
     currDir = path.join(currDir, '..')
     const assets = path.join(currDir, 'assets')
+    // oxlint-disable-next-line eslint/no-await-in-loop - walk up directory tree sequentially
     if (await fileExists(assets)) {
       assetsDir = assets
     } else {

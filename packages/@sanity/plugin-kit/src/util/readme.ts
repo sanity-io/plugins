@@ -6,6 +6,8 @@ import type {User} from './user'
 
 export function generateReadme(data: PackageData) {
   const {user, pluginName, license} = data
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - user object narrowed when name is present
+  const licenseText = getLicenseText(license?.id, user?.name ? (user as User) : undefined)
 
   return (
     outdent`
@@ -28,7 +30,7 @@ export function generateReadme(data: PackageData) {
     })
     \`\`\`
 
-    ${getLicenseText(license?.id, user?.name ? (user as User) : undefined)}
+    ${licenseText}
     ${developTestSnippet()}
   ` + '\n'
   )

@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {Card, type CardTone} from '@sanity/ui'
 import {forwardRef, useCallback, useRef} from 'react'
 import {styled} from 'styled-components'

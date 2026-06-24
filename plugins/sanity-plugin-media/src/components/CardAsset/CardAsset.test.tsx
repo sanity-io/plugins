@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type {RefObject} from 'react'

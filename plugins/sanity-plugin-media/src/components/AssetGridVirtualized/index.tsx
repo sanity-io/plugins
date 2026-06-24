@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components - legacy media plugin ported code
 import {memo, forwardRef} from 'react'
 import {VirtuosoGrid} from 'react-virtuoso'
 import {styled} from 'styled-components'

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {Checkbox, Flex, Grid, type ThemeColorSchemeKey, useMediaIndex} from '@sanity/ui'
 import {type MouseEvent} from 'react'
 import {useDispatch} from 'react-redux'

@@ -80,6 +80,7 @@ describe('Merge mirrors the document format', () => {
       0,
     )
     expect(patches.length).toBeGreaterThan(0)
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test inspects merger patch output shape
     for (const patch of patches as Array<Record<string, any>>) {
       const item = patch.items[0]
       expect(item.language).toEqual('es_ES')
@@ -97,6 +98,7 @@ describe('Merge mirrors the document format', () => {
       0,
     )
     expect(patches.length).toBeGreaterThan(0)
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test inspects merger patch output shape
     for (const patch of patches as Array<Record<string, any>>) {
       const item = patch.items[0]
       expect(item._key).toEqual('es_ES')
@@ -113,6 +115,7 @@ describe('Merge mirrors the document format', () => {
       value: 'Old translation',
     })
 
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test inspects merger patch output shape
     const patches = BaseDocumentMerger.internationalizedArrayMerge(
       translated,
       withExisting,
@@ -139,6 +142,7 @@ describe('Merge mirrors the document format', () => {
     )
     titleItem.value = 'A raw v5 translated title'
 
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test inspects merger patch output shape
     const patches = BaseDocumentMerger.internationalizedArrayMerge(
       rawV5Translated,
       v5Article,

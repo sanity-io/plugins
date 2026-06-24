@@ -1,3 +1,5 @@
+// oxlint-disable no-restricted-imports, typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 // Adapted from:
 // https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/paneItem/PaneItemPreview.tsx
 import {Inline} from '@sanity/ui'

@@ -1,3 +1,4 @@
+// oxlint-disable no-await-in-loop, typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {white} from '@sanity/color'
 import {Flex, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'

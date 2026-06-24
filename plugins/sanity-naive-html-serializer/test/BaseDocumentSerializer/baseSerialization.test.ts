@@ -277,6 +277,7 @@ test('Content with anonymous inline objects serializes all fields, at any depth'
 
   const content = findByClass(tabs.children, 'content')!
   const keysHTML = Array.from(content.children).map((child) => child.id)
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test reads block keys from fixture data
   const keysJSON = inlineDocumentLevelArticle.tabs.content.map((child: any) => child._key as string)
   expect(keysHTML.sort()).toEqual(keysJSON.sort())
 

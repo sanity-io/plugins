@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import type {SanityDocument} from '@sanity/client'
 import {Box, Button, Card, Stack, Text} from '@sanity/ui'
 import {Preview, type SchemaType, useSchema} from 'sanity'

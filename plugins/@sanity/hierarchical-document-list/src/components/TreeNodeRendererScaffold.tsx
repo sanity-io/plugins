@@ -172,6 +172,7 @@ const TreeNodeRendererScaffold = (props: any) => {
 
     return (
       <div
+        // oxlint-disable-next-line react/no-array-index-key - scaffold blocks are purely positional
         key={i}
         style={style}
         className={`rst__unclickable rst__absoluteLineBlock ${highlightLineClass || ''}`}

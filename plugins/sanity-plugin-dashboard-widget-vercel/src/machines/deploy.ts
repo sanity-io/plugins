@@ -18,8 +18,11 @@ interface DeployActorInput {
 
 export const deployMachine = setup({
   types: {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - XState v5 setup types require type assertion
     context: {} as Context,
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - XState v5 setup types require type assertion
     events: {} as Event,
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - XState v5 setup types require type assertion
     input: {} as DeployActorInput,
   },
   actors: {

@@ -13,6 +13,7 @@ const pluginConfigKeys = [
 ]
 
 export const Secrets = (props: ObjectInputProps) => {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - studio-secrets hook return shape
   const {secrets, loading} = useSecrets(namespace) as {secrets: {apiKey: string}; loading: boolean}
   const {setSecret} = useLaunchDarklyContext()
   const [showSettings, setShowSettings] = useState<boolean>(false)

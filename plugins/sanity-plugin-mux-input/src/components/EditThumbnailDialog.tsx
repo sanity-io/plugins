@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {Button, Dialog, Flex, Stack, Text, TextInput} from '@sanity/ui'
 import {useId, useMemo, useState} from 'react'
 import {getDevicePixelRatio} from 'use-device-pixel-ratio'

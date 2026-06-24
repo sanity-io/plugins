@@ -1,3 +1,4 @@
+// oxlint-disable oxc/no-map-spread, react/no-unstable-nested-components - legacy media plugin ported code
 import {Flex, Label} from '@sanity/ui'
 import {memo, useState} from 'react'
 import {Virtuoso} from 'react-virtuoso'

@@ -1,3 +1,5 @@
+// oxlint-disable jsx-a11y/label-has-associated-control - legacy Mux plugin patterns pending migration
+
 import {Checkbox, Flex, Grid, Text} from '@sanity/ui'
 import {type ActionDispatch, type CSSProperties, type ReactNode, useState} from 'react'
 

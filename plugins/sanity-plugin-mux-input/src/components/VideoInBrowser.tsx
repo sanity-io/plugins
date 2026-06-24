@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {CheckmarkIcon, EditIcon, LockIcon, PlayIcon} from '@sanity/icons'
 import {Button, Card, Stack, Text, Tooltip} from '@sanity/ui'
 import {useCallback, useState} from 'react'

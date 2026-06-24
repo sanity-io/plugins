@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {Box, Portal, PortalProvider, useLayer} from '@sanity/ui'
 import {type SyntheticEvent, useEffect, useState} from 'react'
 import {type AssetSourceComponentProps, type SanityDocument, useFormValue} from 'sanity'

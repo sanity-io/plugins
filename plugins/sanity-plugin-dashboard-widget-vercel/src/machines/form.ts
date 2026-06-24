@@ -23,6 +23,7 @@ interface Input {
 }
 
 export const formMachine = setup({
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - XState v5 setup types require type assertion
   types: {} as {
     children: {
       createDocumentActor: 'create document'
@@ -58,6 +59,7 @@ export const formMachine = setup({
           typeof event.data.details === 'object' &&
           'description' in event.data.details
         ) {
+          // oxlint-disable-next-line typescript/no-unsafe-type-assertion - error details description is a string after guards
           return event.data.details.description as string
         }
         return 'An error occurred'

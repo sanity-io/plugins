@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {Checkbox, Flex, Label, Radio, Stack, Text} from '@sanity/ui'
 import {type ActionDispatch, useMemo, useState} from 'react'
 import {FormField} from 'sanity'

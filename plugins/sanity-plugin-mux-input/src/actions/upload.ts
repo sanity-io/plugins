@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {uuid as generateUuid} from '@sanity/uuid'
 import {concat, defer, from, type Observable, of, throwError} from 'rxjs'
 import {catchError, mergeMap, mergeMapTo, switchMap} from 'rxjs/operators'

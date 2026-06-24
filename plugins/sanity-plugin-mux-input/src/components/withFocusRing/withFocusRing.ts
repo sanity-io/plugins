@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {rem} from '@sanity/ui'
 import type {ComponentType} from 'react'
 import {css, styled} from 'styled-components'

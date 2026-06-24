@@ -43,6 +43,7 @@ describe('Presence and accuracy of fields in "vanilla" deserialization -- object
   }
 
   const objectField = getInternationalizedArrayObjectField()
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test reads i18n array item values from fixtures
   const origObjectField = getI18nArrayItem(internationalizedArrayArticle.config, 'en')
     ?.value as Record<string, any>
 
@@ -88,6 +89,7 @@ describe('Presence and accurancy of fields in "vanilla" deserialization -- array
     return findByClass(englishContent!.children, 'value')
   }
   const arrayField = getInternationalizedArrayArrayField()
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test reads i18n array item values from fixtures
   const origArrayField = getI18nArrayItem(internationalizedArrayArticle.content, 'en')
     ?.value as any[]
 

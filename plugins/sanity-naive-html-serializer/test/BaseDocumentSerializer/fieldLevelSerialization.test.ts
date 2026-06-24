@@ -117,10 +117,12 @@ test('Nested locale fields make it to serialization, but only base lang', () => 
   const slices = findByClass(nestedDocTree.children, 'slices')
   const pageFields = findByClass(nestedDocTree.children, 'pageFields')
   expect(slices?.innerHTML).toContain(
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test reads nested locale fixture data
     (nestedLanguageFields as any).slices[0].en[0].children[0].text,
   )
   expect(pageFields?.innerHTML).toContain(nestedLanguageFields.pageFields.name.en)
   expect(slices?.innerHTML).not.toContain(
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - test reads nested locale fixture data
     (nestedLanguageFields as any).slices[0].fr_FR[0].children[0].text,
   )
   expect(pageFields?.innerHTML).not.toContain(nestedLanguageFields.pageFields.name.fr_FR)

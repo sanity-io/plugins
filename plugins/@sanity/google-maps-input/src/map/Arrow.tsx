@@ -10,6 +10,7 @@ interface Props {
   to: LatLng
   color?: {background: string; border: string; text: string}
   zIndex?: number
+  // oxlint-disable-next-line typescript/no-deprecated - MutableRefObject required for mutable ref callback
   arrowRef?: MutableRefObject<google.maps.Polyline | undefined>
   onClick?: (event: google.maps.MapMouseEvent) => void
 }

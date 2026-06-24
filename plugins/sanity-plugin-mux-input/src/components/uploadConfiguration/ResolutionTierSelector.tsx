@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {Flex, Radio, Text} from '@sanity/ui'
 import {type ActionDispatch} from 'react'
 import {FormField} from 'sanity'

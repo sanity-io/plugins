@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion, unicorn/prefer-add-event-listener - legacy Mux plugin patterns pending migration
+
 import {CheckmarkCircleIcon, ErrorOutlineIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Grid, Stack, Text, TextInput} from '@sanity/ui'
 import {useCallback, useEffect, useRef, useState} from 'react'

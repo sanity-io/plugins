@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components, typescript/no-deprecated - legacy media plugin ported code
 import {AddIcon, ChevronDownIcon, CloseIcon} from '@sanity/icons'
 import {Box, Card, Flex, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {components, type StylesConfig} from 'react-select'

@@ -33,6 +33,7 @@ export const AssetListFunctions = (
   const show = useCallback(() => setShowSettings(true), [setShowSettings])
   const hide = useCallback(() => setShowSettings(false), [setShowSettings])
 
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - array member schema narrowed to ObjectSchemaType
   const cloudinaryType = props.schemaType.of.find(
     (t: {name: string}) => t.name === cloudinaryAssetSchema.name,
   ) as ObjectSchemaType | undefined
@@ -54,6 +55,7 @@ export const AssetListFunctions = (
             // Schema version. In case we ever change our schema.
             _version: 1,
           },
+          // oxlint-disable-next-line typescript/no-unsafe-type-assertion - onValueCreate expects mistyped schema argument
           onValueCreate(cloudinaryType as any), // onValueCreate is mistyped
         ),
       )

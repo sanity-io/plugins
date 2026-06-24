@@ -10,7 +10,9 @@ import {hasSourceFile, hasCompiledFile, readJsonFile, fileExists} from '../util/
 const stat = util.promisify(fs.stat)
 const readFile = util.promisify(fs.readFile)
 
+// oxlint-disable-next-line unicorn/prefer-set-has - small fixed allowlist for part keys
 const allowedPartProps = ['name', 'implements', 'path', 'description']
+// oxlint-disable-next-line unicorn/prefer-set-has - small fixed blocklist for plugin keys
 const disallowedPluginProps = ['api', 'project', 'plugins', 'env']
 
 export interface SanityV2Manifest {
@@ -70,11 +72,13 @@ async function readManifest(options: ManifestOptions) {
     content = await readFile(manifestPath, 'utf8')
   } catch (err: any) {
     if (err.code === 'ENOENT') {
+      // oxlint-disable-next-line eslint/preserve-caught-error - legacy error message format
       throw new Error(
         `No sanity.json found. sanity.json is required for plugins to function. Use \`${pkg.binname} init\` for a new plugin, or create an empty \`sanity.json\` with an empty object (\`{}\`) for existing ones.`,
       )
     }
 
+    // oxlint-disable-next-line eslint/preserve-caught-error - legacy error message format
     throw new Error(`Failed to read "${manifestPath}": ${err.message}`)
   }
 
@@ -82,6 +86,7 @@ async function readManifest(options: ManifestOptions) {
   try {
     parsed = JSON.parse(content)
   } catch (err: any) {
+    // oxlint-disable-next-line eslint/preserve-caught-error - legacy error message format
     throw new Error(`Error parsing "${manifestPath}": ${err.message}`)
   }
 
@@ -170,6 +175,7 @@ async function validatePaths(manifest: SanityV2Manifest, options: {basePath: str
     srcStats = await stat(sourcePath)
   } catch (err: any) {
     if (err.code === 'ENOENT') {
+      // oxlint-disable-next-line eslint/preserve-caught-error - legacy error message format
       throw new Error(`sanity.json references "source" path which does not exist: "${sourcePath}"`)
     }
   }
@@ -192,6 +198,7 @@ async function validateParts(manifest: SanityV2Manifest, options: ManifestOption
 
   let i = 0
   for (const part of manifest.parts) {
+    // oxlint-disable-next-line eslint/no-await-in-loop - validate parts sequentially
     await validatePart(part, i, options)
     i++
   }

@@ -1,3 +1,4 @@
+// oxlint-disable jsx-a11y/control-has-associated-label, react/no-unstable-nested-components, typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Text} from '@sanity/ui'
 import groq from 'groq'

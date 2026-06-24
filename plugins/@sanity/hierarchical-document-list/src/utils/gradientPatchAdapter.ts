@@ -21,6 +21,7 @@ function toGradientPatch(patch: Patch): GradientPatch {
     const {position, items} = patch
     return {
       insert: {
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion - patch position key from Sanity mutator API
         [position as string]: matchPath,
         items: items,
       },

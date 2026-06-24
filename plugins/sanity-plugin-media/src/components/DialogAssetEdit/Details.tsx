@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {Card, Stack, Tab, TabList, TabPanel} from '@sanity/ui'
 import {useState} from 'react'
 import {type Control, type FieldErrors, type UseFormRegister} from 'react-hook-form'

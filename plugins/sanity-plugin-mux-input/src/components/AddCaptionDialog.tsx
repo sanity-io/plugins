@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {TranslateIcon, UploadIcon} from '@sanity/icons'
 import {
   Autocomplete,

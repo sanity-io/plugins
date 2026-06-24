@@ -11,6 +11,7 @@ export async function readTSConfig(options: {basePath: string; filename: string}
 
   if (!exists) return undefined
 
+  // oxlint-disable-next-line typescript/unbound-method - TypeScript API requires readFile callback
   const {config} = ts.readConfigFile(filePath, ts.sys.readFile)
 
   if (!config) return undefined

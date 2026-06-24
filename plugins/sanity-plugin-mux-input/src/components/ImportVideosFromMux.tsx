@@ -1,3 +1,5 @@
+// oxlint-disable typescript/consistent-return, typescript/no-base-to-string, typescript/no-deprecated, typescript/restrict-template-expressions - legacy Mux plugin patterns pending migration
+
 import {
   CheckmarkCircleIcon,
   ErrorOutlineIcon,

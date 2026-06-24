@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy media plugin ported code
 import {configureStore, type AnyAction, type EnhancedStore} from '@reduxjs/toolkit'
 import type {SanityClient} from '@sanity/client'
 import type {Epic} from 'redux-observable'

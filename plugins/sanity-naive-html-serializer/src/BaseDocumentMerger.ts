@@ -107,11 +107,14 @@ const fieldLevelMerge = (
     if (typeof translatedVal === 'string') {
       valToPatch = translatedVal
     } else if (Array.isArray(translatedVal) && translatedVal.length) {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - merge reconciles dynamically extracted array values
       valToPatch = reconcileArray((origVal as Array<any>) ?? [], translatedVal)
     } else if (
       typeof translatedVal === 'object' &&
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - merge reconciles dynamically extracted object values
       Object.keys(translatedVal as Record<string, any>).length
     ) {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - merge reconciles dynamically extracted object values
       valToPatch = reconcileObject(origVal ?? {}, translatedVal as Record<string, any>)
     }
     const destinationPath = [
@@ -155,6 +158,7 @@ const internationalizedArrayMerge = (
   Array.from(new Set(i18nArrayPaths)).forEach((path) => {
     //we need to merge the translated values with those things
     //that were not set off for translation. Get the original first
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - extract returns loosely typed values from document paths
     const origArray = extract(path, baseDoc)[0] as Array<I18nArrayItem> | undefined
     if (!origArray?.length) {
       return
@@ -163,6 +167,7 @@ const internationalizedArrayMerge = (
       (item: I18nArrayItem) => getItemLanguage(item) === baseLang,
     )?.value
 
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - extract returns loosely typed values from document paths
     const translatedArray = extract(path, translatedItems)[0] as Array<I18nArrayItem> | undefined
     const translatedVal = translatedArray?.find(
       (item: I18nArrayItem) => getItemLanguage(item) === baseLang,
@@ -173,12 +178,14 @@ const internationalizedArrayMerge = (
     if (typeof translatedVal === 'string') {
       valToPatch = translatedVal
     } else if (Array.isArray(translatedVal) && translatedVal.length) {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - i18n merge reconciles dynamically extracted array values
       valToPatch = reconcileArray((origVal as Array<any>) ?? [], translatedVal)
     } else if (
       typeof translatedVal === 'object' &&
       Object.keys(translatedVal as Record<string, any>).length
     ) {
       valToPatch = reconcileObject(
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion - i18n merge reconciles dynamically extracted object values
         (origVal as Record<string, any>) ?? {},
         translatedVal as Record<string, any>,
       )

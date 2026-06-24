@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {SearchIcon} from '@sanity/icons'
 import {Card, Flex, Grid, Inline, Label, Stack, Text, TextInput} from '@sanity/ui'
 import {useMemo, useState} from 'react'

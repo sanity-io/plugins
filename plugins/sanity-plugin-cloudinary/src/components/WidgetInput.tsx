@@ -39,6 +39,7 @@ const WidgetInput = (props: WidgetInputProps) => {
       </SetupButtonContainer>
 
       <Flex style={{textAlign: 'center', width: '100%'}} marginBottom={2}>
+        {/* oxlint-disable-next-line typescript/no-unsafe-type-assertion - object input value narrowed to CloudinaryAsset */}
         <AssetPreview value={value as CloudinaryAsset} />
       </Flex>
 

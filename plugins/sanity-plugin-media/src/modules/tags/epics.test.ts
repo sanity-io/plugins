@@ -1,3 +1,4 @@
+// oxlint-disable typescript/unbound-method - legacy media plugin ported code
 // @vitest-environment node
 
 import {of} from 'rxjs'

@@ -49,6 +49,7 @@ function useEmeddingsConfig(
 export function SemanticSearchReferenceInput(
   props: ObjectInputProps & {defaultConfig?: EmbeddingsIndexConfig},
 ) {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - schemaType narrowed to ReferenceSchemaType for embeddings options
   const embeddingsIndexConfig = (props.schemaType as ReferenceSchemaType)?.options?.embeddingsIndex
 
   const config = useEmeddingsConfig(embeddingsIndexConfig, props.defaultConfig)
@@ -152,6 +153,7 @@ function SemanticSearchInput(props: ObjectInputProps & {indexConfig: EmbeddingsI
 
   const getEmptySearchValue = useCallback(() => JSON.stringify(docRef.current), [docRef])
   const typeFilter = useMemo(
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion - schemaType narrowed to ReferenceSchemaType for to types
     () => (schemaType as ReferenceSchemaType).to.map((refType) => refType.name),
     [schemaType],
   )

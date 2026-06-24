@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import {SortIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem, type PopoverProps} from '@sanity/ui'
 import {useId} from 'react'

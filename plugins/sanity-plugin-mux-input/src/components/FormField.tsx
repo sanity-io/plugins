@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-deprecated - legacy Mux plugin patterns pending migration
+
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {memo} from 'react'
 

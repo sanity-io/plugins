@@ -87,6 +87,7 @@ export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAuto
         },
         client,
       )
+        // oxlint-disable-next-line promise/always-return - side-effect-only then callback
         .then((result: QueryResult[]) => {
           if (queryRef.current === queryString) {
             setSearching(false)
@@ -139,6 +140,7 @@ export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAuto
         setOptions(NO_OPTIONS)
         return
       }
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion - narrow options union to Option[] for lookup
       const option = (options as Option[])
         .filter((r): r is Option => 'result' in r)
         .find((r) => r.result.value.documentId === value)

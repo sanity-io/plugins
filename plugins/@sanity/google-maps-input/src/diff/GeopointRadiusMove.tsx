@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - classic google.maps.Marker API pending migration
 import {useRef, useEffect} from 'react'
 import {useUserColor, type ObjectDiff} from 'sanity'
 

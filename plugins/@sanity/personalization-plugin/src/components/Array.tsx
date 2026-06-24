@@ -42,6 +42,7 @@ export const ArrayInput = (props: ArrayInputProps) => {
   }
 
   // there is probably some better was of getting the type of this?
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - array item shape from form props
   const values = (props.value as Value[]) || []
 
   const usedVariants = values?.map((variant) => variant[variantId])
@@ -54,6 +55,7 @@ export const ArrayInput = (props: ArrayInputProps) => {
         {filteredVariants.map((variant) => {
           return (
             <Button
+              // oxlint-disable-next-line typescript/restrict-template-expressions - experiment id from form value
               key={`${experimentValue}-${variant.id}`}
               text={`Add ${variant.label}`}
               mode="ghost"

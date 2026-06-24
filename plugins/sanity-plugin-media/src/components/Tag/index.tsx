@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy media plugin ported code
 import {ArrowDownIcon, ArrowUpIcon, CloseIcon, EditIcon, SearchIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Container, Flex, Text, Tooltip} from '@sanity/ui'
 import {type ReactNode} from 'react'

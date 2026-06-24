@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - classic google.maps.places.Autocomplete API pending migration
 import {TextInput} from '@sanity/ui'
 import {createRef, PureComponent} from 'react'
 

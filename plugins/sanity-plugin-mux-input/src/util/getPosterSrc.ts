@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy Mux plugin patterns pending migration
+
 import type {SanityClient} from 'sanity'
 
 import {createUrlParamsObject} from './createUrlParamsObject'

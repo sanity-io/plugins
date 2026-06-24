@@ -25,6 +25,7 @@ export async function injectPresets(options: InjectOptions) {
 
   const applyPresets = presetsFromInput(options.flags.preset)
   for (const preset of applyPresets) {
+    // oxlint-disable-next-line eslint/no-await-in-loop - apply presets sequentially
     await preset.apply(options)
   }
 }

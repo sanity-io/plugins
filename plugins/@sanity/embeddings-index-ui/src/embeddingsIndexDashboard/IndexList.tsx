@@ -14,6 +14,7 @@ export function IndexList(props: IndexListProps) {
   const {loading, selectedIndex, indexes, onIndexSelected} = props
   return (
     <Card tone="default" style={{opacity: loading ? 0.5 : 1}}>
+      {/* oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4 */}
       <Stack space={2}>
         <Card borderBottom flex={1} paddingBottom={2} padding={3}>
           <Flex>
@@ -32,16 +33,19 @@ export function IndexList(props: IndexListProps) {
           </Flex>
         </Card>
         {indexes.length ? (
-          <Stack space={2} style={{maxHeight: 200, overflow: 'auto'}}>
-            {indexes.map((index) => (
-              <IndexRow
-                selectedIndex={selectedIndex}
-                index={index}
-                onIndexSelected={onIndexSelected}
-                key={index.indexName}
-              />
-            ))}
-          </Stack>
+          <>
+            {/* oxlint-disable-next-line typescript/no-deprecated - Stack space prop deprecated until @sanity/ui v4 */}
+            <Stack space={2} style={{maxHeight: 200, overflow: 'auto'}}>
+              {indexes.map((index) => (
+                <IndexRow
+                  selectedIndex={selectedIndex}
+                  index={index}
+                  onIndexSelected={onIndexSelected}
+                  key={index.indexName}
+                />
+              ))}
+            </Stack>
+          </>
         ) : (
           <Text muted>No indexes found.</Text>
         )}

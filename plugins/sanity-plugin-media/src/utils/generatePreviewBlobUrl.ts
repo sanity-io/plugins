@@ -1,3 +1,4 @@
+// oxlint-disable unicorn/prefer-add-event-listener - legacy media plugin ported code
 import {Observable, from, of} from 'rxjs'
 import {mergeMap} from 'rxjs/operators'
 
