@@ -1,11 +1,12 @@
 import {EditIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Dialog, Grid, Stack} from '@sanity/ui'
-import {APIProvider, createStaticMapsUrl} from '@vis.gl/react-google-maps'
+import {APIProvider} from '@vis.gl/react-google-maps'
 import {useCallback, useEffect, useId, useRef, useState} from 'react'
 import {type ObjectInputProps, set, setIfMissing, unset, ChangeIndicator, type Path} from 'sanity'
 
 import {MapApiGate} from '../map/MapApiGate'
-import type {Geopoint, GeopointSchemaType, GoogleMapsInputConfig, LatLng} from '../types'
+import {getGeopointStaticMapUrl} from '../map/staticMapUrl'
+import type {Geopoint, GoogleMapsInputConfig, LatLng} from '../types'
 import {MissingApiKeyCard} from './ApiKeyMessages'
 import {DialogInnerContainer} from './GeopointInput.styles'
 import {GeopointSelect} from './GeopointSelect'
@@ -13,18 +14,7 @@ import {StaticMapPreview} from './StaticMapPreview'
 
 const EMPTY_PATH: Path = []
 
-const getStaticImageUrl = (value: LatLng, apiKey: string) =>
-  createStaticMapsUrl({
-    apiKey,
-    width: 640,
-    height: 300,
-    scale: 2,
-    zoom: 13,
-    center: {lat: value.lat, lng: value.lng},
-    markers: [{location: {lat: value.lat, lng: value.lng}}],
-  })
-
-export type GeopointInputProps = ObjectInputProps<Geopoint, GeopointSchemaType> & {
+export type GeopointInputProps = ObjectInputProps<Geopoint> & {
   geoConfig: GoogleMapsInputConfig
 }
 
@@ -92,7 +82,7 @@ export function GeopointInput(props: GeopointInputProps) {
     return <MissingApiKeyCard typeTitle="Geopoint" />
   }
 
-  const staticImageUrl = value ? getStaticImageUrl(value, config.apiKey) : null
+  const staticImageUrl = value ? getGeopointStaticMapUrl(value, config.apiKey) : null
 
   return (
     <Stack gap={3}>
