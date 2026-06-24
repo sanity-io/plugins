@@ -10,11 +10,9 @@ This plugin will replace the default `geopoint` input component and adds support
 
 ![Google maps input](assets/google-maps-input.png)
 
-## Known issues in Studio V3
+## Known issues
 
-- Diff-preview is not implemented.
-
-These will be re-added well before Studio V3 GA.
+- Diff-preview (showing geopoint changes in the review-changes pane) is not currently implemented.
 
 ## Installation
 
