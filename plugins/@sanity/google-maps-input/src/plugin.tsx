@@ -1,12 +1,10 @@
 import {definePlugin, type SchemaType} from 'sanity'
 
-import {setGeoConfig} from './global-workaround'
 import {GeopointInput, type GeopointInputProps} from './input/GeopointInput'
 import {GeopointRadiusInput, type GeopointRadiusInputProps} from './input/GeopointRadiusInput'
 import type {GeopointSchemaType, GeopointRadiusSchemaType, GoogleMapsInputConfig} from './types'
 
 export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
-  setGeoConfig(config)
   return {
     name: 'google-maps-input',
     schema: {

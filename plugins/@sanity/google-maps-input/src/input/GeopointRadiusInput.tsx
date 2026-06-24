@@ -1,10 +1,10 @@
 import {EditIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Dialog, Grid, Stack, TextInput, Label} from '@sanity/ui'
+import {APIProvider, createStaticMapsUrl} from '@vis.gl/react-google-maps'
 import {useCallback, useEffect, useId, useRef, useState} from 'react'
 import {type ObjectInputProps, set, setIfMissing, unset, ChangeIndicator, type Path} from 'sanity'
 
-import {getGeoConfig} from '../global-workaround'
-import {GoogleMapsLoadProxy} from '../loader/GoogleMapsLoadProxy'
+import {MapApiGate} from '../map/MapApiGate'
 import type {
   GeopointRadius,
   GeopointRadiusSchemaType,
@@ -42,8 +42,6 @@ const generateCirclePoints = (
 }
 
 const getStaticImageUrl = (value: LatLng & {radius?: number}, apiKey: string) => {
-  const loc = `${value.lat},${value.lng}`
-
   // Calculate appropriate zoom level based on radius
   let zoom = 13
   if (value.radius) {
@@ -56,24 +54,27 @@ const getStaticImageUrl = (value: LatLng & {radius?: number}, apiKey: string) =>
     zoom = Math.max(8, Math.min(16, Math.round(calculatedZoom - 0.4)))
   }
 
-  const qs = new URLSearchParams({
-    key: apiKey,
-    center: loc,
-    markers: loc,
-    zoom: zoom.toString(),
-    scale: '2',
-    size: '640x300',
+  const paths = value.radius
+    ? [
+        {
+          coordinates: generateCirclePoints(value.lat, value.lng, value.radius),
+          color: '0x4285F4',
+          weight: 2,
+          fillcolor: '0x4285F480',
+        },
+      ]
+    : []
+
+  return createStaticMapsUrl({
+    apiKey,
+    width: 640,
+    height: 300,
+    scale: 2,
+    zoom,
+    center: {lat: value.lat, lng: value.lng},
+    markers: [{location: {lat: value.lat, lng: value.lng}}],
+    paths,
   })
-
-  // Add circle if radius is present
-  if (value.radius) {
-    // Create a circle path using multiple points
-    const points = generateCirclePoints(value.lat, value.lng, value.radius)
-    const path = points.map((p) => `${p.lat},${p.lng}`).join('|')
-    qs.append('path', `fillcolor:0x4285F480|color:0x4285F4|weight:2|${path}`)
-  }
-
-  return `https://maps.googleapis.com/maps/api/staticmap?${qs.toString()}`
 }
 
 export type GeopointRadiusInputProps = ObjectInputProps<
@@ -123,12 +124,12 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
   )
 
   const handleChange = useCallback(
-    (latLng: google.maps.LatLng, radius?: number) => {
+    (latLng: LatLng, radius?: number) => {
       const currentRadius = radius ?? value?.radius ?? config.defaultRadius ?? 1000
       onChange([
         setIfMissing({_type: schemaTypeName}),
-        set(latLng.lat(), ['lat']),
-        set(latLng.lng(), ['lng']),
+        set(latLng.lat, ['lat']),
+        set(latLng.lng, ['lng']),
         set(currentRadius, ['radius']),
       ])
     },
@@ -166,8 +167,7 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
         <ChangeIndicator path={path} isChanged={changed} hasFocus={!!focused}>
           <StaticMapPreview
             key={staticImageUrl}
-            src={staticImageUrl}
-            alt="Map location with radius"
+            url={staticImageUrl}
             onClick={handleFocusButton}
             onDoubleClick={handleToggleModal}
           />
@@ -228,18 +228,17 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
           width={1}
         >
           <DialogInnerContainer>
-            <GoogleMapsLoadProxy config={getGeoConfig()}>
-              {(api) => (
+            <APIProvider apiKey={config.apiKey}>
+              <MapApiGate>
                 <GeopointRadiusSelect
-                  api={api}
                   value={value || undefined}
                   onChange={readOnly ? undefined : handleChange}
                   defaultLocation={config.defaultLocation}
                   defaultRadiusZoom={config.defaultRadiusZoom}
                   defaultRadius={config.defaultRadius}
                 />
-              )}
-            </GoogleMapsLoadProxy>
+              </MapApiGate>
+            </APIProvider>
           </DialogInnerContainer>
         </Dialog>
       )}

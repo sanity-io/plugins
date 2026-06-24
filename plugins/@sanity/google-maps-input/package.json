@@ -47,13 +47,13 @@
   },
   "dependencies": {
     "@sanity/icons": "catalog:",
-    "@sanity/ui": "catalog:"
+    "@sanity/ui": "catalog:",
+    "@vis.gl/react-google-maps": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@types/google.maps": "^3.65.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",

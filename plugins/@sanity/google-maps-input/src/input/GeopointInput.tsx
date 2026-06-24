@@ -1,10 +1,10 @@
 import {EditIcon, TrashIcon} from '@sanity/icons'
 import {Box, Button, Dialog, Grid, Stack} from '@sanity/ui'
+import {APIProvider, createStaticMapsUrl} from '@vis.gl/react-google-maps'
 import {useCallback, useEffect, useId, useRef, useState} from 'react'
 import {type ObjectInputProps, set, setIfMissing, unset, ChangeIndicator, type Path} from 'sanity'
 
-import {getGeoConfig} from '../global-workaround'
-import {GoogleMapsLoadProxy} from '../loader/GoogleMapsLoadProxy'
+import {MapApiGate} from '../map/MapApiGate'
 import type {Geopoint, GeopointSchemaType, GoogleMapsInputConfig, LatLng} from '../types'
 import {MissingApiKeyCard} from './ApiKeyMessages'
 import {DialogInnerContainer} from './GeopointInput.styles'
@@ -13,19 +13,16 @@ import {StaticMapPreview} from './StaticMapPreview'
 
 const EMPTY_PATH: Path = []
 
-const getStaticImageUrl = (value: LatLng, apiKey: string) => {
-  const loc = `${value.lat},${value.lng}`
-  const qs = new URLSearchParams({
-    key: apiKey,
-    center: loc,
-    markers: loc,
-    zoom: '13',
-    scale: '2',
-    size: '640x300',
+const getStaticImageUrl = (value: LatLng, apiKey: string) =>
+  createStaticMapsUrl({
+    apiKey,
+    width: 640,
+    height: 300,
+    scale: 2,
+    zoom: 13,
+    center: {lat: value.lat, lng: value.lng},
+    markers: [{location: {lat: value.lat, lng: value.lng}}],
   })
-
-  return `https://maps.googleapis.com/maps/api/staticmap?${qs.toString()}`
-}
 
 export type GeopointInputProps = ObjectInputProps<Geopoint, GeopointSchemaType> & {
   geoConfig: GoogleMapsInputConfig
@@ -71,11 +68,11 @@ export function GeopointInput(props: GeopointInputProps) {
   )
 
   const handleChange = useCallback(
-    (latLng: google.maps.LatLng) => {
+    (latLng: LatLng) => {
       onChange([
         setIfMissing({_type: schemaTypeName}),
-        set(latLng.lat(), ['lat']),
-        set(latLng.lng(), ['lng']),
+        set(latLng.lat, ['lat']),
+        set(latLng.lng, ['lng']),
       ])
     },
     [schemaTypeName, onChange],
@@ -103,8 +100,7 @@ export function GeopointInput(props: GeopointInputProps) {
         <ChangeIndicator path={path} isChanged={changed} hasFocus={!!focused}>
           <StaticMapPreview
             key={staticImageUrl}
-            src={staticImageUrl}
-            alt="Map location"
+            url={staticImageUrl}
             onClick={handleFocusButton}
             onDoubleClick={handleToggleModal}
           />
@@ -150,17 +146,16 @@ export function GeopointInput(props: GeopointInputProps) {
           width={1}
         >
           <DialogInnerContainer>
-            <GoogleMapsLoadProxy config={getGeoConfig()}>
-              {(api) => (
+            <APIProvider apiKey={config.apiKey}>
+              <MapApiGate>
                 <GeopointSelect
-                  api={api}
                   value={value || undefined}
                   onChange={readOnly ? undefined : handleChange}
                   defaultLocation={config.defaultLocation}
                   defaultZoom={config.defaultZoom}
                 />
-              )}
-            </GoogleMapsLoadProxy>
+              </MapApiGate>
+            </APIProvider>
           </DialogInnerContainer>
         </Dialog>
       )}

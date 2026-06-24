@@ -1,24 +1,24 @@
+import {StaticMap} from '@vis.gl/react-google-maps'
 import {useState} from 'react'
 
 import {InvalidApiKeyCard} from './ApiKeyMessages'
-import {PreviewImage} from './GeopointInput.styles'
+import {StaticMapContainer} from './GeopointInput.styles'
 
 interface StaticMapPreviewProps {
-  src: string
-  alt: string
+  url: string
   onClick?: () => void
   onDoubleClick?: () => void
 }
 
 /**
- * Renders the Google Static Maps preview image. If the request is rejected
- * (invalid/demo key, a restricted key, or one without Static Maps API access)
- * the broken image is replaced with a helpful error card.
+ * Renders the Google Static Maps preview (via the library's `StaticMap`). If
+ * the image is rejected (invalid/demo key, restricted, or missing Static Maps
+ * API access) the broken image is replaced with a helpful error card.
  *
- * The parent passes `key={src}` so this remounts (and retries) whenever the
- * image URL changes — e.g. after the location or the API key changes.
+ * The parent passes `key={url}` so this remounts (and retries) when the image
+ * URL changes, e.g. after the location or the API key changes.
  */
-export function StaticMapPreview({src, alt, onClick, onDoubleClick}: StaticMapPreviewProps) {
+export function StaticMapPreview({url, onClick, onDoubleClick}: StaticMapPreviewProps) {
   const [failed, setFailed] = useState(false)
 
   if (failed) {
@@ -26,12 +26,12 @@ export function StaticMapPreview({src, alt, onClick, onDoubleClick}: StaticMapPr
   }
 
   return (
-    <PreviewImage
-      src={src}
-      alt={alt}
+    <StaticMapContainer
       onClick={onClick}
       onDoubleClick={onDoubleClick}
-      onError={() => setFailed(true)}
-    />
+      onErrorCapture={() => setFailed(true)}
+    >
+      <StaticMap url={url} />
+    </StaticMapContainer>
   )
 }
