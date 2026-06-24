@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'dev/test-studio/**'
+      - '.changeset/*.md'
       - 'pnpm-lock.yaml'
   workflow_dispatch:
 
