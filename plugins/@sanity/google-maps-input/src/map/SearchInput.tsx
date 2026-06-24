@@ -1,5 +1,4 @@
 import {useMap, useMapsLibrary} from '@vis.gl/react-google-maps'
-import {useEffect, useRef} from 'react'
 
 import type {LatLng} from '../types'
 import {SearchInputContainer} from './SearchInput.styles'
@@ -16,32 +15,6 @@ interface Props {
 export function SearchInput({onSelect}: Props) {
   const places = useMapsLibrary('places')
   const map = useMap()
-  const ref = useRef<google.maps.places.PlaceAutocompleteElement | null>(null)
-
-  useEffect(() => {
-    const element = ref.current
-    if (!element) {
-      return undefined
-    }
-
-    const handleSelect = async (event: Event) => {
-      const {placePrediction} = event as google.maps.places.PlacePredictionSelectEvent
-      const place = placePrediction.toPlace()
-      await place.fetchFields({fields: ['location']})
-
-      const location = place.location
-      if (!location) {
-        return
-      }
-
-      const latLng = {lat: location.lat(), lng: location.lng()}
-      onSelect(latLng)
-      map?.panTo(latLng)
-    }
-
-    element.addEventListener('gmp-select', handleSelect as EventListener)
-    return () => element.removeEventListener('gmp-select', handleSelect as EventListener)
-  }, [places, map, onSelect])
 
   if (!places) {
     return null
@@ -49,7 +22,21 @@ export function SearchInput({onSelect}: Props) {
 
   return (
     <SearchInputContainer>
-      <gmp-place-autocomplete ref={ref} />
+      <gmp-place-autocomplete
+        ongmp-select={async ({placePrediction}: google.maps.places.PlacePredictionSelectEvent) => {
+          const place = placePrediction.toPlace()
+          await place.fetchFields({fields: ['location']})
+
+          const location = place.location
+          if (!location) {
+            return
+          }
+
+          const latLng = {lat: location.lat(), lng: location.lng()}
+          onSelect(latLng)
+          map?.panTo(latLng)
+        }}
+      />
     </SearchInputContainer>
   )
 }

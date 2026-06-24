@@ -119,9 +119,6 @@ patchedDependencies:
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
   - 'vite'
-  # Hoists the transitive @types/google.maps (a dependency of @vis.gl/react-google-maps)
-  # so the global `google.maps.*` types resolve without a direct dependency
-  - '@types/google.maps'
 
 trustPolicy: no-downgrade
 

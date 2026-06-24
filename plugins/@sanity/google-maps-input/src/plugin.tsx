@@ -18,13 +18,13 @@ export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
               name: 'lat',
               title: 'Latitude',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(-90).max(90),
+              validation: (Rule) => Rule.required().min(-90).max(90),
             },
             {
               name: 'lng',
               title: 'Longitude',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(-180).max(180),
+              validation: (Rule) => Rule.required().min(-180).max(180),
             },
             {
               name: 'alt',
@@ -35,7 +35,7 @@ export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
               name: 'radius',
               title: 'Radius (meters)',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(1).max(50000),
+              validation: (Rule) => Rule.required().min(1).max(50000),
             },
           ],
           preview: {
