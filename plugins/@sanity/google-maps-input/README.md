@@ -1,7 +1,5 @@
 # @sanity/google-maps-input
 
-> For the v2 version, please refer to the [v2-branch](https://github.com/sanity-io/google-maps-input/tree/studio-v2).
-
 ## What is it?
 
 Plugin for [Sanity Studio](https://www.sanity.io) providing input handlers for geo-related input types using Google Maps.
@@ -20,12 +18,6 @@ In your studio folder, run:
 
 ```
 npm install --save @sanity/google-maps-input
-```
-
-or
-
-```
-yarn add @sanity/google-maps-input
 ```
 
 ## Usage
@@ -113,27 +105,6 @@ The `geopointRadius` field type extends the basic geopoint with:
 - Draggable circle for radius adjustment
 - Enhanced diff visualization showing radius changes
 
-## Stuck? Get help
-
-[![Slack Community Button](https://slack.sanity.io/badge.svg)](https://slack.sanity.io/)
-
-Join [Sanity’s developer community](https://slack.sanity.io) or ping us [on twitter](https://twitter.com/sanity_io).
-
 ## License
 
 MIT-licensed. See LICENSE.
-
-## Develop & test
-
-Add a Google Maps API key to `.env.local` (see `.env.example` for example format).
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/google-maps-input/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
