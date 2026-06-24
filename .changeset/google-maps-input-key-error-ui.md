@@ -4,7 +4,8 @@
 
 Modernize the map input by rebuilding it on [`@vis.gl/react-google-maps`](https://visgl.github.io/react-google-maps/), and improve the key-configuration UX.
 
-- The map now loads via `<APIProvider>` (with `loading=async`) and uses the library's components: a default advanced marker, `StaticMap`/`createStaticMapsUrl` for the location preview, an editable `<Circle>` for the radius, and the `gmp-place-autocomplete` web component (Places API New) for place search.
+- The map now loads via `<APIProvider>` (with `loading=async`) and uses the library's components: a default advanced marker, `StaticMap`/`createStaticMapsUrl` for the location preview, and an editable `<Circle>` for the radius.
+- Place search now uses the new `gmp-place-autocomplete` web component backed by the **Places API (New)**, replacing the legacy `google.maps.places.Autocomplete` widget — giving better autocomplete results and a nicer search UX.
 - This refactors away from deprecated Google Maps APIs, resolving the runtime console deprecation warnings for:
   - `google.maps.Marker` → `google.maps.marker.AdvancedMarkerElement`
   - `google.maps.places.Autocomplete` → `google.maps.places.PlaceAutocompleteElement`
