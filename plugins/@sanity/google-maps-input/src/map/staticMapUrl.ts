@@ -52,14 +52,20 @@ function generateCirclePoints(lat: number, lng: number, radius: number): StaticM
   return points
 }
 
+// Extra room around the circle so it never sits flush against the image edge.
+// The Static Maps API only offers discrete zoom levels, so without padding a
+// circle can end up tangent to the border at certain radii.
+const BOUNDS_PADDING = 1.15
+
 /**
- * The four cardinal extremes of the circle. Passing these as `visible` lets the
- * Static Maps API auto-fit the viewport around the whole circle (with padding)
- * instead of clipping it.
+ * The four cardinal extremes of the (padded) circle. Passing these as `visible`
+ * lets the Static Maps API auto-fit the viewport around the whole circle —
+ * with margin — instead of clipping it.
  */
 function getCircleBounds(lat: number, lng: number, radius: number): StaticMapsLocation[] {
-  const latDelta = radius / METERS_PER_DEGREE
-  const lngDelta = radius / (METERS_PER_DEGREE * Math.cos((lat * Math.PI) / 180))
+  const padded = radius * BOUNDS_PADDING
+  const latDelta = padded / METERS_PER_DEGREE
+  const lngDelta = padded / (METERS_PER_DEGREE * Math.cos((lat * Math.PI) / 180))
   return [
     {lat: lat + latDelta, lng},
     {lat: lat - latDelta, lng},
