@@ -15,7 +15,7 @@ const REQUIRED_APIS = [
 function RequiredApis() {
   return (
     <Box paddingLeft={3}>
-      <Stack as="ul" space={2}>
+      <Stack as="ul" gap={2}>
         {REQUIRED_APIS.map((api) => (
           <Text key={api} as="li" size={1} muted>
             {api}
@@ -43,7 +43,7 @@ function MessageCard({
         <Box flex="none">
           <Text size={3}>{icon}</Text>
         </Box>
-        <Stack flex={1} space={4}>
+        <Stack flex={1} gap={4}>
           <Text size={1} weight="semibold">
             {title}
           </Text>
@@ -68,7 +68,7 @@ export function MissingApiKeyCard({typeTitle}: {typeTitle: string}) {
       <Card padding={3} radius={2} tone="transparent" border overflow="auto">
         <Code size={1}>{`googleMapsInput({apiKey: 'your-api-key'})`}</Code>
       </Card>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Text size={1} muted>
           The key needs these APIs enabled:
         </Text>
