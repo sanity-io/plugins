@@ -1,8 +1,10 @@
 import {styled} from 'styled-components'
 
-export const WrapperContainer = styled.div`
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 220px;
+export const SearchInputContainer = styled.div`
+  margin: 10px;
+  width: 240px;
+
+  & gmp-place-autocomplete {
+    width: 100%;
+  }
 `

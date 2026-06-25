@@ -41,11 +41,11 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/asset-utils": "^2.3.0",
-    "@sanity/icons": "^3.7.4",
-    "@sanity/image-url": "^2.1.1",
+    "@sanity/asset-utils": "catalog:",
+    "@sanity/icons": "catalog:",
+    "@sanity/image-url": "catalog:",
     "@sanity/ui": "catalog:",
-    "react-fast-compare": "^3.2.2",
+    "react-fast-compare": "catalog:",
     "rxjs": "catalog:"
   },
   "devDependencies": {

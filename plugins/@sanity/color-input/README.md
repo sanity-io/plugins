@@ -72,7 +72,7 @@ Which will render accordingly:
 ### Color list
 
 To add list of predefined selectable color swatches for the user to choose from use `colorList`.
-This uses the `react-color` under the hood https://casesandberg.github.io/react-color/#api-color
+The color picker is a small fork of [`react-color`](https://github.com/casesandberg/react-color), so `colorList` accepts any of its supported [color formats](https://casesandberg.github.io/react-color/#api-color).
 
 ```js
 // ...fields...

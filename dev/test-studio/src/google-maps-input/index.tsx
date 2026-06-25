@@ -1,4 +1,4 @@
-import {googleMapsInput} from '@sanity/google-maps-input'
+import {GeopointDiff, googleMapsInput} from '@sanity/google-maps-input'
 import {PinIcon} from '@sanity/icons'
 import {definePlugin, defineType} from 'sanity'
 
@@ -18,6 +18,8 @@ const googleMapsTest = defineType({
       title: 'Location',
       description: 'A basic geopoint field rendered with the Google Maps input',
       type: 'geopoint',
+      // `geopoint` is a built-in type, so its diff is wired at the field level.
+      components: {diff: GeopointDiff},
     },
     {
       name: 'serviceArea',
@@ -30,7 +32,7 @@ const googleMapsTest = defineType({
       title: 'Locations',
       description: 'An array of geopoints',
       type: 'array',
-      of: [{type: 'geopoint'}],
+      of: [{type: 'geopoint', components: {diff: GeopointDiff}}],
     },
   ],
 })

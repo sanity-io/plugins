@@ -1,6 +1,6 @@
 {
   "name": "@sanity/presets",
-  "version": "0.5.2",
+  "version": "1.0.0",
   "description": "Production ready preset patterns for Sanity Studio",
   "keywords": [
     "sanity",
@@ -41,20 +41,20 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/asset-utils": "^2.3.0",
+    "@sanity/asset-utils": "catalog:",
     "@sanity/telemetry": "catalog:",
-    "@sanity/uuid": "^3.0.3"
+    "@sanity/uuid": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "jsdom": "^29.1.1",
+    "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",

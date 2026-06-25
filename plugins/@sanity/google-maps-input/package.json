@@ -46,14 +46,15 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
-    "@sanity/ui": "catalog:"
+    "@sanity/icons": "catalog:",
+    "@sanity/ui": "catalog:",
+    "@vis.gl/react-google-maps": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
-    "@types/google.maps": "^3.58.1",
+    "@types/google.maps": "^3.65.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",

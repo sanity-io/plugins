@@ -1,57 +1,42 @@
-import {TextInput} from '@sanity/ui'
-import {createRef, PureComponent} from 'react'
+import {useMap, useMapsLibrary} from '@vis.gl/react-google-maps'
 
-import {WrapperContainer} from './SearchInput.styles'
+import type {LatLng} from '../types'
+import {SearchInputContainer} from './SearchInput.styles'
 
 interface Props {
-  api: typeof window.google.maps
-  map: google.maps.Map
-  onChange: (result: google.maps.places.PlaceResult) => void
+  onSelect: (location: LatLng) => void
 }
 
-export class SearchInput extends PureComponent<Props> {
-  searchInputRef = createRef<HTMLInputElement>()
-  autoComplete: google.maps.places.Autocomplete | undefined
+/**
+ * Place search using the `<gmp-place-autocomplete>` web component (Places API
+ * New). The element is provided by the `places` library, so we wait for it to
+ * load before rendering, then listen for the `gmp-select` event.
+ */
+export function SearchInput({onSelect}: Props) {
+  const places = useMapsLibrary('places')
+  const map = useMap()
 
-  handleChange = () => {
-    if (!this.autoComplete) {
-      return
-    }
-
-    this.props.onChange(this.autoComplete.getPlace())
-
-    if (this.searchInputRef.current) {
-      this.searchInputRef.current.value = ''
-    }
+  if (!places) {
+    return null
   }
 
-  override componentDidMount() {
-    const input = this.searchInputRef.current
-    if (!input) {
-      return
-    }
+  return (
+    <SearchInputContainer>
+      <gmp-place-autocomplete
+        ongmp-select={async ({placePrediction}: google.maps.places.PlacePredictionSelectEvent) => {
+          const place = placePrediction.toPlace()
+          await place.fetchFields({fields: ['location']})
 
-    const {api, map} = this.props
-    const {Circle, places, event} = api
-    const searchBounds = new Circle({center: map.getCenter(), radius: 100}).getBounds()!
-    this.autoComplete = new places.Autocomplete(input, {
-      bounds: searchBounds,
-      types: [], // return all kinds of places
-    })
+          const location = place.location
+          if (!location) {
+            return
+          }
 
-    event.addListener(this.autoComplete, 'place_changed', this.handleChange)
-  }
-
-  override render() {
-    return (
-      <WrapperContainer>
-        <TextInput
-          name="place"
-          ref={this.searchInputRef}
-          placeholder="Search for place or address"
-          padding={4}
-        />
-      </WrapperContainer>
-    )
-  }
+          const latLng = {lat: location.lat(), lng: location.lng()}
+          onSelect(latLng)
+          map?.panTo(latLng)
+        }}
+      />
+    </SearchInputContainer>
+  )
 }

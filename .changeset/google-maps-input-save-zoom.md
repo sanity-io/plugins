@@ -1,5 +1,5 @@
 ---
-'@sanity/google-maps-input': minor
+"@sanity/google-maps-input": minor
 ---
 
 author: @gustavorino
