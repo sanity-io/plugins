@@ -1,5 +1,13 @@
 # sanity-plugin-media
 
+## 5.0.3
+
+### Patch Changes
+
+- [#1396](https://github.com/sanity-io/plugins/pull/1396) [`6e30c3c`](https://github.com/sanity-io/plugins/commit/6e30c3c6d454cb05e08b23dcc7cba7c8b7c8e72b) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.80.0
+
+- [#1400](https://github.com/sanity-io/plugins/pull/1400) [`169782e`](https://github.com/sanity-io/plugins/commit/169782e2f6fc6b91ab6c7efaae197a65b6a55640) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to ^5.1.15
+
 ## 5.0.2
 
 ### Patch Changes
