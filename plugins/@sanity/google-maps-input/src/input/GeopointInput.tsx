@@ -7,6 +7,7 @@ import {type ObjectInputProps, set, setIfMissing, unset, ChangeIndicator, type P
 import {MapApiGate} from '../map/MapApiGate'
 import {getGeopointStaticMapUrl} from '../map/staticMapUrl'
 import type {Geopoint, GoogleMapsInputConfig, LatLng} from '../types'
+import {getValidLatLng} from '../utils'
 import {MissingApiKeyCard} from './ApiKeyMessages'
 import {DialogInnerContainer} from './GeopointInput.styles'
 import {GeopointSelect} from './GeopointSelect'
@@ -82,11 +83,15 @@ export function GeopointInput(props: GeopointInputProps) {
     return <MissingApiKeyCard typeTitle="Geopoint" />
   }
 
-  const staticImageUrl = value ? getGeopointStaticMapUrl(value, config.apiKey) : null
+  // A geopoint is only renderable on a map once it has finite coordinates. A
+  // freshly added array item is `{_type, _key}` with no lat/lng yet, so gate the
+  // map preview and "edit" affordances on having a real location.
+  const position = getValidLatLng(value)
+  const staticImageUrl = position ? getGeopointStaticMapUrl(position, config.apiKey) : null
 
   return (
     <Stack gap={3}>
-      {value && staticImageUrl && (
+      {staticImageUrl && (
         <ChangeIndicator path={path} isChanged={changed} hasFocus={!!focused}>
           <StaticMapPreview
             url={staticImageUrl}
@@ -97,21 +102,21 @@ export function GeopointInput(props: GeopointInputProps) {
       )}
 
       <Box>
-        <Grid gridTemplateColumns={value ? 2 : 1} gap={3}>
+        <Grid gridTemplateColumns={position ? 2 : 1} gap={3}>
           <Button
             aria-describedby={ariaDescribedBy}
             disabled={readOnly}
-            icon={value && EditIcon}
+            icon={position ? EditIcon : undefined}
             id={id}
             mode="ghost"
             onClick={handleToggleModal}
             onFocus={handleFocus}
             padding={3}
             ref={inputRef}
-            text={value ? 'Edit' : 'Set location'}
+            text={position ? 'Edit' : 'Set location'}
           />
 
-          {value && (
+          {position && (
             <Button
               disabled={readOnly}
               icon={TrashIcon}
