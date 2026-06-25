@@ -32,7 +32,7 @@ export function GeopointSelect({
   const center: LatLng = {
     ...fallbackLatLng,
     ...defaultLocation,
-    ...(position ?? {}),
+    ...position,
   }
 
   const handleMapClick = useCallback(

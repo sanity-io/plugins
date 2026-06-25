@@ -35,7 +35,7 @@ export function GeopointRadiusSelect({
   const center: LatLng = {
     ...fallbackLatLng,
     ...defaultLocation,
-    ...(position ?? {}),
+    ...position,
   }
   const currentRadius = value?.radius ?? defaultRadius
 
