@@ -7,8 +7,16 @@ const DEFAULT_HEIGHT = 300
 // Rough meters-per-degree of latitude, used to translate a radius in meters to a
 // lat/lng delta. Good enough for previewing modest radii.
 const METERS_PER_DEGREE = 111_000
+// Clamp the latitude cosine away from zero so the radius→longitude conversion
+// can't divide by ~0 near the poles and produce Infinity/NaN coordinates.
+const MIN_LATITUDE_COSINE = 0.01
 const CIRCLE_OUTLINE = '0x4285F4'
 const CIRCLE_FILL = '0x4285F480'
+
+// Meters per degree of longitude at a given latitude (shrinks toward the poles).
+function lngMetersPerDegree(lat: number): number {
+  return METERS_PER_DEGREE * Math.max(Math.cos((lat * Math.PI) / 180), MIN_LATITUDE_COSINE)
+}
 
 export interface StaticMapSize {
   width?: number
@@ -39,7 +47,7 @@ function generateCirclePoints(lat: number, lng: number, radius: number): StaticM
   const points: StaticMapsLocation[] = []
   const steps = 64
   const latRatio = radius / METERS_PER_DEGREE
-  const lngRatio = radius / (METERS_PER_DEGREE * Math.cos((lat * Math.PI) / 180))
+  const lngRatio = radius / lngMetersPerDegree(lat)
 
   for (let i = 0; i <= steps; i++) {
     const angle = (i / steps) * 2 * Math.PI
@@ -65,7 +73,7 @@ const BOUNDS_PADDING = 1.15
 function getCircleBounds(lat: number, lng: number, radius: number): StaticMapsLocation[] {
   const padded = radius * BOUNDS_PADDING
   const latDelta = padded / METERS_PER_DEGREE
-  const lngDelta = padded / (METERS_PER_DEGREE * Math.cos((lat * Math.PI) / 180))
+  const lngDelta = padded / lngMetersPerDegree(lat)
   return [
     {lat: lat + latDelta, lng},
     {lat: lat - latDelta, lng},
