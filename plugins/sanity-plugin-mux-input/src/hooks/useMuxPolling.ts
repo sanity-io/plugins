@@ -1,8 +1,9 @@
-import {useMemo} from 'react'
+import {useMemo, useRef} from 'react'
 import {useDataset, useProjectId} from 'sanity'
 import useSWR from 'swr'
 
 import {useClient} from '../hooks/useClient'
+import {addKeysToMuxData} from '../util/addKeysToMuxData'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
 import type {MuxAsset, VideoAssetDocument} from '../util/types'
 
@@ -33,6 +34,9 @@ export const useMuxPolling = (asset?: VideoAssetDocument) => {
     () => !!asset?.assetId && (asset?.status === 'preparing' || isPreparingStaticRenditions),
     [asset?.assetId, asset?.status, isPreparingStaticRenditions],
   )
+  // Only log the first failure of a streak so a persistent error doesn't flood
+  // the console on every interval.
+  const errorLoggedRef = useRef(false)
   return useSWR(
     shouldFetch ? `/${projectId}/addons/mux/assets/${dataset}/data/${asset?.assetId}` : null,
     async () => {
@@ -46,16 +50,20 @@ export const useMuxPolling = (asset?: VideoAssetDocument) => {
         if (!asset?._id || !data) return
         await client
           .patch(asset._id)
-          .set({status: data.status, data})
+          .set({status: data.status, data: addKeysToMuxData(data)})
           .commit({returnDocuments: false})
+        errorLoggedRef.current = false
       } catch (error) {
         // Input re-throws `poll.error`, so a background polling failure would
-        // crash the whole field. Swallow and log it instead.
-        console.error('[sanity-plugin-mux-input] Mux polling failed', {
-          assetId: asset?.assetId,
-          documentId: asset?._id,
-          error,
-        })
+        // crash the whole field. Swallow it instead.
+        if (!errorLoggedRef.current) {
+          errorLoggedRef.current = true
+          console.error('[sanity-plugin-mux-input] Mux polling failed', {
+            assetId: asset?.assetId,
+            documentId: asset?._id,
+            error,
+          })
+        }
       }
     },
     {refreshInterval: 2000, refreshWhenHidden: true, dedupingInterval: 1000},
