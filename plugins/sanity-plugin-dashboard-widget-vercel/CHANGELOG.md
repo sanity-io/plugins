@@ -1,5 +1,11 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.7
+
+### Patch Changes
+
+- [#1396](https://github.com/sanity-io/plugins/pull/1396) [`6e30c3c`](https://github.com/sanity-io/plugins/commit/6e30c3c6d454cb05e08b23dcc7cba7c8b7c8e72b) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.80.0
+
 ## 4.0.6
 
 ### Patch Changes
