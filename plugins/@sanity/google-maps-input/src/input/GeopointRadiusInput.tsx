@@ -100,7 +100,6 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
       {value && staticImageUrl && (
         <ChangeIndicator path={path} isChanged={changed} hasFocus={!!focused}>
           <StaticMapPreview
-            key={staticImageUrl}
             url={staticImageUrl}
             onClick={handleFocusButton}
             onDoubleClick={handleToggleModal}

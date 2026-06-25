@@ -1,6 +1,6 @@
 import {definePlugin, type SchemaType} from 'sanity'
 
-import {createGeoConfigLayout} from './diff/GeoConfigContext'
+import {GoogleMapsInputContext} from './diff/GeoConfigContext'
 import {GeopointDiff} from './diff/GeopointDiff'
 import {GeopointInput, type GeopointInputProps} from './input/GeopointInput'
 import {GeopointRadiusInput, type GeopointRadiusInputProps} from './input/GeopointRadiusInput'
@@ -13,7 +13,13 @@ export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
       components: {
         // Make the config (API key) available to diff components, which are
         // resolved outside of the form and so can't receive it as a prop.
-        layout: createGeoConfigLayout(config),
+        activeToolLayout: function GoogleMapsInputContextProvider(props) {
+          return (
+            <GoogleMapsInputContext value={config}>
+              {props.renderDefault(props)}
+            </GoogleMapsInputContext>
+          )
+        },
       },
     },
     schema: {

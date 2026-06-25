@@ -1,10 +1,10 @@
 import {ImageIcon} from '@sanity/icons'
 import {Flex, Text} from '@sanity/ui'
-import {useState} from 'react'
+import {use, useState} from 'react'
 
 import {getGeopointRadiusStaticMapUrl, getGeopointStaticMapUrl} from '../map/staticMapUrl'
 import type {Geopoint, GeopointRadius} from '../types'
-import {useGeoConfig} from './GeoConfigContext'
+import {GoogleMapsInputContext} from './GeoConfigContext'
 import {MapDiffImage, MapDiffPlaceholder} from './StaticMapDiffPreview.styles'
 
 type MapValue = Geopoint | GeopointRadius
@@ -19,10 +19,10 @@ function hasRadius(value: MapValue): value is GeopointRadius {
  * built-in image diff shows a before/after thumbnail.
  */
 export function StaticMapDiffPreview({value}: {value?: MapValue}) {
-  const config = useGeoConfig()
   const [failed, setFailed] = useState(false)
+  const apiKey = use(GoogleMapsInputContext)?.apiKey
 
-  if (!value || typeof value.lat !== 'number' || typeof value.lng !== 'number' || !config?.apiKey) {
+  if (!value || typeof value.lat !== 'number' || typeof value.lng !== 'number' || !apiKey) {
     return null
   }
 
@@ -42,12 +42,12 @@ export function StaticMapDiffPreview({value}: {value?: MapValue}) {
   }
 
   const url = hasRadius(value)
-    ? getGeopointRadiusStaticMapUrl(value, config.apiKey, {width: 500, height: 280})
-    : getGeopointStaticMapUrl(value, config.apiKey, {width: 500, height: 280})
+    ? getGeopointRadiusStaticMapUrl(value, apiKey, {width: 500, height: 280})
+    : getGeopointStaticMapUrl(value, apiKey, {width: 500, height: 280})
 
   return (
     <MapDiffImage>
-      <img alt="Map preview" src={url} onError={() => setFailed(true)} />
+      <img alt="" src={url} onError={() => setFailed(true)} height={280} width={500} />
     </MapDiffImage>
   )
 }
