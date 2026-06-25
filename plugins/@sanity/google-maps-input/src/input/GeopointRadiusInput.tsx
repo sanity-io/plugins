@@ -7,6 +7,7 @@ import {type ObjectInputProps, set, setIfMissing, unset, ChangeIndicator, type P
 import {MapApiGate} from '../map/MapApiGate'
 import {getGeopointRadiusStaticMapUrl} from '../map/staticMapUrl'
 import type {GeopointRadius, GoogleMapsInputConfig, LatLng} from '../types'
+import {getValidLatLng} from '../utils'
 import {MissingApiKeyCard} from './ApiKeyMessages'
 import {DialogInnerContainer} from './GeopointInput.styles'
 import {GeopointRadiusSelect} from './GeopointRadiusSelect'
@@ -93,11 +94,21 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
     return <MissingApiKeyCard typeTitle="Geopoint Radius" />
   }
 
-  const staticImageUrl = value ? getGeopointRadiusStaticMapUrl(value, config.apiKey) : null
+  // A geopoint is only renderable on a map once it has finite coordinates. A
+  // freshly added array item is `{_type, _key}` with no lat/lng yet, so gate the
+  // map preview, radius control and "edit" affordances on having a real location.
+  const position = getValidLatLng(value)
+  const radius = Math.round(value?.radius || config.defaultRadius || 1000)
+  const staticImageUrl = position
+    ? getGeopointRadiusStaticMapUrl(
+        {lat: position.lat, lng: position.lng, radius: value?.radius ?? 0},
+        config.apiKey,
+      )
+    : null
 
   return (
     <Stack gap={3}>
-      {value && staticImageUrl && (
+      {staticImageUrl && (
         <ChangeIndicator path={path} isChanged={changed} hasFocus={!!focused}>
           <StaticMapPreview
             url={staticImageUrl}
@@ -107,12 +118,12 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
         </ChangeIndicator>
       )}
 
-      {value && (
+      {position && (
         <Stack gap={2}>
           <Label>Radius (meters)</Label>
           <TextInput
             type="number"
-            value={Math.round(value.radius || config.defaultRadius || 1000)}
+            value={radius}
             onChange={handleRadiusChange}
             disabled={readOnly}
             min={1}
@@ -123,21 +134,21 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
       )}
 
       <Box>
-        <Grid gridTemplateColumns={value ? 2 : 1} gap={3}>
+        <Grid gridTemplateColumns={position ? 2 : 1} gap={3}>
           <Button
             aria-describedby={ariaDescribedBy}
             disabled={readOnly}
-            icon={value && EditIcon}
+            icon={position ? EditIcon : undefined}
             id={id}
             mode="ghost"
             onClick={handleToggleModal}
             onFocus={handleFocus}
             padding={3}
             ref={inputRef}
-            text={value ? 'Edit' : 'Set location and radius'}
+            text={position ? 'Edit' : 'Set location and radius'}
           />
 
-          {value && (
+          {position && (
             <Button
               disabled={readOnly}
               icon={TrashIcon}

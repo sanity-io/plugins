@@ -11,6 +11,7 @@ import {useCallback} from 'react'
 import {MAP_ID} from '../map/constants'
 import {SearchInput} from '../map/SearchInput'
 import type {GeopointRadius, LatLng} from '../types'
+import {getValidLatLng} from '../utils'
 
 const fallbackLatLng: LatLng = {lat: 40.7058254, lng: -74.1180863}
 const defaultMapLocation: LatLng = {lng: 10.74609, lat: 59.91273}
@@ -30,10 +31,11 @@ export function GeopointRadiusSelect({
   defaultRadiusZoom = 12,
   defaultRadius = 1000,
 }: SelectProps) {
+  const position = getValidLatLng(value)
   const center: LatLng = {
     ...fallbackLatLng,
     ...defaultLocation,
-    ...(value ? {lat: value.lat, lng: value.lng} : {}),
+    ...(position ?? {}),
   }
   const currentRadius = value?.radius ?? defaultRadius
 
@@ -99,16 +101,16 @@ export function GeopointRadiusSelect({
       <MapControl position={ControlPosition.TOP_RIGHT}>
         <SearchInput onSelect={handleSelect} />
       </MapControl>
-      {value && (
+      {position && (
         <>
           <AdvancedMarker
-            position={{lat: value.lat, lng: value.lng}}
+            position={position}
             draggable={Boolean(onChange)}
             onDragEnd={handleMarkerDragEnd}
           />
           <Circle
-            center={{lat: value.lat, lng: value.lng}}
-            radius={value.radius}
+            center={position}
+            radius={currentRadius}
             editable={Boolean(onChange)}
             draggable={Boolean(onChange)}
             fillColor="#4285F4"
