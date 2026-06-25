@@ -1,5 +1,39 @@
 # sanity-plugin-media
 
+## 5.0.3
+
+### Patch Changes
+
+- [#1396](https://github.com/sanity-io/plugins/pull/1396) [`6e30c3c`](https://github.com/sanity-io/plugins/commit/6e30c3c6d454cb05e08b23dcc7cba7c8b7c8e72b) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.80.0
+
+- [#1400](https://github.com/sanity-io/plugins/pull/1400) [`169782e`](https://github.com/sanity-io/plugins/commit/169782e2f6fc6b91ab6c7efaae197a65b6a55640) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to ^5.1.15
+
+## 5.0.2
+
+### Patch Changes
+
+- [#1383](https://github.com/sanity-io/plugins/pull/1383) [`e4231ba`](https://github.com/sanity-io/plugins/commit/e4231bad0ca3ac4e1be0027aeaf55140d07269b8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to v5
+
+## 5.0.1
+
+### Patch Changes
+
+- [`6534752`](https://github.com/sanity-io/plugins/commit/653475267ee8bd378bd91fa543f259a04102852e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): Update nanoid from v3 to v4
+
+## 5.0.0
+
+### Major Changes
+
+- [#1354](https://github.com/sanity-io/plugins/pull/1354) [`3217cf8`](https://github.com/sanity-io/plugins/commit/3217cf801b2e84f41336d6ffa097dd77289a0383) Thanks [@stipsan](https://github.com/stipsan)! - Drop the CommonJS build and require Sanity Studio v5 or v6
+
+  The plugin is now published as ESM only and no longer ships a CommonJS (`require`) build. The `sanity` peer dependency is also tightened to `^5 || ^6.0.0-0`, dropping declared support for Studio v3 and v4. Sanity Studio v5+ is pure ESM and the supported Node.js versions handle `require(esm)`, so a separate CommonJS build is no longer needed and only risks two copies of the code ending up in the module tree.
+
+### Patch Changes
+
+- [#1353](https://github.com/sanity-io/plugins/pull/1353) [`5ff7063`](https://github.com/sanity-io/plugins/commit/5ff70639f75bce2a4d7ef88aa2ec03d82cae4acc) Thanks [@stipsan](https://github.com/stipsan)! - Remove the obsolete `@sanity/incompatible-plugin` Sanity Studio v2 compatibility shim (`sanity.json` and `v2-incompatible.js`)
+
+- [#1352](https://github.com/sanity-io/plugins/pull/1352) [`2bae6e5`](https://github.com/sanity-io/plugins/commit/2bae6e5c958d7b90449a13a9ef57ea45f831a454) Thanks [@stipsan](https://github.com/stipsan)! - Remove `src` from the published `files` array; only the compiled `dist` output is published.
+
 ## 4.3.6
 
 ### Patch Changes

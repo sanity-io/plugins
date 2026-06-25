@@ -1,5 +1,8 @@
 {
   "extends": "@repo/tsconfig/check.json",
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "types": ["google.maps"]
+  }
 }

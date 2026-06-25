@@ -1,5 +1,13 @@
 # sanity-plugin-markdown
 
+## 9.0.0
+
+### Major Changes
+
+- [#1354](https://github.com/sanity-io/plugins/pull/1354) [`3217cf8`](https://github.com/sanity-io/plugins/commit/3217cf801b2e84f41336d6ffa097dd77289a0383) Thanks [@stipsan](https://github.com/stipsan)! - Drop the CommonJS build and publish ESM only
+
+  The plugin is now published as ESM only and no longer ships a CommonJS (`require`) build. Sanity Studio v5+ is pure ESM and the supported Node.js versions handle `require(esm)`, so a separate CommonJS build is no longer needed and only risks two copies of the code ending up in the module tree.
+
 ## 8.0.7
 
 ### Patch Changes

@@ -1,5 +1,31 @@
 # sanity-plugin-mux-input
 
+## 4.0.2
+
+### Patch Changes
+
+- [#1375](https://github.com/sanity-io/plugins/pull/1375) [`150147b`](https://github.com/sanity-io/plugins/commit/150147bb58b207060abb2a148237352abe0bb6fb) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update lodash monorepo
+
+## 4.0.1
+
+### Patch Changes
+
+- [`cc31111`](https://github.com/sanity-io/plugins/commit/cc31111d34b128b130bf6223ab611cf1cc1a0344) Thanks [@stipsan](https://github.com/stipsan)! - Stop bundling `use-error-boundary` and treat it as an external dependency
+
+## 4.0.0
+
+### Major Changes
+
+- [#1354](https://github.com/sanity-io/plugins/pull/1354) [`3217cf8`](https://github.com/sanity-io/plugins/commit/3217cf801b2e84f41336d6ffa097dd77289a0383) Thanks [@stipsan](https://github.com/stipsan)! - Drop the CommonJS build and require Sanity Studio v5 or v6
+
+  The plugin is now published as ESM only and no longer ships a CommonJS (`require`) build. The `sanity` peer dependency is also tightened to `^5 || ^6.0.0-0`, dropping declared support for Studio v4. Sanity Studio v5+ is pure ESM and the supported Node.js versions handle `require(esm)`, so a separate CommonJS build is no longer needed and only risks two copies of the code ending up in the module tree.
+
+### Patch Changes
+
+- [#1353](https://github.com/sanity-io/plugins/pull/1353) [`5ff7063`](https://github.com/sanity-io/plugins/commit/5ff70639f75bce2a4d7ef88aa2ec03d82cae4acc) Thanks [@stipsan](https://github.com/stipsan)! - Remove the obsolete `@sanity/incompatible-plugin` Sanity Studio v2 compatibility shim (`sanity.json` and `v2-incompatible.js`)
+
+- [#1352](https://github.com/sanity-io/plugins/pull/1352) [`2bae6e5`](https://github.com/sanity-io/plugins/commit/2bae6e5c958d7b90449a13a9ef57ea45f831a454) Thanks [@stipsan](https://github.com/stipsan)! - Remove `src` from the published `files` array; only the compiled `dist` output is published.
+
 ## 3.0.5
 
 ### Patch Changes
