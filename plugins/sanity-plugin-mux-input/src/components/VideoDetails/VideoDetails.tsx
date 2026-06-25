@@ -3,7 +3,6 @@ import {
   CheckmarkIcon,
   ClockIcon,
   CropIcon,
-  DownloadIcon,
   EditIcon,
   ErrorOutlineIcon,
   RevertIcon,
@@ -30,11 +29,11 @@ import {useEffect, useRef, useState} from 'react'
 
 import {DIALOGS_Z_INDEX} from '../../util/constants'
 import type {MuxPlaybackId, MuxTextTrack, PlaybackPolicy} from '../../util/types'
-import DownloadAssetDialog from '../DownloadAssetDialog'
 import FormField from '../FormField'
 import IconInfo from '../IconInfo'
 import {ResolutionIcon} from '../icons/Resolution'
 import {StopWatchIcon} from '../icons/StopWatch'
+import Mezzanine from '../Mezzanine'
 import TextTracksManager from '../TextTracksManager'
 import VideoPlayer from '../VideoPlayer'
 import DeleteDialog from './DeleteDialog'
@@ -125,31 +124,19 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
                 iconRight={isResyncing && Spinner}
               />
             </Flex>
-            <Flex gap={2}>
+            {modified && (
               <Button
-                icon={DownloadIcon}
+                icon={CheckmarkIcon}
                 fontSize={2}
                 padding={3}
-                mode="bleed"
-                text="Download"
-                tone="default"
-                onClick={() => setState('downloading')}
-                disabled={isSaving}
+                mode="ghost"
+                text="Save and close"
+                tone="positive"
+                onClick={saveChanges}
+                iconRight={isSaving && Spinner}
+                disabled={isSaving || isResyncing}
               />
-              {modified && (
-                <Button
-                  icon={CheckmarkIcon}
-                  fontSize={2}
-                  padding={3}
-                  mode="ghost"
-                  text="Save and close"
-                  tone="positive"
-                  onClick={saveChanges}
-                  iconRight={isSaving && Spinner}
-                  disabled={isSaving || isResyncing}
-                />
-              )}
-            </Flex>
+            )}
           </Flex>
         </Card>
       }
@@ -165,11 +152,6 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
             props.closeDialog()
           }}
         />
-      )}
-
-      {/* DOWNLOAD DIALOG */}
-      {state === 'downloading' && (
-        <DownloadAssetDialog asset={props.asset} onClose={() => setState('idle')} absolute />
       )}
 
       {/* CONFIRM CLOSING DIALOG */}
@@ -241,18 +223,21 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
           <Stack space={4} flex={1} sizing="border">
             <VideoPlayer asset={props.asset} autoPlay={props.asset.autoPlay || false} />
             {tab === 'details' && (
-              <TextTracksManager
-                asset={props.asset}
-                iconOnly
-                collapseTracks
-                tracks={
-                  displayInfo?.text_tracks ||
-                  props.asset.data?.tracks?.filter(
-                    (track): track is MuxTextTrack => track.type === 'text',
-                  ) ||
-                  []
-                }
-              />
+              <>
+                <TextTracksManager
+                  asset={props.asset}
+                  iconOnly
+                  collapseTracks
+                  tracks={
+                    displayInfo?.text_tracks ||
+                    props.asset.data?.tracks?.filter(
+                      (track): track is MuxTextTrack => track.type === 'text',
+                    ) ||
+                    []
+                  }
+                />
+                <Mezzanine asset={props.asset} />
+              </>
             )}
           </Stack>
           <Stack space={4} flex={1} sizing="border">

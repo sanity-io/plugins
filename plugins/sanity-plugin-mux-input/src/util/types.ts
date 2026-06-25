@@ -493,8 +493,9 @@ export interface MuxAsset {
   live_stream_id?: string
   master?: {
     status: 'ready' | 'preparing' | 'errored'
-    // Temporary URL to master MP4, expires after 24 hours
-    url: string
+    // Temporary URL to master MP4, expires after 24 hours.
+    // Only present once `status` is 'ready'.
+    url?: string
   }
   master_access: 'temporary' | 'none'
   mp4_support: 'standard' | 'none'

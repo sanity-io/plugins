@@ -152,11 +152,7 @@ export function deleteTextTrack(client: SanityClient, assetId: string, trackId: 
 }
 
 /**
- * Updates master access on a Mux asset.
- * @NOTE This endpoint is missing from the Mux addon for now, so it will not work.
- * @TODO Until the endpoint becomes available, the best course of action is to implement your own
- * version pointing to your own Mux API proxy. This is the only function that needs a new
- * implementation for the source download feature to work end to end.
+ * Updates master access (the "mezzanine" file in Mux's docs) on a Mux asset, via the addon proxy.
  * @see {@link https://docs.mux.com/api-reference/video/assets/update-asset-master-access}
  */
 export function updateMasterAccess(

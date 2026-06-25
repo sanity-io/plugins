@@ -36,16 +36,27 @@ export const useMuxPolling = (asset?: VideoAssetDocument) => {
   return useSWR(
     shouldFetch ? `/${projectId}/addons/mux/assets/${dataset}/data/${asset?.assetId}` : null,
     async () => {
-      const {data} = await client.request<{data: MuxAsset}>({
-        url: `/addons/mux/assets/${dataset}/data/${asset!.assetId}`,
-        withCredentials: true,
-        method: 'GET',
-        query: PLUGIN_VERSION_QUERY,
-      })
-      await client
-        .patch(asset!._id)
-        .set({status: data.status, data})
-        .commit({returnDocuments: false})
+      try {
+        const {data} = await client.request<{data: MuxAsset}>({
+          url: `/addons/mux/assets/${dataset}/data/${asset!.assetId}`,
+          withCredentials: true,
+          method: 'GET',
+          query: PLUGIN_VERSION_QUERY,
+        })
+        if (!asset?._id || !data) return
+        await client
+          .patch(asset._id)
+          .set({status: data.status, data})
+          .commit({returnDocuments: false})
+      } catch (error) {
+        // Input re-throws `poll.error`, so a background polling failure would
+        // crash the whole field. Swallow and log it instead.
+        console.error('[sanity-plugin-mux-input] Mux polling failed', {
+          assetId: asset?.assetId,
+          documentId: asset?._id,
+          error,
+        })
+      }
     },
     {refreshInterval: 2000, refreshWhenHidden: true, dedupingInterval: 1000},
   )

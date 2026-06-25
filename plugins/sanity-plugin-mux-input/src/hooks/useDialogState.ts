@@ -4,7 +4,7 @@ import {useState} from 'react'
 
 export type DialogState =
   | 'secrets'
-  | 'download-asset'
+  | 'mezzanine'
   | 'select-video'
   | 'edit-thumbnail'
   | 'edit-captions'

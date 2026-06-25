@@ -4,8 +4,8 @@
 
 author: @y-dpi
 
-Add a "Download" action to retrieve the original source video/audio file of a Mux asset
+Add a "Mezzanine" action to enable and download a Mux asset's master-access file
 
-A new "Download" entry is available in the player actions menu and in the asset details dialog. It uses Mux's `master_access` feature to prepare the full-quality source file before transcoding and then downloads it with the asset's name and original extension.
+A new "Mezzanine" section is available in the asset details dialog (next to Captions) and in the player actions menu. It lets editors enable Mux's master access — the highest-quality, near-lossless source copy of the asset, meant for offline editing and archival rather than streaming (unlike the streamable MP4 static renditions). The same surface explains what it is (free, available for 24 hours) and lets the user enable, watch it prepare, and download it, and links to Mux's guide — there's no separate confirmation dialog.
 
-Note: preparing the source file requires the Mux addon `master-access` endpoint, which is not yet exposed. Until it is available, override `updateMasterAccess` to point at your own Mux API proxy to complete the flow.
+Enabling and status checks go through the Mux addon proxy (the same authentication as every other addon call), and the resulting `master` data is stored on the Sanity document — so the status is polled until ready (like captions) and is already present for assets imported from Mux. Because the Mux download URL is short-lived, the Download action re-fetches the asset first: if the file is still available it redirects to it, otherwise it prompts to enable it again.

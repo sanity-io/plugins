@@ -155,8 +155,8 @@ function PlayerActionsMenu(
             <MenuDivider />
             <MenuItem
               icon={DownloadIcon}
-              text="Download"
-              onClick={() => setDialogState('download-asset')}
+              text="Mezzanine"
+              onClick={() => setDialogState('mezzanine')}
             />
             <MenuDivider />
             {hasConfigAccess && (

@@ -15,9 +15,9 @@ import {getVideoSrc} from '../util/getVideoSrc'
 import {tryWithSuspend} from '../util/tryWithSuspend'
 import type {VideoAssetDocument} from '../util/types'
 import CaptionsDialog from './CaptionsDialog'
-import DownloadAssetDialog from './DownloadAssetDialog'
 import EditThumbnailDialog from './EditThumbnailDialog'
 import {AudioIcon} from './icons/Audio'
+import MezzanineDialog from './MezzanineDialog'
 
 export default function VideoPlayer({
   asset,
@@ -233,7 +233,7 @@ export default function VideoPlayer({
         />
       )}
       {dialogState === 'edit-captions' && <CaptionsDialog asset={asset} />}
-      {dialogState === 'download-asset' && <DownloadAssetDialog asset={asset} />}
+      {dialogState === 'mezzanine' && <MezzanineDialog asset={asset} />}
     </>
   )
 }
