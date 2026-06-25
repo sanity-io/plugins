@@ -63,12 +63,11 @@ export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
               radius: 'radius',
             },
             prepare({lat, lng, radius}: {lat?: number; lng?: number; radius?: number}) {
-              const title =
-                typeof lat === 'number' && typeof lng === 'number'
-                  ? `${lat.toFixed(6)}, ${lng.toFixed(6)}`
-                  : 'No location set'
               return {
-                title,
+                title:
+                  typeof lat === 'number' && typeof lng === 'number'
+                    ? `${lat.toFixed(6)}, ${lng.toFixed(6)}`
+                    : 'No location set',
                 subtitle: radius ? `Radius: ${radius}m` : 'No radius set',
               }
             },

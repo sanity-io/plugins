@@ -84,7 +84,7 @@
     "@types/pluralize": "^0.0.33",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@types/react-file-icon": "^1.0.4",
+    "@types/react-file-icon": "^1.0.5",
     "babel-plugin-styled-components": "catalog:",
     "jsdom": "catalog:",
     "react": "catalog:",
