@@ -47,7 +47,8 @@
   },
   "dependencies": {
     "@sanity/icons": "catalog:",
-    "@sanity/ui": "catalog:"
+    "@sanity/ui": "catalog:",
+    "@vis.gl/react-google-maps": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
