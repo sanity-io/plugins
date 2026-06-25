@@ -71,10 +71,7 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
     [asset.data?.max_resolution_tier, asset.data?.max_stored_resolution],
   )
 
-  const status: MezzanineStatus = useMemo(
-    () => getMezzanineStatus(asset),
-    [master?.status, master?.url],
-  )
+  const status: MezzanineStatus = getMezzanineStatus(asset)
 
   // Fetch the latest asset from Mux (through the proxy) and persist it on the Sanity document.
   const refresh = useCallback(async (): Promise<MuxAsset | undefined> => {

@@ -479,6 +479,7 @@ export interface MuxAsset {
   status: 'preparing' | 'ready' | 'errored'
   duration: number
   max_stored_resolution: 'Audio only' | 'SD' | 'HD' | 'FHD' | 'UHD'
+  max_resolution_tier?: '2160p' | '1440p' | '1080p'
   // if the fps can't be reliably determined, this will be -1
   max_stored_frame_rate: -1 | number
   // The aspect ratio of the asset in the form of width:height, for example 16:9
