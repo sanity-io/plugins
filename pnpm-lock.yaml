@@ -5759,10 +5759,6 @@ packages:
     peerDependencies:
       react: ^19.2.5
 
-  '@portabletext/html@1.0.3':
-    resolution: {integrity: sha512-O7kHWwJKGK9iBw29Qk4qyklVPmGE2CdYAY1RlJWFV7JLxxFhrvxKq/tbGcg+FRUjnxTqrxxEAkmIcGWDAQX53A==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-
   '@portabletext/html@1.1.0':
     resolution: {integrity: sha512-5+gl7vuB0xHuKcEnT0aI4w8/Ob4xa1zNnxNgOJ3u5flV20wIzFbFYlWa1+LTA21jMQwoGExg7T+cnelnnDO9kQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -5827,16 +5823,8 @@ packages:
     peerDependencies:
       react: ^18.2 || ^19
 
-  '@portabletext/sanity-bridge@3.1.5':
-    resolution: {integrity: sha512-Q7MJfmSYAm4XBHPxQKbZc29mLQvaG0qsDqIi4joFTTJ8U3Hxcc7x/UosAL21y9uoi+qMEHRMMAbn/H0mHXLvsA==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-
   '@portabletext/sanity-bridge@3.2.0':
     resolution: {integrity: sha512-2lnUBqzO7m9YMfy/qXcf4AJz9/Dz7Ajqqn9bwuiKvcHbEpkXH+IeBRr7kxGBquLTHGuT3ceLj1zNiMKu7XhBNQ==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-
-  '@portabletext/schema@2.2.1':
-    resolution: {integrity: sha512-sreO5HzSc+PDMiYFv4lyh+zpSLp3CFPkyW3gQA2PJ3RQ05pHL7Nbdoopn4B1RvgBPsb1EnmtsUTNcj3VtTLhiA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
   '@portabletext/schema@2.2.2':
@@ -14872,11 +14860,11 @@ snapshots:
 
   '@portabletext/editor@7.7.0(@types/react@19.2.17)(react@19.2.7)':
     dependencies:
-      '@portabletext/html': 1.0.3
+      '@portabletext/html': 1.1.0
       '@portabletext/keyboard-shortcuts': 2.1.2
       '@portabletext/markdown': 1.4.1
       '@portabletext/patches': 2.0.4
-      '@portabletext/schema': 2.2.1
+      '@portabletext/schema': 2.2.2
       '@portabletext/to-html': 5.0.2
       '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.1)
       debug: 4.4.3(supports-color@5.5.0)
@@ -14886,11 +14874,6 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
-
-  '@portabletext/html@1.0.3':
-    dependencies:
-      '@portabletext/schema': 2.2.1
-      '@vercel/stega': 1.1.0
 
   '@portabletext/html@1.1.0':
     dependencies:
@@ -14902,7 +14885,7 @@ snapshots:
   '@portabletext/markdown@1.4.1':
     dependencies:
       '@mdit/plugin-alert': 0.23.2(markdown-it@14.2.0)
-      '@portabletext/schema': 2.2.1
+      '@portabletext/schema': 2.2.2
       '@portabletext/toolkit': 5.0.2
       markdown-it: 14.2.0
 
@@ -14962,15 +14945,6 @@ snapshots:
       '@portabletext/types': 4.0.2
       react: 19.2.7
 
-  '@portabletext/sanity-bridge@3.1.5(@types/react@19.2.17)':
-    dependencies:
-      '@portabletext/schema': 2.2.1
-      '@sanity/schema': 6.1.0(@types/react@19.2.17)
-      '@sanity/types': 6.1.0(@types/react@19.2.17)
-    transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
-
   '@portabletext/sanity-bridge@3.2.0(@types/react@19.2.17)':
     dependencies:
       '@portabletext/schema': 2.2.2
@@ -14979,8 +14953,6 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
-
-  '@portabletext/schema@2.2.1': {}
 
   '@portabletext/schema@2.2.2': {}
 
@@ -20915,14 +20887,14 @@ snapshots:
       '@isaacs/ttlcache': 1.4.1
       '@mux/mux-player-react': 3.13.0(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.7)(react@19.2.7)
       '@portabletext/editor': 7.7.0(@types/react@19.2.17)(react@19.2.7)
-      '@portabletext/html': 1.0.3
+      '@portabletext/html': 1.1.0
       '@portabletext/patches': 2.0.4
       '@portabletext/plugin-markdown-shortcuts': 8.0.22(@portabletext/editor@7.7.0)(@types/react@19.2.17)(react@19.2.7)
       '@portabletext/plugin-one-line': 7.0.22(@portabletext/editor@7.7.0)(react@19.2.7)
       '@portabletext/plugin-paste-link': 4.0.22(@portabletext/editor@7.7.0)(react@19.2.7)
       '@portabletext/plugin-typography': 8.0.22(@portabletext/editor@7.7.0)(@types/react@19.2.17)(react@19.2.7)
       '@portabletext/react': 6.2.0(react@19.2.7)
-      '@portabletext/sanity-bridge': 3.1.5(@types/react@19.2.17)
+      '@portabletext/sanity-bridge': 3.2.0(@types/react@19.2.17)
       '@portabletext/to-html': 5.0.2
       '@portabletext/toolkit': 5.0.2
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.7)
@@ -21059,14 +21031,14 @@ snapshots:
       '@isaacs/ttlcache': 1.4.1
       '@mux/mux-player-react': 3.13.0(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.7)(react@19.2.7)
       '@portabletext/editor': 7.7.0(@types/react@19.2.17)(react@19.2.7)
-      '@portabletext/html': 1.0.3
+      '@portabletext/html': 1.1.0
       '@portabletext/patches': 2.0.4
       '@portabletext/plugin-markdown-shortcuts': 8.0.22(@portabletext/editor@7.7.0)(@types/react@19.2.17)(react@19.2.7)
       '@portabletext/plugin-one-line': 7.0.22(@portabletext/editor@7.7.0)(react@19.2.7)
       '@portabletext/plugin-paste-link': 4.0.22(@portabletext/editor@7.7.0)(react@19.2.7)
       '@portabletext/plugin-typography': 8.0.22(@portabletext/editor@7.7.0)(@types/react@19.2.17)(react@19.2.7)
       '@portabletext/react': 6.2.0(react@19.2.7)
-      '@portabletext/sanity-bridge': 3.1.5(@types/react@19.2.17)
+      '@portabletext/sanity-bridge': 3.2.0(@types/react@19.2.17)
       '@portabletext/to-html': 5.0.2
       '@portabletext/toolkit': 5.0.2
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.7)
