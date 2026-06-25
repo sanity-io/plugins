@@ -922,6 +922,11 @@ export type GoogleMapsTest = {
       _key: string
     } & Geopoint
   >
+  serviceAreas?: Array<
+    {
+      _key: string
+    } & GeopointRadius
+  >
 }
 
 export type GeopointRadius = {
