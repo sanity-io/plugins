@@ -85,6 +85,7 @@ minimumReleaseAgeExclude:
   - '@types/*'
   - '@typescript/*'
   - '@vite/*'
+  - '@vitejs/plugin-react'
   - '@vitest/*'
   - '@vercel/stega'
   - csstype
