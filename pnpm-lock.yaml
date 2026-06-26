@@ -2107,7 +2107,7 @@ importers:
         specifier: 'catalog:'
         version: 3.0.3
       '@tanstack/react-query':
-        specifier: ^5.101.0
+        specifier: ^5.101.1
         version: 5.101.1(react@19.2.7)
       '@xstate/react':
         specifier: ^6.1.0
