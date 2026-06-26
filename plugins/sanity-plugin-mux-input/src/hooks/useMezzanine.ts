@@ -65,6 +65,13 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
   const master = asset.data?.master
   const [busy, setBusy] = useState(false)
   const [expired, setExpired] = useState(false)
+  // Track the previous assetId so we can reset transient flags during render
+  // when the asset changes, without triggering a cascading setState-in-effect.
+  const [prevAssetId, setPrevAssetId] = useState(asset.assetId)
+  if (prevAssetId !== asset.assetId) {
+    setPrevAssetId(asset.assetId)
+    setExpired(false)
+  }
 
   const resolution = useMemo(
     () => asset.data?.max_resolution_tier || asset.data?.max_stored_resolution || undefined,
@@ -72,12 +79,6 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
   )
 
   const status: MezzanineStatus = getMezzanineStatus(asset)
-
-  // Reset the transient "expired" flag when the panel switches to another asset,
-  // so a previous asset's expiry can't leak into the new one.
-  useEffect(() => {
-    setExpired(false)
-  }, [asset.assetId])
 
   // Persist a Mux asset payload on the Sanity document.
   const persist = useCallback(
