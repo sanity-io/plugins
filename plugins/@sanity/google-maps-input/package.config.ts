@@ -3,6 +3,7 @@ import {defineConfig} from '@sanity/pkg-utils'
 
 export default defineConfig({
   ...config,
-  babel: {reactCompiler: true, styledComponents: true},
+  babel: {reactCompiler: true},
   reactCompilerOptions: {target: '19'},
+  rollup: {vanillaExtract: true},
 })

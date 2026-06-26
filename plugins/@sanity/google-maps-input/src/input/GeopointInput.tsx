@@ -9,9 +9,10 @@ import {getGeopointStaticMapUrl} from '../map/staticMapUrl'
 import type {Geopoint, GoogleMapsInputConfig, LatLng} from '../types'
 import {getValidLatLng} from '../utils'
 import {MissingApiKeyCard} from './ApiKeyMessages'
-import {DialogInnerContainer} from './GeopointInput.styles'
 import {GeopointSelect} from './GeopointSelect'
 import {StaticMapPreview} from './StaticMapPreview'
+
+import {dialogInnerContainer} from './GeopointInput.css'
 
 const EMPTY_PATH: Path = []
 
@@ -139,7 +140,7 @@ export function GeopointInput(props: GeopointInputProps) {
           ref={dialogRef}
           width={1}
         >
-          <DialogInnerContainer>
+          <div className={dialogInnerContainer}>
             <APIProvider apiKey={config.apiKey}>
               <MapApiGate>
                 <GeopointSelect
@@ -150,7 +151,7 @@ export function GeopointInput(props: GeopointInputProps) {
                 />
               </MapApiGate>
             </APIProvider>
-          </DialogInnerContainer>
+          </div>
         </Dialog>
       )}
     </Stack>

@@ -2,7 +2,8 @@ import {StaticMap} from '@vis.gl/react-google-maps'
 import {useState} from 'react'
 
 import {InvalidApiKeyCard} from './ApiKeyMessages'
-import {StaticMapContainer} from './GeopointInput.styles'
+
+import {staticMapContainer, staticMapImage} from './StaticMapPreview.css'
 
 interface StaticMapPreviewProps {
   url: string
@@ -23,12 +24,14 @@ export function StaticMapPreview({url, onClick, onDoubleClick}: StaticMapPreview
   }
 
   return (
-    <StaticMapContainer
+    // oxlint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+    <div
+      className={staticMapContainer}
       onClick={onClick}
       onDoubleClick={onDoubleClick}
       onErrorCapture={() => setFailed(true)}
     >
-      <StaticMap url={url} />
-    </StaticMapContainer>
+      <StaticMap className={staticMapImage} url={url} />
+    </div>
   )
 }
