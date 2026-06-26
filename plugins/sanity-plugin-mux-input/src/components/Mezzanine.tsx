@@ -23,7 +23,10 @@ export default function Mezzanine({asset, withExplanation = true}: Props) {
   const {status, busy, expired, resolution, enable, download} = useMezzanine(asset)
 
   const assetReady = asset.status === 'ready' || asset.data?.status === 'ready'
-  const isReady = status === 'ready'
+  // Once a download finds the file gone, treat it as not-ready even if the
+  // (stale) asset prop still reports `ready`, so we show the re-enable path
+  // instead of a dead Download button.
+  const isReady = status === 'ready' && !expired
   const isPreparing = status === 'preparing'
   const showExplanation = !isReady && !isPreparing
 

@@ -73,16 +73,25 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
 
   const status: MezzanineStatus = getMezzanineStatus(asset)
 
+  // Persist a Mux asset payload on the Sanity document.
+  const persist = useCallback(
+    async (data: MuxAsset) => {
+      if (!asset._id) return
+      await client
+        .patch(asset._id)
+        .set({status: data.status, data: addKeysToMuxData(data)})
+        .commit({returnDocuments: false})
+    },
+    [asset._id, client],
+  )
+
   // Fetch the latest asset from Mux (through the proxy) and persist it on the Sanity document.
   const refresh = useCallback(async (): Promise<MuxAsset | undefined> => {
     if (!asset.assetId || !asset._id) return undefined
     const {data} = await getAsset(client, asset.assetId)
-    await client
-      .patch(asset._id)
-      .set({status: data.status, data: addKeysToMuxData(data)})
-      .commit({returnDocuments: false})
+    await persist(data)
     return data
-  }, [asset.assetId, asset._id, client])
+  }, [asset.assetId, asset._id, client, persist])
 
   // Poll while the mezzanine is preparing; stop once it's ready or no longer preparing.
   useEffect(() => {
@@ -120,9 +129,11 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
     setBusy(true)
     setExpired(false)
     try {
-      await updateMasterAccess(client, asset.assetId, 'temporary')
-      // Persist the updated asset (master.status === 'preparing') so polling kicks in.
-      await refresh()
+      const {data} = await updateMasterAccess(client, asset.assetId, 'temporary')
+      // Persist the PUT response directly — it already reports master.status
+      // 'preparing', so polling starts without relying on a follow-up GET that
+      // could read stale data and miss it.
+      await persist(data)
     } catch (error) {
       toast.push({
         status: 'error',
@@ -132,7 +143,7 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
     } finally {
       setBusy(false)
     }
-  }, [asset.assetId, asset._id, client, refresh, toast])
+  }, [asset.assetId, asset._id, client, persist, toast])
 
   const download = useCallback(async () => {
     if (!asset.assetId) return
