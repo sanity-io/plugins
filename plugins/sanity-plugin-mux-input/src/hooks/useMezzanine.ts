@@ -73,6 +73,12 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
 
   const status: MezzanineStatus = getMezzanineStatus(asset)
 
+  // Reset the transient "expired" flag when the panel switches to another asset,
+  // so a previous asset's expiry can't leak into the new one.
+  useEffect(() => {
+    setExpired(false)
+  }, [asset.assetId])
+
   // Persist a Mux asset payload on the Sanity document.
   const persist = useCallback(
     async (data: MuxAsset) => {
