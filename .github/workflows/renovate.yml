@@ -30,7 +30,7 @@ jobs:
       - uses: actions/create-github-app-token@v3 # zizmor: ignore[github-app]
         id: app-token
         with:
-          client-id: ${{ secrets.ECOSPARK_CLIENT_ID }}
+          client-id: ${{ vars.ECOSPARK_CLIENT_ID }}
           private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
 
       - uses: actions/checkout@v7
