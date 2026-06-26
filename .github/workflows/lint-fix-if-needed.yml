@@ -25,7 +25,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: generate-token
         with:
-          app-id: ${{ secrets.ECOSPARK_APP_ID }}
+          client-id: ${{ secrets.ECOSPARK_CLIENT_ID }}
           private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
