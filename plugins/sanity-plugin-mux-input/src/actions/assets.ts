@@ -166,6 +166,9 @@ export function updateMasterAccess(
     withCredentials: true,
     method: 'PUT',
     body: {master_access: masterAccess},
+    headers: {
+      'Content-Type': 'application/json',
+    },
     query: PLUGIN_VERSION_QUERY,
   })
 }

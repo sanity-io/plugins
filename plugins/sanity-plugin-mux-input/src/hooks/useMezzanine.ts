@@ -89,7 +89,12 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
     if (master?.status !== 'preparing' || !asset.assetId || !asset._id) return undefined
 
     let cancelled = false
+    let running = false
     const interval = setInterval(async () => {
+      // Skip this tick if the previous refresh hasn't finished, so a slow
+      // request can't pile up overlapping reads/writes.
+      if (running) return
+      running = true
       try {
         const data = await refresh()
         if (cancelled) return
@@ -98,6 +103,8 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
         }
       } catch (error) {
         console.error('Failed to poll mezzanine status:', error)
+      } finally {
+        running = false
       }
     }, POLL_INTERVAL_MS)
 
