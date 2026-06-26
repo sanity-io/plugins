@@ -1,5 +1,11 @@
 # @sanity/google-maps-input
 
+## 6.1.0
+
+### Minor Changes
+
+- [#1225](https://github.com/sanity-io/plugins/pull/1225) [`41d518e`](https://github.com/sanity-io/plugins/commit/41d518e9fbb3be5f46381e1aa7a65b1f9deea5c0) Thanks [@gustavorino](https://github.com/gustavorino)! - Add optional `saveZoom` config parameter to persist the selected zoom level on the geopoint object
+
 ## 6.0.2
 
 ### Patch Changes
