@@ -1,5 +1,11 @@
 # @sanity/google-maps-input
 
+## 6.0.2
+
+### Patch Changes
+
+- [#1417](https://github.com/sanity-io/plugins/pull/1417) [`50df1f2`](https://github.com/sanity-io/plugins/commit/50df1f287debd7069531f4dcf8f23f740c487923) Thanks [@stipsan](https://github.com/stipsan)! - Migrate internal styling from styled-components to vanilla-extract (zero-runtime CSS)
+
 ## 6.0.1
 
 ### Patch Changes

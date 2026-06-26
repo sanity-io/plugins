@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 4.0.3
+
+### Patch Changes
+
+- [#1417](https://github.com/sanity-io/plugins/pull/1417) [`50df1f2`](https://github.com/sanity-io/plugins/commit/50df1f287debd7069531f4dcf8f23f740c487923) Thanks [@stipsan](https://github.com/stipsan)! - Remove incorrect `sideEffects: false` flag so consumer bundlers don't tree-shake modules with side effects
+
 ## 4.0.2
 
 ### Patch Changes
