@@ -150,3 +150,25 @@ export function deleteTextTrack(client: SanityClient, assetId: string, trackId: 
     query: PLUGIN_VERSION_QUERY,
   })
 }
+
+/**
+ * Updates master access (the "mezzanine" file in Mux's docs) on a Mux asset, via the addon proxy.
+ * @see {@link https://docs.mux.com/api-reference/video/assets/update-asset-master-access}
+ */
+export function updateMasterAccess(
+  client: SanityClient,
+  assetId: string,
+  masterAccess: 'temporary' | 'none',
+) {
+  const {dataset} = client.config()
+  return client.request<{data: MuxAsset}>({
+    url: `/addons/mux/assets/${dataset}/${assetId}/master-access`,
+    withCredentials: true,
+    method: 'PUT',
+    body: {master_access: masterAccess},
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    query: PLUGIN_VERSION_QUERY,
+  })
+}

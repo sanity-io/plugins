@@ -17,6 +17,7 @@ import type {VideoAssetDocument} from '../util/types'
 import CaptionsDialog from './CaptionsDialog'
 import EditThumbnailDialog from './EditThumbnailDialog'
 import {AudioIcon} from './icons/Audio'
+import MezzanineDialog from './MezzanineDialog'
 
 export default function VideoPlayer({
   asset,
@@ -232,6 +233,7 @@ export default function VideoPlayer({
         />
       )}
       {dialogState === 'edit-captions' && <CaptionsDialog asset={asset} />}
+      {dialogState === 'mezzanine' && <MezzanineDialog asset={asset} />}
     </>
   )
 }
