@@ -100,6 +100,35 @@ The `geopointRadius` field type extends the basic geopoint with:
 - Editable radius input field
 - Draggable circle for radius adjustment
 
+### Store selected Zoom
+
+Optionally persists the selected zoom level on the `geopoint` object.
+
+```js
+import {googleMapsInput} from '@sanity/google-maps-input'
+
+export default defineConfig({
+  // ...
+  plugins: [
+    googleMapsInput({
+      apiKey: 'my-api-key',
+      saveZoom: true, // default false
+    }),
+  ],
+})
+```
+
+Adds a `zoom` property to the `geopoint` object:
+
+```json
+{
+  "_type": "geopoint",
+  "lat": 54.5259614,
+  "lng": 15.2551187,
+  "zoom": 3
+}
+```
+
 ### Reviewing changes
 
 In the document's **Review changes** pane, `geopoint` and `geopointRadius` values render as a before/after static map preview, matching the look of the built-in image diff.

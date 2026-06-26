@@ -11,6 +11,7 @@ export interface Geopoint {
   lat: number
   lng: number
   alt?: number
+  zoom?: number
 }
 
 export interface GeopointRadius {
@@ -30,6 +31,7 @@ export interface GoogleMapsInputConfig {
   apiKey: string
   defaultZoom?: number
   defaultLocale?: string
+  saveZoom?: boolean
   defaultLocation?: {
     lat: number
     lng: number

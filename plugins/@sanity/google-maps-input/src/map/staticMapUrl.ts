@@ -23,13 +23,24 @@ export interface StaticMapSize {
   height?: number
 }
 
+const DEFAULT_ZOOM = 13
+
+interface GeopointStaticMapOptions extends StaticMapSize {
+  /** Zoom level for the preview. Defaults to {@link DEFAULT_ZOOM}. */
+  zoom?: number
+}
+
 /**
  * Static map preview for a plain geopoint: a single marker centered in view.
  */
 export function getGeopointStaticMapUrl(
   value: Pick<Geopoint, 'lat' | 'lng'>,
   apiKey: string,
-  {width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT}: StaticMapSize = {},
+  {
+    width = DEFAULT_WIDTH,
+    height = DEFAULT_HEIGHT,
+    zoom = DEFAULT_ZOOM,
+  }: GeopointStaticMapOptions = {},
 ): string {
   const center = {lat: value.lat, lng: value.lng}
   return createStaticMapsUrl({
@@ -37,7 +48,7 @@ export function getGeopointStaticMapUrl(
     width,
     height,
     scale: 2,
-    zoom: 13,
+    zoom,
     center,
     markers: [{location: center}],
   })

@@ -70,6 +70,13 @@ export function GeopointInput(props: GeopointInputProps) {
     [schemaTypeName, onChange],
   )
 
+  const handleZoomChange = useCallback(
+    (zoom: number) => {
+      onChange([setIfMissing({_type: schemaTypeName}), set(zoom, ['zoom'])])
+    },
+    [schemaTypeName, onChange],
+  )
+
   const handleClear = useCallback(() => {
     onChange(unset())
   }, [onChange])
@@ -88,7 +95,9 @@ export function GeopointInput(props: GeopointInputProps) {
   // freshly added array item is `{_type, _key}` with no lat/lng yet, so gate the
   // map preview and "edit" affordances on having a real location.
   const position = getValidLatLng(value)
-  const staticImageUrl = position ? getGeopointStaticMapUrl(position, config.apiKey) : null
+  const staticImageUrl = position
+    ? getGeopointStaticMapUrl(position, config.apiKey, {zoom: value?.zoom})
+    : null
 
   return (
     <Stack gap={3}>
@@ -146,8 +155,9 @@ export function GeopointInput(props: GeopointInputProps) {
                 <GeopointSelect
                   value={value || undefined}
                   onChange={readOnly ? undefined : handleChange}
+                  onZoomChange={readOnly || !config.saveZoom ? undefined : handleZoomChange}
                   defaultLocation={config.defaultLocation}
-                  defaultZoom={config.defaultZoom}
+                  defaultZoom={value?.zoom || config.defaultZoom}
                 />
               </MapApiGate>
             </APIProvider>

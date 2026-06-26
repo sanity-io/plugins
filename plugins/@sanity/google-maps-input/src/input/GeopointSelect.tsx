@@ -2,10 +2,11 @@ import {
   AdvancedMarker,
   ControlPosition,
   Map,
+  type MapCameraChangedEvent,
   type MapMouseEvent,
   MapControl,
 } from '@vis.gl/react-google-maps'
-import {useCallback} from 'react'
+import {useCallback, useRef} from 'react'
 
 import {MAP_ID} from '../map/constants'
 import {SearchInput} from '../map/SearchInput'
@@ -18,6 +19,7 @@ const defaultMapLocation: LatLng = {lng: 10.74609, lat: 59.91273}
 interface SelectProps {
   value?: Geopoint
   onChange?: (latLng: LatLng) => void
+  onZoomChange?: (zoom: number) => void
   defaultLocation?: LatLng
   defaultZoom?: number
 }
@@ -25,6 +27,7 @@ interface SelectProps {
 export function GeopointSelect({
   value,
   onChange,
+  onZoomChange,
   defaultLocation = defaultMapLocation,
   defaultZoom = 8,
 }: SelectProps) {
@@ -34,6 +37,11 @@ export function GeopointSelect({
     ...defaultLocation,
     ...position,
   }
+
+  // Seed with the zoom the map opens at so the initial `zoom_changed` the Maps
+  // API emits on load doesn't write a value before the user interacts. Only
+  // genuine, distinct integer zoom levels get persisted.
+  const lastZoomRef = useRef(Math.round(defaultZoom))
 
   const handleMapClick = useCallback(
     (event: MapMouseEvent) => {
@@ -60,12 +68,25 @@ export function GeopointSelect({
     [onChange],
   )
 
+  const handleZoomChanged = useCallback(
+    (event: MapCameraChangedEvent) => {
+      if (!onZoomChange) return
+      const zoom = Math.round(event.detail.zoom)
+      if (zoom !== lastZoomRef.current) {
+        lastZoomRef.current = zoom
+        onZoomChange(zoom)
+      }
+    },
+    [onZoomChange],
+  )
+
   return (
     <Map
       mapId={MAP_ID}
       defaultCenter={center}
       defaultZoom={defaultZoom}
       onClick={handleMapClick}
+      onZoomChanged={onZoomChange ? handleZoomChanged : undefined}
       gestureHandling="greedy"
       streetViewControl={false}
       mapTypeControl={false}
