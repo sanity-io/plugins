@@ -100,7 +100,7 @@ Type-aware lint can fail (sometimes intermittently, especially on cold installs)
 To keep the plugin on the shared `sanity` variant, declare these in the plugin `devDependencies`:
 
 - `"@types/node": "catalog:"`
-- `"styled-components": "catalog:"` (when the plugin depends on `@sanity/ui`, which peers on styled-components; without the declaration pnpm auto-installs the peer and bypasses the workspace `@sanity/styled-components` override)
+- `"styled-components": "catalog:"` (when the plugin depends on `@sanity/ui`, which peers on styled-components)
 
 Verify alignment by checking that the plugin importer's `sanity` version string in `pnpm-lock.yaml` matches other plugins (e.g. `plugins/@sanity/sfcc`).
 

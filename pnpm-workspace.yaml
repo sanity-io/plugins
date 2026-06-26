@@ -114,7 +114,6 @@ minimumReleaseAgeExclude:
 overrides:
   '@types/node': 'catalog:'
   sanity: 'catalog:'
-  styled-components: npm:@sanity/styled-components@latest
 
 patchedDependencies:
   '@bynder/compact-view': patches/@bynder__compact-view.patch
