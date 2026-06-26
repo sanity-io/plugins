@@ -1,5 +1,13 @@
 # @sanity/google-maps-input
 
+## 6.0.1
+
+### Patch Changes
+
+- [#1412](https://github.com/sanity-io/plugins/pull/1412) [`40aed1e`](https://github.com/sanity-io/plugins/commit/40aed1e4e9ce5ddb90fdd05d2463368d63a2e449) Thanks [@stipsan](https://github.com/stipsan)! - Fix `InvalidValueError` ("not an instance of LatLng … in property lat: not a number") thrown when opening the map editor for an empty geopoint, such as a newly added array item. Map markers, the radius circle and the map center are now only rendered once the value has finite `lat`/`lng` coordinates, and empty items show a "Set location" button instead of a broken preview.
+
+- [#1220](https://github.com/sanity-io/plugins/pull/1220) [`b81e9cf`](https://github.com/sanity-io/plugins/commit/b81e9cfa61d3d752fbf266fd8cb362256ea4ce18) Thanks [@stipsan](https://github.com/stipsan)! - Avoid a runtime error in the `geopointRadius` list preview when a document has an incomplete location: `prepare` now guards against missing `lat`/`lng` and shows "No location set" instead of throwing on `lat.toFixed()`.
+
 ## 6.0.0
 
 ### Major Changes

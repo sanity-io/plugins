@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 5.0.4
+
+### Patch Changes
+
+- [#1404](https://github.com/sanity-io/plugins/pull/1404) [`9c78e97`](https://github.com/sanity-io/plugins/commit/9c78e974ed51eceedf08110b9e9a30ec6772d64b) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update sanity monorepo to ^6.2.0
+
 ## 5.0.3
 
 ### Patch Changes
