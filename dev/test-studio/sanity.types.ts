@@ -646,6 +646,13 @@ export type MuxAssetData = {
     } & MuxPlaybackId
   >
   static_renditions?: MuxStaticRenditions
+  master?: MuxMasterFile
+}
+
+export type MuxMasterFile = {
+  _type: 'mux.masterFile'
+  status?: string
+  url?: string
 }
 
 export type MuxStaticRenditions = {
@@ -1359,6 +1366,7 @@ export type AllSanitySchemaTypes =
   | MuxVideo
   | MuxVideoAsset
   | MuxAssetData
+  | MuxMasterFile
   | MuxStaticRenditions
   | MuxStaticRenditionFile
   | MuxPlaybackId
