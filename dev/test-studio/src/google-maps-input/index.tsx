@@ -34,6 +34,13 @@ const googleMapsTest = defineType({
       type: 'array',
       of: [{type: 'geopoint', components: {diff: GeopointDiff}}],
     },
+    {
+      name: 'serviceAreas',
+      title: 'Service areas',
+      description: 'An array of geopointRadius items',
+      type: 'array',
+      of: [{type: 'geopointRadius'}],
+    },
   ],
 })
 

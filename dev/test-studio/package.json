@@ -37,6 +37,8 @@
     "@sanity/ui": "catalog:",
     "@sanity/vercel-protection-bypass": "workspace:*",
     "@sanity/vision": "catalog:",
+    "@vanilla-extract/css": "catalog:",
+    "@vanilla-extract/vite-plugin": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",

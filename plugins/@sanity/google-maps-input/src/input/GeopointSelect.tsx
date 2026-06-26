@@ -11,6 +11,7 @@ import {useCallback, useRef} from 'react'
 import {MAP_ID} from '../map/constants'
 import {SearchInput} from '../map/SearchInput'
 import type {Geopoint, LatLng} from '../types'
+import {getValidLatLng} from '../utils'
 
 const fallbackLatLng: LatLng = {lat: 40.7058254, lng: -74.1180863}
 const defaultMapLocation: LatLng = {lng: 10.74609, lat: 59.91273}
@@ -30,10 +31,11 @@ export function GeopointSelect({
   defaultLocation = defaultMapLocation,
   defaultZoom = 8,
 }: SelectProps) {
+  const position = getValidLatLng(value)
   const center: LatLng = {
     ...fallbackLatLng,
     ...defaultLocation,
-    ...(value ? {lat: value.lat, lng: value.lng} : {}),
+    ...position,
   }
 
   // Seed with the zoom the map opens at so the initial `zoom_changed` the Maps
@@ -93,9 +95,9 @@ export function GeopointSelect({
       <MapControl position={ControlPosition.TOP_RIGHT}>
         <SearchInput onSelect={handleSelect} />
       </MapControl>
-      {value && (
+      {position && (
         <AdvancedMarker
-          position={{lat: value.lat, lng: value.lng}}
+          position={position}
           draggable={Boolean(onChange)}
           onDragEnd={handleMarkerDragEnd}
         />

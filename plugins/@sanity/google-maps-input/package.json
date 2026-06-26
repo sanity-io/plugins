@@ -1,6 +1,6 @@
 {
   "name": "@sanity/google-maps-input",
-  "version": "5.0.2",
+  "version": "6.0.2",
   "description": "Sanity plugin providing input handlers for geo-related input types using Google Maps",
   "keywords": [
     "cms",
@@ -33,11 +33,23 @@
       "development": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./bundle.css": {
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle.css.js",
+      "default": "./dist/bundle.css.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./bundle.css": {
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle.css.js",
+        "default": "./dist/bundle.css.js"
+      },
       "./package.json": "./package.json"
     }
   },
@@ -57,8 +69,9 @@
     "@types/google.maps": "^3.65.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@vanilla-extract/css": "catalog:",
+    "@vanilla-extract/vite-plugin": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
