@@ -1,7 +1,8 @@
 import {useMap, useMapsLibrary} from '@vis.gl/react-google-maps'
 
 import type {LatLng} from '../types'
-import {SearchInputContainer} from './SearchInput.styles'
+
+import {searchInput} from './SearchInput.css'
 
 interface Props {
   onSelect: (location: LatLng) => void
@@ -21,22 +22,21 @@ export function SearchInput({onSelect}: Props) {
   }
 
   return (
-    <SearchInputContainer>
-      <gmp-place-autocomplete
-        ongmp-select={async ({placePrediction}: google.maps.places.PlacePredictionSelectEvent) => {
-          const place = placePrediction.toPlace()
-          await place.fetchFields({fields: ['location']})
+    <gmp-place-autocomplete
+      className={searchInput}
+      ongmp-select={async ({placePrediction}: google.maps.places.PlacePredictionSelectEvent) => {
+        const place = placePrediction.toPlace()
+        await place.fetchFields({fields: ['location']})
 
-          const location = place.location
-          if (!location) {
-            return
-          }
+        const location = place.location
+        if (!location) {
+          return
+        }
 
-          const latLng = {lat: location.lat(), lng: location.lng()}
-          onSelect(latLng)
-          map?.panTo(latLng)
-        }}
-      />
-    </SearchInputContainer>
+        const latLng = {lat: location.lat(), lng: location.lng()}
+        onSelect(latLng)
+        map?.panTo(latLng)
+      }}
+    />
   )
 }

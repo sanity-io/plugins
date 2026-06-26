@@ -5,7 +5,8 @@ import {use, useState} from 'react'
 import {getGeopointRadiusStaticMapUrl, getGeopointStaticMapUrl} from '../map/staticMapUrl'
 import type {Geopoint, GeopointRadius} from '../types'
 import {GoogleMapsInputContext} from './GeoConfigContext'
-import {MapDiffImage, MapDiffPlaceholder} from './StaticMapDiffPreview.styles'
+
+import {mapDiffImage, mapDiffPlaceholder} from './StaticMapDiffPreview.css'
 
 type MapValue = Geopoint | GeopointRadius
 
@@ -28,7 +29,7 @@ export function StaticMapDiffPreview({value}: {value?: MapValue}) {
 
   if (failed) {
     return (
-      <MapDiffPlaceholder>
+      <div className={mapDiffPlaceholder}>
         <Flex align="center" gap={2} justify="center" padding={3}>
           <Text muted size={1}>
             <ImageIcon />
@@ -37,7 +38,7 @@ export function StaticMapDiffPreview({value}: {value?: MapValue}) {
             Map preview unavailable
           </Text>
         </Flex>
-      </MapDiffPlaceholder>
+      </div>
     )
   }
 
@@ -46,8 +47,13 @@ export function StaticMapDiffPreview({value}: {value?: MapValue}) {
     : getGeopointStaticMapUrl(value, apiKey, {width: 500, height: 280})
 
   return (
-    <MapDiffImage>
-      <img alt="" src={url} onError={() => setFailed(true)} height={280} width={500} />
-    </MapDiffImage>
+    <img
+      className={mapDiffImage}
+      alt=""
+      src={url}
+      onError={() => setFailed(true)}
+      height={280}
+      width={500}
+    />
   )
 }

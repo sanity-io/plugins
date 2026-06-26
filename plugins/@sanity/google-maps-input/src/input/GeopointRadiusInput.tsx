@@ -9,9 +9,10 @@ import {getGeopointRadiusStaticMapUrl} from '../map/staticMapUrl'
 import type {GeopointRadius, GoogleMapsInputConfig, LatLng} from '../types'
 import {getValidLatLng} from '../utils'
 import {MissingApiKeyCard} from './ApiKeyMessages'
-import {DialogInnerContainer} from './GeopointInput.styles'
 import {GeopointRadiusSelect} from './GeopointRadiusSelect'
 import {StaticMapPreview} from './StaticMapPreview'
+
+import {dialogInnerContainer} from './GeopointInput.css'
 
 const EMPTY_PATH: Path = []
 
@@ -171,7 +172,7 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
           ref={dialogRef}
           width={1}
         >
-          <DialogInnerContainer>
+          <div className={dialogInnerContainer}>
             <APIProvider apiKey={config.apiKey}>
               <MapApiGate>
                 <GeopointRadiusSelect
@@ -183,7 +184,7 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
                 />
               </MapApiGate>
             </APIProvider>
-          </DialogInnerContainer>
+          </div>
         </Dialog>
       )}
     </Stack>
