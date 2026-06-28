@@ -8,6 +8,9 @@ import {focusRingBorderStyle, focusRingStyle} from './ui/focusRingStyle'
 // Match the Studio's tooltip timing (TOOLTIP_DELAY_PROPS in `sanity`)
 const TOOLTIP_DELAY = {open: 400}
 
+// Default editor height; also the placeholder height while expanded.
+const EDITOR_HEIGHT = 250
+
 // Studio DOM markers for the document pane and its scroll container
 const DOCUMENT_PANE_SELECTOR = '[data-testid="document-pane"]'
 const DOCUMENT_PANEL_SCROLLER_SELECTOR = '[data-testid="document-panel-scroller"]'
@@ -95,7 +98,7 @@ export const EditorContainer = styled(Card)<{$fullscreen: boolean}>(({theme, $fu
     --input-box-shadow: ${focusRingBorderStyle(border)};
 
     box-shadow: var(--input-box-shadow);
-    height: 250px;
+    height: ${EDITOR_HEIGHT}px;
     min-height: 80px;
     overflow-y: auto;
     position: relative;
@@ -150,22 +153,43 @@ export function FullscreenEditor({enabled, children}: FullscreenEditorProps): Re
     width: number
     height: number
   } | null>(null)
+  // Editor height captured when expanding, so the in-place placeholder keeps the
+  // surrounding fields from shifting while the editor is portaled away.
+  const [placeholderHeight, setPlaceholderHeight] = useState(EDITOR_HEIGHT)
 
   // Only treat as fullscreen once the pane is measured.
   const showFullscreen = isFullscreen && paneRect !== null
 
-  const handleToggle = useCallback(() => setIsFullscreen((current) => !current), [])
+  // Reset paneRect alongside isFullscreen so the next expand re-measures (rather
+  // than rendering at stale coordinates). Done here, not in the effect cleanup,
+  // to avoid a state update when the component unmounts while expanded.
+  const collapse = useCallback(() => {
+    setPaneRect(null)
+    setIsFullscreen(false)
+  }, [])
+
+  const handleToggle = useCallback(() => {
+    if (isFullscreen) {
+      collapse()
+      return
+    }
+    setPlaceholderHeight(rootRef.current?.offsetHeight ?? EDITOR_HEIGHT)
+    setIsFullscreen(true)
+  }, [isFullscreen, collapse])
 
   // Exit on Escape, scoped to the overlay so other Studio UI keeps its own
   // handling; stopImmediatePropagation keeps a surrounding modal open.
-  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      event.preventDefault()
-      event.stopPropagation()
-      event.nativeEvent.stopImmediatePropagation()
-      setIsFullscreen(false)
-    }
-  }, [])
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopPropagation()
+        event.nativeEvent.stopImmediatePropagation()
+        collapse()
+      }
+    },
+    [collapse],
+  )
 
   // Track the pane bounds while fullscreen so the overlay fills the pane.
   useEffect(() => {
@@ -205,8 +229,6 @@ export function FullscreenEditor({enabled, children}: FullscreenEditorProps): Re
       resizeObserver?.disconnect()
       window.removeEventListener('resize', update)
       window.removeEventListener('scroll', update, true)
-      // Clear bounds on collapse so the next expand re-measures.
-      setPaneRect(null)
     }
   }, [isFullscreen])
 
@@ -263,21 +285,26 @@ export function FullscreenEditor({enabled, children}: FullscreenEditorProps): Re
   return (
     <FullscreenRoot ref={rootRef}>
       {showFullscreen ? (
-        // Portal out of any modal so position:fixed is viewport-relative; Layer
-        // stacks it above the modal.
-        <Portal>
-          <Layer>
-            <FullscreenOverlay
-              onKeyDown={handleKeyDown}
-              ref={setOverlayRef}
-              style={fullscreenStyle}
-              tabIndex={-1}
-            >
-              {toggleButton}
-              {children({isFullscreen: showFullscreen})}
-            </FullscreenOverlay>
-          </Layer>
-        </Portal>
+        // Hold the editor's spot in the form layout so sibling fields and the
+        // document scroll position don't shift while it's portaled away.
+        <>
+          <div aria-hidden style={{height: placeholderHeight}} />
+          {/* Portal out of any modal so position:fixed is viewport-relative;
+              Layer stacks it above the modal. */}
+          <Portal>
+            <Layer>
+              <FullscreenOverlay
+                onKeyDown={handleKeyDown}
+                ref={setOverlayRef}
+                style={fullscreenStyle}
+                tabIndex={-1}
+              >
+                {toggleButton}
+                {children({isFullscreen: showFullscreen})}
+              </FullscreenOverlay>
+            </Layer>
+          </Portal>
+        </>
       ) : (
         <>
           {toggleButton}
