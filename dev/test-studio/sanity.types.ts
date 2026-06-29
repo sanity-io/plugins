@@ -240,6 +240,7 @@ export type CodeTest = {
   title?: string
   basicCode?: Code
   codeWithOptions?: Code
+  codeNoFullscreen?: Code
   readOnlyCode?: Code
   codeList?: Array<
     {

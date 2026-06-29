@@ -1220,6 +1220,14 @@
         },
         "optional": true
       },
+      "codeNoFullscreen": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "code"
+        },
+        "optional": true
+      },
       "readOnlyCode": {
         "type": "objectAttribute",
         "value": {
