@@ -32,9 +32,9 @@ Use this skill when you are:
 Read the reference file for the area you are working in. Each reference lists the anti-pattern, the
 preferred approach, and `Incorrect` / `Correct` examples grounded in real plugins in this repo.
 
-| Area            | What it covers                                                                                 | Reference                                          |
-| --------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| Styling and CSS | Use vanilla-extract (static + dynamic) for new styling; `styled-components` is brownfield-only | [`references/styling.md`](./references/styling.md) |
+| Area            | What it covers                                                                                                                    | Reference                                          |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Styling and CSS | Use vanilla-extract (static + dynamic) for new styling; encapsulate classes in components; `styled-components` is brownfield-only | [`references/styling.md`](./references/styling.md) |
 
 > This skill is intended to grow. When you find a plugin pattern worth standardizing (or an
 > anti-pattern worth banning), add a focused reference file and a row to the table above rather than
@@ -70,6 +70,12 @@ See [`references/styling.md`](./references/styling.md) for the full rationale an
 - **Style with the priority above:** vanilla-extract for all new styling — `style()` for static,
   `createVar()` + `assignInlineVars()` (from `@vanilla-extract/dynamic`) for dynamic; never raw
   `<style>` tags.
+- **Encapsulate styles in components; don't scatter `className`.** Wrap each vanilla-extract class in
+  a small component that spreads props onto the `@sanity/ui` primitive, keeping the same export name
+  and API as the old `styled()` so call sites are unchanged — composition stays as clean as before.
+  To override a primitive's own styles, use the `selectors: {'&&': {...}}` specificity trick
+  (styled-components guaranteed override ordering in the CSSOM; vanilla-extract does not). See
+  [`references/styling.md`](./references/styling.md#keep-the-component-layer-encapsulation).
 - **`styled-components` is brownfield only.** Keep existing usage; don't add it to new code. When
   maintaining it, import named (`import {css, keyframes, styled} from 'styled-components'`) and
   declare the shared peer so the plugin resolves to the workspace `@sanity/styled-components`

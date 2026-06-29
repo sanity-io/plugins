@@ -130,7 +130,9 @@ export function StaticMapPreview({url}: {url: string}) {
 ```
 
 Compose `@sanity/ui` primitives and pass the class through their `className` prop just like a DOM
-element.
+element. For anything reused — or any `@sanity/ui` primitive you restyle — wrap it in its own small
+component rather than spreading `className` across the tree (see
+[Keep the component layer](#keep-the-component-layer-encapsulation)).
 
 ### vanilla-extract setup
 
@@ -312,6 +314,158 @@ For the remaining things `styled-components` was used for in this repo:
 
 ---
 
+## Keep the component layer (encapsulation)
+
+vanilla-extract hands you a class-name string, not a component — but a migration must **not** turn
+that into raw `className=` props sprinkled across the tree. A `styled(Box)` element already _is_ a
+named component with its own API; replacing it with `<Box className={...}>` at every call site leaks
+styling details into the markup and leaves the composition uglier than before. **The component
+composition should be as clean as it was with `styled-components`, or cleaner.**
+
+Wrap each styled element in a small component (keep it next to the `.css.ts`, e.g. in a
+`*.styled.tsx`) that spreads props onto the underlying `@sanity/ui` primitive or DOM element and
+applies the class. The import and JSX stay identical to the styled-components version — callers never
+touch a class name.
+
+Given a shared stylesheet:
+
+```ts
+// Component.css.ts
+import {style} from '@vanilla-extract/css'
+
+export const dot = style({
+  selectors: {
+    // override the default overflow
+    '&&': {overflow: 'sticky'},
+  },
+})
+```
+
+**Incorrect** — the class bleeds onto a raw primitive at the call site:
+
+```tsx
+// Component.tsx
+import {Box} from '@sanity/ui'
+
+import {dot} from './Component.css'
+
+function Component() {
+  return <Box className={dot} display="grid" />
+}
+```
+
+**Correct** — the class is encapsulated in a `Dot` component; the composition is unchanged:
+
+```tsx
+// Component.tsx
+import {Box} from '@sanity/ui'
+
+import {dot} from './Component.css'
+
+function Dot() {
+  return <Box className={dot} display="grid" />
+}
+
+function Component() {
+  return <Dot />
+}
+```
+
+This is how [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333) migrated
+`@sanity/vision`: each `*.styled.tsx` was kept (or recreated) as a thin component layer over the new
+`*.css.ts`, preserving every export name and call site.
+
+```tsx
+// QueryErrorDialog.styled.tsx — same `ErrorCode` API as the styled-components version
+import {Code} from '@sanity/ui'
+import {type ComponentProps} from 'react'
+
+import {errorCode} from './QueryErrorDialog.css'
+
+export function ErrorCode(props: ComponentProps<typeof Code>) {
+  return <Code {...props} className={errorCode} />
+}
+```
+
+- **Type the wrapper** with `ComponentProps<typeof Primitive>` (or `ComponentProps<'a'>` for a DOM
+  element), and spread props **before** `className` so the wrapper owns the class.
+- **Forward refs** when the original wrapped a ref-forwarding primitive:
+
+  ```tsx
+  export const Root = forwardRef<HTMLDivElement, ComponentProps<typeof Flex>>(
+    function Root(props, ref) {
+      return <Flex {...props} ref={ref} className={root} />
+    },
+  )
+  ```
+
+- **Map a boolean/variant prop to conditional classes** instead of a styled-components transient prop
+  (`$isInvalid`):
+
+  ```tsx
+  function ResultContainer({
+    isInvalid,
+    ...props
+  }: ComponentProps<typeof Card> & {isInvalid: boolean}) {
+    return (
+      <Card
+        {...props}
+        className={isInvalid ? `${resultContainer} ${resultContainerInvalid}` : resultContainer}
+      />
+    )
+  }
+  ```
+
+- **Map a dynamic scalar** (theme token, measured value, per-instance color) to a CSS variable with
+  `assignInlineVars` inside the wrapper (see
+  [Dynamic styling](#dynamic-styling-with-vanilla-extract)).
+
+---
+
+## Overriding `@sanity/ui` styles: the `&&` trick
+
+With styled-components, `const OverrideCard = styled(Card)` always wins: styled-components inserts the
+override's rules into the CSSOM **after** `Card`'s own rules, so equal-specificity declarations
+resolve in your favor and you never think about ordering. vanilla-extract does **not** control how or
+when stylesheets load, so a plain class can lose that ordering battle against the styles `@sanity/ui`
+sets on its own components.
+
+When an override doesn't take effect, double the class selector with `selectors: {'&&': {...}}` to
+raise specificity (it resolves to `.cls.cls`) so it reliably wins. Use `'&&::before'` / `'&&::after'`
+for pseudo-elements. (vanilla-extract's `selectors` must target the element via `&`; `&&` simply
+references it twice.)
+
+```ts
+// QueryErrorDialog.css.ts (sanity-io/sanity#13333)
+import {style} from '@vanilla-extract/css'
+
+// `&&` is needed to override the color @sanity/ui's Code sets on itself.
+export const errorCode = style({
+  selectors: {
+    '&&': {
+      color: 'var(--card-muted-fg-color)',
+    },
+  },
+})
+```
+
+```ts
+// VisionGui.css.ts (sanity-io/sanity#13333) — override the background @sanity/ui's Card sets
+export const header = style({
+  borderBottom: '1px solid var(--card-border-color)',
+  selectors: {
+    '&&': {
+      background: 'var(--card-bg-color)',
+    },
+  },
+})
+```
+
+Reach for `&&` only when you are genuinely overriding a primitive's built-in style; plain `style()`
+is enough for everything else.
+
+---
+
 ## Third-party CSS imports
 
 Prebuilt stylesheets shipped by a dependency are consumed by importing the `.css` once at module
@@ -350,6 +504,11 @@ Studio theme. **Keep working brownfield code on `styled-components`; do not rewr
 speculatively.** A migration to vanilla-extract must be done carefully — and usually in its own PR —
 to preserve visual fidelity and avoid regressions. The `plugin-transfer` skill makes this a rule:
 transfers never migrate styling in the initial port.
+
+> **Locking in a finished migration.** Once a plugin no longer imports `styled-components` at all,
+> ban it via `no-restricted-imports` in `.oxlintrc.json` so it cannot creep back — this is how
+> `@sanity/vision` locked in its migration in
+> [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333).
 
 For **new** code, prefer vanilla-extract (above). The notes below apply only when maintaining a
 plugin that is already on `styled-components`:
@@ -424,6 +583,8 @@ that forces synchronous reflows. See the `vercel-react-best-practices` rule `js-
   `rules/rendering-hoist-jsx.md`, and the rendering section generally.
 - `plugin-transfer` skill → keep transferred plugins on `styled-components`; dependency alignment for
   `styled-components` and `sanity` peers.
+- [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333) — reference migration of
+  `@sanity/vision`: the component-layer (encapsulation) pattern and the `&&` specificity trick.
 - [vanilla-extract](https://vanilla-extract.style) — `style`, `createVar`, `styleVariants`,
   `keyframes`, `globalStyle`; and
   [`@vanilla-extract/dynamic`](https://vanilla-extract.style/documentation/packages/dynamic/) for
