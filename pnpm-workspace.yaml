@@ -51,7 +51,7 @@ catalog:
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
   motion: ^12.41.0
-  nanoid: ^5.1.15
+  nanoid: ^5.1.16
   react: ^19.2.7
   react-dom: ^19.2.7
   react-fast-compare: ^3.2.2
