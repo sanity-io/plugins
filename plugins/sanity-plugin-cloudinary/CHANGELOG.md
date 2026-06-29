@@ -1,5 +1,11 @@
 # sanity-plugin-cloudinary
 
+## 2.0.4
+
+### Patch Changes
+
+- [#1432](https://github.com/sanity-io/plugins/pull/1432) [`3575908`](https://github.com/sanity-io/plugins/commit/3575908bed86a22f435d4fb22442af95be9e6e29) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to ^5.1.16
+
 ## 2.0.3
 
 ### Patch Changes

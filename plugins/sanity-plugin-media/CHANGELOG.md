@@ -1,5 +1,15 @@
 # sanity-plugin-media
 
+## 5.0.5
+
+### Patch Changes
+
+- [#1432](https://github.com/sanity-io/plugins/pull/1432) [`3575908`](https://github.com/sanity-io/plugins/commit/3575908bed86a22f435d4fb22442af95be9e6e29) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to ^5.1.16
+
+- [#1447](https://github.com/sanity-io/plugins/pull/1447) [`c202da0`](https://github.com/sanity-io/plugins/commit/c202da049e6e6bfa1bc1a25c74a7471e35235eca) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-virtuoso to ^4.18.9
+
+- [#1451](https://github.com/sanity-io/plugins/pull/1451) [`71f8620`](https://github.com/sanity-io/plugins/commit/71f8620ddb285f29a0d27ceb746c52cfb73acf8e) Thanks [@stipsan](https://github.com/stipsan)! - Remove `react-is` from peerDependencies to satisfy `@sanity/pkg-utils` validation
+
 ## 5.0.4
 
 ### Patch Changes

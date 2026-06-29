@@ -1,5 +1,21 @@
 # sanity-plugin-mux-input
 
+## 4.1.0
+
+### Minor Changes
+
+- [#1107](https://github.com/sanity-io/plugins/pull/1107) [`36b4d13`](https://github.com/sanity-io/plugins/commit/36b4d13477f6842aaaef2f6b58b70b339ef68bca) Thanks [@y-dpi](https://github.com/y-dpi), [@R-Delfino95](https://github.com/R-Delfino95)! - Add a "Mezzanine" action to enable and download a Mux asset's master-access file
+
+  A new "Mezzanine" section is available in the asset details dialog (next to Captions) and in the player actions menu. It lets editors enable Mux's master access — the highest-quality, near-lossless source copy of the asset, meant for offline editing and archival rather than streaming (unlike the streamable MP4 static renditions). The same surface explains what it is (free, available for 24 hours) and lets the user enable, watch it prepare, and download it, and links to Mux's guide — there's no separate confirmation dialog.
+
+  Enabling and status checks go through the Mux addon proxy (the same authentication as every other addon call), and the resulting `master` data is stored on the Sanity document — so the status is polled until ready (like captions) and is already present for assets imported from Mux. Because the Mux download URL is short-lived, the Download action re-fetches the asset first: if the file is still available it redirects to it, otherwise it prompts to enable it again.
+
+### Patch Changes
+
+- [#1425](https://github.com/sanity-io/plugins/pull/1425) [`99ac32f`](https://github.com/sanity-io/plugins/commit/99ac32f3eba211849e4813e296d75a634d28494f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency swr to ^2.4.2
+
+- [#1451](https://github.com/sanity-io/plugins/pull/1451) [`71f8620`](https://github.com/sanity-io/plugins/commit/71f8620ddb285f29a0d27ceb746c52cfb73acf8e) Thanks [@stipsan](https://github.com/stipsan)! - Move `react-is` from peerDependencies to dependencies to satisfy `@sanity/pkg-utils` validation
+
 ## 4.0.3
 
 ### Patch Changes
