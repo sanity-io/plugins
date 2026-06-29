@@ -62,7 +62,7 @@
     "@types/react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",
-    "easymde": "^2.20.0",
+    "easymde": "^2.21.0",
     "react": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:"
