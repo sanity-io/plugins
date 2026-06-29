@@ -28,11 +28,23 @@
       "source": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./bundle.css": {
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle.css.js",
+      "default": "./dist/bundle.css.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./bundle.css": {
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle.css.js",
+        "default": "./dist/bundle.css.js"
+      },
       "./package.json": "./package.json"
     }
   },
@@ -55,16 +67,15 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
+    "@vanilla-extract/css": "catalog:",
+    "@vanilla-extract/vite-plugin": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
-    "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "sanity": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "sanity": "^5 || ^6.0.0-0"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
