@@ -9,4 +9,7 @@ export default defineConfig({
   babel: {reactCompiler: true},
 {{/if}}
   reactCompilerOptions: {target: '19'},
+{{#if hasVanillaExtract}}
+  rollup: {vanillaExtract: true},
+{{/if}}
 })

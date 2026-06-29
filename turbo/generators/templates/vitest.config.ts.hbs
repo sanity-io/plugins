@@ -1,6 +1,12 @@
+{{#if hasVanillaExtract}}
+import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
+{{/if}}
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
+{{#if hasVanillaExtract}}
+  plugins: [vanillaExtractPlugin()],
+{{/if}}
   test: {
     server: {
       deps: {

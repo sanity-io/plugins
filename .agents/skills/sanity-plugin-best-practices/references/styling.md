@@ -226,6 +226,12 @@ catalog:
 "ignoreDependencies": ["@vanilla-extract/css"]
 ```
 
+> **New plugins get this for free.** `pnpm generate "new plugin"` wires all of the above
+> automatically when you opt into styling — the `rollup` option, the `./bundle.css` export, the
+> catalog devDeps, the `vitest.config.ts` plugin, and an example `Tool.css.ts`. The test studio
+> already registers the Vite plugin globally, so generated plugins render in `pnpm dev` with no extra
+> steps.
+
 ---
 
 ## Dynamic styling with vanilla-extract
