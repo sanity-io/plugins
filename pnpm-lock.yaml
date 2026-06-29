@@ -2296,7 +2296,7 @@ importers:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       uuid:
-        specifier: ^14.0.0
+        specifier: ^14.0.1
         version: 14.0.1
     devDependencies:
       '@repo/package.config':
