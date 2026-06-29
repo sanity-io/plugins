@@ -4,12 +4,12 @@ How to style plugin UI without paying an unnecessary runtime cost or breaking St
 
 ## Priority order
 
-In **greenfield** plugin code, [vanilla-extract](https://vanilla-extract.style) is the styling
-solution for everything you author — both static and dynamic styles. It compiles to a static
-stylesheet at build time (zero per-render and per-instance runtime cost), produces type-safe,
-locally-scoped class names, and lives next to the component in a `.css.ts` file.
-`@sanity/google-maps-input` is the reference implementation (migrated in
-[PR #1417](https://github.com/sanity-io/plugins/pull/1417)).
+[vanilla-extract](https://vanilla-extract.style) is the styling solution for everything you author in
+this monorepo — both static and dynamic styles, in new plugins and in existing ones (which are being
+migrated off `styled-components`). It compiles to a static stylesheet at build time (zero per-render
+and per-instance runtime cost), produces type-safe, locally-scoped class names, and lives next to the
+component in a `.css.ts` file. `@sanity/google-maps-input` is the reference implementation (migrated
+in [PR #1417](https://github.com/sanity-io/plugins/pull/1417)).
 
 Decide as follows:
 
@@ -18,14 +18,16 @@ Decide as follows:
    `@sanity/ui` theme, or vary with props or state.
 3. **Import a third-party `.css`** once at module scope — for prebuilt stylesheets you don't author
    (katex, easymde, react-photo-album).
-4. **`styled-components`** — **brownfield only.** Existing plugins keep it; do not reach for it in
-   new code. See [Brownfield only: styled-components](#brownfield-only-styled-components).
-5. **Never** raw `<style>` tags or runtime stylesheet injection from a component.
+4. **Never** raw `<style>` tags or runtime stylesheet injection from a component.
 
-> There is essentially no reason to start new code on `styled-components`, even when the plugin is
-> built on `@sanity/ui` (most are). Using `@sanity/ui` does not make `styled-components` a good fit
-> for customizing it or reading its theme: read tokens with the `useTheme_v2()` hook and forward them
-> into vanilla-extract instead (see [Dynamic styling](#dynamic-styling-with-vanilla-extract)).
+`styled-components` is **not** one of the options above. It is the Studio's legacy styling library —
+still present in some plugins, but on its way out. Never add it to a plugin, and migrate existing
+usage to vanilla-extract (see [Migrating off styled-components](#migrating-off-styled-components)).
+
+> There is no reason to write `styled-components`, even when the plugin is built on `@sanity/ui`
+> (most are). Using `@sanity/ui` does not make `styled-components` a good fit for customizing it or
+> reading its theme: read tokens with the `useTheme_v2()` hook and forward them into vanilla-extract
+> instead (see [Dynamic styling](#dynamic-styling-with-vanilla-extract)).
 
 ---
 
@@ -508,53 +510,66 @@ declare module 'katex/dist/katex.min.css'
 
 ---
 
-## Brownfield only: styled-components
+## Migrating off styled-components
 
-`styled-components` is the Studio's own styling library and a `@sanity/ui` peer dependency, so
-existing plugins that use it still work correctly — they share a single managed stylesheet and the
-Studio theme. **Keep working brownfield code on `styled-components`; do not rewrite it
-speculatively.** A migration to vanilla-extract must be done carefully — and usually in its own PR —
-to preserve visual fidelity and avoid regressions. The `plugin-transfer` skill makes this a rule:
-transfers never migrate styling in the initial port.
+`styled-components` is the Studio's legacy styling library (a `@sanity/ui` peer). It still works, but
+**no new code uses it and existing usage is migrated to vanilla-extract** — this skill is the guide
+for that migration. Don't add `styled-components` to a plugin, and convert a component's styling to
+vanilla-extract when you work on it rather than extending the styled-components code.
 
-> **Locking in a finished migration.** Once a plugin no longer imports `styled-components` at all,
-> ban it via `no-restricted-imports` in `.oxlintrc.json` so it cannot creep back — this is how
-> `@sanity/vision` locked in its migration in
-> [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333).
+The migration is mechanical, reusing the patterns above:
 
-For **new** code, prefer vanilla-extract (above). The notes below apply only when maintaining a
-plugin that is already on `styled-components`:
+- `styled(Primitive)` / `styled.div` → a `style()` rule plus a thin wrapper component that keeps the
+  same name and API, so call sites don't change. See
+  [Keep the component layer](#keep-the-component-layer-encapsulation).
+- Theme reads (`({theme}) => theme.sanity...`) → `useTheme_v2()` + `assignInlineVars` over a
+  `createVar()`. See [Dynamic styling](#dynamic-styling-with-vanilla-extract).
+- `css` variants → `styleVariants`; `keyframes` → vanilla-extract `keyframes`; descendant or
+  third-party selectors → `globalStyle` scoped under a wrapper class.
+- Overriding a primitive's own styles often needs the `selectors: {'&&': {...}}` trick that
+  styled-components got for free via CSSOM ordering (see the `&&` trick section above).
 
-**Import named, not default** (`import styled from 'styled-components'` was removed — see the
-`@sanity/code-input` changelog):
-
-```ts
-import {css, keyframes, styled} from 'styled-components'
-```
-
-**Extend `@sanity/ui` primitives** rather than bare DOM elements, and **read theme tokens** with the
-`({theme}) => ...` accessor:
+For example, the markdown CodeMirror theming moves from a `styled(Box)` template:
 
 ```tsx
-// plugins/sanity-plugin-markdown/src/components/MarkdownInput.tsx
-import {Box} from '@sanity/ui'
-import {styled} from 'styled-components'
-
+// Before — styled-components
 const MarkdownInputStyles = styled(Box)`
   & .CodeMirror.CodeMirror {
     color: ${({theme}) => theme.sanity.color.card.enabled.fg};
-    border-color: ${({theme}) => theme.sanity.color.card.enabled.border};
-    background-color: inherit;
   }
 `
 ```
 
-### Dependency setup (brownfield)
+to a colocated `.css.ts` with `globalStyle` + a variable set from the theme (see
+[Dynamic styling](#dynamic-styling-with-vanilla-extract) for wiring the variable via `useTheme_v2()`):
 
-Declare `styled-components` so the plugin resolves to the workspace override
-(`styled-components: npm:@sanity/styled-components@latest`). This guarantees a **single**
-styled-components instance shared with the Studio — without it, pnpm may install a separate copy and
-theming/SSR break.
+```ts
+// After — MarkdownInput.css.ts
+import {createVar, globalStyle, style} from '@vanilla-extract/css'
+
+export const fg = createVar()
+export const markdownInput = style({})
+
+globalStyle(`${markdownInput} .CodeMirror.CodeMirror`, {
+  color: fg,
+})
+```
+
+**Migrate carefully.** The goal is identical visual output — verify the result against the original
+(theme tokens, spacing, specificity). Where styled-components silently won on source order, you may
+need `&&` to match. During a plugin **transfer/port**, do not migrate styling in the same PR: keep it
+building as-is and do the migration in a dedicated follow-up PR (see the `plugin-transfer` skill).
+
+> **Lock in a finished migration.** Once a plugin no longer imports `styled-components`, ban it via
+> `no-restricted-imports` in `.oxlintrc.json` so it cannot creep back — this is how `@sanity/vision`
+> locked in its migration in
+> [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333).
+
+### While a plugin still has styled-components
+
+Until a plugin is fully migrated, keep its `styled-components` declaration aligned so it resolves to
+the workspace `@sanity/styled-components` override — a **single** instance shared with the Studio,
+without which pnpm may install a separate copy and theming/SSR break:
 
 ```json
 {
@@ -567,10 +582,11 @@ theming/SSR break.
 }
 ```
 
-- It is a **peer dependency** (the host Studio provides it) — never list it under `dependencies`.
-- The `catalog:` devDependency pins the same version the rest of the monorepo uses and keeps the
-  plugin on the shared `sanity` peer variant (see the `plugin-transfer` skill for why duplicate
-  variants break type-aware lint).
+- It is a **peer dependency** (the host Studio provides it) — never under `dependencies`.
+- The `catalog:` devDependency keeps the plugin on the shared `sanity` peer variant (see the
+  `plugin-transfer` skill for why duplicate variants break type-aware lint).
+
+Remove both once the migration is complete.
 
 ---
 
@@ -593,8 +609,8 @@ that forces synchronous reflows. See the `vercel-react-best-practices` rule `js-
 
 - `vercel-react-best-practices` → `rules/js-batch-dom-css.md` (batch DOM/CSS writes, prefer classes),
   `rules/rendering-hoist-jsx.md`, and the rendering section generally.
-- `plugin-transfer` skill → keep transferred plugins on `styled-components`; dependency alignment for
-  `styled-components` and `sanity` peers.
+- `plugin-transfer` skill → don't migrate styling during a transfer (do it in a follow-up PR);
+  dependency alignment for `styled-components` and `sanity` peers.
 - [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333) — reference migration of
   `@sanity/vision`: the component-layer (encapsulation) pattern and the `&&` specificity trick.
 - [vanilla-extract](https://vanilla-extract.style) — `style`, `createVar`, `styleVariants`,

@@ -104,7 +104,7 @@ To keep the plugin on the shared `sanity` variant, declare these in the plugin `
 
 Verify alignment by checking that the plugin importer's `sanity` version string in `pnpm-lock.yaml` matches other plugins (e.g. `plugins/@sanity/sfcc`).
 
-> **Do not migrate styling during a transfer.** When the plugin already uses `styled-components`, keep it as-is for the initial port — the goal is a faithful, low-risk move. Migrating to vanilla-extract (the preferred styling for new code) is a **separate follow-up PR**, done with care to preserve visual fidelity and avoid regressions. The `styled-components: catalog:` alignment above still applies. See the `sanity-plugin-best-practices` styling reference for the greenfield-vs-brownfield rule.
+> **Do not migrate styling during a transfer.** When the plugin already uses `styled-components`, leave it in place for the initial port — the goal is a faithful, low-risk move. `styled-components` is still migrated to vanilla-extract (the styling target for every plugin), but in a **separate follow-up PR**, done with care to preserve visual fidelity and avoid regressions. The `styled-components: catalog:` alignment above applies until then. See the `sanity-plugin-best-practices` styling reference (`Migrating off styled-components`).
 
 ### Tests
 

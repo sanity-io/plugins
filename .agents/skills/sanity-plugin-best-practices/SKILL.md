@@ -3,7 +3,7 @@ name: sanity-plugin-best-practices
 description: Anti-patterns and best practices for building Sanity Studio plugins in this monorepo. Use when writing, reviewing, or refactoring plugin code under plugins/ — especially for styling/CSS, component performance, and runtime cost. Triggers on vanilla-extract, raw <style> tags, styled-components, theming, inline styles, or questions about how plugins should be structured here.
 metadata:
   author: Sanity.io
-  version: '1.1.0'
+  version: '1.2.0'
 ---
 
 # Sanity Plugin Best Practices
@@ -32,9 +32,9 @@ Use this skill when you are:
 Read the reference file for the area you are working in. Each reference lists the anti-pattern, the
 preferred approach, and `Incorrect` / `Correct` examples grounded in real plugins in this repo.
 
-| Area            | What it covers                                                                                                                    | Reference                                          |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| Styling and CSS | Use vanilla-extract (static + dynamic) for new styling; encapsulate classes in components; `styled-components` is brownfield-only | [`references/styling.md`](./references/styling.md) |
+| Area            | What it covers                                                                                                                                   | Reference                                          |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| Styling and CSS | Use vanilla-extract (static + dynamic) for all plugin styling; encapsulate classes in components; migrate `styled-components` to vanilla-extract | [`references/styling.md`](./references/styling.md) |
 
 > This skill is intended to grow. When you find a plugin pattern worth standardizing (or an
 > anti-pattern worth banning), add a focused reference file and a row to the table above rather than
@@ -42,22 +42,23 @@ preferred approach, and `Incorrect` / `Correct` examples grounded in real plugin
 
 ## Styling: the one-line rule
 
-For new (greenfield) code, [vanilla-extract](https://vanilla-extract.style) is the styling solution
-for everything you author — it compiles to a static stylesheet (zero per-render and per-instance
-cost), is type-safe and scoped, and lives in a `.css.ts` next to the component:
+[vanilla-extract](https://vanilla-extract.style) is the styling solution for everything you author —
+in new plugins and existing ones. It compiles to a static stylesheet (zero per-render and
+per-instance cost), is type-safe and scoped, and lives in a `.css.ts` next to the component:
 
 1. **vanilla-extract `style()`** — static styles (the common case).
 2. **vanilla-extract `createVar()` + `assignInlineVars()`** — dynamic styles that read the live
-   `@sanity/ui` theme (via the `useTheme_v2()` hook) or vary with props/state. No `styled-components`
-   needed.
+   `@sanity/ui` theme (via the `useTheme_v2()` hook) or vary with props/state.
 3. **Import a third-party `.css`** once at module scope — for prebuilt stylesheets you don't author
    (katex, easymde, …).
-4. **`styled-components`** — **brownfield only.** Existing plugins keep it; never introduce it in new
-   code, and don't migrate styling speculatively (do it in a dedicated PR with care for visual
-   fidelity).
-5. **Never** render raw `<style>` tags (in JSX, via `dangerouslySetInnerHTML`, or by appending a
+4. **Never** render raw `<style>` tags (in JSX, via `dangerouslySetInnerHTML`, or by appending a
    `<style>`/`<link>` to `document.head` from a component). They re-parse on every render, duplicate
    per instance, bypass the theme, and are an injection risk.
+
+`styled-components` is **legacy** — the Studio's old styling library, still in some plugins but never
+used in new code. Migrate existing usage to vanilla-extract (carefully, preserving visual fidelity;
+not during a transfer's initial port). See
+[`references/styling.md`](./references/styling.md#migrating-off-styled-components).
 
 See [`references/styling.md`](./references/styling.md) for the full rationale and examples.
 
@@ -75,11 +76,12 @@ See [`references/styling.md`](./references/styling.md) for the full rationale an
   To override a primitive's own styles, use the `selectors: {'&&': {...}}` specificity trick
   (styled-components guaranteed override ordering in the CSSOM; vanilla-extract does not). See
   [`references/styling.md`](./references/styling.md#keep-the-component-layer-encapsulation).
-- **`styled-components` is brownfield only.** Keep existing usage; don't add it to new code. When
-  maintaining it, import named (`import {css, keyframes, styled} from 'styled-components'`) and
-  declare the shared peer so the plugin resolves to the workspace `@sanity/styled-components`
-  override (a single instance — required for theming and SSR). See
-  [`references/styling.md`](./references/styling.md#brownfield-only-styled-components).
+- **`styled-components` is legacy — migrate it to vanilla-extract.** Never add it to a plugin;
+  convert existing usage to vanilla-extract (carefully, preserving visual fidelity) using the
+  patterns above. Until a plugin is fully migrated, keep its `styled-components` peer + `catalog:`
+  devDependency aligned so it resolves to the workspace `@sanity/styled-components` override; remove
+  them once migrated, and lock it in with `no-restricted-imports`. See
+  [`references/styling.md`](./references/styling.md#migrating-off-styled-components).
 - **Use `lodash-es`, never `lodash`** (matches `AGENTS.md`).
 - **Apply the React performance rules** from `vercel-react-best-practices` (don't define components
   inside components, batch DOM/CSS writes, hoist static JSX, etc.).
