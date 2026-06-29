@@ -35,6 +35,15 @@ const codeTest = defineType({
       },
     },
     {
+      name: 'codeNoFullscreen',
+      title: 'Code with fullscreen disabled',
+      description: 'A code input with the fullscreen toggle button hidden',
+      type: 'code',
+      options: {
+        disableFullscreen: true,
+      },
+    },
+    {
       name: 'readOnlyCode',
       title: 'Read-only code',
       description: 'Code input in readOnly mode',
