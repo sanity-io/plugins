@@ -51,13 +51,16 @@ per-instance cost), is type-safe and scoped, and lives in a `.css.ts` next to th
    `@sanity/ui` theme (via the `useTheme_v2()` hook) or vary with props/state.
 3. **Import a third-party `.css`** once at module scope — for prebuilt stylesheets you don't author
    (katex, easymde, …).
-4. **Never** render raw `<style>` tags (in JSX, via `dangerouslySetInnerHTML`, or by appending a
-   `<style>`/`<link>` to `document.head` from a component). They re-parse on every render, duplicate
-   per instance, bypass the theme, and are an injection risk.
+4. **Never** render raw `<style>` tags (in JSX, via `dangerouslySetInnerHTML`, by appending a
+   `<style>`/`<link>` to `document.head`, or via `useInsertionEffect`). They re-parse on every
+   render, duplicate per instance, bypass the theme, and are an injection risk. CSS-in-JS is a last
+   resort: only when the CSS is genuinely dynamic (from runtime data, able to be _any_ CSS) reach for
+   `styled-components` — the most performant CSS-in-JS — and we try hard never to need it.
 
-`styled-components` is **legacy** — the Studio's old styling library, still in some plugins but never
-used in new code. Migrate existing usage to vanilla-extract (carefully, preserving visual fidelity;
-not during a transfer's initial port). See
+`styled-components` is **legacy** — the Studio's old styling library, still in some plugins. Migrate
+existing styling usage to vanilla-extract (carefully, preserving visual fidelity; not during a
+transfer's initial port). Its only remaining sanctioned use is the last-resort CSS-in-JS escape hatch
+in rule 4 (arbitrary CSS from runtime data). See
 [`references/styling.md`](./references/styling.md#migrating-off-styled-components).
 
 See [`references/styling.md`](./references/styling.md) for the full rationale and examples.
@@ -76,11 +79,12 @@ See [`references/styling.md`](./references/styling.md) for the full rationale an
   To override a primitive's own styles, use the `selectors: {'&&': {...}}` specificity trick
   (styled-components guaranteed override ordering in the CSSOM; vanilla-extract does not). See
   [`references/styling.md`](./references/styling.md#keep-the-component-layer-encapsulation).
-- **`styled-components` is legacy — migrate it to vanilla-extract.** Never add it to a plugin;
-  convert existing usage to vanilla-extract (carefully, preserving visual fidelity) using the
-  patterns above. Until a plugin is fully migrated, keep its `styled-components` peer + `catalog:`
-  devDependency aligned so it resolves to the workspace `@sanity/styled-components` override; remove
-  them once migrated, and lock it in with `no-restricted-imports`. See
+- **`styled-components` is legacy — migrate it to vanilla-extract.** Never add it for ordinary
+  styling (its only sanctioned use is the last-resort CSS-in-JS escape hatch for arbitrary runtime
+  CSS); convert existing styling usage to vanilla-extract (carefully, preserving visual fidelity)
+  using the patterns above. Until a plugin is fully migrated, keep its `styled-components` peer +
+  `catalog:` devDependency aligned so it resolves to the workspace `@sanity/styled-components`
+  override; remove them once migrated, and lock it in with `no-restricted-imports`. See
   [`references/styling.md`](./references/styling.md#migrating-off-styled-components).
 - **Use `lodash-es`, never `lodash`** (matches `AGENTS.md`).
 - **Apply the React performance rules** from `vercel-react-best-practices` (don't define components

@@ -18,11 +18,16 @@ Decide as follows:
    `@sanity/ui` theme, or vary with props or state.
 3. **Import a third-party `.css`** once at module scope — for prebuilt stylesheets you don't author
    (katex, easymde, react-photo-album).
-4. **Never** raw `<style>` tags or runtime stylesheet injection from a component.
+4. **Never** render raw `<style>` tags or insert CSS with the `useInsertionEffect` hook. If
+   installing CSS in JS is absolutely necessary — for example the CSS comes from runtime data and can
+   be _any_ CSS — use `styled-components`, the most performant way to do CSS-in-JS (though we try our
+   best to never have to reach for CSS-in-JS).
 
-`styled-components` is **not** one of the options above. It is the Studio's legacy styling library —
-still present in some plugins, but on its way out. Never add it to a plugin, and migrate existing
-usage to vanilla-extract (see [Migrating off styled-components](#migrating-off-styled-components)).
+`styled-components` is otherwise **not** one of the options above. It is the Studio's legacy styling
+library — still present in some plugins, but on its way out. Don't add it for ordinary styling, and
+migrate existing styling usage to vanilla-extract (see
+[Migrating off styled-components](#migrating-off-styled-components)). Its only sanctioned use is the
+last-resort CSS-in-JS escape hatch in rule 4.
 
 > There is no reason to write `styled-components`, even when the plugin is built on `@sanity/ui`
 > (most are). Using `@sanity/ui` does not make `styled-components` a good fit for customizing it or
@@ -33,8 +38,9 @@ usage to vanilla-extract (see [Migrating off styled-components](#migrating-off-s
 
 ## Anti-pattern: raw `<style>` tags
 
-Do not render `<style>` tags from a component, inject CSS through `dangerouslySetInnerHTML`, or
-append a `<style>` / `<link>` element to `document.head` from render or an effect.
+Do not render `<style>` tags from a component, inject CSS through `dangerouslySetInnerHTML`, append a
+`<style>` / `<link>` element to `document.head`, or insert CSS with the `useInsertionEffect` hook —
+whether from render or an effect.
 
 **Why it is bad:**
 
@@ -88,9 +94,28 @@ function useInjectStyles(css: string) {
 }
 ```
 
+**Incorrect (`useInsertionEffect` to inject a stylesheet — still hand-rolled CSS-in-JS):**
+
+```tsx
+function useInjectStyles(css: string) {
+  useInsertionEffect(() => {
+    const el = document.createElement('style')
+    el.textContent = css
+    document.head.appendChild(el)
+    return () => el.remove()
+  }, [css])
+}
+```
+
 > Note: `dangerouslySetInnerHTML` is fine for rendering already-sanitized **content** (for example
 > `sanity-plugin-latex-input` uses it for KaTeX's `renderToString` output). The anti-pattern is using
 > it — or `<style>` tags — to ship **CSS rules**.
+
+> **The one escape hatch.** If you genuinely must install CSS from JS — the CSS is built from runtime
+> data and can be _any_ CSS, so a fixed `style()` + `createVar()` cannot express it — reach for
+> `styled-components` instead of hand-rolling injection. It is the most performant CSS-in-JS option
+> and inserts styles correctly (via `useInsertionEffect` internally, deduplicated through the CSSOM).
+> This is genuinely rare — exhaust vanilla-extract first; we try our best to never need CSS-in-JS.
 
 ---
 
@@ -513,9 +538,12 @@ declare module 'katex/dist/katex.min.css'
 ## Migrating off styled-components
 
 `styled-components` is the Studio's legacy styling library (a `@sanity/ui` peer). It still works, but
-**no new code uses it and existing usage is migrated to vanilla-extract** — this skill is the guide
-for that migration. Don't add `styled-components` to a plugin, and convert a component's styling to
-vanilla-extract when you work on it rather than extending the styled-components code.
+**no new code uses it for styling and existing usage is migrated to vanilla-extract** — this skill is
+the guide for that migration. Don't add `styled-components` for ordinary styling, and convert a
+component's styling to vanilla-extract when you work on it rather than extending the styled-components
+code. (The one usage that legitimately stays is genuinely-dynamic CSS-in-JS — arbitrary CSS built
+from runtime data that no `style()` + `createVar()` can express, the escape hatch in the
+[priority order](#priority-order). Ordinary styling always migrates.)
 
 The migration is mechanical, reusing the patterns above:
 
