@@ -481,16 +481,16 @@ The test studio connects to Sanity Cloud (project `ppsg7ml5`, dataset `plugins` 
 Navigate to the studio with the token in the URL hash (Sanity consumes it on load and removes it from the address bar):
 
 ```
-http://localhost:3333/kitchen-sink#token=<STUDIO_AUTH_TOKEN>
+http://localhost:3333/home#token=<STUDIO_AUTH_TOKEN>
 ```
 
 Build the URL from the secret:
 
 ```bash
-node -e "const t=process.env.STUDIO_AUTH_TOKEN; console.log('http://localhost:3333/kitchen-sink#token=' + encodeURIComponent(t))"
+node -e "const t=process.env.STUDIO_AUTH_TOKEN; console.log('http://localhost:3333/home#token=' + encodeURIComponent(t))"
 ```
 
-Open that URL in the browser to authenticate and land directly in the Kitchen Sink workspace. Without a token, workspaces show as "Signed out".
+Open that URL in the browser to authenticate and land directly in the Home workspace (the merged "kitchen sink"). Without a token, workspaces show as "Signed out".
 
 ### Node.js version notes
 

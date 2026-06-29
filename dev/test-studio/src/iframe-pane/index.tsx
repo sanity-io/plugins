@@ -2,7 +2,6 @@ import {LinkIcon} from '@sanity/icons'
 import {definePlugin, defineType} from 'sanity'
 import {Iframe} from 'sanity-plugin-iframe-pane'
 import type {DefaultDocumentNodeResolver} from 'sanity/structure'
-import {structureTool} from 'sanity/structure'
 
 // Example document type for demonstrating the iframe pane
 const iframeDocument = defineType({
@@ -28,7 +27,7 @@ const iframeDocument = defineType({
 })
 
 // Example default document node that uses the Iframe component
-const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
+export const iframePaneDefaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
   if (schemaType === 'iframeExample') {
     return S.document().views([
       S.view.form(),
@@ -43,15 +42,10 @@ const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
         .title('Preview'),
     ])
   }
-  return S.document().views([S.view.form()])
+  return null
 }
 
 export const iframePaneExample = definePlugin(() => ({
   name: 'iframe-pane-example',
   schema: {types: [iframeDocument]},
-  plugins: [
-    structureTool({
-      defaultDocumentNode,
-    }),
-  ],
 }))

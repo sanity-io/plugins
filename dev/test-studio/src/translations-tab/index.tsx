@@ -8,7 +8,6 @@ import {
   type ImportTranslation,
 } from 'sanity-translations-tab'
 import type {DefaultDocumentNodeResolver} from 'sanity/structure'
-import {structureTool} from 'sanity/structure'
 
 const SECRETS_DOCUMENT_ID = 'translationService.secrets'
 
@@ -43,7 +42,10 @@ const importTranslation: ImportTranslation = async () => {
   return undefined
 }
 
-const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
+export const translationsTabDefaultDocumentNode: DefaultDocumentNodeResolver = (
+  S,
+  {schemaType},
+) => {
   if (schemaType === 'translatable') {
     return S.document().views([
       S.view.form(),
@@ -67,7 +69,7 @@ const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
     ])
   }
 
-  return S.document().views([S.view.form()])
+  return null
 }
 
 function SeedTranslationSecrets() {
@@ -92,11 +94,6 @@ function SeedTranslationSecrets() {
 export const translationsTabExample = definePlugin(() => ({
   name: 'translations-tab-example',
   schema: {types: [translatableDocument]},
-  plugins: [
-    structureTool({
-      defaultDocumentNode,
-    }),
-  ],
   studio: {
     components: {
       layout: (props) => (
