@@ -1,5 +1,11 @@
 # sanity-plugin-shopify-assets
 
+## 2.0.2
+
+### Patch Changes
+
+- [#1446](https://github.com/sanity-io/plugins/pull/1446) [`efb2556`](https://github.com/sanity-io/plugins/commit/efb25564fce4ced8c6488772ca4dd4261b498e95) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency axios to ^1.18.1
+
 ## 2.0.1
 
 ### Patch Changes

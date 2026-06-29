@@ -1,5 +1,15 @@
 # sanity-plugin-workflow
 
+## 3.0.24
+
+### Patch Changes
+
+- [#1426](https://github.com/sanity-io/plugins/pull/1426) [`f9b7ed3`](https://github.com/sanity-io/plugins/commit/f9b7ed3bb2f2488781fff5a8f7ec32fbcbe72449) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.41.0
+
+- [#1434](https://github.com/sanity-io/plugins/pull/1434) [`a3f4b12`](https://github.com/sanity-io/plugins/commit/a3f4b12bda72238818db068d70ba8f15bc306f79) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.42.0
+
+- [#1445](https://github.com/sanity-io/plugins/pull/1445) [`0669928`](https://github.com/sanity-io/plugins/commit/0669928425b19b3bc7d813ba640333b2442c91b8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-virtual to ^3.14.4
+
 ## 3.0.23
 
 ### Patch Changes

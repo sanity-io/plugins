@@ -1,5 +1,15 @@
 # @sanity/code-input
 
+## 7.2.0
+
+### Minor Changes
+
+- [#1433](https://github.com/sanity-io/plugins/pull/1433) [`1ca8564`](https://github.com/sanity-io/plugins/commit/1ca856491510ac664dc0ee2e08b2e547ed80f8a0) Thanks [@nuotsu](https://github.com/nuotsu)! - Add an "Expand editor" button that expands the code editor to fill the document pane. Use the new `disableFullscreen` field option to hide it.
+
+### Patch Changes
+
+- [#1435](https://github.com/sanity-io/plugins/pull/1435) [`bb76347`](https://github.com/sanity-io/plugins/commit/bb763477a929032c3d5497c37163a385bfb464b6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update codemirror
+
 ## 7.1.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 5.0.10
+
+### Patch Changes
+
+- [#1436](https://github.com/sanity-io/plugins/pull/1436) [`512e629`](https://github.com/sanity-io/plugins/commit/512e6299df682ee810293de597d23581cc408b9c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency uuid to ^14.0.1
+
 ## 5.0.9
 
 ### Patch Changes

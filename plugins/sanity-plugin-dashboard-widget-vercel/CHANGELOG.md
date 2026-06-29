@@ -1,5 +1,13 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.8
+
+### Patch Changes
+
+- [#1424](https://github.com/sanity-io/plugins/pull/1424) [`56ef1aa`](https://github.com/sanity-io/plugins/commit/56ef1aa2134022b509edcd225dcf6775a82ea359) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-query to ^5.101.1
+
+- [#1437](https://github.com/sanity-io/plugins/pull/1437) [`9786ded`](https://github.com/sanity-io/plugins/commit/9786ded76ef680abb4a4d9827eae7059cceb7400) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency xstate to ^5.32.2
+
 ## 4.0.7
 
 ### Patch Changes

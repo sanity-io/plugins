@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 6.0.1
+
+### Patch Changes
+
+- [#1438](https://github.com/sanity-io/plugins/pull/1438) [`bc619dc`](https://github.com/sanity-io/plugins/commit/bc619dcde1a1e0a2778f865abde5eeea1862efd3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update linters
+
 ## 6.0.0
 
 ### Major Changes
