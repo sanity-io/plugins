@@ -24,7 +24,7 @@ Decide as follows:
 
 > There is essentially no reason to start new code on `styled-components`, even when the plugin is
 > built on `@sanity/ui` (most are). Using `@sanity/ui` does not make `styled-components` a good fit
-> for customizing it or reading its theme: read tokens with the `useTheme()` hook and forward them
+> for customizing it or reading its theme: read tokens with the `useTheme_v2()` hook and forward them
 > into vanilla-extract instead (see [Dynamic styling](#dynamic-styling-with-vanilla-extract)).
 
 ---
@@ -234,41 +234,47 @@ When a style must follow the live `@sanity/ui` theme, or change with props or st
 need `styled-components`. Declare a CSS variable with `createVar()`, reference it from a static
 `style()` rule, then assign its value at runtime with `assignInlineVars()` from
 `@vanilla-extract/dynamic` on the element's `style` prop. Read theme tokens with `@sanity/ui`'s
-`useTheme()` hook.
+`useTheme_v2()` hook (the v2 theme API — `color`, `space`, `radius`, `font`) and bridge them in a
+small wrapper component — the `ResultViewWrapper` pattern from
+[sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333):
 
 ```ts
-// MarkdownInput.css.ts
+// ResultView.css.ts
 import {createVar, style} from '@vanilla-extract/css'
 
-export const fg = createVar()
-export const border = createVar()
+export const codeFamilyVar = createVar()
+export const space2Var = createVar()
+export const syntaxStringVar = createVar()
 
-export const editor = style({
-  color: fg,
-  borderColor: border,
-  backgroundColor: 'inherit',
+export const resultViewWrapper = style({
+  fontFamily: codeFamilyVar,
+  padding: space2Var,
+  color: syntaxStringVar,
 })
 ```
 
 ```tsx
-// MarkdownInput.tsx
-import {Box, useTheme} from '@sanity/ui'
+// ResultView.tsx
+import {rem, useTheme_v2 as useThemeV2} from '@sanity/ui'
 import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {type ReactNode} from 'react'
 
-import {border, editor, fg} from './MarkdownInput.css'
+import {codeFamilyVar, resultViewWrapper, space2Var, syntaxStringVar} from './ResultView.css'
 
-export function MarkdownInput() {
-  const theme = useTheme()
+function ResultViewWrapper({children}: {children: ReactNode}) {
+  const {color, font, space} = useThemeV2()
+
   return (
-    <Box
-      className={editor}
+    <div
+      className={resultViewWrapper}
       style={assignInlineVars({
-        [fg]: theme.sanity.color.card.enabled.fg,
-        [border]: theme.sanity.color.card.enabled.border,
+        [codeFamilyVar]: font.code.family,
+        [space2Var]: `${rem(space[2])}`,
+        [syntaxStringVar]: color.syntax.string,
       })}
     >
-      ...
-    </Box>
+      {children}
+    </div>
   )
 }
 ```
@@ -589,4 +595,5 @@ that forces synchronous reflows. See the `vercel-react-best-practices` rule `js-
   `keyframes`, `globalStyle`; and
   [`@vanilla-extract/dynamic`](https://vanilla-extract.style/documentation/packages/dynamic/) for
   `assignInlineVars`.
-- [`@sanity/ui`](https://www.sanity.io/ui) for theme tokens, the `useTheme()` hook, and primitives.
+- [`@sanity/ui`](https://www.sanity.io/ui) for theme tokens, the `useTheme_v2()` hook, and
+  primitives.

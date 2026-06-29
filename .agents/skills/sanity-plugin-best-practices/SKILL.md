@@ -48,7 +48,7 @@ cost), is type-safe and scoped, and lives in a `.css.ts` next to the component:
 
 1. **vanilla-extract `style()`** — static styles (the common case).
 2. **vanilla-extract `createVar()` + `assignInlineVars()`** — dynamic styles that read the live
-   `@sanity/ui` theme (via the `useTheme()` hook) or vary with props/state. No `styled-components`
+   `@sanity/ui` theme (via the `useTheme_v2()` hook) or vary with props/state. No `styled-components`
    needed.
 3. **Import a third-party `.css`** once at module scope — for prebuilt stylesheets you don't author
    (katex, easymde, …).
@@ -64,9 +64,8 @@ See [`references/styling.md`](./references/styling.md) for the full rationale an
 ## General principles
 
 - **Build on `@sanity/ui`.** Compose Studio primitives (`Box`, `Card`, `Flex`, `Stack`, `Text`,
-  `Button`, …) and read design tokens with the `useTheme()` hook (`theme.sanity.color...`,
-  `theme.sanity.space[...]`, `theme.sanity.radius[...]`) instead of hardcoding colors, spacing, or
-  fonts.
+  `Button`, …) and read design tokens with the `useTheme_v2()` hook (`color...`, `space[...]`,
+  `radius[...]`, `font...`) instead of hardcoding colors, spacing, or fonts.
 - **Style with the priority above:** vanilla-extract for all new styling — `style()` for static,
   `createVar()` + `assignInlineVars()` (from `@vanilla-extract/dynamic`) for dynamic; never raw
   `<style>` tags.
