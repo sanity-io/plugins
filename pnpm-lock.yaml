@@ -3214,7 +3214,7 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
       hosted-git-info:
-        specifier: ^9.0.2
+        specifier: ^9.0.3
         version: 9.0.3
       tsdown:
         specifier: ^0.22.3
