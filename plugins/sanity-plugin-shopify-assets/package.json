@@ -47,7 +47,7 @@
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "axios": "^1.18.0",
+    "axios": "^1.18.1",
     "pretty-bytes": "^6.1.1",
     "pretty-ms": "^8.0.0",
     "react-infinite-scroll-component": "^6.1.1",
