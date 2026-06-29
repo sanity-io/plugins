@@ -2581,7 +2581,7 @@ importers:
         specifier: 'catalog:'
         version: 2.3.0(@babel/core@7.29.7)(@sanity/styled-components@6.1.24)
       easymde:
-        specifier: ^2.20.0
+        specifier: ^2.21.0
         version: 2.21.0
       react:
         specifier: 'catalog:'
