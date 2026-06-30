@@ -101,25 +101,22 @@ function FileInputMenuItem(props: Props & {ref?: Ref<HTMLInputElement>}) {
 
 ---
 
-## Passing a ref through (the `as` / wrapper pattern)
+## Forwarding a ref through a wrapper
 
-React 19 also passes `ref` as a prop into the components you render, so a wrapper that spreads its
-props forwards the ref automatically — no explicit `ref={ref}` needed:
+React 19 passes `ref` as a prop into the components you render, so a wrapper component that spreads
+its props forwards a caller's `ref` to the inner element automatically — no explicit `ref={ref}`:
 
 ```tsx
-// Memoized link wrapper handed to MenuItem via `as` (mirrors Sanity's PaneItem)
-const OpenLink = useMemo(
-  () =>
-    function OpenLinkInner(restProps: ComponentProps<typeof IntentLink>) {
-      // `ref` arrives inside restProps and flows to IntentLink via the spread
-      return <IntentLink {...restProps} intent="edit" params={{id, type}} />
-    },
-  [id, type],
-)
+function FancyButton(props: ComponentProps<typeof Button>) {
+  // `ref` arrives in props and flows to Button via the spread
+  return <Button {...props} tone="primary" />
+}
 ```
 
-`lazy()` components and `memo()` components forward a `ref` prop the same way, so neither needs
-`forwardRef` either.
+`lazy()` and `memo()` components forward a `ref` prop the same way, so none of these need
+`forwardRef`. Define wrapper components at module scope, not inside a parent's render (e.g. via
+`useMemo` and the polymorphic `as` prop) — that breaks the `react/no-unstable-nested-components` and
+React Compiler rules, and the Studio is moving away from it.
 
 ---
 
