@@ -1,6 +1,6 @@
 import {Box} from '@sanity/ui'
 import {memo} from 'react'
-import {GroupedVirtuoso} from 'react-virtuoso'
+import {type GroupContent, type GroupItemContent, GroupedVirtuoso} from 'react-virtuoso'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
 import type {CardAssetData, CardUploadData} from '../../types'
@@ -12,6 +12,10 @@ type Props = {
   items: (CardAssetData | CardUploadData)[]
   onLoadMore?: () => void
 }
+
+// `GroupedVirtuoso` has no `data` prop, so the per-render rows and selection are
+// passed through `context` to keep the render callbacks at module scope.
+type TableContext = {items: (CardAssetData | CardUploadData)[]; selectedIds: string[]}
 
 const VirtualRow = memo(
   ({item, selected}: {item: CardAssetData | CardUploadData; selected: boolean}) => {
@@ -35,6 +39,13 @@ const VirtualRow = memo(
   },
 )
 
+const renderGroupHeader: GroupContent<TableContext> = () => <TableHeader />
+
+const renderRow: GroupItemContent<unknown, TableContext> = (index, _groupIndex, _data, context) => {
+  const item = context.items[index]
+  return <VirtualRow item={item!} selected={context.selectedIds.includes(item?.id || '')} />
+}
+
 const AssetTableVirtualized = (props: Props) => {
   const {items, onLoadMore} = props
 
@@ -55,16 +66,11 @@ const AssetTableVirtualized = (props: Props) => {
         const item = items[index]
         return item?.id || index
       }}
+      context={{items, selectedIds}}
       endReached={onLoadMore}
       groupCounts={Array(1).fill(totalCount)}
-      groupContent={() => {
-        return <TableHeader />
-      }}
-      itemContent={(index) => {
-        const item = items[index]
-        const selected = selectedIds.includes(item?.id || '')
-        return <VirtualRow item={item!} selected={selected} />
-      }}
+      groupContent={renderGroupHeader}
+      itemContent={renderRow}
       style={{overflowX: 'hidden'}}
     />
   )

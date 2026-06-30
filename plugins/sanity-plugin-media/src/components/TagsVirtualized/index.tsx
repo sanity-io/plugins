@@ -1,6 +1,6 @@
 import {Flex, Label} from '@sanity/ui'
 import {memo, useState} from 'react'
-import {Virtuoso} from 'react-virtuoso'
+import {type ItemContent, Virtuoso} from 'react-virtuoso'
 
 import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -9,36 +9,32 @@ import {selectTags} from '../../modules/tags'
 import type {TagActions, TagItem} from '../../types'
 import Tag from '../Tag'
 
-const VirtualRow = memo(
-  ({
-    isScrolling,
-    item,
-  }: {
-    isScrolling?: boolean
-    item:
-      | string
-      | (TagItem & {
-          actions: TagActions[]
-        })
-  }) => {
-    // Render label
-    if (typeof item === 'string') {
-      return (
-        <Flex
-          align="center"
-          justify="space-between"
-          key={item}
-          paddingX={3}
-          style={{height: `${PANEL_HEIGHT}px`}}
-        >
-          <Label size={0}>{item}</Label>
-        </Flex>
-      )
-    }
+type TagListItem = string | (TagItem & {actions: TagActions[]})
 
-    // Render tag - only display actions if we're not in the process of scrolling
-    return <Tag actions={isScrolling ? undefined : item.actions} key={item.tag?._id} tag={item} />
-  },
+const VirtualRow = memo(({isScrolling, item}: {isScrolling?: boolean; item: TagListItem}) => {
+  // Render label
+  if (typeof item === 'string') {
+    return (
+      <Flex
+        align="center"
+        justify="space-between"
+        key={item}
+        paddingX={3}
+        style={{height: `${PANEL_HEIGHT}px`}}
+      >
+        <Label size={0}>{item}</Label>
+      </Flex>
+    )
+  }
+
+  // Render tag - only display actions if we're not in the process of scrolling
+  return <Tag actions={isScrolling ? undefined : item.actions} key={item.tag?._id} tag={item} />
+})
+
+// Kept at module scope (not defined during render) so it isn't treated as an
+// unstable nested component; the per-render `isScrolling` flag is passed via context.
+const renderTagRow: ItemContent<TagListItem, boolean> = (_index, item, isScrolling) => (
+  <VirtualRow isScrolling={isScrolling} item={item} />
 )
 
 const TagsVirtualized = () => {
@@ -102,12 +98,7 @@ const TagsVirtualized = () => {
       actions: ['applyAll', 'delete', 'edit', 'search'] as TagActions[],
     }))
 
-  let items: (
-    | string
-    | (TagItem & {
-        actions: TagActions[]
-      })
-  )[] = []
+  let items: TagListItem[] = []
   if (assetsPicked.length === 0) {
     items = tags.map((tagItem) => ({
       ...tagItem,
@@ -147,12 +138,11 @@ const TagsVirtualized = () => {
         }
         return item!.tag._id
       }}
+      context={isScrolling}
+      data={items}
       isScrolling={setIsScrolling}
-      itemContent={(index) => {
-        return <VirtualRow isScrolling={isScrolling} item={items[index]!} />
-      }}
+      itemContent={renderTagRow}
       style={{flex: 1, overflowX: 'hidden'}}
-      totalCount={items.length}
     />
   )
 }

@@ -1,7 +1,7 @@
 import {AddIcon, ChevronDownIcon, CloseIcon} from '@sanity/icons'
 import {Box, Card, Flex, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {components, type StylesConfig} from 'react-select'
-import {Virtuoso} from 'react-virtuoso'
+import {type ItemContent, Virtuoso} from 'react-virtuoso'
 
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
@@ -117,6 +117,10 @@ const Menu = (props: any) => {
   )
 }
 
+// Kept at module scope (not defined during render) so it isn't treated as an
+// unstable nested component; the menu options are passed via the `data` prop.
+const renderMenuOption: ItemContent<any, unknown> = (_index, item) => <Option {...item.props} />
+
 const MenuList = (props: any) => {
   const {children} = props
 
@@ -130,12 +134,9 @@ const MenuList = (props: any) => {
     return (
       <Virtuoso
         className="media__custom-scrollbar"
-        itemContent={(index) => {
-          const item = children[index]
-          return <Option {...item.props} />
-        }}
+        data={children}
+        itemContent={renderMenuOption}
         style={{height}}
-        totalCount={children.length}
       />
     )
   }
