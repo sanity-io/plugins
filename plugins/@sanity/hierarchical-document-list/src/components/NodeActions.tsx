@@ -1,6 +1,5 @@
 import {CopyIcon, EllipsisVerticalIcon, LaunchIcon, RemoveCircleIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
-import {type ComponentProps} from 'react'
 import {IntentButton as IntentLink} from 'sanity'
 
 import useTreeOperations from '../hooks/useTreeOperations'
@@ -15,14 +14,6 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
   const {node} = nodeProps
   const {reference, docType} = node?.value || {}
   const referenceId = reference?._ref
-
-  // `MenuItem` forwards these `IntentLink` props to the link at runtime even though
-  // its `@sanity/ui` types don't expose them, so they're spread to bypass the
-  // excess-property check (adapted from ArrayItemReferenceInput's `as` link pattern).
-  const openLinkProps: Pick<ComponentProps<typeof IntentLink>, 'intent' | 'params'> = {
-    intent: 'edit',
-    params: {id: referenceId, type: docType},
-  }
 
   const isValid = !!node.publishedId
   return (
@@ -61,7 +52,9 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
             icon={LaunchIcon}
             disabled={!isValid}
             as={IntentLink}
-            {...openLinkProps}
+            // @ts-expect-error `MenuItem` does not type the props of the polymorphic `as` component.
+            intent="edit"
+            params={{id: referenceId, type: docType}}
             target="_blank"
             rel="noopener noreferrer"
             data-as="a"

@@ -428,14 +428,14 @@ export function ErrorCode(props: ComponentProps<typeof Code>) {
 
 - **Type the wrapper** with `ComponentProps<typeof Primitive>` (or `ComponentProps<'a'>` for a DOM
   element), and spread props **before** `className` so the wrapper owns the class.
-- **Forward refs** when the original wrapped a ref-forwarding primitive:
+- **Refs need no `forwardRef`** — in React 19 `ref` is a regular prop, so `ComponentProps<typeof Flex>`
+  already includes it and spreading `{...props}` forwards a caller's `ref` to the wrapped primitive
+  (`forwardRef` is banned by lint; see [`refs.md`](./refs.md)):
 
   ```tsx
-  export const Root = forwardRef<HTMLDivElement, ComponentProps<typeof Flex>>(
-    function Root(props, ref) {
-      return <Flex {...props} ref={ref} className={root} />
-    },
-  )
+  export function Root(props: ComponentProps<typeof Flex>) {
+    return <Flex {...props} className={root} />
+  }
   ```
 
 - **Map a boolean/variant prop to conditional classes** instead of a styled-components transient prop
