@@ -14,7 +14,7 @@ import {defineField, defineType} from 'sanity'
  * Seed the misordered document with:
  *   pnpm --filter test-studio seed:issue-520
  *
- * Then open it in the `kitchen-sink` workspace and switch the perspective
+ * Then open it in the `home` workspace and switch the perspective
  * to the published version.
  */
 export const issue520Repro = defineType({

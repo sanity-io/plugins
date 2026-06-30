@@ -1,4 +1,3 @@
-// @ts-expect-error missing types
 import licenses from '@rexxars/choosealicense-list'
 import outdent from 'outdent'
 
@@ -62,7 +61,8 @@ export function getLicenseText(licenseId?: string, user?: User) {
     return ''
   }
 
-  let licenseName: string | undefined = licenses.find(licenseId).title
+  const license = licenses.find(licenseId)
+  let licenseName: string | undefined = license ? license.title : undefined
   licenseName = licenseName?.replace(/\s+license$/i, '')
 
   let licenseText = '## License\n'

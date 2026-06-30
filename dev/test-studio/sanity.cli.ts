@@ -1,3 +1,4 @@
+import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
 import {DevTools} from '@vitejs/devtools'
 import {defineCliConfig} from 'sanity/cli'
 
@@ -29,8 +30,9 @@ export default defineCliConfig({
   },
   studioHost: 'plugins',
   typegen: {formatGeneratedCode: false},
-  // `devtools: {}` makes `sanity build` emit a Rolldown build session that the DevTools dock can inspect
-  vite: isViteDevToolsEnabled
-    ? {plugins: [DevTools()], build: {rolldownOptions: {devtools: {}}}}
-    : {},
+  vite: {
+    plugins: [vanillaExtractPlugin(), ...(isViteDevToolsEnabled ? [DevTools()] : [])],
+    // `devtools: {}` makes `sanity build` emit a Rolldown build session that the DevTools dock can inspect
+    build: isViteDevToolsEnabled ? {rolldownOptions: {devtools: {}}} : {},
+  },
 })

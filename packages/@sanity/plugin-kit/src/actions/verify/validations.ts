@@ -4,7 +4,6 @@ import path from 'path'
 import chalk from 'chalk'
 import outdent from 'outdent'
 import type {ParsedCommandLine} from 'typescript'
-// @ts-expect-error missing types
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import {deprecatedDevDeps, mergedPackages} from '../../configs/banned-packages'
@@ -158,6 +157,86 @@ export function validatePackageType({type}: PackageJson): string[] {
       Please add the following to package.json:
 
       "type": "module"
+  `.trimStart(),
+  ]
+}
+
+/**
+ * Recursively collects the locations of any `require` condition within a package.json `exports`
+ * field. Conditions can be nested arbitrarily deep (and inside fallback arrays), so we walk the
+ * whole tree rather than only inspecting the first level.
+ *
+ * Subpath keys always start with `.` (e.g. `"./feature"`), while condition keys never do, so an
+ * exact `require` key is unambiguously a CommonJS export condition.
+ */
+function findRequireConditions(node: unknown, pathSegments: string[]): string[] {
+  if (Array.isArray(node)) {
+    return node.flatMap((entry, index) =>
+      findRequireConditions(entry, [...pathSegments, String(index)]),
+    )
+  }
+
+  if (!node || typeof node !== 'object') {
+    return []
+  }
+
+  const found: string[] = []
+  for (const [key, value] of Object.entries(node)) {
+    if (key === 'require') {
+      found.push(formatExportsPath(pathSegments))
+    }
+    found.push(...findRequireConditions(value, [...pathSegments, key]))
+  }
+  return found
+}
+
+function formatExportsPath(segments: string[]): string {
+  return `exports${segments.map((segment) => `[${JSON.stringify(segment)}]`).join('')}`
+}
+
+/**
+ * Bans CommonJS interop in package.json. The plugin baseline is Sanity Studio v5 or later, which is
+ * pure ESM, so there is no reason to publish a parallel CJS build anymore. This flags:
+ *
+ * - `require` export conditions
+ * - the top-level `main` field
+ * - the top-level `module` field
+ */
+export function validateEsmOnly(packageJson: PackageJson): string[] {
+  const offenders: string[] = []
+
+  if (typeof packageJson.main !== 'undefined') {
+    offenders.push(`- the top-level "main" field (${JSON.stringify(packageJson.main)})`)
+  }
+
+  if (typeof packageJson.module !== 'undefined') {
+    offenders.push(`- the top-level "module" field (${JSON.stringify(packageJson.module)})`)
+  }
+
+  const requireConditions = [...new Set(findRequireConditions(packageJson.exports, []))]
+  for (const conditionPath of requireConditions) {
+    offenders.push(`- a "require" export condition at ${conditionPath}`)
+  }
+
+  if (!offenders.length) {
+    return []
+  }
+
+  return [
+    outdent`
+      package.json ships CommonJS (CJS) output, but Sanity plugins target Sanity Studio v5+, which is pure ESM.
+
+      Remove the following so the package stays ESM-only:
+      ${offenders.join('\n')}
+
+      Supporting CJS is not worth it:
+      - It can have unintended side-effects.
+      - The Node.js versions plugin-kit supports (${requiredNodeEngine}) fully support require(esm), so a
+        consumer that still uses require() loads the ESM build directly — which is far more predictable.
+      - Publishing a single format guarantees two copies of the plugin's code (ESM + CJS) can't both end up
+        in the module tree, bloating bundles and slowing down builds.
+
+      Rely on "exports" together with "type": "module", and drop "main", "module" and any "require" conditions.
   `.trimStart(),
   ]
 }
@@ -391,78 +470,70 @@ export async function validateStudioConfig({basePath}: {basePath: string}): Prom
   return errors.length ? [errors.join(`\n\n---\n\n`)] : []
 }
 
-export async function validatePluginSanityJson({
+/**
+ * Detects leftover usage of the legacy `@sanity/incompatible-plugin` shim and asks for its removal.
+ *
+ * The shim (a `sanity.json` + `v2-incompatible.js` entry point, plus the `@sanity/incompatible-plugin`
+ * dependency) only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin
+ * was installed there. plugin-kit no longer scaffolds it, so a plugin should not ship it anymore.
+ */
+export async function validateIncompatiblePlugin({
   basePath,
   packageJson,
 }: {
   basePath: string
   packageJson: PackageJson
-}) {
+}): Promise<string[]> {
+  const {dependencies, devDependencies, peerDependencies} = packageJson
+  const inDependencies = !!(
+    dependencies?.[incompatiblePluginPackage] ||
+    devDependencies?.[incompatiblePluginPackage] ||
+    peerDependencies?.[incompatiblePluginPackage]
+  )
+
+  const hasShimFile = await fileExists(path.normalize(path.join(basePath, 'v2-incompatible.js')))
+
   const sanityJson = await readJson5File<SanityV2Json>({basePath, filename: 'sanity.json'})
+  const sanityJsonReferencesShim = !!sanityJson?.parts?.some((part) =>
+    part?.path?.includes('v2-incompatible'),
+  )
 
-  const expectedDefaults = {
-    parts: [
-      {
-        implements: 'part:@sanity/base/sanity-root',
-        path: './v2-incompatible.js',
-      },
-    ],
+  if (!inDependencies && !hasShimFile && !sanityJsonReferencesShim) {
+    return []
   }
 
-  const hasSinglePart =
-    sanityJson &&
-    Object.keys(sanityJson).length === 1 &&
-    sanityJson?.parts &&
-    sanityJson.parts.length === 1
+  const found = [
+    inDependencies ? `- "${incompatiblePluginPackage}" listed in package.json` : null,
+    hasShimFile ? '- the v2-incompatible.js file' : null,
+    sanityJsonReferencesShim ? '- a sanity.json referencing v2-incompatible.js' : null,
+  ].filter((e): e is string => !!e)
 
-  const firstPart = hasSinglePart ? sanityJson?.parts?.[0] : undefined
-  const correctImplements = firstPart?.implements === expectedDefaults.parts[0].implements
-  const pathExists =
-    firstPart?.path && (await fileExists(path.normalize(path.join(basePath, firstPart.path))))
-  const hasDependency = !!packageJson.dependencies?.[incompatiblePluginPackage]
-  const isValid = sanityJson && hasSinglePart && correctImplements && pathExists && hasDependency
+  return [
+    outdent`
+      ${incompatiblePluginPackage} is no longer used and should be removed.
 
-  if (!isValid) {
-    const errors = [
-      !sanityJson ? 'sanity.json does not exist' : null,
-      !hasSinglePart ? 'sanity.json should have exactly one entry in "parts", but did not.' : null,
-      !correctImplements
-        ? `The part should implement ${expectedDefaults.parts[0].implements}, but did not.`
-        : null,
-      firstPart?.path && !pathExists
-        ? `The file in "path", ${firstPart?.path}, does not exist.`
-        : null,
+      It only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin was
+      installed there. That compatibility shim is now obsolete, so plugin-kit no longer adds it.
 
-      !hasDependency
-        ? outdent`
-      package.json should have ${incompatiblePluginPackage} as a dependency, but did not.
-        Install it with: npm install --save ${incompatiblePluginPackage}
-      `.trimStart()
-        : null,
-    ].filter((e): e is string => !!e)
+      Found:
+      ${found.join('\n')}
 
-    return [
-      outdent`
-        Invalid sanity.json. It is used for compatibility checking in V2 studios:
+      To fix this:
+      - Remove "${incompatiblePluginPackage}" from package.json (dependencies/devDependencies/peerDependencies)
+      - Delete the v2-incompatible.js file
+      - Delete sanity.json (if it only contains the v2-incompatible "part")
+      - Remove "sanity.json" and "v2-incompatible.js" from the package.json "files" array
 
-        - ${errors.join('\n- ')}
-
-        sanity.json will only be used when incorrectly installing a v3 plugin in a v2 Studio.
-
-        This check ensures that sanity.json conforms with the usage section of
-        ${urls.incompatiblePlugin}
+      For more, see ${urls.incompatiblePlugin}
     `.trimStart(),
-    ]
-  }
-  return []
+  ]
 }
 
 export function validatePackageName(packageJson: PackageJson) {
-  const valid: {validForNewPackages?: boolean; errors: string[]} = validateNpmPackageName(
-    packageJson.name,
-  )
+  const valid = validateNpmPackageName(packageJson.name ?? '')
   if (!valid.validForNewPackages) {
-    return [`Invalid package.json: "name" is invalid: ${valid.errors.join(', ')}`]
+    const messages = valid.errors ?? valid.warnings ?? []
+    return [`Invalid package.json: "name" is invalid: ${messages.join(', ')}`]
   }
 
   const isScoped = packageJson.name?.startsWith('@')
@@ -472,6 +543,46 @@ export function validatePackageName(packageJson: PackageJson) {
     ]
   }
   return []
+}
+
+/**
+ * Plugins built with @sanity/plugin-kit publish the compiled output (the `dist` directory) plus any
+ * v2-compatibility files. The `src` directory should not be published: it bloats the package and can
+ * cause bundlers that resolve the `source` export condition to pull in raw, uncompiled TypeScript.
+ */
+export function validateBannedFiles(packageJson: PackageJson): string[] {
+  const {files} = packageJson
+  if (!Array.isArray(files)) {
+    return []
+  }
+
+  const hasSrc = files.some((entry) => {
+    if (typeof entry !== 'string') {
+      return false
+    }
+    // Normalize entries like "./src", "src/", "/src" before comparing.
+    const normalized = entry
+      .trim()
+      .replace(/^\.?\/+/, '')
+      .replace(/\/+$/, '')
+    return normalized === 'src'
+  })
+
+  if (!hasSrc) {
+    return []
+  }
+
+  return [
+    outdent`
+      package.json "files" must not include "src".
+
+      Plugins built with @sanity/plugin-kit publish the compiled output in "dist" (and any v2-compatibility files).
+      Shipping the "src" directory bloats the published package and can cause bundlers that resolve the
+      "source" export condition to import raw, uncompiled TypeScript.
+
+      Please remove "src" from the "files" array in package.json.
+    `.trimStart(),
+  ]
 }
 
 export async function validateSrcIndexFile(basePath: string) {

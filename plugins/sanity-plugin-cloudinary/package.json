@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-cloudinary",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "description": "Cloudinary integration for Sanity Studio V3.",
   "keywords": [
     "sanity",
@@ -41,10 +41,10 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "catalog:",
     "@sanity/studio-secrets": "workspace:^",
     "@sanity/ui": "catalog:",
-    "nanoid": "^4.0.0"
+    "nanoid": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

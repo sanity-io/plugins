@@ -3,6 +3,7 @@
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
+    "types": ["google.maps"],
     "isolatedDeclarations": false
   }
 }

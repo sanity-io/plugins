@@ -1,7 +1,5 @@
 # @sanity/google-maps-input
 
-> For the v2 version, please refer to the [v2-branch](https://github.com/sanity-io/google-maps-input/tree/studio-v2).
-
 ## What is it?
 
 Plugin for [Sanity Studio](https://www.sanity.io) providing input handlers for geo-related input types using Google Maps.
@@ -10,24 +8,12 @@ This plugin will replace the default `geopoint` input component and adds support
 
 ![Google maps input](assets/google-maps-input.png)
 
-## Known issues in Studio V3
-
-- Diff-preview is not implemented.
-
-These will be re-added well before Studio V3 GA.
-
 ## Installation
 
 In your studio folder, run:
 
 ```
 npm install --save @sanity/google-maps-input
-```
-
-or
-
-```
-yarn add @sanity/google-maps-input
 ```
 
 ## Usage
@@ -53,10 +39,10 @@ export default defineConfig({
 Ensure that the key has access to:
 
 - Google Maps JavaScript API (for the interactive map)
-- Google Places API Web Service (for the search feature)
 - Google Static Maps API (for previewing a location)
+- Google Places API (New) (for the search feature)
 
-And that the key allows web-access from the Studio URL(s) you are using the plugin in.
+And that the key allows web-access from the Studio URL(s) you are using the plugin in. If the key is missing or rejected, the input renders an inline message explaining what to fix.
 
 ### Configuration Options
 
@@ -113,29 +99,54 @@ The `geopointRadius` field type extends the basic geopoint with:
 - Visual circle overlay on the map
 - Editable radius input field
 - Draggable circle for radius adjustment
-- Enhanced diff visualization showing radius changes
 
-## Stuck? Get help
+### Store selected Zoom
 
-[![Slack Community Button](https://slack.sanity.io/badge.svg)](https://slack.sanity.io/)
+Optionally persists the selected zoom level on the `geopoint` object.
 
-Join [Sanity’s developer community](https://slack.sanity.io) or ping us [on twitter](https://twitter.com/sanity_io).
+```js
+import {googleMapsInput} from '@sanity/google-maps-input'
+
+export default defineConfig({
+  // ...
+  plugins: [
+    googleMapsInput({
+      apiKey: 'my-api-key',
+      saveZoom: true, // default false
+    }),
+  ],
+})
+```
+
+Adds a `zoom` property to the `geopoint` object:
+
+```json
+{
+  "_type": "geopoint",
+  "lat": 54.5259614,
+  "lng": 15.2551187,
+  "zoom": 3
+}
+```
+
+### Reviewing changes
+
+In the document's **Review changes** pane, `geopoint` and `geopointRadius` values render as a before/after static map preview, matching the look of the built-in image diff.
+
+`geopointRadius` fields get this automatically. Because `geopoint` is a built-in Sanity type, attach the exported `GeopointDiff` component to your `geopoint` fields to opt in:
+
+```typescript
+import {GeopointDiff} from '@sanity/google-maps-input'
+
+// In your schema
+export default {
+  name: 'location',
+  title: 'Location',
+  type: 'geopoint',
+  components: {diff: GeopointDiff},
+}
+```
 
 ## License
 
 MIT-licensed. See LICENSE.
-
-## Develop & test
-
-Add a Google Maps API key to `.env.local` (see `.env.example` for example format).
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/google-maps-input/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".

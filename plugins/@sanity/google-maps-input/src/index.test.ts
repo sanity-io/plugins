@@ -12,12 +12,13 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
     {
       ".": {
-        "GeopointArrayDiff": "function",
-        "GeopointFieldDiff": "function",
+        "GeopointDiff": "function",
         "GeopointInput": "function",
-        "GeopointRadiusFieldDiff": "function",
         "GeopointRadiusInput": "function",
         "googleMapsInput": "function",
+      },
+      "./bundle.css": {
+        "default": "string",
       },
     }
   `)

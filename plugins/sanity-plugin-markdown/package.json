@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-markdown",
-  "version": "8.0.7",
+  "version": "9.0.0",
   "description": "Markdown fields in Sanity Studio. Supports Github flavored Markdown and image uploads.",
   "keywords": [
     "github flavored markdown",
@@ -29,7 +29,6 @@
     ".": {
       "development": "./src/index.ts",
       "source": "./src/index.ts",
-      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./next": {
@@ -41,10 +40,7 @@
   },
   "publishConfig": {
     "exports": {
-      ".": {
-        "require": "./dist/index.cjs",
-        "default": "./dist/index.js"
-      },
+      ".": "./dist/index.js",
       "./next": "./dist/indexNext.js",
       "./package.json": "./package.json"
     }
@@ -66,7 +62,7 @@
     "@types/react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",
-    "easymde": "^2.20.0",
+    "easymde": "^2.21.0",
     "react": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:"

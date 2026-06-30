@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-shopify-assets",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Choose assets from your Shopify store in your Sanity Studio",
   "keywords": [
     "assets",
@@ -45,15 +45,15 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "axios": "^1.18.0",
+    "axios": "^1.18.1",
     "pretty-bytes": "^6.1.1",
     "pretty-ms": "^8.0.0",
     "react-infinite-scroll-component": "^6.1.1",
     "react-photo-album": "^2.4.1",
     "rxjs": "catalog:",
-    "video.js": "^7.21.7"
+    "video.js": "catalog:"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
@@ -61,7 +61,7 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@types/video.js": "^7.3.58",
+    "@types/video.js": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",

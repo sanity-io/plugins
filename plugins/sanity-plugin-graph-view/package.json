@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-graph-view",
-  "version": "5.0.9",
+  "version": "5.0.10",
   "description": "",
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-graph-view#readme",
   "bugs": {
@@ -37,13 +37,13 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/color": "^3.0.6",
+    "@sanity/color": "catalog:",
     "@sanity/ui": "catalog:",
     "bezier-easing": "^2.1.0",
     "deep-equal": "^2.2.3",
     "polished": "^4.3.1",
     "react-force-graph-2d": "^1.29.1",
-    "uuid": "^14.0.0"
+    "uuid": "^14.0.1"
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",

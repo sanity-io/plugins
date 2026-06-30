@@ -15,6 +15,8 @@ export const muxInputExample = definePlugin(() => ({
   schema: {types: [muxTrailer]},
   plugins: [
     muxInput({
+      // Make the studio tool clearly attributable to the plugin in the nav.
+      tool: {title: 'mux-input: Videos'},
       video_quality: 'plus',
       max_resolution_tier: '2160p',
       static_renditions: ['highest'],

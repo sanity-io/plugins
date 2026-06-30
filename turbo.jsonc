@@ -2,7 +2,15 @@
   "$schema": "https://turborepo.org/schema.json",
   "ui": "tui",
   "globalDependencies": ["pnpm-workspace.yaml"],
-  "globalEnv": ["NODE_ENV", "CI", "GITHUB_ACTIONS"],
+  "globalEnv": [
+    "NODE_ENV",
+    "CI",
+    "GITHUB_ACTIONS",
+    "SANITY_STUDIO_PROJECT_ID",
+    "SANITY_STUDIO_DATASET",
+    "SANITY_STUDIO_APP_ID",
+    "SANITY_STUDIO_GOOGLE_MAPS_API_KEY",
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

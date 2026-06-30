@@ -18,7 +18,7 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - run: pnpm dlx skills experimental_install --yes
       - run: pnpm dlx skills add https://github.com/vercel-labs/skills --skill find-skills --agent claude-code cursor --yes
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: generate-token
         with:
-          app-id: ${{ secrets.ECOSPARK_APP_ID }}
+          client-id: ${{ vars.ECOSPARK_CLIENT_ID }}
           private-key: ${{ secrets.ECOSPARK_APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write

@@ -10,6 +10,11 @@
     "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
   },
+  "ignoreDependencies": [
+    "@vanilla-extract/css",
+    "babel-plugin-react-compiler",
+    "babel-plugin-styled-components",
+  ],
   "workspaces": {
     ".": {
       "entry": ["*.{ts,mts,mjs}"],
@@ -26,7 +31,6 @@
     "dev/test-studio": {
       "entry": ["migrations/**/*.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": ["babel-plugin-react-compiler"],
     },
     "turbo/generators": {
       "project": ["src/**/*.ts"],
@@ -60,26 +64,14 @@
     "plugins/@sanity/assist": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/code-input": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/color-input": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/debug-preview-url-secret-plugin": {
       "entry": ["package.config.ts"],
@@ -112,10 +104,6 @@
     "plugins/sanity-plugin-asset-source-unsplash": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-bynder-input": {
       "entry": ["package.config.ts"],
@@ -124,18 +112,10 @@
     "plugins/sanity-plugin-graph-view": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-iframe-pane": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-internationalized-array": {
       "entry": ["package.config.ts"],
@@ -144,62 +124,30 @@
     "plugins/sanity-translations-tab": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-markdown": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-media": {
-      "entry": [
-        "package.config.ts",
-        "scripts/migrate-to-localized-fields.ts",
-        "v2-incompatible.js",
-      ],
+      "entry": ["package.config.ts", "scripts/migrate-to-localized-fields.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-mux-input": {
-      "entry": ["package.config.ts", "v2-incompatible.js"],
+      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-workflow": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-workspace-home": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/sfcc": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/orderable-document-list": {
       "entry": ["package.config.ts"],
@@ -208,19 +156,11 @@
     "plugins/sanity-plugin-transifex": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     // add new plugin workspaces here
     "plugins/@sanity/embeddings-index-ui": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
 
     "plugins/@sanity/form-toolkit": {
@@ -231,19 +171,11 @@
     "plugins/@sanity/google-maps-input": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
 
     "plugins/@sanity/cross-dataset-duplicator": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
 
     "plugins/sanity-plugin-studio-smartling": {
@@ -254,18 +186,10 @@
     "plugins/@sanity/hierarchical-document-list": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-shopify-assets": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/personalization-plugin": {
       "entry": ["package.config.ts"],
@@ -274,18 +198,10 @@
     "plugins/sanity-plugin-cloudinary": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/sanity-plugin-async-list": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
 
     "plugins/@sanity/table": {
@@ -296,19 +212,11 @@
     "plugins/sanity-plugin-dashboard-widget-vercel": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
 
     "plugins/sanity-plugin-dashboard-widget-netlify": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
 
     "plugins/sanity-plugin-dashboard-widget-document-list": {
@@ -324,35 +232,19 @@
     "plugins/@sanity/dashboard": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
 
     "plugins/sanity-plugin-documents-pane": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-utils": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-google-translate": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-latex-input": {
       "entry": ["package.config.ts"],
@@ -362,10 +254,6 @@
     "plugins/@sanity/debug-live-sync-tags": {
       "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
 
     "plugins/@sanity/presets": {

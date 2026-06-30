@@ -1,9 +1,10 @@
 import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
+import {HomeIcon} from '@sanity/icons'
 import {vercelProtectionBypassTool} from '@sanity/vercel-protection-bypass'
 import {visionTool} from '@sanity/vision'
 import {defineConfig, type WorkspaceOptions} from 'sanity'
 import {contentGraphView} from 'sanity-plugin-graph-view'
-import {workspaceHomeConfig} from 'sanity-plugin-workspace-home'
+import {workspaceHome} from 'sanity-plugin-workspace-home'
 import {structureTool} from 'sanity/structure'
 
 import {aprimoExample} from '#aprimo'
@@ -24,10 +25,8 @@ import {embeddingsIndexUiExample} from '#embeddings-index-ui'
 import {formToolkitExample} from '#form-toolkit'
 import {googleMapsInputExample} from '#google-maps-input'
 import {googleTranslateExample} from '#google-translate'
-import {
-  hierarchicalDocumentListExample,
-  hierarchicalDocumentListExampleStructure,
-} from '#hierarchical-document-list'
+import {hierarchicalDocumentListExample} from '#hierarchical-document-list'
+import {homeDefaultDocumentNode, homeStructure} from '#home'
 import {hotspotArrayExample} from '#hotspot-array'
 import {i18nArrayTranslationExample} from '#i18n-array-translation'
 import {iframePaneExample} from '#iframe-pane'
@@ -40,10 +39,7 @@ import {markdownExample} from '#markdown'
 import {mediaExample} from '#media'
 import {muxInputExample} from '#mux-input'
 import {netlifyWidgetExample} from '#netlify-widget'
-import {
-  orderableDocumentListExample,
-  orderableDocumentListExampleStructure,
-} from '#orderable-document-list'
+import {orderableDocumentListExample} from '#orderable-document-list'
 import {personalizationExample} from '#personalization'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
@@ -76,73 +72,25 @@ function createWorkspace(
 }
 
 export default defineConfig([
-  workspaceHomeConfig({projectId, dataset}),
+  // The default "Home" workspace is the merged kitchen sink. It must stay first
+  // so the Workspaces Home launcher (which lists every *other* workspace) works.
+  // It hosts every plugin that can coexist in one dataset/schema; the workspaces
+  // below only exist because they require a different dataset or register a
+  // conflicting plugin/schema configuration that cannot live alongside Home.
   createWorkspace({
-    name: 'naive-html-serializer-example',
-    title: 'Naive HTML Serializer',
-    plugins: [sanityNaiveHtmlSerializerExample()],
-  }),
-  createWorkspace({name: 'content-graph-view', plugins: [contentGraphView()]}),
-  createWorkspace({name: 'utils-example', title: 'Utils Example', plugins: [utilsExample()]}),
-  createWorkspace({name: 'iframe-pane-example', plugins: [iframePaneExample()]}),
-  createWorkspace({name: 'transifex-example', title: 'Transifex', plugins: [transifexExample()]}),
-  createWorkspace({name: 'smartling-example', title: 'Smartling', plugins: [smartlingExample()]}),
-  createWorkspace({name: 'documents-pane-example', plugins: [documentsPaneExample()]}),
-  createWorkspace({
-    name: 'translations-tab-example',
-    title: 'Translations Tab',
-    plugins: [translationsTabExample()],
-  }),
-  createWorkspace({
-    name: 'i18n-array-translation-example',
-    title: 'i18n Array Translation',
-    plugins: [i18nArrayTranslationExample()],
-  }),
-  createWorkspace({
-    name: 'doc-i18n-translation-example',
-    title: 'Doc i18n + Translations',
-    plugins: [documentInternationalizationTranslationExample()],
-  }),
-  createWorkspace({name: 'workflow-example', plugins: [structureTool(), workflowExample()]}),
-  createWorkspace({
-    name: 'orderable-document-list-example',
-    title: 'Orderable Document List',
-    plugins: [orderableDocumentListExample(), orderableDocumentListExampleStructure()],
-  }),
-  createWorkspace({
-    name: 'hierarchical-document-list-example',
-    title: 'Hierarchical Document List',
-    plugins: [hierarchicalDocumentListExample(), hierarchicalDocumentListExampleStructure()],
-  }),
-  createWorkspace({
-    name: 'presets-studio',
-    title: 'Presets Studio',
-    plugins: [structureTool(), presetsWorkspace()],
-  }),
-  createWorkspace({
-    name: 'sfcc-example',
-    title: 'Salesforce Commerce Cloud',
-    plugins: [sfccExample()],
-  }),
-  createWorkspace({
-    name: 'dashboard-example',
-    title: 'Dashboard',
+    name: 'home',
+    title: 'Home',
+    icon: HomeIcon,
     plugins: [
-      structureTool(),
-      dashboardToolExample(),
-      documentListWidgetExample(),
-      netlifyWidgetExample(),
-      vercelWidgetExample(),
-    ],
-  }),
-  createWorkspace({
-    name: 'kitchen-sink',
-    plugins: [
-      structureTool(),
+      // Order matters for the top navigation: Workspaces Home, Structure, then
+      // the most-used plugin tools first.
+      workspaceHome(),
+      structureTool({structure: homeStructure, defaultDocumentNode: homeDefaultDocumentNode}),
+      mediaExample(),
+      muxInputExample(),
+      // Inputs, asset sources, panes and tools (no particular order beyond the above).
       assistExample(),
       googleTranslateExample(),
-      mediaExample(),
-      // add new plugins here
       embeddingsIndexUiExample(),
       formToolkitExample(),
       googleMapsInputExample(),
@@ -151,7 +99,6 @@ export default defineConfig([
       shopifyAssetsExample(),
       personalizationExample(),
       cloudinaryExample(),
-      muxInputExample(),
       asyncListExample(),
       tableExample(),
       hotspotArrayExample(),
@@ -167,24 +114,67 @@ export default defineConfig([
       bynderExample(),
       colorExample(),
       markdownExample(),
-      debugSecrets(),
       unsplashExample(),
+      presetsWorkspace(),
+      sanityNaiveHtmlSerializerExample(),
+      utilsExample(),
+      iframePaneExample(),
+      documentsPaneExample(),
+      transifexExample(),
+      smartlingExample(),
+      translationsTabExample(),
+      dashboardToolExample(),
+      documentListWidgetExample(),
+      netlifyWidgetExample(),
+      vercelWidgetExample(),
+      contentGraphView(),
       scriptRunnerTool(),
+      debugSecrets(),
       vercelProtectionBypassTool(),
       visionTool(),
     ],
   }),
+  // Re-registers `internationalizedArray` with async languages loaded from
+  // documents, which cannot coexist with Home's static language config.
   createWorkspace({
     name: 'internationalized-array-async-languages',
+    title: 'internationalized-array: Async Languages',
     plugins: [internationalizedArrayAsyncLanguages()],
   }),
+  // Demos the translations tab at the internationalized-array level, with its own
+  // `internationalizedArray` language set (en/de/no_nb/is) — conflicts with Home.
+  createWorkspace({
+    name: 'i18n-array-translation',
+    title: 'sanity-translations-tab: i18n Array',
+    plugins: [i18nArrayTranslationExample()],
+  }),
+  // A second `documentInternationalization` registration (for docI18nLocalizedPage)
+  // that cannot coexist with Home's `lesson` configuration.
+  createWorkspace({
+    name: 'doc-i18n-translation',
+    title: 'document-internationalization: Translations',
+    plugins: [documentInternationalizationTranslationExample()],
+  }),
+  // Registers its own `internationalizedArray` (en_US/fr) and `product`/`category`
+  // types (`product` collides with the workflow workspace).
+  createWorkspace({
+    name: 'sfcc',
+    title: 'sfcc: Salesforce Commerce Cloud',
+    plugins: [sfccExample()],
+  }),
+  // Defines `product`/`article`; `product` collides with the sfcc workspace.
+  createWorkspace({
+    name: 'workflow',
+    title: 'workflow: Document Workflow',
+    plugins: [structureTool(), workflowExample()],
+  }),
   // Destination workspace for @sanity/cross-dataset-duplicator: uses a
-  // different dataset so it can be picked as a duplication target
+  // different dataset so it can be picked as a duplication target.
   {
     projectId,
     dataset: 'test',
     name: 'cross-dataset-duplicator-target',
-    title: 'Cross Dataset Duplicator Target',
+    title: 'cross-dataset-duplicator: Target',
     basePath: '/cross-dataset-duplicator-target',
     plugins: [structureTool(), crossDatasetDuplicatorExample()],
   },

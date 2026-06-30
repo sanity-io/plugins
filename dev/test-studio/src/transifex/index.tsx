@@ -2,7 +2,6 @@ import {EarthGlobeIcon} from '@sanity/icons'
 import {defineField, definePlugin, defineType} from 'sanity'
 import {defaultFieldLevelConfig, TranslationsTab} from 'sanity-plugin-transifex'
 import type {DefaultDocumentNodeResolver} from 'sanity/structure'
-import {structureTool} from 'sanity/structure'
 
 const languages = [
   {id: 'en', title: 'English', isDefault: true},
@@ -50,7 +49,7 @@ const transifexTest = defineType({
   ],
 })
 
-const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
+export const transifexDefaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
   if (schemaType === 'transifexTest') {
     return S.document().views([
       S.view.form(),
@@ -58,15 +57,10 @@ const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
     ])
   }
 
-  return S.document().views([S.view.form()])
+  return null
 }
 
 export const transifexExample = definePlugin(() => ({
   name: 'transifex-example',
   schema: {types: [localizedString, transifexTest]},
-  plugins: [
-    structureTool({
-      defaultDocumentNode,
-    }),
-  ],
 }))

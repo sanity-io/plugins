@@ -5,7 +5,7 @@ import {
   orderRankOrdering,
 } from '@sanity/orderable-document-list'
 import {definePlugin, defineType, type ConfigContext} from 'sanity'
-import {structureTool, type StructureBuilder} from 'sanity/structure'
+import type {StructureBuilder} from 'sanity/structure'
 
 type StructureListItem = Parameters<ReturnType<StructureBuilder['list']>['items']>[0][number]
 
@@ -62,17 +62,14 @@ export const orderableDocumentListExample = definePlugin(() => ({
   schema: {types: [orderableCategory, orderableProject]},
 }))
 
-export const orderableDocumentListExampleStructure = definePlugin(() => ({
-  plugins: [
-    structureTool({
-      structure: (S, context) => {
-        return S.list()
-          .title('Content')
-          .items([
-            orderableDeskItem({type: 'orderableCategory', title: 'Categories'}, S, context),
-            orderableDeskItem({type: 'orderableProject', title: 'Projects'}, S, context),
-          ])
-      },
-    }),
-  ],
-}))
+// Desk items for the orderable-document-list plugin, composed into the home
+// workspace's structure (rather than living in a dedicated workspace).
+export function orderableDocumentListDeskItems(
+  S: StructureBuilder,
+  context: ConfigContext,
+): StructureListItem[] {
+  return [
+    orderableDeskItem({type: 'orderableCategory', title: 'Categories'}, S, context),
+    orderableDeskItem({type: 'orderableProject', title: 'Projects'}, S, context),
+  ]
+}

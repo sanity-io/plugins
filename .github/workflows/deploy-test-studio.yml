@@ -21,10 +21,11 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - run: pnpm turbo build --filter=test-studio^...
       - run: pnpm sanity deploy -y
         working-directory: dev/test-studio
         env:
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_DEPLOY_TOKEN }}
+          SANITY_STUDIO_GOOGLE_MAPS_API_KEY: ${{ secrets.SANITY_STUDIO_GOOGLE_MAPS_API_KEY }}

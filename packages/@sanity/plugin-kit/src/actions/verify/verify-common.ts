@@ -11,18 +11,20 @@ const splitLine = `\n----------------------------------------------------------`
 
 export const verifyPackageConfigDefaults = {
   'packageName': true,
+  'esmOnly': true,
   'tsconfig': true,
   'tsc': true,
   'dependencies': true,
   'deprecatedDependencies': true,
   'babelConfig': true,
-  'sanityV2Json': true,
+  'incompatiblePlugin': true,
   'eslintImports': true,
   'scripts': true,
   'pkg-utils': true,
   'nodeEngine': true,
   'studioConfig': true,
   'srcIndex': true,
+  'bannedFiles': true,
   'duplicateConfig': true,
 } as const
 

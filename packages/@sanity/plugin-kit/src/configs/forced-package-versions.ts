@@ -7,6 +7,6 @@ export const forcedPeerPackageVersions = {
   'react-dom': '^18',
   '@types/react': '^18',
   '@types/react-dom': '^18',
-  'sanity': '^3',
+  'sanity': '^5 || ^6.0.0-0',
   'styled-components': '^5.2',
 }

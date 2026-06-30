@@ -1,5 +1,42 @@
 # @sanity/google-maps-input
 
+## 6.1.0
+
+### Minor Changes
+
+- [#1225](https://github.com/sanity-io/plugins/pull/1225) [`41d518e`](https://github.com/sanity-io/plugins/commit/41d518e9fbb3be5f46381e1aa7a65b1f9deea5c0) Thanks [@gustavorino](https://github.com/gustavorino)! - Add optional `saveZoom` config parameter to persist the selected zoom level on the geopoint object
+
+## 6.0.2
+
+### Patch Changes
+
+- [#1417](https://github.com/sanity-io/plugins/pull/1417) [`50df1f2`](https://github.com/sanity-io/plugins/commit/50df1f287debd7069531f4dcf8f23f740c487923) Thanks [@stipsan](https://github.com/stipsan)! - Migrate internal styling from styled-components to vanilla-extract (zero-runtime CSS)
+
+## 6.0.1
+
+### Patch Changes
+
+- [#1412](https://github.com/sanity-io/plugins/pull/1412) [`40aed1e`](https://github.com/sanity-io/plugins/commit/40aed1e4e9ce5ddb90fdd05d2463368d63a2e449) Thanks [@stipsan](https://github.com/stipsan)! - Fix `InvalidValueError` ("not an instance of LatLng … in property lat: not a number") thrown when opening the map editor for an empty geopoint, such as a newly added array item. Map markers, the radius circle and the map center are now only rendered once the value has finite `lat`/`lng` coordinates, and empty items show a "Set location" button instead of a broken preview.
+
+- [#1220](https://github.com/sanity-io/plugins/pull/1220) [`b81e9cf`](https://github.com/sanity-io/plugins/commit/b81e9cfa61d3d752fbf266fd8cb362256ea4ce18) Thanks [@stipsan](https://github.com/stipsan)! - Avoid a runtime error in the `geopointRadius` list preview when a document has an incomplete location: `prepare` now guards against missing `lat`/`lng` and shows "No location set" instead of throwing on `lat.toFixed()`.
+
+## 6.0.0
+
+### Major Changes
+
+- [#1219](https://github.com/sanity-io/plugins/pull/1219) [`9ffc169`](https://github.com/sanity-io/plugins/commit/9ffc1697824396925389783a2344e3f42e41970c) Thanks [@stipsan](https://github.com/stipsan)! - Modernize the map input by rebuilding it on [`@vis.gl/react-google-maps`](https://visgl.github.io/react-google-maps/), improve the key-configuration UX, and implement Review Changes diffs.
+
+  - The map now loads via `<APIProvider>` (with `loading=async`) and uses the library's components: a default advanced marker, `StaticMap`/`createStaticMapsUrl` for the location preview, and an editable `<Circle>` for the radius.
+  - Place search now uses the new `gmp-place-autocomplete` web component backed by the **Places API (New)**, replacing the legacy `google.maps.places.Autocomplete` widget — giving better autocomplete results and a nicer search UX.
+  - This refactors away from deprecated Google Maps APIs, resolving the runtime console deprecation warnings for:
+    - `google.maps.Marker` → `google.maps.marker.AdvancedMarkerElement`
+    - `google.maps.places.Autocomplete` → `google.maps.places.PlaceAutocompleteElement`
+    - loading the Maps JavaScript API without `loading=async`
+  - Implemented the Review Changes diff: `geopoint` and `geopointRadius` changes now render a before/after static map preview (matching the built-in image diff) instead of raw latitude/longitude/radius field diffs. `geopointRadius` wires this automatically; for the built-in `geopoint` type, attach the exported `GeopointDiff` to your field's `components.diff`.
+  - The radius preview now auto-fits the viewport so the whole circle stays within the image instead of being clipped.
+  - A missing key renders a clear warning card (how to add `apiKey` to the plugin config and which Google APIs it needs); a rejected key replaces the map/preview with an actionable error card noting the key may be invalid, a demo key, or restricted, and listing the required APIs (Google Maps JavaScript API, Google Static Maps API, Google Places API (New)).
+  - **Breaking:** removes the previously exported (but non-functional) `GeopointFieldDiff`, `GeopointArrayDiff`, and `GeopointRadiusFieldDiff` components (and their prop types), replaced by the single `GeopointDiff`.
+
 ## 5.0.2
 
 ### Patch Changes

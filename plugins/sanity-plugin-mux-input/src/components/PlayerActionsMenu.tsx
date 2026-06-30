@@ -1,4 +1,5 @@
 import {
+  DownloadIcon,
   EllipsisHorizontalIcon,
   ImageIcon,
   LockIcon,
@@ -151,6 +152,12 @@ function PlayerActionsMenu(
                 />
               </>
             )}
+            <MenuDivider />
+            <MenuItem
+              icon={DownloadIcon}
+              text="Mezzanine"
+              onClick={() => setDialogState('mezzanine')}
+            />
             <MenuDivider />
             {hasConfigAccess && (
               <>

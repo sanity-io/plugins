@@ -28,6 +28,14 @@
       "development": "./src/index.ts",
       "default": "./dist/index.js"
     },
+{{#if hasVanillaExtract}}
+    "./bundle.css": {
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle.css.js",
+      "default": "./dist/bundle.css.js"
+    },
+{{/if}}
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
@@ -51,6 +59,10 @@
     "@sanity/pkg-utils": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+{{#if hasVanillaExtract}}
+    "@vanilla-extract/css": "catalog:",
+    "@vanilla-extract/vite-plugin": "catalog:",
+{{/if}}
     "babel-plugin-react-compiler": "catalog:",
 {{#if hasStyledComponents}}
     "babel-plugin-styled-components": "catalog:",
@@ -72,6 +84,14 @@
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+{{#if hasVanillaExtract}}
+      "./bundle.css": {
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle.css.js",
+        "default": "./dist/bundle.css.js"
+      },
+{{/if}}
       "./package.json": "./package.json"
     }
   }

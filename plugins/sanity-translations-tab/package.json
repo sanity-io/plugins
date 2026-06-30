@@ -41,9 +41,9 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@portabletext/block-tools": "^5.1.6",
-    "@portabletext/to-html": "^5.0.2",
-    "@sanity/icons": "^3.7.4",
+    "@portabletext/block-tools": "catalog:",
+    "@portabletext/to-html": "catalog:",
+    "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
     "@sanity/util": "catalog:",
     "sanity-naive-html-serializer": "workspace:^"

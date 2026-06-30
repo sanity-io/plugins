@@ -1,5 +1,11 @@
 # @sanity/presets
 
+## 1.0.0
+
+### Major Changes
+
+- [#1390](https://github.com/sanity-io/plugins/pull/1390) [`747c44e`](https://github.com/sanity-io/plugins/commit/747c44ea2b75ed57f2b0c0c80139bc300621f0e7) Thanks [@jordanl17](https://github.com/jordanl17)! - Rework the README around the recommended registry-based setup: add a from-scratch getting-started walkthrough, document where to create the registry to avoid import cycles, explain inline vs named type usage, and correct the documented Image and SEO field behaviour
+
 ## 0.5.2
 
 ### Patch Changes
