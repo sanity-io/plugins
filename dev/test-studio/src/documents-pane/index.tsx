@@ -1,7 +1,7 @@
 import {DocumentsIcon} from '@sanity/icons'
 import {definePlugin, defineType} from 'sanity'
 import DocumentsPane from 'sanity-plugin-documents-pane'
-import {structureTool, type DefaultDocumentNodeResolver} from 'sanity/structure'
+import type {DefaultDocumentNodeResolver} from 'sanity/structure'
 
 const documentsPaneArticle = defineType({
   name: 'documentsPaneArticle',
@@ -28,7 +28,7 @@ const documentsPaneArticle = defineType({
   ],
 })
 
-const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
+export const documentsPaneDefaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
   if (schemaType === 'documentsPaneArticle') {
     return S.document().views([
       S.view.form(),
@@ -44,15 +44,10 @@ const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
     ])
   }
 
-  return S.document().views([S.view.form()])
+  return null
 }
 
 export const documentsPaneExample = definePlugin(() => ({
   name: 'documents-pane-example',
   schema: {types: [documentsPaneArticle]},
-  plugins: [
-    structureTool({
-      defaultDocumentNode,
-    }),
-  ],
 }))

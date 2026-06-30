@@ -24,6 +24,27 @@ export type Rendition = {
   publicuri?: string
 }
 
+export type CorePresetsTestReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'corePresetsTest'
+}
+
+export type Link = {
+  linkType?: 'internal' | 'external'
+  reference?: CorePresetsTestReference
+  url?: string
+  openInNewTab?: boolean
+}
+
+export type CtaLink = {
+  linkType?: 'internal' | 'external'
+  reference?: CorePresetsTestReference
+  url?: string
+  openInNewTab?: boolean
+}
+
 export type SanityVercelProtectionBypass = {
   _id: string
   _type: 'sanity.vercelProtectionBypass'
@@ -33,6 +54,169 @@ export type SanityVercelProtectionBypass = {
   secret?: string
 }
 
+export type SanityPreviewUrlSecret = {
+  _id: string
+  _type: 'sanity.previewUrlSecret'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  secret?: string
+  source?: string
+  studioUrl?: string
+  userId?: string
+}
+
+export type DocumentListDemo = {
+  _id: string
+  _type: 'documentListDemo'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+}
+
+export type Translatable = {
+  _id: string
+  _type: 'translatable'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  content?: string
+}
+
+export type SmartlingTest = {
+  _id: string
+  _type: 'smartlingTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  greeting?: SmartlingLocalizedString
+  description?: SmartlingLocalizedString
+}
+
+export type SmartlingLocalizedString = {
+  _type: 'smartlingLocalizedString'
+  en?: string
+  es?: string
+  fr?: string
+}
+
+export type TransifexTest = {
+  _id: string
+  _type: 'transifexTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  greeting?: TransifexLocalizedString
+  description?: TransifexLocalizedString
+}
+
+export type TransifexLocalizedString = {
+  _type: 'transifexLocalizedString'
+  en?: string
+  es?: string
+  fr?: string
+}
+
+export type DocumentsPaneArticleReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'documentsPaneArticle'
+}
+
+export type DocumentsPaneArticle = {
+  _id: string
+  _type: 'documentsPaneArticle'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  references?: Array<
+    {
+      _key: string
+    } & DocumentsPaneArticleReference
+  >
+}
+
+export type IframeExample = {
+  _id: string
+  _type: 'iframeExample'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  slug?: Slug
+}
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
+}
+
+export type UtilsDemoDocument = {
+  _id: string
+  _type: 'utilsDemoDocument'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+}
+
+export type NaiveHtmlSerializerArticle = {
+  _id: string
+  _type: 'naiveHtmlSerializerArticle'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  snippet?: string
+  content?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type Blockquote = {
+  _type: 'blockquote'
+  quote?: string
+  author?: string
+  link?: Link
+}
+
+export type RichTextMinimal = Array<{
+  children?: Array<{
+    marks?: Array<string>
+    text?: string
+    _type: 'span'
+    _key: string
+  }>
+  style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+  listItem?: 'bullet' | 'number'
+  markDefs?: null
+  level?: number
+  _type: 'block'
+  _key: string
+}>
+
 export type SanityImageAssetReference = {
   _ref: string
   _type: 'reference'
@@ -40,20 +224,139 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
 }
 
-export type UnsplashPost = {
+export type RichTextDefaults = Array<
+  | {
+      children?: Array<
+        | {
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }
+        | {
+            link?: CtaLink
+            level?: 1 | 2 | 3
+            _type: 'cta'
+            _key: string
+          }
+      >
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+      listItem?: 'bullet' | 'number'
+      markDefs?: Array<{
+        linkType?: 'internal' | 'external'
+        reference?: CorePresetsTestReference
+        url?: string
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }
+  | {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      altText?: string
+      caption?: string
+      _type: 'richTextImage'
+      _key: string
+    }
+>
+
+export type CorePresetsTest = {
   _id: string
-  _type: 'unsplashPost'
+  _type: 'corePresetsTest'
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  image?: {
+  type?: 'landingPage' | 'marketingPage' | 'documentationPage'
+  name: string
+  slug?: Slug
+  content?: Array<
+    | ({
+        _key: string
+      } & Blockquote)
+    | {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        altText?: string
+        caption?: string
+        _type: 'imageBlock'
+        _key: string
+      }
+    | {
+        content?: Array<
+          | {
+              children?: Array<
+                | {
+                    marks?: Array<string>
+                    text?: string
+                    _type: 'span'
+                    _key: string
+                  }
+                | {
+                    link?: CtaLink
+                    level?: 1 | 2 | 3
+                    _type: 'cta'
+                    _key: string
+                  }
+              >
+              style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+              listItem?: 'bullet' | 'number'
+              markDefs?: Array<{
+                linkType?: 'internal' | 'external'
+                reference?: CorePresetsTestReference
+                url?: string
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+              }>
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+          | {
+              asset?: SanityImageAssetReference
+              media?: unknown
+              hotspot?: SanityImageHotspot
+              crop?: SanityImageCrop
+              altText?: string
+              caption?: string
+              _type: 'richTextImage'
+              _key: string
+            }
+        >
+        _type: 'richTextDefaults'
+        _key: string
+      }
+  >
+  seo?: {
+    title?: string
+    description?: string
+    ogImage?: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    }
+  }
+  headerImage?: {
     asset?: SanityImageAssetReference
     media?: unknown
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
+    altText?: string
+    caption?: string
     _type: 'image'
   }
+  canonicalUrl?: string
+  body?: RichTextDefaults
 }
 
 export type SanityImageCrop = {
@@ -72,16 +375,20 @@ export type SanityImageHotspot = {
   width: number
 }
 
-export type SanityPreviewUrlSecret = {
+export type UnsplashPost = {
   _id: string
-  _type: 'sanity.previewUrlSecret'
+  _type: 'unsplashPost'
   _createdAt: string
   _updatedAt: string
   _rev: string
-  secret?: string
-  source?: string
-  studioUrl?: string
-  userId?: string
+  title?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
 }
 
 export type MarkdownTest = {
@@ -96,12 +403,6 @@ export type MarkdownTest = {
 }
 
 export type Markdown = string
-
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
-}
 
 export type ColorTest = {
   _id: string
@@ -583,126 +884,6 @@ export type DisneyCharacter = string
 
 export type Pokemon = string
 
-export type MuxTrailer = {
-  _id: string
-  _type: 'muxTrailer'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  video?: MuxVideo
-}
-
-export type MuxVideoAssetReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'mux.videoAsset'
-}
-
-export type MuxVideo = {
-  _type: 'mux.video'
-  asset?: MuxVideoAssetReference
-}
-
-export type MuxVideoAsset = {
-  _id: string
-  _type: 'mux.videoAsset'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  status?: string
-  assetId?: string
-  playbackId?: string
-  filename?: string
-  thumbTime?: number
-  data?: MuxAssetData
-}
-
-export type MuxAssetData = {
-  _type: 'mux.assetData'
-  resolution_tier?: string
-  upload_id?: string
-  created_at?: string
-  id?: string
-  status?: string
-  max_stored_resolution?: string
-  passthrough?: string
-  encoding_tier?: string
-  video_quality?: string
-  master_access?: string
-  aspect_ratio?: string
-  duration?: number
-  max_stored_frame_rate?: number
-  mp4_support?: string
-  max_resolution_tier?: string
-  tracks?: Array<
-    {
-      _key: string
-    } & MuxTrack
-  >
-  playback_ids?: Array<
-    {
-      _key: string
-    } & MuxPlaybackId
-  >
-  static_renditions?: MuxStaticRenditions
-  master?: MuxMasterFile
-}
-
-export type MuxMasterFile = {
-  _type: 'mux.masterFile'
-  status?: string
-  url?: string
-}
-
-export type MuxStaticRenditions = {
-  _type: 'mux.staticRenditions'
-  status?: string
-  files?: Array<
-    {
-      _key: string
-    } & MuxStaticRenditionFile
-  >
-}
-
-export type MuxStaticRenditionFile = {
-  _type: 'mux.staticRenditionFile'
-  name?: string
-  ext?: string
-  height?: number
-  width?: number
-  bitrate?: number
-  filesize?: string
-  type?: string
-  status?: string
-  resolution_tier?: string
-  resolution?: string
-  id?: string
-  passthrough?: string
-}
-
-export type MuxPlaybackId = {
-  _type: 'mux.playbackId'
-  id?: string
-  policy?: string
-}
-
-export type MuxTrack = {
-  _type: 'mux.track'
-  id?: string
-  type?: string
-  max_width?: number
-  max_frame_rate?: number
-  duration?: number
-  max_height?: number
-  language_code?: string
-  name?: string
-  status?: string
-  text_source?: string
-  text_type?: string
-}
-
 export type CloudinaryTest = {
   _id: string
   _type: 'cloudinaryTest'
@@ -1024,43 +1205,6 @@ export type EmbeddingsArticle = {
   relatedDefaultPlugin?: EmbeddingsArticleReference
 }
 
-export type SanityFileAssetReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
-}
-
-export type MediaProduct = {
-  _id: string
-  _type: 'mediaProduct'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  name?: string
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  attachment?: {
-    asset?: SanityFileAssetReference
-    media?: unknown
-    _type: 'file'
-  }
-}
-
-export type MediaTag = {
-  _id: string
-  _type: 'media.tag'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  name?: Slug
-}
-
 export type GoogleTranslateTest = {
   _id: string
   _type: 'googleTranslateTest'
@@ -1216,6 +1360,163 @@ export type SanityAssistSchemaTypeField = {
   >
 }
 
+export type MuxTrailer = {
+  _id: string
+  _type: 'muxTrailer'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  video?: MuxVideo
+}
+
+export type MuxVideoAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'mux.videoAsset'
+}
+
+export type MuxVideo = {
+  _type: 'mux.video'
+  asset?: MuxVideoAssetReference
+}
+
+export type MuxVideoAsset = {
+  _id: string
+  _type: 'mux.videoAsset'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  status?: string
+  assetId?: string
+  playbackId?: string
+  filename?: string
+  thumbTime?: number
+  data?: MuxAssetData
+}
+
+export type MuxAssetData = {
+  _type: 'mux.assetData'
+  resolution_tier?: string
+  upload_id?: string
+  created_at?: string
+  id?: string
+  status?: string
+  max_stored_resolution?: string
+  passthrough?: string
+  encoding_tier?: string
+  video_quality?: string
+  master_access?: string
+  aspect_ratio?: string
+  duration?: number
+  max_stored_frame_rate?: number
+  mp4_support?: string
+  max_resolution_tier?: string
+  tracks?: Array<
+    {
+      _key: string
+    } & MuxTrack
+  >
+  playback_ids?: Array<
+    {
+      _key: string
+    } & MuxPlaybackId
+  >
+  static_renditions?: MuxStaticRenditions
+  master?: MuxMasterFile
+}
+
+export type MuxMasterFile = {
+  _type: 'mux.masterFile'
+  status?: string
+  url?: string
+}
+
+export type MuxStaticRenditions = {
+  _type: 'mux.staticRenditions'
+  status?: string
+  files?: Array<
+    {
+      _key: string
+    } & MuxStaticRenditionFile
+  >
+}
+
+export type MuxStaticRenditionFile = {
+  _type: 'mux.staticRenditionFile'
+  name?: string
+  ext?: string
+  height?: number
+  width?: number
+  bitrate?: number
+  filesize?: string
+  type?: string
+  status?: string
+  resolution_tier?: string
+  resolution?: string
+  id?: string
+  passthrough?: string
+}
+
+export type MuxPlaybackId = {
+  _type: 'mux.playbackId'
+  id?: string
+  policy?: string
+}
+
+export type MuxTrack = {
+  _type: 'mux.track'
+  id?: string
+  type?: string
+  max_width?: number
+  max_frame_rate?: number
+  duration?: number
+  max_height?: number
+  language_code?: string
+  name?: string
+  status?: string
+  text_source?: string
+  text_type?: string
+}
+
+export type SanityFileAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+}
+
+export type MediaProduct = {
+  _id: string
+  _type: 'mediaProduct'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  attachment?: {
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+  }
+}
+
+export type MediaTag = {
+  _id: string
+  _type: 'media.tag'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: Slug
+}
+
 export type SanityImagePaletteSwatch = {
   _type: 'sanity.imagePaletteSwatch'
   background?: string
@@ -1309,15 +1610,33 @@ export type SanityImageAsset = {
 export type AllSanitySchemaTypes =
   | Options
   | Rendition
+  | CorePresetsTestReference
+  | Link
+  | CtaLink
   | SanityVercelProtectionBypass
+  | SanityPreviewUrlSecret
+  | DocumentListDemo
+  | Translatable
+  | SmartlingTest
+  | SmartlingLocalizedString
+  | TransifexTest
+  | TransifexLocalizedString
+  | DocumentsPaneArticleReference
+  | DocumentsPaneArticle
+  | IframeExample
+  | Slug
+  | UtilsDemoDocument
+  | NaiveHtmlSerializerArticle
+  | Blockquote
+  | RichTextMinimal
   | SanityImageAssetReference
-  | UnsplashPost
+  | RichTextDefaults
+  | CorePresetsTest
   | SanityImageCrop
   | SanityImageHotspot
-  | SanityPreviewUrlSecret
+  | UnsplashPost
   | MarkdownTest
   | Markdown
-  | Slug
   | ColorTest
   | Color
   | RgbaColor
@@ -1362,16 +1681,6 @@ export type AllSanitySchemaTypes =
   | AsyncListTest
   | DisneyCharacter
   | Pokemon
-  | MuxTrailer
-  | MuxVideoAssetReference
-  | MuxVideo
-  | MuxVideoAsset
-  | MuxAssetData
-  | MuxMasterFile
-  | MuxStaticRenditions
-  | MuxStaticRenditionFile
-  | MuxPlaybackId
-  | MuxTrack
   | CloudinaryTest
   | CloudinaryAsset
   | CloudinaryAssetContextCustom
@@ -1399,9 +1708,6 @@ export type AllSanitySchemaTypes =
   | Form
   | EmbeddingsArticleReference
   | EmbeddingsArticle
-  | SanityFileAssetReference
-  | MediaProduct
-  | MediaTag
   | GoogleTranslateTest
   | LocalizedString
   | SanityAssistInstructionTask
@@ -1417,6 +1723,19 @@ export type AllSanitySchemaTypes =
   | SanityAssistInstructionFieldRef
   | SanityAssistInstruction
   | SanityAssistSchemaTypeField
+  | MuxTrailer
+  | MuxVideoAssetReference
+  | MuxVideo
+  | MuxVideoAsset
+  | MuxAssetData
+  | MuxMasterFile
+  | MuxStaticRenditions
+  | MuxStaticRenditionFile
+  | MuxPlaybackId
+  | MuxTrack
+  | SanityFileAssetReference
+  | MediaProduct
+  | MediaTag
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
