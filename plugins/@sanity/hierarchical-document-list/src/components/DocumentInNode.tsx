@@ -1,8 +1,8 @@
 import {HelpCircleIcon} from '@sanity/icons'
 import {Box, Card, Flex, Stack, Text, Tooltip} from '@sanity/ui'
-import {type ReactNode, forwardRef, useMemo} from 'react'
+import {type ReactNode, useMemo} from 'react'
 import {Preview, type SanityDocument, type SchemaType, TextWithTone, useSchema} from 'sanity'
-import {type RouterPaneGroup, usePaneRouter} from 'sanity/structure'
+import {type ChildLinkProps, type RouterPaneGroup, usePaneRouter} from 'sanity/structure'
 
 import useTreeOperations from '../hooks/useTreeOperations'
 import type {LocalTreeItem} from '../types'
@@ -29,24 +29,17 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
     return docType ? schema.get(docType) : undefined
   }, [docType, schema])
 
-  const LinkComponent = useMemo(
-    () =>
-      forwardRef((linkProps: any, ref: any) => (
-        <ChildLink
-          {...linkProps}
-          childId={referenceId}
-          ref={ref}
-          childParameters={{
-            type: docType,
-          }}
-        />
-      )),
-    [ChildLink, docType, referenceId],
-  )
-
   if (!reference?._ref) {
     return null
   }
+
+  // `ChildLink` forwards these router props to its anchor at runtime even though
+  // `@sanity/ui`'s `Card` types don't expose them, so they're spread to bypass the
+  // excess-property check (mirrors Sanity's own PaneItem `as={ChildLink}` pattern).
+  const childLinkProps = {
+    childId: reference._ref,
+    childParameters: docType ? {type: docType} : undefined,
+  } satisfies ChildLinkProps
 
   return (
     <Flex gap={2} align="center" style={{flex: 1}}>
@@ -55,7 +48,8 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
         /* Card loosely copied from @sanity/desk-tool's PaneItem.tsx */
         <Card
           __unstable_focusRing
-          as={LinkComponent}
+          as={ChildLink}
+          {...childLinkProps}
           tone={isActive ? 'primary' : 'default'}
           padding={1}
           radius={2}
