@@ -1,14 +1,15 @@
 import {CloseIcon, ImageIcon} from '@sanity/icons'
-import {forwardRef, useState} from 'react'
+import {type Ref, useState} from 'react'
 
 type Props = {
   isDeleted: boolean
   imageUrl: string
   title: string
+  ref?: Ref<HTMLDivElement>
 }
 
-const SfccDocumentStatus = forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const {isDeleted, imageUrl, title} = props
+const SfccDocumentStatus = (props: Props) => {
+  const {isDeleted, imageUrl, title, ref} = props
 
   const [imageVisible, setImageVisible] = useState(true)
 
@@ -58,6 +59,6 @@ const SfccDocumentStatus = forwardRef<HTMLDivElement, Props>((props, ref) => {
       )}
     </div>
   )
-})
+}
 
 export {SfccDocumentStatus}

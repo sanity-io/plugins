@@ -1,6 +1,5 @@
 import {CopyIcon, EllipsisVerticalIcon, LaunchIcon, RemoveCircleIcon} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
-import {type ComponentProps, type ForwardedRef, forwardRef, useMemo} from 'react'
 import {IntentButton as IntentLink} from 'sanity'
 
 import useTreeOperations from '../hooks/useTreeOperations'
@@ -15,26 +14,6 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
   const {node} = nodeProps
   const {reference, docType} = node?.value || {}
   const referenceId = reference?._ref
-
-  // Adapted from @sanity\form-builder\src\inputs\ReferenceInput\ArrayItemReferenceInput.tsx
-  const OpenLink = useMemo(
-    () =>
-      forwardRef(function OpenLinkInner(
-        restProps: ComponentProps<typeof IntentLink>,
-        _ref: ForwardedRef<HTMLAnchorElement>,
-      ) {
-        return (
-          <IntentLink
-            {...restProps}
-            intent="edit"
-            params={{id: referenceId, type: docType}}
-            target="_blank"
-            rel="noopener noreferrer"
-          />
-        )
-      }),
-    [referenceId, docType],
-  )
 
   const isValid = !!node.publishedId
   return (
@@ -72,7 +51,12 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
             text="Open in new tab"
             icon={LaunchIcon}
             disabled={!isValid}
-            as={OpenLink}
+            as={IntentLink}
+            // @ts-expect-error `MenuItem` does not type the props of the polymorphic `as` component.
+            intent="edit"
+            params={{id: referenceId, type: docType}}
+            target="_blank"
+            rel="noopener noreferrer"
             data-as="a"
           />
         </Menu>

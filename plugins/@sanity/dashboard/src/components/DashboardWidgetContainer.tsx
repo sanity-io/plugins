@@ -1,6 +1,5 @@
 import {Card, Box, Heading} from '@sanity/ui'
 import {getTheme_v2} from '@sanity/ui/theme'
-import {forwardRef} from 'react'
 import {styled} from 'styled-components'
 
 const Root = styled(Card)`
@@ -46,13 +45,11 @@ interface DashboardWidgetProps {
   header?: string
   children: React.ReactNode
   footer?: React.ReactNode
+  ref?: React.Ref<HTMLDivElement>
 }
 
-export const DashboardWidgetContainer = forwardRef(function DashboardWidgetContainer(
-  props: DashboardWidgetProps,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const {header, children, footer} = props
+export function DashboardWidgetContainer(props: DashboardWidgetProps) {
+  const {header, children, footer, ref} = props
 
   return (
     <Root radius={3} display="flex" ref={ref}>
@@ -67,4 +64,4 @@ export const DashboardWidgetContainer = forwardRef(function DashboardWidgetConta
       {footer && <Footer borderTop>{footer}</Footer>}
     </Root>
   )
-})
+}

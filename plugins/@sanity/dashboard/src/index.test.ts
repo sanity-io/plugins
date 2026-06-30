@@ -12,7 +12,7 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
     {
       ".": {
-        "DashboardWidgetContainer": "object",
+        "DashboardWidgetContainer": "function",
         "dashboardTool": "function",
         "projectInfoWidget": "function",
         "projectUsersWidget": "function",

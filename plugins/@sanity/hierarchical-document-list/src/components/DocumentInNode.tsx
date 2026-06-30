@@ -1,6 +1,6 @@
 import {HelpCircleIcon} from '@sanity/icons'
 import {Box, Card, Flex, Stack, Text, Tooltip} from '@sanity/ui'
-import {type ReactNode, forwardRef, useMemo} from 'react'
+import {type ReactNode, useMemo} from 'react'
 import {Preview, type SanityDocument, type SchemaType, TextWithTone, useSchema} from 'sanity'
 import {type RouterPaneGroup, usePaneRouter} from 'sanity/structure'
 
@@ -29,21 +29,6 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
     return docType ? schema.get(docType) : undefined
   }, [docType, schema])
 
-  const LinkComponent = useMemo(
-    () =>
-      forwardRef((linkProps: any, ref: any) => (
-        <ChildLink
-          {...linkProps}
-          childId={referenceId}
-          ref={ref}
-          childParameters={{
-            type: docType,
-          }}
-        />
-      )),
-    [ChildLink, docType, referenceId],
-  )
-
   if (!reference?._ref) {
     return null
   }
@@ -55,7 +40,10 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
         /* Card loosely copied from @sanity/desk-tool's PaneItem.tsx */
         <Card
           __unstable_focusRing
-          as={LinkComponent}
+          as={ChildLink}
+          // @ts-expect-error `Card` does not type the props of the polymorphic `as` component.
+          childId={referenceId}
+          childParameters={{type: docType}}
           tone={isActive ? 'primary' : 'default'}
           padding={1}
           radius={2}
