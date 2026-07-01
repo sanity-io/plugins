@@ -111,6 +111,7 @@
     {
       "files": ["plugins/sanity-naive-html-serializer/src/**/*.ts"],
       "rules": {
+        "no-unnecessary-type-assertion": "off",
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off"
       }
@@ -128,6 +129,7 @@
       "files": ["plugins/sanity-plugin-mux-input/src/**/*.{ts,tsx}"],
       "rules": {
         "no-deprecated": "off",
+        "no-unnecessary-type-assertion": "off",
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off",
         "promise/always-return": "off",
@@ -148,6 +150,7 @@
       "files": ["plugins/sanity-plugin-media/src/**/*.{ts,tsx}"],
       "rules": {
         "no-deprecated": "off",
+        "no-unnecessary-type-assertion": "off",
         "no-unsafe-type-assertion": "off",
         "restrict-template-expressions": "off",
         "promise/always-return": "off",
@@ -229,7 +232,30 @@
       // XState v5's canonical typing pattern relies on `{} as Context` style assertions
       "files": ["plugins/sanity-plugin-dashboard-widget-vercel/src/machines/*.ts"],
       "rules": {
+        "no-unnecessary-type-assertion": "off",
         "no-unsafe-type-assertion": "off"
+      }
+    },
+    {
+      "files": [
+        "plugins/@sanity/assist/src/assistInspector/helpers.ts",
+        "plugins/@sanity/assist/src/assistFormComponents/AssistField.tsx",
+        "plugins/@sanity/assist/src/assistDocument/components/instruction/InstructionOutputInput.tsx",
+        "plugins/@sanity/assist/src/schemas/serialize/serializeSchema.test.ts",
+        "plugins/@sanity/dashboard/src/widgets/sanityTutorials/SanityTutorials.tsx",
+        "plugins/@sanity/document-internationalization/src/actions/DeleteMetadataAction.tsx",
+        "plugins/@sanity/document-internationalization/src/actions/DeleteTranslationAction.tsx",
+        "plugins/@sanity/language-filter/src/filterField.test.ts",
+        "plugins/@sanity/presets/src/presets/rich-text-type/rich-text-type.test.ts",
+        "plugins/sanity-plugin-asset-source-unsplash/src/index.ts",
+        "plugins/sanity-plugin-cloudinary/src/index.ts",
+        "plugins/sanity-plugin-iframe-pane/src/Iframe.tsx",
+        "dev/test-studio/sanity.cli.ts",
+        "dev/test-studio/src/orderable-document-list/index.tsx"
+      ],
+      "rules": {
+        "no-deprecated": "off",
+        "no-unnecessary-type-assertion": "off"
       }
     }
   ]
