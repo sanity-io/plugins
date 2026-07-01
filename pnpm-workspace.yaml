@@ -20,7 +20,7 @@ catalog:
   '@sanity/asset-utils': ^2.3.0
   '@sanity/client': ^7.23.0
   '@sanity/color': ^3.0.6
-  '@sanity/icons': ^3.7.4
+  '@sanity/icons': ^3.8.0
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.3.0
   '@sanity/pkg-utils': ^10.8.1
