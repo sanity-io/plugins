@@ -52,7 +52,6 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
             icon={LaunchIcon}
             disabled={!isValid}
             as={IntentLink}
-            // @ts-expect-error `MenuItem` does not type the props of the polymorphic `as` component.
             intent="edit"
             params={{id: referenceId, type: docType}}
             target="_blank"

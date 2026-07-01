@@ -34,9 +34,7 @@ export default function StateTitle(props: StateTitleProps) {
   return (
     <StyledStickyCard paddingY={4} padding={3} tone="inherit">
       <Flex gap={3} align="center">
-        <Badge tone={tone} muted={!userRoleCanDrop || isDropDisabled}>
-          {state.title}
-        </Badge>
+        <Badge tone={tone}>{state.title}</Badge>
         {userRoleCanDrop ? null : (
           <Status
             text="You do not have permissions to move documents to this State"

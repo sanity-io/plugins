@@ -52,7 +52,7 @@ function FormInput(props: FormInputProps) {
   )
   return (
     <Stack space={3}>
-      <Label muted htmlFor={id}>
+      <Label as="label" muted htmlFor={id}>
         {label}
       </Label>
       {description && (

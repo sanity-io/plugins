@@ -54,7 +54,7 @@ const FormFieldInputLabel = (props: Props) => {
       {/* Description */}
       {description && (
         <Box marginY={3}>
-          <Text htmlFor={name} muted size={1}>
+          <Text as="label" htmlFor={name} muted size={1}>
             {description}
           </Text>
         </Box>
