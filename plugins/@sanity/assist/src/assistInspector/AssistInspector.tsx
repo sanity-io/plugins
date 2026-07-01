@@ -1,6 +1,6 @@
 import {ArrowRightIcon, CloseIcon, PlayIcon, RetryIcon} from '@sanity/icons'
 import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
-import {useCallback, useMemo, useRef} from 'react'
+import {type PropsWithChildren, useCallback, useMemo, useRef, useState} from 'react'
 import {
   type DocumentInspectorProps,
   PerspectiveProvider,
@@ -11,7 +11,10 @@ import {
   DocumentInspectorHeader,
   type DocumentPaneNode,
   DocumentPaneProvider,
+  PaneRouterContext,
+  type PaneRouterContextValue,
   useDocumentPane,
+  usePaneRouter,
 } from 'sanity/structure'
 import {styled} from 'styled-components'
 
@@ -36,6 +39,9 @@ import {
   useTypePath,
 } from './helpers'
 import {InstructionTaskHistoryButton} from './InstructionTaskHistoryButton'
+import {isolatePathParams} from './isolatePathParams'
+
+const EMPTY_PANE_PARAMS: Record<string, string | undefined> = {}
 
 const CardWithShadowBelow = styled(Card)`
   position: relative;
@@ -327,14 +333,16 @@ function AssistInspector(props: DocumentInspectorProps) {
                       containerElement={boundary}
                     >
                       <PerspectiveProvider selectedPerspectiveName={undefined}>
-                        <DocumentPaneProvider
-                          paneKey={documentPane.paneKey}
-                          index={documentPane.index}
-                          itemId="ai"
-                          pane={paneNode}
-                        >
-                          <DocumentForm />
-                        </DocumentPaneProvider>
+                        <IsolatedPathPaneRouterProvider>
+                          <DocumentPaneProvider
+                            paneKey={documentPane.paneKey}
+                            index={documentPane.index}
+                            itemId="ai"
+                            pane={paneNode}
+                          >
+                            <DocumentForm />
+                          </DocumentPaneProvider>
+                        </IsolatedPathPaneRouterProvider>
                       </PerspectiveProvider>
                     </VirtualizerScrollInstanceProvider>
                   </AssistTypeContext.Provider>
@@ -384,6 +392,47 @@ function AssistInspector(props: DocumentInspectorProps) {
       </CardWithShadowAbove>
     </Flex>
   )
+}
+
+/**
+ * The instruction editor below renders a nested document form that reuses the
+ * host document's pane router. Sanity's document pane mirrors the router `path`
+ * param to programmatic focus, and focus drives the selected field group. So
+ * without isolation, navigating the instruction form overwrites the host `path`
+ * and resets the host document's field group selection (SAPP-3970).
+ *
+ * This provider keeps the nested form's `path` navigation in local state while
+ * still forwarding every other param (e.g. the selected instruction) to the
+ * host pane router.
+ */
+function IsolatedPathPaneRouterProvider(props: PropsWithChildren) {
+  const parentRouter = usePaneRouter()
+  const parentParams = parentRouter.params ?? EMPTY_PANE_PARAMS
+  const parentSetParams = parentRouter.setParams
+
+  const [localPath, setLocalPath] = useState<string | undefined>(undefined)
+
+  const setParams = useCallback<PaneRouterContextValue['setParams']>(
+    (nextParams, stickyParams) => {
+      const {nextLocalPath, forwardParams} = isolatePathParams(nextParams, parentParams)
+      setLocalPath(nextLocalPath)
+      if (forwardParams) {
+        parentSetParams(forwardParams, stickyParams)
+      }
+    },
+    [parentParams, parentSetParams],
+  )
+
+  const value = useMemo<PaneRouterContextValue>(
+    () => ({
+      ...parentRouter,
+      params: {...parentParams, path: localPath},
+      setParams,
+    }),
+    [parentRouter, parentParams, localPath, setParams],
+  )
+
+  return <PaneRouterContext.Provider value={value}>{props.children}</PaneRouterContext.Provider>
 }
 
 function AiInspectorHeader(props: {fieldTitle: string; field?: FieldRef; onClose: () => void}) {
