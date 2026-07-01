@@ -138,7 +138,6 @@ function Indexes() {
           />
         </Box>
         <Button
-          size={1}
           icon={loading ? <Spinner /> : UndoIcon}
           title={'Refresh index list'}
           tone="default"

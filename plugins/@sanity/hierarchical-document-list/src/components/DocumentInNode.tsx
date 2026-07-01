@@ -41,9 +41,8 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
         <Card
           __unstable_focusRing
           as={ChildLink}
-          // @ts-expect-error `Card` does not type the props of the polymorphic `as` component.
-          childId={referenceId}
-          childParameters={{type: docType}}
+          childId={referenceId!}
+          childParameters={{type: docType!}}
           tone={isActive ? 'primary' : 'default'}
           padding={1}
           radius={2}
