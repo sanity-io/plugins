@@ -12,7 +12,6 @@ const config = {
     noPublishConfigExports: 'error',
   } satisfies NonNullable<PkgConfigOptions['strictOptions']>,
   dts: 'rolldown',
-  tsconfig: 'tsconfig.build.json',
 } as const satisfies PkgConfigOptions
 
 export default config
