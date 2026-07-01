@@ -1,8 +1,6 @@
 import {LinkIcon} from '@sanity/icons'
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {useMemo} from 'react'
-// oxlint-disable-next-line import/no-unassigned-import
-import 'react-time-ago/locale/en'
 import ReactTimeAgo from 'react-time-ago'
 
 import {type Vercel} from '../../types'
