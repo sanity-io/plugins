@@ -373,7 +373,7 @@ When migrating a plugin, agents should ensure:
 - A test-studio example is present and wired in `dev/test-studio/sanity.config.ts`
 - `.github/CODEOWNERS` is not updated unless explicitly requested
 - The transfer includes a **major** changeset
-- Only monorepo-required plugin config files are maintained (`package.json`, `package.config.ts`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`)
+- Only monorepo-required plugin config files are maintained (`package.json`, `package.config.ts`, `tsconfig.json`, `vitest.config.ts`)
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 
