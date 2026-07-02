@@ -1,13 +1,6 @@
-type PaneParams = Record<string, string | undefined>
+import isEqual from 'react-fast-compare'
 
-function shallowEqualParams(a: PaneParams, b: PaneParams): boolean {
-  const aKeys = Object.keys(a)
-  const bKeys = Object.keys(b)
-  if (aKeys.length !== bKeys.length) {
-    return false
-  }
-  return aKeys.every((key) => a[key] === b[key])
-}
+type PaneParams = Record<string, string | undefined>
 
 export interface IsolatedPathParams {
   /** The `path` value to keep in the nested pane's local state. */
@@ -38,7 +31,7 @@ export function isolatePathParams(
   const {path: nextLocalPath, ...restNext} = nextParams
   const {path: hostPath, ...restHost} = hostParams
 
-  if (shallowEqualParams(restNext, restHost)) {
+  if (isEqual(restNext, restHost)) {
     return {nextLocalPath, forwardParams: null}
   }
 

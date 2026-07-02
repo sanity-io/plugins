@@ -73,4 +73,17 @@ describe('isolatePathParams', () => {
     expect(nextLocalPath).toBe('fields[_key=="title"]')
     expect(forwardParams).toBeNull()
   })
+
+  test('forwards when only the name of an undefined param differs (same key count)', () => {
+    // Regression: a naive shallow compare that only checks `a[key] === b[key]`
+    // treats {instruction: undefined} and {pathKey: undefined} as equal (both
+    // read back as undefined) and would incorrectly skip forwarding.
+    const hostParams = {inspect: 'sanity-assist', instruction: undefined, path: 'title'}
+    const nextParams = {inspect: 'sanity-assist', pathKey: undefined, path: 'title'}
+
+    const {nextLocalPath, forwardParams} = isolatePathParams(nextParams, hostParams)
+
+    expect(nextLocalPath).toBe('title')
+    expect(forwardParams).toEqual({inspect: 'sanity-assist', pathKey: undefined, path: 'title'})
+  })
 })
