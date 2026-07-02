@@ -1,5 +1,5 @@
 import {TrashIcon} from '@sanity/icons/Trash'
-import {type ButtonTone, useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui'
 import {useCallback, useMemo, useState} from 'react'
 import {
   type DocumentActionDescription,
@@ -82,7 +82,7 @@ export const useDeleteMetadataAction = (props: DocumentActionProps): DocumentAct
     label: `Delete all translations`,
     disabled: !doc || !translations.length,
     icon: TrashIcon,
-    tone: 'critical' as ButtonTone,
+    tone: 'critical',
     onHandle: () => {
       setDialogOpen(true)
     },
@@ -93,7 +93,7 @@ export const useDeleteMetadataAction = (props: DocumentActionProps): DocumentAct
         onProceed()
         onClose()
       },
-      tone: 'critical' as ButtonTone,
+      tone: 'critical',
       message:
         translations.length === 1
           ? `Delete 1 translation and this document`

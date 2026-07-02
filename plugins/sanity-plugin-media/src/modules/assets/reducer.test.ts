@@ -50,9 +50,12 @@ describe('assets slice', () => {
   })
 
   it('fetchComplete merges assets', () => {
-    let state = assetsReducer({...initialState, assetTypes: ['image'] as AssetType[]}, {
-      type: '@@INIT',
-    } as never)
+    let state = assetsReducer(
+      {...initialState, assetTypes: ['image'] as AssetType[]},
+      {
+        type: '@@INIT',
+      },
+    )
     state = assetsReducer(state, assetsActions.fetchComplete({assets: [minimalImage]}))
     expect(state.allIds).toContain('img-1')
     expect(state.fetching).toBe(false)

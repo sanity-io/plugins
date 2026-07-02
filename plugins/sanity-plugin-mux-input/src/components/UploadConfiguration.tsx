@@ -530,7 +530,7 @@ function formatUploadConfig(
       inputs.push({
         url: config.watermark.imageUrl,
         overlay_settings: overlaySettings,
-      } as NonNullable<MuxNewAssetSettings['input']>[number])
+      })
     }
   }
 
@@ -546,9 +546,7 @@ function formatUploadConfig(
       video_quality: config.video_quality,
       normalize_audio: config.normalize_audio,
     },
-    watermark: config.watermark?.imageUrl
-      ? ({...config.watermark, enabled: true} as WatermarkConfig)
-      : undefined,
+    watermark: config.watermark?.imageUrl ? {...config.watermark, enabled: true} : undefined,
   }
 }
 

@@ -50,6 +50,7 @@ export const cloudinarySchemaPlugin = definePlugin({
 
 export const cloudinaryImageSource: AssetSource = {
   name: 'cloudinary-image',
+  // oxlint-disable-next-line no-deprecated -- `i18nKey` requires a locale bundle; a plain title is intentional here
   title: 'Cloudinary',
   icon: CloudinaryIcon,
   component: CloudinaryAssetSource,

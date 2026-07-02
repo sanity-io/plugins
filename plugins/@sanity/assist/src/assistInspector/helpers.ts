@@ -211,8 +211,5 @@ export type AiPaneRouter = Omit<PaneRouterContextValue, 'setParams' | 'params'> 
 export function useAiPaneRouter() {
   const paneRouter = usePaneRouter()
 
-  return useMemo(
-    () => ({...paneRouter, params: paneRouter.params ?? {}}) as AiPaneRouter,
-    [paneRouter],
-  )
+  return useMemo(() => ({...paneRouter, params: paneRouter.params ?? {}}), [paneRouter])
 }

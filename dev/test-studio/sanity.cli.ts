@@ -28,7 +28,6 @@ export default defineCliConfig({
       return tsRE.test(filename)
     },
   },
-  studioHost: 'plugins',
   typegen: {formatGeneratedCode: false},
   vite: {
     plugins: [vanillaExtractPlugin(), ...(isViteDevToolsEnabled ? [DevTools()] : [])],

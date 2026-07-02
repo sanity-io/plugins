@@ -1,5 +1,5 @@
 import {TrashIcon} from '@sanity/icons/Trash'
-import {type ButtonTone, useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 import {useClient, type DocumentActionDescription, type DocumentActionProps} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
@@ -94,7 +94,7 @@ export const useDeleteTranslationAction = (
     label: `Delete translation...`,
     disabled: !doc || !documentLanguage,
     icon: TrashIcon,
-    tone: 'critical' as ButtonTone,
+    tone: 'critical',
     onHandle: () => {
       setDialogOpen(true)
     },
