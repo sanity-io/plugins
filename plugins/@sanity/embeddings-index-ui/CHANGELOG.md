@@ -1,5 +1,13 @@
 # @sanity/embeddings-index-ui
 
+## 4.0.2
+
+### Patch Changes
+
+- [#1462](https://github.com/sanity-io/plugins/pull/1462) [`4206774`](https://github.com/sanity-io/plugins/commit/4206774bad11de60e11cd07827f288eee710e797) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @sanity/icons to ^3.8.0
+
+- [#1363](https://github.com/sanity-io/plugins/pull/1363) [`f9acf7c`](https://github.com/sanity-io/plugins/commit/f9acf7c0599e63feb30509f7d42ff941a01e2d35) Thanks [@stipsan](https://github.com/stipsan)! - Replace `React.forwardRef` with the React 19 ref-as-prop pattern (internal refactor, no API change)
+
 ## 4.0.1
 
 ### Patch Changes

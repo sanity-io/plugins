@@ -1,5 +1,13 @@
 # sanity-plugin-media
 
+## 5.0.6
+
+### Patch Changes
+
+- [#1457](https://github.com/sanity-io/plugins/pull/1457) [`a45f0bb`](https://github.com/sanity-io/plugins/commit/a45f0bbebcdf87f3fed0e9f72a48e4487c8020cb) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update sanity monorepo to ^6.3.0
+
+- [#1363](https://github.com/sanity-io/plugins/pull/1363) [`f9acf7c`](https://github.com/sanity-io/plugins/commit/f9acf7c0599e63feb30509f7d42ff941a01e2d35) Thanks [@stipsan](https://github.com/stipsan)! - Replace `React.forwardRef` with the React 19 ref-as-prop pattern (internal refactor, no API change)
+
 ## 5.0.5
 
 ### Patch Changes
