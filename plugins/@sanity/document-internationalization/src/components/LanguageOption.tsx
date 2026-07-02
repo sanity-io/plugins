@@ -2,7 +2,15 @@ import {AddIcon, CheckmarkIcon, SplitVerticalIcon} from '@sanity/icons'
 import {Badge, Box, Button, Flex, Spinner, Text, Tooltip, useToast} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import {useCallback, useState} from 'react'
-import {type ObjectSchemaType, type SanityDocument, useClient} from 'sanity'
+import {
+  getDraftId,
+  getVersionFromId,
+  getVersionId,
+  isVersionId,
+  type ObjectSchemaType,
+  type SanityDocument,
+  useClient,
+} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
 import {METADATA_SCHEMA_NAME} from '../constants'
@@ -77,10 +85,15 @@ export default function LanguageOption(props: LanguageOptionProps) {
     const transaction = client.transaction()
 
     // 1. Duplicate source document
+    // If the source belongs to a release, create the translation
+    // as a version in that same release, otherwise as a draft
     const newTranslationDocumentId = uuid()
+    const sourceReleaseId = isVersionId(source._id) ? getVersionFromId(source._id) : undefined
     let newTranslationDocument = {
       ...source,
-      _id: `drafts.${newTranslationDocumentId}`,
+      _id: sourceReleaseId
+        ? getVersionId(newTranslationDocumentId, sourceReleaseId)
+        : getDraftId(newTranslationDocumentId),
       // 2. Update language of the translation
       [languageField]: language.id,
     }
