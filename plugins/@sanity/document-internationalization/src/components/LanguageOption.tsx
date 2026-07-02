@@ -1,4 +1,6 @@
-import {AddIcon, CheckmarkIcon, SplitVerticalIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {CheckmarkIcon} from '@sanity/icons/Checkmark'
+import {SplitVerticalIcon} from '@sanity/icons/SplitVertical'
 import {Badge, Box, Button, Flex, Spinner, Text, Tooltip, useToast} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import {useCallback, useState} from 'react'

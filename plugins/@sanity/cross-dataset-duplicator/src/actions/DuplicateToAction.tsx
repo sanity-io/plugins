@@ -1,4 +1,4 @@
-import {LaunchIcon} from '@sanity/icons'
+import {LaunchIcon} from '@sanity/icons/Launch'
 import {useState} from 'react'
 import type {DocumentActionProps} from 'sanity'
 

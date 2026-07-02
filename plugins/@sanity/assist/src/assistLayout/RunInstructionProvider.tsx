@@ -1,4 +1,4 @@
-import {PlayIcon} from '@sanity/icons'
+import {PlayIcon} from '@sanity/icons/Play'
 import {Button, Dialog, Flex, Stack, Text, TextArea, Tooltip} from '@sanity/ui'
 import {
   createContext,

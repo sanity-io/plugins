@@ -1,4 +1,4 @@
-import {ErrorOutlineIcon} from '@sanity/icons'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Inline, Text, Tooltip} from '@sanity/ui'
 import {styled} from 'styled-components'
 

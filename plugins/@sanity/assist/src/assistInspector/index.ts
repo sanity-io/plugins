@@ -1,4 +1,4 @@
-import {SparklesIcon} from '@sanity/icons'
+import {SparklesIcon} from '@sanity/icons/Sparkles'
 import {type DocumentInspector, typed} from 'sanity'
 
 import {pluginTitle} from '../constants'

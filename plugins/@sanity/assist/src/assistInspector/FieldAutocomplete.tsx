@@ -1,4 +1,4 @@
-import {SearchIcon} from '@sanity/icons'
+import {SearchIcon} from '@sanity/icons/Search'
 import {Autocomplete, Box, Breadcrumbs, Card, Flex, Text} from '@sanity/ui'
 import {useCallback, useMemo} from 'react'
 import type {ObjectSchemaType} from 'sanity'

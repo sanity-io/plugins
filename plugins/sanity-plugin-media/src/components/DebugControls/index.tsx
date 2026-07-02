@@ -1,4 +1,4 @@
-import {PlugIcon} from '@sanity/icons'
+import {PlugIcon} from '@sanity/icons/Plug'
 import {Box, Flex, Switch, Text, Tooltip} from '@sanity/ui'
 import {type ChangeEvent} from 'react'
 import {useDispatch} from 'react-redux'

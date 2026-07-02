@@ -1,5 +1,5 @@
 import {embeddingsIndexDashboard, embeddingsIndexReferenceInput} from '@sanity/embeddings-index-ui'
-import {EarthGlobeIcon} from '@sanity/icons'
+import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
 import {defineField, definePlugin, defineType} from 'sanity'
 
 const embeddingsArticle = defineType({

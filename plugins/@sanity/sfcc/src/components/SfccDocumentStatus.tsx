@@ -1,4 +1,5 @@
-import {CloseIcon, ImageIcon} from '@sanity/icons'
+import {CloseIcon} from '@sanity/icons/Close'
+import {ImageIcon} from '@sanity/icons/Image'
 import {type Ref, useState} from 'react'
 
 type Props = {

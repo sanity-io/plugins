@@ -1,4 +1,7 @@
-import {ArrowRightIcon, CloseIcon, PlayIcon, RetryIcon} from '@sanity/icons'
+import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
+import {CloseIcon} from '@sanity/icons/Close'
+import {PlayIcon} from '@sanity/icons/Play'
+import {RetryIcon} from '@sanity/icons/Retry'
 import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {useCallback, useMemo, useRef} from 'react'
 import {

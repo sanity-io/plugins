@@ -1,12 +1,9 @@
-import {
-  CodeIcon,
-  ComposeIcon,
-  icons,
-  type IconSymbol,
-  LockIcon,
-  SparklesIcon,
-  ThListIcon,
-} from '@sanity/icons'
+import {icons, type IconSymbol} from '@sanity/icons'
+import {CodeIcon} from '@sanity/icons/Code'
+import {ComposeIcon} from '@sanity/icons/Compose'
+import {LockIcon} from '@sanity/icons/Lock'
+import {SparklesIcon} from '@sanity/icons/Sparkles'
+import {ThListIcon} from '@sanity/icons/ThList'
 import {Box, Flex, Stack, Text, Tooltip} from '@sanity/ui'
 import {defineArrayMember, defineField, defineType, type ObjectSchemaType} from 'sanity'
 

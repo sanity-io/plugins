@@ -1,13 +1,11 @@
 // oxlint-disable no-accumulating-spread
-import {
-  BlockContentIcon,
-  BlockquoteIcon,
-  DocumentIcon,
-  ImageIcon,
-  LinkIcon,
-  OlistIcon,
-  StringIcon,
-} from '@sanity/icons'
+import {BlockContentIcon} from '@sanity/icons/BlockContent'
+import {BlockquoteIcon} from '@sanity/icons/Blockquote'
+import {DocumentIcon} from '@sanity/icons/Document'
+import {ImageIcon} from '@sanity/icons/Image'
+import {LinkIcon} from '@sanity/icons/Link'
+import {OlistIcon} from '@sanity/icons/Olist'
+import {StringIcon} from '@sanity/icons/String'
 import {extractWithPath} from '@sanity/mutator'
 import {type ComponentType, useMemo} from 'react'
 import {

@@ -1,4 +1,4 @@
-import {AddIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
 import {Button, Grid} from '@sanity/ui'
 
 import {MAX_COLUMNS} from '../constants'

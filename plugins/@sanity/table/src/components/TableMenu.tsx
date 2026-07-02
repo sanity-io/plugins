@@ -1,4 +1,6 @@
-import {AddIcon, ControlsIcon, WarningOutlineIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {ControlsIcon} from '@sanity/icons/Controls'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {
   Box,
   Button,

@@ -1,4 +1,5 @@
-import {EllipsisVerticalIcon, TrashIcon} from '@sanity/icons'
+import {EllipsisVerticalIcon} from '@sanity/icons/EllipsisVertical'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {
   Box,
   Button,

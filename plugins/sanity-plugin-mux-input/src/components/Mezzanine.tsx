@@ -1,4 +1,4 @@
-import {DownloadIcon} from '@sanity/icons'
+import {DownloadIcon} from '@sanity/icons/Download'
 import {Button, Card, Flex, Label, Spinner, Stack, Text} from '@sanity/ui'
 
 import {useMezzanine} from '../hooks/useMezzanine'

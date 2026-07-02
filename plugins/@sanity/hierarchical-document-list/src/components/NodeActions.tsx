@@ -1,4 +1,7 @@
-import {CopyIcon, EllipsisVerticalIcon, LaunchIcon, RemoveCircleIcon} from '@sanity/icons'
+import {CopyIcon} from '@sanity/icons/Copy'
+import {EllipsisVerticalIcon} from '@sanity/icons/EllipsisVertical'
+import {LaunchIcon} from '@sanity/icons/Launch'
+import {RemoveCircleIcon} from '@sanity/icons/RemoveCircle'
 import {Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
 import {IntentButton as IntentLink} from 'sanity'
 

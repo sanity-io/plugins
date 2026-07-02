@@ -1,4 +1,4 @@
-import {HelpCircleIcon} from '@sanity/icons'
+import {HelpCircleIcon} from '@sanity/icons/HelpCircle'
 import {Box, Card, Flex, Stack, Text, Tooltip} from '@sanity/ui'
 import {type ReactNode, useMemo} from 'react'
 import {Preview, type SanityDocument, type SchemaType, TextWithTone, useSchema} from 'sanity'
