@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 6.0.3
+
+### Patch Changes
+
+- [#1474](https://github.com/sanity-io/plugins/pull/1474) [`555ef6e`](https://github.com/sanity-io/plugins/commit/555ef6e1de0a3ae72bc584f5755c0bd325db1303) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency typescript to v6
+
 ## 6.0.2
 
 ### Patch Changes

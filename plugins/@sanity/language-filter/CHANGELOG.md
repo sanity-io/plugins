@@ -1,5 +1,11 @@
 # @sanity/language-filter
 
+## 5.0.5
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
 ## 5.0.4
 
 ### Patch Changes
@@ -33,6 +39,7 @@
 - [#586](https://github.com/sanity-io/plugins/pull/586) [`1978fb4`](https://github.com/sanity-io/plugins/commit/1978fb442137427270d1573f8e01541311bfb05c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port @sanity/language-filter to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The plugin is now optimized with React Compiler targeting React 19
   - **ESM-only**: CommonJS support has been removed. The plugin now only exports ES modules
   - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the minimum version
@@ -42,12 +49,14 @@
   - **Language subscription bus removed**: The `languageSubscription.ts` module and its exports (`createSelectedLanguageIdsBus`, `SelectedLanguageIdsBus`, `LanguageSubscription`, `Unsubscribe`, `LanguageSubscribe`) have been removed. State management now uses React Context via `LanguageFilterStudioContext` instead of the subscription bus pattern.
 
   **Modernization:**
+
   - Replaced deprecated `useClickOutside` hook with `useClickOutsideEvent`
   - Fixed FormEvent usage with proper React.ChangeEvent
   - Added explicit return type annotations for better TypeScript compatibility
   - Removed styled-components
 
   **Testing:**
+
   - Converted from Jest to Vitest for testing
   - Added package exports validation test
 
