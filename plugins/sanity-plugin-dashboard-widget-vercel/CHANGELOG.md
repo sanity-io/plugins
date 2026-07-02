@@ -1,5 +1,15 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.9
+
+### Patch Changes
+
+- [#1363](https://github.com/sanity-io/plugins/pull/1363) [`f9acf7c`](https://github.com/sanity-io/plugins/commit/f9acf7c0599e63feb30509f7d42ff941a01e2d35) Thanks [@stipsan](https://github.com/stipsan)! - Replace `React.forwardRef` with the React 19 ref-as-prop pattern (internal refactor, no API change)
+
+- [#1469](https://github.com/sanity-io/plugins/pull/1469) [`c5c3a42`](https://github.com/sanity-io/plugins/commit/c5c3a423a889cbde2e58cba8bfdd194c1775b6d6) Thanks [@mitchuman](https://github.com/mitchuman)! - Fix a crash in the deployments widget ("No locale data has been registered for any of the locales: en-US, en, en") by bumping `@sanity/pkg-utils`.
+
+  The published bundle was silently dropping the side-effect-only `react-time-ago/locale/en` import, because pkg-utils' tree-shaking treated all external imports as side-effect free. Thanks to @mitchuman for discovering the root cause and reporting it in [#1468](https://github.com/sanity-io/plugins/pull/1468) — it was fixed upstream in [`@sanity/pkg-utils`](https://github.com/sanity-io/pkg-utils/pull/2934), so no source changes were needed here beyond the dependency bump.
+
 ## 4.0.8
 
 ### Patch Changes

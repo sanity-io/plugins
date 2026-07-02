@@ -1,5 +1,11 @@
 # @sanity/dashboard
 
+## 6.0.4
+
+### Patch Changes
+
+- [#1363](https://github.com/sanity-io/plugins/pull/1363) [`f9acf7c`](https://github.com/sanity-io/plugins/commit/f9acf7c0599e63feb30509f7d42ff941a01e2d35) Thanks [@stipsan](https://github.com/stipsan)! - Replace `React.forwardRef` with the React 19 ref-as-prop pattern. `DashboardWidgetContainer` is now a plain function component; it still accepts a `ref` as before.
+
 ## 6.0.3
 
 ### Patch Changes
