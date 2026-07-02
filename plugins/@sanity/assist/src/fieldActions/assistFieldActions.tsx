@@ -1,5 +1,6 @@
 import type {AgentActionPath} from '@sanity/client/stega'
-import {ControlsIcon, SparklesIcon} from '@sanity/icons'
+import {ControlsIcon} from '@sanity/icons/Controls'
+import {SparklesIcon} from '@sanity/icons/Sparkles'
 import {useCallback, useMemo, useRef} from 'react'
 import {
   type DocumentFieldAction,

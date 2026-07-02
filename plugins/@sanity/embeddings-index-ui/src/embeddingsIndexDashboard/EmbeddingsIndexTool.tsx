@@ -1,4 +1,5 @@
-import {AddIcon, UndoIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {UndoIcon} from '@sanity/icons/Undo'
 import {Box, Button, Card, Flex, Heading, Spinner, Stack} from '@sanity/ui'
 import {useCallback, useEffect, useState} from 'react'
 

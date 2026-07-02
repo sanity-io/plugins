@@ -1,5 +1,5 @@
 import {purple} from '@sanity/color'
-import {SparklesIcon} from '@sanity/icons'
+import {SparklesIcon} from '@sanity/icons/Sparkles'
 import {Text} from '@sanity/ui'
 import {type CSSProperties, useMemo} from 'react'
 import {useColorSchemeValue} from 'sanity'

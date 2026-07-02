@@ -1,4 +1,5 @@
-import {InfoOutlineIcon, UserIcon} from '@sanity/icons'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {UserIcon} from '@sanity/icons/User'
 import {Badge, type BadgeTone, Box, Card, Flex, Text} from '@sanity/ui'
 import {styled} from 'styled-components'
 

@@ -1,4 +1,4 @@
-import {DocumentIcon} from '@sanity/icons'
+import {DocumentIcon} from '@sanity/icons/Document'
 import {Flex, Text} from '@sanity/ui'
 
 import type {CloudinaryAsset} from '../types'

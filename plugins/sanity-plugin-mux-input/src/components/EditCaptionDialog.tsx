@@ -1,4 +1,6 @@
-import {DownloadIcon, TranslateIcon, UploadIcon} from '@sanity/icons'
+import {DownloadIcon} from '@sanity/icons/Download'
+import {TranslateIcon} from '@sanity/icons/Translate'
+import {UploadIcon} from '@sanity/icons/Upload'
 import {
   Autocomplete,
   Button,

@@ -1,4 +1,4 @@
-import {InfoOutlineIcon} from '@sanity/icons'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
 import {Box, Text, Badge, Tooltip} from '@sanity/ui'
 import type {BadgeTone} from '@sanity/ui'
 

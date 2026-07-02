@@ -1,4 +1,4 @@
-import {DocumentsIcon} from '@sanity/icons'
+import {DocumentsIcon} from '@sanity/icons/Documents'
 import {definePlugin, defineType} from 'sanity'
 import DocumentsPane from 'sanity-plugin-documents-pane'
 import type {DefaultDocumentNodeResolver} from 'sanity/structure'

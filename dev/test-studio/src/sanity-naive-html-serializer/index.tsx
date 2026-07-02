@@ -1,4 +1,5 @@
-import {CopyIcon, DocumentTextIcon} from '@sanity/icons'
+import {CopyIcon} from '@sanity/icons/Copy'
+import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 import {Box, Button, Card, Code, Flex, Stack, Text, Tooltip, useToast} from '@sanity/ui'
 import {useCallback, useMemo} from 'react'
 import type {SanityDocument} from 'sanity'

@@ -1,4 +1,4 @@
-import {RemoveCircleIcon} from '@sanity/icons'
+import {RemoveCircleIcon} from '@sanity/icons/RemoveCircle'
 import {
   Box,
   Button,

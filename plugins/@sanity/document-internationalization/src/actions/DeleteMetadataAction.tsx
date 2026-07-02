@@ -1,4 +1,4 @@
-import {TrashIcon} from '@sanity/icons'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {type ButtonTone, useToast} from '@sanity/ui'
 import {useCallback, useMemo, useState} from 'react'
 import {

@@ -1,4 +1,4 @@
-import {CogIcon} from '@sanity/icons'
+import {CogIcon} from '@sanity/icons/Cog'
 import {Box, Button, Stack, Text, Tooltip} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 import {type ObjectSchemaType, useClient} from 'sanity'

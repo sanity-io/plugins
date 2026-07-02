@@ -1,4 +1,5 @@
-import {AddIcon, TrashIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {startTransition, useOptimistic, useRef} from 'react'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'

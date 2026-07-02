@@ -1,4 +1,4 @@
-import {TranslateIcon} from '@sanity/icons'
+import {TranslateIcon} from '@sanity/icons/Translate'
 import {Box, Button, Card, Popover, Stack, Text, TextInput, useClickOutsideEvent} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import type {ChangeEvent} from 'react'
