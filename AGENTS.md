@@ -45,10 +45,13 @@ pnpm format
 # 2. Run linters (oxlint)
 pnpm lint
 
-# 3. Build all packages
+# 3. Check for unused files, dependencies and exports (knip)
+pnpm knip
+
+# 4. Build all packages
 pnpm build
 
-# 4. Run tests
+# 5. Run tests
 pnpm test
 ```
 
@@ -194,7 +197,10 @@ The CI pipeline runs on every PR:
 | --------- | ------------------------------------------------------ |
 | **build** | `pnpm build` - All packages compile successfully       |
 | **lint**  | `pnpm lint --format github` - Code passes oxlint       |
+| **knip**  | `pnpm knip` - No unused files, dependencies or exports |
 | **test**  | `pnpm test` - All tests pass (runs after build + lint) |
+
+Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUsedInFile`), so removing a type assertion or annotation that was the last reference to an exported type will make knip start flagging that export. Run `pnpm knip` after refactors that remove type references.
 
 ### Lint Specifics
 

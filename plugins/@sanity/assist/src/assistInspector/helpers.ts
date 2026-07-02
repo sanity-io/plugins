@@ -208,7 +208,7 @@ export type AiPaneRouter = Omit<PaneRouterContextValue, 'setParams' | 'params'> 
   setParams: (p: Record<keyof AssistInspectorRouteParams, string | undefined>) => void
 }
 
-export function useAiPaneRouter() {
+export function useAiPaneRouter(): AiPaneRouter {
   const paneRouter = usePaneRouter()
 
   return useMemo(() => ({...paneRouter, params: paneRouter.params ?? {}}), [paneRouter])
