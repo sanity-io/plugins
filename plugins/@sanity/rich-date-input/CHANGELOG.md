@@ -1,5 +1,11 @@
 # @sanity/rich-date-input
 
+## 4.0.6
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
 ## 4.0.5
 
 ### Patch Changes
@@ -47,6 +53,7 @@
   ## Migration Guide
 
   If you're upgrading from v3.x:
+
   1. Ensure your project is using Sanity Studio v5 or later
   2. Ensure your project is using React 19.2 or later
   3. No code changes required - the API remains the same
