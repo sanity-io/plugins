@@ -41,7 +41,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "^3.8.0",
     "@sanity/ui": "catalog:",
     "react-rx": "^4.2.2"
   },
