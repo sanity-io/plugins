@@ -12,6 +12,9 @@ const config = {
     noPublishConfigExports: 'error',
   } satisfies NonNullable<PkgConfigOptions['strictOptions']>,
   dts: 'rolldown',
+  // Generate .d.ts with tsgo (@typescript/native-preview), the same engine oxlint's
+  // type-check uses. Requires inferred exported types to be portable (TS2883).
+  tsgo: true,
 } as const satisfies PkgConfigOptions
 
 export default config
