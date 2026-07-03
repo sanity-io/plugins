@@ -1,5 +1,11 @@
 # @sanity/assist
 
+## 6.1.7
+
+### Patch Changes
+
+- [#1485](https://github.com/sanity-io/plugins/pull/1485) [`6dffe42`](https://github.com/sanity-io/plugins/commit/6dffe4238ec22c03563bca3447adae2d0c3d050c) Thanks [@stipsan](https://github.com/stipsan)! - Fix the instruction icon picker not opening on first click. The lazy-loaded icons from `@sanity/icons` v5 suspended the menu before it could render; each menu item now renders through the `Icon` component, which provides its own suspense fallback.
+
 ## 6.1.6
 
 ### Patch Changes
