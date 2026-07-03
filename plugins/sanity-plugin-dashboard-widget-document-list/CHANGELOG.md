@@ -1,5 +1,7 @@
 # sanity-plugin-dashboard-widget-document-list
 
+## 3.0.7
+
 ## 3.0.6
 
 ## 3.0.5

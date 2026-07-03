@@ -1,5 +1,11 @@
 # sanity-plugin-google-translate
 
+## 4.0.2
+
+### Patch Changes
+
+- [#1481](https://github.com/sanity-io/plugins/pull/1481) [`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/pkg-utils` to `^10.9.0`, enabling tree-shaking of unused `styled-components` in the published bundle. Tagged template literals are now transpiled to plain call expressions during build, so bundlers can drop styled components this plugin exports but the app doesn't use, reducing bundle size.
+
 ## 4.0.1
 
 ### Patch Changes
@@ -13,6 +19,7 @@
 - [#906](https://github.com/sanity-io/plugins/pull/906) [`7af01cc`](https://github.com/sanity-io/plugins/commit/7af01cc02b854fc5130d368dedff5228be6a2556) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port sanity-plugin-google-translate to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The plugin is now optimized with React Compiler targeting React 19
   - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
   - **React 19.2+ required**: Minimum React version is now 19.2
