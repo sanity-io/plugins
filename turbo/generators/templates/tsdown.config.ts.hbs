@@ -2,10 +2,12 @@ import {defineConfig} from '@sanity/tsdown-config'
 import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
-  entry: {
-    'index': './src/index.ts',
-    'migrations/index': './migrations/index.ts',
-  },
+{{#if hasStyledComponents}}
+  styledComponents: true,
+{{/if}}
   reactCompiler: true,
+{{#if hasVanillaExtract}}
+  vanillaExtract: true,
+{{/if}}
   dts: {tsgo: true},
 }) satisfies Promise<UserConfig>

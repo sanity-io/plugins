@@ -32,10 +32,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -45,7 +42,7 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build",
     "prepare": "turbo run build"
   },
@@ -72,9 +69,9 @@
     "yalc": "1.0.0-pre.53"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
     "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/eslint": "^8.56.12",
     "@types/github-url-to-object": "^4.0.4",
     "@types/inquirer": "^9.0.3",
@@ -95,6 +92,7 @@
     "react-dom": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
+    "tsdown": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {

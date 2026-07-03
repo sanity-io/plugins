@@ -4,12 +4,11 @@
     "src/**/*.ts",
     "src/choosealicense-list.d.ts",
     "test/**/*.ts",
-    "package.config.ts",
+    "tsdown.config.ts",
     "vitest.config.ts"
   ],
   "exclude": ["dist", "node_modules", "test/fixtures"],
   "compilerOptions": {
-    "customConditions": ["development"],
     "noPropertyAccessFromIndexSignature": false,
     "noUncheckedIndexedAccess": false,
     "resolveJsonModule": true,

@@ -24,7 +24,7 @@ This is the canonical transfer flow and scaffolds monorepo-compatible files and 
 Keep and maintain these monorepo config files in the transferred plugin:
 
 - `package.json`
-- `package.config.ts`
+- `tsdown.config.ts`
 - `tsconfig.json`
 - `vitest.config.ts`
 

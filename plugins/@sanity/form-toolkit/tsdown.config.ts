@@ -10,4 +10,5 @@ export default defineConfig({
     './src/form-renderer/index.ts',
   ],
   reactCompiler: true,
+  dts: {tsgo: true},
 }) satisfies Promise<UserConfig>

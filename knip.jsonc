@@ -10,11 +10,7 @@
     "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
   },
-  "ignoreDependencies": [
-    "@vanilla-extract/css",
-    "babel-plugin-react-compiler",
-    "babel-plugin-styled-components",
-  ],
+  "ignoreDependencies": ["@vanilla-extract/css", "babel-plugin-react-compiler"],
   "workspaces": {
     ".": {
       "entry": ["*.{ts,mts,mjs}"],
@@ -35,11 +31,7 @@
     "turbo/generators": {
       "project": ["src/**/*.ts"],
     },
-    "packages/@repo/package.config": {
-      "project": ["src/**/*.ts"],
-    },
     "packages/@sanity/plugin-kit": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.ts"],
       "ignoreDependencies": [
         // Spawned as a CLI (`yalc push`) by the link-watch command, never imported
@@ -116,7 +108,6 @@
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-mux-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-workflow": {
@@ -144,7 +135,6 @@
     },
 
     "plugins/@sanity/google-maps-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 

@@ -28,11 +28,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/_exports/index.ts",
-      "development": "./src/_exports/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/_exports/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -42,7 +38,7 @@
     }
   },
   "scripts": {
-    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -66,20 +62,18 @@
     "use-error-boundary": "^2.0.6"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
     "@sanity/client": "catalog:",
-    "@sanity/pkg-utils": "catalog:",
-    "@sanity/plugin-kit": "workspace:*",
     "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/lodash": "^4.17.24",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-is": "catalog:",
-    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
+    "tsdown": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
@@ -89,14 +83,5 @@
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
-  },
-  "sanityPlugin": {
-    "verifyPackage": {
-      "tsc": false,
-      "tsconfig": false,
-      "srcIndex": false,
-      "scripts": false,
-      "eslintImports": false
-    }
   }
 }

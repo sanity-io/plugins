@@ -306,7 +306,7 @@ The generator will:
 Required monorepo config files for the transferred plugin:
 
 - `package.json`
-- `package.config.ts`
+- `tsdown.config.ts`
 - `tsconfig.json`
 - `vitest.config.ts`
 
