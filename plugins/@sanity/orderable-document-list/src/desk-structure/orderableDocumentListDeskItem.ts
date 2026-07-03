@@ -1,4 +1,5 @@
-import {GenerateIcon, SortIcon} from '@sanity/icons'
+import {GenerateIcon} from '@sanity/icons/Generate'
+import {SortIcon} from '@sanity/icons/Sort'
 import {type ComponentType} from 'react'
 import type {ConfigContext} from 'sanity'
 import {type ListItem, type MenuItem, type StructureBuilder} from 'sanity/structure'

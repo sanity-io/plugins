@@ -1,4 +1,4 @@
-import {EarthGlobeIcon} from '@sanity/icons'
+import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
 import {defineField, definePlugin, defineType} from 'sanity'
 import {defaultFieldLevelConfig, TranslationsTab} from 'sanity-plugin-studio-smartling'
 import type {DefaultDocumentNodeResolver} from 'sanity/structure'

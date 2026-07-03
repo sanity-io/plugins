@@ -1,5 +1,27 @@
 # @sanity/document-internationalization
 
+## 6.2.13
+
+## 6.2.12
+
+### Patch Changes
+
+- Updated dependencies [[`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a)]:
+  - sanity-plugin-utils@2.0.5
+
+## 6.2.11
+
+### Patch Changes
+
+- [#1475](https://github.com/sanity-io/plugins/pull/1475) [`c3f2078`](https://github.com/sanity-io/plugins/commit/c3f207864eb80395451ef8e84837e7216b384ff6) Thanks [@stipsan](https://github.com/stipsan)! - Fix the Translations menu being disabled for documents that only exist in a release. When a release is selected, the version document is now used as the source for translations, and new language copies are created in that same release.
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+- Updated dependencies [[`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880)]:
+  - sanity-plugin-utils@2.0.4
+
+## 6.2.10
+
 ## 6.2.9
 
 ### Patch Changes

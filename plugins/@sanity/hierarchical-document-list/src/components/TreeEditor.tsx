@@ -2,7 +2,7 @@ import {
   SortableTreeWithoutDndContext as SortableTree,
   type TreeItem,
 } from '@nosferatu500/react-sortable-tree'
-import {AddCircleIcon} from '@sanity/icons'
+import {AddCircleIcon} from '@sanity/icons/AddCircle'
 import {Box, Button, Card, Flex, Spinner, Stack, Text, Tooltip} from '@sanity/ui'
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {DndProvider} from 'react-dnd'

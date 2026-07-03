@@ -1,4 +1,4 @@
-import {AddIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
 import {Box, Button, Card, Dialog, Flex, Inline, Text} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import {type ChangeEvent, useState} from 'react'

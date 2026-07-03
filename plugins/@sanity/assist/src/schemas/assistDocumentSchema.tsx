@@ -1,12 +1,9 @@
-import {
-  CodeIcon,
-  ComposeIcon,
-  icons,
-  type IconSymbol,
-  LockIcon,
-  SparklesIcon,
-  ThListIcon,
-} from '@sanity/icons'
+import {Icon, type IconSymbol} from '@sanity/icons'
+import {CodeIcon} from '@sanity/icons/Code'
+import {ComposeIcon} from '@sanity/icons/Compose'
+import {LockIcon} from '@sanity/icons/Lock'
+import {SparklesIcon} from '@sanity/icons/Sparkles'
+import {ThListIcon} from '@sanity/icons/ThList'
 import {Box, Flex, Stack, Text, Tooltip} from '@sanity/ui'
 import {defineArrayMember, defineField, defineType, type ObjectSchemaType} from 'sanity'
 
@@ -262,7 +259,7 @@ export const instruction = defineType({
       return {
         title,
         // oxlint-disable-next-line no-unsafe-type-assertion
-        icon: icon ? icons[icon as IconSymbol] : SparklesIcon,
+        icon: icon ? <Icon symbol={icon as IconSymbol} /> : SparklesIcon,
         userId,
       }
     },

@@ -1,6 +1,6 @@
 // Adapted from https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/paneItem/PaneItem.tsx
 
-import {DocumentIcon} from '@sanity/icons'
+import {DocumentIcon} from '@sanity/icons/Document'
 import type {PropsWithChildren} from 'react'
 import {useMemo} from 'react'
 import type {CollatedHit, FIXME, SanityDocument, SchemaType} from 'sanity'

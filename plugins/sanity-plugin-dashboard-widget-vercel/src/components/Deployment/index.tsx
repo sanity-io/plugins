@@ -1,4 +1,4 @@
-import {LinkIcon} from '@sanity/icons'
+import {LinkIcon} from '@sanity/icons/Link'
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {useMemo} from 'react'
 // oxlint-disable-next-line import/no-unassigned-import

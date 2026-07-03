@@ -13,10 +13,12 @@ vi.mock('../components/DocumentInternationalizationContext', () => ({
 function createBadgeProps(opts: {
   draft?: Partial<SanityDocument> | null
   published?: Partial<SanityDocument> | null
+  version?: Partial<SanityDocument> | null
 }): DocumentBadgeProps {
   return {
     draft: opts.draft as SanityDocument | null,
     published: opts.published as SanityDocument | null,
+    version: (opts.version ?? null) as SanityDocument | null,
   } as DocumentBadgeProps
 }
 
@@ -103,6 +105,30 @@ describe('LanguageBadge', () => {
 
     expect(result!.label).toBe('fr')
     expect(result!.title).toBe('French')
+  })
+
+  test('prefers version document over draft and published', () => {
+    const props = createBadgeProps({
+      version: {_id: 'versions.rTestRelease.doc-1', _type: 'article', language: 'es'},
+      draft: {_id: 'drafts.doc-1', _type: 'article', language: 'fr'},
+      published: {_id: 'doc-1', _type: 'article', language: 'en'},
+    })
+    const result = LanguageBadge(props)
+
+    expect(result!.label).toBe('es')
+    expect(result!.title).toBe('Spanish')
+  })
+
+  test('uses version document when document only exists in a release', () => {
+    const props = createBadgeProps({
+      version: {_id: 'versions.rTestRelease.doc-1', _type: 'article', language: 'de'},
+      draft: null,
+      published: null,
+    })
+    const result = LanguageBadge(props)
+
+    expect(result!.label).toBe('de')
+    expect(result!.title).toBe('German')
   })
 
   test('uses published document when no draft exists', () => {

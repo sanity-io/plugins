@@ -96,13 +96,7 @@ export function AprimoWidget(props: AprimoWidgetProps): React.JSX.Element {
     <Box>
       <Box>{preview}</Box>
       <Grid gap={1} style={{gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))'}}>
-        <Button
-          disabled={readOnly}
-          mode="ghost"
-          title="Select an asset"
-          kind="default"
-          onClick={action}
-        >
+        <Button disabled={readOnly} mode="ghost" title="Select an asset" onClick={action}>
           Select…
         </Button>
         <Button

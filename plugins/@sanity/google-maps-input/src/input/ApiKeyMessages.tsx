@@ -1,4 +1,5 @@
-import {ErrorOutlineIcon, WarningOutlineIcon} from '@sanity/icons'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {Box, Card, Code, Flex, Stack, Text} from '@sanity/ui'
 import type {ReactNode} from 'react'
 

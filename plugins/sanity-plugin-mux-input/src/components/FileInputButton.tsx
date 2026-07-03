@@ -15,7 +15,7 @@ const Label = styled.label`
   position: relative;
 `
 
-export interface FileInputButtonProps extends ButtonProps {
+export interface FileInputButtonProps extends Omit<ButtonProps, 'onSelect'> {
   onSelect: (files: FileList) => void
   accept: string
 }

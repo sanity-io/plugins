@@ -1,4 +1,6 @@
-import {DocumentVideoIcon, ErrorOutlineIcon, UploadIcon} from '@sanity/icons'
+import {DocumentVideoIcon} from '@sanity/icons/DocumentVideo'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {UploadIcon} from '@sanity/icons/Upload'
 import {Box, Button, Card, Dialog, Flex, Label, Radio, Stack, Text} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import LanguagesList from 'iso-639-1'

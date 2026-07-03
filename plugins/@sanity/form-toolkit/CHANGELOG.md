@@ -1,5 +1,19 @@
 # @sanity/form-toolkit
 
+## 3.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a)]:
+  - @sanity/sanity-plugin-async-list@2.0.3
+
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880)]:
+  - @sanity/sanity-plugin-async-list@2.0.2
+
 ## 3.0.1
 
 ### Patch Changes

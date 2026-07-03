@@ -3,7 +3,8 @@ import {
   hierarchicalDocumentList,
   hierarchyTree,
 } from '@sanity/hierarchical-document-list'
-import {BookIcon, UserIcon} from '@sanity/icons'
+import {BookIcon} from '@sanity/icons/Book'
+import {UserIcon} from '@sanity/icons/User'
 import {definePlugin, defineType, type ConfigContext} from 'sanity'
 import type {StructureBuilder} from 'sanity/structure'
 

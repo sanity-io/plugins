@@ -1,4 +1,4 @@
-import {RemoveCircleIcon} from '@sanity/icons'
+import {RemoveCircleIcon} from '@sanity/icons/RemoveCircle'
 import {
   Box,
   Button,
@@ -62,7 +62,6 @@ function ChangeLanguageButton(props: {
               key={lang.id}
               text={lang.id.toLocaleUpperCase()}
               value={lang.id}
-              // @ts-expect-error - fix typings
               onClick={handleKeyChange}
             />
           ))}

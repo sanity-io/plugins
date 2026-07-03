@@ -1,4 +1,4 @@
-import {CodeIcon} from '@sanity/icons'
+import {CodeIcon} from '@sanity/icons/Code'
 import {lazy} from 'react'
 import {definePlugin} from 'sanity'
 import {route} from 'sanity/router'

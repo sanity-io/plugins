@@ -14,7 +14,7 @@ const ShopifyAssetDiffPreview = ({value}: Props) => {
 
   if (value?.preview?.url) {
     return (
-      <Flex justify="center" align="center" height="fill" width="fill">
+      <Flex justify="center" align="center" height="fill">
         <Stack gap={2}>
           <img
             alt="preview"
@@ -33,7 +33,7 @@ const ShopifyAssetDiffPreview = ({value}: Props) => {
   }
 
   return (
-    <Flex justify="center" align="center" height="fill" width="fill">
+    <Flex justify="center" align="center" height="fill">
       <div>(no image)</div>
     </Flex>
   )

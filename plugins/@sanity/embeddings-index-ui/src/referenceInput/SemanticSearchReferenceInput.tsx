@@ -1,4 +1,5 @@
-import {EarthGlobeIcon, LinkIcon} from '@sanity/icons'
+import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
+import {LinkIcon} from '@sanity/icons/Link'
 import {Box, Button, Flex, Spinner} from '@sanity/ui'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {

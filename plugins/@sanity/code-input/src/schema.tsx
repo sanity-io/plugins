@@ -1,4 +1,4 @@
-import {CodeBlockIcon} from '@sanity/icons'
+import {CodeBlockIcon} from '@sanity/icons/CodeBlock'
 import {defineType, type ObjectDefinition} from 'sanity'
 
 import {CodeInput} from './CodeInput'

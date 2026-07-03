@@ -1,4 +1,4 @@
-import {ImagesIcon} from '@sanity/icons'
+import {ImagesIcon} from '@sanity/icons/Images'
 import {definePlugin, defineType} from 'sanity'
 import {media, mediaField} from 'sanity-plugin-media'
 

@@ -1,4 +1,4 @@
-import {DocumentTextIcon} from '@sanity/icons'
+import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 import {Box, Card, Code, Stack, Text} from '@sanity/ui'
 import {useEffect, useMemo} from 'react'
 import {definePlugin, defineField, defineType, useClient, useSchema} from 'sanity'

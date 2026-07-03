@@ -1,11 +1,10 @@
-import {WarningOutlineIcon} from '@sanity/icons'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {createPreviewSecret} from '@sanity/preview-url-secret/create-secret'
 import {definePreviewUrl} from '@sanity/preview-url-secret/define-preview-url'
 import {Box, Card, Container, Flex, Spinner, Stack, Text, usePrefersReducedMotion} from '@sanity/ui'
 import {AnimatePresence, motion, MotionConfig} from 'motion/react'
 import type {HTMLAttributeReferrerPolicy} from 'react'
 import {
-  forwardRef,
   memo,
   Suspense,
   useCallback,
@@ -310,11 +309,17 @@ interface FrameProps extends Required<Pick<IframeOptions, 'attributes'>> {
   iframeSize: IframeSizeKey
   url: URL | undefined
 }
-const Frame = forwardRef(function Frame(
-  props: FrameProps,
-  iframe: React.ForwardedRef<HTMLIFrameElement>,
-) {
-  const {loading, setLoading, iframeSize, attributes, reloading, url, setReloading} = props
+function Frame(props: FrameProps & {ref?: React.Ref<HTMLIFrameElement>}) {
+  const {
+    loading,
+    setLoading,
+    iframeSize,
+    attributes,
+    reloading,
+    url,
+    setReloading,
+    ref: iframe,
+  } = props
 
   function handleIframeLoad() {
     setLoading(false)
@@ -363,7 +368,7 @@ const Frame = forwardRef(function Frame(
       )}
     </Flex>
   )
-})
+}
 
 const spinnerVariants = {
   initial: {opacity: 1},

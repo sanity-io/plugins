@@ -1,16 +1,14 @@
-import {
-  CalendarIcon,
-  CheckmarkIcon,
-  ClockIcon,
-  CropIcon,
-  EditIcon,
-  ErrorOutlineIcon,
-  RevertIcon,
-  SearchIcon,
-  SyncIcon,
-  TagIcon,
-  TrashIcon,
-} from '@sanity/icons'
+import {CalendarIcon} from '@sanity/icons/Calendar'
+import {CheckmarkIcon} from '@sanity/icons/Checkmark'
+import {ClockIcon} from '@sanity/icons/Clock'
+import {CropIcon} from '@sanity/icons/Crop'
+import {EditIcon} from '@sanity/icons/Edit'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {RevertIcon} from '@sanity/icons/Revert'
+import {SearchIcon} from '@sanity/icons/Search'
+import {SyncIcon} from '@sanity/icons/Sync'
+import {TagIcon} from '@sanity/icons/Tag'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {
   Button,
   Card,

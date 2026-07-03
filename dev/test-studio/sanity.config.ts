@@ -1,5 +1,5 @@
 import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
-import {HomeIcon} from '@sanity/icons'
+import {HomeIcon} from '@sanity/icons/Home'
 import {vercelProtectionBypassTool} from '@sanity/vercel-protection-bypass'
 import {visionTool} from '@sanity/vision'
 import {defineConfig, type WorkspaceOptions} from 'sanity'
