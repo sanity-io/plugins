@@ -1,4 +1,4 @@
-import {icons, type IconSymbol} from '@sanity/icons'
+import {Icon, type IconSymbol} from '@sanity/icons'
 import {CodeIcon} from '@sanity/icons/Code'
 import {ComposeIcon} from '@sanity/icons/Compose'
 import {LockIcon} from '@sanity/icons/Lock'
@@ -259,7 +259,7 @@ export const instruction = defineType({
       return {
         title,
         // oxlint-disable-next-line no-unsafe-type-assertion
-        icon: icon ? icons[icon as IconSymbol] : SparklesIcon,
+        icon: icon ? <Icon symbol={icon as IconSymbol} /> : SparklesIcon,
         userId,
       }
     },

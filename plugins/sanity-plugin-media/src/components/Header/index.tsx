@@ -1,4 +1,4 @@
-import {Icon} from '@sanity/icons'
+import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
 import {CloseIcon} from '@sanity/icons/Close'
 import {UploadIcon} from '@sanity/icons/Upload'
 import {Box, Button, Flex, Inline, Text} from '@sanity/ui'
@@ -40,7 +40,7 @@ const Header = (props: Props) => {
               <Box display={['none', 'none', 'block']}>
                 <Text>
                   <span style={{margin: '0 0.5em'}}>
-                    <Icon symbol="arrow-right" />
+                    <ArrowRightIcon />
                   </span>
                   <span style={{textTransform: 'capitalize'}}>{selectedDocument._type}</span>
                 </Text>

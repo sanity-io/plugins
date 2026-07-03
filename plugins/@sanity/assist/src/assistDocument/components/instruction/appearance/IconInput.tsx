@@ -1,4 +1,4 @@
-import {icons} from '@sanity/icons'
+import {icons, Icon, type IconSymbol} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
 import {type ElementType, type ReactNode, useCallback, useId, useMemo} from 'react'
 import {set, type StringInputProps} from 'sanity'
@@ -14,12 +14,18 @@ export function IconInput(props: StringInputProps) {
     [onChange],
   )
 
-  const selectedIcon = useMemo(() => getIcon(value), [value])
+  const selectedSymbol = useMemo(() => getIcon(value), [value])
 
   return (
     <MenuButton
       button={
-        <Button icon={selectedIcon} title="Select icon" padding={3} mode="ghost" radius={1} />
+        <Button
+          icon={<Icon symbol={selectedSymbol} />}
+          title="Select icon"
+          padding={3}
+          mode="ghost"
+          radius={1}
+        />
       }
       id={id}
       menu={<Menu style={{maxHeight: 300}}>{items}</Menu>}
@@ -42,6 +48,10 @@ function IconItem({
   return <MenuItem icon={icon} title={key} text={key} onClick={onClick} />
 }
 
-export function getIcon(iconName?: string) {
-  return Object.entries(icons).find(([key]) => key === iconName)?.[1] ?? icons.sparkles
+export function getIcon(iconName?: string): IconSymbol {
+  return iconName && isIconSymbol(iconName) ? iconName : 'sparkles'
+}
+
+function isIconSymbol(iconName: string): iconName is IconSymbol {
+  return iconName in icons
 }
