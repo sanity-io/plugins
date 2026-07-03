@@ -23,16 +23,8 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
-    "./migrations": {
-      "source": "./migrations/index.ts",
-      "development": "./migrations/index.ts",
-      "default": "./dist/migrations/index.js"
-    },
+    ".": "./src/index.ts",
+    "./migrations": "./migrations/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -43,7 +35,7 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -53,10 +45,9 @@
     "lodash-es": "catalog:"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
     "@sanity/language-filter": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
     "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@types/lodash-es": "catalog:",
@@ -68,7 +59,8 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
     "@sanity/assist": "workspace:^",
