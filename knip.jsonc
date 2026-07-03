@@ -210,7 +210,6 @@
     },
 
     "plugins/@sanity/debug-live-sync-tags": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
