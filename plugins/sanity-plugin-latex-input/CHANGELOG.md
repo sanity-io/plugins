@@ -1,5 +1,11 @@
 # sanity-plugin-latex-input
 
+## 3.0.2
+
+### Patch Changes
+
+- [#1460](https://github.com/sanity-io/plugins/pull/1460) [`f50f060`](https://github.com/sanity-io/plugins/commit/f50f0605968e5cec4f23f5f3455abe5c8ddda23c) Thanks [@stipsan](https://github.com/stipsan)! - Regenerate TypeScript declaration output: `isolatedDeclarations` is no longer used and declarations are now generated with tsgo (`@typescript/native-preview`). Internal build-tooling change only, with no runtime behavior or public API changes.
+
 ## 3.0.1
 
 ### Patch Changes
@@ -13,6 +19,7 @@
 - [#905](https://github.com/sanity-io/plugins/pull/905) [`6d83783`](https://github.com/sanity-io/plugins/commit/6d8378397790fb87fb0142e490bbc7624a82ef17) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Migrated from standalone repository (https://github.com/sanity-io/latex-input) into the plugins monorepo.
 
   Breaking changes:
+
   - Now requires React 19.2+ and Sanity Studio v5+
   - CJS output dropped; ESM only
   - React Compiler enabled

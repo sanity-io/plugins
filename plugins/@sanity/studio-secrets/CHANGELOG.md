@@ -1,5 +1,11 @@
 # @sanity/studio-secrets
 
+## 4.0.6
+
+### Patch Changes
+
+- [#1460](https://github.com/sanity-io/plugins/pull/1460) [`f50f060`](https://github.com/sanity-io/plugins/commit/f50f0605968e5cec4f23f5f3455abe5c8ddda23c) Thanks [@stipsan](https://github.com/stipsan)! - Regenerate TypeScript declaration output: `isolatedDeclarations` is no longer used and declarations are now generated with tsgo (`@typescript/native-preview`). Internal build-tooling change only, with no runtime behavior or public API changes.
+
 ## 4.0.5
 
 ### Patch Changes
@@ -37,11 +43,13 @@
 - [#568](https://github.com/sanity-io/plugins/pull/568) [`f49588a`](https://github.com/sanity-io/plugins/commit/f49588a397a5c9c655272efc6085d697f44d7083) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port @sanity/studio-secrets plugin to the plugins monorepo
 
   **Breaking Changes:**
+
   - Require React 19 and Sanity Studio v5
   - Drop CJS output, ESM only
   - Enable React Compiler
 
   **Code Modernization:**
+
   - Fixed TypeScript linting issues for strict type checking
   - Fixed floating promises with proper void operator usage
   - Replaced deprecated `React.FormEvent` with `ChangeEvent`
