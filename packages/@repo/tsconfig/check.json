@@ -1,8 +1,0 @@
-{
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "description": "Shared base preset used for type checking (oxlint and the IDE) and for building with @sanity/pkg-utils",
-  "extends": ["@sanity/tsconfig/strictest"],
-  "compilerOptions": {
-    "customConditions": ["development"]
-  }
-}

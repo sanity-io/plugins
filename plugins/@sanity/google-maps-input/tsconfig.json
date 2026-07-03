@@ -1,8 +1,9 @@
 {
-  "extends": "@repo/tsconfig/check.json",
+  "extends": ["@sanity/tsconfig/strictest"],
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
+    "customConditions": ["development"],
     "types": ["google.maps"]
   }
 }

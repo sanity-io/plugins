@@ -64,8 +64,8 @@
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
     "@types/google.maps": "^3.65.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
