@@ -55,9 +55,9 @@
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
     "@sanity/client": "catalog:",
     "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",

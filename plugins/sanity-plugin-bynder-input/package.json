@@ -46,8 +46,8 @@
   "devDependencies": {
     "@bynder/compact-view": "5.1.2",
     "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/video.js": "catalog:",

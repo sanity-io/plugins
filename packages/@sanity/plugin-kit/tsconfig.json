@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/tsconfig/check.json",
+  "extends": ["@sanity/tsconfig/strictest"],
   "include": [
     "src/**/*.ts",
     "src/choosealicense-list.d.ts",
@@ -9,6 +9,7 @@
   ],
   "exclude": ["dist", "node_modules", "test/fixtures"],
   "compilerOptions": {
+    "customConditions": ["development"],
     "noPropertyAccessFromIndexSignature": false,
     "noUncheckedIndexedAccess": false,
     "resolveJsonModule": true,

@@ -422,11 +422,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.json',
         templateFile: 'templates/tsconfig.json.hbs',
       },
-      {
-        type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
-        templateFile: 'templates/tsconfig.build.json.hbs',
-      },
       // Add to test-studio dependencies
       {
         type: 'append',
@@ -557,15 +552,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         default: defaultExport,
       })
 
-      // Step 4: Ask about isolatedDeclarations
-      const {isolatedDeclarations} = await inquirer.prompt<{isolatedDeclarations: boolean}>({
-        type: 'confirm',
-        name: 'isolatedDeclarations',
-        message:
-          'Enable isolatedDeclarations?\n  (Recommended to disable initially and enable later, as it may require many changes to existing exports)',
-        default: false,
-      })
-
       return {
         name,
         description,
@@ -575,7 +561,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         // vanilla-extract during the initial port (see the plugin-transfer skill).
         hasVanillaExtract: false,
         version,
-        isolatedDeclarations,
         originalRepositoryUrl,
         originalSourceUrl,
         keywords,
@@ -616,11 +601,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.json',
         templateFile: 'templates/tsconfig.json.hbs',
-      },
-      {
-        type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
-        templateFile: 'templates/tsconfig.build.json.hbs',
       },
       // Add to test-studio dependencies
       {

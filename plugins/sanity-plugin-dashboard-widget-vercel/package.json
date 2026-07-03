@@ -60,9 +60,9 @@
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
     "@sanity/dashboard": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
     "@types/object-hash": "^3.0.6",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

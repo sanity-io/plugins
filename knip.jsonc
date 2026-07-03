@@ -35,7 +35,6 @@
     "turbo/generators": {
       "project": ["src/**/*.ts"],
     },
-    "packages/@repo/tsconfig": {},
     "packages/@repo/package.config": {
       "project": ["src/**/*.ts"],
     },

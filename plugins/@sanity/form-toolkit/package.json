@@ -73,8 +73,8 @@
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
     "@types/mailchimp__mailchimp_marketing": "^3.0.22",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

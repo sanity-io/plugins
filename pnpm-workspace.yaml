@@ -75,7 +75,8 @@ dedupeDirectDeps: true
 dedupePeers: true
 linkWorkspacePackages: deep
 
-minimumReleaseAge: 4320
+# Matches the pnpm v11 default (1 day)
+minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
   - '@oxfmt/*'

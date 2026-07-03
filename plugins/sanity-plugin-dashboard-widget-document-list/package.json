@@ -51,9 +51,9 @@
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
     "@sanity/dashboard": "workspace:*",
     "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
     "@types/lodash-es": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

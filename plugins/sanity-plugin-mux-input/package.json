@@ -67,10 +67,10 @@
   },
   "devDependencies": {
     "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
     "@sanity/client": "catalog:",
     "@sanity/pkg-utils": "catalog:",
     "@sanity/plugin-kit": "workspace:*",
+    "@sanity/tsconfig": "catalog:",
     "@types/lodash": "^4.17.24",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

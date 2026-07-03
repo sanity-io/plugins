@@ -26,7 +26,6 @@ Keep and maintain these monorepo config files in the transferred plugin:
 - `package.json`
 - `package.config.ts`
 - `tsconfig.json`
-- `tsconfig.build.json`
 - `vitest.config.ts`
 
 Do not copy standalone-repo-only setup such as custom root CI/build/lint/test configs that are already handled by this monorepo.

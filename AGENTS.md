@@ -373,7 +373,7 @@ When migrating a plugin, agents should ensure:
 - A test-studio example is present and wired in `dev/test-studio/sanity.config.ts`
 - `.github/CODEOWNERS` is not updated unless explicitly requested
 - The transfer includes a **major** changeset
-- Only monorepo-required plugin config files are maintained (`package.json`, `package.config.ts`, `tsconfig.json`, `tsconfig.build.json`, `vitest.config.ts`)
+- Only monorepo-required plugin config files are maintained (`package.json`, `package.config.ts`, `tsconfig.json`, `vitest.config.ts`)
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 
@@ -441,6 +441,10 @@ plugins/
 ```
 
 ## Common Issues
+
+### Build fails with "tsgo did not generate dts file"
+
+Declarations are generated with tsgo (`tsgo: true` in `@repo/package.config`), which requires exported types to be portable. A `TS2883` error printed above the failure means an inferred exported type references a module that is not publicly addressable (for example a deep `.pnpm` or dts-chunk path). Fix it by adding an explicit type annotation at the reported site so the emitted declaration can use a locally imported name (see the actor annotations in `plugins/sanity-plugin-dashboard-widget-vercel/src/machines/form.ts` for an example). Note that test files are part of the declaration program too, since the single `tsconfig.json` includes them.
 
 ### Lint Errors About Missing Types
 
