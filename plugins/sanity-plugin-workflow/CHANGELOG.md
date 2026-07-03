@@ -1,5 +1,11 @@
 # sanity-plugin-workflow
 
+## 3.0.27
+
+### Patch Changes
+
+- [#1480](https://github.com/sanity-io/plugins/pull/1480) [`4c8ee7a`](https://github.com/sanity-io/plugins/commit/4c8ee7a1095c54e9698ab4d19cb922c1fb4c3dd8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.42.2
+
 ## 3.0.26
 
 ### Patch Changes
