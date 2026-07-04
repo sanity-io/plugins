@@ -1,5 +1,11 @@
 # sanity-plugin-markdown
 
+## 9.0.2
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior. The `sanity-plugin-markdown/next` entry point is unchanged, but its file inside the published `dist` folder is renamed from `indexNext.js` to `next.js`.
+
 ## 9.0.1
 
 ### Patch Changes

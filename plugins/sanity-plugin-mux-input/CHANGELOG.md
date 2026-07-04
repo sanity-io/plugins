@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 4.1.5
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior. The `process.env.PKG_VERSION` constant is still replaced with the package version at build time.
+
 ## 4.1.4
 
 ### Patch Changes

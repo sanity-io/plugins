@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 6.0.4
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior of the CLI. `@sanity/pkg-utils` remains a peer dependency, resolved from the plugin under verification at runtime.
+
 ## 6.0.3
 
 ### Patch Changes
