@@ -51,7 +51,7 @@
     "react-hook-form": "catalog:",
     "react-time-ago": "^7.4.4",
     "use-deep-compare-effect": "^1.8.1",
-    "xstate": "^5.32.2",
+    "xstate": "^5.32.4",
     "yup": "^0.32.11"
   },
   "devDependencies": {
