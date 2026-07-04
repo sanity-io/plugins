@@ -1,8 +1,5 @@
 {
   "extends": ["@sanity/tsconfig/strictest"],
   "include": ["**/*.ts", "**/*.tsx", "src/typings.d.ts"],
-  "exclude": ["dist", "node_modules"],
-  "compilerOptions": {
-    "customConditions": ["development"]
-  }
+  "exclude": ["dist", "node_modules"]
 }

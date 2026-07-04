@@ -2,7 +2,9 @@
 // oxlint-disable typescript/no-deprecated
 
 import {Box, Text} from '@sanity/ui'
-import {type Options as EasyMdeOptions} from 'easymde'
+// `import type` (not an inline type specifier) so the bundle keeps no side-effect
+// `import 'easymde'`, which would break SSR/Node (easymde touches `document` on load)
+import type {Options as EasyMdeOptions} from 'easymde'
 import {
   lazy,
   Suspense,

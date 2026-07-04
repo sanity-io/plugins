@@ -1,8 +1,5 @@
 {
   "extends": ["@sanity/tsconfig/strictest"],
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["dist", "node_modules"],
-  "compilerOptions": {
-    "customConditions": ["development"]
-  }
+  "exclude": ["dist", "node_modules"]
 }

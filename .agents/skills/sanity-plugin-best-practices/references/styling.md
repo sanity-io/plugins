@@ -165,19 +165,18 @@ component rather than spreading `className` across the tree (see
 
 vanilla-extract needs a build/transform step. Mirror `@sanity/google-maps-input`:
 
-**1. Enable the pkg-utils Rollup integration** so the build extracts a `dist/bundle.css`:
+**1. Enable the tsdown integration** so the build extracts a `dist/bundle.css`:
 
 ```ts
-// plugins/@sanity/google-maps-input/package.config.ts
-import config from '@repo/package.config'
-import {defineConfig} from '@sanity/pkg-utils'
+// plugins/@sanity/google-maps-input/tsdown.config.ts
+import {defineConfig} from '@sanity/tsdown-config'
+import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
-  ...config,
-  babel: {reactCompiler: true},
-  reactCompilerOptions: {target: '19'},
-  rollup: {vanillaExtract: true},
-})
+  reactCompiler: true,
+  vanillaExtract: true,
+  dts: {tsgo: true},
+}) satisfies Promise<UserConfig>
 ```
 
 **2. Add the `./bundle.css` export and build deps** in `package.json`. The built entry loads the
@@ -187,11 +186,7 @@ SSR/Node imports don't choke on a `.css` file:
 ```json
 {
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./bundle.css": {
       "browser": "./dist/bundle.css",
       "style": "./dist/bundle.css",

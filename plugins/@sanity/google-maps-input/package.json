@@ -28,11 +28,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./bundle.css": {
       "browser": "./dist/bundle.css",
       "style": "./dist/bundle.css",
@@ -54,7 +50,7 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -63,9 +59,8 @@
     "@vis.gl/react-google-maps": "catalog:"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
     "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/google.maps": "^3.65.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
@@ -75,7 +70,8 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",

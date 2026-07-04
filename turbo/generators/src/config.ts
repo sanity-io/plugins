@@ -409,8 +409,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/package.config.ts',
-        templateFile: 'templates/package.config.ts.hbs',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsdown.config.ts',
+        templateFile: 'templates/tsdown.config.ts.hbs',
       },
       {
         type: 'add',
@@ -589,8 +589,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/package.config.ts',
-        templateFile: 'templates/package.config.ts.hbs',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsdown.config.ts',
+        templateFile: 'templates/tsdown.config.ts.hbs',
       },
       {
         type: 'add',

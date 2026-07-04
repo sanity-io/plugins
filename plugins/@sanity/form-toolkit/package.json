@@ -22,45 +22,25 @@
   ],
   "type": "module",
   "exports": {
-    "./formium": {
-      "source": "./src/formium/index.ts",
-      "development": "./src/formium/index.ts",
-      "default": "./dist/formium/index.js"
-    },
-    "./hubspot": {
-      "source": "./src/hubspot/index.ts",
-      "development": "./src/hubspot/index.ts",
-      "default": "./dist/hubspot/index.js"
-    },
-    "./mailchimp": {
-      "source": "./src/mailchimp/index.ts",
-      "development": "./src/mailchimp/index.ts",
-      "default": "./dist/mailchimp/index.js"
-    },
-    "./form-schema": {
-      "source": "./src/form-schema/index.ts",
-      "development": "./src/form-schema/index.ts",
-      "default": "./dist/form-schema/index.js"
-    },
-    "./form-renderer": {
-      "source": "./src/form-renderer/index.ts",
-      "development": "./src/form-renderer/index.ts",
-      "default": "./dist/form-renderer/index.js"
-    },
+    "./form-renderer": "./src/form-renderer/index.ts",
+    "./form-schema": "./src/form-schema/index.ts",
+    "./formium": "./src/formium/index.ts",
+    "./hubspot": "./src/hubspot/index.ts",
+    "./mailchimp": "./src/mailchimp/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
+      "./form-renderer": "./dist/form-renderer/index.js",
+      "./form-schema": "./dist/form-schema/index.js",
       "./formium": "./dist/formium/index.js",
       "./hubspot": "./dist/hubspot/index.js",
       "./mailchimp": "./dist/mailchimp/index.js",
-      "./form-schema": "./dist/form-schema/index.js",
-      "./form-renderer": "./dist/form-renderer/index.js",
       "./package.json": "./package.json"
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -72,9 +52,8 @@
     "react-icons": "catalog:"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
     "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/mailchimp__mailchimp_marketing": "^3.0.22",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
@@ -82,7 +61,8 @@
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "sanity": "catalog:"
+    "sanity": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
     "react": "^19.2",
