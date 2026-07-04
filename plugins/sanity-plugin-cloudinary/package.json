@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-cloudinary",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Cloudinary integration for Sanity Studio V3.",
   "keywords": [
     "sanity",
