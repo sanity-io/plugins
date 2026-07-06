@@ -101,8 +101,8 @@ catalogs:
       specifier: ^5.2.3
       version: 5.2.3
     '@vis.gl/react-google-maps':
-      specifier: ^1.8.3
-      version: 1.8.3
+      specifier: ^1.9.0
+      version: 1.9.0
     babel-plugin-react-compiler:
       specifier: ^1.0.0
       version: 1.0.0
@@ -1120,7 +1120,7 @@ importers:
         version: 3.3.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       '@vis.gl/react-google-maps':
         specifier: 'catalog:'
-        version: 1.8.3(react-dom@19.2.7)(react@19.2.7)
+        version: 1.9.0(react-dom@19.2.7)(react@19.2.7)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -6789,8 +6789,8 @@ packages:
   '@videojs/xhr@2.6.0':
     resolution: {integrity: sha512-7J361GiN1tXpm+gd0xz2QWr3xNWBE+rytvo8J3KuggFaLg+U37gZQ2BuPLcnkfGffy2e+ozY70RHC8jt7zjA6Q==}
 
-  '@vis.gl/react-google-maps@1.8.3':
-    resolution: {integrity: sha512-DW7nEuvOJ299DmdBnvGiUARrgS/+sTEO1iJgG9J8YaErZqLoq7S4TJ22f3EjJvR4dti4L4gft43JEK77nnKXDw==}
+  '@vis.gl/react-google-maps@1.9.0':
+    resolution: {integrity: sha512-ELL/zo8mRMPGDQZwHRClf2tE1/PMYYKjg+C/dUn8rmlQ0e+s7rkcNmCgaeBAV48GJzEcrBsr+vjDv4AvzJrlUA==}
     peerDependencies:
       react: '>=16.8.0 || ^19.0 || ^19.0.0-rc'
       react-dom: '>=16.8.0 || ^19.0 || ^19.0.0-rc'
@@ -8151,6 +8151,10 @@ packages:
 
   fast-diff@1.3.0:
     resolution: {integrity: sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==}
+
+  fast-equals@6.0.0:
+    resolution: {integrity: sha512-PFhhIGgdM79r5Uztdj9Zb6Tt1zKafqVfdMGwVca1z5z6fbX7DmsySSuJd8HiP6I1j505DCS83cLxo5rmSNeVEA==}
+    engines: {node: '>=6.0.0'}
 
   fast-fifo@1.3.2:
     resolution: {integrity: sha512-/d9sfos4yxzpwkDkuN7k2SqFKtYNmCTzgfEpz82x34IM9/zc8KGxQoXg1liNC/izpRM/MBdt44Nmx41ZWqk+FQ==}
@@ -16156,11 +16160,11 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vis.gl/react-google-maps@1.8.3(react-dom@19.2.7)(react@19.2.7)':
+  '@vis.gl/react-google-maps@1.9.0(react-dom@19.2.7)(react@19.2.7)':
     dependencies:
       '@googlemaps/js-api-loader': 2.1.1
       '@types/google.maps': 3.65.2
-      fast-deep-equal: 3.1.3
+      fast-equals: 6.0.0
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
@@ -17779,6 +17783,8 @@ snapshots:
   fast-deep-equal@3.1.3: {}
 
   fast-diff@1.3.0: {}
+
+  fast-equals@6.0.0: {}
 
   fast-fifo@1.3.2: {}
 
