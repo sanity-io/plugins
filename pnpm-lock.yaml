@@ -44,8 +44,8 @@ catalogs:
       specifier: ^10.9.0
       version: 10.9.0
     '@sanity/preview-url-secret':
-      specifier: ^4.0.7
-      version: 4.0.7
+      specifier: ^4.0.8
+      version: 4.0.8
     '@sanity/schema':
       specifier: ^6.3.0
       version: 6.3.0
@@ -915,7 +915,7 @@ importers:
         version: 5.0.0(react@19.2.7)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
-        version: 4.0.7(@sanity/client@7.23.0)
+        version: 4.0.8(@sanity/client@7.23.0)
       react:
         specifier: ^19.2
         version: 19.2.7
@@ -1692,7 +1692,7 @@ importers:
         version: 5.0.0(react@19.2.7)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
-        version: 4.0.7(@sanity/client@7.23.0)
+        version: 4.0.8(@sanity/client@7.23.0)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -2338,7 +2338,7 @@ importers:
         version: 5.0.0(react@19.2.7)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
-        version: 4.0.7(@sanity/client@7.23.0)
+        version: 4.0.8(@sanity/client@7.23.0)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -6191,6 +6191,12 @@ packages:
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       '@sanity/client': ^7.22.1
+
+  '@sanity/preview-url-secret@4.0.8':
+    resolution: {integrity: sha512-n2ulvDpA8z9UOhnyMPB4WC2w3e/noqL2+gE1f+WQyAE2v0OJsYOkTQzNCe9FU0UaVtbuBTNZI5xj+ei6Qxql/Q==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+    peerDependencies:
+      '@sanity/client': ^7.23.0
 
   '@sanity/prism-groq@1.1.2':
     resolution: {integrity: sha512-McMw9U5kuYAgIwyNodhFKdarM0cPme6UYBR6ms6YBNEO8Qqu5zGHydUeORaJ/w4qdFKGB1oWjBjy525ed6LXaQ==}
@@ -15305,6 +15311,11 @@ snapshots:
       - '@sanity/types'
 
   '@sanity/preview-url-secret@4.0.7(@sanity/client@7.23.0)':
+    dependencies:
+      '@sanity/client': 7.23.0
+      '@sanity/uuid': 3.0.2
+
+  '@sanity/preview-url-secret@4.0.8(@sanity/client@7.23.0)':
     dependencies:
       '@sanity/client': 7.23.0
       '@sanity/uuid': 3.0.2

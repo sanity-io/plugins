@@ -23,7 +23,7 @@ catalog:
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.3.0
   '@sanity/pkg-utils': ^10.9.0
-  '@sanity/preview-url-secret': ^4.0.7
+  '@sanity/preview-url-secret': ^4.0.8
   '@sanity/schema': ^6.3.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.0
