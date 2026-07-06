@@ -5,6 +5,7 @@
 - [Table of contents](#table-of-contents)
 - [About Sanity AI Assist](#about-sanity-ai-assist)
 - [Installation](#installation)
+  - [Build errors about missing icon exports](#build-errors-about-missing-icon-exports)
 - [Setup](#setup)
   - [Add the plugin](#add-the-plugin)
   - [Enabling the AI Assist API](#enabling-the-ai-assist-api)
@@ -56,6 +57,30 @@ npm install @sanity/assist sanity@latest
 ```
 
 This plugin requires `sanity` version `3.26` or greater.
+
+### Build errors about missing icon exports
+
+This plugin depends on `@sanity/icons` v5, which [removed the per-icon exports from the package root](https://github.com/sanity-io/icons/releases/tag/v5.0.0): every icon now lives on its own export path. If `sanity build` or `sanity dev` fails with an error like
+
+```
+[MISSING_EXPORT] "CopyIcon" is not exported by "node_modules/@sanity/icons/dist/index.js"
+```
+
+the file referenced by the error still imports icons from the package root — usually the studio's own schema or structure code, or another dependency that has not been updated yet. Update those imports to the per-icon export paths:
+
+```diff
+- import {CopyIcon, ListIcon} from '@sanity/icons'
++ import {CopyIcon} from '@sanity/icons/Copy'
++ import {ListIcon} from '@sanity/icons/List'
+```
+
+Also make sure `@sanity/icons` is declared in the studio's own `package.json` when studio code imports it; which copy an undeclared import resolves to depends on package manager hoisting, and can change when installing or upgrading plugins.
+
+If you cannot update the importing code right away (for example when it lives in a third-party package), pin `@sanity/icons` to v4 in the studio's own `package.json` until it catches up — v4 supports both import styles:
+
+```sh
+npm install @sanity/icons@4
+```
 
 ## Setup
 
