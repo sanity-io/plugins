@@ -87,7 +87,7 @@ export default function Uploader(props: Props) {
       const events$ = new Subject()
       return {
         observable: events$.asObservable(),
-        handleClick: ((event) => events$.next(event)) as React.MouseEventHandler<HTMLButtonElement>,
+        handleClick: (event: React.MouseEvent<HTMLButtonElement>) => events$.next(event),
       }
     })(),
   ).current

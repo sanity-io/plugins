@@ -14,13 +14,7 @@ function orderableDeskItem(
   S: StructureBuilder,
   context: ConfigContext,
 ): StructureListItem {
-  /* oxlint-disable no-unsafe-type-assertion -- workspace packages can resolve duplicate sanity instances under pnpm */
-  return orderableDocumentListDeskItem({
-    ...config,
-    S: S as unknown as OrderableListConfig['S'],
-    context: context as unknown as OrderableListConfig['context'],
-  }) as unknown as StructureListItem
-  /* oxlint-enable no-unsafe-type-assertion */
+  return orderableDocumentListDeskItem({...config, S, context})
 }
 
 const orderableCategory = defineType({

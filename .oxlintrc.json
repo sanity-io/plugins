@@ -226,10 +226,12 @@
       }
     },
     {
-      // XState v5's canonical typing pattern relies on `{} as Context` style assertions
+      // XState v5's canonical typing pattern relies on `{} as Context` style assertions,
+      // which drive the machine's generic type inference and are never truly unnecessary
       "files": ["plugins/sanity-plugin-dashboard-widget-vercel/src/machines/*.ts"],
       "rules": {
-        "no-unsafe-type-assertion": "off"
+        "no-unsafe-type-assertion": "off",
+        "no-unnecessary-type-assertion": "off"
       }
     }
   ]

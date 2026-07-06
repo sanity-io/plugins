@@ -159,7 +159,7 @@ export function Iframe(props: IframeProps): React.JSX.Element {
         const resolvePreviewUrl = definePreviewUrl({
           origin: urlProp.origin === 'same-origin' ? location.origin : urlProp.origin,
           preview,
-          draftMode: {
+          previewMode: {
             enable: urlProp.draftMode,
           },
         })

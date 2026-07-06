@@ -285,7 +285,7 @@ describe('notificationsGenericErrorEpic', () => {
         fetchCount: -1,
         fetching: false,
         panelVisible: true,
-      } as any,
+      },
     })
     store.dispatch(
       tagsActions.createError({
