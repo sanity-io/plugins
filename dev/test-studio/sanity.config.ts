@@ -39,7 +39,7 @@ import {markdownExample} from '#markdown'
 import {mediaExample} from '#media'
 import {muxInputExample} from '#mux-input'
 import {netlifyWidgetExample} from '#netlify-widget'
-import {orderableDocumentListExample} from '#orderable-document-list'
+import {orderableDocumentListExample, orderableIssue1506Repro} from '#orderable-document-list'
 import {personalizationExample} from '#personalization'
 import {presetsWorkspace} from '#presets'
 import {richDateInputExample} from '#rich-date-input'
@@ -167,6 +167,15 @@ export default defineConfig([
     name: 'workflow',
     title: 'workflow: Document Workflow',
     plugins: [structureTool(), workflowExample()],
+  }),
+  // Repro workspace for https://github.com/sanity-io/plugins/issues/1506:
+  // a top-level orderable list alongside plain, creatable document types.
+  // Before the fix, creating any type routed the new document into the
+  // orderable list; after the fix, it routes correctly.
+  createWorkspace({
+    name: 'orderable-issue-1506',
+    title: 'orderable-document-list: Issue #1506 Repro',
+    plugins: [orderableIssue1506Repro()],
   }),
   // Destination workspace for @sanity/cross-dataset-duplicator: uses a
   // different dataset so it can be picked as a duplication target.
