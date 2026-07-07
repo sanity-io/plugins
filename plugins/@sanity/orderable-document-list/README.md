@@ -1,6 +1,6 @@
 # @sanity/orderable-document-list
 
-# What is it?
+## What is it?
 
 Drag-and-drop Document Ordering without leaving the Editing surface.
 
@@ -14,7 +14,7 @@ A Sanity Studio with [Desk Structure](https://www.sanity.io/docs/structure-build
 
 ```ts
 import {defineConfig} from 'sanity'
-import {structureTool, StructureBuilder} from 'sanity/structure'
+import {structureTool} from 'sanity/structure'
 
 export default defineConfig({
   //...
@@ -51,7 +51,7 @@ The config parameter requires `type`, `S` and `context`. It also accepts `title`
 
 ```ts
 import {defineConfig} from 'sanity'
-import {structureTool, StructureBuilder} from 'sanity/structure'
+import {structureTool} from 'sanity/structure'
 import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 
 export default defineConfig({
@@ -86,7 +86,9 @@ export default defineConfig({
 
             // ... all other desk items, e.g. all other document types not already included
             // @see https://www.sanity.io/docs/studio/structure-builder-cheat-sheet#k4eb3b1891dc2
-            ...S.documentTypeListItems().filter((item) => !(['category', 'project'].includes(item.getId())))
+            ...S.documentTypeListItems().filter(
+              (item) => !['category', 'project'].includes(item.getId()),
+            ),
           ])
       },
     }),
@@ -96,14 +98,13 @@ export default defineConfig({
 
 **Caution: Adding a `filter`**
 
-By default, the plugin will display _all_ documents of the same `type`. However, you may wish to add a `filter` to reduce this down to a subset of documents. A typical usecase is for [internationalized document schema](https://github.com/sanity-io/document-internationalization) to order documents of just the base language version.
+By default, the plugin will display _all_ documents of the same `type`. However, you may wish to add a `filter` to reduce this down to a subset of documents. A typical use case is for [internationalized document schema](https://github.com/sanity-io/document-internationalization) to order documents of just the base language version.
 
 However, order ranks are still computed based on _all_ documents of the same `type`. Creating multiple lists with different `filter` settings could produce unexpected results.
 
 ### 2. Add the `orderRank` field to your schema(s).
 
-You must pass in the `type` of the schema and the schema `context`, to create an `initialValue` value.
-Context is available in the schema callback, and should be forwarded as is.
+You must pass in the `type` of the schema to create an `initialValue` value.
 
 Additionally, pass in overrides for the field, such as making it visible by passing `hidden: false`.
 
@@ -183,18 +184,17 @@ To get this first version out the door there are few configuration settings and 
 
 Feedback and PRs welcome :)
 
-### Breaking change in the v3 version
+### Breaking change
 
-`orderableDocumentListDeskItem` requires context from sanity config now.
+`orderableDocumentListDeskItem` requires `context` from Sanity config now.
 See the examples above.
 
 ## How it works
 
-Uses [kvandakes](https://github.com/kvandake)'s [TypeScript implementation](https://github.com/kvandake/lexorank-ts) of [Jira's Lexorank](https://www.youtube.com/watch?v=OjQv9xMoFbg) to create a "lexographical" Document order.
+Uses [kvandake's](https://github.com/kvandake) [TypeScript implementation](https://github.com/kvandake/lexorank-ts) of [Jira's LexoRank](https://www.youtube.com/watch?v=OjQv9xMoFbg) to create a "lexicographical" Document order.
 
 Put simply it updates the position of an individual – or many – Documents in an ordered list without updating any others. It's fast.
 
-
 ## License
 
-[MIT](LICENSE) © Sanity.io
+[MIT](../../../LICENSE) © Sanity.io
