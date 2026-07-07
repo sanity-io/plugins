@@ -5,6 +5,7 @@ import {LockIcon} from '@sanity/icons/Lock'
 import {SparklesIcon} from '@sanity/icons/Sparkles'
 import {ThListIcon} from '@sanity/icons/ThList'
 import {Box, Flex, Stack, Text, Tooltip} from '@sanity/ui'
+import {isValidElement} from 'react'
 import {defineArrayMember, defineField, defineType, type ObjectSchemaType} from 'sanity'
 
 import {AssistDocumentForm} from '../assistDocument/components/AssistDocumentForm'
@@ -267,16 +268,17 @@ export const instruction = defineType({
   components: {
     input: InstructionInput,
     preview: (props: any) => {
-      const Icon = props.icon
+      // `icon` from `prepare` is either a rendered element (<Icon symbol={...} />) or a
+      // component (the SparklesIcon fallback), so it cannot be rendered as <IconValue /> directly
+      const IconValue = props.icon
+      const icon = isValidElement(IconValue) ? IconValue : IconValue ? <IconValue /> : null
       return (
         <Flex gap={3} align="center" padding={2}>
-          {Icon && (
+          {icon ? (
             <Box flex="none">
-              <Text size={1}>
-                <Icon />
-              </Text>
+              <Text size={1}>{icon}</Text>
             </Box>
-          )}
+          ) : null}
 
           <Stack flex={1} gap={2}>
             <Text size={1} textOverflow="ellipsis" weight="medium">
