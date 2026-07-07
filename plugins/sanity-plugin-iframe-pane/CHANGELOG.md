@@ -1,5 +1,11 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.23
+
+### Patch Changes
+
+- [#1476](https://github.com/sanity-io/plugins/pull/1476) [`b8bc962`](https://github.com/sanity-io/plugins/commit/b8bc96275b26a3d219a55cd22e3d29b27e331e11) Thanks [@stipsan](https://github.com/stipsan)! - Use the `previewMode` option instead of the deprecated `draftMode` option when resolving preview URLs with `@sanity/preview-url-secret` (no behavior change)
+
 ## 5.0.22
 
 ### Patch Changes

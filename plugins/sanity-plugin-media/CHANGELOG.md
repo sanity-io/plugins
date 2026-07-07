@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 5.0.11
+
+### Patch Changes
+
+- [#1476](https://github.com/sanity-io/plugins/pull/1476) [`b8bc962`](https://github.com/sanity-io/plugins/commit/b8bc96275b26a3d219a55cd22e3d29b27e331e11) Thanks [@stipsan](https://github.com/stipsan)! - Replace redundant type assertions with `satisfies` checks and return type annotations (internal refactor, no API change)
+
 ## 5.0.10
 
 ### Patch Changes

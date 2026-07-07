@@ -1,5 +1,13 @@
 # @sanity/assist
 
+## 6.1.10
+
+### Patch Changes
+
+- [#1503](https://github.com/sanity-io/plugins/pull/1503) [`30340cf`](https://github.com/sanity-io/plugins/commit/30340cfdc14aa4de52b7d8c6ad50cd7adeec0281) Thanks [@stipsan](https://github.com/stipsan)! - Fix a crash ("Element type is invalid … got: <Icon />") when rendering the instruction list for instructions with a custom icon. Since the `@sanity/icons` v5 migration the instruction preview received a rendered icon element but kept rendering it as a component; it now handles both. The README also gains a troubleshooting section for `MISSING_EXPORT` icon build errors, which come from code importing icons from the `@sanity/icons` package root — a pattern removed in v5 (this plugin already uses the per-icon export paths).
+
+- [#1476](https://github.com/sanity-io/plugins/pull/1476) [`b8bc962`](https://github.com/sanity-io/plugins/commit/b8bc96275b26a3d219a55cd22e3d29b27e331e11) Thanks [@stipsan](https://github.com/stipsan)! - Remove type assertions made redundant by improved type inference (internal refactor, no API change)
+
 ## 6.1.9
 
 ### Patch Changes
