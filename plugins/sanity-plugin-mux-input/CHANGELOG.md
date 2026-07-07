@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 4.1.6
+
+### Patch Changes
+
+- [#1476](https://github.com/sanity-io/plugins/pull/1476) [`b8bc962`](https://github.com/sanity-io/plugins/commit/b8bc96275b26a3d219a55cd22e3d29b27e331e11) Thanks [@stipsan](https://github.com/stipsan)! - Remove redundant type assertions in the uploader components (internal refactor, no API change)
+
 ## 4.1.5
 
 ### Patch Changes

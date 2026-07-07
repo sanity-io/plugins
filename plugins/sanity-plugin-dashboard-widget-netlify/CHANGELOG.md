@@ -1,5 +1,7 @@
 # sanity-plugin-dashboard-widget-netlify
 
+## 3.0.8
+
 ## 3.0.7
 
 ### Patch Changes

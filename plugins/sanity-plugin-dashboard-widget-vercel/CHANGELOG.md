@@ -1,5 +1,11 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.14
+
+### Patch Changes
+
+- [#1494](https://github.com/sanity-io/plugins/pull/1494) [`588ed91`](https://github.com/sanity-io/plugins/commit/588ed913311558585a54a2b23d61075d1422f658) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency xstate to ^5.32.4
+
 ## 4.0.13
 
 ### Patch Changes

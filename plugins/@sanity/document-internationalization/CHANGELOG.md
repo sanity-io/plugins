@@ -1,5 +1,11 @@
 # @sanity/document-internationalization
 
+## 6.2.16
+
+### Patch Changes
+
+- [#1476](https://github.com/sanity-io/plugins/pull/1476) [`b8bc962`](https://github.com/sanity-io/plugins/commit/b8bc96275b26a3d219a55cd22e3d29b27e331e11) Thanks [@stipsan](https://github.com/stipsan)! - Remove redundant `ButtonTone` type assertions in delete actions (internal refactor, no API change)
+
 ## 6.2.15
 
 ### Patch Changes
