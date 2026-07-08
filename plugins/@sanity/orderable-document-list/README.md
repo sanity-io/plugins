@@ -86,7 +86,9 @@ export default defineConfig({
 
             // ... all other desk items, e.g. all other document types not already included
             // @see https://www.sanity.io/docs/studio/structure-builder-cheat-sheet#k4eb3b1891dc2
-            ...S.documentTypeListItems().filter((item) => !(['category', 'project'].includes(item.getId())))
+            ...S.documentTypeListItems().filter(
+              (item) => !['category', 'project'].includes(item.getId()),
+            ),
           ])
       },
     }),
@@ -193,7 +195,6 @@ See the examples above.
 Uses [kvandakes](https://github.com/kvandake)'s [TypeScript implementation](https://github.com/kvandake/lexorank-ts) of [Jira's Lexorank](https://www.youtube.com/watch?v=OjQv9xMoFbg) to create a "lexographical" Document order.
 
 Put simply it updates the position of an individual – or many – Documents in an ordered list without updating any others. It's fast.
-
 
 ## License
 
