@@ -3,8 +3,6 @@ name: Issue Triage
 on:
   issues:
     types:
-      - closed
-      - opened
       - labeled
   workflow_dispatch:
     inputs:
