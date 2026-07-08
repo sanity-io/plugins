@@ -64,7 +64,9 @@ export function orderableDocumentListDeskItem(config: OrderableListConfig): List
     .child(
       Object.assign(
         S.documentTypeList(type)
-          .canHandleIntent(() => createIntent !== false)
+          .canHandleIntent(
+            (_intentName, params) => createIntent !== false && params?.['type'] === type,
+          )
           .serialize(),
         {
           // Prevents the component from re-rendering when switching documents
