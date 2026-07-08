@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.2.6
+
+### Patch Changes
+
+- [#1500](https://github.com/sanity-io/plugins/pull/1500) [`43295a7`](https://github.com/sanity-io/plugins/commit/43295a7079404e2644ac5f7fda08af640adc267c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update codemirror
+
 ## 7.2.5
 
 ### Patch Changes

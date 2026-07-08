@@ -1,6 +1,6 @@
 {
   "name": "@sanity/sfcc",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Sanity plugin for Salesforce Commerce Cloud (SFCC) integration — synced product and category data with editorial enrichment.",
   "keywords": [
     "salesforce-commerce-cloud",

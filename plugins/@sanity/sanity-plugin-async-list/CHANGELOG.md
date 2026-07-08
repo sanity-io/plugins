@@ -1,5 +1,12 @@
 # @sanity/sanity-plugin-async-list
 
+## 2.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`1a6465d`](https://github.com/sanity-io/plugins/commit/1a6465d2548e8fe8b034f58b89a905a6ad74bd3a)]:
+  - @sanity/studio-secrets@4.0.8
+
 ## 2.0.5
 
 ### Patch Changes
