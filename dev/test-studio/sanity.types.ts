@@ -796,6 +796,25 @@ export type Latex = {
   body?: string
 }
 
+export type Issue1506TeamMember = {
+  _id: string
+  _type: 'issue1506TeamMember'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  orderRank?: string
+  name?: string
+}
+
+export type Issue1506Page = {
+  _id: string
+  _type: 'issue1506Page'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+}
+
 export type OrderableProject = {
   _id: string
   _type: 'orderableProject'
@@ -1672,6 +1691,8 @@ export type AllSanitySchemaTypes =
   | Lesson
   | LatexTest
   | Latex
+  | Issue1506TeamMember
+  | Issue1506Page
   | OrderableProject
   | OrderableCategory
   | HotspotArrayDemo
