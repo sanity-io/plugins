@@ -1,5 +1,11 @@
 # @sanity/orderable-document-list
 
+## 2.0.9
+
+### Patch Changes
+
+- [#1513](https://github.com/sanity-io/plugins/pull/1513) [`ace3d6c`](https://github.com/sanity-io/plugins/commit/ace3d6c7cce18783c1c34ee67e1f0b0d8490687a) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix create intent handling so orderable list items only accept create intents for their own document type
+
 ## 2.0.8
 
 ### Patch Changes
