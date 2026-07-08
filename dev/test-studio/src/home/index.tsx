@@ -3,7 +3,7 @@ import type {DefaultDocumentNodeResolver, StructureResolver} from 'sanity/struct
 import {documentsPaneDefaultDocumentNode} from '#documents-pane'
 import {hierarchicalDocumentListDeskItems} from '#hierarchical-document-list'
 import {iframePaneDefaultDocumentNode} from '#iframe-pane'
-import {orderableDocumentListDeskItems} from '#orderable-document-list'
+import {issue1506ReproList, orderableDocumentListDeskItems} from '#orderable-document-list'
 import {sanityNaiveHtmlSerializerDefaultDocumentNode} from '#sanity-naive-html-serializer'
 import {smartlingDefaultDocumentNode} from '#smartling'
 import {transifexDefaultDocumentNode} from '#transifex'
@@ -66,6 +66,11 @@ const MISC_NAMED_TYPES = [
   'media.tag', // sanity-plugin-media (Media Tag)
 ]
 
+const ISSUE_REPRO_TYPES = [
+  'issue1506Page', // @sanity/orderable-document-list (#1506)
+  'issue1506TeamMember', // @sanity/orderable-document-list (#1506)
+]
+
 // Surfaced through the "Document list builders" folder via desk-item helpers,
 // so they should not also appear in the catch-all.
 const DESK_BUILDER_TYPES = [
@@ -99,6 +104,7 @@ export const homeStructure: StructureResolver = (S, context) => {
     ...CUSTOM_PANE_TYPES,
     ...INTERNATIONALIZATION_TYPES,
     ...MISC_NAMED_TYPES,
+    ...ISSUE_REPRO_TYPES,
     ...DESK_BUILDER_TYPES,
   ])
 
@@ -110,6 +116,10 @@ export const homeStructure: StructureResolver = (S, context) => {
   return S.list()
     .title('Content')
     .items([
+      S.listItem()
+        .id('issue-1506-repro')
+        .title('Issue #1506 repro (orderable intent hijack)')
+        .child(issue1506ReproList(S, context)),
       S.divider().title('Plugins'),
       folder('input-plugins', 'Input plugins', INPUT_PLUGIN_TYPES),
       folder('asset-source-plugins', 'Asset source plugins', ASSET_SOURCE_TYPES),
