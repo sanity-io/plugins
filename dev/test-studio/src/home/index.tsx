@@ -118,7 +118,7 @@ export const homeStructure: StructureResolver = (S, context) => {
     .items([
       S.listItem()
         .id('issue-1506-repro')
-        .title('Issue #1506 repro (orderable intent hijack)')
+        .title('Issue #1506 regression (orderable create intent)')
         .child(issue1506ReproList(S, context)),
       S.divider().title('Plugins'),
       folder('input-plugins', 'Input plugins', INPUT_PLUGIN_TYPES),

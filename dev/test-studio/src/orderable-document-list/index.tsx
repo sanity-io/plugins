@@ -71,12 +71,12 @@ export function orderableDocumentListDeskItems(
 }
 
 /**
- * Structure for https://github.com/sanity-io/plugins/issues/1506 — a regular
- * document list alongside an orderable list at the same level. See REPRO.md.
+ * Regression structure for https://github.com/sanity-io/plugins/issues/1506 — a
+ * regular document list alongside an orderable list at the same level.
  */
 export function issue1506ReproList(S: StructureBuilder, context: ConfigContext) {
   return S.list()
-    .title('Issue #1506 repro')
+    .title('Issue #1506 regression')
     .items([
       S.documentTypeListItem('issue1506Page').title('Pages'),
       orderableDocumentListDeskItem({

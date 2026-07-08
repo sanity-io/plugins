@@ -2,14 +2,12 @@ import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list
 import {defineField, defineType} from 'sanity'
 
 /**
- * Document types used to reproduce
+ * Document types used to regression-test
  * https://github.com/sanity-io/plugins/issues/1506
  *
- * The bug: `orderableDocumentListDeskItem()` sets a `canHandleIntent` that
- * returns true for every create/edit intent regardless of `params.type`. When
- * a regular document type list sits alongside an orderable list in the same
- * structure, creating a document of the non-orderable type gets routed into
- * the orderable list instead.
+ * With a regular document list alongside an orderable list at the same structure
+ * level, creating a Page must not be routed into the Team Members orderable list.
+ * See `issue1506ReproList` in `./index.tsx`.
  */
 export const issue1506Page = defineType({
   name: 'issue1506Page',
