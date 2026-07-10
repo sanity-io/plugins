@@ -170,9 +170,7 @@ assist({
     maxPathDepth: 4,
     temperature: 0.3,
   },
-  translate: {
-    /* see sections about document and field translation */
-  },
+  translate: {/* see sections about document and field translation */},
 })
 ```
 
