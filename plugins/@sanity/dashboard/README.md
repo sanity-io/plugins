@@ -72,9 +72,7 @@ dashboardTool({
   name: 'stats',
   title: 'Statistics',
   icon: ActivityIcon,
-  widgets: [
-    /* ... */
-  ],
+  widgets: [/* ... */],
 })
 ```
 
