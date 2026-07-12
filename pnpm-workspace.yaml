@@ -13,7 +13,7 @@ allowBuilds:
 catalog:
   '@hello-pangea/dnd': ^18.0.1
   '@hookform/resolvers': ^4.1.3
-  '@portabletext/block-tools': ^5.1.9
+  '@portabletext/block-tools': ^5.1.11
   '@portabletext/to-html': ^5.0.2
   '@portabletext/types': ^4.0.2
   '@sanity/asset-utils': ^2.3.0

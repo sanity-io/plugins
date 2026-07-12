@@ -14,8 +14,8 @@ catalogs:
       specifier: ^4.1.3
       version: 4.1.3
     '@portabletext/block-tools':
-      specifier: ^5.1.9
-      version: 5.1.9
+      specifier: ^5.1.11
+      version: 5.1.11
     '@portabletext/to-html':
       specifier: ^5.0.2
       version: 5.0.2
@@ -1732,7 +1732,7 @@ importers:
     dependencies:
       '@portabletext/block-tools':
         specifier: 'catalog:'
-        version: 5.1.9(@types/react@19.2.17)
+        version: 5.1.11(@types/react@19.2.17)
       '@portabletext/to-html':
         specifier: 'catalog:'
         version: 5.0.2
@@ -3043,7 +3043,7 @@ importers:
     dependencies:
       '@portabletext/block-tools':
         specifier: 'catalog:'
-        version: 5.1.9(@types/react@19.2.17)
+        version: 5.1.11(@types/react@19.2.17)
       '@portabletext/to-html':
         specifier: 'catalog:'
         version: 5.0.2
@@ -5464,8 +5464,8 @@ packages:
     resolution: {integrity: sha512-//0sR/cow/s4ICQaYoAobOl4aU8cjU6x/V24V7XkKotb9+O+3zySIYp146vpaobYHnxa4pZX8NkV54Z5AwbDKA==}
     engines: {node: '>=12'}
 
-  '@portabletext/block-tools@5.1.9':
-    resolution: {integrity: sha512-TG/gJVBYk82WVYSo3ZFGMV6WMP4O6tLdcX+yI/xt9bBwTDcqQ9nHbTTdxtwzmKvgbJ6l6kHI52KuMMaVFym5DQ==}
+  '@portabletext/block-tools@5.1.11':
+    resolution: {integrity: sha512-9u66jpH6c3nOxI3Ab+1/lMqaxYRqH11NNzBjXCYXewBjyZso+JVWzyeGmmHVRtl7AHqHUjgPttxFcZC56dG4rw==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
   '@portabletext/editor@7.9.0':
@@ -5476,6 +5476,10 @@ packages:
 
   '@portabletext/html@1.1.0':
     resolution: {integrity: sha512-5+gl7vuB0xHuKcEnT0aI4w8/Ob4xa1zNnxNgOJ3u5flV20wIzFbFYlWa1+LTA21jMQwoGExg7T+cnelnnDO9kQ==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+
+  '@portabletext/html@1.1.1':
+    resolution: {integrity: sha512-PoMAnbyT3Nz2v0pHF2IkhPKwOd8Rb/LxwwnfbK3SNBswdZmYODprrFgRe+wovUQxvTr6NQlPi1Zttydt5JKZ5A==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
   '@portabletext/keyboard-shortcuts@2.1.3':
@@ -5556,8 +5560,16 @@ packages:
     resolution: {integrity: sha512-2lnUBqzO7m9YMfy/qXcf4AJz9/Dz7Ajqqn9bwuiKvcHbEpkXH+IeBRr7kxGBquLTHGuT3ceLj1zNiMKu7XhBNQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
+  '@portabletext/sanity-bridge@3.2.2':
+    resolution: {integrity: sha512-oAQwzBliUM23ZsQE97NBRjV46jn59KGlT83R49omufIKDT2epak5Xg6bw1XRCNkR6d+VoKFlFWuxTDx/7F5qlg==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+
   '@portabletext/schema@2.2.2':
     resolution: {integrity: sha512-nQ9g0c1RJZyObLsuNWecIgYl69Irimpf+m9g+u26mhtUFxS4kc6fjqZWtiJUowC5nUGIkjg+Pnr36WGxCE/65g==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+
+  '@portabletext/schema@2.2.3':
+    resolution: {integrity: sha512-C3+BvyDmUk3ZMgdTXowVdzqxHHPotgy2tFsiuuaxhOsXCeb1+iYUnxoDQKV+7HO9CYwA3H6I85/t+1b5VJWPEA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
   '@portabletext/to-html@5.0.2':
@@ -14754,11 +14766,11 @@ snapshots:
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
 
-  '@portabletext/block-tools@5.1.9(@types/react@19.2.17)':
+  '@portabletext/block-tools@5.1.11(@types/react@19.2.17)':
     dependencies:
-      '@portabletext/html': 1.1.0
-      '@portabletext/sanity-bridge': 3.2.0(@types/react@19.2.17)
-      '@portabletext/schema': 2.2.2
+      '@portabletext/html': 1.1.1
+      '@portabletext/sanity-bridge': 3.2.2(@types/react@19.2.17)
+      '@portabletext/schema': 2.2.3
       '@sanity/types': 6.3.0(@types/react@19.2.17)
     transitivePeerDependencies:
       - '@types/react'
@@ -14784,6 +14796,11 @@ snapshots:
   '@portabletext/html@1.1.0':
     dependencies:
       '@portabletext/schema': 2.2.2
+      '@vercel/stega': 1.1.0
+
+  '@portabletext/html@1.1.1':
+    dependencies:
+      '@portabletext/schema': 2.2.3
       '@vercel/stega': 1.1.0
 
   '@portabletext/keyboard-shortcuts@2.1.3': {}
@@ -14869,7 +14886,18 @@ snapshots:
       - '@types/react'
       - supports-color
 
+  '@portabletext/sanity-bridge@3.2.2(@types/react@19.2.17)':
+    dependencies:
+      '@portabletext/schema': 2.2.3
+      '@sanity/schema': 6.3.0(@types/react@19.2.17)
+      '@sanity/types': 6.3.0(@types/react@19.2.17)
+    transitivePeerDependencies:
+      - '@types/react'
+      - supports-color
+
   '@portabletext/schema@2.2.2': {}
+
+  '@portabletext/schema@2.2.3': {}
 
   '@portabletext/to-html@5.0.2':
     dependencies:
