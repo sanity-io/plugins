@@ -42,11 +42,10 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
+    "@date-fns/tz": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "@vvo/tzdb": "^6.198.0",
-    "date-fns": "^2.30.0",
-    "date-fns-tz": "^2.0.1"
+    "date-fns": "catalog:"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",

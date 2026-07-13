@@ -434,6 +434,14 @@ pnpm add lodash-es
 pnpm add lodash
 ```
 
+**date-fns: v4 via the catalog, subpath imports, official `@date-fns/tz`**
+
+All date handling matches sanity core (`sanity-io/sanity`), so plugins dedupe against the `date-fns` instance that `sanity` itself ships:
+
+- Depend on `date-fns` via `catalog:` (v4) — never pin an older major
+- Import from subpaths, e.g. `import {format} from 'date-fns/format'` — the `date-fns` barrel import is banned by lint
+- For time zone work use the official `@date-fns/tz` package (`TZDate`, `tz`, `tzOffset`, via `catalog:`) together with date-fns v4's `in` context option — the community `date-fns-tz` package is banned by lint. Prefer `Intl.supportedValuesOf('timeZone')`/`Intl.DateTimeFormat` for listing time zones instead of static time zone database packages (e.g. `@vvo/tzdb`)
+
 ### Formatting
 
 We use [oxfmt](https://oxc.rs/docs/formatter.html):

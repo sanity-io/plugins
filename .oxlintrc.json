@@ -44,6 +44,14 @@
             "message": "Import from individual modules instead, e.g. `import debounce from 'lodash-es/debounce.js'`. Barrel imports are ~55% slower."
           },
           {
+            "name": "date-fns",
+            "message": "Import from individual modules instead, e.g. `import {format} from 'date-fns/format'`. Matches sanity core and avoids the slower barrel import."
+          },
+          {
+            "name": "date-fns-tz",
+            "message": "Use the official `@date-fns/tz` package (TZDate, tz, tzOffset) with date-fns v4 instead, matching sanity core."
+          },
+          {
             "name": "react",
             "importNames": ["createElement"],
             "message": "Please use JSX instead of createElement, for example `createElement(Icon)` should be `<Icon />`"
