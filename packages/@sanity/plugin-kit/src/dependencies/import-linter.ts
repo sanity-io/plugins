@@ -72,6 +72,9 @@ export async function validateImports({basePath}: {basePath: string}): Promise<s
         configPath,
         // Only use the imports-check config, never the package's own (nested) configs
         '--disable-nested-config',
+        // Deterministic output regardless of environment (oxlint otherwise switches to GitHub
+        // annotations on CI), with the per-diagnostic `help:` migration messages included
+        '--format=agent',
         '--ignore-pattern',
         '**/dist/*',
         '--ignore-pattern',
