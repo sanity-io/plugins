@@ -65,9 +65,9 @@
   "peerDependencies": {
     "@sanity/assist": "workspace:^",
     "@sanity/language-filter": "workspace:^",
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"
   },
   "peerDependenciesMeta": {
     "@sanity/assist": {

@@ -403,6 +403,25 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 
 ### Dependencies
 
+**Declare `peerDependencies` with the `peer` catalog**
+
+Peer dependency ranges are centralized in the `peer` named catalog in `pnpm-workspace.yaml`. In a package's `peerDependencies`, reference them as `catalog:peer`:
+
+```jsonc
+"peerDependencies": {
+  "react": "catalog:peer",
+  "react-dom": "catalog:peer",
+  "sanity": "catalog:peer"
+}
+```
+
+The catalog only holds peers shared across many packages (`react`, `react-dom`, `sanity`, `styled-components`). Keep explicit ranges instead of adding catalog entries for:
+
+- **Niche one-off peers** used by a single package (e.g. `easymde` in `sanity-plugin-markdown`, `eslint`/`typescript` in `@sanity/plugin-kit`)
+- **Peers on other workspace packages**, which keep the `workspace:^` protocol (e.g. `@sanity/dashboard` in the dashboard widgets) or an explicit range when older majors are intentionally supported (e.g. `sanity-plugin-internationalized-array` in `@sanity/sfcc`) — changesets can't track dependents through `catalog:` references
+
+Note that the `peer` catalog entries are intentionally wider than the default catalog's (e.g. `react: ^19.2` vs `^19.2.7`): the default catalog pins what we develop against, the `peer` catalog declares what consumers may use.
+
 **Always use `lodash-es` instead of `lodash`**
 
 When working with lodash utility functions, always use the `lodash-es` package instead of `lodash`. The `lodash-es` package is the ES module version that supports tree-shaking and works correctly with modern build tools.
