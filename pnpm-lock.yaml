@@ -6441,12 +6441,6 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
-  '@tanstack/react-virtual@3.14.4':
-    resolution: {integrity: sha512-dZzAQP2uCDAd+9sAehqmx/DcU+B91Q4Gb0aDSM7t9bJvWDyGF9sapFNW5r1gNLsHs4wTb6ScZENJeYaHxJLiOw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   '@tanstack/react-virtual@3.14.5':
     resolution: {integrity: sha512-4EKRXh7zBLkbKbFmG3AUVkircuHd+7OdT1pocJSepxtfBd3qnrJgJ5rtPkRYyo9fmyVb2+pI2xPy5oYvMLQy6A==}
     peerDependencies:
@@ -6456,9 +6450,6 @@ packages:
   '@tanstack/table-core@8.21.3':
     resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
     engines: {node: '>=12'}
-
-  '@tanstack/virtual-core@3.17.2':
-    resolution: {integrity: sha512-w43MvWvmShpb6kIC9MOoLyUkLmRTLPjt61bHWs+X29hACSpX+n8DvgZ3qM7cUfflKlRRcHR9KVJE6TmcqnQvcA==}
 
   '@tanstack/virtual-core@3.17.3':
     resolution: {integrity: sha512-8Np/TFELpI0ySuJoVmjvOrQYXH/8sTX0Biv9szhFhY39xOdAAY+smrMxjxOum/ux3eM8MUJQsEJ0/R0UpvC8dw==}
@@ -15927,12 +15918,6 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@tanstack/react-virtual@3.14.4(react-dom@19.2.7)(react@19.2.7)':
-    dependencies:
-      '@tanstack/virtual-core': 3.17.2
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-
   '@tanstack/react-virtual@3.14.5(react-dom@19.2.7)(react@19.2.7)':
     dependencies:
       '@tanstack/virtual-core': 3.17.3
@@ -15940,8 +15925,6 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
 
   '@tanstack/table-core@8.21.3': {}
-
-  '@tanstack/virtual-core@3.17.2': {}
 
   '@tanstack/virtual-core@3.17.3': {}
 
@@ -20831,7 +20814,7 @@ snapshots:
       '@sanity/uuid': 3.0.3
       '@sentry/react': 10.62.0(react@19.2.7)
       '@tanstack/react-table': 8.21.3(react-dom@19.2.7)(react@19.2.7)
-      '@tanstack/react-virtual': 3.14.4(react-dom@19.2.7)(react@19.2.7)
+      '@tanstack/react-virtual': 3.14.5(react-dom@19.2.7)(react@19.2.7)
       '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.4)
       classnames: 2.5.1
       color2k: 2.0.3
@@ -20978,7 +20961,7 @@ snapshots:
       '@sanity/uuid': 3.0.3
       '@sentry/react': 10.62.0(react@19.2.7)
       '@tanstack/react-table': 8.21.3(react-dom@19.2.7)(react@19.2.7)
-      '@tanstack/react-virtual': 3.14.4(react-dom@19.2.7)(react@19.2.7)
+      '@tanstack/react-virtual': 3.14.5(react-dom@19.2.7)(react@19.2.7)
       '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.4)
       classnames: 2.5.1
       color2k: 2.0.3
