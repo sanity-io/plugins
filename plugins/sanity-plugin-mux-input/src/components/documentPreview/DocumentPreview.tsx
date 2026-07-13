@@ -1,9 +1,8 @@
 // Adapted from https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/paneItem/PaneItem.tsx
 
 import {DocumentIcon} from '@sanity/icons/Document'
-import type {PropsWithChildren} from 'react'
 import {useMemo} from 'react'
-import type {CollatedHit, FIXME, SanityDocument, SchemaType} from 'sanity'
+import type {CollatedHit, SanityDocument, SchemaType} from 'sanity'
 import {PreviewCard, useDocumentPresence, useDocumentPreviewStore, useSchema} from 'sanity'
 import {IntentLink} from 'sanity/router'
 
@@ -31,14 +30,6 @@ function getIconWithFallback(
   return icon || ((schemaType && schemaType.icon) as any) || defaultIcon || false
 }
 
-function DocumentPreviewLink(props: DocumentPreviewProps) {
-  return (linkProps: PropsWithChildren) => (
-    <IntentLink intent="edit" params={{id: props.documentPair.id}}>
-      {linkProps.children}
-    </IntentLink>
-  )
-}
-
 export function DocumentPreview(props: DocumentPreviewProps) {
   const {schemaType, documentPair} = props
   const doc = documentPair?.draft || documentPair?.published
@@ -48,7 +39,7 @@ export function DocumentPreview(props: DocumentPreviewProps) {
   const documentPresence = useDocumentPresence(id)
   const hasSchemaType = Boolean(schemaType && schemaType.name && schema.get(schemaType.name))
 
-  const PreviewComponent = useMemo(() => {
+  const children = useMemo(() => {
     if (!doc) return null
 
     if (!schemaType || !hasSchemaType) {
@@ -70,15 +61,16 @@ export function DocumentPreview(props: DocumentPreviewProps) {
   return (
     <PreviewCard
       __unstable_focusRing
-      // oxlint-disable-next-line react/react-compiler
-      as={DocumentPreviewLink(props) as FIXME}
+      as={IntentLink}
+      intent="edit"
+      params={{id: props.documentPair.id}}
       data-as="a"
       data-ui="PaneItem"
       padding={2}
       radius={2}
       tone="inherit"
     >
-      {PreviewComponent}
+      {children}
     </PreviewCard>
   )
 }
