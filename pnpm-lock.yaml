@@ -2638,6 +2638,9 @@ importers:
       '@types/react-file-icon':
         specifier: ^1.0.5
         version: 1.0.5
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
       jsdom:
         specifier: 'catalog:'
         version: 29.1.1(@noble/hashes@2.2.0)
@@ -2738,6 +2741,9 @@ importers:
       '@types/react-is':
         specifier: 'catalog:'
         version: 19.2.0
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
       react:
         specifier: 'catalog:'
         version: 19.2.7
