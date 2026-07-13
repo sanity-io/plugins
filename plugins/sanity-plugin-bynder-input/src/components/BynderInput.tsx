@@ -208,16 +208,16 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
             onClick={removeValue}
           />
         </Box>
-        {shouldLoad && (
-          <BynderModalLayout
-            isOpen={isOpen}
-            onClose={closeCompactView}
-            portalConfig={pluginConfig.portalConfig}
-            compactViewOptions={compactViewOptions}
-            onSuccess={onSuccess}
-          />
-        )}
       </Flex>
+      {shouldLoad && (
+        <BynderModalLayout
+          isOpen={isOpen}
+          onClose={closeCompactView}
+          portalConfig={pluginConfig.portalConfig}
+          compactViewOptions={compactViewOptions}
+          onSuccess={onSuccess}
+        />
+      )}
     </>
   )
 }

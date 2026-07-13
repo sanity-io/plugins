@@ -176,9 +176,9 @@ overrides:
   styled-components: npm:@sanity/styled-components@latest
 
 patchedDependencies:
-  '@bynder/compact-view':
-    hash: c71de21a98b99e126cf6a513070404932603d4254f3614440c3a5f5ee7e7e8a6
-    path: patches/@bynder__compact-view.patch
+  '@bynder/compact-view@5.4.0':
+    hash: 9c1658a6a5798c8a110412d8f36e84473f23a9120836f722e4969d821491c32a
+    path: patches/@bynder__compact-view@5.4.0.patch
 
 importers:
 
@@ -1876,8 +1876,8 @@ importers:
         version: 7.21.7
     devDependencies:
       '@bynder/compact-view':
-        specifier: 5.1.2
-        version: 5.1.2(patch_hash=c71de21a98b99e126cf6a513070404932603d4254f3614440c3a5f5ee7e7e8a6)(react-dom@19.2.7)(react@19.2.7)
+        specifier: 5.4.0
+        version: 5.4.0(patch_hash=9c1658a6a5798c8a110412d8f36e84473f23a9120836f722e4969d821491c32a)(react-dom@19.2.7)(react@19.2.7)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.0
@@ -3779,8 +3779,8 @@ packages:
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
 
-  '@bynder/compact-view@5.1.2':
-    resolution: {integrity: sha512-QytJBR/bjlL6WmaUXdeMWqzwOJbKQlXaltvfgDCJ5Da3xEG68UhUUlXimNndtPwsGNdyEp3jpZWnFvLFrd8H1g==}
+  '@bynder/compact-view@5.4.0':
+    resolution: {integrity: sha512-C37isv/FPWtf/AA8H9G9NDj3FM0if+Jl2JnGZwYsEXs64TKmtMPTnRu4qe6Wmlk9+X7ByVaRb5Ba0zNq5Ad3Rw==}
     peerDependencies:
       react: '>=16.8.0 <19.0.0'
       react-dom: '>=16.8.0 <19.0.0'
@@ -12888,7 +12888,7 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
 
-  '@bynder/compact-view@5.1.2(patch_hash=c71de21a98b99e126cf6a513070404932603d4254f3614440c3a5f5ee7e7e8a6)(react-dom@19.2.7)(react@19.2.7)':
+  '@bynder/compact-view@5.4.0(patch_hash=9c1658a6a5798c8a110412d8f36e84473f23a9120836f722e4969d821491c32a)(react-dom@19.2.7)(react@19.2.7)':
     dependencies:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
