@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 4.1.9
+
+### Patch Changes
+
+- [#1555](https://github.com/sanity-io/plugins/pull/1555) [`5ade159`](https://github.com/sanity-io/plugins/commit/5ade159d97951a87867d225b72d6008cdc5e7fd6) Thanks [@stipsan](https://github.com/stipsan)! - Render document previews in the video references list with `IntentLink` passed directly to `PreviewCard`'s `as` prop, instead of recreating a wrapper link component on every render. This preserves the card's styling and focus ring on the rendered link and avoids unnecessary remounts.
+
 ## 4.1.8
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 5.0.13
+
+### Patch Changes
+
+- [#1555](https://github.com/sanity-io/plugins/pull/1555) [`5ade159`](https://github.com/sanity-io/plugins/commit/5ade159d97951a87867d225b72d6008cdc5e7fd6) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update sanity monorepo to ^6.4.0
+
 ## 5.0.12
 
 ### Patch Changes
