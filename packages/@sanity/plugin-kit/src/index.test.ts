@@ -18,12 +18,7 @@ test('package exports', {timeout: 30_000}, async () => {
         "default": "object",
       },
       "./oxlint": {
-        "$schema": "string",
-        "categories": "object",
         "default": "object",
-        "options": "object",
-        "plugins": "object",
-        "rules": "object",
       },
     }
   `)

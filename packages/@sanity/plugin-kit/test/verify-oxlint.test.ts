@@ -6,9 +6,7 @@ import {afterEach, beforeEach, describe, expect, test} from 'vitest'
 
 import {validateOxlintConfig} from '../src/actions/verify/validations'
 
-const sharedConfigExtends = JSON.stringify({
-  extends: ['./node_modules/@sanity/plugin-kit/oxlint-config.json'],
-})
+const sharedConfigReExport = `export {default} from '@sanity/plugin-kit/oxlint'\n`
 
 let tmpDir: string
 
@@ -33,24 +31,39 @@ describe('standalone plugin (no monorepo detected)', () => {
     const errors = await validateOxlintConfig(tmpDir, {})
     expect(errors).toHaveLength(1)
     expect(errors[0]).toContain('Could not find an oxlint config file next to package.json')
-    expect(errors[0]).toContain('@sanity/plugin-kit/oxlint-config.json')
+    expect(errors[0]).toContain(`export {default} from '@sanity/plugin-kit/oxlint'`)
   })
 
-  test('passes when .oxlintrc.json extends the shared plugin-kit config', async () => {
-    await write('.oxlintrc.json', sharedConfigExtends)
+  test('passes when oxlint.config.ts re-exports the shared plugin-kit config', async () => {
+    await write('oxlint.config.ts', sharedConfigReExport)
     expect(await validateOxlintConfig(tmpDir, {})).toEqual([])
   })
 
-  test('fails when the config does not extend the shared plugin-kit config', async () => {
+  test('passes when the shared config is extended in a custom config', async () => {
+    await write(
+      'oxlint.config.ts',
+      `import sanityPluginKitOxlint from '@sanity/plugin-kit/oxlint'\nimport {defineConfig} from 'oxlint'\n\nexport default defineConfig({extends: [sanityPluginKitOxlint]})\n`,
+    )
+    expect(await validateOxlintConfig(tmpDir, {})).toEqual([])
+  })
+
+  test('fails when the config does not use the shared plugin-kit config', async () => {
+    await write('oxlint.config.ts', `export default {rules: {'no-console': 'error'}}\n`)
+    const errors = await validateOxlintConfig(tmpDir, {})
+    expect(errors).toHaveLength(1)
+    expect(errors[0]).toContain('does not use the shared plugin-kit config')
+  })
+
+  test('fails for JSON configs, which cannot reuse the shared config', async () => {
     await write('.oxlintrc.json', JSON.stringify({rules: {'no-console': 'error'}}))
     const errors = await validateOxlintConfig(tmpDir, {})
     expect(errors).toHaveLength(1)
-    expect(errors[0]).toContain('does not extend the shared plugin-kit config')
+    expect(errors[0]).toContain('JSON configs cannot reuse the shared plugin-kit config')
   })
 
   test('fails when multiple oxlint configs exist', async () => {
-    await write('.oxlintrc.json', sharedConfigExtends)
-    await write('.oxlintrc.jsonc', sharedConfigExtends)
+    await write('oxlint.config.ts', sharedConfigReExport)
+    await write('.oxlintrc.json', JSON.stringify({rules: {}}))
     const errors = await validateOxlintConfig(tmpDir, {})
     expect(errors).toHaveLength(1)
     expect(errors[0]).toContain('Found multiple oxlint config files')
@@ -58,9 +71,9 @@ describe('standalone plugin (no monorepo detected)', () => {
 })
 
 describe('monorepo (workspace root detected)', () => {
-  test('passes when the workspace root has a config extending the shared config', async () => {
+  test('passes when the workspace root has a config using the shared config', async () => {
     await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
-    await write('.oxlintrc.json', sharedConfigExtends)
+    await write('oxlint.config.ts', sharedConfigReExport)
     const pluginDir = path.join(tmpDir, 'packages', 'plugin')
     await fs.mkdir(pluginDir, {recursive: true})
 
@@ -79,7 +92,7 @@ describe('monorepo (workspace root detected)', () => {
 
   test('accepts a config next to the plugin package.json as a fallback', async () => {
     await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
-    await write(path.join('packages', 'plugin', '.oxlintrc.json'), sharedConfigExtends)
+    await write(path.join('packages', 'plugin', 'oxlint.config.ts'), sharedConfigReExport)
     const pluginDir = path.join(tmpDir, 'packages', 'plugin')
 
     expect(await validateOxlintConfig(pluginDir, {})).toEqual([])
@@ -88,7 +101,7 @@ describe('monorepo (workspace root detected)', () => {
 
 describe('legacy eslint configuration', () => {
   test('fails when eslint config files remain', async () => {
-    await write('.oxlintrc.json', sharedConfigExtends)
+    await write('oxlint.config.ts', sharedConfigReExport)
     await write('.eslintrc', `{"extends": ["sanity"]}\n`)
     await write('.eslintignore', `dist\n`)
 
@@ -99,7 +112,7 @@ describe('legacy eslint configuration', () => {
   })
 
   test('fails when a flat eslint config remains', async () => {
-    await write('.oxlintrc.json', sharedConfigExtends)
+    await write('oxlint.config.ts', sharedConfigReExport)
     await write('eslint.config.mjs', `export default []\n`)
 
     const errors = await validateOxlintConfig(tmpDir, {})
@@ -108,7 +121,7 @@ describe('legacy eslint configuration', () => {
   })
 
   test('fails when package.json contains an eslintConfig key', async () => {
-    await write('.oxlintrc.json', sharedConfigExtends)
+    await write('oxlint.config.ts', sharedConfigReExport)
 
     const errors = await validateOxlintConfig(tmpDir, {eslintConfig: {extends: ['sanity']}})
     expect(errors).toHaveLength(1)

@@ -40,10 +40,10 @@ test(
         expect(verify.exitCode, `verify-package failed:\n${verify.stderr}`).toBe(0)
         console.error(`"plugin-kit verify-package" done in ${seconds()}.\nRunning "oxlint"...`)
 
-        // The scaffolded .oxlintrc.json extends ./node_modules/@sanity/plugin-kit/oxlint-config.json,
-        // but init ran with --no-install; link this plugin-kit checkout so the extends resolves.
-        // Other packages (sanity, react, typescript, ...) resolve by walking up to plugin-kit's own
-        // node_modules, since the fixture lives inside this package.
+        // The scaffolded oxlint.config.ts re-exports @sanity/plugin-kit/oxlint, but init ran with
+        // --no-install; link this plugin-kit checkout so the import resolves. Other packages
+        // (sanity, react, typescript, ...) resolve by walking up to plugin-kit's own node_modules,
+        // since the fixture lives inside this package.
         await fs.mkdir(path.join(outputDir, 'node_modules', '@sanity'), {recursive: true})
         await fs.symlink(
           packageDir,

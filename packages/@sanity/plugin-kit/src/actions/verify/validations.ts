@@ -807,7 +807,7 @@ export async function validateOxfmtConfig(
 /**
  * Config filenames oxlint discovers automatically (in addition to explicit `-c` paths).
  */
-const oxlintConfigFiles = ['.oxlintrc.json', '.oxlintrc.jsonc']
+const oxlintConfigFiles = ['oxlint.config.ts', '.oxlintrc.json', '.oxlintrc.jsonc']
 
 const legacyEslintConfigFiles = [
   '.eslintrc',
@@ -825,12 +825,10 @@ const legacyEslintConfigFiles = [
   'eslint.config.cts',
 ]
 
-const oxlintSharedConfig = '@sanity/plugin-kit/oxlint-config.json'
+const oxlintSharedConfig = '@sanity/plugin-kit/oxlint'
 
 const oxlintSetupSnippet = outdent`
-  {
-    "extends": ["./node_modules/${oxlintSharedConfig}"]
-  }
+  export {default} from '${oxlintSharedConfig}'
 `
 
 type OxlintConfigDirResult = {ok: true} | {ok: false; error: string}
@@ -853,7 +851,7 @@ async function checkOxlintConfigDir(
         Could not find an oxlint config file ${describeDir}.
 
         plugin-kit ships a shared oxlint config (type-aware rules, type checking and no warnings).
-        Create a .oxlintrc.json there containing:
+        Create an oxlint.config.ts there containing:
 
         ${oxlintSetupSnippet}
       `,
@@ -872,18 +870,39 @@ async function checkOxlintConfigDir(
   }
 
   const file = found[0]
+  if (file.startsWith('.oxlintrc')) {
+    return {
+      ok: false,
+      error: outdent`
+        Found ${file} ${describeDir}, but JSON configs cannot reuse the shared plugin-kit config
+        (package imports are only supported in oxlint.config.ts).
+
+        Replace it with an oxlint.config.ts containing:
+
+        ${oxlintSetupSnippet}
+      `,
+    }
+  }
+
   const content = await readFile(path.join(dir, file), 'utf8')
   if (!content.includes(oxlintSharedConfig)) {
     return {
       ok: false,
       error: outdent`
-        Found ${file} ${describeDir}, but it does not extend the shared plugin-kit config (${oxlintSharedConfig}).
+        Found ${file} ${describeDir}, but it does not use the shared plugin-kit config (${oxlintSharedConfig}).
 
-        Extend the shared config:
+        Re-export the shared config:
 
         ${oxlintSetupSnippet}
 
-        and add your own overrides after it.
+        or extend it with your own options:
+
+        import sanityPluginKitOxlint from '${oxlintSharedConfig}'
+        import {defineConfig} from 'oxlint'
+
+        export default defineConfig({
+          extends: [sanityPluginKitOxlint],
+        })
       `,
     }
   }
@@ -922,7 +941,7 @@ export async function validateOxlintConfig(
 
         plugin-kit has replaced eslint with oxlint. Remove the eslint config files and the eslint
         devDependencies (eslint, eslint-config-*, eslint-plugin-*, @typescript-eslint/*), and lint
-        with oxlint instead, via a .oxlintrc.json containing:
+        with oxlint instead, via an oxlint.config.ts containing:
 
         ${oxlintSetupSnippet}
       `,

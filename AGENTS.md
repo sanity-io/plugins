@@ -453,7 +453,7 @@ pnpm lint        # Run the linter (includes type checking)
 pnpm lint:fix    # Auto-fix what's possible
 ```
 
-The shared rules (plugins, options, categories, rules) live in `@sanity/plugin-kit`'s `oxlint-config.json` (`packages/@sanity/plugin-kit/oxlint-config.json`), which the root `.oxlintrc.json` extends; only workspace-specific ignores and overrides belong in the root config. Standalone plugins scaffolded with `plugin-kit init` extend the same shared config. Note that `ignorePatterns` do not propagate through `extends`, so ignores are declared in the root config.
+The shared rules (plugins, options, categories, rules) live in the `@sanity/plugin-kit/oxlint` config (`packages/@sanity/plugin-kit/src/oxlint.ts`), which the root `oxlint.config.ts` extends; only workspace-specific ignores and overrides belong in the root config. Standalone plugins scaffolded with `plugin-kit init` re-export the same shared config. Note that `ignorePatterns` do not propagate through `extends`, so the root config spreads the shared patterns before adding its own. Like `pnpm format`, `pnpm lint` requires Node `>=22.18` to load the TypeScript config.
 
 ## Project Structure
 
@@ -527,7 +527,7 @@ Open that URL in the browser to authenticate and land directly in the Home works
 
 ### Node.js version notes
 
-`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 24 is preferred when available, and **Node >= 22.18 is required for a full `pnpm build`**: the `@repo/generators` build runs `tsdown`, which loads its `.mts` config through Node's native TypeScript support. On older Node 22.x (e.g. the `v22.14.0` that may be the VM default) that build fails with `Failed to import module "unrun"`. **`pnpm format` also requires Node >= 22.18** (oxfmt loads the TypeScript `oxfmt.config.ts` through the same mechanism). A new enough runtime is usually available via `nvm` (e.g. `export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH"`). `pnpm lint` and `pnpm test` work on older Node 22 too.
+`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 24 is preferred when available, and **Node >= 22.18 is required for a full `pnpm build`**: the `@repo/generators` build runs `tsdown`, which loads its `.mts` config through Node's native TypeScript support. On older Node 22.x (e.g. the `v22.14.0` that may be the VM default) that build fails with `Failed to import module "unrun"`. **`pnpm format` and `pnpm lint` also require Node >= 22.18** (oxfmt and oxlint load the TypeScript `oxfmt.config.ts` / `oxlint.config.ts` through the same mechanism). A new enough runtime is usually available via `nvm` (e.g. `export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH"`). `pnpm test` works on older Node 22 too.
 
 ### Lint / build / test
 

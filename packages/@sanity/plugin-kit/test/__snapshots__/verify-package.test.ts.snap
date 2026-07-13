@@ -150,11 +150,9 @@ Found legacy eslint configuration: [.eslintrc, .eslintrc.json, .eslintignore].
 
 plugin-kit has replaced eslint with oxlint. Remove the eslint config files and the eslint
 devDependencies (eslint, eslint-config-*, eslint-plugin-*, @typescript-eslint/*), and lint
-with oxlint instead, via a .oxlintrc.json containing:
+with oxlint instead, via an oxlint.config.ts containing:
 
-{
-  "extends": ["./node_modules/@sanity/plugin-kit/oxlint-config.json"]
-}
+export {default} from '@sanity/plugin-kit/oxlint'
 
 To skip this validation add the following to your package.json:
 "sanityPlugin": {

@@ -27,23 +27,22 @@
   "files": [
     "assets",
     "bin",
-    "dist",
-    "oxlint-config.json"
+    "dist"
   ],
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./src/index.ts",
     "./oxfmt": "./src/oxfmt.ts",
-    "./package.json": "./package.json",
-    "./oxlint": "./oxlint-config.json"
+    "./oxlint": "./src/oxlint.ts",
+    "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
       "./oxfmt": "./dist/oxfmt.js",
-      "./package.json": "./package.json",
-      "./oxlint": "./oxlint-config.json"
+      "./oxlint": "./dist/oxlint.js",
+      "./package.json": "./package.json"
     }
   },
   "scripts": {
