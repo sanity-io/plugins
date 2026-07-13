@@ -27,7 +27,7 @@ catalog:
   '@sanity/schema': ^6.3.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.0
-  '@sanity/tsdown-config': ^0.13.0
+  '@sanity/tsdown-config': ^0.13.1
   '@sanity/ui': ^3.3.5
   '@sanity/util': ^6.3.0
   '@sanity/uuid': ^3.0.3
