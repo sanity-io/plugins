@@ -1,9 +1,9 @@
 import {createRequire} from 'node:module'
 import path from 'path'
 
+import type {ParsedCommandLine} from '@typescript/typescript6'
 import chalk from 'chalk'
 import outdent from 'outdent'
-import type {ParsedCommandLine} from 'typescript'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import {deprecatedDevDeps, mergedPackages} from '../../configs/banned-packages'
