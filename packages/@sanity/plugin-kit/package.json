@@ -27,20 +27,23 @@
   "files": [
     "assets",
     "bin",
-    "dist"
+    "dist",
+    "oxlint-config.json"
   ],
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./src/index.ts",
     "./oxfmt": "./src/oxfmt.ts",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./oxlint": "./oxlint-config.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
       "./oxfmt": "./dist/oxfmt.js",
-      "./package.json": "./package.json"
+      "./package.json": "./package.json",
+      "./oxlint": "./oxlint-config.json"
     }
   },
   "scripts": {
@@ -63,8 +66,8 @@
     "json5": "^2.2.3",
     "meow": "^9.0.0",
     "nodemon": "3.1.0",
-    "npm-run-path": "^4.0.1",
     "outdent": "^0.8.0",
+    "oxlint": "^1.73.0",
     "p-any": "^3.0.0",
     "p-props": "^4.0.0",
     "validate-npm-package-name": "catalog:",
@@ -75,21 +78,14 @@
     "@sanity/pkg-utils": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
-    "@types/eslint": "^8.56.12",
     "@types/github-url-to-object": "^4.0.4",
     "@types/inquirer": "^9.0.3",
     "@types/node": "catalog:",
     "@types/nodemon": "1.19.6",
     "@types/react": "catalog:",
     "@types/validate-npm-package-name": "^4.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.63.0",
-    "@typescript-eslint/parser": "^8.63.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-config-sanity": "^7.1.4",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.1.1",
     "oxfmt": "^0.58.0",
+    "oxlint-tsgolint": "^0.24.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
@@ -99,9 +95,7 @@
   },
   "peerDependencies": {
     "@sanity/pkg-utils": "catalog:",
-    "eslint": ">=8.0.0",
-    "oxfmt": ">=0.58.0 <1",
-    "typescript": "6.x || 7.x"
+    "oxfmt": ">=0.58.0 <1"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

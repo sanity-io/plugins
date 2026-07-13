@@ -15,7 +15,7 @@ export const initFlags = {
     type: 'boolean',
     default: true,
   },
-  eslint: {
+  oxlint: {
     type: 'boolean',
     default: true,
   },

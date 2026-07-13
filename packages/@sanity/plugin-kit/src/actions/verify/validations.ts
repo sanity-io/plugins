@@ -607,64 +607,6 @@ export async function validateSrcIndexFile(basePath: string) {
   return []
 }
 
-async function disallowDuplicateConfig({
-  basePath,
-  pkgJson,
-  configKey,
-  files,
-}: {
-  basePath: string
-  pkgJson: PackageJson
-  configKey: string
-  files: string[]
-}) {
-  const found: string[] = []
-  for (const file of files) {
-    const filePath = path.join(basePath, file)
-    const exits = await fileExists(filePath)
-    if (exits) {
-      found.push(file)
-    }
-  }
-  if (found.length > 1) {
-    return [
-      outdent`
-      Found multiple config files that serve the same purpose: [${found.join(', ')}].
-
-      There should be at most one of these files. Delete the rest.
-      `,
-    ]
-  }
-  if (found.length && pkgJson[configKey]) {
-    return [
-      outdent`
-      package.json contains ${configKey}, but there also exists a config file that serves the same purpose.
-      Config file: ${found.join('')}]
-
-      Either delete the file or remove ${configKey} entry from package.json.
-      `,
-    ]
-  }
-
-  return []
-}
-
-export async function disallowDuplicateEslintConfig(basePath: string, pkgJson: PackageJson) {
-  return disallowDuplicateConfig({
-    basePath,
-    pkgJson,
-    configKey: 'eslint',
-    files: [
-      '.eslintrc',
-      '.eslintrc.js',
-      '.eslintrc.cjs',
-      '.eslintrc.yaml',
-      '.eslintrc.yml',
-      '.eslintrc.json',
-    ],
-  })
-}
-
 /**
  * Config filenames oxfmt discovers automatically (in addition to explicit `-c` paths).
  */
@@ -853,6 +795,155 @@ export async function validateOxfmtConfig(
   // configs in subdirectories.
   if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
     const localResult = await checkOxfmtConfigDir(basePath, 'next to package.json')
+    if (localResult.ok) {
+      return errors
+    }
+  }
+
+  errors.push(primaryResult.error)
+  return errors
+}
+
+/**
+ * Config filenames oxlint discovers automatically (in addition to explicit `-c` paths).
+ */
+const oxlintConfigFiles = ['.oxlintrc.json', '.oxlintrc.jsonc']
+
+const legacyEslintConfigFiles = [
+  '.eslintrc',
+  '.eslintrc.js',
+  '.eslintrc.cjs',
+  '.eslintrc.yaml',
+  '.eslintrc.yml',
+  '.eslintrc.json',
+  '.eslintignore',
+  'eslint.config.js',
+  'eslint.config.mjs',
+  'eslint.config.cjs',
+  'eslint.config.ts',
+  'eslint.config.mts',
+  'eslint.config.cts',
+]
+
+const oxlintSharedConfig = '@sanity/plugin-kit/oxlint-config.json'
+
+const oxlintSetupSnippet = outdent`
+  {
+    "extends": ["./node_modules/${oxlintSharedConfig}"]
+  }
+`
+
+type OxlintConfigDirResult = {ok: true} | {ok: false; error: string}
+
+async function checkOxlintConfigDir(
+  dir: string,
+  describeDir: string,
+): Promise<OxlintConfigDirResult> {
+  const found: string[] = []
+  for (const file of oxlintConfigFiles) {
+    if (await fileExists(path.join(dir, file))) {
+      found.push(file)
+    }
+  }
+
+  if (found.length === 0) {
+    return {
+      ok: false,
+      error: outdent`
+        Could not find an oxlint config file ${describeDir}.
+
+        plugin-kit ships a shared oxlint config (type-aware rules, type checking and no warnings).
+        Create a .oxlintrc.json there containing:
+
+        ${oxlintSetupSnippet}
+      `,
+    }
+  }
+
+  if (found.length > 1) {
+    return {
+      ok: false,
+      error: outdent`
+        Found multiple oxlint config files ${describeDir}: [${found.join(', ')}].
+
+        There should be at most one of these files. Delete the rest.
+      `,
+    }
+  }
+
+  const file = found[0]
+  const content = await readFile(path.join(dir, file), 'utf8')
+  if (!content.includes(oxlintSharedConfig)) {
+    return {
+      ok: false,
+      error: outdent`
+        Found ${file} ${describeDir}, but it does not extend the shared plugin-kit config (${oxlintSharedConfig}).
+
+        Extend the shared config:
+
+        ${oxlintSetupSnippet}
+
+        and add your own overrides after it.
+      `,
+    }
+  }
+
+  return {ok: true}
+}
+
+/**
+ * Verifies the plugin lints with oxlint using the shared plugin-kit config, and that no legacy
+ * eslint configuration remains.
+ *
+ * In a monorepo (a workspace root is found above the plugin), the oxlint config is expected at the
+ * workspace root; otherwise it should sit next to the package.json that installs and runs
+ * plugin-kit. A config next to package.json is also accepted in a monorepo, since oxlint supports
+ * nested configs.
+ */
+export async function validateOxlintConfig(
+  basePath: string,
+  pkgJson: PackageJson,
+): Promise<string[]> {
+  const errors: string[] = []
+
+  const legacyFound: string[] = []
+  for (const file of legacyEslintConfigFiles) {
+    if (await fileExists(path.join(basePath, file))) {
+      legacyFound.push(file)
+    }
+  }
+  if (pkgJson.eslintConfig) {
+    legacyFound.push('package.json ("eslintConfig" key)')
+  }
+  if (legacyFound.length) {
+    errors.push(
+      outdent`
+        Found legacy eslint configuration: [${legacyFound.join(', ')}].
+
+        plugin-kit has replaced eslint with oxlint. Remove the eslint config files and the eslint
+        devDependencies (eslint, eslint-config-*, eslint-plugin-*, @typescript-eslint/*), and lint
+        with oxlint instead, via a .oxlintrc.json containing:
+
+        ${oxlintSetupSnippet}
+      `,
+    )
+  }
+
+  const workspaceRoot = await findWorkspaceRoot(basePath)
+  const primaryDir = workspaceRoot ?? basePath
+  const primaryResult = await checkOxlintConfigDir(
+    primaryDir,
+    workspaceRoot ? `in the workspace root (${workspaceRoot})` : 'next to package.json',
+  )
+
+  if (primaryResult.ok) {
+    return errors
+  }
+
+  // In a monorepo a config next to the plugin's package.json also works, since oxlint supports
+  // nested configs.
+  if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
+    const localResult = await checkOxlintConfigDir(basePath, 'next to package.json')
     if (localResult.ok) {
       return errors
     }

@@ -18,7 +18,7 @@ Usage
   $ ${cliName} init [dir] [<args>]
 
 Options
-  --no-eslint             Disables ESLint config and dependencies from being added
+  --no-oxlint             Disables oxlint config and dependencies from being added
   --no-oxfmt              Disables oxfmt config and dependencies from being added
   --no-typescript         Disables typescript config and dependencies from being added
   --no-license            Disables LICENSE + package.json license field from being added
@@ -44,8 +44,8 @@ Examples
   # Initialize a plugin in the directory ~/my-plugin
   $ ${cliName} init ~/my-plugin
 
-  # Don't add eslint or oxfmt
-  $ ${cliName} init --no-eslint --no-oxfmt
+  # Don't add oxlint or oxfmt
+  $ ${cliName} init --no-oxlint --no-oxfmt
 `
 
 async function run({argv}: {argv: string[]}) {

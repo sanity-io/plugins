@@ -130,18 +130,6 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
-Found multiple config files that serve the same purpose: [.eslintrc, .eslintrc.json].
-
-There should be at most one of these files. Delete the rest.
-
-To skip this validation add the following to your package.json:
-"sanityPlugin": {
-   "verifyPackage": {
-      "duplicateConfig": false
-   }
-}
-----------------------------------------------------------
-[error] 
 Found legacy prettier configuration: [.prettierrc, package.json ("prettier" key)].
 
 plugin-kit has replaced prettier with oxfmt. Remove the prettier config (custom options can
@@ -154,6 +142,24 @@ To skip this validation add the following to your package.json:
 "sanityPlugin": {
    "verifyPackage": {
       "oxfmt": false
+   }
+}
+----------------------------------------------------------
+[error] 
+Found legacy eslint configuration: [.eslintrc, .eslintrc.json, .eslintignore].
+
+plugin-kit has replaced eslint with oxlint. Remove the eslint config files and the eslint
+devDependencies (eslint, eslint-config-*, eslint-plugin-*, @typescript-eslint/*), and lint
+with oxlint instead, via a .oxlintrc.json containing:
+
+{
+  "extends": ["./node_modules/@sanity/plugin-kit/oxlint-config.json"]
+}
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "oxlint": false
    }
 }
 ----------------------------------------------------------
@@ -243,99 +249,20 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
+src/index.tsx:1:1: error eslint(no-restricted-imports): '@sanity/base' import is restricted from being used by a pattern. help: Use sanity instead of @sanity/base.
+src/index.tsx:2:1: error eslint(no-restricted-imports): '@sanity/form-builder' import is restricted from being used by a pattern. help: Use sanity instead of @sanity/form-builder.
+oxlint detected Studio V2 imports that are no longer available.
+Please migrate to the Sanity v3 APIs, or remove the restricted imports.
 
-root/src/index.tsx
-  1:1  error  '@sanity/base' import is restricted from being used by a pattern. Use sanity instead of @sanity/base                  no-restricted-imports
-  2:1  error  '@sanity/form-builder' import is restricted from being used by a pattern. Use sanity instead of @sanity/form-builder  no-restricted-imports
+To catch these directly in your editor and CI, add the same patterns to the
+"eslint/no-restricted-imports" rule in your .oxlintrc.json.
 
-✖ 2 problems (2 errors, 0 warnings)
-ESLint detected Studio V2 imports that are no longer available.
-It is recommended configure @sanity/eslint-config-no-v2-imports for ESLint.
-
-Run:
-npm install --save-dev @sanity/eslint-config-no-v2-imports
-
-In .eslintrc add:
-"extends": ["@sanity/no-v2-imports"]
-
-This way, V2-imports can be identified directly in the IDE, or using eslint CLI.
-For more, see https://github.com/sanity-io/eslint-config-no-v2-imports
-
-If the plugin package does not use eslint, disable this check.
+If the package intentionally references these modules, disable this check.
 
 To skip this validation add the following to your package.json:
 "sanityPlugin": {
    "verifyPackage": {
-      "eslintImports": false
-   }
-}
-----------------------------------------------------------
-[error] Detected validation issues!
-To make this package Sanity v3 compatible, fix the issues starting from the top, or disable any checks you deem unnecessary.
-
-These issues assume the package uses @sanity/plugin-kit defaults for development and building.
-Refer to https://github.com/sanity-io/plugin-kit for configuration options.
-
-More information is available here:
-- Studio migration guide: https://beta.sanity.io/docs/platform/v2-to-v3
-- Plugin migration guide: https://beta.sanity.io/docs/platform/v2-to-v3/plugins
-- Reference documentation: https://beta.sanity.io/docs/reference
-
-To fail-fast on first detected issue run:
-npx @sanity/plugin-kit verify-package --single"
-`;
-
-exports[`plugin-kit verify-package in package with invalid eslint config 1`] = `
-"[error] 
-package.json must set "type": "module" — plugins built with @sanity/plugin-kit are ESM-only.
-Found: no "type" field (defaults to "commonjs")
-
-Please add the following to package.json:
-
-"type": "module"
-[error] 
-package.json "files" must not include "src".
-
-Plugins built with @sanity/plugin-kit publish the compiled output in "dist" (and any v2-compatibility files).
-Shipping the "src" directory bloats the published package and can cause bundlers that resolve the
-"source" export condition to import raw, uncompiled TypeScript.
-
-Please remove "src" from the "files" array in package.json.
-
-To skip this validation add the following to your package.json:
-"sanityPlugin": {
-   "verifyPackage": {
-      "bannedFiles": false
-   }
-}
-----------------------------------------------------------
-[error] Failed to run eslint check Error: Failed to load config "this-does-not-exist" to extend from.
-Referenced from: root/.eslintrc
-    at configInvalidError root/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:2648:9)
-    at ConfigArrayFactory._loadExtendedShareableConfig root/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:3279:23)
-    at ConfigArrayFactory._loadExtends root/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:3156:25)
-    at ConfigArrayFactory._normalizeObjectConfigDataBody root/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:3095:25)
-    at _normalizeObjectConfigDataBody.next (<anonymous>)
-    at ConfigArrayFactory._normalizeObjectConfigData root/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:3040:20)
-    at _normalizeObjectConfigData.next (<anonymous>)
-    at ConfigArrayFactory.loadInDirectory root/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:2886:28)
-    at CascadingConfigArrayFactory._loadConfigInAncestors root/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:3871:46)
-    at CascadingConfigArrayFactory.getConfigArrayForFile root/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:3792:18) {
-  messageTemplate: 'extend-config-missing',
-  messageData: {
-    configName: 'this-does-not-exist',
-    importerName: root/.eslintrc'
-  }
-}
-[error] 
-Failed to run ESLint. Is ESLint configured?
-
-If the package does not use eslint, disable this check.
-
-To skip this validation add the following to your package.json:
-"sanityPlugin": {
-   "verifyPackage": {
-      "eslintImports": false
+      "imports": false
    }
 }
 ----------------------------------------------------------
@@ -438,30 +365,20 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
+schemas/schema.js:2:1: error eslint(no-restricted-imports): 'all:part:@sanity/base/schema-type' import is restricted from being used by a pattern. help: all:part: imports where removed in Sanity v3. Please refer to the migration guide: https://beta.sanity.io/docs/platform/v2-to-v3, or new API-reference docs: https://beta.sanity.io/docs/reference
+schemas/schema.js:4:1: error eslint(no-restricted-imports): 'part:@sanity/base/schema-creator' import is restricted from being used by a pattern. help: part: imports where removed in Sanity v3. Please refer to the migration guide: https://beta.sanity.io/docs/platform/v2-to-v3, or new API-reference docs: https://beta.sanity.io/docs/reference
+oxlint detected Studio V2 imports that are no longer available.
+Please migrate to the Sanity v3 APIs, or remove the restricted imports.
 
-root/schemas/schema.js
-  2:1  error  'all:part:@sanity/base/schema-type' import is restricted from being used by a pattern. all:part: imports where removed in Sanity v3. Please refer to the migration guide: https://beta.sanity.io/docs/platform/v2-to-v3, or new API-reference docs: https://beta.sanity.io/docs/reference  no-restricted-imports
-  4:1  error  'part:@sanity/base/schema-creator' import is restricted from being used by a pattern. part: imports where removed in Sanity v3. Please refer to the migration guide: https://beta.sanity.io/docs/platform/v2-to-v3, or new API-reference docs: https://beta.sanity.io/docs/reference       no-restricted-imports
+To catch these directly in your editor and CI, add the same patterns to the
+"eslint/no-restricted-imports" rule in your .oxlintrc.json.
 
-✖ 2 problems (2 errors, 0 warnings)
-ESLint detected Studio V2 imports that are no longer available.
-It is recommended configure @sanity/eslint-config-no-v2-imports for ESLint.
-
-Run:
-npm install --save-dev @sanity/eslint-config-no-v2-imports
-
-In .eslintrc add:
-"extends": ["@sanity/no-v2-imports"]
-
-This way, V2-imports can be identified directly in the IDE, or using eslint CLI.
-For more, see https://github.com/sanity-io/eslint-config-no-v2-imports
-
-If the plugin package does not use eslint, disable this check.
+If the package intentionally references these modules, disable this check.
 
 To skip this validation add the following to your package.json:
 "sanityPlugin": {
    "verifyPackage": {
-      "eslintImports": false
+      "imports": false
    }
 }
 ----------------------------------------------------------

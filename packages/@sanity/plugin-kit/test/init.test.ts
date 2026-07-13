@@ -18,14 +18,9 @@ const defaultDevDependencies = [
   '@sanity/pkg-utils',
   '@sanity/plugin-kit',
   '@types/react',
-  '@typescript-eslint/eslint-plugin',
-  '@typescript-eslint/parser',
-  'eslint',
-  'eslint-config-prettier',
-  'eslint-config-sanity',
-  'eslint-plugin-react',
-  'eslint-plugin-react-hooks',
   'oxfmt',
+  'oxlint',
+  'oxlint-tsgolint',
   'react',
   'react-dom',
   'sanity',
@@ -47,22 +42,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
       await fileContains('LICENSE', 'MIT')
       await fileContains('README.md', `# ${pluginTestName}`)
       await fileContains('.gitignore', 'dist')
-      await fileContains(
-        '.eslintrc',
-        'sanity',
-        'sanity/typescript',
-        'sanity/react',
-        'plugin:react-hooks/recommended',
-        'prettier',
-      )
-      await fileContains(
-        '.eslintignore',
-        '.eslintrc.js',
-        'commitlint.config.js',
-        'dist',
-        'lint-staged.config.js',
-        '*.js',
-      )
+      await fileContains('.oxlintrc.json', './node_modules/@sanity/plugin-kit/oxlint-config.json')
       await fileContains('oxfmt.config.ts', `export {default} from '@sanity/plugin-kit/oxfmt'`)
       await fileContains('tsconfig.json', '"extends": "./tsconfig.settings"')
       await fileContains('tsconfig.dist.json', '"extends": "./tsconfig.settings"')
@@ -99,7 +79,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
         files: ['dist'],
         scripts: {
           'format': 'oxfmt',
-          'lint': 'eslint .',
+          'lint': 'oxlint',
           'build': 'plugin-kit verify-package --silent && pkg-utils build --strict --check --clean',
           'watch': 'pkg-utils watch --strict',
           'link-watch': 'plugin-kit link-watch',
@@ -144,7 +124,7 @@ test(
           outputDir,
           ...initTestArgs.filter((a) => a !== '--license' && a !== 'mit'),
           '--no-install',
-          '--no-eslint',
+          '--no-oxlint',
           '--no-oxfmt',
           '--no-typescript',
           '--no-license',
@@ -165,7 +145,7 @@ test(
           ).toBe(false)
 
         await expectNotExist('LICENSE')
-        await expectNotExist('.eslintrc')
+        await expectNotExist('.oxlintrc.json')
         await expectNotExist('.gitignore')
         await expectNotExist('oxfmt.config.ts')
         await expectNotExist('tsconfig.json')

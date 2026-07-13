@@ -1,10 +1,8 @@
-import type {ParsedCommandLine} from '@typescript/typescript6'
 import chalk from 'chalk'
 import type {TypedFlags} from 'meow'
 import outdent from 'outdent'
 
 import sharedFlags from '../../sharedFlags'
-import {runCommand} from '../../util/command-parser'
 import log from '../../util/log'
 
 const splitLine = `\n----------------------------------------------------------`
@@ -13,20 +11,19 @@ export const verifyPackageConfigDefaults = {
   'packageName': true,
   'esmOnly': true,
   'tsconfig': true,
-  'tsc': true,
   'dependencies': true,
   'deprecatedDependencies': true,
   'babelConfig': true,
   'incompatiblePlugin': true,
-  'eslintImports': true,
+  'imports': true,
   'scripts': true,
   'pkg-utils': true,
   'nodeEngine': true,
   'studioConfig': true,
   'srcIndex': true,
   'bannedFiles': true,
-  'duplicateConfig': true,
   'oxfmt': true,
+  'oxlint': true,
 } as const
 
 export type VerifyPackageConfig = Partial<Record<keyof typeof verifyPackageConfigDefaults, boolean>>
@@ -80,16 +77,6 @@ export function createValidator(
         Fail-fast (--single) mode enabled, stopping validation here.
         `,
       )
-    }
-  }
-}
-
-export async function runTscMaybe(verifyConfig: VerifyPackageConfig, ts?: ParsedCommandLine) {
-  if (ts && verifyConfig.tsc !== false) {
-    log.info('All checks ok, running TypeScript compiler.')
-    const {code} = await runCommand('tsc --build')
-    if (code !== 0) {
-      throw new Error('Compilation failed. See output above.\n\n' + disableCheckText('tsc'))
     }
   }
 }

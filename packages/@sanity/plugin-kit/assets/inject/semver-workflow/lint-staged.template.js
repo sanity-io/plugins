@@ -1,4 +1,4 @@
 module.exports = {
-  '**/*.{js,jsx}': ['eslint'],
-  '**/*.{ts,tsx}': ['eslint', () => 'tsc --build'],
+  '**/*.{json,jsonc,md}': ['oxfmt'],
+  '**/*.{js,jsx,ts,tsx}': ['oxfmt', 'oxlint'],
 }

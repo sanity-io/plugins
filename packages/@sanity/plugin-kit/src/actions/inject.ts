@@ -4,9 +4,9 @@ import {fileURLToPath} from 'url'
 import licenses from '@rexxars/choosealicense-list'
 import gitRemoteOriginUrl from 'git-remote-origin-url'
 
-import {eslintignoreTemplate, eslintrcTemplate} from '../configs/eslint'
 import {gitignoreTemplate} from '../configs/git'
 import {oxfmtConfigTemplate} from '../configs/oxfmt'
+import {oxlintConfigTemplate} from '../configs/oxlint'
 import {pkgConfigTemplate} from '../configs/pkg-config'
 import {tsconfigTemplateDist, tsconfigTemplate, tsconfigTemplateSettings} from '../configs/tsconfig'
 import {addBuildScripts, getPackage, writePackageJson} from '../npm/package'
@@ -321,8 +321,7 @@ async function writeStaticAssets(options: InjectOptions) {
   const {outDir, flags} = options
 
   const files: Injectable[] = [
-    flags.eslint && eslintrcTemplate({flags: options.flags}),
-    flags.eslint && eslintignoreTemplate({outDir, flags: options.flags}),
+    flags.oxlint && oxlintConfigTemplate({flags: options.flags}),
     {type: 'copy', from: 'editorconfig', to: '.editorconfig'},
     pkgConfigTemplate({outDir, flags: options.flags}),
     flags.gitignore && gitignoreTemplate(),

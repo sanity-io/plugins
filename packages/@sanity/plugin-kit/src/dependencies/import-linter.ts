@@ -1,122 +1,126 @@
+import fs from 'fs/promises'
+import {createRequire} from 'node:module'
+import os from 'os'
 import path from 'path'
 
-import {ESLint} from 'eslint'
+import execa from 'execa'
 import outdent from 'outdent'
 
 import {mergedPackages} from '../configs/banned-packages'
 import {urls} from '../constants'
 import log from '../util/log'
 
+const require = createRequire(import.meta.url)
+
 const removedImportSuffix = `imports where removed in Sanity v3. Please refer to the migration guide: ${urls.migrationGuideStudio}, or new API-reference docs: ${urls.refDocs}`
 
-export async function validateImports({basePath}: {basePath: string}): Promise<string[]> {
-  log.debug('Running ESLint with Sanity Studio import hints...')
-  const eslintConfig: ESLint.Options['overrideConfig'] = {
-    ignorePatterns: ['node_modules'],
-    parserOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-    },
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            ...mergedPackages.map((packageName) => ({
-              group: [`${packageName}*`],
-              message: `Use sanity instead of ${packageName}.`,
-            })),
-            {
-              group: ['config:*'],
-              message: `config: imports are no longer supported. Please see the new plugin API for alternatives: ${urls.migrationGuideStudio}`,
-            },
-            {
-              group: ['part:*'],
-              message: `part: ${removedImportSuffix}`,
-            },
-            {
-              group: ['all:part:*'],
-              message: `all:part: ${removedImportSuffix}`,
-            },
-            {
-              group: ['sanity:*'],
-              message: `sanity: ${removedImportSuffix}`,
-            },
-          ],
-        },
-      ],
-    },
-  }
+const restrictedImportPatterns = [
+  ...mergedPackages.map((packageName) => ({
+    group: [packageName, `${packageName}/**`],
+    message: `Use sanity instead of ${packageName}.`,
+  })),
+  {
+    group: ['config:*', 'config:*/**'],
+    message: `config: imports are no longer supported. Please see the new plugin API for alternatives: ${urls.migrationGuideStudio}`,
+  },
+  {
+    group: ['part:*', 'part:*/**'],
+    message: `part: ${removedImportSuffix}`,
+  },
+  {
+    group: ['all:part:*', 'all:part:*/**'],
+    message: `all:part: ${removedImportSuffix}`,
+  },
+  {
+    group: ['sanity:*', 'sanity:*/**'],
+    message: `sanity: ${removedImportSuffix}`,
+  },
+]
 
-  const eslint = new ESLint({
-    cwd: basePath,
-    overrideConfig: eslintConfig,
-  })
+/**
+ * Config for the bundled oxlint that only checks for Studio v2 imports: everything else (including
+ * the default `correctness` category) is turned off, so the result does not depend on the
+ * package's own lint setup.
+ */
+const importsOxlintConfig = {
+  categories: {correctness: 'off'},
+  rules: {
+    'eslint/no-restricted-imports': ['error', {patterns: restrictedImportPatterns}],
+  },
+}
+
+function resolveOxlintBin(): string {
+  const packageJsonPath = require.resolve('oxlint/package.json')
+  const packageJson = require('oxlint/package.json') as {bin: Record<string, string>}
+  return path.join(path.dirname(packageJsonPath), packageJson.bin.oxlint)
+}
+
+export async function validateImports({basePath}: {basePath: string}): Promise<string[]> {
+  log.debug('Running oxlint with Sanity Studio import hints...')
+
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'plugin-kit-imports-'))
+  const configPath = path.join(tempDir, 'imports.oxlintrc.json')
 
   try {
-    let results
-    try {
-      results = await eslint.lintFiles([path.join(basePath, '**/*.{js,jsx,ts,tsx}')])
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
-      const shouldRetryWithoutUserConfig =
-        message.includes('@typescript-eslint') && message.includes("reading 'Cjs'")
+    await fs.writeFile(configPath, JSON.stringify(importsOxlintConfig), 'utf8')
 
-      if (!shouldRetryWithoutUserConfig) {
-        throw error
-      }
+    const result = await execa(
+      'node',
+      [
+        resolveOxlintBin(),
+        '--config',
+        configPath,
+        // Only use the imports-check config, never the package's own (nested) configs
+        '--disable-nested-config',
+        '--ignore-pattern',
+        '**/dist/*',
+        '--ignore-pattern',
+        '**/.sanity/*',
+        '.',
+      ],
+      {cwd: basePath, reject: false},
+    )
 
-      log.debug('Retrying ESLint import check without user config: %s', message)
-      const fallbackEslint = new ESLint({
-        cwd: basePath,
-        useEslintrc: false,
-        overrideConfig: eslintConfig,
-      })
-      results = await fallbackEslint.lintFiles([path.join(basePath, '**/*.{js,jsx,ts,tsx}')])
+    if (result.exitCode === 0) {
+      return []
     }
 
-    const onlyImportErrors = results
-      .map((r) => {
-        const limitErrors = r.messages.filter((m) => m.ruleId === 'no-restricted-imports')
-        return {
-          ...r,
-          messages: limitErrors,
-          errorCount: limitErrors.length,
-        }
-      })
-      .filter((r) => r.errorCount)
+    const output = [result.stdout, result.stderr].filter(Boolean).join('\n').trim()
 
-    if (onlyImportErrors.length) {
-      const formatter = await eslint.loadFormatter('stylish')
-      const resultText = await formatter.format(onlyImportErrors)
+    if (!output.includes('no-restricted-imports')) {
+      log.error('Failed to run oxlint import check', output)
+      return [
+        outdent`
+          Failed to run the oxlint-based import check:
 
-      const additionalInfo = outdent`
-        ESLint detected Studio V2 imports that are no longer available.
-        It is recommended configure @sanity/eslint-config-no-v2-imports for ESLint.
-
-        Run:
-        npm install --save-dev @sanity/eslint-config-no-v2-imports
-
-        In .eslintrc add:
-        "extends": ["@sanity/no-v2-imports"]
-
-        This way, V2-imports can be identified directly in the IDE, or using eslint CLI.
-        For more, see ${urls.linterPackage}
-
-        If the plugin package does not use eslint, disable this check.
-    `
-      return [resultText + additionalInfo]
+          ${output}
+      `,
+      ]
     }
-  } catch (e) {
-    log.error('Failed to run eslint check', e)
+
     return [
-      outdent`
-        Failed to run ESLint. Is ESLint configured?
+      output +
+        '\n' +
+        outdent`
+        oxlint detected Studio V2 imports that are no longer available.
+        Please migrate to the Sanity v3 APIs, or remove the restricted imports.
 
-        If the package does not use eslint, disable this check.
+        To catch these directly in your editor and CI, add the same patterns to the
+        "eslint/no-restricted-imports" rule in your .oxlintrc.json.
+
+        If the package intentionally references these modules, disable this check.
     `,
     ]
-  }
+  } catch (e) {
+    log.error('Failed to run oxlint check', e)
+    return [
+      outdent`
+        Failed to run oxlint. This is likely a bug in @sanity/plugin-kit - please report it.
 
-  return []
+        If needed, disable this check to move on.
+    `,
+    ]
+  } finally {
+    await fs.rm(tempDir, {recursive: true, force: true})
+  }
 }

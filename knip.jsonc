@@ -36,13 +36,7 @@
       "ignoreDependencies": [
         // Spawned as a CLI (`yalc push`) by the link-watch command, never imported
         "yalc",
-        // Resolved at runtime by ESLint/tsc when verifying generated plugin fixtures in tests
-        "eslint-config-prettier",
-        "eslint-config-sanity",
-        "eslint-plugin-react",
-        "eslint-plugin-react-hooks",
-        "@typescript-eslint/eslint-plugin",
-        "@typescript-eslint/parser",
+        // Resolved at runtime by oxlint/pkg-utils when verifying generated plugin fixtures in tests
         "react",
         "react-dom",
         "sanity",

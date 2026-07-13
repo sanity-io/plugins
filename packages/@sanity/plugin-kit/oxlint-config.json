@@ -1,0 +1,83 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "react",
+    "react-perf",
+    "oxc",
+    "import",
+    "jsx-a11y",
+    "promise"
+  ],
+  "options": {
+    "denyWarnings": true,
+    "reportUnusedDisableDirectives": "error",
+    "typeAware": true,
+    "typeCheck": true
+  },
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
+  },
+  "rules": {
+    "no-underscore-dangle": "off",
+    "consistent-function-scoping": "off",
+    "eslint/no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "lodash-es",
+            "message": "Import from individual modules instead, e.g. `import debounce from 'lodash-es/debounce.js'`. Barrel imports are ~55% slower."
+          },
+          {
+            "name": "react",
+            "importNames": ["createElement"],
+            "message": "Please use JSX instead of createElement, for example `createElement(Icon)` should be `<Icon />`"
+          },
+          {
+            "name": "react",
+            "importNames": ["forwardRef"],
+            "message": "forwardRef is unnecessary in React 19 — `ref` is a regular prop. Accept `ref` in your component props instead, e.g. `function Foo({ref, ...props}: Props & {ref?: Ref<T>}) {}`. See the sanity-plugin-best-practices skill."
+          }
+        ],
+        "patterns": [
+          {
+            "group": ["lodash.*", "lodash/*", "lodash"],
+            "message": "Please use individual imports from 'lodash-es' instead, e.g. `import debounce from 'lodash-es/debounce.js'`."
+          }
+        ]
+      }
+    ],
+    "react/react-compiler": "error",
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-deprecated": "error",
+    "typescript/no-unnecessary-type-assertion": "error",
+    "typescript/no-unnecessary-type-arguments": "error",
+    "typescript/prefer-ts-expect-error": "error",
+    "import/no-commonjs": "error",
+    "import/no-unassigned-import": ["error", {"allow": ["**/*.css"]}],
+    "no-restricted-globals": [
+      "error",
+      {"name": "__dirname", "message": "Use path.dirname(fileURLToPath(import.meta.url)) instead"},
+      {"name": "__filename", "message": "Use fileURLToPath(import.meta.url) instead"}
+    ],
+    "react/jsx-key": "error",
+    "unicorn/no-abusive-eslint-disable": "error",
+    "react-in-jsx-scope": "off",
+    "react_perf/jsx-no-new-array-as-prop": "off",
+    "react_perf/jsx-no-new-object-as-prop": "off",
+    "react_perf/jsx-no-new-function-as-prop": "off",
+    "react_perf/jsx-no-jsx-as-prop": "off",
+    "jsx_a11y/anchor-is-valid": "off",
+    "jsx_a11y/no-autofocus": "off",
+    "react/exhaustive-deps": "error",
+    "react/rules-of-hooks": "error",
+    "eslint/no-console": ["error", {"allow": ["warn", "error"]}],
+    "no-array-reverse": "off",
+    "no-array-sort": "off",
+    "no-shadow": "off"
+  }
+}

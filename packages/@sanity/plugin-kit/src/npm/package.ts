@@ -211,8 +211,8 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
   const prev = prevPkg || {}
 
   const useOxfmt = flags.oxfmt !== false
-  const useEslint = flags.eslint !== false
-  const useTypescript = flags.eslint !== false
+  const useOxlint = flags.oxlint !== false
+  const useTypescript = flags.typescript !== false
 
   const newDevDependencies = [cliName, '@sanity/pkg-utils']
 
@@ -226,25 +226,10 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     newDevDependencies.push('oxfmt')
   }
 
-  if (useEslint) {
-    log.debug('Using eslint. Adding to dev dependencies.')
-
-    newDevDependencies.push(
-      'eslint',
-      'eslint-config-sanity',
-      'eslint-plugin-react',
-      'eslint-plugin-react-hooks',
-    )
-
-    if (useOxfmt) {
-      // eslint-config-prettier disables the stylistic rules from eslint-config-sanity that would
-      // conflict with oxfmt's (prettier-compatible) output; it does not run prettier itself
-      newDevDependencies.push('eslint-config-prettier')
-    }
-
-    if (useTypescript) {
-      newDevDependencies.push('@typescript-eslint/eslint-plugin', '@typescript-eslint/parser')
-    }
+  if (useOxlint) {
+    log.debug('Using oxlint. Adding to dev dependencies.')
+    // oxlint-tsgolint powers the type-aware rules and type checking enabled in the shared config
+    newDevDependencies.push('oxlint', 'oxlint-tsgolint')
   }
 
   log.debug('Resolving latest versions for %s', newDevDependencies.join(', '))
@@ -397,7 +382,9 @@ export async function addBuildScripts(manifest: PackageJson, options: InjectOpti
       scripts.format = addScript(`oxfmt`, scripts.format)
     }
     scripts['link-watch'] = addScript(expectedScripts['link-watch'], scripts['link-watch'])
-    scripts.lint = addScript(`eslint .`, scripts.lint)
+    if (options.flags.oxlint !== false) {
+      scripts.lint = addScript(`oxlint`, scripts.lint)
+    }
     scripts.prepublishOnly = addScript(expectedScripts.prepublishOnly, scripts.prepublishOnly)
     scripts.watch = addScript(expectedScripts.watch, scripts.watch)
     return scripts

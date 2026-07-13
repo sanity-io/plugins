@@ -453,6 +453,8 @@ pnpm lint        # Run the linter (includes type checking)
 pnpm lint:fix    # Auto-fix what's possible
 ```
 
+The shared rules (plugins, options, categories, rules) live in `@sanity/plugin-kit`'s `oxlint-config.json` (`packages/@sanity/plugin-kit/oxlint-config.json`), which the root `.oxlintrc.json` extends; only workspace-specific ignores and overrides belong in the root config. Standalone plugins scaffolded with `plugin-kit init` extend the same shared config. Note that `ignorePatterns` do not propagate through `extends`, so ignores are declared in the root config.
+
 ## Project Structure
 
 ```

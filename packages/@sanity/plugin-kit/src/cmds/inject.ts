@@ -17,7 +17,7 @@ Usage
   $ ${cliName} inject [dir] [<args>]
 
 Options
-  --no-eslint             Disables ESLint config and dependencies from being added
+  --no-oxlint             Disables oxlint config and dependencies from being added
   --no-oxfmt              Disables oxfmt config and dependencies from being added
   --no-typescript         Disables typescript config and dependencies from being added
   --no-license            Disables LICENSE + package.json license field from being added
@@ -40,8 +40,8 @@ Examples
   # Inject configuration into the plugin in ~/my-plugin
   $ ${cliName} inject ~/my-plugin
 
-  # Don't inject eslint or oxfmt
-  $ ${cliName} inject --no-eslint --no-oxfmt
+  # Don't inject oxlint or oxfmt
+  $ ${cliName} inject --no-oxlint --no-oxfmt
 
   # Inject plugin configuration and semver-workflow into the plugin in the current directory
   $ @sanity/plugin-kit inject --preset semver-workflow
