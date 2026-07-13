@@ -932,6 +932,9 @@ importers:
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
       sanity:
         specifier: ^6.4.0
         version: 6.4.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.2.1)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(node-fetch@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
@@ -2638,6 +2641,9 @@ importers:
       '@types/react-file-icon':
         specifier: ^1.0.5
         version: 1.0.5
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
       jsdom:
         specifier: 'catalog:'
         version: 29.1.1(@noble/hashes@2.2.0)
@@ -2738,6 +2744,9 @@ importers:
       '@types/react-is':
         specifier: 'catalog:'
         version: 19.2.0
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
       react:
         specifier: 'catalog:'
         version: 19.2.7
