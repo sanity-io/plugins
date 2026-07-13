@@ -44,7 +44,6 @@
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@types/node": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
     "tsdown": "catalog:"
