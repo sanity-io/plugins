@@ -4,6 +4,7 @@ import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Card, Text} from '@sanity/ui'
 import {type PropsWithChildren, Suspense, useMemo, useRef, useState} from 'react'
 
+import {PLUGIN_VERSION} from '../constants'
 import {useDialogStateContext} from '../context/DialogStateContext'
 import {useClient} from '../hooks/useClient'
 import {AUDIO_ASPECT_RATIO, MIN_ASPECT_RATIO} from '../util/constants'
@@ -187,8 +188,7 @@ export default function VideoPlayer({
                 crossOrigin="anonymous"
                 metadata={{
                   player_name: 'Sanity Admin Dashboard',
-                  // @ts-expect-error - this constant is search/replaced so must be exact, not accessed with an index signature
-                  player_version: process.env.PKG_VERSION,
+                  player_version: PLUGIN_VERSION,
                   page_type: 'Preview Player',
                 }}
                 audio={isAudio}
