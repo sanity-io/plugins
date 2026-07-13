@@ -11,44 +11,69 @@ const removedImportSuffix = `imports where removed in Sanity v3. Please refer to
 
 export async function validateImports({basePath}: {basePath: string}): Promise<string[]> {
   log.debug('Running ESLint with Sanity Studio import hints...')
+  const eslintConfig: ESLint.Options['overrideConfig'] = {
+    ignorePatterns: ['node_modules'],
+    parserOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            ...mergedPackages.map((packageName) => ({
+              group: [`${packageName}*`],
+              message: `Use sanity instead of ${packageName}.`,
+            })),
+            {
+              group: ['config:*'],
+              message: `config: imports are no longer supported. Please see the new plugin API for alternatives: ${urls.migrationGuideStudio}`,
+            },
+            {
+              group: ['part:*'],
+              message: `part: ${removedImportSuffix}`,
+            },
+            {
+              group: ['all:part:*'],
+              message: `all:part: ${removedImportSuffix}`,
+            },
+            {
+              group: ['sanity:*'],
+              message: `sanity: ${removedImportSuffix}`,
+            },
+          ],
+        },
+      ],
+    },
+  }
+
   const eslint = new ESLint({
     cwd: basePath,
-    overrideConfig: {
-      ignorePatterns: ['node_modules'],
-      rules: {
-        'no-restricted-imports': [
-          'error',
-          {
-            patterns: [
-              ...mergedPackages.map((packageName) => ({
-                group: [`${packageName}*`],
-                message: `Use sanity instead of ${packageName}.`,
-              })),
-              {
-                group: ['config:*'],
-                message: `config: imports are no longer supported. Please see the new plugin API for alternatives: ${urls.migrationGuideStudio}`,
-              },
-              {
-                group: ['part:*'],
-                message: `part: ${removedImportSuffix}`,
-              },
-              {
-                group: ['all:part:*'],
-                message: `all:part: ${removedImportSuffix}`,
-              },
-              {
-                group: ['sanity:*'],
-                message: `sanity: ${removedImportSuffix}`,
-              },
-            ],
-          },
-        ],
-      },
-    },
+    overrideConfig: eslintConfig,
   })
 
   try {
-    const results = await eslint.lintFiles([path.join(basePath, '**/*.{js,jsx,ts,tsx}')])
+    let results
+    try {
+      results = await eslint.lintFiles([path.join(basePath, '**/*.{js,jsx,ts,tsx}')])
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      const shouldRetryWithoutUserConfig =
+        message.includes('@typescript-eslint') && message.includes("reading 'Cjs'")
+
+      if (!shouldRetryWithoutUserConfig) {
+        throw error
+      }
+
+      log.debug('Retrying ESLint import check without user config: %s', message)
+      const fallbackEslint = new ESLint({
+        cwd: basePath,
+        useEslintrc: false,
+        overrideConfig: eslintConfig,
+      })
+      results = await fallbackEslint.lintFiles([path.join(basePath, '**/*.{js,jsx,ts,tsx}')])
+    }
 
     const onlyImportErrors = results
       .map((r) => {
