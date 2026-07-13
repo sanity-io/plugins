@@ -209,7 +209,7 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
           />
         </Box>
       </Flex>
-      {shouldLoad && (
+      {shouldLoad && isOpen && (
         <BynderModalLayout
           isOpen={isOpen}
           onClose={closeCompactView}
