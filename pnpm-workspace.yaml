@@ -75,8 +75,8 @@ catalogs:
   # keep explicit ranges, and peers on other workspace packages keep `workspace:^`
   # (or an explicit range) so changesets can track dependents.
   peer:
-    react: ^19.2
-    react-dom: ^19.2
+    react: ^19.2.7
+    react-dom: ^19.2.7
     sanity: ^5 || ^6.0.0-0
     styled-components: ^6.1
 

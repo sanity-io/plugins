@@ -171,7 +171,7 @@ catalogs:
       version: 4.1.10
   peer:
     react:
-      specifier: ^19.2
+      specifier: ^19.2.7
       version: 19.2.7
 
 overrides:
