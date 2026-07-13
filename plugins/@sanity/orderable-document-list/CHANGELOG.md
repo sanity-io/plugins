@@ -1,5 +1,11 @@
 # @sanity/orderable-document-list
 
+## 2.0.11
+
+### Patch Changes
+
+- [#1555](https://github.com/sanity-io/plugins/pull/1555) [`5ade159`](https://github.com/sanity-io/plugins/commit/5ade159d97951a87867d225b72d6008cdc5e7fd6) Thanks [@stipsan](https://github.com/stipsan)! - Compatibility with `sanity` 6.4.0 typings (no functional changes)
+
 ## 2.0.10
 
 ### Patch Changes
