@@ -1,5 +1,13 @@
 # sanity-plugin-media
 
+## 6.0.0
+
+### Major Changes
+
+- [#1560](https://github.com/sanity-io/plugins/pull/1560) [`c270307`](https://github.com/sanity-io/plugins/commit/c270307ace6fa6fd0bb615aa68352ed6fd3d7a52) Thanks [@stipsan](https://github.com/stipsan)! - Enable React Compiler
+
+  The package is now built with React Compiler targeting React 19, so published components are memoized automatically. As a result the `react` and `react-dom` peer dependencies are tightened from `^18.3 || ^19` to `^19.2`, since the compiled output relies on `react/compiler-runtime`. In practice this doesn't drop any supported setup: the `sanity` peer dependency (`^5 || ^6.0.0-0`) already requires React 19.2.
+
 ## 5.0.13
 
 ### Patch Changes
