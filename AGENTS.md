@@ -420,7 +420,7 @@ The catalog only holds peers shared across many packages (`react`, `react-dom`, 
 - **Niche one-off peers** used by a single package (e.g. `easymde` in `sanity-plugin-markdown`, `eslint`/`typescript` in `@sanity/plugin-kit`)
 - **Peers on other workspace packages**, which keep the `workspace:^` protocol (e.g. `@sanity/dashboard` in the dashboard widgets) or an explicit range when older majors are intentionally supported (e.g. `sanity-plugin-internationalized-array` in `@sanity/sfcc`) — changesets can't track dependents through `catalog:` references
 
-Note that the `peer` catalog entries are intentionally wider than the default catalog's (e.g. `react: ^19.2` vs `^19.2.7`): the default catalog pins what we develop against, the `peer` catalog declares what consumers may use.
+Note that the `peer` catalog entries are intentionally wider than the default catalog's (e.g. `react: ^19.2` vs `^19.2.7`): the default catalog pins what we develop against, the `peer` catalog declares what consumers may use. Renovate is configured (a `packageRules` entry in `.github/renovate.json` disables the `pnpm.catalog.peer` depType) to never rewrite these ranges — changing a peer range is a deliberate, manual decision.
 
 **Always use `lodash-es` instead of `lodash`**
 
