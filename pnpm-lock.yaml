@@ -400,8 +400,8 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
     devDependencies:
       '@tsconfig/vite-react':
-        specifier: ^8.0.6
-        version: 8.0.6
+        specifier: ^8.1.1
+        version: 8.1.1
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -6492,8 +6492,8 @@ packages:
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
 
-  '@tsconfig/vite-react@8.0.6':
-    resolution: {integrity: sha512-O+Eg45m/oNBY9r0EsI/N3VnXvrT4SZbcjTYW5M50eoBVnIUXL+W+ha0uDkK1WqezflsBrHkBSEyn+WdewFJJmw==}
+  '@tsconfig/vite-react@8.1.1':
+    resolution: {integrity: sha512-TdLtRE9INt7aupEC2yhem6y4RN8T+B4oa2OUYsay0ioxSDl8Q4yaq0k2yc86Gb2BEHjKp4RUxgIzqOTk4IQ8dQ==}
 
   '@turbo/darwin-64@2.10.0':
     resolution: {integrity: sha512-EwvHThXzpY0KGd1/NAmuewI5D+aVa3Rl/OlxE36yfjUKb/+ySrfJrSlEFt8aD1OXwnnaHnQnPKHFndor0Zxlsg==}
@@ -15979,7 +15979,7 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.1
 
-  '@tsconfig/vite-react@8.0.6': {}
+  '@tsconfig/vite-react@8.1.1': {}
 
   '@turbo/darwin-64@2.10.0':
     optional: true
