@@ -19,7 +19,7 @@ Usage
 
 Options
   --no-eslint             Disables ESLint config and dependencies from being added
-  --no-prettier           Disables prettier config and dependencies from being added
+  --no-oxfmt              Disables oxfmt config and dependencies from being added
   --no-typescript         Disables typescript config and dependencies from being added
   --no-license            Disables LICENSE + package.json license field from being added
   --no-editorconfig       Disables .editorconfig from being added
@@ -44,8 +44,8 @@ Examples
   # Initialize a plugin in the directory ~/my-plugin
   $ ${cliName} init ~/my-plugin
 
-  # Don't add eslint or prettier
-  $ ${cliName} init --no-eslint --no-prettier
+  # Don't add eslint or oxfmt
+  $ ${cliName} init --no-eslint --no-oxfmt
 `
 
 async function run({argv}: {argv: string[]}) {

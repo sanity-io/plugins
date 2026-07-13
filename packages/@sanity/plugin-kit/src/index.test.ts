@@ -14,6 +14,9 @@ test('package exports', {timeout: 30_000}, async () => {
       ".": {
         "cliEntry": "function",
       },
+      "./oxfmt": {
+        "default": "object",
+      },
     }
   `)
 })

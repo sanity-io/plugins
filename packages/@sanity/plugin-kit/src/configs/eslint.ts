@@ -15,7 +15,9 @@ export function eslintrcTemplate(options: {flags: InitFlags}): InjectTemplate {
       flags.typescript && 'sanity/typescript',
       'sanity/react',
       'plugin:react-hooks/recommended',
-      flags.prettier && 'plugin:prettier/recommended',
+      // eslint-config-prettier: disables stylistic rules that conflict with oxfmt's
+      // (prettier-compatible) formatting; it does not run prettier
+      flags.oxfmt && 'prettier',
       'plugin:react/jsx-runtime',
     ].filter(Boolean),
   }

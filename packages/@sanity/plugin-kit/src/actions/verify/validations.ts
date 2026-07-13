@@ -13,7 +13,7 @@ import {
   requiredNodeEngine,
   urls,
 } from '../../constants'
-import {fileExists, readJson5File} from '../../util/files'
+import {fileExists, readFile, readJsonFile, readJson5File} from '../../util/files'
 import type {PackageJson, SanityStudioJson, SanityV2Json} from './types'
 
 export const expectedScripts = {
@@ -665,22 +665,199 @@ export async function disallowDuplicateEslintConfig(basePath: string, pkgJson: P
   })
 }
 
-export async function disallowDuplicatePrettierConfig(basePath: string, pkgJson: PackageJson) {
-  return disallowDuplicateConfig({
-    basePath,
-    pkgJson,
-    configKey: 'prettier',
-    files: [
-      '.prettierrc',
-      '.prettierrc.json5',
-      '.prettierrc.json',
-      '.prettierrc.yaml',
-      '.prettierrc.yml',
-      '.prettierrc.js',
-      '.prettierrc.cjs',
-      '.prettier.config,js',
-      '.prettier.config.cjs',
-      '.prettierrc.toml',
-    ],
-  })
+/**
+ * Config filenames oxfmt discovers automatically (in addition to explicit `-c` paths).
+ */
+const oxfmtConfigFiles = [
+  'oxfmt.config.ts',
+  'oxfmt.config.js',
+  'oxfmt.config.mjs',
+  '.oxfmtrc.json',
+  '.oxfmtrc.jsonc',
+]
+
+const legacyPrettierConfigFiles = [
+  '.prettierrc',
+  '.prettierrc.json5',
+  '.prettierrc.json',
+  '.prettierrc.yaml',
+  '.prettierrc.yml',
+  '.prettierrc.js',
+  '.prettierrc.cjs',
+  '.prettierrc.mjs',
+  '.prettierrc.toml',
+  'prettier.config.js',
+  'prettier.config.cjs',
+  'prettier.config.mjs',
+]
+
+const oxfmtPresetSpecifier = '@sanity/plugin-kit/oxfmt'
+
+const oxfmtSetupSnippet = outdent`
+  export {default} from '${oxfmtPresetSpecifier}'
+`
+
+/**
+ * Walks up from `basePath` (inclusive) looking for a workspace (monorepo) root: a directory
+ * containing `pnpm-workspace.yaml`, or a `package.json` with a `workspaces` field.
+ */
+async function findWorkspaceRoot(basePath: string): Promise<string | undefined> {
+  let dir = path.resolve(basePath)
+  let prev: string | undefined
+  while (dir !== prev) {
+    if (await isWorkspaceRoot(dir)) {
+      return dir
+    }
+    prev = dir
+    dir = path.dirname(dir)
+  }
+  return undefined
+}
+
+async function isWorkspaceRoot(dir: string): Promise<boolean> {
+  if (await fileExists(path.join(dir, 'pnpm-workspace.yaml'))) {
+    return true
+  }
+  const pkgPath = path.join(dir, 'package.json')
+  if (await fileExists(pkgPath)) {
+    try {
+      const pkg = await readJsonFile<PackageJson>(pkgPath)
+      return Boolean(pkg && typeof pkg === 'object' && pkg.workspaces)
+    } catch {
+      // an unparseable package.json is not a workspace root marker
+    }
+  }
+  return false
+}
+
+type OxfmtConfigDirResult = {ok: true} | {ok: false; error: string}
+
+async function checkOxfmtConfigDir(
+  dir: string,
+  describeDir: string,
+): Promise<OxfmtConfigDirResult> {
+  const found: string[] = []
+  for (const file of oxfmtConfigFiles) {
+    if (await fileExists(path.join(dir, file))) {
+      found.push(file)
+    }
+  }
+
+  if (found.length === 0) {
+    return {
+      ok: false,
+      error: outdent`
+        Could not find an oxfmt config file ${describeDir}.
+
+        plugin-kit ships a shared oxfmt preset. Create an oxfmt.config.ts there containing:
+
+        ${oxfmtSetupSnippet}
+      `,
+    }
+  }
+
+  if (found.length > 1) {
+    return {
+      ok: false,
+      error: outdent`
+        Found multiple oxfmt config files ${describeDir}: [${found.join(', ')}].
+
+        There should be at most one of these files. Delete the rest.
+      `,
+    }
+  }
+
+  const file = found[0]
+  if (file.startsWith('.oxfmtrc')) {
+    return {
+      ok: false,
+      error: outdent`
+        Found ${file} ${describeDir}, but JSON configs cannot reuse the shared plugin-kit preset.
+
+        Replace it with an oxfmt.config.ts containing:
+
+        ${oxfmtSetupSnippet}
+      `,
+    }
+  }
+
+  const content = await readFile(path.join(dir, file), 'utf8')
+  if (!content.includes(oxfmtPresetSpecifier)) {
+    return {
+      ok: false,
+      error: outdent`
+        Found ${file} ${describeDir}, but it does not use the shared plugin-kit preset (${oxfmtPresetSpecifier}).
+
+        Re-export the preset:
+
+        ${oxfmtSetupSnippet}
+
+        or spread it into your own config to customize options.
+      `,
+    }
+  }
+
+  return {ok: true}
+}
+
+/**
+ * Verifies the plugin is formatted with oxfmt using the shared plugin-kit preset, and that no
+ * legacy prettier configuration remains.
+ *
+ * In a monorepo (a workspace root is found above the plugin), the oxfmt config is expected at the
+ * workspace root; otherwise it should sit next to the package.json that installs and runs
+ * plugin-kit. A config next to package.json is also accepted in a monorepo, since oxfmt discovers
+ * nested configs.
+ */
+export async function validateOxfmtConfig(
+  basePath: string,
+  pkgJson: PackageJson,
+): Promise<string[]> {
+  const errors: string[] = []
+
+  const legacyFound: string[] = []
+  for (const file of legacyPrettierConfigFiles) {
+    if (await fileExists(path.join(basePath, file))) {
+      legacyFound.push(file)
+    }
+  }
+  if (pkgJson.prettier) {
+    legacyFound.push('package.json ("prettier" key)')
+  }
+  if (legacyFound.length) {
+    errors.push(
+      outdent`
+        Found legacy prettier configuration: [${legacyFound.join(', ')}].
+
+        plugin-kit has replaced prettier with oxfmt. Remove the prettier config (custom options can
+        be migrated with \`npx oxfmt --migrate=prettier\`), drop the prettier, prettier-plugin-packagejson
+        and eslint-plugin-prettier devDependencies, and format with oxfmt instead:
+
+        ${oxfmtSetupSnippet}
+      `,
+    )
+  }
+
+  const workspaceRoot = await findWorkspaceRoot(basePath)
+  const primaryDir = workspaceRoot ?? basePath
+  const primaryResult = await checkOxfmtConfigDir(
+    primaryDir,
+    workspaceRoot ? `in the workspace root (${workspaceRoot})` : 'next to package.json',
+  )
+
+  if (primaryResult.ok) {
+    return errors
+  }
+
+  // In a monorepo a config next to the plugin's package.json also works, since oxfmt discovers
+  // configs in subdirectories.
+  if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
+    const localResult = await checkOxfmtConfigDir(basePath, 'next to package.json')
+    if (localResult.ok) {
+      return errors
+    }
+  }
+
+  errors.push(primaryResult.error)
+  return errors
 }

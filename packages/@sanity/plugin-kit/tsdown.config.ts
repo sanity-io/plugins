@@ -3,6 +3,7 @@ import type {UserConfig} from 'tsdown'
 
 const config: UserConfig = {
   ...(await defineConfig({
+    entry: ['./src/index.ts', './src/oxfmt.ts'],
     platform: 'node',
     dts: {tsgo: true},
   })),

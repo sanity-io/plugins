@@ -30,6 +30,7 @@ Check the [FAQ](#faq) fro more on these.
 
 - [Installation](#installation)
 - [Initialize a new plugin](#initialize-a-new-plugin)
+- [Formatting with oxfmt](#formatting-with-oxfmt)
 - [Verify plugin package](#verify-plugin-package)
   - [Upgrading a v2 plugin](#upgrading-a-v2-plugin)
 - [Upgrade help in v2 Studio](#upgrade-help-in-v2-studio)
@@ -114,6 +115,39 @@ npx @sanity/plugin-kit@latest init --help
 
 for up-to-date specifics.
 
+## Formatting with oxfmt
+
+Plugins are formatted with [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) using a shared
+preset exported as `@sanity/plugin-kit/oxfmt`. `plugin-kit init` sets this up automatically: it adds
+an `oxfmt` devDependency, a `format` script, and an `oxfmt.config.ts` re-exporting the preset:
+
+```ts
+export {default} from '@sanity/plugin-kit/oxfmt'
+```
+
+The config file belongs next to the `package.json` that installs and runs oxfmt. In a monorepo that
+is the workspace root, so every package is formatted the same way; in a standalone plugin repository
+it is the plugin directory itself.
+
+Oxfmt has no `extends` mechanism. To customize, spread the preset and override options:
+
+```ts
+import pluginKitOxfmt from '@sanity/plugin-kit/oxfmt'
+import {defineConfig} from 'oxfmt'
+
+export default defineConfig({
+  ...pluginKitOxfmt,
+  ignorePatterns: [...(pluginKitOxfmt.ignorePatterns ?? []), 'CHANGELOG.md'],
+})
+```
+
+Note: oxfmt loads TypeScript config files with Node's native TypeScript support, which requires
+Node `^20.19 || >=22.18`.
+
+Migrating a plugin from prettier? Remove the prettier config file (custom options can be migrated
+with `npx oxfmt --migrate=prettier`), drop the `prettier`, `prettier-plugin-packagejson` and
+`eslint-plugin-prettier` devDependencies, and add the `oxfmt.config.ts` above.
+
 ## Verify plugin package
 
 Verify that the plugin package is configured correctly by running:
@@ -132,6 +166,7 @@ Verify that the plugin package is configured correctly by running:
   - babel
   - the deprecated `@sanity/incompatible-plugin` v2 compatibility shim (`sanity.json` + `v2-incompatible.js`)
 - Check for sanity imports that has changed in v3, using eslint
+- Check that the plugin is formatted with oxfmt using the shared `@sanity/plugin-kit/oxfmt` preset (and that no legacy prettier config remains)
 - Check tsconfig.json settings
 - Check for [SPDX](https://spdx.org/licenses/) compatible license definition
 - If the package uses TypeScript, this will also run `tsc --build` when all other checks have passed
@@ -438,7 +473,8 @@ Provide a sanityPlugin config in package.json (defaults shown):
       "studioConfig": true,
       "srcIndex": true,
       "bannedFiles": true,
-      "duplicateConfig": true
+      "duplicateConfig": true,
+      "oxfmt": true
     }
   }
 }

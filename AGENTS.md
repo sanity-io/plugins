@@ -442,6 +442,8 @@ We use [oxfmt](https://oxc.rs/docs/formatter.html):
 pnpm format
 ```
 
+The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`packages/@sanity/plugin-kit/src/oxfmt.ts`), which the root `oxfmt.config.ts` re-exports. Standalone plugins scaffolded with `plugin-kit init` reuse the same preset. Note that loading the TypeScript config requires Node `^20.19 || >=22.18`.
+
 ### Linting
 
 We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (type-aware, includes TypeScript type checking and React Compiler rules via the react-hooks-js plugin):
@@ -523,7 +525,7 @@ Open that URL in the browser to authenticate and land directly in the Home works
 
 ### Node.js version notes
 
-`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 24 is preferred when available, and **Node >= 22.18 is required for a full `pnpm build`**: the `@repo/generators` build runs `tsdown`, which loads its `.mts` config through Node's native TypeScript support. On older Node 22.x (e.g. the `v22.14.0` that may be the VM default) that build fails with `Failed to import module "unrun"`. A new enough runtime is usually available via `nvm` (e.g. `export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH"`). `pnpm lint` and `pnpm test` work on older Node 22 too.
+`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 24 is preferred when available, and **Node >= 22.18 is required for a full `pnpm build`**: the `@repo/generators` build runs `tsdown`, which loads its `.mts` config through Node's native TypeScript support. On older Node 22.x (e.g. the `v22.14.0` that may be the VM default) that build fails with `Failed to import module "unrun"`. **`pnpm format` also requires Node >= 22.18** (oxfmt loads the TypeScript `oxfmt.config.ts` through the same mechanism). A new enough runtime is usually available via `nvm` (e.g. `export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH"`). `pnpm lint` and `pnpm test` work on older Node 22 too.
 
 ### Lint / build / test
 

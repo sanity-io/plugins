@@ -26,6 +26,7 @@ export const verifyPackageConfigDefaults = {
   'srcIndex': true,
   'bannedFiles': true,
   'duplicateConfig': true,
+  'oxfmt': true,
 } as const
 
 export type VerifyPackageConfig = Partial<Record<keyof typeof verifyPackageConfigDefaults, boolean>>

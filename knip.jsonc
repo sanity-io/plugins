@@ -39,12 +39,10 @@
         // Resolved at runtime by ESLint/tsc when verifying generated plugin fixtures in tests
         "eslint-config-prettier",
         "eslint-config-sanity",
-        "eslint-plugin-prettier",
         "eslint-plugin-react",
         "eslint-plugin-react-hooks",
         "@typescript-eslint/eslint-plugin",
         "@typescript-eslint/parser",
-        "prettier",
         "react",
         "react-dom",
         "sanity",

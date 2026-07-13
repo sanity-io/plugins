@@ -6,8 +6,8 @@ import gitRemoteOriginUrl from 'git-remote-origin-url'
 
 import {eslintignoreTemplate, eslintrcTemplate} from '../configs/eslint'
 import {gitignoreTemplate} from '../configs/git'
+import {oxfmtConfigTemplate} from '../configs/oxfmt'
 import {pkgConfigTemplate} from '../configs/pkg-config'
-import {prettierignoreTemplate} from '../configs/prettier'
 import {tsconfigTemplateDist, tsconfigTemplate, tsconfigTemplateSettings} from '../configs/tsconfig'
 import {addBuildScripts, getPackage, writePackageJson} from '../npm/package'
 import {injectPresets} from '../presets/presets'
@@ -329,8 +329,7 @@ async function writeStaticAssets(options: InjectOptions) {
     flags.typescript && tsconfigTemplate({flags: options.flags}),
     flags.typescript && tsconfigTemplateDist({outDir, flags: options.flags}),
     flags.typescript && tsconfigTemplateSettings({outDir, flags: options.flags}),
-    flags.prettier && prettierignoreTemplate({outDir}),
-    flags.prettier && {type: 'copy', from: 'prettierrc.json', to: '.prettierrc'},
+    flags.oxfmt && oxfmtConfigTemplate({flags: options.flags}),
   ]
     .map((f) => (f ? (f as Injectable) : undefined))
     .filter((f): f is Injectable => !!f)

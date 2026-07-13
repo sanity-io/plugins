@@ -142,15 +142,18 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
-package.json contains prettier, but there also exists a config file that serves the same purpose.
-Config file: .prettierrc]
+Found legacy prettier configuration: [.prettierrc, package.json ("prettier" key)].
 
-Either delete the file or remove prettier entry from package.json.
+plugin-kit has replaced prettier with oxfmt. Remove the prettier config (custom options can
+be migrated with \`npx oxfmt --migrate=prettier\`), drop the prettier, prettier-plugin-packagejson
+and eslint-plugin-prettier devDependencies, and format with oxfmt instead:
+
+export {default} from '@sanity/plugin-kit/oxfmt'
 
 To skip this validation add the following to your package.json:
 "sanityPlugin": {
    "verifyPackage": {
-      "duplicateConfig": false
+      "oxfmt": false
    }
 }
 ----------------------------------------------------------

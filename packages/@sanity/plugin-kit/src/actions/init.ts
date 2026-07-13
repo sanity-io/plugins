@@ -23,7 +23,7 @@ export const initFlags = {
     type: 'boolean',
     default: true,
   },
-  prettier: {
+  oxfmt: {
     type: 'boolean',
     default: true,
   },

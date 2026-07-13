@@ -23,11 +23,9 @@ const defaultDevDependencies = [
   'eslint',
   'eslint-config-prettier',
   'eslint-config-sanity',
-  'eslint-plugin-prettier',
   'eslint-plugin-react',
   'eslint-plugin-react-hooks',
-  'prettier',
-  'prettier-plugin-packagejson',
+  'oxfmt',
   'react',
   'react-dom',
   'sanity',
@@ -55,7 +53,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
         'sanity/typescript',
         'sanity/react',
         'plugin:react-hooks/recommended',
-        'plugin:prettier/recommended',
+        'prettier',
       )
       await fileContains(
         '.eslintignore',
@@ -65,7 +63,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
         'lint-staged.config.js',
         '*.js',
       )
-      await fileContains('.prettierrc', '"semi": false')
+      await fileContains('oxfmt.config.ts', `export {default} from '@sanity/plugin-kit/oxfmt'`)
       await fileContains('tsconfig.json', '"extends": "./tsconfig.settings"')
       await fileContains('tsconfig.dist.json', '"extends": "./tsconfig.settings"')
       await fileContains('tsconfig.settings.json', '"target": "esnext"')
@@ -100,6 +98,7 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
         types: './dist/index.d.ts',
         files: ['dist'],
         scripts: {
+          'format': 'oxfmt',
           'lint': 'eslint .',
           'build': 'plugin-kit verify-package --silent && pkg-utils build --strict --check --clean',
           'watch': 'pkg-utils watch --strict',
@@ -146,7 +145,7 @@ test(
           ...initTestArgs.filter((a) => a !== '--license' && a !== 'mit'),
           '--no-install',
           '--no-eslint',
-          '--no-prettier',
+          '--no-oxfmt',
           '--no-typescript',
           '--no-license',
           '--no-editorconfig',
@@ -168,7 +167,7 @@ test(
         await expectNotExist('LICENSE')
         await expectNotExist('.eslintrc')
         await expectNotExist('.gitignore')
-        await expectNotExist('.prettierrc')
+        await expectNotExist('oxfmt.config.ts')
         await expectNotExist('tsconfig.json')
 
         await fileContains('src/index.js', `name: '${pluginTestName}'`)

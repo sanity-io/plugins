@@ -210,7 +210,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
   const {flags} = options
   const prev = prevPkg || {}
 
-  const usePrettier = flags.prettier !== false
+  const useOxfmt = flags.oxfmt !== false
   const useEslint = flags.eslint !== false
   const useTypescript = flags.eslint !== false
 
@@ -221,9 +221,9 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     newDevDependencies.push('@types/react', 'typescript')
   }
 
-  if (usePrettier) {
-    log.debug('Using prettier. Adding to dev dependencies.')
-    newDevDependencies.push('prettier', 'prettier-plugin-packagejson')
+  if (useOxfmt) {
+    log.debug('Using oxfmt. Adding to dev dependencies.')
+    newDevDependencies.push('oxfmt')
   }
 
   if (useEslint) {
@@ -236,8 +236,10 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
       'eslint-plugin-react-hooks',
     )
 
-    if (usePrettier) {
-      newDevDependencies.push('eslint-config-prettier', 'eslint-plugin-prettier')
+    if (useOxfmt) {
+      // eslint-config-prettier disables the stylistic rules from eslint-config-sanity that would
+      // conflict with oxfmt's (prettier-compatible) output; it does not run prettier itself
+      newDevDependencies.push('eslint-config-prettier')
     }
 
     if (useTypescript) {
@@ -278,7 +280,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
   // sort alphabetically for scanability
   files.sort()
 
-  // order should be compatible with prettier-plugin-packagejson
+  // order should be compatible with oxfmt's sortPackageJson
   const forcedOrder = {
     name: pluginName,
     version: prev.version ?? '1.0.0',
@@ -391,7 +393,9 @@ export async function addBuildScripts(manifest: PackageJson, options: InjectOpti
   }
   return addPackageJsonScripts(manifest, options, (scripts) => {
     scripts.build = addScript(expectedScripts.build, scripts.build)
-    scripts.format = addScript(`prettier --write --cache --ignore-unknown .`, scripts.format)
+    if (options.flags.oxfmt !== false) {
+      scripts.format = addScript(`oxfmt`, scripts.format)
+    }
     scripts['link-watch'] = addScript(expectedScripts['link-watch'], scripts['link-watch'])
     scripts.lint = addScript(`eslint .`, scripts.lint)
     scripts.prepublishOnly = addScript(expectedScripts.prepublishOnly, scripts.prepublishOnly)

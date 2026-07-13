@@ -30,6 +30,7 @@
   "dependencies": {
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.0",
+    "@sanity/plugin-kit": "workspace:*",
     "@typescript/native-preview": "catalog:",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",

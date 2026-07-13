@@ -24,7 +24,7 @@ import {
   validateSrcIndexFile,
   validateBannedFiles,
   disallowDuplicateEslintConfig,
-  disallowDuplicatePrettierConfig,
+  validateOxfmtConfig,
 } from './verify/validations'
 import {
   createValidator,
@@ -74,9 +74,7 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
   await validation('duplicateConfig', async () =>
     disallowDuplicateEslintConfig(basePath, packageJson),
   )
-  await validation('duplicateConfig', async () =>
-    disallowDuplicatePrettierConfig(basePath, packageJson),
-  )
+  await validation('oxfmt', async () => validateOxfmtConfig(basePath, packageJson))
 
   if (ts) {
     await validation('tsconfig', async () => validateTsConfig(ts, {basePath, outDir, tsconfig}))
