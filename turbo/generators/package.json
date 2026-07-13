@@ -13,7 +13,7 @@
     "@types/node": "catalog:",
     "@types/validate-npm-package-name": "^4.0.2",
     "hosted-git-info": "^9.0.3",
-    "tsdown": "^0.22.5",
+    "tsdown": "^0.22.7",
     "validate-npm-package-name": "catalog:"
   }
 }
