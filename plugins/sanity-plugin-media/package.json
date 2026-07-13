@@ -85,8 +85,7 @@
     "react-is": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
     "react": "^18.3 || ^19",

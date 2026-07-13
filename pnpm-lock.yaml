@@ -2653,9 +2653,6 @@ importers:
       tsdown:
         specifier: 'catalog:'
         version: 0.22.5(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@6.0.3)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
 
   plugins/sanity-plugin-mux-input:
     dependencies:
@@ -2750,9 +2747,6 @@ importers:
       tsdown:
         specifier: 'catalog:'
         version: 0.22.5(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@6.0.3)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
 
   plugins/sanity-plugin-shopify-assets:
     dependencies:
