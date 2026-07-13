@@ -54,7 +54,7 @@ catalog:
   react: ^19.2.7
   react-dom: ^19.2.7
   react-fast-compare: ^3.2.2
-  react-hook-form: ^7.80.0
+  react-hook-form: ^7.81.0
   react-icons: ^5.7.0
   react-is: ^19.2.7
   react-photo-album: ^3.6.0
