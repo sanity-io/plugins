@@ -1,5 +1,13 @@
 # @sanity/plugin-kit
 
+## 7.0.1
+
+### Patch Changes
+
+- [#1531](https://github.com/sanity-io/plugins/pull/1531) [`402cefa`](https://github.com/sanity-io/plugins/commit/402cefa43d5b3d6468ac54f827cb6cbd6d447789) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency typescript to v7
+
+- [#1561](https://github.com/sanity-io/plugins/pull/1561) [`f310d68`](https://github.com/sanity-io/plugins/commit/f310d6815ba55fc9be1c119532822d8e89035548) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix `verify-package`/`verify-studio` import checks to fall back when `@typescript-eslint` fails to load with TypeScript 7.
+
 ## 7.0.0
 
 ### Major Changes
