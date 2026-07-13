@@ -97,9 +97,9 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "@sanity/pkg-utils": "catalog:",
-    "eslint": ">=8.0.0",
-    "typescript": "6.x || 7.x"
+    "@sanity/pkg-utils": "catalog:peer",
+    "eslint": "catalog:peer",
+    "typescript": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

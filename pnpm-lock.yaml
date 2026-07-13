@@ -169,6 +169,10 @@ catalogs:
     vitest:
       specifier: ^4.1.10
       version: 4.1.10
+  peer:
+    react:
+      specifier: ^19.2
+      version: 19.2.7
 
 overrides:
   '@types/node': ^24.13.3
@@ -920,7 +924,7 @@ importers:
         specifier: 'catalog:'
         version: 4.0.8(@sanity/client@7.23.0)
       react:
-        specifier: ^19.2
+        specifier: catalog:peer
         version: 19.2.7
     devDependencies:
       '@sanity/tsconfig':

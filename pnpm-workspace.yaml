@@ -69,6 +69,20 @@ catalog:
   video.js: ^7.21.7
   vitest: ^4.1.10
 
+catalogs:
+  # Ranges used in `peerDependencies` (referenced as `catalog:peer`).
+  # Peers on other workspace packages don't belong here: they keep `workspace:^`
+  # (or an explicit range) so changesets can track dependents.
+  peer:
+    '@sanity/pkg-utils': ^11.0.1
+    easymde: ^2.18
+    eslint: '>=8.0.0'
+    react: ^19.2
+    react-dom: ^19.2
+    sanity: ^5 || ^6.0.0-0
+    styled-components: ^6.1
+    typescript: 6.x || 7.x
+
 catalogMode: prefer
 dedupeDirectDeps: true
 
