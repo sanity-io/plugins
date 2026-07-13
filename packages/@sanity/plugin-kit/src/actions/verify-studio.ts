@@ -2,7 +2,6 @@ import chalk from 'chalk'
 import outdent from 'outdent'
 
 import {cliName, urls} from '../constants'
-import {validateImports} from '../dependencies/import-linter'
 import {getPackage} from '../npm/package'
 import log from '../util/log'
 import type {PackageJson} from './verify/types'
@@ -19,7 +18,6 @@ export async function verifyStudio({basePath, flags}: {basePath: string; flags: 
 
   await validation('studioConfig', async () => validateStudioConfig({basePath}))
   await validation('dependencies', async () => validateSanityDependencies(packageJson))
-  await validation('imports', async () => validateImports({basePath}))
 
   if (errors.length) {
     throw new Error(

@@ -15,7 +15,6 @@ export const verifyPackageConfigDefaults = {
   'deprecatedDependencies': true,
   'babelConfig': true,
   'incompatiblePlugin': true,
-  'imports': true,
   'scripts': true,
   'pkg-utils': true,
   'nodeEngine': true,

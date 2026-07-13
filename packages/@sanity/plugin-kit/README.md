@@ -210,7 +210,6 @@ Verify that the plugin package is configured correctly by running:
 - Check for redundant v2 config:
   - babel
   - the deprecated `@sanity/incompatible-plugin` v2 compatibility shim (`sanity.json` + `v2-incompatible.js`)
-- Check for sanity imports that has changed in v3, using a bundled oxlint pass
 - Check that the plugin is formatted with oxfmt using the shared `@sanity/plugin-kit/oxfmt` preset (and that no legacy prettier config remains)
 - Check that the plugin lints with oxlint using the shared `@sanity/plugin-kit/oxlint` config (and that no legacy eslint config remains)
 - Check tsconfig.json settings
@@ -247,7 +246,6 @@ This will:
 
 - Check for `sanity.json,` `sanity.config.(ts|js)` and `sanity.cli.(ts|js)` and advice on how to convert the former to the latter two.
 - Check for sanity dependencies that has changed in v3
-- Check for sanity imports that has changed in v3, using ESlint
 
 ### Fail fast mode
 
@@ -510,7 +508,6 @@ Provide a sanityPlugin config in package.json (defaults shown):
       "deprecatedDependencies": true,
       "babelConfig": true,
       "incompatiblePlugin": true,
-      "imports": true,
       "scripts": true,
       "pkg-utils": true,
       "nodeEngine": true,

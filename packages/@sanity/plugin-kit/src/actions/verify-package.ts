@@ -2,7 +2,6 @@ import chalk from 'chalk'
 import outdent from 'outdent'
 
 import {cliName, defaultOutDir, urls} from '../constants'
-import {validateImports} from '../dependencies/import-linter'
 import {getPackage} from '../npm/package'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
@@ -83,7 +82,6 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
   await validation('deprecatedDependencies', async () =>
     validateDeprecatedDependencies(packageJson),
   )
-  await validation('imports', async () => validateImports({basePath}))
 
   if (errors.length) {
     throw new Error(
