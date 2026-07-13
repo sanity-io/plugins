@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@rexxars/choosealicense-list": "^1.1.2",
+    "@typescript/typescript6": "^6.0.2",
     "chalk": "^4.1.2",
     "concurrently": "^8.2.2",
     "email-validator": "^2.0.4",
@@ -98,7 +99,7 @@
   "peerDependencies": {
     "@sanity/pkg-utils": "catalog:",
     "eslint": ">=8.0.0",
-    "typescript": "5.8.x || 5.9.x || 6.0.x"
+    "typescript": "6.x || 7.x"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
