@@ -1,6 +1,6 @@
 {
   "name": "@sanity/plugin-kit",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Enhanced Sanity.io plugin development experience",
   "keywords": [
     "bootstrap",
@@ -97,9 +97,9 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "@sanity/pkg-utils": "catalog:peer",
-    "eslint": "catalog:peer",
-    "typescript": "catalog:peer"
+    "@sanity/pkg-utils": "catalog:",
+    "eslint": ">=8.0.0",
+    "typescript": "6.x || 7.x"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

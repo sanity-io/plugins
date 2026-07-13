@@ -59,7 +59,7 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "easymde": "catalog:peer",
+    "easymde": "^2.18",
     "react": "catalog:peer",
     "sanity": "catalog:peer",
     "styled-components": "catalog:peer"

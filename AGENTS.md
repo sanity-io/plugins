@@ -415,9 +415,12 @@ Peer dependency ranges are centralized in the `peer` named catalog in `pnpm-work
 }
 ```
 
-Two exceptions, which must not use the catalog: peers on **other workspace packages** keep the `workspace:^` protocol (e.g. `@sanity/dashboard` in the dashboard widgets), or an explicit range when older majors are intentionally supported (e.g. `sanity-plugin-internationalized-array` in `@sanity/sfcc`) — changesets can't track dependents through `catalog:` references.
+The catalog only holds peers shared across many packages (`react`, `react-dom`, `sanity`, `styled-components`). Keep explicit ranges instead of adding catalog entries for:
 
-When a plugin needs a new peer dependency, add its range to the `peer` catalog first. Note that the `peer` catalog entries are intentionally wider than the default catalog's (e.g. `react: ^19.2` vs `^19.2.7`): the default catalog pins what we develop against, the `peer` catalog declares what consumers may use.
+- **Niche one-off peers** used by a single package (e.g. `easymde` in `sanity-plugin-markdown`, `eslint`/`typescript` in `@sanity/plugin-kit`)
+- **Peers on other workspace packages**, which keep the `workspace:^` protocol (e.g. `@sanity/dashboard` in the dashboard widgets) or an explicit range when older majors are intentionally supported (e.g. `sanity-plugin-internationalized-array` in `@sanity/sfcc`) — changesets can't track dependents through `catalog:` references
+
+Note that the `peer` catalog entries are intentionally wider than the default catalog's (e.g. `react: ^19.2` vs `^19.2.7`): the default catalog pins what we develop against, the `peer` catalog declares what consumers may use.
 
 **Always use `lodash-es` instead of `lodash`**
 

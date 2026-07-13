@@ -2,4 +2,4 @@
 "sanity-plugin-mux-input": patch
 ---
 
-Align `react` and `styled-components` peer dependency ranges with the shared `peer` catalog (`^19.2` and `^6.1`, the ranges Sanity Studio v5+ already requires)
+Align the `styled-components` peer dependency range with the shared `peer` catalog (`^6.1`, the range Sanity Studio v5+ already requires)
