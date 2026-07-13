@@ -1,5 +1,15 @@
 # sanity-plugin-media
 
+## 5.0.12
+
+### Patch Changes
+
+- [#1518](https://github.com/sanity-io/plugins/pull/1518) [`aff509d`](https://github.com/sanity-io/plugins/commit/aff509d2c83722b2fd06d482840fb5be7fdbb1bc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-virtuoso to ^4.18.10
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1547](https://github.com/sanity-io/plugins/pull/1547) [`78c04b4`](https://github.com/sanity-io/plugins/commit/78c04b45aa830c3fb6337da7cc81ac23b0626a22) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.81.0
+
 ## 5.0.11
 
 ### Patch Changes

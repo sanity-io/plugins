@@ -1,5 +1,15 @@
 # @sanity/code-input
 
+## 7.2.7
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1539](https://github.com/sanity-io/plugins/pull/1539) [`8509905`](https://github.com/sanity-io/plugins/commit/8509905b951f8fd7e8db596bbbf581a104e5af66) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @uiw/codemirror-themes to ^4.25.11
+
+- [#1540](https://github.com/sanity-io/plugins/pull/1540) [`724f04e`](https://github.com/sanity-io/plugins/commit/724f04ec832f7630f60da527a46ef51ba477afc0) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @uiw/react-codemirror to ^4.25.11
+
 ## 7.2.6
 
 ### Patch Changes

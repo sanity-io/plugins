@@ -1,5 +1,11 @@
 # sanity-plugin-google-translate
 
+## 4.0.4
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
 ## 4.0.3
 
 ### Patch Changes

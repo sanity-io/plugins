@@ -1,5 +1,13 @@
 # sanity-plugin-mux-input
 
+## 4.1.8
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1541](https://github.com/sanity-io/plugins/pull/1541) [`9fd850d`](https://github.com/sanity-io/plugins/commit/9fd850d93e55a31691d10c8f2dc22619edd90cb2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency iso-639-1 to ^3.1.6
+
 ## 4.1.7
 
 ### Patch Changes

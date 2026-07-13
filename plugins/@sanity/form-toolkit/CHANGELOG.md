@@ -1,5 +1,16 @@
 # @sanity/form-toolkit
 
+## 3.0.7
+
+### Patch Changes
+
+- [#1486](https://github.com/sanity-io/plugins/pull/1486) [`b15e4f5`](https://github.com/sanity-io/plugins/commit/b15e4f52fa59cfb96ef027ab636ebae77c21f1a0) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-icons to ^5.7.0
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- Updated dependencies [[`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166)]:
+  - @sanity/sanity-plugin-async-list@2.0.7
+
 ## 3.0.6
 
 ### Patch Changes
