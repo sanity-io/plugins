@@ -1,5 +1,25 @@
 # @sanity/plugin-kit
 
+## 7.0.0
+
+### Major Changes
+
+- [#1554](https://github.com/sanity-io/plugins/pull/1554) [`19d2b9b`](https://github.com/sanity-io/plugins/commit/19d2b9ba3bb910edc0134797812a074602974eb5) Thanks [@stipsan](https://github.com/stipsan)! - feat: support TypeScript 7 (the Go-native compiler), require TypeScript 6 or later
+
+  **BREAKING**: the `typescript` peer dependency range is now `6.x || 7.x` — TypeScript 5.x is no longer supported. TypeScript 7 is not required yet, but 6.0 is the new minimum.
+
+  The JS compiler API (used by `verify-package` and `verify-studio` to parse `tsconfig.json`) is now always loaded from the official [`@typescript/typescript6`](https://www.npmjs.com/package/@typescript/typescript6) compat package (a regular dependency), since TypeScript 7 no longer ships it. The installed `typescript` peer no longer affects tsconfig parsing and is only used to run `tsc --build`.
+
+  `plugin-kit init` now scaffolds `typescript` at the latest 6.x instead of `latest`. This fixes scaffolding, which broke when TypeScript 7 became `latest` on npm: the scaffolded ESLint toolchain (`@typescript-eslint` v8) declares a `typescript` peer range that excludes 7.x, so the initial `npm install` failed with a peer dependency conflict.
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1546](https://github.com/sanity-io/plugins/pull/1546) [`73057b2`](https://github.com/sanity-io/plugins/commit/73057b2c9335ccd841b1c8a181662e09c4f00813) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency get-it to ^9.1.0
+
+- [#1548](https://github.com/sanity-io/plugins/pull/1548) [`814e19b`](https://github.com/sanity-io/plugins/commit/814e19b017b4e9318233a659ce882ffafa0c1061) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update linters
+
 ## 6.0.4
 
 ### Patch Changes

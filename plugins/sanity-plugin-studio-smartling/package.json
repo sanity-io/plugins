@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-studio-smartling",
-  "version": "5.0.7",
+  "version": "5.0.8",
   "description": "This plugin provides an in-studio integration with Smartling. It allows your editors to send any document to Smartling with the click of a button, monitor ongoing translations, and import partial or complete translations back into the studio.",
   "keywords": [
     "sanity",
