@@ -43,12 +43,18 @@ jobs:
       - name: Run Knip
         run: pnpm knip --reporter github-actions
 
-  test:
+  test_shards:
+    name: Test (${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
     runs-on: ubuntu-latest
     needs: build
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -58,7 +64,22 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           BASE_REF: ${{ github.base_ref }}
-        run: pnpm test --changed "origin/$BASE_REF"
+        run: pnpm test --changed "origin/$BASE_REF" --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --passWithNoTests
       - name: Test
         if: github.event_name != 'pull_request'
-        run: pnpm test
+        run: pnpm test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --passWithNoTests
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    needs: test_shards
+    if: ${{ !cancelled() }}
+    steps:
+      - name: Check test shard status
+        env:
+          RESULT: ${{ needs.test_shards.result }}
+        run: |
+          if [ "$RESULT" != "success" ] && [ "$RESULT" != "skipped" ]; then
+            echo "Test shards failed with status: $RESULT"
+            exit 1
+          fi
