@@ -43,6 +43,7 @@
     "vitest-package-exports": "^1.2.0"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "catalog:",
     "knip": "^6.26.0"
   },
   "lint-staged": {
