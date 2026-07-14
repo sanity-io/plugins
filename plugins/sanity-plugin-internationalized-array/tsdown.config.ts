@@ -7,5 +7,4 @@ export default defineConfig({
     'migrations/index': './migrations/index.ts',
   },
   reactCompiler: true,
-  dts: {tsgo: true},
 }) satisfies Promise<UserConfig>
