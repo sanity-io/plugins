@@ -473,7 +473,7 @@ plugins/
 
 ### Build fails with "tsgo did not generate dts file"
 
-Declarations are generated with tsgo (`dts: {tsgo: true}` in each package's `tsdown.config.ts`), which requires exported types to be portable. A `TS2883` error printed above the failure means an inferred exported type references a module that is not publicly addressable (for example a deep `.pnpm` or dts-chunk path). Fix it by adding an explicit type annotation at the reported site so the emitted declaration can use a locally imported name (see the actor annotations in `plugins/sanity-plugin-dashboard-widget-vercel/src/machines/form.ts` for an example). Note that test files are part of the declaration program too, since the single `tsconfig.json` includes them.
+Declarations are generated with tsgo (tsdown enables dts generation automatically — packages either declare types in `package.json` or inherit `declaration: true` from the shared `@sanity/tsconfig` presets — and picks the tsgo generator because the installed `typescript` is v7+), which requires exported types to be portable. A `TS2883` error printed above the failure means an inferred exported type references a module that is not publicly addressable (for example a deep `.pnpm` or dts-chunk path). Fix it by adding an explicit type annotation at the reported site so the emitted declaration can use a locally imported name (see the actor annotations in `plugins/sanity-plugin-dashboard-widget-vercel/src/machines/form.ts` for an example). Note that test files are part of the declaration program too, since the single `tsconfig.json` includes them.
 
 ### Lint Errors About Missing Types
 
