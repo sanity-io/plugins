@@ -1,6 +1,6 @@
 {
   "name": "@sanity/studio-secrets",
-  "version": "4.0.9",
+  "version": "4.0.10",
   "description": "React hooks and UI for reading and managing secrets in a Sanity Studio. This is a good pattern for keeping configuration secret. Instead of using environment variables which would be bundled with the Studio source (it is an SPA), we store secret information in a separate, access-controlled dataset that is only queried at runtime.",
   "keywords": [
     "sanity",
