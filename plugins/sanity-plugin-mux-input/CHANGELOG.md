@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 5.0.1
+
+### Patch Changes
+
+- [#1562](https://github.com/sanity-io/plugins/pull/1562) [`aa53df6`](https://github.com/sanity-io/plugins/commit/aa53df60e10f50db8d1a3a5f12ebb5b2ba8e8799) Thanks [@stipsan](https://github.com/stipsan)! - Align the `styled-components` peer dependency range with the shared `peer` catalog (`^6.1`, the range Sanity Studio v5+ already requires)
+
 ## 5.0.0
 
 ### Major Changes
