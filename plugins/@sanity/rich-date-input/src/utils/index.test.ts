@@ -5,6 +5,7 @@ import {
   getAllTimezones,
   getConstructedUTCDate,
   getTimeZoneAbbreviation,
+  resolveCanonicalTimeZone,
   shiftWallClockToTimeZone,
 } from './index'
 
@@ -92,6 +93,31 @@ describe('getAllTimezones', () => {
 
   test('skips time zones without a city component', () => {
     expect(getAllTimezones().some((tz) => !tz.name.includes('/'))).toBe(false)
+  })
+
+  test('uses the last segment as the city for multi-segment names', () => {
+    const multiSegment = getAllTimezones().filter((tz) => tz.name.split('/').length > 2)
+    expect(multiSegment.length).toBeGreaterThan(0)
+    for (const tz of multiSegment) {
+      expect(tz.city).toBe(tz.name.split('/').at(-1)?.replaceAll('_', ' '))
+    }
+  })
+})
+
+describe('resolveCanonicalTimeZone', () => {
+  test('maps aliases to identifiers present in the time zone list', () => {
+    const names = new Set(getAllTimezones().map((tz) => tz.name))
+    // Alias spellings stored by older plugin versions (via @vvo/tzdb) that the
+    // runtime may not list under the same name
+    for (const alias of ['Asia/Kolkata', 'Europe/Kyiv']) {
+      const canonical = resolveCanonicalTimeZone(alias)
+      expect(canonical).toBeTruthy()
+      expect(names.has(alias) || names.has(canonical!)).toBe(true)
+    }
+  })
+
+  test('returns undefined for unknown names', () => {
+    expect(resolveCanonicalTimeZone('Not/AZone')).toBeUndefined()
   })
 })
 

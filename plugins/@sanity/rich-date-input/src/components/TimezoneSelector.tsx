@@ -5,7 +5,12 @@ import {type ReactNode, useCallback, useMemo} from 'react'
 import {type ObjectInputProps, set} from 'sanity'
 
 import type {RichDate} from '../types'
-import {formatInTimeZone, getAllTimezones, shiftWallClockToTimeZone} from '../utils'
+import {
+  formatInTimeZone,
+  getAllTimezones,
+  resolveCanonicalTimeZone,
+  shiftWallClockToTimeZone,
+} from '../utils'
 
 interface TimezoneSelectorProps {
   onChange: Pick<ObjectInputProps, 'onChange'>['onChange']
@@ -15,7 +20,12 @@ interface TimezoneSelectorProps {
 export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
   const {onChange, value} = props
   const allTimezones = useMemo(() => getAllTimezones(), [])
-  const currentTz = allTimezones.find((tz) => tz.name === value?.timezone)
+  // Stored names may be aliases the runtime does not list (e.g. 'Europe/Kyiv'
+  // vs 'Europe/Kiev'), so fall back to matching on the canonical identifier
+  const canonicalStoredTz = value?.timezone ? resolveCanonicalTimeZone(value.timezone) : undefined
+  const currentTz =
+    allTimezones.find((tz) => tz.name === value?.timezone) ??
+    allTimezones.find((tz) => tz.name === canonicalStoredTz)
   const formatter = new Intl.DateTimeFormat()
   const userTzName = formatter.resolvedOptions().timeZone
   const userTz = (allTimezones.find((tz) => tz.name === userTzName) ??

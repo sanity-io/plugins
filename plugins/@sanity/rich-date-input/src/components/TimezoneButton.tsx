@@ -24,7 +24,7 @@ export const TimezoneButton = (props: TimezoneButtonProps): ReactNode => {
       icon={EarthAmericasIcon}
       mode="ghost"
       onClick={onClick}
-      text={`${label}`}
+      text={label ?? timezone}
       aria-label="Select a timezone"
     />
   )

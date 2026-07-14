@@ -103,6 +103,21 @@ export const getTimeZoneAbbreviation = (timeZone: string): string | undefined =>
   }
 }
 
+/**
+ * Resolves any valid IANA time zone name to the runtime's canonical
+ * identifier, e.g. `Europe/Kyiv` to `Europe/Kiev` when the runtime lists the
+ * latter. Documents written with older plugin versions may store alias
+ * spellings that are absent from `Intl.supportedValuesOf('timeZone')`.
+ * Returns `undefined` when the name is not recognized.
+ */
+export const resolveCanonicalTimeZone = (timeZone: string): string | undefined => {
+  try {
+    return new Intl.DateTimeFormat(undefined, {timeZone}).resolvedOptions().timeZone
+  } catch {
+    return undefined
+  }
+}
+
 const offsetToMinutes = (offset: string): number => {
   if (!offset) return 0
   const multiplier = offset.startsWith('-') ? -1 : 1
@@ -125,8 +140,10 @@ export const getAllTimezones = (): NormalizedTimeZone[] => {
 
   allTimezonesCache = Intl.supportedValuesOf('timeZone')
     .flatMap((name): NormalizedTimeZone[] => {
-      // Skip time zones without a city component (e.g. plain 'UTC')
-      const [, city] = name.split('/')
+      // Skip time zones without a city component (e.g. plain 'UTC'). The city
+      // is the last segment: 'America/Indiana/Indianapolis' -> 'Indianapolis'
+      const segments = name.split('/')
+      const city = segments.length > 1 ? segments.at(-1) : undefined
       if (!city) return []
 
       const {abbreviation, alternativeName, offset} = getTimeZoneInfo(name)
