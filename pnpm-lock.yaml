@@ -32,8 +32,8 @@ catalogs:
       specifier: ^3.0.6
       version: 3.0.6
     '@sanity/icons':
-      specifier: ^5.0.0
-      version: 5.0.0
+      specifier: ^5.1.0
+      version: 5.1.0
     '@sanity/image-url':
       specifier: ^2.1.1
       version: 2.1.1
@@ -272,7 +272,7 @@ importers:
         version: link:../../plugins/@sanity/hierarchical-document-list
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/language-filter':
         specifier: workspace:*
         version: link:../../plugins/@sanity/language-filter
@@ -577,7 +577,7 @@ importers:
         version: 3.0.6
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/mutator':
         specifier: 'catalog:'
         version: 6.4.0(@types/react@19.2.17)
@@ -680,7 +680,7 @@ importers:
         version: 1.2.3
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/lezer-groq':
         specifier: ^1.0.4
         version: 1.0.4
@@ -726,7 +726,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -778,7 +778,7 @@ importers:
         version: 2.3.0
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/mutator':
         specifier: 'catalog:'
         version: 6.4.0(@types/react@19.2.17)
@@ -830,7 +830,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/image-url':
         specifier: 'catalog:'
         version: 2.1.1
@@ -919,7 +919,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
         version: 4.0.8(@sanity/client@7.23.0)
@@ -950,7 +950,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/mutator':
         specifier: 'catalog:'
         version: 6.4.0(@types/react@19.2.17)
@@ -1020,7 +1020,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -1121,7 +1121,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -1179,7 +1179,7 @@ importers:
         version: 3.0.6
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/mutator':
         specifier: 'catalog:'
         version: 6.4.0(@types/react@19.2.17)
@@ -1231,7 +1231,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -1295,7 +1295,7 @@ importers:
         version: 7.23.0
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -1341,7 +1341,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/studio-secrets':
         specifier: workspace:^
         version: link:../studio-secrets
@@ -1448,7 +1448,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -1500,7 +1500,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/studio-secrets':
         specifier: workspace:^
         version: link:../studio-secrets
@@ -1549,7 +1549,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -1650,7 +1650,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -1696,7 +1696,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
         version: 4.0.8(@sanity/client@7.23.0)
@@ -1831,7 +1831,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -1923,7 +1923,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/studio-secrets':
         specifier: workspace:^
         version: link:../@sanity/studio-secrets
@@ -2061,7 +2061,7 @@ importers:
         version: 3.0.6
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -2134,7 +2134,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -2342,7 +2342,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
         version: 4.0.8(@sanity/client@7.23.0)
@@ -2397,7 +2397,7 @@ importers:
         version: link:../@sanity/assist
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -2550,7 +2550,7 @@ importers:
         version: 3.0.6
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -2677,7 +2677,7 @@ importers:
         version: 3.5.0
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -2765,7 +2765,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -2906,7 +2906,7 @@ importers:
         version: 2.3.0
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/image-url':
         specifier: 'catalog:'
         version: 2.1.1
@@ -2958,7 +2958,7 @@ importers:
         version: 18.0.1(@types/react@19.2.17)(react-dom@19.2.7)(react@19.2.7)
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -3007,7 +3007,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -3056,7 +3056,7 @@ importers:
         version: 5.0.2
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.0.0(react@19.2.7)
+        version: 5.1.0(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
@@ -6091,8 +6091,8 @@ packages:
     peerDependencies:
       react: ^18.3 || ^19.0.0-0
 
-  '@sanity/icons@5.0.0':
-    resolution: {integrity: sha512-fINQLovVnCANwQbQ63iO2mUVh2ZX3T4h3hiSEaIStvladI5tmrGAuT+XbUuk3jTmBwOHDGD0EL9lpsghGAS+Sg==}
+  '@sanity/icons@5.1.0':
+    resolution: {integrity: sha512-BPvLFBWnxpXCn9XKb5OgBzNNRZJI29TXRpuSXx1/nKJ8FaYuitFmKSAD0L8jC0kF/BKKUMThaY3TYJ0UuubbTQ==}
     engines: {node: '>=22.12'}
     peerDependencies:
       react: ^19
@@ -15497,7 +15497,7 @@ snapshots:
     dependencies:
       react: 19.2.7
 
-  '@sanity/icons@5.0.0(react@19.2.7)':
+  '@sanity/icons@5.1.0(react@19.2.7)':
     dependencies:
       react: 19.2.7
 
@@ -15918,7 +15918,7 @@ snapshots:
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.7)
       '@rexxars/react-split-pane': 1.0.0(react-dom@19.2.7)(react@19.2.7)
       '@sanity/color': 3.0.6
-      '@sanity/icons': 5.0.0(react@19.2.7)
+      '@sanity/icons': 5.1.0(react@19.2.7)
       '@sanity/lezer-groq': 1.0.4
       '@sanity/ui': 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       '@sanity/uuid': 3.0.3
@@ -21030,7 +21030,7 @@ snapshots:
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/diff-patch': 5.0.0
       '@sanity/eventsource': 5.0.2
-      '@sanity/icons': 5.0.0(react@19.2.7)
+      '@sanity/icons': 5.1.0(react@19.2.7)
       '@sanity/id-utils': 1.0.0
       '@sanity/image-url': 2.1.1
       '@sanity/insert-menu': 3.0.8(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(@sanity/types@6.4.0)(react-dom@19.2.7)(react@19.2.7)
@@ -21178,7 +21178,7 @@ snapshots:
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/diff-patch': 5.0.0
       '@sanity/eventsource': 5.0.2
-      '@sanity/icons': 5.0.0(react@19.2.7)
+      '@sanity/icons': 5.1.0(react@19.2.7)
       '@sanity/id-utils': 1.0.0
       '@sanity/image-url': 2.1.1
       '@sanity/insert-menu': 3.0.8(@emotion/is-prop-valid@1.4.0)(@sanity/types@6.4.0)(react-dom@19.2.7)(react@19.2.7)(styled-components@6.4.2)
