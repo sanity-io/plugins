@@ -155,6 +155,11 @@ test(
         const pkg: PackageJson = JSON.parse(await readFile(path.join(outputDir, 'package.json')))
         expect(pkg.scripts, 'scripts should be an empty object').toEqual({})
 
+        expect(
+          pkg.sanityPlugin,
+          'opting out of oxfmt/oxlint should disable the matching verify-package checks',
+        ).toEqual({verifyPackage: {oxfmt: false, oxlint: false}})
+
         expect(Object.keys(pkg.dependencies ?? {}), 'should have empty dependencies').toEqual([])
         expect(
           Object.keys(pkg.peerDependencies ?? {}),

@@ -97,6 +97,20 @@ describe('monorepo (workspace root detected)', () => {
 
     expect(await validateOxlintConfig(pluginDir, {})).toEqual([])
   })
+
+  test('detects legacy eslint configs left at the workspace root', async () => {
+    await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
+    await write('oxlint.config.ts', sharedConfigReExport)
+    await write('.eslintrc', `{"extends": ["sanity"]}\n`)
+    const pluginDir = path.join(tmpDir, 'packages', 'plugin')
+    await fs.mkdir(pluginDir, {recursive: true})
+
+    const errors = await validateOxlintConfig(pluginDir, {})
+    expect(errors).toHaveLength(1)
+    expect(errors[0]).toContain(
+      'Found legacy eslint configuration: [.eslintrc (in the workspace root)]',
+    )
+  })
 })
 
 describe('legacy eslint configuration', () => {

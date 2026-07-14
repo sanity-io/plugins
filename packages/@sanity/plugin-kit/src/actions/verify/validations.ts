@@ -672,6 +672,31 @@ async function isWorkspaceRoot(dir: string): Promise<boolean> {
   return false
 }
 
+/**
+ * Finds leftover config files from a replaced tool, both next to the plugin's package.json and
+ * (in a monorepo) at the workspace root, where the replacement config is expected to live.
+ */
+async function findLegacyConfigFiles(
+  basePath: string,
+  workspaceRoot: string | undefined,
+  files: string[],
+): Promise<string[]> {
+  const found: string[] = []
+  for (const file of files) {
+    if (await fileExists(path.join(basePath, file))) {
+      found.push(file)
+    }
+  }
+  if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
+    for (const file of files) {
+      if (await fileExists(path.join(workspaceRoot, file))) {
+        found.push(`${file} (in the workspace root)`)
+      }
+    }
+  }
+  return found
+}
+
 type OxfmtConfigDirResult = {ok: true} | {ok: false; error: string}
 
 async function checkOxfmtConfigDir(
@@ -756,13 +781,13 @@ export async function validateOxfmtConfig(
   pkgJson: PackageJson,
 ): Promise<string[]> {
   const errors: string[] = []
+  const workspaceRoot = await findWorkspaceRoot(basePath)
 
-  const legacyFound: string[] = []
-  for (const file of legacyPrettierConfigFiles) {
-    if (await fileExists(path.join(basePath, file))) {
-      legacyFound.push(file)
-    }
-  }
+  const legacyFound = await findLegacyConfigFiles(
+    basePath,
+    workspaceRoot,
+    legacyPrettierConfigFiles,
+  )
   if (pkgJson.prettier) {
     legacyFound.push('package.json ("prettier" key)')
   }
@@ -779,8 +804,6 @@ export async function validateOxfmtConfig(
       `,
     )
   }
-
-  const workspaceRoot = await findWorkspaceRoot(basePath)
   const primaryDir = workspaceRoot ?? basePath
   const primaryResult = await checkOxfmtConfigDir(
     primaryDir,
@@ -924,13 +947,9 @@ export async function validateOxlintConfig(
   pkgJson: PackageJson,
 ): Promise<string[]> {
   const errors: string[] = []
+  const workspaceRoot = await findWorkspaceRoot(basePath)
 
-  const legacyFound: string[] = []
-  for (const file of legacyEslintConfigFiles) {
-    if (await fileExists(path.join(basePath, file))) {
-      legacyFound.push(file)
-    }
-  }
+  const legacyFound = await findLegacyConfigFiles(basePath, workspaceRoot, legacyEslintConfigFiles)
   if (pkgJson.eslintConfig) {
     legacyFound.push('package.json ("eslintConfig" key)')
   }
@@ -947,8 +966,6 @@ export async function validateOxlintConfig(
       `,
     )
   }
-
-  const workspaceRoot = await findWorkspaceRoot(basePath)
   const primaryDir = workspaceRoot ?? basePath
   const primaryResult = await checkOxlintConfigDir(
     primaryDir,

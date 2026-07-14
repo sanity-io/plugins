@@ -117,6 +117,20 @@ describe('monorepo (workspace root detected)', () => {
 
     expect(await validateOxfmtConfig(pluginDir, {})).toEqual([])
   })
+
+  test('detects legacy prettier configs left at the workspace root', async () => {
+    await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
+    await write('oxfmt.config.ts', presetConfig)
+    await write('.prettierrc', `{"semi": false}\n`)
+    const pluginDir = path.join(tmpDir, 'packages', 'plugin')
+    await fs.mkdir(pluginDir, {recursive: true})
+
+    const errors = await validateOxfmtConfig(pluginDir, {})
+    expect(errors).toHaveLength(1)
+    expect(errors[0]).toContain(
+      'Found legacy prettier configuration: [.prettierrc (in the workspace root)]',
+    )
+  })
 })
 
 describe('legacy prettier configuration', () => {

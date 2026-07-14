@@ -6,7 +6,7 @@ import githubUrl from 'github-url-to-object'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import type {InjectOptions, PackageData} from '../actions/inject'
-import type {PackageJson} from '../actions/verify/types'
+import type {PackageJson, SanityPlugin} from '../actions/verify/types'
 import {expectedScripts} from '../actions/verify/validations'
 import {
   forcedDevPackageVersions,
@@ -265,6 +265,20 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
   // sort alphabetically for scanability
   files.sort()
 
+  // Opting out of oxfmt/oxlint must also disable the corresponding verify-package checks,
+  // otherwise the scaffolded `build` script (which runs verify-package) fails out of the box
+  const verifyPackageOptOuts = {
+    ...(useOxfmt ? {} : {oxfmt: false}),
+    ...(useOxlint ? {} : {oxlint: false}),
+  }
+  const prevSanityPlugin: SanityPlugin = prev.sanityPlugin ?? {}
+  const sanityPlugin: SanityPlugin | undefined = Object.keys(verifyPackageOptOuts).length
+    ? {
+        ...prevSanityPlugin,
+        verifyPackage: {...prevSanityPlugin.verifyPackage, ...verifyPackageOptOuts},
+      }
+    : prev.sanityPlugin
+
   // order should be compatible with oxfmt's sortPackageJson
   const forcedOrder = {
     name: pluginName,
@@ -293,6 +307,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     engines: {
       node: requiredNodeEngine,
     },
+    ...(sanityPlugin ? {sanityPlugin} : {}),
   }
 
   const manifest: PackageJson = {
