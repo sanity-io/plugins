@@ -45,7 +45,7 @@
           },
           {
             "name": "date-fns",
-            "message": "Import from individual modules instead, e.g. `import {format} from 'date-fns/format'`. Matches sanity core and avoids the slower barrel import."
+            "message": "Import from individual modules instead, e.g. `import {startOfDay} from 'date-fns/startOfDay'`. Barrel imports are ~50% slower."
           },
           {
             "name": "date-fns-tz",
