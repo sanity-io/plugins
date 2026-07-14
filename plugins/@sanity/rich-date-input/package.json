@@ -45,7 +45,7 @@
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
     "@vvo/tzdb": "^6.198.0",
-    "date-fns": "^2.30.0",
+    "date-fns": "^4.4.0",
     "date-fns-tz": "^2.0.1"
   },
   "devDependencies": {

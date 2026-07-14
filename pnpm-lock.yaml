@@ -1456,11 +1456,11 @@ importers:
         specifier: ^6.198.0
         version: 6.198.0
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.4.0
+        version: 4.4.0
       date-fns-tz:
         specifier: ^2.0.1
-        version: 2.0.1(date-fns@2.30.0)
+        version: 2.0.1(date-fns@4.4.0)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -17527,9 +17527,9 @@ snapshots:
 
   dataloader@2.2.3: {}
 
-  date-fns-tz@2.0.1(date-fns@2.30.0):
+  date-fns-tz@2.0.1(date-fns@4.4.0):
     dependencies:
-      date-fns: 2.30.0
+      date-fns: 4.4.0
 
   date-fns@2.30.0:
     dependencies:
