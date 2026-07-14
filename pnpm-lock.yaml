@@ -41,8 +41,8 @@ catalogs:
       specifier: ^6.4.0
       version: 6.4.0
     '@sanity/pkg-utils':
-      specifier: ^11.0.2
-      version: 11.0.2
+      specifier: ^11.0.3
+      version: 11.0.3
     '@sanity/preview-url-secret':
       specifier: ^4.0.8
       version: 4.0.8
@@ -490,7 +490,7 @@ importers:
     devDependencies:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 11.0.2(@types/node@24.13.3)(@typescript/native-preview@7.0.0-dev.20260421.2)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.21.3)(typescript@7.0.2)
+        version: 11.0.3(@types/node@24.13.3)(@typescript/native-preview@7.0.0-dev.20260421.2)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.21.3)(typescript@7.0.2)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.0
@@ -6156,12 +6156,12 @@ packages:
   '@sanity/mutator@6.4.0':
     resolution: {integrity: sha512-WlXp1U7U406bDDocsd3Kt9y6PQyIod/cEDwWtsI9YT+i+oITylowEQmBZ4s8VX0jJjFYi200DaemupbJKj4oDw==}
 
-  '@sanity/parse-package-json@2.2.3':
-    resolution: {integrity: sha512-akqv8dIzeEmhN6IzbaZ4tsrTcQP+DbhtDV6NqIQKDVgU+yKlBFZ+4GZrqcBofllgzLuCthVNc4qcrxRuTUiJlw==}
+  '@sanity/parse-package-json@2.2.4':
+    resolution: {integrity: sha512-acW9Irmw2EkOdehU2WKGckwElVxnd0HHYx0jzKegbyyGwJ7SuLwWRDtJDNJy+XV3uNpOWaBk90BkoCGHQyxw9A==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
-  '@sanity/pkg-utils@11.0.2':
-    resolution: {integrity: sha512-VxdUxAHKDGZdHIQlN4YCMmloiuL99g2FQ8HpVdwKucN8xqSSecN6ewWpzD5onDoor3s2B2O6/E2gj0BZCNGIOw==}
+  '@sanity/pkg-utils@11.0.3':
+    resolution: {integrity: sha512-C6U5WKIIDsjl31vkMKfrd7uFuJ0Z/FESZAK/dAAZleFAA2/t4ns4G2CifG0GjPA2VLR4ZoI+2iN6D022lRVPZQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     hasBin: true
     peerDependencies:
@@ -15473,11 +15473,11 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@sanity/parse-package-json@2.2.3':
+  '@sanity/parse-package-json@2.2.4':
     dependencies:
       zod: 4.4.3
 
-  '@sanity/pkg-utils@11.0.2(@types/node@24.13.3)(@typescript/native-preview@7.0.0-dev.20260421.2)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.21.3)(typescript@7.0.2)':
+  '@sanity/pkg-utils@11.0.3(@types/node@24.13.3)(@typescript/native-preview@7.0.0-dev.20260421.2)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.21.3)(typescript@7.0.2)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
@@ -15492,7 +15492,7 @@ snapshots:
       '@rollup/plugin-replace': 6.0.3(rollup@4.62.2)
       '@rollup/plugin-terser': 1.0.0(rollup@4.62.2)
       '@sanity/browserslist-config': 1.0.5
-      '@sanity/parse-package-json': 2.2.3
+      '@sanity/parse-package-json': 2.2.4
       '@typescript/typescript6': 6.0.2
       '@vanilla-extract/rollup-plugin': 1.5.4(rollup@4.62.2)
       browserslist: 4.28.5
