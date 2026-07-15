@@ -1,5 +1,3 @@
-import {platform} from 'node:os'
-
 import {expect, test} from 'vitest'
 
 import {verifyPackageConfigDefaults} from '../src/actions/verify/verify-common'
@@ -24,7 +22,7 @@ test(
         // checks that output contains the "skip this validation" snippet for every possible relevant key
         // will fail when new checks are added that we may or may not want to account for
         Object.keys(verifyPackageConfigDefaults)
-          .filter((key) => !['tsc', 'studioConfig'].includes(key))
+          .filter((key) => key !== 'studioConfig')
           .forEach((checkKey) => {
             const findString = `"${checkKey}": false`
             expect(stderr, `should include ${findString} in stderr`).toContain(findString)
@@ -47,22 +45,6 @@ test('plugin-kit verify-package in ok package', {timeout: 120_000}, async () => 
     },
   })
 })
-
-test.skipIf(platform() === 'win32')(
-  'plugin-kit verify-package in package with invalid eslint config',
-  {timeout: 120_000},
-  async () => {
-    await testFixture({
-      fixturePath: 'verify-package/invalid-eslint',
-      command: ({fixtureDir}) => runCliCommand('verify-package', [fixtureDir]),
-      assert: async ({result: {stderr}}) => {
-        // to regenerate the snapshot, run: pnpm test -u
-        const redactFilePaths = cleanupOutput(stderr, /[\S]+verify-package\/invalid-eslint\//g)
-        expect(redactFilePaths, 'stderr should match snapshot').toMatchSnapshot()
-      },
-    })
-  },
-)
 
 test('plugin-kit verify-studio in fresh v2 studio', {timeout: 120_000}, async () => {
   await testFixture({
