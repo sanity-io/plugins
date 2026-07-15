@@ -129,8 +129,6 @@ minimumReleaseAgeExclude:
   - rolldown-plugin-dts
 
 overrides:
-  '@sanity/client': 'catalog:'
-  '@sanity/eventsource': ^5.0.4
   '@types/node': 'catalog:'
   sanity: 'catalog:'
   styled-components: npm:@sanity/styled-components@latest

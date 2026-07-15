@@ -25,6 +25,9 @@ catalogs:
     '@sanity/asset-utils':
       specifier: ^2.3.0
       version: 2.3.0
+    '@sanity/client':
+      specifier: ^7.23.2
+      version: 7.23.2
     '@sanity/color':
       specifier: ^3.0.6
       version: 3.0.6
@@ -172,8 +175,6 @@ catalogs:
       version: 19.2.7
 
 overrides:
-  '@sanity/client': ^7.23.2
-  '@sanity/eventsource': ^5.0.4
   '@types/node': ^24.13.3
   sanity: ^6.5.0
   styled-components: npm:@sanity/styled-components@latest
@@ -569,7 +570,7 @@ importers:
         specifier: 'catalog:'
         version: 4.0.2
       '@sanity/client':
-        specifier: ^7.23.2
+        specifier: 'catalog:'
         version: 7.23.2
       '@sanity/color':
         specifier: 'catalog:'
@@ -795,7 +796,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
     devDependencies:
       '@sanity/client':
-        specifier: ^7.23.2
+        specifier: 'catalog:'
         version: 7.23.2
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -874,7 +875,7 @@ importers:
   plugins/@sanity/debug-live-sync-tags:
     dependencies:
       '@sanity/client':
-        specifier: ^7.23.2
+        specifier: 'catalog:'
         version: 7.23.2
       '@sanity/ui':
         specifier: 'catalog:'
@@ -1290,7 +1291,7 @@ importers:
         specifier: 'catalog:'
         version: 18.0.1(@types/react@19.2.17)(react-dom@19.2.7)(react@19.2.7)
       '@sanity/client':
-        specifier: ^7.23.2
+        specifier: 'catalog:'
         version: 7.23.2
       '@sanity/icons':
         specifier: 'catalog:'
@@ -1704,7 +1705,7 @@ importers:
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
     devDependencies:
       '@sanity/client':
-        specifier: ^7.23.2
+        specifier: 'catalog:'
         version: 7.23.2
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -2503,7 +2504,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
     devDependencies:
       '@sanity/client':
-        specifier: ^7.23.2
+        specifier: 'catalog:'
         version: 7.23.2
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -2542,7 +2543,7 @@ importers:
         specifier: ^2.12.0
         version: 2.12.0(react-redux@9.3.0)(react@19.2.7)
       '@sanity/client':
-        specifier: ^7.23.2
+        specifier: 'catalog:'
         version: 7.23.2
       '@sanity/color':
         specifier: 'catalog:'
@@ -2724,7 +2725,7 @@ importers:
         version: 2.0.6(react-dom@19.2.7)(react@19.2.7)
     devDependencies:
       '@sanity/client':
-        specifier: ^7.23.2
+        specifier: 'catalog:'
         version: 7.23.2
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -6139,7 +6140,7 @@ packages:
     resolution: {integrity: sha512-jbnR3z93+hrddl0xPDuQotJYnVNtQPl969LZXo6opMZuy/uG64jwodp76pnJmq8Y9aHqR2fLk/ne7R4iBv8PhA==}
     engines: {node: '>=20.19.1 <22 || >=22.12'}
     peerDependencies:
-      '@sanity/client': ^7.23.2
+      '@sanity/client': ^5.0.0 || ^6.0.0 || ^7.0.0
 
   '@sanity/insert-menu@3.0.8':
     resolution: {integrity: sha512-O3g3ZpvRYLw4VBly4fKUzEK+2Mze8iBZfLpRjh8BgjLWSZ/9XCwrRUMJvKZ6z9qQI8zHRqwZQNslgEjETTTZ6w==}
@@ -6209,7 +6210,7 @@ packages:
     resolution: {integrity: sha512-n2ulvDpA8z9UOhnyMPB4WC2w3e/noqL2+gE1f+WQyAE2v0OJsYOkTQzNCe9FU0UaVtbuBTNZI5xj+ei6Qxql/Q==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
-      '@sanity/client': ^7.23.2
+      '@sanity/client': ^7.23.0
 
   '@sanity/prism-groq@1.1.2':
     resolution: {integrity: sha512-McMw9U5kuYAgIwyNodhFKdarM0cPme6UYBR6ms6YBNEO8Qqu5zGHydUeORaJ/w4qdFKGB1oWjBjy525ed6LXaQ==}
@@ -6268,11 +6269,6 @@ packages:
       babel-plugin-react-compiler:
         optional: true
 
-  '@sanity/types@6.4.0':
-    resolution: {integrity: sha512-WaUiVKVjnf/qoQ1nbSxz5ayJoycos3ljh4dcg3d17gjCn/Qaqo67yUjYnM3z4qNtZT2vPwHedTSQpsqwsa/1qA==}
-    peerDependencies:
-      '@types/react': '*'
-
   '@sanity/types@6.5.0':
     resolution: {integrity: sha512-H3Qs1yeizArl69i3VSDHC20RxLUNo/yWWmzUl2dMOtyooHPLOaKOUv8WrsH1gLg+w++LvuELfwEcxN431DRcnw==}
     peerDependencies:
@@ -6313,7 +6309,7 @@ packages:
     resolution: {integrity: sha512-4Hu3J8qDLanymnSapRzKwHlQl6SCsBbkL1o5fSMVbWVHvTk/j2uGLLNTsjASICTqUwSm3fwWlyahzCy2uS/LvQ==}
     engines: {node: '>=18'}
     peerDependencies:
-      '@sanity/client': ^7.23.2
+      '@sanity/client': ^7.11.2
       '@sanity/types': '*'
     peerDependenciesMeta:
       '@sanity/types':
@@ -14693,7 +14689,7 @@ snapshots:
       '@portabletext/html': 1.1.1
       '@portabletext/sanity-bridge': 3.2.2(@types/react@19.2.17)
       '@portabletext/schema': 2.2.3
-      '@sanity/types': 6.4.0(@types/react@19.2.17)
+      '@sanity/types': 6.5.0(@types/react@19.2.17)
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
@@ -14797,7 +14793,7 @@ snapshots:
     dependencies:
       '@portabletext/schema': 2.2.3
       '@sanity/schema': 6.5.0(@types/react@19.2.17)
-      '@sanity/types': 6.4.0(@types/react@19.2.17)
+      '@sanity/types': 6.5.0(@types/react@19.2.17)
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
@@ -15967,12 +15963,6 @@ snapshots:
       - rolldown
       - supports-color
       - vite
-
-  '@sanity/types@6.4.0(@types/react@19.2.17)':
-    dependencies:
-      '@sanity/client': 7.23.2
-      '@sanity/media-library-types': 1.5.0
-      '@types/react': 19.2.17
 
   '@sanity/types@6.5.0(@types/react@19.2.17)':
     dependencies:
