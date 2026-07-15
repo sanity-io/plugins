@@ -164,8 +164,8 @@ catalogs:
       specifier: ^0.1.3
       version: 0.1.3
     tsdown:
-      specifier: ^0.22.7
-      version: 0.22.7
+      specifier: ^0.22.8
+      version: 0.22.8
     typescript:
       specifier: 7.0.2
       version: 7.0.2
@@ -508,7 +508,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/github-url-to-object':
         specifier: ^4.0.4
         version: 4.0.4
@@ -550,7 +550,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -602,7 +602,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -629,7 +629,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/code-input:
     dependencies:
@@ -693,7 +693,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -711,7 +711,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/color-input:
     dependencies:
@@ -736,7 +736,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -760,7 +760,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/cross-dataset-duplicator:
     dependencies:
@@ -794,7 +794,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -815,7 +815,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/dashboard:
     dependencies:
@@ -840,7 +840,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -861,7 +861,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/debug-live-sync-tags:
     dependencies:
@@ -880,7 +880,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -904,7 +904,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/debug-preview-url-secret-plugin:
     dependencies:
@@ -923,7 +923,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -935,7 +935,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/document-internationalization:
     dependencies:
@@ -966,7 +966,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 6.9.1
@@ -1005,7 +1005,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/embeddings-index-ui:
     dependencies:
@@ -1027,7 +1027,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -1051,7 +1051,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/form-toolkit:
     dependencies:
@@ -1079,7 +1079,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/mailchimp__mailchimp_marketing':
         specifier: ^3.0.22
         version: 3.0.22
@@ -1106,7 +1106,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(styled-components@6.4.2)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/google-maps-input:
     dependencies:
@@ -1125,7 +1125,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/google.maps':
         specifier: ^3.65.2
         version: 3.65.2
@@ -1158,7 +1158,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/hierarchical-document-list:
     dependencies:
@@ -1195,7 +1195,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -1216,7 +1216,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/language-filter:
     dependencies:
@@ -1238,7 +1238,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 6.9.1
@@ -1274,7 +1274,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/orderable-document-list:
     dependencies:
@@ -1305,7 +1305,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -1326,7 +1326,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/personalization-plugin:
     dependencies:
@@ -1357,7 +1357,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -1378,7 +1378,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(styled-components@6.4.2)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/presets:
     dependencies:
@@ -1397,7 +1397,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 6.9.1
@@ -1433,7 +1433,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/rich-date-input:
     dependencies:
@@ -1458,7 +1458,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -1485,7 +1485,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/sanity-plugin-async-list:
     dependencies:
@@ -1510,7 +1510,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -1534,7 +1534,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/sfcc:
     dependencies:
@@ -1553,7 +1553,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -1580,7 +1580,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/studio-secrets:
     dependencies:
@@ -1599,7 +1599,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 6.9.1
@@ -1635,7 +1635,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/table:
     dependencies:
@@ -1654,7 +1654,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -1681,7 +1681,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/@sanity/vercel-protection-bypass:
     dependencies:
@@ -1703,7 +1703,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -1724,7 +1724,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-naive-html-serializer:
     dependencies:
@@ -1752,7 +1752,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -1782,7 +1782,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(styled-components@6.4.2)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-aprimo:
     dependencies:
@@ -1795,7 +1795,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -1816,7 +1816,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-asset-source-unsplash:
     dependencies:
@@ -1841,7 +1841,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -1862,7 +1862,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-bynder-input:
     dependencies:
@@ -1881,7 +1881,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -1908,7 +1908,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-cloudinary:
     dependencies:
@@ -1933,7 +1933,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -1954,7 +1954,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-dashboard-widget-document-list:
     dependencies:
@@ -1976,7 +1976,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -2000,7 +2000,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(styled-components@6.4.2)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-dashboard-widget-netlify:
     dependencies:
@@ -2019,7 +2019,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -2040,7 +2040,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-dashboard-widget-vercel:
     dependencies:
@@ -2095,7 +2095,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/object-hash':
         specifier: ^3.0.6
         version: 3.0.6
@@ -2119,7 +2119,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-documents-pane:
     dependencies:
@@ -2153,7 +2153,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/dlv':
         specifier: ^1.1.5
         version: 1.1.5
@@ -2177,7 +2177,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-google-translate:
     dependencies:
@@ -2193,7 +2193,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -2214,7 +2214,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-graph-view:
     dependencies:
@@ -2248,7 +2248,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -2269,7 +2269,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-hotspot-array:
     dependencies:
@@ -2297,7 +2297,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -2327,7 +2327,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-iframe-pane:
     dependencies:
@@ -2355,7 +2355,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -2379,7 +2379,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-internationalized-array:
     dependencies:
@@ -2407,7 +2407,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 6.9.1
@@ -2446,7 +2446,7 @@ importers:
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-latex-input:
     dependencies:
@@ -2459,7 +2459,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -2480,7 +2480,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(styled-components@6.4.2)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-markdown:
     dependencies:
@@ -2502,7 +2502,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -2523,7 +2523,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-media:
     dependencies:
@@ -2611,7 +2611,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 6.9.1
@@ -2653,7 +2653,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-mux-input:
     dependencies:
@@ -2723,7 +2723,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/lodash':
         specifier: ^4.17.24
         version: 4.17.24
@@ -2750,7 +2750,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-shopify-assets:
     dependencies:
@@ -2790,7 +2790,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -2814,7 +2814,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-studio-smartling:
     dependencies:
@@ -2830,7 +2830,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -2851,7 +2851,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-transifex:
     dependencies:
@@ -2867,7 +2867,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -2888,7 +2888,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-utils:
     dependencies:
@@ -2919,7 +2919,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -2940,7 +2940,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-workflow:
     dependencies:
@@ -2974,7 +2974,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -2992,7 +2992,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-plugin-workspace-home:
     dependencies:
@@ -3014,7 +3014,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -3035,7 +3035,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   plugins/sanity-translations-tab:
     dependencies:
@@ -3066,7 +3066,7 @@ importers:
         version: 2.2.0
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.17
@@ -3087,7 +3087,7 @@ importers:
         version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
 
   scripts/trigger-triage:
     devDependencies:
@@ -3122,8 +3122,8 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
       tsdown:
-        specifier: ^0.22.7
-        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.4.0)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+        specifier: ^0.22.8
+        version: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.4.0)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
       validate-npm-package-name:
         specifier: 'catalog:'
         version: 8.0.0
@@ -10874,14 +10874,14 @@ packages:
     resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
     engines: {node: '>=6'}
 
-  tsdown@0.22.7:
-    resolution: {integrity: sha512-4egbOzc9dxVv/QS+gDV75FIxDIjQQeOnXBlUuikyjmn0ozuc6FW11djJjEEo3vqkuJRygpnKHurnj+Iwftk4VA==}
+  tsdown@0.22.8:
+    resolution: {integrity: sha512-6FOLlr1iLcE3LheqQt13hVUWtTduJNwF2akPskPe8Tf1hr+N5UULHzrNZYTMNwL6lr2UyQ8iefVBB6tdqp1PCQ==}
     engines: {node: ^22.18.0 || >=24.11.0}
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
-      '@tsdown/css': 0.22.7
-      '@tsdown/exe': 0.22.7
+      '@tsdown/css': 0.22.8
+      '@tsdown/exe': 0.22.8
       '@vitejs/devtools': '*'
       publint: ^0.3.8
       tsx: '*'
@@ -15361,15 +15361,15 @@ snapshots:
 
   '@sanity/tsconfig@2.2.0': {}
 
-  '@sanity/tsdown-config@0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)':
+  '@sanity/tsdown-config@0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.4)':
     dependencies:
       '@babel/core': 7.29.7
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.5)(vite@8.1.4)
-      '@sanity/vanilla-extract-tsdown-plugin': 0.1.1(babel-plugin-macros@3.1.0)(tsdown@0.22.7)
+      '@sanity/vanilla-extract-tsdown-plugin': 0.1.1(babel-plugin-macros@3.1.0)(tsdown@0.22.8)
       '@vitejs/plugin-react': 6.0.3(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(vite@8.1.4)
       package-manager-detector: 1.7.0
       publint: 0.3.21
-      tsdown: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+      tsdown: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
       typescript: 7.0.2
     optionalDependencies:
       babel-plugin-react-compiler: 1.0.0
@@ -15443,13 +15443,13 @@ snapshots:
     dependencies:
       uuid: 11.1.1
 
-  '@sanity/vanilla-extract-tsdown-plugin@0.1.1(babel-plugin-macros@3.1.0)(tsdown@0.22.7)':
+  '@sanity/vanilla-extract-tsdown-plugin@0.1.1(babel-plugin-macros@3.1.0)(tsdown@0.22.8)':
     dependencies:
       '@sanity/browserslist-config': 1.0.5
       '@vanilla-extract/integration': 8.0.10(babel-plugin-macros@3.1.0)
       browserslist: 4.28.5
       lightningcss: 1.32.0
-      tsdown: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+      tsdown: 0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -20781,7 +20781,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2):
+  tsdown@0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2):
     dependencies:
       ansis: 4.3.1
       cac: 7.0.0
@@ -20809,7 +20809,7 @@ snapshots:
       - oxc-resolver
       - vue-tsc
 
-  tsdown@0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.4.0)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2):
+  tsdown@0.22.8(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.4.0)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2):
     dependencies:
       ansis: 4.3.1
       cac: 7.0.0
