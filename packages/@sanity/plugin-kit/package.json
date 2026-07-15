@@ -97,6 +97,14 @@
     "oxfmt": "catalog:",
     "oxlint": "catalog:"
   },
+  "peerDependenciesMeta": {
+    "oxfmt": {
+      "optional": true
+    },
+    "oxlint": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
   },
