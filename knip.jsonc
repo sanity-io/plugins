@@ -36,8 +36,7 @@
       "ignoreDependencies": [
         // Spawned as a CLI (`yalc push`) by the link-watch command, never imported
         "yalc",
-        // Used by scaffolded plugins / package templates, not imported by plugin-kit itself
-        "prettier",
+        // Resolved at runtime by oxlint/pkg-utils when verifying generated plugin fixtures in tests
         "react",
         "react-dom",
         "sanity",

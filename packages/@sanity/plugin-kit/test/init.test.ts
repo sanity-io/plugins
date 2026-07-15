@@ -18,16 +18,9 @@ const defaultDevDependencies = [
   '@sanity/pkg-utils',
   '@sanity/plugin-kit',
   '@types/react',
-  '@typescript-eslint/eslint-plugin',
-  '@typescript-eslint/parser',
-  'eslint',
-  'eslint-config-prettier',
-  'eslint-config-sanity',
-  'eslint-plugin-prettier',
-  'eslint-plugin-react',
-  'eslint-plugin-react-hooks',
-  'prettier',
-  'prettier-plugin-packagejson',
+  'oxfmt',
+  'oxlint',
+  'oxlint-tsgolint',
   'react',
   'react-dom',
   'sanity',
@@ -49,23 +42,8 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
       await fileContains('LICENSE', 'MIT')
       await fileContains('README.md', `# ${pluginTestName}`)
       await fileContains('.gitignore', 'dist')
-      await fileContains(
-        '.eslintrc',
-        'sanity',
-        'sanity/typescript',
-        'sanity/react',
-        'plugin:react-hooks/recommended',
-        'plugin:prettier/recommended',
-      )
-      await fileContains(
-        '.eslintignore',
-        '.eslintrc.js',
-        'commitlint.config.js',
-        'dist',
-        'lint-staged.config.js',
-        '*.js',
-      )
-      await fileContains('.prettierrc', '"semi": false')
+      await fileContains('oxlint.config.ts', `export {default} from '@sanity/plugin-kit/oxlint'`)
+      await fileContains('oxfmt.config.ts', `export {default} from '@sanity/plugin-kit/oxfmt'`)
       await fileContains('tsconfig.json', '"extends": "./tsconfig.settings"')
       await fileContains('tsconfig.dist.json', '"extends": "./tsconfig.settings"')
       await fileContains('tsconfig.settings.json', '"target": "esnext"')
@@ -90,7 +68,8 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
         types: './dist/index.d.ts',
         files: ['dist'],
         scripts: {
-          'lint': 'eslint .',
+          'format': 'oxfmt',
+          'lint': 'oxlint',
           'build': 'plugin-kit verify-package --silent && pkg-utils build --strict --check --clean',
           'watch': 'pkg-utils watch --strict',
           'link-watch': 'plugin-kit link-watch',
@@ -135,8 +114,8 @@ test(
           outputDir,
           ...initTestArgs.filter((a) => a !== '--license' && a !== 'mit'),
           '--no-install',
-          '--no-eslint',
-          '--no-prettier',
+          '--no-oxlint',
+          '--no-oxfmt',
           '--no-typescript',
           '--no-license',
           '--no-editorconfig',
@@ -156,15 +135,20 @@ test(
           ).toBe(false)
 
         await expectNotExist('LICENSE')
-        await expectNotExist('.eslintrc')
+        await expectNotExist('oxlint.config.ts')
         await expectNotExist('.gitignore')
-        await expectNotExist('.prettierrc')
+        await expectNotExist('oxfmt.config.ts')
         await expectNotExist('tsconfig.json')
 
         await fileContains('src/index.js', `name: '${pluginTestName}'`)
 
         const pkg: PackageJson = JSON.parse(await readFile(path.join(outputDir, 'package.json')))
         expect(pkg.scripts, 'scripts should be an empty object').toEqual({})
+
+        expect(
+          pkg.sanityPlugin,
+          'opting out of oxfmt/oxlint should disable the matching verify-package checks',
+        ).toEqual({verifyPackage: {oxfmt: false, oxlint: false}})
 
         expect(Object.keys(pkg.dependencies ?? {}), 'should have empty dependencies').toEqual([])
         expect(

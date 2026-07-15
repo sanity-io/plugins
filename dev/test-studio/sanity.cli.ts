@@ -16,6 +16,8 @@ export default defineCliConfig({
   deployment: {appId, autoUpdates: true},
   reactCompiler: {},
   typegen: {formatGeneratedCode: false},
+  // Bundle studio deps in `sanity dev` (required for Structure with client/eventsource alignment).
+  unstable_bundledDev: true,
   vite: {
     plugins: [vanillaExtractPlugin(), ...(isViteDevToolsEnabled ? [DevTools()] : [])],
     // `devtools: {}` makes `sanity build` emit a Rolldown build session that the DevTools dock can inspect

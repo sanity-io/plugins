@@ -21,12 +21,10 @@ test(
 
         // checks that output contains the "skip this validation" snippet for every possible relevant key
         // will fail when new checks are added that we may or may not want to account for
-        Object.keys(verifyPackageConfigDefaults)
-          .filter((key) => key !== 'tsc')
-          .forEach((checkKey) => {
-            const findString = `"${checkKey}": false`
-            expect(stderr, `should include ${findString} in stderr`).toContain(findString)
-          })
+        Object.keys(verifyPackageConfigDefaults).forEach((checkKey) => {
+          const findString = `"${checkKey}": false`
+          expect(stderr, `should include ${findString} in stderr`).toContain(findString)
+        })
       },
     })
   },

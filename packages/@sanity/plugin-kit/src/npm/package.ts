@@ -6,7 +6,7 @@ import githubUrl from 'github-url-to-object'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import type {InjectOptions, PackageData} from '../actions/inject'
-import type {PackageJson} from '../actions/verify/types'
+import type {PackageJson, SanityPlugin} from '../actions/verify/types'
 import {expectedScripts} from '../actions/verify/validations'
 import {
   forcedDevPackageVersions,
@@ -176,9 +176,9 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
   const {flags} = options
   const prev = prevPkg || {}
 
-  const usePrettier = flags.prettier !== false
-  const useEslint = flags.eslint !== false
-  const useTypescript = flags.eslint !== false
+  const useOxfmt = flags.oxfmt !== false
+  const useOxlint = flags.oxlint !== false
+  const useTypescript = flags.typescript !== false
 
   const newDevDependencies = [cliName, '@sanity/pkg-utils']
 
@@ -187,28 +187,15 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     newDevDependencies.push('@types/react', 'typescript')
   }
 
-  if (usePrettier) {
-    log.debug('Using prettier. Adding to dev dependencies.')
-    newDevDependencies.push('prettier', 'prettier-plugin-packagejson')
+  if (useOxfmt) {
+    log.debug('Using oxfmt. Adding to dev dependencies.')
+    newDevDependencies.push('oxfmt')
   }
 
-  if (useEslint) {
-    log.debug('Using eslint. Adding to dev dependencies.')
-
-    newDevDependencies.push(
-      'eslint',
-      'eslint-config-sanity',
-      'eslint-plugin-react',
-      'eslint-plugin-react-hooks',
-    )
-
-    if (usePrettier) {
-      newDevDependencies.push('eslint-config-prettier', 'eslint-plugin-prettier')
-    }
-
-    if (useTypescript) {
-      newDevDependencies.push('@typescript-eslint/eslint-plugin', '@typescript-eslint/parser')
-    }
+  if (useOxlint) {
+    log.debug('Using oxlint. Adding to dev dependencies.')
+    // oxlint-tsgolint powers the type-aware rules and type checking enabled in the shared config
+    newDevDependencies.push('oxlint', 'oxlint-tsgolint')
   }
 
   log.debug('Resolving latest versions for %s', newDevDependencies.join(', '))
@@ -244,7 +231,21 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
   // sort alphabetically for scanability
   files.sort()
 
-  // order should be compatible with prettier-plugin-packagejson
+  // Opting out of oxfmt/oxlint must also disable the corresponding verify-package checks,
+  // otherwise the scaffolded `build` script (which runs verify-package) fails out of the box
+  const verifyPackageOptOuts = {
+    ...(useOxfmt ? {} : {oxfmt: false}),
+    ...(useOxlint ? {} : {oxlint: false}),
+  }
+  const prevSanityPlugin: SanityPlugin = prev.sanityPlugin ?? {}
+  const sanityPlugin: SanityPlugin | undefined = Object.keys(verifyPackageOptOuts).length
+    ? {
+        ...prevSanityPlugin,
+        verifyPackage: {...prevSanityPlugin.verifyPackage, ...verifyPackageOptOuts},
+      }
+    : prev.sanityPlugin
+
+  // order should be compatible with oxfmt's sortPackageJson
   const forcedOrder = {
     name: pluginName,
     version: prev.version ?? '1.0.0',
@@ -272,6 +273,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     engines: {
       node: requiredNodeEngine,
     },
+    ...(sanityPlugin ? {sanityPlugin} : {}),
   }
 
   const manifest: PackageJson = {
@@ -357,9 +359,13 @@ export async function addBuildScripts(manifest: PackageJson, options: InjectOpti
   }
   return addPackageJsonScripts(manifest, options, (scripts) => {
     scripts.build = addScript(expectedScripts.build, scripts.build)
-    scripts.format = addScript(`prettier --write --cache --ignore-unknown .`, scripts.format)
+    if (options.flags.oxfmt !== false) {
+      scripts.format = addScript(`oxfmt`, scripts.format)
+    }
     scripts['link-watch'] = addScript(expectedScripts['link-watch'], scripts['link-watch'])
-    scripts.lint = addScript(`eslint .`, scripts.lint)
+    if (options.flags.oxlint !== false) {
+      scripts.lint = addScript(`oxlint`, scripts.lint)
+    }
     scripts.prepublishOnly = addScript(expectedScripts.prepublishOnly, scripts.prepublishOnly)
     scripts.watch = addScript(expectedScripts.watch, scripts.watch)
     return scripts

@@ -15,7 +15,7 @@ export const initFlags = {
     type: 'boolean',
     default: true,
   },
-  eslint: {
+  oxlint: {
     type: 'boolean',
     default: true,
   },
@@ -23,7 +23,7 @@ export const initFlags = {
     type: 'boolean',
     default: true,
   },
-  prettier: {
+  oxfmt: {
     type: 'boolean',
     default: true,
   },
