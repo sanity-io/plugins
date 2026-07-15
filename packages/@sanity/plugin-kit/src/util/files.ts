@@ -3,10 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import util from 'util'
 
-import json5 from 'json5'
-
 import type {InitFlags} from '../actions/init'
-import log from './log'
 import {prompt} from './prompt'
 
 const stat = util.promisify(fs.stat)
@@ -137,46 +134,4 @@ export async function isEmptyish(dirPath: string) {
   const allFiles = await readdir(dirPath).catch(() => [])
   const files = allFiles.filter((file) => !ignoredFiles.includes(file.toLowerCase()))
   return files.length === 0
-}
-
-async function readFileContent({
-  filename,
-  basePath,
-}: {
-  filename: string
-  basePath: string
-}): Promise<string | undefined> {
-  const filepath = path.normalize(path.join(basePath, filename))
-  try {
-    return await readFile(filepath, 'utf8')
-  } catch (err: any) {
-    if (err.code === 'ENOENT') {
-      log.debug(`No ${filename} file found.`)
-      return undefined
-    }
-    throw new Error(`Failed to read "${filepath}": ${err.message}`)
-  }
-}
-
-export async function readJson5File<T>({
-  filename,
-  basePath,
-}: {
-  filename: string
-  basePath: string
-}): Promise<T | undefined> {
-  const content = await readFileContent({filename, basePath})
-  if (!content) {
-    return undefined
-  }
-
-  return parseJson5<T>(content, filename)
-}
-
-function parseJson5<T>(content: string, errorKey: string): T {
-  try {
-    return json5.parse<T>(content)
-  } catch (err: any) {
-    throw new Error(`Error parsing "${errorKey}": ${err.message}`)
-  }
 }

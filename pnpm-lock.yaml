@@ -457,9 +457,6 @@ importers:
       inquirer:
         specifier: ^8.2.7
         version: 8.2.7(@types/node@24.13.3)
-      json5:
-        specifier: ^2.2.3
-        version: 2.2.3
       meow:
         specifier: ^9.0.0
         version: 9.0.0
