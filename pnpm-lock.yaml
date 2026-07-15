@@ -5696,9 +5696,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rolldown/debug@1.1.4':
-    resolution: {integrity: sha512-K/hi4hdSOdfwwC0tFt30ovGk0TjlaQPk1aBQkfzvTjLX6d18WRX4aeYrYnHKtL0d6a8ciyra2LKsZjlyD4VAuA==}
-
   '@rolldown/debug@1.1.5':
     resolution: {integrity: sha512-GJDtRyJkktO4fcFe8cjnUf99ylufh+GWjE9RevRw8Y/aIt0xQkBc27/Pmu1EoUZFfwyz5LjEJGh+XSTqsuXG8g==}
 
@@ -6342,12 +6339,6 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
-  '@tanstack/react-virtual@3.14.5':
-    resolution: {integrity: sha512-4EKRXh7zBLkbKbFmG3AUVkircuHd+7OdT1pocJSepxtfBd3qnrJgJ5rtPkRYyo9fmyVb2+pI2xPy5oYvMLQy6A==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   '@tanstack/react-virtual@3.14.6':
     resolution: {integrity: sha512-4+Uq8m0/gzO4kMCHUEpTtGX1RnONK0C+g88b2ltwPMWUBiaVarBuWKoPJaz7gj1cKCVRAdyu+U8GcKhwCc2beA==}
     peerDependencies:
@@ -6357,9 +6348,6 @@ packages:
   '@tanstack/table-core@8.21.3':
     resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
     engines: {node: '>=12'}
-
-  '@tanstack/virtual-core@3.17.3':
-    resolution: {integrity: sha512-8Np/TFELpI0ySuJoVmjvOrQYXH/8sTX0Biv9szhFhY39xOdAAY+smrMxjxOum/ux3eM8MUJQsEJ0/R0UpvC8dw==}
 
   '@tanstack/virtual-core@3.17.4':
     resolution: {integrity: sha512-nGm5KteqxasUdThLc2izl6dHUqLv0LQj7Nuyo5gYalTPf/U8a9ermvsl7reT+6ioBW1l8WfpP/mcU338nLXpqw==}
@@ -11292,14 +11280,6 @@ packages:
     resolution: {integrity: sha512-jjRGChg03uGp9f6wQYSO8qXkweJwRbA5WRuEQE8xLIiehIzIIi23qZSzsyvZPCPoFqkeLtZuz7Plt1LGukAInA==}
     hasBin: true
 
-  valibot@1.4.1:
-    resolution: {integrity: sha512-klCmFTz2jeDluy9RwX+F884TCiogtdBJ/YaxSx1EOBYXa3NXNWj8kR1jjN8rzluwojJVWWaHJ4r1U5LfICnM3g==}
-    peerDependencies:
-      typescript: '>=5'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   valibot@1.4.2:
     resolution: {integrity: sha512-gjdCvJ6d3RyHAneqxMYMW9QMCwYMb3jpOO0IyHZV1bnRHFBHrX3VkIILt5XYR0WhwHiH7Mty8ovuPZ/O3gamrg==}
     peerDependencies:
@@ -14404,9 +14384,6 @@ snapshots:
   '@rolldown/binding-win32-x64-msvc@1.1.5':
     optional: true
 
-  '@rolldown/debug@1.1.4':
-    optional: true
-
   '@rolldown/debug@1.1.5': {}
 
   '@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.5)(vite@8.1.4)':
@@ -15728,12 +15705,6 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@tanstack/react-virtual@3.14.5(react-dom@19.2.7)(react@19.2.7)':
-    dependencies:
-      '@tanstack/virtual-core': 3.17.3
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-
   '@tanstack/react-virtual@3.14.6(react-dom@19.2.7)(react@19.2.7)':
     dependencies:
       '@tanstack/virtual-core': 3.17.4
@@ -15741,8 +15712,6 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
 
   '@tanstack/table-core@8.21.3': {}
-
-  '@tanstack/virtual-core@3.17.3': {}
 
   '@tanstack/virtual-core@3.17.4': {}
 
@@ -16074,11 +16043,6 @@ snapshots:
       - '@codemirror/lint'
       - '@codemirror/search'
 
-  '@valibot/to-json-schema@1.7.1(valibot@1.4.1)':
-    dependencies:
-      valibot: 1.4.1(typescript@7.0.2)
-    optional: true
-
   '@valibot/to-json-schema@1.7.1(valibot@1.4.2)':
     dependencies:
       valibot: 1.4.2(typescript@7.0.2)
@@ -16297,7 +16261,7 @@ snapshots:
   '@vitejs/devtools-rolldown@0.3.4(crossws@0.4.10)(typescript@7.0.2)(vite@8.1.4)(vue@3.5.39)':
     dependencies:
       '@floating-ui/dom': 1.7.6
-      '@rolldown/debug': 1.1.4
+      '@rolldown/debug': 1.1.5
       '@vitejs/devtools-kit': 0.3.4(crossws@0.4.10)(typescript@7.0.2)(vite@8.1.4)
       birpc: 4.0.0
       cac: 7.0.0
@@ -17409,14 +17373,14 @@ snapshots:
 
   devframe@0.5.4(crossws@0.4.10)(typescript@7.0.2):
     dependencies:
-      '@valibot/to-json-schema': 1.7.1(valibot@1.4.1)
+      '@valibot/to-json-schema': 1.7.1(valibot@1.4.2)
       birpc: 4.0.0
       cac: 7.0.0
       h3: 2.0.1-rc.22(crossws@0.4.10)
       mrmime: 2.0.1
       nostics: 0.2.0
       pathe: 2.0.3
-      valibot: 1.4.1(typescript@7.0.2)
+      valibot: 1.4.2(typescript@7.0.2)
       ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
@@ -20154,7 +20118,7 @@ snapshots:
       '@sanity/uuid': 3.0.3
       '@sentry/react': 10.62.0(react@19.2.7)
       '@tanstack/react-table': 8.21.3(react-dom@19.2.7)(react@19.2.7)
-      '@tanstack/react-virtual': 3.14.5(react-dom@19.2.7)(react@19.2.7)
+      '@tanstack/react-virtual': 3.14.6(react-dom@19.2.7)(react@19.2.7)
       '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.4)
       clsx: 2.1.1
       color2k: 2.0.3
@@ -20302,7 +20266,7 @@ snapshots:
       '@sanity/uuid': 3.0.3
       '@sentry/react': 10.62.0(react@19.2.7)
       '@tanstack/react-table': 8.21.3(react-dom@19.2.7)(react@19.2.7)
-      '@tanstack/react-virtual': 3.14.5(react-dom@19.2.7)(react@19.2.7)
+      '@tanstack/react-virtual': 3.14.6(react-dom@19.2.7)(react@19.2.7)
       '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.4)
       clsx: 2.1.1
       color2k: 2.0.3
@@ -20450,7 +20414,7 @@ snapshots:
       '@sanity/uuid': 3.0.3
       '@sentry/react': 10.62.0(react@19.2.7)
       '@tanstack/react-table': 8.21.3(react-dom@19.2.7)(react@19.2.7)
-      '@tanstack/react-virtual': 3.14.5(react-dom@19.2.7)(react@19.2.7)
+      '@tanstack/react-virtual': 3.14.6(react-dom@19.2.7)(react@19.2.7)
       '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.4)
       clsx: 2.1.1
       color2k: 2.0.3
@@ -21258,11 +21222,6 @@ snapshots:
   uuid@8.3.2: {}
 
   uuidv7@0.4.4: {}
-
-  valibot@1.4.1(typescript@7.0.2):
-    optionalDependencies:
-      typescript: 7.0.2
-    optional: true
 
   valibot@1.4.2(typescript@7.0.2):
     optionalDependencies:
