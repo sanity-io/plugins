@@ -6,7 +6,7 @@ import {init, initFlags} from '../actions/init'
 import {cliName} from '../constants'
 import {installDependencies, promptForPackageManager} from '../npm/manager'
 import {presetHelpList} from '../presets/presets'
-import {findStudioV3Config, hasSanityJson} from '../sanity/manifest'
+import {findStudioConfig} from '../sanity/studio-detect'
 import {isEmptyish, ensureDir} from '../util/files'
 import log from '../util/log'
 import {prompt} from '../util/prompt'
@@ -52,17 +52,10 @@ async function run({argv}: {argv: string[]}) {
   const cli = meow(help, {flags: initFlags, argv, description})
   const basePath = path.resolve(cli.input[0] || process.cwd())
 
-  const {exists, isRoot} = await hasSanityJson(basePath)
-  if (exists && isRoot) {
+  const {configFile} = await findStudioConfig(basePath)
+  if (configFile) {
     throw new Error(
-      `sanity.json has a "root" property set to true - are you trying to init into a studio instead of a plugin?`,
-    )
-  }
-
-  const {v3ConfigFile} = await findStudioV3Config(basePath)
-  if (v3ConfigFile) {
-    throw new Error(
-      `${v3ConfigFile} exists - are you trying to init into a studio instead of a plugin?`,
+      `${configFile} exists - are you trying to init into a studio instead of a plugin?`,
     )
   }
 

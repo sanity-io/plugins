@@ -14,15 +14,11 @@ export const verifyPackageConfigDefaults = {
   'esmOnly': true,
   'tsconfig': true,
   'tsc': true,
-  'dependencies': true,
   'deprecatedDependencies': true,
   'babelConfig': true,
-  'incompatiblePlugin': true,
-  'eslintImports': true,
   'scripts': true,
   'pkg-utils': true,
   'nodeEngine': true,
-  'studioConfig': true,
   'srcIndex': true,
   'bannedFiles': true,
   'duplicateConfig': true,
@@ -74,7 +70,7 @@ export function createValidator(
 
     if (flags.single && errors.length) {
       throw new Error(
-        outdent`Detected outstanding upgrade issues.
+        outdent`Detected outstanding package validation issues.
 
         Fail-fast (--single) mode enabled, stopping validation here.
         `,

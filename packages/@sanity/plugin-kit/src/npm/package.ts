@@ -14,13 +14,17 @@ import {
   forcedPeerPackageVersions,
 } from '../configs/forced-package-versions'
 import {cliName, requiredNodeEngine} from '../constants'
-import {getPaths, type ManifestOptions} from '../sanity/manifest'
-import {hasSourceEquivalent, writeJsonFile} from '../util/files'
+import {writeJsonFile} from '../util/files'
 import log from '../util/log'
 import {resolveLatestVersions} from './resolveLatestVersions'
 
-// New plugins ship no runtime dependencies by default. The legacy `@sanity/incompatible-plugin`
-// shim (for Sanity Studio v2) is intentionally no longer added.
+export interface GetPackageOptions {
+  basePath: string
+  validate?: boolean
+  isPlugin?: boolean
+  flags?: Record<string, any>
+}
+
 const defaultDependencies: string[] = []
 
 const defaultDevDependencies = [
@@ -38,7 +42,7 @@ const readFile = util.promisify(fs.readFile)
 
 const pathKeys: (keyof PackageJson)[] = ['main', 'module', 'browser', 'types']
 
-export async function getPackage(opts: ManifestOptions): Promise<PackageJson> {
+export async function getPackage(opts: GetPackageOptions): Promise<PackageJson> {
   const options = {flags: {}, ...opts}
 
   validateOptions(options)
@@ -77,7 +81,7 @@ export async function getPackage(opts: ManifestOptions): Promise<PackageJson> {
   return parsed
 }
 
-async function validatePackage(manifest: PackageJson, opts: ManifestOptions) {
+async function validatePackage(manifest: PackageJson, opts: GetPackageOptions) {
   validateOptions(opts)
 
   const options = {isPlugin: true, ...opts}
@@ -100,9 +104,9 @@ function validateOptions(opts: {basePath: string}) {
   }
 }
 
-async function validatePluginPackage(manifest: PackageJson, options: ManifestOptions) {
+async function validatePluginPackage(manifest: PackageJson, options: GetPackageOptions) {
   validatePackageName(manifest)
-  await validatePaths(manifest, options)
+  validatePaths(manifest, options)
 }
 
 function validatePackageName(manifest: PackageJson) {
@@ -123,21 +127,9 @@ function validatePackageName(manifest: PackageJson) {
   }
 }
 
-async function validatePaths(manifest: PackageJson, options: ManifestOptions) {
-  const paths = await getPaths({
-    ...options,
-    pluginName: manifest.name ?? 'unknown',
-    verifySourceParts: false,
-    verifyCompiledParts: false,
-  })
-
+function validatePaths(manifest: PackageJson, options: GetPackageOptions) {
   const abs = (file: string) =>
     path.isAbsolute(file) ? file : path.resolve(path.join(options.basePath, file))
-
-  const exists = (file: string) => fs.existsSync(abs(file))
-  const willExist = (file: string) => paths && hasSourceEquivalent(abs(file), paths)
-  const withinSourceDir = (file: string) => paths?.source && abs(file).startsWith(paths.source)
-  const withinTargetDir = (file: string) => paths?.compiled && abs(file).startsWith(paths.compiled)
 
   for (const key of pathKeys) {
     if (!(key in manifest)) {
@@ -149,40 +141,14 @@ async function validatePaths(manifest: PackageJson, options: ManifestOptions) {
       throw new Error(`Invalid package.json: "${key}" must be a string if defined`)
     }
 
-    // We don't want to reference `./src/MyComponent.js` containing a bunch of JSX and whatnot,
-    // instead we want to target `./dist/MyComponent.js` which is the location it'll be compiled to
-    if (!options?.flags?.allowSourceTarget && paths && withinSourceDir(manifestValue)) {
-      throw new Error(
-        `Invalid package.json: "${key}" points to file within source (uncompiled) directory. Use --allow-source-target if you really want to do this.`,
-      )
-    }
-
-    // Does it exist only because it was there prior to compilation?
-    // We're clearing the folder on compilation, so we shouldn't allow it
-    const fileExists = exists(manifestValue)
-    if (
-      fileExists &&
-      paths &&
-      withinTargetDir(manifestValue) &&
-      !(await willExist(manifestValue))
-    ) {
-      throw new Error(
-        `Invalid package.json: "${key}" points to file that will not exist after compiling`,
-      )
-    }
-
-    // If it _doesn't_ exist and it _won't_ exist, then there isn't much point in continuing, is there?
-    if (!exists(manifestValue) && !(await willExist(manifestValue))) {
-      if (!paths) {
-        throw new Error(`Invalid package.json: "${key}" points to file that does not exist`)
-      }
-
-      const inOutDir = paths.compiled && !abs(manifestValue).startsWith(paths.compiled)
-      throw new Error(
-        inOutDir
-          ? `Invalid package.json: "${key}" points to file that does not exist, and "paths" is not configured to compile to this location`
-          : `Invalid package.json: "${key}" points to file that does not exist, and no equivalent is found in source directory`,
-      )
+    // Compiled entry points are expected to exist only after a build; skip existence checks for
+    // paths under dist-like directories. Otherwise require the file to be present.
+    const absolutePath = abs(manifestValue)
+    const looksCompiled =
+      absolutePath.includes(`${path.sep}dist${path.sep}`) ||
+      absolutePath.endsWith(`${path.sep}dist`)
+    if (!looksCompiled && !fs.existsSync(absolutePath)) {
+      throw new Error(`Invalid package.json: "${key}" points to file that does not exist`)
     }
   }
 }
