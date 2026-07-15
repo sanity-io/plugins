@@ -26,7 +26,7 @@ catalog:
   '@sanity/preview-url-secret': ^4.0.8
   '@sanity/schema': ^6.5.0
   '@sanity/telemetry': '^1.1.0'
-  '@sanity/tsconfig': ^2.2.0
+  '@sanity/tsconfig': ^2.2.1
   '@sanity/tsdown-config': ^0.17.2
   '@sanity/ui': ^3.3.5
   '@sanity/util': ^6.5.0
@@ -50,7 +50,7 @@ catalog:
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
   motion: ^12.42.2
-  nanoid: ^5.1.16
+  nanoid: ^6.0.0
   oxfmt: ^0.58.0
   oxlint: ^1.73.0
   oxlint-tsgolint: ^0.24.0
