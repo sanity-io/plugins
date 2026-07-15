@@ -34,9 +34,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v6
+      - uses: pnpm/setup@v1
         with:
-          node-version: lts/*
+          install: false
+          runtime: node@lts
 
       - name: Trigger issue triage
         if: github.event.action != 'closed'
