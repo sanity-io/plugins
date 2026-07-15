@@ -118,6 +118,32 @@ describe('monorepo (workspace root detected)', () => {
     expect(await validateOxfmtConfig(pluginDir, {})).toEqual([])
   })
 
+  test('fails when a local config without the preset overrides a valid workspace root config', async () => {
+    await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
+    await write('oxfmt.config.ts', presetConfig)
+    await write(
+      path.join('packages', 'plugin', 'oxfmt.config.ts'),
+      `export default {semi: false}\n`,
+    )
+    const pluginDir = path.join(tmpDir, 'packages', 'plugin')
+
+    const errors = await validateOxfmtConfig(pluginDir, {})
+    expect(errors).toHaveLength(1)
+    expect(errors[0]).toContain('does not use the shared plugin-kit preset')
+    expect(errors[0]).toContain('overrides the workspace root config')
+  })
+
+  test('fails when a local JSON config overrides a valid workspace root config', async () => {
+    await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
+    await write('oxfmt.config.ts', presetConfig)
+    await write(path.join('packages', 'plugin', '.oxfmtrc.json'), `{"semi": false}\n`)
+    const pluginDir = path.join(tmpDir, 'packages', 'plugin')
+
+    const errors = await validateOxfmtConfig(pluginDir, {})
+    expect(errors).toHaveLength(1)
+    expect(errors[0]).toContain('JSON configs cannot reuse the shared plugin-kit preset')
+  })
+
   test('detects legacy prettier configs left at the workspace root', async () => {
     await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
     await write('oxfmt.config.ts', presetConfig)

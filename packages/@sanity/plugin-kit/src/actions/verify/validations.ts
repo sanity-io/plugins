@@ -697,12 +697,9 @@ async function findLegacyConfigFiles(
   return found
 }
 
-type OxfmtConfigDirResult = {ok: true} | {ok: false; error: string}
+type ConfigDirResult = {ok: true} | {ok: false; found: boolean; error: string}
 
-async function checkOxfmtConfigDir(
-  dir: string,
-  describeDir: string,
-): Promise<OxfmtConfigDirResult> {
+async function checkOxfmtConfigDir(dir: string, describeDir: string): Promise<ConfigDirResult> {
   const found: string[] = []
   for (const file of oxfmtConfigFiles) {
     if (await fileExists(path.join(dir, file))) {
@@ -713,6 +710,7 @@ async function checkOxfmtConfigDir(
   if (found.length === 0) {
     return {
       ok: false,
+      found: false,
       error: outdent`
         Could not find an oxfmt config file ${describeDir}.
 
@@ -726,6 +724,7 @@ async function checkOxfmtConfigDir(
   if (found.length > 1) {
     return {
       ok: false,
+      found: true,
       error: outdent`
         Found multiple oxfmt config files ${describeDir}: [${found.join(', ')}].
 
@@ -738,6 +737,7 @@ async function checkOxfmtConfigDir(
   if (file.startsWith('.oxfmtrc')) {
     return {
       ok: false,
+      found: true,
       error: outdent`
         Found ${file} ${describeDir}, but JSON configs cannot reuse the shared plugin-kit preset.
 
@@ -752,6 +752,7 @@ async function checkOxfmtConfigDir(
   if (!content.includes(oxfmtPresetSpecifier)) {
     return {
       ok: false,
+      found: true,
       error: outdent`
         Found ${file} ${describeDir}, but it does not use the shared plugin-kit preset (${oxfmtPresetSpecifier}).
 
@@ -773,8 +774,9 @@ async function checkOxfmtConfigDir(
  *
  * In a monorepo (a workspace root is found above the plugin), the oxfmt config is expected at the
  * workspace root; otherwise it should sit next to the package.json that installs and runs
- * plugin-kit. A config next to package.json is also accepted in a monorepo, since oxfmt discovers
- * nested configs.
+ * plugin-kit. Since oxfmt discovers nested configs, a config next to package.json overrides the
+ * workspace root config for this package — so in a monorepo the local config is validated when it
+ * exists, and the workspace root config otherwise.
  */
 export async function validateOxfmtConfig(
   basePath: string,
@@ -810,17 +812,32 @@ export async function validateOxfmtConfig(
     workspaceRoot ? `in the workspace root (${workspaceRoot})` : 'next to package.json',
   )
 
-  if (primaryResult.ok) {
-    return errors
-  }
-
-  // In a monorepo a config next to the plugin's package.json also works, since oxfmt discovers
-  // configs in subdirectories.
+  // In a monorepo, oxfmt discovers nested configs: a config next to the plugin's package.json
+  // overrides the workspace root config for this package's files, so when one exists it is the
+  // config that must use the shared preset.
   if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
     const localResult = await checkOxfmtConfigDir(basePath, 'next to package.json')
     if (localResult.ok) {
       return errors
     }
+    if (localResult.found) {
+      errors.push(
+        primaryResult.ok
+          ? outdent`
+              ${localResult.error}
+
+              Note: this config overrides the workspace root config (${primaryDir}) for this
+              package's files, since oxfmt discovers nested configs. Either make it use the shared
+              preset, or delete it to fall back to the workspace root config.
+            `
+          : localResult.error,
+      )
+      return errors
+    }
+  }
+
+  if (primaryResult.ok) {
+    return errors
   }
 
   errors.push(primaryResult.error)
@@ -854,12 +871,7 @@ const oxlintSetupSnippet = outdent`
   export {default} from '${oxlintSharedConfig}'
 `
 
-type OxlintConfigDirResult = {ok: true} | {ok: false; error: string}
-
-async function checkOxlintConfigDir(
-  dir: string,
-  describeDir: string,
-): Promise<OxlintConfigDirResult> {
+async function checkOxlintConfigDir(dir: string, describeDir: string): Promise<ConfigDirResult> {
   const found: string[] = []
   for (const file of oxlintConfigFiles) {
     if (await fileExists(path.join(dir, file))) {
@@ -870,6 +882,7 @@ async function checkOxlintConfigDir(
   if (found.length === 0) {
     return {
       ok: false,
+      found: false,
       error: outdent`
         Could not find an oxlint config file ${describeDir}.
 
@@ -884,6 +897,7 @@ async function checkOxlintConfigDir(
   if (found.length > 1) {
     return {
       ok: false,
+      found: true,
       error: outdent`
         Found multiple oxlint config files ${describeDir}: [${found.join(', ')}].
 
@@ -896,6 +910,7 @@ async function checkOxlintConfigDir(
   if (file.startsWith('.oxlintrc')) {
     return {
       ok: false,
+      found: true,
       error: outdent`
         Found ${file} ${describeDir}, but JSON configs cannot reuse the shared plugin-kit config
         (package imports are only supported in oxlint.config.ts).
@@ -911,6 +926,7 @@ async function checkOxlintConfigDir(
   if (!content.includes(oxlintSharedConfig)) {
     return {
       ok: false,
+      found: true,
       error: outdent`
         Found ${file} ${describeDir}, but it does not use the shared plugin-kit config (${oxlintSharedConfig}).
 
@@ -939,8 +955,9 @@ async function checkOxlintConfigDir(
  *
  * In a monorepo (a workspace root is found above the plugin), the oxlint config is expected at the
  * workspace root; otherwise it should sit next to the package.json that installs and runs
- * plugin-kit. A config next to package.json is also accepted in a monorepo, since oxlint supports
- * nested configs.
+ * plugin-kit. Since oxlint discovers nested configs, a config next to package.json overrides the
+ * workspace root config for this package — so in a monorepo the local config is validated when it
+ * exists, and the workspace root config otherwise.
  */
 export async function validateOxlintConfig(
   basePath: string,
@@ -972,17 +989,32 @@ export async function validateOxlintConfig(
     workspaceRoot ? `in the workspace root (${workspaceRoot})` : 'next to package.json',
   )
 
-  if (primaryResult.ok) {
-    return errors
-  }
-
-  // In a monorepo a config next to the plugin's package.json also works, since oxlint supports
-  // nested configs.
+  // In a monorepo, oxlint discovers nested configs: a config next to the plugin's package.json
+  // overrides the workspace root config for this package's files, so when one exists it is the
+  // config that must use the shared config.
   if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
     const localResult = await checkOxlintConfigDir(basePath, 'next to package.json')
     if (localResult.ok) {
       return errors
     }
+    if (localResult.found) {
+      errors.push(
+        primaryResult.ok
+          ? outdent`
+              ${localResult.error}
+
+              Note: this config overrides the workspace root config (${primaryDir}) for this
+              package's files, since oxlint discovers nested configs. Either make it use the shared
+              config, or delete it to fall back to the workspace root config.
+            `
+          : localResult.error,
+      )
+      return errors
+    }
+  }
+
+  if (primaryResult.ok) {
+    return errors
   }
 
   errors.push(primaryResult.error)

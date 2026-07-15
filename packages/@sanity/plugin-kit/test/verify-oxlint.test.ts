@@ -98,6 +98,35 @@ describe('monorepo (workspace root detected)', () => {
     expect(await validateOxlintConfig(pluginDir, {})).toEqual([])
   })
 
+  test('fails when a local config without the shared config overrides a valid workspace root config', async () => {
+    await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
+    await write('oxlint.config.ts', sharedConfigReExport)
+    await write(
+      path.join('packages', 'plugin', 'oxlint.config.ts'),
+      `export default {rules: {'no-console': 'error'}}\n`,
+    )
+    const pluginDir = path.join(tmpDir, 'packages', 'plugin')
+
+    const errors = await validateOxlintConfig(pluginDir, {})
+    expect(errors).toHaveLength(1)
+    expect(errors[0]).toContain('does not use the shared plugin-kit config')
+    expect(errors[0]).toContain('overrides the workspace root config')
+  })
+
+  test('fails when a local JSON config overrides a valid workspace root config', async () => {
+    await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
+    await write('oxlint.config.ts', sharedConfigReExport)
+    await write(
+      path.join('packages', 'plugin', '.oxlintrc.json'),
+      JSON.stringify({rules: {'no-console': 'error'}}),
+    )
+    const pluginDir = path.join(tmpDir, 'packages', 'plugin')
+
+    const errors = await validateOxlintConfig(pluginDir, {})
+    expect(errors).toHaveLength(1)
+    expect(errors[0]).toContain('JSON configs cannot reuse the shared plugin-kit config')
+  })
+
   test('detects legacy eslint configs left at the workspace root', async () => {
     await write('pnpm-workspace.yaml', `packages:\n  - packages/*\n`)
     await write('oxlint.config.ts', sharedConfigReExport)
