@@ -1,11 +1,29 @@
 {{#if hasVanillaExtract}}
-import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 {{/if}}
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
 {{#if hasVanillaExtract}}
-  plugins: [vanillaExtractPlugin()],
+  plugins: [
+    // The package-exports test resolves this package's own `.` export, which points at
+    // `./src/index.ts` for monorepo-internal dev consumption, so it transitively imports real
+    // `.css.ts` source and needs `vanillaExtractPlugin()`. But that plugin also matches
+    // `dist/bundle.css.js` (the empty Node/SSR shim for `./bundle.css`) by filename convention
+    // alone (`*.css.js`) and tries to evaluate it as `.css.ts` source, which throws. Stub it out
+    // first, before `vanillaExtractPlugin()` ever sees it.
+    {
+      name: 'stub-bundle-css-js-shim',
+      enforce: 'pre',
+      resolveId(source) {
+        return source.endsWith('/dist/bundle.css.js') ? '\0{{ name }}-bundle-css-js-shim' : null
+      },
+      load(id) {
+        return id === '\0{{ name }}-bundle-css-js-shim' ? '' : null
+      },
+    },
+    vanillaExtractPlugin(),
+  ],
 {{/if}}
   test: {
     server: {

@@ -195,8 +195,8 @@ SSR/Node imports don't choke on a `.css` file:
     "./package.json": "./package.json"
   },
   "devDependencies": {
-    "@vanilla-extract/css": "catalog:",
-    "@vanilla-extract/vite-plugin": "catalog:"
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
+    "@vanilla-extract/css": "catalog:"
   }
 }
 ```
@@ -207,22 +207,16 @@ Add the matching `./bundle.css` entry under `publishConfig.exports` too. `@vanil
 
 **3. Register the Vite plugin** wherever the plugin's source `.css.ts` is compiled live: the
 plugin's own `vitest.config.ts`, and the test studio (which consumes the plugin's `source` export in
-dev):
-
-```ts
-// plugins/@sanity/google-maps-input/vitest.config.ts
-import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
-import {defineConfig} from 'vitest/config'
-
-export default defineConfig({
-  plugins: [vanillaExtractPlugin()],
-  // ...
-})
-```
+dev). Use `@sanity/vanilla-extract-vite-plugin` — a Vite 8 rewrite of `@vanilla-extract/vite-plugin`
+with plugin hook filters (so rolldown-based Vite skips the Rust ↔ JS roundtrip for unrelated modules)
+and a caching compiler on Vite's Environment API / `ModuleRunner` instead of the legacy `vite-node`,
+which measurably speeds up `sanity build` (see
+[the package README](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-vite-plugin#readme)).
+The exported `vanillaExtractPlugin()` API is a drop-in match for the upstream plugin:
 
 ```ts
 // dev/test-studio/sanity.cli.ts — add vanillaExtractPlugin() to the studio's Vite plugins
-import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 
 export default defineCliConfig({
   // ...
@@ -232,14 +226,51 @@ export default defineCliConfig({
 })
 ```
 
+The plugin's own `vitest.config.ts` needs it too, because the package-exports test resolves this
+workspace package's own `exports` map — whose `.` entry points at `./src/index.ts` for
+monorepo-internal dev consumption, not `dist/index.js` — so it transitively imports real `.css.ts`
+source. But registering it plainly breaks that same test on the `./bundle.css` entry:
+`dist/bundle.css.js` (the intentionally-empty Node/SSR shim, see its own comment) matches the
+upstream `cssFileFilter` used to find `.css.ts` output by filename convention alone (`*.css.js`),
+so the plugin tries to evaluate it as real `.css.ts` source through its internal compiler server
+regardless of content. That server externalizes the vanilla-extract runtime as a `require(...)`
+call, which throws `ReferenceError: require is not defined` once evaluated via Vite's
+`ModuleRunner` (the legacy `@vanilla-extract/vite-plugin`, evaluating through `vite-node` instead,
+tolerated this). Stub the shim out as an empty module in a small `enforce: 'pre'` plugin, registered
+_before_ `vanillaExtractPlugin()` so its `resolveId` renames the id away from a `.css.js`-shaped one
+first:
+
+```ts
+// plugins/@sanity/google-maps-input/vitest.config.ts
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
+import {defineConfig} from 'vitest/config'
+
+export default defineConfig({
+  plugins: [
+    {
+      name: 'stub-bundle-css-js-shim',
+      enforce: 'pre',
+      resolveId(source) {
+        return source.endsWith('/dist/bundle.css.js') ? '\0my-plugin-bundle-css-js-shim' : null
+      },
+      load(id) {
+        return id === '\0my-plugin-bundle-css-js-shim' ? '' : null
+      },
+    },
+    vanillaExtractPlugin(),
+  ],
+  // ...
+})
+```
+
 Finally, the catalog carries the build deps (add them if missing) and knip ignores the
 build-time-only css package:
 
 ```yaml
 # pnpm-workspace.yaml
 catalog:
+  '@sanity/vanilla-extract-vite-plugin': ^0.1.0
   '@vanilla-extract/css': ^1.20.1
-  '@vanilla-extract/vite-plugin': ^5.2.2
 ```
 
 ```jsonc
@@ -249,9 +280,9 @@ catalog:
 
 > **New plugins get this for free.** `pnpm generate "new plugin"` wires all of the above
 > automatically when you opt into styling — the `rollup` option, the `./bundle.css` export, the
-> catalog devDeps, the `vitest.config.ts` plugin, and an example `Tool.css.ts`. The test studio
-> already registers the Vite plugin globally, so generated plugins render in `pnpm dev` with no extra
-> steps.
+> catalog devDeps, the `vitest.config.ts` plugin (plus the `bundle.css.js` shim stub), and an
+> example `Tool.css.ts`. The test studio already registers the Vite plugin globally, so generated
+> plugins render in `pnpm dev` with no extra steps.
 
 ---
 

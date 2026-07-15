@@ -1,4 +1,4 @@
-import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {DevTools} from '@vitejs/devtools'
 import {defineCliConfig} from 'sanity/cli'
 
