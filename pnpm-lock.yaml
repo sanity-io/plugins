@@ -122,8 +122,8 @@ catalogs:
       specifier: ^12.42.2
       version: 12.42.2
     nanoid:
-      specifier: ^5.1.16
-      version: 5.1.16
+      specifier: ^6.0.0
+      version: 6.0.0
     oxfmt:
       specifier: ^0.58.0
       version: 0.58.0
@@ -1923,7 +1923,7 @@ importers:
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       nanoid:
         specifier: 'catalog:'
-        version: 5.1.16
+        version: 6.0.0
       styled-components:
         specifier: npm:@sanity/styled-components@latest
         version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
@@ -2568,7 +2568,7 @@ importers:
         version: 1.0.0
       nanoid:
         specifier: 'catalog:'
-        version: 5.1.16
+        version: 6.0.0
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -9482,6 +9482,11 @@ packages:
     engines: {node: ^18 || >=20}
     hasBin: true
 
+  nanoid@6.0.0:
+    resolution: {integrity: sha512-mkUH+rPkwU2qPadJ0oJZOjeZ5Mxn8Q1UhevwkTRWNuUZzyia3h4rhzK39hxaHTk0o2OxB8W2SQ6A8k23ZDi1pQ==}
+    engines: {node: ^22 || ^24 || >=26}
+    hasBin: true
+
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
 
@@ -13565,7 +13570,7 @@ snapshots:
       '@module-federation/dts-plugin': 2.7.0(typescript@7.0.2)
       '@module-federation/runtime': 2.7.0
       '@module-federation/sdk': 2.7.0
-      vite: 8.1.4(@types/node@24.13.3)(@vitejs/devtools@0.4.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
+      vite: 8.1.4(@types/node@24.13.3)(@vitejs/devtools@0.3.4)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -14325,7 +14330,7 @@ snapshots:
       rolldown: 1.1.5
     optionalDependencies:
       '@babel/runtime': 7.29.7
-      vite: 8.1.4(@types/node@24.13.3)(@vitejs/devtools@0.4.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
+      vite: 8.1.4(@types/node@24.13.3)(@vitejs/devtools@0.3.4)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
 
   '@rolldown/pluginutils@1.0.1': {}
 
@@ -14928,7 +14933,7 @@ snapshots:
       '@babel/traverse': 7.29.7
       '@babel/types': 7.29.7
       '@oclif/core': 4.11.11
-      '@sanity/cli-core': 2.3.0(@noble/hashes@2.2.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(terser@5.48.0)(yaml@2.9.0)
+      '@sanity/cli-core': 2.3.0(@noble/hashes@2.2.0)(@types/node@24.13.3)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(terser@5.48.0)(yaml@2.9.0)
       '@sanity/telemetry': 1.1.0(react@19.2.7)
       '@sanity/worker-channels': 2.0.0
       chokidar: 3.6.0
@@ -15083,7 +15088,7 @@ snapshots:
   '@sanity/migrate@7.0.3(@oclif/core@4.11.11)(@sanity/cli-core@2.3.0)(@types/react@19.2.17)(xstate@5.32.4)':
     dependencies:
       '@oclif/core': 4.11.11
-      '@sanity/cli-core': 2.3.0(@noble/hashes@2.2.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(terser@5.48.0)(yaml@2.9.0)
+      '@sanity/cli-core': 2.3.0(@noble/hashes@2.2.0)(@types/node@24.13.3)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(terser@5.48.0)(yaml@2.9.0)
       '@sanity/client': 7.23.2
       '@sanity/mutate': 0.18.1(xstate@5.32.4)
       '@sanity/types': 6.5.0(@types/react@19.2.17)
@@ -16327,7 +16332,7 @@ snapshots:
   '@vitejs/plugin-react@6.0.3(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(vite@8.1.4)':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.1.4(@types/node@24.13.3)(@vitejs/devtools@0.4.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
+      vite: 8.1.4(@types/node@24.13.3)(@vitejs/devtools@0.3.4)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
     optionalDependencies:
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.5)(vite@8.1.4)
       babel-plugin-react-compiler: 1.0.0
@@ -18851,6 +18856,8 @@ snapshots:
   nanoid@3.3.15: {}
 
   nanoid@5.1.16: {}
+
+  nanoid@6.0.0: {}
 
   node-fetch-native@1.6.7:
     optional: true
