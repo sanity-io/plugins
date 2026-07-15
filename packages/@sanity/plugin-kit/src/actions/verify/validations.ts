@@ -697,6 +697,37 @@ async function findLegacyConfigFiles(
   return found
 }
 
+/**
+ * Finds a leftover config key from a replaced tool in the plugin's package.json and (in a
+ * monorepo) the workspace root package.json, where such keys used to configure the whole
+ * workspace.
+ */
+async function findLegacyPackageJsonKey(
+  pkgJson: PackageJson,
+  basePath: string,
+  workspaceRoot: string | undefined,
+  key: string,
+): Promise<string[]> {
+  const found: string[] = []
+  if (pkgJson[key]) {
+    found.push(`package.json ("${key}" key)`)
+  }
+  if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
+    const rootPkgPath = path.join(workspaceRoot, 'package.json')
+    if (await fileExists(rootPkgPath)) {
+      try {
+        const rootPkg = await readJsonFile<PackageJson>(rootPkgPath)
+        if (rootPkg && typeof rootPkg === 'object' && rootPkg[key]) {
+          found.push(`package.json ("${key}" key, in the workspace root)`)
+        }
+      } catch {
+        // an unparseable root package.json is not this check's concern
+      }
+    }
+  }
+  return found
+}
+
 type ConfigDirResult = {ok: true} | {ok: false; found: boolean; error: string}
 
 async function checkOxfmtConfigDir(dir: string, describeDir: string): Promise<ConfigDirResult> {
@@ -790,9 +821,9 @@ export async function validateOxfmtConfig(
     workspaceRoot,
     legacyPrettierConfigFiles,
   )
-  if (pkgJson.prettier) {
-    legacyFound.push('package.json ("prettier" key)')
-  }
+  legacyFound.push(
+    ...(await findLegacyPackageJsonKey(pkgJson, basePath, workspaceRoot, 'prettier')),
+  )
   if (legacyFound.length) {
     errors.push(
       outdent`
@@ -967,9 +998,9 @@ export async function validateOxlintConfig(
   const workspaceRoot = await findWorkspaceRoot(basePath)
 
   const legacyFound = await findLegacyConfigFiles(basePath, workspaceRoot, legacyEslintConfigFiles)
-  if (pkgJson.eslintConfig) {
-    legacyFound.push('package.json ("eslintConfig" key)')
-  }
+  legacyFound.push(
+    ...(await findLegacyPackageJsonKey(pkgJson, basePath, workspaceRoot, 'eslintConfig')),
+  )
   if (legacyFound.length) {
     errors.push(
       outdent`
