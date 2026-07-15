@@ -83,7 +83,7 @@ jobs:
         env:
           RESULT: ${{ needs.test_shards.result }}
         run: |
-          if [ "$RESULT" != "success" ] && [ "$RESULT" != "skipped" ]; then
+          if [ "$RESULT" != "success" ]; then
             echo "Test shards failed with status: $RESULT"
             exit 1
           fi
