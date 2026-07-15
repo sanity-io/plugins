@@ -417,8 +417,10 @@ Peer dependency ranges are centralized in the `peer` named catalog in `pnpm-work
 
 The catalog only holds peers shared across many packages (`react`, `react-dom`, `sanity`, `styled-components`). Keep explicit ranges instead of adding catalog entries for:
 
-- **Niche one-off peers** used by a single package (e.g. `easymde` in `sanity-plugin-markdown`, `eslint`/`typescript` in `@sanity/plugin-kit`)
+- **Niche one-off peers** used by a single package (e.g. `easymde` in `sanity-plugin-markdown`)
 - **Peers on other workspace packages**, which keep the `workspace:^` protocol (e.g. `@sanity/dashboard` in the dashboard widgets) or an explicit range when older majors are intentionally supported (e.g. `sanity-plugin-internationalized-array` in `@sanity/sfcc`) — changesets can't track dependents through `catalog:` references
+
+Exception: peers that must stay in lockstep with the version we develop against reference the **default** catalog (`catalog:`) instead of `catalog:peer` — e.g. `@sanity/pkg-utils`, `oxfmt` and `oxlint` in `@sanity/plugin-kit`, where the shared configs may rely on rules and features that ship in a new minor. A wider `catalog:peer` range would let consumers pair plugin-kit with versions missing those features.
 
 Note that the `peer` catalog entries are intentionally wider than the default catalog's (e.g. `react: ^19.2` vs `^19.2.7`): the default catalog pins what we develop against, the `peer` catalog declares what consumers may use. Renovate is configured (a `packageRules` entry in `.github/renovate.json` disables the `pnpm.catalog.peer` depType) to never rewrite these ranges — changing a peer range is a deliberate, manual decision.
 
