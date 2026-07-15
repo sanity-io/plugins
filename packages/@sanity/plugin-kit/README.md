@@ -30,6 +30,8 @@ Check the [FAQ](#faq) fro more on these.
 
 - [Installation](#installation)
 - [Initialize a new plugin](#initialize-a-new-plugin)
+- [Formatting with oxfmt](#formatting-with-oxfmt)
+- [Linting with oxlint](#linting-with-oxlint)
 - [Verify plugin package](#verify-plugin-package)
   - [Upgrading a v2 plugin](#upgrading-a-v2-plugin)
 - [Upgrade help in v2 Studio](#upgrade-help-in-v2-studio)
@@ -114,6 +116,83 @@ npx @sanity/plugin-kit@latest init --help
 
 for up-to-date specifics.
 
+## Formatting with oxfmt
+
+Plugins are formatted with [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) using a shared
+preset exported as `@sanity/plugin-kit/oxfmt`. `plugin-kit init` sets this up automatically: it adds
+an `oxfmt` devDependency, a `format` script, and an `oxfmt.config.ts` re-exporting the preset:
+
+```ts
+export {default} from '@sanity/plugin-kit/oxfmt'
+```
+
+The config file belongs next to the `package.json` that installs and runs oxfmt. In a monorepo that
+is the workspace root, so every package is formatted the same way; in a standalone plugin repository
+it is the plugin directory itself.
+
+Oxfmt has no `extends` mechanism. To customize, spread the preset and override options:
+
+```ts
+import pluginKitOxfmt from '@sanity/plugin-kit/oxfmt'
+import {defineConfig} from 'oxfmt'
+
+export default defineConfig({
+  ...pluginKitOxfmt,
+  ignorePatterns: [...(pluginKitOxfmt.ignorePatterns ?? []), 'CHANGELOG.md'],
+})
+```
+
+Note: oxfmt loads TypeScript config files with Node's native TypeScript support, which requires
+Node `^20.19 || >=22.18`.
+
+Migrating a plugin from prettier? Remove the prettier config file (custom options can be migrated
+with `npx oxfmt --migrate=prettier`), drop the `prettier`, `prettier-plugin-packagejson` and
+`eslint-plugin-prettier` devDependencies, and add the `oxfmt.config.ts` above.
+
+## Linting with oxlint
+
+Plugins are linted with [oxlint](https://oxc.rs/docs/guide/usage/linter.html) using a shared config
+exported as `@sanity/plugin-kit/oxlint`. It enables type-aware rules and TypeScript type checking
+(via [oxlint-tsgolint](https://github.com/oxc-project/tsgolint)), treats warnings as errors, and
+turns on the React, React Compiler, import, promise, a11y and unicorn rule sets - the same setup
+the [sanity-io/plugins](https://github.com/sanity-io/plugins) monorepo uses. Because oxlint
+type-checks as part of linting, there is no separate `tsc` step.
+
+`plugin-kit init` sets this up automatically: it adds `oxlint` and `oxlint-tsgolint`
+devDependencies, a `lint` script, and an `oxlint.config.ts` re-exporting the shared config:
+
+```ts
+export {default} from '@sanity/plugin-kit/oxlint'
+```
+
+Like the oxfmt config, the `oxlint.config.ts` belongs next to the `package.json` that installs and
+runs oxlint: the workspace root in a monorepo, otherwise the plugin directory. To customize,
+[extend](https://oxc.rs/docs/guide/usage/linter/config.html#extend-shared-configs) the shared
+config and add your own options (`ignorePatterns` do not propagate through `extends`, so spread
+them explicitly when adding your own):
+
+```ts
+import sanityPluginKitOxlint from '@sanity/plugin-kit/oxlint'
+import {defineConfig} from 'oxlint'
+
+export default defineConfig({
+  extends: [sanityPluginKitOxlint],
+  ignorePatterns: [...(sanityPluginKitOxlint.ignorePatterns ?? []), 'examples/**'],
+  overrides: [
+    {
+      files: ['test/**'],
+      rules: {'no-console': 'off'},
+    },
+  ],
+})
+```
+
+Note: TypeScript config files require the Node-based `oxlint` package and Node `>=22.18`.
+
+Migrating a plugin from eslint? Remove the eslint config files and the eslint devDependencies
+(`eslint`, `eslint-config-*`, `eslint-plugin-*`, `@typescript-eslint/*`), and add the
+`oxlint.config.ts` above.
+
 ## Verify plugin package
 
 Verify that the plugin package is configured correctly by running:
@@ -131,10 +210,10 @@ Verify that the plugin package is configured correctly by running:
 - Check for redundant v2 config:
   - babel
   - the deprecated `@sanity/incompatible-plugin` v2 compatibility shim (`sanity.json` + `v2-incompatible.js`)
-- Check for sanity imports that has changed in v3, using eslint
+- Check that the plugin is formatted with oxfmt using the shared `@sanity/plugin-kit/oxfmt` preset (and that no legacy prettier config remains)
+- Check that the plugin lints with oxlint using the shared `@sanity/plugin-kit/oxlint` config (and that no legacy eslint config remains)
 - Check tsconfig.json settings
 - Check for [SPDX](https://spdx.org/licenses/) compatible license definition
-- If the package uses TypeScript, this will also run `tsc --build` when all other checks have passed
 
 Each check will explain why it is needed, steps to fix it and how it can be individually disabled.
 
@@ -167,7 +246,6 @@ This will:
 
 - Check for `sanity.json,` `sanity.config.(ts|js)` and `sanity.cli.(ts|js)` and advice on how to convert the former to the latter two.
 - Check for sanity dependencies that has changed in v3
-- Check for sanity imports that has changed in v3, using ESlint
 
 ### Fail fast mode
 
@@ -426,19 +504,18 @@ Provide a sanityPlugin config in package.json (defaults shown):
       "packageName": true,
       "esmOnly": true,
       "tsconfig": true,
-      "tsc": true,
       "dependencies": true,
       "deprecatedDependencies": true,
       "babelConfig": true,
       "incompatiblePlugin": true,
-      "eslintImports": true,
       "scripts": true,
       "pkg-utils": true,
       "nodeEngine": true,
       "studioConfig": true,
       "srcIndex": true,
       "bannedFiles": true,
-      "duplicateConfig": true
+      "oxfmt": true,
+      "oxlint": true
     }
   }
 }
