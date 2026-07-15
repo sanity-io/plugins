@@ -179,18 +179,19 @@ export default defineConfig({
 ```
 
 **2. Add the `./bundle.css` export and build deps** in `package.json`. The built entry loads the
-stylesheet, so consumers need no changes; the `node` / `default` conditions point at a JS shim so
-SSR/Node imports don't choke on a `.css` file:
+stylesheet, so consumers need no changes; the `node` / `default` conditions point at a JS shim (and
+`types` at its declaration file) so SSR/Node imports don't choke on a `.css` file:
 
 ```json
 {
   "exports": {
     ".": "./src/index.ts",
     "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
       "browser": "./dist/bundle.css",
       "style": "./dist/bundle.css",
-      "node": "./dist/bundle.css.js",
-      "default": "./dist/bundle.css.js"
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
     },
     "./package.json": "./package.json"
   },
@@ -200,6 +201,11 @@ SSR/Node imports don't choke on a `.css` file:
   }
 }
 ```
+
+This exact shape (including the `bundle-css.js`/`bundle-css.d.ts` filenames, deliberately not
+matching the `.css.js`-shaped `cssFileFilter` vanilla-extract Vite plugins use to find `.css.ts`
+output) is generated and kept in sync automatically by `@sanity/tsdown-config`'s `vanillaExtract`
+build option — just rebuild after adding/removing the export, don't hand-edit these paths.
 
 Add the matching `./bundle.css` entry under `publishConfig.exports` too. `@vanilla-extract/css` is
 **build-time only** — its `style()` / `createVar()` calls compile away — so it stays a
@@ -213,6 +219,17 @@ and a caching compiler on Vite's Environment API / `ModuleRunner` instead of the
 which measurably speeds up `sanity build` (see
 [the package README](https://github.com/sanity-io/pkg-utils/tree/main/packages/@sanity/vanilla-extract-vite-plugin#readme)).
 The exported `vanillaExtractPlugin()` API is a drop-in match for the upstream plugin:
+
+```ts
+// plugins/@sanity/google-maps-input/vitest.config.ts
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
+import {defineConfig} from 'vitest/config'
+
+export default defineConfig({
+  plugins: [vanillaExtractPlugin()],
+  // ...
+})
+```
 
 ```ts
 // dev/test-studio/sanity.cli.ts — add vanillaExtractPlugin() to the studio's Vite plugins
@@ -229,39 +246,13 @@ export default defineCliConfig({
 The plugin's own `vitest.config.ts` needs it too, because the package-exports test resolves this
 workspace package's own `exports` map — whose `.` entry points at `./src/index.ts` for
 monorepo-internal dev consumption, not `dist/index.js` — so it transitively imports real `.css.ts`
-source. But registering it plainly breaks that same test on the `./bundle.css` entry:
-`dist/bundle.css.js` (the intentionally-empty Node/SSR shim, see its own comment) matches the
-upstream `cssFileFilter` used to find `.css.ts` output by filename convention alone (`*.css.js`),
-so the plugin tries to evaluate it as real `.css.ts` source through its internal compiler server
-regardless of content. That server externalizes the vanilla-extract runtime as a `require(...)`
-call, which throws `ReferenceError: require is not defined` once evaluated via Vite's
-`ModuleRunner` (the legacy `@vanilla-extract/vite-plugin`, evaluating through `vite-node` instead,
-tolerated this). Stub the shim out as an empty module in a small `enforce: 'pre'` plugin, registered
-_before_ `vanillaExtractPlugin()` so its `resolveId` renames the id away from a `.css.js`-shaped one
-first:
+source.
 
-```ts
-// plugins/@sanity/google-maps-input/vitest.config.ts
-import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
-import {defineConfig} from 'vitest/config'
-
-export default defineConfig({
-  plugins: [
-    {
-      name: 'stub-bundle-css-js-shim',
-      enforce: 'pre',
-      resolveId(source) {
-        return source.endsWith('/dist/bundle.css.js') ? '\0my-plugin-bundle-css-js-shim' : null
-      },
-      load(id) {
-        return id === '\0my-plugin-bundle-css-js-shim' ? '' : null
-      },
-    },
-    vanillaExtractPlugin(),
-  ],
-  // ...
-})
-```
+> **History:** before `@sanity/tsdown-config` 0.17.1, the shim was named `bundle.css.js` — which
+> matched the `cssFileFilter` above by filename alone, so `vanillaExtractPlugin()` tried to evaluate
+> the empty shim as real `.css.ts` source and threw `ReferenceError: require is not defined` via
+> `ModuleRunner`. That's why the shim is now named `bundle-css.js` instead. Make sure
+> `@sanity/tsdown-config` is at least `^0.17.1` (and rebuild) if you see that error.
 
 Finally, the catalog carries the build deps (add them if missing) and knip ignores the
 build-time-only css package:
@@ -280,9 +271,9 @@ catalog:
 
 > **New plugins get this for free.** `pnpm generate "new plugin"` wires all of the above
 > automatically when you opt into styling — the `rollup` option, the `./bundle.css` export, the
-> catalog devDeps, the `vitest.config.ts` plugin (plus the `bundle.css.js` shim stub), and an
-> example `Tool.css.ts`. The test studio already registers the Vite plugin globally, so generated
-> plugins render in `pnpm dev` with no extra steps.
+> catalog devDeps, the `vitest.config.ts` plugin, and an example `Tool.css.ts`. The test studio
+> already registers the Vite plugin globally, so generated plugins render in `pnpm dev` with no extra
+> steps.
 
 ---
 
