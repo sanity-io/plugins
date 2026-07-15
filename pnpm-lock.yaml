@@ -237,6 +237,9 @@ importers:
       '@sanity/assist':
         specifier: workspace:*
         version: link:../../plugins/@sanity/assist
+      '@sanity/block-insert-picker':
+        specifier: workspace:*
+        version: link:../../plugins/@sanity/block-insert-picker
       '@sanity/code-input':
         specifier: workspace:*
         version: link:../../plugins/@sanity/code-input
@@ -627,6 +630,58 @@ importers:
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0
+      react:
+        specifier: 'catalog:'
+        version: 19.2.7
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.7(react@19.2.7)
+      sanity:
+        specifier: ^6.5.0
+        version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.11)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.3.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.3.4)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.8)(jiti@2.7.0)(oxfmt@0.58.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.1.5)(terser@5.48.0)(typescript@7.0.2)
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.22.7(@typescript/native-preview@7.0.0-dev.20260421.2)(@vitejs/devtools@0.3.4)(oxc-resolver@11.21.3)(publint@0.3.21)(tsx@4.23.0)(typescript@7.0.2)
+
+  plugins/@sanity/block-insert-picker:
+    dependencies:
+      '@portabletext/plugin-input-rule':
+        specifier: ^6.0.4
+        version: 6.0.4(@portabletext/editor@7.10.7)(@types/react@19.2.17)(react@19.2.7)
+      '@sanity/ui':
+        specifier: 'catalog:'
+        version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
+      styled-components:
+        specifier: npm:@sanity/styled-components@latest
+        version: '@sanity/styled-components@6.1.24(react-dom@19.2.7)(react@19.2.7)'
+    devDependencies:
+      '@portabletext/editor':
+        specifier: ^7.10.7
+        version: 7.10.7(@types/react@19.2.17)(react@19.2.7)
+      '@sanity/tsconfig':
+        specifier: 'catalog:'
+        version: 2.2.0
+      '@sanity/tsdown-config':
+        specifier: 'catalog:'
+        version: 0.14.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.1.5)(tsdown@0.22.7)(typescript@7.0.2)(vite@8.1.4)
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.7)(react@19.2.7)
+      '@types/node':
+        specifier: ^24.13.3
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
+      jsdom:
+        specifier: 'catalog:'
+        version: 29.1.1(@noble/hashes@2.2.0)
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -3915,8 +3970,8 @@ packages:
       '@csstools/css-parser-algorithms': ^4.0.0
       '@csstools/css-tokenizer': ^4.0.0
 
-  '@csstools/css-color-parser@4.1.8':
-    resolution: {integrity: sha512-3chWb7PRLijpJpPIKkDxdu6IBeO5MrFACND57On0j8OPpc0wZibcGc3xAHrSEbOx/KDRyMHoIxGn0w1PhXMYHw==}
+  '@csstools/css-color-parser@4.1.1':
+    resolution: {integrity: sha512-eZ5XOtyhK+mggRafYUWzA0tvaYOFgdY8AkgQiCJF9qNAePnUo/zmsqqYubBBb3sQ8uNUaSKTY9s9klfRaAXL0g==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@csstools/css-parser-algorithms': ^4.0.0
@@ -3928,8 +3983,8 @@ packages:
     peerDependencies:
       '@csstools/css-tokenizer': ^4.0.0
 
-  '@csstools/css-syntax-patches-for-csstree@1.1.5':
-    resolution: {integrity: sha512-oNjBvzLq2GPZtJphCjLqXow/cHySHSgtxvKZb7OqSZ/xHgw6NWNhfad+6AB9cLeVm6eA9d/qMll3JdEHjy6M+A==}
+  '@csstools/css-syntax-patches-for-csstree@1.1.4':
+    resolution: {integrity: sha512-wgsqt92b7C7tQhIdPNxj0n9zuUbQlvAuI1exyzeNrOKOi62SD7ren8zqszmpVREjAOqg8cD2FqYhQfAuKjk4sw==}
     peerDependencies:
       css-tree: ^3.2.1
     peerDependenciesMeta:
@@ -10267,6 +10322,10 @@ packages:
     resolution: {integrity: sha512-V7+vQEJ06Z+c5tSye8S+nHUfI51xoXIXjHQ99cQtKUkQqqO1kO/KCJUfZXuB47h/YBlDhah2H3hdUGXn8ie0oA==}
     engines: {node: '>=8.6'}
 
+  picomatch@4.0.4:
+    resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
+    engines: {node: '>=12'}
+
   picomatch@4.0.5:
     resolution: {integrity: sha512-RvwwcruNjI1ncT5xRakeyS9Lf8lcItv34KD+aif+VH9kduAyfYBipGh12274xtenIPZ119/R9BdTBa8gAwSh0A==}
     engines: {node: '>=12'}
@@ -11318,11 +11377,11 @@ packages:
     resolution: {integrity: sha512-Bf+ILmBgretUrdJxzXM0SgXLZ3XfiaUuOj/IKQHuTXip+05Xn+uyEYdVg0kYDipTBcLrCVyUzAPz7QmArb0mmw==}
     engines: {node: '>=14.0.0'}
 
-  tldts-core@7.4.4:
-    resolution: {integrity: sha512-vwVLJVvvpslm7vqAH7+XNj/neA/Ynq7DT2EEcMuwc5YzN5XaMyRAqxwU+uX3azZ1FQtB2gvrvnLnAEkvYlVdfg==}
+  tldts-core@7.4.2:
+    resolution: {integrity: sha512-nwEyF4vl4RSJjwSjBUmOSxc3BFPoIFdlRthJ6e+5v9P3bHNsoD06UjuqMUspqp7vsEZ1beaHi1km+optiE17yA==}
 
-  tldts@7.4.4:
-    resolution: {integrity: sha512-kFXFK7O4WPextIUAOk8qtnw9dxR9UIXP9CjuH1cTBVBZMDeQcUPgr/IazGiw1B0Yiw5L75gHLWeW4iD793r90g==}
+  tldts@7.4.2:
+    resolution: {integrity: sha512-kCwffuaH8ntKtygnWe1b4BJKWiCUH30n5KfoTr6IchcXOwR7chAOFJxFrH3vjANafUYrIA4a7SDL+nn7SiR4Sw==}
     hasBin: true
 
   to-regex-range@5.0.1:
@@ -11525,9 +11584,13 @@ packages:
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
 
-  undici@6.27.0:
-    resolution: {integrity: sha512-YmfV3YnEDzXRC5lZ2jWtWWHKGUm1zIt8AhesR1tens+HTNv+YZlN/dp6G727LOvMJ8xjP9Be7Y2Sdr96LDm+pg==}
+  undici@6.26.0:
+    resolution: {integrity: sha512-4yqz8a3n5HmGTlsbADNtr/dJlhkh/55Rq798G6ibiULcXbDtaLpTl1pvdqcbFfeoj3iSi52lePFM7h9H21cw/A==}
     engines: {node: '>=18.17'}
+
+  undici@7.27.0:
+    resolution: {integrity: sha512-+t2Z/GwkZQDtu00813aP66ygViGtPHKhhoFZpQKpKrE+9jIgES+Zw+mFNaDWOVRKiuJjuqKHzD3B1sfGg8+ZOQ==}
+    engines: {node: '>=20.18.1'}
 
   undici@7.28.0:
     resolution: {integrity: sha512-cRZYrTDwWznlnRiPjggAGxZXanty6M8RV1ff8Wm4LWXBp7/IG8v5DnOm74DtUBp9OONpK75YlPnIjQqX0dBDtA==}
@@ -12187,17 +12250,17 @@ snapshots:
       '@octokit/plugin-rest-endpoint-methods': 17.0.0(@octokit/core@7.0.6)
       '@octokit/request': 10.0.10
       '@octokit/request-error': 7.1.0
-      undici: 6.27.0
+      undici: 6.26.0
 
   '@actions/http-client@3.0.2':
     dependencies:
       tunnel: 0.0.6
-      undici: 6.27.0
+      undici: 6.26.0
 
   '@actions/http-client@4.0.1':
     dependencies:
       tunnel: 0.0.6
-      undici: 6.27.0
+      undici: 6.26.0
 
   '@actions/io@3.0.2': {}
 
@@ -12236,7 +12299,7 @@ snapshots:
     dependencies:
       '@asamuzakjp/generational-cache': 1.0.1
       '@csstools/css-calc': 3.2.1(@csstools/css-parser-algorithms@4.0.0)(@csstools/css-tokenizer@4.0.0)
-      '@csstools/css-color-parser': 4.1.8(@csstools/css-parser-algorithms@4.0.0)(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-color-parser': 4.1.1(@csstools/css-parser-algorithms@4.0.0)(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
 
@@ -13315,7 +13378,7 @@ snapshots:
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
 
-  '@csstools/css-color-parser@4.1.8(@csstools/css-parser-algorithms@4.0.0)(@csstools/css-tokenizer@4.0.0)':
+  '@csstools/css-color-parser@4.1.1(@csstools/css-parser-algorithms@4.0.0)(@csstools/css-tokenizer@4.0.0)':
     dependencies:
       '@csstools/color-helpers': 6.0.2
       '@csstools/css-calc': 3.2.1(@csstools/css-parser-algorithms@4.0.0)(@csstools/css-tokenizer@4.0.0)
@@ -13326,7 +13389,7 @@ snapshots:
     dependencies:
       '@csstools/css-tokenizer': 4.0.0
 
-  '@csstools/css-syntax-patches-for-csstree@1.1.5(css-tree@3.2.1)':
+  '@csstools/css-syntax-patches-for-csstree@1.1.4(css-tree@3.2.1)':
     optionalDependencies:
       css-tree: 3.2.1
 
@@ -17827,7 +17890,7 @@ snapshots:
   cssstyle@6.2.0:
     dependencies:
       '@asamuzakjp/css-color': 5.1.11
-      '@csstools/css-syntax-patches-for-csstree': 1.1.5(css-tree@3.2.1)
+      '@csstools/css-syntax-patches-for-csstree': 1.1.4(css-tree@3.2.1)
       css-tree: 3.2.1
       lru-cache: 11.5.1
 
@@ -19513,7 +19576,7 @@ snapshots:
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 6.0.1
-      undici: 7.28.0
+      undici: 7.27.0
       w3c-xmlserializer: 5.0.0
       webidl-conversions: 8.0.1
       whatwg-mimetype: 5.0.0
@@ -19528,7 +19591,7 @@ snapshots:
       '@asamuzakjp/css-color': 5.1.11
       '@asamuzakjp/dom-selector': 7.1.1
       '@bramus/specificity': 2.4.2
-      '@csstools/css-syntax-patches-for-csstree': 1.1.5(css-tree@3.2.1)
+      '@csstools/css-syntax-patches-for-csstree': 1.1.4(css-tree@3.2.1)
       '@exodus/bytes': 1.15.1(@noble/hashes@2.2.0)
       css-tree: 3.2.1
       data-urls: 7.0.0(@noble/hashes@2.2.0)
@@ -19540,7 +19603,7 @@ snapshots:
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 6.0.1
-      undici: 7.28.0
+      undici: 7.27.0
       w3c-xmlserializer: 5.0.0
       webidl-conversions: 8.0.1
       whatwg-mimetype: 5.0.0
@@ -20489,6 +20552,9 @@ snapshots:
   picocolors@1.1.1: {}
 
   picomatch@2.3.2: {}
+
+  picomatch@4.0.4:
+    optional: true
 
   picomatch@4.0.5: {}
 
@@ -22026,11 +22092,11 @@ snapshots:
 
   tinyrainbow@3.1.0: {}
 
-  tldts-core@7.4.4: {}
+  tldts-core@7.4.2: {}
 
-  tldts@7.4.4:
+  tldts@7.4.2:
     dependencies:
-      tldts-core: 7.4.4
+      tldts-core: 7.4.2
 
   to-regex-range@5.0.1:
     dependencies:
@@ -22044,7 +22110,7 @@ snapshots:
 
   tough-cookie@6.0.1:
     dependencies:
-      tldts: 7.4.4
+      tldts: 7.4.2
 
   tr46@0.0.3: {}
 
@@ -22268,7 +22334,9 @@ snapshots:
 
   undici-types@7.18.2: {}
 
-  undici@6.27.0: {}
+  undici@6.26.0: {}
+
+  undici@7.27.0: {}
 
   undici@7.28.0: {}
 
@@ -22316,7 +22384,7 @@ snapshots:
   unplugin@3.0.0:
     dependencies:
       '@jridgewell/remapping': 2.3.5
-      picomatch: 4.0.5
+      picomatch: 4.0.4
       webpack-virtual-modules: 0.6.2
     optional: true
 
