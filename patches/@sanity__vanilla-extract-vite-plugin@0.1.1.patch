@@ -1,0 +1,29 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index ef8551ede583212ab352acc9c6fcd6607d760981..59b785966a87f7d311ec4fdb44ecdc94e2c2402a 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -113,6 +113,24 @@ async function createCompilerServer({ root, identifiers, viteConfig, enableFileW
+ 		logLevel: "silent",
+ 		optimizeDeps: { noDiscovery: !0 },
+ 		build: { assetsInlineLimit: viteConfig.build?.assetsInlineLimit },
++		// Parent app configs (notably `sanity build`) often enable the "browser"
++		// resolve condition. The compiler evaluates `.css.ts` in Node via
++		// ModuleRunner; resolving the browser build of `@vanilla-extract/css`
++		// makes `style()` use the runtime/inject adapter path, so `appendCss`
++		// never reaches our cssCache and virtual `.vanilla.css` imports are omitted.
++		resolve: {
++			...viteConfig.resolve,
++			conditions: ["node", "import", "module", "default"],
++			mainFields: ["module", "jsnext:main", "jsnext", "main"]
++		},
++		ssr: {
++			...viteConfig.ssr,
++			resolve: {
++				...viteConfig.ssr?.resolve,
++				conditions: ["node", "import", "module", "default"],
++				externalConditions: ["node", "import", "module", "default"]
++			}
++		},
+ 		plugins: [
+ 			{
+ 				name: "sanity-vanilla-extract-externalize",
