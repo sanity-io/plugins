@@ -495,6 +495,21 @@ corepack enable
 2. Verify you have access to the project
 3. Check the browser console for specific errors
 
+### vanilla-extract CSS missing from `sanity build` output
+
+`@sanity/vanilla-extract-vite-plugin` is currently patched via `patchedDependencies`
+(`patches/@sanity__vanilla-extract-vite-plugin@0.2.0.patch`): without it, `sanity build` emits the
+compiled `.css.ts` class names but silently drops the extracted CSS (e.g. the google-maps-input
+picker dialog collapses), while `sanity dev` is unaffected. The patch pins every stateful
+`@vanilla-extract/css` entrypoint to one module instance by importing them eagerly at plugin module
+load — see the comment inside the patch for the full root-cause analysis (NODE_ENV-dispatched CJS
+dists resolving to different dev/prod copies before vs. after Vite sets `NODE_ENV=production`).
+Drop the patch once the fix ships upstream in
+[sanity-io/pkg-utils](https://github.com/sanity-io/pkg-utils); when Renovate bumps the plugin past
+`0.2.0`, pnpm will fail install with `ERR_PNPM_PATCH_NOT_APPLIED` — refresh the patch against the
+new version (`pnpm patch <pkg>@<version>`) if it is still unfixed, or delete the patch and the
+`patchedDependencies` entry if it is.
+
 ## Cursor Cloud specific instructions
 
 ### Services
