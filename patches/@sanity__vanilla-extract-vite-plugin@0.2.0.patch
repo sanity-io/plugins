@@ -1,0 +1,35 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index ed8afc6403bf1821f82e3eb6e4d5a0a64ae80827..9bdd2e8920243e877f74964f2e588f36d70f0a73 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -3,6 +3,30 @@ import { createServer, createServerModuleRunner, loadConfigFromFile } from "vite
+ import { isAbsolute, join, posix } from "node:path";
+ import { transformCss } from "@vanilla-extract/css/transformCss";
+ /**
++* Pin every stateful `@vanilla-extract/css` entrypoint to a single module instance
++* (https://github.com/sanity-io/pkg-utils/issues — vanilla-extract CSS silently missing from
++* `sanity build` output).
++*
++* `@vanilla-extract/css`'s CJS dists are dev/prod dispatchers: `dist/*.cjs.js` picks
++* `*.cjs.dev.js` or `*.cjs.prod.js` based on `process.env.NODE_ENV` **at first require**, and the
++* dev/prod files require their siblings (e.g. `adapter/dist/*.cjs.prod.js`) directly, bypassing
++* the dispatcher. `@sanity/vanilla-extract-integration` requires `@vanilla-extract/css/adapter`
++* when this module loads — during config loading, before Vite's `resolveConfig` sets
++* `NODE_ENV=production` for a build — so the adapter dispatcher caches the *dev* copy. The
++* `.css.ts` modules evaluated later through the ModuleRunner then import `@vanilla-extract/css`
++* itself for the first time *after* `NODE_ENV` became `production`, loading the *prod* copy,
++* whose `style()` dispatches `appendCss` through the *prod* adapter instance — not the *dev*
++* instance `setAdapter()` registered the collecting adapter on. The css lands in the built-in
++* no-op mock adapter and the build emits class names without any CSS.
++*
++* Importing the entrypoints eagerly right here makes all their dispatchers resolve at the same
++* moment, with the same `NODE_ENV` value, so host and evaluated modules always share one adapter
++* and one fileScope instance.
++*/
++import "@vanilla-extract/css";
++import "@vanilla-extract/css/adapter";
++import "@vanilla-extract/css/fileScope";
++/**
+ * Serializes compilations: the vanilla-extract css adapter is handed to the evaluated modules
+ * through a global, so only one `.css.ts` module may be evaluated at a time. Ported from
+ * `@vanilla-extract/compiler` (MIT licensed, Copyright (c) 2021 SEEK).
