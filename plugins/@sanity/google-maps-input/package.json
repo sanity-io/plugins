@@ -30,10 +30,11 @@
   "exports": {
     ".": "./src/index.ts",
     "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
       "browser": "./dist/bundle.css",
       "style": "./dist/bundle.css",
-      "node": "./dist/bundle.css.js",
-      "default": "./dist/bundle.css.js"
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
     },
     "./package.json": "./package.json"
   },
@@ -41,10 +42,11 @@
     "exports": {
       ".": "./dist/index.js",
       "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
         "browser": "./dist/bundle.css",
         "style": "./dist/bundle.css",
-        "node": "./dist/bundle.css.js",
-        "default": "./dist/bundle.css.js"
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
       },
       "./package.json": "./package.json"
     }
@@ -61,11 +63,11 @@
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/google.maps": "^3.65.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vanilla-extract/css": "catalog:",
-    "@vanilla-extract/vite-plugin": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
