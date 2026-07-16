@@ -93,6 +93,7 @@ linkWorkspacePackages: deep
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
+  - '@changesets/cli'
   - '@oxfmt/*'
   - '@oxlint/*'
   - '@oxlint-tsgolint/*'

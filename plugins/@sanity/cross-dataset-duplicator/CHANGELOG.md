@@ -1,5 +1,14 @@
 # @sanity/cross-dataset-duplicator
 
+## 2.0.9
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+- Updated dependencies [[`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae)]:
+  - @sanity/studio-secrets@4.0.11
+
 ## 2.0.8
 
 ### Patch Changes

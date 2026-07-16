@@ -1,5 +1,16 @@
 # sanity-plugin-cloudinary
 
+## 2.0.13
+
+### Patch Changes
+
+- [#1577](https://github.com/sanity-io/plugins/pull/1577) [`1c5abb6`](https://github.com/sanity-io/plugins/commit/1c5abb6e6ab8055743d55f0fc75df957e9fab5d8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to v6
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+- Updated dependencies [[`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae)]:
+  - @sanity/studio-secrets@4.0.11
+
 ## 2.0.12
 
 ### Patch Changes
