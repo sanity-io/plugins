@@ -190,7 +190,7 @@ overrides:
 
 patchedDependencies:
   '@bynder/compact-view': c71de21a98b99e126cf6a513070404932603d4254f3614440c3a5f5ee7e7e8a6
-  '@sanity/vanilla-extract-vite-plugin@0.2.0': a909cb42f4899607cbb92ba64d43ed43b26815f405cefac9fbb18fff14facb86
+  '@sanity/vanilla-extract-vite-plugin@0.2.0': f9a8499f6b1984c4dd4aa0d5542d9afe20e0a02d69d22a363d498429a3ea57f8
 
 importers:
 
@@ -316,7 +316,7 @@ importers:
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.0(patch_hash=a909cb42f4899607cbb92ba64d43ed43b26815f405cefac9fbb18fff14facb86)(babel-plugin-macros@3.1.0)(vite@8.1.5)
+        version: 0.2.0(patch_hash=f9a8499f6b1984c4dd4aa0d5542d9afe20e0a02d69d22a363d498429a3ea57f8)(babel-plugin-macros@3.1.0)(vite@8.1.5)
       '@sanity/vercel-protection-bypass':
         specifier: workspace:*
         version: link:../../plugins/@sanity/vercel-protection-bypass
@@ -1127,7 +1127,7 @@ importers:
         version: 0.17.2(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.2.0)(tsdown@0.22.8)(typescript@7.0.2)(vite@8.1.5)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.0(patch_hash=a909cb42f4899607cbb92ba64d43ed43b26815f405cefac9fbb18fff14facb86)(babel-plugin-macros@3.1.0)(vite@8.1.5)
+        version: 0.2.0(patch_hash=f9a8499f6b1984c4dd4aa0d5542d9afe20e0a02d69d22a363d498429a3ea57f8)(babel-plugin-macros@3.1.0)(vite@8.1.5)
       '@types/google.maps':
         specifier: ^3.65.2
         version: 3.65.2
@@ -15087,7 +15087,7 @@ snapshots:
       - babel-plugin-macros
       - rolldown
 
-  '@sanity/vanilla-extract-vite-plugin@0.2.0(patch_hash=a909cb42f4899607cbb92ba64d43ed43b26815f405cefac9fbb18fff14facb86)(babel-plugin-macros@3.1.0)(vite@8.1.5)':
+  '@sanity/vanilla-extract-vite-plugin@0.2.0(patch_hash=f9a8499f6b1984c4dd4aa0d5542d9afe20e0a02d69d22a363d498429a3ea57f8)(babel-plugin-macros@3.1.0)(vite@8.1.5)':
     dependencies:
       '@sanity/vanilla-extract-integration': 0.1.0(babel-plugin-macros@3.1.0)
       '@vanilla-extract/css': 1.21.1(babel-plugin-macros@3.1.0)
