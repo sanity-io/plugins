@@ -178,6 +178,10 @@ catalogs:
     vitest:
       specifier: ^4.1.10
       version: 4.1.10
+  peer:
+    react:
+      specifier: ^19.2
+      version: 19.2.7
 
 overrides:
   '@types/node': ^24.13.3
@@ -640,7 +644,7 @@ importers:
         specifier: ^6.0.2
         version: 6.0.2
       '@codemirror/lang-markdown':
-        specifier: ^6.5.0
+        specifier: ^6.5.1
         version: 6.5.1
       '@codemirror/lang-php':
         specifier: ^6.0.2
