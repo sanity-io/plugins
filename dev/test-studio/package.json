@@ -9,7 +9,7 @@
   "scripts": {
     "build": "sanity build -y",
     "dev": "sanity dev --no-auto-updates",
-    "typegen": "sanity schema extract --enforce-required-fields --workspace home && sanity typegen generate"
+    "typegen": "sanity typegen generate"
   },
   "dependencies": {
     "@sanity/assist": "workspace:*",
