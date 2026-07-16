@@ -137,6 +137,7 @@ overrides:
 
 patchedDependencies:
   '@bynder/compact-view': patches/@bynder__compact-view.patch
+  '@sanity/vanilla-extract-vite-plugin@0.1.1': patches/@sanity__vanilla-extract-vite-plugin@0.1.1.patch
 
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
