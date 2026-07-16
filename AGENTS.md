@@ -495,6 +495,12 @@ corepack enable
 2. Verify you have access to the project
 3. Check the browser console for specific errors
 
+### vanilla-extract CSS missing after `sanity build` (but OK in `sanity dev`)
+
+`@sanity/vanilla-extract-vite-plugin@0.1.1` can emit hashed class names without the matching CSS when the parent Vite config enables the `browser` resolve condition (as `sanity build` does). Elements then have classes like `.mt1vq20` with no rules in the production CSS bundle — e.g. the Google Maps dialog loses `height: 40rem` and the place picker layout breaks.
+
+This monorepo patches the plugin via `pnpm.patchedDependencies` (`patches/@sanity__vanilla-extract-vite-plugin@0.1.1.patch`). Upstream: [sanity-io/pkg-utils#3073](https://github.com/sanity-io/pkg-utils/issues/3073). Remove the patch once a fixed release is in the catalog. Always verify plugin styles with `sanity build` + `sanity preview`, not only `sanity dev`.
+
 ## Cursor Cloud specific instructions
 
 ### Services

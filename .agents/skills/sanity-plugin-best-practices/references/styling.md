@@ -216,6 +216,18 @@ export default defineConfig({
 The test studio already registers this plugin globally in `sanity.cli.ts` — you don't need to touch
 that file for a new plugin.
 
+> **Known bug (patched in this monorepo):** `@sanity/vanilla-extract-vite-plugin@0.1.1` can emit
+> class names without CSS under `sanity build` when the parent Vite config enables the `browser`
+> resolve condition. Fixed here via `pnpm.patchedDependencies`; upstream:
+> [sanity-io/pkg-utils#3073](https://github.com/sanity-io/pkg-utils/issues/3073). Always verify
+> styles with `sanity build` + `sanity preview`, not only `sanity dev`.
+
+> **Known bug (patched in this monorepo):** `@sanity/vanilla-extract-vite-plugin@0.1.1` can emit
+> class names without CSS under `sanity build` when the parent Vite config enables the `browser`
+> resolve condition. Fixed here via `pnpm.patchedDependencies`; upstream:
+> [sanity-io/pkg-utils#3073](https://github.com/sanity-io/pkg-utils/issues/3073). Always verify
+> styles with `sanity build` + `sanity preview`, not only `sanity dev`.
+
 Finally, the catalog carries the build deps (add them if missing) and knip ignores the
 build-time-only css package:
 
