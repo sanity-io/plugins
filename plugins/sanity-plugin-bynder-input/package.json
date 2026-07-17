@@ -40,7 +40,7 @@
     "video.js": "catalog:"
   },
   "devDependencies": {
-    "@bynder/compact-view": "5.1.2",
+    "@bynder/compact-view": "5.4.0",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@types/node": "catalog:",
