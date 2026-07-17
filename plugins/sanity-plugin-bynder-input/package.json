@@ -23,11 +23,25 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
+      },
       "./package.json": "./package.json"
     }
   },
@@ -36,16 +50,18 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
+    "@bynder/compact-view": "5.4.0",
     "@sanity/ui": "catalog:",
     "video.js": "catalog:"
   },
   "devDependencies": {
-    "@bynder/compact-view": "5.4.0",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/video.js": "catalog:",
+    "@vanilla-extract/css": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -60,9 +76,5 @@
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
-  },
-  "inlinedDependencies": {
-    "@bynder/compact-view": "5.4.0",
-    "@sanity/styled-components": "6.1.24"
   }
 }

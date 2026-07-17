@@ -7,6 +7,8 @@ import {
   CompactView,
 } from '@bynder/compact-view'
 
+import './BynderModalLayout.css'
+
 export default function BynderModalLayout({
   isOpen,
   onClose,
