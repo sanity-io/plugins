@@ -1,9 +1,14 @@
+import {BlockElementIcon} from '@sanity/icons/BlockElement'
 import {describe, expect, it} from 'vitest'
 
 import {resolveItemPresentation} from './resolveItemPresentation'
 import type {PickerItem} from './types'
 
 function FakeIcon() {
+  return null
+}
+
+function ParentIcon() {
   return null
 }
 
@@ -24,20 +29,17 @@ describe('resolveItemPresentation', () => {
     })
   })
 
-  it("falls back to the schema's name when title is missing", () => {
-    const schemaType = {icon: FakeIcon, name: 'callout'}
-    expect(resolveItemPresentation(callout, schemaType)).toEqual({
-      description: undefined,
-      icon: FakeIcon,
-      title: 'callout',
-    })
+  it("falls back to the capitalized name when the schema's title is missing", () => {
+    const schemaType = {icon: FakeIcon, name: 'codeBlock'}
+    // Matches core's upperFirst: first character only, rest untouched.
+    expect(resolveItemPresentation(callout, schemaType)).toMatchObject({title: 'CodeBlock'})
   })
 
   it("returns the item's own title when no schemaType is provided", () => {
     const item: PickerItem = {...callout, title: 'Custom Title'}
     expect(resolveItemPresentation(item, undefined)).toEqual({
       description: undefined,
-      icon: undefined,
+      icon: BlockElementIcon,
       title: 'Custom Title',
     })
   })
@@ -51,7 +53,9 @@ describe('resolveItemPresentation', () => {
     })
   })
 
-  it("prefers the schema type's description over the item's curated one", () => {
+  it("prefers the item's curated description over the schema type's", () => {
+    // Curation is the more specific intent: `items` metadata is written for
+    // this picker, the schema description for the editing form.
     const item: PickerItem = {...callout, description: 'Curated copy'}
     const schemaType = {
       description: 'Schema copy',
@@ -59,15 +63,34 @@ describe('resolveItemPresentation', () => {
       title: 'Callout',
     }
     expect(resolveItemPresentation(item, schemaType)).toMatchObject({
+      description: 'Curated copy',
+    })
+  })
+
+  it("falls back to the schema type's description when no curated one exists", () => {
+    const schemaType = {
+      description: 'Schema copy',
+      name: 'callout',
+      title: 'Callout',
+    }
+    expect(resolveItemPresentation(callout, schemaType)).toMatchObject({
       description: 'Schema copy',
     })
   })
 
-  it("falls back to the item's curated description when the schema type has none", () => {
-    const item: PickerItem = {...callout, description: 'Curated copy'}
-    const schemaType = {name: 'callout', title: 'Callout'}
-    expect(resolveItemPresentation(item, schemaType)).toMatchObject({
-      description: 'Curated copy',
+  it("walks the icon fallback chain: member, parent type, then Studio's block icon", () => {
+    // The same chain Studio's built-in insert menu resolves icons with.
+    expect(
+      resolveItemPresentation(callout, {name: 'photo', type: {icon: ParentIcon, name: 'image'}}),
+    ).toMatchObject({icon: ParentIcon})
+    expect(resolveItemPresentation(callout, {name: 'callout'})).toMatchObject({
+      icon: BlockElementIcon,
     })
+  })
+
+  it('reads a reference target icon before the generic fallback', () => {
+    expect(
+      resolveItemPresentation(callout, {name: 'authorRef', to: [{icon: FakeIcon}]}),
+    ).toMatchObject({icon: FakeIcon})
   })
 })

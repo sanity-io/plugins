@@ -19,9 +19,15 @@ type GuardResult = {
 type PickerBehaviorRefs = {
   onIntent: (intent: PickerIntent) => void
   getState: () => PickerState
+  /**
+   * Whether Cmd/Ctrl+/ may open the picker. Read per keystroke (not captured
+   * at registration) so the host toggling `shortcut` doesn't force a
+   * re-registration, which would re-sort the editor's behavior chain.
+   */
+  isShortcutEnabled: () => boolean
 }
 
-export function createPickerBehavior({getState, onIntent}: PickerBehaviorRefs) {
+export function createPickerBehavior({getState, isShortcutEnabled, onIntent}: PickerBehaviorRefs) {
   const guard: BehaviorGuard<BehaviorEvent, GuardResult> = ({event, snapshot}) => {
     const state = getState()
 
@@ -45,7 +51,8 @@ export function createPickerBehavior({getState, onIntent}: PickerBehaviorRefs) {
       if (
         event.type === 'keyboard.keydown' &&
         event.originEvent.key === '/' &&
-        (event.originEvent.metaKey || event.originEvent.ctrlKey)
+        (event.originEvent.metaKey || event.originEvent.ctrlKey) &&
+        isShortcutEnabled()
       ) {
         // For the shortcut mode, anchor to the focused block whether it is a
         // text block or a block object (image, callout); fall back to the

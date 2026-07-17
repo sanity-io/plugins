@@ -5,10 +5,13 @@ import {buildTheme} from '@sanity/ui/theme'
 import {act, cleanup, fireEvent, render, screen} from '@testing-library/react'
 import React from 'react'
 import type {PortableTextBlock} from 'sanity'
+// Resolves to the vi.mock'd module below; the Provider lets tests drive the
+// primary (context-based) detection path.
+import {PortableTextMemberSchemaTypesContext} from 'sanity/_singletons'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
-import {BlockInsertPicker} from './blockInsertPicker'
-import type {PickerInsertEvent, PickerItemMetadata} from './types'
+import {BlockInsertPicker, type BlockInsertPickerProps} from './blockInsertPicker'
+import type {PickerInsertEvent, PickerItem, PickerItemMetadata} from './types'
 
 // jsdom has no matchMedia; @sanity/ui's ThemeProvider queries it for the
 // prefers-color-scheme lookup. The shape assertions are test-environment
@@ -62,8 +65,23 @@ vi.mock('sanity', () => ({
 
 vi.mock('sanity/_singletons', async () => {
   const {createContext} = await import('react')
-  return {PortableTextMemberItemsContext: createContext([])}
+  return {
+    PortableTextMemberItemsContext: createContext([]),
+    PortableTextMemberSchemaTypesContext: createContext(null),
+  }
 })
+
+// Observability for the openOnInsert seam: the real hook rides on Studio's
+// member-items context (a permanent no-op under jsdom's empty mock), so swap
+// it for a recording stub. vi.fn is unavailable in hoisted factories.
+const openBlockSpy = vi.hoisted(() => {
+  const calls: string[] = []
+  return {calls, record: (key: string) => calls.push(key)}
+})
+
+vi.mock('./openBlockOnInsert', () => ({
+  useOpenBlockOnInsert: () => openBlockSpy.record,
+}))
 
 // callout must declare its fields: insert.block normalizes the inserted
 // block against the schema and strips undeclared props, so initial values
@@ -143,44 +161,77 @@ function pressKey(editor: ReturnType<typeof useEditor>, key: string) {
   })
 }
 
-async function renderOpenPicker(options?: {
-  arrayTypeName?: string
-  // null = render without an items prop, exercising bare schema derivation
-  items?: null | readonly PickerItemMetadata[]
-}) {
+async function renderOpenPicker(options?: RenderPickerOptions) {
   const {editor} = await renderPicker(options)
   typeText(editor, '/')
   expect(screen.getByText('Insert block')).toBeDefined()
   return {editor}
 }
 
-async function renderPicker(options?: {
-  arrayTypeName?: string
+type RenderPickerOptions = Omit<BlockInsertPickerProps, 'items'> & {
   initialValue?: PortableTextBlock[]
+  // null = render without an items prop, exercising bare schema derivation
   items?: null | readonly PickerItemMetadata[]
-  onItemInserted?: (event: PickerInsertEvent) => void
-}) {
-  const editorRef = React.createRef<null | ReturnType<typeof useEditor>>()
-  render(
+  /**
+   * Value for the (mocked) PortableTextMemberSchemaTypesContext — the
+   * primary, zero-config detection path. Tests that omit it exercise the
+   * arrayTypeName fallback against the mocked useSchema.
+   */
+  memberSchemaTypes?: unknown
+}
+
+function makePickerTree(
+  editorRef: React.Ref<null | ReturnType<typeof useEditor>>,
+  options?: RenderPickerOptions,
+) {
+  const {initialValue, items, memberSchemaTypes, ...props} = options ?? {}
+  // Opt out of the fallback entirely with arrayTypeName: '' (the
+  // context-path tests pass memberSchemaTypes instead).
+  const arrayTypeName = 'arrayTypeName' in props ? props.arrayTypeName || undefined : 'testContent'
+  // The mocked context accepts any stub; the real value type lives in
+  // sanity's internals. Aliased outside JSX so the Provider gets a stable
+  // identifier (jsx-no-constructed-context-values).
+  // oxlint-disable-next-line no-unsafe-type-assertion
+  const memberSchemaTypesValue = memberSchemaTypes as never
+  const picker = (
+    <BlockInsertPicker
+      {...props}
+      arrayTypeName={arrayTypeName}
+      items={items === null ? undefined : (items ?? defaultItems)}
+    />
+  )
+  return (
     <ThemeProvider theme={theme}>
       <ToastProvider>
         <EditorProvider
           initialConfig={{
-            initialValue: options?.initialValue,
+            initialValue,
             schemaDefinition,
           }}
         >
           <CaptureEditor ref={editorRef} />
           <PortableTextEditable />
-          <BlockInsertPicker
-            arrayTypeName={options?.arrayTypeName ?? 'testContent'}
-            items={options?.items === null ? undefined : (options?.items ?? defaultItems)}
-            onItemInserted={options?.onItemInserted}
-          />
+          {memberSchemaTypes === undefined ? (
+            picker
+          ) : (
+            <PortableTextMemberSchemaTypesContext.Provider
+              // A test harness rendered per call — no re-render for a
+              // constructed value to churn.
+              // oxlint-disable-next-line react/jsx-no-constructed-context-values
+              value={memberSchemaTypesValue}
+            >
+              {picker}
+            </PortableTextMemberSchemaTypesContext.Provider>
+          )}
         </EditorProvider>
       </ToastProvider>
-    </ThemeProvider>,
+    </ThemeProvider>
   )
+}
+
+async function renderPicker(options?: RenderPickerOptions) {
+  const editorRef = React.createRef<null | ReturnType<typeof useEditor>>()
+  const view = render(makePickerTree(editorRef, options))
   const editor = editorRef.current!
   // Wait for the editor machine's value sync (see insertBehavior.test.tsx).
   const seededKey = options?.initialValue?.[0]?._key
@@ -197,7 +248,11 @@ async function renderPicker(options?: {
   await act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 0))
   })
-  return {editor}
+  return {
+    editor,
+    rerenderWith: (nextOptions?: RenderPickerOptions) =>
+      view.rerender(makePickerTree(editorRef, nextOptions)),
+  }
 }
 
 function selectStartOf(editor: ReturnType<typeof useEditor>, blockKey: string) {
@@ -243,6 +298,7 @@ describe('BlockInsertPicker popover', () => {
     mocks.impls.resolveInitialValue = () => Promise.resolve({})
     mocks.impls.schemaGet = baseSchemaGet
     scrollIntoViewSpy.mockClear()
+    openBlockSpy.calls.length = 0
   })
 
   it('closes when a pointerdown lands outside the popover', async () => {
@@ -323,10 +379,10 @@ describe('BlockInsertPicker popover', () => {
     expect(blockTypes(editor)).toContain('callout')
   })
 
-  it("notifies onItemInserted with the inserted block's key, type, and via", async () => {
+  it("notifies onInsert with the inserted block's key, type, via, mode, and query", async () => {
     const events: PickerInsertEvent[] = []
     const {editor} = await renderPicker({
-      onItemInserted: (event) => events.push(event),
+      onInsert: (event) => events.push(event),
     })
     typeText(editor, '/')
     expect(screen.getByText('Insert block')).toBeDefined()
@@ -334,7 +390,9 @@ describe('BlockInsertPicker popover', () => {
     await flush()
     const callout = editor.getSnapshot().context.value.find((block) => block._type === 'callout')
     expect(callout).toBeDefined()
-    expect(events).toEqual([{blockKey: callout!._key, blockType: 'callout', via: 'picker'}])
+    expect(events).toEqual([
+      {blockKey: callout!._key, blockType: 'callout', mode: 'slash', query: '/', via: 'picker'},
+    ])
   })
 
   it('derives items from the array members when no metadata is given', async () => {
@@ -663,5 +721,421 @@ describe('BlockInsertPicker popover', () => {
     const callout = editor.getSnapshot().context.value.find((block) => block._type === 'callout')
     expect(callout).toBeUndefined()
     expect(screen.getByText('template exploded')).toBeDefined()
+  })
+
+  it('derives items from the member-schema context with no arrayTypeName (zero-config path)', async () => {
+    // No schema.get fallback available at all: detection rides entirely on
+    // the context Studio provides above the plugins slot.
+    mocks.impls.schemaGet = () => undefined
+    const {editor} = await renderPicker({
+      arrayTypeName: '',
+      items: null,
+      memberSchemaTypes: {
+        blockObjects: [{jsonType: 'object', name: 'callout', title: 'Context Callout'}],
+        portableText: {jsonType: 'array', name: 'anything', of: []},
+      },
+    })
+    typeText(editor, '/')
+    expect(screen.getByText('Context Callout')).toBeDefined()
+    pressKey(editor, 'Enter')
+    await flush()
+    expect(blockTypes(editor)).toContain('callout')
+  })
+
+  it('prefers the member-schema context over the arrayTypeName fallback', async () => {
+    const {editor} = await renderPicker({
+      items: null,
+      memberSchemaTypes: {
+        blockObjects: [{jsonType: 'object', name: 'callout', title: 'Context Callout'}],
+        portableText: {jsonType: 'array', name: 'anything', of: []},
+      },
+    })
+    typeText(editor, '/')
+    // testContent's schema.get members (Callout/Image) must not appear.
+    expect(screen.getByText('Context Callout')).toBeDefined()
+    expect(screen.queryByText('Image')).toBeNull()
+  })
+
+  it('excludes aliased text-block members on the fallback path', async () => {
+    mocks.impls.schemaGet = (name: string) =>
+      name === 'aliasedContent'
+        ? {
+            jsonType: 'array',
+            of: [
+              // A custom-named text block: `{name: 'myBlock', type: 'block'}`
+              // compiles to a member whose type chain roots at `block`.
+              {jsonType: 'object', name: 'myBlock', type: {name: 'block'}},
+              {jsonType: 'object', name: 'callout', title: 'Callout'},
+            ],
+          }
+        : undefined
+    await renderOpenPicker({arrayTypeName: 'aliasedContent', items: null})
+    expect(screen.getByText('Callout')).toBeDefined()
+    expect(screen.queryByText('MyBlock')).toBeNull()
+    expect(screen.getAllByRole('option')).toHaveLength(1)
+  })
+
+  it('never opens (and warns in dev) when the array derives zero items', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      mocks.impls.schemaGet = (name: string) =>
+        name === 'textOnlyContent'
+          ? {jsonType: 'array', of: [{jsonType: 'object', name: 'block'}]}
+          : undefined
+      const {editor} = await renderPicker({arrayTypeName: 'textOnlyContent', items: null})
+      typeText(editor, '/')
+      // No behaviors registered: the "/" inserts as plain text, no popover.
+      expect(screen.queryByText('Insert block')).toBeNull()
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('No insertable items'))
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('surfaces resolveItems-appended custom items on a text-only array', async () => {
+    // The zero-items guard runs on the resolver's OUTPUT: a block-only array
+    // plus a custom item is a working picker, not a disabled one.
+    mocks.impls.schemaGet = (name: string) =>
+      name === 'textOnlyContent'
+        ? {jsonType: 'array', of: [{jsonType: 'object', name: 'block'}]}
+        : undefined
+    const onSelect = vi.fn()
+    const {editor} = await renderPicker({
+      arrayTypeName: 'textOnlyContent',
+      items: null,
+      resolveItems: (items) => [
+        ...items,
+        {action: {onSelect, type: 'custom'}, id: 'my-command', title: 'Run my command'},
+      ],
+    })
+    typeText(editor, '/')
+    expect(screen.getByText('Run my command')).toBeDefined()
+    pressKey(editor, 'Enter')
+    await flush()
+    expect(onSelect).toHaveBeenCalledWith(
+      expect.objectContaining({closePicker: expect.any(Function), editor}),
+    )
+    // A custom action inserts nothing and cleans up the typed query.
+    expect(blockTypes(editor)).toEqual(['block'])
+    expect(textContents(editor)).toEqual([''])
+  })
+
+  it('lets resolveItems reorder and drop derived items', async () => {
+    await renderOpenPicker({
+      resolveItems: (items) => items.filter((item) => item.id !== 'image').toReversed(),
+    })
+    const options = screen.getAllByRole('option')
+    expect(options).toHaveLength(1)
+    expect(options[0]!.textContent).toContain('Callout')
+  })
+
+  it('decorates well-known member types from presets, with items metadata winning', async () => {
+    mocks.impls.schemaGet = (name: string) =>
+      name === 'presetContent'
+        ? {
+            jsonType: 'array',
+            of: [
+              {jsonType: 'object', name: 'image', title: 'Image'},
+              {jsonType: 'object', name: 'code', title: 'Code'},
+            ],
+          }
+        : undefined
+    await renderOpenPicker({
+      arrayTypeName: 'presetContent',
+      // The host overrides the image trigger; code falls through to presets.
+      items: [{trigger: '/pic', type: 'image'}],
+    })
+    expect(screen.getByText('/pic')).toBeDefined()
+    expect(screen.queryByText('/image')).toBeNull()
+    expect(screen.getByText('/code')).toBeDefined()
+  })
+
+  it('applies no preset metadata with presets: false', async () => {
+    mocks.impls.schemaGet = (name: string) =>
+      name === 'presetContent'
+        ? {jsonType: 'array', of: [{jsonType: 'object', name: 'image', title: 'Image'}]}
+        : undefined
+    await renderOpenPicker({arrayTypeName: 'presetContent', items: null, presets: false})
+    expect(screen.queryByText('/image')).toBeNull()
+  })
+
+  it('renders overridden labels in the chrome', async () => {
+    const {editor} = await renderPicker({
+      labels: {noMatches: 'Nichts zu "{query}"', title: 'Block einfügen'},
+    })
+    typeText(editor, '/')
+    expect(screen.getByText('Block einfügen')).toBeDefined()
+    typeText(editor, 'zzz')
+    expect(screen.getByText('Nichts zu "/zzz"')).toBeDefined()
+  })
+
+  it('ignores Cmd+/ with shortcut: false, keeping the slash trigger', async () => {
+    const {editor} = await renderPicker({shortcut: false})
+    act(() => {
+      editor.send({
+        originEvent: {
+          altKey: false,
+          code: 'Slash',
+          ctrlKey: false,
+          key: '/',
+          metaKey: true,
+          shiftKey: false,
+        },
+        type: 'keyboard.keydown',
+      })
+    })
+    expect(screen.queryByText('Insert block')).toBeNull()
+    typeText(editor, '/')
+    expect(screen.getByText('Insert block')).toBeDefined()
+  })
+
+  it('replaces the built-in matching via the filter option, receiving the bare query', async () => {
+    const filter = vi.fn((items: readonly PickerItem[], filterQuery: string) =>
+      filterQuery.includes('!') ? items.filter((item) => item.id === 'image') : items,
+    )
+    const {editor} = await renderPicker({filter})
+    typeText(editor, '/')
+    expect(screen.getAllByRole('option')).toHaveLength(2)
+    // The slash-mode "/" prefix is stripped before the seam.
+    expect(filter).toHaveBeenLastCalledWith(expect.anything(), '')
+    typeText(editor, 'im!')
+    expect(filter).toHaveBeenLastCalledWith(expect.anything(), 'im!')
+    const options = screen.getAllByRole('option')
+    expect(options).toHaveLength(1)
+    expect(options[0]!.textContent).toContain('Image')
+  })
+
+  it('renders badges from items metadata', async () => {
+    await renderOpenPicker({
+      items: [{badge: 'Beta', trigger: '/callout', type: 'callout'}],
+    })
+    expect(screen.getByText('Beta')).toBeDefined()
+  })
+
+  it('warns in dev about items metadata that matches no member', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      await renderPicker({items: [{trigger: '/callout', type: 'calout'}]})
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('calout'))
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('warns in dev when neither context nor arrayTypeName resolves, and stays disabled', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      mocks.impls.schemaGet = () => undefined
+      const {editor} = await renderPicker({arrayTypeName: '', items: null})
+      typeText(editor, '/')
+      expect(screen.queryByText('Insert block')).toBeNull()
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('No Portable Text member schema context found'),
+      )
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('opens inserted blocks for editing by default', async () => {
+    const {editor} = await renderOpenPicker()
+    pressKey(editor, 'Enter')
+    await flush()
+    const callout = editor.getSnapshot().context.value.find((block) => block._type === 'callout')
+    expect(openBlockSpy.calls).toEqual([callout!._key])
+  })
+
+  it('keeps inserted blocks closed with openOnInsert: false, still notifying onInsert', async () => {
+    const events: PickerInsertEvent[] = []
+    const {editor} = await renderPicker({
+      onInsert: (event) => events.push(event),
+      openOnInsert: false,
+    })
+    typeText(editor, '/')
+    pressKey(editor, 'Enter')
+    await flush()
+    expect(openBlockSpy.calls).toEqual([])
+    expect(events).toHaveLength(1)
+  })
+
+  it('lets per-item openOnInsert metadata override the plugin default, in both directions', async () => {
+    // Item false beats plugin default true.
+    const first = await renderPicker({
+      items: [{openOnInsert: false, trigger: '/callout', type: 'callout'}],
+    })
+    typeText(first.editor, '/cal')
+    pressKey(first.editor, 'Enter')
+    await flush()
+    expect(openBlockSpy.calls).toEqual([])
+    cleanup()
+    // Item true beats plugin false.
+    const second = await renderPicker({
+      items: [{openOnInsert: true, trigger: '/callout', type: 'callout'}],
+      openOnInsert: false,
+    })
+    typeText(second.editor, '/cal')
+    pressKey(second.editor, 'Enter')
+    await flush()
+    expect(openBlockSpy.calls).toHaveLength(1)
+  })
+
+  it('runs custom actions from shortcut mode without touching the document', async () => {
+    const onSelect = vi.fn()
+    const events: PickerInsertEvent[] = []
+    const {editor} = await renderPicker({
+      initialValue: [textBlock('anchor', 'run me later')],
+      onInsert: (event) => events.push(event),
+      resolveItems: (items) => [
+        ...items,
+        {action: {onSelect, type: 'custom'}, id: 'my-command', title: 'Run my command'},
+      ],
+    })
+    selectStartOf(editor, 'anchor')
+    act(() => {
+      editor.send({
+        originEvent: {
+          altKey: false,
+          code: 'Slash',
+          ctrlKey: false,
+          key: '/',
+          metaKey: true,
+          shiftKey: false,
+        },
+        type: 'keyboard.keydown',
+      })
+    })
+    // The anchor text deliberately starts with the typed query, so only the
+    // mode guard (not the starts-with guard) keeps cleanup from deleting it.
+    typeText(editor, 'run')
+    pressKey(editor, 'Enter')
+    await flush()
+    expect(onSelect).toHaveBeenCalledTimes(1)
+    expect(textContents(editor)).toEqual(['run me later'])
+    // Custom actions insert nothing, so onInsert must not fire.
+    expect(events).toEqual([])
+  })
+
+  it('reports shortcut mode and the typed query on onInsert', async () => {
+    const events: PickerInsertEvent[] = []
+    const {editor} = await renderPicker({
+      initialValue: [textBlock('anchor', 'hello')],
+      onInsert: (event) => events.push(event),
+    })
+    selectStartOf(editor, 'anchor')
+    act(() => {
+      editor.send({
+        originEvent: {
+          altKey: false,
+          code: 'Slash',
+          ctrlKey: false,
+          key: '/',
+          metaKey: true,
+          shiftKey: false,
+        },
+        type: 'keyboard.keydown',
+      })
+    })
+    typeText(editor, 'cal')
+    pressKey(editor, 'Enter')
+    await flush()
+    expect(events).toEqual([
+      expect.objectContaining({blockType: 'callout', mode: 'shortcut', query: 'cal'}),
+    ])
+  })
+
+  it('closes the popover when the item list empties mid-session', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      const {editor, rerenderWith} = await renderPicker()
+      typeText(editor, '/')
+      expect(screen.getByRole('listbox')).toBeDefined()
+      rerenderWith({resolveItems: () => []})
+      await flush()
+      expect(screen.queryByRole('listbox')).toBeNull()
+      expect(screen.queryByRole('status')).toBeNull()
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('acts on the clicked row even when a custom item reuses a derived id', async () => {
+    const onSelect = vi.fn()
+    const {editor} = await renderPicker({
+      resolveItems: (items) => [
+        ...items,
+        {action: {onSelect, type: 'custom'}, id: 'callout', title: 'Shadow command'},
+      ],
+    })
+    typeText(editor, '/')
+    fireEvent.click(screen.getByText('Shadow command'))
+    await flush()
+    // The duplicate id must not alias the click onto the derived row.
+    expect(onSelect).toHaveBeenCalledTimes(1)
+    expect(blockTypes(editor)).not.toContain('callout')
+    typeText(editor, '/')
+    fireEvent.click(screen.getByText('Callout'))
+    await flush()
+    expect(blockTypes(editor)).toContain('callout')
+    expect(onSelect).toHaveBeenCalledTimes(1)
+  })
+
+  it('surfaces a toast when a custom action throws instead of swallowing it', async () => {
+    const {editor} = await renderPicker({
+      resolveItems: (items) => [
+        ...items,
+        {
+          action: {
+            onSelect: () => {
+              throw new Error('boom from host')
+            },
+            type: 'custom',
+          },
+          id: 'exploder',
+          title: 'ZZExploder',
+        },
+      ],
+    })
+    typeText(editor, '/zzexp')
+    pressKey(editor, 'Enter')
+    await flush()
+    expect(screen.getByText('boom from host')).toBeDefined()
+  })
+
+  it('shows a warning toast when the anchor block disappears during resolution', async () => {
+    let release: (value: Record<string, unknown>) => void = () => {}
+    mocks.impls.resolveInitialValue = () =>
+      new Promise<Record<string, unknown>>((resolve) => {
+        release = resolve
+      })
+    const {editor} = await renderPicker({
+      initialValue: [textBlock('anchor', ''), textBlock('other', 'keep me')],
+    })
+    selectStartOf(editor, 'anchor')
+    typeText(editor, '/')
+    pressKey(editor, 'Enter')
+    // Delete the anchor while the initial value is still resolving.
+    act(() => {
+      editor.send({at: [{_key: 'anchor'}], type: 'delete.block'})
+    })
+    await act(async () => {
+      release({})
+      await new Promise((resolve) => setTimeout(resolve, 0))
+    })
+    expect(blockTypes(editor)).not.toContain('callout')
+    expect(screen.getByText('The block you were inserting into was removed')).toBeDefined()
+  })
+
+  it('renders an overridden position announcement in the live region', async () => {
+    const {editor} = await renderPicker({
+      labels: {positionAnnouncement: '{index} von {count}'},
+    })
+    typeText(editor, '/')
+    expect(document.querySelector('output')?.textContent).toContain('1 von 2')
+  })
+
+  it('shows queries containing replacement patterns verbatim in the empty state', async () => {
+    const {editor} = await renderPicker()
+    typeText(editor, '/$&')
+    expect(screen.getByText('No matches for "/$&"')).toBeDefined()
   })
 })

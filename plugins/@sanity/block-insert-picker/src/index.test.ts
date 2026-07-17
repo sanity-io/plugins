@@ -13,12 +13,18 @@ test('package exports', {timeout: 30_000}, async () => {
     {
       ".": {
         "BLOCKQUOTE_PATTERN": "object",
+        "BlockInsertPicker": "function",
         "CODE_FENCE_PATTERN": "object",
+        "MarkdownInputRules": "function",
         "blockInsertPicker": "function",
         "blockquoteRule": "function",
         "codeFenceRule": "function",
+        "derivePickerItems": "function",
         "fenceLanguageFromMatch": "function",
+        "filterPickerItems": "function",
         "normalizeFenceLanguage": "function",
+        "standardBlockPresets": "object",
+        "wellKnownInputRules": "object",
       },
     }
   `)

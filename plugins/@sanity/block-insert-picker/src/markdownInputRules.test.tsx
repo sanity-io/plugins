@@ -2,39 +2,72 @@ import {defineSchema, EditorProvider, useEditor} from '@portabletext/editor'
 import {act, render} from '@testing-library/react'
 import React from 'react'
 import type {PortableTextBlock} from 'sanity'
-import {describe, expect, it, vi} from 'vitest'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
 
 import {blockquoteRule} from './inputRules'
-import {MarkdownInputRules} from './markdownInputRules'
+import {MarkdownInputRules, type MarkdownInputRulesProps} from './markdownInputRules'
+import {wellKnownInputRules} from './presets'
 import type {PickerInsertEvent} from './types'
 
-// The component reads the host array's members off the Studio schema and the
-// member-items context for open-on-insert; both are mocked, mirroring
-// blockInsertPicker.test.tsx.
+// The component reads the host array's members off the Studio schema (the
+// arrayTypeName fallback path — the member-schema context stays at its null
+// default) and the member-items context for open-on-insert; both modules are
+// mocked, mirroring blockInsertPicker.test.tsx.
 vi.mock('sanity', () => ({
   useFormCallbacks: () => ({
     onPathOpen: () => {},
     onSetPathCollapsed: () => {},
   }),
   useSchema: () => ({
-    get: (name: string) =>
-      name === 'testContent'
-        ? {
-            jsonType: 'array',
-            of: [{name: 'block'}, {name: 'callout'}],
-          }
-        : undefined,
+    get: (name: string) => {
+      if (name === 'testContent') {
+        return {
+          jsonType: 'array',
+          of: [
+            {jsonType: 'object', name: 'block'},
+            {jsonType: 'object', name: 'callout'},
+          ],
+        }
+      }
+      if (name === 'aliasedContent') {
+        return {
+          jsonType: 'array',
+          of: [
+            {jsonType: 'object', name: 'block'},
+            // A code-input member under another name: resolves to `code`.
+            {jsonType: 'object', name: 'snippet', type: {name: 'code'}},
+          ],
+        }
+      }
+      return undefined
+    },
   }),
 }))
 
 vi.mock('sanity/_singletons', async () => {
   const {createContext} = await import('react')
-  return {PortableTextMemberItemsContext: createContext([])}
+  return {
+    PortableTextMemberItemsContext: createContext([]),
+    PortableTextMemberSchemaTypesContext: createContext(null),
+  }
 })
+
+// Observability for the openOnInsert seam (see blockInsertPicker.test.tsx).
+const openBlockSpy = vi.hoisted(() => {
+  const calls: string[] = []
+  return {calls, record: (key: string) => calls.push(key)}
+})
+
+vi.mock('./openBlockOnInsert', () => ({
+  useOpenBlockOnInsert: () => openBlockSpy.record,
+}))
 
 const schemaDefinition = defineSchema({
   annotations: [],
-  blockObjects: [{name: 'callout'}],
+  blockObjects: [
+    {name: 'callout'},
+    {fields: [{name: 'language', type: 'string'}], name: 'snippet'},
+  ],
   decorators: [],
   inlineObjects: [],
   lists: [],
@@ -56,7 +89,10 @@ const CaptureEditor = React.forwardRef<null | ReturnType<typeof useEditor>, obje
   },
 )
 
-async function renderComponent(initialValue: PortableTextBlock[]) {
+async function renderComponent(
+  initialValue: PortableTextBlock[],
+  overrides?: Partial<MarkdownInputRulesProps>,
+) {
   const editorRef = React.createRef<null | ReturnType<typeof useEditor>>()
   const events: PickerInsertEvent[] = []
   render(
@@ -64,8 +100,9 @@ async function renderComponent(initialValue: PortableTextBlock[]) {
       <CaptureEditor ref={editorRef} />
       <MarkdownInputRules
         arrayTypeName="testContent"
-        onItemInserted={(event) => events.push(event)}
+        onInsert={(event) => events.push(event)}
         rules={rules}
+        {...overrides}
       />
     </EditorProvider>,
   )
@@ -95,7 +132,11 @@ function textBlock(key: string, text: string): PortableTextBlock {
 }
 
 describe('MarkdownInputRules component', () => {
-  it("notifies onItemInserted with the inserted block's key, type, and via", async () => {
+  beforeEach(() => {
+    openBlockSpy.calls.length = 0
+  })
+
+  it("notifies onInsert with the inserted block's key, type, and via", async () => {
     const {editor, events} = await renderComponent([textBlock('anchor', '>')])
     const point = {
       offset: 1,
@@ -127,7 +168,7 @@ describe('MarkdownInputRules component', () => {
         <CaptureEditor ref={editorRef} />
         <MarkdownInputRules
           arrayTypeName="testContent"
-          onItemInserted={(event) => events.push(event)}
+          onInsert={(event) => events.push(event)}
           rules={disallowed}
         />
       </EditorProvider>,
@@ -152,5 +193,59 @@ describe('MarkdownInputRules component', () => {
     })
     expect(events).toEqual([])
     expect(editor.getSnapshot().context.value.map((block) => block._type)).toEqual(['block'])
+  })
+
+  it('resolves rule block types through member type chains, inserting the member name', async () => {
+    // wellKnownInputRules' fence targets `code`; the array only has
+    // `{type: 'code', name: 'snippet'}`. The rule must activate and insert
+    // a `snippet` block (the _type the array accepts).
+    const {editor, events} = await renderComponent([textBlock('anchor', '```ts')], {
+      arrayTypeName: 'aliasedContent',
+      rules: [...wellKnownInputRules],
+    })
+    const point = {
+      offset: 5,
+      path: [{_key: 'anchor'}, 'children', {_key: 'anchor-span'}],
+    }
+    act(() => {
+      editor.send({at: {anchor: point, focus: point}, type: 'select'})
+    })
+    act(() => {
+      editor.send({text: ' ', type: 'insert.text'})
+    })
+    const snippet = editor.getSnapshot().context.value.find((block) => block._type === 'snippet')
+    expect(snippet).toBeDefined()
+    expect(snippet).toMatchObject({language: 'ts'})
+    expect(events).toEqual([expect.objectContaining({blockType: 'snippet', via: 'inputRule'})])
+  })
+
+  it('opens inserted blocks by default and skips opening with openOnInsert: false', async () => {
+    const first = await renderComponent([textBlock('anchor', '>')])
+    const point = {
+      offset: 1,
+      path: [{_key: 'anchor'}, 'children', {_key: 'anchor-span'}],
+    }
+    act(() => {
+      first.editor.send({at: {anchor: point, focus: point}, type: 'select'})
+    })
+    act(() => {
+      first.editor.send({text: ' ', type: 'insert.text'})
+    })
+    expect(openBlockSpy.calls).toHaveLength(1)
+
+    openBlockSpy.calls.length = 0
+    const second = await renderComponent([textBlock('anchor2', '>')], {openOnInsert: false})
+    const point2 = {
+      offset: 1,
+      path: [{_key: 'anchor2'}, 'children', {_key: 'anchor2-span'}],
+    }
+    act(() => {
+      second.editor.send({at: {anchor: point2, focus: point2}, type: 'select'})
+    })
+    act(() => {
+      second.editor.send({text: ' ', type: 'insert.text'})
+    })
+    expect(second.events).toHaveLength(1)
+    expect(openBlockSpy.calls).toEqual([])
   })
 })

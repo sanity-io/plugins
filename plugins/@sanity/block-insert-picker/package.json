@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@portabletext/plugin-input-rule": "^6.0.4",
+    "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:"
   },
   "devDependencies": {
@@ -62,7 +63,7 @@
   "peerDependencies": {
     "@portabletext/editor": "^7.10.7",
     "react": "catalog:peer",
-    "sanity": "catalog:peer",
+    "sanity": "^5.6 || ^6.0.0-0",
     "styled-components": "catalog:peer"
   },
   "engines": {

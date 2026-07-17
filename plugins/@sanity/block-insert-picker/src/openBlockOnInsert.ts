@@ -8,12 +8,12 @@ import {PortableTextMemberItemsContext} from 'sanity/_singletons'
  * member item only exists on a later render — so callers schedule the key and
  * the effect opens it when it appears.
  *
- * This module is deliberately the ONLY importer of `sanity/_singletons` in
- * this plugin: `PortableTextMemberItemsContext` is an internal, unexported
- * subpath with no stability guarantee, so the dependency stays quarantined
- * here where it can be swapped for a public member-items API in one place.
- * Consumers that need to react to inserts without this internal should use
- * the `onItemInserted` seam on the plugin components instead.
+ * Together with memberSchemaTypes.ts, this module is one of exactly two
+ * importers of `sanity/_singletons` in this plugin: the subpath is internal
+ * with no stability guarantee, so each dependency stays quarantined where it
+ * can be swapped for a public API in one place. Consumers that need to react
+ * to inserts without this internal should use the `onInsert` seam on the
+ * plugin components instead.
  */
 export function useOpenBlockOnInsert(): (blockKey: string) => void {
   const memberItems = useContext(PortableTextMemberItemsContext)

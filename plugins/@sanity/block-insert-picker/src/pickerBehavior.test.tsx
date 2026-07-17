@@ -28,20 +28,23 @@ const initialValueWithObjectBlock = [
 
 function HarnessRegister({
   onIntent,
+  shortcutEnabled = true,
   stateRef,
 }: {
   onIntent: (intent: PickerIntent) => void
+  shortcutEnabled?: boolean
   stateRef: React.RefObject<PickerState>
 }) {
   const editor = useEditor()
   useEffect(() => {
     const behavior = createPickerBehavior({
       getState: () => stateRef.current,
+      isShortcutEnabled: () => shortcutEnabled,
       onIntent,
     })
     const unregister = editor.registerBehavior({behavior})
     return unregister
-  }, [editor, onIntent, stateRef])
+  }, [editor, onIntent, shortcutEnabled, stateRef])
   return null
 }
 
@@ -55,14 +58,21 @@ const CaptureEditor = React.forwardRef<null | ReturnType<typeof useEditor>, obje
   },
 )
 
-function renderHarness(initialValue?: typeof initialValueWithObjectBlock) {
+function renderHarness(
+  initialValue?: typeof initialValueWithObjectBlock,
+  options?: {shortcutEnabled?: boolean},
+) {
   const editorRef = React.createRef<null | ReturnType<typeof useEditor>>()
   const onIntent = vi.fn<(intent: PickerIntent) => void>()
   const stateRef = {current: {mode: 'closed'} as PickerState}
   render(
     <EditorProvider initialConfig={{initialValue, schemaDefinition}}>
       <CaptureEditor ref={editorRef} />
-      <HarnessRegister onIntent={onIntent} stateRef={stateRef} />
+      <HarnessRegister
+        onIntent={onIntent}
+        shortcutEnabled={options?.shortcutEnabled}
+        stateRef={stateRef}
+      />
     </EditorProvider>,
   )
   const editor = editorRef.current!
@@ -115,6 +125,24 @@ describe('createPickerBehavior', () => {
     expect(onIntent).toHaveBeenCalledWith(
       expect.objectContaining({mode: 'shortcut', query: '', type: 'open'}),
     )
+  })
+
+  it('ignores Cmd+/ when the shortcut is disabled', () => {
+    const {editor, onIntent} = renderHarness(undefined, {shortcutEnabled: false})
+    act(() => {
+      editor.send({
+        originEvent: {
+          altKey: false,
+          code: 'Slash',
+          ctrlKey: false,
+          key: '/',
+          metaKey: true,
+          shiftKey: false,
+        },
+        type: 'keyboard.keydown',
+      })
+    })
+    expect(onIntent).not.toHaveBeenCalled()
   })
 
   it('anchors shortcut mode to the focused block object, not the first block', async () => {

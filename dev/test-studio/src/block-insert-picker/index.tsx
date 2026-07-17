@@ -61,10 +61,10 @@ const content = defineType({
   ],
   components: {
     portableText: {
-      // The picker derives its items from this array's members; the metadata
-      // below only curates triggers, keywords, grouping, and rank.
+      // Zero config would already work here: the picker detects this array
+      // and derives an item per member. The metadata below only curates
+      // triggers, keywords, grouping, and rank.
       plugins: blockInsertPicker({
-        arrayTypeName: 'blockInsertPickerContent',
         items: [
           {
             type: 'blockInsertPickerCode',
@@ -78,7 +78,8 @@ const content = defineType({
             keywords: ['note', 'warning', 'tip'],
             group: 'Callouts',
           },
-          {type: 'image', trigger: '/image', keywords: ['figure', 'photo'], group: 'Media'},
+          // No trigger/keywords: the built-in `image` preset fills them in.
+          {type: 'image', group: 'Media'},
         ],
         inputRules: [
           // "```py " inserts a code snippet with the language (and a tab

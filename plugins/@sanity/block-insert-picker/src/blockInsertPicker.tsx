@@ -5,63 +5,118 @@ import {useEffect, useId, useLayoutEffect, useMemo, useReducer, useRef, useState
 import {useResolveInitialValueForType, useSchema} from 'sanity'
 import type {SchemaType} from 'sanity'
 
-import {derivePickerItems} from './deriveItems'
+import {derivePickerItems, unknownMetadataTypes} from './deriveItems'
 import {filterPickerItems} from './filterItems'
 import {flattenSections, groupPickerItems} from './groupItems'
-import {createInsertBehavior} from './insertBehavior'
+import {createCleanupQueryBehavior, createInsertBehavior, sendCleanupQuery} from './insertBehavior'
 import {insertPickerItem} from './insertPickerItem'
+import {
+  type BlockInsertPickerLabels,
+  formatNoMatches,
+  formatPosition,
+  resolveLabels,
+} from './labels'
+import {usePickerItemsContext} from './memberSchemaTypes'
 import {useOpenBlockOnInsert} from './openBlockOnInsert'
 import {createPickerBehavior} from './pickerBehavior'
 import {pickerReducer} from './pickerReducer'
+import {applyPresetMetadata} from './presets'
 import {resolveItemPresentation} from './resolveItemPresentation'
-import type {PickerInsertEvent, PickerIntent, PickerItemMetadata, PickerState} from './types'
+import type {
+  PickerInsertEvent,
+  PickerIntent,
+  PickerItem,
+  PickerItemMetadata,
+  PickerItemsContext,
+  PickerItemsResolver,
+  PickerState,
+} from './types'
 
-type BlockInsertPickerProps = {
+export type BlockInsertPickerProps = {
   /**
-   * Per-member curation (trigger, keywords, group, description) merged into
-   * the items derived from `arrayTypeName`'s members; array order is the
-   * rank. Members without an entry still get items, in schema order.
+   * Per-member curation (trigger, keywords, group, description, badge,
+   * hidden, openOnInsert) merged into the items derived from the array's
+   * members; array order is the rank. Members without an entry still get
+   * items, in schema order.
    */
   items?: readonly PickerItemMetadata[]
   /**
-   * Name of the portable-text array type this picker is mounted on. Items,
-   * presentation (title/icon), and initial values all resolve against that
-   * array's member types (which carry member-level config like
-   * a member-specific icon and per-member title overrides), falling back to
-   * the global type of the same name.
+   * Escape hatch: names the portable-text array type to resolve items from
+   * when Studio's member-schema context is unavailable. With the context
+   * present (any supported sanity version) this is ignored — the containing
+   * array and its members are detected automatically.
    */
   arrayTypeName?: string
-  /** Notified after each successful insert, alongside the built-in open-on-insert. */
-  onItemInserted?: (event: PickerInsertEvent) => void
+  /**
+   * Programmatic seam over the derived-and-curated item list: reorder,
+   * remove, relabel, or append items (including `custom`-action items).
+   */
+  resolveItems?: PickerItemsResolver
+  /**
+   * Replaces the built-in matching (see filterPickerItems). Receives the
+   * bare query in both modes — the slash-mode "/" prefix is stripped.
+   */
+  filter?: (items: readonly PickerItem[], query: string) => readonly PickerItem[]
+  /** Overrides for the picker chrome's user-facing strings. */
+  labels?: Partial<BlockInsertPickerLabels>
+  /** Notified after each successful insert, alongside open-on-insert. */
+  onInsert?: (event: PickerInsertEvent) => void
+  /**
+   * Whether an inserted block opens for editing (default true). Items can
+   * override per member via their metadata's `openOnInsert`.
+   */
+  openOnInsert?: boolean
+  /** Whether Cmd/Ctrl+/ opens the picker (default true). */
+  shortcut?: boolean
+  /**
+   * Whether well-known block types (image, file, code, table, ...) get
+   * default triggers and keywords when the host's `items` doesn't cover
+   * them (default true). See standardBlockPresets.
+   */
+  presets?: boolean
 }
 
-export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockInsertPickerProps) {
+export function BlockInsertPicker({
+  arrayTypeName,
+  filter,
+  items,
+  labels: labelOverrides,
+  onInsert,
+  openOnInsert = true,
+  presets = true,
+  resolveItems,
+  shortcut = true,
+}: BlockInsertPickerProps) {
   const editor = useEditor()
   const openBlockOnInsert = useOpenBlockOnInsert()
+  const itemsContext = usePickerItemsContext(arrayTypeName)
   const schema = useSchema()
   const resolveInitialValueForType = useResolveInitialValueForType()
   const toast = useToast()
+  const labels = useMemo(() => resolveLabels(labelOverrides), [labelOverrides])
   // Instance-scoped so ARIA option ids stay unique when several PTE fields
   // (each with their own picker) mount on the same document.
   const instanceId = useId()
   const listboxId = `${instanceId}-listbox`
   const optionId = (id: string) => `${instanceId}-option-${id}`
 
-  // Items derive from the array's member types, curated by the metadata in
-  // `items`. Titles and icons are then enriched ONCE from the member type
-  // — not the global type of the same name — so member-level config wins:
-  // a member that redefines a core type's name shows its own icon and
-  // title rather than the global type's. Enriching before filtering keeps
-  // query matching aligned with what the popover displays, and keyboard
-  // select and the rendered list always index the same filtered array.
+  // Items derive from the array's member types (via Studio's member-schema
+  // context, or the arrayTypeName fallback), curated by the metadata in
+  // `items` and decorated by presets. Titles and icons are then enriched
+  // ONCE from the member type — not the global type of the same name — so
+  // member-level config wins: a member that redefines a core type's name
+  // shows its own icon and title rather than the global type's. Enriching
+  // before filtering keeps query matching aligned with what the popover
+  // displays, and `resolveItems` runs last over the fully-presented list so
+  // hosts relabel or append against what would actually render.
   const pickerItems = useMemo(() => {
-    const arrayType = arrayTypeName ? schema.get(arrayTypeName) : undefined
-    const base = derivePickerItems(
-      arrayType && arrayType.jsonType === 'array' ? arrayType : undefined,
-      items,
-    )
-    return base.map((item) => {
-      const schemaType = memberTypeFor(schema, arrayTypeName, item.action.blockType)
+    if (!itemsContext) return []
+    const derived = presets
+      ? applyPresetMetadata(derivePickerItems(itemsContext, items), itemsContext)
+      : derivePickerItems(itemsContext, items)
+    const presented = derived.map((item) => {
+      if (item.action.type !== 'insertBlock') return item
+      const schemaType = memberTypeFor(itemsContext, schema, item.action.blockType)
       const presentation = resolveItemPresentation(item, schemaType)
       // The derived items are fresh objects owned by this memo, so in-place
       // assignment is safe (and satisfies oxc's no-map-spread).
@@ -71,7 +126,45 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
         title: presentation.title,
       })
     })
-  }, [arrayTypeName, items, schema])
+    return resolveItems ? [...resolveItems(presented, itemsContext)] : presented
+  }, [items, itemsContext, presets, resolveItems, schema])
+
+  const hasItems = pickerItems.length > 0
+
+  // Dev-mode configuration diagnostics, once per mount per category: a
+  // silent picker (no context, or nothing derivable) and typo'd metadata
+  // keys are the two misconfigurations schema-derived items can't surface
+  // on their own.
+  const warnedRef = useRef<{context?: boolean; empty?: boolean; unknown?: boolean}>({})
+  useEffect(() => {
+    if (process.env['NODE_ENV'] === 'production') return
+    const warned = warnedRef.current
+    if (!itemsContext && !warned.context) {
+      warned.context = true
+      console.warn(
+        '[@sanity/block-insert-picker] No Portable Text member schema context found and no ' +
+          '`arrayTypeName` resolved to an array type — the picker is disabled for this field.',
+      )
+      return
+    }
+    if (itemsContext && items && !warned.unknown) {
+      const unknown = unknownMetadataTypes(itemsContext, items)
+      if (unknown.length > 0) {
+        warned.unknown = true
+        console.warn(
+          `[@sanity/block-insert-picker] \`items\` metadata references types that are not ` +
+            `members of this array: ${unknown.join(', ')}`,
+        )
+      }
+    }
+    if (itemsContext && !hasItems && !warned.empty) {
+      warned.empty = true
+      console.warn(
+        '[@sanity/block-insert-picker] No insertable items: the array has no non-text-block ' +
+          'members (and `resolveItems` added none) — the picker is disabled for this field.',
+      )
+    }
+  }, [hasItems, items, itemsContext])
 
   const [state, dispatch] = useReducer(pickerReducer, {mode: 'closed'})
 
@@ -84,21 +177,43 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
     stateRef.current = state
   })
 
+  // The shortcut flag is read through a ref for the same reason: the guard
+  // consults it per keystroke, so toggling it must not re-register (and
+  // re-sort) the behavior chain.
+  const shortcutRef = useRef(shortcut)
+  useLayoutEffect(() => {
+    shortcutRef.current = shortcut
+  })
+
   const open = state.mode !== 'closed'
   const query = open ? state.query : ''
   const mode = open ? state.mode : null
 
+  const filterItems = filter ?? filterPickerItems
+  // The filter seam receives the query without the slash-mode "/" prefix, so
+  // a custom `filter` sees the same bare text in both modes. The raw query
+  // keeps driving the empty-state label, the shortcut echo, and onInsert.
+  const filterQuery = mode === 'slash' ? bareQuery(query) : query
+
   // Sections drive the rendered layout (group headers); `filtered` is the same
   // items flattened into the single index space navigation and selection share.
   const sections = useMemo(
-    () => groupPickerItems(filterPickerItems(pickerItems, query)),
-    [pickerItems, query],
+    () => groupPickerItems(filterItems(pickerItems, filterQuery)),
+    [filterItems, filterQuery, pickerItems],
   )
   const filtered = useMemo(() => flattenSections(sections), [sections])
-  const flatIndexById = useMemo(
-    () => new Map(filtered.map((item, index) => [item.id, index])),
-    [filtered],
-  )
+  // Rows resolve their flat index positionally (section offset + row index),
+  // never by item id: a resolveItems-appended item may reuse a derived id,
+  // and an id-keyed map would point both rows at one index.
+  const sectionOffsets = useMemo(() => {
+    const offsets: number[] = []
+    let total = 0
+    for (const section of sections) {
+      offsets.push(total)
+      total += section.items.length
+    }
+    return offsets
+  }, [sections])
   // A lone section carries no useful category label (e.g. a curated `items`
   // prop, or a filter that matched a single group) — skip the header chrome.
   const showGroupHeaders = sections.length > 1
@@ -126,7 +241,12 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
       // Index into the grouped display order (not the raw rank-flat order)
       // so the row the user sees highlighted is the one that gets inserted.
       const visible = flattenSections(
-        groupPickerItems(filterPickerItems(pickerItems, current.query)),
+        groupPickerItems(
+          filterItems(
+            pickerItems,
+            current.mode === 'slash' ? bareQuery(current.query) : current.query,
+          ),
+        ),
       )
       const clamped = Math.max(0, Math.min(visible.length - 1, idx))
       const chosen = visible[clamped]
@@ -134,20 +254,25 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
       // the captured `current` state.
       dispatch({type: 'close'})
       if (!chosen) return
+      if (chosen.action.type === 'custom') {
+        // No block to insert: clean up the typed "/query" text (slash mode)
+        // and hand the editor to the host's action.
+        sendCleanupQuery(editor, {
+          anchorBlockKey: current.anchorBlockKey,
+          mode: current.mode,
+          query: current.query,
+        })
+        chosen.action.onSelect({
+          closePicker: () => dispatch({type: 'close'}),
+          editor,
+        })
+        return
+      }
+      const blockType = chosen.action.blockType
       let initialValue: Record<string, unknown> | undefined
-      const schemaType = memberTypeFor(schema, arrayTypeName, chosen.action.blockType)
+      const schemaType = memberTypeFor(itemsContext, schema, blockType)
       if (schemaType) {
-        try {
-          initialValue = (await resolveInitialValueForType(schemaType, {})) ?? undefined
-        } catch (error) {
-          toast.push({
-            closable: true,
-            description: error instanceof Error ? error.message : String(error),
-            status: 'error',
-            title: 'Could not insert block',
-          })
-          return
-        }
+        initialValue = (await resolveInitialValueForType(schemaType, {})) ?? undefined
       }
       // Re-take the snapshot after the await; the document may have changed.
       // A null selection is fine: the insert behavior anchors the block via
@@ -159,23 +284,44 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
       const anchorStillExists = snapshot.context.value.some(
         (b) => b._key === current.anchorBlockKey,
       )
-      if (!anchorStillExists) return
+      if (!anchorStillExists) {
+        toast.push({
+          closable: true,
+          description: labels.insertAnchorRemoved,
+          status: 'warning',
+          title: labels.insertError,
+        })
+        return
+      }
       insertPickerItem({
         anchorBlockKey: current.anchorBlockKey,
+        blockType,
         editor,
         initialValue,
-        item: chosen,
         keyGenerator: () => snapshot.context.keyGenerator(),
         mode: current.mode,
         onInsertedKey: (key) => {
-          openBlockOnInsert(key)
-          onItemInserted?.({
+          if (chosen.openOnInsert ?? openOnInsert) openBlockOnInsert(key)
+          onInsert?.({
             blockKey: key,
-            blockType: chosen.action.blockType,
+            blockType,
+            mode: current.mode,
+            query: current.query,
             via: 'picker',
           })
         },
         query: current.query,
+      })
+    } catch (error) {
+      // insertItemAtIndex is fire-and-forget (`void insertItemAtIndex(...)`),
+      // so anything thrown here — initial-value resolution, a host `filter`,
+      // a custom action's onSelect, a host onInsert — would otherwise become
+      // an unhandled rejection with no user feedback.
+      toast.push({
+        closable: true,
+        description: error instanceof Error ? error.message : String(error),
+        status: 'error',
+        title: labels.insertError,
       })
     } finally {
       insertInFlightRef.current = false
@@ -224,23 +370,38 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
   })
 
   // Register behaviors imperatively so their lifecycle follows this
-  // component's. The picker
-  // behavior watches typing/keys; the insert behavior performs the atomic
-  // cleanup + insert when a custom.blockInsertPicker.insert event arrives.
+  // component's — and only while there is anything to offer: with zero
+  // items the picker must never open (no empty popover, no swallowed "/").
+  // The picker behavior watches typing/keys; the insert behavior performs
+  // the atomic cleanup + insert when a custom.blockInsertPicker.insert
+  // event arrives; the cleanup behavior serves `custom` item actions.
   useEffect(() => {
+    if (!hasItems) return undefined
     const behavior = createPickerBehavior({
       getState: () => stateRef.current,
+      isShortcutEnabled: () => shortcutRef.current,
       onIntent: (intent) => handleIntentRef.current(intent),
     })
     const unregisterPicker = editor.registerBehavior({behavior})
     const unregisterInsert = editor.registerBehavior({
       behavior: createInsertBehavior(),
     })
+    const unregisterCleanup = editor.registerBehavior({
+      behavior: createCleanupQueryBehavior(),
+    })
     return () => {
       unregisterPicker()
       unregisterInsert()
+      unregisterCleanup()
     }
-  }, [editor])
+  }, [editor, hasItems])
+
+  // If the item list empties while the picker is open (a resolveItems change,
+  // a schema hot-reload), the behaviors above unregister — close the popover
+  // rather than leaving a zombie that no behavior can drive.
+  useEffect(() => {
+    if (!hasItems && stateRef.current.mode !== 'closed') dispatch({type: 'close'})
+  }, [hasItems])
 
   // --- UI ---
 
@@ -256,7 +417,7 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
     ? [
         highlightedItem.title,
         highlightedItem.description,
-        `${highlightedIndex + 1} of ${filtered.length}`,
+        formatPosition(labels, highlightedIndex + 1, filtered.length),
       ]
         .filter(Boolean)
         .join(', ')
@@ -380,7 +541,7 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
             role="status"
           >
             <Text muted size={1}>
-              No matches for "{query}"
+              {formatNoMatches(labels, query)}
             </Text>
           </Card>
         }
@@ -424,7 +585,7 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
                 style={{letterSpacing: '0.05em', textTransform: 'uppercase'}}
                 weight="medium"
               >
-                Insert block
+                {labels.title}
               </Text>
             </Box>
             {mode === 'shortcut' && query !== '' ? (
@@ -436,7 +597,7 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
             ) : null}
           </Flex>
           <Box
-            aria-label="Insert block"
+            aria-label={labels.title}
             id={listboxId}
             // A custom ARIA listbox: <select>/<datalist> cannot host rich
             // rows (icons, descriptions, hotkey chips) or grouped sections.
@@ -445,16 +606,16 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
             style={{flex: 1, maxHeight: 320, minHeight: 0, overflowY: 'auto'}}
           >
             {sections.map((section, sectionIndex) => {
-              const sectionLabel = section.group ?? 'Other blocks'
-              const rows = section.items.map((item) => {
-                const idx = flatIndexById.get(item.id) ?? 0
+              const sectionLabel = section.group ?? labels.ungroupedSection
+              const rows = section.items.map((item, rowIndex) => {
+                const idx = (sectionOffsets[sectionIndex] ?? 0) + rowIndex
                 const Icon = item.icon
                 const isHighlighted = idx === highlightedIndex
                 return (
                   <Card
                     aria-selected={isHighlighted}
-                    id={optionId(item.id)}
-                    key={item.id}
+                    id={optionId(String(idx))}
+                    key={`${item.id}-${idx}`}
                     onClick={() => selectItemAtIndex(idx)}
                     onMouseMove={(event) =>
                       highlightOnPointerMove(idx, event.clientX, event.clientY)
@@ -494,6 +655,13 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
                           </Text>
                         ) : null}
                       </Stack>
+                      {item.badge ? (
+                        <Box flex="none">
+                          <Text muted size={0}>
+                            {item.badge}
+                          </Text>
+                        </Box>
+                      ) : null}
                       {item.trigger ? (
                         <Box flex="none">
                           <Hotkeys fontSize={0} keys={[item.trigger]} />
@@ -541,10 +709,12 @@ export function BlockInsertPicker({arrayTypeName, items, onItemInserted}: BlockI
           </Box>
           <Card borderTop flex="none" padding={2} radius={0}>
             <Flex align="center" gap={3} wrap="wrap">
-              <FooterHint keys={['↑', '↓']} label="Navigate" />
-              <FooterHint keys={['↵']} label="Insert" />
-              <FooterHint keys={['Esc']} label="Dismiss" />
-              <FooterHint keys={[OPEN_MODIFIER, '/']} label="Anywhere" />
+              <FooterHint keys={['↑', '↓']} label={labels.footerNavigate} />
+              <FooterHint keys={['↵']} label={labels.footerInsert} />
+              <FooterHint keys={['Esc']} label={labels.footerDismiss} />
+              {shortcut ? (
+                <FooterHint keys={[OPEN_MODIFIER, '/']} label={labels.footerAnywhere} />
+              ) : null}
             </Flex>
           </Card>
         </Card>
@@ -573,17 +743,22 @@ function FooterHint({keys, label}: {keys: string[]; label: string}) {
 
 // Module-level (not a component closure) so useMemo dependency arrays don't
 // need a function that the react-hooks lint flags as changing every render.
+// Member types resolve from the picker's items context first (member-level
+// config wins), then from the global type of the same name — the same
+// fallback the previous arrayTypeName-only lookup used.
 function memberTypeFor(
+  itemsContext: PickerItemsContext | null,
   schema: {get(name: string): SchemaType | undefined},
-  arrayTypeName: string | undefined,
   blockType: string,
 ): SchemaType | undefined {
-  const arrayType = arrayTypeName ? schema.get(arrayTypeName) : undefined
-  if (arrayType && arrayType.jsonType === 'array') {
-    const member = arrayType.of.find((candidate) => candidate.name === blockType)
-    if (member) return member
-  }
-  return schema.get(blockType)
+  const member = itemsContext?.memberTypes.find((candidate) => candidate.name === blockType)
+  return member ?? schema.get(blockType)
+}
+
+// Slash-mode queries carry the leading "/" the writer typed; the filter seam
+// works on the bare text (see filterQuery above).
+function bareQuery(query: string): string {
+  return query.startsWith('/') ? query.slice(1) : query
 }
 
 // Interacting with any popover surface (header, padding, the scroll

@@ -1,10 +1,11 @@
 import type {Editor} from '@portabletext/editor'
 
 import {sendInsertPickerItem} from './insertBehavior'
-import type {PickerItem, PickerMode} from './types'
+import type {PickerMode} from './types'
 
 type InsertContext = {
-  item: PickerItem
+  /** The `_type` of the block to insert — an `insertBlock` action's target. */
+  blockType: string
   mode: PickerMode
   editor: Editor
   anchorBlockKey: string
@@ -22,7 +23,7 @@ export function insertPickerItem(ctx: InsertContext): void {
     anchorBlockKey: ctx.anchorBlockKey,
     block: {
       _key: blockKey,
-      _type: ctx.item.action.blockType,
+      _type: ctx.blockType,
       ...ctx.initialValue,
     },
     mode: ctx.mode,

@@ -1,22 +1,26 @@
 import {useEditor} from '@portabletext/editor'
 import {defineInputRuleBehavior} from '@portabletext/plugin-input-rule'
 import {useEffect, useLayoutEffect, useMemo, useRef} from 'react'
-import {useSchema} from 'sanity'
 
+import {typeNameChain} from './deriveItems'
 import {createMarkdownInputRules, type MarkdownInputRuleConfig} from './inputRules'
+import {usePickerItemsContext} from './memberSchemaTypes'
 import {useOpenBlockOnInsert} from './openBlockOnInsert'
 import type {PickerInsertEvent} from './types'
 
-type MarkdownInputRulesProps = {
+export type MarkdownInputRulesProps = {
   /**
-   * Name of the portable-text array type this plugin is mounted on. Rules are
-   * only enabled for block types the array actually allows.
+   * Escape hatch: names the portable-text array type when Studio's
+   * member-schema context is unavailable (see BlockInsertPickerProps).
+   * Rules are only enabled for block types the array actually allows.
    */
   arrayTypeName?: string
   /** The markdown transforms to enable (see inputRules.ts). */
   rules: readonly MarkdownInputRuleConfig[]
-  /** Notified after each successful insert, alongside the built-in open-on-insert. */
-  onItemInserted?: (event: PickerInsertEvent) => void
+  /** Notified after each successful insert, alongside open-on-insert. */
+  onInsert?: (event: PickerInsertEvent) => void
+  /** Whether an inserted block opens for editing (default true). */
+  openOnInsert?: boolean
 }
 
 /**
@@ -26,30 +30,43 @@ type MarkdownInputRulesProps = {
  */
 export function MarkdownInputRules({
   arrayTypeName,
-  onItemInserted,
+  onInsert,
+  openOnInsert = true,
   rules,
 }: MarkdownInputRulesProps) {
   const editor = useEditor()
-  const schema = useSchema()
+  const itemsContext = usePickerItemsContext(arrayTypeName)
   const openBlockOnInsert = useOpenBlockOnInsert()
 
-  const allowedBlockTypes = useMemo(() => {
-    const arrayType = arrayTypeName ? schema.get(arrayTypeName) : undefined
-    if (!arrayType || arrayType.jsonType !== 'array') return new Set<string>()
-    return new Set(arrayType.of.map((member) => member.name))
-  }, [arrayTypeName, schema])
+  // Rules resolve against the array's insertable members with the same
+  // precedence as picker item metadata: a rule's blockType matches a member
+  // by name first, then by any name in the member's resolved type chain — so
+  // wellKnownInputRules' `code` fence also serves `{type: 'code', name:
+  // 'snippet'}`, with the inserted `_type` rewritten to the member name the
+  // array actually accepts. Rules matching nothing are dropped here, which
+  // also keeps `block` itself (and aliased text blocks) unreachable.
+  const resolvedRules = useMemo(() => {
+    const memberTypes = itemsContext?.memberTypes ?? []
+    return rules.flatMap((rule) => {
+      const member =
+        memberTypes.find((candidate) => candidate.name === rule.blockType) ??
+        memberTypes.find((candidate) => typeNameChain(candidate).includes(rule.blockType))
+      if (!member) return []
+      return [rule.blockType === member.name ? rule : {...rule, blockType: member.name}]
+    })
+  }, [itemsContext, rules])
 
   // The insert callbacks are routed through a ref (same pattern as
   // BlockInsertPicker's handleIntentRef) so the registration effect below
   // stays keyed on the rules/schema/editor only: re-registering a behavior
   // is not free (it tears down and re-sorts the editor's behavior chain, and
   // moves this behavior after later-registered ones), so a host passing an
-  // inline onItemInserted must not cause per-render churn.
+  // inline onInsert must not cause per-render churn.
   const onInsertedRef = useRef<(block: {_key: string; _type: string}) => void>(() => {})
   useLayoutEffect(() => {
     onInsertedRef.current = (block) => {
-      openBlockOnInsert(block._key)
-      onItemInserted?.({
+      if (openOnInsert) openBlockOnInsert(block._key)
+      onInsert?.({
         blockKey: block._key,
         blockType: block._type,
         via: 'inputRule',
@@ -65,17 +82,18 @@ export function MarkdownInputRules({
   // applies the delete + insert as one behavior action set).
   useEffect(() => {
     const inputRules = createMarkdownInputRules({
-      allowedBlockTypes,
+      // resolvedRules are already narrowed to insertable members.
+      allowedBlockTypes: new Set(resolvedRules.map((rule) => rule.blockType)),
       // The generator is read per insert so keys stay unique across a session.
       keyGenerator: () => editor.getSnapshot().context.keyGenerator(),
       onInserted: (block) => onInsertedRef.current(block),
-      rules,
+      rules: resolvedRules,
     })
     if (inputRules.length === 0) return undefined
     return editor.registerBehavior({
       behavior: defineInputRuleBehavior({rules: inputRules}),
     })
-  }, [allowedBlockTypes, editor, rules])
+  }, [editor, resolvedRules])
 
   return null
 }

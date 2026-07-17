@@ -4,7 +4,6 @@
 import {describe, expect, it, vi} from 'vitest'
 
 import {insertPickerItem} from './insertPickerItem'
-import type {PickerItem} from './types'
 
 function makeStubEditor() {
   const sends: unknown[] = []
@@ -14,22 +13,15 @@ function makeStubEditor() {
   }
 }
 
-const callout: PickerItem = {
-  action: {blockType: 'callout', type: 'insertBlock'},
-  id: 'callout',
-  title: 'Callout',
-  trigger: '/callout',
-}
-
 describe('insertPickerItem', () => {
   it('sends a single custom.blockInsertPicker.insert event in slash mode', () => {
     const editor = makeStubEditor()
     const onInsertedKey = vi.fn()
     insertPickerItem({
       anchorBlockKey: 'blk1',
+      blockType: 'callout',
       editor: editor as never,
       initialValue: {type: 'info'},
-      item: callout,
       keyGenerator: () => 'new-block-key',
       mode: 'slash',
       onInsertedKey,
@@ -56,9 +48,9 @@ describe('insertPickerItem', () => {
     const onInsertedKey = vi.fn()
     insertPickerItem({
       anchorBlockKey: 'blk1',
+      blockType: 'callout',
       editor: editor as never,
       initialValue: {type: 'info'},
-      item: callout,
       keyGenerator: () => 'new-block-key',
       mode: 'shortcut',
       onInsertedKey,
