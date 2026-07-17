@@ -128,7 +128,15 @@ export function useGenerateCaption(apiClient: SanityClient) {
   const toast = useToast()
 
   const generateCaption = useCallback(
-    ({path, documentId}: {path: string; documentId: string}) => {
+    ({
+      path,
+      documentId,
+      languagePath,
+    }: {
+      path: string
+      documentId: string
+      languagePath?: string
+    }) => {
       setLoading(true)
 
       return apiClient
@@ -142,6 +150,7 @@ export function useGenerateCaption(apiClient: SanityClient) {
             documentId,
             types,
             userId: user?.id,
+            languagePath,
           },
         })
         .catch((e) => {

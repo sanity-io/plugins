@@ -53,6 +53,7 @@ export function ImageContextProvider(props: InputProps) {
         void generateCaption({
           path: pathToString([...path, descriptionField.path]),
           documentId: assistableDocumentId,
+          languagePath: config.translate?.document?.languageField,
         })
       }
     }
@@ -67,6 +68,7 @@ export function ImageContextProvider(props: InputProps) {
     status,
     readOnly,
     isShowingOlderRevision,
+    config.translate?.document?.languageField,
   ])
 
   const context: ImageContextValue = useMemo(() => {

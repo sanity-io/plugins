@@ -403,6 +403,9 @@ By default, the caption field will regenerate whenever the image asset changes. 
 }
 ```
 
+If [document translation](#configure-document-translations) is configured with `translate.document.languageField`,
+generated image descriptions will be written in the document's language.
+
 ## Image generation
 
 <img width="600" alt="image" src="https://github.com/sanity-io/assist/assets/835514/c4de6791-f530-4cd1-b0c2-96ef988bc256">
