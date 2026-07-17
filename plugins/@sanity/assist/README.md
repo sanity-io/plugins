@@ -403,8 +403,17 @@ By default, the caption field will regenerate whenever the image asset changes. 
 }
 ```
 
-If [document translation](#configure-document-translations) is configured with `translate.document.languageField`,
-generated image descriptions will be written in the document's language.
+When [document translation](#configure-document-translations) is configured with `translate.document.languageField`,
+the document's language field path is included in the generate-caption request, the same way it's sent for
+[full document translation](#full-document-translation).
+
+> **Note:** at the time of writing, the AI Assist backend for the "Generate image description" action always
+> produces descriptions in English, regardless of the document's language field — this is a known limitation of
+> the automatic caption feature, not something a Studio-side config can currently override (see
+> [sanity-io/plugins#1606](https://github.com/sanity-io/plugins/issues/1606)). If you need alt text/captions in a
+> specific language today, use the [Transform Agent Action's `image-description` operation](https://www.sanity.io/docs/agent-actions/targets-paths#image-description)
+> with a custom `instruction` (e.g. from a [Sanity Function](https://www.sanity.io/docs/functions) or a
+> [custom field action](#custom-field-actions)) instead of `imageDescriptionField`.
 
 ## Image generation
 
