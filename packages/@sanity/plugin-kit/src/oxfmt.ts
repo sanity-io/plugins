@@ -33,7 +33,7 @@ const config: OxfmtConfig = {
   quoteProps: 'consistent',
   sortImports: true,
   sortPackageJson: {sortScripts: true},
-  ignorePatterns: ['dist/**', 'pnpm-lock.yaml', 'turbo/**/*.hbs'],
+  ignorePatterns: ['dist/**', 'pnpm-lock.yaml'],
   overrides: [
     {
       files: ['.changeset/*.md'],
