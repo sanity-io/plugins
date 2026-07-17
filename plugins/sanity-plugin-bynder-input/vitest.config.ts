@@ -1,6 +1,8 @@
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
+  plugins: [vanillaExtractPlugin()],
   test: {
     server: {
       deps: {

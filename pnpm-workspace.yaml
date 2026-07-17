@@ -141,8 +141,11 @@ overrides:
   sanity: 'catalog:'
   styled-components: npm:@sanity/styled-components@latest
 
-patchedDependencies:
-  '@bynder/compact-view': patches/@bynder__compact-view.patch
+peerDependencyRules:
+  allowedVersions:
+    # @bynder/compact-view does not declare react 19 in its peers yet, but works fine with it
+    '@bynder/compact-view>react': '19'
+    '@bynder/compact-view>react-dom': '19'
 
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
