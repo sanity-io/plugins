@@ -149,6 +149,9 @@ export interface DocumentTranslationConfig {
    * For projects that use the `@sanity/document-internationalization` plugin,
    * this should be the same as `languageField` config for that plugin.
    *
+   * Also used when generating image descriptions (`options.aiAssist.imageDescriptionField`)
+   * so captions match the document language instead of defaulting to English.
+   *
    * Default: 'language'
    */
   languageField: string

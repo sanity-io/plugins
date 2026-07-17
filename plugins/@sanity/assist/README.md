@@ -392,6 +392,10 @@ This will add a **Generate image description** action to the configured field.
 The **Generate image description** action will automatically run whenever the image changes.
 `imageDescriptionField` can be a nested field, if the image has an object field, i.e. `imageDescriptionField: 'wrapper.altText'`.
 Fields within array items are not supported.
+
+When `translate.document.languageField` is configured, generated image descriptions use that
+document language field (the same path used for document translations) instead of defaulting to English.
+
 By default, the caption field will regenerate whenever the image asset changes. To disable this behavior use the following configuration:
 
 ```ts
@@ -478,6 +482,7 @@ AI Assist allows editors to translate these documents into the desired language 
 ### Configure document translations
 To enable full document translations, set `translate.document.languageField` to the path of the language field in your documents.
 All documents with a corresponding language field will get a "Translate document" instruction added to the AI Assist drop-down for the document.
+The same `languageField` is also used when generating image descriptions, so captions are written in the document language.
 To further limit which document types should be enabled for translation instructions, provide an array of document type names to `translate.document.documentTypes`.
 If the studio is using [@sanity/document-internationalization](https://github.com/sanity-io/document-internationalization), these options should be the same as those used for that plugin.
 **Example configs**
