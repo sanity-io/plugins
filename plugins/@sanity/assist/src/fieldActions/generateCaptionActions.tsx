@@ -29,7 +29,6 @@ export const generateCaptionsActions: DocumentFieldAction = {
     const {assistableDocumentId} = useAssistDocumentContext()
 
     const isActive = !!imageContext && pathKey === imageContext?.imageDescriptionPath
-    const languagePath = config.translate?.document?.languageField
 
     return useMemo(() => {
       if (!isActive || !imageContext) {
@@ -59,7 +58,7 @@ export const generateCaptionsActions: DocumentFieldAction = {
             })
             return
           }
-          void generateCaption({path: pathKey, documentId: assistableDocumentId, languagePath})
+          void generateCaption({path: pathKey, documentId: assistableDocumentId})
         },
         renderAsButton: true,
         disabled: loading,
@@ -74,7 +73,6 @@ export const generateCaptionsActions: DocumentFieldAction = {
       loading,
       status,
       openInspector,
-      languagePath,
     ])
   },
 }
