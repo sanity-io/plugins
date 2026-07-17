@@ -444,7 +444,7 @@ We use [oxfmt](https://oxc.rs/docs/formatter.html):
 pnpm format
 ```
 
-The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`packages/@sanity/plugin-kit/src/oxfmt.ts`), which the root `oxfmt.config.ts` re-exports. Standalone plugins scaffolded with `plugin-kit init` reuse the same preset. Note that loading the TypeScript config requires Node `^20.19 || >=22.18`.
+The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`packages/@sanity/plugin-kit/src/oxfmt.ts`), which the root `oxfmt.config.ts` extends with workspace-specific `ignorePatterns` (for example `turbo/**/*.hbs`). Standalone plugins scaffolded with `plugin-kit init` reuse the same preset. Note that loading the TypeScript config requires Node `^20.19 || >=22.18`.
 
 ### Linting
 

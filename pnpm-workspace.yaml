@@ -22,7 +22,7 @@ catalog:
   '@sanity/icons': ^5.1.0
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.5.0
-  '@sanity/pkg-utils': ^11.0.9
+  '@sanity/pkg-utils': ^11.0.10
   '@sanity/preview-url-secret': ^4.0.8
   '@sanity/schema': ^6.5.0
   '@sanity/telemetry': '^1.1.0'
@@ -31,7 +31,7 @@ catalog:
   '@sanity/ui': ^3.3.5
   '@sanity/util': ^6.5.0
   '@sanity/uuid': ^3.0.3
-  '@sanity/vanilla-extract-vite-plugin': ^0.2.1
+  '@sanity/vanilla-extract-vite-plugin': ^0.2.2
   '@sanity/vision': ^6.5.0
   '@testing-library/jest-dom': ^6.9.1
   '@testing-library/react': ^16.3.2
@@ -129,6 +129,8 @@ minimumReleaseAgeExclude:
   # tsdown can select a newly released rolldown-plugin-dts version.
   - tsdown
   - rolldown-plugin-dts
+  - '@yuku-parser/*'
+  - yuku-parser
 
 overrides:
   '@types/node': 'catalog:'
