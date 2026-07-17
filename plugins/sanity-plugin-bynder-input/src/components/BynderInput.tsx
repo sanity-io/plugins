@@ -5,6 +5,8 @@ import {type ObjectInputProps, PatchEvent, set, unset} from 'sanity'
 
 import type {BynderAssetOptions, BynderAssetValue} from '../schema/bynder.asset'
 
+import './BynderInput.css'
+
 const VideoPlayer = lazy(() => import('./VideoPlayer'))
 const BynderModalLayout = lazy(() => import('./BynderModalLayout'))
 
