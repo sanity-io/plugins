@@ -50,7 +50,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@bynder/compact-view": "5.4.0",
+    "@bynder/compact-view": "^5.4.0",
     "@sanity/ui": "catalog:",
     "video.js": "catalog:"
   },

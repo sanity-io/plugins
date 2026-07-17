@@ -1862,7 +1862,7 @@ importers:
   plugins/sanity-plugin-bynder-input:
     dependencies:
       '@bynder/compact-view':
-        specifier: 5.4.0
+        specifier: ^5.4.0
         version: 5.4.0(react-dom@19.2.7)(react@19.2.7)
       '@sanity/ui':
         specifier: 'catalog:'
