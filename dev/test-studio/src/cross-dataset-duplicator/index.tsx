@@ -1,5 +1,5 @@
 import {crossDatasetDuplicator} from '@sanity/cross-dataset-duplicator'
-import {LaunchIcon} from '@sanity/icons'
+import {LaunchIcon} from '@sanity/icons/Launch'
 import {definePlugin, defineType} from 'sanity'
 
 const crossDatasetDuplicatorArticle = defineType({

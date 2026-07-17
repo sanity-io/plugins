@@ -1,6 +1,6 @@
 {
   "name": "@sanity/document-internationalization",
-  "version": "6.2.9",
+  "version": "6.2.20",
   "description": "Create unique translations of a document based on its language, joined by a shared reference document.",
   "keywords": [
     "sanity",
@@ -23,11 +23,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -37,7 +33,7 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -50,9 +46,8 @@
     "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@types/node": "catalog:",
@@ -64,12 +59,13 @@
     "react-dom": "catalog:",
     "sanity": "catalog:",
     "sanity-plugin-internationalized-array": "workspace:*",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
     "sanity-plugin-internationalized-array": "workspace:^"
   },
   "engines": {

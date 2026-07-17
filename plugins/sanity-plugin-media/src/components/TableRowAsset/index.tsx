@@ -1,4 +1,6 @@
-import {CheckmarkCircleIcon, EditIcon, WarningFilledIcon} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {EditIcon} from '@sanity/icons/Edit'
+import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
 import {
   Box,
   Checkbox,

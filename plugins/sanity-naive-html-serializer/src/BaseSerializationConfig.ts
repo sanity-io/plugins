@@ -133,11 +133,11 @@ export const customBlockDeserializers: Array<any> = [
             ...block,
             ...newBlock,
             style: customStyle ?? (newBlock as PortableTextTextBlock).style,
-          } as PortableTextTextBlock
+          }
 
           //next(childNodes) plays poorly with custom styles, issue to be filed.
           if (customStyle) {
-            return block as PortableTextTextBlock
+            return block
           }
         }
       }

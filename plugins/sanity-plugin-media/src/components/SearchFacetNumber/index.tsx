@@ -1,4 +1,4 @@
-import {SelectIcon} from '@sanity/icons'
+import {SelectIcon} from '@sanity/icons/Select'
 import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 

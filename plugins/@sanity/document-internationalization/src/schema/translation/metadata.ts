@@ -1,4 +1,4 @@
-import {TranslateIcon} from '@sanity/icons'
+import {TranslateIcon} from '@sanity/icons/Translate'
 import {defineField, defineType, type DocumentDefinition, type FieldDefinition} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 

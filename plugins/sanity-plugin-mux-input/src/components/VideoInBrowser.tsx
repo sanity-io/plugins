@@ -1,4 +1,7 @@
-import {CheckmarkIcon, EditIcon, LockIcon, PlayIcon} from '@sanity/icons'
+import {CheckmarkIcon} from '@sanity/icons/Checkmark'
+import {EditIcon} from '@sanity/icons/Edit'
+import {LockIcon} from '@sanity/icons/Lock'
+import {PlayIcon} from '@sanity/icons/Play'
 import {Button, Card, Stack, Text, Tooltip} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 import {styled} from 'styled-components'

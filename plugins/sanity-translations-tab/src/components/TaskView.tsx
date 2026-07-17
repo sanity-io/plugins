@@ -1,4 +1,4 @@
-import {ArrowTopRightIcon} from '@sanity/icons'
+import {ArrowTopRightIcon} from '@sanity/icons/ArrowTopRight'
 import {Box, Button, Flex, Text, Stack, useToast} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 

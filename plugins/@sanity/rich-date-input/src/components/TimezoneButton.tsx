@@ -1,4 +1,4 @@
-import {EarthAmericasIcon} from '@sanity/icons'
+import {EarthAmericasIcon} from '@sanity/icons/EarthAmericas'
 import {Button} from '@sanity/ui'
 import {type ReactNode} from 'react'
 

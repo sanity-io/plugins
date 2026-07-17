@@ -4,10 +4,10 @@ import {fileURLToPath} from 'url'
 import licenses from '@rexxars/choosealicense-list'
 import gitRemoteOriginUrl from 'git-remote-origin-url'
 
-import {eslintignoreTemplate, eslintrcTemplate} from '../configs/eslint'
 import {gitignoreTemplate} from '../configs/git'
+import {oxfmtConfigTemplate} from '../configs/oxfmt'
+import {oxlintConfigTemplate} from '../configs/oxlint'
 import {pkgConfigTemplate} from '../configs/pkg-config'
-import {prettierignoreTemplate} from '../configs/prettier'
 import {tsconfigTemplateDist, tsconfigTemplate, tsconfigTemplateSettings} from '../configs/tsconfig'
 import {addBuildScripts, getPackage, writePackageJson} from '../npm/package'
 import {injectPresets} from '../presets/presets'
@@ -321,16 +321,14 @@ async function writeStaticAssets(options: InjectOptions) {
   const {outDir, flags} = options
 
   const files: Injectable[] = [
-    flags.eslint && eslintrcTemplate({flags: options.flags}),
-    flags.eslint && eslintignoreTemplate({outDir, flags: options.flags}),
+    flags.oxlint && oxlintConfigTemplate({flags: options.flags}),
     {type: 'copy', from: 'editorconfig', to: '.editorconfig'},
     pkgConfigTemplate({outDir, flags: options.flags}),
     flags.gitignore && gitignoreTemplate(),
     flags.typescript && tsconfigTemplate({flags: options.flags}),
     flags.typescript && tsconfigTemplateDist({outDir, flags: options.flags}),
     flags.typescript && tsconfigTemplateSettings({outDir, flags: options.flags}),
-    flags.prettier && prettierignoreTemplate({outDir}),
-    flags.prettier && {type: 'copy', from: 'prettierrc.json', to: '.prettierrc'},
+    flags.oxfmt && oxfmtConfigTemplate({flags: options.flags}),
   ]
     .map((f) => (f ? (f as Injectable) : undefined))
     .filter((f): f is Injectable => !!f)

@@ -1,5 +1,43 @@
 # sanity-plugin-hotspot-array
 
+## 5.0.8
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 5.0.7
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 5.0.6
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+## 5.0.5
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior.
+
+## 5.0.4
+
+### Patch Changes
+
+- [#1480](https://github.com/sanity-io/plugins/pull/1480) [`4c8ee7a`](https://github.com/sanity-io/plugins/commit/4c8ee7a1095c54e9698ab4d19cb922c1fb4c3dd8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.42.2
+
+## 5.0.3
+
+### Patch Changes
+
+- [#1426](https://github.com/sanity-io/plugins/pull/1426) [`f9b7ed3`](https://github.com/sanity-io/plugins/commit/f9b7ed3bb2f2488781fff5a8f7ec32fbcbe72449) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.41.0
+
+- [#1434](https://github.com/sanity-io/plugins/pull/1434) [`a3f4b12`](https://github.com/sanity-io/plugins/commit/a3f4b12bda72238818db068d70ba8f15bc306f79) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.42.0
+
 ## 5.0.2
 
 ### Patch Changes

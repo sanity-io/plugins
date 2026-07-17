@@ -1,8 +1,0 @@
-{
-  "extends": "@repo/tsconfig/build.json",
-  "compilerOptions": {
-    "isolatedDeclarations": false
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"]
-}

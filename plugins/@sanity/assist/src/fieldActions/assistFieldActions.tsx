@@ -1,5 +1,7 @@
 import type {AgentActionPath} from '@sanity/client/stega'
-import {ControlsIcon, SparklesIcon} from '@sanity/icons'
+import {Icon} from '@sanity/icons'
+import {ControlsIcon} from '@sanity/icons/Controls'
+import {SparklesIcon} from '@sanity/icons/Sparkles'
 import {useCallback, useMemo, useRef} from 'react'
 import {
   type DocumentFieldAction,
@@ -312,9 +314,13 @@ function instructionItem(props: {
   hidden: boolean
 }) {
   const {hidden, isPrivate, onInstructionAction, assistSupported, instruction} = props
+  // @TODO investigate in studio core why we can't accept JSX.Element and only accept ComponentType
+  function IconLeft() {
+    return <Icon symbol={getIcon(instruction.icon)} />
+  }
   return node({
     type: 'action',
-    icon: getIcon(instruction.icon),
+    icon: IconLeft,
     iconRight: isPrivate ? PrivateIcon : undefined,
     title: getInstructionTitle(instruction),
     onAction: () => onInstructionAction(instruction),

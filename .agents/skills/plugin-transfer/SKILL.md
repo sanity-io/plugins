@@ -24,9 +24,8 @@ This is the canonical transfer flow and scaffolds monorepo-compatible files and 
 Keep and maintain these monorepo config files in the transferred plugin:
 
 - `package.json`
-- `package.config.ts`
+- `tsdown.config.ts`
 - `tsconfig.json`
-- `tsconfig.build.json`
 - `vitest.config.ts`
 
 Do not copy standalone-repo-only setup such as custom root CI/build/lint/test configs that are already handled by this monorepo.
@@ -103,6 +102,8 @@ To keep the plugin on the shared `sanity` variant, declare these in the plugin `
 - `"styled-components": "catalog:"` (when the plugin depends on `@sanity/ui`, which peers on styled-components; without the declaration pnpm auto-installs the peer and bypasses the workspace `@sanity/styled-components` override)
 
 Verify alignment by checking that the plugin importer's `sanity` version string in `pnpm-lock.yaml` matches other plugins (e.g. `plugins/@sanity/sfcc`).
+
+> **Do not migrate styling during a transfer.** When the plugin already uses `styled-components`, leave it in place for the initial port — the goal is a faithful, low-risk move. `styled-components` is still migrated to vanilla-extract (the styling target for every plugin), but in a **separate follow-up PR**, done with care to preserve visual fidelity and avoid regressions. The `styled-components: catalog:` alignment above applies until then. See the `sanity-plugin-best-practices` styling reference (`Migrating off styled-components`).
 
 ### Tests
 
@@ -219,6 +220,7 @@ Example for `sanity-naive-html-serializer`:
 
 ## Anything Else To Consider
 
+- **Do not migrate styling during the transfer.** Keep an existing `styled-components` plugin on `styled-components` for the initial port; defer any vanilla-extract migration to a follow-up PR (see [the styling note above](#duplicate-sanity-peer-variants-break-type-aware-lint)).
 - Review copied dependencies and peer dependencies carefully.
 - Run the [Before Submitting a PR](#before-submitting-a-pr) verification suite—not just `pnpm build` and `pnpm dev`.
 - Use `pnpm dev` to manually verify the test-studio example after the automated checks pass.

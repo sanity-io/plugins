@@ -1,4 +1,5 @@
-import {SearchIcon, SpinnerIcon} from '@sanity/icons'
+import {SearchIcon} from '@sanity/icons/Search'
+import {SpinnerIcon} from '@sanity/icons/Spinner'
 import {TextInput} from '@sanity/ui'
 import {startTransition, useOptimistic} from 'react'
 import {styled, keyframes} from 'styled-components'

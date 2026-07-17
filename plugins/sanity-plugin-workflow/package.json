@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-workflow",
-  "version": "3.0.22",
+  "version": "3.0.32",
   "description": "A demonstration of a custom content publishing workflow using Sanity.",
   "keywords": [
     "sanity",
@@ -23,11 +23,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "development": "./src/index.ts",
-      "source": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -37,34 +33,33 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
     "@hello-pangea/dnd": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "@tanstack/react-virtual": "^3.14.2",
+    "@tanstack/react-virtual": "^3.14.6",
     "lexorank": "catalog:",
     "motion": "catalog:",
     "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

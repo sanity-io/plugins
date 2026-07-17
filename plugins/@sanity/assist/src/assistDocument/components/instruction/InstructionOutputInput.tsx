@@ -110,8 +110,7 @@ function ObjectOutputInput({
             <Selectable
               value={field.name}
               title={field.type.title ?? field.name}
-              // oxlint-disable-next-line no-unsafe-type-assertion
-              arrayValue={value as OutputFieldItem[]}
+              arrayValue={value}
               onChange={onSelectChange}
             />
           </Flex>
@@ -172,8 +171,7 @@ function ArrayOutputInput({
             <Selectable
               value={itemType.name}
               title={isType(itemType, 'block') ? 'Text' : (itemType.title ?? itemType.name)}
-              // oxlint-disable-next-line no-unsafe-type-assertion
-              arrayValue={value as OutputTypeItem[] | undefined}
+              arrayValue={value}
               onChange={onSelectChange}
             />
           </Flex>

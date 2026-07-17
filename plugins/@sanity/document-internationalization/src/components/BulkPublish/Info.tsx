@@ -1,4 +1,4 @@
-import {InfoOutlineIcon} from '@sanity/icons'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
 import {Box, Stack, Text} from '@sanity/ui'
 
 import InfoIcon from './InfoIcon'

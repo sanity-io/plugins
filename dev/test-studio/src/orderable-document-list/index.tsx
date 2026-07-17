@@ -5,7 +5,9 @@ import {
   orderRankOrdering,
 } from '@sanity/orderable-document-list'
 import {definePlugin, defineType, type ConfigContext} from 'sanity'
-import {structureTool, type StructureBuilder} from 'sanity/structure'
+import type {StructureBuilder} from 'sanity/structure'
+
+import {issue1506Page, issue1506TeamMember} from './issue-1506-repro'
 
 type StructureListItem = Parameters<ReturnType<StructureBuilder['list']>['items']>[0][number]
 
@@ -14,13 +16,7 @@ function orderableDeskItem(
   S: StructureBuilder,
   context: ConfigContext,
 ): StructureListItem {
-  /* oxlint-disable no-unsafe-type-assertion -- workspace packages can resolve duplicate sanity instances under pnpm */
-  return orderableDocumentListDeskItem({
-    ...config,
-    S: S as unknown as OrderableListConfig['S'],
-    context: context as unknown as OrderableListConfig['context'],
-  }) as unknown as StructureListItem
-  /* oxlint-enable no-unsafe-type-assertion */
+  return orderableDocumentListDeskItem({...config, S, context})
 }
 
 const orderableCategory = defineType({
@@ -59,20 +55,35 @@ const orderableProject = defineType({
 })
 
 export const orderableDocumentListExample = definePlugin(() => ({
-  schema: {types: [orderableCategory, orderableProject]},
+  schema: {types: [orderableCategory, orderableProject, issue1506Page, issue1506TeamMember]},
 }))
 
-export const orderableDocumentListExampleStructure = definePlugin(() => ({
-  plugins: [
-    structureTool({
-      structure: (S, context) => {
-        return S.list()
-          .title('Content')
-          .items([
-            orderableDeskItem({type: 'orderableCategory', title: 'Categories'}, S, context),
-            orderableDeskItem({type: 'orderableProject', title: 'Projects'}, S, context),
-          ])
-      },
-    }),
-  ],
-}))
+// Desk items for the orderable-document-list plugin, composed into the home
+// workspace's structure (rather than living in a dedicated workspace).
+export function orderableDocumentListDeskItems(
+  S: StructureBuilder,
+  context: ConfigContext,
+): StructureListItem[] {
+  return [
+    orderableDeskItem({type: 'orderableCategory', title: 'Categories'}, S, context),
+    orderableDeskItem({type: 'orderableProject', title: 'Projects'}, S, context),
+  ]
+}
+
+/**
+ * Regression structure for https://github.com/sanity-io/plugins/issues/1506 — a
+ * regular document list alongside an orderable list at the same level.
+ */
+export function issue1506ReproList(S: StructureBuilder, context: ConfigContext) {
+  return S.list()
+    .title('Issue #1506 regression')
+    .items([
+      S.documentTypeListItem('issue1506Page').title('Pages'),
+      orderableDocumentListDeskItem({
+        type: 'issue1506TeamMember',
+        title: 'Team Members (orderable)',
+        S,
+        context,
+      }),
+    ])
+}

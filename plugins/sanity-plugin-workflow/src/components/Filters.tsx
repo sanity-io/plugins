@@ -1,4 +1,5 @@
-import {ResetIcon, UserIcon} from '@sanity/icons'
+import {ResetIcon} from '@sanity/icons/Reset'
+import {UserIcon} from '@sanity/icons/User'
 import {Button, Card, Flex, Menu, MenuButton} from '@sanity/ui'
 import {useCallback} from 'react'
 import {useCurrentUser, UserAvatar, useSchema} from 'sanity'

@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-shopify-assets",
-  "version": "2.0.1",
+  "version": "2.0.8",
   "description": "Choose assets from your Shopify store in your Sanity Studio",
   "keywords": [
     "assets",
@@ -27,11 +27,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -41,39 +37,38 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "axios": "^1.18.0",
+    "axios": "^1.18.1",
     "pretty-bytes": "^6.1.1",
     "pretty-ms": "^8.0.0",
     "react-infinite-scroll-component": "^6.1.1",
-    "react-photo-album": "catalog:react-photo-album-v2",
+    "react-photo-album": "^2.4.1",
     "rxjs": "catalog:",
     "video.js": "catalog:"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/video.js": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

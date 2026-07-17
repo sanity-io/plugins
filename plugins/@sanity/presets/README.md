@@ -24,6 +24,8 @@ Presets are designed to be extended — add fields, groups, and map hooks as you
 
 **Prerequisites:** A Sanity Studio project with `sanity` installed. See the [getting started guide](https://www.sanity.io/docs/getting-started) if you're starting from scratch.
 
+Presets give you schema types to add to a Studio you've already created — they don't scaffold a project or generate a schema from nothing.
+
 ```sh
 npm install @sanity/presets
 ```
@@ -36,39 +38,98 @@ pnpm add @sanity/presets
 yarn add @sanity/presets
 ```
 
-Import `createPresetsRegistry` and create a registry instance. The registry returns `define<Type>` functions that produce schema types:
+## Getting started
+
+A working page-building schema, from scratch. The recommended layout keeps the registry in a module of its own, separate from your schema types and your Studio config:
+
+```
+sanity.config.ts        # Studio config — imports the assembled schema types
+schemaTypes/
+├── presets.ts          # creates the registry, exports the define* functions
+├── hero.ts             # a custom type, modelled by hand
+└── index.ts            # assembles the schema types array
+```
+
+### 1. Create the registry
+
+Call `createPresetsRegistry` once, in a module of its own. It returns the `define<Type>` functions that produce schema types. Export them for your schema files to import:
 
 ```ts
+// schemaTypes/presets.ts
 import {createPresetsRegistry} from '@sanity/presets'
 
-const {defineLink, defineCta, defineSeo, defineImage, definePage} = createPresetsRegistry({
-  link: {
-    to: ['page', 'post'],
-  },
-})
+export const {definePage, defineLink, defineCta, defineImage, defineRichText} =
+  createPresetsRegistry({
+    link: {
+      // Document types an internal link can point to. This cascades to
+      // every link — standalone, inside CTAs, inside rich text. See "Registry".
+      to: ['page'],
+    },
+  })
 ```
 
-The `define<Type>` functions are used directly in your `schema.types` configuration, alongside standard `defineType` and `defineField` calls:
+Keep this in its own module rather than in `sanity.config.ts` or your schema index — creating the registry where your schema files import it back from leads to import cycles.
+
+### 2. Define your schema types
+
+Import the `define<Type>` functions and use them to build your types. `definePage` produces a document type; the others produce object types you compose into it. Presets and hand-modelled types mix freely:
 
 ```ts
+// schemaTypes/index.ts
+import {definePage, defineImage, defineCta, defineRichText} from './presets'
+import {hero} from './hero'
+
+export const schemaTypes = [
+  definePage({
+    name: 'page',
+    title: 'Page',
+    // Reference types by name, or inline a preset instance directly.
+    // See "Inline vs named types".
+    pageBuilderBlocks: ['hero', 'imageBlock', 'cta', 'richText'],
+  }),
+  hero,
+  defineImage({name: 'imageBlock', title: 'Image'}),
+  defineCta({name: 'cta', title: 'Call to action'}),
+  defineRichText({name: 'richText', title: 'Rich text'}),
+]
+```
+
+The custom `hero` type is modelled by hand with `defineType`, the same as any non-preset type:
+
+```ts
+// schemaTypes/hero.ts
+import {defineField, defineType} from 'sanity'
+
+export const hero = defineType({
+  name: 'hero',
+  title: 'Hero',
+  type: 'object',
+  fields: [
+    defineField({name: 'heading', title: 'Heading', type: 'string'}),
+    defineField({name: 'body', title: 'Body', type: 'text', rows: 3}),
+  ],
+})
+```
+
+### 3. Wire the schema into your config
+
+Import the assembled array and pass it to `schema.types`:
+
+```ts
+// sanity.config.ts
 import {defineConfig} from 'sanity'
+import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
-  // ...
+  projectId: 'your-project-id',
+  dataset: 'production',
   schema: {
-    types: [
-      definePage({
-        name: 'marketingPage',
-        title: 'Marketing Page',
-        // Each page builder block must be a type you've defined in your
-        // schema. See "Use presets alongside custom types" for more.
-        pageBuilderBlocks: ['hero', 'featureGrid'],
-      }),
-      // your other types...
-    ],
+    types: schemaTypes,
   },
 })
 ```
+
+That's a complete setup. From here, read [Concepts](#concepts) to understand the registry and composition, or [Usage](#usage) for the options each preset accepts.
 
 ## Concepts
 
@@ -101,6 +162,37 @@ defineLink({
   to: ['product'],
 })
 ```
+
+### Inline vs named types
+
+Only `definePage` produces a document type. The other presets (`defineLink`, `defineCta`, `defineSeo`, `defineImage`, `defineRichText`) produce object and array types — building blocks meant to live _inside_ other types, not standalone documents. There are two ways to place them:
+
+- **Inline** — call the preset directly where the type is used: inside a custom type's `fields`, or in a page's `pageBuilderBlocks`. This is the default; reach for it unless you have a reason not to.
+
+  ```ts
+  defineType({
+    name: 'blockquote',
+    type: 'object',
+    fields: [
+      defineField({name: 'quote', type: 'text'}),
+      // An inline link, defined right where it's used.
+      defineLink({name: 'source', title: 'Source'}),
+    ],
+  })
+  ```
+
+- **Named** — register the preset once in `schema.types` with a `name`, then reference it elsewhere by that name string. Reach for this when you want one standardized definition reused in several places: define it once, and every reference stays in sync.
+
+  ```ts
+  // In schema.types, register a reusable CTA:
+  defineCta({name: 'cta', title: 'Call to action'})
+
+  // Elsewhere, refer to it by name:
+  pageBuilderBlocks: ['cta']
+  fields: [defineField({name: 'cta', type: 'cta'})]
+  ```
+
+Default to inline; promote a preset to a named type only when reuse calls for it.
 
 ### Composition
 
@@ -157,13 +249,14 @@ The page preset produces a document type designed for page building. It includes
 definePage({
   name: 'marketingPage',
   title: 'Marketing Page',
-  // Each page builder block must be a type you've defined in your schema.
-  // See "Use presets alongside custom types" for more.
-  pageBuilderBlocks: ['hero', 'featureGrid', 'testimonial'],
+  pageBuilderBlocks: [
+    defineImage({name: 'imageBlock', title: 'Image'}),
+    defineRichText({name: 'richText', title: 'Rich text'}),
+  ],
 })
 ```
 
-Each entry in `pageBuilderBlocks` is either a string referencing a type in your schema, or an inline schema type definition - typically a preset instance such as `defineImage({name: 'imageBlock'})`. Mix both freely.
+Each entry in `pageBuilderBlocks` is either an inline schema type definition — typically a preset instance, as above — or a string referencing a type defined elsewhere in your schema (see [Use presets alongside custom types](#use-presets-alongside-custom-types)). Mix both freely.
 
 Rich text presets work in `pageBuilderBlocks`, both inline (`defineRichText({...})`) and by name (`'richText'`). Documents store each rich text block under `content[].content`.
 
@@ -237,7 +330,7 @@ defineCta({
 
 ### SEO (search engine optimization)
 
-The SEO preset produces an object type for search engine metadata. It includes fields for a title, description, and Open Graph image with dimension validation.
+The SEO preset produces an object type for search engine metadata. It includes fields for a title, description, and Open Graph image with a recommended size of 1200×630.
 
 ```ts
 defineSeo({
@@ -249,17 +342,17 @@ defineSeo({
 
 **Fields:**
 
-| Field         | Type     | Description                                                        |
-| ------------- | -------- | ------------------------------------------------------------------ |
-| `title`       | `string` | Page title for search engines. Warns when exceeding 70 characters. |
-| `description` | `text`   | Meta description. Warns when exceeding 150 characters.             |
-| `ogImage`     | `image`  | Open Graph image. Validates dimensions are exactly 1200×630.       |
+| Field         | Type     | Description                                                                                                 |
+| ------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
+| `title`       | `string` | Page title for search engines. Shows an info note past 70 characters, where search engines may truncate it. |
+| `description` | `text`   | Meta description. Shows an info note past 150 characters, where search engines may truncate it.             |
+| `ogImage`     | `image`  | Open Graph image. Shows a warning when dimensions aren't exactly 1200×630; recommended, not enforced.       |
 
 The SEO preset is also composed into the page preset, where it appears as an inline object field in the Metadata group.
 
 ### Image
 
-The image preset produces an object type for images with optional alt text and caption fields. It includes built-in preview configuration.
+The image preset produces an `image` type with optional alt text and caption fields. Hotspot is an option on the type itself; alt text and caption are added as fields. It includes built-in preview configuration.
 
 ```ts
 defineImage({
@@ -273,11 +366,10 @@ defineImage({
 
 **Fields:**
 
-| Field     | Type     | Description                                                                            |
-| --------- | -------- | -------------------------------------------------------------------------------------- |
-| `image`   | `image`  | The image asset. Hotspot is enabled by default.                                        |
-| `altText` | `string` | Alt text for accessibility. Enabled by default. Shows a validation warning when empty. |
-| `caption` | `text`   | Image caption. Enabled by default.                                                     |
+| Field     | Type     | Description                                                                           |
+| --------- | -------- | ------------------------------------------------------------------------------------- |
+| `altText` | `string` | Alt text for accessibility. Enabled by default. Shows a warning encouraging alt text. |
+| `caption` | `text`   | Image caption. Enabled by default.                                                    |
 
 **Options:**
 
@@ -408,9 +500,7 @@ Rather than reaching for [map hooks](#map-hooks), use the `fields` and `groups` 
 definePage({
   name: 'blogPost',
   title: 'Blog Post',
-  // These types must be defined in your schema.
-  // See "Use presets alongside custom types" for more.
-  pageBuilderBlocks: ['richText', defineImage({name: 'imageBlock'})],
+  pageBuilderBlocks: [defineRichText({name: 'richText'}), defineImage({name: 'imageBlock'})],
   groups: [{name: 'settings', title: 'Settings'}],
   fields: [
     defineField({

@@ -5,6 +5,10 @@ import pProps from 'p-props'
 const lockedDependencies: Record<string, string> = {
   'styled-components': '^6.1',
   'eslint': '^8.57.0',
+  // The scaffolded ESLint toolchain (@typescript-eslint v8) requires the classic JS compiler API,
+  // which TypeScript 7 (the Go-native compiler) no longer ships. Unlock once typescript-eslint
+  // supports TypeScript 7.
+  'typescript': '^6',
 }
 
 export function resolveLatestVersions(packages: string[]) {

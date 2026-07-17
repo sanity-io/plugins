@@ -1,4 +1,4 @@
-import {ComposeIcon} from '@sanity/icons'
+import {ComposeIcon} from '@sanity/icons/Compose'
 import {Box, Button, Flex, Inline, Label} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'

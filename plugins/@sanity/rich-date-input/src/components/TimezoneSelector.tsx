@@ -1,4 +1,4 @@
-import {SearchIcon} from '@sanity/icons'
+import {SearchIcon} from '@sanity/icons/Search'
 import {Autocomplete, Box, Card, Text} from '@sanity/ui'
 import {formatInTimeZone, getTimezoneOffset, zonedTimeToUtc} from 'date-fns-tz'
 import {type ReactNode, useCallback} from 'react'

@@ -1,4 +1,4 @@
-import {ImageIcon} from '@sanity/icons'
+import {ImageIcon} from '@sanity/icons/Image'
 import {Box, Spinner} from '@sanity/ui'
 import {useContext, useMemo} from 'react'
 import type {DocumentFieldAction, DocumentFieldActionGroup, DocumentFieldActionItem} from 'sanity'
