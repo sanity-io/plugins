@@ -1,5 +1,17 @@
 # sanity-plugin-bynder-input
 
+## 5.0.0
+
+### Major Changes
+
+- [#1553](https://github.com/sanity-io/plugins/pull/1553) [`387896a`](https://github.com/sanity-io/plugins/commit/387896ab86d98e224fc3591686c184da3ed64dfc) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix the Bynder Compact View modal not appearing in Sanity Studio v6 (and blocking clicks after closing) by upgrading `@bynder/compact-view` to 5.4.0 and styling its modal container from the plugin.
+
+  Breaking: `@bynder/compact-view` is now a regular dependency of the plugin instead of being patched and bundled into it, and it doesn't declare React 19 in its peer dependencies yet. Installing may require allowing the stale peer range — npm: `--legacy-peer-deps`, pnpm: `peerDependencyRules.allowedVersions` — see the README for details.
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
 ## 4.1.7
 
 ### Patch Changes
