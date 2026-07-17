@@ -1,5 +1,17 @@
 # @sanity/plugin-kit
 
+## 8.0.1
+
+### Patch Changes
+
+- [#1599](https://github.com/sanity-io/plugins/pull/1599) [`f9cb255`](https://github.com/sanity-io/plugins/commit/f9cb25577a4c412926eced32521c89f9a8a6aabb) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxfmt to ^0.59.0
+
+- [#1603](https://github.com/sanity-io/plugins/pull/1603) [`bfd5a92`](https://github.com/sanity-io/plugins/commit/bfd5a9268e11a20ac8c8aace8d30738e1cf0b984) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxlint to ^1.74.0
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+- [#1604](https://github.com/sanity-io/plugins/pull/1604) [`f170525`](https://github.com/sanity-io/plugins/commit/f1705254eb6b25d4ebd6c738f43d8f1cdd7e5290) Thanks [@stipsan](https://github.com/stipsan)! - Move `turbo/**/*.hbs` oxfmt ignore pattern from the shared preset to the monorepo root config
+
 ## 8.0.0
 
 ### Major Changes
