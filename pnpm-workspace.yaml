@@ -129,6 +129,8 @@ minimumReleaseAgeExclude:
   # tsdown can select a newly released rolldown-plugin-dts version.
   - tsdown
   - rolldown-plugin-dts
+  - '@yuku-parser/*'
+  - yuku-parser
 
 overrides:
   '@types/node': 'catalog:'
