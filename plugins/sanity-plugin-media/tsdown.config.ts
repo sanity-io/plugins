@@ -3,5 +3,5 @@ import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
   styledComponents: true,
-  dts: {tsgo: true},
+  reactCompiler: true,
 }) satisfies Promise<UserConfig>

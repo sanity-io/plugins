@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-media",
-  "version": "5.0.11",
+  "version": "6.0.2",
   "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
   "keywords": [
     "asset",
@@ -54,7 +54,7 @@
     "copy-to-clipboard": "^3.3.3",
     "date-fns": "catalog:",
     "filesize": "^9.0.11",
-    "groq": "^6.3.0",
+    "groq": "^6.5.0",
     "is-hotkey-esm": "^1.0.0",
     "nanoid": "catalog:",
     "pluralize": "^8.0.0",
@@ -79,20 +79,20 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/react-file-icon": "^1.0.5",
+    "babel-plugin-react-compiler": "catalog:",
     "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-is": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^18.3 || ^19",
-    "react-dom": "^18.3 || ^19",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

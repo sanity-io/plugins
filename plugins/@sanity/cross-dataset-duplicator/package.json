@@ -1,6 +1,6 @@
 {
   "name": "@sanity/cross-dataset-duplicator",
-  "version": "2.0.6",
+  "version": "2.0.9",
   "description": "Empower content editors to migrate Documents and Assets between Sanity Projects and Datasets from inside Sanity Studio",
   "keywords": [
     "sanity",
@@ -58,10 +58,10 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

@@ -17,21 +17,22 @@ catalog:
   '@portabletext/to-html': ^5.0.2
   '@portabletext/types': ^4.0.2
   '@sanity/asset-utils': ^2.3.0
-  '@sanity/client': ^7.23.0
+  '@sanity/client': ^7.23.2
   '@sanity/color': ^3.0.6
-  '@sanity/icons': ^5.0.0
+  '@sanity/icons': ^5.1.0
   '@sanity/image-url': ^2.1.1
-  '@sanity/mutator': ^6.3.0
-  '@sanity/pkg-utils': ^11.0.1
+  '@sanity/mutator': ^6.5.0
+  '@sanity/pkg-utils': ^11.0.7
   '@sanity/preview-url-secret': ^4.0.8
-  '@sanity/schema': ^6.3.0
+  '@sanity/schema': ^6.5.0
   '@sanity/telemetry': '^1.1.0'
-  '@sanity/tsconfig': ^2.2.0
-  '@sanity/tsdown-config': ^0.13.1
+  '@sanity/tsconfig': ^2.2.1
+  '@sanity/tsdown-config': ^0.19.2
   '@sanity/ui': ^3.3.5
-  '@sanity/util': ^6.3.0
+  '@sanity/util': ^6.5.0
   '@sanity/uuid': ^3.0.3
-  '@sanity/vision': ^6.3.0
+  '@sanity/vanilla-extract-vite-plugin': ^0.2.1
+  '@sanity/vision': ^6.5.0
   '@testing-library/jest-dom': ^6.9.1
   '@testing-library/react': ^16.3.2
   '@types/lodash-es': ^4.17.12
@@ -42,7 +43,6 @@ catalog:
   '@types/video.js': ^7.3.58
   '@typescript/native-preview': beta
   '@vanilla-extract/css': ^1.21.1
-  '@vanilla-extract/vite-plugin': ^5.2.4
   '@vis.gl/react-google-maps': ^1.9.0
   babel-plugin-react-compiler: ^1.0.0
   date-fns: ^4.4.0
@@ -50,7 +50,10 @@ catalog:
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
   motion: ^12.42.2
-  nanoid: ^5.1.16
+  nanoid: ^6.0.0
+  oxfmt: ^0.59.0
+  oxlint: ^1.74.0
+  oxlint-tsgolint: ^0.24.0
   react: ^19.2.7
   react-dom: ^19.2.7
   react-fast-compare: ^3.2.2
@@ -60,14 +63,25 @@ catalog:
   react-photo-album: ^3.6.0
   react-rx: ^4.2.3
   rxjs: ^7.8.2
-  sanity: ^6.3.0
+  sanity: ^6.5.0
   styled-components: ^6.4.3
   suspend-react: ^0.1.3
-  tsdown: ^0.22.5
-  typescript: 6.0.3
+  tsdown: ^0.22.8
+  typescript: 7.0.2
   validate-npm-package-name: ^8.0.0
   video.js: ^7.21.7
   vitest: ^4.1.10
+
+catalogs:
+  # Ranges used in `peerDependencies` (referenced as `catalog:peer`).
+  # Only the shared studio peers live here; niche one-off peers (e.g. `easymde`)
+  # keep explicit ranges, and peers on other workspace packages keep `workspace:^`
+  # (or an explicit range) so changesets can track dependents.
+  peer:
+    react: ^19.2
+    react-dom: ^19.2
+    sanity: ^5 || ^6.0.0-0
+    styled-components: ^6.1
 
 catalogMode: prefer
 dedupeDirectDeps: true
@@ -79,6 +93,7 @@ linkWorkspacePackages: deep
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
+  - '@changesets/cli'
   - '@oxfmt/*'
   - '@oxlint/*'
   - '@oxlint-tsgolint/*'
@@ -111,6 +126,9 @@ minimumReleaseAgeExclude:
   - uuid@14.0.0
   # Renovate security update: turbo@2.9.14
   - turbo@2.9.14
+  # tsdown can select a newly released rolldown-plugin-dts version.
+  - tsdown
+  - rolldown-plugin-dts
 
 overrides:
   '@types/node': 'catalog:'

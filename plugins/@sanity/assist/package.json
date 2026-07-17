@@ -1,6 +1,6 @@
 {
   "name": "@sanity/assist",
-  "version": "6.1.10",
+  "version": "6.1.13",
   "description": "You create the instructions; Sanity AI Assist does the rest.",
   "keywords": [
     "ai",
@@ -66,10 +66,10 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

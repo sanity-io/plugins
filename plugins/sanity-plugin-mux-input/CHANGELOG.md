@@ -1,5 +1,45 @@
 # sanity-plugin-mux-input
 
+## 5.0.3
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 5.0.2
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 5.0.1
+
+### Patch Changes
+
+- [#1562](https://github.com/sanity-io/plugins/pull/1562) [`aa53df6`](https://github.com/sanity-io/plugins/commit/aa53df60e10f50db8d1a3a5f12ebb5b2ba8e8799) Thanks [@stipsan](https://github.com/stipsan)! - Align the `styled-components` peer dependency range with the shared `peer` catalog (`^6.1`, the range Sanity Studio v5+ already requires)
+
+## 5.0.0
+
+### Major Changes
+
+- [#1560](https://github.com/sanity-io/plugins/pull/1560) [`c270307`](https://github.com/sanity-io/plugins/commit/c270307ace6fa6fd0bb615aa68352ed6fd3d7a52) Thanks [@stipsan](https://github.com/stipsan)! - Enable React Compiler
+
+  The package is now built with React Compiler targeting React 19, so published components are memoized automatically. As a result the `react` peer dependency is tightened from `^18.3 || ^19` to `^19.2`, since the compiled output relies on `react/compiler-runtime`. In practice this doesn't drop any supported setup: the `sanity` peer dependency (`^5 || ^6.0.0-0`) already requires React 19.2.
+
+## 4.1.9
+
+### Patch Changes
+
+- [#1555](https://github.com/sanity-io/plugins/pull/1555) [`5ade159`](https://github.com/sanity-io/plugins/commit/5ade159d97951a87867d225b72d6008cdc5e7fd6) Thanks [@stipsan](https://github.com/stipsan)! - Render document previews in the video references list with `IntentLink` passed directly to `PreviewCard`'s `as` prop, instead of recreating a wrapper link component on every render. This preserves the card's styling and focus ring on the rendered link and avoids unnecessary remounts.
+
+## 4.1.8
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1541](https://github.com/sanity-io/plugins/pull/1541) [`9fd850d`](https://github.com/sanity-io/plugins/commit/9fd850d93e55a31691d10c8f2dc22619edd90cb2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency iso-639-1 to ^3.1.6
+
 ## 4.1.7
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@sanity/document-internationalization",
-  "version": "6.2.17",
+  "version": "6.2.20",
   "description": "Create unique translations of a document based on its language, joined by a shared reference document.",
   "keywords": [
     "sanity",
@@ -63,9 +63,9 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
     "sanity-plugin-internationalized-array": "workspace:^"
   },
   "engines": {

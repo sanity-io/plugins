@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-bynder-input",
-  "version": "4.1.4",
+  "version": "4.1.7",
   "keywords": [
     "sanity",
     "sanity-plugin"
@@ -54,9 +54,9 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

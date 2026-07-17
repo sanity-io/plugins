@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-hotspot-array",
-  "version": "5.0.5",
+  "version": "5.0.8",
   "description": "A configurable Custom Input for Arrays that will add and update items by clicking on an Image",
   "keywords": [
     "sanity",
@@ -59,9 +59,9 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

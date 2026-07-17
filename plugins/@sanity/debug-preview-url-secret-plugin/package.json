@@ -1,6 +1,6 @@
 {
   "name": "@sanity/debug-preview-url-secret-plugin",
-  "version": "2.0.15",
+  "version": "2.0.18",
   "keywords": [
     "sanity",
     "sanity-plugin",
@@ -49,8 +49,8 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"
+    "react": "catalog:peer",
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

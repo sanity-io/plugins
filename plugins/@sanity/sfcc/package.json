@@ -1,6 +1,6 @@
 {
   "name": "@sanity/sfcc",
-  "version": "1.0.17",
+  "version": "1.0.20",
   "description": "Sanity plugin for Salesforce Commerce Cloud (SFCC) integration — synced product and category data with editorial enrichment.",
   "keywords": [
     "salesforce-commerce-cloud",
@@ -56,9 +56,9 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
     "sanity-plugin-internationalized-array": "^4.0.0 || ^5.0.0"
   },
   "engines": {
