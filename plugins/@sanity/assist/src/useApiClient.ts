@@ -126,10 +126,6 @@ export function useGenerateCaption(apiClient: SanityClient) {
   const user = useCurrentUser()
   const types = useSerializedTypes()
   const toast = useToast()
-  const {config} = useAiAssistanceConfig()
-  // Reuse the same document language field configured for translations, so generated
-  // image descriptions match the document language instead of always defaulting to English.
-  const languagePath = config.translate?.document?.languageField
 
   const generateCaption = useCallback(
     ({path, documentId}: {path: string; documentId: string}) => {
@@ -146,7 +142,6 @@ export function useGenerateCaption(apiClient: SanityClient) {
             documentId,
             types,
             userId: user?.id,
-            languagePath,
           },
         })
         .catch((e) => {
@@ -166,7 +161,7 @@ export function useGenerateCaption(apiClient: SanityClient) {
           }, 2000)
         })
     },
-    [setLoading, apiClient, toast, user, types, languagePath],
+    [setLoading, apiClient, toast, user, types],
   )
 
   return useMemo(

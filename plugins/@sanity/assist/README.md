@@ -34,9 +34,13 @@
 - [Adding translation actions to fields](#adding-translation-actions-to-fields)
 - [Translation style guide](#translation-style-guide)
 - [Custom field actions](#custom-field-actions)
-  - [useExampleFieldActions](#usefieldaction)
+  - [useExampleFieldActions](#useexamplefieldactions)
   - [Define helpers](#define-helpers)
   - [useUserInput](#useuserinput)
+- [Known limitations](#known-limitations)
+  - [Image descriptions are always generated in English](#image-descriptions-are-always-generated-in-english)
+- [Caveats](#caveats)
+- [Third party sub-processors](#third-party-sub-processors)
 - [License](#license)
 
 ## About Sanity AI Assist
@@ -46,7 +50,8 @@ You create the instructions; Sanity AI Assist does the rest. [Learn more about w
 [Read the release announcement here.](https://www.sanity.io/blog/sanity-ai-assist-announcement?utm_source=github.com&utm_medium=organic_social&utm_campaign=ai-assist&utm_content=)
 
 > Using this feature requires Sanity to send data to OpenAI.com for processing. It uses generative AI; you should verify the data before using it.
-> <img width="1019" alt="Screenshot showing Sanity AI Assist instructions for a title field in the Sanity Studio document editor" src="https://github.com/sanity-io/sanity/assets/835514/4d895477-c6d7-4da0-be25-c73e109edbdb">
+
+<img width="1019" alt="Screenshot showing Sanity AI Assist instructions for a title field in the Sanity Studio document editor" src="https://github.com/sanity-io/sanity/assets/835514/4d895477-c6d7-4da0-be25-c73e109edbdb">
 
 ## Installation
 
@@ -106,16 +111,23 @@ export default defineConfig({
 After installing and adding the plugin and having the AI Assist feature enabled for your project and its datasets, you need to create a token for the plugin to access the AI Assist API. This needs to be done by a member of the project with token creation permissions (typically someone with an admin or developer role).
 
 - Start the studio and open any document
-- Click \*the sparkle icon\*\* (✨) in the document header near the close document X-button
+- Click **the sparkle icon** (✨) in the document header near the close document X-button
 - Then select **Manage instructions**
+
   <img width="210" alt="The AI Assist document menu showing 'Manage instructions' highlighted" src="https://github.com/sanity-io/sanity/assets/835514/58c177ca-4530-4f44-abe0-4adcd9e11c8b">
+
 - Selecting **Manage instructions** will open an inspector panel
 - Click the **Enable AI assistance** button to create a token and enable AI Assist for everyone with access to the project
+
   <img width="339" alt="The 'Enable Sanity AI Assist' button" src="https://github.com/sanity-io/sanity/assets/835514/38b81861-6a7c-49a2-a7c5-f46816d0c0a8">
-  You will find a new API token entry for your project named “Sanity AI” in your project's API settings on [sanity.io/manage](https://sanity.io/manage).
-  <img alt="The Sanity AI Assist API token entry on sanity.io/manage" src="https://github.com/sanity-io/sanity/assets/835514/3b2f549b-926c-4d85-b5fa-dd7f8f58e667" />
-  The plugin will now work for any dataset in your project.
-  **Note:** You can revoke this token at any time to disable Sanity AI Assist service. A new token has to be generated via the plugin UI for it to work again.
+
+You will find a new API token entry for your project named “Sanity AI” in your project's API settings on [sanity.io/manage](https://sanity.io/manage).
+
+<img alt="The Sanity AI Assist API token entry on sanity.io/manage" src="https://github.com/sanity-io/sanity/assets/835514/3b2f549b-926c-4d85-b5fa-dd7f8f58e667" />
+
+The plugin will now work for any dataset in your project.
+
+> **Note:** You can revoke this token at any time to disable Sanity AI Assist service. A new token has to be generated via the plugin UI for it to work again.
 
 ### Permissions
 
@@ -177,7 +189,8 @@ assist({
 - `localeSettings`: See section on [date and datetime](#date-and-datetime)
 - `maxPathDepth`: The max depth for document paths AI Assist will write to.
 - `temperature`: Influences how much the output of an instruction will vary between runs.
-  For more details, please review the TSDocs of the individual config parameters in [assistTypes.ts](./src/assistTypes.ts)
+
+For more details, please review the TSDocs of the individual config parameters in [assistTypes.ts](./src/assistTypes.ts).
 
 ## Schema configuration
 
@@ -245,21 +258,23 @@ The following types are not supported, and behave as excluded types:
 - [Image](https://www.sanity.io/docs/image-type) (supported when image has custom fields)
 - [File](https://www.sanity.io/docs/file-type) (never supported, even when file has custom fields)
 - [Reference](https://www.sanity.io/docs/reference-type) (supported when configured with embeddingsIndex)
-  Fields with these types will not be changed by the assistant, do not have AI Assist actions, and cannot be referenced in instructions.
-  Objects where all fields are excluded or unsupported and arrays where all member types are excluded or unsupported
-  will also be excluded.
+
+Fields with these types will not be changed by the assistant, do not have AI Assist actions, and cannot be referenced in instructions.
+Objects where all fields are excluded or unsupported and arrays where all member types are excluded or unsupported
+will also be excluded.
 
 ### Date and datetime
 
 - [Date](https://www.sanity.io/docs/date-type)
 - [Datetime](https://www.sanity.io/docs/datetime-type)
-  Starting from v3.0.0, AI Assist can write to date and datetime fields. Instructions can use language like "tomorrow at noon" or
-  "next year", and when Assist writes to the field, it will be converted to a field-compatible value.
-  Language about time is locale and timeZone dependant. By default instructions will use the locale and timezone provided
-  by the browser (`Intl.DateTimeFormat().resolvedOptions()`).
-  Alternatively, you can configure the plugin per user with an `assist.localeSettings` function that should return `LocaleSettings`.
 
-##### Example
+Starting from v3.0.0, AI Assist can write to date and datetime fields. Instructions can use language like "tomorrow at noon" or
+"next year", and when Assist writes to the field, it will be converted to a field-compatible value.
+Language about time is locale and timeZone dependant. By default instructions will use the locale and timezone provided
+by the browser (`Intl.DateTimeFormat().resolvedOptions()`).
+Alternatively, you can configure the plugin per user with an `assist.localeSettings` function that should return `LocaleSettings`.
+
+#### Example
 
 ```ts
 assist({
@@ -403,35 +418,34 @@ By default, the caption field will regenerate whenever the image asset changes. 
 }
 ```
 
-When [document translation](#configure-document-translations) is configured with `translate.document.languageField`,
-the document's language field path is included in the generate-caption request, the same way it's sent for
-[full document translation](#full-document-translation).
-
-> **Note:** at the time of writing, the AI Assist backend for the "Generate image description" action always
-> produces descriptions in English, regardless of the document's language field — this is a known limitation of
-> the automatic caption feature, not something a Studio-side config can currently override (see
-> [sanity-io/plugins#1606](https://github.com/sanity-io/plugins/issues/1606)). If you need alt text/captions in a
-> specific language today, use the [Transform Agent Action's `image-description` operation](https://www.sanity.io/docs/agent-actions/targets-paths#image-description)
-> with a custom `instruction` (e.g. from a [Sanity Function](https://www.sanity.io/docs/functions) or a
-> [custom field action](#custom-field-actions)) instead of `imageDescriptionField`.
+> **Note:** Image descriptions are always generated in English.
+> See [Known limitations](#image-descriptions-are-always-generated-in-english) for details and workarounds.
 
 ## Image generation
 
 <img width="600" alt="image" src="https://github.com/sanity-io/assist/assets/835514/c4de6791-f530-4cd1-b0c2-96ef988bc256">
+
 AI Assist can generate assets for images configured with a prompt field.
 An image is generated directly by using the **Generate image from prompt** instruction on the prompt field,
 or indirectly whenever the image prompt field is written to by an AI Assist instruction.
+
 ### Configure
+
 To enable image generation for an image field, the image must:
+
 - set `options.aiAssist.imageInstructionField` to a child-path relative to the image
 - have a `string` or `text` field that corresponds to the `imageInstructionField` path
+
 This will add a **Generate image from prompt** instruction to the image prompt field. Running it will generate an image.
 Additionally, whenever an AI Assist instruction writes to the image prompt field, the image will be re-generated.
 This could be a document instruction, an instruction for the image field or parent object, or directly on the image prompt field.
 A common style guide can achieved by adding an instruction to the image prompt field that rewrites its value to include instructions on common style rules.
 Use AI context documents to apply a reusable style guide to the prompt rewriting as needed.
+
 #### Example
+
 Given the following document schema
+
 ```ts
 defineType({
   type: 'document',
@@ -457,13 +471,18 @@ defineType({
   ],
 })
 ```
+
 To directly generate an image based on the value in the prompt field,
 run the "Generate image from prompt" instruction that is automatically added.
 For better image results or to ensure a consistent style, rewrite the prompt before generating the image:
+
 ### Example prompt expansion instruction
+
 <img width="267" alt="image" src="https://github.com/sanity-io/assist/assets/835514/dabc6910-80d3-4a69-940f-49ac5cae9ade">
+
 For better image results, use an instruction that expands the prompt to be more detailed.
 Example instruction text:
+
 ```
 Rewrite image prompts for image generation according to the following rules:
 - Be Specific: Include detailed descriptions of the scene, objects, colors, and any characters. Instead of saying "a cat in a garden", say "a fluffy gray cat sitting beside pink tulips in a sunny garden".
@@ -477,22 +496,31 @@ Keep it 100 words or less.
 The prompt to rewrite is:
 {Reference to image-prompt-field}
 ```
+
 The rules can be extracted into an AI Context document and reused in other instructions as needed. This approach can also be used to inform a reusable styleguide for image generation.
+
 ## Full document translation
+
 <img width="250" alt="Translate document action" src="https://github.com/sanity-io/assist/assets/835514/932968ee-1a8c-4389-8822-338188f88b40">
+
 AI assist offers full document translations, which is ideal for pairing with [@sanity/document-internationalization](https://github.com/sanity-io/document-internationalization).
 Translations are done deeply; visiting nested objects, arrays and even Portable text annotations.
+
 ### What AI Assist full document translations solves
+
 Given a document written in one language, AI assist can translate the document in place to a language specified by a language field in the document.
 When the document translation feature is enabled, AI Assist will go through the document field by field, translating all string and portable text fields into the language specified in the document's language field.
 This works especially well with [@sanity/document-internationalization](https://github.com/sanity-io/document-internationalization), which uses a strategy of creating copies of the source document for each separate language to be translated into and uses a hidden string field to set the language for each copy.
 AI Assist allows editors to translate these documents into the desired language immediately.
+
 ### Configure document translations
+
 To enable full document translations, set `translate.document.languageField` to the path of the language field in your documents.
 All documents with a corresponding language field will get a "Translate document" instruction added to the AI Assist drop-down for the document.
 To further limit which document types should be enabled for translation instructions, provide an array of document type names to `translate.document.documentTypes`.
 If the studio is using [@sanity/document-internationalization](https://github.com/sanity-io/document-internationalization), these options should be the same as those used for that plugin.
 **Example configs**
+
 ```ts
 // This will add a "Translate document" instruction to all documents with a language field
 assist({
@@ -503,6 +531,7 @@ assist({
   },
 })
 ```
+
 ```ts
 // This will add a "Translate document" instruction only to the 'article' document type
 assist({
@@ -514,7 +543,9 @@ assist({
   },
 })
 ```
+
 **All configuration params**
+
 ```ts
 assist({
     translate: {
@@ -543,17 +574,25 @@ assist({
     }
 })
 ```
+
 ## Field level translations
+
 <img width="250" alt="Translate fields action" src="https://github.com/sanity-io/assist/assets/835514/99819cd4-578e-43b2-8c70-8e39afff5f09">
 <img width="250" alt="Translate fields dialog" src="https://github.com/sanity-io/assist/assets/835514/fe3d289c-49b6-46dd-ae2f-cd509a01534a">
+
 AI assist offers field-level translations, which is ideal for use in conjunction with [sanity-plugin-internationalized-array](https://github.com/sanity-io/sanity-plugin-internationalized-array?tab=readme-ov-file#sanity-plugin-internationalized-array) and [@sanity/language-filter](https://github.com/sanity-io/language-filter)
+
 ### What AI Assist field-level translations solves
+
 Given a document with field values in different languages, AI assist can transfer and translate from one language to the others.
 The typical use case would be for documents that use internationalized wrapper types to hold values for multiple languages.
 AI Assist supports complex values, so language fields that hold nested objects, portable text, or arrays will also be translated.
 When initiating translations, editors select a language to translate from and which languages to translate to. This means that AI Assist supports partial translations in cases where editors are responsible for only some languages in the document.
+
 ### Configure field translations
+
 To enable field-level translations, set `translate.field.documentTypes` to an array with which document types should get field translations, and `translate.field.languages`
+
 ```ts
 assist({
   translate: {
@@ -567,10 +606,12 @@ assist({
   },
 })
 ```
+
 These documents will get a **Translate fields** instruction added to the document AI Assist dropdown.
 Out of the box, this is sufficient config for document types using the `internationalizedArray*` types provided by [sanity-plugin-internationalized-array](https://github.com/sanity-io/sanity-plugin-internationalized-array?tab=readme-ov-file#sanity-plugin-internationalized-array).
 It will also work without further config for object types named `locale*`, (e.g. `localeTitle`, `localeDescription`) with one field per language:
 _Example locale object supported by default_
+
 ```ts
 // Object type with name starting with 'locale', and one field per language language
 defineType({
@@ -591,26 +632,36 @@ defineType({
   ],
 })
 ```
+
 **If your schema is not using either of these structures**, refer to the section on [Custom language fields](#custom-language-fields).
+
 #### Note on document schema depth
+
 By default, field level translations will translate 6 "path-segments" deep.
 Depth is based on field path segments like so:
+
 - `title` has depth 1
 - `array[_key="no"].title` has depth 3
+
 If this is not sufficient for your document types, use `maxPathDepth`:
+
 ```ts
 assist({
   translate: {
     field: {
-      maxPathDepth: 12
+      maxPathDepth: 12,
     },
   },
 })
 ```
+
 Be careful not to set this too high in studios with recursive document schemas, as it could have negative impact on performance.
 maxPathDepth is hard-capped to 50.
+
 ### Loading field languages
+
 Languages must be an array of objects with an id and title.
+
 ```ts
 assist({
   translate: {
@@ -623,7 +674,9 @@ assist({
   },
 })
 ```
+
 Or an asynchronous function that returns an array of objects with an id and title.
+
 ```ts
 assist({
   translate: {
@@ -636,7 +689,9 @@ assist({
   },
 })
 ```
+
 The async function contains a configured Sanity client in the first parameter, allowing you to store language options as documents. Your query should return an array of objects with an id and title.
+
 ```ts
 assist({
   translate: {
@@ -649,8 +704,10 @@ assist({
   },
 })
 ```
+
 Additionally, you can "pick" fields from a document, to pass into the query. For example, if you have a concept of "Markets" where only certain language fields are required in certain markets.
 In this example, each language document has an array of strings called markets to declare where that language can be used. And the document being authored has a single market field.
+
 ```ts
 assist({
   translate: {
@@ -669,21 +726,30 @@ assist({
   },
 })
 ```
+
 ### Custom language fields
+
 By providing a function to `translate.field.translationOutputs`, you have complete control over which fields belong to which language.
 `translationOutputs` is used when an editor uses the **Translate fields** instruction.
 It determines the relationships between document paths: Given a document path and a language, it should return the approriate sibling paths into which translations are output.
 `translationOutputs` is invoked once per path in the document (limited to a depth of 6), with the following arguments:
+
 - `documentMember` - the field or array item for a given path; contains the path and its `schemaType`
 - `enclosingType` - the schema type of the parent holding the member
 - `translateFromLanguageId` - the `languageId` for the language the users want to translate from
 - `translateToLanguageIds` - all `languageId`s the user can translate to
+
 The function should return a `TranslationOutput[]` array that contains all the paths where translations from `documentMember` (in the language received in `translateFromLanguageId`) should be output.
 The function should return `undefined` for all document members that should not be directly translated, or are nested fields under a translated path.
+
 #### Default function
+
 The default `translationOutputs` is available using `import {defaultTranslationOutputs} from '@sanity/assist`.
+
 #### Example
+
 Given the following document:
+
 ```ts
 {
 	titles: {
@@ -699,19 +765,25 @@ Given the following document:
 	}
 }
 ```
+
 When translating from English to German, `translationOutputs` will be
 invoked multiple times.
 The following parameters will be the same every invocation:
+
 - `translateFromLanguageId` will be `'en'`
 - `translateToLanguageIds` will be `['de']`
+
 `documentMember` and `enclosingType` will change between each invocation, and take the following values:
+
 1. `{path: 'titles', name: 'titles', schemaType: ObjectSchemaType}`, `ObjectSchemaType`
 2. `{path: 'titles.en', name: 'en', schemaType: ObjectSchemaType}`, `ObjectSchemaType`
 3. `{path: 'titles.en.title', name: 'title', schemaType: StringSchemaType}`, `ObjectSchemaType`
 4. `{path: 'titles.en.subtitle', name: 'subtitle', schemaType: StringSchemaType}`, `ObjectSchemaType`
 5. `{path: 'titles.de', name: 'de', schemaType: ObjectSchemaType}`, `ObjectSchemaType`
+
 To indicate that you want everything under `title.en` to be translated into `title.de`, `translationOutputs` needs to return `[id: 'de', outputPath: 'titles.de']` when invoked with `documentMember.path: 'titles.en'`.
 The following function enables this:
+
 ```ts
 function translationOutputs(
   member,
@@ -734,7 +806,9 @@ function translationOutputs(
   return undefined
 }
 ```
-[### Full field translation configuration example]()
+
+### Full field translation configuration example
+
 ```ts
 assist({
   translate: {
@@ -768,16 +842,21 @@ assist({
   },
 })
 ```
+
 ## Adding translation actions to fields
+
 <img width="250" alt="Translate action on field" src="https://github.com/sanity-io/assist/assets/835514/e6dc0860-90a7-4f7a-b3d2-71893b09862f">
 <img width="250" alt="Translate fields action on field" src="https://github.com/sanity-io/assist/assets/835514/acc5fa23-2022-4eae-922d-5c83dda7379c">
+
 By default, **Translate document** and **Translate fields…** instructions are only added to the top-level document instruction menu.
 These instructions can also be added to fields by setting
 `options.aiAssist.translateAction: true` for a field or type.
 This allows editors to translate only parts of the document and can be useful to enable for `internationalizedArrays` or `locale` wrapper object types.
 For document types configured for full document translations, a **Translate** action will be added. Running it will translate the field to the language set in the language field
 For document types configured for field translations, a **Translate fields...** action will be added. Running it will open a dialog with language selectors.
+
 #### Example
+
 ```ts
 defineField({
   name: 'subtitle',
@@ -790,11 +869,14 @@ defineField({
   },
 })
 ```
+
 ## Translation style guide
+
 In some cases you might want/need the translator to follow a certain style guide - for
 instance you might tell it not to translate certain words, or be more formal or casual.
 To configure this you can pass a `styleguide` property under the translation
 configuration:
+
 ```ts
 assist({
   translate: {
@@ -802,42 +884,55 @@ assist({
   },
 })
 ```
+
 The style guide is currently limited to 2000 characters, and the translation might get
 slower the longer your style guide is. If the provided string is longer than the limit,
 the plugin will throw upon studio startup.
 Note that this is currently only available on a global level - it can not be defined
 per-field for now.
+
 ### Dynamic styleguide
+
 As of 4.1.0 it is also possible to provide a styleguide async function.
-The function is passed a context object with Sanity client and the current documentId and schemaType. 
+The function is passed a context object with Sanity client and the current documentId and schemaType.
 Consider caching the results: the function is invoked every time translate runs.
+
 ```ts
 assist({
   translate: {
-    styleguide: ({client, documentId, schemaType}) => client.fetch('* [_id=="styleguide.singleton"][0].styleguide')
+    styleguide: ({client, documentId, schemaType}) =>
+      client.fetch('* [_id=="styleguide.singleton"][0].styleguide'),
   },
 })
 ```
+
 ## Custom field actions
+
 <img width="513" alt="Field action menu with custom actions" src="https://github.com/user-attachments/assets/c613f692-4983-4acc-a8c2-8fb60294682a" />
+
 To incorporate [Agent Actions](https://www.sanity.io/docs/agent-actions?utm_source=github.com&utm_medium=organic_social&utm_campaign=ai-assist&utm_content=)
 or other custom actions into the AI Assist document and field action menus, use `fieldActions` plugin config.
 Because of react hook linting, we recommend defining the `useExampleFieldActions` outside the plugin config:
+
 ```ts
 //sanity.config.ts
 import {defineConfig} from 'sanity'
 import {assist, type AssistFieldActionProps, defineAssistFieldAction} from '@sanity/assist'
 function useExampleFieldActions(props: AssistFieldActionProps) {
-  return useMemo(() => [
-    defineAssistFieldAction({
-      title: 'Do something',
-      icon: ActionIcon,
-      onAction: async () => {
-        // perform an (async) action
-        // errors will be caught and displayed in a toast
-        // until the action completes or fails, AI Assist "presence" will show up on the top of the document
-      },
-    })], [])
+  return useMemo(
+    () => [
+      defineAssistFieldAction({
+        title: 'Do something',
+        icon: ActionIcon,
+        onAction: async () => {
+          // perform an (async) action
+          // errors will be caught and displayed in a toast
+          // until the action completes or fails, AI Assist "presence" will show up on the top of the document
+        },
+      }),
+    ],
+    [],
+  )
 }
 export default defineConfig({
   //...
@@ -846,26 +941,33 @@ export default defineConfig({
     assist({
       fieldActions: {
         title: 'Custom actions',
-        useExampleFieldActions
-      }
-    })
-  ]
+        useExampleFieldActions,
+      },
+    }),
+  ],
 })
 ```
+
 ### `useExampleFieldActions`
+
 `useExampleFieldActions` is called for the document itself and for all fields within it. It can call React hooks.
 Actions returned by the hook will be added to the corresponding document or field menu.
-It is recommended to wrap the returned actions in `useMemo`. The returned array can contain `undefined` values. 
+It is recommended to wrap the returned actions in `useMemo`. The returned array can contain `undefined` values.
 These will be filtered out.
 See TSDocs for [AssistFieldActionProps](./src/fieldActions/customFieldActions.tsx) for details on how each
 prop can be used to parameterize Agent Actions on sanity client.
+
 #### Agent Action examples
+
 Below are some examples of agent action integration.
-For more, see [HOW-TO-USE](../studio/examples/agentActions/HOW-TO-USE.md)
+For more, see [HOW-TO-USE](https://github.com/sanity-io/assist/blob/main/studio/examples/agentActions/HOW-TO-USE.md).
+
 ##### Fix spelling
+
 The following example adds a "Fix spelling" action to all fields and the document itself.
 It will fix spelling mistakes for the field it is invoked for (and all child fields, for arrays and objects),
 by calling `client.agent.action.transform`.
+
 ```ts
 function useExampleFieldActions(props: AssistFieldActionProps) {
   const {
@@ -906,13 +1008,17 @@ function useExampleFieldActions(props: AssistFieldActionProps) {
   ])
 }
 ```
+
 ##### Fill field (contextually aware)
+
 The following example adds a "Fill field" action to all fields in the document by calling `client.agent.action.generate`.
 The action will:
+
 - create the document as a draft if it does not exist, respecting initial values (`targetDocument`)
 - use existing document state to determine what should be put in the the field (`instruction`, `instructionParams`)
 - pass the current readOnly and hidden state currently use by the document form to the Agent Action, so it respects it (`conditionalPaths`)
 - output to the field the action started from (`target.path`)
+
 ```ts
 function useExampleFieldActions(props: AssistFieldActionProps) {
   const {
@@ -988,10 +1094,14 @@ function useExampleFieldActions(props: AssistFieldActionProps) {
   ])
 }
 ```
+
 ### Define helpers
+
 #### `defineAssistFieldAction`
+
 Adds a single action that will appear in the document/field action menu.
 `onAction` _cannot_ call hooks. If state from hook is needed, it should be pre-assembled by `useExampleFieldActions`
+
 ```ts
 defineAssistFieldAction({
   title: 'Do something',
@@ -1001,44 +1111,57 @@ defineAssistFieldAction({
   },
 })
 ```
+
 #### `defineAssistFieldActionGroup`
+
 Adds a group to hold one or more actions (or nested groups).
 `children` can contain `undefined` values. These will be filtered out.
 A group that has an empty `children` array (or only undefined values) will be filtered out.
 By default, any actions returned by `useExampleFieldActions` will be grouped under `title`.
+
 ```ts
 function useExampleFieldActions(props: AssistFieldActionProps) {
   return [
-    defineAssistFieldAction({/* ... */}), 
+    defineAssistFieldAction({/* ... */}),
     defineAssistFieldActionGroup({
       title: 'More actions',
-      children: [
-        defineAssistFieldAction({/* ... */}),
-      ],
-    })
+      children: [defineAssistFieldAction({/* ... */})],
+    }),
   ]
 }
 ```
+
 #### Only groups in `useExampleFieldActions`
+
 If `useExampleFieldActions` _only_ returns groups, the default wrapper group will be omitted. This allows full control over each group title.
+
 #### `defineFieldActionDivider`
+
 Adds a divider between actions or groups. Takes no arguments:
+
 ```ts
 function useExampleFieldActions(props: AssistFieldActionProps) {
-  return useMemo(() => [
-    defineAssistFieldAction({/* ... */}),
-    defineFieldActionDivider(),
-    defineAssistFieldAction({/* ... */}),
-  ], [])
+  return useMemo(
+    () => [
+      defineAssistFieldAction({/* ... */}),
+      defineFieldActionDivider(),
+      defineAssistFieldAction({/* ... */}),
+    ],
+    [],
+  )
 }
 ```
+
 ### `useUserInput`
+
 <img width="522" alt="user input dialog" src="https://github.com/user-attachments/assets/86966468-9a28-4c0b-99f3-e4b80fdbe691" />
+
 For certain actions, it is useful to have the user provide additional information or details that can be used
 as parameters for the action.
 `useUserInput` returns a `getUserInput` function that can be called and awaited to return input from the user.
 The `getUserInput` function takes input configuration and will display an input dialog to the user.
 When the user completes the dialog, the user inputted text will be available (or undefined if the user closed the dialog).
+
 ```ts
 function useExampleFieldActions(props: AssistFieldActionProps) {
   const getUserInput = useUserInput()
@@ -1073,13 +1196,40 @@ function useExampleFieldActions(props: AssistFieldActionProps) {
   )
 }
 ```
+
+## Known limitations
+
+### Image descriptions are always generated in English
+
+The AI Assist API currently ignores the document language when generating image descriptions:
+fields configured with `options.aiAssist.imageDescriptionField` always get an English description,
+even when [document translation](#configure-document-translations) is configured with `translate.document.languageField`.
+This is a limitation in the AI Assist API itself, so it cannot be worked around with plugin or Studio configuration
+(see [sanity-io/plugins#1606](https://github.com/sanity-io/plugins/issues/1606)).
+
+If you need image descriptions in another language, consider one of these alternatives:
+
+- Use the [Transform Agent Action's `image-description` operation](https://www.sanity.io/docs/agent-actions/targets-paths#image-description)
+  with a custom `instruction` that specifies the output language, for example via a
+  [custom field action](#custom-field-actions) or a [Sanity Function](https://www.sanity.io/docs/functions),
+  instead of `imageDescriptionField`.
+- Keep `imageDescriptionField` and let editors run the document or field translation actions afterwards,
+  translating the generated English description along with the rest of the document
+  (see [Full document translation](#full-document-translation) and [Field level translations](#field-level-translations)).
+
 ## Caveats
+
 Large Language Models (LLMs) are a new technology. Constraints and limitations are still being explored,
 but some common caveats to the field that you may run into using AI Assist are:
+
 - Limits to instruction length: Long instructions on deep content structures may exhaust model context
 - Timeouts: To be able to write structured content, we're using the largest language models - long-running results may time out or intermittently fail
 - Limited capacity: The underlying LLM APIs used by AI Assist are resource-constrained
+
 ## Third party sub-processors
+
 This version of the feature uses OpenAI.com as a third-party sub-processor. Their security posture has been vetted by Sanity's security team, and approved for use.
+
 ## License
-[MIT](LICENSE) © Sanity
+
+[MIT](https://github.com/sanity-io/plugins/blob/main/LICENSE) © Sanity.io
