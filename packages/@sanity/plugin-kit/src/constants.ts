@@ -7,7 +7,6 @@ export const urls = {
   pluginReadme: 'https://github.com/sanity-io/plugin-kit',
   incompatiblePlugin: 'https://github.com/sanity-io/incompatible-plugin',
   sanityExchange: 'https://www.sanity.io/exchange',
-  linterPackage: 'https://github.com/sanity-io/eslint-config-no-v2-imports',
 }
 
 export const incompatiblePluginPackage = '@sanity/incompatible-plugin'

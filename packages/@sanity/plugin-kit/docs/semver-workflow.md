@@ -21,9 +21,9 @@ This preset:
 
 - adds [husky](https://github.com/typicode/husky) for pre-commit hooks to ensure that:
   - all commits follow [conventional-commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) format
-  - all files in a commit pass eslint
+  - all files in a commit are formatted with oxfmt and pass oxlint
 - [semantic-release](https://semantic-release.gitbook.io/semantic-release/) automation for npm publish
-  - automates Github releases
+  - automates GitHub releases
   - updates package version based on conventional-commits
   - updates CHANGELOG.md
 - [GitHub workflow](https://docs.github.com/en/actions/using-workflows) (Action) that

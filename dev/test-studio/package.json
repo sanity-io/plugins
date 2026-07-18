@@ -36,10 +36,10 @@
     "@sanity/studio-secrets": "workspace:*",
     "@sanity/table": "workspace:*",
     "@sanity/ui": "catalog:",
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@sanity/vercel-protection-bypass": "workspace:*",
     "@sanity/vision": "catalog:",
     "@vanilla-extract/css": "catalog:",
-    "@vanilla-extract/vite-plugin": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
@@ -75,8 +75,9 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/devtools": "^0.4.0",
-    "babel-plugin-react-compiler": "catalog:"
+    "@vitejs/devtools": "^0.4.1",
+    "babel-plugin-react-compiler": "catalog:",
+    "typescript": "catalog:"
   },
   "engines": {
     "node": "24"

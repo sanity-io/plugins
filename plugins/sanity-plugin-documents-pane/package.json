@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-documents-pane",
-  "version": "4.1.10",
+  "version": "4.1.12",
   "description": "Displays the results of a GROQ query in a View Pane",
   "keywords": [
     "sanity",

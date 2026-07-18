@@ -26,6 +26,11 @@ test(
         // only check for a single file from the preset:
         // rest is covered by the init tests; it uses the same codepath
         await fileContains(path.join('.github', 'workflows', 'main.yml'), 'CI & Release')
+
+        // plugins are ESM ("type": "module") and the shared oxlint config bans CommonJS,
+        // so the preset's config files must use `export default`, not `module.exports`
+        await fileContains('lint-staged.config.js', 'export default')
+        await fileContains('commitlint.config.js', 'export default')
       },
     })
   },

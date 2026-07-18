@@ -2,35 +2,22 @@ import chalk from 'chalk'
 import outdent from 'outdent'
 
 import {cliName, urls} from '../constants'
-import {validateImports} from '../dependencies/import-linter'
 import {getPackage} from '../npm/package'
-import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
-import {readTSConfig} from '../util/ts'
 import type {PackageJson} from './verify/types'
 import {validateSanityDependencies, validateStudioConfig} from './verify/validations'
-import {
-  createValidator,
-  runTscMaybe,
-  type VerifyFlags,
-  type VerifyPackageConfig,
-} from './verify/verify-common'
+import {createValidator, type VerifyFlags, type VerifyPackageConfig} from './verify/verify-common'
 
 export async function verifyStudio({basePath, flags}: {basePath: string; flags: VerifyFlags}) {
   let errors: string[] = []
 
   const packageJson: PackageJson = await getPackage({basePath, validate: false})
   const verifyConfig: VerifyPackageConfig = packageJson.sanityPlugin?.verifyPackage || {}
-  const packageConfig = await loadPackageConfig({basePath})
-  const tsconfig = packageConfig?.tsconfig ?? 'tsconfig.json'
 
   const validation = createValidator(verifyConfig, flags, errors)
 
-  const ts = await readTSConfig({basePath, filename: tsconfig})
-
   await validation('studioConfig', async () => validateStudioConfig({basePath}))
   await validation('dependencies', async () => validateSanityDependencies(packageJson))
-  await validation('eslintImports', async () => validateImports({basePath}))
 
   if (errors.length) {
     throw new Error(
@@ -48,8 +35,6 @@ export async function verifyStudio({basePath, flags}: {basePath: string; flags: 
       `.trimStart(),
     )
   }
-
-  await runTscMaybe(verifyConfig, ts)
 
   log.success(
     outdent`
