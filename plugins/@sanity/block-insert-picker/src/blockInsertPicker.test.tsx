@@ -301,7 +301,11 @@ describe('BlockInsertPicker popover', () => {
     openBlockSpy.calls.length = 0
   })
 
-  it('closes when a pointerdown lands outside the popover', async () => {
+  // The first test in this file pays the popover's cold-start cost: the
+  // initial jsdom render of the editor + theme providers and first-time
+  // styled-components style injection can exceed the 5s default on CI
+  // runners, so we lift the per-test timeout. Later tests run warm.
+  it('closes when a pointerdown lands outside the popover', {timeout: 15_000}, async () => {
     await renderOpenPicker()
     fireEvent.pointerDown(document.body)
     expect(screen.queryByText('Insert block')).toBeNull()
