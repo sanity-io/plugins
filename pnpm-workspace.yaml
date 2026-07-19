@@ -84,6 +84,8 @@ catalogs:
     sanity: ^5 || ^6.0.0-0
     styled-components: ^6.1
 
+# When running `pnpm add`, reuse a dependency's catalog version automatically if
+# it already exists in a catalog, so shared deps stay aligned on a single version.
 catalogMode: prefer
 dedupeDirectDeps: true
 
