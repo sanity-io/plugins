@@ -1,5 +1,13 @@
 # @sanity/code-input
 
+## 7.2.10
+
+### Patch Changes
+
+- [#1610](https://github.com/sanity-io/plugins/pull/1610) [`6283900`](https://github.com/sanity-io/plugins/commit/62839006741bff85dc29a7b06302737d8532b597) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @codemirror/lang-markdown to ^6.5.1
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
 ## 7.2.9
 
 ### Patch Changes
