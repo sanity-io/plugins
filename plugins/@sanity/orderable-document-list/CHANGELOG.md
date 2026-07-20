@@ -1,5 +1,12 @@
 # @sanity/orderable-document-list
 
+## 2.0.15
+
+### Patch Changes
+
+- Updated dependencies [[`edb64e9`](https://github.com/sanity-io/plugins/commit/edb64e9d45d1c595ea8b9fdabd789c0bc58e9c48)]:
+  - sanity-plugin-utils@2.0.11
+
 ## 2.0.14
 
 ### Patch Changes
