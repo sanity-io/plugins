@@ -5,6 +5,7 @@
     // ENABLE_VITE_DEVTOOLS opts into Vite DevTools (see sanity.cli.ts); declaring it here
     // invalidates turbo-cached builds when it flips and passes it through in strict env mode
     "build": {
+      "dependsOn": [],
       "env": ["ENABLE_VITE_DEVTOOLS"],
     },
     "dev": {
