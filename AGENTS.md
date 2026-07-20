@@ -446,6 +446,14 @@ When a dependency is used by more than one package (two or more), manage its ver
 
 Leave niche one-off peers and `workspace:` protocol deps as they are. `pnpm add` runs with `catalogMode: prefer` (set in `pnpm-workspace.yaml`), so adding a dependency that already exists in a catalog reuses the catalog version automatically. pnpm has no built-in "used N times" enforcement, so apply this rule whenever you add or move shared dependencies.
 
+**date-fns: v4 via the catalog, subpath imports, official `@date-fns/tz`**
+
+All date handling matches sanity core (`sanity-io/sanity`), so plugins dedupe against the `date-fns` instance that `sanity` itself ships:
+
+- Depend on `date-fns` via `catalog:` (v4) — never pin an older major
+- Import from subpaths, e.g. `import {format} from 'date-fns/format'` — the `date-fns` barrel import is banned by lint
+- For time zone work use the official `@date-fns/tz` package (`TZDate`, `tz`, `tzOffset`, via `catalog:`) together with date-fns v4's `in` context option — the community `date-fns-tz` package is banned by lint. Prefer `Intl.supportedValuesOf('timeZone')`/`Intl.DateTimeFormat` for listing time zones instead of static time zone database packages (e.g. `@vvo/tzdb`)
+
 ### Formatting
 
 We use [oxfmt](https://oxc.rs/docs/formatter.html):
