@@ -31,7 +31,7 @@ catalog:
   '@sanity/ui': ^3.3.5
   '@sanity/util': ^6.5.0
   '@sanity/uuid': ^3.0.3
-  '@sanity/vanilla-extract-vite-plugin': ^0.2.2
+  '@sanity/vanilla-extract-vite-plugin': ^0.2.4
   '@sanity/vision': ^6.5.0
   '@testing-library/jest-dom': ^6.9.1
   '@testing-library/react': ^16.3.2
