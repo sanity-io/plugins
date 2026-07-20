@@ -1,5 +1,15 @@
 # sanity-plugin-media
 
+## 6.0.4
+
+### Patch Changes
+
+- [#1639](https://github.com/sanity-io/plugins/pull/1639) [`48e32f9`](https://github.com/sanity-io/plugins/commit/48e32f962bea75d96eed929fbda805782d2a9b04) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.82.0
+
+- [#1641](https://github.com/sanity-io/plugins/pull/1641) [`2087502`](https://github.com/sanity-io/plugins/commit/2087502d5c94b9feb4964ef5939ea06f924f46a4) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-virtuoso to ^4.18.11
+
+- [#1569](https://github.com/sanity-io/plugins/pull/1569) [`1d5f733`](https://github.com/sanity-io/plugins/commit/1d5f73373bd7adabf2ca552fead9af4b2958a83e) Thanks [@stipsan](https://github.com/stipsan)! - Import `date-fns` functions from subpaths instead of the barrel, matching Sanity Studio core
+
 ## 6.0.3
 
 ### Patch Changes
