@@ -13,7 +13,7 @@ import {
   Tooltip,
   useMediaIndex,
 } from '@sanity/ui'
-import {formatRelative} from 'date-fns'
+import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
 import {
   memo,
