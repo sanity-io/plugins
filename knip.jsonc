@@ -15,10 +15,6 @@
     ".": {
       "entry": ["*.{ts,mts,mjs}"],
       "project": ["*.{ts,mts,mjs}"],
-      "ignoreDependencies": [
-        // TypeScript native compiler, used as a dev tool not imported
-        "@typescript/native-preview",
-      ],
       "ignoreBinaries": [
         // Installed externally (not an npm package); used in lint:workflows script
         "zizmor",
