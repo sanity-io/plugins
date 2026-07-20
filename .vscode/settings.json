@@ -1,5 +1,7 @@
 {
-  "typescript.experimental.useTsgo": true,
+  // TypeScript 7 native language service (via TypeScriptTeam.native-preview extension)
+  "js/ts.experimental.useTsgo": true,
+  "js/ts.tsdk.path": "./node_modules/typescript",
   "oxc.fmt.configPath": ".oxfmtrc.json",
   "oxc.typeAware": true
 }
