@@ -1,5 +1,25 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.19
+
+### Patch Changes
+
+- [#1639](https://github.com/sanity-io/plugins/pull/1639) [`48e32f9`](https://github.com/sanity-io/plugins/commit/48e32f962bea75d96eed929fbda805782d2a9b04) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.82.0
+
+## 4.0.18
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 4.0.17
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+- [#1597](https://github.com/sanity-io/plugins/pull/1597) [`314c536`](https://github.com/sanity-io/plugins/commit/314c5365e708aae8518a131b3b08e6e528bfcf30) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency xstate to ^5.32.5
+
 ## 4.0.16
 
 ### Patch Changes

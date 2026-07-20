@@ -436,6 +436,24 @@ pnpm add lodash-es
 pnpm add lodash
 ```
 
+**Catalog shared dependencies**
+
+When a dependency is used by more than one package (two or more), manage its version in the pnpm [catalog](https://pnpm.io/catalogs) instead of repeating a literal range in each `package.json`:
+
+1. Add the dependency and its version range to the default `catalog:` in `pnpm-workspace.yaml`.
+2. Reference it from each `package.json` as `"dep-name": "catalog:"`.
+3. Shared studio peers (`react`, `react-dom`, `sanity`, `styled-components`) use the named `peer` catalog (`catalog:peer`) — see above. For other cases where one package must stay on a different major than the rest, add a named catalog and reference it with `catalog:<name>`.
+
+Leave niche one-off peers and `workspace:` protocol deps as they are. `pnpm add` runs with `catalogMode: prefer` (set in `pnpm-workspace.yaml`), so adding a dependency that already exists in a catalog reuses the catalog version automatically. pnpm has no built-in "used N times" enforcement, so apply this rule whenever you add or move shared dependencies.
+
+**date-fns: v4 via the catalog, subpath imports, official `@date-fns/tz`**
+
+All date handling matches sanity core (`sanity-io/sanity`), so plugins dedupe against the `date-fns` instance that `sanity` itself ships:
+
+- Depend on `date-fns` via `catalog:` (v4) — never pin an older major
+- Import from subpaths, e.g. `import {format} from 'date-fns/format'` — the `date-fns` barrel import is banned by lint
+- For time zone work use the official `@date-fns/tz` package (`TZDate`, `tz`, `tzOffset`, via `catalog:`) together with date-fns v4's `in` context option — the community `date-fns-tz` package is banned by lint. Prefer `Intl.supportedValuesOf('timeZone')`/`Intl.DateTimeFormat` for listing time zones instead of static time zone database packages (e.g. `@vvo/tzdb`)
+
 ### Formatting
 
 We use [oxfmt](https://oxc.rs/docs/formatter.html):
@@ -444,7 +462,7 @@ We use [oxfmt](https://oxc.rs/docs/formatter.html):
 pnpm format
 ```
 
-The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`packages/@sanity/plugin-kit/src/oxfmt.ts`), which the root `oxfmt.config.ts` re-exports. Standalone plugins scaffolded with `plugin-kit init` reuse the same preset. Note that loading the TypeScript config requires Node `^20.19 || >=22.18`.
+The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`packages/@sanity/plugin-kit/src/oxfmt.ts`), which the root `oxfmt.config.ts` extends with workspace-specific `ignorePatterns` (for example `turbo/**/*.hbs`). Standalone plugins scaffolded with `plugin-kit init` reuse the same preset. Note that loading the TypeScript config requires Node `^20.19 || >=22.18`.
 
 ### Linting
 

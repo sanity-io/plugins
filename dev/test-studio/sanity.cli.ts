@@ -1,4 +1,4 @@
-import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {DevTools} from '@vitejs/devtools'
 import {defineCliConfig} from 'sanity/cli'
 
@@ -17,6 +17,10 @@ export default defineCliConfig({
   reactCompiler: {},
   typegen: {formatGeneratedCode: false},
   // Bundle studio deps in `sanity dev` (required for Structure with client/eventsource alignment).
+  // Trade-off: with this on, editing a `.css.ts` (vanilla-extract) file does not hot-reload —
+  // the change only takes effect after restarting `sanity dev`. Plain `.ts`/`.tsx` HMR still
+  // works fine. If you're actively working on styles and need CSS HMR, comment out this line
+  // for that session (confirmed fast, sub-10ms HMR with it unset).
   unstable_bundledDev: true,
   vite: {
     plugins: [vanillaExtractPlugin(), ...(isViteDevToolsEnabled ? [DevTools()] : [])],
