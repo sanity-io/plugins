@@ -1,5 +1,11 @@
 # @sanity/rich-date-input
 
+## 4.1.0
+
+### Minor Changes
+
+- [#1569](https://github.com/sanity-io/plugins/pull/1569) [`1d5f733`](https://github.com/sanity-io/plugins/commit/1d5f73373bd7adabf2ca552fead9af4b2958a83e) Thanks [@stipsan](https://github.com/stipsan)! - Update `date-fns` to v4 and replace the community `date-fns-tz` package with the official `@date-fns/tz` package, matching how Sanity Studio itself now handles time zones. Since these are the same versions the `sanity` package ships, studios no longer bundle a second `date-fns` instance. The time zone list is now derived from the runtime's `Intl` API instead of the static `@vvo/tzdb` database, which keeps it current with the browser and trims the bundle.
+
 ## 4.0.12
 
 ### Patch Changes

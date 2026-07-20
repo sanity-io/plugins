@@ -1,5 +1,11 @@
 # @sanity/assist
 
+## 6.1.15
+
+### Patch Changes
+
+- [#1569](https://github.com/sanity-io/plugins/pull/1569) [`1d5f733`](https://github.com/sanity-io/plugins/commit/1d5f73373bd7adabf2ca552fead9af4b2958a83e) Thanks [@stipsan](https://github.com/stipsan)! - Import `date-fns` functions from subpaths instead of the barrel, matching Sanity Studio core
+
 ## 6.1.14
 
 ### Patch Changes
