@@ -1,6 +1,6 @@
 {
   "name": "@sanity/sanity-plugin-async-list",
-  "version": "2.0.8",
+  "version": "2.0.10",
   "description": "This plugin fetches data from an external API and returns that data as options in a selectable list of strings in your Sanity Studio.",
   "keywords": [
     "sanity",

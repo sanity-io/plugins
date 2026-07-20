@@ -1,5 +1,21 @@
 # @sanity/assist
 
+## 6.1.14
+
+### Patch Changes
+
+- [#1628](https://github.com/sanity-io/plugins/pull/1628) [`735b86a`](https://github.com/sanity-io/plugins/commit/735b86a6de33365e367b34b42f694372277caa51) Thanks [@stipsan](https://github.com/stipsan)! - Clean up README formatting (headings, lists and code blocks were rendering as plain text on some markdown renderers) and add a "Known limitations" section documenting that image descriptions are always generated in English regardless of `translate.document.languageField`, with suggested workarounds ([sanity-io/plugins#1606](https://github.com/sanity-io/plugins/issues/1606))
+
+- [#1467](https://github.com/sanity-io/plugins/pull/1467) [`ebecfbf`](https://github.com/sanity-io/plugins/commit/ebecfbf905f8eec53b503f7912ae2ee247c3d5e3) Thanks [@stipsan](https://github.com/stipsan)! - Keep the document's selected field group from resetting while editing AI Assist instructions. The instruction inspector no longer overwrites the host document pane's `path` param, so working with AI Assist inputs preserves the active field group tab.
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 6.1.13
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
 ## 6.1.12
 
 ### Patch Changes
