@@ -277,6 +277,7 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Plugins can expand their vitest configs and test suites over time as needed (unit tests, integration tests, etc.)
 - Tests run against built `dist/` output after `pnpm build`
 - Snapshots are generated with `pnpm test -u`
+- For plugins that use vanilla-extract: register `vanillaExtractPlugin()` in the plugin’s `vitest.config.ts` (required so `.css.ts` compiles under Vitest); optionally import `@vanilla-extract/css/disableRuntimeStyles` in a setup file only for `jsdom`/`happy-dom` suites that don’t need real CSS — see the `sanity-plugin-best-practices` styling reference (`Disabling runtime styles in tests`)
 
 ## Pull Request Workflow
 

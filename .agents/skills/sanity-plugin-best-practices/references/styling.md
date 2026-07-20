@@ -216,6 +216,57 @@ export default defineConfig({
 The test studio already registers this plugin globally in `sanity.cli.ts` — you don't need to touch
 that file for a new plugin.
 
+#### Disabling runtime styles in tests
+
+These are **separate** concerns — do not confuse them:
+
+| Concern                                      | What solves it                                                                        |
+| -------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `.css.ts` must compile / class names resolve | Keep `vanillaExtractPlugin()` in `vitest.config.ts` (required)                        |
+| Avoid injecting CSS into jsdom for speed     | Optional: `import '@vanilla-extract/css/disableRuntimeStyles'` in a Vitest setup file |
+
+In browser-like environments (`jsdom` / `happy-dom`), vanilla-extract injects real styles into the
+document when `.css.ts` runs. That is often desirable, but it can slow tests down. If a suite does
+**not** need styles available, import
+[`disableRuntimeStyles`](https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles)
+in a setup file to skip style creation.
+
+Nuance for this monorepo:
+
+1. **`disableRuntimeStyles` does not replace the Vite plugin.** Package-exports tests and any
+   import path that pulls `.css.ts` source still need `vanillaExtractPlugin()`.
+2. **Only relevant under `jsdom` / `happy-dom`.** Default Vitest env here is `node` (see
+   `AGENTS.md` Testing). Under `node` there is no document to inject into — do not add a setup
+   import just because a plugin uses vanilla-extract.
+3. **Prefer disable** for most jsdom unit/render tests that only need class-name strings, DOM
+   structure, or behavior — not computed styles.
+4. **Do not disable** when a test asserts layout, CSS-driven visibility, `getComputedStyle`, or
+   otherwise depends on real rules being present.
+5. **Opt in per plugin** via that plugin’s `vitest.setup.ts` (or equivalent `setupFiles`). Do not
+   enable it monorepo-wide, and do not bake it into the plugin generator template.
+
+Example when you _do_ opt in:
+
+```ts
+// vitest.setup.ts — only when using jsdom/happy-dom and tests don't need real CSS
+import '@vanilla-extract/css/disableRuntimeStyles'
+```
+
+```ts
+// vitest.config.ts
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
+import {defineConfig} from 'vitest/config'
+
+export default defineConfig({
+  plugins: [vanillaExtractPlugin()],
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+    // ...
+  },
+})
+```
+
 Finally, the catalog carries the build deps (add them if missing) and knip ignores the
 build-time-only css package:
 
@@ -623,5 +674,8 @@ that forces synchronous reflows. See the `vercel-react-best-practices` rule `js-
   `keyframes`, `globalStyle`; and
   [`@vanilla-extract/dynamic`](https://vanilla-extract.style/documentation/packages/dynamic/) for
   `assignInlineVars`.
+- [vanilla-extract test environments](https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles)
+  — when to use `disableRuntimeStyles` in Vitest/jsdom (see
+  [Disabling runtime styles in tests](#disabling-runtime-styles-in-tests)).
 - [`@sanity/ui`](https://www.sanity.io/ui) for theme tokens, the `useTheme_v2()` hook, and
   primitives.
