@@ -68,8 +68,8 @@ catalogs:
       specifier: ^3.0.3
       version: 3.0.3
     '@sanity/vanilla-extract-vite-plugin':
-      specifier: ^0.2.2
-      version: 0.2.2
+      specifier: ^0.2.4
+      version: 0.2.4
     '@sanity/vision':
       specifier: ^6.5.0
       version: 6.5.0
@@ -318,7 +318,7 @@ importers:
         version: 3.3.5(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.2(babel-plugin-macros@3.1.0)(vite@8.1.5)
+        version: 0.2.4(babel-plugin-macros@3.1.0)(vite@8.1.5)
       '@sanity/vercel-protection-bypass':
         specifier: workspace:*
         version: link:../../plugins/@sanity/vercel-protection-bypass
@@ -1129,7 +1129,7 @@ importers:
         version: 0.19.3(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.2.0)(tsdown@0.22.9)(typescript@7.0.2)(vite@8.1.5)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.2(babel-plugin-macros@3.1.0)(vite@8.1.5)
+        version: 0.2.4(babel-plugin-macros@3.1.0)(vite@8.1.5)
       '@types/google.maps':
         specifier: ^3.65.2
         version: 3.65.2
@@ -1885,7 +1885,7 @@ importers:
         version: 0.19.3(@babel/runtime@7.29.7)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(rolldown@1.2.0)(tsdown@0.22.9)(typescript@7.0.2)(vite@8.1.5)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.2(babel-plugin-macros@3.1.0)(vite@8.1.5)
+        version: 0.2.4(babel-plugin-macros@3.1.0)(vite@8.1.5)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -6224,6 +6224,10 @@ packages:
     resolution: {integrity: sha512-RPe+pLH9P5OYqlnvybLD+zRUXyzILlYtN0RyNAvUEL3+XmaA68YlsvxtljQBBxcwVeCl6kRN4V2G7aVH9MOD3g==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
+  '@sanity/vanilla-extract-integration@0.1.4':
+    resolution: {integrity: sha512-ko5t+GgyLmF+lG0dWFwAbU5w+OJ8QTVF6D/AEwPCgPh31CN8Ok3sk7Og0UY+QcX+qb3O/Fj98Be6UYVD9UxoGQ==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+
   '@sanity/vanilla-extract-rolldown-plugin@0.2.2':
     resolution: {integrity: sha512-Ej9KDlwsB88n1y9fdX35cM7JR8VTepk63t/6GYTzai2l/J5zGuLyr2oIv81ZjlCT37IG//m16uQcZo6+20bbEQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -6239,8 +6243,8 @@ packages:
     peerDependencies:
       tsdown: ^0.22.5
 
-  '@sanity/vanilla-extract-vite-plugin@0.2.2':
-    resolution: {integrity: sha512-M6EQYqVnCKxp8stgruiHgwI2cA78Rw9cXn7U238o4NtIkvx9oZ/cRF0IGM1ngbUysRGw/d3G7dtTDtAy2w5ONg==}
+  '@sanity/vanilla-extract-vite-plugin@0.2.4':
+    resolution: {integrity: sha512-V4HO9fPsF5blnVIlKahFa1k4MNT+ejpybNMfky+pnq0RuKp05cNwB37QW2tT1VKKa0487aThAfS+xIc5iii+jQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       vite: ^8.0.0
@@ -15117,6 +15121,15 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
 
+  '@sanity/vanilla-extract-integration@0.1.4(babel-plugin-macros@3.1.0)':
+    dependencies:
+      '@vanilla-extract/css': 1.21.1(babel-plugin-macros@3.1.0)
+      javascript-stringify: 2.1.0
+      rolldown: 1.2.0
+      yuku-parser: 0.6.5
+    transitivePeerDependencies:
+      - babel-plugin-macros
+
   '@sanity/vanilla-extract-rolldown-plugin@0.2.2(babel-plugin-macros@3.1.0)(rolldown@1.2.0)':
     dependencies:
       '@sanity/vanilla-extract-integration': 0.1.2(babel-plugin-macros@3.1.0)
@@ -15134,9 +15147,9 @@ snapshots:
       - babel-plugin-macros
       - rolldown
 
-  '@sanity/vanilla-extract-vite-plugin@0.2.2(babel-plugin-macros@3.1.0)(vite@8.1.5)':
+  '@sanity/vanilla-extract-vite-plugin@0.2.4(babel-plugin-macros@3.1.0)(vite@8.1.5)':
     dependencies:
-      '@sanity/vanilla-extract-integration': 0.1.2(babel-plugin-macros@3.1.0)
+      '@sanity/vanilla-extract-integration': 0.1.4(babel-plugin-macros@3.1.0)
       '@vanilla-extract/css': 1.21.1(babel-plugin-macros@3.1.0)
       vite: 8.1.5(@types/node@24.13.3)(@vitejs/devtools@0.4.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(tsx@4.23.1)(yaml@2.9.0)
     transitivePeerDependencies:
