@@ -6220,10 +6220,6 @@ packages:
   '@sanity/uuid@3.0.3':
     resolution: {integrity: sha512-aJvKuFwzcZKRwuIjrRPfXfXKpSdnLF4CnedV5WcX1n5SzhufvRNHIot5lkx1+Y1DwiMVQOZ5gDSPJH+P6Ao70A==}
 
-  '@sanity/vanilla-extract-integration@0.1.2':
-    resolution: {integrity: sha512-RPe+pLH9P5OYqlnvybLD+zRUXyzILlYtN0RyNAvUEL3+XmaA68YlsvxtljQBBxcwVeCl6kRN4V2G7aVH9MOD3g==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-
   '@sanity/vanilla-extract-integration@0.1.4':
     resolution: {integrity: sha512-ko5t+GgyLmF+lG0dWFwAbU5w+OJ8QTVF6D/AEwPCgPh31CN8Ok3sk7Og0UY+QcX+qb3O/Fj98Be6UYVD9UxoGQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -15116,15 +15112,6 @@ snapshots:
     dependencies:
       uuid: 11.1.1
 
-  '@sanity/vanilla-extract-integration@0.1.2(babel-plugin-macros@3.1.0)':
-    dependencies:
-      '@vanilla-extract/css': 1.21.1(babel-plugin-macros@3.1.0)
-      javascript-stringify: 2.1.0
-      rolldown: 1.2.0
-      yuku-parser: 0.6.5
-    transitivePeerDependencies:
-      - babel-plugin-macros
-
   '@sanity/vanilla-extract-integration@0.1.4(babel-plugin-macros@3.1.0)':
     dependencies:
       '@vanilla-extract/css': 1.21.1(babel-plugin-macros@3.1.0)
@@ -15136,7 +15123,7 @@ snapshots:
 
   '@sanity/vanilla-extract-rolldown-plugin@0.2.2(babel-plugin-macros@3.1.0)(rolldown@1.2.0)':
     dependencies:
-      '@sanity/vanilla-extract-integration': 0.1.2(babel-plugin-macros@3.1.0)
+      '@sanity/vanilla-extract-integration': 0.1.4(babel-plugin-macros@3.1.0)
       lightningcss: 1.32.0
     optionalDependencies:
       rolldown: 1.2.0
