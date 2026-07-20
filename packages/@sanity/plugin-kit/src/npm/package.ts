@@ -22,7 +22,6 @@ export interface GetPackageOptions {
   basePath: string
   validate?: boolean
   isPlugin?: boolean
-  flags?: Record<string, any>
 }
 
 const defaultDependencies: string[] = []
@@ -40,14 +39,10 @@ const defaultPeerDependencies = ['react', 'sanity']
 
 const readFile = util.promisify(fs.readFile)
 
-const pathKeys: (keyof PackageJson)[] = ['main', 'module', 'browser', 'types']
-
 export async function getPackage(opts: GetPackageOptions): Promise<PackageJson> {
-  const options = {flags: {}, ...opts}
+  validateOptions(opts)
 
-  validateOptions(options)
-
-  const {basePath, validate = true} = options
+  const {basePath, validate = true} = opts
   const manifestPath = path.normalize(path.join(basePath, 'package.json'))
 
   let content
@@ -75,19 +70,19 @@ export async function getPackage(opts: GetPackageOptions): Promise<PackageJson> 
   }
 
   if (validate) {
-    await validatePackage(parsed, options)
+    validatePackage(parsed, opts)
   }
 
   return parsed
 }
 
-async function validatePackage(manifest: PackageJson, opts: GetPackageOptions) {
+function validatePackage(manifest: PackageJson, opts: GetPackageOptions) {
   validateOptions(opts)
 
   const options = {isPlugin: true, ...opts}
 
   if (options.isPlugin) {
-    await validatePluginPackage(manifest, options)
+    validatePackageName(manifest)
   }
 
   validateLockFiles(options)
@@ -102,11 +97,6 @@ function validateOptions(opts: {basePath: string}) {
   if (typeof options.basePath !== 'string') {
     throw new Error(`"options.basePath" must be a string (path to plugin base path)`)
   }
-}
-
-async function validatePluginPackage(manifest: PackageJson, options: GetPackageOptions) {
-  validatePackageName(manifest)
-  validatePaths(manifest, options)
 }
 
 function validatePackageName(manifest: PackageJson) {
@@ -124,32 +114,6 @@ function validatePackageName(manifest: PackageJson) {
     throw new Error(
       `Invalid package.json: "name" should be prefixed with "sanity-plugin-" (or scoped - @your-company/plugin-name)`,
     )
-  }
-}
-
-function validatePaths(manifest: PackageJson, options: GetPackageOptions) {
-  const abs = (file: string) =>
-    path.isAbsolute(file) ? file : path.resolve(path.join(options.basePath, file))
-
-  for (const key of pathKeys) {
-    if (!(key in manifest)) {
-      continue
-    }
-
-    const manifestValue = manifest[key]
-    if (typeof manifestValue !== 'string') {
-      throw new Error(`Invalid package.json: "${key}" must be a string if defined`)
-    }
-
-    // Compiled entry points are expected to exist only after a build; skip existence checks for
-    // paths under dist-like directories. Otherwise require the file to be present.
-    const absolutePath = abs(manifestValue)
-    const looksCompiled =
-      absolutePath.includes(`${path.sep}dist${path.sep}`) ||
-      absolutePath.endsWith(`${path.sep}dist`)
-    if (!looksCompiled && !fs.existsSync(absolutePath)) {
-      throw new Error(`Invalid package.json: "${key}" points to file that does not exist`)
-    }
   }
 }
 
