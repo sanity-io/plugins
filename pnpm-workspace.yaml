@@ -130,6 +130,8 @@ minimumReleaseAgeExclude:
   # tsdown can select a newly released rolldown-plugin-dts version.
   - tsdown
   - rolldown-plugin-dts
+  # tsdown transitive dependency can be newly published.
+  - verkit
   # Renovate dependency update: @sanity/vanilla-extract-tsdown-plugin@0.2.5
   - '@sanity/vanilla-extract-tsdown-plugin@0.2.5'
   # Renovate dependency update: @sanity/vanilla-extract-rolldown-plugin@0.2.2
