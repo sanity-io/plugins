@@ -119,6 +119,8 @@ minimumReleaseAgeExclude:
   - react
   - react-dom
   - react-is
+  # Renovate dependency update: styled-components@6.4.4
+  - styled-components@6.4.4
   - rollup
   - sanity
   - vite
