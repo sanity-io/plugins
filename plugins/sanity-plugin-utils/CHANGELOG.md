@@ -1,5 +1,11 @@
 # sanity-plugin-utils
 
+## 2.0.11
+
+### Patch Changes
+
+- [#1661](https://github.com/sanity-io/plugins/pull/1661) [`edb64e9`](https://github.com/sanity-io/plugins/commit/edb64e9d45d1c595ea8b9fdabd789c0bc58e9c48) Thanks [@stipsan](https://github.com/stipsan)! - Re-enable npm provenance
+
 ## 2.0.10
 
 ### Patch Changes

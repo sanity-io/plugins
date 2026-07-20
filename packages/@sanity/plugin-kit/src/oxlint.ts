@@ -58,6 +58,16 @@ const config: OxlintConfig = {
               "Import from individual modules instead, e.g. `import debounce from 'lodash-es/debounce.js'`. Barrel imports are ~55% slower.",
           },
           {
+            name: 'date-fns',
+            message:
+              "Import from individual modules instead, e.g. `import {startOfDay} from 'date-fns/startOfDay'`. Barrel imports are ~50% slower.",
+          },
+          {
+            name: 'date-fns-tz',
+            message:
+              'Use the official `@date-fns/tz` package (TZDate, tz, tzOffset) with date-fns v4 instead, matching sanity core.',
+          },
+          {
             name: 'react',
             importNames: ['createElement'],
             message:
