@@ -6,7 +6,7 @@ import {verifyPackage} from '../actions/verify-package'
 import {verifyFlags} from '../actions/verify/verify-common'
 import {cliName} from '../constants'
 
-const description = `Verify that a Sanity plugin package is v3 compatible, and print upgrade steps if not.`
+const description = `Verify that a Sanity plugin package follows plugin-kit conventions.`
 
 const help = `
 Usage
