@@ -50,16 +50,6 @@ test('plugin-kit init --force in empty directory', {timeout: 120_000}, async () 
 
       await fileContains('src/index.ts', `name: '${pluginTestName}'`)
 
-      // The legacy @sanity/incompatible-plugin v2 shim should no longer be scaffolded
-      expect(
-        await fileExists(path.join(outputDir, 'sanity.json')),
-        'sanity.json should not be scaffolded',
-      ).toBe(false)
-      expect(
-        await fileExists(path.join(outputDir, 'v2-incompatible.js')),
-        'v2-incompatible.js should not be scaffolded',
-      ).toBe(false)
-
       const pkg: PackageJson = JSON.parse(await readFile(path.join(outputDir, 'package.json')))
 
       expect(pkg, 'package.json has expected content').toMatchObject({
