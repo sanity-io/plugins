@@ -85,6 +85,12 @@ describe('fence language parsing', () => {
     expect(normalizeFenceLanguage('rust', languages)).toBe('rust')
   })
 
+  it('matches a mixed-case table entry and returns its canonical value', () => {
+    const mixedCase: readonly LanguageEntry[] = [{aliases: ['JS'], value: 'JavaScript'}]
+    expect(normalizeFenceLanguage('javascript', mixedCase)).toBe('JavaScript')
+    expect(normalizeFenceLanguage('js', mixedCase)).toBe('JavaScript')
+  })
+
   it('yields the default (or nothing) for an empty token', () => {
     expect(normalizeFenceLanguage('', languages, 'typescript')).toBe('typescript')
     expect(normalizeFenceLanguage('', languages)).toBeUndefined()

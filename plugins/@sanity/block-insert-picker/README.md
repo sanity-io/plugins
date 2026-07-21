@@ -6,20 +6,8 @@ Type `/` at the start of a line (or press `Cmd`/`Ctrl` + `/` anywhere) to open a
 
 ## Installation
 
-```bash
-npm install --save @sanity/block-insert-picker
-```
-
-or
-
-```bash
-pnpm add @sanity/block-insert-picker
-```
-
-or
-
-```
-yarn add @sanity/block-insert-picker
+```sh
+npm install @sanity/block-insert-picker
 ```
 
 Requires `sanity` v5.6 or later.

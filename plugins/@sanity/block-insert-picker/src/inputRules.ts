@@ -138,8 +138,12 @@ export function normalizeFenceLanguage(
 ): string | undefined {
   const lower = raw.trim().toLowerCase()
   if (!lower) return defaultLanguage
+  // Match case-insensitively on both sides so a table with mixed-case values
+  // or aliases still resolves (and yields its canonical `value`, casing
+  // preserved) rather than falling through to the typed token.
   for (const {aliases, value} of languages) {
-    if (value === lower || aliases?.includes(lower)) return value
+    if (value.toLowerCase() === lower || aliases?.some((alias) => alias.toLowerCase() === lower))
+      return value
   }
   return lower
 }
