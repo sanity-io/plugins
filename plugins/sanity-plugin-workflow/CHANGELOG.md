@@ -1,5 +1,13 @@
 # sanity-plugin-workflow
 
+## 3.0.35
+
+### Patch Changes
+
+- [#1664](https://github.com/sanity-io/plugins/pull/1664) [`6063d87`](https://github.com/sanity-io/plugins/commit/6063d87a433a45e087737449c78b09ce39e81d01) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-virtual to ^3.14.7
+
+- [#1450](https://github.com/sanity-io/plugins/pull/1450) [`5ecc71c`](https://github.com/sanity-io/plugins/commit/5ecc71c51eb297534f879d126ef4a09b9ef1a1f6) Thanks [@stipsan](https://github.com/stipsan)! - Migrate styling from styled-components to vanilla-extract (zero-runtime CSS)
+
 ## 3.0.34
 
 ### Patch Changes

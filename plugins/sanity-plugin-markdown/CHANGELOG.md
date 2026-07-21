@@ -1,5 +1,11 @@
 # sanity-plugin-markdown
 
+## 9.0.7
+
+### Patch Changes
+
+- [#1667](https://github.com/sanity-io/plugins/pull/1667) [`4b2545b`](https://github.com/sanity-io/plugins/commit/4b2545be1b314e2c9fb9d4519312722328c45461) Thanks [@stipsan](https://github.com/stipsan)! - Move `@sanity/client` from inlined/dev dependencies to a regular dependency
+
 ## 9.0.6
 
 ### Patch Changes
