@@ -328,8 +328,10 @@ export function BlockInsertPicker({
     }
   }
 
-  // selectItemAtIndex is called directly from onMouseDown to avoid the stale-ref
-  // race where onMouseEnter's batched setHighlightedIndex hasn't flushed yet.
+  // Rows call this from onClick with their own index rather than reading
+  // highlightedIndex: the onMouseMove highlight update for the row under the
+  // cursor may not have flushed yet, so passing idx avoids inserting the
+  // previously-highlighted row.
   const selectItemAtIndex = (idx: number) => {
     const current = stateRef.current
     if (current.mode === 'closed') return

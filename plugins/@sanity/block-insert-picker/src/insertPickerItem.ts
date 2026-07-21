@@ -22,9 +22,15 @@ export function insertPickerItem(ctx: InsertContext): void {
   sendInsertPickerItem(ctx.editor, {
     anchorBlockKey: ctx.anchorBlockKey,
     block: {
+      // Spread the resolved initial value first so the generated `_key` and
+      // the target `_type` always win: Sanity's initial-value resolver sets
+      // `_type` on object values, and a schema's initialValue could carry
+      // stray meta keys. In this flow the resolved `_type` matches
+      // `ctx.blockType` by construction, but ordering it last keeps the
+      // insert correct even when that assumption doesn't hold.
+      ...ctx.initialValue,
       _key: blockKey,
       _type: ctx.blockType,
-      ...ctx.initialValue,
     },
     mode: ctx.mode,
     query: ctx.query,

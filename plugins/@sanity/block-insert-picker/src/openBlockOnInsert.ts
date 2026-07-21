@@ -31,10 +31,11 @@ export function useOpenBlockOnInsert(): (blockKey: string) => void {
     }
   }, [memberItems, onPathOpen, onSetPathCollapsed])
 
-  // Stable identity: callers hold this in effect dependency arrays, and the
-  // React Compiler is not active in this app to memoize it for them — an
-  // unstable return would re-run (and re-register behaviors in) every effect
-  // that lists it, on every render.
+  // Stable identity: callers hold this in effect dependency arrays, so it must
+  // keep a constant reference — an unstable return would re-run (and re-register
+  // behaviors in) every effect that lists it, on every render. The empty-dep
+  // `useCallback` states that contract explicitly rather than relying on the
+  // React Compiler to infer it.
   return useCallback((blockKey: string) => {
     pendingKeyRef.current = blockKey
   }, [])
