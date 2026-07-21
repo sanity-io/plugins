@@ -137,7 +137,7 @@ export function BlockInsertPicker({
   // on their own.
   const warnedRef = useRef<{context?: boolean; empty?: boolean; unknown?: boolean}>({})
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production') return
+    if (process.env['NODE_ENV'] === 'production') return
     const warned = warnedRef.current
     if (!itemsContext && !warned.context) {
       warned.context = true
