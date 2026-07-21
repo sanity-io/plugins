@@ -44,8 +44,7 @@
   "dependencies": {
     "@sanity/client": "catalog:",
     "@sanity/ui": "catalog:",
-    "react-simplemde-editor": "^5.2.0",
-    "rxjs": "catalog:"
+    "react-simplemde-editor": "^5.2.0"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
