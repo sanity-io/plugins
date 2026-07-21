@@ -220,16 +220,16 @@ that file for a new plugin.
 
 These are **separate** concerns — do not confuse them:
 
-| Concern                                      | What solves it                                                                        |
-| -------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `.css.ts` must compile / class names resolve | Keep `vanillaExtractPlugin()` in `vitest.config.ts` (required)                        |
-| Avoid injecting CSS into jsdom for speed     | Optional: `import '@vanilla-extract/css/disableRuntimeStyles'` in a Vitest setup file |
+| Concern                                      | What solves it                                                          |
+| -------------------------------------------- | ----------------------------------------------------------------------- |
+| `.css.ts` must compile / class names resolve | Keep `vanillaExtractPlugin()` in `vitest.config.ts` (required)          |
+| Avoid injecting CSS into jsdom for speed     | Optional: `'@vanilla-extract/css/disableRuntimeStyles'` in `setupFiles` |
 
 In browser-like environments (`jsdom` / `happy-dom`), vanilla-extract injects real styles into the
 document when `.css.ts` runs. That is often desirable, but it can slow tests down. If a suite does
-**not** need styles available, import
+**not** need styles available, add
 [`disableRuntimeStyles`](https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles)
-in a setup file to skip style creation.
+to `setupFiles` to skip style creation.
 
 Nuance for this monorepo:
 
@@ -242,15 +242,11 @@ Nuance for this monorepo:
    structure, or behavior — not computed styles.
 4. **Do not disable** when a test asserts layout, CSS-driven visibility, `getComputedStyle`, or
    otherwise depends on real rules being present.
-5. **Opt in per plugin** via that plugin’s `vitest.setup.ts` (or equivalent `setupFiles`). Do not
-   enable it monorepo-wide, and do not bake it into the plugin generator template.
+5. **Opt in per plugin** via that plugin’s `setupFiles`. Do not enable it monorepo-wide, and do
+   not bake it into the plugin generator template.
 
-Example when you _do_ opt in:
-
-```ts
-// vitest.setup.ts — only when using jsdom/happy-dom and tests don't need real CSS
-import '@vanilla-extract/css/disableRuntimeStyles'
-```
+Example when you _do_ opt in — `setupFiles` entries resolve through Vite, so the bare package
+specifier works directly (no wrapper `vitest.setup.ts` needed):
 
 ```ts
 // vitest.config.ts
@@ -261,7 +257,8 @@ export default defineConfig({
   plugins: [vanillaExtractPlugin()],
   test: {
     environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts'],
+    // only when tests don't need real CSS
+    setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
     // ...
   },
 })
