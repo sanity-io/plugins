@@ -235,7 +235,13 @@ export function BlockInsertPicker({
     current: Exclude<PickerState, {mode: 'closed'}>,
     idx: number,
   ) => {
-    if (insertInFlightRef.current) return
+    if (insertInFlightRef.current) {
+      // A prior select is still resolving; bail to avoid a double-insert. Still
+      // close, because the user may have reopened the picker mid-flight and a
+      // stuck-open menu that swallows this Enter looks broken.
+      dispatch({type: 'close'})
+      return
+    }
     insertInFlightRef.current = true
     try {
       // Index into the grouped display order (not the raw rank-flat order)
@@ -609,6 +615,10 @@ export function BlockInsertPicker({
           >
             {sections.map((section, sectionIndex) => {
               const sectionLabel = section.group ?? labels.ungroupedSection
+              // Key on the raw group (namespaced), not the display label: a
+              // curated group named the same as `ungroupedSection` would
+              // otherwise share a React key with the null-group section.
+              const sectionKey = section.group === null ? 'ungrouped' : `group:${section.group}`
               const rows = section.items.map((item, rowIndex) => {
                 const idx = (sectionOffsets[sectionIndex] ?? 0) + rowIndex
                 const Icon = item.icon
@@ -675,7 +685,7 @@ export function BlockInsertPicker({
               })
               if (!showGroupHeaders) {
                 return (
-                  <Stack key={sectionLabel} gap={1}>
+                  <Stack key={sectionKey} gap={1}>
                     {rows}
                   </Stack>
                 )
@@ -683,7 +693,7 @@ export function BlockInsertPicker({
               return (
                 <Box
                   aria-label={sectionLabel}
-                  key={sectionLabel}
+                  key={sectionKey}
                   paddingTop={sectionIndex === 0 ? 0 : 2}
                   // Grouped options inside a listbox: role="group" is the
                   // valid ARIA structure here; the tags the rule suggests

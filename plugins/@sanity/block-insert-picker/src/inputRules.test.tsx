@@ -83,6 +83,10 @@ describe('fence language parsing', () => {
 
   it('passes an unrecognized language through as typed', () => {
     expect(normalizeFenceLanguage('rust', languages)).toBe('rust')
+    // Case is preserved for unknown tokens (the "as typed" contract), so a
+    // no-table rule like wellKnownInputRules keeps what the writer typed.
+    expect(normalizeFenceLanguage('GraphQL', languages)).toBe('GraphQL')
+    expect(normalizeFenceLanguage('GraphQL', [])).toBe('GraphQL')
   })
 
   it('matches a mixed-case table entry and returns its canonical value', () => {

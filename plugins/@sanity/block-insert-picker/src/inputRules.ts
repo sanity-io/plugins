@@ -136,7 +136,8 @@ export function normalizeFenceLanguage(
   languages: readonly LanguageEntry[],
   defaultLanguage?: string,
 ): string | undefined {
-  const lower = raw.trim().toLowerCase()
+  const token = raw.trim()
+  const lower = token.toLowerCase()
   if (!lower) return defaultLanguage
   // Match case-insensitively on both sides so a table with mixed-case values
   // or aliases still resolves (and yields its canonical `value`, casing
@@ -145,7 +146,9 @@ export function normalizeFenceLanguage(
     if (value.toLowerCase() === lower || aliases?.some((alias) => alias.toLowerCase() === lower))
       return value
   }
-  return lower
+  // Unknown token: pass it through as typed (case preserved) per the contract
+  // above — not the lowercased form used for matching.
+  return token
 }
 
 function createInsertRule(
@@ -159,9 +162,12 @@ function createInsertRule(
         const match = event.matches[0]
         if (!match) return []
         const block: InsertableBlock = {
+          // Spread the host-built fields first so the generated `_key` and the
+          // resolved `_type` always win (mirrors insertPickerItem): a stray
+          // `_key`/`_type` from buildValue can't hijack the block identity.
+          ...config.buildValue({keyGenerator, matchText: match.text}),
           _key: keyGenerator(),
           _type: config.blockType,
-          ...config.buildValue({keyGenerator, matchText: match.text}),
         }
         // `match.selection` is clamped to the text that existed *before* the
         // triggering space, so it stops short of that space and would leave it
