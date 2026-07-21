@@ -1,5 +1,13 @@
 # @sanity/plugin-kit
 
+## 9.0.0
+
+### Major Changes
+
+- [#1588](https://github.com/sanity-io/plugins/pull/1588) [`f64af98`](https://github.com/sanity-io/plugins/commit/f64af98e9eed4b6f9c0f3f0ffcfe6702ae329a68) Thanks [@stipsan](https://github.com/stipsan)! - Remove Sanity Studio v2 upgrade and compatibility tooling
+
+  `verify-studio` is removed. `verify-package` no longer checks for leftover v2 shims (`@sanity/incompatible-plugin`, `v2-incompatible.js`, `sanity.json` parts), obsolete `@sanity/*` package dependencies, or `part:`/`config:` imports. Package verification now focuses on current plugin-kit conventions for modern Studio plugins.
+
 ## 8.0.1
 
 ### Patch Changes
