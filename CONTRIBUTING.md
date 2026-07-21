@@ -294,7 +294,7 @@ The generator will:
 - Fetch metadata from the published npm package
 - Copy over `version`, `description`, and `keywords`
 - Copy over `dependencies`, automatically filtering out:
-  - `@sanity/incompatible-plugin` (test package)
+  - `@sanity/incompatible-plugin` (legacy Sanity Studio v2 compatibility shim, no longer needed)
   - `styled-components` (should always be a peer dependency)
   - `sanity` (should always be a peer/dev dependency)
 - Detect if the plugin uses `styled-components` based on `devDependencies` and `peerDependencies`
@@ -306,9 +306,8 @@ The generator will:
 Required monorepo config files for the transferred plugin:
 
 - `package.json`
-- `package.config.ts`
+- `tsdown.config.ts`
 - `tsconfig.json`
-- `tsconfig.build.json`
 - `vitest.config.ts`
 
 Do not copy standalone-repo root CI/build/lint/test config files that are already handled by this monorepo.

@@ -1,0 +1,72 @@
+{
+  "name": "@sanity/dashboard",
+  "version": "6.0.12",
+  "description": "Tool for rendering dashboard widgets",
+  "keywords": [
+    "cms",
+    "content",
+    "dashboard",
+    "headless",
+    "realtime",
+    "sanity",
+    "sanity-plugin",
+    "sanity-tool"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/dashboard#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/dashboard"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/icons": "catalog:",
+    "@sanity/image-url": "catalog:",
+    "@sanity/ui": "catalog:",
+    "rxjs": "catalog:"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

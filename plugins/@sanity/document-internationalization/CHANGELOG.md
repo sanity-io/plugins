@@ -1,5 +1,138 @@
 # @sanity/document-internationalization
 
+## 6.2.23
+
+### Patch Changes
+
+- Updated dependencies [[`edb64e9`](https://github.com/sanity-io/plugins/commit/edb64e9d45d1c595ea8b9fdabd789c0bc58e9c48)]:
+  - sanity-plugin-utils@2.0.11
+
+## 6.2.22
+
+## 6.2.21
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+- Updated dependencies [[`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616)]:
+  - sanity-plugin-utils@2.0.10
+
+## 6.2.20
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+- Updated dependencies [[`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae)]:
+  - sanity-plugin-utils@2.0.9
+
+## 6.2.19
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+- Updated dependencies [[`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95)]:
+  - sanity-plugin-utils@2.0.8
+
+## 6.2.18
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- Updated dependencies [[`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166)]:
+  - sanity-plugin-utils@2.0.7
+
+## 6.2.17
+
+## 6.2.16
+
+### Patch Changes
+
+- [#1476](https://github.com/sanity-io/plugins/pull/1476) [`b8bc962`](https://github.com/sanity-io/plugins/commit/b8bc96275b26a3d219a55cd22e3d29b27e331e11) Thanks [@stipsan](https://github.com/stipsan)! - Remove redundant `ButtonTone` type assertions in delete actions (internal refactor, no API change)
+
+## 6.2.15
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior.
+
+- Updated dependencies [[`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66)]:
+  - sanity-plugin-utils@2.0.6
+
+## 6.2.14
+
+### Patch Changes
+
+- [#1460](https://github.com/sanity-io/plugins/pull/1460) [`f50f060`](https://github.com/sanity-io/plugins/commit/f50f0605968e5cec4f23f5f3455abe5c8ddda23c) Thanks [@stipsan](https://github.com/stipsan)! - Regenerate TypeScript declaration output: `isolatedDeclarations` is no longer used and declarations are now generated with tsgo (`@typescript/native-preview`). Internal build-tooling change only, with no runtime behavior or public API changes.
+
+## 6.2.13
+
+## 6.2.12
+
+### Patch Changes
+
+- Updated dependencies [[`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a)]:
+  - sanity-plugin-utils@2.0.5
+
+## 6.2.11
+
+### Patch Changes
+
+- [#1475](https://github.com/sanity-io/plugins/pull/1475) [`c3f2078`](https://github.com/sanity-io/plugins/commit/c3f207864eb80395451ef8e84837e7216b384ff6) Thanks [@stipsan](https://github.com/stipsan)! - Fix the Translations menu being disabled for documents that only exist in a release. When a release is selected, the version document is now used as the source for translations, and new language copies are created in that same release.
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+- Updated dependencies [[`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880)]:
+  - sanity-plugin-utils@2.0.4
+
+## 6.2.10
+
+## 6.2.9
+
+### Patch Changes
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
+## 6.2.8
+
+## 6.2.7
+
+### Patch Changes
+
+- [`7a37fd1`](https://github.com/sanity-io/plugins/commit/7a37fd1653681de5f892de2dea29b83e9b119ff1) Thanks [@stipsan](https://github.com/stipsan)! - use `workspace:^` for prod deps
+
+- [`68fb45a`](https://github.com/sanity-io/plugins/commit/68fb45ae05271006813424506fb995cc84f79885) Thanks [@stipsan](https://github.com/stipsan)! - Use concistent peer dep definition
+
+- Updated dependencies [[`7c1a95c`](https://github.com/sanity-io/plugins/commit/7c1a95c2213555c50bca2fde2af3590abc57c444)]:
+  - sanity-plugin-utils@2.0.3
+
+## 6.2.6
+
+### Patch Changes
+
+- Updated dependencies [[`c66b926`](https://github.com/sanity-io/plugins/commit/c66b9269394b2ec45c320580a39069e6fd39dd4d)]:
+  - sanity-plugin-utils@2.0.2
+
+## 6.2.5
+
+### Patch Changes
+
+- [#980](https://github.com/sanity-io/plugins/pull/980) [`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/pkg-utils` to pick up a DTS generation bug fix.
+
+- Updated dependencies [[`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c)]:
+  - sanity-plugin-utils@2.0.1
+
+## 6.2.4
+
+### Patch Changes
+
+- [#964](https://github.com/sanity-io/plugins/pull/964) [`4226408`](https://github.com/sanity-io/plugins/commit/4226408594d2717cf2503866f5d5216991701d38) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/mutator` and `@sanity/util` dependencies to v6, in line with Sanity Studio v6
+
+## 6.2.3
+
 ## 6.2.2
 
 ### Patch Changes
@@ -60,6 +193,7 @@
   **Breaking change:** Translation reference items in `translation.metadata` documents now use a dedicated `language` field instead of `_key` for the language identifier. The `_key` is now a random unique ID.
 
   **How to upgrade:**
+
   1. Update `sanity-plugin-internationalized-array` to v5 first.
   2. Backup your data.
   3. Create a migration file using the new bundled helper from `sanity-plugin-internationalized-array/migrations`, and **include `'translation.metadata'` in your `documentTypes` array** so translation metadata documents are also migrated:
@@ -150,6 +284,7 @@
 - [#562](https://github.com/sanity-io/plugins/pull/562) [`bc342c5`](https://github.com/sanity-io/plugins/commit/bc342c59a49810ae6289546af049a8c3a8a57e43) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Port @sanity/document-internationalization to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The plugin is now optimized with React Compiler for better performance
   - **ESM-only**: CommonJS is no longer supported (removed dual module format)
   - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the baseline

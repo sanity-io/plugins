@@ -11,12 +11,14 @@ import {useDocumentInternationalizationContext} from './DocumentInternationaliza
 import {DocumentInternationalizationMenu} from './DocumentInternationalizationMenu'
 
 const mockUseEditState = vi.fn()
+const mockUsePerspective = vi.fn()
 
 vi.mock('sanity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('sanity')>()
   return {
     ...actual,
     useEditState: (...args: unknown[]) => mockUseEditState(...args),
+    usePerspective: () => mockUsePerspective(),
   }
 })
 
@@ -69,7 +71,9 @@ describe('DocumentInternationalizationMenu', () => {
     mockUseEditState.mockReturnValue({
       draft: createMockDocument('drafts.doc-1', 'en'),
       published: null,
+      version: null,
     })
+    mockUsePerspective.mockReturnValue({selectedReleaseId: undefined})
   })
 
   afterEach(() => {
@@ -96,13 +100,43 @@ describe('DocumentInternationalizationMenu', () => {
   })
 
   test('disables translations button when source document does not exist', () => {
-    mockUseEditState.mockReturnValue({draft: null, published: null})
+    mockUseEditState.mockReturnValue({draft: null, published: null, version: null})
 
     render(<DocumentInternationalizationMenu documentId="doc-1" schemaType={articleSchemaType} />, {
       wrapper: ThemeWrapper,
     })
 
     expect(screen.getByRole('button', {name: 'Translations'})).toBeDisabled()
+  })
+
+  test('enables translations button when document only exists as a release version', async () => {
+    mockUsePerspective.mockReturnValue({selectedReleaseId: 'rTestRelease'})
+    mockUseEditState.mockReturnValue({
+      draft: null,
+      published: null,
+      version: createMockDocument('versions.rTestRelease.doc-1', 'en'),
+    })
+    vi.mocked(useTranslationMetadata).mockReturnValue({
+      data: [],
+      loading: false,
+      error: null,
+    })
+
+    render(<DocumentInternationalizationMenu documentId="doc-1" schemaType={articleSchemaType} />, {
+      wrapper: ThemeWrapper,
+    })
+
+    // The selected release is subscribed to in edit state
+    expect(mockUseEditState).toHaveBeenCalledWith('doc-1', 'article', 'default', 'rTestRelease')
+
+    const button = screen.getByRole('button', {name: 'Translations'})
+    expect(button).not.toBeDisabled()
+
+    // Language options are rendered from the version document
+    fireEvent.click(button)
+    await waitFor(() => {
+      expect(screen.getAllByTestId('language-option')).toHaveLength(MOCK_LANGUAGES.length)
+    })
   })
 
   test('renders language options when source language is valid', async () => {

@@ -1,4 +1,4 @@
-import {AddIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
 import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Button, Card, Stack, Text, useToast} from '@sanity/ui'
 import type React from 'react'
@@ -38,8 +38,10 @@ import {MigrationBanner} from './MigrationBanner'
  *   missing languages" button (controlled by `buttonAddAll` and
  *   `buttonLocations` config). Dispatches `setIfMissing` + `insert` patches.
  * - **Default languages**: Automatically adds entries for languages listed in
- *   `defaultLanguages` when a document is first created or when those entries
- *   are missing.
+ *   `defaultLanguages` when those entries are missing. Only runs once the
+ *   document exists in the dataset (it has a `_rev`), so the effect never
+ *   recreates a just-deleted document or creates a draft before the user's
+ *   first edit.
  * - **Ordering**: Detects when value items are out of order relative to the
  *   master `languages` list and automatically re-sorts them.
  * - **Validation**: Shows a `<Feedback>` component if the languages
@@ -144,7 +146,14 @@ export default function InternationalizedArray(
     [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path],
   )
 
-  const {isDeleting} = useDocumentPane()
+  const {isDeleted, isDeleting} = useDocumentPane()
+
+  // The document only has a revision once it exists in the dataset. Patching
+  // a nonexistent document would create it: auto-adding default languages to
+  // a just-deleted document resurrects it as an empty draft (and the deleted
+  // pane can outrace `isDeleted`), and auto-adding to an unsaved new document
+  // creates a draft before the user has made any edits.
+  const documentExists = Boolean(useFormValue(['_rev']))
 
   // Create a stable dependency string that only changes when language keys change
   const languageKeysFromValue = value
@@ -165,7 +174,13 @@ export default function InternationalizedArray(
       .filter((language) => languages.find((l) => l.id === language))
       .every((language) => addedLanguages.includes(language))
 
-    if (!isDeleting && !hasAddedDefaultLanguages && !shouldMigrateArray) {
+    if (
+      documentExists &&
+      !isDeleting &&
+      !isDeleted &&
+      !hasAddedDefaultLanguages &&
+      !shouldMigrateArray
+    ) {
       const languagesToAdd = defaultLanguages
         .filter((language) => !addedLanguages.includes(language))
         .filter((language) => languages.find((l) => l.id === language))
@@ -177,6 +192,8 @@ export default function InternationalizedArray(
     }
     return undefined
   }, [
+    documentExists,
+    isDeleted,
     isDeleting,
     handleAddLanguages,
     defaultLanguages,

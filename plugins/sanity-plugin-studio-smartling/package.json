@@ -1,0 +1,63 @@
+{
+  "name": "sanity-plugin-studio-smartling",
+  "version": "5.0.11",
+  "description": "This plugin provides an in-studio integration with Smartling. It allows your editors to send any document to Smartling with the click of a button, monitor ongoing translations, and import partial or complete translations back into the studio.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-studio-smartling#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-studio-smartling"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "sanity-translations-tab": "workspace:^"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

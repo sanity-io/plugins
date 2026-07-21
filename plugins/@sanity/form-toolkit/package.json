@@ -1,0 +1,75 @@
+{
+  "name": "@sanity/form-toolkit",
+  "version": "3.0.10",
+  "description": "Tool kit for integrating forms with a Sanity Studio",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/form-toolkit#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/form-toolkit"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    "./form-renderer": "./src/form-renderer/index.ts",
+    "./form-schema": "./src/form-schema/index.ts",
+    "./formium": "./src/formium/index.ts",
+    "./hubspot": "./src/hubspot/index.ts",
+    "./mailchimp": "./src/mailchimp/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      "./form-renderer": "./dist/form-renderer/index.js",
+      "./form-schema": "./dist/form-schema/index.js",
+      "./formium": "./dist/formium/index.js",
+      "./hubspot": "./dist/hubspot/index.js",
+      "./mailchimp": "./dist/mailchimp/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@formium/client": "^0.1.4",
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "@sanity/sanity-plugin-async-list": "workspace:^",
+    "@sanity/ui": "catalog:",
+    "h3": "^1.15.11",
+    "react-icons": "catalog:"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@types/mailchimp__mailchimp_marketing": "^3.0.22",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

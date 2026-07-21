@@ -1,14 +1,21 @@
-import {AddIcon, TrashIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {startTransition, useOptimistic, useRef} from 'react'
-import {type Color, CustomPicker} from 'react-color'
-import {Alpha, Checkboard, Hue, Saturation} from 'react-color/lib/components/common'
-import type {CustomPickerInjectedProps} from 'react-color/lib/components/common/ColorWrap'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
 import {styled} from 'styled-components'
 
 import {ColorList} from './ColorList'
 import {ColorPickerFields} from './ColorPickerFields'
+import {
+  Alpha,
+  Checkboard,
+  type Color,
+  CustomPicker,
+  type CustomPickerInjectedProps,
+  Hue,
+  Saturation,
+} from './react-color'
 import type {ColorSchemaType, ColorValue} from './types'
 
 const ColorBox = styled(Box)`
@@ -88,13 +95,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
               overflow="hidden"
               style={{position: 'relative', minWidth: '4em', background: '#fff'}}
             >
-              <Checkboard
-                size={8}
-                white="transparent"
-                grey="rgba(0,0,0,.08)"
-                // oxlint-disable-next-line no-unsafe-type-assertion
-                renderers={{} as {canvas: unknown}}
-              />
+              <Checkboard size={8} white="transparent" grey="rgba(0,0,0,.08)" />
               <ColorBox
                 style={{
                   backgroundColor: `rgba(${rgb?.r},${rgb?.g},${rgb?.b},${rgb?.a})`,

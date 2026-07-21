@@ -1,4 +1,4 @@
-import {DatabaseIcon} from '@sanity/icons'
+import {DatabaseIcon} from '@sanity/icons/Database'
 import {Box, Button, Card, Flex, Grid, Hotkeys, Stack, Text} from '@sanity/ui'
 import {isValidElement, useMemo} from 'react'
 import {isValidElementType} from 'react-is'

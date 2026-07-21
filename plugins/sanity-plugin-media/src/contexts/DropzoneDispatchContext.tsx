@@ -1,0 +1,32 @@
+import {type ReactNode, createContext, useContext, useMemo} from 'react'
+
+type ContextProps = {
+  open: () => void
+}
+
+type Props = {
+  children: ReactNode
+  open: () => void
+}
+
+const DropzoneDispatchContext = createContext<ContextProps | undefined>(undefined)
+
+export const DropzoneDispatchProvider = (props: Props) => {
+  const {children, open} = props
+
+  const contextValue: ContextProps = useMemo(() => ({open}), [open])
+
+  return (
+    <DropzoneDispatchContext.Provider value={contextValue}>
+      {children}
+    </DropzoneDispatchContext.Provider>
+  )
+}
+
+export const useDropzoneActions = () => {
+  const context = useContext(DropzoneDispatchContext)
+  if (context === undefined) {
+    throw new Error('useDropzoneActions must be used within an DropzoneDispatchProvider')
+  }
+  return context
+}

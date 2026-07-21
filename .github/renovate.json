@@ -2,9 +2,20 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>sanity-io/renovate-config"],
   "automerge": true,
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "packages/@sanity/plugin-kit/test/fixtures/**"
+  ],
   "ignorePresets": [
-    ":ignoreModulesAndTests",
     "github>sanity-io/renovate-config:group-non-major",
     "github>sanity-io/renovate-config:workarounds-esm"
+  ],
+  "packageRules": [
+    {
+      "description": "Never rewrite the manually curated ranges in the pnpm `peer` catalog — they declare what consumers may use and are intentionally wider than the default catalog",
+      "matchDepTypes": ["pnpm.catalog.peer"],
+      "enabled": false
+    }
   ]
 }

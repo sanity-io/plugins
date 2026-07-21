@@ -1,5 +1,144 @@
 # sanity-plugin-workflow
 
+## 3.0.34
+
+### Patch Changes
+
+- Updated dependencies [[`edb64e9`](https://github.com/sanity-io/plugins/commit/edb64e9d45d1c595ea8b9fdabd789c0bc58e9c48)]:
+  - sanity-plugin-utils@2.0.11
+
+## 3.0.33
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+- Updated dependencies [[`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616)]:
+  - sanity-plugin-utils@2.0.10
+
+## 3.0.32
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+- Updated dependencies [[`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae)]:
+  - sanity-plugin-utils@2.0.9
+
+## 3.0.31
+
+### Patch Changes
+
+- [#1573](https://github.com/sanity-io/plugins/pull/1573) [`d0f0ab2`](https://github.com/sanity-io/plugins/commit/d0f0ab215447043dc9046b54be17266d005a3c1c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-virtual to ^3.14.6
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+- Updated dependencies [[`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95)]:
+  - sanity-plugin-utils@2.0.8
+
+## 3.0.30
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1536](https://github.com/sanity-io/plugins/pull/1536) [`227d4d1`](https://github.com/sanity-io/plugins/commit/227d4d1a7372a025ac772658e83dcaa9523ef02c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-virtual to ^3.14.5
+
+- Updated dependencies [[`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166)]:
+  - sanity-plugin-utils@2.0.7
+
+## 3.0.29
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior.
+
+- Updated dependencies [[`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66)]:
+  - sanity-plugin-utils@2.0.6
+
+## 3.0.28
+
+### Patch Changes
+
+- [#1460](https://github.com/sanity-io/plugins/pull/1460) [`f50f060`](https://github.com/sanity-io/plugins/commit/f50f0605968e5cec4f23f5f3455abe5c8ddda23c) Thanks [@stipsan](https://github.com/stipsan)! - Regenerate TypeScript declaration output: `isolatedDeclarations` is no longer used and declarations are now generated with tsgo (`@typescript/native-preview`). Internal build-tooling change only, with no runtime behavior or public API changes.
+
+## 3.0.27
+
+### Patch Changes
+
+- [#1480](https://github.com/sanity-io/plugins/pull/1480) [`4c8ee7a`](https://github.com/sanity-io/plugins/commit/4c8ee7a1095c54e9698ab4d19cb922c1fb4c3dd8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.42.2
+
+## 3.0.26
+
+### Patch Changes
+
+- [#1481](https://github.com/sanity-io/plugins/pull/1481) [`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/pkg-utils` to `^10.9.0`, enabling tree-shaking of unused `styled-components` in the published bundle. Tagged template literals are now transpiled to plain call expressions during build, so bundlers can drop styled components this plugin exports but the app doesn't use, reducing bundle size.
+
+- Updated dependencies [[`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a)]:
+  - sanity-plugin-utils@2.0.5
+
+## 3.0.25
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+- Updated dependencies [[`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880)]:
+  - sanity-plugin-utils@2.0.4
+
+## 3.0.24
+
+### Patch Changes
+
+- [#1426](https://github.com/sanity-io/plugins/pull/1426) [`f9b7ed3`](https://github.com/sanity-io/plugins/commit/f9b7ed3bb2f2488781fff5a8f7ec32fbcbe72449) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.41.0
+
+- [#1434](https://github.com/sanity-io/plugins/pull/1434) [`a3f4b12`](https://github.com/sanity-io/plugins/commit/a3f4b12bda72238818db068d70ba8f15bc306f79) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.42.0
+
+- [#1445](https://github.com/sanity-io/plugins/pull/1445) [`0669928`](https://github.com/sanity-io/plugins/commit/0669928425b19b3bc7d813ba640333b2442c91b8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-virtual to ^3.14.4
+
+## 3.0.23
+
+### Patch Changes
+
+- [#1377](https://github.com/sanity-io/plugins/pull/1377) [`4f9c0d5`](https://github.com/sanity-io/plugins/commit/4f9c0d50983932fd48a1d2ab7514427c57fe0dcd) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update tanstack-virtual monorepo
+
+## 3.0.22
+
+### Patch Changes
+
+- [#1203](https://github.com/sanity-io/plugins/pull/1203) [`20c5f35`](https://github.com/sanity-io/plugins/commit/20c5f35c0869a0375e515c53ee17b5160fed685e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency motion to ^12.40.0
+
+## 3.0.21
+
+### Patch Changes
+
+- [#1084](https://github.com/sanity-io/plugins/pull/1084) [`c4c28bc`](https://github.com/sanity-io/plugins/commit/c4c28bc4f3706ce57dd1b6fc7d639b20731c1740) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update tanstack-virtual monorepo to ^3.14.2
+
+## 3.0.20
+
+### Patch Changes
+
+- [`7a37fd1`](https://github.com/sanity-io/plugins/commit/7a37fd1653681de5f892de2dea29b83e9b119ff1) Thanks [@stipsan](https://github.com/stipsan)! - use `workspace:^` for prod deps
+
+- Updated dependencies [[`7c1a95c`](https://github.com/sanity-io/plugins/commit/7c1a95c2213555c50bca2fde2af3590abc57c444)]:
+  - sanity-plugin-utils@2.0.3
+
+## 3.0.19
+
+### Patch Changes
+
+- Updated dependencies [[`c66b926`](https://github.com/sanity-io/plugins/commit/c66b9269394b2ec45c320580a39069e6fd39dd4d)]:
+  - sanity-plugin-utils@2.0.2
+
+## 3.0.18
+
+### Patch Changes
+
+- [#980](https://github.com/sanity-io/plugins/pull/980) [`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/pkg-utils` to pick up a DTS generation bug fix.
+
+- Updated dependencies [[`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c)]:
+  - sanity-plugin-utils@2.0.1
+
 ## 3.0.17
 
 ### Patch Changes
@@ -24,6 +163,7 @@
   Workflow items would drop one position off from where they were visually placed when dragging within the same column. This was caused by the dragged item remaining in the destination items array during rank calculation.
 
   **Changes:**
+
   - Filter out the dragged item when reordering within the same column, aligning with dnd library expectations
   - Fix boundary check for end-of-list drops to correctly identify when dropping at or past the last position
 

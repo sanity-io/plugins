@@ -1,0 +1,52 @@
+{
+  "name": "sanity-plugin-test-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/sanity-io/sanity#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity/issues"
+  },
+  "license": "MIT",
+  "author": "Test Person <test.person@somewhere-on-the-internet.nowhere>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sanity-io/sanity"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "format": "oxfmt",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "oxlint",
+    "prepublishOnly": "npm run build",
+    "watch": "pkg-utils watch --strict"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@sanity/pkg-utils": "^6.4.1",
+    "@sanity/plugin-kit": "^0.0.1-studio-v3.1",
+    "oxfmt": "^0.58.0",
+    "oxlint": "^1.73.0",
+    "oxlint-tsgolint": "^0.24.0",
+    "react": "^18.2.0",
+    "sanity": "^3.0.0",
+    "typescript": "^5.4.5"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "sanity": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

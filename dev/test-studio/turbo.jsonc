@@ -1,0 +1,18 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // Workspace plugins export ./src for monorepo consumption, so sanity build
+    // does not need their dist/. Use transit (not ^build) so Turbo still
+    // invalidates this cache when dependency source changes.
+    // ENABLE_VITE_DEVTOOLS opts into Vite DevTools (see sanity.cli.ts); declaring it here
+    // invalidates turbo-cached builds when it flips and passes it through in strict env mode
+    "build": {
+      "dependsOn": ["transit"],
+      "env": ["ENABLE_VITE_DEVTOOLS"],
+    },
+    "dev": {
+      "env": ["ENABLE_VITE_DEVTOOLS"],
+    },
+  },
+}

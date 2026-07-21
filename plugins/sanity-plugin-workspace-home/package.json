@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-workspace-home",
-  "version": "3.0.6",
+  "version": "3.0.15",
   "description": "A home screen for your multi-workspace Sanity Studio",
   "keywords": [
     "sanity",
@@ -23,11 +23,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "development": "./src/index.ts",
-      "source": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -37,31 +33,30 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
+    "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "react-is": "^19.2.5"
+    "react-is": "catalog:"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "@types/react-is": "^19.2.0",
+    "@types/react-is": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

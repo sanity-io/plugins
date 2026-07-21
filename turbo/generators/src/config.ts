@@ -6,6 +6,10 @@ import type {PlopTypes} from '@turbo/gen'
 import hostedGitInfo from 'hosted-git-info'
 import validateNpmPackageName from 'validate-npm-package-name'
 
+interface Inquirer {
+  prompt<T>(question: PlopTypes.PromptQuestion): Promise<T>
+}
+
 interface NpmPackageJson {
   name: string
   version: string
@@ -34,7 +38,6 @@ async function fetchNpmPackage(name: string): Promise<NpmPackageData | null> {
     throw new Error(`Failed to fetch npm package: ${response.statusText}`)
   }
 
-  // oxlint-disable-next-line no-unsafe-type-assertion
   return response.json() as Promise<NpmPackageData>
 }
 
@@ -171,7 +174,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
     // Validate plugin name to prevent command injection
     // Plugin names are already validated by npm package name rules, but double-check
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const pluginName = String((answers as any).name)
     const {errors} = validateNpmPackageName(pluginName)
     if (errors?.length) {
@@ -180,7 +182,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
     const pluginDir = join(rootPath, 'plugins', pluginName)
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const repoUrl = (answers as any).originalRepositoryUrl
     if (!repoUrl) {
       throw new Error(
@@ -267,7 +268,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
   plop.setGenerator('new plugin', {
     description: 'Generates a new Sanity Studio plugin',
-    prompts: async (inquirer) => {
+    prompts: async (_inquirer) => {
+      const inquirer = _inquirer as Inquirer
       // Step 1: Get and validate the plugin name
       const {name} = await inquirer.prompt<{name: string}>({
         type: 'input',
@@ -345,16 +347,26 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         default: defaultExport,
       })
 
-      // Step 5: Ask about styled-components
-      const {hasStyledComponents} = await inquirer.prompt<{hasStyledComponents: boolean}>({
+      // Step 5: Ask about styling. New (greenfield) plugins use vanilla-extract — never
+      // styled-components — per the sanity-plugin-best-practices skill.
+      const {hasVanillaExtract} = await inquirer.prompt<{hasVanillaExtract: boolean}>({
         type: 'confirm',
-        name: 'hasStyledComponents',
-        message: 'Will this plugin use styled-components?',
-        default: false,
+        name: 'hasVanillaExtract',
+        message:
+          'Will this plugin include styling? (sets up vanilla-extract; recommended for any UI)',
+        default: true,
       })
 
-      // Version starts at 0.0.1 for new plugins (replaces the OIDC setup package)
-      return {name, description, pluginNamedExport, hasStyledComponents, version: '0.0.1'}
+      // Version starts at 0.0.1 for new plugins (replaces the OIDC setup package).
+      // `hasStyledComponents` is always false for new plugins (greenfield uses vanilla-extract).
+      return {
+        name,
+        description,
+        pluginNamedExport,
+        hasVanillaExtract,
+        hasStyledComponents: false,
+        version: '0.0.1',
+      }
     },
     actions: [
       {
@@ -378,6 +390,14 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         templateFile: 'templates/src/components/Tool.tsx.hbs',
       },
       {
+        // Only scaffolded when styling was requested; Tool.tsx imports it conditionally
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/components/Tool.css.ts',
+        templateFile: 'templates/src/components/Tool.css.ts.hbs',
+        skip: (data: {hasVanillaExtract?: boolean}) =>
+          data.hasVanillaExtract ? undefined : 'no styling selected; skipping Tool.css.ts',
+      },
+      {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/plugin.tsx',
         templateFile: 'templates/src/plugin.tsx.hbs',
@@ -389,8 +409,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/package.config.ts',
-        templateFile: 'templates/package.config.ts.hbs',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsdown.config.ts',
+        templateFile: 'templates/tsdown.config.ts.hbs',
       },
       {
         type: 'add',
@@ -401,11 +421,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.json',
         templateFile: 'templates/tsconfig.json.hbs',
-      },
-      {
-        type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
-        templateFile: 'templates/tsconfig.build.json.hbs',
       },
       // Add to test-studio dependencies
       {
@@ -450,7 +465,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
   plop.setGenerator('copy plugin', {
     description: 'Copies an existing Sanity Studio plugin into the monorepo',
-    prompts: async (inquirer) => {
+    prompts: async (_inquirer) => {
+      const inquirer = _inquirer as Inquirer
       // Step 1: Get and validate the plugin name
       const {name} = await inquirer.prompt<{name: string}>({
         type: 'input',
@@ -536,22 +552,15 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         default: defaultExport,
       })
 
-      // Step 4: Ask about isolatedDeclarations
-      const {isolatedDeclarations} = await inquirer.prompt<{isolatedDeclarations: boolean}>({
-        type: 'confirm',
-        name: 'isolatedDeclarations',
-        message:
-          'Enable isolatedDeclarations?\n  (Recommended to disable initially and enable later, as it may require many changes to existing exports)',
-        default: false,
-      })
-
       return {
         name,
         description,
         pluginNamedExport,
         hasStyledComponents,
+        // Transfers keep their existing styled-components; styling is never migrated to
+        // vanilla-extract during the initial port (see the plugin-transfer skill).
+        hasVanillaExtract: false,
         version,
-        isolatedDeclarations,
         originalRepositoryUrl,
         originalSourceUrl,
         keywords,
@@ -580,8 +589,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/package.config.ts',
-        templateFile: 'templates/package.config.ts.hbs',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsdown.config.ts',
+        templateFile: 'templates/tsdown.config.ts.hbs',
       },
       {
         type: 'add',
@@ -592,11 +601,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.json',
         templateFile: 'templates/tsconfig.json.hbs',
-      },
-      {
-        type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
-        templateFile: 'templates/tsconfig.build.json.hbs',
       },
       // Add to test-studio dependencies
       {

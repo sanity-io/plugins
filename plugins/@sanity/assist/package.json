@@ -1,6 +1,6 @@
 {
   "name": "@sanity/assist",
-  "version": "6.0.7",
+  "version": "6.1.15",
   "description": "You create the instructions; Sanity AI Assist does the rest.",
   "keywords": [
     "ai",
@@ -24,11 +24,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -38,43 +34,42 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@portabletext/types": "^4.0.2",
+    "@portabletext/types": "catalog:",
     "@sanity/client": "catalog:",
-    "@sanity/color": "^3.0.6",
-    "@sanity/icons": "^3.7.4",
+    "@sanity/color": "catalog:",
+    "@sanity/icons": "catalog:",
+    "@sanity/mutator": "catalog:",
     "@sanity/ui": "catalog:",
-    "date-fns": "^3.6.0",
-    "lodash-es": "^4.17.23",
-    "react-fast-compare": "^3.2.2",
+    "date-fns": "catalog:",
+    "lodash-es": "catalog:",
+    "react-fast-compare": "catalog:",
     "rxjs": "catalog:",
     "rxjs-exhaustmap-with-trailing": "^2.1.1"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
-    "@sanity/schema": "^5.21.0",
-    "@types/lodash-es": "^4.17.12",
+    "@sanity/schema": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@types/lodash-es": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "@sanity/mutator": "^5 || ^6.0.0-0",
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

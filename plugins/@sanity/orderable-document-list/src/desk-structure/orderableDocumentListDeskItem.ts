@@ -1,4 +1,5 @@
-import {GenerateIcon, SortIcon} from '@sanity/icons'
+import {GenerateIcon} from '@sanity/icons/Generate'
+import {SortIcon} from '@sanity/icons/Sort'
 import {type ComponentType} from 'react'
 import type {ConfigContext} from 'sanity'
 import {type ListItem, type MenuItem, type StructureBuilder} from 'sanity/structure'
@@ -63,7 +64,9 @@ export function orderableDocumentListDeskItem(config: OrderableListConfig): List
     .child(
       Object.assign(
         S.documentTypeList(type)
-          .canHandleIntent(() => createIntent !== false)
+          .canHandleIntent(
+            (_intentName, params) => createIntent !== false && params?.['type'] === type,
+          )
           .serialize(),
         {
           // Prevents the component from re-rendering when switching documents

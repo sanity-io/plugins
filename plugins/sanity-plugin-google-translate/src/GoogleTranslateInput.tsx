@@ -1,5 +1,5 @@
 import {Box, Button, Text, Flex, Stack, Tooltip, useToast} from '@sanity/ui'
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {MemberField, MemberFieldSet, MemberFieldError, set, unset} from 'sanity'
 import type {FieldMember, InputProps, ObjectInputProps} from 'sanity'
 
@@ -40,10 +40,10 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
   // oxlint-disable-next-line no-unsafe-type-assertion - plugin-specific object options
   const {apiKey} = (props.schemaType.options ?? {}) as GoogleTranslateSchemaOptions
 
-  const [isTranslating, setIsTranslating] = React.useState(false)
+  const [isTranslating, setIsTranslating] = useState(false)
   const toast = useToast()
 
-  const handleTranslation = React.useCallback(
+  const handleTranslation = useCallback(
     (config: TranslationConfig) => {
       if (!config?.content) {
         return toast.push({
@@ -81,7 +81,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
         })
       }
 
-      const translations = allLanguageFields.map((item) => {
+      const translations = allLanguageFields.map(async (item) => {
         url.searchParams.set(`target`, item.fieldLang)
 
         if (item.fieldLang === source) {
@@ -130,7 +130,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
     [apiKey, members, onChange, toast],
   )
 
-  const renderInput = React.useCallback(
+  const renderInput = useCallback(
     (member: InputProps) => {
       if (!value) {
         return renderDefault(member)

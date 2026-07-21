@@ -4,31 +4,37 @@
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
-      "computedHash": "9e1c8b3103f92fa8092568a44fe64858de7c5c9dc65ce4bea8f168080e889cfd"
+      "skillPath": "skills/find-skills/SKILL.md",
+      "computedHash": "d31e234f0c90694a670222cdd1dafa853e051d7066beda389f1097c22dadd461"
     },
     "pnpm": {
       "source": "antfu/skills",
       "sourceType": "github",
+      "skillPath": "skills/pnpm/SKILL.md",
       "computedHash": "318f9fca2441a3e06fedc336e195dd18be5dbe901064e4fa71b76b40b096ab3a"
     },
     "turborepo": {
       "source": "vercel/turborepo",
       "sourceType": "github",
-      "computedHash": "8941746a010948d4251798bd9703230b8841ab7efe988a0815022e870368b481"
+      "skillPath": "skills/turborepo/SKILL.md",
+      "computedHash": "1c3ea4299a1cdf72c2ac811fb4ede272c7a8cf5bf13ce92ffec9ba6dd46e666f"
     },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
-      "computedHash": "43ca6c197f8ec13055079da7053232d477068b03ca443f9ac1bc819b95cdd432"
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "3219a1944e404ffc14d1d9d6aef6dd2e3855b81387ee0a044ccbfe14d34c2357"
     },
     "vite": {
       "source": "antfu/skills",
       "sourceType": "github",
+      "skillPath": "skills/vite/SKILL.md",
       "computedHash": "867ff66238f3152e9c494339ad08dc432dd0df5bcf5cc7a00b61a72b580eb908"
     },
     "vitest": {
       "source": "antfu/skills",
       "sourceType": "github",
+      "skillPath": "skills/vitest/SKILL.md",
       "computedHash": "669c7275f7e1379b06b2bcfa593603aead4c983b951c7e8edbc09640aa38d0a1"
     }
   }

@@ -1,0 +1,36 @@
+{
+  "name": "not-prefixed-with-sanity-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "parcel": "^2.7.0",
+    "react": "^18.2.0",
+    "typescript": "^4.7.3"
+  },
+  "peerDependencies": {
+    "react": "^18"
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true
+  }
+}

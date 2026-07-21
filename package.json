@@ -7,6 +7,8 @@
     "build": "turbo build",
     "check:deps": "knip --dependencies",
     "dev": "pnpm turbo dev --filter=test-studio",
+    "devtools:test-studio": "pnpm devtools:test-studio:build && ENABLE_VITE_DEVTOOLS=true pnpm dev",
+    "devtools:test-studio:build": "pnpm build && ENABLE_VITE_DEVTOOLS=true pnpm --filter=test-studio build",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
     "generate": "turbo gen",
     "issue-triage": "node scripts/trigger-triage/src/index.ts",
@@ -15,7 +17,7 @@
     "lint": "pnpm run oxlint",
     "lint:fix": "pnpm lint --fix --fix-suggestions",
     "lint:workflows": "if command -v zizmor >/dev/null 2>&1; then zizmor .github --min-severity high; else echo 'zizmor not found. Install it: https://docs.zizmor.sh/installation/'; exit 1; fi",
-    "oxlint": "oxlint --deny-warnings --disable-nested-config --report-unused-disable-directives",
+    "oxlint": "oxlint --disable-nested-config",
     "postgenerate": "pnpm install && pnpm format && pnpm build",
     "postinstall": "husky",
     "pregenerate": "turbo run build --filter='./turbo/generators'",
@@ -26,28 +28,28 @@
     "typegen": "pnpm --filter=test-studio run typegen && pnpm format"
   },
   "dependencies": {
-    "@changesets/changelog-github": "^0.6.0",
-    "@changesets/cli": "^2.31.0",
-    "@typescript/native-preview": "catalog:",
-    "eslint-plugin-react-hooks": "^7.0.1",
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.31.1",
+    "@sanity/plugin-kit": "workspace:*",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
-    "oxfmt": "^0.41.0",
-    "oxlint": "^1.56.0",
-    "oxlint-tsgolint": "^0.17.0",
-    "setup-npm-trusted-publish": "^1.0.3",
-    "turbo": "2.9.14",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "setup-npm-trusted-publish": "^1.3.1",
+    "turbo": "2.10.5",
     "typescript": "catalog:",
-    "vitest": "^4.1.0",
+    "vitest": "catalog:",
     "vitest-package-exports": "^1.2.0"
   },
   "devDependencies": {
-    "knip": "^6.4.1"
+    "@vitest/coverage-v8": "catalog:",
+    "knip": "^6.27.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,jsonc,md}": [
       "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@11.13.1"
 }

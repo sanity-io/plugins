@@ -1,6 +1,6 @@
 {
   "name": "@sanity/orderable-document-list",
-  "version": "2.0.0",
+  "version": "2.0.15",
   "description": "Drag-and-drop Document Ordering without leaving the Editing surface",
   "keywords": [
     "sanity",
@@ -23,11 +23,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -37,34 +33,34 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@hello-pangea/dnd": "^18.0.1",
+    "@hello-pangea/dnd": "catalog:",
     "@sanity/client": "catalog:",
-    "@sanity/icons": "^3.5.3",
+    "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "lexorank": "^1.0.4",
-    "sanity-plugin-utils": "workspace:*"
+    "lexorank": "catalog:",
+    "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

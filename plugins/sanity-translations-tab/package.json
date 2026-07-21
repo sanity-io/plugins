@@ -1,0 +1,68 @@
+{
+  "name": "sanity-translations-tab",
+  "version": "6.1.15",
+  "description": "This is the base module for implementing common translation vendor tasks from a Studio, such as sending content to be translated in some specific languages, importing content back etc. Not useful on its own, but vendor-specific plugins will use this for its chrome.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-translations-tab#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-translations-tab"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@portabletext/block-tools": "catalog:",
+    "@portabletext/to-html": "catalog:",
+    "@sanity/icons": "catalog:",
+    "@sanity/ui": "catalog:",
+    "@sanity/util": "catalog:",
+    "sanity-naive-html-serializer": "workspace:^"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

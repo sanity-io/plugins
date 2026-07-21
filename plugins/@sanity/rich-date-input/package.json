@@ -1,6 +1,6 @@
 {
   "name": "@sanity/rich-date-input",
-  "version": "4.0.4",
+  "version": "4.1.0",
   "description": "A timezone-aware datetime type and input component for Sanity Studio",
   "keywords": [
     "cms",
@@ -28,11 +28,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -42,20 +38,18 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
+    "@date-fns/tz": "catalog:",
+    "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "@vvo/tzdb": "^6.198.0",
-    "date-fns": "^2.30.0",
-    "date-fns-tz": "^2.0.1"
+    "date-fns": "catalog:"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
@@ -63,12 +57,13 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

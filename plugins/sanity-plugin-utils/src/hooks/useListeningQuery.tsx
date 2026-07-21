@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
 import isEqual from 'react-fast-compare'
-import {Subscription} from 'rxjs'
+import type {Subscription} from 'rxjs'
 import {catchError, distinctUntilChanged} from 'rxjs/operators'
 import {type ListenQueryOptions, type ListenQueryParams, useDocumentStore} from 'sanity'
 
@@ -64,7 +64,7 @@ export function useListeningQuery<V>(
                 return current
               }
 
-              // oxlint-disable-next-line no-unsafe-type-assertion -- listenQuery result is typed by caller
+              // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
               return documents as V
             })
             setLoading(false)
@@ -72,7 +72,7 @@ export function useListeningQuery<V>(
           })
       } catch (err) {
         console.error(err)
-        // oxlint-disable-next-line react-hooks-js/set-state-in-effect -- sync error handling for subscription setup
+        // oxlint-disable-next-line react/react-compiler -- sync error handling for subscription setup
         setLoading(false)
         setError(err)
       }

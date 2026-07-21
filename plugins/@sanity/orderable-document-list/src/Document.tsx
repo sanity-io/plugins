@@ -1,6 +1,8 @@
-import {ChevronDownIcon, ChevronUpIcon, DragHandleIcon} from '@sanity/icons'
+import {ChevronDownIcon} from '@sanity/icons/ChevronDown'
+import {ChevronUpIcon} from '@sanity/icons/ChevronUp'
+import {DragHandleIcon} from '@sanity/icons/DragHandle'
 import {AvatarCounter, Card, Box, Button, Flex, Text, Tooltip} from '@sanity/ui'
-import {useContext, useMemo, type ReactNode} from 'react'
+import {useContext} from 'react'
 import {
   useSchema,
   PreviewCard,
@@ -41,6 +43,7 @@ export function Document({
   const {showIncrements} = useContext(OrderableContext)
   const schema = useSchema()
   const router = usePaneRouter()
+  // oxlint-disable-next-line typescript/no-deprecated -- the replacement, `useDocumentVersions`, would require reimplementing the internal (unexported) `getDocumentVersionInfoFromVersions` util
   const versionsInfo = useDocumentVersionInfo(doc._id)
 
   const {ChildLink, groupIndex, routerPanesState} = router
@@ -49,14 +52,6 @@ export function Document({
   const pressed = currentDoc === doc._id || currentDoc === doc._id.replace(`drafts.`, ``)
   const selected = pressed && routerPanesState.length === groupIndex + 2
   const schemaType = schema.get(doc._type)
-
-  const Link = useMemo(
-    () =>
-      function LinkComponent(linkProps: {children: ReactNode}) {
-        return <ChildLink {...linkProps} childId={doc._id} />
-      },
-    [ChildLink, doc._id],
-  )
 
   if (!schemaType) {
     return null
@@ -73,8 +68,7 @@ export function Document({
   return (
     <PreviewCard
       __unstable_focusRing
-      // @ts-expect-error PreviewCard's polymorphic `as` prop does not accept ChildLink's type.
-      as={Link}
+      as={ChildLink}
       data-as="a"
       data-ui="PaneItem"
       radius={2}
@@ -85,6 +79,7 @@ export function Document({
       tone="inherit"
       width="100%"
       flex={1}
+      childId={doc._id}
     >
       <Flex align="center">
         <Box paddingX={2} style={{flexShrink: 0}}>

@@ -1,0 +1,5 @@
+{
+  "extends": ["@sanity/tsconfig/strictest"],
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "node_modules", "examples"]
+}

@@ -4,7 +4,7 @@ import BezierEasing from 'bezier-easing'
 import deepEqual from 'deep-equal'
 import {rgba} from 'polished'
 import {useEffect, useState} from 'react'
-import {ForceGraph2D} from 'react-force-graph'
+import ForceGraph2D from 'react-force-graph-2d'
 import {useClient, useUserColorManager, type SanityClient, type SanityDocument} from 'sanity'
 import {useRouter} from 'sanity/router'
 import {v4 as uuidv4} from 'uuid'
@@ -339,7 +339,6 @@ export default function GraphView({
                 const y = node.y + (Math.cos(angle) * distance) / globalScale
 
                 ctx.save()
-                // oxlint-disable-next-line react-hooks-js/todo
                 try {
                   ctx.globalAlpha = fadeEasing(
                     1 -

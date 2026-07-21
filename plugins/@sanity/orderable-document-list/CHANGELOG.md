@@ -1,4 +1,125 @@
-<!-- markdownlint-disable --><!-- textlint-disable -->
+# @sanity/orderable-document-list
+
+## 2.0.15
+
+### Patch Changes
+
+- Updated dependencies [[`edb64e9`](https://github.com/sanity-io/plugins/commit/edb64e9d45d1c595ea8b9fdabd789c0bc58e9c48)]:
+  - sanity-plugin-utils@2.0.11
+
+## 2.0.14
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+- Updated dependencies [[`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616)]:
+  - sanity-plugin-utils@2.0.10
+
+## 2.0.13
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+- Updated dependencies [[`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae)]:
+  - sanity-plugin-utils@2.0.9
+
+## 2.0.12
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+- Updated dependencies [[`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95)]:
+  - sanity-plugin-utils@2.0.8
+
+## 2.0.11
+
+### Patch Changes
+
+- [#1555](https://github.com/sanity-io/plugins/pull/1555) [`5ade159`](https://github.com/sanity-io/plugins/commit/5ade159d97951a87867d225b72d6008cdc5e7fd6) Thanks [@stipsan](https://github.com/stipsan)! - Compatibility with `sanity` 6.4.0 typings (no functional changes)
+
+## 2.0.10
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- Updated dependencies [[`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166)]:
+  - sanity-plugin-utils@2.0.7
+
+## 2.0.9
+
+### Patch Changes
+
+- [#1513](https://github.com/sanity-io/plugins/pull/1513) [`ace3d6c`](https://github.com/sanity-io/plugins/commit/ace3d6c7cce18783c1c34ee67e1f0b0d8490687a) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix create intent handling so orderable list items only accept create intents for their own document type
+
+## 2.0.8
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior.
+
+- Updated dependencies [[`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66)]:
+  - sanity-plugin-utils@2.0.6
+
+## 2.0.7
+
+### Patch Changes
+
+- [#1460](https://github.com/sanity-io/plugins/pull/1460) [`f50f060`](https://github.com/sanity-io/plugins/commit/f50f0605968e5cec4f23f5f3455abe5c8ddda23c) Thanks [@stipsan](https://github.com/stipsan)! - Regenerate TypeScript declaration output: `isolatedDeclarations` is no longer used and declarations are now generated with tsgo (`@typescript/native-preview`). Internal build-tooling change only, with no runtime behavior or public API changes.
+
+## 2.0.6
+
+### Patch Changes
+
+- [#1481](https://github.com/sanity-io/plugins/pull/1481) [`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/pkg-utils` to `^10.9.0`, enabling tree-shaking of unused `styled-components` in the published bundle. Tagged template literals are now transpiled to plain call expressions during build, so bundlers can drop styled components this plugin exports but the app doesn't use, reducing bundle size.
+
+- Updated dependencies [[`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a)]:
+  - sanity-plugin-utils@2.0.5
+
+## 2.0.5
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+- Updated dependencies [[`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880)]:
+  - sanity-plugin-utils@2.0.4
+
+## 2.0.4
+
+### Patch Changes
+
+- [#1317](https://github.com/sanity-io/plugins/pull/1317) [`d25a910`](https://github.com/sanity-io/plugins/commit/d25a910f446e3585375cf02d83c97e4fcec609e5) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency lexorank to ^1.0.5
+
+## 2.0.3
+
+### Patch Changes
+
+- [`7a37fd1`](https://github.com/sanity-io/plugins/commit/7a37fd1653681de5f892de2dea29b83e9b119ff1) Thanks [@stipsan](https://github.com/stipsan)! - use `workspace:^` for prod deps
+
+- Updated dependencies [[`7c1a95c`](https://github.com/sanity-io/plugins/commit/7c1a95c2213555c50bca2fde2af3590abc57c444)]:
+  - sanity-plugin-utils@2.0.3
+
+## 2.0.2
+
+### Patch Changes
+
+- [#995](https://github.com/sanity-io/plugins/pull/995) [`657ce09`](https://github.com/sanity-io/plugins/commit/657ce09ba7d6453b771fd60668a409b9a5c0f2fd) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/icons to ^3.7.4
+
+- Updated dependencies [[`c66b926`](https://github.com/sanity-io/plugins/commit/c66b9269394b2ec45c320580a39069e6fd39dd4d)]:
+  - sanity-plugin-utils@2.0.2
+
+## 2.0.1
+
+### Patch Changes
+
+- [#980](https://github.com/sanity-io/plugins/pull/980) [`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/pkg-utils` to pick up a DTS generation bug fix.
+
+- Updated dependencies [[`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c)]:
+  - sanity-plugin-utils@2.0.1
 
 ## 2.0.0
 
@@ -7,6 +128,7 @@
 - [#908](https://github.com/sanity-io/plugins/pull/908) [`96796ed`](https://github.com/sanity-io/plugins/commit/96796ed94ebf9a9d3270464100f4b97dcc9007dc) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Migrate to sanity-io/plugins monorepo
 
   **Breaking Changes:**
+
   - React 19.2+ required
   - Sanity Studio v5+ required
   - ESM-only (CommonJS removed)
@@ -21,11 +143,6 @@
 
 - Updated dependencies [[`cd2bc3c`](https://github.com/sanity-io/plugins/commit/cd2bc3c3e39c3cb357dd456bc205d1d6d57f441a)]:
   - sanity-plugin-utils@2.0.0
-
-# 📓 Changelog
-
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## [1.5.1](https://github.com/sanity-io/orderable-document-list/compare/v1.5.0...v1.5.1) (2026-02-25)
 

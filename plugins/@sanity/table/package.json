@@ -1,0 +1,65 @@
+{
+  "name": "@sanity/table",
+  "version": "3.1.10",
+  "description": "Table schema type and input component for Sanity Studio",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/table#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/table"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/icons": "catalog:",
+    "@sanity/ui": "catalog:",
+    "@sanity/uuid": "catalog:"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

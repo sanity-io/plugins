@@ -1,5 +1,91 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.27
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 5.0.26
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 5.0.25
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 5.0.24
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+## 5.0.23
+
+### Patch Changes
+
+- [#1476](https://github.com/sanity-io/plugins/pull/1476) [`b8bc962`](https://github.com/sanity-io/plugins/commit/b8bc96275b26a3d219a55cd22e3d29b27e331e11) Thanks [@stipsan](https://github.com/stipsan)! - Use the `previewMode` option instead of the deprecated `draftMode` option when resolving preview URLs with `@sanity/preview-url-secret` (no behavior change)
+
+## 5.0.22
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior.
+
+## 5.0.21
+
+### Patch Changes
+
+- [#1480](https://github.com/sanity-io/plugins/pull/1480) [`4c8ee7a`](https://github.com/sanity-io/plugins/commit/4c8ee7a1095c54e9698ab4d19cb922c1fb4c3dd8) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.42.2
+
+## 5.0.20
+
+### Patch Changes
+
+- [#1481](https://github.com/sanity-io/plugins/pull/1481) [`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/pkg-utils` to `^10.9.0`, enabling tree-shaking of unused `styled-components` in the published bundle. Tagged template literals are now transpiled to plain call expressions during build, so bundlers can drop styled components this plugin exports but the app doesn't use, reducing bundle size.
+
+## 5.0.19
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+## 5.0.18
+
+### Patch Changes
+
+- [#1363](https://github.com/sanity-io/plugins/pull/1363) [`f9acf7c`](https://github.com/sanity-io/plugins/commit/f9acf7c0599e63feb30509f7d42ff941a01e2d35) Thanks [@stipsan](https://github.com/stipsan)! - Replace `React.forwardRef` with the React 19 ref-as-prop pattern (internal refactor, no API change)
+
+## 5.0.17
+
+### Patch Changes
+
+- [#1426](https://github.com/sanity-io/plugins/pull/1426) [`f9b7ed3`](https://github.com/sanity-io/plugins/commit/f9b7ed3bb2f2488781fff5a8f7ec32fbcbe72449) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.41.0
+
+- [#1434](https://github.com/sanity-io/plugins/pull/1434) [`a3f4b12`](https://github.com/sanity-io/plugins/commit/a3f4b12bda72238818db068d70ba8f15bc306f79) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^12.42.0
+
+## 5.0.16
+
+### Patch Changes
+
+- [#1203](https://github.com/sanity-io/plugins/pull/1203) [`20c5f35`](https://github.com/sanity-io/plugins/commit/20c5f35c0869a0375e515c53ee17b5160fed685e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency motion to ^12.40.0
+
+## 5.0.15
+
+### Patch Changes
+
+- [#994](https://github.com/sanity-io/plugins/pull/994) [`3694754`](https://github.com/sanity-io/plugins/commit/3694754a3abc1b435356a87e03c322efd3125266) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update dependency @sanity/preview-url-secret to ^4.0.7
+
+## 5.0.14
+
+### Patch Changes
+
+- [#980](https://github.com/sanity-io/plugins/pull/980) [`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/pkg-utils` to pick up a DTS generation bug fix.
+
 ## 5.0.13
 
 ### Patch Changes

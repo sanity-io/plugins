@@ -1,4 +1,4 @@
-import {DragHandleIcon} from '@sanity/icons'
+import {DragHandleIcon} from '@sanity/icons/DragHandle'
 import {Box, Card, type CardTone, Flex, Stack, useTheme} from '@sanity/ui'
 import {getTheme_v2} from '@sanity/ui/theme'
 import {useCallback, useEffect, useMemo, useState} from 'react'

@@ -1,6 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignoreWorkspaces": ["dev/*"],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true,
@@ -11,185 +10,194 @@
     "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
   },
-  "rules": {
-    // dev/* workspaces are ignored, so their catalog entries appear unused
-    "catalog": "warn",
-  },
+  "ignoreDependencies": ["@vanilla-extract/css", "babel-plugin-react-compiler"],
   "workspaces": {
     ".": {
       "entry": ["*.{ts,mts,mjs}"],
       "project": ["*.{ts,mts,mjs}"],
-      "ignoreDependencies": [
-        // TypeScript native compiler, used as a dev tool not imported
-        "@typescript/native-preview",
-      ],
       "ignoreBinaries": [
-        // Provided by sanity package in dev/test-studio, which is an ignored workspace
-        "sanity",
         // Installed externally (not an npm package); used in lint:workflows script
         "zizmor",
       ],
     },
+    "dev/test-studio": {
+      "entry": ["migrations/**/*.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
     "turbo/generators": {
       "project": ["src/**/*.ts"],
     },
-    "packages/@repo/tsconfig": {},
-    "packages/@repo/package.config": {
+    "packages/@sanity/plugin-kit": {
       "project": ["src/**/*.ts"],
+      "ignoreDependencies": [
+        // Spawned as a CLI (`yalc push`) by the link-watch command, never imported
+        "yalc",
+        // Resolved at runtime by oxlint/pkg-utils when verifying generated plugin fixtures in tests
+        "react",
+        "react-dom",
+        "sanity",
+        "styled-components",
+        "@types/react",
+      ],
     },
     "plugins/@sanity/assist": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/code-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/color-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/debug-preview-url-secret-plugin": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/document-internationalization": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/rich-date-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/studio-secrets": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/vercel-protection-bypass": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/language-filter": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-aprimo": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-asset-source-unsplash": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-bynder-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-graph-view": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-iframe-pane": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-internationalized-array": {
-      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-translations-tab": {
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-markdown": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
+    },
+    "plugins/sanity-plugin-media": {
+      "entry": ["scripts/migrate-to-localized-fields.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-mux-input": {
+      "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-workflow": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-workspace-home": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/sfcc": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/@sanity/orderable-document-list": {
-      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-transifex": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/@sanity/block-insert-picker": {
       "project": ["src/**/*.{ts,tsx}"],
     },
     // add new plugin workspaces here
-    "plugins/sanity-plugin-utils": {
-      "entry": ["package.config.ts"],
+    "plugins/@sanity/embeddings-index-ui": {
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
+    },
+
+    "plugins/@sanity/form-toolkit": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/google-maps-input": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/cross-dataset-duplicator": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/sanity-plugin-studio-smartling": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/hierarchical-document-list": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-shopify-assets": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/@sanity/personalization-plugin": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-cloudinary": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/@sanity/sanity-plugin-async-list": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/table": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/sanity-plugin-dashboard-widget-vercel": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/sanity-plugin-dashboard-widget-netlify": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/sanity-plugin-dashboard-widget-document-list": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/sanity-plugin-hotspot-array": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/@sanity/dashboard": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+
+    "plugins/sanity-plugin-documents-pane": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-plugin-utils": {
+      "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-google-translate": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
     "plugins/sanity-plugin-latex-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/@sanity/debug-live-sync-tags": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        // Used by @sanity/pkg-utils babel transform, not directly imported
-        "babel-plugin-styled-components",
-      ],
     },
 
     "plugins/@sanity/presets": {
-      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/sanity-naive-html-serializer": {
       "project": ["src/**/*.{ts,tsx}"],
     },
   },

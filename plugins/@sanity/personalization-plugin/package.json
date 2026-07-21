@@ -1,0 +1,71 @@
+{
+  "name": "@sanity/personalization-plugin",
+  "version": "3.0.9",
+  "description": "Plugin to help with personalization, a/b testing when using Sanity",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/personalization-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/personalization-plugin"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./growthbook": "./src/growthbook/index.ts",
+    "./launchDarkly": "./src/launchDarkly/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./growthbook": "./dist/growthbook/index.js",
+      "./launchDarkly": "./dist/launchDarkly/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/icons": "catalog:",
+    "@sanity/studio-secrets": "workspace:^",
+    "@sanity/ui": "catalog:",
+    "@sanity/uuid": "catalog:",
+    "fast-deep-equal": "^3.1.3",
+    "react-icons": "catalog:",
+    "suspend-react": "catalog:"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

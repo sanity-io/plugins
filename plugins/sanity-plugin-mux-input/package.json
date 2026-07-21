@@ -1,0 +1,87 @@
+{
+  "name": "sanity-plugin-mux-input",
+  "version": "5.0.4",
+  "description": "An input component that integrates Sanity Studio with Mux video encoding/hosting service.",
+  "keywords": [
+    "input",
+    "media",
+    "mux",
+    "plugin",
+    "sanity",
+    "sanity-plugin",
+    "video"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-mux-input#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-mux-input"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/_exports/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@mux/mux-player": "^3.13.0",
+    "@mux/mux-player-react": "^3.13.0",
+    "@mux/upchunk": "^3.5.0",
+    "@sanity/icons": "catalog:",
+    "@sanity/ui": "catalog:",
+    "@sanity/uuid": "catalog:",
+    "iso-639-1": "^3.1.6",
+    "jsonwebtoken-esm": "^1.0.5",
+    "lodash": "^4.18.1",
+    "react-is": "catalog:",
+    "react-rx": "catalog:",
+    "rxjs": "catalog:",
+    "scroll-into-view-if-needed": "^3.1.0",
+    "suspend-react": "catalog:",
+    "swr": "^2.4.2",
+    "type-fest": "^4.41.0",
+    "use-device-pixel-ratio": "^1.1.2",
+    "use-error-boundary": "^2.0.6"
+  },
+  "devDependencies": {
+    "@sanity/client": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@types/lodash": "^4.17.24",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-is": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

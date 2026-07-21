@@ -1,6 +1,6 @@
 {
   "name": "@sanity/debug-preview-url-secret-plugin",
-  "version": "2.0.9",
+  "version": "2.0.19",
   "keywords": [
     "sanity",
     "sanity-plugin",
@@ -18,17 +18,12 @@
     "directory": "plugins/@sanity/debug-preview-url-secret-plugin"
   },
   "files": [
-    "CHANGELOG.md",
     "dist"
   ],
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "development": "./src/index.ts",
-      "source": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -38,24 +33,24 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@sanity/icons": "^3.7.4",
-    "@sanity/preview-url-secret": "^4.0.4"
+    "@sanity/icons": "catalog:",
+    "@sanity/preview-url-secret": "catalog:"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/node": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"
+    "react": "catalog:peer",
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

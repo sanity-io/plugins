@@ -1,4 +1,7 @@
-import {CopyIcon, LaunchIcon, MobileDeviceIcon, RefreshIcon} from '@sanity/icons'
+import {CopyIcon} from '@sanity/icons/Copy'
+import {LaunchIcon} from '@sanity/icons/Launch'
+import {MobileDeviceIcon} from '@sanity/icons/MobileDevice'
+import {RefreshIcon} from '@sanity/icons/Refresh'
 import {Box, Button, Card, Flex, Text, Tooltip, useToast} from '@sanity/ui'
 import {useCallback, useRef, useState} from 'react'
 
@@ -38,6 +41,7 @@ export function Toolbar(props: ToolbarProps) {
   return (
     <>
       <textarea
+        aria-hidden
         style={{position: 'absolute', pointerEvents: 'none', opacity: 0}}
         ref={input}
         value={validUrl ? url.toString() : ''}

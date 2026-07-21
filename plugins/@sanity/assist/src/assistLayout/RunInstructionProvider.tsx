@@ -1,4 +1,4 @@
-import {PlayIcon} from '@sanity/icons'
+import {PlayIcon} from '@sanity/icons/Play'
 import {Button, Dialog, Flex, Stack, Text, TextArea, Tooltip} from '@sanity/ui'
 import {
   createContext,
@@ -175,7 +175,7 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
   )
 
   const contextValue: RunInstructionContextValue = useMemo(
-    // oxlint-disable-next-line react-hooks-js/memo-dependencies
+    // oxlint-disable-next-line react/react-compiler
     () => ({runInstruction, getUserInput, instructionLoading: loading}),
     // oxlint-disable-next-line react-hooks/exhaustive-deps
     [runInstruction, loading],

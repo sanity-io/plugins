@@ -1,5 +1,93 @@
 # sanity-plugin-internationalized-array
 
+## 5.1.22
+
+## 5.1.21
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 5.1.20
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 5.1.19
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 5.1.18
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+## 5.1.17
+
+## 5.1.16
+
+## 5.1.15
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior.
+
+## 5.1.14
+
+### Patch Changes
+
+- [#1460](https://github.com/sanity-io/plugins/pull/1460) [`f50f060`](https://github.com/sanity-io/plugins/commit/f50f0605968e5cec4f23f5f3455abe5c8ddda23c) Thanks [@stipsan](https://github.com/stipsan)! - Regenerate TypeScript declaration output: `isolatedDeclarations` is no longer used and declarations are now generated with tsgo (`@typescript/native-preview`). Internal build-tooling change only, with no runtime behavior or public API changes.
+
+## 5.1.13
+
+## 5.1.12
+
+## 5.1.11
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+## 5.1.10
+
+## 5.1.9
+
+### Patch Changes
+
+- [#1083](https://github.com/sanity-io/plugins/pull/1083) [`7e65764`](https://github.com/sanity-io/plugins/commit/7e65764c026879d6156e49d8380e3bd6d85f0697) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): Update lodash monorepo to ^4.18.1
+
+## 5.1.8
+
+### Patch Changes
+
+- [`68fb45a`](https://github.com/sanity-io/plugins/commit/68fb45ae05271006813424506fb995cc84f79885) Thanks [@stipsan](https://github.com/stipsan)! - Use concistent peer dep definition
+
+## 5.1.7
+
+### Patch Changes
+
+- [#984](https://github.com/sanity-io/plugins/pull/984) [`d723da8`](https://github.com/sanity-io/plugins/commit/d723da8cfe195b5fda540b17c708c2eeca1a07ee) Thanks [@stipsan](https://github.com/stipsan)! - Bump `@sanity/assist` peer range
+
+## 5.1.6
+
+### Patch Changes
+
+- [#980](https://github.com/sanity-io/plugins/pull/980) [`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/pkg-utils` to pick up a DTS generation bug fix.
+
+## 5.1.5
+
+### Patch Changes
+
+- [#965](https://github.com/sanity-io/plugins/pull/965) [`064dc6b`](https://github.com/sanity-io/plugins/commit/064dc6b75c755dfd35f5be2441ed29cf295acfb8) Thanks [@SamHemingway](https://github.com/SamHemingway)! - Fix deleted documents being recreated as empty drafts when `defaultLanguages` is configured. The auto-add effect now only patches documents that exist in the dataset (have a `_rev`) and skips documents the pane reports as deleted. This also means new documents no longer get a draft created just by opening the form — default languages are added after the user's first edit.
+
+- [#964](https://github.com/sanity-io/plugins/pull/964) [`4226408`](https://github.com/sanity-io/plugins/commit/4226408594d2717cf2503866f5d5216991701d38) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/util` dependency to v6, in line with Sanity Studio v6
+
+## 5.1.4
+
 ## 5.1.3
 
 ### Patch Changes
@@ -76,6 +164,7 @@
   ## How to upgrade
 
   Full details in [README Migrate from v4 to v5](https://github.com/sanity-io/plugins/blob/main/plugins/sanity-plugin-internationalized-array/README.md#migrate-from-v4-to-v5) section of the README.
+
   1. Update GROQ queries from `_key == "en"` to `language == "en"  || _key == "en"` until the migration is completed.
   2. Run the new bundled migration helper to update existing documents. Create a migration file in your project that imports from `sanity-plugin-internationalized-array/migrations`, configures your `documentTypes`, and exports the migration:
 
@@ -190,6 +279,7 @@
 - [#493](https://github.com/sanity-io/plugins/pull/493) [`4d9e6bb`](https://github.com/sanity-io/plugins/commit/4d9e6bb044c80db8cec386e36fcddab94d5102f5) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Port sanity-plugin-internationalized-array to the Sanity plugins monorepo
 
   This major release includes several breaking changes as part of the migration to the monorepo:
+
   - **React Compiler enabled**: The plugin is now optimized with React Compiler for better performance
   - **ESM-only**: CommonJS is no longer supported (removed dual module format)
   - **Sanity Studio v5 required**: The plugin now requires Sanity Studio v5 as the baseline

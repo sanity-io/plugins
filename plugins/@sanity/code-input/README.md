@@ -52,6 +52,7 @@ defineType({
 - `language` - Default language for this code field.
 - `languageAlternatives` - Array of languages that should be available (se its format in the example below)
 - `withFilename` - Boolean option to display input field for filename
+- `disableFullscreen` - Boolean option to hide the "Expand editor" button (expanding is enabled by default)
 
 ```js
 //...fields,
@@ -67,9 +68,14 @@ defineField({
       {title: 'CSS', value: 'css'},
     ],
     withFilename: true,
+    disableFullscreen: false,
   },
 })
 ```
+
+The code editor can be expanded to fill the document pane using the "Expand
+editor" button in the top-right corner of the editor (press `Escape` to
+collapse). Set `disableFullscreen: true` to hide this button.
 
 ![Code input with all options in dark mode](assets/all-options.png)
 
@@ -207,7 +213,6 @@ As outlined above, the actual code is stored in a `code` property, so if your sc
 Here's an example using [react-refractor](https://github.com/rexxars/react-refractor):
 
 ```jsx
-import React from 'react'
 import Refractor from 'react-refractor'
 import js from 'refractor/lang/javascript'
 

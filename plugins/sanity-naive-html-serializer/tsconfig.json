@@ -1,0 +1,10 @@
+{
+  "extends": ["@sanity/tsconfig/strictest"],
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "noPropertyAccessFromIndexSignature": false,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  }
+}

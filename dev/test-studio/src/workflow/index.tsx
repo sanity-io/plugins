@@ -1,4 +1,5 @@
-import {PackageIcon, DocumentIcon} from '@sanity/icons'
+import {DocumentIcon} from '@sanity/icons/Document'
+import {PackageIcon} from '@sanity/icons/Package'
 import {definePlugin, defineType} from 'sanity'
 import {workflow} from 'sanity-plugin-workflow'
 

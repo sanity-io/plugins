@@ -1,0 +1,220 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`plugin-kit verify-package in ok package 1`] = `
+"[success] No outstanding package validation issues detected.
+
+Suggested next steps:
+  - Use plugin-kit to build and develop the plugin according to https://github.com/sanity-io/plugins/tree/main/packages/@sanity/plugin-kit#readme.
+  - Build the plugin and fix any compilation errors
+  - Test the plugin using the link-watch command"
+`;
+
+exports[`plugin-kit verify-package in package with all checks failing 1`] = `
+"[error] 
+package.json must set "type": "module" — plugins built with @sanity/plugin-kit are ESM-only.
+Found: no "type" field (defaults to "commonjs")
+
+Please add the following to package.json:
+
+"type": "module"
+[error] 
+Invalid package.json: "name" should be prefixed with "sanity-plugin-" (or scoped - @your-company/plugin-name)
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "packageName": false
+   }
+}
+----------------------------------------------------------
+[error] 
+package.json ships CommonJS (CJS) output, but Sanity plugins target Sanity Studio v5+, which is pure ESM.
+
+Remove the following so the package stays ESM-only:
+- the top-level "main" field ("./dist/index.cjs")
+- the top-level "module" field ("./dist/index.js")
+- a "require" export condition at exports["."]
+
+Supporting CJS is not worth it:
+- It can have unintended side-effects.
+- The Node.js versions plugin-kit supports (>=20.19 <22 || >=22.12) fully support require(esm), so a
+  consumer that still uses require() loads the ESM build directly — which is far more predictable.
+- Publishing a single format guarantees two copies of the plugin's code (ESM + CJS) can't both end up
+  in the module tree, bloating bundles and slowing down builds.
+
+Rely on "exports" together with "type": "module", and drop "main", "module" and any "require" conditions.
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "esmOnly": false
+   }
+}
+----------------------------------------------------------
+[error] 
+package.json does not list @sanity/pkg-utils as a devDependency.
+@sanity/pkg-utils replaced parcel as the recommended build tool in @sanity/plugin-kit 2.0.0
+
+Please add it by running 'npm install --save-dev @sanity/pkg-utils'.
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "pkg-utils": false
+   }
+}
+----------------------------------------------------------
+[error] 
+Expected one of [src/index.js, src/index.ts] to exist.
+
+@sanity/pkg-utils expects a non-jsx file to be the source entry-point for the plugin.
+If you currently have JSX in your index file, extract it into a separate file and import it.
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "srcIndex": false
+   }
+}
+----------------------------------------------------------
+[error] 
+package.json "files" must not include "src".
+
+Plugins built with @sanity/plugin-kit publish the compiled output in "dist".
+Shipping the "src" directory bloats the published package and can cause bundlers that resolve the
+"source" export condition to import raw, uncompiled TypeScript.
+
+Please remove "src" from the "files" array in package.json.
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "bannedFiles": false
+   }
+}
+----------------------------------------------------------
+[error] 
+The following script commands did not contain expected defaults: build, watch, link-watch, prepublishOnly
+
+This checks for that the commands-strings includes these terms.
+
+Please add the following to your package.json "scripts":
+
+"build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+"watch": "pkg-utils watch --strict",
+"link-watch": "plugin-kit link-watch",
+"prepublishOnly": "npm run build"
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "scripts": false
+   }
+}
+----------------------------------------------------------
+[error] 
+Expected package.json to contain engines.node: ">=20.19 <22 || >=22.12" to match @sanity/pkg-utils,
+but it was: undefined
+
+Please add the following to package.json:
+
+"engines": {
+  "node": ">=20.19 <22 || >=22.12"
+}
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "nodeEngine": false
+   }
+}
+----------------------------------------------------------
+[error] 
+Found legacy prettier configuration: [.prettierrc, package.json ("prettier" key)].
+
+plugin-kit has replaced prettier with oxfmt. Remove the prettier config (custom options can
+be migrated with \`npx oxfmt --migrate=prettier\`), drop the prettier, prettier-plugin-packagejson
+and eslint-plugin-prettier devDependencies, and format with oxfmt instead:
+
+export {default} from '@sanity/plugin-kit/oxfmt'
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "oxfmt": false
+   }
+}
+----------------------------------------------------------
+[error] 
+Found legacy eslint configuration: [.eslintrc, .eslintrc.json, .eslintignore].
+
+plugin-kit has replaced eslint with oxlint. Remove the eslint config files and the eslint
+devDependencies (eslint, eslint-config-*, eslint-plugin-*, @typescript-eslint/*), and lint
+with oxlint instead, via an oxlint.config.ts containing:
+
+export {default} from '@sanity/plugin-kit/oxlint'
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "oxlint": false
+   }
+}
+----------------------------------------------------------
+[error] 
+Recommended tsconfig.json compilerOptions missing:
+
+The following fields had unexpected values: [target, jsx, module, rootDir, outDir, noEmit]
+Expected to find these values:
+"target": "esnext",
+"jsx": "preserve",
+"module": "preserve",
+"rootDir": ".",
+"outDir": "dist",
+"noEmit": true,
+
+Please update your tsconfig.json accordingly.
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "tsconfig": false
+   }
+}
+----------------------------------------------------------
+[error] 
+Found babel-config file: [babel.config.js]. When using default @sanity/plugin-kit build command,
+this is probably not needed.
+
+Delete the file, or disable this check.
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "babelConfig": false
+   }
+}
+----------------------------------------------------------
+[error] 
+package.json contains deprecated dependencies that should be removed:
+- parcel
+
+To skip this validation add the following to your package.json:
+"sanityPlugin": {
+   "verifyPackage": {
+      "deprecatedDependencies": false
+   }
+}
+----------------------------------------------------------
+[error] Detected validation issues!
+Fix the issues starting from the top, or disable any checks you deem unnecessary.
+
+These issues assume the package uses @sanity/plugin-kit defaults for development and building.
+Refer to https://github.com/sanity-io/plugins/tree/main/packages/@sanity/plugin-kit#readme for configuration options.
+
+More information is available here:
+- Reference documentation: https://www.sanity.io/docs/reference
+
+To fail-fast on first detected issue run:
+npx @sanity/plugin-kit verify-package --single"
+`;

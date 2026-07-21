@@ -1,5 +1,53 @@
 # @sanity/presets
 
+## 1.0.5
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 1.0.4
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 1.0.3
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 1.0.2
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+## 1.0.1
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior.
+
+## 1.0.0
+
+### Major Changes
+
+- [#1390](https://github.com/sanity-io/plugins/pull/1390) [`747c44e`](https://github.com/sanity-io/plugins/commit/747c44ea2b75ed57f2b0c0c80139bc300621f0e7) Thanks [@jordanl17](https://github.com/jordanl17)! - Rework the README around the recommended registry-based setup: add a from-scratch getting-started walkthrough, document where to create the registry to avoid import cycles, explain inline vs named type usage, and correct the documented Image and SEO field behaviour
+
+## 0.5.2
+
+### Patch Changes
+
+- [#1304](https://github.com/sanity-io/plugins/pull/1304) [`5d2195a`](https://github.com/sanity-io/plugins/commit/5d2195a8b56b1907391a6bfb9cff9ca5448bc9dc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): Update dependency @sanity/uuid to ^3.0.3
+
+## 0.5.1
+
+### Patch Changes
+
+- [#980](https://github.com/sanity-io/plugins/pull/980) [`98d148e`](https://github.com/sanity-io/plugins/commit/98d148e00ef679b422e1effe7fc53dfce9cb046c) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/pkg-utils` to pick up a DTS generation bug fix.
+
 ## 0.5.0
 
 ### Minor Changes
@@ -63,6 +111,7 @@
 - [#828](https://github.com/sanity-io/plugins/pull/828) [`6de1330`](https://github.com/sanity-io/plugins/commit/6de13306c0b3916154299fdbbdae70c440d232a8) Thanks [@juice49](https://github.com/juice49)! - Replace plugin-based API with a registry-based API. `createPresetsRegistry()` is the new entry point — it returns `define<Type>` functions that produce schema types directly, added to `schema.types` instead of `plugins`.
 
   Key changes:
+
   - **Registry-level configuration.** Configure `link.internalTypes` once and it cascades to every preset that composes a link (CTA, rich text).
   - **User-defined type names.** All `name` values are provided at the call site.
   - **Inline composition.** Composed presets (e.g. the link inside a CTA) are inlined as anonymous object fields via `registry.getPreset()`, replacing the previous `composes` mechanism.
@@ -77,6 +126,7 @@
   stable, but may make adjustments to address feedback.
 
   The following presets are available:
+
   - page
   - link
   - cta
@@ -85,6 +135,7 @@
   - richText
 
   Since the last changelog entry:
+
   - The API is now based on inline type factories, rather than composing
     global types based on their name.
   - `defineRichText` has been added to create Portable Text fields that

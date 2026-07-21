@@ -1,0 +1,131 @@
+name: Changeset PR npm diff links
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+concurrency:
+  group: changeset-pr-npmdiff-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  comment:
+    if: >
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'changeset-release/') &&
+      startsWith(github.event.pull_request.title, 'Version Packages')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post or update npmdiff comment
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const COMMENT_MARKER = '<!-- changeset-pr-npmdiff-links -->'
+            const PACKAGE_JSON_PATTERN =
+              /^(?:plugins\/(?:@sanity\/[^/]+|sanity-plugin-[^/]+)|packages\/@sanity\/plugin-kit)\/package\.json$/
+
+            const {owner, repo} = context.repo
+            const pr = context.payload.pull_request
+
+            const changedFiles = await github.paginate(github.rest.pulls.listFiles, {
+              owner,
+              repo,
+              pull_number: pr.number,
+              per_page: 100,
+            })
+
+            async function getPackageJson(path, ref) {
+              const {data} = await github.rest.repos.getContent({
+                owner,
+                repo,
+                path,
+                ref,
+              })
+
+              if (!('content' in data)) return null
+
+              return JSON.parse(Buffer.from(data.content, data.encoding).toString('utf8'))
+            }
+
+            const packageDiffs = []
+
+            for (const file of changedFiles) {
+              if (!PACKAGE_JSON_PATTERN.test(file.filename) || file.status === 'removed') {
+                continue
+              }
+
+              try {
+                const [basePkg, headPkg] = await Promise.all([
+                  getPackageJson(file.filename, pr.base.sha),
+                  getPackageJson(file.filename, pr.head.sha),
+                ])
+
+                if (!basePkg || !headPkg) continue
+                if (headPkg.private === true) continue
+                if (!basePkg.version || !headPkg.version) continue
+                if (basePkg.version === headPkg.version) continue
+                if (!headPkg.name) continue
+
+                packageDiffs.push({
+                  name: headPkg.name,
+                  fromVersion: basePkg.version,
+                  toVersion: headPkg.version,
+                  url: `https://npmdiff.dev/${encodeURIComponent(headPkg.name)}/${encodeURIComponent(basePkg.version)}/${encodeURIComponent(headPkg.version)}`,
+                })
+              } catch (error) {
+                console.warn(`Failed to process ${file.filename}:`, error.message)
+              }
+            }
+
+            packageDiffs.sort((a, b) => a.name.localeCompare(b.name))
+
+            const body = packageDiffs.length
+              ? [
+                  '## Package diff links for this Changesets PR',
+                  '',
+                  'These links start working after this PR is merged and the release is published to npm, and can be used to verify that published packages did not include unexpected changes:',
+                  '',
+                  ...packageDiffs.map(
+                    (pkg) =>
+                      `- \`${pkg.name}\` (${pkg.fromVersion} → ${pkg.toVersion}): [npmdiff.dev](${pkg.url})`,
+                  ),
+                  '',
+                  COMMENT_MARKER,
+                ].join('\n')
+              : [
+                  '## Package diff links for this Changesets PR',
+                  '',
+                  'No published package version changes were detected in this PR.',
+                  '',
+                  COMMENT_MARKER,
+                ].join('\n')
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number: pr.number,
+              per_page: 100,
+            })
+
+            const existingComment = comments.find((comment) => comment.body.includes(COMMENT_MARKER))
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existingComment.id,
+                body,
+              })
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pr.number,
+                body,
+              })
+            }

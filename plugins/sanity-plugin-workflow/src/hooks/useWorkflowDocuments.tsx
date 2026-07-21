@@ -65,7 +65,7 @@ export function useWorkflowDocuments(schemaTypes: string[]): WorkflowDocuments {
   useEffect(() => {
     if (data) {
       // Fix this later
-      // oxlint-disable-next-line react-hooks-js/set-state-in-effect
+      // oxlint-disable-next-line react/react-compiler
       setLocalDocuments(data)
     }
   }, [data])

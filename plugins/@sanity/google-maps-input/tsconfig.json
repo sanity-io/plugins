@@ -1,0 +1,8 @@
+{
+  "extends": ["@sanity/tsconfig/strictest"],
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "types": ["google.maps"]
+  }
+}

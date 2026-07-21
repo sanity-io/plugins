@@ -1,0 +1,70 @@
+{
+  "name": "sanity-plugin-dashboard-widget-document-list",
+  "version": "3.0.13",
+  "description": "Dashboard widget for the Sanity Content Studio which displays a list of documents.",
+  "keywords": [
+    "dashboard",
+    "documents",
+    "part",
+    "plugin",
+    "sanity",
+    "widget"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-dashboard-widget-document-list#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/sanity-plugin-dashboard-widget-document-list"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@sanity/ui": "catalog:",
+    "lodash-es": "catalog:",
+    "rxjs": "catalog:"
+  },
+  "devDependencies": {
+    "@sanity/dashboard": "workspace:*",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@types/lodash-es": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "@sanity/dashboard": "workspace:^",
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}
