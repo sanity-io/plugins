@@ -11,12 +11,13 @@
  * `prop-types` have been removed, and deprecated `keyCode` checks replaced with
  * `event.key`.
  */
-import {Component} from 'react'
-import type {
-  ChangeEvent,
-  CSSProperties,
-  KeyboardEvent as ReactKeyboardEvent,
-  ReactElement,
+import {
+  Component,
+  createRef,
+  type ChangeEvent,
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactElement,
 } from 'react'
 
 import type {EditableInputStyles} from './types'
@@ -51,7 +52,8 @@ interface EditableInputState {
 
 export class EditableInput extends Component<EditableInputProps, EditableInputState> {
   private readonly inputId: string
-  private input: HTMLInputElement | null = null
+  private inputRef = createRef<HTMLInputElement | null>()
+  private abortControllerRef = createRef<AbortController | null>()
 
   constructor(props: EditableInputProps) {
     super(props)
@@ -66,7 +68,7 @@ export class EditableInput extends Component<EditableInputProps, EditableInputSt
       (prevProps.value !== this.props.value || prevState.value !== this.state.value)
     ) {
       const nextValue = String(this.props.value ?? '').toUpperCase()
-      const isFocused = this.input === document.activeElement
+      const isFocused = this.inputRef.current === document.activeElement
       // Sync the controlled value into local state, but only when the input is
       // not focused so we don't clobber what the user is typing. This needs a
       // post-update `activeElement` check that `getDerivedStateFromProps` can't do.
@@ -80,11 +82,7 @@ export class EditableInput extends Component<EditableInputProps, EditableInputSt
   }
 
   override componentWillUnmount(): void {
-    this.unbindEventListeners()
-  }
-
-  private readonly setInputRef = (input: HTMLInputElement | null): void => {
-    this.input = input
+    this.abortControllerRef.current?.abort()
   }
 
   private readonly getValueObjectWithLabel = (value: string | number): Record<string, string> => {
@@ -139,17 +137,17 @@ export class EditableInput extends Component<EditableInputProps, EditableInputSt
     }
     event.preventDefault()
     this.handleDrag(event.nativeEvent)
-    window.addEventListener('mousemove', this.handleDrag)
-    window.addEventListener('mouseup', this.handleMouseUp)
+    if (this.abortControllerRef.current) {
+      this.abortControllerRef.current.abort()
+    }
+    this.abortControllerRef.current = new AbortController()
+    const {signal} = this.abortControllerRef.current
+    window.addEventListener('mousemove', this.handleDrag, {signal})
+    window.addEventListener('mouseup', this.handleMouseUp, {signal})
   }
 
   private readonly handleMouseUp = (): void => {
-    this.unbindEventListeners()
-  }
-
-  private readonly unbindEventListeners = (): void => {
-    window.removeEventListener('mousemove', this.handleDrag)
-    window.removeEventListener('mouseup', this.handleMouseUp)
+    this.abortControllerRef.current?.abort()
   }
 
   override render(): ReactElement {
@@ -166,7 +164,7 @@ export class EditableInput extends Component<EditableInputProps, EditableInputSt
         <input
           id={this.inputId}
           style={inputStyle}
-          ref={this.setInputRef}
+          ref={this.inputRef}
           value={this.state.value}
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
