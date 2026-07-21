@@ -1,4 +1,6 @@
-import {ChevronDownIcon, ChevronUpIcon, DragHandleIcon} from '@sanity/icons'
+import {ChevronDownIcon} from '@sanity/icons/ChevronDown'
+import {ChevronUpIcon} from '@sanity/icons/ChevronUp'
+import {DragHandleIcon} from '@sanity/icons/DragHandle'
 import {AvatarCounter, Card, Box, Button, Flex, Text, Tooltip} from '@sanity/ui'
 import {useContext} from 'react'
 import {
@@ -41,6 +43,7 @@ export function Document({
   const {showIncrements} = useContext(OrderableContext)
   const schema = useSchema()
   const router = usePaneRouter()
+  // oxlint-disable-next-line typescript/no-deprecated -- the replacement, `useDocumentVersions`, would require reimplementing the internal (unexported) `getDocumentVersionInfoFromVersions` util
   const versionsInfo = useDocumentVersionInfo(doc._id)
 
   const {ChildLink, groupIndex, routerPanesState} = router
@@ -65,7 +68,6 @@ export function Document({
   return (
     <PreviewCard
       __unstable_focusRing
-      // @ts-expect-error PreviewCard's polymorphic `as` prop does not accept ChildLink's type.
       as={ChildLink}
       data-as="a"
       data-ui="PaneItem"

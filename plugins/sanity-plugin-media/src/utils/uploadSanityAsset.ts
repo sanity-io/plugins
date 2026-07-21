@@ -66,7 +66,7 @@ const uploadSanityAsset$ = (
         return throwError({
           message: 'Asset already exists',
           statusCode: 409,
-        } as HttpError)
+        } satisfies HttpError)
       }
 
       return of(null)

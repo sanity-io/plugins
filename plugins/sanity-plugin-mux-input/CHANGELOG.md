@@ -1,5 +1,111 @@
 # sanity-plugin-mux-input
 
+## 5.0.4
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 5.0.3
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 5.0.2
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 5.0.1
+
+### Patch Changes
+
+- [#1562](https://github.com/sanity-io/plugins/pull/1562) [`aa53df6`](https://github.com/sanity-io/plugins/commit/aa53df60e10f50db8d1a3a5f12ebb5b2ba8e8799) Thanks [@stipsan](https://github.com/stipsan)! - Align the `styled-components` peer dependency range with the shared `peer` catalog (`^6.1`, the range Sanity Studio v5+ already requires)
+
+## 5.0.0
+
+### Major Changes
+
+- [#1560](https://github.com/sanity-io/plugins/pull/1560) [`c270307`](https://github.com/sanity-io/plugins/commit/c270307ace6fa6fd0bb615aa68352ed6fd3d7a52) Thanks [@stipsan](https://github.com/stipsan)! - Enable React Compiler
+
+  The package is now built with React Compiler targeting React 19, so published components are memoized automatically. As a result the `react` peer dependency is tightened from `^18.3 || ^19` to `^19.2`, since the compiled output relies on `react/compiler-runtime`. In practice this doesn't drop any supported setup: the `sanity` peer dependency (`^5 || ^6.0.0-0`) already requires React 19.2.
+
+## 4.1.9
+
+### Patch Changes
+
+- [#1555](https://github.com/sanity-io/plugins/pull/1555) [`5ade159`](https://github.com/sanity-io/plugins/commit/5ade159d97951a87867d225b72d6008cdc5e7fd6) Thanks [@stipsan](https://github.com/stipsan)! - Render document previews in the video references list with `IntentLink` passed directly to `PreviewCard`'s `as` prop, instead of recreating a wrapper link component on every render. This preserves the card's styling and focus ring on the rendered link and avoids unnecessary remounts.
+
+## 4.1.8
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1541](https://github.com/sanity-io/plugins/pull/1541) [`9fd850d`](https://github.com/sanity-io/plugins/commit/9fd850d93e55a31691d10c8f2dc22619edd90cb2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency iso-639-1 to ^3.1.6
+
+## 4.1.7
+
+### Patch Changes
+
+- [#1493](https://github.com/sanity-io/plugins/pull/1493) [`1a6465d`](https://github.com/sanity-io/plugins/commit/1a6465d2548e8fe8b034f58b89a905a6ad74bd3a) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-rx to ^4.2.3
+
+## 4.1.6
+
+### Patch Changes
+
+- [#1476](https://github.com/sanity-io/plugins/pull/1476) [`b8bc962`](https://github.com/sanity-io/plugins/commit/b8bc96275b26a3d219a55cd22e3d29b27e331e11) Thanks [@stipsan](https://github.com/stipsan)! - Remove redundant type assertions in the uploader components (internal refactor, no API change)
+
+## 4.1.5
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior. The `process.env.PKG_VERSION` constant is still replaced with the package version at build time.
+
+## 4.1.4
+
+### Patch Changes
+
+- [#1460](https://github.com/sanity-io/plugins/pull/1460) [`f50f060`](https://github.com/sanity-io/plugins/commit/f50f0605968e5cec4f23f5f3455abe5c8ddda23c) Thanks [@stipsan](https://github.com/stipsan)! - Regenerate TypeScript declaration output: `isolatedDeclarations` is no longer used and declarations are now generated with tsgo (`@typescript/native-preview`). Internal build-tooling change only, with no runtime behavior or public API changes.
+
+## 4.1.3
+
+### Patch Changes
+
+- [#1481](https://github.com/sanity-io/plugins/pull/1481) [`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/pkg-utils` to `^10.9.0`, enabling tree-shaking of unused `styled-components` in the published bundle. Tagged template literals are now transpiled to plain call expressions during build, so bundlers can drop styled components this plugin exports but the app doesn't use, reducing bundle size.
+
+## 4.1.2
+
+### Patch Changes
+
+- [#1474](https://github.com/sanity-io/plugins/pull/1474) [`555ef6e`](https://github.com/sanity-io/plugins/commit/555ef6e1de0a3ae72bc584f5755c0bd325db1303) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency typescript to v6
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+## 4.1.1
+
+### Patch Changes
+
+- [#1363](https://github.com/sanity-io/plugins/pull/1363) [`f9acf7c`](https://github.com/sanity-io/plugins/commit/f9acf7c0599e63feb30509f7d42ff941a01e2d35) Thanks [@stipsan](https://github.com/stipsan)! - Replace `React.forwardRef` with the React 19 ref-as-prop pattern (internal refactor, no API change)
+
+## 4.1.0
+
+### Minor Changes
+
+- [#1107](https://github.com/sanity-io/plugins/pull/1107) [`36b4d13`](https://github.com/sanity-io/plugins/commit/36b4d13477f6842aaaef2f6b58b70b339ef68bca) Thanks [@y-dpi](https://github.com/y-dpi), [@R-Delfino95](https://github.com/R-Delfino95)! - Add a "Mezzanine" action to enable and download a Mux asset's master-access file
+
+  A new "Mezzanine" section is available in the asset details dialog (next to Captions) and in the player actions menu. It lets editors enable Mux's master access — the highest-quality, near-lossless source copy of the asset, meant for offline editing and archival rather than streaming (unlike the streamable MP4 static renditions). The same surface explains what it is (free, available for 24 hours) and lets the user enable, watch it prepare, and download it, and links to Mux's guide — there's no separate confirmation dialog.
+
+  Enabling and status checks go through the Mux addon proxy (the same authentication as every other addon call), and the resulting `master` data is stored on the Sanity document — so the status is polled until ready (like captions) and is already present for assets imported from Mux. Because the Mux download URL is short-lived, the Download action re-fetches the asset first: if the file is still available it redirects to it, otherwise it prompts to enable it again.
+
+### Patch Changes
+
+- [#1425](https://github.com/sanity-io/plugins/pull/1425) [`99ac32f`](https://github.com/sanity-io/plugins/commit/99ac32f3eba211849e4813e296d75a634d28494f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency swr to ^2.4.2
+
+- [#1451](https://github.com/sanity-io/plugins/pull/1451) [`71f8620`](https://github.com/sanity-io/plugins/commit/71f8620ddb285f29a0d27ceb746c52cfb73acf8e) Thanks [@stipsan](https://github.com/stipsan)! - Move `react-is` from peerDependencies to dependencies to satisfy `@sanity/pkg-utils` validation
+
 ## 4.0.3
 
 ### Patch Changes

@@ -1,4 +1,4 @@
-import {EditIcon} from '@sanity/icons'
+import {EditIcon} from '@sanity/icons/Edit'
 import {Box, Button, Flex, Text, Tooltip} from '@sanity/ui'
 import type {FC} from 'react'
 

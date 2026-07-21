@@ -1,4 +1,5 @@
-import {CheckmarkCircleIcon, ErrorOutlineIcon} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Button, Card, Flex, Grid, Stack, Text, TextInput} from '@sanity/ui'
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {styled} from 'styled-components'

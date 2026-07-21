@@ -1,5 +1,87 @@
 # @sanity/code-input
 
+## 7.3.0
+
+### Minor Changes
+
+- [#1600](https://github.com/sanity-io/plugins/pull/1600) [`9734bff`](https://github.com/sanity-io/plugins/commit/9734bff266ab10c621356726a53496dde892e35e) Thanks [@GabeStah](https://github.com/GabeStah)! - Export `SUPPORTED_LANGUAGES` and `LANGUAGE_ALIASES` from the package root. Downstream tooling that maps external language tokens (markdown fence infostrings, import pipelines) onto `code` field values can now consume the canonical list the Language selector offers instead of vendoring a copy that drifts.
+
+## 7.2.10
+
+### Patch Changes
+
+- [#1610](https://github.com/sanity-io/plugins/pull/1610) [`6283900`](https://github.com/sanity-io/plugins/commit/62839006741bff85dc29a7b06302737d8532b597) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @codemirror/lang-markdown to ^6.5.1
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 7.2.9
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 7.2.8
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 7.2.7
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1539](https://github.com/sanity-io/plugins/pull/1539) [`8509905`](https://github.com/sanity-io/plugins/commit/8509905b951f8fd7e8db596bbbf581a104e5af66) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @uiw/codemirror-themes to ^4.25.11
+
+- [#1540](https://github.com/sanity-io/plugins/pull/1540) [`724f04e`](https://github.com/sanity-io/plugins/commit/724f04ec832f7630f60da527a46ef51ba477afc0) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @uiw/react-codemirror to ^4.25.11
+
+## 7.2.6
+
+### Patch Changes
+
+- [#1500](https://github.com/sanity-io/plugins/pull/1500) [`43295a7`](https://github.com/sanity-io/plugins/commit/43295a7079404e2644ac5f7fda08af640adc267c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update codemirror
+
+## 7.2.5
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior.
+
+## 7.2.4
+
+### Patch Changes
+
+- [#1460](https://github.com/sanity-io/plugins/pull/1460) [`f50f060`](https://github.com/sanity-io/plugins/commit/f50f0605968e5cec4f23f5f3455abe5c8ddda23c) Thanks [@stipsan](https://github.com/stipsan)! - Regenerate TypeScript declaration output: `isolatedDeclarations` is no longer used and declarations are now generated with tsgo (`@typescript/native-preview`). Internal build-tooling change only, with no runtime behavior or public API changes.
+
+## 7.2.3
+
+### Patch Changes
+
+- [#1481](https://github.com/sanity-io/plugins/pull/1481) [`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/pkg-utils` to `^10.9.0`, enabling tree-shaking of unused `styled-components` in the published bundle. Tagged template literals are now transpiled to plain call expressions during build, so bundlers can drop styled components this plugin exports but the app doesn't use, reducing bundle size.
+
+## 7.2.2
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+## 7.2.1
+
+### Patch Changes
+
+- [#1363](https://github.com/sanity-io/plugins/pull/1363) [`f9acf7c`](https://github.com/sanity-io/plugins/commit/f9acf7c0599e63feb30509f7d42ff941a01e2d35) Thanks [@stipsan](https://github.com/stipsan)! - Replace `React.forwardRef` with the React 19 ref-as-prop pattern (internal refactor, no API change)
+
+## 7.2.0
+
+### Minor Changes
+
+- [#1433](https://github.com/sanity-io/plugins/pull/1433) [`1ca8564`](https://github.com/sanity-io/plugins/commit/1ca856491510ac664dc0ee2e08b2e547ed80f8a0) Thanks [@nuotsu](https://github.com/nuotsu)! - Add an "Expand editor" button that expands the code editor to fill the document pane. Use the new `disableFullscreen` field option to hide it.
+
+### Patch Changes
+
+- [#1435](https://github.com/sanity-io/plugins/pull/1435) [`bb76347`](https://github.com/sanity-io/plugins/commit/bb763477a929032c3d5497c37163a385bfb464b6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update codemirror
+
 ## 7.1.6
 
 ### Patch Changes

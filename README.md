@@ -81,6 +81,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | Plugin                                                                                                   | Description                                                         |
 | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | [`@sanity/assist`](./plugins/@sanity/assist)                                                             | AI-powered writing and translation assistance for Studio            |
+| [`@sanity/block-insert-picker`](./plugins/@sanity/block-insert-picker)                                   | Slash-command block insert picker for Portable Text editors         |
 | [`@sanity/code-input`](./plugins/@sanity/code-input)                                                     | Code editor input powered by CodeMirror                             |
 | [`@sanity/color-input`](./plugins/@sanity/color-input)                                                   | Color picker input for Sanity Studio                                |
 | [`@sanity/cross-dataset-duplicator`](./plugins/@sanity/cross-dataset-duplicator)                         | Migrate documents and assets between datasets from inside Studio    |

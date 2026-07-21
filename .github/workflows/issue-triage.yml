@@ -4,8 +4,6 @@ on:
   issues:
     types:
       - closed
-      - opened
-      - labeled
   workflow_dispatch:
     inputs:
       issue_url:
@@ -36,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: lts/*
 

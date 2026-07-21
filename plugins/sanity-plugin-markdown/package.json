@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-markdown",
-  "version": "9.0.0",
+  "version": "9.0.6",
   "description": "Markdown fields in Sanity Studio. Supports Github flavored Markdown and image uploads.",
   "keywords": [
     "github flavored markdown",
@@ -26,52 +26,43 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "development": "./src/index.ts",
-      "source": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
-    "./next": {
-      "development": "./src/indexNext.ts",
-      "source": "./src/indexNext.ts",
-      "default": "./dist/indexNext.js"
-    },
+    ".": "./src/index.ts",
+    "./next": "./src/indexNext.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
-      "./next": "./dist/indexNext.js",
+      "./next": "./dist/next.js",
       "./package.json": "./package.json"
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
+    "@sanity/client": "catalog:",
     "@sanity/ui": "catalog:",
     "react-simplemde-editor": "^5.2.0"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/client": "catalog:",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "babel-plugin-styled-components": "catalog:",
     "easymde": "^2.21.0",
     "react": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
     "easymde": "^2.18",
-    "react": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

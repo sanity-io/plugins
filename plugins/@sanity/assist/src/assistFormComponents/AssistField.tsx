@@ -57,6 +57,7 @@ function AssistField(props: FieldProps) {
     actions: props.actions,
 
     // Render presence in the internal slot (between presence and the field actions)
+    // oxlint-disable-next-line no-deprecated -- the slot is deprecated for external use but exists specifically for this plugin
     __internal_slot: actions,
   })
 }

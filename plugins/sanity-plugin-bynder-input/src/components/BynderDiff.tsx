@@ -8,7 +8,7 @@ type ComponentProps = {
 function Component({value}: ComponentProps) {
   if (value?.previewUrl || value?.previewImg) {
     return (
-      <Flex justify="center" align="center" height="fill" width="fill">
+      <Flex justify="center" align="center" height="fill">
         <img
           alt="preview"
           src={value?.previewImg ?? value?.previewUrl}
@@ -24,7 +24,7 @@ function Component({value}: ComponentProps) {
   }
 
   return (
-    <Flex justify="center" align="center" height="fill" width="fill">
+    <Flex justify="center" align="center" height="fill">
       <div>(no image)</div>
     </Flex>
   )

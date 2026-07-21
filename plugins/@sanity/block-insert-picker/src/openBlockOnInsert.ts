@@ -1,0 +1,42 @@
+import {useCallback, useContext, useEffect, useRef} from 'react'
+import {useFormCallbacks} from 'sanity'
+import {PortableTextMemberItemsContext} from 'sanity/_singletons'
+
+/**
+ * Opens a just-inserted block's editing UI (dialog/popover per the member's
+ * config) once its member item mounts. An insert lands synchronously, but the
+ * member item only exists on a later render — so callers schedule the key and
+ * the effect opens it when it appears.
+ *
+ * Together with memberSchemaTypes.ts, this module is one of exactly two
+ * importers of `sanity/_singletons` in this plugin: the subpath is internal
+ * with no stability guarantee, so each dependency stays quarantined where it
+ * can be swapped for a public API in one place. Consumers that need to react
+ * to inserts without this internal should use the `onInsert` seam on the
+ * plugin components instead.
+ */
+export function useOpenBlockOnInsert(): (blockKey: string) => void {
+  const memberItems = useContext(PortableTextMemberItemsContext)
+  const {onPathOpen, onSetPathCollapsed} = useFormCallbacks()
+  const pendingKeyRef = useRef<null | string>(null)
+
+  useEffect(() => {
+    const key = pendingKeyRef.current
+    if (!key) return
+    const item = memberItems.find((m) => m.member.key === key)
+    if (item) {
+      onPathOpen(item.member.item.path)
+      onSetPathCollapsed(item.member.item.path, false)
+      pendingKeyRef.current = null
+    }
+  }, [memberItems, onPathOpen, onSetPathCollapsed])
+
+  // Stable identity: callers hold this in effect dependency arrays, so it must
+  // keep a constant reference — an unstable return would re-run (and re-register
+  // behaviors in) every effect that lists it, on every render. The empty-dep
+  // `useCallback` states that contract explicitly rather than relying on the
+  // React Compiler to infer it.
+  return useCallback((blockKey: string) => {
+    pendingKeyRef.current = blockKey
+  }, [])
+}

@@ -23,17 +23,14 @@
   "author": "Sanity.io <hello@sanity.io>",
   "type": "module",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
 {{#if hasVanillaExtract}}
     "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
       "browser": "./dist/bundle.css",
       "style": "./dist/bundle.css",
-      "node": "./dist/bundle.css.js",
-      "default": "./dist/bundle.css.js"
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
     },
 {{/if}}
     "./package.json": "./package.json"
@@ -43,7 +40,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
 {{#if dependencies}}
@@ -54,29 +51,28 @@
   },
 {{/if}}
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
 {{#if hasVanillaExtract}}
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@vanilla-extract/css": "catalog:",
-    "@vanilla-extract/vite-plugin": "catalog:",
 {{/if}}
     "babel-plugin-react-compiler": "catalog:",
-{{#if hasStyledComponents}}
-    "babel-plugin-styled-components": "catalog:",
-    "styled-components": "catalog:",
-{{/if}}
     "react": "catalog:",
     "react-dom": "catalog:",
-    "sanity": "catalog:"
+    "sanity": "catalog:",
+{{#if hasStyledComponents}}
+    "styled-components": "catalog:",
+{{/if}}
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"{{#if hasStyledComponents}},
-    "styled-components": "^6.1"{{/if}}
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"{{#if hasStyledComponents}},
+    "styled-components": "catalog:peer"{{/if}}
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
@@ -86,10 +82,11 @@
       ".": "./dist/index.js",
 {{#if hasVanillaExtract}}
       "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
         "browser": "./dist/bundle.css",
         "style": "./dist/bundle.css",
-        "node": "./dist/bundle.css.js",
-        "default": "./dist/bundle.css.js"
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
       },
 {{/if}}
       "./package.json": "./package.json"

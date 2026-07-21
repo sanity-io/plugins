@@ -1,4 +1,4 @@
-import {ServerError} from '@sanity/client'
+import type {ServerError} from '@sanity/client'
 
 export function isValidUrl(url: string): boolean {
   try {

@@ -1,4 +1,5 @@
-import {EditIcon, TrashIcon} from '@sanity/icons'
+import {EditIcon} from '@sanity/icons/Edit'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Dialog, Grid, Stack, TextInput, Label} from '@sanity/ui'
 import {APIProvider} from '@vis.gl/react-google-maps'
 import {useCallback, useEffect, useId, useRef, useState} from 'react'

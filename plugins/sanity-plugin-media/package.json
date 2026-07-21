@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-media",
-  "version": "5.0.4",
+  "version": "6.0.4",
   "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
   "keywords": [
     "asset",
@@ -29,11 +29,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -43,7 +39,7 @@
     }
   },
   "scripts": {
-    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -58,7 +54,7 @@
     "copy-to-clipboard": "^3.3.3",
     "date-fns": "catalog:",
     "filesize": "^9.0.11",
-    "groq": "^6.2.0",
+    "groq": "^6.5.0",
     "is-hotkey-esm": "^1.0.0",
     "nanoid": "catalog:",
     "pluralize": "^8.0.0",
@@ -67,17 +63,15 @@
     "react-hook-form": "catalog:",
     "react-redux": "^9.3.0",
     "react-select": "^5.10.2",
-    "react-virtuoso": "^4.18.9",
+    "react-virtuoso": "^4.18.11",
     "redux": "^5.0.1",
     "redux-observable": "3.0.0-rc.2",
     "rxjs": "catalog:",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
-    "@sanity/plugin-kit": "workspace:*",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@testing-library/user-event": "^14.6.1",
@@ -85,31 +79,22 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/react-file-icon": "^1.0.5",
-    "babel-plugin-styled-components": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
     "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-is": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
-    "typescript": "catalog:"
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^18.3 || ^19",
-    "react-dom": "^18.3 || ^19",
-    "react-is": "^18.3 || ^19",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
-  },
-  "sanityPlugin": {
-    "verifyPackage": {
-      "tsconfig": false,
-      "tsc": false,
-      "eslintImports": false,
-      "scripts": false
-    }
   }
 }

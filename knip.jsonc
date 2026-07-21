@@ -10,19 +10,11 @@
     "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
   },
-  "ignoreDependencies": [
-    "@vanilla-extract/css",
-    "babel-plugin-react-compiler",
-    "babel-plugin-styled-components",
-  ],
+  "ignoreDependencies": ["@vanilla-extract/css", "babel-plugin-react-compiler"],
   "workspaces": {
     ".": {
       "entry": ["*.{ts,mts,mjs}"],
       "project": ["*.{ts,mts,mjs}"],
-      "ignoreDependencies": [
-        // TypeScript native compiler, used as a dev tool not imported
-        "@typescript/native-preview",
-      ],
       "ignoreBinaries": [
         // Installed externally (not an npm package); used in lint:workflows script
         "zizmor",
@@ -35,25 +27,12 @@
     "turbo/generators": {
       "project": ["src/**/*.ts"],
     },
-    "packages/@repo/tsconfig": {},
-    "packages/@repo/package.config": {
-      "project": ["src/**/*.ts"],
-    },
     "packages/@sanity/plugin-kit": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.ts"],
       "ignoreDependencies": [
         // Spawned as a CLI (`yalc push`) by the link-watch command, never imported
         "yalc",
-        // Resolved at runtime by ESLint/tsc when verifying generated plugin fixtures in tests
-        "eslint-config-prettier",
-        "eslint-config-sanity",
-        "eslint-plugin-prettier",
-        "eslint-plugin-react",
-        "eslint-plugin-react-hooks",
-        "@typescript-eslint/eslint-plugin",
-        "@typescript-eslint/parser",
-        "prettier",
+        // Resolved at runtime by oxlint/pkg-utils when verifying generated plugin fixtures in tests
         "react",
         "react-dom",
         "sanity",
@@ -62,206 +41,163 @@
       ],
     },
     "plugins/@sanity/assist": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/code-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/color-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/debug-preview-url-secret-plugin": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/document-internationalization": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/rich-date-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/studio-secrets": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/vercel-protection-bypass": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/language-filter": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-aprimo": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-asset-source-unsplash": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-bynder-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-graph-view": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-iframe-pane": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-internationalized-array": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-translations-tab": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-markdown": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-media": {
-      "entry": ["package.config.ts", "scripts/migrate-to-localized-fields.ts"],
+      "entry": ["scripts/migrate-to-localized-fields.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-mux-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-workflow": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-workspace-home": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/sfcc": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/orderable-document-list": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-transifex": {
-      "entry": ["package.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/@sanity/block-insert-picker": {
       "project": ["src/**/*.{ts,tsx}"],
     },
     // add new plugin workspaces here
     "plugins/@sanity/embeddings-index-ui": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/@sanity/form-toolkit": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/@sanity/google-maps-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/@sanity/cross-dataset-duplicator": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/sanity-plugin-studio-smartling": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/@sanity/hierarchical-document-list": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-shopify-assets": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/personalization-plugin": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-cloudinary": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/@sanity/sanity-plugin-async-list": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/@sanity/table": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/sanity-plugin-dashboard-widget-vercel": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/sanity-plugin-dashboard-widget-netlify": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/sanity-plugin-dashboard-widget-document-list": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/sanity-plugin-hotspot-array": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/@sanity/dashboard": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/sanity-plugin-documents-pane": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-utils": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-google-translate": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-latex-input": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/@sanity/debug-live-sync-tags": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
 
     "plugins/@sanity/presets": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-naive-html-serializer": {
-      "entry": ["package.config.ts"],
       "project": ["src/**/*.{ts,tsx}"],
     },
   },

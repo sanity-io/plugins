@@ -16,6 +16,12 @@
       "dependsOn": ["^build"],
       "outputs": [".sanity/**", "dist/**"],
     },
+    // No-op graph edge: packages that read workspace source (not dist) can
+    // dependOn ["transit"] instead of ["^build"] to keep cache invalidation
+    // when deps change without waiting for their build tasks.
+    "transit": {
+      "dependsOn": ["^transit"],
+    },
     "dev": {
       "cache": false,
       "persistent": true,

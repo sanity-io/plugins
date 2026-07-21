@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-workflow",
-  "version": "3.0.23",
+  "version": "3.0.34",
   "description": "A demonstration of a custom content publishing workflow using Sanity.",
   "keywords": [
     "sanity",
@@ -23,16 +23,13 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "development": "./src/index.ts",
-      "source": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
       "browser": "./dist/bundle.css",
       "style": "./dist/bundle.css",
-      "node": "./dist/bundle.css.js",
-      "default": "./dist/bundle.css.js"
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
     },
     "./package.json": "./package.json"
   },
@@ -40,42 +37,43 @@
     "exports": {
       ".": "./dist/index.js",
       "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
         "browser": "./dist/bundle.css",
         "style": "./dist/bundle.css",
-        "node": "./dist/bundle.css.js",
-        "default": "./dist/bundle.css.js"
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
       },
       "./package.json": "./package.json"
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
     "@hello-pangea/dnd": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "@tanstack/react-virtual": "^3.14.4",
+    "@tanstack/react-virtual": "^3.14.7",
     "lexorank": "catalog:",
     "motion": "catalog:",
     "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@vanilla-extract/css": "catalog:",
-    "@vanilla-extract/vite-plugin": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
-    "sanity": "catalog:"
+    "sanity": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"
+    "react": "catalog:peer",
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

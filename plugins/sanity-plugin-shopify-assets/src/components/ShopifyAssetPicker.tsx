@@ -1,4 +1,4 @@
-import {ErrorOutlineIcon} from '@sanity/icons'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Card, Dialog, Flex, Inline, Spinner, Stack, Text, TextInput} from '@sanity/ui'
 import {type ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'

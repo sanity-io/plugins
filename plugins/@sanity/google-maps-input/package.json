@@ -1,6 +1,6 @@
 {
   "name": "@sanity/google-maps-input",
-  "version": "6.1.0",
+  "version": "6.1.7",
   "description": "Sanity plugin providing input handlers for geo-related input types using Google Maps",
   "keywords": [
     "cms",
@@ -28,16 +28,13 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
       "browser": "./dist/bundle.css",
       "style": "./dist/bundle.css",
-      "node": "./dist/bundle.css.js",
-      "default": "./dist/bundle.css.js"
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
     },
     "./package.json": "./package.json"
   },
@@ -45,16 +42,17 @@
     "exports": {
       ".": "./dist/index.js",
       "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
         "browser": "./dist/bundle.css",
         "style": "./dist/bundle.css",
-        "node": "./dist/bundle.css.js",
-        "default": "./dist/bundle.css.js"
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
       },
       "./package.json": "./package.json"
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -63,24 +61,24 @@
     "@vis.gl/react-google-maps": "catalog:"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/google.maps": "^3.65.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vanilla-extract/css": "catalog:",
-    "@vanilla-extract/vite-plugin": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

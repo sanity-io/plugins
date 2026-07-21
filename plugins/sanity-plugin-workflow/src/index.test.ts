@@ -15,9 +15,7 @@ test('package exports', {timeout: 30_000}, async () => {
         "defineStates": "function",
         "workflow": "function",
       },
-      "./bundle.css": {
-        "default": "string",
-      },
+      "./bundle.css": {},
     }
   `)
 })

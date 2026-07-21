@@ -1,4 +1,5 @@
-import {InfoOutlineIcon, UserIcon} from '@sanity/icons'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {UserIcon} from '@sanity/icons/User'
 import {Badge, type BadgeTone, Box, Card, Flex, Text} from '@sanity/ui'
 import type {ComponentProps} from 'react'
 
@@ -34,9 +35,7 @@ export default function StateTitle(props: StateTitleProps) {
   return (
     <StyledStickyCard paddingY={4} padding={3} tone="inherit">
       <Flex gap={3} align="center">
-        <Badge tone={tone} muted={!userRoleCanDrop || isDropDisabled}>
-          {state.title}
-        </Badge>
+        <Badge tone={tone}>{state.title}</Badge>
         {userRoleCanDrop ? null : (
           <Status
             text="You do not have permissions to move documents to this State"

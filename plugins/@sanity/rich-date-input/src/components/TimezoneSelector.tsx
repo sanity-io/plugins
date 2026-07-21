@@ -1,11 +1,16 @@
-import {SearchIcon} from '@sanity/icons'
+import {tzOffset} from '@date-fns/tz'
+import {SearchIcon} from '@sanity/icons/Search'
 import {Autocomplete, Box, Card, Text} from '@sanity/ui'
-import {formatInTimeZone, getTimezoneOffset, zonedTimeToUtc} from 'date-fns-tz'
-import {type ReactNode, useCallback} from 'react'
+import {type ReactNode, useCallback, useMemo} from 'react'
 import {type ObjectInputProps, set} from 'sanity'
 
 import type {RichDate} from '../types'
-import {allTimezones, unlocalizeDateTime} from '../utils'
+import {
+  formatInTimeZone,
+  getAllTimezones,
+  resolveCanonicalTimeZone,
+  shiftWallClockToTimeZone,
+} from '../utils'
 
 interface TimezoneSelectorProps {
   onChange: Pick<ObjectInputProps, 'onChange'>['onChange']
@@ -14,11 +19,18 @@ interface TimezoneSelectorProps {
 
 export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
   const {onChange, value} = props
-  const currentTz = allTimezones.find((tz) => tz.name === value?.timezone)
+  const allTimezones = useMemo(() => getAllTimezones(), [])
+  // Stored names may be aliases the runtime does not list (e.g. 'Europe/Kyiv'
+  // vs 'Europe/Kiev'), so fall back to matching on the canonical identifier
+  const canonicalStoredTz = value?.timezone ? resolveCanonicalTimeZone(value.timezone) : undefined
+  const currentTz =
+    allTimezones.find((tz) => tz.name === value?.timezone) ??
+    allTimezones.find((tz) => tz.name === canonicalStoredTz)
   const formatter = new Intl.DateTimeFormat()
   const userTzName = formatter.resolvedOptions().timeZone
   const userTz = (allTimezones.find((tz) => tz.name === userTzName) ??
-    allTimezones.find((tz) => tz.group.includes(userTzName)))!
+    allTimezones.find((tz) => tz.abbreviation === 'GMT') ??
+    allTimezones[0])!
 
   const handleTimezoneChange = useCallback(
     (selectedTz: string) => {
@@ -29,11 +41,14 @@ export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
 
       // then, recalculate UTC and local from "old" time with the new offset
       if (value?.utc) {
-        const desiredDateTime = unlocalizeDateTime(value.utc, value.timezone)
-        const newUtcDateObject = zonedTimeToUtc(desiredDateTime, newTimezone.name)
-        const newOffset = getTimezoneOffset(newTimezone.name, newUtcDateObject) / 60 / 1000
+        const newUtcDateObject = shiftWallClockToTimeZone(
+          new Date(value.utc),
+          value.timezone,
+          newTimezone.name,
+        )
+        const newOffset = tzOffset(newTimezone.name, newUtcDateObject)
         const newLocalDate = formatInTimeZone(
-          newUtcDateObject.toISOString(),
+          newUtcDateObject,
           newTimezone.name,
           "yyyy-MM-dd'T'HH:mm:ssXXX",
         )
@@ -43,7 +58,7 @@ export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
       }
       onChange(patches)
     },
-    [onChange, userTz, value],
+    [allTimezones, onChange, userTz, value],
   )
 
   return (
@@ -70,7 +85,7 @@ export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
               <Text size={1} textOverflow="ellipsis">
                 <span>GMT{option.offset}</span>
                 <span style={{fontWeight: 500, marginLeft: '1em'}}>{option.alternativeName}</span>
-                <span style={{marginLeft: '1em'}}>{option.mainCities}</span>
+                <span style={{marginLeft: '1em'}}>{option.city}</span>
               </Text>
             </Card>
           )

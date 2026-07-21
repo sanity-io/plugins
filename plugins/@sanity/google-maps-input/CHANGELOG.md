@@ -1,5 +1,49 @@
 # @sanity/google-maps-input
 
+## 6.1.7
+
+### Patch Changes
+
+- [#1659](https://github.com/sanity-io/plugins/pull/1659) [`ae97408`](https://github.com/sanity-io/plugins/commit/ae974086ae9de58f2d499944509e8628f59cecab) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Stop emitting the redundant `css.ts.d.ts` file from the package output.
+
+## 6.1.6
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 6.1.5
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 6.1.4
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - The vanilla-extract CSS bundle is now built by `@sanity/vanilla-extract-tsdown-plugin` (via `@sanity/tsdown-config` 0.14.0) instead of `@vanilla-extract/rollup-plugin`. `dist/bundle.css` is slightly smaller, the `dist/bundle.css.map` sourcemap is no longer emitted (aligned with `@tsdown/css` behavior), and the `bundle.css.js` node shim is now a comment-only no-op module instead of `export default ""`
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 6.1.3
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+## 6.1.2
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior. The extracted `bundle.css` and its conditional export are unchanged.
+
+## 6.1.1
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
 ## 6.1.0
 
 ### Minor Changes

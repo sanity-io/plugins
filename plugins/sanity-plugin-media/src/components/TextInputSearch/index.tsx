@@ -1,4 +1,5 @@
-import {CloseIcon, SearchIcon} from '@sanity/icons'
+import {CloseIcon} from '@sanity/icons/Close'
+import {SearchIcon} from '@sanity/icons/Search'
 import {Box, Flex, TextInput} from '@sanity/ui'
 import {type ChangeEvent} from 'react'
 import {useDispatch} from 'react-redux'

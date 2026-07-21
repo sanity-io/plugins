@@ -165,59 +165,46 @@ component rather than spreading `className` across the tree (see
 
 vanilla-extract needs a build/transform step. Mirror `@sanity/google-maps-input`:
 
-**1. Enable the pkg-utils Rollup integration** so the build extracts a `dist/bundle.css`:
+**1. Enable the tsdown integration** so the build extracts a `dist/bundle.css`:
 
 ```ts
-// plugins/@sanity/google-maps-input/package.config.ts
-import config from '@repo/package.config'
-import {defineConfig} from '@sanity/pkg-utils'
+// plugins/@sanity/google-maps-input/tsdown.config.ts
+import {defineConfig} from '@sanity/tsdown-config'
+import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
-  ...config,
-  babel: {reactCompiler: true},
-  reactCompilerOptions: {target: '19'},
-  rollup: {vanillaExtract: true},
-})
+  reactCompiler: true,
+  vanillaExtract: true,
+}) satisfies Promise<UserConfig>
 ```
 
-**2. Add the `./bundle.css` export and build deps** in `package.json`. The built entry loads the
-stylesheet, so consumers need no changes; the `node` / `default` conditions point at a JS shim so
-SSR/Node imports don't choke on a `.css` file:
+This also wires up the `./bundle.css` export in `package.json` automatically, keeping it in sync on
+every build — nothing to hand-edit there.
+
+**2. Add the build deps** in `package.json`:
 
 ```json
 {
-  "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
-    "./bundle.css": {
-      "browser": "./dist/bundle.css",
-      "style": "./dist/bundle.css",
-      "node": "./dist/bundle.css.js",
-      "default": "./dist/bundle.css.js"
-    },
-    "./package.json": "./package.json"
-  },
   "devDependencies": {
-    "@vanilla-extract/css": "catalog:",
-    "@vanilla-extract/vite-plugin": "catalog:"
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
+    "@vanilla-extract/css": "catalog:"
   }
 }
 ```
 
-Add the matching `./bundle.css` entry under `publishConfig.exports` too. `@vanilla-extract/css` is
-**build-time only** — its `style()` / `createVar()` calls compile away — so it stays a
-`devDependency`, never a runtime `dependency`.
+`@vanilla-extract/css` is **build-time only** — its `style()` / `createVar()` calls compile away —
+so it stays a `devDependency`, never a runtime `dependency`.
 
-**3. Register the Vite plugin** wherever the plugin's source `.css.ts` is compiled live: the
-plugin's own `vitest.config.ts`, and the test studio (which consumes the plugin's `source` export in
-dev):
+**3. Register the Vite plugin in the plugin's own `vitest.config.ts`.** The package-exports test
+resolves this workspace package's own `exports` map — whose `.` entry points at `./src/index.ts` for
+monorepo-internal dev consumption, not `dist/index.js` — so it transitively imports real `.css.ts`
+source and needs the plugin to compile it. Use `@sanity/vanilla-extract-vite-plugin` instead of the
+upstream `@vanilla-extract/vite-plugin` — it's faster. The exported `vanillaExtractPlugin()` API is a
+drop-in match:
 
 ```ts
 // plugins/@sanity/google-maps-input/vitest.config.ts
-import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
@@ -226,17 +213,8 @@ export default defineConfig({
 })
 ```
 
-```ts
-// dev/test-studio/sanity.cli.ts — add vanillaExtractPlugin() to the studio's Vite plugins
-import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
-
-export default defineCliConfig({
-  // ...
-  vite: {
-    plugins: [vanillaExtractPlugin()],
-  },
-})
-```
+The test studio already registers this plugin globally in `sanity.cli.ts` — you don't need to touch
+that file for a new plugin.
 
 Finally, the catalog carries the build deps (add them if missing) and knip ignores the
 build-time-only css package:
@@ -244,8 +222,8 @@ build-time-only css package:
 ```yaml
 # pnpm-workspace.yaml
 catalog:
+  '@sanity/vanilla-extract-vite-plugin': ^0.1.0
   '@vanilla-extract/css': ^1.20.1
-  '@vanilla-extract/vite-plugin': ^5.2.2
 ```
 
 ```jsonc
@@ -428,14 +406,14 @@ export function ErrorCode(props: ComponentProps<typeof Code>) {
 
 - **Type the wrapper** with `ComponentProps<typeof Primitive>` (or `ComponentProps<'a'>` for a DOM
   element), and spread props **before** `className` so the wrapper owns the class.
-- **Forward refs** when the original wrapped a ref-forwarding primitive:
+- **Refs need no `forwardRef`** — in React 19 `ref` is a regular prop, so `ComponentProps<typeof Flex>`
+  already includes it and spreading `{...props}` forwards a caller's `ref` to the wrapped primitive
+  (`forwardRef` is banned by lint; see [`refs.md`](./refs.md)):
 
   ```tsx
-  export const Root = forwardRef<HTMLDivElement, ComponentProps<typeof Flex>>(
-    function Root(props, ref) {
-      return <Flex {...props} ref={ref} className={root} />
-    },
-  )
+  export function Root(props: ComponentProps<typeof Flex>) {
+    return <Flex {...props} className={root} />
+  }
   ```
 
 - **Map a boolean/variant prop to conditional classes** instead of a styled-components transient prop

@@ -1,5 +1,89 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.19
+
+### Patch Changes
+
+- [#1639](https://github.com/sanity-io/plugins/pull/1639) [`48e32f9`](https://github.com/sanity-io/plugins/commit/48e32f962bea75d96eed929fbda805782d2a9b04) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.82.0
+
+## 4.0.18
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 4.0.17
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+- [#1597](https://github.com/sanity-io/plugins/pull/1597) [`314c536`](https://github.com/sanity-io/plugins/commit/314c5365e708aae8518a131b3b08e6e528bfcf30) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency xstate to ^5.32.5
+
+## 4.0.16
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 4.0.15
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1535](https://github.com/sanity-io/plugins/pull/1535) [`c1601d5`](https://github.com/sanity-io/plugins/commit/c1601d548e294f1733c40125f1b1a03894703084) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-query to ^5.101.2
+
+- [#1547](https://github.com/sanity-io/plugins/pull/1547) [`78c04b4`](https://github.com/sanity-io/plugins/commit/78c04b45aa830c3fb6337da7cc81ac23b0626a22) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.81.0
+
+## 4.0.14
+
+### Patch Changes
+
+- [#1494](https://github.com/sanity-io/plugins/pull/1494) [`588ed91`](https://github.com/sanity-io/plugins/commit/588ed913311558585a54a2b23d61075d1422f658) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency xstate to ^5.32.4
+
+## 4.0.13
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior.
+
+## 4.0.12
+
+### Patch Changes
+
+- [#1460](https://github.com/sanity-io/plugins/pull/1460) [`f50f060`](https://github.com/sanity-io/plugins/commit/f50f0605968e5cec4f23f5f3455abe5c8ddda23c) Thanks [@stipsan](https://github.com/stipsan)! - Regenerate TypeScript declaration output: `isolatedDeclarations` is no longer used and declarations are now generated with tsgo (`@typescript/native-preview`). Internal build-tooling change only, with no runtime behavior or public API changes.
+
+## 4.0.11
+
+### Patch Changes
+
+- [#1481](https://github.com/sanity-io/plugins/pull/1481) [`0eae652`](https://github.com/sanity-io/plugins/commit/0eae652abea74fd63af2d334707afc8ecd4eb15a) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade `@sanity/pkg-utils` to `^10.9.0`, enabling tree-shaking of unused `styled-components` in the published bundle. Tagged template literals are now transpiled to plain call expressions during build, so bundlers can drop styled components this plugin exports but the app doesn't use, reducing bundle size.
+
+## 4.0.10
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+## 4.0.9
+
+### Patch Changes
+
+- [#1363](https://github.com/sanity-io/plugins/pull/1363) [`f9acf7c`](https://github.com/sanity-io/plugins/commit/f9acf7c0599e63feb30509f7d42ff941a01e2d35) Thanks [@stipsan](https://github.com/stipsan)! - Replace `React.forwardRef` with the React 19 ref-as-prop pattern (internal refactor, no API change)
+
+- [#1469](https://github.com/sanity-io/plugins/pull/1469) [`c5c3a42`](https://github.com/sanity-io/plugins/commit/c5c3a423a889cbde2e58cba8bfdd194c1775b6d6) Thanks [@mitchuman](https://github.com/mitchuman)! - Fix a crash in the deployments widget ("No locale data has been registered for any of the locales: en-US, en, en") by bumping `@sanity/pkg-utils`.
+
+  The published bundle was silently dropping the side-effect-only `react-time-ago/locale/en` import, because pkg-utils' tree-shaking treated all external imports as side-effect free. Thanks to @mitchuman for discovering the root cause and reporting it in [#1468](https://github.com/sanity-io/plugins/pull/1468) — it was fixed upstream in [`@sanity/pkg-utils`](https://github.com/sanity-io/pkg-utils/pull/2934), so no source changes were needed here beyond the dependency bump.
+
+## 4.0.8
+
+### Patch Changes
+
+- [#1424](https://github.com/sanity-io/plugins/pull/1424) [`56ef1aa`](https://github.com/sanity-io/plugins/commit/56ef1aa2134022b509edcd225dcf6775a82ea359) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-query to ^5.101.1
+
+- [#1437](https://github.com/sanity-io/plugins/pull/1437) [`9786ded`](https://github.com/sanity-io/plugins/commit/9786ded76ef680abb4a4d9827eae7059cceb7400) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency xstate to ^5.32.2
+
 ## 4.0.7
 
 ### Patch Changes

@@ -1,5 +1,5 @@
 import {colorInput} from '@sanity/color-input'
-import {DropIcon} from '@sanity/icons'
+import {DropIcon} from '@sanity/icons/Drop'
 import {definePlugin, defineType} from 'sanity'
 
 const colorTest = defineType({

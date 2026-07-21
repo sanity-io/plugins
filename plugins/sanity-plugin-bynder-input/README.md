@@ -10,6 +10,20 @@ This plugin adds your familiar Bynder user interface in the Sanity Studio, letti
 npm install sanity-plugin-bynder-input
 ```
 
+### Peer dependency warnings
+
+The plugin depends on [`@bynder/compact-view`](https://www.npmjs.com/package/@bynder/compact-view), which doesn't declare React 19 in its peer dependencies yet (it declares `react >=16.8.0 <19.0.0`), even though it works fine with the React 19 that Sanity Studio uses. Until Bynder updates the range, tell your package manager to allow it:
+
+- `npm`: install with the `--legacy-peer-deps` flag
+- `pnpm`: set [`peerDependencyRules.allowedVersions`](https://pnpm.io/settings#peerdependencyrulesallowedversions) in `pnpm-workspace.yaml`:
+
+  ```yaml
+  peerDependencyRules:
+    allowedVersions:
+      '@bynder/compact-view>react': '19'
+      '@bynder/compact-view>react-dom': '19'
+  ```
+
 ## Usage
 
 Add `bynderInputPlugin` to `plugins` in `sanity.config.ts` (or.js) and specify your Bynder portal domain.

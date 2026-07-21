@@ -9,8 +9,8 @@ export const selectCombinedItems = createSelector(
     (state: RootReducerState) => state.uploads.allIds,
   ],
   (assetIds, uploadIds) => {
-    const assetItems = assetIds.map((id) => ({id, type: 'asset'}) as CardAssetData)
-    const uploadItems = uploadIds.map((id) => ({id, type: 'upload'}) as CardUploadData)
+    const assetItems = assetIds.map((id): CardAssetData => ({id, type: 'asset'}))
+    const uploadItems = uploadIds.map((id): CardUploadData => ({id, type: 'upload'}))
     const combinedItems: (CardAssetData | CardUploadData)[] = [...uploadItems, ...assetItems]
     return combinedItems
   },

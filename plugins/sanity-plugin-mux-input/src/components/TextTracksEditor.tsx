@@ -1,4 +1,4 @@
-import {TranslateIcon} from '@sanity/icons'
+import {TranslateIcon} from '@sanity/icons/Translate'
 import {Autocomplete, Box, Card, Checkbox, Flex, Stack, Text} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import LanguagesList from 'iso-639-1'

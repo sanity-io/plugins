@@ -1,8 +1,8 @@
-import {EarthAmericasIcon} from '@sanity/icons'
+import {EarthAmericasIcon} from '@sanity/icons/EarthAmericas'
 import {Button} from '@sanity/ui'
 import {type ReactNode} from 'react'
 
-import {allTimezones} from '../utils'
+import {getTimeZoneAbbreviation} from '../utils'
 
 interface TimezoneButtonProps {
   onClick: () => void
@@ -14,11 +14,7 @@ export const TimezoneButton = (props: TimezoneButtonProps): ReactNode => {
   const formatter = new Intl.DateTimeFormat()
   const currentTimezone = formatter.resolvedOptions().timeZone
 
-  const label =
-    allTimezones.find((tz) => tz.name === timezone)?.abbreviation ??
-    allTimezones.find((tz) => tz.group.includes(timezone))?.abbreviation ??
-    allTimezones.find((tz) => tz.name === currentTimezone)?.abbreviation ??
-    allTimezones.find((tz) => tz.group.includes(currentTimezone))?.abbreviation
+  const label = getTimeZoneAbbreviation(timezone) ?? getTimeZoneAbbreviation(currentTimezone)
 
   return (
     <Button
@@ -28,7 +24,7 @@ export const TimezoneButton = (props: TimezoneButtonProps): ReactNode => {
       icon={EarthAmericasIcon}
       mode="ghost"
       onClick={onClick}
-      text={`${label}`}
+      text={label ?? timezone}
       aria-label="Select a timezone"
     />
   )

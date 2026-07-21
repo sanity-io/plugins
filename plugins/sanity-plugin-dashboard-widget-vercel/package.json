@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-dashboard-widget-vercel",
-  "version": "4.0.7",
+  "version": "4.0.19",
   "description": "View your recent Vercel deployments and manually trigger builds directly from your Sanity dashboard.",
   "keywords": [
     "dashboard",
@@ -26,11 +26,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -40,7 +36,7 @@
     }
   },
   "scripts": {
-    "build": "pkg build --strict --check --clean",
+    "build": "tsdown",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -49,36 +45,35 @@
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
     "@sanity/uuid": "catalog:",
-    "@tanstack/react-query": "^5.101.1",
+    "@tanstack/react-query": "^5.101.2",
     "@xstate/react": "^6.1.0",
     "object-hash": "3.0.0",
     "react-hook-form": "catalog:",
     "react-time-ago": "^7.4.4",
     "use-deep-compare-effect": "^1.8.1",
-    "xstate": "^5.32.2",
+    "xstate": "^5.32.5",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@repo/package.config": "workspace:*",
-    "@repo/tsconfig": "workspace:*",
     "@sanity/dashboard": "workspace:*",
-    "@sanity/pkg-utils": "catalog:",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
     "@types/object-hash": "^3.0.6",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
-    "babel-plugin-styled-components": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
   },
   "peerDependencies": {
     "@sanity/dashboard": "workspace:^",
-    "react": "^19.2",
-    "react-dom": "^19.2",
-    "sanity": "^5 || ^6.0.0-0",
-    "styled-components": "^6.1"
+    "react": "catalog:peer",
+    "react-dom": "catalog:peer",
+    "sanity": "catalog:peer",
+    "styled-components": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

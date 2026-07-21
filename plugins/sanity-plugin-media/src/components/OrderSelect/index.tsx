@@ -1,4 +1,4 @@
-import {SortIcon} from '@sanity/icons'
+import {SortIcon} from '@sanity/icons/Sort'
 import {Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 

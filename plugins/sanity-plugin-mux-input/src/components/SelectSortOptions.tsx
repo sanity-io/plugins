@@ -1,4 +1,4 @@
-import {SortIcon} from '@sanity/icons'
+import {SortIcon} from '@sanity/icons/Sort'
 import {Button, Menu, MenuButton, MenuItem, type PopoverProps} from '@sanity/ui'
 import {useId} from 'react'
 
