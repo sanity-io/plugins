@@ -1,5 +1,11 @@
 # @sanity/color-input
 
+## 6.0.17
+
+### Patch Changes
+
+- [#1673](https://github.com/sanity-io/plugins/pull/1673) [`fa4097c`](https://github.com/sanity-io/plugins/commit/fa4097ca6ec397a2a0b38d829ef4eb7c42db3747) Thanks [@stipsan](https://github.com/stipsan)! - Replace the vendored `CustomPicker` higher-order component with color-state handling directly in the picker component
+
 ## 6.0.16
 
 ### Patch Changes
