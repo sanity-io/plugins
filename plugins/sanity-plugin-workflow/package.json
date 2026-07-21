@@ -69,6 +69,7 @@
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
+    "styled-components": "catalog:",
     "tsdown": "catalog:"
   },
   "peerDependencies": {
