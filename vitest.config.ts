@@ -12,5 +12,10 @@ export default defineConfig({
       'plugins/sanity-translations-tab',
       'scripts/*',
     ],
+    coverage: {
+      provider: 'v8',
+      reporter: ['html', 'json', 'json-summary'],
+      reportOnFailure: true,
+    },
   },
 })

@@ -2,7 +2,6 @@ import chalk from 'chalk'
 import outdent from 'outdent'
 
 import {cliName, defaultOutDir, urls} from '../constants'
-import {validateImports} from '../dependencies/import-linter'
 import {getPackage} from '../npm/package'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
@@ -23,15 +22,10 @@ import {
   validateSanityDependencies,
   validateSrcIndexFile,
   validateBannedFiles,
-  disallowDuplicateEslintConfig,
-  disallowDuplicatePrettierConfig,
+  validateOxfmtConfig,
+  validateOxlintConfig,
 } from './verify/validations'
-import {
-  createValidator,
-  runTscMaybe,
-  type VerifyFlags,
-  type VerifyPackageConfig,
-} from './verify/verify-common'
+import {createValidator, type VerifyFlags, type VerifyPackageConfig} from './verify/verify-common'
 
 export async function verifyPackage({basePath, flags}: {basePath: string; flags: VerifyFlags}) {
   let errors: string[] = []
@@ -71,12 +65,8 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
   await validation('bannedFiles', async () => validateBannedFiles(packageJson))
   await validation('scripts', async () => validateScripts(packageJson))
   await validation('nodeEngine', async () => validateNodeEngine(packageJson))
-  await validation('duplicateConfig', async () =>
-    disallowDuplicateEslintConfig(basePath, packageJson),
-  )
-  await validation('duplicateConfig', async () =>
-    disallowDuplicatePrettierConfig(basePath, packageJson),
-  )
+  await validation('oxfmt', async () => validateOxfmtConfig(basePath, packageJson))
+  await validation('oxlint', async () => validateOxlintConfig(basePath, packageJson))
 
   if (ts) {
     await validation('tsconfig', async () => validateTsConfig(ts, {basePath, outDir, tsconfig}))
@@ -92,7 +82,6 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
   await validation('deprecatedDependencies', async () =>
     validateDeprecatedDependencies(packageJson),
   )
-  await validation('eslintImports', async () => validateImports({basePath}))
 
   if (errors.length) {
     throw new Error(
@@ -114,8 +103,6 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
       `.trimStart(),
     )
   }
-
-  await runTscMaybe(verifyConfig, ts)
 
   log.success(
     outdent`

@@ -1242,6 +1242,18 @@ export type LocalizedString = {
   fr?: string
 }
 
+export type AssistFieldGroupsRepro = {
+  _id: string
+  _type: 'assistFieldGroupsRepro'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  body?: string
+  metaTitle?: string
+  metaDescription?: string
+}
+
 export type SanityAssistInstructionTask = {
   _type: 'sanity.assist.instructionTask'
   path?: string
@@ -1731,6 +1743,7 @@ export type AllSanitySchemaTypes =
   | EmbeddingsArticle
   | GoogleTranslateTest
   | LocalizedString
+  | AssistFieldGroupsRepro
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus
   | SanityAssistSchemaTypeAnnotations

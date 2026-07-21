@@ -11,26 +11,28 @@ allowBuilds:
   esbuild: false
 
 catalog:
+  '@date-fns/tz': ^1.5.0
   '@hello-pangea/dnd': ^18.0.1
   '@hookform/resolvers': ^4.1.3
   '@portabletext/block-tools': ^5.1.11
   '@portabletext/to-html': ^5.0.2
   '@portabletext/types': ^4.0.2
   '@sanity/asset-utils': ^2.3.0
-  '@sanity/client': ^7.23.2
+  '@sanity/client': ^7.24.0
   '@sanity/color': ^3.0.6
   '@sanity/icons': ^5.1.0
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.5.0
-  '@sanity/pkg-utils': ^11.0.3
+  '@sanity/pkg-utils': ^11.0.13
   '@sanity/preview-url-secret': ^4.0.8
   '@sanity/schema': ^6.5.0
   '@sanity/telemetry': '^1.1.0'
-  '@sanity/tsconfig': ^2.2.0
-  '@sanity/tsdown-config': ^0.14.2
+  '@sanity/tsconfig': ^2.2.1
+  '@sanity/tsdown-config': ^0.19.6
   '@sanity/ui': ^3.3.5
   '@sanity/util': ^6.5.0
   '@sanity/uuid': ^3.0.3
+  '@sanity/vanilla-extract-vite-plugin': ^0.2.5
   '@sanity/vision': ^6.5.0
   '@testing-library/jest-dom': ^6.9.1
   '@testing-library/react': ^16.3.2
@@ -40,30 +42,32 @@ catalog:
   '@types/react-dom': ^19.2.3
   '@types/react-is': ^19.2.0
   '@types/video.js': ^7.3.58
-  '@typescript/native-preview': beta
   '@vanilla-extract/css': ^1.21.1
-  '@vanilla-extract/vite-plugin': ^5.2.5
   '@vis.gl/react-google-maps': ^1.9.0
+  '@vitest/coverage-v8': ^4.1.10
   babel-plugin-react-compiler: ^1.0.0
   date-fns: ^4.4.0
   jsdom: ^29.1.1
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
   motion: ^12.42.2
-  nanoid: ^5.1.16
+  nanoid: ^6.0.0
+  oxfmt: ^0.59.0
+  oxlint: ^1.74.0
+  oxlint-tsgolint: ^0.24.0
   react: ^19.2.7
   react-dom: ^19.2.7
   react-fast-compare: ^3.2.2
-  react-hook-form: ^7.81.0
+  react-hook-form: ^7.82.0
   react-icons: ^5.7.0
   react-is: ^19.2.7
   react-photo-album: ^3.6.0
   react-rx: ^4.2.3
   rxjs: ^7.8.2
   sanity: ^6.5.0
-  styled-components: ^6.4.3
+  styled-components: ^6.4.4
   suspend-react: ^0.1.3
-  tsdown: ^0.22.7
+  tsdown: ^0.22.12
   typescript: 7.0.2
   validate-npm-package-name: ^8.0.0
   video.js: ^7.21.7
@@ -80,6 +84,8 @@ catalogs:
     sanity: ^5 || ^6.0.0-0
     styled-components: ^6.1
 
+# When running `pnpm add`, reuse a dependency's catalog version automatically if
+# it already exists in a catalog, so shared deps stay aligned on a single version.
 catalogMode: prefer
 dedupeDirectDeps: true
 
@@ -90,6 +96,7 @@ linkWorkspacePackages: deep
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
+  - '@changesets/cli'
   - '@oxfmt/*'
   - '@oxlint/*'
   - '@oxlint-tsgolint/*'
@@ -98,8 +105,6 @@ minimumReleaseAgeExclude:
   - '@sanity/*'
   - '@types/*'
   - '@typescript/*'
-  - '@vanilla-extract/compiler'
-  - '@vanilla-extract/vite-plugin'
   - '@vite/*'
   - '@vitejs/plugin-react'
   - '@vitest/*'
@@ -114,6 +119,8 @@ minimumReleaseAgeExclude:
   - react
   - react-dom
   - react-is
+  # Renovate dependency update: styled-components@6.4.4
+  - styled-components@6.4.4
   - rollup
   - sanity
   - vite
@@ -127,14 +134,38 @@ minimumReleaseAgeExclude:
   # tsdown can select a newly released rolldown-plugin-dts version.
   - tsdown
   - rolldown-plugin-dts
+  # tsdown transitive dependency can be newly published.
+  - verkit
+  # pkg-utils / tsdown-config / vanilla-extract plugins depend on lightningcss ^1.33.0
+  - lightningcss@1.33.0
+  - lightningcss-android-arm64@1.33.0
+  - lightningcss-darwin-arm64@1.33.0
+  - lightningcss-darwin-x64@1.33.0
+  - lightningcss-freebsd-x64@1.33.0
+  - lightningcss-linux-arm-gnueabihf@1.33.0
+  - lightningcss-linux-arm64-gnu@1.33.0
+  - lightningcss-linux-arm64-musl@1.33.0
+  - lightningcss-linux-x64-gnu@1.33.0
+  - lightningcss-linux-x64-musl@1.33.0
+  - lightningcss-win32-arm64-msvc@1.33.0
+  - lightningcss-win32-x64-msvc@1.33.0
+  # Renovate dependency update: @sanity/vanilla-extract-tsdown-plugin@0.2.8
+  - '@sanity/vanilla-extract-tsdown-plugin@0.2.8'
+  # Renovate dependency update: @sanity/vanilla-extract-rolldown-plugin@0.3.2
+  - '@sanity/vanilla-extract-rolldown-plugin@0.3.2'
+  - '@yuku-parser/*'
+  - yuku-parser
 
 overrides:
   '@types/node': 'catalog:'
   sanity: 'catalog:'
   styled-components: npm:@sanity/styled-components@latest
 
-patchedDependencies:
-  '@bynder/compact-view': patches/@bynder__compact-view.patch
+peerDependencyRules:
+  allowedVersions:
+    # @bynder/compact-view does not declare react 19 in its peers yet, but works fine with it
+    '@bynder/compact-view>react': '19'
+    '@bynder/compact-view>react-dom': '19'
 
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite

@@ -417,8 +417,10 @@ Peer dependency ranges are centralized in the `peer` named catalog in `pnpm-work
 
 The catalog only holds peers shared across many packages (`react`, `react-dom`, `sanity`, `styled-components`). Keep explicit ranges instead of adding catalog entries for:
 
-- **Niche one-off peers** used by a single package (e.g. `easymde` in `sanity-plugin-markdown`, `eslint`/`typescript` in `@sanity/plugin-kit`)
+- **Niche one-off peers** used by a single package (e.g. `easymde` in `sanity-plugin-markdown`)
 - **Peers on other workspace packages**, which keep the `workspace:^` protocol (e.g. `@sanity/dashboard` in the dashboard widgets) or an explicit range when older majors are intentionally supported (e.g. `sanity-plugin-internationalized-array` in `@sanity/sfcc`) — changesets can't track dependents through `catalog:` references
+
+Exception: peers that must stay in lockstep with the version we develop against reference the **default** catalog (`catalog:`) instead of `catalog:peer` — e.g. `@sanity/pkg-utils`, `oxfmt` and `oxlint` in `@sanity/plugin-kit`, where the shared configs may rely on rules and features that ship in a new minor. A wider `catalog:peer` range would let consumers pair plugin-kit with versions missing those features.
 
 Note that the `peer` catalog entries are intentionally wider than the default catalog's (e.g. `react: ^19.2` vs `^19.2.7`): the default catalog pins what we develop against, the `peer` catalog declares what consumers may use. Renovate is configured (a `packageRules` entry in `.github/renovate.json` disables the `pnpm.catalog.peer` depType) to never rewrite these ranges — changing a peer range is a deliberate, manual decision.
 
@@ -434,6 +436,24 @@ pnpm add lodash-es
 pnpm add lodash
 ```
 
+**Catalog shared dependencies**
+
+When a dependency is used by more than one package (two or more), manage its version in the pnpm [catalog](https://pnpm.io/catalogs) instead of repeating a literal range in each `package.json`:
+
+1. Add the dependency and its version range to the default `catalog:` in `pnpm-workspace.yaml`.
+2. Reference it from each `package.json` as `"dep-name": "catalog:"`.
+3. Shared studio peers (`react`, `react-dom`, `sanity`, `styled-components`) use the named `peer` catalog (`catalog:peer`) — see above. For other cases where one package must stay on a different major than the rest, add a named catalog and reference it with `catalog:<name>`.
+
+Leave niche one-off peers and `workspace:` protocol deps as they are. `pnpm add` runs with `catalogMode: prefer` (set in `pnpm-workspace.yaml`), so adding a dependency that already exists in a catalog reuses the catalog version automatically. pnpm has no built-in "used N times" enforcement, so apply this rule whenever you add or move shared dependencies.
+
+**date-fns: v4 via the catalog, subpath imports, official `@date-fns/tz`**
+
+All date handling matches sanity core (`sanity-io/sanity`), so plugins dedupe against the `date-fns` instance that `sanity` itself ships:
+
+- Depend on `date-fns` via `catalog:` (v4) — never pin an older major
+- Import from subpaths, e.g. `import {format} from 'date-fns/format'` — the `date-fns` barrel import is banned by lint
+- For time zone work use the official `@date-fns/tz` package (`TZDate`, `tz`, `tzOffset`, via `catalog:`) together with date-fns v4's `in` context option — the community `date-fns-tz` package is banned by lint. Prefer `Intl.supportedValuesOf('timeZone')`/`Intl.DateTimeFormat` for listing time zones instead of static time zone database packages (e.g. `@vvo/tzdb`)
+
 ### Formatting
 
 We use [oxfmt](https://oxc.rs/docs/formatter.html):
@@ -441,6 +461,8 @@ We use [oxfmt](https://oxc.rs/docs/formatter.html):
 ```bash
 pnpm format
 ```
+
+The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`packages/@sanity/plugin-kit/src/oxfmt.ts`), which the root `oxfmt.config.ts` extends with workspace-specific `ignorePatterns` (for example `turbo/**/*.hbs`). Standalone plugins scaffolded with `plugin-kit init` reuse the same preset. Note that loading the TypeScript config requires Node `^20.19 || >=22.18`.
 
 ### Linting
 
@@ -450,6 +472,8 @@ We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (type-aware, in
 pnpm lint        # Run the linter (includes type checking)
 pnpm lint:fix    # Auto-fix what's possible
 ```
+
+The shared rules (plugins, options, categories, rules) live in the `@sanity/plugin-kit/oxlint` config (`packages/@sanity/plugin-kit/src/oxlint.ts`), which the root `oxlint.config.ts` extends; only workspace-specific ignores and overrides belong in the root config. Standalone plugins scaffolded with `plugin-kit init` re-export the same shared config. Note that `ignorePatterns` do not propagate through `extends`, so the root config spreads the shared patterns before adding its own. Like `pnpm format`, `pnpm lint` requires Node `>=22.18` to load the TypeScript config.
 
 ## Project Structure
 
@@ -523,7 +547,7 @@ Open that URL in the browser to authenticate and land directly in the Home works
 
 ### Node.js version notes
 
-`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 24 is preferred when available, and **Node >= 22.18 is required for a full `pnpm build`**: the `@repo/generators` build runs `tsdown`, which loads its `.mts` config through Node's native TypeScript support. On older Node 22.x (e.g. the `v22.14.0` that may be the VM default) that build fails with `Failed to import module "unrun"`. A new enough runtime is usually available via `nvm` (e.g. `export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH"`). `pnpm lint` and `pnpm test` work on older Node 22 too.
+`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 24 is preferred when available, and **Node >= 22.18 is required for a full `pnpm build`**: the `@repo/generators` build runs `tsdown`, which loads its `.mts` config through Node's native TypeScript support. On older Node 22.x (e.g. the `v22.14.0` that may be the VM default) that build fails with `Failed to import module "unrun"`. **`pnpm format` and `pnpm lint` also require Node >= 22.18** (oxfmt and oxlint load the TypeScript `oxfmt.config.ts` / `oxlint.config.ts` through the same mechanism). A new enough runtime is usually available via `nvm` (e.g. `export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH"`). `pnpm test` works on older Node 22 too.
 
 ### Lint / build / test
 

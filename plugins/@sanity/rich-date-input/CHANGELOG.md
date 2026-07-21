@@ -1,5 +1,23 @@
 # @sanity/rich-date-input
 
+## 4.1.0
+
+### Minor Changes
+
+- [#1569](https://github.com/sanity-io/plugins/pull/1569) [`1d5f733`](https://github.com/sanity-io/plugins/commit/1d5f73373bd7adabf2ca552fead9af4b2958a83e) Thanks [@stipsan](https://github.com/stipsan)! - Update `date-fns` to v4 and replace the community `date-fns-tz` package with the official `@date-fns/tz` package, matching how Sanity Studio itself now handles time zones. Since these are the same versions the `sanity` package ships, studios no longer bundle a second `date-fns` instance. The time zone list is now derived from the runtime's `Intl` API instead of the static `@vvo/tzdb` database, which keeps it current with the browser and trims the bundle.
+
+## 4.0.12
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 4.0.11
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
 ## 4.0.10
 
 ### Patch Changes
