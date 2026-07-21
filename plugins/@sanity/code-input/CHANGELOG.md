@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.3.0
+
+### Minor Changes
+
+- [#1600](https://github.com/sanity-io/plugins/pull/1600) [`9734bff`](https://github.com/sanity-io/plugins/commit/9734bff266ab10c621356726a53496dde892e35e) Thanks [@GabeStah](https://github.com/GabeStah)! - Export `SUPPORTED_LANGUAGES` and `LANGUAGE_ALIASES` from the package root. Downstream tooling that maps external language tokens (markdown fence infostrings, import pipelines) onto `code` field values can now consume the canonical list the Language selector offers instead of vendoring a copy that drifts.
+
 ## 7.2.10
 
 ### Patch Changes
