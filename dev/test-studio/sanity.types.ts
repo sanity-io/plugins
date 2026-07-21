@@ -888,6 +888,64 @@ export type TableRow = {
   cells?: Array<string>
 }
 
+export type BlockInsertPickerTest = {
+  _id: string
+  _type: 'blockInsertPickerTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  content?: BlockInsertPickerContent
+}
+
+export type BlockInsertPickerContent = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+      listItem?: 'bullet' | 'number'
+      markDefs?: Array<{
+        href?: string
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }
+  | ({
+      _key: string
+    } & BlockInsertPickerCallout)
+  | ({
+      _key: string
+    } & BlockInsertPickerCode)
+  | {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+      _key: string
+    }
+>
+
+export type BlockInsertPickerCode = {
+  _type: 'blockInsertPickerCode'
+  language?: string
+  filename?: string
+  source?: string
+}
+
+export type BlockInsertPickerCallout = {
+  _type: 'blockInsertPickerCallout'
+  tone?: 'info' | 'tip' | 'warning'
+  text?: string
+}
+
 export type AsyncListTest = {
   _id: string
   _type: 'asyncListTest'
@@ -1711,6 +1769,10 @@ export type AllSanitySchemaTypes =
   | TableTest
   | Table
   | TableRow
+  | BlockInsertPickerTest
+  | BlockInsertPickerContent
+  | BlockInsertPickerCode
+  | BlockInsertPickerCallout
   | AsyncListTest
   | DisneyCharacter
   | Pokemon
