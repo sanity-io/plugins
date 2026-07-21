@@ -1,0 +1,72 @@
+{
+  "name": "@sanity/block-insert-picker",
+  "version": "1.0.0",
+  "description": "Slash-command block-insert picker and markdown input rules for Portable Text fields in Sanity Studio",
+  "keywords": [
+    "block-insert",
+    "portable-text",
+    "sanity",
+    "sanity-plugin",
+    "slash-commands"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/@sanity/block-insert-picker#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "plugins/@sanity/block-insert-picker"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "dependencies": {
+    "@portabletext/plugin-input-rule": "^6.0.4",
+    "@sanity/icons": "catalog:",
+    "@sanity/ui": "catalog:"
+  },
+  "devDependencies": {
+    "@portabletext/editor": "^7.10.7",
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "jsdom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "@portabletext/editor": "^7.10.7",
+    "react": "catalog:peer",
+    "sanity": "^5.6 || ^6.0.0-0",
+    "styled-components": "catalog:peer"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}

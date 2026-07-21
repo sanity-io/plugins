@@ -1,5 +1,11 @@
 # @sanity/google-maps-input
 
+## 6.1.7
+
+### Patch Changes
+
+- [#1659](https://github.com/sanity-io/plugins/pull/1659) [`ae97408`](https://github.com/sanity-io/plugins/commit/ae974086ae9de58f2d499944509e8628f59cecab) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Stop emitting the redundant `css.ts.d.ts` file from the package output.
+
 ## 6.1.6
 
 ### Patch Changes
