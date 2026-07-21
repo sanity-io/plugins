@@ -42,11 +42,11 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
+    "@sanity/client": "catalog:",
     "@sanity/ui": "catalog:",
     "react-simplemde-editor": "^5.2.0"
   },
   "devDependencies": {
-    "@sanity/client": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@types/node": "catalog:",
@@ -66,9 +66,5 @@
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
-  },
-  "inlinedDependencies": {
-    "@sanity/client": "7.23.2",
-    "rxjs": "7.8.2"
   }
 }
