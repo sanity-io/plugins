@@ -52,7 +52,7 @@ Examples
 `
 
 async function run({argv}: {argv: string[]}) {
-  const cli = meow(help, {flags: initFlags, argv, description})
+  const cli = meow(help, {importMeta: import.meta, flags: initFlags, argv, description})
   const basePath = path.resolve(cli.input[0] || process.cwd())
   const packageConfig = await loadPackageConfig({basePath})
   const outDir = packageConfig?.dist ?? defaultOutDir

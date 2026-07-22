@@ -105,7 +105,7 @@ async function injectBase(options: InjectOptions) {
 
   const repoUrl =
     flags.repo ??
-    ((await gitRemoteOriginUrl(basePath).catch(errorToUndefined)) || pkg?.repository?.url)
+    ((await gitRemoteOriginUrl({cwd: basePath}).catch(errorToUndefined)) || pkg?.repository?.url)
 
   const gitOrigin = requireUserConfirmation ? await promptForRepoOrigin(options, repoUrl) : repoUrl
 

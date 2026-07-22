@@ -2,23 +2,35 @@ import path from 'path'
 import {URL} from 'url'
 
 import githubUrlToObject from 'github-url-to-object'
-import inquirer from 'inquirer'
+import inquirer, {type Question} from 'inquirer'
 import validNpmName from 'validate-npm-package-name'
 
 import type {InjectOptions} from '../actions/inject'
 
-export async function prompt(
-  message: string,
-  options: {
-    choices?: any
-    type?: string
-    default?: any
-    filter?: (val: any) => any
-    validate?: (val: any) => boolean | string
-  },
-) {
-  const type = options.choices ? 'list' : options.type
-  const result = await inquirer.prompt([{...options, type, message, name: 'single'}])
+interface PromptOptions {
+  choices?: any
+  type?: string
+  default?: any
+  filter?: (val: any) => any
+  validate?: (val: any) => boolean | string
+}
+
+export async function prompt(message: string, options: PromptOptions) {
+  const type = options.choices ? 'list' : (options.type ?? 'input')
+  const question: Question & Pick<PromptOptions, 'validate'> = {
+    ...options,
+    type,
+    message,
+    name: 'single',
+  }
+  const {filter, validate} = options
+  if (validate) {
+    // Classic inquirer ran `validate` on the filtered value; the modern rewrite applies
+    // `filter` only after the prompt resolves, so restore the original semantics here
+    // (all filters used with `prompt` are idempotent)
+    question.validate = (value: any) => validate(filter ? filter(value) : value)
+  }
+  const result = await inquirer.prompt([question])
   return result && result.single
 }
 
