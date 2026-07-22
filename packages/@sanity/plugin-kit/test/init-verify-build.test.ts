@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import {fileURLToPath} from 'url'
 
-import execa from 'execa'
+import {execa} from 'execa'
 import {expect, test} from 'vitest'
 
 import {contents, initTestArgs, normalize, runCliCommand, testFixture} from './fixture-utils'
