@@ -16,7 +16,7 @@ interface PromptOptions {
 }
 
 export async function prompt(message: string, options: PromptOptions) {
-  const type = options.choices ? 'list' : (options.type ?? 'input')
+  const type = options.choices ? 'select' : (options.type ?? 'input')
   const question: Question & Pick<PromptOptions, 'validate'> = {
     ...options,
     type,
