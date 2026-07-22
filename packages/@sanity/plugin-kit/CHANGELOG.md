@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 9.0.2
+
+### Patch Changes
+
+- [#1687](https://github.com/sanity-io/plugins/pull/1687) [`96830b8`](https://github.com/sanity-io/plugins/commit/96830b800b5e20a34f8def189488aae26a2f92ae) Thanks [@stipsan](https://github.com/stipsan)! - Update CLI dependencies to their latest majors: `chalk` 5, `concurrently` 9, `execa` 9, `git-remote-origin-url` 4, `inquirer` 12, `meow` 14, `p-props` 6, `xdg-basedir` 5 and `nodemon` 3.1.14. The CLI behaves the same as before, and its installed footprint shrinks noticeably (the new majors drop many transitive dependencies). `concurrently` 10, `execa` 10 and `inquirer` 13+ are intentionally held back for now, as they require Node.js versions newer than plugin-kit's supported range.
+
 ## 9.0.1
 
 ### Patch Changes
