@@ -336,7 +336,7 @@ importers:
         version: 19.2.7(react@19.2.7)
       sanity:
         specifier: ^6.5.0
-        version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.14)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.5.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.15)(jiti@2.7.0)(oxfmt@0.59.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.2.0)(supports-color@8.1.1)(terser@5.49.0)(typescript@7.0.2)
+        version: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.14)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.5.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.15)(jiti@2.7.0)(oxfmt@0.59.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.2.0)(terser@5.49.0)(typescript@7.0.2)
       sanity-naive-html-serializer:
         specifier: workspace:*
         version: link:../../plugins/sanity-naive-html-serializer
@@ -459,8 +459,8 @@ importers:
         specifier: ^9.6.1
         version: 9.6.1
       get-it:
-        specifier: ^9.1.0
-        version: 9.1.0(vitest@4.1.10)
+        specifier: ^9.2.0
+        version: 9.2.0(vitest@4.1.10)
       get-latest-version:
         specifier: ^6.0.1
         version: 6.0.1
@@ -497,7 +497,7 @@ importers:
     devDependencies:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 11.0.13(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.21.3)(supports-color@8.1.1)(typescript@7.0.2)
+        version: 11.0.13(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.21.3)(typescript@7.0.2)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
@@ -2809,7 +2809,7 @@ importers:
         version: 3.4.0(@emotion/is-prop-valid@1.4.0)(@sanity/styled-components@6.1.24)(react-dom@19.2.7)(react-is@19.2.7)(react@19.2.7)
       axios:
         specifier: ^1.18.1
-        version: 1.18.1(supports-color@8.1.1)
+        version: 1.18.1
       pretty-bytes:
         specifier: ^6.1.1
         version: 6.1.1
@@ -6173,12 +6173,6 @@ packages:
     resolution: {integrity: sha512-XwbGSK/cNW/awPfT8GssDTZoTlmg/7bcz1feCdfSDjOvNmlNfSqu/uPJZgKPnM0n54bFTUy8cs2zTKm1kc8nVA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
-  '@sanity/preview-url-secret@4.0.8':
-    resolution: {integrity: sha512-n2ulvDpA8z9UOhnyMPB4WC2w3e/noqL2+gE1f+WQyAE2v0OJsYOkTQzNCe9FU0UaVtbuBTNZI5xj+ei6Qxql/Q==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      '@sanity/client': ^7.23.0
-
   '@sanity/preview-url-secret@4.1.0':
     resolution: {integrity: sha512-Zha42V94Q7vnSHOyCHtSihChX7asoVrDq7BCQ6xyAzoGZKdbP7FIOiSahfIN9Z1ZUEe5PJh6/HGx9+6e/y50NA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -6260,9 +6254,6 @@ packages:
   '@sanity/util@6.5.0':
     resolution: {integrity: sha512-PlRAkAUZZUUUPk8drODqd2e34g3nTjob7n36/v7/IrfIo2ONk9yMYE+O9r9GhrOLwQHixjwGeg3RGzbMGbEL6w==}
     engines: {node: '>=22.12'}
-
-  '@sanity/uuid@3.0.2':
-    resolution: {integrity: sha512-vzdhqOrX7JGbMyK40KuIwwyXHm7GMLOGuYgn3xlC09e4ZVNofUO5mgezQqnRv0JAMthIRhofqs9f6ufUjMKOvw==}
 
   '@sanity/uuid@3.0.3':
     resolution: {integrity: sha512-aJvKuFwzcZKRwuIjrRPfXfXKpSdnLF4CnedV5WcX1n5SzhufvRNHIot5lkx1+Y1DwiMVQOZ5gDSPJH+P6Ao70A==}
@@ -6593,9 +6584,6 @@ packages:
 
   '@types/use-sync-external-store@0.0.6':
     resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
-
-  '@types/uuid@8.3.4':
-    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
 
   '@types/validate-npm-package-name@4.0.2':
     resolution: {integrity: sha512-lrpDziQipxCEeK5kWxvljWYhUvOiB2A9izZd9B2AFarYAkqZshb4lPbRs7zKEic6eGtH8V/2qJW+dPp9OtF6bw==}
@@ -8271,8 +8259,8 @@ packages:
     resolution: {integrity: sha512-vRyooMBzoIdEbARGT3JcvWqMD67YzC5SKlMqofyfck1ebLh2zzlpD4hVQ3xiuuiADk4jNs0rTezVlxCMqOlZfA==}
     engines: {node: '>=14.0.0'}
 
-  get-it@9.1.0:
-    resolution: {integrity: sha512-6ogh4PhhPKj70sKeyXxNZS1rCj2zDFIE2ddXu+XD9F98DUBBhq84hL0xf/+ew7aGdf2PgQBXX36KlzgXuDokdg==}
+  get-it@9.2.0:
+    resolution: {integrity: sha512-od/t2gFolI6YH8f2DafcGPFTe0qjP2EWTBU+joJzdSHm97Nni0fC99UDXTEYvOxnVFk7am/f2lHkUs8OKDVnEQ==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       vitest: '>=2.0.0'
@@ -10911,11 +10899,6 @@ packages:
     resolution: {integrity: sha512-6ZxzVpzDXDa3bJWaHilVayA+BH/1zmxCJoVgvmqJnid/gPoKHxUrS/aC/T6LGQtNHT+XHG9fXPJB4d+IrU30Ew==}
     hasBin: true
 
-  uuid@8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
-    hasBin: true
-
   uuidv7@0.4.4:
     resolution: {integrity: sha512-jjRGChg03uGp9f6wQYSO8qXkweJwRbA5WRuEQE8xLIiehIzIIi23qZSzsyvZPCPoFqkeLtZuz7Plt1LGukAInA==}
     hasBin: true
@@ -11483,7 +11466,7 @@ snapshots:
       regexpu-core: 6.4.0
       semver: 6.3.1
 
-  '@babel/helper-define-polyfill-provider@0.6.8(@babel/core@7.29.7)(supports-color@8.1.1)':
+  '@babel/helper-define-polyfill-provider@0.6.8(@babel/core@7.29.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-compilation-targets': 7.29.7
@@ -12019,7 +12002,7 @@ snapshots:
       '@babel/helper-create-regexp-features-plugin': 7.29.7(@babel/core@7.29.7)
       '@babel/helper-plugin-utils': 7.29.7
 
-  '@babel/preset-env@7.29.7(@babel/core@7.29.7)(supports-color@8.1.1)':
+  '@babel/preset-env@7.29.7(@babel/core@7.29.7)':
     dependencies:
       '@babel/compat-data': 7.29.7
       '@babel/core': 7.29.7
@@ -12088,7 +12071,7 @@ snapshots:
       '@babel/plugin-transform-unicode-regex': 7.29.7(@babel/core@7.29.7)
       '@babel/plugin-transform-unicode-sets-regex': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-modules': 0.1.6-no-external-plugins(@babel/core@7.29.7)
-      babel-plugin-polyfill-corejs2: 0.4.17(@babel/core@7.29.7)(supports-color@8.1.1)
+      babel-plugin-polyfill-corejs2: 0.4.17(@babel/core@7.29.7)
       babel-plugin-polyfill-corejs3: 0.14.2(@babel/core@7.29.7)
       babel-plugin-polyfill-regenerator: 0.6.8(@babel/core@7.29.7)
       core-js-compat: 3.49.0
@@ -14184,7 +14167,7 @@ snapshots:
 
   '@sanity/browserslist-config@1.0.5': {}
 
-  '@sanity/cli-build@4.1.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.0)(supports-color@8.1.1)(terser@5.49.0)(tsx@4.23.1)(typescript@7.0.2)(yaml@2.9.0)':
+  '@sanity/cli-build@4.1.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.0)(terser@5.49.0)(tsx@4.23.1)(typescript@7.0.2)(yaml@2.9.0)':
     dependencies:
       '@oclif/core': 4.11.14
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.0)(vite@8.1.5)
@@ -14277,20 +14260,20 @@ snapshots:
       - terser
       - yaml
 
-  '@sanity/cli@7.10.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.59.0)(rolldown@1.2.0)(supports-color@8.1.1)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)':
+  '@sanity/cli@7.10.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.59.0)(rolldown@1.2.0)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)':
     dependencies:
       '@oclif/core': 4.11.14
       '@oclif/plugin-help': 6.2.53
       '@oclif/plugin-not-found': 3.2.88(@types/node@24.13.3)
-      '@sanity/cli-build': 4.1.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.0)(supports-color@8.1.1)(terser@5.49.0)(tsx@4.23.1)(typescript@7.0.2)(yaml@2.9.0)
+      '@sanity/cli-build': 4.1.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.0)(terser@5.49.0)(tsx@4.23.1)(typescript@7.0.2)(yaml@2.9.0)
       '@sanity/cli-core': 2.5.0(@noble/hashes@2.2.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(terser@5.49.0)(yaml@2.9.0)
       '@sanity/client': 7.24.0
-      '@sanity/codegen': 7.0.3(@oclif/core@4.11.14)(@sanity/cli-core@2.5.0)(oxfmt@0.59.0)(react@19.2.7)(supports-color@8.1.1)
+      '@sanity/codegen': 7.0.3(@oclif/core@4.11.14)(@sanity/cli-core@2.5.0)(oxfmt@0.59.0)(react@19.2.7)
       '@sanity/descriptors': 1.3.0
-      '@sanity/export': 6.2.0(supports-color@8.1.1)
+      '@sanity/export': 6.2.0
       '@sanity/generate-help-url': 4.0.0
       '@sanity/id-utils': 1.0.0
-      '@sanity/import': 6.0.3(@sanity/client@7.24.0)(@types/react@19.2.17)(supports-color@8.1.1)
+      '@sanity/import': 6.0.3(@sanity/client@7.24.0)(@types/react@19.2.17)
       '@sanity/migrate': 7.0.3(@oclif/core@4.11.14)(@sanity/cli-core@2.5.0)(@types/react@19.2.17)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.1.0(@types/node@24.13.3)(@vitejs/devtools@0.4.1)(esbuild@0.28.1)(terser@5.49.0)(tsx@4.23.1)(yaml@2.9.0)
       '@sanity/schema': 6.5.0(@types/react@19.2.17)
@@ -14309,7 +14292,7 @@ snapshots:
       execa: 9.6.1
       form-data: 4.0.6
       get-latest-version: 6.0.1
-      groq-js: 1.30.3(supports-color@8.1.1)
+      groq-js: 1.30.3
       gunzip-maybe: 1.4.2
       import-meta-resolve: 4.2.0
       is-installed-globally: 1.0.0
@@ -14384,11 +14367,11 @@ snapshots:
       nanoid: 3.3.16
       rxjs: 7.8.2
 
-  '@sanity/codegen@7.0.3(@oclif/core@4.11.14)(@sanity/cli-core@2.5.0)(oxfmt@0.59.0)(react@19.2.7)(supports-color@8.1.1)':
+  '@sanity/codegen@7.0.3(@oclif/core@4.11.14)(@sanity/cli-core@2.5.0)(oxfmt@0.59.0)(react@19.2.7)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/generator': 7.29.7
-      '@babel/preset-env': 7.29.7(@babel/core@7.29.7)(supports-color@8.1.1)
+      '@babel/preset-env': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-react': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
       '@babel/register': 7.29.7(@babel/core@7.29.7)
@@ -14402,7 +14385,7 @@ snapshots:
       debug: 4.4.3(supports-color@8.1.1)
       globby: 11.1.0
       groq: 6.5.0
-      groq-js: 1.30.3(supports-color@8.1.1)
+      groq-js: 1.30.3
       json5: 2.2.3
       lodash-es: 4.18.1
       prettier: 3.9.5
@@ -14448,7 +14431,7 @@ snapshots:
       event-source-polyfill: 1.0.31
       eventsource: 2.0.2
 
-  '@sanity/export@6.2.0(supports-color@8.1.1)':
+  '@sanity/export@6.2.0':
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
       get-it: 8.8.0
@@ -14478,7 +14461,7 @@ snapshots:
     dependencies:
       '@sanity/signed-urls': 2.0.4
 
-  '@sanity/import@6.0.3(@sanity/client@7.24.0)(@types/react@19.2.17)(supports-color@8.1.1)':
+  '@sanity/import@6.0.3(@sanity/client@7.24.0)(@types/react@19.2.17)':
     dependencies:
       '@sanity/asset-utils': 2.3.0
       '@sanity/client': 7.24.0
@@ -14555,7 +14538,7 @@ snapshots:
       console-table-printer: 2.16.1
       debug: 4.4.3(supports-color@8.1.1)
       fast-fifo: 1.3.2
-      groq-js: 1.30.3(supports-color@8.1.1)
+      groq-js: 1.30.3
       p-map: 7.0.5
     transitivePeerDependencies:
       - '@types/react'
@@ -14591,7 +14574,7 @@ snapshots:
     dependencies:
       zod: 4.4.3
 
-  '@sanity/pkg-utils@11.0.13(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.21.3)(supports-color@8.1.1)(typescript@7.0.2)':
+  '@sanity/pkg-utils@11.0.13(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-resolver@11.21.3)(typescript@7.0.2)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
@@ -14630,7 +14613,7 @@ snapshots:
       rolldown: 1.2.0
       rolldown-plugin-dts: 0.27.12(oxc-resolver@11.21.3)(rolldown@1.2.0)(typescript@7.0.2)
       rollup: 4.62.2
-      rollup-plugin-esbuild: 6.2.1(esbuild@0.28.1)(rollup@4.62.2)(supports-color@8.1.1)
+      rollup-plugin-esbuild: 6.2.1(esbuild@0.28.1)(rollup@4.62.2)
       rxjs: 7.8.2
       treeify: 1.1.0
       tsx: 4.23.1
@@ -14657,11 +14640,6 @@ snapshots:
       - '@sanity/client'
       - '@sanity/types'
 
-  '@sanity/preview-url-secret@4.0.8(@sanity/client@7.24.0)':
-    dependencies:
-      '@sanity/client': 7.24.0
-      '@sanity/uuid': 3.0.2
-
   '@sanity/preview-url-secret@4.1.0(@sanity/client@7.24.0)':
     dependencies:
       '@sanity/client': 7.24.0
@@ -14685,7 +14663,7 @@ snapshots:
       cardinal: 2.1.1
       empathic: 2.0.1
       eventsource: 4.1.0
-      groq-js: 1.30.3(supports-color@8.1.1)
+      groq-js: 1.30.3
       jiti: 2.7.0
       mime-types: 3.0.2
       ora: 9.4.1
@@ -14719,7 +14697,7 @@ snapshots:
       '@sanity/types': 6.5.0(@types/react@19.2.17)
       arrify: 3.0.0
       get-it: 8.8.0
-      groq-js: 1.30.3(supports-color@8.1.1)
+      groq-js: 1.30.3
       humanize-list: 1.0.1
       leven: 4.1.0
       lodash-es: 4.18.1
@@ -14743,7 +14721,7 @@ snapshots:
       '@sanity/telemetry': 1.1.0(react@19.2.7)
       '@sanity/types': 6.5.0(@types/react@19.2.17)
       groq: 3.88.1-typegen-experimental.0
-      groq-js: 1.30.3(supports-color@8.1.1)
+      groq-js: 1.30.3
       reselect: 5.2.0
       rxjs: 7.8.2
       zustand: 5.0.14(@types/react@19.2.17)(immer@11.1.15)(react@19.2.7)(use-sync-external-store@1.6.0)
@@ -14862,11 +14840,6 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@sanity/uuid@3.0.2':
-    dependencies:
-      '@types/uuid': 8.3.4
-      uuid: 8.3.2
-
   '@sanity/uuid@3.0.3':
     dependencies:
       uuid: 11.1.1
@@ -14932,7 +14905,7 @@ snapshots:
       react: 19.2.7
       react-rx: 4.2.3(react@19.2.7)(rxjs@7.8.2)
       rxjs: 7.8.2
-      sanity: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.14)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.5.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.15)(jiti@2.7.0)(oxfmt@0.59.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.2.0)(supports-color@8.1.1)(terser@5.49.0)(typescript@7.0.2)
+      sanity: 6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.14)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.5.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.15)(jiti@2.7.0)(oxfmt@0.59.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.2.0)(terser@5.49.0)(typescript@7.0.2)
     transitivePeerDependencies:
       - '@babel/runtime'
       - '@codemirror/lint'
@@ -15241,8 +15214,6 @@ snapshots:
   '@types/unist@3.0.3': {}
 
   '@types/use-sync-external-store@0.0.6': {}
-
-  '@types/uuid@8.3.4': {}
 
   '@types/validate-npm-package-name@4.0.2': {}
 
@@ -15717,7 +15688,7 @@ snapshots:
       global: 4.4.0
       pkcs7: 1.0.4
 
-  agent-base@6.0.2(supports-color@8.1.1):
+  agent-base@6.0.2:
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
     transitivePeerDependencies:
@@ -15829,11 +15800,11 @@ snapshots:
 
   aws4@1.13.2: {}
 
-  axios@1.18.1(supports-color@8.1.1):
+  axios@1.18.1:
     dependencies:
       follow-redirects: 1.16.0
       form-data: 4.0.6
-      https-proxy-agent: 5.0.1(supports-color@8.1.1)
+      https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
@@ -15847,11 +15818,11 @@ snapshots:
       cosmiconfig: 7.1.0
       resolve: 1.22.12
 
-  babel-plugin-polyfill-corejs2@0.4.17(@babel/core@7.29.7)(supports-color@8.1.1):
+  babel-plugin-polyfill-corejs2@0.4.17(@babel/core@7.29.7):
     dependencies:
       '@babel/compat-data': 7.29.7
       '@babel/core': 7.29.7
-      '@babel/helper-define-polyfill-provider': 0.6.8(@babel/core@7.29.7)(supports-color@8.1.1)
+      '@babel/helper-define-polyfill-provider': 0.6.8(@babel/core@7.29.7)
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
@@ -15859,7 +15830,7 @@ snapshots:
   babel-plugin-polyfill-corejs3@0.14.2(@babel/core@7.29.7):
     dependencies:
       '@babel/core': 7.29.7
-      '@babel/helper-define-polyfill-provider': 0.6.8(@babel/core@7.29.7)(supports-color@8.1.1)
+      '@babel/helper-define-polyfill-provider': 0.6.8(@babel/core@7.29.7)
       core-js-compat: 3.49.0
     transitivePeerDependencies:
       - supports-color
@@ -15867,7 +15838,7 @@ snapshots:
   babel-plugin-polyfill-regenerator@0.6.8(@babel/core@7.29.7):
     dependencies:
       '@babel/core': 7.29.7
-      '@babel/helper-define-polyfill-provider': 0.6.8(@babel/core@7.29.7)(supports-color@8.1.1)
+      '@babel/helper-define-polyfill-provider': 0.6.8(@babel/core@7.29.7)
     transitivePeerDependencies:
       - supports-color
 
@@ -16924,7 +16895,7 @@ snapshots:
       through2: 4.0.2
       tunnel-agent: 0.6.0
 
-  get-it@9.1.0(vitest@4.1.10):
+  get-it@9.2.0(vitest@4.1.10):
     dependencies:
       undici: 7.28.0
     optionalDependencies:
@@ -17030,7 +17001,7 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  groq-js@1.30.3(supports-color@8.1.1):
+  groq-js@1.30.3:
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
     transitivePeerDependencies:
@@ -17139,9 +17110,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@5.0.1(supports-color@8.1.1):
+  https-proxy-agent@5.0.1:
     dependencies:
-      agent-base: 6.0.2(supports-color@8.1.1)
+      agent-base: 6.0.2
       debug: 4.4.3(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
@@ -18811,7 +18782,7 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.2.0
       '@rolldown/binding-win32-x64-msvc': 1.2.0
 
-  rollup-plugin-esbuild@6.2.1(esbuild@0.28.1)(rollup@4.62.2)(supports-color@8.1.1):
+  rollup-plugin-esbuild@6.2.1(esbuild@0.28.1)(rollup@4.62.2):
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
       es-module-lexer: 1.7.0
@@ -18899,7 +18870,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sanity@6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.14)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.5.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.15)(jiti@2.7.0)(oxfmt@0.59.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.2.0)(supports-color@8.1.1)(terser@5.49.0)(typescript@7.0.2):
+  sanity@6.5.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@oclif/core@4.11.14)(@rolldown/plugin-babel@0.2.3)(@sanity/cli-core@2.5.0)(@sanity/styled-components@6.1.24)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.15)(jiti@2.7.0)(oxfmt@0.59.0)(react-dom@19.2.7)(react@19.2.7)(rolldown@1.2.0)(terser@5.49.0)(typescript@7.0.2):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.5.0
@@ -18925,7 +18896,7 @@ snapshots:
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.7)
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
-      '@sanity/cli': 7.10.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.59.0)(rolldown@1.2.0)(supports-color@8.1.1)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)
+      '@sanity/cli': 7.10.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.59.0)(rolldown@1.2.0)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)
       '@sanity/client': 7.24.0
       '@sanity/color': 3.0.6
       '@sanity/comlink': 4.0.1
@@ -18944,7 +18915,7 @@ snapshots:
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/mutator': 6.5.0(@types/react@19.2.17)
       '@sanity/presentation-comlink': 2.1.0(@sanity/client@7.24.0)(@sanity/types@6.5.0)
-      '@sanity/preview-url-secret': 4.0.8(@sanity/client@7.24.0)
+      '@sanity/preview-url-secret': 4.1.0(@sanity/client@7.24.0)
       '@sanity/prism-groq': 1.1.2
       '@sanity/schema': 6.5.0(@types/react@19.2.17)
       '@sanity/sdk': 2.17.0(@types/react@19.2.17)(immer@11.1.15)(react@19.2.7)(use-sync-external-store@1.6.0)(xstate@5.32.5)
@@ -18964,7 +18935,7 @@ snapshots:
       debug: 4.4.3(supports-color@8.1.1)
       exif-component: 1.0.1
       fast-deep-equal: 3.1.3
-      groq-js: 1.30.3(supports-color@8.1.1)
+      groq-js: 1.30.3
       history: 5.3.0
       i18next: 26.3.6(typescript@7.0.2)
       is-hotkey-esm: 1.0.0
@@ -19072,7 +19043,7 @@ snapshots:
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.7)
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
-      '@sanity/cli': 7.10.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.59.0)(rolldown@1.2.0)(supports-color@8.1.1)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)
+      '@sanity/cli': 7.10.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.59.0)(rolldown@1.2.0)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)
       '@sanity/client': 7.24.0
       '@sanity/color': 3.0.6
       '@sanity/comlink': 4.0.1
@@ -19091,7 +19062,7 @@ snapshots:
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/mutator': 6.5.0(@types/react@19.2.17)
       '@sanity/presentation-comlink': 2.1.0(@sanity/client@7.24.0)(@sanity/types@6.5.0)
-      '@sanity/preview-url-secret': 4.0.8(@sanity/client@7.24.0)
+      '@sanity/preview-url-secret': 4.1.0(@sanity/client@7.24.0)
       '@sanity/prism-groq': 1.1.2
       '@sanity/schema': 6.5.0(@types/react@19.2.17)
       '@sanity/sdk': 2.17.0(@types/react@19.2.17)(immer@11.1.15)(react@19.2.7)(use-sync-external-store@1.6.0)(xstate@5.32.5)
@@ -19111,7 +19082,7 @@ snapshots:
       debug: 4.4.3(supports-color@8.1.1)
       exif-component: 1.0.1
       fast-deep-equal: 3.1.3
-      groq-js: 1.30.3(supports-color@8.1.1)
+      groq-js: 1.30.3
       history: 5.3.0
       i18next: 26.3.6(typescript@7.0.2)
       is-hotkey-esm: 1.0.0
@@ -19219,7 +19190,7 @@ snapshots:
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.7)
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
-      '@sanity/cli': 7.10.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.59.0)(rolldown@1.2.0)(supports-color@8.1.1)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)
+      '@sanity/cli': 7.10.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.1)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.59.0)(rolldown@1.2.0)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)
       '@sanity/client': 7.24.0
       '@sanity/color': 3.0.6
       '@sanity/comlink': 4.0.1
@@ -19238,7 +19209,7 @@ snapshots:
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/mutator': 6.5.0(@types/react@19.2.17)
       '@sanity/presentation-comlink': 2.1.0(@sanity/client@7.24.0)(@sanity/types@6.5.0)
-      '@sanity/preview-url-secret': 4.0.8(@sanity/client@7.24.0)
+      '@sanity/preview-url-secret': 4.1.0(@sanity/client@7.24.0)
       '@sanity/prism-groq': 1.1.2
       '@sanity/schema': 6.5.0(@types/react@19.2.17)
       '@sanity/sdk': 2.17.0(@types/react@19.2.17)(immer@11.1.15)(react@19.2.7)(use-sync-external-store@1.6.0)(xstate@5.32.5)
@@ -19258,7 +19229,7 @@ snapshots:
       debug: 4.4.3(supports-color@8.1.1)
       exif-component: 1.0.1
       fast-deep-equal: 3.1.3
-      groq-js: 1.30.3(supports-color@8.1.1)
+      groq-js: 1.30.3
       history: 5.3.0
       i18next: 26.3.6(typescript@7.0.2)
       is-hotkey-esm: 1.0.0
@@ -19960,8 +19931,6 @@ snapshots:
   uuid@13.0.2: {}
 
   uuid@14.0.1: {}
-
-  uuid@8.3.2: {}
 
   uuidv7@0.4.4: {}
 
