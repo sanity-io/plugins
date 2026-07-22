@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import {fileURLToPath} from 'url'
 
-import execa from 'execa'
+import {execa, type Options, type Result} from 'execa'
 import {expect} from 'vitest'
 
 const testDir = path.dirname(fileURLToPath(import.meta.url))
@@ -35,6 +35,11 @@ export const initTestArgs = [
   'https://github.com/sanity-io/sanity',
 ]
 
+// Subprocesses in these tests always run with execa's default pipe + utf8 stdio and may use
+// `reject: false`; resolving Result against these options types stdout/stderr as plain strings
+// and keeps failure properties accessible
+export type CliResult = Result<{reject: false}>
+
 export async function testFixture({
   fixturePath,
   relativeOutPath = 'dist',
@@ -43,8 +48,8 @@ export async function testFixture({
 }: {
   fixturePath: string
   relativeOutPath?: string
-  command: (args: {fixtureDir: string; outputDir: string}) => Promise<execa.ExecaReturnValue>
-  assert: (args: {result: execa.ExecaReturnValue; outputDir: string}) => Promise<void>
+  command: (args: {fixtureDir: string; outputDir: string}) => Promise<CliResult>
+  assert: (args: {result: CliResult; outputDir: string}) => Promise<void>
 }) {
   const fixtureDir = path.join(baseFixturesDir, normalize(fixturePath))
   const outputDir = path.join(fixtureDir, normalize(relativeOutPath))
@@ -66,7 +71,13 @@ export function fileContainsValidator(outputDir: string) {
   }
 }
 
-export function runCliCommand(command: string, args: string[] = [], options?: execa.Options) {
+// The explicit return type keeps the emitted declaration portable (avoids TS2883 references
+// to execa-internal types during dts generation)
+export function runCliCommand(
+  command: string,
+  args: string[] = [],
+  options?: Pick<Options, 'cwd' | 'preferLocal' | 'localDir' | 'reject'>,
+): Promise<CliResult> {
   return execa('node', [binPath, command, ...args].filter(Boolean), {
     cwd: testDir,
     reject: false,

@@ -38,6 +38,7 @@ export async function cliEntry(argv = process.argv) {
     $ ${cliName} verify-package
 `,
     {
+      importMeta: import.meta,
       autoHelp: false,
       flags: sharedFlags,
       argv: argv.slice(2),

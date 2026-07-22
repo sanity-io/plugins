@@ -1,4 +1,4 @@
-import execa from 'execa'
+import {execa} from 'execa'
 
 import {prompt} from '../util/prompt'
 
@@ -41,5 +41,5 @@ export async function promptForPackageManager() {
 export async function installDependencies(pm: string, {cwd}: {cwd?: string}) {
   const proc = execa(pm, ['install'], {cwd, stdio: 'inherit'})
   const {exitCode} = await proc
-  return exitCode <= 0
+  return exitCode === 0
 }
