@@ -459,8 +459,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       get-it:
-        specifier: ^9.1.0
-        version: 9.1.0(vitest@4.1.10)
+        specifier: ^9.2.0
+        version: 9.2.0(vitest@4.1.10)
       get-latest-version:
         specifier: ^6.0.1
         version: 6.0.1
@@ -8360,8 +8360,8 @@ packages:
     resolution: {integrity: sha512-vRyooMBzoIdEbARGT3JcvWqMD67YzC5SKlMqofyfck1ebLh2zzlpD4hVQ3xiuuiADk4jNs0rTezVlxCMqOlZfA==}
     engines: {node: '>=14.0.0'}
 
-  get-it@9.1.0:
-    resolution: {integrity: sha512-6ogh4PhhPKj70sKeyXxNZS1rCj2zDFIE2ddXu+XD9F98DUBBhq84hL0xf/+ew7aGdf2PgQBXX36KlzgXuDokdg==}
+  get-it@9.2.0:
+    resolution: {integrity: sha512-od/t2gFolI6YH8f2DafcGPFTe0qjP2EWTBU+joJzdSHm97Nni0fC99UDXTEYvOxnVFk7am/f2lHkUs8OKDVnEQ==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       vitest: '>=2.0.0'
@@ -17256,7 +17256,7 @@ snapshots:
       through2: 4.0.2
       tunnel-agent: 0.6.0
 
-  get-it@9.1.0(vitest@4.1.10):
+  get-it@9.2.0(vitest@4.1.10):
     dependencies:
       undici: 7.28.0
     optionalDependencies:
