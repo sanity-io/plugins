@@ -25,7 +25,8 @@ describe('Browser', () => {
     )
   })
 
-  it('renders Browse Assets header in tool mode', async () => {
+  // First tool mount is expensive under styled-components v6.4; keep headroom on slow CI runners
+  it('renders Browse Assets header in tool mode', {timeout: 30_000}, async () => {
     render(
       <ColorSchemeProvider scheme="light">
         <ThemeProvider theme={studioTheme}>

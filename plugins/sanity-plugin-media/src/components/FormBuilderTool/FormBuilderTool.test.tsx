@@ -33,7 +33,8 @@ describe('FormBuilderTool', () => {
     )
   })
 
-  it('renders picker header for image asset type', async () => {
+  // First form mount is expensive under styled-components v6.4; keep headroom on slow CI runners
+  it('renders picker header for image asset type', {timeout: 30_000}, async () => {
     render(
       <ColorSchemeProvider scheme="light">
         <ThemeProvider theme={studioTheme}>
