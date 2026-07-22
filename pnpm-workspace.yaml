@@ -7,8 +7,15 @@ packages:
   - scripts/*
   - turbo/generators
 
+# Gated off because AILF runs remote (--remote); flip a value to true if you need one at build time locally.
 allowBuilds:
+  '@playwright/browser-chromium': false
+  '@swc/core': false
+  better-sqlite3: false
   esbuild: false
+  onnxruntime-node: false
+  protobufjs: false
+  sharp: false
 
 catalog:
   '@date-fns/tz': ^1.5.0

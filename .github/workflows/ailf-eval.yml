@@ -1,0 +1,198 @@
+name: AI Literacy Eval
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "plugins/**/.ailf/**"
+      - "plugins/**/src/**"
+      - ".github/workflows/ailf-eval.yml"
+
+  workflow_dispatch:
+    inputs:
+      debug_mode:
+        description: "Run in debug mode (fewer tests, faster iteration)"
+        type: boolean
+        default: false
+
+  schedule:
+    - cron: "0 0 * * 1"
+
+concurrency:
+  group: ailf-eval-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    name: Discover plugins with AILF coverage
+    runs-on: ubuntu-latest
+    outputs:
+      plugins: ${{ steps.list.outputs.plugins }}
+      has_ailf: ${{ steps.list.outputs.has_ailf }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - id: list
+        run: |
+          plugins=$(find plugins -type d -name '.ailf' -not -path '*/node_modules/*' \
+            | sed 's|/.ailf$||' \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "plugins=$plugins" >> "$GITHUB_OUTPUT"
+          if [ "$plugins" != "[]" ]; then
+            echo "has_ailf=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_ailf=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  evaluate:
+    name: AI Literacy Evaluation
+    needs: discover
+    if: needs.discover.outputs.has_ailf == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin: ${{ fromJson(needs.discover.outputs.plugins) }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup
+        with:
+          node-version: lts/*
+
+      - name: Compute plugin key
+        id: key
+        run: echo "key=$(basename '${{ matrix.plugin }}')" >> "$GITHUB_OUTPUT"
+
+      - name: Run evaluation
+        id: eval
+        working-directory: ${{ matrix.plugin }}
+        env:
+          AILF_API_KEY: ${{ secrets.AILF_API_KEY }}
+          AILF_CLASSIFICATION: adhoc
+          AILF_OWNER_TEAM: "studio"
+          AILF_OWNER_INDIVIDUAL: ${{ github.actor }}
+        run: |
+          pnpm exec ailf run --remote \
+            --output /tmp/ailf-report-${{ steps.key.outputs.key }}.md \
+            ${{ inputs.debug_mode && '--debug' || '' }}
+
+      - name: Post PR comment
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v8
+        env:
+          PLUGIN_KEY: ${{ steps.key.outputs.key }}
+          PLUGIN_PATH: ${{ matrix.plugin }}
+        with:
+          script: |
+            const fs = require('fs');
+
+            const pluginKey = process.env.PLUGIN_KEY;
+            const pluginPath = process.env.PLUGIN_PATH;
+            const MARKER = `<!-- ailf-score-report-${pluginKey} -->`;
+            const HISTORY_START = `<!-- ailf-score-history-${pluginKey} -->`;
+            const HISTORY_END = `<!-- /ailf-score-history-${pluginKey} -->`;
+            const MAX_HISTORY = 3;
+
+            let newReport;
+            try {
+              newReport = fs.readFileSync(`/tmp/ailf-report-${pluginKey}.md`, 'utf-8');
+            } catch {
+              newReport = `## AI Literacy Evaluation - \`${pluginPath}\`\n\nNo report generated. Check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).`;
+            }
+
+            const prNumber = context.issue?.number || context.payload?.pull_request?.number;
+            if (!prNumber) {
+              console.log('No PR number found, skipping comment');
+              return;
+            }
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: prNumber,
+            });
+            const existing = comments.find(c => c.body?.includes(MARKER));
+
+            let historyEntries = [];
+            if (existing) {
+              const oldBody = existing.body || '';
+              const histStart = oldBody.indexOf(HISTORY_START);
+              const histEnd = oldBody.indexOf(HISTORY_END);
+              if (histStart !== -1 && histEnd !== -1) {
+                const historyContent = oldBody.slice(histStart + HISTORY_START.length, histEnd).trim();
+                if (historyContent) {
+                  historyEntries = historyContent
+                    .split(/<\/details>\s*/)
+                    .map(s => s.trim())
+                    .filter(s => s.startsWith('<details>'))
+                    .map(s => s + '\n</details>');
+                }
+              }
+
+              let previousReport = '';
+              if (histStart !== -1) {
+                const markerIdx = oldBody.indexOf(MARKER);
+                const separatorIdx = oldBody.lastIndexOf('---', histStart);
+                const endIdx = separatorIdx > markerIdx ? separatorIdx : histStart;
+                previousReport = oldBody.slice(markerIdx + MARKER.length, endIdx).trim();
+              } else {
+                const markerIdx = oldBody.indexOf(MARKER);
+                if (markerIdx !== -1) {
+                  previousReport = oldBody.slice(markerIdx + MARKER.length).trim();
+                }
+              }
+
+              if (previousReport) {
+                const scoreMatch = previousReport.match(/Overall:\s*(\d+)\/100/);
+                const score = scoreMatch ? scoreMatch[1] : '?';
+                const dateMatch = previousReport.match(/Generated by.*?·\s*([^·<\n*]+)/);
+                const date = dateMatch
+                  ? dateMatch[1].trim()
+                  : new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+                const entry = `<details>\n<summary>${date} - ${score}/100</summary>\n\n${previousReport}\n\n</details>`;
+                historyEntries.unshift(entry);
+              }
+
+              historyEntries = historyEntries.slice(0, MAX_HISTORY);
+            }
+
+            const historySection = historyEntries.length > 0
+              ? `\n\n---\n\n### Previous runs\n\n${HISTORY_START}\n${historyEntries.join('\n\n')}\n${HISTORY_END}`
+              : '';
+            const finalBody = `${MARKER}\n${newReport}${historySection}`;
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                comment_id: existing.id, body: finalBody,
+              });
+              console.log(`Updated comment for ${pluginKey} (${historyEntries.length} history entries)`);
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: prNumber, body: finalBody,
+              });
+              console.log(`Created new PR comment for ${pluginKey}`);
+            }
+
+      - name: Summary
+        if: always()
+        env:
+          PLUGIN_KEY: ${{ steps.key.outputs.key }}
+          PLUGIN_PATH: ${{ matrix.plugin }}
+        run: |
+          echo "## AI Literacy Evaluation - \`$PLUGIN_PATH\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f "/tmp/ailf-report-$PLUGIN_KEY.md" ]; then
+            cat "/tmp/ailf-report-$PLUGIN_KEY.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No report generated. Check the workflow logs." >> "$GITHUB_STEP_SUMMARY"
+          fi

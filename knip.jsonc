@@ -18,6 +18,8 @@
       "ignoreBinaries": [
         // Installed externally (not an npm package); used in lint:workflows script
         "zizmor",
+        // From @sanity/ailf (per-plugin devDep); invoked via `pnpm exec ailf` in the ailf-eval workflow
+        "ailf",
       ],
     },
     "dev/test-studio": {
