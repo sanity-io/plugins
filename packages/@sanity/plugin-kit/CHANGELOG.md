@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 9.0.1
+
+### Patch Changes
+
+- [#1675](https://github.com/sanity-io/plugins/pull/1675) [`fc35ac5`](https://github.com/sanity-io/plugins/commit/fc35ac56bd69aa0d68a6d1aacb04699fd942ce95) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency get-it to ^9.2.0
+
 ## 9.0.0
 
 ### Major Changes

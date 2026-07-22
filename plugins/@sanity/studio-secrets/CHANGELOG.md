@@ -1,5 +1,11 @@
 # @sanity/studio-secrets
 
+## 4.0.13
+
+### Patch Changes
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/ui` dependency to the latest catalog version.
+
 ## 4.0.12
 
 ### Patch Changes

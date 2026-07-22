@@ -1,5 +1,12 @@
 # sanity-plugin-studio-smartling
 
+## 5.0.12
+
+### Patch Changes
+
+- Updated dependencies [[`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999), [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999)]:
+  - sanity-translations-tab@6.1.16
+
 ## 5.0.11
 
 ### Patch Changes
