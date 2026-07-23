@@ -43,7 +43,6 @@ export function readBoolEnv(name: string, defaultValue: boolean): boolean {
 
 export type E2eEnv = {
   token: string
-  tokenSource: 'SANITY_E2E_SESSION_TOKEN' | 'STUDIO_AUTH_TOKEN'
   projectId: string
   baseUrl: string
   dataset: string
@@ -59,20 +58,13 @@ export function resolveE2eEnv(): E2eEnv {
   const errors: string[] = []
 
   const sessionToken = process.env.SANITY_E2E_SESSION_TOKEN
-  const studioToken = process.env.STUDIO_AUTH_TOKEN
-
   let token: string | undefined
-  let tokenSource: E2eEnv['tokenSource'] | undefined
 
   if (!isInvalidSecret(sessionToken)) {
     token = sessionToken!.trim()
-    tokenSource = 'SANITY_E2E_SESSION_TOKEN'
-  } else if (!isInvalidSecret(studioToken)) {
-    token = studioToken!.trim()
-    tokenSource = 'STUDIO_AUTH_TOKEN'
   } else {
     errors.push(
-      'SANITY_E2E_SESSION_TOKEN (or STUDIO_AUTH_TOKEN fallback) — required studio session/API token (not SANITY_DEPLOY_TOKEN)',
+      'SANITY_E2E_SESSION_TOKEN — required studio session/API token (not SANITY_DEPLOY_TOKEN)',
     )
   }
 
@@ -98,7 +90,7 @@ export function resolveE2eEnv(): E2eEnv {
   }
   const dataset = datasetRaw?.trim() ?? ''
 
-  if (errors.length > 0 || !token || !tokenSource) {
+  if (errors.length > 0 || !token) {
     throw new Error(
       [
         'Missing or invalid e2e env:',
@@ -108,12 +100,8 @@ export function resolveE2eEnv(): E2eEnv {
     )
   }
 
-  // Log which token source won without printing the secret.
-  console.info(`[e2e] Using auth token from ${tokenSource}`)
-
   return {
     token,
-    tokenSource,
     projectId,
     baseUrl,
     dataset,

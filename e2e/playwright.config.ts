@@ -5,7 +5,7 @@ import {
   type PlaywrightTestProject,
 } from '@playwright/test'
 
-import {loadE2eEnvFiles, readBoolEnv, resolveE2eEnv} from './helpers/env.js'
+import {loadE2eEnvFiles, resolveE2eEnv} from './helpers/env.js'
 
 loadE2eEnvFiles()
 const env = resolveE2eEnv()
@@ -15,7 +15,6 @@ const HEADLESS = env.headless
 const BASE_URL = env.baseUrl
 const PROJECT_ID = env.projectId
 const TOKEN = env.token
-const DEBUG = readBoolEnv('SANITY_E2E_DEBUG', false)
 
 const TESTS_PATH = './tests'
 const ARTIFACT_OUTPUT_PATH = './results'
@@ -86,7 +85,7 @@ const playwrightConfig: PlaywrightTestConfig = {
     headless: HEADLESS,
     contextOptions: {reducedMotion: 'reduce'},
   },
-  projects: DEBUG ? [CHROMIUM_PROJECT] : [CHROMIUM_PROJECT, FIREFOX_PROJECT],
+  projects: [CHROMIUM_PROJECT, FIREFOX_PROJECT],
   webServer: isRemoteStudioUrl(BASE_URL)
     ? undefined
     : {

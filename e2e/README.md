@@ -4,13 +4,12 @@ Playwright smoke tests for the plugins [test studio](../dev/test-studio). Auth f
 
 ## Required secrets / vars
 
-| Variable                    | Purpose                                                                   |
-| --------------------------- | ------------------------------------------------------------------------- |
-| `SANITY_E2E_SESSION_TOKEN`  | Studio session/API token used for browser auth (required in CI)           |
-| `STUDIO_AUTH_TOKEN`         | Fallback for Cursor cloud agents when `SANITY_E2E_SESSION_TOKEN` is unset |
-| `SANITY_E2E_PROJECT_ID`     | Project id — must match the storage key suffix (required)                 |
-| `SANITY_E2E_STUDIO_DATASET` | Dataset for the studio under test (required)                              |
-| `SANITY_E2E_BASE_URL`       | Studio origin (default `http://localhost:3333`)                           |
+| Variable                    | Purpose                                                   |
+| --------------------------- | --------------------------------------------------------- |
+| `SANITY_E2E_SESSION_TOKEN`  | Studio session/API token used for browser auth (required) |
+| `SANITY_E2E_PROJECT_ID`     | Project id — must match the storage key suffix (required) |
+| `SANITY_E2E_STUDIO_DATASET` | Dataset for the studio under test (required)              |
+| `SANITY_E2E_BASE_URL`       | Studio origin (default `http://localhost:3333`)           |
 
 In CI these come from GitHub Actions:
 
@@ -52,7 +51,7 @@ Locally, Playwright starts `pnpm --filter test-studio dev` unless a server is al
 
 ## Troubleshooting auth
 
-1. **Missing secret/vars** — Config and CI fail fast if `SANITY_E2E_SESSION_TOKEN` / `STUDIO_AUTH_TOKEN`, `SANITY_E2E_PROJECT_ID`, or `SANITY_E2E_STUDIO_DATASET` is unset, empty, or a placeholder (`changeme`, etc.). See the error pointing at this README.
+1. **Missing secret/vars** — Config and CI fail fast if `SANITY_E2E_SESSION_TOKEN`, `SANITY_E2E_PROJECT_ID`, or `SANITY_E2E_STUDIO_DATASET` is unset, empty, or a placeholder (`changeme`, etc.). See the error pointing at this README.
 2. **Deploy token used by mistake** — Auth preflight calls `GET /users/me`. A 401/403 usually means the wrong token kind; use a session/API token, not `SANITY_DEPLOY_TOKEN`.
 3. **Project id mismatch** — Storage key is `__studio_auth_token_${SANITY_E2E_PROJECT_ID}`. If the studio uses a different project id, auth will look signed out.
 4. **CORS** — Local origin must be allowed on the Sanity project.

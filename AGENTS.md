@@ -561,7 +561,7 @@ node -e "const t=process.env.STUDIO_AUTH_TOKEN; console.log('http://localhost:33
 
 Open that URL in the browser to authenticate and land directly in the Home workspace (the merged "kitchen sink"). Without a token, workspaces show as "Signed out".
 
-**Playwright e2e:** do not use the `#token=` hash. Tests seed `__studio_auth_token_<projectId>` via Playwright `storageState` (same underlying Studio auth). Prefer `SANITY_E2E_SESSION_TOKEN`; `STUDIO_AUTH_TOKEN` is accepted as a fallback. Required env: `SANITY_E2E_PROJECT_ID`, `SANITY_E2E_STUDIO_DATASET`. See [`e2e/README.md`](e2e/README.md).
+**Playwright e2e:** do not use the `#token=` hash. Tests seed `__studio_auth_token_<projectId>` via Playwright `storageState` (same underlying Studio auth). Requires `SANITY_E2E_SESSION_TOKEN`, `SANITY_E2E_PROJECT_ID`, and `SANITY_E2E_STUDIO_DATASET`. See [`e2e/README.md`](e2e/README.md).
 
 ### E2E smoke tests
 
@@ -569,7 +569,7 @@ Open that URL in the browser to authenticate and land directly in the Home works
 # Browsers (once)
 pnpm --filter e2e exec playwright install --with-deps chromium firefox
 
-# Required: SANITY_E2E_PROJECT_ID, SANITY_E2E_STUDIO_DATASET, and a session token
+# Required: SANITY_E2E_SESSION_TOKEN, SANITY_E2E_PROJECT_ID, SANITY_E2E_STUDIO_DATASET
 # (or copy e2e/.env.example → e2e/.env.local)
 pnpm test:e2e
 ```
