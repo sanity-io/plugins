@@ -1,5 +1,14 @@
 # sanity-plugin-documents-pane
 
+## 4.1.15
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+- Updated dependencies [[`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df)]:
+  - sanity-plugin-utils@2.0.13
+
 ## 4.1.14
 
 ### Patch Changes
