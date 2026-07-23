@@ -12,7 +12,6 @@ concurrency:
 
 permissions:
   contents: read
-  pull-requests: write
 
 # Dataset names are inlined (not `env.*`) because the `env` context is unavailable
 # when evaluating workflow/job-level `env:` maps. Steps may still use `${{ env.CHROMIUM_DATASET }}`.
@@ -24,6 +23,9 @@ jobs:
   setup:
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -177,6 +179,9 @@ jobs:
     if: ${{ !cancelled() }}
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
