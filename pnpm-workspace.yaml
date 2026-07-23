@@ -47,6 +47,7 @@ catalog:
   '@vitest/coverage-v8': ^4.1.10
   babel-plugin-react-compiler: ^1.0.0
   date-fns: ^4.4.0
+  groq: ^6.6.0
   jsdom: ^29.1.1
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
@@ -158,6 +159,14 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@types/node': 'catalog:'
+  # Keep the Sanity Studio monorepo packages on a single version so dts emit and
+  # transitive deps (cli/migrate/portabletext) cannot leave a second major.minor
+  # of @sanity/types|mutator|schema|util in the lockfile.
+  '@sanity/mutator': 'catalog:'
+  '@sanity/schema': 'catalog:'
+  '@sanity/types': ^6.6.0
+  '@sanity/util': 'catalog:'
+  groq: 'catalog:'
   sanity: 'catalog:'
 
 peerDependencyRules:
