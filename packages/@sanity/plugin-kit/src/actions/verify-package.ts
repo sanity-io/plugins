@@ -1,10 +1,10 @@
-import chalk from 'chalk'
-import outdent from 'outdent'
+import {styleText} from 'node:util'
 
 import {cliName, defaultOutDir, urls} from '../constants'
 import {getPackage} from '../npm/package'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
+import {outdent} from '../util/outdent'
 import {readTSConfig} from '../util/ts'
 import type {PackageJson} from './verify/types'
 import {
@@ -88,7 +88,8 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
         More information is available here:
         - Reference documentation: ${urls.refDocs}
 
-        ${chalk.grey(
+        ${styleText(
+          'grey',
           `To fail-fast on first detected issue run:\nnpx ${cliName} verify-package --single`,
         )}
       `.trimStart(),

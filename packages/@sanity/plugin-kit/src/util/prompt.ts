@@ -1,11 +1,11 @@
 import path from 'path'
 import {URL} from 'url'
 
-import githubUrlToObject from 'github-url-to-object'
 import inquirer, {type Question} from 'inquirer'
 import validNpmName from 'validate-npm-package-name'
 
 import type {InjectOptions} from '../actions/inject'
+import {githubUrlToObject} from './github-url'
 
 interface PromptOptions {
   choices?: any

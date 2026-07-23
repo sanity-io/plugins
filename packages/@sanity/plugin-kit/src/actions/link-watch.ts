@@ -18,18 +18,18 @@ and the ISC License has been added for this file only, in accordance with the pa
 */
 
 import fs from 'fs'
+import {styleText} from 'node:util'
 import path from 'path'
 
-import chalk from 'chalk'
 import concurrently from 'concurrently'
 import nodemon from 'nodemon'
-import outdent from 'outdent'
 
 import {defaultOutDir} from '../constants'
 import {getPackage} from '../npm/package'
 import {fileExists, mkdir} from '../util/files'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
+import {outdent} from '../util/outdent'
 
 interface YalcWatchConfig {
   command?: string
@@ -85,10 +85,10 @@ export async function linkWatch({basePath}: {basePath: string}) {
         Then, run one of the below commands, based on the package manager used in studio-or-package:
 
         ## yarn
-        ${chalk.greenBright(`yalc add --link ${pkg.name} && yarn install`)}
+        ${styleText('greenBright', `yalc add --link ${pkg.name} && yarn install`)}
 
         ## npm
-        ${chalk.greenBright(`npx yalc add ${pkg.name} && npx yalc link ${pkg.name} && npm install`)}
+        ${styleText('greenBright', `npx yalc add ${pkg.name} && npx yalc link ${pkg.name} && npm install`)}
       `.trimStart(),
       )
     })
@@ -96,7 +96,7 @@ export async function linkWatch({basePath}: {basePath: string}) {
       process.exit()
     })
     .on('restart', function (files: any) {
-      log.info('Found changes in files:', chalk.magentaBright(files))
+      log.info('Found changes in files:', styleText('magentaBright', files))
       log.info('Pushing new yalc package...')
     })
 }

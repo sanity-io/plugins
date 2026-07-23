@@ -1,7 +1,6 @@
-import {outdent} from 'outdent'
-
 import type {InitFlags} from '../actions/init'
 import type {InjectTemplate} from '../actions/inject'
+import {outdent} from '../util/outdent'
 
 export function pkgConfigTemplate(options: {outDir: string; flags: InitFlags}): InjectTemplate {
   const {flags, outDir} = options
