@@ -212,7 +212,11 @@ function AssistInspector(props: DocumentInspectorProps) {
 
   const boundary = useRef<HTMLDivElement | null>(null)
   const [boundaryElement, setBoundaryElement] = useState<HTMLDivElement | null>(null)
-  useImperativeHandle(boundary, () => boundaryElement, [boundaryElement])
+  useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(
+    boundary,
+    () => boundaryElement,
+    [boundaryElement],
+  )
   const pathKey = params?.[fieldPathParam]
   const instructionKey = params?.[instructionParam]
   const documentPane = useDocumentPane()
