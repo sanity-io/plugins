@@ -17,11 +17,17 @@ const appId = process.env.SANITY_STUDIO_APP_ID || 'bi1ktslqwmu1cawds5ce3jn6'
 const isViteDevToolsEnabled = process.env.ENABLE_VITE_DEVTOOLS === 'true'
 // Enable React production profiling on Vercel preview deployments (PR builds), but not on
 // production (plugins-studio.sanity.dev) where the react-dom/profiling overhead is unwanted.
-const reactProductionProfiling = process.env.VERCEL_ENV === 'preview'
+const isVercelPreview = process.env.VERCEL_ENV === 'preview'
 
 export default defineCliConfig({
   api: {projectId, dataset},
-  deployment: {appId, autoUpdates: true},
+  deployment: {
+    appId,
+    // Auto-updates vendor builds hardcode `react-dom-client.production.js`, which bypasses
+    // the `react-dom/client` → `react-dom/profiling` alias below. Disable on Vercel previews
+    // so profiling can take effect; keep enabled for production / sanity deploy.
+    autoUpdates: !isVercelPreview,
+  },
   reactCompiler: {},
   typegen: {formatGeneratedCode: false},
   // Bundle studio deps in `sanity dev` (required for Structure with client/eventsource alignment).
@@ -38,7 +44,7 @@ export default defineCliConfig({
     } satisfies UserConfig)
 
     // Support React Production Profiling on Vercel preview deployments
-    if (reactProductionProfiling && command === 'build') {
+    if (isVercelPreview && command === 'build') {
       nextConfig = mergeConfig(nextConfig, {
         // Aliasing to react-dom/profiling is necessary in the production build, otherwise React
         // can't run the profiler on the deployed studio
