@@ -625,8 +625,8 @@ importers:
   plugins/@sanity/block-insert-picker:
     dependencies:
       '@portabletext/plugin-input-rule':
-        specifier: ^6.0.4
-        version: 6.0.5(@portabletext/editor@7.10.8)(@types/react@19.2.17)(react@19.2.7)
+        specifier: ^6.0.7
+        version: 6.0.9(@portabletext/editor@7.10.8)(@types/react@19.2.17)(react@19.2.7)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 5.2.1(react@19.2.7)
@@ -5424,6 +5424,13 @@ packages:
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       '@portabletext/editor': ^7.10.8
+      react: ^19.2
+
+  '@portabletext/plugin-input-rule@6.0.9':
+    resolution: {integrity: sha512-vL668zVOba1TrsqC4bfzonNigOXNMu9TEC7a/2mJaMEaMwt5iz/0h/Eq5UyFhwCT2B3mgwuR+SiR6JgqO0P9iA==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+    peerDependencies:
+      '@portabletext/editor': ^7.10.12
       react: ^19.2
 
   '@portabletext/plugin-list-index@1.0.20':
@@ -13742,6 +13749,15 @@ snapshots:
       react: 19.2.7
 
   '@portabletext/plugin-input-rule@6.0.5(@portabletext/editor@7.10.8)(@types/react@19.2.17)(react@19.2.7)':
+    dependencies:
+      '@portabletext/editor': 7.10.8(@types/react@19.2.17)(react@19.2.7)
+      '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.5)
+      react: 19.2.7
+      xstate: 5.32.5
+    transitivePeerDependencies:
+      - '@types/react'
+
+  '@portabletext/plugin-input-rule@6.0.9(@portabletext/editor@7.10.8)(@types/react@19.2.17)(react@19.2.7)':
     dependencies:
       '@portabletext/editor': 7.10.8(@types/react@19.2.17)(react@19.2.7)
       '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.7)(xstate@5.32.5)
