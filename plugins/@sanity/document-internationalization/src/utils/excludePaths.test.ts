@@ -268,4 +268,33 @@ describe('removeExcludedPaths', () => {
     const result = removeExcludedPaths(doc, excludedSchemaType)
     expect(result!['title']).toBe('Hello')
   })
+
+  test('skips array items without _key', () => {
+    const doc: SanityDocument = {
+      _id: 'doc-1',
+      _type: 'article',
+      _rev: 'rev-1',
+      _createdAt: '2024-01-01T00:00:00Z',
+      _updatedAt: '2024-01-01T00:00:00Z',
+      title: 'Hello',
+      blocks: [
+        {_type: 'textBlock', text: 'No key', internal: 'kept because skipped'},
+        {_key: 'block-1', _type: 'textBlock', text: 'Has key', internal: 'removed'},
+      ],
+    }
+
+    const result = removeExcludedPaths(doc, excludedSchemaType)
+    const blocks = result?.['blocks']
+    expect(Array.isArray(blocks)).toBe(true)
+    if (!Array.isArray(blocks)) {
+      throw new Error('Expected blocks to be an array')
+    }
+
+    const firstBlock = expectRecord(blocks[0], 'Expected first block to be an object')
+    const secondBlock = expectRecord(blocks[1], 'Expected second block to be an object')
+    // Item without _key is not walked — excluded nested field remains
+    expect(firstBlock['internal']).toBe('kept because skipped')
+    expect(secondBlock['internal']).toBeUndefined()
+    expect(secondBlock['text']).toBe('Has key')
+  })
 })
