@@ -574,8 +574,8 @@ building as-is and do the migration in a dedicated follow-up PR (see the `plugin
 ### While a plugin still has styled-components
 
 Until a plugin is fully migrated, keep its `styled-components` declaration aligned so it resolves to
-the workspace `@sanity/styled-components` override — a **single** instance shared with the Studio,
-without which pnpm may install a separate copy and theming/SSR break:
+a **single** instance shared with the Studio, without which pnpm may install a separate copy and
+theming/SSR break:
 
 ```json
 {
