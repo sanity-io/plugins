@@ -1,4 +1,4 @@
-import {Fragment, useEffect, useState} from 'react'
+import {Fragment, startTransition, useEffect, useState} from 'react'
 
 import type {Connector, ConnectorOptions} from '../_lib/connector'
 import {ConnectorPath} from './ConnectorPath'
@@ -37,8 +37,7 @@ export function AssistConnectorsOverlay(props: {connectors: Connector[]}) {
   useEffect(() => {
     // hacky workaround to force redraw for connectors on initial render
     // this seem to improve initial measurements of elements
-    const frame = requestAnimationFrame(() => setRedraw(true))
-    return () => cancelAnimationFrame(frame)
+    startTransition(() => setRedraw(true))
   }, [])
 
   // const zIndex = zIndexes.length ? Math.max(...zIndexes) : 1
