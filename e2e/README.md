@@ -43,7 +43,9 @@ Same naming and lifecycle as [`sanity-io/sanity`](https://github.com/sanity-io/s
 | Pull request   | `pr-{number}-chromium-{run_id}` | `pr-{number}-firefox-{run_id}` |
 | Push to `main` | `main-chromium-{run_id}`        | `main-firefox-{run_id}`        |
 
-CI creates both datasets before building the studio (`pnpm e2e:setup`). The test studio exposes `/chromium` and `/firefox` workspaces (Home kitchen-sink plugins) pointed at those datasets. Playwright projects use `baseURL` `/chromium` and `/firefox`.
+CI creates both datasets in a setup job, then runs Chromium and Firefox as a **matrix** (parallel jobs). Each matrix job builds the studio, starts preview, and runs `playwright test --project <browser>` with that browser’s dataset (`SANITY_E2E_DATASET`). Blob reports are merged afterward for the PR comment / Vercel HTML report.
+
+The test studio exposes `/chromium` and `/firefox` workspaces (Home kitchen-sink plugins) pointed at those datasets. Playwright projects use `baseURL` `/chromium` and `/firefox`.
 
 Datasets are **not** deleted at the end of each run. A scheduled workflow (`.github/workflows/e2e-periodic-cleanup.yml`, every 6 hours) runs `pnpm e2e:cleanup`:
 

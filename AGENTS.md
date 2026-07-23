@@ -577,7 +577,7 @@ pnpm e2e:setup   # optional locally; CI creates ephemeral pr-*/main-* datasets
 pnpm test:e2e
 ```
 
-Locally Playwright uses `sanity dev`; CI creates ephemeral per-browser datasets, builds, then uses `sanity preview --port 3333`. Auth preflight calls `/users/me` before the suite runs — missing or wrong tokens fail fast (do not use `SANITY_DEPLOY_TOKEN`). CI also requires `SANITY_E2E_PROJECT_ID` and Vercel report secrets (`VERCEL_E2E_REPORT_*`) — see [`e2e/README.md`](e2e/README.md).
+Locally Playwright uses `sanity dev`; CI creates ephemeral per-browser datasets, then runs Chromium and Firefox as parallel matrix jobs (`sanity preview --port 3333` per job). Auth preflight calls `/users/me` before the suite runs — missing or wrong tokens fail fast (do not use `SANITY_DEPLOY_TOKEN`). CI also requires `SANITY_E2E_PROJECT_ID` and Vercel report secrets (`VERCEL_E2E_REPORT_*`) — see [`e2e/README.md`](e2e/README.md).
 
 ### Node.js version notes
 

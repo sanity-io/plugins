@@ -15,6 +15,8 @@ const HEADLESS = env.headless
 const BASE_URL = env.baseUrl
 const PROJECT_ID = env.projectId
 const TOKEN = env.token
+/** CI matrix sets this so webServer health-checks the matching workspace. */
+const E2E_BROWSER = process.env.SANITY_E2E_BROWSER === 'firefox' ? 'firefox' : 'chromium'
 
 const TESTS_PATH = './tests'
 const ARTIFACT_OUTPUT_PATH = './results'
@@ -71,9 +73,8 @@ const playwrightConfig: PlaywrightTestConfig = {
   reporter: CI
     ? [
         ['list'],
-        ['html', {open: 'never', outputFolder: 'playwright-report'}],
+        // Blob shards are merged in CI (`report` job) into HTML + summary.
         ['blob'],
-        ['./reporters/summary.ts'],
       ]
     : [['list'], ['html', {open: 'never', outputFolder: 'playwright-report'}]],
   use: {
@@ -107,7 +108,7 @@ const playwrightConfig: PlaywrightTestConfig = {
     ? undefined
     : {
         command: CI ? 'pnpm start' : 'pnpm dev',
-        url: `${BASE_URL}/chromium`,
+        url: `${BASE_URL}/${E2E_BROWSER}`,
         reuseExistingServer: !CI,
         timeout: 300_000,
         stdout: 'pipe',

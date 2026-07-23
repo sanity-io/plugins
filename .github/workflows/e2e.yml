@@ -19,22 +19,15 @@ permissions:
 env:
   CHROMIUM_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
   FIREFOX_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-firefox-{1}', github.event.number, github.run_id) || format('main-firefox-{0}', github.run_id) }}
-  SANITY_E2E_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
-  SANITY_E2E_DATASET_CHROMIUM: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
-  SANITY_E2E_DATASET_FIREFOX: ${{ github.event_name == 'pull_request' && format('pr-{0}-firefox-{1}', github.event.number, github.run_id) || format('main-firefox-{0}', github.run_id) }}
-  SANITY_STUDIO_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
 
 jobs:
-  e2e:
-    timeout-minutes: 45
+  setup:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      CI: 'true'
       SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
-      SANITY_E2E_BASE_URL: http://localhost:3333
-      SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v7
 
@@ -103,12 +96,58 @@ jobs:
         working-directory: e2e
         run: pnpm exec playwright install --with-deps chromium firefox
 
+  e2e:
+    needs: [setup]
+    timeout-minutes: 45
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox]
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      CI: 'true'
+      SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+      SANITY_E2E_BASE_URL: http://localhost:3333
+      SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+      SANITY_E2E_BROWSER: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Store Playwright's Version
+        id: playwright-version
+        working-directory: e2e
+        run: |
+          PLAYWRIGHT_VERSION=$(pnpm exec playwright --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          echo "version=${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Playwright Browsers cache
+        id: cache-playwright-browsers
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ steps.playwright-version.outputs.version }}-playwright-browsers-chromium-firefox
+
+      - name: Install Playwright browser
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        working-directory: e2e
+        run: pnpm exec playwright install --with-deps ${{ matrix.project }}
+
       - name: Install Playwright system deps (cache hit)
         if: steps.cache-playwright-browsers.outputs.cache-hit == 'true'
         working-directory: e2e
-        run: pnpm exec playwright install-deps chromium firefox
+        run: pnpm exec playwright install-deps ${{ matrix.project }}
 
       - name: Build test studio and dependencies
+        env:
+          # Step-level env can use `env` context (job-level cannot).
+          SANITY_E2E_DATASET: ${{ matrix.project == 'chromium' && env.CHROMIUM_DATASET || env.FIREFOX_DATASET }}
+          SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
+          SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
+          SANITY_STUDIO_DATASET: ${{ matrix.project == 'chromium' && env.CHROMIUM_DATASET || env.FIREFOX_DATASET }}
         run: pnpm turbo build --filter=test-studio...
 
       - name: Run e2e smoke tests
@@ -116,12 +155,61 @@ jobs:
         working-directory: e2e
         env:
           SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
-        run: pnpm test
-        continue-on-error: true
+          PWTEST_BLOB_REPORT_NAME: ${{ matrix.project }}
+          SANITY_E2E_DATASET: ${{ matrix.project == 'chromium' && env.CHROMIUM_DATASET || env.FIREFOX_DATASET }}
+          SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
+          SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
+          SANITY_STUDIO_DATASET: ${{ matrix.project == 'chromium' && env.CHROMIUM_DATASET || env.FIREFOX_DATASET }}
+        run: pnpm test --project ${{ matrix.project }}
+
+      - name: Upload Playwright blob report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-blob-${{ matrix.project }}
+          path: |
+            e2e/blob-report
+            e2e/results
+          retention-days: 7
+          if-no-files-found: ignore
+
+  report:
+    needs: [e2e]
+    if: ${{ !cancelled() }}
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Download blob reports
+        uses: actions/download-artifact@v8
+        with:
+          pattern: playwright-blob-*
+          merge-multiple: true
+          path: all-blob-reports
+
+      - name: Merge into HTML report + summary
+        working-directory: e2e
+        run: |
+          BLOB_DIR=../all-blob-reports
+          if [ -d ../all-blob-reports/blob-report ]; then
+            BLOB_DIR=../all-blob-reports/blob-report
+          fi
+          if [ ! -d "$BLOB_DIR" ] || [ -z "$(ls -A "$BLOB_DIR" 2>/dev/null)" ]; then
+            echo "No blob reports found to merge"
+            mkdir -p playwright-report
+            echo '{"passed":0,"failed":0,"flaky":0,"skipped":0,"failedFiles":[],"failedFilesFormatted":""}' > test-summary.json
+            exit 0
+          fi
+          pnpm exec playwright merge-reports --reporter html,./reporters/summary.ts "$BLOB_DIR"
 
       - name: Extract test summary
         id: summary
-        if: ${{ !cancelled() }}
         working-directory: e2e
         run: |
           if [ ! -f test-summary.json ]; then
@@ -145,15 +233,13 @@ jobs:
             }
           " >> "$GITHUB_OUTPUT"
 
-      - name: Upload Playwright report artifact
+      - name: Upload merged Playwright report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
           name: playwright-report-${{ github.run_id }}
           path: |
             e2e/playwright-report
-            e2e/results
-            e2e/blob-report
             e2e/test-summary.json
           retention-days: 7
           if-no-files-found: ignore
@@ -233,7 +319,7 @@ jobs:
 
       - name: Update PR Comment (tests passed)
         uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
-        if: github.event_name == 'pull_request' && steps.playwright.outcome == 'success'
+        if: github.event_name == 'pull_request' && needs.e2e.result == 'success'
         with:
           comment-tag: e2e-status
           message: |
@@ -245,7 +331,7 @@ jobs:
 
       - name: Update PR Comment (tests failed)
         uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
-        if: github.event_name == 'pull_request' && steps.playwright.outcome != 'success'
+        if: github.event_name == 'pull_request' && needs.e2e.result != 'success'
         with:
           comment-tag: e2e-status
           message: |
@@ -268,6 +354,16 @@ jobs:
 
             </details>
 
-      - name: Fail job if Playwright failed
-        if: steps.playwright.outcome != 'success'
-        run: exit 1
+  e2e-status:
+    name: E2E Status
+    needs: [e2e, report]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check E2E test matrix status
+        run: |
+          result="${{ needs.e2e.result }}"
+          if [ "$result" != "success" ] && [ "$result" != "skipped" ]; then
+            echo "E2E test matrix failed with status: $result"
+            exit 1
+          fi
