@@ -46,6 +46,9 @@ jobs:
       - name: Validate e2e secrets and vars
         env:
           SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
+          VERCEL_E2E_REPORT_TOKEN: ${{ secrets.VERCEL_E2E_REPORT_TOKEN }}
+          VERCEL_E2E_REPORT_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_E2E_REPORT_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
         run: |
           missing=0
           if [ -z "$SANITY_E2E_SESSION_TOKEN" ]; then
@@ -58,6 +61,10 @@ jobs:
           fi
           if [ -z "$SANITY_E2E_STUDIO_DATASET" ]; then
             echo "::error::SANITY_E2E_STUDIO_DATASET repository variable is not set. See e2e/README.md"
+            missing=1
+          fi
+          if [ -z "$VERCEL_E2E_REPORT_TOKEN" ] || [ -z "$VERCEL_E2E_REPORT_ORG_ID" ] || [ -z "$VERCEL_E2E_REPORT_PROJECT_ID" ]; then
+            echo "::error::Vercel report hosting secrets missing. Set VERCEL_E2E_REPORT_TOKEN, VERCEL_E2E_REPORT_ORG_ID, and VERCEL_E2E_REPORT_PROJECT_ID. See e2e/README.md (Vercel report hosting)."
             missing=1
           fi
           if [ "$missing" -ne 0 ]; then
@@ -106,7 +113,6 @@ jobs:
         working-directory: e2e
         run: |
           if [ ! -f test-summary.json ]; then
-            echo "summary=⚪ no summary produced" >> "$GITHUB_OUTPUT"
             echo "passed=0" >> "$GITHUB_OUTPUT"
             echo "failed=0" >> "$GITHUB_OUTPUT"
             echo "flaky=0" >> "$GITHUB_OUTPUT"
@@ -116,12 +122,6 @@ jobs:
           fi
           node -e "
             const s = JSON.parse(require('fs').readFileSync('test-summary.json', 'utf8'));
-            const parts = [];
-            if (s.passed) parts.push('🟢 ' + s.passed + ' passed');
-            if (s.failed) parts.push('🔴 ' + s.failed + ' failed');
-            if (s.flaky) parts.push('🟡 ' + s.flaky + ' flaky');
-            if (s.skipped) parts.push('⚪ ' + s.skipped + ' skipped');
-            console.log('summary=' + (parts.join(' • ') || '⚪ no tests'));
             console.log('passed=' + s.passed);
             console.log('failed=' + s.failed);
             console.log('flaky=' + s.flaky);
@@ -133,7 +133,7 @@ jobs:
             }
           " >> "$GITHUB_OUTPUT"
 
-      - name: Upload Playwright report
+      - name: Upload Playwright report artifact
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
@@ -146,6 +146,79 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
+      - name: Check for HTML report
+        id: html-report
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -f e2e/playwright-report/index.html ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Vercel CLI
+        if: ${{ !cancelled() && steps.html-report.outputs.exists == 'true' }}
+        run: npm install -g vercel
+
+      - name: Prepare Vercel prebuilt output
+        if: ${{ !cancelled() && steps.html-report.outputs.exists == 'true' }}
+        run: |
+          mkdir -p .vercel/output/static
+          cp -r e2e/playwright-report/* .vercel/output/static/
+          echo '{"version": 3}' > .vercel/output/config.json
+
+      - name: Deploy report to Vercel
+        id: deploy-report
+        if: ${{ !cancelled() && steps.html-report.outputs.exists == 'true' }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
+          COMMIT_REF: ${{ github.head_ref || github.ref_name }}
+        run: |
+          echo "REPORT_URL=$(vercel deploy --prebuilt \
+            --token=${{ secrets.VERCEL_E2E_REPORT_TOKEN }} \
+            --yes \
+            -m githubDeployment="1" \
+            -m githubCommitRef="$COMMIT_REF" \
+            -m githubCommitSha="${{ github.sha }}" \
+            -m githubRunId="${{ github.run_id }}" \
+            | tail -n 1)" >> "$GITHUB_OUTPUT"
+
+      - name: Build linked summary
+        id: linked-summary
+        if: ${{ !cancelled() }}
+        env:
+          REPORT_URL: ${{ steps.deploy-report.outputs.REPORT_URL }}
+          PASSED: ${{ steps.summary.outputs.passed }}
+          FAILED: ${{ steps.summary.outputs.failed }}
+          FLAKY: ${{ steps.summary.outputs.flaky }}
+          SKIPPED: ${{ steps.summary.outputs.skipped }}
+        run: |
+          node -e "
+            const u = process.env.REPORT_URL || '';
+            const s = {
+              passed: +process.env.PASSED || 0,
+              failed: +process.env.FAILED || 0,
+              flaky: +process.env.FLAKY || 0,
+              skipped: +process.env.SKIPPED || 0,
+            };
+            const parts = [];
+            if (u) {
+              if (s.passed) parts.push('[🟢 ' + s.passed + ' passed](' + u + '#?q=s%3Apassed)');
+              if (s.failed) parts.push('[🔴 ' + s.failed + ' failed](' + u + '#?q=s%3Afailed)');
+              if (s.flaky) parts.push('[🟡 ' + s.flaky + ' flaky](' + u + '#?q=s%3Aflaky)');
+              if (s.skipped) parts.push('([⚪ ' + s.skipped + ' skipped](' + u + '#?q=s%3Askipped))');
+              const text = (parts.join(' • ') || '⚪ no tests') + ' • [view full report](' + u + ')';
+              console.log('text=' + text);
+            } else {
+              if (s.passed) parts.push('🟢 ' + s.passed + ' passed');
+              if (s.failed) parts.push('🔴 ' + s.failed + ' failed');
+              if (s.flaky) parts.push('🟡 ' + s.flaky + ' flaky');
+              if (s.skipped) parts.push('⚪ ' + s.skipped + ' skipped');
+              console.log('text=' + (parts.join(' • ') || '⚪ no tests'));
+            }
+          " >> "$GITHUB_OUTPUT"
+
       - name: Update PR Comment (tests passed)
         uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
         if: github.event_name == 'pull_request' && steps.playwright.outcome == 'success'
@@ -154,9 +227,7 @@ jobs:
           message: |
             ### ✅ E2E Tests
 
-            ${{ steps.summary.outputs.summary }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
-            HTML report is attached as the `playwright-report-${{ github.run_id }}` workflow artifact.
+            ${{ steps.linked-summary.outputs.text }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
       - name: Update PR Comment (tests failed)
         uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
@@ -166,9 +237,7 @@ jobs:
           message: |
             ### ❌ E2E Tests
 
-            ${{ steps.summary.outputs.summary }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
-            HTML report is attached as the `playwright-report-${{ github.run_id }}` workflow artifact.
+            ${{ steps.linked-summary.outputs.text }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
             <details>
             <summary>Debug failing tests locally</summary>

@@ -574,7 +574,7 @@ pnpm --filter e2e exec playwright install --with-deps chromium firefox
 pnpm test:e2e
 ```
 
-Locally Playwright uses `sanity dev`; CI builds then uses `sanity preview --port 3333`. Auth preflight calls `/users/me` before the suite runs — missing or wrong tokens fail fast (do not use `SANITY_DEPLOY_TOKEN`). CI also requires repository variables `SANITY_E2E_PROJECT_ID` and `SANITY_E2E_STUDIO_DATASET`.
+Locally Playwright uses `sanity dev`; CI builds then uses `sanity preview --port 3333`. Auth preflight calls `/users/me` before the suite runs — missing or wrong tokens fail fast (do not use `SANITY_DEPLOY_TOKEN`). CI also requires repository variables `SANITY_E2E_PROJECT_ID` and `SANITY_E2E_STUDIO_DATASET`, plus Vercel report secrets (`VERCEL_E2E_REPORT_*`) — see [`e2e/README.md`](e2e/README.md#vercel-report-hosting).
 
 ### Node.js version notes
 
