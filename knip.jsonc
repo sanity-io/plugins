@@ -25,8 +25,10 @@
       "project": ["src/**/*.{ts,tsx}"],
     },
     "e2e": {
-      "entry": ["globalSetup.ts", "tests/**/*.ts", "helpers/**/*.ts"],
+      "entry": ["playwright.config.ts", "globalSetup.ts", "tests/**/*.ts", "helpers/**/*.ts"],
       "project": ["**/*.ts"],
+      // Config calls resolveE2eEnv() at load time; knip has no e2e secrets/vars.
+      "playwright": false,
     },
     "turbo/generators": {
       "project": ["src/**/*.ts"],
