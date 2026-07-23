@@ -15,7 +15,7 @@ export function createE2EClient(dataset: string): SanityClient {
     projectId: requireEnv('SANITY_E2E_PROJECT_ID'),
     dataset: sanityIdify(dataset),
     token: requireEnv('SANITY_E2E_SESSION_TOKEN'),
-    apiVersion: '2023-02-03',
+    apiVersion: '2026-07-23',
     useCdn: false,
   })
 }
