@@ -3,7 +3,14 @@ import {CloseIcon} from '@sanity/icons/Close'
 import {PlayIcon} from '@sanity/icons/Play'
 import {RetryIcon} from '@sanity/icons/Retry'
 import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
-import {type PropsWithChildren, useCallback, useMemo, useRef, useState} from 'react'
+import {
+  type PropsWithChildren,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   type DocumentInspectorProps,
   PerspectiveProvider,
@@ -205,10 +212,7 @@ function AssistInspector(props: DocumentInspectorProps) {
 
   const boundary = useRef<HTMLDivElement | null>(null)
   const [boundaryElement, setBoundaryElement] = useState<HTMLDivElement | null>(null)
-  const setBoundaryRef = useCallback((element: HTMLDivElement | null) => {
-    boundary.current = element
-    setBoundaryElement(element)
-  }, [])
+  useImperativeHandle(boundary, () => boundaryElement, [boundaryElement])
   const pathKey = params?.[fieldPathParam]
   const instructionKey = params?.[instructionParam]
   const documentPane = useDocumentPane()
@@ -319,7 +323,7 @@ function AssistInspector(props: DocumentInspectorProps) {
 
   return (
     <Flex
-      ref={setBoundaryRef}
+      ref={setBoundaryElement}
       direction="column"
       height="fill"
       overflow="hidden"
