@@ -1,6 +1,6 @@
 import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
 import {Box, Stack, Text} from '@sanity/ui'
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 import {type ArrayOfObjectsInputProps, set, typed} from 'sanity'
 import {styled} from 'styled-components'
 
@@ -44,6 +44,8 @@ export function PromptInput(props: ArrayOfObjectsInputProps) {
 
 function useOnlyInlineBlocks(props: ArrayOfObjectsInputProps) {
   const {onChange, value} = props
+  const fixedRef = useRef(false)
+
   useEffect(() => {
     let needsFix = false
     // oxlint-disable-next-line no-unsafe-type-assertion
@@ -63,8 +65,10 @@ function useOnlyInlineBlocks(props: ArrayOfObjectsInputProps) {
       })
     })
 
-    if (needsFix) {
+    // only apply this once when loading the field
+    if (needsFix && !fixedRef.current) {
       onChange(set(val))
+      fixedRef.current = true
     }
   }, [onChange, value])
 }
