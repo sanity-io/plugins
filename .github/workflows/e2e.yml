@@ -14,9 +14,15 @@ permissions:
   contents: read
   pull-requests: write
 
+# Dataset names are inlined (not `env.*`) because the `env` context is unavailable
+# when evaluating workflow/job-level `env:` maps. Steps may still use `${{ env.CHROMIUM_DATASET }}`.
 env:
   CHROMIUM_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
   FIREFOX_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-firefox-{1}', github.event.number, github.run_id) || format('main-firefox-{0}', github.run_id) }}
+  SANITY_E2E_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
+  SANITY_E2E_DATASET_CHROMIUM: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
+  SANITY_E2E_DATASET_FIREFOX: ${{ github.event_name == 'pull_request' && format('pr-{0}-firefox-{1}', github.event.number, github.run_id) || format('main-firefox-{0}', github.run_id) }}
+  SANITY_STUDIO_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
 
 jobs:
   e2e:
@@ -27,13 +33,8 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       CI: 'true'
       SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
-      SANITY_E2E_DATASET: ${{ env.CHROMIUM_DATASET }}
-      SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
-      SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
       SANITY_E2E_BASE_URL: http://localhost:3333
-      # test-studio project/dataset at build + preview time
       SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
-      SANITY_STUDIO_DATASET: ${{ env.CHROMIUM_DATASET }}
     steps:
       - uses: actions/checkout@v7
 
