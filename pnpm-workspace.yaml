@@ -56,12 +56,12 @@ catalog:
   oxfmt: ^0.60.0
   oxlint: ^1.75.0
   oxlint-tsgolint: ^7.0.2001
-  react: ^19.2.7
-  react-dom: ^19.2.7
+  react: ^19.2.8
+  react-dom: ^19.2.8
   react-fast-compare: ^3.2.2
   react-hook-form: ^7.82.0
   react-icons: ^5.7.0
-  react-is: ^19.2.7
+  react-is: ^19.2.8
   react-photo-album: ^3.6.0
   react-rx: ^4.2.3
   rxjs: ^7.8.2
