@@ -17,8 +17,6 @@ import {LanguageField} from './LanguageField'
 import type {CodeInputValue, CodeSchemaType} from './types'
 import {useFieldMember} from './useFieldMember'
 
-export type {CodeInputLanguage, CodeInputValue} from './types'
-
 /**
  * @public
  */
