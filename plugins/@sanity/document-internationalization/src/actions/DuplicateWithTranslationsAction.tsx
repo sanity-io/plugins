@@ -40,6 +40,7 @@ const DISABLED_REASON_KEY = {
   MULTIPLE_METADATA: 'action.duplicate.disabled.multiple-metadata',
   NOTHING_TO_DUPLICATE: 'action.duplicate.disabled.nothing-to-duplicate',
   NOT_READY: 'action.duplicate.disabled.not-ready',
+  TARGET_NOT_FOUND: 'action.duplicate.disabled.target-not-found',
 }
 
 /**
