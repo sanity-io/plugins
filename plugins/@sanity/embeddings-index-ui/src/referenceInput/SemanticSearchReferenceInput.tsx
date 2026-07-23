@@ -114,8 +114,8 @@ function SemanticSearchInput(props: ObjectInputProps & {indexConfig: EmbeddingsI
     if (value?.['_ref']) {
       autocompleteRef.current?.focus()
     }
-    // intentional empty deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // intentional empty deps — focus once on mount when replacing an existing reference
+    // oxlint-disable-next-line react/exhaustive-deps
   }, [])
 
   const handleFocus = useCallback(() => onPathFocus(['_ref']), [onPathFocus])

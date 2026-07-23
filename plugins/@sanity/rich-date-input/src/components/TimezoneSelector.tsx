@@ -75,7 +75,8 @@ export const TimezoneSelector = (props: TimezoneSelectorProps): ReactNode => {
         padding={4}
         placeholder="Search for a city or time zone"
         popover={{
-          boundaryElement: document.querySelector('body'),
+          floatingBoundary: document.body,
+          referenceBoundary: document.body,
           constrainSize: true,
           placement: 'bottom-start',
         }}
