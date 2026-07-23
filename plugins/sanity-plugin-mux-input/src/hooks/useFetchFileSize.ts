@@ -2,54 +2,96 @@ import {useEffect, useState} from 'react'
 
 import {type StagedUpload} from '../components/Uploader'
 
+type UrlFileSizeState = {
+  url: string | null
+  fileSize: number | null
+  isLoadingFileSize: boolean
+  canSkipFileSizeValidation: boolean
+}
+
 export function useFetchFileSize(stagedUpload: StagedUpload, maxFileSize?: number) {
-  const [fileSize, setFileSize] = useState<number | null>(null)
-  const [isLoadingFileSize, setIsLoadingFileSize] = useState(false)
-  const [canSkipFileSizeValidation, setCanSkipFileSizeValidation] = useState(false)
+  const url = stagedUpload.type === 'url' ? stagedUpload.url : null
+  const [urlState, setUrlState] = useState<UrlFileSizeState>(() => ({
+    url,
+    fileSize: null,
+    isLoadingFileSize: Boolean(url),
+    canSkipFileSizeValidation: false,
+  }))
+
+  if (urlState.url !== url) {
+    setUrlState({
+      url,
+      fileSize: null,
+      isLoadingFileSize: Boolean(url),
+      canSkipFileSizeValidation: false,
+    })
+  }
 
   useEffect(() => {
-    // Fetch URL Upload file size
-    if (stagedUpload.type === 'url') {
-      // oxlint-disable-next-line react/react-compiler
-      setIsLoadingFileSize(false)
-      setCanSkipFileSizeValidation(false)
-      setFileSize(null)
-      const url = stagedUpload.url
+    if (!url) return undefined
 
-      // Get file size from URL
-      const fetchFileSize = async () => {
-        setIsLoadingFileSize(true)
-        try {
-          const response = await fetch(url, {method: 'HEAD'})
-          const contentLength = response.headers.get('content-length')
-          const newFileSize = contentLength ? parseInt(contentLength, 10) : null
+    let cancelled = false
 
-          setIsLoadingFileSize(false)
-          if (newFileSize) {
-            setFileSize(newFileSize)
-          }
-          if (newFileSize === null && maxFileSize !== undefined) {
-            // Size unknown but size limit is configured - skip file size validation
-            setCanSkipFileSizeValidation(true)
-          }
-        } catch {
-          console.warn('Could not validate file size from URL')
-          // Skip validation of file size, but still validate duration
-          setCanSkipFileSizeValidation(true)
-          setIsLoadingFileSize(false)
-        }
+    // Get file size from URL
+    const fetchFileSize = async () => {
+      setUrlState((prev) =>
+        prev.url === url
+          ? {
+              url,
+              fileSize: null,
+              isLoadingFileSize: true,
+              canSkipFileSizeValidation: false,
+            }
+          : prev,
+      )
+      try {
+        const response = await fetch(url, {method: 'HEAD'})
+        const contentLength = response.headers.get('content-length')
+        const newFileSize = contentLength ? parseInt(contentLength, 10) : null
+
+        if (cancelled) return
+
+        setUrlState((prev) =>
+          prev.url === url
+            ? {
+                url,
+                fileSize: newFileSize,
+                isLoadingFileSize: false,
+                canSkipFileSizeValidation: newFileSize === null && maxFileSize !== undefined,
+              }
+            : prev,
+        )
+      } catch {
+        if (cancelled) return
+
+        console.warn('Could not validate file size from URL')
+        setUrlState((prev) =>
+          prev.url === url
+            ? {
+                url,
+                fileSize: null,
+                isLoadingFileSize: false,
+                // Skip validation of file size, but still validate duration
+                canSkipFileSizeValidation: true,
+              }
+            : prev,
+        )
       }
+    }
 
-      void fetchFileSize()
+    void Promise.resolve().then(fetchFileSize)
+
+    return () => {
+      cancelled = true
     }
-    if (stagedUpload.type === 'file') {
-      setFileSize(stagedUpload.files[0]!.size)
-    }
-  }, [maxFileSize, stagedUpload, stagedUpload.type])
+  }, [maxFileSize, url])
+
+  const fileSize = stagedUpload.type === 'file' ? stagedUpload.files[0]!.size : urlState.fileSize
 
   return {
     fileSize,
-    isLoadingFileSize,
-    canSkipFileSizeValidation,
+    isLoadingFileSize: stagedUpload.type === 'url' ? urlState.isLoadingFileSize : false,
+    canSkipFileSizeValidation:
+      stagedUpload.type === 'url' ? urlState.canSkipFileSizeValidation : false,
   }
 }

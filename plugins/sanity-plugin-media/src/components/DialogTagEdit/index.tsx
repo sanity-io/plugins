@@ -133,30 +133,6 @@ const DialogTagEdit = (props: Props) => {
     }
   }, [client, handleTagUpdate, tagItem?.tag])
 
-  const Footer = () => (
-    <Box padding={3}>
-      <Flex justify="space-between">
-        {/* Delete button */}
-        <Button
-          disabled={formUpdating}
-          fontSize={1}
-          mode="bleed"
-          onClick={handleDelete}
-          text="Delete"
-          tone="critical"
-        />
-
-        {/* Submit button */}
-        <FormSubmitButton
-          disabled={formUpdating || !isDirty || !isValid}
-          isValid={isValid}
-          lastUpdated={tagItem?.tag?._updatedAt}
-          onClick={handleSubmit(onSubmit)}
-        />
-      </Flex>
-    </Box>
-  )
-
   if (!currentTag) {
     return null
   }
@@ -164,8 +140,29 @@ const DialogTagEdit = (props: Props) => {
   return (
     <Dialog
       animate
-      // oxlint-disable-next-line react/react-compiler
-      footer={<Footer />}
+      footer={
+        <Box padding={3}>
+          <Flex justify="space-between">
+            {/* Delete button */}
+            <Button
+              disabled={formUpdating}
+              fontSize={1}
+              mode="bleed"
+              onClick={handleDelete}
+              text="Delete"
+              tone="critical"
+            />
+
+            {/* Submit button */}
+            <FormSubmitButton
+              disabled={formUpdating || !isDirty || !isValid}
+              isValid={isValid}
+              lastUpdated={tagItem?.tag?._updatedAt}
+              onClick={handleSubmit(onSubmit)}
+            />
+          </Flex>
+        </Box>
+      }
       header="Edit Tag"
       id={id}
       onClose={handleClose}

@@ -5,7 +5,6 @@ import {
   type ReactElement,
   type SetStateAction,
   useCallback,
-  useEffect,
   useState,
 } from 'react'
 
@@ -32,17 +31,13 @@ export const SettingsView = ({
   title = 'Configure',
 }: SettingsViewProps): ReactElement => {
   const {loading, secrets, storeSecrets} = useSecrets<Record<string, any>>(namespace)
-  const [newSecrets, setNewSecrets] = useState<Record<string, any>>({})
+  const [newSecrets, setNewSecrets] = useState<Record<string, any>>(() => secrets ?? {})
+  const [previousSecrets, setPreviousSecrets] = useState(secrets)
 
-  // Sync async-loaded secrets into form state. This is a legitimate
-  // useEffect for external data sync, not a cascading render issue.
-  // See: https://github.com/facebook/react/issues/34743
-  useEffect(() => {
-    if (secrets) {
-      // oxlint-disable-next-line react/react-compiler
-      setNewSecrets(secrets)
-    }
-  }, [secrets])
+  if (secrets !== previousSecrets) {
+    setPreviousSecrets(secrets)
+    setNewSecrets(secrets ?? {})
+  }
 
   const onClick = useCallback(() => storeSecrets(newSecrets), [storeSecrets, newSecrets])
 

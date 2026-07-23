@@ -76,6 +76,79 @@ interface DraggableWatermarkProps {
   videoElementRef?: React.RefObject<HTMLVideoElement>
 }
 
+type ContentBox = {x: number; y: number; width: number; height: number}
+
+const EMPTY_CONTENT_BOX: ContentBox = {x: 0, y: 0, width: 0, height: 0}
+
+function readVideoContentBox(
+  containerRef?: React.RefObject<HTMLDivElement | null>,
+  videoElementRef?: React.RefObject<HTMLVideoElement | null>,
+): ContentBox {
+  const container = containerRef?.current
+  if (!container) return EMPTY_CONTENT_BOX
+
+  const rect = container.getBoundingClientRect()
+  const containerW = rect.width
+  const containerH = rect.height
+
+  const videoEl = videoElementRef?.current
+  const videoW = videoEl?.videoWidth || 0
+  const videoH = videoEl?.videoHeight || 0
+
+  if (!videoW || !videoH || !containerW || !containerH) {
+    return {x: 0, y: 0, width: containerW, height: containerH}
+  }
+
+  const scale = Math.min(containerW / videoW, containerH / videoH)
+  const contentW = videoW * scale
+  const contentH = videoH * scale
+  const offsetX = (containerW - contentW) / 2
+  const offsetY = (containerH - contentH) / 2
+
+  return {x: offsetX, y: offsetY, width: contentW, height: contentH}
+}
+
+function useVideoContentBox(
+  containerRef?: React.RefObject<HTMLDivElement | null>,
+  videoElementRef?: React.RefObject<HTMLVideoElement | null>,
+  enabled = true,
+) {
+  const [contentBox, setContentBox] = useState<ContentBox>(EMPTY_CONTENT_BOX)
+
+  useEffect(() => {
+    if (!enabled) return undefined
+
+    const updateContentBox = () => {
+      setContentBox(readVideoContentBox(containerRef, videoElementRef))
+    }
+
+    const frame = requestAnimationFrame(updateContentBox)
+    const container = containerRef?.current
+    const videoElement = videoElementRef?.current
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined' || !container
+        ? undefined
+        : new ResizeObserver(updateContentBox)
+
+    if (container && resizeObserver) {
+      resizeObserver.observe(container)
+    }
+    videoElement?.addEventListener('loadedmetadata', updateContentBox)
+    videoElement?.addEventListener('loadeddata', updateContentBox)
+    window.addEventListener('resize', updateContentBox)
+
+    return () => {
+      cancelAnimationFrame(frame)
+      resizeObserver?.disconnect()
+      videoElement?.removeEventListener('loadedmetadata', updateContentBox)
+      videoElement?.removeEventListener('loadeddata', updateContentBox)
+      window.removeEventListener('resize', updateContentBox)
+    }
+  }, [containerRef, enabled, videoElementRef])
+
+  return contentBox
+}
+
 export default function DraggableWatermark({
   watermark,
   onChange,
@@ -88,6 +161,8 @@ export default function DraggableWatermark({
   const watermarkRef = useRef<HTMLDivElement>(null)
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [localPosition, setLocalPosition] = useState(watermark.position || {x: 50, y: 50})
+  const [prevWatermarkPosition, setPrevWatermarkPosition] = useState(watermark.position)
+  const contentBox = useVideoContentBox(containerRef, videoElementRef, Boolean(watermark.imageUrl))
 
   const position = localPosition
   const size = watermark.size || 20
@@ -102,31 +177,10 @@ export default function DraggableWatermark({
     return Math.max(0, Math.min(1, num / 100))
   }
 
-  const getVideoContentBox = useCallback(() => {
-    const container = containerRef?.current
-    if (!container) return {x: 0, y: 0, width: 0, height: 0}
-
-    const rect = container.getBoundingClientRect()
-    const containerW = rect.width
-    const containerH = rect.height
-
-    const videoEl = videoElementRef?.current
-    const videoW = videoEl?.videoWidth || 0
-    const videoH = videoEl?.videoHeight || 0
-
-    if (!videoW || !videoH || !containerW || !containerH) {
-      return {x: 0, y: 0, width: containerW, height: containerH}
-    }
-
-    // object-fit: contain sizing
-    const scale = Math.min(containerW / videoW, containerH / videoH)
-    const contentW = videoW * scale
-    const contentH = videoH * scale
-    const offsetX = (containerW - contentW) / 2
-    const offsetY = (containerH - contentH) / 2
-
-    return {x: offsetX, y: offsetY, width: contentW, height: contentH}
-  }, [containerRef, videoElementRef])
+  const getVideoContentBox = useCallback(
+    () => readVideoContentBox(containerRef, videoElementRef),
+    [containerRef, videoElementRef],
+  )
 
   const parseOverlayValue = (value: string | undefined): {n: number; unit: '%' | 'px'} | null => {
     if (!value) return null
@@ -141,9 +195,8 @@ export default function DraggableWatermark({
   }
 
   const computeManualStyle = (overlay: MuxOverlaySettings) => {
-    const rect = containerRef?.current?.getBoundingClientRect()
-    const w = rect?.width ?? 0
-    const h = rect?.height ?? 0
+    const w = contentBox.width
+    const h = contentBox.height
     const isVertical = h > w
     const baseW = isVertical ? 1080 : 1920
     const baseH = isVertical ? 1920 : 1080
@@ -220,12 +273,10 @@ export default function DraggableWatermark({
     }
   }, [])
 
-  useEffect(() => {
-    if (!isDragging && watermark.position) {
-      // oxlint-disable-next-line react/react-compiler
-      setLocalPosition(watermark.position)
-    }
-  }, [watermark.position, isDragging])
+  if (!isDragging && watermark.position && watermark.position !== prevWatermarkPosition) {
+    setPrevWatermarkPosition(watermark.position)
+    setLocalPosition(watermark.position)
+  }
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -308,8 +359,6 @@ export default function DraggableWatermark({
   const opacityForRender = hasManualOverlay
     ? (parseOpacityPercent(watermark.overlay_settings?.opacity) ?? opacity)
     : opacity
-  // oxlint-disable-next-line react/react-compiler
-  const contentBox = getVideoContentBox()
   const hasContentBox = contentBox.width > 0 && contentBox.height > 0
 
   const computeWatermarkStyle = () => {
@@ -339,7 +388,6 @@ export default function DraggableWatermark({
       ref={watermarkRef}
       $opacity={opacityForRender}
       onMouseDown={hasManualOverlay ? undefined : handleMouseDown}
-      // oxlint-disable-next-line react/react-compiler
       style={computeWatermarkStyle()}
     >
       <img src={watermark.imageUrl} alt="Watermark" draggable={false} />
@@ -369,6 +417,13 @@ export function WatermarkControls({
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [mode, setMode] = useState<'canvas' | 'manual'>(
     watermark.overlay_settings ? 'manual' : 'canvas',
+  )
+  const hasOverlaySettings = Boolean(watermark.overlay_settings)
+  const [prevHasOverlaySettings, setPrevHasOverlaySettings] = useState(hasOverlaySettings)
+  const previewContentBox = useVideoContentBox(
+    previewContainerRef,
+    previewVideoRef,
+    Boolean(watermark.imageUrl),
   )
 
   const isUpdatingRef = useRef(false)
@@ -476,10 +531,10 @@ export function WatermarkControls({
     }
   }, [])
 
-  useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
-    setMode(watermark.overlay_settings ? 'manual' : 'canvas')
-  }, [watermark.overlay_settings])
+  if (hasOverlaySettings !== prevHasOverlaySettings) {
+    setPrevHasOverlaySettings(hasOverlaySettings)
+    setMode(hasOverlaySettings ? 'manual' : 'canvas')
+  }
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const url = e.target.value
@@ -536,31 +591,6 @@ export function WatermarkControls({
         vertical_margin: normalizeZeroPercent(merged.vertical_margin) || merged.vertical_margin,
       },
     })
-  }
-
-  const getVideoContentBox = () => {
-    const container = previewContainerRef?.current
-    if (!container) return {x: 0, y: 0, width: 0, height: 0}
-
-    const rect = container.getBoundingClientRect()
-    const containerW = rect.width
-    const containerH = rect.height
-
-    const videoEl = previewVideoRef?.current
-    const videoW = videoEl?.videoWidth || 0
-    const videoH = videoEl?.videoHeight || 0
-
-    if (!videoW || !videoH || !containerW || !containerH) {
-      return {x: 0, y: 0, width: containerW, height: containerH}
-    }
-
-    const scale = Math.min(containerW / videoW, containerH / videoH)
-    const contentW = videoW * scale
-    const contentH = videoH * scale
-    const offsetX = (containerW - contentW) / 2
-    const offsetY = (containerH - contentH) / 2
-
-    return {x: offsetX, y: offsetY, width: contentW, height: contentH}
   }
 
   return (
@@ -807,10 +837,9 @@ export function WatermarkControls({
             <>
               <Box>
                 <Text size={1} weight="medium">
-                  {/* oxlint-disable-next-line react/react-compiler */}
                   {(() => {
                     const sizePct = watermark.size || 20
-                    const contentW = getVideoContentBox().width
+                    const contentW = previewContentBox.width
                     if (!contentW) return `Size: ${sizePct}%`
                     const px = Math.max(1, Math.round((sizePct / 100) * contentW))
                     return `Size: ${px}px`
@@ -818,29 +847,26 @@ export function WatermarkControls({
                 </Text>
                 <RangeInput
                   type="range"
-                  // oxlint-disable-next-line react/react-compiler
                   value={(() => {
                     const sizePct = watermark.size || 20
-                    const contentW = getVideoContentBox().width
+                    const contentW = previewContentBox.width
                     if (!contentW) return sizePct
                     return Math.max(1, Math.round((sizePct / 100) * contentW))
                   })()}
-                  // oxlint-disable-next-line react/react-compiler
                   min={(() => {
-                    const contentW = getVideoContentBox().width
+                    const contentW = previewContentBox.width
                     if (!contentW) return 5
                     return Math.max(1, Math.round(contentW * 0.05))
                   })()}
-                  // oxlint-disable-next-line react/react-compiler
                   max={(() => {
-                    const contentW = getVideoContentBox().width
+                    const contentW = previewContentBox.width
                     if (!contentW) return 50
                     return Math.max(1, Math.round(contentW * 0.5))
                   })()}
                   step={1}
                   onChange={(e) => {
                     const raw = Number(e.target.value)
-                    const contentW = getVideoContentBox().width
+                    const contentW = readVideoContentBox(previewContainerRef, previewVideoRef).width
                     const nextPct = contentW ? (raw / contentW) * 100 : raw
                     const clampedPct = Math.max(5, Math.min(50, nextPct))
                     onChange({

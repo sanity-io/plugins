@@ -48,6 +48,8 @@ export interface EditableInputProps {
 interface EditableInputState {
   value: string
   blurValue: string
+  isFocused: boolean
+  propValue: string
 }
 
 export class EditableInput extends Component<EditableInputProps, EditableInputState> {
@@ -58,26 +60,33 @@ export class EditableInput extends Component<EditableInputProps, EditableInputSt
   constructor(props: EditableInputProps) {
     super(props)
     const initialValue = String(props.value ?? '').toUpperCase()
-    this.state = {value: initialValue, blurValue: initialValue}
+    this.state = {
+      value: initialValue,
+      blurValue: initialValue,
+      isFocused: false,
+      propValue: initialValue,
+    }
     this.inputId = `rc-editable-input-${idCounter++}`
   }
 
-  override componentDidUpdate(prevProps: EditableInputProps, prevState: EditableInputState): void {
-    if (
-      this.props.value !== this.state.value &&
-      (prevProps.value !== this.props.value || prevState.value !== this.state.value)
-    ) {
-      const nextValue = String(this.props.value ?? '').toUpperCase()
-      const isFocused = this.inputRef.current === document.activeElement
-      // Sync the controlled value into local state, but only when the input is
-      // not focused so we don't clobber what the user is typing. This needs a
-      // post-update `activeElement` check that `getDerivedStateFromProps` can't do.
-      // oxlint-disable-next-line react/no-did-update-set-state
-      this.setState(
-        isFocused
-          ? {blurValue: nextValue}
-          : {value: nextValue, blurValue: this.state.blurValue ? '' : nextValue},
-      )
+  static getDerivedStateFromProps(
+    props: EditableInputProps,
+    state: EditableInputState,
+  ): Partial<EditableInputState> | null {
+    const nextValue = String(props.value ?? '').toUpperCase()
+
+    if (nextValue === state.propValue || nextValue === state.value) {
+      return nextValue === state.propValue ? null : {propValue: nextValue}
+    }
+
+    if (state.isFocused) {
+      return {blurValue: nextValue, propValue: nextValue}
+    }
+
+    return {
+      blurValue: state.blurValue ? '' : nextValue,
+      propValue: nextValue,
+      value: nextValue,
     }
   }
 
@@ -98,8 +107,14 @@ export class EditableInput extends Component<EditableInputProps, EditableInputSt
 
   private readonly handleBlur = (): void => {
     if (this.state.blurValue) {
-      this.setState({value: this.state.blurValue, blurValue: ''})
+      this.setState({value: this.state.blurValue, blurValue: '', isFocused: false})
+      return
     }
+    this.setState({isFocused: false})
+  }
+
+  private readonly handleFocus = (): void => {
+    this.setState({isFocused: true})
   }
 
   private readonly handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -169,6 +184,7 @@ export class EditableInput extends Component<EditableInputProps, EditableInputSt
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
+          onFocus={this.handleFocus}
           placeholder={this.props.placeholder}
           spellCheck="false"
         />

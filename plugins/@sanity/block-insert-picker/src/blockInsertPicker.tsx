@@ -1,7 +1,7 @@
 import {useEditor} from '@portabletext/editor'
 import {Box, Card, Flex, Hotkeys, Popover, Stack, Text, useToast} from '@sanity/ui'
 import type {CSSProperties} from 'react'
-import {useEffect, useId, useLayoutEffect, useMemo, useReducer, useRef, useState} from 'react'
+import {useEffect, useId, useLayoutEffect, useMemo, useReducer, useRef} from 'react'
 import {useResolveInitialValueForType, useSchema} from 'sanity'
 import type {SchemaType} from 'sanity'
 
@@ -439,22 +439,15 @@ export function BlockInsertPicker({
   // editor.dom is the supported anchoring API; a collapsed caret in an empty
   // block can yield an all-zero rect in some browsers, so fall back to the
   // block element's rect in that case.
-  const [cursorRect, setCursorRect] = useState<DOMRect | null>(null)
-
-  useLayoutEffect(() => {
-    if (!open) {
-      // oxlint-disable-next-line react/react-compiler
-      setCursorRect(null)
-      return
-    }
+  const cursorRect = useMemo(() => {
+    if (!open) return null
     const snapshot = editor.getSnapshot()
     const rect = editor.dom.getSelectionRect(snapshot)
     if (rect && (rect.x || rect.y || rect.width || rect.height)) {
-      setCursorRect(rect)
-      return
+      return rect
     }
     const blockRect = editor.dom.getStartBlockElement(snapshot)?.getBoundingClientRect()
-    if (blockRect) setCursorRect(blockRect)
+    return blockRect ?? null
   }, [editor, open])
 
   // Close on any pointerdown outside the popover (clicking into another block

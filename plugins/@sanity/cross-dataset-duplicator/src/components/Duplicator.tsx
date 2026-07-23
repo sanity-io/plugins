@@ -21,7 +21,7 @@ import {
 } from '@sanity/ui'
 import {getTheme_v2} from '@sanity/ui/theme'
 import {dset} from 'dset'
-import {type ChangeEvent, Fragment, useEffect, useEffectEvent, useMemo, useState} from 'react'
+import {type ChangeEvent, Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   useClient,
   Preview,
@@ -119,6 +119,11 @@ export default function Duplicator(props: DuplicatorProps) {
   const [isDuplicating, setIsDuplicating] = useState(false)
   const [isGathering, setIsGathering] = useState(false)
   const [progress, setProgress] = useState<[number, number]>([0, 0])
+  const destinationRef = useRef(destination)
+
+  useEffect(() => {
+    destinationRef.current = destination
+  }, [destination])
 
   // References found in the initial docs
   const initialRefsCount = useMemo(
@@ -132,23 +137,23 @@ export default function Duplicator(props: DuplicatorProps) {
   const displayMessage = message ?? initialMessage
 
   // Check if payload documents exist at destination
-  async function updatePayloadStatuses(payloadActual: PayloadItem[], dest: WorkspaceOption | null) {
-    if (!payloadActual.length || !dest?.name) {
-      return
-    }
+  const getPayloadWithStatuses = useCallback(
+    async (payloadActual: PayloadItem[], dest: WorkspaceOption | null) => {
+      if (!payloadActual.length || !dest?.name) {
+        return undefined
+      }
 
-    const payloadIds = payloadActual.map(({doc}) => doc._id)
-    const destinationClient = originClient.withConfig({
-      dataset: dest.dataset,
-      projectId: dest.projectId,
-    })
-    const destinationData = await destinationClient.fetch<SanityDocument[]>(
-      `*[_id in $payloadIds]{ _id, _updatedAt }`,
-      {payloadIds},
-    )
+      const payloadIds = payloadActual.map(({doc}) => doc._id)
+      const destinationClient = originClient.withConfig({
+        dataset: dest.dataset,
+        projectId: dest.projectId,
+      })
+      const destinationData = await destinationClient.fetch<SanityDocument[]>(
+        `*[_id in $payloadIds]{ _id, _updatedAt }`,
+        {payloadIds},
+      )
 
-    setPayload(
-      payloadActual.map((item) => {
+      return payloadActual.map((item) => {
         const existingDoc = destinationData.find((doc) => doc._id === item.doc._id)
         let status: keyof MessageTypes = 'CREATE'
 
@@ -168,24 +173,38 @@ export default function Duplicator(props: DuplicatorProps) {
         }
 
         return {...item, status}
-      }),
-    )
-  }
+      })
+    },
+    [originClient],
+  )
 
-  // Build the initial payload and check statuses at the current destination
-  const initializePayload = useEffectEvent((nextDocs: SanityDocument[]) => {
-    const initialPayload: PayloadItem[] = nextDocs.map((doc) => ({include: true, doc}))
-    updatePayloadStatuses(initialPayload, destination).catch(console.error)
-  })
+  async function updatePayloadStatuses(payloadActual: PayloadItem[], dest: WorkspaceOption | null) {
+    if (!payloadActual.length || !dest?.name) {
+      return
+    }
+
+    const payloadWithStatuses = await getPayloadWithStatuses(payloadActual, dest)
+    if (payloadWithStatuses) setPayload(payloadWithStatuses)
+  }
 
   // Sync the payload with the docs prop and the destination dataset.
   // setPayload only runs after fetching document statuses from the
   // destination resolves, not synchronously within the effect.
   // See: https://github.com/facebook/react/issues/34743
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
-    initializePayload(docs)
-  }, [docs])
+    let cancelled = false
+    const initialPayload: PayloadItem[] = docs.map((doc) => ({include: true, doc}))
+    getPayloadWithStatuses(initialPayload, destinationRef.current)
+      .then((payloadWithStatuses) => {
+        if (!cancelled && payloadWithStatuses) setPayload(payloadWithStatuses)
+        return undefined
+      })
+      .catch(console.error)
+
+    return () => {
+      cancelled = true
+    }
+  }, [docs, getPayloadWithStatuses])
 
   function handleCheckbox(_id: string) {
     setPayload((current) =>

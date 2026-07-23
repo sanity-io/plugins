@@ -17,17 +17,14 @@ const pluginConfigKeys = [
 export const Secrets = (props: ObjectInputProps) => {
   const {secrets, loading} = useSecrets(namespace) as {secrets: {apiKey: string}; loading: boolean}
   const {setSecret} = useGrowthbookContext()
-  const [showSettings, setShowSettings] = useState<boolean>(false)
+  const [settingsDismissed, setSettingsDismissed] = useState(false)
+  const showSettings = !loading && !secrets && !settingsDismissed
 
   useEffect(() => {
-    if (loading) return undefined
-    if (!secrets && !loading) {
-      setSecret(undefined)
-      // oxlint-disable-next-line react/react-compiler
-      return setShowSettings(true)
+    if (loading) {
+      return
     }
-    setSecret(secrets.apiKey)
-    return setShowSettings(false)
+    setSecret(secrets?.apiKey)
   }, [secrets, loading, setSecret])
 
   if (!showSettings) {
@@ -40,7 +37,7 @@ export const Secrets = (props: ObjectInputProps) => {
         namespace={namespace}
         keys={pluginConfigKeys}
         onClose={() => {
-          setShowSettings(false)
+          setSettingsDismissed(true)
         }}
       />
       {props.renderDefault(props)}

@@ -37,8 +37,8 @@ export function AssistConnectorsOverlay(props: {connectors: Connector[]}) {
   useEffect(() => {
     // hacky workaround to force redraw for connectors on initial render
     // this seem to improve initial measurements of elements
-    // oxlint-disable-next-line react/react-compiler
-    setRedraw(true)
+    const frame = requestAnimationFrame(() => setRedraw(true))
+    return () => cancelAnimationFrame(frame)
   }, [])
 
   // const zIndex = zIndexes.length ? Math.max(...zIndexes) : 1

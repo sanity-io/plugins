@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {defer, of, timer} from 'rxjs'
 import {concatMap, expand, tap} from 'rxjs/operators'
 import type {SanityClient} from 'sanity'
@@ -120,16 +120,29 @@ function hasMorePages(pageResult: PageResult) {
  */
 export default function useMuxAssets({client, enabled}: {client: SanityClient; enabled: boolean}) {
   const [state, setState] = useState<MuxAssetsState>({loading: true, cursor: null})
+  const stateRef = useRef(state)
 
   useEffect(() => {
     if (!enabled) return
+
+    const setMuxAssetsState = (
+      updater: MuxAssetsState | ((prevState: MuxAssetsState) => MuxAssetsState),
+    ) => {
+      setState((prevState) => {
+        const nextState = typeof updater === 'function' ? updater(prevState) : updater
+        stateRef.current = nextState
+        return nextState
+      })
+    }
+
+    const currentState = stateRef.current
 
     const subscription = defer(() =>
       fetchMuxAssetsPage(
         client,
         // When we've already successfully loaded before (fully or partially), we start from the next cursor to avoid re-fetching
-        'data' in state && state.data && state.data.length > 0 && !state.error
-          ? state.cursor
+        currentState.data && currentState.data.length > 0 && !currentState.error
+          ? currentState.cursor
           : null,
       ),
     )
@@ -157,13 +170,13 @@ export default function useMuxAssets({client, enabled}: {client: SanityClient; e
 
         // On each iteration, persist intermediate states to give feedback to users
         tap((pageResult) =>
-          setState((prevState) => accumulateIntermediateState(prevState, pageResult)),
+          setMuxAssetsState((prevState) => accumulateIntermediateState(prevState, pageResult)),
         ),
       )
       .subscribe({
         // Once done, let the user know we've stopped loading
         complete: () => {
-          setState((prev) => ({
+          setMuxAssetsState((prev) => ({
             ...prev,
             loading: false,
           }))
@@ -172,8 +185,7 @@ export default function useMuxAssets({client, enabled}: {client: SanityClient; e
 
     // Unsubscribe on component unmount to prevent memory leaks or fetching unnecessarily
     return () => subscription.unsubscribe()
-    // oxlint-disable-next-line react/exhaustive-deps -- secrets/pluginConfig are stable for the asset fetch lifecycle once enabled
-  }, [enabled])
+  }, [client, enabled])
 
   return state
 }

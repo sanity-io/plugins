@@ -180,6 +180,29 @@ type RenderPickerOptions = Omit<BlockInsertPickerProps, 'items'> & {
   memberSchemaTypes?: unknown
 }
 
+function MemberSchemaTypesProvider({
+  children,
+  memberSchemaTypes,
+}: {
+  children: React.ReactNode
+  memberSchemaTypes: unknown
+}) {
+  // The mocked context accepts any stub; the real value type lives in
+  // sanity's internals.
+  // oxlint-disable no-unsafe-type-assertion
+  const memberSchemaTypesValue = React.useMemo(
+    () => memberSchemaTypes as never,
+    [memberSchemaTypes],
+  )
+  // oxlint-enable no-unsafe-type-assertion
+
+  return (
+    <PortableTextMemberSchemaTypesContext.Provider value={memberSchemaTypesValue}>
+      {children}
+    </PortableTextMemberSchemaTypesContext.Provider>
+  )
+}
+
 function makePickerTree(
   editorRef: React.Ref<null | ReturnType<typeof useEditor>>,
   options?: RenderPickerOptions,
@@ -188,11 +211,6 @@ function makePickerTree(
   // Opt out of the fallback entirely with arrayTypeName: '' (the
   // context-path tests pass memberSchemaTypes instead).
   const arrayTypeName = 'arrayTypeName' in props ? props.arrayTypeName || undefined : 'testContent'
-  // The mocked context accepts any stub; the real value type lives in
-  // sanity's internals. Aliased outside JSX so the Provider gets a stable
-  // identifier (jsx-no-constructed-context-values).
-  // oxlint-disable-next-line no-unsafe-type-assertion
-  const memberSchemaTypesValue = memberSchemaTypes as never
   const picker = (
     <BlockInsertPicker
       {...props}
@@ -214,14 +232,9 @@ function makePickerTree(
           {memberSchemaTypes === undefined ? (
             picker
           ) : (
-            <PortableTextMemberSchemaTypesContext.Provider
-              // A test harness rendered per call — no re-render for a
-              // constructed value to churn.
-              // oxlint-disable-next-line react/jsx-no-constructed-context-values
-              value={memberSchemaTypesValue}
-            >
+            <MemberSchemaTypesProvider memberSchemaTypes={memberSchemaTypes}>
               {picker}
-            </PortableTextMemberSchemaTypesContext.Provider>
+            </MemberSchemaTypesProvider>
           )}
         </EditorProvider>
       </ToastProvider>

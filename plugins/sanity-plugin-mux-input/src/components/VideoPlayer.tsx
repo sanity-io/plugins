@@ -40,66 +40,62 @@ export default function VideoPlayer({
   const isAudio = assetIsAudio(asset)
   const muxPlayer = useRef<MuxPlayerRefAttributes>(null)
   const playerContainerRef = useRef<HTMLDivElement>(null)
-  const [error, setError] = useState<Error>()
+  const [currentTime, setCurrentTime] = useState(0)
 
   /* Playback ID that will be used to play the video */
-  const playbackId = useMemo(() => {
+  const playbackIdResult = useMemo(() => {
     try {
-      return getPlaybackId(asset, ['public', 'signed', 'drm'])
+      return {playbackId: getPlaybackId(asset, ['public', 'signed', 'drm'])}
     } catch (e) {
-      // oxlint-disable-next-line react/react-compiler
-      setError(new TypeError('Asset has no playback ID', {cause: e}))
-      return undefined
+      return {error: new TypeError('Asset has no playback ID', {cause: e})}
     }
   }, [asset])
+  const playbackId = 'playbackId' in playbackIdResult ? playbackIdResult.playbackId : undefined
 
   const muxPlaybackId = useMemo(() => {
     if (!playbackId) return undefined
     return getPlaybackPolicyById(asset, playbackId)
   }, [asset, playbackId])
 
-  const src = useMemo(() => {
+  const srcResult = useMemo(() => {
     if (!playbackId) return undefined
     if (!muxPlaybackId) return undefined
     return tryWithSuspend(
-      () => getVideoSrc({muxPlaybackId, client}),
-      (e: Error) => {
-        setError(e)
-        return undefined
-      },
+      () => ({src: getVideoSrc({muxPlaybackId, client})}),
+      (error: Error) => ({error}),
     )
   }, [muxPlaybackId, playbackId, client])
+  const src = srcResult && 'src' in srcResult ? srcResult.src : undefined
 
-  const poster = useMemo(() => {
+  const posterResult = useMemo(() => {
     return tryWithSuspend(
-      () => getPosterSrc({asset, client, width: thumbnailWidth}),
-      (e: Error) => {
-        setError(e)
-        return undefined
-      },
+      () => ({poster: getPosterSrc({asset, client, width: thumbnailWidth})}),
+      (error: Error) => ({error}),
     )
   }, [asset, client, thumbnailWidth])
+  const poster = posterResult && 'poster' in posterResult ? posterResult.poster : undefined
 
   const signedToken = useMemo(() => {
+    if (!src) return undefined
+
     try {
-      const url = new URL(src!)
+      const url = new URL(src)
       return url.searchParams.get('token')
     } catch {
       return undefined
     }
   }, [src])
-  const drmToken = useMemo(() => {
+  const drmTokenResult = useMemo(() => {
     if (!playbackId) return undefined
     if (muxPlaybackId?.policy !== 'drm') return undefined
 
     return tryWithSuspend(
-      () => generateJwt(client, playbackId, 'd'),
-      (e: Error) => {
-        setError(e)
-        return undefined
-      },
+      () => ({drmToken: generateJwt(client, playbackId, 'd')}),
+      (error: Error) => ({error}),
     )
   }, [client, muxPlaybackId?.policy, playbackId])
+  const drmToken =
+    drmTokenResult && 'drmToken' in drmTokenResult ? drmTokenResult.drmToken : undefined
   const tokens:
     | Partial<{
         playback?: string
@@ -136,6 +132,11 @@ export default function VideoPlayer({
       return undefined
     }
   }, [signedToken, drmToken])
+  const error =
+    ('error' in playbackIdResult ? playbackIdResult.error : undefined) ||
+    (srcResult && 'error' in srcResult ? srcResult.error : undefined) ||
+    (posterResult && 'error' in posterResult ? posterResult.error : undefined) ||
+    (drmTokenResult && 'error' in drmTokenResult ? drmTokenResult.error : undefined)
 
   const [width, height] = (asset?.data?.aspect_ratio ?? '16:9').split(':').map(Number)
   const targetAspectRatio =
@@ -186,6 +187,10 @@ export default function VideoPlayer({
                 tokens={tokens}
                 preload="metadata"
                 crossOrigin="anonymous"
+                onTimeUpdate={(event) => {
+                  const target = event.currentTarget as EventTarget & {currentTime?: number}
+                  if (typeof target.currentTime === 'number') setCurrentTime(target.currentTime)
+                }}
                 metadata={{
                   player_name: 'Sanity Admin Dashboard',
                   player_version: PLUGIN_VERSION,
@@ -226,11 +231,7 @@ export default function VideoPlayer({
       </Card>
 
       {dialogState === 'edit-thumbnail' && (
-        <EditThumbnailDialog
-          asset={asset}
-          // oxlint-disable-next-line react/react-compiler
-          currentTime={muxPlayer?.current?.currentTime}
-        />
+        <EditThumbnailDialog asset={asset} currentTime={currentTime} />
       )}
       {dialogState === 'edit-captions' && <CaptionsDialog asset={asset} />}
       {dialogState === 'mezzanine' && <MezzanineDialog asset={asset} />}

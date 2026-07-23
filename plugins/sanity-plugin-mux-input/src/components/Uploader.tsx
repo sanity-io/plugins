@@ -76,26 +76,24 @@ type UploaderStateAction =
  * the preview player.
  */
 export default function Uploader(props: Props) {
+  const {client, onChange} = props
   const toast = useToast()
   const containerRef = useRef<HTMLDivElement>(null)
 
   const dragEnteredEls = useRef<EventTarget[]>([])
   const [dragState, setDragState] = useState<'valid' | 'invalid' | null>(null)
 
-  const cancelUploadButton = useRef(
-    (() => {
-      const events$ = new Subject()
-      return {
-        observable: events$.asObservable(),
-        handleClick: (event: React.MouseEvent<HTMLButtonElement>) => events$.next(event),
-      }
-    })(),
-  ).current
+  const [cancelUploadButton] = useState(() => {
+    const events$ = new Subject()
+    return {
+      observable: events$.asObservable(),
+      handleClick: (event: React.MouseEvent<HTMLButtonElement>) => events$.next(event),
+    }
+  })
 
   const uploadRef = useRef<Subscription | null>(null)
   const uploadingDocumentId = useRef<string | null>(null)
   const [state, dispatch] = useReducer(
-    // oxlint-disable-next-line react/react-compiler
     (prev: State, action: UploaderStateAction) => {
       switch (action.action) {
         case 'stageUpload':
@@ -122,17 +120,8 @@ export default function Uploader(props: Props) {
           } satisfies Pick<typeof prev, 'uploadStatus'>)
         case 'reset':
         case 'complete':
-          // Clear upload observable on completion
-          uploadRef.current?.unsubscribe()
-          uploadRef.current = null
-          uploadingDocumentId.current = null
           return INITIAL_STATE
         case 'error': {
-          // Clear upload observable on error
-          uploadRef.current?.unsubscribe()
-          uploadRef.current = null
-          uploadingDocumentId.current = null
-
           let error = action.error
           if (isServerError(action.error) && hasPlaybackPolicy(action.settings, 'drm')) {
             error = new Error(
@@ -201,78 +190,87 @@ export default function Uploader(props: Props) {
    * @param watermark Optional watermark configuration
    * @returns
    */
-  const startUpload = (
-    settings: MuxNewAssetSettings,
-    watermark?: import('../util/types').WatermarkConfig,
-  ) => {
-    const {stagedUpload} = state
-    if (!stagedUpload || uploadRef.current) return
-    dispatch({action: 'commitUpload'})
-    let uploadObservable: Observable<UploadFileEvent | UploadUrlEvent>
-    switch (stagedUpload.type) {
-      case 'url':
-        uploadObservable = uploadUrl({
-          client: props.client,
-          url: stagedUpload.url,
-          settings,
-          watermark,
-        })
-        break
-      case 'file':
-        uploadObservable = uploadFile({
-          client: props.client,
-          file: stagedUpload.files[0]!,
-          settings,
-          watermark,
-        }).pipe(
-          takeUntil(
-            cancelUploadButton.observable.pipe(
-              tap(() => {
-                if (uploadingDocumentId.current) {
-                  void props.client.delete(uploadingDocumentId.current)
-                  uploadingDocumentId.current = null
-                }
-              }),
+  const {stagedUpload} = state
+  const startUpload = useCallback(
+    (settings: MuxNewAssetSettings, watermark?: import('../util/types').WatermarkConfig) => {
+      if (!stagedUpload || uploadRef.current) return
+      dispatch({action: 'commitUpload'})
+      let uploadObservable: Observable<UploadFileEvent | UploadUrlEvent>
+      switch (stagedUpload.type) {
+        case 'url':
+          uploadObservable = uploadUrl({
+            client,
+            url: stagedUpload.url,
+            settings,
+            watermark,
+          })
+          break
+        case 'file':
+          uploadObservable = uploadFile({
+            client,
+            file: stagedUpload.files[0]!,
+            settings,
+            watermark,
+          }).pipe(
+            takeUntil(
+              cancelUploadButton.observable.pipe(
+                tap(() => {
+                  if (uploadingDocumentId.current) {
+                    void client.delete(uploadingDocumentId.current)
+                    uploadingDocumentId.current = null
+                  }
+                }),
+              ),
             ),
-          ),
-        )
-        break
-    }
-    uploadRef.current = uploadObservable.subscribe({
-      next: (event) => {
-        switch (event.type) {
-          case 'uuid':
-            // Track the document ID for cleanup on unmount
-            uploadingDocumentId.current = event.uuid
-            dispatch({action: 'progressInfo', ...event})
-            break
-          case 'file':
-          case 'url':
-            dispatch({action: 'progressInfo', ...event})
-            break
-          case 'progress':
-            dispatch({action: 'progress', percent: event.percent})
-            break
-          case 'success':
-            dispatch({action: 'progress', percent: 100})
-            uploadingDocumentId.current = null
-            props.onChange(
-              PatchEvent.from([
-                setIfMissing({asset: {}}),
-                set({_type: 'reference', _weak: true, _ref: event.asset._id}, ['asset']),
-              ]),
-            )
-            break
-          case 'pause':
-          case 'resume':
-          default:
-            break
-        }
-      },
-      complete: () => dispatch({action: 'complete'}),
-      error: (error) => dispatch({action: 'error', error, settings}),
-    })
-  }
+          )
+          break
+      }
+      uploadRef.current = uploadObservable.subscribe({
+        next: (event) => {
+          switch (event.type) {
+            case 'uuid':
+              // Track the document ID for cleanup on unmount
+              uploadingDocumentId.current = event.uuid
+              dispatch({action: 'progressInfo', ...event})
+              break
+            case 'file':
+            case 'url':
+              dispatch({action: 'progressInfo', ...event})
+              break
+            case 'progress':
+              dispatch({action: 'progress', percent: event.percent})
+              break
+            case 'success':
+              dispatch({action: 'progress', percent: 100})
+              uploadingDocumentId.current = null
+              onChange(
+                PatchEvent.from([
+                  setIfMissing({asset: {}}),
+                  set({_type: 'reference', _weak: true, _ref: event.asset._id}, ['asset']),
+                ]),
+              )
+              break
+            case 'pause':
+            case 'resume':
+            default:
+              break
+          }
+        },
+        complete: () => {
+          uploadRef.current = null
+          uploadingDocumentId.current = null
+          dispatch({action: 'complete'})
+        },
+        error: (error) => {
+          uploadRef.current?.unsubscribe()
+          uploadRef.current = null
+          uploadingDocumentId.current = null
+          dispatch({action: 'error', error, settings})
+        },
+      })
+    },
+    [cancelUploadButton.observable, client, onChange, stagedUpload],
+  )
 
   const invalidFileToast = useCallback(() => {
     toast.push({
@@ -410,7 +408,6 @@ export default function Uploader(props: Props) {
     const {uploadStatus} = state
     return (
       <UploadProgress
-        // oxlint-disable-next-line react/react-compiler
         onCancel={cancelUploadButton.handleClick}
         progress={uploadStatus.progress}
         filename={uploadStatus.file?.name || uploadStatus.url}

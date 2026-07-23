@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
 import isEqual from 'react-fast-compare'
-import type {Subscription} from 'rxjs'
+import {EMPTY, type Subscription} from 'rxjs'
 import {catchError, distinctUntilChanged} from 'rxjs/operators'
 import {type ListenQueryOptions, type ListenQueryParams, useDocumentStore} from 'sanity'
 
@@ -51,11 +51,13 @@ export function useListeningQuery<V>(
             distinctUntilChanged(isEqual),
             catchError((err) => {
               console.error(err)
-              setError(err)
-              setLoading(false)
-              setData(null)
+              queueMicrotask(() => {
+                setError(err)
+                setLoading(false)
+                setData(null)
+              })
 
-              return err
+              return EMPTY
             }),
           )
           .subscribe((documents) => {
@@ -72,9 +74,10 @@ export function useListeningQuery<V>(
           })
       } catch (err) {
         console.error(err)
-        // oxlint-disable-next-line react/react-compiler -- sync error handling for subscription setup
-        setLoading(false)
-        setError(err)
+        queueMicrotask(() => {
+          setLoading(false)
+          setError(err)
+        })
       }
     }
 

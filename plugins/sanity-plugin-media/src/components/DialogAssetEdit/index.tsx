@@ -301,49 +301,6 @@ const DialogAssetEdit = (props: Props) => {
     assetUpdatedPrev.current = assetItem?.asset._updatedAt
   }, [assetItem?.asset, generateDefaultValues, reset])
 
-  const Footer = () => (
-    <Box padding={3}>
-      <Stack space={3}>
-        {hasOrphanedLocales && (
-          <Card padding={3} radius={2} shadow={1} tone="caution">
-            <Flex align="center" justify="space-between" gap={3}>
-              <Text size={1}>
-                This asset has localized fields that are no longer configured. Clean them up to
-                avoid validation errors.
-              </Text>
-              <Button
-                fontSize={1}
-                mode="ghost"
-                onClick={handleCleanupLocales}
-                text="Cleanup localized fields"
-                tone="caution"
-              />
-            </Flex>
-          </Card>
-        )}
-        <Flex justify="space-between">
-          {/* Delete button */}
-          <Button
-            disabled={formUpdating}
-            fontSize={1}
-            mode="bleed"
-            onClick={handleDelete}
-            text="Delete"
-            tone="critical"
-          />
-
-          {/* Submit button */}
-          <FormSubmitButton
-            disabled={formUpdating || !isDirty || !isValid || hasOrphanedLocales}
-            isValid={isValid}
-            lastUpdated={currentAsset?._updatedAt}
-            onClick={handleSubmit(onSubmit)}
-          />
-        </Flex>
-      </Stack>
-    </Box>
-  )
-
   if (!currentAsset) {
     return null
   }
@@ -365,8 +322,48 @@ const DialogAssetEdit = (props: Props) => {
   return (
     <Dialog
       animate
-      // oxlint-disable-next-line react/react-compiler
-      footer={<Footer />}
+      footer={
+        <Box padding={3}>
+          <Stack space={3}>
+            {hasOrphanedLocales && (
+              <Card padding={3} radius={2} shadow={1} tone="caution">
+                <Flex align="center" justify="space-between" gap={3}>
+                  <Text size={1}>
+                    This asset has localized fields that are no longer configured. Clean them up to
+                    avoid validation errors.
+                  </Text>
+                  <Button
+                    fontSize={1}
+                    mode="ghost"
+                    onClick={handleCleanupLocales}
+                    text="Cleanup localized fields"
+                    tone="caution"
+                  />
+                </Flex>
+              </Card>
+            )}
+            <Flex justify="space-between">
+              {/* Delete button */}
+              <Button
+                disabled={formUpdating}
+                fontSize={1}
+                mode="bleed"
+                onClick={handleDelete}
+                text="Delete"
+                tone="critical"
+              />
+
+              {/* Submit button */}
+              <FormSubmitButton
+                disabled={formUpdating || !isDirty || !isValid || hasOrphanedLocales}
+                isValid={isValid}
+                lastUpdated={currentAsset?._updatedAt}
+                onClick={handleSubmit(onSubmit)}
+              />
+            </Flex>
+          </Stack>
+        </Box>
+      }
       header="Asset details"
       id={id}
       onClose={handleClose}

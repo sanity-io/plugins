@@ -104,6 +104,7 @@ function SemanticSearchInput(props: ObjectInputProps & {indexConfig: EmbeddingsI
   const {value: currentDocument} = useDocumentPane()
   const docRef = useRef(currentDocument)
   const autocompleteRef = useRef<HTMLInputElement>(null)
+  const shouldFocusOnMountRef = useRef(Boolean(value?.['_ref']))
 
   useEffect(() => {
     docRef.current = currentDocument
@@ -111,11 +112,10 @@ function SemanticSearchInput(props: ObjectInputProps & {indexConfig: EmbeddingsI
 
   useEffect(() => {
     // if this component is rendered, and there is a value, replace was selected
-    if (value?.['_ref']) {
+    if (shouldFocusOnMountRef.current) {
       autocompleteRef.current?.focus()
     }
     // intentional empty deps — focus once on mount when replacing an existing reference
-    // oxlint-disable-next-line react/exhaustive-deps
   }, [])
 
   const handleFocus = useCallback(() => onPathFocus(['_ref']), [onPathFocus])

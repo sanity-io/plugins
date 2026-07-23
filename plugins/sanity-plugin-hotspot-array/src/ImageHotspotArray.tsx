@@ -147,15 +147,10 @@ export function ImageHotspotArray(
   const hotspotImageRef = useRef<HTMLImageElement | null>(null)
 
   const [imageRect, setImageRect] = useState<DOMRectReadOnly>()
+  const handleImageResize = useCallback((e: ResizeObserverEntry) => setImageRect(e.contentRect), [])
+  const debouncedHandleImageResize = useDebouncedCallback(handleImageResize, 200)
 
-  useResizeObserver<HTMLImageElement>(
-    hotspotImageRef,
-    useDebouncedCallback(
-      (e: ResizeObserverEntry) => setImageRect(e.contentRect),
-      [setImageRect],
-      200,
-    ),
-  )
+  useResizeObserver<HTMLImageElement>(hotspotImageRef, debouncedHandleImageResize)
 
   return (
     <Stack gap={[2, 2, 3]}>

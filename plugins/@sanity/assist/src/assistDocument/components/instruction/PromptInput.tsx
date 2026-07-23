@@ -43,10 +43,11 @@ export function PromptInput(props: ArrayOfObjectsInputProps) {
 }
 
 function useOnlyInlineBlocks(props: ArrayOfObjectsInputProps) {
+  const {onChange, value} = props
   useEffect(() => {
     let needsFix = false
     // oxlint-disable-next-line no-unsafe-type-assertion
-    const val = ((props.value as PromptBlock[]) ?? []).map((block) => {
+    const val = ((value as PromptBlock[]) ?? []).map((block) => {
       if (block._type === 'block') {
         return block
       }
@@ -63,9 +64,7 @@ function useOnlyInlineBlocks(props: ArrayOfObjectsInputProps) {
     })
 
     if (needsFix) {
-      props.onChange(set(val))
+      onChange(set(val))
     }
-    // only run this once when loading the field
-    // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [onChange, value])
 }

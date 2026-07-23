@@ -15,6 +15,7 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
   const [videoAssetMetadata, setVideoAssetMetadata] = useState<VideoAssetMetadata | null>(null)
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false)
   useEffect(() => {
+    let isCurrent = true
     let videoSrc = null
     // Validate file uploads
     if (stagedUpload.type === 'file') {
@@ -27,17 +28,20 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
       videoSrc = stagedUpload.url
     }
 
-    // oxlint-disable-next-line react/react-compiler
-    setVideoAssetMetadata((old) => ({
-      ...old,
-      duration: undefined,
-      width: undefined,
-      height: undefined,
-    }))
-
     if (!videoSrc) return () => null
 
-    setIsLoadingMetadata(true)
+    void Promise.resolve().then(() => {
+      if (!isCurrent) return
+
+      setVideoAssetMetadata((old) => ({
+        ...old,
+        duration: undefined,
+        width: undefined,
+        height: undefined,
+      }))
+      setIsLoadingMetadata(true)
+    })
+
     const videoElement = document.createElement('video')
     videoElement.preload = 'metadata'
 
@@ -92,6 +96,7 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
     videoElement.src = videoSrc
 
     return () => {
+      isCurrent = false
       cleanupVideo(videoElement)
     }
   }, [stagedUpload.type, stagedUpload])
