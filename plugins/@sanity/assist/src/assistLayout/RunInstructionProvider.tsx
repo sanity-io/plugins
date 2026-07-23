@@ -175,10 +175,8 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
   )
 
   const contextValue: RunInstructionContextValue = useMemo(
-    // oxlint-disable-next-line react/react-compiler
     () => ({runInstruction, getUserInput, instructionLoading: loading}),
-    // oxlint-disable-next-line react-hooks/exhaustive-deps
-    [runInstruction, loading],
+    [runInstruction, getUserInput, loading],
   )
 
   return (

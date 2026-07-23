@@ -54,7 +54,6 @@
     "@hello-pangea/dnd": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "@tanstack/react-virtual": "^3.14.7",
     "lexorank": "catalog:",
     "motion": "catalog:",
     "sanity-plugin-utils": "workspace:^"

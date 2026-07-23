@@ -22,7 +22,7 @@ import {
   Tooltip,
   useClickOutsideEvent,
 } from '@sanity/ui'
-import {memo, useCallback, useEffect, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {PatchEvent, unset} from 'sanity'
 import {styled} from 'styled-components'
 
@@ -76,12 +76,9 @@ function PlayerActionsMenu(
     await resyncAsset(asset)
   }, [resyncAsset, asset])
 
-  useEffect(() => {
-    if (open && dialogState) {
-      // oxlint-disable-next-line react/react-compiler
-      setOpen(false)
-    }
-  }, [dialogState, open])
+  if (open && dialogState) {
+    setOpen(false)
+  }
 
   useClickOutsideEvent(
     () => setOpen(false),

@@ -1,6 +1,6 @@
 import type {DraggableLocation} from '@hello-pangea/dnd'
 import {useToast} from '@sanity/ui'
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {useClient} from 'sanity'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
@@ -60,15 +60,13 @@ export function useWorkflowDocuments(schemaTypes: string[]): WorkflowDocuments {
   // oxlint-disable-next-line no-unsafe-type-assertion
   const data = _data as SanityDocumentWithMetadata[]
 
-  const [localDocuments, setLocalDocuments] = useState<SanityDocumentWithMetadata[]>([])
+  const [localDocuments, setLocalDocuments] = useState<SanityDocumentWithMetadata[]>(() => data)
+  const [previousData, setPreviousData] = useState(data)
 
-  useEffect(() => {
-    if (data) {
-      // Fix this later
-      // oxlint-disable-next-line react/react-compiler
-      setLocalDocuments(data)
-    }
-  }, [data])
+  if (data !== previousData) {
+    setPreviousData(data)
+    setLocalDocuments(data)
+  }
 
   const move = useCallback(
     async (

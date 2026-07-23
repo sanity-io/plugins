@@ -15,7 +15,7 @@ import {
   useToast,
 } from '@sanity/ui'
 import LanguagesList from 'iso-639-1'
-import {useEffect, useId, useRef, useState} from 'react'
+import {useId, useRef, useState} from 'react'
 
 import {addTextTrackFromUrl, deleteTextTrack, getAsset} from '../actions/assets'
 import {useClient} from '../hooks/useClient'
@@ -30,6 +30,16 @@ const LANGUAGE_OPTIONS = LanguagesList.getAllCodes().map((code) => ({
   value: code,
   label: LanguagesList.getNativeName(code),
 }))
+
+function getSelectedLanguage(track: MuxTextTrack) {
+  const baseCode = track.language_code?.split('-')[0]
+  const foundByCode = LANGUAGE_OPTIONS.find(
+    (opt) => opt.value === track.language_code || opt.value === baseCode,
+  )
+  const foundByName = track.name ? LANGUAGE_OPTIONS.find((opt) => opt.label === track.name) : null
+
+  return foundByCode || foundByName || null
+}
 
 export interface Props {
   asset: VideoAssetDocument
@@ -51,37 +61,23 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
   const [vttUrl, setVttUrl] = useState('')
   const [languageCode, setLanguageCode] = useState(track.language_code || '')
   const [selectedLanguage, setSelectedLanguage] = useState<{value: string; label: string} | null>(
-    () => {
-      const baseCode = track.language_code?.split('-')[0]
-      const found = LANGUAGE_OPTIONS.find(
-        (opt) => opt.value === track.language_code || opt.value === baseCode,
-      )
-      if (found) return found
-      if (track.name) {
-        const foundByName = LANGUAGE_OPTIONS.find((opt) => opt.label === track.name)
-        if (foundByName) return foundByName
-      }
-      return null
-    },
+    () => getSelectedLanguage(track),
   )
   const [name, setName] = useState(track.name || '')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [prevTrack, setPrevTrack] = useState(track)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
+  if (track !== prevTrack) {
+    setPrevTrack(track)
     setLanguageCode(track.language_code || '')
     setName(track.name || '')
     setVttUrl('')
-    const baseCode = track.language_code?.split('-')[0]
-    const foundByCode = LANGUAGE_OPTIONS.find(
-      (opt) => opt.value === track.language_code || opt.value === baseCode,
-    )
-    const foundByName = track.name ? LANGUAGE_OPTIONS.find((opt) => opt.label === track.name) : null
-    setSelectedLanguage(foundByCode || foundByName || null)
-  }, [track, asset, client])
+    setSelectedFile(null)
+    setSelectedLanguage(getSelectedLanguage(track))
+  }
 
   const handleDownloadCurrentFile = async () => {
     setDownloading(true)

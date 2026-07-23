@@ -1,5 +1,5 @@
 import {Card, Text} from '@sanity/ui'
-import {useEffect, useMemo, useRef} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {useCancelUpload} from '../hooks/useCancelUpload'
 import type {MuxInputProps, PluginConfig, VideoAssetDocument} from '../util/types'
@@ -14,44 +14,26 @@ interface Props extends Pick<MuxInputProps, 'onChange' | 'readOnly'> {
 }
 
 const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
-  const isLoading = useMemo<boolean | string>(() => {
-    if (asset?.status === 'preparing') {
-      return 'Preparing the video'
-    }
-    if (asset?.status === 'waiting_for_upload') {
-      return 'Waiting for upload to start'
-    }
-    if (asset?.status === 'waiting') {
-      return 'Processing upload'
-    }
-    if (asset?.status === 'ready') {
-      return false
-    }
-    if (typeof asset?.status === 'undefined') {
-      return false
-    }
+  let isLoading: boolean | string = true
+  if (asset?.status === 'preparing') {
+    isLoading = 'Preparing the video'
+  } else if (asset?.status === 'waiting_for_upload') {
+    isLoading = 'Waiting for upload to start'
+  } else if (asset?.status === 'waiting') {
+    isLoading = 'Processing upload'
+  } else if (asset?.status === 'ready' || typeof asset?.status === 'undefined') {
+    isLoading = false
+  }
 
-    return true
-  }, [asset])
-  // oxlint-disable-next-line react/react-compiler
-  const isPreparingStaticRenditions = useMemo<boolean>(() => {
-    // Legacy: If static_renditions has a status field, it was created with mp4_support (deprecated)
-    // We don't process this old format, just return false
-    // Note: 'disabled' status is valid in the new format when no renditions were requested
-    if (
-      asset?.data?.static_renditions?.status &&
-      asset?.data?.static_renditions?.status !== 'disabled'
-    ) {
-      return false
-    }
-
-    // Check if any file in static_renditions is still preparing
-    const files = asset?.data?.static_renditions?.files
-    if (!files || files.length === 0) {
-      return false
-    }
-    return files.some((file) => file.status === 'preparing')
-  }, [asset?.data?.static_renditions?.status, asset?.data?.static_renditions?.files])
+  // Legacy: If static_renditions has a status field, it was created with mp4_support (deprecated)
+  // We don't process this old format, just return false
+  // Note: 'disabled' status is valid in the new format when no renditions were requested
+  const staticRenditions = asset?.data?.static_renditions
+  const staticRenditionFiles = staticRenditions?.files
+  const isPreparingStaticRenditions = Boolean(
+    (!staticRenditions?.status || staticRenditions.status === 'disabled') &&
+    staticRenditionFiles?.some((file) => file.status === 'preparing'),
+  )
   const playRef = useRef<HTMLDivElement>(null)
   const muteRef = useRef<HTMLDivElement>(null)
   const handleCancelUpload = useCancelUpload(asset, onChange)

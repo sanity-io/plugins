@@ -182,6 +182,20 @@ export type AssistFieldActionGroup = Omit<
 }
 
 type PushToast = (params: ToastParams) => string
+type FieldActionsConfig = {
+  title?: string
+  useFieldActions: (props: AssistFieldActionProps) => (AssistFieldActionNode | undefined)[]
+}
+
+const NO_FIELD_ACTIONS: (AssistFieldActionNode | undefined)[] = []
+
+function useNoFieldActions(_props: AssistFieldActionProps) {
+  return NO_FIELD_ACTIONS
+}
+
+const DEFAULT_FIELD_ACTIONS: FieldActionsConfig = {
+  useFieldActions: useNoFieldActions,
+}
 
 export function defineAssistFieldAction(
   action: Omit<AssistFieldActionItem, 'type'>,
@@ -217,8 +231,11 @@ export function useCustomFieldActions(
 
   const schemaId = useWorkspaceSchemaId()
   const {push: pushToast} = useToast()
-  // oxlint-disable-next-line react/react-compiler
-  const configActions = fieldActions?.useFieldActions?.({
+  const fieldActionTitle = fieldActions?.title
+  const fieldActionConfig: FieldActionsConfig = fieldActions?.useFieldActions
+    ? {title: fieldActionTitle, useFieldActions: fieldActions.useFieldActions}
+    : DEFAULT_FIELD_ACTIONS
+  const configActions = fieldActionConfig.useFieldActions({
     ...props,
     schemaId,
     // oxlint-disable-next-line no-unsafe-type-assertion
@@ -226,14 +243,12 @@ export function useCustomFieldActions(
   })
 
   return useMemo(() => {
-    const title = fieldActions?.title
     const customActions = configActions
       ?.filter(isDefined)
       .map((node) => {
         return createSafeNode({
           node,
           pushToast,
-          // oxlint-disable-next-line react/react-compiler
           addSyntheticTask,
           removeSyntheticTask,
         })
@@ -247,15 +262,14 @@ export function useCustomFieldActions(
         : [
             {
               type: 'group',
-              title: title || 'Custom actions',
+              title: fieldActionTitle || 'Custom actions',
               children: customActions,
               expanded: true,
             } satisfies DocumentFieldActionGroup,
           ]
       : []
     return groups ?? []
-    // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
-  }, [configActions, fieldActions, pushToast])
+  }, [configActions, fieldActionTitle, pushToast, addSyntheticTask, removeSyntheticTask])
 }
 
 function createSafeNode(args: {

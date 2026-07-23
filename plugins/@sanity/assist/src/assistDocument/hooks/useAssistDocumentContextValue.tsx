@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {getDraftId, getVersionId, type ObjectSchemaType, usePerspective, useSchema} from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
@@ -107,18 +107,46 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
 }
 
 function useSyntheticTasks(assistableDocumentId: string) {
-  const [syntheticTasks, setSyntheticTasks] = useState<InstructionTask[]>(() => [])
-  const addSyntheticTask = useCallback((task: InstructionTask) => {
-    setSyntheticTasks((current) => [...current, task])
-  }, [])
-  const removeSyntheticTask = useCallback((task: InstructionTask) => {
-    setSyntheticTasks((current) => current.filter((t) => task._key !== t._key))
-  }, [])
+  const [syntheticTasksState, setSyntheticTasksState] = useState<{
+    assistableDocumentId: string
+    tasks: InstructionTask[]
+  }>(() => ({assistableDocumentId, tasks: []}))
 
-  useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
-    setSyntheticTasks([])
-  }, [assistableDocumentId])
+  if (syntheticTasksState.assistableDocumentId !== assistableDocumentId) {
+    setSyntheticTasksState({assistableDocumentId, tasks: []})
+  }
+
+  const syntheticTasks =
+    syntheticTasksState.assistableDocumentId === assistableDocumentId
+      ? syntheticTasksState.tasks
+      : []
+
+  const addSyntheticTask = useCallback(
+    (task: InstructionTask) => {
+      setSyntheticTasksState((current) => ({
+        assistableDocumentId,
+        tasks: [
+          ...(current.assistableDocumentId === assistableDocumentId ? current.tasks : []),
+          task,
+        ],
+      }))
+    },
+    [assistableDocumentId],
+  )
+  const removeSyntheticTask = useCallback(
+    (task: InstructionTask) => {
+      setSyntheticTasksState((current) => {
+        if (current.assistableDocumentId !== assistableDocumentId) {
+          return {assistableDocumentId, tasks: []}
+        }
+        return {
+          assistableDocumentId,
+          tasks: current.tasks.filter((t) => task._key !== t._key),
+        }
+      })
+    },
+    [assistableDocumentId],
+  )
 
   return {
     syntheticTasks,

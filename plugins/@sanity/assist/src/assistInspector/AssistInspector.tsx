@@ -3,7 +3,14 @@ import {CloseIcon} from '@sanity/icons/Close'
 import {PlayIcon} from '@sanity/icons/Play'
 import {RetryIcon} from '@sanity/icons/Retry'
 import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
-import {type PropsWithChildren, useCallback, useMemo, useRef, useState} from 'react'
+import {
+  type PropsWithChildren,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   type DocumentInspectorProps,
   PerspectiveProvider,
@@ -204,6 +211,12 @@ function AssistInspector(props: DocumentInspectorProps) {
   const {params} = useAiPaneRouter()
 
   const boundary = useRef<HTMLDivElement | null>(null)
+  const [boundaryElement, setBoundaryElement] = useState<HTMLDivElement | null>(null)
+  useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(
+    boundary,
+    () => boundaryElement,
+    [boundaryElement],
+  )
   const pathKey = params?.[fieldPathParam]
   const instructionKey = params?.[instructionParam]
   const documentPane = useDocumentPane()
@@ -217,10 +230,6 @@ function AssistInspector(props: DocumentInspectorProps) {
   } = documentPane
 
   const {assistableDocumentId, documentIsAssistable} = useAssistDocumentContext()
-
-  const formStateRef = useRef(formState)
-  // oxlint-disable-next-line react/react-compiler
-  formStateRef.current = formState
 
   const {instructionLoading, requestRunInstruction} = useRequestRunInstruction({
     documentOnChange,
@@ -281,9 +290,17 @@ function AssistInspector(props: DocumentInspectorProps) {
         typePath,
         assistDocumentId: assistDocumentId(documentType),
         instruction,
-        conditionalMembers: formStateRef.current ? getConditionalMembers(formStateRef.current) : [],
+        conditionalMembers: formState ? getConditionalMembers(formState) : [],
       }),
-    [pathKey, instruction, typePath, documentType, assistableDocumentId, requestRunInstruction],
+    [
+      pathKey,
+      instruction,
+      typePath,
+      documentType,
+      assistableDocumentId,
+      requestRunInstruction,
+      formState,
+    ],
   )
 
   const Region = useCallback((_props: any) => {
@@ -310,7 +327,7 @@ function AssistInspector(props: DocumentInspectorProps) {
 
   return (
     <Flex
-      ref={boundary}
+      ref={setBoundaryElement}
       direction="column"
       height="fill"
       overflow="hidden"
@@ -331,8 +348,7 @@ function AssistInspector(props: DocumentInspectorProps) {
                 {selectedField && (
                   <AssistTypeContext.Provider value={assistTypeContext}>
                     <VirtualizerScrollInstanceProvider
-                      // oxlint-disable-next-line react/react-compiler
-                      scrollElement={boundary.current}
+                      scrollElement={boundaryElement}
                       containerElement={boundary}
                     >
                       <PerspectiveProvider selectedPerspectiveName={undefined}>

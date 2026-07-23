@@ -51,14 +51,10 @@ function Indexes() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [createIndexOpen, setCreateIndexOpen] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState<IndexState | undefined>(undefined)
+  const [selectedIndexName, setSelectedIndexName] = useState<string | undefined>(undefined)
+  const selectedIndex = indexes.find((index) => index.indexName === selectedIndexName)
 
   const onCreateIndexClose = useCallback(() => setCreateIndexOpen(false), [])
-
-  useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
-    setSelectedIndex(indexes.find((i) => i.indexName === selectedIndex?.indexName))
-  }, [indexes, selectedIndex])
 
   const updateIndexes = useCallback(() => {
     setLoading(true)
@@ -103,22 +99,21 @@ function Indexes() {
 
   const onSelectIndex = useCallback(
     (index: IndexState) => {
-      setSelectedIndex(index)
+      setSelectedIndexName(index.indexName)
       updateIndexes()
     },
-    [setSelectedIndex, updateIndexes],
+    [updateIndexes],
   )
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
-    updateIndexes()
+    queueMicrotask(updateIndexes)
   }, [updateIndexes])
 
   const openCreate = useCallback(() => setCreateIndexOpen(true), [])
   const onSubmit = useCallback(
     (index: IndexState) => {
       setIndexes((current) => [...current, index])
-      setSelectedIndex(index)
+      setSelectedIndexName(index.indexName)
       updateIndexes()
     },
     [updateIndexes],

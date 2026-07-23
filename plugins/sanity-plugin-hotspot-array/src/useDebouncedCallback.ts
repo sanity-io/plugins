@@ -1,6 +1,6 @@
 // copied from react-hookz/web
 // https://github.com/react-hookz/web/blob/579a445fcc9f4f4bb5b9d5e670b2e57448b4ee50/src/useDebouncedCallback/index.ts
-import {type DependencyList, useEffect, useMemo, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 
 /**
  * Run effect only when component is unmounted.
@@ -24,15 +24,12 @@ export type DebouncedFunction<Fn extends (...args: any[]) => any> = (
  * Makes passed function debounced, otherwise acts like `useCallback`.
  *
  * @param callback Function that will be debounced.
- * @param deps Dependencies list when to update callback. It also replaces invoked
- * 	callback for scheduled debounced invocations.
  * @param delay Debounce delay.
  * @param maxWait The maximum time `callback` is allowed to be delayed before
  * it's invoked. 0 means no max wait.
  */
 export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
   callback: Fn,
-  deps: DependencyList,
   delay: number,
   maxWait = 0,
 ): DebouncedFunction<Fn> {
@@ -41,7 +38,7 @@ export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
   const cb = useRef(callback)
   const lastCall = useRef<{args: Parameters<Fn>; this: ThisParameterType<Fn>}>(undefined)
 
-  const clear = () => {
+  const clear = useCallback(() => {
     if (timeout.current) {
       clearTimeout(timeout.current)
       timeout.current = undefined
@@ -51,15 +48,14 @@ export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
       clearTimeout(waitTimeout.current)
       waitTimeout.current = undefined
     }
-  }
+  }, [])
 
   // Cancel scheduled execution on unmount
   useUnmountEffect(clear)
 
   useEffect(() => {
     cb.current = callback
-    // oxlint-disable-next-line react/exhaustive-deps -- deps are provided by the caller via the `deps` argument
-  }, deps)
+  }, [callback])
 
   // oxlint-disable react/react-compiler
   return useMemo(() => {
@@ -98,7 +94,6 @@ export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
     })
 
     return wrapped
-    // oxlint-disable-next-line react/exhaustive-deps -- deps are provided by the caller via the `deps` argument
-  }, [delay, maxWait, ...deps])
+  }, [callback, clear, delay, maxWait])
   // oxlint-enable react/react-compiler
 }

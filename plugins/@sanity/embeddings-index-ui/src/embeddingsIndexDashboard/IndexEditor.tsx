@@ -1,6 +1,6 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {Box, Button, Card, Dialog, Spinner, Stack, Text} from '@sanity/ui'
-import {type FormEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
+import {type FormEvent, useCallback, useEffect, useId, useMemo, useRef, useState} from 'react'
 import {useSchema} from 'sanity'
 
 import {type IndexState, type NamedIndex} from '../api/embeddingsApi'
@@ -50,15 +50,22 @@ export function IndexEditor(props: {
   const client = useApiClient()
   const schema = useSchema()
   const defaultIndex = useDefaultIndex(schema, client.config().dataset ?? '')
+  const sourceIndex = useMemo(
+    () => ({
+      ...defaultIndex,
+      ...selectedIndex,
+    }),
+    [defaultIndex, selectedIndex],
+  )
   const [errors, setErrors] = useState<string[] | undefined>()
   const [loading, setLoading] = useState<boolean>()
-  const [index, setIndex] = useState<Partial<NamedIndex>>(() => ({
-    ...defaultIndex,
-    ...selectedIndex,
-  }))
+  const [index, setIndex] = useState<Partial<NamedIndex>>(() => sourceIndex)
+  const [previousSourceIndex, setPreviousSourceIndex] = useState(sourceIndex)
 
-  // oxlint-disable-next-line react/react-compiler
-  useEffect(() => setIndex(selectedIndex ?? {...defaultIndex}), [selectedIndex, defaultIndex])
+  if (sourceIndex !== previousSourceIndex) {
+    setPreviousSourceIndex(sourceIndex)
+    setIndex(sourceIndex)
+  }
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
@@ -127,13 +134,8 @@ export function IndexEditor(props: {
           <Card tone="critical" border padding={2}>
             <Text>
               <ul style={{marginLeft: -10}}>
-                {errors?.map((error, i) => (
-                  <li
-                    // oxlint-disable-next-line react/no-array-index-key
-                    key={`${error}-${i}`}
-                  >
-                    {error}
-                  </li>
+                {errors?.map((error) => (
+                  <li key={error}>{error}</li>
                 ))}
               </ul>
             </Text>

@@ -28,7 +28,6 @@ const STATUS_TO_TONE: Record<ImageStatus, CardTone> = {
   loaded: 'default',
 }
 
-// oxlint-disable-next-line react/react-compiler
 export default function VideoThumbnail({
   asset,
   width,
@@ -46,21 +45,23 @@ export default function VideoThumbnail({
   const [status, setStatus] = useState<ImageStatus>('loading')
   const [error, setError] = useState<string | null>(null)
 
-  const thumbnailSrc = useMemo(() => {
+  const thumbnailResult = useMemo(() => {
     return tryWithSuspend(
       () => {
         let thumbnail: MuxAnimatedThumbnailUrl | MuxThumbnailUrl | undefined
 
         if (staticImage) thumbnail = getPosterSrc({asset, client, width: posterWidth})
         else thumbnail = getAnimatedPosterSrc({asset, client, width: posterWidth})
-        return thumbnail
+        return {thumbnail}
       },
-      (err: Error) => {
-        handleError(err.message)
-        return undefined
-      },
+      (error: Error) => ({error}),
     )
   }, [asset, client, posterWidth, staticImage])
+  const thumbnailSrc =
+    thumbnailResult && 'thumbnail' in thumbnailResult ? thumbnailResult.thumbnail : undefined
+  const thumbnailError =
+    thumbnailResult && 'error' in thumbnailResult ? thumbnailResult.error.message : undefined
+  const imageStatus: ImageStatus = thumbnailError ? 'error' : status
 
   function handleLoad() {
     setStatus('loaded')
@@ -88,11 +89,11 @@ export default function VideoThumbnail({
         border
         radius={2}
         ref={ref}
-        tone={STATUS_TO_TONE[status]}
+        tone={STATUS_TO_TONE[imageStatus]}
       >
         {inView ? (
           <>
-            {status === 'loading' && (
+            {imageStatus === 'loading' && (
               <Box
                 style={{
                   position: 'absolute',
@@ -104,7 +105,7 @@ export default function VideoThumbnail({
                 <Spinner />
               </Box>
             )}
-            {status === 'error' && (
+            {imageStatus === 'error' && (
               <Stack
                 space={4}
                 style={{
@@ -120,7 +121,7 @@ export default function VideoThumbnail({
                   <ErrorOutlineIcon style={{fontSize: '1.75em'}} />
                 </Text>
                 <Text muted align="center">
-                  {error}
+                  {thumbnailError || error}
                 </Text>
               </Stack>
             )}
@@ -129,7 +130,7 @@ export default function VideoThumbnail({
               alt={`Preview for ${staticImage ? 'image' : 'video'} ${asset.filename || asset.assetId}`}
               onLoad={handleLoad}
               onError={() => handleError()}
-              style={{opacity: status === 'loaded' ? 1 : 0}}
+              style={{opacity: imageStatus === 'loaded' ? 1 : 0}}
             />
           </>
         ) : null}

@@ -1,6 +1,6 @@
 import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Card, Checkbox, Dialog, Flex, Heading, Stack, Text, useToast} from '@sanity/ui'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import type {SanityDocument} from 'sanity'
 
 import {deleteAsset} from '../../actions/assets'
@@ -24,21 +24,18 @@ export default function DeleteDialog({
   succeededDeleting: () => void
 }) {
   const client = useClient()
-  const [state, setState] = useState<
-    'processing_deletion' | 'checkingReferences' | 'error_deleting' | 'cantDelete' | 'confirm'
-  >('checkingReferences')
+  const [state, setState] = useState<'idle' | 'processing_deletion' | 'error_deleting'>('idle')
   const [deleteOnMux, setDeleteOnMux] = useState(true)
   const toast = useToast()
-
-  useEffect(() => {
-    if (state !== 'checkingReferences' || referencesLoading) return
-
-    // oxlint-disable-next-line react/react-compiler
-    setState(references?.length ? 'cantDelete' : 'confirm')
-  }, [state, references, referencesLoading])
+  const referenceState = referencesLoading
+    ? 'checkingReferences'
+    : references?.length
+      ? 'cantDelete'
+      : 'confirm'
+  const dialogState = state === 'idle' ? referenceState : state
 
   async function confirmDelete() {
-    if (state !== 'confirm') return
+    if (dialogState !== 'confirm') return
 
     setState('processing_deletion')
     const worked = await deleteAsset({client, asset, deleteOnMux})
@@ -80,13 +77,13 @@ export default function DeleteDialog({
         }}
       >
         <Stack space={3}>
-          {state === 'checkingReferences' && (
+          {dialogState === 'checkingReferences' && (
             <>
               <Heading size={2}>Checking if video can be deleted</Heading>
               <SpinnerBox />
             </>
           )}
-          {state === 'cantDelete' && (
+          {dialogState === 'cantDelete' && (
             <>
               <Heading size={2}>Video can&apos;t be deleted</Heading>
               <Text size={2} style={{marginBottom: '2rem'}}>
@@ -97,7 +94,7 @@ export default function DeleteDialog({
               <VideoReferences references={references} isLoaded={!referencesLoading} />
             </>
           )}
-          {state === 'confirm' && (
+          {dialogState === 'confirm' && (
             <>
               <Heading size={2}>Are you sure you want to delete this video?</Heading>
               <Text size={2}>This action is irreversible</Text>
@@ -122,20 +119,20 @@ export default function DeleteDialog({
                     tone="critical"
                     onClick={confirmDelete}
                     disabled={['processing_deletion', 'checkingReferences', 'cantDelete'].some(
-                      (s) => s === state,
+                      (s) => s === dialogState,
                     )}
                   />
                 </Box>
               </Stack>
             </>
           )}
-          {state === 'processing_deletion' && (
+          {dialogState === 'processing_deletion' && (
             <>
               <Heading size={2}>Deleting video...</Heading>
               <SpinnerBox />
             </>
           )}
-          {state === 'error_deleting' && (
+          {dialogState === 'error_deleting' && (
             <>
               <Heading size={2}>Something went wrong!</Heading>
               <Text size={2}>Try deleting the video again by clicking the button below</Text>

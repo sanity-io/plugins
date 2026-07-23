@@ -19,7 +19,6 @@ type Props = {
 }
 
 export const ToolOptionsProvider = ({options, children}: PropsWithChildren<Props>) => {
-  // oxlint-disable-next-line react-compiler
   const value = useMemo<ContextProps>(() => {
     let creditLineExcludeSources
 
@@ -42,15 +41,7 @@ export const ToolOptionsProvider = ({options, children}: PropsWithChildren<Props
       directUploads: options?.directUploads ?? true,
       locales: options?.locales,
     }
-  }, [
-    options?.creditLine?.enabled,
-    options?.components,
-    options?.createTagsOnUpload,
-    options?.creditLine?.excludeSources,
-    options?.maximumUploadSize,
-    options?.directUploads,
-    options?.locales,
-  ])
+  }, [options])
 
   return <ToolOptionsContext.Provider value={value}>{children}</ToolOptionsContext.Provider>
 }

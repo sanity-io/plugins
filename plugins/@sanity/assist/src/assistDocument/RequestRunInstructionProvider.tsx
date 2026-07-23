@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef} from 'react'
 import {type ObjectSchemaType, PatchEvent, type SanityDocument, unset} from 'sanity'
 
 import {useRunInstruction} from '../assistLayout/RunInstructionProvider'
@@ -41,22 +41,26 @@ export function useRequestRunInstruction(args: {
 export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
   const {documentOnChange, isDocAssistable, task} = args
 
-  const [queuedArgs, setQueuedArgs] = useState<T | undefined>(undefined)
+  const queuedArgsRef = useRef<T | undefined>(undefined)
 
-  useEffect(() => {
-    if (queuedArgs && isDocAssistable) {
-      task(queuedArgs)
-      // oxlint-disable-next-line react/react-compiler
-      setQueuedArgs(undefined)
+  const runQueuedTask = useCallback(() => {
+    const queuedArgs = queuedArgsRef.current
+    if (queuedArgs === undefined || !isDocAssistable) {
+      return
     }
-  }, [queuedArgs, isDocAssistable, task])
+    queuedArgsRef.current = undefined
+    task(queuedArgs)
+  }, [isDocAssistable, task])
+
+  useEffect(() => runQueuedTask(), [runQueuedTask])
 
   return useCallback(
     (taskArgs: T) => {
       // make a dummy edit: this will trigger the document/draft to be created
       documentOnChange(PatchEvent.from([unset(['_force_document_creation'])]))
-      setQueuedArgs(taskArgs)
+      queuedArgsRef.current = taskArgs
+      queueMicrotask(runQueuedTask)
     },
-    [setQueuedArgs, documentOnChange],
+    [documentOnChange, runQueuedTask],
   )
 }
