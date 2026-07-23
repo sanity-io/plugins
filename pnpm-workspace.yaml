@@ -1,5 +1,6 @@
 packages:
   - dev/*
+  - e2e
   - packages/*
   - packages/@sanity/*
   - plugins/*

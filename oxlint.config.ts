@@ -17,6 +17,12 @@ export default defineConfig({
   ],
   overrides: [
     {
+      files: ['e2e/**/*.ts'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
+    {
       files: ['turbo/generators/**/*.ts'],
       rules: {
         'no-console': 'off',

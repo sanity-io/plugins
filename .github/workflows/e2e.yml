@@ -1,0 +1,84 @@
+name: E2E
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    timeout-minutes: 45
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      CI: 'true'
+      SANITY_E2E_PROJECT_ID: ppsg7ml5
+      SANITY_E2E_BASE_URL: http://localhost:3333
+      SANITY_STUDIO_DATASET: plugins
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Validate e2e secrets
+        env:
+          SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
+        run: |
+          if [ -z "$SANITY_E2E_SESSION_TOKEN" ]; then
+            echo "::error::SANITY_E2E_SESSION_TOKEN secret is not set. Add a studio session/API token (not SANITY_DEPLOY_TOKEN). See e2e/README.md"
+            exit 1
+          fi
+
+      - name: Store Playwright's Version
+        id: playwright-version
+        working-directory: e2e
+        run: |
+          PLAYWRIGHT_VERSION=$(pnpm exec playwright --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          echo "Playwright's Version: $PLAYWRIGHT_VERSION"
+          echo "version=${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright Browsers
+        id: cache-playwright-browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ steps.playwright-version.outputs.version }}-playwright-browsers-chromium-firefox
+
+      - name: Install Playwright Browsers
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        working-directory: e2e
+        run: pnpm exec playwright install --with-deps chromium firefox
+
+      - name: Install Playwright system deps (cache hit)
+        if: steps.cache-playwright-browsers.outputs.cache-hit == 'true'
+        working-directory: e2e
+        run: pnpm exec playwright install-deps chromium firefox
+
+      - name: Build test studio and dependencies
+        run: pnpm turbo build --filter=test-studio...
+
+      - name: Run e2e smoke tests
+        working-directory: e2e
+        env:
+          SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
+        run: pnpm test
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: |
+            e2e/playwright-report
+            e2e/results
+          retention-days: 7
+          if-no-files-found: ignore

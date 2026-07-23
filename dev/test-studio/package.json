@@ -9,6 +9,7 @@
   "scripts": {
     "build": "sanity build -y",
     "dev": "sanity dev --no-auto-updates",
+    "preview": "sanity preview --port 3333",
     "typegen": "sanity schema extract --force --enforce-required-fields --workspace home && sanity typegen generate"
   },
   "dependencies": {

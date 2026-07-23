@@ -13,6 +13,7 @@ This guide is for AI agents working on this codebase. Follow these instructions 
 | Run linters          | `pnpm lint`          |
 | Build all packages   | `pnpm build`         |
 | Run tests            | `pnpm test`          |
+| Run e2e smoke tests  | `pnpm test:e2e`      |
 | Add changeset        | `pnpm changeset add` |
 | Start dev server     | `pnpm dev`           |
 
@@ -546,7 +547,7 @@ The test studio dev script uses `sanity dev --no-auto-updates`, so `pnpm dev` st
 
 The test studio connects to Sanity Cloud (project `ppsg7ml5`, dataset `plugins` by default). For cloud agents, use the injected `STUDIO_AUTH_TOKEN` secret instead of interactive login.
 
-Navigate to the studio with the token in the URL hash (Sanity consumes it on load and removes it from the address bar):
+**Interactive / manual browser:** navigate with the token in the URL hash (Sanity consumes it on load and removes it from the address bar):
 
 ```
 http://localhost:3333/home#token=<STUDIO_AUTH_TOKEN>
@@ -559,6 +560,20 @@ node -e "const t=process.env.STUDIO_AUTH_TOKEN; console.log('http://localhost:33
 ```
 
 Open that URL in the browser to authenticate and land directly in the Home workspace (the merged "kitchen sink"). Without a token, workspaces show as "Signed out".
+
+**Playwright e2e:** do not use the `#token=` hash. Tests seed `__studio_auth_token_<projectId>` via Playwright `storageState` (same underlying Studio auth). Prefer `SANITY_E2E_SESSION_TOKEN`; `STUDIO_AUTH_TOKEN` is accepted as a fallback. See [`e2e/README.md`](e2e/README.md).
+
+### E2E smoke tests
+
+```bash
+# Browsers (once)
+pnpm --filter e2e exec playwright install --with-deps chromium firefox
+
+# Run (starts test-studio via webServer when needed)
+pnpm test:e2e
+```
+
+Locally Playwright uses `sanity dev`; CI builds then uses `sanity preview --port 3333`. Auth preflight calls `/users/me` before the suite runs — missing or wrong tokens fail fast (do not use `SANITY_DEPLOY_TOKEN`).
 
 ### Node.js version notes
 
