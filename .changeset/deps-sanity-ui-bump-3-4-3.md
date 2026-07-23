@@ -1,5 +1,4 @@
 ---
-"@sanity/plugin-kit": patch
 "@sanity/assist": patch
 "@sanity/block-insert-picker": patch
 "@sanity/code-input": patch
@@ -7,7 +6,6 @@
 "@sanity/cross-dataset-duplicator": patch
 "@sanity/dashboard": patch
 "@sanity/debug-live-sync-tags": patch
-"@sanity/debug-preview-url-secret-plugin": patch
 "@sanity/document-internationalization": patch
 "@sanity/embeddings-index-ui": patch
 "@sanity/form-toolkit": patch
@@ -16,14 +14,12 @@
 "@sanity/language-filter": patch
 "@sanity/orderable-document-list": patch
 "@sanity/personalization-plugin": patch
-"@sanity/presets": patch
 "@sanity/rich-date-input": patch
 "@sanity/sanity-plugin-async-list": patch
 "@sanity/sfcc": patch
 "@sanity/studio-secrets": patch
 "@sanity/table": patch
 "@sanity/vercel-protection-bypass": patch
-"sanity-naive-html-serializer": patch
 "sanity-plugin-aprimo": patch
 "sanity-plugin-asset-source-unsplash": patch
 "sanity-plugin-bynder-input": patch
@@ -37,17 +33,14 @@
 "sanity-plugin-hotspot-array": patch
 "sanity-plugin-iframe-pane": patch
 "sanity-plugin-internationalized-array": patch
-"sanity-plugin-latex-input": patch
 "sanity-plugin-markdown": patch
 "sanity-plugin-media": patch
 "sanity-plugin-mux-input": patch
 "sanity-plugin-shopify-assets": patch
-"sanity-plugin-studio-smartling": patch
-"sanity-plugin-transifex": patch
 "sanity-plugin-utils": patch
 "sanity-plugin-workflow": patch
 "sanity-plugin-workspace-home": patch
 "sanity-translations-tab": patch
 ---
 
-fix(deps): update dependency tsdown to ^0.22.13
+Update `@sanity/ui` dependency to ^3.4.3.
