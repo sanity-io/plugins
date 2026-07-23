@@ -45,7 +45,7 @@
     "@sanity/ui": "catalog:"
   },
   "devDependencies": {
-    "@portabletext/editor": "^7.10.7",
+    "@portabletext/editor": "^7.10.10",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@testing-library/react": "catalog:",
