@@ -717,20 +717,15 @@ describe('BlockInsertPicker popover', () => {
     expect(blockTypes(editor)).toContain('callout')
   })
 
-  // First toast mount is expensive under styled-components v6.4; keep headroom on slow CI runners
-  it(
-    'aborts the insert and shows an error toast when initial value resolution fails',
-    {timeout: 30_000},
-    async () => {
-      mocks.impls.resolveInitialValue = () => Promise.reject(new Error('template exploded'))
-      const {editor} = await renderOpenPicker()
-      pressKey(editor, 'Enter')
-      await flush()
-      const callout = editor.getSnapshot().context.value.find((block) => block._type === 'callout')
-      expect(callout).toBeUndefined()
-      expect(screen.getByText('template exploded')).toBeDefined()
-    },
-  )
+  it('aborts the insert and shows an error toast when initial value resolution fails', async () => {
+    mocks.impls.resolveInitialValue = () => Promise.reject(new Error('template exploded'))
+    const {editor} = await renderOpenPicker()
+    pressKey(editor, 'Enter')
+    await flush()
+    const callout = editor.getSnapshot().context.value.find((block) => block._type === 'callout')
+    expect(callout).toBeUndefined()
+    expect(screen.getByText('template exploded')).toBeDefined()
+  })
 
   it('derives items from the member-schema context with no arrayTypeName (zero-config path)', async () => {
     // No schema.get fallback available at all: detection rides entirely on
@@ -1110,34 +1105,29 @@ describe('BlockInsertPicker popover', () => {
     expect(screen.getByText('boom from host')).toBeDefined()
   })
 
-  // First toast mount is expensive under styled-components v6.4; keep headroom on slow CI runners
-  it(
-    'shows a warning toast when the anchor block disappears during resolution',
-    {timeout: 30_000},
-    async () => {
-      let release: (value: Record<string, unknown>) => void = () => {}
-      mocks.impls.resolveInitialValue = () =>
-        new Promise<Record<string, unknown>>((resolve) => {
-          release = resolve
-        })
-      const {editor} = await renderPicker({
-        initialValue: [textBlock('anchor', ''), textBlock('other', 'keep me')],
+  it('shows a warning toast when the anchor block disappears during resolution', async () => {
+    let release: (value: Record<string, unknown>) => void = () => {}
+    mocks.impls.resolveInitialValue = () =>
+      new Promise<Record<string, unknown>>((resolve) => {
+        release = resolve
       })
-      selectStartOf(editor, 'anchor')
-      typeText(editor, '/')
-      pressKey(editor, 'Enter')
-      // Delete the anchor while the initial value is still resolving.
-      act(() => {
-        editor.send({at: [{_key: 'anchor'}], type: 'delete.block'})
-      })
-      await act(async () => {
-        release({})
-        await new Promise((resolve) => setTimeout(resolve, 0))
-      })
-      expect(blockTypes(editor)).not.toContain('callout')
-      expect(screen.getByText('The block you were inserting into was removed')).toBeDefined()
-    },
-  )
+    const {editor} = await renderPicker({
+      initialValue: [textBlock('anchor', ''), textBlock('other', 'keep me')],
+    })
+    selectStartOf(editor, 'anchor')
+    typeText(editor, '/')
+    pressKey(editor, 'Enter')
+    // Delete the anchor while the initial value is still resolving.
+    act(() => {
+      editor.send({at: [{_key: 'anchor'}], type: 'delete.block'})
+    })
+    await act(async () => {
+      release({})
+      await new Promise((resolve) => setTimeout(resolve, 0))
+    })
+    expect(blockTypes(editor)).not.toContain('callout')
+    expect(screen.getByText('The block you were inserting into was removed')).toBeDefined()
+  })
 
   it('renders an overridden position announcement in the live region', async () => {
     const {editor} = await renderPicker({

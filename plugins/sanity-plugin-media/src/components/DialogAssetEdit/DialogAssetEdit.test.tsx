@@ -79,8 +79,7 @@ function renderAssetDialog(
 }
 
 describe('DialogAssetEdit', () => {
-  // First dialog mount is expensive under styled-components v6.4; keep headroom on slow CI runners
-  it('renders asset details header and details tab', {timeout: 30_000}, () => {
+  it('renders asset details header and details tab', () => {
     renderAssetDialog({
       id: 'dlg-1',
       type: 'assetEdit',

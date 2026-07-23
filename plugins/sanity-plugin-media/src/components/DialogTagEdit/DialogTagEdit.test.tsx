@@ -39,8 +39,7 @@ vi.mock('../../hooks/useVersionedClient', () => ({
 }))
 
 describe('DialogTagEdit', () => {
-  // First dialog mount is expensive under styled-components v6.4; keep headroom on slow CI runners
-  it('dispatches updateRequest when name changes and form submits', {timeout: 30_000}, async () => {
+  it('dispatches updateRequest when name changes and form submits', async () => {
     const user = userEvent.setup()
     const {store} = renderWithProviders(
       <DialogTagEdit dialog={{id: 'dlg-1', type: 'tagEdit', tagId: 't1'}}>

@@ -277,6 +277,7 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Plugins can expand their vitest configs and test suites over time as needed (unit tests, integration tests, etc.)
 - Tests run against built `dist/` output after `pnpm build`
 - Snapshots are generated with `pnpm test -u`
+- Root Vitest sets `SC_DISABLE_SPEEDY=false` so styled-components keeps its fast CSSOM injection path under jsdom (upstream disables it when `NODE_ENV !== 'production'`, which makes first mounts of styled-heavy trees slow enough to trip default timeouts). Same approach as [sanity#13675](https://github.com/sanity-io/sanity/pull/13675).
 
 ## Pull Request Workflow
 
