@@ -34,7 +34,7 @@ catalog:
   '@sanity/uuid': ^3.0.3
   '@sanity/vanilla-extract-vite-plugin': ^0.2.5
   '@sanity/vision': ^6.6.0
-  '@testing-library/jest-dom': ^6.9.1
+  '@testing-library/jest-dom': ^7.0.0
   '@testing-library/react': ^16.3.2
   '@types/lodash-es': ^4.17.12
   '@types/node': ^24.13.3
