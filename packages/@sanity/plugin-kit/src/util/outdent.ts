@@ -6,7 +6,8 @@
 export function outdent(strings: TemplateStringsArray, ...values: unknown[]): string {
   const match = strings[0].match(/(\r\n|\r|\n)([ \t]*)(?:[^ \t\r\n]|$)/)
   const indentationLevel = match ? match[2].length : 0
-  const reMatchIndent = new RegExp(`(\\r\\n|\\r|\\n).{0,${indentationLevel}}`, 'g')
+  // Only strip spaces/tabs — never consume non-whitespace from under-indented lines
+  const reMatchIndent = new RegExp(`(\\r\\n|\\r|\\n)[ \\t]{0,${indentationLevel}}`, 'g')
 
   const outdented = strings.map((v, i) => {
     let s = v.replace(reMatchIndent, '$1')

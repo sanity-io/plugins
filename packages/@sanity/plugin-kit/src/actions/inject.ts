@@ -108,7 +108,10 @@ async function injectBase(options: InjectOptions) {
     ((await execa('git', ['config', '--get', 'remote.origin.url'], {
       cwd: basePath,
       reject: false,
-    }).then((result) => (result.exitCode === 0 ? result.stdout.trim() : undefined))) ||
+    })
+      .then((result) => (result.exitCode === 0 ? result.stdout.trim() : undefined))
+      // Spawn errors (e.g. git missing) fall through to package.json repository.url
+      .catch(() => undefined)) ||
       pkg?.repository?.url)
 
   const gitOrigin = requireUserConfirmation ? await promptForRepoOrigin(options, repoUrl) : repoUrl

@@ -39,8 +39,12 @@ export async function promptForPackageManager() {
 }
 
 export async function installDependencies(pm: string, {cwd}: {cwd?: string}) {
-  // `reject: false` so a failed install returns false (and the caller prints a hint)
-  // instead of bubbling up as an unhandled CLI error
-  const {exitCode} = await execa(pm, ['install'], {cwd, stdio: 'inherit', reject: false})
-  return exitCode === 0
+  // `reject: false` covers non-zero exits; try/catch covers spawn failures (e.g. ENOENT
+  // when the package manager binary is missing) so the caller can print its hint
+  try {
+    const {exitCode} = await execa(pm, ['install'], {cwd, stdio: 'inherit', reject: false})
+    return exitCode === 0
+  } catch {
+    return false
+  }
 }

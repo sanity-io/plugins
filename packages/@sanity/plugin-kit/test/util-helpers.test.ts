@@ -38,4 +38,14 @@ describe('outdent', () => {
       line3
     `).toBe('line1\n  nested\nline3')
   })
+
+  test('does not eat content from under-indented lines', () => {
+    // First content line has 4 spaces of indent; a later line has only 2.
+    // Stripping must stop at whitespace — not consume "x" from the short line.
+    expect(outdent`
+    four
+  x
+    four
+    `).toBe('four\nx\nfour')
+  })
 })

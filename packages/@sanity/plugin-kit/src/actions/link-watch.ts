@@ -95,8 +95,8 @@ export async function linkWatch({basePath}: {basePath: string}) {
     .on('quit', function () {
       process.exit()
     })
-    .on('restart', function (files: any) {
-      log.info('Found changes in files:', styleText('magentaBright', files))
+    .on('restart', function (files?: string[]) {
+      log.info('Found changes in files:', styleText('magentaBright', (files ?? []).join(', ')))
       log.info('Pushing new yalc package...')
     })
 }
