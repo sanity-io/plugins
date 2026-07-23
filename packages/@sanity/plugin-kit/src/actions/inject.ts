@@ -2,7 +2,7 @@ import path from 'path'
 import {fileURLToPath} from 'url'
 
 import licenses from '@rexxars/choosealicense-list'
-import gitRemoteOriginUrl from 'git-remote-origin-url'
+import {execa} from 'execa'
 
 import {gitignoreTemplate} from '../configs/git'
 import {oxfmtConfigTemplate} from '../configs/oxfmt'
@@ -105,7 +105,14 @@ async function injectBase(options: InjectOptions) {
 
   const repoUrl =
     flags.repo ??
-    ((await gitRemoteOriginUrl({cwd: basePath}).catch(errorToUndefined)) || pkg?.repository?.url)
+    ((await execa('git', ['config', '--get', 'remote.origin.url'], {
+      cwd: basePath,
+      reject: false,
+    })
+      .then((result) => (result.exitCode === 0 ? result.stdout.trim() : undefined))
+      // Spawn errors (e.g. git missing) fall through to package.json repository.url
+      .catch(() => undefined)) ||
+      pkg?.repository?.url)
 
   const gitOrigin = requireUserConfirmation ? await promptForRepoOrigin(options, repoUrl) : repoUrl
 

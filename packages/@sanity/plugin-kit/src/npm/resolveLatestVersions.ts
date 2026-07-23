@@ -1,5 +1,4 @@
 import {getLatestVersion} from 'get-latest-version'
-import pProps from 'p-props'
 
 // We may want to lock certain dependencies to specific versions
 const lockedDependencies: Record<string, string> = {
@@ -11,23 +10,23 @@ const lockedDependencies: Record<string, string> = {
   'typescript': '^6',
 }
 
-export function resolveLatestVersions(packages: string[]) {
+export async function resolveLatestVersions(packages: string[]) {
   const versions: Record<string, string> = {}
   for (const pkgName of packages) {
     versions[pkgName] = pkgName in lockedDependencies ? lockedDependencies[pkgName] : 'latest'
   }
 
-  return pProps(
-    versions,
-    async (range, pkgName) => {
+  const entries = await Promise.all(
+    Object.entries(versions).map(async ([pkgName, range]) => {
       const version = await getLatestVersion(pkgName, {range})
       if (!version) {
         throw new Error(`Found no version for ${pkgName}`)
       }
-      return rangeify(version)
-    },
-    {concurrency: 8},
+      return [pkgName, rangeify(version)] as const
+    }),
   )
+
+  return Object.fromEntries(entries)
 }
 
 function rangeify(version: string) {

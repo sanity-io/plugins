@@ -1,11 +1,11 @@
 import path from 'path'
 import {URL} from 'url'
 
-import githubUrlToObject from 'github-url-to-object'
 import inquirer, {type Question} from 'inquirer'
 import validNpmName from 'validate-npm-package-name'
 
 import type {InjectOptions} from '../actions/inject'
+import {githubUrlToObject} from './github-url'
 
 interface PromptOptions {
   choices?: any
@@ -16,7 +16,7 @@ interface PromptOptions {
 }
 
 export async function prompt(message: string, options: PromptOptions) {
-  const type = options.choices ? 'list' : (options.type ?? 'input')
+  const type = options.choices ? 'select' : (options.type ?? 'input')
   const question: Question & Pick<PromptOptions, 'validate'> = {
     ...options,
     type,

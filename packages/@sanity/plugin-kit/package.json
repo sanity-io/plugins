@@ -53,28 +53,19 @@
   "dependencies": {
     "@rexxars/choosealicense-list": "^1.1.2",
     "@typescript/typescript6": "^6.0.2",
-    "chalk": "^5.6.2",
-    "concurrently": "^9.2.1",
-    "email-validator": "^2.0.4",
-    "execa": "^9.6.1",
-    "get-it": "^9.2.0",
+    "concurrently": "^10.0.3",
+    "execa": "^10.0.0",
     "get-latest-version": "^6.0.1",
-    "git-remote-origin-url": "^4.0.0",
-    "github-url-to-object": "^4.0.6",
-    "inquirer": "^12.9.6",
+    "inquirer": "^14.0.2",
     "meow": "^14.1.0",
     "nodemon": "3.1.14",
-    "outdent": "^0.8.0",
-    "p-props": "^6.1.0",
     "validate-npm-package-name": "catalog:",
-    "xdg-basedir": "^5.1.0",
     "yalc": "1.0.0-pre.53"
   },
   "devDependencies": {
     "@sanity/pkg-utils": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
-    "@types/github-url-to-object": "^4.0.4",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/validate-npm-package-name": "^4.0.2",
@@ -102,7 +93,7 @@
     }
   },
   "engines": {
-    "node": ">=20.19 <22 || >=22.12"
+    "node": ">=24"
   },
   "binname": "plugin-kit"
 }
