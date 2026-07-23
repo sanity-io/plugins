@@ -32,7 +32,7 @@ catalogs:
       specifier: ^7.24.0
       version: 7.24.0
     '@sanity/color':
-      specifier: ^3.0.6
+      specifier: ^3.0.7
       version: 3.0.7
     '@sanity/icons':
       specifier: ^5.2.0
