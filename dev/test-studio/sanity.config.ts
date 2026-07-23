@@ -58,21 +58,86 @@ import {utilsExample} from '#utils'
 import {vercelWidgetExample} from '#vercel-widget'
 import {workflowExample} from '#workflow'
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
+const projectId =
+  process.env.SANITY_E2E_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'plugins'
 
+const e2eDatasetChromium =
+  process.env.SANITY_E2E_DATASET_CHROMIUM || process.env.SANITY_E2E_DATASET || undefined
+const e2eDatasetFirefox =
+  process.env.SANITY_E2E_DATASET_FIREFOX || process.env.SANITY_E2E_DATASET || undefined
+
 function createWorkspace(
-  config: Omit<WorkspaceOptions, 'projectId' | 'dataset' | 'basePath'>,
+  config: Omit<WorkspaceOptions, 'projectId' | 'dataset' | 'basePath'> & {
+    dataset?: string
+  },
 ): WorkspaceOptions {
+  const {dataset: workspaceDataset = dataset, ...rest} = config
   return {
     projectId,
-    dataset,
-    ...config,
-    basePath: `/${config.name}`,
+    dataset: workspaceDataset,
+    ...rest,
+    basePath: `/${rest.name}`,
   }
 }
 
-export default defineConfig([
+function createHomePlugins() {
+  return [
+    // Order matters for the top navigation: Workspaces Home, Structure, then
+    // the most-used plugin tools first.
+    workspaceHome(),
+    structureTool({structure: homeStructure, defaultDocumentNode: homeDefaultDocumentNode}),
+    mediaExample(),
+    muxInputExample(),
+    // Inputs, asset sources, panes and tools (no particular order beyond the above).
+    assistExample(),
+    googleTranslateExample(),
+    embeddingsIndexUiExample(),
+    formToolkitExample(),
+    googleMapsInputExample(),
+    crossDatasetDuplicatorExample(),
+    hierarchicalDocumentListExample(),
+    shopifyAssetsExample(),
+    personalizationExample(),
+    cloudinaryExample(),
+    asyncListExample(),
+    blockInsertPickerExample(),
+    tableExample(),
+    hotspotArrayExample(),
+    orderableDocumentListExample(),
+    latexInputExample(),
+    debugLiveSyncTagsExample(),
+    studioSecretsExample(),
+    documentInternationalizationExample(),
+    internationalizedArrayExample(),
+    richDateInputExample(),
+    codeInputExample(),
+    aprimoExample(),
+    bynderExample(),
+    colorExample(),
+    markdownExample(),
+    unsplashExample(),
+    presetsWorkspace(),
+    sanityNaiveHtmlSerializerExample(),
+    utilsExample(),
+    iframePaneExample(),
+    documentsPaneExample(),
+    transifexExample(),
+    smartlingExample(),
+    translationsTabExample(),
+    dashboardToolExample(),
+    documentListWidgetExample(),
+    netlifyWidgetExample(),
+    vercelWidgetExample(),
+    contentGraphView(),
+    scriptRunnerTool(),
+    debugSecrets(),
+    vercelProtectionBypassTool(),
+    visionTool(),
+  ]
+}
+
+const workspaces: WorkspaceOptions[] = [
   // The default "Home" workspace is the merged kitchen sink. It must stay first
   // so the Workspaces Home launcher (which lists every *other* workspace) works.
   // It hosts every plugin that can coexist in one dataset/schema; the workspaces
@@ -82,60 +147,36 @@ export default defineConfig([
     name: 'home',
     title: 'Home',
     icon: HomeIcon,
-    plugins: [
-      // Order matters for the top navigation: Workspaces Home, Structure, then
-      // the most-used plugin tools first.
-      workspaceHome(),
-      structureTool({structure: homeStructure, defaultDocumentNode: homeDefaultDocumentNode}),
-      mediaExample(),
-      muxInputExample(),
-      // Inputs, asset sources, panes and tools (no particular order beyond the above).
-      assistExample(),
-      googleTranslateExample(),
-      embeddingsIndexUiExample(),
-      formToolkitExample(),
-      googleMapsInputExample(),
-      crossDatasetDuplicatorExample(),
-      hierarchicalDocumentListExample(),
-      shopifyAssetsExample(),
-      personalizationExample(),
-      cloudinaryExample(),
-      asyncListExample(),
-      blockInsertPickerExample(),
-      tableExample(),
-      hotspotArrayExample(),
-      orderableDocumentListExample(),
-      latexInputExample(),
-      debugLiveSyncTagsExample(),
-      studioSecretsExample(),
-      documentInternationalizationExample(),
-      internationalizedArrayExample(),
-      richDateInputExample(),
-      codeInputExample(),
-      aprimoExample(),
-      bynderExample(),
-      colorExample(),
-      markdownExample(),
-      unsplashExample(),
-      presetsWorkspace(),
-      sanityNaiveHtmlSerializerExample(),
-      utilsExample(),
-      iframePaneExample(),
-      documentsPaneExample(),
-      transifexExample(),
-      smartlingExample(),
-      translationsTabExample(),
-      dashboardToolExample(),
-      documentListWidgetExample(),
-      netlifyWidgetExample(),
-      vercelWidgetExample(),
-      contentGraphView(),
-      scriptRunnerTool(),
-      debugSecrets(),
-      vercelProtectionBypassTool(),
-      visionTool(),
-    ],
+    plugins: createHomePlugins(),
   }),
+]
+
+// Ephemeral e2e browser workspaces (same plugins as Home, isolated datasets).
+// Enabled when SANITY_E2E_DATASET* is set (CI / `pnpm test:e2e` webServer).
+if (e2eDatasetChromium) {
+  workspaces.push(
+    createWorkspace({
+      name: 'chromium',
+      title: 'e2e: Chromium',
+      icon: HomeIcon,
+      dataset: e2eDatasetChromium,
+      plugins: createHomePlugins(),
+    }),
+  )
+}
+if (e2eDatasetFirefox) {
+  workspaces.push(
+    createWorkspace({
+      name: 'firefox',
+      title: 'e2e: Firefox',
+      icon: HomeIcon,
+      dataset: e2eDatasetFirefox,
+      plugins: createHomePlugins(),
+    }),
+  )
+}
+
+workspaces.push(
   // Re-registers `internationalizedArray` with async languages loaded from
   // documents, which cannot coexist with Home's static language config.
   createWorkspace({
@@ -180,4 +221,6 @@ export default defineConfig([
     basePath: '/cross-dataset-duplicator-target',
     plugins: [structureTool(), crossDatasetDuplicatorExample()],
   },
-])
+)
+
+export default defineConfig(workspaces)

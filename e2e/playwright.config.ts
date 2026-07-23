@@ -19,15 +19,25 @@ const TOKEN = env.token
 const TESTS_PATH = './tests'
 const ARTIFACT_OUTPUT_PATH = './results'
 
-/** Deployed hosts do not need a local webServer (follow-up: Vercel preview). */
+/** Deployed hosts do not need a local webServer (follow-up: Vercel studio preview). */
 function isRemoteStudioUrl(url: string): boolean {
   return url.includes('.sanity.studio') || url.includes('.sanity.dev') || url.includes('vercel.app')
+}
+
+const studioWebServerEnv = {
+  ...process.env,
+  SANITY_STUDIO_PROJECT_ID: PROJECT_ID,
+  SANITY_E2E_PROJECT_ID: PROJECT_ID,
+  SANITY_E2E_DATASET: env.dataset,
+  SANITY_E2E_DATASET_CHROMIUM: env.datasetChromium,
+  SANITY_E2E_DATASET_FIREFOX: env.datasetFirefox,
 }
 
 const CHROMIUM_PROJECT: PlaywrightTestProject = {
   name: 'chromium',
   use: {
     ...devices['Desktop Chrome'],
+    baseURL: `${BASE_URL}/chromium`,
     launchOptions: {
       args: ['--disable-gpu', '--disable-software-rasterizer'],
     },
@@ -41,6 +51,7 @@ const FIREFOX_PROJECT: PlaywrightTestProject = {
   name: 'firefox',
   use: {
     ...devices['Desktop Firefox'],
+    baseURL: `${BASE_URL}/firefox`,
     contextOptions: {
       reducedMotion: 'reduce',
     },
@@ -87,8 +98,7 @@ const playwrightConfig: PlaywrightTestConfig = {
       ],
     },
     video: 'retain-on-failure',
-    // Home kitchen-sink workspace
-    baseURL: `${BASE_URL}/home`,
+    baseURL: BASE_URL,
     headless: HEADLESS,
     contextOptions: {reducedMotion: 'reduce'},
   },
@@ -97,17 +107,12 @@ const playwrightConfig: PlaywrightTestConfig = {
     ? undefined
     : {
         command: CI ? 'pnpm start' : 'pnpm dev',
-        url: `${BASE_URL}/home`,
+        url: `${BASE_URL}/chromium`,
         reuseExistingServer: !CI,
         timeout: 300_000,
         stdout: 'pipe',
         stderr: 'pipe',
-        // Keep the studio under test on the same project/dataset as e2e auth.
-        env: {
-          ...process.env,
-          SANITY_STUDIO_PROJECT_ID: PROJECT_ID,
-          SANITY_STUDIO_DATASET: env.dataset,
-        },
+        env: studioWebServerEnv,
       },
 }
 

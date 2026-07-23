@@ -1,0 +1,25 @@
+name: Cleanup E2E Datasets
+
+on:
+  schedule:
+    # Every 6 hours (same cadence as sanity-io/sanity)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      - name: Delete e2e datasets for closed PRs / stale main runs
+        env:
+          SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
+          SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: pnpm e2e:cleanup

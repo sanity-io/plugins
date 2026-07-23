@@ -45,7 +45,10 @@ export type E2eEnv = {
   token: string
   projectId: string
   baseUrl: string
+  /** Fallback / default dataset (local or shared). */
   dataset: string
+  datasetChromium: string
+  datasetFirefox: string
   ci: boolean
   headless: boolean
 }
@@ -84,11 +87,19 @@ export function resolveE2eEnv(): E2eEnv {
     errors.push(`SANITY_E2E_BASE_URL — invalid URL: ${baseUrlRaw}`)
   }
 
-  const datasetRaw = process.env.SANITY_E2E_STUDIO_DATASET
-  if (isInvalidSecret(datasetRaw)) {
-    errors.push('SANITY_E2E_STUDIO_DATASET — required dataset name for the studio under test')
+  // Align with sanity-io/sanity: SANITY_E2E_DATASET (+ per-browser overrides).
+  // SANITY_E2E_STUDIO_DATASET remains accepted as a local fallback alias.
+  const defaultDataset =
+    process.env.SANITY_E2E_DATASET?.trim() || process.env.SANITY_E2E_STUDIO_DATASET?.trim() || ''
+
+  const datasetChromium = process.env.SANITY_E2E_DATASET_CHROMIUM?.trim() || defaultDataset
+  const datasetFirefox = process.env.SANITY_E2E_DATASET_FIREFOX?.trim() || defaultDataset
+
+  if (isInvalidSecret(datasetChromium) || isInvalidSecret(datasetFirefox)) {
+    errors.push(
+      'SANITY_E2E_DATASET_CHROMIUM / SANITY_E2E_DATASET_FIREFOX (or SANITY_E2E_DATASET) — required dataset name(s)',
+    )
   }
-  const dataset = datasetRaw?.trim() ?? ''
 
   if (errors.length > 0 || !token) {
     throw new Error(
@@ -104,7 +115,9 @@ export function resolveE2eEnv(): E2eEnv {
     token,
     projectId,
     baseUrl,
-    dataset,
+    dataset: defaultDataset || datasetChromium,
+    datasetChromium,
+    datasetFirefox,
     ci: readBoolEnv('CI', false),
     headless: readBoolEnv('HEADLESS', true),
   }

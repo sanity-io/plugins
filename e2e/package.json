@@ -5,13 +5,17 @@
   "description": "Playwright smoke e2e tests for the plugins test studio",
   "type": "module",
   "scripts": {
+    "cleanup": "tsx scripts/cleanupDatasets.ts",
     "dev": "pnpm --filter test-studio dev",
+    "setup": "tsx scripts/setup.ts",
     "start": "pnpm --filter test-studio preview",
     "test": "playwright test"
   },
   "devDependencies": {
     "@playwright/test": "^1.51.0",
+    "@sanity/client": "catalog:",
     "@types/node": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:"
   },
   "engines": {

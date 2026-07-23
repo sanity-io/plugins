@@ -14,6 +14,8 @@ This guide is for AI agents working on this codebase. Follow these instructions 
 | Build all packages   | `pnpm build`         |
 | Run tests            | `pnpm test`          |
 | Run e2e smoke tests  | `pnpm test:e2e`      |
+| Create e2e dataset   | `pnpm e2e:setup`     |
+| Cleanup e2e datasets | `pnpm e2e:cleanup`   |
 | Add changeset        | `pnpm changeset add` |
 | Start dev server     | `pnpm dev`           |
 
@@ -561,7 +563,7 @@ node -e "const t=process.env.STUDIO_AUTH_TOKEN; console.log('http://localhost:33
 
 Open that URL in the browser to authenticate and land directly in the Home workspace (the merged "kitchen sink"). Without a token, workspaces show as "Signed out".
 
-**Playwright e2e:** do not use the `#token=` hash. Tests seed `__studio_auth_token_<projectId>` via Playwright `storageState` (same underlying Studio auth). Requires `SANITY_E2E_SESSION_TOKEN`, `SANITY_E2E_PROJECT_ID`, and `SANITY_E2E_STUDIO_DATASET`. See [`e2e/README.md`](e2e/README.md).
+**Playwright e2e:** do not use the `#token=` hash. Tests seed `__studio_auth_token_<projectId>` via Playwright `storageState` (same underlying Studio auth). Requires `SANITY_E2E_SESSION_TOKEN`, `SANITY_E2E_PROJECT_ID`, and dataset env (`SANITY_E2E_DATASET` and/or `SANITY_E2E_DATASET_CHROMIUM` / `SANITY_E2E_DATASET_FIREFOX`). See [`e2e/README.md`](e2e/README.md).
 
 ### E2E smoke tests
 
@@ -569,12 +571,13 @@ Open that URL in the browser to authenticate and land directly in the Home works
 # Browsers (once)
 pnpm --filter e2e exec playwright install --with-deps chromium firefox
 
-# Required: SANITY_E2E_SESSION_TOKEN, SANITY_E2E_PROJECT_ID, SANITY_E2E_STUDIO_DATASET
+# Required: SANITY_E2E_SESSION_TOKEN, SANITY_E2E_PROJECT_ID, SANITY_E2E_DATASET
 # (or copy e2e/.env.example → e2e/.env.local)
+pnpm e2e:setup   # optional locally; CI creates ephemeral pr-*/main-* datasets
 pnpm test:e2e
 ```
 
-Locally Playwright uses `sanity dev`; CI builds then uses `sanity preview --port 3333`. Auth preflight calls `/users/me` before the suite runs — missing or wrong tokens fail fast (do not use `SANITY_DEPLOY_TOKEN`). CI also requires repository variables `SANITY_E2E_PROJECT_ID` and `SANITY_E2E_STUDIO_DATASET`, plus Vercel report secrets (`VERCEL_E2E_REPORT_*`) — see [`e2e/README.md`](e2e/README.md#vercel-report-hosting).
+Locally Playwright uses `sanity dev`; CI creates ephemeral per-browser datasets, builds, then uses `sanity preview --port 3333`. Auth preflight calls `/users/me` before the suite runs — missing or wrong tokens fail fast (do not use `SANITY_DEPLOY_TOKEN`). CI also requires `SANITY_E2E_PROJECT_ID` and Vercel report secrets (`VERCEL_E2E_REPORT_*`) — see [`e2e/README.md`](e2e/README.md).
 
 ### Node.js version notes
 

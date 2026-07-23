@@ -14,6 +14,10 @@ permissions:
   contents: read
   pull-requests: write
 
+env:
+  CHROMIUM_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
+  FIREFOX_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-firefox-{1}', github.event.number, github.run_id) || format('main-firefox-{0}', github.run_id) }}
+
 jobs:
   e2e:
     timeout-minutes: 45
@@ -23,11 +27,13 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       CI: 'true'
       SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
-      SANITY_E2E_STUDIO_DATASET: ${{ vars.SANITY_E2E_STUDIO_DATASET }}
+      SANITY_E2E_DATASET: ${{ env.CHROMIUM_DATASET }}
+      SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
+      SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
       SANITY_E2E_BASE_URL: http://localhost:3333
-      # test-studio reads SANITY_STUDIO_* at build/preview time
+      # test-studio project/dataset at build + preview time
       SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
-      SANITY_STUDIO_DATASET: ${{ vars.SANITY_E2E_STUDIO_DATASET }}
+      SANITY_STUDIO_DATASET: ${{ env.CHROMIUM_DATASET }}
     steps:
       - uses: actions/checkout@v7
 
@@ -59,10 +65,6 @@ jobs:
             echo "::error::SANITY_E2E_PROJECT_ID repository variable is not set. See e2e/README.md"
             missing=1
           fi
-          if [ -z "$SANITY_E2E_STUDIO_DATASET" ]; then
-            echo "::error::SANITY_E2E_STUDIO_DATASET repository variable is not set. See e2e/README.md"
-            missing=1
-          fi
           if [ -z "$VERCEL_E2E_REPORT_TOKEN" ] || [ -z "$VERCEL_E2E_REPORT_ORG_ID" ] || [ -z "$VERCEL_E2E_REPORT_PROJECT_ID" ]; then
             echo "::error::Vercel report hosting secrets missing. Set VERCEL_E2E_REPORT_TOKEN, VERCEL_E2E_REPORT_ORG_ID, and VERCEL_E2E_REPORT_PROJECT_ID. See e2e/README.md (Vercel report hosting)."
             missing=1
@@ -70,6 +72,15 @@ jobs:
           if [ "$missing" -ne 0 ]; then
             exit 1
           fi
+
+      - name: Create ephemeral datasets (chromium + firefox)
+        env:
+          SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
+        run: |
+          echo "Creating datasets: ${{ env.CHROMIUM_DATASET }} and ${{ env.FIREFOX_DATASET }}"
+          SANITY_E2E_DATASET=${{ env.CHROMIUM_DATASET }} pnpm e2e:setup &
+          SANITY_E2E_DATASET=${{ env.FIREFOX_DATASET }} pnpm e2e:setup &
+          wait
 
       - name: Store Playwright's Version
         id: playwright-version
@@ -229,6 +240,8 @@ jobs:
 
             ${{ steps.linked-summary.outputs.text }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
+            Datasets: `${{ env.CHROMIUM_DATASET }}`, `${{ env.FIREFOX_DATASET }}`
+
       - name: Update PR Comment (tests failed)
         uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
         if: github.event_name == 'pull_request' && steps.playwright.outcome != 'success'
@@ -239,12 +252,15 @@ jobs:
 
             ${{ steps.linked-summary.outputs.text }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
+            Datasets: `${{ env.CHROMIUM_DATASET }}`, `${{ env.FIREFOX_DATASET }}`
+
             <details>
             <summary>Debug failing tests locally</summary>
 
             ```sh
             SANITY_E2E_PROJECT_ID=${{ vars.SANITY_E2E_PROJECT_ID }} \
-            SANITY_E2E_STUDIO_DATASET=${{ vars.SANITY_E2E_STUDIO_DATASET }} \
+            SANITY_E2E_DATASET_CHROMIUM=${{ env.CHROMIUM_DATASET }} \
+            SANITY_E2E_DATASET_FIREFOX=${{ env.FIREFOX_DATASET }} \
             pnpm test:e2e --headed \
               ${{ steps.summary.outputs.failed_files_formatted }}
             ```

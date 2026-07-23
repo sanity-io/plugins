@@ -20,6 +20,9 @@ export default defineConfig({
       files: ['e2e/**/*.ts'],
       rules: {
         'no-console': 'off',
+        // Setup/cleanup scripts paginate GitHub and delete datasets sequentially.
+        'no-await-in-loop': 'off',
+        'no-unsafe-type-assertion': 'off',
       },
     },
     {
