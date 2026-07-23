@@ -51,6 +51,8 @@ Helpers:
 
 Locally, Playwright starts `pnpm --filter test-studio dev` unless a server is already on port 3333. In CI it uses `sanity preview` after a prior build.
 
+On pull requests, CI posts (and updates) an **E2E Tests** status comment with pass/fail/flaky/skipped counts and a link to the workflow run — same pattern as [`sanity-io/sanity`](https://github.com/sanity-io/sanity). The HTML report is uploaded as a workflow artifact (hosted report URL can land with the Vercel preview follow-up).
+
 ## Troubleshooting auth
 
 1. **Missing secret/vars** — Config and CI fail fast if `SANITY_E2E_SESSION_TOKEN`, `SANITY_E2E_PROJECT_ID`, or `SANITY_E2E_STUDIO_DATASET` is unset, empty, or a placeholder (`changeme`, etc.). See the error pointing at this README.
@@ -64,6 +66,6 @@ Locally, Playwright starts `pnpm --filter test-studio dev` unless a server is al
 Before the suite grows beyond read-only smoke (especially write-heavy tests or parallel PR CI), add the same production setup as Sanity’s main e2e workflow:
 
 1. **Ephemeral per-PR datasets** — Create/cleanup datasets like `pr-<n>-chromium-<run_id>` so concurrent jobs do not race on shared `plugins`.
-2. **Vercel preview hosting** — Deploy the studio under test and set `SANITY_E2E_BASE_URL` to the preview URL (skip local `webServer`).
+2. **Vercel preview hosting** — Deploy the studio under test and set `SANITY_E2E_BASE_URL` to the preview URL (skip local `webServer`). Also host the Playwright HTML report (so PR comments can link `[🟢 N passed](report#?q=s%3Apassed)` like `sanity-io/sanity`).
 
 Without those, concurrent CI and mutating tests will flake or fail against the shared dataset / local preview.

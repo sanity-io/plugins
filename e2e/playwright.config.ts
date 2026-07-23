@@ -57,7 +57,14 @@ const playwrightConfig: PlaywrightTestConfig = {
   },
   outputDir: ARTIFACT_OUTPUT_PATH,
   retries: CI ? 2 : 0,
-  reporter: [['list'], ['html', {open: 'never', outputFolder: 'playwright-report'}]],
+  reporter: CI
+    ? [
+        ['list'],
+        ['html', {open: 'never', outputFolder: 'playwright-report'}],
+        ['blob'],
+        ['./reporters/summary.ts'],
+      ]
+    : [['list'], ['html', {open: 'never', outputFolder: 'playwright-report'}]],
   use: {
     actionTimeout: 10_000,
     trace: 'on-first-retry',
