@@ -14,13 +14,20 @@ if (!rawDataset) {
 }
 
 const dataset = sanityIdify(rawDataset)
+const projectId = process.env.SANITY_E2E_PROJECT_ID?.trim()
+if (!projectId) {
+  throw new Error('Missing SANITY_E2E_PROJECT_ID')
+}
+
 const client = createE2EClient(dataset)
+
+console.info(`[e2e] Project ${projectId} — ensuring dataset ${dataset}`)
 
 const datasets: DatasetsResponse = await client.datasets.list()
 if (!datasets.find((ds) => ds.name === dataset)) {
-  console.info(`[e2e] Creating dataset ${dataset}`)
+  console.info(`[e2e] Creating dataset ${dataset} on ${projectId}`)
   await client.datasets.create(dataset, {aclMode: 'public'})
-  console.info(`[e2e] Created dataset ${dataset}`)
+  console.info(`[e2e] Created dataset ${dataset} on ${projectId}`)
 } else {
-  console.info(`[e2e] Dataset ${dataset} already exists`)
+  console.info(`[e2e] Dataset ${dataset} already exists on ${projectId}`)
 }

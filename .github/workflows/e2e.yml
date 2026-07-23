@@ -71,10 +71,9 @@ jobs:
         env:
           SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
         run: |
-          echo "Creating datasets: ${{ env.CHROMIUM_DATASET }} and ${{ env.FIREFOX_DATASET }}"
-          SANITY_E2E_DATASET=${{ env.CHROMIUM_DATASET }} pnpm e2e:setup &
-          SANITY_E2E_DATASET=${{ env.FIREFOX_DATASET }} pnpm e2e:setup &
-          wait
+          echo "Creating datasets on project ${SANITY_E2E_PROJECT_ID}: ${{ env.CHROMIUM_DATASET }} and ${{ env.FIREFOX_DATASET }}"
+          SANITY_E2E_DATASET=${{ env.CHROMIUM_DATASET }} pnpm e2e:setup
+          SANITY_E2E_DATASET=${{ env.FIREFOX_DATASET }} pnpm e2e:setup
 
       - name: Store Playwright's Version
         id: playwright-version

@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "cleanup": "tsx scripts/cleanupDatasets.ts",
+    "create-dataset": "tsx scripts/setup.ts",
     "dev": "pnpm --filter test-studio dev",
-    "setup": "tsx scripts/setup.ts",
     "start": "pnpm --filter test-studio preview",
     "test": "playwright test"
   },
