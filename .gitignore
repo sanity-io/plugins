@@ -159,3 +159,6 @@ yalc.lock
 
 # pnpm
 .pnpm-store
+
+# Vercel CLI (pulled project settings + prebuilt output)
+.vercel

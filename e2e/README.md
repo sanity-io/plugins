@@ -6,23 +6,26 @@ Playwright smoke tests for the plugins [test studio](../dev/test-studio). Auth f
 
 E2E runs against the Sanity sandbox org project **plugins-e2e-testing** (`a1psl692`).
 
-| Variable / secret              | Purpose                                                               |
-| ------------------------------ | --------------------------------------------------------------------- |
-| `SANITY_E2E_SESSION_TOKEN`     | Studio session/API token (secret; must be able to create datasets)    |
-| `SANITY_E2E_PROJECT_ID`        | Project id — must match the storage key suffix (variable: `a1psl692`) |
-| `SANITY_E2E_DATASET`           | Default/fallback dataset (local). CI uses ephemeral per-browser names |
-| `SANITY_E2E_DATASET_CHROMIUM`  | Chromium workspace dataset (set automatically in CI)                  |
-| `SANITY_E2E_DATASET_FIREFOX`   | Firefox workspace dataset (set automatically in CI)                   |
-| `SANITY_E2E_BASE_URL`          | Studio origin (default `http://localhost:3333`)                       |
-| `VERCEL_E2E_REPORT_TOKEN`      | Vercel token used to deploy the HTML report (secret)                  |
-| `VERCEL_E2E_REPORT_ORG_ID`     | Vercel team/org id for the report project (secret)                    |
-| `VERCEL_E2E_REPORT_PROJECT_ID` | Vercel project id for the report host (secret)                        |
+| Variable / secret              | Purpose                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------- |
+| `SANITY_E2E_SESSION_TOKEN`     | Studio session/API token (secret; must be able to create datasets)              |
+| `SANITY_E2E_PROJECT_ID`        | Project id — must match the storage key suffix (variable: `a1psl692`)           |
+| `SANITY_E2E_DATASET`           | Default/fallback dataset (local). CI uses ephemeral per-browser names           |
+| `SANITY_E2E_DATASET_CHROMIUM`  | Chromium workspace dataset (set automatically in CI)                            |
+| `SANITY_E2E_DATASET_FIREFOX`   | Firefox workspace dataset (set automatically in CI)                             |
+| `SANITY_E2E_BASE_URL`          | Studio origin (default `http://localhost:3333`; CI uses the Vercel preview URL) |
+| `VERCEL_E2E_REPORT_TOKEN`      | Vercel token used to deploy the HTML report (secret)                            |
+| `VERCEL_E2E_REPORT_ORG_ID`     | Vercel team/org id for the report project (secret)                              |
+| `VERCEL_E2E_REPORT_PROJECT_ID` | Vercel project id for the report host (secret)                                  |
+| `VERCEL_E2E_STUDIO_TOKEN`      | Vercel token used to deploy the studio preview (secret)                         |
+| `VERCEL_E2E_STUDIO_ORG_ID`     | Vercel team/org id for the studio preview project (secret)                      |
+| `VERCEL_E2E_STUDIO_PROJECT_ID` | Vercel project id for the studio preview (secret)                               |
 
 `SANITY_E2E_STUDIO_DATASET` is still accepted as an alias for `SANITY_E2E_DATASET`.
 
 In CI:
 
-- Secrets: `SANITY_E2E_SESSION_TOKEN`, `VERCEL_E2E_REPORT_*`
+- Secrets: `SANITY_E2E_SESSION_TOKEN`, `VERCEL_E2E_REPORT_*`, `VERCEL_E2E_STUDIO_*`
 - Variable: `SANITY_E2E_PROJECT_ID` (`a1psl692`)
 - Ephemeral datasets are created per run (see below)
 
@@ -43,7 +46,7 @@ Same naming and lifecycle as [`sanity-io/sanity`](https://github.com/sanity-io/s
 | Pull request   | `pr-{number}-chromium-{run_id}` | `pr-{number}-firefox-{run_id}` |
 | Push to `main` | `main-chromium-{run_id}`        | `main-firefox-{run_id}`        |
 
-CI creates both datasets in a setup job, then runs Chromium and Firefox as a **matrix** (parallel jobs). Each matrix job builds the studio, starts preview, and runs `playwright test --project <browser>` with that browser’s dataset (`SANITY_E2E_DATASET`). Blob reports are merged afterward for the PR comment / Vercel HTML report.
+CI creates both datasets in a `setup` job while a parallel `deploy-preview` job builds the studio (`vercel build` with both dataset env vars baked in) and deploys it to Vercel. Chromium and Firefox then run as a **matrix** (parallel jobs) against the deployed preview URL — `playwright test --project <browser>` with that browser’s dataset (`SANITY_E2E_DATASET`). No local dev server runs in CI. Blob reports are merged afterward for the PR comment / Vercel HTML report.
 
 The test studio exposes `/chromium` and `/firefox` workspaces (Home kitchen-sink plugins) pointed at those datasets. Playwright projects use `baseURL` `/chromium` and `/firefox`.
 
@@ -60,6 +63,18 @@ SANITY_E2E_DATASET_CHROMIUM=my-local-e2e \
 SANITY_E2E_DATASET_FIREFOX=my-local-e2e \
 pnpm test:e2e
 ```
+
+## Vercel studio preview
+
+CI deploys the studio under test to Vercel per run (same as [`sanity-io/sanity`](https://github.com/sanity-io/sanity)): `vercel pull` → `vercel build` (ephemeral dataset env vars baked in) → `vercel deploy --prebuilt`. Pushes to `main` deploy with `--prod`. Playwright targets the deployment URL via `SANITY_E2E_BASE_URL`; `playwright.config.ts` skips the local `webServer` for remote URLs.
+
+### One-time setup
+
+1. **Create a Vercel project** for the studio preview (suggested name: `plugins-e2e-studio`).
+2. **Set the Root Directory** to `dev/test-studio` (Project Settings → General) and enable “Include source files outside of the Root Directory”. Build command and output dir come from `dev/test-studio/vercel.json`.
+3. **Disable Deployment Protection** on the project so Playwright (and reviewers) can open preview URLs without Vercel auth.
+4. **Allow CORS** for the preview URLs on the Sanity project `a1psl692`: add `https://*.vercel.app` (or a narrower pattern for the project’s deployment domain) in manage → API → CORS origins.
+5. **Add GitHub Actions secrets**: `VERCEL_E2E_STUDIO_TOKEN`, `VERCEL_E2E_STUDIO_ORG_ID`, `VERCEL_E2E_STUDIO_PROJECT_ID`.
 
 ## Vercel report hosting
 
@@ -98,7 +113,7 @@ Helpers:
 | `pnpm e2e:start`   | Preview the built studio (`sanity preview --port 3333`) |
 | `pnpm test:e2e`    | Run Playwright                                          |
 
-Locally, Playwright starts `pnpm --filter test-studio dev` unless a server is already on port 3333. In CI it creates ephemeral datasets, builds the studio with those dataset env vars, then uses `sanity preview`.
+Locally, Playwright starts `pnpm --filter test-studio dev` unless a server is already on port 3333 (set `SANITY_E2E_BASE_URL` to a deployed studio to skip the local server). In CI, tests run against the per-run Vercel preview deployment.
 
 On pull requests, CI posts an **E2E Tests** status comment with pass/fail/flaky/skipped counts, a hosted HTML report URL, dataset names, and a link to the workflow run.
 
@@ -111,7 +126,3 @@ On pull requests, CI posts an **E2E Tests** status comment with pass/fail/flaky/
 5. **Login screen still visible** — Token invalid or storageState origin ≠ `SANITY_E2E_BASE_URL`.
 6. **Report deploy failed** — Confirm the three `VERCEL_E2E_REPORT_*` secrets match the Vercel project.
 7. **Dataset create failed** — Token needs dataset create permission on `a1psl692`.
-
-## Follow-ups
-
-1. **Vercel studio preview hosting** — Deploy the studio under test and set `SANITY_E2E_BASE_URL` to the preview URL (skip local `webServer`), matching Sanity’s main e2e deploy-preview job.

@@ -43,7 +43,7 @@ jobs:
           message: |
             ### 🧪 E2E Tests
 
-            ⏳ Setting up and running smoke tests… • [view progress](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            ⏳ Setting up preview environment and running smoke tests… • [view progress](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
       - name: Validate e2e secrets and vars
         env:
@@ -51,6 +51,9 @@ jobs:
           VERCEL_E2E_REPORT_TOKEN: ${{ secrets.VERCEL_E2E_REPORT_TOKEN }}
           VERCEL_E2E_REPORT_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
           VERCEL_E2E_REPORT_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
+          VERCEL_E2E_STUDIO_TOKEN: ${{ secrets.VERCEL_E2E_STUDIO_TOKEN }}
+          VERCEL_E2E_STUDIO_ORG_ID: ${{ secrets.VERCEL_E2E_STUDIO_ORG_ID }}
+          VERCEL_E2E_STUDIO_PROJECT_ID: ${{ secrets.VERCEL_E2E_STUDIO_PROJECT_ID }}
         run: |
           missing=0
           if [ -z "$SANITY_E2E_SESSION_TOKEN" ]; then
@@ -63,6 +66,10 @@ jobs:
           fi
           if [ -z "$VERCEL_E2E_REPORT_TOKEN" ] || [ -z "$VERCEL_E2E_REPORT_ORG_ID" ] || [ -z "$VERCEL_E2E_REPORT_PROJECT_ID" ]; then
             echo "::error::Vercel report hosting secrets missing. Set VERCEL_E2E_REPORT_TOKEN, VERCEL_E2E_REPORT_ORG_ID, and VERCEL_E2E_REPORT_PROJECT_ID. See e2e/README.md (Vercel report hosting)."
+            missing=1
+          fi
+          if [ -z "$VERCEL_E2E_STUDIO_TOKEN" ] || [ -z "$VERCEL_E2E_STUDIO_ORG_ID" ] || [ -z "$VERCEL_E2E_STUDIO_PROJECT_ID" ]; then
+            echo "::error::Vercel studio preview secrets missing. Set VERCEL_E2E_STUDIO_TOKEN, VERCEL_E2E_STUDIO_ORG_ID, and VERCEL_E2E_STUDIO_PROJECT_ID. See e2e/README.md (Vercel studio preview)."
             missing=1
           fi
           if [ "$missing" -ne 0 ]; then
@@ -97,9 +104,86 @@ jobs:
         working-directory: e2e
         run: pnpm exec playwright install --with-deps chromium firefox
 
+  deploy-preview:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    outputs:
+      preview_url: ${{ steps.deploy.outputs.DEPLOY_URL }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Pull Vercel Environment Information
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_STUDIO_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_STUDIO_PROJECT_ID }}
+        run: pnpm vercel pull --yes --environment=${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_E2E_STUDIO_TOKEN }}
+
+      - name: Build Project Artifacts
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_STUDIO_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_STUDIO_PROJECT_ID }}
+          SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+          SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+          SANITY_STUDIO_DATASET: ${{ env.CHROMIUM_DATASET }}
+          SANITY_E2E_DATASET: ${{ env.CHROMIUM_DATASET }}
+          SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
+          SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
+        run: pnpm vercel build ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_E2E_STUDIO_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        id: deploy
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_STUDIO_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_STUDIO_PROJECT_ID }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message || github.event.pull_request.title }}
+          GITHUB_EVENT_REPOSITORY_NAME: ${{ github.event.repository.name }}
+          COMMIT_AUTHOR_NAME: ${{ github.event.sender.name || 'GitHub Actions' }}
+          COMMIT_REF: ${{ github.head_ref || github.ref_name }}
+          COMMIT_AUTHOR_LOGIN: ${{ github.event.sender.login || github.actor }}
+        run: |
+          echo "DEPLOY_URL=$(pnpm vercel deploy --prebuilt ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_E2E_STUDIO_TOKEN }} \
+          -m githubDeployment="1" \
+          -m githubCommitAuthorName="$COMMIT_AUTHOR_NAME" \
+          -m githubCommitMessage="$COMMIT_MESSAGE" \
+          -m githubCommitOrg="${{ github.repository_owner }}" \
+          -m githubCommitRef="$COMMIT_REF" \
+          -m githubCommitRepo="${GITHUB_EVENT_REPOSITORY_NAME}" \
+          -m githubCommitSha="${{ github.sha }}" \
+          -m githubOrg="${{ github.repository_owner }}" \
+          -m githubRepo="${GITHUB_EVENT_REPOSITORY_NAME}" \
+          -m githubCommitAuthorLogin="$COMMIT_AUTHOR_LOGIN" | tail -n 1)" >> "$GITHUB_OUTPUT"
+
+      - name: Echo the preview URL
+        run: |
+          if [ -z "${{ steps.deploy.outputs.DEPLOY_URL }}" ]; then
+           echo "::error::Preview URL was not found. Deployment may have failed."
+           exit 1
+          fi
+          echo "Preview URL: ${{ steps.deploy.outputs.DEPLOY_URL }}"
+
+      - name: Update PR Comment with preview URL
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
+        if: github.event_name == 'pull_request'
+        with:
+          comment-tag: e2e-status
+          message: |
+            ### 🧪 E2E Tests
+
+            ⏳ Running tests… • [view progress](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            **Studio:** ${{ steps.deploy.outputs.DEPLOY_URL }}
+
   e2e:
-    needs: [setup]
-    timeout-minutes: 45
+    needs: [setup, deploy-preview]
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -110,11 +194,12 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       CI: 'true'
       SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
-      SANITY_E2E_BASE_URL: http://localhost:3333
-      SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
-      SANITY_E2E_BROWSER: ${{ matrix.project }}
+      SANITY_E2E_BASE_URL: ${{ needs.deploy-preview.outputs.preview_url }}
     steps:
       - uses: actions/checkout@v7
+
+      - name: Echo the base URL
+        run: echo "$SANITY_E2E_BASE_URL"
 
       - uses: ./.github/actions/setup
 
@@ -142,15 +227,6 @@ jobs:
         working-directory: e2e
         run: pnpm exec playwright install-deps ${{ matrix.project }}
 
-      - name: Build test studio and dependencies
-        env:
-          # Step-level env can use `env` context (job-level cannot).
-          SANITY_E2E_DATASET: ${{ matrix.project == 'chromium' && env.CHROMIUM_DATASET || env.FIREFOX_DATASET }}
-          SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
-          SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
-          SANITY_STUDIO_DATASET: ${{ matrix.project == 'chromium' && env.CHROMIUM_DATASET || env.FIREFOX_DATASET }}
-        run: pnpm turbo build --filter=test-studio...
-
       - name: Run e2e smoke tests
         id: playwright
         working-directory: e2e
@@ -160,7 +236,6 @@ jobs:
           SANITY_E2E_DATASET: ${{ matrix.project == 'chromium' && env.CHROMIUM_DATASET || env.FIREFOX_DATASET }}
           SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
           SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
-          SANITY_STUDIO_DATASET: ${{ matrix.project == 'chromium' && env.CHROMIUM_DATASET || env.FIREFOX_DATASET }}
         run: pnpm test --project ${{ matrix.project }}
 
       - name: Upload Playwright blob report
@@ -175,7 +250,7 @@ jobs:
           if-no-files-found: ignore
 
   report:
-    needs: [e2e]
+    needs: [e2e, deploy-preview]
     if: ${{ !cancelled() }}
     timeout-minutes: 15
     runs-on: ubuntu-latest
@@ -258,10 +333,6 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Install Vercel CLI
-        if: ${{ !cancelled() && steps.html-report.outputs.exists == 'true' }}
-        run: npm install -g vercel
-
       - name: Prepare Vercel prebuilt output
         if: ${{ !cancelled() && steps.html-report.outputs.exists == 'true' }}
         run: |
@@ -277,7 +348,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
           COMMIT_REF: ${{ github.head_ref || github.ref_name }}
         run: |
-          echo "REPORT_URL=$(vercel deploy --prebuilt \
+          echo "REPORT_URL=$(pnpm vercel deploy --prebuilt \
             --token=${{ secrets.VERCEL_E2E_REPORT_TOKEN }} \
             --yes \
             -m githubDeployment="1" \
@@ -331,6 +402,8 @@ jobs:
 
             ${{ steps.linked-summary.outputs.text }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
+            **Studio:** ${{ needs.deploy-preview.outputs.preview_url }}
+
             Datasets: `${{ env.CHROMIUM_DATASET }}`, `${{ env.FIREFOX_DATASET }}`
 
       - name: Update PR Comment (tests failed)
@@ -343,6 +416,8 @@ jobs:
 
             ${{ steps.linked-summary.outputs.text }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
+            **Studio:** ${{ needs.deploy-preview.outputs.preview_url }}
+
             Datasets: `${{ env.CHROMIUM_DATASET }}`, `${{ env.FIREFOX_DATASET }}`
 
             <details>
@@ -350,6 +425,7 @@ jobs:
 
             ```sh
             SANITY_E2E_PROJECT_ID=${{ vars.SANITY_E2E_PROJECT_ID }} \
+            SANITY_E2E_BASE_URL=${{ needs.deploy-preview.outputs.preview_url }} \
             SANITY_E2E_DATASET_CHROMIUM=${{ env.CHROMIUM_DATASET }} \
             SANITY_E2E_DATASET_FIREFOX=${{ env.FIREFOX_DATASET }} \
             pnpm test:e2e --headed \
