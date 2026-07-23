@@ -451,6 +451,16 @@ When a dependency is used by more than one package (two or more), manage its ver
 
 Leave niche one-off peers and `workspace:` protocol deps as they are. `pnpm add` runs with `catalogMode: prefer` (set in `pnpm-workspace.yaml`), so adding a dependency that already exists in a catalog reuses the catalog version automatically. pnpm has no built-in "used N times" enforcement, so apply this rule whenever you add or move shared dependencies.
 
+**Upgrading the Sanity Studio monorepo (`sanity`, `@sanity/*`, `groq`)**
+
+When bumping the Studio stack (e.g. `^6.5.0` → `^6.6.0`):
+
+1. Update the catalog entries for `sanity`, `@sanity/mutator`, `@sanity/schema`, `@sanity/util`, `@sanity/vision`, and `groq` together.
+2. Keep `pnpm-workspace.yaml` `overrides` for `@sanity/mutator`, `@sanity/schema`, `@sanity/util`, `@sanity/types`, `groq`, and `sanity` pointed at that version (via `catalog:` or an explicit range for packages not in the catalog). Catalog-only bumps leave transitive deps (CLI / migrate / portabletext) free to keep an older `@sanity/types` copy, which breaks dts emit with `TS2883` portable-type errors.
+3. After `pnpm install`, confirm the lockfile has a single `@sanity/types@X.Y.Z` (and matching mutator/schema/util) — not both the old and new minor.
+4. Fix any new document-operation disable reasons (e.g. `TARGET_NOT_FOUND`) by mapping them to Sanity's structure locale keys (`action.*.disabled.*`), not by reusing an unrelated tooltip string.
+5. Add a **separate** changeset per published package whose `package.json` or runtime code changed.
+
 **date-fns: v4 via the catalog, subpath imports, official `@date-fns/tz`**
 
 All date handling matches sanity core (`sanity-io/sanity`), so plugins dedupe against the `date-fns` instance that `sanity` itself ships:
