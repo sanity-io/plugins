@@ -35,7 +35,7 @@ catalogs:
       specifier: ^3.0.7
       version: 3.0.7
     '@sanity/icons':
-      specifier: ^5.2.0
+      specifier: ^5.2.1
       version: 5.2.1
     '@sanity/image-url':
       specifier: ^2.1.1
