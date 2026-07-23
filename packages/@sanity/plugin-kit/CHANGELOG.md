@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 9.0.3
+
+### Patch Changes
+
+- [#1707](https://github.com/sanity-io/plugins/pull/1707) [`5eb902e`](https://github.com/sanity-io/plugins/commit/5eb902e0bca64962bd284c7675e9e9704ea372bd) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade oxlint to ^1.75.0 and oxlint-tsgolint to ^7.0.2001
+
 ## 9.0.2
 
 ### Patch Changes
