@@ -14,18 +14,15 @@ E2E runs against the Sanity sandbox org project **plugins-e2e-testing** (`a1psl6
 | `SANITY_E2E_DATASET_CHROMIUM`  | Chromium workspace dataset (set automatically in CI)                            |
 | `SANITY_E2E_DATASET_FIREFOX`   | Firefox workspace dataset (set automatically in CI)                             |
 | `SANITY_E2E_BASE_URL`          | Studio origin (default `http://localhost:3333`; CI uses the Vercel preview URL) |
-| `VERCEL_E2E_REPORT_TOKEN`      | Vercel token used to deploy the HTML report (secret)                            |
-| `VERCEL_E2E_REPORT_ORG_ID`     | Vercel team/org id for the report project (secret)                              |
-| `VERCEL_E2E_REPORT_PROJECT_ID` | Vercel project id for the report host (secret)                                  |
-| `VERCEL_E2E_STUDIO_TOKEN`      | Vercel token used to deploy the studio preview (secret)                         |
-| `VERCEL_E2E_STUDIO_ORG_ID`     | Vercel team/org id for the studio preview project (secret)                      |
-| `VERCEL_E2E_STUDIO_PROJECT_ID` | Vercel project id for the studio preview (secret)                               |
+| `VERCEL_E2E_REPORT_TOKEN`      | Vercel token used for the studio preview + HTML report deploys (secret)         |
+| `VERCEL_E2E_REPORT_ORG_ID`     | Vercel team/org id for that project (secret)                                    |
+| `VERCEL_E2E_REPORT_PROJECT_ID` | Vercel project id used for both studio preview and report deploys (secret)      |
 
 `SANITY_E2E_STUDIO_DATASET` is still accepted as an alias for `SANITY_E2E_DATASET`.
 
 In CI:
 
-- Secrets: `SANITY_E2E_SESSION_TOKEN`, `VERCEL_E2E_REPORT_*`, `VERCEL_E2E_STUDIO_*`
+- Secrets: `SANITY_E2E_SESSION_TOKEN`, `VERCEL_E2E_REPORT_*` (shared by the studio preview and report deploys)
 - Variable: `SANITY_E2E_PROJECT_ID` (`a1psl692`)
 - Ephemeral datasets are created per run (see below)
 
@@ -68,13 +65,13 @@ pnpm test:e2e
 
 CI deploys the studio under test to Vercel per run (same as [`sanity-io/sanity`](https://github.com/sanity-io/sanity)): `vercel pull` → `vercel build` (ephemeral dataset env vars baked in) → `vercel deploy --prebuilt`. Pushes to `main` deploy with `--prod`. Playwright targets the deployment URL via `SANITY_E2E_BASE_URL`; `playwright.config.ts` skips the local `webServer` for remote URLs.
 
+The studio preview reuses the same Vercel project and secrets as report hosting (`VERCEL_E2E_REPORT_*`). Report deploys are `--prebuilt` static output, so they are unaffected by the project’s build settings.
+
 ### One-time setup
 
-1. **Create a Vercel project** for the studio preview (suggested name: `plugins-e2e-studio`).
-2. **Set the Root Directory** to `dev/test-studio` (Project Settings → General) and enable “Include source files outside of the Root Directory”. Build command and output dir come from `dev/test-studio/vercel.json`.
-3. **Disable Deployment Protection** on the project so Playwright (and reviewers) can open preview URLs without Vercel auth.
-4. **Allow CORS** for the preview URLs on the Sanity project `a1psl692`: add `https://*.vercel.app` (or a narrower pattern for the project’s deployment domain) in manage → API → CORS origins.
-5. **Add GitHub Actions secrets**: `VERCEL_E2E_STUDIO_TOKEN`, `VERCEL_E2E_STUDIO_ORG_ID`, `VERCEL_E2E_STUDIO_PROJECT_ID`.
+1. **Set the Root Directory** of the Vercel project to `dev/test-studio` (Project Settings → General) and enable “Include source files outside of the Root Directory”. Build command and output dir come from `dev/test-studio/vercel.json`.
+2. **Disable Deployment Protection** on the project so Playwright (and reviewers) can open preview URLs without Vercel auth.
+3. **Allow CORS** for the preview URLs on the Sanity project `a1psl692`: add `https://*.vercel.app` (or a narrower pattern for the project’s deployment domain) in manage → API → CORS origins.
 
 ## Vercel report hosting
 

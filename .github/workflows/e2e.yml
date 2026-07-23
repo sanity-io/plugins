@@ -51,9 +51,6 @@ jobs:
           VERCEL_E2E_REPORT_TOKEN: ${{ secrets.VERCEL_E2E_REPORT_TOKEN }}
           VERCEL_E2E_REPORT_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
           VERCEL_E2E_REPORT_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
-          VERCEL_E2E_STUDIO_TOKEN: ${{ secrets.VERCEL_E2E_STUDIO_TOKEN }}
-          VERCEL_E2E_STUDIO_ORG_ID: ${{ secrets.VERCEL_E2E_STUDIO_ORG_ID }}
-          VERCEL_E2E_STUDIO_PROJECT_ID: ${{ secrets.VERCEL_E2E_STUDIO_PROJECT_ID }}
         run: |
           missing=0
           if [ -z "$SANITY_E2E_SESSION_TOKEN" ]; then
@@ -65,11 +62,7 @@ jobs:
             missing=1
           fi
           if [ -z "$VERCEL_E2E_REPORT_TOKEN" ] || [ -z "$VERCEL_E2E_REPORT_ORG_ID" ] || [ -z "$VERCEL_E2E_REPORT_PROJECT_ID" ]; then
-            echo "::error::Vercel report hosting secrets missing. Set VERCEL_E2E_REPORT_TOKEN, VERCEL_E2E_REPORT_ORG_ID, and VERCEL_E2E_REPORT_PROJECT_ID. See e2e/README.md (Vercel report hosting)."
-            missing=1
-          fi
-          if [ -z "$VERCEL_E2E_STUDIO_TOKEN" ] || [ -z "$VERCEL_E2E_STUDIO_ORG_ID" ] || [ -z "$VERCEL_E2E_STUDIO_PROJECT_ID" ]; then
-            echo "::error::Vercel studio preview secrets missing. Set VERCEL_E2E_STUDIO_TOKEN, VERCEL_E2E_STUDIO_ORG_ID, and VERCEL_E2E_STUDIO_PROJECT_ID. See e2e/README.md (Vercel studio preview)."
+            echo "::error::Vercel secrets missing (used for both the studio preview and report hosting). Set VERCEL_E2E_REPORT_TOKEN, VERCEL_E2E_REPORT_ORG_ID, and VERCEL_E2E_REPORT_PROJECT_ID. See e2e/README.md."
             missing=1
           fi
           if [ "$missing" -ne 0 ]; then
@@ -122,34 +115,34 @@ jobs:
 
       - name: Pull Vercel Environment Information
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_STUDIO_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_STUDIO_PROJECT_ID }}
-        run: pnpm vercel pull --yes --environment=${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_E2E_STUDIO_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
+        run: pnpm vercel pull --yes --environment=${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_E2E_REPORT_TOKEN }}
 
       - name: Build Project Artifacts
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_STUDIO_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_STUDIO_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
           SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
           SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
           SANITY_STUDIO_DATASET: ${{ env.CHROMIUM_DATASET }}
           SANITY_E2E_DATASET: ${{ env.CHROMIUM_DATASET }}
           SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
           SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
-        run: pnpm vercel build ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_E2E_STUDIO_TOKEN }}
+        run: pnpm vercel build ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_E2E_REPORT_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
         id: deploy
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_STUDIO_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_STUDIO_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message || github.event.pull_request.title }}
           GITHUB_EVENT_REPOSITORY_NAME: ${{ github.event.repository.name }}
           COMMIT_AUTHOR_NAME: ${{ github.event.sender.name || 'GitHub Actions' }}
           COMMIT_REF: ${{ github.head_ref || github.ref_name }}
           COMMIT_AUTHOR_LOGIN: ${{ github.event.sender.login || github.actor }}
         run: |
-          echo "DEPLOY_URL=$(pnpm vercel deploy --prebuilt ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_E2E_STUDIO_TOKEN }} \
+          echo "DEPLOY_URL=$(pnpm vercel deploy --prebuilt ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_E2E_REPORT_TOKEN }} \
           -m githubDeployment="1" \
           -m githubCommitAuthorName="$COMMIT_AUTHOR_NAME" \
           -m githubCommitMessage="$COMMIT_MESSAGE" \
