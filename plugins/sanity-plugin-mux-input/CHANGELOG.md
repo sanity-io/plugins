@@ -1,5 +1,13 @@
 # sanity-plugin-mux-input
 
+## 5.0.6
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+- [#1707](https://github.com/sanity-io/plugins/pull/1707) [`5eb902e`](https://github.com/sanity-io/plugins/commit/5eb902e0bca64962bd284c7675e9e9704ea372bd) Thanks [@stipsan](https://github.com/stipsan)! - Update oxlint suppressions for React Compiler and exhaustive-deps compatibility
+
 ## 5.0.5
 
 ### Patch Changes

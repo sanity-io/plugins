@@ -277,6 +277,7 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Plugins can expand their vitest configs and test suites over time as needed (unit tests, integration tests, etc.)
 - Tests run against built `dist/` output after `pnpm build`
 - Snapshots are generated with `pnpm test -u`
+- Root Vitest sets `SC_DISABLE_SPEEDY=false` so styled-components keeps its fast CSSOM injection path under jsdom (upstream disables it when `NODE_ENV !== 'production'`, which makes first mounts of styled-heavy trees slow enough to trip default timeouts). Same approach as [sanity#13675](https://github.com/sanity-io/sanity/pull/13675).
 
 ## Pull Request Workflow
 
@@ -350,6 +351,10 @@ How it works:
 - Build sessions are written to `dev/test-studio/node_modules/.rolldown` (gitignored)
 - The flag is declared in `dev/test-studio/turbo.jsonc` so turbo-cached builds are invalidated when it changes (and so turbo's strict env mode passes it through to `pnpm dev`)
 - Enabling devtools makes `sanity build` noticeably slower; that's why it's opt-in via the env flag
+
+### React production profiling on Vercel previews
+
+`dev/test-studio/sanity.cli.ts` enables React production profiling when `VERCEL_ENV === "preview"` (Vercel PR deployments): it aliases `react-dom/client` → `react-dom/profiling`, emits production source maps, and disables identifier mangling so React DevTools can profile and show readable component names. It also sets `deployment.autoUpdates: false` on those previews, because auto-updates vendor builds hardcode `react-dom-client.production.js` and would bypass the profiling alias. Production builds (including `plugins-studio.sanity.dev` via `sanity deploy`, where `VERCEL_ENV` is unset) keep auto-updates on and skip profiling to avoid the overhead. `VERCEL_ENV` is listed in `dev/test-studio/turbo.jsonc` so Turbo cache keys differ between preview and production.
 
 ## Creating a New Plugin
 
@@ -445,6 +450,16 @@ When a dependency is used by more than one package (two or more), manage its ver
 3. Shared studio peers (`react`, `react-dom`, `sanity`, `styled-components`) use the named `peer` catalog (`catalog:peer`) — see above. For other cases where one package must stay on a different major than the rest, add a named catalog and reference it with `catalog:<name>`.
 
 Leave niche one-off peers and `workspace:` protocol deps as they are. `pnpm add` runs with `catalogMode: prefer` (set in `pnpm-workspace.yaml`), so adding a dependency that already exists in a catalog reuses the catalog version automatically. pnpm has no built-in "used N times" enforcement, so apply this rule whenever you add or move shared dependencies.
+
+**Upgrading the Sanity Studio monorepo (`sanity`, `@sanity/*`, `groq`)**
+
+When bumping the Studio stack (e.g. `^6.5.0` → `^6.6.0`):
+
+1. Update the catalog entries for `sanity`, `@sanity/mutator`, `@sanity/schema`, `@sanity/util`, `@sanity/vision`, and `groq` together.
+2. Keep `pnpm-workspace.yaml` `overrides` for `@sanity/mutator`, `@sanity/schema`, `@sanity/util`, `@sanity/types`, `groq`, and `sanity` pointed at that version (via `catalog:` or an explicit range for packages not in the catalog). Catalog-only bumps leave transitive deps (CLI / migrate / portabletext) free to keep an older `@sanity/types` copy, which breaks dts emit with `TS2883` portable-type errors.
+3. After `pnpm install`, confirm the lockfile has a single `@sanity/types@X.Y.Z` (and matching mutator/schema/util) — not both the old and new minor.
+4. Fix any new document-operation disable reasons (e.g. `TARGET_NOT_FOUND`) by mapping them to Sanity's structure locale keys (`action.*.disabled.*`), not by reusing an unrelated tooltip string.
+5. Add a **separate** changeset per published package whose `package.json` or runtime code changed.
 
 **date-fns: v4 via the catalog, subpath imports, official `@date-fns/tz`**
 
