@@ -76,11 +76,13 @@ export function resolveE2eEnv(): E2eEnv {
     )
   }
 
-  const projectIdRaw = process.env.SANITY_E2E_PROJECT_ID ?? 'ppsg7ml5'
-  const projectId = projectIdRaw.trim()
-  if (isInvalidSecret(projectId) || projectId.length === 0) {
-    errors.push('SANITY_E2E_PROJECT_ID — must be a non-empty project id')
+  const projectIdRaw = process.env.SANITY_E2E_PROJECT_ID
+  if (isInvalidSecret(projectIdRaw)) {
+    errors.push(
+      'SANITY_E2E_PROJECT_ID — required Sanity project id (must match storage key suffix)',
+    )
   }
+  const projectId = projectIdRaw?.trim() ?? ''
 
   const baseUrlRaw = process.env.SANITY_E2E_BASE_URL ?? 'http://localhost:3333'
   const baseUrl = baseUrlRaw.replace(/\/$/, '')
@@ -90,10 +92,11 @@ export function resolveE2eEnv(): E2eEnv {
     errors.push(`SANITY_E2E_BASE_URL — invalid URL: ${baseUrlRaw}`)
   }
 
-  const dataset = (process.env.SANITY_STUDIO_DATASET ?? 'plugins').trim()
-  if (dataset.length === 0) {
-    errors.push('SANITY_STUDIO_DATASET — must be a non-empty dataset name')
+  const datasetRaw = process.env.SANITY_E2E_STUDIO_DATASET
+  if (isInvalidSecret(datasetRaw)) {
+    errors.push('SANITY_E2E_STUDIO_DATASET — required dataset name for the studio under test')
   }
+  const dataset = datasetRaw?.trim() ?? ''
 
   if (errors.length > 0 || !token || !tokenSource) {
     throw new Error(

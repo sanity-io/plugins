@@ -21,20 +21,35 @@ jobs:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
       CI: 'true'
-      SANITY_E2E_PROJECT_ID: ppsg7ml5
+      SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+      SANITY_E2E_STUDIO_DATASET: ${{ vars.SANITY_E2E_STUDIO_DATASET }}
       SANITY_E2E_BASE_URL: http://localhost:3333
-      SANITY_STUDIO_DATASET: plugins
+      # test-studio reads SANITY_STUDIO_* at build/preview time
+      SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+      SANITY_STUDIO_DATASET: ${{ vars.SANITY_E2E_STUDIO_DATASET }}
     steps:
       - uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup
 
-      - name: Validate e2e secrets
+      - name: Validate e2e secrets and vars
         env:
           SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
         run: |
+          missing=0
           if [ -z "$SANITY_E2E_SESSION_TOKEN" ]; then
             echo "::error::SANITY_E2E_SESSION_TOKEN secret is not set. Add a studio session/API token (not SANITY_DEPLOY_TOKEN). See e2e/README.md"
+            missing=1
+          fi
+          if [ -z "$SANITY_E2E_PROJECT_ID" ]; then
+            echo "::error::SANITY_E2E_PROJECT_ID repository variable is not set. See e2e/README.md"
+            missing=1
+          fi
+          if [ -z "$SANITY_E2E_STUDIO_DATASET" ]; then
+            echo "::error::SANITY_E2E_STUDIO_DATASET repository variable is not set. See e2e/README.md"
+            missing=1
+          fi
+          if [ "$missing" -ne 0 ]; then
             exit 1
           fi
 

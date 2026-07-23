@@ -96,6 +96,12 @@ const playwrightConfig: PlaywrightTestConfig = {
         timeout: 300_000,
         stdout: 'pipe',
         stderr: 'pipe',
+        // Keep the studio under test on the same project/dataset as e2e auth.
+        env: {
+          ...process.env,
+          SANITY_STUDIO_PROJECT_ID: PROJECT_ID,
+          SANITY_STUDIO_DATASET: env.dataset,
+        },
       },
 }
 

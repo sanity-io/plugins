@@ -2,17 +2,24 @@
 
 Playwright smoke tests for the plugins [test studio](../dev/test-studio). Auth follows the same pattern as [`sanity-io/sanity`](https://github.com/sanity-io/sanity): bots never click “Sign in”; Playwright seeds Studio’s `__studio_auth_token_<projectId>` localStorage via `storageState`.
 
-## Required secrets
+## Required secrets / vars
 
-| Variable                   | Purpose                                                                   |
-| -------------------------- | ------------------------------------------------------------------------- |
-| `SANITY_E2E_SESSION_TOKEN` | Studio session/API token used for browser auth (required in CI)           |
-| `STUDIO_AUTH_TOKEN`        | Fallback for Cursor cloud agents when `SANITY_E2E_SESSION_TOKEN` is unset |
-| `SANITY_E2E_PROJECT_ID`    | Project id (default `ppsg7ml5`) — must match the storage key suffix       |
-| `SANITY_E2E_BASE_URL`      | Studio origin (default `http://localhost:3333`)                           |
-| `SANITY_STUDIO_DATASET`    | Dataset (default `plugins`)                                               |
+| Variable                    | Purpose                                                                   |
+| --------------------------- | ------------------------------------------------------------------------- |
+| `SANITY_E2E_SESSION_TOKEN`  | Studio session/API token used for browser auth (required in CI)           |
+| `STUDIO_AUTH_TOKEN`         | Fallback for Cursor cloud agents when `SANITY_E2E_SESSION_TOKEN` is unset |
+| `SANITY_E2E_PROJECT_ID`     | Project id — must match the storage key suffix (required)                 |
+| `SANITY_E2E_STUDIO_DATASET` | Dataset for the studio under test (required)                              |
+| `SANITY_E2E_BASE_URL`       | Studio origin (default `http://localhost:3333`)                           |
 
-Copy [`e2e/.env.example`](./.env.example) to `e2e/.env.local` and fill in the token, or export the vars in your shell.
+In CI these come from GitHub Actions:
+
+- Secret: `SANITY_E2E_SESSION_TOKEN`
+- Repository variables: `SANITY_E2E_PROJECT_ID`, `SANITY_E2E_STUDIO_DATASET`
+
+Copy [`e2e/.env.example`](./.env.example) to `e2e/.env.local` and fill in values, or export the vars in your shell.
+
+The Playwright `webServer` maps `SANITY_E2E_PROJECT_ID` / `SANITY_E2E_STUDIO_DATASET` onto `SANITY_STUDIO_PROJECT_ID` / `SANITY_STUDIO_DATASET` so the test studio process uses the same project and dataset.
 
 Get a token via `sanity login` then `sanity debug --secrets`, or create a project API token in [manage.sanity.io](https://www.sanity.io/manage).
 
@@ -45,7 +52,7 @@ Locally, Playwright starts `pnpm --filter test-studio dev` unless a server is al
 
 ## Troubleshooting auth
 
-1. **Missing secret** — Config and CI fail fast if `SANITY_E2E_SESSION_TOKEN` / `STUDIO_AUTH_TOKEN` is unset, empty, or a placeholder (`changeme`, etc.). See the error pointing at this README.
+1. **Missing secret/vars** — Config and CI fail fast if `SANITY_E2E_SESSION_TOKEN` / `STUDIO_AUTH_TOKEN`, `SANITY_E2E_PROJECT_ID`, or `SANITY_E2E_STUDIO_DATASET` is unset, empty, or a placeholder (`changeme`, etc.). See the error pointing at this README.
 2. **Deploy token used by mistake** — Auth preflight calls `GET /users/me`. A 401/403 usually means the wrong token kind; use a session/API token, not `SANITY_DEPLOY_TOKEN`.
 3. **Project id mismatch** — Storage key is `__studio_auth_token_${SANITY_E2E_PROJECT_ID}`. If the studio uses a different project id, auth will look signed out.
 4. **CORS** — Local origin must be allowed on the Sanity project.
