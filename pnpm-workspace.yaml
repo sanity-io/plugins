@@ -19,12 +19,12 @@ catalog:
   '@portabletext/types': ^4.0.2
   '@sanity/asset-utils': ^2.3.0
   '@sanity/client': ^7.24.0
-  '@sanity/color': ^3.0.6
+  '@sanity/color': ^3.0.7
   '@sanity/icons': ^5.2.0
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.6.0
   '@sanity/pkg-utils': ^11.0.13
-  '@sanity/preview-url-secret': ^4.1.0
+  '@sanity/preview-url-secret': ^4.1.1
   '@sanity/schema': ^6.6.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.1
