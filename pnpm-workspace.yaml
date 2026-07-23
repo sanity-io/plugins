@@ -98,19 +98,28 @@ minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
   - '@changesets/cli'
+  - '@csstools/*'
+  - '@devframes/*'
+  - '@oclif/*'
   - '@oxfmt/*'
   - '@oxlint/*'
   - '@oxlint-tsgolint/*'
   - '@portabletext/*'
+  - '@publint/*'
   - '@rollup/*'
   - '@sanity/*'
   - '@types/*'
   - '@typescript/*'
   - '@vite/*'
+  - '@vitejs/devtools'
+  - '@vitejs/devtools-kit'
   - '@vitejs/plugin-react'
   - '@vitest/*'
   - '@vercel/stega'
+  - baseline-browser-mapping
+  - brace-expansion
   - csstype
+  - devframe
   - get-it
   - groq
   - groq-js
@@ -120,6 +129,9 @@ minimumReleaseAgeExclude:
   - react
   - react-dom
   - react-is
+  - html-parse-stringify
+  - mdurl
+  - publint
   # Renovate dependency update: styled-components@6.4.4
   - styled-components@6.4.4
   - rollup
@@ -154,7 +166,11 @@ minimumReleaseAgeExclude:
   - '@sanity/vanilla-extract-tsdown-plugin@0.2.8'
   # Renovate dependency update: @sanity/vanilla-extract-rolldown-plugin@0.3.2
   - '@sanity/vanilla-extract-rolldown-plugin@0.3.2'
+  - '@yuku-codegen/*'
   - '@yuku-parser/*'
+  - '@yuku-toolchain/*'
+  - yuku-codegen
+  - yuku-ast
   - yuku-parser
 
 overrides:
