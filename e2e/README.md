@@ -4,6 +4,8 @@ Playwright smoke tests for the plugins [test studio](../dev/test-studio). Auth f
 
 ## Required secrets / vars
 
+E2E runs against the Sanity sandbox org project **plugins-e2e-testing** (`a1psl692`). Set `SANITY_E2E_PROJECT_ID=a1psl692` (and a dataset on that project).
+
 | Variable                    | Purpose                                                   |
 | --------------------------- | --------------------------------------------------------- |
 | `SANITY_E2E_SESSION_TOKEN`  | Studio session/API token used for browser auth (required) |
@@ -14,17 +16,17 @@ Playwright smoke tests for the plugins [test studio](../dev/test-studio). Auth f
 In CI these come from GitHub Actions:
 
 - Secret: `SANITY_E2E_SESSION_TOKEN`
-- Repository variables: `SANITY_E2E_PROJECT_ID`, `SANITY_E2E_STUDIO_DATASET`
+- Repository variables: `SANITY_E2E_PROJECT_ID` (use `a1psl692`), `SANITY_E2E_STUDIO_DATASET`
 
 Copy [`e2e/.env.example`](./.env.example) to `e2e/.env.local` and fill in values, or export the vars in your shell.
 
 The Playwright `webServer` maps `SANITY_E2E_PROJECT_ID` / `SANITY_E2E_STUDIO_DATASET` onto `SANITY_STUDIO_PROJECT_ID` / `SANITY_STUDIO_DATASET` so the test studio process uses the same project and dataset.
 
-Get a token via `sanity login` then `sanity debug --secrets`, or create a project API token in [manage.sanity.io](https://www.sanity.io/manage).
+Get a token via `sanity login` then `sanity debug --secrets`, or create a project API token in [manage.sanity.io](https://www.sanity.io/manage) for **plugins-e2e-testing** (`a1psl692`).
 
 **Do not use `SANITY_DEPLOY_TOKEN`.** That secret is for `sanity deploy` only and will fail auth preflight / studio login.
 
-Ensure the project allows CORS origin `http://localhost:3333` (API → CORS origins in manage).
+Ensure project `a1psl692` allows CORS origin `http://localhost:3333` (API → CORS origins in manage).
 
 ## Running tests
 
