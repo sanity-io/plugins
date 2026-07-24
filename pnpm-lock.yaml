@@ -41,7 +41,7 @@ catalogs:
       specifier: ^2.1.1
       version: 2.1.1
     '@sanity/pkg-utils':
-      specifier: ^11.0.13
+      specifier: ^11.0.14
       version: 11.0.14
     '@sanity/preview-url-secret':
       specifier: ^4.1.1
