@@ -9,6 +9,11 @@
     "dev": "pnpm turbo dev --filter=test-studio",
     "devtools:test-studio": "pnpm devtools:test-studio:build && ENABLE_VITE_DEVTOOLS=true pnpm dev",
     "devtools:test-studio:build": "pnpm build && ENABLE_VITE_DEVTOOLS=true pnpm --filter=test-studio build",
+    "e2e:build": "pnpm turbo build --filter=e2e-studio...",
+    "e2e:cleanup": "pnpm --filter e2e run cleanup",
+    "e2e:dev": "pnpm --filter e2e dev",
+    "e2e:setup": "pnpm --filter e2e run create-dataset",
+    "e2e:start": "pnpm --filter e2e start",
     "format": "oxfmt . --no-error-on-unmatched-pattern",
     "generate": "turbo gen",
     "issue-triage": "node scripts/trigger-triage/src/index.ts",
@@ -24,6 +29,7 @@
     "pretest": "turbo run build --filter='!./dev/*'",
     "release": "changeset publish",
     "test": "vitest",
+    "test:e2e": "pnpm --filter e2e test",
     "turbo:fix": "pnpm dlx rimraf ./node_modules && pnpm install && pnpm turbo scan",
     "typegen": "pnpm --filter=test-studio run typegen && pnpm format"
   },
@@ -44,7 +50,8 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "catalog:",
-    "knip": "^6.27.0"
+    "knip": "^6.27.0",
+    "vercel": "^56.5.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,jsonc,md}": [

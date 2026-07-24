@@ -13,6 +13,9 @@ This guide is for AI agents working on this codebase. Follow these instructions 
 | Run linters          | `pnpm lint`          |
 | Build all packages   | `pnpm build`         |
 | Run tests            | `pnpm test`          |
+| Run e2e smoke tests  | `pnpm test:e2e`      |
+| Create e2e dataset   | `pnpm e2e:setup`     |
+| Cleanup e2e datasets | `pnpm e2e:cleanup`   |
 | Add changeset        | `pnpm changeset add` |
 | Start dev server     | `pnpm dev`           |
 
@@ -546,7 +549,7 @@ The test studio dev script uses `sanity dev --no-auto-updates`, so `pnpm dev` st
 
 The test studio connects to Sanity Cloud (project `ppsg7ml5`, dataset `plugins` by default). For cloud agents, use the injected `STUDIO_AUTH_TOKEN` secret instead of interactive login.
 
-Navigate to the studio with the token in the URL hash (Sanity consumes it on load and removes it from the address bar):
+**Interactive / manual browser:** navigate with the token in the URL hash (Sanity consumes it on load and removes it from the address bar):
 
 ```
 http://localhost:3333/home#token=<STUDIO_AUTH_TOKEN>
@@ -559,6 +562,22 @@ node -e "const t=process.env.STUDIO_AUTH_TOKEN; console.log('http://localhost:33
 ```
 
 Open that URL in the browser to authenticate and land directly in the Home workspace (the merged "kitchen sink"). Without a token, workspaces show as "Signed out".
+
+**Playwright e2e:** do not use the `#token=` hash. Tests seed `__studio_auth_token_<projectId>` via Playwright `storageState` (same underlying Studio auth). Requires `SANITY_E2E_SESSION_TOKEN`, `SANITY_E2E_PROJECT_ID`, and dataset env (`SANITY_E2E_DATASET` and/or `SANITY_E2E_DATASET_CHROMIUM` / `SANITY_E2E_DATASET_FIREFOX`). See [`e2e/README.md`](e2e/README.md).
+
+### E2E smoke tests
+
+```bash
+# Browsers (once)
+pnpm --filter e2e exec playwright install --with-deps chromium firefox
+
+# Required: SANITY_E2E_SESSION_TOKEN, SANITY_E2E_PROJECT_ID, SANITY_E2E_DATASET
+# (or copy e2e/.env.example → e2e/.env.local)
+pnpm e2e:setup   # optional locally; CI creates ephemeral pr-*/main-* datasets
+pnpm test:e2e
+```
+
+Tests run against the dedicated bare-bones `dev/e2e-studio` (workspaces `/chromium` and `/firefox`; plugins are added there together with their e2e tests) — not `dev/test-studio`. Locally Playwright uses `sanity dev`; CI creates ephemeral per-browser datasets, deploys the e2e studio to Vercel (`vercel build` + `deploy --prebuilt`), then runs Chromium and Firefox as parallel matrix jobs against the preview URL. Auth preflight calls `/users/me` before the suite runs — missing or wrong tokens fail fast (do not use `SANITY_DEPLOY_TOKEN`). CI also requires `SANITY_E2E_PROJECT_ID` and Vercel secrets (`VERCEL_E2E_REPORT_*`, shared by the studio preview and report deploys) — see [`e2e/README.md`](e2e/README.md).
 
 ### Node.js version notes
 
