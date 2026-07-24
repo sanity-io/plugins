@@ -74,15 +74,23 @@ export default defineConfig({
         },
         {
           id: 'slug-and-seo-from-preset',
-          text: "The slug and SEO metadata come from `definePage`'s built-in behaviour — they are not added as separate hand-rolled fields alongside the preset.",
+          text: "Slug and SEO come from `definePage`'s built-in behaviour. They are not added as separate hand-rolled fields alongside the preset.",
         },
         {
           id: 'hero-is-hand-rolled',
           text: "The hero section is defined by hand using `defineType({type: 'object', ...})` — the hero is a custom type specific to this project, not a built-in preset.",
         },
         {
-          id: 'no-hand-rolled-portable-text-or-cta',
-          text: 'The solution does NOT hand-roll Portable Text, CTA schemas, or image handling that the presets already provide.',
+          id: 'no-hand-rolled-portable-text',
+          text: 'Portable Text is provided by `defineRichText`, not hand-rolled as an `array` of `block` types with manual annotations.',
+        },
+        {
+          id: 'no-hand-rolled-cta',
+          text: 'The CTA schema is provided by `defineCta`, not hand-rolled as an object with `label` and `link` fields.',
+        },
+        {
+          id: 'no-hand-rolled-image-handling',
+          text: "Image blocks are provided by `defineImage`, not hand-rolled as an object type wrapping `type: 'image'` with alt/caption fields.",
         },
       ],
     },

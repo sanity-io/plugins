@@ -3,7 +3,7 @@ import {defineConfig, defineField, defineType} from 'sanity'
 
 const {definePage, defineCta, defineRichText, defineImage} = createPresetsRegistry({
   link: {
-    to: ['page'],
+    to: ['page', 'post'],
   },
 })
 
@@ -38,6 +38,12 @@ export default defineConfig({
         ],
       }),
       hero,
+      defineType({
+        name: 'post',
+        title: 'Post',
+        type: 'document',
+        fields: [defineField({name: 'title', title: 'Title', type: 'string'})],
+      }),
     ],
   },
 })

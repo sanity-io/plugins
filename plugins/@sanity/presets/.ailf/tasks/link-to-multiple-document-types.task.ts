@@ -95,7 +95,7 @@ export default defineConfig({
       criteria: [
         {
           id: 'uses-define-link-preset',
-          text: 'The link field is produced using a `defineLink` function obtained from a `createPresetsRegistry()` call, rather than a hand-rolled object type with manual `hidden` callbacks for conditional visibility.',
+          text: 'The link field is produced using a `defineLink` function obtained from a `createPresetsRegistry()` call, rather than a hand-rolled object type composing an internal reference and an external URL field.',
         },
         {
           id: 'internal-targets-via-registry-to',

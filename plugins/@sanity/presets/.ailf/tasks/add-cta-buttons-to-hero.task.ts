@@ -65,7 +65,7 @@ export default defineConfig({
       criteria: [
         {
           id: 'hero-has-ctas-array',
-          text: 'The `hero` object has a `ctas` array field (or similarly named collection of CTAs).',
+          text: 'The `hero` object has a repeatable field (typically an array) for multiple CTAs.',
         },
         {
           id: 'cta-has-label',

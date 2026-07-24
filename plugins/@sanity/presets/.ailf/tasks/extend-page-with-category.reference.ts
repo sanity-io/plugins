@@ -29,11 +29,9 @@ export default defineConfig({
           }),
         ],
         map: {
-          preview: () => ({
-            select: {
-              title: 'name',
-              subtitle: 'campaign',
-            },
+          preview: (preview) => ({
+            ...preview,
+            select: {title: 'name', subtitle: 'campaign'},
           }),
         },
       }),
