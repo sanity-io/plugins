@@ -1,19 +1,12 @@
 import {renderHook} from '@testing-library/react'
 import {beforeEach, describe, expect, test, vi} from 'vitest'
 
-import {METADATA_SCHEMA_NAME} from '../constants'
-import {useTranslationMetadata} from './useLanguageMetadata'
 import {useOpenInNewPane} from './useOpenInNewPane'
 
-const mockUseListeningQuery = vi.fn()
 const mockNavigateIntent = vi.fn()
 const mockNavigateUrl = vi.fn()
 const mockResolvePathFromState = vi.fn(() => '/desk/article;doc-1')
 const mockUsePaneRouter = vi.fn()
-
-vi.mock('sanity-plugin-utils', () => ({
-  useListeningQuery: (...args: unknown[]) => mockUseListeningQuery(...args),
-}))
 
 vi.mock('sanity/router', () => ({
   useRouter: () => ({
@@ -26,41 +19,6 @@ vi.mock('sanity/router', () => ({
 vi.mock('sanity/structure', () => ({
   usePaneRouter: () => mockUsePaneRouter(),
 }))
-
-describe('useTranslationMetadata', () => {
-  beforeEach(() => {
-    mockUseListeningQuery.mockReturnValue({
-      data: [{_id: 'meta-1', translations: []}],
-      loading: false,
-      error: null,
-    })
-  })
-
-  test('queries metadata documents that reference the given id', () => {
-    const {result} = renderHook(() => useTranslationMetadata('doc-1'))
-
-    expect(mockUseListeningQuery).toHaveBeenCalledWith(
-      expect.stringContaining('$id in translations[].value._ref'),
-      {
-        params: {id: 'doc-1', translationSchema: METADATA_SCHEMA_NAME},
-      },
-    )
-    expect(result.current.data).toEqual([{_id: 'meta-1', translations: []}])
-    expect(result.current.loading).toBe(false)
-    expect(result.current.error).toBeNull()
-  })
-
-  test('forwards loading and error from useListeningQuery', () => {
-    const error = new Error('query failed')
-    mockUseListeningQuery.mockReturnValue({data: null, loading: true, error})
-
-    const {result} = renderHook(() => useTranslationMetadata('doc-2'))
-
-    expect(result.current.data).toBeNull()
-    expect(result.current.loading).toBe(true)
-    expect(result.current.error).toBe(error)
-  })
-})
 
 describe('useOpenInNewPane', () => {
   beforeEach(() => {

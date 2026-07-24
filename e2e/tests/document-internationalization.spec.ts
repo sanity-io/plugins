@@ -20,27 +20,6 @@ function languageBadge(page: import('@playwright/test').Page, languageId: string
 }
 
 test.describe('@sanity/document-internationalization', () => {
-  test('shows Translations menu and language badge on a localized lesson', async ({
-    page,
-  }, testInfo) => {
-    const projectName = testInfo.project.name
-    const lesson = await seedLesson(projectName, {language: 'en'})
-
-    try {
-      await openLessonDocument(page, lesson.id)
-
-      await expect(page.getByTestId('document-internationalization-menu')).toBeVisible()
-      await expect(languageBadge(page, 'en').first()).toBeVisible()
-
-      await openTranslationsMenu(page)
-      await expect(languageOption(page, 'English')).toBeVisible()
-      await expect(languageOption(page, 'Spanish')).toBeVisible()
-      await expect(languageOption(page, 'French')).toBeVisible()
-    } finally {
-      await cleanupLessonTree(projectName, lesson.id)
-    }
-  })
-
   test('creates a Spanish translation from an English lesson', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
     const lesson = await seedLesson(projectName, {
@@ -51,7 +30,12 @@ test.describe('@sanity/document-internationalization', () => {
 
     try {
       await openLessonDocument(page, lesson.id)
+
+      // Menu + badge visibility for a localized document (covers the smoke case).
+      await expect(languageBadge(page, 'en').first()).toBeVisible()
       await openTranslationsMenu(page)
+      await expect(languageOption(page, 'English')).toBeVisible()
+      await expect(languageOption(page, 'French')).toBeVisible()
 
       const spanish = languageOption(page, 'Spanish')
       await expect(spanish).toBeEnabled()
@@ -59,8 +43,12 @@ test.describe('@sanity/document-internationalization', () => {
 
       await expect(page.getByText('Created "Spanish" translation')).toBeVisible()
 
-      // Creating a translation does not auto-open it — click again once metadata syncs.
-      await languageOption(page, 'Spanish').click()
+      // Creating a translation does not auto-open it. Wait until the metadata
+      // listener flips the option to its "open translation" state (split-vertical
+      // icon) — clicking earlier would trigger another create instead of opening.
+      const spanishOption = languageOption(page, 'Spanish')
+      await expect(spanishOption.locator('[data-sanity-icon="split-vertical"]')).toBeVisible()
+      await spanishOption.click()
       await expect(page.getByTestId('document-pane')).toHaveCount(2)
       await expect(languageBadge(page, 'es').first()).toBeVisible()
 
@@ -144,6 +132,7 @@ test.describe('@sanity/document-internationalization', () => {
       {language: 'fr', documentId: french.id},
     ])
 
+    let duplicatedId: string | undefined
     try {
       await openLessonDocument(page, english.id)
 
@@ -153,11 +142,18 @@ test.describe('@sanity/document-internationalization', () => {
       await expect(page.getByTestId('document-pane').first()).toBeVisible()
       await expect(page).not.toHaveURL(new RegExp(english.id))
 
+      // Capture the duplicated document id so the new set can be cleaned up.
+      duplicatedId = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/.exec(
+        page.url(),
+      )?.[0]
+
       await openTranslationsMenu(page)
       await expect(languageOption(page, 'English')).toBeVisible()
       await expect(languageOption(page, 'French')).toBeVisible()
     } finally {
       await deleteDocuments(projectName, [english.id, french.id, metadataId])
+      // The action creates a whole new set (duplicated lessons + metadata).
+      if (duplicatedId) await cleanupLessonTree(projectName, duplicatedId)
     }
   })
 
