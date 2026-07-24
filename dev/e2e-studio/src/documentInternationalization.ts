@@ -9,7 +9,7 @@ import {defineField, definePlugin, defineType} from 'sanity'
  * Schema + plugin wiring for document-internationalization e2e coverage.
  * Kept separate from smokeTestDocument so plugin suites stay easy to scan.
  */
-export const lessonType = defineType({
+const lessonType = defineType({
   name: 'lesson',
   title: 'Lesson',
   type: 'document',

@@ -124,7 +124,10 @@ export async function cleanupLessonTree(
 }
 
 export async function openLessonDocument(page: Page, documentId: string): Promise<void> {
-  await page.goto(`/intent/edit/id=${documentId};type=lesson`)
+  // Relative to project baseURL (`…/chromium` or `…/firefox`). A leading `/`
+  // resolves against the host origin and drops the workspace basePath, which
+  // surfaces Sanity's "Workspace not found" screen.
+  await page.goto(`intent/edit/id=${documentId};type=lesson`)
   await expect(page.getByTestId('studio-navbar')).toBeVisible()
   await expect(page.getByTestId('document-pane').first()).toBeVisible()
   await expect(page.getByTestId('form-view').first()).toBeVisible()
