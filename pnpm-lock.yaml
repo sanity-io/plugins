@@ -594,7 +594,7 @@ importers:
   plugins/@sanity/block-insert-picker:
     dependencies:
       '@portabletext/plugin-input-rule':
-        specifier: ^6.0.7
+        specifier: ^6.0.9
         version: 6.0.9(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)
       '@sanity/icons':
         specifier: 'catalog:'
