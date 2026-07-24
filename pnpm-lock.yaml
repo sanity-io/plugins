@@ -3021,7 +3021,7 @@ importers:
         specifier: 'catalog:'
         version: 3.4.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4)
       '@tanstack/react-virtual':
-        specifier: ^3.14.7
+        specifier: ^3.14.8
         version: 3.14.8(react-dom@19.2.8)(react@19.2.8)
       lexorank:
         specifier: 'catalog:'
