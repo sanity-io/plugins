@@ -1,5 +1,11 @@
 # @sanity/color-input
 
+## 6.0.20
+
+### Patch Changes
+
+- [#1697](https://github.com/sanity-io/plugins/pull/1697) [`d82235e`](https://github.com/sanity-io/plugins/commit/d82235ee29efbdffa8bffa2a76c147ccbb4e30e6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - Remove unused internal react-color type re-exports to satisfy knip checks.
+
 ## 6.0.19
 
 ### Patch Changes

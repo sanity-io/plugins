@@ -1,6 +1,6 @@
 {
   "name": "@sanity/block-insert-picker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Slash-command block-insert picker and markdown input rules for Portable Text fields in Sanity Studio",
   "keywords": [
     "block-insert",

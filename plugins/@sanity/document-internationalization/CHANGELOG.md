@@ -1,5 +1,11 @@
 # @sanity/document-internationalization
 
+## 6.2.26
+
+### Patch Changes
+
+- [#1717](https://github.com/sanity-io/plugins/pull/1717) [`d268b24`](https://github.com/sanity-io/plugins/commit/d268b2415f4dfab1d555e5144516314bd1225cf5) Thanks [@stipsan](https://github.com/stipsan)! - Map Sanity 6.6 `TARGET_NOT_FOUND` duplicate disable reason to the structure locale tooltip for missing release/variant documents
+
 ## 6.2.25
 
 ### Patch Changes
