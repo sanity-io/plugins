@@ -10,6 +10,15 @@ import {
   seedTranslationMetadata,
 } from '../helpers/documentInternationalization.js'
 
+/**
+ * Language badges render in the document status bar without a stable
+ * `document-badges` testid in current Studio — match the exact language id text
+ * inside the document pane instead.
+ */
+function languageBadge(page: import('@playwright/test').Page, languageId: string) {
+  return page.getByTestId('document-pane').getByText(languageId, {exact: true})
+}
+
 test.describe('@sanity/document-internationalization', () => {
   test('shows Translations menu and language badge on a localized lesson', async ({
     page,
@@ -21,8 +30,7 @@ test.describe('@sanity/document-internationalization', () => {
       await openLessonDocument(page, lesson.id)
 
       await expect(page.getByTestId('document-internationalization-menu')).toBeVisible()
-      // Language badge label is the language id (e.g. "en")
-      await expect(page.getByTestId('document-badges')).toContainText('en')
+      await expect(languageBadge(page, 'en').first()).toBeVisible()
 
       await openTranslationsMenu(page)
       await expect(languageOption(page, 'English')).toBeVisible()
@@ -50,19 +58,18 @@ test.describe('@sanity/document-internationalization', () => {
       await spanish.click()
 
       await expect(page.getByText('Created "Spanish" translation')).toBeVisible()
-      await expect(
-        page.getByTestId('document-badges').filter({hasText: 'es'}).first(),
-      ).toBeVisible()
+
+      // Creating a translation does not auto-open it — click again once metadata syncs.
+      await languageOption(page, 'Spanish').click()
+      await expect(page.getByTestId('document-pane')).toHaveCount(2)
+      await expect(languageBadge(page, 'es').first()).toBeVisible()
 
       // Excluded `content` field should not be copied to the new translation.
-      const spanishTitle = page
+      const spanishPane = page
         .getByTestId('document-pane')
-        .filter({has: page.getByTestId('document-badges').filter({hasText: 'es'})})
-        .getByTestId('field-title')
-        .getByTestId('string-input')
-      const spanishContent = page
-        .getByTestId('document-pane')
-        .filter({has: page.getByTestId('document-badges').filter({hasText: 'es'})})
+        .filter({has: page.getByText('es', {exact: true})})
+      const spanishTitle = spanishPane.getByTestId('field-title').getByTestId('string-input')
+      const spanishContent = spanishPane
         .getByTestId('field-content')
         .locator('textarea, [data-testid="text-input"]')
         .first()
@@ -169,7 +176,8 @@ test.describe('@sanity/document-internationalization', () => {
       await page.getByRole('button', {name: 'Manage Translations'}).click()
 
       await expect(page.getByTestId('document-pane')).toHaveCount(2)
-      await expect(page.getByText('Translations metadata').first()).toBeVisible()
+      // Schema title is singular: "Translation metadata"
+      await expect(page.getByText('Translation metadata').first()).toBeVisible()
     } finally {
       await deleteDocuments(projectName, [english.id, spanish.id, metadataId])
     }
