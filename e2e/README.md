@@ -125,5 +125,6 @@ On pull requests, CI posts an **E2E Tests** status comment with pass/fail/flaky/
 3. **Project id mismatch** — Storage key is `__studio_auth_token_${SANITY_E2E_PROJECT_ID}`. If the studio uses a different project id, auth will look signed out.
 4. **CORS** — Local origin must be allowed on the Sanity project.
 5. **Login screen still visible** — Token invalid or storageState origin ≠ `SANITY_E2E_BASE_URL`.
-6. **Report deploy failed** — Confirm the three `VERCEL_E2E_REPORT_*` secrets match the Vercel project.
-7. **Dataset create failed** — Token needs dataset create permission on `a1psl692`.
+6. **"Workspace not found"** — Playwright project `baseURL` must end with a trailing slash (`…/chromium/`). Without it, relative navigations replace the workspace segment. Also avoid host-absolute paths like `/intent/edit/…` (they drop the workspace `basePath`).
+7. **Report deploy failed** — Confirm the three `VERCEL_E2E_REPORT_*` secrets match the Vercel project.
+8. **Dataset create failed** — Token needs dataset create permission on `a1psl692`.
