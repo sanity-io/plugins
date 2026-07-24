@@ -342,6 +342,9 @@ importers:
       '@sanity/table':
         specifier: workspace:*
         version: link:../../plugins/@sanity/table
+      '@sanity/themer':
+        specifier: 0.0.0
+        version: 0.0.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react-is@19.2.8)(react@19.2.8)(sanity@6.6.0)(styled-components@6.4.4)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.4.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4)
@@ -6495,6 +6498,16 @@ packages:
     resolution: {integrity: sha512-pIy9yXosuA2duaJH0J1V8RYrabGB/Jh77FGYozr2pGwmCFwnLw/W/FS99qbcsJZa3wXHSMhMRyYq7IbulbijZw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
+
+  '@sanity/themer@0.0.0':
+    resolution: {integrity: sha512-HgH7nMrdif95nXWXf4/0bHzeQfMMNR0M3kNmw2hN2ZnDxxfeAUeDXAL10XiNjK2OotxQjH+eSK9hHiFhULpXvA==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+    peerDependencies:
+      react: ^18 || >=19.0.0-0
+      sanity: ^6.6.0
+    peerDependenciesMeta:
+      sanity:
+        optional: true
 
   '@sanity/tsconfig@2.2.1':
     resolution: {integrity: sha512-1HbvN+W2bWixgXQnvJ9rev5vJaSbN62d+r0Y2pN6XsK6/MP9JfVyF90elBuIrDENTGgVmxB403+gZow45wq+Pg==}
@@ -15882,6 +15895,20 @@ snapshots:
       '@actions/core': 3.0.1
       '@actions/github': 9.1.1
       yaml: 2.9.0
+
+  '@sanity/themer@0.0.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react-is@19.2.8)(react@19.2.8)(sanity@6.6.0)(styled-components@6.4.4)':
+    dependencies:
+      '@sanity/color': 3.0.7
+      '@sanity/icons': 5.2.1(react@19.2.8)
+      '@sanity/ui': 3.4.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4)
+      react: 19.2.8
+    optionalDependencies:
+      sanity: 6.6.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.5)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.15)(jiti@2.7.0)(oxfmt@0.60.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.0)(styled-components@6.4.4)(terser@5.49.0)(typescript@7.0.2)
+    transitivePeerDependencies:
+      - '@emotion/is-prop-valid'
+      - react-dom
+      - react-is
+      - styled-components
 
   '@sanity/tsconfig@2.2.1': {}
 
