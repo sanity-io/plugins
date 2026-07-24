@@ -79,17 +79,17 @@ The studio preview reuses the same Vercel project and secrets as report hosting 
 
 ## Vercel report hosting
 
-CI deploys the Playwright HTML report to a dedicated Vercel project. PR comments link counts into the hosted report (`[🟢 N passed](…#?q=s%3Apassed)`, etc.).
+CI deploys the Playwright HTML report to the **same Vercel project** as the studio preview (report deploys are `--prebuilt` static output, so the studio build settings don't affect them). PR comments link counts into the hosted report (`[🟢 N passed](…#?q=s%3Apassed)`, etc.).
 
 ### One-time setup
 
-1. **Create a Vercel project** for static HTML reports only (suggested name: `plugins-e2e-report`).
+1. **Create a Vercel project** shared by the studio preview and report deploys (suggested name: `plugins-e2e-test-studio`), configured as described under _Vercel studio preview_.
 2. **Create a Vercel token** with deploy access: [vercel.com/account/tokens](https://vercel.com/account/tokens).
-3. **Find org + project ids** (Vercel dashboard → project → Settings → General, or `vercel project inspect plugins-e2e-report`).
+3. **Find org + project ids** (Vercel dashboard → project → Settings → General).
 4. **Add GitHub Actions secrets**: `VERCEL_E2E_REPORT_TOKEN`, `VERCEL_E2E_REPORT_ORG_ID`, `VERCEL_E2E_REPORT_PROJECT_ID`.
 5. Re-run the **E2E** workflow.
 
-Optional: disable Deployment Protection on that project so report links open without login.
+Deployment Protection must stay disabled on the project (see _Vercel studio preview_) so report links open without login.
 
 ## Running tests
 

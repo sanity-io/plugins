@@ -7,5 +7,5 @@ export function sanityIdify(input: string): string {
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-zA-Z0-9_-]+/g, '_')
-    .replace(/^-/, '')
+    .replace(/^-+/, '')
 }

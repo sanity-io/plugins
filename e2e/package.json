@@ -2,7 +2,7 @@
   "name": "e2e",
   "version": "0.0.0",
   "private": true,
-  "description": "Playwright smoke e2e tests for the plugins test studio",
+  "description": "Playwright smoke e2e tests for the dedicated e2e studio (dev/e2e-studio)",
   "type": "module",
   "scripts": {
     "cleanup": "tsx scripts/cleanupDatasets.ts",

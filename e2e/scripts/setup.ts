@@ -26,7 +26,8 @@ console.info(`[e2e] Project ${projectId} — ensuring dataset ${dataset}`)
 const datasets: DatasetsResponse = await client.datasets.list()
 if (!datasets.find((ds) => ds.name === dataset)) {
   console.info(`[e2e] Creating dataset ${dataset} on ${projectId}`)
-  await client.datasets.create(dataset, {aclMode: 'public'})
+  // Private: tests authenticate via storageState, so nothing needs public read.
+  await client.datasets.create(dataset, {aclMode: 'private'})
   console.info(`[e2e] Created dataset ${dataset} on ${projectId}`)
 } else {
   console.info(`[e2e] Dataset ${dataset} already exists on ${projectId}`)
