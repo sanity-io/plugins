@@ -62,7 +62,7 @@ catalogs:
       specifier: ^3.0.3
       version: 3.0.3
     '@sanity/vanilla-extract-vite-plugin':
-      specifier: ^0.2.5
+      specifier: ^0.2.6
       version: 0.2.6
     '@sanity/vision':
       specifier: ^6.6.0
