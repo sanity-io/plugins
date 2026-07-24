@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 6.0.7
+
+### Patch Changes
+
+- [#1717](https://github.com/sanity-io/plugins/pull/1717) [`d268b24`](https://github.com/sanity-io/plugins/commit/d268b2415f4dfab1d555e5144516314bd1225cf5) Thanks [@stipsan](https://github.com/stipsan)! - Align `groq` with the Sanity Studio `^6.6.0` catalog
+
 ## 6.0.6
 
 ### Patch Changes
