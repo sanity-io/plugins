@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
-    "@turbo/gen": "2.10.5",
+    "@turbo/gen": "2.10.6",
     "@types/hosted-git-info": "^3.0.5",
     "@types/node": "catalog:",
     "@types/validate-npm-package-name": "^4.0.2",
