@@ -1,0 +1,24 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // SANITY_E2E_* vars are inlined into the bundle (see sanity.cli.ts), so they
+    // must invalidate the turbo cache and pass through in strict env mode.
+    "build": {
+      "env": [
+        "SANITY_E2E_PROJECT_ID",
+        "SANITY_E2E_DATASET",
+        "SANITY_E2E_DATASET_CHROMIUM",
+        "SANITY_E2E_DATASET_FIREFOX",
+      ],
+    },
+    "dev": {
+      "env": [
+        "SANITY_E2E_PROJECT_ID",
+        "SANITY_E2E_DATASET",
+        "SANITY_E2E_DATASET_CHROMIUM",
+        "SANITY_E2E_DATASET_FIREFOX",
+      ],
+    },
+  },
+}

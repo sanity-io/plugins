@@ -7,8 +7,8 @@
   "scripts": {
     "cleanup": "tsx scripts/cleanupDatasets.ts",
     "create-dataset": "tsx scripts/setup.ts",
-    "dev": "pnpm --filter test-studio dev",
-    "start": "pnpm --filter test-studio preview",
+    "dev": "pnpm --filter e2e-studio dev",
+    "start": "pnpm --filter e2e-studio preview",
     "test": "playwright test"
   },
   "devDependencies": {

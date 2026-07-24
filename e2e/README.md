@@ -1,6 +1,10 @@
 # E2E Testing (Smoke)
 
-Playwright smoke tests for the plugins [test studio](../dev/test-studio). Auth follows the same pattern as [`sanity-io/sanity`](https://github.com/sanity-io/sanity): bots never click “Sign in”; Playwright seeds Studio’s `__studio_auth_token_<projectId>` localStorage via `storageState`.
+Playwright smoke tests for the dedicated [e2e studio](../dev/e2e-studio). Auth follows the same pattern as [`sanity-io/sanity`](https://github.com/sanity-io/sanity): bots never click “Sign in”; Playwright seeds Studio’s `__studio_auth_token_<projectId>` localStorage via `storageState`.
+
+## The e2e studio
+
+`dev/e2e-studio` is a **bare-bones studio used only for e2e testing** — separate from `dev/test-studio` (normal development work). It has two workspaces, `/chromium` and `/firefox`, each pointed at that browser’s ephemeral dataset, with just the structure tool and one simple schema type (`smokeTestDocument`). **No monorepo plugins are installed yet**: each plugin gets added to this studio together with the e2e tests that cover it.
 
 ## Required secrets / vars
 
@@ -45,7 +49,7 @@ Same naming and lifecycle as [`sanity-io/sanity`](https://github.com/sanity-io/s
 
 CI creates both datasets in a `setup` job while a parallel `deploy-preview` job builds the studio (`vercel build` with both dataset env vars baked in) and deploys it to Vercel. Chromium and Firefox then run as a **matrix** (parallel jobs) against the deployed preview URL — `playwright test --project <browser>` with that browser’s dataset (`SANITY_E2E_DATASET`). No local dev server runs in CI. Blob reports are merged afterward for the PR comment / Vercel HTML report.
 
-The test studio exposes `/chromium` and `/firefox` workspaces (Home kitchen-sink plugins) pointed at those datasets. Playwright projects use `baseURL` `/chromium` and `/firefox`.
+The e2e studio exposes `/chromium` and `/firefox` workspaces pointed at those datasets (the dataset name is shown as the workspace subtitle in the navbar). Playwright projects use `baseURL` `/chromium` and `/firefox`.
 
 Datasets are **not** deleted at the end of each run. A scheduled workflow (`.github/workflows/e2e-periodic-cleanup.yml`, every 6 hours) runs `pnpm e2e:cleanup`:
 
@@ -69,7 +73,7 @@ The studio preview reuses the same Vercel project and secrets as report hosting 
 
 ### One-time setup
 
-1. **Set the Root Directory** of the Vercel project to `dev/test-studio` (Project Settings → General) and enable “Include source files outside of the Root Directory”. Build command and output dir come from `dev/test-studio/vercel.json`.
+1. **Set the Root Directory** of the Vercel project to `dev/e2e-studio` (Project Settings → General) and enable “Include source files outside of the Root Directory”. Build command and output dir come from `dev/e2e-studio/vercel.json`.
 2. **Disable Deployment Protection** on the project so Playwright (and reviewers) can open preview URLs without Vercel auth.
 3. **Allow CORS** for the preview URLs on the Sanity project `a1psl692`: add `https://*.vercel.app` (or a narrower pattern for the project’s deployment domain) in manage → API → CORS origins.
 
@@ -95,7 +99,7 @@ From the repo root:
 # Install browsers once
 pnpm --filter e2e exec playwright install --with-deps chromium firefox
 
-# Run smoke suite (starts test-studio via webServer if needed)
+# Run smoke suite (starts the e2e studio via webServer if needed)
 pnpm test:e2e
 ```
 
@@ -105,12 +109,12 @@ Helpers:
 | ------------------ | ------------------------------------------------------- |
 | `pnpm e2e:setup`   | Create a dataset (`SANITY_E2E_DATASET`) if missing      |
 | `pnpm e2e:cleanup` | Delete closed-PR / stale main datasets                  |
-| `pnpm e2e:dev`     | Start test studio with `sanity dev`                     |
-| `pnpm e2e:build`   | Build workspace deps + test studio                      |
+| `pnpm e2e:dev`     | Start the e2e studio with `sanity dev`                  |
+| `pnpm e2e:build`   | Build the e2e studio                                    |
 | `pnpm e2e:start`   | Preview the built studio (`sanity preview --port 3333`) |
 | `pnpm test:e2e`    | Run Playwright                                          |
 
-Locally, Playwright starts `pnpm --filter test-studio dev` unless a server is already on port 3333 (set `SANITY_E2E_BASE_URL` to a deployed studio to skip the local server). In CI, tests run against the per-run Vercel preview deployment.
+Locally, Playwright starts `pnpm --filter e2e-studio dev` unless a server is already on port 3333 (set `SANITY_E2E_BASE_URL` to a deployed studio to skip the local server). In CI, tests run against the per-run Vercel preview deployment.
 
 On pull requests, CI posts an **E2E Tests** status comment with pass/fail/flaky/skipped counts, a hosted HTML report URL, dataset names, and a link to the workflow run.
 

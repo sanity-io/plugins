@@ -9,7 +9,7 @@
     "dev": "pnpm turbo dev --filter=test-studio",
     "devtools:test-studio": "pnpm devtools:test-studio:build && ENABLE_VITE_DEVTOOLS=true pnpm dev",
     "devtools:test-studio:build": "pnpm build && ENABLE_VITE_DEVTOOLS=true pnpm --filter=test-studio build",
-    "e2e:build": "pnpm turbo build --filter=test-studio...",
+    "e2e:build": "pnpm turbo build --filter=e2e-studio...",
     "e2e:cleanup": "pnpm --filter e2e run cleanup",
     "e2e:dev": "pnpm --filter e2e dev",
     "e2e:setup": "pnpm --filter e2e run create-dataset",

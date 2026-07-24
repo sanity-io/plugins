@@ -11,27 +11,10 @@
     // invalidates the cache when preview vs production builds differ.
     "build": {
       "dependsOn": ["transit"],
-      "env": [
-        "ENABLE_VITE_DEVTOOLS",
-        "VERCEL_ENV",
-        "SANITY_STUDIO_PROJECT_ID",
-        "SANITY_STUDIO_DATASET",
-        "SANITY_E2E_PROJECT_ID",
-        "SANITY_E2E_DATASET",
-        "SANITY_E2E_DATASET_CHROMIUM",
-        "SANITY_E2E_DATASET_FIREFOX",
-      ],
+      "env": ["ENABLE_VITE_DEVTOOLS", "VERCEL_ENV"],
     },
     "dev": {
-      "env": [
-        "ENABLE_VITE_DEVTOOLS",
-        "SANITY_STUDIO_PROJECT_ID",
-        "SANITY_STUDIO_DATASET",
-        "SANITY_E2E_PROJECT_ID",
-        "SANITY_E2E_DATASET",
-        "SANITY_E2E_DATASET_CHROMIUM",
-        "SANITY_E2E_DATASET_FIREFOX",
-      ],
+      "env": ["ENABLE_VITE_DEVTOOLS"],
     },
   },
 }

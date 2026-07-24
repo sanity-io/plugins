@@ -1,0 +1,23 @@
+{
+  "name": "e2e-studio",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Dedicated bare-bones studio for Playwright e2e tests (plugins are added alongside their e2e suites)",
+  "type": "module",
+  "scripts": {
+    "build": "sanity build -y",
+    "dev": "sanity dev --no-auto-updates",
+    "preview": "sanity preview --port 3333"
+  },
+  "dependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "catalog:"
+  },
+  "devDependencies": {
+    "@tsconfig/vite-react": "^8.1.1",
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
+  }
+}
