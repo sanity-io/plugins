@@ -470,7 +470,7 @@ importers:
   e2e:
     devDependencies:
       '@playwright/test':
-        specifier: ^1.51.0
+        specifier: ^1.61.1
         version: 1.61.1
       '@sanity/client':
         specifier: 'catalog:'
