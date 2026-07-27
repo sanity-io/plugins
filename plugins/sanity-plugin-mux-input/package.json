@@ -42,8 +42,8 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@mux/mux-player": "^3.13.0",
-    "@mux/mux-player-react": "^3.13.0",
+    "@mux/mux-player": "^3.13.2",
+    "@mux/mux-player-react": "^3.13.2",
     "@mux/upchunk": "^3.5.0",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
