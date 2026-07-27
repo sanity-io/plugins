@@ -16155,7 +16155,7 @@ snapshots:
       tar-stream: 3.1.7
       undici: 7.29.0
       xdg-app-paths: 5.1.0
-      zod: 4.1.11
+      zod: 4.4.3
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
@@ -19771,7 +19771,7 @@ snapshots:
       async-retry: 1.3.3
       debug: 4.4.3(supports-color@8.1.1)
       ws: 8.21.1
-      zod: 4.1.11
+      zod: 4.4.3
     transitivePeerDependencies:
       - bare-abort-controller
       - bufferutil
