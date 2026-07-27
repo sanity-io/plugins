@@ -6,6 +6,24 @@ Playwright smoke tests for the dedicated [e2e studio](../dev/e2e-studio). Auth f
 
 `dev/e2e-studio` is a **bare-bones studio used only for e2e testing** — separate from `dev/test-studio` (normal development work). It has two workspaces, `/chromium` and `/firefox`, each pointed at that browser’s ephemeral dataset. Plugins (and their schema types) are added one by one together with the e2e tests that cover them. Currently wired: `@sanity/document-internationalization` (`lesson` schema) plus a shared `smokeTestDocument` type for the smoke suite.
 
+## Test layout
+
+Each plugin gets **its own folder** under `tests/` (and, when it needs seeding/navigation helpers, a matching folder under `helpers/`) to keep suites clean and tidy as more plugins are wired in:
+
+```
+e2e/
+├── tests/
+│   ├── smoke.spec.ts                          # studio-wide smoke (auth precheck)
+│   └── document-internationalization/         # one folder per plugin
+│       └── document-internationalization.spec.ts
+└── helpers/
+    ├── env.ts, e2eClient.ts, …                # shared infrastructure
+    └── document-internationalization/         # plugin-specific helpers
+        └── documentInternationalization.ts
+```
+
+When adding e2e coverage for a new plugin, create `tests/<plugin-name>/` for its specs and `helpers/<plugin-name>/` for its helpers instead of adding loose files at the top level. Top-level files are reserved for studio-wide suites (e.g. `smoke.spec.ts`) and shared infrastructure (`env.ts`, `e2eClient.ts`, `assertStudioAuth.ts`).
+
 ## Required secrets / vars
 
 E2E runs against the Sanity sandbox org project **plugins-e2e-testing** (`a1psl692`).

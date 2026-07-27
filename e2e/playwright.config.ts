@@ -100,7 +100,9 @@ const playwrightConfig: PlaywrightTestConfig = {
         },
       ],
     },
-    video: 'retain-on-failure',
+    // SANITY_E2E_VIDEO=on records videos for every test (kept in ./results);
+    // default only keeps videos of failures.
+    video: process.env.SANITY_E2E_VIDEO === 'on' ? 'on' : 'retain-on-failure',
     baseURL: BASE_URL,
     headless: HEADLESS,
     contextOptions: {reducedMotion: 'reduce'},

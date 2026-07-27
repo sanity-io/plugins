@@ -8,7 +8,7 @@ import {
   openTranslationsMenu,
   seedLesson,
   seedTranslationMetadata,
-} from '../helpers/documentInternationalization.js'
+} from '../../helpers/document-internationalization/documentInternationalization.js'
 
 /**
  * Language badges render in the document status bar without a stable
@@ -20,6 +20,14 @@ function languageBadge(page: import('@playwright/test').Page, languageId: string
 }
 
 test.describe('@sanity/document-internationalization', () => {
+  /**
+   * Covers the plugin's core flow: the Translations menu and language badge on
+   * a localized document, and creating a new translation from it. Verifies the
+   * whole transaction the plugin builds (duplicate source → set language →
+   * create/patch `translation.metadata`), that the success toast fires, and
+   * that fields marked `documentInternationalization.exclude` are NOT copied —
+   * the main data-integrity guarantee editors rely on.
+   */
   test('creates a Spanish translation from an English lesson', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
     const lesson = await seedLesson(projectName, {
@@ -69,6 +77,13 @@ test.describe('@sanity/document-internationalization', () => {
     }
   })
 
+  /**
+   * Covers navigation to an already-linked translation: with seeded metadata,
+   * a language option must OPEN the existing document in a split pane rather
+   * than create a duplicate. This guards the menu's translation-detection
+   * logic (metadata lookup per language) — a regression here silently forks
+   * content into duplicate documents.
+   */
   test('opens an existing translation from the Translations menu', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
     const english = await seedLesson(projectName, {
@@ -99,6 +114,13 @@ test.describe('@sanity/document-internationalization', () => {
     }
   })
 
+  /**
+   * Covers the custom `useDeleteTranslationAction` document action: the
+   * confirmation dialog and the "unset reference" path, which must remove the
+   * document's entry from `translation.metadata` without deleting the sibling
+   * translations. Stale metadata references are the main source of broken
+   * Translations menus, so this cleanup path needs browser-level coverage.
+   */
   test('Delete translation action unsets the metadata reference', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
     const english = await seedLesson(projectName, {language: 'en', title: 'Delete EN'})
@@ -123,6 +145,13 @@ test.describe('@sanity/document-internationalization', () => {
     }
   })
 
+  /**
+   * Covers the custom `useDuplicateWithTranslationsAction` document action:
+   * duplicating a document must clone every language version AND a fresh
+   * `translation.metadata` linking the copies — not reuse the source set.
+   * Asserts the studio navigates to the new copy (different id) and that its
+   * Translations menu shows the duplicated languages linked together.
+   */
   test('Duplicate with translations creates a new linked set', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
     const english = await seedLesson(projectName, {language: 'en', title: 'Dup EN'})
@@ -157,6 +186,13 @@ test.describe('@sanity/document-internationalization', () => {
     }
   })
 
+  /**
+   * Covers the "Manage Translations" entry point (enabled by
+   * `allowCreateMetaDoc`): it must open the `translation.metadata` document in
+   * a split pane so editors can inspect/repair the links directly. Guards the
+   * pane routing to the metadata schema type, which plain unit tests cannot
+   * exercise.
+   */
   test('Manage Translations opens the metadata document', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
     const english = await seedLesson(projectName, {language: 'en', title: 'Meta EN'})

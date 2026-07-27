@@ -2,8 +2,8 @@ import {randomUUID} from 'node:crypto'
 
 import {expect, type Page} from '@playwright/test'
 
-import {createE2EClient} from './e2eClient.js'
-import {loadE2eEnvFiles, resolveE2eEnv} from './env.js'
+import {createE2EClient} from '../e2eClient.js'
+import {loadE2eEnvFiles, resolveE2eEnv} from '../env.js'
 
 loadE2eEnvFiles()
 
