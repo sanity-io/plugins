@@ -494,7 +494,7 @@ importers:
         specifier: ^6.0.2
         version: 6.0.2
       concurrently:
-        specifier: ^10.0.3
+        specifier: ^10.0.4
         version: 10.0.4
       execa:
         specifier: ^10.0.0
