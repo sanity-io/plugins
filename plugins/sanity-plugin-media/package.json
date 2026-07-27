@@ -83,7 +83,6 @@
     "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-is": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
     "tsdown": "catalog:"
