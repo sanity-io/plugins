@@ -19,7 +19,7 @@ catalog:
   '@portabletext/to-html': ^5.0.2
   '@portabletext/types': ^4.0.2
   '@sanity/asset-utils': ^2.3.0
-  '@sanity/client': ^7.24.0
+  '@sanity/client': ^7.25.0
   '@sanity/color': ^3.0.8
   '@sanity/icons': ^5.2.1
   '@sanity/image-url': ^2.1.1
