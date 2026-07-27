@@ -40,7 +40,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@portabletext/plugin-input-rule": "^6.0.9",
+    "@portabletext/plugin-input-rule": "^6.0.10",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:"
   },
