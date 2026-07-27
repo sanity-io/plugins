@@ -4,7 +4,25 @@ Playwright smoke tests for the dedicated [e2e studio](../dev/e2e-studio). Auth f
 
 ## The e2e studio
 
-`dev/e2e-studio` is a **bare-bones studio used only for e2e testing** — separate from `dev/test-studio` (normal development work). It has two workspaces, `/chromium` and `/firefox`, each pointed at that browser’s ephemeral dataset, with just the structure tool and one simple schema type (`smokeTestDocument`). **No monorepo plugins are installed yet**: each plugin gets added to this studio together with the e2e tests that cover it.
+`dev/e2e-studio` is a **bare-bones studio used only for e2e testing** — separate from `dev/test-studio` (normal development work). It has two workspaces, `/chromium` and `/firefox`, each pointed at that browser’s ephemeral dataset. Plugins (and their schema types) are added one by one together with the e2e tests that cover them. Currently wired: `@sanity/document-internationalization` (`lesson` schema) plus a shared `smokeTestDocument` type for the smoke suite.
+
+## Test layout
+
+Each plugin gets **its own folder** under `tests/` (and, when it needs seeding/navigation helpers, a matching folder under `helpers/`) to keep suites clean and tidy as more plugins are wired in:
+
+```
+e2e/
+├── tests/
+│   ├── smoke.spec.ts                          # studio-wide smoke (auth precheck)
+│   └── document-internationalization/         # one folder per plugin
+│       └── document-internationalization.spec.ts
+└── helpers/
+    ├── env.ts, e2eClient.ts, …                # shared infrastructure
+    └── document-internationalization/         # plugin-specific helpers
+        └── documentInternationalization.ts
+```
+
+When adding e2e coverage for a new plugin, create `tests/<plugin-name>/` for its specs and `helpers/<plugin-name>/` for its helpers instead of adding loose files at the top level. Top-level files are reserved for studio-wide suites (e.g. `smoke.spec.ts`) and shared infrastructure (`env.ts`, `e2eClient.ts`, `assertStudioAuth.ts`).
 
 ## Required secrets / vars
 
@@ -125,5 +143,6 @@ On pull requests, CI posts an **E2E Tests** status comment with pass/fail/flaky/
 3. **Project id mismatch** — Storage key is `__studio_auth_token_${SANITY_E2E_PROJECT_ID}`. If the studio uses a different project id, auth will look signed out.
 4. **CORS** — Local origin must be allowed on the Sanity project.
 5. **Login screen still visible** — Token invalid or storageState origin ≠ `SANITY_E2E_BASE_URL`.
-6. **Report deploy failed** — Confirm the three `VERCEL_E2E_REPORT_*` secrets match the Vercel project.
-7. **Dataset create failed** — Token needs dataset create permission on `a1psl692`.
+6. **"Workspace not found"** — Playwright project `baseURL` must end with a trailing slash (`…/chromium/`). Without it, relative navigations replace the workspace segment. Also avoid host-absolute paths like `/intent/edit/…` (they drop the workspace `basePath`).
+7. **Report deploy failed** — Confirm the three `VERCEL_E2E_REPORT_*` secrets match the Vercel project.
+8. **Dataset create failed** — Token needs dataset create permission on `a1psl692`.

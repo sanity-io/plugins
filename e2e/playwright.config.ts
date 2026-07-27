@@ -35,11 +35,13 @@ const studioWebServerEnv = {
   SANITY_E2E_DATASET_FIREFOX: env.datasetFirefox,
 }
 
+// Trailing slash is required: without it, relative paths like `intent/edit/...`
+// replace the last baseURL segment (`chromium`) instead of resolving under it.
 const CHROMIUM_PROJECT: PlaywrightTestProject = {
   name: 'chromium',
   use: {
     ...devices['Desktop Chrome'],
-    baseURL: `${BASE_URL}/chromium`,
+    baseURL: `${BASE_URL}/chromium/`,
     launchOptions: {
       args: ['--disable-gpu', '--disable-software-rasterizer'],
     },
@@ -53,7 +55,7 @@ const FIREFOX_PROJECT: PlaywrightTestProject = {
   name: 'firefox',
   use: {
     ...devices['Desktop Firefox'],
-    baseURL: `${BASE_URL}/firefox`,
+    baseURL: `${BASE_URL}/firefox/`,
     contextOptions: {
       reducedMotion: 'reduce',
     },
@@ -98,7 +100,9 @@ const playwrightConfig: PlaywrightTestConfig = {
         },
       ],
     },
-    video: 'retain-on-failure',
+    // SANITY_E2E_VIDEO=on records videos for every test (kept in ./results);
+    // default only keeps videos of failures.
+    video: process.env.SANITY_E2E_VIDEO === 'on' ? 'on' : 'retain-on-failure',
     baseURL: BASE_URL,
     headless: HEADLESS,
     contextOptions: {reducedMotion: 'reduce'},
