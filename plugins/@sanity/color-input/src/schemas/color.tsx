@@ -1,7 +1,10 @@
+import {assignInlineVars} from '@vanilla-extract/dynamic'
 import {defineType, type ObjectDefinition} from 'sanity'
 
 import {ColorInput} from '../LazyColorInput'
 import {type ColorOptions} from '../types'
+
+import {backgroundColorVar, colorPreview, opacityVar} from './colorPreview.css'
 
 const round = (val: number = 1) => Math.round(val * 100)
 
@@ -20,6 +23,18 @@ declare module 'sanity' {
   export interface IntrinsicDefinitions {
     color: ColorDefinition
   }
+}
+
+function ColorPreviewMedia({hex, alpha}: {hex?: string; alpha?: number}) {
+  return (
+    <div
+      className={colorPreview}
+      style={assignInlineVars({
+        [backgroundColorVar]: hex ?? '#000',
+        [opacityVar]: String(alpha ?? 1),
+      })}
+    />
+  )
 }
 
 export const color = defineType({
@@ -79,19 +94,7 @@ export const color = defineType({
       return {
         title: title,
         subtitle: subtitle,
-        media: () => (
-          <div
-            style={{
-              backgroundColor: hex ?? '#000',
-              opacity: alpha ?? 1,
-              position: 'absolute',
-              height: '100%',
-              width: '100%',
-              top: '0',
-              left: '0',
-            }}
-          />
-        ),
+        media: () => <ColorPreviewMedia hex={hex} alpha={alpha} />,
       }
     },
   },

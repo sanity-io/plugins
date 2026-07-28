@@ -4,6 +4,10 @@
  * Forked from
  * {@link https://github.com/casesandberg/react-color/blob/v2.19.3/src/components/common/EditableInput.js | react-color's EditableInput}
  * (MIT, Copyright (c) 2015 Case Sandberg). See the plugin LICENSE.
+ *
+ * @remarks
+ * Theme-driven colors are applied via vanilla-extract CSS variables set by the
+ * parent (`ColorPickerFields`).
  */
 import {
   startTransition,
@@ -12,13 +16,13 @@ import {
   useRef,
   useState,
   type ChangeEvent,
-  type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactElement,
 } from 'react'
 
 import {useDrag} from './helpers/useDrag'
-import type {EditableInputStyles} from './types'
+
+import {input, label as labelClass, labelDrag, wrap} from './EditableInput.css'
 
 const DEFAULT_ARROW_OFFSET = 1
 
@@ -35,7 +39,6 @@ type EditableInputEvent =
 export interface EditableInputProps {
   label: string
   value?: string | number | undefined
-  style?: EditableInputStyles | undefined
   arrowOffset?: number | undefined
   placeholder?: string | undefined
   hideLabel?: boolean | undefined
@@ -47,7 +50,6 @@ export interface EditableInputProps {
 export function EditableInput({
   label,
   value: valueProp,
-  style,
   arrowOffset,
   placeholder,
   hideLabel,
@@ -139,19 +141,11 @@ export function EditableInput({
     onDrag: handleDrag,
   })
 
-  const resolvedStyle = style ?? {}
-  const wrapStyle: CSSProperties = {position: 'relative', ...resolvedStyle.wrap}
-  const inputStyle: CSSProperties = {...resolvedStyle.input}
-  const labelStyle: CSSProperties = {
-    ...resolvedStyle.label,
-    ...(dragLabel ? {cursor: 'ew-resize'} : null),
-  }
-
   return (
-    <div style={wrapStyle}>
+    <div className={wrap}>
       <input
         id={inputId}
-        style={inputStyle}
+        className={input}
         ref={inputRef}
         value={inputValue}
         onKeyDown={handleKeyDown}
@@ -161,7 +155,11 @@ export function EditableInput({
         spellCheck="false"
       />
       {showLabel ? (
-        <label htmlFor={inputId} ref={labelRef} style={labelStyle}>
+        <label
+          htmlFor={inputId}
+          ref={labelRef}
+          className={dragLabel ? `${labelClass} ${labelDrag}` : labelClass}
+        >
           {label}
         </label>
       ) : null}
