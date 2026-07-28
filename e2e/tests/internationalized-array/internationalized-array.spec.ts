@@ -23,7 +23,7 @@ test.describe('sanity-plugin-internationalized-array', () => {
     try {
       await openI18nPost(page, doc.id)
 
-      await expect(languageLabel(page, 'en').first()).toBeVisible()
+      await expect(languageLabel(page, 'en')).toBeVisible()
       // EN is present → its field add button is disabled
       await expect(fieldAddButton(page, 'en')).toHaveAttribute('data-disabled', 'true')
     } finally {
@@ -39,10 +39,10 @@ test.describe('sanity-plugin-internationalized-array', () => {
 
     try {
       await openI18nPost(page, doc.id)
-      await expect(languageLabel(page, 'en').first()).toBeVisible()
+      await expect(languageLabel(page, 'en')).toBeVisible()
 
       await fieldAddButton(page, 'es').click()
-      await expect(languageLabel(page, 'es').first()).toBeVisible()
+      await expect(languageLabel(page, 'es')).toBeVisible()
       await expect(fieldAddButton(page, 'es')).toHaveAttribute('data-disabled', 'true')
     } finally {
       await deleteI18nPost(projectName, doc.id)
@@ -60,9 +60,9 @@ test.describe('sanity-plugin-internationalized-array', () => {
 
       await page.getByTestId('field-title').getByTestId('add-all-languages').click()
 
-      await expect(languageLabel(page, 'en').first()).toBeVisible()
-      await expect(languageLabel(page, 'es').first()).toBeVisible()
-      await expect(languageLabel(page, 'fr').first()).toBeVisible()
+      await expect(languageLabel(page, 'en')).toBeVisible()
+      await expect(languageLabel(page, 'es')).toBeVisible()
+      await expect(languageLabel(page, 'fr')).toBeVisible()
       // All languages present → add-all control is gone or disabled
       await expect(page.getByTestId('field-title').getByTestId('add-all-languages')).toHaveCount(0)
     } finally {
@@ -80,7 +80,7 @@ test.describe('sanity-plugin-internationalized-array', () => {
 
     try {
       await openI18nPost(page, doc.id)
-      await expect(languageLabel(page, 'es').first()).toBeVisible()
+      await expect(languageLabel(page, 'es')).toBeVisible()
 
       const titleField = page.getByTestId('field-title')
       const removeButtons = titleField.locator('[data-sanity-icon="remove-circle"]')
@@ -93,7 +93,7 @@ test.describe('sanity-plugin-internationalized-array', () => {
 
       await removeButtons.nth(1).locator('xpath=ancestor::button[1]').click()
       await expect(languageLabel(page, 'es')).toHaveCount(0)
-      await expect(languageLabel(page, 'en').first()).toBeVisible()
+      await expect(languageLabel(page, 'en')).toBeVisible()
     } finally {
       await deleteI18nPost(projectName, doc.id)
     }
@@ -115,8 +115,8 @@ test.describe('sanity-plugin-internationalized-array', () => {
       await documentAddButton(page, 'es').click()
 
       // Spanish appears in both root internationalized string fields
-      await expect(page.getByTestId('field-title').getByText('ES', {exact: true})).toBeVisible()
-      await expect(page.getByTestId('field-summary').getByText('ES', {exact: true})).toBeVisible()
+      await expect(languageLabel(page, 'es', 'title')).toBeVisible()
+      await expect(languageLabel(page, 'es', 'summary')).toBeVisible()
     } finally {
       await deleteI18nPost(projectName, doc.id)
     }
@@ -134,15 +134,15 @@ test.describe('sanity-plugin-internationalized-array', () => {
 
     try {
       await openI18nPost(page, doc.id)
-      await expect(languageLabel(page, 'es').first()).toBeVisible()
-      await expect(languageLabel(page, 'fr').first()).toBeVisible()
+      await expect(languageLabel(page, 'es')).toBeVisible()
+      await expect(languageLabel(page, 'fr')).toBeVisible()
 
       await openLanguageFilter(page)
       // Toggle off Spanish and French (English is a default language — always shown)
       await page.getByRole('button', {name: /Spanish/}).click()
       await page.getByRole('button', {name: /French/}).click()
 
-      await expect(languageLabel(page, 'en').first()).toBeVisible()
+      await expect(languageLabel(page, 'en')).toBeVisible()
       await expect(languageLabel(page, 'es')).toHaveCount(0)
       await expect(languageLabel(page, 'fr')).toHaveCount(0)
     } finally {

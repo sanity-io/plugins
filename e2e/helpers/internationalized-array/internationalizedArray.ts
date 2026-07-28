@@ -88,9 +88,12 @@ export async function openI18nPost(page: Page, documentId: string): Promise<void
   await expect(page.getByTestId('form-view').first()).toBeVisible()
 }
 
-/** Language code label rendered beside each internationalized array item. */
-export function languageLabel(page: Page, languageId: string) {
-  return page.getByTestId('form-view').getByText(languageId.toUpperCase(), {exact: true})
+/** Language code Label rendered as the nested value-field title (not add-button text). */
+export function languageLabel(page: Page, languageId: string, fieldName = 'title') {
+  return page
+    .getByTestId(`field-${fieldName}`)
+    .locator('[data-ui="Label"]')
+    .getByText(languageId.toUpperCase(), {exact: true})
 }
 
 export function fieldAddButton(page: Page, languageId: string) {
