@@ -1,5 +1,15 @@
 # @sanity/color-input
 
+## 6.1.0
+
+### Minor Changes
+
+- [#1670](https://github.com/sanity-io/plugins/pull/1670) [`cfa596d`](https://github.com/sanity-io/plugins/commit/cfa596d036aced36b4c136b372da051e1a15a474) Thanks [@stipsan](https://github.com/stipsan)! - Migrate styling from `styled-components` and inline `style` objects to vanilla-extract. The plugin no longer requires a `styled-components` peer dependency; styles ship via the `./bundle.css` export (auto-injected when importing the package).
+
+### Patch Changes
+
+- [#1362](https://github.com/sanity-io/plugins/pull/1362) [`6c2470e`](https://github.com/sanity-io/plugins/commit/6c2470e3193830d719a783eba82b4cb9c5bdb2a6) Thanks [@stipsan](https://github.com/stipsan)! - Replace vendored react-color class components with function components
+
 ## 6.0.20
 
 ### Patch Changes
