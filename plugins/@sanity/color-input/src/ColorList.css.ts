@@ -20,7 +20,6 @@ export const colorBoxContainer = style({
 export const colorBox = style({
   borderRadius: 'inherit',
   boxShadow: 'inset 0 0 0 1px var(--card-shadow-outline-color)',
-  content: "''",
   position: 'absolute',
   inset: 0,
   zIndex: 1,

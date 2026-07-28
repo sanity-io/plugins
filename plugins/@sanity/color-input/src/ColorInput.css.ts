@@ -20,13 +20,24 @@ export const sliderCard = style({
 export const alphaCard = style({
   position: 'relative',
   height: '10px',
-  background: '#fff',
+  selectors: {
+    // Doubled class doubles specificity so the white checkerboard base wins
+    // over Card's own `background-color` (same 0-1-0 specificity, but the
+    // styled-components rule is injected later and would win the tie).
+    '&&': {
+      background: '#fff',
+    },
+  },
 })
 
 export const previewCard = style({
   position: 'relative',
   minWidth: '4em',
-  background: '#fff',
+  selectors: {
+    '&&': {
+      background: '#fff',
+    },
+  },
 })
 
 export const colorBox = style({
