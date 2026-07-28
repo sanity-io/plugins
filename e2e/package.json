@@ -12,7 +12,7 @@
     "test": "playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "^1.51.0",
+    "@playwright/test": "^1.62.0",
     "@sanity/client": "catalog:",
     "@types/node": "catalog:",
     "tsx": "catalog:",

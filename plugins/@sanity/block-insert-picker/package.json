@@ -40,12 +40,12 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@portabletext/plugin-input-rule": "^6.0.9",
+    "@portabletext/plugin-input-rule": "^6.0.10",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:"
   },
   "devDependencies": {
-    "@portabletext/editor": "^7.10.12",
+    "@portabletext/editor": "^7.10.13",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@testing-library/react": "catalog:",

@@ -315,4 +315,111 @@ describe('DeleteTranslationAction', () => {
     expect(tx.patch).toHaveBeenCalledWith('meta-1', expect.any(Function))
     expect(tx.commit).toHaveBeenCalled()
   })
+
+  test('shows error toast when delete operation fails', async () => {
+    const tx = mockClient.transaction()
+    tx.commit.mockRejectedValueOnce(new Error('delete failed'))
+    const draft = createMockDocument('drafts.doc-1', 'en')
+    const props = createActionProps({draft})
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
+
+    act(() => {
+      result.current.onHandle?.()
+    })
+
+    const dialog = result.current.dialog as {
+      footer: ReactElement<{onProceed: () => void}>
+    }
+
+    await act(async () => {
+      dialog.footer.props.onProceed()
+    })
+
+    await waitFor(() => {
+      expect(mockToastPush).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: 'error',
+          title: 'Failed to delete document',
+          description: 'delete failed',
+        }),
+      )
+    })
+  })
+
+  test('shows error toast when unset operation fails', async () => {
+    const tx = mockClient.transaction()
+    tx.commit.mockRejectedValueOnce(new Error('unset failed'))
+    const draft = createMockDocument('drafts.doc-1', 'en')
+    const props = createActionProps({draft})
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
+
+    act(() => {
+      result.current.onHandle?.()
+    })
+
+    const dialog = result.current.dialog as {
+      content: ReactElement<{setTranslations: (translations: unknown[]) => void}>
+      footer: ReactElement<{onProceed: () => void}>
+    }
+
+    act(() => {
+      dialog.content.props.setTranslations([
+        {
+          _id: 'meta-1',
+          _type: 'translation.metadata',
+          schemaTypes: ['article'],
+          translations: [
+            {
+              _key: 'random-key',
+              [LANGUAGE_FIELD_NAME]: 'en',
+              _type: 'internationalizedArrayReferenceValue',
+              value: {_type: 'reference', _ref: 'doc-1'},
+            },
+          ],
+        },
+      ])
+    })
+
+    const updatedDialog = result.current.dialog as {
+      footer: ReactElement<{onProceed: () => void}>
+    }
+
+    await act(async () => {
+      updatedDialog.footer.props.onProceed()
+    })
+
+    await waitFor(() => {
+      expect(mockToastPush).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: 'error',
+          title: 'Failed to unset translation reference',
+          description: 'unset failed',
+        }),
+      )
+    })
+  })
+
+  test('dialog footer receives translations and handlers after open', () => {
+    const draft = createMockDocument('drafts.doc-1', 'en')
+    const props = createActionProps({draft})
+    const {result} = renderHook(() => useDeleteTranslationAction(props))
+
+    expect(result.current.dialog).toBeFalsy()
+
+    act(() => {
+      result.current.onHandle?.()
+    })
+
+    const dialog = result.current.dialog as {
+      type: string
+      header: string
+      footer: ReactElement<{translations: unknown[]; onClose: () => void; onProceed: () => void}>
+    }
+
+    expect(dialog.type).toBe('dialog')
+    expect(dialog.header).toBe('Delete translation')
+    expect(dialog.footer.props.translations).toEqual([])
+    expect(typeof dialog.footer.props.onClose).toBe('function')
+    expect(typeof dialog.footer.props.onProceed).toBe('function')
+  })
 })

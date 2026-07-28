@@ -10,9 +10,11 @@
     "preview": "sanity preview --port 3333"
   },
   "dependencies": {
+    "@sanity/document-internationalization": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
+    "sanity-plugin-internationalized-array": "workspace:*",
     "styled-components": "catalog:"
   },
   "devDependencies": {
