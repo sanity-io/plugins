@@ -1,5 +1,11 @@
 # @sanity/document-internationalization
 
+## 6.2.27
+
+### Patch Changes
+
+- [#1712](https://github.com/sanity-io/plugins/pull/1712) [`4b84531`](https://github.com/sanity-io/plugins/commit/4b84531636051aa942231723b07173a697954b23) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add a stable `data-testid` on the Translations menu button for e2e coverage
+
 ## 6.2.26
 
 ### Patch Changes
