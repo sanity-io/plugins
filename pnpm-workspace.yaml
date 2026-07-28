@@ -199,6 +199,13 @@ peerDependencyRules:
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
   - 'vite'
+  # `@sanity/vanilla-extract-vite-plugin` matches every `*.css.{js,ts,…}` module, including ones
+  # inside node_modules, and compiles them in a vanilla-extract runtime context. `@bynder/compact-view`
+  # ships a plain `Styles.css.js` (a CSS string it injects into a shadow root, not a vanilla-extract
+  # module) and declares no dependencies, so the compile only resolves `@vanilla-extract/css/adapter`
+  # when pnpm happens to hoist it into the hidden `.pnpm/node_modules` directory. Public-hoisting makes
+  # that resolution deterministic instead of relying on the implicit hoist layout.
+  - '@vanilla-extract/css'
 
 trustPolicy: no-downgrade
 
