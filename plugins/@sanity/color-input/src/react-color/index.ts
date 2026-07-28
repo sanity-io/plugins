@@ -8,28 +8,9 @@
  * blocks and the color-state helpers are vendored.
  */
 export {Alpha} from './Alpha'
-export type {AlphaProps} from './Alpha'
 export {Checkboard} from './Checkboard'
-export type {CheckboardProps} from './Checkboard'
 export {EditableInput} from './EditableInput'
-export type {EditableInputProps} from './EditableInput'
 export {isValidHex, simpleCheckForValidColor, toState} from './helpers/color'
 export {Hue} from './Hue'
-export type {HueProps} from './Hue'
 export {Saturation} from './Saturation'
-export type {SaturationProps} from './Saturation'
-export type {
-  AlphaColorResult,
-  CheckboardRenderers,
-  Color,
-  ColorChangeHandler,
-  ColorState,
-  HEXColor,
-  HSLColor,
-  HSVColor,
-  HueColorResult,
-  PickerEvent,
-  RenderersProps,
-  RGBColor,
-  SaturationColorResult,
-} from './types'
+export type {Color, ColorChangeHandler, ColorState, HSLColor, HSVColor, RGBColor} from './types'
