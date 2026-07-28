@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 10.0.1
+
+### Patch Changes
+
+- [#1758](https://github.com/sanity-io/plugins/pull/1758) [`965c25e`](https://github.com/sanity-io/plugins/commit/965c25e64243da3221742c451e2a5381dd14075a) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency concurrently to ^10.0.4
+
 ## 10.0.0
 
 ### Major Changes
