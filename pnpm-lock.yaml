@@ -2735,7 +2735,7 @@ importers:
         version: 3.13.2(react@19.2.8)
       '@mux/mux-player-react':
         specifier: ^3.13.2
-        version: 3.13.2(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)
+        version: 3.13.2(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)
       '@mux/upchunk':
         specifier: ^3.5.0
         version: 3.5.0
@@ -4934,19 +4934,6 @@ packages:
   '@mux/mux-data-google-ima@0.3.17':
     resolution: {integrity: sha512-4wpH6dYybyZhqLn9qGn/+67Z8MZnQRAdqTFEEZw2bx61M9q01uPYYHxd8qwOnYtUGEeafsdTwVHVxKHGD3oc1A==}
 
-  '@mux/mux-player-react@3.13.0':
-    resolution: {integrity: sha512-7IkImo1H3rUYeuWHI/L0L7sGUqBvZCvptx3+4igc+P/V3WgqNFjOyQlcyxzxgXNtNNhGmkn5NaF3TU9DPbOmAQ==}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^17.0.0-0 || ^18 || ^18.0.0-0 || ^19 || ^19.0.0-0
-      '@types/react-dom': '*'
-      react: ^17.0.2 || ^17.0.0-0 || ^18 || ^18.0.0-0 || ^19 || ^19.0.0-0
-      react-dom: ^17.0.2 || ^17.0.2-0 || ^18 || ^18.0.0-0 || ^19 || ^19.0.0-0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
   '@mux/mux-player-react@3.13.2':
     resolution: {integrity: sha512-yjAmiqVPYTKi88LAuHxSwKiYrZUDy1ofUYjrDP91mvPfz8BfTvUanzpyE8+a6pRIZFp55rmiAnWyjWKuqSGASw==}
     peerDependencies:
@@ -4960,20 +4947,11 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@mux/mux-player@3.13.0':
-    resolution: {integrity: sha512-vh4CIMahUa29gys+mlfsOFKYKAKXxE07jSWk9WZxkdpGBW1fKfCQXlNxBoAIQlPa9Uk4MZuM3HVgqdW6aTuaZg==}
-
   '@mux/mux-player@3.13.2':
     resolution: {integrity: sha512-qYOYK4/vAr0VEs5SoC8KRieKm3VSgXJpyuERvOIDYvomIVGVpeqGzhjeDeZ7XKQBH3swg0RdAT3kZaTWXe5s9Q==}
 
-  '@mux/mux-video@0.31.0':
-    resolution: {integrity: sha512-DvO2GynIJhPDc0LMuWvC144lCF+E07NI+chrg/vcRQlCf2fPdNNqCSMoaRdWu2S2v/Orsc85giT9K6GRbjbzgA==}
-
   '@mux/mux-video@0.31.2':
     resolution: {integrity: sha512-waahxlrat1PpRzcY2pwMQJ5Gyhos+D6iRyKnYzF0wBf4SESfBtunSBj3EuKuljypm8bamh9gWnlA0LSzm5Pz1w==}
-
-  '@mux/playback-core@0.35.0':
-    resolution: {integrity: sha512-7Zi1EJ9sQNIUlQVBjJCXV0CB+rUVEsU3vNRElRV4xnD7dbpoioIAhe1SjZNBifjnK5aBKLDwQHypbnL3Cw3a5A==}
 
   '@mux/playback-core@0.35.2':
     resolution: {integrity: sha512-AsMV0LMwJm9T1ig6BBYSddeMlkzz+2RGcd6dkOgYk+L5Hx477ovbTxJZJ/vTW+rZjNWHcG3BvgNbSLgiubyZhw==}
@@ -5691,12 +5669,6 @@ packages:
     resolution: {integrity: sha512-qHAXTSEo3eauEO2mzsIiBIzGiGIAbhXtJt71GnL2fK7LkBvVoXYrgSo/6iQpr01wBIyNzpjdScpvrbVBkf1jhg==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
-  '@portabletext/editor@7.10.12':
-    resolution: {integrity: sha512-2p05SO4hPwovMkAB1PfJBeCna6hALml6uXujjjKtSMmzGwa8lFFpkz97J2hEQMY2GQG+4ptijnOREU21M+Jqhw==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      react: ^19.2.7
-
   '@portabletext/editor@7.10.13':
     resolution: {integrity: sha512-Iuan374/uhjDwlhb65ltFVFY1JUV4198ecRjNbg8X0zQuW3k369Lxah7Xg33Ep5bNVLbwQXeMim1pkM+m1+Z+A==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -5738,13 +5710,6 @@ packages:
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       '@portabletext/editor': ^7.10.13
-      react: ^19.2
-
-  '@portabletext/plugin-input-rule@6.0.9':
-    resolution: {integrity: sha512-vL668zVOba1TrsqC4bfzonNigOXNMu9TEC7a/2mJaMEaMwt5iz/0h/Eq5UyFhwCT2B3mgwuR+SiR6JgqO0P9iA==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      '@portabletext/editor': ^7.10.12
       react: ^19.2
 
   '@portabletext/plugin-list-index@1.0.24':
@@ -6367,10 +6332,6 @@ packages:
       babel-plugin-react-compiler:
         optional: true
 
-  '@sanity/client@7.24.0':
-    resolution: {integrity: sha512-YfXm/MzcknFiOe4Y5nYIFEhqqYwrQaWt7f4Vy3sbt3ZbDbd8oMoPaQ/WeSSbWFkHV8RFm01dE16u4Z1VNude+g==}
-    engines: {node: '>=20'}
-
   '@sanity/client@7.25.0':
     resolution: {integrity: sha512-eANEy/ZwTRcrkivg9DzJuY//Wfht2jOEuMQd3gURE290bj+8rTbQwE+5W0a4XPLDz2M9xkiFE4cGB+qXDIVZwQ==}
     engines: {node: '>=20'}
@@ -6385,10 +6346,6 @@ packages:
     peerDependenciesMeta:
       oxfmt:
         optional: true
-
-  '@sanity/color@3.0.7':
-    resolution: {integrity: sha512-cFy8VlD4yfosgyFI0zL+SSPvc0r8oLxw0EoykmT8AgUDqJoHan6rewva5RdQura+GDKZNJE4W16cbLeROmo3Ag==}
-    engines: {node: '>=18.0.0'}
 
   '@sanity/color@3.0.8':
     resolution: {integrity: sha512-MBQ082q7GRvzSH7Xzx4ul1Kxm/AEKDgwTz5cd13oXIlenl3VAM0Un0QpeTjkC5IZTC7SHbnhwkgoVHTZDz9WKQ==}
@@ -6503,12 +6460,6 @@ packages:
     resolution: {integrity: sha512-uHiiJNWER36S/M2R9B7iwf+R2GMV267kQCfIpQiGX+2C3aHwjFHjaEiPBF0aPOyBkHV2OfB3l7XSzyLIXYuQHQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
-  '@sanity/preview-url-secret@4.1.1':
-    resolution: {integrity: sha512-WfTnDZDCVXj+D4KfHv332YaC/aPqEA+Zzwcr1icOQi6pf1Ka9YZGMZaoA++Yzdk5VkWAgNOBYOEyrie1CbFtOQ==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      '@sanity/client': ^7.24.0
-
   '@sanity/preview-url-secret@4.1.2':
     resolution: {integrity: sha512-bGZ1sNvqPgucBJpMBNmjjjCRtvjaQAdJuRo6UuIJVBhPx80JDrrtSwq9GrTcMdjOzDyn994akeNP4aESebfOJA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -6582,15 +6533,6 @@ packages:
     resolution: {integrity: sha512-CJxadjPS6CZNev/BZiV/E5S2UbRneW+QBbTa6z9bOxXX+gM6MP95a0/VXq8/GN/yp28tROz++fSyqXoxqIOgLg==}
     peerDependencies:
       '@types/react': '*'
-
-  '@sanity/ui@3.4.3':
-    resolution: {integrity: sha512-NJvU9Y0Xuguo5XEurkaiVL4HBOx0R18lWlRM87WajEFfQFLBcIbZ4y9JNMnmYv7lYFO8JVbr5a3Xhruo0sO4og==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      react: ^18 || >=19.0.0-0
-      react-dom: ^18 || >=19.0.0-0
-      react-is: ^18 || >=19.0.0-0
-      styled-components: ^5.2 || ^6
 
   '@sanity/ui@3.5.0':
     resolution: {integrity: sha512-V3uDrE5DLIwkOQIU5Rxa9DhUh/s4EySOzTqeQyM/4tPXBy5FtDGzWfvQXB06j/R0E8DCYlA+w73AC7EX2us38Q==}
@@ -7107,9 +7049,6 @@ packages:
   '@vanilla-extract/babel-plugin-debug-ids@1.2.2':
     resolution: {integrity: sha512-MeDWGICAF9zA/OZLOKwhoRlsUW+fiMwnfuOAqFVohL31Agj7Q/RBWAYweqjHLgFBCsdnr6XIfwjJnmb2znEWxw==}
 
-  '@vanilla-extract/css@1.21.1':
-    resolution: {integrity: sha512-T6z6oeT+o0OwqukE6kLs9w5ooB75b8NPRadyU9pPTml83l40TPN+mscPt2OQ9P9cYfwEBMfsfivwiJujs2mzmg==}
-
   '@vanilla-extract/css@1.21.2':
     resolution: {integrity: sha512-ehF/tmv2MxQwOJB1DicALUqnjZTnmY9Y7J2ccKB578JzZpYeL6sLAUqbaXo1taw1Erp0qBq0I4Kejs0uU/pBfg==}
 
@@ -7307,19 +7246,9 @@ packages:
       xstate:
         optional: true
 
-  '@yuku-codegen/binding-darwin-arm64@0.7.4':
-    resolution: {integrity: sha512-fjkATm+fg4r6Ss8o82u3j33PfIqhSs4A0WEEw9kOwhMx/ui/RQ0ZAsCtF6e7UG2CWGOGXAJspLlfk2tr3rjjKQ==}
-    cpu: [arm64]
-    os: [darwin]
-
   '@yuku-codegen/binding-darwin-arm64@0.8.1':
     resolution: {integrity: sha512-Ck0RmDBLc+R0dZpfTXmJFAvcuPf+npbJF1T/VhC9pPDGjNEOGwn4DwFcjhg//DfNIO+xgktsLSt5S4v0MFrToA==}
     cpu: [arm64]
-    os: [darwin]
-
-  '@yuku-codegen/binding-darwin-x64@0.7.4':
-    resolution: {integrity: sha512-Hj0KvHpS1RJY/bgM3BADzmXXkKO3+bq3M8bMq4b0j0LsVi1SeWYpD/hJLJFwHeNMS+jO4vlZ343yjb4DEb9XXQ==}
-    cpu: [x64]
     os: [darwin]
 
   '@yuku-codegen/binding-darwin-x64@0.8.1':
@@ -7327,21 +7256,10 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@yuku-codegen/binding-freebsd-x64@0.7.4':
-    resolution: {integrity: sha512-GLKBZvqVFvC1bvNPoPZRj0UxUaAZZKCzb8IPNyvRhXesOk+Af9UbhbVPwx9Do4o2AVf6R5FPzyRWWIihQdCp+A==}
-    cpu: [x64]
-    os: [freebsd]
-
   '@yuku-codegen/binding-freebsd-x64@0.8.1':
     resolution: {integrity: sha512-Rd1PHfw2mxC8y00kWxYWDClnBC1NbSwPuq0zKLYPggE7mlOnV+eQ15futtaz/Q4BP+jOtEv9elxvP7by20h6Kw==}
     cpu: [x64]
     os: [freebsd]
-
-  '@yuku-codegen/binding-linux-arm-gnu@0.7.4':
-    resolution: {integrity: sha512-CAjbJexBJUqHgIPgOCJO7EYRnFluNLt5VD3jNS40wmsNZqa04HbewVVcgfmzfzuBhjX6ookntLDG3lWieyTAVw==}
-    cpu: [arm]
-    os: [linux]
-    libc: [glibc]
 
   '@yuku-codegen/binding-linux-arm-gnu@0.8.1':
     resolution: {integrity: sha512-/XGncN6jQ/CwXNgWwo+XnsUmILY1q1mbS1f38XnYOHw3DOKOISxVIAlD9IsmdrHLAUAncFlgFS3ky4OO9fvjyg==}
@@ -7349,23 +7267,11 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@yuku-codegen/binding-linux-arm-musl@0.7.4':
-    resolution: {integrity: sha512-HQMuKBltnKFUqhUh8wNiivd76coRwDngdCxbcAULlatAlc2OXo8L6jLTkVnNeUuOw9JYzSq9LY2/7zvrg63Ddg==}
-    cpu: [arm]
-    os: [linux]
-    libc: [musl]
-
   '@yuku-codegen/binding-linux-arm-musl@0.8.1':
     resolution: {integrity: sha512-Rxut53qx3JbTkQ8+A6I8Lrplwz55HQVCjEsTsWF1uOpfgALdvuKSMPIE0gVqefEEcOSA9ASklbNacmXwiqnaMw==}
     cpu: [arm]
     os: [linux]
     libc: [musl]
-
-  '@yuku-codegen/binding-linux-arm64-gnu@0.7.4':
-    resolution: {integrity: sha512-cnU7ZVxK/Oq/TIS2iq56rouy1dqnLYgWR2puWcrxGCtmbdxiMISANYhI5t2tMLzTGZMyhawM2zYlyI+gnpBupQ==}
-    cpu: [arm64]
-    os: [linux]
-    libc: [glibc]
 
   '@yuku-codegen/binding-linux-arm64-gnu@0.8.1':
     resolution: {integrity: sha512-hBNkUPHX04BjB2oIIgIlYT2tog9x0rmBVkZep0f4LLYyFhdJfYM/s2pJ0c8ehQhhkQaJFokW4CxGhiVvVLlzWg==}
@@ -7373,23 +7279,11 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@yuku-codegen/binding-linux-arm64-musl@0.7.4':
-    resolution: {integrity: sha512-NyuabTumcxPtZv/Q+pMVvrcKxLn1SPcpdBGtekVJz7JwI36SuExTq4IG4EZsk7YDmFKP8wDEvmKYOpV/a8Lwhw==}
-    cpu: [arm64]
-    os: [linux]
-    libc: [musl]
-
   '@yuku-codegen/binding-linux-arm64-musl@0.8.1':
     resolution: {integrity: sha512-ePZZnmOxArA4jA3AWlJj3WdY5z1ahQSLwAYrv7mozkJVcrBz2wZgy8l9ukcHFpTxPyhxCAea4gBSZEqqsCYE3A==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
-
-  '@yuku-codegen/binding-linux-x64-gnu@0.7.4':
-    resolution: {integrity: sha512-w3EnCLPD2vpJw0F+0qVV/1KSOAw4SgzjbGUbbwXUh9w5Kxo1Hdc3mN+/Nvk50oA6cCbSOCEaILnPHXPCauArvg==}
-    cpu: [x64]
-    os: [linux]
-    libc: [glibc]
 
   '@yuku-codegen/binding-linux-x64-gnu@0.8.1':
     resolution: {integrity: sha512-LGAEXnQ4Xg/BtOuEirABwa9ByUTXFjealqXXAHVFb8EEmZu5QeHLtsdB2MA2IcYVAgW/QPkyqfnd80R4FltI2A==}
@@ -7397,31 +7291,15 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@yuku-codegen/binding-linux-x64-musl@0.7.4':
-    resolution: {integrity: sha512-FXKQlFjDM8FxqJ/TncAni7e7JyaXIB3Hv6boApxSs5ZUlvqP4TbrjYVk3mYDQt6xQAE/kEHplxM6m5SKx5sfRg==}
-    cpu: [x64]
-    os: [linux]
-    libc: [musl]
-
   '@yuku-codegen/binding-linux-x64-musl@0.8.1':
     resolution: {integrity: sha512-PPDMcQIKCNTOaLBBKh9SBM1EAPcsvnlShMAxq2D/twnSCSEUI9LfrR+G9J4P3o+46ZS4WN8mjZsj8p4PKOnKgw==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@yuku-codegen/binding-win32-arm64@0.7.4':
-    resolution: {integrity: sha512-rWr899KEvZIWMx9yUXQl4i90OGIs4gaw4X1UsS2rxsI3qnp8acLIVKI3N5WDqaertkW10crDRZvIxxyw7kTMTQ==}
-    cpu: [arm64]
-    os: [win32]
-
   '@yuku-codegen/binding-win32-arm64@0.8.1':
     resolution: {integrity: sha512-W8A1QpstKYhg4e56s13L4ByQprQ1OXY3QFoNPIh6+4v/DEgqfhJ9ApU++e7zHQCQrhYjyQC/uWtxUcRqpyL/7Q==}
     cpu: [arm64]
-    os: [win32]
-
-  '@yuku-codegen/binding-win32-x64@0.7.4':
-    resolution: {integrity: sha512-3Olgmkd5rDrIN9g7wJFMRRC9jub5zAwiQOtwOVhvNe/nZE/rSufFRa7vrFupqSCQml+Zxbcy9npzo3Qne3rA2A==}
-    cpu: [x64]
     os: [win32]
 
   '@yuku-codegen/binding-win32-x64@0.8.1':
@@ -7429,19 +7307,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@yuku-parser/binding-darwin-arm64@0.7.4':
-    resolution: {integrity: sha512-rUetRGukIlPOkDCy+Fo0YTee66n9A04XRQMONptbemWSU27CCV6RDj56+4ne4eSE4gJ0139RWUfbqMtt744pWQ==}
-    cpu: [arm64]
-    os: [darwin]
-
   '@yuku-parser/binding-darwin-arm64@0.8.0':
     resolution: {integrity: sha512-04AakSJhI4mPrqhZzXdFyaEDh0YkfeqbnyYY3aCrmxeWfR/Xr8+kFn5sh+wZYN/5HatPniELKHixJuUCUyfBvg==}
     cpu: [arm64]
-    os: [darwin]
-
-  '@yuku-parser/binding-darwin-x64@0.7.4':
-    resolution: {integrity: sha512-9bHrGQUot2vWTg0YTdyIBHGd38fy2BSQH1WaqUDVuNqSn7HffrTUzWOgbaWRNd5GTOvDdrt9SDZIG7nfqzeBtg==}
-    cpu: [x64]
     os: [darwin]
 
   '@yuku-parser/binding-darwin-x64@0.8.0':
@@ -7449,21 +7317,10 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@yuku-parser/binding-freebsd-x64@0.7.4':
-    resolution: {integrity: sha512-159565OJ/LR6cCP781nH8DxB5GqlqqWk3uyOLZIznQhsj9zeht4X7+jz9IQH1l/TUio+ojEXf8yt2+DJrN+QVw==}
-    cpu: [x64]
-    os: [freebsd]
-
   '@yuku-parser/binding-freebsd-x64@0.8.0':
     resolution: {integrity: sha512-04hmgnU152wya88raI+RQhxZPgwXcHbfdNZLu3x5ggKnJVHLD8xZZLcWIKSs59CiEXL6PKVX1/cx8GoTYlaCaQ==}
     cpu: [x64]
     os: [freebsd]
-
-  '@yuku-parser/binding-linux-arm-gnu@0.7.4':
-    resolution: {integrity: sha512-j3s3LJxEbOyP58hmzuXpJlKzgxaswuOTu8nAbDpE119b5W3gP1SW+HndLscGUOACpyMdH5WJ6gBHRxq0HCRVBw==}
-    cpu: [arm]
-    os: [linux]
-    libc: [glibc]
 
   '@yuku-parser/binding-linux-arm-gnu@0.8.0':
     resolution: {integrity: sha512-+cuJWUK13lwce721XGRjz7izSr2Q1U0RlHkDzdkohWpRWlttTqRdxNnaW13nDc47GBDrNsXMHx+KLcebeOeeGg==}
@@ -7471,23 +7328,11 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@yuku-parser/binding-linux-arm-musl@0.7.4':
-    resolution: {integrity: sha512-PUpHPmvWIDxhYTS5oah08RQ28t6dlFBxRPJcftS6HgquiPsm/e0gL5vKwPJpyjaPBHzRH61IAUDDfrRe8iFs8g==}
-    cpu: [arm]
-    os: [linux]
-    libc: [musl]
-
   '@yuku-parser/binding-linux-arm-musl@0.8.0':
     resolution: {integrity: sha512-rOVPRqt9cm1YP/wPV+yyZh0FYr6UR/wm/BXslvLuge0LDewVvDrm/AxcDrwWuPAu61Nzdg2rMVfcNnrplCbC1w==}
     cpu: [arm]
     os: [linux]
     libc: [musl]
-
-  '@yuku-parser/binding-linux-arm64-gnu@0.7.4':
-    resolution: {integrity: sha512-Hi3w0et5mu3i7S+qE0UgOev4RqJ/U9DW8xn79t4nttiICYCx3NveC0Goo78uqzxttsDI3hfRY43lrrF26svqcw==}
-    cpu: [arm64]
-    os: [linux]
-    libc: [glibc]
 
   '@yuku-parser/binding-linux-arm64-gnu@0.8.0':
     resolution: {integrity: sha512-pAoIozKr6E+ptpaQz4CZv1O7cay2f4m7kbd+DSQug5MKdUBTZZ18GdWSPvq0fwQYraH9hZlyLqrMaeP5W/ncrA==}
@@ -7495,23 +7340,11 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@yuku-parser/binding-linux-arm64-musl@0.7.4':
-    resolution: {integrity: sha512-i073u4ENL9DJeWBRKioRCz8i5hg6EmUcH89eH1lts9f9AFPA1GphODwK6OXOXUbpi2AwZ1deFIUWgLGP2mdmmA==}
-    cpu: [arm64]
-    os: [linux]
-    libc: [musl]
-
   '@yuku-parser/binding-linux-arm64-musl@0.8.0':
     resolution: {integrity: sha512-JCAg50ahXuYlrsIi1jmymX9X/9B0JYBRroAHnYttN44tAvCo1PFqukHrw1up6HvEOoLA0OjlM0Zwh60u3Gc/Zg==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
-
-  '@yuku-parser/binding-linux-x64-gnu@0.7.4':
-    resolution: {integrity: sha512-j5pt0LyDGxCzfoqRTR3cmMG21+bgSxIufAzJXFOWXkbg/22Ih51eGEsbInnSD5Q9FvJ3ooIn/jfok0dBdhudnA==}
-    cpu: [x64]
-    os: [linux]
-    libc: [glibc]
 
   '@yuku-parser/binding-linux-x64-gnu@0.8.0':
     resolution: {integrity: sha512-tEeVQ14etp7lpUqXzq+X5AlQzFH+m3TVDiCKIq17zxnxJ117DOVvoveWSkSMt/lj68z48SvZUMHe7xLvqtO1lg==}
@@ -7519,43 +7352,21 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@yuku-parser/binding-linux-x64-musl@0.7.4':
-    resolution: {integrity: sha512-RR1hNhrSpv3FanLM6u5uD+9CYA9IM8U3uGscgvKKV77gtj7ttO4UubpwN7vcx1KknoEIQHKJFPVKoeVy+avf6w==}
-    cpu: [x64]
-    os: [linux]
-    libc: [musl]
-
   '@yuku-parser/binding-linux-x64-musl@0.8.0':
     resolution: {integrity: sha512-+UGRYnF37nnbZNMsMjSGDXKUTIxYUmbbk3Lzib88sLK7kg2y80vjchYYoYsDUK9kAgqPWyA9hKGURHy/Kk9Few==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@yuku-parser/binding-win32-arm64@0.7.4':
-    resolution: {integrity: sha512-1xhYwOLo9TjppHHwNYi3X/dGgOvnj9xh62jpgP4U8nEtTGA70NtJDCkN45pRQdU3B6/U7oQj1T4esP3aFJg6BA==}
-    cpu: [arm64]
-    os: [win32]
-
   '@yuku-parser/binding-win32-arm64@0.8.0':
     resolution: {integrity: sha512-l+7Va9/sX1ccRjzjJj6MR0arKsvHB5b419+pKbwzn+/18A/xfccWqmxXrn0C0NyVLlbEb3AV9Is+AbF72O85yA==}
     cpu: [arm64]
-    os: [win32]
-
-  '@yuku-parser/binding-win32-x64@0.7.4':
-    resolution: {integrity: sha512-HonZAapmSKusxLZPnU9WrMzAUdPSBJliGw3CSkA9Er/aq15STEOEy9SOsVGvj4maBv95EmWxt2LThHXnFnGfNg==}
-    cpu: [x64]
     os: [win32]
 
   '@yuku-parser/binding-win32-x64@0.8.0':
     resolution: {integrity: sha512-dolKDTJv2xrWowDBEkvSaDvCsVFZOA7DCUuD+7DatglS68WbuxS4LudU5bzSeAOL5vgPpyGm82469cMLnL+6vQ==}
     cpu: [x64]
     os: [win32]
-
-  '@yuku-toolchain/types@0.7.4':
-    resolution: {integrity: sha512-iUFXr+UnUJjzVLNI6GIv07poi9NwcG5hTBJSheJh3SdpkYpIjCl9kAGe7dbJMHn5sXeceCL4H12pKa0b6pkouQ==}
-
-  '@yuku-toolchain/types@0.8.0':
-    resolution: {integrity: sha512-hL/raFM5V9UT2lVE/lIWDTWvANqSB8TvMVp+PgICehBa96KhTl/UpGm370JXaacukR+QnaHM2Yv6O/UcrzAFGg==}
 
   '@yuku-toolchain/types@0.8.1':
     resolution: {integrity: sha512-HcGEV3kOn9evBTm2ARYOFNKAI7sY9twQozCVd9EVdlsBlnKi0a2iv8xXxYVHFCBQpX3SvvPXBhk8lcK6NUTdNg==}
@@ -10764,25 +10575,6 @@ packages:
     engines: {node: 20 || >=22}
     hasBin: true
 
-  rolldown-plugin-dts@0.27.13:
-    resolution: {integrity: sha512-DeVZJbbB0ajp5q6vABqC8ZCJzxftlxbiV60Bk96GFdQaysGVpgTTVjQu0lUt4Lb+aRCtejfOixtQKDRol7IuVQ==}
-    engines: {node: ^22.18.0 || >=24.11.0}
-    peerDependencies:
-      '@typescript/native-preview': '*'
-      '@volar/typescript': ~2.4.0
-      rolldown: ^1.0.0
-      typescript: ^5.0.0 || ^6.0.0 || ~7.0.0
-      vue-tsc: ~3.2.0 || ~3.3.0
-    peerDependenciesMeta:
-      '@typescript/native-preview':
-        optional: true
-      '@volar/typescript':
-        optional: true
-      typescript:
-        optional: true
-      vue-tsc:
-        optional: true
-
   rolldown-plugin-dts@0.27.14:
     resolution: {integrity: sha512-ZvuDDwoIpRK9RPxDXratCpklFO9QZZWndf/sd0VBFb4LEj0jj07UcHK9OCh7V4XiFz2Z89ziyBC2K6tJiDjrbw==}
     engines: {node: ^22.18.0 || >=24.11.0}
@@ -12057,20 +11849,11 @@ packages:
     resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
     engines: {node: '>=18'}
 
-  yuku-ast@0.7.4:
-    resolution: {integrity: sha512-Pn6e7uZOBczeJ+JIiPGtD4aw6eRflzKrZJmAdeg092RxM9tQtvAkZAbEoknNgYmsB6dGYESvXPQcUE7Nu8ai7Q==}
-
   yuku-ast@0.8.0:
     resolution: {integrity: sha512-trBzFsSa6k32vzNUCH6pFhAoTzWD/NifSYOIQ/6v14vXKh7TRhd2vDNIwRguGdXvcyfBNEEGcsfxFHrnJbS+FQ==}
 
-  yuku-codegen@0.7.4:
-    resolution: {integrity: sha512-bLdC5yzvn507PtU7+kB4CMBLfnvKW1N2m26Vpl1q4Os+FLROnkKTThM7g+clVb+9tHaOlcc6gqQ+rNBY8L/Dxw==}
-
   yuku-codegen@0.8.1:
     resolution: {integrity: sha512-/4Sbg9K9HpCe3PidmMbs9TzJ62gq3KmQY279TB0EGKdMoM8LfcmIg4E9wS2J/ylbFuQaWcYqf5dBKr8zubdlKA==}
-
-  yuku-parser@0.7.4:
-    resolution: {integrity: sha512-HveMyhZPQQfR4z3xskXv5hHJW9g0KIESZW6JvUZv7Jn52FfMFUhCYL77KHBtnWGFti0KrKeTHMZVTY5AUVgFAA==}
 
   yuku-parser@0.8.0:
     resolution: {integrity: sha512-obrazyE8Cyh79xTQS9wv44khnhvkXG1CDSSy0bg+Pjjla+iXkKXK2b6+LTYXSN3qvVfQxc0MN5qhNKYr9sl3Zw==}
@@ -14153,18 +13936,7 @@ snapshots:
     dependencies:
       mux-embed: 5.18.1
 
-  '@mux/mux-player-react@3.13.0(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)':
-    dependencies:
-      '@mux/mux-player': 3.13.0(react@19.2.8)
-      '@mux/playback-core': 0.35.0
-      prop-types: 15.8.1
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
-    optionalDependencies:
-      '@types/react': 19.2.17
-      '@types/react-dom': 19.2.3(@types/react@19.2.17)
-
-  '@mux/mux-player-react@3.13.2(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)':
+  '@mux/mux-player-react@3.13.2(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)':
     dependencies:
       '@mux/mux-player': 3.13.2(react@19.2.8)
       '@mux/playback-core': 0.35.2
@@ -14173,15 +13945,7 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
     optionalDependencies:
       '@types/react': 19.2.17
-
-  '@mux/mux-player@3.13.0(react@19.2.8)':
-    dependencies:
-      '@mux/mux-video': 0.31.0
-      '@mux/playback-core': 0.35.0
-      media-chrome: 4.19.2(react@19.2.8)
-      player.style: 0.3.4(react@19.2.8)
-    transitivePeerDependencies:
-      - react
+      '@types/react-dom': 19.2.3(@types/react@19.2.17)
 
   '@mux/mux-player@3.13.2(react@19.2.8)':
     dependencies:
@@ -14192,14 +13956,6 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@mux/mux-video@0.31.0':
-    dependencies:
-      '@mux/mux-data-google-ima': 0.3.17
-      '@mux/playback-core': 0.35.0
-      castable-video: 1.1.16
-      custom-media-element: 1.4.6
-      media-tracks: 0.3.5
-
   '@mux/mux-video@0.31.2':
     dependencies:
       '@mux/mux-data-google-ima': 0.3.17
@@ -14208,11 +13964,6 @@ snapshots:
       castable-video: 1.1.16
       custom-media-element: 1.4.6
       media-tracks: 0.3.5
-
-  '@mux/playback-core@0.35.0':
-    dependencies:
-      hls.js: 1.6.16
-      mux-embed: 5.18.1
 
   '@mux/playback-core@0.35.2':
     dependencies:
@@ -14702,23 +14453,6 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@portabletext/editor@7.10.12(@types/react@19.2.17)(react@19.2.8)':
-    dependencies:
-      '@portabletext/html': 1.1.1
-      '@portabletext/keyboard-shortcuts': 2.1.3
-      '@portabletext/markdown': 1.4.4
-      '@portabletext/patches': 2.0.5
-      '@portabletext/schema': 2.2.3
-      '@portabletext/to-html': 5.0.2
-      '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.8)(xstate@5.32.5)
-      debug: 4.4.3(supports-color@8.1.1)
-      react: 19.2.8
-      scroll-into-view-if-needed: 3.1.0
-      xstate: 5.32.5
-    transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
-
   '@portabletext/editor@7.10.13(@types/react@19.2.17)(react@19.2.8)':
     dependencies:
       '@portabletext/html': 1.1.1
@@ -14754,17 +14488,17 @@ snapshots:
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
 
-  '@portabletext/plugin-character-pair-decorator@8.0.40(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)':
+  '@portabletext/plugin-character-pair-decorator@8.0.40(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)':
     dependencies:
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
-      '@portabletext/plugin-input-rule': 6.0.9(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/plugin-input-rule': 6.0.10(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)
       react: 19.2.8
     transitivePeerDependencies:
       - '@types/react'
 
-  '@portabletext/plugin-dnd@1.0.24(@portabletext/editor@7.10.12)(react@19.2.8)':
+  '@portabletext/plugin-dnd@1.0.24(@portabletext/editor@7.10.13)(react@19.2.8)':
     dependencies:
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
       react: 19.2.8
 
   '@portabletext/plugin-input-rule@6.0.10(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)':
@@ -14776,51 +14510,42 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@portabletext/plugin-input-rule@6.0.9(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)':
+  '@portabletext/plugin-list-index@1.0.24(@portabletext/editor@7.10.13)(react@19.2.8)':
     dependencies:
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
-      '@xstate/react': 6.1.0(@types/react@19.2.17)(react@19.2.8)(xstate@5.32.5)
-      react: 19.2.8
-      xstate: 5.32.5
-    transitivePeerDependencies:
-      - '@types/react'
-
-  '@portabletext/plugin-list-index@1.0.24(@portabletext/editor@7.10.12)(react@19.2.8)':
-    dependencies:
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
       react: 19.2.8
 
-  '@portabletext/plugin-markdown-shortcuts@8.0.40(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)':
+  '@portabletext/plugin-markdown-shortcuts@8.0.40(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)':
     dependencies:
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
-      '@portabletext/plugin-character-pair-decorator': 8.0.40(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)
-      '@portabletext/plugin-input-rule': 6.0.9(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/plugin-character-pair-decorator': 8.0.40(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/plugin-input-rule': 6.0.10(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)
       react: 19.2.8
     transitivePeerDependencies:
       - '@types/react'
 
-  '@portabletext/plugin-one-line@7.0.39(@portabletext/editor@7.10.12)(react@19.2.8)':
+  '@portabletext/plugin-one-line@7.0.39(@portabletext/editor@7.10.13)(react@19.2.8)':
     dependencies:
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
       react: 19.2.8
 
-  '@portabletext/plugin-paste-link@4.0.39(@portabletext/editor@7.10.12)(react@19.2.8)':
+  '@portabletext/plugin-paste-link@4.0.39(@portabletext/editor@7.10.13)(react@19.2.8)':
     dependencies:
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
       react: 19.2.8
 
-  '@portabletext/plugin-table@1.3.9(@portabletext/editor@7.10.12)(react-dom@19.2.8)(react@19.2.8)':
+  '@portabletext/plugin-table@1.3.9(@portabletext/editor@7.10.13)(react-dom@19.2.8)(react@19.2.8)':
     dependencies:
       '@floating-ui/dom': 1.8.0
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
       '@portabletext/keyboard-shortcuts': 2.1.3
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
-  '@portabletext/plugin-typography@8.0.40(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)':
+  '@portabletext/plugin-typography@8.0.40(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)':
     dependencies:
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
-      '@portabletext/plugin-input-rule': 6.0.9(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/plugin-input-rule': 6.0.10(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)
       react: 19.2.8
     transitivePeerDependencies:
       - '@types/react'
@@ -15257,7 +14982,7 @@ snapshots:
     dependencies:
       '@inquirer/prompts': 8.5.2(@types/node@24.13.3)
       '@oclif/core': 4.13.0
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
       boxen: 8.0.1
       debug: 4.4.3(supports-color@8.1.1)
       empathic: 2.0.1
@@ -15298,13 +15023,13 @@ snapshots:
       '@oclif/plugin-not-found': 3.2.88(@types/node@24.13.3)
       '@sanity/cli-build': 4.1.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.9)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.0)(terser@5.49.0)(tsx@4.23.1)(typescript@7.0.2)(yaml@2.9.0)
       '@sanity/cli-core': 2.5.1(@noble/hashes@2.2.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.9)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(terser@5.49.0)(yaml@2.9.0)
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
       '@sanity/codegen': 7.0.3(@oclif/core@4.13.0)(@sanity/cli-core@2.5.1)(oxfmt@0.60.0)(react@19.2.8)
       '@sanity/descriptors': 1.3.0
       '@sanity/export': 6.2.0
       '@sanity/generate-help-url': 4.0.0
       '@sanity/id-utils': 1.0.0
-      '@sanity/import': 6.0.3(@sanity/client@7.24.0)(@types/react@19.2.17)
+      '@sanity/import': 6.0.3(@sanity/client@7.25.0)(@types/react@19.2.17)
       '@sanity/migrate': 8.0.0(@types/react@19.2.17)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.2.0(@types/node@24.13.3)(@vitejs/devtools@0.4.9)(esbuild@0.28.1)(terser@5.49.0)(tsx@4.23.1)(yaml@2.9.0)
       '@sanity/schema': 6.6.0(@types/react@19.2.17)
@@ -15391,13 +15116,6 @@ snapshots:
       - vue-tsc
       - xstate
 
-  '@sanity/client@7.24.0':
-    dependencies:
-      '@sanity/eventsource': 5.0.4
-      get-it: 8.8.0
-      nanoid: 3.3.16
-      rxjs: 7.8.2
-
   '@sanity/client@7.25.0':
     dependencies:
       '@sanity/eventsource': 5.0.4
@@ -15435,8 +15153,6 @@ snapshots:
     transitivePeerDependencies:
       - react
       - supports-color
-
-  '@sanity/color@3.0.7': {}
 
   '@sanity/color@3.0.8': {}
 
@@ -15501,10 +15217,10 @@ snapshots:
     dependencies:
       '@sanity/signed-urls': 2.0.4
 
-  '@sanity/import@6.0.3(@sanity/client@7.24.0)(@types/react@19.2.17)':
+  '@sanity/import@6.0.3(@sanity/client@7.25.0)(@types/react@19.2.17)':
     dependencies:
       '@sanity/asset-utils': 2.3.0
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
       '@sanity/generate-help-url': 4.0.0
       '@sanity/mutator': 6.6.0(@types/react@19.2.17)
       debug: 4.4.3(supports-color@8.1.1)
@@ -15542,7 +15258,7 @@ snapshots:
 
   '@sanity/migrate@8.0.0(@types/react@19.2.17)(xstate@5.32.5)':
     dependencies:
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/types': 6.6.0(@types/react@19.2.17)
       '@sanity/util': 6.6.0(@types/react@19.2.17)
@@ -15559,7 +15275,7 @@ snapshots:
   '@sanity/mutate@0.18.1(xstate@5.32.5)':
     dependencies:
       '@isaacs/ttlcache': 2.1.5
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/uuid': 3.0.3
       hotscript: 1.0.13
@@ -15642,18 +15358,13 @@ snapshots:
       - supports-color
       - vue-tsc
 
-  '@sanity/presentation-comlink@2.2.0(@sanity/client@7.24.0)(@sanity/types@6.6.0)':
+  '@sanity/presentation-comlink@2.2.0(@sanity/client@7.25.0)(@sanity/types@6.6.0)':
     dependencies:
       '@sanity/comlink': 4.0.1
-      '@sanity/visual-editing-types': 1.1.8(@sanity/client@7.24.0)(@sanity/types@6.6.0)
+      '@sanity/visual-editing-types': 1.1.8(@sanity/client@7.25.0)(@sanity/types@6.6.0)
     transitivePeerDependencies:
       - '@sanity/client'
       - '@sanity/types'
-
-  '@sanity/preview-url-secret@4.1.1(@sanity/client@7.24.0)':
-    dependencies:
-      '@sanity/client': 7.24.0
-      '@sanity/uuid': 3.0.3
 
   '@sanity/preview-url-secret@4.1.2(@sanity/client@7.25.0)':
     dependencies:
@@ -15672,7 +15383,7 @@ snapshots:
       '@sanity-labs/design-tokens': 0.0.2-alpha.4
       '@sanity/blueprints': 0.22.0
       '@sanity/blueprints-parser': 0.4.0
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
       adm-zip: 0.6.0
       array-treeify: 0.1.5
       cardinal: 2.1.1
@@ -15726,7 +15437,7 @@ snapshots:
   '@sanity/sdk@2.18.0(@types/react@19.2.17)(immer@11.1.15)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)':
     dependencies:
       '@sanity/bifur-client': 1.0.0
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
       '@sanity/comlink': 4.0.1
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/diff-patch': 6.0.0
@@ -15811,27 +15522,9 @@ snapshots:
 
   '@sanity/types@6.6.0(@types/react@19.2.17)':
     dependencies:
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
       '@sanity/media-library-types': 1.6.0
       '@types/react': 19.2.17
-
-  '@sanity/ui@3.4.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4)':
-    dependencies:
-      '@floating-ui/react-dom': 2.1.9(react-dom@19.2.8)(react@19.2.8)
-      '@juggle/resize-observer': 3.4.0
-      '@sanity/color': 3.0.8
-      '@sanity/icons': 5.2.1(react@19.2.8)
-      csstype: 3.2.3
-      motion: 12.42.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)
-      react: 19.2.8
-      react-compiler-runtime: 1.0.0(react@19.2.8)
-      react-dom: 19.2.8(react@19.2.8)
-      react-is: 19.2.8
-      react-refractor: 4.0.0(react@19.2.8)
-      styled-components: 6.4.4(react-dom@19.2.8)(react@19.2.8)
-      use-effect-event: 2.0.3(react@19.2.8)
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
 
   '@sanity/ui@3.5.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)(styled-components@6.4.4)':
     dependencies:
@@ -15855,7 +15548,7 @@ snapshots:
     dependencies:
       '@date-fns/tz': 1.5.0
       '@date-fns/utc': 2.1.1
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
       '@sanity/types': 6.6.0(@types/react@19.2.17)
       date-fns: 4.4.0
       rxjs: 7.8.2
@@ -15868,7 +15561,7 @@ snapshots:
 
   '@sanity/vanilla-extract-integration@0.1.7(babel-plugin-macros@3.1.0)':
     dependencies:
-      '@vanilla-extract/css': 1.21.1(babel-plugin-macros@3.1.0)
+      '@vanilla-extract/css': 1.21.2(babel-plugin-macros@3.1.0)
       javascript-stringify: 2.1.0
       rolldown: 1.2.0
       yuku-parser: 0.8.0
@@ -15895,7 +15588,7 @@ snapshots:
   '@sanity/vanilla-extract-vite-plugin@0.2.7(babel-plugin-macros@3.1.0)(vite@8.1.5)':
     dependencies:
       '@sanity/vanilla-extract-integration': 0.1.7(babel-plugin-macros@3.1.0)
-      '@vanilla-extract/css': 1.21.1(babel-plugin-macros@3.1.0)
+      '@vanilla-extract/css': 1.21.2(babel-plugin-macros@3.1.0)
       vite: 8.1.5(@types/node@24.13.3)(@vitejs/devtools@0.4.9)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(tsx@4.23.1)(yaml@2.9.0)
     transitivePeerDependencies:
       - babel-plugin-macros
@@ -15912,7 +15605,7 @@ snapshots:
       '@lezer/highlight': 1.2.3
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.8)
       '@rexxars/react-split-pane': 1.0.0(react-dom@19.2.8)(react@19.2.8)
-      '@sanity/color': 3.0.7
+      '@sanity/color': 3.0.8
       '@sanity/icons': 5.2.1(react@19.2.8)
       '@sanity/lezer-groq': 1.0.4
       '@sanity/ui': 3.5.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)(styled-components@6.4.4)
@@ -15937,9 +15630,9 @@ snapshots:
       - react-dom
       - styled-components
 
-  '@sanity/visual-editing-types@1.1.8(@sanity/client@7.24.0)(@sanity/types@6.6.0)':
+  '@sanity/visual-editing-types@1.1.8(@sanity/client@7.25.0)(@sanity/types@6.6.0)':
     dependencies:
-      '@sanity/client': 7.24.0
+      '@sanity/client': 7.25.0
     optionalDependencies:
       '@sanity/types': 6.6.0(@types/react@19.2.17)
 
@@ -16356,22 +16049,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vanilla-extract/css@1.21.1(babel-plugin-macros@3.1.0)':
-    dependencies:
-      '@emotion/hash': 0.9.2
-      '@vanilla-extract/private': 1.0.9
-      css-what: 6.2.2
-      csstype: 3.2.3
-      dedent: 1.7.2(babel-plugin-macros@3.1.0)
-      deep-object-diff: 1.1.9
-      deepmerge: 4.3.1
-      lru-cache: 10.4.3
-      media-query-parser: 2.0.2
-      modern-ahocorasick: 1.1.0
-      picocolors: 1.1.1
-    transitivePeerDependencies:
-      - babel-plugin-macros
-
   '@vanilla-extract/css@1.21.2(babel-plugin-macros@3.1.0)':
     dependencies:
       '@emotion/hash': 0.9.2
@@ -16397,7 +16074,7 @@ snapshots:
       '@babel/core': 7.29.7
       '@babel/plugin-syntax-typescript': 7.29.7(@babel/core@7.29.7)
       '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
-      '@vanilla-extract/css': 1.21.1(babel-plugin-macros@3.1.0)
+      '@vanilla-extract/css': 1.21.2(babel-plugin-macros@3.1.0)
       dedent: 1.7.2(babel-plugin-macros@3.1.0)
       esbuild: 0.28.1
       eval: 0.1.8
@@ -16716,141 +16393,71 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@yuku-codegen/binding-darwin-arm64@0.7.4':
-    optional: true
-
   '@yuku-codegen/binding-darwin-arm64@0.8.1':
-    optional: true
-
-  '@yuku-codegen/binding-darwin-x64@0.7.4':
     optional: true
 
   '@yuku-codegen/binding-darwin-x64@0.8.1':
     optional: true
 
-  '@yuku-codegen/binding-freebsd-x64@0.7.4':
-    optional: true
-
   '@yuku-codegen/binding-freebsd-x64@0.8.1':
-    optional: true
-
-  '@yuku-codegen/binding-linux-arm-gnu@0.7.4':
     optional: true
 
   '@yuku-codegen/binding-linux-arm-gnu@0.8.1':
     optional: true
 
-  '@yuku-codegen/binding-linux-arm-musl@0.7.4':
-    optional: true
-
   '@yuku-codegen/binding-linux-arm-musl@0.8.1':
-    optional: true
-
-  '@yuku-codegen/binding-linux-arm64-gnu@0.7.4':
     optional: true
 
   '@yuku-codegen/binding-linux-arm64-gnu@0.8.1':
     optional: true
 
-  '@yuku-codegen/binding-linux-arm64-musl@0.7.4':
-    optional: true
-
   '@yuku-codegen/binding-linux-arm64-musl@0.8.1':
-    optional: true
-
-  '@yuku-codegen/binding-linux-x64-gnu@0.7.4':
     optional: true
 
   '@yuku-codegen/binding-linux-x64-gnu@0.8.1':
     optional: true
 
-  '@yuku-codegen/binding-linux-x64-musl@0.7.4':
-    optional: true
-
   '@yuku-codegen/binding-linux-x64-musl@0.8.1':
-    optional: true
-
-  '@yuku-codegen/binding-win32-arm64@0.7.4':
     optional: true
 
   '@yuku-codegen/binding-win32-arm64@0.8.1':
     optional: true
 
-  '@yuku-codegen/binding-win32-x64@0.7.4':
-    optional: true
-
   '@yuku-codegen/binding-win32-x64@0.8.1':
-    optional: true
-
-  '@yuku-parser/binding-darwin-arm64@0.7.4':
     optional: true
 
   '@yuku-parser/binding-darwin-arm64@0.8.0':
     optional: true
 
-  '@yuku-parser/binding-darwin-x64@0.7.4':
-    optional: true
-
   '@yuku-parser/binding-darwin-x64@0.8.0':
-    optional: true
-
-  '@yuku-parser/binding-freebsd-x64@0.7.4':
     optional: true
 
   '@yuku-parser/binding-freebsd-x64@0.8.0':
     optional: true
 
-  '@yuku-parser/binding-linux-arm-gnu@0.7.4':
-    optional: true
-
   '@yuku-parser/binding-linux-arm-gnu@0.8.0':
-    optional: true
-
-  '@yuku-parser/binding-linux-arm-musl@0.7.4':
     optional: true
 
   '@yuku-parser/binding-linux-arm-musl@0.8.0':
     optional: true
 
-  '@yuku-parser/binding-linux-arm64-gnu@0.7.4':
-    optional: true
-
   '@yuku-parser/binding-linux-arm64-gnu@0.8.0':
-    optional: true
-
-  '@yuku-parser/binding-linux-arm64-musl@0.7.4':
     optional: true
 
   '@yuku-parser/binding-linux-arm64-musl@0.8.0':
     optional: true
 
-  '@yuku-parser/binding-linux-x64-gnu@0.7.4':
-    optional: true
-
   '@yuku-parser/binding-linux-x64-gnu@0.8.0':
-    optional: true
-
-  '@yuku-parser/binding-linux-x64-musl@0.7.4':
     optional: true
 
   '@yuku-parser/binding-linux-x64-musl@0.8.0':
     optional: true
 
-  '@yuku-parser/binding-win32-arm64@0.7.4':
-    optional: true
-
   '@yuku-parser/binding-win32-arm64@0.8.0':
-    optional: true
-
-  '@yuku-parser/binding-win32-x64@0.7.4':
     optional: true
 
   '@yuku-parser/binding-win32-x64@0.8.0':
     optional: true
-
-  '@yuku-toolchain/types@0.7.4': {}
-
-  '@yuku-toolchain/types@0.8.0': {}
 
   '@yuku-toolchain/types@0.8.1': {}
 
@@ -20040,20 +19647,6 @@ snapshots:
       glob: 13.0.6
       package-json-from-dist: 1.0.1
 
-  rolldown-plugin-dts@0.27.13(oxc-resolver@11.24.2)(rolldown@1.2.0)(typescript@7.0.2):
-    dependencies:
-      dts-resolver: 3.0.0(oxc-resolver@11.24.2)
-      get-tsconfig: 5.0.0-beta.5
-      obug: 2.1.4
-      rolldown: 1.2.0
-      yuku-ast: 0.7.4
-      yuku-codegen: 0.7.4
-      yuku-parser: 0.7.4
-    optionalDependencies:
-      typescript: 7.0.2
-    transitivePeerDependencies:
-      - oxc-resolver
-
   rolldown-plugin-dts@0.27.14(oxc-resolver@11.24.2)(rolldown@1.2.0)(typescript@7.0.2):
     dependencies:
       dts-resolver: 3.0.0(oxc-resolver@11.24.2)
@@ -20221,17 +19814,17 @@ snapshots:
       '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1)(react@19.2.8)
       '@dnd-kit/utilities': 3.2.2(react@19.2.8)
       '@isaacs/ttlcache': 2.1.5
-      '@mux/mux-player-react': 3.13.0(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
+      '@mux/mux-player-react': 3.13.2(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
       '@portabletext/html': 1.1.1
       '@portabletext/patches': 2.0.5
-      '@portabletext/plugin-dnd': 1.0.24(@portabletext/editor@7.10.12)(react@19.2.8)
-      '@portabletext/plugin-list-index': 1.0.24(@portabletext/editor@7.10.12)(react@19.2.8)
-      '@portabletext/plugin-markdown-shortcuts': 8.0.40(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)
-      '@portabletext/plugin-one-line': 7.0.39(@portabletext/editor@7.10.12)(react@19.2.8)
-      '@portabletext/plugin-paste-link': 4.0.39(@portabletext/editor@7.10.12)(react@19.2.8)
-      '@portabletext/plugin-table': 1.3.9(@portabletext/editor@7.10.12)(react-dom@19.2.8)(react@19.2.8)
-      '@portabletext/plugin-typography': 8.0.40(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/plugin-dnd': 1.0.24(@portabletext/editor@7.10.13)(react@19.2.8)
+      '@portabletext/plugin-list-index': 1.0.24(@portabletext/editor@7.10.13)(react@19.2.8)
+      '@portabletext/plugin-markdown-shortcuts': 8.0.40(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/plugin-one-line': 7.0.39(@portabletext/editor@7.10.13)(react@19.2.8)
+      '@portabletext/plugin-paste-link': 4.0.39(@portabletext/editor@7.10.13)(react@19.2.8)
+      '@portabletext/plugin-table': 1.3.9(@portabletext/editor@7.10.13)(react-dom@19.2.8)(react@19.2.8)
+      '@portabletext/plugin-typography': 8.0.40(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)
       '@portabletext/react': 6.2.0(react@19.2.8)
       '@portabletext/sanity-bridge': 3.2.3(@types/react@19.2.17)
       '@portabletext/to-html': 5.0.2
@@ -20240,8 +19833,8 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
       '@sanity/cli': 7.12.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.9)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.60.0)(rolldown@1.2.0)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)
-      '@sanity/client': 7.24.0
-      '@sanity/color': 3.0.7
+      '@sanity/client': 7.25.0
+      '@sanity/color': 3.0.8
       '@sanity/comlink': 4.0.1
       '@sanity/diff': 6.6.0
       '@sanity/diff-match-patch': 3.2.0
@@ -20256,14 +19849,14 @@ snapshots:
       '@sanity/migrate': 8.0.0(@types/react@19.2.17)(xstate@5.32.5)
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/mutator': 6.6.0(@types/react@19.2.17)
-      '@sanity/presentation-comlink': 2.2.0(@sanity/client@7.24.0)(@sanity/types@6.6.0)
-      '@sanity/preview-url-secret': 4.1.1(@sanity/client@7.24.0)
+      '@sanity/presentation-comlink': 2.2.0(@sanity/client@7.25.0)(@sanity/types@6.6.0)
+      '@sanity/preview-url-secret': 4.1.2(@sanity/client@7.25.0)
       '@sanity/prism-groq': 1.1.2
       '@sanity/schema': 6.6.0(@types/react@19.2.17)
       '@sanity/sdk': 2.18.0(@types/react@19.2.17)(immer@11.1.15)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/types': 6.6.0(@types/react@19.2.17)
-      '@sanity/ui': 3.4.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4)
+      '@sanity/ui': 3.5.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)(styled-components@6.4.4)
       '@sanity/util': 6.6.0(@types/react@19.2.17)
       '@sanity/uuid': 3.0.3
       '@sanity/workbench': 0.1.0-alpha.29(@sanity/sdk@2.18.0)(react@19.2.8)(xstate@5.32.5)
@@ -20367,17 +19960,17 @@ snapshots:
       '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1)(react@19.2.8)
       '@dnd-kit/utilities': 3.2.2(react@19.2.8)
       '@isaacs/ttlcache': 2.1.5
-      '@mux/mux-player-react': 3.13.0(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)
-      '@portabletext/editor': 7.10.12(@types/react@19.2.17)(react@19.2.8)
+      '@mux/mux-player-react': 3.13.2(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)
+      '@portabletext/editor': 7.10.13(@types/react@19.2.17)(react@19.2.8)
       '@portabletext/html': 1.1.1
       '@portabletext/patches': 2.0.5
-      '@portabletext/plugin-dnd': 1.0.24(@portabletext/editor@7.10.12)(react@19.2.8)
-      '@portabletext/plugin-list-index': 1.0.24(@portabletext/editor@7.10.12)(react@19.2.8)
-      '@portabletext/plugin-markdown-shortcuts': 8.0.40(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)
-      '@portabletext/plugin-one-line': 7.0.39(@portabletext/editor@7.10.12)(react@19.2.8)
-      '@portabletext/plugin-paste-link': 4.0.39(@portabletext/editor@7.10.12)(react@19.2.8)
-      '@portabletext/plugin-table': 1.3.9(@portabletext/editor@7.10.12)(react-dom@19.2.8)(react@19.2.8)
-      '@portabletext/plugin-typography': 8.0.40(@portabletext/editor@7.10.12)(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/plugin-dnd': 1.0.24(@portabletext/editor@7.10.13)(react@19.2.8)
+      '@portabletext/plugin-list-index': 1.0.24(@portabletext/editor@7.10.13)(react@19.2.8)
+      '@portabletext/plugin-markdown-shortcuts': 8.0.40(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)
+      '@portabletext/plugin-one-line': 7.0.39(@portabletext/editor@7.10.13)(react@19.2.8)
+      '@portabletext/plugin-paste-link': 4.0.39(@portabletext/editor@7.10.13)(react@19.2.8)
+      '@portabletext/plugin-table': 1.3.9(@portabletext/editor@7.10.13)(react-dom@19.2.8)(react@19.2.8)
+      '@portabletext/plugin-typography': 8.0.40(@portabletext/editor@7.10.13)(@types/react@19.2.17)(react@19.2.8)
       '@portabletext/react': 6.2.0(react@19.2.8)
       '@portabletext/sanity-bridge': 3.2.3(@types/react@19.2.17)
       '@portabletext/to-html': 5.0.2
@@ -20386,8 +19979,8 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
       '@sanity/cli': 7.12.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.9)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.60.0)(rolldown@1.2.0)(terser@5.49.0)(typescript@7.0.2)(xstate@5.32.5)
-      '@sanity/client': 7.24.0
-      '@sanity/color': 3.0.7
+      '@sanity/client': 7.25.0
+      '@sanity/color': 3.0.8
       '@sanity/comlink': 4.0.1
       '@sanity/diff': 6.6.0
       '@sanity/diff-match-patch': 3.2.0
@@ -20402,14 +19995,14 @@ snapshots:
       '@sanity/migrate': 8.0.0(@types/react@19.2.17)(xstate@5.32.5)
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/mutator': 6.6.0(@types/react@19.2.17)
-      '@sanity/presentation-comlink': 2.2.0(@sanity/client@7.24.0)(@sanity/types@6.6.0)
-      '@sanity/preview-url-secret': 4.1.1(@sanity/client@7.24.0)
+      '@sanity/presentation-comlink': 2.2.0(@sanity/client@7.25.0)(@sanity/types@6.6.0)
+      '@sanity/preview-url-secret': 4.1.2(@sanity/client@7.25.0)
       '@sanity/prism-groq': 1.1.2
       '@sanity/schema': 6.6.0(@types/react@19.2.17)
       '@sanity/sdk': 2.18.0(@types/react@19.2.17)(immer@11.1.15)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/types': 6.6.0(@types/react@19.2.17)
-      '@sanity/ui': 3.4.3(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react-is@19.2.8)(react@19.2.8)(styled-components@6.4.4)
+      '@sanity/ui': 3.5.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)(styled-components@6.4.4)
       '@sanity/util': 6.6.0(@types/react@19.2.17)
       '@sanity/uuid': 3.0.3
       '@sanity/workbench': 0.1.0-alpha.29(@sanity/sdk@2.18.0)(react@19.2.8)(xstate@5.32.5)
@@ -20950,7 +20543,7 @@ snapshots:
       obug: 2.1.4
       picomatch: 4.0.5
       rolldown: 1.2.0
-      rolldown-plugin-dts: 0.27.13(oxc-resolver@11.24.2)(rolldown@1.2.0)(typescript@7.0.2)
+      rolldown-plugin-dts: 0.27.14(oxc-resolver@11.24.2)(rolldown@1.2.0)(typescript@7.0.2)
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tree-kill: 1.2.2
@@ -21530,29 +21123,9 @@ snapshots:
 
   yoctocolors@2.1.2: {}
 
-  yuku-ast@0.7.4:
-    dependencies:
-      '@yuku-toolchain/types': 0.7.4
-
   yuku-ast@0.8.0:
     dependencies:
-      '@yuku-toolchain/types': 0.8.0
-
-  yuku-codegen@0.7.4:
-    dependencies:
-      '@yuku-toolchain/types': 0.7.4
-    optionalDependencies:
-      '@yuku-codegen/binding-darwin-arm64': 0.7.4
-      '@yuku-codegen/binding-darwin-x64': 0.7.4
-      '@yuku-codegen/binding-freebsd-x64': 0.7.4
-      '@yuku-codegen/binding-linux-arm-gnu': 0.7.4
-      '@yuku-codegen/binding-linux-arm-musl': 0.7.4
-      '@yuku-codegen/binding-linux-arm64-gnu': 0.7.4
-      '@yuku-codegen/binding-linux-arm64-musl': 0.7.4
-      '@yuku-codegen/binding-linux-x64-gnu': 0.7.4
-      '@yuku-codegen/binding-linux-x64-musl': 0.7.4
-      '@yuku-codegen/binding-win32-arm64': 0.7.4
-      '@yuku-codegen/binding-win32-x64': 0.7.4
+      '@yuku-toolchain/types': 0.8.1
 
   yuku-codegen@0.8.1:
     dependencies:
@@ -21570,26 +21143,9 @@ snapshots:
       '@yuku-codegen/binding-win32-arm64': 0.8.1
       '@yuku-codegen/binding-win32-x64': 0.8.1
 
-  yuku-parser@0.7.4:
-    dependencies:
-      '@yuku-toolchain/types': 0.7.4
-      yuku-ast: 0.7.4
-    optionalDependencies:
-      '@yuku-parser/binding-darwin-arm64': 0.7.4
-      '@yuku-parser/binding-darwin-x64': 0.7.4
-      '@yuku-parser/binding-freebsd-x64': 0.7.4
-      '@yuku-parser/binding-linux-arm-gnu': 0.7.4
-      '@yuku-parser/binding-linux-arm-musl': 0.7.4
-      '@yuku-parser/binding-linux-arm64-gnu': 0.7.4
-      '@yuku-parser/binding-linux-arm64-musl': 0.7.4
-      '@yuku-parser/binding-linux-x64-gnu': 0.7.4
-      '@yuku-parser/binding-linux-x64-musl': 0.7.4
-      '@yuku-parser/binding-win32-arm64': 0.7.4
-      '@yuku-parser/binding-win32-x64': 0.7.4
-
   yuku-parser@0.8.0:
     dependencies:
-      '@yuku-toolchain/types': 0.8.0
+      '@yuku-toolchain/types': 0.8.1
       yuku-ast: 0.8.0
     optionalDependencies:
       '@yuku-parser/binding-darwin-arm64': 0.8.0
