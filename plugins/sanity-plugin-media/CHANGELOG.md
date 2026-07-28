@@ -1,5 +1,47 @@
 # sanity-plugin-media
 
+## 6.0.9
+
+### Patch Changes
+
+- [#1362](https://github.com/sanity-io/plugins/pull/1362) [`6c2470e`](https://github.com/sanity-io/plugins/commit/6c2470e3193830d719a783eba82b4cb9c5bdb2a6) Thanks [@stipsan](https://github.com/stipsan)! - Replace ReduxProvider class component with a function component
+
+## 6.0.8
+
+### Patch Changes
+
+- [#1750](https://github.com/sanity-io/plugins/pull/1750) [`95509fd`](https://github.com/sanity-io/plugins/commit/95509fd0434a8b2235b064cba6f6028e7f756331) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.83.0
+
+## 6.0.7
+
+### Patch Changes
+
+- [#1717](https://github.com/sanity-io/plugins/pull/1717) [`d268b24`](https://github.com/sanity-io/plugins/commit/d268b2415f4dfab1d555e5144516314bd1225cf5) Thanks [@stipsan](https://github.com/stipsan)! - Align `groq` with the Sanity Studio `^6.6.0` catalog
+
+## 6.0.6
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+## 6.0.5
+
+### Patch Changes
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/icons` dependency to the latest catalog version.
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/ui` dependency to the latest catalog version.
+
+## 6.0.4
+
+### Patch Changes
+
+- [#1639](https://github.com/sanity-io/plugins/pull/1639) [`48e32f9`](https://github.com/sanity-io/plugins/commit/48e32f962bea75d96eed929fbda805782d2a9b04) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.82.0
+
+- [#1641](https://github.com/sanity-io/plugins/pull/1641) [`2087502`](https://github.com/sanity-io/plugins/commit/2087502d5c94b9feb4964ef5939ea06f924f46a4) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-virtuoso to ^4.18.11
+
+- [#1569](https://github.com/sanity-io/plugins/pull/1569) [`1d5f733`](https://github.com/sanity-io/plugins/commit/1d5f73373bd7adabf2ca552fead9af4b2958a83e) Thanks [@stipsan](https://github.com/stipsan)! - Import `date-fns` functions from subpaths instead of the barrel, matching Sanity Studio core
+
 ## 6.0.3
 
 ### Patch Changes

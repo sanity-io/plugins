@@ -9,6 +9,11 @@
     "plugins/**/src/schema.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
+    // `@sanity/types` is catalogued only so the `overrides` block can pin it with
+    // `catalog:`. knip reads `catalog:` references from package.json manifests
+    // (including `pnpm.overrides`), not from the overrides in pnpm-workspace.yaml,
+    // so it reports the entry as unused.
+    "pnpm-workspace.yaml": ["catalog"],
   },
   "ignoreDependencies": ["@vanilla-extract/css", "babel-plugin-react-compiler"],
   "workspaces": {
@@ -23,6 +28,19 @@
     "dev/test-studio": {
       "entry": ["migrations/**/*.ts"],
       "project": ["src/**/*.{ts,tsx}"],
+    },
+    "e2e": {
+      "entry": [
+        "playwright.config.ts",
+        "globalSetup.ts",
+        "tests/**/*.ts",
+        "helpers/**/*.ts",
+        "reporters/**/*.ts",
+        "scripts/**/*.ts",
+      ],
+      "project": ["**/*.ts"],
+      // Config calls resolveE2eEnv() at load time; knip has no e2e secrets/vars.
+      "playwright": false,
     },
     "turbo/generators": {
       "project": ["src/**/*.ts"],
@@ -111,6 +129,9 @@
       "project": ["src/**/*.{ts,tsx}"],
     },
     "plugins/sanity-plugin-transifex": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
+    "plugins/@sanity/block-insert-picker": {
       "project": ["src/**/*.{ts,tsx}"],
     },
     // add new plugin workspaces here

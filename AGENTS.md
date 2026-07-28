@@ -13,6 +13,9 @@ This guide is for AI agents working on this codebase. Follow these instructions 
 | Run linters          | `pnpm lint`          |
 | Build all packages   | `pnpm build`         |
 | Run tests            | `pnpm test`          |
+| Run e2e smoke tests  | `pnpm test:e2e`      |
+| Create e2e dataset   | `pnpm e2e:setup`     |
+| Cleanup e2e datasets | `pnpm e2e:cleanup`   |
 | Add changeset        | `pnpm changeset add` |
 | Start dev server     | `pnpm dev`           |
 
@@ -277,6 +280,7 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Plugins can expand their vitest configs and test suites over time as needed (unit tests, integration tests, etc.)
 - Tests run against built `dist/` output after `pnpm build`
 - Snapshots are generated with `pnpm test -u`
+- Root Vitest sets `SC_DISABLE_SPEEDY=false` so styled-components keeps its fast CSSOM injection path under jsdom (upstream disables it when `NODE_ENV !== 'production'`, which makes first mounts of styled-heavy trees slow enough to trip default timeouts). Same approach as [sanity#13675](https://github.com/sanity-io/sanity/pull/13675).
 - For plugins that use vanilla-extract: register `vanillaExtractPlugin()` in the plugin’s `vitest.config.ts` (required so `.css.ts` compiles under Vitest); optionally add `'@vanilla-extract/css/disableRuntimeStyles'` to `setupFiles` only for `jsdom`/`happy-dom` suites that don’t need real CSS — see the `sanity-plugin-best-practices` styling reference (`Disabling runtime styles in tests`)
 
 ## Pull Request Workflow
@@ -351,6 +355,10 @@ How it works:
 - Build sessions are written to `dev/test-studio/node_modules/.rolldown` (gitignored)
 - The flag is declared in `dev/test-studio/turbo.jsonc` so turbo-cached builds are invalidated when it changes (and so turbo's strict env mode passes it through to `pnpm dev`)
 - Enabling devtools makes `sanity build` noticeably slower; that's why it's opt-in via the env flag
+
+### React production profiling on Vercel previews
+
+`dev/test-studio/sanity.cli.ts` enables React production profiling when `VERCEL_ENV === "preview"` (Vercel PR deployments): it aliases `react-dom/client` → `react-dom/profiling`, emits production source maps, and disables identifier mangling so React DevTools can profile and show readable component names. It also sets `deployment.autoUpdates: false` on those previews, because auto-updates vendor builds hardcode `react-dom-client.production.js` and would bypass the profiling alias. Production builds (including `plugins-studio.sanity.dev` via `sanity deploy`, where `VERCEL_ENV` is unset) keep auto-updates on and skip profiling to avoid the overhead. `VERCEL_ENV` is listed in `dev/test-studio/turbo.jsonc` so Turbo cache keys differ between preview and production.
 
 ## Creating a New Plugin
 
@@ -447,6 +455,16 @@ When a dependency is used by more than one package (two or more), manage its ver
 
 Leave niche one-off peers and `workspace:` protocol deps as they are. `pnpm add` runs with `catalogMode: prefer` (set in `pnpm-workspace.yaml`), so adding a dependency that already exists in a catalog reuses the catalog version automatically. pnpm has no built-in "used N times" enforcement, so apply this rule whenever you add or move shared dependencies.
 
+**Upgrading the Sanity Studio monorepo (`sanity`, `@sanity/*`, `groq`)**
+
+When bumping the Studio stack (e.g. `^6.5.0` → `^6.6.0`):
+
+1. Update the catalog entries for `sanity`, `@sanity/mutator`, `@sanity/schema`, `@sanity/util`, `@sanity/vision`, and `groq` together.
+2. Keep `pnpm-workspace.yaml` `overrides` for `@sanity/mutator`, `@sanity/schema`, `@sanity/util`, `@sanity/types`, `groq`, and `sanity` pointed at that version (via `catalog:` or an explicit range for packages not in the catalog). Catalog-only bumps leave transitive deps (CLI / migrate / portabletext) free to keep an older `@sanity/types` copy, which breaks dts emit with `TS2883` portable-type errors.
+3. After `pnpm install`, confirm the lockfile has a single `@sanity/types@X.Y.Z` (and matching mutator/schema/util) — not both the old and new minor.
+4. Fix any new document-operation disable reasons (e.g. `TARGET_NOT_FOUND`) by mapping them to Sanity's structure locale keys (`action.*.disabled.*`), not by reusing an unrelated tooltip string.
+5. Add a **separate** changeset per published package whose `package.json` or runtime code changed.
+
 **date-fns: v4 via the catalog, subpath imports, official `@date-fns/tz`**
 
 All date handling matches sanity core (`sanity-io/sanity`), so plugins dedupe against the `date-fns` instance that `sanity` itself ships:
@@ -532,7 +550,7 @@ The test studio dev script uses `sanity dev --no-auto-updates`, so `pnpm dev` st
 
 The test studio connects to Sanity Cloud (project `ppsg7ml5`, dataset `plugins` by default). For cloud agents, use the injected `STUDIO_AUTH_TOKEN` secret instead of interactive login.
 
-Navigate to the studio with the token in the URL hash (Sanity consumes it on load and removes it from the address bar):
+**Interactive / manual browser:** navigate with the token in the URL hash (Sanity consumes it on load and removes it from the address bar):
 
 ```
 http://localhost:3333/home#token=<STUDIO_AUTH_TOKEN>
@@ -545,6 +563,22 @@ node -e "const t=process.env.STUDIO_AUTH_TOKEN; console.log('http://localhost:33
 ```
 
 Open that URL in the browser to authenticate and land directly in the Home workspace (the merged "kitchen sink"). Without a token, workspaces show as "Signed out".
+
+**Playwright e2e:** do not use the `#token=` hash. Tests seed `__studio_auth_token_<projectId>` via Playwright `storageState` (same underlying Studio auth). Requires `SANITY_E2E_SESSION_TOKEN`, `SANITY_E2E_PROJECT_ID`, and dataset env (`SANITY_E2E_DATASET` and/or `SANITY_E2E_DATASET_CHROMIUM` / `SANITY_E2E_DATASET_FIREFOX`). See [`e2e/README.md`](e2e/README.md).
+
+### E2E smoke tests
+
+```bash
+# Browsers (once)
+pnpm --filter e2e exec playwright install --with-deps chromium firefox
+
+# Required: SANITY_E2E_SESSION_TOKEN, SANITY_E2E_PROJECT_ID, SANITY_E2E_DATASET
+# (or copy e2e/.env.example → e2e/.env.local)
+pnpm e2e:setup   # optional locally; CI creates ephemeral pr-*/main-* datasets
+pnpm test:e2e
+```
+
+Tests run against the dedicated bare-bones `dev/e2e-studio` (workspaces `/chromium` and `/firefox`; plugins are added there together with their e2e tests) — not `dev/test-studio`. Locally Playwright uses `sanity dev`; CI creates ephemeral per-browser datasets, deploys the e2e studio to Vercel (`vercel build` + `deploy --prebuilt`), then runs Chromium and Firefox as parallel matrix jobs against the preview URL. Auth preflight calls `/users/me` before the suite runs — missing or wrong tokens fail fast (do not use `SANITY_DEPLOY_TOKEN`). CI also requires `SANITY_E2E_PROJECT_ID` and Vercel secrets (`VERCEL_E2E_REPORT_*`, shared by the studio preview and report deploys) — see [`e2e/README.md`](e2e/README.md).
 
 ### Node.js version notes
 

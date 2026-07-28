@@ -1,5 +1,29 @@
 # sanity-plugin-mux-input
 
+## 5.0.7
+
+### Patch Changes
+
+- [#1751](https://github.com/sanity-io/plugins/pull/1751) [`b065f3d`](https://github.com/sanity-io/plugins/commit/b065f3dec7b675616043fe6308ab4e8228b12f26) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @mux/mux-player to ^3.13.2
+
+- [#1752](https://github.com/sanity-io/plugins/pull/1752) [`1097877`](https://github.com/sanity-io/plugins/commit/1097877c0640bfa6b9b541192677a844ab270426) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @mux/mux-player-react to ^3.13.2
+
+## 5.0.6
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+- [#1707](https://github.com/sanity-io/plugins/pull/1707) [`5eb902e`](https://github.com/sanity-io/plugins/commit/5eb902e0bca64962bd284c7675e9e9704ea372bd) Thanks [@stipsan](https://github.com/stipsan)! - Update oxlint suppressions for React Compiler and exhaustive-deps compatibility
+
+## 5.0.5
+
+### Patch Changes
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/icons` dependency to the latest catalog version.
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/ui` dependency to the latest catalog version.
+
 ## 5.0.4
 
 ### Patch Changes

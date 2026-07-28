@@ -1,5 +1,41 @@
 # @sanity/color-input
 
+## 6.1.0
+
+### Minor Changes
+
+- [#1670](https://github.com/sanity-io/plugins/pull/1670) [`cfa596d`](https://github.com/sanity-io/plugins/commit/cfa596d036aced36b4c136b372da051e1a15a474) Thanks [@stipsan](https://github.com/stipsan)! - Migrate styling from `styled-components` and inline `style` objects to vanilla-extract. The plugin no longer requires a `styled-components` peer dependency; styles ship via the `./bundle.css` export (auto-injected when importing the package).
+
+### Patch Changes
+
+- [#1362](https://github.com/sanity-io/plugins/pull/1362) [`6c2470e`](https://github.com/sanity-io/plugins/commit/6c2470e3193830d719a783eba82b4cb9c5bdb2a6) Thanks [@stipsan](https://github.com/stipsan)! - Replace vendored react-color class components with function components
+
+## 6.0.20
+
+### Patch Changes
+
+- [#1697](https://github.com/sanity-io/plugins/pull/1697) [`d82235e`](https://github.com/sanity-io/plugins/commit/d82235ee29efbdffa8bffa2a76c147ccbb4e30e6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - Remove unused internal react-color type re-exports to satisfy knip checks.
+
+## 6.0.19
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+## 6.0.18
+
+### Patch Changes
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/icons` dependency to the latest catalog version.
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/ui` dependency to the latest catalog version.
+
+## 6.0.17
+
+### Patch Changes
+
+- [#1673](https://github.com/sanity-io/plugins/pull/1673) [`fa4097c`](https://github.com/sanity-io/plugins/commit/fa4097ca6ec397a2a0b38d829ef4eb7c42db3747) Thanks [@stipsan](https://github.com/stipsan)! - Replace the vendored `CustomPicker` higher-order component with color-state handling directly in the picker component
+
 ## 6.0.16
 
 ### Patch Changes

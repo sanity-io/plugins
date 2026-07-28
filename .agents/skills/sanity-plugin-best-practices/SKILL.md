@@ -84,8 +84,8 @@ See [`references/styling.md`](./references/styling.md) for the full rationale an
   styling (its only sanctioned use is the last-resort CSS-in-JS escape hatch for arbitrary runtime
   CSS); convert existing styling usage to vanilla-extract (carefully, preserving visual fidelity)
   using the patterns above. Until a plugin is fully migrated, keep its `styled-components` peer +
-  `catalog:` devDependency aligned so it resolves to the workspace `@sanity/styled-components`
-  override; remove them once migrated, and lock it in with `no-restricted-imports`. See
+  `catalog:` devDependency aligned so it resolves to the single instance shared with the Studio;
+  remove them once migrated, and lock it in with `no-restricted-imports`. See
   [`references/styling.md`](./references/styling.md#migrating-off-styled-components).
 - **Use `lodash-es`, never `lodash`** (matches `AGENTS.md`).
 - **Never use `forwardRef`.** On React 19 `ref` is a regular prop — declare `ref?: Ref<T>` in your

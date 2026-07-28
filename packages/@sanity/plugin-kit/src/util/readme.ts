@@ -1,7 +1,7 @@
 import licenses from '@rexxars/choosealicense-list'
-import outdent from 'outdent'
 
 import type {PackageData} from '../actions/inject'
+import {outdent} from './outdent'
 import type {User} from './user'
 
 export function generateReadme(data: PackageData) {
@@ -48,10 +48,10 @@ export function developTestSnippet() {
   return outdent`
     ## Develop & test
 
-    This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
+    This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugins/tree/main/packages/@sanity/plugin-kit)
     with default configuration for build & watch scripts.
 
-    See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
+    See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugins/tree/main/packages/@sanity/plugin-kit#testing-a-plugin-in-sanity-studio)
     on how to run this plugin with hotreload in the studio.
   `
 }

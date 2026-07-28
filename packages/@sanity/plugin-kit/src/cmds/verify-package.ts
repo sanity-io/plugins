@@ -6,7 +6,7 @@ import {verifyPackage} from '../actions/verify-package'
 import {verifyFlags} from '../actions/verify/verify-common'
 import {cliName} from '../constants'
 
-const description = `Verify that a Sanity plugin package is v3 compatible, and print upgrade steps if not.`
+const description = `Verify that a Sanity plugin package follows plugin-kit conventions.`
 
 const help = `
 Usage
@@ -30,7 +30,7 @@ Examples
 `
 
 function run({argv}: {argv: string[]}) {
-  const cli = meow(help, {flags: verifyFlags, argv, description})
+  const cli = meow(help, {importMeta: import.meta, flags: verifyFlags, argv, description})
   const basePath = path.resolve(cli.input[0] || process.cwd())
   return verifyPackage({basePath, flags: cli.flags})
 }

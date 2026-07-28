@@ -1,5 +1,46 @@
 # sanity-plugin-workflow
 
+## 3.0.38
+
+### Patch Changes
+
+- [#1728](https://github.com/sanity-io/plugins/pull/1728) [`ed28fe7`](https://github.com/sanity-io/plugins/commit/ed28fe7ef61da99766471dfeab7ebf1a32110864) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-virtual to ^3.14.8
+
+## 3.0.37
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+- Updated dependencies [[`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df)]:
+  - sanity-plugin-utils@2.0.13
+
+## 3.0.36
+
+### Patch Changes
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/icons` dependency to the latest catalog version.
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/ui` dependency to the latest catalog version.
+
+- Updated dependencies [[`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999), [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999)]:
+  - sanity-plugin-utils@2.0.12
+
+## 3.0.35
+
+### Patch Changes
+
+- [#1664](https://github.com/sanity-io/plugins/pull/1664) [`6063d87`](https://github.com/sanity-io/plugins/commit/6063d87a433a45e087737449c78b09ce39e81d01) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-virtual to ^3.14.7
+
+- [#1450](https://github.com/sanity-io/plugins/pull/1450) [`5ecc71c`](https://github.com/sanity-io/plugins/commit/5ecc71c51eb297534f879d126ef4a09b9ef1a1f6) Thanks [@stipsan](https://github.com/stipsan)! - Migrate styling from styled-components to vanilla-extract (zero-runtime CSS)
+
+## 3.0.34
+
+### Patch Changes
+
+- Updated dependencies [[`edb64e9`](https://github.com/sanity-io/plugins/commit/edb64e9d45d1c595ea8b9fdabd789c0bc58e9c48)]:
+  - sanity-plugin-utils@2.0.11
+
 ## 3.0.33
 
 ### Patch Changes

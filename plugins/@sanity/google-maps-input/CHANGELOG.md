@@ -1,5 +1,25 @@
 # @sanity/google-maps-input
 
+## 6.1.9
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+## 6.1.8
+
+### Patch Changes
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/icons` dependency to the latest catalog version.
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/ui` dependency to the latest catalog version.
+
+## 6.1.7
+
+### Patch Changes
+
+- [#1659](https://github.com/sanity-io/plugins/pull/1659) [`ae97408`](https://github.com/sanity-io/plugins/commit/ae974086ae9de58f2d499944509e8628f59cecab) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Stop emitting the redundant `css.ts.d.ts` file from the package output.
+
 ## 6.1.6
 
 ### Patch Changes

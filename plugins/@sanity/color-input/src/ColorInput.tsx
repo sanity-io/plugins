@@ -1,9 +1,9 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
-import {startTransition, useOptimistic, useRef} from 'react'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {startTransition, useOptimistic, useRef, type ComponentProps} from 'react'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
-import {styled} from 'styled-components'
 
 import {ColorList} from './ColorList'
 import {ColorPickerFields} from './ColorPickerFields'
@@ -11,96 +11,110 @@ import {
   Alpha,
   Checkboard,
   type Color,
-  CustomPicker,
-  type CustomPickerInjectedProps,
+  type ColorState,
   Hue,
   Saturation,
+  simpleCheckForValidColor,
+  toState,
 } from './react-color'
 import type {ColorSchemaType, ColorValue} from './types'
 
-const ColorBox = styled(Box)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-`
+import {
+  alphaCard,
+  colorBox,
+  fieldsBox,
+  previewBackgroundVar,
+  previewCard,
+  readOnlyContainer,
+  root,
+  saturationCard,
+  sliderCard,
+  widthVar,
+} from './ColorInput.css'
 
-const ReadOnlyContainer = styled(Flex)`
-  margin-top: 6rem;
-  background-color: var(--card-bg-color);
-  position: relative;
-  width: 100%;
-`
+function ColorBox({backgroundColor}: {backgroundColor: string}) {
+  return (
+    <Box className={colorBox} style={assignInlineVars({[previewBackgroundVar]: backgroundColor})} />
+  )
+}
 
-interface ColorPickerProps extends CustomPickerInjectedProps<Color> {
+function ReadOnlyContainer(props: ComponentProps<typeof Flex>) {
+  return <Flex {...props} className={readOnlyContainer} />
+}
+
+function FieldsBox(props: ComponentProps<typeof Box>) {
+  return <Box {...props} className={fieldsBox} />
+}
+
+interface ColorPickerProps {
   width?: string
   disableAlpha: boolean
   colorList?: Array<Color> | undefined
   readOnly?: boolean
+  onChange: (color: ColorState) => void
   onUnset: () => void
   color: ColorValue
 }
 
-const ColorPickerInner = (props: ColorPickerProps) => {
+const ColorPicker = (props: ColorPickerProps) => {
   const {
     width,
     color: {rgb, hex, hsv, hsl},
-    onChange,
+    onChange: onChangeProp,
     onUnset,
     disableAlpha,
     colorList,
     readOnly,
   } = props
 
+  // Remembers the hue across achromatic colors (saturation 0), where the hue
+  // can't be recovered from the color value itself. While the color is
+  // chromatic the live `hsl` prop is authoritative — so external value changes
+  // (undo, remote sync) are picked up — and the ref only bridges achromatic
+  // spans. Adapted from react-color's `ColorWrap` HOC (MIT, Copyright (c) 2015
+  // Case Sandberg).
+  const oldHueRef = useRef(hsl?.h ?? 0)
+
+  const onChange = (data: Color): void => {
+    if (!simpleCheckForValidColor(data)) {
+      return
+    }
+    const incomingHue = typeof data === 'string' ? undefined : 'h' in data ? data.h : undefined
+    const oldHue = hsl && hsl.s > 0 ? hsl.h : oldHueRef.current
+    const nextColor = toState(data, incomingHue || oldHue)
+    oldHueRef.current = nextColor.oldHue
+    onChangeProp(nextColor)
+  }
+
   if (!hsl || !hsv) {
     return null
   }
 
   return (
-    <div style={{width}}>
+    <div className={root} style={width ? assignInlineVars({[widthVar]: width}) : undefined}>
       <Card padding={1} border radius={1}>
         <Stack gap={2}>
           {!readOnly && (
             <>
-              <Card overflow="hidden" style={{position: 'relative', height: '5em'}}>
+              <Card overflow="hidden" className={saturationCard}>
                 <Saturation onChange={onChange} hsl={hsl} hsv={hsv} />
               </Card>
 
-              <Card
-                shadow={1}
-                radius={3}
-                overflow="hidden"
-                style={{position: 'relative', height: '10px'}}
-              >
+              <Card shadow={1} radius={3} overflow="hidden" className={sliderCard}>
                 <Hue hsl={hsl} onChange={!readOnly && onChange} />
               </Card>
 
               {!disableAlpha && (
-                <Card
-                  shadow={1}
-                  radius={3}
-                  overflow="hidden"
-                  style={{position: 'relative', height: '10px', background: '#fff'}}
-                >
+                <Card shadow={1} radius={3} overflow="hidden" className={alphaCard}>
                   <Alpha rgb={rgb} hsl={hsl} onChange={onChange} />
                 </Card>
               )}
             </>
           )}
           <Flex>
-            <Card
-              flex={1}
-              radius={2}
-              overflow="hidden"
-              style={{position: 'relative', minWidth: '4em', background: '#fff'}}
-            >
+            <Card flex={1} radius={2} overflow="hidden" className={previewCard}>
               <Checkboard size={8} white="transparent" grey="rgba(0,0,0,.08)" />
-              <ColorBox
-                style={{
-                  backgroundColor: `rgba(${rgb?.r},${rgb?.g},${rgb?.b},${rgb?.a})`,
-                }}
-              />
+              <ColorBox backgroundColor={`rgba(${rgb?.r},${rgb?.g},${rgb?.b},${rgb?.a})`} />
 
               {readOnly && (
                 <ReadOnlyContainer
@@ -131,7 +145,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
 
             {!readOnly && (
               <Flex align="flex-start" marginLeft={2}>
-                <Box style={{width: 200}}>
+                <FieldsBox>
                   <ColorPickerFields
                     rgb={rgb}
                     hsl={hsl}
@@ -139,7 +153,7 @@ const ColorPickerInner = (props: ColorPickerProps) => {
                     onChange={onChange}
                     disableAlpha={disableAlpha}
                   />
-                </Box>
+                </FieldsBox>
                 <Box marginLeft={2}>
                   <Button onClick={onUnset} title="Delete color" icon={TrashIcon} tone="critical" />
                 </Box>
@@ -152,8 +166,6 @@ const ColorPickerInner = (props: ColorPickerProps) => {
     </div>
   )
 }
-
-const ColorPicker = CustomPicker(ColorPickerInner)
 
 const DEFAULT_COLOR: ColorValue & {source: string} = {
   hex: '#24a3e3',

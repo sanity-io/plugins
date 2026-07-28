@@ -1,5 +1,6 @@
 import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
 import {HomeIcon} from '@sanity/icons/Home'
+import {themerTool} from '@sanity/themer/tool'
 import {vercelProtectionBypassTool} from '@sanity/vercel-protection-bypass'
 import {visionTool} from '@sanity/vision'
 import {defineConfig, type WorkspaceOptions} from 'sanity'
@@ -10,6 +11,7 @@ import {structureTool} from 'sanity/structure'
 import {aprimoExample} from '#aprimo'
 import {assistExample} from '#assist'
 import {asyncListExample} from '#async-list'
+import {blockInsertPickerExample} from '#block-insert-picker'
 import {bynderExample} from '#bynder'
 import {cloudinaryExample} from '#cloudinary'
 import {codeInputExample} from '#code-input'
@@ -100,6 +102,7 @@ export default defineConfig([
       personalizationExample(),
       cloudinaryExample(),
       asyncListExample(),
+      blockInsertPickerExample(),
       tableExample(),
       hotspotArrayExample(),
       orderableDocumentListExample(),
@@ -129,6 +132,7 @@ export default defineConfig([
       vercelWidgetExample(),
       contentGraphView(),
       scriptRunnerTool(),
+      themerTool(),
       debugSecrets(),
       vercelProtectionBypassTool(),
       visionTool(),

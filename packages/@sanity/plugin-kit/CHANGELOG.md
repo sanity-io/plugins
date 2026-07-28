@@ -1,5 +1,64 @@
 # @sanity/plugin-kit
 
+## 10.0.2
+
+### Patch Changes
+
+- [#1362](https://github.com/sanity-io/plugins/pull/1362) [`6c2470e`](https://github.com/sanity-io/plugins/commit/6c2470e3193830d719a783eba82b4cb9c5bdb2a6) Thanks [@stipsan](https://github.com/stipsan)! - Ban importing `Component`, `PureComponent`, and `createRef` from `react` in the shared oxlint config
+
+## 10.0.1
+
+### Patch Changes
+
+- [#1758](https://github.com/sanity-io/plugins/pull/1758) [`965c25e`](https://github.com/sanity-io/plugins/commit/965c25e64243da3221742c451e2a5381dd14075a) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency concurrently to ^10.0.4
+
+## 10.0.0
+
+### Major Changes
+
+- [#1696](https://github.com/sanity-io/plugins/pull/1696) [`09c10da`](https://github.com/sanity-io/plugins/commit/09c10da8f0dd48691b933c5a82d724c8527beb03) Thanks [@stipsan](https://github.com/stipsan)! - **Node.js 24 or newer is now required** to run the plugin-kit CLI (`engines.node` was `>=20.19 <22 || >=22.12`). This only affects the machine running plugin-kit itself — plugins scaffolded and verified by plugin-kit still declare (and are held to) the wider `>=20.19 <22 || >=22.12` range shared with `@sanity/pkg-utils`.
+
+  With the permissive engine range gone, the CLI dependencies previously held back are now on their latest majors: `concurrently` 10, `execa` 10 and `inquirer` 14. The CLI behaves the same as before, apart from `link-watch` output now being prefixed with an automatic color (concurrently 10's new default).
+
+  Also drops several dependencies in favor of Node.js 24 built-ins and small local helpers:
+
+  - `chalk` → `util.styleText`
+  - `get-it` → native `fetch`
+  - `git-remote-origin-url` → `execa` + `git config`
+  - `github-url-to-object` → local URL/scp parser
+  - `xdg-basedir` → `os.homedir()` / `XDG_CONFIG_HOME`
+  - `email-validator` → lightweight local check
+  - `p-props` → `Promise.all` + `Object.fromEntries`
+  - `outdent` → local tagged-template helper
+
+  Also fixes `init` reporting a failed dependency install as an unhandled CLI error instead of the intended "Failed to install dependencies, try manually running `npm install`" hint.
+
+## 9.0.3
+
+### Patch Changes
+
+- [#1707](https://github.com/sanity-io/plugins/pull/1707) [`5eb902e`](https://github.com/sanity-io/plugins/commit/5eb902e0bca64962bd284c7675e9e9704ea372bd) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade oxlint to ^1.75.0 and oxlint-tsgolint to ^7.0.2001
+
+## 9.0.2
+
+### Patch Changes
+
+- [#1687](https://github.com/sanity-io/plugins/pull/1687) [`96830b8`](https://github.com/sanity-io/plugins/commit/96830b800b5e20a34f8def189488aae26a2f92ae) Thanks [@stipsan](https://github.com/stipsan)! - Update CLI dependencies to their latest majors: `chalk` 5, `concurrently` 9, `execa` 9, `git-remote-origin-url` 4, `inquirer` 12, `meow` 14, `p-props` 6, `xdg-basedir` 5 and `nodemon` 3.1.14. The CLI behaves the same as before, and its installed footprint shrinks noticeably (the new majors drop many transitive dependencies). `concurrently` 10, `execa` 10 and `inquirer` 13+ are intentionally held back for now, as they require Node.js versions newer than plugin-kit's supported range.
+
+## 9.0.1
+
+### Patch Changes
+
+- [#1675](https://github.com/sanity-io/plugins/pull/1675) [`fc35ac5`](https://github.com/sanity-io/plugins/commit/fc35ac56bd69aa0d68a6d1aacb04699fd942ce95) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency get-it to ^9.2.0
+
+## 9.0.0
+
+### Major Changes
+
+- [#1588](https://github.com/sanity-io/plugins/pull/1588) [`f64af98`](https://github.com/sanity-io/plugins/commit/f64af98e9eed4b6f9c0f3f0ffcfe6702ae329a68) Thanks [@stipsan](https://github.com/stipsan)! - Remove Sanity Studio v2 upgrade and compatibility tooling
+
+  `verify-studio` is removed. `verify-package` no longer checks for leftover v2 shims (`@sanity/incompatible-plugin`, `v2-incompatible.js`, `sanity.json` parts), obsolete `@sanity/*` package dependencies, or `part:`/`config:` imports. Package verification now focuses on current plugin-kit conventions for modern Studio plugins.
+
 ## 8.0.1
 
 ### Patch Changes

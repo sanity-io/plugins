@@ -1,10 +1,10 @@
-import chalk from 'chalk'
-import outdent from 'outdent'
+import {styleText} from 'node:util'
 
 import {cliName, defaultOutDir, urls} from '../constants'
 import {getPackage} from '../npm/package'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
+import {outdent} from '../util/outdent'
 import {readTSConfig} from '../util/ts'
 import type {PackageJson} from './verify/types'
 import {
@@ -15,11 +15,9 @@ import {
   validatePackageType,
   validatePkgUtilsDependency,
   validatePkgUtilsVersion,
-  validateIncompatiblePlugin,
   validateDeprecatedDependencies,
   validateScripts,
   validateTsConfig,
-  validateSanityDependencies,
   validateSrcIndexFile,
   validateBannedFiles,
   validateOxfmtConfig,
@@ -72,13 +70,8 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
     await validation('tsconfig', async () => validateTsConfig(ts, {basePath, outDir, tsconfig}))
   }
 
-  await validation('incompatiblePlugin', async () =>
-    validateIncompatiblePlugin({basePath, packageJson}),
-  )
-
   await validation('babelConfig', async () => validateBabelConfig({basePath}))
 
-  await validation('dependencies', async () => validateSanityDependencies(packageJson))
   await validation('deprecatedDependencies', async () =>
     validateDeprecatedDependencies(packageJson),
   )
@@ -87,17 +80,16 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
     throw new Error(
       outdent`
         Detected validation issues!
-        To make this package Sanity v3 compatible, fix the issues starting from the top, or disable any checks you deem unnecessary.
+        Fix the issues starting from the top, or disable any checks you deem unnecessary.
 
         These issues assume the package uses @sanity/plugin-kit defaults for development and building.
         Refer to ${urls.pluginReadme} for configuration options.
 
         More information is available here:
-        - Studio migration guide: ${urls.migrationGuideStudio}
-        - Plugin migration guide: ${urls.migrationGuidePlugin}
         - Reference documentation: ${urls.refDocs}
 
-        ${chalk.grey(
+        ${styleText(
+          'grey',
           `To fail-fast on first detected issue run:\nnpx ${cliName} verify-package --single`,
         )}
       `.trimStart(),
@@ -106,7 +98,7 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
 
   log.success(
     outdent`
-    No outstanding upgrade issues detected.
+    No outstanding package validation issues detected.
 
     Suggested next steps:
       - Use plugin-kit to build and develop the plugin according to ${urls.pluginReadme}.

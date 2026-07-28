@@ -21,12 +21,10 @@ test(
 
         // checks that output contains the "skip this validation" snippet for every possible relevant key
         // will fail when new checks are added that we may or may not want to account for
-        Object.keys(verifyPackageConfigDefaults)
-          .filter((key) => key !== 'studioConfig')
-          .forEach((checkKey) => {
-            const findString = `"${checkKey}": false`
-            expect(stderr, `should include ${findString} in stderr`).toContain(findString)
-          })
+        Object.keys(verifyPackageConfigDefaults).forEach((checkKey) => {
+          const findString = `"${checkKey}": false`
+          expect(stderr, `should include ${findString} in stderr`).toContain(findString)
+        })
       },
     })
   },
@@ -42,18 +40,6 @@ test('plugin-kit verify-package in ok package', {timeout: 120_000}, async () => 
       // to regenerate the snapshot, run: pnpm test -u
       const redactFilePaths = cleanupOutput(stdout, /[\S]+verify-package\/valid\//g)
       expect(redactFilePaths, 'stdout should match snapshot').toMatchSnapshot()
-    },
-  })
-})
-
-test('plugin-kit verify-studio in fresh v2 studio', {timeout: 120_000}, async () => {
-  await testFixture({
-    fixturePath: 'verify-package/fresh-v2-movie-studio',
-    command: ({fixtureDir}) => runCliCommand('verify-studio', [fixtureDir]),
-    assert: async ({result: {stderr}}) => {
-      // to regenerate the snapshot, run: pnpm test -u
-      const redactFilePaths = cleanupOutput(stderr, /[\S]+verify-package\/fresh-v2-movie-studio\//g)
-      expect(redactFilePaths, 'stderr should match snapshot').toMatchSnapshot()
     },
   })
 })

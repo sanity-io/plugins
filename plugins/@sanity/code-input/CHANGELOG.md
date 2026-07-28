@@ -1,5 +1,31 @@
 # @sanity/code-input
 
+## 7.3.3
+
+### Patch Changes
+
+- [#1697](https://github.com/sanity-io/plugins/pull/1697) [`d82235e`](https://github.com/sanity-io/plugins/commit/d82235ee29efbdffa8bffa2a76c147ccbb4e30e6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - Remove an unused internal type re-export to satisfy knip checks.
+
+## 7.3.2
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+## 7.3.1
+
+### Patch Changes
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/icons` dependency to the latest catalog version.
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/ui` dependency to the latest catalog version.
+
+## 7.3.0
+
+### Minor Changes
+
+- [#1600](https://github.com/sanity-io/plugins/pull/1600) [`9734bff`](https://github.com/sanity-io/plugins/commit/9734bff266ab10c621356726a53496dde892e35e) Thanks [@GabeStah](https://github.com/GabeStah)! - Export `SUPPORTED_LANGUAGES` and `LANGUAGE_ALIASES` from the package root. Downstream tooling that maps external language tokens (markdown fence infostrings, import pipelines) onto `code` field values can now consume the canonical list the Language selector offers instead of vendoring a copy that drifts.
+
 ## 7.2.10
 
 ### Patch Changes

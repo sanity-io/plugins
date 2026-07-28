@@ -190,6 +190,3 @@ function addTelemetryComponent(
     },
   } as SchemaTypeDefinition
 }
-
-// Re-export for consumers that previously used these types.
-export type {PresetDefinition, AnyPresetDefinition}

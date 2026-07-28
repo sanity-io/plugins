@@ -615,15 +615,15 @@ need `&&` to match. During a plugin **transfer/port**, do not migrate styling in
 building as-is and do the migration in a dedicated follow-up PR (see the `plugin-transfer` skill).
 
 > **Lock in a finished migration.** Once a plugin no longer imports `styled-components`, ban it via
-> `no-restricted-imports` in `.oxlintrc.json` so it cannot creep back — this is how `@sanity/vision`
+> `no-restricted-imports` in `@sanity/plugin-kit/oxlint` (or a local `oxlint.config.ts` override) so it cannot creep back — this is how `@sanity/vision`
 > locked in its migration in
 > [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333).
 
 ### While a plugin still has styled-components
 
 Until a plugin is fully migrated, keep its `styled-components` declaration aligned so it resolves to
-the workspace `@sanity/styled-components` override — a **single** instance shared with the Studio,
-without which pnpm may install a separate copy and theming/SSR break:
+a **single** instance shared with the Studio, without which pnpm may install a separate copy and
+theming/SSR break:
 
 ```json
 {

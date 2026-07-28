@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-dashboard-widget-vercel",
-  "version": "4.0.18",
+  "version": "4.0.23",
   "description": "View your recent Vercel deployments and manually trigger builds directly from your Sanity dashboard.",
   "keywords": [
     "dashboard",
@@ -45,7 +45,7 @@
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
     "@sanity/uuid": "catalog:",
-    "@tanstack/react-query": "^5.101.2",
+    "@tanstack/react-query": "^5.101.4",
     "@xstate/react": "^6.1.0",
     "object-hash": "3.0.0",
     "react-hook-form": "catalog:",

@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-media",
-  "version": "6.0.3",
+  "version": "6.0.9",
   "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
   "keywords": [
     "asset",
@@ -54,7 +54,7 @@
     "copy-to-clipboard": "^3.3.3",
     "date-fns": "catalog:",
     "filesize": "^9.0.11",
-    "groq": "^6.5.0",
+    "groq": "catalog:",
     "is-hotkey-esm": "^1.0.0",
     "nanoid": "catalog:",
     "pluralize": "^8.0.0",
@@ -83,7 +83,6 @@
     "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-is": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
     "tsdown": "catalog:"

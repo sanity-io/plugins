@@ -1,6 +1,6 @@
 {
   "name": "@sanity/google-maps-input",
-  "version": "6.1.6",
+  "version": "6.1.9",
   "description": "Sanity plugin providing input handlers for geo-related input types using Google Maps",
   "keywords": [
     "cms",
@@ -64,7 +64,7 @@
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
-    "@types/google.maps": "^3.65.2",
+    "@types/google.maps": "^3.65.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vanilla-extract/css": "catalog:",

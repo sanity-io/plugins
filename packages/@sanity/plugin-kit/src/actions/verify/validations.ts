@@ -2,19 +2,13 @@ import {createRequire} from 'node:module'
 import path from 'path'
 
 import type {ParsedCommandLine} from '@typescript/typescript6'
-import chalk from 'chalk'
-import outdent from 'outdent'
 import validateNpmPackageName from 'validate-npm-package-name'
 
-import {deprecatedDevDeps, mergedPackages} from '../../configs/banned-packages'
-import {
-  incompatiblePluginPackage,
-  minPkgUtilsMajor,
-  requiredNodeEngine,
-  urls,
-} from '../../constants'
-import {fileExists, readFile, readJsonFile, readJson5File} from '../../util/files'
-import type {PackageJson, SanityStudioJson, SanityV2Json} from './types'
+import {deprecatedDevDeps} from '../../configs/banned-packages'
+import {minPkgUtilsMajor, requiredNodeEngine} from '../../constants'
+import {fileExists, readFile, readJsonFile} from '../../util/files'
+import {outdent} from '../../util/outdent'
+import type {PackageJson} from './types'
 
 export const expectedScripts = {
   'build': 'plugin-kit verify-package --silent && pkg-utils build --strict --check --clean',
@@ -292,29 +286,6 @@ export function validatePkgUtilsVersion({basePath}: {basePath: string}): string[
   return []
 }
 
-export function validateSanityDependencies(packageJson: PackageJson): string[] {
-  const {dependencies, devDependencies, peerDependencies} = packageJson
-  const allDependencies = {...dependencies, ...devDependencies, ...peerDependencies}
-
-  const illegalDeps = Object.keys(allDependencies).filter((dep) => mergedPackages.includes(dep))
-  const deps = new Set<string>(illegalDeps)
-  const unique = [...deps.values()]
-  if (unique.length) {
-    return [
-      outdent`
-        package.json depends on "@sanity/*" packages that have moved into "sanity" package.
-
-        The following dependencies should be replaced with "sanity":
-        - ${unique.join('\n- ')}
-
-        Refer to the reference docs to find replacement imports:
-        ${urls.refDocs}
-    `.trimStart(),
-    ]
-  }
-  return []
-}
-
 export function validateDeprecatedDependencies(packageJson: PackageJson): string[] {
   const {dependencies, devDependencies, peerDependencies} = packageJson
   const allDependencies = {...dependencies, ...devDependencies, ...peerDependencies}
@@ -362,173 +333,6 @@ export async function validateBabelConfig({basePath}: {basePath: string}) {
   return []
 }
 
-export async function validateStudioConfig({basePath}: {basePath: string}): Promise<string[]> {
-  const suffixes = ['ts', 'js', 'tsx', 'jsx']
-
-  const filenames = filesWithSuffixes(['sanity.config', 'sanity.cli'], suffixes)
-
-  const files: Record<string, boolean | undefined> = {}
-
-  for (const filename of filenames) {
-    const filepath = path.normalize(path.join(basePath, filename))
-    files[filename] = await fileExists(filepath)
-  }
-
-  const sanityJson = await readJson5File<SanityStudioJson>({basePath, filename: 'sanity.json'})
-
-  const hasConfigFile = (fileBase: string) =>
-    filesWithSuffixes([fileBase], suffixes).some((filename) => files[filename])
-  const hasCliConfig = hasConfigFile('sanity.cli')
-  const hasStudioConfig = hasConfigFile('sanity.config')
-
-  const errors: string[] = []
-
-  if (sanityJson) {
-    const info = [
-      outdent`
-        Found sanity.json. This file is not used by Sanity Studio V3.
-
-        Please consult the Studio V3 migration guide:
-         ${urls.migrationGuideStudio}
-        It will detail how to convert sanity.json to sanity.config.ts (or .js) and sanity.cli.ts (or .js) equivalents.
-      `.trimStart(),
-      sanityJson.plugins?.length &&
-        outdent`
-        For V3 versions and alternatives to V2 plugins, please refer to the Sanity Exchange:
-        ${urls.sanityExchange}
-      `.trimStart(),
-    ].filter((s): s is string => !!s)
-
-    errors.push(info.join('\n\n'))
-  }
-
-  if (!hasCliConfig) {
-    errors.push(
-      outdent`
-        sanity.cli.(${suffixes.join(
-          ' | ',
-        )}) missing. Please create a file named sanity.cli.ts with the following content:
-
-        ${chalk.green(
-          outdent`
-        import {createCliConfig} from 'sanity/cli'
-
-        export default createCliConfig({
-          api: {
-            projectId: '${sanityJson?.api?.projectId ?? 'project-id'}',
-            dataset: '${sanityJson?.api?.dataset ?? 'dataset'}',
-          }
-        })`,
-        )}
-
-        Make sure to replace the projectId and dataset fields with your own.
-
-        For more, see ${urls.migrationGuideStudio}
-    `.trimStart(),
-    )
-  }
-
-  if (!hasStudioConfig) {
-    errors.push(
-      outdent`
-        sanity.config.(${suffixes.join(
-          ' | ',
-        )}) missing. At a minimum sanity.config.ts should contain:
-
-        ${chalk
-          .green(
-            outdent`
-            import { defineConfig } from "sanity"
-            import { deskTool } from "sanity/desk"
-
-            export default defineConfig({
-              name: "default",
-
-              projectId: '${sanityJson?.api?.projectId ?? 'project-id'}',
-              dataset: '${sanityJson?.api?.dataset ?? 'dataset'}',
-
-              plugins: [
-                deskTool(),
-              ],
-
-              schema: {
-                types: [
-                  /* put your v2 schema-types here */
-                ],
-              },
-            })`,
-          )
-          .trimStart()}
-
-        Make sure to replace the projectId and dataset fields with your own.
-
-        For more, see ${urls.migrationGuideStudio}
-    `.trimStart(),
-    )
-  }
-
-  return errors.length ? [errors.join(`\n\n---\n\n`)] : []
-}
-
-/**
- * Detects leftover usage of the legacy `@sanity/incompatible-plugin` shim and asks for its removal.
- *
- * The shim (a `sanity.json` + `v2-incompatible.js` entry point, plus the `@sanity/incompatible-plugin`
- * dependency) only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin
- * was installed there. plugin-kit no longer scaffolds it, so a plugin should not ship it anymore.
- */
-export async function validateIncompatiblePlugin({
-  basePath,
-  packageJson,
-}: {
-  basePath: string
-  packageJson: PackageJson
-}): Promise<string[]> {
-  const {dependencies, devDependencies, peerDependencies} = packageJson
-  const inDependencies = !!(
-    dependencies?.[incompatiblePluginPackage] ||
-    devDependencies?.[incompatiblePluginPackage] ||
-    peerDependencies?.[incompatiblePluginPackage]
-  )
-
-  const hasShimFile = await fileExists(path.normalize(path.join(basePath, 'v2-incompatible.js')))
-
-  const sanityJson = await readJson5File<SanityV2Json>({basePath, filename: 'sanity.json'})
-  const sanityJsonReferencesShim = !!sanityJson?.parts?.some((part) =>
-    part?.path?.includes('v2-incompatible'),
-  )
-
-  if (!inDependencies && !hasShimFile && !sanityJsonReferencesShim) {
-    return []
-  }
-
-  const found = [
-    inDependencies ? `- "${incompatiblePluginPackage}" listed in package.json` : null,
-    hasShimFile ? '- the v2-incompatible.js file' : null,
-    sanityJsonReferencesShim ? '- a sanity.json referencing v2-incompatible.js' : null,
-  ].filter((e): e is string => !!e)
-
-  return [
-    outdent`
-      ${incompatiblePluginPackage} is no longer used and should be removed.
-
-      It only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin was
-      installed there. That compatibility shim is now obsolete, so plugin-kit no longer adds it.
-
-      Found:
-      ${found.join('\n')}
-
-      To fix this:
-      - Remove "${incompatiblePluginPackage}" from package.json (dependencies/devDependencies/peerDependencies)
-      - Delete the v2-incompatible.js file
-      - Delete sanity.json (if it only contains the v2-incompatible "part")
-      - Remove "sanity.json" and "v2-incompatible.js" from the package.json "files" array
-
-      For more, see ${urls.incompatiblePlugin}
-    `.trimStart(),
-  ]
-}
-
 export function validatePackageName(packageJson: PackageJson) {
   const valid = validateNpmPackageName(packageJson.name ?? '')
   if (!valid.validForNewPackages) {
@@ -546,9 +350,9 @@ export function validatePackageName(packageJson: PackageJson) {
 }
 
 /**
- * Plugins built with @sanity/plugin-kit publish the compiled output (the `dist` directory) plus any
- * v2-compatibility files. The `src` directory should not be published: it bloats the package and can
- * cause bundlers that resolve the `source` export condition to pull in raw, uncompiled TypeScript.
+ * Plugins built with @sanity/plugin-kit publish the compiled output (the `dist` directory).
+ * The `src` directory should not be published: it bloats the package and can cause bundlers that
+ * resolve the `source` export condition to pull in raw, uncompiled TypeScript.
  */
 export function validateBannedFiles(packageJson: PackageJson): string[] {
   const {files} = packageJson
@@ -576,7 +380,7 @@ export function validateBannedFiles(packageJson: PackageJson): string[] {
     outdent`
       package.json "files" must not include "src".
 
-      Plugins built with @sanity/plugin-kit publish the compiled output in "dist" (and any v2-compatibility files).
+      Plugins built with @sanity/plugin-kit publish the compiled output in "dist".
       Shipping the "src" directory bloats the published package and can cause bundlers that resolve the
       "source" export condition to import raw, uncompiled TypeScript.
 

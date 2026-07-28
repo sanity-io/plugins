@@ -1,6 +1,6 @@
 {
   "name": "@sanity/plugin-kit",
-  "version": "8.0.1",
+  "version": "10.0.2",
   "description": "Enhanced Sanity.io plugin development experience",
   "keywords": [
     "bootstrap",
@@ -53,33 +53,20 @@
   "dependencies": {
     "@rexxars/choosealicense-list": "^1.1.2",
     "@typescript/typescript6": "^6.0.2",
-    "chalk": "^4.1.2",
-    "concurrently": "^8.2.2",
-    "email-validator": "^2.0.4",
-    "execa": "^5.1.1",
-    "get-it": "^9.1.0",
+    "concurrently": "^10.0.4",
+    "execa": "^10.0.0",
     "get-latest-version": "^6.0.1",
-    "git-remote-origin-url": "^3.1.0",
-    "github-url-to-object": "^4.0.6",
-    "inquirer": "^8.2.7",
-    "json5": "^2.2.3",
-    "meow": "^9.0.0",
-    "nodemon": "3.1.0",
-    "outdent": "^0.8.0",
-    "p-any": "^3.0.0",
-    "p-props": "^4.0.0",
+    "inquirer": "^14.0.2",
+    "meow": "^14.1.0",
+    "nodemon": "3.1.14",
     "validate-npm-package-name": "catalog:",
-    "xdg-basedir": "^4.0.0",
     "yalc": "1.0.0-pre.53"
   },
   "devDependencies": {
     "@sanity/pkg-utils": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
-    "@types/github-url-to-object": "^4.0.4",
-    "@types/inquirer": "^9.0.3",
     "@types/node": "catalog:",
-    "@types/nodemon": "1.19.6",
     "@types/react": "catalog:",
     "@types/validate-npm-package-name": "^4.0.2",
     "oxfmt": "catalog:",
@@ -106,7 +93,7 @@
     }
   },
   "engines": {
-    "node": ">=20.19 <22 || >=22.12"
+    "node": ">=24"
   },
   "binname": "plugin-kit"
 }

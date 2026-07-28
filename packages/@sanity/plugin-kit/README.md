@@ -12,14 +12,8 @@ npx @sanity/plugin-kit@latest init my-sanity-plugin
 ```
 
 ```sh
-# Verify your plugin package.
-# This command can also be used when upgrading plugins from Sanity Studio v2 → v3.
+# Verify your plugin package
 npx @sanity/plugin-kit@latest verify-package
-```
-
-```sh
-# Get help upgrading from Sanity Studio v2 → v3.
-npx @sanity/plugin-kit@latest verify-studio
 ```
 
 `@sanity/plugin-kit` assumes and recommends [`@sanity/pkg-utils`](https://github.com/sanity-io/pkg-utils#sanitypkg-utils) for building,
@@ -33,11 +27,8 @@ Check the [FAQ](#faq) fro more on these.
 - [Formatting with oxfmt](#formatting-with-oxfmt)
 - [Linting with oxlint](#linting-with-oxlint)
 - [Verify plugin package](#verify-plugin-package)
-  - [Upgrading a v2 plugin](#upgrading-a-v2-plugin)
-- [Upgrade help in v2 Studio](#upgrade-help-in-v2-studio)
-- [Inject config into existing v3 plugin](#inject-config-into-existing-package)
+- [Inject config into existing package](#inject-config-into-existing-package)
 - [Testing a plugin in Sanity Studio](#testing-a-plugin-in-sanity-studio)
-- [Upgrading from plugin-kit 1.x](#upgrade-from-v1x-to-v2)
 - [FAQ](#faq) aka "Do I _have_ to use this plugin-kit?" aka No
 - [Configuration reference](#configuration-reference)
 - [Developing plugin-kit](#develop-plugin-kit)
@@ -45,6 +36,9 @@ Check the [FAQ](#faq) fro more on these.
 ## Installation
 
 > npm install --save-dev @sanity/plugin-kit
+
+Running the plugin-kit CLI requires Node.js 24 or newer. Plugins scaffolded by plugin-kit are not
+affected by this requirement: they declare the wider Node.js range shared with `@sanity/pkg-utils`.
 
 ### Install build tool
 
@@ -204,16 +198,13 @@ Verify that the plugin package is configured correctly by running:
 - Check package.json for:
   - recommended script commands
   - ESM-only configuration (bans CJS `main`/`module` fields and `require` export conditions)
-  - sanity dependency compatibility
-  - @sanity/pkg-utils devDependency
-  - recommended usage of devDependencies/peerDependencies/dependencies for certain packages
-- Check for redundant v2 config:
-  - babel
-  - the deprecated `@sanity/incompatible-plugin` v2 compatibility shim (`sanity.json` + `v2-incompatible.js`)
+  - @sanity/pkg-utils devDependency (and required major version)
+  - recommended `engines.node`
+  - no publishing of `src` via the `files` array
+- Check for redundant legacy tooling config (for example Babel) and deprecated build tools
 - Check that the plugin is formatted with oxfmt using the shared `@sanity/plugin-kit/oxfmt` preset (and that no legacy prettier config remains)
 - Check that the plugin lints with oxlint using the shared `@sanity/plugin-kit/oxlint` config (and that no legacy eslint config remains)
 - Check tsconfig.json settings
-- Check for [SPDX](https://spdx.org/licenses/) compatible license definition
 
 Each check will explain why it is needed, steps to fix it and how it can be individually disabled.
 
@@ -221,40 +212,13 @@ Each check will explain why it is needed, steps to fix it and how it can be indi
 
 `verify-package` is _not_ a codemod tool. It will only check files and recommended settings: it will not change any files.
 
-Consider using `npx @sanity/plugin-kit@latest inject` if you want to add recommended V3 plugin configuration automatically.
+Consider using `npx @sanity/plugin-kit@latest inject` if you want to add recommended plugin configuration automatically.
 See the [Inject docs](#inject-config-into-existing-package) for more on this.
-
-### Upgrading a v2 plugin
-
-Simply use the `verify-package` command in a v2 plugin package, and it will notify you about steps you need to take to upgrade the
-plugin to v3.
-
-```sh
-npx @sanity/plugin-kit@latest verify-package
-```
-
-## Upgrade help in V2 Studio
-
-You can use the `verify-studio` command in a v2 Sanity Studio to get some of the same validation there, to help in the upgrade from v2
-to v3.
-
-```sh
-npx @sanity/plugin-kit@latest verify-studio
-```
-
-This will:
-
-- Check for `sanity.json,` `sanity.config.(ts|js)` and `sanity.cli.(ts|js)` and advice on how to convert the former to the latter two.
-- Check for sanity dependencies that has changed in v3
 
 ### Fail fast mode
 
 ```sh
-## for plugins
 npx @sanity/plugin-kit@latest verify-package --single
-
-## for studio
-npx @sanity/plugin-kit@latest verify-package --studio --single
 ```
 
 This will only output the first validation that fails. Useful when working through the list of issues by fixing and rerunning the command.
@@ -265,7 +229,7 @@ This will only output the first validation that fails. Useful when working throu
 npx @sanity/plugin-kit@latest inject
 ```
 
-will inject recommended V3 plugin package boilerplate into an existing plugin.
+will inject recommended plugin package boilerplate into an existing plugin.
 Be sure to commit any local changes before running this command, so you can easily revert anything
 you dont want.
 
@@ -370,19 +334,6 @@ The `prepublishOnly` task should kick in and compile the source files, then veri
 If you have not published any modules to npm before, you will be asked to create a user first.
 
 For an opinionated template for publication based on semantic-release, see [semver-workflow preset](docs/semver-workflow.md)
-
-### Upgrade from v1.x to v2
-
-To upgrade a plugin that already uses `@sanity/plugin-kit` 1.x:
-
-- Update `@sanity/plugin-kit` to version to 2.x in `package.json`
-- Run: `npx @sanity/plugin-kit@latest inject`
-  - This will update package.json with new defaults
-  - Feel free to answer no to any file-overwrite prompts
-- Inspect git diff to see what was changed
-- Run: `npm install`
-- Run: `npm run build`
-- Fix any outstanding issues, if any
 
 ## FAQ
 
@@ -504,14 +455,11 @@ Provide a sanityPlugin config in package.json (defaults shown):
       "packageName": true,
       "esmOnly": true,
       "tsconfig": true,
-      "dependencies": true,
       "deprecatedDependencies": true,
       "babelConfig": true,
-      "incompatiblePlugin": true,
       "scripts": true,
       "pkg-utils": true,
       "nodeEngine": true,
-      "studioConfig": true,
       "srcIndex": true,
       "bannedFiles": true,
       "oxfmt": true,

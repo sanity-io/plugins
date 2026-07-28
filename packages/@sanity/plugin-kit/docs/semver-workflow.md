@@ -49,21 +49,11 @@ npm install
 The preset changes README.md in a naive manner.
 Some text could be redundant or unnecessary depending on context and search for TODO.
 
-Move text around until it looks good. Remember to change any v2 usage examples.
+Move text around until it looks good.
 
 ### 3. Check `.github/workflows/main.yml` branches
 
-This differs from repo to repo, default is `[main]`
-
-In a plugin repo with a v2 and v3 version, it could look like this:
-
-```yml
-# .github/workflows/main.yml
-name: CI & Release
-on:
-  push:
-    branches: [main, studio-v2]
-```
+This differs from repo to repo, default is `[main]`.
 
 ### 4. Check secrets
 
@@ -77,27 +67,14 @@ on Github for a repository.
 
 ### 5. Check .releaserc.json
 
-This differs from repo to repo. Branches defaults to `"branches": ["main"]`
-
-In a typical plugin repo with a v2 and v3 version, it will typically look like this:
-
-```json
-{
-  "extends": "@sanity/semantic-release-preset",
-  "branches": ["main", {"name": "studio-v2", "channel": "studio-v2", "range": "1.x.x"}]
-}
-```
-
-This assumes that the v2 version lives on `studio-v2` branch and the v3 version livs on `main`.
-The v2 version will be constrained to a version range and use `studio-v2` as npm tag.
-The v3 version will be release with `latest` npm tag.
+This differs from repo to repo. Branches defaults to `"branches": ["main"]`.
 
 ### 6. Test workflow and remove `--dry-run`
 
 The injected semantic-release command in `.github/workflows/main.yml` has `--dry-run` enabled.
 
 Before removing the flag, perform a release on Github by manually triggering the `CI & Release`
-workflow for the V3-branch and check "Release new version".
+workflow and check "Release new version".
 
 Inspect the workflow logs to see the version that will be used for the release.
 If it is ok, remove the `--dry-run` flag from the workflow to perform a real release.

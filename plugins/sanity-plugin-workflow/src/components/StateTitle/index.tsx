@@ -1,16 +1,16 @@
 import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
 import {UserIcon} from '@sanity/icons/User'
 import {Badge, type BadgeTone, Box, Card, Flex, Text} from '@sanity/ui'
-import {styled} from 'styled-components'
+import type {ComponentProps} from 'react'
 
 import type {State} from '../../types'
 import {Status} from './Status'
 
-const StyledStickyCard = styled(Card)`
-  position: sticky;
-  top: 0;
-  z-index: 1;
-`
+import {stickyCard} from './index.css'
+
+function StyledStickyCard(props: ComponentProps<typeof Card>) {
+  return <Card {...props} className={stickyCard} />
+}
 
 type StateTitleProps = {
   state: State

@@ -75,6 +75,16 @@ const config: OxlintConfig = {
           },
           {
             name: 'react',
+            importNames: ['Component', 'PureComponent'],
+            message: 'Class components are not allowed. Use function components instead.',
+          },
+          {
+            name: 'react',
+            importNames: ['createRef'],
+            message: 'createRef is only for class components. Use the useRef hook instead.',
+          },
+          {
+            name: 'react',
             importNames: ['forwardRef'],
             message:
               'forwardRef is unnecessary in React 19 — `ref` is a regular prop. Accept `ref` in your component props instead, e.g. `function Foo({ref, ...props}: Props & {ref?: Ref<T>}) {}`. See the sanity-plugin-best-practices skill.',

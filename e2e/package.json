@@ -1,0 +1,24 @@
+{
+  "name": "e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Playwright smoke e2e tests for the dedicated e2e studio (dev/e2e-studio)",
+  "type": "module",
+  "scripts": {
+    "cleanup": "tsx scripts/cleanupDatasets.ts",
+    "create-dataset": "tsx scripts/setup.ts",
+    "dev": "pnpm --filter e2e-studio dev",
+    "start": "pnpm --filter e2e-studio preview",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.0",
+    "@sanity/client": "catalog:",
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=22.18"
+  }
+}

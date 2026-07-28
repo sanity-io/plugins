@@ -6,7 +6,7 @@ import {initFlags} from '../actions/init'
 import {inject} from '../actions/inject'
 import {cliName, defaultOutDir} from '../constants'
 import {presetHelpList} from '../presets/presets'
-import {findStudioV3Config} from '../sanity/manifest'
+import {findStudioConfig} from '../sanity/studio-detect'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
 
@@ -52,15 +52,15 @@ Examples
 `
 
 async function run({argv}: {argv: string[]}) {
-  const cli = meow(help, {flags: initFlags, argv, description})
+  const cli = meow(help, {importMeta: import.meta, flags: initFlags, argv, description})
   const basePath = path.resolve(cli.input[0] || process.cwd())
   const packageConfig = await loadPackageConfig({basePath})
   const outDir = packageConfig?.dist ?? defaultOutDir
 
-  const {v3ConfigFile} = await findStudioV3Config(basePath)
-  if (v3ConfigFile) {
+  const {configFile} = await findStudioConfig(basePath)
+  if (configFile) {
     throw new Error(
-      `${v3ConfigFile} exists - are you trying to INJECT into a studio instead of a plugin?`,
+      `${configFile} exists - are you trying to INJECT into a studio instead of a plugin?`,
     )
   }
   log.info('Inject config into plugin in "%s"', basePath)
