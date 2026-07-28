@@ -62,7 +62,9 @@ per-instance cost), is type-safe and scoped, and lives in a `.css.ts` next to th
 existing styling usage to vanilla-extract (carefully, preserving visual fidelity; not during a
 transfer's initial port). Its only remaining sanctioned use is the last-resort CSS-in-JS escape hatch
 in rule 4 (arbitrary CSS from runtime data). See
-[`references/styling.md`](./references/styling.md#migrating-off-styled-components).
+[`references/styling.md`](./references/styling.md#migrating-off-styled-components) for the patterns
+and the [`migrate-styled-components-to-vanilla-extract`](../migrate-styled-components-to-vanilla-extract/SKILL.md)
+skill for the step-by-step migration procedure.
 
 See [`references/styling.md`](./references/styling.md) for the full rationale and examples.
 

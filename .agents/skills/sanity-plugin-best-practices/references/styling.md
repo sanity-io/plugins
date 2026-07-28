@@ -564,8 +564,13 @@ declare module 'katex/dist/katex.min.css'
 ## Migrating off styled-components
 
 `styled-components` is the Studio's legacy styling library (a `@sanity/ui` peer). It still works, but
-**no new code uses it for styling and existing usage is migrated to vanilla-extract** — this skill is
-the guide for that migration. Don't add `styled-components` for ordinary styling, and convert a
+**no new code uses it for styling and existing usage is migrated to vanilla-extract** — this section
+covers the patterns; the
+[`migrate-styled-components-to-vanilla-extract`](../../migrate-styled-components-to-vanilla-extract/SKILL.md)
+skill covers the step-by-step procedure (config, dependencies, verification), distilled from
+[PR #1417](https://github.com/sanity-io/plugins/pull/1417) and
+[PR #1450](https://github.com/sanity-io/plugins/pull/1450). Don't add `styled-components` for
+ordinary styling, and convert a
 component's styling to vanilla-extract when you work on it rather than extending the styled-components
 code. (The one usage that legitimately stays is genuinely-dynamic CSS-in-JS — arbitrary CSS built
 from runtime data that no `style()` + `createVar()` can express, the escape hatch in the
@@ -640,7 +645,12 @@ theming/SSR break:
 - The `catalog:` devDependency keeps the plugin on the shared `sanity` peer variant (see the
   `plugin-transfer` skill for why duplicate variants break type-aware lint).
 
-Remove both once the migration is complete.
+Once the migration is complete, remove the **peer** dependency — but keep the
+`styled-components: catalog:` **devDependency** while the plugin depends on `@sanity/ui` (which
+peers on styled-components). Dropping the devDependency makes pnpm resolve a separate
+styled-components copy and forks the plugin's `sanity` peer variant away from the rest of the
+workspace, breaking type-aware lint. All migrated plugins (`@sanity/google-maps-input`,
+`sanity-plugin-workflow`, `sanity-plugin-bynder-input`) keep it.
 
 ---
 
@@ -661,6 +671,9 @@ that forces synchronous reflows. See the `vercel-react-best-practices` rule `js-
 
 ## See also
 
+- [`migrate-styled-components-to-vanilla-extract`](../../migrate-styled-components-to-vanilla-extract/SKILL.md)
+  skill → the step-by-step procedure for migrating a plugin off styled-components (inventory,
+  config, dependencies, snapshot, verification).
 - `vercel-react-best-practices` → `rules/js-batch-dom-css.md` (batch DOM/CSS writes, prefer classes),
   `rules/rendering-hoist-jsx.md`, and the rendering section generally.
 - `plugin-transfer` skill → don't migrate styling during a transfer (do it in a follow-up PR);
