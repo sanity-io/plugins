@@ -50,7 +50,7 @@ catalog:
   babel-plugin-react-compiler: ^1.0.0
   date-fns: ^4.4.0
   groq: ^6.6.0
-  jsdom: ^29.1.1
+  jsdom: ^30.0.0
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
   motion: ^12.42.2
@@ -222,3 +222,6 @@ trustPolicyExclude:
   - ts-api-utils@2.3.0
   - undici@5.29.0
   - vite@6.4.1
+
+patchedDependencies:
+  jsdom@30.0.0: patches/jsdom@30.0.0.patch
