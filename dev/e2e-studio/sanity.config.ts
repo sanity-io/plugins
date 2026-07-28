@@ -2,6 +2,7 @@ import {defineConfig, defineField, defineType, type WorkspaceOptions} from 'sani
 import {structureTool} from 'sanity/structure'
 
 import {documentInternationalizationExample} from './src/documentInternationalization'
+import {internationalizedArrayExample} from './src/internationalizedArray'
 
 const projectId = process.env.SANITY_E2E_PROJECT_ID || 'a1psl692'
 const fallbackDataset = process.env.SANITY_E2E_DATASET || 'plugins'
@@ -26,7 +27,11 @@ function createWorkspace(name: string, title: string, dataset: string): Workspac
     basePath: `/${name}`,
     projectId,
     dataset,
-    plugins: [structureTool(), documentInternationalizationExample()],
+    plugins: [
+      structureTool(),
+      documentInternationalizationExample(),
+      internationalizedArrayExample(),
+    ],
     schema: {types: [smokeTestDocument]},
   }
 }
