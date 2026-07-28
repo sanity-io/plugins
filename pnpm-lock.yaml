@@ -28,9 +28,6 @@ catalogs:
     '@sanity/asset-utils':
       specifier: ^2.3.0
       version: 2.3.0
-    '@sanity/client':
-      specifier: ^7.25.0
-      version: 7.25.0
     '@sanity/color':
       specifier: ^3.0.8
       version: 3.0.8
@@ -185,6 +182,7 @@ catalogs:
 
 overrides:
   '@types/node': ^24.13.3
+  '@sanity/client': ^7.25.0
   '@sanity/mutator': ^6.6.0
   '@sanity/schema': ^6.6.0
   '@sanity/types': ^6.6.0
@@ -348,6 +346,9 @@ importers:
       '@sanity/table':
         specifier: workspace:*
         version: link:../../plugins/@sanity/table
+      '@sanity/themer':
+        specifier: ^0.2.0
+        version: 0.2.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)(sanity@6.6.0)(styled-components@6.4.4)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 3.5.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)(styled-components@6.4.4)
@@ -479,7 +480,7 @@ importers:
         specifier: ^1.62.0
         version: 1.62.0
       '@sanity/client':
-        specifier: 'catalog:'
+        specifier: ^7.25.0
         version: 7.25.0
       '@types/node':
         specifier: ^24.13.3
@@ -576,7 +577,7 @@ importers:
         specifier: 'catalog:'
         version: 4.0.2
       '@sanity/client':
-        specifier: 'catalog:'
+        specifier: ^7.25.0
         version: 7.25.0
       '@sanity/color':
         specifier: 'catalog:'
@@ -854,7 +855,7 @@ importers:
         version: 3.1.4
     devDependencies:
       '@sanity/client':
-        specifier: 'catalog:'
+        specifier: ^7.25.0
         version: 7.25.0
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -936,7 +937,7 @@ importers:
   plugins/@sanity/debug-live-sync-tags:
     dependencies:
       '@sanity/client':
-        specifier: 'catalog:'
+        specifier: ^7.25.0
         version: 7.25.0
       '@sanity/ui':
         specifier: 'catalog:'
@@ -1352,7 +1353,7 @@ importers:
         specifier: 'catalog:'
         version: 18.0.1(@types/react@19.2.17)(react-dom@19.2.8)(react@19.2.8)
       '@sanity/client':
-        specifier: 'catalog:'
+        specifier: ^7.25.0
         version: 7.25.0
       '@sanity/icons':
         specifier: 'catalog:'
@@ -1763,7 +1764,7 @@ importers:
         version: 3.5.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)(styled-components@6.4.4)
     devDependencies:
       '@sanity/client':
-        specifier: 'catalog:'
+        specifier: ^7.25.0
         version: 7.25.0
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -2558,7 +2559,7 @@ importers:
   plugins/sanity-plugin-markdown:
     dependencies:
       '@sanity/client':
-        specifier: 'catalog:'
+        specifier: ^7.25.0
         version: 7.25.0
       '@sanity/ui':
         specifier: 'catalog:'
@@ -2607,7 +2608,7 @@ importers:
         specifier: ^2.12.0
         version: 2.12.0(react-redux@9.3.0)(react@19.2.8)
       '@sanity/client':
-        specifier: 'catalog:'
+        specifier: ^7.25.0
         version: 7.25.0
       '@sanity/color':
         specifier: 'catalog:'
@@ -2783,7 +2784,7 @@ importers:
         version: 2.0.6(react-dom@19.2.8)(react@19.2.8)
     devDependencies:
       '@sanity/client':
-        specifier: 'catalog:'
+        specifier: ^7.25.0
         version: 7.25.0
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -6401,7 +6402,7 @@ packages:
     resolution: {integrity: sha512-jbnR3z93+hrddl0xPDuQotJYnVNtQPl969LZXo6opMZuy/uG64jwodp76pnJmq8Y9aHqR2fLk/ne7R4iBv8PhA==}
     engines: {node: '>=20.19.1 <22 || >=22.12'}
     peerDependencies:
-      '@sanity/client': ^5.0.0 || ^6.0.0 || ^7.0.0
+      '@sanity/client': ^7.25.0
 
   '@sanity/json-match@1.0.5':
     resolution: {integrity: sha512-skhIX8gT/hLritEBkjfc7+TBlJNu/NLisyA8noKceCk28OatFK0wX7dIuFawkt3pfhTYVomVPykAYFcIm2OqJg==}
@@ -6461,7 +6462,7 @@ packages:
     resolution: {integrity: sha512-bGZ1sNvqPgucBJpMBNmjjjCRtvjaQAdJuRo6UuIJVBhPx80JDrrtSwq9GrTcMdjOzDyn994akeNP4aESebfOJA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
-      '@sanity/client': ^7.24.0
+      '@sanity/client': ^7.25.0
 
   '@sanity/prism-groq@1.1.2':
     resolution: {integrity: sha512-McMw9U5kuYAgIwyNodhFKdarM0cPme6UYBR6ms6YBNEO8Qqu5zGHydUeORaJ/w4qdFKGB1oWjBjy525ed6LXaQ==}
@@ -6498,6 +6499,19 @@ packages:
     resolution: {integrity: sha512-pIy9yXosuA2duaJH0J1V8RYrabGB/Jh77FGYozr2pGwmCFwnLw/W/FS99qbcsJZa3wXHSMhMRyYq7IbulbijZw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
+
+  '@sanity/themer@0.2.0':
+    resolution: {integrity: sha512-Q+rzoAJfsf2I3VnSuW/PDEtncuBAAckVJDYY6mKXPA7sm2GXkW95AaJgj6WYHdrXczkMgiQymkjJB7ZXsFKLHw==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+    peerDependencies:
+      react: ^19
+      sanity: ^6.6.0
+      styled-components: ^6
+    peerDependenciesMeta:
+      sanity:
+        optional: true
+      styled-components:
+        optional: true
 
   '@sanity/tsconfig@2.2.1':
     resolution: {integrity: sha512-1HbvN+W2bWixgXQnvJ9rev5vJaSbN62d+r0Y2pN6XsK6/MP9JfVyF90elBuIrDENTGgVmxB403+gZow45wq+Pg==}
@@ -6568,7 +6582,7 @@ packages:
     resolution: {integrity: sha512-4Hu3J8qDLanymnSapRzKwHlQl6SCsBbkL1o5fSMVbWVHvTk/j2uGLLNTsjASICTqUwSm3fwWlyahzCy2uS/LvQ==}
     engines: {node: '>=18'}
     peerDependencies:
-      '@sanity/client': ^7.11.2
+      '@sanity/client': ^7.25.0
       '@sanity/types': ^6.6.0
     peerDependenciesMeta:
       '@sanity/types':
@@ -15793,6 +15807,22 @@ snapshots:
       '@actions/core': 3.0.1
       '@actions/github': 9.1.1
       yaml: 2.9.0
+
+  '@sanity/themer@0.2.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)(sanity@6.6.0)(styled-components@6.4.4)':
+    dependencies:
+      '@sanity/color': 3.0.8
+      '@sanity/icons': 5.2.1(react@19.2.8)
+      '@sanity/ui': 3.5.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8)(react@19.2.8)(styled-components@6.4.4)
+      react: 19.2.8
+      react-compiler-runtime: 1.0.0(react@19.2.8)
+      react-refractor: 4.0.0(react@19.2.8)
+      refractor: 5.0.0
+    optionalDependencies:
+      sanity: 6.6.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@emotion/is-prop-valid@1.4.0)(@noble/hashes@2.2.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.2.3)(@types/react@19.2.17)(@vitejs/devtools@0.4.9)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.15)(jiti@2.7.0)(oxfmt@0.60.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.0)(styled-components@6.4.4)(terser@5.49.0)(typescript@7.0.2)
+      styled-components: 6.4.4(react-dom@19.2.8)(react@19.2.8)
+    transitivePeerDependencies:
+      - '@emotion/is-prop-valid'
+      - react-dom
 
   '@sanity/tsconfig@2.2.1': {}
 

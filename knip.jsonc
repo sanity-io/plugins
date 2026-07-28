@@ -9,6 +9,11 @@
     "plugins/**/src/schema.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schema/**/*.{ts,tsx}": ["types", "nsTypes"],
     "plugins/**/src/schemas/**/*.{ts,tsx}": ["types", "nsTypes"],
+    // `@sanity/types` is catalogued only so the `overrides` block can pin it with
+    // `catalog:`. knip reads `catalog:` references from package.json manifests
+    // (including `pnpm.overrides`), not from the overrides in pnpm-workspace.yaml,
+    // so it reports the entry as unused.
+    "pnpm-workspace.yaml": ["catalog"],
   },
   "ignoreDependencies": ["@vanilla-extract/css", "babel-plugin-react-compiler"],
   "workspaces": {
