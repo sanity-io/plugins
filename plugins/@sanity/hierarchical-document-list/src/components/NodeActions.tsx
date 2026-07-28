@@ -1,4 +1,3 @@
-// oxlint-disable react/no-unstable-nested-components - legacy code will be lint-cleaned in a follow-up PR
 import {CopyIcon} from '@sanity/icons/Copy'
 import {EllipsisVerticalIcon} from '@sanity/icons/EllipsisVertical'
 import {LaunchIcon} from '@sanity/icons/Launch'

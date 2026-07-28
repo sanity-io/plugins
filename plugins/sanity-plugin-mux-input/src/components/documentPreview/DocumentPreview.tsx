@@ -1,4 +1,4 @@
-// oxlint-disable react/react-compiler, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 // Adapted from https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/paneItem/PaneItem.tsx
 
 import {DocumentIcon} from '@sanity/icons/Document'

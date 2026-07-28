@@ -1,4 +1,3 @@
-// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {
   AdvancedMarker,
   Circle,

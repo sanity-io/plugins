@@ -1,4 +1,4 @@
-// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-unsafe-type-assertion, typescript/no-unnecessary-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {uuid} from '@sanity/uuid'
 import type {SanityClient, SanityDocument} from 'sanity'
 import {assertEvent, assign, fromPromise, setup} from 'xstate'

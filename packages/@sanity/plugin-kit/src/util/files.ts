@@ -1,4 +1,4 @@
-// oxlint-disable eslint/preserve-caught-error, typescript/no-unnecessary-type-parameters, typescript/no-unsafe-type-assertion, unicorn/prefer-set-has - legacy code will be lint-cleaned in a follow-up PR
+// oxlint-disable typescript/no-unsafe-type-assertion, unicorn/prefer-set-has - legacy code will be lint-cleaned in a follow-up PR
 import crypto from 'crypto'
 import fs from 'fs'
 import path from 'path'

@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-await-in-loop - legacy code will be lint-cleaned in a follow-up PR
 import path from 'path'
 
 import {fileExists} from '../util/files'

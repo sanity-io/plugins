@@ -12,6 +12,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING O
 THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 /*
 This code is a modified version of https://github.com/johot/yalc-watch,
 and the ISC License has been added for this file only, in accordance with the package.json license field in that package
