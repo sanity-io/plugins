@@ -35,7 +35,7 @@
     "@sanity/sfcc": "workspace:*",
     "@sanity/studio-secrets": "workspace:*",
     "@sanity/table": "workspace:*",
-    "@sanity/themer": "0.0.0",
+    "@sanity/themer": "0.2.0",
     "@sanity/ui": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@sanity/vercel-protection-bypass": "workspace:*",
