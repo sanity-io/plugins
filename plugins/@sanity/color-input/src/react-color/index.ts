@@ -13,12 +13,4 @@ export {EditableInput} from './EditableInput'
 export {isValidHex, simpleCheckForValidColor, toState} from './helpers/color'
 export {Hue} from './Hue'
 export {Saturation} from './Saturation'
-export type {
-  Color,
-  ColorChangeHandler,
-  ColorState,
-  EditableInputStyles,
-  HSLColor,
-  HSVColor,
-  RGBColor,
-} from './types'
+export type {Color, ColorChangeHandler, ColorState, HSLColor, HSVColor, RGBColor} from './types'

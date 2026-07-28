@@ -1,6 +1,6 @@
 {
   "name": "@sanity/color-input",
-  "version": "6.0.20",
+  "version": "6.1.0",
   "description": "Color input",
   "keywords": [
     "cms",
@@ -29,11 +29,25 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
+      },
       "./package.json": "./package.json"
     }
   },
@@ -44,26 +58,27 @@
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
+    "@vanilla-extract/dynamic": "catalog:",
     "lodash-es": "catalog:",
     "tinycolor2": "^1.6.0"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/lodash-es": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/tinycolor2": "^1.4.6",
+    "@vanilla-extract/css": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:",
     "tsdown": "catalog:"
   },
   "peerDependencies": {
     "react": "catalog:peer",
-    "sanity": "catalog:peer",
-    "styled-components": "catalog:peer"
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

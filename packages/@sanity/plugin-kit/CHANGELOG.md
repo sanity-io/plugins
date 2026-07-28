@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 10.0.2
+
+### Patch Changes
+
+- [#1362](https://github.com/sanity-io/plugins/pull/1362) [`6c2470e`](https://github.com/sanity-io/plugins/commit/6c2470e3193830d719a783eba82b4cb9c5bdb2a6) Thanks [@stipsan](https://github.com/stipsan)! - Ban importing `Component`, `PureComponent`, and `createRef` from `react` in the shared oxlint config
+
 ## 10.0.1
 
 ### Patch Changes

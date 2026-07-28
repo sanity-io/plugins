@@ -76,7 +76,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/devtools": "^0.4.8",
+    "@vitejs/devtools": "^0.4.9",
     "babel-plugin-react-compiler": "catalog:",
     "typescript": "catalog:"
   },

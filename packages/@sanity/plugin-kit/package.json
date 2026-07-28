@@ -1,6 +1,6 @@
 {
   "name": "@sanity/plugin-kit",
-  "version": "10.0.1",
+  "version": "10.0.2",
   "description": "Enhanced Sanity.io plugin development experience",
   "keywords": [
     "bootstrap",

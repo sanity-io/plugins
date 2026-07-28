@@ -1,5 +1,11 @@
 # @sanity/orderable-document-list
 
+## 2.0.18
+
+### Patch Changes
+
+- [#1362](https://github.com/sanity-io/plugins/pull/1362) [`6c2470e`](https://github.com/sanity-io/plugins/commit/6c2470e3193830d719a783eba82b4cb9c5bdb2a6) Thanks [@stipsan](https://github.com/stipsan)! - Replace class component with a function component using `useImperativeHandle` and React 19 ref-as-prop for structure menu actions
+
 ## 2.0.17
 
 ### Patch Changes

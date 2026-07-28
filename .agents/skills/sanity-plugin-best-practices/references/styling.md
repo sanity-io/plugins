@@ -567,7 +567,7 @@ need `&&` to match. During a plugin **transfer/port**, do not migrate styling in
 building as-is and do the migration in a dedicated follow-up PR (see the `plugin-transfer` skill).
 
 > **Lock in a finished migration.** Once a plugin no longer imports `styled-components`, ban it via
-> `no-restricted-imports` in `.oxlintrc.json` so it cannot creep back — this is how `@sanity/vision`
+> `no-restricted-imports` in `@sanity/plugin-kit/oxlint` (or a local `oxlint.config.ts` override) so it cannot creep back — this is how `@sanity/vision`
 > locked in its migration in
 > [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333).
 
