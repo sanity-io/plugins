@@ -1,0 +1,20 @@
+diff --git a/lib/jsdom/living/css/helpers/font-sizes.js b/lib/jsdom/living/css/helpers/font-sizes.js
+index 48b90f91b98259bdb5db7e73dda8c3dd68bac285..a5c2abd1611f77df80919031c23fa1caa0c65135 100644
+--- a/lib/jsdom/living/css/helpers/font-sizes.js
++++ b/lib/jsdom/living/css/helpers/font-sizes.js
+@@ -113,8 +113,13 @@ function resolveLengthInPixels(elementImpl, size, dimension, isFontSize) {
+         format: "computedValue"
+       });
+     }
+-    const [, value] = FONT_SIZE_REGEXP.exec(resolvedSize);
+-    return Number(value);
++    const match = FONT_SIZE_REGEXP.exec(resolvedSize);
++    if (match) {
++      const [, value] = match;
++      return Number(value);
++    }
++    // resolveCalc may leave percentage-based calc() unresolved; fall through.
++    return resolvedSize;
+   }
+ 
+   const match = LENGTH_REGEXP.exec(size);
