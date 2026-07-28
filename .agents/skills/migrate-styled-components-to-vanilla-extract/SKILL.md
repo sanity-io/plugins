@@ -32,8 +32,8 @@ to it for pattern details.
   token, and specificity outcome must be preserved. Verify manually in the test studio before
   opening the PR.
 - **Reference implementations** to compare against: `plugins/@sanity/google-maps-input`,
-  `plugins/sanity-plugin-workflow`, and `plugins/sanity-plugin-bynder-input` — all fully migrated on
-  the current tsdown setup.
+  `plugins/sanity-plugin-workflow`, `plugins/@sanity/color-input`, and
+  `plugins/sanity-plugin-bynder-input` — all fully migrated on the current tsdown setup.
 
 ## Step 1: Inventory
 
@@ -192,15 +192,13 @@ In the plugin's `package.json`:
   `dependencies` — that one is a small runtime helper.)
 - **Remove** the `styled-components` entry from `peerDependencies`, and any
   `babel-plugin-styled-components` devDependency.
-- **Keep** `"styled-components": "catalog:"` in `devDependencies` while the plugin depends on
-  `@sanity/ui` (which peers on styled-components). Removing it makes pnpm resolve a separate
-  styled-components copy and forks the plugin's `sanity` peer variant away from the rest of the
-  workspace, breaking type-aware lint (this was caught in review on PR #1450 — all migrated plugins
-  keep it). Only drop the devDependency when nothing in the plugin's dependency graph peers on
-  styled-components.
-
-After `pnpm install`, verify peer alignment: the plugin's `sanity` / `@sanity/ui` resolution strings
-in `pnpm-lock.yaml` must match other plugins (e.g. `plugins/@sanity/google-maps-input`).
+- **Peer alignment:** when the plugin depends on `@sanity/ui` (which peers on styled-components),
+  removing the `"styled-components": "catalog:"` devDependency can make pnpm resolve a separate
+  styled-components copy, forking the plugin's `sanity` peer variant away from the rest of the
+  workspace and breaking type-aware lint (this was caught in review on PR #1450). Dropping it can
+  be fine (`@sanity/color-input` did), but you must verify: after `pnpm install`, the plugin's
+  `sanity` / `@sanity/ui` resolution strings in `pnpm-lock.yaml` must match other plugins (e.g.
+  `plugins/@sanity/google-maps-input`). If they fork, keep the `catalog:` devDependency.
 
 No `knip.jsonc` or catalog changes are needed — `@vanilla-extract/css` is globally ignored and all
 the catalog entries already exist.
@@ -230,7 +228,8 @@ don't touch that file.
 > `setupFiles: ['@vanilla-extract/css/disableRuntimeStyles']`. This does **not** replace the Vite
 > plugin, is irrelevant under the default `node` environment, and is opted into per plugin — never
 > monorepo-wide. See
-> [vanilla-extract test environments](https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles).
+> [Disabling runtime styles in tests](../sanity-plugin-best-practices/references/styling.md#disabling-runtime-styles-in-tests)
+> in the styling reference.
 
 ## Step 6: Build and update the exports snapshot
 
@@ -284,8 +283,8 @@ Migrate styling from styled-components to vanilla-extract (zero-runtime CSS)
 - [ ] `.css.ts` files colocated with their components; component layer preserved where call sites
       need it
 - [ ] `tsdown.config.ts`: `styledComponents` removed, `vanillaExtract: true` added
-- [ ] `package.json`: vanilla-extract devDeps added; `styled-components` peer removed;
-      `styled-components: catalog:` devDep kept while `@sanity/ui` is a dependency
+- [ ] `package.json`: vanilla-extract devDeps added; `styled-components` peer removed; `sanity` /
+      `@sanity/ui` peer variants verified aligned in `pnpm-lock.yaml`
 - [ ] `vitest.config.ts` registers `vanillaExtractPlugin()`
 - [ ] `dist/bundle.css` emitted with all rules; package-exports snapshot updated
 - [ ] `pnpm format` / `pnpm lint` / `pnpm knip` / `pnpm build` / `pnpm test run` all pass

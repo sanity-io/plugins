@@ -646,12 +646,13 @@ theming/SSR break:
 - The `catalog:` devDependency keeps the plugin on the shared `sanity` peer variant (see the
   `plugin-transfer` skill for why duplicate variants break type-aware lint).
 
-Once the migration is complete, remove the **peer** dependency — but keep the
-`styled-components: catalog:` **devDependency** while the plugin depends on `@sanity/ui` (which
-peers on styled-components). Dropping the devDependency makes pnpm resolve a separate
-styled-components copy and forks the plugin's `sanity` peer variant away from the rest of the
-workspace, breaking type-aware lint. All migrated plugins (`@sanity/google-maps-input`,
-`sanity-plugin-workflow`, `sanity-plugin-bynder-input`) keep it.
+Once the migration is complete, remove the **peer** dependency. When the plugin depends on
+`@sanity/ui` (which peers on styled-components), dropping the `styled-components: catalog:`
+**devDependency** can make pnpm resolve a separate styled-components copy, forking the plugin's
+`sanity` peer variant away from the rest of the workspace and breaking type-aware lint. It can work
+out fine (`@sanity/color-input` dropped it), but verify the plugin's `sanity` / `@sanity/ui`
+resolution strings in `pnpm-lock.yaml` still match other plugins — if they fork, keep the
+devDependency (`@sanity/google-maps-input` and `sanity-plugin-workflow` do).
 
 ---
 
