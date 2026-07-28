@@ -86,7 +86,11 @@ export function EditableInput({
 
   const handleBlur = () => {
     if (blurValue) {
-      setInputValue(blurValue)
+      // Restore from the prop rather than the stored value: the transition
+      // that clears a stale `blurValue` may not have committed yet, but
+      // `valueProp` is always current — so a value the parent already
+      // accepted is never rolled back.
+      setInputValue(normalizeDisplayValue(valueProp))
       setBlurValue('')
     }
   }
