@@ -11,8 +11,10 @@ metadata:
 The repeatable procedure for converting one plugin's styling from `styled-components` (the Studio's
 legacy styling library) to [vanilla-extract](https://vanilla-extract.style). Distilled from the
 migrations of `@sanity/google-maps-input`
-([PR #1417](https://github.com/sanity-io/plugins/pull/1417)) and `sanity-plugin-workflow`
-([PR #1450](https://github.com/sanity-io/plugins/pull/1450)).
+([PR #1417](https://github.com/sanity-io/plugins/pull/1417)), `sanity-plugin-workflow`
+([PR #1450](https://github.com/sanity-io/plugins/pull/1450)), and `@sanity/color-input`
+([PR #1670](https://github.com/sanity-io/plugins/pull/1670) — the dynamic-styling example:
+`styleVariants`, `createVar` + `assignInlineVars`, `useTheme_v2()`).
 
 This skill covers the **workflow**: what to change, in what order, and how to verify it. The styling
 **patterns** themselves (dynamic theming, variants, keyframes, the `&&` specificity trick,
@@ -50,6 +52,7 @@ rg "styled-components" plugins/<plugin-name>/src
 | Descendant selectors (`& img`, third-party classes) | class on the child directly, or `globalStyle()` scoped under a local wrapper class |
 | `createGlobalStyle`                                 | `globalStyle()` (scope it — never leak outside the plugin)                         |
 | `*.styles.tsx` modules                              | replaced by `.css.ts` (+ a component layer where call sites need it)               |
+| Computed inline `style={{}}` objects                | static parts into `style()`, changing values via `createVar()` (Shape C below)     |
 
 Each row's pattern is documented with examples in the
 [styling reference](../sanity-plugin-best-practices/references/styling.md).
@@ -102,7 +105,46 @@ the child directly when you render it yourself:
 <img className={mapDiffImage} alt="" src={url} height={280} width={500} />
 ```
 
-For everything else — theme-driven values, variants, keyframes, theming third-party widgets'
+**Shape C — dynamic values through CSS variables** (from `@sanity/color-input`, PR #1670). When a
+value varies per instance, with props/state, or reads the theme, keep the static parts in `style()`
+and bridge only the changing values through `createVar()` + `assignInlineVars()` (from
+`@vanilla-extract/dynamic`). This also migrates computed inline `style={{}}` objects — hoist the
+static properties into the `.css.ts` and keep only the variables inline:
+
+```ts
+// Checkboard.css.ts
+import {createVar, style} from '@vanilla-extract/css'
+
+export const borderRadiusVar = createVar()
+export const backgroundImageVar = createVar()
+
+export const checkboard = style({
+  borderRadius: borderRadiusVar,
+  position: 'absolute',
+  inset: 0,
+  background: backgroundImageVar,
+})
+```
+
+```tsx
+// Checkboard.tsx — before: <div style={{borderRadius, position: 'absolute', inset: 0, background}} />
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+
+import {backgroundImageVar, borderRadiusVar, checkboard} from './Checkboard.css'
+
+;<div
+  className={checkboard}
+  style={assignInlineVars({
+    [borderRadiusVar]: borderRadius,
+    [backgroundImageVar]: background ? `url(${background}) center left` : undefined,
+  })}
+/>
+```
+
+`assignInlineVars` omits `undefined` values, so one class serves every instance. Theme tokens flow
+the same way: read them with `useTheme_v2()` in a small wrapper and assign them to variables.
+
+For everything else — variants (`styleVariants`), keyframes, theming third-party widgets'
 classes, and overriding a `@sanity/ui` primitive's own styles (the `selectors: {'&&': {...}}`
 trick) — follow the corresponding section of the
 [styling reference](../sanity-plugin-best-practices/references/styling.md). Where styled-components
