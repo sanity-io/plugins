@@ -5,9 +5,9 @@
  * {@link https://github.com/casesandberg/react-color/blob/v2.19.3/src/components/common/Saturation.js | react-color's Saturation}
  * (MIT, Copyright (c) 2015 Case Sandberg). See the plugin LICENSE.
  */
+import {assignInlineVars} from '@vanilla-extract/dynamic'
 import throttle from 'lodash-es/throttle'
-import {useEffect, useMemo, useRef, type CSSProperties, type ReactElement} from 'react'
-import {styled} from 'styled-components'
+import {useEffect, useMemo, useRef, type ReactElement} from 'react'
 
 import * as saturation from './helpers/saturation'
 import {useDrag} from './helpers/useDrag'
@@ -19,19 +19,24 @@ import type {
   SaturationColorResult,
 } from './types'
 
+import {
+  black,
+  hueBackgroundVar,
+  pointer,
+  pointerKnob,
+  pointerLeftVar,
+  pointerTopVar,
+  radiusVar,
+  root,
+  shadowVar,
+  white,
+} from './Saturation.css'
+
 type ThrottledChange = ReturnType<
   typeof throttle<
     (handler: ColorChangeHandler<SaturationColorResult>, data: SaturationColorResult) => void
   >
 >
-
-const SaturationWhite = styled.div`
-  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
-`
-
-const SaturationBlack = styled.div`
-  background: linear-gradient(to top, #000, rgba(0, 0, 0, 0));
-`
 
 export interface SaturationProps {
   hsl: HSLColor
@@ -89,43 +94,26 @@ export function Saturation({hsl, hsv, radius, shadow, onChange}: SaturationProps
     },
   })
 
-  const pointerStyle: CSSProperties = {
-    position: 'absolute',
-    top: `${-(hsv.v * 100) + 100}%`,
-    left: `${hsv.s * 100}%`,
-    cursor: 'default',
-  }
-
   return (
     <div
-      style={{
-        position: 'absolute',
-        inset: 0,
-        background: `hsl(${hsl.h},100%, 50%)`,
-        borderRadius: radius,
-      }}
+      className={root}
+      style={assignInlineVars({
+        [hueBackgroundVar]: `hsl(${hsl.h},100%, 50%)`,
+        [radiusVar]: radius,
+        [shadowVar]: shadow,
+        [pointerTopVar]: `${-(hsv.v * 100) + 100}%`,
+        [pointerLeftVar]: `${hsv.s * 100}%`,
+      })}
       ref={containerRef}
       onTouchMove={handleChange}
       onTouchStart={handleChange}
     >
-      <SaturationWhite style={{position: 'absolute', inset: 0, borderRadius: radius}}>
-        <SaturationBlack
-          style={{position: 'absolute', inset: 0, boxShadow: shadow, borderRadius: radius}}
-        />
-        <div style={pointerStyle}>
-          <div
-            style={{
-              width: '4px',
-              height: '4px',
-              boxShadow:
-                '0 0 0 1.5px #fff, inset 0 0 1px 1px rgba(0,0,0,.3), 0 0 1px 2px rgba(0,0,0,.4)',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              transform: 'translate(-2px, -2px)',
-            }}
-          />
+      <div className={white}>
+        <div className={black} />
+        <div className={pointer}>
+          <div className={pointerKnob} />
         </div>
-      </SaturationWhite>
+      </div>
     </div>
   )
 }

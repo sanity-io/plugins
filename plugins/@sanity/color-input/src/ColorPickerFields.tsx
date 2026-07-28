@@ -1,15 +1,24 @@
-import {Box, Flex, useTheme} from '@sanity/ui'
-import {useCallback, useMemo} from 'react'
+import {Box, Flex, useTheme_v2} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {useCallback} from 'react'
 
 import {
   type Color,
   type ColorChangeHandler,
   EditableInput,
-  type EditableInputStyles,
   type HSLColor,
   isValidHex,
   type RGBColor,
 } from './react-color'
+
+import {
+  inputBgVar,
+  inputBorderVar,
+  inputFgVar,
+  inputFontSizeVar,
+  labelFgVar,
+  labelFontSizeVar,
+} from './react-color/EditableInput.css'
 
 interface ColorPickerFieldsProps {
   rgb?: RGBColor
@@ -26,39 +35,10 @@ export const ColorPickerFields = ({
   hex,
   disableAlpha,
 }: ColorPickerFieldsProps): React.JSX.Element => {
-  const {sanity} = useTheme()
-
-  const inputStyles: EditableInputStyles = useMemo(
-    () => ({
-      input: {
-        width: '80%',
-        padding: '4px 10% 3px',
-        border: 'none',
-        // TODO: when upgrading to @sanity/ui@4 start using the new tokens
-        // oxlint-disable-next-line typescript/no-deprecated
-        boxShadow: `inset 0 0 0 1px ${sanity.color.input.default.enabled.border}`,
-        // oxlint-disable-next-line typescript/no-deprecated
-        color: sanity.color.input.default.enabled.fg,
-        // oxlint-disable-next-line typescript/no-deprecated
-        backgroundColor: sanity.color.input.default.enabled.bg,
-        // oxlint-disable-next-line typescript/no-deprecated
-        fontSize: sanity.fonts.text.sizes[0]?.fontSize,
-        textAlign: 'center',
-      },
-      label: {
-        display: 'block',
-        textAlign: 'center',
-        // oxlint-disable-next-line typescript/no-deprecated
-        fontSize: sanity.fonts.label.sizes[0]?.fontSize,
-        // oxlint-disable-next-line typescript/no-deprecated
-        color: sanity.color.base.fg,
-        paddingTop: '3px',
-        paddingBottom: '4px',
-        textTransform: 'capitalize',
-      },
-    }),
-    [sanity],
-  )
+  const {color, font} = useTheme_v2()
+  const inputEnabled = color.input.default.enabled
+  const textFontSize = font.text.sizes[0]?.fontSize
+  const labelFontSize = font.label.sizes[0]?.fontSize
 
   const handleChange: ColorChangeHandler<Record<string, string>> = useCallback(
     (data) => {
@@ -100,49 +80,31 @@ export const ColorPickerFields = ({
   )
 
   return (
-    <Flex>
+    <Flex
+      style={assignInlineVars({
+        [inputBorderVar]: inputEnabled.border,
+        [inputFgVar]: inputEnabled.fg,
+        [inputBgVar]: inputEnabled.bg,
+        [inputFontSizeVar]: textFontSize === undefined ? undefined : `${textFontSize}px`,
+        [labelFontSizeVar]: labelFontSize === undefined ? undefined : `${labelFontSize}px`,
+        [labelFgVar]: color.fg,
+      })}
+    >
       <Box flex={2} marginRight={1}>
-        <EditableInput
-          style={inputStyles}
-          label="hex"
-          value={hex?.replace('#', '')}
-          onChange={handleChange}
-        />
+        <EditableInput label="hex" value={hex?.replace('#', '')} onChange={handleChange} />
       </Box>
       <Box flex={1} marginRight={1}>
-        <EditableInput
-          style={inputStyles}
-          label="r"
-          value={rgb?.r}
-          onChange={handleChange}
-          dragLabel
-          dragMax={255}
-        />
+        <EditableInput label="r" value={rgb?.r} onChange={handleChange} dragLabel dragMax={255} />
       </Box>
       <Box flex={1} marginRight={1}>
-        <EditableInput
-          style={inputStyles}
-          label="g"
-          value={rgb?.g}
-          onChange={handleChange}
-          dragLabel
-          dragMax={255}
-        />
+        <EditableInput label="g" value={rgb?.g} onChange={handleChange} dragLabel dragMax={255} />
       </Box>
       <Box flex={1} marginRight={1}>
-        <EditableInput
-          style={inputStyles}
-          label="b"
-          value={rgb?.b}
-          onChange={handleChange}
-          dragLabel
-          dragMax={255}
-        />
+        <EditableInput label="b" value={rgb?.b} onChange={handleChange} dragLabel dragMax={255} />
       </Box>
       {!disableAlpha && (
         <Box flex={1}>
           <EditableInput
-            style={inputStyles}
             label="a"
             value={Math.round((rgb?.a ?? 1) * 100)}
             onChange={handleChange}

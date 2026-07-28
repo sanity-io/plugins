@@ -5,7 +5,8 @@
  * {@link https://github.com/casesandberg/react-color/blob/v2.19.3/src/components/common/Alpha.js | react-color's Alpha}
  * (MIT, Copyright (c) 2015 Case Sandberg). See the plugin LICENSE.
  */
-import {useRef, type CSSProperties, type ReactElement} from 'react'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {useRef, type ReactElement} from 'react'
 
 import {Checkboard} from './Checkboard'
 import * as alpha from './helpers/alpha'
@@ -18,6 +19,20 @@ import type {
   PickerEvent,
   RGBColor,
 } from './types'
+
+import {
+  checkboardLayer,
+  container,
+  gradientLayer,
+  gradientVar,
+  pointer,
+  pointerKnob,
+  pointerLeftVar,
+  pointerTopVar,
+  radiusVar,
+  root,
+  shadowVar,
+} from './Alpha.css'
 
 export interface AlphaProps {
   rgb: RGBColor
@@ -43,11 +58,11 @@ export function Alpha({
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const handleChange = (event: PickerEvent) => {
-    const container = containerRef.current
-    if (!container) {
+    const containerEl = containerRef.current
+    if (!containerEl) {
       return
     }
-    const change = alpha.calculateChange(event, hsl, direction, a, container)
+    const change = alpha.calculateChange(event, hsl, direction, a, containerEl)
     if (change && typeof onChange === 'function') {
       onChange(change)
     }
@@ -66,43 +81,31 @@ export function Alpha({
     direction === 'vertical'
       ? `linear-gradient(to bottom, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%, rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`
       : `linear-gradient(to right, rgba(${rgb.r},${rgb.g},${rgb.b}, 0) 0%, rgba(${rgb.r},${rgb.g},${rgb.b}, 1) 100%)`
-  const pointerStyle: CSSProperties =
-    direction === 'vertical'
-      ? {position: 'absolute', left: 0, top: `${alphaValue * 100}%`}
-      : {position: 'absolute', left: `${alphaValue * 100}%`}
+  const pointerDirection = direction === 'vertical' ? 'vertical' : 'horizontal'
 
   return (
-    <div style={{position: 'absolute', inset: 0, borderRadius: radius}}>
-      <div style={{position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: radius}}>
+    <div
+      className={root}
+      style={assignInlineVars({
+        [radiusVar]: radius,
+        [shadowVar]: shadow,
+        [gradientVar]: gradient,
+        [pointerLeftVar]: pointerDirection === 'horizontal' ? `${alphaValue * 100}%` : undefined,
+        [pointerTopVar]: pointerDirection === 'vertical' ? `${alphaValue * 100}%` : undefined,
+      })}
+    >
+      <div className={checkboardLayer}>
         <Checkboard renderers={renderers} />
       </div>
+      <div className={gradientLayer} />
       <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: gradient,
-          boxShadow: shadow,
-          borderRadius: radius,
-        }}
-      />
-      <div
-        style={{position: 'relative', height: '100%', margin: '0 3px'}}
+        className={container}
         ref={containerRef}
         onTouchMove={handleChange}
         onTouchStart={handleChange}
       >
-        <div style={pointerStyle}>
-          <div
-            style={{
-              width: '4px',
-              borderRadius: '1px',
-              height: '8px',
-              boxShadow: '0 0 2px rgba(0, 0, 0, .6)',
-              background: '#fff',
-              marginTop: '1px',
-              transform: 'translateX(-2px)',
-            }}
-          />
+        <div className={pointer[pointerDirection]}>
+          <div className={pointerKnob} />
         </div>
       </div>
     </div>
