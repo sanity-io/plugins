@@ -1,9 +1,10 @@
-import chalk from 'chalk'
+import {styleText} from 'node:util'
+
 import type {TypedFlags} from 'meow'
-import outdent from 'outdent'
 
 import sharedFlags from '../../sharedFlags'
 import log from '../../util/log'
+import {outdent} from '../../util/outdent'
 
 const splitLine = `\n----------------------------------------------------------`
 
@@ -35,7 +36,8 @@ export const verifyFlags = {
 export type VerifyFlags = TypedFlags<typeof verifyFlags>
 
 function disableCheckText(checkKey: string) {
-  return chalk.grey(
+  return styleText(
+    'grey',
     outdent`
               To skip this validation add the following to your package.json:
               "sanityPlugin": {

@@ -1,5 +1,20 @@
 # sanity-plugin-workflow
 
+## 3.0.38
+
+### Patch Changes
+
+- [#1728](https://github.com/sanity-io/plugins/pull/1728) [`ed28fe7`](https://github.com/sanity-io/plugins/commit/ed28fe7ef61da99766471dfeab7ebf1a32110864) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-virtual to ^3.14.8
+
+## 3.0.37
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+- Updated dependencies [[`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df)]:
+  - sanity-plugin-utils@2.0.13
+
 ## 3.0.36
 
 ### Patch Changes

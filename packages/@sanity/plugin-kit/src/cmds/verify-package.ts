@@ -30,7 +30,7 @@ Examples
 `
 
 function run({argv}: {argv: string[]}) {
-  const cli = meow(help, {flags: verifyFlags, argv, description})
+  const cli = meow(help, {importMeta: import.meta, flags: verifyFlags, argv, description})
   const basePath = path.resolve(cli.input[0] || process.cwd())
   return verifyPackage({basePath, flags: cli.flags})
 }

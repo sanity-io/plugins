@@ -2,12 +2,12 @@ import {createRequire} from 'node:module'
 import path from 'path'
 
 import type {ParsedCommandLine} from '@typescript/typescript6'
-import outdent from 'outdent'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import {deprecatedDevDeps} from '../../configs/banned-packages'
 import {minPkgUtilsMajor, requiredNodeEngine} from '../../constants'
 import {fileExists, readFile, readJsonFile} from '../../util/files'
+import {outdent} from '../../util/outdent'
 import type {PackageJson} from './types'
 
 export const expectedScripts = {

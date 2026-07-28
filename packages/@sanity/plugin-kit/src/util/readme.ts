@@ -1,7 +1,7 @@
 import licenses from '@rexxars/choosealicense-list'
-import outdent from 'outdent'
 
 import type {PackageData} from '../actions/inject'
+import {outdent} from './outdent'
 import type {User} from './user'
 
 export function generateReadme(data: PackageData) {

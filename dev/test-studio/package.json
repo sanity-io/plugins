@@ -9,7 +9,7 @@
   "scripts": {
     "build": "sanity build -y",
     "dev": "sanity dev --no-auto-updates",
-    "typegen": "sanity schema extract --enforce-required-fields --workspace home && sanity typegen generate"
+    "typegen": "sanity schema extract --force --enforce-required-fields --workspace home && sanity typegen generate"
   },
   "dependencies": {
     "@sanity/assist": "workspace:*",
@@ -35,6 +35,7 @@
     "@sanity/sfcc": "workspace:*",
     "@sanity/studio-secrets": "workspace:*",
     "@sanity/table": "workspace:*",
+    "@sanity/themer": "^0.2.0",
     "@sanity/ui": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@sanity/vercel-protection-bypass": "workspace:*",
@@ -75,7 +76,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/devtools": "^0.4.1",
+    "@vitejs/devtools": "^0.4.8",
     "babel-plugin-react-compiler": "catalog:",
     "typescript": "catalog:"
   },

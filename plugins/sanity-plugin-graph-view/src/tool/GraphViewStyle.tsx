@@ -8,8 +8,8 @@ import {styled} from 'styled-components'
 type Style = PropsWithChildren<{theme: SanityTheme}>
 type SanityTheme = Theme['sanity']
 
-export const GraphRoot: React.FC<Style> = styled.div`
-  font-family: ${({theme}: Style) => theme.fonts.text.family};
+export const GraphRoot: React.FC<Style> = styled.div<Style>`
+  font-family: ${({theme}) => theme.fonts.text.family};
   position: absolute;
   top: 0;
   left: 0;
@@ -24,16 +24,16 @@ export const GraphWrapper: React.FC<Style> = styled.div`
   height: 100%;
 `
 
-export const HoverNode: React.FC<Style> = styled.div`
-  font-family: ${({theme}: Style) => theme.fonts.text.family};
+export const HoverNode: React.FC<Style> = styled.div<Style>`
+  font-family: ${({theme}) => theme.fonts.text.family};
   display: none;
   position: absolute;
-  bottom: ${({theme}: Style) => theme.space[0]}px;
+  bottom: ${({theme}) => theme.space[0]}px;
   left: 50%;
   transform: translate3d(-50%, 0, 0);
   background: var(--component-bg);
-  border-radius: ${({theme}: Style) => theme.radius[2]}px;
-  padding: ${({theme}: Style) => theme.space[2]}px;
+  border-radius: ${({theme}) => theme.radius[2]}px;
+  padding: ${({theme}) => theme.space[2]}px;
   z-index: 1000;
 
   &:empty {
@@ -41,11 +41,11 @@ export const HoverNode: React.FC<Style> = styled.div`
   }
 `
 
-export const Legend: React.FC<Style> = styled.div`
+export const Legend: React.FC<Style> = styled.div<Style>`
   color: #ccc;
   position: absolute;
-  top: ${({theme}: Style) => theme.space[4]}px;
-  left: ${({theme}: Style) => theme.space[4]}px;
+  top: ${({theme}) => theme.space[4]}px;
+  left: ${({theme}) => theme.space[4]}px;
 
   & > div {
     margin: 5px 0;
@@ -58,10 +58,10 @@ export const LegendRow: React.FC<
   display: flex;
 `
 
-export const LegendBadge: React.FC<Style> = styled.div`
+export const LegendBadge: React.FC<Style> = styled.div<Style>`
   width: 1.25em;
   height: 1.25em;
   background: currentColor;
   border-radius: 50%;
-  margin-right: ${({theme}: Style) => theme.space[2]}px;
+  margin-right: ${({theme}) => theme.space[2]}px;
 `

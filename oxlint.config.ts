@@ -19,6 +19,15 @@ export default defineConfig({
   ],
   overrides: [
     {
+      files: ['e2e/**/*.ts'],
+      rules: {
+        'no-console': 'off',
+        // Setup/cleanup scripts paginate GitHub and delete datasets sequentially.
+        'no-await-in-loop': 'off',
+        'no-unsafe-type-assertion': 'off',
+      },
+    },
+    {
       files: ['turbo/generators/**/*.ts'],
       rules: {
         'no-console': 'off',

@@ -43,7 +43,7 @@ const flags = {
 } as const
 
 function run({argv}: {argv: string[]}) {
-  const cli = meow(help, {flags, argv, description})
+  const cli = meow(help, {importMeta: import.meta, flags, argv, description})
   const versionParts = pkg.version.split('.')
   const versionNames = ['major', 'minor', 'patch']
   const versionFlags = versionNames.filter((flagName) => cli.flags[flagName])

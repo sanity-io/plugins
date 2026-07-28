@@ -215,6 +215,7 @@ export function DocumentInternationalizationMenu(
         onClick={handleClick}
         ref={buttonRef}
         selected={open}
+        data-testid="document-internationalization-menu"
       />
     </Popover>
   )

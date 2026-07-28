@@ -1,5 +1,23 @@
 # sanity-plugin-media
 
+## 6.0.8
+
+### Patch Changes
+
+- [#1750](https://github.com/sanity-io/plugins/pull/1750) [`95509fd`](https://github.com/sanity-io/plugins/commit/95509fd0434a8b2235b064cba6f6028e7f756331) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.83.0
+
+## 6.0.7
+
+### Patch Changes
+
+- [#1717](https://github.com/sanity-io/plugins/pull/1717) [`d268b24`](https://github.com/sanity-io/plugins/commit/d268b2415f4dfab1d555e5144516314bd1225cf5) Thanks [@stipsan](https://github.com/stipsan)! - Align `groq` with the Sanity Studio `^6.6.0` catalog
+
+## 6.0.6
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
 ## 6.0.5
 
 ### Patch Changes

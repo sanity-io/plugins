@@ -1,5 +1,6 @@
 import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
 import {HomeIcon} from '@sanity/icons/Home'
+import {themerTool} from '@sanity/themer/tool'
 import {vercelProtectionBypassTool} from '@sanity/vercel-protection-bypass'
 import {visionTool} from '@sanity/vision'
 import {defineConfig, type WorkspaceOptions} from 'sanity'
@@ -131,6 +132,7 @@ export default defineConfig([
       vercelWidgetExample(),
       contentGraphView(),
       scriptRunnerTool(),
+      themerTool(),
       debugSecrets(),
       vercelProtectionBypassTool(),
       visionTool(),

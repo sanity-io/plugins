@@ -1,5 +1,13 @@
 # sanity-plugin-graph-view
 
+## 5.0.19
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+- [#1693](https://github.com/sanity-io/plugins/pull/1693) [`fc7c0cf`](https://github.com/sanity-io/plugins/commit/fc7c0cf0f9b925f08aea7262c2baba4b98eba3ee) Thanks [@stipsan](https://github.com/stipsan)! - Fix theme interpolation typings so they compile against regular `styled-components` v6.4
+
 ## 5.0.18
 
 ### Patch Changes

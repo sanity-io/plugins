@@ -1,6 +1,5 @@
-import outdent from 'outdent'
-
 import type {PackageJson} from '../actions/verify/types'
+import {outdent} from '../util/outdent'
 
 export function defaultSourceJs(pkg: PackageJson) {
   return (

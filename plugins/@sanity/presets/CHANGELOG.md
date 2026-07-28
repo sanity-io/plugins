@@ -1,5 +1,11 @@
 # @sanity/presets
 
+## 1.0.6
+
+### Patch Changes
+
+- [#1697](https://github.com/sanity-io/plugins/pull/1697) [`d82235e`](https://github.com/sanity-io/plugins/commit/d82235ee29efbdffa8bffa2a76c147ccbb4e30e6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - Remove an unused internal type re-export to satisfy knip checks.
+
 ## 1.0.5
 
 ### Patch Changes

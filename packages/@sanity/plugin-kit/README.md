@@ -37,6 +37,9 @@ Check the [FAQ](#faq) fro more on these.
 
 > npm install --save-dev @sanity/plugin-kit
 
+Running the plugin-kit CLI requires Node.js 24 or newer. Plugins scaffolded by plugin-kit are not
+affected by this requirement: they declare the wider Node.js range shared with `@sanity/pkg-utils`.
+
 ### Install build tool
 
 `@sanity/plugin-kit` assumes the plugin will use [@sanity/pkg-utils](https://github.com/sanity-io/pkg-utils#sanitypkg-utils) for build and watch:

@@ -2,7 +2,6 @@ import fs from 'fs'
 import path from 'path'
 import util from 'util'
 
-import githubUrl from 'github-url-to-object'
 import validateNpmPackageName from 'validate-npm-package-name'
 
 import type {InjectOptions, PackageData} from '../actions/inject'
@@ -15,6 +14,7 @@ import {
 } from '../configs/forced-package-versions'
 import {cliName, requiredNodeEngine} from '../constants'
 import {writeJsonFile} from '../util/files'
+import {githubUrlToObject} from '../util/github-url'
 import log from '../util/log'
 import {resolveLatestVersions} from './resolveLatestVersions'
 
@@ -262,7 +262,7 @@ function urlsFromOrigin(gitOrigin?: string): {bugs?: {url: string}; homepage?: s
     return {}
   }
 
-  const details = githubUrl(gitOrigin)
+  const details = githubUrlToObject(gitOrigin)
   if (!details) {
     return {}
   }
