@@ -1,8 +1,6 @@
 // oxlint-disable oxc/no-map-spread, typescript/no-misused-spread, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
+import {styleText} from 'node:util'
 import path from 'path'
-
-import chalk from 'chalk'
-import outdent from 'outdent'
 
 import {type Injectable, type InjectOptions, writeAssets} from '../actions/inject'
 import type {PackageJson} from '../actions/verify/types'
@@ -17,6 +15,7 @@ import {resolveLatestVersions} from '../npm/resolveLatestVersions'
 import {errorToUndefined} from '../util/errorToUndefined'
 import {readFile, writeFile} from '../util/files'
 import log from '../util/log'
+import {outdent} from '../util/outdent'
 import {developTestSnippet, getLicenseText, installationSnippet} from '../util/readme'
 import {getUserInfo} from '../util/user'
 import type {Preset} from './presets'
@@ -58,7 +57,8 @@ async function addDevDependencies(options: InjectOptions) {
   log.info('Updated devDependencies.')
 
   log.info(
-    chalk.green(
+    styleText(
+      'green',
       outdent`
         semantic-release preset injected.
 

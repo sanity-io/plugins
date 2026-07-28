@@ -10,8 +10,7 @@
  * follow-up PR). The upstream raw `<style>` tag holding the static hue gradient
  * has been replaced with a `styled-components` element, and `reactcss` removed.
  */
-import {Component} from 'react'
-import type {CSSProperties, ReactElement} from 'react'
+import {Component, createRef, type CSSProperties, type ReactElement} from 'react'
 import {styled} from 'styled-components'
 
 import * as hue from './helpers/hue'
@@ -33,21 +32,23 @@ export interface HueProps {
 }
 
 export class Hue extends Component<HueProps> {
-  private container: HTMLDivElement | null = null
+  private containerRef = createRef<HTMLDivElement | null>()
+  private abortControllerRef = createRef<AbortController | null>()
 
   override componentWillUnmount(): void {
-    this.unbindEventListeners()
-  }
-
-  private readonly setContainerRef = (node: HTMLDivElement | null): void => {
-    this.container = node
+    this.abortControllerRef.current?.abort()
   }
 
   private readonly handleChange = (event: PickerEvent): void => {
-    if (!this.container) {
+    if (!this.containerRef.current) {
       return
     }
-    const change = hue.calculateChange(event, this.props.direction, this.props.hsl, this.container)
+    const change = hue.calculateChange(
+      event,
+      this.props.direction,
+      this.props.hsl,
+      this.containerRef.current,
+    )
     if (change && typeof this.props.onChange === 'function') {
       this.props.onChange(change)
     }
@@ -55,17 +56,17 @@ export class Hue extends Component<HueProps> {
 
   private readonly handleMouseDown = (event: React.MouseEvent<HTMLDivElement>): void => {
     this.handleChange(event.nativeEvent)
-    window.addEventListener('mousemove', this.handleChange)
-    window.addEventListener('mouseup', this.handleMouseUp)
+    if (this.abortControllerRef.current) {
+      this.abortControllerRef.current.abort()
+    }
+    this.abortControllerRef.current = new AbortController()
+    const {signal} = this.abortControllerRef.current
+    window.addEventListener('mousemove', this.handleChange, {signal})
+    window.addEventListener('mouseup', this.handleMouseUp, {signal})
   }
 
   private readonly handleMouseUp = (): void => {
-    this.unbindEventListeners()
-  }
-
-  private readonly unbindEventListeners = (): void => {
-    window.removeEventListener('mousemove', this.handleChange)
-    window.removeEventListener('mouseup', this.handleMouseUp)
+    this.abortControllerRef.current?.abort()
   }
 
   override render(): ReactElement {
@@ -80,7 +81,7 @@ export class Hue extends Component<HueProps> {
         <HueGradient
           $direction={direction}
           style={{padding: '0 2px', position: 'relative', height: '100%', borderRadius: radius}}
-          ref={this.setContainerRef}
+          ref={this.containerRef}
           onMouseDown={this.handleMouseDown}
           onTouchMove={this.handleChange}
           onTouchStart={this.handleChange}

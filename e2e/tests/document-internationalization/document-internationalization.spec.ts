@@ -1,0 +1,217 @@
+import {expect, test} from '@playwright/test'
+
+import {
+  cleanupLessonTree,
+  deleteDocuments,
+  languageOption,
+  openLessonDocument,
+  openTranslationsMenu,
+  seedLesson,
+  seedTranslationMetadata,
+} from '../../helpers/document-internationalization/documentInternationalization.js'
+
+/**
+ * Language badges render in the document status bar without a stable
+ * `document-badges` testid in current Studio — match the exact language id text
+ * inside the document pane instead.
+ */
+function languageBadge(page: import('@playwright/test').Page, languageId: string) {
+  return page.getByTestId('document-pane').getByText(languageId, {exact: true})
+}
+
+test.describe('@sanity/document-internationalization', () => {
+  /**
+   * Covers the plugin's core flow: the Translations menu and language badge on
+   * a localized document, and creating a new translation from it. Verifies the
+   * whole transaction the plugin builds (duplicate source → set language →
+   * create/patch `translation.metadata`), that the success toast fires, and
+   * that fields marked `documentInternationalization.exclude` are NOT copied —
+   * the main data-integrity guarantee editors rely on.
+   */
+  test('creates a Spanish translation from an English lesson', async ({page}, testInfo) => {
+    const projectName = testInfo.project.name
+    const lesson = await seedLesson(projectName, {
+      language: 'en',
+      title: 'English source lesson',
+      content: 'Source content that should not copy',
+    })
+
+    try {
+      await openLessonDocument(page, lesson.id)
+
+      // Menu + badge visibility for a localized document (covers the smoke case).
+      await expect(languageBadge(page, 'en').first()).toBeVisible()
+      await openTranslationsMenu(page)
+      await expect(languageOption(page, 'English')).toBeVisible()
+      await expect(languageOption(page, 'French')).toBeVisible()
+
+      const spanish = languageOption(page, 'Spanish')
+      await expect(spanish).toBeEnabled()
+      await spanish.click()
+
+      await expect(page.getByText('Created "Spanish" translation')).toBeVisible()
+
+      // Creating a translation does not auto-open it. Wait until the metadata
+      // listener flips the option to its "open translation" state (split-vertical
+      // icon) — clicking earlier would trigger another create instead of opening.
+      const spanishOption = languageOption(page, 'Spanish')
+      await expect(spanishOption.locator('[data-sanity-icon="split-vertical"]')).toBeVisible()
+      await spanishOption.click()
+      await expect(page.getByTestId('document-pane')).toHaveCount(2)
+      await expect(languageBadge(page, 'es').first()).toBeVisible()
+
+      // Excluded `content` field should not be copied to the new translation.
+      const spanishPane = page
+        .getByTestId('document-pane')
+        .filter({has: page.getByText('es', {exact: true})})
+      const spanishTitle = spanishPane.getByTestId('field-title').getByTestId('string-input')
+      const spanishContent = spanishPane
+        .getByTestId('field-content')
+        .locator('textarea, [data-testid="text-input"]')
+        .first()
+
+      await expect(spanishTitle).toHaveValue('English source lesson')
+      await expect(spanishContent).toHaveValue('')
+    } finally {
+      await cleanupLessonTree(projectName, lesson.id)
+    }
+  })
+
+  /**
+   * Covers navigation to an already-linked translation: with seeded metadata,
+   * a language option must OPEN the existing document in a split pane rather
+   * than create a duplicate. This guards the menu's translation-detection
+   * logic (metadata lookup per language) — a regression here silently forks
+   * content into duplicate documents.
+   */
+  test('opens an existing translation from the Translations menu', async ({page}, testInfo) => {
+    const projectName = testInfo.project.name
+    const english = await seedLesson(projectName, {
+      language: 'en',
+      title: 'Open-me English',
+    })
+    const spanish = await seedLesson(projectName, {
+      language: 'es',
+      title: 'Open-me Spanish',
+    })
+    const metadataId = await seedTranslationMetadata(projectName, [
+      {language: 'en', documentId: english.id},
+      {language: 'es', documentId: spanish.id},
+    ])
+
+    try {
+      await openLessonDocument(page, english.id)
+      await openTranslationsMenu(page)
+
+      await languageOption(page, 'Spanish').click()
+
+      const titleInputs = page.getByTestId('field-title').getByTestId('string-input')
+      await expect(page.getByTestId('document-pane')).toHaveCount(2)
+      await expect(titleInputs).toHaveCount(2)
+      await expect(titleInputs.nth(1)).toHaveValue('Open-me Spanish')
+    } finally {
+      await deleteDocuments(projectName, [english.id, spanish.id, metadataId])
+    }
+  })
+
+  /**
+   * Covers the custom `useDeleteTranslationAction` document action: the
+   * confirmation dialog and the "unset reference" path, which must remove the
+   * document's entry from `translation.metadata` without deleting the sibling
+   * translations. Stale metadata references are the main source of broken
+   * Translations menus, so this cleanup path needs browser-level coverage.
+   */
+  test('Delete translation action unsets the metadata reference', async ({page}, testInfo) => {
+    const projectName = testInfo.project.name
+    const english = await seedLesson(projectName, {language: 'en', title: 'Delete EN'})
+    const spanish = await seedLesson(projectName, {language: 'es', title: 'Delete ES'})
+    const metadataId = await seedTranslationMetadata(projectName, [
+      {language: 'en', documentId: english.id},
+      {language: 'es', documentId: spanish.id},
+    ])
+
+    try {
+      await openLessonDocument(page, spanish.id)
+
+      await page.getByTestId('action-menu-button').click()
+      await page.getByRole('menuitem', {name: 'Delete translation...'}).click()
+
+      await expect(page.getByRole('dialog')).toBeVisible()
+      await page.getByRole('button', {name: 'Unset translation reference'}).click()
+
+      await expect(page.getByText('Translation reference unset')).toBeVisible()
+    } finally {
+      await deleteDocuments(projectName, [english.id, spanish.id, metadataId])
+    }
+  })
+
+  /**
+   * Covers the custom `useDuplicateWithTranslationsAction` document action:
+   * duplicating a document must clone every language version AND a fresh
+   * `translation.metadata` linking the copies — not reuse the source set.
+   * Asserts the studio navigates to the new copy (different id) and that its
+   * Translations menu shows the duplicated languages linked together.
+   */
+  test('Duplicate with translations creates a new linked set', async ({page}, testInfo) => {
+    const projectName = testInfo.project.name
+    const english = await seedLesson(projectName, {language: 'en', title: 'Dup EN'})
+    const french = await seedLesson(projectName, {language: 'fr', title: 'Dup FR'})
+    const metadataId = await seedTranslationMetadata(projectName, [
+      {language: 'en', documentId: english.id},
+      {language: 'fr', documentId: french.id},
+    ])
+
+    let duplicatedId: string | undefined
+    try {
+      await openLessonDocument(page, english.id)
+
+      await page.getByTestId('action-menu-button').click()
+      await page.getByRole('menuitem', {name: 'Duplicate with translations'}).click()
+
+      await expect(page.getByTestId('document-pane').first()).toBeVisible()
+      await expect(page).not.toHaveURL(new RegExp(english.id))
+
+      // Capture the duplicated document id so the new set can be cleaned up.
+      duplicatedId = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/.exec(
+        page.url(),
+      )?.[0]
+
+      await openTranslationsMenu(page)
+      await expect(languageOption(page, 'English')).toBeVisible()
+      await expect(languageOption(page, 'French')).toBeVisible()
+    } finally {
+      await deleteDocuments(projectName, [english.id, french.id, metadataId])
+      // The action creates a whole new set (duplicated lessons + metadata).
+      if (duplicatedId) await cleanupLessonTree(projectName, duplicatedId)
+    }
+  })
+
+  /**
+   * Covers the "Manage Translations" entry point (enabled by
+   * `allowCreateMetaDoc`): it must open the `translation.metadata` document in
+   * a split pane so editors can inspect/repair the links directly. Guards the
+   * pane routing to the metadata schema type, which plain unit tests cannot
+   * exercise.
+   */
+  test('Manage Translations opens the metadata document', async ({page}, testInfo) => {
+    const projectName = testInfo.project.name
+    const english = await seedLesson(projectName, {language: 'en', title: 'Meta EN'})
+    const spanish = await seedLesson(projectName, {language: 'es', title: 'Meta ES'})
+    const metadataId = await seedTranslationMetadata(projectName, [
+      {language: 'en', documentId: english.id},
+      {language: 'es', documentId: spanish.id},
+    ])
+
+    try {
+      await openLessonDocument(page, english.id)
+      await openTranslationsMenu(page)
+      await page.getByRole('button', {name: 'Manage Translations'}).click()
+
+      await expect(page.getByTestId('document-pane')).toHaveCount(2)
+      // Schema title is singular: "Translation metadata"
+      await expect(page.getByText('Translation metadata').first()).toBeVisible()
+    } finally {
+      await deleteDocuments(projectName, [english.id, spanish.id, metadataId])
+    }
+  })
+})

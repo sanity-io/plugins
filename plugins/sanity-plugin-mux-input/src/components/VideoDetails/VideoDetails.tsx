@@ -1,17 +1,15 @@
 // oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {
-  CalendarIcon,
-  CheckmarkIcon,
-  ClockIcon,
-  CropIcon,
-  EditIcon,
-  ErrorOutlineIcon,
-  RevertIcon,
-  SearchIcon,
-  SyncIcon,
-  TagIcon,
-  TrashIcon,
-} from '@sanity/icons'
+import {CalendarIcon} from '@sanity/icons/Calendar'
+import {CheckmarkIcon} from '@sanity/icons/Checkmark'
+import {ClockIcon} from '@sanity/icons/Clock'
+import {CropIcon} from '@sanity/icons/Crop'
+import {EditIcon} from '@sanity/icons/Edit'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {RevertIcon} from '@sanity/icons/Revert'
+import {SearchIcon} from '@sanity/icons/Search'
+import {SyncIcon} from '@sanity/icons/Sync'
+import {TagIcon} from '@sanity/icons/Tag'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {
   Button,
   Card,
@@ -34,6 +32,7 @@ import FormField from '../FormField'
 import IconInfo from '../IconInfo'
 import {ResolutionIcon} from '../icons/Resolution'
 import {StopWatchIcon} from '../icons/StopWatch'
+import Mezzanine from '../Mezzanine'
 import TextTracksManager from '../TextTracksManager'
 import VideoPlayer from '../VideoPlayer'
 import DeleteDialog from './DeleteDialog'
@@ -223,18 +222,21 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
           <Stack space={4} flex={1} sizing="border">
             <VideoPlayer asset={props.asset} autoPlay={props.asset.autoPlay || false} />
             {tab === 'details' && (
-              <TextTracksManager
-                asset={props.asset}
-                iconOnly
-                collapseTracks
-                tracks={
-                  displayInfo?.text_tracks ||
-                  props.asset.data?.tracks?.filter(
-                    (track): track is MuxTextTrack => track.type === 'text',
-                  ) ||
-                  []
-                }
-              />
+              <>
+                <TextTracksManager
+                  asset={props.asset}
+                  iconOnly
+                  collapseTracks
+                  tracks={
+                    displayInfo?.text_tracks ||
+                    props.asset.data?.tracks?.filter(
+                      (track): track is MuxTextTrack => track.type === 'text',
+                    ) ||
+                    []
+                  }
+                />
+                <Mezzanine asset={props.asset} />
+              </>
             )}
           </Stack>
           <Stack space={4} flex={1} sizing="border">

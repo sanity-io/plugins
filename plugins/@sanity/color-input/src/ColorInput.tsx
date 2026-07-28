@@ -1,4 +1,5 @@
-import {AddIcon, TrashIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {startTransition, useOptimistic, useRef} from 'react'
 import {type ObjectInputProps, set, setIfMissing, unset} from 'sanity'
@@ -10,10 +11,11 @@ import {
   Alpha,
   Checkboard,
   type Color,
-  CustomPicker,
-  type CustomPickerInjectedProps,
+  type ColorState,
   Hue,
   Saturation,
+  simpleCheckForValidColor,
+  toState,
 } from './react-color'
 import type {ColorSchemaType, ColorValue} from './types'
 
@@ -32,25 +34,45 @@ const ReadOnlyContainer = styled(Flex)`
   width: 100%;
 `
 
-interface ColorPickerProps extends CustomPickerInjectedProps<Color> {
+interface ColorPickerProps {
   width?: string
   disableAlpha: boolean
   colorList?: Array<Color> | undefined
   readOnly?: boolean
+  onChange: (color: ColorState) => void
   onUnset: () => void
   color: ColorValue
 }
 
-const ColorPickerInner = (props: ColorPickerProps) => {
+const ColorPicker = (props: ColorPickerProps) => {
   const {
     width,
     color: {rgb, hex, hsv, hsl},
-    onChange,
+    onChange: onChangeProp,
     onUnset,
     disableAlpha,
     colorList,
     readOnly,
   } = props
+
+  // Remembers the hue across achromatic colors (saturation 0), where the hue
+  // can't be recovered from the color value itself. While the color is
+  // chromatic the live `hsl` prop is authoritative — so external value changes
+  // (undo, remote sync) are picked up — and the ref only bridges achromatic
+  // spans. Adapted from react-color's `ColorWrap` HOC (MIT, Copyright (c) 2015
+  // Case Sandberg).
+  const oldHueRef = useRef(hsl?.h ?? 0)
+
+  const onChange = (data: Color): void => {
+    if (!simpleCheckForValidColor(data)) {
+      return
+    }
+    const incomingHue = typeof data === 'string' ? undefined : 'h' in data ? data.h : undefined
+    const oldHue = hsl && hsl.s > 0 ? hsl.h : oldHueRef.current
+    const nextColor = toState(data, incomingHue || oldHue)
+    oldHueRef.current = nextColor.oldHue
+    onChangeProp(nextColor)
+  }
 
   if (!hsl || !hsv) {
     return null
@@ -151,8 +173,6 @@ const ColorPickerInner = (props: ColorPickerProps) => {
     </div>
   )
 }
-
-const ColorPicker = CustomPicker(ColorPickerInner)
 
 const DEFAULT_COLOR: ColorValue & {source: string} = {
   hex: '#24a3e3',

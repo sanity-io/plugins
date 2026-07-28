@@ -1,5 +1,5 @@
 // oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
-import {ErrorOutlineIcon} from '@sanity/icons'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Button, type ButtonProps, Card} from '@sanity/ui'
 import {type CSSProperties, useMemo} from 'react'
 import {useObservable} from 'react-rx'

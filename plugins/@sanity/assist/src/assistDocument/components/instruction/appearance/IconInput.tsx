@@ -1,6 +1,6 @@
-import {icons} from '@sanity/icons'
+import {icons, Icon, type IconSymbol} from '@sanity/icons'
 import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
-import {type ElementType, type ReactNode, useCallback, useId, useMemo} from 'react'
+import {useCallback, useId, useMemo} from 'react'
 import {set, type StringInputProps} from 'sanity'
 
 export function IconInput(props: StringInputProps) {
@@ -8,18 +8,24 @@ export function IconInput(props: StringInputProps) {
   const id = useId()
   const items = useMemo(
     () =>
-      Object.entries(icons).map(([key, icon]) => (
-        <IconItem key={key} iconKey={key} icon={icon} onChange={onChange} />
-      )),
+      Object.keys(icons)
+        .filter(isIconSymbol)
+        .map((key) => <IconItem key={key} iconKey={key} onChange={onChange} />),
     [onChange],
   )
 
-  const selectedIcon = useMemo(() => getIcon(value), [value])
+  const selectedSymbol = useMemo(() => getIcon(value), [value])
 
   return (
     <MenuButton
       button={
-        <Button icon={selectedIcon} title="Select icon" padding={3} mode="ghost" radius={1} />
+        <Button
+          icon={<Icon symbol={selectedSymbol} />}
+          title="Select icon"
+          padding={3}
+          mode="ghost"
+          radius={1}
+        />
       }
       id={id}
       menu={<Menu style={{maxHeight: 300}}>{items}</Menu>}
@@ -29,19 +35,23 @@ export function IconInput(props: StringInputProps) {
 }
 
 function IconItem({
-  icon,
   iconKey: key,
   onChange,
 }: {
-  iconKey: string
-  // oxlint-disable-next-line no-redundant-type-constituents
-  icon: ElementType | ReactNode
+  iconKey: IconSymbol
   onChange: StringInputProps['onChange']
 }) {
   const onClick = useCallback(() => onChange(set(key)), [onChange, key])
-  return <MenuItem icon={icon} title={key} text={key} onClick={onClick} />
+  // `Icon` wraps the lazy-loaded icon in its own `Suspense` boundary. Rendering the raw
+  // lazy component from `icons` would suspend the whole menu (there is no boundary between
+  // it and the popover), which unmounts the menu and closes it before it can be seen.
+  return <MenuItem icon={<Icon symbol={key} />} title={key} text={key} onClick={onClick} />
 }
 
-export function getIcon(iconName?: string) {
-  return Object.entries(icons).find(([key]) => key === iconName)?.[1] ?? icons.sparkles
+export function getIcon(iconName?: string): IconSymbol {
+  return iconName && isIconSymbol(iconName) ? iconName : 'sparkles'
+}
+
+function isIconSymbol(iconName: string): iconName is IconSymbol {
+  return iconName in icons
 }

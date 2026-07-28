@@ -1,5 +1,7 @@
 // oxlint-disable react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {DownloadIcon, TranslateIcon, UploadIcon} from '@sanity/icons'
+import {DownloadIcon} from '@sanity/icons/Download'
+import {TranslateIcon} from '@sanity/icons/Translate'
+import {UploadIcon} from '@sanity/icons/Upload'
 import {
   Autocomplete,
   Button,
@@ -412,7 +414,9 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
             )}
           </Card>
           <Stack space={2}>
-            <Label htmlFor="vtt-url">VTT File URL</Label>
+            <Label as="label" htmlFor="vtt-url">
+              VTT File URL
+            </Label>
             <TextInput
               id="vtt-url"
               placeholder="https://example.com/subtitles.vtt"
@@ -430,7 +434,9 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
         </Stack>
 
         <Stack space={2}>
-          <Label htmlFor="caption-name">Audio name</Label>
+          <Label as="label" htmlFor="caption-name">
+            Audio name
+          </Label>
           <Autocomplete
             id="caption-name"
             value={selectedLanguage?.value || ''}
@@ -463,7 +469,9 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
         </Stack>
 
         <Stack space={2}>
-          <Label htmlFor="caption-language">Language Code</Label>
+          <Label as="label" htmlFor="caption-language">
+            Language Code
+          </Label>
           <TextInput
             id="caption-language"
             placeholder="en-US"

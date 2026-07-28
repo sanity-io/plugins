@@ -1,13 +1,10 @@
-import {CopyIcon, DocumentTextIcon} from '@sanity/icons'
+import {CopyIcon} from '@sanity/icons/Copy'
+import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 import {Box, Button, Card, Code, Flex, Stack, Text, Tooltip, useToast} from '@sanity/ui'
 import {useCallback, useMemo} from 'react'
 import type {SanityDocument} from 'sanity'
 import {definePlugin, defineType, useSchema} from 'sanity'
-import {
-  structureTool,
-  type DefaultDocumentNodeResolver,
-  type UserViewComponent,
-} from 'sanity/structure'
+import type {DefaultDocumentNodeResolver, UserViewComponent} from 'sanity/structure'
 
 import {formatHtml} from './formatHtml'
 import {serializeDocumentToHtml} from './serializeDocumentToHtml'
@@ -132,7 +129,10 @@ const HtmlSerializeView: UserViewComponent = ({document}) => {
   )
 }
 
-const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
+export const sanityNaiveHtmlSerializerDefaultDocumentNode: DefaultDocumentNodeResolver = (
+  S,
+  {schemaType},
+) => {
   if (schemaType === 'naiveHtmlSerializerArticle') {
     return S.document().views([
       S.view.form(),
@@ -140,15 +140,10 @@ const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}) => {
     ])
   }
 
-  return S.document().views([S.view.form()])
+  return null
 }
 
 export const sanityNaiveHtmlSerializerExample = definePlugin(() => ({
   name: 'sanity-naive-html-serializer-example',
   schema: {types: [naiveHtmlSerializerArticle]},
-  plugins: [
-    structureTool({
-      defaultDocumentNode,
-    }),
-  ],
 }))

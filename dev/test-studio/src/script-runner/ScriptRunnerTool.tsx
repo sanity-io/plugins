@@ -1,10 +1,8 @@
-import {
-  ArrowLeftIcon,
-  CheckmarkCircleIcon,
-  CodeIcon,
-  ErrorOutlineIcon,
-  PlayIcon,
-} from '@sanity/icons'
+import {ArrowLeftIcon} from '@sanity/icons/ArrowLeft'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {CodeIcon} from '@sanity/icons/Code'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {PlayIcon} from '@sanity/icons/Play'
 import {Box, Button, Card, Code, Flex, Heading, Stack, Text, TextInput} from '@sanity/ui'
 import {type ChangeEvent, useCallback, useState} from 'react'
 import {useClient} from 'sanity'

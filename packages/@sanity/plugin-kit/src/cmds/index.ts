@@ -11,9 +11,6 @@ export default {
   'verify-package': async (options: {argv: string[]}) => {
     await (await import('./verify-package')).default(options)
   },
-  'verify-studio': async (options: {argv: string[]}) => {
-    await (await import('./verify-studio')).default(options)
-  },
   'version': async (options: {argv: string[]}) => {
     ;(await import('./version')).default(options)
   },

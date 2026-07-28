@@ -1,5 +1,6 @@
 // oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
-import {EarthGlobeIcon, LinkIcon} from '@sanity/icons'
+import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
+import {LinkIcon} from '@sanity/icons/Link'
 import {Box, Button, Flex, Spinner} from '@sanity/ui'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
@@ -114,8 +115,8 @@ function SemanticSearchInput(props: ObjectInputProps & {indexConfig: EmbeddingsI
     if (value?.['_ref']) {
       autocompleteRef.current?.focus()
     }
-    // intentional empty deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // intentional empty deps — focus once on mount when replacing an existing reference
+    // oxlint-disable-next-line react/exhaustive-deps
   }, [])
 
   const handleFocus = useCallback(() => onPathFocus(['_ref']), [onPathFocus])

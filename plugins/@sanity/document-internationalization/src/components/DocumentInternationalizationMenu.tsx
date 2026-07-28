@@ -1,9 +1,9 @@
-import {TranslateIcon} from '@sanity/icons'
+import {TranslateIcon} from '@sanity/icons/Translate'
 import {Box, Button, Card, Popover, Stack, Text, TextInput, useClickOutsideEvent} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import type {ChangeEvent} from 'react'
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {useEditState} from 'sanity'
+import {useEditState, usePerspective} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
 import {useTranslationMetadata} from '../hooks/useLanguageMetadata'
@@ -56,8 +56,16 @@ export function DocumentInternationalizationMenu(
   }, [loading, metadata?._id])
 
   // Duplicate a new language version from the most recent version of this document
-  const {draft, published} = useEditState(documentId, schemaType.name)
-  const source = draft || published
+  // When a release is selected, the version document is the source, so documents
+  // that only exist in that release can still be translated
+  const {selectedReleaseId} = usePerspective()
+  const {draft, published, version} = useEditState(
+    documentId,
+    schemaType.name,
+    'default',
+    selectedReleaseId,
+  )
+  const source = version || draft || published
 
   // Check for data issues
   const documentIsInOneMetadataDocument = useMemo(() => {
@@ -207,6 +215,7 @@ export function DocumentInternationalizationMenu(
         onClick={handleClick}
         ref={buttonRef}
         selected={open}
+        data-testid="document-internationalization-menu"
       />
     </Popover>
   )

@@ -1,10 +1,11 @@
 // oxlint-disable react/react-compiler - legacy code will be lint-cleaned in a follow-up PR
 import {type MuxPlayerProps, type MuxPlayerRefAttributes} from '@mux/mux-player-react'
 import MuxPlayer from '@mux/mux-player-react/lazy'
-import {ErrorOutlineIcon} from '@sanity/icons'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Card, Text} from '@sanity/ui'
 import {type PropsWithChildren, Suspense, useMemo, useRef, useState} from 'react'
 
+import {PLUGIN_VERSION} from '../constants'
 import {useDialogStateContext} from '../context/DialogStateContext'
 import {useClient} from '../hooks/useClient'
 import {AUDIO_ASPECT_RATIO, MIN_ASPECT_RATIO} from '../util/constants'
@@ -18,6 +19,7 @@ import type {VideoAssetDocument} from '../util/types'
 import CaptionsDialog from './CaptionsDialog'
 import EditThumbnailDialog from './EditThumbnailDialog'
 import {AudioIcon} from './icons/Audio'
+import MezzanineDialog from './MezzanineDialog'
 
 export default function VideoPlayer({
   asset,
@@ -187,8 +189,7 @@ export default function VideoPlayer({
                 crossOrigin="anonymous"
                 metadata={{
                   player_name: 'Sanity Admin Dashboard',
-                  // @ts-expect-error - this constant is search/replaced so must be exact, not accessed with an index signature
-                  player_version: process.env.PKG_VERSION,
+                  player_version: PLUGIN_VERSION,
                   page_type: 'Preview Player',
                 }}
                 audio={isAudio}
@@ -233,6 +234,7 @@ export default function VideoPlayer({
         />
       )}
       {dialogState === 'edit-captions' && <CaptionsDialog asset={asset} />}
+      {dialogState === 'mezzanine' && <MezzanineDialog asset={asset} />}
     </>
   )
 }

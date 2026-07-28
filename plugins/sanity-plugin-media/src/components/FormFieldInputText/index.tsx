@@ -1,5 +1,5 @@
 import {Box, TextInput} from '@sanity/ui'
-import {forwardRef} from 'react'
+import {type Ref} from 'react'
 
 import FormFieldInputLabel from '../FormFieldInputLabel'
 
@@ -11,12 +11,11 @@ type Props = {
   name: string
   placeholder?: string
   value?: string
+  ref?: Ref<HTMLInputElement>
 }
 
-type Ref = HTMLInputElement
-
-const FormFieldInputText = forwardRef<Ref, Props>((props: Props, ref) => {
-  const {description, disabled, error, label, name, placeholder, value, ...rest} = props
+const FormFieldInputText = (props: Props) => {
+  const {description, disabled, error, label, name, placeholder, value, ref, ...rest} = props
 
   return (
     <Box>
@@ -36,6 +35,6 @@ const FormFieldInputText = forwardRef<Ref, Props>((props: Props, ref) => {
       />
     </Box>
   )
-})
+}
 
 export default FormFieldInputText

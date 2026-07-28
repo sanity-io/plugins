@@ -1,5 +1,7 @@
 // oxlint-disable jsx_a11y/click-events-have-key-events, jsx_a11y/no-static-element-interactions, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {CheckmarkCircleIcon, EditIcon, WarningFilledIcon} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {EditIcon} from '@sanity/icons/Edit'
+import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
 import {
   Box,
   Checkbox,

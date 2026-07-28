@@ -1,5 +1,5 @@
 // oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {CloseIcon} from '@sanity/icons'
+import {CloseIcon} from '@sanity/icons/Close'
 import {Box, Flex, Label, rem, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'

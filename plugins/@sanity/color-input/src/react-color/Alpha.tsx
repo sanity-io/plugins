@@ -10,8 +10,7 @@
  * follow-up PR). `reactcss` has been removed in favor of plain inline styles,
  * and the unused custom `pointer` slot dropped.
  */
-import {Component} from 'react'
-import type {CSSProperties, ReactElement} from 'react'
+import {Component, createRef, type CSSProperties, type ReactElement} from 'react'
 
 import {Checkboard} from './Checkboard'
 import * as alpha from './helpers/alpha'
@@ -36,18 +35,15 @@ export interface AlphaProps {
 }
 
 export class Alpha extends Component<AlphaProps> {
-  private container: HTMLDivElement | null = null
+  private containerRef = createRef<HTMLDivElement | null>()
+  private abortControllerRef = createRef<AbortController | null>()
 
   override componentWillUnmount(): void {
-    this.unbindEventListeners()
-  }
-
-  private readonly setContainerRef = (node: HTMLDivElement | null): void => {
-    this.container = node
+    this.abortControllerRef.current?.abort()
   }
 
   private readonly handleChange = (event: PickerEvent): void => {
-    if (!this.container) {
+    if (!this.containerRef.current) {
       return
     }
     const change = alpha.calculateChange(
@@ -55,7 +51,7 @@ export class Alpha extends Component<AlphaProps> {
       this.props.hsl,
       this.props.direction,
       this.props.a,
-      this.container,
+      this.containerRef.current,
     )
     if (change && typeof this.props.onChange === 'function') {
       this.props.onChange(change)
@@ -64,17 +60,17 @@ export class Alpha extends Component<AlphaProps> {
 
   private readonly handleMouseDown = (event: React.MouseEvent<HTMLDivElement>): void => {
     this.handleChange(event.nativeEvent)
-    window.addEventListener('mousemove', this.handleChange)
-    window.addEventListener('mouseup', this.handleMouseUp)
+    if (this.abortControllerRef.current) {
+      this.abortControllerRef.current.abort()
+    }
+    this.abortControllerRef.current = new AbortController()
+    const {signal} = this.abortControllerRef.current
+    window.addEventListener('mousemove', this.handleChange, {signal})
+    window.addEventListener('mouseup', this.handleMouseUp, {signal})
   }
 
   private readonly handleMouseUp = (): void => {
-    this.unbindEventListeners()
-  }
-
-  private readonly unbindEventListeners = (): void => {
-    window.removeEventListener('mousemove', this.handleChange)
-    window.removeEventListener('mouseup', this.handleMouseUp)
+    this.abortControllerRef.current?.abort()
   }
 
   override render(): ReactElement {
@@ -106,7 +102,7 @@ export class Alpha extends Component<AlphaProps> {
         {/* oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- the slider surface is dragged via pointer coordinates, which have no keyboard equivalent */}
         <div
           style={{position: 'relative', height: '100%', margin: '0 3px'}}
-          ref={this.setContainerRef}
+          ref={this.containerRef}
           onMouseDown={this.handleMouseDown}
           onTouchMove={this.handleChange}
           onTouchStart={this.handleChange}

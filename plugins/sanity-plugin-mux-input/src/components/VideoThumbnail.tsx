@@ -1,5 +1,5 @@
 // oxlint-disable react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {ErrorOutlineIcon} from '@sanity/icons'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Card, type CardTone, Spinner, Stack, Text} from '@sanity/ui'
 import {Suspense, useMemo, useRef, useState} from 'react'
 import {styled} from 'styled-components'

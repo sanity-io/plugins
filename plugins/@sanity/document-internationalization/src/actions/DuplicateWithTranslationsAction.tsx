@@ -1,4 +1,4 @@
-import {CopyIcon} from '@sanity/icons'
+import {CopyIcon} from '@sanity/icons/Copy'
 import {useToast} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import {useCallback, useMemo, useState} from 'react'
@@ -40,6 +40,7 @@ const DISABLED_REASON_KEY = {
   MULTIPLE_METADATA: 'action.duplicate.disabled.multiple-metadata',
   NOTHING_TO_DUPLICATE: 'action.duplicate.disabled.nothing-to-duplicate',
   NOT_READY: 'action.duplicate.disabled.not-ready',
+  TARGET_NOT_FOUND: 'action.duplicate.disabled.target-not-found',
 }
 
 /**

@@ -1,4 +1,4 @@
-import {forwardRef, type ReactElement, type ReactNode} from 'react'
+import {type ReactElement, type ReactNode, type Ref} from 'react'
 import {keyframes, styled} from 'styled-components'
 
 const fadeIn = keyframes`
@@ -21,20 +21,19 @@ const FadeInDiv = styled.div`
   animation-timing-function: ease-in-out;
 `
 
-export const FadeInContent = forwardRef(function FadeInContent(
-  {
-    children,
-    durationMs = 250,
-  }: {
-    children?: ReactNode
-    ms?: number
-    durationMs?: number
-  },
-  ref: any,
-): ReactElement {
+export function FadeInContent({
+  children,
+  durationMs = 250,
+  ref,
+}: {
+  children?: ReactNode
+  ms?: number
+  durationMs?: number
+  ref?: Ref<HTMLDivElement>
+}): ReactElement {
   return (
     <FadeInDiv ref={ref} style={{animationDuration: `${durationMs}ms`}}>
       {children}
     </FadeInDiv>
   )
-})
+}

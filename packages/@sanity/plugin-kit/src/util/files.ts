@@ -4,13 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import util from 'util'
 
-import json5 from 'json5'
-import pAny from 'p-any'
-
 import type {InitFlags} from '../actions/init'
-import {buildExtensions} from '../configs/buildExtensions'
-import type {ManifestPaths} from '../sanity/manifest'
-import log from './log'
 import {prompt} from './prompt'
 
 const stat = util.promisify(fs.stat)
@@ -19,83 +13,6 @@ const readdir = util.promisify(fs.readdir)
 const copyFile = util.promisify(fs.copyFile)
 export const readFile = util.promisify(fs.readFile)
 export const writeFile = util.promisify(fs.writeFile)
-
-export function hasSourceEquivalent(compiledFile: string, paths: ManifestPaths) {
-  if (!paths.source) {
-    return fileExists(
-      path.isAbsolute(compiledFile) ? compiledFile : path.resolve(paths.basePath, compiledFile),
-    )
-  }
-
-  // /plugin/dist/MyComponent.js => /plugin/src
-  const baseDir = path.dirname(compiledFile.replace(paths.compiled as string, paths.source))
-
-  // /plugin/dist/MyComponent.js => MyComponent
-  const baseName = path.basename(compiledFile, path.extname(compiledFile))
-
-  // MyComponent => /plugin/src/MyComponent
-  const pathStub = path.join(baseDir, baseName)
-
-  /*
-   * /plugin/src/MyComponent => [
-   *   /plugin/src/MyComponent.jsx,
-   *   /plugin/src/MyComponent.mjs,
-   *   ...
-   * ]
-   */
-  return buildCandidateExists(pathStub)
-}
-
-// Generally used for parts resolving
-export async function hasSourceFile(filePath: string, paths?: ManifestPaths) {
-  if (!paths?.source) {
-    return fileExists(
-      path.isAbsolute(filePath) ? filePath : path.resolve(paths?.basePath ?? '', filePath),
-    )
-  }
-
-  // filePath: components/SomeInput
-  // paths: {source: '/plugin/src'}
-  // MyComponent => /plugin/src/MyComponent
-  const pathStub = path.isAbsolute(filePath) ? filePath : path.resolve(paths.source, filePath)
-
-  if (await fileExists(pathStub)) {
-    return true
-  }
-
-  return buildCandidateExists(pathStub)
-}
-
-// Generally used for parts resolving
-export function hasCompiledFile(filePath: string, paths?: ManifestPaths) {
-  if (!paths?.compiled) {
-    return fileExists(
-      path.isAbsolute(filePath) ? filePath : path.resolve(paths?.basePath ?? '', filePath),
-    )
-  }
-
-  // filePath: components/SomeInput
-  // paths: {compiled: '/plugin/dist'}
-
-  // components/SomeInput => /plugin/dist/components/SomeInput
-  const absPath = path.isAbsolute(filePath) ? filePath : path.resolve(paths.compiled, filePath)
-
-  // /plugin/dist/components/SomeInput     => /plugin/dist/components/SomeInput.js
-  // /plugin/dist/components/SomeInput.js  => /plugin/dist/components/SomeInput.js
-  // /plugin/dist/components/SomeInput.css => /plugin/dist/components/SomeInput.css
-  const fileExt = path.extname(absPath)
-  const withExt = fileExt === '' ? `${absPath}.js` : absPath
-
-  return fileExists(withExt)
-}
-
-function buildCandidateExists(pathStub: string) {
-  const candidates = buildExtensions.map((extCandidate) => `${pathStub}${extCandidate}`)
-
-  return pAny(candidates.map((candidate) => stat(candidate)))
-    .then(() => true)
-    .catch(() => false)
-}
 
 export function fileExists(filePath: string) {
   return stat(filePath)
@@ -218,46 +135,4 @@ export async function isEmptyish(dirPath: string) {
   const allFiles = await readdir(dirPath).catch(() => [])
   const files = allFiles.filter((file) => !ignoredFiles.includes(file.toLowerCase()))
   return files.length === 0
-}
-
-async function readFileContent({
-  filename,
-  basePath,
-}: {
-  filename: string
-  basePath: string
-}): Promise<string | undefined> {
-  const filepath = path.normalize(path.join(basePath, filename))
-  try {
-    return await readFile(filepath, 'utf8')
-  } catch (err: any) {
-    if (err.code === 'ENOENT') {
-      log.debug(`No ${filename} file found.`)
-      return undefined
-    }
-    throw new Error(`Failed to read "${filepath}": ${err.message}`)
-  }
-}
-
-export async function readJson5File<T>({
-  filename,
-  basePath,
-}: {
-  filename: string
-  basePath: string
-}): Promise<T | undefined> {
-  const content = await readFileContent({filename, basePath})
-  if (!content) {
-    return undefined
-  }
-
-  return parseJson5<T>(content, filename)
-}
-
-function parseJson5<T>(content: string, errorKey: string): T {
-  try {
-    return json5.parse<T>(content)
-  } catch (err: any) {
-    throw new Error(`Error parsing "${errorKey}": ${err.message}`)
-  }
 }

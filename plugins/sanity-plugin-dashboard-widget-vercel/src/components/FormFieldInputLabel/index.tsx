@@ -1,5 +1,5 @@
 import {red} from '@sanity/color'
-import {ErrorOutlineIcon} from '@sanity/icons'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Inline, Text, Tooltip} from '@sanity/ui'
 import type {FC} from 'react'
 import {type FieldError} from 'react-hook-form'

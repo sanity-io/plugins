@@ -6,7 +6,7 @@ import {initFlags} from '../actions/init'
 import {inject} from '../actions/inject'
 import {cliName, defaultOutDir} from '../constants'
 import {presetHelpList} from '../presets/presets'
-import {findStudioV3Config} from '../sanity/manifest'
+import {findStudioConfig} from '../sanity/studio-detect'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
 
@@ -17,8 +17,8 @@ Usage
   $ ${cliName} inject [dir] [<args>]
 
 Options
-  --no-eslint             Disables ESLint config and dependencies from being added
-  --no-prettier           Disables prettier config and dependencies from being added
+  --no-oxlint             Disables oxlint config and dependencies from being added
+  --no-oxfmt              Disables oxfmt config and dependencies from being added
   --no-typescript         Disables typescript config and dependencies from being added
   --no-license            Disables LICENSE + package.json license field from being added
   --no-editorconfig       Disables .editorconfig from being added
@@ -40,8 +40,8 @@ Examples
   # Inject configuration into the plugin in ~/my-plugin
   $ ${cliName} inject ~/my-plugin
 
-  # Don't inject eslint or prettier
-  $ ${cliName} inject --no-eslint --no-prettier
+  # Don't inject oxlint or oxfmt
+  $ ${cliName} inject --no-oxlint --no-oxfmt
 
   # Inject plugin configuration and semver-workflow into the plugin in the current directory
   $ @sanity/plugin-kit inject --preset semver-workflow
@@ -52,15 +52,15 @@ Examples
 `
 
 async function run({argv}: {argv: string[]}) {
-  const cli = meow(help, {flags: initFlags, argv, description})
+  const cli = meow(help, {importMeta: import.meta, flags: initFlags, argv, description})
   const basePath = path.resolve(cli.input[0] || process.cwd())
   const packageConfig = await loadPackageConfig({basePath})
   const outDir = packageConfig?.dist ?? defaultOutDir
 
-  const {v3ConfigFile} = await findStudioV3Config(basePath)
-  if (v3ConfigFile) {
+  const {configFile} = await findStudioConfig(basePath)
+  if (configFile) {
     throw new Error(
-      `${v3ConfigFile} exists - are you trying to INJECT into a studio instead of a plugin?`,
+      `${configFile} exists - are you trying to INJECT into a studio instead of a plugin?`,
     )
   }
   log.info('Inject config into plugin in "%s"', basePath)

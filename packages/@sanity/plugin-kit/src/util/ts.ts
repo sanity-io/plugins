@@ -1,7 +1,10 @@
 // oxlint-disable typescript/unbound-method - legacy code will be lint-cleaned in a follow-up PR
 import path from 'path'
 
-import * as ts from 'typescript'
+// The JS compiler API is loaded from the official `@typescript/typescript6` compat package
+// instead of the `typescript` peer dependency, as TypeScript 7 (the Go-native compiler) no longer
+// ships it
+import * as ts from '@typescript/typescript6'
 
 import {fileExists} from './files'
 

@@ -1,7 +1,7 @@
 // oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {DownloadIcon} from '@sanity/icons'
+import {DownloadIcon} from '@sanity/icons/Download'
 import {Box, Button, Flex, Inline, Stack, Text} from '@sanity/ui'
-import {format} from 'date-fns'
+import {format} from 'date-fns/format'
 import filesize from 'filesize'
 import {type ReactNode} from 'react'
 

@@ -1,7 +1,7 @@
 // oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {configureStore} from '@reduxjs/toolkit'
 import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
-import {render} from '@testing-library/react'
+import {render, type RenderResult} from '@testing-library/react'
 import type {ReactElement, ReactNode} from 'react'
 import {Provider} from 'react-redux'
 import {ColorSchemeProvider} from 'sanity'
@@ -20,15 +20,25 @@ type Opts = {
   toolOptions?: Partial<MediaToolOptions>
 }
 
-export function renderWithProviders(ui: ReactElement, opts: Opts = {}) {
-  const {onSelect, preloaded, toolOptions} = opts
-
-  const store = configureStore({
+function createTestStore(preloaded?: Partial<RootReducerState>) {
+  return configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({thunk: false, serializableCheck: false}),
     preloadedState: createTestRootState(preloaded),
   })
+}
+
+// The explicit `RenderResult` return annotation keeps the exported type portable for
+// declaration emit (TS2883): the inferred type otherwise expands into non-portable
+// deep paths from `react-dom/client` and `pretty-format`.
+export function renderWithProviders(
+  ui: ReactElement,
+  opts: Opts = {},
+): RenderResult & {store: ReturnType<typeof createTestStore>} {
+  const {onSelect, preloaded, toolOptions} = opts
+
+  const store = createTestStore(preloaded)
 
   const options: MediaToolOptions = {
     creditLine: {enabled: false},

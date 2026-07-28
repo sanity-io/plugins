@@ -1,4 +1,4 @@
-import {EditIcon} from '@sanity/icons'
+import {EditIcon} from '@sanity/icons/Edit'
 import {Badge, Box, Button, Flex, Text, useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {type SanityDocument, useClient} from 'sanity'

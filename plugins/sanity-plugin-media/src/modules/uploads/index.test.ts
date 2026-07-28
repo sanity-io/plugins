@@ -8,7 +8,7 @@ import uploadsReducer, {uploadsActions} from './index'
 
 describe('uploads slice', () => {
   it('uploadStart adds item to queue', () => {
-    let state = uploadsReducer(undefined, {type: '@@INIT'} as never)
+    let state = uploadsReducer(undefined, {type: '@@INIT'})
     const uploadItem = {
       _type: 'upload',
       assetType: 'image',
@@ -31,7 +31,7 @@ describe('uploads slice', () => {
   })
 
   it('uploadProgress updates percent and status', () => {
-    let state = uploadsReducer(undefined, {type: '@@INIT'} as never)
+    let state = uploadsReducer(undefined, {type: '@@INIT'})
     const uploadItem = {
       _type: 'upload',
       assetType: 'image',

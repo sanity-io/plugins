@@ -1,5 +1,154 @@
 # @sanity/plugin-kit
 
+## 10.0.0
+
+### Major Changes
+
+- [#1696](https://github.com/sanity-io/plugins/pull/1696) [`09c10da`](https://github.com/sanity-io/plugins/commit/09c10da8f0dd48691b933c5a82d724c8527beb03) Thanks [@stipsan](https://github.com/stipsan)! - **Node.js 24 or newer is now required** to run the plugin-kit CLI (`engines.node` was `>=20.19 <22 || >=22.12`). This only affects the machine running plugin-kit itself — plugins scaffolded and verified by plugin-kit still declare (and are held to) the wider `>=20.19 <22 || >=22.12` range shared with `@sanity/pkg-utils`.
+
+  With the permissive engine range gone, the CLI dependencies previously held back are now on their latest majors: `concurrently` 10, `execa` 10 and `inquirer` 14. The CLI behaves the same as before, apart from `link-watch` output now being prefixed with an automatic color (concurrently 10's new default).
+
+  Also drops several dependencies in favor of Node.js 24 built-ins and small local helpers:
+
+  - `chalk` → `util.styleText`
+  - `get-it` → native `fetch`
+  - `git-remote-origin-url` → `execa` + `git config`
+  - `github-url-to-object` → local URL/scp parser
+  - `xdg-basedir` → `os.homedir()` / `XDG_CONFIG_HOME`
+  - `email-validator` → lightweight local check
+  - `p-props` → `Promise.all` + `Object.fromEntries`
+  - `outdent` → local tagged-template helper
+
+  Also fixes `init` reporting a failed dependency install as an unhandled CLI error instead of the intended "Failed to install dependencies, try manually running `npm install`" hint.
+
+## 9.0.3
+
+### Patch Changes
+
+- [#1707](https://github.com/sanity-io/plugins/pull/1707) [`5eb902e`](https://github.com/sanity-io/plugins/commit/5eb902e0bca64962bd284c7675e9e9704ea372bd) Thanks [@stipsan](https://github.com/stipsan)! - Upgrade oxlint to ^1.75.0 and oxlint-tsgolint to ^7.0.2001
+
+## 9.0.2
+
+### Patch Changes
+
+- [#1687](https://github.com/sanity-io/plugins/pull/1687) [`96830b8`](https://github.com/sanity-io/plugins/commit/96830b800b5e20a34f8def189488aae26a2f92ae) Thanks [@stipsan](https://github.com/stipsan)! - Update CLI dependencies to their latest majors: `chalk` 5, `concurrently` 9, `execa` 9, `git-remote-origin-url` 4, `inquirer` 12, `meow` 14, `p-props` 6, `xdg-basedir` 5 and `nodemon` 3.1.14. The CLI behaves the same as before, and its installed footprint shrinks noticeably (the new majors drop many transitive dependencies). `concurrently` 10, `execa` 10 and `inquirer` 13+ are intentionally held back for now, as they require Node.js versions newer than plugin-kit's supported range.
+
+## 9.0.1
+
+### Patch Changes
+
+- [#1675](https://github.com/sanity-io/plugins/pull/1675) [`fc35ac5`](https://github.com/sanity-io/plugins/commit/fc35ac56bd69aa0d68a6d1aacb04699fd942ce95) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency get-it to ^9.2.0
+
+## 9.0.0
+
+### Major Changes
+
+- [#1588](https://github.com/sanity-io/plugins/pull/1588) [`f64af98`](https://github.com/sanity-io/plugins/commit/f64af98e9eed4b6f9c0f3f0ffcfe6702ae329a68) Thanks [@stipsan](https://github.com/stipsan)! - Remove Sanity Studio v2 upgrade and compatibility tooling
+
+  `verify-studio` is removed. `verify-package` no longer checks for leftover v2 shims (`@sanity/incompatible-plugin`, `v2-incompatible.js`, `sanity.json` parts), obsolete `@sanity/*` package dependencies, or `part:`/`config:` imports. Package verification now focuses on current plugin-kit conventions for modern Studio plugins.
+
+## 8.0.1
+
+### Patch Changes
+
+- [#1599](https://github.com/sanity-io/plugins/pull/1599) [`f9cb255`](https://github.com/sanity-io/plugins/commit/f9cb25577a4c412926eced32521c89f9a8a6aabb) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxfmt to ^0.59.0
+
+- [#1603](https://github.com/sanity-io/plugins/pull/1603) [`bfd5a92`](https://github.com/sanity-io/plugins/commit/bfd5a9268e11a20ac8c8aace8d30738e1cf0b984) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxlint to ^1.74.0
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+- [#1604](https://github.com/sanity-io/plugins/pull/1604) [`f170525`](https://github.com/sanity-io/plugins/commit/f1705254eb6b25d4ebd6c738f43d8f1cdd7e5290) Thanks [@stipsan](https://github.com/stipsan)! - Move `turbo/**/*.hbs` oxfmt ignore pattern from the shared preset to the monorepo root config
+
+## 8.0.0
+
+### Major Changes
+
+- [#1565](https://github.com/sanity-io/plugins/pull/1565) [`67f4292`](https://github.com/sanity-io/plugins/commit/67f429241412fba5128fa971acf807762847b696) Thanks [@stipsan](https://github.com/stipsan)! - Replace prettier with [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) and eslint with [oxlint](https://oxc.rs/docs/guide/usage/linter.html)
+
+  plugin-kit now ships shared formatter and linter configs:
+
+  - `@sanity/plugin-kit/oxfmt`: an oxfmt preset. Re-export it from an `oxfmt.config.ts` next to the `package.json` that runs oxfmt (the workspace root in a monorepo, otherwise the plugin directory):
+
+    ```ts
+    export {default} from '@sanity/plugin-kit/oxfmt'
+    ```
+
+  - `@sanity/plugin-kit/oxlint`: an oxlint config with type-aware rules and TypeScript type checking enabled (via oxlint-tsgolint) and warnings treated as errors. Re-export it from an `oxlint.config.ts` in the same location (or [extend it](https://oxc.rs/docs/guide/usage/linter/config.html#extend-shared-configs) with `defineConfig({extends: [...]})` to customize):
+
+    ```ts
+    export {default} from '@sanity/plugin-kit/oxlint'
+    ```
+
+  Breaking changes:
+
+  - `init` and `inject` scaffold oxfmt and oxlint (`oxfmt.config.ts` and `oxlint.config.ts`, `oxfmt`/`oxlint`/`oxlint-tsgolint` devDependencies, `format: "oxfmt"` and `lint: "oxlint"` scripts) instead of prettier and eslint. The `--no-prettier` flag is now `--no-oxfmt`, `--no-eslint` is now `--no-oxlint`, and the prettier/eslint devDependencies (`prettier`, `prettier-plugin-packagejson`, `eslint`, `eslint-config-*`, `eslint-plugin-*`, `@typescript-eslint/*`) are no longer added.
+  - `verify-package` no longer runs `tsc --build` after the checks pass: oxlint type-checks as part of linting, so the `tsc` check key is gone and plugins no longer need a standalone type-check step.
+  - `verify-package` replaces the duplicate-prettier/eslint-config checks with new `oxfmt` and `oxlint` checks: they verify a config using the shared plugin-kit preset/config exists in the expected location (the workspace root when a monorepo is detected, otherwise next to the plugin's `package.json` — and since oxfmt/oxlint discover nested configs, a config next to the plugin's `package.json` overrides the workspace root for that package and is validated instead when present), and fail on leftover prettier/eslint configuration with migration instructions. Disable them with `sanityPlugin.verifyPackage.oxfmt: false` / `sanityPlugin.verifyPackage.oxlint: false`.
+  - The Sanity v2 imports check (the `eslintImports` key) is removed entirely from `verify-package` and `verify-studio` - plugins are no longer linted for v2-era imports. The `eslint` and `typescript` peer dependencies are gone (`oxfmt` and `oxlint` are peers instead, and — unlike `@sanity/pkg-utils` — both are optional peers, since plugin-kit only needs them installed when the corresponding `verify-package` check is enabled).
+  - The `semver-workflow` preset's lint-staged config now runs oxfmt and oxlint (instead of eslint and `tsc --build`), and the scaffolded `lint-staged.config.js` / `commitlint.config.js` use ESM (`export default`) to match the plugin's `"type": "module"` and the shared oxlint config's `import/no-commonjs` rule.
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 7.0.2
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 7.0.1
+
+### Patch Changes
+
+- [#1531](https://github.com/sanity-io/plugins/pull/1531) [`402cefa`](https://github.com/sanity-io/plugins/commit/402cefa43d5b3d6468ac54f827cb6cbd6d447789) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency typescript to v7
+
+- [#1561](https://github.com/sanity-io/plugins/pull/1561) [`f310d68`](https://github.com/sanity-io/plugins/commit/f310d6815ba55fc9be1c119532822d8e89035548) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix `verify-package`/`verify-studio` import checks to fall back when `@typescript-eslint` fails to load with TypeScript 7.
+
+## 7.0.0
+
+### Major Changes
+
+- [#1554](https://github.com/sanity-io/plugins/pull/1554) [`19d2b9b`](https://github.com/sanity-io/plugins/commit/19d2b9ba3bb910edc0134797812a074602974eb5) Thanks [@stipsan](https://github.com/stipsan)! - feat: support TypeScript 7 (the Go-native compiler), require TypeScript 6 or later
+
+  **BREAKING**: the `typescript` peer dependency range is now `6.x || 7.x` — TypeScript 5.x is no longer supported. TypeScript 7 is not required yet, but 6.0 is the new minimum.
+
+  The JS compiler API (used by `verify-package` and `verify-studio` to parse `tsconfig.json`) is now always loaded from the official [`@typescript/typescript6`](https://www.npmjs.com/package/@typescript/typescript6) compat package (a regular dependency), since TypeScript 7 no longer ships it. The installed `typescript` peer no longer affects tsconfig parsing and is only used to run `tsc --build`.
+
+  `plugin-kit init` now scaffolds `typescript` at the latest 6.x instead of `latest`. This fixes scaffolding, which broke when TypeScript 7 became `latest` on npm: the scaffolded ESLint toolchain (`@typescript-eslint` v8) declares a `typescript` peer range that excludes 7.x, so the initial `npm install` failed with a peer dependency conflict.
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+- [#1546](https://github.com/sanity-io/plugins/pull/1546) [`73057b2`](https://github.com/sanity-io/plugins/commit/73057b2c9335ccd841b1c8a181662e09c4f00813) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency get-it to ^9.1.0
+
+- [#1548](https://github.com/sanity-io/plugins/pull/1548) [`814e19b`](https://github.com/sanity-io/plugins/commit/814e19b017b4e9318233a659ce882ffafa0c1061) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update linters
+
+## 6.0.4
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior of the CLI. `@sanity/pkg-utils` remains a peer dependency, resolved from the plugin under verification at runtime.
+
+## 6.0.3
+
+### Patch Changes
+
+- [#1474](https://github.com/sanity-io/plugins/pull/1474) [`555ef6e`](https://github.com/sanity-io/plugins/commit/555ef6e1de0a3ae72bc584f5755c0bd325db1303) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency typescript to v6
+
+## 6.0.2
+
+### Patch Changes
+
+- [#1466](https://github.com/sanity-io/plugins/pull/1466) [`dcdfd1e`](https://github.com/sanity-io/plugins/commit/dcdfd1ecc508b6c6c9b8a7310dc7884bef4b259c) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update linters
+
+## 6.0.1
+
+### Patch Changes
+
+- [#1438](https://github.com/sanity-io/plugins/pull/1438) [`bc619dc`](https://github.com/sanity-io/plugins/commit/bc619dcde1a1e0a2778f865abde5eeea1862efd3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update linters
+
 ## 6.0.0
 
 ### Major Changes

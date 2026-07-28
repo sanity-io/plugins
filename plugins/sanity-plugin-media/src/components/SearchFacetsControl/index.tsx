@@ -1,5 +1,5 @@
 // oxlint-disable react/no-array-index-key, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {AddIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
 import {Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 

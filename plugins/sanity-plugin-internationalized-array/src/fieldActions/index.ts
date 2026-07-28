@@ -1,4 +1,5 @@
-import {AddIcon, TranslateIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {TranslateIcon} from '@sanity/icons/Translate'
 import {useCallback} from 'react'
 import {
   defineDocumentFieldAction,

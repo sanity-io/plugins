@@ -64,19 +64,6 @@ export interface RenderersProps {
   renderers?: CheckboardRenderers | undefined
 }
 
-export interface CustomPickerInjectedProps<
-  T = HSLColor | HSVColor | RGBColor,
-> extends Partial<ColorState> {
-  onChange: ColorChangeHandler<T>
-}
-
-export interface CustomPickerProps {
-  color?: Color | undefined
-  onChange?: ((color: ColorState) => void) | undefined
-  onChangeComplete?: ((color: ColorState) => void) | undefined
-  onSwatchHover?: ((color: ColorState, event: MouseEvent) => void) | undefined
-}
-
 export interface EditableInputStyles {
   input?: CSSProperties | undefined
   label?: CSSProperties | undefined

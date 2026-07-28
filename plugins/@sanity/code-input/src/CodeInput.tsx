@@ -1,4 +1,4 @@
-import {Box, Card, Stack, Text} from '@sanity/ui'
+import {Box, Stack, Text} from '@sanity/ui'
 import {Suspense, useCallback} from 'react'
 import {
   MemberField,
@@ -8,60 +8,19 @@ import {
   setIfMissing,
   unset,
 } from 'sanity'
-import {css, styled} from 'styled-components'
 
+import {EditorContainer, FullscreenEditor} from './CodeInputFullscreen'
 import {CodeMirrorProxy, useMounted} from './codemirror/useCodeMirror'
 import {useLanguageMode} from './codemirror/useLanguageMode'
 import {PATH_CODE} from './config'
 import {LanguageField} from './LanguageField'
 import type {CodeInputValue, CodeSchemaType} from './types'
-import {focusRingBorderStyle, focusRingStyle} from './ui/focusRingStyle'
 import {useFieldMember} from './useFieldMember'
-
-export type {CodeInputLanguage, CodeInputValue} from './types'
 
 /**
  * @public
  */
 export interface CodeInputProps extends ObjectInputProps<CodeInputValue, CodeSchemaType> {}
-
-const EditorContainer = styled(Card)(({theme}) => {
-  // TODO: when upgrading to @sanity/ui@4 start using the new tokens
-  // oxlint-disable-next-line typescript/no-deprecated
-  const {focusRing, input} = theme.sanity
-  // oxlint-disable-next-line typescript/no-deprecated
-  const base = theme.sanity.color.base
-  // oxlint-disable-next-line typescript/no-deprecated
-  const color = theme.sanity.color.input
-  const border = {
-    color: color.default.enabled.border,
-    width: input.border.width,
-  }
-
-  return css`
-    --input-box-shadow: ${focusRingBorderStyle(border)};
-
-    box-shadow: var(--input-box-shadow);
-    height: 250px;
-    min-height: 80px;
-    overflow-y: auto;
-    position: relative;
-    resize: vertical;
-    z-index: 0;
-
-    & > .cm-theme {
-      height: 100%;
-    }
-
-    &:focus-within {
-      --input-box-shadow: ${focusRingStyle({
-        base,
-        border,
-        focusRing,
-      })};
-    }
-  `
-})
 
 /** @public */
 export function CodeInput(props: CodeInputProps): React.JSX.Element {
@@ -108,35 +67,47 @@ export function CodeInput(props: CodeInputProps): React.JSX.Element {
 
   const mounted = useMounted()
 
+  const fullscreenEnabled = !type.options?.disableFullscreen
+
   const renderCodeInput: RenderInputCallback = useCallback(
-    (inputProps) => {
-      return (
-        <EditorContainer border overflow="hidden" radius={1} sizing="border" readOnly={readOnly}>
-          {mounted && (
-            <Suspense
-              fallback={
-                <Box padding={3}>
-                  <Text>Loading code editor...</Text>
-                </Box>
-              }
-            >
-              <CodeMirrorProxy
-                languageMode={languageMode}
-                onChange={handleCodeChange}
-                // oxlint-disable-next-line no-unsafe-type-assertion - fix later
-                value={inputProps.value as string}
-                highlightLines={value?.highlightedLines}
-                onHighlightChange={onHighlightChange}
-                readOnly={readOnly}
-                onFocus={handleCodeFocus}
-                onBlur={elementProps.onBlur}
-              />
-            </Suspense>
-          )}
-        </EditorContainer>
-      )
-    },
+    (inputProps) => (
+      <FullscreenEditor enabled={fullscreenEnabled}>
+        {({isFullscreen}) => (
+          <EditorContainer
+            $fullscreen={isFullscreen}
+            border={!isFullscreen}
+            overflow="hidden"
+            radius={1}
+            sizing="border"
+            readOnly={readOnly}
+          >
+            {mounted && (
+              <Suspense
+                fallback={
+                  <Box padding={3}>
+                    <Text>Loading code editor...</Text>
+                  </Box>
+                }
+              >
+                <CodeMirrorProxy
+                  languageMode={languageMode}
+                  onChange={handleCodeChange}
+                  // oxlint-disable-next-line no-unsafe-type-assertion - fix later
+                  value={inputProps.value as string}
+                  highlightLines={value?.highlightedLines}
+                  onHighlightChange={onHighlightChange}
+                  readOnly={readOnly}
+                  onFocus={handleCodeFocus}
+                  onBlur={elementProps.onBlur}
+                />
+              </Suspense>
+            )}
+          </EditorContainer>
+        )}
+      </FullscreenEditor>
+    ),
     [
+      fullscreenEnabled,
       readOnly,
       mounted,
       languageMode,

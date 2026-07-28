@@ -1,11 +1,9 @@
 // oxlint-disable typescript/consistent-return, typescript/no-base-to-string, typescript/no-deprecated, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
-import {
-  CheckmarkCircleIcon,
-  ErrorOutlineIcon,
-  InfoOutlineIcon,
-  RetrieveIcon,
-  RetryIcon,
-} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {RetrieveIcon} from '@sanity/icons/Retrieve'
+import {RetryIcon} from '@sanity/icons/Retry'
 import {
   Box,
   Button,

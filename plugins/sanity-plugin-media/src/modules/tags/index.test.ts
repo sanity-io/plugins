@@ -17,7 +17,7 @@ const sampleTag: Tag = {
 
 describe('tags slice', () => {
   it('createComplete adds tag', () => {
-    let state = tagsReducer(undefined, {type: '@@INIT'} as never)
+    let state = tagsReducer(undefined, {type: '@@INIT'})
     state = tagsReducer(state, tagsActions.createComplete({tag: sampleTag}))
     expect(state.allIds).toContain('tag-1')
     expect(state.byIds['tag-1']!.tag).toEqual(sampleTag)
@@ -25,7 +25,7 @@ describe('tags slice', () => {
   })
 
   it('deleteComplete removes tag', () => {
-    let state = tagsReducer(undefined, {type: '@@INIT'} as never)
+    let state = tagsReducer(undefined, {type: '@@INIT'})
     state = tagsReducer(state, tagsActions.createComplete({tag: sampleTag}))
     state = tagsReducer(state, tagsActions.deleteComplete({tagId: 'tag-1'}))
     expect(state.allIds).not.toContain('tag-1')
@@ -33,7 +33,7 @@ describe('tags slice', () => {
   })
 
   it('fetchComplete hydrates tag list', () => {
-    let state = tagsReducer(undefined, {type: '@@INIT'} as never)
+    let state = tagsReducer(undefined, {type: '@@INIT'})
     state = tagsReducer(state, tagsActions.fetchRequest())
     expect(state.fetching).toBe(true)
     state = tagsReducer(state, tagsActions.fetchComplete({tags: [sampleTag]}))

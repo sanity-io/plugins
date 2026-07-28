@@ -1,16 +1,15 @@
 import {Flex, Heading} from '@sanity/ui'
-{{#if hasStyledComponents}}
-import {styled} from 'styled-components'
+{{#if hasVanillaExtract}}
 
-const Layout = styled(Flex).attrs({
-  align: 'center',
-  direction: 'column',
-  height: 'fill',
-  justify: 'center',
-})`
-  width: 100%;
-`
+import {layout} from './Tool.css'
 
+function Layout({children}: {children: React.ReactNode}) {
+  return (
+    <Flex align="center" className={layout} direction="column" height="fill" justify="center">
+      {children}
+    </Flex>
+  )
+}
 {{else}}
 
 function Layout({children}: {children: React.ReactNode}) {

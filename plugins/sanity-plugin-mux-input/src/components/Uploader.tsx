@@ -1,5 +1,5 @@
 // oxlint-disable promise/always-return, react/react-compiler, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
-import {ErrorOutlineIcon} from '@sanity/icons'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Button, type CardTone, Flex, Text, useToast} from '@sanity/ui'
 import {useCallback, useEffect, useReducer, useRef, useState} from 'react'
 import {type Observable, Subject, Subscription} from 'rxjs'
@@ -88,7 +88,7 @@ export default function Uploader(props: Props) {
       const events$ = new Subject()
       return {
         observable: events$.asObservable(),
-        handleClick: ((event) => events$.next(event)) as React.MouseEventHandler<HTMLButtonElement>,
+        handleClick: (event: React.MouseEvent<HTMLButtonElement>) => events$.next(event),
       }
     })(),
   ).current

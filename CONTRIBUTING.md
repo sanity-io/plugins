@@ -306,9 +306,8 @@ The generator will:
 Required monorepo config files for the transferred plugin:
 
 - `package.json`
-- `package.config.ts`
+- `tsdown.config.ts`
 - `tsconfig.json`
-- `tsconfig.build.json`
 - `vitest.config.ts`
 
 Do not copy standalone-repo root CI/build/lint/test config files that are already handled by this monorepo.

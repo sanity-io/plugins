@@ -1,5 +1,6 @@
 // oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {TranslateIcon, UploadIcon} from '@sanity/icons'
+import {TranslateIcon} from '@sanity/icons/Translate'
+import {UploadIcon} from '@sanity/icons/Upload'
 import {
   Autocomplete,
   Button,
@@ -337,7 +338,9 @@ export default function AddCaptionDialog({asset, onAdd, onClose}: Props) {
                 Or enter the caption file URL
               </Text>
               <Stack space={2}>
-                <Label htmlFor="vtt-url">Caption File URL (.vtt or .srt)</Label>
+                <Label as="label" htmlFor="vtt-url">
+                  Caption File URL (.vtt or .srt)
+                </Label>
                 <TextInput
                   id="vtt-url"
                   placeholder="https://example.com/subtitles.vtt"
@@ -354,7 +357,9 @@ export default function AddCaptionDialog({asset, onAdd, onClose}: Props) {
         </Stack>
 
         <Stack space={2}>
-          <Label htmlFor="caption-name">Audio name</Label>
+          <Label as="label" htmlFor="caption-name">
+            Audio name
+          </Label>
           <Autocomplete
             id="caption-name"
             value={selectedLanguage?.value || ''}
@@ -392,7 +397,9 @@ export default function AddCaptionDialog({asset, onAdd, onClose}: Props) {
         </Stack>
 
         <Stack space={2}>
-          <Label htmlFor="caption-language">Language Code</Label>
+          <Label as="label" htmlFor="caption-language">
+            Language Code
+          </Label>
           <TextInput
             id="caption-language"
             placeholder="en-US"

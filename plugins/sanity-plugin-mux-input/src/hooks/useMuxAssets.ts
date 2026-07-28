@@ -173,7 +173,7 @@ export default function useMuxAssets({client, enabled}: {client: SanityClient; e
 
     // Unsubscribe on component unmount to prevent memory leaks or fetching unnecessarily
     return () => subscription.unsubscribe()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps -- secrets/pluginConfig are stable for the asset fetch lifecycle once enabled
   }, [enabled])
 
   return state

@@ -1,5 +1,5 @@
 // oxlint-disable react/no-array-index-key - legacy code will be lint-cleaned in a follow-up PR
-import {SelectIcon} from '@sanity/icons'
+import {SelectIcon} from '@sanity/icons/Select'
 import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 

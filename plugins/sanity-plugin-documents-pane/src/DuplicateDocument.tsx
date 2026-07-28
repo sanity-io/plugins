@@ -1,4 +1,4 @@
-import {CopyIcon} from '@sanity/icons'
+import {CopyIcon} from '@sanity/icons/Copy'
 import {Box, Button, Text, Tooltip} from '@sanity/ui'
 import {fromString as pathFromString} from '@sanity/util/paths'
 import {uuid} from '@sanity/uuid'

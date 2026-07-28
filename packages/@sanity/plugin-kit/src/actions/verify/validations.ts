@@ -2,20 +2,14 @@
 import {createRequire} from 'node:module'
 import path from 'path'
 
-import chalk from 'chalk'
-import outdent from 'outdent'
-import type {ParsedCommandLine} from 'typescript'
+import type {ParsedCommandLine} from '@typescript/typescript6'
 import validateNpmPackageName from 'validate-npm-package-name'
 
-import {deprecatedDevDeps, mergedPackages} from '../../configs/banned-packages'
-import {
-  incompatiblePluginPackage,
-  minPkgUtilsMajor,
-  requiredNodeEngine,
-  urls,
-} from '../../constants'
-import {fileExists, readJson5File} from '../../util/files'
-import type {PackageJson, SanityStudioJson, SanityV2Json} from './types'
+import {deprecatedDevDeps} from '../../configs/banned-packages'
+import {minPkgUtilsMajor, requiredNodeEngine} from '../../constants'
+import {fileExists, readFile, readJsonFile} from '../../util/files'
+import {outdent} from '../../util/outdent'
+import type {PackageJson} from './types'
 
 export const expectedScripts = {
   'build': 'plugin-kit verify-package --silent && pkg-utils build --strict --check --clean',
@@ -293,29 +287,6 @@ export function validatePkgUtilsVersion({basePath}: {basePath: string}): string[
   return []
 }
 
-export function validateSanityDependencies(packageJson: PackageJson): string[] {
-  const {dependencies, devDependencies, peerDependencies} = packageJson
-  const allDependencies = {...dependencies, ...devDependencies, ...peerDependencies}
-
-  const illegalDeps = Object.keys(allDependencies).filter((dep) => mergedPackages.includes(dep))
-  const deps = new Set<string>(illegalDeps)
-  const unique = [...deps.values()]
-  if (unique.length) {
-    return [
-      outdent`
-        package.json depends on "@sanity/*" packages that have moved into "sanity" package.
-
-        The following dependencies should be replaced with "sanity":
-        - ${unique.join('\n- ')}
-
-        Refer to the reference docs to find replacement imports:
-        ${urls.refDocs}
-    `.trimStart(),
-    ]
-  }
-  return []
-}
-
 export function validateDeprecatedDependencies(packageJson: PackageJson): string[] {
   const {dependencies, devDependencies, peerDependencies} = packageJson
   const allDependencies = {...dependencies, ...devDependencies, ...peerDependencies}
@@ -363,173 +334,6 @@ export async function validateBabelConfig({basePath}: {basePath: string}) {
   return []
 }
 
-export async function validateStudioConfig({basePath}: {basePath: string}): Promise<string[]> {
-  const suffixes = ['ts', 'js', 'tsx', 'jsx']
-
-  const filenames = filesWithSuffixes(['sanity.config', 'sanity.cli'], suffixes)
-
-  const files: Record<string, boolean | undefined> = {}
-
-  for (const filename of filenames) {
-    const filepath = path.normalize(path.join(basePath, filename))
-    files[filename] = await fileExists(filepath)
-  }
-
-  const sanityJson = await readJson5File<SanityStudioJson>({basePath, filename: 'sanity.json'})
-
-  const hasConfigFile = (fileBase: string) =>
-    filesWithSuffixes([fileBase], suffixes).some((filename) => files[filename])
-  const hasCliConfig = hasConfigFile('sanity.cli')
-  const hasStudioConfig = hasConfigFile('sanity.config')
-
-  const errors: string[] = []
-
-  if (sanityJson) {
-    const info = [
-      outdent`
-        Found sanity.json. This file is not used by Sanity Studio V3.
-
-        Please consult the Studio V3 migration guide:
-         ${urls.migrationGuideStudio}
-        It will detail how to convert sanity.json to sanity.config.ts (or .js) and sanity.cli.ts (or .js) equivalents.
-      `.trimStart(),
-      sanityJson.plugins?.length &&
-        outdent`
-        For V3 versions and alternatives to V2 plugins, please refer to the Sanity Exchange:
-        ${urls.sanityExchange}
-      `.trimStart(),
-    ].filter((s): s is string => !!s)
-
-    errors.push(info.join('\n\n'))
-  }
-
-  if (!hasCliConfig) {
-    errors.push(
-      outdent`
-        sanity.cli.(${suffixes.join(
-          ' | ',
-        )}) missing. Please create a file named sanity.cli.ts with the following content:
-
-        ${chalk.green(
-          outdent`
-        import {createCliConfig} from 'sanity/cli'
-
-        export default createCliConfig({
-          api: {
-            projectId: '${sanityJson?.api?.projectId ?? 'project-id'}',
-            dataset: '${sanityJson?.api?.dataset ?? 'dataset'}',
-          }
-        })`,
-        )}
-
-        Make sure to replace the projectId and dataset fields with your own.
-
-        For more, see ${urls.migrationGuideStudio}
-    `.trimStart(),
-    )
-  }
-
-  if (!hasStudioConfig) {
-    errors.push(
-      outdent`
-        sanity.config.(${suffixes.join(
-          ' | ',
-        )}) missing. At a minimum sanity.config.ts should contain:
-
-        ${chalk
-          .green(
-            outdent`
-            import { defineConfig } from "sanity"
-            import { deskTool } from "sanity/desk"
-
-            export default defineConfig({
-              name: "default",
-
-              projectId: '${sanityJson?.api?.projectId ?? 'project-id'}',
-              dataset: '${sanityJson?.api?.dataset ?? 'dataset'}',
-
-              plugins: [
-                deskTool(),
-              ],
-
-              schema: {
-                types: [
-                  /* put your v2 schema-types here */
-                ],
-              },
-            })`,
-          )
-          .trimStart()}
-
-        Make sure to replace the projectId and dataset fields with your own.
-
-        For more, see ${urls.migrationGuideStudio}
-    `.trimStart(),
-    )
-  }
-
-  return errors.length ? [errors.join(`\n\n---\n\n`)] : []
-}
-
-/**
- * Detects leftover usage of the legacy `@sanity/incompatible-plugin` shim and asks for its removal.
- *
- * The shim (a `sanity.json` + `v2-incompatible.js` entry point, plus the `@sanity/incompatible-plugin`
- * dependency) only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin
- * was installed there. plugin-kit no longer scaffolds it, so a plugin should not ship it anymore.
- */
-export async function validateIncompatiblePlugin({
-  basePath,
-  packageJson,
-}: {
-  basePath: string
-  packageJson: PackageJson
-}): Promise<string[]> {
-  const {dependencies, devDependencies, peerDependencies} = packageJson
-  const inDependencies = !!(
-    dependencies?.[incompatiblePluginPackage] ||
-    devDependencies?.[incompatiblePluginPackage] ||
-    peerDependencies?.[incompatiblePluginPackage]
-  )
-
-  const hasShimFile = await fileExists(path.normalize(path.join(basePath, 'v2-incompatible.js')))
-
-  const sanityJson = await readJson5File<SanityV2Json>({basePath, filename: 'sanity.json'})
-  const sanityJsonReferencesShim = !!sanityJson?.parts?.some((part) =>
-    part?.path?.includes('v2-incompatible'),
-  )
-
-  if (!inDependencies && !hasShimFile && !sanityJsonReferencesShim) {
-    return []
-  }
-
-  const found = [
-    inDependencies ? `- "${incompatiblePluginPackage}" listed in package.json` : null,
-    hasShimFile ? '- the v2-incompatible.js file' : null,
-    sanityJsonReferencesShim ? '- a sanity.json referencing v2-incompatible.js' : null,
-  ].filter((e): e is string => !!e)
-
-  return [
-    outdent`
-      ${incompatiblePluginPackage} is no longer used and should be removed.
-
-      It only rendered an error dialog in the long end-of-life Sanity Studio v2 when a v3 plugin was
-      installed there. That compatibility shim is now obsolete, so plugin-kit no longer adds it.
-
-      Found:
-      ${found.join('\n')}
-
-      To fix this:
-      - Remove "${incompatiblePluginPackage}" from package.json (dependencies/devDependencies/peerDependencies)
-      - Delete the v2-incompatible.js file
-      - Delete sanity.json (if it only contains the v2-incompatible "part")
-      - Remove "sanity.json" and "v2-incompatible.js" from the package.json "files" array
-
-      For more, see ${urls.incompatiblePlugin}
-    `.trimStart(),
-  ]
-}
-
 export function validatePackageName(packageJson: PackageJson) {
   const valid = validateNpmPackageName(packageJson.name ?? '')
   if (!valid.validForNewPackages) {
@@ -547,9 +351,9 @@ export function validatePackageName(packageJson: PackageJson) {
 }
 
 /**
- * Plugins built with @sanity/plugin-kit publish the compiled output (the `dist` directory) plus any
- * v2-compatibility files. The `src` directory should not be published: it bloats the package and can
- * cause bundlers that resolve the `source` export condition to pull in raw, uncompiled TypeScript.
+ * Plugins built with @sanity/plugin-kit publish the compiled output (the `dist` directory).
+ * The `src` directory should not be published: it bloats the package and can cause bundlers that
+ * resolve the `source` export condition to pull in raw, uncompiled TypeScript.
  */
 export function validateBannedFiles(packageJson: PackageJson): string[] {
   const {files} = packageJson
@@ -577,7 +381,7 @@ export function validateBannedFiles(packageJson: PackageJson): string[] {
     outdent`
       package.json "files" must not include "src".
 
-      Plugins built with @sanity/plugin-kit publish the compiled output in "dist" (and any v2-compatibility files).
+      Plugins built with @sanity/plugin-kit publish the compiled output in "dist".
       Shipping the "src" directory bloats the published package and can cause bundlers that resolve the
       "source" export condition to import raw, uncompiled TypeScript.
 
@@ -608,80 +412,447 @@ export async function validateSrcIndexFile(basePath: string) {
   return []
 }
 
-async function disallowDuplicateConfig({
-  basePath,
-  pkgJson,
-  configKey,
-  files,
-}: {
-  basePath: string
-  pkgJson: PackageJson
-  configKey: string
-  files: string[]
-}) {
+/**
+ * Config filenames oxfmt discovers automatically (in addition to explicit `-c` paths).
+ */
+const oxfmtConfigFiles = [
+  'oxfmt.config.ts',
+  'oxfmt.config.js',
+  'oxfmt.config.mjs',
+  '.oxfmtrc.json',
+  '.oxfmtrc.jsonc',
+]
+
+const legacyPrettierConfigFiles = [
+  '.prettierrc',
+  '.prettierrc.json5',
+  '.prettierrc.json',
+  '.prettierrc.yaml',
+  '.prettierrc.yml',
+  '.prettierrc.js',
+  '.prettierrc.cjs',
+  '.prettierrc.mjs',
+  '.prettierrc.toml',
+  'prettier.config.js',
+  'prettier.config.cjs',
+  'prettier.config.mjs',
+]
+
+const oxfmtPresetSpecifier = '@sanity/plugin-kit/oxfmt'
+
+const oxfmtSetupSnippet = outdent`
+  export {default} from '${oxfmtPresetSpecifier}'
+`
+
+/**
+ * Walks up from `basePath` (inclusive) looking for a workspace (monorepo) root: a directory
+ * containing `pnpm-workspace.yaml`, or a `package.json` with a `workspaces` field.
+ */
+async function findWorkspaceRoot(basePath: string): Promise<string | undefined> {
+  let dir = path.resolve(basePath)
+  let prev: string | undefined
+  while (dir !== prev) {
+    if (await isWorkspaceRoot(dir)) {
+      return dir
+    }
+    prev = dir
+    dir = path.dirname(dir)
+  }
+  return undefined
+}
+
+async function isWorkspaceRoot(dir: string): Promise<boolean> {
+  if (await fileExists(path.join(dir, 'pnpm-workspace.yaml'))) {
+    return true
+  }
+  const pkgPath = path.join(dir, 'package.json')
+  if (await fileExists(pkgPath)) {
+    try {
+      const pkg = await readJsonFile<PackageJson>(pkgPath)
+      return Boolean(pkg && typeof pkg === 'object' && pkg.workspaces)
+    } catch {
+      // an unparseable package.json is not a workspace root marker
+    }
+  }
+  return false
+}
+
+/**
+ * Finds leftover config files from a replaced tool, both next to the plugin's package.json and
+ * (in a monorepo) at the workspace root, where the replacement config is expected to live.
+ */
+async function findLegacyConfigFiles(
+  basePath: string,
+  workspaceRoot: string | undefined,
+  files: string[],
+): Promise<string[]> {
   const found: string[] = []
   for (const file of files) {
-    const filePath = path.join(basePath, file)
-    const exits = await fileExists(filePath)
-    if (exits) {
+    if (await fileExists(path.join(basePath, file))) {
       found.push(file)
     }
   }
+  if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
+    for (const file of files) {
+      if (await fileExists(path.join(workspaceRoot, file))) {
+        found.push(`${file} (in the workspace root)`)
+      }
+    }
+  }
+  return found
+}
+
+/**
+ * Finds a leftover config key from a replaced tool in the plugin's package.json and (in a
+ * monorepo) the workspace root package.json, where such keys used to configure the whole
+ * workspace.
+ */
+async function findLegacyPackageJsonKey(
+  pkgJson: PackageJson,
+  basePath: string,
+  workspaceRoot: string | undefined,
+  key: string,
+): Promise<string[]> {
+  const found: string[] = []
+  if (pkgJson[key]) {
+    found.push(`package.json ("${key}" key)`)
+  }
+  if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
+    const rootPkgPath = path.join(workspaceRoot, 'package.json')
+    if (await fileExists(rootPkgPath)) {
+      try {
+        const rootPkg = await readJsonFile<PackageJson>(rootPkgPath)
+        if (rootPkg && typeof rootPkg === 'object' && rootPkg[key]) {
+          found.push(`package.json ("${key}" key, in the workspace root)`)
+        }
+      } catch {
+        // an unparseable root package.json is not this check's concern
+      }
+    }
+  }
+  return found
+}
+
+type ConfigDirResult = {ok: true} | {ok: false; found: boolean; error: string}
+
+async function checkOxfmtConfigDir(dir: string, describeDir: string): Promise<ConfigDirResult> {
+  const found: string[] = []
+  for (const file of oxfmtConfigFiles) {
+    if (await fileExists(path.join(dir, file))) {
+      found.push(file)
+    }
+  }
+
+  if (found.length === 0) {
+    return {
+      ok: false,
+      found: false,
+      error: outdent`
+        Could not find an oxfmt config file ${describeDir}.
+
+        plugin-kit ships a shared oxfmt preset. Create an oxfmt.config.ts there containing:
+
+        ${oxfmtSetupSnippet}
+      `,
+    }
+  }
+
   if (found.length > 1) {
-    return [
-      outdent`
-      Found multiple config files that serve the same purpose: [${found.join(', ')}].
+    return {
+      ok: false,
+      found: true,
+      error: outdent`
+        Found multiple oxfmt config files ${describeDir}: [${found.join(', ')}].
 
-      There should be at most one of these files. Delete the rest.
+        There should be at most one of these files. Delete the rest.
       `,
-    ]
-  }
-  if (found.length && pkgJson[configKey]) {
-    return [
-      outdent`
-      package.json contains ${configKey}, but there also exists a config file that serves the same purpose.
-      Config file: ${found.join('')}]
-
-      Either delete the file or remove ${configKey} entry from package.json.
-      `,
-    ]
+    }
   }
 
-  return []
+  const file = found[0]
+  if (file.startsWith('.oxfmtrc')) {
+    return {
+      ok: false,
+      found: true,
+      error: outdent`
+        Found ${file} ${describeDir}, but JSON configs cannot reuse the shared plugin-kit preset.
+
+        Replace it with an oxfmt.config.ts containing:
+
+        ${oxfmtSetupSnippet}
+      `,
+    }
+  }
+
+  const content = await readFile(path.join(dir, file), 'utf8')
+  if (!content.includes(oxfmtPresetSpecifier)) {
+    return {
+      ok: false,
+      found: true,
+      error: outdent`
+        Found ${file} ${describeDir}, but it does not use the shared plugin-kit preset (${oxfmtPresetSpecifier}).
+
+        Re-export the preset:
+
+        ${oxfmtSetupSnippet}
+
+        or spread it into your own config to customize options.
+      `,
+    }
+  }
+
+  return {ok: true}
 }
 
-export async function disallowDuplicateEslintConfig(basePath: string, pkgJson: PackageJson) {
-  return disallowDuplicateConfig({
+/**
+ * Verifies the plugin is formatted with oxfmt using the shared plugin-kit preset, and that no
+ * legacy prettier configuration remains.
+ *
+ * In a monorepo (a workspace root is found above the plugin), the oxfmt config is expected at the
+ * workspace root; otherwise it should sit next to the package.json that installs and runs
+ * plugin-kit. Since oxfmt discovers nested configs, a config next to package.json overrides the
+ * workspace root config for this package — so in a monorepo the local config is validated when it
+ * exists, and the workspace root config otherwise.
+ */
+export async function validateOxfmtConfig(
+  basePath: string,
+  pkgJson: PackageJson,
+): Promise<string[]> {
+  const errors: string[] = []
+  const workspaceRoot = await findWorkspaceRoot(basePath)
+
+  const legacyFound = await findLegacyConfigFiles(
     basePath,
-    pkgJson,
-    configKey: 'eslint',
-    files: [
-      '.eslintrc',
-      '.eslintrc.js',
-      '.eslintrc.cjs',
-      '.eslintrc.yaml',
-      '.eslintrc.yml',
-      '.eslintrc.json',
-    ],
-  })
+    workspaceRoot,
+    legacyPrettierConfigFiles,
+  )
+  legacyFound.push(
+    ...(await findLegacyPackageJsonKey(pkgJson, basePath, workspaceRoot, 'prettier')),
+  )
+  if (legacyFound.length) {
+    errors.push(
+      outdent`
+        Found legacy prettier configuration: [${legacyFound.join(', ')}].
+
+        plugin-kit has replaced prettier with oxfmt. Remove the prettier config (custom options can
+        be migrated with \`npx oxfmt --migrate=prettier\`), drop the prettier, prettier-plugin-packagejson
+        and eslint-plugin-prettier devDependencies, and format with oxfmt instead:
+
+        ${oxfmtSetupSnippet}
+      `,
+    )
+  }
+  const primaryDir = workspaceRoot ?? basePath
+  const primaryResult = await checkOxfmtConfigDir(
+    primaryDir,
+    workspaceRoot ? `in the workspace root (${workspaceRoot})` : 'next to package.json',
+  )
+
+  // In a monorepo, oxfmt discovers nested configs: a config next to the plugin's package.json
+  // overrides the workspace root config for this package's files, so when one exists it is the
+  // config that must use the shared preset.
+  if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
+    const localResult = await checkOxfmtConfigDir(basePath, 'next to package.json')
+    if (localResult.ok) {
+      return errors
+    }
+    if (localResult.found) {
+      errors.push(
+        primaryResult.ok
+          ? outdent`
+              ${localResult.error}
+
+              Note: this config overrides the workspace root config (${primaryDir}) for this
+              package's files, since oxfmt discovers nested configs. Either make it use the shared
+              preset, or delete it to fall back to the workspace root config.
+            `
+          : localResult.error,
+      )
+      return errors
+    }
+  }
+
+  if (primaryResult.ok) {
+    return errors
+  }
+
+  errors.push(primaryResult.error)
+  return errors
 }
 
-export async function disallowDuplicatePrettierConfig(basePath: string, pkgJson: PackageJson) {
-  return disallowDuplicateConfig({
-    basePath,
-    pkgJson,
-    configKey: 'prettier',
-    files: [
-      '.prettierrc',
-      '.prettierrc.json5',
-      '.prettierrc.json',
-      '.prettierrc.yaml',
-      '.prettierrc.yml',
-      '.prettierrc.js',
-      '.prettierrc.cjs',
-      '.prettier.config,js',
-      '.prettier.config.cjs',
-      '.prettierrc.toml',
-    ],
-  })
+/**
+ * Config filenames oxlint discovers automatically (in addition to explicit `-c` paths).
+ */
+const oxlintConfigFiles = ['oxlint.config.ts', '.oxlintrc.json', '.oxlintrc.jsonc']
+
+const legacyEslintConfigFiles = [
+  '.eslintrc',
+  '.eslintrc.js',
+  '.eslintrc.cjs',
+  '.eslintrc.yaml',
+  '.eslintrc.yml',
+  '.eslintrc.json',
+  '.eslintignore',
+  'eslint.config.js',
+  'eslint.config.mjs',
+  'eslint.config.cjs',
+  'eslint.config.ts',
+  'eslint.config.mts',
+  'eslint.config.cts',
+]
+
+const oxlintSharedConfig = '@sanity/plugin-kit/oxlint'
+
+const oxlintSetupSnippet = outdent`
+  export {default} from '${oxlintSharedConfig}'
+`
+
+async function checkOxlintConfigDir(dir: string, describeDir: string): Promise<ConfigDirResult> {
+  const found: string[] = []
+  for (const file of oxlintConfigFiles) {
+    if (await fileExists(path.join(dir, file))) {
+      found.push(file)
+    }
+  }
+
+  if (found.length === 0) {
+    return {
+      ok: false,
+      found: false,
+      error: outdent`
+        Could not find an oxlint config file ${describeDir}.
+
+        plugin-kit ships a shared oxlint config (type-aware rules, type checking and no warnings).
+        Create an oxlint.config.ts there containing:
+
+        ${oxlintSetupSnippet}
+      `,
+    }
+  }
+
+  if (found.length > 1) {
+    return {
+      ok: false,
+      found: true,
+      error: outdent`
+        Found multiple oxlint config files ${describeDir}: [${found.join(', ')}].
+
+        There should be at most one of these files. Delete the rest.
+      `,
+    }
+  }
+
+  const file = found[0]
+  if (file.startsWith('.oxlintrc')) {
+    return {
+      ok: false,
+      found: true,
+      error: outdent`
+        Found ${file} ${describeDir}, but JSON configs cannot reuse the shared plugin-kit config
+        (package imports are only supported in oxlint.config.ts).
+
+        Replace it with an oxlint.config.ts containing:
+
+        ${oxlintSetupSnippet}
+      `,
+    }
+  }
+
+  const content = await readFile(path.join(dir, file), 'utf8')
+  if (!content.includes(oxlintSharedConfig)) {
+    return {
+      ok: false,
+      found: true,
+      error: outdent`
+        Found ${file} ${describeDir}, but it does not use the shared plugin-kit config (${oxlintSharedConfig}).
+
+        Re-export the shared config:
+
+        ${oxlintSetupSnippet}
+
+        or extend it with your own options:
+
+        import sanityPluginKitOxlint from '${oxlintSharedConfig}'
+        import {defineConfig} from 'oxlint'
+
+        export default defineConfig({
+          extends: [sanityPluginKitOxlint],
+        })
+      `,
+    }
+  }
+
+  return {ok: true}
+}
+
+/**
+ * Verifies the plugin lints with oxlint using the shared plugin-kit config, and that no legacy
+ * eslint configuration remains.
+ *
+ * In a monorepo (a workspace root is found above the plugin), the oxlint config is expected at the
+ * workspace root; otherwise it should sit next to the package.json that installs and runs
+ * plugin-kit. Since oxlint discovers nested configs, a config next to package.json overrides the
+ * workspace root config for this package — so in a monorepo the local config is validated when it
+ * exists, and the workspace root config otherwise.
+ */
+export async function validateOxlintConfig(
+  basePath: string,
+  pkgJson: PackageJson,
+): Promise<string[]> {
+  const errors: string[] = []
+  const workspaceRoot = await findWorkspaceRoot(basePath)
+
+  const legacyFound = await findLegacyConfigFiles(basePath, workspaceRoot, legacyEslintConfigFiles)
+  legacyFound.push(
+    ...(await findLegacyPackageJsonKey(pkgJson, basePath, workspaceRoot, 'eslintConfig')),
+  )
+  if (legacyFound.length) {
+    errors.push(
+      outdent`
+        Found legacy eslint configuration: [${legacyFound.join(', ')}].
+
+        plugin-kit has replaced eslint with oxlint. Remove the eslint config files and the eslint
+        devDependencies (eslint, eslint-config-*, eslint-plugin-*, @typescript-eslint/*), and lint
+        with oxlint instead, via an oxlint.config.ts containing:
+
+        ${oxlintSetupSnippet}
+      `,
+    )
+  }
+  const primaryDir = workspaceRoot ?? basePath
+  const primaryResult = await checkOxlintConfigDir(
+    primaryDir,
+    workspaceRoot ? `in the workspace root (${workspaceRoot})` : 'next to package.json',
+  )
+
+  // In a monorepo, oxlint discovers nested configs: a config next to the plugin's package.json
+  // overrides the workspace root config for this package's files, so when one exists it is the
+  // config that must use the shared config.
+  if (workspaceRoot && workspaceRoot !== path.resolve(basePath)) {
+    const localResult = await checkOxlintConfigDir(basePath, 'next to package.json')
+    if (localResult.ok) {
+      return errors
+    }
+    if (localResult.found) {
+      errors.push(
+        primaryResult.ok
+          ? outdent`
+              ${localResult.error}
+
+              Note: this config overrides the workspace root config (${primaryDir}) for this
+              package's files, since oxlint discovers nested configs. Either make it use the shared
+              config, or delete it to fall back to the workspace root config.
+            `
+          : localResult.error,
+      )
+      return errors
+    }
+  }
+
+  if (primaryResult.ok) {
+    return errors
+  }
+
+  errors.push(primaryResult.error)
+  return errors
 }

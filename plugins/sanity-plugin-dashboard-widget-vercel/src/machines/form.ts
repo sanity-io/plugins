@@ -1,6 +1,6 @@
 // oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {uuid} from '@sanity/uuid'
-import type {SanityClient} from 'sanity'
+import type {SanityClient, SanityDocument} from 'sanity'
 import {assertEvent, assign, fromPromise, setup} from 'xstate'
 
 import {DEPLOYMENT_TARGET_DOCUMENT_TYPE} from '../constants'
@@ -72,8 +72,15 @@ export const formMachine = setup({
     }),
   },
   actors: {
+    // The explicit `Promise<SanityDocument>` return types keep the inferred machine
+    // type portable for declaration emit (TS2883), by referencing the `SanityDocument`
+    // alias imported from `sanity` instead of a deep `@sanity/client` path.
     'create document': fromPromise(
-      ({input}: {input: Required<Pick<Context, 'client' | 'formData'>>}) => {
+      ({
+        input,
+      }: {
+        input: Required<Pick<Context, 'client' | 'formData'>>
+      }): Promise<SanityDocument> => {
         return input.client.create({
           _id: `vercel.${uuid()}`,
           _type: DEPLOYMENT_TARGET_DOCUMENT_TYPE,
@@ -82,13 +89,19 @@ export const formMachine = setup({
       },
     ),
     'update document': fromPromise(
-      ({input}: {input: Required<Pick<Context, 'client' | 'id' | 'formData'>>}) => {
+      ({
+        input,
+      }: {
+        input: Required<Pick<Context, 'client' | 'id' | 'formData'>>
+      }): Promise<SanityDocument> => {
         return input.client.patch(input.id).set(input.formData).commit()
       },
     ),
-    'delete document': fromPromise(({input}: {input: Required<Pick<Context, 'client' | 'id'>>}) => {
-      return input.client.delete(input.id)
-    }),
+    'delete document': fromPromise(
+      ({input}: {input: Required<Pick<Context, 'client' | 'id'>>}): Promise<SanityDocument> => {
+        return input.client.delete(input.id)
+      },
+    ),
   },
 }).createMachine({
   /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOlwgBswBiAYQCUBRAQQBVGBtABgF1FQADgHtYuAC64h+fiAAeiAIwBmAGwkuGjQFYALAE4AHACYdWgwYA0IAJ6IjKgOwkdXFUYVa9h-Ua5KAvv5WaFh4hKTkVNQAqgAKACJsnLwywqISUjLyCMpqmtr6xqbmVrYIBgokWvlGWkpaCgZeKoHBGDgExGSUNPGMADKM7Nx8SCBp4pLSY9m56vm6hiZmljaIOipqdXpcDk1aWiYqBlqtICEd4SSYAE5g6BL4UNQQUmBk+ABuQgDW77f3MRgeJCTAAV1QYHwYmYmDEQhuI1SIkmmRmiGOShIDiUOh0SiaCgUegcDj0pTsjhI5iMewUpPsTSMZwuYS6AIeBGeYBuNwRJAEFAeADMEahrncHsDQRCoTC4QikWMJhlpqBspjsbj8YTiaTyWsEKouNT6noiX5zUpiQEgud2mzSGCBBBOU8Xm8Pt8-iRna6gSDwZDobD4YiUsqUaqshiDFicXiCea9WSKeVKiSVIclEYlIY-BUWQ7Ok6XW7ubz+YKRWLfWWAzLg-Kw0rBFGpjGEJqEzrkyTU4b6ToSHojHos7VXEc6kXQiWSBAwFRHs9XoQvb93ovl9Kg3LQ4qI230h30V241rE7r+wayro1A4dO4VHotA5fPTTnbWfPt2AV9QPJ8jcApCmIoo3OKf4NnuIYKuGozHqiapyLG8bakmRI3mmpjxk0XAuEoXAHI+DgtGc+BCIu8BjD+4TIieaLqogAC0Khpmxs6XF0kRgAxyGdk+aYKLSVR7Fweg6A4IkGFwChcY6EqAly-HRmeY7DnSY5GHGL4qFwRhpjpJpmriDjVMRLgGAp84ckCECqaezEIHoObUuZuwKH4xGPgoRnmCQpmOAcqhmPJ37Flcfrlo5TGoQgY4mgYHkeAS+iqH5hqSc4dSuCo+I6SoSjvjZUX1pAsUodkrlGO51TSd5b46JlZRebVuG7IcjRmA05FtHOVzQSpkaMVVdivs4CibHGxg6biSg4ZsJD2AccaFEVGwOKVXTQRVI0CWeNV1Z5jW+WmujDj4HjmMRnhEttpBAQilWdkdyX1V5RFNS1iAEpU1pHER9JWjogSBEAA */

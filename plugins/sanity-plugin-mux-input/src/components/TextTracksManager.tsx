@@ -1,13 +1,11 @@
 // oxlint-disable react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {
-  AddIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  DownloadIcon,
-  EditIcon,
-  ErrorOutlineIcon,
-  TrashIcon,
-} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {ChevronDownIcon} from '@sanity/icons/ChevronDown'
+import {ChevronUpIcon} from '@sanity/icons/ChevronUp'
+import {DownloadIcon} from '@sanity/icons/Download'
+import {EditIcon} from '@sanity/icons/Edit'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Card, Dialog, Flex, Heading, Spinner, Stack, Text, useToast} from '@sanity/ui'
 import {useEffect, useId, useMemo, useState} from 'react'
 

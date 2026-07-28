@@ -16,9 +16,8 @@ export async function cliEntry(argv = process.argv) {
   These are common commands used in various situations:
 
     init            Create a new Sanity plugin
-    inject          Inject config into an existing Sanity v3 plugin
-    verify-package  Check that a Sanity plugin package follows V3 conventions. Prints upgrade steps.
-    verify-studio   Check that a Sanity Studio follows V3 conventions. Prints upgrade steps.
+    inject          Inject config into an existing Sanity plugin
+    verify-package  Check that a Sanity plugin package follows plugin-kit conventions
     link-watch      Recompiles plugin automatically on changes and runs yalc push --publish
     version         Show the version of ${cliName} currently installed
 
@@ -36,13 +35,11 @@ export async function cliEntry(argv = process.argv) {
     # Init a new plugin in my-sanity-plugin directory
     $ ${cliName} init my-sanity-plugin
 
-    # Check that a Sanity plugin package in current directory follows V3 conventions
+    # Check that a Sanity plugin package in current directory follows plugin-kit conventions
     $ ${cliName} verify-package
-
-    # Check that a Sanity Studio in current directory  follows V3 conventions
-    $ ${cliName} verify-studio
 `,
     {
+      importMeta: import.meta,
       autoHelp: false,
       flags: sharedFlags,
       argv: argv.slice(2),

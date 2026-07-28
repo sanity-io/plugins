@@ -1,4 +1,4 @@
-import {AddIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
 import {Box, Button, Card, Flex, Text, ToastProvider, Tooltip} from '@sanity/ui'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {useMachine} from '@xstate/react'

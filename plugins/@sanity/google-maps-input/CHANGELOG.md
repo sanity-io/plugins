@@ -1,5 +1,100 @@
 # @sanity/google-maps-input
 
+## 6.1.9
+
+### Patch Changes
+
+- [#1702](https://github.com/sanity-io/plugins/pull/1702) [`2a3a7ea`](https://github.com/sanity-io/plugins/commit/2a3a7eab8616981991e4a0b345ebe866a5fec8df) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/ui` dependency to ^3.4.3.
+
+## 6.1.8
+
+### Patch Changes
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/icons` dependency to the latest catalog version.
+
+- [#1684](https://github.com/sanity-io/plugins/pull/1684) [`4ea0d1f`](https://github.com/sanity-io/plugins/commit/4ea0d1fd2eeb05b80f38e11aa17ca29390115999) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Update `@sanity/ui` dependency to the latest catalog version.
+
+## 6.1.7
+
+### Patch Changes
+
+- [#1659](https://github.com/sanity-io/plugins/pull/1659) [`ae97408`](https://github.com/sanity-io/plugins/commit/ae974086ae9de58f2d499944509e8628f59cecab) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Stop emitting the redundant `css.ts.d.ts` file from the package output.
+
+## 6.1.6
+
+### Patch Changes
+
+- [#1622](https://github.com/sanity-io/plugins/pull/1622) [`6fe3c11`](https://github.com/sanity-io/plugins/commit/6fe3c11e32b8187a19fbdc333e4a8b159fe5a616) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.9
+
+## 6.1.5
+
+### Patch Changes
+
+- [#1596](https://github.com/sanity-io/plugins/pull/1596) [`f06fd76`](https://github.com/sanity-io/plugins/commit/f06fd767531740a09a5755f41fa1d3d42da202ae) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.8
+
+## 6.1.4
+
+### Patch Changes
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - The vanilla-extract CSS bundle is now built by `@sanity/vanilla-extract-tsdown-plugin` (via `@sanity/tsdown-config` 0.14.0) instead of `@vanilla-extract/rollup-plugin`. `dist/bundle.css` is slightly smaller, the `dist/bundle.css.map` sourcemap is no longer emitted (aligned with `@tsdown/css` behavior), and the `bundle.css.js` node shim is now a comment-only no-op module instead of `export default ""`
+
+- [#1571](https://github.com/sanity-io/plugins/pull/1571) [`52975b2`](https://github.com/sanity-io/plugins/commit/52975b2f0d4ea5086c800b2ce16190b862284a95) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update tsdown to ^0.22.7 and @sanity/tsdown-config to ^0.14.0
+
+## 6.1.3
+
+### Patch Changes
+
+- [#1519](https://github.com/sanity-io/plugins/pull/1519) [`a11d511`](https://github.com/sanity-io/plugins/commit/a11d511b371b332adc08197711583951eb294166) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency tsdown to ^0.22.5
+
+## 6.1.2
+
+### Patch Changes
+
+- [#1491](https://github.com/sanity-io/plugins/pull/1491) [`2361892`](https://github.com/sanity-io/plugins/commit/236189294b6408c9bced43765e53cf26a11a0e66) Thanks [@stipsan](https://github.com/stipsan)! - Build with `tsdown` instead of `@sanity/pkg-utils`. Internal build-tooling change only, with no intended changes to the public API or runtime behavior. The extracted `bundle.css` and its conditional export are unchanged.
+
+## 6.1.1
+
+### Patch Changes
+
+- [#1471](https://github.com/sanity-io/plugins/pull/1471) [`52487d2`](https://github.com/sanity-io/plugins/commit/52487d208f11fe2a4ccb523fab9386f3fbdd5880) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/icons` to v4 and adopt its per-icon import paths for smaller bundles and faster treeshaking
+
+## 6.1.0
+
+### Minor Changes
+
+- [#1225](https://github.com/sanity-io/plugins/pull/1225) [`41d518e`](https://github.com/sanity-io/plugins/commit/41d518e9fbb3be5f46381e1aa7a65b1f9deea5c0) Thanks [@gustavorino](https://github.com/gustavorino)! - Add optional `saveZoom` config parameter to persist the selected zoom level on the geopoint object
+
+## 6.0.2
+
+### Patch Changes
+
+- [#1417](https://github.com/sanity-io/plugins/pull/1417) [`50df1f2`](https://github.com/sanity-io/plugins/commit/50df1f287debd7069531f4dcf8f23f740c487923) Thanks [@stipsan](https://github.com/stipsan)! - Migrate internal styling from styled-components to vanilla-extract (zero-runtime CSS)
+
+## 6.0.1
+
+### Patch Changes
+
+- [#1412](https://github.com/sanity-io/plugins/pull/1412) [`40aed1e`](https://github.com/sanity-io/plugins/commit/40aed1e4e9ce5ddb90fdd05d2463368d63a2e449) Thanks [@stipsan](https://github.com/stipsan)! - Fix `InvalidValueError` ("not an instance of LatLng … in property lat: not a number") thrown when opening the map editor for an empty geopoint, such as a newly added array item. Map markers, the radius circle and the map center are now only rendered once the value has finite `lat`/`lng` coordinates, and empty items show a "Set location" button instead of a broken preview.
+
+- [#1220](https://github.com/sanity-io/plugins/pull/1220) [`b81e9cf`](https://github.com/sanity-io/plugins/commit/b81e9cfa61d3d752fbf266fd8cb362256ea4ce18) Thanks [@stipsan](https://github.com/stipsan)! - Avoid a runtime error in the `geopointRadius` list preview when a document has an incomplete location: `prepare` now guards against missing `lat`/`lng` and shows "No location set" instead of throwing on `lat.toFixed()`.
+
+## 6.0.0
+
+### Major Changes
+
+- [#1219](https://github.com/sanity-io/plugins/pull/1219) [`9ffc169`](https://github.com/sanity-io/plugins/commit/9ffc1697824396925389783a2344e3f42e41970c) Thanks [@stipsan](https://github.com/stipsan)! - Modernize the map input by rebuilding it on [`@vis.gl/react-google-maps`](https://visgl.github.io/react-google-maps/), improve the key-configuration UX, and implement Review Changes diffs.
+
+  - The map now loads via `<APIProvider>` (with `loading=async`) and uses the library's components: a default advanced marker, `StaticMap`/`createStaticMapsUrl` for the location preview, and an editable `<Circle>` for the radius.
+  - Place search now uses the new `gmp-place-autocomplete` web component backed by the **Places API (New)**, replacing the legacy `google.maps.places.Autocomplete` widget — giving better autocomplete results and a nicer search UX.
+  - This refactors away from deprecated Google Maps APIs, resolving the runtime console deprecation warnings for:
+    - `google.maps.Marker` → `google.maps.marker.AdvancedMarkerElement`
+    - `google.maps.places.Autocomplete` → `google.maps.places.PlaceAutocompleteElement`
+    - loading the Maps JavaScript API without `loading=async`
+  - Implemented the Review Changes diff: `geopoint` and `geopointRadius` changes now render a before/after static map preview (matching the built-in image diff) instead of raw latitude/longitude/radius field diffs. `geopointRadius` wires this automatically; for the built-in `geopoint` type, attach the exported `GeopointDiff` to your field's `components.diff`.
+  - The radius preview now auto-fits the viewport so the whole circle stays within the image instead of being clipped.
+  - A missing key renders a clear warning card (how to add `apiKey` to the plugin config and which Google APIs it needs); a rejected key replaces the map/preview with an actionable error card noting the key may be invalid, a demo key, or restricted, and listing the required APIs (Google Maps JavaScript API, Google Static Maps API, Google Places API (New)).
+  - **Breaking:** removes the previously exported (but non-functional) `GeopointFieldDiff`, `GeopointArrayDiff`, and `GeopointRadiusFieldDiff` components (and their prop types), replaced by the single `GeopointDiff`.
+
 ## 5.0.2
 
 ### Patch Changes

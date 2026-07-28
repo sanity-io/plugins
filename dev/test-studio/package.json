@@ -9,10 +9,11 @@
   "scripts": {
     "build": "sanity build -y",
     "dev": "sanity dev --no-auto-updates",
-    "typegen": "sanity schema extract --enforce-required-fields --workspace kitchen-sink && sanity typegen generate"
+    "typegen": "sanity schema extract --force --enforce-required-fields --workspace home && sanity typegen generate"
   },
   "dependencies": {
     "@sanity/assist": "workspace:*",
+    "@sanity/block-insert-picker": "workspace:*",
     "@sanity/code-input": "workspace:*",
     "@sanity/color-input": "workspace:*",
     "@sanity/cross-dataset-duplicator": "workspace:*",
@@ -34,9 +35,12 @@
     "@sanity/sfcc": "workspace:*",
     "@sanity/studio-secrets": "workspace:*",
     "@sanity/table": "workspace:*",
+    "@sanity/themer": "^0.2.0",
     "@sanity/ui": "catalog:",
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@sanity/vercel-protection-bypass": "workspace:*",
     "@sanity/vision": "catalog:",
+    "@vanilla-extract/css": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
@@ -68,12 +72,13 @@
     "styled-components": "catalog:"
   },
   "devDependencies": {
-    "@tsconfig/vite-react": "^8.0.6",
+    "@tsconfig/vite-react": "^8.1.1",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/devtools": "^0.3.3",
-    "babel-plugin-react-compiler": "catalog:"
+    "@vitejs/devtools": "^0.4.8",
+    "babel-plugin-react-compiler": "catalog:",
+    "typescript": "catalog:"
   },
   "engines": {
     "node": "24"

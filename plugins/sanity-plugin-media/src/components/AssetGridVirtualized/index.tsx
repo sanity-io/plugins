@@ -1,5 +1,5 @@
 // oxlint-disable react/no-unstable-nested-components - legacy code will be lint-cleaned in a follow-up PR
-import {memo, forwardRef} from 'react'
+import {memo} from 'react'
 import {VirtuosoGrid} from 'react-virtuoso'
 import {styled} from 'styled-components'
 
@@ -35,11 +35,11 @@ const StyledItemContainer = styled.div`
   width: ${CARD_WIDTH}px;
 `
 
-const ItemContainer = forwardRef<HTMLDivElement, any>((props, ref) => {
+const ItemContainer = (props: any) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we're doing this to avoid sc warnings about `context` passed as an attribute
-  const {context, ...rest} = props
+  const {context, ref, ...rest} = props
   return <StyledItemContainer ref={ref} {...rest} />
-})
+}
 
 const StyledListContainer = styled.div`
   display: grid;
@@ -49,11 +49,11 @@ const StyledListContainer = styled.div`
   margin: 0 auto;
 `
 
-const ListContainer = forwardRef<HTMLDivElement, any>((props, ref) => {
+const ListContainer = (props: any) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we're doing this to avoid sc warnings about `context` passed as an attribute
-  const {context, ...rest} = props
+  const {context, ref, ...rest} = props
   return <StyledListContainer ref={ref} {...rest} />
-})
+}
 
 const AssetGridVirtualized = (props: Props) => {
   const {items, onLoadMore} = props

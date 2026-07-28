@@ -1,4 +1,4 @@
-import {PublishIcon} from '@sanity/icons'
+import {PublishIcon} from '@sanity/icons/Publish'
 import {Box, Text, Tooltip} from '@sanity/ui'
 import {TextWithTone, type PreviewValue, type SanityDocument} from 'sanity'
 

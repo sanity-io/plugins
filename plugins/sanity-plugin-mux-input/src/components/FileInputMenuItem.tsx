@@ -1,11 +1,11 @@
 // oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Box, type ButtonProps, Flex, Text} from '@sanity/ui'
-import {isValidElement, useId, forwardRef, useCallback} from 'react'
+import {isValidElement, useId, useCallback} from 'react'
 import {isValidElementType} from 'react-is'
 
 import {FileButton} from './FileInputMenuItem.styled'
 
-export interface FileInputMenuItemProps extends ButtonProps {
+export interface FileInputMenuItemProps extends Omit<ButtonProps, 'onSelect'> {
   accept?: string
   capture?: 'user' | 'environment'
   multiple?: boolean
@@ -13,10 +13,11 @@ export interface FileInputMenuItemProps extends ButtonProps {
   disabled?: boolean
 }
 
-export const FileInputMenuItem = forwardRef(function FileInputMenuItem(
+export function FileInputMenuItem(
   props: FileInputMenuItemProps &
-    Omit<React.HTMLProps<HTMLButtonElement>, 'as' | 'ref' | 'type' | 'value' | 'onSelect'>,
-  forwardedRef: React.ForwardedRef<HTMLInputElement>,
+    Omit<React.HTMLProps<HTMLButtonElement>, 'as' | 'ref' | 'type' | 'value' | 'onSelect'> & {
+      ref?: React.Ref<HTMLInputElement>
+    },
 ) {
   const {
     icon: Icon,
@@ -30,6 +31,7 @@ export const FileInputMenuItem = forwardRef(function FileInputMenuItem(
     textAlign,
     text,
     disabled,
+    ref,
     ...rest
   } = props
   const idHook = useId()
@@ -66,7 +68,7 @@ export const FileInputMenuItem = forwardRef(function FileInputMenuItem(
   )
 
   return (
-    <FileButton {...rest} htmlFor={id} disabled={disabled} ref={forwardedRef}>
+    <FileButton {...rest} htmlFor={id} disabled={disabled} ref={ref}>
       {content}
 
       {/* Visibly hidden input */}
@@ -83,4 +85,4 @@ export const FileInputMenuItem = forwardRef(function FileInputMenuItem(
       />
     </FileButton>
   )
-})
+}

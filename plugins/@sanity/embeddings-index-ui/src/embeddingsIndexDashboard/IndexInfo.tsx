@@ -1,5 +1,6 @@
 // oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
-import {EllipsisVerticalIcon, TrashIcon} from '@sanity/icons'
+import {EllipsisVerticalIcon} from '@sanity/icons/EllipsisVertical'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {
   Box,
   Button,

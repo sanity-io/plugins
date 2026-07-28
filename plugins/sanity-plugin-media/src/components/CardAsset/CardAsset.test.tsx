@@ -21,12 +21,11 @@ function setShiftPressed(on: boolean) {
 }
 
 vi.mock('../../hooks/useKeyPress', () => ({
-  default: (): RefObject<boolean> =>
-    ({
-      get current() {
-        return Boolean((globalThis as unknown as Record<string, unknown>)[SHIFT_FLAG])
-      },
-    }) as RefObject<boolean>,
+  default: (): RefObject<boolean> => ({
+    get current() {
+      return Boolean((globalThis as unknown as Record<string, unknown>)[SHIFT_FLAG])
+    },
+  }),
 }))
 
 vi.mock('../Image', () => ({

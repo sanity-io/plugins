@@ -1,4 +1,4 @@
-import {CheckmarkIcon} from '@sanity/icons'
+import {CheckmarkIcon} from '@sanity/icons/Checkmark'
 import {type ToastContextValue, useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {

@@ -12,8 +12,7 @@
  * removed, and `lodash` swapped for `lodash-es`.
  */
 import throttle from 'lodash-es/throttle'
-import {Component} from 'react'
-import type {CSSProperties, ReactElement} from 'react'
+import {Component, createRef, type CSSProperties, type ReactElement} from 'react'
 import {styled} from 'styled-components'
 
 import * as saturation from './helpers/saturation'
@@ -48,7 +47,8 @@ export interface SaturationProps {
 }
 
 export class Saturation extends Component<SaturationProps> {
-  private container: HTMLDivElement | null = null
+  private containerRef = createRef<HTMLDivElement | null>()
+  private abortControllerRef = createRef<AbortController | null>()
 
   private readonly throttle: ThrottledChange = throttle(
     (handler: ColorChangeHandler<SaturationColorResult>, data: SaturationColorResult): void => {
@@ -59,47 +59,45 @@ export class Saturation extends Component<SaturationProps> {
 
   override componentWillUnmount(): void {
     this.throttle.cancel()
-    this.unbindEventListeners()
-  }
-
-  private readonly setContainerRef = (node: HTMLDivElement | null): void => {
-    this.container = node
+    this.abortControllerRef.current?.abort()
   }
 
   private getContainerRenderWindow(): Window {
-    const {container} = this
+    const {containerRef} = this
     let renderWindow: Window = window
-    while (!renderWindow.document.contains(container) && renderWindow.parent !== renderWindow) {
+    while (
+      !renderWindow.document.contains(containerRef.current) &&
+      renderWindow.parent !== renderWindow
+    ) {
       renderWindow = renderWindow.parent
     }
     return renderWindow
   }
 
   private readonly handleChange = (event: PickerEvent): void => {
-    if (!this.container || typeof this.props.onChange !== 'function') {
+    if (!this.containerRef.current || typeof this.props.onChange !== 'function') {
       return
     }
     this.throttle(
       this.props.onChange,
-      saturation.calculateChange(event, this.props.hsl, this.container),
+      saturation.calculateChange(event, this.props.hsl, this.containerRef.current),
     )
   }
 
   private readonly handleMouseDown = (event: React.MouseEvent<HTMLDivElement>): void => {
     this.handleChange(event.nativeEvent)
     const renderWindow = this.getContainerRenderWindow()
-    renderWindow.addEventListener('mousemove', this.handleChange)
-    renderWindow.addEventListener('mouseup', this.handleMouseUp)
+    if (this.abortControllerRef.current) {
+      this.abortControllerRef.current.abort()
+    }
+    this.abortControllerRef.current = new AbortController()
+    const {signal} = this.abortControllerRef.current
+    renderWindow.addEventListener('mousemove', this.handleChange, {signal})
+    renderWindow.addEventListener('mouseup', this.handleMouseUp, {signal})
   }
 
   private readonly handleMouseUp = (): void => {
-    this.unbindEventListeners()
-  }
-
-  private readonly unbindEventListeners = (): void => {
-    const renderWindow = this.getContainerRenderWindow()
-    renderWindow.removeEventListener('mousemove', this.handleChange)
-    renderWindow.removeEventListener('mouseup', this.handleMouseUp)
+    this.abortControllerRef.current?.abort()
   }
 
   override render(): ReactElement {
@@ -120,7 +118,7 @@ export class Saturation extends Component<SaturationProps> {
           background: `hsl(${hsl.h},100%, 50%)`,
           borderRadius: radius,
         }}
-        ref={this.setContainerRef}
+        ref={this.containerRef}
         onMouseDown={this.handleMouseDown}
         onTouchMove={this.handleChange}
         onTouchStart={this.handleChange}
