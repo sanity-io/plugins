@@ -30,6 +30,7 @@ catalog:
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.1
   '@sanity/tsdown-config': ^0.21.1
+  '@sanity/types': ^6.6.0
   '@sanity/ui': ^3.5.0
   '@sanity/util': ^6.6.0
   '@sanity/uuid': ^3.0.3
@@ -177,12 +178,14 @@ minimumReleaseAgeExclude:
 
 overrides:
   '@types/node': 'catalog:'
+  # Type errors happen if there are duplicates of `@sanity/client` in node_modules
+  '@sanity/client': 'catalog:'
   # Keep the Sanity Studio monorepo packages on a single version so dts emit and
   # transitive deps (cli/migrate/portabletext) cannot leave a second major.minor
   # of @sanity/types|mutator|schema|util in the lockfile.
   '@sanity/mutator': 'catalog:'
   '@sanity/schema': 'catalog:'
-  '@sanity/types': ^6.6.0
+  '@sanity/types': 'catalog:'
   '@sanity/util': 'catalog:'
   groq: 'catalog:'
   sanity: 'catalog:'
