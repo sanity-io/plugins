@@ -10,6 +10,9 @@ const functionKeyCache = new WeakMap<LanguageCallback, string>()
 // Cache for React.use promises
 const promiseCache = new Map<string, Promise<Language[]>>()
 
+// Cache for resolved values to support synchronous reads via peek()
+const resolvedValueCache = new Map<string, Language[]>()
+
 // Cache for function references to enable sharing between same functions
 const functionCache = new Map<string, Language[]>()
 
@@ -22,18 +25,27 @@ function stringifyCacheKey(key: unknown[]): string {
 export const preloadWithKey = (fn: () => Promise<Language[]>, key: (string | number)[]) => {
   const keyStr = stringifyCacheKey(key)
   if (!promiseCache.has(keyStr)) {
-    promiseCache.set(keyStr, fn())
+    const promise = fn().then((result) => {
+      resolvedValueCache.set(keyStr, result)
+      return result
+    })
+    promiseCache.set(keyStr, promise)
   }
 }
 
 // Cache busting: clear all promise caches
 export const clear = () => {
   promiseCache.clear()
+  resolvedValueCache.clear()
 }
 
 // Peeking into entries outside of suspense
-export const peek = (selectedValue: Record<string, unknown>) => {
-  const key = stringifyCacheKey([version, namespace, selectedValue])
+export const peek = (selectedValue: Record<string, unknown>, workspaceId?: string) => {
+  const key = stringifyCacheKey(createCacheKey(selectedValue, workspaceId))
+  const cachedResult = resolvedValueCache.get(key)
+  if (cachedResult) {
+    return cachedResult
+  }
   const promise = promiseCache.get(key)
   if (promise) {
     // Check if promise is resolved
@@ -64,7 +76,10 @@ export const createOrGetPromise = (
   if (promiseCache.has(keyStr)) {
     return promiseCache.get(keyStr)!
   }
-  const promise = fn()
+  const promise = fn().then((result) => {
+    resolvedValueCache.set(keyStr, result)
+    return result
+  })
   promiseCache.set(keyStr, promise)
   return promise
 }

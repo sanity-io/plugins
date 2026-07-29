@@ -72,7 +72,16 @@ describe('cache', () => {
     expect(calls).toBe(2)
   })
 
-  test('peek returns undefined for unresolved or missing entries', () => {
+  test('peek returns resolved entries created with createCacheKey/createOrGetPromise', async () => {
+    const selectedValue = {market: 'eu'}
+    const key = createCacheKey(selectedValue)
+
+    await createOrGetPromise(async () => MOCK_LANGUAGES, key)
+
+    expect(peek(selectedValue)).toEqual(MOCK_LANGUAGES)
+  })
+
+  test('peek returns undefined for missing entries', () => {
     expect(peek({})).toBeUndefined()
   })
 
