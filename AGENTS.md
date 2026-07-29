@@ -377,6 +377,8 @@ pnpm generate "copy plugin"
 
 For agent-specific transfer guidance, use the `plugin-transfer` skill in `.agents/skills/plugin-transfer/SKILL.md`.
 
+For expanding Vitest + Playwright coverage for a plugin, use the `plugin-test-coverage` skill in `.agents/skills/plugin-test-coverage/SKILL.md`.
+
 When migrating a plugin, agents should ensure:
 
 - `README.md` from the original repository is preserved, but cleaned up for the monorepo:
