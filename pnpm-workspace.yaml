@@ -133,6 +133,8 @@ minimumReleaseAgeExclude:
   - react
   - react-dom
   - react-is
+  # Renovate dependency update: react-rx@4.2.5
+  - react-rx@4.2.5
   - html-parse-stringify
   - mdurl
   - publint
