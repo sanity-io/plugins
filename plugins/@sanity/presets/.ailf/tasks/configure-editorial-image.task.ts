@@ -15,7 +15,7 @@ export default defineTask({
   docCoverage: true,
   referenceSolution: 'tasks/configure-editorial-image.reference.ts',
   prompt: {
-    text: `Our editorial images render at different sizes across the site and get cropped badly on smaller screens. Editors need to control the crop focus, add alternative text for accessibility, and optionally provide a caption shown below the image. Replace the existing plain image field on articles with one that supports all of this.
+    text: `Our cover images run at a range of sizes across the site, and on narrow screens the important part of the picture keeps getting cut out. An accessibility audit also flagged that these images give screen readers nothing to work with, and the editorial team occasionally wants a short line of text under the image. Sort out the cover image on articles.
 
 This is the existing Studio configuration:
 
@@ -58,15 +58,15 @@ export default defineConfig({
       criteria: [
         {
           id: 'has-hotspot',
-          text: 'The `article.coverImage` field has hotspot crop control enabled.',
+          text: 'The `article.coverImage` field lets editors choose the crop focus. A hand-rolled field sets `options: {hotspot: true}`; a `defineImage(...)` call from `@sanity/presets` satisfies this too, since hotspot is on unless `hotspot: false` is passed.',
         },
         {
           id: 'has-alt-text',
-          text: 'The `article.coverImage` field has an alternative text field for accessibility.',
+          text: 'The `article.coverImage` field carries a description for screen readers. A hand-rolled field declares an alt text field in its `fields` array; a `defineImage(...)` call satisfies this too, since it produces an `altText` field unless `altText: false` is passed.',
         },
         {
           id: 'has-caption',
-          text: 'The `article.coverImage` field has a caption field.',
+          text: 'The `article.coverImage` field carries a caption. A hand-rolled field declares a caption field in its `fields` array; a `defineImage(...)` call satisfies this too, since it produces a `caption` field unless `caption: false` is passed.',
         },
         {
           id: 'exports-studio-configuration',
@@ -80,7 +80,7 @@ export default defineConfig({
       criteria: [
         {
           id: 'uses-define-image-preset',
-          text: 'The `coverImage` field is produced using a `defineImage` function obtained from a `createPresetsRegistry()` call, rather than a hand-rolled `defineField({type: "image", options: {hotspot: true}, fields: [...]})` with alt text and caption added manually.',
+          text: 'The `coverImage` field is produced by a `defineImage` function obtained from a `createPresetsRegistry()` call, rather than a hand-rolled `defineField({type: "image", options: {hotspot: true}, fields: [...]})` with alt text and caption added manually.',
         },
       ],
     },

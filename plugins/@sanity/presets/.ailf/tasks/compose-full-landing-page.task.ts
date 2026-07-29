@@ -15,7 +15,7 @@ export default defineTask({
   docCoverage: true,
   referenceSolution: 'tasks/compose-full-landing-page.reference.ts',
   prompt: {
-    text: `We need a landing page schema for our marketing site. Editors build pages by composing sections: a hero with a headline and a call-to-action button, rich text content blocks, and image blocks with captions. Pages need a URL slug and search-engine metadata.
+    text: `We are modelling the landing pages for our marketing site. Editors assemble each page from sections: a hero at the top with a headline and a button that links somewhere, blocks of formatted copy, and images with a short line of text underneath. Every page needs a tidy URL, and needs to look right when it is shared on social media or turns up in search results.
 
 This is the existing Studio configuration:
 
@@ -40,19 +40,19 @@ export default defineConfig({
       criteria: [
         {
           id: 'has-page-document',
-          text: 'The schema includes a `page` document type (or similarly named landing page document).',
+          text: 'The schema includes a landing page document type, whether a `definePage(...)` call or a hand-rolled `defineType({type: "document", ...})`.',
         },
         {
           id: 'page-composes-sections',
-          text: 'The page composes hero sections (with a heading and a CTA), rich text content blocks, and image blocks with captions as page builder sections.',
+          text: 'The page sections live in an array whose members cover a hero, formatted copy, and images. The members are named either in `pageBuilderBlocks` on `definePage` or in the `of` array of a hand-rolled field.',
         },
         {
           id: 'page-has-slug',
-          text: 'The page has a URL slug field.',
+          text: 'The page has a slug. A `definePage(...)` call satisfies this, since it produces a `slug` field sourced from `name`; a hand-rolled page declares a field of type `slug`.',
         },
         {
           id: 'page-has-seo-metadata',
-          text: 'The page has SEO metadata fields (title, description, and/or Open Graph image).',
+          text: 'The page carries search and social metadata. A `definePage(...)` call satisfies this, since it composes the SEO preset, as does a `defineSeo(...)` call; a hand-rolled page declares the title, description, and Open Graph image fields itself.',
         },
         {
           id: 'exports-studio-configuration',
@@ -78,7 +78,7 @@ export default defineConfig({
         },
         {
           id: 'hero-is-hand-rolled',
-          text: "The hero section is defined by hand using `defineType({type: 'object', ...})` — the hero is a custom type specific to this project, not a built-in preset.",
+          text: "The hero section is defined by hand using `defineType({type: 'object', ...})`. The hero is a custom type specific to this project, not a built-in preset.",
         },
         {
           id: 'no-hand-rolled-portable-text',
@@ -86,7 +86,7 @@ export default defineConfig({
         },
         {
           id: 'no-hand-rolled-cta',
-          text: 'The CTA schema is provided by `defineCta`, not hand-rolled as an object with `label` and `link` fields.',
+          text: "The hero's button is provided by `defineCta`, not hand-rolled as an object composing a link and an importance level.",
         },
         {
           id: 'no-hand-rolled-image-handling',

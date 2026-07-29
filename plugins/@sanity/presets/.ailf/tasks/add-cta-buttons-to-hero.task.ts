@@ -15,7 +15,7 @@ export default defineTask({
   docCoverage: true,
   referenceSolution: 'tasks/add-cta-buttons-to-hero.reference.ts',
   prompt: {
-    text: `Our marketing team wants to add call-to-action buttons to the hero section of landing pages. Each CTA has a button label, a destination link, and a semantic importance level (primary vs secondary). Editors need to pick whether the link is to another document in the Studio or to an external URL. The hero should support multiple CTAs.
+    text: `Add repeatable link actions to the landing page hero. These will be shown in a button/action style on the website.
 
 This is the existing Studio configuration:
 
@@ -65,19 +65,11 @@ export default defineConfig({
       criteria: [
         {
           id: 'hero-has-ctas-array',
-          text: 'The `hero` object has a repeatable field (typically an array) for multiple CTAs.',
-        },
-        {
-          id: 'cta-has-label',
-          text: 'Each CTA item includes a label or title field for the button text.',
+          text: 'The `hero` object gains an `array` field, so editors can add more than one action.',
         },
         {
           id: 'cta-has-link',
-          text: 'Each CTA item includes a link field that supports both internal (document reference) and external (URL) destinations.',
-        },
-        {
-          id: 'cta-has-importance',
-          text: 'Each CTA item includes a field for semantic importance (e.g. primary vs secondary, or a numeric level).',
+          text: 'Each array member carries a link destination. A `defineCta(...)` or `defineLink(...)` call from `@sanity/presets` satisfies this, since both produce an internal reference field and an external URL field. A hand-rolled member declares those destination fields itself.',
         },
         {
           id: 'exports-studio-configuration',
@@ -91,11 +83,11 @@ export default defineConfig({
       criteria: [
         {
           id: 'uses-define-cta-preset',
-          text: 'The CTA items in the array are produced using a `defineCta` function obtained from a `createPresetsRegistry()` call, rather than hand-rolled object types with separate label, link, and level fields.',
+          text: 'The array members are produced by a `defineCta` function obtained from a `createPresetsRegistry()` call, rather than a hand-rolled object type composing a link and an importance level.',
         },
         {
           id: 'uses-define-link-via-registry',
-          text: 'Internal link targets are declared via the `to` option on the registry (e.g. `link: {to: [...]}` in `createPresetsRegistry`) or on a `defineLink` call, rather than constructing a reference field manually.',
+          text: 'Internal link targets are declared through a `to` option, either `link: {to: [...]}` on `createPresetsRegistry` or `to: [...]` on a `defineLink` call, rather than a manually constructed `reference` field.',
         },
       ],
     },

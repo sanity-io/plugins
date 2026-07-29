@@ -42,15 +42,15 @@ export default defineConfig({
       criteria: [
         {
           id: 'includes-page-document-type',
-          text: 'The Studio configuration includes a `page` document type produced by the `page-type` preset from `@sanity/presets`.',
+          text: "`definePage` is called with `name: 'page'`.",
         },
         {
           id: 'uses-create-presets-registry',
-          text: 'The configuration uses `createPresetsRegistry` from `@sanity/presets` to instantiate the preset registry and obtain the `definePage` function.',
+          text: '`createPresetsRegistry` is imported from `@sanity/presets` and called to obtain `definePage`.',
         },
         {
           id: 'page-type-added-to-schema',
-          text: 'The `page` document type is included in the `schema.types` array passed to `defineConfig`.',
+          text: 'The result of the `definePage` call is an entry in the `schema.types` array passed to `defineConfig`.',
         },
         {
           id: 'exports-studio-configuration',

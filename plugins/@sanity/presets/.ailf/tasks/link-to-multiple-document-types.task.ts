@@ -15,7 +15,7 @@ export default defineTask({
   docCoverage: true,
   referenceSolution: 'tasks/link-to-multiple-document-types.reference.ts',
   prompt: {
-    text: `Our navigation menu items should be able to link to either a page or a blog post inside the Studio, or to an external URL. Editors need a single link field that handles all three cases, showing the right inputs depending on which destination type they choose.
+    text: `Our navigation menu items need to point at pages and blog posts in the Studio, or out to a URL somewhere else. Editors pick the destination per menu item.
 
 This is the existing Studio configuration:
 
@@ -69,19 +69,15 @@ export default defineConfig({
       criteria: [
         {
           id: 'has-link-field',
-          text: 'The `menuItem` document type has a link field.',
+          text: 'The `menuItem` document type gains a field for the destination.',
         },
         {
           id: 'supports-page-and-post',
-          text: 'The link field can point to both `page` and `post` document types as internal destinations.',
+          text: 'Both `page` and `post` are declared as internal destinations, whether as `link: {to: ["page", "post"]}` on `createPresetsRegistry`, a `to: [...]` option on a `defineLink(...)` call, or `to: [{type: "page"}, {type: "post"}]` on a hand-rolled `reference` field.',
         },
         {
           id: 'supports-external-url',
-          text: 'The link field also supports linking to an external URL.',
-        },
-        {
-          id: 'conditional-inputs',
-          text: 'The link field shows different inputs depending on the destination type chosen (e.g. a reference picker for internal, a URL field for external).',
+          text: 'The destination can also be an external URL. A `defineLink(...)` call from `@sanity/presets` satisfies this, since it produces a `url` field; a hand-rolled solution declares a field of type `url`.',
         },
         {
           id: 'exports-studio-configuration',
@@ -95,11 +91,11 @@ export default defineConfig({
       criteria: [
         {
           id: 'uses-define-link-preset',
-          text: 'The link field is produced using a `defineLink` function obtained from a `createPresetsRegistry()` call, rather than a hand-rolled object type composing an internal reference and an external URL field.',
+          text: 'The destination field is produced by a `defineLink` function obtained from a `createPresetsRegistry()` call, rather than a hand-rolled object type composing an internal reference and an external URL field.',
         },
         {
           id: 'internal-targets-via-registry-to',
-          text: 'The allowed internal document types (`page` and `post`) are declared via a `to` option — either on the registry (`link: {to: ["page", "post"]}` in `createPresetsRegistry`) or on the `defineLink` call directly — rather than added as separate reference fields.',
+          text: 'The allowed internal document types are declared through a `to` option, either `link: {to: ["page", "post"]}` on `createPresetsRegistry` or `to: [...]` on the `defineLink` call, rather than as separate reference fields.',
         },
       ],
     },

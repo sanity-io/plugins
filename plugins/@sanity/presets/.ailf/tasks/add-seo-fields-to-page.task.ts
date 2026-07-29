@@ -15,7 +15,7 @@ export default defineTask({
   docCoverage: true,
   referenceSolution: 'tasks/add-seo-fields-to-page.reference.ts',
   prompt: {
-    text: `Search engines and social share cards need proper metadata on our page documents. Add fields for a search title, a meta description, and an Open Graph image that appears when the page is shared on social media. Group these fields together so editors can find them in one place.
+    text: `Our pages need to look right when they are shared on social media and when they turn up in search results. Give editors control over that, kept together in one place so they can find it.
 
 This is the existing Studio configuration:
 
@@ -58,19 +58,19 @@ export default defineConfig({
       criteria: [
         {
           id: 'has-seo-title',
-          text: 'The `page` document type has a field for a search engine title (e.g. `seoTitle`, `metaTitle`, or similar).',
+          text: 'The `page` type carries a search engine title. A `defineSeo(...)` call from `@sanity/presets` satisfies this, since it produces a `title` field; a hand-rolled solution declares a string field for it (`seoTitle`, `metaTitle`, or similar).',
         },
         {
           id: 'has-seo-description',
-          text: 'The `page` document type has a field for a meta description.',
+          text: 'The `page` type carries a meta description. A `defineSeo(...)` call satisfies this, since it produces a `description` field; a hand-rolled solution declares a field for it.',
         },
         {
           id: 'has-og-image',
-          text: 'The `page` document type has an image field for the Open Graph (social share) image.',
+          text: 'The `page` type carries an Open Graph image for social shares. A `defineSeo(...)` call satisfies this, since it produces an `ogImage` field; a hand-rolled solution declares an `image` field for it.',
         },
         {
           id: 'seo-fields-grouped',
-          text: 'The SEO-related fields are grouped or nested together (e.g. under an object field or a field group), rather than added as three separate top-level fields.',
+          text: 'The metadata sits inside a single field on `page`, such as a `defineSeo(...)` call or a hand-rolled object field, rather than three separate top-level fields.',
         },
         {
           id: 'exports-studio-configuration',
@@ -84,7 +84,7 @@ export default defineConfig({
       criteria: [
         {
           id: 'uses-define-seo-preset',
-          text: 'The SEO metadata is produced using a `defineSeo` function obtained from a `createPresetsRegistry()` call, rather than three separate hand-rolled fields (title string, description text, ogImage image) defined individually.',
+          text: 'The metadata field is produced by a `defineSeo` function obtained from a `createPresetsRegistry()` call, rather than a hand-rolled object composing a title, a description, and an image.',
         },
       ],
     },

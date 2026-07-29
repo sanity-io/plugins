@@ -15,7 +15,7 @@ export default defineTask({
   docCoverage: true,
   referenceSolution: 'tasks/extend-page-with-category.reference.ts',
   prompt: {
-    text: `Our marketing team wants to organise pages by campaign. Each page should belong to one campaign category, chosen from Spring, Summer, Autumn, or Winter. Editors also need to see the campaign name in the document list preview alongside the page title.
+    text: `Our marketing team wants to organise pages by campaign. Each page should belong to one campaign category, chosen from Spring, Summer, Autumn, or Winter. Editors also need to see the campaign in the document list, alongside the page title.
 
 This is the existing Studio configuration:
 
@@ -48,11 +48,11 @@ export default defineConfig({
       criteria: [
         {
           id: 'page-has-campaign-field',
-          text: 'The `page` document type has a campaign category field (named `campaign` or similar) with exactly four options: Spring, Summer, Autumn, and Winter.',
+          text: 'A `campaign` field (or similarly named) of type `string` is declared with an `options.list` holding exactly Spring, Summer, Autumn, and Winter. Passing it through the `fields` option on `definePage` counts, as does declaring it on a hand-rolled type.',
         },
         {
           id: 'preview-shows-campaign',
-          text: 'The document list preview shows the campaign category alongside the page title (via `preview.select` or an equivalent mechanism).',
+          text: 'The page type configures a preview whose `select` names `campaign` alongside the title field, whether through a `map.preview` hook, a `preview` option on the `definePage` call, or a `preview` on a hand-rolled type.',
         },
         {
           id: 'exports-studio-configuration',
