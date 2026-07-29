@@ -62,14 +62,16 @@ const ContainerGrid = styled<
     user-select: none;
     white-space: nowrap;
 
-    ${!$updating &&
-    css`
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          background: ${getSchemeColor($scheme, 'bg')};
+    ${
+      !$updating &&
+      css`
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background: ${getSchemeColor($scheme, 'bg')};
+          }
         }
-      }
-    `}
+      `
+    }
   `
 })
 
