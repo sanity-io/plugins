@@ -29,7 +29,7 @@ The packages folder contains two types of packages:
 ### Prerequisites
 
 - Node.js (latest LTS)
-- [pnpm](https://pnpm.io/) v10 or later (managed via corepack)
+- [pnpm](https://pnpm.io/) v11 or later (managed via corepack)
 
 ### Installation
 

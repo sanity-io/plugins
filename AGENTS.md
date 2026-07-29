@@ -27,7 +27,7 @@ Use the **latest LTS** release of Node.js.
 
 ### pnpm Version
 
-The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v10 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
+The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v11 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
 
 ```bash
 # Enable corepack to automatically use the correct pnpm version
@@ -36,6 +36,8 @@ corepack enable
 # Install all dependencies
 pnpm install
 ```
+
+pnpm v11 defaults `minimumReleaseAge` to 1 day. `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs. For a one-off third-party upgrade of a version still inside that window, use `pnpm add … --config.minimumReleaseAge=0` (or a version-specific exclude) rather than permanently exempting the package.
 
 ## Before Submitting a PR
 
@@ -519,7 +521,7 @@ Run `pnpm build` first—some packages need to be built for type information to 
 
 ### "Command not found: pnpm"
 
-Ensure you have pnpm v10+ installed, then run:
+Ensure you have pnpm v11+ installed, then run:
 
 ```bash
 corepack enable
