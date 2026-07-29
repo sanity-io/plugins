@@ -118,15 +118,17 @@ export const EditorContainer = styled(Card)<{$fullscreen: boolean}>(({theme, $fu
       })};
     }
 
-    ${$fullscreen &&
-    css`
-      height: 100%;
-      border-radius: 0;
-      resize: none;
-      background-color: ${base.bg};
-      /* Divider drawn on the overlay so the sides sit flush with the pane */
-      box-shadow: none;
-    `}
+    ${
+      $fullscreen &&
+      css`
+        height: 100%;
+        border-radius: 0;
+        resize: none;
+        background-color: ${base.bg};
+        /* Divider drawn on the overlay so the sides sit flush with the pane */
+        box-shadow: none;
+      `
+    }
   `
 })
 
