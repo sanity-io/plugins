@@ -49,11 +49,11 @@ export function normalizeCloudinaryAsset(asset: CloudinaryAssetResponse): Record
     ...requiredFields,
   }
 
-  // Only persist Cloudinary's asset id when the Media Library actually provides one
+  // Only persist Cloudinary's asset id when the Media Library actually provides one.
+  // Do not delete a missing id here — callers that replace a whole asset object should
+  // preserve any previously stored id themselves (see CloudinaryReferenceInput).
   if (asset.id) {
     updatedAsset['id'] = asset.id
-  } else {
-    delete updatedAsset['id']
   }
 
   // Sanity object keys cannot contain special characters, so rename Cloudinary context keys

@@ -3,7 +3,7 @@ import {useSecrets} from '@sanity/studio-secrets'
 import {Button, Flex, Grid, Stack} from '@sanity/ui'
 import {nanoid} from 'nanoid'
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {type ObjectInputProps, PatchEvent, set, unset, useClient} from 'sanity'
+import {type ObjectInputProps, getPublishedId, PatchEvent, set, unset, useClient} from 'sanity'
 
 import {cloudinaryAssetSchema} from '../schema/cloudinaryAsset'
 import type {InsertHandlerParams} from '../types'
@@ -33,6 +33,8 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const saveInProgressRef = useRef(false)
   const {secrets} = useSecrets<Secrets>(namespace)
   const client = useClient({apiVersion: API_VERSION})
+  // Lookups should see published docs only so we never store drafts.* in _ref
+  const publishedClient = useMemo(() => client.withConfig({perspective: 'published'}), [client])
 
   const cloudName = secrets?.cloudName
   const apiKey = secrets?.apiKey
@@ -61,7 +63,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
             ...(valueKey ? {_key: valueKey} : {}),
             asset: {
               _type: 'reference',
-              _ref: documentId,
+              _ref: getPublishedId(documentId),
               _weak: true,
             },
           }),
@@ -93,17 +95,19 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       setIsLoading(true)
       saveInProgressRef.current = true
       try {
+        type ExistingAssetDoc = {_id: string; asset?: {id?: string}}
+
         // Prefer Cloudinary asset `id` when the Media Library provides it; otherwise
         // fall back to public_id + resource_type + type so we never query with a
         // missing id (which can match unrelated documents).
         const existingAsset = asset.id
-          ? await client.fetch<{_id: string} | null>(
-              `*[_type == "cloudinaryAssetDocument" && asset.id == $id][0]`,
+          ? await publishedClient.fetch<ExistingAssetDoc | null>(
+              `*[_type == "cloudinaryAssetDocument" && asset.id == $id][0]{_id, asset}`,
               {id: asset.id},
             )
           : asset.public_id
-            ? await client.fetch<{_id: string} | null>(
-                `*[_type == "cloudinaryAssetDocument" && asset.public_id == $publicId && asset.resource_type == $resourceType && asset.type == $type][0]`,
+            ? await publishedClient.fetch<ExistingAssetDoc | null>(
+                `*[_type == "cloudinaryAssetDocument" && asset.public_id == $publicId && asset.resource_type == $resourceType && asset.type == $type][0]{_id, asset}`,
                 {
                   publicId: asset.public_id,
                   resourceType: asset.resource_type,
@@ -113,9 +117,15 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
             : null
 
         if (existingAsset) {
-          // Update the existing asset and reference it
-          await client.patch(existingAsset._id).set({asset: normalizedAsset}).commit()
-          setAssetReference(existingAsset._id)
+          const publishedId = getPublishedId(existingAsset._id)
+          // Preserve a previously stored Cloudinary id if this selection omits it
+          const assetToStore =
+            normalizedAsset['id'] || !existingAsset.asset?.id
+              ? normalizedAsset
+              : {...normalizedAsset, id: existingAsset.asset.id}
+
+          await client.patch(publishedId).set({asset: assetToStore}).commit()
+          setAssetReference(publishedId)
         } else {
           // Create a new asset document and reference it (let Sanity assign a valid _id)
           const newAsset = await client.create({
@@ -134,7 +144,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         setIsLoading(false)
       }
     },
-    [readOnly, client, setAssetReference],
+    [readOnly, client, publishedClient, setAssetReference],
   )
 
   const handleOpenSelector = useCallback(() => {
