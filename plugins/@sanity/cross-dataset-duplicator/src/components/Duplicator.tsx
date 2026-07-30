@@ -100,13 +100,39 @@ function isUnknownArray(value: unknown): value is unknown[] {
   return Array.isArray(value)
 }
 
-// Pull a human-readable description out of a Sanity mutation error
+// Pull a human-readable description out of a Sanity mutation error.
+// Prefer the richest text available: item-level descriptions (which carry the
+// "references non-existent document" phrasing) over a possibly-generic top-level
+// `details.description` like "Mutation(s) failed with N error(s)".
 function getErrorDescription(err: unknown): string {
   if (!isRecord(err)) {
     return ''
   }
 
   const details = err['details']
+  const itemDescriptions: string[] = []
+
+  if (isRecord(details) && isUnknownArray(details['items'])) {
+    for (const item of details['items']) {
+      if (isRecord(item) && isRecord(item['error'])) {
+        const itemDescription = item['error']['description']
+
+        if (typeof itemDescription === 'string' && itemDescription) {
+          itemDescriptions.push(itemDescription)
+        }
+      }
+    }
+  }
+
+  if (itemDescriptions.length) {
+    return itemDescriptions.join('\n')
+  }
+
+  const message = err['message']
+
+  if (typeof message === 'string' && message) {
+    return message
+  }
 
   if (isRecord(details)) {
     const description = details['description']
@@ -116,9 +142,43 @@ function getErrorDescription(err: unknown): string {
     }
   }
 
-  const message = err['message']
+  return ''
+}
 
-  return typeof message === 'string' ? message : ''
+function isReferenceMutationError(err: unknown): boolean {
+  if (!isRecord(err)) {
+    return false
+  }
+
+  const details = err['details']
+
+  // Most reliable: structured mutation item type from the Content Lake API
+  if (isRecord(details) && isUnknownArray(details['items'])) {
+    for (const item of details['items']) {
+      if (isRecord(item) && isRecord(item['error'])) {
+        if (item['error']['type'] === 'documentReferenceDoesNotExistError') {
+          return true
+        }
+
+        const itemDescription = item['error']['description']
+
+        if (
+          typeof itemDescription === 'string' &&
+          (itemDescription.toLowerCase().includes('references non-existent document') ||
+            itemDescription.toLowerCase().includes('reference non-existent'))
+        ) {
+          return true
+        }
+      }
+    }
+  }
+
+  const description = getErrorDescription(err).toLowerCase()
+
+  return (
+    description.includes('references non-existent document') ||
+    description.includes('reference non-existent')
+  )
 }
 
 // Collect the _id's of referenced documents that are missing at the destination,
@@ -462,12 +522,7 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
     setMessage({tone: 'positive', text: 'Duplication complete!'})
     onSuccess()
   } catch (retryErr) {
-    const retryDescription = getErrorDescription(retryErr)
-    const isStillReferenceError =
-      retryDescription.toLowerCase().includes('references non-existent document') ||
-      retryDescription.toLowerCase().includes('reference non-existent')
-
-    if (isStillReferenceError) {
+    if (isReferenceMutationError(retryErr)) {
       // Another layer of missing refs — recurse with the expanded set
       await handleReferenceError({
         ...options,
@@ -750,12 +805,7 @@ export default function Duplicator(props: DuplicatorProps) {
 
       onCommitSuccess()
     } catch (err) {
-      const description = getErrorDescription(err)
-      const isReferenceError =
-        description.toLowerCase().includes('references non-existent document') ||
-        description.toLowerCase().includes('reference non-existent')
-
-      if (isReferenceError) {
+      if (isReferenceMutationError(err)) {
         await handleReferenceError({
           err,
           transactionDocs: transactionDocsMapped,
@@ -768,6 +818,7 @@ export default function Duplicator(props: DuplicatorProps) {
           excludedIds: new Set(payload.filter((item) => !item.include).map((item) => item.doc._id)),
         })
       } else {
+        const description = getErrorDescription(err)
         setMessage({
           tone: 'critical',
           text: description || `Duplication Failed`,
