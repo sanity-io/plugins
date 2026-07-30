@@ -1,4 +1,4 @@
-import {FolderIcon} from '@sanity/icons'
+import {FolderIcon} from '@sanity/icons/Folder'
 import {Box, Button, Flex, Inline, useMediaIndex} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 

@@ -1,4 +1,7 @@
-import {AddIcon, EditIcon, FolderIcon, TrashIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {EditIcon} from '@sanity/icons/Edit'
+import {FolderIcon} from '@sanity/icons/Folder'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {
   Box,
   Button,

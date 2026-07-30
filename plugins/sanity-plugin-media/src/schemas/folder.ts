@@ -1,4 +1,4 @@
-import {FolderIcon} from '@sanity/icons'
+import {FolderIcon} from '@sanity/icons/Folder'
 
 import {FOLDER_DOCUMENT_NAME} from '../constants'
 

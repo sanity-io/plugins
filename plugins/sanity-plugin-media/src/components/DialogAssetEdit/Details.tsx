@@ -1,4 +1,5 @@
-import {FolderIcon, TrashIcon} from '@sanity/icons'
+import {FolderIcon} from '@sanity/icons/Folder'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Card, Flex, Stack, Tab, TabList, TabPanel, Text} from '@sanity/ui'
 import {useState} from 'react'
 import {type Control, type FieldErrors, type UseFormRegister} from 'react-hook-form'
