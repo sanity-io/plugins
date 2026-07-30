@@ -31,7 +31,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const [previewRevision, setPreviewRevision] = useState(0)
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const saveInProgressRef = useRef(false)
-  const {secrets} = useSecrets<Secrets>(namespace)
+  const {secrets, loading: secretsLoading} = useSecrets<Secrets>(namespace)
   const client = useClient({apiVersion: API_VERSION})
   // Lookups should see published docs only so we never store drafts.* in _ref
   const publishedClient = useMemo(() => client.withConfig({perspective: 'published'}), [client])
@@ -42,7 +42,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const currentValue = value as ReferenceValue | undefined
   const valueKey = currentValue?._key
   const schemaTypeName = schemaType.name
-  const actionsDisabled = Boolean(readOnly) || isLoading
+  const actionsDisabled = Boolean(readOnly) || isLoading || secretsLoading
 
   const folder = (schemaType.options as {folder?: FolderOption} | undefined)?.folder
   const folderOption = useMemo(
@@ -152,7 +152,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   )
 
   const handleOpenSelector = useCallback(() => {
-    if (readOnly) {
+    if (readOnly || secretsLoading) {
       return
     }
 
@@ -201,12 +201,14 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       console.error('Error opening Cloudinary media selector:', error)
       setIsLoading(false)
     }
-  }, [readOnly, cloudName, apiKey, handleSelect, folderOption])
+  }, [readOnly, secretsLoading, cloudName, apiKey, handleSelect, folderOption])
 
   const reference = currentValue?.asset
 
   let selectButtonText = 'Configure Cloudinary to Select Assets'
-  if (hasConfig) {
+  if (secretsLoading) {
+    selectButtonText = 'Loading Cloudinary config...'
+  } else if (hasConfig) {
     selectButtonText = isLoading ? 'Opening Media Library...' : 'Select Asset'
   }
 
@@ -221,8 +223,8 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
           mode="bleed"
           title="Configure"
           onClick={() => setShowSettings(true)}
-          text={hasConfig ? undefined : 'Configure Cloudinary plugin'}
-          disabled={Boolean(readOnly)}
+          text={hasConfig || secretsLoading ? undefined : 'Configure Cloudinary plugin'}
+          disabled={Boolean(readOnly) || secretsLoading}
         />
       </Flex>
 
@@ -238,7 +240,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
             tone="primary"
             mode="ghost"
             disabled={actionsDisabled}
-            loading={isLoading}
+            loading={isLoading || secretsLoading}
           />
 
           {reference?._ref ? (
