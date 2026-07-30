@@ -8,8 +8,8 @@ import {EMPTY, from, of} from 'rxjs'
 import {
   bufferTime,
   catchError,
+  concatMap,
   debounceTime,
-  exhaustMap,
   filter,
   mergeMap,
   switchMap,
@@ -760,8 +760,10 @@ export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client
   action$.pipe(
     filter(assetsActions.updateImageReferences.match),
     withLatestFrom(state$),
-    // Ignore concurrent replace actions (e.g. double-click) while one is in flight.
-    exhaustMap(([action, state]) => {
+    // Queue replaces so a later action still runs (exhaustMap would drop it after
+    // the reducer already set `updating`, leaving a stuck spinner). Same-asset
+    // double-clicks are blocked in the UI when the original is already updating.
+    concatMap(([action, state]) => {
       const {asset, id} = action.payload
 
       return of(action).pipe(
