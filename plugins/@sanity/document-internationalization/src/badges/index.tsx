@@ -4,13 +4,13 @@ import {useDocumentInternationalizationContext} from '../components/DocumentInte
 
 /**
  * Document badge that displays the language identifier of a document.
- * Reads the configured `languageField` from the draft or published document,
- * looks up the matching language in `supportedLanguages` to resolve the title,
- * and returns a badge descriptor with `primary` color. Returns `null` when
- * no document exists or the language field is empty/non-string.
+ * Reads the configured `languageField` from the version, draft or published
+ * document, looks up the matching language in `supportedLanguages` to resolve
+ * the title, and returns a badge descriptor with `primary` color. Returns
+ * `null` when no document exists or the language field is empty/non-string.
  */
 export function LanguageBadge(props: DocumentBadgeProps): DocumentBadgeDescription | null {
-  const source = props?.draft || props?.published
+  const source = props?.version || props?.draft || props?.published
   const {languageField, supportedLanguages} = useDocumentInternationalizationContext()
   const languageId = source?.[languageField]
 

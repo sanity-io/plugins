@@ -11,7 +11,7 @@ export const fieldLevelExperiments = definePlugin<GrowthbookExperimentFieldPlugi
     const pluginConfig = {...GROWTHBOOK_CONFIG_DEFAULT, ...config}
     const {fields, environment, project, convertBooleans, baseUrl, tags} = pluginConfig
     return {
-      name: 'sanity-growthbook-personalistaion-plugin-field-level-experiments',
+      name: 'sanity-growthbook-personalization-plugin-field-level-experiments',
       plugins: [
         baseFieldLevelExperiments({
           fields,

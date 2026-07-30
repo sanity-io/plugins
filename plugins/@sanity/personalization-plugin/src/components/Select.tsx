@@ -1,6 +1,6 @@
 import {Select as SanitySelect} from '@sanity/ui'
 import type {ChangeEvent} from 'react'
-import type {FormPatch, PatchEvent, Path, StringInputProps} from 'sanity'
+import type {FormPatch, PatchEvent, StringInputProps} from 'sanity'
 
 import type {SelectOption} from './ExperimentInput'
 
@@ -11,8 +11,6 @@ export const Select = (
       event: ChangeEvent<HTMLSelectElement>,
       onChange: (patch: FormPatch | FormPatch[] | PatchEvent) => void,
     ) => void
-    aditionalChangePath?: Path
-    clearSubValueOnChange?: boolean
   },
 ) => {
   const {

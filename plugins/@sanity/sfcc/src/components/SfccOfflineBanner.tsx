@@ -1,4 +1,4 @@
-import {WarningOutlineIcon} from '@sanity/icons'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {Card, Flex, Text} from '@sanity/ui'
 import {useFormValue} from 'sanity'
 

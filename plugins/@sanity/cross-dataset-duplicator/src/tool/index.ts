@@ -1,4 +1,4 @@
-import {LaunchIcon} from '@sanity/icons'
+import {LaunchIcon} from '@sanity/icons/Launch'
 import type {Tool} from 'sanity'
 
 import {

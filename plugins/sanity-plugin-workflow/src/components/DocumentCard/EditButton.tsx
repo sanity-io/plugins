@@ -1,4 +1,4 @@
-import {EditIcon} from '@sanity/icons'
+import {EditIcon} from '@sanity/icons/Edit'
 import {Button} from '@sanity/ui'
 import {useRouter} from 'sanity/router'
 

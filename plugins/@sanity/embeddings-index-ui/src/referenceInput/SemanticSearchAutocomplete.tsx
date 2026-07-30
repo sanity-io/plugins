@@ -1,7 +1,7 @@
 import {Autocomplete, type AutocompleteOpenButtonProps, Box, Button, Flex, Text} from '@sanity/ui'
 import {
   type FocusEventHandler,
-  forwardRef,
+  type Ref,
   useCallback,
   useEffect,
   useId,
@@ -41,9 +41,8 @@ interface NoResultOption {
 const NO_OPTIONS: NoResultOption[] = []
 const NO_FILTER = () => true
 
-export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAutocomplete(
-  props: SemanticSearchAutocompleteProps,
-  ref: any,
+export function SemanticSearchAutocomplete(
+  props: SemanticSearchAutocompleteProps & {ref?: Ref<HTMLInputElement>},
 ) {
   const {
     indexConfig,
@@ -54,6 +53,7 @@ export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAuto
     onBlur,
     onSelect,
     typeFilter,
+    ref,
   } = props
   const id = useId()
   const [query, setQuery] = useState('')
@@ -167,7 +167,7 @@ export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAuto
       renderOption={AutocompleteOption}
     />
   )
-})
+}
 
 function AutocompleteOption(props: Option | NoResultOption) {
   if ('result' in props) {
