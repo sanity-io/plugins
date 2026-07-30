@@ -98,10 +98,17 @@ describe('FormRenderer', () => {
 
     render(<FormRenderer formData={formData} />)
 
-    const duplicateKeyWarnings = errorSpy.mock.calls.filter((args) =>
-      args.some((arg) => typeof arg === 'string' && arg.includes('same key')),
+    const keyWarnings = errorSpy.mock.calls.filter((args) =>
+      args.some(
+        (arg) =>
+          typeof arg === 'string' &&
+          // React warns differently for missing vs duplicate keys
+          (arg.includes('same key') ||
+            arg.includes('unique "key" prop') ||
+            arg.includes("unique 'key' prop")),
+      ),
     )
-    expect(duplicateKeyWarnings).toEqual([])
+    expect(keyWarnings).toEqual([])
 
     errorSpy.mockRestore()
   })
