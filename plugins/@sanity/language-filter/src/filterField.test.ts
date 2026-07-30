@@ -9,12 +9,10 @@ describe('filterField', () => {
       name: 'some-doc',
       jsonType: 'object',
       fields: [],
-      __experimental_search: [],
       type: {
         name: 'document',
         jsonType: 'object',
         fields: [],
-        __experimental_search: [],
       },
     }
     it('should be enabled when documentTypes is missing', () => {
@@ -52,7 +50,6 @@ describe('filterField', () => {
       name: 'locale_parent',
       jsonType: 'object',
       fields: [],
-      __experimental_search: [],
     }
     const member: FieldMember = {
       name: 'nb',

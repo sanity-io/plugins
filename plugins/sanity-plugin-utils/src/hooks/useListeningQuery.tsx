@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
 import isEqual from 'react-fast-compare'
-import {Subscription} from 'rxjs'
+import type {Subscription} from 'rxjs'
 import {catchError, distinctUntilChanged} from 'rxjs/operators'
 import {type ListenQueryOptions, type ListenQueryParams, useDocumentStore} from 'sanity'
 

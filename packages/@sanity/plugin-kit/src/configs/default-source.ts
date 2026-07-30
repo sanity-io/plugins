@@ -1,6 +1,5 @@
-import outdent from 'outdent'
-
 import type {PackageJson} from '../actions/verify/types'
+import {outdent} from '../util/outdent'
 
 export function defaultSourceJs(pkg: PackageJson) {
   return (
@@ -22,8 +21,8 @@ export function defaultSourceJs(pkg: PackageJson) {
    *
    * @public
    */
-  export const myPlugin = definePlugin((config = {}) => {
-    // eslint-disable-next-line no-console
+  export const myPlugin = definePlugin((_config = {}) => {
+    // oxlint-disable-next-line no-console
     console.log(\`hello from ${pkg.name}\`)
     return {
       name: '${pkg.name}',
@@ -57,8 +56,8 @@ export function defaultSourceTs(pkg: PackageJson) {
    *
    * @public
    */
-  export const myPlugin = definePlugin<MyPluginConfig | void>((config = {}) => {
-    // eslint-disable-next-line no-console
+  export const myPlugin = definePlugin<MyPluginConfig | void>((_config = {}) => {
+    // oxlint-disable-next-line no-console
     console.log('hello from ${pkg.name}')
     return {
       name: '${pkg.name}',

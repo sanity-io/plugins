@@ -1,7 +1,7 @@
 // Note: This is _specifically_ meant for CLI usage,
 // I realize that "singletons" are bad.
 
-import chalk from 'chalk'
+import {styleText} from 'node:util'
 
 let beQuiet = false
 let beVerbose = false
@@ -24,21 +24,24 @@ export default {
 
   // Debug only printed on --verbose
   debug: (msg: any, ...args: any[]) =>
-    !beQuiet && beVerbose && console.debug(`${chalk.bgBlack.white('[debug]')} ${msg}`, ...args),
+    !beQuiet &&
+    beVerbose &&
+    console.debug(`${styleText(['bgBlack', 'white'], '[debug]')} ${msg}`, ...args),
 
   // Success messages only printed if not --silent
   success: (msg: any, ...args: any[]) =>
-    !beQuiet && console.info(`${chalk.bgBlack.greenBright('[success]')} ${msg}`, ...args),
+    !beQuiet &&
+    console.info(`${styleText(['bgBlack', 'greenBright'], '[success]')} ${msg}`, ...args),
 
   // Info only printed if not --silent ("standard" level)
   info: (msg: any, ...args: any[]) =>
-    !beQuiet && console.info(`${chalk.bgBlack.cyanBright('[info]')} ${msg}`, ...args),
+    !beQuiet && console.info(`${styleText(['bgBlack', 'cyanBright'], '[info]')} ${msg}`, ...args),
 
   // Warning only printed if not --silent
   warn: (msg: any, ...args: any[]) =>
-    !beQuiet && console.warn(`${chalk.bgBlack.yellowBright('[warn]')} ${msg}`, ...args),
+    !beQuiet && console.warn(`${styleText(['bgBlack', 'yellowBright'], '[warn]')} ${msg}`, ...args),
 
   // Errors are always printed
   error: (msg: any, ...args: any[]) =>
-    console.error(`${chalk.bgBlack.redBright('[error]')} ${msg}`, ...args),
+    console.error(`${styleText(['bgBlack', 'redBright'], '[error]')} ${msg}`, ...args),
 }

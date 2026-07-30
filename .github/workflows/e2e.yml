@@ -1,0 +1,440 @@
+name: E2E
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+# Dataset names are inlined (not `env.*`) because the `env` context is unavailable
+# when evaluating workflow/job-level `env:` maps. Steps may still use `${{ env.CHROMIUM_DATASET }}`.
+env:
+  CHROMIUM_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-chromium-{1}', github.event.number, github.run_id) || format('main-chromium-{0}', github.run_id) }}
+  FIREFOX_DATASET: ${{ github.event_name == 'pull_request' && format('pr-{0}-firefox-{1}', github.event.number, github.run_id) || format('main-firefox-{0}', github.run_id) }}
+
+jobs:
+  setup:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Add PR Comment placeholder for E2E status
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
+        if: github.event_name == 'pull_request'
+        with:
+          comment-tag: e2e-status
+          message: |
+            ### 🧪 E2E Tests
+
+            ⏳ Setting up preview environment and running smoke tests… • [view progress](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+      - name: Validate e2e secrets and vars
+        env:
+          SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
+          VERCEL_E2E_REPORT_TOKEN: ${{ secrets.VERCEL_E2E_REPORT_TOKEN }}
+          VERCEL_E2E_REPORT_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_E2E_REPORT_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
+        run: |
+          missing=0
+          if [ -z "$SANITY_E2E_SESSION_TOKEN" ]; then
+            echo "::error::SANITY_E2E_SESSION_TOKEN secret is not set. Add a studio session/API token (not SANITY_DEPLOY_TOKEN). See e2e/README.md"
+            missing=1
+          fi
+          if [ -z "$SANITY_E2E_PROJECT_ID" ]; then
+            echo "::error::SANITY_E2E_PROJECT_ID repository variable is not set. See e2e/README.md"
+            missing=1
+          fi
+          if [ -z "$VERCEL_E2E_REPORT_TOKEN" ] || [ -z "$VERCEL_E2E_REPORT_ORG_ID" ] || [ -z "$VERCEL_E2E_REPORT_PROJECT_ID" ]; then
+            echo "::error::Vercel secrets missing (used for both the studio preview and report hosting). Set VERCEL_E2E_REPORT_TOKEN, VERCEL_E2E_REPORT_ORG_ID, and VERCEL_E2E_REPORT_PROJECT_ID. See e2e/README.md."
+            missing=1
+          fi
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Create ephemeral datasets (chromium + firefox)
+        env:
+          SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
+        run: |
+          echo "Creating datasets on project ${SANITY_E2E_PROJECT_ID}: ${{ env.CHROMIUM_DATASET }} and ${{ env.FIREFOX_DATASET }}"
+          SANITY_E2E_DATASET=${{ env.CHROMIUM_DATASET }} pnpm e2e:setup
+          SANITY_E2E_DATASET=${{ env.FIREFOX_DATASET }} pnpm e2e:setup
+
+      - name: Store Playwright's Version
+        id: playwright-version
+        working-directory: e2e
+        run: |
+          PLAYWRIGHT_VERSION=$(pnpm exec playwright --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          echo "Playwright's Version: $PLAYWRIGHT_VERSION"
+          echo "version=${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright Browsers
+        id: cache-playwright-browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ steps.playwright-version.outputs.version }}-playwright-browsers-chromium-firefox
+
+      - name: Install Playwright Browsers
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        working-directory: e2e
+        run: pnpm exec playwright install --with-deps chromium firefox
+
+  deploy-preview:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    outputs:
+      preview_url: ${{ steps.deploy.outputs.DEPLOY_URL }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Pull Vercel Environment Information
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
+        run: pnpm vercel pull --yes --environment=${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_E2E_REPORT_TOKEN }}
+
+      - name: Build Project Artifacts
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
+          SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+          SANITY_E2E_DATASET: ${{ env.CHROMIUM_DATASET }}
+          SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
+          SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
+        run: pnpm vercel build ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_E2E_REPORT_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        id: deploy
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message || github.event.pull_request.title }}
+          GITHUB_EVENT_REPOSITORY_NAME: ${{ github.event.repository.name }}
+          COMMIT_AUTHOR_NAME: ${{ github.event.sender.name || 'GitHub Actions' }}
+          COMMIT_REF: ${{ github.head_ref || github.ref_name }}
+          COMMIT_AUTHOR_LOGIN: ${{ github.event.sender.login || github.actor }}
+        run: |
+          echo "DEPLOY_URL=$(pnpm vercel deploy --prebuilt ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '--prod' || '' }} --token=${{ secrets.VERCEL_E2E_REPORT_TOKEN }} \
+          -m githubDeployment="1" \
+          -m githubCommitAuthorName="$COMMIT_AUTHOR_NAME" \
+          -m githubCommitMessage="$COMMIT_MESSAGE" \
+          -m githubCommitOrg="${{ github.repository_owner }}" \
+          -m githubCommitRef="$COMMIT_REF" \
+          -m githubCommitRepo="${GITHUB_EVENT_REPOSITORY_NAME}" \
+          -m githubCommitSha="${{ github.sha }}" \
+          -m githubOrg="${{ github.repository_owner }}" \
+          -m githubRepo="${GITHUB_EVENT_REPOSITORY_NAME}" \
+          -m githubCommitAuthorLogin="$COMMIT_AUTHOR_LOGIN" | tail -n 1)" >> "$GITHUB_OUTPUT"
+
+      - name: Echo the preview URL
+        run: |
+          if [ -z "${{ steps.deploy.outputs.DEPLOY_URL }}" ]; then
+           echo "::error::Preview URL was not found. Deployment may have failed."
+           exit 1
+          fi
+          echo "Preview URL: ${{ steps.deploy.outputs.DEPLOY_URL }}"
+
+      - name: Update PR Comment with preview URL
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
+        if: github.event_name == 'pull_request'
+        with:
+          comment-tag: e2e-status
+          message: |
+            ### 🧪 E2E Tests
+
+            ⏳ Running tests… • [view progress](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            **Studio:** ${{ steps.deploy.outputs.DEPLOY_URL }}
+
+  e2e:
+    needs: [setup, deploy-preview]
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox]
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      CI: 'true'
+      SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+      SANITY_E2E_BASE_URL: ${{ needs.deploy-preview.outputs.preview_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Echo the base URL
+        run: echo "$SANITY_E2E_BASE_URL"
+
+      - uses: ./.github/actions/setup
+
+      - name: Store Playwright's Version
+        id: playwright-version
+        working-directory: e2e
+        run: |
+          PLAYWRIGHT_VERSION=$(pnpm exec playwright --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          echo "version=${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Playwright Browsers cache
+        id: cache-playwright-browsers
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ steps.playwright-version.outputs.version }}-playwright-browsers-chromium-firefox
+
+      - name: Install Playwright browser
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        working-directory: e2e
+        run: pnpm exec playwright install --with-deps ${{ matrix.project }}
+
+      - name: Install Playwright system deps (cache hit)
+        if: steps.cache-playwright-browsers.outputs.cache-hit == 'true'
+        working-directory: e2e
+        run: pnpm exec playwright install-deps ${{ matrix.project }}
+
+      - name: Run e2e smoke tests
+        id: playwright
+        working-directory: e2e
+        env:
+          SANITY_E2E_SESSION_TOKEN: ${{ secrets.SANITY_E2E_SESSION_TOKEN }}
+          PWTEST_BLOB_REPORT_NAME: ${{ matrix.project }}
+          SANITY_E2E_DATASET: ${{ matrix.project == 'chromium' && env.CHROMIUM_DATASET || env.FIREFOX_DATASET }}
+          SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
+          SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
+        run: pnpm test --project ${{ matrix.project }}
+
+      - name: Upload Playwright blob report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-blob-${{ matrix.project }}
+          path: |
+            e2e/blob-report
+            e2e/results
+          retention-days: 7
+          if-no-files-found: ignore
+
+  report:
+    needs: [e2e, deploy-preview]
+    if: ${{ !cancelled() }}
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Download blob reports
+        uses: actions/download-artifact@v8
+        with:
+          pattern: playwright-blob-*
+          merge-multiple: true
+          path: all-blob-reports
+
+      - name: Merge into HTML report + summary
+        working-directory: e2e
+        run: |
+          BLOB_DIR=../all-blob-reports
+          if [ -d ../all-blob-reports/blob-report ]; then
+            BLOB_DIR=../all-blob-reports/blob-report
+          fi
+          if [ ! -d "$BLOB_DIR" ] || [ -z "$(ls -A "$BLOB_DIR" 2>/dev/null)" ]; then
+            echo "No blob reports found to merge"
+            mkdir -p playwright-report
+            echo '{"passed":0,"failed":0,"flaky":0,"skipped":0,"failedFiles":[],"failedFilesFormatted":""}' > test-summary.json
+            exit 0
+          fi
+          pnpm exec playwright merge-reports --reporter html,./reporters/summary.ts "$BLOB_DIR"
+
+      - name: Extract test summary
+        id: summary
+        working-directory: e2e
+        run: |
+          if [ ! -f test-summary.json ]; then
+            echo "passed=0" >> "$GITHUB_OUTPUT"
+            echo "failed=0" >> "$GITHUB_OUTPUT"
+            echo "flaky=0" >> "$GITHUB_OUTPUT"
+            echo "skipped=0" >> "$GITHUB_OUTPUT"
+            echo "failed_files_formatted=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          node -e "
+            const s = JSON.parse(require('fs').readFileSync('test-summary.json', 'utf8'));
+            console.log('passed=' + s.passed);
+            console.log('failed=' + s.failed);
+            console.log('flaky=' + s.flaky);
+            console.log('skipped=' + s.skipped);
+            if (s.failedFilesFormatted) {
+              process.stdout.write('failed_files_formatted<<ENDOFFILES\n');
+              process.stdout.write(s.failedFilesFormatted + '\n');
+              process.stdout.write('ENDOFFILES\n');
+            }
+          " >> "$GITHUB_OUTPUT"
+
+      - name: Upload merged Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: |
+            e2e/playwright-report
+            e2e/test-summary.json
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Check for HTML report
+        id: html-report
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -f e2e/playwright-report/index.html ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Prepare Vercel prebuilt output
+        if: ${{ !cancelled() && steps.html-report.outputs.exists == 'true' }}
+        run: |
+          mkdir -p .vercel/output/static
+          cp -r e2e/playwright-report/* .vercel/output/static/
+          echo '{"version": 3}' > .vercel/output/config.json
+
+      - name: Deploy report to Vercel
+        id: deploy-report
+        if: ${{ !cancelled() && steps.html-report.outputs.exists == 'true' }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_E2E_REPORT_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_E2E_REPORT_PROJECT_ID }}
+          COMMIT_REF: ${{ github.head_ref || github.ref_name }}
+        run: |
+          echo "REPORT_URL=$(pnpm vercel deploy --prebuilt \
+            --token=${{ secrets.VERCEL_E2E_REPORT_TOKEN }} \
+            --yes \
+            -m githubDeployment="1" \
+            -m githubCommitRef="$COMMIT_REF" \
+            -m githubCommitSha="${{ github.sha }}" \
+            -m githubRunId="${{ github.run_id }}" \
+            | tail -n 1)" >> "$GITHUB_OUTPUT"
+
+      - name: Build linked summary
+        id: linked-summary
+        if: ${{ !cancelled() }}
+        env:
+          REPORT_URL: ${{ steps.deploy-report.outputs.REPORT_URL }}
+          PASSED: ${{ steps.summary.outputs.passed }}
+          FAILED: ${{ steps.summary.outputs.failed }}
+          FLAKY: ${{ steps.summary.outputs.flaky }}
+          SKIPPED: ${{ steps.summary.outputs.skipped }}
+        run: |
+          node -e "
+            const u = process.env.REPORT_URL || '';
+            const s = {
+              passed: +process.env.PASSED || 0,
+              failed: +process.env.FAILED || 0,
+              flaky: +process.env.FLAKY || 0,
+              skipped: +process.env.SKIPPED || 0,
+            };
+            const parts = [];
+            if (u) {
+              if (s.passed) parts.push('[🟢 ' + s.passed + ' passed](' + u + '#?q=s%3Apassed)');
+              if (s.failed) parts.push('[🔴 ' + s.failed + ' failed](' + u + '#?q=s%3Afailed)');
+              if (s.flaky) parts.push('[🟡 ' + s.flaky + ' flaky](' + u + '#?q=s%3Aflaky)');
+              if (s.skipped) parts.push('([⚪ ' + s.skipped + ' skipped](' + u + '#?q=s%3Askipped))');
+              const text = (parts.join(' • ') || '⚪ no tests') + ' • [view full report](' + u + ')';
+              console.log('text=' + text);
+            } else {
+              if (s.passed) parts.push('🟢 ' + s.passed + ' passed');
+              if (s.failed) parts.push('🔴 ' + s.failed + ' failed');
+              if (s.flaky) parts.push('🟡 ' + s.flaky + ' flaky');
+              if (s.skipped) parts.push('⚪ ' + s.skipped + ' skipped');
+              console.log('text=' + (parts.join(' • ') || '⚪ no tests'));
+            }
+          " >> "$GITHUB_OUTPUT"
+
+      - name: Update PR Comment (tests passed)
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
+        if: github.event_name == 'pull_request' && needs.e2e.result == 'success'
+        with:
+          comment-tag: e2e-status
+          message: |
+            ### ✅ E2E Tests
+
+            ${{ steps.linked-summary.outputs.text }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            **Studio:** ${{ needs.deploy-preview.outputs.preview_url }}
+
+            Datasets: `${{ env.CHROMIUM_DATASET }}`, `${{ env.FIREFOX_DATASET }}`
+
+      - name: Update PR Comment (tests failed)
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3
+        if: github.event_name == 'pull_request' && needs.e2e.result != 'success'
+        with:
+          comment-tag: e2e-status
+          message: |
+            ### ❌ E2E Tests
+
+            ${{ steps.linked-summary.outputs.text }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            **Studio:** ${{ needs.deploy-preview.outputs.preview_url }}
+
+            Datasets: `${{ env.CHROMIUM_DATASET }}`, `${{ env.FIREFOX_DATASET }}`
+
+            <details>
+            <summary>Debug failing tests locally</summary>
+
+            ```sh
+            SANITY_E2E_PROJECT_ID=${{ vars.SANITY_E2E_PROJECT_ID }} \
+            SANITY_E2E_BASE_URL=${{ needs.deploy-preview.outputs.preview_url }} \
+            SANITY_E2E_DATASET_CHROMIUM=${{ env.CHROMIUM_DATASET }} \
+            SANITY_E2E_DATASET_FIREFOX=${{ env.FIREFOX_DATASET }} \
+            pnpm test:e2e --headed \
+              ${{ steps.summary.outputs.failed_files_formatted }}
+            ```
+
+            </details>
+
+  e2e-status:
+    name: E2E Status
+    needs: [e2e, report]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check E2E test matrix status
+        run: |
+          result="${{ needs.e2e.result }}"
+          if [ "$result" != "success" ] && [ "$result" != "skipped" ]; then
+            echo "E2E test matrix failed with status: $result"
+            exit 1
+          fi

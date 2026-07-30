@@ -10,5 +10,12 @@
   "ignorePresets": [
     "github>sanity-io/renovate-config:group-non-major",
     "github>sanity-io/renovate-config:workarounds-esm"
+  ],
+  "packageRules": [
+    {
+      "description": "Never rewrite the manually curated ranges in the pnpm `peer` catalog — they declare what consumers may use and are intentionally wider than the default catalog",
+      "matchDepTypes": ["pnpm.catalog.peer"],
+      "enabled": false
+    }
   ]
 }

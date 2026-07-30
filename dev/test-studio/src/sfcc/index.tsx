@@ -1,4 +1,5 @@
-import {PackageIcon, TagIcon} from '@sanity/icons'
+import {PackageIcon} from '@sanity/icons/Package'
+import {TagIcon} from '@sanity/icons/Tag'
 import {
   sfccPlugin,
   sfccProductStoreField,
