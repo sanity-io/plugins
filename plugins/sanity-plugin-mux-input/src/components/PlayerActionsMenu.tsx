@@ -1,3 +1,4 @@
+// oxlint-disable react/react-compiler, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {DownloadIcon} from '@sanity/icons/Download'
 import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
 import {ImageIcon} from '@sanity/icons/Image'

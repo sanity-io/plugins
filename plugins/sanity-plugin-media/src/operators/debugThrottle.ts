@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {iif, type Observable, of, throwError} from 'rxjs'
 import {delay, mergeMap} from 'rxjs/operators'
 

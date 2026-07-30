@@ -53,7 +53,7 @@ You can pass in a `stopTypes` parameter to name all objects you do not want tran
     defineField({
       name: 'categories',
       type: 'array',
-      //ts-ignore
+      // @ts-expect-error - localize is a plugin-specific schema option
       localize: false,
       ...
     })]

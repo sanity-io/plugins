@@ -1,3 +1,4 @@
+// oxlint-disable unicorn/prefer-add-event-listener - legacy code will be lint-cleaned in a follow-up PR
 import {Observable, from, of} from 'rxjs'
 import {mergeMap} from 'rxjs/operators'
 

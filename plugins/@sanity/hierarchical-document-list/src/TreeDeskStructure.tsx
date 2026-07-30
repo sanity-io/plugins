@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Flex, Spinner} from '@sanity/ui'
 import {useCallback, useEffect} from 'react'
 import {type PatchEvent, useDocumentOperation, useEditState} from 'sanity'

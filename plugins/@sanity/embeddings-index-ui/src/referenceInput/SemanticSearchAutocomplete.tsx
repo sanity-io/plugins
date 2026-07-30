@@ -1,3 +1,4 @@
+// oxlint-disable promise/always-return, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {Autocomplete, type AutocompleteOpenButtonProps, Box, Button, Flex, Text} from '@sanity/ui'
 import {
   type FocusEventHandler,

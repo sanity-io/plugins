@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {zodResolver} from '@hookform/resolvers/zod'
 import type {FieldValues, Resolver} from 'react-hook-form'
 

@@ -1,3 +1,4 @@
+// oxlint-disable jsx_a11y/control-has-associated-label, react/no-unstable-nested-components, react/react-compiler, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Text} from '@sanity/ui'
 import groq from 'groq'

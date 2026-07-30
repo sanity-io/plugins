@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {hues} from '@sanity/color'
 import {type ThemeColorSchemeKey, studioTheme} from '@sanity/ui'
 

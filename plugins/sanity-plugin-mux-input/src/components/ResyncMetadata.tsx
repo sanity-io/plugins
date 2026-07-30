@@ -1,3 +1,4 @@
+// oxlint-disable typescript/consistent-return, typescript/no-base-to-string, typescript/no-deprecated, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
 import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {SyncIcon} from '@sanity/icons/Sync'

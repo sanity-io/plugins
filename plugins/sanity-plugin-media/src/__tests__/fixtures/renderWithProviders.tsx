@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {configureStore} from '@reduxjs/toolkit'
 import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
 import {render, type RenderResult} from '@testing-library/react'

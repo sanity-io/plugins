@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {ThLargeIcon} from '@sanity/icons/ThLarge'
 import {ThListIcon} from '@sanity/icons/ThList'
 import {Button, Inline} from '@sanity/ui'

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {DownloadIcon} from '@sanity/icons/Download'
 import {Button, Card, Flex, Label, Spinner, Stack, Text} from '@sanity/ui'
 

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
 import {htmlToBlocks} from '@portabletext/block-tools'
 
 import {customDeserializers, customBlockDeserializers} from '../BaseSerializationConfig'

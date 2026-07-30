@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {rem} from '@sanity/ui'
 import type {ComponentType} from 'react'
 import {css, styled} from 'styled-components'

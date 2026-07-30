@@ -1,3 +1,4 @@
+// oxlint-disable react/no-array-index-key - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Card, Container, Heading, Stack, Text} from '@sanity/ui'
 import {Fragment, type PropsWithChildren} from 'react'
 

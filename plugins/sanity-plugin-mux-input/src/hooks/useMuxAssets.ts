@@ -1,3 +1,4 @@
+// oxlint-disable typescript/consistent-return - legacy code will be lint-cleaned in a follow-up PR
 import {useEffect, useState} from 'react'
 import {defer, of, timer} from 'rxjs'
 import {concatMap, expand, tap} from 'rxjs/operators'

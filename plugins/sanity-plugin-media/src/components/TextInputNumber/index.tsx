@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-redundant-type-constituents - legacy code will be lint-cleaned in a follow-up PR
 import {TextInput} from '@sanity/ui'
 import {type ChangeEvent} from 'react'
 

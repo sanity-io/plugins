@@ -1,3 +1,4 @@
+// oxlint-disable promise/always-return, typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {AddIcon} from '@sanity/icons/Add'
 import {UndoIcon} from '@sanity/icons/Undo'
 import {Box, Button, Card, Flex, Heading, Spinner, Stack} from '@sanity/ui'

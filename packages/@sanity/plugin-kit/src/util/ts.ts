@@ -1,3 +1,4 @@
+// oxlint-disable typescript/unbound-method - legacy code will be lint-cleaned in a follow-up PR
 import path from 'path'
 
 // The JS compiler API is loaded from the official `@typescript/typescript6` compat package

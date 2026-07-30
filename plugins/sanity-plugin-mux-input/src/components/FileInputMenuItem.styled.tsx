@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {MenuItem} from '@sanity/ui'
 import {css, styled} from 'styled-components'
 

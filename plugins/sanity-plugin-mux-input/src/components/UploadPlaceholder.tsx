@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {DocumentVideoIcon} from '@sanity/icons/DocumentVideo'
 import {PlugIcon} from '@sanity/icons/Plug'
 import {SearchIcon} from '@sanity/icons/Search'

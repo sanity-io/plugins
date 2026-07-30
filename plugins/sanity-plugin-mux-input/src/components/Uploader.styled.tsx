@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {Card, type CardTone} from '@sanity/ui'
 import {useCallback, useRef} from 'react'
 import {styled} from 'styled-components'

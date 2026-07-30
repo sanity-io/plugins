@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Button, Card, Flex, Label, Stack, Text} from '@sanity/ui'
 import {useCallback} from 'react'
 

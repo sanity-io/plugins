@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 /**
  * When running `suspend()` from react-suspend a function may throw a Promise
  * causing unexpected behavior when catching.

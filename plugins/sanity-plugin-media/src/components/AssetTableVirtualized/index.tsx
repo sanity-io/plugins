@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components - legacy code will be lint-cleaned in a follow-up PR
 import {Box} from '@sanity/ui'
 import {memo} from 'react'
 import {GroupedVirtuoso} from 'react-virtuoso'

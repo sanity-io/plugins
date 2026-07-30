@@ -495,6 +495,16 @@ pnpm lint:fix    # Auto-fix what's possible
 
 The shared rules (plugins, options, categories, rules) live in the `@sanity/plugin-kit/oxlint` config (`packages/@sanity/plugin-kit/src/oxlint.ts`), which the root `oxlint.config.ts` extends; only workspace-specific ignores and overrides belong in the root config. Standalone plugins scaffolded with `plugin-kit init` re-export the same shared config. Note that `ignorePatterns` do not propagate through `extends`, so the root config spreads the shared patterns before adding its own. Like `pnpm format`, `pnpm lint` requires Node `>=22.18` to load the TypeScript config.
 
+#### Lint Suppressions
+
+- Prefer local suppression comments over `oxlint.config.ts` `overrides` or broad `ignorePatterns`.
+- Use the narrowest practical scope, and always include the rule plus a short reason:
+  - `// oxlint-disable-next-line offending-rule - explanation why it is disabled`
+  - `// oxlint-disable offending-rule - explanation why it is disabled`
+- File-level `oxlint-disable` comments are acceptable when a legacy file has many diagnostics, but keep the rule list specific and remove the comment when the file is lint-cleaned.
+- For TypeScript compiler diagnostics emitted through oxlint type checking, use `// @ts-expect-error - explanation why it is disabled` on the affected line.
+- Never use TypeScript ignore comments; use `@ts-expect-error` with an explanation instead.
+
 ## Project Structure
 
 ```

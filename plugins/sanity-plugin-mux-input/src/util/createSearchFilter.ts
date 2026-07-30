@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-restricted-imports - legacy code will be lint-cleaned in a follow-up PR
 // Adaptation of Sanity's createSearchQuery for our limited use case:
 // https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/core/search/weighted/createSearchQuery.ts
 import {compact, toLower, trim, uniq, words} from 'lodash'

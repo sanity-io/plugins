@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 // @vitest-environment node
 
 import {of, throwError} from 'rxjs'

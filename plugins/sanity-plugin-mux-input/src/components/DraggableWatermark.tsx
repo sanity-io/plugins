@@ -1,3 +1,4 @@
+// oxlint-disable react/react-compiler, typescript/no-deprecated, typescript/no-unsafe-type-assertion, unicorn/prefer-add-event-listener - legacy code will be lint-cleaned in a follow-up PR
 import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Button, Card, Flex, Grid, Stack, Text, TextInput} from '@sanity/ui'

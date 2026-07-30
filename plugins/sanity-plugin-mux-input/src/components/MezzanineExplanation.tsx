@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {Stack, Text} from '@sanity/ui'
 
 /** Explains what the mezzanine file is and how it differs from the streamable MP4 renditions. */

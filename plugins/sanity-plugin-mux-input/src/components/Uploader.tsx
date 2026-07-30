@@ -1,3 +1,4 @@
+// oxlint-disable promise/always-return, react/react-compiler, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Button, type CardTone, Flex, Text, useToast} from '@sanity/ui'
 import {useCallback, useEffect, useReducer, useRef, useState} from 'react'

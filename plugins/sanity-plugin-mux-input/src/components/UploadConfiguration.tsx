@@ -1,3 +1,4 @@
+// oxlint-disable jsx_a11y/media-has-caption, react/react-compiler, typescript/no-deprecated, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {DocumentVideoIcon} from '@sanity/icons/DocumentVideo'
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {UploadIcon} from '@sanity/icons/Upload'

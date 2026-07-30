@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated, typescript/no-useless-default-assignment - legacy code will be lint-cleaned in a follow-up PR
 // Lifted from sanity/form/inputs/files/common/UploadProgress
 
 import {Button, Card, Code, Flex, Inline, Stack, Text} from '@sanity/ui'

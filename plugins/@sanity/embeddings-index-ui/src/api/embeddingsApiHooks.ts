@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-deprecated - legacy code will be lint-cleaned in a follow-up PR
 import {useMemo} from 'react'
 import {type SanityClient, useClient} from 'sanity'
 
