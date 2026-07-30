@@ -30,6 +30,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [previewRevision, setPreviewRevision] = useState(0)
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const saveInProgressRef = useRef(false)
   const {secrets} = useSecrets<Secrets>(namespace)
   const client = useClient({apiVersion: API_VERSION})
 
@@ -90,6 +91,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       }
 
       setIsLoading(true)
+      saveInProgressRef.current = true
       try {
         // Prefer Cloudinary asset `id` when the Media Library provides it; otherwise
         // fall back to public_id + resource_type + type so we never query with a
@@ -128,6 +130,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       } catch (err) {
         console.error('Error creating/updating Cloudinary asset:', err)
       } finally {
+        saveInProgressRef.current = false
         setIsLoading(false)
       }
     },
@@ -165,13 +168,21 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         },
         undefined,
         () => {
-          // Library opened — clear the "opening" loading state
+          // Don't clear loading while create/patch is in flight — closing the
+          // library after insert can fire showHandler mid-save.
+          if (saveInProgressRef.current) {
+            return
+          }
           setIsLoading(false)
         },
         folderOption,
       )
 
-      fallbackTimerRef.current = setTimeout(() => setIsLoading(false), SELECTOR_FALLBACK_TIMEOUT)
+      fallbackTimerRef.current = setTimeout(() => {
+        if (!saveInProgressRef.current) {
+          setIsLoading(false)
+        }
+      }, SELECTOR_FALLBACK_TIMEOUT)
     } catch (error) {
       console.error('Error opening Cloudinary media selector:', error)
       setIsLoading(false)
