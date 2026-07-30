@@ -53,7 +53,7 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
             onBlur={onBlur}
             placeholder={options.placeholder}
             {...validationRules}
-            {...textValueProps()}
+            {...textValueProps(options.defaultValue)}
           />
         )
 
