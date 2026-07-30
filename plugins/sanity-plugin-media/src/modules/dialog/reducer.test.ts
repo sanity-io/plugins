@@ -71,11 +71,13 @@ describe('dialog slice reducers', () => {
     expect(state.items).toEqual([{assetId: 'a1', id: 'a1', type: 'assetEdit'}])
   })
 
-  it('showSearchFacets and showTags append the expected dialogs', () => {
+  it('showSearchFacets, showFolders and showTags append the expected dialogs', () => {
     let state = dialogReducer(dialogState(), dialogActions.showSearchFacets())
+    state = dialogReducer(state, dialogActions.showFolders())
     state = dialogReducer(state, dialogActions.showTags())
     expect(state.items).toEqual([
       {id: 'searchFacets', type: 'searchFacets'},
+      {id: 'folders', type: 'folders'},
       {id: 'tags', type: 'tags'},
     ])
   })

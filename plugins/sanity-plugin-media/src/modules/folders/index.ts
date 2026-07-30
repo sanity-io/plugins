@@ -123,11 +123,19 @@ const foldersSlice = createSlice({
       state.currentFolderId = null
       state.currentFolderUnfiled = true
     },
-    deleteComplete(state, action: PayloadAction<{folderId: string; deletedIds: string[]}>) {
+    deleteComplete(
+      state,
+      action: PayloadAction<{
+        folderId: string
+        deletedIds: string[]
+        clearedCurrentFolder?: boolean
+      }>,
+    ) {
       state.deletingId = undefined
       const removed = new Set(action.payload.deletedIds)
       if (state.currentFolderId && removed.has(state.currentFolderId)) {
         state.currentFolderId = null
+        state.currentFolderUnfiled = false
       }
     },
     deleteError(state, action: PayloadAction<{error: HttpError; folderId: string}>) {
@@ -144,6 +152,7 @@ const foldersSlice = createSlice({
         folders: FolderDoc[]
         exactCountByFolderId: Record<string, number>
         unfiledCount: number
+        clearedCurrentFolder?: boolean
       }>,
     ) {
       const {byId, childrenByParentId, rootIds} = indexFolders(action.payload.folders)
@@ -158,6 +167,7 @@ const foldersSlice = createSlice({
 
       if (state.currentFolderId && !byId[state.currentFolderId]) {
         state.currentFolderId = null
+        state.currentFolderUnfiled = false
       }
     },
     fetchError(state, action: PayloadAction<{error: HttpError}>) {
@@ -230,11 +240,16 @@ export const foldersFetchEpic: MyEpic = (action$, state$, {client}) =>
           result.folders.forEach(({_id, count}) => {
             exactCountByFolderId[_id] = count
           })
+          const folderIds = new Set(folders.map((folder) => folder._id))
+          const clearedCurrentFolder = Boolean(
+            state.folders.currentFolderId && !folderIds.has(state.folders.currentFolderId),
+          )
           return of(
             foldersSlice.actions.fetchComplete({
               folders,
               exactCountByFolderId,
               unfiledCount: result.unfiledCount,
+              clearedCurrentFolder,
             }),
           )
         }),
@@ -277,7 +292,11 @@ export const foldersCurrentFolderEpic: MyEpic = (action$) =>
       (action) =>
         foldersSlice.actions.currentFolderClear.match(action) ||
         foldersSlice.actions.currentFolderSet.match(action) ||
-        foldersSlice.actions.currentFolderShowUnfiled.match(action),
+        foldersSlice.actions.currentFolderShowUnfiled.match(action) ||
+        (foldersSlice.actions.deleteComplete.match(action) &&
+          Boolean(action.payload.clearedCurrentFolder)) ||
+        (foldersSlice.actions.fetchComplete.match(action) &&
+          Boolean(action.payload.clearedCurrentFolder)),
     ),
     mergeMap(() =>
       of(
@@ -411,6 +430,7 @@ export const foldersDeleteEpic: MyEpic = (action$, state$, {client}) =>
               foldersSlice.actions.deleteComplete({
                 folderId,
                 deletedIds: [folderId],
+                clearedCurrentFolder: state.folders.currentFolderId === folderId,
               }),
             ),
           )

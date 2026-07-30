@@ -224,6 +224,12 @@ const dialogSlice = createSlice({
         type: 'searchFacets',
       })
     },
+    showFolders(state) {
+      state.items.push({
+        id: 'folders',
+        type: 'folders',
+      })
+    },
     showTags(state) {
       state.items.push({
         id: 'tags',

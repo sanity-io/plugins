@@ -5,6 +5,7 @@ import DialogConfirm from '../DialogConfirm'
 import DialogFolderCreate from '../DialogFolderCreate'
 import DialogFolderMove from '../DialogFolderMove'
 import DialogFolderRename from '../DialogFolderRename'
+import DialogFolders from '../DialogFolders'
 import DialogSearchFacets from '../DialogSearchFacets'
 import DialogTagCreate from '../DialogTagCreate'
 import DialogTagEdit from '../DialogTagEdit'
@@ -59,6 +60,14 @@ const Dialogs = () => {
         <DialogFolderRename dialog={dialog} key={index}>
           {childDialogs}
         </DialogFolderRename>
+      )
+    }
+
+    if (dialog.type === 'folders') {
+      return (
+        <DialogFolders dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogFolders>
       )
     }
 

@@ -4,7 +4,6 @@ import {useDispatch} from 'react-redux'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {dialogActions} from '../../modules/dialog'
-import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
 import {foldersActions} from '../../modules/folders'
 import {tagsActions} from '../../modules/tags'
 import ButtonViewGroup from '../ButtonViewGroup'
@@ -19,7 +18,6 @@ const Controls = () => {
   // Redux
   const dispatch = useDispatch()
   const fetching = useTypedSelector((state) => state.assets.fetching)
-  const currentFolderId = useTypedSelector((state) => state.folders.currentFolderId)
   const foldersPanelVisible = useTypedSelector((state) => state.folders.panelVisible)
   const pageIndex = useTypedSelector((state) => state.assets.pageIndex)
   const searchFacets = useTypedSelector((state) => state.search.facets)
@@ -30,6 +28,10 @@ const Controls = () => {
   // Callbacks
   const handleShowSearchFacetDialog = () => {
     dispatch(dialogActions.showSearchFacets())
+  }
+
+  const handleShowFoldersDialog = () => {
+    dispatch(dialogActions.showFolders())
   }
 
   const handleShowTagsDialog = () => {
@@ -105,15 +107,12 @@ const Controls = () => {
                   tone="primary"
                 />
 
+                {/* Folders button (small) */}
                 <Button
                   fontSize={1}
-                  icon={FolderIcon}
                   mode="ghost"
-                  onClick={() =>
-                    dispatch(
-                      DIALOG_ACTIONS.showFolderCreate({parentFolderId: currentFolderId || null}),
-                    )
-                  }
+                  onClick={handleShowFoldersDialog}
+                  text="Folders"
                   tone="primary"
                 />
               </Inline>
@@ -127,13 +126,15 @@ const Controls = () => {
           {/* Folders + Views */}
           <Box marginX={2}>
             <Inline space={2} style={{whiteSpace: 'nowrap'}}>
-              <Button
-                aria-label="Toggle folders panel"
-                fontSize={1}
-                icon={FolderIcon}
-                mode={foldersPanelVisible ? 'default' : 'ghost'}
-                onClick={toggleFoldersPanel}
-              />
+              <Box display={['none', 'none', 'block']}>
+                <Button
+                  aria-label="Toggle folders panel"
+                  fontSize={1}
+                  icon={FolderIcon}
+                  mode={foldersPanelVisible ? 'default' : 'ghost'}
+                  onClick={toggleFoldersPanel}
+                />
+              </Box>
               <ButtonViewGroup />
             </Inline>
           </Box>

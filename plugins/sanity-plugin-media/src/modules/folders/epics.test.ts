@@ -8,7 +8,7 @@ import {
   createMockSanityClient,
   mockTransactionCommit,
 } from '../../__tests__/fixtures/mockSanityClient'
-import {foldersActions, foldersDeleteEpic} from './index'
+import {foldersActions, foldersCurrentFolderEpic, foldersDeleteEpic} from './index'
 
 describe('foldersDeleteEpic', () => {
   it('deletes only the selected folder, unsets direct asset refs, and promotes child folders', async () => {
@@ -135,5 +135,65 @@ describe('foldersDeleteEpic', () => {
     childPatch?.({unset: childUnset})
 
     expect(childUnset).toHaveBeenCalledWith(['parent'])
+  })
+})
+
+describe('foldersCurrentFolderEpic', () => {
+  it('reloads assets when deleting the currently viewed folder', async () => {
+    const tx = mockTransactionCommit(undefined)
+    const client = createMockSanityClient({
+      observable: {
+        fetch: vi.fn(() => of({assets: []})),
+      },
+      transaction: vi.fn(() => tx),
+    })
+
+    const deleteStore = createEpicTestStore(foldersDeleteEpic, client, {
+      assets: {
+        assetTypes: ['image'],
+        allIds: ['asset-1'],
+        byIds: {},
+        fetchCount: 1,
+        fetching: false,
+        order: {_updatedAt: 'desc'} as never,
+        pageIndex: 0,
+        pageSize: 100,
+        view: 'grid',
+      },
+      folders: {
+        byId: {
+          target: {_id: 'target', name: 'Target', parentId: null},
+        },
+        childrenByParentId: {},
+        rootIds: ['target'],
+        exactCountByFolderId: {},
+        unfiledCount: 0,
+        currentFolderId: 'target',
+        currentFolderUnfiled: false,
+        panelVisible: false,
+        fetching: false,
+        fetchCount: -1,
+        creating: false,
+        renaming: false,
+      },
+    })
+
+    const reloadStore = createEpicTestStore(foldersCurrentFolderEpic, client, {
+      assets: deleteStore.getState().assets,
+      folders: deleteStore.getState().folders,
+    })
+
+    reloadStore.dispatch(
+      foldersActions.deleteComplete({
+        folderId: 'target',
+        deletedIds: ['target'],
+        clearedCurrentFolder: true,
+      }),
+    )
+
+    await vi.waitFor(() => {
+      expect(reloadStore.getState().assets.allIds).toEqual([])
+      expect(reloadStore.getState().assets.pageIndex).toBe(0)
+    })
   })
 })

@@ -115,6 +115,7 @@ export type Dialog =
   | DialogFolderCreateProps
   | DialogFolderMoveProps
   | DialogFolderRenameProps
+  | DialogFoldersProps
   | DialogSearchFacetsProps
   | DialogTagCreateProps
   | DialogTagEditProps
@@ -164,6 +165,12 @@ export type DialogFolderRenameProps = {
   folderId: string
   id: string
   type: 'folderRename'
+}
+
+export type DialogFoldersProps = {
+  closeDialogId?: string
+  id: string
+  type: 'folders'
 }
 
 export type DialogSearchFacetsProps = {
