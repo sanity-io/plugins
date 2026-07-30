@@ -396,4 +396,39 @@ describe('DialogAssetEdit', () => {
     await user.click(dlg.getByRole('tab', {name: 'French'}))
     expect(textareaByName(/asset details/i, screen, 'description.fr')).toHaveValue('')
   })
+
+  it('does not fill missing locale keys from EXIF when a partial translation exists', async () => {
+    renderAssetDialog(
+      {
+        id: 'dlg-1',
+        type: 'assetEdit',
+        assetId: 'a1',
+      },
+      {
+        preloaded: {
+          assets: assetsWith({
+            description: {fr: 'Description française'},
+            metadata: withImageDescription('EXIF ImageDescription test'),
+          }),
+        },
+        toolOptions: {
+          locales: [
+            {id: 'en', title: 'English'},
+            {id: 'fr', title: 'French'},
+          ],
+        },
+      },
+    )
+
+    await waitFor(() => {
+      expect(textareaByName(/asset details/i, screen, 'description.en')).toHaveValue('')
+    })
+
+    const dlg = withinDialog(/asset details/i, screen)
+    const user = userEvent.setup()
+    await user.click(dlg.getByRole('tab', {name: 'French'}))
+    expect(textareaByName(/asset details/i, screen, 'description.fr')).toHaveValue(
+      'Description française',
+    )
+  })
 })

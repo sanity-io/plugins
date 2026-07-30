@@ -89,7 +89,12 @@ const DialogAssetEdit = (props: Props) => {
               // Only populate the first locale to avoid spreading a legacy value
               // across all languages; the user should fill in other translations manually
               obj[locale.id] = i === 0 ? field : ''
+            } else if (typeof field === 'object' && field) {
+              // Localized object present but this locale key is missing: leave empty.
+              // Do not apply EXIF fallback to partial translations.
+              obj[locale.id] = ''
             } else {
+              // No description set at all — EXIF fallback only for the first locale.
               obj[locale.id] = i === 0 ? fallback : ''
             }
           }
