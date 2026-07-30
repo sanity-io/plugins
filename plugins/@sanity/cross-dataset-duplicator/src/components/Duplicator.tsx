@@ -213,6 +213,8 @@ type ReferenceErrorOptions = {
   onSuccess: () => void
   /** Caps recursive recovery so a pathological reference loop can't hang forever */
   depth?: number
+  /** Document ids the user explicitly deselected — never auto-commit these during recovery */
+  excludedIds?: Set<string>
 }
 
 // Upload a recovered asset to the destination, rewriting url/path for the new dataset
@@ -319,9 +321,24 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
     setMessage,
     onSuccess,
     depth = 0,
+    excludedIds = new Set(),
   } = options
   const description = getErrorDescription(err)
   const missingIds = getMissingReferenceIds(err, description)
+
+  // If the only missing refs are ones the user deselected, surface that instead of
+  // silently re-committing them
+  const autoFetchIds = missingIds.filter((id) => !excludedIds.has(id))
+  const blockedIds = missingIds.filter((id) => excludedIds.has(id))
+
+  if (blockedIds.length && !autoFetchIds.length) {
+    setMessage({
+      tone: 'critical',
+      text: `Duplication failed because deselected document(s) are still referenced: ${blockedIds.join(', ')}. Re-select them or remove the references.`,
+    })
+
+    return
+  }
 
   if (!missingIds.length || depth >= 5) {
     // Couldn't parse the missing _id's (or we hit the recursion cap) — retry each document on its own
@@ -338,7 +355,7 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
 
   setMessage({
     tone: 'default',
-    text: `Fetching ${missingIds.length} missing referenced document(s) and retrying...`,
+    text: `Fetching ${autoFetchIds.length} missing referenced document(s) and retrying...`,
   })
 
   let missingDocs: SanityDocument[] = []
@@ -347,7 +364,7 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
     // Recursively gather referenced docs (and apply pluginConfig.filter), same
     // as the "Gather References" path — so nested refs aren't left behind
     missingDocs = await getDocumentsInArray({
-      fetchIds: missingIds,
+      fetchIds: autoFetchIds,
       client: originClient,
       pluginConfig,
     })
@@ -373,37 +390,41 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
     return
   }
 
-  // Don't re-commit documents already in the failed transaction
+  // Don't re-commit documents already in the failed transaction, or ones the
+  // user explicitly deselected (including transitive refs of those)
   const existingIds = new Set(transactionDocs.map((doc) => doc._id))
   // Reverse so transitive refs (appended last by getDocumentsInArray) are processed first
-  const newMissingDocs = [...missingDocs].reverse().filter((doc) => !existingIds.has(doc._id))
+  const newMissingDocs = [...missingDocs]
+    .reverse()
+    .filter((doc) => !existingIds.has(doc._id) && !excludedIds.has(doc._id))
 
   setMessage({tone: 'default', text: `Duplicating ${newMissingDocs.length} missing document(s)...`})
 
   const svgMaps: {old: string; new: string}[] = []
 
-  // Process in order (preserving dependency-first ordering) rather than pushing
-  // from concurrent workers, whose completion order is nondeterministic
-  let recoveredDocs: SanityDocument[]
+  // Process with the same concurrency limit as the main duplication path, while
+  // writing into index slots so dependency-first order is preserved
+  const recoveredChunks: SanityDocument[][] = Array.from({length: newMissingDocs.length}, () => [])
 
   try {
-    const recoveredChunks = await Promise.all(
-      newMissingDocs.map(async (doc) => {
+    await mapWithConcurrency(
+      newMissingDocs.map((doc, index) => ({doc, index})),
+      3,
+      async ({doc, index}) => {
         if (!isAssetDocument(doc)) {
-          return [doc]
+          recoveredChunks[index] = [doc]
+
+          return
         }
 
         const {docs, svgMap} = await uploadAssetForRecovery(doc, destinationClient, token)
+        recoveredChunks[index] = docs
 
         if (svgMap) {
           svgMaps.push(svgMap)
         }
-
-        return docs
-      }),
+      },
     )
-
-    recoveredDocs = recoveredChunks.flat()
   } catch (uploadErr) {
     setMessage({
       tone: 'critical',
@@ -415,6 +436,8 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
 
     return
   }
+
+  const recoveredDocs = recoveredChunks.flat()
 
   // Remap SVG _ref's in both recovered and original transaction docs
   const remappedRecoveredDocs = remapSvgRefs(recoveredDocs, svgMaps)
@@ -735,6 +758,7 @@ export default function Duplicator(props: DuplicatorProps) {
           token,
           setMessage,
           onSuccess: onCommitSuccess,
+          excludedIds: new Set(payload.filter((item) => !item.include).map((item) => item.doc._id)),
         })
       } else {
         setMessage({
