@@ -126,7 +126,9 @@ describe('constructFilter', () => {
       searchQuery: undefined,
     })
 
-    expect(q.replace(/\s+/g, ' ')).toContain('name.current in ["internal","archived"]')
-    expect(q.replace(/\s+/g, ' ')).toContain('opt.media.tags')
+    const normalized = q.replace(/\s+/g, ' ')
+    expect(normalized).toContain(
+      '!(defined(opt.media.tags) && count(opt.media.tags[@._ref in *[_type == "media.tag" && name.current in ["internal","archived"]]._id]) > 0)',
+    )
   })
 })

@@ -31,9 +31,10 @@ export type MediaToolOptions = {
   }
   directUploads?: boolean
   /**
-   * Tag slugs (`media.tag.name.current`) whose assets are omitted from the main
-   * Media browser grid (and from the tag sidebar / tag search facet). Assets may
-   * still be edited via dialogs and still appear in the asset source when relevant.
+   * Tag slugs (`media.tag.name.current`) whose assets are omitted from the Media
+   * browser grid and asset source/picker queries (and from the tag sidebar / tag
+   * search facet). The asset edit dialog still lists all tags so they can be
+   * assigned or removed on an open asset.
    */
   excludeTags?: string[]
   /**
