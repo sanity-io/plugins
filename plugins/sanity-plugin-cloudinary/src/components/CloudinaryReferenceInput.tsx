@@ -19,6 +19,8 @@ const SELECTOR_FALLBACK_TIMEOUT = 30_000
 type FolderOption = {path?: string; resource_type?: 'image' | 'video'}
 
 type ReferenceValue = {
+  _key?: string
+  _type?: string
   asset?: {_type?: 'reference'; _ref?: string; _weak?: boolean}
 }
 
@@ -26,12 +28,14 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const {onChange, value, schemaType} = props
   const [showSettings, setShowSettings] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [previewRevision, setPreviewRevision] = useState(0)
   const {secrets} = useSecrets<Secrets>(namespace)
   const client = useClient({apiVersion: API_VERSION})
 
   const cloudName = secrets?.cloudName
   const apiKey = secrets?.apiKey
   const hasConfig = Boolean(apiKey && cloudName)
+  const currentValue = value as ReferenceValue | undefined
 
   const folder = (schemaType.options as {folder?: FolderOption} | undefined)?.folder
   const folderOption = useMemo(
@@ -48,6 +52,8 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         PatchEvent.from(
           set({
             _type: schemaType.name,
+            // Preserve array item identity when this field is used inside an array
+            ...(currentValue?._key ? {_key: currentValue._key} : {}),
             asset: {
               _type: 'reference',
               _ref: documentId,
@@ -57,7 +63,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         ),
       )
     },
-    [onChange, schemaType.name],
+    [onChange, schemaType.name, currentValue?._key],
   )
 
   const handleSelect = useCallback(
@@ -71,9 +77,11 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       const normalizedAsset = {
         _type: cloudinaryAssetSchema.name,
         _key: nanoid(),
+        _version: 1,
         ...normalizeCloudinaryAsset(asset),
       }
 
+      setIsLoading(true)
       try {
         // Check if this asset already exists in Sanity
         const existingAsset = await client.fetch<{_id: string} | null>(
@@ -94,8 +102,13 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
           })
           setAssetReference(newAsset._id)
         }
+
+        // Force preview refresh when the same document is updated in place
+        setPreviewRevision((revision) => revision + 1)
       } catch (err) {
         console.error('Error creating/updating Cloudinary asset:', err)
+      } finally {
+        setIsLoading(false)
       }
     },
     [client, setAssetReference],
@@ -109,28 +122,36 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
 
     setIsLoading(true)
 
+    let fallbackTimer: ReturnType<typeof setTimeout> | undefined
+
     try {
       openMediaSelector(
         cloudName,
         apiKey,
         false, // single selection
         (payload) => {
+          if (fallbackTimer) {
+            clearTimeout(fallbackTimer)
+          }
+          // handleSelect manages isLoading for the create/patch work
           void handleSelect(payload)
-          setIsLoading(false)
         },
         undefined,
-        () => setIsLoading(false),
+        () => {
+          // Library opened — clear the "opening" loading state
+          setIsLoading(false)
+        },
         folderOption,
       )
 
-      setTimeout(() => setIsLoading(false), SELECTOR_FALLBACK_TIMEOUT)
+      fallbackTimer = setTimeout(() => setIsLoading(false), SELECTOR_FALLBACK_TIMEOUT)
     } catch (error) {
       console.error('Error opening Cloudinary media selector:', error)
       setIsLoading(false)
     }
   }, [cloudName, apiKey, handleSelect, folderOption])
 
-  const reference = (value as ReferenceValue | undefined)?.asset
+  const reference = currentValue?.asset
 
   let selectButtonText = 'Configure Cloudinary to Select Assets'
   if (hasConfig) {
@@ -153,7 +174,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       </Flex>
 
       <Flex marginBottom={2} style={{textAlign: 'center', width: '100%'}}>
-        <ReferencePreview value={reference} />
+        <ReferencePreview value={reference} revision={previewRevision} />
       </Flex>
 
       <Stack gap={2}>

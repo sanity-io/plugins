@@ -15,27 +15,26 @@ export const cloudinaryAssetDocument = defineType({
   ],
   preview: {
     select: {
-      caption: 'asset.metadata.caption',
-      alt: 'asset.metadata.alt_text',
-      displayName: 'asset.display_name',
+      caption: 'asset.context.custom.caption',
+      alt: 'asset.context.custom.alt',
+      publicId: 'asset.public_id',
       resourceType: 'asset.resource_type',
       format: 'asset.format',
       media: 'asset',
     },
     prepare(selection) {
-      const {caption, alt, displayName, resourceType, format, media} = selection as {
+      const {caption, alt, publicId, resourceType, format, media} = selection as {
         caption?: string
         alt?: string
-        displayName?: string
+        publicId?: string
         resourceType?: string
         format?: string
         media?: any
       }
 
-      // Use caption or alt text as the title, fall back to display name
-      const title = caption || alt || displayName || 'Untitled Asset'
+      // Prefer caption/alt from Cloudinary context; fall back to public_id
+      const title = caption || alt || publicId || 'Untitled Asset'
 
-      // Create a descriptive subtitle
       const type = resourceType || 'image'
       const formatInfo = format ? `(${format})` : ''
       const subtitle = `${type} ${formatInfo}`
