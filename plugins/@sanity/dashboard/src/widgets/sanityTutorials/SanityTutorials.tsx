@@ -2,7 +2,7 @@ import {Flex} from '@sanity/ui'
 import {useEffect, useState} from 'react'
 
 import {DashboardWidgetContainer} from '../../components/DashboardWidgetContainer'
-import {type FeedItem, type Guide, useDataAdapter} from './dataAdapter'
+import {type FeedItem, useDataAdapter} from './dataAdapter'
 import {Tutorial} from './Tutorial'
 
 function createUrl(slug: {current: string}, type?: string) {
@@ -44,7 +44,7 @@ export function SanityTutorials(props: SanityTutorialsProps) {
           }
           const presenter = feedItem.presenter || feedItem.guideOrTutorial?.presenter || {}
           const subtitle = feedItem.category
-          const {guideOrTutorial = {} as Guide} = feedItem
+          const {guideOrTutorial = {}} = feedItem
           const href =
             (guideOrTutorial.slug
               ? createUrl(guideOrTutorial.slug, guideOrTutorial._type)

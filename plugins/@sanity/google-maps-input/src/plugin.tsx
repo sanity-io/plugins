@@ -1,32 +1,48 @@
 import {definePlugin, type SchemaType} from 'sanity'
 
-import {setGeoConfig} from './global-workaround'
+import {GoogleMapsInputContext} from './diff/GeoConfigContext'
+import {GeopointDiff} from './diff/GeopointDiff'
 import {GeopointInput, type GeopointInputProps} from './input/GeopointInput'
 import {GeopointRadiusInput, type GeopointRadiusInputProps} from './input/GeopointRadiusInput'
 import type {GeopointSchemaType, GeopointRadiusSchemaType, GoogleMapsInputConfig} from './types'
 
 export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
-  setGeoConfig(config)
   return {
     name: 'google-maps-input',
+    studio: {
+      components: {
+        // Make the config (API key) available to diff components, which are
+        // resolved outside of the form and so can't receive it as a prop.
+        activeToolLayout: function GoogleMapsInputContextProvider(props) {
+          return (
+            <GoogleMapsInputContext value={config}>
+              {props.renderDefault(props)}
+            </GoogleMapsInputContext>
+          )
+        },
+      },
+    },
     schema: {
       types: [
         {
           name: 'geopointRadius',
           title: 'Geopoint with Radius',
           type: 'object',
+          // Only attach the map diff when there's a key to render it with;
+          // otherwise fall back to the default per-field (lat/lng/radius) diff.
+          components: config.apiKey ? {diff: GeopointDiff} : undefined,
           fields: [
             {
               name: 'lat',
               title: 'Latitude',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(-90).max(90),
+              validation: (Rule) => Rule.required().min(-90).max(90),
             },
             {
               name: 'lng',
               title: 'Longitude',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(-180).max(180),
+              validation: (Rule) => Rule.required().min(-180).max(180),
             },
             {
               name: 'alt',
@@ -37,7 +53,7 @@ export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
               name: 'radius',
               title: 'Radius (meters)',
               type: 'number',
-              validation: (Rule: any) => Rule.required().min(1).max(50000),
+              validation: (Rule) => Rule.required().min(1).max(50000),
             },
           ],
           preview: {
@@ -46,9 +62,12 @@ export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {
               lng: 'lng',
               radius: 'radius',
             },
-            prepare({lat, lng, radius}: {lat: number; lng: number; radius: number}) {
+            prepare({lat, lng, radius}: {lat?: number; lng?: number; radius?: number}) {
               return {
-                title: `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+                title:
+                  typeof lat === 'number' && typeof lng === 'number'
+                    ? `${lat.toFixed(6)}, ${lng.toFixed(6)}`
+                    : 'No location set',
                 subtitle: radius ? `Radius: ${radius}m` : 'No radius set',
               }
             },

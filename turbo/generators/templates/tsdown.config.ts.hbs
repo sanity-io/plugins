@@ -1,0 +1,12 @@
+import {defineConfig} from '@sanity/tsdown-config'
+import type {UserConfig} from 'tsdown'
+
+export default defineConfig({
+{{#if hasStyledComponents}}
+  styledComponents: true,
+{{/if}}
+  reactCompiler: true,
+{{#if hasVanillaExtract}}
+  vanillaExtract: true,
+{{/if}}
+}) satisfies Promise<UserConfig>

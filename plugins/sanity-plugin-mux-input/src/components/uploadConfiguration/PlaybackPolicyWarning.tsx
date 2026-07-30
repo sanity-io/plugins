@@ -1,4 +1,4 @@
-import {WarningFilledIcon} from '@sanity/icons'
+import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
 import {Box, Flex, Text} from '@sanity/ui'
 import {type CSSProperties} from 'react'
 

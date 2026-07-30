@@ -1,28 +1,28 @@
-import {uuid} from '@sanity/uuid'
-
 import type {MuxAsset} from './types'
 
 /**
- * Adds _key to array items in MuxAsset data for Sanity compatibility.
- * Sanity requires _key on array items for proper editing support.
+ * Adds a `_key` to array items in MuxAsset data (Sanity requires `_key` on array
+ * items). Keys are derived from each item's stable Mux `id`, so repeated calls
+ * are idempotent and don't churn the document — important because the asset is
+ * persisted on every poll while it prepares.
  */
 export function addKeysToMuxData(data: MuxAsset): MuxAsset {
   return {
     ...data,
-    tracks: data.tracks?.map((track) => ({
+    tracks: data.tracks?.map((track, index) => ({
       ...track,
-      _key: uuid(),
+      _key: track.id || `track-${index}`,
     })),
-    playback_ids: data.playback_ids?.map((playbackId) => ({
+    playback_ids: data.playback_ids?.map((playbackId, index) => ({
       ...playbackId,
-      _key: uuid(),
+      _key: playbackId.id || `playback-${index}`,
     })),
     static_renditions: data.static_renditions
       ? {
           ...data.static_renditions,
-          files: data.static_renditions.files?.map((file) => ({
+          files: data.static_renditions.files?.map((file, index) => ({
             ...file,
-            _key: uuid(),
+            _key: file.id || `rendition-${index}`,
           })),
         }
       : undefined,

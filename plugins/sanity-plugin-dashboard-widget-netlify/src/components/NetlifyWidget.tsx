@@ -18,7 +18,6 @@ export default function NetlifyWidget(props: NetlifyWidgetProps) {
       <Button
         as="a"
         href={isLoading ? undefined : netlifySitesUrl}
-        disabled={isLoading}
         paddingX={2}
         paddingY={4}
         mode="bleed"

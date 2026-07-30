@@ -1,5 +1,6 @@
-import type {Color, HSLColor, HSVColor, RGBColor} from 'react-color'
 import type {ObjectInputProps, ObjectOptions, ObjectSchemaType} from 'sanity'
+
+import type {Color, HSLColor, HSVColor, RGBColor} from './react-color'
 
 export interface ColorValue {
   hex: string
