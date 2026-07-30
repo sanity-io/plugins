@@ -31,7 +31,7 @@ catalog:
   '@sanity/tsconfig': ^2.2.1
   '@sanity/tsdown-config': ^0.21.2
   '@sanity/types': ^6.7.0
-  '@sanity/ui': ^3.5.0
+  '@sanity/ui': 4.0.0-next.0
   '@sanity/util': ^6.7.0
   '@sanity/uuid': ^3.0.3
   '@sanity/vanilla-extract-vite-plugin': ^0.2.8
@@ -159,6 +159,9 @@ overrides:
   '@sanity/mutator': 'catalog:'
   '@sanity/schema': 'catalog:'
   '@sanity/types': 'catalog:'
+  # Force a single @sanity/ui across the tree (including sanity's ^3.5.0 peer/dep)
+  # while testing the v4 next prerelease.
+  '@sanity/ui': 'catalog:'
   '@sanity/util': 'catalog:'
   groq: 'catalog:'
   sanity: 'catalog:'
