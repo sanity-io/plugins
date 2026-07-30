@@ -767,13 +767,13 @@ export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client
           for (const document of documents) {
             const clonedDocument = JSON.parse(JSON.stringify(document)) as Record<string, unknown>
             const assetsToReplace = findImageAssets(clonedDocument, asset, id)
-            for (const assetToReplace of assetsToReplace) {
-              await client
-                .patch(document._id)
-                .ifRevisionId(document._rev)
-                .set(assetToReplace as AttributeSet)
-                .commit()
+            if (assetsToReplace.length === 0) {
+              continue
             }
+            // Merge all top-level field patches into one commit so we keep a
+            // single ifRevisionId check and avoid partial updates / round-trips.
+            const patchSet = Object.assign({}, ...assetsToReplace) as AttributeSet
+            await client.patch(document._id).ifRevisionId(document._rev).set(patchSet).commit()
           }
           return assetsActions.updateImageReferencesComplete({id})
         }),

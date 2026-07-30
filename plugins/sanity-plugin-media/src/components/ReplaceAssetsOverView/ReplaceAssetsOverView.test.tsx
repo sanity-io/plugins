@@ -114,4 +114,18 @@ describe('ReplaceAssetsOverview', () => {
     expect(screen.queryByTestId('replace-item-img-1')).toBeNull()
     expect(screen.getByTestId('replace-item-img-2')).toBeTruthy()
   })
+
+  it('shows empty state when the only image is the one being replaced', () => {
+    renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        assets: assetsState({
+          'img-1': assetItem(imageAsset, {picked: true}),
+          'file-1': assetItem(fileAsset),
+        }),
+      },
+    })
+
+    expect(screen.getByText('There are no assets')).toBeTruthy()
+    expect(screen.queryByTestId('replace-grid')).toBeNull()
+  })
 })

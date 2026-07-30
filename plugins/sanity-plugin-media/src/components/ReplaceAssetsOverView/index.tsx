@@ -19,16 +19,6 @@ const ReplaceAssetsOverview = () => {
   // unpicking even if another asset remains selected.
   const assetToReplaceId = assetsPicked.length === 1 ? assetsPicked[0]?.asset._id : undefined
 
-  const hasItems = combinedItems.length > 0
-  const hasFetchedOnce = fetchCount >= 0
-  const isEmpty = !hasItems && hasFetchedOnce && !fetching
-
-  const handleLoadMoreItems = () => {
-    if (!fetching) {
-      dispatch(assetsActions.loadNextPage())
-    }
-  }
-
   // Only image assets can replace image refs; exclude uploads and the asset being replaced.
   const reducedItems = combinedItems.filter((item) => {
     if (item.type !== 'asset' || item.id === assetToReplaceId) {
@@ -37,6 +27,15 @@ const ReplaceAssetsOverview = () => {
     const asset = assetsById[item.id]?.asset
     return asset ? isImageAsset(asset) : false
   })
+
+  const hasFetchedOnce = fetchCount >= 0
+  const isEmpty = reducedItems.length === 0 && hasFetchedOnce && !fetching
+
+  const handleLoadMoreItems = () => {
+    if (!fetching) {
+      dispatch(assetsActions.loadNextPage())
+    }
+  }
 
   return (
     <Box height="fill">

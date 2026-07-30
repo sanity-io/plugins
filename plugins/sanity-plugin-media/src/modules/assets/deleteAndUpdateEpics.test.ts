@@ -131,6 +131,49 @@ describe('assetsUpdateImageReferencesEpic', () => {
     })
   })
 
+  it('merges multi-field patches into a single commit per document', async () => {
+    const referencingDocument = {
+      _id: 'doc-1',
+      _rev: 'rev-1',
+      _type: 'post',
+      hero: {_type: 'image', asset: {_ref: 'a1', _type: 'reference'}},
+      thumb: {_type: 'image', asset: {_ref: 'a1', _type: 'reference'}},
+    }
+    const chain = mockPatchChain({})
+    const client = createMockSanityClient({
+      observable: {
+        fetch: vi.fn(() => of([referencingDocument])),
+      },
+      patch: vi.fn(() => chain),
+    })
+
+    const replacementAsset = {...sampleAsset, _id: 'a2'}
+
+    const store = createEpicTestStore(assetsUpdateImageReferencesEpic, client, {
+      assets: {
+        ...assetsInitialState,
+        assetTypes: ['image'],
+        allIds: ['a1'],
+        byIds: {
+          a1: {_type: 'asset', asset: sampleAsset, picked: true, updating: false},
+        },
+      },
+    })
+
+    store.dispatch(assetsActions.updateImageReferences({asset: replacementAsset, id: 'a1'}))
+
+    await vi.waitFor(() => {
+      expect(client.patch).toHaveBeenCalledTimes(1)
+      expect(chain.ifRevisionId).toHaveBeenCalledTimes(1)
+      expect(chain.set).toHaveBeenCalledWith({
+        hero: {_type: 'image', asset: {_ref: 'a2', _type: 'reference'}},
+        thumb: {_type: 'image', asset: {_ref: 'a2', _type: 'reference'}},
+      })
+      expect(chain.commit).toHaveBeenCalledTimes(1)
+      expect(store.getState().assets.byIds['a1']!.updating).toBe(false)
+    })
+  })
+
   it('on error clears the spinner and sets the error on the original asset, not the replacement', async () => {
     const client = createMockSanityClient({
       observable: {
