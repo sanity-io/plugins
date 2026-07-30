@@ -2,7 +2,7 @@ import {PlugIcon} from '@sanity/icons/Plug'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Button, Flex, Grid, Stack} from '@sanity/ui'
 import {nanoid} from 'nanoid'
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {type ObjectInputProps, PatchEvent, set, unset, useClient} from 'sanity'
 
 import {cloudinaryAssetSchema} from '../schema/cloudinaryAsset'
@@ -29,6 +29,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const [showSettings, setShowSettings] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [previewRevision, setPreviewRevision] = useState(0)
+  const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const {secrets} = useSecrets<Secrets>(namespace)
   const client = useClient({apiVersion: API_VERSION})
 
@@ -36,6 +37,8 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const apiKey = secrets?.apiKey
   const hasConfig = Boolean(apiKey && cloudName)
   const currentValue = value as ReferenceValue | undefined
+  const valueKey = currentValue?._key
+  const schemaTypeName = schemaType.name
 
   const folder = (schemaType.options as {folder?: FolderOption} | undefined)?.folder
   const folderOption = useMemo(
@@ -51,9 +54,9 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       onChange(
         PatchEvent.from(
           set({
-            _type: schemaType.name,
+            _type: schemaTypeName,
             // Preserve array item identity when this field is used inside an array
-            ...(currentValue?._key ? {_key: currentValue._key} : {}),
+            ...(valueKey ? {_key: valueKey} : {}),
             asset: {
               _type: 'reference',
               _ref: documentId,
@@ -63,7 +66,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         ),
       )
     },
-    [onChange, schemaType.name, currentValue?._key],
+    [onChange, schemaTypeName, valueKey],
   )
 
   const handleSelect = useCallback(
@@ -122,7 +125,9 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
 
     setIsLoading(true)
 
-    let fallbackTimer: ReturnType<typeof setTimeout> | undefined
+    if (fallbackTimerRef.current) {
+      clearTimeout(fallbackTimerRef.current)
+    }
 
     try {
       openMediaSelector(
@@ -130,8 +135,9 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         apiKey,
         false, // single selection
         (payload) => {
-          if (fallbackTimer) {
-            clearTimeout(fallbackTimer)
+          if (fallbackTimerRef.current) {
+            clearTimeout(fallbackTimerRef.current)
+            fallbackTimerRef.current = undefined
           }
           // handleSelect manages isLoading for the create/patch work
           void handleSelect(payload)
@@ -144,7 +150,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         folderOption,
       )
 
-      fallbackTimer = setTimeout(() => setIsLoading(false), SELECTOR_FALLBACK_TIMEOUT)
+      fallbackTimerRef.current = setTimeout(() => setIsLoading(false), SELECTOR_FALLBACK_TIMEOUT)
     } catch (error) {
       console.error('Error opening Cloudinary media selector:', error)
       setIsLoading(false)
