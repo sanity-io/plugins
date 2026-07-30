@@ -237,6 +237,73 @@ async function uploadAssetForRecovery(
   }
 }
 
+// Rewrite _ref values that point at remapped SVG asset ids
+function remapSvgRefs(
+  docs: SanityDocument[],
+  svgMaps: {old: string; new: string}[],
+): SanityDocument[] {
+  if (!svgMaps.length) {
+    return docs
+  }
+
+  return docs.map((doc) => {
+    const references = extractWithPath(`.._ref`, doc)
+
+    if (!references.length) {
+      return doc
+    }
+
+    references.forEach((ref) => {
+      const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
+
+      if (newRefValue) {
+        dset(doc, ref.path.join('.'), newRefValue)
+      }
+    })
+
+    return doc
+  })
+}
+
+// Order docs so referenced documents come before the documents that point at
+// them. Used by the sequential one-by-one fallback where commit order matters.
+function orderDocsDependenciesFirst(docs: SanityDocument[]): SanityDocument[] {
+  const byId = new Map(docs.map((doc) => [doc._id, doc]))
+  const visiting = new Set<string>()
+  const visited = new Set<string>()
+  const ordered: SanityDocument[] = []
+
+  function visit(id: string): void {
+    if (visited.has(id) || visiting.has(id)) {
+      return
+    }
+
+    const doc = byId.get(id)
+
+    if (!doc) {
+      return
+    }
+
+    visiting.add(id)
+
+    for (const ref of extractWithPath(`.._ref`, doc)) {
+      if (typeof ref.value === 'string') {
+        visit(ref.value)
+      }
+    }
+
+    visiting.delete(id)
+    visited.add(id)
+    ordered.push(doc)
+  }
+
+  for (const doc of docs) {
+    visit(doc._id)
+  }
+
+  return ordered
+}
+
 // When a transaction fails because of missing references, fetch the referenced
 // documents (and their transitive refs) from the origin — respecting
 // pluginConfig.filter — upload any assets, then retry. Falls back to one-by-one
@@ -259,7 +326,12 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
   if (!missingIds.length || depth >= 5) {
     // Couldn't parse the missing _id's (or we hit the recursion cap) — retry each document on its own
     setMessage({tone: 'default', text: 'Retrying documents one by one...'})
-    await commitOneByOne(transactionDocs, destinationClient, setMessage, onSuccess)
+    await commitOneByOne(
+      orderDocsDependenciesFirst(transactionDocs),
+      destinationClient,
+      setMessage,
+      onSuccess,
+    )
 
     return
   }
@@ -291,35 +363,47 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
 
   if (!missingDocs.length) {
     setMessage({tone: 'default', text: 'Retrying documents one by one...'})
-    await commitOneByOne(transactionDocs, destinationClient, setMessage, onSuccess)
+    await commitOneByOne(
+      orderDocsDependenciesFirst(transactionDocs),
+      destinationClient,
+      setMessage,
+      onSuccess,
+    )
 
     return
   }
 
   // Don't re-commit documents already in the failed transaction
   const existingIds = new Set(transactionDocs.map((doc) => doc._id))
-  const newMissingDocs = missingDocs.filter((doc) => !existingIds.has(doc._id))
+  // Reverse so transitive refs (appended last by getDocumentsInArray) are processed first
+  const newMissingDocs = [...missingDocs].reverse().filter((doc) => !existingIds.has(doc._id))
 
   setMessage({tone: 'default', text: `Duplicating ${newMissingDocs.length} missing document(s)...`})
 
-  const recoveredDocs: SanityDocument[] = []
   const svgMaps: {old: string; new: string}[] = []
 
+  // Process in order (preserving dependency-first ordering) rather than pushing
+  // from concurrent workers, whose completion order is nondeterministic
+  let recoveredDocs: SanityDocument[]
+
   try {
-    await mapWithConcurrency(newMissingDocs, 3, async (doc) => {
-      if (!isAssetDocument(doc)) {
-        recoveredDocs.push(doc)
+    const recoveredChunks = await Promise.all(
+      newMissingDocs.map(async (doc) => {
+        if (!isAssetDocument(doc)) {
+          return [doc]
+        }
 
-        return
-      }
+        const {docs, svgMap} = await uploadAssetForRecovery(doc, destinationClient, token)
 
-      const {docs, svgMap} = await uploadAssetForRecovery(doc, destinationClient, token)
-      recoveredDocs.push(...docs)
+        if (svgMap) {
+          svgMaps.push(svgMap)
+        }
 
-      if (svgMap) {
-        svgMaps.push(svgMap)
-      }
-    })
+        return docs
+      }),
+    )
+
+    recoveredDocs = recoveredChunks.flat()
   } catch (uploadErr) {
     setMessage({
       tone: 'critical',
@@ -332,31 +416,13 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
     return
   }
 
-  // Remap any SVG _ref's in the original transaction docs to new destination ids
-  const remappedTransactionDocs =
-    svgMaps.length === 0
-      ? transactionDocs
-      : transactionDocs.map((doc) => {
-          const references = extractWithPath(`.._ref`, doc)
-
-          if (!references.length) {
-            return doc
-          }
-
-          references.forEach((ref) => {
-            const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
-
-            if (newRefValue) {
-              dset(doc, ref.path.join('.'), newRefValue)
-            }
-          })
-
-          return doc
-        })
+  // Remap SVG _ref's in both recovered and original transaction docs
+  const remappedRecoveredDocs = remapSvgRefs(recoveredDocs, svgMaps)
+  const remappedTransactionDocs = remapSvgRefs(transactionDocs, svgMaps)
 
   // Put recovered (referenced) docs first so sequential commits land
   // dependencies before the documents that point at them
-  const allDocs = [...recoveredDocs, ...remappedTransactionDocs]
+  const allDocs = orderDocsDependenciesFirst([...remappedRecoveredDocs, ...remappedTransactionDocs])
 
   const retryTransaction = destinationClient.transaction()
   allDocs.forEach((doc) => retryTransaction.createOrReplace(doc))
