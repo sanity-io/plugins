@@ -101,6 +101,24 @@ describe('assets slice', () => {
     expect(state.byIds['img-1']!.updating).toBe(true)
   })
 
+  it('updateImageReferences clears a previous error on the targeted asset', () => {
+    let state = stateWithOneAsset()
+    state = assetsReducer(
+      state,
+      assetsActions.updateError({
+        asset: minimalImage,
+        error: {message: 'previous', statusCode: 500},
+      }),
+    )
+    expect(state.byIds['img-1']!.error).toBe('previous')
+    state = assetsReducer(
+      state,
+      assetsActions.updateImageReferences({asset: minimalImage, id: 'img-1'}),
+    )
+    expect(state.byIds['img-1']!.error).toBeUndefined()
+    expect(state.byIds['img-1']!.updating).toBe(true)
+  })
+
   it('updateImageReferencesComplete clears the updating flag', () => {
     let state = stateWithOneAsset()
     state = assetsReducer(

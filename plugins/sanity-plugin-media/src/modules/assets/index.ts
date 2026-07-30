@@ -9,6 +9,7 @@ import {
   bufferTime,
   catchError,
   debounceTime,
+  exhaustMap,
   filter,
   mergeMap,
   switchMap,
@@ -381,10 +382,12 @@ const assetsSlice = createSlice({
     updateImageReferences(state, action: PayloadAction<{asset: Asset; id: string}>) {
       const assetId = action.payload?.id
       state.byIds[assetId]!.updating = true
+      delete state.byIds[assetId]!.error
     },
     updateImageReferencesComplete(state, action: PayloadAction<{id: string}>) {
       const {id} = action.payload
       state.byIds[id]!.updating = false
+      delete state.byIds[id]!.error
     },
     updateRequest(
       state,
@@ -757,25 +760,31 @@ export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client
   action$.pipe(
     filter(assetsActions.updateImageReferences.match),
     withLatestFrom(state$),
-    mergeMap(([action, state]) => {
+    // Ignore concurrent replace actions (e.g. double-click) while one is in flight.
+    exhaustMap(([action, state]) => {
       const {asset, id} = action.payload
 
       return of(action).pipe(
         debugThrottle(state.debug.badConnection),
         mergeMap(() => client.observable.fetch<SanityDocument[]>(groq`*[references($id)]`, {id})),
-        mergeMap(async (documents) => {
-          for (const document of documents) {
+        mergeMap((documents) => {
+          // Patch every referencing document in one transaction so we never leave
+          // references split across old/new assets if a later commit would fail.
+          const transaction: Transaction = documents.reduce((tx, document) => {
             const clonedDocument = JSON.parse(JSON.stringify(document)) as Record<string, unknown>
             const assetsToReplace = findImageAssets(clonedDocument, asset, id)
             if (assetsToReplace.length === 0) {
-              continue
+              return tx
             }
-            // Merge all top-level field patches into one commit so we keep a
-            // single ifRevisionId check and avoid partial updates / round-trips.
             const patchSet = Object.assign({}, ...assetsToReplace) as AttributeSet
-            await client.patch(document._id).ifRevisionId(document._rev).set(patchSet).commit()
-          }
-          return assetsActions.updateImageReferencesComplete({id})
+            return tx.patch(document._id, (patch) =>
+              patch.ifRevisionId(document._rev).set(patchSet),
+            )
+          }, client.transaction())
+
+          return from(transaction.commit()).pipe(
+            mergeMap(() => of(assetsActions.updateImageReferencesComplete({id}))),
+          )
         }),
         catchError((error: ClientError) => {
           // The asset marked as `updating` is the original (being replaced), keyed

@@ -376,15 +376,20 @@ describe('CardAsset', () => {
     expect(store.getState().assets.byIds['img-1']!.updating).toBe(true)
   })
 
-  it('does not replace when the candidate is a file asset', async () => {
+  it('does not replace when the original asset is already updating', async () => {
     const user = userEvent.setup()
+    const replacement = {
+      ...imageAsset,
+      _id: 'img-2',
+      originalFilename: 'replacement.png',
+    } as ImageAsset
     const {store} = renderWithProviders(
-      <CardAsset id="file-1" selected={false} source="replace-asset" />,
+      <CardAsset id="img-2" selected={false} source="replace-asset" />,
       {
         preloaded: {
           assets: assetsState({
-            'img-1': assetItem(imageAsset, {picked: true}),
-            'file-1': assetItem(fileAsset),
+            'img-1': assetItem(imageAsset, {picked: true, updating: true}),
+            'img-2': assetItem(replacement),
           }),
           dialog: {
             items: [{id: 'dialogAllAssets', type: 'dialogAllAssets'}],
@@ -393,9 +398,8 @@ describe('CardAsset', () => {
       },
     )
 
-    await user.click(clickFooterFilename('doc.pdf'))
+    await user.click(clickPreview())
 
-    expect(store.getState().assets.byIds['img-1']!.updating).toBe(false)
     expect(store.getState().dialog.items).toHaveLength(1)
   })
 })

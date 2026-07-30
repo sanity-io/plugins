@@ -119,8 +119,9 @@ const CardAsset = (props: Props) => {
 
   // Prefer the single currently-picked asset over `lastPicked`, which is cleared
   // when unpicking even if another asset remains selected.
-  const assetToReplaceId =
-    source === 'replace-asset' && assetsPicked.length === 1 ? assetsPicked[0]?.asset._id : undefined
+  const assetToReplace =
+    source === 'replace-asset' && assetsPicked.length === 1 ? assetsPicked[0] : undefined
+  const assetToReplaceId = assetToReplace?.asset._id
 
   const {onSelect} = useAssetSourceActions()
 
@@ -130,7 +131,7 @@ const CardAsset = (props: Props) => {
   }
 
   const handleReplaceAsset = () => {
-    if (!assetToReplaceId || !isImageAsset(asset)) {
+    if (!assetToReplaceId || !isImageAsset(asset) || assetToReplace?.updating) {
       return
     }
 

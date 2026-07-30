@@ -4,7 +4,11 @@ import {of, throwError} from 'rxjs'
 import {describe, expect, it, vi} from 'vitest'
 
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
-import {createMockSanityClient, mockPatchChain} from '../../__tests__/fixtures/mockSanityClient'
+import {
+  createMockSanityClient,
+  mockPatchChain,
+  mockTransactionCommit,
+} from '../../__tests__/fixtures/mockSanityClient'
 import type {ImageAsset} from '../../types'
 import {
   assetsActions,
@@ -88,19 +92,19 @@ describe('assetsUpdateEpic', () => {
 })
 
 describe('assetsUpdateImageReferencesEpic', () => {
-  it('patches referencing documents and dispatches updateImageReferencesComplete', async () => {
+  it('patches referencing documents in a transaction and completes', async () => {
     const referencingDocument = {
       _id: 'doc-1',
       _rev: 'rev-1',
       _type: 'post',
       hero: {_type: 'image', asset: {_ref: 'a1', _type: 'reference'}},
     }
-    const chain = mockPatchChain({})
+    const tx = mockTransactionCommit({})
     const client = createMockSanityClient({
       observable: {
         fetch: vi.fn(() => of([referencingDocument])),
       },
-      patch: vi.fn(() => chain),
+      transaction: vi.fn(() => tx),
     })
 
     const replacementAsset = {...sampleAsset, _id: 'a2'}
@@ -121,17 +125,18 @@ describe('assetsUpdateImageReferencesEpic', () => {
 
     await vi.waitFor(() => {
       expect(client.observable.fetch).toHaveBeenCalled()
-      expect(client.patch).toHaveBeenCalledWith('doc-1')
-      expect(chain.ifRevisionId).toHaveBeenCalledWith('rev-1')
-      expect(chain.set).toHaveBeenCalledWith({
+      expect(client.transaction).toHaveBeenCalled()
+      expect(tx.patch).toHaveBeenCalledWith('doc-1', expect.any(Function))
+      expect(tx.patchChain.ifRevisionId).toHaveBeenCalledWith('rev-1')
+      expect(tx.patchChain.set).toHaveBeenCalledWith({
         hero: {_type: 'image', asset: {_ref: 'a2', _type: 'reference'}},
       })
-      expect(chain.commit).toHaveBeenCalled()
+      expect(tx.commit).toHaveBeenCalledTimes(1)
       expect(store.getState().assets.byIds['a1']!.updating).toBe(false)
     })
   })
 
-  it('merges multi-field patches into a single commit per document', async () => {
+  it('merges multi-field patches into a single transaction patch per document', async () => {
     const referencingDocument = {
       _id: 'doc-1',
       _rev: 'rev-1',
@@ -139,12 +144,12 @@ describe('assetsUpdateImageReferencesEpic', () => {
       hero: {_type: 'image', asset: {_ref: 'a1', _type: 'reference'}},
       thumb: {_type: 'image', asset: {_ref: 'a1', _type: 'reference'}},
     }
-    const chain = mockPatchChain({})
+    const tx = mockTransactionCommit({})
     const client = createMockSanityClient({
       observable: {
         fetch: vi.fn(() => of([referencingDocument])),
       },
-      patch: vi.fn(() => chain),
+      transaction: vi.fn(() => tx),
     })
 
     const replacementAsset = {...sampleAsset, _id: 'a2'}
@@ -163,13 +168,12 @@ describe('assetsUpdateImageReferencesEpic', () => {
     store.dispatch(assetsActions.updateImageReferences({asset: replacementAsset, id: 'a1'}))
 
     await vi.waitFor(() => {
-      expect(client.patch).toHaveBeenCalledTimes(1)
-      expect(chain.ifRevisionId).toHaveBeenCalledTimes(1)
-      expect(chain.set).toHaveBeenCalledWith({
+      expect(tx.patch).toHaveBeenCalledTimes(1)
+      expect(tx.patchChain.set).toHaveBeenCalledWith({
         hero: {_type: 'image', asset: {_ref: 'a2', _type: 'reference'}},
         thumb: {_type: 'image', asset: {_ref: 'a2', _type: 'reference'}},
       })
-      expect(chain.commit).toHaveBeenCalledTimes(1)
+      expect(tx.commit).toHaveBeenCalledTimes(1)
       expect(store.getState().assets.byIds['a1']!.updating).toBe(false)
     })
   })
