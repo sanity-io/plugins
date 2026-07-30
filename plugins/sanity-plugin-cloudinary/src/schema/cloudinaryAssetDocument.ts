@@ -6,6 +6,9 @@ export const cloudinaryAssetDocument = defineType({
   name: 'cloudinaryAssetDocument',
   title: 'Cloudinary Asset',
   type: 'document',
+  // Shared assets are patched in place by the reference input; liveEdit avoids
+  // desk drafts that could later publish over those updates.
+  liveEdit: true,
   fields: [
     {
       name: 'asset',
