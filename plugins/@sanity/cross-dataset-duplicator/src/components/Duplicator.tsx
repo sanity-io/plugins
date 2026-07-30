@@ -306,7 +306,8 @@ async function uploadAssetForRecovery(
   }
 }
 
-// Rewrite _ref values that point at remapped SVG asset ids
+// Rewrite _ref values that point at remapped SVG asset ids.
+// Clones each doc so caller-held / payload objects are not mutated.
 function remapSvgRefs(
   docs: SanityDocument[],
   svgMaps: {old: string; new: string}[],
@@ -315,12 +316,14 @@ function remapSvgRefs(
     return docs
   }
 
-  return docs.map((doc) => {
-    const references = extractWithPath(`.._ref`, doc)
+  return docs.map((original) => {
+    const references = extractWithPath(`.._ref`, original)
 
     if (!references.length) {
-      return doc
+      return original
     }
+
+    const doc = structuredClone(original)
 
     references.forEach((ref) => {
       const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
@@ -464,6 +467,19 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
   const newMissingDocs = [...missingDocs]
     .reverse()
     .filter((doc) => !existingIds.has(doc._id) && !excludedIds.has(doc._id))
+
+  // Nothing new to add — retrying the same transaction would just loop until the depth cap
+  if (!newMissingDocs.length) {
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(
+      orderDocsDependenciesFirst(transactionDocs),
+      destinationClient,
+      setMessage,
+      onSuccess,
+    )
+
+    return
+  }
 
   setMessage({tone: 'default', text: `Duplicating ${newMissingDocs.length} missing document(s)...`})
 
