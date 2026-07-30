@@ -97,24 +97,28 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       try {
         type ExistingAssetDoc = {_id: string; asset?: {id?: string}}
 
-        // Prefer Cloudinary asset `id` when the Media Library provides it; otherwise
-        // fall back to public_id + resource_type + type so we never query with a
-        // missing id (which can match unrelated documents).
-        const existingAsset = asset.id
-          ? await publishedClient.fetch<ExistingAssetDoc | null>(
-              `*[_type == "cloudinaryAssetDocument" && asset.id == $id][0]{_id, asset}`,
-              {id: asset.id},
-            )
-          : asset.public_id
-            ? await publishedClient.fetch<ExistingAssetDoc | null>(
-                `*[_type == "cloudinaryAssetDocument" && asset.public_id == $publicId && asset.resource_type == $resourceType && asset.type == $type][0]{_id, asset}`,
-                {
-                  publicId: asset.public_id,
-                  resourceType: asset.resource_type,
-                  type: asset.type,
-                },
-              )
-            : null
+        // Prefer Cloudinary asset `id` when present; if that misses (or id is
+        // absent), fall back to public_id + resource_type + type so we still
+        // reuse an existing shared document.
+        let existingAsset: ExistingAssetDoc | null = null
+
+        if (asset.id) {
+          existingAsset = await publishedClient.fetch<ExistingAssetDoc | null>(
+            `*[_type == "cloudinaryAssetDocument" && asset.id == $id][0]{_id, asset}`,
+            {id: asset.id},
+          )
+        }
+
+        if (!existingAsset && asset.public_id) {
+          existingAsset = await publishedClient.fetch<ExistingAssetDoc | null>(
+            `*[_type == "cloudinaryAssetDocument" && asset.public_id == $publicId && asset.resource_type == $resourceType && asset.type == $type][0]{_id, asset}`,
+            {
+              publicId: asset.public_id,
+              resourceType: asset.resource_type,
+              type: asset.type,
+            },
+          )
+        }
 
         if (existingAsset) {
           const publishedId = getPublishedId(existingAsset._id)
