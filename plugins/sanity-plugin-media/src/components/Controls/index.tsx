@@ -75,7 +75,7 @@ const Controls = () => {
             </Box>
 
             <Box display={['block', 'block', 'none']} marginX={2}>
-              <Inline space={2} style={{whiteSpace: 'nowrap'}}>
+              <Inline gap={2} style={{whiteSpace: 'nowrap'}}>
                 {/* Filters button (small) */}
                 <Button
                   fontSize={1}

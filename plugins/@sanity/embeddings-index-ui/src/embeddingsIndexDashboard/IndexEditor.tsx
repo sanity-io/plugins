@@ -34,7 +34,7 @@ export function EditIndexDialog(props: {
 
   return open ? (
     <Dialog id={id} width={1} ref={ref} onClose={onClose} header="Create embeddings index">
-      <Stack padding={4} space={5}>
+      <Stack padding={4} gap={5}>
         <IndexEditor readOnly={false} onSubmit={handleSubmit} />
       </Stack>
     </Dialog>
@@ -122,7 +122,7 @@ export function IndexEditor(props: {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack space={4}>
+      <Stack gap={4}>
         {errors?.length ? (
           <Card tone="critical" border padding={2}>
             <Text>

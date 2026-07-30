@@ -80,7 +80,7 @@ const SearchFacetTags = ({facet}: Props) => {
                       key={operatorType}
                       onClick={() => handleOperatorItemClick(operatorType)}
                       padding={2}
-                      space={4}
+                      gap={4}
                       style={{minWidth: '150px'}}
                       text={operators[operatorType].label}
                     />

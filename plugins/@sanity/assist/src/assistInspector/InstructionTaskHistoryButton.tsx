@@ -12,7 +12,7 @@ import {
   Spinner,
   Stack,
   Text,
-  useClickOutside,
+  useClickOutsideEvent,
   useGlobalKeyDown,
   useLayer,
 } from '@sanity/ui'
@@ -138,8 +138,7 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
     setOpen(false)
   }, [])
 
-  // oxlint-disable-next-line no-deprecated
-  useClickOutside(handleClickOutside, [button, popover])
+  useClickOutsideEvent(handleClickOutside, () => [button, popover])
 
   const handleEscape = useCallback(() => {
     setOpen(false)

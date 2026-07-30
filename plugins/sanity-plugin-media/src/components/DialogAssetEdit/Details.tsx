@@ -50,7 +50,7 @@ export default function Details({
   const hasLocales = locales && locales.length > 0
   const [activeLocaleTab, setActiveLocaleTab] = useState(0)
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {/* Tags */}
       <FormFieldInputTags
         control={control}
@@ -75,8 +75,8 @@ export default function Details({
       {/* Localized fields grouped by language */}
       {hasLocales ? (
         <Card marginTop={2} shadow={1} padding={3} radius={1}>
-          <Stack space={2}>
-            <TabList space={2}>
+          <Stack gap={2}>
+            <TabList gap={2}>
               {locales.map((locale, idx) => (
                 <Tab
                   key={locale.id}
@@ -95,7 +95,7 @@ export default function Details({
                 aria-labelledby={`locale-tab-${locale.id}`}
                 hidden={activeLocaleTab !== idx}
               >
-                <Stack space={3}>
+                <Stack gap={3}>
                   <FormFieldInputText
                     {...register(`title.${locale.id}` as const)}
                     disabled={formUpdating}

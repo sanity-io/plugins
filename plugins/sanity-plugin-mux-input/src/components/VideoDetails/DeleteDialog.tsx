@@ -79,7 +79,7 @@ export default function DeleteDialog({
           justifyContent: 'center',
         }}
       >
-        <Stack space={3}>
+        <Stack gap={3}>
           {state === 'checkingReferences' && (
             <>
               <Heading size={2}>Checking if video can be deleted</Heading>
@@ -101,7 +101,7 @@ export default function DeleteDialog({
             <>
               <Heading size={2}>Are you sure you want to delete this video?</Heading>
               <Text size={2}>This action is irreversible</Text>
-              <Stack space={4} marginY={4}>
+              <Stack gap={4} marginY={4}>
                 <Flex align="center" as="label">
                   <Checkbox
                     checked={deleteOnMux}

@@ -50,7 +50,7 @@ function OptionCard({
             name="sync-option"
           />
         </Box>
-        <Stack space={2} flex={1}>
+        <Stack gap={2} flex={1}>
           <Flex align="center" gap={2}>
             <Text size={2} weight="semibold">
               {title} ({count})
@@ -142,7 +142,7 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
           <Card tone="primary" marginBottom={4} padding={3} border radius={2}>
             <Flex align="center" gap={4}>
               <Spinner muted size={4} />
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text size={2} weight="semibold">
                   Loading assets from Mux
                 </Text>
@@ -159,7 +159,7 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
           <Card tone="critical" marginBottom={4} padding={3} border radius={2}>
             <Flex align="center" gap={2}>
               <ErrorOutlineIcon fontSize={36} />
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text size={2} weight="semibold">
                   There was an error getting data from Mux
                 </Text>
@@ -174,7 +174,7 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
           <Card tone="primary" marginBottom={4} padding={3} border radius={2}>
             <Flex align="center" gap={4}>
               <Spinner muted size={4} />
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text size={2} weight="semibold">
                   Syncing metadata
                 </Text>
@@ -191,7 +191,7 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
           <Card tone="critical" marginBottom={4} padding={3} border radius={2}>
             <Flex align="center" gap={2}>
               <ErrorOutlineIcon fontSize={36} />
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text size={2} weight="semibold">
                   There was an error syncing metadata
                 </Text>
@@ -207,7 +207,7 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
 
         {/* SUCCESS STATE */}
         {resyncState === 'done' && (
-          <Stack paddingY={5} space={3} style={{textAlign: 'center'}}>
+          <Stack paddingY={5} gap={3} style={{textAlign: 'center'}}>
             <Box>
               <CheckmarkCircleIcon fontSize={48} />
             </Box>
@@ -220,12 +220,12 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
 
         {/* OPTIONS */}
         {!isDone && !isLoading && !props.muxAssets.error && (
-          <Stack space={4}>
+          <Stack gap={4}>
             <Text size={1} muted>
               Found {videosToUpdate} video{videosToUpdate === 1 ? '' : 's'} linked to Mux.
             </Text>
 
-            <Stack space={3}>
+            <Stack gap={3}>
               {hasEmptyTitles && (
                 <OptionCard
                   id="fillEmpty"

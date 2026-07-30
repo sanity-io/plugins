@@ -22,7 +22,7 @@ const FormFieldInputLabel = (props: Props) => {
     <>
       {/* Label */}
       <Box marginY={3}>
-        <Inline space={2}>
+        <Inline gap={2}>
           <Text as="label" htmlFor={name} size={1} weight="semibold">
             {label}
           </Text>

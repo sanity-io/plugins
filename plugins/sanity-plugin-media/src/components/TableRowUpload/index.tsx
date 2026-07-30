@@ -148,7 +148,7 @@ const TableRowUpload = (props: Props) => {
           marginLeft: mediaIndex < 3 ? 3 : 0,
         }}
       >
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text muted size={1} textOverflow="ellipsis">
             {item.name} ({fileSize})
           </Text>

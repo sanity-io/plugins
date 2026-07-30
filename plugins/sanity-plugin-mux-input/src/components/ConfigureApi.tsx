@@ -136,10 +136,10 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
     >
       <Box padding={3}>
         <form onSubmit={handleSubmit} noValidate>
-          <Stack space={4}>
+          <Stack gap={4}>
             {!hasSecretsInitially && (
               <Card padding={[3, 3, 3]} radius={2} shadow={1} tone="primary">
-                <Stack space={3}>
+                <Stack gap={3}>
                   <Text size={1}>
                     To set up a new access token, go to your{' '}
                     <a
@@ -183,7 +183,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
               />
             </FormField>
 
-            <Stack space={4}>
+            <Stack gap={4}>
               <Flex align="center">
                 <Checkbox
                   id={enableSignedUrlsId}
@@ -199,7 +199,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
               </Flex>
               {secrets.signingKeyId && state.enableSignedUrls ? (
                 <Card padding={[3, 3, 3]} radius={2} shadow={1} tone="caution">
-                  <Stack space={3}>
+                  <Stack gap={3}>
                     <Text size={1}>The signing key ID that Sanity will use is:</Text>
                     <Code size={1}>{secrets.signingKeyId}</Code>
                     <Text size={1}>
@@ -222,7 +222,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
               />
             </FormField>
             <Card padding={[3, 3, 3]} radius={2} shadow={1} tone="neutral">
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Text size={1}>
                   DRM (Digital Rights Management) provides an extra layer of content security for
                   video content streamed from Mux. For additional information check out our{' '}
@@ -248,7 +248,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
               </Stack>
             </Card>
 
-            <Inline space={2}>
+            <Inline gap={2}>
               <Button
                 text="Save"
                 disabled={!dirty}

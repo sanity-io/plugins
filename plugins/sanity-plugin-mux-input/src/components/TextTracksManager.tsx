@@ -155,7 +155,7 @@ function TrackCard({
       border
     >
       <Flex align="center" justify="space-between" gap={3}>
-        <Stack space={2} flex={1}>
+        <Stack gap={2} flex={1}>
           <Flex align="center" gap={2}>
             <Text weight="semibold">{track.name || 'Untitled'}</Text>
             <Text size={1} muted>
@@ -590,7 +590,7 @@ export default function TextTracksManager({
 
   if (visibleTracks.length === 0 && !showAddDialog) {
     return (
-      <Stack space={3}>
+      <Stack gap={3}>
         <Flex justify="flex-end">
           <Button
             icon={AddIcon}
@@ -620,7 +620,7 @@ export default function TextTracksManager({
   const hasMoreTracks = collapseTracks && visibleTracks.length > MAX_VISIBLE_TRACKS
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       <Flex justify="flex-end">
         <Button
           icon={AddIcon}
@@ -677,13 +677,13 @@ export default function TextTracksManager({
               justifyContent: 'center',
             }}
           >
-            <Stack space={3}>
+            <Stack gap={3}>
               <Heading size={2}>
                 Are you sure you want to delete &quot;
                 {trackToDelete.name || trackToDelete.language_code || 'Untitled'}&quot;?
               </Heading>
               <Text size={2}>This action is irreversible</Text>
-              <Stack space={4} marginY={4}>
+              <Stack gap={4} marginY={4}>
                 <Box>
                   <Button
                     icon={

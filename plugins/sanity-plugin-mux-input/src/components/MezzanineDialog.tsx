@@ -38,7 +38,7 @@ export default function MezzanineDialog({asset, onClose}: Props) {
       width={1}
     >
       <Box padding={4}>
-        <Stack space={4}>
+        <Stack gap={4}>
           {showExplanation && <MezzanineExplanation />}
           <Mezzanine asset={asset} withExplanation={false} />
         </Stack>

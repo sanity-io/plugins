@@ -190,7 +190,7 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
           }
         >
           <Card padding={5}>
-            <Stack style={{textAlign: 'center'}} space={3}>
+            <Stack style={{textAlign: 'center'}} gap={3}>
               <Heading size={2}>Unsaved changes will be lost</Heading>
               <Text size={2}>Are you sure you want to discard them?</Text>
             </Stack>
@@ -218,7 +218,7 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
               : undefined
           }
         >
-          <Stack space={4} flex={1} sizing="border">
+          <Stack gap={4} flex={1} sizing="border">
             <VideoPlayer asset={props.asset} autoPlay={props.asset.autoPlay || false} />
             {tab === 'details' && (
               <>
@@ -238,8 +238,8 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
               </>
             )}
           </Stack>
-          <Stack space={4} flex={1} sizing="border">
-            <TabList space={2}>
+          <Stack gap={4} flex={1} sizing="border">
+            <TabList gap={2}>
               <Tab
                 aria-controls="details-panel"
                 icon={EditIcon}
@@ -263,7 +263,7 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
               hidden={tab !== 'details'}
               style={{wordBreak: 'break-word'}}
             >
-              <Stack space={4}>
+              <Stack gap={4}>
                 <AssetInput
                   label="Video title or file name"
                   description="Not visible to users. Useful for finding videos later."
@@ -271,7 +271,7 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
                   onInput={(e) => setFilename(e.currentTarget.value)}
                   disabled={state !== 'idle'}
                 />
-                <Stack space={3}>
+                <Stack gap={3}>
                   {displayInfo?.duration && (
                     <IconInfo
                       text={`Duration: ${displayInfo.duration}`}

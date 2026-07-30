@@ -124,7 +124,7 @@ function Indexes() {
     [updateIndexes],
   )
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       <Flex gap={2} align="center" style={{height: 30}}>
         <Box flex={1}>
           <Heading size={1}>Embeddings indexes</Heading>
