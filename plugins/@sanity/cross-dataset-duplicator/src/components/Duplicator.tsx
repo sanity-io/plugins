@@ -228,6 +228,13 @@ async function uploadAssetForRecovery(
   const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
 
   const res = await fetch(downloadUrl, downloadConfig)
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to download asset "${doc._id}" from origin (${res.status} ${res.statusText})`,
+    )
+  }
+
   const assetData = await res.blob()
   const assetDoc = await destinationClient.assets.upload(typeIsFile ? `file` : `image`, assetData, {
     filename: doc.originalFilename,
