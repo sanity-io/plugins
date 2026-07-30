@@ -13,6 +13,16 @@ export const clearChildrenGroups = (props: ObjectFieldProps): ObjectFieldProps =
     return props
   }
 
+  const innerChild = children.props.children
+  if (
+    !innerChild ||
+    typeof innerChild !== 'object' ||
+    Array.isArray(innerChild) ||
+    !('props' in innerChild)
+  ) {
+    return props
+  }
+
   return {
     ...props,
     children: {
@@ -20,9 +30,9 @@ export const clearChildrenGroups = (props: ObjectFieldProps): ObjectFieldProps =
       props: {
         ...children.props,
         children: {
-          ...children.props.children,
+          ...innerChild,
           props: {
-            ...children.props.children?.props,
+            ...innerChild.props,
             groups: [],
           },
         },

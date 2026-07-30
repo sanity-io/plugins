@@ -144,9 +144,15 @@ const createExperimentType = ({
         experiment: experimentId,
       },
       prepare: ({base, experiment}) => {
-        const title = base?.title || base?.name || typeof base === 'string' ? base : ''
+        const title =
+          typeof base === 'string'
+            ? base
+            : base && typeof base === 'object'
+              ? base.title || base.name || ''
+              : ''
         const experimentTitle = experiment ? `Experiment: ${experiment}` : ''
-        const media = base?.image || base?.photo || base?.media || ''
+        const media =
+          base && typeof base === 'object' ? base.image || base.photo || base.media || '' : ''
         return {
           title: title || experimentTitle,
           subtitle: title ? experimentTitle : '',

@@ -117,10 +117,16 @@ const createPersonalizationType = ({
         base: 'default',
       },
       prepare: ({base}) => {
-        const title = base?.title || base?.name || typeof base === 'string' ? base : ''
-        const media = base?.image || base?.photo || base?.media || ''
+        const title =
+          typeof base === 'string'
+            ? base
+            : base && typeof base === 'object'
+              ? base.title || base.name || ''
+              : ''
+        const media =
+          base && typeof base === 'object' ? base.image || base.photo || base.media || '' : ''
         return {
-          title: title,
+          title,
           media,
         }
       },

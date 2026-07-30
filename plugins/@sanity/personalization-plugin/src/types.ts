@@ -28,6 +28,9 @@ export type ExperimentFieldPluginConfig = {
   experimentId?: string
 }
 
+/** @deprecated Use {@link ExperimentFieldPluginConfig} instead. */
+export type FieldPluginConfig = ExperimentFieldPluginConfig
+
 export type PersonalizationFieldPluginConfig = {
   fields: (string | FieldDefinition)[]
   segments: VariantType[] | ((client: SanityClient) => Promise<VariantType[]>)

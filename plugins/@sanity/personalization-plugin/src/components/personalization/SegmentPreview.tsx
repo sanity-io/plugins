@@ -15,8 +15,8 @@ export const SegmentPreview = (props: PreviewProps) => {
   const [subtitle, setSubtitle] = useState<string | undefined>(undefined)
   const [title, setTitle] = useState<string | undefined>(undefined)
   const [media, setMedia] = useState<any>(undefined)
-  const client = useClient({apiVersion: '2025-01-01'})
-  const {segments} = usePersonalizationContext()
+  const {segments, apiVersion} = usePersonalizationContext()
+  const client = useClient({apiVersion})
 
   const {segment, value} = props as VariantPreviewProps
 
@@ -26,7 +26,7 @@ export const SegmentPreview = (props: PreviewProps) => {
 
   useEffect(() => {
     const getSubtitle = async () => {
-      setTitle(`${selectedSegment?.label}`)
+      setTitle(selectedSegment?.label)
       if (typeof value === 'string') {
         return setSubtitle(value)
       }
@@ -43,7 +43,9 @@ export const SegmentPreview = (props: PreviewProps) => {
           const valueKey = referenceType?.preview?.select?.[key]
           selectFields[key] =
             valueKey && doc
-              ? valueKey?.split('.').reduce((acc, index) => acc[index], doc)
+              ? valueKey.split('.').reduce((acc: any, index) => {
+                  return acc == null ? undefined : acc[index]
+                }, doc)
               : undefined
         })
 
