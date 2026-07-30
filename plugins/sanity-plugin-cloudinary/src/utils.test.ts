@@ -7,6 +7,7 @@ describe('assetUrl', () => {
     const url = assetUrl(
       {
         public_id: 'folder/sample',
+        resource_type: 'image',
         secure_url: 'https://res.cloudinary.com/demo/image/upload/v1/folder/sample.jpg',
       },
       'demo',
@@ -18,9 +19,40 @@ describe('assetUrl', () => {
     expect(url).toContain('folder/sample')
   })
 
+  test('keeps the original video URL when cloudName is provided', () => {
+    const url = assetUrl(
+      {
+        public_id: 'folder/clip',
+        resource_type: 'video',
+        secure_url: 'https://res.cloudinary.com/demo/video/upload/v1/folder/clip.mp4',
+        url: 'http://res.cloudinary.com/demo/video/upload/v1/folder/clip.mp4',
+      },
+      'demo',
+    )
+
+    expect(url).toBe('https://res.cloudinary.com/demo/video/upload/v1/folder/clip.mp4')
+    expect(url).not.toContain('/image/upload')
+    expect(url).not.toContain('c_scale')
+  })
+
+  test('keeps the original raw URL when cloudName is provided', () => {
+    const url = assetUrl(
+      {
+        public_id: 'folder/doc',
+        resource_type: 'raw',
+        secure_url: 'https://res.cloudinary.com/demo/raw/upload/v1/folder/doc.pdf',
+      },
+      'demo',
+    )
+
+    expect(url).toBe('https://res.cloudinary.com/demo/raw/upload/v1/folder/doc.pdf')
+    expect(url).not.toContain('c_scale')
+  })
+
   test('falls back to the stored secure_url when no cloudName is provided', () => {
     const url = assetUrl({
       public_id: 'folder/sample',
+      resource_type: 'image',
       secure_url: 'https://res.cloudinary.com/demo/image/upload/v1/folder/sample.jpg',
       url: 'http://res.cloudinary.com/demo/image/upload/v1/folder/sample.jpg',
     })
@@ -30,7 +62,10 @@ describe('assetUrl', () => {
 
   test('does not use url-gen when cloudName is provided but public_id is missing', () => {
     const url = assetUrl(
-      {secure_url: 'https://res.cloudinary.com/demo/image/upload/v1/folder/sample.jpg'},
+      {
+        resource_type: 'image',
+        secure_url: 'https://res.cloudinary.com/demo/image/upload/v1/folder/sample.jpg',
+      },
       'demo',
     )
 
@@ -46,6 +81,7 @@ describe('assetUrl', () => {
 
   test('prefers a derived secure_url over the base asset url', () => {
     const url = assetUrl({
+      resource_type: 'video',
       secure_url: 'https://res.cloudinary.com/demo/image/upload/v1/base.jpg',
       derived: [
         {

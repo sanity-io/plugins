@@ -11,13 +11,25 @@ import type {
 const widgetSrc = 'https://media-library.cloudinary.com/global/all.js'
 
 export function assetUrl(
-  asset: Partial<Pick<CloudinaryAsset, 'url' | 'secure_url' | 'derived' | 'public_id' | 'format'>>,
+  asset: Partial<
+    Pick<
+      CloudinaryAsset,
+      'url' | 'secure_url' | 'derived' | 'public_id' | 'format' | 'resource_type'
+    >
+  >,
   cloudName?: string,
 ): string | undefined {
   // When the cloud name and public id are known, build an on-the-fly preview
   // with url-gen instead of serving the full-size original. Scaling to a 400px
   // width keeps previews crisp while avoiding multi-megabyte source downloads.
-  if (cloudName && asset.public_id) {
+  // Only images use CloudinaryImage — video/raw would get an /image/upload URL
+  // that breaks VideoPlayer and raw-file previews.
+  if (
+    cloudName &&
+    asset.public_id &&
+    asset.resource_type !== 'video' &&
+    asset.resource_type !== 'raw'
+  ) {
     return new CloudinaryImage(asset.public_id, new CloudConfig({cloudName}))
       .resize(scale().width(400))
       .toURL()
