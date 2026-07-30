@@ -85,6 +85,9 @@ describe('ReplaceAssetsOverview', () => {
           },
           {lastPicked: undefined},
         ),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
         uploads: {
           allIds: ['upload-1'],
           byIds: {},
@@ -98,7 +101,7 @@ describe('ReplaceAssetsOverview', () => {
     expect(screen.queryByTestId('replace-item-upload-1')).toBeNull()
   })
 
-  it('excludes the picked asset even when lastPicked is stale/cleared', () => {
+  it('excludes the dialog target even when lastPicked is stale/cleared', () => {
     renderWithProviders(<ReplaceAssetsOverview />, {
       preloaded: {
         assets: assetsState(
@@ -108,6 +111,9 @@ describe('ReplaceAssetsOverview', () => {
           },
           {lastPicked: undefined},
         ),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
       },
     })
 
@@ -122,10 +128,30 @@ describe('ReplaceAssetsOverview', () => {
           'img-1': assetItem(imageAsset, {picked: true}),
           'file-1': assetItem(fileAsset),
         }),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
       },
     })
 
     expect(screen.getByText('There are no replacement images')).toBeTruthy()
     expect(screen.queryByTestId('replace-grid')).toBeNull()
+  })
+
+  it('excludes the replace target from dialog assetId even when picks were cleared', () => {
+    renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        assets: assetsState({
+          'img-1': assetItem(imageAsset, {picked: false}),
+          'img-2': assetItem(replacementImage),
+        }),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+      },
+    })
+
+    expect(screen.queryByTestId('replace-item-img-1')).toBeNull()
+    expect(screen.getByTestId('replace-item-img-2')).toBeTruthy()
   })
 })

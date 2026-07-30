@@ -340,7 +340,7 @@ describe('CardAsset', () => {
             {lastPicked: undefined},
           ),
           dialog: {
-            items: [{id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+            items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
           },
         },
       },
@@ -392,7 +392,7 @@ describe('CardAsset', () => {
             'img-2': assetItem(replacement),
           }),
           dialog: {
-            items: [{id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+            items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
           },
         },
       },

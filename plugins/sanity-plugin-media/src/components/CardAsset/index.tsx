@@ -110,6 +110,14 @@ const CardAsset = (props: Props) => {
   const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
   const assetsPicked = useTypedSelector(selectAssetsPicked)
   const item = useTypedSelector((state) => selectAssetById(state, id))
+  // Dialog carries the replace target so search refetch (which clears allIds/picks) is safe.
+  const dialogReplaceAssetId = useTypedSelector((state) => {
+    if (source !== 'replace-asset') {
+      return undefined
+    }
+    const dialog = state.dialog.items.find((d) => d.type === 'dialogAllAssets')
+    return dialog?.type === 'dialogAllAssets' ? dialog.assetId : undefined
+  })
 
   const asset = item?.asset
   const error = item?.error
@@ -117,11 +125,16 @@ const CardAsset = (props: Props) => {
   const picked = item?.picked
   const updating = item?.updating
 
-  // Prefer the single currently-picked asset over `lastPicked`, which is cleared
-  // when unpicking even if another asset remains selected.
-  const assetToReplace =
-    source === 'replace-asset' && assetsPicked.length === 1 ? assetsPicked[0] : undefined
-  const assetToReplaceId = assetToReplace?.asset._id
+  // Prefer dialog assetId; fall back to the single currently-picked asset (not lastPicked).
+  const assetToReplaceId =
+    dialogReplaceAssetId ??
+    (source === 'replace-asset' && assetsPicked.length === 1
+      ? assetsPicked[0]?.asset._id
+      : undefined)
+
+  const assetToReplace = useTypedSelector((state) =>
+    assetToReplaceId ? selectAssetById(state, assetToReplaceId) : undefined,
+  )
 
   const {onSelect} = useAssetSourceActions()
 

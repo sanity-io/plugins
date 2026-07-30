@@ -196,11 +196,14 @@ const assetsSlice = createSlice({
           if (!state.allIds.includes(asset._id)) {
             state.allIds.push(asset._id)
           }
+          const existing = state.byIds[asset._id]
+          // Preserve pick/updating across search refreshes (e.g. replace dialog clearing filters)
           state.byIds[asset._id] = {
             _type: 'asset',
             asset: asset,
-            picked: false,
-            updating: false,
+            picked: existing?.picked ?? false,
+            updating: existing?.updating ?? false,
+            ...(existing?.error ? {error: existing.error} : {}),
           }
         })
       }
@@ -327,8 +330,12 @@ const assetsSlice = createSlice({
     },
     pick(state, action: PayloadAction<{assetId: string; picked: boolean}>) {
       const {assetId, picked} = action.payload
+      const item = state.byIds[assetId]
+      if (!item) {
+        return
+      }
 
-      state.byIds[assetId]!.picked = picked
+      item.picked = picked
       state.lastPicked = picked ? assetId : undefined
     },
     pickAll(state) {

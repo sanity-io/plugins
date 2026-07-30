@@ -80,14 +80,21 @@ describe('dialog slice reducers', () => {
   })
 
   it('showAllAssetsDialog appends the replace-asset overview dialog', () => {
-    const state = dialogReducer(dialogState(), dialogActions.showAllAssetsDialog())
-    expect(state.items).toEqual([{id: 'dialogAllAssets', type: 'dialogAllAssets'}])
+    const state = dialogReducer(
+      dialogState(),
+      dialogActions.showAllAssetsDialog({assetId: 'img-1'}),
+    )
+    expect(state.items).toEqual([
+      {assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'},
+    ])
   })
 
   it('showAllAssetsDialog is a no-op when the dialog is already open', () => {
-    let state = dialogReducer(dialogState(), dialogActions.showAllAssetsDialog())
-    state = dialogReducer(state, dialogActions.showAllAssetsDialog())
-    expect(state.items).toEqual([{id: 'dialogAllAssets', type: 'dialogAllAssets'}])
+    let state = dialogReducer(dialogState(), dialogActions.showAllAssetsDialog({assetId: 'img-1'}))
+    state = dialogReducer(state, dialogActions.showAllAssetsDialog({assetId: 'img-2'}))
+    expect(state.items).toEqual([
+      {assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'},
+    ])
   })
 
   it('inlineTagCreate sets lastCreatedTag on matching assetEdit items', () => {

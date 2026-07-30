@@ -1,23 +1,75 @@
 import {Box, Text} from '@sanity/ui'
-import {useDispatch} from 'react-redux'
+import {useEffect, useRef} from 'react'
+import {useDispatch, useStore} from 'react-redux'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions, selectAssetsPicked} from '../../modules/assets'
+import {assetsActions} from '../../modules/assets'
+import {searchActions} from '../../modules/search'
 import {selectCombinedItems} from '../../modules/selectors'
+import type {RootReducerState} from '../../modules/types'
+import type {SearchFacetInputProps, WithId} from '../../types'
 import {isImageAsset} from '../../utils/typeGuards'
 import AssetGridVirtualized from '../AssetGridVirtualized'
 
+function omitFacetId(facet: WithId<SearchFacetInputProps>): SearchFacetInputProps {
+  // Strip the runtime `id` so facetsAdd can assign a fresh one on restore.
+  const {id: _id, ...withoutId} = facet
+  void _id
+  return withoutId
+}
+
 const ReplaceAssetsOverview = () => {
   const dispatch = useDispatch()
+  const store = useStore<RootReducerState>()
   const combinedItems = useTypedSelector(selectCombinedItems)
   const assetsById = useTypedSelector((state) => state.assets.byIds)
-  const assetsPicked = useTypedSelector(selectAssetsPicked)
   const fetchCount = useTypedSelector((state) => state.assets.fetchCount)
   const fetching = useTypedSelector((state) => state.assets.fetching)
+  const pageSize = useTypedSelector((state) => state.assets.pageSize)
+  const searchQuery = useTypedSelector((state) => state.search.query)
+  const searchFacets = useTypedSelector((state) => state.search.facets)
 
-  // Prefer the currently picked asset over `lastPicked`, which is cleared when
-  // unpicking even if another asset remains selected.
-  const assetToReplaceId = assetsPicked.length === 1 ? assetsPicked[0]?.asset._id : undefined
+  // Prefer the dialog's assetId — search refetch clears `allIds` / can drop picks.
+  const assetToReplaceId = useTypedSelector((state) => {
+    const dialog = state.dialog.items.find((item) => item.type === 'dialogAllAssets')
+    return dialog?.type === 'dialogAllAssets' ? dialog.assetId : undefined
+  })
+
+  const savedSearchRef = useRef<{
+    query: string
+    facets: WithId<SearchFacetInputProps>[]
+  } | null>(null)
+
+  // Clear browser search/facets so the picker is not limited to the filtered result set
+  // the user used to find the asset. Restore them when the dialog closes.
+  useEffect(() => {
+    const {query, facets} = store.getState().search
+    savedSearchRef.current = {query, facets}
+
+    if (query.length > 0) {
+      dispatch(searchActions.querySet({searchQuery: ''}))
+    }
+    if (facets.length > 0) {
+      dispatch(searchActions.facetsClear())
+    }
+
+    return () => {
+      const saved = savedSearchRef.current
+      if (!saved) {
+        return
+      }
+      if (saved.query.length > 0) {
+        dispatch(searchActions.querySet({searchQuery: saved.query}))
+      }
+      if (saved.facets.length > 0) {
+        for (const facet of saved.facets) {
+          dispatch(searchActions.facetsAdd({facet: omitFacetId(facet)}))
+        }
+      }
+    }
+  }, [dispatch, store])
+
+  const filtersActive = searchQuery.length > 0 || searchFacets.length > 0
 
   // Only image assets can replace image refs; exclude uploads and the asset being replaced.
   const reducedItems = combinedItems.filter((item) => {
@@ -29,7 +81,18 @@ const ReplaceAssetsOverview = () => {
   })
 
   const hasFetchedOnce = fetchCount >= 0
-  const isEmpty = reducedItems.length === 0 && hasFetchedOnce && !fetching
+  const hasMorePages = fetchCount === pageSize
+  // Don't treat a filtered / mid-fetch / incomplete page as "no replacements".
+  const isEmpty =
+    reducedItems.length === 0 && hasFetchedOnce && !fetching && !filtersActive && !hasMorePages
+
+  // Keep loading pages until we find image candidates or exhaust results.
+  useEffect(() => {
+    if (filtersActive || fetching || reducedItems.length > 0 || !hasFetchedOnce || !hasMorePages) {
+      return
+    }
+    dispatch(assetsActions.loadNextPage())
+  }, [dispatch, filtersActive, fetching, reducedItems.length, hasFetchedOnce, hasMorePages])
 
   const handleLoadMoreItems = () => {
     if (!fetching) {

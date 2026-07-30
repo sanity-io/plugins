@@ -31,7 +31,11 @@ const PickedBar = () => {
   }
 
   const handleReplaceImages = () => {
-    dispatch(dialogActions.showAllAssetsDialog())
+    const assetId = assetsPicked[0]?.asset._id
+    if (!assetId) {
+      return
+    }
+    dispatch(dialogActions.showAllAssetsDialog({assetId}))
   }
 
   if (assetsPicked.length === 0) {

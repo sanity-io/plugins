@@ -86,6 +86,9 @@ describe('PickedBar', () => {
     expect(screen.getByText('Replace')).toBeTruthy()
     await user.click(screen.getByText('Replace'))
     expect(store.getState().dialog.items.some((d) => d.type === 'dialogAllAssets')).toBe(true)
+    expect(store.getState().dialog.items.find((d) => d.type === 'dialogAllAssets')).toMatchObject({
+      assetId: 'img-1',
+    })
   })
 
   it('hides Replace when the only picked asset is a file', () => {
