@@ -91,11 +91,24 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
 
       setIsLoading(true)
       try {
-        // Check if this asset already exists in Sanity
-        const existingAsset = await client.fetch<{_id: string} | null>(
-          `*[_type == "cloudinaryAssetDocument" && asset.id == $id][0]`,
-          {id: asset.id},
-        )
+        // Prefer Cloudinary asset `id` when the Media Library provides it; otherwise
+        // fall back to public_id + resource_type + type so we never query with a
+        // missing id (which can match unrelated documents).
+        const existingAsset = asset.id
+          ? await client.fetch<{_id: string} | null>(
+              `*[_type == "cloudinaryAssetDocument" && asset.id == $id][0]`,
+              {id: asset.id},
+            )
+          : asset.public_id
+            ? await client.fetch<{_id: string} | null>(
+                `*[_type == "cloudinaryAssetDocument" && asset.public_id == $publicId && asset.resource_type == $resourceType && asset.type == $type][0]`,
+                {
+                  publicId: asset.public_id,
+                  resourceType: asset.resource_type,
+                  type: asset.type,
+                },
+              )
+            : null
 
         if (existingAsset) {
           // Update the existing asset and reference it

@@ -32,7 +32,6 @@ export function normalizeCloudinaryAsset(asset: CloudinaryAssetResponse): Record
   ) as CloudinaryAssetResponse
 
   const requiredFields = {
-    id: asset.id,
     public_id: asset.public_id,
     resource_type: asset.resource_type,
     type: asset.type,
@@ -48,6 +47,13 @@ export function normalizeCloudinaryAsset(asset: CloudinaryAssetResponse): Record
   let updatedAsset: Record<string, unknown> = {
     ...assetWithoutNulls,
     ...requiredFields,
+  }
+
+  // Only persist Cloudinary's asset id when the Media Library actually provides one
+  if (asset.id) {
+    updatedAsset['id'] = asset.id
+  } else {
+    delete updatedAsset['id']
   }
 
   // Sanity object keys cannot contain special characters, so rename Cloudinary context keys
