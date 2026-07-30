@@ -277,6 +277,26 @@ type ReferenceErrorOptions = {
   excludedIds?: Set<string>
 }
 
+// Only attach the studio token when downloading from a Sanity host so a crafted
+// asset `url` cannot exfiltrate credentials to an attacker-controlled endpoint.
+function assetDownloadInit(url: string, token: string, typeIsFile: boolean): RequestInit {
+  if (typeIsFile) {
+    return {}
+  }
+
+  try {
+    const {hostname} = new URL(url)
+
+    if (hostname === 'cdn.sanity.io' || hostname.endsWith('.sanity.io')) {
+      return {headers: {Authorization: `Bearer ${token}`}}
+    }
+  } catch {
+    // Invalid URL — fetch without credentials
+  }
+
+  return {}
+}
+
 // Upload a recovered asset to the destination, rewriting url/path for the new dataset
 async function uploadAssetForRecovery(
   doc: SanityDocument & SanityAssetDocument,
@@ -285,9 +305,8 @@ async function uploadAssetForRecovery(
 ): Promise<{docs: SanityDocument[]; svgMap?: {old: string; new: string}}> {
   const typeIsFile = isSanityFileAsset(doc)
   const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
-  const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
 
-  const res = await fetch(downloadUrl, downloadConfig)
+  const res = await fetch(downloadUrl, assetDownloadInit(downloadUrl, token, typeIsFile))
 
   if (!res.ok) {
     throw new Error(
@@ -733,9 +752,8 @@ export default function Duplicator(props: DuplicatorProps) {
       // Get the *original* image with this dlRaw param to create the same deterministic _id
       const typeIsFile = isSanityFileAsset(doc)
       const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
-      const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
 
-      const res = await fetch(downloadUrl, downloadConfig)
+      const res = await fetch(downloadUrl, assetDownloadInit(downloadUrl, token, typeIsFile))
       const assetData = await res.blob()
 
       const options = {filename: doc.originalFilename}
