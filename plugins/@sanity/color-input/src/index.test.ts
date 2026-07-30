@@ -19,6 +19,7 @@ test('package exports', {timeout: 30_000}, async () => {
         "hsvaColor": "object",
         "rgbaColor": "object",
       },
+      "./bundle.css": {},
     }
   `)
 })

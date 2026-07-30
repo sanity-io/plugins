@@ -37,7 +37,7 @@ describe('imageDprUrl', () => {
 
   it('uses multiplier 1 when devicePixelRatio is missing', () => {
     Object.defineProperty(window, 'devicePixelRatio', {
-      value: undefined as unknown as number,
+      value: undefined,
       configurable: true,
     })
     const url = imageDprUrl(asset, {width: 100})

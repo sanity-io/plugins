@@ -1,4 +1,6 @@
-import {CheckmarkCircleIcon, CloseCircleIcon, LockIcon} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {CloseCircleIcon} from '@sanity/icons/CloseCircle'
+import {LockIcon} from '@sanity/icons/Lock'
 import {
   vercelProtectionBypassSchemaId as _id,
   vercelProtectionBypassSchemaType as type,

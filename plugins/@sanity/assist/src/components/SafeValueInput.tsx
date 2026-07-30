@@ -47,7 +47,7 @@ export function ErrorWrapper(
           {catcher}
         </WrapPreCard>
 
-        <Flex width="fill" flex={1} gap={3}>
+        <Flex flex={1} gap={3}>
           <Box flex={1}>
             <Button text="Dismiss" onClick={dismiss} tone="primary" />
           </Box>

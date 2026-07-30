@@ -3,9 +3,10 @@ import {
   hierarchicalDocumentList,
   hierarchyTree,
 } from '@sanity/hierarchical-document-list'
-import {BookIcon, UserIcon} from '@sanity/icons'
-import {definePlugin, defineType} from 'sanity'
-import {structureTool} from 'sanity/structure'
+import {BookIcon} from '@sanity/icons/Book'
+import {UserIcon} from '@sanity/icons/User'
+import {definePlugin, defineType, type ConfigContext} from 'sanity'
+import type {StructureBuilder} from 'sanity/structure'
 
 const hierarchyAuthor = defineType({
   name: 'hierarchyAuthor',
@@ -46,25 +47,20 @@ export const hierarchicalDocumentListExample = definePlugin(() => ({
   plugins: [hierarchicalDocumentList()],
 }))
 
-export const hierarchicalDocumentListExampleStructure = definePlugin(() => ({
-  plugins: [
-    structureTool({
-      structure: (S, context) =>
-        S.list()
-          .title('Content')
-          .items([
-            S.documentTypeListItem('hierarchyAuthor'),
-            S.documentTypeListItem('hierarchyBook'),
-            S.divider(),
-            createDeskHierarchy({
-              S,
-              context,
-              title: 'Main table of contents',
-              documentId: 'main-table-of-contents',
-              referenceTo: ['hierarchyAuthor', 'hierarchyBook'],
-              maxDepth: 3,
-            }),
-          ]),
+// Desk items for the hierarchical-document-list plugin, composed into the
+// home workspace's structure (rather than living in a dedicated workspace).
+export function hierarchicalDocumentListDeskItems(S: StructureBuilder, context: ConfigContext) {
+  return [
+    S.documentTypeListItem('hierarchyAuthor'),
+    S.documentTypeListItem('hierarchyBook'),
+    S.divider(),
+    createDeskHierarchy({
+      S,
+      context,
+      title: 'Main table of contents',
+      documentId: 'main-table-of-contents',
+      referenceTo: ['hierarchyAuthor', 'hierarchyBook'],
+      maxDepth: 3,
     }),
-  ],
-}))
+  ]
+}

@@ -1,4 +1,4 @@
-import {LaunchIcon} from '@sanity/icons'
+import {LaunchIcon} from '@sanity/icons/Launch'
 import {Box, Button, Flex} from '@sanity/ui'
 import {useCallback} from 'react'
 
