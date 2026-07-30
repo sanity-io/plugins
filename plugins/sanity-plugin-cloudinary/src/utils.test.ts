@@ -94,4 +94,25 @@ describe('assetUrl', () => {
 
     expect(url).toBe('https://res.cloudinary.com/demo/image/upload/a_45/v1/derived.jpg')
   })
+
+  test('prefers derived transforms over url-gen when cloudName is provided', () => {
+    const url = assetUrl(
+      {
+        public_id: 'folder/sample',
+        resource_type: 'image',
+        secure_url: 'https://res.cloudinary.com/demo/image/upload/v1/folder/sample.jpg',
+        derived: [
+          {
+            raw_transformation: 'a_45',
+            url: 'http://res.cloudinary.com/demo/image/upload/a_45/v1/folder/sample.jpg',
+            secure_url: 'https://res.cloudinary.com/demo/image/upload/a_45/v1/folder/sample.jpg',
+          },
+        ],
+      },
+      'demo',
+    )
+
+    expect(url).toBe('https://res.cloudinary.com/demo/image/upload/a_45/v1/folder/sample.jpg')
+    expect(url).not.toContain('c_scale')
+  })
 })

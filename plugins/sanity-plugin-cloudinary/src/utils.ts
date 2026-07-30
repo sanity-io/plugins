@@ -19,14 +19,20 @@ export function assetUrl(
   >,
   cloudName?: string,
 ): string | undefined {
-  // When the cloud name and public id are known, build an on-the-fly preview
-  // with url-gen instead of serving the full-size original. Scaling to a 400px
-  // width keeps previews crisp while avoiding multi-megabyte source downloads.
+  const [derived] = asset.derived ?? []
+
+  // When the cloud name and public id are known and there is no Media Library
+  // derived transform, build an on-the-fly preview with url-gen instead of
+  // serving the full-size original. Scaling to a 400px width keeps previews
+  // crisp while avoiding multi-megabyte source downloads.
   // Only images use CloudinaryImage — video/raw would get an /image/upload URL
-  // that breaks VideoPlayer and raw-file previews.
+  // that breaks VideoPlayer and raw-file previews. Derived transforms are
+  // preferred over the scaled original so Studio still shows the editor's
+  // chosen crop/effects.
   if (
     cloudName &&
     asset.public_id &&
+    !derived &&
     asset.resource_type !== 'video' &&
     asset.resource_type !== 'raw'
   ) {
@@ -35,7 +41,6 @@ export function assetUrl(
       .toURL()
   }
 
-  const [derived] = asset.derived ?? []
   if (derived) {
     if (derived.secure_url) {
       return derived.secure_url
