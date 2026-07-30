@@ -1,4 +1,4 @@
-import {PlugIcon} from '@sanity/icons'
+import {ControlsIcon} from '@sanity/icons'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Button, Flex, Grid, Stack} from '@sanity/ui'
 import {nanoid} from 'nanoid'
@@ -144,7 +144,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       <Flex justify="flex-end">
         <Button
           color="primary"
-          icon={PlugIcon}
+          icon={ControlsIcon}
           mode="bleed"
           title="Configure"
           onClick={() => setShowSettings(true)}
