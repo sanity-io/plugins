@@ -1,4 +1,4 @@
-import {PlugIcon} from '@sanity/icons'
+import {PlugIcon} from '@sanity/icons/Plug'
 import {Button, Card, Flex, Grid, Heading, Inline, Text} from '@sanity/ui'
 import {useCallback} from 'react'
 

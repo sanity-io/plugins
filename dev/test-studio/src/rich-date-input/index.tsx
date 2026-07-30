@@ -1,4 +1,4 @@
-import {CalendarIcon} from '@sanity/icons'
+import {CalendarIcon} from '@sanity/icons/Calendar'
 import {richDate} from '@sanity/rich-date-input'
 import {definePlugin, defineType} from 'sanity'
 

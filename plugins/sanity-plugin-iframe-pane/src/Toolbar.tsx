@@ -1,4 +1,7 @@
-import {CopyIcon, LaunchIcon, MobileDeviceIcon, RefreshIcon} from '@sanity/icons'
+import {CopyIcon} from '@sanity/icons/Copy'
+import {LaunchIcon} from '@sanity/icons/Launch'
+import {MobileDeviceIcon} from '@sanity/icons/MobileDevice'
+import {RefreshIcon} from '@sanity/icons/Refresh'
 import {Box, Button, Card, Flex, Text, Tooltip, useToast} from '@sanity/ui'
 import {useCallback, useRef, useState} from 'react'
 

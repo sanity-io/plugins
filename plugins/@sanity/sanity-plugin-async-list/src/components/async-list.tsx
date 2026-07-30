@@ -1,4 +1,6 @@
-import {ApiIcon, SearchIcon, SpinnerIcon} from '@sanity/icons'
+import {ApiIcon} from '@sanity/icons/Api'
+import {SearchIcon} from '@sanity/icons/Search'
+import {SpinnerIcon} from '@sanity/icons/Spinner'
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {Autocomplete, Button, Card, Flex, Text} from '@sanity/ui'
 import debounce from 'lodash-es/debounce.js'

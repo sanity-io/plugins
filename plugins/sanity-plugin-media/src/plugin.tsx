@@ -1,4 +1,4 @@
-import {ImageIcon} from '@sanity/icons'
+import {ImageIcon} from '@sanity/icons/Image'
 import {type AssetSource, type Tool as SanityTool, definePlugin} from 'sanity'
 
 import FormBuilderTool from './components/FormBuilderTool'

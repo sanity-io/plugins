@@ -1,4 +1,6 @@
-import {AddCircleIcon, RemoveCircleIcon, RestoreIcon} from '@sanity/icons'
+import {AddCircleIcon} from '@sanity/icons/AddCircle'
+import {RemoveCircleIcon} from '@sanity/icons/RemoveCircle'
+import {RestoreIcon} from '@sanity/icons/Restore'
 import {Badge, Box, Flex, Menu, MenuItem, Text, TextInput} from '@sanity/ui'
 import {type ChangeEvent, useRef, useState} from 'react'
 import {UserAvatar} from 'sanity'
