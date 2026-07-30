@@ -28,7 +28,6 @@ const STATUS_TO_TONE: Record<ImageStatus, CardTone> = {
   loaded: 'default',
 }
 
-// oxlint-disable-next-line react/react-compiler
 export default function VideoThumbnail({
   asset,
   width,

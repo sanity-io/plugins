@@ -1,7 +1,9 @@
-import {cleanup, render, screen} from '@testing-library/react'
+import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import type {ReactNode} from 'react'
+import {set} from 'sanity'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import {ThemeWrapper} from '../test/component-helpers'
 import {MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES, createValue} from '../test/helpers'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
@@ -220,5 +222,23 @@ describe('InternationalizedInput', () => {
 
     expect(screen.getByTestId('mock-input')).toBeInTheDocument()
     expect(props.inputProps.renderInput).toHaveBeenCalled()
+  })
+
+  test('Change language menu patches set(language) for an unused language', () => {
+    // Parent only has the invalid key item — ES/DE are free to select
+    mockUseFormValue.mockReturnValue([createValue('xx', {value: 'legacy'})])
+
+    const props = createMockProps('xx')
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedInput {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByText('Change "xx"'))
+    fireEvent.click(screen.getByRole('menuitem', {name: 'ES'}))
+
+    expect(props.inputProps.onChange).toHaveBeenCalledWith([set('es', [LANGUAGE_FIELD_NAME])])
   })
 })
