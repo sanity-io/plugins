@@ -85,7 +85,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         return
       }
 
-      const normalizedAsset = {
+      const normalizedAsset: Record<string, unknown> = {
         _type: cloudinaryAssetSchema.name,
         _key: nanoid(),
         _version: 1,
