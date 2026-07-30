@@ -1,5 +1,5 @@
 ---
-'@sanity/sanity-plugin-async-list': major
+"@sanity/sanity-plugin-async-list": major
 ---
 
 Refactor the input into a real React component and fix the `async-list-undefined` namespace/id

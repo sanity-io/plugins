@@ -88,14 +88,18 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
   // derive a namespace from. Without an explicit `secrets.namespace` (or a
   // `schemaType` from the plugin), multiple component-usage fields would share
   // the same default namespace and collide.
+  const secretsKeys = options.secrets?.keys
+  const secretsNamespace = options.secrets?.namespace
+  const schemaType = options.schemaType
   useEffect(() => {
-    if (options.secrets?.keys && !options.secrets.namespace && !options.schemaType) {
+    if (process.env['NODE_ENV'] === 'production') return
+    if (secretsKeys && !secretsNamespace && !schemaType) {
       console.warn(
         'sanity-plugin-async-list: `secrets` is configured without `schemaType` or `secrets.namespace`. ' +
           'Set an explicit `secrets.namespace` to avoid collisions between fields.',
       )
     }
-  }, [options])
+  }, [secretsKeys, secretsNamespace, schemaType])
 
   const {secrets} = useSecrets<Record<string, string> | undefined>(namespace)
   const [data, setData] = useState<OptionsItem[] | null>(null)
@@ -205,15 +209,23 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
   return (
     <Card>
       <Autocomplete
+        // Passthrough first; critical form/id props below always win.
+        {...options.autocompleteProps}
         id={props.elementProps.id}
-        filterOption={options.loaderType === 'search' ? () => true : undefined}
-        icon={loading ? LoadingIcon : SearchIcon}
-        openButton
+        filterOption={
+          options.autocompleteProps?.filterOption ??
+          (options.loaderType === 'search' ? () => true : undefined)
+        }
+        icon={loading ? LoadingIcon : (options.autocompleteProps?.icon ?? SearchIcon)}
+        openButton={options.autocompleteProps?.openButton ?? true}
         onChange={handleChange}
         options={data ?? []}
         value={props.value}
-        onQueryChange={options.loaderType === 'search' ? debouncedHandler : undefined}
-        {...options.autocompleteProps}
+        onQueryChange={
+          options.loaderType === 'search'
+            ? debouncedHandler
+            : options.autocompleteProps?.onQueryChange
+        }
       />
 
       {showSettings && options.secrets?.keys && (
