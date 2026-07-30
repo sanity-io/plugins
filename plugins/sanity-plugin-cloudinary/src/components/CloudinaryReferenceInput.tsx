@@ -25,7 +25,7 @@ type ReferenceValue = {
 }
 
 const CloudinaryReferenceInput = (props: ObjectInputProps) => {
-  const {onChange, value, schemaType} = props
+  const {onChange, value, schemaType, readOnly} = props
   const [showSettings, setShowSettings] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [previewRevision, setPreviewRevision] = useState(0)
@@ -39,6 +39,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const currentValue = value as ReferenceValue | undefined
   const valueKey = currentValue?._key
   const schemaTypeName = schemaType.name
+  const actionsDisabled = Boolean(readOnly) || isLoading
 
   const folder = (schemaType.options as {folder?: FolderOption} | undefined)?.folder
   const folderOption = useMemo(
@@ -71,6 +72,10 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
 
   const handleSelect = useCallback(
     async (payload: InsertHandlerParams) => {
+      if (readOnly) {
+        return
+      }
+
       const [asset] = payload.assets
 
       if (!asset) {
@@ -114,10 +119,14 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         setIsLoading(false)
       }
     },
-    [client, setAssetReference],
+    [readOnly, client, setAssetReference],
   )
 
   const handleOpenSelector = useCallback(() => {
+    if (readOnly) {
+      return
+    }
+
     if (!cloudName || !apiKey) {
       setShowSettings(true)
       return
@@ -155,7 +164,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
       console.error('Error opening Cloudinary media selector:', error)
       setIsLoading(false)
     }
-  }, [cloudName, apiKey, handleSelect, folderOption])
+  }, [readOnly, cloudName, apiKey, handleSelect, folderOption])
 
   const reference = currentValue?.asset
 
@@ -176,6 +185,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
           title="Configure"
           onClick={() => setShowSettings(true)}
           text={hasConfig ? undefined : 'Configure Cloudinary plugin'}
+          disabled={Boolean(readOnly)}
         />
       </Flex>
 
@@ -190,7 +200,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
             onClick={handleOpenSelector}
             tone="primary"
             mode="ghost"
-            disabled={(!hasConfig && !showSettings) || isLoading}
+            disabled={actionsDisabled}
             loading={isLoading}
           />
 
@@ -200,7 +210,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
               tone="critical"
               mode="ghost"
               onClick={() => onChange(PatchEvent.from(unset()))}
-              disabled={isLoading}
+              disabled={actionsDisabled}
             />
           ) : null}
         </Grid>
