@@ -1,5 +1,5 @@
 ---
-'sanity-plugin-media': patch
+"sanity-plugin-media": patch
 ---
 
 author: @oxygensmith
