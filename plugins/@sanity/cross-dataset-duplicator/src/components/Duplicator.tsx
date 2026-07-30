@@ -754,6 +754,13 @@ export default function Duplicator(props: DuplicatorProps) {
       const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
 
       const res = await fetch(downloadUrl, assetDownloadInit(downloadUrl, token, typeIsFile))
+
+      if (!res.ok) {
+        throw new Error(
+          `Failed to download asset "${doc._id}" from origin (${res.status} ${res.statusText})`,
+        )
+      }
+
       const assetData = await res.blob()
 
       const options = {filename: doc.originalFilename}
