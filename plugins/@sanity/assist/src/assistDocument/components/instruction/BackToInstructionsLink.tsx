@@ -1,4 +1,4 @@
-import {ArrowLeftIcon} from '@sanity/icons'
+import {ArrowLeftIcon} from '@sanity/icons/ArrowLeft'
 import {Button} from '@sanity/ui'
 import {useCallback} from 'react'
 import {useDocumentPane} from 'sanity/structure'

@@ -7,6 +7,10 @@ export const muxSecretsDocumentId = 'secrets.mux' as const
 
 export const DIALOGS_Z_INDEX = 60_000
 
+/** Mux guide explaining the mezzanine ("master access") file and how it differs from MP4 renditions. */
+export const MEZZANINE_LEARN_MORE_URL =
+  'https://www.mux.com/docs/guides/download-for-offline-editing#enable-master-access'
+
 export const THUMBNAIL_ASPECT_RATIO = 16 / 9
 
 /** To prevent excessive height, thumbnails and input should not go beyond to this aspect ratio. */

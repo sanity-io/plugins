@@ -24,20 +24,20 @@ test-studio instead.
 
 ## End-to-end repro in the dev test-studio
 
-For a live repro inside the test-studio's `kitchen-sink` workspace:
+For a live repro inside the test-studio's `home` workspace:
 
 ### 1. Schema
 
 A dedicated document type `issue520Repro` is added in
 `dev/test-studio/src/internationalized-array/issue-520-repro.ts` and wired
-into the `kitchen-sink` workspace via the existing
+into the `home` workspace via the existing
 `internationalizedArrayExample` plugin export.
 
 ### 2. Studio runner script
 
 Use the Studio Script Runner entrypoint at
 `dev/test-studio/src/script-runner/scripts/seed-issue-520/index.ts`. It runs
-inside the `kitchen-sink` Studio workspace with the logged-in user's Studio
+inside the `home` Studio workspace with the logged-in user's Studio
 client and:
 
 1. Create an asap release.
@@ -59,9 +59,9 @@ pnpm --filter test-studio dev
 
 Then run the Studio script:
 
-1. Open the studio at `http://localhost:3333/kitchen-sink`.
+1. Open the studio at `http://localhost:3333/home`.
 2. Open the `Scripts` tool from the Studio tools menu.
-3. Open `Seed issue #520 repro` at `/kitchen-sink/scripts/seed-issue-520`.
+3. Open `Seed issue #520 repro` at `/home/scripts/seed-issue-520`.
 4. Set `Published document ID` to the document id you want to reproduce with
    (defaults to `issue-520-repro`).
 5. Click `Run script`.

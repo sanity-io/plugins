@@ -1,10 +1,8 @@
-import {
-  CheckmarkCircleIcon,
-  ClockIcon,
-  CloseCircleIcon,
-  ErrorOutlineIcon,
-  SyncIcon,
-} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {ClockIcon} from '@sanity/icons/Clock'
+import {CloseCircleIcon} from '@sanity/icons/CloseCircle'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {SyncIcon} from '@sanity/icons/Sync'
 import {
   Box,
   Button,
@@ -18,7 +16,7 @@ import {
   useGlobalKeyDown,
   useLayer,
 } from '@sanity/ui'
-import {type ForwardedRef, forwardRef, useCallback, useMemo, useState} from 'react'
+import {type Ref, useCallback, useMemo, useState} from 'react'
 import {StatusButton, type StatusButtonProps, typed, useClient} from 'sanity'
 import {keyframes, styled} from 'styled-components'
 
@@ -170,21 +168,19 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
   )
 }
 
-const TASK_STATUS_BUTTON_TOOLTIP_PROPS: StatusButtonProps['tooltipProps'] = {
+const TASK_STATUS_BUTTON_TOOLTIP_PROPS: NonNullable<StatusButtonProps['tooltipProps']> = {
   placement: 'top',
 }
 
-const TaskStatusButton = forwardRef(function TaskStatusButton(
-  props: {
-    disabled: boolean
-    hasErrors: boolean
-    isRunning: boolean
-    onClick: () => void
-    selected: boolean
-  },
-  ref: ForwardedRef<HTMLButtonElement>,
-) {
-  const {disabled, hasErrors, isRunning, onClick, selected} = props
+function TaskStatusButton(props: {
+  disabled: boolean
+  hasErrors: boolean
+  isRunning: boolean
+  onClick: () => void
+  selected: boolean
+  ref?: Ref<HTMLButtonElement>
+}) {
+  const {disabled, hasErrors, isRunning, onClick, selected, ref} = props
 
   return (
     <StatusButton
@@ -200,7 +196,7 @@ const TaskStatusButton = forwardRef(function TaskStatusButton(
       tooltipProps={TASK_STATUS_BUTTON_TOOLTIP_PROPS}
     />
   )
-})
+}
 
 function TaskList(props: {onEscape: () => void; tasks: CancelableInstructionTask[]}) {
   const {onEscape, tasks} = props

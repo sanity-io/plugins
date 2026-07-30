@@ -1,4 +1,4 @@
-import execa from 'execa'
+import {execa} from 'execa'
 
 import {prompt} from '../util/prompt'
 
@@ -39,7 +39,12 @@ export async function promptForPackageManager() {
 }
 
 export async function installDependencies(pm: string, {cwd}: {cwd?: string}) {
-  const proc = execa(pm, ['install'], {cwd, stdio: 'inherit'})
-  const {exitCode} = await proc
-  return exitCode <= 0
+  // `reject: false` covers non-zero exits; try/catch covers spawn failures (e.g. ENOENT
+  // when the package manager binary is missing) so the caller can print its hint
+  try {
+    const {exitCode} = await execa(pm, ['install'], {cwd, stdio: 'inherit', reject: false})
+    return exitCode === 0
+  } catch {
+    return false
+  }
 }

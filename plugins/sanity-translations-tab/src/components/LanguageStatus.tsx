@@ -1,4 +1,4 @@
-import {DownloadIcon} from '@sanity/icons'
+import {DownloadIcon} from '@sanity/icons/Download'
 import {Flex, Card, Text, Grid, Box, Button} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 

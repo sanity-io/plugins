@@ -1,5 +1,6 @@
 import type {SyncTag, LiveEvent} from '@sanity/client'
-import {AddIcon, TrashIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {
   apiVersion,
   vercelProtectionBypassSchemaId as _id,

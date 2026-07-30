@@ -1,4 +1,5 @@
-import {ThLargeIcon, ThListIcon} from '@sanity/icons'
+import {ThLargeIcon} from '@sanity/icons/ThLarge'
+import {ThListIcon} from '@sanity/icons/ThList'
 import {Button, Inline} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 

@@ -246,4 +246,32 @@ describe('LanguageManage', () => {
       expect(mockOpenInNewPane).toHaveBeenCalled()
     })
   })
+
+  test('re-enables button when metadata creation fails', async () => {
+    vi.mocked(useDocumentInternationalizationContext).mockReturnValue({
+      ...MOCK_PLUGIN_CONFIG,
+      allowCreateMetaDoc: true,
+    })
+    const tx = mockClient.transaction()
+    tx.commit.mockRejectedValueOnce(new Error('create failed'))
+
+    render(
+      <LanguageManage
+        id={undefined}
+        metadataId="meta-1"
+        schemaType={mockSchemaType}
+        documentId="doc-1"
+        sourceLanguageId="en"
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    const button = screen.getByRole('button', {name: 'Manage Translations'})
+    fireEvent.click(button)
+
+    await waitFor(() => {
+      expect(button).not.toBeDisabled()
+    })
+    expect(mockOpenInNewPane).not.toHaveBeenCalled()
+  })
 })

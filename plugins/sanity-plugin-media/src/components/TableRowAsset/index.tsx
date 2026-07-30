@@ -1,4 +1,6 @@
-import {CheckmarkCircleIcon, EditIcon, WarningFilledIcon} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {EditIcon} from '@sanity/icons/Edit'
+import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
 import {
   Box,
   Checkbox,
@@ -11,7 +13,7 @@ import {
   Tooltip,
   useMediaIndex,
 } from '@sanity/ui'
-import {formatRelative} from 'date-fns'
+import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
 import {
   memo,
@@ -60,14 +62,16 @@ const ContainerGrid = styled<
     user-select: none;
     white-space: nowrap;
 
-    ${!$updating &&
-    css`
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          background: ${getSchemeColor($scheme, 'bg')};
+    ${
+      !$updating &&
+      css`
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background: ${getSchemeColor($scheme, 'bg')};
+          }
         }
-      }
-    `}
+      `
+    }
   `
 })
 

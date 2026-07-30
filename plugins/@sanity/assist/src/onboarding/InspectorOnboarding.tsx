@@ -1,4 +1,4 @@
-import {SparklesIcon} from '@sanity/icons'
+import {SparklesIcon} from '@sanity/icons/Sparkles'
 import {Box, Button, Container, Flex, Stack, Text} from '@sanity/ui'
 import {styled} from 'styled-components'
 
