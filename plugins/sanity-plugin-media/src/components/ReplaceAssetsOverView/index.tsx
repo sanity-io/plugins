@@ -2,16 +2,22 @@ import {Box, Text} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions} from '../../modules/assets'
+import {assetsActions, selectAssetsPicked} from '../../modules/assets'
 import {selectCombinedItems} from '../../modules/selectors'
+import {isImageAsset} from '../../utils/typeGuards'
 import AssetGridVirtualized from '../AssetGridVirtualized'
 
 const ReplaceAssetsOverview = () => {
   const dispatch = useDispatch()
   const combinedItems = useTypedSelector(selectCombinedItems)
+  const assetsById = useTypedSelector((state) => state.assets.byIds)
+  const assetsPicked = useTypedSelector(selectAssetsPicked)
   const fetchCount = useTypedSelector((state) => state.assets.fetchCount)
   const fetching = useTypedSelector((state) => state.assets.fetching)
-  const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
+
+  // Prefer the currently picked asset over `lastPicked`, which is cleared when
+  // unpicking even if another asset remains selected.
+  const assetToReplaceId = assetsPicked.length === 1 ? assetsPicked[0]?.asset._id : undefined
 
   const hasItems = combinedItems.length > 0
   const hasFetchedOnce = fetchCount >= 0
@@ -23,8 +29,14 @@ const ReplaceAssetsOverview = () => {
     }
   }
 
-  // Don't offer the currently selected asset as a replacement for itself
-  const reducedItems = combinedItems.filter((asset) => asset.id !== lastPicked)
+  // Only image assets can replace image refs; exclude uploads and the asset being replaced.
+  const reducedItems = combinedItems.filter((item) => {
+    if (item.type !== 'asset' || item.id === assetToReplaceId) {
+      return false
+    }
+    const asset = assetsById[item.id]?.asset
+    return asset ? isImageAsset(asset) : false
+  })
 
   return (
     <Box height="fill">

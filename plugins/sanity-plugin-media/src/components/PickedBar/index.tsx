@@ -8,6 +8,7 @@ import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions, selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+import {isImageAsset} from '../../utils/typeGuards'
 
 const PickedBar = () => {
   const scheme = useColorSchemeValue()
@@ -15,6 +16,10 @@ const PickedBar = () => {
   // Redux
   const dispatch = useDispatch()
   const assetsPicked = useTypedSelector(selectAssetsPicked)
+
+  // Replace only rewrites image field refs — only offer it for a single image asset.
+  const canReplace =
+    assetsPicked.length === 1 && !!assetsPicked[0] && isImageAsset(assetsPicked[0].asset)
 
   // Callbacks
   const handlePickClear = () => {
@@ -75,7 +80,7 @@ const PickedBar = () => {
         </Button>
 
         {/* Replace button */}
-        {assetsPicked.length === 1 && (
+        {canReplace && (
           <Button
             mode="bleed"
             onClick={handleReplaceImages}

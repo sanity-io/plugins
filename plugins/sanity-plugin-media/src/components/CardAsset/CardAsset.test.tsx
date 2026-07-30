@@ -319,4 +319,83 @@ describe('CardAsset', () => {
       container.querySelectorAll('[data-sanity-icon="warning-filled"]').length,
     ).toBeGreaterThan(0)
   })
+
+  it('replaces via preview click in replace-asset mode using the picked asset, not lastPicked', async () => {
+    const user = userEvent.setup()
+    const replacement = {
+      ...imageAsset,
+      _id: 'img-2',
+      originalFilename: 'replacement.png',
+    } as ImageAsset
+    const {store} = renderWithProviders(
+      <CardAsset id="img-2" selected={false} source="replace-asset" />,
+      {
+        preloaded: {
+          assets: assetsState(
+            {
+              // Still picked, but lastPicked was cleared (e.g. after unpicking another asset)
+              'img-1': assetItem(imageAsset, {picked: true}),
+              'img-2': assetItem(replacement),
+            },
+            {lastPicked: undefined},
+          ),
+          dialog: {
+            items: [{id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+          },
+        },
+      },
+    )
+
+    await user.click(clickPreview())
+
+    expect(store.getState().assets.byIds['img-1']!.updating).toBe(true)
+    expect(store.getState().dialog.items).toHaveLength(0)
+  })
+
+  it('replaces via footer click in replace-asset mode', async () => {
+    const user = userEvent.setup()
+    const replacement = {
+      ...imageAsset,
+      _id: 'img-2',
+      originalFilename: 'replacement.png',
+    } as ImageAsset
+    const {store} = renderWithProviders(
+      <CardAsset id="img-2" selected={false} source="replace-asset" />,
+      {
+        preloaded: {
+          assets: assetsState({
+            'img-1': assetItem(imageAsset, {picked: true}),
+            'img-2': assetItem(replacement),
+          }),
+        },
+      },
+    )
+
+    await user.click(clickFooterFilename('replacement.png'))
+
+    expect(store.getState().assets.byIds['img-1']!.updating).toBe(true)
+  })
+
+  it('does not replace when the candidate is a file asset', async () => {
+    const user = userEvent.setup()
+    const {store} = renderWithProviders(
+      <CardAsset id="file-1" selected={false} source="replace-asset" />,
+      {
+        preloaded: {
+          assets: assetsState({
+            'img-1': assetItem(imageAsset, {picked: true}),
+            'file-1': assetItem(fileAsset),
+          }),
+          dialog: {
+            items: [{id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+          },
+        },
+      },
+    )
+
+    await user.click(clickFooterFilename('doc.pdf'))
+
+    expect(store.getState().assets.byIds['img-1']!.updating).toBe(false)
+    expect(store.getState().dialog.items).toHaveLength(1)
+  })
 })

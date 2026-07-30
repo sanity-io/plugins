@@ -22,7 +22,7 @@ import {PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import useKeyPress from '../../hooks/useKeyPress'
 import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions, selectAssetById} from '../../modules/assets'
+import {assetsActions, selectAssetById, selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import imageDprUrl from '../../utils/imageDprUrl'
@@ -108,6 +108,7 @@ const CardAsset = (props: Props) => {
   // Redux
   const dispatch = useDispatch()
   const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
+  const assetsPicked = useTypedSelector(selectAssetsPicked)
   const item = useTypedSelector((state) => selectAssetById(state, id))
 
   const asset = item?.asset
@@ -116,6 +117,11 @@ const CardAsset = (props: Props) => {
   const picked = item?.picked
   const updating = item?.updating
 
+  // Prefer the single currently-picked asset over `lastPicked`, which is cleared
+  // when unpicking even if another asset remains selected.
+  const assetToReplaceId =
+    source === 'replace-asset' && assetsPicked.length === 1 ? assetsPicked[0]?.asset._id : undefined
+
   const {onSelect} = useAssetSourceActions()
 
   // Short circuit if no asset is available
@@ -123,9 +129,28 @@ const CardAsset = (props: Props) => {
     return null
   }
 
+  const handleReplaceAsset = () => {
+    if (!assetToReplaceId || !isImageAsset(asset)) {
+      return
+    }
+
+    dispatch(assetsActions.updateImageReferences({asset, id: assetToReplaceId}))
+    toast.push({
+      status: 'info',
+      title:
+        'Updating in progress. Depending on the amount of changes, this could take a few minutes.',
+    })
+    dispatch(dialogActions.clear())
+  }
+
   // Callbacks
   const handleAssetClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
+
+    if (source === 'replace-asset') {
+      handleReplaceAsset()
+      return
+    }
 
     if (onSelect) {
       onSelect([
@@ -148,14 +173,8 @@ const CardAsset = (props: Props) => {
   const handleContextActionClick = (e: MouseEvent) => {
     e.stopPropagation()
 
-    if (source === 'replace-asset' && lastPicked) {
-      dispatch(assetsActions.updateImageReferences({asset, id: lastPicked}))
-      toast.push({
-        status: 'info',
-        title:
-          'Updating in progress. Depending on the amount of changes, this could take a few minutes.',
-      })
-      dispatch(dialogActions.clear())
+    if (source === 'replace-asset') {
+      handleReplaceAsset()
       return
     }
 
