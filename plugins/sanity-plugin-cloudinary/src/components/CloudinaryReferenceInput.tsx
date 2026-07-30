@@ -115,9 +115,8 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
           await client.patch(existingAsset._id).set({asset: normalizedAsset}).commit()
           setAssetReference(existingAsset._id)
         } else {
-          // Create a new asset document and reference it
+          // Create a new asset document and reference it (let Sanity assign a valid _id)
           const newAsset = await client.create({
-            _id: nanoid(),
             _type: 'cloudinaryAssetDocument',
             asset: normalizedAsset,
           })
