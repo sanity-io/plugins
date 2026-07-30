@@ -20,17 +20,23 @@ export const cloudinaryAssetDocument = defineType({
       publicId: 'asset.public_id',
       resourceType: 'asset.resource_type',
       format: 'asset.format',
-      media: 'asset',
+      // Desk list `media` needs a URL (or React element), not the raw asset object
+      secureUrl: 'asset.secure_url',
+      url: 'asset.url',
+      derivedUrl: 'asset.derived.0.secure_url',
     },
     prepare(selection) {
-      const {caption, alt, publicId, resourceType, format, media} = selection as {
-        caption?: string
-        alt?: string
-        publicId?: string
-        resourceType?: string
-        format?: string
-        media?: any
-      }
+      const {caption, alt, publicId, resourceType, format, secureUrl, url, derivedUrl} =
+        selection as {
+          caption?: string
+          alt?: string
+          publicId?: string
+          resourceType?: string
+          format?: string
+          secureUrl?: string
+          url?: string
+          derivedUrl?: string
+        }
 
       // Prefer caption/alt from Cloudinary context; fall back to public_id
       const title = caption || alt || publicId || 'Untitled Asset'
@@ -38,6 +44,15 @@ export const cloudinaryAssetDocument = defineType({
       const type = resourceType || 'image'
       const formatInfo = format ? `(${format})` : ''
       const subtitle = `${type} ${formatInfo}`
+
+      let media = derivedUrl || secureUrl || url
+      if (media && format === 'pdf') {
+        // First page as JPG so desk lists can render a thumbnail
+        media = media.replace(
+          'image/upload',
+          'image/upload/f_jpg,pg_1,l_text:Verdana_75_letter_spacing_14:PDF',
+        )
+      }
 
       return {
         title,
