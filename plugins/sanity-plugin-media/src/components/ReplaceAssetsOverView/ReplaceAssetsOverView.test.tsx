@@ -125,7 +125,7 @@ describe('ReplaceAssetsOverview', () => {
       },
     })
 
-    expect(screen.getByText('There are no assets')).toBeTruthy()
+    expect(screen.getByText('There are no replacement images')).toBeTruthy()
     expect(screen.queryByTestId('replace-grid')).toBeNull()
   })
 })

@@ -42,7 +42,7 @@ const ReplaceAssetsOverview = () => {
       {isEmpty ? (
         <Box padding={5}>
           <Text size={1} weight="semibold">
-            There are no assets
+            There are no replacement images
           </Text>
         </Box>
       ) : (

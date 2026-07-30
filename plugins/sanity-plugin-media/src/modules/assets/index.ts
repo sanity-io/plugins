@@ -380,14 +380,22 @@ const assetsSlice = createSlice({
       state.byIds[assetId]!.updating = false
     },
     updateImageReferences(state, action: PayloadAction<{asset: Asset; id: string}>) {
-      const assetId = action.payload?.id
-      state.byIds[assetId]!.updating = true
-      delete state.byIds[assetId]!.error
+      const {id: assetId} = action.payload
+      const item = state.byIds[assetId]
+      if (!item) {
+        return
+      }
+      item.updating = true
+      delete item.error
     },
     updateImageReferencesComplete(state, action: PayloadAction<{id: string}>) {
       const {id} = action.payload
-      state.byIds[id]!.updating = false
-      delete state.byIds[id]!.error
+      const item = state.byIds[id]
+      if (!item) {
+        return
+      }
+      item.updating = false
+      delete item.error
     },
     updateRequest(
       state,
@@ -772,17 +780,23 @@ export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client
         mergeMap((documents) => {
           // Patch every referencing document in one transaction so we never leave
           // references split across old/new assets if a later commit would fail.
+          let patchedCount = 0
           const transaction: Transaction = documents.reduce((tx, document) => {
             const clonedDocument = JSON.parse(JSON.stringify(document)) as Record<string, unknown>
             const assetsToReplace = findImageAssets(clonedDocument, asset, id)
             if (assetsToReplace.length === 0) {
               return tx
             }
+            patchedCount += 1
             const patchSet = Object.assign({}, ...assetsToReplace) as AttributeSet
             return tx.patch(document._id, (patch) =>
               patch.ifRevisionId(document._rev).set(patchSet),
             )
           }, client.transaction())
+
+          if (patchedCount === 0) {
+            return of(assetsActions.updateImageReferencesComplete({id}))
+          }
 
           return from(transaction.commit()).pipe(
             mergeMap(() => of(assetsActions.updateImageReferencesComplete({id}))),

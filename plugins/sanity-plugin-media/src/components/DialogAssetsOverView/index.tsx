@@ -27,7 +27,7 @@ const DialogAllAssets = (props: Props) => {
   }, [dispatch])
 
   return (
-    <Dialog header="Choose an asset for replacing" id={id} onClose={handleClose} width={3}>
+    <Dialog header="Choose a replacement image" id={id} onClose={handleClose} width={3}>
       <Box padding={4} style={{height: '50vh'}}>
         <ReplaceAssetsOverview />
       </Box>

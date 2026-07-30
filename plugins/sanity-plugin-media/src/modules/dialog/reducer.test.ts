@@ -84,6 +84,12 @@ describe('dialog slice reducers', () => {
     expect(state.items).toEqual([{id: 'dialogAllAssets', type: 'dialogAllAssets'}])
   })
 
+  it('showAllAssetsDialog is a no-op when the dialog is already open', () => {
+    let state = dialogReducer(dialogState(), dialogActions.showAllAssetsDialog())
+    state = dialogReducer(state, dialogActions.showAllAssetsDialog())
+    expect(state.items).toEqual([{id: 'dialogAllAssets', type: 'dialogAllAssets'}])
+  })
+
   it('inlineTagCreate sets lastCreatedTag on matching assetEdit items', () => {
     const state = dialogReducer(
       {

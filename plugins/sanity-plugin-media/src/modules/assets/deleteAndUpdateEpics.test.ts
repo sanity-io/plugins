@@ -212,4 +212,33 @@ describe('assetsUpdateImageReferencesEpic', () => {
       expect(byIds['a2']!.error).toBeUndefined()
     })
   })
+
+  it('completes without committing when no referencing documents need patches', async () => {
+    const tx = mockTransactionCommit({})
+    const client = createMockSanityClient({
+      observable: {
+        fetch: vi.fn(() => of([])),
+      },
+      transaction: vi.fn(() => tx),
+    })
+
+    const replacementAsset = {...sampleAsset, _id: 'a2'}
+    const store = createEpicTestStore(assetsUpdateImageReferencesEpic, client, {
+      assets: {
+        ...assetsInitialState,
+        assetTypes: ['image'],
+        allIds: ['a1'],
+        byIds: {
+          a1: {_type: 'asset', asset: sampleAsset, picked: true, updating: false},
+        },
+      },
+    })
+
+    store.dispatch(assetsActions.updateImageReferences({asset: replacementAsset, id: 'a1'}))
+
+    await vi.waitFor(() => {
+      expect(tx.commit).not.toHaveBeenCalled()
+      expect(store.getState().assets.byIds['a1']!.updating).toBe(false)
+    })
+  })
 })

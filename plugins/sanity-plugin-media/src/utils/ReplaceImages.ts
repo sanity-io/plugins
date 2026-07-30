@@ -1,9 +1,14 @@
 import type {Asset} from '../types'
 
+type AssetRef = {
+  _ref?: unknown
+  _type?: unknown
+}
+
 type ImageNode = {
   _type?: unknown
-  asset?: {_ref?: unknown} & Record<string, unknown>
-} & Record<string, unknown>
+  asset?: AssetRef
+}
 
 /**
  * Re-points every image asset in `document` that references `assetToReplaceId`
@@ -42,10 +47,10 @@ function repointNestedImages(
   const candidate = node as ImageNode
   // Match built-in `image` nodes and custom image schema types (e.g. `mainImage`),
   // which store their type name in `_type` rather than `"image"`. Skip file fields.
-  const hasMatchingAssetRef =
-    candidate.asset?._type === 'reference' && candidate.asset._ref === assetToReplaceId
-  if (hasMatchingAssetRef && candidate._type !== 'file') {
-    candidate.asset!._ref = newAsset._id
+  const assetRef = candidate.asset
+  const hasMatchingAssetRef = assetRef?._type === 'reference' && assetRef._ref === assetToReplaceId
+  if (hasMatchingAssetRef && candidate._type !== 'file' && assetRef) {
+    assetRef._ref = newAsset._id
     if (topLevelField) {
       matchedTopLevelFields.add(topLevelField)
     }

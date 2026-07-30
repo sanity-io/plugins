@@ -159,6 +159,9 @@ const dialogSlice = createSlice({
       })
     },
     showAllAssetsDialog(state) {
+      if (state.items.some((item) => item.type === 'dialogAllAssets')) {
+        return
+      }
       state.items.push({
         id: 'dialogAllAssets',
         type: 'dialogAllAssets',
