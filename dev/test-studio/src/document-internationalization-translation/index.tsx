@@ -3,7 +3,7 @@ import {
   useDeleteTranslationAction,
   useDuplicateWithTranslationsAction,
 } from '@sanity/document-internationalization'
-import {TranslateIcon} from '@sanity/icons'
+import {TranslateIcon} from '@sanity/icons/Translate'
 import {Box, Card, Code, Stack, Text} from '@sanity/ui'
 import {useEffect, useMemo} from 'react'
 import {definePlugin, defineField, defineType, useClient, useSchema} from 'sanity'

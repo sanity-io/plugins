@@ -1,10 +1,8 @@
-import {
-  CheckmarkCircleIcon,
-  CircleIcon,
-  EyeClosedIcon,
-  EyeOpenIcon,
-  TranslateIcon,
-} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {CircleIcon} from '@sanity/icons/Circle'
+import {EyeClosedIcon} from '@sanity/icons/EyeClosed'
+import {EyeOpenIcon} from '@sanity/icons/EyeOpen'
+import {TranslateIcon} from '@sanity/icons/Translate'
 import {
   Badge,
   Box,

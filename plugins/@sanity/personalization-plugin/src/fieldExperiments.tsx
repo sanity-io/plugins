@@ -114,7 +114,7 @@ const createExperimentType = ({
         experiment: experimentId,
       },
       prepare: ({base, experiment}) => {
-        const title = base?.title || base?.name || typeof base === 'string' ? base : ''
+        const title = base?.title || base?.name || (typeof base === 'string' ? base : '')
         const experimentTitle = experiment ? `Experiment: ${experiment}` : ''
         const media = base?.image || base?.photo || base?.media || ''
         return {
@@ -225,7 +225,7 @@ export const fieldLevelExperiments = definePlugin<FieldPluginConfig>((config) =>
     experimentId,
   })
   return {
-    name: 'sanity-personalistaion-plugin-field-level-experiments',
+    name: 'sanity-personalization-plugin-field-level-experiments',
     schema: {
       types: fieldSchemaConfig,
     },

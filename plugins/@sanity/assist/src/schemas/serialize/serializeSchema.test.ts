@@ -157,7 +157,6 @@ describe('serializeSchema', () => {
               name: 'crossDatasetReference',
               to: [{type: 'excluded'}],
               dataset: 'x',
-              projectId: 'y',
             }),
           ],
         },
