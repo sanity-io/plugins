@@ -22,6 +22,66 @@ export function assetUrl(asset: Partial<Pick<CloudinaryAsset, 'url' | 'secure_ur
   return asset.url
 }
 
+/**
+ * Normalize a Media Library payload into a shape that matches the `cloudinary.asset`
+ * schema: drop nulls, sanitize context keys, and tag derived items with `_type`.
+ */
+export function normalizeCloudinaryAsset(asset: CloudinaryAssetResponse): Record<string, unknown> {
+  const assetWithoutNulls = Object.fromEntries(
+    Object.entries(asset).filter(([_, assetValue]) => assetValue !== null),
+  ) as CloudinaryAssetResponse
+
+  const requiredFields = {
+    id: asset.id,
+    public_id: asset.public_id,
+    resource_type: asset.resource_type,
+    type: asset.type,
+    url: asset.url,
+    secure_url: asset.secure_url,
+    format: asset.format,
+    width: asset.width,
+    height: asset.height,
+    bytes: asset.bytes,
+    tags: asset.tags,
+  }
+
+  let updatedAsset: Record<string, unknown> = {
+    ...assetWithoutNulls,
+    ...requiredFields,
+  }
+
+  // Sanity object keys cannot contain special characters, so rename Cloudinary context keys
+  if (asset.context) {
+    const objectWithRenamedKeys = Object.fromEntries(
+      Object.entries(asset.context.custom).map(([contextKey, contextValue]) => {
+        return [contextKey.replace(/[^a-zA-Z0-9_]|-/g, '_'), contextValue]
+      }),
+    )
+
+    updatedAsset = {
+      ...updatedAsset,
+      context: {
+        ...asset.context,
+        custom: objectWithRenamedKeys,
+      },
+    }
+  }
+
+  if (asset.derived) {
+    updatedAsset = {
+      ...updatedAsset,
+      derived: asset.derived.map((derivedItem) => ({
+        _type: 'derived',
+        url: derivedItem.url,
+        secure_url: derivedItem.secure_url,
+        raw_transformation: derivedItem.raw_transformation,
+      })),
+    }
+  }
+
+  return updatedAsset
+}
+
 export const openMediaSelector = (
   cloudName: string,
   apiKey: string,
@@ -47,10 +107,10 @@ export const openMediaSelector = (
       }
     }
 
-    if (folder) {
+    if (folder?.path || folder?.resource_type) {
       options['folder'] = {
-        path: folder.path,
-        resource_type: folder.resource_type,
+        ...(folder.path ? {path: folder.path} : {}),
+        ...(folder.resource_type ? {resource_type: folder.resource_type} : {}),
       }
     }
 

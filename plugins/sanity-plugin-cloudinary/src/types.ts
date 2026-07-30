@@ -41,6 +41,7 @@ export type CloudinaryAsset = {
   _type: string
   _key?: string
   _version: number
+  id?: string
   public_id: string
   resource_type: string
   type: string

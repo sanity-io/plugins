@@ -5,8 +5,9 @@ import {nanoid} from 'nanoid'
 import {useCallback, useMemo, useState} from 'react'
 import {type ObjectInputProps, PatchEvent, set, unset, useClient} from 'sanity'
 
+import {cloudinaryAssetSchema} from '../schema/cloudinaryAsset'
 import type {InsertHandlerParams} from '../types'
-import {openMediaSelector} from '../utils'
+import {normalizeCloudinaryAsset, openMediaSelector} from '../utils'
 import ReferencePreview from './ReferencePreview'
 import SecretsConfigView, {namespace, type Secrets} from './SecretsConfigView'
 
@@ -16,6 +17,10 @@ const API_VERSION = '2023-01-01'
 const SELECTOR_FALLBACK_TIMEOUT = 30_000
 
 type FolderOption = {path?: string; resource_type?: 'image' | 'video'}
+
+type ReferenceValue = {
+  asset?: {_type?: 'reference'; _ref?: string; _weak?: boolean}
+}
 
 const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const {onChange, value, schemaType} = props
@@ -29,9 +34,30 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
   const hasConfig = Boolean(apiKey && cloudName)
 
   const folder = (schemaType.options as {folder?: FolderOption} | undefined)?.folder
-  const folderOption = useMemo<FolderOption>(
-    () => (folder ? {path: folder.path, resource_type: folder.resource_type} : {}),
+  const folderOption = useMemo(
+    () =>
+      folder?.path || folder?.resource_type
+        ? {path: folder.path, resource_type: folder.resource_type}
+        : undefined,
     [folder],
+  )
+
+  const setAssetReference = useCallback(
+    (documentId: string) => {
+      onChange(
+        PatchEvent.from(
+          set({
+            _type: schemaType.name,
+            asset: {
+              _type: 'reference',
+              _ref: documentId,
+              _weak: true,
+            },
+          }),
+        ),
+      )
+    },
+    [onChange, schemaType.name],
   )
 
   const handleSelect = useCallback(
@@ -40,6 +66,12 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
 
       if (!asset) {
         return
+      }
+
+      const normalizedAsset = {
+        _type: cloudinaryAssetSchema.name,
+        _key: nanoid(),
+        ...normalizeCloudinaryAsset(asset),
       }
 
       try {
@@ -51,22 +83,22 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
 
         if (existingAsset) {
           // Update the existing asset and reference it
-          await client.patch(existingAsset._id).set({asset}).commit()
-          onChange(PatchEvent.from(set({_type: 'reference', _ref: existingAsset._id, _weak: true})))
+          await client.patch(existingAsset._id).set({asset: normalizedAsset}).commit()
+          setAssetReference(existingAsset._id)
         } else {
           // Create a new asset document and reference it
           const newAsset = await client.create({
             _id: nanoid(),
             _type: 'cloudinaryAssetDocument',
-            asset: {...asset, _type: 'cloudinaryAssetReference', _key: nanoid()},
+            asset: normalizedAsset,
           })
-          onChange(PatchEvent.from(set({_type: 'reference', _ref: newAsset._id, _weak: true})))
+          setAssetReference(newAsset._id)
         }
       } catch (err) {
         console.error('Error creating/updating Cloudinary asset:', err)
       }
     },
-    [client, onChange],
+    [client, setAssetReference],
   )
 
   const handleOpenSelector = useCallback(() => {
@@ -98,7 +130,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
     }
   }, [cloudName, apiKey, handleSelect, folderOption])
 
-  const reference = value as {_ref?: string} | undefined
+  const reference = (value as ReferenceValue | undefined)?.asset
 
   let selectButtonText = 'Configure Cloudinary to Select Assets'
   if (hasConfig) {
