@@ -46,8 +46,10 @@ export const cloudinaryAssetDocument = defineType({
       const subtitle = `${type} ${formatInfo}`
 
       let media = derivedUrl || secureUrl || url
-      if (media && format === 'pdf') {
-        // First page as JPG so desk lists can render a thumbnail
+      // Desk/list media is rendered as an <img>; only pass image (and PDF) URLs
+      if (type !== 'image' || !media) {
+        media = undefined
+      } else if (format === 'pdf') {
         media = media.replace(
           'image/upload',
           'image/upload/f_jpg,pg_1,l_text:Verdana_75_letter_spacing_14:PDF',
