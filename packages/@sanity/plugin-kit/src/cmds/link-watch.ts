@@ -44,7 +44,7 @@ const flags = {
 } as const
 
 function run({argv}: {argv: string[]}) {
-  const cli = meow(help, {flags, argv, description})
+  const cli = meow(help, {importMeta: import.meta, flags, argv, description})
   const basePath = path.resolve(cli.input[0] || process.cwd())
   return linkWatch({basePath})
 }

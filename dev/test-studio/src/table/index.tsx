@@ -1,4 +1,4 @@
-import {ThListIcon} from '@sanity/icons'
+import {ThListIcon} from '@sanity/icons/ThList'
 import {table} from '@sanity/table'
 import {definePlugin, defineType} from 'sanity'
 

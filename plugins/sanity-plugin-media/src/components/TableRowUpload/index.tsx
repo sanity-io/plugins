@@ -1,4 +1,4 @@
-import {CloseIcon} from '@sanity/icons'
+import {CloseIcon} from '@sanity/icons/Close'
 import {Box, Button, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
 import filesize from 'filesize'
 import {useDispatch} from 'react-redux'

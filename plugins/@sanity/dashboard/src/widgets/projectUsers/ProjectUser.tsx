@@ -1,4 +1,4 @@
-import {RobotIcon} from '@sanity/icons'
+import {RobotIcon} from '@sanity/icons/Robot'
 import {Box, Flex, rem, Stack, Text} from '@sanity/ui'
 import {useListFormat, type User, UserAvatar} from 'sanity'
 import {styled} from 'styled-components'

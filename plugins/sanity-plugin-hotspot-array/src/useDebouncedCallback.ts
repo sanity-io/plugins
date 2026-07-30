@@ -58,7 +58,7 @@ export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
 
   useEffect(() => {
     cb.current = callback
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps -- deps are provided by the caller via the `deps` argument
   }, deps)
 
   // oxlint-disable react/react-compiler
@@ -98,7 +98,7 @@ export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
     })
 
     return wrapped
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps -- deps are provided by the caller via the `deps` argument
   }, [delay, maxWait, ...deps])
   // oxlint-enable react/react-compiler
 }

@@ -49,7 +49,7 @@ const seedIssue520: StudioScript = {
     log.info('Publishing the release...')
     await client.releases.publish({releaseId})
 
-    log.success(`Done. Open "${publishedId}" in the kitchen-sink workspace.`)
+    log.success(`Done. Open "${publishedId}" in the home workspace.`)
     log.info('The Localized field should crash with "Attempted to patch a read-only document".')
   },
 }

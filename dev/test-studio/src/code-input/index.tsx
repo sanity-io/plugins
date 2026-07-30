@@ -1,5 +1,5 @@
 import {codeInput} from '@sanity/code-input'
-import {CodeBlockIcon} from '@sanity/icons'
+import {CodeBlockIcon} from '@sanity/icons/CodeBlock'
 import {definePlugin, defineType} from 'sanity'
 
 const codeTest = defineType({
@@ -32,6 +32,15 @@ const codeTest = defineType({
           {title: 'HTML', value: 'html'},
           {title: 'CSS', value: 'css'},
         ],
+      },
+    },
+    {
+      name: 'codeNoFullscreen',
+      title: 'Code with fullscreen disabled',
+      description: 'A code input with the fullscreen toggle button hidden',
+      type: 'code',
+      options: {
+        disableFullscreen: true,
       },
     },
     {

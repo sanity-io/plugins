@@ -1,6 +1,6 @@
 import type {SanityClient} from '@sanity/client'
 import type {ToastParams} from '@sanity/ui'
-import {type Ref, useImperativeHandle, useState} from 'react'
+import {useImperativeHandle, useState, type Ref} from 'react'
 
 import {DocumentListWrapper} from './DocumentListWrapper'
 import {resetOrder} from './helpers/resetOrder'
@@ -13,18 +13,18 @@ export interface OrderableDocumentListProps {
     params?: Record<string, unknown>
     currentVersion?: string
   }
-  ref?: Ref<OrderableDocumentListHandle>
+  /**
+   * Structure menu actions look up `actionHandlers` on the pane component
+   * instance. Expose them via `useImperativeHandle`.
+   */
+  ref?: Ref<{
+    actionHandlers: {
+      showIncrements: () => void
+      resetOrder: () => Promise<void>
+    }
+  }>
 }
 
-export interface OrderableDocumentListHandle {
-  actionHandlers: {
-    showIncrements: () => void
-    resetOrder: () => Promise<void>
-  }
-}
-
-// The structure tool reads `actionHandlers` off the pane component's ref to wire
-// up its menu items, so we expose them through `useImperativeHandle`.
 export function OrderableDocumentList({options, ref}: OrderableDocumentListProps) {
   const [showIncrements, setShowIncrements] = useState(false)
   const [resetOrderTransaction, setResetOrderTransaction] = useState<ToastParams>({})
@@ -34,7 +34,7 @@ export function OrderableDocumentList({options, ref}: OrderableDocumentListProps
     () => ({
       actionHandlers: {
         showIncrements: () => {
-          setShowIncrements((current) => !current)
+          setShowIncrements((state) => !state)
         },
 
         resetOrder: async () => {
@@ -57,6 +57,8 @@ export function OrderableDocumentList({options, ref}: OrderableDocumentListProps
           })
         },
       },
+      // The pane stores this handle in state, so only re-create it when needed
+      // to avoid update loops.
     }),
     [options],
   )

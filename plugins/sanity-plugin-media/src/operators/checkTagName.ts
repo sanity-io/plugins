@@ -21,7 +21,7 @@ const checkTagName = (client: SanityClient, name: string) => {
           return throwError({
             message: 'Tag already exists',
             statusCode: 409,
-          } as HttpError)
+          } satisfies HttpError)
         }
 
         return of(true)

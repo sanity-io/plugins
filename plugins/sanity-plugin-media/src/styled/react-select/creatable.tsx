@@ -1,4 +1,6 @@
-import {AddIcon, ChevronDownIcon, CloseIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {ChevronDownIcon} from '@sanity/icons/ChevronDown'
+import {CloseIcon} from '@sanity/icons/Close'
 import {Box, Card, Flex, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {components, type StylesConfig} from 'react-select'
 import {Virtuoso} from 'react-virtuoso'

@@ -1,4 +1,4 @@
-import {ClipboardIcon} from '@sanity/icons'
+import {ClipboardIcon} from '@sanity/icons/Clipboard'
 import {Button, Popover, Text} from '@sanity/ui'
 import copy from 'copy-to-clipboard'
 import {useEffect, useRef, useState} from 'react'

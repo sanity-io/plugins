@@ -22,70 +22,72 @@ type Props = {
   selectedAssets?: AssetSourceComponentProps['selectedAssets']
 }
 
-function ReduxProvider(props: Props) {
-  const [store] = useState<Store>(() => {
-    // Initialize redux store + middleware
-    const epicMiddleware = createEpicMiddleware<AnyAction, AnyAction, RootReducerState>({
-      dependencies: {
-        client: props.client, // inject sanity client as a dependency to all epics
-      },
-    })
-    const configuredStore = configureStore({
-      reducer: rootReducer,
-      middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-          /*
-          serializableCheck: {
-            ignoredActions: [
-              assetsActions.deleteError.type,
-              uploadsActions.uploadRequest.type,
-              uploadsActions.uploadStart.type,
-            ]
-          },
-          */
-          // TODO: remove once we're no longer storing non-serializable data in the store
-          serializableCheck: false,
-          thunk: false,
-        }).prepend(epicMiddleware),
-      devTools: true,
-      preloadedState: {
-        assets: {
-          ...assetsInitialState,
-          assetTypes: isSupportedAssetType(props?.assetType)
-            ? [props.assetType]
-            : ['file', 'image'],
-        },
-        debug: {
-          badConnection: false,
-          enabled: false,
-        },
-        dialog: {items: []},
-        notifications: {items: []},
-        search: {facets: [], query: ''},
-        selected: {
-          assets: props.selectedAssets || [],
-          document: props.document,
-          documentAssetIds: props.document ? getDocumentAssetIds(props.document) : [],
-        },
-        tags: {
-          allIds: [],
-          byIds: {},
-          creating: false,
-          fetchCount: -1,
-          fetching: false,
-          panelVisible: true,
-        },
-        uploads: {
-          allIds: [],
-          byIds: {},
-        },
-      },
-    })
-    epicMiddleware.run(rootEpic)
-    return configuredStore
+function createReduxStore(props: Props): Store {
+  const epicMiddleware = createEpicMiddleware<AnyAction, AnyAction, RootReducerState>({
+    dependencies: {
+      client: props.client,
+    },
   })
 
-  return <Provider store={store}>{props.children}</Provider>
+  const store = configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        /*
+        serializableCheck: {
+          ignoredActions: [
+            assetsActions.deleteError.type,
+            uploadsActions.uploadRequest.type,
+            uploadsActions.uploadStart.type,
+          ]
+        },
+        */
+        // TODO: remove once we're no longer storing non-serializable data in the store
+        serializableCheck: false,
+        thunk: false,
+      }).prepend(epicMiddleware),
+    devTools: true,
+    preloadedState: {
+      assets: {
+        ...assetsInitialState,
+        assetTypes: isSupportedAssetType(props?.assetType) ? [props.assetType] : ['file', 'image'],
+      },
+      debug: {
+        badConnection: false,
+        enabled: false,
+      },
+      dialog: {items: []},
+      notifications: {items: []},
+      search: {facets: [], query: ''},
+      selected: {
+        assets: props.selectedAssets || [],
+        document: props.document,
+        documentAssetIds: props.document ? getDocumentAssetIds(props.document) : [],
+      },
+      tags: {
+        allIds: [],
+        byIds: {},
+        creating: false,
+        fetchCount: -1,
+        fetching: false,
+        panelVisible: true,
+      },
+      uploads: {
+        allIds: [],
+        byIds: {},
+      },
+    },
+  })
+
+  epicMiddleware.run(rootEpic)
+
+  return store
+}
+
+function ReduxProvider({children, ...props}: Props) {
+  const [store] = useState(() => createReduxStore(props))
+
+  return <Provider store={store}>{children}</Provider>
 }
 
 export default ReduxProvider
