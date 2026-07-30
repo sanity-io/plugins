@@ -207,19 +207,57 @@ type ReferenceErrorOptions = {
   transactionDocs: SanityDocument[]
   originClient: SanityClient
   destinationClient: SanityClient
+  pluginConfig: Required<PluginConfig>
+  token: string
   setMessage: SetMessage
   onSuccess: () => void
+  /** Caps recursive recovery so a pathological reference loop can't hang forever */
+  depth?: number
+}
+
+// Upload a recovered asset to the destination, rewriting url/path for the new dataset
+async function uploadAssetForRecovery(
+  doc: SanityDocument & SanityAssetDocument,
+  destinationClient: SanityClient,
+  token: string,
+): Promise<{docs: SanityDocument[]; svgMap?: {old: string; new: string}}> {
+  const typeIsFile = isSanityFileAsset(doc)
+  const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
+  const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
+
+  const res = await fetch(downloadUrl, downloadConfig)
+  const assetData = await res.blob()
+  const assetDoc = await destinationClient.assets.upload(typeIsFile ? `file` : `image`, assetData, {
+    filename: doc.originalFilename,
+  })
+
+  return {
+    docs: [assetDoc, {...doc, url: assetDoc.url, path: assetDoc.path}],
+    svgMap: doc.extension === 'svg' ? {old: doc._id, new: assetDoc._id} : undefined,
+  }
 }
 
 // When a transaction fails because of missing references, fetch the referenced
-// documents from the origin and retry, falling back to one-by-one commits
+// documents (and their transitive refs) from the origin — respecting
+// pluginConfig.filter — upload any assets, then retry. Falls back to one-by-one
+// commits if the retry still fails.
 async function handleReferenceError(options: ReferenceErrorOptions): Promise<void> {
-  const {err, transactionDocs, originClient, destinationClient, setMessage, onSuccess} = options
+  const {
+    err,
+    transactionDocs,
+    originClient,
+    destinationClient,
+    pluginConfig,
+    token,
+    setMessage,
+    onSuccess,
+    depth = 0,
+  } = options
   const description = getErrorDescription(err)
   const missingIds = getMissingReferenceIds(err, description)
 
-  if (!missingIds.length) {
-    // Couldn't parse the missing _id's, retry each document on its own
+  if (!missingIds.length || depth >= 5) {
+    // Couldn't parse the missing _id's (or we hit the recursion cap) — retry each document on its own
     setMessage({tone: 'default', text: 'Retrying documents one by one...'})
     await commitOneByOne(transactionDocs, destinationClient, setMessage, onSuccess)
 
@@ -234,7 +272,13 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
   let missingDocs: SanityDocument[] = []
 
   try {
-    missingDocs = await originClient.fetch<SanityDocument[]>(`*[_id in $ids]`, {ids: missingIds})
+    // Recursively gather referenced docs (and apply pluginConfig.filter), same
+    // as the "Gather References" path — so nested refs aren't left behind
+    missingDocs = await getDocumentsInArray({
+      fetchIds: missingIds,
+      client: originClient,
+      pluginConfig,
+    })
   } catch (fetchErr) {
     setMessage({
       tone: 'critical',
@@ -252,11 +296,67 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
     return
   }
 
-  // Put referenced docs first so sequential commits land dependencies before
-  // the documents that point at them
-  const allDocs = [...missingDocs, ...transactionDocs]
+  // Don't re-commit documents already in the failed transaction
+  const existingIds = new Set(transactionDocs.map((doc) => doc._id))
+  const newMissingDocs = missingDocs.filter((doc) => !existingIds.has(doc._id))
 
-  setMessage({tone: 'default', text: `Duplicating ${missingDocs.length} missing document(s)...`})
+  setMessage({tone: 'default', text: `Duplicating ${newMissingDocs.length} missing document(s)...`})
+
+  const recoveredDocs: SanityDocument[] = []
+  const svgMaps: {old: string; new: string}[] = []
+
+  try {
+    await mapWithConcurrency(newMissingDocs, 3, async (doc) => {
+      if (!isAssetDocument(doc)) {
+        recoveredDocs.push(doc)
+
+        return
+      }
+
+      const {docs, svgMap} = await uploadAssetForRecovery(doc, destinationClient, token)
+      recoveredDocs.push(...docs)
+
+      if (svgMap) {
+        svgMaps.push(svgMap)
+      }
+    })
+  } catch (uploadErr) {
+    setMessage({
+      tone: 'critical',
+      text:
+        (uploadErr instanceof Error ? uploadErr.message : '') ||
+        description ||
+        'Duplication Failed',
+    })
+
+    return
+  }
+
+  // Remap any SVG _ref's in the original transaction docs to new destination ids
+  const remappedTransactionDocs =
+    svgMaps.length === 0
+      ? transactionDocs
+      : transactionDocs.map((doc) => {
+          const references = extractWithPath(`.._ref`, doc)
+
+          if (!references.length) {
+            return doc
+          }
+
+          references.forEach((ref) => {
+            const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
+
+            if (newRefValue) {
+              dset(doc, ref.path.join('.'), newRefValue)
+            }
+          })
+
+          return doc
+        })
+
+  // Put recovered (referenced) docs first so sequential commits land
+  // dependencies before the documents that point at them
+  const allDocs = [...recoveredDocs, ...remappedTransactionDocs]
 
   const retryTransaction = destinationClient.transaction()
   allDocs.forEach((doc) => retryTransaction.createOrReplace(doc))
@@ -265,7 +365,24 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
     await retryTransaction.commit()
     setMessage({tone: 'positive', text: 'Duplication complete!'})
     onSuccess()
-  } catch {
+  } catch (retryErr) {
+    const retryDescription = getErrorDescription(retryErr)
+    const isStillReferenceError =
+      retryDescription.toLowerCase().includes('references non-existent document') ||
+      retryDescription.toLowerCase().includes('reference non-existent')
+
+    if (isStillReferenceError) {
+      // Another layer of missing refs — recurse with the expanded set
+      await handleReferenceError({
+        ...options,
+        err: retryErr,
+        transactionDocs: allDocs,
+        depth: depth + 1,
+      })
+
+      return
+    }
+
     setMessage({tone: 'default', text: 'Retrying documents one by one...'})
     await commitOneByOne(allDocs, destinationClient, setMessage, onSuccess)
   }
@@ -548,6 +665,8 @@ export default function Duplicator(props: DuplicatorProps) {
           transactionDocs: transactionDocsMapped,
           originClient,
           destinationClient,
+          pluginConfig,
+          token,
           setMessage,
           onSuccess: onCommitSuccess,
         })
