@@ -770,6 +770,7 @@ export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client
             for (const assetToReplace of assetsToReplace) {
               await client
                 .patch(document._id)
+                .ifRevisionId(document._rev)
                 .set(assetToReplace as AttributeSet)
                 .commit()
             }

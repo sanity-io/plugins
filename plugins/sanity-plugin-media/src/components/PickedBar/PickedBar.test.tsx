@@ -1,6 +1,6 @@
-import {screen} from '@testing-library/react'
+import {cleanup, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {describe, expect, it, vi} from 'vitest'
+import {afterEach, describe, expect, it, vi} from 'vitest'
 
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
 import {initialState as assetsInitialState} from '../../modules/assets'
@@ -62,6 +62,10 @@ function assetsState(byIds: Record<string, AssetItem>, extra?: Partial<typeof as
 }
 
 describe('PickedBar', () => {
+  afterEach(() => {
+    cleanup()
+  })
+
   it('renders nothing when no assets are picked', () => {
     renderWithProviders(<PickedBar />, {
       preloaded: {

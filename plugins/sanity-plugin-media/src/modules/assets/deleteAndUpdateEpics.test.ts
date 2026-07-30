@@ -91,6 +91,7 @@ describe('assetsUpdateImageReferencesEpic', () => {
   it('patches referencing documents and dispatches updateImageReferencesComplete', async () => {
     const referencingDocument = {
       _id: 'doc-1',
+      _rev: 'rev-1',
       _type: 'post',
       hero: {_type: 'image', asset: {_ref: 'a1', _type: 'reference'}},
     }
@@ -121,6 +122,7 @@ describe('assetsUpdateImageReferencesEpic', () => {
     await vi.waitFor(() => {
       expect(client.observable.fetch).toHaveBeenCalled()
       expect(client.patch).toHaveBeenCalledWith('doc-1')
+      expect(chain.ifRevisionId).toHaveBeenCalledWith('rev-1')
       expect(chain.set).toHaveBeenCalledWith({
         hero: {_type: 'image', asset: {_ref: 'a2', _type: 'reference'}},
       })

@@ -1,5 +1,5 @@
-import {screen} from '@testing-library/react'
-import {describe, expect, it, vi} from 'vitest'
+import {cleanup, screen} from '@testing-library/react'
+import {afterEach, describe, expect, it, vi} from 'vitest'
 
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
 import {initialState as assetsInitialState} from '../../modules/assets'
@@ -70,6 +70,10 @@ function assetsState(byIds: Record<string, AssetItem>, extra?: Partial<typeof as
 }
 
 describe('ReplaceAssetsOverview', () => {
+  afterEach(() => {
+    cleanup()
+  })
+
   it('lists only other image assets as replace candidates', () => {
     renderWithProviders(<ReplaceAssetsOverview />, {
       preloaded: {

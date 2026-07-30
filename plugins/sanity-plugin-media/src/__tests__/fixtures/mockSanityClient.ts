@@ -55,16 +55,19 @@ export function createMockSanityClient(
 }
 
 export function mockPatchChain(result: unknown): {
+  ifRevisionId: ReturnType<typeof vi.fn>
   set: ReturnType<typeof vi.fn>
   setIfMissing: ReturnType<typeof vi.fn>
   commit: ReturnType<typeof vi.fn>
 } {
   const commit = vi.fn().mockResolvedValue(result)
   const chain = {
+    ifRevisionId: vi.fn(),
     set: vi.fn(),
     setIfMissing: vi.fn(),
     commit,
   }
+  chain.ifRevisionId.mockImplementation(() => chain)
   chain.set.mockImplementation(() => chain)
   chain.setIfMissing.mockImplementation(() => chain)
   return chain
