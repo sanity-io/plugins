@@ -1,6 +1,5 @@
-import {outdent} from 'outdent'
-
 import type {InjectTemplate} from '../actions/inject'
+import {outdent} from '../util/outdent'
 
 export function gitignoreTemplate(): InjectTemplate {
   return {

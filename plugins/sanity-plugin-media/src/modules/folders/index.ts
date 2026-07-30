@@ -195,8 +195,7 @@ export const foldersFetchEpic: MyEpic = (action$, state$, {client}) =>
         mergeMap(() => {
           const assetTypes = state.assets.assetTypes.map((type) => `sanity.${type}Asset`)
           return client.observable.fetch<{
-            folders: {_id: string; name?: string; parentId?: string | null}[]
-            assetCounts: {folderId: string; count: number}[]
+            folders: {_id: string; name?: string; parentId?: string | null; count: number}[]
             unfiledCount: number
           }>(
             groq`{
@@ -206,17 +205,12 @@ export const foldersFetchEpic: MyEpic = (action$, state$, {client}) =>
               ] {
                 _id,
                 name,
-                "parentId": parent._ref
-              },
-              "assetCounts": *[
-                _type in ${JSON.stringify(assetTypes)}
-                && !(_id in path("drafts.**"))
-                && defined(opt.media.folder._ref)
-              ] {
-                "folderId": opt.media.folder._ref
-              } | {
-                "folderId": folderId,
-                "count": count(*[_id == ^.folderId])
+                "parentId": parent._ref,
+                "count": count(*[
+                  _type in ${JSON.stringify(assetTypes)}
+                  && !(_id in path("drafts.**"))
+                  && opt.media.folder._ref == ^._id
+                ])
               },
               "unfiledCount": count(*[
                 _type in ${JSON.stringify(assetTypes)}
@@ -233,8 +227,8 @@ export const foldersFetchEpic: MyEpic = (action$, state$, {client}) =>
             parentId: f.parentId || null,
           }))
           const exactCountByFolderId: Record<string, number> = {}
-          result.assetCounts.forEach(({folderId, count}) => {
-            exactCountByFolderId[folderId] = (exactCountByFolderId[folderId] || 0) + count
+          result.folders.forEach(({_id, count}) => {
+            exactCountByFolderId[_id] = count
           })
           return of(
             foldersSlice.actions.fetchComplete({

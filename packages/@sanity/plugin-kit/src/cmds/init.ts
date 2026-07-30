@@ -6,7 +6,7 @@ import {init, initFlags} from '../actions/init'
 import {cliName} from '../constants'
 import {installDependencies, promptForPackageManager} from '../npm/manager'
 import {presetHelpList} from '../presets/presets'
-import {findStudioV3Config, hasSanityJson} from '../sanity/manifest'
+import {findStudioConfig} from '../sanity/studio-detect'
 import {isEmptyish, ensureDir} from '../util/files'
 import log from '../util/log'
 import {prompt} from '../util/prompt'
@@ -18,8 +18,8 @@ Usage
   $ ${cliName} init [dir] [<args>]
 
 Options
-  --no-eslint             Disables ESLint config and dependencies from being added
-  --no-prettier           Disables prettier config and dependencies from being added
+  --no-oxlint             Disables oxlint config and dependencies from being added
+  --no-oxfmt              Disables oxfmt config and dependencies from being added
   --no-typescript         Disables typescript config and dependencies from being added
   --no-license            Disables LICENSE + package.json license field from being added
   --no-editorconfig       Disables .editorconfig from being added
@@ -44,25 +44,18 @@ Examples
   # Initialize a plugin in the directory ~/my-plugin
   $ ${cliName} init ~/my-plugin
 
-  # Don't add eslint or prettier
-  $ ${cliName} init --no-eslint --no-prettier
+  # Don't add oxlint or oxfmt
+  $ ${cliName} init --no-oxlint --no-oxfmt
 `
 
 async function run({argv}: {argv: string[]}) {
-  const cli = meow(help, {flags: initFlags, argv, description})
+  const cli = meow(help, {importMeta: import.meta, flags: initFlags, argv, description})
   const basePath = path.resolve(cli.input[0] || process.cwd())
 
-  const {exists, isRoot} = await hasSanityJson(basePath)
-  if (exists && isRoot) {
+  const {configFile} = await findStudioConfig(basePath)
+  if (configFile) {
     throw new Error(
-      `sanity.json has a "root" property set to true - are you trying to init into a studio instead of a plugin?`,
-    )
-  }
-
-  const {v3ConfigFile} = await findStudioV3Config(basePath)
-  if (v3ConfigFile) {
-    throw new Error(
-      `${v3ConfigFile} exists - are you trying to init into a studio instead of a plugin?`,
+      `${configFile} exists - are you trying to init into a studio instead of a plugin?`,
     )
   }
 

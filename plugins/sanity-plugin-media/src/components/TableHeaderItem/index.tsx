@@ -1,4 +1,5 @@
-import {ChevronDownIcon, ChevronUpIcon} from '@sanity/icons'
+import {ChevronDownIcon} from '@sanity/icons/ChevronDown'
+import {ChevronUpIcon} from '@sanity/icons/ChevronUp'
 import {Box, Label} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 

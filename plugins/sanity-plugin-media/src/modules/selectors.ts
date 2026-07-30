@@ -11,19 +11,18 @@ export const selectCombinedItems = createSelector(
     selectCurrentFolderChildren,
   ],
   (assetIds, uploadIds, folderChildren) => {
-    const assetItems = assetIds.map((id) => ({id, type: 'asset'}) as CardAssetData)
+    const assetItems = assetIds.map((id): CardAssetData => ({id, type: 'asset'}))
     const folderItems = folderChildren.map(
-      (folder) =>
-        ({
-          id: `folder:${folder.id}`,
-          folderId: folder.id,
-          name: folder.name,
-          path: folder.path,
-          totalCount: folder.totalCount,
-          type: 'folder',
-        }) as CardFolderData,
+      (folder): CardFolderData => ({
+        id: `folder:${folder.id}`,
+        folderId: folder.id,
+        name: folder.name,
+        path: folder.path,
+        totalCount: folder.totalCount,
+        type: 'folder',
+      }),
     )
-    const uploadItems = uploadIds.map((id) => ({id, type: 'upload'}) as CardUploadData)
+    const uploadItems = uploadIds.map((id): CardUploadData => ({id, type: 'upload'}))
     const combinedItems: (CardAssetData | CardFolderData | CardUploadData)[] = [
       ...folderItems,
       ...uploadItems,

@@ -37,5 +37,5 @@ export function createTestRootState(overrides: Partial<RootReducerState> = {}): 
     uploads: {allIds: [], byIds: {}},
   }
 
-  return {...base, ...overrides} as RootReducerState
+  return {...base, ...overrides}
 }

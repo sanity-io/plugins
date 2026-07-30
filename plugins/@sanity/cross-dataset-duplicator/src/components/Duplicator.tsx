@@ -1,6 +1,8 @@
 import {isAssetId, isSanityFileAsset} from '@sanity/asset-utils'
 import type {SanityAssetDocument} from '@sanity/client'
-import {ArrowRightIcon, SearchIcon, LaunchIcon} from '@sanity/icons'
+import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
+import {LaunchIcon} from '@sanity/icons/Launch'
+import {SearchIcon} from '@sanity/icons/Search'
 import {extractWithPath} from '@sanity/mutator'
 import {
   Card,

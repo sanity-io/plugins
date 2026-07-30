@@ -1,5 +1,5 @@
 import {Card, type CardTone} from '@sanity/ui'
-import {forwardRef, useCallback, useRef} from 'react'
+import {useCallback, useRef} from 'react'
 import {styled} from 'styled-components'
 
 import {withFocusRing} from './withFocusRing'
@@ -15,43 +15,50 @@ interface UploadCardProps {
   onDragLeave: React.DragEventHandler<HTMLDivElement>
   onDragEnter: React.DragEventHandler<HTMLDivElement>
 }
-export const UploadCard = forwardRef<HTMLDivElement, UploadCardProps>(
-  ({children, tone, onPaste, onDrop, onDragEnter, onDragLeave, onDragOver}, forwardedRef) => {
-    const inputRef = useRef<HTMLInputElement>(null)
-    const handleKeyDown = useCallback<React.KeyboardEventHandler<HTMLDivElement>>((event) => {
-      const target = event.target as HTMLElement
+export function UploadCard({
+  children,
+  tone,
+  onPaste,
+  onDrop,
+  onDragEnter,
+  onDragLeave,
+  onDragOver,
+  ref,
+}: UploadCardProps & {ref?: React.Ref<HTMLDivElement>}) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const handleKeyDown = useCallback<React.KeyboardEventHandler<HTMLDivElement>>((event) => {
+    const target = event.target as HTMLElement
 
-      // Don't steal focus when pasting into the VTT input
-      if (target.closest('#vtt-url')) {
-        return
-      }
+    // Don't steal focus when pasting into the VTT input
+    if (target.closest('#vtt-url')) {
+      return
+    }
 
-      if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
-        inputRef.current!.focus()
-      }
-    }, [])
+    if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+      inputRef.current!.focus()
+    }
+  }, [])
 
-    return (
-      <UploadCardWithFocusRing
-        tone={tone}
-        ref={forwardedRef}
-        padding={0}
-        radius={2}
-        shadow={0}
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-        onPaste={onPaste}
-        onDrop={onDrop}
-        onDragEnter={onDragEnter}
-        onDragLeave={onDragLeave}
-        onDragOver={onDragOver}
-      >
-        <HiddenInput ref={inputRef} />
-        {children}
-      </UploadCardWithFocusRing>
-    )
-  },
-)
+  return (
+    <UploadCardWithFocusRing
+      tone={tone}
+      ref={ref}
+      padding={0}
+      radius={2}
+      shadow={0}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      onPaste={onPaste}
+      onDrop={onDrop}
+      onDragEnter={onDragEnter}
+      onDragLeave={onDragLeave}
+      onDragOver={onDragOver}
+    >
+      <HiddenInput ref={inputRef} />
+      {children}
+    </UploadCardWithFocusRing>
+  )
+}
 
 const HiddenInput = styled.input.attrs({type: 'text'})`
   position: absolute;

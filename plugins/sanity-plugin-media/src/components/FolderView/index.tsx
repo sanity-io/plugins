@@ -67,7 +67,7 @@ const FolderHeaderAction = ({
         </Text>
       </Container>
     }
-    disabled={'ontouchstart' in window}
+    disabled={typeof window !== 'undefined' && 'ontouchstart' in window}
     placement="top"
     portal
   >
