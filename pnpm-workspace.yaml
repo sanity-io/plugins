@@ -159,9 +159,6 @@ overrides:
   '@sanity/mutator': 'catalog:'
   '@sanity/schema': 'catalog:'
   '@sanity/types': 'catalog:'
-  # Force a single @sanity/ui across the tree (including sanity's ^3.5.0 peer/dep)
-  # while testing the v4 next prerelease.
-  '@sanity/ui': 'catalog:'
   '@sanity/util': 'catalog:'
   groq: 'catalog:'
   sanity: 'catalog:'
