@@ -160,7 +160,6 @@ export default function Details({
             label="Description"
             name="description"
             rows={5}
-            value={toStringField(currentAsset?.description)}
           />
           {creditLine?.enabled && (
             <FormFieldInputText
