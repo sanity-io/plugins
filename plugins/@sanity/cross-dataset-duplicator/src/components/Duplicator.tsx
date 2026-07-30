@@ -177,8 +177,9 @@ async function commitOneByOne(
       tx.createOrReplace(doc)
       await tx.commit()
       successCount += 1
-    } catch {
+    } catch (commitErr) {
       failCount += 1
+      console.error(`Failed to duplicate document "${doc._id}"`, commitErr)
     }
   })
 
@@ -235,7 +236,8 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
   } catch (fetchErr) {
     setMessage({
       tone: 'critical',
-      text: description || (fetchErr instanceof Error ? fetchErr.message : 'Duplication Failed'),
+      text:
+        (fetchErr instanceof Error ? fetchErr.message : '') || description || 'Duplication Failed',
     })
 
     return
@@ -248,7 +250,9 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
     return
   }
 
-  const allDocs = [...transactionDocs, ...missingDocs]
+  // Put referenced docs first so sequential commits land dependencies before
+  // the documents that point at them
+  const allDocs = [...missingDocs, ...transactionDocs]
 
   setMessage({tone: 'default', text: `Duplicating ${missingDocs.length} missing document(s)...`})
 

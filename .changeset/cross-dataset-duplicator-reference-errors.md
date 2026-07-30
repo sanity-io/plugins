@@ -1,5 +1,5 @@
 ---
-'@sanity/cross-dataset-duplicator': patch
+"@sanity/cross-dataset-duplicator": patch
 ---
 
 author: @rohanvachheta
