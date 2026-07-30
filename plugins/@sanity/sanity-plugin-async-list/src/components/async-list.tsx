@@ -4,7 +4,7 @@ import {SpinnerIcon} from '@sanity/icons/Spinner'
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {Autocomplete, Button, Card, Flex, Text} from '@sanity/ui'
 import debounce from 'lodash-es/debounce.js'
-import {type JSX, useCallback, useEffect, useMemo, useState} from 'react'
+import {type JSX, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {set, type StringInputProps, unset, useClient} from 'sanity'
 
 import type {AsyncListInputOptions} from '../types'
@@ -176,15 +176,23 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
     [fetchData, data, props.value, prevQuery],
   )
 
-  // Debounce query events so we don't spam the loader. Memoized so the debounce
-  // timer is stable across renders.
-  const debouncedHandler = useMemo(
-    () => debounce((value: string | null) => handleQueryChange(value), 300),
-    [handleQueryChange],
-  )
+  // Keep a stable debounced wrapper that always calls the latest handler.
+  // Depending on `handleQueryChange` in useMemo would recreate (and cancel) the
+  // debounce after every search finishes (`data`/`prevQuery` change), dropping
+  // keystrokes typed while a request was in flight.
+  const handleQueryChangeRef = useRef(handleQueryChange)
+  useEffect(() => {
+    handleQueryChangeRef.current = handleQueryChange
+  }, [handleQueryChange])
 
-  // Cancel any pending debounced call when the handler is replaced or the input
-  // unmounts, so we never run async work / set state on an unmounted tree.
+  // oxlint-disable react/react-compiler -- stable debounce instance; latest handler via ref
+  const debouncedHandler = useMemo(
+    () => debounce((value: string | null) => handleQueryChangeRef.current(value), 300),
+    [],
+  )
+  // oxlint-enable react/react-compiler
+
+  // Cancel only on unmount — not when the underlying handler identity changes.
   useEffect(() => () => debouncedHandler.cancel(), [debouncedHandler])
 
   // Render error state as a readonly string field
