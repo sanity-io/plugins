@@ -67,4 +67,25 @@ describe('findImageAssets', () => {
     expect(findImageAssets(document, newAsset, 'old-asset')).toEqual([])
     expect(document.file.asset._ref).toBe('old-asset')
   })
+
+  it('re-points custom image schema types (not only `_type: "image"`)', () => {
+    const document = {
+      _id: 'doc-1',
+      _type: 'post',
+      poster: {_type: 'mainImage', asset: {_ref: 'old-asset', _type: 'reference'}, alt: 'keep'},
+    }
+
+    const result = findImageAssets(document, newAsset, 'old-asset')
+
+    expect(result).toEqual([
+      {
+        poster: {
+          _type: 'mainImage',
+          asset: {_ref: 'new-asset', _type: 'reference'},
+          alt: 'keep',
+        },
+      },
+    ])
+    expect(document.poster.asset._ref).toBe('new-asset')
+  })
 })

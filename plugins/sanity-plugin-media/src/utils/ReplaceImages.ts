@@ -40,8 +40,12 @@ function repointNestedImages(
   }
 
   const candidate = node as ImageNode
-  if (candidate._type === 'image' && candidate.asset && candidate.asset._ref === assetToReplaceId) {
-    candidate.asset._ref = newAsset._id
+  // Match built-in `image` nodes and custom image schema types (e.g. `mainImage`),
+  // which store their type name in `_type` rather than `"image"`. Skip file fields.
+  const hasMatchingAssetRef =
+    candidate.asset?._type === 'reference' && candidate.asset._ref === assetToReplaceId
+  if (hasMatchingAssetRef && candidate._type !== 'file') {
+    candidate.asset!._ref = newAsset._id
     if (topLevelField) {
       matchedTopLevelFields.add(topLevelField)
     }
