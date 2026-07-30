@@ -1,4 +1,5 @@
-import {DocumentTextIcon, TokenIcon} from '@sanity/icons'
+import {DocumentTextIcon} from '@sanity/icons/DocumentText'
+import {TokenIcon} from '@sanity/icons/Token'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
 import {HideReferenceChangedBannerInput} from '../components/HideReferenceChangedBannerInput'

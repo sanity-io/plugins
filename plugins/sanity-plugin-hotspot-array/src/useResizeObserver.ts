@@ -120,6 +120,6 @@ export function useResizeObserver<T extends Element>(
       subscribed = false
       ro.unsubscribe(_tgt, handler)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps -- callback is kept current via cb.current
   }, [tgt, ro])
 }

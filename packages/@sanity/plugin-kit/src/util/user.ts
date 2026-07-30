@@ -1,14 +1,13 @@
 import {execSync} from 'child_process'
 import path from 'path'
 
-import {validate as isValidEmail} from 'email-validator'
-import xdgBasedir from 'xdg-basedir'
-
 import type {InjectOptions} from '../actions/inject'
 import type {PackageJson} from '../actions/verify/types'
+import {isValidEmail} from './email'
 import {readJsonFile} from './files'
 import {prompt} from './prompt'
 import {requester} from './request'
+import {xdgConfig} from './xdg'
 
 export interface User {
   name: string
@@ -75,7 +74,7 @@ async function promptForInfo(defValue?: User) {
 async function getSanityUserInfo(): Promise<User | undefined> {
   try {
     const data = await readJsonFile<{authToken?: string}>(
-      path.join(xdgBasedir.config ?? '', 'sanity', 'config.json'),
+      path.join(xdgConfig ?? '', 'sanity', 'config.json'),
     )
     const token = data?.authToken
 

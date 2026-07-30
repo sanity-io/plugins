@@ -1,4 +1,4 @@
-import {PlayIcon} from '@sanity/icons'
+import {PlayIcon} from '@sanity/icons/Play'
 import {Card, Box, Heading, Flex, Text, Stack} from '@sanity/ui'
 import {getTheme_v2} from '@sanity/ui/theme'
 import {styled} from 'styled-components'

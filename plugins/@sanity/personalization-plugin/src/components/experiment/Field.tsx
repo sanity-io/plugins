@@ -1,4 +1,4 @@
-import {CloseIcon} from '@sanity/icons'
+import {CloseIcon} from '@sanity/icons/Close'
 import {useCallback, useMemo} from 'react'
 import {GiSoapExperiment} from 'react-icons/gi'
 import {
