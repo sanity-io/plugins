@@ -1,4 +1,4 @@
-import {CloseIcon} from '@sanity/icons'
+import {CloseIcon} from '@sanity/icons/Close'
 import {useCallback, useMemo} from 'react'
 import {IoMdPeople} from 'react-icons/io'
 import {
