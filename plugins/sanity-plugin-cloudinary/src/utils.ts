@@ -14,7 +14,7 @@ export function assetUrl(
   asset: Partial<
     Pick<
       CloudinaryAsset,
-      'url' | 'secure_url' | 'derived' | 'public_id' | 'format' | 'resource_type'
+      'url' | 'secure_url' | 'derived' | 'public_id' | 'format' | 'resource_type' | 'type'
     >
   >,
   cloudName?: string,
@@ -25,16 +25,18 @@ export function assetUrl(
   // derived transform, build an on-the-fly preview with url-gen instead of
   // serving the full-size original. Scaling to a 400px width keeps previews
   // crisp while avoiding multi-megabyte source downloads.
-  // Only images use CloudinaryImage — video/raw would get an /image/upload URL
-  // that breaks VideoPlayer and raw-file previews. Derived transforms are
-  // preferred over the scaled original so Studio still shows the editor's
-  // chosen crop/effects.
+  // Only public `upload` images use CloudinaryImage — video/raw would get an
+  // /image/upload URL that breaks VideoPlayer/raw previews, and private or
+  // authenticated assets need their stored (often signed) URL rather than an
+  // unsigned /upload/ path. Derived transforms are preferred over the scaled
+  // original so Studio still shows the editor's chosen crop/effects.
   if (
     cloudName &&
     asset.public_id &&
     !derived &&
     asset.resource_type !== 'video' &&
-    asset.resource_type !== 'raw'
+    asset.resource_type !== 'raw' &&
+    (!asset.type || asset.type === 'upload')
   ) {
     return new CloudinaryImage(asset.public_id, new CloudConfig({cloudName}))
       .resize(scale().width(400))

@@ -8,6 +8,7 @@ describe('assetUrl', () => {
       {
         public_id: 'folder/sample',
         resource_type: 'image',
+        type: 'upload',
         secure_url: 'https://res.cloudinary.com/demo/image/upload/v1/folder/sample.jpg',
       },
       'demo',
@@ -24,6 +25,7 @@ describe('assetUrl', () => {
       {
         public_id: 'folder/clip',
         resource_type: 'video',
+        type: 'upload',
         secure_url: 'https://res.cloudinary.com/demo/video/upload/v1/folder/clip.mp4',
         url: 'http://res.cloudinary.com/demo/video/upload/v1/folder/clip.mp4',
       },
@@ -40,12 +42,46 @@ describe('assetUrl', () => {
       {
         public_id: 'folder/doc',
         resource_type: 'raw',
+        type: 'upload',
         secure_url: 'https://res.cloudinary.com/demo/raw/upload/v1/folder/doc.pdf',
       },
       'demo',
     )
 
     expect(url).toBe('https://res.cloudinary.com/demo/raw/upload/v1/folder/doc.pdf')
+    expect(url).not.toContain('c_scale')
+  })
+
+  test('keeps the stored URL for private delivery-type assets', () => {
+    const url = assetUrl(
+      {
+        public_id: 'folder/sample',
+        resource_type: 'image',
+        type: 'private',
+        secure_url: 'https://res.cloudinary.com/demo/image/private/s--abc--/v1/folder/sample.jpg',
+      },
+      'demo',
+    )
+
+    expect(url).toBe('https://res.cloudinary.com/demo/image/private/s--abc--/v1/folder/sample.jpg')
+    expect(url).not.toContain('c_scale')
+  })
+
+  test('keeps the stored URL for authenticated delivery-type assets', () => {
+    const url = assetUrl(
+      {
+        public_id: 'folder/sample',
+        resource_type: 'image',
+        type: 'authenticated',
+        secure_url:
+          'https://res.cloudinary.com/demo/image/authenticated/s--xyz--/v1/folder/sample.jpg',
+      },
+      'demo',
+    )
+
+    expect(url).toBe(
+      'https://res.cloudinary.com/demo/image/authenticated/s--xyz--/v1/folder/sample.jpg',
+    )
     expect(url).not.toContain('c_scale')
   })
 
