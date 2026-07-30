@@ -101,9 +101,10 @@ linkWorkspacePackages: deep
 # explicitly unless overriding the default.
 #
 # Keep this list to first-party packages and closely tracked tooling that may
-# need immediate installs. Prefer `pnpm add … --config.minimumReleaseAge=0` (or
-# a version-specific exclude) for one-off third-party upgrades; avoid permanent
-# third-party package excludes solely to land a fresh release.
+# need immediate installs. For one-off upgrades still inside the maturity
+# window, add exact `name@version` entries (do not bypass with
+# `--config.minimumReleaseAge=0` — that is not allowed). Avoid permanent
+# third-party package-name excludes solely to land a fresh release.
 minimumReleaseAgeExclude:
   - '@changesets/cli'
   - '@devframes/*'
