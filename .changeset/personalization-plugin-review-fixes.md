@@ -1,5 +1,5 @@
 ---
-'@sanity/personalization-plugin': patch
+"@sanity/personalization-plugin": patch
 ---
 
 Address review feedback from the migration into the monorepo:
