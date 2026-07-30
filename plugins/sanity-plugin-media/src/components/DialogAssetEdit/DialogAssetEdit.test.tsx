@@ -297,6 +297,73 @@ describe('DialogAssetEdit', () => {
     })
   })
 
+  it('does not refill Description from EXIF when it was intentionally cleared', async () => {
+    renderAssetDialog(
+      {
+        id: 'dlg-1',
+        type: 'assetEdit',
+        assetId: 'a1',
+      },
+      {
+        preloaded: {
+          assets: assetsWith({
+            description: '',
+            metadata: withImageDescription('EXIF ImageDescription test'),
+          }),
+        },
+      },
+    )
+
+    await waitFor(() => {
+      expect(textareaByName(/asset details/i, screen, 'description')).toHaveValue('')
+    })
+  })
+
+  it('persists a cleared Description as empty string so EXIF cannot refill it', async () => {
+    const user = userEvent.setup()
+    const {store} = renderAssetDialog(
+      {
+        id: 'dlg-1',
+        type: 'assetEdit',
+        assetId: 'a1',
+      },
+      {
+        preloaded: {
+          assets: assetsWith({
+            description: undefined,
+            metadata: withImageDescription('EXIF ImageDescription test'),
+          }),
+        },
+      },
+    )
+    const dispatchSpy = vi.spyOn(store, 'dispatch')
+    const dlg = withinDialog(/asset details/i, screen)
+
+    await waitFor(() => {
+      expect(textareaByName(/asset details/i, screen, 'description')).toHaveValue(
+        'EXIF ImageDescription test',
+      )
+    })
+
+    await user.clear(textareaByName(/asset details/i, screen, 'description'))
+    await user.click(dlg.getByRole('button', {name: /save and close/i}))
+
+    await waitFor(() => {
+      let updateAction
+      for (const call of dispatchSpy.mock.calls) {
+        const action = call[0]
+        if (assetsActions.updateRequest.match(action)) {
+          updateAction = action
+          break
+        }
+      }
+      expect(updateAction).toBeDefined()
+      expect(updateAction?.payload.formData).toMatchObject({
+        description: '',
+      })
+    })
+  })
+
   it('preserves intentionally empty localized description instead of applying EXIF fallback', async () => {
     const user = userEvent.setup()
     renderAssetDialog(

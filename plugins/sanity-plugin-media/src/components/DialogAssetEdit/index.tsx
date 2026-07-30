@@ -241,6 +241,12 @@ const DialogAssetEdit = (props: Props) => {
 
       const sanitizedFormData = sanitizeFormData(formData)
 
+      // Keep an intentionally cleared description as '' (not null) so the EXIF
+      // ImageDescription fallback does not refill it the next time the dialog opens.
+      if (formData.description === '') {
+        sanitizedFormData['description'] = ''
+      }
+
       dispatch(
         assetsActions.updateRequest({
           asset: assetItem?.asset,
