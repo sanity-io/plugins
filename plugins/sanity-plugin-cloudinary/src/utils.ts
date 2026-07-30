@@ -167,10 +167,15 @@ function loadJS(url: string, callback: (cloudinary: NonNullable<Window['cloudina
     return
   }
 
+  // Guard against double-invocation if load fires in the same tick as the
+  // post-listener readiness re-check below.
+  let settled = false
   const handleLoad = () => {
-    if (window.cloudinary) {
-      callback(window.cloudinary)
+    if (settled || !window.cloudinary) {
+      return
     }
+    settled = true
+    callback(window.cloudinary)
   }
 
   const existingScript = document.getElementById('damWidget')
@@ -179,6 +184,10 @@ function loadJS(url: string, callback: (cloudinary: NonNullable<Window['cloudina
     // loading yet (the global isn't ready). Wait for the load event instead
     // of invoking the callback too early.
     existingScript.addEventListener('load', handleLoad, {once: true})
+    // Re-check immediately: the load event may have fired between the initial
+    // `window.cloudinary` check and registering this listener, in which case
+    // the event will never fire again and the callback would otherwise hang.
+    handleLoad()
     return
   }
 
