@@ -11,7 +11,7 @@ export const fieldLevelExperiments = definePlugin<LaunchDarklyFieldLevelConfig>(
   const pluginConfig = {...LAUNCHDARKLY_CONFIG_DEFAULT, ...config}
   const {fields, projectKey, tags} = pluginConfig
   return {
-    name: 'sanity-growthbook-personalistaion-plugin-field-level-experiments',
+    name: 'sanity-launchdarkly-personalization-plugin-field-level-experiments',
     plugins: [
       baseFieldLevelExperiments({
         fields,
