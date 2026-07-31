@@ -1,6 +1,7 @@
 import {CollapseIcon} from '@sanity/icons/Collapse'
 import {ExpandIcon} from '@sanity/icons/Expand'
-import {Box, Button, Card, Layer, Portal, Text, Tooltip} from '@sanity/ui'
+import {Box, Button, Card, Layer, Portal, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {type CSSProperties, type ReactNode, useCallback, useEffect, useRef, useState} from 'react'
 import {css, styled} from 'styled-components'
 

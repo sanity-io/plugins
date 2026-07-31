@@ -1,5 +1,6 @@
 import {SelectIcon} from '@sanity/icons/Select'
-import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
+import {Box, Button} from '@sanity/ui'
+import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
 import {useDispatch} from 'react-redux'
 import Select from 'react-select'
 import {useColorSchemeValue} from 'sanity'

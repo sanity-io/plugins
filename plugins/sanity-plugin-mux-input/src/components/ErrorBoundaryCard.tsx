@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import {Button, Card, Flex, Grid, Heading, Inline, Text, useToast} from '@sanity/ui'
+import {Button, Card, Flex, Grid, Heading, Inline, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {memo, useCallback, useRef} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import {clear} from 'suspend-react'

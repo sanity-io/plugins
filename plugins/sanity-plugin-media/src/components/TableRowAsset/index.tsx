@@ -10,9 +10,9 @@ import {
   Spinner,
   Text,
   type ThemeColorSchemeKey,
-  Tooltip,
   useMediaIndex,
 } from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
 import {

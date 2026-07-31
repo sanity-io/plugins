@@ -1,5 +1,6 @@
 import {icons, Icon, type IconSymbol} from '@sanity/icons'
-import {Button, Menu, MenuButton, MenuItem} from '@sanity/ui'
+import {Button} from '@sanity/ui'
+import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
 import {useCallback, useId, useMemo} from 'react'
 import {set, type StringInputProps} from 'sanity'
 

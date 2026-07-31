@@ -1,5 +1,6 @@
 import {EditIcon} from '@sanity/icons/Edit'
-import {Badge, Box, Button, Flex, Text, useToast} from '@sanity/ui'
+import {Badge, Box, Button, Flex, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback} from 'react'
 import {type SanityDocument, useClient} from 'sanity'
 

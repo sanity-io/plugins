@@ -1,4 +1,5 @@
-import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {studioTheme, ThemeProvider} from '@sanity/ui'
+import {ToastProvider} from '@sanity/ui/toast'
 import {render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
 import {ColorSchemeProvider} from 'sanity'

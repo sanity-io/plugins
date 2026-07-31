@@ -3,19 +3,8 @@ import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
 import {RetrieveIcon} from '@sanity/icons/Retrieve'
 import {RetryIcon} from '@sanity/icons/Retry'
-import {
-  Box,
-  Button,
-  Card,
-  Checkbox,
-  Code,
-  Dialog,
-  Flex,
-  Heading,
-  Spinner,
-  Stack,
-  Text,
-} from '@sanity/ui'
+import {Box, Button, Card, Checkbox, Dialog, Flex, Heading, Spinner, Stack, Text} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 import {truncateString, useFormattedDuration} from 'sanity'
 import {styled} from 'styled-components'
 

@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export * from './types'
 export * from './components/DashboardWidgetContainer'
 export * from './widgets/projectInfo'

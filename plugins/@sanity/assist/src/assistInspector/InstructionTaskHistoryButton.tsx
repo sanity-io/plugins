@@ -8,7 +8,6 @@ import {
   Button,
   Card,
   Flex,
-  Popover,
   Spinner,
   Stack,
   Text,
@@ -16,6 +15,7 @@ import {
   useGlobalKeyDown,
   useLayer,
 } from '@sanity/ui'
+import {Popover} from '@sanity/ui/popover'
 import {type Ref, useCallback, useMemo, useState} from 'react'
 import {StatusButton, type StatusButtonProps, typed, useClient} from 'sanity'
 import {keyframes, styled} from 'styled-components'

@@ -1,5 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
-import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {studioTheme, ThemeProvider} from '@sanity/ui'
+import {ToastProvider} from '@sanity/ui/toast'
 import {render, type RenderResult} from '@testing-library/react'
 import type {ReactElement, ReactNode} from 'react'
 import {Provider} from 'react-redux'

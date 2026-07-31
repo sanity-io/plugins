@@ -1,4 +1,5 @@
-import {Box, Text, Tooltip} from '@sanity/ui'
+import {Box, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 
 type StatusProps = {
   text: string

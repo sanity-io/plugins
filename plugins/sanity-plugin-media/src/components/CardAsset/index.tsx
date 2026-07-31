@@ -10,8 +10,8 @@ import {
   Text,
   type Theme,
   type ThemeColorSchemeKey,
-  Tooltip,
 } from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'

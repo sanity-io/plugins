@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {definePlugin, type ObjectDefinition} from 'sanity'
 
 import {shopifyAssetMetadataSchema} from './schema/shopifyAssetMetadataSchema'

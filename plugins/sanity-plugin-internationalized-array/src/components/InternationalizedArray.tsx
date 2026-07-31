@@ -1,6 +1,7 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {useLanguageFilterStudioContext} from '@sanity/language-filter'
-import {Button, Card, Stack, Text, useToast} from '@sanity/ui'
+import {Button, Card, Stack, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import type React from 'react'
 import {useCallback, useEffect, useMemo} from 'react'
 import {

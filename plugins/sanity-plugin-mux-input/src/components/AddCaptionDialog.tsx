@@ -1,7 +1,6 @@
 import {TranslateIcon} from '@sanity/icons/Translate'
 import {UploadIcon} from '@sanity/icons/Upload'
 import {
-  Autocomplete,
   Button,
   Card,
   Checkbox,
@@ -12,8 +11,9 @@ import {
   Stack,
   Text,
   TextInput,
-  useToast,
 } from '@sanity/ui'
+import {Autocomplete} from '@sanity/ui/autocomplete'
+import {useToast} from '@sanity/ui/toast'
 import LanguagesList from 'iso-639-1'
 import {useId, useRef, useState} from 'react'
 

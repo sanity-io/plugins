@@ -9,12 +9,12 @@ import {
   Button,
   Card,
   Flex,
-  Popover,
   Stack,
   Text,
   TextInput,
   useClickOutsideEvent,
 } from '@sanity/ui'
+import {Popover} from '@sanity/ui/popover'
 import {type MouseEventHandler, useCallback, useState} from 'react'
 import {TextWithTone} from 'sanity'
 

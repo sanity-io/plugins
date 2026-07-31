@@ -1,6 +1,7 @@
 import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
-import {Box, Text, Badge, Tooltip} from '@sanity/ui'
+import {Box, Text, Badge} from '@sanity/ui'
 import type {BadgeTone} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 
 type StatusTones = {
   EXISTS: BadgeTone

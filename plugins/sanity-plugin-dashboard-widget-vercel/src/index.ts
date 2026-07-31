@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import type {DashboardWidget, LayoutConfig} from '@sanity/dashboard'
 
 import Widget from './app'

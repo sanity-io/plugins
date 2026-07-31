@@ -1,5 +1,6 @@
 import {PlayIcon} from '@sanity/icons/Play'
-import {Button, Dialog, Flex, Stack, Text, TextArea, Tooltip} from '@sanity/ui'
+import {Button, Dialog, Flex, Stack, Text, TextArea} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {
   createContext,
   type Dispatch,

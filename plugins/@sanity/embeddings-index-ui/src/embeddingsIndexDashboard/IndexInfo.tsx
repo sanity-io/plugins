@@ -1,17 +1,7 @@
 import {EllipsisVerticalIcon} from '@sanity/icons/EllipsisVertical'
 import {TrashIcon} from '@sanity/icons/Trash'
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Label,
-  Menu,
-  MenuButton,
-  MenuItem,
-  Stack,
-  Text,
-} from '@sanity/ui'
+import {Box, Button, Flex, Heading, Label, Stack, Text} from '@sanity/ui'
+import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
 import {useCallback} from 'react'
 
 import {type IndexState} from '../api/embeddingsApi'

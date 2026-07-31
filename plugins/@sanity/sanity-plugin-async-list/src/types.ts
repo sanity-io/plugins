@@ -1,4 +1,4 @@
-import type {AutocompleteProps} from '@sanity/ui'
+import type {AutocompleteProps} from '@sanity/ui/autocomplete'
 import type {AllHTMLAttributes, ClassAttributes, Ref} from 'react'
 import type {SanityClient, SourceClientOptions} from 'sanity'
 

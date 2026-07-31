@@ -1,5 +1,6 @@
 import {TranslateIcon} from '@sanity/icons/Translate'
-import {Autocomplete, Box, Card, Checkbox, Flex, Stack, Text} from '@sanity/ui'
+import {Box, Card, Checkbox, Flex, Stack, Text} from '@sanity/ui'
+import {Autocomplete} from '@sanity/ui/autocomplete'
 import {uuid} from '@sanity/uuid'
 import LanguagesList from 'iso-639-1'
 import {type Dispatch} from 'react'

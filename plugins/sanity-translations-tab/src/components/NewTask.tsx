@@ -1,4 +1,5 @@
-import {Button, Box, Flex, Grid, Select, Stack, Switch, Text, useToast} from '@sanity/ui'
+import {Button, Box, Flex, Grid, Select, Stack, Switch, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useState, useContext, useCallback} from 'react'
 import type {ChangeEvent} from 'react'
 import {styled} from 'styled-components'

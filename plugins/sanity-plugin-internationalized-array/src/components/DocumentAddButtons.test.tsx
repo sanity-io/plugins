@@ -53,8 +53,8 @@ vi.mock('./InternationalizedArrayContext', () => ({
   })),
 }))
 
-vi.mock('@sanity/ui', async (importOriginal) => {
-  const original = await importOriginal<typeof import('@sanity/ui')>()
+vi.mock('@sanity/ui/toast', async (importOriginal) => {
+  const original = await importOriginal<typeof import('@sanity/ui/toast')>()
   return {
     ...original,
     useToast: () => ({push: mockToastPush}),

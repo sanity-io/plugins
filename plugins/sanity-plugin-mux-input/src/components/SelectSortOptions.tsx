@@ -1,5 +1,7 @@
 import {SortIcon} from '@sanity/icons/Sort'
-import {Button, Menu, MenuButton, MenuItem, type PopoverProps} from '@sanity/ui'
+import {Button} from '@sanity/ui'
+import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
+import {type PopoverProps} from '@sanity/ui/popover'
 import {useId} from 'react'
 
 import {ASSET_SORT_OPTIONS, type SortOption} from '../hooks/useAssets'

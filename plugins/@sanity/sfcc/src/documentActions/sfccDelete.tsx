@@ -1,5 +1,6 @@
 import {TrashIcon} from '@sanity/icons/Trash'
-import {Stack, Text, useToast} from '@sanity/ui'
+import {Stack, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useState} from 'react'
 import {type DocumentActionComponent, useClient} from 'sanity'
 import {useRouter} from 'sanity/router'

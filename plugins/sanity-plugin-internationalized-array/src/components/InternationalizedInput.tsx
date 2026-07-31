@@ -1,17 +1,7 @@
 import {RemoveCircleIcon} from '@sanity/icons/RemoveCircle'
-import {
-  Box,
-  Button,
-  Card,
-  Flex,
-  Label,
-  Menu,
-  MenuButton,
-  MenuItem,
-  Spinner,
-  Text,
-  Tooltip,
-} from '@sanity/ui'
+import {Box, Button, Card, Flex, Label, Spinner, Text} from '@sanity/ui'
+import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
+import {Tooltip} from '@sanity/ui/tooltip'
 import type React from 'react'
 import {type ReactNode, useCallback, useMemo} from 'react'
 import {type FormPatch, type ObjectItemProps, PatchEvent, type Path, useFormValue} from 'sanity'

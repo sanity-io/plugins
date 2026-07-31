@@ -1,5 +1,6 @@
 import {PlayIcon} from '@sanity/icons/Play'
-import {Box, Button, Checkbox, Dialog, Flex, Radio, Spinner, Stack, Text, Tooltip} from '@sanity/ui'
+import {Box, Button, Checkbox, Dialog, Flex, Radio, Spinner, Stack, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {
   createContext,
   type PropsWithChildren,

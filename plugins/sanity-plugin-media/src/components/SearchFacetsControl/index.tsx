@@ -1,5 +1,6 @@
 import {AddIcon} from '@sanity/icons/Add'
-import {Button, Flex, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem} from '@sanity/ui'
+import {Button, Flex} from '@sanity/ui'
+import {Menu, MenuButton, MenuDivider, MenuGroup, MenuItem} from '@sanity/ui/menu'
 import {useDispatch} from 'react-redux'
 
 import {FACETS} from '../../constants'

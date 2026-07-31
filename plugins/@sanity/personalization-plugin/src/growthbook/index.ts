@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {definePlugin, isObjectInputProps} from 'sanity'
 
 import {fieldLevelExperiments as baseFieldLevelExperiments} from '../fieldExperiments'

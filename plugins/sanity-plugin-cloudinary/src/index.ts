@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {type AssetSource, definePlugin, isArrayOfObjectsInputProps} from 'sanity'
 
 import {CloudinaryAssetSource} from './components/asset-source/CloudinaryAssetSource'

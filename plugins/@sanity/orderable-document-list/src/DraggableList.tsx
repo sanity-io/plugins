@@ -5,7 +5,8 @@ import {
   type DropResult,
   type DraggableLocation,
 } from '@hello-pangea/dnd'
-import {Box, Card, useToast} from '@sanity/ui'
+import {Box, Card} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useEffect, useState, useMemo, useCallback, type CSSProperties} from 'react'
 import type {PatchOperations} from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
