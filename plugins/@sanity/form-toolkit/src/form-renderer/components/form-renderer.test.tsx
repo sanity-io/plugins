@@ -93,6 +93,48 @@ describe('FormRenderer', () => {
     expect(onChange).toHaveBeenCalledWith('Ada')
   })
 
+  test('controlled fields ignore options.defaultValue when form state is empty', () => {
+    const onChange = vi.fn()
+    const formWithDefaults: FormDataProps = {
+      title: 'Contact',
+      id: {current: 'contact'},
+      fields: [
+        {
+          type: 'text',
+          name: 'firstName',
+          label: 'First name',
+          options: {defaultValue: 'Ada'},
+        },
+        {
+          type: 'textarea',
+          name: 'message',
+          label: 'Message',
+          options: {defaultValue: 'Hello there'},
+        },
+      ],
+    }
+    const getFieldState = (): FieldState => ({
+      value: undefined,
+      onChange,
+    })
+
+    const {container} = render(
+      <FormRenderer formData={formWithDefaults} getFieldState={getFieldState} />,
+    )
+
+    const input = container.querySelector('input[name="firstName"]')
+    if (!(input instanceof HTMLInputElement)) {
+      throw new Error('Expected a text input for "firstName"')
+    }
+    expect(input.value).toBe('')
+
+    const textarea = container.querySelector('textarea[name="message"]')
+    if (!(textarea instanceof HTMLTextAreaElement)) {
+      throw new Error('Expected a textarea for "message"')
+    }
+    expect(textarea.value).toBe('')
+  })
+
   test('falls back to field.name for the React key when _key is missing', () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 

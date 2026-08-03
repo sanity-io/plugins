@@ -35,11 +35,11 @@ export const DefaultField: FC<FieldComponentProps> = ({field, fieldState, error}
     }
   }
 
-  // Controlled inputs bind `value`/`onChange`; uncontrolled ones use `defaultValue`.
+  // Controlled inputs bind `value`/`onChange` from form state only — never the
+  // schema default, which would desync the UI from what the form library submits.
+  // Uncontrolled (native) inputs use `defaultValue` so the browser owns state.
   const textValueProps = (fallback?: string) =>
-    isControlled
-      ? {value: value ?? fallback ?? '', onChange: handleChange}
-      : {defaultValue: fallback}
+    isControlled ? {value: value ?? '', onChange: handleChange} : {defaultValue: fallback}
 
   const renderInput = () => {
     switch (type) {
