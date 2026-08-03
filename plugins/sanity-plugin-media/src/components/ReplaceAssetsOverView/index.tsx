@@ -36,6 +36,7 @@ const ReplaceAssetsOverview = () => {
   })
 
   const savedSearchRef = useRef<{
+    assetId: string | undefined
     query: string
     facets: WithId<SearchFacetInputProps>[]
   } | null>(null)
@@ -50,8 +51,15 @@ const ReplaceAssetsOverview = () => {
   // Clear browser search/facets so the picker is not limited to the filtered result set
   // the user used to find the asset. Restore them when the dialog closes.
   useEffect(() => {
-    const {query, facets} = store.getState().search
-    savedSearchRef.current = {query, facets}
+    const {dialog, search} = store.getState()
+    const {query, facets} = search
+    const dialogItem = dialog.items.find((item) => item.type === 'dialogAllAssets')
+
+    savedSearchRef.current = {
+      assetId: dialogItem?.type === 'dialogAllAssets' ? dialogItem.assetId : undefined,
+      query,
+      facets,
+    }
 
     if (query.length > 0) {
       dispatch(searchActions.querySet({searchQuery: ''}))
@@ -65,13 +73,20 @@ const ReplaceAssetsOverview = () => {
       if (!saved) {
         return
       }
+
+      const hadFilters = saved.query.length > 0 || saved.facets.length > 0
+
       if (saved.query.length > 0) {
         dispatch(searchActions.querySet({searchQuery: saved.query}))
       }
-      if (saved.facets.length > 0) {
-        for (const facet of saved.facets) {
-          dispatch(searchActions.facetsAdd({facet: omitFacetId(facet)}))
-        }
+      for (const facet of saved.facets) {
+        dispatch(searchActions.facetsAdd({facet: omitFacetId(facet)}))
+      }
+
+      // Changing the search runs `assetsUnpickEpic`, which clears picks — put the
+      // asset being replaced back so closing the dialog keeps the browser selection.
+      if (hadFilters && saved.assetId) {
+        dispatch(assetsActions.pick({assetId: saved.assetId, picked: true}))
       }
     }
   }, [dispatch, store])

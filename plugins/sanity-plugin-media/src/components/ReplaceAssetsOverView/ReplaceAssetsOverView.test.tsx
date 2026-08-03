@@ -154,6 +154,44 @@ describe('ReplaceAssetsOverview', () => {
     expect(store.getState().search.facets).toHaveLength(0)
   })
 
+  it('restores the search and the cleared pick when the dialog closes', () => {
+    const facet = {...inputs.title, id: 'facet-1'}
+    const {store, unmount} = renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        // `assetsUnpickEpic` clears picks whenever the search changes.
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: false})}),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+        search: {facets: [facet], query: 'photo'},
+      },
+    })
+
+    unmount()
+
+    expect(store.getState().search.query).toBe('photo')
+    expect(store.getState().search.facets).toHaveLength(1)
+    expect(store.getState().search.facets[0]!.name).toBe('title')
+    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
+  })
+
+  it('leaves the pick alone when no filters were active', () => {
+    const {store, unmount} = renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+      },
+    })
+
+    unmount()
+
+    expect(store.getState().search.query).toBe('')
+    expect(store.getState().search.facets).toHaveLength(0)
+    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
+  })
+
   it('does not flash the empty state while the unfiltered refetch is pending', () => {
     renderWithProviders(<ReplaceAssetsOverview />, {
       preloaded: {
