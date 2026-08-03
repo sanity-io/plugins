@@ -23,7 +23,7 @@ export const getExperiments = async ({
 
   const featureExperiments: ExperimentType[] = []
   let hasMore = true
-  const offset = 0
+  let offset = 0
   const limit = 10
 
   while (hasMore) {
@@ -45,7 +45,9 @@ export const getExperiments = async ({
       })),
     }))
     featureExperiments.push(...experiments)
-    if (items.length !== limit) {
+    if (items.length === limit) {
+      offset += limit
+    } else {
       hasMore = false
     }
   }
