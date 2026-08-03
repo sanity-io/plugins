@@ -20,9 +20,11 @@ const DEFAULT_PARAMS = {}
 const DEFAULT_OPTIONS = {apiVersion: `v2023-05-01`}
 const DEFAULT_INITIAL_VALUE = null
 
-function useStableObject<T extends object>(value: T): T {
-  const stringified = useMemo(() => JSON.stringify(value), [value])
-  return useMemo(() => JSON.parse(stringified) as T, [stringified])
+function useStableParams(
+  params?: null | ListenQueryParams | ListenQueryOptions,
+): ListenQueryParams {
+  const stringifiedParams = useMemo(() => JSON.stringify(params || {}), [params])
+  return useMemo(() => JSON.parse(stringifiedParams), [stringifiedParams])
 }
 
 export function useListeningQuery<V>(
@@ -33,8 +35,8 @@ export function useListeningQuery<V>(
     initialValue = DEFAULT_INITIAL_VALUE,
   }: Config<V>,
 ): Return<V> {
-  const memoParams = useStableObject(params)
-  const memoOptions = useStableObject(options)
+  const memoParams = useStableParams(params)
+  const memoOptions = useStableParams(options)
   const documentStore = useDocumentStore()
 
   const state$ = useMemo(() => {
