@@ -82,7 +82,7 @@ const Controls = () => {
               <SearchFacets />
 
               {/* Search Facets Control (add / clear) */}
-              <Inline space={2}>
+              <Inline gap={2}>
                 <SearchFacetsControl />
               </Inline>
             </Box>
@@ -125,7 +125,7 @@ const Controls = () => {
         <Flex align="center" justify={['space-between']}>
           {/* Folders + Views */}
           <Box marginX={2}>
-            <Inline space={2} style={{whiteSpace: 'nowrap'}}>
+            <Inline gap={2} style={{whiteSpace: 'nowrap'}}>
               <Box display={['none', 'none', 'block']}>
                 <Button
                   aria-label="Toggle folders panel"
