@@ -956,6 +956,15 @@ export default function Duplicator(props: DuplicatorProps) {
     )
   }
 
+  if (!destination) {
+    return (
+      <Feedback tone="critical">
+        No allowed Migration destinations are available for this Dataset. Check the{' '}
+        <code>migrationFilters</code> plugin config, or add another Workspace as a valid target.
+      </Feedback>
+    )
+  }
+
   return (
     <Container width={1}>
       <Card border>
@@ -966,14 +975,12 @@ export default function Duplicator(props: DuplicatorProps) {
                 <Stack style={{flex: 1}} gap={3}>
                   <Label>Duplicate from</Label>
                   <Select readOnly value={currentWorkspace?.name}>
-                    {workspacesOptions
-                      .filter((space) => space.disabled)
-                      .map((space) => (
-                        <option key={space.name} value={space.name} disabled={space.disabled}>
-                          {space.title ?? space.name}
-                          {hasMultipleProjectIds ? ` (${space.projectId})` : ``}
-                        </option>
-                      ))}
+                    {currentWorkspace ? (
+                      <option value={currentWorkspace.name}>
+                        {currentWorkspace.title ?? currentWorkspace.name}
+                        {hasMultipleProjectIds ? ` (${currentWorkspace.projectId})` : ``}
+                      </option>
+                    ) : null}
                   </Select>
                 </Stack>
                 <Box padding={4} paddingTop={5} paddingBottom={0}>
