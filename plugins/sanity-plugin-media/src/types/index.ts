@@ -117,6 +117,7 @@ export type CardUploadData = {
 }
 
 export type Dialog =
+  | DialogAllAssetsProps
   | DialogAssetEditProps
   | DialogConfirmProps
   | DialogFolderCreateProps
@@ -127,6 +128,14 @@ export type Dialog =
   | DialogTagCreateProps
   | DialogTagEditProps
   | DialogTagsProps
+
+export type DialogAllAssetsProps = {
+  /** Asset id being replaced — kept on the dialog so search refetch can clear picks. */
+  assetId: string
+  closeDialogId?: string
+  id: string
+  type: 'dialogAllAssets'
+}
 
 export type DialogAssetEditProps = {
   assetId?: string

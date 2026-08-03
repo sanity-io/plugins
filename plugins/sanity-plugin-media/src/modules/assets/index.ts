@@ -1,5 +1,5 @@
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {ClientError, Patch, Transaction} from '@sanity/client'
+import type {AttributeSet, ClientError, Patch, SanityDocument, Transaction} from '@sanity/client'
 import groq from 'groq'
 import {nanoid} from 'nanoid'
 import type {Selector} from 'react-redux'
@@ -8,6 +8,7 @@ import {EMPTY, from, of} from 'rxjs'
 import {
   bufferTime,
   catchError,
+  concatMap,
   debounceTime,
   filter,
   mergeMap,
@@ -30,6 +31,7 @@ import type {
   Tag,
 } from '../../types'
 import constructFilter from '../../utils/constructFilter'
+import {findImageAssets} from '../../utils/ReplaceImages'
 import {searchActions} from '../search'
 import type {RootReducerState} from '../types'
 import {UPLOADS_ACTIONS} from '../uploads/actions'
@@ -196,11 +198,14 @@ const assetsSlice = createSlice({
           if (!state.allIds.includes(asset._id)) {
             state.allIds.push(asset._id)
           }
+          const existing = state.byIds[asset._id]
+          // Preserve pick/updating across search refreshes (e.g. replace dialog clearing filters)
           state.byIds[asset._id] = {
             _type: 'asset',
             asset: asset,
-            picked: false,
-            updating: false,
+            picked: existing?.picked ?? false,
+            updating: existing?.updating ?? false,
+            ...(existing?.error ? {error: existing.error} : {}),
           }
         })
       }
@@ -370,8 +375,12 @@ const assetsSlice = createSlice({
     },
     pick(state, action: PayloadAction<{assetId: string; picked: boolean}>) {
       const {assetId, picked} = action.payload
+      const item = state.byIds[assetId]
+      if (!item) {
+        return
+      }
 
-      state.byIds[assetId]!.picked = picked
+      item.picked = picked
       state.lastPicked = picked ? assetId : undefined
     },
     pickAll(state) {
@@ -421,6 +430,24 @@ const assetsSlice = createSlice({
       const assetId = asset?._id
       state.byIds[assetId]!.error = error.message
       state.byIds[assetId]!.updating = false
+    },
+    updateImageReferences(state, action: PayloadAction<{asset: Asset; id: string}>) {
+      const {id: assetId} = action.payload
+      const item = state.byIds[assetId]
+      if (!item) {
+        return
+      }
+      item.updating = true
+      delete item.error
+    },
+    updateImageReferencesComplete(state, action: PayloadAction<{id: string}>) {
+      const {id} = action.payload
+      const item = state.byIds[id]
+      if (!item) {
+        return
+      }
+      item.updating = false
+      delete item.error
     },
     updateRequest(
       state,
@@ -857,6 +884,63 @@ export const assetsUpdateEpic: MyEpic = (action$, state$, {client}) =>
             }),
           ),
         ),
+      )
+    }),
+  )
+
+export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.updateImageReferences.match),
+    withLatestFrom(state$),
+    // Queue replaces so a later action still runs (exhaustMap would drop it after
+    // the reducer already set `updating`, leaving a stuck spinner). Same-asset
+    // double-clicks are blocked in the UI when the original is already updating.
+    concatMap(([action, state]) => {
+      const {asset, id} = action.payload
+
+      return of(action).pipe(
+        debugThrottle(state.debug.badConnection),
+        mergeMap(() => client.observable.fetch<SanityDocument[]>(groq`*[references($id)]`, {id})),
+        mergeMap((documents) => {
+          // Patch every referencing document in one transaction so we never leave
+          // references split across old/new assets if a later commit would fail.
+          let patchedCount = 0
+          const transaction: Transaction = documents.reduce((tx, document) => {
+            const clonedDocument = JSON.parse(JSON.stringify(document)) as Record<string, unknown>
+            const assetsToReplace = findImageAssets(clonedDocument, asset, id)
+            if (assetsToReplace.length === 0) {
+              return tx
+            }
+            patchedCount += 1
+            const patchSet = Object.assign({}, ...assetsToReplace) as AttributeSet
+            return tx.patch(document._id, (patch) =>
+              patch.ifRevisionId(document._rev).set(patchSet),
+            )
+          }, client.transaction())
+
+          if (patchedCount === 0) {
+            return of(assetsActions.updateImageReferencesComplete({id}))
+          }
+
+          return from(transaction.commit()).pipe(
+            mergeMap(() => of(assetsActions.updateImageReferencesComplete({id}))),
+          )
+        }),
+        catchError((error: ClientError) => {
+          // The asset marked as `updating` is the original (being replaced), keyed
+          // by `id` — not the replacement `asset` that was clicked. Attach the error
+          // to (and clear the spinner on) the original asset.
+          const originalAsset = state.assets.byIds[id]?.asset ?? asset
+          return of(
+            assetsActions.updateError({
+              asset: originalAsset,
+              error: {
+                message: error?.message || 'Internal error',
+                statusCode: error?.statusCode || 500,
+              },
+            }),
+          )
+        }),
       )
     }),
   )

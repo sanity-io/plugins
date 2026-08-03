@@ -210,6 +210,16 @@ const dialogSlice = createSlice({
         type: 'confirm',
       })
     },
+    showAllAssetsDialog(state, action: PayloadAction<{assetId: string}>) {
+      if (state.items.some((item) => item.type === 'dialogAllAssets')) {
+        return
+      }
+      state.items.push({
+        assetId: action.payload.assetId,
+        id: 'dialogAllAssets',
+        type: 'dialogAllAssets',
+      })
+    },
     showAssetEdit(state, action: PayloadAction<{assetId: string}>) {
       const {assetId} = action.payload
       state.items.push({

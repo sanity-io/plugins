@@ -11,6 +11,7 @@ import {
   type Theme,
   type ThemeColorSchemeKey,
   Tooltip,
+  useToast,
 } from '@sanity/ui'
 import {memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
@@ -21,7 +22,7 @@ import {PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import useKeyPress from '../../hooks/useKeyPress'
 import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions, selectAssetById} from '../../modules/assets'
+import {assetsActions, selectAssetById, selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import imageDprUrl from '../../utils/imageDprUrl'
@@ -32,6 +33,7 @@ import Image from '../Image'
 type Props = {
   id: string
   selected: boolean
+  source?: string
 }
 
 const CardWrapper = styled(Flex)`
@@ -95,9 +97,10 @@ const StyledWarningOutlineIcon = styled(WarningFilledIcon)(({theme}) => {
 })
 
 const CardAsset = (props: Props) => {
-  const {id, selected} = props
+  const {id, selected, source} = props
 
   const scheme = useColorSchemeValue()
+  const toast = useToast()
 
   // Refs
   const shiftPressed: RefObject<boolean> = useKeyPress('shift')
@@ -105,13 +108,33 @@ const CardAsset = (props: Props) => {
   // Redux
   const dispatch = useDispatch()
   const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
+  const assetsPicked = useTypedSelector(selectAssetsPicked)
   const item = useTypedSelector((state) => selectAssetById(state, id))
+  // Dialog carries the replace target so search refetch (which clears allIds/picks) is safe.
+  const dialogReplaceAssetId = useTypedSelector((state) => {
+    if (source !== 'replace-asset') {
+      return undefined
+    }
+    const dialog = state.dialog.items.find((d) => d.type === 'dialogAllAssets')
+    return dialog?.type === 'dialogAllAssets' ? dialog.assetId : undefined
+  })
 
   const asset = item?.asset
   const error = item?.error
   const isOpaque = item?.asset?.metadata?.isOpaque
   const picked = item?.picked
   const updating = item?.updating
+
+  // Prefer dialog assetId; fall back to the single currently-picked asset (not lastPicked).
+  const assetToReplaceId =
+    dialogReplaceAssetId ??
+    (source === 'replace-asset' && assetsPicked.length === 1
+      ? assetsPicked[0]?.asset._id
+      : undefined)
+
+  const assetToReplace = useTypedSelector((state) =>
+    assetToReplaceId ? selectAssetById(state, assetToReplaceId) : undefined,
+  )
 
   const {isMultiSelect, onSelect} = useAssetSourceActions()
 
@@ -120,9 +143,28 @@ const CardAsset = (props: Props) => {
     return null
   }
 
+  const handleReplaceAsset = () => {
+    if (!assetToReplaceId || !isImageAsset(asset) || assetToReplace?.updating) {
+      return
+    }
+
+    dispatch(assetsActions.updateImageReferences({asset, id: assetToReplaceId}))
+    toast.push({
+      status: 'info',
+      title:
+        'Updating in progress. Depending on the amount of changes, this could take a few minutes.',
+    })
+    dispatch(dialogActions.clear())
+  }
+
   // Callbacks
   const handleAssetClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
+
+    if (source === 'replace-asset') {
+      handleReplaceAsset()
+      return
+    }
 
     if (selected) {
       return
@@ -154,6 +196,11 @@ const CardAsset = (props: Props) => {
 
   const handleContextActionClick = (e: MouseEvent) => {
     e.stopPropagation()
+
+    if (source === 'replace-asset') {
+      handleReplaceAsset()
+      return
+    }
 
     if (selected) {
       return

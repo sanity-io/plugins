@@ -10,6 +10,7 @@ import {assetsActions, selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+import {isImageAsset} from '../../utils/typeGuards'
 
 const PickedBar = () => {
   const scheme = useColorSchemeValue()
@@ -20,6 +21,10 @@ const PickedBar = () => {
   const currentFolderId = useTypedSelector((state) => state.folders.currentFolderId)
   const {isMultiSelect, onSelect} = useAssetSourceActions()
 
+  // Replace only rewrites image field refs — only offer it for a single image asset.
+  const canReplace =
+    assetsPicked.length === 1 && !!assetsPicked[0] && isImageAsset(assetsPicked[0].asset)
+
   // Callbacks
   const handlePickClear = () => {
     dispatch(assetsActions.pickClear())
@@ -27,6 +32,14 @@ const PickedBar = () => {
 
   const handleDeletePicked = () => {
     dispatch(dialogActions.showConfirmDeleteAssets({assets: assetsPicked}))
+  }
+
+  const handleReplaceImages = () => {
+    const assetId = assetsPicked[0]?.asset._id
+    if (!assetId) {
+      return
+    }
+    dispatch(dialogActions.showAllAssetsDialog({assetId}))
   }
 
   const handleMovePicked = () =>
@@ -105,6 +118,19 @@ const PickedBar = () => {
             tone="critical"
           >
             <Label size={0}>Delete</Label>
+          </Button>
+        )}
+
+        {/* Replace button */}
+        {canReplace && (
+          <Button
+            mode="bleed"
+            onClick={handleReplaceImages}
+            padding={2}
+            style={{background: 'none', boxShadow: 'none'}}
+            tone="default"
+          >
+            <Label size={0}>Replace</Label>
           </Button>
         )}
 
