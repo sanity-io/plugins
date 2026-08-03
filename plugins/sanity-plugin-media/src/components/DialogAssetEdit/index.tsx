@@ -74,19 +74,34 @@ const DialogAssetEdit = (props: Props) => {
 
   const generateDefaultValues = useCallback(
     (asset?: Asset): AssetFormData => {
+      let imageDescription: string | undefined
+      if (asset && isImageAsset(asset)) {
+        const raw = asset.metadata?.image?.['ImageDescription']
+        if (typeof raw === 'string') {
+          imageDescription = raw
+        }
+      }
+
       if (locales && locales.length > 0) {
-        const makeLocaleObj = (field?: Record<string, string> | string) => {
+        const makeLocaleObj = (field?: Record<string, string> | string, fallback = '') => {
           const obj: Record<string, string> = {}
           for (let i = 0; i < locales.length; i++) {
             const locale = locales[i]!
-            if (typeof field === 'object' && field && field[locale.id]) {
-              obj[locale.id] = field[locale.id]!
+            // Prefer key presence over truthiness so an intentional empty string
+            // (e.g. `{en: ''}`) is preserved and does not fall through to EXIF.
+            if (typeof field === 'object' && field && locale.id in field) {
+              obj[locale.id] = field[locale.id] ?? ''
             } else if (typeof field === 'string') {
               // Only populate the first locale to avoid spreading a legacy value
               // across all languages; the user should fill in other translations manually
               obj[locale.id] = i === 0 ? field : ''
-            } else {
+            } else if (typeof field === 'object' && field) {
+              // Localized object present but this locale key is missing: leave empty.
+              // Do not apply EXIF fallback to partial translations.
               obj[locale.id] = ''
+            } else {
+              // No description set at all — EXIF fallback only for the first locale.
+              obj[locale.id] = i === 0 ? fallback : ''
             }
           }
           return obj
@@ -94,25 +109,25 @@ const DialogAssetEdit = (props: Props) => {
         return {
           altText: makeLocaleObj(asset?.altText),
           creditLine: makeLocaleObj(asset?.creditLine),
-          description: makeLocaleObj(asset?.description),
+          description: makeLocaleObj(asset?.description, imageDescription),
           originalFilename: asset?.originalFilename || '',
           opt: {media: {tags: assetTagOptions}},
           title: makeLocaleObj(asset?.title),
         }
       }
       // Normalize: if a field is a localized object but locales are disabled, pick first non-empty value
-      const flattenField = (field: unknown): string => {
+      const flattenField = (field: unknown, fallback = ''): string => {
         if (typeof field === 'string') return field
         if (typeof field === 'object' && field !== null) {
           const values = Object.values(field as Record<string, string>)
-          return values.find((v) => v) || ''
+          return values.find((v) => v) || fallback
         }
-        return ''
+        return fallback
       }
       return {
         altText: flattenField(asset?.altText),
         creditLine: flattenField(asset?.creditLine),
-        description: flattenField(asset?.description),
+        description: flattenField(asset?.description, imageDescription),
         originalFilename: asset?.originalFilename || '',
         opt: {media: {tags: assetTagOptions}},
         title: flattenField(asset?.title),
@@ -252,6 +267,12 @@ const DialogAssetEdit = (props: Props) => {
       }
 
       const sanitizedFormData = sanitizeFormData(formData)
+
+      // Keep an intentionally cleared description as '' (not null) so the EXIF
+      // ImageDescription fallback does not refill it the next time the dialog opens.
+      if (formData.description === '') {
+        sanitizedFormData['description'] = ''
+      }
 
       dispatch(
         assetsActions.updateRequest({
