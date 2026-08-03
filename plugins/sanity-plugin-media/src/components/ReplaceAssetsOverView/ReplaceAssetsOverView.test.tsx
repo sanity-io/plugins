@@ -2,6 +2,7 @@ import {act, cleanup, screen} from '@testing-library/react'
 import {afterEach, describe, expect, it, vi} from 'vitest'
 
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
+import {createTestRootState} from '../../__tests__/fixtures/rootState'
 import {inputs} from '../../config/searchFacets'
 import {assetsActions, initialState as assetsInitialState} from '../../modules/assets'
 import type {AssetItem, AssetType, FileAsset, ImageAsset} from '../../types'
@@ -16,6 +17,8 @@ vi.mock('../AssetGridVirtualized', () => ({
     </div>
   ),
 }))
+
+const foldersState = createTestRootState().folders
 
 const imageAsset = {
   _id: 'img-1',
@@ -137,6 +140,25 @@ describe('ReplaceAssetsOverview', () => {
 
     expect(screen.getByText('There are no replacement images')).toBeTruthy()
     expect(screen.queryByTestId('replace-grid')).toBeNull()
+  })
+
+  it('clears the folder scope on open and restores it on close', () => {
+    const {store, unmount} = renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: false})}),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+        folders: {...foldersState, currentFolderId: 'folder-1'},
+      },
+    })
+
+    expect(store.getState().folders.currentFolderId).toBeNull()
+
+    unmount()
+
+    expect(store.getState().folders.currentFolderId).toBe('folder-1')
+    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
   })
 
   it('clears the browser search and facets on open', () => {

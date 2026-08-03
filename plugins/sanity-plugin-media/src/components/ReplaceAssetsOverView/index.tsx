@@ -4,6 +4,7 @@ import {useDispatch, useStore} from 'react-redux'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions} from '../../modules/assets'
+import {foldersActions} from '../../modules/folders'
 import {searchActions} from '../../modules/search'
 import {selectCombinedItems} from '../../modules/selectors'
 import type {RootReducerState} from '../../modules/types'
@@ -29,6 +30,8 @@ const ReplaceAssetsOverview = () => {
   const pageSize = useTypedSelector((state) => state.assets.pageSize)
   const searchQuery = useTypedSelector((state) => state.search.query)
   const searchFacets = useTypedSelector((state) => state.search.facets)
+  const currentFolderId = useTypedSelector((state) => state.folders.currentFolderId)
+  const currentFolderUnfiled = useTypedSelector((state) => state.folders.currentFolderUnfiled)
 
   // Prefer the dialog's assetId — search refetch clears `allIds` / can drop picks.
   const assetToReplaceId = useTypedSelector((state) => {
@@ -36,30 +39,38 @@ const ReplaceAssetsOverview = () => {
     return dialog?.type === 'dialogAllAssets' ? dialog.assetId : undefined
   })
 
-  const savedSearchRef = useRef<{
+  const savedBrowserStateRef = useRef<{
     assetId: string | undefined
     query: string
     facets: WithId<SearchFacetInputProps>[]
+    folderId: string | null
+    folderUnfiled: boolean
   } | null>(null)
 
-  // Clearing filters only triggers a refetch after `assetsSearchEpic`'s debounce, so the
-  // stale filtered results stay in the store for a moment. Track that gap to avoid
-  // rendering the empty state before the unfiltered results arrive.
+  // Clearing the search only triggers a refetch after `assetsSearchEpic`'s debounce, so the
+  // stale results stay in the store for a moment. Track that gap to avoid rendering the
+  // empty state before the unscoped results arrive.
   const [awaitingRefetch, setAwaitingRefetch] = useState(
-    () => searchQuery.length > 0 || searchFacets.length > 0,
+    () =>
+      searchQuery.length > 0 ||
+      searchFacets.length > 0 ||
+      Boolean(currentFolderId) ||
+      currentFolderUnfiled,
   )
 
-  // Clear browser search/facets so the picker is not limited to the filtered result set
-  // the user used to find the asset. Restore them when the dialog closes.
+  // Clear the browser search, facets and folder scope so the picker is not limited to the
+  // result set the user used to find the asset. Restore them when the dialog closes.
   useEffect(() => {
-    const {dialog, search} = store.getState()
+    const {dialog, folders, search} = store.getState()
     const {query, facets} = search
     const dialogItem = dialog.items.find((item) => item.type === 'dialogAllAssets')
 
-    savedSearchRef.current = {
+    savedBrowserStateRef.current = {
       assetId: dialogItem?.type === 'dialogAllAssets' ? dialogItem.assetId : undefined,
       query,
       facets,
+      folderId: folders.currentFolderId,
+      folderUnfiled: folders.currentFolderUnfiled,
     }
 
     if (query.length > 0) {
@@ -68,14 +79,21 @@ const ReplaceAssetsOverview = () => {
     if (facets.length > 0) {
       dispatch(searchActions.facetsClear())
     }
+    if (folders.currentFolderId || folders.currentFolderUnfiled) {
+      dispatch(foldersActions.currentFolderClear())
+    }
 
     return () => {
-      const saved = savedSearchRef.current
+      const saved = savedBrowserStateRef.current
       if (!saved) {
         return
       }
 
-      const hadFilters = saved.query.length > 0 || saved.facets.length > 0
+      const hadScope =
+        saved.query.length > 0 ||
+        saved.facets.length > 0 ||
+        Boolean(saved.folderId) ||
+        saved.folderUnfiled
 
       if (saved.query.length > 0) {
         dispatch(searchActions.querySet({searchQuery: saved.query}))
@@ -83,10 +101,15 @@ const ReplaceAssetsOverview = () => {
       for (const facet of saved.facets) {
         dispatch(searchActions.facetsAdd({facet: omitFacetId(facet)}))
       }
+      if (saved.folderId) {
+        dispatch(foldersActions.currentFolderSet({folderId: saved.folderId}))
+      } else if (saved.folderUnfiled) {
+        dispatch(foldersActions.currentFolderShowUnfiled())
+      }
 
-      // Changing the search runs `assetsUnpickEpic`, which clears picks — put the
-      // asset being replaced back so closing the dialog keeps the browser selection.
-      if (hadFilters && saved.assetId) {
+      // Changing the search or folder runs epics that clear picks — put the asset being
+      // replaced back so closing the dialog keeps the browser selection.
+      if (hadScope && saved.assetId) {
         dispatch(assetsActions.pick({assetId: saved.assetId, picked: true}))
       }
     }
@@ -119,7 +142,11 @@ const ReplaceAssetsOverview = () => {
     })
   }, [awaitingRefetch, store])
 
-  const filtersActive = searchQuery.length > 0 || searchFacets.length > 0
+  const scopeActive =
+    searchQuery.length > 0 ||
+    searchFacets.length > 0 ||
+    Boolean(currentFolderId) ||
+    currentFolderUnfiled
 
   // Only image assets can replace image refs; exclude uploads and the asset being replaced.
   const reducedItems = combinedItems.filter((item) => {
@@ -132,12 +159,12 @@ const ReplaceAssetsOverview = () => {
 
   const hasFetchedOnce = fetchCount >= 0
   const hasMorePages = fetchCount === pageSize
-  // Don't treat a filtered / stale / mid-fetch / incomplete page as "no replacements".
+  // Don't treat a scoped / stale / mid-fetch / incomplete page as "no replacements".
   const isEmpty =
     reducedItems.length === 0 &&
     hasFetchedOnce &&
     !fetching &&
-    !filtersActive &&
+    !scopeActive &&
     !awaitingRefetch &&
     !hasMorePages
 
@@ -145,7 +172,7 @@ const ReplaceAssetsOverview = () => {
   // leaves `fetchCount` untouched, so stop paging on error instead of retrying forever.
   useEffect(() => {
     if (
-      filtersActive ||
+      scopeActive ||
       fetching ||
       awaitingRefetch ||
       fetchingError ||
@@ -158,7 +185,7 @@ const ReplaceAssetsOverview = () => {
     dispatch(assetsActions.loadNextPage())
   }, [
     dispatch,
-    filtersActive,
+    scopeActive,
     fetching,
     awaitingRefetch,
     fetchingError,

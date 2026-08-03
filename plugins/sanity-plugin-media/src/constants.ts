@@ -63,6 +63,7 @@ export const FACETS: (SearchFacetDivider | SearchFacetGroup | SearchFacetInputPr
   inputs.inCurrentDocument,
   divider,
   inputs.title,
+  inputs.folder,
   inputs.altText,
   inputs.creditLine,
   inputs.description,
@@ -82,6 +83,8 @@ export const GRID_TEMPLATE_COLUMNS = {
   SMALL: '3rem 100px auto 1.5rem',
   LARGE: '3rem 100px auto 5.5rem 5.5rem 3.5rem 8.5rem 4.75rem 2rem',
 }
+export const FOLDERS_PANEL_WIDTH = 260 // px
+export const FOLDER_DOCUMENT_NAME = 'media.folder'
 export const PANEL_HEIGHT = 32 // px
 export const TAG_DOCUMENT_NAME = 'media.tag'
 export const TAGS_PANEL_WIDTH = 250 // px
