@@ -47,6 +47,7 @@
     "date-fns": "catalog:",
     "lodash-es": "catalog:",
     "react-fast-compare": "catalog:",
+    "react-rx": "catalog:",
     "rxjs": "catalog:",
     "rxjs-exhaustmap-with-trailing": "^2.1.1"
   },

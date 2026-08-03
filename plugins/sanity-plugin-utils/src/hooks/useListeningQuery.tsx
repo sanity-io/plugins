@@ -1,7 +1,7 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useMemo} from 'react'
 import isEqual from 'react-fast-compare'
-import type {Subscription} from 'rxjs'
-import {catchError, distinctUntilChanged} from 'rxjs/operators'
+import {useObservable} from 'react-rx'
+import {catchError, distinctUntilChanged, map, of, startWith} from 'rxjs'
 import {type ListenQueryOptions, type ListenQueryParams, useDocumentStore} from 'sanity'
 
 interface Config<V> {
@@ -20,9 +20,9 @@ const DEFAULT_PARAMS = {}
 const DEFAULT_OPTIONS = {apiVersion: `v2023-05-01`}
 const DEFAULT_INITIAL_VALUE = null
 
-function useParams(params?: null | ListenQueryParams | ListenQueryOptions): ListenQueryParams {
-  const stringifiedParams = useMemo(() => JSON.stringify(params || {}), [params])
-  return useMemo(() => JSON.parse(stringifiedParams), [stringifiedParams])
+function useStableObject<T extends object>(value: T): T {
+  const stringified = useMemo(() => JSON.stringify(value), [value])
+  return useMemo(() => JSON.parse(stringified) as T, [stringified])
 }
 
 export function useListeningQuery<V>(
@@ -33,63 +33,35 @@ export function useListeningQuery<V>(
     initialValue = DEFAULT_INITIAL_VALUE,
   }: Config<V>,
 ): Return<V> {
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<unknown>(null)
-  const [data, setData] = useState<Return<V>['data']>(initialValue)
-  const memoParams = useParams(params)
-  const memoOptions = useParams(options)
-
-  const subscription = useRef<null | Subscription>(null)
+  const memoParams = useStableObject(params)
+  const memoOptions = useStableObject(options)
   const documentStore = useDocumentStore()
 
-  useEffect(() => {
-    if (query && !error && !subscription.current) {
-      try {
-        subscription.current = documentStore
-          .listenQuery(query, memoParams, memoOptions)
-          .pipe(
-            distinctUntilChanged(isEqual),
-            catchError((err) => {
-              console.error(err)
-              setError(err)
-              setLoading(false)
-              setData(null)
-
-              return err
-            }),
-          )
-          .subscribe((documents) => {
-            setData((current) => {
-              if (isEqual(current, documents)) {
-                return current
-              }
-
-              // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
-              return documents as V
-            })
-            setLoading(false)
-            setError(null)
-          })
-      } catch (err) {
-        console.error(err)
-        // oxlint-disable-next-line react/react-compiler -- sync error handling for subscription setup
-        setLoading(false)
-        setError(err)
-      }
+  const state$ = useMemo(() => {
+    if (!query) {
+      return of({loading: false, error: null, data: initialValue})
     }
 
-    // Unsubscribe when an error occurs
-    if (error && subscription.current) {
-      subscription.current.unsubscribe()
+    try {
+      return documentStore.listenQuery(query, memoParams, memoOptions).pipe(
+        distinctUntilChanged(isEqual),
+        map((documents) => ({
+          loading: false,
+          error: null,
+          // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
+          data: documents as V,
+        })),
+        startWith({loading: true, error: null, data: initialValue}),
+        catchError((err) => {
+          console.error(err)
+          return of({loading: false, error: err, data: null as V | null})
+        }),
+      )
+    } catch (err) {
+      console.error(err)
+      return of({loading: false, error: err, data: null as V | null})
     }
+  }, [query, memoParams, memoOptions, documentStore, initialValue])
 
-    return () => {
-      if (subscription.current) {
-        subscription?.current?.unsubscribe()
-        subscription.current = null
-      }
-    }
-  }, [query, error, memoParams, memoOptions, documentStore])
-
-  return {data, loading, error}
+  return useObservable(state$, {loading: true, error: null, data: initialValue})
 }
