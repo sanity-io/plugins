@@ -4,6 +4,7 @@ import {type AssetSource, type Tool as SanityTool, definePlugin} from 'sanity'
 import FormBuilderTool from './components/FormBuilderTool'
 import Tool from './components/Tool'
 import {ToolOptionsProvider} from './contexts/ToolOptionsContext'
+import mediaFolder from './schemas/folder'
 import mediaTag from './schemas/tag'
 import type {MediaToolOptions} from './types'
 
@@ -46,7 +47,7 @@ export const media = definePlugin<MediaToolOptions | void>((options) => ({
     },
   },
   schema: {
-    types: [mediaTag],
+    types: [mediaTag, mediaFolder],
   },
   tools: (prev) => {
     return [...prev, tool]

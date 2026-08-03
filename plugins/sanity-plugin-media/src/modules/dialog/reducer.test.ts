@@ -6,6 +6,7 @@ import {createTestRootState} from '../../__tests__/fixtures/rootState'
 import type {AssetItem, ImageAsset, Tag} from '../../types'
 import {assetsActions} from '../assets'
 import {ASSETS_ACTIONS} from '../assets/actions'
+import {foldersActions} from '../folders'
 import {tagsActions} from '../tags'
 import {DIALOG_ACTIONS} from './actions'
 import dialogReducer, {dialogActions} from './index'
@@ -70,11 +71,13 @@ describe('dialog slice reducers', () => {
     expect(state.items).toEqual([{assetId: 'a1', id: 'a1', type: 'assetEdit'}])
   })
 
-  it('showSearchFacets and showTags append the expected dialogs', () => {
+  it('showSearchFacets, showFolders and showTags append the expected dialogs', () => {
     let state = dialogReducer(dialogState(), dialogActions.showSearchFacets())
+    state = dialogReducer(state, dialogActions.showFolders())
     state = dialogReducer(state, dialogActions.showTags())
     expect(state.items).toEqual([
       {id: 'searchFacets', type: 'searchFacets'},
+      {id: 'folders', type: 'folders'},
       {id: 'tags', type: 'tags'},
     ])
   })
@@ -140,6 +143,21 @@ describe('dialog slice reducers', () => {
     expect(confirm && 'title' in confirm && confirm.title).toMatch(/permanently delete/i)
     const cb = confirm && 'confirmCallbackAction' in confirm ? confirm.confirmCallbackAction : null
     expect(cb).toEqual(tagsActions.deleteRequest({tag: sampleTag}))
+  })
+
+  it('showConfirmDeleteFolder describes non-recursive folder deletion', () => {
+    const state = dialogReducer(
+      dialogState(),
+      dialogActions.showConfirmDeleteFolder({folderId: 'folder-id', folderName: 'Products'}),
+    )
+    const confirm = state.items[0]
+    expect(confirm?.type).toBe('confirm')
+    expect(confirm && 'title' in confirm && confirm.title).toBe('Delete Products?')
+    expect(confirm && 'description' in confirm && confirm.description).toContain(
+      'Assets in this folder will stay in the library',
+    )
+    const cb = confirm && 'confirmCallbackAction' in confirm ? confirm.confirmCallbackAction : null
+    expect(cb).toEqual(foldersActions.deleteRequest({folderId: 'folder-id'}))
   })
 
   it('showConfirmAssetsTagAdd uses plural copy for multiple assets', () => {
