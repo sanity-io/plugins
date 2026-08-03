@@ -14,6 +14,7 @@ test('package exports', {timeout: 30_000}, async () => {
       ".": {
         "AsyncList": "function",
         "asyncList": "function",
+        "createAsyncListInput": "function",
       },
     }
   `)

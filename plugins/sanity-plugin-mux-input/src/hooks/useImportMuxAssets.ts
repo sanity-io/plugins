@@ -117,9 +117,9 @@ const useAssetsInSanity = createHookFromObservableFactory<AssetInSanity[], Docum
       {},
       {
         apiVersion: SANITY_API_VERSION,
-      }
+      },
     )
-  }
+  },
 )
 
 function assetExistsInSanity(asset: MuxAsset, existingAssets: AssetInSanity[]) {
@@ -127,6 +127,6 @@ function assetExistsInSanity(asset: MuxAsset, existingAssets: AssetInSanity[]) {
   if (asset.status !== 'ready') return false
 
   return existingAssets.some(
-    (existing) => existing.assetId === asset.id || existing.uploadId === asset.upload_id
+    (existing) => existing.assetId === asset.id || existing.uploadId === asset.upload_id,
   )
 }

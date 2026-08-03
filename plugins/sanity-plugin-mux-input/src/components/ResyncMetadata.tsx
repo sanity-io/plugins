@@ -1,4 +1,6 @@
-import {CheckmarkCircleIcon, ErrorOutlineIcon, SyncIcon} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {SyncIcon} from '@sanity/icons/Sync'
 import {Box, Button, Card, Dialog, Flex, Heading, Radio, Spinner, Stack, Text} from '@sanity/ui'
 import {useState} from 'react'
 
@@ -69,7 +71,7 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
   const videosToUpdate = props.matchedAssets?.filter((m) => m.muxAsset).length || 0
   const videosWithEmptyOrPlaceholder =
     props.matchedAssets?.filter(
-      (m) => m.muxAsset && m.muxTitle && isEmptyOrPlaceholderTitle(m.currentTitle, m.muxAsset.id)
+      (m) => m.muxAsset && m.muxTitle && isEmptyOrPlaceholderTitle(m.currentTitle, m.muxAsset.id),
     ).length || 0
 
   const hasEmptyTitles = videosWithEmptyOrPlaceholder > 0
@@ -84,13 +86,13 @@ function ResyncMetadataDialog(props: ReturnType<typeof useResyncMuxMetadata>) {
   const handleSync = () => {
     switch (selectedOption) {
       case 'fillEmpty':
-        props.syncOnlyEmpty()
+        void props.syncOnlyEmpty()
         break
       case 'syncTitles':
-        props.syncAllVideos()
+        void props.syncAllVideos()
         break
       case 'fullResync':
-        props.syncFullData()
+        void props.syncFullData()
         break
       default:
         break
@@ -271,10 +273,8 @@ export default function ResyncMetadata() {
   }
 
   if (resyncMetadata.dialogOpen) {
-    // eslint-disable-next-line consistent-return
     return <ResyncMetadataDialog {...resyncMetadata} />
   }
 
-  // eslint-disable-next-line consistent-return
   return <Button mode="bleed" text="Sync with Mux" onClick={resyncMetadata.openDialog} />
 }

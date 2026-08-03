@@ -1,4 +1,4 @@
-import {ObjectField, SanityDocument, TypedObject, Schema} from 'sanity'
+import type {ObjectField, SanityDocument, TypedObject, Schema} from 'sanity'
 
 export type SerializedDocument = {
   name: string

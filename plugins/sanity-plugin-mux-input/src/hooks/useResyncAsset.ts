@@ -98,7 +98,7 @@ export function useResyncAsset(options?: UseResyncAssetOptions): UseResyncAssetR
         return undefined
       }
     },
-    [client, toast, options, showToast]
+    [client, toast, options, showToast],
   )
 
   return {

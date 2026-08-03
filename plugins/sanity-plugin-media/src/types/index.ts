@@ -10,11 +10,8 @@ import type {Epic} from 'redux-observable'
 import * as z from 'zod'
 
 import type {DetailsProps} from '../components/DialogAssetEdit/Details'
-import type {SUPPORTED_ASSET_TYPES} from '../constants'
-import {getAssetFormSchema, tagFormSchema, tagOptionSchema} from '../formSchema'
+import {folderFormSchema, getAssetFormSchema, tagFormSchema, tagOptionSchema} from '../formSchema'
 import type {RootReducerState} from '../modules/types'
-
-export type AssetTypes = (typeof SUPPORTED_ASSET_TYPES)[number]
 
 export type MediaTagsOptions = {
   mediaTags?: string[]
@@ -33,6 +30,13 @@ export type MediaToolOptions = {
     excludeSources?: string | string[]
   }
   directUploads?: boolean
+  /**
+   * Tag slugs (`media.tag.name.current`) whose assets are omitted from the Media
+   * browser grid and asset source/picker queries (and from the tag sidebar / tag
+   * search facet). The asset edit dialog still lists all tags so they can be
+   * assigned or removed on an open asset.
+   */
+  excludeTags?: string[]
   /**
    * Optional locales following Sanity recommended scheme: [{ id, title }]
    * https://www.sanity.io/docs/studio/localization#k4da239411955
@@ -53,6 +57,7 @@ type CustomFields = {
   description?: LocalizedString
   opt?: {
     media?: {
+      folder?: SanityReference
       tags?: SanityReference[]
     }
   }
@@ -91,12 +96,19 @@ export type Block = {
 
 export type BrowserView = 'grid' | 'table'
 
-export type ButtonVariant = 'danger' | 'default' | 'secondary'
-
 // TODO: rename
 export type CardAssetData = {
   id: string
   type: 'asset'
+}
+
+export type CardFolderData = {
+  id: string
+  folderId: string
+  name: string
+  path: string
+  totalCount: number
+  type: 'folder'
 }
 
 export type CardUploadData = {
@@ -105,14 +117,25 @@ export type CardUploadData = {
 }
 
 export type Dialog =
+  | DialogAllAssetsProps
   | DialogAssetEditProps
   | DialogConfirmProps
+  | DialogFolderCreateProps
+  | DialogFolderMoveProps
+  | DialogFolderRenameProps
+  | DialogFoldersProps
   | DialogSearchFacetsProps
   | DialogTagCreateProps
   | DialogTagEditProps
   | DialogTagsProps
 
-export type DialogAction = 'deleteAsset' | 'deleteTag'
+export type DialogAllAssetsProps = {
+  /** Asset id being replaced — kept on the dialog so search refetch can clear picks. */
+  assetId: string
+  closeDialogId?: string
+  id: string
+  type: 'dialogAllAssets'
+}
 
 export type DialogAssetEditProps = {
   assetId?: string
@@ -136,6 +159,34 @@ export type DialogConfirmProps = {
   title: string
   tone: 'critical' | 'primary'
   type: 'confirm'
+}
+
+export type DialogFolderCreateProps = {
+  closeDialogId?: string
+  parentFolderId?: string | null
+  id: string
+  type: 'folderCreate'
+}
+
+export type DialogFolderMoveProps = {
+  assets: AssetItem[]
+  closeDialogId?: string
+  folderId?: string | null
+  id: string
+  type: 'folderMove'
+}
+
+export type DialogFolderRenameProps = {
+  closeDialogId?: string
+  folderId: string
+  id: string
+  type: 'folderRename'
+}
+
+export type DialogFoldersProps = {
+  closeDialogId?: string
+  id: string
+  type: 'folders'
 }
 
 export type DialogSearchFacetsProps = {
@@ -163,16 +214,6 @@ export type DialogTagEditProps = {
   type: 'tagEdit'
 }
 
-export type Document = {
-  _createdAt: string
-  _id: string
-  _rev: string
-  _type: string
-  _updatedAt: string
-  name?: string
-  title?: string
-}
-
 export type HttpError = {
   message: string
   statusCode: number
@@ -182,6 +223,26 @@ export type FileAsset = SanityAssetDocument &
   CustomFields & {
     _type: 'sanity.fileAsset'
   }
+
+export type FolderDoc = {
+  _id: string
+  name: string
+  parentId: string | null
+}
+
+export type FolderTreeItem = {
+  depth: number
+  exactCount: number
+  id: string
+  name: string
+  parentId: string | null
+  path: string
+  totalCount: number
+}
+
+export type FolderTreeNode = Omit<FolderTreeItem, 'depth'> & {
+  children: FolderTreeNode[]
+}
 
 export type ImageAsset = SanityImageAssetDocument &
   CustomFields & {
@@ -275,6 +336,7 @@ export type SearchFacetName =
   | 'altText'
   | 'creditLine'
   | 'description'
+  | 'folder'
   | 'fileName'
   | 'height'
   | 'inCurrentDocument'
@@ -311,12 +373,6 @@ export type SearchFacetOperators = Record<
   }
 >
 
-export type SanityUploadCompleteEvent = {
-  asset: SanityAssetDocument | SanityImageAssetDocument
-  id: string
-  type: 'complete'
-}
-
 export type SanityUploadProgressEvent = {
   lengthComputable: boolean
   loaded: number
@@ -324,16 +380,6 @@ export type SanityUploadProgressEvent = {
   stage: 'download' | 'upload'
   total: number
   type: 'progress'
-}
-
-export type SanityUploadResponseEvent = {
-  body: {document: Partial<SanityAssetDocument | SanityImageAssetDocument>}
-  headers: Record<string, string>
-  method: string
-  statusCode: number
-  statusMessage: string
-  type: 'response'
-  url: string // preview image?
 }
 
 export type Span = {
@@ -351,6 +397,8 @@ export type Tag = SanityDocument & {
 
 export type TagActions = 'applyAll' | 'delete' | 'edit' | 'removeAll' | 'search'
 
+export type FolderFormData = z.infer<typeof folderFormSchema>
+
 export type TagFormData = z.infer<typeof tagFormSchema>
 
 export type TagItem = {
@@ -366,6 +414,7 @@ export type TagSelectOption = z.infer<typeof tagOptionSchema>
 export type UploadItem = {
   _type: 'upload'
   assetType: AssetType
+  folderId?: string | null
   hash: string
   name: string
   objectUrl?: string

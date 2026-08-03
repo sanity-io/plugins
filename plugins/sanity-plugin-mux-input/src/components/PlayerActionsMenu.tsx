@@ -1,14 +1,13 @@
-import {
-  EllipsisHorizontalIcon,
-  ImageIcon,
-  LockIcon,
-  PlugIcon,
-  ResetIcon,
-  SearchIcon,
-  SyncIcon,
-  TranslateIcon,
-  UploadIcon,
-} from '@sanity/icons'
+import {DownloadIcon} from '@sanity/icons/Download'
+import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
+import {ImageIcon} from '@sanity/icons/Image'
+import {LockIcon} from '@sanity/icons/Lock'
+import {PlugIcon} from '@sanity/icons/Plug'
+import {ResetIcon} from '@sanity/icons/Reset'
+import {SearchIcon} from '@sanity/icons/Search'
+import {SyncIcon} from '@sanity/icons/Sync'
+import {TranslateIcon} from '@sanity/icons/Translate'
+import {UploadIcon} from '@sanity/icons/Upload'
 import {
   Box,
   Button,
@@ -61,7 +60,7 @@ function PlayerActionsMenu(
     setDialogState: SetDialogState
     config: PluginConfig
     accept: string
-  }
+  },
 ) {
   const {asset, readOnly, dialogState, setDialogState, onChange, onSelect, accept} = props
   const [open, setOpen] = useState(false)
@@ -79,13 +78,14 @@ function PlayerActionsMenu(
 
   useEffect(() => {
     if (open && dialogState) {
+      // oxlint-disable-next-line react/react-compiler
       setOpen(false)
     }
   }, [dialogState, open])
 
   useClickOutsideEvent(
     () => setOpen(false),
-    () => [menuElement]
+    () => [menuElement],
   )
 
   return (
@@ -150,6 +150,12 @@ function PlayerActionsMenu(
                 />
               </>
             )}
+            <MenuDivider />
+            <MenuItem
+              icon={DownloadIcon}
+              text="Mezzanine"
+              onClick={() => setDialogState('mezzanine')}
+            />
             <MenuDivider />
             {hasConfigAccess && (
               <>

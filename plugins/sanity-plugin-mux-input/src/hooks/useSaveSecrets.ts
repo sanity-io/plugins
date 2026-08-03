@@ -25,7 +25,7 @@ export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
           enableSignedUrls,
           signingKeyId!,
           signingKeyPrivate!,
-          drmConfigId!
+          drmConfigId!,
         )
         const valid = await testSecrets(client)
         if (!valid?.status && token && secretKey) {
@@ -40,7 +40,7 @@ export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
         const hasValidSigningKeys = await haveValidSigningKeys(
           client,
           signingKeyId!,
-          signingKeyPrivate!
+          signingKeyPrivate!,
         )
 
         if (!hasValidSigningKeys) {
@@ -55,7 +55,7 @@ export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
               enableSignedUrls,
               signingKeyId,
               signingKeyPrivate,
-              drmConfigId ?? ''
+              drmConfigId ?? '',
             )
           } catch (err: any) {
             // eslint-disable-next-line no-console
@@ -73,6 +73,6 @@ export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
         drmConfigId,
       }
     },
-    [client, secrets]
+    [client, secrets],
   )
 }

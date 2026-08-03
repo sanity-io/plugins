@@ -1,4 +1,4 @@
-import {SanityDocument} from 'sanity'
+import type {SanityDocument} from 'sanity'
 
 const META_FIELDS = ['_key', '_type', '_id']
 

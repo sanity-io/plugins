@@ -72,6 +72,15 @@ const muxStaticRenditions = {
   ],
 }
 
+const muxMasterFile = {
+  name: 'mux.masterFile',
+  type: 'object',
+  fields: [
+    {type: 'string', name: 'status'},
+    {type: 'string', name: 'url'},
+  ],
+}
+
 const muxAssetData = {
   name: 'mux.assetData',
   title: 'Mux asset data',
@@ -151,6 +160,10 @@ const muxAssetData = {
       name: 'static_renditions',
       type: 'mux.staticRenditions',
     },
+    {
+      name: 'master',
+      type: 'mux.masterFile',
+    },
   ],
 }
 
@@ -191,6 +204,7 @@ export const schemaTypes = [
   muxPlaybackId,
   muxStaticRenditionFile,
   muxStaticRenditions,
+  muxMasterFile,
   muxAssetData,
   muxVideoAsset,
 ]

@@ -37,7 +37,7 @@ describe('assets slice', () => {
   it('pick toggles picked flag', () => {
     let state = stateWithOneAsset()
     state = assetsReducer(state, assetsActions.pick({assetId: 'img-1', picked: true}))
-    expect(state.byIds['img-1'].picked).toBe(true)
+    expect(state.byIds['img-1']!.picked).toBe(true)
     expect(state.lastPicked).toBe('img-1')
   })
 
@@ -45,14 +45,43 @@ describe('assets slice', () => {
     let state = stateWithOneAsset()
     state = assetsReducer(state, assetsActions.pick({assetId: 'img-1', picked: true}))
     state = assetsReducer(state, assetsActions.pickClear())
-    expect(state.byIds['img-1'].picked).toBe(false)
+    expect(state.byIds['img-1']!.picked).toBe(false)
     expect(state.lastPicked).toBeUndefined()
   })
 
+  it('fetchComplete merges assets and preserves picked/updating flags', () => {
+    let state = assetsReducer(
+      {
+        ...initialState,
+        assetTypes: ['image'] as AssetType[],
+        byIds: {
+          'img-1': {
+            _type: 'asset',
+            asset: minimalImage,
+            picked: true,
+            updating: true,
+            error: 'previous',
+          },
+        },
+      },
+      {type: '@@INIT'},
+    )
+    state = assetsReducer(state, assetsActions.fetchComplete({assets: [minimalImage]}))
+    expect(state.allIds).toContain('img-1')
+    expect(state.byIds['img-1']!.picked).toBe(true)
+    expect(state.byIds['img-1']!.updating).toBe(true)
+    expect(state.byIds['img-1']!.error).toBe('previous')
+    expect(state.fetching).toBe(false)
+    expect(state.fetchCount).toBe(1)
+  })
+
   it('fetchComplete merges assets', () => {
-    let state = assetsReducer({...initialState, assetTypes: ['image'] as AssetType[]}, {
-      type: '@@INIT',
-    } as never)
+    let state = assetsReducer(
+      {...initialState, assetTypes: ['image'] as AssetType[]},
+      {
+        type: '@@INIT',
+      },
+    )
     state = assetsReducer(state, assetsActions.fetchComplete({assets: [minimalImage]}))
     expect(state.allIds).toContain('img-1')
     expect(state.fetching).toBe(false)
@@ -86,6 +115,43 @@ describe('assets slice', () => {
     let state = stateWithOneAsset()
     const updated = {...minimalImage, title: 'New'}
     state = assetsReducer(state, assetsActions.listenerUpdateQueueComplete({assets: [updated]}))
-    expect(state.byIds['img-1'].asset.title).toBe('New')
+    expect(state.byIds['img-1']!.asset.title).toBe('New')
+  })
+
+  it('updateImageReferences marks the targeted asset as updating', () => {
+    let state = stateWithOneAsset()
+    state = assetsReducer(
+      state,
+      assetsActions.updateImageReferences({asset: minimalImage, id: 'img-1'}),
+    )
+    expect(state.byIds['img-1']!.updating).toBe(true)
+  })
+
+  it('updateImageReferences clears a previous error on the targeted asset', () => {
+    let state = stateWithOneAsset()
+    state = assetsReducer(
+      state,
+      assetsActions.updateError({
+        asset: minimalImage,
+        error: {message: 'previous', statusCode: 500},
+      }),
+    )
+    expect(state.byIds['img-1']!.error).toBe('previous')
+    state = assetsReducer(
+      state,
+      assetsActions.updateImageReferences({asset: minimalImage, id: 'img-1'}),
+    )
+    expect(state.byIds['img-1']!.error).toBeUndefined()
+    expect(state.byIds['img-1']!.updating).toBe(true)
+  })
+
+  it('updateImageReferencesComplete clears the updating flag', () => {
+    let state = stateWithOneAsset()
+    state = assetsReducer(
+      state,
+      assetsActions.updateImageReferences({asset: minimalImage, id: 'img-1'}),
+    )
+    state = assetsReducer(state, assetsActions.updateImageReferencesComplete({id: 'img-1'}))
+    expect(state.byIds['img-1']!.updating).toBe(false)
   })
 })

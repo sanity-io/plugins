@@ -51,7 +51,6 @@ function getStyle(
   }
 }
 
-// oxlint-disable-next-line react/react-compiler
 export default function DocumentList(props: DocumentListProps) {
   const {
     // oxlint-disable-next-line no-useless-default-assignment

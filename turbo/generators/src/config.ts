@@ -347,16 +347,26 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         default: defaultExport,
       })
 
-      // Step 5: Ask about styled-components
-      const {hasStyledComponents} = await inquirer.prompt<{hasStyledComponents: boolean}>({
+      // Step 5: Ask about styling. New (greenfield) plugins use vanilla-extract — never
+      // styled-components — per the sanity-plugin-best-practices skill.
+      const {hasVanillaExtract} = await inquirer.prompt<{hasVanillaExtract: boolean}>({
         type: 'confirm',
-        name: 'hasStyledComponents',
-        message: 'Will this plugin use styled-components?',
-        default: false,
+        name: 'hasVanillaExtract',
+        message:
+          'Will this plugin include styling? (sets up vanilla-extract; recommended for any UI)',
+        default: true,
       })
 
-      // Version starts at 0.0.1 for new plugins (replaces the OIDC setup package)
-      return {name, description, pluginNamedExport, hasStyledComponents, version: '0.0.1'}
+      // Version starts at 0.0.1 for new plugins (replaces the OIDC setup package).
+      // `hasStyledComponents` is always false for new plugins (greenfield uses vanilla-extract).
+      return {
+        name,
+        description,
+        pluginNamedExport,
+        hasVanillaExtract,
+        hasStyledComponents: false,
+        version: '0.0.1',
+      }
     },
     actions: [
       {
@@ -380,6 +390,14 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         templateFile: 'templates/src/components/Tool.tsx.hbs',
       },
       {
+        // Only scaffolded when styling was requested; Tool.tsx imports it conditionally
+        type: 'add',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/components/Tool.css.ts',
+        templateFile: 'templates/src/components/Tool.css.ts.hbs',
+        skip: (data: {hasVanillaExtract?: boolean}) =>
+          data.hasVanillaExtract ? undefined : 'no styling selected; skipping Tool.css.ts',
+      },
+      {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/src/plugin.tsx',
         templateFile: 'templates/src/plugin.tsx.hbs',
@@ -391,8 +409,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/package.config.ts',
-        templateFile: 'templates/package.config.ts.hbs',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsdown.config.ts',
+        templateFile: 'templates/tsdown.config.ts.hbs',
       },
       {
         type: 'add',
@@ -403,11 +421,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.json',
         templateFile: 'templates/tsconfig.json.hbs',
-      },
-      {
-        type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
-        templateFile: 'templates/tsconfig.build.json.hbs',
       },
       // Add to test-studio dependencies
       {
@@ -539,22 +552,15 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         default: defaultExport,
       })
 
-      // Step 4: Ask about isolatedDeclarations
-      const {isolatedDeclarations} = await inquirer.prompt<{isolatedDeclarations: boolean}>({
-        type: 'confirm',
-        name: 'isolatedDeclarations',
-        message:
-          'Enable isolatedDeclarations?\n  (Recommended to disable initially and enable later, as it may require many changes to existing exports)',
-        default: false,
-      })
-
       return {
         name,
         description,
         pluginNamedExport,
         hasStyledComponents,
+        // Transfers keep their existing styled-components; styling is never migrated to
+        // vanilla-extract during the initial port (see the plugin-transfer skill).
+        hasVanillaExtract: false,
         version,
-        isolatedDeclarations,
         originalRepositoryUrl,
         originalSourceUrl,
         keywords,
@@ -583,8 +589,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/package.config.ts',
-        templateFile: 'templates/package.config.ts.hbs',
+        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsdown.config.ts',
+        templateFile: 'templates/tsdown.config.ts.hbs',
       },
       {
         type: 'add',
@@ -595,11 +601,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.json',
         templateFile: 'templates/tsconfig.json.hbs',
-      },
-      {
-        type: 'add',
-        path: '{{ turbo.paths.root }}/plugins/{{ name }}/tsconfig.build.json',
-        templateFile: 'templates/tsconfig.build.json.hbs',
       },
       // Add to test-studio dependencies
       {

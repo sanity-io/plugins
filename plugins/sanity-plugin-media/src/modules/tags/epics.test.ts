@@ -33,7 +33,7 @@ describe('tagsCreateEpic', () => {
     store.dispatch(tagsActions.createRequest({name: 'alpha'}))
 
     await vi.waitFor(() => {
-      expect(store.getState().tags.byIds.t1?.tag).toEqual(sampleTag)
+      expect(store.getState().tags.byIds['t1']?.tag).toEqual(sampleTag)
       expect(client.observable.create).toHaveBeenCalled()
     })
   })
@@ -90,7 +90,7 @@ describe('tagsDeleteEpic', () => {
       expect(tx.patch).toHaveBeenCalled()
       expect(tx.delete).toHaveBeenCalledWith('t1')
       expect(tx.commit).toHaveBeenCalled()
-      expect(store.getState().tags.byIds.t1).toBeUndefined()
+      expect(store.getState().tags.byIds['t1']).toBeUndefined()
     })
   })
 })

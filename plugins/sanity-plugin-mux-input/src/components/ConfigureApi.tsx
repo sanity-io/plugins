@@ -46,12 +46,12 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
       secrets.secretKey !== state.secretKey ||
       secrets.enableSignedUrls !== state.enableSignedUrls ||
       secrets.drmConfigId !== state.drmConfigId,
-    [secrets, state]
+    [secrets, state],
   )
   const id = `ConfigureApi${useId()}`
   const [tokenId, secretKeyId, enableSignedUrlsId, drmConfigIdId] = useMemo<typeof fieldNames>(
     () => fieldNames.map((field) => `${id}-${field}`) as unknown as typeof fieldNames,
-    [id]
+    [id],
   )
   const firstField = useRef<HTMLInputElement>(null)
   const handleSaveSecrets = useSaveSecrets(client, secrets)
@@ -78,7 +78,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
           })
       }
     },
-    [client, dispatch, handleSaveSecrets, setDialogState, state]
+    [client, dispatch, handleSaveSecrets, setDialogState, state],
   )
   const handleChangeToken = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -87,7 +87,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
         payload: {name: 'token', value: event.currentTarget.value},
       })
     },
-    [dispatch]
+    [dispatch],
   )
   const handleChangeSecretKey = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -96,7 +96,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
         payload: {name: 'secretKey', value: event.currentTarget.value},
       })
     },
-    [dispatch]
+    [dispatch],
   )
   const handleChangeEnableSignedUrls = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -105,7 +105,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
         payload: {name: 'enableSignedUrls', value: event.currentTarget.checked},
       })
     },
-    [dispatch]
+    [dispatch],
   )
   const handleChangeDrmConfigId = useCallback(
     (event: React.FormEvent<HTMLInputElement>) => {
@@ -114,7 +114,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
         payload: {name: 'drmConfigId', value: event.currentTarget.value},
       })
     },
-    [dispatch]
+    [dispatch],
   )
 
   useEffect(() => {

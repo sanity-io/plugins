@@ -1,5 +1,5 @@
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {ClientError, Patch, Transaction} from '@sanity/client'
+import type {AttributeSet, ClientError, Patch, SanityDocument, Transaction} from '@sanity/client'
 import groq from 'groq'
 import {nanoid} from 'nanoid'
 import type {Selector} from 'react-redux'
@@ -8,6 +8,7 @@ import {EMPTY, from, of} from 'rxjs'
 import {
   bufferTime,
   catchError,
+  concatMap,
   debounceTime,
   filter,
   mergeMap,
@@ -30,6 +31,7 @@ import type {
   Tag,
 } from '../../types'
 import constructFilter from '../../utils/constructFilter'
+import {findImageAssets} from '../../utils/ReplaceImages'
 import {searchActions} from '../search'
 import type {RootReducerState} from '../types'
 import {UPLOADS_ACTIONS} from '../uploads/actions'
@@ -45,6 +47,7 @@ export type AssetsReducerState = {
   allIds: string[]
   assetTypes: AssetType[]
   byIds: Record<string, AssetItem>
+  excludeTagSlugs: string[]
   fetchCount: number
   fetching: boolean
   fetchingError?: HttpError
@@ -77,6 +80,7 @@ export const initialState = {
   allIds: [],
   assetTypes: [],
   byIds: {},
+  excludeTagSlugs: [],
   fetchCount: -1,
   fetching: false,
   fetchingError: undefined,
@@ -110,37 +114,37 @@ const assetsSlice = createSlice({
       .addCase(ASSETS_ACTIONS.tagsAddComplete, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = false
+          state.byIds[asset.asset._id]!.updating = false
         })
       })
       .addCase(ASSETS_ACTIONS.tagsAddError, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = false
+          state.byIds[asset.asset._id]!.updating = false
         })
       })
       .addCase(ASSETS_ACTIONS.tagsAddRequest, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = true
+          state.byIds[asset.asset._id]!.updating = true
         })
       })
       .addCase(ASSETS_ACTIONS.tagsRemoveComplete, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = false
+          state.byIds[asset.asset._id]!.updating = false
         })
       })
       .addCase(ASSETS_ACTIONS.tagsRemoveError, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = false
+          state.byIds[asset.asset._id]!.updating = false
         })
       })
       .addCase(ASSETS_ACTIONS.tagsRemoveRequest, (state, action) => {
         const {assets} = action.payload
         assets.forEach((asset) => {
-          state.byIds[asset.asset._id].updating = true
+          state.byIds[asset.asset._id]!.updating = true
         })
       })
   },
@@ -170,20 +174,20 @@ const assetsSlice = createSlice({
       )
 
       assetIds?.forEach((id) => {
-        state.byIds[id].updating = false
+        state.byIds[id]!.updating = false
       })
       itemErrors?.forEach((item) => {
-        state.byIds[item.id].error = item.description
+        state.byIds[item.id]!.error = item.description
       })
     },
     deleteRequest(state, action: PayloadAction<{assets: Asset[]; closeDialogId?: string}>) {
       const {assets} = action.payload
       assets.forEach((asset) => {
-        state.byIds[asset?._id].updating = true
+        state.byIds[asset?._id]!.updating = true
       })
 
       Object.keys(state.byIds).forEach((key) => {
-        delete state.byIds[key].error
+        delete state.byIds[key]!.error
       })
     },
     fetchComplete(state, action: PayloadAction<{assets: Asset[]}>) {
@@ -194,11 +198,14 @@ const assetsSlice = createSlice({
           if (!state.allIds.includes(asset._id)) {
             state.allIds.push(asset._id)
           }
+          const existing = state.byIds[asset._id]
+          // Preserve pick/updating across search refreshes (e.g. replace dialog clearing filters)
           state.byIds[asset._id] = {
             _type: 'asset',
             asset: asset,
-            picked: false,
-            updating: false,
+            picked: existing?.picked ?? false,
+            updating: existing?.updating ?? false,
+            ...(existing?.error ? {error: existing.error} : {}),
           }
         })
       }
@@ -211,6 +218,48 @@ const assetsSlice = createSlice({
       const error = action.payload
       state.fetching = false
       state.fetchingError = error
+    },
+    folderSetComplete(
+      state,
+      action: PayloadAction<{assetIds: string[]; folderId: string | null; closeDialogId?: string}>,
+    ) {
+      const {assetIds, folderId} = action.payload
+
+      assetIds.forEach((assetId) => {
+        if (state.byIds[assetId]?.asset) {
+          state.byIds[assetId].asset.opt = state.byIds[assetId].asset.opt || {}
+          state.byIds[assetId].asset.opt.media = state.byIds[assetId].asset.opt.media || {}
+          state.byIds[assetId].asset.opt.media.folder = folderId
+            ? {_ref: folderId, _type: 'reference', _weak: true}
+            : undefined
+          state.byIds[assetId].updating = false
+        }
+      })
+    },
+    folderSetError(state, action: PayloadAction<{assetIds: string[]; error: HttpError}>) {
+      const {assetIds, error} = action.payload
+
+      assetIds.forEach((assetId) => {
+        if (state.byIds[assetId]) {
+          state.byIds[assetId].error = error.message
+          state.byIds[assetId].updating = false
+        }
+      })
+    },
+    folderSetRequest(
+      state,
+      action: PayloadAction<{
+        assets: AssetItem[]
+        folderId: string | null
+        closeDialogId?: string
+      }>,
+    ) {
+      action.payload.assets.forEach((asset) => {
+        const item = state.byIds[asset.asset._id]
+        if (item) {
+          item.updating = true
+        }
+      })
     },
     fetchRequest: {
       reducer: (state, _action: PayloadAction<{params: Record<string, any>; query: string}>) => {
@@ -246,6 +295,7 @@ const assetsSlice = createSlice({
               metadata {
                 dimensions,
                 exif,
+                image,
                 isOpaque,
               },
               mimeType,
@@ -284,7 +334,7 @@ const assetsSlice = createSlice({
       const {assets} = action.payload
       assets?.forEach((asset) => {
         if (state.byIds[asset?._id]?.asset) {
-          state.byIds[asset._id].asset = asset
+          state.byIds[asset._id]!.asset = asset
         }
       })
     },
@@ -308,7 +358,7 @@ const assetsSlice = createSlice({
       const {assets} = action.payload
       assets?.forEach((asset) => {
         if (state.byIds[asset?._id]?.asset) {
-          state.byIds[asset._id].asset = asset
+          state.byIds[asset._id]!.asset = asset
         }
       })
     },
@@ -325,19 +375,23 @@ const assetsSlice = createSlice({
     },
     pick(state, action: PayloadAction<{assetId: string; picked: boolean}>) {
       const {assetId, picked} = action.payload
+      const item = state.byIds[assetId]
+      if (!item) {
+        return
+      }
 
-      state.byIds[assetId].picked = picked
+      item.picked = picked
       state.lastPicked = picked ? assetId : undefined
     },
     pickAll(state) {
       state.allIds.forEach((id) => {
-        state.byIds[id].picked = true
+        state.byIds[id]!.picked = true
       })
     },
     pickClear(state) {
       state.lastPicked = undefined
       Object.values(state.byIds).forEach((asset) => {
-        state.byIds[asset.asset._id].picked = false
+        state.byIds[asset.asset._id]!.picked = false
       })
     },
     pickRange(state, action: PayloadAction<{endId: string; startId: string}>) {
@@ -347,15 +401,15 @@ const assetsSlice = createSlice({
       // Sort numerically, ascending order
       const indices = [startIndex, endIndex].sort((a, b) => a - b)
 
-      state.allIds.slice(indices[0], indices[1] + 1).forEach((key) => {
-        state.byIds[key].picked = true
+      state.allIds.slice(indices[0], indices[1]! + 1).forEach((key) => {
+        state.byIds[key]!.picked = true
       })
       state.lastPicked = state.allIds[endIndex]
     },
     sort(state) {
       state.allIds.sort((a, b) => {
-        const tagA = state.byIds[a].asset[state.order.field]
-        const tagB = state.byIds[b].asset[state.order.field]
+        const tagA = state.byIds[a]!.asset[state.order.field]
+        const tagB = state.byIds[b]!.asset[state.order.field]
 
         if (tagA < tagB) {
           return state.order.direction === 'asc' ? -1 : 1
@@ -367,22 +421,40 @@ const assetsSlice = createSlice({
     },
     updateComplete(state, action: PayloadAction<{asset: Asset; closeDialogId?: string}>) {
       const {asset} = action.payload
-      state.byIds[asset._id].updating = false
-      state.byIds[asset._id].asset = asset
+      state.byIds[asset._id]!.updating = false
+      state.byIds[asset._id]!.asset = asset
     },
     updateError(state, action: PayloadAction<{asset: Asset; error: HttpError}>) {
       const {asset, error} = action.payload
 
       const assetId = asset?._id
-      state.byIds[assetId].error = error.message
-      state.byIds[assetId].updating = false
+      state.byIds[assetId]!.error = error.message
+      state.byIds[assetId]!.updating = false
+    },
+    updateImageReferences(state, action: PayloadAction<{asset: Asset; id: string}>) {
+      const {id: assetId} = action.payload
+      const item = state.byIds[assetId]
+      if (!item) {
+        return
+      }
+      item.updating = true
+      delete item.error
+    },
+    updateImageReferencesComplete(state, action: PayloadAction<{id: string}>) {
+      const {id} = action.payload
+      const item = state.byIds[id]
+      if (!item) {
+        return
+      }
+      item.updating = false
+      delete item.error
     },
     updateRequest(
       state,
       action: PayloadAction<{asset: Asset; closeDialogId?: string; formData: Record<string, any>}>,
     ) {
       const assetId = action.payload?.asset?._id
-      state.byIds[assetId].updating = true
+      state.byIds[assetId]!.updating = true
     },
     viewSet(state, action: PayloadAction<{view: BrowserView}>) {
       state.view = action.payload?.view
@@ -461,6 +533,8 @@ export const assetsFetchPageIndexEpic: MyEpic = (action$, state$) =>
 
       const constructedFilter = constructFilter({
         assetTypes: state.assets.assetTypes,
+        currentFolderId: state.folders.currentFolderId,
+        excludeTagSlugs: state.assets.excludeTagSlugs,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
       })
@@ -523,48 +597,21 @@ const patchOperationTagUnset =
   (patch: Patch) =>
     patch.ifRevisionId(asset?.asset?._rev).unset([`opt.media.tags[_ref == "${tag._id}"]`])
 
-export const assetsRemoveTagsEpic: MyEpic = (action$, state$, {client}) => {
-  return action$.pipe(
-    filter(ASSETS_ACTIONS.tagsAddRequest.match),
-    withLatestFrom(state$),
-    mergeMap(([action, state]) => {
-      const {assets, tag} = action.payload
+const patchOperationFolderSet =
+  ({asset, folderId}: {asset: AssetItem; folderId: string | null}) =>
+  (patch: Patch) => {
+    const nextPatch = patch.ifRevisionId(asset?.asset?._rev).setIfMissing({opt: {}}).setIfMissing({
+      'opt.media': {},
+    })
 
-      return of(action).pipe(
-        // Optionally throttle
-        debugThrottle(state.debug.badConnection),
-        // Add tag references to all picked assets
-        mergeMap(() => {
-          const pickedAssets = selectAssetsPicked(state)
+    if (folderId) {
+      return nextPatch.set({
+        'opt.media.folder': {_ref: folderId, _type: 'reference', _weak: true},
+      })
+    }
 
-          // Filter out picked assets which already include tag
-          const pickedAssetsFiltered = pickedAssets?.filter(filterAssetWithoutTag(tag))
-
-          const transaction: Transaction = pickedAssetsFiltered.reduce(
-            (tx, pickedAsset) => tx.patch(pickedAsset?.asset?._id, patchOperationTagAppend({tag})),
-            client.transaction(),
-          )
-
-          return from(transaction.commit())
-        }),
-        // Dispatch complete action
-        mergeMap(() => of(ASSETS_ACTIONS.tagsAddComplete({assets, tag}))),
-        catchError((error: ClientError) =>
-          of(
-            ASSETS_ACTIONS.tagsAddError({
-              assets,
-              error: {
-                message: error?.message || 'Internal error',
-                statusCode: error?.statusCode || 500,
-              },
-              tag,
-            }),
-          ),
-        ),
-      )
-    }),
-  )
-}
+    return nextPatch.unset(['opt.media.folder'])
+  }
 
 export const assetsOrderSetEpic: MyEpic = (action$) =>
   action$.pipe(
@@ -726,6 +773,60 @@ export const assetsTagsRemoveEpic: MyEpic = (action$, state$, {client}) => {
   )
 }
 
+export const assetsFolderSetEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.folderSetRequest.match),
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
+      const {assets, closeDialogId, folderId} = action.payload
+      const assetIds = assets.map((asset) => asset.asset._id)
+
+      return of(action).pipe(
+        debugThrottle(state.debug.badConnection),
+        mergeMap(() => {
+          const transaction: Transaction = assets.reduce(
+            (tx, asset) => tx.patch(asset.asset._id, patchOperationFolderSet({asset, folderId})),
+            client.transaction(),
+          )
+
+          return from(transaction.commit())
+        }),
+        mergeMap(() =>
+          of(
+            assetsActions.folderSetComplete({
+              assetIds,
+              closeDialogId,
+              folderId,
+            }),
+          ),
+        ),
+        catchError((error: ClientError) =>
+          of(
+            assetsActions.folderSetError({
+              assetIds,
+              error: {
+                message: error?.message || 'Internal error',
+                statusCode: error?.statusCode || 500,
+              },
+            }),
+          ),
+        ),
+      )
+    }),
+  )
+
+export const assetsFolderSetRefreshEpic: MyEpic = (action$) =>
+  action$.pipe(
+    filter(assetsActions.folderSetComplete.match),
+    mergeMap(() =>
+      of(
+        assetsActions.pickClear(),
+        assetsActions.clear(),
+        assetsActions.loadPageIndex({pageIndex: 0}),
+      ),
+    ),
+  )
+
 export const assetsUnpickEpic: MyEpic = (action$) =>
   action$.pipe(
     ofType(
@@ -787,6 +888,63 @@ export const assetsUpdateEpic: MyEpic = (action$, state$, {client}) =>
     }),
   )
 
+export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.updateImageReferences.match),
+    withLatestFrom(state$),
+    // Queue replaces so a later action still runs (exhaustMap would drop it after
+    // the reducer already set `updating`, leaving a stuck spinner). Same-asset
+    // double-clicks are blocked in the UI when the original is already updating.
+    concatMap(([action, state]) => {
+      const {asset, id} = action.payload
+
+      return of(action).pipe(
+        debugThrottle(state.debug.badConnection),
+        mergeMap(() => client.observable.fetch<SanityDocument[]>(groq`*[references($id)]`, {id})),
+        mergeMap((documents) => {
+          // Patch every referencing document in one transaction so we never leave
+          // references split across old/new assets if a later commit would fail.
+          let patchedCount = 0
+          const transaction: Transaction = documents.reduce((tx, document) => {
+            const clonedDocument = JSON.parse(JSON.stringify(document)) as Record<string, unknown>
+            const assetsToReplace = findImageAssets(clonedDocument, asset, id)
+            if (assetsToReplace.length === 0) {
+              return tx
+            }
+            patchedCount += 1
+            const patchSet = Object.assign({}, ...assetsToReplace) as AttributeSet
+            return tx.patch(document._id, (patch) =>
+              patch.ifRevisionId(document._rev).set(patchSet),
+            )
+          }, client.transaction())
+
+          if (patchedCount === 0) {
+            return of(assetsActions.updateImageReferencesComplete({id}))
+          }
+
+          return from(transaction.commit()).pipe(
+            mergeMap(() => of(assetsActions.updateImageReferencesComplete({id}))),
+          )
+        }),
+        catchError((error: ClientError) => {
+          // The asset marked as `updating` is the original (being replaced), keyed
+          // by `id` — not the replacement `asset` that was clicked. Attach the error
+          // to (and clear the spinner on) the original asset.
+          const originalAsset = state.assets.byIds[id]?.asset ?? asset
+          return of(
+            assetsActions.updateError({
+              asset: originalAsset,
+              error: {
+                message: error?.message || 'Internal error',
+                statusCode: error?.statusCode || 500,
+              },
+            }),
+          )
+        }),
+      )
+    }),
+  )
+
 // Selectors
 
 const selectAssetsByIds = (state: RootReducerState) => state.assets.byIds
@@ -804,9 +962,9 @@ export const selectAssetById = createSelector(
   },
 )
 
-export const selectAssets: Selector<RootReducerState, AssetItem[]> = createSelector(
+const selectAssets: Selector<RootReducerState, AssetItem[]> = createSelector(
   [selectAssetsByIds, selectAssetsAllIds],
-  (byIds, allIds) => allIds.map((id) => byIds[id]),
+  (byIds, allIds) => allIds.map((id) => byIds[id]!),
 )
 
 export const selectAssetsLength = createSelector([selectAssets], (assets) => assets.length)

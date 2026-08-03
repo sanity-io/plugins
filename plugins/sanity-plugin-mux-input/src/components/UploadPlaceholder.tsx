@@ -1,10 +1,13 @@
-import {DocumentVideoIcon, PlugIcon, SearchIcon, UploadIcon} from '@sanity/icons'
+import {DocumentVideoIcon} from '@sanity/icons/DocumentVideo'
+import {PlugIcon} from '@sanity/icons/Plug'
+import {SearchIcon} from '@sanity/icons/Search'
+import {UploadIcon} from '@sanity/icons/Upload'
 import {Button, Card, Flex, Inline, Text} from '@sanity/ui'
 import {useCallback} from 'react'
 
 import {useAccessControl} from '../hooks/useAccessControl'
 import type {SetDialogState} from '../hooks/useDialogState'
-import {PluginConfig} from '../util/types'
+import {type PluginConfig} from '../util/types'
 import {FileInputButton, type FileInputButtonProps} from './FileInputButton'
 
 function formatAcceptString(accept: string): string {

@@ -1,4 +1,4 @@
-import {SearchIcon} from '@sanity/icons'
+import {SearchIcon} from '@sanity/icons/Search'
 import {Card, Flex, Grid, Inline, Label, Stack, Text, TextInput} from '@sanity/ui'
 import {useMemo, useState} from 'react'
 
@@ -28,7 +28,7 @@ export default function VideosBrowser({onSelect, config}: VideosBrowserProps) {
   const [editedAsset, setEditedAsset] = useState<VideoDetailsProps['asset'] | null>(null)
   const freshEditedAsset = useMemo(
     () => assets.find((a) => a._id === editedAsset?._id) || editedAsset,
-    [editedAsset, assets]
+    [editedAsset, assets],
   )
 
   const pageStart = page * pageLimit

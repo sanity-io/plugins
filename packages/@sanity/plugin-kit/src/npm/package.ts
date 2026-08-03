@@ -2,25 +2,29 @@ import fs from 'fs'
 import path from 'path'
 import util from 'util'
 
-// @ts-expect-error missing types
-import githubUrl from 'github-url-to-object'
-// @ts-expect-error missing types
 import validateNpmPackageName from 'validate-npm-package-name'
 
-import {InjectOptions, PackageData} from '../actions/inject'
-import {PackageJson} from '../actions/verify/types'
+import type {InjectOptions, PackageData} from '../actions/inject'
+import type {PackageJson, SanityPlugin} from '../actions/verify/types'
 import {expectedScripts} from '../actions/verify/validations'
 import {
   forcedDevPackageVersions,
   forcedPackageVersions,
   forcedPeerPackageVersions,
 } from '../configs/forced-package-versions'
-import {cliName, incompatiblePluginPackage, requiredNodeEngine} from '../constants'
-import {getPaths, ManifestOptions} from '../sanity/manifest'
-import {hasSourceEquivalent, writeJsonFile} from '../util/files'
+import {cliName, requiredNodeEngine} from '../constants'
+import {writeJsonFile} from '../util/files'
+import {githubUrlToObject} from '../util/github-url'
 import log from '../util/log'
 import {resolveLatestVersions} from './resolveLatestVersions'
-const defaultDependencies = [incompatiblePluginPackage]
+
+export interface GetPackageOptions {
+  basePath: string
+  validate?: boolean
+  isPlugin?: boolean
+}
+
+const defaultDependencies: string[] = []
 
 const defaultDevDependencies = [
   'sanity',
@@ -35,14 +39,10 @@ const defaultPeerDependencies = ['react', 'sanity']
 
 const readFile = util.promisify(fs.readFile)
 
-const pathKeys: (keyof PackageJson)[] = ['main', 'module', 'browser', 'types']
+export async function getPackage(opts: GetPackageOptions): Promise<PackageJson> {
+  validateOptions(opts)
 
-export async function getPackage(opts: ManifestOptions): Promise<PackageJson> {
-  const options = {flags: {}, ...opts}
-
-  validateOptions(options)
-
-  const {basePath, validate = true} = options
+  const {basePath, validate = true} = opts
   const manifestPath = path.normalize(path.join(basePath, 'package.json'))
 
   let content
@@ -70,19 +70,19 @@ export async function getPackage(opts: ManifestOptions): Promise<PackageJson> {
   }
 
   if (validate) {
-    await validatePackage(parsed, options)
+    validatePackage(parsed, opts)
   }
 
   return parsed
 }
 
-async function validatePackage(manifest: PackageJson, opts: ManifestOptions) {
+function validatePackage(manifest: PackageJson, opts: GetPackageOptions) {
   validateOptions(opts)
 
   const options = {isPlugin: true, ...opts}
 
   if (options.isPlugin) {
-    await validatePluginPackage(manifest, options)
+    validatePackageName(manifest)
   }
 
   validateLockFiles(options)
@@ -99,21 +99,14 @@ function validateOptions(opts: {basePath: string}) {
   }
 }
 
-async function validatePluginPackage(manifest: PackageJson, options: ManifestOptions) {
-  validatePackageName(manifest)
-  await validatePaths(manifest, options)
-}
-
 function validatePackageName(manifest: PackageJson) {
   if (typeof manifest.name !== 'string') {
     throw new Error(`Invalid package.json: "name" must be a string`)
   }
 
-  const valid: {validForNewPackages?: boolean; errors: string[]} = validateNpmPackageName(
-    manifest.name,
-  )
+  const valid = validateNpmPackageName(manifest.name)
   if (!valid.validForNewPackages) {
-    throw new Error(`Invalid package.json: "name" is invalid: ${valid.errors.join(', ')}`)
+    throw new Error(`Invalid package.json: "name" is invalid: ${(valid.errors ?? []).join(', ')}`)
   }
 
   const isScoped = manifest.name[0] === '@'
@@ -121,70 +114,6 @@ function validatePackageName(manifest: PackageJson) {
     throw new Error(
       `Invalid package.json: "name" should be prefixed with "sanity-plugin-" (or scoped - @your-company/plugin-name)`,
     )
-  }
-}
-
-async function validatePaths(manifest: PackageJson, options: ManifestOptions) {
-  const paths = await getPaths({
-    ...options,
-    pluginName: manifest.name ?? 'unknown',
-    verifySourceParts: false,
-    verifyCompiledParts: false,
-  })
-
-  const abs = (file: string) =>
-    path.isAbsolute(file) ? file : path.resolve(path.join(options.basePath, file))
-
-  const exists = (file: string) => fs.existsSync(abs(file))
-  const willExist = (file: string) => paths && hasSourceEquivalent(abs(file), paths)
-  const withinSourceDir = (file: string) => paths?.source && abs(file).startsWith(paths.source)
-  const withinTargetDir = (file: string) => paths?.compiled && abs(file).startsWith(paths.compiled)
-
-  for (const key of pathKeys) {
-    if (!(key in manifest)) {
-      continue
-    }
-
-    const manifestValue = manifest[key]
-    if (typeof manifestValue !== 'string') {
-      throw new Error(`Invalid package.json: "${key}" must be a string if defined`)
-    }
-
-    // We don't want to reference `./src/MyComponent.js` containing a bunch of JSX and whatnot,
-    // instead we want to target `./dist/MyComponent.js` which is the location it'll be compiled to
-    if (!options?.flags?.allowSourceTarget && paths && withinSourceDir(manifestValue)) {
-      throw new Error(
-        `Invalid package.json: "${key}" points to file within source (uncompiled) directory. Use --allow-source-target if you really want to do this.`,
-      )
-    }
-
-    // Does it exist only because it was there prior to compilation?
-    // We're clearing the folder on compilation, so we shouldn't allow it
-    const fileExists = exists(manifestValue)
-    if (
-      fileExists &&
-      paths &&
-      withinTargetDir(manifestValue) &&
-      !(await willExist(manifestValue))
-    ) {
-      throw new Error(
-        `Invalid package.json: "${key}" points to file that will not exist after compiling`,
-      )
-    }
-
-    // If it _doesn't_ exist and it _won't_ exist, then there isn't much point in continuing, is there?
-    if (!exists(manifestValue) && !(await willExist(manifestValue))) {
-      if (!paths) {
-        throw new Error(`Invalid package.json: "${key}" points to file that does not exist`)
-      }
-
-      const inOutDir = paths.compiled && !abs(manifestValue).startsWith(paths.compiled)
-      throw new Error(
-        inOutDir
-          ? `Invalid package.json: "${key}" points to file that does not exist, and "paths" is not configured to compile to this location`
-          : `Invalid package.json: "${key}" points to file that does not exist, and no equivalent is found in source directory`,
-      )
-    }
   }
 }
 
@@ -211,9 +140,9 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
   const {flags} = options
   const prev = prevPkg || {}
 
-  const usePrettier = flags.prettier !== false
-  const useEslint = flags.eslint !== false
-  const useTypescript = flags.eslint !== false
+  const useOxfmt = flags.oxfmt !== false
+  const useOxlint = flags.oxlint !== false
+  const useTypescript = flags.typescript !== false
 
   const newDevDependencies = [cliName, '@sanity/pkg-utils']
 
@@ -222,28 +151,15 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     newDevDependencies.push('@types/react', 'typescript')
   }
 
-  if (usePrettier) {
-    log.debug('Using prettier. Adding to dev dependencies.')
-    newDevDependencies.push('prettier', 'prettier-plugin-packagejson')
+  if (useOxfmt) {
+    log.debug('Using oxfmt. Adding to dev dependencies.')
+    newDevDependencies.push('oxfmt')
   }
 
-  if (useEslint) {
-    log.debug('Using eslint. Adding to dev dependencies.')
-
-    newDevDependencies.push(
-      'eslint',
-      'eslint-config-sanity',
-      'eslint-plugin-react',
-      'eslint-plugin-react-hooks',
-    )
-
-    if (usePrettier) {
-      newDevDependencies.push('eslint-config-prettier', 'eslint-plugin-prettier')
-    }
-
-    if (useTypescript) {
-      newDevDependencies.push('@typescript-eslint/eslint-plugin', '@typescript-eslint/parser')
-    }
+  if (useOxlint) {
+    log.debug('Using oxlint. Adding to dev dependencies.')
+    // oxlint-tsgolint powers the type-aware rules and type checking enabled in the shared config
+    newDevDependencies.push('oxlint', 'oxlint-tsgolint')
   }
 
   log.debug('Resolving latest versions for %s', newDevDependencies.join(', '))
@@ -274,12 +190,26 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
 
   const source = flags.typescript ? './src/index.ts' : './src/index.js'
 
-  const files = [outDir, 'sanity.json', 'src', 'v2-incompatible.js']
+  const files = [outDir]
 
   // sort alphabetically for scanability
   files.sort()
 
-  // order should be compatible with prettier-plugin-packagejson
+  // Opting out of oxfmt/oxlint must also disable the corresponding verify-package checks,
+  // otherwise the scaffolded `build` script (which runs verify-package) fails out of the box
+  const verifyPackageOptOuts = {
+    ...(useOxfmt ? {} : {oxfmt: false}),
+    ...(useOxlint ? {} : {oxlint: false}),
+  }
+  const prevSanityPlugin: SanityPlugin = prev.sanityPlugin ?? {}
+  const sanityPlugin: SanityPlugin | undefined = Object.keys(verifyPackageOptOuts).length
+    ? {
+        ...prevSanityPlugin,
+        verifyPackage: {...prevSanityPlugin.verifyPackage, ...verifyPackageOptOuts},
+      }
+    : prev.sanityPlugin
+
+  // order should be compatible with oxfmt's sortPackageJson
   const forcedOrder = {
     name: pluginName,
     version: prev.version ?? '1.0.0',
@@ -307,6 +237,7 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
     engines: {
       node: requiredNodeEngine,
     },
+    ...(sanityPlugin ? {sanityPlugin} : {}),
   }
 
   const manifest: PackageJson = {
@@ -327,7 +258,11 @@ export async function writePackageJson(data: PackageData, options: InjectOptions
 }
 
 function urlsFromOrigin(gitOrigin?: string): {bugs?: {url: string}; homepage?: string} {
-  const details: {user: string; repo: string} | undefined = githubUrl(gitOrigin)
+  if (!gitOrigin) {
+    return {}
+  }
+
+  const details = githubUrlToObject(gitOrigin)
   if (!details) {
     return {}
   }
@@ -388,9 +323,13 @@ export async function addBuildScripts(manifest: PackageJson, options: InjectOpti
   }
   return addPackageJsonScripts(manifest, options, (scripts) => {
     scripts.build = addScript(expectedScripts.build, scripts.build)
-    scripts.format = addScript(`prettier --write --cache --ignore-unknown .`, scripts.format)
+    if (options.flags.oxfmt !== false) {
+      scripts.format = addScript(`oxfmt`, scripts.format)
+    }
     scripts['link-watch'] = addScript(expectedScripts['link-watch'], scripts['link-watch'])
-    scripts.lint = addScript(`eslint .`, scripts.lint)
+    if (options.flags.oxlint !== false) {
+      scripts.lint = addScript(`oxlint`, scripts.lint)
+    }
     scripts.prepublishOnly = addScript(expectedScripts.prepublishOnly, scripts.prepublishOnly)
     scripts.watch = addScript(expectedScripts.watch, scripts.watch)
     return scripts

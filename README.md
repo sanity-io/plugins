@@ -29,7 +29,7 @@ The packages folder contains two types of packages:
 ### Prerequisites
 
 - Node.js (latest LTS)
-- [pnpm](https://pnpm.io/) v10 or later (managed via corepack)
+- [pnpm](https://pnpm.io/) v11 or later (managed via corepack)
 
 ### Installation
 
@@ -81,6 +81,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | Plugin                                                                                                   | Description                                                         |
 | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | [`@sanity/assist`](./plugins/@sanity/assist)                                                             | AI-powered writing and translation assistance for Studio            |
+| [`@sanity/block-insert-picker`](./plugins/@sanity/block-insert-picker)                                   | Slash-command block insert picker for Portable Text editors         |
 | [`@sanity/code-input`](./plugins/@sanity/code-input)                                                     | Code editor input powered by CodeMirror                             |
 | [`@sanity/color-input`](./plugins/@sanity/color-input)                                                   | Color picker input for Sanity Studio                                |
 | [`@sanity/cross-dataset-duplicator`](./plugins/@sanity/cross-dataset-duplicator)                         | Migrate documents and assets between datasets from inside Studio    |
@@ -88,6 +89,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`@sanity/debug-live-sync-tags`](./plugins/@sanity/debug-live-sync-tags)                                 | Debug tool for inspecting live sync tags                            |
 | [`@sanity/debug-preview-url-secret-plugin`](./plugins/@sanity/debug-preview-url-secret-plugin)           | Debug tool for preview URL secrets and their status                 |
 | [`@sanity/document-internationalization`](./plugins/@sanity/document-internationalization)               | Document-level translations linked by a shared reference            |
+| [`@sanity/embeddings-index-ui`](./plugins/@sanity/embeddings-index-ui)                                   | Studio plugins for the embeddings index API (deprecated)            |
 | [`@sanity/form-toolkit`](./plugins/@sanity/form-toolkit)                                                 | Toolkit for integrating forms with a Sanity Studio                  |
 | [`@sanity/google-maps-input`](./plugins/@sanity/google-maps-input)                                       | Google Maps input for geopoint and geopointRadius fields            |
 | [`@sanity/hierarchical-document-list`](./plugins/@sanity/hierarchical-document-list)                     | Edit and persist hierarchical document trees                        |
@@ -97,6 +99,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`@sanity/presets`](./plugins/@sanity/presets)                                                           | Experimental preset patterns for Sanity Studio                      |
 | [`@sanity/rich-date-input`](./plugins/@sanity/rich-date-input)                                           | Timezone-aware datetime input for Sanity Studio                     |
 | [`@sanity/sanity-plugin-async-list`](./plugins/@sanity/sanity-plugin-async-list)                         | Autocomplete string input with options loaded from an external API  |
+| [`@sanity/sfcc`](./plugins/@sanity/sfcc)                                                                 | Salesforce Commerce Cloud integration with synced product data      |
 | [`@sanity/studio-secrets`](./plugins/@sanity/studio-secrets)                                             | Manage Studio secrets at runtime                                    |
 | [`@sanity/table`](./plugins/@sanity/table)                                                               | Table schema type and input component for Sanity Studio             |
 | [`@sanity/vercel-protection-bypass`](./plugins/@sanity/vercel-protection-bypass)                         | Setup tool for Vercel Deployment Protection in previews             |
@@ -108,6 +111,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`sanity-plugin-dashboard-widget-netlify`](./plugins/sanity-plugin-dashboard-widget-netlify)             | Dashboard widget for triggering Netlify builds                      |
 | [`sanity-plugin-dashboard-widget-vercel`](./plugins/sanity-plugin-dashboard-widget-vercel)               | Dashboard widget for managing Vercel deployments                    |
 | [`sanity-plugin-documents-pane`](./plugins/sanity-plugin-documents-pane)                                 | Display GROQ-queried document lists in a view pane                  |
+| [`sanity-plugin-google-translate`](./plugins/sanity-plugin-google-translate)                             | Translate content with Google Translate directly from Studio        |
 | [`sanity-plugin-graph-view`](./plugins/sanity-plugin-graph-view)                                         | Visual graph tool for exploring content relationships               |
 | [`sanity-plugin-hotspot-array`](./plugins/sanity-plugin-hotspot-array)                                   | Add and update array items by clicking on an image                  |
 | [`sanity-plugin-iframe-pane`](./plugins/sanity-plugin-iframe-pane)                                       | Display external URLs in a Studio pane                              |

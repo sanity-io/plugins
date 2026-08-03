@@ -1,9 +1,8 @@
 // Adapted from https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/paneItem/PaneItem.tsx
 
-import {DocumentIcon} from '@sanity/icons'
-import type {PropsWithChildren} from 'react'
-import React, {useMemo} from 'react'
-import type {CollatedHit, FIXME, SanityDocument, SchemaType} from 'sanity'
+import {DocumentIcon} from '@sanity/icons/Document'
+import {useMemo} from 'react'
+import type {CollatedHit, SanityDocument, SchemaType} from 'sanity'
 import {PreviewCard, useDocumentPresence, useDocumentPreviewStore, useSchema} from 'sanity'
 import {IntentLink} from 'sanity/router'
 
@@ -19,24 +18,16 @@ interface DocumentPreviewProps {
  * Return `false` if we explicitly disable the icon.
  * Otherwise return the passed icon or the schema type icon as a backup.
  */
-export function getIconWithFallback(
+function getIconWithFallback(
   icon: React.ComponentType<any> | false | undefined,
   schemaType: SchemaType | undefined,
-  defaultIcon: React.ComponentType<any>
+  defaultIcon: React.ComponentType<any>,
 ): React.ComponentType<any> | false {
   if (icon === false) {
     return false
   }
 
   return icon || ((schemaType && schemaType.icon) as any) || defaultIcon || false
-}
-
-function DocumentPreviewLink(props: DocumentPreviewProps) {
-  return (linkProps: PropsWithChildren) => (
-    <IntentLink intent="edit" params={{id: props.documentPair.id}}>
-      {linkProps.children}
-    </IntentLink>
-  )
 }
 
 export function DocumentPreview(props: DocumentPreviewProps) {
@@ -48,11 +39,11 @@ export function DocumentPreview(props: DocumentPreviewProps) {
   const documentPresence = useDocumentPresence(id)
   const hasSchemaType = Boolean(schemaType && schemaType.name && schema.get(schemaType.name))
 
-  const PreviewComponent = useMemo(() => {
+  const children = useMemo(() => {
     if (!doc) return null
 
     if (!schemaType || !hasSchemaType) {
-      return <MissingSchemaType value={doc as SanityDocument} />
+      return <MissingSchemaType value={doc} />
     }
 
     return (
@@ -70,14 +61,16 @@ export function DocumentPreview(props: DocumentPreviewProps) {
   return (
     <PreviewCard
       __unstable_focusRing
-      as={DocumentPreviewLink(props) as FIXME}
+      as={IntentLink}
+      intent="edit"
+      params={{id: props.documentPair.id}}
       data-as="a"
       data-ui="PaneItem"
       padding={2}
       radius={2}
       tone="inherit"
     >
-      {PreviewComponent}
+      {children}
     </PreviewCard>
   )
 }

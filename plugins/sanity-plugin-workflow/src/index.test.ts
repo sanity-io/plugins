@@ -10,11 +10,12 @@ test('package exports', {timeout: 30_000}, async () => {
   })
 
   expect(manifest.exports).toMatchInlineSnapshot(`
-      {
-        ".": {
-          "defineStates": "function",
-          "workflow": "function",
-        },
-      }
-    `)
+    {
+      ".": {
+        "defineStates": "function",
+        "workflow": "function",
+      },
+      "./bundle.css": {},
+    }
+  `)
 })

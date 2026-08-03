@@ -14,7 +14,7 @@ type Props = {
 const StackContainer = styled(Flex)(({theme}: {theme: Theme}) => {
   return css`
     > * {
-      margin-bottom: ${rem(theme.sanity.space[2])};
+      margin-bottom: ${rem(theme.sanity.space[2]!)};
     }
   `
 })

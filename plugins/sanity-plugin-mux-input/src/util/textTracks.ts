@@ -8,7 +8,7 @@ import type {MuxTextTrack, VideoAssetDocument} from './types'
 
 export function extractErrorMessage(
   error: unknown,
-  defaultMessage = 'Failed to process request'
+  defaultMessage = 'Failed to process request',
 ): string {
   let message = ''
 
@@ -31,7 +31,7 @@ export function extractErrorMessage(
   if (message.includes('responded with')) {
     const parts = message.split('(')
     if (parts.length > 1) {
-      return parts[parts.length - 1].replace(')', '').trim()
+      return parts[parts.length - 1]!.replace(')', '').trim()
     }
   }
 
@@ -63,7 +63,7 @@ export interface PollTrackStatusResult {
  * @returns Promise resolving to the poll result
  */
 export async function pollTrackStatus(
-  options: PollTrackStatusOptions
+  options: PollTrackStatusOptions,
 ): Promise<PollTrackStatusResult> {
   const {
     client,
@@ -84,7 +84,7 @@ export async function pollTrackStatus(
 
   const findTrack = (textTracks: MuxTextTrack[]): MuxTextTrack | undefined => {
     let foundTrack = textTracks.find(
-      (track) => track.name === trimmedName && track.language_code === trimmedLanguageCode
+      (track) => track.name === trimmedName && track.language_code === trimmedLanguageCode,
     )
 
     if (!foundTrack) {
@@ -175,7 +175,7 @@ export async function pollTrackStatus(
 export async function downloadVttFile(
   client: SanityClient,
   asset: VideoAssetDocument,
-  track: MuxTextTrack
+  track: MuxTextTrack,
 ): Promise<void> {
   if (!track.id) {
     throw new Error('Track ID is missing')

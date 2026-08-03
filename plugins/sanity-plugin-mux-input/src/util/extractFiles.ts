@@ -22,7 +22,7 @@ function normalizeItems(items: DataTransferItem[]) {
         // Edge throws
         try {
           entry = item.webkitGetAsEntry()
-        } catch (err) {
+        } catch {
           return [item.getAsFile()]
         }
         if (!entry) {
@@ -39,9 +39,9 @@ function normalizeItems(items: DataTransferItem[]) {
 
       // others
       return new Promise((resolve) => item.getAsString(resolve)).then((str?: any) =>
-        str ? [new File([str], 'unknown.txt', {type: item.type})] : []
+        str ? [new File([str], 'unknown.txt', {type: item.type})] : [],
       )
-    })
+    }),
   )
 }
 

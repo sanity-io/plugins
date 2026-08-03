@@ -20,7 +20,7 @@ import {assistFormId} from './constants'
 const preventDefault = (ev: React.FormEvent) => ev.preventDefault()
 
 export function DocumentForm(
-  props: Omit<BoxProps, 'as'> & Omit<HTMLProps<HTMLDivElement>, 'as' | 'onSubmit' | 'ref'>,
+  props: Omit<BoxProps<'form'>, 'as'> & Omit<HTMLProps<HTMLFormElement>, 'as' | 'onSubmit' | 'ref'>,
 ) {
   const {
     collapsedFieldSets,
@@ -92,7 +92,7 @@ export function DocumentForm(
     }
   }, [hasRev])
 
-  const formRef = useRef<null | HTMLDivElement>(null)
+  const formRef = useRef<null | HTMLFormElement>(null)
 
   useEffect(() => {
     focusFirstDescendant(formRef.current!)

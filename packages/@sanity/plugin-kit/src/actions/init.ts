@@ -1,6 +1,6 @@
 import path from 'path'
 
-import {TypedFlags} from 'meow'
+import type {TypedFlags} from 'meow'
 
 import {defaultSourceJs, defaultSourceTs} from '../configs/default-source'
 import {defaultOutDir} from '../constants'
@@ -15,7 +15,7 @@ export const initFlags = {
     type: 'boolean',
     default: true,
   },
-  eslint: {
+  oxlint: {
     type: 'boolean',
     default: true,
   },
@@ -23,7 +23,7 @@ export const initFlags = {
     type: 'boolean',
     default: true,
   },
-  prettier: {
+  oxfmt: {
     type: 'boolean',
     default: true,
   },

@@ -24,7 +24,7 @@ export function readSecrets(client: SanityClient): Secrets {
         signingKeyPrivate,
         drmConfigId
       }`,
-      {_id}
+      {_id},
     )
     return {
       token: data?.token || null,

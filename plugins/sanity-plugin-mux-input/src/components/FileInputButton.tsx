@@ -1,5 +1,5 @@
 import {Button, type ButtonProps} from '@sanity/ui'
-import React, {useCallback, useId, useRef} from 'react'
+import {useCallback, useId, useRef} from 'react'
 import {styled} from 'styled-components'
 
 const HiddenInput = styled.input`
@@ -15,7 +15,7 @@ const Label = styled.label`
   position: relative;
 `
 
-export interface FileInputButtonProps extends ButtonProps {
+export interface FileInputButtonProps extends Omit<ButtonProps, 'onSelect'> {
   onSelect: (files: FileList) => void
   accept: string
 }
@@ -28,7 +28,7 @@ export const FileInputButton = ({onSelect, accept, ...props}: FileInputButtonPro
         onSelect(event.target.files!)
       }
     },
-    [onSelect]
+    [onSelect],
   )
   const handleButtonClick = useCallback(() => inputRef.current?.click(), [])
   return (

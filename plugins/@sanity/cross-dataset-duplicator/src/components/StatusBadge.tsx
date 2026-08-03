@@ -1,4 +1,4 @@
-import {InfoOutlineIcon} from '@sanity/icons'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
 import {Box, Text, Badge, Tooltip} from '@sanity/ui'
 import type {BadgeTone} from '@sanity/ui'
 
@@ -80,7 +80,7 @@ export default function StatusBadge(props: StatusBadgeProps) {
 
   if (!badgeTone) {
     return (
-      <Badge muted padding={2} fontSize={1}>
+      <Badge padding={2} fontSize={1}>
         Checking...
       </Badge>
     )
@@ -100,7 +100,7 @@ export default function StatusBadge(props: StatusBadgeProps) {
       placement="top"
       portal
     >
-      <Badge muted padding={3} fontSize={1} tone={badgeTone}>
+      <Badge padding={3} fontSize={1} tone={badgeTone}>
         {badgeStatus}
         <Box marginLeft={2} display={'inline-block'} as="span">
           <InfoOutlineIcon />

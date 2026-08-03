@@ -1,7 +1,12 @@
 import useTypedSelector from '../../hooks/useTypedSelector'
 import type {Dialog} from '../../types'
 import DialogAssetEdit from '../DialogAssetEdit'
+import DialogAllAssets from '../DialogAssetsOverView'
 import DialogConfirm from '../DialogConfirm'
+import DialogFolderCreate from '../DialogFolderCreate'
+import DialogFolderMove from '../DialogFolderMove'
+import DialogFolderRename from '../DialogFolderRename'
+import DialogFolders from '../DialogFolders'
 import DialogSearchFacets from '../DialogSearchFacets'
 import DialogTagCreate from '../DialogTagCreate'
 import DialogTagEdit from '../DialogTagEdit'
@@ -16,7 +21,7 @@ const Dialogs = () => {
       return null
     }
 
-    const dialog = dialogs[index]
+    const dialog = dialogs[index]!
     const childDialogs = renderDialogs(dialogs, index + 1)
 
     if (dialog.type === 'assetEdit') {
@@ -32,6 +37,38 @@ const Dialogs = () => {
         <DialogConfirm dialog={dialog} key={index}>
           {childDialogs}
         </DialogConfirm>
+      )
+    }
+
+    if (dialog.type === 'folderCreate') {
+      return (
+        <DialogFolderCreate dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogFolderCreate>
+      )
+    }
+
+    if (dialog.type === 'folderMove') {
+      return (
+        <DialogFolderMove dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogFolderMove>
+      )
+    }
+
+    if (dialog.type === 'folderRename') {
+      return (
+        <DialogFolderRename dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogFolderRename>
+      )
+    }
+
+    if (dialog.type === 'folders') {
+      return (
+        <DialogFolders dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogFolders>
       )
     }
 
@@ -64,6 +101,14 @@ const Dialogs = () => {
         <DialogTags dialog={dialog} key={index}>
           {childDialogs}
         </DialogTags>
+      )
+    }
+
+    if (dialog.type === 'dialogAllAssets') {
+      return (
+        <DialogAllAssets dialog={dialog} key={index}>
+          {childDialogs}
+        </DialogAllAssets>
       )
     }
 

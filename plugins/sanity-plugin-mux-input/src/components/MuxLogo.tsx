@@ -1,5 +1,5 @@
 import {useTheme_v2} from '@sanity/ui'
-import {CSSProperties, useId, useMemo} from 'react'
+import {type CSSProperties, useId, useMemo} from 'react'
 
 export interface Props {
   height?: number

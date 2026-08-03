@@ -25,6 +25,12 @@ export interface CodeOptions {
   languageAlternatives?: CodeInputLanguage[]
   language?: string
   withFilename?: boolean
+  /**
+   * Hides the fullscreen toggle button on the editor.
+   *
+   * @defaultValue false
+   */
+  disableFullscreen?: boolean
 }
 
 /**

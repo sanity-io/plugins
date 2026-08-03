@@ -1,4 +1,4 @@
-import {WarningOutlineIcon} from '@sanity/icons'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {Box, Button, Flex, Stack, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'
@@ -63,7 +63,9 @@ const DialogConfirm = (props: Props) => {
   return (
     <Dialog
       animate
+      // oxlint-disable-next-line react/react-compiler
       footer={<Footer />}
+      // oxlint-disable-next-line react/react-compiler
       header={<Header />}
       id="confirm"
       onClose={handleClose}

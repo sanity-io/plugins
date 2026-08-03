@@ -1,7 +1,7 @@
 import {Checkbox, Flex, Grid, Text} from '@sanity/ui'
-import {ActionDispatch, CSSProperties, ReactNode, useState} from 'react'
+import {type ActionDispatch, type CSSProperties, type ReactNode, useState} from 'react'
 
-import {UploadConfigurationStateAction} from '../UploadConfiguration'
+import {type UploadConfigurationStateAction} from '../UploadConfiguration'
 
 export default function PlaybackPolicyOption({
   id,

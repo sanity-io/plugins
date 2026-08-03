@@ -1,11 +1,11 @@
 import {htmlToBlocks} from '@portabletext/block-tools'
-import {
+import type {
   PortableTextBlockComponent,
   PortableTextListComponent,
   PortableTextListItemComponent,
 } from '@portabletext/to-html'
-import {PortableTextBlockStyle} from '@portabletext/types'
-import {PortableTextTextBlock, TypedObject} from 'sanity'
+import type {PortableTextBlockStyle} from '@portabletext/types'
+import type {PortableTextTextBlock, TypedObject} from 'sanity'
 
 import {blockContentType} from './BaseDocumentDeserializer/helpers'
 
@@ -133,11 +133,11 @@ export const customBlockDeserializers: Array<any> = [
             ...block,
             ...newBlock,
             style: customStyle ?? (newBlock as PortableTextTextBlock).style,
-          } as PortableTextTextBlock
+          }
 
           //next(childNodes) plays poorly with custom styles, issue to be filed.
           if (customStyle) {
-            return block as PortableTextTextBlock
+            return block
           }
         }
       }

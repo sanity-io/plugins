@@ -1,10 +1,8 @@
+import {styleText} from 'node:util'
 import path from 'path'
 
-import chalk from 'chalk'
-import outdent from 'outdent'
-
-import {Injectable, InjectOptions, writeAssets} from '../actions/inject'
-import {PackageJson} from '../actions/verify/types'
+import {type Injectable, type InjectOptions, writeAssets} from '../actions/inject'
+import type {PackageJson} from '../actions/verify/types'
 import {
   addPackageJsonScripts,
   addScript,
@@ -16,9 +14,10 @@ import {resolveLatestVersions} from '../npm/resolveLatestVersions'
 import {errorToUndefined} from '../util/errorToUndefined'
 import {readFile, writeFile} from '../util/files'
 import log from '../util/log'
+import {outdent} from '../util/outdent'
 import {developTestSnippet, getLicenseText, installationSnippet} from '../util/readme'
 import {getUserInfo} from '../util/user'
-import {Preset} from './presets'
+import type {Preset} from './presets'
 
 export const semverWorkflowPreset: Preset = {
   name: 'semver-workflow',
@@ -57,7 +56,8 @@ async function addDevDependencies(options: InjectOptions) {
   log.info('Updated devDependencies.')
 
   log.info(
-    chalk.green(
+    styleText(
+      'green',
       outdent`
         semantic-release preset injected.
 
@@ -122,7 +122,7 @@ async function readmeSnippets(options: InjectOptions) {
 }
 
 /**
- * Returns sections that does not exists "close enough" in readme
+ * Returns sections that do not exist "close enough" in readme
  */
 export function missingSections(readme: string, sections: string[]) {
   return sections.filter((section) => !closeEnough(section, readme))

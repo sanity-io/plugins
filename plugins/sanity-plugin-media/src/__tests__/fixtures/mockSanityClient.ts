@@ -35,10 +35,10 @@ export function createMockSanityClient(
 
   const observable: MockSanityClient['observable'] = {
     ...observableBase,
-    ...(observableOverrides ?? {}),
+    ...observableOverrides,
     assets: {
       ...observableBase.assets,
-      ...(observableOverrides?.assets ?? {}),
+      ...observableOverrides?.assets,
     },
   }
 
@@ -55,30 +55,47 @@ export function createMockSanityClient(
 }
 
 export function mockPatchChain(result: unknown): {
+  append: ReturnType<typeof vi.fn>
+  ifRevisionId: ReturnType<typeof vi.fn>
   set: ReturnType<typeof vi.fn>
   setIfMissing: ReturnType<typeof vi.fn>
+  unset: ReturnType<typeof vi.fn>
   commit: ReturnType<typeof vi.fn>
 } {
   const commit = vi.fn().mockResolvedValue(result)
   const chain = {
+    append: vi.fn(),
+    ifRevisionId: vi.fn(),
     set: vi.fn(),
     setIfMissing: vi.fn(),
+    unset: vi.fn(),
     commit,
   }
+  chain.append.mockImplementation(() => chain)
+  chain.ifRevisionId.mockImplementation(() => chain)
   chain.set.mockImplementation(() => chain)
   chain.setIfMissing.mockImplementation(() => chain)
+  chain.unset.mockImplementation(() => chain)
   return chain
 }
 
-export function mockTransactionCommit(resolved: unknown = undefined): {
+export function mockTransactionCommit(resolved?: unknown): {
   patch: ReturnType<typeof vi.fn>
   delete: ReturnType<typeof vi.fn>
   commit: ReturnType<typeof vi.fn>
+  patchChain: ReturnType<typeof mockPatchChain>
 } {
+  const patchChain = mockPatchChain(resolved)
   const tx = {
-    patch: vi.fn().mockReturnThis(),
+    patch: vi.fn((_id: string, ops?: (patch: typeof patchChain) => unknown) => {
+      if (typeof ops === 'function') {
+        ops(patchChain)
+      }
+      return tx
+    }),
     delete: vi.fn().mockReturnThis(),
     commit: vi.fn().mockResolvedValue(resolved),
+    patchChain,
   }
   return tx
 }

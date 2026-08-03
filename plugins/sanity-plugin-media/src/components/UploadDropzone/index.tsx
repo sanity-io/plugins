@@ -53,7 +53,7 @@ async function filterFiles(fileList: FileList) {
     try {
       await file.slice(0, 1).arrayBuffer()
       filteredFiles.push(file)
-    } catch (err) {
+    } catch {
       // do nothing: file is a package or folder
     }
   }

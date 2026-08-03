@@ -16,7 +16,7 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
     {
       ".": {
-        "SfccDocumentStatus": "object",
+        "SfccDocumentStatus": "function",
         "SfccOfflineBanner": "function",
         "categoryStructure": "function",
         "productStructure": "function",

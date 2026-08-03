@@ -1,8 +1,7 @@
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
 import type {ClientError, SanityAssetDocument, SanityImageAssetDocument} from '@sanity/client'
 import groq from 'groq'
-import type {Selector} from 'react-redux'
-import {empty, merge, of} from 'rxjs'
+import {empty, from, merge, of} from 'rxjs'
 import {catchError, delay, filter, mergeMap, takeUntil, withLatestFrom} from 'rxjs/operators'
 
 import type {HttpError, MyEpic, SanityUploadProgressEvent, UploadItem} from '../../types'
@@ -31,7 +30,7 @@ const uploadsSlice = createSlice({
       .addCase(UPLOADS_ACTIONS.uploadComplete, (state, action) => {
         const {asset} = action.payload
         if (state.byIds[asset.sha1hash]) {
-          state.byIds[asset.sha1hash].status = 'complete'
+          state.byIds[asset.sha1hash]!.status = 'complete'
         }
       })
   },
@@ -98,8 +97,8 @@ const uploadsSlice = createSlice({
       action: PayloadAction<{event: SanityUploadProgressEvent; uploadHash: string}>,
     ) {
       const {event, uploadHash} = action.payload
-      state.byIds[uploadHash].percent = event.percent
-      state.byIds[uploadHash].status = 'uploading'
+      state.byIds[uploadHash]!.percent = event.percent
+      state.byIds[uploadHash]!.status = 'uploading'
     },
     uploadStart(state, action: PayloadAction<{file: File; uploadItem: UploadItem}>) {
       const {uploadItem} = action.payload
@@ -144,10 +143,33 @@ export const uploadsAssetStartEpic: MyEpic = (action$, _state$, {client}) =>
           ),
           mergeMap((event) => {
             if (event?.type === 'complete') {
-              return of(
-                UPLOADS_ACTIONS.uploadComplete({
-                  asset: event.asset,
-                }),
+              const folderId = uploadItem.folderId || null
+
+              if (!folderId) {
+                return of(
+                  UPLOADS_ACTIONS.uploadComplete({
+                    asset: event.asset,
+                  }),
+                )
+              }
+
+              return from(
+                client
+                  .patch(event.asset._id)
+                  .setIfMissing({opt: {}})
+                  .setIfMissing({'opt.media': {}})
+                  .set({
+                    'opt.media.folder': {_ref: folderId, _type: 'reference', _weak: true},
+                  })
+                  .commit(),
+              ).pipe(
+                mergeMap((asset) =>
+                  of(
+                    UPLOADS_ACTIONS.uploadComplete({
+                      asset: asset as SanityAssetDocument | SanityImageAssetDocument,
+                    }),
+                  ),
+                ),
               )
             }
             if (event?.type === 'progress' && event?.stage === 'upload') {
@@ -198,6 +220,7 @@ export const uploadsAssetUploadEpic: MyEpic = (action$, state$) =>
           const uploadItem = {
             _type: 'upload',
             assetType,
+            folderId: state.folders.currentFolderId,
             hash,
             name: file.name,
             size: file.size,
@@ -232,6 +255,8 @@ export const uploadsCheckRequestEpic: MyEpic = (action$, state$, {client}) =>
 
       const constructedFilter = constructFilter({
         assetTypes: state.assets.assetTypes,
+        currentFolderId: state.folders.currentFolderId,
+        excludeTagSlugs: state.assets.excludeTagSlugs,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
       })
@@ -260,21 +285,12 @@ export const uploadsCheckRequestEpic: MyEpic = (action$, state$, {client}) =>
 
 // Selectors
 
-const selectUploadsByIds = (state: RootReducerState) => state.uploads.byIds
-
-const selectUploadsAllIds = (state: RootReducerState) => state.uploads.allIds
-
 export const selectUploadById = createSelector(
   [
     (state: RootReducerState) => state.uploads.byIds,
     (_state: RootReducerState, uploadId: string) => uploadId,
   ],
   (byIds, uploadId) => byIds[uploadId],
-)
-
-export const selectUploads: Selector<RootReducerState, UploadItem[]> = createSelector(
-  [selectUploadsByIds, selectUploadsAllIds],
-  (byIds, allIds) => allIds.map((id) => byIds[id]),
 )
 
 export const uploadsActions = {...uploadsSlice.actions}

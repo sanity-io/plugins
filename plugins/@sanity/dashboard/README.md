@@ -66,15 +66,13 @@ You can change the name, title and icon of the dashboard tool should you want to
 ```ts
 import {defineConfig} from 'sanity'
 import {dashboardTool} from '@sanity/dashboard'
-import {ActivityIcon} from '@sanity/icons'
+import {ActivityIcon} from '@sanity/icons/Activity'
 
 dashboardTool({
   name: 'stats',
   title: 'Statistics',
   icon: ActivityIcon,
-  widgets: [
-    /* ... */
-  ],
+  widgets: [/* ... */],
 })
 ```
 

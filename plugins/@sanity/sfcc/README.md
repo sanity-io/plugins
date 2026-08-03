@@ -59,7 +59,8 @@ export default defineConfig({
 Create your `product` and `category` document types using the exported schema building blocks. Add the `sfcc` group, include the store field, attach the preview config, and wire up the offline banner:
 
 ```ts
-import {PackageIcon, TagIcon} from '@sanity/icons'
+import {PackageIcon} from '@sanity/icons/Package'
+import {TagIcon} from '@sanity/icons/Tag'
 import {
   sfccCategoryPreview,
   sfccCategoryStoreField,

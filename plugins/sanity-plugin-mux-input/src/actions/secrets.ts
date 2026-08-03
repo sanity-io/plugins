@@ -13,7 +13,6 @@ interface SecretsDocument {
   signingKeyPrivate: string
   drmConfigId: string
 }
-// eslint-disable-next-line max-params
 export function saveSecrets(
   client: SanityClient,
   token: string,
@@ -21,7 +20,7 @@ export function saveSecrets(
   enableSignedUrls: boolean,
   signingKeyId: string,
   signingKeyPrivate: string,
-  drmConfigId: string
+  drmConfigId: string,
 ): Promise<SecretsDocument> {
   const doc: SecretsDocument = {
     _id: 'secrets.mux',
@@ -57,7 +56,7 @@ export async function createSigningKeys(client: SanityClient) {
       error.response?.statusCode === 401
         ? 'Unauthorized - Failed to create the Signing Key. Please ensure that the token has "System" permissions'
         : error.message
-    throw new Error(message)
+    throw new Error(message, {cause: error})
   }
 }
 
@@ -74,7 +73,7 @@ export function testSecrets(client: SanityClient) {
 export async function haveValidSigningKeys(
   client: SanityClient,
   signingKeyId: string,
-  signingKeyPrivate: string
+  signingKeyPrivate: string,
 ) {
   if (!(signingKeyId && signingKeyPrivate)) {
     return false
@@ -93,7 +92,7 @@ export async function haveValidSigningKeys(
     //
     return !!(res.data && res.data.id)
   } catch (e) {
-    console.error('Error fetching signingKeyId', signingKeyId, 'assuming it is not valid')
+    console.error('Error fetching signingKeyId', signingKeyId, 'assuming it is not valid', e)
     return false
   }
 }
@@ -106,6 +105,6 @@ export function testSecretsObservable(client: SanityClient) {
       withCredentials: true,
       method: 'GET',
       query: PLUGIN_VERSION_QUERY,
-    })
+    }),
   )
 }

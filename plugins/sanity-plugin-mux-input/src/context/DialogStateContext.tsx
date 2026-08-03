@@ -1,4 +1,4 @@
-import React, {createContext, useContext} from 'react'
+import {createContext, useContext, useMemo} from 'react'
 
 import {type DialogState, type SetDialogState} from '../hooks/useDialogState'
 
@@ -23,11 +23,8 @@ export const DialogStateProvider = ({
   setDialogState,
   children,
 }: DialogStateProviderProps) => {
-  return (
-    <DialogStateContext.Provider value={{dialogState, setDialogState}}>
-      {children}
-    </DialogStateContext.Provider>
-  )
+  const value = useMemo(() => ({dialogState, setDialogState}), [dialogState, setDialogState])
+  return <DialogStateContext.Provider value={value}>{children}</DialogStateContext.Provider>
 }
 
 export const useDialogStateContext = () => {

@@ -1,14 +1,13 @@
 import path from 'path'
 import {fileURLToPath} from 'url'
 
-// @ts-expect-error missing types
 import licenses from '@rexxars/choosealicense-list'
-import gitRemoteOriginUrl from 'git-remote-origin-url'
+import {execa} from 'execa'
 
-import {eslintignoreTemplate, eslintrcTemplate} from '../configs/eslint'
 import {gitignoreTemplate} from '../configs/git'
+import {oxfmtConfigTemplate} from '../configs/oxfmt'
+import {oxlintConfigTemplate} from '../configs/oxlint'
 import {pkgConfigTemplate} from '../configs/pkg-config'
-import {prettierignoreTemplate} from '../configs/prettier'
 import {tsconfigTemplateDist, tsconfigTemplate, tsconfigTemplateSettings} from '../configs/tsconfig'
 import {addBuildScripts, getPackage, writePackageJson} from '../npm/package'
 import {injectPresets} from '../presets/presets'
@@ -24,8 +23,8 @@ import log from '../util/log'
 import {prompt, promptForPackageName, promptForRepoOrigin} from '../util/prompt'
 import {generateReadme, isDefaultGitHubReadme} from '../util/readme'
 import {getUserInfo} from '../util/user'
-import {InitFlags} from './init'
-import {PackageJson} from './verify/types'
+import type {InitFlags} from './init'
+import type {PackageJson} from './verify/types'
 
 const bannedFields = ['login', 'description', 'projecturl', 'email']
 const preferredLicenses = ['MIT', 'ISC', 'BSD-3-Clause']
@@ -106,7 +105,14 @@ async function injectBase(options: InjectOptions) {
 
   const repoUrl =
     flags.repo ??
-    ((await gitRemoteOriginUrl(basePath).catch(errorToUndefined)) || pkg?.repository?.url)
+    ((await execa('git', ['config', '--get', 'remote.origin.url'], {
+      cwd: basePath,
+      reject: false,
+    })
+      .then((result) => (result.exitCode === 0 ? result.stdout.trim() : undefined))
+      // Spawn errors (e.g. git missing) fall through to package.json repository.url
+      .catch(() => undefined)) ||
+      pkg?.repository?.url)
 
   const gitOrigin = requireUserConfirmation ? await promptForRepoOrigin(options, repoUrl) : repoUrl
 
@@ -166,7 +172,7 @@ async function writeLicense(
     return false
   }
 
-  // Prefer whatever path the user is currenly using (LICENSE.md or LICENSE)
+  // Prefer whatever path the user is currently using (LICENSE.md or LICENSE)
   const hasLicenseMdFile = await fileExists(path.join(basePath, 'LICENSE.md'))
   const licensePath = path.join(basePath, hasLicenseMdFile ? 'LICENSE.md' : 'LICENSE')
 
@@ -194,9 +200,9 @@ async function getLicense(
   }
 
   const text = license.body
-    .replace(/\[fullname\]/g, user?.name)
-    .replace(/\[project\]/g, pluginName)
-    .replace(/\[year\]/g, new Date().getFullYear())
+    .replace(/\[fullname\]/g, user?.name ?? '')
+    .replace(/\[project\]/g, pluginName ?? '')
+    .replace(/\[year\]/g, String(new Date().getFullYear()))
 
   return {id: license.id, text}
 }
@@ -211,7 +217,7 @@ async function getLicenseIdentifier(
     return null
   }
 
-  // --license becomes "", --license mit beocomes "mit"
+  // --license becomes "", --license mit becomes "mit"
   if (typeof flags.license === 'string') {
     const license = licenses.find(`${flags.license}`)
     if (!license) {
@@ -322,18 +328,14 @@ async function writeStaticAssets(options: InjectOptions) {
   const {outDir, flags} = options
 
   const files: Injectable[] = [
-    flags.eslint && eslintrcTemplate({flags: options.flags}),
-    flags.eslint && eslintignoreTemplate({outDir, flags: options.flags}),
+    flags.oxlint && oxlintConfigTemplate({flags: options.flags}),
     {type: 'copy', from: 'editorconfig', to: '.editorconfig'},
-    {type: 'copy', from: 'sanity.json', to: 'sanity.json'},
-    {type: 'copy', from: 'v2-incompatible.js.template', to: 'v2-incompatible.js'},
     pkgConfigTemplate({outDir, flags: options.flags}),
     flags.gitignore && gitignoreTemplate(),
     flags.typescript && tsconfigTemplate({flags: options.flags}),
     flags.typescript && tsconfigTemplateDist({outDir, flags: options.flags}),
     flags.typescript && tsconfigTemplateSettings({outDir, flags: options.flags}),
-    flags.prettier && prettierignoreTemplate({outDir}),
-    flags.prettier && {type: 'copy', from: 'prettierrc.json', to: '.prettierrc'},
+    flags.oxfmt && oxfmtConfigTemplate({flags: options.flags}),
   ]
     .map((f) => (f ? (f as Injectable) : undefined))
     .filter((f): f is Injectable => !!f)

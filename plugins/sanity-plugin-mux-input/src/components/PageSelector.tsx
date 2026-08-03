@@ -1,6 +1,7 @@
-import {ChevronLeftIcon, ChevronRightIcon} from '@sanity/icons'
+import {ChevronLeftIcon} from '@sanity/icons/ChevronLeft'
+import {ChevronRightIcon} from '@sanity/icons/ChevronRight'
 import {Button, Label} from '@sanity/ui'
-import {Dispatch, SetStateAction, useEffect} from 'react'
+import {type Dispatch, type SetStateAction, useEffect} from 'react'
 
 const PageSelector = (props: {
   page: number
