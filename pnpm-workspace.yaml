@@ -136,7 +136,8 @@ minimumReleaseAgeExclude:
   - react
   - react-dom
   - react-is
-  - react-rx@4.2.5 || 5.1.1
+  - react-rx@4.2.5
+  - react-rx@5.1.1
   - rolldown-plugin-dts
   - rollup
   - sanity
