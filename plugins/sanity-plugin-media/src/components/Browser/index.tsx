@@ -9,6 +9,8 @@ import GlobalStyle from '../../styled/GlobalStyles'
 import Controls from '../Controls'
 import DebugControls from '../DebugControls'
 import Dialogs from '../Dialogs'
+import FolderBreadcrumbs from '../FolderBreadcrumbs'
+import FolderPanel from '../FolderPanel'
 import Header from '../Header'
 import Items from '../Items'
 import Notifications from '../Notifications'
@@ -21,6 +23,7 @@ import {useBrowserInit} from './useBrowserInit'
 type Props = {
   assetType?: AssetSourceComponentProps['assetType']
   document?: SanityDocument
+  isMultiSelect?: boolean
   onClose?: AssetSourceComponentProps['onClose']
   onSelect?: AssetSourceComponentProps['onSelect']
   selectedAssets?: AssetSourceComponentProps['selectedAssets']
@@ -53,7 +56,10 @@ const BrowserContent = ({
             {/* Browser Controls */}
             <Controls />
 
+            <FolderBreadcrumbs />
+
             <Flex flex={1}>
+              <FolderPanel />
               <Flex align="flex-end" direction="column" flex={1} style={{position: 'relative'}}>
                 <PickedBar />
                 <Items />
@@ -82,7 +88,7 @@ const Browser = (props: Props) => {
       excludeTagSlugs={excludeTagSlugs}
       selectedAssets={props?.selectedAssets}
     >
-      <AssetBrowserDispatchProvider onSelect={props?.onSelect}>
+      <AssetBrowserDispatchProvider isMultiSelect={props?.isMultiSelect} onSelect={props?.onSelect}>
         <GlobalStyle />
         <BrowserContent onClose={props?.onClose} schemaType={props?.schemaType} />
       </AssetBrowserDispatchProvider>

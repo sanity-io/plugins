@@ -54,11 +54,13 @@
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@testing-library/react": "catalog:",
     "@types/mailchimp__mailchimp_marketing": "^3.0.22",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
+    "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",

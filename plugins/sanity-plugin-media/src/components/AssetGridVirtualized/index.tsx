@@ -3,12 +3,13 @@ import {VirtuosoGrid} from 'react-virtuoso'
 import {styled} from 'styled-components'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
-import type {CardAssetData, CardUploadData} from '../../types'
+import type {CardAssetData, CardFolderData, CardUploadData} from '../../types'
 import CardAsset from '../CardAsset'
+import CardFolder from '../CardFolder'
 import CardUpload from '../CardUpload'
 
 type Props = {
-  items: (CardAssetData | CardUploadData)[]
+  items: (CardAssetData | CardFolderData | CardUploadData)[]
   onLoadMore?: () => void
 }
 
@@ -16,9 +17,19 @@ const CARD_HEIGHT = 220
 const CARD_WIDTH = 240
 
 const VirtualCell = memo(
-  ({item, selected}: {item: CardAssetData | CardUploadData; selected: boolean}) => {
+  ({
+    item,
+    selected,
+  }: {
+    item: CardAssetData | CardFolderData | CardUploadData
+    selected: boolean
+  }) => {
     if (item?.type === 'asset') {
       return <CardAsset id={item.id} selected={selected} />
+    }
+
+    if (item?.type === 'folder') {
+      return <CardFolder folderId={item.folderId} name={item.name} totalCount={item.totalCount} />
     }
 
     if (item?.type === 'upload') {

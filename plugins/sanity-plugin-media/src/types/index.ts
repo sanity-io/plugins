@@ -10,7 +10,7 @@ import type {Epic} from 'redux-observable'
 import * as z from 'zod'
 
 import type {DetailsProps} from '../components/DialogAssetEdit/Details'
-import {getAssetFormSchema, tagFormSchema, tagOptionSchema} from '../formSchema'
+import {folderFormSchema, getAssetFormSchema, tagFormSchema, tagOptionSchema} from '../formSchema'
 import type {RootReducerState} from '../modules/types'
 
 export type MediaTagsOptions = {
@@ -57,6 +57,7 @@ type CustomFields = {
   description?: LocalizedString
   opt?: {
     media?: {
+      folder?: SanityReference
       tags?: SanityReference[]
     }
   }
@@ -101,6 +102,15 @@ export type CardAssetData = {
   type: 'asset'
 }
 
+export type CardFolderData = {
+  id: string
+  folderId: string
+  name: string
+  path: string
+  totalCount: number
+  type: 'folder'
+}
+
 export type CardUploadData = {
   id: string
   type: 'upload'
@@ -109,6 +119,10 @@ export type CardUploadData = {
 export type Dialog =
   | DialogAssetEditProps
   | DialogConfirmProps
+  | DialogFolderCreateProps
+  | DialogFolderMoveProps
+  | DialogFolderRenameProps
+  | DialogFoldersProps
   | DialogSearchFacetsProps
   | DialogTagCreateProps
   | DialogTagEditProps
@@ -136,6 +150,34 @@ export type DialogConfirmProps = {
   title: string
   tone: 'critical' | 'primary'
   type: 'confirm'
+}
+
+export type DialogFolderCreateProps = {
+  closeDialogId?: string
+  parentFolderId?: string | null
+  id: string
+  type: 'folderCreate'
+}
+
+export type DialogFolderMoveProps = {
+  assets: AssetItem[]
+  closeDialogId?: string
+  folderId?: string | null
+  id: string
+  type: 'folderMove'
+}
+
+export type DialogFolderRenameProps = {
+  closeDialogId?: string
+  folderId: string
+  id: string
+  type: 'folderRename'
+}
+
+export type DialogFoldersProps = {
+  closeDialogId?: string
+  id: string
+  type: 'folders'
 }
 
 export type DialogSearchFacetsProps = {
@@ -172,6 +214,26 @@ export type FileAsset = SanityAssetDocument &
   CustomFields & {
     _type: 'sanity.fileAsset'
   }
+
+export type FolderDoc = {
+  _id: string
+  name: string
+  parentId: string | null
+}
+
+export type FolderTreeItem = {
+  depth: number
+  exactCount: number
+  id: string
+  name: string
+  parentId: string | null
+  path: string
+  totalCount: number
+}
+
+export type FolderTreeNode = Omit<FolderTreeItem, 'depth'> & {
+  children: FolderTreeNode[]
+}
 
 export type ImageAsset = SanityImageAssetDocument &
   CustomFields & {
@@ -265,6 +327,7 @@ export type SearchFacetName =
   | 'altText'
   | 'creditLine'
   | 'description'
+  | 'folder'
   | 'fileName'
   | 'height'
   | 'inCurrentDocument'
@@ -325,6 +388,8 @@ export type Tag = SanityDocument & {
 
 export type TagActions = 'applyAll' | 'delete' | 'edit' | 'removeAll' | 'search'
 
+export type FolderFormData = z.infer<typeof folderFormSchema>
+
 export type TagFormData = z.infer<typeof tagFormSchema>
 
 export type TagItem = {
@@ -340,6 +405,7 @@ export type TagSelectOption = z.infer<typeof tagOptionSchema>
 export type UploadItem = {
   _type: 'upload'
   assetType: AssetType
+  folderId?: string | null
   hash: string
   name: string
   objectUrl?: string

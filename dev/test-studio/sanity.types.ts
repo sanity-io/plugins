@@ -961,30 +961,30 @@ export type DisneyCharacter = string
 
 export type Pokemon = string
 
-export type CloudinaryTest = {
+export type CloudinaryAssetDocumentReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'cloudinaryAssetDocument'
+}
+
+export type CloudinaryAssetReference = {
+  _type: 'cloudinaryAssetReference'
+  asset?: CloudinaryAssetDocumentReference
+}
+
+export type CloudinaryAssetDocument = {
   _id: string
-  _type: 'cloudinaryTest'
+  _type: 'cloudinaryAssetDocument'
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
   asset?: CloudinaryAsset
-  assetList?: Array<
-    {
-      _key: string
-    } & CloudinaryAsset
-  >
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
 }
 
 export type CloudinaryAsset = {
   _type: 'cloudinary.asset'
+  id?: string
   public_id?: string
   resource_type?: string
   type?: string
@@ -1005,6 +1005,29 @@ export type CloudinaryAsset = {
   >
   access_mode?: string
   context?: CloudinaryAssetContext
+}
+
+export type CloudinaryTest = {
+  _id: string
+  _type: 'cloudinaryTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  asset?: CloudinaryAsset
+  assetList?: Array<
+    {
+      _key: string
+    } & CloudinaryAsset
+  >
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  assetReference?: CloudinaryAssetReference
 }
 
 export type CloudinaryAssetContextCustom = {
@@ -1776,8 +1799,11 @@ export type AllSanitySchemaTypes =
   | AsyncListTest
   | DisneyCharacter
   | Pokemon
-  | CloudinaryTest
+  | CloudinaryAssetDocumentReference
+  | CloudinaryAssetReference
+  | CloudinaryAssetDocument
   | CloudinaryAsset
+  | CloudinaryTest
   | CloudinaryAssetContextCustom
   | CloudinaryAssetContext
   | CloudinaryAssetDerived
