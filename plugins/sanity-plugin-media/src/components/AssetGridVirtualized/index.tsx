@@ -3,22 +3,31 @@ import {type GridItemContent, VirtuosoGrid} from 'react-virtuoso'
 import {styled} from 'styled-components'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
-import type {CardAssetData, CardUploadData} from '../../types'
+import type {CardAssetData, CardFolderData, CardUploadData} from '../../types'
 import CardAsset from '../CardAsset'
+import CardFolder from '../CardFolder'
 import CardUpload from '../CardUpload'
 
 type Props = {
-  items: (CardAssetData | CardUploadData)[]
+  items: (CardAssetData | CardFolderData | CardUploadData)[]
   onLoadMore?: () => void
+  source?: string
 }
+
+type GridItem = CardAssetData | CardFolderData | CardUploadData
+type GridContext = {selectedIds: string[]; source?: string}
 
 const CARD_HEIGHT = 220
 const CARD_WIDTH = 240
 
 const VirtualCell = memo(
-  ({item, selected}: {item: CardAssetData | CardUploadData; selected: boolean}) => {
+  ({item, selected, source}: {item: GridItem; selected: boolean; source?: string}) => {
     if (item?.type === 'asset') {
-      return <CardAsset id={item.id} selected={selected} />
+      return <CardAsset id={item.id} selected={selected} source={source} />
+    }
+
+    if (item?.type === 'folder') {
+      return <CardFolder folderId={item.folderId} name={item.name} totalCount={item.totalCount} />
     }
 
     if (item?.type === 'upload') {
@@ -30,12 +39,14 @@ const VirtualCell = memo(
 )
 
 // Kept at module scope (not defined during render) so it isn't treated as an
-// unstable nested component; the per-render `selectedIds` are passed via context.
-const renderCell: GridItemContent<CardAssetData | CardUploadData, string[]> = (
-  _index,
-  item,
-  selectedIds,
-) => <VirtualCell item={item} selected={selectedIds.includes(item.id)} />
+// unstable nested component; per-render `selectedIds`/`source` are passed via context.
+const renderCell: GridItemContent<GridItem, GridContext> = (_index, item, context) => (
+  <VirtualCell
+    item={item}
+    selected={context.selectedIds.includes(item.id)}
+    source={context.source}
+  />
+)
 
 const StyledItemContainer = styled.div`
   height: ${CARD_HEIGHT}px;
@@ -63,7 +74,7 @@ const ListContainer = (props: any) => {
 }
 
 const AssetGridVirtualized = (props: Props) => {
-  const {items, onLoadMore} = props
+  const {items, onLoadMore, source} = props
 
   // Redux
   const selectedAssets = useTypedSelector((state) => state.selected.assets)
@@ -86,7 +97,7 @@ const AssetGridVirtualized = (props: Props) => {
         Item: ItemContainer,
         List: ListContainer,
       }}
-      context={selectedIds}
+      context={{selectedIds, source}}
       data={items}
       endReached={onLoadMore}
       itemContent={renderCell}

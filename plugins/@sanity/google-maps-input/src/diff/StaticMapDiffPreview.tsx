@@ -1,4 +1,4 @@
-import {ImageIcon} from '@sanity/icons'
+import {ImageIcon} from '@sanity/icons/Image'
 import {Flex, Text} from '@sanity/ui'
 import {use, useState} from 'react'
 

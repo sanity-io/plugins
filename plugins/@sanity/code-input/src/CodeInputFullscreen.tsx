@@ -1,4 +1,5 @@
-import {CollapseIcon, ExpandIcon} from '@sanity/icons'
+import {CollapseIcon} from '@sanity/icons/Collapse'
+import {ExpandIcon} from '@sanity/icons/Expand'
 import {Box, Button, Card, Layer, Portal, Text, Tooltip} from '@sanity/ui'
 import {type CSSProperties, type ReactNode, useCallback, useEffect, useRef, useState} from 'react'
 import {css, styled} from 'styled-components'
@@ -117,15 +118,17 @@ export const EditorContainer = styled(Card)<{$fullscreen: boolean}>(({theme, $fu
       })};
     }
 
-    ${$fullscreen &&
-    css`
-      height: 100%;
-      border-radius: 0;
-      resize: none;
-      background-color: ${base.bg};
-      /* Divider drawn on the overlay so the sides sit flush with the pane */
-      box-shadow: none;
-    `}
+    ${
+      $fullscreen &&
+      css`
+        height: 100%;
+        border-radius: 0;
+        resize: none;
+        background-color: ${base.bg};
+        /* Divider drawn on the overlay so the sides sit flush with the pane */
+        box-shadow: none;
+      `
+    }
   `
 })
 

@@ -66,7 +66,7 @@ const uploadSanityAsset$ = (
         return throwError({
           message: 'Asset already exists',
           statusCode: 409,
-        } as HttpError)
+        } satisfies HttpError)
       }
 
       return of(null)
@@ -75,7 +75,7 @@ const uploadSanityAsset$ = (
       // Begin upload if no existing asset found
       return client.observable.assets
         .upload(assetType, file, {
-          extract: ['blurhash', 'exif', 'location', 'lqip', 'palette'],
+          extract: ['blurhash', 'exif', 'image', 'location', 'lqip', 'palette'],
           preserveFilename: true,
         })
         .pipe(

@@ -24,9 +24,8 @@ This is the canonical transfer flow and scaffolds monorepo-compatible files and 
 Keep and maintain these monorepo config files in the transferred plugin:
 
 - `package.json`
-- `package.config.ts`
+- `tsdown.config.ts`
 - `tsconfig.json`
-- `tsconfig.build.json`
 - `vitest.config.ts`
 
 Do not copy standalone-repo-only setup such as custom root CI/build/lint/test configs that are already handled by this monorepo.
@@ -100,7 +99,7 @@ Type-aware lint can fail (sometimes intermittently, especially on cold installs)
 To keep the plugin on the shared `sanity` variant, declare these in the plugin `devDependencies`:
 
 - `"@types/node": "catalog:"`
-- `"styled-components": "catalog:"` (when the plugin depends on `@sanity/ui`, which peers on styled-components; without the declaration pnpm auto-installs the peer and bypasses the workspace `@sanity/styled-components` override)
+- `"styled-components": "catalog:"` (when the plugin depends on `@sanity/ui`, which peers on styled-components; without the declaration pnpm may auto-install a separate copy of the peer)
 
 Verify alignment by checking that the plugin importer's `sanity` version string in `pnpm-lock.yaml` matches other plugins (e.g. `plugins/@sanity/sfcc`).
 

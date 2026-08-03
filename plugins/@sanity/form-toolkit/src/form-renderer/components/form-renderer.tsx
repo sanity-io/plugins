@@ -13,11 +13,11 @@ interface FormRendererProps extends HTMLProps<HTMLFormElement> {
   fieldComponents?: Record<string, ComponentType<FieldComponentProps>>
 }
 
-const defaultGetFieldState = (name: string) => ({
-  value: undefined,
-  onChange: () => {},
-  name, // Pass name to field for native form handling
-})
+// No field state by default: fields render as uncontrolled, interactive inputs
+// so the form works out of the box (e.g. as a native HTML form). Consumers can
+// pass `getFieldState` to make the fields controlled.
+const EMPTY_FIELD_STATE: FieldState = {}
+const defaultGetFieldState = (): FieldState => EMPTY_FIELD_STATE
 
 const defaultFieldComponents: Record<string, ComponentType<FieldComponentProps>> = {}
 
@@ -49,7 +49,7 @@ export const FormRenderer: FC<FormRendererProps> = (props) => {
   return (
     <form {...elProps} id={elProps.id ?? formData?.id?.current}>
       {formData?.fields?.map((field) => (
-        <div key={field._key} className="form-field">
+        <div key={field._key ?? field.name} className="form-field">
           {renderField(field)}
         </div>
       ))}

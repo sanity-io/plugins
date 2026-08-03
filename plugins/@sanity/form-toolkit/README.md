@@ -1,5 +1,3 @@
-## Usage
-
 # @sanity/form-toolkit
 
 Plugin for integrating 3rd party form services or building your own forms with Sanity.
@@ -73,7 +71,7 @@ export default defineType({
   title: 'Post',
   type: 'document',
   fields: [
-    //...rest of schma
+    //...rest of schema
     defineField({
       name: 'hubSpot',
       type: 'hubSpotForm',
@@ -147,7 +145,7 @@ export default defineType({
   title: 'Post',
   type: 'document',
   fields: [
-    //...rest of schma
+    //...rest of schema
     defineField({
       name: 'mailchimp',
       type: 'mailchimpForm',
@@ -158,7 +156,7 @@ export default defineType({
 
 ## formSchema and FormRenderer
 
-The `formSchema` plugin and `FormRenderer` React component are designed to be used together to build and render forms in Sanity. `formSchema` provides a Sanity schema for creating `form` documents made up of various `formFields`, then `FormRenderer` takes those `form` documents and renders them as React components. The `formSchema` plugin can be used by itself with your own logic for rendering the form. The `/examples` directory of this repository shows `FormRenderer` being used with popular form libraries.
+The `formSchema` plugin and `FormRenderer` React component are designed to be used together to build and render forms in Sanity. `formSchema` provides a Sanity schema for creating `form` documents made up of various `formFields`, then `FormRenderer` takes those `form` documents and renders them as React components. The `formSchema` plugin can be used by itself with your own logic for rendering the form. The [`examples/form-schema`](examples/form-schema) directory shows `FormRenderer` being used with popular form libraries.
 
 First add `formSchema` it as a plugin in `sanity.config.ts` (or .js):
 
@@ -234,7 +232,7 @@ export const NativeFormExample: FC<NativeFormExampleProps> = ({
 
 ### FormRenderer
 
-The `FormRenderer` component takes documents created with the `formSchema` plugin and renders a form for your front-end. The `formSchema` plugin can be used by itself with your own logic for rendering the form. The `/examples` directory of this repository shows `FormRenderer` being used with popular form libraries. `FormRenderer` takes the following props
+The `FormRenderer` component takes documents created with the `formSchema` plugin and renders a form for your front-end. The `formSchema` plugin can be used by itself with your own logic for rendering the form. The [`examples/form-schema`](examples/form-schema) directory shows `FormRenderer` being used with popular form libraries. `FormRenderer` takes the following props
 
 #### All props for native `form` element
 
@@ -259,27 +257,12 @@ const fieldComponents = {
 
 #### getFieldState
 
-Function for managing each field as a piece of state (see `react-hook-form.tsx` and `tanstack-form.tsx` in the `/examples` directory)
+Function for managing each field as a piece of state (see [`react-hook-form.tsx`](examples/form-schema/react-hook-form.tsx) and [`tanstack-form.tsx`](examples/form-schema/tanstack-form.tsx) in the [`examples/form-schema`](examples/form-schema) directory)
 
 #### getFieldError
 
-Similar to `getFieldState`, a function for managing each field's errors as a piece of state (see `react-hook-form.tsx` and `tanstack-form.tsx` in the `/examples` directory)
+Similar to `getFieldState`, a function for managing each field's errors as a piece of state (see [`react-hook-form.tsx`](examples/form-schema/react-hook-form.tsx) and [`tanstack-form.tsx`](examples/form-schema/tanstack-form.tsx) in the [`examples/form-schema`](examples/form-schema) directory)
 
 ## License
 
 [MIT](LICENSE) © Chris LaRocque
-
-## Develop & test
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/form-toolkit/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
-
-Semantic release will only release on configured branches, so it is safe to run release on any branch.

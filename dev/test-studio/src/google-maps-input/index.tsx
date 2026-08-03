@@ -1,5 +1,5 @@
 import {GeopointDiff, googleMapsInput} from '@sanity/google-maps-input'
-import {PinIcon} from '@sanity/icons'
+import {PinIcon} from '@sanity/icons/Pin'
 import {definePlugin, defineType} from 'sanity'
 
 const googleMapsTest = defineType({

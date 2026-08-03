@@ -9,6 +9,20 @@ export function createTestRootState(overrides: Partial<RootReducerState> = {}): 
     },
     debug: {badConnection: false, enabled: false},
     dialog: {items: []},
+    folders: {
+      byId: {},
+      childrenByParentId: {},
+      rootIds: [],
+      exactCountByFolderId: {},
+      unfiledCount: 0,
+      currentFolderId: null,
+      currentFolderUnfiled: false,
+      panelVisible: false,
+      fetching: false,
+      fetchCount: -1,
+      creating: false,
+      renaming: false,
+    },
     notifications: {items: []},
     search: {facets: [], query: ''},
     selected: {assets: [], document: undefined, documentAssetIds: []},
@@ -23,5 +37,5 @@ export function createTestRootState(overrides: Partial<RootReducerState> = {}): 
     uploads: {allIds: [], byIds: {}},
   }
 
-  return {...base, ...overrides} as RootReducerState
+  return {...base, ...overrides}
 }

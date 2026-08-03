@@ -1,4 +1,4 @@
-import {ArrowRightIcon} from '@sanity/icons'
+import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
 import {Box, Stack, Text} from '@sanity/ui'
 import {useEffect} from 'react'
 import {type ArrayOfObjectsInputProps, set, typed} from 'sanity'

@@ -1,10 +1,8 @@
-import {
-  CheckmarkCircleIcon,
-  ClockIcon,
-  CloseCircleIcon,
-  ErrorOutlineIcon,
-  SyncIcon,
-} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {ClockIcon} from '@sanity/icons/Clock'
+import {CloseCircleIcon} from '@sanity/icons/CloseCircle'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {SyncIcon} from '@sanity/icons/Sync'
 import {
   Box,
   Button,

@@ -796,6 +796,25 @@ export type Latex = {
   body?: string
 }
 
+export type Issue1506TeamMember = {
+  _id: string
+  _type: 'issue1506TeamMember'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  orderRank?: string
+  name?: string
+}
+
+export type Issue1506Page = {
+  _id: string
+  _type: 'issue1506Page'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+}
+
 export type OrderableProject = {
   _id: string
   _type: 'orderableProject'
@@ -869,6 +888,64 @@ export type TableRow = {
   cells?: Array<string>
 }
 
+export type BlockInsertPickerTest = {
+  _id: string
+  _type: 'blockInsertPickerTest'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  content?: BlockInsertPickerContent
+}
+
+export type BlockInsertPickerContent = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+      listItem?: 'bullet' | 'number'
+      markDefs?: Array<{
+        href?: string
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }
+  | ({
+      _key: string
+    } & BlockInsertPickerCallout)
+  | ({
+      _key: string
+    } & BlockInsertPickerCode)
+  | {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+      _key: string
+    }
+>
+
+export type BlockInsertPickerCode = {
+  _type: 'blockInsertPickerCode'
+  language?: string
+  filename?: string
+  source?: string
+}
+
+export type BlockInsertPickerCallout = {
+  _type: 'blockInsertPickerCallout'
+  tone?: 'info' | 'tip' | 'warning'
+  text?: string
+}
+
 export type AsyncListTest = {
   _id: string
   _type: 'asyncListTest'
@@ -883,6 +960,52 @@ export type AsyncListTest = {
 export type DisneyCharacter = string
 
 export type Pokemon = string
+
+export type CloudinaryAssetDocumentReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'cloudinaryAssetDocument'
+}
+
+export type CloudinaryAssetReference = {
+  _type: 'cloudinaryAssetReference'
+  asset?: CloudinaryAssetDocumentReference
+}
+
+export type CloudinaryAssetDocument = {
+  _id: string
+  _type: 'cloudinaryAssetDocument'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  asset?: CloudinaryAsset
+}
+
+export type CloudinaryAsset = {
+  _type: 'cloudinary.asset'
+  id?: string
+  public_id?: string
+  resource_type?: string
+  type?: string
+  format?: string
+  version?: number
+  url?: string
+  secure_url?: string
+  width?: number
+  height?: number
+  bytes?: number
+  duration?: number
+  tags?: Array<string>
+  created_at?: string
+  derived?: Array<
+    {
+      _key: string
+    } & CloudinaryAssetDerived
+  >
+  access_mode?: string
+  context?: CloudinaryAssetContext
+}
 
 export type CloudinaryTest = {
   _id: string
@@ -904,30 +1027,7 @@ export type CloudinaryTest = {
     crop?: SanityImageCrop
     _type: 'image'
   }
-}
-
-export type CloudinaryAsset = {
-  _type: 'cloudinary.asset'
-  public_id?: string
-  resource_type?: string
-  type?: string
-  format?: string
-  version?: number
-  url?: string
-  secure_url?: string
-  width?: number
-  height?: number
-  bytes?: number
-  duration?: number
-  tags?: Array<string>
-  created_at?: string
-  derived?: Array<
-    {
-      _key: string
-    } & CloudinaryAssetDerived
-  >
-  access_mode?: string
-  context?: CloudinaryAssetContext
+  assetReference?: CloudinaryAssetReference
 }
 
 export type CloudinaryAssetContextCustom = {
@@ -1221,6 +1321,18 @@ export type LocalizedString = {
   en?: string
   es?: string
   fr?: string
+}
+
+export type AssistFieldGroupsRepro = {
+  _id: string
+  _type: 'assistFieldGroupsRepro'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  body?: string
+  metaTitle?: string
+  metaDescription?: string
 }
 
 export type SanityAssistInstructionTask = {
@@ -1672,17 +1784,26 @@ export type AllSanitySchemaTypes =
   | Lesson
   | LatexTest
   | Latex
+  | Issue1506TeamMember
+  | Issue1506Page
   | OrderableProject
   | OrderableCategory
   | HotspotArrayDemo
   | TableTest
   | Table
   | TableRow
+  | BlockInsertPickerTest
+  | BlockInsertPickerContent
+  | BlockInsertPickerCode
+  | BlockInsertPickerCallout
   | AsyncListTest
   | DisneyCharacter
   | Pokemon
-  | CloudinaryTest
+  | CloudinaryAssetDocumentReference
+  | CloudinaryAssetReference
+  | CloudinaryAssetDocument
   | CloudinaryAsset
+  | CloudinaryTest
   | CloudinaryAssetContextCustom
   | CloudinaryAssetContext
   | CloudinaryAssetDerived
@@ -1710,6 +1831,7 @@ export type AllSanitySchemaTypes =
   | EmbeddingsArticle
   | GoogleTranslateTest
   | LocalizedString
+  | AssistFieldGroupsRepro
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus
   | SanityAssistSchemaTypeAnnotations

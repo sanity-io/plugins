@@ -165,59 +165,46 @@ component rather than spreading `className` across the tree (see
 
 vanilla-extract needs a build/transform step. Mirror `@sanity/google-maps-input`:
 
-**1. Enable the pkg-utils Rollup integration** so the build extracts a `dist/bundle.css`:
+**1. Enable the tsdown integration** so the build extracts a `dist/bundle.css`:
 
 ```ts
-// plugins/@sanity/google-maps-input/package.config.ts
-import config from '@repo/package.config'
-import {defineConfig} from '@sanity/pkg-utils'
+// plugins/@sanity/google-maps-input/tsdown.config.ts
+import {defineConfig} from '@sanity/tsdown-config'
+import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
-  ...config,
-  babel: {reactCompiler: true},
-  reactCompilerOptions: {target: '19'},
-  rollup: {vanillaExtract: true},
-})
+  reactCompiler: true,
+  vanillaExtract: true,
+}) satisfies Promise<UserConfig>
 ```
 
-**2. Add the `./bundle.css` export and build deps** in `package.json`. The built entry loads the
-stylesheet, so consumers need no changes; the `node` / `default` conditions point at a JS shim so
-SSR/Node imports don't choke on a `.css` file:
+This also wires up the `./bundle.css` export in `package.json` automatically, keeping it in sync on
+every build — nothing to hand-edit there.
+
+**2. Add the build deps** in `package.json`:
 
 ```json
 {
-  "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
-    },
-    "./bundle.css": {
-      "browser": "./dist/bundle.css",
-      "style": "./dist/bundle.css",
-      "node": "./dist/bundle.css.js",
-      "default": "./dist/bundle.css.js"
-    },
-    "./package.json": "./package.json"
-  },
   "devDependencies": {
-    "@vanilla-extract/css": "catalog:",
-    "@vanilla-extract/vite-plugin": "catalog:"
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
+    "@vanilla-extract/css": "catalog:"
   }
 }
 ```
 
-Add the matching `./bundle.css` entry under `publishConfig.exports` too. `@vanilla-extract/css` is
-**build-time only** — its `style()` / `createVar()` calls compile away — so it stays a
-`devDependency`, never a runtime `dependency`.
+`@vanilla-extract/css` is **build-time only** — its `style()` / `createVar()` calls compile away —
+so it stays a `devDependency`, never a runtime `dependency`.
 
-**3. Register the Vite plugin** wherever the plugin's source `.css.ts` is compiled live: the
-plugin's own `vitest.config.ts`, and the test studio (which consumes the plugin's `source` export in
-dev):
+**3. Register the Vite plugin in the plugin's own `vitest.config.ts`.** The package-exports test
+resolves this workspace package's own `exports` map — whose `.` entry points at `./src/index.ts` for
+monorepo-internal dev consumption, not `dist/index.js` — so it transitively imports real `.css.ts`
+source and needs the plugin to compile it. Use `@sanity/vanilla-extract-vite-plugin` instead of the
+upstream `@vanilla-extract/vite-plugin` — it's faster. The exported `vanillaExtractPlugin()` API is a
+drop-in match:
 
 ```ts
 // plugins/@sanity/google-maps-input/vitest.config.ts
-import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
@@ -226,17 +213,53 @@ export default defineConfig({
 })
 ```
 
-```ts
-// dev/test-studio/sanity.cli.ts — add vanillaExtractPlugin() to the studio's Vite plugins
-import {vanillaExtractPlugin} from '@vanilla-extract/vite-plugin'
+The test studio already registers this plugin globally in `sanity.cli.ts` — you don't need to touch
+that file for a new plugin.
 
-export default defineCliConfig({
-  // ...
-  vite: {
-    plugins: [vanillaExtractPlugin()],
+#### Disabling runtime styles in tests
+
+These are **separate** concerns — do not confuse them:
+
+| Concern                                      | What solves it                                                          |
+| -------------------------------------------- | ----------------------------------------------------------------------- |
+| `.css.ts` must compile / class names resolve | Keep `vanillaExtractPlugin()` in `vitest.config.ts` (required)          |
+| Avoid injecting CSS into jsdom for speed     | `'@vanilla-extract/css/disableRuntimeStyles'` in `setupFiles` (default) |
+
+In browser-like environments (`jsdom` / `happy-dom`), vanilla-extract injects real styles into the
+document when `.css.ts` runs. That is often desirable, but it can slow tests down. Since plugin
+tests assert class names, DOM structure, and behavior — not computed styles — every vanilla-extract
+plugin's `vitest.config.ts` includes
+[`disableRuntimeStyles`](https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles)
+in `setupFiles` (the generator emits it when you opt into styling):
+
+```ts
+// vitest.config.ts
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
+import {defineConfig} from 'vitest/config'
+
+export default defineConfig({
+  plugins: [vanillaExtractPlugin()],
+  test: {
+    setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
+    // ...
   },
 })
 ```
+
+`setupFiles` entries resolve through Vite, so the bare package specifier works directly — no
+wrapper `vitest.setup.ts` needed.
+
+Nuance for this monorepo:
+
+1. **`disableRuntimeStyles` does not replace the Vite plugin.** Package-exports tests and any
+   import path that pulls `.css.ts` source still need `vanillaExtractPlugin()`.
+2. **It only has an effect under `jsdom` / `happy-dom`.** The default Vitest env here is `node`
+   (see `AGENTS.md` Testing), where there is no document to inject into — the entry is a harmless
+   no-op that protects any suite later switched to jsdom (via `environment` or a per-file
+   `// @vitest-environment jsdom` pragma) from paying the injection cost.
+3. **Remove it (or scope it away) when a test genuinely needs real CSS** — asserting layout,
+   CSS-driven visibility, `getComputedStyle`, or anything that depends on real rules being
+   present. That is the only reason to deviate from the default.
 
 Finally, the catalog carries the build deps (add them if missing) and knip ignores the
 build-time-only css package:
@@ -244,8 +267,8 @@ build-time-only css package:
 ```yaml
 # pnpm-workspace.yaml
 catalog:
+  '@sanity/vanilla-extract-vite-plugin': ^0.1.0
   '@vanilla-extract/css': ^1.20.1
-  '@vanilla-extract/vite-plugin': ^5.2.2
 ```
 
 ```jsonc
@@ -255,9 +278,9 @@ catalog:
 
 > **New plugins get this for free.** `pnpm generate "new plugin"` wires all of the above
 > automatically when you opt into styling — the `rollup` option, the `./bundle.css` export, the
-> catalog devDeps, the `vitest.config.ts` plugin, and an example `Tool.css.ts`. The test studio
-> already registers the Vite plugin globally, so generated plugins render in `pnpm dev` with no extra
-> steps.
+> catalog devDeps, the `vitest.config.ts` plugin + `disableRuntimeStyles` setup, and an example
+> `Tool.css.ts`. The test studio already registers the Vite plugin globally, so generated plugins
+> render in `pnpm dev` with no extra steps.
 
 ---
 
@@ -589,15 +612,15 @@ need `&&` to match. During a plugin **transfer/port**, do not migrate styling in
 building as-is and do the migration in a dedicated follow-up PR (see the `plugin-transfer` skill).
 
 > **Lock in a finished migration.** Once a plugin no longer imports `styled-components`, ban it via
-> `no-restricted-imports` in `.oxlintrc.json` so it cannot creep back — this is how `@sanity/vision`
+> `no-restricted-imports` in `@sanity/plugin-kit/oxlint` (or a local `oxlint.config.ts` override) so it cannot creep back — this is how `@sanity/vision`
 > locked in its migration in
 > [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13333).
 
 ### While a plugin still has styled-components
 
 Until a plugin is fully migrated, keep its `styled-components` declaration aligned so it resolves to
-the workspace `@sanity/styled-components` override — a **single** instance shared with the Studio,
-without which pnpm may install a separate copy and theming/SSR break:
+a **single** instance shared with the Studio, without which pnpm may install a separate copy and
+theming/SSR break:
 
 ```json
 {
@@ -645,5 +668,8 @@ that forces synchronous reflows. See the `vercel-react-best-practices` rule `js-
   `keyframes`, `globalStyle`; and
   [`@vanilla-extract/dynamic`](https://vanilla-extract.style/documentation/packages/dynamic/) for
   `assignInlineVars`.
+- [vanilla-extract test environments](https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles)
+  — when to use `disableRuntimeStyles` in Vitest/jsdom (see
+  [Disabling runtime styles in tests](#disabling-runtime-styles-in-tests)).
 - [`@sanity/ui`](https://www.sanity.io/ui) for theme tokens, the `useTheme_v2()` hook, and
   primitives.

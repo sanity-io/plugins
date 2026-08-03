@@ -4,7 +4,7 @@ import {isValidElementType} from 'react-is'
 
 import {FileButton} from './FileInputMenuItem.styled'
 
-export interface FileInputMenuItemProps extends ButtonProps {
+export interface FileInputMenuItemProps extends Omit<ButtonProps, 'onSelect'> {
   accept?: string
   capture?: 'user' | 'environment'
   multiple?: boolean

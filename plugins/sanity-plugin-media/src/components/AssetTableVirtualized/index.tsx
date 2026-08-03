@@ -3,26 +3,44 @@ import {memo} from 'react'
 import {type GroupContent, type GroupItemContent, GroupedVirtuoso} from 'react-virtuoso'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
-import type {CardAssetData, CardUploadData} from '../../types'
+import type {CardAssetData, CardFolderData, CardUploadData} from '../../types'
 import TableHeader from '../TableHeader'
 import TableRowAsset from '../TableRowAsset'
+import TableRowFolder from '../TableRowFolder'
 import TableRowUpload from '../TableRowUpload'
 
 type Props = {
-  items: (CardAssetData | CardUploadData)[]
+  items: (CardAssetData | CardFolderData | CardUploadData)[]
   onLoadMore?: () => void
 }
 
 // `GroupedVirtuoso` has no `data` prop, so the per-render rows and selection are
 // passed through `context` to keep the render callbacks at module scope.
-type TableContext = {items: (CardAssetData | CardUploadData)[]; selectedIds: string[]}
+type TableContext = {
+  items: (CardAssetData | CardFolderData | CardUploadData)[]
+  selectedIds: string[]
+}
 
 const VirtualRow = memo(
-  ({item, selected}: {item: CardAssetData | CardUploadData; selected: boolean}) => {
+  ({
+    item,
+    selected,
+  }: {
+    item: CardAssetData | CardFolderData | CardUploadData
+    selected: boolean
+  }) => {
     if (item?.type === 'asset') {
       return (
         <Box style={{height: '100px'}}>
           <TableRowAsset id={item.id} selected={selected} />
+        </Box>
+      )
+    }
+
+    if (item?.type === 'folder') {
+      return (
+        <Box style={{height: '100px'}}>
+          <TableRowFolder folderId={item.folderId} name={item.name} totalCount={item.totalCount} />
         </Box>
       )
     }

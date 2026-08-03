@@ -7,11 +7,7 @@
  * ({@link https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-color | @types/react-color}).
  * MIT, Copyright (c) 2015 Case Sandberg. See the plugin LICENSE.
  */
-import type {
-  CSSProperties,
-  MouseEvent as ReactMouseEvent,
-  TouchEvent as ReactTouchEvent,
-} from 'react'
+import type {MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent} from 'react'
 
 export interface HEXColor {
   hex: string
@@ -62,25 +58,6 @@ export interface CheckboardRenderers {
 
 export interface RenderersProps {
   renderers?: CheckboardRenderers | undefined
-}
-
-export interface CustomPickerInjectedProps<
-  T = HSLColor | HSVColor | RGBColor,
-> extends Partial<ColorState> {
-  onChange: ColorChangeHandler<T>
-}
-
-export interface CustomPickerProps {
-  color?: Color | undefined
-  onChange?: ((color: ColorState) => void) | undefined
-  onChangeComplete?: ((color: ColorState) => void) | undefined
-  onSwatchHover?: ((color: ColorState, event: MouseEvent) => void) | undefined
-}
-
-export interface EditableInputStyles {
-  input?: CSSProperties | undefined
-  label?: CSSProperties | undefined
-  wrap?: CSSProperties | undefined
 }
 
 export interface SaturationColorResult extends HSVColor {

@@ -17,9 +17,7 @@ test('package exports', {timeout: 30_000}, async () => {
         "GeopointRadiusInput": "function",
         "googleMapsInput": "function",
       },
-      "./bundle.css": {
-        "default": "string",
-      },
+      "./bundle.css": {},
     }
   `)
 })

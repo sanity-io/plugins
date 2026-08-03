@@ -1,5 +1,5 @@
 import {codeInput} from '@sanity/code-input'
-import {CodeBlockIcon} from '@sanity/icons'
+import {CodeBlockIcon} from '@sanity/icons/CodeBlock'
 import {definePlugin, defineType} from 'sanity'
 
 const codeTest = defineType({

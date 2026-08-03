@@ -1,4 +1,4 @@
-import {EarthGlobeIcon} from '@sanity/icons'
+import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
 import {definePlugin, type Tool} from 'sanity'
 
 import {EmbeddingsIndexTool} from './EmbeddingsIndexTool'

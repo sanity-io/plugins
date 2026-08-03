@@ -77,7 +77,9 @@ describe('DocumentAddButtons', () => {
     mockGetFormValue.mockReturnValue(undefined)
     render(<DocumentAddButtons />, {wrapper: ThemeWrapper})
 
+    expect(screen.getByTestId('document-add-buttons')).toBeInTheDocument()
     expect(screen.getByText('Add translation to internationalized fields')).toBeInTheDocument()
+    expect(screen.getByTestId('add-buttons-grid')).toBeInTheDocument()
     expect(screen.getByTestId('add-fr')).toBeInTheDocument()
     expect(screen.getByTestId('add-en')).toBeInTheDocument()
     expect(screen.getByTestId('add-es')).toBeInTheDocument()

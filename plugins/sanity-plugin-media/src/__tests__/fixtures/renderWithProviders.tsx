@@ -1,6 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
 import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
-import {render} from '@testing-library/react'
+import {render, type RenderResult} from '@testing-library/react'
 import type {ReactElement, ReactNode} from 'react'
 import {Provider} from 'react-redux'
 import {ColorSchemeProvider} from 'sanity'
@@ -14,20 +14,39 @@ import type {MediaToolOptions} from '../../types'
 import {createTestRootState} from './rootState'
 
 type Opts = {
+  onAction?: (action: {type: string}) => void
   onSelect?: AssetSourceComponentProps['onSelect']
   preloaded?: Partial<RootReducerState>
   toolOptions?: Partial<MediaToolOptions>
 }
 
-export function renderWithProviders(ui: ReactElement, opts: Opts = {}) {
-  const {onSelect, preloaded, toolOptions} = opts
-
-  const store = configureStore({
+function createTestStore(preloaded?: Partial<RootReducerState>, onAction?: Opts['onAction']) {
+  return configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({thunk: false, serializableCheck: false}),
+    middleware: (getDefaultMiddleware) => {
+      const middleware = getDefaultMiddleware({thunk: false, serializableCheck: false})
+      if (!onAction) {
+        return middleware
+      }
+      return middleware.concat(() => (next) => (action) => {
+        onAction(action as {type: string})
+        return next(action)
+      })
+    },
     preloadedState: createTestRootState(preloaded),
   })
+}
+
+// The explicit `RenderResult` return annotation keeps the exported type portable for
+// declaration emit (TS2883): the inferred type otherwise expands into non-portable
+// deep paths from `react-dom/client` and `pretty-format`.
+export function renderWithProviders(
+  ui: ReactElement,
+  opts: Opts = {},
+): RenderResult & {store: ReturnType<typeof createTestStore>} {
+  const {onAction, onSelect, preloaded, toolOptions} = opts
+
+  const store = createTestStore(preloaded, onAction)
 
   const options: MediaToolOptions = {
     creditLine: {enabled: false},

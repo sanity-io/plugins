@@ -1,4 +1,4 @@
-import {type DashboardWidget, type LayoutConfig} from '@sanity/dashboard'
+import type {DashboardWidget, LayoutConfig} from '@sanity/dashboard'
 
 import Widget from './app'
 

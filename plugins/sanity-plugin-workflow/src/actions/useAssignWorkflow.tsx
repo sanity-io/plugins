@@ -1,4 +1,4 @@
-import {UsersIcon} from '@sanity/icons'
+import {UsersIcon} from '@sanity/icons/Users'
 import {useState} from 'react'
 import type {DocumentActionDescription, DocumentActionProps} from 'sanity'
 import {useProjectUsers} from 'sanity-plugin-utils'

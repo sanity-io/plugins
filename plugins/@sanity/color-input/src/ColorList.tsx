@@ -1,32 +1,25 @@
 import {Flex} from '@sanity/ui'
-import {styled} from 'styled-components'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import type {ComponentProps} from 'react'
 import tinycolor from 'tinycolor2'
 
 import type {Color, ColorChangeHandler} from './react-color'
 
-const ColorListWrap = styled(Flex)`
-  gap: 0.25em;
-`
+import {colorBox, colorBoxContainer, colorListWrap, swatchBackgroundVar} from './ColorList.css'
 
-const ColorBoxContainer = styled.div`
-  width: 2.1em;
-  height: 2.1em;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  border-radius: 3px;
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADFJREFUOE9jZGBgEGHAD97gk2YcNYBhmIQBgWSAP52AwoAQwJvQRg1gACckQoC2gQgAIF8IscwEtKYAAAAASUVORK5CYII=')
-    left center #fff;
-`
+function ColorListWrap(props: ComponentProps<typeof Flex>) {
+  return <Flex {...props} className={colorListWrap} />
+}
 
-const ColorBox = styled.div`
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px var(--card-shadow-outline-color);
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-`
+function ColorBoxContainer(props: ComponentProps<'div'>) {
+  return <div {...props} className={colorBoxContainer} />
+}
+
+function ColorBox({backgroundColor}: {backgroundColor: string}) {
+  return (
+    <div className={colorBox} style={assignInlineVars({[swatchBackgroundVar]: backgroundColor})} />
+  )
+}
 
 interface ValidatedColor {
   key: string
@@ -67,7 +60,7 @@ export function ColorList({colors, onChange}: ColorListProps): React.JSX.Element
             onChange(color)
           }}
         >
-          <ColorBox style={{background: backgroundColor}} />
+          <ColorBox backgroundColor={backgroundColor} />
         </ColorBoxContainer>
       ))}
     </ColorListWrap>

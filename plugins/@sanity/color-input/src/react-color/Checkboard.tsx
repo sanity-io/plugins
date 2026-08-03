@@ -6,10 +6,13 @@
  * (MIT, Copyright (c) 2015 Case Sandberg). See the plugin LICENSE. The upstream
  * `children` cloning branch is dropped as it is unused here.
  */
+import {assignInlineVars} from '@vanilla-extract/dynamic'
 import type {ReactElement} from 'react'
 
-import * as checkboard from './helpers/checkboard'
+import * as checkboardHelper from './helpers/checkboard'
 import type {CheckboardRenderers, RenderersProps} from './types'
+
+import {backgroundImageVar, borderRadiusVar, boxShadowVar, checkboard} from './Checkboard.css'
 
 const EMPTY_RENDERERS: CheckboardRenderers = {}
 
@@ -29,16 +32,15 @@ export function Checkboard({
   borderRadius,
   boxShadow,
 }: CheckboardProps): ReactElement {
-  const background = checkboard.get(white, grey, size, renderers.canvas)
+  const background = checkboardHelper.get(white, grey, size, renderers.canvas)
   return (
     <div
-      style={{
-        borderRadius,
-        boxShadow,
-        position: 'absolute',
-        inset: 0,
-        background: background ? `url(${background}) center left` : undefined,
-      }}
+      className={checkboard}
+      style={assignInlineVars({
+        [borderRadiusVar]: borderRadius,
+        [boxShadowVar]: boxShadow,
+        [backgroundImageVar]: background ? `url(${background}) center left` : undefined,
+      })}
     />
   )
 }

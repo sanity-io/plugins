@@ -1,4 +1,4 @@
-import {WarningOutlineIcon} from '@sanity/icons'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {createPreviewSecret} from '@sanity/preview-url-secret/create-secret'
 import {definePreviewUrl} from '@sanity/preview-url-secret/define-preview-url'
 import {Box, Card, Container, Flex, Spinner, Stack, Text, usePrefersReducedMotion} from '@sanity/ui'
@@ -159,7 +159,7 @@ export function Iframe(props: IframeProps): React.JSX.Element {
         const resolvePreviewUrl = definePreviewUrl({
           origin: urlProp.origin === 'same-origin' ? location.origin : urlProp.origin,
           preview,
-          draftMode: {
+          previewMode: {
             enable: urlProp.draftMode,
           },
         })

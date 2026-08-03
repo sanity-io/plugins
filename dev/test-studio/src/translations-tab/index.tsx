@@ -1,4 +1,4 @@
-import {TranslateIcon} from '@sanity/icons'
+import {TranslateIcon} from '@sanity/icons/Translate'
 import {useEffect} from 'react'
 import {definePlugin, defineType, useClient} from 'sanity'
 import {

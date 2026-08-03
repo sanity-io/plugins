@@ -1,4 +1,4 @@
-import {ComposeIcon} from '@sanity/icons'
+import {ComposeIcon} from '@sanity/icons/Compose'
 import {Button, Card, Flex} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import {usePaneRouter} from 'sanity/structure'

@@ -6,7 +6,7 @@ How to accept and forward a `ref` in plugin components now that the monorepo is 
 
 Do **not** use `React.forwardRef`. In React 19 `ref` is an ordinary prop — declare it in your
 component's props and use it directly. This is enforced by `oxlint`: importing `forwardRef` from
-`react` is an error (see `.oxlintrc.json`).
+`react` is an error (see `@sanity/plugin-kit/oxlint`).
 
 ---
 
@@ -122,6 +122,6 @@ React Compiler rules, and the Studio is moving away from it.
 
 ## See also
 
-- `.oxlintrc.json` → the `no-restricted-imports` entry that bans `forwardRef`.
+- `@sanity/plugin-kit/oxlint` → the `no-restricted-imports` entry that bans `forwardRef`.
 - `vercel-react-best-practices` → general React 19 patterns.
 - [React 19 — ref as a prop](https://react.dev/blog/2024/12/05/react-19#ref-as-a-prop).
