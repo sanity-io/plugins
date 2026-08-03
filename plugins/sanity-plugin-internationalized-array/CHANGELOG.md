@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.1.25
+
+### Patch Changes
+
+- [#1765](https://github.com/sanity-io/plugins/pull/1765) [`97937c4`](https://github.com/sanity-io/plugins/commit/97937c4d853c869d6a8e2be855b9f248012d7b03) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add a stable `data-testid` on the document-level add-translations panel for e2e coverage
+
 ## 5.1.24
 
 ### Patch Changes

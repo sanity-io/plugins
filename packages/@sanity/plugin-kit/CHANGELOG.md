@@ -1,5 +1,15 @@
 # @sanity/plugin-kit
 
+## 10.0.3
+
+### Patch Changes
+
+- [#1698](https://github.com/sanity-io/plugins/pull/1698) [`d3dedd3`](https://github.com/sanity-io/plugins/commit/d3dedd32390403abbd4f4580310f93f15d969c77) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxlint to ^1.76.0
+
+- [#1779](https://github.com/sanity-io/plugins/pull/1779) [`5555795`](https://github.com/sanity-io/plugins/commit/5555795bdafe8f49f86561fb83741d400c329373) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxfmt to ^0.61.0
+
+- [#1799](https://github.com/sanity-io/plugins/pull/1799) [`93858fc`](https://github.com/sanity-io/plugins/commit/93858fc89b84aed2fe7312bf874b1a470dd002ad) Thanks [@stipsan](https://github.com/stipsan)! - Prefer function components via `react/prefer-function-component` (with `allowErrorBoundary`) instead of banning `Component`/`PureComponent` imports
+
 ## 10.0.2
 
 ### Patch Changes
