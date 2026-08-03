@@ -1,4 +1,4 @@
-import {ErrorOutlineIcon} from '@sanity/icons'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Card, type CardTone, Spinner, Stack, Text} from '@sanity/ui'
 import {Suspense, useMemo, useRef, useState} from 'react'
 import {styled} from 'styled-components'
@@ -28,7 +28,6 @@ const STATUS_TO_TONE: Record<ImageStatus, CardTone> = {
   loaded: 'default',
 }
 
-// oxlint-disable-next-line react/react-compiler
 export default function VideoThumbnail({
   asset,
   width,

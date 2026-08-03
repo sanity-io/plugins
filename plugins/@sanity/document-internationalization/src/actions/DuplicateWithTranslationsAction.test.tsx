@@ -198,6 +198,17 @@ describe('useDuplicateWithTranslationsAction', () => {
     const {result} = renderHook(() => useDuplicateWithTranslationsAction(props))
 
     expect(result.current.disabled).toBe(true)
+    expect(result.current.title).toBe('action.duplicate.disabled.nothing-to-duplicate')
+  })
+
+  test('shows target-not-found tooltip when duplicate is disabled for missing release/variant', () => {
+    mockDuplicateDisabled.mockReturnValue('TARGET_NOT_FOUND')
+    const props = createActionProps()
+
+    const {result} = renderHook(() => useDuplicateWithTranslationsAction(props))
+
+    expect(result.current.disabled).toBe(true)
+    expect(result.current.title).toBe('action.duplicate.disabled.target-not-found')
   })
 
   test('enables action when metadata exists and user has permission', () => {

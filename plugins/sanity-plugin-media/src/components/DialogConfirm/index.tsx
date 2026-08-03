@@ -1,4 +1,4 @@
-import {WarningOutlineIcon} from '@sanity/icons'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {Box, Button, Flex, Stack, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'

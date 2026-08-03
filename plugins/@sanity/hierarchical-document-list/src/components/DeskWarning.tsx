@@ -21,7 +21,7 @@ const DeskWarning = (
 ) => {
   return (
     <Container padding={5} style={{maxWidth: '25rem'}} sizing={'content'}>
-      <Card padding={4} border radius={2} width={0} tone="caution">
+      <Card padding={4} border radius={2} tone="caution">
         <Stack gap={3}>
           <Heading size={1}>{props.title}</Heading>
           {props.subtitle &&

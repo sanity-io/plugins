@@ -1,4 +1,4 @@
-import {AddIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
 import type {FC} from 'react'
 
 import TreeDeskStructure from './TreeDeskStructure'

@@ -10,7 +10,7 @@ import {schema} from './schema-types'
  *
  * ```ts
  * import {defineConfig} from 'sanity'
- * import {formSchema} from '@sanity/form-toolkit'
+ * import {formSchema} from '@sanity/form-toolkit/form-schema'
  *
  * export default defineConfig({
  *   // ...
