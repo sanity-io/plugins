@@ -256,6 +256,7 @@ export const uploadsCheckRequestEpic: MyEpic = (action$, state$, {client}) =>
       const constructedFilter = constructFilter({
         assetTypes: state.assets.assetTypes,
         currentFolderId: state.folders.currentFolderId,
+        excludeTagSlugs: state.assets.excludeTagSlugs,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
       })
