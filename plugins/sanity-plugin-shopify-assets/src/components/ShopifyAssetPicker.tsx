@@ -91,9 +91,8 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
 
   const handleSelect = useCallback(
     (file: Asset) => {
-      file._key = value?._key
-      file._type = schemaType.name
-      onChange(PatchEvent.from([set(file)]))
+      const nextValue: Asset = {...file, _key: value?._key, _type: schemaType.name}
+      onChange(PatchEvent.from([set(nextValue)]))
       onClose()
     },
     [onChange, onClose, schemaType.name, value?._key],

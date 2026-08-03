@@ -36,7 +36,7 @@ export type MessageTypes = {
 
 const documentMessages: MessageTypes = {
   // Only happens once document is copied the first time, and _updatedAt is the same
-  EXISTS: `This document already exists at the Destination with the same ID with the same Updated time.`,
+  EXISTS: `This document already exists at the Destination with the same ID and Updated time.`,
   // Is true immediately after transaction as _updatedAt is updated by API after mutation
   // Is also true if the document at the destination has been manually modified
   // Presently, the plugin doesn't actually compare the two documents
