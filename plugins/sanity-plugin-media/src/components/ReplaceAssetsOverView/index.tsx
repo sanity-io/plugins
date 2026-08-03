@@ -1,5 +1,5 @@
 import {Box, Text} from '@sanity/ui'
-import {useEffect, useRef} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {useDispatch, useStore} from 'react-redux'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -40,6 +40,13 @@ const ReplaceAssetsOverview = () => {
     facets: WithId<SearchFacetInputProps>[]
   } | null>(null)
 
+  // Clearing filters only triggers a refetch after `assetsSearchEpic`'s debounce, so the
+  // stale filtered results stay in the store for a moment. Track that gap to avoid
+  // rendering the empty state before the unfiltered results arrive.
+  const [awaitingRefetch, setAwaitingRefetch] = useState(
+    () => searchQuery.length > 0 || searchFacets.length > 0,
+  )
+
   // Clear browser search/facets so the picker is not limited to the filtered result set
   // the user used to find the asset. Restore them when the dialog closes.
   useEffect(() => {
@@ -69,6 +76,33 @@ const ReplaceAssetsOverview = () => {
     }
   }, [dispatch, store])
 
+  // Resolve the wait once a fetch started after the filters were cleared has completed.
+  useEffect(() => {
+    if (!awaitingRefetch) {
+      return undefined
+    }
+
+    // A fetch already running when the dialog opened belongs to the filtered query.
+    let staleFetchInFlight = store.getState().assets.fetching
+    let refetchStarted = false
+
+    return store.subscribe(() => {
+      const {fetching: isFetching} = store.getState().assets
+
+      if (isFetching) {
+        refetchStarted = !staleFetchInFlight
+        return
+      }
+      if (staleFetchInFlight) {
+        staleFetchInFlight = false
+        return
+      }
+      if (refetchStarted) {
+        setAwaitingRefetch(false)
+      }
+    })
+  }, [awaitingRefetch, store])
+
   const filtersActive = searchQuery.length > 0 || searchFacets.length > 0
 
   // Only image assets can replace image refs; exclude uploads and the asset being replaced.
@@ -82,17 +116,37 @@ const ReplaceAssetsOverview = () => {
 
   const hasFetchedOnce = fetchCount >= 0
   const hasMorePages = fetchCount === pageSize
-  // Don't treat a filtered / mid-fetch / incomplete page as "no replacements".
+  // Don't treat a filtered / stale / mid-fetch / incomplete page as "no replacements".
   const isEmpty =
-    reducedItems.length === 0 && hasFetchedOnce && !fetching && !filtersActive && !hasMorePages
+    reducedItems.length === 0 &&
+    hasFetchedOnce &&
+    !fetching &&
+    !filtersActive &&
+    !awaitingRefetch &&
+    !hasMorePages
 
   // Keep loading pages until we find image candidates or exhaust results.
   useEffect(() => {
-    if (filtersActive || fetching || reducedItems.length > 0 || !hasFetchedOnce || !hasMorePages) {
+    if (
+      filtersActive ||
+      fetching ||
+      awaitingRefetch ||
+      reducedItems.length > 0 ||
+      !hasFetchedOnce ||
+      !hasMorePages
+    ) {
       return
     }
     dispatch(assetsActions.loadNextPage())
-  }, [dispatch, filtersActive, fetching, reducedItems.length, hasFetchedOnce, hasMorePages])
+  }, [
+    dispatch,
+    filtersActive,
+    fetching,
+    awaitingRefetch,
+    reducedItems.length,
+    hasFetchedOnce,
+    hasMorePages,
+  ])
 
   const handleLoadMoreItems = () => {
     if (!fetching) {

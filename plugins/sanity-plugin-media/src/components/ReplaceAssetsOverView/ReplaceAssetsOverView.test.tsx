@@ -1,8 +1,9 @@
-import {cleanup, screen} from '@testing-library/react'
+import {act, cleanup, screen} from '@testing-library/react'
 import {afterEach, describe, expect, it, vi} from 'vitest'
 
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
-import {initialState as assetsInitialState} from '../../modules/assets'
+import {inputs} from '../../config/searchFacets'
+import {assetsActions, initialState as assetsInitialState} from '../../modules/assets'
 import type {AssetItem, AssetType, FileAsset, ImageAsset} from '../../types'
 import ReplaceAssetsOverview from './index'
 
@@ -136,6 +137,58 @@ describe('ReplaceAssetsOverview', () => {
 
     expect(screen.getByText('There are no replacement images')).toBeTruthy()
     expect(screen.queryByTestId('replace-grid')).toBeNull()
+  })
+
+  it('clears the browser search and facets on open', () => {
+    const {store} = renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+        search: {facets: [{...inputs.title, id: 'facet-1'}], query: 'photo'},
+      },
+    })
+
+    expect(store.getState().search.query).toBe('')
+    expect(store.getState().search.facets).toHaveLength(0)
+  })
+
+  it('does not flash the empty state while the unfiltered refetch is pending', () => {
+    renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        // Filtered page held only the asset being replaced, and was a partial page.
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+        search: {facets: [], query: 'photo'},
+      },
+    })
+
+    expect(screen.queryByText('There are no replacement images')).toBeNull()
+  })
+
+  it('shows the empty state once the unfiltered refetch completes with no candidates', () => {
+    const {store} = renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+        search: {facets: [], query: 'photo'},
+      },
+    })
+
+    expect(screen.queryByText('There are no replacement images')).toBeNull()
+
+    act(() => {
+      store.dispatch(assetsActions.clear())
+      store.dispatch(assetsActions.fetchRequest({queryFilter: ''}))
+      store.dispatch(assetsActions.fetchComplete({assets: [imageAsset]}))
+    })
+
+    expect(screen.getByText('There are no replacement images')).toBeTruthy()
   })
 
   it('excludes the replace target from dialog assetId even when picks were cleared', () => {
