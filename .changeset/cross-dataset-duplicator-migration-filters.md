@@ -1,5 +1,5 @@
 ---
-'@sanity/cross-dataset-duplicator': minor
+"@sanity/cross-dataset-duplicator": minor
 ---
 
 author: @Nathan-Heller
