@@ -26,53 +26,56 @@ interface listProps extends Omit<fetchProps, 'query' | 'cursor'> {
 const fetchSearch = (props: searchProps): Observable<any> => {
   const {projectId, dataset, shop, query, cursor, resultsPerPage, token} = props
 
-  return defer(() => {
-    return axios.get(
-      `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?shop=${shop}&query=${encodeURIComponent(
-        query,
-      )}${cursor && `&cursor=${cursor}`}&limit=${resultsPerPage}`,
-      {
-        withCredentials: true,
-        method: 'GET',
-        headers: token
-          ? {
-              Authorization: `Bearer ${token}`,
-            }
-          : {},
-      },
-    )
-  }).pipe(map((result) => result.data))
+  const cursorParam = cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''
+  const url = `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?shop=${encodeURIComponent(
+    shop,
+  )}&query=${encodeURIComponent(query)}${cursorParam}&limit=${resultsPerPage}`
+
+  return defer(() =>
+    axios.get(url, {
+      withCredentials: true,
+      method: 'GET',
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : {},
+    }),
+  ).pipe(map((result) => result.data))
 }
 
 const fetchList = (props: listProps): Observable<any> => {
   const {projectId, dataset, shop, cursor, resultsPerPage, token} = props
 
+  const cursorParam = cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''
+  const url = `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?shop=${encodeURIComponent(
+    shop,
+  )}${cursorParam}&limit=${resultsPerPage}`
+
   return defer(() =>
-    axios.get(
-      `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?shop=${shop}${
-        cursor && `&cursor=${cursor}`
-      }&limit=${resultsPerPage}`,
-      {
-        withCredentials: true,
-        method: 'GET',
-        headers: token
-          ? {
-              Authorization: `Bearer ${token}`,
-            }
-          : {},
-      },
-    ),
+    axios.get(url, {
+      withCredentials: true,
+      method: 'GET',
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : {},
+    }),
   ).pipe(map((result) => result.data))
 }
 
 export const search = (props: fetchProps): Observable<any> => {
   const {projectId, dataset, shop, query, cursor, resultsPerPage, token} = props
 
+  // No value-based dedupe here on purpose: callers clear results and set their
+  // loading state before pushing to these subjects, so suppressing a repeated
+  // [query, cursor] pair would leave them loading forever. debounceTime already
+  // collapses rapid input and switchMap cancels superseded requests.
   return concat(
     query.pipe(
       withLatestFrom(cursor),
       debounceTime(500),
-      distinctUntilChanged(),
       switchMap(([q, c]) => {
         if (q) {
           return fetchSearch({
