@@ -68,14 +68,14 @@ const fetchList = (props: listProps): Observable<any> => {
 export const search = (props: fetchProps): Observable<any> => {
   const {projectId, dataset, shop, query, cursor, resultsPerPage, token} = props
 
+  // No value-based dedupe here on purpose: callers clear results and set their
+  // loading state before pushing to these subjects, so suppressing a repeated
+  // [query, cursor] pair would leave them loading forever. debounceTime already
+  // collapses rapid input and switchMap cancels superseded requests.
   return concat(
     query.pipe(
       withLatestFrom(cursor),
       debounceTime(500),
-      distinctUntilChanged(
-        ([prevQuery, prevCursor], [nextQuery, nextCursor]) =>
-          prevQuery === nextQuery && prevCursor === nextCursor,
-      ),
       switchMap(([q, c]) => {
         if (q) {
           return fetchSearch({
