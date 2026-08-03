@@ -1,12 +1,12 @@
 # Test Studio Script Runner
 
-The script runner adds a `Scripts` tool to the `kitchen-sink` test studio workspace. It lists
+The script runner adds a `Scripts` tool to the `home` test studio workspace. It lists
 browser-side scripts and lets agents run them with the current Studio client.
 
 ## Routes
 
-- `<studio>/kitchen-sink/scripts` shows all registered scripts.
-- `<studio>/kitchen-sink/scripts/<script-name>` opens a script run screen.
+- `<studio>/home/scripts` shows all registered scripts.
+- `<studio>/home/scripts/<script-name>` opens a script run screen.
 
 The route segment comes from the script's `name`.
 

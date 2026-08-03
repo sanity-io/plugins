@@ -20,10 +20,10 @@ Read `README.md` and `types.ts` before changing the runner or adding scripts.
 
 ## What The Tool Does
 
-The runner is a Sanity Studio custom tool registered in the `kitchen-sink` workspace.
+The runner is a Sanity Studio custom tool registered in the `home` workspace.
 
-- Home route: `<studio>/kitchen-sink/scripts`
-- Script route: `<studio>/kitchen-sink/scripts/<script-name>`
+- Home route: `<studio>/home/scripts`
+- Script route: `<studio>/home/scripts/<script-name>`
 
 Scripts are browser-side TypeScript modules discovered at build time with Vite `import.meta.glob`.
 They run inside Sanity Studio with the logged-in user's permissions and receive the Studio client.

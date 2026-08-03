@@ -64,8 +64,10 @@ export const getTranslationTask: Adapter['getTranslationTask'] = async (
           //get the last step in the workflow -- usually "published"
           const lastStep = progressItem.workflowStepSummaryReportItemList.at(-1)
           //get the percentage of how many words have reached the last step
-          if (lastStep && lastStep.wordCount >= 0) {
-            progress = Math.floor((lastStep.wordCount / item.progress.totalWordCount) * 100) ?? 0
+          //guard against a 0 totalWordCount (e.g. empty documents) which would
+          //otherwise produce NaN/Infinity and surface as an invalid percentage
+          if (lastStep && lastStep.wordCount >= 0 && item.progress.totalWordCount > 0) {
+            progress = Math.floor((lastStep.wordCount / item.progress.totalWordCount) * 100)
           }
         }
       }

@@ -12,13 +12,25 @@ export const authenticate = (secrets: Secrets): Promise<string> => {
       'The Smartling adapter requires a secret key and a proxy URL. Please check your secrets document in this dataset, per the plugin documentation.',
     )
   }
+  // `secret` is already a JSON string (e.g. `{"userIdentifier":"…","userSecret":"…"}`),
+  // so it is sent as-is. Wrapping it in `JSON.stringify` would double-encode it into a
+  // quoted string and break authentication with proxies that forward the body verbatim.
   return fetch(proxy, {
     headers,
     method: 'POST',
-    body: JSON.stringify(secret),
+    body: secret,
   })
     .then((res) => res.json())
-    .then((res) => res.response.data.accessToken)
+    .then((res) => {
+      const accessToken = res?.response?.data?.accessToken
+      if (!accessToken) {
+        const errMsg =
+          res?.response?.errors?.[0]?.message ||
+          'Could not authenticate with Smartling. Please check your secret key and proxy URL, per the plugin documentation.'
+        throw new Error(errMsg)
+      }
+      return accessToken
+    })
 }
 
 export const getHeaders = (url: string, accessToken: string): Record<string, string> => ({
@@ -62,7 +74,7 @@ export const findExistingJob = async (
       .then((res) => res?.response?.data?.items)
   }
 
-  if (items.length) {
+  if (items?.length) {
     //smartling will fuzzy match job names. We need to be precise.
     const correctJob = items
       .filter((item: {jobStatus: string}) => item.jobStatus !== 'DELETED')

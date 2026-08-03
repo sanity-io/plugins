@@ -419,6 +419,38 @@ describe('LanguageOption', () => {
     })
   })
 
+  test('creates translation document in the same release when source is a version document', async () => {
+    mockClient = createMockSanityClient()
+    const transactionMock = mockClient.transaction()
+
+    const source = createMockDocument('versions.rTestRelease.doc-1', 'en')
+    render(
+      <LanguageOption
+        language={mockLanguage}
+        schemaType={mockSchemaType}
+        documentId="doc-1"
+        disabled={false}
+        current={false}
+        source={source}
+        metadataId="meta-1"
+        sourceLanguageId="en"
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => {
+      expect(transactionMock.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          _id: 'versions.rTestRelease.mock-uuid-123',
+          _type: 'article',
+          language: 'fr',
+        }),
+      )
+    })
+  })
+
   test('creates metadata document with source reference in transaction', async () => {
     mockClient = createMockSanityClient()
     const transactionMock = mockClient.transaction()

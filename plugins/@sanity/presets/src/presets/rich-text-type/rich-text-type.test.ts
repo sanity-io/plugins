@@ -33,8 +33,7 @@ function getOf(typeDef: SchemaTypeDefinition): Member[] {
   if (!('of' in typeDef) || !typeDef.of) {
     throw new Error('Expected an array type definition with an of array')
   }
-  // oxlint-disable-next-line no-unsafe-type-assertion -- test helper narrows to stub shape
-  return typeDef.of as unknown as Member[]
+  return typeDef.of
 }
 
 function getBlock(typeDef: SchemaTypeDefinition): BlockMember {
@@ -42,8 +41,7 @@ function getBlock(typeDef: SchemaTypeDefinition): BlockMember {
   if (!block) {
     throw new Error('Expected a block member in the array')
   }
-  // oxlint-disable-next-line no-unsafe-type-assertion -- test helper narrows to stub shape
-  return block as unknown as BlockMember
+  return block
 }
 
 describe('richTextType', () => {

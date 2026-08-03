@@ -1,5 +1,3 @@
-/// <reference types="google.maps" />
-import type {DiffComponent, DiffComponentOptions, ObjectDiff} from 'sanity'
 import type {ObjectSchemaType} from 'sanity'
 
 export interface LatLng {
@@ -13,6 +11,7 @@ export interface Geopoint {
   lat: number
   lng: number
   alt?: number
+  zoom?: number
 }
 
 export interface GeopointRadius {
@@ -24,20 +23,15 @@ export interface GeopointRadius {
   radius: number
 }
 
-export interface GeopointSchemaType extends ObjectSchemaType {
-  diffComponent?: DiffComponent<ObjectDiff<Geopoint>> | DiffComponentOptions<ObjectDiff<Geopoint>>
-}
+export type GeopointSchemaType = ObjectSchemaType
 
-export interface GeopointRadiusSchemaType extends ObjectSchemaType {
-  diffComponent?:
-    | DiffComponent<ObjectDiff<GeopointRadius>>
-    | DiffComponentOptions<ObjectDiff<GeopointRadius>>
-}
+export type GeopointRadiusSchemaType = ObjectSchemaType
 
 export interface GoogleMapsInputConfig {
   apiKey: string
   defaultZoom?: number
   defaultLocale?: string
+  saveZoom?: boolean
   defaultLocation?: {
     lat: number
     lng: number

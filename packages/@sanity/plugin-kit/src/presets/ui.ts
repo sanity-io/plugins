@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import {styleText} from 'node:util'
 
 import type {InjectOptions} from '../actions/inject'
 import {forcedDevPackageVersions, forcedPackageVersions} from '../configs/forced-package-versions'
@@ -17,7 +17,7 @@ async function applyPreset(options: InjectOptions) {
   await addDependencies(options)
   await addDevDependencies(options)
 
-  log.info(chalk.green('ui preset injected'))
+  log.info(styleText('green', 'ui preset injected'))
 }
 
 async function addDependencies(options: InjectOptions) {

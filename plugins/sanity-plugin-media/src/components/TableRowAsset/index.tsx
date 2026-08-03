@@ -1,4 +1,6 @@
-import {CheckmarkCircleIcon, EditIcon, WarningFilledIcon} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {EditIcon} from '@sanity/icons/Edit'
+import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
 import {
   Box,
   Checkbox,
@@ -11,7 +13,7 @@ import {
   Tooltip,
   useMediaIndex,
 } from '@sanity/ui'
-import {formatRelative} from 'date-fns'
+import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
 import {
   memo,
@@ -60,14 +62,16 @@ const ContainerGrid = styled<
     user-select: none;
     white-space: nowrap;
 
-    ${!$updating &&
-    css`
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          background: ${getSchemeColor($scheme, 'bg')};
+    ${
+      !$updating &&
+      css`
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            background: ${getSchemeColor($scheme, 'bg')};
+          }
         }
-      }
-    `}
+      `
+    }
   `
 })
 
@@ -112,14 +116,15 @@ const TableRowAsset = (props: Props) => {
   const picked = item?.picked
   const updating = item?.updating
 
-  const {onSelect} = useAssetSourceActions()
+  const {isMultiSelect, onSelect} = useAssetSourceActions()
 
   const handleContextActionClick = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
       e.stopPropagation()
 
       if (!asset) return
-      if (onSelect) {
+      if (selected) return
+      if (onSelect && !isMultiSelect) {
         dispatch(dialogActions.showAssetEdit({assetId: asset._id}))
       } else if (shiftPressed.current && !picked) {
         dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
@@ -127,7 +132,7 @@ const TableRowAsset = (props: Props) => {
         dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
       }
     },
-    [asset, dispatch, lastPicked, onSelect, picked, shiftPressed],
+    [asset, dispatch, isMultiSelect, lastPicked, onSelect, picked, selected, shiftPressed],
   )
 
   const handleClick = useCallback(
@@ -135,8 +140,15 @@ const TableRowAsset = (props: Props) => {
       e.stopPropagation()
 
       if (!asset) return
-      if (onSelect) {
+      if (selected) return
+      if (onSelect && !isMultiSelect) {
         onSelect([{kind: 'assetDocumentId', value: asset._id}])
+      } else if (onSelect && isMultiSelect) {
+        if (shiftPressed.current && !picked) {
+          dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
+        } else {
+          dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
+        }
       } else if (shiftPressed.current) {
         if (picked) {
           dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
@@ -147,7 +159,7 @@ const TableRowAsset = (props: Props) => {
         dispatch(dialogActions.showAssetEdit({assetId: asset._id}))
       }
     },
-    [asset, dispatch, lastPicked, onSelect, picked, shiftPressed],
+    [asset, dispatch, isMultiSelect, lastPicked, onSelect, picked, selected, shiftPressed],
   )
 
   const opacityCell = updating ? 0.5 : 1
@@ -200,7 +212,7 @@ const TableRowAsset = (props: Props) => {
           position: 'relative',
         }}
       >
-        {onSelect ? (
+        {onSelect && !isMultiSelect ? (
           <EditIcon
             style={{
               flexShrink: 0,

@@ -13,6 +13,7 @@ test('package exports', {timeout: 30_000}, async () => {
     {
       ".": {
         "fieldLevelExperiments": "function",
+        "fieldLevelPersonalization": "function",
         "flattenSchemaType": "function",
       },
       "./growthbook": {

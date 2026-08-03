@@ -1,4 +1,5 @@
-import {AddIcon, UndoIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
+import {UndoIcon} from '@sanity/icons/Undo'
 import {Box, Button, Card, Flex, Heading, Spinner, Stack} from '@sanity/ui'
 import {useCallback, useEffect, useState} from 'react'
 
@@ -138,7 +139,6 @@ function Indexes() {
           />
         </Box>
         <Button
-          size={1}
           icon={loading ? <Spinner /> : UndoIcon}
           title={'Refresh index list'}
           tone="default"

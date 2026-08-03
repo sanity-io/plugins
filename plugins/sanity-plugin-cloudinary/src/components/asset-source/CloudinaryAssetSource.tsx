@@ -1,4 +1,4 @@
-import {PlugIcon} from '@sanity/icons'
+import {PlugIcon} from '@sanity/icons/Plug'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Box, Button, Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {useCallback, useEffect, useRef, useState} from 'react'
@@ -17,21 +17,21 @@ export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
   const {onClose, dialogHeaderTitle} = props
 
   const [loadingMessage, setLoadingMessage] = useState<string | undefined>(
-    'Loading Cloudinary Media Libary',
+    'Loading Cloudinary Media Library',
   )
   const library = useRef<CloudinaryMediaLibrary | undefined>(undefined)
   const contentRef = useRef<HTMLDivElement | null>(null)
   const {secrets} = useSecrets<Secrets>(namespace)
   const cloudName = secrets?.cloudName
   const apiKey = secrets?.apiKey
-  const [widgetId] = useState(() => `cloundinaryWidget-${Date.now()}`)
+  const [widgetId] = useState(() => `cloudinaryWidget-${Date.now()}`)
   const [showSettings, setShowSettings] = useState(false)
 
   const propsRef = useRef(props)
 
   useEffect(() => {
     // because we have to access props after loading js in a callback,
-    // we cannot pass props as dependecnies as that will cause infinite updates
+    // we cannot pass props as dependencies as that will cause infinite updates
     // this takes a snapshot of props, so we can access them later
     propsRef.current = props
   }, [props])
