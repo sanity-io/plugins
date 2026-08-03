@@ -136,8 +136,8 @@ minimumReleaseAgeExclude:
   - react
   - react-dom
   - react-is
-  # Renovate dependency update: react-rx@4.2.5 (still within 1-day window)
   - react-rx@4.2.5
+  - react-rx@5.1.1
   - rolldown-plugin-dts
   - rollup
   - sanity
@@ -153,15 +153,17 @@ overrides:
   '@types/node': 'catalog:'
   # Type errors happen if there are duplicates of `@sanity/client` in node_modules
   '@sanity/client': 'catalog:'
-  # Keep the Sanity Studio monorepo packages on a single version so dts emit and
+  # Pin the Sanity Studio monorepo to the `next` dist-tag for compatibility testing.
+  # Keep mutator/schema/types/util/groq in lockstep with sanity so dts emit and
   # transitive deps (cli/migrate/portabletext) cannot leave a second major.minor
-  # of @sanity/types|mutator|schema|util in the lockfile.
-  '@sanity/mutator': 'catalog:'
-  '@sanity/schema': 'catalog:'
-  '@sanity/types': 'catalog:'
-  '@sanity/util': 'catalog:'
-  groq: 'catalog:'
-  sanity: 'catalog:'
+  # of those packages in the lockfile.
+  '@sanity/mutator': next
+  '@sanity/schema': next
+  '@sanity/types': next
+  '@sanity/util': next
+  '@sanity/vision': next
+  groq: next
+  sanity: next
 
 peerDependencyRules:
   allowedVersions:
