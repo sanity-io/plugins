@@ -6,9 +6,7 @@ Plugin for visually organizing documents as hierarchies in the [Sanity studio](h
 - Navigational structure & menus - a website mega-menu with multiple levels, for example
 - Taxonomy inheritance - "_Carbs_ is a parent of _Legumes_ which is a parent of _Beans_"
 
-![Screenshot of the plugin](/screenshot-1.jpg)
-
-⚠️ **Compatibility:** This plugin requires Sanity Studio [version 3.3.0](https://github.com/sanity-io/sanity/releases/tag/v3.3.0) or higher.
+![Screenshot of the plugin](screenshot-1.jpg)
 
 If you're looking for a way to order documents on a flat list, refer to [@sanity/orderable-document-list](https://github.com/sanity-io/orderable-document-list).
 
@@ -47,9 +45,9 @@ export default defineConfig({
 ```ts
 // sanity.config.ts
 import {defineConfig} from 'sanity'
-import {deskTool} from 'sanity/desk'
+import {structureTool} from 'sanity/structure'
 import {
-  createDeskHierarchy,
+  createStructureHierarchy,
   hierarchicalDocumentList,
   hierarchyTree,
 } from '@sanity/hierarchical-document-list'
@@ -57,14 +55,14 @@ import {
 export default defineConfig({
   // ...
   plugins: [
-    deskTool({
-      // NOTE: I'n V3 you MUST pass S and Context along to createDeskHierarchy as props
+    structureTool({
+      // NOTE: You must pass S and context along to createStructureHierarchy as props
       structure: (S, context) =>
         S.list()
           .title('Content')
           .items([
             ...S.documentTypeListItems(), // or whatever other structure you have
-            createDeskHierarchy({
+            createStructureHierarchy({
               //prop drill S and context:
               S,
               context,
@@ -105,6 +103,8 @@ export default defineConfig({
   },
 })
 ```
+
+> **Note:** `createStructureHierarchy` was previously named `createDeskHierarchy` (back when Studio used `sanity/desk`). The old name is still exported as a deprecated alias, so existing setups keep working, but new code should use `createStructureHierarchy`.
 
 ## How it works
 
@@ -317,7 +317,7 @@ export default createSchema({
 Then, in your desk structure where you added the hierarchical document(s), include the right `documentType` and `fieldKeyInDocument` properties:
 
 ```js
-createDeskHierarchy({
+createStructureHierarchy({
   // Include whatever values you defined in your schema in the step above
   documentType: 'myCustomHierarchicalType', // the name of your document type
   fieldKeyInDocument: 'customTreeDataKey', // the name of the hierarchical field
@@ -327,7 +327,7 @@ createDeskHierarchy({
 // Ideally, use the same configuration object you defined in your schemas:
 import {hierarchicalOptions} from './hierarchicalSchemas'
 
-createDeskHierarchy({
+createStructureHierarchy({
   ...hierarchicalOptions,
   // ...
 })
@@ -343,23 +343,4 @@ We're considering adapting this input to support any type of nest-able data, not
 
 ## License
 
-MIT-licensed. See LICENSE.
-
-## License
-
 [MIT](LICENSE) © Sanity
-
-## Develop & test
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/hierarchical-document-list/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
-
-Semantic release will only release on configured branches, so it is safe to run release on any branch.

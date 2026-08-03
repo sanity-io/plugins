@@ -65,6 +65,6 @@
     "styled-components": "catalog:peer"
   },
   "engines": {
-    "node": ">=20.19 <22 || >=22.12"
+    "node": ">=24.11"
   }
 }
