@@ -276,6 +276,12 @@ type ReferenceErrorOptions = {
   depth?: number
   /** Document ids the user explicitly deselected — never auto-commit these during recovery */
   excludedIds?: Set<string>
+  /**
+   * SVG _id remaps already applied by the caller. Recovered documents are fetched
+   * fresh from the origin, so they still point at origin SVG _id's that only exist
+   * at the destination under their uploaded _id.
+   */
+  svgMaps?: {old: string; new: string}[]
 }
 
 // Only attach the studio token when downloading from a Sanity host so a crafted
@@ -417,6 +423,7 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
     onSuccess,
     depth = 0,
     excludedIds = new Set(),
+    svgMaps: inheritedSvgMaps = [],
   } = options
   const description = getErrorDescription(err)
   const missingIds = getMissingReferenceIds(err, description)
@@ -508,7 +515,10 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
 
   setMessage({tone: 'default', text: `Duplicating ${newMissingDocs.length} missing document(s)...`})
 
-  const svgMaps: {old: string; new: string}[] = []
+  // Seed with the caller's remaps so recovered documents referencing an SVG that
+  // was uploaded earlier are repointed at its destination _id, even when that
+  // asset isn't re-fetched here (e.g. `pluginConfig.filter` excludes assets)
+  const svgMaps: {old: string; new: string}[] = [...inheritedSvgMaps]
 
   // Process with the same concurrency limit as the main duplication path, while
   // writing into index slots so dependency-first order is preserved
@@ -570,6 +580,7 @@ async function handleReferenceError(options: ReferenceErrorOptions): Promise<voi
         err: retryErr,
         transactionDocs: allDocs,
         depth: depth + 1,
+        svgMaps,
       })
 
       return
@@ -899,6 +910,7 @@ export default function Duplicator(props: DuplicatorProps) {
           setMessage,
           onSuccess: onCommitSuccess,
           excludedIds: new Set(payload.filter((item) => !item.include).map((item) => item.doc._id)),
+          svgMaps,
         })
       } else {
         const description = getErrorDescription(err)
