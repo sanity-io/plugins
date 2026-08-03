@@ -290,6 +290,29 @@ describe('ReplaceAssetsOverview', () => {
     expect(actions.some((action) => action.type === assetsActions.loadNextPage.type)).toBe(false)
   })
 
+  it('resolves the wait when a fetch in flight on open is replaced by the rescoped one', () => {
+    const {store} = renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}, {fetching: true}),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+        search: {facets: [], query: 'photo'},
+      },
+    })
+
+    expect(screen.queryByText('There are no replacement images')).toBeNull()
+
+    act(() => {
+      // `assetsFetchEpic` uses switchMap, so `fetching` never drops between the two fetches.
+      store.dispatch(assetsActions.clear())
+      store.dispatch(assetsActions.fetchRequest({queryFilter: ''}))
+      store.dispatch(assetsActions.fetchComplete({assets: [imageAsset]}))
+    })
+
+    expect(screen.getByText('There are no replacement images')).toBeTruthy()
+  })
+
   it('excludes the replace target from dialog assetId even when picks were cleared', () => {
     renderWithProviders(<ReplaceAssetsOverview />, {
       preloaded: {

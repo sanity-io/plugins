@@ -115,28 +115,27 @@ const ReplaceAssetsOverview = () => {
     }
   }, [dispatch, store])
 
-  // Resolve the wait once a fetch started after the filters were cleared has completed.
+  // Every rescoped refetch is preceded by `assetsActions.clear()`, so wait for the asset
+  // list to be emptied and the following fetch to settle. Watching `fetching` alone is not
+  // enough: `assetsFetchEpic` uses `switchMap`, so replacing an in-flight request leaves
+  // `fetching` true throughout.
   useEffect(() => {
     if (!awaitingRefetch) {
       return undefined
     }
 
-    // A fetch already running when the dialog opened belongs to the filtered query.
-    let staleFetchInFlight = store.getState().assets.fetching
-    let refetchStarted = false
+    let previousIds = store.getState().assets.allIds
+    let listCleared = false
 
     return store.subscribe(() => {
-      const {fetching: isFetching} = store.getState().assets
+      const {allIds, fetching: isFetching} = store.getState().assets
 
-      if (isFetching) {
-        refetchStarted = !staleFetchInFlight
-        return
+      if (allIds !== previousIds && allIds.length === 0) {
+        listCleared = true
       }
-      if (staleFetchInFlight) {
-        staleFetchInFlight = false
-        return
-      }
-      if (refetchStarted) {
+      previousIds = allIds
+
+      if (listCleared && !isFetching) {
         setAwaitingRefetch(false)
       }
     })
