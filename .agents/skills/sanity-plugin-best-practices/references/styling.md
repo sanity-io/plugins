@@ -567,10 +567,7 @@ declare module 'katex/dist/katex.min.css'
 **no new code uses it for styling and existing usage is migrated to vanilla-extract** — this section
 covers the patterns; the
 [`migrate-styled-components-to-vanilla-extract`](../../migrate-styled-components-to-vanilla-extract/SKILL.md)
-skill covers the step-by-step procedure (config, dependencies, verification), distilled from
-[PR #1417](https://github.com/sanity-io/plugins/pull/1417),
-[PR #1450](https://github.com/sanity-io/plugins/pull/1450), and
-[PR #1670](https://github.com/sanity-io/plugins/pull/1670). Don't add `styled-components` for
+skill covers the step-by-step procedure (config, dependencies, verification). Don't add `styled-components` for
 ordinary styling, and convert a
 component's styling to vanilla-extract when you work on it rather than extending the styled-components
 code. (The one usage that legitimately stays is genuinely-dynamic CSS-in-JS — arbitrary CSS built

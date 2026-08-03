@@ -10,10 +10,8 @@ metadata:
 
 The repeatable procedure for converting one plugin's styling from `styled-components` (the Studio's
 legacy styling library) to [vanilla-extract](https://vanilla-extract.style). Distilled from the
-migrations of `@sanity/google-maps-input`
-([PR #1417](https://github.com/sanity-io/plugins/pull/1417)), `sanity-plugin-workflow`
-([PR #1450](https://github.com/sanity-io/plugins/pull/1450)), and `@sanity/color-input`
-([PR #1670](https://github.com/sanity-io/plugins/pull/1670) — the dynamic-styling example:
+already-migrated plugins in this repo — `plugins/@sanity/google-maps-input`,
+`plugins/sanity-plugin-workflow`, and `plugins/@sanity/color-input` (the dynamic-styling example:
 `styleVariants`, `createVar` + `assignInlineVars`, `useTheme_v2()`).
 
 This skill covers the **workflow**: what to change, in what order, and how to verify it. The styling
@@ -62,9 +60,9 @@ Each row's pattern is documented with examples in the
 Work component by component. Create a `.css.ts` next to each component and move its rules over. Two
 real shapes cover most cases:
 
-**Shape A — keep the component layer** (from `sanity-plugin-workflow`, PR #1450). When the styled
-element is used like a component (composed, given props), replace it with a `style()` rule plus a
-thin wrapper that keeps the same name and API, so call sites don't change:
+**Shape A — keep the component layer** (see `sanity-plugin-workflow`). When the styled element is
+used like a component (composed, given props), replace it with a `style()` rule plus a thin wrapper
+that keeps the same name and API, so call sites don't change:
 
 ```ts
 // FloatingCard.css.ts
@@ -95,19 +93,19 @@ Type the wrapper with `ComponentProps<typeof Primitive>` (or `ComponentProps<'di
 regular prop on React 19. See
 [Keep the component layer](../sanity-plugin-best-practices/references/styling.md#keep-the-component-layer-encapsulation).
 
-**Shape B — flatten single-use wrappers** (from `@sanity/google-maps-input`, PR #1417). When the
-styled element was an internal, single-use `styled.div` with no meaningful API, put the class
-directly on the element. Descendant selectors like `& img { ... }` usually migrate best by styling
-the child directly when you render it yourself:
+**Shape B — flatten single-use wrappers** (see `@sanity/google-maps-input`). When the styled element
+was an internal, single-use `styled.div` with no meaningful API, put the class directly on the
+element. Descendant selectors like `& img { ... }` usually migrate best by styling the child
+directly when you render it yourself:
 
 ```tsx
 // Before: <MapDiffImage><img ... /></MapDiffImage> where MapDiffImage = styled.div`& img {...}`
 <img className={mapDiffImage} alt="" src={url} height={280} width={500} />
 ```
 
-**Shape C — dynamic values through CSS variables** (from `@sanity/color-input`, PR #1670). When a
-value varies per instance, with props/state, or reads the theme, keep the static parts in `style()`
-and bridge only the changing values through `createVar()` + `assignInlineVars()` (from
+**Shape C — dynamic values through CSS variables** (see `@sanity/color-input`). When a value varies
+per instance, with props/state, or reads the theme, keep the static parts in `style()` and bridge
+only the changing values through `createVar()` + `assignInlineVars()` (from
 `@vanilla-extract/dynamic`). This also migrates computed inline `style={{}}` objects — hoist the
 static properties into the `.css.ts` and keep only the variables inline:
 
@@ -195,10 +193,10 @@ In the plugin's `package.json`:
 - **Peer alignment:** when the plugin depends on `@sanity/ui` (which peers on styled-components),
   removing the `"styled-components": "catalog:"` devDependency can make pnpm resolve a separate
   styled-components copy, forking the plugin's `sanity` peer variant away from the rest of the
-  workspace and breaking type-aware lint (this was caught in review on PR #1450). Dropping it can
-  be fine (`@sanity/color-input` did), but you must verify: after `pnpm install`, the plugin's
-  `sanity` / `@sanity/ui` resolution strings in `pnpm-lock.yaml` must match other plugins (e.g.
-  `plugins/@sanity/google-maps-input`). If they fork, keep the `catalog:` devDependency.
+  workspace and breaking type-aware lint. Dropping it can be fine (`@sanity/color-input` did), but
+  you must verify: after `pnpm install`, the plugin's `sanity` / `@sanity/ui` resolution strings in
+  `pnpm-lock.yaml` must match other plugins (e.g. `plugins/@sanity/google-maps-input`). If they
+  fork, keep the `catalog:` devDependency.
 
 No `knip.jsonc` or catalog changes are needed — `@vanilla-extract/css` is globally ignored and all
 the catalog entries already exist.
