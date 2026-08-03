@@ -71,9 +71,18 @@ function renderTool(overrides: Record<string, unknown> = {}) {
   return props
 }
 
+let fetch: ReturnType<typeof vi.fn>
+
 describe('EditAssetTool', () => {
   beforeEach(() => {
-    const fetch = vi.fn().mockReturnValue(of({items: [asset]}))
+    // Return a shape appropriate to each query (folders vs assets/tags) so the
+    // corresponding epics don't choke while reducing store state.
+    fetch = vi.fn((query: string) => {
+      if (query.includes('media.folder')) {
+        return of({folders: [], unfiledCount: 0})
+      }
+      return of({items: [asset]})
+    })
     vi.mocked(useVersionedClient).mockReturnValue(
       createMockSanityClient({listen: vi.fn(() => new Subject()), observable: {fetch}}),
     )
@@ -89,6 +98,18 @@ describe('EditAssetTool', () => {
     await waitFor(() => {
       expect(withinDialog(/asset details/i, screen).getByText('Asset details')).toBeInTheDocument()
     })
+  })
+
+  it('fetches tags and folders so saving does not wipe existing tags/folder', async () => {
+    renderTool()
+
+    await waitFor(() => {
+      expect(withinDialog(/asset details/i, screen).getByText('Asset details')).toBeInTheDocument()
+    })
+
+    const queries = fetch.mock.calls.map((call) => String(call[0]))
+    expect(queries.some((q) => q.includes('media.tag'))).toBe(true)
+    expect(queries.some((q) => q.includes('media.folder'))).toBe(true)
   })
 
   it('closes the source immediately when no asset is selected', async () => {

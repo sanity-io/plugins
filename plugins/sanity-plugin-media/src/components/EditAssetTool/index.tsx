@@ -9,6 +9,8 @@ import useTypedSelector from '../../hooks/useTypedSelector'
 import useVersionedClient from '../../hooks/useVersionedClient'
 import {assetsActions} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
+import {foldersActions} from '../../modules/folders'
+import {tagsActions} from '../../modules/tags'
 import GlobalStyle from '../../styled/GlobalStyles'
 import constructFilter from '../../utils/constructFilter'
 import Dialogs from '../Dialogs'
@@ -38,6 +40,14 @@ const EditAssetDialog = ({assetId, onClose}: {assetId: string; onClose: () => vo
     })} && _id == $assetId`
 
     dispatch(assetsActions.fetchRequest({params: {assetId}, queryFilter}))
+
+    // Tags and folders must be loaded into the store so the edit dialog can
+    // resolve the asset's existing tag references and folder path (mirroring
+    // `useBrowserInit`). Without this, `selectTagSelectOptions` resolves no tags
+    // and saving would patch `opt.media.tags` to null, wiping existing tags.
+    dispatch(tagsActions.fetchRequest())
+    dispatch(foldersActions.fetchRequest())
+
     dispatch(dialogActions.showAssetEdit({assetId}))
   }, [assetId, dispatch])
 
