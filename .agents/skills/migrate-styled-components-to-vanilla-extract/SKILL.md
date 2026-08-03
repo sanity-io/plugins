@@ -1,6 +1,6 @@
 ---
 name: migrate-styled-components-to-vanilla-extract
-description: Step-by-step procedure for migrating a package off styled-components to vanilla-extract (zero-runtime CSS). Use when converting styled() components to .css.ts files, removing a styled-components dependency, adding a ./bundle.css export, or when asked to migrate styling to vanilla-extract. Pair with the sanity-plugin-best-practices styling reference for the underlying patterns.
+description: Step-by-step procedure for migrating a workspace off styled-components to vanilla-extract (zero-runtime CSS). Use when converting styled() components to .css.ts files, removing a styled-components dependency, adding a ./bundle.css export, or when asked to migrate styling to vanilla-extract. Pair with the sanity-plugin-best-practices styling reference for the underlying patterns.
 metadata:
   author: Sanity.io
   version: '1.0.0'
@@ -8,7 +8,7 @@ metadata:
 
 # Migrate styled-components to vanilla-extract
 
-The repeatable procedure for converting a package's styling from `styled-components` (the Studio's
+The repeatable procedure for converting a workspace's styling from `styled-components` (the Studio's
 legacy styling library) to [vanilla-extract](https://vanilla-extract.style).
 
 This skill covers the **workflow**: what to change, in what order, and how to verify it. The styling
@@ -27,10 +27,10 @@ which plugins are reference implementations), see `AGENTS.md` →
 
 ## Step 1: Inventory
 
-Find every styled-components usage in the package and classify it before touching code:
+Find every styled-components usage in the workspace and classify it before touching code:
 
 ```bash
-rg "styled-components" <package>/src
+rg "styled-components" <workspace>/src
 ```
 
 | Usage                                               | Migration target                                                                   |
@@ -40,7 +40,7 @@ rg "styled-components" <package>/src
 | Prop-driven variants (`$isInvalid`, `css` branches) | `styleVariants()` or conditional class composition                                 |
 | `keyframes` animations                              | vanilla-extract `keyframes()`                                                      |
 | Descendant selectors (`& img`, third-party classes) | class on the child directly, or `globalStyle()` scoped under a local wrapper class |
-| `createGlobalStyle`                                 | `globalStyle()` (scope it — never leak outside the plugin)                         |
+| `createGlobalStyle`                                 | `globalStyle()` (scope it — never leak outside the workspace)                      |
 | `*.styles.tsx` modules                              | replaced by `.css.ts` (+ a component layer where call sites need it)               |
 | Computed inline `style={{}}` objects                | static parts into `style()`, changing values via `createVar()` (Shape C below)     |
 
@@ -144,7 +144,7 @@ Delete the `*.styles.tsx` modules (and their `styled-components` imports) as the
 
 ## Step 3: Switch the build config
 
-In the plugin's `tsdown.config.ts`, drop `styledComponents: true` and add `vanillaExtract: true`:
+In the workspace's `tsdown.config.ts`, drop `styledComponents: true` and add `vanillaExtract: true`:
 
 ```ts
 import {defineConfig} from '@sanity/tsdown-config'
@@ -173,20 +173,20 @@ export block looks like:
 
 ## Step 4: Update dependencies
 
-In the plugin's `package.json`:
+In the workspace's `package.json`:
 
 - **Add** dev dependencies `"@sanity/vanilla-extract-vite-plugin": "catalog:"` and
   `"@vanilla-extract/css": "catalog:"`. Both are build-time only — never runtime `dependencies`.
-  (If the plugin uses `assignInlineVars`, add `"@vanilla-extract/dynamic": "catalog:"` under
+  (If the workspace uses `assignInlineVars`, add `"@vanilla-extract/dynamic": "catalog:"` under
   `dependencies` — that one is a small runtime helper.)
 - **Remove** the `styled-components` entry from `peerDependencies`, and any
   `babel-plugin-styled-components` devDependency.
-- **Peer alignment:** when the package depends on `@sanity/ui` (which peers on styled-components),
+- **Peer alignment:** when the workspace depends on `@sanity/ui` (which peers on styled-components),
   removing the `"styled-components": "catalog:"` devDependency can make pnpm resolve a separate
-  styled-components copy, forking the package's `sanity` peer variant away from the rest of the
-  workspace and breaking type-aware lint. Dropping it can be fine, but you must verify: after
-  `pnpm install`, the package's `sanity` / `@sanity/ui` resolution strings in `pnpm-lock.yaml` must
-  match other packages that depend on `@sanity/ui`. If they fork, keep the `catalog:`
+  styled-components copy, forking the workspace's `sanity` peer variant away from the rest of the
+  monorepo and breaking type-aware lint. Dropping it can be fine, but you must verify: after
+  `pnpm install`, the workspace's `sanity` / `@sanity/ui` resolution strings in `pnpm-lock.yaml` must
+  match other workspaces that depend on `@sanity/ui`. If they fork, keep the `catalog:`
   devDependency.
 
 No `knip.jsonc` or catalog changes are needed — `@vanilla-extract/css` is globally ignored and all
@@ -195,8 +195,8 @@ the catalog entries already exist.
 ## Step 5: Register the Vite plugin for Vitest
 
 The package-exports test resolves the workspace `exports` map, whose `.` entry points at
-`./src/index.ts` — so it imports real `.css.ts` source and Vitest needs the plugin to compile it.
-Add it to the plugin's `vitest.config.ts`:
+`./src/index.ts` — so it imports real `.css.ts` source and Vitest must compile it. Add the plugin to
+the workspace's `vitest.config.ts`:
 
 ```ts
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
@@ -210,12 +210,12 @@ export default defineConfig({
 
 Use `@sanity/vanilla-extract-vite-plugin` (faster drop-in for the upstream
 `@vanilla-extract/vite-plugin`). If a host app or studio already registers the Vite plugin
-globally, you don't need to touch that file for the package under migration.
+globally, you don't need to touch that file for the workspace under migration.
 
-> **Optional, jsdom-only:** if the plugin has `jsdom`/`happy-dom` suites that don't assert on real
+> **Optional, jsdom-only:** if the workspace has `jsdom`/`happy-dom` suites that don't assert on real
 > CSS (layout, `getComputedStyle`), you can skip runtime style injection with
 > `setupFiles: ['@vanilla-extract/css/disableRuntimeStyles']`. This does **not** replace the Vite
-> plugin, is irrelevant under the default `node` environment, and is opted into per plugin — never
+> plugin, is irrelevant under the default `node` environment, and is opted into per workspace — never
 > monorepo-wide. See
 > [Disabling runtime styles in tests](../sanity-plugin-best-practices/references/styling.md#disabling-runtime-styles-in-tests)
 > in the styling reference.
@@ -224,14 +224,14 @@ globally, you don't need to touch that file for the package under migration.
 
 ```bash
 pnpm install
-pnpm build --filter=<plugin-name>
+pnpm build --filter=<workspace-name>
 ```
 
 Check the output: `dist/bundle.css` must contain every migrated rule, and `dist/index.js` must
 import it. Then update the package-exports inline snapshot, which gains a `"./bundle.css"` entry:
 
 ```bash
-pnpm test -u --project <plugin-name>
+pnpm test -u --project <workspace-name>
 ```
 
 ## Step 7: Verify
@@ -246,20 +246,20 @@ pnpm build
 pnpm test run
 ```
 
-Then verify **visual fidelity** manually: exercise the package's UI and compare against the
+Then verify **visual fidelity** manually: exercise the workspace's UI and compare against the
 pre-migration rendering — theme tokens, spacing, stacking, hover/sticky/fixed behavior. If an
 override no longer takes effect, reach for the `&&` trick rather than `!important`.
 
-Optionally lock the migration in: once the plugin no longer imports `styled-components`, a
-`no-restricted-imports` ban in a plugin-level lint override keeps it from creeping back.
+Optionally lock the migration in: once the workspace no longer imports `styled-components`, a
+`no-restricted-imports` ban in a workspace-level lint override keeps it from creeping back.
 
 ## Step 8: Add a changeset
 
-One patch changeset for the migrated plugin:
+One patch changeset for the migrated workspace:
 
 ```markdown
 ---
-'<plugin-name>': patch
+'<workspace-name>': patch
 ---
 
 Migrate styling from styled-components to vanilla-extract (zero-runtime CSS)
