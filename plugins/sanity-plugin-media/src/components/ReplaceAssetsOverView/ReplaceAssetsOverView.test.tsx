@@ -229,6 +229,45 @@ describe('ReplaceAssetsOverview', () => {
     expect(screen.getByText('There are no replacement images')).toBeTruthy()
   })
 
+  it('loads the next page while a full page holds no replacement candidates', () => {
+    const actions: {type: string}[] = []
+    renderWithProviders(<ReplaceAssetsOverview />, {
+      onAction: (action) => actions.push(action),
+      preloaded: {
+        assets: assetsState(
+          {'img-1': assetItem(imageAsset, {picked: true})},
+          {fetchCount: assetsInitialState.pageSize},
+        ),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+      },
+    })
+
+    expect(actions.some((action) => action.type === assetsActions.loadNextPage.type)).toBe(true)
+  })
+
+  it('stops paging when the last fetch failed', () => {
+    const actions: {type: string}[] = []
+    renderWithProviders(<ReplaceAssetsOverview />, {
+      onAction: (action) => actions.push(action),
+      preloaded: {
+        assets: assetsState(
+          {'img-1': assetItem(imageAsset, {picked: true})},
+          {
+            fetchCount: assetsInitialState.pageSize,
+            fetchingError: {message: 'Internal error', statusCode: 500},
+          },
+        ),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+      },
+    })
+
+    expect(actions.some((action) => action.type === assetsActions.loadNextPage.type)).toBe(false)
+  })
+
   it('excludes the replace target from dialog assetId even when picks were cleared', () => {
     renderWithProviders(<ReplaceAssetsOverview />, {
       preloaded: {

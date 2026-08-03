@@ -25,6 +25,7 @@ const ReplaceAssetsOverview = () => {
   const assetsById = useTypedSelector((state) => state.assets.byIds)
   const fetchCount = useTypedSelector((state) => state.assets.fetchCount)
   const fetching = useTypedSelector((state) => state.assets.fetching)
+  const fetchingError = useTypedSelector((state) => state.assets.fetchingError)
   const pageSize = useTypedSelector((state) => state.assets.pageSize)
   const searchQuery = useTypedSelector((state) => state.search.query)
   const searchFacets = useTypedSelector((state) => state.search.facets)
@@ -140,12 +141,14 @@ const ReplaceAssetsOverview = () => {
     !awaitingRefetch &&
     !hasMorePages
 
-  // Keep loading pages until we find image candidates or exhaust results.
+  // Keep loading pages until we find image candidates or exhaust results. A failed fetch
+  // leaves `fetchCount` untouched, so stop paging on error instead of retrying forever.
   useEffect(() => {
     if (
       filtersActive ||
       fetching ||
       awaitingRefetch ||
+      fetchingError ||
       reducedItems.length > 0 ||
       !hasFetchedOnce ||
       !hasMorePages
@@ -158,6 +161,7 @@ const ReplaceAssetsOverview = () => {
     filtersActive,
     fetching,
     awaitingRefetch,
+    fetchingError,
     reducedItems.length,
     hasFetchedOnce,
     hasMorePages,
