@@ -319,8 +319,13 @@ async function uploadAssetForRecovery(
     filename: doc.originalFilename,
   })
 
+  // Merge the original asset document's editorial metadata (e.g. `altText`) with
+  // the uploaded asset's canonical fields, matching the main duplication path.
+  // Keeping this to a single document at the uploaded `_id` avoids leaving an
+  // orphaned asset behind when an SVG's `_id` changes on upload; references are
+  // repointed via `svgMap`.
   return {
-    docs: [assetDoc, {...doc, url: assetDoc.url, path: assetDoc.path}],
+    docs: [{...doc, ...assetDoc}],
     svgMap: doc.extension === 'svg' ? {old: doc._id, new: assetDoc._id} : undefined,
   }
 }
