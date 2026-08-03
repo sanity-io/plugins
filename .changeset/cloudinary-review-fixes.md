@@ -1,5 +1,5 @@
 ---
-'sanity-plugin-cloudinary': patch
+"sanity-plugin-cloudinary": patch
 ---
 
 - Fix the `cloudinaryAssetSourcePlugin` name, which was mistakenly registered as `cloudinart-asset-source`
