@@ -1,5 +1,5 @@
 ---
-'sanity-plugin-cloudinary': minor
+"sanity-plugin-cloudinary": minor
 ---
 
 author: @ChrisLaRocque
