@@ -1,4 +1,4 @@
-import {UsersIcon} from '@sanity/icons'
+import {UsersIcon} from '@sanity/icons/Users'
 import {Card, Spinner, Stack, Text} from '@sanity/ui'
 import {definePlugin} from 'sanity'
 import {Feedback, useListeningQuery, useProjectUsers} from 'sanity-plugin-utils'

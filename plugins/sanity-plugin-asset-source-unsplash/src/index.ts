@@ -10,6 +10,7 @@ export type {Asset, AssetDocument, UnsplashPhoto} from './types'
  */
 export const unsplashAssetSource: AssetSource = {
   name: 'unsplash',
+  // oxlint-disable-next-line no-deprecated -- `i18nKey` requires a locale bundle; a plain title is intentional here
   title: 'Unsplash',
   component: UnsplashAssetSource,
   icon: UnsplashIcon,

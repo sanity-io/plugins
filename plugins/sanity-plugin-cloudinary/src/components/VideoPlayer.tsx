@@ -16,9 +16,11 @@ export default function VideoPlayer(props: VideoPlayerProps) {
   }
 
   return (
+    // Cloudinary videos are user-uploaded and have no caption files to point a
+    // `<track>` at; a `src`-less `<track>` would be invalid HTML, so omit it.
+    // eslint-disable-next-line jsx-a11y/media-has-caption -- no captions available for arbitrary Cloudinary videos
     <video controls aria-label="Cloudinary video preview" style={style}>
       <source src={src} type="video/mp4" />
-      <track kind="captions" />
     </video>
   )
 }

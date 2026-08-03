@@ -261,7 +261,11 @@ const types = [
   localeString,
 ]
 
-export default new Schema({
+// The explicit annotation keeps the exported type portable for declaration emit
+// (TS2883): the Schema instance type otherwise resolves to a private dts chunk path.
+const schema: InstanceType<typeof Schema> = new Schema({
   name: 'test',
   types,
 })
+
+export default schema

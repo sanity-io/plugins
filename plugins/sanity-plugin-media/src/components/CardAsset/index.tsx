@@ -1,4 +1,6 @@
-import {CheckmarkCircleIcon, EditIcon, WarningFilledIcon} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {EditIcon} from '@sanity/icons/Edit'
+import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
 import {
   Box,
   Checkbox,
@@ -54,18 +56,20 @@ const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?:
     user-select: none;
     width: 100%;
 
-    border: ${$picked
-      ? `1px solid ${theme.sanity.color.spot.orange} !important`
-      : '1px solid inherit'};
+    border: ${
+      $picked ? `1px solid ${theme.sanity.color.spot.orange} !important` : '1px solid inherit'
+    };
 
-    ${!$updating &&
-    css`
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          border: 1px solid var(--card-border-color);
+    ${
+      !$updating &&
+      css`
+        @media (hover: hover) and (pointer: fine) {
+          &:hover {
+            border: 1px solid var(--card-border-color);
+          }
         }
-      }
-    `}
+      `
+    }
   `
 })
 
@@ -109,7 +113,7 @@ const CardAsset = (props: Props) => {
   const picked = item?.picked
   const updating = item?.updating
 
-  const {onSelect} = useAssetSourceActions()
+  const {isMultiSelect, onSelect} = useAssetSourceActions()
 
   // Short circuit if no asset is available
   if (!asset) {
@@ -120,13 +124,23 @@ const CardAsset = (props: Props) => {
   const handleAssetClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
 
-    if (onSelect) {
+    if (selected) {
+      return
+    }
+
+    if (onSelect && !isMultiSelect) {
       onSelect([
         {
           kind: 'assetDocumentId',
           value: asset._id,
         },
       ])
+    } else if (onSelect && isMultiSelect) {
+      if (shiftPressed.current && !picked) {
+        dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
+      } else {
+        dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
+      }
     } else if (shiftPressed.current) {
       if (picked) {
         dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
@@ -141,7 +155,11 @@ const CardAsset = (props: Props) => {
   const handleContextActionClick = (e: MouseEvent) => {
     e.stopPropagation()
 
-    if (onSelect) {
+    if (selected) {
+      return
+    }
+
+    if (onSelect && !isMultiSelect) {
       dispatch(dialogActions.showAssetEdit({assetId: asset._id}))
     } else if (shiftPressed.current && !picked) {
       dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
@@ -229,7 +247,7 @@ const CardAsset = (props: Props) => {
           $scheme={scheme}
           style={{opacity: opacityContainer}}
         >
-          {onSelect ? (
+          {onSelect && !isMultiSelect ? (
             <EditIcon
               style={{
                 flexShrink: 0,

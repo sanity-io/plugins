@@ -5,10 +5,12 @@ import type {AssetType, SearchFacetInputProps} from '../types'
 
 const constructFilter = ({
   assetTypes,
+  currentFolderId,
   searchFacets,
   searchQuery,
 }: {
   assetTypes: AssetType[]
+  currentFolderId?: string | null
   searchFacets: SearchFacetInputProps[]
   searchQuery?: string
 }): string => {
@@ -75,6 +77,12 @@ const constructFilter = ({
     return acc
   }, [])
 
+  // All assets (no folder selected) should not apply a folder filter. A specific
+  // folder shows only assets pointing at it.
+  const folderFilter: string | undefined = currentFolderId
+    ? `opt.media.folder._ref == ${JSON.stringify(currentFolderId)}`
+    : undefined
+
   // Join separate filter fragments
   const constructedQuery = [
     // Base filter
@@ -88,6 +96,7 @@ const constructFilter = ({
           groq`[_id, altText, assetId, creditLine, description, originalFilename, title, url] match '*${searchQuery.trim()}*'`,
         ]
       : []),
+    ...(folderFilter ? [folderFilter] : []),
     // Search facets
     ...searchFacetFragments,
   ].join(' && ')
