@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import {useMemo, useState} from 'react'
 import isEqual from 'react-fast-compare'
 import {useObservable} from 'react-rx'
 import {catchError, distinctUntilChanged, map, of, startWith} from 'rxjs'
@@ -39,9 +39,16 @@ export function useListeningQuery<V>(
   const memoOptions = useStableParams(options)
   const documentStore = useDocumentStore()
 
+  // Callers often pass a fresh `[]` each render (e.g. DeleteTranslationDialog).
+  // Stabilize by value so the observable isn't recreated forever / stuck loading.
+  const [stableInitialValue, setStableInitialValue] = useState(initialValue)
+  if (!isEqual(stableInitialValue, initialValue)) {
+    setStableInitialValue(initialValue)
+  }
+
   const state$ = useMemo(() => {
     if (!query) {
-      return of({loading: false, error: null, data: initialValue})
+      return of({loading: false, error: null, data: stableInitialValue})
     }
 
     try {
@@ -53,7 +60,7 @@ export function useListeningQuery<V>(
           // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
           data: documents as V,
         })),
-        startWith({loading: true, error: null, data: initialValue}),
+        startWith({loading: true, error: null, data: stableInitialValue}),
         catchError((err) => {
           console.error(err)
           return of({loading: false, error: err, data: null as V | null})
@@ -63,7 +70,7 @@ export function useListeningQuery<V>(
       console.error(err)
       return of({loading: false, error: err, data: null as V | null})
     }
-  }, [query, memoParams, memoOptions, documentStore, initialValue])
+  }, [query, memoParams, memoOptions, documentStore, stableInitialValue])
 
-  return useObservable(state$, {loading: true, error: null, data: initialValue})
+  return useObservable(state$, {loading: true, error: null, data: stableInitialValue})
 }

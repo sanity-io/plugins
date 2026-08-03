@@ -19,17 +19,29 @@ const DEFAULT_OPTIONS: ListenQueryOptions = {apiVersion: `v2022-05-09`}
 
 const INITIAL_STATE = {loading: true, error: false, data: null} as const
 
+function useStableParams(params: Params): Params {
+  const stringified = useMemo(() => JSON.stringify(params), [params])
+  return useMemo(() => JSON.parse(stringified), [stringified])
+}
+
+function useStableOptions(options: ListenQueryOptions): ListenQueryOptions {
+  const stringified = useMemo(() => JSON.stringify(options), [options])
+  return useMemo(() => JSON.parse(stringified), [stringified])
+}
+
 export function useListeningQuery<T>(
   query: string,
   params: Params = DEFAULT_PARAMS,
   options: ListenQueryOptions = DEFAULT_OPTIONS,
 ): ReturnShape<T> {
   const client = useClient({apiVersion: `v2022-05-09`})
+  const memoParams = useStableParams(params)
+  const memoOptions = useStableOptions(options)
 
   const state$ = useMemo(
     () =>
       query
-        ? listenQuery(client, query, params, options).pipe(
+        ? listenQuery(client, query, memoParams, memoOptions).pipe(
             distinctUntilChanged(isEqual),
             map((documents) => ({
               loading: false,
@@ -44,7 +56,7 @@ export function useListeningQuery<T>(
             }),
           )
         : of({loading: false, error: false, data: null as T | null}),
-    [query, params, options, client],
+    [query, memoParams, memoOptions, client],
   )
 
   return useObservable(state$, INITIAL_STATE)
