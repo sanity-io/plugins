@@ -289,6 +289,7 @@ export function createAsyncListInput(
   options: AsyncListInputOptions,
 ): (props: StringInputProps) => JSX.Element {
   return function AsyncListInput(props: StringInputProps): JSX.Element {
+    'use memo'
     return <AsyncList {...props} options={options} />
   }
 }
