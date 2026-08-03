@@ -4,6 +4,17 @@ import {operators} from '../config/searchFacets'
 import {TAG_DOCUMENT_NAME} from '../constants'
 import type {AssetType, SearchFacetInputProps} from '../types'
 
+/** GROQ fragment that excludes assets tagged with any of the given media.tag slugs. */
+export const buildExcludeTagsFragment = (excludeTagSlugs?: string[]): string | undefined => {
+  const serializedExcludeTagSlugs = excludeTagSlugs?.length
+    ? JSON.stringify(excludeTagSlugs)
+    : undefined
+
+  return serializedExcludeTagSlugs
+    ? groq`!(defined(opt.media.tags) && count(opt.media.tags[@._ref in *[_type == "${TAG_DOCUMENT_NAME}" && name.current in ${serializedExcludeTagSlugs}]._id]) > 0)`
+    : undefined
+}
+
 const constructFilter = ({
   assetTypes,
   currentFolderId,
@@ -26,13 +37,7 @@ const constructFilter = ({
     _type in ${JSON.stringify(documentAssetTypes)} && !(_id in path("drafts.**"))
   `
 
-  const serializedExcludeTagSlugs = excludeTagSlugs?.length
-    ? JSON.stringify(excludeTagSlugs)
-    : undefined
-
-  const excludeTagsFragment = serializedExcludeTagSlugs
-    ? groq`!(defined(opt.media.tags) && count(opt.media.tags[@._ref in *[_type == "${TAG_DOCUMENT_NAME}" && name.current in ${serializedExcludeTagSlugs}]._id]) > 0)`
-    : undefined
+  const excludeTagsFragment = buildExcludeTagsFragment(excludeTagSlugs)
 
   const searchFacetFragments = searchFacets.reduce((acc: string[], facet) => {
     if (facet.type === 'number') {

@@ -16,6 +16,7 @@ import {
 import {FOLDER_DOCUMENT_NAME} from '../../constants'
 import debugThrottle from '../../operators/debugThrottle'
 import type {FolderDoc, FolderTreeItem, FolderTreeNode, HttpError, MyEpic} from '../../types'
+import {buildExcludeTagsFragment} from '../../utils/constructFilter'
 import {assetsActions} from '../assets'
 import type {RootReducerState} from '../types'
 import {UPLOADS_ACTIONS} from '../uploads/actions'
@@ -204,6 +205,8 @@ export const foldersFetchEpic: MyEpic = (action$, state$, {client}) =>
         debugThrottle(state.debug.badConnection),
         mergeMap(() => {
           const assetTypes = state.assets.assetTypes.map((type) => `sanity.${type}Asset`)
+          const excludeTagsFragment = buildExcludeTagsFragment(state.assets.excludeTagSlugs)
+          const excludeTagsClause = excludeTagsFragment ? `&& ${excludeTagsFragment}` : ''
           return client.observable.fetch<{
             folders: {_id: string; name?: string; parentId?: string | null; count: number}[]
             unfiledCount: number
@@ -220,12 +223,14 @@ export const foldersFetchEpic: MyEpic = (action$, state$, {client}) =>
                   _type in ${JSON.stringify(assetTypes)}
                   && !(_id in path("drafts.**"))
                   && opt.media.folder._ref == ^._id
+                  ${excludeTagsClause}
                 ])
               },
               "unfiledCount": count(*[
                 _type in ${JSON.stringify(assetTypes)}
                 && !(_id in path("drafts.**"))
                 && !defined(opt.media.folder._ref)
+                ${excludeTagsClause}
               ])
             }`,
           )
