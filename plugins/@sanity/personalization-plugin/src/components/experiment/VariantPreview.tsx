@@ -8,15 +8,15 @@ import {
   useClient,
 } from 'sanity'
 
-import type {VariantPreviewProps} from '../types'
-import {useExperimentContext} from './ExperimentContext'
+import type {VariantPreviewProps} from '../../types'
+import {useExperimentContext} from './Context'
 
 export const VariantPreview = (props: PreviewProps) => {
   const [subtitle, setSubtitle] = useState<string | undefined>(undefined)
   const [title, setTitle] = useState<string | undefined>(undefined)
   const [media, setMedia] = useState<any>(undefined)
-  const client = useClient({apiVersion: '2025-01-01'})
-  const {experiments} = useExperimentContext()
+  const {experiments, apiVersion} = useExperimentContext()
+  const client = useClient({apiVersion})
 
   const {experiment, variant, value} = props as VariantPreviewProps
 
@@ -30,7 +30,11 @@ export const VariantPreview = (props: PreviewProps) => {
 
   useEffect(() => {
     const getSubtitle = async () => {
-      setTitle(`${selectedExperiment?.label} - ${selectedVariant?.label}`)
+      setTitle(
+        selectedExperiment?.label && selectedVariant?.label
+          ? `${selectedExperiment.label} - ${selectedVariant.label}`
+          : selectedExperiment?.label || selectedVariant?.label,
+      )
       if (typeof value === 'string') {
         return setSubtitle(value)
       }
@@ -47,7 +51,7 @@ export const VariantPreview = (props: PreviewProps) => {
           const valueKey = referenceType?.preview?.select?.[key]
           selectFields[key] =
             valueKey && doc
-              ? valueKey?.split('.').reduce((acc, index) => acc[index], doc)
+              ? valueKey.split('.').reduce((acc: any, index) => acc?.[index], doc)
               : undefined
         })
 

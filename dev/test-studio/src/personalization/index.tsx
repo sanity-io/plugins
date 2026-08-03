@@ -1,4 +1,4 @@
-import {fieldLevelExperiments} from '@sanity/personalization-plugin'
+import {fieldLevelExperiments, fieldLevelPersonalization} from '@sanity/personalization-plugin'
 import {defineField, definePlugin, defineType} from 'sanity'
 
 const experiments = [
@@ -21,6 +21,12 @@ const experiments = [
   },
 ]
 
+const segments = [
+  {id: 'enterprise', label: 'Enterprise'},
+  {id: 'small-business', label: 'Small Business'},
+  {id: 'individual', label: 'Individual'},
+]
+
 const personalizationTest = defineType({
   type: 'document',
   name: 'personalizationTest',
@@ -37,6 +43,16 @@ const personalizationTest = defineType({
       name: 'description',
       title: 'Description (A/B testable)',
     }),
+    defineField({
+      type: 'personalizationString',
+      name: 'tagline',
+      title: 'Tagline (personalized by segment)',
+    }),
+    defineField({
+      type: 'personalizationText',
+      name: 'pitch',
+      title: 'Pitch (personalized by segment)',
+    }),
   ],
 })
 
@@ -46,6 +62,10 @@ export const personalizationExample = definePlugin(() => ({
     fieldLevelExperiments({
       fields: ['string', 'text'],
       experiments,
+    }),
+    fieldLevelPersonalization({
+      fields: ['string', 'text'],
+      segments,
     }),
   ],
 }))

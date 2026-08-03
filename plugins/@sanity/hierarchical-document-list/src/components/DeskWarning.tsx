@@ -25,7 +25,7 @@ const DeskWarning = (
         <Stack gap={3}>
           <Heading size={1}>{props.title}</Heading>
           {props.subtitle &&
-            props.subtitle.split('\\n').map((line: string) => (
+            props.subtitle.split(/\\n|\n/).map((line: string) => (
               <Text size={1} key={line}>
                 <WrapCodeBlocks text={line} />
               </Text>

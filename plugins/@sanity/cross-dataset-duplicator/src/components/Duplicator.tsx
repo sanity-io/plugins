@@ -1,5 +1,5 @@
 import {isAssetId, isSanityFileAsset} from '@sanity/asset-utils'
-import type {SanityAssetDocument} from '@sanity/client'
+import type {SanityAssetDocument, SanityClient} from '@sanity/client'
 import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
 import {LaunchIcon} from '@sanity/icons/Launch'
 import {SearchIcon} from '@sanity/icons/Search'
@@ -33,6 +33,7 @@ import {
 
 import {stickyStyles, createInitialMessage} from '../helpers'
 import {getDocumentsInArray} from '../helpers/getDocumentsInArray'
+import {isAllowedMigrationTarget} from '../helpers/migrationFilters'
 import type {PluginConfig} from '../types'
 import Feedback from './Feedback'
 import SelectButtons from './SelectButtons'
@@ -90,6 +91,506 @@ async function mapWithConcurrency<T>(
   await Promise.all(workers)
 }
 
+type SetMessage = (msg: Message) => void
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function isUnknownArray(value: unknown): value is unknown[] {
+  return Array.isArray(value)
+}
+
+// Pull a human-readable description out of a Sanity mutation error.
+// Prefer the richest text available: item-level descriptions (which carry the
+// "references non-existent document" phrasing) over a possibly-generic top-level
+// `details.description` like "Mutation(s) failed with N error(s)".
+function getErrorDescription(err: unknown): string {
+  if (!isRecord(err)) {
+    return ''
+  }
+
+  const details = err['details']
+  const itemDescriptions: string[] = []
+
+  if (isRecord(details) && isUnknownArray(details['items'])) {
+    for (const item of details['items']) {
+      if (isRecord(item) && isRecord(item['error'])) {
+        const itemDescription = item['error']['description']
+
+        if (typeof itemDescription === 'string' && itemDescription) {
+          itemDescriptions.push(itemDescription)
+        }
+      }
+    }
+  }
+
+  if (itemDescriptions.length) {
+    return itemDescriptions.join('\n')
+  }
+
+  const message = err['message']
+
+  if (typeof message === 'string' && message) {
+    return message
+  }
+
+  if (isRecord(details)) {
+    const description = details['description']
+
+    if (typeof description === 'string') {
+      return description
+    }
+  }
+
+  return ''
+}
+
+function isReferenceMutationError(err: unknown): boolean {
+  if (!isRecord(err)) {
+    return false
+  }
+
+  const details = err['details']
+
+  // Most reliable: structured mutation item type from the Content Lake API
+  if (isRecord(details) && isUnknownArray(details['items'])) {
+    for (const item of details['items']) {
+      if (isRecord(item) && isRecord(item['error'])) {
+        if (item['error']['type'] === 'documentReferenceDoesNotExistError') {
+          return true
+        }
+
+        const itemDescription = item['error']['description']
+
+        if (
+          typeof itemDescription === 'string' &&
+          (itemDescription.toLowerCase().includes('references non-existent document') ||
+            itemDescription.toLowerCase().includes('reference non-existent'))
+        ) {
+          return true
+        }
+      }
+    }
+  }
+
+  const description = getErrorDescription(err).toLowerCase()
+
+  return (
+    description.includes('references non-existent document') ||
+    description.includes('reference non-existent')
+  )
+}
+
+// Collect the _id's of referenced documents that are missing at the destination,
+// reading both the structured error payload and the human-readable description
+function getMissingReferenceIds(err: unknown, description: string): string[] {
+  const missingIds: string[] = []
+
+  const details = isRecord(err) ? err['details'] : undefined
+  const rawItems = isRecord(details) ? details['items'] : undefined
+  const items = isUnknownArray(rawItems) ? rawItems : []
+
+  for (const item of items) {
+    if (isRecord(item)) {
+      const error = item['error']
+
+      if (isRecord(error)) {
+        // Sanity returns `referenceID`; keep the other spellings as fallbacks
+        const refId = error['referenceID'] ?? error['referencedId'] ?? error['referenceId']
+
+        if (typeof refId === 'string' && !missingIds.includes(refId)) {
+          missingIds.push(refId)
+        }
+      }
+    }
+  }
+
+  const refRegex = /references non-existent document [`'"]?([^`'"\s)]+)[`'"]?/gi
+  let match = refRegex.exec(description)
+
+  while (match !== null) {
+    const id = match[1]
+
+    if (id && !missingIds.includes(id)) {
+      missingIds.push(id)
+    }
+
+    match = refRegex.exec(description)
+  }
+
+  return missingIds
+}
+
+// Commit documents individually so a single failing document doesn't block the rest.
+// Runs sequentially (concurrency 1) so referenced documents can land before the
+// documents that point at them.
+async function commitOneByOne(
+  docs: SanityDocument[],
+  client: SanityClient,
+  setMessage: SetMessage,
+  onSuccess: () => void,
+): Promise<void> {
+  let successCount = 0
+  let failCount = 0
+
+  await mapWithConcurrency(docs, 1, async (doc) => {
+    try {
+      const tx = client.transaction()
+      tx.createOrReplace(doc)
+      await tx.commit()
+      successCount += 1
+    } catch (commitErr) {
+      failCount += 1
+      console.error(`Failed to duplicate document "${doc._id}"`, commitErr)
+    }
+  })
+
+  if (failCount === 0) {
+    setMessage({tone: 'positive', text: 'Duplication complete!'})
+    onSuccess()
+
+    return
+  }
+
+  setMessage({
+    tone: 'critical',
+    text: `Duplication finished with ${failCount} error(s). ${successCount} document(s) duplicated successfully.`,
+  })
+
+  if (successCount > 0) {
+    onSuccess()
+  }
+}
+
+type ReferenceErrorOptions = {
+  err: unknown
+  transactionDocs: SanityDocument[]
+  originClient: SanityClient
+  destinationClient: SanityClient
+  pluginConfig: Required<PluginConfig>
+  token: string
+  setMessage: SetMessage
+  onSuccess: () => void
+  /** Caps recursive recovery so a pathological reference loop can't hang forever */
+  depth?: number
+  /** Document ids the user explicitly deselected — never auto-commit these during recovery */
+  excludedIds?: Set<string>
+  /**
+   * SVG _id remaps already applied by the caller. Recovered documents are fetched
+   * fresh from the origin, so they still point at origin SVG _id's that only exist
+   * at the destination under their uploaded _id.
+   */
+  svgMaps?: {old: string; new: string}[]
+}
+
+// Only attach the studio token when downloading from a Sanity host so a crafted
+// asset `url` cannot exfiltrate credentials to an attacker-controlled endpoint.
+function assetDownloadInit(url: string, token: string, typeIsFile: boolean): RequestInit {
+  if (typeIsFile) {
+    return {}
+  }
+
+  try {
+    const {hostname} = new URL(url)
+
+    if (hostname === 'cdn.sanity.io' || hostname.endsWith('.sanity.io')) {
+      return {headers: {Authorization: `Bearer ${token}`}}
+    }
+  } catch {
+    // Invalid URL — fetch without credentials
+  }
+
+  return {}
+}
+
+// Upload a recovered asset to the destination, rewriting url/path for the new dataset
+async function uploadAssetForRecovery(
+  doc: SanityDocument & SanityAssetDocument,
+  destinationClient: SanityClient,
+  token: string,
+): Promise<{docs: SanityDocument[]; svgMap?: {old: string; new: string}}> {
+  const typeIsFile = isSanityFileAsset(doc)
+  const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
+
+  const res = await fetch(downloadUrl, assetDownloadInit(downloadUrl, token, typeIsFile))
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to download asset "${doc._id}" from origin (${res.status} ${res.statusText})`,
+    )
+  }
+
+  const assetData = await res.blob()
+  const assetDoc = await destinationClient.assets.upload(typeIsFile ? `file` : `image`, assetData, {
+    filename: doc.originalFilename,
+  })
+
+  // Merge the original asset document's editorial metadata (e.g. `altText`) with
+  // the uploaded asset's canonical fields, matching the main duplication path.
+  // Keeping this to a single document at the uploaded `_id` avoids leaving an
+  // orphaned asset behind when an SVG's `_id` changes on upload; references are
+  // repointed via `svgMap`.
+  return {
+    docs: [{...doc, ...assetDoc}],
+    svgMap: doc.extension === 'svg' ? {old: doc._id, new: assetDoc._id} : undefined,
+  }
+}
+
+// Rewrite _ref values that point at remapped SVG asset ids.
+// Clones each doc so caller-held / payload objects are not mutated.
+function remapSvgRefs(
+  docs: SanityDocument[],
+  svgMaps: {old: string; new: string}[],
+): SanityDocument[] {
+  if (!svgMaps.length) {
+    return docs
+  }
+
+  return docs.map((original) => {
+    const references = extractWithPath(`.._ref`, original)
+
+    if (!references.length) {
+      return original
+    }
+
+    const doc = structuredClone(original)
+
+    references.forEach((ref) => {
+      const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
+
+      if (newRefValue) {
+        dset(doc, ref.path.join('.'), newRefValue)
+      }
+    })
+
+    return doc
+  })
+}
+
+// Order docs so referenced documents come before the documents that point at
+// them. Used by the sequential one-by-one fallback where commit order matters.
+function orderDocsDependenciesFirst(docs: SanityDocument[]): SanityDocument[] {
+  const byId = new Map(docs.map((doc) => [doc._id, doc]))
+  const visiting = new Set<string>()
+  const visited = new Set<string>()
+  const ordered: SanityDocument[] = []
+
+  function visit(id: string): void {
+    if (visited.has(id) || visiting.has(id)) {
+      return
+    }
+
+    const doc = byId.get(id)
+
+    if (!doc) {
+      return
+    }
+
+    visiting.add(id)
+
+    for (const ref of extractWithPath(`.._ref`, doc)) {
+      if (typeof ref.value === 'string') {
+        visit(ref.value)
+      }
+    }
+
+    visiting.delete(id)
+    visited.add(id)
+    ordered.push(doc)
+  }
+
+  for (const doc of docs) {
+    visit(doc._id)
+  }
+
+  return ordered
+}
+
+// When a transaction fails because of missing references, fetch the referenced
+// documents (and their transitive refs) from the origin — respecting
+// pluginConfig.filter — upload any assets, then retry. Falls back to one-by-one
+// commits if the retry still fails.
+async function handleReferenceError(options: ReferenceErrorOptions): Promise<void> {
+  const {
+    err,
+    transactionDocs,
+    originClient,
+    destinationClient,
+    pluginConfig,
+    token,
+    setMessage,
+    onSuccess,
+    depth = 0,
+    excludedIds = new Set(),
+    svgMaps: inheritedSvgMaps = [],
+  } = options
+  const description = getErrorDescription(err)
+  const missingIds = getMissingReferenceIds(err, description)
+
+  // If the only missing refs are ones the user deselected, surface that instead of
+  // silently re-committing them
+  const autoFetchIds = missingIds.filter((id) => !excludedIds.has(id))
+  const blockedIds = missingIds.filter((id) => excludedIds.has(id))
+
+  if (blockedIds.length && !autoFetchIds.length) {
+    setMessage({
+      tone: 'critical',
+      text: `Duplication failed because deselected document(s) are still referenced: ${blockedIds.join(', ')}. Re-select them or remove the references.`,
+    })
+
+    return
+  }
+
+  if (!missingIds.length || depth >= 5) {
+    // Couldn't parse the missing _id's (or we hit the recursion cap) — retry each document on its own
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(
+      orderDocsDependenciesFirst(transactionDocs),
+      destinationClient,
+      setMessage,
+      onSuccess,
+    )
+
+    return
+  }
+
+  setMessage({
+    tone: 'default',
+    text: `Fetching ${autoFetchIds.length} missing referenced document(s) and retrying...`,
+  })
+
+  let missingDocs: SanityDocument[] = []
+
+  try {
+    // Recursively gather referenced docs (and apply pluginConfig.filter), same
+    // as the "Gather References" path — so nested refs aren't left behind
+    missingDocs = await getDocumentsInArray({
+      fetchIds: autoFetchIds,
+      client: originClient,
+      pluginConfig,
+    })
+  } catch (fetchErr) {
+    setMessage({
+      tone: 'critical',
+      text:
+        (fetchErr instanceof Error ? fetchErr.message : '') || description || 'Duplication Failed',
+    })
+
+    return
+  }
+
+  if (!missingDocs.length) {
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(
+      orderDocsDependenciesFirst(transactionDocs),
+      destinationClient,
+      setMessage,
+      onSuccess,
+    )
+
+    return
+  }
+
+  // Don't re-commit documents already in the failed transaction, or ones the
+  // user explicitly deselected (including transitive refs of those)
+  const existingIds = new Set(transactionDocs.map((doc) => doc._id))
+  // Reverse so transitive refs (appended last by getDocumentsInArray) are processed first
+  const newMissingDocs = [...missingDocs]
+    .reverse()
+    .filter((doc) => !existingIds.has(doc._id) && !excludedIds.has(doc._id))
+
+  // Nothing new to add — retrying the same transaction would just loop until the depth cap
+  if (!newMissingDocs.length) {
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(
+      orderDocsDependenciesFirst(transactionDocs),
+      destinationClient,
+      setMessage,
+      onSuccess,
+    )
+
+    return
+  }
+
+  setMessage({tone: 'default', text: `Duplicating ${newMissingDocs.length} missing document(s)...`})
+
+  // Seed with the caller's remaps so recovered documents referencing an SVG that
+  // was uploaded earlier are repointed at its destination _id, even when that
+  // asset isn't re-fetched here (e.g. `pluginConfig.filter` excludes assets)
+  const svgMaps: {old: string; new: string}[] = [...inheritedSvgMaps]
+
+  // Process with the same concurrency limit as the main duplication path, while
+  // writing into index slots so dependency-first order is preserved
+  const recoveredChunks: SanityDocument[][] = Array.from({length: newMissingDocs.length}, () => [])
+
+  try {
+    await mapWithConcurrency(
+      newMissingDocs.map((doc, index) => ({doc, index})),
+      3,
+      async ({doc, index}) => {
+        if (!isAssetDocument(doc)) {
+          recoveredChunks[index] = [doc]
+
+          return
+        }
+
+        const {docs, svgMap} = await uploadAssetForRecovery(doc, destinationClient, token)
+        recoveredChunks[index] = docs
+
+        if (svgMap) {
+          svgMaps.push(svgMap)
+        }
+      },
+    )
+  } catch (uploadErr) {
+    setMessage({
+      tone: 'critical',
+      text:
+        (uploadErr instanceof Error ? uploadErr.message : '') ||
+        description ||
+        'Duplication Failed',
+    })
+
+    return
+  }
+
+  const recoveredDocs = recoveredChunks.flat()
+
+  // Remap SVG _ref's in both recovered and original transaction docs
+  const remappedRecoveredDocs = remapSvgRefs(recoveredDocs, svgMaps)
+  const remappedTransactionDocs = remapSvgRefs(transactionDocs, svgMaps)
+
+  // Put recovered (referenced) docs first so sequential commits land
+  // dependencies before the documents that point at them
+  const allDocs = orderDocsDependenciesFirst([...remappedRecoveredDocs, ...remappedTransactionDocs])
+
+  const retryTransaction = destinationClient.transaction()
+  allDocs.forEach((doc) => retryTransaction.createOrReplace(doc))
+
+  try {
+    await retryTransaction.commit()
+    setMessage({tone: 'positive', text: 'Duplication complete!'})
+    onSuccess()
+  } catch (retryErr) {
+    if (isReferenceMutationError(retryErr)) {
+      // Another layer of missing refs — recurse with the expanded set
+      await handleReferenceError({
+        ...options,
+        err: retryErr,
+        transactionDocs: allDocs,
+        depth: depth + 1,
+        svgMaps,
+      })
+
+      return
+    }
+
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(allDocs, destinationClient, setMessage, onSuccess)
+  }
+}
+
 export default function Duplicator(props: DuplicatorProps) {
   const {docs, token, pluginConfig, onDuplicated} = props
   const theme = useTheme()
@@ -103,12 +604,27 @@ export default function Duplicator(props: DuplicatorProps) {
   // Create list of dataset options
   // and set initial value of dropdown
   const workspaces = useWorkspaces()
-  const workspacesOptions: WorkspaceOption[] = workspaces.map((workspace) => ({
-    ...workspace,
-    disabled:
-      workspace.dataset === originClient.config().dataset &&
-      workspace.projectId === originClient.config().projectId,
-  }))
+  const {projectId: sourceProjectId, dataset: sourceDataset} = originClient.config()
+  const workspacesOptions: WorkspaceOption[] = workspaces.map((workspace) => {
+    const isSourceWorkspace =
+      workspace.projectId === sourceProjectId && workspace.dataset === sourceDataset
+    const isAllowedMigration = isAllowedMigrationTarget({
+      migrationFilters: pluginConfig.migrationFilters,
+      sourceProjectId,
+      sourceDataset,
+      targetProjectId: workspace.projectId,
+      targetDataset: workspace.dataset,
+    })
+
+    return {
+      ...workspace,
+      disabled: isSourceWorkspace || !isAllowedMigration,
+    }
+  })
+
+  const currentWorkspace = workspacesOptions.find(
+    (workspace) => workspace.projectId === sourceProjectId && workspace.dataset === sourceDataset,
+  )
 
   const [destination, setDestination] = useState<WorkspaceOption | null>(
     workspaces.length ? (workspacesOptions.find((space) => !space.disabled) ?? null) : null,
@@ -146,10 +662,13 @@ export default function Duplicator(props: DuplicatorProps) {
       `*[_id in $payloadIds]{ _id, _updatedAt }`,
       {payloadIds},
     )
+    // Index the destination docs by `_id` so status updates stay O(n) instead
+    // of O(n²) when looking them up for each payload item below.
+    const destinationById = new Map(destinationData.map((doc) => [doc._id, doc]))
 
     setPayload(
       payloadActual.map((item) => {
-        const existingDoc = destinationData.find((doc) => doc._id === item.doc._id)
+        const existingDoc = destinationById.get(item.doc._id)
         let status: keyof MessageTypes = 'CREATE'
 
         if (existingDoc?._updatedAt && item.doc._updatedAt) {
@@ -268,9 +787,17 @@ export default function Duplicator(props: DuplicatorProps) {
       // Get the *original* image with this dlRaw param to create the same deterministic _id
       const typeIsFile = isSanityFileAsset(doc)
       const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
-      const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
 
-      const res = await fetch(downloadUrl, downloadConfig)
+      const res = await fetch(downloadUrl, assetDownloadInit(downloadUrl, token, typeIsFile))
+
+      // Fail fast instead of uploading an error response (e.g. 401/403/404)
+      // body as the asset's binary data.
+      if (!res.ok) {
+        throw new Error(
+          `Failed to download asset "${doc.originalFilename ?? doc._id}" (${res.status} ${res.statusText})`,
+        )
+      }
+
       const assetData = await res.blob()
 
       const options = {filename: doc.originalFilename}
@@ -285,14 +812,15 @@ export default function Duplicator(props: DuplicatorProps) {
         svgMaps.push({old: doc._id, new: assetDoc._id})
       }
 
-      // This adds the newly created asset document to the transaction but ...
-      // it doesn't have some of the original asset's metadata like `altText` or `title`
-      transactionDocs.push(assetDoc)
-
-      // So the original `doc` is added to the transaction as well below
-      // However, we don't want to retain the original `url` or `path` values
-      // because these strings contain the origin's dataset name
-      transactionDocs.push({...doc, url: assetDoc.url, path: assetDoc.path})
+      // Merge the original asset document's editorial metadata (e.g. `altText`,
+      // `title`) — which the upload response omits — with the canonical fields of
+      // the freshly uploaded asset (`_id`, `url`, `path`, `assetId`, `sha1hash`,
+      // ...). The uploaded values win, so `url`/`path` no longer reference the
+      // origin dataset. For SVGs the uploaded `_id` differs from the source
+      // (the file is sanitized on upload), so pushing a single merged document at
+      // the new `_id` — and remapping references to it below — avoids leaving an
+      // orphaned asset document behind at the original `_id`.
+      transactionDocs.push({...doc, ...assetDoc})
 
       currentProgress += 1
       setMessage({
@@ -311,33 +839,48 @@ export default function Duplicator(props: DuplicatorProps) {
       console.error(err)
       setIsDuplicating(false)
       setProgress([0, 0])
-      setMessage({tone: 'critical', text: `Duplication Failed`})
+      setMessage({
+        tone: 'critical',
+        text: err instanceof Error ? err.message : `Duplication Failed`,
+      })
 
       return
     }
 
-    // Remap SVG references to new _id's
-    const transactionDocsMapped = transactionDocs.map((doc) => {
-      const expr = `.._ref`
-      const references = extractWithPath(expr, doc)
+    // Remap SVG references to new _id's. SVG assets are sanitized on upload, so
+    // their `_id` changes; references still pointing at the original `_id` must
+    // be updated to the uploaded one.
+    const svgIdRemap = new Map(svgMaps.map(({old, new: next}) => [old, next]))
+    const transactionDocsMapped =
+      svgIdRemap.size === 0
+        ? transactionDocs
+        : transactionDocs.map((doc) => {
+            const references = extractWithPath(`.._ref`, doc)
 
-      if (!references.length) {
-        return doc
-      }
+            if (!references.length) {
+              return doc
+            }
 
-      // For every found _ref, search for an SVG asset _id and update
-      references.forEach((ref) => {
-        const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
+            // Clone lazily before the first mutation: some of these docs are the
+            // same objects held in React state (`payload`), and `dset` mutates in
+            // place — which would corrupt state and trip up the React Compiler.
+            let mappedDoc = doc
 
-        if (newRefValue) {
-          const refPath = ref.path.join('.')
+            references.forEach((ref) => {
+              const newRefValue =
+                typeof ref.value === 'string' ? svgIdRemap.get(ref.value) : undefined
 
-          dset(doc, refPath, newRefValue)
-        }
-      })
+              if (newRefValue) {
+                if (mappedDoc === doc) {
+                  mappedDoc = structuredClone(doc)
+                }
 
-      return doc
-    })
+                dset(mappedDoc, ref.path.join('.'), newRefValue)
+              }
+            })
+
+            return mappedDoc
+          })
 
     // Create transaction
     const transaction = destinationClient.transaction()
@@ -346,16 +889,36 @@ export default function Duplicator(props: DuplicatorProps) {
       transaction.createOrReplace(doc)
     })
 
+    const onCommitSuccess = () => {
+      updatePayloadStatuses(payload, destination).catch(console.error)
+    }
+
     try {
       await transaction.commit()
       setMessage({tone: 'positive', text: 'Duplication complete!'})
 
-      updatePayloadStatuses(payload, destination).catch(console.error)
+      onCommitSuccess()
     } catch (err) {
-      setMessage({
-        tone: 'critical',
-        text: err instanceof Error ? err.message : `Duplication Failed`,
-      })
+      if (isReferenceMutationError(err)) {
+        await handleReferenceError({
+          err,
+          transactionDocs: transactionDocsMapped,
+          originClient,
+          destinationClient,
+          pluginConfig,
+          token,
+          setMessage,
+          onSuccess: onCommitSuccess,
+          excludedIds: new Set(payload.filter((item) => !item.include).map((item) => item.doc._id)),
+          svgMaps,
+        })
+      } else {
+        const description = getErrorDescription(err)
+        setMessage({
+          tone: 'critical',
+          text: description || `Duplication Failed`,
+        })
+      }
     }
 
     setIsDuplicating(false)
@@ -400,16 +963,20 @@ export default function Duplicator(props: DuplicatorProps) {
 
   const buttonTextParts = [`Duplicate`]
 
-  if (selectedDocumentsCount > 1) {
+  if (selectedDocumentsCount > 0) {
     buttonTextParts.push(
       String(selectedDocumentsCount),
       selectedDocumentsCount === 1 ? `Document` : `Documents`,
     )
   }
 
-  if (selectedAssetsCount > 1) {
+  if (selectedAssetsCount > 0) {
+    // Only join with "and" when documents are also part of the selection.
+    if (selectedDocumentsCount > 0) {
+      buttonTextParts.push(`and`)
+    }
+
     buttonTextParts.push(
-      `and`,
       String(selectedAssetsCount),
       selectedAssetsCount === 1 ? `Asset` : `Assets`,
     )
@@ -431,6 +998,15 @@ export default function Duplicator(props: DuplicatorProps) {
     )
   }
 
+  if (!destination) {
+    return (
+      <Feedback tone="critical">
+        No allowed Migration destinations are available for this Dataset. Check the{' '}
+        <code>migrationFilters</code> plugin config, or add another Workspace as a valid target.
+      </Feedback>
+    )
+  }
+
   return (
     <Container width={1}>
       <Card border>
@@ -440,15 +1016,13 @@ export default function Duplicator(props: DuplicatorProps) {
               <Flex gap={3}>
                 <Stack style={{flex: 1}} gap={3}>
                   <Label>Duplicate from</Label>
-                  <Select readOnly value={workspacesOptions.find((space) => space.disabled)?.name}>
-                    {workspacesOptions
-                      .filter((space) => space.disabled)
-                      .map((space) => (
-                        <option key={space.name} value={space.name} disabled={space.disabled}>
-                          {space.title ?? space.name}
-                          {hasMultipleProjectIds ? ` (${space.projectId})` : ``}
-                        </option>
-                      ))}
+                  <Select readOnly value={currentWorkspace?.name}>
+                    {currentWorkspace ? (
+                      <option value={currentWorkspace.name}>
+                        {currentWorkspace.title ?? currentWorkspace.name}
+                        {hasMultipleProjectIds ? ` (${currentWorkspace.projectId})` : ``}
+                      </option>
+                    ) : null}
                   </Select>
                 </Stack>
                 <Box padding={4} paddingTop={5} paddingBottom={0}>
@@ -463,7 +1037,10 @@ export default function Duplicator(props: DuplicatorProps) {
                       <option key={space.name} value={space.name} disabled={space.disabled}>
                         {space.title ?? space.name}
                         {hasMultipleProjectIds ? ` (${space.projectId})` : ``}
-                        {space.disabled ? ` (Current)` : ``}
+                        {currentWorkspace?.name === space.name &&
+                        currentWorkspace.projectId === space.projectId
+                          ? ` (Current)`
+                          : ``}
                       </option>
                     ))}
                   </Select>
@@ -475,7 +1052,9 @@ export default function Duplicator(props: DuplicatorProps) {
                   <Card
                     style={{
                       width: '100%',
-                      transform: `scaleX(${progress[0] / progress[1]})`,
+                      // Guard against a 0-asset payload (progress[1] === 0),
+                      // which would make the ratio NaN and produce an invalid transform.
+                      transform: `scaleX(${progress[1] > 0 ? progress[0] / progress[1] : 0})`,
                       transformOrigin: 'left',
                       transition: 'transform .2s ease',
                       boxSizing: 'border-box',

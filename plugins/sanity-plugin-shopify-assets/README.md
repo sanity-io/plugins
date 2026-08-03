@@ -26,7 +26,7 @@ export const defineConfig({
 })
 ```
 
-Simply update the `shopifyDomain` to your store URL. You'll need to install the [Sanity Connect](https://www.sanity.io/docs/sanity-connect-for-shopify) app on your store to handle authorisation. You'll need to ensure the Liquid sync option is enabled within the Sanity Connect app.
+Simply update the `shopifyDomain` to your store URL. You'll need to install the [Sanity Connect](https://www.sanity.io/docs/sanity-connect-for-shopify) app on your store to handle authorisation. You'll need to ensure the Sync content from Sanity to Shopify option is enabled within the Sanity Connect app.
 
 Then you can enable the asset selector on a field:
 
@@ -82,23 +82,4 @@ defineField({
 
 ## License
 
-[MIT](LICENSE) © Sanity.io <hello@sanity.io>
-
-## Develop & test
-
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
-
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run this plugin with hotreload in the studio.
-
-## License
-
 [MIT](LICENSE) © Sanity.io
-
-### Release new version
-
-Run ["CI & Release" workflow](https://github.com/sanity-io/sanity-plugin-shopify-assets/actions/workflows/main.yml).
-Make sure to select the main branch and check "Release new version".
-
-Semantic release will only release on configured branches, so it is safe to run release on any branch.

@@ -11,7 +11,7 @@ interface FormiumInputConfig {
  *
  * ```ts
  * import {defineConfig} from 'sanity'
- * import {formiumInput} from 'sanity-plugin-form-toolkit'
+ * import {formiumInput} from '@sanity/form-toolkit/formium'
  *
  * export default defineConfig({
  *   // ...

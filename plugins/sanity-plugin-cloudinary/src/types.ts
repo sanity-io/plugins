@@ -8,6 +8,7 @@ export type CloudinaryDerivative = {
 
 export type CloudinaryAssetResponse = {
   public_id: string
+  id?: string
   resource_type: string
   type: string
   url: string
@@ -27,6 +28,10 @@ export type InsertHandlerParams = {
   assets: CloudinaryAssetResponse[]
 }
 
+export type ShowHandlerParams = {
+  isOpen: boolean
+}
+
 export interface CloudinaryMediaLibrary {
   show: (config?: {asset: any; folder: any}) => void
   hide: () => void
@@ -36,6 +41,7 @@ export type CloudinaryAsset = {
   _type: string
   _key?: string
   _version: number
+  id?: string
   public_id: string
   resource_type: string
   type: string
@@ -43,6 +49,8 @@ export type CloudinaryAsset = {
   version: number
   url: string
   secure_url: string
+  width: number
+  height: number
   derived?: CloudinaryAssetDerived[]
   display_name?: string
 }
@@ -63,7 +71,8 @@ export type AssetDocument = {
 
 declare global {
   interface Window {
-    cloudinary: {
+    // Only defined after the Cloudinary Media Library widget script has loaded.
+    cloudinary?: {
       openMediaLibrary: (config: any, callbacks: any) => void
       createMediaLibrary: (config: any, callbacks?: any) => CloudinaryMediaLibrary
     }

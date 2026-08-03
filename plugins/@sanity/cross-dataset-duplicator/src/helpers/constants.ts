@@ -9,4 +9,5 @@ export const DEFAULT_CONFIG: Required<PluginConfig> = {
   filter: '',
   follow: ['outbound'],
   queries: [],
+  migrationFilters: [],
 }

@@ -24,6 +24,7 @@ _Individual asset view_
 
 - Support for batch uploads with drag and drop support
 - Edit text fields native to Sanity's asset documents, such as `title`, `description`, `altText` and `originalFilename`
+- Browse folder documents in a dedicated sidebar and assign assets to folders individually or in bulk
 - View asset metadata and a limited subset of EXIF data, if present
 - Tag your assets individually or in bulk
 - Manage tags directly within the plugin
@@ -32,7 +33,7 @@ _Individual asset view_
 
 #### Granular search tools
 
-- Refine your search with any combination of search facets such as filtering by tag name, asset usage, file size, orientation, type (and more)
+- Refine your search with any combination of search facets such as filtering by tag name, folder, asset usage, file size, orientation, type (and more)
 - Use text search for a quick lookup by title, description and alt text
 
 #### Built for large datasets and collaborative editing in mind
@@ -118,6 +119,11 @@ export default defineConfig({
       // number - maximum file size (in bytes) that can be uploaded through the plugin interface
       directUploads: true,
       // boolean - enable / disable direct uploads through the plugin interface (default true)
+      excludeTags: ['internal', 'archived'],
+      // string[] (optional) - tag slugs (`media.tag` `name.current`). Assets that reference
+      // any of these tags are omitted from the Media browser grid and asset picker queries,
+      // and those tags are hidden in the tag sidebar and tag search facet. The asset edit
+      // dialog still lists all tags so you can assign or remove them on an open asset.
       components: {
         details: CustomDetails,
         // Custom component for asset details (see below)
@@ -286,6 +292,7 @@ export function CustomDetails(props) {
 <summary>Limitations when using Sanity's GraphQL endpoints</summary>
 
 - Currently, `opt.media.tags` on assets aren't accessible via GraphQL. This is because `opt` is a custom object used by this plugin and not part of Sanity's asset schema.
+- The same limitation applies to `opt.media.folder`.
 
 </details>
 
@@ -307,9 +314,9 @@ export function CustomDetails(props) {
 <details>
 <summary>How can I query asset fields I've set in this plugin?</summary>
 
-The following GROQ query will return an image with additional asset text fields as well as an array of tag names.
+The following GROQ query will return an image with additional asset text fields, its folder reference, resolved folder name, and an array of tag names.
 
-Note that tags are namespaced within `opt.media` and tag names are accessed via the `current` property (as they're defined as slugs on the `tag.media` document schema).
+Note that tags and folders are namespaced within `opt.media`. Tag names are accessed via the `current` property (as they're defined as slugs on the `tag.media` document schema), and the folder is a single weak reference you can dereference for its `name`.
 
 ```
 *[_id == 'my-document-id'] {
@@ -319,6 +326,8 @@ Note that tags are namespaced within `opt.media` and tag names are accessed via 
       _type,
       altText,
       description,
+      "folder": opt.media.folder,
+      "folderName": opt.media.folder->name,
       "tags": opt.media.tags[]->name.current,
       title
     }
@@ -335,6 +344,20 @@ Note that tags are namespaced within `opt.media` and tag names are accessed via 
 - By default, Sanity won't automatically extract EXIF data unless you explicitly tell it to
 - Manually tell Sanity to process EXIF metadata by [updating your image field options accordingly](https://www.sanity.io/docs/image-type#metadata-5fe564e516d8)
 - Note that all images uploaded directly within the plugin will include all metadata by default
+
+</details>
+
+#### Folders
+
+<details>
+<summary>How do folders work?</summary>
+
+- This plugin defines the document type `media.folder`
+- Folder hierarchy is stored on folder documents using a `parent` reference to another `media.folder` document
+- Asset folder assignment is stored as a weak reference at `opt.media.folder`
+- The default asset browser view shows all assets. Opening a folder filters the asset list to assets assigned to that folder.
+- You can move selected assets to a folder from the selection bar, remove selected assets from the current folder, or change/remove an individual asset's folder from the asset details dialog
+- Deleting a folder deletes only the folder document. Assets assigned to it stay in the library and have their folder assignment removed; nested folders move up one level.
 
 </details>
 

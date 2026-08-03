@@ -1,5 +1,5 @@
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import type {ClientError, Patch, Transaction} from '@sanity/client'
+import type {AttributeSet, ClientError, Patch, SanityDocument, Transaction} from '@sanity/client'
 import groq from 'groq'
 import {nanoid} from 'nanoid'
 import type {Selector} from 'react-redux'
@@ -8,6 +8,7 @@ import {EMPTY, from, of} from 'rxjs'
 import {
   bufferTime,
   catchError,
+  concatMap,
   debounceTime,
   filter,
   mergeMap,
@@ -30,6 +31,7 @@ import type {
   Tag,
 } from '../../types'
 import constructFilter from '../../utils/constructFilter'
+import {findImageAssets} from '../../utils/ReplaceImages'
 import {searchActions} from '../search'
 import type {RootReducerState} from '../types'
 import {UPLOADS_ACTIONS} from '../uploads/actions'
@@ -45,6 +47,7 @@ export type AssetsReducerState = {
   allIds: string[]
   assetTypes: AssetType[]
   byIds: Record<string, AssetItem>
+  excludeTagSlugs: string[]
   fetchCount: number
   fetching: boolean
   fetchingError?: HttpError
@@ -77,6 +80,7 @@ export const initialState = {
   allIds: [],
   assetTypes: [],
   byIds: {},
+  excludeTagSlugs: [],
   fetchCount: -1,
   fetching: false,
   fetchingError: undefined,
@@ -194,11 +198,14 @@ const assetsSlice = createSlice({
           if (!state.allIds.includes(asset._id)) {
             state.allIds.push(asset._id)
           }
+          const existing = state.byIds[asset._id]
+          // Preserve pick/updating across search refreshes (e.g. replace dialog clearing filters)
           state.byIds[asset._id] = {
             _type: 'asset',
             asset: asset,
-            picked: false,
-            updating: false,
+            picked: existing?.picked ?? false,
+            updating: existing?.updating ?? false,
+            ...(existing?.error ? {error: existing.error} : {}),
           }
         })
       }
@@ -211,6 +218,48 @@ const assetsSlice = createSlice({
       const error = action.payload
       state.fetching = false
       state.fetchingError = error
+    },
+    folderSetComplete(
+      state,
+      action: PayloadAction<{assetIds: string[]; folderId: string | null; closeDialogId?: string}>,
+    ) {
+      const {assetIds, folderId} = action.payload
+
+      assetIds.forEach((assetId) => {
+        if (state.byIds[assetId]?.asset) {
+          state.byIds[assetId].asset.opt = state.byIds[assetId].asset.opt || {}
+          state.byIds[assetId].asset.opt.media = state.byIds[assetId].asset.opt.media || {}
+          state.byIds[assetId].asset.opt.media.folder = folderId
+            ? {_ref: folderId, _type: 'reference', _weak: true}
+            : undefined
+          state.byIds[assetId].updating = false
+        }
+      })
+    },
+    folderSetError(state, action: PayloadAction<{assetIds: string[]; error: HttpError}>) {
+      const {assetIds, error} = action.payload
+
+      assetIds.forEach((assetId) => {
+        if (state.byIds[assetId]) {
+          state.byIds[assetId].error = error.message
+          state.byIds[assetId].updating = false
+        }
+      })
+    },
+    folderSetRequest(
+      state,
+      action: PayloadAction<{
+        assets: AssetItem[]
+        folderId: string | null
+        closeDialogId?: string
+      }>,
+    ) {
+      action.payload.assets.forEach((asset) => {
+        const item = state.byIds[asset.asset._id]
+        if (item) {
+          item.updating = true
+        }
+      })
     },
     fetchRequest: {
       reducer: (state, _action: PayloadAction<{params: Record<string, any>; query: string}>) => {
@@ -246,6 +295,7 @@ const assetsSlice = createSlice({
               metadata {
                 dimensions,
                 exif,
+                image,
                 isOpaque,
               },
               mimeType,
@@ -325,8 +375,12 @@ const assetsSlice = createSlice({
     },
     pick(state, action: PayloadAction<{assetId: string; picked: boolean}>) {
       const {assetId, picked} = action.payload
+      const item = state.byIds[assetId]
+      if (!item) {
+        return
+      }
 
-      state.byIds[assetId]!.picked = picked
+      item.picked = picked
       state.lastPicked = picked ? assetId : undefined
     },
     pickAll(state) {
@@ -376,6 +430,24 @@ const assetsSlice = createSlice({
       const assetId = asset?._id
       state.byIds[assetId]!.error = error.message
       state.byIds[assetId]!.updating = false
+    },
+    updateImageReferences(state, action: PayloadAction<{asset: Asset; id: string}>) {
+      const {id: assetId} = action.payload
+      const item = state.byIds[assetId]
+      if (!item) {
+        return
+      }
+      item.updating = true
+      delete item.error
+    },
+    updateImageReferencesComplete(state, action: PayloadAction<{id: string}>) {
+      const {id} = action.payload
+      const item = state.byIds[id]
+      if (!item) {
+        return
+      }
+      item.updating = false
+      delete item.error
     },
     updateRequest(
       state,
@@ -461,6 +533,8 @@ export const assetsFetchPageIndexEpic: MyEpic = (action$, state$) =>
 
       const constructedFilter = constructFilter({
         assetTypes: state.assets.assetTypes,
+        currentFolderId: state.folders.currentFolderId,
+        excludeTagSlugs: state.assets.excludeTagSlugs,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
       })
@@ -522,6 +596,22 @@ const patchOperationTagUnset =
   ({asset, tag}: {asset: AssetItem; tag: Tag}) =>
   (patch: Patch) =>
     patch.ifRevisionId(asset?.asset?._rev).unset([`opt.media.tags[_ref == "${tag._id}"]`])
+
+const patchOperationFolderSet =
+  ({asset, folderId}: {asset: AssetItem; folderId: string | null}) =>
+  (patch: Patch) => {
+    const nextPatch = patch.ifRevisionId(asset?.asset?._rev).setIfMissing({opt: {}}).setIfMissing({
+      'opt.media': {},
+    })
+
+    if (folderId) {
+      return nextPatch.set({
+        'opt.media.folder': {_ref: folderId, _type: 'reference', _weak: true},
+      })
+    }
+
+    return nextPatch.unset(['opt.media.folder'])
+  }
 
 export const assetsOrderSetEpic: MyEpic = (action$) =>
   action$.pipe(
@@ -683,6 +773,60 @@ export const assetsTagsRemoveEpic: MyEpic = (action$, state$, {client}) => {
   )
 }
 
+export const assetsFolderSetEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.folderSetRequest.match),
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
+      const {assets, closeDialogId, folderId} = action.payload
+      const assetIds = assets.map((asset) => asset.asset._id)
+
+      return of(action).pipe(
+        debugThrottle(state.debug.badConnection),
+        mergeMap(() => {
+          const transaction: Transaction = assets.reduce(
+            (tx, asset) => tx.patch(asset.asset._id, patchOperationFolderSet({asset, folderId})),
+            client.transaction(),
+          )
+
+          return from(transaction.commit())
+        }),
+        mergeMap(() =>
+          of(
+            assetsActions.folderSetComplete({
+              assetIds,
+              closeDialogId,
+              folderId,
+            }),
+          ),
+        ),
+        catchError((error: ClientError) =>
+          of(
+            assetsActions.folderSetError({
+              assetIds,
+              error: {
+                message: error?.message || 'Internal error',
+                statusCode: error?.statusCode || 500,
+              },
+            }),
+          ),
+        ),
+      )
+    }),
+  )
+
+export const assetsFolderSetRefreshEpic: MyEpic = (action$) =>
+  action$.pipe(
+    filter(assetsActions.folderSetComplete.match),
+    mergeMap(() =>
+      of(
+        assetsActions.pickClear(),
+        assetsActions.clear(),
+        assetsActions.loadPageIndex({pageIndex: 0}),
+      ),
+    ),
+  )
+
 export const assetsUnpickEpic: MyEpic = (action$) =>
   action$.pipe(
     ofType(
@@ -740,6 +884,63 @@ export const assetsUpdateEpic: MyEpic = (action$, state$, {client}) =>
             }),
           ),
         ),
+      )
+    }),
+  )
+
+export const assetsUpdateImageReferencesEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.updateImageReferences.match),
+    withLatestFrom(state$),
+    // Queue replaces so a later action still runs (exhaustMap would drop it after
+    // the reducer already set `updating`, leaving a stuck spinner). Same-asset
+    // double-clicks are blocked in the UI when the original is already updating.
+    concatMap(([action, state]) => {
+      const {asset, id} = action.payload
+
+      return of(action).pipe(
+        debugThrottle(state.debug.badConnection),
+        mergeMap(() => client.observable.fetch<SanityDocument[]>(groq`*[references($id)]`, {id})),
+        mergeMap((documents) => {
+          // Patch every referencing document in one transaction so we never leave
+          // references split across old/new assets if a later commit would fail.
+          let patchedCount = 0
+          const transaction: Transaction = documents.reduce((tx, document) => {
+            const clonedDocument = JSON.parse(JSON.stringify(document)) as Record<string, unknown>
+            const assetsToReplace = findImageAssets(clonedDocument, asset, id)
+            if (assetsToReplace.length === 0) {
+              return tx
+            }
+            patchedCount += 1
+            const patchSet = Object.assign({}, ...assetsToReplace) as AttributeSet
+            return tx.patch(document._id, (patch) =>
+              patch.ifRevisionId(document._rev).set(patchSet),
+            )
+          }, client.transaction())
+
+          if (patchedCount === 0) {
+            return of(assetsActions.updateImageReferencesComplete({id}))
+          }
+
+          return from(transaction.commit()).pipe(
+            mergeMap(() => of(assetsActions.updateImageReferencesComplete({id}))),
+          )
+        }),
+        catchError((error: ClientError) => {
+          // The asset marked as `updating` is the original (being replaced), keyed
+          // by `id` — not the replacement `asset` that was clicked. Attach the error
+          // to (and clear the spinner on) the original asset.
+          const originalAsset = state.assets.byIds[id]?.asset ?? asset
+          return of(
+            assetsActions.updateError({
+              asset: originalAsset,
+              error: {
+                message: error?.message || 'Internal error',
+                statusCode: error?.statusCode || 500,
+              },
+            }),
+          )
+        }),
       )
     }),
   )
