@@ -118,28 +118,29 @@ const ReplaceAssetsOverview = () => {
   // Every rescoped refetch is preceded by `assetsActions.clear()`, so wait for the asset
   // list to be emptied and the following fetch to settle. Watching `fetching` alone is not
   // enough: `assetsFetchEpic` uses `switchMap`, so replacing an in-flight request leaves
-  // `fetching` true throughout.
+  // `fetching` true throughout. Clearing a folder scope and a search at the same time
+  // produces two refetches (the folder one immediately, the search one after its debounce),
+  // so each list clear re-arms the wait rather than resolving it for good.
   useEffect(() => {
-    if (!awaitingRefetch) {
-      return undefined
-    }
-
     let previousIds = store.getState().assets.allIds
-    let listCleared = false
+    let awaitingSettle = false
 
     return store.subscribe(() => {
       const {allIds, fetching: isFetching} = store.getState().assets
-
-      if (allIds !== previousIds && allIds.length === 0) {
-        listCleared = true
-      }
+      const listCleared = allIds !== previousIds && allIds.length === 0
       previousIds = allIds
 
-      if (listCleared && !isFetching) {
+      if (listCleared) {
+        awaitingSettle = true
+        setAwaitingRefetch(true)
+        return
+      }
+      if (awaitingSettle && !isFetching) {
+        awaitingSettle = false
         setAwaitingRefetch(false)
       }
     })
-  }, [awaitingRefetch, store])
+  }, [store])
 
   const scopeActive =
     searchQuery.length > 0 ||

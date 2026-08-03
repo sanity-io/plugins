@@ -313,6 +313,41 @@ describe('ReplaceAssetsOverview', () => {
     expect(screen.getByText('There are no replacement images')).toBeTruthy()
   })
 
+  it('keeps waiting when a second rescoped refetch follows the first', () => {
+    const {store} = renderWithProviders(<ReplaceAssetsOverview />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+        dialog: {
+          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        },
+        // Folder scope clears immediately, the search clear lands after its debounce.
+        folders: {...foldersState, currentFolderId: 'folder-1'},
+        search: {facets: [], query: 'photo'},
+      },
+    })
+
+    act(() => {
+      store.dispatch(assetsActions.clear())
+      store.dispatch(assetsActions.fetchRequest({queryFilter: ''}))
+      store.dispatch(assetsActions.fetchComplete({assets: [imageAsset]}))
+    })
+
+    expect(screen.getByText('There are no replacement images')).toBeTruthy()
+
+    act(() => {
+      store.dispatch(assetsActions.clear())
+    })
+
+    expect(screen.queryByText('There are no replacement images')).toBeNull()
+
+    act(() => {
+      store.dispatch(assetsActions.fetchRequest({queryFilter: ''}))
+      store.dispatch(assetsActions.fetchComplete({assets: [imageAsset, replacementImage]}))
+    })
+
+    expect(screen.getByTestId('replace-item-img-2')).toBeTruthy()
+  })
+
   it('excludes the replace target from dialog assetId even when picks were cleared', () => {
     renderWithProviders(<ReplaceAssetsOverview />, {
       preloaded: {
