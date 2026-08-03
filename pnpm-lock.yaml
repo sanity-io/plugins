@@ -146,8 +146,8 @@ catalogs:
       specifier: ^19.2.8
       version: 19.2.8
     react-photo-album:
-      specifier: ^3.6.0
-      version: 3.6.0
+      specifier: ^3.6.1
+      version: 3.6.1
     react-rx:
       specifier: ^4.2.5
       version: 4.2.5
@@ -1914,7 +1914,7 @@ importers:
         version: 4.18.1
       react-photo-album:
         specifier: 'catalog:'
-        version: 3.6.0(@types/react@19.2.18)(react@19.2.8)
+        version: 3.6.1(@types/react@19.2.18)(react@19.2.8)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -2858,15 +2858,9 @@ importers:
       pretty-ms:
         specifier: ^8.0.0
         version: 8.0.0
-      react-infinite-scroll-component:
-        specifier: ^6.1.1
-        version: 6.1.1(react@19.2.8)
       react-photo-album:
-        specifier: ^2.4.1
-        version: 2.4.1(react@19.2.8)
-      rxjs:
         specifier: 'catalog:'
-        version: 7.8.2
+        version: 3.6.1(@types/react@19.2.18)(react@19.2.8)
       video.js:
         specifier: 'catalog:'
         version: 7.21.7
@@ -10395,11 +10389,6 @@ packages:
     peerDependencies:
       react: '*'
 
-  react-infinite-scroll-component@6.1.1:
-    resolution: {integrity: sha512-R8YoOyiNDynSWmfVme5LHslsKrP+/xcRUWR2ies8UgUab9dtyw5ECnMCVPPmnmjjF4MWQmfVdRwRWcWaDgeyMA==}
-    peerDependencies:
-      react: '>=16.0.0'
-
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -10415,14 +10404,8 @@ packages:
     peerDependencies:
       react: '>=16.13.1'
 
-  react-photo-album@2.4.1:
-    resolution: {integrity: sha512-dzqP5QbYAugA0uZTl3qsVldckzDXYDkDOvA8CpACl51hSEfhJmCfwhbnI4WBHnETQHv48nnNQ1jhrulst8njLA==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      react: '>=16.8.0'
-
-  react-photo-album@3.6.0:
-    resolution: {integrity: sha512-W9NgI+0XxOYF/FLQJ/ZiKsizNQtGtgDdiFgojmTmpBKDGeGiWKfSzmbw3v9WAqzimPeiFJ2sEb9DO0nHRHP/OA==}
+  react-photo-album@3.6.1:
+    resolution: {integrity: sha512-m4pTIpgEpdAJgRnf3DfISHfIHMjJkouWJdKUyGy9UaFBBePv1kolqKTzAmZrfQcoZBVfT/g9vvcc39o1RfwZgA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/react': ^18 || ^19
@@ -11096,10 +11079,6 @@ packages:
 
   text-decoder@1.2.7:
     resolution: {integrity: sha512-vlLytXkeP4xvEq2otHeJfSQIRyWxo/oZGEbXrtEEF9Hnmrdly59sUbzZ/QgyWuLYHctCHxFF4tRQZNQ9k60ExQ==}
-
-  throttle-debounce@2.3.0:
-    resolution: {integrity: sha512-H7oLPV0P7+jgvrk+6mwwwBDmxTaxnu9HMXmloNLXwnNO0ZxZ31Orah2n8lU1eMPvsaowP2CX+USCgyovXfdOFQ==}
-    engines: {node: '>=8'}
 
   throttleit@2.1.0:
     resolution: {integrity: sha512-nt6AMGKW1p/70DF/hGBdJB57B8Tspmbp5gfJ8ilhLnt7kkr2ye7hzD6NVG8GGErk2HWF34igrL2CXmNIkzKqKw==}
@@ -19861,11 +19840,6 @@ snapshots:
     dependencies:
       react: 19.2.8
 
-  react-infinite-scroll-component@6.1.1(react@19.2.8):
-    dependencies:
-      react: 19.2.8
-      throttle-debounce: 2.3.0
-
   react-is@16.13.1: {}
 
   react-is@17.0.2: {}
@@ -19877,11 +19851,7 @@ snapshots:
       jerrypick: 1.1.2
       react: 19.2.8
 
-  react-photo-album@2.4.1(react@19.2.8):
-    dependencies:
-      react: 19.2.8
-
-  react-photo-album@3.6.0(@types/react@19.2.18)(react@19.2.8):
+  react-photo-album@3.6.1(@types/react@19.2.18)(react@19.2.8):
     dependencies:
       react: 19.2.8
     optionalDependencies:
@@ -21061,8 +21031,6 @@ snapshots:
       b4a: 1.8.1
     transitivePeerDependencies:
       - react-native-b4a
-
-  throttle-debounce@2.3.0: {}
 
   throttleit@2.1.0: {}
 

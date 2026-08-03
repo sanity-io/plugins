@@ -1,49 +1,54 @@
-import {BehaviorSubject} from 'rxjs'
+import type {AxiosRequestConfig} from 'axios'
 import {expect, test, vi} from 'vitest'
 
-import {search} from './datastores/shopify'
+import {fetchAssets} from './datastores/shopify'
+
+const axiosGet = vi.hoisted(() =>
+  vi.fn((_url: string, _config?: AxiosRequestConfig) =>
+    Promise.resolve({data: {assets: [], pageInfo: {cursor: '', hasNextPage: false}}}),
+  ),
+)
 
 vi.mock('axios', () => ({
   default: {
-    get: vi.fn(() =>
-      Promise.resolve({data: {assets: [], pageInfo: {cursor: '', hasNextPage: false}}}),
-    ),
+    get: axiosGet,
   },
 }))
 
-// The picker clears its results and sets its loading state before pushing to
-// these subjects, so `search` must emit for every push. Deduplicating repeated
-// [query, cursor] pairs would leave the picker stuck loading on an empty grid.
-test('emits again when a query settles back to the previous value', async () => {
-  vi.useFakeTimers()
-
-  const query = new BehaviorSubject('')
-  const cursor = new BehaviorSubject('')
-  const emissions: unknown[] = []
-
-  const subscription = search({
+test('fetchAssets includes query and cursor search params', async () => {
+  await fetchAssets({
     projectId: 'project',
     dataset: 'dataset',
     shop: 'example.myshopify.com',
-    query,
-    cursor,
+    query: 'abc',
+    cursor: 'cursor-1',
     resultsPerPage: 42,
-  }).subscribe((results) => emissions.push(results))
+    token: 'token',
+  })
 
-  cursor.next('')
-  query.next('abc')
-  await vi.advanceTimersByTimeAsync(600)
-  expect(emissions).toHaveLength(1)
+  expect(axiosGet).toHaveBeenCalledTimes(1)
+  expect(axiosGet.mock.calls[0]?.[0]).toContain('shop=example.myshopify.com')
+  expect(axiosGet.mock.calls[0]?.[0]).toContain('query=abc')
+  expect(axiosGet.mock.calls[0]?.[0]).toContain('cursor=cursor-1')
+  expect(axiosGet.mock.calls[0]?.[0]).toContain('limit=42')
+  expect(axiosGet.mock.calls[0]?.[1]?.headers).toMatchObject({
+    Authorization: 'Bearer token',
+  })
+})
 
-  // A typo corrected back to the previous query within the debounce window
-  cursor.next('')
-  query.next('abcd')
-  cursor.next('')
-  query.next('abc')
-  await vi.advanceTimersByTimeAsync(600)
+test('fetchAssets omits empty query and cursor params', async () => {
+  axiosGet.mockClear()
 
-  expect(emissions).toHaveLength(2)
+  await fetchAssets({
+    projectId: 'project',
+    dataset: 'dataset',
+    shop: 'example.myshopify.com',
+    query: '  ',
+    cursor: '',
+    resultsPerPage: 42,
+  })
 
-  subscription.unsubscribe()
-  vi.useRealTimers()
+  expect(axiosGet.mock.calls[0]?.[0]).not.toContain('query=')
+  expect(axiosGet.mock.calls[0]?.[0]).not.toContain('cursor=')
+  expect(axiosGet.mock.calls[0]?.[1]?.headers).toEqual({})
 })
