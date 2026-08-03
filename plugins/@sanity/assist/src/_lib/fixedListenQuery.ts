@@ -1,7 +1,19 @@
 import type {SanityClient} from '@sanity/client'
-import {defer, delay, merge, Observable, of, partition, switchMap, throwError} from 'rxjs'
+import {
+  defer,
+  delay,
+  filter,
+  merge,
+  mergeMap,
+  Observable,
+  of,
+  partition,
+  share,
+  switchMap,
+  take,
+  throwError,
+} from 'rxjs'
 import {exhaustMapToWithTrailing} from 'rxjs-exhaustmap-with-trailing'
-import {filter, mergeMap, share, take} from 'rxjs/operators'
 import type {MutationEvent, ReconnectEvent, WelcomeEvent} from 'sanity'
 
 /** @internal */

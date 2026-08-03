@@ -1,7 +1,7 @@
-import {useEffect, useRef, useState} from 'react'
+import {useMemo} from 'react'
 import isEqual from 'react-fast-compare'
-import {of} from 'rxjs'
-import {catchError, distinctUntilChanged} from 'rxjs/operators'
+import {useObservable} from 'react-rx'
+import {catchError, distinctUntilChanged, map, of, startWith} from 'rxjs'
 import {type ListenQueryOptions, useClient} from 'sanity'
 
 import {listenQuery} from './fixedListenQuery'
@@ -14,50 +14,50 @@ type ReturnShape<T> = {
   data: T | null
 }
 
-type Observable = {
-  unsubscribe: () => void
-}
-
 const DEFAULT_PARAMS = {}
 const DEFAULT_OPTIONS: ListenQueryOptions = {apiVersion: `v2022-05-09`}
+
+const INITIAL_STATE = {loading: true, error: false, data: null} as const
+
+function useStableParams(params: Params): Params {
+  const stringified = useMemo(() => JSON.stringify(params), [params])
+  return useMemo(() => JSON.parse(stringified), [stringified])
+}
+
+function useStableOptions(options: ListenQueryOptions): ListenQueryOptions {
+  const stringified = useMemo(() => JSON.stringify(options), [options])
+  return useMemo(() => JSON.parse(stringified), [stringified])
+}
 
 export function useListeningQuery<T>(
   query: string,
   params: Params = DEFAULT_PARAMS,
   options: ListenQueryOptions = DEFAULT_OPTIONS,
 ): ReturnShape<T> {
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
-  const [data, setData] = useState<T | null>(null)
-  const subscription = useRef<null | Observable>(null)
-
   const client = useClient({apiVersion: `v2022-05-09`})
+  const memoParams = useStableParams(params)
+  const memoOptions = useStableOptions(options)
 
-  useEffect(() => {
-    if (query) {
-      subscription.current = listenQuery(client, query, params, options)
-        .pipe(
-          distinctUntilChanged(isEqual),
-          catchError((err) => {
-            console.error(err)
-            setError(true)
-            setLoading(false)
-            setData(null)
+  const state$ = useMemo(
+    () =>
+      query
+        ? listenQuery(client, query, memoParams, memoOptions).pipe(
+            distinctUntilChanged(isEqual),
+            map((documents) => ({
+              loading: false,
+              error: false,
+              // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
+              data: documents as T,
+            })),
+            startWith({loading: true, error: false, data: null as T | null}),
+            catchError((err) => {
+              console.error(err)
+              return of({loading: false, error: true, data: null as T | null})
+            }),
+          )
+        : of({loading: false, error: false, data: null as T | null}),
+    [query, memoParams, memoOptions, client],
+  )
 
-            return of(null)
-          }),
-        )
-        .subscribe((documents) => {
-          setData((current) => (isEqual(current, documents) ? current : documents))
-          setLoading(false)
-          setError(false)
-        })
-    }
-
-    return () => {
-      return subscription.current ? subscription.current.unsubscribe() : undefined
-    }
-  }, [query, params, options, client])
-
-  return {loading, error, data}
+  return useObservable(state$, INITIAL_STATE)
 }

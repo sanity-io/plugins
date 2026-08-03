@@ -1,5 +1,7 @@
 import {Flex} from '@sanity/ui'
-import {useEffect, useState} from 'react'
+import {useMemo} from 'react'
+import {useObservable} from 'react-rx'
+import {catchError, map, of, startWith} from 'rxjs'
 
 import {DashboardWidgetContainer} from '../../components/DashboardWidgetContainer'
 import {type FeedItem, useDataAdapter} from './dataAdapter'
@@ -18,20 +20,26 @@ export interface SanityTutorialsProps {
   templateRepoId: string
 }
 
+const EMPTY_FEED: FeedItem[] = []
+
 export function SanityTutorials(props: SanityTutorialsProps) {
   const {templateRepoId} = props
-  const [feedItems, setFeedItems] = useState<FeedItem[]>([])
-
   const {getFeed, urlBuilder} = useDataAdapter()
 
-  useEffect(() => {
-    const subscription = getFeed(templateRepoId).subscribe((response) => {
-      setFeedItems(response.items)
-    })
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [setFeedItems, getFeed, templateRepoId])
+  const feedItems$ = useMemo(
+    () =>
+      getFeed(templateRepoId).pipe(
+        map((response) => response.items),
+        startWith(EMPTY_FEED),
+        catchError((error) => {
+          console.error(error)
+          return of(EMPTY_FEED)
+        }),
+      ),
+    [getFeed, templateRepoId],
+  )
+
+  const feedItems = useObservable(feedItems$, EMPTY_FEED)
 
   const title = 'Learn about Sanity'
 

@@ -37,7 +37,7 @@ corepack enable
 pnpm install
 ```
 
-pnpm v11 defaults `minimumReleaseAge` to 1 day. `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@4.2.5`) for one-off upgrades still inside that window.
+pnpm v11 defaults `minimumReleaseAge` to 1 day. `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@5.1.1`) for one-off upgrades still inside that window.
 
 Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
 

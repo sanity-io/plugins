@@ -1,6 +1,7 @@
 import {Box, Card, Stack, Heading, Grid, Label, Text, Code, Button} from '@sanity/ui'
-import {useEffect, useMemo, useState} from 'react'
-import {type Subscription} from 'rxjs'
+import {useMemo} from 'react'
+import {useObservable} from 'react-rx'
+import {catchError, map, of, startWith} from 'rxjs'
 
 import {DashboardWidgetContainer} from '../../components/DashboardWidgetContainer'
 import {WidgetContainer} from '../../containers/WidgetContainer'
@@ -27,57 +28,57 @@ function getManageUrl(projectId: string) {
 const NO_EXPERIMENTAL: DashboardWidget[] = []
 const NO_DATA: ProjectData[] = []
 
+type StudioAppsState = UserApplication[] | {error: string} | undefined
+type GraphQLApiState = string | {error: string} | undefined
+
 export function ProjectInfo(props: ProjectInfoProps) {
   const {__experimental_before = NO_EXPERIMENTAL, data = NO_DATA} = props
-  const [studioApps, setStudioApps] = useState<UserApplication[] | {error: string} | undefined>()
-  const [graphQLApi, setGraphQLApi] = useState<string | {error: string} | undefined>()
   const versionedClient = useVersionedClient()
   const {projectId = 'unknown', dataset = 'unknown'} = versionedClient.config()
 
-  useEffect(() => {
-    const subscriptions: Subscription[] = []
-
-    subscriptions.push(
+  const studioApps$ = useMemo(
+    () =>
       versionedClient.observable
         .request<UserApplication[]>({uri: '/user-applications', tag: 'dashboard.project-info'})
-        .subscribe({
-          next: (result) => setStudioApps(result.filter((app) => app.type === 'studio')),
-          error: (error) => {
+        .pipe(
+          map((result) => result.filter((app) => app.type === 'studio') as StudioAppsState),
+          startWith(undefined as StudioAppsState),
+          catchError((error) => {
             console.error('Error while resolving user applications', error)
-            setStudioApps({
+            return of({
               error: 'Something went wrong while resolving user applications. See console.',
-            })
-          },
-        }),
-    )
+            } as StudioAppsState)
+          }),
+        ),
+    [versionedClient],
+  )
 
-    // ping assumed graphql endpoint
-    subscriptions.push(
+  const graphQLApi$ = useMemo(
+    () =>
       versionedClient.observable
         .request({
           method: 'HEAD',
           uri: `/graphql/${dataset}/default`,
           tag: 'dashboard.project-info.graphql-api',
         })
-        .subscribe({
-          next: () => setGraphQLApi(getGraphQLUrl(projectId, dataset)),
-          error: (error) => {
+        .pipe(
+          map(() => getGraphQLUrl(projectId, dataset) as GraphQLApiState),
+          startWith(undefined as GraphQLApiState),
+          catchError((error) => {
             if (error.statusCode === 404) {
-              setGraphQLApi(undefined)
-            } else {
-              console.error('Error while looking for graphQLApi', error)
-              setGraphQLApi({
-                error: 'Something went wrong while looking up graphQLApi. See console.',
-              })
+              return of(undefined as GraphQLApiState)
             }
-          },
-        }),
-    )
+            console.error('Error while looking for graphQLApi', error)
+            return of({
+              error: 'Something went wrong while looking up graphQLApi. See console.',
+            } as GraphQLApiState)
+          }),
+        ),
+    [dataset, projectId, versionedClient],
+  )
 
-    return () => {
-      subscriptions.forEach((s) => s.unsubscribe())
-    }
-  }, [dataset, projectId, versionedClient, setGraphQLApi])
+  const studioApps = useObservable(studioApps$, undefined)
+  const graphQLApi = useObservable(graphQLApi$, undefined)
 
   const assembleTableRows = useMemo(() => {
     let result: App[] = [

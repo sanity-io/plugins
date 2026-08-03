@@ -1,7 +1,9 @@
 import {DashboardWidgetContainer} from '@sanity/dashboard'
 import {Card, Flex, Spinner, Stack} from '@sanity/ui'
 import intersection from 'lodash-es/intersection.js'
-import {type ReactNode, useEffect, useMemo, useState} from 'react'
+import {type ReactNode, useMemo} from 'react'
+import {useObservable} from 'react-rx'
+import {catchError, map, of, startWith} from 'rxjs'
 import {
   getPublishedId,
   IntentButton,
@@ -34,6 +36,15 @@ const defaultProps = {
   apiVersion: 'v1',
 }
 
+type DocumentListState =
+  | {status: 'idle'}
+  | {status: 'loading'}
+  | {status: 'error'; error: Error}
+  | {status: 'success'; documents: SanityDocument[]}
+
+const IDLE_STATE: DocumentListState = {status: 'idle'}
+const LOADING_STATE: DocumentListState = {status: 'loading'}
+
 function DocumentList(props: DocumentListConfig): ReactNode {
   const {
     query,
@@ -49,10 +60,6 @@ function DocumentList(props: DocumentListConfig): ReactNode {
     ...defaultProps,
     ...props,
   }
-
-  const [documents, setDocuments] = useState<SanityDocument[] | undefined>()
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<Error | undefined>()
 
   const versionedClient = useClient({apiVersion})
   const schema = useSchema()
@@ -73,26 +80,25 @@ function DocumentList(props: DocumentListConfig): ReactNode {
     }
   }, [schema, query, queryParams, order, limit, types])
 
-  useEffect(() => {
+  const state$ = useMemo(() => {
     if (!assembledQuery) {
-      return
+      return of(IDLE_STATE)
     }
 
-    const subscription = getSubscription(assembledQuery, params, versionedClient).subscribe({
-      next: (d) => {
-        setDocuments(d.slice(0, limit))
-        setLoading(false)
-      },
-      error: (e) => {
-        setError(e)
-        setLoading(false)
-      },
-    })
-    // eslint-disable-next-line consistent-return
-    return () => {
-      subscription.unsubscribe()
-    }
+    return getSubscription(assembledQuery, params, versionedClient).pipe(
+      map((documents) => ({
+        status: 'success' as const,
+        documents: documents.slice(0, limit),
+      })),
+      startWith(LOADING_STATE),
+      catchError((error: Error) => of({status: 'error' as const, error})),
+    )
   }, [limit, versionedClient, assembledQuery, params])
+
+  const state = useObservable(state$, LOADING_STATE)
+  const error = state.status === 'error' ? state.error : undefined
+  const loading = state.status === 'loading' || state.status === 'idle'
+  const documents = state.status === 'success' ? state.documents : undefined
 
   return (
     <DashboardWidgetContainer

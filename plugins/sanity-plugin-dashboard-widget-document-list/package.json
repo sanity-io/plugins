@@ -43,6 +43,7 @@
   "dependencies": {
     "@sanity/ui": "catalog:",
     "lodash-es": "catalog:",
+    "react-rx": "catalog:",
     "rxjs": "catalog:"
   },
   "devDependencies": {

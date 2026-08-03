@@ -46,6 +46,7 @@
     "@sanity/icons": "catalog:",
     "@sanity/image-url": "catalog:",
     "@sanity/ui": "catalog:",
+    "react-rx": "catalog:",
     "rxjs": "catalog:"
   },
   "devDependencies": {
