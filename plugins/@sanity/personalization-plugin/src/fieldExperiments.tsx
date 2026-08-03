@@ -294,7 +294,7 @@ export const fieldLevelExperiments = definePlugin<ExperimentFieldPluginConfig>((
               experimentId,
             },
           }
-          return ExperimentProvider(providerProps)
+          return <ExperimentProvider {...providerProps} />
         },
       },
     },

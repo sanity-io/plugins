@@ -47,7 +47,7 @@ export function ExperimentProvider(props: ExperimentProps) {
           }
           return experimentFieldPluginConfig.experiments
         },
-        [workspace],
+        [workspace, 'field-level-experiments'],
         {equal},
       )
 

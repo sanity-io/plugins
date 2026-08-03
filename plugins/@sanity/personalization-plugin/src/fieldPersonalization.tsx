@@ -249,7 +249,7 @@ export const fieldLevelPersonalization = definePlugin<PersonalizationFieldPlugin
                 segmentArrayName,
               },
             }
-            return PersonalizationProvider(providerProps)
+            return <PersonalizationProvider {...providerProps} />
           },
         },
       },

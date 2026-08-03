@@ -46,7 +46,7 @@ export function PersonalizationProvider(props: PersonalizationProps) {
           }
           return personalizationFieldPluginConfig.segments
         },
-        [workspace],
+        [workspace, 'field-level-personalization'],
         {equal},
       )
 
