@@ -8,12 +8,12 @@ import throwError from './utils/throwError'
 export interface TreeProps extends TreeDeskStructureProps {
   /**
    * Visible title above the tree.
-   * Also used as the label in the desk list item.
+   * Also used as the label in the structure list item.
    */
   title: string
 
   /**
-   * Optional icon for rendering the item in the desk structure.
+   * Optional icon for rendering the item in the structure.
    */
   icon?: any
 
@@ -31,24 +31,24 @@ export interface TreeProps extends TreeDeskStructureProps {
   creatableTypes?: string[]
 }
 
-const deskTreeValidator = (props: TreeProps): FC => {
+const structureTreeValidator = (props: TreeProps): FC => {
   const {documentId, referenceTo} = props
-  if (typeof documentId !== 'string' && !documentId) {
+  if (typeof documentId !== 'string' || !documentId) {
     throwError('invalidDocumentId')
   }
   if (!Array.isArray(referenceTo)) {
     throwError('invalidReferenceTo', `(documentId "${documentId}")`)
   }
 
-  return (deskProps) => <TreeDeskStructure {...deskProps} options={props} />
+  return (structureProps) => <TreeDeskStructure {...structureProps} options={props} />
 }
 
-export default function createDeskHierarchy(props: TreeProps) {
+export default function createStructureHierarchy(props: TreeProps) {
   const {documentId, referenceTo, referenceOptions, context, S, creatableTypes} = props
   if (!S || !context) {
     throw new Error(
       'Invalid configuration. S or context props are undefined. ' +
-        'These props are available as function parameters when configuring structure, and must be passed along to createDeskHierarchy. ' +
+        'These props are available as function parameters when configuring structure, and must be passed along to createStructureHierarchy. ' +
         'Confer the plugin README for example usage.',
     )
   }
@@ -56,7 +56,7 @@ export default function createDeskHierarchy(props: TreeProps) {
   const {schema} = context
 
   const safelyCreatableTypes =
-    creatableTypes && !creatableTypes.some((type) => referenceTo.indexOf(type))
+    creatableTypes && creatableTypes.every((type) => referenceTo.includes(type))
       ? creatableTypes
       : referenceTo
 
@@ -107,7 +107,7 @@ export default function createDeskHierarchy(props: TreeProps) {
         mainList.serialize(),
         {
           type: 'component',
-          component: deskTreeValidator(props),
+          component: structureTreeValidator(props),
           options: props,
           __preserveInstance: true,
         },
