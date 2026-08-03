@@ -217,7 +217,7 @@ export const fieldLevelPersonalization = definePlugin<PersonalizationFieldPlugin
       segmentArrayName,
     })
     return {
-      name: 'sanity-personalistaion-plugin-field-level-personalization',
+      name: 'sanity-personalization-plugin-field-level-personalization',
       schema: {
         types: fieldSchemaConfig,
       },

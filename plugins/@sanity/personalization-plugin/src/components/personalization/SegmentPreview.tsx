@@ -43,9 +43,7 @@ export const SegmentPreview = (props: PreviewProps) => {
           const valueKey = referenceType?.preview?.select?.[key]
           selectFields[key] =
             valueKey && doc
-              ? valueKey.split('.').reduce((acc: any, index) => {
-                  return acc == null ? undefined : acc[index]
-                }, doc)
+              ? valueKey.split('.').reduce((acc: any, index) => acc?.[index], doc)
               : undefined
         })
 
