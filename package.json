@@ -7,6 +7,7 @@
     "build": "turbo build",
     "check:deps": "knip --dependencies",
     "dev": "pnpm turbo dev --filter=test-studio",
+    "dev:test-studio-production-profiling": "REACT_PRODUCTION_PROFILING=true turbo run start --filter=test-studio",
     "devtools:test-studio": "pnpm devtools:test-studio:build && ENABLE_VITE_DEVTOOLS=true pnpm dev",
     "devtools:test-studio:build": "pnpm build && ENABLE_VITE_DEVTOOLS=true pnpm --filter=test-studio build",
     "e2e:build": "pnpm turbo build --filter=e2e-studio...",
