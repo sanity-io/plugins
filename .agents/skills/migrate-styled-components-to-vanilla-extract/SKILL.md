@@ -1,6 +1,6 @@
 ---
 name: migrate-styled-components-to-vanilla-extract
-description: Step-by-step procedure for migrating one plugin in this monorepo off styled-components to vanilla-extract (zero-runtime CSS). Use when converting styled() components to .css.ts files, removing a plugin's styled-components dependency, adding the ./bundle.css export, or when asked to migrate a plugin's styling. Pair with the sanity-plugin-best-practices styling reference for the underlying patterns.
+description: Step-by-step procedure for migrating a package off styled-components to vanilla-extract (zero-runtime CSS). Use when converting styled() components to .css.ts files, removing a styled-components dependency, adding a ./bundle.css export, or when asked to migrate styling to vanilla-extract. Pair with the sanity-plugin-best-practices styling reference for the underlying patterns.
 metadata:
   author: Sanity.io
   version: '1.0.0'
@@ -8,37 +8,29 @@ metadata:
 
 # Migrate styled-components to vanilla-extract
 
-The repeatable procedure for converting one plugin's styling from `styled-components` (the Studio's
-legacy styling library) to [vanilla-extract](https://vanilla-extract.style). Distilled from the
-already-migrated plugins in this repo — `plugins/@sanity/google-maps-input`,
-`plugins/sanity-plugin-workflow`, and `plugins/@sanity/color-input` (the dynamic-styling example:
-`styleVariants`, `createVar` + `assignInlineVars`, `useTheme_v2()`).
+The repeatable procedure for converting a package's styling from `styled-components` (the Studio's
+legacy styling library) to [vanilla-extract](https://vanilla-extract.style).
 
 This skill covers the **workflow**: what to change, in what order, and how to verify it. The styling
 **patterns** themselves (dynamic theming, variants, keyframes, the `&&` specificity trick,
 encapsulation) live in the `sanity-plugin-best-practices` skill's
 [styling reference](../sanity-plugin-best-practices/references/styling.md) — read it first and defer
-to it for pattern details.
+to it for pattern details. For monorepo-specific policy (one plugin per PR, never during a transfer,
+which plugins are reference implementations), see `AGENTS.md` →
+`Migrating plugin styling off styled-components`.
 
 ## Ground rules
 
-- **One plugin per PR.** A migration must be reviewable and easy to bisect if a visual regression
-  slips through.
-- **Never during a transfer.** When porting a plugin into the monorepo, keep styled-components as-is
-  and migrate in a dedicated follow-up PR (see the `plugin-transfer` skill).
 - **Identical visual output is the goal.** This is a refactor, not a redesign — every rule, theme
-  token, and specificity outcome must be preserved. Verify manually in the test studio before
-  opening the PR.
-- **Reference implementations** to compare against: `plugins/@sanity/google-maps-input`,
-  `plugins/sanity-plugin-workflow`, `plugins/@sanity/color-input`, and
-  `plugins/sanity-plugin-bynder-input` — all fully migrated on the current tsdown setup.
+  token, and specificity outcome must be preserved. Verify the result against the original rendering
+  before opening the PR.
 
 ## Step 1: Inventory
 
-Find every styled-components usage in the plugin and classify it before touching code:
+Find every styled-components usage in the package and classify it before touching code:
 
 ```bash
-rg "styled-components" plugins/<plugin-name>/src
+rg "styled-components" <package>/src
 ```
 
 | Usage                                               | Migration target                                                                   |
@@ -60,9 +52,9 @@ Each row's pattern is documented with examples in the
 Work component by component. Create a `.css.ts` next to each component and move its rules over. Two
 real shapes cover most cases:
 
-**Shape A — keep the component layer** (see `sanity-plugin-workflow`). When the styled element is
-used like a component (composed, given props), replace it with a `style()` rule plus a thin wrapper
-that keeps the same name and API, so call sites don't change:
+**Shape A — keep the component layer.** When the styled element is used like a component (composed,
+given props), replace it with a `style()` rule plus a thin wrapper that keeps the same name and API,
+so call sites don't change:
 
 ```ts
 // FloatingCard.css.ts
@@ -93,21 +85,20 @@ Type the wrapper with `ComponentProps<typeof Primitive>` (or `ComponentProps<'di
 regular prop on React 19. See
 [Keep the component layer](../sanity-plugin-best-practices/references/styling.md#keep-the-component-layer-encapsulation).
 
-**Shape B — flatten single-use wrappers** (see `@sanity/google-maps-input`). When the styled element
-was an internal, single-use `styled.div` with no meaningful API, put the class directly on the
-element. Descendant selectors like `& img { ... }` usually migrate best by styling the child
-directly when you render it yourself:
+**Shape B — flatten single-use wrappers.** When the styled element was an internal, single-use
+`styled.div` with no meaningful API, put the class directly on the element. Descendant selectors
+like `& img { ... }` usually migrate best by styling the child directly when you render it yourself:
 
 ```tsx
 // Before: <MapDiffImage><img ... /></MapDiffImage> where MapDiffImage = styled.div`& img {...}`
 <img className={mapDiffImage} alt="" src={url} height={280} width={500} />
 ```
 
-**Shape C — dynamic values through CSS variables** (see `@sanity/color-input`). When a value varies
-per instance, with props/state, or reads the theme, keep the static parts in `style()` and bridge
-only the changing values through `createVar()` + `assignInlineVars()` (from
-`@vanilla-extract/dynamic`). This also migrates computed inline `style={{}}` objects — hoist the
-static properties into the `.css.ts` and keep only the variables inline:
+**Shape C — dynamic values through CSS variables.** When a value varies per instance, with
+props/state, or reads the theme, keep the static parts in `style()` and bridge only the changing
+values through `createVar()` + `assignInlineVars()` (from `@vanilla-extract/dynamic`). This also
+migrates computed inline `style={{}}` objects — hoist the static properties into the `.css.ts` and
+keep only the variables inline:
 
 ```ts
 // Checkboard.css.ts
@@ -190,13 +181,13 @@ In the plugin's `package.json`:
   `dependencies` — that one is a small runtime helper.)
 - **Remove** the `styled-components` entry from `peerDependencies`, and any
   `babel-plugin-styled-components` devDependency.
-- **Peer alignment:** when the plugin depends on `@sanity/ui` (which peers on styled-components),
+- **Peer alignment:** when the package depends on `@sanity/ui` (which peers on styled-components),
   removing the `"styled-components": "catalog:"` devDependency can make pnpm resolve a separate
-  styled-components copy, forking the plugin's `sanity` peer variant away from the rest of the
-  workspace and breaking type-aware lint. Dropping it can be fine (`@sanity/color-input` did), but
-  you must verify: after `pnpm install`, the plugin's `sanity` / `@sanity/ui` resolution strings in
-  `pnpm-lock.yaml` must match other plugins (e.g. `plugins/@sanity/google-maps-input`). If they
-  fork, keep the `catalog:` devDependency.
+  styled-components copy, forking the package's `sanity` peer variant away from the rest of the
+  workspace and breaking type-aware lint. Dropping it can be fine, but you must verify: after
+  `pnpm install`, the package's `sanity` / `@sanity/ui` resolution strings in `pnpm-lock.yaml` must
+  match other packages that depend on `@sanity/ui`. If they fork, keep the `catalog:`
+  devDependency.
 
 No `knip.jsonc` or catalog changes are needed — `@vanilla-extract/css` is globally ignored and all
 the catalog entries already exist.
@@ -218,8 +209,8 @@ export default defineConfig({
 ```
 
 Use `@sanity/vanilla-extract-vite-plugin` (faster drop-in for the upstream
-`@vanilla-extract/vite-plugin`). The test studio already registers it globally in `sanity.cli.ts` —
-don't touch that file.
+`@vanilla-extract/vite-plugin`). If a host app or studio already registers the Vite plugin
+globally, you don't need to touch that file for the package under migration.
 
 > **Optional, jsdom-only:** if the plugin has `jsdom`/`happy-dom` suites that don't assert on real
 > CSS (layout, `getComputedStyle`), you can skip runtime style injection with
@@ -255,10 +246,9 @@ pnpm build
 pnpm test run
 ```
 
-Then verify **visual fidelity** manually: start the test studio (`pnpm dev`), exercise the plugin's
-example, and compare against the pre-migration rendering — theme tokens, spacing, stacking,
-hover/sticky/fixed behavior. If an override no longer takes effect, reach for the `&&` trick rather
-than `!important`.
+Then verify **visual fidelity** manually: exercise the package's UI and compare against the
+pre-migration rendering — theme tokens, spacing, stacking, hover/sticky/fixed behavior. If an
+override no longer takes effect, reach for the `&&` trick rather than `!important`.
 
 Optionally lock the migration in: once the plugin no longer imports `styled-components`, a
 `no-restricted-imports` ban in a plugin-level lint override keeps it from creeping back.
@@ -286,5 +276,5 @@ Migrate styling from styled-components to vanilla-extract (zero-runtime CSS)
 - [ ] `vitest.config.ts` registers `vanillaExtractPlugin()`
 - [ ] `dist/bundle.css` emitted with all rules; package-exports snapshot updated
 - [ ] `pnpm format` / `pnpm lint` / `pnpm knip` / `pnpm build` / `pnpm test run` all pass
-- [ ] Visual fidelity verified in the test studio
+- [ ] Visual fidelity verified against the pre-migration rendering
 - [ ] Patch changeset added

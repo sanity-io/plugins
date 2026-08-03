@@ -390,6 +390,23 @@ When migrating a plugin, agents should ensure:
 - The transfer includes a **major** changeset
 - Only monorepo-required plugin config files are maintained (`package.json`, `tsdown.config.ts`, `tsconfig.json`, `vitest.config.ts`)
 
+### Migrating plugin styling off styled-components
+
+vanilla-extract is the styling target for every plugin. To migrate an existing plugin off
+`styled-components`, use the `migrate-styled-components-to-vanilla-extract` skill in
+`.agents/skills/migrate-styled-components-to-vanilla-extract/SKILL.md`. Monorepo policy for those
+migrations:
+
+- **One plugin per PR.** A migration must be reviewable and easy to bisect if a visual regression
+  slips through.
+- **Never during a transfer.** Keep styled-components as-is in the initial port; migrate in a
+  dedicated follow-up PR (see the `plugin-transfer` skill above).
+- **Reference implementations** to compare against: `plugins/@sanity/google-maps-input`,
+  `plugins/sanity-plugin-workflow`, `plugins/@sanity/color-input`, and
+  `plugins/sanity-plugin-bynder-input` — all fully migrated on the current tsdown setup.
+  `@sanity/color-input` is the dynamic-styling example (`styleVariants`, `createVar` +
+  `assignInlineVars`, `useTheme_v2()`).
+
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 
 - Setting up npm trusted publishing (different process for new vs existing packages)

@@ -643,13 +643,13 @@ theming/SSR break:
 - The `catalog:` devDependency keeps the plugin on the shared `sanity` peer variant (see the
   `plugin-transfer` skill for why duplicate variants break type-aware lint).
 
-Once the migration is complete, remove the **peer** dependency. When the plugin depends on
+Once the migration is complete, remove the **peer** dependency. When the package depends on
 `@sanity/ui` (which peers on styled-components), dropping the `styled-components: catalog:`
-**devDependency** can make pnpm resolve a separate styled-components copy, forking the plugin's
+**devDependency** can make pnpm resolve a separate styled-components copy, forking the package's
 `sanity` peer variant away from the rest of the workspace and breaking type-aware lint. It can work
-out fine (`@sanity/color-input` dropped it), but verify the plugin's `sanity` / `@sanity/ui`
-resolution strings in `pnpm-lock.yaml` still match other plugins — if they fork, keep the
-devDependency (`@sanity/google-maps-input` and `sanity-plugin-workflow` do).
+out fine, but verify the package's `sanity` / `@sanity/ui` resolution strings in `pnpm-lock.yaml`
+still match other packages — if they fork, keep the devDependency. See `AGENTS.md` →
+`Migrating plugin styling off styled-components` for this monorepo's reference implementations.
 
 ---
 
