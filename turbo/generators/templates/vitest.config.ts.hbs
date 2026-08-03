@@ -8,6 +8,9 @@ export default defineConfig({
   plugins: [vanillaExtractPlugin()],
 {{/if}}
   test: {
+{{#if hasVanillaExtract}}
+    setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
+{{/if}}
     server: {
       deps: {
         inline: ['vitest-package-exports'],

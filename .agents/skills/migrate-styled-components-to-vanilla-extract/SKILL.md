@@ -125,13 +125,17 @@ import {assignInlineVars} from '@vanilla-extract/dynamic'
 
 import {backgroundImageVar, borderRadiusVar, checkboard} from './Checkboard.css'
 
-;<div
-  className={checkboard}
-  style={assignInlineVars({
-    [borderRadiusVar]: borderRadius,
-    [backgroundImageVar]: background ? `url(${background}) center left` : undefined,
-  })}
-/>
+function Checkboard({borderRadius, background}: {borderRadius?: string; background?: string}) {
+  return (
+    <div
+      className={checkboard}
+      style={assignInlineVars({
+        [borderRadiusVar]: borderRadius,
+        [backgroundImageVar]: background ? `url(${background}) center left` : undefined,
+      })}
+    />
+  )
+}
 ```
 
 `assignInlineVars` omits `undefined` values, so one class serves every instance. Theme tokens flow

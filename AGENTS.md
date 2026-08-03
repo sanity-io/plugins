@@ -27,7 +27,7 @@ Use the **latest LTS** release of Node.js.
 
 ### pnpm Version
 
-The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v10 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
+The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v11 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
 
 ```bash
 # Enable corepack to automatically use the correct pnpm version
@@ -36,6 +36,10 @@ corepack enable
 # Install all dependencies
 pnpm install
 ```
+
+pnpm v11 defaults `minimumReleaseAge` to 1 day. `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@4.2.5`) for one-off upgrades still inside that window.
+
+Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
 
 ## Before Submitting a PR
 
@@ -281,7 +285,7 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Tests run against built `dist/` output after `pnpm build`
 - Snapshots are generated with `pnpm test -u`
 - Root Vitest sets `SC_DISABLE_SPEEDY=false` so styled-components keeps its fast CSSOM injection path under jsdom (upstream disables it when `NODE_ENV !== 'production'`, which makes first mounts of styled-heavy trees slow enough to trip default timeouts). Same approach as [sanity#13675](https://github.com/sanity-io/sanity/pull/13675).
-- For plugins that use vanilla-extract: register `vanillaExtractPlugin()` in the plugin’s `vitest.config.ts` (required so `.css.ts` compiles under Vitest); optionally add `'@vanilla-extract/css/disableRuntimeStyles'` to `setupFiles` only for `jsdom`/`happy-dom` suites that don’t need real CSS — see the `sanity-plugin-best-practices` styling reference (`Disabling runtime styles in tests`)
+- For plugins that use vanilla-extract: register `vanillaExtractPlugin()` in the plugin’s `vitest.config.ts` (required so `.css.ts` compiles under Vitest) and include `'@vanilla-extract/css/disableRuntimeStyles'` in `setupFiles` (no-op under `node`, skips CSS injection for `jsdom`/`happy-dom` suites; remove only when a test asserts real CSS) — see the `sanity-plugin-best-practices` styling reference (`Disabling runtime styles in tests`)
 
 ## Pull Request Workflow
 
@@ -377,6 +381,8 @@ pnpm generate "copy plugin"
 ```
 
 For agent-specific transfer guidance, use the `plugin-transfer` skill in `.agents/skills/plugin-transfer/SKILL.md`.
+
+For expanding Vitest + Playwright coverage for a plugin, use the `plugin-test-coverage` skill in `.agents/skills/plugin-test-coverage/SKILL.md`.
 
 When migrating a plugin, agents should ensure:
 
@@ -537,7 +543,7 @@ Run `pnpm build` first—some packages need to be built for type information to 
 
 ### "Command not found: pnpm"
 
-Ensure you have pnpm v10+ installed, then run:
+Ensure you have pnpm v11+ installed, then run:
 
 ```bash
 corepack enable
