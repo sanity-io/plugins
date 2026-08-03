@@ -108,6 +108,27 @@ describe('constructFilter', () => {
     )
   })
 
+  it('does not apply a folder filter in the all assets view', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      searchFacets: [],
+      searchQuery: undefined,
+    })
+
+    expect(q).not.toContain('opt.media.folder._ref')
+  })
+
+  it('filters to the current folder when a folder is selected', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      currentFolderId: 'media.folder.products',
+      searchFacets: [],
+      searchQuery: undefined,
+    })
+
+    expect(q).toContain('opt.media.folder._ref == "media.folder.products"')
+  })
+
   it('omits text search fragment when searchQuery is undefined', () => {
     const q = constructFilter({
       assetTypes: ['image', 'file'],
@@ -116,5 +137,19 @@ describe('constructFilter', () => {
     })
 
     expect(q).not.toContain('match ')
+  })
+
+  it('excludes assets tagged with any slug listed in excludeTagSlugs', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      excludeTagSlugs: ['internal', 'archived'],
+      searchFacets: [],
+      searchQuery: undefined,
+    })
+
+    const normalized = q.replace(/\s+/g, ' ')
+    expect(normalized).toContain(
+      '!(defined(opt.media.tags) && count(opt.media.tags[@._ref in *[_type == "media.tag" && name.current in ["internal","archived"]]._id]) > 0)',
+    )
   })
 })

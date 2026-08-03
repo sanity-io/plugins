@@ -10,6 +10,11 @@ export const cloudinaryAssetSchema = defineType({
   fields: [
     {
       type: 'string',
+      name: 'id',
+      // Cloudinary asset id (used by cloudinaryAssetDocument lookups)
+    },
+    {
+      type: 'string',
       name: 'public_id',
     },
     {

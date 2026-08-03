@@ -15,7 +15,10 @@ const detectFramework = (): string => {
   } else if (process.env['ASTRO_ENV']) {
     return 'astro'
   }
-  throw new Error('Unable to detect framework.')
+  // Default to the Next.js-compatible handler. The framework env vars above
+  // aren't always set (e.g. Next.js API routes where NEXT_RUNTIME is absent),
+  // and throwing here would break the most common setup.
+  return 'nextjs'
 }
 
 // Create a generic handler with predefined logic
@@ -64,6 +67,13 @@ const createHandler = (handlerFunc: () => Promise<unknown>) => {
       res.setHeader('Access-Control-Allow-Origin', '*') // Allow all origins
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS') // Allowed HTTP methods
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization') // Allowed headers
+
+      // Short-circuit CORS preflight requests so we don't hit the upstream API
+      if (req.method === 'OPTIONS') {
+        res.writeHead(204)
+        res.end()
+        return
+      }
 
       await handlerLogic({req, res})
     }

@@ -18,7 +18,11 @@ interface MailchimpInputConfig {
  *
  * export default defineConfig({
  *   // ...
- *   plugins: [mailchimpInput()],
+ *   plugins: [
+ *    mailchimpInput({
+ *      url: 'http://localhost:3000/api/mailchimp'
+ *    })
+ *   ],
  * })
  * ```
  */

@@ -1,8 +1,10 @@
+import {FolderIcon} from '@sanity/icons/Folder'
 import {Box, Button, Flex, Inline, useMediaIndex} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {dialogActions} from '../../modules/dialog'
+import {foldersActions} from '../../modules/folders'
 import {tagsActions} from '../../modules/tags'
 import ButtonViewGroup from '../ButtonViewGroup'
 import OrderSelect from '../OrderSelect'
@@ -16,6 +18,7 @@ const Controls = () => {
   // Redux
   const dispatch = useDispatch()
   const fetching = useTypedSelector((state) => state.assets.fetching)
+  const foldersPanelVisible = useTypedSelector((state) => state.folders.panelVisible)
   const pageIndex = useTypedSelector((state) => state.assets.pageIndex)
   const searchFacets = useTypedSelector((state) => state.search.facets)
   const tagsPanelVisible = useTypedSelector((state) => state.tags.panelVisible)
@@ -27,8 +30,16 @@ const Controls = () => {
     dispatch(dialogActions.showSearchFacets())
   }
 
+  const handleShowFoldersDialog = () => {
+    dispatch(dialogActions.showFolders())
+  }
+
   const handleShowTagsDialog = () => {
     dispatch(dialogActions.showTags())
+  }
+
+  const toggleFoldersPanel = () => {
+    dispatch(foldersActions.panelVisibleSet({panelVisible: !foldersPanelVisible}))
   }
 
   const toggleTagsPanelToggle = () => {
@@ -71,7 +82,9 @@ const Controls = () => {
               <SearchFacets />
 
               {/* Search Facets Control (add / clear) */}
-              <SearchFacetsControl />
+              <Inline space={2}>
+                <SearchFacetsControl />
+              </Inline>
             </Box>
 
             <Box display={['block', 'block', 'none']} marginX={2}>
@@ -93,6 +106,15 @@ const Controls = () => {
                   text={`Tags`}
                   tone="primary"
                 />
+
+                {/* Folders button (small) */}
+                <Button
+                  fontSize={1}
+                  mode="ghost"
+                  onClick={handleShowFoldersDialog}
+                  text="Folders"
+                  tone="primary"
+                />
               </Inline>
             </Box>
           </Flex>
@@ -101,9 +123,20 @@ const Controls = () => {
 
       <Box>
         <Flex align="center" justify={['space-between']}>
-          {/* Views */}
+          {/* Folders + Views */}
           <Box marginX={2}>
-            <ButtonViewGroup />
+            <Inline space={2} style={{whiteSpace: 'nowrap'}}>
+              <Box display={['none', 'none', 'block']}>
+                <Button
+                  aria-label="Toggle folders panel"
+                  fontSize={1}
+                  icon={FolderIcon}
+                  mode={foldersPanelVisible ? 'default' : 'ghost'}
+                  onClick={toggleFoldersPanel}
+                />
+              </Box>
+              <ButtonViewGroup />
+            </Inline>
           </Box>
 
           <Flex marginX={2}>

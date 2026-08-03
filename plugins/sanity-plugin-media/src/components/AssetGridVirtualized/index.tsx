@@ -3,22 +3,36 @@ import {VirtuosoGrid} from 'react-virtuoso'
 import {styled} from 'styled-components'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
-import type {CardAssetData, CardUploadData} from '../../types'
+import type {CardAssetData, CardFolderData, CardUploadData} from '../../types'
 import CardAsset from '../CardAsset'
+import CardFolder from '../CardFolder'
 import CardUpload from '../CardUpload'
 
 type Props = {
-  items: (CardAssetData | CardUploadData)[]
+  items: (CardAssetData | CardFolderData | CardUploadData)[]
   onLoadMore?: () => void
+  source?: string
 }
 
 const CARD_HEIGHT = 220
 const CARD_WIDTH = 240
 
 const VirtualCell = memo(
-  ({item, selected}: {item: CardAssetData | CardUploadData; selected: boolean}) => {
+  ({
+    item,
+    selected,
+    source,
+  }: {
+    item: CardAssetData | CardFolderData | CardUploadData
+    selected: boolean
+    source?: string
+  }) => {
     if (item?.type === 'asset') {
-      return <CardAsset id={item.id} selected={selected} />
+      return <CardAsset id={item.id} selected={selected} source={source} />
+    }
+
+    if (item?.type === 'folder') {
+      return <CardFolder folderId={item.folderId} name={item.name} totalCount={item.totalCount} />
     }
 
     if (item?.type === 'upload') {
@@ -55,7 +69,7 @@ const ListContainer = (props: any) => {
 }
 
 const AssetGridVirtualized = (props: Props) => {
-  const {items, onLoadMore} = props
+  const {items, onLoadMore, source} = props
 
   // Redux
   const selectedAssets = useTypedSelector((state) => state.selected.assets)
@@ -82,7 +96,7 @@ const AssetGridVirtualized = (props: Props) => {
       itemContent={(index) => {
         const item = items[index]!
         const selected = selectedIds.includes(item.id)
-        return <VirtualCell item={item} selected={selected} />
+        return <VirtualCell item={item} selected={selected} source={source} />
       }}
       overscan={48}
       style={{overflowX: 'hidden', overflowY: 'scroll'}}

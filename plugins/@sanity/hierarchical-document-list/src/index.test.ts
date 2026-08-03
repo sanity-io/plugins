@@ -14,6 +14,7 @@ test('package exports', {timeout: 30_000}, async () => {
       ".": {
         "createDeskHierarchy": "function",
         "createHierarchicalSchemas": "function",
+        "createStructureHierarchy": "function",
         "flatDataToTree": "function",
         "hierarchicalDocumentList": "function",
         "hierarchyTree": "object",

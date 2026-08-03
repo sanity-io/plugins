@@ -1,7 +1,7 @@
 import {useEffect} from 'react'
 import {type ObjectItem, type ObjectItemProps, set} from 'sanity'
 
-export const ExperimentItem = (props: ObjectItemProps) => {
+export const ArrayItem = (props: ObjectItemProps) => {
   const {active} = props.value as ObjectItem & {active: boolean}
   const {onChange} = props.inputProps
 

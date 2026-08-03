@@ -1,6 +1,6 @@
 import {CloseIcon} from '@sanity/icons/Close'
 import {useCallback, useMemo} from 'react'
-import {GiSoapExperiment} from 'react-icons/gi'
+import {IoMdPeople} from 'react-icons/io'
 import {
   defineDocumentFieldAction,
   type DocumentFieldActionItem,
@@ -11,46 +11,47 @@ import {
   set,
   unset,
 } from 'sanity'
+
+import {clearChildrenGroups} from '../../utils/clearChildGroups'
+
 type PatchStuff = {onChange: (patch: FormPatch | FormPatch[] | PatchEvent) => void; inputId: string}
 
-const useAddExperimentAction = (
+const useAddPersonalizationAction = (
   props: DocumentFieldActionProps &
-    PatchStuff & {experimentNameOverride: string; experimentId: string; active: boolean},
+    PatchStuff & {personalizationNameOverride: string; active: boolean},
 ): DocumentFieldActionItem => {
-  const {onChange, active, experimentNameOverride} = props
+  const {onChange, active, personalizationNameOverride} = props
 
   const handleAddAction = useCallback(() => {
     onChange([set(!active, ['active'])])
   }, [onChange, active])
 
   return {
-    title: `Add ${experimentNameOverride}`,
+    title: `Add ${personalizationNameOverride}`,
     type: 'action',
-    icon: GiSoapExperiment,
+    icon: IoMdPeople,
     onAction: handleAddAction,
     renderAsButton: true,
   }
 }
 
-const useRemoveExperimentAction = (
+const useRemovePersonalizationAction = (
   props: DocumentFieldActionProps &
     PatchStuff & {
-      experimentNameOverride: string
-      experimentId: string
+      personalizationNameOverride: string
       active: boolean
-      variantNameOverride: string
+      segmentNameOverride: string
     },
 ): DocumentFieldActionItem => {
-  const {onChange, active, experimentId, experimentNameOverride, variantNameOverride} = props
+  const {onChange, active, personalizationNameOverride, segmentNameOverride} = props
   const handleClearAction = useCallback(() => {
     const activeId = ['active']
-    const experiment = [experimentId]
-    const variants = [`${variantNameOverride}s`]
-    onChange([set(!active, activeId), unset(experiment), unset(variants)])
-  }, [onChange, active, experimentId, variantNameOverride])
+    const segments = [`${segmentNameOverride}s`]
+    onChange([set(!active, activeId), unset(segments)])
+  }, [onChange, active, segmentNameOverride])
 
   return {
-    title: `Remove ${experimentNameOverride}`,
+    title: `Remove ${personalizationNameOverride}`,
     type: 'action',
     icon: CloseIcon,
     onAction: handleClearAction,
@@ -62,52 +63,47 @@ const createActions = ({
   onChange,
   inputId,
   active,
-  experimentNameOverride,
-  experimentId,
-  variantNameOverride,
+  personalizationNameOverride,
+  segmentNameOverride,
 }: PatchStuff & {
   active?: boolean
-  experimentNameOverride: string
-  experimentId: string
-  variantNameOverride: string
+  personalizationNameOverride: string
+  segmentNameOverride: string
 }) => {
   const removeAction = defineDocumentFieldAction({
-    name: `Remove ${experimentNameOverride}`,
+    name: `Remove ${personalizationNameOverride}`,
     useAction: (props) =>
-      useRemoveExperimentAction({
+      useRemovePersonalizationAction({
         ...props,
         active: true,
         onChange,
         inputId,
-        experimentNameOverride,
-        experimentId,
-        variantNameOverride,
+        personalizationNameOverride,
+        segmentNameOverride,
       }),
   })
   const addAction = defineDocumentFieldAction({
-    name: `Add ${experimentNameOverride}`,
+    name: `Add ${personalizationNameOverride}`,
     useAction: (props) =>
-      useAddExperimentAction({
+      useAddPersonalizationAction({
         ...props,
         active: false,
         onChange,
         inputId,
-        experimentNameOverride,
-        experimentId,
+        personalizationNameOverride,
       }),
   })
   return active ? removeAction : addAction
 }
 
-export const ExperimentField = (
+export const Field = (
   props: ObjectFieldProps & {
-    experimentNameOverride: string
-    experimentId: string
-    variantNameOverride: string
+    personalizationNameOverride: string
+    segmentNameOverride: string
   },
 ) => {
   const {onChange} = props.inputProps
-  const {inputId, experimentNameOverride, experimentId, variantNameOverride} = props
+  const {inputId, personalizationNameOverride, segmentNameOverride} = props
   const active = props.value?.['active'] as boolean | undefined
 
   const actionProps = useMemo(
@@ -115,11 +111,10 @@ export const ExperimentField = (
       onChange,
       inputId,
       active,
-      experimentNameOverride,
-      experimentId,
-      variantNameOverride,
+      personalizationNameOverride,
+      segmentNameOverride,
     }),
-    [onChange, inputId, active, experimentNameOverride, experimentId, variantNameOverride],
+    [onChange, inputId, active, personalizationNameOverride, segmentNameOverride],
   )
 
   const memoizedActions = useMemo(() => {
@@ -127,12 +122,13 @@ export const ExperimentField = (
     return [createActions(actionProps), ...oldActions]
   }, [actionProps, props.actions])
 
-  const withActionProps = useMemo(
-    () => ({
-      ...props,
+  const enhancedProps = useMemo(() => {
+    const propsWithClearedGroups = clearChildrenGroups(props)
+    return {
+      ...propsWithClearedGroups,
       actions: memoizedActions,
-    }),
-    [props, memoizedActions],
-  )
-  return props.renderDefault(withActionProps)
+    }
+  }, [props, memoizedActions])
+
+  return props.renderDefault(enhancedProps)
 }

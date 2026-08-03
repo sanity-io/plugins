@@ -955,11 +955,58 @@ export type AsyncListTest = {
   title?: string
   pokemon?: Pokemon
   disneyCharacter?: DisneyCharacter
+  componentBerry?: string
 }
 
 export type DisneyCharacter = string
 
 export type Pokemon = string
+
+export type CloudinaryAssetDocumentReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'cloudinaryAssetDocument'
+}
+
+export type CloudinaryAssetReference = {
+  _type: 'cloudinaryAssetReference'
+  asset?: CloudinaryAssetDocumentReference
+}
+
+export type CloudinaryAssetDocument = {
+  _id: string
+  _type: 'cloudinaryAssetDocument'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  asset?: CloudinaryAsset
+}
+
+export type CloudinaryAsset = {
+  _type: 'cloudinary.asset'
+  id?: string
+  public_id?: string
+  resource_type?: string
+  type?: string
+  format?: string
+  version?: number
+  url?: string
+  secure_url?: string
+  width?: number
+  height?: number
+  bytes?: number
+  duration?: number
+  tags?: Array<string>
+  created_at?: string
+  derived?: Array<
+    {
+      _key: string
+    } & CloudinaryAssetDerived
+  >
+  access_mode?: string
+  context?: CloudinaryAssetContext
+}
 
 export type CloudinaryTest = {
   _id: string
@@ -981,30 +1028,7 @@ export type CloudinaryTest = {
     crop?: SanityImageCrop
     _type: 'image'
   }
-}
-
-export type CloudinaryAsset = {
-  _type: 'cloudinary.asset'
-  public_id?: string
-  resource_type?: string
-  type?: string
-  format?: string
-  version?: number
-  url?: string
-  secure_url?: string
-  width?: number
-  height?: number
-  bytes?: number
-  duration?: number
-  tags?: Array<string>
-  created_at?: string
-  derived?: Array<
-    {
-      _key: string
-    } & CloudinaryAssetDerived
-  >
-  access_mode?: string
-  context?: CloudinaryAssetContext
+  assetReference?: CloudinaryAssetReference
 }
 
 export type CloudinaryAssetContextCustom = {
@@ -1034,6 +1058,30 @@ export type PersonalizationTest = {
   title?: string
   headline?: ExperimentString
   description?: ExperimentText
+  tagline?: PersonalizationString
+  pitch?: PersonalizationText
+}
+
+export type PersonalizationText = {
+  _type: 'personalizationText'
+  default?: string
+  active?: boolean
+  segments?: Array<
+    {
+      _key: string
+    } & SegmentText
+  >
+}
+
+export type PersonalizationString = {
+  _type: 'personalizationString'
+  default?: string
+  active?: boolean
+  segments?: Array<
+    {
+      _key: string
+    } & SegmentString
+  >
 }
 
 export type ExperimentText = {
@@ -1058,6 +1106,18 @@ export type ExperimentString = {
       _key: string
     } & VariantString
   >
+}
+
+export type SegmentText = {
+  _type: 'segmentText'
+  segmentId?: string
+  value?: string
+}
+
+export type SegmentString = {
+  _type: 'segmentString'
+  segmentId?: string
+  value?: string
 }
 
 export type VariantText = {
@@ -1597,6 +1657,23 @@ export type MediaProduct = {
   }
 }
 
+export type MediaFolderReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'media.folder'
+}
+
+export type MediaFolder = {
+  _id: string
+  _type: 'media.folder'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+  parent?: MediaFolderReference
+}
+
 export type MediaTag = {
   _id: string
   _type: 'media.tag'
@@ -1776,14 +1853,21 @@ export type AllSanitySchemaTypes =
   | AsyncListTest
   | DisneyCharacter
   | Pokemon
-  | CloudinaryTest
+  | CloudinaryAssetDocumentReference
+  | CloudinaryAssetReference
+  | CloudinaryAssetDocument
   | CloudinaryAsset
+  | CloudinaryTest
   | CloudinaryAssetContextCustom
   | CloudinaryAssetContext
   | CloudinaryAssetDerived
   | PersonalizationTest
+  | PersonalizationText
+  | PersonalizationString
   | ExperimentText
   | ExperimentString
+  | SegmentText
+  | SegmentString
   | VariantText
   | VariantString
   | ShopifyAssetsTest
@@ -1831,6 +1915,8 @@ export type AllSanitySchemaTypes =
   | MuxTrack
   | SanityFileAssetReference
   | MediaProduct
+  | MediaFolderReference
+  | MediaFolder
   | MediaTag
   | SanityImagePaletteSwatch
   | SanityImagePalette

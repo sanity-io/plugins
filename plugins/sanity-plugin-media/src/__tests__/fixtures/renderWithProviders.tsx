@@ -15,16 +15,25 @@ import type {MediaToolOptions} from '../../types'
 import {createTestRootState} from './rootState'
 
 type Opts = {
+  onAction?: (action: {type: string}) => void
   onSelect?: AssetSourceComponentProps['onSelect']
   preloaded?: Partial<RootReducerState>
   toolOptions?: Partial<MediaToolOptions>
 }
 
-function createTestStore(preloaded?: Partial<RootReducerState>) {
+function createTestStore(preloaded?: Partial<RootReducerState>, onAction?: Opts['onAction']) {
   return configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({thunk: false, serializableCheck: false}),
+    middleware: (getDefaultMiddleware) => {
+      const middleware = getDefaultMiddleware({thunk: false, serializableCheck: false})
+      if (!onAction) {
+        return middleware
+      }
+      return middleware.concat(() => (next) => (action) => {
+        onAction(action as {type: string})
+        return next(action)
+      })
+    },
     preloadedState: createTestRootState(preloaded),
   })
 }
@@ -36,9 +45,9 @@ export function renderWithProviders(
   ui: ReactElement,
   opts: Opts = {},
 ): RenderResult & {store: ReturnType<typeof createTestStore>} {
-  const {onSelect, preloaded, toolOptions} = opts
+  const {onAction, onSelect, preloaded, toolOptions} = opts
 
-  const store = createTestStore(preloaded)
+  const store = createTestStore(preloaded, onAction)
 
   const options: MediaToolOptions = {
     creditLine: {enabled: false},

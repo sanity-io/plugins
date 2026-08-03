@@ -8,6 +8,8 @@ import {cloudinaryAssetSchema} from './schema/cloudinaryAsset'
 import {cloudinaryAssetContext} from './schema/cloudinaryAssetContext'
 import {cloudinaryAssetContextCustom} from './schema/cloudinaryAssetContextCustom'
 import {cloudinaryAssetDerivedSchema} from './schema/cloudinaryAssetDerived'
+import {cloudinaryAssetDocument} from './schema/cloudinaryAssetDocument'
+import {cloudinaryAssetReference} from './schema/cloudinaryAssetReference'
 
 export {type CloudinaryAssetContext} from './schema/cloudinaryAssetContext'
 export {type CloudinaryAssetDerived} from './schema/cloudinaryAssetDerived'
@@ -20,7 +22,23 @@ export {
   cloudinaryAssetDerivedSchema,
   cloudinaryAssetContext,
   cloudinaryAssetContextCustom,
+  cloudinaryAssetDocument,
+  cloudinaryAssetReference,
 }
+
+export const cloudinaryReferencePlugin = definePlugin({
+  name: 'cloudinary-reference',
+  schema: {
+    types: [
+      cloudinaryAssetDocument,
+      cloudinaryAssetReference,
+      cloudinaryAssetSchema,
+      cloudinaryAssetDerivedSchema,
+      cloudinaryAssetContext,
+      cloudinaryAssetContextCustom,
+    ],
+  },
+})
 
 export const cloudinarySchemaPlugin = definePlugin({
   name: 'cloudinary-schema',
@@ -58,7 +76,7 @@ export const cloudinaryImageSource: AssetSource = {
 }
 
 export const cloudinaryAssetSourcePlugin = definePlugin({
-  name: 'cloudinart-asset-source',
+  name: 'cloudinary-asset-source',
   form: {
     image: {
       assetSources: [cloudinaryImageSource],

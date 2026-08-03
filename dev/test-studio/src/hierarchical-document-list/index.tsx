@@ -1,5 +1,5 @@
 import {
-  createDeskHierarchy,
+  createStructureHierarchy,
   hierarchicalDocumentList,
   hierarchyTree,
 } from '@sanity/hierarchical-document-list'
@@ -54,7 +54,7 @@ export function hierarchicalDocumentListDeskItems(S: StructureBuilder, context: 
     S.documentTypeListItem('hierarchyAuthor'),
     S.documentTypeListItem('hierarchyBook'),
     S.divider(),
-    createDeskHierarchy({
+    createStructureHierarchy({
       S,
       context,
       title: 'Main table of contents',
