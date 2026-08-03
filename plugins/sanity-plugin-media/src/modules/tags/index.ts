@@ -48,7 +48,7 @@ const tagsSlice = createSlice({
       })
       .addCase(DIALOG_ACTIONS.showTagEdit, (state, action) => {
         const {tagId} = action.payload
-        delete state.byIds[tagId].error
+        delete state.byIds[tagId]!.error
       })
       .addMatcher(
         isAnyOf(
@@ -59,14 +59,14 @@ const tagsSlice = createSlice({
         ),
         (state, action) => {
           const {tag} = action.payload
-          state.byIds[tag._id].updating = false
+          state.byIds[tag._id]!.updating = false
         },
       )
       .addMatcher(
         isAnyOf(ASSETS_ACTIONS.tagsAddRequest, ASSETS_ACTIONS.tagsRemoveRequest),
         (state, action) => {
           const {tag} = action.payload
-          state.byIds[tag._id].updating = true
+          state.byIds[tag._id]!.updating = true
         },
       )
   },
@@ -104,16 +104,16 @@ const tagsSlice = createSlice({
       const {error, tag} = action.payload
 
       const tagId = tag?._id
-      state.byIds[tagId].error = error
-      state.byIds[tagId].updating = false
+      state.byIds[tagId]!.error = error
+      state.byIds[tagId]!.updating = false
     },
     deleteRequest(state, action: PayloadAction<{tag: Tag}>) {
       const tagId = action.payload?.tag?._id
-      state.byIds[tagId].picked = false
-      state.byIds[tagId].updating = true
+      state.byIds[tagId]!.picked = false
+      state.byIds[tagId]!.updating = true
 
       Object.keys(state.byIds).forEach((key) => {
-        delete state.byIds[key].error
+        delete state.byIds[key]!.error
       })
     },
     fetchComplete(state, action: PayloadAction<{tags: Tag[]}>) {
@@ -209,7 +209,7 @@ const tagsSlice = createSlice({
 
       tags?.forEach((tag) => {
         if (state.byIds[tag._id]) {
-          state.byIds[tag._id].tag = tag
+          state.byIds[tag._id]!.tag = tag
         }
       })
     },
@@ -221,8 +221,8 @@ const tagsSlice = createSlice({
     // Sort all tags by name
     sort(state) {
       state.allIds.sort((a, b) => {
-        const tagA = state.byIds[a].tag.name.current
-        const tagB = state.byIds[b].tag.name.current
+        const tagA = state.byIds[a]!.tag.name.current
+        const tagB = state.byIds[b]!.tag.name.current
 
         if (tagA < tagB) {
           return -1
@@ -234,14 +234,14 @@ const tagsSlice = createSlice({
     },
     updateComplete(state, action: PayloadAction<{closeDialogId?: string; tag: Tag}>) {
       const {tag} = action.payload
-      state.byIds[tag._id].tag = tag
-      state.byIds[tag._id].updating = false
+      state.byIds[tag._id]!.tag = tag
+      state.byIds[tag._id]!.updating = false
     },
     updateError(state, action: PayloadAction<{tag: Tag; error: HttpError}>) {
       const {error, tag} = action.payload
       const tagId = tag?._id
-      state.byIds[tagId].error = error
-      state.byIds[tagId].updating = false
+      state.byIds[tagId]!.error = error
+      state.byIds[tagId]!.updating = false
     },
     updateRequest(
       state,
@@ -252,7 +252,7 @@ const tagsSlice = createSlice({
       }>,
     ) {
       const {tag} = action.payload
-      state.byIds[tag?._id].updating = true
+      state.byIds[tag?._id]!.updating = true
     },
   },
 })
@@ -464,14 +464,14 @@ export const tagsUpdateEpic: MyEpic = (action$, state$, {client}) =>
         // Optionally throttle
         debugThrottle(state.debug.badConnection),
         // Check if tag name is available, throw early if not
-        checkTagName(client, formData?.name?.current),
+        checkTagName(client, formData?.['name']?.current),
         // Patch document (Update tag)
         mergeMap(
           () =>
             from(
               client
                 .patch(tag._id)
-                .set({name: {_type: 'slug', current: formData?.name.current}})
+                .set({name: {_type: 'slug', current: formData?.['name'].current}})
                 .commit(),
             ) as Observable<Tag>,
         ),
@@ -507,7 +507,7 @@ const selectTagsAllIds = (state: RootReducerState) => state.tags.allIds
 
 export const selectTags: Selector<RootReducerState, TagItem[]> = createSelector(
   [selectTagsByIds, selectTagsAllIds],
-  (byIds, allIds) => allIds.map((id) => byIds[id]),
+  (byIds, allIds) => allIds.map((id) => byIds[id]!),
 )
 
 export const selectTagById = createSelector(

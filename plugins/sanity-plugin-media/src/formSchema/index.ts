@@ -1,7 +1,7 @@
 import * as z from 'zod'
 
 // Helper to generate localized string schema
-export function localizedStringSchema(locales?: {id: string}[]) {
+function localizedStringSchema(locales?: {id: string}[]) {
   if (!locales || locales.length === 0) {
     return z.string().trim().optional()
   }
@@ -36,4 +36,8 @@ export const assetFormSchema = getAssetFormSchema()
 
 export const tagFormSchema = z.object({
   name: z.string().min(1, {message: 'Name cannot be empty'}),
+})
+
+export const folderFormSchema = z.object({
+  name: z.string().trim().min(1, {message: 'Name cannot be empty'}),
 })

@@ -1,0 +1,6 @@
+# Playwright
+/results
+/playwright-report
+/test-results
+/blob-report
+/test-summary.json

@@ -5,6 +5,8 @@ import {type ObjectInputProps, PatchEvent, set, unset} from 'sanity'
 
 import type {BynderAssetOptions, BynderAssetValue} from '../schema/bynder.asset'
 
+import './BynderInput.css'
+
 const VideoPlayer = lazy(() => import('./VideoPlayer'))
 const BynderModalLayout = lazy(() => import('./BynderModalLayout'))
 
@@ -208,16 +210,16 @@ export function BynderInput(props: BynderInputProps): React.JSX.Element {
             onClick={removeValue}
           />
         </Box>
-        {shouldLoad && (
-          <BynderModalLayout
-            isOpen={isOpen}
-            onClose={closeCompactView}
-            portalConfig={pluginConfig.portalConfig}
-            compactViewOptions={compactViewOptions}
-            onSuccess={onSuccess}
-          />
-        )}
       </Flex>
+      {shouldLoad && isOpen && (
+        <BynderModalLayout
+          isOpen={isOpen}
+          onClose={closeCompactView}
+          portalConfig={pluginConfig.portalConfig}
+          compactViewOptions={compactViewOptions}
+          onSuccess={onSuccess}
+        />
+      )}
     </>
   )
 }

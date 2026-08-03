@@ -1,10 +1,10 @@
-import {Box, Text} from '@sanity/ui'
+import {Box, Text, useMediaIndex} from '@sanity/ui'
 import {useEffect} from 'react'
 import {useDispatch} from 'react-redux'
 
-import useBreakpointIndex from '../../hooks/useBreakpointIndex'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions} from '../../modules/assets'
+import {foldersActions} from '../../modules/folders'
 import {selectCombinedItems} from '../../modules/selectors'
 import {tagsActions} from '../../modules/tags'
 import AssetGridVirtualized from '../AssetGridVirtualized'
@@ -15,11 +15,12 @@ const Items = () => {
   const dispatch = useDispatch()
   const fetchCount = useTypedSelector((state) => state.assets.fetchCount)
   const fetching = useTypedSelector((state) => state.assets.fetching)
+  const foldersPanelVisible = useTypedSelector((state) => state.folders.panelVisible)
   const tagsPanelVisible = useTypedSelector((state) => state.tags.panelVisible)
   const view = useTypedSelector((state) => state.assets.view)
   const combinedItems = useTypedSelector(selectCombinedItems)
 
-  const breakpointIndex = useBreakpointIndex()
+  const mediaIndex = useMediaIndex()
 
   const hasFetchedOnce = fetchCount >= 0
   const hasItems = combinedItems.length > 0
@@ -33,12 +34,16 @@ const Items = () => {
 
   // Effects
 
-  // - Hide tag panel on smaller breakpoints
+  // - Hide folders/tags panels on smaller breakpoints
   useEffect(() => {
-    if (breakpointIndex <= 1 && tagsPanelVisible) {
+    if (mediaIndex <= 1 && foldersPanelVisible) {
+      dispatch(foldersActions.panelVisibleSet({panelVisible: false}))
+    }
+
+    if (mediaIndex <= 1 && tagsPanelVisible) {
       dispatch(tagsActions.panelVisibleSet({panelVisible: false}))
     }
-  }, [breakpointIndex])
+  }, [dispatch, foldersPanelVisible, mediaIndex, tagsPanelVisible])
 
   const isEmpty = !hasItems && hasFetchedOnce && !fetching
 

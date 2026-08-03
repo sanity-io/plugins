@@ -1,14 +1,30 @@
 import groq from 'groq'
 
 import {operators} from '../config/searchFacets'
+import {TAG_DOCUMENT_NAME} from '../constants'
 import type {AssetType, SearchFacetInputProps} from '../types'
+
+/** GROQ fragment that excludes assets tagged with any of the given media.tag slugs. */
+export const buildExcludeTagsFragment = (excludeTagSlugs?: string[]): string | undefined => {
+  const serializedExcludeTagSlugs = excludeTagSlugs?.length
+    ? JSON.stringify(excludeTagSlugs)
+    : undefined
+
+  return serializedExcludeTagSlugs
+    ? groq`!(defined(opt.media.tags) && count(opt.media.tags[@._ref in *[_type == "${TAG_DOCUMENT_NAME}" && name.current in ${serializedExcludeTagSlugs}]._id]) > 0)`
+    : undefined
+}
 
 const constructFilter = ({
   assetTypes,
+  currentFolderId,
+  excludeTagSlugs,
   searchFacets,
   searchQuery,
 }: {
   assetTypes: AssetType[]
+  currentFolderId?: string | null
+  excludeTagSlugs?: string[]
   searchFacets: SearchFacetInputProps[]
   searchQuery?: string
 }): string => {
@@ -20,6 +36,8 @@ const constructFilter = ({
   const baseFilter = groq`
     _type in ${JSON.stringify(documentAssetTypes)} && !(_id in path("drafts.**"))
   `
+
+  const excludeTagsFragment = buildExcludeTagsFragment(excludeTagSlugs)
 
   const searchFacetFragments = searchFacets.reduce((acc: string[], facet) => {
     if (facet.type === 'number') {
@@ -75,10 +93,17 @@ const constructFilter = ({
     return acc
   }, [])
 
+  // All assets (no folder selected) should not apply a folder filter. A specific
+  // folder shows only assets pointing at it.
+  const folderFilter: string | undefined = currentFolderId
+    ? `opt.media.folder._ref == ${JSON.stringify(currentFolderId)}`
+    : undefined
+
   // Join separate filter fragments
   const constructedQuery = [
     // Base filter
     baseFilter,
+    ...(excludeTagsFragment ? [excludeTagsFragment] : []),
     // Search query (if present)
     // NOTE: Currently this only searches direct fields on sanity.fileAsset/sanity.imageAsset and NOT referenced tags
     // It's possible to add this by adding the following line to the searchQuery, but it's quite slow
@@ -88,6 +113,7 @@ const constructFilter = ({
           groq`[_id, altText, assetId, creditLine, description, originalFilename, title, url] match '*${searchQuery.trim()}*'`,
         ]
       : []),
+    ...(folderFilter ? [folderFilter] : []),
     // Search facets
     ...searchFacetFragments,
   ].join(' && ')

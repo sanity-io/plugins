@@ -7,7 +7,7 @@ import uploadsReducer, {uploadsActions} from './index'
 
 describe('uploads slice', () => {
   it('uploadStart adds item to queue', () => {
-    let state = uploadsReducer(undefined, {type: '@@INIT'} as never)
+    let state = uploadsReducer(undefined, {type: '@@INIT'})
     const uploadItem = {
       _type: 'upload',
       assetType: 'image',
@@ -26,11 +26,11 @@ describe('uploads slice', () => {
     )
 
     expect(state.allIds).toEqual(['abc'])
-    expect(state.byIds.abc).toMatchObject({hash: 'abc', status: 'queued'})
+    expect(state.byIds['abc']).toMatchObject({hash: 'abc', status: 'queued'})
   })
 
   it('uploadProgress updates percent and status', () => {
-    let state = uploadsReducer(undefined, {type: '@@INIT'} as never)
+    let state = uploadsReducer(undefined, {type: '@@INIT'})
     const uploadItem = {
       _type: 'upload',
       assetType: 'image',
@@ -53,7 +53,7 @@ describe('uploads slice', () => {
       }),
     )
 
-    expect(state.byIds.h1.percent).toBe(42)
-    expect(state.byIds.h1.status).toBe('uploading')
+    expect(state.byIds['h1']!.percent).toBe(42)
+    expect(state.byIds['h1']!.status).toBe('uploading')
   })
 })

@@ -1,6 +1,6 @@
 import {htmlToBlocks} from '@portabletext/block-tools'
 import {Schema} from '@sanity/schema'
-import {ObjectField, PortableTextSpan, PortableTextTextBlock} from 'sanity'
+import type {ObjectField, PortableTextSpan, PortableTextTextBlock} from 'sanity'
 
 const defaultSchema = Schema.compile({
   name: 'default',

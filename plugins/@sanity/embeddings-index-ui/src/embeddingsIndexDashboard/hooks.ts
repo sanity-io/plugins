@@ -1,11 +1,10 @@
 import {useMemo} from 'react'
-import {ObjectSchemaType, Schema} from 'sanity'
+import type {ObjectSchemaType, Schema} from 'sanity'
 
 import {isType} from '../utils/types'
 
 const defaultProjection = '{...}'
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function useDefaultIndex(schema: Schema, dataset: string) {
   const defaultFilter = useMemo(
     () =>

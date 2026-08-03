@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext} from 'react'
 import type {SerializedDocument} from 'sanity-naive-html-serializer'
 
 import type {Adapter, Secrets, WorkflowIdentifiers} from '../types'
@@ -17,4 +17,4 @@ export type ContextProps = {
   importAllConcurrency?: number
 }
 
-export const TranslationContext = React.createContext<ContextProps | null>(null)
+export const TranslationContext = createContext<ContextProps | null>(null)

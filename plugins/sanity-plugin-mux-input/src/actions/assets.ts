@@ -26,14 +26,14 @@ export async function deleteAsset({
 
   try {
     await client.delete(asset._id)
-  } catch (error) {
+  } catch {
     return 'failed-sanity'
   }
 
   if (deleteOnMux && asset?.assetId) {
     try {
       await deleteAssetOnMux(client, asset.assetId)
-    } catch (error) {
+    } catch {
       return 'failed-mux'
     }
   }
@@ -147,6 +147,28 @@ export function deleteTextTrack(client: SanityClient, assetId: string, trackId: 
     url: `/addons/mux/assets/${dataset}/${assetId}/tracks/${trackId}`,
     withCredentials: true,
     method: 'DELETE',
+    query: PLUGIN_VERSION_QUERY,
+  })
+}
+
+/**
+ * Updates master access (the "mezzanine" file in Mux's docs) on a Mux asset, via the addon proxy.
+ * @see {@link https://docs.mux.com/api-reference/video/assets/update-asset-master-access}
+ */
+export function updateMasterAccess(
+  client: SanityClient,
+  assetId: string,
+  masterAccess: 'temporary' | 'none',
+) {
+  const {dataset} = client.config()
+  return client.request<{data: MuxAsset}>({
+    url: `/addons/mux/assets/${dataset}/${assetId}/master-access`,
+    withCredentials: true,
+    method: 'PUT',
+    body: {master_access: masterAccess},
+    headers: {
+      'Content-Type': 'application/json',
+    },
     query: PLUGIN_VERSION_QUERY,
   })
 }

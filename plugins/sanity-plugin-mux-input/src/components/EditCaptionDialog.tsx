@@ -1,4 +1,6 @@
-import {DownloadIcon, TranslateIcon, UploadIcon} from '@sanity/icons'
+import {DownloadIcon} from '@sanity/icons/Download'
+import {TranslateIcon} from '@sanity/icons/Translate'
+import {UploadIcon} from '@sanity/icons/Upload'
 import {
   Autocomplete,
   Button,
@@ -69,6 +71,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler
     setLanguageCode(track.language_code || '')
     setName(track.name || '')
     setVttUrl('')
@@ -94,7 +97,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
           title = 'Cannot download'
         }
       } else if (error === 'Track ID is missing' || error === 'Track is not ready yet') {
-        errorMessage = String(error)
+        errorMessage = error
         title = 'Cannot download'
       }
 
@@ -398,7 +401,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
               style={{display: 'none'}}
               onChange={(e) => {
                 if (e.target.files && e.target.files.length > 0 && !isSubmitting) {
-                  setSelectedFile(e.target.files[0])
+                  setSelectedFile(e.target.files[0]!)
                   setVttUrl('')
                 }
               }}
@@ -410,7 +413,9 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
             )}
           </Card>
           <Stack space={2}>
-            <Label htmlFor="vtt-url">VTT File URL</Label>
+            <Label as="label" htmlFor="vtt-url">
+              VTT File URL
+            </Label>
             <TextInput
               id="vtt-url"
               placeholder="https://example.com/subtitles.vtt"
@@ -428,7 +433,9 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
         </Stack>
 
         <Stack space={2}>
-          <Label htmlFor="caption-name">Audio name</Label>
+          <Label as="label" htmlFor="caption-name">
+            Audio name
+          </Label>
           <Autocomplete
             id="caption-name"
             value={selectedLanguage?.value || ''}
@@ -461,7 +468,9 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
         </Stack>
 
         <Stack space={2}>
-          <Label htmlFor="caption-language">Language Code</Label>
+          <Label as="label" htmlFor="caption-language">
+            Language Code
+          </Label>
           <TextInput
             id="caption-language"
             placeholder="en-US"

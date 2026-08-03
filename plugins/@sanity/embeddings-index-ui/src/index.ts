@@ -1,3 +1,4 @@
+// oxlint-disable-next-line import/no-unassigned-import
 import './schemas/typeDefExtensions'
 import {embeddingsIndexDashboard} from './embeddingsIndexDashboard/dashboardPlugin'
 import {embeddingsIndexReferenceInput} from './referenceInput/referencePlugin'

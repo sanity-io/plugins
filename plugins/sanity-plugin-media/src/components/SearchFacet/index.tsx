@@ -1,4 +1,4 @@
-import {CloseIcon} from '@sanity/icons'
+import {CloseIcon} from '@sanity/icons/Close'
 import {Box, Flex, Label, rem, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'
@@ -17,7 +17,7 @@ type Props = {
 const Container = styled<typeof Box, {$scheme: ThemeColorSchemeKey}>(Box)(({$scheme, theme}) => {
   return css`
     background: ${getSchemeColor($scheme, 'bg')};
-    border-radius: ${rem(theme.sanity.radius[2])};
+    border-radius: ${rem(theme.sanity.radius[2]!)};
   `
 })
 

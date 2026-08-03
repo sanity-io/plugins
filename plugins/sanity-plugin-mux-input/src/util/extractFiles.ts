@@ -22,7 +22,7 @@ function normalizeItems(items: DataTransferItem[]) {
         // Edge throws
         try {
           entry = item.webkitGetAsEntry()
-        } catch (err) {
+        } catch {
           return [item.getAsFile()]
         }
         if (!entry) {

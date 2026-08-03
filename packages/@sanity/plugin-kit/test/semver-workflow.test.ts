@@ -1,8 +1,8 @@
-import outdent from 'outdent'
 import {expect, test} from 'vitest'
 
-import {PackageJson} from '../src/actions/verify/types'
+import type {PackageJson} from '../src/actions/verify/types'
 import {missingSections, readmeBaseurl} from '../src/presets/semver-workflow'
+import {outdent} from '../src/util/outdent'
 import {getLicenseText} from '../src/util/readme'
 
 test('readmeBaseUrl', async () => {

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import {Button, Card, Flex, Grid, Heading, Inline, Text, useToast} from '@sanity/ui'
-import React, {memo, useCallback, useRef} from 'react'
+import {memo, useCallback, useRef} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import {clear} from 'suspend-react'
 import {useErrorBoundary} from 'use-error-boundary'
@@ -16,6 +16,7 @@ function ErrorBoundaryCard(props: Props) {
   const {push: pushToast} = useToast()
   const errorRef = useRef(null)
   const {ErrorBoundary, didCatch, error, reset} = useErrorBoundary({
+    // oxlint-disable-next-line no-unstable-nested-components
     onDidCatch: (err, errorInfo) => {
       console.group(err.toString())
       console.groupCollapsed('console.error')

@@ -1,9 +1,9 @@
 import {useCallback, useMemo} from 'react'
 import {useRouter} from 'sanity/router'
 
-import {QueryResult} from '../api/embeddingsApi'
+import {type QueryResult} from '../api/embeddingsApi'
 import {SemanticSearchAutocomplete} from '../referenceInput/SemanticSearchAutocomplete'
-import {EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
+import {type EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
 
 export function QueryIndex(props: {indexName: string}) {
   const {indexName} = props

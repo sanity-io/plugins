@@ -10,13 +10,15 @@ test('package exports', {timeout: 30_000}, async () => {
   })
 
   expect(manifest.exports).toMatchInlineSnapshot(`
-      {
-        ".": {
-          "PreviewCode": "function",
-          "codeInput": "function",
-          "codeSchema": "object",
-          "codeTypeName": "string",
-        },
-      }
-    `)
+    {
+      ".": {
+        "LANGUAGE_ALIASES": "object",
+        "PreviewCode": "function",
+        "SUPPORTED_LANGUAGES": "object",
+        "codeInput": "function",
+        "codeSchema": "object",
+        "codeTypeName": "string",
+      },
+    }
+  `)
 })

@@ -3,11 +3,14 @@ import {useState} from 'react'
 import {type AssetSourceComponentProps, type SanityDocument} from 'sanity'
 
 import {AssetBrowserDispatchProvider} from '../../contexts/AssetSourceDispatchContext'
+import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import useVersionedClient from '../../hooks/useVersionedClient'
 import GlobalStyle from '../../styled/GlobalStyles'
 import Controls from '../Controls'
 import DebugControls from '../DebugControls'
 import Dialogs from '../Dialogs'
+import FolderBreadcrumbs from '../FolderBreadcrumbs'
+import FolderPanel from '../FolderPanel'
 import Header from '../Header'
 import Items from '../Items'
 import Notifications from '../Notifications'
@@ -20,6 +23,7 @@ import {useBrowserInit} from './useBrowserInit'
 type Props = {
   assetType?: AssetSourceComponentProps['assetType']
   document?: SanityDocument
+  isMultiSelect?: boolean
   onClose?: AssetSourceComponentProps['onClose']
   onSelect?: AssetSourceComponentProps['onSelect']
   selectedAssets?: AssetSourceComponentProps['selectedAssets']
@@ -52,7 +56,10 @@ const BrowserContent = ({
             {/* Browser Controls */}
             <Controls />
 
+            <FolderBreadcrumbs />
+
             <Flex flex={1}>
+              <FolderPanel />
               <Flex align="flex-end" direction="column" flex={1} style={{position: 'relative'}}>
                 <PickedBar />
                 <Items />
@@ -71,15 +78,17 @@ const BrowserContent = ({
 
 const Browser = (props: Props) => {
   const client = useVersionedClient()
+  const {excludeTagSlugs} = useToolOptions()
 
   return (
     <ReduxProvider
       assetType={props?.assetType}
       client={client}
       document={props?.document}
+      excludeTagSlugs={excludeTagSlugs}
       selectedAssets={props?.selectedAssets}
     >
-      <AssetBrowserDispatchProvider onSelect={props?.onSelect}>
+      <AssetBrowserDispatchProvider isMultiSelect={props?.isMultiSelect} onSelect={props?.onSelect}>
         <GlobalStyle />
         <BrowserContent onClose={props?.onClose} schemaType={props?.schemaType} />
       </AssetBrowserDispatchProvider>

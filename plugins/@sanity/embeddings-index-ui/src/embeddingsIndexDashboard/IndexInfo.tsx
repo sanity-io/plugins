@@ -1,4 +1,5 @@
-import {EllipsisVerticalIcon, TrashIcon} from '@sanity/icons'
+import {EllipsisVerticalIcon} from '@sanity/icons/EllipsisVertical'
+import {TrashIcon} from '@sanity/icons/Trash'
 import {
   Box,
   Button,
@@ -13,7 +14,7 @@ import {
 } from '@sanity/ui'
 import {useCallback} from 'react'
 
-import {IndexState} from '../api/embeddingsApi'
+import {type IndexState} from '../api/embeddingsApi'
 import {IndexEditor} from './IndexEditor'
 import {QueryIndex} from './QueryIndex'
 

@@ -1,4 +1,6 @@
-import {CloseIcon, Icon, UploadIcon} from '@sanity/icons'
+import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
+import {CloseIcon} from '@sanity/icons/Close'
+import {UploadIcon} from '@sanity/icons/Upload'
 import {Box, Button, Flex, Inline, Text} from '@sanity/ui'
 import pluralize from 'pluralize'
 
@@ -38,7 +40,7 @@ const Header = (props: Props) => {
               <Box display={['none', 'none', 'block']}>
                 <Text>
                   <span style={{margin: '0 0.5em'}}>
-                    <Icon symbol="arrow-right" />
+                    <ArrowRightIcon />
                   </span>
                   <span style={{textTransform: 'capitalize'}}>{selectedDocument._type}</span>
                 </Text>
@@ -55,7 +57,7 @@ const Header = (props: Props) => {
               icon={UploadIcon}
               mode="bleed"
               onClick={open}
-              text={`Upload ${assetTypes.length === 1 ? pluralize(assetTypes[0]) : 'assets'}`}
+              text={`Upload ${assetTypes.length === 1 ? pluralize(assetTypes[0]!) : 'assets'}`}
             />
           )}
 

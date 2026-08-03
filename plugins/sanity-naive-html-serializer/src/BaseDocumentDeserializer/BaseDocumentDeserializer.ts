@@ -1,7 +1,7 @@
 import {htmlToBlocks} from '@portabletext/block-tools'
 
 import {customDeserializers, customBlockDeserializers} from '../BaseSerializationConfig'
-import {Deserializer} from '../types'
+import type {Deserializer} from '../types'
 import {blockContentType, preprocess} from './helpers'
 
 const deserializeArray = (

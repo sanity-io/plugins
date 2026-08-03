@@ -55,7 +55,7 @@ describe('uploadsAssetStartEpic', () => {
     store.dispatch(uploadsActions.uploadStart({file, uploadItem}))
 
     await vi.waitFor(() => {
-      expect(store.getState().uploads.byIds.deadbeef?.objectUrl).toBe('blob:http://preview')
+      expect(store.getState().uploads.byIds['deadbeef']?.objectUrl).toBe('blob:http://preview')
     })
 
     await vi.waitFor(() => {
@@ -103,7 +103,7 @@ describe('uploadsCheckRequestEpic', () => {
 
     await vi.waitFor(() => {
       expect(client.observable.fetch).toHaveBeenCalled()
-      expect(store.getState().uploads.byIds.hh).toBeUndefined()
+      expect(store.getState().uploads.byIds['hh']).toBeUndefined()
     })
   })
 })

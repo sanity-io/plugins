@@ -1,4 +1,4 @@
-import {RemoveIcon} from '@sanity/icons'
+import {RemoveIcon} from '@sanity/icons/Remove'
 import {Box, Button, TextInput} from '@sanity/ui'
 import type {ChangeEvent} from 'react'
 

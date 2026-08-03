@@ -1,4 +1,3 @@
-/* eslint-disable */
 // From: https://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable-string
 /**
  * Format bytes as human-readable text.

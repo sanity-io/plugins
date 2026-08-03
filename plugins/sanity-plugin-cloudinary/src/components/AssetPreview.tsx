@@ -1,8 +1,10 @@
-import {DocumentIcon} from '@sanity/icons'
+import {DocumentIcon} from '@sanity/icons/Document'
+import {useSecrets} from '@sanity/studio-secrets'
 import {Flex, Text} from '@sanity/ui'
 
 import type {CloudinaryAsset} from '../types'
 import {assetUrl} from '../utils'
+import {namespace, type Secrets} from './SecretsConfigView'
 import VideoPlayer from './VideoPlayer'
 
 interface ComponentProps {
@@ -11,8 +13,15 @@ interface ComponentProps {
 }
 
 const AssetPreview = ({value, layout}: ComponentProps) => {
-  const url = value && assetUrl(value)
-  if (!value || !url) {
+  const {secrets} = useSecrets<Secrets>(namespace)
+  const cloudName = secrets?.cloudName
+
+  if (!value || !cloudName) {
+    return null
+  }
+
+  const url = assetUrl(value, cloudName)
+  if (!url) {
     return null
   }
 
@@ -37,29 +46,36 @@ const AssetPreview = ({value, layout}: ComponentProps) => {
           </Text>
         </Flex>
       )
-    default:
-      return (
-        <Flex align="center">
+    default: {
+      // Cloudinary returns resource_type as "image" even for PDFs, so we check
+      // the format to handle PDFs specifically: convert the first page to JPG
+      // and overlay a "PDF" label for thumbnail clarity.
+      const previewSrc =
+        value.format === 'pdf'
+          ? url.replace(
+              'image/upload',
+              'image/upload/f_jpg,pg_1,l_text:Verdana_75_letter_spacing_14:PDF',
+            )
+          : url
+
+      return layout === 'default' ? (
+        <Flex align="center" justify="center" style={{width: '100%'}}>
           <img
             alt="preview"
-            src={
-              // Cloudinary returns resource_type as "image" even for PDFs,
-              // so we check the format to handle PDFs specifically.
-              // If it's a PDF, convert the first page to JPG and overlay a "PDF" label for thumbnail clarity.
-              value.format === 'pdf'
-                ? url?.replace(
-                    'image/upload',
-                    'image/upload/f_jpg,pg_1,l_text:Verdana_75_letter_spacing_14:PDF',
-                  )
-                : url
-            }
-            style={{
-              maxWidth: layout === 'default' ? '80px' : '100%',
-              height: 'auto',
-            }}
+            src={previewSrc}
+            style={{maxWidth: '80px', height: 'auto', display: 'block'}}
           />
         </Flex>
+      ) : (
+        <div style={{width: '100%'}}>
+          <img
+            alt="preview"
+            src={previewSrc}
+            style={{width: '100%', height: 'auto', display: 'block'}}
+          />
+        </div>
       )
+    }
   }
 }
 

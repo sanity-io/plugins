@@ -1,6 +1,8 @@
 import {isAssetId, isSanityFileAsset} from '@sanity/asset-utils'
-import type {SanityAssetDocument} from '@sanity/client'
-import {ArrowRightIcon, SearchIcon, LaunchIcon} from '@sanity/icons'
+import type {SanityAssetDocument, SanityClient} from '@sanity/client'
+import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
+import {LaunchIcon} from '@sanity/icons/Launch'
+import {SearchIcon} from '@sanity/icons/Search'
 import {extractWithPath} from '@sanity/mutator'
 import {
   Card,
@@ -86,6 +88,490 @@ async function mapWithConcurrency<T>(
   const workers = Array.from({length: Math.min(limit, queue.length)}, () => work())
 
   await Promise.all(workers)
+}
+
+type SetMessage = (msg: Message) => void
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function isUnknownArray(value: unknown): value is unknown[] {
+  return Array.isArray(value)
+}
+
+// Pull a human-readable description out of a Sanity mutation error.
+// Prefer the richest text available: item-level descriptions (which carry the
+// "references non-existent document" phrasing) over a possibly-generic top-level
+// `details.description` like "Mutation(s) failed with N error(s)".
+function getErrorDescription(err: unknown): string {
+  if (!isRecord(err)) {
+    return ''
+  }
+
+  const details = err['details']
+  const itemDescriptions: string[] = []
+
+  if (isRecord(details) && isUnknownArray(details['items'])) {
+    for (const item of details['items']) {
+      if (isRecord(item) && isRecord(item['error'])) {
+        const itemDescription = item['error']['description']
+
+        if (typeof itemDescription === 'string' && itemDescription) {
+          itemDescriptions.push(itemDescription)
+        }
+      }
+    }
+  }
+
+  if (itemDescriptions.length) {
+    return itemDescriptions.join('\n')
+  }
+
+  const message = err['message']
+
+  if (typeof message === 'string' && message) {
+    return message
+  }
+
+  if (isRecord(details)) {
+    const description = details['description']
+
+    if (typeof description === 'string') {
+      return description
+    }
+  }
+
+  return ''
+}
+
+function isReferenceMutationError(err: unknown): boolean {
+  if (!isRecord(err)) {
+    return false
+  }
+
+  const details = err['details']
+
+  // Most reliable: structured mutation item type from the Content Lake API
+  if (isRecord(details) && isUnknownArray(details['items'])) {
+    for (const item of details['items']) {
+      if (isRecord(item) && isRecord(item['error'])) {
+        if (item['error']['type'] === 'documentReferenceDoesNotExistError') {
+          return true
+        }
+
+        const itemDescription = item['error']['description']
+
+        if (
+          typeof itemDescription === 'string' &&
+          (itemDescription.toLowerCase().includes('references non-existent document') ||
+            itemDescription.toLowerCase().includes('reference non-existent'))
+        ) {
+          return true
+        }
+      }
+    }
+  }
+
+  const description = getErrorDescription(err).toLowerCase()
+
+  return (
+    description.includes('references non-existent document') ||
+    description.includes('reference non-existent')
+  )
+}
+
+// Collect the _id's of referenced documents that are missing at the destination,
+// reading both the structured error payload and the human-readable description
+function getMissingReferenceIds(err: unknown, description: string): string[] {
+  const missingIds: string[] = []
+
+  const details = isRecord(err) ? err['details'] : undefined
+  const rawItems = isRecord(details) ? details['items'] : undefined
+  const items = isUnknownArray(rawItems) ? rawItems : []
+
+  for (const item of items) {
+    if (isRecord(item)) {
+      const error = item['error']
+
+      if (isRecord(error)) {
+        // Sanity returns `referenceID`; keep the other spellings as fallbacks
+        const refId = error['referenceID'] ?? error['referencedId'] ?? error['referenceId']
+
+        if (typeof refId === 'string' && !missingIds.includes(refId)) {
+          missingIds.push(refId)
+        }
+      }
+    }
+  }
+
+  const refRegex = /references non-existent document [`'"]?([^`'"\s)]+)[`'"]?/gi
+  let match = refRegex.exec(description)
+
+  while (match !== null) {
+    const id = match[1]
+
+    if (id && !missingIds.includes(id)) {
+      missingIds.push(id)
+    }
+
+    match = refRegex.exec(description)
+  }
+
+  return missingIds
+}
+
+// Commit documents individually so a single failing document doesn't block the rest.
+// Runs sequentially (concurrency 1) so referenced documents can land before the
+// documents that point at them.
+async function commitOneByOne(
+  docs: SanityDocument[],
+  client: SanityClient,
+  setMessage: SetMessage,
+  onSuccess: () => void,
+): Promise<void> {
+  let successCount = 0
+  let failCount = 0
+
+  await mapWithConcurrency(docs, 1, async (doc) => {
+    try {
+      const tx = client.transaction()
+      tx.createOrReplace(doc)
+      await tx.commit()
+      successCount += 1
+    } catch (commitErr) {
+      failCount += 1
+      console.error(`Failed to duplicate document "${doc._id}"`, commitErr)
+    }
+  })
+
+  if (failCount === 0) {
+    setMessage({tone: 'positive', text: 'Duplication complete!'})
+    onSuccess()
+
+    return
+  }
+
+  setMessage({
+    tone: 'critical',
+    text: `Duplication finished with ${failCount} error(s). ${successCount} document(s) duplicated successfully.`,
+  })
+
+  if (successCount > 0) {
+    onSuccess()
+  }
+}
+
+type ReferenceErrorOptions = {
+  err: unknown
+  transactionDocs: SanityDocument[]
+  originClient: SanityClient
+  destinationClient: SanityClient
+  pluginConfig: Required<PluginConfig>
+  token: string
+  setMessage: SetMessage
+  onSuccess: () => void
+  /** Caps recursive recovery so a pathological reference loop can't hang forever */
+  depth?: number
+  /** Document ids the user explicitly deselected — never auto-commit these during recovery */
+  excludedIds?: Set<string>
+}
+
+// Only attach the studio token when downloading from a Sanity host so a crafted
+// asset `url` cannot exfiltrate credentials to an attacker-controlled endpoint.
+function assetDownloadInit(url: string, token: string, typeIsFile: boolean): RequestInit {
+  if (typeIsFile) {
+    return {}
+  }
+
+  try {
+    const {hostname} = new URL(url)
+
+    if (hostname === 'cdn.sanity.io' || hostname.endsWith('.sanity.io')) {
+      return {headers: {Authorization: `Bearer ${token}`}}
+    }
+  } catch {
+    // Invalid URL — fetch without credentials
+  }
+
+  return {}
+}
+
+// Upload a recovered asset to the destination, rewriting url/path for the new dataset
+async function uploadAssetForRecovery(
+  doc: SanityDocument & SanityAssetDocument,
+  destinationClient: SanityClient,
+  token: string,
+): Promise<{docs: SanityDocument[]; svgMap?: {old: string; new: string}}> {
+  const typeIsFile = isSanityFileAsset(doc)
+  const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
+
+  const res = await fetch(downloadUrl, assetDownloadInit(downloadUrl, token, typeIsFile))
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to download asset "${doc._id}" from origin (${res.status} ${res.statusText})`,
+    )
+  }
+
+  const assetData = await res.blob()
+  const assetDoc = await destinationClient.assets.upload(typeIsFile ? `file` : `image`, assetData, {
+    filename: doc.originalFilename,
+  })
+
+  return {
+    docs: [assetDoc, {...doc, url: assetDoc.url, path: assetDoc.path}],
+    svgMap: doc.extension === 'svg' ? {old: doc._id, new: assetDoc._id} : undefined,
+  }
+}
+
+// Rewrite _ref values that point at remapped SVG asset ids.
+// Clones each doc so caller-held / payload objects are not mutated.
+function remapSvgRefs(
+  docs: SanityDocument[],
+  svgMaps: {old: string; new: string}[],
+): SanityDocument[] {
+  if (!svgMaps.length) {
+    return docs
+  }
+
+  return docs.map((original) => {
+    const references = extractWithPath(`.._ref`, original)
+
+    if (!references.length) {
+      return original
+    }
+
+    const doc = structuredClone(original)
+
+    references.forEach((ref) => {
+      const newRefValue = svgMaps.find((asset) => asset.old === ref.value)?.new
+
+      if (newRefValue) {
+        dset(doc, ref.path.join('.'), newRefValue)
+      }
+    })
+
+    return doc
+  })
+}
+
+// Order docs so referenced documents come before the documents that point at
+// them. Used by the sequential one-by-one fallback where commit order matters.
+function orderDocsDependenciesFirst(docs: SanityDocument[]): SanityDocument[] {
+  const byId = new Map(docs.map((doc) => [doc._id, doc]))
+  const visiting = new Set<string>()
+  const visited = new Set<string>()
+  const ordered: SanityDocument[] = []
+
+  function visit(id: string): void {
+    if (visited.has(id) || visiting.has(id)) {
+      return
+    }
+
+    const doc = byId.get(id)
+
+    if (!doc) {
+      return
+    }
+
+    visiting.add(id)
+
+    for (const ref of extractWithPath(`.._ref`, doc)) {
+      if (typeof ref.value === 'string') {
+        visit(ref.value)
+      }
+    }
+
+    visiting.delete(id)
+    visited.add(id)
+    ordered.push(doc)
+  }
+
+  for (const doc of docs) {
+    visit(doc._id)
+  }
+
+  return ordered
+}
+
+// When a transaction fails because of missing references, fetch the referenced
+// documents (and their transitive refs) from the origin — respecting
+// pluginConfig.filter — upload any assets, then retry. Falls back to one-by-one
+// commits if the retry still fails.
+async function handleReferenceError(options: ReferenceErrorOptions): Promise<void> {
+  const {
+    err,
+    transactionDocs,
+    originClient,
+    destinationClient,
+    pluginConfig,
+    token,
+    setMessage,
+    onSuccess,
+    depth = 0,
+    excludedIds = new Set(),
+  } = options
+  const description = getErrorDescription(err)
+  const missingIds = getMissingReferenceIds(err, description)
+
+  // If the only missing refs are ones the user deselected, surface that instead of
+  // silently re-committing them
+  const autoFetchIds = missingIds.filter((id) => !excludedIds.has(id))
+  const blockedIds = missingIds.filter((id) => excludedIds.has(id))
+
+  if (blockedIds.length && !autoFetchIds.length) {
+    setMessage({
+      tone: 'critical',
+      text: `Duplication failed because deselected document(s) are still referenced: ${blockedIds.join(', ')}. Re-select them or remove the references.`,
+    })
+
+    return
+  }
+
+  if (!missingIds.length || depth >= 5) {
+    // Couldn't parse the missing _id's (or we hit the recursion cap) — retry each document on its own
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(
+      orderDocsDependenciesFirst(transactionDocs),
+      destinationClient,
+      setMessage,
+      onSuccess,
+    )
+
+    return
+  }
+
+  setMessage({
+    tone: 'default',
+    text: `Fetching ${autoFetchIds.length} missing referenced document(s) and retrying...`,
+  })
+
+  let missingDocs: SanityDocument[] = []
+
+  try {
+    // Recursively gather referenced docs (and apply pluginConfig.filter), same
+    // as the "Gather References" path — so nested refs aren't left behind
+    missingDocs = await getDocumentsInArray({
+      fetchIds: autoFetchIds,
+      client: originClient,
+      pluginConfig,
+    })
+  } catch (fetchErr) {
+    setMessage({
+      tone: 'critical',
+      text:
+        (fetchErr instanceof Error ? fetchErr.message : '') || description || 'Duplication Failed',
+    })
+
+    return
+  }
+
+  if (!missingDocs.length) {
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(
+      orderDocsDependenciesFirst(transactionDocs),
+      destinationClient,
+      setMessage,
+      onSuccess,
+    )
+
+    return
+  }
+
+  // Don't re-commit documents already in the failed transaction, or ones the
+  // user explicitly deselected (including transitive refs of those)
+  const existingIds = new Set(transactionDocs.map((doc) => doc._id))
+  // Reverse so transitive refs (appended last by getDocumentsInArray) are processed first
+  const newMissingDocs = [...missingDocs]
+    .reverse()
+    .filter((doc) => !existingIds.has(doc._id) && !excludedIds.has(doc._id))
+
+  // Nothing new to add — retrying the same transaction would just loop until the depth cap
+  if (!newMissingDocs.length) {
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(
+      orderDocsDependenciesFirst(transactionDocs),
+      destinationClient,
+      setMessage,
+      onSuccess,
+    )
+
+    return
+  }
+
+  setMessage({tone: 'default', text: `Duplicating ${newMissingDocs.length} missing document(s)...`})
+
+  const svgMaps: {old: string; new: string}[] = []
+
+  // Process with the same concurrency limit as the main duplication path, while
+  // writing into index slots so dependency-first order is preserved
+  const recoveredChunks: SanityDocument[][] = Array.from({length: newMissingDocs.length}, () => [])
+
+  try {
+    await mapWithConcurrency(
+      newMissingDocs.map((doc, index) => ({doc, index})),
+      3,
+      async ({doc, index}) => {
+        if (!isAssetDocument(doc)) {
+          recoveredChunks[index] = [doc]
+
+          return
+        }
+
+        const {docs, svgMap} = await uploadAssetForRecovery(doc, destinationClient, token)
+        recoveredChunks[index] = docs
+
+        if (svgMap) {
+          svgMaps.push(svgMap)
+        }
+      },
+    )
+  } catch (uploadErr) {
+    setMessage({
+      tone: 'critical',
+      text:
+        (uploadErr instanceof Error ? uploadErr.message : '') ||
+        description ||
+        'Duplication Failed',
+    })
+
+    return
+  }
+
+  const recoveredDocs = recoveredChunks.flat()
+
+  // Remap SVG _ref's in both recovered and original transaction docs
+  const remappedRecoveredDocs = remapSvgRefs(recoveredDocs, svgMaps)
+  const remappedTransactionDocs = remapSvgRefs(transactionDocs, svgMaps)
+
+  // Put recovered (referenced) docs first so sequential commits land
+  // dependencies before the documents that point at them
+  const allDocs = orderDocsDependenciesFirst([...remappedRecoveredDocs, ...remappedTransactionDocs])
+
+  const retryTransaction = destinationClient.transaction()
+  allDocs.forEach((doc) => retryTransaction.createOrReplace(doc))
+
+  try {
+    await retryTransaction.commit()
+    setMessage({tone: 'positive', text: 'Duplication complete!'})
+    onSuccess()
+  } catch (retryErr) {
+    if (isReferenceMutationError(retryErr)) {
+      // Another layer of missing refs — recurse with the expanded set
+      await handleReferenceError({
+        ...options,
+        err: retryErr,
+        transactionDocs: allDocs,
+        depth: depth + 1,
+      })
+
+      return
+    }
+
+    setMessage({tone: 'default', text: 'Retrying documents one by one...'})
+    await commitOneByOne(allDocs, destinationClient, setMessage, onSuccess)
+  }
 }
 
 export default function Duplicator(props: DuplicatorProps) {
@@ -269,9 +755,8 @@ export default function Duplicator(props: DuplicatorProps) {
       // Get the *original* image with this dlRaw param to create the same deterministic _id
       const typeIsFile = isSanityFileAsset(doc)
       const downloadUrl = typeIsFile ? doc.url : `${doc.url}?dlRaw=true`
-      const downloadConfig = typeIsFile ? {} : {headers: {Authorization: `Bearer ${token}`}}
 
-      const res = await fetch(downloadUrl, downloadConfig)
+      const res = await fetch(downloadUrl, assetDownloadInit(downloadUrl, token, typeIsFile))
 
       // Fail fast instead of uploading an error response (e.g. 401/403/404)
       // body as the asset's binary data.
@@ -372,16 +857,35 @@ export default function Duplicator(props: DuplicatorProps) {
       transaction.createOrReplace(doc)
     })
 
+    const onCommitSuccess = () => {
+      updatePayloadStatuses(payload, destination).catch(console.error)
+    }
+
     try {
       await transaction.commit()
       setMessage({tone: 'positive', text: 'Duplication complete!'})
 
-      updatePayloadStatuses(payload, destination).catch(console.error)
+      onCommitSuccess()
     } catch (err) {
-      setMessage({
-        tone: 'critical',
-        text: err instanceof Error ? err.message : `Duplication Failed`,
-      })
+      if (isReferenceMutationError(err)) {
+        await handleReferenceError({
+          err,
+          transactionDocs: transactionDocsMapped,
+          originClient,
+          destinationClient,
+          pluginConfig,
+          token,
+          setMessage,
+          onSuccess: onCommitSuccess,
+          excludedIds: new Set(payload.filter((item) => !item.include).map((item) => item.doc._id)),
+        })
+      } else {
+        const description = getErrorDescription(err)
+        setMessage({
+          tone: 'critical',
+          text: description || `Duplication Failed`,
+        })
+      }
     }
 
     setIsDuplicating(false)

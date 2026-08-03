@@ -1,8 +1,9 @@
 import {Box, Portal, PortalProvider, useLayer} from '@sanity/ui'
-import {type SyntheticEvent, useEffect, useState} from 'react'
+import {type SyntheticEvent} from 'react'
 import {type AssetSourceComponentProps, type SanityDocument, useFormValue} from 'sanity'
 
 import useKeyPress from '../../hooks/useKeyPress'
+import useRootPortalElement from '../../hooks/useRootPortalElement'
 import Browser from '../Browser'
 
 const FormBuilderTool = (props: AssetSourceComponentProps) => {
@@ -12,6 +13,9 @@ const FormBuilderTool = (props: AssetSourceComponentProps) => {
 
   // Get current Sanity document
   const currentDocument = useFormValue([]) as SanityDocument
+  const selectionType = (props as unknown as {selectionType?: string})?.selectionType
+  const schemaJsonType = (props?.schemaType as {jsonType?: string} | undefined)?.jsonType
+  const isMultiSelect = selectionType === 'multiple' || schemaJsonType === 'array'
 
   // Close on escape key press
   useKeyPress('escape', onClose)
@@ -45,7 +49,12 @@ const FormBuilderTool = (props: AssetSourceComponentProps) => {
             zIndex,
           }}
         >
-          <Browser document={currentDocument} schemaType={props.schemaType} {...props} />
+          <Browser
+            document={currentDocument}
+            isMultiSelect={isMultiSelect}
+            schemaType={props.schemaType}
+            {...props}
+          />
         </Box>
       </Portal>
     </PortalProvider>
@@ -53,17 +62,3 @@ const FormBuilderTool = (props: AssetSourceComponentProps) => {
 }
 
 export default FormBuilderTool
-
-const useRootPortalElement = () => {
-  const [container] = useState(() => document.createElement('div'))
-
-  useEffect(() => {
-    container.classList.add('media-portal')
-    document.body.appendChild(container)
-    return () => {
-      document.body.removeChild(container)
-    }
-  }, [container])
-
-  return container
-}

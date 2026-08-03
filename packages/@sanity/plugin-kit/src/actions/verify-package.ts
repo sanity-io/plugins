@@ -1,35 +1,29 @@
-import chalk from 'chalk'
-import outdent from 'outdent'
+import {styleText} from 'node:util'
 
 import {cliName, defaultOutDir, urls} from '../constants'
-import {validateImports} from '../dependencies/import-linter'
 import {getPackage} from '../npm/package'
 import {loadPackageConfig} from '../util/load-package-config'
 import log from '../util/log'
+import {outdent} from '../util/outdent'
 import {readTSConfig} from '../util/ts'
-import {PackageJson} from './verify/types'
+import type {PackageJson} from './verify/types'
 import {
   validateBabelConfig,
+  validateEsmOnly,
   validateNodeEngine,
   validatePackageName,
   validatePackageType,
   validatePkgUtilsDependency,
   validatePkgUtilsVersion,
-  validatePluginSanityJson,
   validateDeprecatedDependencies,
   validateScripts,
   validateTsConfig,
-  validateSanityDependencies,
   validateSrcIndexFile,
-  disallowDuplicateEslintConfig,
-  disallowDuplicatePrettierConfig,
+  validateBannedFiles,
+  validateOxfmtConfig,
+  validateOxlintConfig,
 } from './verify/validations'
-import {
-  createValidator,
-  runTscMaybe,
-  VerifyFlags,
-  VerifyPackageConfig,
-} from './verify/verify-common'
+import {createValidator, type VerifyFlags, type VerifyPackageConfig} from './verify/verify-common'
 
 export async function verifyPackage({basePath, flags}: {basePath: string; flags: VerifyFlags}) {
   let errors: string[] = []
@@ -63,57 +57,48 @@ export async function verifyPackage({basePath, flags}: {basePath: string; flags:
   const ts = await readTSConfig({basePath, filename: tsconfig})
 
   await validation('packageName', async () => validatePackageName(packageJson))
+  await validation('esmOnly', async () => validateEsmOnly(packageJson))
   await validation('pkg-utils', async () => validatePkgUtilsDependency(packageJson))
   await validation('srcIndex', async () => validateSrcIndexFile(basePath))
+  await validation('bannedFiles', async () => validateBannedFiles(packageJson))
   await validation('scripts', async () => validateScripts(packageJson))
   await validation('nodeEngine', async () => validateNodeEngine(packageJson))
-  await validation('duplicateConfig', async () =>
-    disallowDuplicateEslintConfig(basePath, packageJson),
-  )
-  await validation('duplicateConfig', async () =>
-    disallowDuplicatePrettierConfig(basePath, packageJson),
-  )
+  await validation('oxfmt', async () => validateOxfmtConfig(basePath, packageJson))
+  await validation('oxlint', async () => validateOxlintConfig(basePath, packageJson))
 
   if (ts) {
     await validation('tsconfig', async () => validateTsConfig(ts, {basePath, outDir, tsconfig}))
   }
 
-  await validation('sanityV2Json', async () => validatePluginSanityJson({basePath, packageJson}))
-
   await validation('babelConfig', async () => validateBabelConfig({basePath}))
 
-  await validation('dependencies', async () => validateSanityDependencies(packageJson))
   await validation('deprecatedDependencies', async () =>
     validateDeprecatedDependencies(packageJson),
   )
-  await validation('eslintImports', async () => validateImports({basePath}))
 
   if (errors.length) {
     throw new Error(
       outdent`
         Detected validation issues!
-        To make this package Sanity v3 compatible, fix the issues starting from the top, or disable any checks you deem unnecessary.
+        Fix the issues starting from the top, or disable any checks you deem unnecessary.
 
         These issues assume the package uses @sanity/plugin-kit defaults for development and building.
         Refer to ${urls.pluginReadme} for configuration options.
 
         More information is available here:
-        - Studio migration guide: ${urls.migrationGuideStudio}
-        - Plugin migration guide: ${urls.migrationGuidePlugin}
         - Reference documentation: ${urls.refDocs}
 
-        ${chalk.grey(
-          `To fail-fast on first detected issue run:\nnpx ${cliName} verify-package' --single`,
+        ${styleText(
+          'grey',
+          `To fail-fast on first detected issue run:\nnpx ${cliName} verify-package --single`,
         )}
       `.trimStart(),
     )
   }
 
-  await runTscMaybe(verifyConfig, ts)
-
   log.success(
     outdent`
-    No outstanding upgrade issues detected.
+    No outstanding package validation issues detected.
 
     Suggested next steps:
       - Use plugin-kit to build and develop the plugin according to ${urls.pluginReadme}.

@@ -25,7 +25,7 @@ const DialogSearchFacets = (props: Props) => {
   // Callbacks
   const handleClose = useCallback(() => {
     dispatch(dialogActions.clear())
-  }, [])
+  }, [dispatch])
 
   return (
     <Dialog animate header="Filters" id={id} onClose={handleClose} width={1}>

@@ -1,4 +1,6 @@
-import {CalendarIcon, ClockIcon, TagIcon} from '@sanity/icons'
+import {CalendarIcon} from '@sanity/icons/Calendar'
+import {ClockIcon} from '@sanity/icons/Clock'
+import {TagIcon} from '@sanity/icons/Tag'
 import {Inline, Stack, Text} from '@sanity/ui'
 
 import getVideoMetadata from '../util/getVideoMetadata'
@@ -29,7 +31,7 @@ const VideoMetadata = (props: {asset: VideoAssetDocument}) => {
           <IconInfo text={displayInfo.duration} icon={ClockIcon} size={1} muted />
         )}
         <IconInfo
-          text={displayInfo.createdAt.toISOString().split('T')[0]}
+          text={displayInfo.createdAt.toISOString().split('T')[0]!}
           icon={CalendarIcon}
           size={1}
           muted

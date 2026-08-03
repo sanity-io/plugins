@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 
-import {StagedUpload} from '../components/Uploader'
+import {type StagedUpload} from '../components/Uploader'
 
 export function useFetchFileSize(stagedUpload: StagedUpload, maxFileSize?: number) {
   const [fileSize, setFileSize] = useState<number | null>(null)
@@ -10,6 +10,7 @@ export function useFetchFileSize(stagedUpload: StagedUpload, maxFileSize?: numbe
   useEffect(() => {
     // Fetch URL Upload file size
     if (stagedUpload.type === 'url') {
+      // oxlint-disable-next-line react/react-compiler
       setIsLoadingFileSize(false)
       setCanSkipFileSizeValidation(false)
       setFileSize(null)
@@ -39,10 +40,10 @@ export function useFetchFileSize(stagedUpload: StagedUpload, maxFileSize?: numbe
         }
       }
 
-      fetchFileSize()
+      void fetchFileSize()
     }
     if (stagedUpload.type === 'file') {
-      setFileSize(stagedUpload.files[0].size)
+      setFileSize(stagedUpload.files[0]!.size)
     }
   }, [maxFileSize, stagedUpload, stagedUpload.type])
 

@@ -1,26 +1,36 @@
 import path from 'path'
 import {URL} from 'url'
 
-// @ts-expect-error missing types
-import githubUrlToObject from 'github-url-to-object'
-import inquirer from 'inquirer'
-// @ts-expect-error missing types
+import inquirer, {type Question} from 'inquirer'
 import validNpmName from 'validate-npm-package-name'
 
-import {InjectOptions} from '../actions/inject'
+import type {InjectOptions} from '../actions/inject'
+import {githubUrlToObject} from './github-url'
 
-export async function prompt(
-  message: string,
-  options: {
-    choices?: any
-    type?: string
-    default?: any
-    filter?: (val: any) => any
-    validate?: (val: any) => boolean | string
-  },
-) {
-  const type = options.choices ? 'list' : options.type
-  const result = await inquirer.prompt([{...options, type, message, name: 'single'}])
+interface PromptOptions {
+  choices?: any
+  type?: string
+  default?: any
+  filter?: (val: any) => any
+  validate?: (val: any) => boolean | string
+}
+
+export async function prompt(message: string, options: PromptOptions) {
+  const type = options.choices ? 'select' : (options.type ?? 'input')
+  const question: Question & Pick<PromptOptions, 'validate'> = {
+    ...options,
+    type,
+    message,
+    name: 'single',
+  }
+  const {filter, validate} = options
+  if (validate) {
+    // Classic inquirer ran `validate` on the filtered value; the modern rewrite applies
+    // `filter` only after the prompt resolves, so restore the original semantics here
+    // (all filters used with `prompt` are idempotent)
+    question.validate = (value: any) => validate(filter ? filter(value) : value)
+  }
+  const result = await inquirer.prompt([question])
   return result && result.single
 }
 
@@ -53,7 +63,7 @@ export function promptForRepoOrigin(_options: InjectOptions, defaultVal?: string
     default: defaultVal,
     filter: (raw) => {
       const url = (raw || '').trim()
-      const gh: {user: string; repo: string} | undefined = githubUrlToObject(url)
+      const gh = githubUrlToObject(url)
       return gh ? `git+ssh://git@github.com/${gh.user}/${gh.repo}.git` : url
     },
     validate: (url) => {

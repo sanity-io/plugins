@@ -1,4 +1,4 @@
-import {ObjectField, TypedObject} from 'sanity'
+import type {ObjectField, TypedObject} from 'sanity'
 
 const META_FIELDS = ['_key', '_type', '_id']
 

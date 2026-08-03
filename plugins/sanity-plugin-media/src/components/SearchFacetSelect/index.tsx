@@ -1,4 +1,4 @@
-import {SelectIcon} from '@sanity/icons'
+import {SelectIcon} from '@sanity/icons/Select'
 import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
 
@@ -86,14 +86,14 @@ const SearchFacetSelect = ({facet}: Props) => {
         id="list"
         menu={
           <Menu>
-            {options?.map((item, index) => {
+            {options?.map((item) => {
               const selected = item.name === selectedItem?.name
               return (
                 <MenuItem
                   disabled={selected}
                   fontSize={1}
                   key={item.name}
-                  onClick={() => handleListItemClick(options[index])}
+                  onClick={() => handleListItemClick(item)}
                   padding={2}
                   text={item.title}
                 />

@@ -1,4 +1,4 @@
-import {minutesToMilliseconds} from 'date-fns'
+import {minutesToMilliseconds} from 'date-fns/minutesToMilliseconds'
 
 export const releaseAnnouncementUrl =
   'https://www.sanity.io/blog/sanity-ai-assist-announcement?utm_source=sanity-assist-plugin&utm_medium=organic_social&utm_campaign=ai-assist&utm_content='

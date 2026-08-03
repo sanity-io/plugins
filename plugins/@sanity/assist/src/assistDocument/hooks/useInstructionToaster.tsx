@@ -1,5 +1,6 @@
 import {useToast} from '@sanity/ui'
-import {addSeconds, isAfter} from 'date-fns'
+import {addSeconds} from 'date-fns/addSeconds'
+import {isAfter} from 'date-fns/isAfter'
 import {useEffect, useRef} from 'react'
 import {type ObjectSchemaType, useCurrentUser} from 'sanity'
 

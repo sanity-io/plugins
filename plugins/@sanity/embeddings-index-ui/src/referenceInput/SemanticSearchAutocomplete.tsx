@@ -1,8 +1,7 @@
-/* eslint-disable max-nested-callbacks */
-import {Autocomplete, AutocompleteOpenButtonProps, Box, Button, Flex, Text} from '@sanity/ui'
+import {Autocomplete, type AutocompleteOpenButtonProps, Box, Button, Flex, Text} from '@sanity/ui'
 import {
-  FocusEventHandler,
-  forwardRef,
+  type FocusEventHandler,
+  type Ref,
   useCallback,
   useEffect,
   useId,
@@ -12,10 +11,10 @@ import {
 } from 'react'
 import {typed} from 'sanity'
 
-import {queryIndex, QueryResult} from '../api/embeddingsApi'
+import {queryIndex, type QueryResult} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
 import {DocumentPreview} from '../preview/DocumentPreview'
-import {EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
+import {type EmbeddingsIndexConfig} from '../schemas/typeDefExtensions'
 
 export interface SemanticSearchAutocompleteProps {
   indexConfig: EmbeddingsIndexConfig
@@ -42,10 +41,8 @@ interface NoResultOption {
 const NO_OPTIONS: NoResultOption[] = []
 const NO_FILTER = () => true
 
-export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAutocomplete(
-  props: SemanticSearchAutocompleteProps,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ref: any,
+export function SemanticSearchAutocomplete(
+  props: SemanticSearchAutocompleteProps & {ref?: Ref<HTMLInputElement>},
 ) {
   const {
     indexConfig,
@@ -56,6 +53,7 @@ export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAuto
     onBlur,
     onSelect,
     typeFilter,
+    ref,
   } = props
   const id = useId()
   const [query, setQuery] = useState('')
@@ -169,7 +167,7 @@ export const SemanticSearchAutocomplete = forwardRef(function SemanticSearchAuto
       renderOption={AutocompleteOption}
     />
   )
-})
+}
 
 function AutocompleteOption(props: Option | NoResultOption) {
   if ('result' in props) {

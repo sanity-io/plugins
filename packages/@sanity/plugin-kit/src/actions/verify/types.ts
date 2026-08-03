@@ -1,4 +1,4 @@
-import {VerifyPackageConfig} from './verify-common'
+import type {VerifyPackageConfig} from './verify-common'
 
 export interface SanityPlugin {
   verifyPackage?: VerifyPackageConfig
@@ -32,26 +32,4 @@ export interface PackageJson {
   repository?: {url?: string}
 
   [index: string]: unknown
-}
-
-export interface SanityV2Json {
-  parts?: [
-    {
-      implements?: string
-      path?: 'string'
-    },
-  ]
-}
-
-export interface SanityStudioJson {
-  root?: boolean
-  project?: {
-    name?: string
-  }
-  api?: {
-    projectId?: string
-    dataset?: string
-  }
-  plugins?: string[]
-  parts?: Record<string, unknown>[]
 }

@@ -1,5 +1,3 @@
-import 'sanity'
-
 export interface EmbeddingsIndexConfig {
   /**
    * Name of the index
@@ -17,7 +15,6 @@ export interface EmbeddingsIndexConfig {
   searchMode?: 'embeddings' | 'default'
 }
 
-/* eslint-disable no-unused-vars */
 declare module 'sanity' {
   interface ReferenceBaseOptions {
     /**

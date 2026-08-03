@@ -1,10 +1,8 @@
-import {
-  CheckmarkCircleIcon,
-  ErrorOutlineIcon,
-  InfoOutlineIcon,
-  RetrieveIcon,
-  RetryIcon,
-} from '@sanity/icons'
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {RetrieveIcon} from '@sanity/icons/Retrieve'
+import {RetryIcon} from '@sanity/icons/Retry'
 import {
   Box,
   Button,
@@ -98,7 +96,6 @@ function MissingAsset({
   )
 }
 
-// eslint-disable-next-line complexity
 function ImportVideosDialog(props: ReturnType<typeof useImportMuxAssets>) {
   const {importState} = props
 
@@ -333,10 +330,8 @@ export default function ImportVideosFromMux() {
   }
 
   if (importAssets.dialogOpen) {
-    // eslint-disable-next-line consistent-return
     return <ImportVideosDialog {...importAssets} />
   }
 
-  // eslint-disable-next-line consistent-return
   return <Button mode="bleed" text="Import from Mux" onClick={importAssets.openDialog} />
 }

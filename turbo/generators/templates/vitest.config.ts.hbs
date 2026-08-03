@@ -1,7 +1,16 @@
+{{#if hasVanillaExtract}}
+import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
+{{/if}}
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
+{{#if hasVanillaExtract}}
+  plugins: [vanillaExtractPlugin()],
+{{/if}}
   test: {
+{{#if hasVanillaExtract}}
+    setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
+{{/if}}
     server: {
       deps: {
         inline: ['vitest-package-exports'],

@@ -1,15 +1,12 @@
-import {
-  type ActionFromReducersMapObject,
-  type Reducer,
-  type StateFromReducersMapObject,
-  combineReducers,
-} from '@reduxjs/toolkit'
+import {type Reducer, type StateFromReducersMapObject, combineReducers} from '@reduxjs/toolkit'
 import {combineEpics} from 'redux-observable'
 
 import assetsReducer, {
   assetsDeleteEpic,
   assetsFetchAfterDeleteAllEpic,
   assetsFetchEpic,
+  assetsFolderSetEpic,
+  assetsFolderSetRefreshEpic,
   assetsFetchNextPageEpic,
   assetsFetchPageIndexEpic,
   assetsListenerCreateQueueEpic,
@@ -22,6 +19,7 @@ import assetsReducer, {
   assetsTagsRemoveEpic,
   assetsUnpickEpic,
   assetsUpdateEpic,
+  assetsUpdateImageReferencesEpic,
 } from './assets'
 import debugReducer from './debug'
 import dialogReducer, {
@@ -29,12 +27,23 @@ import dialogReducer, {
   dialogTagCreateEpic,
   dialogTagDeleteEpic,
 } from './dialog'
+import foldersReducer, {
+  foldersCurrentFolderEpic,
+  foldersCreateEpic,
+  foldersDeleteEpic,
+  foldersFetchEpic,
+  foldersRefreshEpic,
+  foldersRenameEpic,
+} from './folders'
 import notificationsReducer, {
   notificationsAssetsDeleteErrorEpic,
   notificationsAssetsDeleteCompleteEpic,
   notificationsAssetsTagsAddCompleteEpic,
   notificationsAssetsTagsRemoveCompleteEpic,
   notificationsAssetsUpdateCompleteEpic,
+  notificationsFolderCreateCompleteEpic,
+  notificationsFolderDeleteCompleteEpic,
+  notificationsFolderRenameCompleteEpic,
   notificationsGenericErrorEpic,
   notificationsTagCreateCompleteEpic,
   notificationsTagDeleteCompleteEpic,
@@ -65,6 +74,8 @@ export const rootEpic = combineEpics(
   assetsFetchAfterDeleteAllEpic,
   assetsFetchNextPageEpic,
   assetsFetchPageIndexEpic,
+  assetsFolderSetEpic,
+  assetsFolderSetRefreshEpic,
   assetsListenerCreateQueueEpic,
   assetsListenerDeleteQueueEpic,
   assetsListenerUpdateQueueEpic,
@@ -75,14 +86,24 @@ export const rootEpic = combineEpics(
   assetsTagsRemoveEpic,
   assetsUnpickEpic,
   assetsUpdateEpic,
+  assetsUpdateImageReferencesEpic,
   dialogClearOnAssetUpdateEpic,
   dialogTagCreateEpic,
   dialogTagDeleteEpic,
+  foldersCurrentFolderEpic,
+  foldersCreateEpic,
+  foldersDeleteEpic,
+  foldersFetchEpic,
+  foldersRefreshEpic,
+  foldersRenameEpic,
   notificationsAssetsDeleteErrorEpic,
   notificationsAssetsDeleteCompleteEpic,
   notificationsAssetsTagsAddCompleteEpic,
   notificationsAssetsTagsRemoveCompleteEpic,
   notificationsAssetsUpdateCompleteEpic,
+  notificationsFolderCreateCompleteEpic,
+  notificationsFolderDeleteCompleteEpic,
+  notificationsFolderRenameCompleteEpic,
   notificationsGenericErrorEpic,
   notificationsTagCreateCompleteEpic,
   notificationsTagDeleteCompleteEpic,
@@ -106,6 +127,7 @@ const reducers = {
   assets: assetsReducer,
   debug: debugReducer,
   dialog: dialogReducer,
+  folders: foldersReducer,
   notifications: notificationsReducer,
   search: searchReducer,
   selected: selectedReducer,
@@ -118,7 +140,5 @@ type ReducersMapObject = typeof reducers
 // Workaround to avoid `$CombinedState` ts errors
 // source: https://github.com/reduxjs/redux-toolkit/issues/2068#issuecomment-1130796500
 // TODO: remove once we use `redux-toolkit` v2
-export const rootReducer: Reducer<
-  StateFromReducersMapObject<ReducersMapObject>,
-  ActionFromReducersMapObject<ReducersMapObject>
-> = combineReducers(reducers)
+export const rootReducer: Reducer<StateFromReducersMapObject<ReducersMapObject>> =
+  combineReducers(reducers)
