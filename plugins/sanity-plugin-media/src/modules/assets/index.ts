@@ -288,6 +288,7 @@ const assetsSlice = createSlice({
               metadata {
                 dimensions,
                 exif,
+                image,
                 isOpaque,
               },
               mimeType,
