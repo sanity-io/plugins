@@ -75,11 +75,6 @@ const config: OxlintConfig = {
           },
           {
             name: 'react',
-            importNames: ['Component', 'PureComponent'],
-            message: 'Class components are not allowed. Use function components instead.',
-          },
-          {
-            name: 'react',
             importNames: ['createRef'],
             message: 'createRef is only for class components. Use the useRef hook instead.',
           },
@@ -99,6 +94,9 @@ const config: OxlintConfig = {
         ],
       },
     ],
+
+    // Prefer function components; allow class error boundaries (no hook equivalent yet)
+    'react/prefer-function-component': ['error', {allowErrorBoundary: true}],
 
     // React Compiler checks
     'react/react-compiler': 'error',

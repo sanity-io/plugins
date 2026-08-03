@@ -1,5 +1,5 @@
 ---
-'sanity-plugin-studio-smartling': patch
+"sanity-plugin-studio-smartling": patch
 ---
 
 Harden the Smartling adapter and fix docs:
