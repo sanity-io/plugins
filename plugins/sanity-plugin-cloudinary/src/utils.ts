@@ -1,3 +1,6 @@
+import {CloudConfig, CloudinaryImage} from '@cloudinary/url-gen'
+import {scale} from '@cloudinary/url-gen/actions/resize'
+
 import type {
   CloudinaryAsset,
   CloudinaryAssetResponse,
@@ -8,8 +11,39 @@ import type {
 
 const widgetSrc = 'https://media-library.cloudinary.com/global/all.js'
 
-export function assetUrl(asset: Partial<Pick<CloudinaryAsset, 'url' | 'secure_url' | 'derived'>>) {
+export function assetUrl(
+  asset: Partial<
+    Pick<
+      CloudinaryAsset,
+      'url' | 'secure_url' | 'derived' | 'public_id' | 'format' | 'resource_type' | 'type'
+    >
+  >,
+  cloudName?: string,
+): string | undefined {
   const [derived] = asset.derived ?? []
+
+  // When the cloud name and public id are known and there is no Media Library
+  // derived transform, build an on-the-fly preview with url-gen instead of
+  // serving the full-size original. Scaling to a 400px width keeps previews
+  // crisp while avoiding multi-megabyte source downloads.
+  // Only public `upload` images use CloudinaryImage — video/raw would get an
+  // /image/upload URL that breaks VideoPlayer/raw previews, and private or
+  // authenticated assets need their stored (often signed) URL rather than an
+  // unsigned /upload/ path. Derived transforms are preferred over the scaled
+  // original so Studio still shows the editor's chosen crop/effects.
+  if (
+    cloudName &&
+    asset.public_id &&
+    !derived &&
+    asset.resource_type !== 'video' &&
+    asset.resource_type !== 'raw' &&
+    (!asset.type || asset.type === 'upload')
+  ) {
+    return new CloudinaryImage(asset.public_id, new CloudConfig({cloudName}))
+      .resize(scale().width(400))
+      .toURL()
+  }
+
   if (derived) {
     if (derived.secure_url) {
       return derived.secure_url
@@ -97,7 +131,7 @@ export const openMediaSelector = (
   showHandler?: (params: ShowHandlerParams) => void,
   folder?: {resource_type?: 'image' | 'video'; path?: string},
 ) => {
-  loadJS(widgetSrc, () => {
+  loadJS(widgetSrc, (cloudinary) => {
     const options: Record<string, any> = {
       cloud_name: cloudName,
       api_key: apiKey,
@@ -129,7 +163,7 @@ export const openMediaSelector = (
       callbacks.showHandler = showHandler
     }
 
-    window.cloudinary.openMediaLibrary(options, callbacks)
+    cloudinary.openMediaLibrary(options, callbacks)
   })
 }
 
@@ -146,7 +180,7 @@ export const createMediaLibrary = ({
   libraryCreated: (library: CloudinaryMediaLibrary) => void
   insertHandler: (params: InsertHandlerParams) => void
 }) => {
-  loadJS(widgetSrc, () => {
+  loadJS(widgetSrc, (cloudinary) => {
     const options: Record<string, any> = {
       cloud_name: cloudName,
       api_key: apiKey,
@@ -155,25 +189,47 @@ export const createMediaLibrary = ({
       remove_header: true,
     }
 
-    libraryCreated(window.cloudinary.createMediaLibrary(options, {insertHandler}))
+    libraryCreated(cloudinary.createMediaLibrary(options, {insertHandler}))
   })
 }
 
-function loadJS(url: string, callback: () => void) {
+function loadJS(url: string, callback: (cloudinary: NonNullable<Window['cloudinary']>) => void) {
+  // The widget exposes `window.cloudinary` only once the script has finished
+  // loading. When it's already available, run the callback right away.
+  if (window.cloudinary) {
+    callback(window.cloudinary)
+    return
+  }
+
+  // Guard against double-invocation if load fires in the same tick as the
+  // post-listener readiness re-check below.
+  let settled = false
+  const handleLoad = () => {
+    if (settled || !window.cloudinary) {
+      return
+    }
+    settled = true
+    callback(window.cloudinary)
+  }
+
   const existingScript = document.getElementById('damWidget')
-  if (!existingScript) {
-    const script = document.createElement('script')
-    script.src = url
-    script.id = 'damWidget'
-    document.body.appendChild(script)
-    script.addEventListener('load', () => {
-      callback()
-    })
+  if (existingScript) {
+    // Another input already injected the script, but it hasn't finished
+    // loading yet (the global isn't ready). Wait for the load event instead
+    // of invoking the callback too early.
+    existingScript.addEventListener('load', handleLoad, {once: true})
+    // Re-check immediately: the load event may have fired between the initial
+    // `window.cloudinary` check and registering this listener, in which case
+    // the event will never fire again and the callback would otherwise hang.
+    handleLoad()
+    return
   }
-  if (existingScript && callback) {
-    return callback()
-  }
-  return true
+
+  const script = document.createElement('script')
+  script.src = url
+  script.id = 'damWidget'
+  script.addEventListener('load', handleLoad, {once: true})
+  document.body.appendChild(script)
 }
 
 export function encodeSourceId(asset: CloudinaryAssetResponse): string {
