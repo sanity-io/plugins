@@ -7,20 +7,14 @@
     // invalidates this cache when dependency source changes.
     // ENABLE_VITE_DEVTOOLS opts into Vite DevTools (see sanity.cli.ts); declaring it here
     // invalidates turbo-cached builds when it flips and passes it through in strict env mode.
-    // REACT_PRODUCTION_PROFILING / VERCEL_ENV gate React production profiling (preview / opt-in)
-    // — must be declared so turbo invalidates the cache when profiling vs normal builds differ.
+    // VERCEL_ENV gates React production profiling — it must be declared so turbo invalidates
+    // the cache when Vercel and non-Vercel builds differ.
     "build": {
       "dependsOn": ["transit"],
-      "env": ["ENABLE_VITE_DEVTOOLS", "REACT_PRODUCTION_PROFILING", "VERCEL_ENV"],
+      "env": ["ENABLE_VITE_DEVTOOLS", "VERCEL_ENV"],
     },
     "dev": {
       "env": ["ENABLE_VITE_DEVTOOLS"],
-    },
-    // `pnpm dev:test-studio-production-profiling` builds with profiling then serves via preview
-    "start": {
-      "dependsOn": ["build"],
-      "cache": false,
-      "persistent": true,
     },
   },
 }

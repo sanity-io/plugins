@@ -362,17 +362,9 @@ How it works:
 
 ### React production profiling
 
-`dev/test-studio/sanity.cli.ts` enables React production profiling the same way as [sanity-io/sanity](https://github.com/sanity-io/sanity/blob/main/dev/test-studio/sanity.cli.ts): when `REACT_PRODUCTION_PROFILING=true` during `sanity build`, it aliases `react-dom/client` → `react-dom/profiling`, emits production source maps, and disables identifier mangling so React DevTools can profile and show readable component names. It also sets `deployment.autoUpdates: false` while profiling, because auto-updates vendor builds hardcode `react-dom-client.production.js` and would bypass the profiling alias.
+`dev/test-studio/sanity.cli.ts` enables React production profiling on Vercel preview and production deployments (`VERCEL_ENV === "preview" || VERCEL_ENV === "production"`). During `sanity build`, it aliases `react-dom/client` → `react-dom/profiling`, emits production source maps, and disables identifier mangling so React DevTools can profile and show readable component names. It also sets `deployment.autoUpdates: false` on Vercel, because auto-updates vendor builds hardcode `react-dom-client.production.js` and would bypass the profiling alias.
 
-Profiling is also auto-enabled when `VERCEL_ENV === "preview"` (Vercel PR deployments), matching the Preview-only scope used on the Sanity monorepo’s Vercel project (where `REACT_PRODUCTION_PROFILING` is set for Preview only). Production builds (`plugins-studio.sanity.dev`, `VERCEL_ENV=production`) keep auto-updates on and skip profiling to avoid that overhead.
-
-Locally:
-
-```bash
-pnpm dev:test-studio-production-profiling
-```
-
-`REACT_PRODUCTION_PROFILING` and `VERCEL_ENV` are listed in `dev/test-studio/turbo.jsonc` so Turbo cache keys differ between profiling and normal builds.
+React profiling is already available in the development build from `pnpm dev`. `VERCEL_ENV` is listed in `dev/test-studio/turbo.jsonc` so Turbo cache keys differ between Vercel and non-Vercel builds.
 
 ## Creating a New Plugin
 

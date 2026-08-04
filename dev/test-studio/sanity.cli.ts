@@ -15,12 +15,9 @@ const appId = process.env.SANITY_STUDIO_APP_ID || 'bi1ktslqwmu1cawds5ce3jn6'
 // the DevTools dock in a running `sanity dev` server without restarting it.
 // Usage: `pnpm devtools:test-studio` from the repo root (see AGENTS.md).
 const isViteDevToolsEnabled = process.env.ENABLE_VITE_DEVTOOLS === 'true'
-// Match sanity-io/sanity: opt in via REACT_PRODUCTION_PROFILING (local + Vercel Preview env).
-// Also treat VERCEL_ENV=preview as enabled so PR deployments profile without a dashboard env var
-// (same Preview-only scope as setting REACT_PRODUCTION_PROFILING on Vercel Preview only).
-// Production (plugins-studio.sanity.dev) stays without profiling overhead.
+// Enable React production profiling on all Vercel deployments.
 const reactProductionProfiling =
-  process.env.REACT_PRODUCTION_PROFILING === 'true' || process.env.VERCEL_ENV === 'preview'
+  process.env.VERCEL_ENV === 'preview' || process.env.VERCEL_ENV === 'production'
 
 export default defineCliConfig({
   api: {projectId, dataset},
@@ -28,7 +25,7 @@ export default defineCliConfig({
     appId,
     // Auto-updates vendor builds hardcode `react-dom-client.production.js`, which bypasses
     // the `react-dom/client` → `react-dom/profiling` alias below. Disable when profiling so
-    // the alias can take effect; keep enabled for production / sanity deploy.
+    // the alias can take effect; keep enabled for non-Vercel sanity deploys.
     autoUpdates: !reactProductionProfiling,
   },
   reactCompiler: {},
