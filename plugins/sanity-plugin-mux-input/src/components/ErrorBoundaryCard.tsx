@@ -15,8 +15,32 @@ function ErrorBoundaryCard(props: Props) {
   const {children, schemaType} = props
   const {push: pushToast} = useToast()
   const errorRef = useRef(null)
+  // Built here (rather than inside `onDidCatch`) so the error handler doesn't read
+  // as a nested component; it only depends on render-scope values.
+  const crashedToastDescription = (
+    <Flex align="center">
+      <Inline space={1}>
+        An error happened while rendering
+        <Button
+          padding={1}
+          fontSize={1}
+          style={{transform: 'translateY(1px)'}}
+          mode="ghost"
+          text={schemaType.title}
+          onClick={() => {
+            if (errorRef.current) {
+              scrollIntoView(errorRef.current, {
+                behavior: 'smooth',
+                scrollMode: 'if-needed',
+                block: 'center',
+              })
+            }
+          }}
+        />
+      </Inline>
+    </Flex>
+  )
   const {ErrorBoundary, didCatch, error, reset} = useErrorBoundary({
-    // oxlint-disable-next-line no-unstable-nested-components
     onDidCatch: (err, errorInfo) => {
       console.group(err.toString())
       console.groupCollapsed('console.error')
@@ -36,29 +60,7 @@ function ErrorBoundaryCard(props: Props) {
       pushToast({
         status: 'error',
         title: 'Plugin crashed',
-        description: (
-          <Flex align="center">
-            <Inline space={1}>
-              An error happened while rendering
-              <Button
-                padding={1}
-                fontSize={1}
-                style={{transform: 'translateY(1px)'}}
-                mode="ghost"
-                text={schemaType.title}
-                onClick={() => {
-                  if (errorRef.current) {
-                    scrollIntoView(errorRef.current, {
-                      behavior: 'smooth',
-                      scrollMode: 'if-needed',
-                      block: 'center',
-                    })
-                  }
-                }}
-              />
-            </Inline>
-          </Flex>
-        ),
+        description: crashedToastDescription,
       })
     },
   })

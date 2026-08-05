@@ -63,23 +63,20 @@ const DialogFolderCreate = (props: Props) => {
     }
   }, [creatingError, setError])
 
-  const Footer = () => (
-    <Box padding={3}>
-      <Flex justify="flex-end">
-        <FormSubmitButton
-          disabled={creating || !isDirty || !isValid}
-          isValid={isValid}
-          onClick={handleSubmit(onSubmit)}
-        />
-      </Flex>
-    </Box>
-  )
-
   return (
     <Dialog
       animate
-      // oxlint-disable-next-line react/react-compiler
-      footer={<Footer />}
+      footer={
+        <Box padding={3}>
+          <Flex justify="flex-end">
+            <FormSubmitButton
+              disabled={creating || !isDirty || !isValid}
+              isValid={isValid}
+              onClick={handleSubmit(onSubmit)}
+            />
+          </Flex>
+        </Box>
+      }
       header="Create Folder"
       id={id}
       onClose={handleClose}

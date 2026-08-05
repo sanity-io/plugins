@@ -1,5 +1,5 @@
 import {memo} from 'react'
-import {VirtuosoGrid} from 'react-virtuoso'
+import {type GridItemContent, VirtuosoGrid} from 'react-virtuoso'
 import {styled} from 'styled-components'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -14,19 +14,14 @@ type Props = {
   source?: string
 }
 
+type GridItem = CardAssetData | CardFolderData | CardUploadData
+type GridContext = {selectedIds: string[]; source?: string}
+
 const CARD_HEIGHT = 220
 const CARD_WIDTH = 240
 
 const VirtualCell = memo(
-  ({
-    item,
-    selected,
-    source,
-  }: {
-    item: CardAssetData | CardFolderData | CardUploadData
-    selected: boolean
-    source?: string
-  }) => {
+  ({item, selected, source}: {item: GridItem; selected: boolean; source?: string}) => {
     if (item?.type === 'asset') {
       return <CardAsset id={item.id} selected={selected} source={source} />
     }
@@ -41,6 +36,16 @@ const VirtualCell = memo(
 
     return null
   },
+)
+
+// Kept at module scope (not defined during render) so it isn't treated as an
+// unstable nested component; per-render `selectedIds`/`source` are passed via context.
+const renderCell: GridItemContent<GridItem, GridContext> = (_index, item, context) => (
+  <VirtualCell
+    item={item}
+    selected={context.selectedIds.includes(item.id)}
+    source={context.source}
+  />
 )
 
 const StyledItemContainer = styled.div`
@@ -92,15 +97,12 @@ const AssetGridVirtualized = (props: Props) => {
         Item: ItemContainer,
         List: ListContainer,
       }}
+      context={{selectedIds, source}}
+      data={items}
       endReached={onLoadMore}
-      itemContent={(index) => {
-        const item = items[index]!
-        const selected = selectedIds.includes(item.id)
-        return <VirtualCell item={item} selected={selected} source={source} />
-      }}
+      itemContent={renderCell}
       overscan={48}
       style={{overflowX: 'hidden', overflowY: 'scroll'}}
-      totalCount={totalCount}
     />
   )
 }

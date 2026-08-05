@@ -37,36 +37,30 @@ const DialogConfirm = (props: Props) => {
     handleClose()
   }
 
-  const Footer = () => (
-    <Box padding={3}>
-      <Flex justify="space-between">
-        <Button fontSize={1} mode="bleed" onClick={handleClose} text="Cancel" />
-        <Button
-          fontSize={1}
-          onClick={handleConfirm}
-          text={dialog?.confirmText}
-          tone={dialog?.tone}
-        />
-      </Flex>
-    </Box>
-  )
-
-  const Header = () => (
-    <Flex align="center">
-      <Box paddingX={1}>
-        <WarningOutlineIcon />
-      </Box>
-      <Box marginLeft={2}>{dialog?.headerTitle}</Box>
-    </Flex>
-  )
-
   return (
     <Dialog
       animate
-      // oxlint-disable-next-line react/react-compiler
-      footer={<Footer />}
-      // oxlint-disable-next-line react/react-compiler
-      header={<Header />}
+      footer={
+        <Box padding={3}>
+          <Flex justify="space-between">
+            <Button fontSize={1} mode="bleed" onClick={handleClose} text="Cancel" />
+            <Button
+              fontSize={1}
+              onClick={handleConfirm}
+              text={dialog?.confirmText}
+              tone={dialog?.tone}
+            />
+          </Flex>
+        </Box>
+      }
+      header={
+        <Flex align="center">
+          <Box paddingX={1}>
+            <WarningOutlineIcon />
+          </Box>
+          <Box marginLeft={2}>{dialog?.headerTitle}</Box>
+        </Flex>
+      }
       id="confirm"
       onClose={handleClose}
       width={1}

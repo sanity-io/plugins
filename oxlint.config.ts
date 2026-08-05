@@ -90,7 +90,6 @@ export default defineConfig({
         'oxc/no-map-spread': 'off',
         'unicorn/prefer-add-event-listener': 'off',
         'no-await-in-loop': 'off',
-        'react/no-unstable-nested-components': 'off',
       },
     },
     {
