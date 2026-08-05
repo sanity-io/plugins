@@ -102,8 +102,9 @@ const DialogTagEdit = (props: Props) => {
       if (result && transition === 'update') {
         // Regenerate snapshot
         setTagSnapshot(result as Tag)
-        // Reset react-hook-form
-        reset(generateDefaultValues(result as Tag))
+        // Reset react-hook-form. `keepFieldsRef` keeps fields registered — with React Compiler
+        // the `register()` calls do not re-run after reset (see DialogAssetEdit for details).
+        reset(generateDefaultValues(result as Tag), {keepFieldsRef: true})
       }
     },
     [reset, generateDefaultValues],
@@ -133,7 +134,9 @@ const DialogTagEdit = (props: Props) => {
     }
   }, [client, handleTagUpdate, tagItem?.tag])
 
-  const Footer = () => (
+  // Plain JSX, not an inline component: a new component identity per render remounts the
+  // footer subtree whenever form state changes (see DialogAssetEdit for details).
+  const footer = (
     <Box padding={3}>
       <Flex justify="space-between">
         {/* Delete button */}
@@ -162,15 +165,7 @@ const DialogTagEdit = (props: Props) => {
   }
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/react-compiler
-      footer={<Footer />}
-      header="Edit Tag"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Edit Tag" id={id} onClose={handleClose} width={1}>
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Deleted notification */}
