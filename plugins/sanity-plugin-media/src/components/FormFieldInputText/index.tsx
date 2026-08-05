@@ -39,6 +39,7 @@ const FormFieldInputText = (props: Props) => {
       <TextInput
         {...rest}
         autoComplete="off"
+        autoFocus
         defaultValue={value}
         disabled={disabled}
         id={name}
