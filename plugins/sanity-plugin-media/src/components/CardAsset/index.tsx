@@ -229,7 +229,11 @@ const CardAsset = (props: Props) => {
             position: 'relative',
           }}
         >
-          <div onClick={handleAssetClick} style={{height: '100%', opacity: opacityPreview}}>
+          <div
+            data-testid={`media-asset-card-${asset._id}`}
+            onClick={handleAssetClick}
+            style={{height: '100%', opacity: opacityPreview}}
+          >
             {/* File icon */}
             {isFileAsset(asset) && <FileIcon extension={asset.extension} width="80px" />}
 
