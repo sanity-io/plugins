@@ -1,5 +1,5 @@
 import {Box, TextInput} from '@sanity/ui'
-import {type Ref} from 'react'
+import {type ChangeEventHandler, type FocusEventHandler, type Ref} from 'react'
 
 import FormFieldInputLabel from '../FormFieldInputLabel'
 
@@ -9,13 +9,27 @@ type Props = {
   error?: string
   label: string
   name: string
+  onBlur?: FocusEventHandler<HTMLInputElement>
+  onChange?: ChangeEventHandler<HTMLInputElement>
   placeholder?: string
   value?: string
   ref?: Ref<HTMLInputElement>
 }
 
 const FormFieldInputText = (props: Props) => {
-  const {description, disabled, error, label, name, placeholder, value, ref, ...rest} = props
+  const {
+    description,
+    disabled,
+    error,
+    label,
+    name,
+    onBlur,
+    onChange,
+    placeholder,
+    value,
+    ref,
+    ...rest
+  } = props
 
   return (
     <Box>
@@ -25,11 +39,12 @@ const FormFieldInputText = (props: Props) => {
       <TextInput
         {...rest}
         autoComplete="off"
-        autoFocus
         defaultValue={value}
         disabled={disabled}
         id={name}
         name={name}
+        onBlur={onBlur}
+        onChange={onChange}
         placeholder={placeholder}
         ref={ref}
       />
