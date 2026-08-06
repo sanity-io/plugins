@@ -1,13 +1,15 @@
 import {DashboardWidgetContainer} from '@sanity/dashboard'
 import {Button, Flex, Card, Text, Box} from '@sanity/ui'
-import {styled} from 'styled-components'
+import type {ComponentProps} from 'react'
 
 import {type NetlifyWidgetProps} from '../types'
 import SiteList from './SiteList'
 
-const ContentCard = styled(Card)`
-  min-height: 66px;
-`
+import {contentCard} from './NetlifyWidget.css'
+
+function ContentCard({className, ...props}: ComponentProps<typeof Card>) {
+  return <Card {...props} className={`${contentCard} ${className ?? ''}`} />
+}
 
 export default function NetlifyWidget(props: NetlifyWidgetProps) {
   const netlifySitesUrl = 'https://app.netlify.com/account/sites'
