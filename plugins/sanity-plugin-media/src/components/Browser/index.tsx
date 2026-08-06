@@ -48,7 +48,7 @@ const BrowserContent = ({
         <Dialogs />
         <Notifications />
 
-        <Card display="flex" height="fill" ref={setPortalElement}>
+        <Card data-testid="media-browser" display="flex" height="fill" ref={setPortalElement}>
           <Flex direction="column" flex={1}>
             {/* Header */}
             <Header onClose={onClose} />

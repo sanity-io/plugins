@@ -1,5 +1,5 @@
 import {Box, TextArea} from '@sanity/ui'
-import {type Ref} from 'react'
+import {type ChangeEventHandler, type FocusEventHandler, type Ref} from 'react'
 
 import FormFieldInputLabel from '../FormFieldInputLabel'
 
@@ -9,6 +9,8 @@ type Props = {
   error?: string
   label: string
   name: string
+  onBlur?: FocusEventHandler<HTMLTextAreaElement>
+  onChange?: ChangeEventHandler<HTMLTextAreaElement>
   placeholder?: string
   rows?: number
   value?: string
@@ -16,7 +18,20 @@ type Props = {
 }
 
 const FormFieldInputTextarea = (props: Props) => {
-  const {description, disabled, error, label, name, placeholder, rows, value, ref, ...rest} = props
+  const {
+    description,
+    disabled,
+    error,
+    label,
+    name,
+    onBlur,
+    onChange,
+    placeholder,
+    rows,
+    value,
+    ref,
+    ...rest
+  } = props
 
   return (
     <Box>
@@ -31,6 +46,8 @@ const FormFieldInputTextarea = (props: Props) => {
         disabled={disabled}
         id={name}
         name={name}
+        onBlur={onBlur}
+        onChange={onChange}
         placeholder={placeholder}
         ref={ref}
         rows={rows}
