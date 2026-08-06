@@ -269,7 +269,14 @@ export function mediaAssetCard(page: Page, assetId: string) {
 }
 
 export function assetDetailsDialog(page: Page) {
-  return page.getByRole('dialog', {name: /asset details/i})
+  // Prefer the first matching layer; Edit Media under React Strict Mode can
+  // briefly mount two dialog nodes with the same accessible name.
+  return page.getByRole('dialog', {name: /asset details/i}).first()
+}
+
+/** Image field after an asset has been selected (Sanity file/image input preview). */
+export function selectedImagePreview(page: Page) {
+  return mediaProductField(page, 'Image').getByRole('img', {name: /Preview of uploaded image/i})
 }
 
 function assetInputTestIdPrefix(fieldTitle: 'Image' | 'Attachment'): string {
@@ -307,14 +314,16 @@ export async function openMediaAssetSource(
  * freshly seeded (untagged) assets remain selectable in auto-tag tests.
  */
 export async function clearMediaSearchFacets(page: Page): Promise<void> {
-  const clear = mediaBrowser(page).getByRole('button', {name: 'Clear', exact: true})
+  const browser = mediaBrowser(page)
+  const clear = browser.getByRole('button', {name: 'Clear', exact: true})
   // Facets are applied after the tags fetch completes — wait for Clear when present.
   try {
-    await clear.waitFor({state: 'visible', timeout: 10_000})
-    await clear.click()
+    await clear.waitFor({state: 'visible', timeout: 15_000})
   } catch {
-    // No active facets — nothing to clear.
+    return
   }
+  await clear.click()
+  await expect(clear).toBeHidden({timeout: 10_000})
 }
 
 /** Open Edit Media for an already-selected image. */
