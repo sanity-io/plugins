@@ -6,6 +6,8 @@ import {assetUrl} from '../utils'
 import {namespace, type Secrets} from './SecretsConfigView'
 import VideoPlayer from './VideoPlayer'
 
+import {previewImage, videoDiff} from './AssetDiff.css'
+
 type Props = {
   value: CloudinaryAsset | undefined
 }
@@ -22,19 +24,13 @@ const CloudinaryDiffPreview = ({value}: Props) => {
 
   if (value.resource_type === 'video' && url) {
     return (
-      <section
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-        }}
-      >
+      <section className={videoDiff}>
         <VideoPlayer src={url} kind="diff" />
       </section>
     )
   }
 
-  return <img alt="preview" src={url} style={{maxWidth: '100%', height: 'auto'}} />
+  return <img alt="preview" src={url} className={previewImage} />
 }
 
 type DiffProps = {

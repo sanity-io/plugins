@@ -1,17 +1,18 @@
 import {PlugIcon} from '@sanity/icons/Plug'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Box, Button, Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {type ComponentProps, useCallback, useEffect, useRef, useState} from 'react'
 import type {AssetSourceComponentProps, ImageAsset} from 'sanity'
-import {styled} from 'styled-components'
 
 import type {CloudinaryMediaLibrary, InsertHandlerParams} from '../../types'
 import {createMediaLibrary, decodeSourceId, encodeFilename, encodeSourceId} from '../../utils'
 import SecretsConfigView, {namespace, type Secrets} from '../SecretsConfigView'
 
-const Widget = styled.div`
-  height: 70vh;
-`
+import {widget} from './CloudinaryAssetSource.css'
+
+function Widget({className, ...props}: ComponentProps<'div'>) {
+  return <div {...props} className={className ? `${widget} ${className}` : widget} />
+}
 
 export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
   const {onClose, dialogHeaderTitle} = props

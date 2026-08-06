@@ -2,7 +2,7 @@ import {PlugIcon} from '@sanity/icons/Plug'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Button, Flex, Grid, Stack} from '@sanity/ui'
 import {nanoid} from 'nanoid'
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {type ComponentProps, useCallback, useMemo, useRef, useState} from 'react'
 import {type ObjectInputProps, getPublishedId, PatchEvent, set, unset, useClient} from 'sanity'
 
 import {cloudinaryAssetSchema} from '../schema/cloudinaryAsset'
@@ -10,6 +10,16 @@ import type {InsertHandlerParams} from '../types'
 import {normalizeCloudinaryAsset, openMediaSelector} from '../utils'
 import ReferencePreview from './ReferencePreview'
 import SecretsConfigView, {namespace, type Secrets} from './SecretsConfigView'
+
+import {actionGrid, previewFlex} from './CloudinaryReferenceInput.css'
+
+function PreviewFlex({className, ...props}: ComponentProps<typeof Flex>) {
+  return <Flex {...props} className={className ? `${previewFlex} ${className}` : previewFlex} />
+}
+
+function ActionGrid({className, ...props}: ComponentProps<typeof Grid>) {
+  return <Grid {...props} className={className ? `${actionGrid} ${className}` : actionGrid} />
+}
 
 const API_VERSION = '2023-01-01'
 
@@ -228,12 +238,12 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         />
       </Flex>
 
-      <Flex marginBottom={2} style={{textAlign: 'center', width: '100%'}}>
+      <PreviewFlex marginBottom={2}>
         <ReferencePreview value={reference} revision={previewRevision} />
-      </Flex>
+      </PreviewFlex>
 
       <Stack gap={2}>
-        <Grid gap={1} style={{gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))'}}>
+        <ActionGrid gap={1}>
           <Button
             text={selectButtonText}
             onClick={handleOpenSelector}
@@ -252,7 +262,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
               disabled={actionsDisabled}
             />
           ) : null}
-        </Grid>
+        </ActionGrid>
       </Stack>
     </Stack>
   )
