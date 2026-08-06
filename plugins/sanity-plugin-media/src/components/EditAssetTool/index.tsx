@@ -11,7 +11,8 @@ import {assetsActions} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {foldersActions} from '../../modules/folders'
 import {tagsActions} from '../../modules/tags'
-import GlobalStyle from '../../styled/GlobalStyles'
+
+import '../../styled/GlobalStyles/GlobalStyles.css'
 import constructFilter from '../../utils/constructFilter'
 import Dialogs from '../Dialogs'
 import Notifications from '../Notifications'
@@ -98,7 +99,6 @@ const EditAssetTool = (props: AssetSourceComponentProps) => {
       selectedAssets={selectedAssets}
     >
       <AssetBrowserDispatchProvider onSelect={props.onSelect}>
-        <GlobalStyle />
         <PortalProvider element={portalElement}>
           <EditAssetDialog assetId={assetId} onClose={onClose} />
         </PortalProvider>

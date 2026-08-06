@@ -1,41 +1,30 @@
 import type {ThemeColorSchemeKey} from '@sanity/ui'
-import type {MouseEvent} from 'react'
-import {styled, css} from 'styled-components'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps} from 'react'
 
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
-type Props = {
-  onClick?: (e: MouseEvent) => void
-  $showCheckerboard?: boolean
-  $scheme?: ThemeColorSchemeKey
-  src: string
-  style?: any
+import {checkerboardColorVar, image, imageCheckerboard} from './Image.css'
+
+type Props = Omit<ComponentProps<'img'>, 'crossOrigin'> & {
+  scheme?: ThemeColorSchemeKey
+  showCheckerboard?: boolean
 }
 
-const Image = styled.img.attrs({crossOrigin: 'anonymous' as const})<Props>`
-  --checkerboard-color: ${(props) =>
-    props.$scheme ? getSchemeColor(props.$scheme, 'bg2') : 'inherit'};
-
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-
-  ${(props) =>
-    props.$showCheckerboard &&
-    css`
-      background-image:
-        linear-gradient(45deg, var(--checkerboard-color) 25%, transparent 25%),
-        linear-gradient(-45deg, var(--checkerboard-color) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, var(--checkerboard-color) 75%),
-        linear-gradient(-45deg, transparent 75%, var(--checkerboard-color) 75%);
-      background-size: 20px 20px;
-      background-position:
-        0 0,
-        0 10px,
-        10px -10px,
-        -10px 0;
-    `}
-`
+function Image({alt = '', className, scheme, showCheckerboard, style, ...props}: Props) {
+  return (
+    <img
+      {...props}
+      alt={alt}
+      crossOrigin="anonymous"
+      className={clsx(showCheckerboard ? imageCheckerboard : image, className)}
+      style={{
+        ...style,
+        ...(scheme && assignInlineVars({[checkerboardColorVar]: getSchemeColor(scheme, 'bg2')})),
+      }}
+    />
+  )
+}
 
 export default Image

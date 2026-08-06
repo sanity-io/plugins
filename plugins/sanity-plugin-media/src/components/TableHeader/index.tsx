@@ -1,8 +1,9 @@
 import {Checkbox, Flex, Grid, type ThemeColorSchemeKey, useMediaIndex} from '@sanity/ui'
-import {type MouseEvent} from 'react'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps, type MouseEvent} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS, PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
@@ -11,19 +12,23 @@ import {assetsActions, selectAssetsLength, selectAssetsPickedLength} from '../..
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import TableHeaderItem from '../TableHeaderItem'
 
+import {contextActionContainer, hoverBgVar} from './TableHeader.css'
+
 // TODO: DRY
-const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
-  $scheme,
-}) => {
-  return css`
-    cursor: pointer;
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        background: ${getSchemeColor($scheme, 'bg')};
-      }
-    }
-  `
-})
+function ContextActionContainer({
+  className,
+  scheme,
+  style,
+  ...props
+}: ComponentProps<typeof Flex> & {scheme: ThemeColorSchemeKey}) {
+  return (
+    <Flex
+      {...props}
+      className={clsx(contextActionContainer, className)}
+      style={{...style, ...assignInlineVars({[hoverBgVar]: getSchemeColor(scheme, 'bg')})}}
+    />
+  )
+}
 
 const TableHeader = () => {
   const scheme = useColorSchemeValue()
@@ -78,7 +83,7 @@ const TableHeader = () => {
           align="center"
           justify="center"
           onClick={handleContextActionClick}
-          $scheme={scheme}
+          scheme={scheme}
           style={{
             height: '100%',
             position: 'relative',

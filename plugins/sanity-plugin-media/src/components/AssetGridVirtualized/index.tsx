@@ -1,6 +1,6 @@
+import {clsx} from 'clsx/lite'
 import {memo} from 'react'
 import {VirtuosoGrid} from 'react-virtuoso'
-import {styled} from 'styled-components'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
 import type {CardAssetData, CardFolderData, CardUploadData} from '../../types'
@@ -8,14 +8,13 @@ import CardAsset from '../CardAsset'
 import CardFolder from '../CardFolder'
 import CardUpload from '../CardUpload'
 
+import {itemContainer, listContainer} from './AssetGridVirtualized.css'
+
 type Props = {
   items: (CardAssetData | CardFolderData | CardUploadData)[]
   onLoadMore?: () => void
   source?: string
 }
-
-const CARD_HEIGHT = 220
-const CARD_WIDTH = 240
 
 const VirtualCell = memo(
   ({
@@ -43,29 +42,16 @@ const VirtualCell = memo(
   },
 )
 
-const StyledItemContainer = styled.div`
-  height: ${CARD_HEIGHT}px;
-  width: ${CARD_WIDTH}px;
-`
-
 const ItemContainer = (props: any) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we're doing this to avoid sc warnings about `context` passed as an attribute
-  const {context, ref, ...rest} = props
-  return <StyledItemContainer ref={ref} {...rest} />
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we're doing this to avoid warnings about `context` passed as an attribute
+  const {className, context, ref, ...rest} = props
+  return <div className={clsx(itemContainer, className)} ref={ref} {...rest} />
 }
 
-const StyledListContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, ${CARD_WIDTH}px);
-  grid-template-rows: repeat(auto-fill, ${CARD_HEIGHT}px);
-  justify-content: center;
-  margin: 0 auto;
-`
-
 const ListContainer = (props: any) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we're doing this to avoid sc warnings about `context` passed as an attribute
-  const {context, ref, ...rest} = props
-  return <StyledListContainer ref={ref} {...rest} />
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- we're doing this to avoid warnings about `context` passed as an attribute
+  const {className, context, ref, ...rest} = props
+  return <div className={clsx(listContainer, className)} ref={ref} {...rest} />
 }
 
 const AssetGridVirtualized = (props: Props) => {

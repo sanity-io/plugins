@@ -5,12 +5,11 @@ import {EditIcon} from '@sanity/icons/Edit'
 import {SearchIcon} from '@sanity/icons/Search'
 import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Container, Flex, Text, Tooltip} from '@sanity/ui'
-import {type ReactNode} from 'react'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps, type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'
-import {styled} from 'styled-components'
 
 import {inputs} from '../../config/searchFacets'
-import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
@@ -18,26 +17,20 @@ import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
 import {searchActions, selectIsSearchFacetTag} from '../../modules/search'
 import type {SearchFacetInputSearchableProps, TagActions, TagItem} from '../../types'
 
+import {buttonContainer, tagContainer} from './Tag.css'
+
 type Props = {
   actions?: TagActions[]
   tag: TagItem
 }
 
-const TagContainer = styled(Flex)`
-  height: ${PANEL_HEIGHT}px;
-`
+function TagContainer({className, ...props}: ComponentProps<typeof Flex>) {
+  return <Flex {...props} className={clsx(tagContainer, className)} />
+}
 
-const ButtonContainer = styled(Flex)`
-  @media (pointer: fine) {
-    visibility: hidden;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    ${TagContainer}:hover & {
-      visibility: visible;
-    }
-  }
-`
+function ButtonContainer({className, ...props}: ComponentProps<typeof Flex>) {
+  return <Flex {...props} className={clsx(buttonContainer, className)} />
+}
 
 type TagButtonProps = {
   disabled?: boolean

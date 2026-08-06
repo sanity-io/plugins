@@ -1,8 +1,11 @@
-import {Box, Flex, type Theme} from '@sanity/ui'
-import {type MouseEvent} from 'react'
+import {Box, Flex, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps, type MouseEvent} from 'react'
 import {defaultStyles, FileIcon as ReactFileIcon} from 'react-file-icon'
 import type {DefaultExtensionType} from 'react-file-icon'
-import {styled, css} from 'styled-components'
+
+import {container, fontFamilyVar} from './FileIcon.css'
 
 type Props = {
   extension?: string
@@ -10,16 +13,17 @@ type Props = {
   width: string
 }
 
-// Force react-file-icon styles
-const Container = styled(Box)(({theme}: {theme: Theme}) => {
-  return css`
-    text {
-      font-family: ${theme.sanity.fonts.text.family} !important;
-      font-size: 8px !important;
-      font-weight: 500 !important;
-    }
-  `
-})
+function Container({className, style, ...props}: ComponentProps<typeof Box>) {
+  const {font} = useThemeV2()
+
+  return (
+    <Box
+      {...props}
+      className={clsx(container, className)}
+      style={{...style, ...assignInlineVars({[fontFamilyVar]: font.text.family})}}
+    />
+  )
+}
 
 const FileIcon = (props: Props) => {
   const {extension, onClick, width} = props

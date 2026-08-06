@@ -503,8 +503,8 @@ const DialogAssetEdit = (props: Props) => {
             {isImageAsset(currentAsset) && (
               <Image
                 draggable={false}
-                $scheme={scheme}
-                $showCheckerboard={!currentAsset?.metadata?.isOpaque}
+                scheme={scheme}
+                showCheckerboard={!currentAsset?.metadata?.isOpaque}
                 src={imageDprUrl(currentAsset, {height: 600, width: 600})}
               />
             )}

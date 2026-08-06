@@ -3,7 +3,6 @@ import {Flex, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'
 import {type DropEvent, type DropzoneOptions, useDropzone} from 'react-dropzone'
 import {useDispatch} from 'react-redux'
-import {styled} from 'styled-components'
 
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import {DropzoneDispatchProvider} from '../../contexts/DropzoneDispatchContext'
@@ -12,35 +11,11 @@ import useTypedSelector from '../../hooks/useTypedSelector'
 import {notificationsActions} from '../../modules/notifications'
 import {uploadsActions} from '../../modules/uploads'
 
+import {dragActiveContainer, uploadContainer} from './UploadDropzone.css'
+
 type Props = {
   children: ReactNode
 }
-
-const UploadContainer = styled.div`
-  color: white;
-  height: 100%;
-  min-height: 100%;
-  right: 0;
-  top: 0;
-  width: 100%;
-
-  &:focus {
-    outline: none;
-  }
-`
-
-const DragActiveContainer = styled.div`
-  align-items: center;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 100%;
-  z-index: 3;
-`
 
 // Iterate through all files and only return non-folders / packages.
 // We check for files by reading the first byte of the file
@@ -151,21 +126,21 @@ const UploadDropzone = (props: Props) => {
 
   return (
     <DropzoneDispatchProvider open={open}>
-      <UploadContainer {...getRootProps()}>
+      <div className={uploadContainer} {...getRootProps()}>
         <input {...getInputProps()} />
 
         {isDragActive && (
-          <DragActiveContainer>
+          <div className={dragActiveContainer}>
             <Flex direction="column" justify="center" style={{color: white.hex}}>
               <Text size={3} style={{color: 'inherit'}}>
                 Drop files to upload
               </Text>
             </Flex>
-          </DragActiveContainer>
+          </div>
         )}
 
         {children}
-      </UploadContainer>
+      </div>
     </DropzoneDispatchProvider>
   )
 }

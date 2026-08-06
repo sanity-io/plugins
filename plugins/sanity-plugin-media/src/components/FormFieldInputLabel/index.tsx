@@ -1,6 +1,10 @@
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
-import {Box, Inline, Text, Tooltip} from '@sanity/ui'
-import {styled} from 'styled-components'
+import {Box, Inline, Text, Tooltip, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps} from 'react'
+
+import {errorIconColorVar, errorOutlineIcon} from './FormFieldInputLabel.css'
 
 type Props = {
   description?: string
@@ -9,11 +13,21 @@ type Props = {
   name: string
 }
 
-const StyledErrorOutlineIcon = styled(ErrorOutlineIcon)(({theme}) => {
-  return {
-    color: theme.sanity.color.spot.red,
-  }
-})
+function StyledErrorOutlineIcon({
+  className,
+  style,
+  ...props
+}: ComponentProps<typeof ErrorOutlineIcon>) {
+  const {color} = useThemeV2()
+
+  return (
+    <ErrorOutlineIcon
+      {...props}
+      className={clsx(errorOutlineIcon, className)}
+      style={{...style, ...assignInlineVars({[errorIconColorVar]: color.avatar.red.bg})}}
+    />
+  )
+}
 
 const FormFieldInputLabel = (props: Props) => {
   const {description, error, label, name} = props

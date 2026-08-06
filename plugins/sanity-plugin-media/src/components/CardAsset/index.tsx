@@ -8,17 +8,17 @@ import {
   Flex,
   Spinner,
   Text,
-  type Theme,
   type ThemeColorSchemeKey,
   Tooltip,
+  useTheme_v2 as useThemeV2,
   useToast,
 } from '@sanity/ui'
-import {memo, type MouseEvent, type RefObject} from 'react'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps, memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {styled, css} from 'styled-components'
 
-import {PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import useKeyPress from '../../hooks/useKeyPress'
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -30,71 +30,86 @@ import {isFileAsset, isImageAsset} from '../../utils/typeGuards'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
 
+import {
+  cardContainerBase,
+  cardContainerNotPicked,
+  cardContainerNotUpdating,
+  cardContainerPicked,
+  cardContainerUpdating,
+  cardWrapper,
+  contextActionContainer,
+  contextActionHoverBgVar,
+  pickedBorderColorVar,
+  warningOutlineIcon,
+  warningOutlineIconColorVar,
+} from './CardAsset.css'
+
 type Props = {
   id: string
   selected: boolean
   source?: string
 }
 
-const CardWrapper = styled(Flex)`
-  box-sizing: border-box;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-`
+function CardWrapper({className, ...props}: ComponentProps<typeof Flex>) {
+  return <Flex {...props} className={clsx(cardWrapper, className)} />
+}
 
-const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?: boolean}>(({
-  $picked,
-  theme,
-  $updating,
-}) => {
-  return css`
-    border: 1px solid transparent;
-    height: 100%;
-    pointer-events: ${$updating ? 'none' : 'auto'};
-    position: relative;
-    transition: all 300ms;
-    user-select: none;
-    width: 100%;
+function CardContainer({
+  className,
+  picked,
+  style,
+  updating,
+  ...props
+}: ComponentProps<typeof Flex> & {picked?: boolean; updating?: boolean}) {
+  const {color} = useThemeV2()
 
-    border: ${
-      $picked ? `1px solid ${theme.sanity.color.spot.orange} !important` : '1px solid inherit'
-    };
+  return (
+    <Flex
+      {...props}
+      className={clsx(
+        cardContainerBase,
+        picked ? cardContainerPicked : cardContainerNotPicked,
+        updating ? cardContainerUpdating : cardContainerNotUpdating,
+        className,
+      )}
+      style={{...style, ...assignInlineVars({[pickedBorderColorVar]: color.avatar.orange.bg})}}
+    />
+  )
+}
 
-    ${
-      !$updating &&
-      css`
-        @media (hover: hover) and (pointer: fine) {
-          &:hover {
-            border: 1px solid var(--card-border-color);
-          }
-        }
-      `
-    }
-  `
-})
+function ContextActionContainer({
+  className,
+  scheme,
+  style,
+  ...props
+}: ComponentProps<typeof Flex> & {scheme: ThemeColorSchemeKey}) {
+  return (
+    <Flex
+      {...props}
+      className={clsx(contextActionContainer, className)}
+      style={{
+        ...style,
+        ...assignInlineVars({[contextActionHoverBgVar]: getSchemeColor(scheme, 'bg')}),
+      }}
+    />
+  )
+}
 
-const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
-  $scheme,
-}) => {
-  return css`
-    cursor: pointer;
-    height: ${PANEL_HEIGHT}px;
-    transition: all 300ms;
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        background: ${getSchemeColor($scheme, 'bg')};
-      }
-    }
-  `
-})
+function StyledWarningOutlineIcon({
+  className,
+  style,
+  ...props
+}: ComponentProps<typeof WarningFilledIcon>) {
+  const {color} = useThemeV2()
 
-const StyledWarningOutlineIcon = styled(WarningFilledIcon)(({theme}) => {
-  return {
-    color: theme.sanity.color.spot.red,
-  }
-})
+  return (
+    <WarningFilledIcon
+      {...props}
+      className={clsx(warningOutlineIcon, className)}
+      style={{...style, ...assignInlineVars({[warningOutlineIconColorVar]: color.avatar.red.bg})}}
+    />
+  )
+}
 
 const CardAsset = (props: Props) => {
   const {id, selected, source} = props
@@ -220,7 +235,7 @@ const CardAsset = (props: Props) => {
 
   return (
     <CardWrapper padding={1}>
-      <CardContainer direction="column" $picked={picked} $updating={item.updating}>
+      <CardContainer direction="column" picked={picked} updating={item.updating}>
         {/* Image */}
         <Box
           flex={1}
@@ -241,11 +256,10 @@ const CardAsset = (props: Props) => {
             {isImageAsset(asset) && (
               <Image
                 draggable={false}
-                $scheme={scheme}
-                $showCheckerboard={!isOpaque}
+                scheme={scheme}
+                showCheckerboard={!isOpaque}
                 src={imageDprUrl(asset, {height: 250, width: 250})}
                 style={{
-                  draggable: false,
                   transition: 'opacity 1000ms',
                 }}
               />
@@ -295,7 +309,7 @@ const CardAsset = (props: Props) => {
           align="center"
           onClick={handleContextActionClick}
           paddingX={1}
-          $scheme={scheme}
+          scheme={scheme}
           style={{opacity: opacityContainer}}
         >
           {onSelect && !isMultiSelect ? (
