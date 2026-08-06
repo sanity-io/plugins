@@ -67,10 +67,12 @@
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vanilla-extract/css": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "easymde": "^2.21.0",
     "react": "catalog:",
+    "react-dom": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
     "tsdown": "catalog:"
@@ -78,6 +80,7 @@
   "peerDependencies": {
     "easymde": "^2.18",
     "react": "catalog:peer",
+    "react-dom": "catalog:peer",
     "sanity": "catalog:peer"
   },
   "engines": {
