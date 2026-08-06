@@ -6,6 +6,6 @@ export default defineConfig({
     index: './src/index.ts',
     next: './src/indexNext.ts',
   },
-  styledComponents: true,
   reactCompiler: true,
+  vanillaExtract: true,
 }) satisfies Promise<UserConfig>

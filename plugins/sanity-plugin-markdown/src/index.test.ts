@@ -10,19 +10,20 @@ test('package exports', {timeout: 30_000}, async () => {
   })
 
   expect(manifest.exports).toMatchInlineSnapshot(`
-      {
-        ".": {
-          "MarkdownInput": "function",
-          "defaultMdeTools": "object",
-          "markdownSchema": "function",
-          "markdownSchemaType": "object",
-        },
-        "./next": {
-          "MarkdownInput": "function",
-          "defaultMdeTools": "object",
-          "markdownSchema": "function",
-          "markdownSchemaType": "object",
-        },
-      }
-    `)
+    {
+      ".": {
+        "MarkdownInput": "function",
+        "defaultMdeTools": "object",
+        "markdownSchema": "function",
+        "markdownSchemaType": "object",
+      },
+      "./bundle.css": {},
+      "./next": {
+        "MarkdownInput": "function",
+        "defaultMdeTools": "object",
+        "markdownSchema": "function",
+        "markdownSchemaType": "object",
+      },
+    }
+  `)
 })
