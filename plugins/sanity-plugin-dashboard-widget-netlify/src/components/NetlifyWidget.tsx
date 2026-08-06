@@ -1,5 +1,6 @@
 import {DashboardWidgetContainer} from '@sanity/dashboard'
 import {Button, Flex, Card, Text, Box} from '@sanity/ui'
+import {clsx} from 'clsx/lite'
 import type {ComponentProps} from 'react'
 
 import {type NetlifyWidgetProps} from '../types'
@@ -8,7 +9,7 @@ import SiteList from './SiteList'
 import {contentCard} from './NetlifyWidget.css'
 
 function ContentCard({className, ...props}: ComponentProps<typeof Card>) {
-  return <Card {...props} className={`${contentCard} ${className ?? ''}`} />
+  return <Card {...props} className={clsx(contentCard, className)} />
 }
 
 export default function NetlifyWidget(props: NetlifyWidgetProps) {
