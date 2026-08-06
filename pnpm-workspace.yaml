@@ -62,7 +62,7 @@ catalog:
   react: ^19.2.8
   react-dom: ^19.2.8
   react-fast-compare: ^3.2.2
-  react-hook-form: ^7.84.0
+  react-hook-form: 8.0.0-beta.3
   react-icons: ^5.7.0
   react-is: ^19.2.8
   react-photo-album: ^3.6.0
@@ -173,6 +173,9 @@ peerDependencyRules:
     # @bynder/compact-view does not declare react 19 in its peers yet, but works fine with it
     '@bynder/compact-view>react': '19'
     '@bynder/compact-view>react-dom': '19'
+    # @hookform/resolvers has no react-hook-form v8 compatible release yet (peers ^7.0.0);
+    # the resolver contract is unchanged and it works with the v8 beta
+    '@hookform/resolvers>react-hook-form': '8.0.0-beta.3'
 
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite

@@ -134,8 +134,8 @@ catalogs:
       specifier: ^3.2.2
       version: 3.2.2
     react-hook-form:
-      specifier: ^7.84.0
-      version: 7.84.0
+      specifier: 8.0.0-beta.3
+      version: 8.0.0-beta.3
     react-icons:
       specifier: ^5.7.0
       version: 5.7.0
@@ -2148,7 +2148,7 @@ importers:
     dependencies:
       '@hookform/resolvers':
         specifier: 'catalog:'
-        version: 4.1.3(react-hook-form@7.84.0)
+        version: 4.1.3(react-hook-form@8.0.0-beta.3)
       '@sanity/color':
         specifier: 'catalog:'
         version: 3.0.8
@@ -2172,7 +2172,7 @@ importers:
         version: 3.0.0
       react-hook-form:
         specifier: 'catalog:'
-        version: 7.84.0(react@19.2.8)
+        version: 8.0.0-beta.3(react@19.2.8)
       react-time-ago:
         specifier: ^7.4.4
         version: 7.4.4(react-dom@19.2.8)(react@19.2.8)
@@ -2631,7 +2631,7 @@ importers:
     dependencies:
       '@hookform/resolvers':
         specifier: 'catalog:'
-        version: 4.1.3(react-hook-form@7.84.0)
+        version: 4.1.3(react-hook-form@8.0.0-beta.3)
       '@reduxjs/toolkit':
         specifier: ^2.12.0
         version: 2.12.0(react-redux@9.3.0)(react@19.2.8)
@@ -2682,7 +2682,7 @@ importers:
         version: 1.6.0(react-dom@19.2.8)(react@19.2.8)
       react-hook-form:
         specifier: 'catalog:'
-        version: 7.84.0(react@19.2.8)
+        version: 8.0.0-beta.3(react@19.2.8)
       react-redux:
         specifier: ^9.3.0
         version: 9.3.0(@types/react@19.2.18)(react@19.2.8)(redux@5.0.1)
@@ -10477,8 +10477,8 @@ packages:
     peerDependencies:
       react: '*'
 
-  react-hook-form@7.84.0:
-    resolution: {integrity: sha512-+hWvQP6GLco56mDwrbU4XnHix8t1z90ltZsDIrREl+jnQFQxYLX8oAzqe/Xn8nHpmoXTY5M6oEXrAhbP1qevNQ==}
+  react-hook-form@8.0.0-beta.3:
+    resolution: {integrity: sha512-VyAKK5sXyAK1bkcExoa7ab6nZOd04T+gwv8F4y5xM9vXWw3GVFCJNJgTGt+FYW4jrZkglO12+yhDcQtVLEzZRg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -13662,10 +13662,10 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@hookform/resolvers@4.1.3(react-hook-form@7.84.0)':
+  '@hookform/resolvers@4.1.3(react-hook-form@8.0.0-beta.3)':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.84.0(react@19.2.8)
+      react-hook-form: 8.0.0-beta.3(react@19.2.8)
 
   '@inquirer/ansi@1.0.2': {}
 
@@ -19734,7 +19734,7 @@ snapshots:
     transitivePeerDependencies:
       - preact-render-to-string
 
-  react-hook-form@7.84.0(react@19.2.8):
+  react-hook-form@8.0.0-beta.3(react@19.2.8):
     dependencies:
       react: 19.2.8
 
