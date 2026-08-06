@@ -1,22 +1,13 @@
 import {SearchIcon} from '@sanity/icons/Search'
 import {SpinnerIcon} from '@sanity/icons/Spinner'
 import {TextInput} from '@sanity/ui'
-import {startTransition, useOptimistic} from 'react'
-import {styled, keyframes} from 'styled-components'
+import {startTransition, useOptimistic, type ComponentProps} from 'react'
 
-const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
+import {animatedSpinnerIcon} from './SearchInput.css'
 
-  to {
-    transform: rotate(360deg);
-  }
-`
-
-const AnimatedSpinnerIcon = styled(SpinnerIcon)`
-  animation: ${rotate} 500ms linear infinite;
-`
+function AnimatedSpinnerIcon(props: ComponentProps<typeof SpinnerIcon>) {
+  return <SpinnerIcon {...props} className={animatedSpinnerIcon} />
+}
 
 export function SearchInput({
   value,

@@ -10,12 +10,13 @@ test('package exports', {timeout: 30_000}, async () => {
   })
 
   expect(manifest.exports).toMatchInlineSnapshot(`
-      {
-        ".": {
-          "UnsplashIcon": "function",
-          "unsplashAssetSource": "object",
-          "unsplashImageAsset": "function",
-        },
-      }
-    `)
+    {
+      ".": {
+        "UnsplashIcon": "function",
+        "unsplashAssetSource": "object",
+        "unsplashImageAsset": "function",
+      },
+      "./bundle.css": {},
+    }
+  `)
 })
