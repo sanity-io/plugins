@@ -17,30 +17,30 @@ const pluginsRoot = path.join(repoRoot, 'plugins')
  */
 test('plugins with reactCompiler in tsdown also enable it in vitest', async () => {
   const tsdownConfigs = await findFiles(pluginsRoot, 'tsdown.config.ts')
-  const mismatches: string[] = []
 
-  for (const tsdownPath of tsdownConfigs) {
-    const tsdownSource = await readFile(tsdownPath, 'utf8')
-    if (!enablesReactCompiler(tsdownSource)) continue
+  const results = await Promise.all(
+    tsdownConfigs.map(async (tsdownPath) => {
+      const tsdownSource = await readFile(tsdownPath, 'utf8')
+      if (!enablesReactCompiler(tsdownSource)) return null
 
-    const pluginDir = path.dirname(tsdownPath)
-    const vitestPath = path.join(pluginDir, 'vitest.config.ts')
-    let vitestSource: string
-    try {
-      vitestSource = await readFile(vitestPath, 'utf8')
-    } catch {
-      mismatches.push(
-        `${path.relative(repoRoot, pluginDir)}: missing vitest.config.ts (tsdown has reactCompiler)`,
-      )
-      continue
-    }
+      const pluginDir = path.dirname(tsdownPath)
+      const vitestPath = path.join(pluginDir, 'vitest.config.ts')
+      const relativePlugin = path.relative(repoRoot, pluginDir)
 
-    if (!enablesReactCompilerInVitest(vitestSource)) {
-      mismatches.push(
-        `${path.relative(repoRoot, pluginDir)}: tsdown has reactCompiler but vitest.config.ts does not use reactCompilerPreset / @rolldown/plugin-babel`,
-      )
-    }
-  }
+      try {
+        const vitestSource = await readFile(vitestPath, 'utf8')
+        if (!enablesReactCompilerInVitest(vitestSource)) {
+          return `${relativePlugin}: tsdown has reactCompiler but vitest.config.ts does not use reactCompilerPreset / @rolldown/plugin-babel`
+        }
+      } catch {
+        return `${relativePlugin}: missing vitest.config.ts (tsdown has reactCompiler)`
+      }
+
+      return null
+    }),
+  )
+
+  const mismatches = results.filter((message): message is string => message !== null)
 
   expect(
     mismatches,
@@ -70,15 +70,17 @@ async function findFiles(root: string, fileName: string): Promise<string[]> {
 
   async function walk(dir: string): Promise<void> {
     const entries = await readdir(dir, {withFileTypes: true})
-    for (const entry of entries) {
-      if (entry.name === 'node_modules' || entry.name === 'dist') continue
-      const fullPath = path.join(dir, entry.name)
-      if (entry.isDirectory()) {
-        await walk(fullPath)
-      } else if (entry.name === fileName) {
-        results.push(fullPath)
-      }
-    }
+    await Promise.all(
+      entries.map(async (entry) => {
+        if (entry.name === 'node_modules' || entry.name === 'dist') return
+        const fullPath = path.join(dir, entry.name)
+        if (entry.isDirectory()) {
+          await walk(fullPath)
+        } else if (entry.name === fileName) {
+          results.push(fullPath)
+        }
+      }),
+    )
   }
 
   await walk(root)
