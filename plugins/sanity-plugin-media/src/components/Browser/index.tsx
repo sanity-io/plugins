@@ -5,8 +5,7 @@ import {type AssetSourceComponentProps, type SanityDocument} from 'sanity'
 import {AssetBrowserDispatchProvider} from '../../contexts/AssetSourceDispatchContext'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import useVersionedClient from '../../hooks/useVersionedClient'
-
-import '../../styled/GlobalStyles/GlobalStyles.css'
+import GlobalStyle from '../../styled/GlobalStyles'
 import Controls from '../Controls'
 import DebugControls from '../DebugControls'
 import Dialogs from '../Dialogs'
@@ -90,6 +89,7 @@ const Browser = (props: Props) => {
       selectedAssets={props?.selectedAssets}
     >
       <AssetBrowserDispatchProvider isMultiSelect={props?.isMultiSelect} onSelect={props?.onSelect}>
+        <GlobalStyle />
         <BrowserContent onClose={props?.onClose} schemaType={props?.schemaType} />
       </AssetBrowserDispatchProvider>
     </ReduxProvider>

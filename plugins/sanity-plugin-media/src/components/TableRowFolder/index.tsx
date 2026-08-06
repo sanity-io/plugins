@@ -29,14 +29,14 @@ function ContainerGrid({className, style, ...props}: ComponentProps<typeof Grid>
   )
 }
 
-function FolderBadge({className, ...props}: ComponentProps<typeof Box>) {
+function FolderBadge({className, style, ...props}: ComponentProps<typeof Box>) {
   const {color} = useThemeV2()
 
   return (
     <Box
       {...props}
       className={clsx(folderBadge, className)}
-      style={assignInlineVars({[spotYellowVar]: color.avatar.yellow.bg})}
+      style={{...style, ...assignInlineVars({[spotYellowVar]: color.avatar.yellow.bg})}}
     />
   )
 }
