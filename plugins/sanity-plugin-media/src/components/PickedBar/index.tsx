@@ -4,10 +4,13 @@ import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 
 import {PANEL_HEIGHT} from '../../constants'
+import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions, selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
+import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+import {isImageAsset} from '../../utils/typeGuards'
 
 const PickedBar = () => {
   const scheme = useColorSchemeValue()
@@ -15,6 +18,12 @@ const PickedBar = () => {
   // Redux
   const dispatch = useDispatch()
   const assetsPicked = useTypedSelector(selectAssetsPicked)
+  const currentFolderId = useTypedSelector((state) => state.folders.currentFolderId)
+  const {isMultiSelect, onSelect} = useAssetSourceActions()
+
+  // Replace only rewrites image field refs — only offer it for a single image asset.
+  const canReplace =
+    assetsPicked.length === 1 && !!assetsPicked[0] && isImageAsset(assetsPicked[0].asset)
 
   // Callbacks
   const handlePickClear = () => {
@@ -23,6 +32,37 @@ const PickedBar = () => {
 
   const handleDeletePicked = () => {
     dispatch(dialogActions.showConfirmDeleteAssets({assets: assetsPicked}))
+  }
+
+  const handleReplaceImages = () => {
+    const assetId = assetsPicked[0]?.asset._id
+    if (!assetId) {
+      return
+    }
+    dispatch(dialogActions.showAllAssetsDialog({assetId}))
+  }
+
+  const handleMovePicked = () =>
+    dispatch(DIALOG_ACTIONS.showFolderMove({assets: assetsPicked, folderId: currentFolderId}))
+
+  const handleRemovePickedFromFolder = () =>
+    dispatch(assetsActions.folderSetRequest({assets: assetsPicked, folderId: null}))
+
+  const handleInsertPicked = () => {
+    if (!onSelect) {
+      return
+    }
+
+    const pickedAssetIds = assetsPicked.map((item) => ({
+      kind: 'assetDocumentId' as const,
+      value: item.asset._id,
+    }))
+
+    if (pickedAssetIds.length === 0) {
+      return
+    }
+
+    onSelect(pickedAssetIds)
   }
 
   if (assetsPicked.length === 0) {
@@ -59,16 +99,65 @@ const PickedBar = () => {
           <Label size={0}>Deselect</Label>
         </Button>
 
-        {/* Delete button */}
-        <Button
-          mode="bleed"
-          onClick={handleDeletePicked}
-          padding={2}
-          style={{background: 'none', boxShadow: 'none'}}
-          tone="critical"
-        >
-          <Label size={0}>Delete</Label>
-        </Button>
+        {onSelect && isMultiSelect ? (
+          <Button
+            mode="bleed"
+            onClick={handleInsertPicked}
+            padding={2}
+            style={{background: 'none', boxShadow: 'none'}}
+            tone="primary"
+          >
+            <Label size={0}>Insert selected</Label>
+          </Button>
+        ) : (
+          <Button
+            mode="bleed"
+            onClick={handleDeletePicked}
+            padding={2}
+            style={{background: 'none', boxShadow: 'none'}}
+            tone="critical"
+          >
+            <Label size={0}>Delete</Label>
+          </Button>
+        )}
+
+        {/* Replace button */}
+        {canReplace && (
+          <Button
+            mode="bleed"
+            onClick={handleReplaceImages}
+            padding={2}
+            style={{background: 'none', boxShadow: 'none'}}
+            tone="default"
+          >
+            <Label size={0}>Replace</Label>
+          </Button>
+        )}
+
+        {!onSelect && (
+          <>
+            <Button
+              mode="bleed"
+              onClick={handleMovePicked}
+              padding={2}
+              style={{background: 'none', boxShadow: 'none'}}
+              tone="primary"
+            >
+              <Label size={0}>Move to folder</Label>
+            </Button>
+            {currentFolderId && (
+              <Button
+                mode="bleed"
+                onClick={handleRemovePickedFromFolder}
+                padding={2}
+                style={{background: 'none', boxShadow: 'none'}}
+                tone="critical"
+              >
+                <Label size={0}>Remove from folder</Label>
+              </Button>
+            )}
+          </>
+        )}
       </Flex>
     </Flex>
   )

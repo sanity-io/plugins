@@ -3,6 +3,7 @@ import {structureTool} from 'sanity/structure'
 
 import {documentInternationalizationExample} from './src/documentInternationalization'
 import {internationalizedArrayExample} from './src/internationalizedArray'
+import {mediaExample} from './src/media'
 
 const projectId = process.env.SANITY_E2E_PROJECT_ID || 'a1psl692'
 const fallbackDataset = process.env.SANITY_E2E_DATASET || 'plugins'
@@ -31,6 +32,7 @@ function createWorkspace(name: string, title: string, dataset: string): Workspac
       structureTool(),
       documentInternationalizationExample(),
       internationalizedArrayExample(),
+      mediaExample(),
     ],
     schema: {types: [smokeTestDocument]},
   }

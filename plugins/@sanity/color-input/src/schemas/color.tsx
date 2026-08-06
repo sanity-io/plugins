@@ -82,7 +82,7 @@ export const color = defineType({
       hsl,
       alpha,
     }: {
-      title: string
+      title?: string
       alpha?: number
       hex?: string
       hsl?: {h: number; s: number; l: number}
@@ -92,7 +92,7 @@ export const color = defineType({
         subtitle = `H:${round(hsl.h)} S:${round(hsl.s)} L:${round(hsl.l)} A:${round(alpha)}`
       }
       return {
-        title: title,
+        title: title || 'Color',
         subtitle: subtitle,
         media: () => <ColorPreviewMedia hex={hex} alpha={alpha} />,
       }

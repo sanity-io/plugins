@@ -10,7 +10,15 @@ describe('selectCombinedItems', () => {
     const state = {
       assets: {allIds: ['a1', 'a2']},
       uploads: {allIds: ['u1']},
-    } as RootReducerState
+      folders: {
+        byId: {},
+        childrenByParentId: {},
+        rootIds: [],
+        exactCountByFolderId: {},
+        currentFolderId: null,
+        currentFolderUnfiled: false,
+      },
+    } as unknown as RootReducerState
 
     expect(selectCombinedItems(state)).toEqual([
       {id: 'u1', type: 'upload'},

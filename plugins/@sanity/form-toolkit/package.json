@@ -1,6 +1,6 @@
 {
   "name": "@sanity/form-toolkit",
-  "version": "3.0.12",
+  "version": "3.0.13",
   "description": "Tool kit for integrating forms with a Sanity Studio",
   "keywords": [
     "sanity",
@@ -54,11 +54,13 @@
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@testing-library/react": "catalog:",
     "@types/mailchimp__mailchimp_marketing": "^3.0.22",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
+    "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",

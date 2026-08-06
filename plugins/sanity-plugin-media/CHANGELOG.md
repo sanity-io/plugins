@@ -1,5 +1,38 @@
 # sanity-plugin-media
 
+## 6.1.1
+
+### Patch Changes
+
+- [#1840](https://github.com/sanity-io/plugins/pull/1840) [`a723c55`](https://github.com/sanity-io/plugins/commit/a723c554df91d9fe160551f77454162f5fca2c75) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix Save staying disabled when editing filename, title, alt text, or description in the asset details dialog
+
+## 6.1.0
+
+### Minor Changes
+
+- [#1119](https://github.com/sanity-io/plugins/pull/1119) [`ab39674`](https://github.com/sanity-io/plugins/commit/ab3967405db1d091cab1a9745a3f1dda8d79b1d5) Thanks [@lud-hu](https://github.com/lud-hu)! - Add an "Edit Media" asset source so media details (alt text, title, tags, etc.) can be edited directly from an image or file field on a document, without opening the full Media tool.
+
+- [#1117](https://github.com/sanity-io/plugins/pull/1117) [`6f4316d`](https://github.com/sanity-io/plugins/commit/6f4316d3d1692326dc40d2e10fa655278e033df7) Thanks [@nickeforsberg](https://github.com/nickeforsberg)! - Add an `excludeTags` option that hides assets referencing the listed `media.tag` slugs (`name.current` values). Excluded assets are omitted from the Media browser grid and asset-picker queries, and the matching tags are hidden from the tag sidebar and tag search facet. The asset edit dialog still lists all tags so you can assign or remove them on an open asset.
+
+- [#1121](https://github.com/sanity-io/plugins/pull/1121) [`30fa7e2`](https://github.com/sanity-io/plugins/commit/30fa7e24e642ccf6dcb30925f7bf95e720d98467) Thanks [@bobbygeo](https://github.com/bobbygeo), [@pedrobonamin](https://github.com/pedrobonamin)! - Add folder management to the media browser
+
+  - Organise assets into nested folders, backed by a new `media.folder` document type (a `name` plus a weak `parent` reference) and a single weak `opt.media.folder` reference on each asset (mirroring how tags work). Renaming a folder is a one-field document write regardless of how many assets it contains.
+  - Browse folders in a dedicated sidebar tree, with breadcrumb navigation, create / rename / delete flows, a bulk "Move to folder" dialog, and per-asset folder controls in the asset details dialog. The default "All assets" view lists every asset; opening a folder filters the list to that folder.
+  - Deleting a folder removes only the folder document — its assets stay in the library with their folder assignment cleared, and nested folders move up one level.
+  - Support multi-select insert when the media plugin is used as an asset source for array (multiple) fields.
+
+- [#1115](https://github.com/sanity-io/plugins/pull/1115) [`e7ec6e6`](https://github.com/sanity-io/plugins/commit/e7ec6e6417f7d4f6da1664aa4ab824daf4deea1f) Thanks [@am0wa](https://github.com/am0wa)! - Extract `image` (`sanity.imageExifTags`) metadata on asset upload and include it in asset queries. The asset edit dialog now pre-fills the Description field from the image's `ImageDescription` EXIF tag as a fallback for image assets.
+
+- [#1118](https://github.com/sanity-io/plugins/pull/1118) [`186e29c`](https://github.com/sanity-io/plugins/commit/186e29cd1cba62a6796ec961215d904983f98a15) Thanks [@Polleke007](https://github.com/Polleke007), [@joepvandepol](https://github.com/joepvandepol)! - Add the ability to replace a selected asset with another one and update all of its references across documents
+
+  When a single asset is selected, a new **Replace** action opens an overview where you can pick a replacement asset. Every document that references the original asset (including deeply nested image fields) is re-pointed to the chosen asset. Ported from sanity-io/sanity-plugin-media#236.
+
+### Patch Changes
+
+- [#1807](https://github.com/sanity-io/plugins/pull/1807) [`9e2a955`](https://github.com/sanity-io/plugins/commit/9e2a955ddd075c5e85deaac50ac048f4003d7b7f) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.84.0
+
+- [#1108](https://github.com/sanity-io/plugins/pull/1108) [`1dc3a7b`](https://github.com/sanity-io/plugins/commit/1dc3a7b50e49358b46cefd2413c4d0fe6597c71e) Thanks [@oxygensmith](https://github.com/oxygensmith)! - Add `crossOrigin="anonymous"` to the image thumbnail component so thumbnails load in Firefox. Firefox's Opaque Response Blocking would otherwise block Sanity CDN asset responses (which send `Vary: Origin`) when requested without an `Origin` header.
+
 ## 6.0.9
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
 import type {ClientError, SanityAssetDocument, SanityImageAssetDocument} from '@sanity/client'
 import groq from 'groq'
-import {empty, merge, of} from 'rxjs'
+import {empty, from, merge, of} from 'rxjs'
 import {catchError, delay, filter, mergeMap, takeUntil, withLatestFrom} from 'rxjs/operators'
 
 import type {HttpError, MyEpic, SanityUploadProgressEvent, UploadItem} from '../../types'
@@ -143,10 +143,33 @@ export const uploadsAssetStartEpic: MyEpic = (action$, _state$, {client}) =>
           ),
           mergeMap((event) => {
             if (event?.type === 'complete') {
-              return of(
-                UPLOADS_ACTIONS.uploadComplete({
-                  asset: event.asset,
-                }),
+              const folderId = uploadItem.folderId || null
+
+              if (!folderId) {
+                return of(
+                  UPLOADS_ACTIONS.uploadComplete({
+                    asset: event.asset,
+                  }),
+                )
+              }
+
+              return from(
+                client
+                  .patch(event.asset._id)
+                  .setIfMissing({opt: {}})
+                  .setIfMissing({'opt.media': {}})
+                  .set({
+                    'opt.media.folder': {_ref: folderId, _type: 'reference', _weak: true},
+                  })
+                  .commit(),
+              ).pipe(
+                mergeMap((asset) =>
+                  of(
+                    UPLOADS_ACTIONS.uploadComplete({
+                      asset: asset as SanityAssetDocument | SanityImageAssetDocument,
+                    }),
+                  ),
+                ),
               )
             }
             if (event?.type === 'progress' && event?.stage === 'upload') {
@@ -197,6 +220,7 @@ export const uploadsAssetUploadEpic: MyEpic = (action$, state$) =>
           const uploadItem = {
             _type: 'upload',
             assetType,
+            folderId: state.folders.currentFolderId,
             hash,
             name: file.name,
             size: file.size,
@@ -231,6 +255,8 @@ export const uploadsCheckRequestEpic: MyEpic = (action$, state$, {client}) =>
 
       const constructedFilter = constructFilter({
         assetTypes: state.assets.assetTypes,
+        currentFolderId: state.folders.currentFolderId,
+        excludeTagSlugs: state.assets.excludeTagSlugs,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
       })

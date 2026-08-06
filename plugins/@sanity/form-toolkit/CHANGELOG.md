@@ -1,5 +1,20 @@
 # @sanity/form-toolkit
 
+## 3.0.13
+
+### Patch Changes
+
+- [#1234](https://github.com/sanity-io/plugins/pull/1234) [`1dd36c8`](https://github.com/sanity-io/plugins/commit/1dd36c84acb5f9485afe2fd2e04639aebec023d4) Thanks [@stipsan](https://github.com/stipsan)! - Address post-migration review feedback:
+
+  - `FormRenderer` now renders interactive (uncontrolled) inputs when no `getFieldState` is provided, so the documented native HTML form usage works out of the box
+  - Uncontrolled text and textarea fields honor `options.defaultValue` (controlled fields keep form-library state only, so UI and submit values stay in sync)
+  - `FormRenderer` falls back to `field.name` for the React key when a field has no `_key`
+  - The shared HubSpot/Mailchimp request handler defaults to the Next.js-compatible handler instead of throwing when no framework environment variable is detected, and short-circuits CORS preflight (`OPTIONS`) requests
+  - Corrected the `formSchema`, `formiumInput`, and `mailchimpInput` usage examples (import paths and required options), README typos, and example/dev-workflow references
+
+- Updated dependencies [[`f4e7fcc`](https://github.com/sanity-io/plugins/commit/f4e7fcceec4adb5f049aaffce0e1d6d1585828e5)]:
+  - @sanity/sanity-plugin-async-list@3.0.0
+
 ## 3.0.12
 
 ### Patch Changes

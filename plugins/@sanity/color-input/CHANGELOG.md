@@ -1,5 +1,11 @@
 # @sanity/color-input
 
+## 6.1.1
+
+### Patch Changes
+
+- [#1821](https://github.com/sanity-io/plugins/pull/1821) [`1c44147`](https://github.com/sanity-io/plugins/commit/1c44147a8d218d1c4c2a02856169f050d28937b8) Thanks [@stipsan](https://github.com/stipsan)! - Make color preview `prepare` accept optional selected fields for Sanity next typing
+
 ## 6.1.0
 
 ### Minor Changes

@@ -4,6 +4,26 @@ type PreDefinedQuery = {
   label: string
   query: string
 }
+
+/**
+ * A single allowed migration target.
+ * If `projectId` is omitted, the target is only allowed within the source project.
+ * @public
+ */
+export type MigrationTarget = {
+  projectId?: string
+  dataset: string
+}
+
+/**
+ * Restricts which Datasets (and Projects) a given source Dataset may migrate to.
+ * @public
+ */
+export type MigrationFilter = {
+  sourceDataset: string
+  targets: MigrationTarget[]
+}
+
 /**
  * Plugin configuration
  * @public
@@ -15,6 +35,7 @@ export interface PluginConfig {
   filter?: string
   follow?: ('inbound' | 'outbound')[]
   queries?: PreDefinedQuery[]
+  migrationFilters?: MigrationFilter[]
 }
 
 /**
