@@ -1,10 +1,11 @@
 import {Button, Box, Flex, Grid, Select, Stack, Switch, Text, useToast} from '@sanity/ui'
 import {useState, useContext, useCallback} from 'react'
-import type {ChangeEvent} from 'react'
-import {styled} from 'styled-components'
+import type {ChangeEvent, ComponentProps} from 'react'
 
 import type {TranslationLocale} from '../types'
 import {TranslationContext} from './TranslationContext'
+
+import {localeButton, localeSwitch, wrapText} from './NewTask.css'
 
 type Props = {
   locales: TranslationLocale[]
@@ -17,9 +18,9 @@ type LocaleCheckboxProps = {
   checked: boolean
 }
 
-const WrapText = styled(Box)`
-  white-space: normal;
-`
+function WrapText({className, ...props}: ComponentProps<typeof Box>) {
+  return <Box {...props} className={`${wrapText} ${className ?? ''}`} />
+}
 
 const LocaleCheckbox = ({locale, toggle, checked}: LocaleCheckboxProps) => {
   const onClick = useCallback(() => toggle(locale.localeId, !checked), [locale, toggle, checked])
@@ -29,12 +30,12 @@ const LocaleCheckbox = ({locale, toggle, checked}: LocaleCheckboxProps) => {
       mode="ghost"
       onClick={onClick}
       disabled={locale.enabled === false}
-      style={{cursor: `pointer`}}
+      className={localeButton}
       radius={2}
     >
       <Flex align="center" gap={3}>
         <Switch
-          style={{pointerEvents: `none`}}
+          className={localeSwitch}
           disabled={locale.enabled === false}
           onChange={onClick}
           checked={checked}
