@@ -70,6 +70,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@testing-library/jest-dom": "catalog:",
@@ -79,6 +80,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/react-file-icon": "^1.0.5",
+    "@vitejs/plugin-react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "jsdom": "catalog:",
     "react": "catalog:",

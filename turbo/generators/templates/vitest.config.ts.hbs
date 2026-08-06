@@ -1,12 +1,21 @@
+import pluginBabel from '@rolldown/plugin-babel'
+import {reactCompilerPreset} from '@vitejs/plugin-react'
 {{#if hasVanillaExtract}}
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 {{/if}}
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
+  // Match `reactCompiler: true` in tsdown.config.ts so tests exercise compiled output.
+  plugins: [
+    pluginBabel({presets: [reactCompilerPreset()]}),
 {{#if hasVanillaExtract}}
-  plugins: [vanillaExtractPlugin()],
+    vanillaExtractPlugin(),
 {{/if}}
+  ],
+  oxc: {
+    jsx: {runtime: 'automatic'},
+  },
   test: {
 {{#if hasVanillaExtract}}
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],

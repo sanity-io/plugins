@@ -63,6 +63,7 @@
     "tinycolor2": "^1.6.0"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
@@ -71,6 +72,7 @@
     "@types/react": "catalog:",
     "@types/tinycolor2": "^1.4.6",
     "@vanilla-extract/css": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",

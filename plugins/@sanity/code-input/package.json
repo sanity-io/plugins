@@ -62,10 +62,12 @@
     "@uiw/react-codemirror": "^4.25.11"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",

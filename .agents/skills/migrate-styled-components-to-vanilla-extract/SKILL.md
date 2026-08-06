@@ -208,11 +208,16 @@ The package-exports test resolves the workspace `exports` map, whose `.` entry p
 the workspace's `vitest.config.ts`:
 
 ```ts
+import pluginBabel from '@rolldown/plugin-babel'
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
+import {reactCompilerPreset} from '@vitejs/plugin-react'
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
-  plugins: [vanillaExtractPlugin()],
+  // Keep React Compiler (matches `reactCompiler: true` in tsdown.config.ts) and
+  // compose vanilla-extract — do not replace the babel plugin.
+  plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
+  oxc: {jsx: {runtime: 'automatic'}},
   // ...existing test config
 })
 ```
@@ -282,7 +287,7 @@ Migrate styling from styled-components to vanilla-extract (zero-runtime CSS)
 - [ ] `tsdown.config.ts`: `styledComponents` removed, `vanillaExtract: true` added
 - [ ] `package.json`: vanilla-extract devDeps added; `styled-components` peer removed; `sanity` /
       `@sanity/ui` peer variants verified aligned in `pnpm-lock.yaml`
-- [ ] `vitest.config.ts` registers `vanillaExtractPlugin()`
+- [ ] `vitest.config.ts` registers `vanillaExtractPlugin()` **alongside** the existing React Compiler babel plugin (`pluginBabel({presets: [reactCompilerPreset()]})`) — do not drop compiler parity
 - [ ] `dist/bundle.css` emitted with all rules; package-exports snapshot updated
 - [ ] `pnpm format` / `pnpm lint` / `pnpm knip` / `pnpm build` / `pnpm test run` all pass
 - [ ] Visual fidelity verified against the pre-migration rendering

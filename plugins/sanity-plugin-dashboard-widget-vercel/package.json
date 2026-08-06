@@ -55,12 +55,14 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "catalog:",
     "@sanity/dashboard": "workspace:*",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@types/object-hash": "^3.0.6",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

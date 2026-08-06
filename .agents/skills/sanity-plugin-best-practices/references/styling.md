@@ -204,11 +204,15 @@ drop-in match:
 
 ```ts
 // plugins/@sanity/google-maps-input/vitest.config.ts
+import pluginBabel from '@rolldown/plugin-babel'
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
+import {reactCompilerPreset} from '@vitejs/plugin-react'
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
-  plugins: [vanillaExtractPlugin()],
+  // Keep React Compiler (matches tsdown `reactCompiler: true`) and compose VE.
+  plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
+  oxc: {jsx: {runtime: 'automatic'}},
   // ...
 })
 ```
@@ -234,11 +238,14 @@ in `setupFiles` (the generator emits it when you opt into styling):
 
 ```ts
 // vitest.config.ts
+import pluginBabel from '@rolldown/plugin-babel'
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
+import {reactCompilerPreset} from '@vitejs/plugin-react'
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
-  plugins: [vanillaExtractPlugin()],
+  plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
+  oxc: {jsx: {runtime: 'automatic'}},
   test: {
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
     // ...

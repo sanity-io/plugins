@@ -287,6 +287,24 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Root Vitest sets `SC_DISABLE_SPEEDY=false` so styled-components keeps its fast CSSOM injection path under jsdom (upstream disables it when `NODE_ENV !== 'production'`, which makes first mounts of styled-heavy trees slow enough to trip default timeouts). Same approach as [sanity#13675](https://github.com/sanity-io/sanity/pull/13675).
 - For plugins that use vanilla-extract: register `vanillaExtractPlugin()` in the plugin’s `vitest.config.ts` (required so `.css.ts` compiles under Vitest) and include `'@vanilla-extract/css/disableRuntimeStyles'` in `setupFiles` (no-op under `node`, skips CSS injection for `jsdom`/`happy-dom` suites; remove only when a test asserts real CSS) — see the `sanity-plugin-best-practices` styling reference (`Disabling runtime styles in tests`)
 
+### React Compiler Vitest parity
+
+If a plugin’s `tsdown.config.ts` has `reactCompiler: true` (the default from generators), its `vitest.config.ts` **must** register the same Babel stack so unit tests exercise compiled output — not uncompiled `src`:
+
+```ts
+import pluginBabel from '@rolldown/plugin-babel'
+import {reactCompilerPreset} from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [pluginBabel({presets: [reactCompilerPreset()]})],
+  oxc: {jsx: {runtime: 'automatic'}},
+  // ...
+})
+```
+
+- Generators already wire both `tsdown.config.ts` and `vitest.config.ts` (plus `@rolldown/plugin-babel` / `@vitejs/plugin-react` catalog deps). Do not remove the Vitest compiler plugin when adding vanilla-extract or other plugins — compose into `plugins: [...]`.
+- `scripts/react-compiler-parity` enforces this invariant in `pnpm test`. Agents who enable or keep `reactCompiler` in tsdown without mirroring Vitest will fail CI.
+
 ## Pull Request Workflow
 
 ### 1. Create as Draft PR First
