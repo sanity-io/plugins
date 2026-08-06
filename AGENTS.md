@@ -360,9 +360,11 @@ How it works:
 - The flag is declared in `dev/test-studio/turbo.jsonc` so turbo-cached builds are invalidated when it changes (and so turbo's strict env mode passes it through to `pnpm dev`)
 - Enabling devtools makes `sanity build` noticeably slower; that's why it's opt-in via the env flag
 
-### React production profiling on Vercel previews
+### React production profiling
 
-`dev/test-studio/sanity.cli.ts` enables React production profiling when `VERCEL_ENV === "preview"` (Vercel PR deployments): it aliases `react-dom/client` → `react-dom/profiling`, emits production source maps, and disables identifier mangling so React DevTools can profile and show readable component names. It also sets `deployment.autoUpdates: false` on those previews, because auto-updates vendor builds hardcode `react-dom-client.production.js` and would bypass the profiling alias. Production builds (including `plugins-studio.sanity.dev` via `sanity deploy`, where `VERCEL_ENV` is unset) keep auto-updates on and skip profiling to avoid the overhead. `VERCEL_ENV` is listed in `dev/test-studio/turbo.jsonc` so Turbo cache keys differ between preview and production.
+`dev/test-studio/sanity.cli.ts` enables React production profiling on Vercel preview and production deployments (`VERCEL_ENV === "preview" || VERCEL_ENV === "production"`). During `sanity build`, it aliases `react-dom/client` → `react-dom/profiling`, emits production source maps, and disables identifier mangling so React DevTools can profile and show readable component names. While that profiling path is active it also sets `deployment.autoUpdates: false`, because auto-updates vendor builds hardcode `react-dom-client.production.js` and would bypass the profiling alias.
+
+React profiling is already available in the development build from `pnpm dev`. `VERCEL_ENV` is listed in `dev/test-studio/turbo.jsonc` so Turbo cache keys differ between Vercel and non-Vercel builds.
 
 ## Creating a New Plugin
 
