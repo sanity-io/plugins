@@ -221,6 +221,14 @@ Use `@sanity/vanilla-extract-vite-plugin` (faster drop-in for the upstream
 `@vanilla-extract/vite-plugin`). If a host app or studio already registers the Vite plugin
 globally, you don't need to touch that file for the workspace under migration.
 
+**Dependent workspace Vitest projects:** other packages that depend on the migrated workspace via
+`workspace:^` resolve its `.` export to `./src/index.ts` during monorepo tests. Their package-exports
+(and any other) suites then transitively import `.css.ts` modules. After migration, run
+`pnpm test run` (full suite) and, for each failing dependent, register `vanillaExtractPlugin()` in
+that package's `vitest.config.ts` and add `"@sanity/vanilla-extract-vite-plugin": "catalog:"` as a
+`devDependency` (same pattern as the migrated workspace). Add a separate patch changeset for each
+dependent whose `package.json` / Vitest config changed.
+
 > **Optional, jsdom-only:** if the workspace has `jsdom`/`happy-dom` suites that don't assert on real
 > CSS (layout, `getComputedStyle`), you can skip runtime style injection with
 > `setupFiles: ['@vanilla-extract/css/disableRuntimeStyles']`. This does **not** replace the Vite
