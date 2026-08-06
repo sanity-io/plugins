@@ -1,18 +1,19 @@
 import {type AnyAction, configureStore, type Store} from '@reduxjs/toolkit'
 import type {SanityClient} from '@sanity/client'
-import {type ReactNode, useState} from 'react'
+import {type ReactNode, useEffect, useState} from 'react'
 import {Provider} from 'react-redux'
-import {createEpicMiddleware} from 'redux-observable'
+import {createEpicMiddleware, ofType} from 'redux-observable'
+import {takeUntil} from 'rxjs'
 import type {AssetSourceComponentProps, SanityDocument} from 'sanity'
 
 import {rootEpic, rootReducer} from '../../modules'
 import {initialState as assetsInitialState} from '../../modules/assets'
-// import {assetsActions} from '../../modules/assets'
-// import {searchActions} from '../../modules/search'
-// import {uploadsActions} from '../../modules/uploads'
 import type {RootReducerState} from '../../modules/types'
 import getDocumentAssetIds from '../../utils/getDocumentAssetIds'
 import {isSupportedAssetType} from '../../utils/isSupportedAssetType'
+
+/** Stops the root epic when the Media browser unmounts (tool close / dialog dismiss / tests). */
+const EPIC_END_TYPE = 'media/epicEnd' as const
 
 type Props = {
   assetType?: AssetSourceComponentProps['assetType']
@@ -23,7 +24,12 @@ type Props = {
   selectedAssets?: AssetSourceComponentProps['selectedAssets']
 }
 
-function createReduxStore(props: Props): Store {
+type CreatedStore = {
+  endEpics: () => void
+  store: Store
+}
+
+function createReduxStore(props: Props): CreatedStore {
   const epicMiddleware = createEpicMiddleware<AnyAction, AnyAction, RootReducerState>({
     dependencies: {
       client: props.client,
@@ -34,15 +40,6 @@ function createReduxStore(props: Props): Store {
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
-        /*
-        serializableCheck: {
-          ignoredActions: [
-            assetsActions.deleteError.type,
-            uploadsActions.uploadRequest.type,
-            uploadsActions.uploadStart.type,
-          ]
-        },
-        */
         // TODO: remove once we're no longer storing non-serializable data in the store
         serializableCheck: false,
         thunk: false,
@@ -95,13 +92,28 @@ function createReduxStore(props: Props): Store {
     },
   })
 
-  epicMiddleware.run(rootEpic)
+  // Scope the root epic so closing the browser tears down debounced fetches / listeners
+  // instead of dispatching into an unmounted react-redux tree (Vitest jsdom teardown).
+  epicMiddleware.run((action$, state$, dependencies) =>
+    rootEpic(action$, state$, dependencies).pipe(takeUntil(action$.pipe(ofType(EPIC_END_TYPE)))),
+  )
 
-  return store
+  return {
+    store,
+    endEpics: () => {
+      store.dispatch({type: EPIC_END_TYPE})
+    },
+  }
 }
 
 function ReduxProvider({children, ...props}: Props) {
-  const [store] = useState(() => createReduxStore(props))
+  const [{endEpics, store}] = useState(() => createReduxStore(props))
+
+  useEffect(() => {
+    return () => {
+      endEpics()
+    }
+  }, [endEpics])
 
   return <Provider store={store}>{children}</Provider>
 }

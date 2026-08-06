@@ -1,10 +1,9 @@
 import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
-import {render, screen, waitFor} from '@testing-library/react'
-import {of} from 'rxjs'
+import {cleanup, render, screen, waitFor} from '@testing-library/react'
+import {of, Subject} from 'rxjs'
 import {ColorSchemeProvider} from 'sanity'
-import {describe, expect, it, vi, beforeEach} from 'vitest'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
-import {createListenMock} from '../../__tests__/fixtures/listenMock'
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
 import {ToolOptionsProvider} from '../../contexts/ToolOptionsContext'
 import useVersionedClient from '../../hooks/useVersionedClient'
@@ -16,13 +15,23 @@ vi.mock('../../hooks/useVersionedClient', () => ({
 
 describe('Browser', () => {
   beforeEach(() => {
-    const fetch = vi.fn().mockReturnValue(of({items: []}))
+    // Shape responses per query so fetch epics settle without cascading errors.
+    const fetch = vi.fn((query: string) => {
+      if (query.includes('media.folder')) {
+        return of({folders: [], unfiledCount: 0})
+      }
+      return of({items: []})
+    })
     vi.mocked(useVersionedClient).mockReturnValue(
       createMockSanityClient({
-        listen: createListenMock(),
+        listen: vi.fn(() => new Subject()),
         observable: {fetch},
       }),
     )
+  })
+
+  afterEach(() => {
+    cleanup()
   })
 
   it('renders Browse Assets header in tool mode', async () => {
