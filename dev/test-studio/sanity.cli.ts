@@ -15,7 +15,8 @@ const appId = process.env.SANITY_STUDIO_APP_ID || 'bi1ktslqwmu1cawds5ce3jn6'
 // the DevTools dock in a running `sanity dev` server without restarting it.
 // Usage: `pnpm devtools:test-studio` from the repo root (see AGENTS.md).
 const isViteDevToolsEnabled = process.env.ENABLE_VITE_DEVTOOLS === 'true'
-// Enable React production profiling on all Vercel deployments.
+// Enable React production profiling on Vercel preview and production deployments
+// (`VERCEL_ENV=development` is left alone).
 const reactProductionProfiling =
   process.env.VERCEL_ENV === 'preview' || process.env.VERCEL_ENV === 'production'
 
@@ -43,14 +44,14 @@ export default defineCliConfig({
       build: isViteDevToolsEnabled ? {rolldownOptions: {devtools: {}}} : {},
     } satisfies UserConfig)
 
-    // Support React Production Profiling (same approach as sanity-io/sanity test studio)
+    // Support React production profiling on Vercel preview/production builds
     if (reactProductionProfiling && command === 'build') {
       nextConfig = mergeConfig(nextConfig, {
         // Aliasing to react-dom/profiling is necessary in the production build, otherwise React
         // can't run the profiler on the deployed studio
         resolve: {alias: {'react-dom/client': require.resolve('react-dom/profiling')}},
         build: {
-          // Enable production source maps to more easily debug deployed preview studios
+          // Enable production source maps to more easily debug deployed Vercel studios
           sourcemap: true,
           rolldownOptions: {
             output: {
