@@ -60,4 +60,32 @@ describe('FormBuilderTool', () => {
       expect(screen.getByText(/Insert image/i)).toBeInTheDocument()
     })
   })
+
+  it('renders picker header for file asset type', async () => {
+    render(
+      <ColorSchemeProvider scheme="light">
+        <ThemeProvider theme={studioTheme}>
+          <ToastProvider>
+            <LayerProvider>
+              <ToolOptionsProvider options={{creditLine: {enabled: false}}}>
+                <FormBuilderTool
+                  {...({
+                    assetType: 'file',
+                    onClose: vi.fn(),
+                    onSelect: vi.fn(),
+                    schemaType: {},
+                    selectedAssets: undefined,
+                  } as any)}
+                />
+              </ToolOptionsProvider>
+            </LayerProvider>
+          </ToastProvider>
+        </ThemeProvider>
+      </ColorSchemeProvider>,
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText(/Insert file/i)).toBeInTheDocument()
+    })
+  })
 })

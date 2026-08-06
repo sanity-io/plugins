@@ -7,7 +7,12 @@ import {describe, expect, it, vi, beforeEach, afterEach} from 'vitest'
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
 import {initialState as assetsInitialState} from '../assets'
-import {uploadsAssetStartEpic, uploadsCheckRequestEpic, uploadsActions} from './index'
+import {
+  uploadsAssetStartEpic,
+  uploadsAssetUploadEpic,
+  uploadsCheckRequestEpic,
+  uploadsActions,
+} from './index'
 
 vi.mock('../../utils/generatePreviewBlobUrl', () => ({
   generatePreviewBlobUrl$: () => of('blob:http://preview'),
@@ -105,5 +110,62 @@ describe('uploadsCheckRequestEpic', () => {
       expect(client.observable.fetch).toHaveBeenCalled()
       expect(store.getState().uploads.byIds['hh']).toBeUndefined()
     })
+  })
+})
+
+describe('uploadsAssetUploadEpic', () => {
+  it('hashes the file and dispatches uploadStart as image for image MIME types', async () => {
+    const client = createMockSanityClient()
+    const store = createEpicTestStore(uploadsAssetUploadEpic, client)
+
+    const file = new File(['x'], 'photo.png', {type: 'image/png'})
+    store.dispatch(uploadsActions.uploadRequest({file}))
+
+    await vi.waitFor(() => {
+      const upload = store.getState().uploads.byIds['deadbeef']
+      expect(upload).toMatchObject({
+        assetType: 'image',
+        hash: 'deadbeef',
+        name: 'photo.png',
+        status: 'queued',
+      })
+    })
+  })
+
+  it('forces asset type when forceAsAssetType is provided', async () => {
+    const client = createMockSanityClient()
+    const store = createEpicTestStore(uploadsAssetUploadEpic, client)
+
+    const file = new File(['x'], 'photo.png', {type: 'image/png'})
+    store.dispatch(uploadsActions.uploadRequest({file, forceAsAssetType: 'file'}))
+
+    await vi.waitFor(() => {
+      expect(store.getState().uploads.byIds['deadbeef']?.assetType).toBe('file')
+    })
+  })
+
+  it('ignores a second upload for a hash already in flight', async () => {
+    const client = createMockSanityClient()
+    const store = createEpicTestStore(uploadsAssetUploadEpic, client, {
+      uploads: {
+        allIds: ['deadbeef'],
+        byIds: {
+          deadbeef: {
+            _type: 'upload',
+            assetType: 'image',
+            hash: 'deadbeef',
+            name: 'existing.png',
+            size: 1,
+            status: 'uploading',
+          },
+        },
+      },
+    })
+
+    const file = new File(['x'], 'photo.png', {type: 'image/png'})
+    store.dispatch(uploadsActions.uploadRequest({file}))
+
+    await Promise.resolve()
+    expect(store.getState().uploads.byIds['deadbeef']?.name).toBe('existing.png')
   })
 })

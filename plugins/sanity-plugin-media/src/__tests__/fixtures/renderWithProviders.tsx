@@ -14,6 +14,7 @@ import type {MediaToolOptions} from '../../types'
 import {createTestRootState} from './rootState'
 
 type Opts = {
+  isMultiSelect?: boolean
   onAction?: (action: {type: string}) => void
   onSelect?: AssetSourceComponentProps['onSelect']
   preloaded?: Partial<RootReducerState>
@@ -44,7 +45,7 @@ export function renderWithProviders(
   ui: ReactElement,
   opts: Opts = {},
 ): RenderResult & {store: ReturnType<typeof createTestStore>} {
-  const {onAction, onSelect, preloaded, toolOptions} = opts
+  const {isMultiSelect, onAction, onSelect, preloaded, toolOptions} = opts
 
   const store = createTestStore(preloaded, onAction)
 
@@ -60,7 +61,7 @@ export function renderWithProviders(
         <ToolOptionsProvider options={options}>
           <ThemeProvider theme={studioTheme}>
             <ToastProvider>
-              <AssetBrowserDispatchProvider onSelect={onSelect}>
+              <AssetBrowserDispatchProvider isMultiSelect={isMultiSelect} onSelect={onSelect}>
                 {node}
               </AssetBrowserDispatchProvider>
             </ToastProvider>

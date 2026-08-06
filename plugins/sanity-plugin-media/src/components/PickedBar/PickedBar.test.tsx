@@ -116,4 +116,102 @@ describe('PickedBar', () => {
     expect(screen.getByText(/2 assets selected/i)).toBeTruthy()
     expect(screen.queryByText('Replace')).toBeNull()
   })
+
+  it('clears picks when Deselect is clicked', async () => {
+    const user = userEvent.setup()
+    const {store} = renderWithProviders(<PickedBar />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+      },
+    })
+
+    await user.click(screen.getByText('Deselect'))
+    expect(store.getState().assets.byIds['img-1']?.picked).toBe(false)
+  })
+
+  it('opens confirm-delete dialog when Delete is clicked', async () => {
+    const user = userEvent.setup()
+    const {store} = renderWithProviders(<PickedBar />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+      },
+    })
+
+    await user.click(screen.getByText('Delete'))
+    expect(store.getState().dialog.items.some((d) => d.type === 'confirm')).toBe(true)
+  })
+
+  it('opens folder-move dialog when Move to folder is clicked', async () => {
+    const user = userEvent.setup()
+    const {store} = renderWithProviders(<PickedBar />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+        folders: {
+          byId: {},
+          childrenByParentId: {},
+          rootIds: [],
+          exactCountByFolderId: {},
+          unfiledCount: 0,
+          currentFolderId: null,
+          currentFolderUnfiled: false,
+          panelVisible: false,
+          fetching: false,
+          fetchCount: -1,
+          creating: false,
+          renaming: false,
+        },
+      },
+    })
+
+    await user.click(screen.getByText('Move to folder'))
+    expect(store.getState().dialog.items.some((d) => d.type === 'folderMove')).toBe(true)
+  })
+
+  it('dispatches folderSetRequest(null) when Remove from folder is clicked', async () => {
+    const user = userEvent.setup()
+    const onAction = vi.fn()
+    renderWithProviders(<PickedBar />, {
+      onAction,
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+        folders: {
+          byId: {f1: {_id: 'f1', name: 'F', parentId: null}},
+          childrenByParentId: {},
+          rootIds: ['f1'],
+          exactCountByFolderId: {},
+          unfiledCount: 0,
+          currentFolderId: 'f1',
+          currentFolderUnfiled: false,
+          panelVisible: true,
+          fetching: false,
+          fetchCount: 1,
+          creating: false,
+          renaming: false,
+        },
+      },
+    })
+
+    await user.click(screen.getByText('Remove from folder'))
+    expect(onAction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'assets/folderSetRequest',
+        payload: expect.objectContaining({folderId: null}),
+      }),
+    )
+  })
+
+  it('calls onSelect with picked assets when Insert selected is clicked', async () => {
+    const user = userEvent.setup()
+    const onSelect = vi.fn()
+    renderWithProviders(<PickedBar />, {
+      isMultiSelect: true,
+      onSelect,
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
+      },
+    })
+
+    await user.click(screen.getByText('Insert selected'))
+    expect(onSelect).toHaveBeenCalledWith([{kind: 'assetDocumentId', value: 'img-1'}])
+  })
 })

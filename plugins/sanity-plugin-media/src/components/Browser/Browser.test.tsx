@@ -42,4 +42,22 @@ describe('Browser', () => {
       expect(screen.getByText('Browse Assets')).toBeInTheDocument()
     })
   })
+
+  it('shows Tags panel by default', async () => {
+    render(
+      <ColorSchemeProvider scheme="light">
+        <ThemeProvider theme={studioTheme}>
+          <ToastProvider>
+            <ToolOptionsProvider options={{creditLine: {enabled: false}}}>
+              <Browser />
+            </ToolOptionsProvider>
+          </ToastProvider>
+        </ThemeProvider>
+      </ColorSchemeProvider>,
+    )
+
+    await waitFor(() => {
+      expect(screen.getAllByText('Tags').length).toBeGreaterThan(0)
+    })
+  })
 })
