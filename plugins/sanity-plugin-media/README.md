@@ -60,6 +60,19 @@ or
 yarn add sanity-plugin-media
 ```
 
+### Peer dependency warnings
+
+The plugin uses [`react-hook-form`](https://react-hook-form.com/) v8 together with [`@hookform/resolvers`](https://www.npmjs.com/package/@hookform/resolvers), which doesn't declare react-hook-form v8 in its peer dependencies yet (it declares `react-hook-form ^7.55.0`), even though the resolver contract is unchanged and works fine with v8. Until a v8-compatible release is published, tell your package manager to allow it:
+
+- `npm`: install with the `--legacy-peer-deps` flag
+- `pnpm`: set [`peerDependencyRules.allowedVersions`](https://pnpm.io/settings#peerdependencyrulesallowedversions) in `pnpm-workspace.yaml`:
+
+  ```yaml
+  peerDependencyRules:
+    allowedVersions:
+      '@hookform/resolvers>react-hook-form': '8.0.0-beta.3'
+  ```
+
 ## Usage
 
 Add it as a plugin in your `sanity.config.ts` (or .js) file:
