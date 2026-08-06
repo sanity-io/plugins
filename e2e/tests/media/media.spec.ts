@@ -5,7 +5,7 @@ import {
   clearMediaSearchFacets,
   deleteMediaAsset,
   deleteMediaDocuments,
-  getMediaAssetTags,
+  getMediaAssetTagNames,
   getMediaAssetTitle,
   mediaAssetCard,
   openEditMediaSource,
@@ -142,6 +142,9 @@ test.describe('sanity-plugin-media', () => {
 
   test('auto-tags an asset when selected via mediaField', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
+    // Seed ensures a `product` tag exists for the mediaField pre-filter. applyMediaTags
+    // resolves tags by name.current (and may create one), so assert the slug — not a
+    // specific document id (datasets can already contain another `product` tag).
     const tagId = await seedMediaTag(projectName, 'product')
     const asset = await seedMediaImage(projectName)
     const doc = await seedMediaProduct(projectName)
@@ -161,8 +164,8 @@ test.describe('sanity-plugin-media', () => {
       await expect(selectedImagePreview(page)).toBeVisible({timeout: 30_000})
 
       await expect
-        .poll(async () => getMediaAssetTags(projectName, asset.id), {timeout: 30_000})
-        .toContain(tagId)
+        .poll(async () => getMediaAssetTagNames(projectName, asset.id), {timeout: 30_000})
+        .toContain('product')
     } finally {
       await deleteMediaDocuments(projectName, cleanupIds)
     }

@@ -19,7 +19,7 @@ const FOLDER_TYPE = 'media.folder'
 function crc32(buf: Buffer): number {
   let c = ~0
   for (let i = 0; i < buf.length; i++) {
-    c ^= buf[i]!
+    c ^= buf[i]
     for (let k = 0; k < 8; k++) {
       c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1
     }
@@ -37,7 +37,7 @@ function pngChunk(type: string, data: Buffer): Buffer {
 }
 
 /** Valid unique 1×1 RGB PNG (content hash differs per `unique` string). */
-export function uniqueTinyPng(unique = randomUUID()): Buffer {
+export function uniqueTinyPng(unique: string = randomUUID()): Buffer {
   const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])
   const ihdrData = Buffer.alloc(13)
   ihdrData.writeUInt32BE(1, 0)
@@ -214,6 +214,21 @@ export async function getMediaAssetTags(
   return doc ?? []
 }
 
+/** Resolve slug names for tags currently referenced on an asset. */
+export async function getMediaAssetTagNames(
+  projectName: string | undefined,
+  assetId: string,
+): Promise<string[]> {
+  const client = createE2EClient(datasetForProject(projectName))
+  // Dereference the reference array items (`tags[]->`), not `tags[]._ref->`
+  // (string-> is unreliable and can yield nulls).
+  const names = await client.fetch<(string | null)[] | null>(
+    `*[_id == $id][0].opt.media.tags[]->name.current`,
+    {id: assetId},
+  )
+  return (names ?? []).filter((name): name is string => typeof name === 'string')
+}
+
 export async function getMediaAssetFolder(
   projectName: string | undefined,
   assetId: string,
@@ -316,6 +331,7 @@ export async function openMediaAssetSource(
 export async function clearMediaSearchFacets(page: Page): Promise<void> {
   const browser = mediaBrowser(page)
   const clear = browser.getByRole('button', {name: 'Clear', exact: true})
+  const tagFacet = browser.getByText(/TAGS includes/i)
   // Facets are applied after the tags fetch completes — wait for Clear when present.
   try {
     await clear.waitFor({state: 'visible', timeout: 15_000})
@@ -324,6 +340,14 @@ export async function clearMediaSearchFacets(page: Page): Promise<void> {
   }
   await clear.click()
   await expect(clear).toBeHidden({timeout: 10_000})
+  // useBrowserInit can re-apply mediaTags facets after a late tags fetch; clear again.
+  try {
+    await tagFacet.waitFor({state: 'visible', timeout: 2_000})
+    await browser.getByRole('button', {name: 'Clear', exact: true}).click()
+    await expect(tagFacet).toHaveCount(0, {timeout: 10_000})
+  } catch {
+    // Facets stayed cleared.
+  }
 }
 
 /** Open Edit Media for an already-selected image. */
