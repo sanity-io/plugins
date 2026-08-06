@@ -27,6 +27,7 @@ const SimpleMdeReact = lazy(() => import('react-simplemde-editor'))
 
 function MarkdownInputStyles({
   className,
+  style,
   children,
   ...props
 }: ComponentProps<typeof Box> & {children?: ReactNode}) {
@@ -36,12 +37,15 @@ function MarkdownInputStyles({
     <Box
       {...props}
       className={className ? `${markdownInput} ${className}` : markdownInput}
-      style={assignInlineVars({
-        [fgVar]: color.fg,
-        [borderVar]: color.border,
-        [bgVar]: color.bg,
-        [selectionHoveredBgVar]: color.selectable.primary.hovered.bg,
-      })}
+      style={{
+        ...assignInlineVars({
+          [fgVar]: color.fg,
+          [borderVar]: color.border,
+          [bgVar]: color.bg,
+          [selectionHoveredBgVar]: color.selectable.primary.hovered.bg,
+        }),
+        ...style,
+      }}
     >
       {children}
     </Box>
