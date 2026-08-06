@@ -2,72 +2,11 @@ import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Button, Card, Flex, Grid, Stack, Text, TextInput} from '@sanity/ui'
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {styled} from 'styled-components'
 
 import {convertWatermarkToMuxOverlay} from '../util/convertWatermarkToMux'
 import type {MuxOverlaySettings, WatermarkConfig} from '../util/types'
 
-const RangeInput = styled.input`
-  width: 100%;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--card-border-color);
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
-
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--card-focus-ring-color, #2276fc);
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  }
-
-  &::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--card-focus-ring-color, #2276fc);
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  }
-
-  &:hover::-webkit-slider-thumb {
-    background: var(--card-focus-ring-color, #1a5fc7);
-  }
-
-  &:hover::-moz-range-thumb {
-    background: var(--card-focus-ring-color, #1a5fc7);
-  }
-`
-
-const WatermarkOverlay = styled.div<{$opacity: number}>`
-  position: absolute;
-  max-width: 200px;
-  opacity: ${(props) => props.$opacity};
-  cursor: move;
-  user-select: none;
-  z-index: 10;
-  pointer-events: auto;
-
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-    pointer-events: none;
-  }
-
-  &:hover {
-    outline: 2px dashed rgba(255, 255, 255, 0.8);
-    outline-offset: 4px;
-  }
-`
+import {rangeInput, watermarkOverlay} from './DraggableWatermark.css'
 
 interface DraggableWatermarkProps {
   watermark: WatermarkConfig
@@ -335,15 +274,16 @@ export default function DraggableWatermark({
   }
 
   return (
-    <WatermarkOverlay
+    // oxlint-disable-next-line jsx-a11y/no-static-element-interactions
+    <div
       ref={watermarkRef}
-      $opacity={opacityForRender}
+      className={watermarkOverlay}
       onMouseDown={hasManualOverlay ? undefined : handleMouseDown}
       // oxlint-disable-next-line react/react-compiler
-      style={computeWatermarkStyle()}
+      style={{...computeWatermarkStyle(), opacity: opacityForRender}}
     >
       <img src={watermark.imageUrl} alt="Watermark" draggable={false} />
-    </WatermarkOverlay>
+    </div>
   )
 }
 
@@ -816,7 +756,8 @@ export function WatermarkControls({
                     return `Size: ${px}px`
                   })()}
                 </Text>
-                <RangeInput
+                <input
+                  className={rangeInput}
                   type="range"
                   // oxlint-disable-next-line react/react-compiler
                   value={(() => {
@@ -855,7 +796,8 @@ export function WatermarkControls({
                 <Text size={1} weight="medium">
                   Opacity: {Math.round((watermark.opacity ?? 0.7) * 100)}%
                 </Text>
-                <RangeInput
+                <input
+                  className={rangeInput}
                   type="range"
                   value={watermark.opacity ?? 0.7}
                   min={0}

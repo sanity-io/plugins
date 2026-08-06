@@ -17,25 +17,13 @@ import {
   Text,
 } from '@sanity/ui'
 import {truncateString, useFormattedDuration} from 'sanity'
-import {styled} from 'styled-components'
 
 import useImportMuxAssets from '../hooks/useImportMuxAssets'
 import {DIALOGS_Z_INDEX} from '../util/constants'
 import type {MuxAsset} from '../util/types'
 import VideoThumbnail from './VideoThumbnail'
 
-const MissingAssetCheckbox = styled(Checkbox)`
-  position: static !important;
-
-  input::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    display: block;
-    cursor: pointer;
-    z-index: 1000;
-  }
-`
+import {missingAssetCheckbox} from './ImportVideosFromMux.css'
 
 function MissingAsset({
   asset,
@@ -59,7 +47,8 @@ function MissingAsset({
       radius={1}
     >
       <Flex align="center" gap={2}>
-        <MissingAssetCheckbox
+        <Checkbox
+          className={missingAssetCheckbox}
           checked={selected}
           onChange={(e) => {
             selectAsset(e.currentTarget.checked)

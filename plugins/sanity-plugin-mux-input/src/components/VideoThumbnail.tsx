@@ -1,7 +1,6 @@
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Card, type CardTone, Spinner, Stack, Text} from '@sanity/ui'
 import {Suspense, useMemo, useRef, useState} from 'react'
-import {styled} from 'styled-components'
 
 import {useClient} from '../hooks/useClient'
 import {useInView} from '../hooks/useInView'
@@ -11,14 +10,7 @@ import {getPosterSrc} from '../util/getPosterSrc'
 import {tryWithSuspend} from '../util/tryWithSuspend'
 import type {AssetThumbnailOptions, MuxAnimatedThumbnailUrl, MuxThumbnailUrl} from '../util/types'
 
-const Image = styled.img`
-  transition: opacity 0.175s ease-out 0s;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center center;
-`
+import {thumbnailImage} from './VideoThumbnail.css'
 
 type ImageStatus = 'loading' | 'error' | 'loaded'
 
@@ -123,7 +115,8 @@ export default function VideoThumbnail({
                 </Text>
               </Stack>
             )}
-            <Image
+            <img
+              className={thumbnailImage}
               src={thumbnailSrc ?? undefined}
               alt={`Preview for ${staticImage ? 'image' : 'video'} ${asset.filename || asset.assetId}`}
               onLoad={handleLoad}

@@ -1,22 +1,26 @@
 import type {SanityDocument} from '@sanity/client'
-import {Box, Card, Text} from '@sanity/ui'
+import {Box, Card, Text, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps} from 'react'
 import {collate, useSchema} from 'sanity'
-import {styled} from 'styled-components'
 
 import {DocumentPreview} from '../documentPreview/DocumentPreview'
 import SpinnerBox from '../SpinnerBox'
 
-const Container = styled(Box)`
-  * {
-    color: ${(props: any) => props.theme.sanity.color.base.fg};
-  }
-  a {
-    text-decoration: none;
-  }
-  h2 {
-    font-size: ${(props: any) => props.theme.sanity.fonts.text.sizes[1]};
-  }
-`
+import {container, fgVar} from './VideoReferences.css'
+
+function Container({className, style, ...props}: ComponentProps<typeof Box>) {
+  const {color} = useThemeV2()
+
+  return (
+    <Box
+      {...props}
+      className={clsx(container, className)}
+      style={{...assignInlineVars({[fgVar]: color.fg}), ...style}}
+    />
+  )
+}
 
 const VideoReferences: React.FC<{
   references?: SanityDocument[]
