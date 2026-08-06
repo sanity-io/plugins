@@ -55,6 +55,7 @@
     "@sanity/icons": "catalog:",
     "@sanity/studio-secrets": "workspace:^",
     "@sanity/ui": "catalog:",
+    "clsx": "catalog:",
     "nanoid": "catalog:"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 import {DocumentIcon} from '@sanity/icons/Document'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Flex, Text} from '@sanity/ui'
+import {clsx} from 'clsx/lite'
 import type {ComponentProps} from 'react'
 
 import type {CloudinaryAsset} from '../types'
@@ -28,21 +29,19 @@ function VideoPreviewFlex({
   ...props
 }: ComponentProps<typeof Flex> & {layout?: 'default' | 'block'}) {
   const layoutClass = videoPreview[layout === 'default' ? 'default' : 'block']
-  return <Flex {...props} className={className ? `${layoutClass} ${className}` : layoutClass} />
+  return <Flex {...props} className={clsx(layoutClass, className)} />
 }
 
 function RawFileLabel({className, ...props}: ComponentProps<typeof Text>) {
-  return <Text {...props} className={className ? `${rawFileLabel} ${className}` : rawFileLabel} />
+  return <Text {...props} className={clsx(rawFileLabel, className)} />
 }
 
 function ThumbnailFlex({className, ...props}: ComponentProps<typeof Flex>) {
-  return <Flex {...props} className={className ? `${thumbnailFlex} ${className}` : thumbnailFlex} />
+  return <Flex {...props} className={clsx(thumbnailFlex, className)} />
 }
 
 function FullWidthPreview({className, ...props}: ComponentProps<'div'>) {
-  return (
-    <div {...props} className={className ? `${fullWidthPreview} ${className}` : fullWidthPreview} />
-  )
+  return <div {...props} className={clsx(fullWidthPreview, className)} />
 }
 
 const AssetPreview = ({value, layout}: AssetPreviewProps) => {

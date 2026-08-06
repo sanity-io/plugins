@@ -1,6 +1,7 @@
 import {PlugIcon} from '@sanity/icons/Plug'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Box, Button, Flex} from '@sanity/ui'
+import {clsx} from 'clsx/lite'
 import {type ComponentProps, useCallback, useState} from 'react'
 import {
   type ArrayInputFunctionsProps,
@@ -20,12 +21,7 @@ import SecretsConfigView, {namespace} from './SecretsConfigView'
 import {fullWidthButton} from './AssetListFunctions.css'
 
 function FullWidthButton({className, ...props}: ComponentProps<typeof Button>) {
-  return (
-    <Button
-      {...props}
-      className={className ? `${fullWidthButton} ${className}` : fullWidthButton}
-    />
-  )
+  return <Button {...props} className={clsx(fullWidthButton, className)} />
 }
 
 interface ApiConfig {

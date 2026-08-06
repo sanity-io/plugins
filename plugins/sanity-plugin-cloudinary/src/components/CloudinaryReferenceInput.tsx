@@ -1,6 +1,7 @@
 import {PlugIcon} from '@sanity/icons/Plug'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Button, Flex, Grid, Stack} from '@sanity/ui'
+import {clsx} from 'clsx/lite'
 import {nanoid} from 'nanoid'
 import {type ComponentProps, useCallback, useMemo, useRef, useState} from 'react'
 import {type ObjectInputProps, getPublishedId, PatchEvent, set, unset, useClient} from 'sanity'
@@ -14,11 +15,11 @@ import SecretsConfigView, {namespace, type Secrets} from './SecretsConfigView'
 import {actionGrid, previewFlex} from './CloudinaryReferenceInput.css'
 
 function PreviewFlex({className, ...props}: ComponentProps<typeof Flex>) {
-  return <Flex {...props} className={className ? `${previewFlex} ${className}` : previewFlex} />
+  return <Flex {...props} className={clsx(previewFlex, className)} />
 }
 
 function ActionGrid({className, ...props}: ComponentProps<typeof Grid>) {
-  return <Grid {...props} className={className ? `${actionGrid} ${className}` : actionGrid} />
+  return <Grid {...props} className={clsx(actionGrid, className)} />
 }
 
 const API_VERSION = '2023-01-01'

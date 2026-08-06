@@ -49,6 +49,7 @@ catalog:
   '@vis.gl/react-google-maps': ^1.9.0
   '@vitest/coverage-v8': ^4.1.10
   babel-plugin-react-compiler: ^1.0.0
+  clsx: ^2.1.1
   date-fns: ^4.4.0
   groq: ^6.8.0
   jsdom: ^29.1.1

@@ -1,5 +1,6 @@
 import {PlugIcon} from '@sanity/icons/Plug'
 import {Button, Flex, Grid, Stack} from '@sanity/ui'
+import {clsx} from 'clsx/lite'
 import {type ComponentProps, useCallback} from 'react'
 import {type ObjectInputProps, PatchEvent, unset} from 'sanity'
 
@@ -9,20 +10,15 @@ import AssetPreview from './AssetPreview'
 import {actionGrid, previewFlex, setupButtonContainer} from './WidgetInput.css'
 
 function SetupButtonContainer({className, ...props}: ComponentProps<'div'>) {
-  return (
-    <div
-      {...props}
-      className={className ? `${setupButtonContainer} ${className}` : setupButtonContainer}
-    />
-  )
+  return <div {...props} className={clsx(setupButtonContainer, className)} />
 }
 
 function PreviewFlex({className, ...props}: ComponentProps<typeof Flex>) {
-  return <Flex {...props} className={className ? `${previewFlex} ${className}` : previewFlex} />
+  return <Flex {...props} className={clsx(previewFlex, className)} />
 }
 
 function ActionGrid({className, ...props}: ComponentProps<typeof Grid>) {
-  return <Grid {...props} className={className ? `${actionGrid} ${className}` : actionGrid} />
+  return <Grid {...props} className={clsx(actionGrid, className)} />
 }
 
 type WidgetInputProps = ObjectInputProps & {openMediaSelector: () => void; onSetup: () => void}

@@ -1,6 +1,7 @@
 import {PlugIcon} from '@sanity/icons/Plug'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Box, Button, Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
+import {clsx} from 'clsx/lite'
 import {type ComponentProps, useCallback, useEffect, useRef, useState} from 'react'
 import type {AssetSourceComponentProps, ImageAsset} from 'sanity'
 
@@ -11,7 +12,7 @@ import SecretsConfigView, {namespace, type Secrets} from '../SecretsConfigView'
 import {widget} from './CloudinaryAssetSource.css'
 
 function Widget({className, ...props}: ComponentProps<'div'>) {
-  return <div {...props} className={className ? `${widget} ${className}` : widget} />
+  return <div {...props} className={clsx(widget, className)} />
 }
 
 export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
