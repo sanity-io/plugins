@@ -71,7 +71,7 @@ export const floatingCard = style({
 ```tsx
 // FloatingCard.tsx — before: const StyledFloatingCard = styled(Card)`position: fixed; ...`
 import {Card} from '@sanity/ui'
-import {clsx} from 'clsx'
+import {clsx} from 'clsx/lite'
 import type {ComponentProps} from 'react'
 
 import {floatingCard} from './FloatingCard.css'
@@ -84,9 +84,10 @@ function StyledFloatingCard({className, ...props}: ComponentProps<typeof Card>) 
 Type the wrapper with `ComponentProps<typeof Primitive>` (or `ComponentProps<'div'>`) and never use
 `forwardRef` — `ref` is a regular prop on React 19. **Merge, don't clobber:** a fixed
 `className={floatingCard}` after `{...props}` silently drops a `className` a caller passes in. Pull
-`className` out of props and merge it with `clsx(floatingCard, className)` (any classnames helper —
-`clsx`, `classnames` — or a `` `${floatingCard} ${className ?? ''}` `` template literal works) so the
-wrapper's class is always applied while still honoring the caller's. See
+`className` out of props and merge it with `clsx(floatingCard, className)` — prefer
+`import {clsx} from 'clsx/lite'` when only joining strings (the usual case); reach for full `clsx`
+only if you need the object/array API. A `` `${floatingCard} ${className ?? ''}` `` template literal
+also works. See
 [Keep the component layer](../sanity-plugin-best-practices/references/styling.md#keep-the-component-layer-encapsulation).
 
 **Shape B — flatten single-use wrappers.** When the styled element was an internal, single-use

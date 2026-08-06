@@ -440,7 +440,7 @@ This is how [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13
 ```tsx
 // QueryErrorDialog.styled.tsx — same `ErrorCode` API as the styled-components version
 import {Code} from '@sanity/ui'
-import {clsx} from 'clsx'
+import {clsx} from 'clsx/lite'
 import {type ComponentProps} from 'react'
 
 import {errorCode} from './QueryErrorDialog.css'
@@ -454,13 +454,16 @@ export function ErrorCode({className, ...props}: ComponentProps<typeof Code>) {
   element).
 - **Merge, don't clobber, `className`.** A fixed `className={errorCode}` after `{...props}` silently
   drops a `className` a caller passes in. Pull `className` out of props and merge it —
-  `clsx(errorCode, className)` (any classnames helper, or a `` `${errorCode} ${className ?? ''}` ``
-  template literal) — so the wrapper's class always applies while still honoring the caller's.
+  `clsx(errorCode, className)`. Prefer `import {clsx} from 'clsx/lite'` when only joining strings
+  (the usual case); reach for full `clsx` only if you need the object/array API. A
+  `` `${errorCode} ${className ?? ''}` `` template literal also works.
 - **Refs need no `forwardRef`** — in React 19 `ref` is a regular prop, so `ComponentProps<typeof Flex>`
   already includes it and spreading `{...props}` forwards a caller's `ref` to the wrapped primitive
   (`forwardRef` is banned by lint; see [`refs.md`](./refs.md)):
 
   ```tsx
+  import {clsx} from 'clsx/lite'
+
   export function Root({className, ...props}: ComponentProps<typeof Flex>) {
     return <Flex {...props} className={clsx(root, className)} />
   }
@@ -470,6 +473,8 @@ export function ErrorCode({className, ...props}: ComponentProps<typeof Code>) {
   (`$isInvalid`):
 
   ```tsx
+  import {clsx} from 'clsx/lite'
+
   function ResultContainer({
     isInvalid,
     className,
