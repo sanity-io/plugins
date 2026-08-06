@@ -145,6 +145,7 @@ const Controls = () => {
             {/* Tags panel toggle */}
             <Box display={['none', 'none', 'block']} marginLeft={2}>
               <Button
+                aria-label="Toggle tags panel"
                 fontSize={1}
                 icon={
                   <Box style={{transform: 'scale(0.75)'}}>

@@ -8,10 +8,13 @@ import {
   getMediaAssetTags,
   getMediaAssetTitle,
   mediaAssetCard,
+  clearMediaSearchFacets,
   openEditMediaSource,
+  openFoldersPanel,
   openMediaAssetSource,
   openMediaProduct,
   openMediaTool,
+  openTagsPanel,
   searchMediaAssets,
   seedMediaFolder,
   seedMediaImage,
@@ -58,7 +61,7 @@ test.describe('sanity-plugin-media', () => {
       await expect(saveButton).toBeEnabled()
       await saveButton.click()
 
-      await expect(dialog).toBeHidden()
+      await expect(dialog).toBeHidden({timeout: 30_000})
 
       await expect
         .poll(async () => getMediaAssetTitle(projectName, asset.id), {timeout: 30_000})
@@ -77,7 +80,7 @@ test.describe('sanity-plugin-media', () => {
 
     try {
       await openMediaProduct(page, doc.id)
-      await openMediaAssetSource(page, 'image')
+      await openMediaAssetSource(page, 'Image')
       await searchMediaAssets(page, asset.filename)
 
       const card = mediaAssetCard(page, asset.id)
@@ -105,13 +108,9 @@ test.describe('sanity-plugin-media', () => {
     const tagName = `e2e-tag-${Date.now().toString(36)}`
 
     await openMediaTool(page)
+    await openTagsPanel(page)
 
-    const tagsToggle = page.getByRole('button', {name: /^Tags$/i})
-    if (await tagsToggle.count()) {
-      await tagsToggle.first().click()
-    }
-
-    await page.getByRole('button', {name: 'Create tag'}).click()
+    await page.getByRole('button', {name: 'Create tag', exact: true}).click()
     const createDialog = page.getByRole('dialog', {name: /create tag/i})
     await expect(createDialog).toBeVisible()
     await createDialog.locator('input[name="name"]').fill(tagName)
@@ -129,7 +128,7 @@ test.describe('sanity-plugin-media', () => {
 
     try {
       await openMediaTool(page)
-      await page.getByRole('button', {name: 'Toggle folders panel'}).click()
+      await openFoldersPanel(page)
       await expect(page.getByText(folderName).first()).toBeVisible({timeout: 30_000})
       await page.getByText(folderName).first().click()
       await expect(mediaAssetCard(page, asset.id)).toBeVisible({timeout: 30_000})
@@ -147,7 +146,9 @@ test.describe('sanity-plugin-media', () => {
 
     try {
       await openMediaProduct(page, doc.id)
-      await openMediaAssetSource(page, 'image')
+      await openMediaAssetSource(page, 'Image')
+      // mediaField pre-filters to the `product` tag — clear so the untagged seed is visible.
+      await clearMediaSearchFacets(page)
       await searchMediaAssets(page, asset.filename)
 
       const card = mediaAssetCard(page, asset.id)
@@ -175,7 +176,7 @@ test.describe('sanity-plugin-media', () => {
 
     try {
       await openMediaProduct(page, doc.id)
-      await openEditMediaSource(page, 'image')
+      await openEditMediaSource(page, 'Image')
 
       const dialog = assetDetailsDialog(page)
       const titleInput = dialog.locator('input[name="title"]')
