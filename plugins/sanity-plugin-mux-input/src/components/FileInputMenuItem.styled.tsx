@@ -1,36 +1,30 @@
-import {MenuItem} from '@sanity/ui'
-import {css, styled} from 'styled-components'
+import {MenuItem, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps} from 'react'
 
 import {focusRingStyle} from './withFocusRing/helpers'
 
-export const FileButton = styled(MenuItem)(({theme}) => {
-  const {focusRing} = theme.sanity
-  const base = theme.sanity.color.base
+import {boxShadowFocusVar, fileButton} from './FileInputMenuItem.css'
+
+export function FileButton({className, style, ...props}: ComponentProps<typeof MenuItem>) {
+  const theme = useThemeV2()
   const border = {width: 1, color: 'var(--card-border-color)'}
 
-  return css`
-    position: relative;
-
-    &:not([data-disabled='true']) {
-      &:focus-within {
-        box-shadow: ${focusRingStyle({base, border, focusRing})};
-      }
-    }
-
-    & input {
-      overflow: hidden;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      min-width: 0;
-      display: block;
-      appearance: none;
-      padding: 0;
-      margin: 0;
-      border: 0;
-      opacity: 0;
-    }
-  `
-})
+  return (
+    <MenuItem
+      {...props}
+      className={clsx(fileButton, className)}
+      style={{
+        ...assignInlineVars({
+          [boxShadowFocusVar]: focusRingStyle({
+            base: theme.color,
+            border,
+            focusRing: theme.card.focusRing,
+          }),
+        }),
+        ...style,
+      }}
+    />
+  )
+}

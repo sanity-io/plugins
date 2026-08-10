@@ -1,8 +1,9 @@
 import {Card, type CardTone} from '@sanity/ui'
 import {useCallback, useRef} from 'react'
-import {styled} from 'styled-components'
 
 import {withFocusRing} from './withFocusRing'
+
+import {hiddenInput} from './Uploader.css'
 
 const UploadCardWithFocusRing = withFocusRing(Card)
 
@@ -54,19 +55,8 @@ export function UploadCard({
       onDragLeave={onDragLeave}
       onDragOver={onDragOver}
     >
-      <HiddenInput ref={inputRef} />
+      <input ref={inputRef} className={hiddenInput} type="text" />
       {children}
     </UploadCardWithFocusRing>
   )
 }
-
-const HiddenInput = styled.input.attrs({type: 'text'})`
-  position: absolute;
-  border: 0;
-  color: white;
-  opacity: 0;
-
-  &:focus {
-    outline: none;
-  }
-`

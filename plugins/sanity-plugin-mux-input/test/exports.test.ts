@@ -15,6 +15,7 @@ test('package exports', {timeout: 30_000}, async () => {
         "defaultConfig": "object",
         "muxInput": "function",
       },
+      "./bundle.css": {},
     }
   `)
 })

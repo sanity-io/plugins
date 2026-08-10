@@ -1,35 +1,27 @@
 // Lifted from sanity/form/inputs/files/common/UploadProgress
 
 import {Button, Card, Code, Flex, Inline, Stack, Text} from '@sanity/ui'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps} from 'react'
 import {LinearProgress} from 'sanity'
-import {styled} from 'styled-components'
 
-const CardWrapper = styled(Card)`
-  min-height: 82px;
-  box-sizing: border-box;
-`
+import {cardWrapper, codeWrapper, flexWrapper, leftSection} from './UploadProgress.css'
 
-const FlexWrapper = styled(Flex)`
-  text-overflow: ellipsis;
-  overflow: hidden;
-`
+function CardWrapper({className, ...props}: ComponentProps<typeof Card>) {
+  return <Card {...props} className={clsx(cardWrapper, className)} />
+}
 
-const LeftSection = styled(Stack)`
-  position: relative;
-  width: 60%;
-`
+function FlexWrapper({className, ...props}: ComponentProps<typeof Flex>) {
+  return <Flex {...props} className={clsx(flexWrapper, className)} />
+}
 
-const CodeWrapper = styled(Code)`
-  position: relative;
-  width: 100%;
+function LeftSection({className, ...props}: ComponentProps<typeof Stack>) {
+  return <Stack {...props} className={clsx(leftSection, className)} />
+}
 
-  code {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    position: relative;
-    max-width: 200px;
-  }
-`
+function CodeWrapper({className, ...props}: ComponentProps<typeof Code>) {
+  return <Code {...props} className={clsx(codeWrapper, className)} />
+}
 
 export const UploadProgress = ({
   progress = 100,

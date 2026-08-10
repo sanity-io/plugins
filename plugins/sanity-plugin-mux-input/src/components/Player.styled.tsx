@@ -1,11 +1,8 @@
-import {styled} from 'styled-components'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps} from 'react'
 
-export const TopControls = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  justify-content: flex-end;
-  button {
-    height: auto;
-  }
-`
+import {topControls} from './Player.css'
+
+export function TopControls({className, ...props}: ComponentProps<'div'>) {
+  return <div {...props} className={clsx(topControls, className)} />
+}
