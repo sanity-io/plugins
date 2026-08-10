@@ -4,6 +4,8 @@ import {useCallback, useState} from 'react'
 
 import ProgressBar from './ProgressBar'
 
+import {importButton} from './LanguageStatus.css'
+
 type LanguageStatusProps = {
   title: string
   progress: number
@@ -41,7 +43,7 @@ export const LanguageStatus = ({
         ) : null}
         <Box gridColumnStart={5} gridColumnEnd={6}>
           <Button
-            style={{width: `100%`}}
+            className={importButton}
             mode="ghost"
             onClick={handleImport}
             text={busy ? 'Importing...' : 'Import'}

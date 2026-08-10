@@ -414,6 +414,12 @@ migrations:
   `plugins/sanity-plugin-bynder-input` — all fully migrated on the current tsdown setup.
   `@sanity/color-input` is the dynamic-styling example (`styleVariants`, `createVar` +
   `assignInlineVars`, `useTheme_v2()`).
+- **Dependent Vitest projects:** after migration, run the full `pnpm test run`. Workspace
+  dependents that import the migrated package via `workspace:^` resolve its `.` export to
+  `./src/index.ts` and will fail package-exports (or other) tests until they also register
+  `vanillaExtractPlugin()` in their `vitest.config.ts` and add
+  `"@sanity/vanilla-extract-vite-plugin": "catalog:"` as a `devDependency`. See the migration
+  skill Step 5.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed instructions on:
 
