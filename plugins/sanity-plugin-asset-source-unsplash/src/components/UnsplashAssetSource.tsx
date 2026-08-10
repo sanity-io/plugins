@@ -1,20 +1,19 @@
 import {Dialog, Stack, Box} from '@sanity/ui'
 import memoize from 'lodash-es/memoize.js'
-import {lazy, Suspense, useMemo, useRef, useState} from 'react'
+import {lazy, Suspense, useMemo, useRef, useState, type ComponentProps} from 'react'
 import {type AssetSourceComponentProps, useClient} from 'sanity'
-import {styled} from 'styled-components'
 
 import type {FetcherResult, UnsplashPhoto} from '../types'
 import {Loader} from './Loader'
 import {SearchInput} from './SearchInput'
 
+import {unsplashDialog} from './UnsplashAssetSource.css'
+
 const RESULTS_PER_PAGE = 42
 
-const StyledDialog = styled(Dialog)`
-  & > [data-ui='DialogCard'] > [data-ui='Card'] {
-    height: 100%;
-  }
-`
+function StyledDialog(props: ComponentProps<typeof Dialog>) {
+  return <Dialog {...props} className={unsplashDialog} />
+}
 
 const UnsplashAssetSourceGallery = lazy(() => import('./UnsplashPhotoGallery'))
 

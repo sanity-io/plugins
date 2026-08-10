@@ -1,35 +1,36 @@
-import {Text, Card} from '@sanity/ui'
-import {getTheme_v2} from '@sanity/ui/theme'
-import {styled} from 'styled-components'
+import {Text, Card, useTheme_v2} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {type ComponentProps} from 'react'
 
-const CreditLineLink = styled.a`
-  text-decoration: none;
-  cursor: pointer;
-  &:hover,
-  &:focus {
-    [data-ui='Text'] {
-      text-decoration: underline;
-    }
-  }
-`
+import {
+  creditLine,
+  creditLineBgVar,
+  creditLineFgVar,
+  creditLineLink,
+} from './UnsplashCreditLine.css'
 
-const CreditLine = styled(Card)`
-  ${({theme}) => {
-    const v2 = getTheme_v2({sanity: theme.sanity})
-    return `
-     --creditline-fg: ${v2.color.fg};
-     --creditline-bg: ${v2.color.bg};
-   `
-  }};
-  -webkit-user-drag: none;
-  position: absolute;
-  background-color: var(--creditline-bg);
-  bottom: 0;
+function CreditLineLink({children, ...props}: ComponentProps<'a'>) {
+  return (
+    <a {...props} className={creditLineLink}>
+      {children}
+    </a>
+  )
+}
 
-  [data-ui='Text'] {
-    color: var(--creditline-fg);
-  }
-`
+function CreditLine(props: ComponentProps<typeof Card>) {
+  const {color} = useTheme_v2()
+
+  return (
+    <Card
+      {...props}
+      className={creditLine}
+      style={assignInlineVars({
+        [creditLineFgVar]: color.fg,
+        [creditLineBgVar]: color.bg,
+      })}
+    />
+  )
+}
 
 const UTM_SOURCE = 'sanity-plugin-asset-source-unsplash'
 export function UnsplashCreditLine({
