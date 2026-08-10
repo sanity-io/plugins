@@ -331,10 +331,15 @@ const DialogAssetEdit = (props: Props) => {
     }
   }, [getValues, lastRemovedTagIds, setValue])
 
-  // Reset react-hook-form local state on mount and every time the asset has been updated elsewhere
+  // Reset react-hook-form local state on mount and every time the asset has been updated elsewhere.
+  // `keepFieldsRef` is required with React Compiler: a plain `reset()` empties react-hook-form's
+  // internal field registry and relies on the `register()` calls re-running on the next render to
+  // re-register every field. The compiler memoizes the registered field JSX (keyed on the stable
+  // `register` reference), so without this option the fields stay unregistered after reset and
+  // edits to string fields no longer mark the form dirty (Save stays disabled).
   useEffect(() => {
     if (assetUpdatedPrev.current !== assetItem?.asset._updatedAt) {
-      reset(generateDefaultValues(assetItem?.asset))
+      reset(generateDefaultValues(assetItem?.asset), {keepFieldsRef: true})
     }
     assetUpdatedPrev.current = assetItem?.asset._updatedAt
   }, [assetItem?.asset, generateDefaultValues, reset])

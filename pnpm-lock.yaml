@@ -25,6 +25,9 @@ catalogs:
     '@portabletext/types':
       specifier: ^4.0.2
       version: 4.0.2
+    '@rolldown/plugin-babel':
+      specifier: ^0.2.3
+      version: 0.2.3
     '@sanity/asset-utils':
       specifier: ^2.3.0
       version: 2.3.0
@@ -91,6 +94,9 @@ catalogs:
     '@vis.gl/react-google-maps':
       specifier: ^1.9.0
       version: 1.9.0
+    '@vitejs/plugin-react':
+      specifier: ^6.0.5
+      version: 6.0.5
     '@vitest/coverage-v8':
       specifier: ^4.1.10
       version: 4.1.10
@@ -2708,6 +2714,9 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@rolldown/plugin-babel':
+        specifier: 'catalog:'
+        version: 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.1)(vite@8.2.0)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
@@ -2735,6 +2744,9 @@ importers:
       '@types/react-file-icon':
         specifier: ^1.0.5
         version: 1.0.5
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 6.0.5(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(vite@8.2.0)
       babel-plugin-react-compiler:
         specifier: 'catalog:'
         version: 1.0.0

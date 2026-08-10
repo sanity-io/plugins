@@ -65,7 +65,9 @@ const DialogTagCreate = (props: Props) => {
     }
   }, [creatingError, setError])
 
-  const Footer = () => (
+  // Plain JSX, not an inline component: a new component identity per render remounts the
+  // footer subtree whenever form state changes (see DialogAssetEdit for details).
+  const footer = (
     <Box padding={3}>
       <Flex justify="flex-end">
         {/* Submit button */}
@@ -79,15 +81,7 @@ const DialogTagCreate = (props: Props) => {
   )
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/react-compiler
-      footer={<Footer />}
-      header="Create Tag"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Create Tag" id={id} onClose={handleClose} width={1}>
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Hidden button to enable enter key submissions */}

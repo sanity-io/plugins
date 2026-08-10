@@ -63,7 +63,9 @@ const DialogFolderCreate = (props: Props) => {
     }
   }, [creatingError, setError])
 
-  const Footer = () => (
+  // Plain JSX, not an inline component: a new component identity per render remounts the
+  // footer subtree whenever form state changes (see DialogAssetEdit for details).
+  const footer = (
     <Box padding={3}>
       <Flex justify="flex-end">
         <FormSubmitButton
@@ -76,15 +78,7 @@ const DialogFolderCreate = (props: Props) => {
   )
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/react-compiler
-      footer={<Footer />}
-      header="Create Folder"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Create Folder" id={id} onClose={handleClose} width={1}>
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         <button style={{display: 'none'}} tabIndex={-1} type="submit" />
 

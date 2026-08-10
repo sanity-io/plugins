@@ -64,11 +64,6 @@ export default function Details({
   creditLine,
   locales,
 }: DetailsProps) {
-  'use no memo'
-  // React Compiler memoizes the register() field JSX using asset-derived deps only.
-  // That can leave Save stuck disabled while the DOM still updates (uncontrolled inputs).
-  // Tags work because they use Controller; string fields use register and need this opt-out.
-
   const hasLocales = locales && locales.length > 0
   const [activeLocaleTab, setActiveLocaleTab] = useState(0)
   const folderId = currentAsset?.opt?.media?.folder?._ref
