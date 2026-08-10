@@ -1,6 +1,6 @@
 import {type PayloadAction, createSlice} from '@reduxjs/toolkit'
-import pluralize from 'pluralize'
 import type {UnknownAction} from '@reduxjs/toolkit'
+import pluralize from 'pluralize'
 import {ofType} from 'redux-observable'
 import {of} from 'rxjs'
 import {bufferTime, filter, mergeMap} from 'rxjs/operators'

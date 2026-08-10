@@ -30,10 +30,9 @@ const ContainerGrid = styled(Grid)(
   `,
 )
 
-const FolderBadge = styled(Box)(
-  ({theme}) => {
-    const yellow = getTheme_v2(theme).color.avatar.yellow.bg
-    return css`
+const FolderBadge = styled(Box)(({theme}) => {
+  const yellow = getTheme_v2(theme).color.avatar.yellow.bg
+  return css`
     background: ${yellow};
     border-radius: 6px;
     height: 42px;
@@ -51,8 +50,7 @@ const FolderBadge = styled(Box)(
       width: 18px;
     }
   `
-  },
-)
+})
 
 const TableRowFolder = ({folderId, name, totalCount}: Props) => {
   const dispatch = useDispatch()

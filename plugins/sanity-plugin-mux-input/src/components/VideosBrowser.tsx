@@ -43,9 +43,7 @@ export default function VideosBrowser({onSelect, config}: VideosBrowserProps) {
             <TextInput
               value={searchQuery}
               icon={SearchIcon}
-              onInput={(e: InputEvent<HTMLInputElement>) =>
-                setSearchQuery(e.currentTarget.value)
-              }
+              onInput={(e: InputEvent<HTMLInputElement>) => setSearchQuery(e.currentTarget.value)}
               placeholder="Search videos"
             />
             <SelectSortOptions setSort={setSort} sort={sort} />

@@ -34,16 +34,11 @@ const FolderCard = styled(Card)`
   }
 `
 
-const FolderGlyph = styled(Box)(
-  ({theme}) => {
-    const yellow = getTheme_v2(theme).color.avatar.yellow.bg
-    return css`
+const FolderGlyph = styled(Box)(({theme}) => {
+  const yellow = getTheme_v2(theme).color.avatar.yellow.bg
+  return css`
     align-items: flex-end;
-    background: linear-gradient(
-      180deg,
-      ${yellow} 0%,
-      ${yellow} 100%
-    );
+    background: linear-gradient(180deg, ${yellow} 0%, ${yellow} 100%);
     border-radius: 8px;
     display: flex;
     height: 72px;
@@ -61,8 +56,7 @@ const FolderGlyph = styled(Box)(
       width: 38px;
     }
   `
-  },
-)
+})
 
 const CardFolder = ({folderId, name, totalCount}: Props) => {
   const dispatch = useDispatch()

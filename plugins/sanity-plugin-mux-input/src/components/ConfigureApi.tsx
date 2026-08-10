@@ -11,7 +11,15 @@ import {
   Text,
   TextInput,
 } from '@sanity/ui'
-import {type ChangeEvent, type SubmitEvent, useCallback, useEffect, useId, useMemo, useRef} from 'react'
+import {
+  type ChangeEvent,
+  type SubmitEvent,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+} from 'react'
 import {clear, preload} from 'suspend-react'
 
 import {useClient} from '../hooks/useClient'
