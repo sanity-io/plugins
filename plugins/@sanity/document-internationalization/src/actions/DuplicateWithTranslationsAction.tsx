@@ -1,5 +1,5 @@
 import {CopyIcon} from '@sanity/icons/Copy'
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {uuid} from '@sanity/uuid'
 import {useCallback, useMemo, useState} from 'react'
 import {filter, firstValueFrom} from 'rxjs'

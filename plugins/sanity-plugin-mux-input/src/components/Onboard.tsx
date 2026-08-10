@@ -33,7 +33,7 @@ export default function Onboard(props: OnboardProps) {
           tone="transparent"
         >
           <Flex justify="flex-start" align="center">
-            <Grid columns={1} gap={[2, 3, 4, 4]}>
+            <Grid gridTemplateColumns={1} gap={[2, 3, 4, 4]}>
               <Inline paddingY={1}>
                 <div style={{height: '32px'}}>
                   <MuxLogo />

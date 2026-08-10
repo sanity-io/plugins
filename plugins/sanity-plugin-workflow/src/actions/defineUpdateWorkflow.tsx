@@ -1,6 +1,6 @@
 import {ArrowLeftIcon} from '@sanity/icons/ArrowLeft'
 import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {
   type DocumentActionDescription,
   useCurrentUser,

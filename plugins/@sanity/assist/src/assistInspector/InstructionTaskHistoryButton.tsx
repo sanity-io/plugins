@@ -8,14 +8,14 @@ import {
   Button,
   Card,
   Flex,
-  Popover,
   Spinner,
   Stack,
   Text,
-  useClickOutside,
+  useClickOutsideEvent,
   useGlobalKeyDown,
   useLayer,
 } from '@sanity/ui'
+import {Popover} from '@sanity/ui/popover'
 import {type Ref, useCallback, useMemo, useState} from 'react'
 import {StatusButton, type StatusButtonProps, typed, useClient} from 'sanity'
 import {keyframes, styled} from 'styled-components'
@@ -138,8 +138,7 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
     setOpen(false)
   }, [])
 
-  // oxlint-disable-next-line no-deprecated
-  useClickOutside(handleClickOutside, [button, popover])
+  useClickOutsideEvent(handleClickOutside, () => [button, popover])
 
   const handleEscape = useCallback(() => {
     setOpen(false)

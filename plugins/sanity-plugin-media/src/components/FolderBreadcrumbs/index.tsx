@@ -15,7 +15,7 @@ const FolderBreadcrumbs = () => {
 
   return (
     <Box display={['block', 'block', 'none']} padding={2}>
-      <Inline space={1}>
+      <Inline gap={1}>
         <Button
           fontSize={1}
           padding={2}
@@ -25,7 +25,7 @@ const FolderBreadcrumbs = () => {
         />
 
         {segments.map((segment) => (
-          <Inline key={segment.id} space={1}>
+          <Inline key={segment.id} gap={1}>
             <Text muted size={1}>
               /
             </Text>

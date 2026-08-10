@@ -1,6 +1,7 @@
 import {EditIcon} from '@sanity/icons/Edit'
 import {PublishIcon} from '@sanity/icons/Publish'
-import {Box, Inline, Text, Tooltip} from '@sanity/ui'
+import {Box, Inline, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {type SanityDocument, TextWithTone, useRelativeTime} from 'sanity'
 
 import type {DocumentPair} from '../types'

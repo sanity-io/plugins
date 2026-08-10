@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {HomeIcon} from '@sanity/icons/Home'
 import {definePlugin, type Plugin, type WorkspaceOptions} from 'sanity'
 

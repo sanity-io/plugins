@@ -48,7 +48,7 @@ export function PaneItemPreview(props: PaneItemPreviewProps) {
   })
 
   const status = isLoading ? null : (
-    <Inline space={4}>
+    <Inline gap={4}>
       {presence && presence.length > 0 && <DocumentPreviewPresence presence={presence} />}
       <PublishedStatus document={original} />
       <DraftStatus document={snapshot} />

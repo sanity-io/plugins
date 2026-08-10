@@ -37,7 +37,7 @@ export default function VideosBrowser({onSelect, config}: VideosBrowserProps) {
   const placement = onSelect ? 'input' : 'tool'
   return (
     <DrmPlaybackWarningContextProvider config={config}>
-      <Stack padding={4} space={4} style={{minHeight: '50vh'}}>
+      <Stack padding={4} gap={4} style={{minHeight: '50vh'}}>
         <Flex justify="space-between" align="center">
           <Flex align="center" gap={3}>
             <TextInput
@@ -52,14 +52,14 @@ export default function VideosBrowser({onSelect, config}: VideosBrowserProps) {
             <PageSelector page={page} setPage={setPage} total={pageTotal} />
           </Flex>
           {placement === 'tool' && (
-            <Inline space={2}>
+            <Inline gap={2}>
               <ImportVideosFromMux />
               <ResyncMetadata />
               <ConfigureApi />
             </Inline>
           )}
         </Flex>
-        <Stack space={3}>
+        <Stack gap={3}>
           {assets?.length > 0 && (
             <Label muted>
               {assets.length} video{assets.length > 1 ? 's' : null}{' '}

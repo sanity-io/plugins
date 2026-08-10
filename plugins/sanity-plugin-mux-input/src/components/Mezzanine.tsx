@@ -32,7 +32,7 @@ export default function Mezzanine({asset, withExplanation = true}: Props) {
 
   return (
     <Card padding={3} radius={2} tone="transparent" border>
-      <Stack space={4}>
+      <Stack gap={4}>
         <Flex align="center" justify="space-between" gap={3}>
           <Label muted size={1}>
             Mezzanine
@@ -44,7 +44,7 @@ export default function Mezzanine({asset, withExplanation = true}: Props) {
           </Text>
         </Flex>
 
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={1} muted={!isReady}>
             mezzanine.mp4
           </Text>
@@ -58,7 +58,7 @@ export default function Mezzanine({asset, withExplanation = true}: Props) {
         {withExplanation && showExplanation && <MezzanineExplanation />}
 
         {showExplanation && (expired || status === 'errored') && (
-          <Stack space={2}>
+          <Stack gap={2}>
             {expired && (
               <Text size={1} muted>
                 The previous mezzanine file expired. Enable it again to download.

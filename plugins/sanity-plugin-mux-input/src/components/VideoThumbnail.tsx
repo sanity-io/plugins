@@ -105,7 +105,7 @@ export default function VideoThumbnail({
             )}
             {status === 'error' && (
               <Stack
-                space={4}
+                gap={4}
                 style={{
                   position: 'absolute',
                   width: '100%',

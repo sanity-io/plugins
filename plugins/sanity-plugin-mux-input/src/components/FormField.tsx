@@ -14,10 +14,10 @@ function FormField(props: Props) {
   const {children, title, description, inputId} = props
 
   return (
-    <Stack space={1}>
+    <Stack gap={1}>
       <Flex align="flex-end">
         <Box flex={1} paddingY={2}>
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text as="label" htmlFor={inputId} weight="semibold" size={1}>
               {title || <em>Untitled</em>}
             </Text>

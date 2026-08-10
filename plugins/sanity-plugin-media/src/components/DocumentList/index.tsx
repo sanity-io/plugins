@@ -29,7 +29,7 @@ const DocumentList = ({documents, isLoading}: Props) => {
 
   return (
     <Card flex={1} marginBottom={2} padding={2} radius={2} shadow={1}>
-      <Stack space={2}>
+      <Stack gap={2}>
         {documents?.map((doc) => (
           <ReferringDocument doc={doc} key={doc._id} schemaType={schema.get(doc._type)} />
         ))}

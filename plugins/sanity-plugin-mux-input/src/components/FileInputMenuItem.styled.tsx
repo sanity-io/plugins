@@ -1,4 +1,4 @@
-import {MenuItem} from '@sanity/ui'
+import {MenuItem} from '@sanity/ui/menu'
 import {css, styled} from 'styled-components'
 
 import {focusRingStyle} from './withFocusRing/helpers'

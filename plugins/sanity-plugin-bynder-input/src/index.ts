@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export {bynderInputPlugin} from './plugin'
 
 export {BynderInput, type BynderConfig, type BynderInputProps} from './components/BynderInput'

@@ -14,7 +14,7 @@ const VideoMetadata = (props: {asset: VideoAssetDocument}) => {
 
   const displayInfo = getVideoMetadata(props.asset)
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       {displayInfo.title && (
         <Text
           size={1}
@@ -26,7 +26,7 @@ const VideoMetadata = (props: {asset: VideoAssetDocument}) => {
           {displayInfo.title}
         </Text>
       )}
-      <Inline space={3}>
+      <Inline gap={3}>
         {displayInfo?.duration && (
           <IconInfo text={displayInfo.duration} icon={ClockIcon} size={1} muted />
         )}

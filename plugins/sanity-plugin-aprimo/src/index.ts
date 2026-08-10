@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export {aprimoPlugin} from './plugin'
 
 export {AprimoCDNAssetSchema} from './schema/AprimoCDNAsset'

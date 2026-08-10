@@ -1,5 +1,5 @@
 import type {AgentActionPath} from '@sanity/client/stega'
-import {type ToastParams, useToast} from '@sanity/ui'
+import {type ToastParams, useToast} from '@sanity/ui/toast'
 import {useMemo} from 'react'
 import {
   type DocumentFieldActionDivider,

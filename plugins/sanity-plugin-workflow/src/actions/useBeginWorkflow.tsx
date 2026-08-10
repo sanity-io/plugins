@@ -1,5 +1,5 @@
 import {SplitVerticalIcon} from '@sanity/icons/SplitVertical'
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {LexoRank} from 'lexorank'
 import {useCallback, useState} from 'react'
 import {type DocumentActionDescription, type DocumentActionProps, useClient} from 'sanity'

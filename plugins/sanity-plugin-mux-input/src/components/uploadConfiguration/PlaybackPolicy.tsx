@@ -1,4 +1,5 @@
-import {Code, Grid, Text} from '@sanity/ui'
+import {Grid, Text} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 import {type ActionDispatch} from 'react'
 
 import {type Secrets, type UploadConfig} from '../../util/types'

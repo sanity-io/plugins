@@ -12,7 +12,7 @@ const ButtonViewGroup = () => {
   const view = useTypedSelector((state) => state.assets.view)
 
   return (
-    <Inline space={0} style={{whiteSpace: 'nowrap'}}>
+    <Inline gap={0} style={{whiteSpace: 'nowrap'}}>
       <Button
         fontSize={1}
         icon={ThLargeIcon}
