@@ -1,5 +1,11 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.31
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
 ## 5.0.30
 
 ### Patch Changes
