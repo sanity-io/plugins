@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 6.1.1
+
+### Patch Changes
+
+- [#1840](https://github.com/sanity-io/plugins/pull/1840) [`a723c55`](https://github.com/sanity-io/plugins/commit/a723c554df91d9fe160551f77454162f5fca2c75) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix Save staying disabled when editing filename, title, alt text, or description in the asset details dialog
+
 ## 6.1.0
 
 ### Minor Changes
