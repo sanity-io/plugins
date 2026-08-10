@@ -1,10 +1,14 @@
-import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
+import {Box, Card, Flex, Stack, Text, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {css, styled} from 'styled-components'
 
 import {foldersActions} from '../../modules/folders'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+
+import {cardWrapper, folderCard, folderGlyph, spotYellowVar} from './CardFolder.css'
 
 type Props = {
   folderId: string
@@ -12,53 +16,25 @@ type Props = {
   totalCount: number
 }
 
-const CardWrapper = styled(Flex)`
-  box-sizing: border-box;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-`
+function CardWrapper({className, ...props}: ComponentProps<typeof Flex>) {
+  return <Flex {...props} className={clsx(cardWrapper, className)} />
+}
 
-const FolderCard = styled(Card)`
-  cursor: pointer;
-  height: 100%;
-  transition: border-color 200ms ease;
-  width: 100%;
+function FolderCard({className, ...props}: ComponentProps<typeof Card>) {
+  return <Card {...props} className={clsx(folderCard, className)} />
+}
 
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      border-color: var(--card-border-color);
-    }
-  }
-`
+function FolderGlyph({className, style, ...props}: ComponentProps<typeof Box>) {
+  const {color} = useThemeV2()
 
-const FolderGlyph = styled(Box)(
-  ({theme}) => css`
-    align-items: flex-end;
-    background: linear-gradient(
-      180deg,
-      ${theme.sanity.color.spot.yellow} 0%,
-      ${theme.sanity.color.spot.yellow} 100%
-    );
-    border-radius: 8px;
-    display: flex;
-    height: 72px;
-    position: relative;
-    width: 96px;
-
-    &::before {
-      background: ${theme.sanity.color.spot.yellow};
-      border-radius: 8px 8px 0 0;
-      content: '';
-      height: 18px;
-      left: 0;
-      position: absolute;
-      top: -8px;
-      width: 38px;
-    }
-  `,
-)
+  return (
+    <Box
+      {...props}
+      className={clsx(folderGlyph, className)}
+      style={{...style, ...assignInlineVars({[spotYellowVar]: color.avatar.yellow.bg})}}
+    />
+  )
+}
 
 const CardFolder = ({folderId, name, totalCount}: Props) => {
   const dispatch = useDispatch()

@@ -1,40 +1,26 @@
-import {createGlobalStyle, css} from 'styled-components'
+import {useEffect} from 'react'
 
-const customScrollbar = css`
-  ::-webkit-scrollbar {
-    width: 14px;
-  }
+import {globalStylesActive} from './GlobalStyles.css'
 
-  ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    border: 4px solid rgba(0, 0, 0, 0);
-    background: var(--card-border-color);
-    background-clip: padding-box;
+// Reference-counted so overlapping instances (e.g. the Browse tool and an Edit Media
+// asset source mounted at the same time) don't have one unmounting turn the rules off
+// for the other.
+let activeCount = 0
 
-    &:hover {
-      background: var(--card-muted-fg-color);
-      background-clip: padding-box;
+const GlobalStyle = () => {
+  useEffect(() => {
+    activeCount += 1
+    document.body.classList.add(globalStylesActive)
+
+    return () => {
+      activeCount -= 1
+      if (activeCount === 0) {
+        document.body.classList.remove(globalStylesActive)
+      }
     }
-  }
-`
+  }, [])
 
-const GlobalStyle = createGlobalStyle`
-  .media__custom-scrollbar {
-    ${customScrollbar}
-  }
-
-  // @sanity/ui overrides
-
-  // Custom scrollbar on Box (used in Dialogs)
-  div[data-ui="Box"] {
-    ${customScrollbar}
-  }
-
-  // Dialog background color
-  div[data-ui="Dialog"] {
-    background-color: rgba(15, 17, 18, 0.9);
-  }
-
-`
+  return null
+}
 
 export default GlobalStyle

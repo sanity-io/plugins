@@ -30,11 +30,25 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
+      },
       "./package.json": "./package.json"
     }
   },
@@ -51,6 +65,8 @@
     "@sanity/ui": "catalog:",
     "@sanity/uuid": "catalog:",
     "@tanem/react-nprogress": "^5.0.63",
+    "@vanilla-extract/dynamic": "catalog:",
+    "clsx": "catalog:",
     "copy-to-clipboard": "^3.3.3",
     "date-fns": "catalog:",
     "filesize": "^9.0.11",
@@ -72,6 +88,7 @@
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@testing-library/user-event": "^14.6.1",
@@ -79,19 +96,18 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/react-file-icon": "^1.0.5",
+    "@vanilla-extract/css": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",
-    "styled-components": "catalog:",
     "tsdown": "catalog:"
   },
   "peerDependencies": {
     "react": "catalog:peer",
     "react-dom": "catalog:peer",
-    "sanity": "catalog:peer",
-    "styled-components": "catalog:peer"
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

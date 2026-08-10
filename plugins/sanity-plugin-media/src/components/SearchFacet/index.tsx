@@ -1,25 +1,52 @@
 import {CloseIcon} from '@sanity/icons/Close'
-import {Box, Flex, Label, rem, Text, type ThemeColorSchemeKey} from '@sanity/ui'
-import {type ReactNode} from 'react'
+import {
+  Box,
+  Flex,
+  Label,
+  rem,
+  Text,
+  type ThemeColorSchemeKey,
+  useTheme_v2 as useThemeV2,
+} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps, type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {styled, css} from 'styled-components'
 
 import {searchActions} from '../../modules/search'
 import type {SearchFacetInputProps, WithId} from '../../types'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+
+import {bgVar, borderRadiusVar, container} from './SearchFacet.css'
 
 type Props = {
   children: ReactNode
   facet: WithId<SearchFacetInputProps>
 }
 
-const Container = styled<typeof Box, {$scheme: ThemeColorSchemeKey}>(Box)(({$scheme, theme}) => {
-  return css`
-    background: ${getSchemeColor($scheme, 'bg')};
-    border-radius: ${rem(theme.sanity.radius[2]!)};
-  `
-})
+function Container({
+  className,
+  scheme,
+  style,
+  ...props
+}: ComponentProps<typeof Box> & {scheme: ThemeColorSchemeKey}) {
+  const {radius} = useThemeV2()
+
+  return (
+    <Box
+      {...props}
+      className={clsx(container, className)}
+      style={{
+        ...style,
+        ...assignInlineVars({
+          [bgVar]: getSchemeColor(scheme, 'bg'),
+          [borderRadiusVar]: `${rem(radius[2]!)}`,
+        }),
+      }}
+    />
+  )
+}
 
 const SearchFacet = (props: Props) => {
   const {children, facet} = props
@@ -34,7 +61,7 @@ const SearchFacet = (props: Props) => {
   }
 
   return (
-    <Container padding={[2, 2, 1]} $scheme={scheme}>
+    <Container padding={[2, 2, 1]} scheme={scheme}>
       <Flex align={['flex-start', 'flex-start', 'center']} direction={['column', 'column', 'row']}>
         {/* Title */}
         <Box paddingBottom={[3, 3, 0]} paddingLeft={1} paddingRight={2} paddingTop={[1, 1, 0]}>

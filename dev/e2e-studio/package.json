@@ -19,6 +19,7 @@
     "styled-components": "catalog:"
   },
   "devDependencies": {
+    "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@tsconfig/vite-react": "^8.1.1",
     "@types/react": "catalog:",
     "typescript": "catalog:"

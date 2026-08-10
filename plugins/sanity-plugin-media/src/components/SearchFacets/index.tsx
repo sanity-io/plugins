@@ -1,5 +1,7 @@
-import {Box, Flex, Inline, rem, type Theme} from '@sanity/ui'
-import {styled, css} from 'styled-components'
+import {Box, Flex, Inline, rem, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps} from 'react'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
 import SearchFacetNumber from '../SearchFacetNumber'
@@ -7,17 +9,23 @@ import SearchFacetSelect from '../SearchFacetSelect'
 import SearchFacetString from '../SearchFacetString'
 import SearchFacetTags from '../SearchFacetTags'
 
+import {marginBottomVar, stackContainer} from './SearchFacets.css'
+
 type Props = {
   layout?: 'inline' | 'stack'
 }
 
-const StackContainer = styled(Flex)(({theme}: {theme: Theme}) => {
-  return css`
-    > * {
-      margin-bottom: ${rem(theme.sanity.space[2]!)};
-    }
-  `
-})
+function StackContainer({className, style, ...props}: ComponentProps<typeof Flex>) {
+  const {space} = useThemeV2()
+
+  return (
+    <Flex
+      {...props}
+      className={clsx(stackContainer, className)}
+      style={{...style, ...assignInlineVars({[marginBottomVar]: `${rem(space[2]!)}`})}}
+    />
+  )
+}
 
 const SearchFacets = (props: Props) => {
   const {layout = 'inline'} = props

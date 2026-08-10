@@ -1,11 +1,15 @@
-import {Box, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
+import {Box, Flex, Grid, Stack, Text, useMediaIndex, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {css, styled} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
 import {foldersActions} from '../../modules/folders'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+
+import {containerGrid, folderBadge, hoverBgVar, spotYellowVar} from './TableRowFolder.css'
 
 type Props = {
   folderId: string
@@ -13,42 +17,29 @@ type Props = {
   totalCount: number
 }
 
-const ContainerGrid = styled(Grid)(
-  ({theme}) => css`
-    align-items: center;
-    cursor: pointer;
-    height: 100%;
-    user-select: none;
-    white-space: nowrap;
+function ContainerGrid({className, style, ...props}: ComponentProps<typeof Grid>) {
+  const {color} = useThemeV2()
 
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        background: ${theme.sanity.color.card.enabled.bg};
-      }
-    }
-  `,
-)
+  return (
+    <Grid
+      {...props}
+      className={clsx(containerGrid, className)}
+      style={{...style, ...assignInlineVars({[hoverBgVar]: color.bg})}}
+    />
+  )
+}
 
-const FolderBadge = styled(Box)(
-  ({theme}) => css`
-    background: ${theme.sanity.color.spot.yellow};
-    border-radius: 6px;
-    height: 42px;
-    position: relative;
-    width: 52px;
+function FolderBadge({className, style, ...props}: ComponentProps<typeof Box>) {
+  const {color} = useThemeV2()
 
-    &::before {
-      background: ${theme.sanity.color.spot.yellow};
-      border-radius: 6px 6px 0 0;
-      content: '';
-      height: 12px;
-      left: 0;
-      position: absolute;
-      top: -6px;
-      width: 18px;
-    }
-  `,
-)
+  return (
+    <Box
+      {...props}
+      className={clsx(folderBadge, className)}
+      style={{...style, ...assignInlineVars({[spotYellowVar]: color.avatar.yellow.bg})}}
+    />
+  )
+}
 
 const TableRowFolder = ({folderId, name, totalCount}: Props) => {
   const dispatch = useDispatch()

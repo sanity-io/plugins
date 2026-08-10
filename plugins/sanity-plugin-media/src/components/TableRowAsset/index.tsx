@@ -12,10 +12,14 @@ import {
   type ThemeColorSchemeKey,
   Tooltip,
   useMediaIndex,
+  useTheme_v2 as useThemeV2,
 } from '@sanity/ui'
+import {assignInlineVars} from '@vanilla-extract/dynamic'
+import {clsx} from 'clsx/lite'
 import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
 import {
+  type ComponentProps,
   memo,
   type MouseEvent,
   type RefObject,
@@ -26,7 +30,6 @@ import {
 } from 'react'
 import {useDispatch} from 'react-redux'
 import {WithReferringDocuments, useColorSchemeValue} from 'sanity'
-import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
@@ -42,6 +45,19 @@ import {isFileAsset, isImageAsset} from '../../utils/typeGuards'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
 
+import {
+  containerGridBase,
+  containerGridNotSelected,
+  containerGridNotUpdating,
+  containerGridSelected,
+  containerGridUpdating,
+  contextActionContainer,
+  contextActionHoverBgVar,
+  hoverBgVar,
+  warningIcon,
+  warningIconColorVar,
+} from './TableRowAsset.css'
+
 // Duration (ms) to wait before reference counts (and associated listeners) are rendered
 const REFERENCE_COUNT_VISIBILITY_DELAY = 750
 
@@ -50,49 +66,61 @@ type Props = {
   selected: boolean
 }
 
-const ContainerGrid = styled<
-  typeof Grid,
-  {$selected?: boolean; $scheme: ThemeColorSchemeKey; $updating?: boolean}
->(Grid)(({$scheme, $selected, $updating}) => {
-  return css`
-    align-items: center;
-    cursor: ${$selected ? 'default' : 'pointer'};
-    height: 100%;
-    pointer-events: ${$updating ? 'none' : 'auto'};
-    user-select: none;
-    white-space: nowrap;
+function ContainerGrid({
+  className,
+  scheme,
+  selected,
+  style,
+  updating,
+  ...props
+}: ComponentProps<typeof Grid> & {
+  scheme: ThemeColorSchemeKey
+  selected?: boolean
+  updating?: boolean
+}) {
+  return (
+    <Grid
+      {...props}
+      className={clsx(
+        containerGridBase,
+        selected ? containerGridSelected : containerGridNotSelected,
+        updating ? containerGridUpdating : containerGridNotUpdating,
+        className,
+      )}
+      style={{...style, ...assignInlineVars({[hoverBgVar]: getSchemeColor(scheme, 'bg')})}}
+    />
+  )
+}
 
-    ${
-      !$updating &&
-      css`
-        @media (hover: hover) and (pointer: fine) {
-          &:hover {
-            background: ${getSchemeColor($scheme, 'bg')};
-          }
-        }
-      `
-    }
-  `
-})
+function ContextActionContainer({
+  className,
+  scheme,
+  style,
+  ...props
+}: ComponentProps<typeof Flex> & {scheme: ThemeColorSchemeKey}) {
+  return (
+    <Flex
+      {...props}
+      className={clsx(contextActionContainer, className)}
+      style={{
+        ...style,
+        ...assignInlineVars({[contextActionHoverBgVar]: getSchemeColor(scheme, 'bg2')}),
+      }}
+    />
+  )
+}
 
-const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
-  $scheme,
-}) => {
-  return css`
-    cursor: pointer;
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        background: ${getSchemeColor($scheme, 'bg2')};
-      }
-    }
-  `
-})
+function StyledWarningIcon({className, style, ...props}: ComponentProps<typeof WarningFilledIcon>) {
+  const {color} = useThemeV2()
 
-const StyledWarningIcon = styled(WarningFilledIcon)(({theme}) => {
-  return {
-    color: theme.sanity.color.spot.red,
-  }
-})
+  return (
+    <WarningFilledIcon
+      {...props}
+      className={clsx(warningIcon, className)}
+      style={{...style, ...assignInlineVars({[warningIconColorVar]: color.avatar.red.bg})}}
+    />
+  )
+}
 
 const TableRowAsset = (props: Props) => {
   const {id, selected} = props
@@ -186,8 +214,8 @@ const TableRowAsset = (props: Props) => {
   return (
     <ContainerGrid
       onClick={selected ? undefined : handleClick}
-      $scheme={scheme}
-      $selected={selected}
+      scheme={scheme}
+      selected={selected}
       style={{
         gridColumnGap: mediaIndex < 3 ? 0 : '16px',
         gridRowGap: 0,
@@ -195,12 +223,12 @@ const TableRowAsset = (props: Props) => {
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
         gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',
       }}
-      $updating={item.updating}
+      updating={item.updating}
     >
       {/* Picked checkbox */}
       <ContextActionContainer
         onClick={handleContextActionClick}
-        $scheme={scheme}
+        scheme={scheme}
         style={{
           alignItems: 'center',
           gridColumn: 1,
@@ -250,8 +278,8 @@ const TableRowAsset = (props: Props) => {
             {isImageAsset(asset) && (
               <Image
                 draggable={false}
-                $scheme={scheme}
-                $showCheckerboard={!isOpaque}
+                scheme={scheme}
+                showCheckerboard={!isOpaque}
                 src={imageDprUrl(asset, {height: 100, width: 100})}
               />
             )}
