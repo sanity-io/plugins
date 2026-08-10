@@ -52,7 +52,7 @@ export default defineConfig({
         },
         {
           id: 'preview-shows-campaign',
-          text: 'The page type configures a preview whose `select` names `campaign` alongside the title field, whether through a `map.preview` hook, a `preview` option on the `definePage` call, or a `preview` on a hand-rolled type.',
+          text: 'The page type configures a preview whose `select` names `campaign` alongside the page title, which `definePage` stores in a `name` field. A `select` that reads the title from `title` does not satisfy this, since `definePage` declares no such field. The preview may arrive through a `map.preview` hook, a `preview` option on the `definePage` call, or a `preview` on a hand-rolled type.',
         },
         {
           id: 'exports-studio-configuration',
