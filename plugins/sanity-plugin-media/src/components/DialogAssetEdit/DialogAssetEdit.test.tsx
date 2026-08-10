@@ -137,6 +137,25 @@ describe('DialogAssetEdit', () => {
     expect(dlg.getByRole('button', {name: /save and close/i})).toBeDisabled()
   })
 
+  it('enables Save after editing a string field (title)', async () => {
+    const user = userEvent.setup()
+    renderAssetDialog({
+      id: 'dlg-1',
+      type: 'assetEdit',
+      assetId: 'a1',
+    })
+
+    const dlg = withinDialog(/asset details/i, screen)
+    const save = dlg.getByRole('button', {name: /save and close/i})
+    expect(save).toBeDisabled()
+
+    await user.type(inputByName(/asset details/i, screen, 'title'), 'Hero image')
+
+    await waitFor(() => {
+      expect(save).not.toBeDisabled()
+    })
+  })
+
   it('dispatches asset update when a field changes and the form is submitted', async () => {
     const user = userEvent.setup()
     const {store} = renderAssetDialog({

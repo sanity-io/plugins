@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 import {CloseCircleIcon} from '@sanity/icons/CloseCircle'
 import {LockIcon} from '@sanity/icons/Lock'

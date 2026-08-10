@@ -1,5 +1,6 @@
 import {AddIcon} from '@sanity/icons/Add'
-import {Button, Grid, Popover, useClickOutsideEvent} from '@sanity/ui'
+import {Button, Grid, useClickOutsideEvent} from '@sanity/ui'
+import {Popover} from '@sanity/ui/popover'
 import {useCallback, useRef, useState} from 'react'
 
 import type {User} from '../types'

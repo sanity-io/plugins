@@ -1,5 +1,5 @@
 import type {DraggableLocation} from '@hello-pangea/dnd'
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useEffect, useState} from 'react'
 import {useClient} from 'sanity'
 import {useListeningQuery} from 'sanity-plugin-utils'

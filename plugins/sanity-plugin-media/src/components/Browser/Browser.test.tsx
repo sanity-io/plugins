@@ -1,8 +1,9 @@
-import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
-import {render, screen, waitFor} from '@testing-library/react'
+import {studioTheme, ThemeProvider} from '@sanity/ui'
+import {ToastProvider} from '@sanity/ui/toast'
+import {act, cleanup, render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
 import {ColorSchemeProvider} from 'sanity'
-import {describe, expect, it, vi, beforeEach} from 'vitest'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
 import {createListenMock} from '../../__tests__/fixtures/listenMock'
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
@@ -15,6 +16,10 @@ vi.mock('../../hooks/useVersionedClient', () => ({
 }))
 
 describe('Browser', () => {
+  afterEach(() => {
+    cleanup()
+  })
+
   beforeEach(() => {
     const fetch = vi.fn().mockReturnValue(of({items: []}))
     vi.mocked(useVersionedClient).mockReturnValue(
@@ -26,7 +31,7 @@ describe('Browser', () => {
   })
 
   it('renders Browse Assets header in tool mode', async () => {
-    render(
+    const {unmount} = render(
       <ColorSchemeProvider scheme="light">
         <ThemeProvider theme={studioTheme}>
           <ToastProvider>
@@ -40,6 +45,14 @@ describe('Browser', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Browse Assets')).toBeInTheDocument()
+    })
+
+    // @sanity/ui v4 keeps Popover/Tooltip content mounted via Activity and may
+    // schedule follow-up work; unmount and flush so that work does not race
+    // jsdom teardown (which otherwise surfaces as unhandled errors in CI).
+    unmount()
+    await act(async () => {
+      await Promise.resolve()
     })
   })
 })

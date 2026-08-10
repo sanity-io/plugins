@@ -1,4 +1,5 @@
-import {Box, Card, Stack, Heading, Grid, Label, Text, Code, Button} from '@sanity/ui'
+import {Box, Card, Stack, Heading, Grid, Label, Text, Button} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 import {useEffect, useMemo, useState} from 'react'
 import {type Subscription} from 'rxjs'
 

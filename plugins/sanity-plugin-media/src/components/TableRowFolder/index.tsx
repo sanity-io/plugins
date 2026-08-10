@@ -74,7 +74,7 @@ const TableRowFolder = ({folderId, name, totalCount}: Props) => {
         marginLeft={mediaIndex < 3 ? 3 : 0}
         style={{gridColumn: mediaIndex < 3 ? 3 : 3, gridRow: mediaIndex < 3 ? '2/4' : 'auto'}}
       >
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={1} style={{lineHeight: '1.2em'}} textOverflow="ellipsis" weight="semibold">
             {name}
           </Text>

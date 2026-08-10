@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import {Button, Card, Flex, Grid, Heading, Inline, Text, useToast} from '@sanity/ui'
+import {Button, Card, Flex, Grid, Heading, Inline, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {memo, useCallback, useRef} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import {clear} from 'suspend-react'
@@ -38,7 +39,7 @@ function ErrorBoundaryCard(props: Props) {
         title: 'Plugin crashed',
         description: (
           <Flex align="center">
-            <Inline space={1}>
+            <Inline gap={1}>
               An error happened while rendering
               <Button
                 padding={1}
@@ -73,7 +74,7 @@ function ErrorBoundaryCard(props: Props) {
     return (
       <Card ref={errorRef} paddingX={[2, 3, 4, 4]} height="fill" shadow={1} overflow="auto">
         <Flex justify="flex-start" align="center" height="fill">
-          <Grid columns={1} gap={[2, 3, 4, 4]}>
+          <Grid gridTemplateColumns={1} gap={[2, 3, 4, 4]}>
             <Heading as="h1">
               The <code>{name}</code> plugin crashed
             </Heading>

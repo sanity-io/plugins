@@ -74,9 +74,9 @@ export const DRMWarningDialog = ({onClose}: {onClose: () => void}) => {
         </Stack>
       }
     >
-      <Stack space={3} padding={3}>
+      <Stack gap={3} padding={3}>
         <Card padding={[3, 3, 3]} radius={2}>
-          <Stack space={3}>
+          <Stack gap={3}>
             <Text size={1} weight="semibold">
               DRM-protected playback will generate a license with a small associated cost. The
               plugin will attempt to play signed or public playback IDs instead whenever possible.
@@ -84,7 +84,7 @@ export const DRMWarningDialog = ({onClose}: {onClose: () => void}) => {
           </Stack>
         </Card>
         <Card padding={[3, 3, 3]} radius={2} tone="suggest">
-          <Stack space={3}>
+          <Stack gap={3}>
             <Text size={1} weight="semibold">
               This is a one time warning. If it persists, you can disable it from your plugin
               configuration.

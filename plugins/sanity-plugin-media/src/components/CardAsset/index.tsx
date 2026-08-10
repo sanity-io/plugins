@@ -10,9 +10,9 @@ import {
   Text,
   type Theme,
   type ThemeColorSchemeKey,
-  Tooltip,
-  useToast,
 } from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
@@ -229,7 +229,11 @@ const CardAsset = (props: Props) => {
             position: 'relative',
           }}
         >
-          <div onClick={handleAssetClick} style={{height: '100%', opacity: opacityPreview}}>
+          <div
+            data-testid={`media-asset-card-${asset._id}`}
+            onClick={handleAssetClick}
+            style={{height: '100%', opacity: opacityPreview}}
+          >
             {/* File icon */}
             {isFileAsset(asset) && <FileIcon extension={asset.extension} width="80px" />}
 

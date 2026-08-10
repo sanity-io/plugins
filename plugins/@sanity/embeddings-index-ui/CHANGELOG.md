@@ -1,5 +1,17 @@
 # @sanity/embeddings-index-ui
 
+## 4.0.14
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
+## 4.0.13
+
+### Patch Changes
+
+- [#1792](https://github.com/sanity-io/plugins/pull/1792) [`c61bb44`](https://github.com/sanity-io/plugins/commit/c61bb4444b326668e03a4d83a9853bec7a638d15) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-rx to ^4.2.5
+
 ## 4.0.12
 
 ### Patch Changes

@@ -1,4 +1,4 @@
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useMemo, useState} from 'react'
 import {useDocumentStore} from 'sanity'
 

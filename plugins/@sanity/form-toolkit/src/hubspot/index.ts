@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {asyncList} from '@sanity/sanity-plugin-async-list'
 import {definePlugin} from 'sanity'
 

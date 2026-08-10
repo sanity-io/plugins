@@ -1,5 +1,7 @@
 import {CheckmarkIcon} from '@sanity/icons/Checkmark'
-import {Box, Button, Text, Tooltip, useToast} from '@sanity/ui'
+import {Box, Button, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback} from 'react'
 import {useClient} from 'sanity'
 

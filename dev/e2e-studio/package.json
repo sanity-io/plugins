@@ -15,6 +15,7 @@
     "react-dom": "catalog:",
     "sanity": "catalog:",
     "sanity-plugin-internationalized-array": "workspace:*",
+    "sanity-plugin-media": "workspace:*",
     "styled-components": "catalog:"
   },
   "devDependencies": {

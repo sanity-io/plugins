@@ -440,24 +440,32 @@ This is how [sanity-io/sanity#13333](https://github.com/sanity-io/sanity/pull/13
 ```tsx
 // QueryErrorDialog.styled.tsx — same `ErrorCode` API as the styled-components version
 import {Code} from '@sanity/ui'
+import {clsx} from 'clsx/lite'
 import {type ComponentProps} from 'react'
 
 import {errorCode} from './QueryErrorDialog.css'
 
-export function ErrorCode(props: ComponentProps<typeof Code>) {
-  return <Code {...props} className={errorCode} />
+export function ErrorCode({className, ...props}: ComponentProps<typeof Code>) {
+  return <Code {...props} className={clsx(errorCode, className)} />
 }
 ```
 
 - **Type the wrapper** with `ComponentProps<typeof Primitive>` (or `ComponentProps<'a'>` for a DOM
-  element), and spread props **before** `className` so the wrapper owns the class.
+  element).
+- **Merge, don't clobber, `className`.** A fixed `className={errorCode}` after `{...props}` silently
+  drops a `className` a caller passes in. Pull `className` out of props and merge it —
+  `clsx(errorCode, className)`. Prefer `import {clsx} from 'clsx/lite'` when only joining strings
+  (the usual case); reach for full `clsx` only if you need the object/array API. A
+  `` `${errorCode} ${className ?? ''}` `` template literal also works.
 - **Refs need no `forwardRef`** — in React 19 `ref` is a regular prop, so `ComponentProps<typeof Flex>`
   already includes it and spreading `{...props}` forwards a caller's `ref` to the wrapped primitive
   (`forwardRef` is banned by lint; see [`refs.md`](./refs.md)):
 
   ```tsx
-  export function Root(props: ComponentProps<typeof Flex>) {
-    return <Flex {...props} className={root} />
+  import {clsx} from 'clsx/lite'
+
+  export function Root({className, ...props}: ComponentProps<typeof Flex>) {
+    return <Flex {...props} className={clsx(root, className)} />
   }
   ```
 
@@ -465,14 +473,17 @@ export function ErrorCode(props: ComponentProps<typeof Code>) {
   (`$isInvalid`):
 
   ```tsx
+  import {clsx} from 'clsx/lite'
+
   function ResultContainer({
     isInvalid,
+    className,
     ...props
   }: ComponentProps<typeof Card> & {isInvalid: boolean}) {
     return (
       <Card
         {...props}
-        className={isInvalid ? `${resultContainer} ${resultContainerInvalid}` : resultContainer}
+        className={clsx(resultContainer, isInvalid && resultContainerInvalid, className)}
       />
     )
   }
@@ -561,8 +572,11 @@ declare module 'katex/dist/katex.min.css'
 ## Migrating off styled-components
 
 `styled-components` is the Studio's legacy styling library (a `@sanity/ui` peer). It still works, but
-**no new code uses it for styling and existing usage is migrated to vanilla-extract** — this skill is
-the guide for that migration. Don't add `styled-components` for ordinary styling, and convert a
+**no new code uses it for styling and existing usage is migrated to vanilla-extract** — this section
+covers the patterns; the
+[`migrate-styled-components-to-vanilla-extract`](../../migrate-styled-components-to-vanilla-extract/SKILL.md)
+skill covers the step-by-step procedure (config, dependencies, verification). Don't add `styled-components` for
+ordinary styling, and convert a
 component's styling to vanilla-extract when you work on it rather than extending the styled-components
 code. (The one usage that legitimately stays is genuinely-dynamic CSS-in-JS — arbitrary CSS built
 from runtime data that no `style()` + `createVar()` can express, the escape hatch in the
@@ -637,7 +651,13 @@ theming/SSR break:
 - The `catalog:` devDependency keeps the plugin on the shared `sanity` peer variant (see the
   `plugin-transfer` skill for why duplicate variants break type-aware lint).
 
-Remove both once the migration is complete.
+Once the migration is complete, remove the **peer** dependency. When the package depends on
+`@sanity/ui` (which peers on styled-components), dropping the `styled-components: catalog:`
+**devDependency** can make pnpm resolve a separate styled-components copy, forking the package's
+`sanity` peer variant away from the rest of the workspace and breaking type-aware lint. It can work
+out fine, but verify the package's `sanity` / `@sanity/ui` resolution strings in `pnpm-lock.yaml`
+still match other packages — if they fork, keep the devDependency. See `AGENTS.md` →
+`Migrating plugin styling off styled-components` for this monorepo's reference implementations.
 
 ---
 
@@ -658,6 +678,9 @@ that forces synchronous reflows. See the `vercel-react-best-practices` rule `js-
 
 ## See also
 
+- [`migrate-styled-components-to-vanilla-extract`](../../migrate-styled-components-to-vanilla-extract/SKILL.md)
+  skill → the step-by-step procedure for migrating a plugin off styled-components (inventory,
+  config, dependencies, snapshot, verification).
 - `vercel-react-best-practices` → `rules/js-batch-dom-css.md` (batch DOM/CSS writes, prefer classes),
   `rules/rendering-hoist-jsx.md`, and the rendering section generally.
 - `plugin-transfer` skill → don't migrate styling during a transfer (do it in a follow-up PR);

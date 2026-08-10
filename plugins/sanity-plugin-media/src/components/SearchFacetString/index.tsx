@@ -1,5 +1,6 @@
 import {SelectIcon} from '@sanity/icons/Select'
-import {Box, Button, Menu, MenuButton, MenuDivider, MenuItem, TextInput} from '@sanity/ui'
+import {Box, Button, TextInput} from '@sanity/ui'
+import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
 import {type ChangeEvent} from 'react'
 import {useDispatch} from 'react-redux'
 

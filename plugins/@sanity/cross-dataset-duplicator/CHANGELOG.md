@@ -1,5 +1,37 @@
 # @sanity/cross-dataset-duplicator
 
+## 2.1.1
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
+- Updated dependencies [[`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8)]:
+  - @sanity/studio-secrets@4.0.16
+
+## 2.1.0
+
+### Minor Changes
+
+- [#1229](https://github.com/sanity-io/plugins/pull/1229) [`8d35f29`](https://github.com/sanity-io/plugins/commit/8d35f29e874cf143df0837fe9e7651c19112e472) Thanks [@Nathan-Heller](https://github.com/Nathan-Heller)! - Add `migrationFilters` config option to restrict which Datasets and Projects are allowed as Migration destinations for a given source Dataset
+
+### Patch Changes
+
+- [#1228](https://github.com/sanity-io/plugins/pull/1228) [`71d77d5`](https://github.com/sanity-io/plugins/commit/71d77d562758934327613044a21e204b9e305ea7) Thanks [@rohanvachheta](https://github.com/rohanvachheta)! - Handle reference errors during duplication by fetching missing referenced documents (including transitive refs, respecting `filter`), re-uploading any recovered assets, and retrying the transaction, with a one-by-one commit fallback
+
+- [#1292](https://github.com/sanity-io/plugins/pull/1292) [`2ab8636`](https://github.com/sanity-io/plugins/commit/2ab863673c64f235d643e71c5ea372bfd186142b) Thanks [@stipsan](https://github.com/stipsan)! - Fix several issues surfaced in code review:
+
+  - Duplicating an SVG asset no longer leaves an orphaned asset document at the destination; a single merged asset document is created at the uploaded `_id`
+  - Asset downloads now fail fast with a clear error (e.g. on 401/403/404) instead of uploading the error response body as the asset
+  - The progress bar no longer produces an invalid transform when duplicating documents that include no assets
+  - The duplicate button label now reads correctly for single-item and asset-only selections
+  - SVG reference remapping no longer mutates documents held in component state
+  - Tightened the "already exists" status tooltip copy
+  - Cleaned up the README: corrected the `defineConfig` example and removed stale standalone-repo instructions
+
+- Updated dependencies [[`c61bb44`](https://github.com/sanity-io/plugins/commit/c61bb4444b326668e03a4d83a9853bec7a638d15)]:
+  - @sanity/studio-secrets@4.0.15
+
 ## 2.0.12
 
 ### Patch Changes

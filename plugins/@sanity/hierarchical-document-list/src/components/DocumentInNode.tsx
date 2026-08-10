@@ -1,5 +1,6 @@
 import {HelpCircleIcon} from '@sanity/icons/HelpCircle'
-import {Box, Card, Flex, Stack, Text, Tooltip} from '@sanity/ui'
+import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {type ReactNode, useMemo} from 'react'
 import {Preview, type SanityDocument, type SchemaType, TextWithTone, useSchema} from 'sanity'
 import {type RouterPaneGroup, usePaneRouter} from 'sanity/structure'

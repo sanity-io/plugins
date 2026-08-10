@@ -292,12 +292,12 @@ export default function UploadConfiguration({
       header="Configure Mux Upload"
       onClose={onClose}
     >
-      <Stack padding={4} space={2}>
+      <Stack padding={4} gap={2}>
         {(validationError || watermarkValidationError) && (
           <Card padding={3} tone="critical" radius={2} marginBottom={2}>
             <Flex gap={2} align="flex-start">
               <ErrorOutlineIcon width={20} height={20} />
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text size={1} weight="semibold">
                   Validation Error
                 </Text>
@@ -316,7 +316,7 @@ export default function UploadConfiguration({
         >
           <Flex gap={2}>
             <DocumentVideoIcon fontSize="2em" />
-            <Stack space={2}>
+            <Stack gap={2}>
               <Text textOverflow="ellipsis" as="h2" size={3}>
                 {stagedUpload.type === 'file' ? stagedUpload.files[0]!.name : stagedUpload.url}
               </Text>
@@ -334,7 +334,7 @@ export default function UploadConfiguration({
                     })()}
               </Text>
               {stagedUpload.type === 'file' && (
-                <Stack space={1}>
+                <Stack gap={1}>
                   {isLoadingMetadata && (
                     <Text as="p" size={1} muted>
                       Reading video metadata...
@@ -351,7 +351,7 @@ export default function UploadConfiguration({
           </Flex>
         </Card>
         {!disableUploadConfig && (
-          <Stack space={3} paddingBottom={2}>
+          <Stack gap={3} paddingBottom={2}>
             <FormField
               path={[]}
               title="Video Quality Level"
@@ -398,7 +398,7 @@ export default function UploadConfiguration({
             {!basicConfig && (
               <>
                 <FormField title="Additional Configuration" path={[]}>
-                  <Stack space={3}>
+                  <Stack gap={3}>
                     <PlaybackPolicy id={id} config={config} secrets={secrets} dispatch={dispatch} />
                     {maxSupportedResolution > 0 && (
                       <ResolutionTierSelector
@@ -585,7 +585,7 @@ function WatermarkSection({
         </>
       }
     >
-      <Stack space={3}>
+      <Stack gap={3}>
         <WatermarkControls
           watermark={config.watermark || {enabled: false}}
           onChange={(watermark) => {

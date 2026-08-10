@@ -1,5 +1,26 @@
 # @sanity/hierarchical-document-list
 
+## 4.0.1
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
+## 4.0.0
+
+### Major Changes
+
+- [#1224](https://github.com/sanity-io/plugins/pull/1224) [`99603ce`](https://github.com/sanity-io/plugins/commit/99603ce771051179c07b584439ecd92e2396994b) Thanks [@stipsan](https://github.com/stipsan)! - Add `createStructureHierarchy` and deprecate `createDeskHierarchy`. Now that Studio's `sanity/desk` has been replaced by `sanity/structure`, the structure-builder helper is renamed to `createStructureHierarchy`. `createDeskHierarchy` continues to work as a deprecated alias and will be removed in a future major version.
+
+  Require Node.js 24.11 or later, to match the `engines.node` constraint of the `@nosferatu500/react-sortable-tree@5` runtime dependency (previously the package advertised a wider range that could fail engine-strict installs and mislead users).
+
+  This release also fixes several bugs and documentation issues:
+
+  - The structure helper now rejects any non-string or empty `documentId` immediately, instead of only erroring on values that are both non-string and falsy.
+  - `creatableTypes` is now correctly validated as a subset of `referenceTo` (the previous `indexOf` check inside `some()` could discard a valid subset or accept invalid types).
+  - Warning messages now render across multiple lines again by splitting on both real and escaped newlines, and the "not live editable" warning no longer has a misspelled function name or stray whitespace.
+  - Updated the README usage example to `structureTool`/`createStructureHierarchy`, restored the plugin screenshot, dropped the outdated Studio compatibility note, and removed the duplicate License section.
+
 ## 3.0.12
 
 ### Patch Changes

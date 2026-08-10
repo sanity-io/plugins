@@ -53,7 +53,7 @@ const SearchFacets = (props: Props) => {
 
     return (
       <Box marginBottom={2}>
-        <Inline space={2}>{Items}</Inline>
+        <Inline gap={2}>{Items}</Inline>
       </Box>
     )
   }

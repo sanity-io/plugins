@@ -72,7 +72,7 @@ const DialogConfirm = (props: Props) => {
       width={1}
     >
       <Box paddingX={4} paddingY={4}>
-        <Stack space={3}>
+        <Stack gap={3}>
           {dialog?.title && <Text size={1}>{dialog.title}</Text>}
           {dialog?.description && (
             <Text muted size={1}>

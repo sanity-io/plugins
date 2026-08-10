@@ -56,7 +56,7 @@ const AssetMetadata = (props: Props) => {
     <Box marginTop={3}>
       {/* Base */}
       <Box>
-        <Stack space={3}>
+        <Stack gap={3}>
           <Row label="Size" value={filesize(asset?.size, {base: 10, round: 0})} />
           <Row label="MIME type" value={asset?.mimeType} />
           <Row label="Extension" value={asset?.extension?.toUpperCase()} />
@@ -81,7 +81,7 @@ const AssetMetadata = (props: Props) => {
               }}
             />
             <Box>
-              <Stack space={3}>
+              <Stack gap={3}>
                 {exif.ISO && <Row label="ISO" value={exif.ISO} />}
                 {exif.FNumber && <Row label="Aperture" value={`ƒ/${exif.FNumber}`} />}
                 {exif.FocalLength && <Row label="Focal length" value={`${exif.FocalLength}mm`} />}
@@ -101,7 +101,7 @@ const AssetMetadata = (props: Props) => {
 
       {/* Asset actions */}
       <Box marginTop={5}>
-        <Inline space={2}>
+        <Inline gap={2}>
           {/* Download */}
           <Button
             disabled={!item || item?.updating}

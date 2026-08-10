@@ -564,8 +564,8 @@ export function WatermarkControls({
   }
 
   return (
-    <Stack space={3}>
-      <Stack space={2}>
+    <Stack gap={3}>
+      <Stack gap={2}>
         <Text size={1} weight="medium">
           Watermark Image URL
         </Text>
@@ -650,7 +650,7 @@ export function WatermarkControls({
       </Stack>
 
       {watermark.imageUrl && (
-        <Stack space={2}>
+        <Stack gap={2}>
           <Card padding={3} tone="transparent" border radius={2}>
             <Flex
               align="center"
@@ -658,7 +658,7 @@ export function WatermarkControls({
               gap={3}
               style={{flexWrap: 'wrap', alignItems: 'flex-start'}}
             >
-              <Stack space={2} style={{minWidth: 240, flex: 1}}>
+              <Stack gap={2} style={{minWidth: 240, flex: 1}}>
                 <Text size={1} weight="medium">
                   Positioning mode
                 </Text>
@@ -699,12 +699,12 @@ export function WatermarkControls({
 
           {mode === 'manual' && (
             <Card padding={3} tone="transparent" border radius={2}>
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Text size={1} weight="medium">
                   Mux overlay_settings
                 </Text>
-                <Grid columns={[1, 2]} gap={3} style={{width: '100%'}}>
-                  <Stack space={2} style={{minWidth: 0}}>
+                <Grid gridTemplateColumns={[1, 2]} gap={3} style={{width: '100%'}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       horizontal_align
                     </Text>
@@ -728,7 +728,7 @@ export function WatermarkControls({
                       <option value="right">right</option>
                     </select>
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       horizontal_margin (e.g. 2% or 40px)
                     </Text>
@@ -739,7 +739,7 @@ export function WatermarkControls({
                       }
                     />
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       vertical_align
                     </Text>
@@ -763,7 +763,7 @@ export function WatermarkControls({
                       <option value="bottom">bottom</option>
                     </select>
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       vertical_margin (e.g. 2% or 40px)
                     </Text>
@@ -774,7 +774,7 @@ export function WatermarkControls({
                       }
                     />
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       width (e.g. 25% or 80px)
                     </Text>
@@ -783,7 +783,7 @@ export function WatermarkControls({
                       onChange={(e) => updateOverlaySettings({width: e.currentTarget.value})}
                     />
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       opacity (e.g. 90%)
                     </Text>

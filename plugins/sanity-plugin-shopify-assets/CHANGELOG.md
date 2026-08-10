@@ -1,5 +1,17 @@
 # sanity-plugin-shopify-assets
 
+## 2.0.13
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
+## 2.0.12
+
+### Patch Changes
+
+- [#1231](https://github.com/sanity-io/plugins/pull/1231) [`6e2d73a`](https://github.com/sanity-io/plugins/commit/6e2d73a5b8067a69610ffd2d8c40ab278b98e15f) Thanks [@stipsan](https://github.com/stipsan)! - Harden the Shopify asset input and picker: safely read `shopifyDomain` when `options` is undefined, mount the Video.js player on an element it owns so the preview renders reliably and is disposed on unmount instead of leaking, open the Shopify admin link with `noopener,noreferrer`, stop mutating search-result objects on select, and URL-encode `shop`/`cursor` query params
+
 ## 2.0.11
 
 ### Patch Changes

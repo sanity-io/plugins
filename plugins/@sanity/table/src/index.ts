@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {definePlugin, defineType} from 'sanity'
 
 import {createTableComponent, TableComponent} from './components/TableComponent'

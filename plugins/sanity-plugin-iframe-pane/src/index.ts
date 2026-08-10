@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export {
   Iframe,
   type IframeOptions,

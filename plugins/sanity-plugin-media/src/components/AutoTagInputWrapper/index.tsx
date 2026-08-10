@@ -1,4 +1,4 @@
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useEffect, useRef} from 'react'
 import {type InputProps} from 'sanity'
 

@@ -1,5 +1,6 @@
 import {EditIcon} from '@sanity/icons/Edit'
-import {Box, Button, Flex, Text, Tooltip} from '@sanity/ui'
+import {Box, Button, Flex, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import type {FC} from 'react'
 
 import {type Sanity} from '../../types'
