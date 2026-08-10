@@ -1,18 +1,50 @@
 import {DocumentIcon} from '@sanity/icons/Document'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Flex, Text} from '@sanity/ui'
+import {clsx} from 'clsx/lite'
+import type {ComponentProps} from 'react'
 
 import type {CloudinaryAsset} from '../types'
 import {assetUrl} from '../utils'
 import {namespace, type Secrets} from './SecretsConfigView'
 import VideoPlayer from './VideoPlayer'
 
-interface ComponentProps {
+import {
+  fullWidthImage,
+  fullWidthPreview,
+  rawFileLabel,
+  thumbnailFlex,
+  thumbnailImage,
+  videoPreview,
+} from './AssetPreview.css'
+
+interface AssetPreviewProps {
   layout?: 'default' | 'block'
   value: CloudinaryAsset | undefined
 }
 
-const AssetPreview = ({value, layout}: ComponentProps) => {
+function VideoPreviewFlex({
+  layout,
+  className,
+  ...props
+}: ComponentProps<typeof Flex> & {layout?: 'default' | 'block'}) {
+  const layoutClass = videoPreview[layout === 'default' ? 'default' : 'block']
+  return <Flex {...props} className={clsx(layoutClass, className)} />
+}
+
+function RawFileLabel({className, ...props}: ComponentProps<typeof Text>) {
+  return <Text {...props} className={clsx(rawFileLabel, className)} />
+}
+
+function ThumbnailFlex({className, ...props}: ComponentProps<typeof Flex>) {
+  return <Flex {...props} className={clsx(thumbnailFlex, className)} />
+}
+
+function FullWidthPreview({className, ...props}: ComponentProps<'div'>) {
+  return <div {...props} className={clsx(fullWidthPreview, className)} />
+}
+
+const AssetPreview = ({value, layout}: AssetPreviewProps) => {
   const {secrets} = useSecrets<Secrets>(namespace)
   const cloudName = secrets?.cloudName
 
@@ -28,22 +60,15 @@ const AssetPreview = ({value, layout}: ComponentProps) => {
   switch (value.resource_type) {
     case 'video':
       return (
-        <Flex
-          align="center"
-          style={{
-            maxWidth: layout === 'default' ? '80px' : '100%',
-          }}
-        >
+        <VideoPreviewFlex align="center" layout={layout}>
           <VideoPlayer src={url} kind="player" />
-        </Flex>
+        </VideoPreviewFlex>
       )
     case 'raw':
       return (
         <Flex align="center">
           <DocumentIcon />
-          <Text size={1} style={{marginLeft: '0.5em'}}>
-            {value.display_name ?? 'Raw file'}
-          </Text>
+          <RawFileLabel size={1}>{value.display_name ?? 'Raw file'}</RawFileLabel>
         </Flex>
       )
     default: {
@@ -59,21 +84,13 @@ const AssetPreview = ({value, layout}: ComponentProps) => {
           : url
 
       return layout === 'default' ? (
-        <Flex align="center" justify="center" style={{width: '100%'}}>
-          <img
-            alt="preview"
-            src={previewSrc}
-            style={{maxWidth: '80px', height: 'auto', display: 'block'}}
-          />
-        </Flex>
+        <ThumbnailFlex align="center" justify="center">
+          <img alt="preview" src={previewSrc} className={thumbnailImage} />
+        </ThumbnailFlex>
       ) : (
-        <div style={{width: '100%'}}>
-          <img
-            alt="preview"
-            src={previewSrc}
-            style={{width: '100%', height: 'auto', display: 'block'}}
-          />
-        </div>
+        <FullWidthPreview>
+          <img alt="preview" src={previewSrc} className={fullWidthImage} />
+        </FullWidthPreview>
       )
     }
   }

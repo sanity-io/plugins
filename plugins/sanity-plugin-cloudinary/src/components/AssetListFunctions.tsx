@@ -1,7 +1,8 @@
 import {PlugIcon} from '@sanity/icons/Plug'
 import {useSecrets} from '@sanity/studio-secrets'
 import {Box, Button, Flex} from '@sanity/ui'
-import {useCallback, useState} from 'react'
+import {clsx} from 'clsx/lite'
+import {type ComponentProps, useCallback, useState} from 'react'
 import {
   type ArrayInputFunctionsProps,
   ArrayOfObjectsFunctions,
@@ -16,6 +17,12 @@ import {cloudinaryAssetSchema} from '../schema/cloudinaryAsset'
 import type {InsertHandlerParams} from '../types'
 import {openMediaSelector} from '../utils'
 import SecretsConfigView, {namespace} from './SecretsConfigView'
+
+import {fullWidthButton} from './AssetListFunctions.css'
+
+function FullWidthButton({className, ...props}: ComponentProps<typeof Button>) {
+  return <Button {...props} className={clsx(fullWidthButton, className)} />
+}
 
 interface ApiConfig {
   cloudName: string
@@ -82,8 +89,7 @@ export const AssetListFunctions = (
       {cloudinaryType && (
         <>
           <Box flex={1}>
-            <Button
-              style={{width: '100%'}}
+            <FullWidthButton
               disabled={props.readOnly || loading}
               mode="bleed"
               text="Add multiple"
