@@ -43,4 +43,4 @@
 "sanity-translations-tab": patch
 ---
 
-Add compatibility with @sanity/ui 4 across workspace plugins.
+upgrade to `@sanity/ui` v4
