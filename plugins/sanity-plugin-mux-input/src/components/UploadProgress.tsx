@@ -52,7 +52,7 @@ export const UploadProgress = ({
         <LeftSection>
           <Flex justify="center" gap={[3, 3, 2, 2]} direction={['column', 'column', 'row']}>
             <Text size={1}>
-              <Inline space={2}>
+              <Inline gap={2}>
                 {text}
                 <CodeWrapper size={1}>{filename ? filename : '...'}</CodeWrapper>
               </Inline>

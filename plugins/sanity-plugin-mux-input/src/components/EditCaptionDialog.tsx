@@ -350,8 +350,8 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
       width={1}
       onClickOutside={onClose}
     >
-      <Stack padding={4} space={4}>
-        <Stack space={2}>
+      <Stack padding={4} gap={4}>
+        <Stack gap={2}>
           <Card padding={3} marginBottom={2} tone="transparent" border radius={2}>
             <Flex align="center" justify="space-between">
               <Text>{getCurrentFileName()}</Text>
@@ -412,7 +412,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
               </Text>
             )}
           </Card>
-          <Stack space={2}>
+          <Stack gap={2}>
             <Label as="label" htmlFor="vtt-url">
               VTT File URL
             </Label>
@@ -432,7 +432,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
           </Stack>
         </Stack>
 
-        <Stack space={2}>
+        <Stack gap={2}>
           <Label as="label" htmlFor="caption-name">
             Audio name
           </Label>
@@ -467,7 +467,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
           />
         </Stack>
 
-        <Stack space={2}>
+        <Stack gap={2}>
           <Label as="label" htmlFor="caption-language">
             Language Code
           </Label>

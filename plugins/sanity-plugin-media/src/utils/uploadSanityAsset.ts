@@ -40,10 +40,10 @@ const hexFromBuffer = (buffer: ArrayBuffer): string => {
 
 export const hashFile$ = (file: File): Observable<string> => {
   if (!window.crypto || !window.crypto.subtle || !window.FileReader) {
-    return throwError({
+    return throwError(() => ({
       message: 'Unable to generate hash: uploads are only allowed in secure contexts',
       statusCode: 500,
-    })
+    }))
   }
   return readFile$(file).pipe(
     mergeMap((arrayBuffer) => window.crypto.subtle.digest('SHA-1', arrayBuffer)),
@@ -63,10 +63,13 @@ const uploadSanityAsset$ = (
     // Cancel if the asset already exists
     mergeMap((existingAsset: SanityAssetDocument | SanityImageAssetDocument | null) => {
       if (existingAsset) {
-        return throwError({
-          message: 'Asset already exists',
-          statusCode: 409,
-        } satisfies HttpError)
+        return throwError(
+          () =>
+            ({
+              message: 'Asset already exists',
+              statusCode: 409,
+            }) satisfies HttpError,
+        )
       }
 
       return of(null)

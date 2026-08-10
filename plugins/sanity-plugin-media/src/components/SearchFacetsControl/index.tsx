@@ -111,7 +111,7 @@ const SearchFacetsControl = () => {
             fontSize={1}
             icon={AddIcon}
             mode="bleed"
-            space={2}
+            gap={2}
             text="Add filter"
             tone="primary"
           />

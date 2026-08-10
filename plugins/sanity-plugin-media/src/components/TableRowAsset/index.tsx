@@ -9,10 +9,10 @@ import {
   Grid,
   Spinner,
   Text,
-  type ThemeColorSchemeKey,
   Tooltip,
   useMediaIndex,
 } from '@sanity/ui'
+import {getTheme_v2, type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
 import {
@@ -25,7 +25,7 @@ import {
   useState,
 } from 'react'
 import {useDispatch} from 'react-redux'
-import {WithReferringDocuments, useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue, useReferringDocuments} from 'sanity'
 import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
@@ -44,6 +44,12 @@ import Image from '../Image'
 
 // Duration (ms) to wait before reference counts (and associated listeners) are rendered
 const REFERENCE_COUNT_VISIBILITY_DELAY = 750
+
+function AssetReferenceCount({id}: {id: string}) {
+  const {isLoading, referringDocuments} = useReferringDocuments(id)
+  const uniqueDocuments = getUniqueDocuments(referringDocuments)
+  return isLoading ? <>-</> : <>{Array.isArray(uniqueDocuments) ? uniqueDocuments.length : 0}</>
+}
 
 type Props = {
   id: string
@@ -90,7 +96,7 @@ const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey
 
 const StyledWarningIcon = styled(WarningFilledIcon)(({theme}) => {
   return {
-    color: theme.sanity.color.spot.red,
+    color: getTheme_v2(theme).color.avatar.red.bg,
   }
 })
 
@@ -189,8 +195,8 @@ const TableRowAsset = (props: Props) => {
       $scheme={scheme}
       $selected={selected}
       style={{
-        gridColumnGap: mediaIndex < 3 ? 0 : '16px',
-        gridRowGap: 0,
+        columnGap: mediaIndex < 3 ? 0 : '16px',
+        rowGap: 0,
         gridTemplateColumns:
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
         gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',
@@ -375,20 +381,7 @@ const TableRowAsset = (props: Props) => {
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
-          {referenceCountVisible ? (
-            <WithReferringDocuments id={id}>
-              {({isLoading, referringDocuments}) => {
-                const uniqueDocuments = getUniqueDocuments(referringDocuments)
-                return isLoading ? (
-                  <>-</>
-                ) : (
-                  <>{Array.isArray(uniqueDocuments) ? uniqueDocuments.length : 0}</>
-                )
-              }}
-            </WithReferringDocuments>
-          ) : (
-            <>-</>
-          )}
+          {referenceCountVisible ? <AssetReferenceCount id={id} /> : <>-</>}
         </Text>
       </Box>
 

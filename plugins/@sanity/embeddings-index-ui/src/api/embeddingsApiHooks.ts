@@ -8,7 +8,6 @@ export function useApiClient(): SanityClient {
     if (customHost) {
       return client.withConfig({
         apiHost: customHost,
-        useProjectHostname: false,
         withCredentials: false,
       })
     }

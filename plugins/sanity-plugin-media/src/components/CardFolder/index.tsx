@@ -1,4 +1,5 @@
 import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {css, styled} from 'styled-components'
@@ -34,12 +35,14 @@ const FolderCard = styled(Card)`
 `
 
 const FolderGlyph = styled(Box)(
-  ({theme}) => css`
+  ({theme}) => {
+    const yellow = getTheme_v2(theme).color.avatar.yellow.bg
+    return css`
     align-items: flex-end;
     background: linear-gradient(
       180deg,
-      ${theme.sanity.color.spot.yellow} 0%,
-      ${theme.sanity.color.spot.yellow} 100%
+      ${yellow} 0%,
+      ${yellow} 100%
     );
     border-radius: 8px;
     display: flex;
@@ -48,7 +51,7 @@ const FolderGlyph = styled(Box)(
     width: 96px;
 
     &::before {
-      background: ${theme.sanity.color.spot.yellow};
+      background: ${yellow};
       border-radius: 8px 8px 0 0;
       content: '';
       height: 18px;
@@ -57,7 +60,8 @@ const FolderGlyph = styled(Box)(
       top: -8px;
       width: 38px;
     }
-  `,
+  `
+  },
 )
 
 const CardFolder = ({folderId, name, totalCount}: Props) => {
@@ -80,7 +84,7 @@ const CardFolder = ({folderId, name, totalCount}: Props) => {
             <FolderGlyph />
           </Flex>
 
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text
               size={1}
               style={{lineHeight: '1.35em', minHeight: '2.7em', wordBreak: 'break-word'}}

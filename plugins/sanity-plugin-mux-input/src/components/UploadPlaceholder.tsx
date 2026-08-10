@@ -62,7 +62,7 @@ export default function UploadPlaceholder(props: UploadPlaceholderProps) {
             </Text>
           </Flex>
         </Flex>
-        <Inline space={2}>
+        <Inline gap={2}>
           <FileInputButton
             accept={accept}
             mode="bleed"

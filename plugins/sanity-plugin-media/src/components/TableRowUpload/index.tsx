@@ -58,8 +58,8 @@ const TableRowUpload = (props: Props) => {
       style={{
         alignItems: 'center',
         background: getSchemeColor(scheme, 'bg'),
-        gridColumnGap: mediaIndex < 3 ? 0 : '16px',
-        gridRowGap: 0,
+        columnGap: mediaIndex < 3 ? 0 : '16px',
+        rowGap: 0,
         gridTemplateColumns:
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
         gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',
@@ -148,7 +148,7 @@ const TableRowUpload = (props: Props) => {
           marginLeft: mediaIndex < 3 ? 3 : 0,
         }}
       >
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text muted size={1} textOverflow="ellipsis">
             {item.name} ({fileSize})
           </Text>

@@ -1,4 +1,5 @@
-import {LayerProvider, studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {LayerProvider, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
 import {render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
 import {ColorSchemeProvider} from 'sanity'
@@ -36,7 +37,7 @@ describe('FormBuilderTool', () => {
   it('renders picker header for image asset type', async () => {
     render(
       <ColorSchemeProvider scheme="light">
-        <ThemeProvider theme={studioTheme}>
+        <ThemeProvider theme={buildTheme()}>
           <ToastProvider>
             <LayerProvider>
               <ToolOptionsProvider options={{creditLine: {enabled: false}}}>

@@ -1,5 +1,5 @@
 import {Box, Label, Stack, Text, TextArea, TextInput} from '@sanity/ui'
-import {type Dispatch, type FormEvent, type SetStateAction, useCallback, useId} from 'react'
+import {type Dispatch, type ChangeEvent, type SetStateAction, useCallback, useId} from 'react'
 
 import {type NamedIndex} from '../api/embeddingsApi'
 
@@ -47,11 +47,11 @@ function FormInput(props: FormInputProps) {
   const {label, description, onChange, value, readOnly, placeholder, type = 'text'} = props
   const id = useId()
   const handleChange = useCallback(
-    (e: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.currentTarget.value),
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.currentTarget.value),
     [onChange],
   )
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       <Label as="label" muted htmlFor={id}>
         {label}
       </Label>

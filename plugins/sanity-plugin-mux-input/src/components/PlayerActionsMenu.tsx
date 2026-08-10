@@ -89,7 +89,7 @@ function PlayerActionsMenu(
   )
 
   return (
-    <Inline space={1} padding={2}>
+    <Inline gap={1} padding={2}>
       {isSigned && (
         <Tooltip
           animate

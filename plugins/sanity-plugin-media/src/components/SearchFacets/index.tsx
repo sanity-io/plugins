@@ -1,4 +1,5 @@
-import {Box, Flex, Inline, rem, type Theme} from '@sanity/ui'
+import {Box, Flex, Inline, rem} from '@sanity/ui'
+import {getTheme_v2, type Theme} from '@sanity/ui/theme'
 import {styled, css} from 'styled-components'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -14,11 +15,10 @@ type Props = {
 const StackContainer = styled(Flex)(({theme}: {theme: Theme}) => {
   return css`
     > * {
-      margin-bottom: ${rem(theme.sanity.space[2]!)};
+      margin-bottom: ${rem(getTheme_v2(theme).space[2]!)};
     }
   `
 })
-
 const SearchFacets = (props: Props) => {
   const {layout = 'inline'} = props
 
@@ -53,7 +53,7 @@ const SearchFacets = (props: Props) => {
 
     return (
       <Box marginBottom={2}>
-        <Inline space={2}>{Items}</Inline>
+        <Inline gap={2}>{Items}</Inline>
       </Box>
     )
   }

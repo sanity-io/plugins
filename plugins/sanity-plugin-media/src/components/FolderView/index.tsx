@@ -222,7 +222,7 @@ const FolderView = () => {
         }}
       >
         <Box flex={1}>
-          <Inline space={2}>
+          <Inline gap={2}>
             <Label size={0}>Folders</Label>
             {fetching && (
               <Label size={0} style={{opacity: 0.3}}>
@@ -232,7 +232,7 @@ const FolderView = () => {
           </Inline>
         </Box>
 
-        <Inline space={1}>
+        <Inline gap={1}>
           {currentFolderId && (
             <FolderHeaderAction
               icon={<EditIcon />}

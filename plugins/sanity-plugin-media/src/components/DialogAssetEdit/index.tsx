@@ -4,7 +4,7 @@ import groq from 'groq'
 import {type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type SubmitHandler, useForm, useFormState} from 'react-hook-form'
 import {useDispatch} from 'react-redux'
-import {WithReferringDocuments, useColorSchemeValue, useDocumentStore} from 'sanity'
+import {useColorSchemeValue, useReferringDocuments} from 'sanity'
 
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import {getAssetFormSchema} from '../../formSchema'
@@ -48,8 +48,6 @@ const DialogAssetEdit = (props: Props) => {
   const client = useVersionedClient()
   const scheme = useColorSchemeValue()
 
-  const documentStore = useDocumentStore()
-
   const dispatch = useDispatch()
   const assetItem = useTypedSelector((state) => selectAssetById(state, String(assetId))) // TODO: check casting
   const tags = useTypedSelector(selectTags)
@@ -61,6 +59,10 @@ const DialogAssetEdit = (props: Props) => {
   const [tabSection, setTabSection] = useState<'details' | 'references'>('details')
 
   const currentAsset = assetItem ? assetItem?.asset : assetSnapshot
+  const referringDocumentId = currentAsset?._id ?? String(assetId)
+  const {isLoading: referringDocumentsLoading, referringDocuments} =
+    useReferringDocuments(referringDocumentId)
+  const uniqueReferringDocuments = getUniqueDocuments(referringDocuments)
   const allTagOptions = getTagSelectOptions(tags)
 
   const assetTagOptions = useTypedSelector(selectTagSelectOptions(currentAsset))
@@ -178,12 +180,12 @@ const DialogAssetEdit = (props: Props) => {
       // Dispatch action to create new tag
       dispatch(
         tagsActions.createRequest({
-          assetId: currentAsset?._id,
+          assetId: referringDocumentId,
           name: tagName,
         }),
       )
     },
-    [currentAsset?._id, dispatch],
+    [dispatch, referringDocumentId],
   )
 
   const handleChangeFolder = useCallback(() => {
@@ -341,7 +343,7 @@ const DialogAssetEdit = (props: Props) => {
 
   const footer = (
     <Box padding={3}>
-      <Stack space={3}>
+      <Stack gap={3}>
         {hasOrphanedLocales && (
           <Card padding={3} radius={2} shadow={1} tone="caution">
             <Flex align="center" justify="space-between" gap={3}>
@@ -413,85 +415,73 @@ const DialogAssetEdit = (props: Props) => {
       */}
       <Flex direction={['column-reverse', 'column-reverse', 'row-reverse']}>
         <Box flex={1} marginTop={[5, 5, 0]} padding={4}>
-          <WithReferringDocuments documentStore={documentStore} id={currentAsset._id}>
-            {({isLoading, referringDocuments}) => {
-              const uniqueReferringDocuments = getUniqueDocuments(referringDocuments)
-              return (
-                <>
-                  {/* Tabs */}
-                  <TabList space={2}>
-                    <Tab
-                      aria-controls="details-panel"
-                      disabled={formUpdating}
-                      id="details-tab"
-                      label="Details"
-                      onClick={() => setTabSection('details')}
-                      selected={tabSection === 'details'}
-                      size={2}
-                    />
-                    <Tab
-                      aria-controls="references-panel"
-                      disabled={formUpdating}
-                      id="references-tab"
-                      label={`References${
-                        !isLoading && Array.isArray(uniqueReferringDocuments)
-                          ? ` (${uniqueReferringDocuments.length})`
-                          : ''
-                      }`}
-                      onClick={() => setTabSection('references')}
-                      selected={tabSection === 'references'}
-                      size={2}
-                    />
-                  </TabList>
+          {/* Tabs */}
+          <TabList gap={2}>
+            <Tab
+              aria-controls="details-panel"
+              disabled={formUpdating}
+              id="details-tab"
+              label="Details"
+              onClick={() => setTabSection('details')}
+              selected={tabSection === 'details'}
+              size={2}
+            />
+            <Tab
+              aria-controls="references-panel"
+              disabled={formUpdating}
+              id="references-tab"
+              label={`References${
+                !referringDocumentsLoading && Array.isArray(uniqueReferringDocuments)
+                  ? ` (${uniqueReferringDocuments.length})`
+                  : ''
+              }`}
+              onClick={() => setTabSection('references')}
+              selected={tabSection === 'references'}
+              size={2}
+            />
+          </TabList>
 
-                  {/* Form fields */}
-                  <Box as="form" marginTop={4} onSubmit={handleSubmit(onSubmit)}>
-                    {/* Deleted notification */}
-                    {!assetItem && (
-                      <Card marginBottom={3} padding={3} radius={2} shadow={1} tone="critical">
-                        <Text size={1}>This file cannot be found – it may have been deleted.</Text>
-                      </Card>
-                    )}
+          {/* Form fields */}
+          <Box as="form" marginTop={4} onSubmit={handleSubmit(onSubmit)}>
+            {/* Deleted notification */}
+            {!assetItem && (
+              <Card marginBottom={3} padding={3} radius={2} shadow={1} tone="critical">
+                <Text size={1}>This file cannot be found – it may have been deleted.</Text>
+              </Card>
+            )}
 
-                    {/* Hidden button to enable enter key submissions */}
-                    <button style={{display: 'none'}} tabIndex={-1} type="submit" />
+            {/* Hidden button to enable enter key submissions */}
+            <button style={{display: 'none'}} tabIndex={-1} type="submit" />
 
-                    {/* Panel: details */}
-                    <TabPanel
-                      aria-labelledby="details"
-                      hidden={tabSection !== 'details'}
-                      id="details-panel"
-                    >
-                      {CustomDetails ? (
-                        <CustomDetails
-                          {...detailsProps}
-                          renderDefaultDetails={renderDefaultDetails}
-                        />
-                      ) : (
-                        <Details {...detailsProps} />
-                      )}
-                    </TabPanel>
+            {/* Panel: details */}
+            <TabPanel
+              aria-labelledby="details"
+              hidden={tabSection !== 'details'}
+              id="details-panel"
+            >
+              {CustomDetails ? (
+                <CustomDetails {...detailsProps} renderDefaultDetails={renderDefaultDetails} />
+              ) : (
+                <Details {...detailsProps} />
+              )}
+            </TabPanel>
 
-                    {/* Panel: References */}
-                    <TabPanel
-                      aria-labelledby="references"
-                      hidden={tabSection !== 'references'}
-                      id="references-panel"
-                    >
-                      <Box marginTop={5}>
-                        {assetItem?.asset && (
-                          <DocumentList
-                            documents={uniqueReferringDocuments}
-                            isLoading={isLoading}
-                          />
-                        )}
-                      </Box>
-                    </TabPanel>
-                  </Box>
-                </>
-              )
-            }}
-          </WithReferringDocuments>
+            {/* Panel: References */}
+            <TabPanel
+              aria-labelledby="references"
+              hidden={tabSection !== 'references'}
+              id="references-panel"
+            >
+              <Box marginTop={5}>
+                {assetItem?.asset && (
+                  <DocumentList
+                    documents={uniqueReferringDocuments}
+                    isLoading={referringDocumentsLoading}
+                  />
+                )}
+              </Box>
+            </TabPanel>
+          </Box>
         </Box>
 
         <Box flex={1} padding={4}>

@@ -1,5 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
-import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {ThemeProvider, ToastProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
 import {render, type RenderResult} from '@testing-library/react'
 import type {ReactElement, ReactNode} from 'react'
 import {Provider} from 'react-redux'
@@ -58,7 +59,7 @@ export function renderWithProviders(
     <Provider store={store}>
       <ColorSchemeProvider scheme="light">
         <ToolOptionsProvider options={options}>
-          <ThemeProvider theme={studioTheme}>
+          <ThemeProvider theme={buildTheme()}>
             <ToastProvider>
               <AssetBrowserDispatchProvider onSelect={onSelect}>
                 {node}

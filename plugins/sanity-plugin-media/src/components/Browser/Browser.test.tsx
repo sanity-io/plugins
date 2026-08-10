@@ -1,4 +1,5 @@
-import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {ThemeProvider, ToastProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
 import {render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
 import {ColorSchemeProvider} from 'sanity'
@@ -28,7 +29,7 @@ describe('Browser', () => {
   it('renders Browse Assets header in tool mode', async () => {
     render(
       <ColorSchemeProvider scheme="light">
-        <ThemeProvider theme={studioTheme}>
+        <ThemeProvider theme={buildTheme()}>
           <ToastProvider>
             <ToolOptionsProvider options={{creditLine: {enabled: false}}}>
               <Browser />

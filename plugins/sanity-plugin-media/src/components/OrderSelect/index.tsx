@@ -47,7 +47,7 @@ const OrderSelect = () => {
                   }
                   padding={2}
                   selected={selected}
-                  space={4}
+                  gap={4}
                   style={{minWidth: '200px'}}
                   text={getOrderTitle(item.field, item.direction)}
                 />

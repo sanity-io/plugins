@@ -1,17 +1,18 @@
 import {CloseIcon} from '@sanity/icons/Close'
-import {Box, Card, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
+import {Box, Card, rem, Text} from '@sanity/ui'
+import {buildTheme, type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {components, type StylesConfig} from 'react-select'
 import {Virtuoso} from 'react-virtuoso'
 
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
 const {
-  fonts: {
-    text: {sizes: themeTextSizes},
+  font: {
+    text: {family: textFontFamily, sizes: themeTextSizes},
   },
   radius: themeRadius,
   space: themeSpace,
-} = studioTheme
+} = buildTheme().v2!
 
 export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => {
   return {
@@ -43,7 +44,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     input: (styles) => ({
       ...styles,
       color: 'var(--card-fg-color)',
-      fontFamily: studioTheme.fonts.text.family,
+      fontFamily: textFontFamily,
       fontSize: themeTextSizes[1]!.fontSize,
       marginLeft: rem(themeSpace[2]!),
     }),
@@ -53,7 +54,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     }),
     noOptionsMessage: (styles) => ({
       ...styles,
-      fontFamily: studioTheme.fonts.text.family,
+      fontFamily: textFontFamily,
       fontSize: themeTextSizes[1]!.fontSize,
       lineHeight: '1em',
     }),

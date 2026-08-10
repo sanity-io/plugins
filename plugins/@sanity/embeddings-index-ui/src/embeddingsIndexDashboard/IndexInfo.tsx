@@ -29,7 +29,7 @@ export function IndexInfo({selectedIndex, onDeleteIndex}: IndexInfoProps) {
     [selectedIndex, onDeleteIndex],
   )
   return (
-    <Stack space={4} flex={1}>
+    <Stack gap={4} flex={1}>
       <Flex align="center" flex={1} gap={2}>
         <Box flex={1}>
           <Heading>Index: {selectedIndex?.indexName ?? 'Untitled'}</Heading>
@@ -61,14 +61,14 @@ export function IndexInfo({selectedIndex, onDeleteIndex}: IndexInfoProps) {
       </Flex>
 
       <Flex gap={6}>
-        <Stack space={4} flex={1} style={{maxWidth: 600}}>
+        <Stack gap={4} flex={1} style={{maxWidth: 600}}>
           <Box>
             <IndexEditor index={selectedIndex} readOnly />
           </Box>
           <IndexStatus selectedIndex={selectedIndex} />
         </Stack>
 
-        <Stack space={3} flex={1}>
+        <Stack gap={3} flex={1}>
           <Label muted>Query index</Label>
           <QueryIndex indexName={selectedIndex.indexName} key={selectedIndex.indexName} />
         </Stack>
@@ -79,14 +79,14 @@ export function IndexInfo({selectedIndex, onDeleteIndex}: IndexInfoProps) {
 
 function IndexStatus({selectedIndex}: {selectedIndex: IndexState}) {
   return (
-    <Stack space={4} flex={1}>
+    <Stack gap={4} flex={1}>
       <Flex gap={2} align="center">
         <Box flex={1}>
           <Label size={1} muted>
             Status
           </Label>
         </Box>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text>{selectedIndex.status}</Text>
         </Stack>
       </Flex>
@@ -96,7 +96,7 @@ function IndexStatus({selectedIndex}: {selectedIndex: IndexState}) {
             Indexing progress
           </Label>
         </Box>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text>
             {selectedIndex.startDocumentCount - selectedIndex.remainingDocumentCount} /{' '}
             {selectedIndex.startDocumentCount}
@@ -109,7 +109,7 @@ function IndexStatus({selectedIndex}: {selectedIndex: IndexState}) {
             Failed documents
           </Label>
         </Box>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text>{selectedIndex.failedDocumentCount}</Text>
         </Stack>
       </Flex>

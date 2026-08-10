@@ -1,4 +1,5 @@
-import {LayerProvider, studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {LayerProvider, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
 import {cleanup, render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {of, Subject} from 'rxjs'
@@ -26,12 +27,9 @@ vi.mock('sanity', async (importOriginal) => {
   return {
     ...actual,
     useFormValue: () => ({_id: 'doc-1', _type: 'article'}),
-    useDocumentStore: () => ({}),
-    WithReferringDocuments: ({children}: {children: (args: unknown) => unknown}) =>
-      children({isLoading: false, referringDocuments: []}),
+    useReferringDocuments: () => ({isLoading: false, referringDocuments: []}),
   }
 })
-
 const asset = {
   _id: 'a1',
   _type: 'sanity.imageAsset',
@@ -56,7 +54,7 @@ function renderTool(overrides: Record<string, unknown> = {}) {
 
   render(
     <ColorSchemeProvider scheme="light">
-      <ThemeProvider theme={studioTheme}>
+      <ThemeProvider theme={buildTheme()}>
         <ToastProvider>
           <LayerProvider>
             <ToolOptionsProvider options={{creditLine: {enabled: false}}}>

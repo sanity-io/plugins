@@ -134,7 +134,7 @@ const DialogFolderMove = ({children, dialog}: Props) => {
       onClose={handleClose}
       width={1}
     >
-      <Stack padding={4} space={4}>
+      <Stack padding={4} gap={4}>
         <Text size={1}>
           Move {assets.length} {pluralize('asset', assets.length)} to a folder.
         </Text>
@@ -157,7 +157,7 @@ const DialogFolderMove = ({children, dialog}: Props) => {
         </Box>
 
         {selectedFolder && (
-          <Inline space={2}>
+          <Inline gap={2}>
             <Text muted size={1}>
               Destination:
             </Text>

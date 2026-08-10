@@ -1,4 +1,5 @@
 import {Box, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
+import {getTheme_v2} from '@sanity/ui/theme'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {css, styled} from 'styled-components'
@@ -23,22 +24,24 @@ const ContainerGrid = styled(Grid)(
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
-        background: ${theme.sanity.color.card.enabled.bg};
+        background: ${getTheme_v2(theme).color.bg};
       }
     }
   `,
 )
 
 const FolderBadge = styled(Box)(
-  ({theme}) => css`
-    background: ${theme.sanity.color.spot.yellow};
+  ({theme}) => {
+    const yellow = getTheme_v2(theme).color.avatar.yellow.bg
+    return css`
+    background: ${yellow};
     border-radius: 6px;
     height: 42px;
     position: relative;
     width: 52px;
 
     &::before {
-      background: ${theme.sanity.color.spot.yellow};
+      background: ${yellow};
       border-radius: 6px 6px 0 0;
       content: '';
       height: 12px;
@@ -47,7 +50,8 @@ const FolderBadge = styled(Box)(
       top: -6px;
       width: 18px;
     }
-  `,
+  `
+  },
 )
 
 const TableRowFolder = ({folderId, name, totalCount}: Props) => {
@@ -60,7 +64,7 @@ const TableRowFolder = ({folderId, name, totalCount}: Props) => {
       onClick={() => dispatch(foldersActions.currentFolderSet({folderId}))}
       style={{
         background: getSchemeColor(scheme, 'bg'),
-        gridColumnGap: mediaIndex < 3 ? 0 : '16px',
+        columnGap: mediaIndex < 3 ? 0 : '16px',
         gridTemplateColumns:
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
         gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',
@@ -74,7 +78,7 @@ const TableRowFolder = ({folderId, name, totalCount}: Props) => {
         marginLeft={mediaIndex < 3 ? 3 : 0}
         style={{gridColumn: mediaIndex < 3 ? 3 : 3, gridRow: mediaIndex < 3 ? '2/4' : 'auto'}}
       >
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={1} style={{lineHeight: '1.2em'}} textOverflow="ellipsis" weight="semibold">
             {name}
           </Text>

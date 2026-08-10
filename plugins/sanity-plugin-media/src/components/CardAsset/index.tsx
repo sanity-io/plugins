@@ -1,18 +1,8 @@
 import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 import {EditIcon} from '@sanity/icons/Edit'
 import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
-import {
-  Box,
-  Checkbox,
-  Container,
-  Flex,
-  Spinner,
-  Text,
-  type Theme,
-  type ThemeColorSchemeKey,
-  Tooltip,
-  useToast,
-} from '@sanity/ui'
+import {Box, Checkbox, Container, Flex, Spinner, Text, Tooltip, useToast} from '@sanity/ui'
+import {getTheme_v2, type Theme, type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
@@ -59,7 +49,9 @@ const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?:
     width: 100%;
 
     border: ${
-      $picked ? `1px solid ${theme.sanity.color.spot.orange} !important` : '1px solid inherit'
+      $picked
+        ? `1px solid ${getTheme_v2(theme).color.avatar.orange.bg} !important`
+        : '1px solid inherit'
     };
 
     ${
@@ -92,7 +84,7 @@ const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey
 
 const StyledWarningOutlineIcon = styled(WarningFilledIcon)(({theme}) => {
   return {
-    color: theme.sanity.color.spot.red,
+    color: getTheme_v2(theme).color.avatar.red.bg,
   }
 })
 

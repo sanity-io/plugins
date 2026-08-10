@@ -42,7 +42,6 @@ export default defineConfig({
     {
       files: ['plugins/@sanity/embeddings-index-ui/src/**/*.{ts,tsx}'],
       rules: {
-        'no-deprecated': 'off',
         'no-unsafe-type-assertion': 'off',
         'restrict-template-expressions': 'off',
         'promise/always-return': 'off',
@@ -51,7 +50,6 @@ export default defineConfig({
     {
       files: ['plugins/sanity-plugin-mux-input/src/**/*.{ts,tsx}'],
       rules: {
-        'no-deprecated': 'off',
         'no-unsafe-type-assertion': 'off',
         'restrict-template-expressions': 'off',
         'promise/always-return': 'off',
@@ -71,7 +69,6 @@ export default defineConfig({
     {
       files: ['plugins/sanity-plugin-media/src/**/*.{ts,tsx}'],
       rules: {
-        'no-deprecated': 'off',
         'no-unsafe-type-assertion': 'off',
         // zodFormResolver bridges a type-only zod v3/v4 mismatch whose inferred types depend on
         // dependency hoisting, so this assertion is only "unnecessary" for some install graphs
