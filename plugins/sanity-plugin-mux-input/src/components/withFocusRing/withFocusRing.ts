@@ -1,17 +1,13 @@
-import {rem, type Theme} from '@sanity/ui'
+import {rem} from '@sanity/ui'
 import type {ComponentType} from 'react'
 import {css, styled} from 'styled-components'
 
 import {focusRingBorderStyle, focusRingStyle} from './helpers'
 
-type FocusRingProps = {
-  $border?: boolean
-  theme: Theme
-}
-
-export function withFocusRing<Props>(component: ComponentType<Props>) {
-  return styled(component as ComponentType<Record<string, unknown>>)<FocusRingProps>((props) => {
-    const {$border, theme} = props
+export function withFocusRing<Props extends object>(component: ComponentType<Props>) {
+  // `$border` is the only consumer-facing addition; `theme` comes from styled-components
+  // (injected via DefaultTheme / ExecutionContext) and must not appear on public props.
+  return styled(component)<{$border?: boolean}>(({$border, theme}) => {
     const border = {
       width: $border ? 1 : 0,
       color: 'var(--card-border-color)',
