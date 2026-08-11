@@ -174,6 +174,9 @@ overrides:
   '@sanity/vision': next
   groq: next
   sanity: next
+  # Keep a single tsx (and thus a single vite types instance) so sanity.cli vite
+  # config callbacks type-check cleanly after the catalog tsx bump.
+  tsx: 'catalog:'
 
 peerDependencyRules:
   allowedVersions:

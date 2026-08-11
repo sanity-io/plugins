@@ -233,7 +233,6 @@ export function useCustomFieldActions(
         return createSafeNode({
           node,
           pushToast,
-          // oxlint-disable-next-line react/react-compiler
           addSyntheticTask,
           removeSyntheticTask,
         })
@@ -254,8 +253,7 @@ export function useCustomFieldActions(
           ]
       : []
     return groups ?? []
-    // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
-  }, [configActions, fieldActions, pushToast])
+  }, [addSyntheticTask, configActions, fieldActions, pushToast, removeSyntheticTask])
 }
 
 function createSafeNode(args: {
