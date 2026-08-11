@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "catalog:",
-    "knip": "^6.29.0",
+    "knip": "^6.32.1",
     "vercel": "^56.5.0"
   },
   "lint-staged": {
