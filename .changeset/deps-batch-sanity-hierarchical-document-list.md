@@ -2,4 +2,4 @@
 "@sanity/hierarchical-document-list": patch
 ---
 
-Update @nosferatu500/react-sortable-tree to ^5.1.0 and @sanity/ui to ^4.0.1
+Update @nosferatu500/react-sortable-tree to ^5.1.0, @sanity/util to ^6.9.1, and @sanity/ui to ^4.0.1

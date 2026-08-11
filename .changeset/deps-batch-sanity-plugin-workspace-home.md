@@ -1,5 +1,0 @@
----
-"sanity-plugin-workspace-home": patch
----
-
-Update @sanity/ui to ^4.0.1
