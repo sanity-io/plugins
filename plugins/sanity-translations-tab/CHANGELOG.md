@@ -1,5 +1,14 @@
 # sanity-translations-tab
 
+## 6.1.19
+
+### Patch Changes
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update @portabletext/block-tools to ^5.1.14, @portabletext/to-html to ^5.0.3, @sanity/util to ^6.9.1, and @sanity/ui to ^4.0.1
+
+- Updated dependencies [[`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e)]:
+  - sanity-naive-html-serializer@5.1.13
+
 ## 6.1.18
 
 ### Patch Changes
