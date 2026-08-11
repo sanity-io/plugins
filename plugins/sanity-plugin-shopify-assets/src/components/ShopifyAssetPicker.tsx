@@ -29,6 +29,7 @@ const RESULTS_PER_PAGE = 42
 const PHOTO_SPACING = 2
 const PHOTO_PADDING = 1
 const SEARCH_DEBOUNCE_MS = 500
+const MISSING_DOMAIN_ERROR = 'Please configure your Shopify domain in the plugin config'
 
 const StyledDialog = styled(Dialog)`
   & > [data-ui='DialogCard'] > [data-ui='Card'] {
@@ -48,6 +49,14 @@ function mapShopifyFileToPhoto(file: ShopifyFile) {
 }
 
 type ShopifyPhoto = ReturnType<typeof mapShopifyFileToPhoto>
+
+/**
+ * A failed request resolves to a `failed` result instead of setting shared error
+ * state, so a rejection from a superseded query cannot overwrite newer results.
+ */
+type GalleryData =
+  | {status: 'loaded'; response: ShopifyAPIResponse}
+  | {status: 'failed'; message: string}
 
 function createFetcher(params: {projectId: string; dataset: string; shop: string; token?: string}) {
   return async function fetcher(query: string, cursor: string): Promise<ShopifyAPIResponse> {
@@ -74,6 +83,21 @@ function getErrorMessage(err: unknown): string {
   return 'An error occurred - check plugin configuration'
 }
 
+function ErrorCard({message}: {message: string}) {
+  return (
+    <Card overflow="hidden" padding={4} radius={2} shadow={1} tone="critical">
+      <Flex align="center" gap={3}>
+        <Text size={2}>
+          <ErrorOutlineIcon />
+        </Text>
+        <Inline gap={2}>
+          <Text size={1}>{message}</Text>
+        </Inline>
+      </Flex>
+    </Card>
+  )
+}
+
 export interface AssetPickerProps extends ObjectInputProps<Asset> {
   shopifyDomain: string
   isOpen: boolean
@@ -89,16 +113,10 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
 
   const [query, setQuery] = useState('')
   const [debouncedQuery, setDebouncedQuery] = useState('')
-  const [apiError, setApiError] = useState('')
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-
-  const error = shopifyDomain
-    ? apiError
-    : 'Please configure your Shopify domain in the plugin config'
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
-      setApiError('')
       setDebouncedQuery(query)
     }, SEARCH_DEBOUNCE_MS)
 
@@ -116,17 +134,16 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
     [projectId, dataset, shopifyDomain, token],
   )
 
-  const initialDataPromise = useMemo(
-    () =>
-      fetcher(debouncedQuery, '').catch((err: unknown) => {
-        setApiError(getErrorMessage(err))
-        return {
-          assets: [],
-          pageInfo: {cursor: '', hasNextPage: false},
-        } satisfies ShopifyAPIResponse
-      }),
-    [debouncedQuery, fetcher],
-  )
+  const initialDataPromise = useMemo<Promise<GalleryData>>(() => {
+    if (!shopifyDomain) {
+      return Promise.resolve({status: 'failed', message: MISSING_DOMAIN_ERROR})
+    }
+
+    return fetcher(debouncedQuery, '').then(
+      (response) => ({status: 'loaded', response}),
+      (err: unknown) => ({status: 'failed', message: getErrorMessage(err)}),
+    )
+  }, [debouncedQuery, fetcher, shopifyDomain])
 
   const handleSearchTermChanged = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.currentTarget.value)
@@ -159,18 +176,7 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
         height="stretch"
         style={{overflow: 'hidden scroll', overflowX: 'clip', overflowY: 'scroll'}}
       >
-        {error ? (
-          <Card overflow="hidden" padding={4} radius={2} shadow={1} tone="critical">
-            <Flex align="center" gap={3}>
-              <Text size={2}>
-                <ErrorOutlineIcon />
-              </Text>
-              <Inline gap={2}>
-                <Text size={1}>{error}</Text>
-              </Inline>
-            </Flex>
-          </Card>
-        ) : (
+        {shopifyDomain ? (
           <>
             <Box style={{position: 'sticky', top: 0, zIndex: 1}}>
               <Card>
@@ -194,11 +200,12 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
                 fetcher={fetcher}
                 scrollContainerRef={scrollContainerRef}
                 onSelect={handleSelect}
-                onError={setApiError}
                 initialDataPromise={initialDataPromise}
               />
             </Suspense>
           </>
+        ) : (
+          <ErrorCard message={MISSING_DOMAIN_ERROR} />
         )}
       </Stack>
     </StyledDialog>
@@ -210,24 +217,27 @@ function ShopifyAssetGallery({
   fetcher,
   scrollContainerRef,
   onSelect,
-  onError,
   initialDataPromise,
 }: {
   query: string
   fetcher: (query: string, cursor: string) => Promise<ShopifyAPIResponse>
   scrollContainerRef: React.RefObject<HTMLDivElement | null>
   onSelect: (file: ShopifyFile) => void
-  onError: (message: string) => void
-  initialDataPromise: Promise<ShopifyAPIResponse>
+  initialDataPromise: Promise<GalleryData>
 }) {
   const data = use(initialDataPromise)
   // Remounted per query via `key`, so the initial pageInfo is the pagination baseline.
-  const paginationRef = useRef({
-    cursor: data.pageInfo.cursor,
-    hasNextPage: data.pageInfo.hasNextPage,
-  })
+  const paginationRef = useRef(
+    data.status === 'loaded'
+      ? {cursor: data.response.pageInfo.cursor, hasNextPage: data.response.pageInfo.hasNextPage}
+      : {cursor: '', hasNextPage: false},
+  )
 
-  const initialPhotos = data.assets.map(mapShopifyFileToPhoto)
+  if (data.status === 'failed') {
+    return <ErrorCard message={data.message} />
+  }
+
+  const initialPhotos = data.response.assets.map(mapShopifyFileToPhoto)
 
   return (
     <>
@@ -247,24 +257,20 @@ function ShopifyAssetGallery({
               return null
             }
 
-            try {
-              const results = await fetcher(query, paginationRef.current.cursor)
-              paginationRef.current = {
-                cursor: results.pageInfo.cursor,
-                hasNextPage: results.pageInfo.hasNextPage,
-              }
+            const results = await fetcher(query, paginationRef.current.cursor)
+            paginationRef.current = {
+              cursor: results.pageInfo.cursor,
+              hasNextPage: results.pageInfo.hasNextPage,
+            }
 
-              if (results.assets.length === 0) {
-                return null
-              }
-
-              return results.assets.map(mapShopifyFileToPhoto)
-            } catch (err) {
-              onError(getErrorMessage(err))
+            if (results.assets.length === 0) {
               return null
             }
+
+            return results.assets.map(mapShopifyFileToPhoto)
           }}
           loading={<Loader />}
+          error={<ErrorCard message="Could not load more assets - check plugin configuration" />}
           finished={
             <Flex align="center" justify="center" padding={3}>
               <Text size={1} muted>
