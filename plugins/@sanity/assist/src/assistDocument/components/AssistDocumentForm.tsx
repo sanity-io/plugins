@@ -271,13 +271,11 @@ function FieldsInitializer({
     if (missingPresetInstructions?.length) {
       event = event.append(
         insert(
-          missingPresetInstructions.map(
-            (preset): StudioInstruction => ({
-              ...preset,
-              _type: 'sanity.assist.instruction',
-              prompt: preset.prompt?.map((p) => ({markDefs: [], ...p})),
-            }),
-          ),
+          missingPresetInstructions.map((preset): StudioInstruction => ({
+            ...preset,
+            _type: 'sanity.assist.instruction',
+            prompt: preset.prompt?.map((p) => ({markDefs: [], ...p})),
+          })),
           'after',
           ['fields', {_key: pathKey}, 'instructions', -1],
         ),
