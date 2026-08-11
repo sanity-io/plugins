@@ -2,4 +2,4 @@
 "sanity-plugin-aprimo": patch
 ---
 
-Update styled-components to ^6.5.1
+Update @sanity/ui to ^4.0.1

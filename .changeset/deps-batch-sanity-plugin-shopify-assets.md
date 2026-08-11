@@ -2,4 +2,4 @@
 "sanity-plugin-shopify-assets": patch
 ---
 
-Update styled-components to ^6.5.1
+Update axios to ^1.19.0 and @sanity/ui to ^4.0.1

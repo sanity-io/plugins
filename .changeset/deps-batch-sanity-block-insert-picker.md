@@ -2,4 +2,4 @@
 "@sanity/block-insert-picker": patch
 ---
 
-Update @portabletext/plugin-input-rule to ^6.0.15 and styled-components to ^6.5.1
+Update @portabletext/plugin-input-rule to ^6.0.15 and @sanity/ui to ^4.0.1

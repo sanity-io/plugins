@@ -2,4 +2,4 @@
 "@sanity/code-input": patch
 ---
 
-Update CodeMirror packages and styled-components to ^6.5.1
+Update CodeMirror packages and @sanity/ui to ^4.0.1
