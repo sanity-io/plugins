@@ -1,5 +1,6 @@
 import {UploadIcon} from '@sanity/icons/Upload'
-import {Box, Button, useToast} from '@sanity/ui'
+import {Box, Button} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useMachine} from '@xstate/react'
 import {useEffect} from 'react'
 

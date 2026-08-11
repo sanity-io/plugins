@@ -1,5 +1,31 @@
 # @sanity/sanity-plugin-async-list
 
+## 3.0.1
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
+- Updated dependencies [[`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8)]:
+  - @sanity/studio-secrets@4.0.16
+
+## 3.0.0
+
+### Major Changes
+
+- [#1087](https://github.com/sanity-io/plugins/pull/1087) [`f4e7fcc`](https://github.com/sanity-io/plugins/commit/f4e7fcceec4adb5f049aaffce0e1d6d1585828e5) Thanks [@stipsan](https://github.com/stipsan)! - Refactor the input into a real React component and fix the `async-list-undefined` namespace/id
+
+  - **Breaking:** `AsyncList` is now a regular React component that takes a single `props` argument (the standard Sanity input props plus an `options` field), instead of being called as `AsyncList(props, options)`. For the `components.input` slot, use the new `createAsyncListInput(options)` factory: `input: createAsyncListInput({loader})`. This makes the input safe under the Rules of Hooks and lets the React Compiler optimize it.
+  - **Breaking:** the secrets namespace and DOM `id` are no longer derived as `async-list-${schemaType}` (which became the literal `async-list-undefined` for component usage). The DOM `id` now uses Sanity's stable per-field id, and the secrets namespace falls back to `async-list` (instead of `async-list-undefined`) when no `schemaType`/`secrets.namespace` is available. When using the component with `secrets`, set an explicit `secrets.namespace`; a dev warning is logged if it is missing.
+  - Fix: the debounced search handler is stable and is cancelled on unmount, so it no longer drops queued calls or updates state on an unmounted tree.
+  - Fix: the value-change handler no longer depends on the whole `props` object, avoiding unnecessary `Autocomplete` re-renders.
+  - Fix: loader results are validated to ensure each option's `value` is a string.
+
+### Patch Changes
+
+- Updated dependencies [[`c61bb44`](https://github.com/sanity-io/plugins/commit/c61bb4444b326668e03a4d83a9853bec7a638d15)]:
+  - @sanity/studio-secrets@4.0.15
+
 ## 2.0.12
 
 ### Patch Changes

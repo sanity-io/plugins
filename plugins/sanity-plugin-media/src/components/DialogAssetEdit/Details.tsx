@@ -64,6 +64,11 @@ export default function Details({
   creditLine,
   locales,
 }: DetailsProps) {
+  'use no memo'
+  // React Compiler memoizes the register() field JSX using asset-derived deps only.
+  // That can leave Save stuck disabled while the DOM still updates (uncontrolled inputs).
+  // Tags work because they use Controller; string fields use register and need this opt-out.
+
   const hasLocales = locales && locales.length > 0
   const [activeLocaleTab, setActiveLocaleTab] = useState(0)
   const folderId = currentAsset?.opt?.media?.folder?._ref
@@ -71,7 +76,7 @@ export default function Details({
     truncateFolderPath(folderPath) || (folderMissing ? 'Folder no longer exists' : 'No folder')
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {/* Tags */}
       <FormFieldInputTags
         control={control}
@@ -137,8 +142,8 @@ export default function Details({
       {/* Localized fields grouped by language */}
       {hasLocales ? (
         <Card marginTop={2} shadow={1} padding={3} radius={1}>
-          <Stack space={2}>
-            <TabList space={2}>
+          <Stack gap={2}>
+            <TabList gap={2}>
               {locales.map((locale, idx) => (
                 <Tab
                   key={locale.id}
@@ -157,7 +162,7 @@ export default function Details({
                 aria-labelledby={`locale-tab-${locale.id}`}
                 hidden={activeLocaleTab !== idx}
               >
-                <Stack space={3}>
+                <Stack gap={3}>
                   <FormFieldInputText
                     {...register(`title.${locale.id}` as const)}
                     disabled={formUpdating}

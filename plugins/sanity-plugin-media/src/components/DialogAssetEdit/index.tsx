@@ -2,7 +2,7 @@ import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Stack, Tab, TabList, TabPanel, Text} from '@sanity/ui'
 import groq from 'groq'
 import {type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {type SubmitHandler, useForm} from 'react-hook-form'
+import {type SubmitHandler, useForm, useFormState} from 'react-hook-form'
 import {useDispatch} from 'react-redux'
 import {WithReferringDocuments, useColorSchemeValue, useDocumentStore} from 'sanity'
 
@@ -136,20 +136,15 @@ const DialogAssetEdit = (props: Props) => {
     [assetTagOptions, locales],
   )
 
-  const {
-    control,
-    // Read the formState before render to subscribe the form state through Proxy
-    formState: {errors, isDirty, isValid},
-    getValues,
-    handleSubmit,
-    register,
-    reset,
-    setValue,
-  } = useForm<AssetFormData>({
+  const {control, getValues, handleSubmit, register, reset, setValue} = useForm<AssetFormData>({
     defaultValues: generateDefaultValues(assetItem?.asset),
     mode: 'onChange',
     resolver: zodFormResolver<AssetFormData>(getAssetFormSchema(locales)),
   })
+
+  // Subscribe via useFormState so React Compiler cannot skip formState Proxy reads
+  // that gate the Save button (isDirty / isValid).
+  const {errors, isDirty, isValid} = useFormState({control})
 
   const formUpdating = !assetItem || assetItem?.updating
 
@@ -344,9 +339,9 @@ const DialogAssetEdit = (props: Props) => {
     assetUpdatedPrev.current = assetItem?.asset._updatedAt
   }, [assetItem?.asset, generateDefaultValues, reset])
 
-  const Footer = () => (
+  const footer = (
     <Box padding={3}>
-      <Stack space={3}>
+      <Stack gap={3}>
         {hasOrphanedLocales && (
           <Card padding={3} radius={2} shadow={1} tone="caution">
             <Flex align="center" justify="space-between" gap={3}>
@@ -410,15 +405,7 @@ const DialogAssetEdit = (props: Props) => {
   }
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/react-compiler
-      footer={<Footer />}
-      header="Asset details"
-      id={id}
-      onClose={handleClose}
-      width={3}
-    >
+    <Dialog animate footer={footer} header="Asset details" id={id} onClose={handleClose} width={3}>
       {/*
         We reverse direction to ensure the download button doesn't appear (in the DOM) before other tabbable items.
         This ensures that the dialog doesn't scroll down to the download button (which on smaller screens, can sometimes
@@ -432,7 +419,7 @@ const DialogAssetEdit = (props: Props) => {
               return (
                 <>
                   {/* Tabs */}
-                  <TabList space={2}>
+                  <TabList gap={2}>
                     <Tab
                       aria-controls="details-panel"
                       disabled={formUpdating}

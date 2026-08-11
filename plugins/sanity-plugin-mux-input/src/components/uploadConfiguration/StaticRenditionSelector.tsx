@@ -73,13 +73,13 @@ export const StaticRenditionSelector = ({
     }
   }
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       <FormField
         path={[]}
         title="Static Renditions"
         description="Generate downloadable MP4 or M4A files. Note: Mux will not upscale to produce MP4 renditions - renditions that would cause upscaling are skipped."
       >
-        <Stack space={3}>
+        <Stack gap={3}>
           {/* Mode Selector */}
           <Flex gap={3}>
             <Flex align="center" gap={2}>
@@ -110,7 +110,7 @@ export const StaticRenditionSelector = ({
 
           {/* Standard Mode Options */}
           {renditionMode === 'standard' && (
-            <Stack space={2}>
+            <Stack gap={2}>
               <Flex align="center" gap={2} padding={[0, 2]}>
                 <Checkbox
                   id={`${id}--highest`}
@@ -138,7 +138,7 @@ export const StaticRenditionSelector = ({
 
           {/* Advanced Mode Options */}
           {renditionMode === 'advanced' && (
-            <Stack space={2}>
+            <Stack gap={2}>
               <Label size={1} muted>
                 Select specific resolutions:
               </Label>

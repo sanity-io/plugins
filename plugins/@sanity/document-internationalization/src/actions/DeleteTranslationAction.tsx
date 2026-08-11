@@ -1,5 +1,5 @@
 import {TrashIcon} from '@sanity/icons/Trash'
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useState} from 'react'
 import {useClient, type DocumentActionDescription, type DocumentActionProps} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'

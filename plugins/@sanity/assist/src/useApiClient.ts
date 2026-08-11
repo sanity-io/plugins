@@ -1,5 +1,5 @@
 import type {SanityClient} from '@sanity/client'
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useMemo, useState} from 'react'
 import {type Path, pathToString, useClient, useCurrentUser} from 'sanity'
 

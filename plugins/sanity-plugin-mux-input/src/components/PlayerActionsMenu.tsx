@@ -8,20 +8,10 @@ import {SearchIcon} from '@sanity/icons/Search'
 import {SyncIcon} from '@sanity/icons/Sync'
 import {TranslateIcon} from '@sanity/icons/Translate'
 import {UploadIcon} from '@sanity/icons/Upload'
-import {
-  Box,
-  Button,
-  Card,
-  Inline,
-  Label,
-  Menu,
-  MenuDivider,
-  MenuItem,
-  Popover,
-  Text,
-  Tooltip,
-  useClickOutsideEvent,
-} from '@sanity/ui'
+import {Box, Button, Card, Inline, Label, Text, useClickOutsideEvent} from '@sanity/ui'
+import {Menu, MenuDivider, MenuItem} from '@sanity/ui/menu'
+import {Popover} from '@sanity/ui/popover'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {PatchEvent, unset} from 'sanity'
 import {styled} from 'styled-components'
@@ -89,7 +79,7 @@ function PlayerActionsMenu(
   )
 
   return (
-    <Inline space={1} padding={2}>
+    <Inline gap={1} padding={2}>
       {isSigned && (
         <Tooltip
           animate

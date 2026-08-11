@@ -18,3 +18,13 @@ if (typeof window !== 'undefined') {
     })),
   })
 }
+
+// jsdom has no ResizeObserver, and @sanity/ui v4 uses the global API directly
+// instead of shipping the @juggle/resize-observer polyfill.
+if (typeof globalThis.ResizeObserver === 'undefined') {
+  globalThis.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+}

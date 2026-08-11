@@ -1,5 +1,35 @@
 # @sanity/personalization-plugin
 
+## 3.1.1
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
+- Updated dependencies [[`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8)]:
+  - @sanity/studio-secrets@4.0.16
+
+## 3.1.0
+
+### Minor Changes
+
+- [#1226](https://github.com/sanity-io/plugins/pull/1226) [`1143bd6`](https://github.com/sanity-io/plugins/commit/1143bd625940f8258fae87571a0dfb93135604fe) Thanks [@jjburbridge](https://github.com/jjburbridge)! - Add `fieldLevelPersonalization` export for segment-based field personalization. Segments can be defined statically, fetched from an external API, or stored in your Sanity dataset. `FieldPluginConfig` is renamed to `ExperimentFieldPluginConfig` (a deprecated type alias is kept for compatibility).
+
+### Patch Changes
+
+- [#1208](https://github.com/sanity-io/plugins/pull/1208) [`51317b2`](https://github.com/sanity-io/plugins/commit/51317b21329513a406c755a07c6fbc1b3bc37df0) Thanks [@stipsan](https://github.com/stipsan)! - Address review feedback from the migration into the monorepo:
+
+  - Fix LaunchDarkly experiment pagination so `offset` advances between pages, preventing duplicate results and a possible infinite loop
+  - Correct misspelled plugin names (`personalistaion` → `personalization`) and stop the LaunchDarkly entry point from identifying itself as the GrowthBook plugin
+  - Fix an operator-precedence bug in the experiment field preview that could set the title to the entire field object
+  - Walk reference preview paths with optional chaining to avoid throwing on missing intermediate fields
+  - Move the experiment item activation patch out of render and into an effect
+  - Remove unused `Select` props
+  - Fix the GrowthBook (`project` config key) and LaunchDarkly (`fieldLevelExperiments` usage) docs and drop the stale standalone-repo Studio version / tooling references
+
+- Updated dependencies [[`c61bb44`](https://github.com/sanity-io/plugins/commit/c61bb4444b326668e03a4d83a9853bec7a638d15)]:
+  - @sanity/studio-secrets@4.0.15
+
 ## 3.0.11
 
 ### Patch Changes

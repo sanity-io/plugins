@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {type DecorationMember, definePlugin, type ObjectMember} from 'sanity'
 
 import {SfccOfflineBanner} from './components/SfccOfflineBanner'

@@ -1,4 +1,5 @@
-import {Box, Text, useToast} from '@sanity/ui'
+import {Box, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useMachine} from '@xstate/react'
 import {useEffect, useRef} from 'react'
 import useDeepCompareEffect from 'use-deep-compare-effect'

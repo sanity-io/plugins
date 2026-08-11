@@ -51,9 +51,8 @@ describe('runTriage', () => {
   })
 
   test('ignores bot-authored issues without calling Miriad', async () => {
-    const fetchIssue = vi.fn(
-      async (_opts: FetchIssueOptions): Promise<GitHubIssue> =>
-        issue({user: {login: 'dependabot[bot]', type: 'Bot'}}),
+    const fetchIssue = vi.fn(async (_opts: FetchIssueOptions): Promise<GitHubIssue> =>
+      issue({user: {login: 'dependabot[bot]', type: 'Bot'}}),
     )
     const createMiriadClient = vi.fn((): TriageMiriadClient => createTriageClient(channel()))
 
@@ -64,9 +63,8 @@ describe('runTriage', () => {
   })
 
   test('ignores dependency labels without calling Miriad', async () => {
-    const fetchIssue = vi.fn(
-      async (_opts: FetchIssueOptions): Promise<GitHubIssue> =>
-        issue({labels: [{name: 'dependencies'}]}),
+    const fetchIssue = vi.fn(async (_opts: FetchIssueOptions): Promise<GitHubIssue> =>
+      issue({labels: [{name: 'dependencies'}]}),
     )
     const createMiriadClient = vi.fn((): TriageMiriadClient => createTriageClient(channel()))
 
@@ -77,9 +75,8 @@ describe('runTriage', () => {
   })
 
   test('ignores dependency dashboards without calling Miriad', async () => {
-    const fetchIssue = vi.fn(
-      async (_opts: FetchIssueOptions): Promise<GitHubIssue> =>
-        issue({title: 'Dependency Dashboard'}),
+    const fetchIssue = vi.fn(async (_opts: FetchIssueOptions): Promise<GitHubIssue> =>
+      issue({title: 'Dependency Dashboard'}),
     )
     const createMiriadClient = vi.fn((): TriageMiriadClient => createTriageClient(channel()))
 

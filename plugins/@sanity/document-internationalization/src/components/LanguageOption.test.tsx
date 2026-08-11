@@ -38,8 +38,8 @@ vi.mock('sanity', async (importOriginal) => {
   }
 })
 
-vi.mock('@sanity/ui', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@sanity/ui')>()
+vi.mock('@sanity/ui/toast', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@sanity/ui/toast')>()
   return {
     ...actual,
     useToast: () => ({push: mockToastPush}),

@@ -1,4 +1,5 @@
-import {LayerProvider, studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {LayerProvider, studioTheme, ThemeProvider} from '@sanity/ui'
+import {ToastProvider} from '@sanity/ui/toast'
 import {cleanup, render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {of, Subject} from 'rxjs'

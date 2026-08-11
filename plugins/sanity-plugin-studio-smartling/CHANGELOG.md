@@ -1,5 +1,24 @@
 # sanity-plugin-studio-smartling
 
+## 5.0.15
+
+### Patch Changes
+
+- Updated dependencies [[`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8)]:
+  - sanity-translations-tab@6.1.18
+
+## 5.0.14
+
+### Patch Changes
+
+- [#1216](https://github.com/sanity-io/plugins/pull/1216) [`d4dd45b`](https://github.com/sanity-io/plugins/commit/d4dd45b22f1ff58ef55fd587b881cbfc682092f5) Thanks [@stipsan](https://github.com/stipsan)! - Harden the Smartling adapter and fix docs:
+
+  - Send the secret credentials JSON verbatim during authentication instead of double-encoding it, which could break auth with proxies that forward the request body as-is
+  - Throw a clear error (surfacing Smartling's message) when authentication does not return an access token, instead of a cryptic `TypeError`
+  - Avoid throwing when no existing job is found or when a translation/progress response is missing its expected payload
+  - Guard the progress calculation against a zero total word count so empty documents no longer report `NaN`/`Infinity`
+  - Fix the `additionalDeserializers` option name in the advanced configuration docs (was `additonalDeserializers`) and update the README development/release instructions for the monorepo
+
 ## 5.0.13
 
 ### Patch Changes

@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {SettingsView, type SettingsKey, type SettingsViewProps} from './Settings'
 import {type Secrets, useSecrets} from './useSecrets'
 

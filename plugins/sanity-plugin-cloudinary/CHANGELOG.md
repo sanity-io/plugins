@@ -1,5 +1,40 @@
 # sanity-plugin-cloudinary
 
+## 2.1.1
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
+- Updated dependencies [[`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8)]:
+  - @sanity/studio-secrets@4.0.16
+
+## 2.1.0
+
+### Minor Changes
+
+- [#1233](https://github.com/sanity-io/plugins/pull/1233) [`36f3fe2`](https://github.com/sanity-io/plugins/commit/36f3fe2058bb4a1b28bc653b3218d08ed5f96863) Thanks [@ChrisLaRocque](https://github.com/ChrisLaRocque)! - Add performant preview images
+
+  Asset previews and diffs now build an optimized, scaled-down preview URL with `@cloudinary/url-gen` (a 400px-wide transformation) when a cloud name is configured, instead of loading the full-size original. This keeps the Studio fast when previewing large Cloudinary assets, and falls back to the stored asset URL when no cloud name is available.
+
+- [#1227](https://github.com/sanity-io/plugins/pull/1227) [`3b02635`](https://github.com/sanity-io/plugins/commit/3b02635d965b7e445ecb63a4a4debfcdde625b68) Thanks [@pgurley](https://github.com/pgurley), [@atlvis](https://github.com/atlvis)! - Add `cloudinaryReferencePlugin` for storing Cloudinary assets as reusable document references
+
+  - New `cloudinaryReferencePlugin` registers the schema types needed to reference Cloudinary assets as documents
+  - New `cloudinaryAssetDocument` type stores a Cloudinary asset as a standalone document
+  - New `cloudinaryAssetReference` type references those asset documents, with a custom input for selecting and managing assets through the Cloudinary Media Library
+  - `openMediaSelector` now supports a `showHandler` callback and a `folder` option, so the select button can show a loading state and scope the library to a folder
+  - Fixed the internal name of `cloudinaryAssetSourcePlugin` (`cloudinart-asset-source` → `cloudinary-asset-source`)
+
+### Patch Changes
+
+- [#1236](https://github.com/sanity-io/plugins/pull/1236) [`7ec89b6`](https://github.com/sanity-io/plugins/commit/7ec89b60f954155ef1b84d088a6fe1279f33cb7e) Thanks [@stipsan](https://github.com/stipsan)! - - Fix the `cloudinaryAssetSourcePlugin` name, which was mistakenly registered as `cloudinart-asset-source`
+  - Wait for the Cloudinary Media Library script to finish loading before opening it, avoiding runtime errors when several inputs mount at once
+  - Fix a user-facing typo in the asset source loading message ("Media Libary" → "Media Library")
+  - Remove an invalid `src`-less `<track>` element from the video preview
+  - Correct the README usage examples (`defineConfg` → `defineConfig`) and drop stale standalone-repo "Develop & test" / "Release new version" instructions
+- Updated dependencies [[`c61bb44`](https://github.com/sanity-io/plugins/commit/c61bb4444b326668e03a4d83a9853bec7a638d15)]:
+  - @sanity/studio-secrets@4.0.15
+
 ## 2.0.16
 
 ### Patch Changes

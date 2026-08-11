@@ -2,18 +2,8 @@ import {AddIcon} from '@sanity/icons/Add'
 import {EditIcon} from '@sanity/icons/Edit'
 import {FolderIcon} from '@sanity/icons/Folder'
 import {TrashIcon} from '@sanity/icons/Trash'
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Inline,
-  Label,
-  Text,
-  Tooltip,
-  Tree,
-  TreeItem,
-} from '@sanity/ui'
+import {Box, Button, Container, Flex, Inline, Label, Text, Tree, TreeItem} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {type ReactNode, useMemo} from 'react'
 import {useDispatch} from 'react-redux'
 
@@ -222,7 +212,7 @@ const FolderView = () => {
         }}
       >
         <Box flex={1}>
-          <Inline space={2}>
+          <Inline gap={2}>
             <Label size={0}>Folders</Label>
             {fetching && (
               <Label size={0} style={{opacity: 0.3}}>
@@ -232,7 +222,7 @@ const FolderView = () => {
           </Inline>
         </Box>
 
-        <Inline space={1}>
+        <Inline gap={1}>
           {currentFolderId && (
             <FolderHeaderAction
               icon={<EditIcon />}

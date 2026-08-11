@@ -1,6 +1,7 @@
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
-import {Box, Card, Code, Flex, Stack, Text} from '@sanity/ui'
+import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 import type {ReactNode} from 'react'
 
 const GET_API_KEY_URL = 'https://developers.google.com/maps/documentation/javascript/get-api-key'

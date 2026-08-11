@@ -265,6 +265,13 @@ jobs:
 
       - name: Merge into HTML report + summary
         working-directory: e2e
+        env:
+          # Used by reporters/summary.ts to embed the exact local repro command
+          # in the agent-friendly failure report (agent-report.md).
+          SANITY_E2E_PROJECT_ID: ${{ vars.SANITY_E2E_PROJECT_ID }}
+          SANITY_E2E_BASE_URL: ${{ needs.deploy-preview.outputs.preview_url }}
+          SANITY_E2E_DATASET_CHROMIUM: ${{ env.CHROMIUM_DATASET }}
+          SANITY_E2E_DATASET_FIREFOX: ${{ env.FIREFOX_DATASET }}
         run: |
           BLOB_DIR=../all-blob-reports
           if [ -d ../all-blob-reports/blob-report ]; then
@@ -273,7 +280,7 @@ jobs:
           if [ ! -d "$BLOB_DIR" ] || [ -z "$(ls -A "$BLOB_DIR" 2>/dev/null)" ]; then
             echo "No blob reports found to merge"
             mkdir -p playwright-report
-            echo '{"passed":0,"failed":0,"flaky":0,"skipped":0,"failedFiles":[],"failedFilesFormatted":""}' > test-summary.json
+            echo '{"passed":0,"failed":0,"flaky":0,"skipped":0,"hasFailures":false,"failedFiles":[],"failedFilesFormatted":""}' > test-summary.json
             exit 0
           fi
           pnpm exec playwright merge-reports --reporter html,./reporters/summary.ts "$BLOB_DIR"
@@ -302,6 +309,14 @@ jobs:
               process.stdout.write('ENDOFFILES\n');
             }
           " >> "$GITHUB_OUTPUT"
+
+      - name: Append failure digest to job summary
+        if: ${{ !cancelled() && steps.summary.outputs.failed != '0' && steps.summary.outputs.failed != '' }}
+        run: |
+          if [ -f e2e/playwright-report/agent-report.md ]; then
+            # GITHUB_STEP_SUMMARY is limited to 1MB; keep a safety margin.
+            head -c 900000 e2e/playwright-report/agent-report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload merged Playwright report
         if: ${{ !cancelled() }}
@@ -381,6 +396,16 @@ jobs:
               if (s.skipped) parts.push('⚪ ' + s.skipped + ' skipped');
               console.log('text=' + (parts.join(' • ') || '⚪ no tests'));
             }
+            if (u && s.failed) {
+              const block = [
+                '🤖 **Share with an AI agent:**',
+                '',
+                '> Fix the failing e2e tests. The failure report with error messages and page snapshots is at ' + u + '/agent-report.md',
+              ].join('\n');
+              process.stdout.write('agent_block<<ENDOFAGENTBLOCK\n' + block + '\nENDOFAGENTBLOCK\n');
+            } else {
+              console.log('agent_block=');
+            }
           " >> "$GITHUB_OUTPUT"
 
       - name: Update PR Comment (tests passed)
@@ -406,6 +431,8 @@ jobs:
             ### ❌ E2E Tests
 
             ${{ steps.linked-summary.outputs.text }} • [view run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            ${{ steps.linked-summary.outputs.agent_block }}
 
             **Studio:** ${{ needs.deploy-preview.outputs.preview_url }}
 

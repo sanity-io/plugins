@@ -15,18 +15,19 @@ const appId = process.env.SANITY_STUDIO_APP_ID || 'bi1ktslqwmu1cawds5ce3jn6'
 // the DevTools dock in a running `sanity dev` server without restarting it.
 // Usage: `pnpm devtools:test-studio` from the repo root (see AGENTS.md).
 const isViteDevToolsEnabled = process.env.ENABLE_VITE_DEVTOOLS === 'true'
-// Enable React production profiling on Vercel preview deployments (PR builds), but not on
-// production (plugins-studio.sanity.dev) where the react-dom/profiling overhead is unwanted.
-const isVercelPreview = process.env.VERCEL_ENV === 'preview'
+// Enable React production profiling on Vercel preview and production deployments
+// (`VERCEL_ENV=development` is left alone).
+const reactProductionProfiling =
+  process.env.VERCEL_ENV === 'preview' || process.env.VERCEL_ENV === 'production'
 
 export default defineCliConfig({
   api: {projectId, dataset},
   deployment: {
     appId,
     // Auto-updates vendor builds hardcode `react-dom-client.production.js`, which bypasses
-    // the `react-dom/client` → `react-dom/profiling` alias below. Disable on Vercel previews
-    // so profiling can take effect; keep enabled for production / sanity deploy.
-    autoUpdates: !isVercelPreview,
+    // the `react-dom/client` → `react-dom/profiling` alias below. Disable when profiling so
+    // the alias can take effect; keep enabled for non-Vercel sanity deploys.
+    autoUpdates: !reactProductionProfiling,
   },
   reactCompiler: {},
   typegen: {formatGeneratedCode: false},
@@ -43,14 +44,14 @@ export default defineCliConfig({
       build: isViteDevToolsEnabled ? {rolldownOptions: {devtools: {}}} : {},
     } satisfies UserConfig)
 
-    // Support React Production Profiling on Vercel preview deployments
-    if (isVercelPreview && command === 'build') {
+    // Support React production profiling on Vercel preview/production builds
+    if (reactProductionProfiling && command === 'build') {
       nextConfig = mergeConfig(nextConfig, {
         // Aliasing to react-dom/profiling is necessary in the production build, otherwise React
         // can't run the profiler on the deployed studio
         resolve: {alias: {'react-dom/client': require.resolve('react-dom/profiling')}},
         build: {
-          // Enable production source maps to easier debug deployed preview studios
+          // Enable production source maps to more easily debug deployed Vercel studios
           sourcemap: true,
           rolldownOptions: {
             output: {
