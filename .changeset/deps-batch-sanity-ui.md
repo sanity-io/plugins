@@ -1,6 +1,5 @@
 ---
 "@sanity/color-input": patch
-"@sanity/cross-dataset-duplicator": patch
 "@sanity/dashboard": patch
 "@sanity/debug-live-sync-tags": patch
 "@sanity/embeddings-index-ui": patch
