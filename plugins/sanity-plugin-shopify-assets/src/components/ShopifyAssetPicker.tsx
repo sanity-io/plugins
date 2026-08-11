@@ -89,16 +89,11 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
 
   const [query, setQuery] = useState('')
   const [debouncedQuery, setDebouncedQuery] = useState('')
-  const [apiError, setApiError] = useState('')
+  const [apiError, setApiError] = useState<{token: object; message: string} | null>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-
-  const error = shopifyDomain
-    ? apiError
-    : 'Please configure your Shopify domain in the plugin config'
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
-      setApiError('')
       setDebouncedQuery(query)
     }, SEARCH_DEBOUNCE_MS)
 
@@ -116,17 +111,28 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
     [projectId, dataset, shopifyDomain, token],
   )
 
-  const initialDataPromise = useMemo(
-    () =>
-      fetcher(debouncedQuery, '').catch((err: unknown) => {
-        setApiError(getErrorMessage(err))
+  const request = useMemo(() => {
+    // Errors are tagged so failures from superseded requests are ignored.
+    const requestToken = {}
+    const onError = (message: string) => setApiError({token: requestToken, message})
+
+    return {
+      token: requestToken,
+      onError,
+      promise: fetcher(debouncedQuery, '').catch((err: unknown) => {
+        onError(getErrorMessage(err))
         return {
           assets: [],
           pageInfo: {cursor: '', hasNextPage: false},
         } satisfies ShopifyAPIResponse
       }),
-    [debouncedQuery, fetcher],
-  )
+    }
+  }, [debouncedQuery, fetcher])
+
+  const apiErrorMessage = apiError?.token === request.token ? apiError.message : ''
+  const error = shopifyDomain
+    ? apiErrorMessage
+    : 'Please configure your Shopify domain in the plugin config'
 
   const handleSearchTermChanged = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.currentTarget.value)
@@ -194,8 +200,8 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
                 fetcher={fetcher}
                 scrollContainerRef={scrollContainerRef}
                 onSelect={handleSelect}
-                onError={setApiError}
-                initialDataPromise={initialDataPromise}
+                onError={request.onError}
+                initialDataPromise={request.promise}
               />
             </Suspense>
           </>
