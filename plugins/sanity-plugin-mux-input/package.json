@@ -65,7 +65,7 @@
     "@sanity/client": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
-    "@types/lodash": "^4.17.24",
+    "@types/lodash": "^4.17.25",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-is": "catalog:",
