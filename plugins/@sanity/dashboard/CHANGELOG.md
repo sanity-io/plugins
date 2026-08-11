@@ -1,5 +1,11 @@
 # @sanity/dashboard
 
+## 6.0.16
+
+### Patch Changes
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update @sanity/ui to ^4.0.1
+
 ## 6.0.15
 
 ### Patch Changes

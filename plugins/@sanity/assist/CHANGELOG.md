@@ -1,5 +1,11 @@
 # @sanity/assist
 
+## 6.1.19
+
+### Patch Changes
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update @sanity/client to ^7.26.2, @sanity/mutator to ^6.9.1, @sanity/schema to ^6.9.1, and @sanity/ui to ^4.0.1
+
 ## 6.1.18
 
 ### Patch Changes
