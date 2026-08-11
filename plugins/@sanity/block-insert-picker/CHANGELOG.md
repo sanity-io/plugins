@@ -1,5 +1,11 @@
 # @sanity/block-insert-picker
 
+## 1.0.6
+
+### Patch Changes
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update @portabletext/plugin-input-rule to ^6.0.15 and @sanity/ui to ^4.0.1
+
 ## 1.0.5
 
 ### Patch Changes
