@@ -58,5 +58,5 @@
       "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
-  "packageManager": "pnpm@11.13.1"
+  "packageManager": "pnpm@11.21.0"
 }
