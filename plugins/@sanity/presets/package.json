@@ -33,6 +33,8 @@
     }
   },
   "scripts": {
+    "ailf:smoke": "AILF_CLASSIFICATION=adhoc ailf run --remote --debug",
+    "ailf:validate": "ailf validate tasks .ailf/tasks",
     "build": "tsdown",
     "prepack": "turbo run build"
   },
@@ -42,6 +44,7 @@
     "@sanity/uuid": "catalog:"
   },
   "devDependencies": {
+    "@sanity/ailf": "^7.31.1",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@testing-library/jest-dom": "catalog:",

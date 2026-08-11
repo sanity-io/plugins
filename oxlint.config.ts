@@ -14,6 +14,8 @@ export default defineConfig({
     'plugins/@sanity/form-toolkit/examples/**',
     'packages/@sanity/plugin-kit/assets/**',
     'packages/@sanity/plugin-kit/test/fixtures/**',
+    // AILF reference solutions - graded artefacts, not part of the plugins build
+    'plugins/**/.ailf/tasks/**/*.reference.ts',
   ],
   overrides: [
     {
