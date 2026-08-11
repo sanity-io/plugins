@@ -19,7 +19,7 @@ export function pkgConfigTemplate(options: {outDir: string; flags: InitFlags}): 
         tsconfig: 'tsconfig.${outDir}.json',
 
         // Remove this block to enable strict export validation
-        extract: {
+        tsdoc: {
           rules: {
             'ae-incompatible-release-tags': 'off',
             'ae-internal-missing-underscore': 'off',
