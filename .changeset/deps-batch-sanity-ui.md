@@ -1,5 +1,4 @@
 ---
-"@sanity/assist": patch
 "@sanity/color-input": patch
 "@sanity/cross-dataset-duplicator": patch
 "@sanity/dashboard": patch
