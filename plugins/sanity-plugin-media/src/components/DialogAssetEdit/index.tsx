@@ -285,13 +285,16 @@ const DialogAssetEdit = (props: Props) => {
                     _type: 'reference',
                     _weak: true,
                   })) || null,
+                // Preserve the folder reference — it is managed separately and must
+                // not be wiped when patching opt.media via .set().
+                ...(currentAsset?.opt?.media?.folder && {folder: currentAsset.opt.media.folder}),
               },
             },
           },
         }),
       )
     },
-    [assetItem?.asset, dispatch],
+    [assetItem?.asset, currentAsset, dispatch],
   )
 
   // Listen for asset mutations and update snapshot
