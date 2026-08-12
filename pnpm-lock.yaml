@@ -515,7 +515,7 @@ importers:
         specifier: ^10.0.4
         version: 10.0.4
       execa:
-        specifier: ^10.0.0
+        specifier: ^10.0.1
         version: 10.0.1
       get-latest-version:
         specifier: ^6.0.1
