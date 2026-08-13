@@ -53,13 +53,13 @@ catalogs:
       specifier: ^0.24.0
       version: 0.24.1
     '@sanity/ui':
-      specifier: ^4.0.1
-      version: 4.0.1
+      specifier: ^4.0.2
+      version: 4.0.2
     '@sanity/uuid':
       specifier: ^3.0.3
       version: 3.0.3
     '@sanity/vanilla-extract-vite-plugin':
-      specifier: ^0.2.11
+      specifier: ^0.2.12
       version: 0.2.12
     '@testing-library/jest-dom':
       specifier: ^7.0.1
@@ -256,7 +256,7 @@ importers:
         version: 19.2.8(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@8.1.1)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@8.1.1)(typescript@7.0.2)
       sanity-plugin-internationalized-array:
         specifier: workspace:*
         version: link:../../plugins/sanity-plugin-internationalized-array
@@ -350,10 +350,10 @@ importers:
         version: link:../../plugins/@sanity/table
       '@sanity/themer':
         specifier: ^0.3.3
-        version: 0.3.3(react-dom@19.2.8)(react@19.2.8)(sanity@6.9.3-next.3)(styled-components@6.5.1)
+        version: 0.3.3(react-dom@19.2.8)(react@19.2.8)(sanity@6.10.0-next.11)(styled-components@6.5.1)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
         version: 0.2.12(babel-plugin-macros@3.1.0)(vite@8.2.1)
@@ -362,7 +362,7 @@ importers:
         version: link:../../plugins/@sanity/vercel-protection-bypass
       '@sanity/vision':
         specifier: next
-        version: 6.9.3-next.3(@babel/runtime@7.29.7)(@codemirror/theme-one-dark@6.1.3)(codemirror@6.0.2)(react-dom@19.2.8)(react@19.2.8)(sanity@6.9.3-next.3)(styled-components@6.5.1)
+        version: 6.10.0-next.11(@babel/runtime@7.29.7)(@codemirror/theme-one-dark@6.1.3)(codemirror@6.0.2)(react-dom@19.2.8)(react@19.2.8)(sanity@6.10.0-next.11)(styled-components@6.5.1)
       '@vanilla-extract/css':
         specifier: 'catalog:'
         version: 1.21.2(babel-plugin-macros@3.1.0)
@@ -374,7 +374,7 @@ importers:
         version: 19.2.8(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       sanity-naive-html-serializer:
         specifier: workspace:*
         version: link:../../plugins/sanity-naive-html-serializer
@@ -515,7 +515,7 @@ importers:
         specifier: ^10.0.4
         version: 10.0.4
       execa:
-        specifier: ^10.0.0
+        specifier: ^10.0.1
         version: 10.0.1
       get-latest-version:
         specifier: ^6.0.1
@@ -571,7 +571,7 @@ importers:
         version: 19.2.8(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@5.5.0)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@5.5.0)(typescript@7.0.2)
       styled-components:
         specifier: 'catalog:'
         version: 6.5.1(react-dom@19.2.8)(react@19.2.8)
@@ -598,10 +598,10 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/mutator':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.11(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -619,11 +619,11 @@ importers:
         version: 2.1.1(rxjs@7.8.2)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/schema':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)
+        version: 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
@@ -668,10 +668,10 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@portabletext/editor':
         specifier: ^7.10.18
@@ -759,7 +759,7 @@ importers:
         version: 1.0.4
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@uiw/codemirror-themes':
         specifier: ^4.25.11
         version: 4.25.11(@codemirror/language@6.12.4)(@codemirror/state@6.7.1)(@codemirror/view@6.43.8)
@@ -768,7 +768,7 @@ importers:
         version: 4.25.11(@babel/runtime@7.29.7)(@codemirror/autocomplete@6.20.3)(@codemirror/language@6.12.4)(@codemirror/lint@6.9.7)(@codemirror/search@6.7.1)(@codemirror/state@6.7.1)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.43.8)(codemirror@6.0.2)(react-dom@19.2.8)(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -802,7 +802,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@vanilla-extract/dynamic':
         specifier: 'catalog:'
         version: 2.1.5
@@ -811,7 +811,7 @@ importers:
         version: 4.18.1
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       tinycolor2:
         specifier: ^1.6.0
         version: 1.6.0
@@ -860,19 +860,19 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/mutator':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.11(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/studio-secrets':
         specifier: workspace:^
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       dset:
         specifier: ^3.1.4
         version: 3.1.4
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/client':
         specifier: ^7.26.2
@@ -915,13 +915,13 @@ importers:
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -958,10 +958,10 @@ importers:
         version: 7.26.2
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1007,7 +1007,7 @@ importers:
         version: 19.2.8
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1032,13 +1032,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/mutator':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.11(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/util':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)
+        version: 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -1047,7 +1047,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       sanity-plugin-utils:
         specifier: workspace:^
         version: link:../../sanity-plugin-utils
@@ -1102,13 +1102,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       react-rx:
         specifier: ^4.2.5
         version: 4.2.5(react@19.2.8)(rxjs@7.8.2)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1154,7 +1154,7 @@ importers:
         version: link:../sanity-plugin-async-list
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       h3:
         specifier: ^1.15.11
         version: 1.15.11
@@ -1163,7 +1163,7 @@ importers:
         version: 5.7.0(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1209,13 +1209,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@vis.gl/react-google-maps':
         specifier: 'catalog:'
         version: 1.9.0(react-dom@19.2.8)(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1267,13 +1267,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/mutator':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.11(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/util':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)
+        version: 6.10.0-next.11(@types/react@19.2.18)
       react-dnd:
         specifier: ^16.0.1
         version: 16.0.1(@types/node@24.13.3)(@types/react@19.2.18)(react@19.2.8)
@@ -1282,7 +1282,7 @@ importers:
         version: 16.0.1
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1319,7 +1319,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       react-rx:
         specifier: 'catalog:'
         version: 4.2.5(react@19.2.8)(rxjs@7.8.2)
@@ -1328,7 +1328,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1383,13 +1383,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       lexorank:
         specifier: 'catalog:'
         version: 1.0.5
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       sanity-plugin-utils:
         specifier: workspace:^
         version: link:../../sanity-plugin-utils
@@ -1432,7 +1432,7 @@ importers:
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -1444,7 +1444,7 @@ importers:
         version: 5.7.0(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       suspend-react:
         specifier: 'catalog:'
         version: 0.1.3(react@19.2.8)
@@ -1487,7 +1487,7 @@ importers:
         version: 3.0.3
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/ailf':
         specifier: ^7.36.0
@@ -1542,13 +1542,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1591,13 +1591,13 @@ importers:
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1637,10 +1637,10 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       sanity-plugin-internationalized-array:
         specifier: ^4.0.0 || ^5.0.0
         version: link:../../sanity-plugin-internationalized-array
@@ -1680,7 +1680,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       react-rx:
         specifier: 'catalog:'
         version: 4.2.5(react@19.2.8)(rxjs@7.8.2)
@@ -1689,7 +1689,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1738,13 +1738,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1787,10 +1787,10 @@ importers:
         version: 4.1.4(@sanity/client@7.26.2)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/client':
         specifier: ^7.26.2
@@ -1830,16 +1830,16 @@ importers:
         version: 5.0.3
       '@sanity/mutator':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.11(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/schema':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)
+        version: 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/util':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)
+        version: 6.10.0-next.11(@types/react@19.2.18)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@portabletext/types':
         specifier: 'catalog:'
@@ -1882,10 +1882,10 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1919,7 +1919,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -1928,7 +1928,7 @@ importers:
         version: 3.6.1(@types/react@19.2.18)(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -1965,10 +1965,10 @@ importers:
         version: 5.4.0(react-dom@19.2.8)(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       video.js:
         specifier: 'catalog:'
         version: 7.21.7
@@ -2023,13 +2023,13 @@ importers:
         version: link:../@sanity/studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       nanoid:
         specifier: 'catalog:'
         version: 6.0.1
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -2063,7 +2063,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -2072,7 +2072,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/dashboard':
         specifier: workspace:*
@@ -2109,10 +2109,10 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/dashboard':
         specifier: workspace:*
@@ -2158,7 +2158,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2179,7 +2179,7 @@ importers:
         version: 7.4.4(react-dom@19.2.8)(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       use-deep-compare-effect:
         specifier: ^1.8.1
         version: 1.8.1(react@19.2.8)
@@ -2231,10 +2231,10 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/util':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)
+        version: 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2246,7 +2246,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       sanity-plugin-utils:
         specifier: workspace:^
         version: link:../sanity-plugin-utils
@@ -2286,10 +2286,10 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -2326,7 +2326,7 @@ importers:
         version: 3.0.8
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       bezier-easing:
         specifier: ^2.1.0
         version: 2.1.0
@@ -2341,7 +2341,7 @@ importers:
         version: 1.29.1(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       uuid:
         specifier: ^14.0.1
         version: 14.0.1
@@ -2384,10 +2384,10 @@ importers:
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/util':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)
+        version: 6.10.0-next.11(@types/react@19.2.18)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -2396,7 +2396,7 @@ importers:
         version: 13.1.0(react-dom@19.2.8)(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -2442,13 +2442,13 @@ importers:
         version: 4.1.4(@sanity/client@7.26.2)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       motion:
         specifier: 'catalog:'
         version: 13.1.0(react-dom@19.2.8)(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       suspend-react:
         specifier: 'catalog:'
         version: 0.1.3(react@19.2.8)
@@ -2494,16 +2494,16 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/util':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)
+        version: 6.10.0-next.11(@types/react@19.2.18)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/language-filter':
         specifier: workspace:*
@@ -2554,11 +2554,11 @@ importers:
   plugins/sanity-plugin-latex-input:
     dependencies:
       katex:
-        specifier: ^0.17.0
-        version: 0.17.0
+        specifier: ^0.18.4
+        version: 0.18.4
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -2592,13 +2592,13 @@ importers:
         version: 7.26.2
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       react-simplemde-editor:
         specifier: ^5.2.0
         version: 5.2.0(easymde@2.21.0)(react-dom@19.2.8)(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -2647,7 +2647,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2665,7 +2665,7 @@ importers:
         version: 9.0.11
       groq:
         specifier: next
-        version: 6.9.3-next.3
+        version: 6.10.0-next.11
       is-hotkey-esm:
         specifier: ^1.0.0
         version: 1.0.0
@@ -2704,7 +2704,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -2771,7 +2771,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2795,7 +2795,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       scroll-into-view-if-needed:
         specifier: ^3.1.0
         version: 3.1.0
@@ -2859,7 +2859,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       axios:
         specifier: ^1.19.0
         version: 1.19.0(debug@4.4.3)(supports-color@10.2.2)
@@ -2880,7 +2880,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       video.js:
         specifier: 'catalog:'
         version: 7.21.7
@@ -2920,7 +2920,7 @@ importers:
     dependencies:
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       sanity-translations-tab:
         specifier: workspace:^
         version: link:../sanity-translations-tab
@@ -2957,7 +2957,7 @@ importers:
     dependencies:
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       sanity-translations-tab:
         specifier: workspace:^
         version: link:../sanity-translations-tab
@@ -3003,7 +3003,7 @@ importers:
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       react-fast-compare:
         specifier: 'catalog:'
         version: 3.2.2
@@ -3012,7 +3012,7 @@ importers:
         version: 7.8.2
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -3052,7 +3052,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@tanstack/react-virtual':
         specifier: ^3.14.9
         version: 3.14.9(react-dom@19.2.8)(react@19.2.8)
@@ -3064,7 +3064,7 @@ importers:
         version: 13.1.0(react-dom@19.2.8)(react@19.2.8)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       sanity-plugin-utils:
         specifier: workspace:^
         version: link:../sanity-plugin-utils
@@ -3107,13 +3107,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       react-is:
         specifier: 'catalog:'
         version: 19.2.8
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
     devDependencies:
       '@sanity/tsconfig':
         specifier: 'catalog:'
@@ -3156,13 +3156,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+        version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/util':
         specifier: next
-        version: 6.9.3-next.3(@types/react@19.2.18)
+        version: 6.10.0-next.11(@types/react@19.2.18)
       sanity:
         specifier: next
-        version: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+        version: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       sanity-naive-html-serializer:
         specifier: workspace:^
         version: link:../sanity-naive-html-serializer
@@ -7051,6 +7051,12 @@ packages:
     peerDependencies:
       '@oclif/core': ^4.0.0
 
+  '@sanity/access-ui@6.9.1':
+    resolution: {integrity: sha512-BDVNx+QlifhULNQ3+INH9qBYO3cjXTc3fkjOiJ+uSOuOAEKT8SelbDDVb8yf/sWrV/UmW8kRxrXJxrfwbYj5Eg==}
+    engines: {node: '>=22.12'}
+    peerDependencies:
+      react: ^19.2.2
+
   '@sanity/ailf@7.36.0':
     resolution: {integrity: sha512-OTQWf8rlvfPew0z7ByqdaDXIPTdn/fuyfBitAJAkeLWQnuzGz3NrJYvjR1jnSIn8PsbJLaYwP0nrDD2K8ATXYg==}
     hasBin: true
@@ -7146,8 +7152,8 @@ packages:
     resolution: {integrity: sha512-oJ5kZQV6C/DAlcpRLEU7AcVWXrSPuJb3Z1TQ9tm/qZOVWJENwWln45jtepQEYolTIuGx9jUlhYUi3hGIkOt8RA==}
     engines: {node: '>=18.2'}
 
-  '@sanity/diff@6.9.3-next.3':
-    resolution: {integrity: sha512-K5+7X+nu8lxlmBH+xs+BA+N30UzQ/cvz6cg7QsQBQF4DMkW8dSLQ58z0otcy9o4uvvyF/whuq1UCN9T0wnWPxw==}
+  '@sanity/diff@6.10.0-next.11':
+    resolution: {integrity: sha512-4gMTTKk5GprR/sHee79RrPH05iZwIJlU7hPLP6Vm4yq7sDiKyqSxF13QiUkQMAsJqD93GbN4cxaQf10Ajp+Xcg==}
     engines: {node: '>=22.12'}
 
   '@sanity/eventsource@5.0.4':
@@ -7223,8 +7229,8 @@ packages:
       xstate:
         optional: true
 
-  '@sanity/mutator@6.9.3-next.3':
-    resolution: {integrity: sha512-kEYpiyDOPpRF9U+tVZ3zQWfC5zQv/IRnK1DPgq5VYvpCRWxqfwNaB34x+5g6o5nrykYBjw+0ghLbfPCv99WpYg==}
+  '@sanity/mutator@6.10.0-next.11':
+    resolution: {integrity: sha512-PddsNQa7nkpPMCL/5/0VfYfZY2O7yb2aZ3SQ4FWvx0p4yV0pNmLs+JOdApoJbXi8Gt18lXw7gNcD+LIgVJCMwA==}
 
   '@sanity/parse-package-json@2.3.1':
     resolution: {integrity: sha512-ObHxlg9RxRWRWo8OO+Ddbh+4VN2R7vkncfK97Dvybixxh8UX6I0fpR4N4xa55E1PcGPsjAFSMWlS+tfInTdllA==}
@@ -7267,8 +7273,14 @@ packages:
     engines: {node: '>=22.12'}
     hasBin: true
 
-  '@sanity/schema@6.9.3-next.3':
-    resolution: {integrity: sha512-RcVdumV3wqNmBJHeonNYQTB+dr027HUB/wueylzkqw6OJpW7uWqO9LaIgyC7E9HHSxGfsHk50/rTNFxx81rzDg==}
+  '@sanity/schema@6.10.0-next.11':
+    resolution: {integrity: sha512-MA7V7jR4NOqqBvwi7+PcveHWHjGskAs5VqhQxCuTqhvBnWjK138SmRPzOZbbIHmw7h9qh/KRhZONyjM6Mf2UpQ==}
+
+  '@sanity/sdk-react@2.19.0':
+    resolution: {integrity: sha512-dphdWEAY7vO3i9Y4Eht85LJnezqwAhTH2U/7iewMMqLXBYPrfRHIEium2eTWb5rX7UpigiqRcJpREi9ZkcKjBA==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
 
   '@sanity/sdk@2.19.0':
     resolution: {integrity: sha512-UOrxOmISioW22b0IyGgkRJCk1VnzmevH7jY8WZpANStmwa/4lsujRNlWOYeW3IguhIz0HptgtVfRXXyZwr9UXQ==}
@@ -7320,13 +7332,21 @@ packages:
       babel-plugin-react-compiler:
         optional: true
 
-  '@sanity/types@6.9.3-next.3':
-    resolution: {integrity: sha512-9987h66nPABq7cpZNlLRjqN6IMrClcvXA+qFCQArYzHdqqsCsykXANGBtKfiWofBU6/8ng77sM/j6ekOTiOwtw==}
+  '@sanity/types@6.10.0-next.11':
+    resolution: {integrity: sha512-3bcS9U06mp9cpVq/x1FmnaNrA5sMNHMmoecXJtsppyg/CM1I4H6CWLAKyvAZRGK6hccdATnye8ULC1tI+5BSSA==}
     peerDependencies:
       '@types/react': '*'
 
   '@sanity/ui@4.0.1':
     resolution: {integrity: sha512-OjsUCrI75fqhRHFljHUVQbddaDfVj3z1IJhbNImeZFguYyWEUTtf5N4j7S1mR9B9rbeZ0mx9QRyVg8YfriIaRA==}
+    engines: {node: '>=22.12'}
+    peerDependencies:
+      react: ^19.2
+      react-dom: ^19.2
+      styled-components: ^6.1
+
+  '@sanity/ui@4.0.2':
+    resolution: {integrity: sha512-tMjxwteN8rsGJUmYXUPDy9YGZVf6FvdiWY/JQn+BRNDhAYCa3ZXIOFGA+gPzai12ldG18sEcqNYjPqkyEyOrTg==}
     engines: {node: '>=22.12'}
     peerDependencies:
       react: ^19.2
@@ -7341,8 +7361,8 @@ packages:
       react: ^19.2
       react-dom: ^19.2
 
-  '@sanity/util@6.9.3-next.3':
-    resolution: {integrity: sha512-z1o2WcDjqYgd73vYOS9sIsPJiAKbeSfsBpKZNKf6Czwmjs4aIy+pZpnYhEmzCSgvsq9NQPzL62wuRdB9sZi+qQ==}
+  '@sanity/util@6.10.0-next.11':
+    resolution: {integrity: sha512-wq9cd4AYeIz9CXlCzsMiPLojoP6hyv2sZYTXjqTSjBVtNPXHglmufWgg6gD0upXPVd0oDinNNadGrmKhCvxLPg==}
     engines: {node: '>=22.12'}
 
   '@sanity/uuid@3.0.3':
@@ -7373,8 +7393,8 @@ packages:
     peerDependencies:
       vite: ^8.0.0
 
-  '@sanity/vision@6.9.3-next.3':
-    resolution: {integrity: sha512-yR6uRTBY5V/kG2Nx07pfsPwtsLp6tYYr6R7hNBLQgFbn4iQ0UxyQR0RynNodOUJMUKFDJT4J1udlloWVNYel+A==}
+  '@sanity/vision@6.10.0-next.11':
+    resolution: {integrity: sha512-+cbocaNwGMohEvMpNKBHW6FADupO7Yl/aBdY/hSaJxGZHk35hR1ccpoxfmwGPuVlZSTlT1IX5DiOTSAx0b+Jmw==}
     peerDependencies:
       react: ^19.2.2
       sanity: ^6.0.0-0
@@ -10411,8 +10431,8 @@ packages:
     resolution: {integrity: sha512-kj56ZjnOFbgDt91zYwQ10jsVUtVGJqAKfRbAir0EvTK84O5ZsSyc0rDEm2P3jmAJkxs4X1DOG8vtaYJQIA/XCA==}
     engines: {node: '>=22.12'}
 
-  groq@6.9.3-next.3:
-    resolution: {integrity: sha512-VffzC/iPGA5ZHz6uVMEeCTjPKu27EOiJaMVer6zk31u747L8FkIHrXVBKeML2b5Kfnh264asOPuhXGlRiI2ZHQ==}
+  groq@6.10.0-next.11:
+    resolution: {integrity: sha512-QPMF7ncYi0EricZOh+Hy8PQyvxhZAR83Mh5TaGVmwGOEy2ILYnnZrQIRaMQTyHwSAXkUBXW8BU/lUBiAWUKx/Q==}
     engines: {node: '>=22.12'}
 
   gtoken@7.1.0:
@@ -11165,8 +11185,8 @@ packages:
     resolution: {integrity: sha512-kpSuLD3/7RenBnjnJdOHXCKC8dTd1JzeOiJhN0necWWci6cC+qX+VuwPnMVgb+a4+KNJSfgqahpnfWaeDXCimw==}
     engines: {node: '>=18.0.0'}
 
-  katex@0.17.0:
-    resolution: {integrity: sha512-Vdw0ATsQ9V+LuegM/BTwQqV/6cTl5lbGcIrU+BCgLxyf6bo38ybOr372tuSIxir3CN720flu1meYR6XzNMwQnw==}
+  katex@0.18.4:
+    resolution: {integrity: sha512-IMPntbRLOU+eu88XDiFKqQ8Akhr9Tv7jDMXqPhjG9SI1JMA4DIgXk4x9k4skJz2NZJXBRbC+2pYBLj9olqcZow==}
     hasBin: true
 
   keycode@2.2.1:
@@ -12666,6 +12686,11 @@ packages:
     peerDependencies:
       react: '>= 16.8'
 
+  react-error-boundary@6.1.2:
+    resolution: {integrity: sha512-3DpCr5HVdZ0caUjYE/kIHBEJN0mNP3ZCgf16c48uJ5TbWjorKVp+YG8W3XqlJ7vJAVNw6wNIImyPXmFydwmyng==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+
   react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
 
@@ -13085,8 +13110,8 @@ packages:
     resolution: {integrity: sha512-JPdADikobt6zFuuCRhl6whNrCJlLPxpUmT/hNxLij70mkpeejHKDN+HeVlrdHI8snDTzRIiF3Ye8KyMIyVWA+A==}
     hasBin: true
 
-  sanity@6.9.3-next.3:
-    resolution: {integrity: sha512-/6abUR4zcQ4m/pX6aRjtaWXgmrIytwPof8WFKl2DKxovkErgolNwW5vAetxOMJCpO4SmxPcpIC3Ly9FjWJb1+Q==}
+  sanity@6.10.0-next.11:
+    resolution: {integrity: sha512-RcnzNtAawYA6OkEZtN88Y0rdT0HydjKRhllTlV5Ida7cwJ2/iNTHUJPeb6B//r6vdMueFUVRUUeOfF3Hcv1lXA==}
     engines: {node: '>=22.12'}
     hasBin: true
     peerDependencies:
@@ -19262,7 +19287,7 @@ snapshots:
       '@portabletext/html': 1.1.2
       '@portabletext/sanity-bridge': 3.2.5(@types/react@19.2.18)
       '@portabletext/schema': 2.2.4
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -19406,8 +19431,8 @@ snapshots:
   '@portabletext/sanity-bridge@3.2.5(@types/react@19.2.18)':
     dependencies:
       '@portabletext/schema': 2.2.4
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -19621,6 +19646,16 @@ snapshots:
     dependencies:
       '@oclif/core': 4.13.3
 
+  '@sanity/access-ui@6.9.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)':
+    dependencies:
+      '@sanity/client': 7.26.2
+      '@sanity/icons': 5.2.1(react@19.2.8)
+      '@sanity/ui': 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+      react: 19.2.8
+    transitivePeerDependencies:
+      - react-dom
+      - styled-components
+
   '@sanity/ailf@7.36.0(@aws-sdk/credential-provider-node@3.972.78)(@noble/hashes@2.3.0)(@smithy/signature-v4@5.6.12)(@types/json-schema@7.0.15)(@types/node@24.13.3)(@types/react@19.2.18)(babel-plugin-macros@3.1.0)(debug@4.3.4)(pg@8.23.0)(playwright-core@1.62.1)(socks@2.8.9)(supports-color@10.2.2)':
     dependencies:
       '@google-cloud/bigquery': 8.3.1(supports-color@10.2.2)
@@ -19719,9 +19754,9 @@ snapshots:
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.3)(vite@8.2.1)
       '@sanity/cli-core': 2.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(supports-color@10.2.2)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/workbench-cli': 1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
       '@vitejs/plugin-react': 6.0.5(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(vite@8.2.1)
       chokidar: 5.0.0
@@ -19774,9 +19809,9 @@ snapshots:
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.3)(vite@8.2.1)
       '@sanity/cli-core': 2.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(supports-color@5.5.0)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/workbench-cli': 1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@5.5.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
       '@vitejs/plugin-react': 6.0.5(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(vite@8.2.1)
       chokidar: 5.0.0
@@ -19829,9 +19864,9 @@ snapshots:
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.3)(vite@8.2.1)
       '@sanity/cli-core': 2.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(supports-color@8.1.1)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/workbench-cli': 1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@8.1.1)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
       '@vitejs/plugin-react': 6.0.5(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(vite@8.2.1)
       chokidar: 5.0.0
@@ -20011,10 +20046,10 @@ snapshots:
       '@sanity/import': 6.0.3(@sanity/client@7.26.2)(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@10.2.2)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.6.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(rolldown@1.2.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/template-validator': 3.1.0
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/workbench-cli': 1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
       '@sanity/worker-channels': 2.0.0
       '@vercel/frameworks': 3.29.0
@@ -20112,10 +20147,10 @@ snapshots:
       '@sanity/import': 6.0.3(@sanity/client@7.26.2)(@types/react@19.2.18)(supports-color@5.5.0)
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@5.5.0)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.6.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(rolldown@1.2.3)(supports-color@5.5.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/template-validator': 3.1.0
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/workbench-cli': 1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@5.5.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
       '@sanity/worker-channels': 2.0.0
       '@vercel/frameworks': 3.29.0
@@ -20213,10 +20248,10 @@ snapshots:
       '@sanity/import': 6.0.3(@sanity/client@7.26.2)(@types/react@19.2.18)(supports-color@8.1.1)
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@8.1.1)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.6.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(rolldown@1.2.3)(supports-color@8.1.1)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/template-validator': 3.1.0
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/workbench-cli': 1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@8.1.1)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
       '@sanity/worker-channels': 2.0.0
       '@vercel/frameworks': 3.29.0
@@ -20322,7 +20357,7 @@ snapshots:
       chokidar: 3.6.0
       debug: 4.4.3(supports-color@10.2.2)
       globby: 11.1.0
-      groq: 6.9.3-next.3
+      groq: 6.10.0-next.11
       groq-js: 1.30.3(supports-color@10.2.2)
       json5: 2.2.3
       lodash-es: 4.18.1
@@ -20353,7 +20388,7 @@ snapshots:
       chokidar: 3.6.0
       debug: 4.4.3(supports-color@5.5.0)
       globby: 11.1.0
-      groq: 6.9.3-next.3
+      groq: 6.10.0-next.11
       groq-js: 1.30.3(supports-color@5.5.0)
       json5: 2.2.3
       lodash-es: 4.18.1
@@ -20384,7 +20419,7 @@ snapshots:
       chokidar: 3.6.0
       debug: 4.4.3(supports-color@8.1.1)
       globby: 11.1.0
-      groq: 6.9.3-next.3
+      groq: 6.10.0-next.11
       groq-js: 1.30.3(supports-color@8.1.1)
       json5: 2.2.3
       lodash-es: 4.18.1
@@ -20420,7 +20455,7 @@ snapshots:
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
 
-  '@sanity/diff@6.9.3-next.3':
+  '@sanity/diff@6.10.0-next.11':
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
 
@@ -20498,7 +20533,7 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/client': 7.26.2
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/mutator': 6.9.3-next.3(@types/react@19.2.18)(supports-color@10.2.2)
+      '@sanity/mutator': 6.10.0-next.11(@types/react@19.2.18)(supports-color@10.2.2)
       debug: 4.4.3(supports-color@10.2.2)
       get-it: 8.8.3
       gunzip-maybe: 1.4.2
@@ -20517,7 +20552,7 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/client': 7.26.2
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/mutator': 6.9.3-next.3(@types/react@19.2.18)(supports-color@5.5.0)
+      '@sanity/mutator': 6.10.0-next.11(@types/react@19.2.18)(supports-color@5.5.0)
       debug: 4.4.3(supports-color@5.5.0)
       get-it: 8.8.3
       gunzip-maybe: 1.4.2
@@ -20536,7 +20571,7 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/client': 7.26.2
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/mutator': 6.9.3-next.3(@types/react@19.2.18)(supports-color@8.1.1)
+      '@sanity/mutator': 6.10.0-next.11(@types/react@19.2.18)(supports-color@8.1.1)
       debug: 4.4.3(supports-color@8.1.1)
       get-it: 8.8.3
       gunzip-maybe: 1.4.2
@@ -20578,8 +20613,8 @@ snapshots:
     dependencies:
       '@sanity/client': 7.26.2
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
-      '@sanity/util': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.11(@types/react@19.2.18)
       arrify: 3.0.0
       debug: 4.4.3(supports-color@10.2.2)
       fast-fifo: 1.3.2
@@ -20594,8 +20629,8 @@ snapshots:
     dependencies:
       '@sanity/client': 7.26.2
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
-      '@sanity/util': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.11(@types/react@19.2.18)
       arrify: 3.0.0
       debug: 4.4.3(supports-color@5.5.0)
       fast-fifo: 1.3.2
@@ -20610,8 +20645,8 @@ snapshots:
     dependencies:
       '@sanity/client': 7.26.2
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
-      '@sanity/util': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.11(@types/react@19.2.18)
       arrify: 3.0.0
       debug: 4.4.3(supports-color@8.1.1)
       fast-fifo: 1.3.2
@@ -20636,10 +20671,10 @@ snapshots:
     optionalDependencies:
       xstate: 5.32.5
 
-  '@sanity/mutator@6.9.3-next.3(@types/react@19.2.18)(supports-color@10.2.2)':
+  '@sanity/mutator@6.10.0-next.11(@types/react@19.2.18)(supports-color@10.2.2)':
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/uuid': 3.0.3
       debug: 4.4.3(supports-color@10.2.2)
       lodash-es: 4.18.1
@@ -20647,10 +20682,10 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@sanity/mutator@6.9.3-next.3(@types/react@19.2.18)(supports-color@5.5.0)':
+  '@sanity/mutator@6.10.0-next.11(@types/react@19.2.18)(supports-color@5.5.0)':
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/uuid': 3.0.3
       debug: 4.4.3(supports-color@5.5.0)
       lodash-es: 4.18.1
@@ -20658,10 +20693,10 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@sanity/mutator@6.9.3-next.3(@types/react@19.2.18)(supports-color@8.1.1)':
+  '@sanity/mutator@6.10.0-next.11(@types/react@19.2.18)(supports-color@8.1.1)':
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/uuid': 3.0.3
       debug: 4.4.3(supports-color@8.1.1)
       lodash-es: 4.18.1
@@ -20721,11 +20756,11 @@ snapshots:
       - vite
       - vue-tsc
 
-  '@sanity/presentation-comlink@2.2.3(@sanity/types@6.9.3-next.3)':
+  '@sanity/presentation-comlink@2.2.3(@sanity/types@6.10.0-next.11)':
     dependencies:
       '@sanity/client': 7.26.2
       '@sanity/comlink': 4.0.3
-      '@sanity/visual-editing-types': 2.0.14(@sanity/client@7.26.2)(@sanity/types@6.9.3-next.3)
+      '@sanity/visual-editing-types': 2.0.14(@sanity/client@7.26.2)(@sanity/types@6.10.0-next.11)
       xstate: 5.32.5
     transitivePeerDependencies:
       - '@sanity/types'
@@ -20914,11 +20949,11 @@ snapshots:
       - vue-tsc
       - yaml
 
-  '@sanity/schema@6.9.3-next.3(@types/react@19.2.18)':
+  '@sanity/schema@6.10.0-next.11(@types/react@19.2.18)':
     dependencies:
       '@sanity/descriptors': 1.3.0
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       arrify: 3.0.0
       get-it: 8.8.3
       groq-js: 2.0.0
@@ -20928,6 +20963,24 @@ snapshots:
       object-inspect: 1.13.4
     transitivePeerDependencies:
       - '@types/react'
+
+  '@sanity/sdk-react@2.19.0(@types/react@19.2.18)(immer@11.1.16)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)':
+    dependencies:
+      '@sanity/client': 7.26.2
+      '@sanity/message-protocol': 0.23.0
+      '@sanity/sdk': 2.19.0(@types/react@19.2.18)(immer@11.1.16)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
+      groq: 6.10.0-next.11
+      react: 19.2.8
+      react-compiler-runtime: 1.0.0(react@19.2.8)
+      react-dom: 19.2.8(react@19.2.8)
+      react-error-boundary: 6.1.2(react@19.2.8)
+      rxjs: 7.8.2
+    transitivePeerDependencies:
+      - '@types/react'
+      - immer
+      - use-sync-external-store
+      - xstate
 
   '@sanity/sdk@2.19.0(@types/react@19.2.18)(immer@11.1.16)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)':
     dependencies:
@@ -20942,8 +20995,8 @@ snapshots:
       '@sanity/message-protocol': 0.23.0
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
-      groq: 6.9.3-next.3
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
+      groq: 6.10.0-next.11
       groq-js: 2.0.0
       reselect: 5.2.0
       rxjs: 7.8.2
@@ -20973,17 +21026,17 @@ snapshots:
       '@actions/github': 9.1.1
       yaml: 2.9.0
 
-  '@sanity/themer@0.3.3(react-dom@19.2.8)(react@19.2.8)(sanity@6.9.3-next.3)(styled-components@6.5.1)':
+  '@sanity/themer@0.3.3(react-dom@19.2.8)(react@19.2.8)(sanity@6.10.0-next.11)(styled-components@6.5.1)':
     dependencies:
       '@sanity/color': 3.0.8
       '@sanity/icons': 5.2.1(react@19.2.8)
-      '@sanity/ui': 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
+      '@sanity/ui': 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       react: 19.2.8
       react-compiler-runtime: 1.0.0(react@19.2.8)
       react-refractor: 4.0.0(react@19.2.8)
       refractor: 5.0.0
     optionalDependencies:
-      sanity: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+      sanity: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       styled-components: 6.5.1(react-dom@19.2.8)(react@19.2.8)
     transitivePeerDependencies:
       - react-dom
@@ -21046,13 +21099,27 @@ snapshots:
       - supports-color
       - vite
 
-  '@sanity/types@6.9.3-next.3(@types/react@19.2.18)':
+  '@sanity/types@6.10.0-next.11(@types/react@19.2.18)':
     dependencies:
       '@sanity/client': 7.26.2
       '@sanity/media-library-types': 1.6.0
       '@types/react': 19.2.18
 
   '@sanity/ui@4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.9(react-dom@19.2.8)(react@19.2.8)
+      '@sanity/color': 3.0.8
+      '@sanity/icons': 5.2.1(react@19.2.8)
+      csstype: 3.2.3
+      motion: 13.1.0(react-dom@19.2.8)(react@19.2.8)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+      react-is: 19.2.8
+      react-refractor: 4.0.0(react@19.2.8)
+      styled-components: 6.5.1(react-dom@19.2.8)(react@19.2.8)
+      use-effect-event: 2.0.3(react@19.2.8)
+
+  '@sanity/ui@4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)':
     dependencies:
       '@floating-ui/react-dom': 2.1.9(react-dom@19.2.8)(react@19.2.8)
       '@sanity/color': 3.0.8
@@ -21076,12 +21143,12 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
       react-refractor: 4.0.0(react@19.2.8)
 
-  '@sanity/util@6.9.3-next.3(@types/react@19.2.18)':
+  '@sanity/util@6.10.0-next.11(@types/react@19.2.18)':
     dependencies:
       '@date-fns/tz': 1.5.0
       '@date-fns/utc': 2.1.1
       '@sanity/client': 7.26.2
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       date-fns: 4.4.0
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -21125,7 +21192,7 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
 
-  '@sanity/vision@6.9.3-next.3(@babel/runtime@7.29.7)(@codemirror/theme-one-dark@6.1.3)(codemirror@6.0.2)(react-dom@19.2.8)(react@19.2.8)(sanity@6.9.3-next.3)(styled-components@6.5.1)':
+  '@sanity/vision@6.10.0-next.11(@babel/runtime@7.29.7)(@codemirror/theme-one-dark@6.1.3)(codemirror@6.0.2)(react-dom@19.2.8)(react@19.2.8)(sanity@6.10.0-next.11)(styled-components@6.5.1)':
     dependencies:
       '@codemirror/autocomplete': 6.20.3
       '@codemirror/commands': 6.10.4
@@ -21153,7 +21220,7 @@ snapshots:
       react: 19.2.8
       react-rx: 5.1.1(react@19.2.8)(rxjs@7.8.2)
       rxjs: 7.8.2
-      sanity: 6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
+      sanity: 6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2)
       use-effect-event: 2.0.3(react@19.2.8)
     transitivePeerDependencies:
       - '@babel/runtime'
@@ -21163,17 +21230,17 @@ snapshots:
       - react-dom
       - styled-components
 
-  '@sanity/visual-editing-types@2.0.14(@sanity/client@7.26.2)(@sanity/types@6.9.3-next.3)':
+  '@sanity/visual-editing-types@2.0.14(@sanity/client@7.26.2)(@sanity/types@6.10.0-next.11)':
     dependencies:
       '@sanity/client': 7.26.2
     optionalDependencies:
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
 
   '@sanity/workbench-cli@1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)':
     dependencies:
       '@module-federation/vite': 1.20.1(typescript@7.0.2)(vite@8.2.1)
       '@sanity/cli-core': 2.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(supports-color@10.2.2)(yaml@2.9.0)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@vitejs/plugin-react': 6.0.5(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(vite@8.2.1)
       form-data: 4.0.6
       tar-fs: 3.1.3
@@ -21210,7 +21277,7 @@ snapshots:
     dependencies:
       '@module-federation/vite': 1.20.1(typescript@7.0.2)(vite@8.2.1)
       '@sanity/cli-core': 2.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(supports-color@5.5.0)(yaml@2.9.0)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@vitejs/plugin-react': 6.0.5(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(vite@8.2.1)
       form-data: 4.0.6
       tar-fs: 3.1.3
@@ -21247,7 +21314,7 @@ snapshots:
     dependencies:
       '@module-federation/vite': 1.20.1(typescript@7.0.2)(vite@8.2.1)
       '@sanity/cli-core': 2.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(supports-color@8.1.1)(yaml@2.9.0)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@vitejs/plugin-react': 6.0.5(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(vite@8.2.1)
       form-data: 4.0.6
       tar-fs: 3.1.3
@@ -21983,7 +22050,7 @@ snapshots:
       tar-stream: 3.1.7
       undici: 7.29.0
       xdg-app-paths: 5.1.0
-      zod: 4.1.11
+      zod: 4.4.3
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
@@ -24425,7 +24492,7 @@ snapshots:
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
-      gaxios: 7.1.3(supports-color@10.2.2)
+      gaxios: 7.3.0(supports-color@10.2.2)
       gcp-metadata: 8.1.4(supports-color@10.2.2)
       google-logging-utils: 1.1.3
       gtoken: 8.0.0(supports-color@10.2.2)
@@ -24499,7 +24566,7 @@ snapshots:
     dependencies:
       obug: 2.1.4
 
-  groq@6.9.3-next.3: {}
+  groq@6.10.0-next.11: {}
 
   gtoken@7.1.0(supports-color@10.2.2):
     dependencies:
@@ -24511,7 +24578,7 @@ snapshots:
 
   gtoken@8.0.0(supports-color@10.2.2):
     dependencies:
-      gaxios: 7.1.3(supports-color@10.2.2)
+      gaxios: 7.3.0(supports-color@10.2.2)
       jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
@@ -25365,7 +25432,7 @@ snapshots:
   kareem@3.3.0:
     optional: true
 
-  katex@0.17.0:
+  katex@0.18.4:
     dependencies:
       commander: 8.3.0
 
@@ -27104,6 +27171,10 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.8
 
+  react-error-boundary@6.1.2(react@19.2.8):
+    dependencies:
+      react: 19.2.8
+
   react-fast-compare@3.2.2: {}
 
   react-file-icon@1.6.0(react-dom@19.2.8)(react@19.2.8):
@@ -27565,7 +27636,7 @@ snapshots:
       async-retry: 1.3.3
       debug: 4.4.3(supports-color@10.2.2)
       ws: 8.21.3
-      zod: 4.1.11
+      zod: 4.4.3
     transitivePeerDependencies:
       - bare-abort-controller
       - bufferutil
@@ -27573,7 +27644,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  sanity@6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2):
+  sanity@6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@10.2.2)(typescript@7.0.2):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.5.0
@@ -27598,13 +27669,14 @@ snapshots:
       '@portabletext/to-html': 5.0.3
       '@portabletext/toolkit': 5.0.2
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.8)
+      '@sanity/access-ui': 6.9.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
       '@sanity/cli': 7.18.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(rolldown@1.2.3)(supports-color@10.2.2)(typescript@7.0.2)(xstate@5.32.5)
       '@sanity/client': 7.26.2
       '@sanity/color': 3.0.8
       '@sanity/comlink': 4.0.3
-      '@sanity/diff': 6.9.3-next.3
+      '@sanity/diff': 6.10.0-next.11
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/diff-patch': 5.0.0
       '@sanity/eventsource': 5.0.4
@@ -27617,15 +27689,16 @@ snapshots:
       '@sanity/message-protocol': 0.24.0
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@10.2.2)(xstate@5.32.5)
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
-      '@sanity/mutator': 6.9.3-next.3(@types/react@19.2.18)(supports-color@10.2.2)
-      '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.9.3-next.3)
+      '@sanity/mutator': 6.10.0-next.11(@types/react@19.2.18)(supports-color@10.2.2)
+      '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.10.0-next.11)
       '@sanity/preview-url-secret': 4.1.4(@sanity/client@7.26.2)
       '@sanity/prism-groq': 1.1.2
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
+      '@sanity/sdk-react': 2.19.0(@types/react@19.2.18)(immer@11.1.16)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/ui': 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
-      '@sanity/util': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/uuid': 3.0.3
       '@sanity/workbench': 0.1.0-alpha.36(@sanity/sdk@2.19.0)(react@19.2.8)(xstate@5.32.5)
       '@sentry/react': 10.70.0(react@19.2.8)
@@ -27703,6 +27776,7 @@ snapshots:
       - bufferutil
       - canvas
       - esbuild
+      - immer
       - jiti
       - less
       - oxfmt
@@ -27720,7 +27794,7 @@ snapshots:
       - utf-8-validate
       - vue-tsc
 
-  sanity@6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@5.5.0)(typescript@7.0.2):
+  sanity@6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@5.5.0)(typescript@7.0.2):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.5.0
@@ -27745,13 +27819,14 @@ snapshots:
       '@portabletext/to-html': 5.0.3
       '@portabletext/toolkit': 5.0.2
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.8)
+      '@sanity/access-ui': 6.9.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
       '@sanity/cli': 7.18.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(rolldown@1.2.3)(supports-color@5.5.0)(typescript@7.0.2)(xstate@5.32.5)
       '@sanity/client': 7.26.2
       '@sanity/color': 3.0.8
       '@sanity/comlink': 4.0.3
-      '@sanity/diff': 6.9.3-next.3
+      '@sanity/diff': 6.10.0-next.11
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/diff-patch': 5.0.0
       '@sanity/eventsource': 5.0.4
@@ -27764,15 +27839,16 @@ snapshots:
       '@sanity/message-protocol': 0.24.0
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@5.5.0)(xstate@5.32.5)
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
-      '@sanity/mutator': 6.9.3-next.3(@types/react@19.2.18)(supports-color@5.5.0)
-      '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.9.3-next.3)
+      '@sanity/mutator': 6.10.0-next.11(@types/react@19.2.18)(supports-color@5.5.0)
+      '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.10.0-next.11)
       '@sanity/preview-url-secret': 4.1.4(@sanity/client@7.26.2)
       '@sanity/prism-groq': 1.1.2
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
+      '@sanity/sdk-react': 2.19.0(@types/react@19.2.18)(immer@11.1.16)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/ui': 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
-      '@sanity/util': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/uuid': 3.0.3
       '@sanity/workbench': 0.1.0-alpha.36(@sanity/sdk@2.19.0)(react@19.2.8)(xstate@5.32.5)
       '@sentry/react': 10.70.0(react@19.2.8)
@@ -27850,6 +27926,7 @@ snapshots:
       - bufferutil
       - canvas
       - esbuild
+      - immer
       - jiti
       - less
       - oxfmt
@@ -27867,7 +27944,7 @@ snapshots:
       - utf-8-validate
       - vue-tsc
 
-  sanity@6.9.3-next.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@8.1.1)(typescript@7.0.2):
+  sanity@6.10.0-next.11(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.1)(supports-color@8.1.1)(typescript@7.0.2):
     dependencies:
       '@algorithm.ts/lcs': 4.0.6
       '@date-fns/tz': 1.5.0
@@ -27892,13 +27969,14 @@ snapshots:
       '@portabletext/to-html': 5.0.3
       '@portabletext/toolkit': 5.0.2
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.8)
+      '@sanity/access-ui': 6.9.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 1.0.0
       '@sanity/cli': 7.18.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(oxfmt@0.63.0)(rolldown@1.2.3)(supports-color@8.1.1)(typescript@7.0.2)(xstate@5.32.5)
       '@sanity/client': 7.26.2
       '@sanity/color': 3.0.8
       '@sanity/comlink': 4.0.3
-      '@sanity/diff': 6.9.3-next.3
+      '@sanity/diff': 6.10.0-next.11
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/diff-patch': 5.0.0
       '@sanity/eventsource': 5.0.4
@@ -27911,15 +27989,16 @@ snapshots:
       '@sanity/message-protocol': 0.24.0
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@8.1.1)(xstate@5.32.5)
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
-      '@sanity/mutator': 6.9.3-next.3(@types/react@19.2.18)(supports-color@8.1.1)
-      '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.9.3-next.3)
+      '@sanity/mutator': 6.10.0-next.11(@types/react@19.2.18)(supports-color@8.1.1)
+      '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.10.0-next.11)
       '@sanity/preview-url-secret': 4.1.4(@sanity/client@7.26.2)
       '@sanity/prism-groq': 1.1.2
-      '@sanity/schema': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.11(@types/react@19.2.18)
+      '@sanity/sdk-react': 2.19.0(@types/react@19.2.18)(immer@11.1.16)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
-      '@sanity/types': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/types': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/ui': 4.0.1(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.1)
-      '@sanity/util': 6.9.3-next.3(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.11(@types/react@19.2.18)
       '@sanity/uuid': 3.0.3
       '@sanity/workbench': 0.1.0-alpha.36(@sanity/sdk@2.19.0)(react@19.2.8)(xstate@5.32.5)
       '@sentry/react': 10.70.0(react@19.2.8)
@@ -27997,6 +28076,7 @@ snapshots:
       - bufferutil
       - canvas
       - esbuild
+      - immer
       - jiti
       - less
       - oxfmt
