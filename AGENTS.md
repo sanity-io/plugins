@@ -279,7 +279,7 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 
 ### Test Configuration
 
-- Root `vitest.config.ts` uses glob patterns `['plugins/@sanity/*', 'plugins/sanity-plugin-*']` to automatically find all plugin projects
+- Root `vitest.config.ts` discovers projects by glob, covering `packages/@sanity/*`, `plugins/@sanity/*`, `plugins/sanity-plugin-*` and `scripts/*` (plus the two plugins that match neither plugin prefix). A new workspace under any of those paths is picked up by `pnpm test` as soon as it has a `vitest.config.ts`, with no root config change
 - Individual plugins have minimal `vitest.config.ts` starting with just inline deps configuration for vitest-package-exports
 - Plugins can expand their vitest configs and test suites over time as needed (unit tests, integration tests, etc.)
 - Tests run against built `dist/` output after `pnpm build`
