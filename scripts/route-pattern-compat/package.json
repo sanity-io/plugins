@@ -1,0 +1,23 @@
+{
+  "name": "@sanity/route-pattern-compat",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Spike: can URLPattern match every route pattern path-to-regexp v6 accepted, so Presentation can stop being bound to path-to-regexp v8 semantics?",
+  "type": "module",
+  "scripts": {
+    "report": "node src/report.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "path-to-regexp-v6": "npm:path-to-regexp@^6.3.0",
+    "path-to-regexp-v8": "npm:path-to-regexp@^8.4.2",
+    "typescript": "catalog:",
+    "urlpattern-polyfill": "^10.1.0",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": ">=22.18"
+  }
+}
