@@ -6,7 +6,7 @@ export interface TimeAgoProps {
 }
 
 export function TimeAgo({time}: TimeAgoProps) {
-  const timeAgo = useRelativeTime(time)
+  const timeAgo = useRelativeTime(time, {useTemporalPhrase: true})
 
-  return <span title={timeAgo}>{timeAgo} ago</span>
+  return <span title={timeAgo}>{timeAgo}</span>
 }
