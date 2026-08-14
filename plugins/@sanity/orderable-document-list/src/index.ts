@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export {orderRankField, type RankFieldConfig} from './fields/orderRankField'
 export {orderRankOrdering} from './fields/orderRankOrdering'
 export {

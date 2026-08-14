@@ -1,9 +1,10 @@
-import {LayerProvider, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {LayerProvider, ThemeProvider} from '@sanity/ui'
 import {buildTheme} from '@sanity/ui/theme'
-import {render, screen, waitFor} from '@testing-library/react'
+import {ToastProvider} from '@sanity/ui/toast'
+import {act, cleanup, render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
 import {ColorSchemeProvider} from 'sanity'
-import {describe, expect, it, vi, beforeEach} from 'vitest'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
 import {createListenMock} from '../../__tests__/fixtures/listenMock'
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
@@ -24,6 +25,10 @@ vi.mock('sanity', async (importOriginal) => {
 })
 
 describe('FormBuilderTool', () => {
+  afterEach(() => {
+    cleanup()
+  })
+
   beforeEach(() => {
     const fetch = vi.fn().mockReturnValue(of({items: []}))
     vi.mocked(useVersionedClient).mockReturnValue(
@@ -35,7 +40,7 @@ describe('FormBuilderTool', () => {
   })
 
   it('renders picker header for image asset type', async () => {
-    render(
+    const {unmount} = render(
       <ColorSchemeProvider scheme="light">
         <ThemeProvider theme={buildTheme()}>
           <ToastProvider>
@@ -59,6 +64,13 @@ describe('FormBuilderTool', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Insert image/i)).toBeInTheDocument()
+    })
+
+    // Same teardown hygiene as Browser.test.tsx — flush Activity/Popover work
+    // after unmount so jsdom teardown cannot race React updates.
+    unmount()
+    await act(async () => {
+      await Promise.resolve()
     })
   })
 })

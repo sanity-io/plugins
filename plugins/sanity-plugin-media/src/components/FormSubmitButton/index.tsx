@@ -1,4 +1,5 @@
-import {Box, Button, Text, Tooltip} from '@sanity/ui'
+import {Box, Button, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {format} from 'date-fns/format'
 import {type ReactNode} from 'react'
 

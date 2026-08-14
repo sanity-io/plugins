@@ -3,7 +3,8 @@ import {
   type TreeItem,
 } from '@nosferatu500/react-sortable-tree'
 import {AddCircleIcon} from '@sanity/icons/AddCircle'
-import {Box, Button, Card, Flex, Spinner, Stack, Text, Tooltip} from '@sanity/ui'
+import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'

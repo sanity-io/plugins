@@ -1,4 +1,6 @@
-import {Box, Button, Text, Flex, Stack, Tooltip, useToast} from '@sanity/ui'
+import {Box, Button, Text, Flex, Stack} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useState} from 'react'
 import {MemberField, MemberFieldSet, MemberFieldError, set, unset} from 'sanity'
 import type {FieldMember, InputProps, ObjectInputProps} from 'sanity'

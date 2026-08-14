@@ -1,5 +1,7 @@
 import {useEditor} from '@portabletext/editor'
-import {Box, Card, Flex, Hotkeys, Popover, Stack, Text, useToast} from '@sanity/ui'
+import {Box, Card, Flex, Hotkeys, Stack, Text} from '@sanity/ui'
+import {Popover} from '@sanity/ui/popover'
+import {useToast} from '@sanity/ui/toast'
 import type {CSSProperties} from 'react'
 import {useEffect, useId, useLayoutEffect, useMemo, useReducer, useRef, useState} from 'react'
 import {useResolveInitialValueForType, useSchema} from 'sanity'

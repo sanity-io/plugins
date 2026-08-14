@@ -2,18 +2,8 @@ import {AddIcon} from '@sanity/icons/Add'
 import {EditIcon} from '@sanity/icons/Edit'
 import {FolderIcon} from '@sanity/icons/Folder'
 import {TrashIcon} from '@sanity/icons/Trash'
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Inline,
-  Label,
-  Text,
-  Tooltip,
-  Tree,
-  TreeItem,
-} from '@sanity/ui'
+import {Box, Button, Container, Flex, Inline, Label, Text, Tree, TreeItem} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {type ReactNode, useMemo} from 'react'
 import {useDispatch} from 'react-redux'
 

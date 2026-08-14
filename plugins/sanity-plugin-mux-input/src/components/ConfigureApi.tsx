@@ -1,16 +1,5 @@
-import {
-  Box,
-  Button,
-  Card,
-  Checkbox,
-  Code,
-  Dialog,
-  Flex,
-  Inline,
-  Stack,
-  Text,
-  TextInput,
-} from '@sanity/ui'
+import {Box, Button, Card, Checkbox, Dialog, Flex, Inline, Stack, Text, TextInput} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 import {
   type ChangeEvent,
   type SubmitEvent,

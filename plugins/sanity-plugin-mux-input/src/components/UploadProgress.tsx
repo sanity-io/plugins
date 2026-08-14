@@ -1,6 +1,7 @@
 // Lifted from sanity/form/inputs/files/common/UploadProgress
 
-import {Button, Card, Code, Flex, Inline, Stack, Text} from '@sanity/ui'
+import {Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 import {LinearProgress} from 'sanity'
 import {styled} from 'styled-components'
 

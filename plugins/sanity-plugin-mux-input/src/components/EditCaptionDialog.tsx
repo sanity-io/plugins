@@ -1,19 +1,9 @@
 import {DownloadIcon} from '@sanity/icons/Download'
 import {TranslateIcon} from '@sanity/icons/Translate'
 import {UploadIcon} from '@sanity/icons/Upload'
-import {
-  Autocomplete,
-  Button,
-  Card,
-  Dialog,
-  Flex,
-  Label,
-  Spinner,
-  Stack,
-  Text,
-  TextInput,
-  useToast,
-} from '@sanity/ui'
+import {Button, Card, Dialog, Flex, Label, Spinner, Stack, Text, TextInput} from '@sanity/ui'
+import {Autocomplete} from '@sanity/ui/autocomplete'
+import {useToast} from '@sanity/ui/toast'
 import LanguagesList from 'iso-639-1'
 import {useEffect, useId, useRef, useState} from 'react'
 

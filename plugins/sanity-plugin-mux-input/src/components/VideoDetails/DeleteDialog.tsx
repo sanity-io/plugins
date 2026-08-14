@@ -1,5 +1,6 @@
 import {TrashIcon} from '@sanity/icons/Trash'
-import {Box, Button, Card, Checkbox, Dialog, Flex, Heading, Stack, Text, useToast} from '@sanity/ui'
+import {Box, Button, Card, Checkbox, Dialog, Flex, Heading, Stack, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useEffect, useState} from 'react'
 import type {SanityDocument} from 'sanity'
 

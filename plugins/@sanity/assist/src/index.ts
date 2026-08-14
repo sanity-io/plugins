@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export {assist} from './plugin'
 export * from './schemas/serialize/SchemTypeTool'
 export * from './schemas/typeDefExtensions'

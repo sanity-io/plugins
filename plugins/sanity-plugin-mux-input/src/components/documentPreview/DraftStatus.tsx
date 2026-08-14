@@ -1,6 +1,7 @@
 // Adapted from https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/DraftStatus.tsx
 import {EditIcon} from '@sanity/icons/Edit'
-import {Box, Text, Tooltip} from '@sanity/ui'
+import {Box, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import type {PreviewValue, SanityDocument} from 'sanity'
 import {TextWithTone} from 'sanity'
 

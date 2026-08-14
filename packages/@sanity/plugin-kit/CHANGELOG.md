@@ -1,5 +1,13 @@
 # @sanity/plugin-kit
 
+## 10.0.5
+
+### Patch Changes
+
+- [#1835](https://github.com/sanity-io/plugins/pull/1835) [`c8bd954`](https://github.com/sanity-io/plugins/commit/c8bd954764e1852ed95961cc4785be80dee9996b) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxfmt to ^0.63.0
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update oxlint to ^1.78.0 and migrate the init `package.config.ts` template from deprecated `extract` to `tsdoc` for `@sanity/pkg-utils` v12
+
 ## 10.0.4
 
 ### Patch Changes

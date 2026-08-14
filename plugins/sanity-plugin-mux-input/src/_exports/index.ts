@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {definePlugin} from 'sanity'
 
 import createStudioTool, {DEFAULT_TOOL_CONFIG} from '../components/StudioTool'

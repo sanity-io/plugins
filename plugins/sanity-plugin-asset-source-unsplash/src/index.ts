@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {type AssetSource, definePlugin, type Plugin} from 'sanity'
 
 import {UnsplashIcon} from './components/Icon'

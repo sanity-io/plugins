@@ -1,18 +1,9 @@
 import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 import {EditIcon} from '@sanity/icons/Edit'
 import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
-import {
-  Box,
-  Checkbox,
-  Container,
-  Flex,
-  Grid,
-  Spinner,
-  Text,
-  Tooltip,
-  useMediaIndex,
-} from '@sanity/ui'
+import {Box, Checkbox, Container, Flex, Grid, Spinner, Text, useMediaIndex} from '@sanity/ui'
 import {getTheme_v2, type ThemeColorSchemeKey} from '@sanity/ui/theme'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
 import {

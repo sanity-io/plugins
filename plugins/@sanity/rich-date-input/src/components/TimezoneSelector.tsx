@@ -1,6 +1,7 @@
 import {tzOffset} from '@date-fns/tz'
 import {SearchIcon} from '@sanity/icons/Search'
-import {Autocomplete, Box, Card, Text} from '@sanity/ui'
+import {Box, Card, Text} from '@sanity/ui'
+import {Autocomplete} from '@sanity/ui/autocomplete'
 import {type ReactNode, useCallback, useMemo} from 'react'
 import {type ObjectInputProps, set} from 'sanity'
 

@@ -5,11 +5,13 @@ import {css, styled} from 'styled-components'
 
 import {focusRingBorderStyle, focusRingStyle} from './helpers'
 
-export function withFocusRing<Props>(component: ComponentType<Props>) {
-  return styled(component as unknown as any)<Props & {$border?: boolean}>((props) => {
-    const v2 = getTheme_v2(props.theme)
+export function withFocusRing<Props extends object>(component: ComponentType<Props>) {
+  // `$border` is the only consumer-facing addition; `theme` comes from styled-components
+  // (injected via DefaultTheme / ExecutionContext) and must not appear on public props.
+  return styled(component)<{$border?: boolean}>(({$border, theme}) => {
+    const v2 = getTheme_v2(theme)
     const border = {
-      width: props.$border ? 1 : 0,
+      width: $border ? 1 : 0,
       color: 'var(--card-border-color)',
     }
 

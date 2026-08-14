@@ -1,6 +1,7 @@
 import {LockIcon} from '@sanity/icons/Lock'
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
-import {Box, Button, Card, Code, Heading, Stack, Text} from '@sanity/ui'
+import {Box, Button, Card, Heading, Stack, Text} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 import {type ReactElement, useState} from 'react'
 import {definePlugin} from 'sanity'
 

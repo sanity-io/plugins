@@ -1,4 +1,4 @@
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useEffect, useMemo, useState} from 'react'
 
 import {getAsset, updateMasterAccess} from '../actions/assets'

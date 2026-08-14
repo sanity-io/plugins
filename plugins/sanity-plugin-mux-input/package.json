@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-mux-input",
-  "version": "5.0.8",
+  "version": "5.0.10",
   "description": "An input component that integrates Sanity Studio with Mux video encoding/hosting service.",
   "keywords": [
     "input",
@@ -56,7 +56,7 @@
     "rxjs": "catalog:",
     "scroll-into-view-if-needed": "^3.1.0",
     "suspend-react": "catalog:",
-    "swr": "^2.4.2",
+    "swr": "^2.5.0",
     "type-fest": "^4.41.0",
     "use-device-pixel-ratio": "^1.1.2",
     "use-error-boundary": "^2.0.6"
@@ -65,7 +65,7 @@
     "@sanity/client": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
-    "@types/lodash": "^4.17.24",
+    "@types/lodash": "^4.17.25",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-is": "catalog:",
