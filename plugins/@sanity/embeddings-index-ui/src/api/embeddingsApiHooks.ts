@@ -8,6 +8,10 @@ export function useApiClient(): SanityClient {
     if (customHost) {
       return client.withConfig({
         apiHost: customHost,
+        // Required so the override host is used as-is (not `{projectId}.{apiHost}`).
+        // There is no non-deprecated replacement for this client flag.
+        // oxlint-disable-next-line no-deprecated -- custom embeddings-index-host must not be project-prefixed
+        useProjectHostname: false,
         withCredentials: false,
       })
     }
