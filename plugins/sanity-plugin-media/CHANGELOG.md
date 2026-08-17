@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 6.1.4
+
+### Patch Changes
+
+- [#1904](https://github.com/sanity-io/plugins/pull/1904) [`3c18bf9`](https://github.com/sanity-io/plugins/commit/3c18bf9e3c8a235349b506d1f80fe5a7141503f2) Thanks [@trostum](https://github.com/trostum)! - Fix folder reference being lost when saving asset metadata (title, alt text, description, tags)
+
 ## 6.1.3
 
 ### Patch Changes
