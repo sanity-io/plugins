@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 10.0.6
+
+### Patch Changes
+
+- [#1893](https://github.com/sanity-io/plugins/pull/1893) [`85f79d3`](https://github.com/sanity-io/plugins/commit/85f79d3f9411657b9a33f819db46f6deee6744b9) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency execa to ^10.0.1
+
 ## 10.0.5
 
 ### Patch Changes

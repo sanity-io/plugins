@@ -1,5 +1,11 @@
 # sanity-plugin-latex-input
 
+## 3.0.8
+
+### Patch Changes
+
+- [#1888](https://github.com/sanity-io/plugins/pull/1888) [`c201930`](https://github.com/sanity-io/plugins/commit/c201930211e3a867acc873246d9514ef92d536e5) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency katex to ^0.18.4
+
 ## 3.0.7
 
 ### Patch Changes
