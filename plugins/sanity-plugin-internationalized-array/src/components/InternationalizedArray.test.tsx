@@ -46,6 +46,7 @@ vi.mock('./InternationalizedArrayContext', () => ({
     defaultLanguages: [],
     buttonAddAll: true,
     buttonLocations: ['field'],
+    restoreOrder: true,
     languageDisplay: 'codeOnly',
     apiVersion: '2025-10-15',
     select: {},
@@ -401,6 +402,21 @@ describe('InternationalizedArray', () => {
     const value = createValues(['fr', 'en'])
     // readOnly at the document level (props.readOnly, mapped to documentReadOnly)
     const props = createMockArrayProps({onChange, value, readOnly: true})
+
+    renderInternationalizedArray(props)
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not auto-reorder when restoreOrder is false', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      restoreOrder: false,
+    })
+
+    const onChange = vi.fn()
+    const value = createValues(['fr', 'en'])
+    const props = createMockArrayProps({onChange, value})
 
     renderInternationalizedArray(props)
 
