@@ -598,7 +598,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/mutator':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.50(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
@@ -623,7 +623,7 @@ importers:
     devDependencies:
       '@sanity/schema':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)
+        version: 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
@@ -860,7 +860,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/mutator':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.50(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/studio-secrets':
         specifier: workspace:^
         version: link:../studio-secrets
@@ -1032,13 +1032,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/mutator':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.50(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)
+        version: 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -1267,13 +1267,13 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/mutator':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.50(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)
+        version: 6.10.0-next.50(@types/react@19.2.18)
       react-dnd:
         specifier: ^16.0.1
         version: 16.0.1(@types/node@24.13.3)(@types/react@19.2.18)(react@19.2.8)
@@ -1830,13 +1830,13 @@ importers:
         version: 5.0.3
       '@sanity/mutator':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)(supports-color@10.2.2)
+        version: 6.10.0-next.50(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/schema':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)
+        version: 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/util':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)
+        version: 6.10.0-next.50(@types/react@19.2.18)
       sanity:
         specifier: next
         version: 6.10.0-next.50(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)
@@ -2234,7 +2234,7 @@ importers:
         version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)
+        version: 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2387,7 +2387,7 @@ importers:
         version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)
+        version: 6.10.0-next.50(@types/react@19.2.18)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -2497,7 +2497,7 @@ importers:
         version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)
+        version: 6.10.0-next.50(@types/react@19.2.18)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -2665,7 +2665,7 @@ importers:
         version: 9.0.11
       groq:
         specifier: next
-        version: 6.10.0-next.40
+        version: 6.10.0-next.50
       is-hotkey-esm:
         specifier: ^1.0.0
         version: 1.0.0
@@ -3159,7 +3159,7 @@ importers:
         version: 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
-        version: 6.10.0-next.40(@types/react@19.2.18)
+        version: 6.10.0-next.50(@types/react@19.2.18)
       sanity:
         specifier: next
         version: 6.10.0-next.50(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@2.19.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(immer@11.1.16)(jiti@2.7.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.3)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)
@@ -7229,8 +7229,8 @@ packages:
       xstate:
         optional: true
 
-  '@sanity/mutator@6.10.0-next.40':
-    resolution: {integrity: sha512-azTLK+lRPrn1xWSoxbz5gHh/NmxUq9ZQUqjl09Pirjc/M9dlJCDSg1jt1ckfzEn6IrCZpHjOb9U6rY5+x34lZQ==}
+  '@sanity/mutator@6.10.0-next.50':
+    resolution: {integrity: sha512-IOdqfmdQEfxgUWroKwQRB49ql14LMFz7QXDGzg1hItHpQ3Rd+O8evzh4eodue2cV4Ta0SvN/f4EfEsVOQrDuwQ==}
 
   '@sanity/parse-package-json@2.3.1':
     resolution: {integrity: sha512-ObHxlg9RxRWRWo8OO+Ddbh+4VN2R7vkncfK97Dvybixxh8UX6I0fpR4N4xa55E1PcGPsjAFSMWlS+tfInTdllA==}
@@ -7273,8 +7273,8 @@ packages:
     engines: {node: '>=22.12'}
     hasBin: true
 
-  '@sanity/schema@6.10.0-next.40':
-    resolution: {integrity: sha512-O1zBGn9hZQjNo65DSUpcplzZeb5PAHaenitw+d911IfjdIilYmqFoWSCJbJ2SK7HJ3nWlxSykHWFZ7l9iOq9CQ==}
+  '@sanity/schema@6.10.0-next.50':
+    resolution: {integrity: sha512-BYjLRcMqzU2y3xa9Pk6VyibFl3Z2XFzfdP98QutjfHGY6x8v9zY4lEUqJQ+Mk1yweKNWl/WhL7v/Gf8RDzZsWA==}
 
   '@sanity/sdk-react@2.19.0':
     resolution: {integrity: sha512-dphdWEAY7vO3i9Y4Eht85LJnezqwAhTH2U/7iewMMqLXBYPrfRHIEium2eTWb5rX7UpigiqRcJpREi9ZkcKjBA==}
@@ -7361,8 +7361,8 @@ packages:
       react: ^19.2
       react-dom: ^19.2
 
-  '@sanity/util@6.10.0-next.40':
-    resolution: {integrity: sha512-xCI6qzZc+2tWJKBo/uBgt4CBmZm6gse4RYzL2+Q0HPdapHQmBH0zIZLtFyJ1tMb14s296dVDQFckVxs9/koAfg==}
+  '@sanity/util@6.10.0-next.50':
+    resolution: {integrity: sha512-N3tRaD5OuQlBnNjNwYSu5KEhRWMnVYAml+csj2nRJJDbHaQRbDOezy7qc/fdQE6PKZl2wscomAgyz/D6X9ERAg==}
     engines: {node: '>=22.12'}
 
   '@sanity/uuid@3.0.3':
@@ -10432,8 +10432,8 @@ packages:
     resolution: {integrity: sha512-kj56ZjnOFbgDt91zYwQ10jsVUtVGJqAKfRbAir0EvTK84O5ZsSyc0rDEm2P3jmAJkxs4X1DOG8vtaYJQIA/XCA==}
     engines: {node: '>=22.12'}
 
-  groq@6.10.0-next.40:
-    resolution: {integrity: sha512-9n+AEEVHYZpriYshQyy/hKBPY+DiHXJdm3B5FjxMtRPtpIn5XfDfWOCSsR5YX16+6kALPPmVG+bY2nPVWCy0CA==}
+  groq@6.10.0-next.50:
+    resolution: {integrity: sha512-DiH3GZ5LOjSRXXlq9vztmbdoa+IUGAwiHqnBi5nQvy0WWIWQPXkSg08q/0GdU0AaJUS+ssQfkbyp27MvU6JOwA==}
     engines: {node: '>=22.12'}
 
   gtoken@7.1.0:
@@ -19432,7 +19432,7 @@ snapshots:
   '@portabletext/sanity-bridge@3.2.5(@types/react@19.2.18)':
     dependencies:
       '@portabletext/schema': 2.2.4
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
     transitivePeerDependencies:
       - '@types/react'
@@ -19755,7 +19755,7 @@ snapshots:
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.3)(vite@8.2.1)
       '@sanity/cli-core': 2.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(supports-color@10.2.2)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/workbench-cli': 1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
@@ -19810,7 +19810,7 @@ snapshots:
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.3)(vite@8.2.1)
       '@sanity/cli-core': 2.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(supports-color@5.5.0)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/workbench-cli': 1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@5.5.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
@@ -19865,7 +19865,7 @@ snapshots:
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.3)(vite@8.2.1)
       '@sanity/cli-core': 2.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(supports-color@8.1.1)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/workbench-cli': 1.10.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(jiti@2.7.0)(supports-color@8.1.1)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
@@ -20047,7 +20047,7 @@ snapshots:
       '@sanity/import': 6.0.3(@sanity/client@7.26.2)(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@10.2.2)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.6.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(rolldown@1.2.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/template-validator': 3.1.0
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
@@ -20148,7 +20148,7 @@ snapshots:
       '@sanity/import': 6.0.3(@sanity/client@7.26.2)(@types/react@19.2.18)(supports-color@5.5.0)
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@5.5.0)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.6.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(rolldown@1.2.3)(supports-color@5.5.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/template-validator': 3.1.0
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
@@ -20249,7 +20249,7 @@ snapshots:
       '@sanity/import': 6.0.3(@sanity/client@7.26.2)(@types/react@19.2.18)(supports-color@8.1.1)
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@8.1.1)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.6.0(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.2)(rolldown@1.2.3)(supports-color@8.1.1)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/template-validator': 3.1.0
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
@@ -20358,7 +20358,7 @@ snapshots:
       chokidar: 3.6.0
       debug: 4.4.3(supports-color@10.2.2)
       globby: 11.1.0
-      groq: 6.10.0-next.40
+      groq: 6.10.0-next.50
       groq-js: 1.30.3(supports-color@10.2.2)
       json5: 2.2.3
       lodash-es: 4.18.1
@@ -20389,7 +20389,7 @@ snapshots:
       chokidar: 3.6.0
       debug: 4.4.3(supports-color@5.5.0)
       globby: 11.1.0
-      groq: 6.10.0-next.40
+      groq: 6.10.0-next.50
       groq-js: 1.30.3(supports-color@5.5.0)
       json5: 2.2.3
       lodash-es: 4.18.1
@@ -20420,7 +20420,7 @@ snapshots:
       chokidar: 3.6.0
       debug: 4.4.3(supports-color@8.1.1)
       globby: 11.1.0
-      groq: 6.10.0-next.40
+      groq: 6.10.0-next.50
       groq-js: 1.30.3(supports-color@8.1.1)
       json5: 2.2.3
       lodash-es: 4.18.1
@@ -20534,7 +20534,7 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/client': 7.26.2
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/mutator': 6.10.0-next.40(@types/react@19.2.18)(supports-color@10.2.2)
+      '@sanity/mutator': 6.10.0-next.50(@types/react@19.2.18)(supports-color@10.2.2)
       debug: 4.4.3(supports-color@10.2.2)
       get-it: 8.8.3
       gunzip-maybe: 1.4.2
@@ -20553,7 +20553,7 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/client': 7.26.2
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/mutator': 6.10.0-next.40(@types/react@19.2.18)(supports-color@5.5.0)
+      '@sanity/mutator': 6.10.0-next.50(@types/react@19.2.18)(supports-color@5.5.0)
       debug: 4.4.3(supports-color@5.5.0)
       get-it: 8.8.3
       gunzip-maybe: 1.4.2
@@ -20572,7 +20572,7 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/client': 7.26.2
       '@sanity/generate-help-url': 4.0.0
-      '@sanity/mutator': 6.10.0-next.40(@types/react@19.2.18)(supports-color@8.1.1)
+      '@sanity/mutator': 6.10.0-next.50(@types/react@19.2.18)(supports-color@8.1.1)
       debug: 4.4.3(supports-color@8.1.1)
       get-it: 8.8.3
       gunzip-maybe: 1.4.2
@@ -20615,7 +20615,7 @@ snapshots:
       '@sanity/client': 7.26.2
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
-      '@sanity/util': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.50(@types/react@19.2.18)
       arrify: 3.0.0
       debug: 4.4.3(supports-color@10.2.2)
       fast-fifo: 1.3.2
@@ -20631,7 +20631,7 @@ snapshots:
       '@sanity/client': 7.26.2
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
-      '@sanity/util': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.50(@types/react@19.2.18)
       arrify: 3.0.0
       debug: 4.4.3(supports-color@5.5.0)
       fast-fifo: 1.3.2
@@ -20647,7 +20647,7 @@ snapshots:
       '@sanity/client': 7.26.2
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
-      '@sanity/util': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.50(@types/react@19.2.18)
       arrify: 3.0.0
       debug: 4.4.3(supports-color@8.1.1)
       fast-fifo: 1.3.2
@@ -20672,7 +20672,7 @@ snapshots:
     optionalDependencies:
       xstate: 5.32.5
 
-  '@sanity/mutator@6.10.0-next.40(@types/react@19.2.18)(supports-color@10.2.2)':
+  '@sanity/mutator@6.10.0-next.50(@types/react@19.2.18)(supports-color@10.2.2)':
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
@@ -20683,7 +20683,7 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@sanity/mutator@6.10.0-next.40(@types/react@19.2.18)(supports-color@5.5.0)':
+  '@sanity/mutator@6.10.0-next.50(@types/react@19.2.18)(supports-color@5.5.0)':
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
@@ -20694,7 +20694,7 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@sanity/mutator@6.10.0-next.40(@types/react@19.2.18)(supports-color@8.1.1)':
+  '@sanity/mutator@6.10.0-next.50(@types/react@19.2.18)(supports-color@8.1.1)':
     dependencies:
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
@@ -20950,7 +20950,7 @@ snapshots:
       - vue-tsc
       - yaml
 
-  '@sanity/schema@6.10.0-next.40(@types/react@19.2.18)':
+  '@sanity/schema@6.10.0-next.50(@types/react@19.2.18)':
     dependencies:
       '@sanity/descriptors': 1.3.0
       '@sanity/generate-help-url': 4.0.0
@@ -20971,7 +20971,7 @@ snapshots:
       '@sanity/message-protocol': 0.23.0
       '@sanity/sdk': 2.19.0(@types/react@19.2.18)(immer@11.1.16)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
-      groq: 6.10.0-next.40
+      groq: 6.10.0-next.50
       react: 19.2.8
       react-compiler-runtime: 1.0.0(react@19.2.8)
       react-dom: 19.2.8(react@19.2.8)
@@ -20997,7 +20997,7 @@ snapshots:
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
-      groq: 6.10.0-next.40
+      groq: 6.10.0-next.50
       groq-js: 2.0.0
       reselect: 5.2.0
       rxjs: 7.8.2
@@ -21031,7 +21031,7 @@ snapshots:
     dependencies:
       '@sanity/color': 3.0.8
       '@sanity/icons': 5.2.1(react@19.2.8)
-      '@sanity/ui': 4.0.2(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+      '@sanity/ui': 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       react: 19.2.8
       react-compiler-runtime: 1.0.0(react@19.2.8)
       react-refractor: 4.0.0(react@19.2.8)
@@ -21144,7 +21144,7 @@ snapshots:
       react-dom: 19.2.8(react@19.2.8)
       react-refractor: 4.0.0(react@19.2.8)
 
-  '@sanity/util@6.10.0-next.40(@types/react@19.2.18)':
+  '@sanity/util@6.10.0-next.50(@types/react@19.2.18)':
     dependencies:
       '@date-fns/tz': 1.5.0
       '@date-fns/utc': 2.1.1
@@ -24567,7 +24567,7 @@ snapshots:
     dependencies:
       obug: 2.1.4
 
-  groq@6.10.0-next.40: {}
+  groq@6.10.0-next.50: {}
 
   gtoken@7.1.0(supports-color@10.2.2):
     dependencies:
@@ -27690,16 +27690,16 @@ snapshots:
       '@sanity/message-protocol': 0.24.0
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@10.2.2)(xstate@5.32.5)
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
-      '@sanity/mutator': 6.10.0-next.40(@types/react@19.2.18)(supports-color@10.2.2)
+      '@sanity/mutator': 6.10.0-next.50(@types/react@19.2.18)(supports-color@10.2.2)
       '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.10.0-next.50)
       '@sanity/preview-url-secret': 4.1.4(@sanity/client@7.26.2)
       '@sanity/prism-groq': 1.1.2
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/sdk-react': 2.19.0(@types/react@19.2.18)(immer@11.1.16)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/ui': 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
-      '@sanity/util': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/uuid': 3.0.3
       '@sanity/workbench': 0.1.0-alpha.36(@sanity/sdk@2.19.0)(react@19.2.8)(xstate@5.32.5)
       '@sentry/react': 10.70.0(react@19.2.8)
@@ -27839,16 +27839,16 @@ snapshots:
       '@sanity/message-protocol': 0.24.0
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@5.5.0)(xstate@5.32.5)
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
-      '@sanity/mutator': 6.10.0-next.40(@types/react@19.2.18)(supports-color@5.5.0)
+      '@sanity/mutator': 6.10.0-next.50(@types/react@19.2.18)(supports-color@5.5.0)
       '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.10.0-next.50)
       '@sanity/preview-url-secret': 4.1.4(@sanity/client@7.26.2)
       '@sanity/prism-groq': 1.1.2
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/sdk-react': 2.19.0(@types/react@19.2.18)(immer@11.1.16)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/ui': 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
-      '@sanity/util': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/uuid': 3.0.3
       '@sanity/workbench': 0.1.0-alpha.36(@sanity/sdk@2.19.0)(react@19.2.8)(xstate@5.32.5)
       '@sentry/react': 10.70.0(react@19.2.8)
@@ -27988,16 +27988,16 @@ snapshots:
       '@sanity/message-protocol': 0.24.0
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@8.1.1)(xstate@5.32.5)
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
-      '@sanity/mutator': 6.10.0-next.40(@types/react@19.2.18)(supports-color@8.1.1)
+      '@sanity/mutator': 6.10.0-next.50(@types/react@19.2.18)(supports-color@8.1.1)
       '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.10.0-next.50)
       '@sanity/preview-url-secret': 4.1.4(@sanity/client@7.26.2)
       '@sanity/prism-groq': 1.1.2
-      '@sanity/schema': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/schema': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/sdk-react': 2.19.0(@types/react@19.2.18)(immer@11.1.16)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(xstate@5.32.5)
       '@sanity/telemetry': 1.1.0(react@19.2.8)
       '@sanity/types': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/ui': 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
-      '@sanity/util': 6.10.0-next.40(@types/react@19.2.18)
+      '@sanity/util': 6.10.0-next.50(@types/react@19.2.18)
       '@sanity/uuid': 3.0.3
       '@sanity/workbench': 0.1.0-alpha.36(@sanity/sdk@2.19.0)(react@19.2.8)(xstate@5.32.5)
       '@sentry/react': 10.70.0(react@19.2.8)
