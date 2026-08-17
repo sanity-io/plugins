@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.2.0
+
+### Minor Changes
+
+- [#1909](https://github.com/sanity-io/plugins/pull/1909) [`9ca6717`](https://github.com/sanity-io/plugins/commit/9ca6717e093143d37f54671f6fe6f69386dcbdc5) Thanks [@stipsan](https://github.com/stipsan)! - Add `restoreOrder` plugin option (default `true`) to opt out of automatic language order restoration on document open
+
 ## 5.1.27
 
 ### Patch Changes
