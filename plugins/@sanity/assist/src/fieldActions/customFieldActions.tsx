@@ -1,4 +1,4 @@
-import type {AgentActionPath} from '@sanity/client/stega'
+import type {AgentActionPath} from '@sanity/client'
 import {type ToastParams, useToast} from '@sanity/ui/toast'
 import {useMemo} from 'react'
 import {
