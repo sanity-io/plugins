@@ -100,7 +100,6 @@ const config: OxlintConfig = {
     // React Compiler recommended rules are on via `correctness`. These extra
     // presets are off until we opt in (oxlint 1.79 replaced `react/react-compiler`).
     'react/unsupported-syntax': 'off',
-    'react/void-use-memo': 'off',
     'react/invariant': 'off',
     'react/rule-suppression': 'off',
     'react/syntax': 'off',
