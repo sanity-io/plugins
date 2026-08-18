@@ -33,7 +33,6 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
 
     return true
   }, [asset])
-  // oxlint-disable-next-line react/react-compiler
   const isPreparingStaticRenditions = useMemo<boolean>(() => {
     // Legacy: If static_renditions has a status field, it was created with mp4_support (deprecated)
     // We don't process this old format, just return false
@@ -51,6 +50,7 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
       return false
     }
     return files.some((file) => file.status === 'preparing')
+    // oxlint-disable-next-line react/preserve-manual-memoization
   }, [asset?.data?.static_renditions?.status, asset?.data?.static_renditions?.files])
   const playRef = useRef<HTMLDivElement>(null)
   const muteRef = useRef<HTMLDivElement>(null)

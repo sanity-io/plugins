@@ -71,9 +71,10 @@ export const formMachine = setup({
     }),
   },
   actors: {
-    // The explicit `Promise<SanityDocument>` return types keep the inferred machine
-    // type portable for declaration emit (TS2883), by referencing the `SanityDocument`
-    // alias imported from `sanity` instead of a deep `@sanity/client` path.
+    // Explicit return types keep the inferred machine type portable for
+    // declaration emit (TS2883), by referencing aliases imported from `sanity`
+    // instead of a deep `@sanity/client` path. `delete` returns a mutation
+    // result in client v8, not the deleted document.
     'create document': fromPromise(
       ({
         input,
@@ -97,7 +98,11 @@ export const formMachine = setup({
       },
     ),
     'delete document': fromPromise(
-      ({input}: {input: Required<Pick<Context, 'client' | 'id'>>}): Promise<SanityDocument> => {
+      ({
+        input,
+      }: {
+        input: Required<Pick<Context, 'client' | 'id'>>
+      }): Promise<Awaited<ReturnType<SanityClient['delete']>>> => {
         return input.client.delete(input.id)
       },
     ),

@@ -57,7 +57,7 @@ export function IndexEditor(props: {
     ...selectedIndex,
   }))
 
-  // oxlint-disable-next-line react/react-compiler
+  // oxlint-disable-next-line react/set-state-in-effect
   useEffect(() => setIndex(selectedIndex ?? {...defaultIndex}), [selectedIndex, defaultIndex])
 
   const handleSubmit = useCallback(

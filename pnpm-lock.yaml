@@ -2437,12 +2437,15 @@ importers:
 
   plugins/sanity-plugin-iframe-pane:
     dependencies:
+      '@sanity/client':
+        specifier: 'catalog:'
+        version: 8.1.0(vitest@4.1.11)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 5.2.1(react@19.2.8)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
-        version: 4.1.4(@sanity/client@7.26.2)
+        version: 4.1.4(@sanity/client@8.1.0)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)

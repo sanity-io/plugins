@@ -150,7 +150,7 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
     if (!props.value && !data) {
       // Kicking off the initial load intentionally sets loading/error state on
       // mount so the field shows a spinner while the loader resolves.
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-effect
       void fetchData()
     }
   }, [fetchData, data, secrets, options.secrets, props.value])
@@ -186,12 +186,11 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
     handleQueryChangeRef.current = handleQueryChange
   }, [handleQueryChange])
 
-  // oxlint-disable react/react-compiler -- stable debounce instance; latest handler via ref
   const debouncedHandler = useMemo(
+    // oxlint-disable-next-line react/refs
     () => debounce((value: string | null) => handleQueryChangeRef.current(value), 300),
     [],
   )
-  // oxlint-enable react/react-compiler
 
   // Cancel only on unmount — not when the underlying handler identity changes.
   useEffect(() => () => debouncedHandler.cancel(), [debouncedHandler])

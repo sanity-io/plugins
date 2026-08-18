@@ -68,7 +68,7 @@ function PlayerActionsMenu(
 
   useEffect(() => {
     if (open && dialogState) {
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-effect
       setOpen(false)
     }
   }, [dialogState, open])

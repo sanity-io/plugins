@@ -75,6 +75,7 @@ export default function DocumentList(props: DocumentListProps) {
 
   const parentRef = useRef(null)
 
+  // oxlint-disable-next-line react/incompatible-library
   const virtualizer = useVirtualizer({
     count: dataFiltered.length,
     getScrollElement: useCallback(() => parentRef.current, []),

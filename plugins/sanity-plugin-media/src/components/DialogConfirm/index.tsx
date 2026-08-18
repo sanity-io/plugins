@@ -63,9 +63,9 @@ const DialogConfirm = (props: Props) => {
   return (
     <Dialog
       animate
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/static-components
       footer={<Footer />}
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/static-components
       header={<Header />}
       id="confirm"
       onClose={handleClose}
