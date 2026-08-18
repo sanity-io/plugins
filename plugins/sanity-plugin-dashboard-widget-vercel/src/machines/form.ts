@@ -5,6 +5,13 @@ import {assertEvent, assign, fromPromise, setup} from 'xstate'
 import {DEPLOYMENT_TARGET_DOCUMENT_TYPE} from '../constants'
 import type {Sanity} from '../types'
 
+// Named locally so dts emit does not reach into `@sanity/client` (TS2883).
+type DeleteMutationResult = {
+  transactionId: string
+  documentIds: string[]
+  results: {id: string; operation: string}[]
+}
+
 type Context = {
   client: SanityClient
   document?: Sanity.DeploymentTarget
@@ -102,7 +109,7 @@ export const formMachine = setup({
         input,
       }: {
         input: Required<Pick<Context, 'client' | 'id'>>
-      }): Promise<Awaited<ReturnType<SanityClient['delete']>>> => {
+      }): Promise<DeleteMutationResult> => {
         return input.client.delete(input.id)
       },
     ),
