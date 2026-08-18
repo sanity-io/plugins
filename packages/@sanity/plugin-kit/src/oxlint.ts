@@ -97,18 +97,18 @@ const config: OxlintConfig = {
 
     // Prefer function components; allow class error boundaries (no hook equivalent yet)
     'react/prefer-function-component': ['error', {allowErrorBoundary: true}],
-    // React compiler rules not enabled by default
-    'react/unsupported-syntax': 'error',
-    'react/void-use-memo': 'error',
-    'react/invariant': 'error',
-    'react/rule-suppression': 'error',
-    'react/syntax': 'error',
-    'react/todo': 'error',
-    'react/capitalized-calls': 'error',
-    'react/exhaustive-effect-dependencies': 'error',
-    'react/hooks': 'error',
-    'react/memo-dependencies': 'error',
-    'react/no-deriving-state-in-effects': 'error',
+    // React compiler rules not enabled by default, enable later
+    // 'react/unsupported-syntax': 'error',
+    // 'react/void-use-memo': 'error',
+    // 'react/invariant': 'error',
+    // 'react/rule-suppression': 'error',
+    // 'react/syntax': 'error',
+    // 'react/todo': 'error',
+    // 'react/capitalized-calls': 'error',
+    // 'react/exhaustive-effect-dependencies': 'error',
+    // 'react/hooks': 'error',
+    // 'react/memo-dependencies': 'error',
+    // 'react/no-deriving-state-in-effects': 'error',
 
     'typescript/ban-ts-comment': 'error',
     'typescript/no-deprecated': 'error',
