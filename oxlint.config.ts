@@ -19,6 +19,15 @@ export default defineConfig({
   ],
   overrides: [
     {
+      // github-script loads these with require(); they must stay CommonJS. console.log
+      // is the workflow log stream (same as the previous inline script).
+      files: ['.github/scripts/**/*.cjs'],
+      rules: {
+        'import/no-commonjs': 'off',
+        'no-console': 'off',
+      },
+    },
+    {
       files: ['e2e/**/*.ts'],
       rules: {
         'no-console': 'off',
