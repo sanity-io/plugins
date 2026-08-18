@@ -26,7 +26,7 @@ catalog:
   '@portabletext/to-html': ^5.0.3
   '@portabletext/types': ^4.0.2
   '@sanity/asset-utils': ^2.3.0
-  '@sanity/client': ^7.26.2
+  '@sanity/client': ^8.1.0
   '@sanity/color': ^3.0.8
   '@sanity/icons': ^5.2.1
   '@sanity/image-url': ^2.1.1
@@ -162,7 +162,7 @@ minimumReleaseAgeExclude:
 overrides:
   '@types/node': 'catalog:'
   # Type errors happen if there are duplicates of `@sanity/client` in node_modules
-  '@sanity/client': 'catalog:'
+  '@sanity/client@8': 'catalog:'
   # Pin the Sanity Studio monorepo to the `next` dist-tag for compatibility testing.
   # Keep mutator/schema/types/util/groq in lockstep with sanity so dts emit and
   # transitive deps (cli/migrate/portabletext) cannot leave a second major.minor

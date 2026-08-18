@@ -56,7 +56,6 @@ function Indexes() {
   const onCreateIndexClose = useCallback(() => setCreateIndexOpen(false), [])
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
     setSelectedIndex(indexes.find((i) => i.indexName === selectedIndex?.indexName))
   }, [indexes, selectedIndex])
 
@@ -110,7 +109,6 @@ function Indexes() {
   )
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
     updateIndexes()
   }, [updateIndexes])
 

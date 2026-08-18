@@ -32,7 +32,7 @@ import type {OxlintConfig} from 'oxlint'
  * @public
  */
 const config: OxlintConfig = {
-  plugins: ['typescript', 'unicorn', 'react', 'react-perf', 'oxc', 'import', 'jsx-a11y', 'promise'],
+  plugins: ['typescript', 'unicorn', 'react', 'oxc', 'import', 'jsx-a11y', 'promise'],
   ignorePatterns: ['**/.sanity/*', '**/dist/*', '**/sanity.types.ts'],
   options: {
     denyWarnings: true,
@@ -97,9 +97,18 @@ const config: OxlintConfig = {
 
     // Prefer function components; allow class error boundaries (no hook equivalent yet)
     'react/prefer-function-component': ['error', {allowErrorBoundary: true}],
-
-    // React Compiler checks
-    'react/react-compiler': 'error',
+    // React compiler rules not enabled by default
+    'react/unsupported-syntax': 'error',
+    'react/void-use-memo': 'error',
+    'react/invariant': 'error',
+    'react/rule-suppression': 'error',
+    'react/syntax': 'error',
+    'react/todo': 'error',
+    'react/capitalized-calls': 'error',
+    'react/exhaustive-effect-dependencies': 'error',
+    'react/hooks': 'error',
+    'react/memo-dependencies': 'error',
+    'react/no-deriving-state-in-effects': 'error',
 
     'typescript/ban-ts-comment': 'error',
     'typescript/no-deprecated': 'error',
