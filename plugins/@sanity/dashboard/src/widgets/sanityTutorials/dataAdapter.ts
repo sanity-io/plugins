@@ -34,11 +34,11 @@ export function useDataAdapter() {
   return useMemo(
     () => ({
       getFeed: (templateRepoId: string) => {
-        const uri = templateRepoId
+        const url = templateRepoId
           ? `/addons/dashboard?templateRepoId=${templateRepoId}`
           : '/addons/dashboard'
         return versionedClient.observable.request<{items: FeedItem[]}>({
-          uri,
+          url,
           tag: 'dashboard.sanity-tutorials',
           withCredentials: false,
         })

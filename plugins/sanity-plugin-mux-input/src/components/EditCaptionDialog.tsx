@@ -61,7 +61,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setLanguageCode(track.language_code || '')
     setName(track.name || '')
     setVttUrl('')

@@ -20,7 +20,6 @@ type Props = {
 }
 
 export const ToolOptionsProvider = ({options, children}: PropsWithChildren<Props>) => {
-  // oxlint-disable-next-line react-compiler
   const value = useMemo<ContextProps>(() => {
     let creditLineExcludeSources
 
@@ -44,6 +43,7 @@ export const ToolOptionsProvider = ({options, children}: PropsWithChildren<Props
       excludeTagSlugs: options?.excludeTags?.length ? [...options.excludeTags] : [],
       locales: options?.locales,
     }
+    // oxlint-disable-next-line react/preserve-manual-memoization
   }, [
     options?.creditLine?.enabled,
     options?.components,

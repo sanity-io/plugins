@@ -40,7 +40,7 @@ export function ProjectInfo(props: ProjectInfoProps) {
 
     subscriptions.push(
       versionedClient.observable
-        .request<UserApplication[]>({uri: '/user-applications', tag: 'dashboard.project-info'})
+        .request<UserApplication[]>({url: '/user-applications', tag: 'dashboard.project-info'})
         .subscribe({
           next: (result) => setStudioApps(result.filter((app) => app.type === 'studio')),
           error: (error) => {
@@ -57,7 +57,7 @@ export function ProjectInfo(props: ProjectInfoProps) {
       versionedClient.observable
         .request({
           method: 'HEAD',
-          uri: `/graphql/${dataset}/default`,
+          url: `/graphql/${dataset}/default`,
           tag: 'dashboard.project-info.graphql-api',
         })
         .subscribe({

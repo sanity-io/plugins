@@ -37,7 +37,7 @@ export function AssistConnectorsOverlay(props: {connectors: Connector[]}) {
   useEffect(() => {
     // hacky workaround to force redraw for connectors on initial render
     // this seem to improve initial measurements of elements
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setRedraw(true)
   }, [])
 

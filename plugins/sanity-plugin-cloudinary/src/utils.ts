@@ -62,7 +62,7 @@ export function assetUrl(
  */
 export function normalizeCloudinaryAsset(asset: CloudinaryAssetResponse): Record<string, unknown> {
   const assetWithoutNulls = Object.fromEntries(
-    Object.entries(asset).filter(([_, assetValue]) => assetValue !== null),
+    Object.entries(asset).filter(([, assetValue]) => assetValue !== null),
   ) as CloudinaryAssetResponse
 
   const requiredFields = {

@@ -119,7 +119,7 @@ describe('BulkPublish', () => {
 
     await waitFor(() => {
       expect(mockRequest).toHaveBeenCalledWith({
-        uri: '/publish/project-1/production',
+        url: '/publish/project-1/production',
         method: 'POST',
         body: [{documentId: 'doc-1'}, {documentId: 'doc-2'}],
       })

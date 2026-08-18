@@ -164,7 +164,7 @@ const DialogTagEdit = (props: Props) => {
   return (
     <Dialog
       animate
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/static-components
       footer={<Footer />}
       header="Edit Tag"
       id={id}

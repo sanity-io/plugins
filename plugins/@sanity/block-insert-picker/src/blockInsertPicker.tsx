@@ -445,7 +445,7 @@ export function BlockInsertPicker({
 
   useLayoutEffect(() => {
     if (!open) {
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-effect
       setCursorRect(null)
       return
     }

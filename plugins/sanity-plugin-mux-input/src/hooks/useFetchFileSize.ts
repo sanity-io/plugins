@@ -10,7 +10,7 @@ export function useFetchFileSize(stagedUpload: StagedUpload, maxFileSize?: numbe
   useEffect(() => {
     // Fetch URL Upload file size
     if (stagedUpload.type === 'url') {
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-effect
       setIsLoadingFileSize(false)
       setCanSkipFileSizeValidation(false)
       setFileSize(null)

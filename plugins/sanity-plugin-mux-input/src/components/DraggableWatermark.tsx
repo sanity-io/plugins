@@ -222,7 +222,7 @@ export default function DraggableWatermark({
 
   useEffect(() => {
     if (!isDragging && watermark.position) {
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-effect
       setLocalPosition(watermark.position)
     }
   }, [watermark.position, isDragging])
@@ -308,7 +308,7 @@ export default function DraggableWatermark({
   const opacityForRender = hasManualOverlay
     ? (parseOpacityPercent(watermark.overlay_settings?.opacity) ?? opacity)
     : opacity
-  // oxlint-disable-next-line react/react-compiler
+  // oxlint-disable-next-line react/refs
   const contentBox = getVideoContentBox()
   const hasContentBox = contentBox.width > 0 && contentBox.height > 0
 
@@ -339,7 +339,7 @@ export default function DraggableWatermark({
       ref={watermarkRef}
       $opacity={opacityForRender}
       onMouseDown={hasManualOverlay ? undefined : handleMouseDown}
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/refs
       style={computeWatermarkStyle()}
     >
       <img src={watermark.imageUrl} alt="Watermark" draggable={false} />
@@ -477,7 +477,7 @@ export function WatermarkControls({
   }, [])
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setMode(watermark.overlay_settings ? 'manual' : 'canvas')
   }, [watermark.overlay_settings])
 
@@ -807,7 +807,7 @@ export function WatermarkControls({
             <>
               <Box>
                 <Text size={1} weight="medium">
-                  {/* oxlint-disable-next-line react/react-compiler */}
+                  {/* oxlint-disable-next-line react/refs */}
                   {(() => {
                     const sizePct = watermark.size || 20
                     const contentW = getVideoContentBox().width
@@ -818,20 +818,20 @@ export function WatermarkControls({
                 </Text>
                 <RangeInput
                   type="range"
-                  // oxlint-disable-next-line react/react-compiler
+                  // oxlint-disable-next-line react/refs
                   value={(() => {
                     const sizePct = watermark.size || 20
                     const contentW = getVideoContentBox().width
                     if (!contentW) return sizePct
                     return Math.max(1, Math.round((sizePct / 100) * contentW))
                   })()}
-                  // oxlint-disable-next-line react/react-compiler
+                  // oxlint-disable-next-line react/refs
                   min={(() => {
                     const contentW = getVideoContentBox().width
                     if (!contentW) return 5
                     return Math.max(1, Math.round(contentW * 0.05))
                   })()}
-                  // oxlint-disable-next-line react/react-compiler
+                  // oxlint-disable-next-line react/refs
                   max={(() => {
                     const contentW = getVideoContentBox().width
                     if (!contentW) return 50

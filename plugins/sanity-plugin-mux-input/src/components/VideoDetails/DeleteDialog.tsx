@@ -34,7 +34,7 @@ export default function DeleteDialog({
   useEffect(() => {
     if (state !== 'checkingReferences' || referencesLoading) return
 
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setState(references?.length ? 'cantDelete' : 'confirm')
   }, [state, references, referencesLoading])
 

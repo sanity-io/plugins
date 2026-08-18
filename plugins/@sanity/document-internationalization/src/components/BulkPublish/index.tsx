@@ -54,7 +54,7 @@ export default function BulkPublish(props: BulkPublishProps) {
     }))
     client
       .request({
-        uri: `/publish/${projectId}/${dataset}`,
+        url: `/publish/${projectId}/${dataset}`,
         method: 'POST',
         body,
       })

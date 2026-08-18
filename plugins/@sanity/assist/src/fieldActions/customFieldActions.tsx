@@ -217,7 +217,6 @@ export function useCustomFieldActions(
 
   const schemaId = useWorkspaceSchemaId()
   const {push: pushToast} = useToast()
-  // oxlint-disable-next-line react/react-compiler
   const configActions = fieldActions?.useFieldActions?.({
     ...props,
     schemaId,
