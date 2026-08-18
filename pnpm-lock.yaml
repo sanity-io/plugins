@@ -240,8 +240,8 @@ importers:
         specifier: ^6.32.1
         version: 6.32.1
       vercel:
-        specifier: ^56.5.0
-        version: 56.5.0(supports-color@10.2.2)
+        specifier: ^57.0.0
+        version: 57.0.0(supports-color@10.2.2)
 
   dev/e2e-studio:
     dependencies:
@@ -8087,14 +8087,14 @@ packages:
     resolution: {integrity: sha512-ncQ8CRb6XoEAYJwjOTRGpACRT6h/AeY+/33gLyeVxG5BIes27OPm1jmqreF+JHjcTmGhClTP+kBpmyLfbV0xew==}
     engines: {node: '>=20.0.0'}
 
-  '@vercel/build-utils@13.34.0':
-    resolution: {integrity: sha512-DhbYXymwjO6N3prqBf7UzQFNpQIcHabe1qbiXxqqfjDJ5Tca9+MMYnU/+uObHrPBfR9FAXMxAwmkIUw59zJ7cw==}
+  '@vercel/build-utils@13.35.0':
+    resolution: {integrity: sha512-UQmy2Ht1S3Evz7V9IfA1MyK452gjfPwZRnjGVRV/iVrB9MSCg4tMKmXTVYIarRMuUPbBmnJpoJ1mXPI/pHkJvg==}
 
-  '@vercel/cli-auth@0.3.0':
-    resolution: {integrity: sha512-9nsdxUpV/L+9CBVGeRw/Qby2azhi2lk01jp0aTH+Hxx2U61+mAmbi5qChHnrbEmQdx2Ih7dp4LxO3nj1Q7f/5Q==}
+  '@vercel/cli-auth@0.3.1':
+    resolution: {integrity: sha512-TaMXMiPrwcLoLxu6ExcJ8yEw8b8Qss6UZkNYF4xIq+/VdvAk0l8JCpeAwzuHgKuJqmIDrOvtfjHO2+T/MBR3dg==}
 
-  '@vercel/cli-config@0.2.0':
-    resolution: {integrity: sha512-fJRRRB7734BDuXZ89yBEaA2ncYhH7bWX30mk04W80J6VAfQc+4iB8lyzAdaGpFV3/vNlkt9VZt+/uoQoWX6UsQ==}
+  '@vercel/cli-config@0.2.1':
+    resolution: {integrity: sha512-RhfyXmRLHdbnry8RJqHDc+5rGxMZ0bu+fpysZjtv3bE+BubpuwxTancHOKiH5zKQREsdwFVr3mOI2kOvxlOyxA==}
 
   '@vercel/detect-agent@1.2.3':
     resolution: {integrity: sha512-VYNCgUc0nOmC4WJmWw9GkrKdfr8Zl4/rxhC5SvgacBgxiW9W/9NRttUoHHXV8xdII3MaRgkZZVX8Ikzc/Jmjag==}
@@ -14093,30 +14093,30 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
-  vercel@56.5.0:
-    resolution: {integrity: sha512-wAKpT8DFSbnwlgbS711fbvxGjOfQeb1n+NcaBaSC4onq9eJAjbPfERrjrKE4GDsV8dkoBo0627lp0QxbLCGFiw==}
+  vercel@57.0.0:
+    resolution: {integrity: sha512-usxKPD1Lgewjq713pc1yE0MF2R5lLmWf1ws/WHyY5EQST/WZnkPPx6JkUirzMd1uxyO9PIjUR1c73AQsP6p7Xg==}
     engines: {node: '>= 18'}
     hasBin: true
     peerDependencies:
-      '@vercel/backends': 0.8.25
-      '@vercel/container': 0.0.5
-      '@vercel/elysia': 0.1.102
-      '@vercel/express': 0.1.116
-      '@vercel/fastify': 0.1.105
+      '@vercel/backends': 0.8.26
+      '@vercel/container': 0.1.0
+      '@vercel/elysia': 0.1.103
+      '@vercel/express': 0.1.117
+      '@vercel/fastify': 0.1.106
       '@vercel/go': 3.10.2
-      '@vercel/h3': 0.1.111
-      '@vercel/hono': 0.2.105
+      '@vercel/h3': 0.1.112
+      '@vercel/hono': 0.2.106
       '@vercel/hydrogen': 1.4.0
-      '@vercel/koa': 0.1.85
-      '@vercel/nestjs': 0.2.106
+      '@vercel/koa': 0.1.86
+      '@vercel/nestjs': 0.2.107
       '@vercel/next': 4.20.4
-      '@vercel/node': 5.8.26
-      '@vercel/python': 6.51.1
+      '@vercel/node': 5.8.27
+      '@vercel/python': 6.52.0
       '@vercel/redwood': 2.5.0
       '@vercel/remix-builder': 5.9.1
       '@vercel/ruby': 2.5.1
       '@vercel/rust': 1.4.0
-      '@vercel/static-build': 2.11.8
+      '@vercel/static-build': 2.11.9
     peerDependenciesMeta:
       '@vercel/backends':
         optional: true
@@ -21981,21 +21981,21 @@ snapshots:
       throttleit: 2.1.0
       undici: 6.28.0
 
-  '@vercel/build-utils@13.34.0':
+  '@vercel/build-utils@13.35.0':
     dependencies:
       '@vercel/python-analysis': 0.11.1
       cjs-module-lexer: 1.2.3
       es-module-lexer: 1.5.0
 
-  '@vercel/cli-auth@0.3.0':
+  '@vercel/cli-auth@0.3.1':
     dependencies:
       '@napi-rs/keyring': 1.2.0
-      '@vercel/cli-config': 0.2.0
+      '@vercel/cli-config': 0.2.1
       async-listen: 3.0.0
       open: 8.4.0
       zod: 4.1.11
 
-  '@vercel/cli-config@0.2.0':
+  '@vercel/cli-config@0.2.1':
     dependencies:
       xdg-app-paths: 5.5.1
       zod: 4.1.11
@@ -29097,12 +29097,12 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vercel@56.5.0(supports-color@10.2.2):
+  vercel@57.0.0(supports-color@10.2.2):
     dependencies:
       '@vercel/blob': 2.4.0
-      '@vercel/build-utils': 13.34.0
-      '@vercel/cli-auth': 0.3.0
-      '@vercel/cli-config': 0.2.0
+      '@vercel/build-utils': 13.35.0
+      '@vercel/cli-auth': 0.3.1
+      '@vercel/cli-config': 0.2.1
       '@vercel/detect-agent': 1.2.3
       '@vercel/fun': 1.3.0(supports-color@10.2.2)
       '@vercel/prepare-flags-definitions': 0.3.0
