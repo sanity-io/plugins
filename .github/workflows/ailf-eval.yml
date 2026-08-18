@@ -86,7 +86,7 @@ jobs:
 
       - name: Post PR comment
         if: always() && github.event_name == 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           PLUGIN_KEY: ${{ steps.key.outputs.key }}
           PLUGIN_PATH: ${{ matrix.plugin }}
