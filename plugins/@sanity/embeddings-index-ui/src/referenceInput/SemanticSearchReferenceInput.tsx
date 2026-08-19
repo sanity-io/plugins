@@ -115,6 +115,7 @@ function SemanticSearchInput(props: ObjectInputProps & {indexConfig: EmbeddingsI
       autocompleteRef.current?.focus()
     }
     // intentional empty deps — focus once on mount when replacing an existing reference
+    // oxlint-disable-next-line react/rule-suppression
     // oxlint-disable-next-line react/exhaustive-deps
   }, [])
 

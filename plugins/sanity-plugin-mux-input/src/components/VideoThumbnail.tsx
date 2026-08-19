@@ -55,6 +55,7 @@ export default function VideoThumbnail({
         return thumbnail
       },
       (err: Error) => {
+        // oxlint-disable-next-line react/todo
         handleError(err.message)
         return undefined
       },
