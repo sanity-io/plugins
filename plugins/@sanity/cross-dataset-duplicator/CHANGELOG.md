@@ -1,5 +1,16 @@
 # @sanity/cross-dataset-duplicator
 
+## 2.1.3
+
+### Patch Changes
+
+- [#1878](https://github.com/sanity-io/plugins/pull/1878) [`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency styled-components to ^6.5.3
+
+- [#1922](https://github.com/sanity-io/plugins/pull/1922) [`22c8082`](https://github.com/sanity-io/plugins/commit/22c8082f6ecc377dd1978267d849113cd2477b49) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/client` to v8
+
+- Updated dependencies [[`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43)]:
+  - @sanity/studio-secrets@4.0.18
+
 ## 2.1.2
 
 ### Patch Changes

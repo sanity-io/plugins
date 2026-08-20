@@ -1,5 +1,11 @@
 # @sanity/rich-date-input
 
+## 4.1.5
+
+### Patch Changes
+
+- [#1878](https://github.com/sanity-io/plugins/pull/1878) [`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency styled-components to ^6.5.3
+
 ## 4.1.4
 
 ### Patch Changes

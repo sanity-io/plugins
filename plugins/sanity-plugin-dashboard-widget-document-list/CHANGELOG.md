@@ -1,5 +1,7 @@
 # sanity-plugin-dashboard-widget-document-list
 
+## 3.0.18
+
 ## 3.0.17
 
 ### Patch Changes
