@@ -1,19 +1,8 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {ControlsIcon} from '@sanity/icons/Controls'
 import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
-import {
-  Box,
-  Button,
-  Card,
-  Dialog,
-  Inline,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  type Placement,
-  TextInput,
-} from '@sanity/ui'
+import {Box, Button, Card, Dialog, Inline, type Placement, TextInput} from '@sanity/ui'
+import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
 import {type ChangeEventHandler, useState} from 'react'
 
 interface TableMenuProps {

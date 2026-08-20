@@ -1,5 +1,25 @@
 # sanity-plugin-media
 
+## 6.1.4
+
+### Patch Changes
+
+- [#1904](https://github.com/sanity-io/plugins/pull/1904) [`3c18bf9`](https://github.com/sanity-io/plugins/commit/3c18bf9e3c8a235349b506d1f80fe5a7141503f2) Thanks [@trostum](https://github.com/trostum)! - Fix folder reference being lost when saving asset metadata (title, alt text, description, tags)
+
+## 6.1.3
+
+### Patch Changes
+
+- [#1889](https://github.com/sanity-io/plugins/pull/1889) [`27c5b19`](https://github.com/sanity-io/plugins/commit/27c5b1921353f3491075075f318438740ec52df9) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.85.0
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update @sanity/client to ^7.26.2, nanoid to ^6.0.1, groq to ^6.9.1, testing-library packages, and @sanity/ui to ^4.0.1
+
+## 6.1.2
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
 ## 6.1.1
 
 ### Patch Changes

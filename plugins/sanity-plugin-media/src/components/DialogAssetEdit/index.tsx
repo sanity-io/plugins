@@ -285,13 +285,16 @@ const DialogAssetEdit = (props: Props) => {
                     _type: 'reference',
                     _weak: true,
                   })) || null,
+                // Preserve the folder reference — it is managed separately and must
+                // not be wiped when patching opt.media via .set().
+                ...(currentAsset?.opt?.media?.folder && {folder: currentAsset.opt.media.folder}),
               },
             },
           },
         }),
       )
     },
-    [assetItem?.asset, dispatch],
+    [assetItem?.asset, currentAsset, dispatch],
   )
 
   // Listen for asset mutations and update snapshot
@@ -341,7 +344,7 @@ const DialogAssetEdit = (props: Props) => {
 
   const footer = (
     <Box padding={3}>
-      <Stack space={3}>
+      <Stack gap={3}>
         {hasOrphanedLocales && (
           <Card padding={3} radius={2} shadow={1} tone="caution">
             <Flex align="center" justify="space-between" gap={3}>
@@ -419,7 +422,7 @@ const DialogAssetEdit = (props: Props) => {
               return (
                 <>
                   {/* Tabs */}
-                  <TabList space={2}>
+                  <TabList gap={2}>
                     <Tab
                       aria-controls="details-panel"
                       disabled={formUpdating}

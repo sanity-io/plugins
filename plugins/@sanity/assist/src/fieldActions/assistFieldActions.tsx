@@ -1,4 +1,4 @@
-import type {AgentActionPath} from '@sanity/client/stega'
+import type {AgentActionPath} from '@sanity/client'
 import {Icon} from '@sanity/icons'
 import {ControlsIcon} from '@sanity/icons/Controls'
 import {SparklesIcon} from '@sanity/icons/Sparkles'

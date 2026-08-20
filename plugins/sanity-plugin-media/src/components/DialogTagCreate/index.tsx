@@ -81,7 +81,7 @@ const DialogTagCreate = (props: Props) => {
   return (
     <Dialog
       animate
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/static-components
       footer={<Footer />}
       header="Create Tag"
       id={id}

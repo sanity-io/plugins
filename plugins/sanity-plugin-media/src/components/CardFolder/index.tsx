@@ -80,7 +80,7 @@ const CardFolder = ({folderId, name, totalCount}: Props) => {
             <FolderGlyph />
           </Flex>
 
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text
               size={1}
               style={{lineHeight: '1.35em', minHeight: '2.7em', wordBreak: 'break-word'}}

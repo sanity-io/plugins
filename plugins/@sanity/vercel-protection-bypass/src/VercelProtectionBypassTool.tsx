@@ -8,19 +8,8 @@ import {
   tag,
   fetchVercelProtectionBypassSecret,
 } from '@sanity/preview-url-secret/constants'
-import {
-  Box,
-  Button,
-  Card,
-  Dialog,
-  Flex,
-  Heading,
-  Spinner,
-  Stack,
-  Text,
-  TextInput,
-  useToast,
-} from '@sanity/ui'
+import {Box, Button, Card, Dialog, Flex, Heading, Spinner, Stack, Text, TextInput} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {
   Activity,
   Suspense,

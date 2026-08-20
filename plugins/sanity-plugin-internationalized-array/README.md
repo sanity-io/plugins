@@ -137,6 +137,10 @@ To control the "Add translation" button titles, configure `languageDisplay`. Thi
 
 The "Add all languages" button can be hidden with `buttonAddAll`.
 
+By default, opening a document reorders internationalized array items to match
+the configured `languages` order. That can create a draft (and a history entry)
+for published documents whose stored order differs. Opt out with `restoreOrder: false`.
+
 ```ts
 import {defineConfig} from 'sanity'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
@@ -148,6 +152,7 @@ export default defineConfig({
       // ...other config
       buttonLocations: ['field', 'unstable__fieldAction', 'document'], // default ['field']
       buttonAddAll: false, // default true
+      restoreOrder: false, // default true
       languageDisplay: 'codeOnly', // codeOnly (default) | titleOnly | titleAndCode
     }),
   ],

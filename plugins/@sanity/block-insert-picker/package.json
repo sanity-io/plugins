@@ -1,6 +1,6 @@
 {
   "name": "@sanity/block-insert-picker",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Slash-command block-insert picker and markdown input rules for Portable Text fields in Sanity Studio",
   "keywords": [
     "block-insert",
@@ -40,12 +40,12 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@portabletext/plugin-input-rule": "^6.0.10",
+    "@portabletext/plugin-input-rule": "^6.0.15",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:"
   },
   "devDependencies": {
-    "@portabletext/editor": "^7.10.13",
+    "@portabletext/editor": "^7.10.18",
     "@rolldown/plugin-babel": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",

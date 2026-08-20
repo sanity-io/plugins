@@ -1,4 +1,5 @@
-import {Button, useToast} from '@sanity/ui'
+import {Button} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {LexoRank} from 'lexorank'
 import {useCallback, useMemo} from 'react'
 import {useClient} from 'sanity'

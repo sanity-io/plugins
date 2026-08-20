@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export {clear} from './cache'
 export {LANGUAGE_FIELD_NAME} from './constants'
 export {internationalizedArray} from './plugin'

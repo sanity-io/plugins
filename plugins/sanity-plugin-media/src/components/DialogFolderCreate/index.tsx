@@ -78,7 +78,7 @@ const DialogFolderCreate = (props: Props) => {
   return (
     <Dialog
       animate
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/static-components
       footer={<Footer />}
       header="Create Folder"
       id={id}

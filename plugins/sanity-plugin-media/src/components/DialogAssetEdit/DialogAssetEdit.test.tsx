@@ -315,6 +315,50 @@ describe('DialogAssetEdit', () => {
     })
   })
 
+  it('preserves the folder reference when saving other metadata fields', async () => {
+    const user = userEvent.setup()
+    const folderRef = {_ref: 'folder.products', _type: 'reference' as const, _weak: true}
+    const assetInFolder = {
+      ...asset,
+      opt: {media: {folder: folderRef}},
+    } as ImageAsset
+    const {store} = renderAssetDialog(
+      {
+        id: 'dlg-1',
+        type: 'assetEdit',
+        assetId: 'a1',
+      },
+      {
+        preloaded: {
+          assets: {
+            ...assetsPreloaded,
+            byIds: {
+              a1: {_type: 'asset', asset: assetInFolder, picked: false, updating: false},
+            },
+          },
+        },
+      },
+    )
+    const dispatchSpy = vi.spyOn(store, 'dispatch')
+    const dlg = withinDialog(/asset details/i, screen)
+
+    await user.type(inputByName(/asset details/i, screen, 'title'), 'New title')
+    await user.click(dlg.getByRole('button', {name: /save and close/i}))
+
+    await waitFor(() => {
+      let updateAction
+      for (const call of dispatchSpy.mock.calls) {
+        const action = call[0]
+        if (assetsActions.updateRequest.match(action)) {
+          updateAction = action
+          break
+        }
+      }
+      expect(updateAction).toBeDefined()
+      expect(updateAction?.payload.formData['opt'].media.folder).toEqual(folderRef)
+    })
+  })
+
   it('removes the current folder from the details view', async () => {
     const user = userEvent.setup()
     const assetInFolder = {

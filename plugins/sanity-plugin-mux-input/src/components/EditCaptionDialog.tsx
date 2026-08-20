@@ -1,19 +1,9 @@
 import {DownloadIcon} from '@sanity/icons/Download'
 import {TranslateIcon} from '@sanity/icons/Translate'
 import {UploadIcon} from '@sanity/icons/Upload'
-import {
-  Autocomplete,
-  Button,
-  Card,
-  Dialog,
-  Flex,
-  Label,
-  Spinner,
-  Stack,
-  Text,
-  TextInput,
-  useToast,
-} from '@sanity/ui'
+import {Button, Card, Dialog, Flex, Label, Spinner, Stack, Text, TextInput} from '@sanity/ui'
+import {Autocomplete} from '@sanity/ui/autocomplete'
+import {useToast} from '@sanity/ui/toast'
 import LanguagesList from 'iso-639-1'
 import {useEffect, useId, useRef, useState} from 'react'
 
@@ -71,7 +61,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setLanguageCode(track.language_code || '')
     setName(track.name || '')
     setVttUrl('')
@@ -350,8 +340,8 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
       width={1}
       onClickOutside={onClose}
     >
-      <Stack padding={4} space={4}>
-        <Stack space={2}>
+      <Stack padding={4} gap={4}>
+        <Stack gap={2}>
           <Card padding={3} marginBottom={2} tone="transparent" border radius={2}>
             <Flex align="center" justify="space-between">
               <Text>{getCurrentFileName()}</Text>
@@ -412,7 +402,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
               </Text>
             )}
           </Card>
-          <Stack space={2}>
+          <Stack gap={2}>
             <Label as="label" htmlFor="vtt-url">
               VTT File URL
             </Label>
@@ -432,7 +422,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
           </Stack>
         </Stack>
 
-        <Stack space={2}>
+        <Stack gap={2}>
           <Label as="label" htmlFor="caption-name">
             Audio name
           </Label>
@@ -467,7 +457,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
           />
         </Stack>
 
-        <Stack space={2}>
+        <Stack gap={2}>
           <Label as="label" htmlFor="caption-language">
             Language Code
           </Label>

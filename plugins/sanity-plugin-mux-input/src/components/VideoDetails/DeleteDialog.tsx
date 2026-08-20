@@ -1,5 +1,6 @@
 import {TrashIcon} from '@sanity/icons/Trash'
-import {Box, Button, Card, Checkbox, Dialog, Flex, Heading, Stack, Text, useToast} from '@sanity/ui'
+import {Box, Button, Card, Checkbox, Dialog, Flex, Heading, Stack, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useEffect, useState} from 'react'
 import type {SanityDocument} from 'sanity'
 
@@ -33,7 +34,7 @@ export default function DeleteDialog({
   useEffect(() => {
     if (state !== 'checkingReferences' || referencesLoading) return
 
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setState(references?.length ? 'cantDelete' : 'confirm')
   }, [state, references, referencesLoading])
 
@@ -79,7 +80,7 @@ export default function DeleteDialog({
           justifyContent: 'center',
         }}
       >
-        <Stack space={3}>
+        <Stack gap={3}>
           {state === 'checkingReferences' && (
             <>
               <Heading size={2}>Checking if video can be deleted</Heading>
@@ -101,7 +102,7 @@ export default function DeleteDialog({
             <>
               <Heading size={2}>Are you sure you want to delete this video?</Heading>
               <Text size={2}>This action is irreversible</Text>
-              <Stack space={4} marginY={4}>
+              <Stack gap={4} marginY={4}>
                 <Flex align="center" as="label">
                   <Checkbox
                     checked={deleteOnMux}

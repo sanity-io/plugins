@@ -50,9 +50,8 @@ describe('runArchive', () => {
   })
 
   test('ignored issues do not query Miriad', async () => {
-    const fetchIssue = vi.fn(
-      async (_opts: FetchIssueOptions): Promise<GitHubIssue> =>
-        issue({labels: [{name: 'dependencies'}]}),
+    const fetchIssue = vi.fn(async (_opts: FetchIssueOptions): Promise<GitHubIssue> =>
+      issue({labels: [{name: 'dependencies'}]}),
     )
     const createMiriadClient = vi.fn((): ArchiveMiriadClient => createArchiveClient(channel()))
 

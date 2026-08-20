@@ -1,4 +1,5 @@
-import {Card, Flex, Text, Tooltip} from '@sanity/ui'
+import {Card, Flex, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import type {FormNodePresence} from 'sanity'
 
 import {FadeInContent} from '../components/FadeInContent'

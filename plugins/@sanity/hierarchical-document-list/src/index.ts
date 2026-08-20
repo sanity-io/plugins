@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {definePlugin} from 'sanity'
 
 import {default as createHierarchicalSchemas} from './createHierarchicalSchemas'

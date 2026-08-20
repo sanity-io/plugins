@@ -32,7 +32,7 @@ import type {OxlintConfig} from 'oxlint'
  * @public
  */
 const config: OxlintConfig = {
-  plugins: ['typescript', 'unicorn', 'react', 'react-perf', 'oxc', 'import', 'jsx-a11y', 'promise'],
+  plugins: ['typescript', 'unicorn', 'react', 'oxc', 'import', 'jsx-a11y', 'promise'],
   ignorePatterns: ['**/.sanity/*', '**/dist/*', '**/sanity.types.ts'],
   options: {
     denyWarnings: true,
@@ -97,9 +97,19 @@ const config: OxlintConfig = {
 
     // Prefer function components; allow class error boundaries (no hook equivalent yet)
     'react/prefer-function-component': ['error', {allowErrorBoundary: true}],
-
-    // React Compiler checks
-    'react/react-compiler': 'error',
+    // React Compiler recommended rules are on via `correctness`. These extra
+    // presets are off until we opt in (oxlint 1.79 replaced `react/react-compiler`).
+    'react/unsupported-syntax': 'off',
+    'react/void-use-memo': 'off',
+    'react/invariant': 'off',
+    'react/rule-suppression': 'off',
+    'react/syntax': 'off',
+    'react/todo': 'off',
+    'react/capitalized-calls': 'off',
+    'react/exhaustive-effect-dependencies': 'off',
+    'react/hooks': 'off',
+    'react/memo-dependencies': 'off',
+    'react/no-deriving-state-in-effects': 'off',
 
     'typescript/ban-ts-comment': 'error',
     'typescript/no-deprecated': 'error',

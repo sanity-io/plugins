@@ -1,5 +1,5 @@
-import type {AgentActionPath} from '@sanity/client/stega'
-import {type ToastParams, useToast} from '@sanity/ui'
+import type {AgentActionPath} from '@sanity/client'
+import {type ToastParams, useToast} from '@sanity/ui/toast'
 import {useMemo} from 'react'
 import {
   type DocumentFieldActionDivider,
@@ -217,7 +217,6 @@ export function useCustomFieldActions(
 
   const schemaId = useWorkspaceSchemaId()
   const {push: pushToast} = useToast()
-  // oxlint-disable-next-line react/react-compiler
   const configActions = fieldActions?.useFieldActions?.({
     ...props,
     schemaId,
@@ -233,7 +232,6 @@ export function useCustomFieldActions(
         return createSafeNode({
           node,
           pushToast,
-          // oxlint-disable-next-line react/react-compiler
           addSyntheticTask,
           removeSyntheticTask,
         })
@@ -254,8 +252,7 @@ export function useCustomFieldActions(
           ]
       : []
     return groups ?? []
-    // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
-  }, [configActions, fieldActions, pushToast])
+  }, [addSyntheticTask, configActions, fieldActions, pushToast, removeSyntheticTask])
 }
 
 function createSafeNode(args: {

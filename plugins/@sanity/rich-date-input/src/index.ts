@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {definePlugin} from 'sanity'
 
 import {type RichDateDefinition, richDateSchema, type RichDateSchemaType} from './schema'

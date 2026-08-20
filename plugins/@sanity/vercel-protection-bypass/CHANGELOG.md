@@ -1,5 +1,17 @@
 # @sanity/vercel-protection-bypass
 
+## 5.0.21
+
+### Patch Changes
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update @sanity/client to ^7.26.2 and @sanity/ui to ^4.0.1
+
+## 5.0.20
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
 ## 5.0.19
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.33
+
+### Patch Changes
+
+- [#1896](https://github.com/sanity-io/plugins/pull/1896) [`908de62`](https://github.com/sanity-io/plugins/commit/908de62920bfcf73dc59ef4a7eb178b438bacac2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^13.1.0
+
+## 5.0.32
+
+### Patch Changes
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update @sanity/ui to ^4.0.1
+
+## 5.0.31
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
 ## 5.0.30
 
 ### Patch Changes

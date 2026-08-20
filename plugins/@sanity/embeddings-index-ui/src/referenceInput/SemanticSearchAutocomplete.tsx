@@ -1,4 +1,5 @@
-import {Autocomplete, type AutocompleteOpenButtonProps, Box, Button, Flex, Text} from '@sanity/ui'
+import {Box, Button, Flex, Text} from '@sanity/ui'
+import {Autocomplete, type AutocompleteOpenButtonProps} from '@sanity/ui/autocomplete'
 import {
   type FocusEventHandler,
   type Ref,

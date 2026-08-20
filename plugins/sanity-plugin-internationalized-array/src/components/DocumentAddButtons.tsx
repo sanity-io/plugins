@@ -1,4 +1,5 @@
-import {Box, Stack, Text, useToast} from '@sanity/ui'
+import {Box, Stack, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {randomKey} from '@sanity/util/content'
 import {type ReactElement, useCallback} from 'react'
 import {

@@ -145,6 +145,17 @@ export type PluginConfig = {
    * */
   buttonAddAll?: boolean
   /**
+   * Automatically reorder array items to match the configured `languages` order
+   * when a document is opened.
+   *
+   * Disable this if you want to preserve a custom item order and avoid the
+   * plugin writing a patch (which creates a draft / history entry) for published
+   * documents whose order differs from the language config.
+   *
+   * @defaultValue true
+   */
+  restoreOrder?: boolean
+  /**
    * How to display the languages on buttons and fields
    * @defaultValue 'code'
    * */

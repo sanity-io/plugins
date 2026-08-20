@@ -47,6 +47,7 @@ export const MOCK_INTERNATIONALIZED_ARRAY_CONTEXT: InternationalizedArrayContext
   defaultLanguages: [],
   buttonAddAll: true,
   buttonLocations: ['field'],
+  restoreOrder: true,
   languageDisplay: 'codeOnly' as const,
   apiVersion: '2025-10-15',
   select: {},

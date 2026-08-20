@@ -51,7 +51,7 @@ function FormInput(props: FormInputProps) {
     [onChange],
   )
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       <Label as="label" muted htmlFor={id}>
         {label}
       </Label>

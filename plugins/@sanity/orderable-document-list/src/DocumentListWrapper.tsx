@@ -1,4 +1,5 @@
-import {useToast, Box, type ToastParams} from '@sanity/ui'
+import {Box} from '@sanity/ui'
+import {useToast, type ToastParams} from '@sanity/ui/toast'
 import {useEffect, useMemo} from 'react'
 import {useSchema} from 'sanity'
 import {Feedback} from 'sanity-plugin-utils'

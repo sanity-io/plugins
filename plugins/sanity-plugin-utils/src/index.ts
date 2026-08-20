@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export {Feedback} from './components/Feedback'
 export {Cell, Row, Table} from './components/Table'
 export {UserSelectMenu} from './components/UserSelectMenu/index'

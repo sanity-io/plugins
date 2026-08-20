@@ -1,14 +1,5 @@
-import {
-  ThemeProvider,
-  ToastProvider,
-  Stack,
-  Text,
-  Layer,
-  Box,
-  Card,
-  Flex,
-  Spinner,
-} from '@sanity/ui'
+import {ThemeProvider, Stack, Text, Layer, Box, Card, Flex, Spinner} from '@sanity/ui'
+import {ToastProvider} from '@sanity/ui/toast'
 import {randomKey} from '@sanity/util/content'
 import {useMemo} from 'react'
 import type {SanityDocument} from 'sanity'

@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {type CodeDefinition, codeSchema, codeTypeName} from './schema'
 export {LANGUAGE_ALIASES, SUPPORTED_LANGUAGES} from './config'
 export {type CodeInput, type CodeInputProps} from './CodeInput'
