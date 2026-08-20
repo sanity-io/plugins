@@ -28,7 +28,7 @@ To skip this validation add the following to your package.json:
 }
 ----------------------------------------------------------
 [error] 
-package.json ships CommonJS (CJS) output, but Sanity plugins target Sanity Studio v5+, which is pure ESM.
+package.json ships CommonJS (CJS) output, but Sanity plugins target Sanity Studio, which is pure ESM.
 
 Remove the following so the package stays ESM-only:
 - the top-level "main" field ("./dist/index.cjs")

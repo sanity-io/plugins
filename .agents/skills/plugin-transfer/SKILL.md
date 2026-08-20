@@ -157,7 +157,7 @@ This major release includes several breaking changes as part of the migration to
 - **React Compiler enabled**: ...
 - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
 - **React 19.2+ required**: ...
-- **Sanity Studio v5+ required**: ...
+- **Sanity peer dependency tightened**: Minimum `sanity` peer is now `^5 || ^6`
 - **Node.js 20.19+ required**: ...
 ```
 
@@ -165,7 +165,7 @@ Include additional bullets only when they apply to the plugin—for example:
 
 - **styled-components 6.1+ required** (UI plugins that use styled-components)
 - **react-dom 19.2+ required** (when newly added as a peer dependency)
-- **Dropped Sanity v3/v4 support** (when the previous peer range allowed older Studio versions)
+- **Dropped support for older Sanity majors** (when the previous peer range allowed older Studio versions)
 
 Example for `sanity-naive-html-serializer`:
 
@@ -185,7 +185,7 @@ This major release includes several breaking changes as part of the migration to
 - **ESM-only**: CommonJS support has been removed. The package now ships only ESM
 - **React 19.2+ required**: Minimum React version is now 19.2 (previously ^18.3 || ^19)
 - **react-dom 19.2+ required**: `react-dom` is now a required peer dependency
-- **Sanity Studio v5+ required**: Minimum Sanity version is now v5 (Sanity v3 and v4 are no longer supported)
+- **Sanity peer dependency tightened**: Minimum `sanity` peer is now `^5 || ^6` (older majors no longer supported)
 - **Node.js 20.19+ required**: Minimum Node.js version is now 20.19 (previously >=18)
 ```
 

@@ -121,7 +121,7 @@ languages: async (client) => {
 
 `@sanity/language-filter`'s asynchronous language loading does not currently support modifying the query based on a value in the current document.
 
-## Changes in V3
+## Schema options
 
 ### documentTypes
 

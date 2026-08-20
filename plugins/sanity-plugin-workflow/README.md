@@ -93,9 +93,9 @@ With the document now Approved, a user may also return to the document and Publi
 
 Once the Workflow is complete, the metadata can be removed by using the "Complete Workflow" document action.
 
-### Differences from the Sanity Studio v2 Workflow Demo
+### Differences from the legacy Workflow Demo
 
-This plugin is largely based on the original Workflow Demo built into a Sanity Studio v2 project. The major differences are:
+This plugin is largely based on the original Workflow Demo built into a legacy Studio project. The major differences are:
 
 - This plugin is not concerned with nor will modify whether a document is in draft or published.
 - This plugin can be more easily installed and configured.

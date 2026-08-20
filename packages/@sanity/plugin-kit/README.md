@@ -470,7 +470,7 @@ Provide a sanityPlugin config in package.json (defaults shown):
 ```
 
 Set `esmOnly` to `false` to allow CommonJS interop (a `require` export condition, or top-level
-`main`/`module` fields). This is discouraged: plugins target Sanity Studio v5+, which is pure ESM, and
+`main`/`module` fields). This is discouraged: plugins target Sanity Studio, which is pure ESM, and
 shipping a parallel CJS build can have unintended side-effects. The supported Node.js versions handle
 `require(esm)`, so a single published format keeps two copies of the plugin's code out of the module
 tree, avoiding bundle bloat and slower builds.
