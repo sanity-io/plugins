@@ -1,5 +1,12 @@
 # @sanity/personalization-plugin
 
+## 3.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43)]:
+  - @sanity/studio-secrets@4.0.18
+
 ## 3.1.2
 
 ### Patch Changes

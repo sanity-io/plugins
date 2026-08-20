@@ -1,5 +1,17 @@
 # sanity-plugin-mux-input
 
+## 5.0.11
+
+### Patch Changes
+
+- [#1878](https://github.com/sanity-io/plugins/pull/1878) [`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency styled-components to ^6.5.3
+
+- [#1856](https://github.com/sanity-io/plugins/pull/1856) [`0c770b1`](https://github.com/sanity-io/plugins/commit/0c770b110f816f97b9c766b985d52e97918a82ac) Thanks [@stipsan](https://github.com/stipsan)! - Replace deprecated Sanity UI, React, and RxJS APIs (`space` → `gap`, `useRelativeTime` with `useTemporalPhrase`, `throwError` factory). Remaining theme v1 focus-ring usage is deferred with targeted lint disables.
+
+- [#1926](https://github.com/sanity-io/plugins/pull/1926) [`f485d93`](https://github.com/sanity-io/plugins/commit/f485d934bfcb46ac873c66c6332d760815d797dd) Thanks [@stipsan](https://github.com/stipsan)! - Suppress new oxlint React Compiler rule violations, pending fixes in a follow-up
+
+- [#1922](https://github.com/sanity-io/plugins/pull/1922) [`22c8082`](https://github.com/sanity-io/plugins/commit/22c8082f6ecc377dd1978267d849113cd2477b49) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/client` to v8
+
 ## 5.0.10
 
 ### Patch Changes

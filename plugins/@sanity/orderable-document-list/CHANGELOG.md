@@ -1,5 +1,18 @@
 # @sanity/orderable-document-list
 
+## 2.0.21
+
+### Patch Changes
+
+- [#1878](https://github.com/sanity-io/plugins/pull/1878) [`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency styled-components to ^6.5.3
+
+- [#1936](https://github.com/sanity-io/plugins/pull/1936) [`a5b8bdb`](https://github.com/sanity-io/plugins/commit/a5b8bdbc7a500d6ce93fd75de8765a9bdfa0fade) Thanks [@stipsan](https://github.com/stipsan)! - Use `DocumentVersionsStatusIndicator` instead of the deprecated `DocumentStatusIndicator`
+
+- [#1922](https://github.com/sanity-io/plugins/pull/1922) [`22c8082`](https://github.com/sanity-io/plugins/commit/22c8082f6ecc377dd1978267d849113cd2477b49) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/client` to v8
+
+- Updated dependencies [[`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43)]:
+  - sanity-plugin-utils@2.0.16
+
 ## 2.0.20
 
 ### Patch Changes
