@@ -665,7 +665,7 @@ importers:
     dependencies:
       '@portabletext/plugin-input-rule':
         specifier: ^6.0.15
-        version: 6.0.17(@portabletext/editor@7.11.0)(@types/react@19.2.18)(react@19.2.8)
+        version: 6.0.18(@portabletext/editor@7.12.0)(@types/react@19.2.18)(react@19.2.8)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 5.2.1(react@19.2.8)
@@ -678,7 +678,7 @@ importers:
     devDependencies:
       '@portabletext/editor':
         specifier: ^7.10.18
-        version: 7.11.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
+        version: 7.12.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
@@ -6650,12 +6650,6 @@ packages:
     resolution: {integrity: sha512-BX4LXt3hDU2wI2kufuMT3CNF88atdZuCSB+YXtjUF9hO/sZJhLG/IfK5pWV4GVoRIql9C6f2IBitxRSImG5NQQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
-  '@portabletext/editor@7.11.0':
-    resolution: {integrity: sha512-t4upBUN8ODfi7B1GphlU7Whn5BU0YlzGb3zwVAgTRBRZgAJzvnjtK8lXS5nEaQD5ZT5W48HomTMSvKbXk7D+wQ==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      react: ^19.2.8
-
   '@portabletext/editor@7.12.0':
     resolution: {integrity: sha512-ydzmN7ZqwKVniLDV0fF2rA9iwd0kNgtwQV6kAn+y5gW7HPYljXAR3IlmDmiKBXBvYk95pwRLRtru+Zgx/VFHAw==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -6690,13 +6684,6 @@ packages:
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       '@portabletext/editor': ^7.12.0
-      react: ^19.2
-
-  '@portabletext/plugin-input-rule@6.0.17':
-    resolution: {integrity: sha512-n6dMB31MEDe9phPAJSAMRc4DjyOxkIfyF3Jh4o2oHnKW3YVZMXJQkJ9qQ9Y3PtVqWBXCQBvYMB+j4IJpije7JA==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      '@portabletext/editor': ^7.11.0
       react: ^19.2
 
   '@portabletext/plugin-input-rule@6.0.18':
@@ -19275,23 +19262,6 @@ snapshots:
       - '@types/react'
       - vitest
 
-  '@portabletext/editor@7.11.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)':
-    dependencies:
-      '@portabletext/html': 1.2.0
-      '@portabletext/keyboard-shortcuts': 2.1.4
-      '@portabletext/markdown': 1.5.0
-      '@portabletext/patches': 2.0.6
-      '@portabletext/schema': 2.2.4
-      '@portabletext/to-html': 5.0.3
-      '@xstate/react': 6.1.0(@types/react@19.2.18)(react@19.2.8)(xstate@5.32.5)
-      debug: 4.4.3(supports-color@10.2.2)
-      react: 19.2.8
-      scroll-into-view-if-needed: 3.1.0
-      xstate: 5.32.5
-    transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
-
   '@portabletext/editor@7.12.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)':
     dependencies:
       '@portabletext/html': 1.2.0
@@ -19373,15 +19343,6 @@ snapshots:
     dependencies:
       '@portabletext/editor': 7.12.0(@types/react@19.2.18)(react@19.2.8)(supports-color@8.1.1)
       react: 19.2.8
-
-  '@portabletext/plugin-input-rule@6.0.17(@portabletext/editor@7.11.0)(@types/react@19.2.18)(react@19.2.8)':
-    dependencies:
-      '@portabletext/editor': 7.11.0(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
-      '@xstate/react': 6.1.0(@types/react@19.2.18)(react@19.2.8)(xstate@5.32.5)
-      react: 19.2.8
-      xstate: 5.32.5
-    transitivePeerDependencies:
-      - '@types/react'
 
   '@portabletext/plugin-input-rule@6.0.18(@portabletext/editor@7.12.0)(@types/react@19.2.18)(react@19.2.8)':
     dependencies:
