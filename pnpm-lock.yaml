@@ -29,8 +29,8 @@ catalogs:
       specifier: ^2.3.0
       version: 2.3.0
     '@sanity/client':
-      specifier: ^8.1.0
-      version: 8.1.0
+      specifier: ^8.2.0
+      version: 8.2.0
     '@sanity/color':
       specifier: ^3.0.8
       version: 3.0.8
@@ -182,7 +182,7 @@ catalogs:
 
 overrides:
   '@types/node': ^24.13.3
-  '@sanity/client@8': ^8.1.0
+  '@sanity/client@8': ^8.2.0
   '@sanity/mutator': next
   '@sanity/schema': next
   '@sanity/types': next
@@ -495,7 +495,7 @@ importers:
         version: 1.62.1
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -592,7 +592,7 @@ importers:
         version: 4.0.2
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@sanity/color':
         specifier: 'catalog:'
         version: 3.0.8
@@ -879,7 +879,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
@@ -958,7 +958,7 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
@@ -1380,7 +1380,7 @@ importers:
         version: 18.0.1(@types/react@19.2.18)(react-dom@19.2.8)(react@19.2.8)
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 5.2.1(react@19.2.8)
@@ -1787,7 +1787,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
-        version: 4.1.4(@sanity/client@8.1.0)
+        version: 4.1.4(@sanity/client@8.2.0)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
@@ -1797,7 +1797,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
@@ -2439,13 +2439,13 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 5.2.1(react@19.2.8)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
-        version: 4.1.4(@sanity/client@8.1.0)
+        version: 4.1.4(@sanity/client@8.2.0)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
@@ -2595,7 +2595,7 @@ importers:
     dependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
@@ -2644,7 +2644,7 @@ importers:
         version: 2.12.0(react-redux@9.3.0)(react@19.2.8)
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@sanity/color':
         specifier: 'catalog:'
         version: 3.0.8
@@ -2823,7 +2823,7 @@ importers:
     devDependencies:
       '@sanity/client':
         specifier: 'catalog:'
-        version: 8.1.0(vitest@4.1.11)
+        version: 8.2.0(vitest@4.1.11)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
@@ -7114,8 +7114,8 @@ packages:
     resolution: {integrity: sha512-iEkGiHbrxCnT/A30A6pH+vX4otP3lLp935Vwuv0/YrnETxrKCn6PnsZU+TfTm6ZEZ9kZGs8wKP5yBLmZw5S6OQ==}
     engines: {node: '>=20'}
 
-  '@sanity/client@8.1.0':
-    resolution: {integrity: sha512-GS9q17kSIpF+NSOMJejAmTw0sKJA5oSTxtipkItnuWFvO4njVQnUQ+1OvRYZyg/AK9dwymlM35ROKuA5XuWyFQ==}
+  '@sanity/client@8.2.0':
+    resolution: {integrity: sha512-SK2o8uh9ayAYAHJtKvd3r78Y5QHlV6RA1H249rYXtm71rdvp4dVvQyf3E/QtYVaeIhrWufK1Mh7sbX6FDVLtWQ==}
     engines: {node: '>=22.12.0'}
 
   '@sanity/codegen@8.0.0':
@@ -19629,7 +19629,7 @@ snapshots:
 
   '@sanity/access-ui@6.11.0-next.38(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)(vitest@4.1.11)':
     dependencies:
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/icons': 5.2.1(react@19.2.8)
       '@sanity/ui': 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       react: 19.2.8
@@ -19794,7 +19794,7 @@ snapshots:
     dependencies:
       '@inquirer/prompts': 8.5.2(@types/node@24.13.3)
       '@oclif/core': 4.13.5
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       boxen: 8.0.1
       empathic: 2.0.1
       get-it: 9.5.0(vitest@4.1.11)
@@ -19836,13 +19836,13 @@ snapshots:
       '@oclif/plugin-not-found': 3.2.93(@types/node@24.13.3)
       '@sanity/cli-build': 5.2.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.4)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/cli-core': 3.1.0(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(vitest@4.1.11)(yaml@2.9.0)
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/codegen': 8.0.0(oxfmt@0.63.0)(react@19.2.8)(supports-color@10.2.2)
       '@sanity/descriptors': 1.3.0
       '@sanity/export': 6.2.1(supports-color@10.2.2)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/id-utils': 1.0.0
-      '@sanity/import': 6.0.3(@sanity/client@8.1.0)(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)
+      '@sanity/import': 6.0.3(@sanity/client@8.2.0)(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.7.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(rolldown@1.2.4)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/schema': 6.11.0-next.38(@types/react@19.2.18)(vitest@4.1.11)
@@ -19938,13 +19938,13 @@ snapshots:
       '@oclif/plugin-not-found': 3.2.93(@types/node@24.13.3)
       '@sanity/cli-build': 5.2.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.4)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/cli-core': 3.1.0(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(vitest@4.1.11)(yaml@2.9.0)
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/codegen': 8.0.0(oxfmt@0.63.0)(react@19.2.8)(supports-color@5.5.0)
       '@sanity/descriptors': 1.3.0
       '@sanity/export': 6.2.1(supports-color@5.5.0)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/id-utils': 1.0.0
-      '@sanity/import': 6.0.3(@sanity/client@8.1.0)(@types/react@19.2.18)(supports-color@5.5.0)(vitest@4.1.11)
+      '@sanity/import': 6.0.3(@sanity/client@8.2.0)(@types/react@19.2.18)(supports-color@5.5.0)(vitest@4.1.11)
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@5.5.0)(vitest@4.1.11)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.7.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(rolldown@1.2.4)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/schema': 6.11.0-next.38(@types/react@19.2.18)(vitest@4.1.11)
@@ -20040,13 +20040,13 @@ snapshots:
       '@oclif/plugin-not-found': 3.2.93(@types/node@24.13.3)
       '@sanity/cli-build': 5.2.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.4)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/cli-core': 3.1.0(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(vitest@4.1.11)(yaml@2.9.0)
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/codegen': 8.0.0(oxfmt@0.63.0)(react@19.2.8)(supports-color@8.1.1)
       '@sanity/descriptors': 1.3.0
       '@sanity/export': 6.2.1(supports-color@8.1.1)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/id-utils': 1.0.0
-      '@sanity/import': 6.0.3(@sanity/client@8.1.0)(@types/react@19.2.18)(supports-color@8.1.1)(vitest@4.1.11)
+      '@sanity/import': 6.0.3(@sanity/client@8.2.0)(@types/react@19.2.18)(supports-color@8.1.1)(vitest@4.1.11)
       '@sanity/migrate': 8.0.2(@types/react@19.2.18)(supports-color@8.1.1)(vitest@4.1.11)(xstate@5.32.5)
       '@sanity/runtime-cli': 17.7.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(rolldown@1.2.4)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/schema': 6.11.0-next.38(@types/react@19.2.18)(vitest@4.1.11)
@@ -20142,7 +20142,7 @@ snapshots:
       nanoid: 3.3.18
       rxjs: 7.8.2
 
-  '@sanity/client@8.1.0(vitest@4.1.11)':
+  '@sanity/client@8.2.0(vitest@4.1.11)':
     dependencies:
       eventsource: 5.1.0
       get-it: 9.5.0(vitest@4.1.11)
@@ -20334,10 +20334,10 @@ snapshots:
     dependencies:
       '@sanity/signed-urls': 2.0.5
 
-  '@sanity/import@6.0.3(@sanity/client@8.1.0)(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)':
+  '@sanity/import@6.0.3(@sanity/client@8.2.0)(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)':
     dependencies:
       '@sanity/asset-utils': 2.3.0
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/mutator': 6.11.0-next.38(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)
       debug: 4.4.3(supports-color@10.2.2)
@@ -20354,10 +20354,10 @@ snapshots:
       - supports-color
       - vitest
 
-  '@sanity/import@6.0.3(@sanity/client@8.1.0)(@types/react@19.2.18)(supports-color@5.5.0)(vitest@4.1.11)':
+  '@sanity/import@6.0.3(@sanity/client@8.2.0)(@types/react@19.2.18)(supports-color@5.5.0)(vitest@4.1.11)':
     dependencies:
       '@sanity/asset-utils': 2.3.0
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/mutator': 6.11.0-next.38(@types/react@19.2.18)(supports-color@5.5.0)(vitest@4.1.11)
       debug: 4.4.3(supports-color@5.5.0)
@@ -20374,10 +20374,10 @@ snapshots:
       - supports-color
       - vitest
 
-  '@sanity/import@6.0.3(@sanity/client@8.1.0)(@types/react@19.2.18)(supports-color@8.1.1)(vitest@4.1.11)':
+  '@sanity/import@6.0.3(@sanity/client@8.2.0)(@types/react@19.2.18)(supports-color@8.1.1)(vitest@4.1.11)':
     dependencies:
       '@sanity/asset-utils': 2.3.0
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/mutator': 6.11.0-next.38(@types/react@19.2.18)(supports-color@8.1.1)(vitest@4.1.11)
       debug: 4.4.3(supports-color@8.1.1)
@@ -20584,9 +20584,9 @@ snapshots:
       '@sanity/client': 7.26.2
       '@sanity/uuid': 3.0.3
 
-  '@sanity/preview-url-secret@4.1.4(@sanity/client@8.1.0)':
+  '@sanity/preview-url-secret@4.1.4(@sanity/client@8.2.0)':
     dependencies:
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/uuid': 3.0.3
 
   '@sanity/prism-groq@1.1.2': {}
@@ -20604,7 +20604,7 @@ snapshots:
       '@sanity/blueprints-parser': 0.5.0
       '@sanity/cli-build': 5.2.1(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.4)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/cli-core': 3.1.0(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(vitest@4.1.11)(yaml@2.9.0)
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       adm-zip: 0.6.0
       array-treeify: 0.2.0
       cardinal: 2.1.1
@@ -20833,7 +20833,7 @@ snapshots:
 
   '@sanity/types@6.11.0-next.38(@types/react@19.2.18)(vitest@4.1.11)':
     dependencies:
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/media-library-types': 1.6.0
       '@types/react': 19.2.18
     transitivePeerDependencies:
@@ -20867,7 +20867,7 @@ snapshots:
     dependencies:
       '@date-fns/tz': 1.5.0
       '@date-fns/utc': 2.1.1
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/types': 6.11.0-next.38(@types/react@19.2.18)(vitest@4.1.11)
       date-fns: 4.4.0
       rxjs: 7.8.2
@@ -20925,7 +20925,7 @@ snapshots:
       '@lezer/highlight': 1.2.3
       '@rexxars/react-json-inspector': 9.0.1(react@19.2.8)
       '@rexxars/react-split-pane': 1.0.0(react-dom@19.2.8)(react@19.2.8)
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/color': 3.0.8
       '@sanity/icons': 5.2.1(react@19.2.8)
       '@sanity/lezer-groq': 1.0.4
@@ -27293,7 +27293,7 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 2.0.2
       '@sanity/cli': 8.0.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.63.0)(rolldown@1.2.4)(supports-color@10.2.2)(typescript@7.0.2)(vitest@4.1.11)(xstate@5.32.5)
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/color': 3.0.8
       '@sanity/comlink': 4.0.3
       '@sanity/diff': 6.11.0-next.38
@@ -27311,7 +27311,7 @@ snapshots:
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/mutator': 6.11.0-next.38(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)
       '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.11.0-next.38)
-      '@sanity/preview-url-secret': 4.1.4(@sanity/client@8.1.0)
+      '@sanity/preview-url-secret': 4.1.4(@sanity/client@8.2.0)
       '@sanity/prism-groq': 1.1.2
       '@sanity/schema': 6.11.0-next.38(@types/react@19.2.18)(vitest@4.1.11)
       '@sanity/sdk-react': 2.19.0(@types/react@19.2.18)(immer@11.1.17)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(vitest@4.1.11)(xstate@5.32.5)
@@ -27443,7 +27443,7 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 2.0.2
       '@sanity/cli': 8.0.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.63.0)(rolldown@1.2.4)(supports-color@5.5.0)(typescript@7.0.2)(vitest@4.1.11)(xstate@5.32.5)
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/color': 3.0.8
       '@sanity/comlink': 4.0.3
       '@sanity/diff': 6.11.0-next.38
@@ -27461,7 +27461,7 @@ snapshots:
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/mutator': 6.11.0-next.38(@types/react@19.2.18)(supports-color@5.5.0)(vitest@4.1.11)
       '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.11.0-next.38)
-      '@sanity/preview-url-secret': 4.1.4(@sanity/client@8.1.0)
+      '@sanity/preview-url-secret': 4.1.4(@sanity/client@8.2.0)
       '@sanity/prism-groq': 1.1.2
       '@sanity/schema': 6.11.0-next.38(@types/react@19.2.18)(vitest@4.1.11)
       '@sanity/sdk-react': 2.19.0(@types/react@19.2.18)(immer@11.1.17)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(vitest@4.1.11)(xstate@5.32.5)
@@ -27593,7 +27593,7 @@ snapshots:
       '@sanity/asset-utils': 2.3.0
       '@sanity/bifur-client': 2.0.2
       '@sanity/cli': 8.0.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxfmt@0.63.0)(rolldown@1.2.4)(supports-color@8.1.1)(typescript@7.0.2)(vitest@4.1.11)(xstate@5.32.5)
-      '@sanity/client': 8.1.0(vitest@4.1.11)
+      '@sanity/client': 8.2.0(vitest@4.1.11)
       '@sanity/color': 3.0.8
       '@sanity/comlink': 4.0.3
       '@sanity/diff': 6.11.0-next.38
@@ -27611,7 +27611,7 @@ snapshots:
       '@sanity/mutate': 0.18.1(xstate@5.32.5)
       '@sanity/mutator': 6.11.0-next.38(@types/react@19.2.18)(supports-color@8.1.1)(vitest@4.1.11)
       '@sanity/presentation-comlink': 2.2.3(@sanity/types@6.11.0-next.38)
-      '@sanity/preview-url-secret': 4.1.4(@sanity/client@8.1.0)
+      '@sanity/preview-url-secret': 4.1.4(@sanity/client@8.2.0)
       '@sanity/prism-groq': 1.1.2
       '@sanity/schema': 6.11.0-next.38(@types/react@19.2.18)(vitest@4.1.11)
       '@sanity/sdk-react': 2.19.0(@types/react@19.2.18)(immer@11.1.17)(react-dom@19.2.8)(react@19.2.8)(use-sync-external-store@1.6.0)(vitest@4.1.11)(xstate@5.32.5)
