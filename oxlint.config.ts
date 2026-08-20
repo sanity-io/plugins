@@ -17,6 +17,22 @@ export default defineConfig({
     // AILF reference solutions - graded artefacts, not part of the plugins build
     'plugins/**/.ailf/tasks/**/*.reference.ts',
   ],
+  rules: {
+    // This monorepo builds plugins with React Compiler, so unlike the plugin-kit preset
+    // (which mostly relies on category defaults) every React Compiler rule is enabled:
+    // https://oxc.rs/blog/2026-08-18-react-compiler-support.html#oxlint
+    'react/capitalized-calls': 'error',
+    'react/exhaustive-effect-dependencies': 'error',
+    'react/hooks': 'error',
+    'react/invariant': 'error',
+    'react/memo-dependencies': 'error',
+    'react/no-deriving-state-in-effects': 'error',
+    'react/rule-suppression': 'error',
+    'react/syntax': 'error',
+    'react/todo': 'error',
+    'react/unsupported-syntax': 'error',
+    'react/void-use-memo': 'error',
+  },
   overrides: [
     {
       files: ['e2e/**/*.ts'],

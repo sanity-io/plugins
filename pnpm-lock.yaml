@@ -128,7 +128,7 @@ catalogs:
       specifier: ^0.63.0
       version: 0.63.0
     oxlint:
-      specifier: ^1.78.0
+      specifier: ^1.79.0
       version: 1.79.0
     oxlint-tsgolint:
       specifier: ^7.0.2001

@@ -29,6 +29,7 @@ export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
         )
         const valid = await testSecrets(client)
         if (!valid?.status && token && secretKey) {
+          // oxlint-disable-next-line react/todo
           throw new Error('Invalid secrets')
         }
       } catch (err) {

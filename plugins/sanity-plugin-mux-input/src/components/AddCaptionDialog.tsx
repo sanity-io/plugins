@@ -268,6 +268,7 @@ export default function AddCaptionDialog({asset, onAdd, onClose}: Props) {
         status: 'error',
         description: extractErrorMessage(error, 'Failed to add caption track'),
       })
+      // oxlint-disable-next-line react/todo
     } finally {
       setIsSubmitting(false)
     }

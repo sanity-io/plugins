@@ -58,6 +58,7 @@ export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
 
   useEffect(() => {
     cb.current = callback
+    // oxlint-disable-next-line react/rule-suppression
     // oxlint-disable-next-line react/exhaustive-deps -- deps are provided by the caller via the `deps` argument
   }, deps)
 
@@ -97,6 +98,7 @@ export function useDebouncedCallback<Fn extends (...args: any[]) => any>(
     })
 
     return wrapped
+    // oxlint-disable-next-line react/rule-suppression
     // oxlint-disable-next-line react/exhaustive-deps -- deps are provided by the caller via the `deps` argument
   }, [delay, maxWait, ...deps])
 }
