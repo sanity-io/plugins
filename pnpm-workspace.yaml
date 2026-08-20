@@ -31,12 +31,12 @@ catalog:
   '@sanity/icons': ^5.2.1
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.10.1
-  '@sanity/pkg-utils': ^12.1.0
+  '@sanity/pkg-utils': ^12.3.0
   '@sanity/preview-url-secret': ^4.1.4
   '@sanity/schema': ^6.10.1
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.1
-  '@sanity/tsdown-config': ^0.24.1
+  '@sanity/tsdown-config': ^0.26.0
   '@sanity/types': ^6.10.1
   '@sanity/ui': ^4.0.3
   '@sanity/util': ^6.10.1
@@ -55,7 +55,6 @@ catalog:
   '@vanilla-extract/dynamic': ^2.1.5
   '@vis.gl/react-google-maps': ^1.9.0
   '@vitest/coverage-v8': ^4.1.10
-  babel-plugin-react-compiler: ^1.0.0
   date-fns: ^4.4.0
   groq: ^6.10.1
   jsdom: ^29.1.1
@@ -63,6 +62,7 @@ catalog:
   lodash-es: ^4.18.1
   motion: ^13.1.0
   nanoid: ^6.0.1
+  oxc-transform-react: ^0.145.0
   oxfmt: ^0.63.0
   oxlint: ^1.78.0
   oxlint-tsgolint: ^7.0.2001

@@ -15,7 +15,7 @@
     // so it reports the entry as unused.
     "pnpm-workspace.yaml": ["catalog"],
   },
-  "ignoreDependencies": ["@vanilla-extract/css", "babel-plugin-react-compiler"],
+  "ignoreDependencies": ["@vanilla-extract/css", "oxc-transform-react"],
   "workspaces": {
     ".": {
       "entry": ["*.{ts,mts,mjs}"],

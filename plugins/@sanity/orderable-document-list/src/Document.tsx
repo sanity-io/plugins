@@ -112,6 +112,7 @@ export function Document({
 
             <Tooltip content={tooltip} portal placement="right" boundaryElement={null}>
               <Flex align="center" style={{flexShrink: 0}}>
+                {/* oxlint-disable-next-line typescript/no-deprecated -- the replacement, `DocumentVersionsStatusIndicator`, is marked @internal and takes a `documentVersions` array that `useDocumentVersionInfo` does not provide */}
                 <DocumentStatusIndicator
                   draft={versionsInfo.draft}
                   published={versionsInfo.published}

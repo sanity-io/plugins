@@ -7,5 +7,5 @@ export default defineConfig({
     next: './src/indexNext.ts',
   },
   styledComponents: true,
-  reactCompiler: true,
+  reactCompiler: {transform: 'oxc'},
 }) satisfies Promise<UserConfig>
