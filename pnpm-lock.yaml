@@ -56,8 +56,8 @@ catalogs:
       specifier: ^0.26.0
       version: 0.26.0
     '@sanity/ui':
-      specifier: ^4.0.3
-      version: 4.0.3
+      specifier: ^4.0.4
+      version: 4.0.4
     '@sanity/uuid':
       specifier: ^3.0.3
       version: 3.0.3
@@ -356,7 +356,7 @@ importers:
         version: 0.3.5(react-dom@19.2.8)(react@19.2.8)(sanity@6.11.0-next.32)(styled-components@6.5.3)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
         version: 0.2.13(babel-plugin-macros@3.1.0)(vite@8.2.1)
@@ -604,7 +604,7 @@ importers:
         version: 6.11.0-next.32(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -671,7 +671,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.11.0-next.32(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@3.0.0-rc.1)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.145.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.4)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)(vitest@4.1.11)
@@ -762,7 +762,7 @@ importers:
         version: 1.0.4
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@uiw/codemirror-themes':
         specifier: ^4.25.11
         version: 4.25.11(@codemirror/language@6.12.4)(@codemirror/state@6.7.1)(@codemirror/view@6.43.9)
@@ -805,7 +805,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@vanilla-extract/dynamic':
         specifier: 'catalog:'
         version: 2.1.5
@@ -869,7 +869,7 @@ importers:
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       dset:
         specifier: ^3.1.4
         version: 3.1.4
@@ -918,7 +918,7 @@ importers:
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
@@ -961,7 +961,7 @@ importers:
         version: 8.1.0(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.11.0-next.32(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@3.0.0-rc.1)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.145.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.4)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)(vitest@4.1.11)
@@ -1038,7 +1038,7 @@ importers:
         version: 6.11.0-next.32(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.11.0-next.32(@types/react@19.2.18)(vitest@4.1.11)
@@ -1105,7 +1105,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       react-rx:
         specifier: ^4.2.5
         version: 4.2.5(react@19.2.8)(rxjs@7.8.2)
@@ -1157,7 +1157,7 @@ importers:
         version: link:../sanity-plugin-async-list
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       h3:
         specifier: ^1.15.11
         version: 1.15.11
@@ -1212,7 +1212,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@vis.gl/react-google-maps':
         specifier: 'catalog:'
         version: 1.9.0(react-dom@19.2.8)(react@19.2.8)
@@ -1273,7 +1273,7 @@ importers:
         version: 6.11.0-next.32(@types/react@19.2.18)(supports-color@10.2.2)(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.11.0-next.32(@types/react@19.2.18)(vitest@4.1.11)
@@ -1322,7 +1322,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       react-rx:
         specifier: 'catalog:'
         version: 4.2.5(react@19.2.8)(rxjs@7.8.2)
@@ -1386,7 +1386,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       lexorank:
         specifier: 'catalog:'
         version: 1.0.5
@@ -1435,7 +1435,7 @@ importers:
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -1545,7 +1545,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -1594,7 +1594,7 @@ importers:
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -1640,7 +1640,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.11.0-next.32(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@3.0.0-rc.1)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.145.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.4)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)(vitest@4.1.11)
@@ -1683,7 +1683,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       react-rx:
         specifier: 'catalog:'
         version: 4.2.5(react@19.2.8)(rxjs@7.8.2)
@@ -1741,7 +1741,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -1790,7 +1790,7 @@ importers:
         version: 4.1.4(@sanity/client@8.1.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.11.0-next.32(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@3.0.0-rc.1)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.145.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.4)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)(vitest@4.1.11)
@@ -1885,7 +1885,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.11.0-next.32(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@3.0.0-rc.1)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.145.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.4)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)(vitest@4.1.11)
@@ -1922,7 +1922,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -1968,7 +1968,7 @@ importers:
         version: 5.4.0(react-dom@19.2.8)(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.11.0-next.32(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@3.0.0-rc.1)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.145.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.4)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)(vitest@4.1.11)
@@ -2026,7 +2026,7 @@ importers:
         version: link:../@sanity/studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       nanoid:
         specifier: 'catalog:'
         version: 6.0.1
@@ -2066,7 +2066,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -2112,7 +2112,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.11.0-next.32(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@3.0.0-rc.1)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.145.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.4)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)(vitest@4.1.11)
@@ -2161,7 +2161,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2234,7 +2234,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.11.0-next.32(@types/react@19.2.18)(vitest@4.1.11)
@@ -2289,7 +2289,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.11.0-next.32(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@3.0.0-rc.1)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.145.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.4)(styled-components@6.5.3)(supports-color@10.2.2)(typescript@7.0.2)(vitest@4.1.11)
@@ -2329,7 +2329,7 @@ importers:
         version: 3.0.8
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       bezier-easing:
         specifier: ^2.1.0
         version: 2.1.0
@@ -2387,7 +2387,7 @@ importers:
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.11.0-next.32(@types/react@19.2.18)(vitest@4.1.11)
@@ -2448,7 +2448,7 @@ importers:
         version: 4.1.4(@sanity/client@8.1.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       motion:
         specifier: 'catalog:'
         version: 13.1.0(react-dom@19.2.8)(react@19.2.8)
@@ -2500,7 +2500,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.11.0-next.32(@types/react@19.2.18)(vitest@4.1.11)
@@ -2598,7 +2598,7 @@ importers:
         version: 8.1.0(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       react-simplemde-editor:
         specifier: ^5.2.0
         version: 5.2.0(easymde@2.21.0)(react-dom@19.2.8)(react@19.2.8)
@@ -2653,7 +2653,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2777,7 +2777,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2865,7 +2865,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       axios:
         specifier: ^1.19.0
         version: 1.19.0(debug@4.4.3)(supports-color@10.2.2)
@@ -3009,7 +3009,7 @@ importers:
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       react-fast-compare:
         specifier: 'catalog:'
         version: 3.2.2
@@ -3058,7 +3058,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@tanstack/react-virtual':
         specifier: ^3.14.9
         version: 3.14.9(react-dom@19.2.8)(react@19.2.8)
@@ -3113,7 +3113,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       react-is:
         specifier: 'catalog:'
         version: 19.2.8
@@ -3162,7 +3162,7 @@ importers:
         version: 5.2.1(react@19.2.8)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
+        version: 4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.11.0-next.32(@types/react@19.2.18)(vitest@4.1.11)
@@ -7478,14 +7478,6 @@ packages:
     engines: {node: '>=22.12'}
     peerDependencies:
       '@types/react': '*'
-
-  '@sanity/ui@4.0.3':
-    resolution: {integrity: sha512-IXZ01joAs1YDKhzcvW5+F+3hL5BsDLH3HB7WqpBqfTitQ0jmvyXr8quHQnsP8br3JyxEREmTEAIJhS8ABEXPXw==}
-    engines: {node: '>=22.12'}
-    peerDependencies:
-      react: ^19.2
-      react-dom: ^19.2
-      styled-components: ^6.1
 
   '@sanity/ui@4.0.4':
     resolution: {integrity: sha512-vFYoo7cmmYBHT9Gea40ZBoXpI/KmRnsuR//OxEK9lRRCOwPyn/vrEpht18GY9pIwxvip8UUNQG1RWv/fpqIAQQ==}
@@ -21042,20 +21034,6 @@ snapshots:
       '@types/react': 19.2.18
     transitivePeerDependencies:
       - vitest
-
-  '@sanity/ui@4.0.3(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)':
-    dependencies:
-      '@floating-ui/react-dom': 2.1.9(react-dom@19.2.8)(react@19.2.8)
-      '@sanity/color': 3.0.8
-      '@sanity/icons': 5.2.1(react@19.2.8)
-      csstype: 3.2.3
-      motion: 13.1.0(react-dom@19.2.8)(react@19.2.8)
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
-      react-is: 19.2.8
-      react-refractor: 4.0.0(react@19.2.8)
-      styled-components: 6.5.3(react-dom@19.2.8)(react@19.2.8)
-      use-effect-event: 2.0.3(react@19.2.8)
 
   '@sanity/ui@4.0.4(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)':
     dependencies:
