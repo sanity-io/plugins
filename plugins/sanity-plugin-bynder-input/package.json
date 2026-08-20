@@ -55,7 +55,6 @@
     "video.js": "catalog:"
   },
   "devDependencies": {
-    "@rolldown/plugin-babel": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
@@ -63,8 +62,7 @@
     "@types/react": "catalog:",
     "@types/video.js": "catalog:",
     "@vanilla-extract/css": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
+    "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",

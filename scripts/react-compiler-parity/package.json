@@ -7,10 +7,8 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@rolldown/plugin-babel": "catalog:",
     "@types/node": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
+    "oxc-transform-react": "catalog:",
     "typescript": "catalog:",
     "vite": "^8.2.1",
     "vitest": "catalog:"

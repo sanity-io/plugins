@@ -28,7 +28,7 @@ Keep and maintain these monorepo config files in the transferred plugin:
 - `tsconfig.json`
 - `vitest.config.ts`
 
-The copy-plugin generator sets `reactCompiler: true` in `tsdown.config.ts` and mirrors it in `vitest.config.ts` via `@rolldown/plugin-babel` + `reactCompilerPresetForVitest()` (the stock `reactCompilerPreset()` is skipped in Vitest SSR). Keep that Vitest wiring — tests must exercise compiled output. See AGENTS.md (“React Compiler Vitest parity”).
+The copy-plugin generator sets `reactCompiler: {transform: 'oxc'}` in `tsdown.config.ts` and mirrors it in `vitest.config.ts` via `reactCompilerPluginForVitest()` (`oxc-transform-react`). `@vitejs/plugin-react` `compiler: true` is skipped in Vitest SSR. Keep that Vitest wiring — tests must exercise compiled output. See AGENTS.md (“React Compiler Vitest parity”).
 
 Do not copy standalone-repo-only setup such as custom root CI/build/lint/test configs that are already handled by this monorepo.
 

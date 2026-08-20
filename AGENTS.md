@@ -70,6 +70,8 @@ Every PR that changes published packages **must** include changesets. **Importan
 
 Each plugin has its own changelog that consumers read. A combined changeset would pollute individual plugin changelogs with irrelevant information. For example, `@sanity/code-input`'s changelog should not mention workflow-specific changes.
 
+**Exception — uniform monorepo-wide dependency or tooling changes:** when one change applies identically to many packages and the summary is a single line that is equally relevant to every affected package (for example bumping a shared dependency or switching a shared build setting), use a single combined changeset listing all affected packages. Each package's changelog renders only that one relevant line either way, so nothing gets polluted, while dozens of identical files would only add noise. This matches existing practice: Renovate's dependency-update changesets are combined, as are manual monorepo-wide bumps (for example the `styled-components` update in GH-1878).
+
 #### How to Add Changesets
 
 **Option 1: Manual Creation (Recommended for Multiple Plugins)**
@@ -289,33 +291,46 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 
 ### React Compiler Vitest parity
 
-If a plugin’s `tsdown.config.ts` has `reactCompiler: true` (the default from generators), its `vitest.config.ts` **must** register the same Babel stack so unit tests exercise compiled output — not uncompiled `src`.
+If a plugin’s `tsdown.config.ts` has `reactCompiler: {transform: 'oxc'}` (the default from generators), its `vitest.config.ts` **must** run the same `oxc-transform-react` pass so unit tests exercise compiled output — not uncompiled `src`.
 
-`reactCompilerPreset()` from `@vitejs/plugin-react` sets `applyToEnvironmentHook` so the compiler runs only when Vite `consumer === 'client'`. Vitest transforms through the SSR environment (`consumer: 'server'`), so the stock preset is dropped. Wrap it and force the hook on:
+Do **not** use `@vitejs/plugin-react` `react({compiler: true})` for Vitest. That integration only compiles when Vite `consumer === 'client'`. Vitest transforms through the SSR environment (`consumer: 'server'`), so the compiler is skipped. Register `reactCompilerPluginForVitest()` which calls `transformSync` from `oxc-transform-react` with `reactCompiler: true` in an `enforce: 'pre'` plugin:
 
 ```ts
-import pluginBabel from '@rolldown/plugin-babel'
-import {reactCompilerPreset} from '@vitejs/plugin-react'
+import {transformSync} from 'oxc-transform-react'
 import {defineConfig} from 'vitest/config'
 
-function reactCompilerPresetForVitest() {
-  const preset = reactCompilerPreset()
+function reactCompilerPluginForVitest() {
   return {
-    ...preset,
-    rolldown: {
-      ...preset.rolldown,
-      applyToEnvironmentHook: () => true,
+    name: 'vitest-react-compiler',
+    enforce: 'pre',
+    transform: {
+      filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
+      handler(code, id) {
+        const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
+        const result = transformSync(filename, code, {
+          jsx: {runtime: 'automatic'},
+          reactCompiler: true,
+          sourcemap: true,
+        })
+        if (result.fatal) {
+          throw new Error(
+            result.errors.map((error) => error.message).join('\n') ||
+              'React Compiler transform failed.',
+          )
+        }
+        return {code: result.code, map: result.map}
+      },
     },
   }
 }
 
 export default defineConfig({
-  plugins: [pluginBabel({presets: [reactCompilerPresetForVitest()]})],
+  plugins: [reactCompilerPluginForVitest()],
   // ...
 })
 ```
 
-- Generators already wire both `tsdown.config.ts` and `vitest.config.ts` (plus `@rolldown/plugin-babel` / `@vitejs/plugin-react` catalog deps), including the Vitest SSR wrap. Do not remove the Vitest compiler plugin when adding vanilla-extract or other plugins — compose into `plugins: [...]`.
+- Generators already wire both `tsdown.config.ts` and `vitest.config.ts` (plus the `oxc-transform-react` catalog dep). Do not remove the Vitest compiler plugin when adding vanilla-extract or other plugins — compose into `plugins: [...]`.
 - `scripts/react-compiler-parity` enforces this invariant in `pnpm test` (config text **and** a Vite SSR transform that must emit `react/compiler-runtime`). Agents who enable or keep `reactCompiler` in tsdown without mirroring Vitest will fail CI.
 
 ## Pull Request Workflow
@@ -573,6 +588,10 @@ Declarations are generated with tsgo (tsdown enables dts generation automaticall
 ### Lint Errors About Missing Types
 
 Run `pnpm build` first—some packages need to be built for type information to be available.
+
+### `tsdown.config.ts`: `Promise<UserConfig[]>` does not satisfy `Promise<UserConfig>`
+
+`@sanity/tsdown-config` overloads `defineConfig` so `reactCompiler.reactServer: true` returns `Promise<UserConfig[]>` (dual client / `react-server` builds) and every other call returns `Promise<UserConfig>`. Annotate plugin configs with `satisfies Promise<UserConfig | UserConfig[]>` so both overloads type-check — do not use `satisfies Promise<UserConfig>` alone. The generator template already uses the union.
 
 ### "Command not found: pnpm"
 

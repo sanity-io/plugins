@@ -7,8 +7,10 @@ import {Virtuoso} from 'react-virtuoso'
 
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const {radius: themeRadius, space: themeSpace} = studioTheme
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => {
   return {
     control: (styles, {isFocused}) => {
@@ -43,6 +45,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     input: (styles) => ({
       ...styles,
       color: 'var(--card-fg-color)',
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
       fontFamily: studioTheme.fonts.text.family,
       marginLeft: rem(themeSpace[2]!),
     }),
@@ -71,6 +74,7 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     }),
     noOptionsMessage: (styles) => ({
       ...styles,
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
       fontFamily: studioTheme.fonts.text.family,
       lineHeight: '1em',
     }),

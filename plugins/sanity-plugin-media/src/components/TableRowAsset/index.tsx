@@ -52,6 +52,7 @@ type Props = {
 
 const ContainerGrid = styled<
   typeof Grid,
+  // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
   {$selected?: boolean; $scheme: ThemeColorSchemeKey; $updating?: boolean}
 >(Grid)(({$scheme, $selected, $updating}) => {
   return css`
@@ -75,6 +76,7 @@ const ContainerGrid = styled<
   `
 })
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
   $scheme,
 }) => {
@@ -90,6 +92,7 @@ const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey
 
 const StyledWarningIcon = styled(WarningFilledIcon)(({theme}) => {
   return {
+    // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
     color: theme.sanity.color.spot.red,
   }
 })
@@ -189,8 +192,8 @@ const TableRowAsset = (props: Props) => {
       $scheme={scheme}
       $selected={selected}
       style={{
-        gridColumnGap: mediaIndex < 3 ? 0 : '16px',
-        gridRowGap: 0,
+        columnGap: mediaIndex < 3 ? 0 : '16px',
+        rowGap: 0,
         gridTemplateColumns:
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
         gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',
@@ -376,7 +379,9 @@ const TableRowAsset = (props: Props) => {
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
           {referenceCountVisible ? (
-            <WithReferringDocuments id={id}>
+            <WithReferringDocuments // oxlint-disable-line no-deprecated -- deferred to a follow-up PR
+              id={id}
+            >
               {({isLoading, referringDocuments}) => {
                 const uniqueDocuments = getUniqueDocuments(referringDocuments)
                 return isLoading ? (

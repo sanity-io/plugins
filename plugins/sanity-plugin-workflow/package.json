@@ -60,15 +60,13 @@
     "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
-    "@rolldown/plugin-babel": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@vanilla-extract/css": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
+    "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",

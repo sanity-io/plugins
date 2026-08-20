@@ -23,7 +23,7 @@ import {
   Text,
   TextInput,
 } from '@sanity/ui'
-import {useEffect, useRef, useState} from 'react'
+import {type InputEvent, useEffect, useRef, useState} from 'react'
 
 import {DIALOGS_Z_INDEX} from '../../util/constants'
 import type {MuxPlaybackId, MuxTextTrack, PlaybackPolicy} from '../../util/types'
@@ -43,7 +43,7 @@ const AssetInput: React.FC<{
   description?: string
   placeholder?: string
   value: string
-  onInput: (e: React.FormEvent<HTMLInputElement>) => void
+  onInput: (e: InputEvent<HTMLInputElement>) => void
   disabled?: boolean
 }> = (props) => (
   <FormField title={props.label} description={props.description} inputId={props.label}>

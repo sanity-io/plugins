@@ -41,7 +41,7 @@ Skip one-off tooling (migrations, banners) unless they are part of the main auth
 - Context/provider tests: mock `useClient` / `useWorkspace` / pane hooks; use `Suspense` + `act` for async `React.use` language resolution; call any module-level `clear()` between tests.
 - Timeouts: `test('name', {timeout: 30_000}, async () => { … })` — options object as second arg.
 - Keep the package-exports snapshot test; update with `pnpm test -u` only when exports intentionally change.
-- React Compiler is on in both build and Vitest — do not add unnecessary `useMemo` / `useCallback`. If `tsdown.config.ts` has `reactCompiler: true`, `vitest.config.ts` must register `pluginBabel({presets: [reactCompilerPresetForVitest()]})` (stock `reactCompilerPreset()` is client-only; the wrap applies it in Vitest SSR). Generators wire both; compose with other Vitest plugins rather than replacing them. Enforced by `scripts/react-compiler-parity`.
+- React Compiler is on in both build and Vitest — do not add unnecessary `useMemo` / `useCallback`. If `tsdown.config.ts` has `reactCompiler: {transform: 'oxc'}`, `vitest.config.ts` must register `reactCompilerPluginForVitest()` (`oxc-transform-react` with `reactCompiler: true`). `@vitejs/plugin-react` `compiler: true` is client-only and is skipped in Vitest SSR. Generators wire both; compose with other Vitest plugins rather than replacing them. Enforced by `scripts/react-compiler-parity`.
 
 Run a single package:
 

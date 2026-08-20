@@ -62,7 +62,6 @@
     "use-error-boundary": "^2.0.6"
   },
   "devDependencies": {
-    "@rolldown/plugin-babel": "catalog:",
     "@sanity/client": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
@@ -70,8 +69,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-is": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
+    "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",

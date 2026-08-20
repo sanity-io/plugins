@@ -4,8 +4,6 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {generatePreviewBlobUrl$} from './generatePreviewBlobUrl'
 
 describe('generatePreviewBlobUrl$', () => {
-  const origCreateElement = document.createElement.bind(document)
-
   beforeEach(() => {
     class MockImage {
       onload: (() => void) | null = null
@@ -22,9 +20,12 @@ describe('generatePreviewBlobUrl$', () => {
     }
     vi.stubGlobal('Image', MockImage)
 
+    // Allocate with a string literal before spying so TS picks the non-deprecated canvas overload.
+    const templateCanvas = document.createElement('canvas')
+    const templateDiv = document.createElement('div')
     vi.spyOn(document, 'createElement').mockImplementation((tagName: string) => {
       if (tagName === 'canvas') {
-        const el = origCreateElement('canvas')
+        const el = templateCanvas.cloneNode(false) as HTMLCanvasElement
         vi.spyOn(el, 'getContext').mockReturnValue({
           drawImage: vi.fn(),
         } as unknown as CanvasRenderingContext2D)
@@ -35,7 +36,7 @@ describe('generatePreviewBlobUrl$', () => {
         }
         return el
       }
-      return origCreateElement(tagName)
+      return templateDiv.cloneNode(false) as HTMLElement
     })
 
     const createObjectURL = vi.fn(() => 'blob:mock-preview')

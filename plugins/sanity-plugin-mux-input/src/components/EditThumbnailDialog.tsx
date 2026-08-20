@@ -1,5 +1,5 @@
 import {Button, Dialog, Flex, Stack, Text, TextInput} from '@sanity/ui'
-import {useId, useMemo, useState} from 'react'
+import {type ChangeEvent, useId, useMemo, useState} from 'react'
 import {getDevicePixelRatio} from 'use-device-pixel-ratio'
 
 import {useDialogStateContext} from '../context/DialogStateContext'
@@ -49,7 +49,7 @@ export default function EditThumbnailDialog({asset, currentTime = 0}: Props) {
     throw saveThumbnailError
   }
 
-  const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value
     setTimeFormatted(value)
 

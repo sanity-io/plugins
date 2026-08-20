@@ -3,5 +3,5 @@ import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
   styledComponents: true,
-  reactCompiler: true,
-}) satisfies Promise<UserConfig>
+  reactCompiler: {transform: 'oxc'},
+}) satisfies Promise<UserConfig | UserConfig[]>

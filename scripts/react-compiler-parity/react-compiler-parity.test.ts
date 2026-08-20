@@ -3,8 +3,7 @@ import {tmpdir} from 'node:os'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 
-import pluginBabel from '@rolldown/plugin-babel'
-import {reactCompilerPreset} from '@vitejs/plugin-react'
+import {transformSync} from 'oxc-transform-react'
 import {createServer, type PluginOption} from 'vite'
 import {expect, test} from 'vitest'
 
@@ -21,8 +20,8 @@ export function Counter() {
 
 /**
  * Every plugin that enables React Compiler in `tsdown.config.ts` must also
- * run Vitest through the same `@rolldown/plugin-babel` + `reactCompilerPresetForVitest`
- * stack. Generators wire both; this test stops agents from forgetting one side.
+ * run Vitest through `oxc-transform-react` via `reactCompilerPluginForVitest()`.
+ * Generators wire both; this test stops agents from forgetting one side.
  *
  * See AGENTS.md ("React Compiler Vitest parity") and
  * turbo/generators/templates/vitest.config.ts.hbs.
@@ -42,7 +41,7 @@ test('plugins with reactCompiler in tsdown also enable it in vitest', async () =
       try {
         const vitestSource = await readFile(vitestPath, 'utf8')
         if (!enablesReactCompilerInVitest(vitestSource)) {
-          return `${relativePlugin}: tsdown has reactCompiler but vitest.config.ts does not wire pluginBabel({presets: [reactCompilerPresetForVitest()]}) with applyToEnvironmentHook: () => true`
+          return `${relativePlugin}: tsdown has reactCompiler but vitest.config.ts does not wire reactCompilerPluginForVitest() with oxc-transform-react (reactCompiler: true)`
         }
       } catch {
         return `${relativePlugin}: missing vitest.config.ts (tsdown has reactCompiler)`
@@ -66,23 +65,17 @@ test('plugins with reactCompiler in tsdown also enable it in vitest', async () =
   ).toEqual([])
 })
 
-test(
-  'stock reactCompilerPreset is skipped in Vite SSR, wrap compiles',
-  {timeout: 30_000},
-  async () => {
-    const unfixed = await transformFixtureSsr([pluginBabel({presets: [reactCompilerPreset()]})])
-    const wrapped = await transformFixtureSsr([
-      pluginBabel({presets: [reactCompilerPresetForVitest()]}),
-    ])
+test('oxc plugin compiles a component in Vite SSR', {timeout: 30_000}, async () => {
+  const unfixed = await transformFixtureSsr([])
+  const compiled = await transformFixtureSsr([reactCompilerPluginForVitest()])
 
-    expect(unfixed, 'stock preset must not compile under consumer: server').not.toContain(
-      'react/compiler-runtime',
-    )
-    expect(wrapped, 'wrapped preset must compile under consumer: server').toContain(
-      'react/compiler-runtime',
-    )
-  },
-)
+  expect(unfixed, 'Vite SSR without the plugin must not compile').not.toContain(
+    'react/compiler-runtime',
+  )
+  expect(compiled, 'oxc plugin must compile under consumer: server').toContain(
+    'react/compiler-runtime',
+  )
+})
 
 test('assist vitest config compiles a component in Vite SSR', {timeout: 30_000}, async () => {
   const {default: assistVitestConfig} = await import(
@@ -98,13 +91,27 @@ test('assist vitest config compiles a component in Vite SSR', {timeout: 30_000},
   expect(code).toContain('react/compiler-runtime')
 })
 
-function reactCompilerPresetForVitest() {
-  const preset = reactCompilerPreset()
+function reactCompilerPluginForVitest() {
   return {
-    ...preset,
-    rolldown: {
-      ...preset.rolldown,
-      applyToEnvironmentHook: () => true,
+    name: 'vitest-react-compiler',
+    enforce: 'pre' as const,
+    transform: {
+      filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
+      handler(code: string, id: string) {
+        const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
+        const result = transformSync(filename, code, {
+          jsx: {runtime: 'automatic'},
+          reactCompiler: true,
+          sourcemap: true,
+        })
+        if (result.fatal) {
+          throw new Error(
+            result.errors.map((error) => error.message).join('\n') ||
+              'React Compiler transform failed.',
+          )
+        }
+        return {code: result.code, map: result.map}
+      },
     },
   }
 }
@@ -136,14 +143,11 @@ function enablesReactCompiler(tsdownSource: string): boolean {
 }
 
 function enablesReactCompilerInVitest(vitestSource: string): boolean {
-  // Require the full stack, including the Vitest SSR wrap. Stock
-  // `reactCompilerPreset()` is client-only (`consumer === 'client'`).
+  // Require the oxc stack. `@vitejs/plugin-react` `compiler: true` is client-only.
   return (
-    vitestSource.includes('@rolldown/plugin-babel') &&
-    /pluginBabel\s*\(\s*\{\s*presets\s*:\s*\[[^\]]*reactCompilerPresetForVitest\s*\(/.test(
-      vitestSource,
-    ) &&
-    /applyToEnvironmentHook\s*:\s*\(\)\s*=>\s*true/.test(vitestSource)
+    vitestSource.includes('oxc-transform-react') &&
+    vitestSource.includes('reactCompilerPluginForVitest(') &&
+    /reactCompiler\s*:\s*true/.test(vitestSource)
   )
 }
 

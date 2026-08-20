@@ -1,6 +1,14 @@
 import {Box, Button, Card, Checkbox, Dialog, Flex, Inline, Stack, Text, TextInput} from '@sanity/ui'
 import {Code} from '@sanity/ui/code'
-import {useCallback, useEffect, useId, useMemo, useRef} from 'react'
+import {
+  type ChangeEvent,
+  type SubmitEvent,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+} from 'react'
 import {clear, preload} from 'suspend-react'
 
 import {useClient} from '../hooks/useClient'
@@ -47,7 +55,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
   const saving = useRef(false)
 
   const handleSubmit = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
+    (event: SubmitEvent<HTMLFormElement>) => {
       event.preventDefault()
 
       if (!saving.current && event.currentTarget.reportValidity()) {
@@ -70,7 +78,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
     [client, dispatch, handleSaveSecrets, setDialogState, state],
   )
   const handleChangeToken = useCallback(
-    (event: React.FormEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       dispatch({
         type: 'change',
         payload: {name: 'token', value: event.currentTarget.value},
@@ -79,7 +87,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
     [dispatch],
   )
   const handleChangeSecretKey = useCallback(
-    (event: React.FormEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       dispatch({
         type: 'change',
         payload: {name: 'secretKey', value: event.currentTarget.value},
@@ -88,7 +96,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
     [dispatch],
   )
   const handleChangeEnableSignedUrls = useCallback(
-    (event: React.FormEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       dispatch({
         type: 'change',
         payload: {name: 'enableSignedUrls', value: event.currentTarget.checked},
@@ -97,7 +105,7 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
     [dispatch],
   )
   const handleChangeDrmConfigId = useCallback(
-    (event: React.FormEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       dispatch({
         type: 'change',
         payload: {name: 'drmConfigId', value: event.currentTarget.value},

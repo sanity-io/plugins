@@ -160,9 +160,9 @@ import {defineConfig} from '@sanity/tsdown-config'
 import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
-  reactCompiler: true,
+  reactCompiler: {transform: 'oxc'},
   vanillaExtract: true,
-}) satisfies Promise<UserConfig>
+}) satisfies Promise<UserConfig | UserConfig[]>
 ```
 
 The integration extracts all `.css.ts` rules into `dist/bundle.css` at build time, auto-imports it
@@ -208,26 +208,39 @@ The package-exports test resolves the workspace `exports` map, whose `.` entry p
 the workspace's `vitest.config.ts`:
 
 ```ts
-import pluginBabel from '@rolldown/plugin-babel'
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
-import {reactCompilerPreset} from '@vitejs/plugin-react'
+import {transformSync} from 'oxc-transform-react'
 import {defineConfig} from 'vitest/config'
 
-function reactCompilerPresetForVitest() {
-  const preset = reactCompilerPreset()
+function reactCompilerPluginForVitest() {
   return {
-    ...preset,
-    rolldown: {
-      ...preset.rolldown,
-      applyToEnvironmentHook: () => true,
+    name: 'vitest-react-compiler',
+    enforce: 'pre',
+    transform: {
+      filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
+      handler(code, id) {
+        const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
+        const result = transformSync(filename, code, {
+          jsx: {runtime: 'automatic'},
+          reactCompiler: true,
+          sourcemap: true,
+        })
+        if (result.fatal) {
+          throw new Error(
+            result.errors.map((error) => error.message).join('\n') ||
+              'React Compiler transform failed.',
+          )
+        }
+        return {code: result.code, map: result.map}
+      },
     },
   }
 }
 
 export default defineConfig({
-  // Keep React Compiler (matches `reactCompiler: true` in tsdown.config.ts) and
-  // compose vanilla-extract — do not replace the babel plugin.
-  plugins: [pluginBabel({presets: [reactCompilerPresetForVitest()]}), vanillaExtractPlugin()],
+  // Keep React Compiler (matches `reactCompiler: {transform: 'oxc'}` in tsdown.config.ts) and
+  // compose vanilla-extract — do not replace the oxc plugin.
+  plugins: [reactCompilerPluginForVitest(), vanillaExtractPlugin()],
   // ...existing test config
 })
 ```
@@ -297,7 +310,7 @@ Migrate styling from styled-components to vanilla-extract (zero-runtime CSS)
 - [ ] `tsdown.config.ts`: `styledComponents` removed, `vanillaExtract: true` added
 - [ ] `package.json`: vanilla-extract devDeps added; `styled-components` peer removed; `sanity` /
       `@sanity/ui` peer variants verified aligned in `pnpm-lock.yaml`
-- [ ] `vitest.config.ts` registers `vanillaExtractPlugin()` **alongside** the existing React Compiler babel plugin (`pluginBabel({presets: [reactCompilerPresetForVitest()]})`) — do not drop compiler parity
+- [ ] `vitest.config.ts` registers `vanillaExtractPlugin()` **alongside** the existing React Compiler oxc plugin (`reactCompilerPluginForVitest()`) — do not drop compiler parity
 - [ ] `dist/bundle.css` emitted with all rules; package-exports snapshot updated
 - [ ] `pnpm format` / `pnpm lint` / `pnpm knip` / `pnpm build` / `pnpm test run` all pass
 - [ ] Visual fidelity verified against the pre-migration rendering

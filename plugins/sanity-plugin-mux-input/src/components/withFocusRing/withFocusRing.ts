@@ -16,15 +16,22 @@ export function withFocusRing<Props extends object>(component: ComponentType<Pro
     return css`
       --card-focus-box-shadow: ${focusRingBorderStyle(border)};
 
-      border-radius: ${rem(theme.sanity.radius[1]!)};
+      border-radius: ${rem(
+        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+        theme.sanity.radius[1]!,
+      )};
       outline: none;
       box-shadow: var(--card-focus-box-shadow);
 
       &:focus {
         --card-focus-box-shadow: ${focusRingStyle({
-          base: theme.sanity.color.base,
+          base:
+            // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+            theme.sanity.color.base,
           border,
-          focusRing: theme.sanity.focusRing,
+          focusRing:
+            // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+            theme.sanity.focusRing,
         })};
       }
     `

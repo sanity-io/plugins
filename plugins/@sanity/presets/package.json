@@ -44,7 +44,6 @@
     "@sanity/uuid": "catalog:"
   },
   "devDependencies": {
-    "@rolldown/plugin-babel": "catalog:",
     "@sanity/ailf": "^7.36.0",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
@@ -53,9 +52,8 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
     "jsdom": "catalog:",
+    "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sanity": "catalog:",

@@ -29,7 +29,7 @@ export default defineCliConfig({
     // the alias can take effect; keep enabled for non-Vercel sanity deploys.
     autoUpdates: !reactProductionProfiling,
   },
-  reactCompiler: {},
+  reactCompiler: {transform: 'oxc'},
   typegen: {formatGeneratedCode: false},
   // Bundle studio deps in `sanity dev` (required for Structure with client/eventsource alignment).
   // Trade-off: with this on, editing a `.css.ts` (vanilla-extract) file does not hot-reload —

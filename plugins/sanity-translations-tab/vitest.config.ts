@@ -1,22 +1,35 @@
-import pluginBabel from '@rolldown/plugin-babel'
-import {reactCompilerPreset} from '@vitejs/plugin-react'
+import {transformSync} from 'oxc-transform-react'
 import {defineConfig} from 'vitest/config'
 
-/** Apply React Compiler in Vitest SSR (`consumer: 'server'`), not only Vite client. */
-function reactCompilerPresetForVitest() {
-  const preset = reactCompilerPreset()
+/** Apply oxc React Compiler in Vitest SSR (`consumer: 'server'`). `react({compiler: true})` skips server. */
+function reactCompilerPluginForVitest() {
   return {
-    ...preset,
-    rolldown: {
-      ...preset.rolldown,
-      applyToEnvironmentHook: () => true,
+    name: 'vitest-react-compiler',
+    enforce: 'pre',
+    transform: {
+      filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
+      handler(code, id) {
+        const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
+        const result = transformSync(filename, code, {
+          jsx: {runtime: 'automatic'},
+          reactCompiler: true,
+          sourcemap: true,
+        })
+        if (result.fatal) {
+          throw new Error(
+            result.errors.map((error) => error.message).join('\n') ||
+              'React Compiler transform failed.',
+          )
+        }
+        return {code: result.code, map: result.map}
+      },
     },
   }
 }
 
 export default defineConfig({
-  // Match `reactCompiler: true` in tsdown.config.ts so tests exercise compiled output.
-  plugins: [pluginBabel({presets: [reactCompilerPresetForVitest()]})],
+  // Match `reactCompiler: {transform: 'oxc'}` in tsdown.config.ts so tests exercise compiled output.
+  plugins: [reactCompilerPluginForVitest()],
   test: {
     server: {
       deps: {

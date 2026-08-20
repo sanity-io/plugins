@@ -1,4 +1,5 @@
-import {LayerProvider, studioTheme, ThemeProvider} from '@sanity/ui'
+import {LayerProvider, ThemeProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
 import {ToastProvider} from '@sanity/ui/toast'
 import {cleanup, render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -32,7 +33,6 @@ vi.mock('sanity', async (importOriginal) => {
       children({isLoading: false, referringDocuments: []}),
   }
 })
-
 const asset = {
   _id: 'a1',
   _type: 'sanity.imageAsset',
@@ -45,6 +45,8 @@ const asset = {
   url: 'https://example.com/x.png',
   metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
 } as ImageAsset
+
+const studioTheme = buildTheme()
 
 function renderTool(overrides: Record<string, unknown> = {}) {
   const props = {

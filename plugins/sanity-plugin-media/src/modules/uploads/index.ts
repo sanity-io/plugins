@@ -1,7 +1,7 @@
 import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
 import type {ClientError, SanityAssetDocument, SanityImageAssetDocument} from '@sanity/client'
 import groq from 'groq'
-import {empty, from, merge, of} from 'rxjs'
+import {EMPTY, from, merge, of} from 'rxjs'
 import {catchError, delay, filter, mergeMap, takeUntil, withLatestFrom} from 'rxjs/operators'
 
 import type {HttpError, MyEpic, SanityUploadProgressEvent, UploadItem} from '../../types'
@@ -180,7 +180,7 @@ export const uploadsAssetStartEpic: MyEpic = (action$, _state$, {client}) =>
                 }),
               )
             }
-            return empty()
+            return EMPTY
           }),
           catchError((error: ClientError) =>
             of(

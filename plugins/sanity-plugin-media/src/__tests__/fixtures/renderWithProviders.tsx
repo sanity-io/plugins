@@ -1,5 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
-import {studioTheme, ThemeProvider} from '@sanity/ui'
+import {ThemeProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
 import {ToastProvider} from '@sanity/ui/toast'
 import {render, type RenderResult} from '@testing-library/react'
 import type {ReactElement, ReactNode} from 'react'
@@ -13,6 +14,8 @@ import {rootReducer} from '../../modules'
 import type {RootReducerState} from '../../modules/types'
 import type {MediaToolOptions} from '../../types'
 import {createTestRootState} from './rootState'
+
+const studioTheme = buildTheme()
 
 type Opts = {
   onAction?: (action: {type: string}) => void

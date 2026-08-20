@@ -173,9 +173,9 @@ import {defineConfig} from '@sanity/tsdown-config'
 import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
-  reactCompiler: true,
+  reactCompiler: {transform: 'oxc'},
   vanillaExtract: true,
-}) satisfies Promise<UserConfig>
+}) satisfies Promise<UserConfig | UserConfig[]>
 ```
 
 This also wires up the `./bundle.css` export in `package.json` automatically, keeping it in sync on
@@ -204,25 +204,38 @@ drop-in match:
 
 ```ts
 // plugins/@sanity/google-maps-input/vitest.config.ts
-import pluginBabel from '@rolldown/plugin-babel'
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
-import {reactCompilerPreset} from '@vitejs/plugin-react'
+import {transformSync} from 'oxc-transform-react'
 import {defineConfig} from 'vitest/config'
 
-function reactCompilerPresetForVitest() {
-  const preset = reactCompilerPreset()
+function reactCompilerPluginForVitest() {
   return {
-    ...preset,
-    rolldown: {
-      ...preset.rolldown,
-      applyToEnvironmentHook: () => true,
+    name: 'vitest-react-compiler',
+    enforce: 'pre',
+    transform: {
+      filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
+      handler(code, id) {
+        const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
+        const result = transformSync(filename, code, {
+          jsx: {runtime: 'automatic'},
+          reactCompiler: true,
+          sourcemap: true,
+        })
+        if (result.fatal) {
+          throw new Error(
+            result.errors.map((error) => error.message).join('\n') ||
+              'React Compiler transform failed.',
+          )
+        }
+        return {code: result.code, map: result.map}
+      },
     },
   }
 }
 
 export default defineConfig({
-  // Keep React Compiler (matches tsdown `reactCompiler: true`) and compose VE.
-  plugins: [pluginBabel({presets: [reactCompilerPresetForVitest()]}), vanillaExtractPlugin()],
+  // Keep React Compiler (matches tsdown `reactCompiler: {transform: 'oxc'}`) and compose VE.
+  plugins: [reactCompilerPluginForVitest(), vanillaExtractPlugin()],
   // ...
 })
 ```
@@ -248,24 +261,37 @@ in `setupFiles` (the generator emits it when you opt into styling):
 
 ```ts
 // vitest.config.ts
-import pluginBabel from '@rolldown/plugin-babel'
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
-import {reactCompilerPreset} from '@vitejs/plugin-react'
+import {transformSync} from 'oxc-transform-react'
 import {defineConfig} from 'vitest/config'
 
-function reactCompilerPresetForVitest() {
-  const preset = reactCompilerPreset()
+function reactCompilerPluginForVitest() {
   return {
-    ...preset,
-    rolldown: {
-      ...preset.rolldown,
-      applyToEnvironmentHook: () => true,
+    name: 'vitest-react-compiler',
+    enforce: 'pre',
+    transform: {
+      filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
+      handler(code, id) {
+        const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
+        const result = transformSync(filename, code, {
+          jsx: {runtime: 'automatic'},
+          reactCompiler: true,
+          sourcemap: true,
+        })
+        if (result.fatal) {
+          throw new Error(
+            result.errors.map((error) => error.message).join('\n') ||
+              'React Compiler transform failed.',
+          )
+        }
+        return {code: result.code, map: result.map}
+      },
     },
   }
 }
 
 export default defineConfig({
-  plugins: [pluginBabel({presets: [reactCompilerPresetForVitest()]}), vanillaExtractPlugin()],
+  plugins: [reactCompilerPluginForVitest(), vanillaExtractPlugin()],
   test: {
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
     // ...
