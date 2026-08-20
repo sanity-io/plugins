@@ -162,7 +162,7 @@ import type {UserConfig} from 'tsdown'
 export default defineConfig({
   reactCompiler: true,
   vanillaExtract: true,
-}) satisfies Promise<UserConfig>
+}) satisfies Promise<UserConfig | UserConfig[]>
 ```
 
 The integration extracts all `.css.ts` rules into `dist/bundle.css` at build time, auto-imports it

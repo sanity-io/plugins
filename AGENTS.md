@@ -543,6 +543,10 @@ Declarations are generated with tsgo (tsdown enables dts generation automaticall
 
 Run `pnpm build` first—some packages need to be built for type information to be available.
 
+### `tsdown.config.ts`: `Promise<UserConfig[]>` does not satisfy `Promise<UserConfig>`
+
+`@sanity/tsdown-config` overloads `defineConfig` so `reactCompiler.reactServer: true` returns `Promise<UserConfig[]>` (dual client / `react-server` builds) and every other call returns `Promise<UserConfig>`. Annotate plugin configs with `satisfies Promise<UserConfig | UserConfig[]>` so both overloads type-check — do not use `satisfies Promise<UserConfig>` alone. The generator template already uses the union.
+
 ### "Command not found: pnpm"
 
 Ensure you have pnpm v11+ installed, then run:
