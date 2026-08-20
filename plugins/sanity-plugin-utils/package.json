@@ -1,7 +1,7 @@
 {
   "name": "sanity-plugin-utils",
   "version": "2.0.15",
-  "description": "Handy hooks and clever components for Sanity Studio v3",
+  "description": "Handy hooks and clever components for Sanity Studio",
   "keywords": [
     "sanity",
     "sanity-plugin"

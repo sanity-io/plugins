@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/@sanity/vercel-protection-bypass.svg?style=flat-square)](https://www.npmjs.com/package/@sanity/vercel-protection-bypass)
 
 > [!IMPORTANT]  
-> This plugin requires React 19.2 or later, and Sanity Studio v4.
+> This plugin requires React 19.2 or later.
 
 ```sh
 npm install @sanity/vercel-protection-bypass

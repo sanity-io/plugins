@@ -149,17 +149,17 @@ To personalize this configuration it's useful to know what arguments go into `Tr
 
 There are several reasons to override these functions. Generally, developers will customize to ensure documents serialize and deserialize correctly. Since the serialization functions are used across all our translation plugins currently, you can find some frequently encountered scenarios at [their repository here](https://github.com/sanity-io/sanity-naive-html-serializer), along with code examples for customized configurations.
 
-## Migrating to Sanity Studio v3
+## Migrating from environment variables
 
-There is one major breaking change in this plugin's migration to Sanity Studio v3: the proxy was set in an environment variable, and now it should be part of the `secrets` document.
+There is one major breaking change from earlier versions of this plugin: the proxy was set in an environment variable, and now it should be part of the `secrets` document.
 
-In v2, you would set the proxy in a `.env` file, like so:
+Previously, you would set the proxy in a `.env` file, like so:
 
 ```env
 SANITY_STUDIO_SMARTLING_PROXY=https://my-proxy-endpoint.com/api/proxy
 ```
 
-In v3, you should set the proxy in the `secrets` document. If you have an existing secrets document, you can patch it like so:
+You should now set the proxy in the `secrets` document. If you have an existing secrets document, you can patch it like so:
 
 ```javascript
 // ./patchSmartlingSecrets.js
@@ -176,13 +176,13 @@ and run the script with `sanity exec patchSmartlingSecrets.js --with-user-token`
 
 Alternatively, you can re-run the `populateSmartlingSecrets` script in [Quickstart](#quickstart) to create a new secrets document with the proxy set.
 
-We apologize for the inconvenience. Because of the new embeddability of the studio, developers may find that their v3 Studio is built and deployed in different ways, with access to different environments. Keeping this setting in `secrets` allows developers to set it in a way that works for their deployment and reduce complexity. You can find more information on our guidance around environment variables [here](https://github.com/sanity-io/sanity/releases/tag/v3.5.0).
+Because of the embeddability of the studio, developers may find that their Studio is built and deployed in different ways, with access to different environments. Keeping this setting in `secrets` allows developers to set it in a way that works for their deployment and reduce complexity. You can find more information on our guidance around environment variables [here](https://www.sanity.io/docs/studio/environment-variables).
 
-Otherwise, you should not have to do anything to migrate to Sanity Studio v3. If you are using the default configs, you should be able to upgrade without any changes. If you are using custom serialization, you may need to update how `BaseDocumentSerializer` receives your schema.
+If you are using the default configs, you should be able to upgrade without any other changes. If you are using custom serialization, you may need to update how `BaseDocumentSerializer` receives your schema.
 
-These are outlined in the serializer README [here](https://github.com/sanity-io/sanity-naive-html-serializer#v2-to-v3-changes).
+These are outlined in the serializer README [here](https://github.com/sanity-io/plugins/tree/main/plugins/sanity-naive-html-serializer#schema-access-changes).
 
-The final change from the v2 to v3 version of the plugin is in how progress in a translation job is calculated. The plugin will now count progress as the percentage of all strings that have reached the final stage of a Smartling workflow.
+The final change from earlier versions of the plugin is in how progress in a translation job is calculated. The plugin will now count progress as the percentage of all strings that have reached the final stage of a Smartling workflow.
 
 ## License
 

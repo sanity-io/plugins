@@ -2,23 +2,23 @@
 
 ## Where you are now:
 
-**I'm on Sanity Studio v3 and upgrading from plugin v1.0.0 and above**
+**I'm upgrading from plugin v1.0.0 and above**
 
 - You will need to perform a content migration to upgrade. See ["Upgrading from v1 to v2"](#upgrading-from-v1-to-v2)
 - Your queries will also need to change, as translation references have moved. See ["Upgrading from v1 to v2"](#upgrading-from-v1-to-v2) below for migration guidance, including query updates.
 
-**I'm on Sanity Studio v3 but will stay with the older plugin for now**
+**I will stay with the older plugin for now**
 
 - Please refer to the [v1 branch](https://github.com/sanity-io/document-internationalization/tree/v1)
 - Install from `v1.0.0` and above
 - This version of the plugin will not be updated with new features
 
-**I'm on Sanity Studio v2**
+**I'm on the legacy Studio v2 line**
 
 - Please refer to the [studio-v2 branch](https://github.com/sanity-io/document-internationalization/tree/studio-v2)
 - Install from `v0.0.0` and above
 - This version of the plugin will not be updated with new features
-- You will not need to perform a content migration to move to Sanity Studio v3, if you install the v1 plugin.
+- You will not need to perform a content migration when moving off Studio v2 if you install the v1 plugin.
 
 ### Upgrading from v1 to v2
 
@@ -32,7 +32,7 @@ We have provided migration scripts and guidance on this page. Please submit an i
 
 ### How v2 is different from v1
 
-A complete rewrite of the original Document Internationalization plugin, exclusively for Sanity Studio v3. Major **benefits** from the previous versions include:
+A complete rewrite of the original Document Internationalization plugin. Major **benefits** from the previous versions include:
 
 - Create new documents in any language and link translated references later
 - Translation references are written to a separate "meta" document

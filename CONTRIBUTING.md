@@ -324,7 +324,7 @@ When moving a plugin to this monorepo the conventions enforced on the repo typic
 
 - enabling React Compiler
 - Dropping CJS
-- Requiring Sanity Studio v5 as the baseline
+- Aligning with the current Sanity Studio peer dependency baseline
 
 ```bash
 pnpm changeset add

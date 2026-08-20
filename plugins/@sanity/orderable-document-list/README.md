@@ -185,9 +185,9 @@ To get this first version out the door there are few configuration settings and 
 
 Feedback and PRs welcome :)
 
-### Breaking change in the v3 version
+### Configuration note
 
-`orderableDocumentListDeskItem` requires context from sanity config now.
+`orderableDocumentListDeskItem` requires context from the Sanity config.
 See the examples above.
 
 ## How it works

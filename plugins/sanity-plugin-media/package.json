@@ -1,7 +1,7 @@
 {
   "name": "sanity-plugin-media",
   "version": "6.1.4",
-  "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
+  "description": "Browse, manage and refine Sanity assets from within your Studio.",
   "keywords": [
     "asset",
     "browser",
