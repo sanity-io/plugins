@@ -8,7 +8,7 @@ import {reactCompilerPreset} from '@vitejs/plugin-react'
 import {createServer, type PluginOption} from 'vite'
 import {expect, test} from 'vitest'
 
-const repoRoot = path.resolve(fileURLToPath(import.meta.url), '../../..')
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const pluginsRoot = path.join(repoRoot, 'plugins')
 
 const COUNTER_SOURCE = `
