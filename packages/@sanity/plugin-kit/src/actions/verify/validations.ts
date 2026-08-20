@@ -189,8 +189,8 @@ function formatExportsPath(segments: string[]): string {
 }
 
 /**
- * Bans CommonJS interop in package.json. The plugin baseline is Sanity Studio v5 or later, which is
- * pure ESM, so there is no reason to publish a parallel CJS build anymore. This flags:
+ * Bans CommonJS interop in package.json. The plugin baseline is Sanity Studio,
+ * which is pure ESM, so there is no reason to publish a parallel CJS build anymore. This flags:
  *
  * - `require` export conditions
  * - the top-level `main` field
@@ -218,7 +218,7 @@ export function validateEsmOnly(packageJson: PackageJson): string[] {
 
   return [
     outdent`
-      package.json ships CommonJS (CJS) output, but Sanity plugins target Sanity Studio v5+, which is pure ESM.
+      package.json ships CommonJS (CJS) output, but Sanity plugins target Sanity Studio, which is pure ESM.
 
       Remove the following so the package stays ESM-only:
       ${offenders.join('\n')}

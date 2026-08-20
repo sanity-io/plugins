@@ -6,7 +6,7 @@
 - [What this package does](#what-this-package-does)
 - [Quick start](#quick-start)
 - [Internationalized array formats](#internationalized-array-formats)
-- [v2-to-v3-changes](#v2-to-v3-changes)
+- [schema-access-changes](#schema-access-changes)
 
 ## What this package solves
 
@@ -53,11 +53,11 @@ When serializing and merging with the `internationalizedArray` translation level
 
 Serialized files are identical for both formats (items are identified by their language code), and `BaseDocumentMerger.internationalizedArrayMerge` writes patches in whichever format the target document already uses, preserving existing item keys when replacing.
 
-## v2-to-v3-changes
+## Schema access changes
 
 You likely will not need to make changes to your usage of this package. The biggest change to your codebase will be feeding in the schema to `BaseDocumentSerializer`. `BaseDocumentSerializer` should be the only affected interface.
 
-### In v2
+### Legacy Studio (`part:` imports)
 
 ```javascript
 import schemas from 'part:@sanity/base/schema'
@@ -66,7 +66,7 @@ const serializer = BaseDocumentSerializer(schemas)
 const serialized = serializer.serializeDocument(doc, 'document')
 ```
 
-### In v3
+### Current Studio
 
 If you're in a valid React context:
 
