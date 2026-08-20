@@ -1,4 +1,4 @@
-import type {ThemeColorSchemeKey} from '@sanity/ui'
+import type {ThemeColorSchemeKey} from '@sanity/ui/theme'
 import type {MouseEvent} from 'react'
 import {styled, css} from 'styled-components'
 

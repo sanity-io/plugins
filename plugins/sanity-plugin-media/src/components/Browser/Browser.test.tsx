@@ -1,4 +1,5 @@
-import {studioTheme, ThemeProvider} from '@sanity/ui'
+import {ThemeProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
 import {ToastProvider} from '@sanity/ui/toast'
 import {act, cleanup, render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
@@ -14,6 +15,8 @@ import Browser from './index'
 vi.mock('../../hooks/useVersionedClient', () => ({
   default: vi.fn(),
 }))
+
+const studioTheme = buildTheme()
 
 describe('Browser', () => {
   afterEach(() => {

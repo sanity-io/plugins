@@ -18,10 +18,13 @@ const checkTagName = (client: SanityClient, name: string) => {
       }),
       mergeMap((existingTagCount: number) => {
         if (existingTagCount > 0) {
-          return throwError({
-            message: 'Tag already exists',
-            statusCode: 409,
-          } satisfies HttpError)
+          return throwError(
+            () =>
+              ({
+                message: 'Tag already exists',
+                statusCode: 409,
+              }) satisfies HttpError,
+          )
         }
 
         return of(true)

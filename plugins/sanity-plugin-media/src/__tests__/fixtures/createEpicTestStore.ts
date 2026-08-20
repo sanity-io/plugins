@@ -1,4 +1,4 @@
-import {configureStore, type AnyAction, type EnhancedStore} from '@reduxjs/toolkit'
+import {configureStore, type EnhancedStore, type UnknownAction} from '@reduxjs/toolkit'
 import type {SanityClient} from '@sanity/client'
 import type {Epic} from 'redux-observable'
 import {createEpicMiddleware} from 'redux-observable'
@@ -8,11 +8,11 @@ import type {RootReducerState} from '../../modules/types'
 import {createTestRootState} from './rootState'
 
 export function createEpicTestStore(
-  epic: Epic<AnyAction, AnyAction, RootReducerState, {client: SanityClient}>,
+  epic: Epic<UnknownAction, UnknownAction, RootReducerState, {client: SanityClient}>,
   mockClient: SanityClient,
   preloaded?: Partial<RootReducerState>,
-): EnhancedStore<RootReducerState, AnyAction> {
-  const epicMiddleware = createEpicMiddleware<AnyAction, AnyAction, RootReducerState>({
+): EnhancedStore<RootReducerState> {
+  const epicMiddleware = createEpicMiddleware<UnknownAction, UnknownAction, RootReducerState>({
     dependencies: {client: mockClient},
   })
 

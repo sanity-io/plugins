@@ -24,6 +24,7 @@ export const mediaAssetSource = {
 const editMediaAssetSource = {
   icon: EditIcon,
   name: 'edit-media',
+  // oxlint-disable-next-line no-deprecated -- `i18nKey` requires a locale bundle; a plain title is intentional here
   title: 'Edit Media',
   component: EditAssetTool,
 } satisfies AssetSource

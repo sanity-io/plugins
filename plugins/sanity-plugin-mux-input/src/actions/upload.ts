@@ -1,6 +1,6 @@
 import {uuid as generateUuid} from '@sanity/uuid'
 import {concat, defer, from, type Observable, of, throwError} from 'rxjs'
-import {catchError, mergeMap, mergeMapTo, switchMap} from 'rxjs/operators'
+import {catchError, mergeMap, switchMap} from 'rxjs/operators'
 import type {SanityClient} from 'sanity'
 
 import {createUpChunkObservable} from '../clients/upChunkObservable'
@@ -64,7 +64,7 @@ export function uploadUrl({
         testSecretsObservable(client).pipe(
           switchMap((json) => {
             if (!json || !json.status) {
-              return throwError(new Error('Invalid credentials'))
+              return throwError(() => new Error('Invalid credentials'))
             }
             const uuid = generateUuid()
             const muxBody = settings
@@ -99,7 +99,7 @@ export function uploadUrl({
                   null
 
                 if (!asset) {
-                  return throwError(new Error('No asset document returned'))
+                  return throwError(() => new Error('No asset document returned'))
                 }
                 return of({type: 'success' as const, id: uuid, asset})
               }),
@@ -173,7 +173,7 @@ export function uploadFile({
                     }),
                     catchError((err) => {
                       // Delete asset document
-                      return cancelUpload(client, uuid).pipe(mergeMapTo(throwError(err)))
+                      return cancelUpload(client, uuid).pipe(mergeMap(() => throwError(() => err)))
                     }),
                   )
                 }),
@@ -275,13 +275,13 @@ function testFile(file: File) {
     const fileOptions = optionsFromFile({}, file)
     return of(fileOptions)
   }
-  return throwError(new Error('Invalid file'))
+  return throwError(() => new Error('Invalid file'))
 }
 
 function testUrl(url: string): Observable<string> {
   const error = new Error('Invalid URL')
   if (typeof url !== 'string') {
-    return throwError(error)
+    return throwError(() => error)
   }
   let formattedUrl = url.trim()
   formattedUrl = formatDriveShareLink(formattedUrl)
@@ -289,10 +289,10 @@ function testUrl(url: string): Observable<string> {
   try {
     parsed = new URL(formattedUrl)
   } catch {
-    return throwError(error)
+    return throwError(() => error)
   }
   if (parsed && !parsed.protocol.match(/http:|https:/)) {
-    return throwError(error)
+    return throwError(() => error)
   }
   return of(formattedUrl)
 }
