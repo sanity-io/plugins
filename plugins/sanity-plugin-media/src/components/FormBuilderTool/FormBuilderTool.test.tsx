@@ -24,6 +24,8 @@ vi.mock('sanity', async (importOriginal) => {
   }
 })
 
+const studioTheme = buildTheme()
+
 describe('FormBuilderTool', () => {
   afterEach(() => {
     cleanup()
@@ -42,7 +44,7 @@ describe('FormBuilderTool', () => {
   it('renders picker header for image asset type', async () => {
     const {unmount} = render(
       <ColorSchemeProvider scheme="light">
-        <ThemeProvider theme={buildTheme()}>
+        <ThemeProvider theme={studioTheme}>
           <ToastProvider>
             <LayerProvider>
               <ToolOptionsProvider options={{creditLine: {enabled: false}}}>

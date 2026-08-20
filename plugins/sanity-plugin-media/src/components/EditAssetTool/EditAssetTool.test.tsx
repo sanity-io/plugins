@@ -44,6 +44,8 @@ const asset = {
   metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
 } as ImageAsset
 
+const studioTheme = buildTheme()
+
 function renderTool(overrides: Record<string, unknown> = {}) {
   const props = {
     assetType: 'image',
@@ -55,7 +57,7 @@ function renderTool(overrides: Record<string, unknown> = {}) {
 
   render(
     <ColorSchemeProvider scheme="light">
-      <ThemeProvider theme={buildTheme()}>
+      <ThemeProvider theme={studioTheme}>
         <ToastProvider>
           <LayerProvider>
             <ToolOptionsProvider options={{creditLine: {enabled: false}}}>

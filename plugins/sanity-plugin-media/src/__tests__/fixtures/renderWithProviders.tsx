@@ -15,6 +15,8 @@ import type {RootReducerState} from '../../modules/types'
 import type {MediaToolOptions} from '../../types'
 import {createTestRootState} from './rootState'
 
+const studioTheme = buildTheme()
+
 type Opts = {
   onAction?: (action: {type: string}) => void
   onSelect?: AssetSourceComponentProps['onSelect']
@@ -60,7 +62,7 @@ export function renderWithProviders(
     <Provider store={store}>
       <ColorSchemeProvider scheme="light">
         <ToolOptionsProvider options={options}>
-          <ThemeProvider theme={buildTheme()}>
+          <ThemeProvider theme={studioTheme}>
             <ToastProvider>
               <AssetBrowserDispatchProvider onSelect={onSelect}>
                 {node}

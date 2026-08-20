@@ -16,6 +16,8 @@ vi.mock('../../hooks/useVersionedClient', () => ({
   default: vi.fn(),
 }))
 
+const studioTheme = buildTheme()
+
 describe('Browser', () => {
   afterEach(() => {
     cleanup()
@@ -34,7 +36,7 @@ describe('Browser', () => {
   it('renders Browse Assets header in tool mode', async () => {
     const {unmount} = render(
       <ColorSchemeProvider scheme="light">
-        <ThemeProvider theme={buildTheme()}>
+        <ThemeProvider theme={studioTheme}>
           <ToastProvider>
             <ToolOptionsProvider options={{creditLine: {enabled: false}}}>
               <Browser />
