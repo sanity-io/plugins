@@ -8,4 +8,4 @@ export default defineConfig({
   styledComponents: true,
   reactCompiler: true,
   define: {__PKG_VERSION__: JSON.stringify(pkg.version)},
-}) satisfies Promise<UserConfig>
+}) satisfies Promise<UserConfig | UserConfig[]>

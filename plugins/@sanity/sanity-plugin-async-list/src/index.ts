@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {definePlugin} from 'sanity'
 
 import {AsyncList, createAsyncListInput} from './components/async-list'

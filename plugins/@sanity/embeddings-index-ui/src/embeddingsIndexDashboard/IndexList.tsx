@@ -14,7 +14,7 @@ export function IndexList(props: IndexListProps) {
   const {loading, selectedIndex, indexes, onIndexSelected} = props
   return (
     <Card tone="default" style={{opacity: loading ? 0.5 : 1}}>
-      <Stack space={2}>
+      <Stack gap={2}>
         <Card borderBottom flex={1} paddingBottom={2} padding={3}>
           <Flex>
             <Box flex={1}>
@@ -32,7 +32,7 @@ export function IndexList(props: IndexListProps) {
           </Flex>
         </Card>
         {indexes.length ? (
-          <Stack space={2} style={{maxHeight: 200, overflow: 'auto'}}>
+          <Stack gap={2} style={{maxHeight: 200, overflow: 'auto'}}>
             {indexes.map((index) => (
               <IndexRow
                 selectedIndex={selectedIndex}

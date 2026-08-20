@@ -222,7 +222,7 @@ export default function DraggableWatermark({
 
   useEffect(() => {
     if (!isDragging && watermark.position) {
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-effect
       setLocalPosition(watermark.position)
     }
   }, [watermark.position, isDragging])
@@ -308,7 +308,7 @@ export default function DraggableWatermark({
   const opacityForRender = hasManualOverlay
     ? (parseOpacityPercent(watermark.overlay_settings?.opacity) ?? opacity)
     : opacity
-  // oxlint-disable-next-line react/react-compiler
+  // oxlint-disable-next-line react/refs
   const contentBox = getVideoContentBox()
   const hasContentBox = contentBox.width > 0 && contentBox.height > 0
 
@@ -339,7 +339,7 @@ export default function DraggableWatermark({
       ref={watermarkRef}
       $opacity={opacityForRender}
       onMouseDown={hasManualOverlay ? undefined : handleMouseDown}
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/refs
       style={computeWatermarkStyle()}
     >
       <img src={watermark.imageUrl} alt="Watermark" draggable={false} />
@@ -460,6 +460,7 @@ export function WatermarkControls({
             imageAspectRatio: undefined,
             overlay_settings: undefined,
           })
+          // oxlint-disable-next-line react/todo
         } finally {
           setIsValidating(false)
         }
@@ -477,7 +478,7 @@ export function WatermarkControls({
   }, [])
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setMode(watermark.overlay_settings ? 'manual' : 'canvas')
   }, [watermark.overlay_settings])
 
@@ -564,8 +565,8 @@ export function WatermarkControls({
   }
 
   return (
-    <Stack space={3}>
-      <Stack space={2}>
+    <Stack gap={3}>
+      <Stack gap={2}>
         <Text size={1} weight="medium">
           Watermark Image URL
         </Text>
@@ -650,7 +651,7 @@ export function WatermarkControls({
       </Stack>
 
       {watermark.imageUrl && (
-        <Stack space={2}>
+        <Stack gap={2}>
           <Card padding={3} tone="transparent" border radius={2}>
             <Flex
               align="center"
@@ -658,7 +659,7 @@ export function WatermarkControls({
               gap={3}
               style={{flexWrap: 'wrap', alignItems: 'flex-start'}}
             >
-              <Stack space={2} style={{minWidth: 240, flex: 1}}>
+              <Stack gap={2} style={{minWidth: 240, flex: 1}}>
                 <Text size={1} weight="medium">
                   Positioning mode
                 </Text>
@@ -699,12 +700,12 @@ export function WatermarkControls({
 
           {mode === 'manual' && (
             <Card padding={3} tone="transparent" border radius={2}>
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Text size={1} weight="medium">
                   Mux overlay_settings
                 </Text>
-                <Grid columns={[1, 2]} gap={3} style={{width: '100%'}}>
-                  <Stack space={2} style={{minWidth: 0}}>
+                <Grid gridTemplateColumns={[1, 2]} gap={3} style={{width: '100%'}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       horizontal_align
                     </Text>
@@ -728,7 +729,7 @@ export function WatermarkControls({
                       <option value="right">right</option>
                     </select>
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       horizontal_margin (e.g. 2% or 40px)
                     </Text>
@@ -739,7 +740,7 @@ export function WatermarkControls({
                       }
                     />
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       vertical_align
                     </Text>
@@ -763,7 +764,7 @@ export function WatermarkControls({
                       <option value="bottom">bottom</option>
                     </select>
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       vertical_margin (e.g. 2% or 40px)
                     </Text>
@@ -774,7 +775,7 @@ export function WatermarkControls({
                       }
                     />
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       width (e.g. 25% or 80px)
                     </Text>
@@ -783,7 +784,7 @@ export function WatermarkControls({
                       onChange={(e) => updateOverlaySettings({width: e.currentTarget.value})}
                     />
                   </Stack>
-                  <Stack space={2} style={{minWidth: 0}}>
+                  <Stack gap={2} style={{minWidth: 0}}>
                     <Text size={0} muted>
                       opacity (e.g. 90%)
                     </Text>
@@ -807,7 +808,7 @@ export function WatermarkControls({
             <>
               <Box>
                 <Text size={1} weight="medium">
-                  {/* oxlint-disable-next-line react/react-compiler */}
+                  {/* oxlint-disable-next-line react/refs */}
                   {(() => {
                     const sizePct = watermark.size || 20
                     const contentW = getVideoContentBox().width
@@ -818,20 +819,20 @@ export function WatermarkControls({
                 </Text>
                 <RangeInput
                   type="range"
-                  // oxlint-disable-next-line react/react-compiler
+                  // oxlint-disable-next-line react/refs
                   value={(() => {
                     const sizePct = watermark.size || 20
                     const contentW = getVideoContentBox().width
                     if (!contentW) return sizePct
                     return Math.max(1, Math.round((sizePct / 100) * contentW))
                   })()}
-                  // oxlint-disable-next-line react/react-compiler
+                  // oxlint-disable-next-line react/refs
                   min={(() => {
                     const contentW = getVideoContentBox().width
                     if (!contentW) return 5
                     return Math.max(1, Math.round(contentW * 0.05))
                   })()}
-                  // oxlint-disable-next-line react/react-compiler
+                  // oxlint-disable-next-line react/refs
                   max={(() => {
                     const contentW = getVideoContentBox().width
                     if (!contentW) return 50

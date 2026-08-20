@@ -1,5 +1,6 @@
 import {yupResolver} from '@hookform/resolvers/yup'
-import {Box, Button, Dialog, Flex, Stack, useToast} from '@sanity/ui'
+import {Box, Button, Dialog, Flex, Stack} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useActor} from '@xstate/react'
 import {type FC, useEffect} from 'react'
 import {useForm} from 'react-hook-form'

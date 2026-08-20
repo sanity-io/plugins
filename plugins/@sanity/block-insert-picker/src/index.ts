@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export {BlockInsertPicker, type BlockInsertPickerProps} from './blockInsertPicker'
 export {derivePickerItems} from './deriveItems'
 export {filterPickerItems} from './filterItems'

@@ -73,6 +73,7 @@ function CodeMirrorProxy(props: CodeMirrorProps & {ref?: Ref<ReactCodeMirrorRef>
     if (editorView) {
       setHighlightedLines(editorView, highlightLines ?? [])
     }
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [editorView, highlightLines, value])
 
   const [initialState] = useState(() => {
@@ -111,6 +112,7 @@ function CodeMirrorProxy(props: CodeMirrorProps & {ref?: Ref<ReactCodeMirrorRef>
       onCreateEditor={handleCreateEditor}
       initialState={initialState}
       basicSetup={basicSetup}
+      readOnly={readOnly}
     />
   )
 }

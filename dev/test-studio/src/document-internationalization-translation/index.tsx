@@ -4,7 +4,8 @@ import {
   useDuplicateWithTranslationsAction,
 } from '@sanity/document-internationalization'
 import {TranslateIcon} from '@sanity/icons/Translate'
-import {Box, Card, Code, Stack, Text} from '@sanity/ui'
+import {Box, Card, Stack, Text} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 import {useEffect, useMemo} from 'react'
 import {definePlugin, defineField, defineType, useClient, useSchema} from 'sanity'
 import type {SanityDocument} from 'sanity'

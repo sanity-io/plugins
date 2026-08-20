@@ -1,4 +1,4 @@
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {addSeconds} from 'date-fns/addSeconds'
 import {isAfter} from 'date-fns/isAfter'
 import {useEffect, useRef} from 'react'

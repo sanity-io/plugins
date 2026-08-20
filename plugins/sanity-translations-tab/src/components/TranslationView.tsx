@@ -2,7 +2,8 @@
  * Add cleanup function to cancel async tasks
  */
 
-import {Stack, useToast} from '@sanity/ui'
+import {Stack} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useContext, useEffect, useState} from 'react'
 
 import type {TranslationTask, TranslationLocale} from '../types'

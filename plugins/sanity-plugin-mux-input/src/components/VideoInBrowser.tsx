@@ -2,7 +2,8 @@ import {CheckmarkIcon} from '@sanity/icons/Checkmark'
 import {EditIcon} from '@sanity/icons/Edit'
 import {LockIcon} from '@sanity/icons/Lock'
 import {PlayIcon} from '@sanity/icons/Play'
-import {Button, Card, Stack, Text, Tooltip} from '@sanity/ui'
+import {Button, Card, Stack, Text} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useState} from 'react'
 import {styled} from 'styled-components'
 
@@ -174,7 +175,7 @@ export default function VideoInBrowser({
         </Tooltip>
       )}
       <Stack
-        space={3}
+        gap={3}
         height="fill"
         style={{
           gridTemplateRows: 'min-content min-content 1fr',

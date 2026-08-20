@@ -18,8 +18,8 @@ export function pkgConfigTemplate(options: {outDir: string; flags: InitFlags}): 
         dist: '${outDir}',
         tsconfig: 'tsconfig.${outDir}.json',
 
-        // Remove this block to enable strict export validation
-        extract: {
+        // Remove this block to enable stricter TSDoc / API Extractor checks
+        tsdoc: {
           rules: {
             'ae-incompatible-release-tags': 'off',
             'ae-internal-missing-underscore': 'off',

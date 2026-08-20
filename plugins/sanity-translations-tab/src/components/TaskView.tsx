@@ -1,5 +1,6 @@
 import {ArrowTopRightIcon} from '@sanity/icons/ArrowTopRight'
-import {Box, Button, Flex, Text, Stack, useToast} from '@sanity/ui'
+import {Box, Button, Flex, Text, Stack} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useContext, useState} from 'react'
 
 import type {TranslationLocale, TranslationTask} from '../types'

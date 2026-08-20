@@ -1,6 +1,7 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {useLanguageFilterStudioContext} from '@sanity/language-filter'
-import {Button, Card, Stack, Text, useToast} from '@sanity/ui'
+import {Button, Card, Stack, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import type React from 'react'
 import {useCallback, useEffect, useMemo} from 'react'
 import {
@@ -42,8 +43,10 @@ import {MigrationBanner} from './MigrationBanner'
  *   document exists in the dataset (it has a `_rev`), so the effect never
  *   recreates a just-deleted document or creates a draft before the user's
  *   first edit.
- * - **Ordering**: Detects when value items are out of order relative to the
- *   master `languages` list and automatically re-sorts them.
+ * - **Ordering**: When `restoreOrder` is enabled (default), detects when value
+ *   items are out of order relative to the master `languages` list and
+ *   automatically re-sorts them. Set `restoreOrder: false` to keep the stored
+ *   order and avoid silent draft creation on open.
  * - **Validation**: Shows a `<Feedback>` component if the languages
  *   configuration is invalid (e.g. missing `id` or `title`).
  * - **Empty state**: Displays a "no translations" message when the field has
@@ -67,6 +70,7 @@ export default function InternationalizedArray(
     defaultLanguages,
     buttonAddAll,
     buttonLocations,
+    restoreOrder,
     languageFilter: builtInLanguageFilter,
   } = useInternationalizedArrayContext()
 
@@ -261,12 +265,12 @@ export default function InternationalizedArray(
     [languages],
   )
 
-  // Automatically restore order of fields
+  // Automatically restore order of fields (opt out with restoreOrder: false)
   useEffect(() => {
-    if (languagesOutOfOrder.length > 0 && allKeysAreLanguages && !readOnly) {
+    if (restoreOrder && languagesOutOfOrder.length > 0 && allKeysAreLanguages && !readOnly) {
       handleRestoreOrder()
     }
-  }, [languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, readOnly])
+  }, [restoreOrder, languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, readOnly])
 
   // compare value keys with possible languages
   const allLanguagesArePresent = useMemo(

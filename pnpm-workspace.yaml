@@ -8,35 +8,42 @@ packages:
   - scripts/*
   - turbo/generators
 
+# Gated off because AILF runs remote (--remote); flip a value to true if you need one at build time locally.
 allowBuilds:
+  '@playwright/browser-chromium': false
+  '@swc/core': false
+  better-sqlite3: false
   esbuild: false
+  onnxruntime-node: false
+  protobufjs: false
+  sharp: false
 
 catalog:
   '@date-fns/tz': ^1.5.0
   '@hello-pangea/dnd': ^18.0.1
   '@hookform/resolvers': ^4.1.3
-  '@portabletext/block-tools': ^5.1.12
-  '@portabletext/to-html': ^5.0.2
+  '@portabletext/block-tools': ^5.2.0
+  '@portabletext/to-html': ^5.0.3
   '@portabletext/types': ^4.0.2
   '@sanity/asset-utils': ^2.3.0
-  '@sanity/client': ^7.26.0
+  '@sanity/client': ^8.2.0
   '@sanity/color': ^3.0.8
   '@sanity/icons': ^5.2.1
   '@sanity/image-url': ^2.1.1
-  '@sanity/mutator': ^6.9.0
-  '@sanity/pkg-utils': ^11.0.17
-  '@sanity/preview-url-secret': ^4.1.2
-  '@sanity/schema': ^6.9.0
+  '@sanity/mutator': ^6.10.1
+  '@sanity/pkg-utils': ^12.3.0
+  '@sanity/preview-url-secret': ^4.1.4
+  '@sanity/schema': ^6.10.1
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.1
-  '@sanity/tsdown-config': ^0.21.2
-  '@sanity/types': ^6.9.0
-  '@sanity/ui': ^3.5.1
-  '@sanity/util': ^6.9.0
+  '@sanity/tsdown-config': ^0.26.0
+  '@sanity/types': ^6.10.1
+  '@sanity/ui': ^4.0.4
+  '@sanity/util': ^6.10.1
   '@sanity/uuid': ^3.0.3
-  '@sanity/vanilla-extract-vite-plugin': ^0.2.8
-  '@sanity/vision': ^6.9.0
-  '@testing-library/jest-dom': ^7.0.0
+  '@sanity/vanilla-extract-vite-plugin': ^0.2.13
+  '@sanity/vision': ^6.10.1
+  '@testing-library/jest-dom': ^7.0.1
   '@testing-library/react': ^16.3.2
   '@types/lodash-es': ^4.17.12
   '@types/node': ^24.13.3
@@ -47,36 +54,36 @@ catalog:
   '@vanilla-extract/css': ^1.21.2
   '@vanilla-extract/dynamic': ^2.1.5
   '@vis.gl/react-google-maps': ^1.9.0
-  '@vitest/coverage-v8': ^4.1.10
+  '@vitest/coverage-v8': ^4.1.11
   babel-plugin-react-compiler: ^1.0.0
   date-fns: ^4.4.0
-  groq: ^6.9.0
+  groq: ^6.10.1
   jsdom: ^29.1.1
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
-  motion: ^12.43.0
-  nanoid: ^6.0.0
-  oxfmt: ^0.61.0
-  oxlint: ^1.77.0
+  motion: ^13.1.0
+  nanoid: ^6.0.1
+  oxfmt: ^0.63.0
+  oxlint: ^1.79.0
   oxlint-tsgolint: ^7.0.2001
   react: ^19.2.8
   react-dom: ^19.2.8
   react-fast-compare: ^3.2.2
-  react-hook-form: ^7.84.0
+  react-hook-form: ^7.85.0
   react-icons: ^5.7.0
   react-is: ^19.2.8
   react-photo-album: ^3.6.0
   react-rx: ^4.2.5
   rxjs: ^7.8.2
-  sanity: ^6.9.0
-  styled-components: ^6.4.4
+  sanity: ^6.10.1
+  styled-components: ^6.5.3
   suspend-react: ^0.1.3
   tsdown: ^0.22.14
-  tsx: ^4.23.5
+  tsx: ^4.23.12
   typescript: 7.0.2
   validate-npm-package-name: ^8.0.0
   video.js: ^7.21.7
-  vitest: ^4.1.10
+  vitest: ^4.1.11
 
 catalogs:
   # Ranges used in `peerDependencies` (referenced as `catalog:peer`).
@@ -155,7 +162,7 @@ minimumReleaseAgeExclude:
 overrides:
   '@types/node': 'catalog:'
   # Type errors happen if there are duplicates of `@sanity/client` in node_modules
-  '@sanity/client': 'catalog:'
+  '@sanity/client@8': 'catalog:'
   # Pin the Sanity Studio monorepo to the `next` dist-tag for compatibility testing.
   # Keep mutator/schema/types/util/groq in lockstep with sanity so dts emit and
   # transitive deps (cli/migrate/portabletext) cannot leave a second major.minor
@@ -167,6 +174,9 @@ overrides:
   '@sanity/vision': next
   groq: next
   sanity: next
+  # Keep a single tsx (and thus a single vite types instance) so sanity.cli vite
+  # config callbacks type-check cleanly after the catalog tsx bump.
+  tsx: 'catalog:'
 
 peerDependencyRules:
   allowedVersions:
@@ -190,7 +200,7 @@ trustPolicy: no-downgrade
 trustPolicyExclude:
   - '@octokit/endpoint@9.0.6'
   - '@octokit/plugin-paginate-rest@9.2.2'
-  - '@sanity/sdk@2.1.2'
+  - '@sanity/sdk@2.1.2 || 3.0.0-rc.1'
   - chokidar@4.0.3
   - groq@3.88.1-typegen-experimental.0
   - react-redux@8.1.3 || 9.2.0

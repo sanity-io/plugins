@@ -1,4 +1,6 @@
-import {studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {ThemeProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
+import {ToastProvider} from '@sanity/ui/toast'
 import {act, cleanup, render, waitFor} from '@testing-library/react'
 import type {InputProps} from 'sanity'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
@@ -7,6 +9,7 @@ import {ToolOptionsProvider} from '../../contexts/ToolOptionsContext'
 import {AutoTagInput} from './index'
 
 const applyMediaTagsMock = vi.hoisted(() => vi.fn(() => Promise.resolve()))
+const pushToast = vi.hoisted(() => vi.fn())
 
 vi.mock('../../utils/applyMediaTags', () => ({
   applyMediaTags: applyMediaTagsMock,
@@ -16,15 +19,15 @@ vi.mock('../../hooks/useVersionedClient', () => ({
   default: () => ({name: 'mock-client'}),
 }))
 
-vi.mock('@sanity/ui', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@sanity/ui')>()
+vi.mock('@sanity/ui/toast', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@sanity/ui/toast')>()
   return {
     ...actual,
     useToast: () => ({push: pushToast}),
   }
 })
 
-const pushToast = vi.fn()
+const studioTheme = buildTheme()
 
 function renderAutoTag(
   value: InputProps['value'],

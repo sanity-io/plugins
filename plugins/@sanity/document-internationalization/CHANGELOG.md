@@ -1,5 +1,38 @@
 # @sanity/document-internationalization
 
+## 6.2.32
+
+### Patch Changes
+
+- [#1878](https://github.com/sanity-io/plugins/pull/1878) [`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency styled-components to ^6.5.3
+
+- [#1926](https://github.com/sanity-io/plugins/pull/1926) [`f485d93`](https://github.com/sanity-io/plugins/commit/f485d934bfcb46ac873c66c6332d760815d797dd) Thanks [@stipsan](https://github.com/stipsan)! - Suppress new oxlint React Compiler rule violations, pending fixes in a follow-up
+
+- [#1922](https://github.com/sanity-io/plugins/pull/1922) [`22c8082`](https://github.com/sanity-io/plugins/commit/22c8082f6ecc377dd1978267d849113cd2477b49) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/client` to v8
+
+- Updated dependencies [[`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43)]:
+  - sanity-plugin-utils@2.0.16
+
+## 6.2.31
+
+## 6.2.30
+
+### Patch Changes
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update @sanity/mutator to ^6.9.1, @sanity/util to ^6.9.1, and @sanity/ui to ^4.0.1
+
+- Updated dependencies [[`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e)]:
+  - sanity-plugin-utils@2.0.15
+
+## 6.2.29
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
+- Updated dependencies [[`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8)]:
+  - sanity-plugin-utils@2.0.14
+
 ## 6.2.28
 
 ## 6.2.27

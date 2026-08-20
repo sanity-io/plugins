@@ -55,6 +55,7 @@ export default function VideoThumbnail({
         return thumbnail
       },
       (err: Error) => {
+        // oxlint-disable-next-line react/todo
         handleError(err.message)
         return undefined
       },
@@ -105,7 +106,7 @@ export default function VideoThumbnail({
             )}
             {status === 'error' && (
               <Stack
-                space={4}
+                gap={4}
                 style={{
                   position: 'absolute',
                   width: '100%',

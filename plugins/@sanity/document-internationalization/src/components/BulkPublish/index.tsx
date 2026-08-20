@@ -1,4 +1,5 @@
-import {Button, Card, Dialog, Inline, Stack, Text, useToast} from '@sanity/ui'
+import {Button, Card, Dialog, Inline, Stack, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useState} from 'react'
 import {TextWithTone, useClient, useWorkspace} from 'sanity'
 
@@ -53,7 +54,7 @@ export default function BulkPublish(props: BulkPublishProps) {
     }))
     client
       .request({
-        uri: `/publish/${projectId}/${dataset}`,
+        url: `/publish/${projectId}/${dataset}`,
         method: 'POST',
         body,
       })

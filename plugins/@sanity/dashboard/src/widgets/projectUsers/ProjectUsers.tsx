@@ -37,7 +37,7 @@ export function ProjectUsers() {
     const {projectId} = versionedClient.config()
     const subscription = versionedClient.observable
       .request<Project>({
-        uri: `/projects/${projectId}`,
+        url: `/projects/${projectId}`,
         tag: 'dashboard.project-users',
       })
       .pipe(

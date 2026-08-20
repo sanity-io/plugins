@@ -1,5 +1,5 @@
 import type {DraggableLocation} from '@hello-pangea/dnd'
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useEffect, useState} from 'react'
 import {useClient} from 'sanity'
 import {useListeningQuery} from 'sanity-plugin-utils'
@@ -65,7 +65,7 @@ export function useWorkflowDocuments(schemaTypes: string[]): WorkflowDocuments {
   useEffect(() => {
     if (data) {
       // Fix this later
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-effect
       setLocalDocuments(data)
     }
   }, [data])

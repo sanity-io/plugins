@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-latex-input",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "LaTeX input for Portable Text Editor in Sanity Studio.",
   "keywords": [
     "latex",
@@ -38,7 +38,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "katex": "^0.17.0"
+    "katex": "^0.18.4"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",

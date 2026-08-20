@@ -1,6 +1,6 @@
 {
   "name": "@sanity/presets",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Production ready preset patterns for Sanity Studio",
   "keywords": [
     "sanity",
@@ -33,6 +33,8 @@
     }
   },
   "scripts": {
+    "ailf:smoke": "AILF_CLASSIFICATION=adhoc ailf run --remote --debug",
+    "ailf:validate": "ailf validate tasks .ailf/tasks",
     "build": "tsdown",
     "prepack": "turbo run build"
   },
@@ -42,6 +44,7 @@
     "@sanity/uuid": "catalog:"
   },
   "devDependencies": {
+    "@sanity/ailf": "^7.36.0",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@testing-library/jest-dom": "catalog:",

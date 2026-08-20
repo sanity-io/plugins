@@ -39,6 +39,7 @@ export const CONFIG_DEFAULT: Required<PluginConfig> = {
   apiVersion: '2025-10-15',
   buttonLocations: ['field'],
   buttonAddAll: true,
+  restoreOrder: true,
   languageDisplay: 'codeOnly',
   includeForDocumentType: (documentType) => documentType !== 'translation.metadata',
   languageFilter: {

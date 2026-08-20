@@ -27,7 +27,7 @@ export function useMediaMetadata(stagedUpload: StagedUpload) {
       videoSrc = stagedUpload.url
     }
 
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setVideoAssetMetadata((old) => ({
       ...old,
       duration: undefined,

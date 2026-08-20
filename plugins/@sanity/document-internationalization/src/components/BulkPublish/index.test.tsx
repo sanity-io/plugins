@@ -21,8 +21,8 @@ vi.mock('sanity', async (importOriginal) => {
   }
 })
 
-vi.mock('@sanity/ui', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@sanity/ui')>()
+vi.mock('@sanity/ui/toast', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@sanity/ui/toast')>()
   return {
     ...actual,
     useToast: () => ({push: mockToastPush}),
@@ -119,7 +119,7 @@ describe('BulkPublish', () => {
 
     await waitFor(() => {
       expect(mockRequest).toHaveBeenCalledWith({
-        uri: '/publish/project-1/production',
+        url: '/publish/project-1/production',
         method: 'POST',
         body: [{documentId: 'doc-1'}, {documentId: 'doc-2'}],
       })

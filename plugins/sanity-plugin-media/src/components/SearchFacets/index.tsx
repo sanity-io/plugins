@@ -11,10 +11,14 @@ type Props = {
   layout?: 'inline' | 'stack'
 }
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const StackContainer = styled(Flex)(({theme}: {theme: Theme}) => {
   return css`
     > * {
-      margin-bottom: ${rem(theme.sanity.space[2]!)};
+      margin-bottom: ${rem(
+        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+        theme.sanity.space[2]!,
+      )};
     }
   `
 })
@@ -53,7 +57,7 @@ const SearchFacets = (props: Props) => {
 
     return (
       <Box marginBottom={2}>
-        <Inline space={2}>{Items}</Inline>
+        <Inline gap={2}>{Items}</Inline>
       </Box>
     )
   }

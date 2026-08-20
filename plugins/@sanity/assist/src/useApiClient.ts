@@ -1,5 +1,5 @@
 import type {SanityClient} from '@sanity/client'
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useMemo, useState} from 'react'
 import {type Path, pathToString, useClient, useCurrentUser} from 'sanity'
 
@@ -232,6 +232,7 @@ export function useGetInstructStatus(apiClient: SanityClient) {
     setLoading(true)
 
     const projectId = apiClient.config().projectId
+    // oxlint-disable-next-line react/todo
     try {
       const status = await apiClient.request<InstructStatus>({
         method: 'GET',

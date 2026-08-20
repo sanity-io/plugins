@@ -2,7 +2,8 @@ import {ApiIcon} from '@sanity/icons/Api'
 import {SearchIcon} from '@sanity/icons/Search'
 import {SpinnerIcon} from '@sanity/icons/Spinner'
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
-import {Autocomplete, Button, Card, Flex, Text} from '@sanity/ui'
+import {Button, Card, Flex, Text} from '@sanity/ui'
+import {Autocomplete} from '@sanity/ui/autocomplete'
 import debounce from 'lodash-es/debounce.js'
 import {type JSX, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {set, type StringInputProps, unset, useClient} from 'sanity'
@@ -135,6 +136,7 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
 
         console.error('sanity-plugin-async-list fetch error:', errorMessage)
         setError(new Error('Error fetching list, check console for more info'))
+        // oxlint-disable-next-line react/todo
       } finally {
         setLoading(false)
       }
@@ -149,7 +151,7 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
     if (!props.value && !data) {
       // Kicking off the initial load intentionally sets loading/error state on
       // mount so the field shows a spinner while the loader resolves.
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-effect
       void fetchData()
     }
   }, [fetchData, data, secrets, options.secrets, props.value])
@@ -185,12 +187,11 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
     handleQueryChangeRef.current = handleQueryChange
   }, [handleQueryChange])
 
-  // oxlint-disable react/react-compiler -- stable debounce instance; latest handler via ref
   const debouncedHandler = useMemo(
+    // oxlint-disable-next-line react/refs
     () => debounce((value: string | null) => handleQueryChangeRef.current(value), 300),
     [],
   )
-  // oxlint-enable react/react-compiler
 
   // Cancel only on unmount — not when the underlying handler identity changes.
   useEffect(() => () => debouncedHandler.cancel(), [debouncedHandler])

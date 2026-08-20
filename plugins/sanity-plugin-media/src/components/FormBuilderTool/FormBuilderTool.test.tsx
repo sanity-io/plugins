@@ -1,5 +1,7 @@
-import {LayerProvider, studioTheme, ThemeProvider, ToastProvider} from '@sanity/ui'
-import {cleanup, render, screen, waitFor} from '@testing-library/react'
+import {LayerProvider, ThemeProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
+import {ToastProvider} from '@sanity/ui/toast'
+import {act, cleanup, render, screen, waitFor} from '@testing-library/react'
 import {of, Subject} from 'rxjs'
 import {ColorSchemeProvider} from 'sanity'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
@@ -20,6 +22,8 @@ vi.mock('sanity', async (importOriginal) => {
     useFormValue: () => ({_id: 'doc-1', _type: 'article'}),
   }
 })
+
+const studioTheme = buildTheme()
 
 describe('FormBuilderTool', () => {
   beforeEach(() => {
@@ -42,7 +46,7 @@ describe('FormBuilderTool', () => {
   })
 
   it('renders picker header for image asset type', async () => {
-    render(
+    const {unmount} = render(
       <ColorSchemeProvider scheme="light">
         <ThemeProvider theme={studioTheme}>
           <ToastProvider>
@@ -67,10 +71,17 @@ describe('FormBuilderTool', () => {
     await waitFor(() => {
       expect(screen.getByText(/Insert image/i)).toBeInTheDocument()
     })
+
+    // Same teardown hygiene as Browser.test.tsx — flush Activity/Popover work
+    // after unmount so jsdom teardown cannot race React updates.
+    unmount()
+    await act(async () => {
+      await Promise.resolve()
+    })
   })
 
   it('renders picker header for file asset type', async () => {
-    render(
+    const {unmount} = render(
       <ColorSchemeProvider scheme="light">
         <ThemeProvider theme={studioTheme}>
           <ToastProvider>
@@ -94,6 +105,11 @@ describe('FormBuilderTool', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Insert file/i)).toBeInTheDocument()
+    })
+
+    unmount()
+    await act(async () => {
+      await Promise.resolve()
     })
   })
 })

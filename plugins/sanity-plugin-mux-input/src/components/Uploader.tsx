@@ -1,5 +1,6 @@
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
-import {Button, type CardTone, Flex, Text, useToast} from '@sanity/ui'
+import {Button, type CardTone, Flex, Text} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useEffect, useReducer, useRef, useState} from 'react'
 import {type Observable, Subject, Subscription} from 'rxjs'
 import {takeUntil, tap} from 'rxjs/operators'
@@ -95,7 +96,7 @@ export default function Uploader(props: Props) {
   const uploadRef = useRef<Subscription | null>(null)
   const uploadingDocumentId = useRef<string | null>(null)
   const [state, dispatch] = useReducer(
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/refs
     (prev: State, action: UploaderStateAction) => {
       switch (action.action) {
         case 'stageUpload':
@@ -410,7 +411,7 @@ export default function Uploader(props: Props) {
     const {uploadStatus} = state
     return (
       <UploadProgress
-        // oxlint-disable-next-line react/react-compiler
+        // oxlint-disable-next-line react/refs
         onCancel={cancelUploadButton.handleClick}
         progress={uploadStatus.progress}
         filename={uploadStatus.file?.name || uploadStatus.url}

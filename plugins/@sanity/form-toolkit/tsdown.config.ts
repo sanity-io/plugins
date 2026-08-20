@@ -10,4 +10,4 @@ export default defineConfig({
     './src/form-renderer/index.ts',
   ],
   reactCompiler: true,
-}) satisfies Promise<UserConfig>
+}) satisfies Promise<UserConfig | UserConfig[]>

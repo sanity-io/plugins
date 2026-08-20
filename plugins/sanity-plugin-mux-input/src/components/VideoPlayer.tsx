@@ -47,7 +47,7 @@ export default function VideoPlayer({
     try {
       return getPlaybackId(asset, ['public', 'signed', 'drm'])
     } catch (e) {
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-render
       setError(new TypeError('Asset has no playback ID', {cause: e}))
       return undefined
     }
@@ -228,7 +228,7 @@ export default function VideoPlayer({
       {dialogState === 'edit-thumbnail' && (
         <EditThumbnailDialog
           asset={asset}
-          // oxlint-disable-next-line react/react-compiler
+          // oxlint-disable-next-line react/refs
           currentTime={muxPlayer?.current?.currentTime}
         />
       )}

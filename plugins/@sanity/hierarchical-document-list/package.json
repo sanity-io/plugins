@@ -1,6 +1,6 @@
 {
   "name": "@sanity/hierarchical-document-list",
-  "version": "4.0.0",
+  "version": "4.0.3",
   "description": "Sanity Plugin - Hierarchical Document List",
   "keywords": [
     "sanity",
@@ -37,7 +37,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@nosferatu500/react-sortable-tree": "^5.0.0",
+    "@nosferatu500/react-sortable-tree": "^5.1.0",
     "@sanity/color": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/mutator": "catalog:",

@@ -211,7 +211,7 @@ Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUse
 
 ### Lint Specifics
 
-- **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors). React Compiler rules run via the react-hooks-js plugin.
+- **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors). React Compiler rules run natively via the [React Compiler vendored into oxlint](https://oxc.rs/blog/2026-08-18-react-compiler-support.html); the root `oxlint.config.ts` enables all of them (stricter than the plugin-kit preset) since this monorepo builds plugins with React Compiler.
 - **TypeScript type checking** is included in `pnpm lint` via oxlint — no separate `tsc` needed
 - Run `pnpm lint:fix` to auto-fix issues when possible
 
@@ -510,7 +510,7 @@ The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`pa
 
 ### Linting
 
-We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (type-aware, includes TypeScript type checking and React Compiler rules via the react-hooks-js plugin):
+We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (type-aware, includes TypeScript type checking and [React Compiler rules](https://oxc.rs/blog/2026-08-18-react-compiler-support.html)):
 
 ```bash
 pnpm lint        # Run the linter (includes type checking)
@@ -542,6 +542,10 @@ Declarations are generated with tsgo (tsdown enables dts generation automaticall
 ### Lint Errors About Missing Types
 
 Run `pnpm build` first—some packages need to be built for type information to be available.
+
+### `tsdown.config.ts`: `Promise<UserConfig[]>` does not satisfy `Promise<UserConfig>`
+
+`@sanity/tsdown-config` overloads `defineConfig` so `reactCompiler.reactServer: true` returns `Promise<UserConfig[]>` (dual client / `react-server` builds) and every other call returns `Promise<UserConfig>`. Annotate plugin configs with `satisfies Promise<UserConfig | UserConfig[]>` so both overloads type-check — do not use `satisfies Promise<UserConfig>` alone. The generator template already uses the union.
 
 ### "Command not found: pnpm"
 

@@ -1,4 +1,5 @@
-import {Box, Code, Label, Stack} from '@sanity/ui'
+import {Box, Label, Stack} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 
 export default function Debug({query, params}: {query: string; params?: Record<string, string>}) {
   return (

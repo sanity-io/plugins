@@ -1,4 +1,4 @@
-import {type AnyAction, configureStore, type Store} from '@reduxjs/toolkit'
+import {configureStore, type Store, type UnknownAction} from '@reduxjs/toolkit'
 import type {SanityClient} from '@sanity/client'
 import {type ReactNode, useEffect, useState} from 'react'
 import {Provider} from 'react-redux'
@@ -30,7 +30,7 @@ type CreatedStore = {
 }
 
 function createReduxStore(props: Props): CreatedStore {
-  const epicMiddleware = createEpicMiddleware<AnyAction, AnyAction, RootReducerState>({
+  const epicMiddleware = createEpicMiddleware<UnknownAction, UnknownAction, RootReducerState>({
     dependencies: {
       client: props.client,
     },

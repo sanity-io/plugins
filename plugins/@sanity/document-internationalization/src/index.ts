@@ -1,3 +1,5 @@
+import '@sanity/ui/styles.css'
+
 export {
   useDeleteTranslationAction,
   /* oxlint-disable-next-line typescript-eslint/no-deprecated -- re-exported for backwards compatibility */

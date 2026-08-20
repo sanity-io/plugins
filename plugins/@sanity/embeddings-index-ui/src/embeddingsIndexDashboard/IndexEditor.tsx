@@ -1,6 +1,6 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {Box, Button, Card, Dialog, Spinner, Stack, Text} from '@sanity/ui'
-import {type FormEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
+import {type SubmitEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
 import {useSchema} from 'sanity'
 
 import {type IndexState, type NamedIndex} from '../api/embeddingsApi'
@@ -34,7 +34,7 @@ export function EditIndexDialog(props: {
 
   return open ? (
     <Dialog id={id} width={1} ref={ref} onClose={onClose} header="Create embeddings index">
-      <Stack padding={4} space={5}>
+      <Stack padding={4} gap={5}>
         <IndexEditor readOnly={false} onSubmit={handleSubmit} />
       </Stack>
     </Dialog>
@@ -57,11 +57,11 @@ export function IndexEditor(props: {
     ...selectedIndex,
   }))
 
-  // oxlint-disable-next-line react/react-compiler
+  // oxlint-disable-next-line react/set-state-in-effect
   useEffect(() => setIndex(selectedIndex ?? {...defaultIndex}), [selectedIndex, defaultIndex])
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    (e: SubmitEvent<HTMLFormElement>) => {
       e.preventDefault()
       if (readOnly) {
         return
@@ -122,7 +122,7 @@ export function IndexEditor(props: {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack space={4}>
+      <Stack gap={4}>
         {errors?.length ? (
           <Card tone="critical" border padding={2}>
             <Text>

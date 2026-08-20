@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
 import {HomeIcon} from '@sanity/icons/Home'
 import {themerTool} from '@sanity/themer/tool'

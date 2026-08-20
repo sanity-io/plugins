@@ -1,5 +1,5 @@
 import {Button, Dialog, Flex, Stack, Text, TextInput} from '@sanity/ui'
-import {useId, useMemo, useState} from 'react'
+import {type ChangeEvent, useId, useMemo, useState} from 'react'
 import {getDevicePixelRatio} from 'use-device-pixel-ratio'
 
 import {useDialogStateContext} from '../context/DialogStateContext'
@@ -49,7 +49,7 @@ export default function EditThumbnailDialog({asset, currentTime = 0}: Props) {
     throw saveThumbnailError
   }
 
-  const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value
     setTimeFormatted(value)
 
@@ -81,21 +81,21 @@ export default function EditThumbnailDialog({asset, currentTime = 0}: Props) {
         </Stack>
       }
     >
-      <Stack space={3} padding={3}>
-        <Stack space={2}>
+      <Stack gap={3} padding={3}>
+        <Stack gap={2}>
           <Text size={1} weight="semibold">
             Current:
           </Text>
           <VideoThumbnail asset={asset} width={width} staticImage />
         </Stack>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={1} weight="semibold">
             New:
           </Text>
           <VideoThumbnail asset={assetWithNewThumbnail} width={width} staticImage />
         </Stack>
 
-        <Stack space={2}>
+        <Stack gap={2}>
           <Flex align={'center'} justify={'center'}>
             <Text size={5} weight="semibold">
               Or
@@ -103,7 +103,7 @@ export default function EditThumbnailDialog({asset, currentTime = 0}: Props) {
           </Flex>
         </Stack>
 
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={1} weight="semibold">
             Selected time for thumbnail (hh:mm:ss):
           </Text>

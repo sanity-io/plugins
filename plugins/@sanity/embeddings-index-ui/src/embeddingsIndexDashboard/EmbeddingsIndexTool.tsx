@@ -56,7 +56,7 @@ function Indexes() {
   const onCreateIndexClose = useCallback(() => setCreateIndexOpen(false), [])
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     setSelectedIndex(indexes.find((i) => i.indexName === selectedIndex?.indexName))
   }, [indexes, selectedIndex])
 
@@ -110,7 +110,7 @@ function Indexes() {
   )
 
   useEffect(() => {
-    // oxlint-disable-next-line react/react-compiler
+    // oxlint-disable-next-line react/set-state-in-effect
     updateIndexes()
   }, [updateIndexes])
 
@@ -124,7 +124,7 @@ function Indexes() {
     [updateIndexes],
   )
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       <Flex gap={2} align="center" style={{height: 30}}>
         <Box flex={1}>
           <Heading size={1}>Embeddings indexes</Heading>

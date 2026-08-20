@@ -1,5 +1,5 @@
 import type {SanityClient} from '@sanity/client'
-import type {ToastParams} from '@sanity/ui'
+import type {ToastParams} from '@sanity/ui/toast'
 import {useImperativeHandle, useState, type Ref} from 'react'
 
 import {DocumentListWrapper} from './DocumentListWrapper'

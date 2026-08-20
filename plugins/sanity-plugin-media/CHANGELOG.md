@@ -1,5 +1,37 @@
 # sanity-plugin-media
 
+## 6.1.5
+
+### Patch Changes
+
+- [#1878](https://github.com/sanity-io/plugins/pull/1878) [`c30892f`](https://github.com/sanity-io/plugins/commit/c30892f91ce0e048dae59c395b998dddcc843b43) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency styled-components to ^6.5.3
+
+- [#1856](https://github.com/sanity-io/plugins/pull/1856) [`0c770b1`](https://github.com/sanity-io/plugins/commit/0c770b110f816f97b9c766b985d52e97918a82ac) Thanks [@stipsan](https://github.com/stipsan)! - Replace deprecated Redux and RxJS APIs (`UnknownAction`, `throwError` factory). Remaining Sanity UI theme deprecations are deferred with targeted lint disables.
+
+- [#1926](https://github.com/sanity-io/plugins/pull/1926) [`f485d93`](https://github.com/sanity-io/plugins/commit/f485d934bfcb46ac873c66c6332d760815d797dd) Thanks [@stipsan](https://github.com/stipsan)! - Suppress new oxlint React Compiler rule violations, pending fixes in a follow-up
+
+- [#1922](https://github.com/sanity-io/plugins/pull/1922) [`22c8082`](https://github.com/sanity-io/plugins/commit/22c8082f6ecc377dd1978267d849113cd2477b49) Thanks [@stipsan](https://github.com/stipsan)! - Update `@sanity/client` to v8
+
+## 6.1.4
+
+### Patch Changes
+
+- [#1904](https://github.com/sanity-io/plugins/pull/1904) [`3c18bf9`](https://github.com/sanity-io/plugins/commit/3c18bf9e3c8a235349b506d1f80fe5a7141503f2) Thanks [@trostum](https://github.com/trostum)! - Fix folder reference being lost when saving asset metadata (title, alt text, description, tags)
+
+## 6.1.3
+
+### Patch Changes
+
+- [#1889](https://github.com/sanity-io/plugins/pull/1889) [`27c5b19`](https://github.com/sanity-io/plugins/commit/27c5b1921353f3491075075f318438740ec52df9) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.85.0
+
+- [#1881](https://github.com/sanity-io/plugins/pull/1881) [`440c499`](https://github.com/sanity-io/plugins/commit/440c4997cb74daab0e375519275f42a234f8a76e) Thanks [@stipsan](https://github.com/stipsan)! - Update @sanity/client to ^7.26.2, nanoid to ^6.0.1, groq to ^6.9.1, testing-library packages, and @sanity/ui to ^4.0.1
+
+## 6.1.2
+
+### Patch Changes
+
+- [#1793](https://github.com/sanity-io/plugins/pull/1793) [`0650099`](https://github.com/sanity-io/plugins/commit/0650099886e58486f958b7d5318333bba5b7aff8) Thanks [@stipsan](https://github.com/stipsan)! - upgrade to `@sanity/ui` v4
+
 ## 6.1.1
 
 ### Patch Changes

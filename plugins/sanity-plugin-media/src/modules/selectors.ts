@@ -12,16 +12,14 @@ export const selectCombinedItems = createSelector(
   ],
   (assetIds, uploadIds, folderChildren) => {
     const assetItems = assetIds.map((id): CardAssetData => ({id, type: 'asset'}))
-    const folderItems = folderChildren.map(
-      (folder): CardFolderData => ({
-        id: `folder:${folder.id}`,
-        folderId: folder.id,
-        name: folder.name,
-        path: folder.path,
-        totalCount: folder.totalCount,
-        type: 'folder',
-      }),
-    )
+    const folderItems = folderChildren.map((folder): CardFolderData => ({
+      id: `folder:${folder.id}`,
+      folderId: folder.id,
+      name: folder.name,
+      path: folder.path,
+      totalCount: folder.totalCount,
+      type: 'folder',
+    }))
     const uploadItems = uploadIds.map((id): CardUploadData => ({id, type: 'upload'}))
     const combinedItems: (CardAssetData | CardFolderData | CardUploadData)[] = [
       ...folderItems,

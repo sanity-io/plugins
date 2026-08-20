@@ -38,7 +38,7 @@ const TagViewHeader = ({allowCreate, light, title}: Props) => {
           height: `${PANEL_HEIGHT}px`,
         }}
       >
-        <Inline space={2}>
+        <Inline gap={2}>
           <Label size={0}>{title}</Label>
           {tagsFetching && (
             <Label size={0} style={{opacity: 0.3}}>

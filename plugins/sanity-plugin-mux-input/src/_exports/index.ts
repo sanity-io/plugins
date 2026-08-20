@@ -1,3 +1,4 @@
+import '@sanity/ui/styles.css'
 import {definePlugin} from 'sanity'
 
 import createStudioTool, {DEFAULT_TOOL_CONFIG} from '../components/StudioTool'
@@ -8,6 +9,7 @@ export type {VideoAssetDocument} from '../util/types'
 
 export const defaultConfig: PluginConfig = {
   static_renditions: [],
+  // oxlint-disable-next-line no-deprecated -- kept for backwards-compatible defaults until next major
   mp4_support: 'none',
   video_quality: 'plus',
   max_resolution_tier: '1080p',
@@ -32,6 +34,7 @@ function convertLegacyConfig(config: Partial<PluginConfig>): {
   }
 
   // Convert legacy mp4_support to static_renditions
+  // oxlint-disable-next-line no-deprecated -- migrate legacy plugin option until next major
   if (config.mp4_support === 'standard') {
     return {static_renditions: ['highest']}
   }
@@ -42,6 +45,7 @@ function convertLegacyConfig(config: Partial<PluginConfig>): {
 export const muxInput = definePlugin<Partial<PluginConfig> | void>((userConfig) => {
   // TODO: Remove this on next major version when we end support for encoding_tier
   if (typeof userConfig === 'object' && 'encoding_tier' in userConfig) {
+    // oxlint-disable-next-line no-deprecated -- migrate legacy plugin option until next major
     const deprecated_encoding_tier = userConfig.encoding_tier
     if (!userConfig.video_quality) {
       if (deprecated_encoding_tier === 'baseline') {

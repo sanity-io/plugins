@@ -23,7 +23,7 @@ export const Secrets = (props: ObjectInputProps) => {
     if (loading) return undefined
     if (!secrets && !loading) {
       setSecret(undefined)
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/set-state-in-effect
       return setShowSettings(true)
     }
     setSecret(secrets.apiKey)

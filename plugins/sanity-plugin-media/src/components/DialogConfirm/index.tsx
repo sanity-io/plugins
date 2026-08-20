@@ -63,16 +63,16 @@ const DialogConfirm = (props: Props) => {
   return (
     <Dialog
       animate
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/static-components
       footer={<Footer />}
-      // oxlint-disable-next-line react/react-compiler
+      // oxlint-disable-next-line react/static-components
       header={<Header />}
       id="confirm"
       onClose={handleClose}
       width={1}
     >
       <Box paddingX={4} paddingY={4}>
-        <Stack space={3}>
+        <Stack gap={3}>
           {dialog?.title && <Text size={1}>{dialog.title}</Text>}
           {dialog?.description && (
             <Text muted size={1}>

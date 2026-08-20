@@ -1,6 +1,7 @@
 import {ResetIcon} from '@sanity/icons/Reset'
 import {UserIcon} from '@sanity/icons/User'
-import {Button, Card, Flex, Menu, MenuButton} from '@sanity/ui'
+import {Button, Card, Flex} from '@sanity/ui'
+import {Menu, MenuButton} from '@sanity/ui/menu'
 import {useCallback} from 'react'
 import {useCurrentUser, UserAvatar, useSchema} from 'sanity'
 import {type UserExtended, UserSelectMenu} from 'sanity-plugin-utils'

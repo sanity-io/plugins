@@ -23,7 +23,10 @@ const ContainerGrid = styled(Grid)(
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
-        background: ${theme.sanity.color.card.enabled.bg};
+        background: ${
+          // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+          theme.sanity.color.card.enabled.bg
+        };
       }
     }
   `,
@@ -31,14 +34,20 @@ const ContainerGrid = styled(Grid)(
 
 const FolderBadge = styled(Box)(
   ({theme}) => css`
-    background: ${theme.sanity.color.spot.yellow};
+    background: ${
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+      theme.sanity.color.spot.yellow
+    };
     border-radius: 6px;
     height: 42px;
     position: relative;
     width: 52px;
 
     &::before {
-      background: ${theme.sanity.color.spot.yellow};
+      background: ${
+        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+        theme.sanity.color.spot.yellow
+      };
       border-radius: 6px 6px 0 0;
       content: '';
       height: 12px;
@@ -74,7 +83,7 @@ const TableRowFolder = ({folderId, name, totalCount}: Props) => {
         marginLeft={mediaIndex < 3 ? 3 : 0}
         style={{gridColumn: mediaIndex < 3 ? 3 : 3, gridRow: mediaIndex < 3 ? '2/4' : 'auto'}}
       >
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={1} style={{lineHeight: '1.2em'}} textOverflow="ellipsis" weight="semibold">
             {name}
           </Text>

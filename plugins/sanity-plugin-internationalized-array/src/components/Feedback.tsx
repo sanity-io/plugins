@@ -1,4 +1,5 @@
-import {Card, Code, Stack, Text} from '@sanity/ui'
+import {Card, Stack, Text} from '@sanity/ui'
+import {Code} from '@sanity/ui/code'
 import type React from 'react'
 
 const schemaExample = {
