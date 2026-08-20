@@ -218,7 +218,7 @@ function reactCompilerPluginForVitest() {
     enforce: 'pre',
     transform: {
       filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
-      handler(code, id) {
+      handler(code: string, id: string) {
         const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
         const result = transformSync(filename, code, {
           jsx: {runtime: 'automatic'},
