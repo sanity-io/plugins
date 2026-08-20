@@ -1,5 +1,11 @@
 # sanity-plugin-utils
 
+## 2.0.17
+
+### Patch Changes
+
+- [#1928](https://github.com/sanity-io/plugins/pull/1928) [`3195e01`](https://github.com/sanity-io/plugins/commit/3195e01b3adffe32e03cb0d65da00b091e18ce89) Thanks [@stipsan](https://github.com/stipsan)! - Compile React Compiler memoization with the native oxc transform (`reactCompiler: {transform: 'oxc'}` from `@sanity/tsdown-config` 0.26, backed by `oxc-transform-react`) instead of `babel-plugin-react-compiler`
+
 ## 2.0.16
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 10.0.8
+
+### Patch Changes
+
+- [#1928](https://github.com/sanity-io/plugins/pull/1928) [`3195e01`](https://github.com/sanity-io/plugins/commit/3195e01b3adffe32e03cb0d65da00b091e18ce89) Thanks [@stipsan](https://github.com/stipsan)! - Require `@sanity/pkg-utils` ^12.3.0, which adds the `reactCompiler.transform` option for running React Compiler on the native oxc transform (`oxc-transform-react`)
+
 ## 10.0.7
 
 ### Patch Changes
