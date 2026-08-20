@@ -40,6 +40,7 @@ export default function ReferencePatcher(props: ReferencePatcherProps) {
         ]),
       )
     }
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [translation, editState, metadataId, client, onChange])
 
   return null

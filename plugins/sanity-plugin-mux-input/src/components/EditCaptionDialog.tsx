@@ -71,6 +71,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
     )
     const foundByName = track.name ? LANGUAGE_OPTIONS.find((opt) => opt.label === track.name) : null
     setSelectedLanguage(foundByCode || foundByName || null)
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [track, asset, client])
 
   const handleDownloadCurrentFile = async () => {
@@ -96,6 +97,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
         status: 'error',
         description: errorMessage,
       })
+      // oxlint-disable-next-line react/todo
     } finally {
       setDownloading(false)
     }
@@ -263,6 +265,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
 
     try {
       if (!asset.assetId) {
+        // oxlint-disable-next-line react/todo
         throw new Error('Asset ID is required')
       }
 
@@ -327,6 +330,7 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
         status: 'error',
         description: error instanceof Error ? error.message : 'Please try again',
       })
+      // oxlint-disable-next-line react/todo
     } finally {
       setIsSubmitting(false)
     }

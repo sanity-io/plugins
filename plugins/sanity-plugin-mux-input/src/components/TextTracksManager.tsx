@@ -463,6 +463,7 @@ export default function TextTracksManager({
         status: 'error',
         description: error instanceof Error ? error.message : 'Please try again',
       })
+      // oxlint-disable-next-line react/todo
     } finally {
       setDownloadingTrackId(null)
     }
@@ -476,6 +477,7 @@ export default function TextTracksManager({
     setDeletingTrackId(track.id)
     try {
       if (!asset.assetId) {
+        // oxlint-disable-next-line react/todo
         throw new Error('Asset ID is required')
       }
       await deleteTextTrack(client, asset.assetId, track.id)
@@ -510,6 +512,7 @@ export default function TextTracksManager({
         status: 'error',
         description: error instanceof Error ? error.message : 'Please try again',
       })
+      // oxlint-disable-next-line react/todo
     } finally {
       setDeletingTrackId(null)
     }

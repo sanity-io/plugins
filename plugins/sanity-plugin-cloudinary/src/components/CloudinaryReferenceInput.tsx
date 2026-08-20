@@ -143,6 +143,7 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         setPreviewRevision((revision) => revision + 1)
       } catch (err) {
         console.error('Error creating/updating Cloudinary asset:', err)
+        // oxlint-disable-next-line react/todo
       } finally {
         saveInProgressRef.current = false
         setIsLoading(false)

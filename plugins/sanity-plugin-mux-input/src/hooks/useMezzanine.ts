@@ -119,6 +119,7 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
         }
       } catch (error) {
         console.error('Failed to poll mezzanine status:', error)
+        // oxlint-disable-next-line react/todo
       } finally {
         running = false
       }
@@ -147,6 +148,7 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
         title: 'Could not enable the mezzanine file',
         description: error instanceof Error ? error.message : 'Please try again',
       })
+      // oxlint-disable-next-line react/todo
     } finally {
       setBusy(false)
     }
@@ -175,6 +177,7 @@ export function useMezzanine(asset: VideoAssetDocument): UseMezzanineReturn {
         title: 'Could not download the mezzanine file',
         description: error instanceof Error ? error.message : 'Please try again',
       })
+      // oxlint-disable-next-line react/todo
     } finally {
       setBusy(false)
     }

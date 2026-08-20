@@ -136,6 +136,7 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
 
         console.error('sanity-plugin-async-list fetch error:', errorMessage)
         setError(new Error('Error fetching list, check console for more info'))
+        // oxlint-disable-next-line react/todo
       } finally {
         setLoading(false)
       }

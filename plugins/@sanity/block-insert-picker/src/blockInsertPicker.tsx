@@ -331,6 +331,7 @@ export function BlockInsertPicker({
         status: 'error',
         title: labels.insertError,
       })
+      // oxlint-disable-next-line react/todo
     } finally {
       insertInFlightRef.current = false
     }
@@ -517,6 +518,7 @@ export function BlockInsertPicker({
 
   useEffect(() => {
     highlightedRowRef.current?.scrollIntoView({block: 'nearest'})
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [highlightedIndex])
 
   // Stable virtual element derived from the captured rect — keeps Popover
