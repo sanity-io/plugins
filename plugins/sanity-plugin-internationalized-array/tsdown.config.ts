@@ -7,4 +7,4 @@ export default defineConfig({
     'migrations/index': './migrations/index.ts',
   },
   reactCompiler: true,
-}) satisfies Promise<UserConfig>
+}) satisfies Promise<UserConfig | UserConfig[]>

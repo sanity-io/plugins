@@ -3,4 +3,4 @@ import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
   reactCompiler: true,
-}) satisfies Promise<UserConfig>
+}) satisfies Promise<UserConfig | UserConfig[]>
