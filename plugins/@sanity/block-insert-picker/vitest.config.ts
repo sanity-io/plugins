@@ -2,9 +2,14 @@ import pluginBabel from '@rolldown/plugin-babel'
 import {reactCompilerPreset} from '@vitejs/plugin-react'
 import {defineConfig} from 'vitest/config'
 
+// Match `reactCompiler: true` in tsdown.config.ts so tests exercise compiled output.
+// Vitest transforms node-environment tests through the `ssr` Vite environment, where the
+// preset's client-only default would silently drop the compiler — apply it everywhere.
+const compilerPreset = reactCompilerPreset()
+compilerPreset.rolldown.applyToEnvironmentHook = () => true
+
 export default defineConfig({
-  // Match `reactCompiler: true` in tsdown.config.ts so tests exercise compiled output.
-  plugins: [pluginBabel({presets: [reactCompilerPreset()]})],
+  plugins: [pluginBabel({presets: [compilerPreset]})],
   oxc: {
     jsx: {runtime: 'automatic'},
   },

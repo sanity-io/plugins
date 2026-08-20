@@ -295,8 +295,14 @@ If a plugin’s `tsdown.config.ts` has `reactCompiler: true` (the default from g
 import pluginBabel from '@rolldown/plugin-babel'
 import {reactCompilerPreset} from '@vitejs/plugin-react'
 
+// reactCompilerPreset only applies to Vite environments with `consumer === 'client'`, but
+// Vitest transforms node-environment tests through the `ssr` environment — lift the gate
+// so those tests do not silently run uncompiled `src`.
+const compilerPreset = reactCompilerPreset()
+compilerPreset.rolldown.applyToEnvironmentHook = () => true
+
 export default defineConfig({
-  plugins: [pluginBabel({presets: [reactCompilerPreset()]})],
+  plugins: [pluginBabel({presets: [compilerPreset]})],
   oxc: {jsx: {runtime: 'automatic'}},
   // ...
 })

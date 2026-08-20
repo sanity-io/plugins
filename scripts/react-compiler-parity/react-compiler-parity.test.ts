@@ -30,7 +30,7 @@ test('plugins with reactCompiler in tsdown also enable it in vitest', async () =
       try {
         const vitestSource = await readFile(vitestPath, 'utf8')
         if (!enablesReactCompilerInVitest(vitestSource)) {
-          return `${relativePlugin}: tsdown has reactCompiler but vitest.config.ts does not wire pluginBabel({presets: [reactCompilerPreset()]})`
+          return `${relativePlugin}: tsdown has reactCompiler but vitest.config.ts does not wire pluginBabel({presets: [compilerPreset]}) with the environment gate lifted`
         }
       } catch {
         return `${relativePlugin}: missing vitest.config.ts (tsdown has reactCompiler)`
@@ -60,12 +60,17 @@ function enablesReactCompiler(tsdownSource: string): boolean {
 }
 
 function enablesReactCompilerInVitest(vitestSource: string): boolean {
-  // Require the full stack: import the babel plugin package AND wire
-  // `reactCompilerPreset` into `pluginBabel({presets: [...]})`. Either alone
-  // is not enough (imports without wiring, or a preset used by something else).
+  // Require the full stack: import the babel plugin package, create the preset, lift its
+  // client-only environment gate, and wire it into `pluginBabel({presets: [...]})`.
+  // The gate lift matters: `reactCompilerPreset()` only applies to Vite environments with
+  // `consumer === 'client'`, but Vitest transforms node-environment tests through the
+  // `ssr` environment — without `applyToEnvironmentHook = () => true` those tests would
+  // silently run uncompiled `src`.
   return (
     vitestSource.includes('@rolldown/plugin-babel') &&
-    /pluginBabel\s*\(\s*\{\s*presets\s*:\s*\[[^\]]*reactCompilerPreset\s*\(/.test(vitestSource)
+    /const\s+compilerPreset\s*=\s*reactCompilerPreset\s*\(/.test(vitestSource) &&
+    /compilerPreset\.rolldown\.applyToEnvironmentHook\s*=\s*\(\)\s*=>\s*true/.test(vitestSource) &&
+    /pluginBabel\s*\(\s*\{\s*presets\s*:\s*\[[^\]]*\bcompilerPreset\b/.test(vitestSource)
   )
 }
 
