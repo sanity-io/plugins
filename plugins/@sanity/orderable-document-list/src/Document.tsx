@@ -65,6 +65,14 @@ export function Document({
       versions={versionsInfo.versions}
     />
   )
+  const statusIndicator = (
+    // oxlint-disable-next-line typescript/no-deprecated -- DocumentVersionsStatusIndicator takes documentVersions[], not the draft/published/versions shape from useDocumentVersionInfo
+    <DocumentStatusIndicator
+      draft={versionsInfo.draft}
+      published={versionsInfo.published}
+      versions={versionsInfo.versions}
+    />
+  )
 
   return (
     <PreviewCard
@@ -112,11 +120,7 @@ export function Document({
 
             <Tooltip content={tooltip} portal placement="right" boundaryElement={null}>
               <Flex align="center" style={{flexShrink: 0}}>
-                <DocumentStatusIndicator
-                  draft={versionsInfo.draft}
-                  published={versionsInfo.published}
-                  versions={versionsInfo.versions}
-                />
+                {statusIndicator}
               </Flex>
             </Tooltip>
           </Flex>
