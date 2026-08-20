@@ -10,4 +10,4 @@ export default defineConfig({
     './src/form-renderer/index.ts',
   ],
   reactCompiler: {transform: 'oxc'},
-}) satisfies Promise<UserConfig>
+}) satisfies Promise<UserConfig | UserConfig[]>

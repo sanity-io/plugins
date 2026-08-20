@@ -4,4 +4,4 @@ import type {UserConfig} from 'tsdown'
 export default defineConfig({
   styledComponents: true,
   reactCompiler: {transform: 'oxc'},
-}) satisfies Promise<UserConfig>
+}) satisfies Promise<UserConfig | UserConfig[]>
