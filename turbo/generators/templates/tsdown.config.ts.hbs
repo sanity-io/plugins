@@ -5,7 +5,7 @@ export default defineConfig({
 {{#if hasStyledComponents}}
   styledComponents: true,
 {{/if}}
-  reactCompiler: true,
+  reactCompiler: {transform: 'oxc'},
 {{#if hasVanillaExtract}}
   vanillaExtract: true,
 {{/if}}

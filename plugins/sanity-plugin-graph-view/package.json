@@ -47,7 +47,7 @@
     "@types/deep-equal": "^1.0.4",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "babel-plugin-react-compiler": "catalog:",
+    "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",

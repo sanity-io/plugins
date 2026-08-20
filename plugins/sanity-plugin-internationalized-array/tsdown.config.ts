@@ -6,5 +6,5 @@ export default defineConfig({
     'index': './src/index.ts',
     'migrations/index': './migrations/index.ts',
   },
-  reactCompiler: true,
+  reactCompiler: {transform: 'oxc'},
 }) satisfies Promise<UserConfig | UserConfig[]>

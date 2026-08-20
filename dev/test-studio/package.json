@@ -80,7 +80,7 @@
     "@vitejs/devtools-oxc": "^0.4.12",
     "@vitejs/devtools-rolldown": "^0.4.12",
     "@vitejs/devtools-vite": "^0.4.12",
-    "babel-plugin-react-compiler": "catalog:",
+    "oxc-transform-react": "catalog:",
     "typescript": "catalog:"
   },
   "engines": {

@@ -70,6 +70,8 @@ Every PR that changes published packages **must** include changesets. **Importan
 
 Each plugin has its own changelog that consumers read. A combined changeset would pollute individual plugin changelogs with irrelevant information. For example, `@sanity/code-input`'s changelog should not mention workflow-specific changes.
 
+**Exception — uniform monorepo-wide dependency or tooling changes:** when one change applies identically to many packages and the summary is a single line that is equally relevant to every affected package (for example bumping a shared dependency or switching a shared build setting), use a single combined changeset listing all affected packages. Each package's changelog renders only that one relevant line either way, so nothing gets polluted, while dozens of identical files would only add noise. This matches existing practice: Renovate's dependency-update changesets are combined, as are manual monorepo-wide bumps (for example the `styled-components` update in GH-1878).
+
 #### How to Add Changesets
 
 **Option 1: Manual Creation (Recommended for Multiple Plugins)**
