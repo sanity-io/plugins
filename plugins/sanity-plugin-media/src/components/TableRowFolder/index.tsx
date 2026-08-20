@@ -1,5 +1,4 @@
 import {Box, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
-import {getTheme_v2} from '@sanity/ui/theme'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {css, styled} from 'styled-components'
@@ -24,23 +23,31 @@ const ContainerGrid = styled(Grid)(
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
-        background: ${getTheme_v2(theme).color.bg};
+        background: ${
+          // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+          theme.sanity.color.card.enabled.bg
+        };
       }
     }
   `,
 )
 
-const FolderBadge = styled(Box)(({theme}) => {
-  const yellow = getTheme_v2(theme).color.avatar.yellow.bg
-  return css`
-    background: ${yellow};
+const FolderBadge = styled(Box)(
+  ({theme}) => css`
+    background: ${
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+      theme.sanity.color.spot.yellow
+    };
     border-radius: 6px;
     height: 42px;
     position: relative;
     width: 52px;
 
     &::before {
-      background: ${yellow};
+      background: ${
+        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+        theme.sanity.color.spot.yellow
+      };
       border-radius: 6px 6px 0 0;
       content: '';
       height: 12px;
@@ -49,8 +56,8 @@ const FolderBadge = styled(Box)(({theme}) => {
       top: -6px;
       width: 18px;
     }
-  `
-})
+  `,
+)
 
 const TableRowFolder = ({folderId, name, totalCount}: Props) => {
   const dispatch = useDispatch()
@@ -62,7 +69,7 @@ const TableRowFolder = ({folderId, name, totalCount}: Props) => {
       onClick={() => dispatch(foldersActions.currentFolderSet({folderId}))}
       style={{
         background: getSchemeColor(scheme, 'bg'),
-        columnGap: mediaIndex < 3 ? 0 : '16px',
+        gridColumnGap: mediaIndex < 3 ? 0 : '16px',
         gridTemplateColumns:
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
         gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',

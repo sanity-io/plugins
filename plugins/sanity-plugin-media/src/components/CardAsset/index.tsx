@@ -1,8 +1,16 @@
 import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 import {EditIcon} from '@sanity/icons/Edit'
 import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
-import {Box, Checkbox, Container, Flex, Spinner, Text} from '@sanity/ui'
-import {getTheme_v2, type Theme, type ThemeColorSchemeKey} from '@sanity/ui/theme'
+import {
+  Box,
+  Checkbox,
+  Container,
+  Flex,
+  Spinner,
+  Text,
+  type Theme,
+  type ThemeColorSchemeKey,
+} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {memo, type MouseEvent, type RefObject} from 'react'
@@ -36,6 +44,7 @@ const CardWrapper = styled(Flex)`
   width: 100%;
 `
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?: boolean}>(({
   $picked,
   theme,
@@ -51,9 +60,8 @@ const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?:
     width: 100%;
 
     border: ${
-      $picked
-        ? `1px solid ${getTheme_v2(theme).color.avatar.orange.bg} !important`
-        : '1px solid inherit'
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+      $picked ? `1px solid ${theme.sanity.color.spot.orange} !important` : '1px solid inherit'
     };
 
     ${
@@ -69,6 +77,7 @@ const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?:
   `
 })
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
   $scheme,
 }) => {
@@ -86,7 +95,8 @@ const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey
 
 const StyledWarningOutlineIcon = styled(WarningFilledIcon)(({theme}) => {
   return {
-    color: getTheme_v2(theme).color.avatar.red.bg,
+    // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+    color: theme.sanity.color.spot.red,
   }
 })
 

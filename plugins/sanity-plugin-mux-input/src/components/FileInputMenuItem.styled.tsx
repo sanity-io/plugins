@@ -1,13 +1,13 @@
 import {MenuItem} from '@sanity/ui/menu'
-import {getTheme_v2} from '@sanity/ui/theme'
 import {css, styled} from 'styled-components'
 
 import {focusRingStyle} from './withFocusRing/helpers'
 
 export const FileButton = styled(MenuItem)(({theme}) => {
-  const v2 = getTheme_v2(theme)
-  const focusRing = v2.button.focusRing
-  const base = {bg: v2.color.bg}
+  // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+  const {focusRing} = theme.sanity
+  // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+  const base = theme.sanity.color.base
   const border = {width: 1, color: 'var(--card-border-color)'}
 
   return css`

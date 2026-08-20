@@ -1,19 +1,15 @@
 import {CloseIcon} from '@sanity/icons/Close'
-import {Box, Card, rem, Text} from '@sanity/ui'
-import {buildTheme, type ThemeColorSchemeKey} from '@sanity/ui/theme'
+import {Box, Card, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {components, type StylesConfig} from 'react-select'
 import {Virtuoso} from 'react-virtuoso'
 
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
-const {
-  font: {
-    text: {family: textFontFamily, sizes: themeTextSizes},
-  },
-  radius: themeRadius,
-  space: themeSpace,
-} = buildTheme().v2!
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+const {fonts, radius: themeRadius, space: themeSpace} = studioTheme
+const themeTextSizes = fonts.text.sizes
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => {
   return {
     control: (styles, {isDisabled, isFocused}) => {
@@ -44,7 +40,8 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     input: (styles) => ({
       ...styles,
       color: 'var(--card-fg-color)',
-      fontFamily: textFontFamily,
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+      fontFamily: studioTheme.fonts.text.family,
       fontSize: themeTextSizes[1]!.fontSize,
       marginLeft: rem(themeSpace[2]!),
     }),
@@ -54,7 +51,8 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     }),
     noOptionsMessage: (styles) => ({
       ...styles,
-      fontFamily: textFontFamily,
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+      fontFamily: studioTheme.fonts.text.family,
       fontSize: themeTextSizes[1]!.fontSize,
       lineHeight: '1em',
     }),

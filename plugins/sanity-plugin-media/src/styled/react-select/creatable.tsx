@@ -1,16 +1,16 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {ChevronDownIcon} from '@sanity/icons/ChevronDown'
 import {CloseIcon} from '@sanity/icons/Close'
-import {Box, Card, Flex, rem, Text} from '@sanity/ui'
-import {buildTheme, type ThemeColorSchemeKey} from '@sanity/ui/theme'
+import {Box, Card, Flex, rem, studioTheme, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {components, type StylesConfig} from 'react-select'
 import {Virtuoso} from 'react-virtuoso'
 
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
-const {radius: themeRadius, space: themeSpace, font} = buildTheme().v2!
-const textFontFamily = font.text.family
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+const {radius: themeRadius, space: themeSpace} = studioTheme
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => {
   return {
     control: (styles, {isFocused}) => {
@@ -45,7 +45,8 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     input: (styles) => ({
       ...styles,
       color: 'var(--card-fg-color)',
-      fontFamily: textFontFamily,
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+      fontFamily: studioTheme.fonts.text.family,
       marginLeft: rem(themeSpace[2]!),
     }),
     menuList: (styles) => ({
@@ -73,7 +74,8 @@ export const reactSelectStyles = (scheme: ThemeColorSchemeKey): StylesConfig => 
     }),
     noOptionsMessage: (styles) => ({
       ...styles,
-      fontFamily: textFontFamily,
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+      fontFamily: studioTheme.fonts.text.family,
       lineHeight: '1em',
     }),
     option: (styles, {isFocused}) => ({

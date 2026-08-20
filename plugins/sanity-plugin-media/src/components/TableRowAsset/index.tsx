@@ -1,8 +1,17 @@
 import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 import {EditIcon} from '@sanity/icons/Edit'
 import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
-import {Box, Checkbox, Container, Flex, Grid, Spinner, Text, useMediaIndex} from '@sanity/ui'
-import {getTheme_v2, type ThemeColorSchemeKey} from '@sanity/ui/theme'
+import {
+  Box,
+  Checkbox,
+  Container,
+  Flex,
+  Grid,
+  Spinner,
+  Text,
+  type ThemeColorSchemeKey,
+  useMediaIndex,
+} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
@@ -16,7 +25,7 @@ import {
   useState,
 } from 'react'
 import {useDispatch} from 'react-redux'
-import {useColorSchemeValue, useReferringDocuments} from 'sanity'
+import {WithReferringDocuments, useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
@@ -36,12 +45,6 @@ import Image from '../Image'
 // Duration (ms) to wait before reference counts (and associated listeners) are rendered
 const REFERENCE_COUNT_VISIBILITY_DELAY = 750
 
-function AssetReferenceCount({id}: {id: string}) {
-  const {isLoading, referringDocuments} = useReferringDocuments(id)
-  const uniqueDocuments = getUniqueDocuments(referringDocuments)
-  return isLoading ? <>-</> : <>{Array.isArray(uniqueDocuments) ? uniqueDocuments.length : 0}</>
-}
-
 type Props = {
   id: string
   selected: boolean
@@ -49,6 +52,7 @@ type Props = {
 
 const ContainerGrid = styled<
   typeof Grid,
+  // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
   {$selected?: boolean; $scheme: ThemeColorSchemeKey; $updating?: boolean}
 >(Grid)(({$scheme, $selected, $updating}) => {
   return css`
@@ -72,6 +76,7 @@ const ContainerGrid = styled<
   `
 })
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
   $scheme,
 }) => {
@@ -87,7 +92,8 @@ const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey
 
 const StyledWarningIcon = styled(WarningFilledIcon)(({theme}) => {
   return {
-    color: getTheme_v2(theme).color.avatar.red.bg,
+    // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+    color: theme.sanity.color.spot.red,
   }
 })
 
@@ -372,7 +378,22 @@ const TableRowAsset = (props: Props) => {
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
-          {referenceCountVisible ? <AssetReferenceCount id={id} /> : <>-</>}
+          {referenceCountVisible ? (
+            <WithReferringDocuments // oxlint-disable-line no-deprecated -- deferred to a follow-up PR
+              id={id}
+            >
+              {({isLoading, referringDocuments}) => {
+                const uniqueDocuments = getUniqueDocuments(referringDocuments)
+                return isLoading ? (
+                  <>-</>
+                ) : (
+                  <>{Array.isArray(uniqueDocuments) ? uniqueDocuments.length : 0}</>
+                )
+              }}
+            </WithReferringDocuments>
+          ) : (
+            <>-</>
+          )}
         </Text>
       </Box>
 

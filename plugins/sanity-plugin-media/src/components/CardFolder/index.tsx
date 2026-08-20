@@ -1,5 +1,4 @@
 import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
-import {getTheme_v2} from '@sanity/ui/theme'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {css, styled} from 'styled-components'
@@ -34,11 +33,22 @@ const FolderCard = styled(Card)`
   }
 `
 
-const FolderGlyph = styled(Box)(({theme}) => {
-  const yellow = getTheme_v2(theme).color.avatar.yellow.bg
-  return css`
+const FolderGlyph = styled(Box)(
+  ({theme}) => css`
     align-items: flex-end;
-    background: linear-gradient(180deg, ${yellow} 0%, ${yellow} 100%);
+    background: linear-gradient(
+      180deg,
+      ${
+          // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+          theme.sanity.color.spot.yellow
+        }
+        0%,
+      ${
+          // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+          theme.sanity.color.spot.yellow
+        }
+        100%
+    );
     border-radius: 8px;
     display: flex;
     height: 72px;
@@ -46,7 +56,10 @@ const FolderGlyph = styled(Box)(({theme}) => {
     width: 96px;
 
     &::before {
-      background: ${yellow};
+      background: ${
+        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+        theme.sanity.color.spot.yellow
+      };
       border-radius: 8px 8px 0 0;
       content: '';
       height: 18px;
@@ -55,8 +68,8 @@ const FolderGlyph = styled(Box)(({theme}) => {
       top: -8px;
       width: 38px;
     }
-  `
-})
+  `,
+)
 
 const CardFolder = ({folderId, name, totalCount}: Props) => {
   const dispatch = useDispatch()

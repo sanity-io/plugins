@@ -1,6 +1,5 @@
 import {CloseIcon} from '@sanity/icons/Close'
-import {Box, Flex, Label, rem, Text} from '@sanity/ui'
-import {getTheme_v2, type ThemeColorSchemeKey} from '@sanity/ui/theme'
+import {Box, Flex, Label, rem, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
@@ -15,12 +14,17 @@ type Props = {
   facet: WithId<SearchFacetInputProps>
 }
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const Container = styled<typeof Box, {$scheme: ThemeColorSchemeKey}>(Box)(({$scheme, theme}) => {
   return css`
     background: ${getSchemeColor($scheme, 'bg')};
-    border-radius: ${rem(getTheme_v2(theme).radius[2]!)};
+    border-radius: ${
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+      rem(theme.sanity.radius[2]!)
+    };
   `
 })
+
 const SearchFacet = (props: Props) => {
   const {children, facet} = props
 

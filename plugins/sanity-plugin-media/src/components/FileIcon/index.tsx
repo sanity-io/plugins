@@ -1,5 +1,4 @@
-import {Box, Flex} from '@sanity/ui'
-import {getTheme_v2, type Theme} from '@sanity/ui/theme'
+import {Box, Flex, type Theme} from '@sanity/ui'
 import {type MouseEvent} from 'react'
 import {defaultStyles, FileIcon as ReactFileIcon} from 'react-file-icon'
 import type {DefaultExtensionType} from 'react-file-icon'
@@ -12,15 +11,20 @@ type Props = {
 }
 
 // Force react-file-icon styles
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const Container = styled(Box)(({theme}: {theme: Theme}) => {
   return css`
     text {
-      font-family: ${getTheme_v2(theme).font.text.family} !important;
+      font-family: ${
+        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+        theme.sanity.fonts.text.family
+      } !important;
       font-size: 8px !important;
       font-weight: 500 !important;
     }
   `
 })
+
 const FileIcon = (props: Props) => {
   const {extension, onClick, width} = props
 
