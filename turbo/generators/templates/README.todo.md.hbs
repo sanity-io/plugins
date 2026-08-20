@@ -49,7 +49,7 @@ These files are required for monorepo conventions and are scaffolded for you:
 - `tsconfig.json`
 - `vitest.config.ts`
 
-`tsdown.config.ts` enables React Compiler (`reactCompiler: true`) and `vitest.config.ts` mirrors it with `@rolldown/plugin-babel` + `reactCompilerPreset` — keep both in sync.
+`tsdown.config.ts` enables React Compiler (`reactCompiler: true`) and `vitest.config.ts` mirrors it with `@rolldown/plugin-babel` + `reactCompilerPresetForVitest()` — keep both in sync. The stock `reactCompilerPreset()` is client-only and is skipped in Vitest SSR.
 
 Do not bring over standalone-repo config that is not used here (for example custom root build/lint/test configs and CI files).
 

@@ -3,9 +3,21 @@ import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {reactCompilerPreset} from '@vitejs/plugin-react'
 import {defineConfig} from 'vitest/config'
 
+/** Apply React Compiler in Vitest SSR (`consumer: 'server'`), not only Vite client. */
+function reactCompilerPresetForVitest() {
+  const preset = reactCompilerPreset()
+  return {
+    ...preset,
+    rolldown: {
+      ...preset.rolldown,
+      applyToEnvironmentHook: () => true,
+    },
+  }
+}
+
 export default defineConfig({
   // Match `reactCompiler: true` in tsdown.config.ts so tests exercise compiled output.
-  plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
+  plugins: [pluginBabel({presets: [reactCompilerPresetForVitest()]}), vanillaExtractPlugin()],
   test: {
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
     server: {

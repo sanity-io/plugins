@@ -5,10 +5,22 @@ import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 {{/if}}
 import {defineConfig} from 'vitest/config'
 
+/** Apply React Compiler in Vitest SSR (`consumer: 'server'`), not only Vite client. */
+function reactCompilerPresetForVitest() {
+  const preset = reactCompilerPreset()
+  return {
+    ...preset,
+    rolldown: {
+      ...preset.rolldown,
+      applyToEnvironmentHook: () => true,
+    },
+  }
+}
+
 export default defineConfig({
   // Match `reactCompiler: true` in tsdown.config.ts so tests exercise compiled output.
   plugins: [
-    pluginBabel({presets: [reactCompilerPreset()]}),
+    pluginBabel({presets: [reactCompilerPresetForVitest()]}),
 {{#if hasVanillaExtract}}
     vanillaExtractPlugin(),
 {{/if}}

@@ -289,20 +289,34 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 
 ### React Compiler Vitest parity
 
-If a plugin’s `tsdown.config.ts` has `reactCompiler: true` (the default from generators), its `vitest.config.ts` **must** register the same Babel stack so unit tests exercise compiled output — not uncompiled `src`:
+If a plugin’s `tsdown.config.ts` has `reactCompiler: true` (the default from generators), its `vitest.config.ts` **must** register the same Babel stack so unit tests exercise compiled output — not uncompiled `src`.
+
+`reactCompilerPreset()` from `@vitejs/plugin-react` sets `applyToEnvironmentHook` so the compiler runs only when Vite `consumer === 'client'`. Vitest transforms through the SSR environment (`consumer: 'server'`), so the stock preset is dropped. Wrap it and force the hook on:
 
 ```ts
 import pluginBabel from '@rolldown/plugin-babel'
 import {reactCompilerPreset} from '@vitejs/plugin-react'
+import {defineConfig} from 'vitest/config'
+
+function reactCompilerPresetForVitest() {
+  const preset = reactCompilerPreset()
+  return {
+    ...preset,
+    rolldown: {
+      ...preset.rolldown,
+      applyToEnvironmentHook: () => true,
+    },
+  }
+}
 
 export default defineConfig({
-  plugins: [pluginBabel({presets: [reactCompilerPreset()]})],
+  plugins: [pluginBabel({presets: [reactCompilerPresetForVitest()]})],
   // ...
 })
 ```
 
-- Generators already wire both `tsdown.config.ts` and `vitest.config.ts` (plus `@rolldown/plugin-babel` / `@vitejs/plugin-react` catalog deps). Do not remove the Vitest compiler plugin when adding vanilla-extract or other plugins — compose into `plugins: [...]`.
-- `scripts/react-compiler-parity` enforces this invariant in `pnpm test`. Agents who enable or keep `reactCompiler` in tsdown without mirroring Vitest will fail CI.
+- Generators already wire both `tsdown.config.ts` and `vitest.config.ts` (plus `@rolldown/plugin-babel` / `@vitejs/plugin-react` catalog deps), including the Vitest SSR wrap. Do not remove the Vitest compiler plugin when adding vanilla-extract or other plugins — compose into `plugins: [...]`.
+- `scripts/react-compiler-parity` enforces this invariant in `pnpm test` (config text **and** a Vite SSR transform that must emit `react/compiler-runtime`). Agents who enable or keep `reactCompiler` in tsdown without mirroring Vitest will fail CI.
 
 ## Pull Request Workflow
 
