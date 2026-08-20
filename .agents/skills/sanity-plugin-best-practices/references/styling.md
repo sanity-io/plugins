@@ -209,9 +209,14 @@ import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {reactCompilerPreset} from '@vitejs/plugin-react'
 import {defineConfig} from 'vitest/config'
 
+// Vitest transforms run in the SSR environment; override the preset's
+// client-only applyToEnvironmentHook so the compiler is not skipped.
+const reactCompiler = reactCompilerPreset()
+reactCompiler.rolldown.applyToEnvironmentHook = () => true
+
 export default defineConfig({
   // Keep React Compiler (matches tsdown `reactCompiler: true`) and compose VE.
-  plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
+  plugins: [pluginBabel({presets: [reactCompiler]}), vanillaExtractPlugin()],
   // ...
 })
 ```
@@ -242,8 +247,11 @@ import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {reactCompilerPreset} from '@vitejs/plugin-react'
 import {defineConfig} from 'vitest/config'
 
+const reactCompiler = reactCompilerPreset()
+reactCompiler.rolldown.applyToEnvironmentHook = () => true
+
 export default defineConfig({
-  plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
+  plugins: [pluginBabel({presets: [reactCompiler]}), vanillaExtractPlugin()],
   test: {
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
     // ...

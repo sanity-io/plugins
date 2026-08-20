@@ -30,7 +30,7 @@ test('plugins with reactCompiler in tsdown also enable it in vitest', async () =
       try {
         const vitestSource = await readFile(vitestPath, 'utf8')
         if (!enablesReactCompilerInVitest(vitestSource)) {
-          return `${relativePlugin}: tsdown has reactCompiler but vitest.config.ts does not wire pluginBabel({presets: [reactCompilerPreset()]})`
+          return `${relativePlugin}: tsdown has reactCompiler but vitest.config.ts does not wire pluginBabel with reactCompilerPreset() and the applyToEnvironmentHook override`
         }
       } catch {
         return `${relativePlugin}: missing vitest.config.ts (tsdown has reactCompiler)`
@@ -60,12 +60,20 @@ function enablesReactCompiler(tsdownSource: string): boolean {
 }
 
 function enablesReactCompilerInVitest(vitestSource: string): boolean {
-  // Require the full stack: import the babel plugin package AND wire
-  // `reactCompilerPreset` into `pluginBabel({presets: [...]})`. Either alone
-  // is not enough (imports without wiring, or a preset used by something else).
+  // Require the full stack: import the babel plugin package, create the preset,
+  // override its applyToEnvironmentHook (the default only applies to 'client'
+  // consumers, but Vitest transforms modules through the SSR environment, so
+  // without the override the compiler is silently skipped), and wire the preset
+  // into `pluginBabel({presets: [...]})`.
+  const presetVar = /const\s+(\w+)\s*=\s*reactCompilerPreset\s*\(/.exec(vitestSource)?.[1]
+  if (!presetVar || !vitestSource.includes('@rolldown/plugin-babel')) return false
   return (
-    vitestSource.includes('@rolldown/plugin-babel') &&
-    /pluginBabel\s*\(\s*\{\s*presets\s*:\s*\[[^\]]*reactCompilerPreset\s*\(/.test(vitestSource)
+    new RegExp(
+      `${presetVar}\\.rolldown\\.applyToEnvironmentHook\\s*=\\s*\\(\\)\\s*=>\\s*true`,
+    ).test(vitestSource) &&
+    new RegExp(`pluginBabel\\s*\\(\\s*\\{\\s*presets\\s*:\\s*\\[[^\\]]*\\b${presetVar}\\b`).test(
+      vitestSource,
+    )
   )
 }
 
