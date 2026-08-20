@@ -95,7 +95,7 @@ catalogs:
       specifier: ^1.9.0
       version: 1.9.0
     '@vitest/coverage-v8':
-      specifier: ^4.1.10
+      specifier: ^4.1.11
       version: 4.1.11
     babel-plugin-react-compiler:
       specifier: ^1.0.0
@@ -173,7 +173,7 @@ catalogs:
       specifier: ^7.21.7
       version: 7.21.7
     vitest:
-      specifier: ^4.1.10
+      specifier: ^4.1.11
       version: 4.1.11
   peer:
     react:
