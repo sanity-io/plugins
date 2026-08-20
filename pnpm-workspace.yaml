@@ -31,7 +31,7 @@ catalog:
   '@sanity/icons': ^5.2.1
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.10.1
-  '@sanity/pkg-utils': ^12.1.0
+  '@sanity/pkg-utils': ^12.3.0
   '@sanity/preview-url-secret': ^4.1.4
   '@sanity/schema': ^6.10.1
   '@sanity/telemetry': '^1.1.0'
