@@ -18,6 +18,14 @@ export function Counter() {
 }
 `
 
+// Automatic JSX runtime: React components with no `react` import at all.
+const JSX_ONLY_SOURCE = `
+import {Counter} from './Counter'
+export function CounterPanel() {
+  return <section><Counter /></section>
+}
+`
+
 /**
  * Every plugin that enables React Compiler in `tsdown.config.ts` must also
  * run Vitest through `oxc-transform-react` via `reactCompilerPluginForVitest()`.
@@ -77,6 +85,16 @@ test('oxc plugin compiles a component in Vite SSR', {timeout: 30_000}, async () 
   )
 })
 
+test('oxc plugin compiles JSX-only modules without a react import', {timeout: 30_000}, async () => {
+  const compiled = await transformFixtureSsr([reactCompilerPluginForVitest()], {
+    'CounterPanel.tsx': JSX_ONLY_SOURCE,
+    'Counter.tsx': COUNTER_SOURCE,
+  })
+  expect(compiled, 'automatic-runtime JSX modules must compile without a react import').toContain(
+    'react/compiler-runtime',
+  )
+})
+
 test('assist vitest config compiles a component in Vite SSR', {timeout: 30_000}, async () => {
   const {default: assistVitestConfig} = await import(
     path.join(repoRoot, 'plugins/@sanity/assist/vitest.config.ts')
@@ -99,9 +117,10 @@ function reactCompilerPluginForVitest() {
       filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
       handler(code: string, id: string) {
         const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
-        // Skip non-React modules. oxc DCE drops unused `import * as _jestDom`
-        // side-effect imports in Vitest setup files.
-        if (!/(?:from|import)\s*['"]react(?:['"]|\/)/.test(code)) {
+        // Skip non-React modules — but `.tsx`/`.jsx` files always are (the
+        // automatic JSX runtime needs no react import). oxc DCE drops unused
+        // `import * as _jestDom` side-effect imports in Vitest setup files.
+        if (!/\.[tj]sx$/.test(filename) && !/(?:from|import)\s*['"]react(?:['"]|\/)/.test(code)) {
           return null
         }
         const result = transformSync(filename, code, {
@@ -121,9 +140,15 @@ function reactCompilerPluginForVitest() {
   }
 }
 
-async function transformFixtureSsr(plugins: PluginOption[]) {
+async function transformFixtureSsr(
+  plugins: PluginOption[],
+  files: Record<string, string> = {'Counter.tsx': COUNTER_SOURCE},
+) {
   const root = await mkdtemp(path.join(tmpdir(), 'react-compiler-parity-'))
-  await writeFile(path.join(root, 'Counter.tsx'), COUNTER_SOURCE)
+  const [entry] = Object.keys(files)
+  await Promise.all(
+    Object.entries(files).map(([name, source]) => writeFile(path.join(root, name), source)),
+  )
 
   const server = await createServer({
     configFile: false,
@@ -135,7 +160,7 @@ async function transformFixtureSsr(plugins: PluginOption[]) {
   })
 
   try {
-    const result = await server.environments.ssr.transformRequest('/Counter.tsx')
+    const result = await server.environments.ssr.transformRequest(`/${entry}`)
     return result?.code ?? ''
   } finally {
     await server.close()

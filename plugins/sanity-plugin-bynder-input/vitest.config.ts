@@ -11,9 +11,10 @@ function reactCompilerPluginForVitest() {
       filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
       handler(code: string, id: string) {
         const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
-        // Skip non-React modules. oxc DCE drops unused `import * as _jestDom`
-        // side-effect imports in Vitest setup files.
-        if (!/(?:from|import)\s*['"]react(?:['"]|\/)/.test(code)) {
+        // Skip non-React modules — but `.tsx`/`.jsx` files always are (the
+        // automatic JSX runtime needs no react import). oxc DCE drops unused
+        // `import * as _jestDom` side-effect imports in Vitest setup files.
+        if (!/\.[tj]sx$/.test(filename) && !/(?:from|import)\s*['"]react(?:['"]|\/)/.test(code)) {
           return null
         }
         const result = transformSync(filename, code, {
