@@ -99,6 +99,11 @@ function reactCompilerPluginForVitest() {
       filter: {id: {include: /\.[tj]sx?(?:\?|$)/, exclude: /\/node_modules\//}},
       handler(code: string, id: string) {
         const filename = id.includes('?') ? id.slice(0, id.indexOf('?')) : id
+        // Skip non-React modules. oxc DCE drops unused `import * as _jestDom`
+        // side-effect imports in Vitest setup files.
+        if (!/(?:from|import)\s*['"]react(?:['"]|\/)/.test(code)) {
+          return null
+        }
         const result = transformSync(filename, code, {
           jsx: {runtime: 'automatic'},
           reactCompiler: true,
@@ -144,10 +149,12 @@ function enablesReactCompiler(tsdownSource: string): boolean {
 
 function enablesReactCompilerInVitest(vitestSource: string): boolean {
   // Require the oxc stack. `@vitejs/plugin-react` `compiler: true` is client-only.
+  // The `return null` skip is required so oxc DCE does not drop jest-dom setup imports.
   return (
     vitestSource.includes('oxc-transform-react') &&
     vitestSource.includes('reactCompilerPluginForVitest(') &&
-    /reactCompiler\s*:\s*true/.test(vitestSource)
+    /reactCompiler\s*:\s*true/.test(vitestSource) &&
+    vitestSource.includes('return null')
   )
 }
 
