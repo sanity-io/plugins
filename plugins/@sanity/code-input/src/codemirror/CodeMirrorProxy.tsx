@@ -111,6 +111,7 @@ function CodeMirrorProxy(props: CodeMirrorProps & {ref?: Ref<ReactCodeMirrorRef>
       onCreateEditor={handleCreateEditor}
       initialState={initialState}
       basicSetup={basicSetup}
+      readOnly={readOnly}
     />
   )
 }
