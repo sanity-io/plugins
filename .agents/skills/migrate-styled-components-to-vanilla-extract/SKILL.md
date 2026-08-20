@@ -217,7 +217,6 @@ export default defineConfig({
   // Keep React Compiler (matches `reactCompiler: true` in tsdown.config.ts) and
   // compose vanilla-extract — do not replace the babel plugin.
   plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
-  oxc: {jsx: {runtime: 'automatic'}},
   // ...existing test config
 })
 ```

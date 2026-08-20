@@ -297,7 +297,6 @@ import {reactCompilerPreset} from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [pluginBabel({presets: [reactCompilerPreset()]})],
-  oxc: {jsx: {runtime: 'automatic'}},
   // ...
 })
 ```

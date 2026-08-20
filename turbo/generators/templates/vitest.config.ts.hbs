@@ -13,9 +13,6 @@ export default defineConfig({
     vanillaExtractPlugin(),
 {{/if}}
   ],
-  oxc: {
-    jsx: {runtime: 'automatic'},
-  },
   test: {
 {{#if hasVanillaExtract}}
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],

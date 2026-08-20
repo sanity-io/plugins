@@ -5,9 +5,6 @@ import {defineConfig} from 'vitest/config'
 export default defineConfig({
   // Match `reactCompiler: true` in tsdown.config.ts so tests exercise compiled output.
   plugins: [pluginBabel({presets: [reactCompilerPreset()]})],
-  oxc: {
-    jsx: {runtime: 'automatic'},
-  },
   test: {
     // Component tests opt into jsdom per-file via `// @vitest-environment jsdom`.
     // The default stays `node` so the package-exports test keeps resolving `sanity`

@@ -212,7 +212,6 @@ import {defineConfig} from 'vitest/config'
 export default defineConfig({
   // Keep React Compiler (matches tsdown `reactCompiler: true`) and compose VE.
   plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
-  oxc: {jsx: {runtime: 'automatic'}},
   // ...
 })
 ```
@@ -245,7 +244,6 @@ import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
   plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
-  oxc: {jsx: {runtime: 'automatic'}},
   test: {
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
     // ...

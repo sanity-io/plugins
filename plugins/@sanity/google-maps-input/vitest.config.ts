@@ -6,9 +6,6 @@ import {defineConfig} from 'vitest/config'
 export default defineConfig({
   // Match `reactCompiler: true` in tsdown.config.ts so tests exercise compiled output.
   plugins: [pluginBabel({presets: [reactCompilerPreset()]}), vanillaExtractPlugin()],
-  oxc: {
-    jsx: {runtime: 'automatic'},
-  },
   test: {
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
     server: {
