@@ -44,6 +44,7 @@ const CardWrapper = styled(Flex)`
   width: 100%;
 `
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?: boolean}>(({
   $picked,
   theme,
@@ -59,6 +60,7 @@ const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?:
     width: 100%;
 
     border: ${
+      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
       $picked ? `1px solid ${theme.sanity.color.spot.orange} !important` : '1px solid inherit'
     };
 
@@ -75,6 +77,7 @@ const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?:
   `
 })
 
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
   $scheme,
 }) => {
@@ -92,6 +95,7 @@ const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey
 
 const StyledWarningOutlineIcon = styled(WarningFilledIcon)(({theme}) => {
   return {
+    // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
     color: theme.sanity.color.spot.red,
   }
 })

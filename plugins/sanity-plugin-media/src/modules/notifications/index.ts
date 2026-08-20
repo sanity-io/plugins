@@ -1,6 +1,6 @@
 import {type PayloadAction, createSlice} from '@reduxjs/toolkit'
+import type {UnknownAction} from '@reduxjs/toolkit'
 import pluralize from 'pluralize'
-import type {AnyAction} from 'redux'
 import {ofType} from 'redux-observable'
 import {of} from 'rxjs'
 import {bufferTime, filter, mergeMap} from 'rxjs/operators'
@@ -169,7 +169,7 @@ export const notificationsGenericErrorEpic: MyEpic = (action$) =>
       foldersActions.renameError.type,
       uploadsActions.uploadError.type,
     ),
-    mergeMap((action: AnyAction) => {
+    mergeMap((action: UnknownAction) => {
       const title = `An error occurred: ${messageFromGenericErrorPayload(action['payload'])}`
       return of(
         notificationsSlice.actions.add({

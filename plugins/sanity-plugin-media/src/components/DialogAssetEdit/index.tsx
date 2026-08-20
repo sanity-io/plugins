@@ -416,7 +416,11 @@ const DialogAssetEdit = (props: Props) => {
       */}
       <Flex direction={['column-reverse', 'column-reverse', 'row-reverse']}>
         <Box flex={1} marginTop={[5, 5, 0]} padding={4}>
-          <WithReferringDocuments documentStore={documentStore} id={currentAsset._id}>
+          <WithReferringDocuments // oxlint-disable-line no-deprecated -- deferred to a follow-up PR
+            // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+            documentStore={documentStore}
+            id={currentAsset._id}
+          >
             {({isLoading, referringDocuments}) => {
               const uniqueReferringDocuments = getUniqueDocuments(referringDocuments)
               return (

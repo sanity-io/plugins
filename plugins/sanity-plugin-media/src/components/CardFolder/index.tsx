@@ -38,8 +38,16 @@ const FolderGlyph = styled(Box)(
     align-items: flex-end;
     background: linear-gradient(
       180deg,
-      ${theme.sanity.color.spot.yellow} 0%,
-      ${theme.sanity.color.spot.yellow} 100%
+      ${
+          // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+          theme.sanity.color.spot.yellow
+        }
+        0%,
+      ${
+          // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+          theme.sanity.color.spot.yellow
+        }
+        100%
     );
     border-radius: 8px;
     display: flex;
@@ -48,7 +56,10 @@ const FolderGlyph = styled(Box)(
     width: 96px;
 
     &::before {
-      background: ${theme.sanity.color.spot.yellow};
+      background: ${
+        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+        theme.sanity.color.spot.yellow
+      };
       border-radius: 8px 8px 0 0;
       content: '';
       height: 18px;

@@ -460,6 +460,7 @@ export function WatermarkControls({
             imageAspectRatio: undefined,
             overlay_settings: undefined,
           })
+          // oxlint-disable-next-line react/todo
         } finally {
           setIsValidating(false)
         }

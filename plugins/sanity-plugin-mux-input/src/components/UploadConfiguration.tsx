@@ -270,6 +270,7 @@ export default function UploadConfiguration({
       })
       startUpload(settings, watermark)
     }
+    // oxlint-disable-next-line react/rule-suppression
     // oxlint-disable-next-line react/exhaustive-deps -- intentionally mount-only: start upload once with developer-specified config
   }, [])
   if (skipConfig) return null

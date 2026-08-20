@@ -11,10 +11,14 @@ type Props = {
 }
 
 // Force react-file-icon styles
+// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
 const Container = styled(Box)(({theme}: {theme: Theme}) => {
   return css`
     text {
-      font-family: ${theme.sanity.fonts.text.family} !important;
+      font-family: ${
+        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
+        theme.sanity.fonts.text.family
+      } !important;
       font-size: 8px !important;
       font-weight: 500 !important;
     }

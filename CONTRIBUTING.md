@@ -79,7 +79,7 @@ pnpm format
 
 ### Linting
 
-We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (including React Compiler rules via the react-hooks-js plugin):
+We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (including [React Compiler rules](https://oxc.rs/blog/2026-08-18-react-compiler-support.html)):
 
 ```bash
 # Run the linter

@@ -12,6 +12,7 @@ type Props = {
 
 const StyledErrorOutlineIcon = styled(ErrorOutlineIcon)(({theme}) => {
   return {
+    // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
     color: theme.sanity.color.spot.red,
   }
 })

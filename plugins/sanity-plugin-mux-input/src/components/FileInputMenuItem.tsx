@@ -26,7 +26,7 @@ export function FileInputMenuItem(
     fontSize,
     multiple,
     onSelect,
-    space = 3,
+    gap = 3,
     textAlign,
     text,
     disabled,
@@ -49,7 +49,7 @@ export function FileInputMenuItem(
     <Flex align="center" justify="flex-start">
       {/* Icon */}
       {Icon && (
-        <Box marginRight={text ? space : undefined}>
+        <Box marginRight={text ? gap : undefined}>
           <Text size={fontSize}>
             {isValidElement(Icon) && Icon}
             {isValidElementType(Icon) && <Icon />}

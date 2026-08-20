@@ -1,6 +1,6 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {Box, Button, Card, Dialog, Spinner, Stack, Text} from '@sanity/ui'
-import {type FormEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
+import {type SubmitEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
 import {useSchema} from 'sanity'
 
 import {type IndexState, type NamedIndex} from '../api/embeddingsApi'
@@ -61,7 +61,7 @@ export function IndexEditor(props: {
   useEffect(() => setIndex(selectedIndex ?? {...defaultIndex}), [selectedIndex, defaultIndex])
 
   const handleSubmit = useCallback(
-    (e: FormEvent) => {
+    (e: SubmitEvent<HTMLFormElement>) => {
       e.preventDefault()
       if (readOnly) {
         return

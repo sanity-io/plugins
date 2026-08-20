@@ -1,4 +1,5 @@
-import {LayerProvider, studioTheme, ThemeProvider} from '@sanity/ui'
+import {LayerProvider, ThemeProvider} from '@sanity/ui'
+import {buildTheme} from '@sanity/ui/theme'
 import {ToastProvider} from '@sanity/ui/toast'
 import {act, cleanup, render, screen, waitFor} from '@testing-library/react'
 import {of} from 'rxjs'
@@ -22,6 +23,8 @@ vi.mock('sanity', async (importOriginal) => {
     useFormValue: () => ({_id: 'doc-1', _type: 'article'}),
   }
 })
+
+const studioTheme = buildTheme()
 
 describe('FormBuilderTool', () => {
   afterEach(() => {

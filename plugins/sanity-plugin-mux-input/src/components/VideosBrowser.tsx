@@ -1,6 +1,6 @@
 import {SearchIcon} from '@sanity/icons/Search'
 import {Card, Flex, Grid, Inline, Label, Stack, Text, TextInput} from '@sanity/ui'
-import {useMemo, useState} from 'react'
+import {type InputEvent, useMemo, useState} from 'react'
 
 import {DrmPlaybackWarningContextProvider} from '../context/DrmPlaybackWarningContext'
 import useAssets from '../hooks/useAssets'
@@ -43,9 +43,7 @@ export default function VideosBrowser({onSelect, config}: VideosBrowserProps) {
             <TextInput
               value={searchQuery}
               icon={SearchIcon}
-              onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                setSearchQuery(e.currentTarget.value)
-              }
+              onInput={(e: InputEvent<HTMLInputElement>) => setSearchQuery(e.currentTarget.value)}
               placeholder="Search videos"
             />
             <SelectSortOptions setSort={setSort} sort={sort} />
