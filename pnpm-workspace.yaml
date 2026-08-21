@@ -73,7 +73,7 @@ catalog:
   react-icons: ^5.7.0
   react-is: ^19.2.8
   react-photo-album: ^3.6.0
-  react-rx: ^4.2.5
+  react-rx: ^6.0.0
   rxjs: ^7.8.2
   sanity: ^6.10.1
   styled-components: ^6.5.3

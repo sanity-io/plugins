@@ -39,7 +39,7 @@
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "react-rx": "^4.2.5"
+    "react-rx": "^6.0.0"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
