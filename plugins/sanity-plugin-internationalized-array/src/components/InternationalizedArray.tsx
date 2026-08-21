@@ -20,7 +20,7 @@ import type {InternationalizedArrayItem} from '../types'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
-import {documentExistsInStore} from '../utils/documentExistsInStore'
+import {documentExistsInStore, documentMissingFromStore} from '../utils/documentExistsInStore'
 import {internationalizedArrayLanguageFilter} from '../utils/internationalizedArrayLanguageFilter'
 import AddButtons from './AddButtons'
 import Feedback from './Feedback'
@@ -160,18 +160,21 @@ export default function InternationalizedArray(
   // linger on the last displayed snapshot after delete, and the built-in Delete
   // action never writes pane `isDeleting`, so neither of those is sufficient.
   const documentInStore = documentExistsInStore(editState)
+  const documentGoneFromStore = documentMissingFromStore(editState)
 
   // Latch once this pane instance has observed the document leave the store, or
   // once its language items disappear after being present. Either means delete
   // (or equivalent) is in flight; auto-adding would resurrect the document.
-  // Adjusted during render (not in an effect) so the skip is applied on the
-  // same commit that observes the transition.
+  // Only a confirmed absence (ready store, no snapshots) latches — loading
+  // emissions are transient and merely pause auto-patches via
+  // `documentInStore`. Adjusted during render (not in an effect) so the skip
+  // is applied on the same commit that observes the transition.
   const [seenInStore, setSeenInStore] = useState(documentInStore)
   const [leftStore, setLeftStore] = useState(false)
   if (documentInStore && !seenInStore) {
     setSeenInStore(true)
   }
-  if (!documentInStore && seenInStore && !leftStore) {
+  if (documentGoneFromStore && seenInStore && !leftStore) {
     setLeftStore(true)
   }
 

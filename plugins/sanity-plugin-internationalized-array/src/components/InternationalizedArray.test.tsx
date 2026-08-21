@@ -640,6 +640,74 @@ describe('InternationalizedArray', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 
+  test('still auto-adds default languages after a transient not-ready pair store emission', async () => {
+    vi.useFakeTimers()
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+    const view = renderInternationalizedArray(props)
+
+    // Reconnect / subscription churn: a not-ready emission is loading, not a
+    // delete, and must not permanently latch auto-add off.
+    mockDocumentPane({editState: {ready: false, draft: null, published: null, version: null}})
+    view.rerender(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+    )
+
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+    view.rerender(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+    )
+
+    await vi.runAllTimersAsync()
+    vi.useRealTimers()
+
+    expect(onChange).toHaveBeenCalled()
+  })
+
+  test('does not auto-add default languages after the store confirmed the document gone, even if a snapshot reappears', async () => {
+    vi.useFakeTimers()
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+    const view = renderInternationalizedArray(props)
+    await vi.runAllTimersAsync()
+    onChange.mockClear()
+
+    // Ready with no snapshots is a confirmed delete: the latch must hold even
+    // if the store flaps back to a snapshot afterwards.
+    mockDocumentPane({editState: EMPTY_EDIT_STATE})
+    view.rerender(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+    )
+
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+    view.rerender(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+    )
+
+    await vi.runAllTimersAsync()
+    vi.useRealTimers()
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
   test('does not auto-reorder when the document is no longer in the pair store', () => {
     mockDocumentPane({editState: EMPTY_EDIT_STATE})
 
