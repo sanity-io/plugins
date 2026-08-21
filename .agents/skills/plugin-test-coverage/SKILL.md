@@ -80,7 +80,7 @@ Do not dump plugin specs at the top level of `tests/`.
 - Prefer accessible role/name locators; add `data-testid` + a **patch** changeset only when selectors are flaky or ambiguous (e.g. duplicate add-button grids).
 - Seed documents via the Content Lake API; always `try/finally` cleanup.
 - Video: `SANITY_E2E_VIDEO=on` when debugging.
-- Document existence matters: some plugins only auto-seed after `_rev` exists — seed empty persisted docs, don’t rely on brand-new unsaved drafts.
+- Document existence matters: some plugins only auto-seed after the document is in the pair store (draft/published/version snapshot) — seed empty persisted docs, don't rely on brand-new unsaved drafts. Form `_rev` can linger after delete, so it is not a reliable existence check.
 
 ## PR checklist
 

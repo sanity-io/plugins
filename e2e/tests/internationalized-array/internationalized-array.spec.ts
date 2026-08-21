@@ -2,8 +2,10 @@ import {expect, test} from '@playwright/test'
 
 import {
   deleteI18nPost,
+  deleteI18nPostInStudio,
   documentAddButton,
   fieldAddButton,
+  getI18nPost,
   languageItem,
   languageLabel,
   openI18nPost,
@@ -14,7 +16,7 @@ import {
 test.describe('sanity-plugin-internationalized-array', () => {
   /**
    * `defaultLanguages` only auto-seeds after the document exists in the
-   * dataset (`_rev`). Opening a persisted empty array must create the EN item.
+   * pair store. Opening a persisted empty array must create the EN item.
    */
   test('seeds default language on an existing empty document', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
@@ -26,6 +28,29 @@ test.describe('sanity-plugin-internationalized-array', () => {
       await expect(languageLabel(page, 'en')).toBeVisible()
       // EN is present → its field add button is disabled
       await expect(fieldAddButton(page, 'en')).toHaveAttribute('data-disabled', 'true')
+    } finally {
+      await deleteI18nPost(projectName, doc.id)
+    }
+  })
+
+  test('does not recreate a document after deleting it from the studio', async ({
+    page,
+  }, testInfo) => {
+    const projectName = testInfo.project.name
+    const doc = await seedI18nPost(projectName, {title: [], summary: []})
+
+    try {
+      await openI18nPost(page, doc.id)
+      await expect(languageLabel(page, 'en')).toBeVisible()
+
+      await deleteI18nPostInStudio(page)
+
+      await expect.poll(async () => getI18nPost(projectName, doc.id), {timeout: 20_000}).toBeNull()
+
+      // Auto-add uses a setTimeout; wait long enough that a resurrecting patch
+      // would have landed, then confirm the document is still gone.
+      await new Promise((resolve) => setTimeout(resolve, 2_000))
+      expect(await getI18nPost(projectName, doc.id)).toBeNull()
     } finally {
       await deleteI18nPost(projectName, doc.id)
     }

@@ -39,7 +39,7 @@ function item(language: string, value = ''): I18nArrayItem {
 /**
  * Create an i18nPost draft via the Content Lake API.
  * Pass `title` / `summary` arrays explicitly — use `[]` when testing
- * `defaultLanguages` seeding (requires a persisted `_rev`).
+ * `defaultLanguages` seeding (requires the document to exist in the pair store).
  */
 export async function seedI18nPost(
   projectName: string | undefined,
@@ -76,6 +76,23 @@ export async function deleteI18nPost(
     .delete(`drafts.${documentId}`)
     .commit({visibility: 'async'})
     .catch(() => undefined)
+}
+
+export async function getI18nPost(
+  projectName: string | undefined,
+  documentId: string,
+): Promise<Record<string, unknown> | null> {
+  const client = createE2EClient(datasetForProject(projectName))
+  const draft = await client.getDocument(`drafts.${documentId}`)
+  if (draft) return draft
+  const published = await client.getDocument(documentId)
+  return published ?? null
+}
+
+export async function deleteI18nPostInStudio(page: Page): Promise<void> {
+  await page.getByTestId('action-menu-button').click()
+  await page.getByRole('menuitem', {name: /^Delete$/}).click()
+  await page.getByRole('button', {name: 'Delete document'}).click()
 }
 
 export async function openI18nPost(page: Page, documentId: string): Promise<void> {
