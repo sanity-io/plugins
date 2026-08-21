@@ -29,3 +29,21 @@ export function documentExistsInStore(editState: DocumentPairSnapshots): boolean
 
   return Boolean(editState.draft || editState.published || editState.version)
 }
+
+/**
+ * Whether the pair store has confirmed the document is absent: the store is
+ * ready but has no draft, published, or version snapshot.
+ *
+ * Intentionally not the negation of {@link documentExistsInStore}. Loading
+ * states (missing `editState` or `ready === false`) are neither "exists" nor
+ * "missing" — the pair listener can re-emit not-ready snapshots on
+ * subscription churn or reconnect, and treating those as missing would make a
+ * transient blip look like a delete.
+ */
+export function documentMissingFromStore(editState: DocumentPairSnapshots): boolean {
+  if (!editState || editState.ready === false) {
+    return false
+  }
+
+  return !editState.draft && !editState.published && !editState.version
+}

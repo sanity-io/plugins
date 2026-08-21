@@ -20,7 +20,7 @@ import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {InternationalizedArrayItem} from '../types'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
-import {documentExistsInStore} from '../utils/documentExistsInStore'
+import {documentExistsInStore, documentMissingFromStore} from '../utils/documentExistsInStore'
 import {internationalizedArrayLanguageFilter} from '../utils/internationalizedArrayLanguageFilter'
 import AddButtons from './AddButtons'
 import CompactAddButton from './CompactAddButton'
@@ -62,8 +62,9 @@ function isPristineDocument(
  *   `defaultLanguages` when those entries are missing. Seeds brand-new
  *   documents once the events store reports they are pristine (no history),
  *   and seeds persisted documents that still have a pair-store snapshot.
- *   Form `_rev` is not used for that check — it can linger on the last
- *   displayed snapshot after delete, and Studio's Delete action does not set
+ *   A not-ready store is treated as loading, not as a delete. Form `_rev` is
+ *   not used for that check — it can linger on the last displayed snapshot
+ *   after delete, and Studio's Delete action does not set
  *   `useDocumentPane().isDeleting`. Newly created documents stay read-only
  *   until initial value templates resolve, and the field-level `readOnly`
  *   prop can lag that document-level lock. Skipping the patch until writable
@@ -192,19 +193,22 @@ export default function InternationalizedArray(
   // empty draft. Form `_rev` can linger on the last displayed snapshot after
   // delete, and the built-in Delete action never writes pane `isDeleting`.
   const documentInStore = documentExistsInStore(editState)
+  const documentMissing = documentMissingFromStore(editState)
   const isPristine = isPristineDocument(useContext(EventsContext))
 
-  // Latch once this pane instance has observed the document leave the store, or
-  // once its language items disappear after being present. Either means delete
-  // (or equivalent) is in flight; auto-adding would resurrect the document.
-  // Adjusted during render (not in an effect) so the skip is applied on the
-  // same commit that observes the transition.
+  // Latch once this pane instance has observed confirmed absence (store ready
+  // with no snapshots), or once its language items disappear after being
+  // present. Either means delete (or equivalent) is in flight; auto-adding
+  // would resurrect the document. Do not latch on loading (`ready === false` /
+  // missing editState) — that is not a delete. Adjusted during render (not in
+  // an effect) so the skip is applied on the same commit that observes the
+  // transition.
   const [seenInStore, setSeenInStore] = useState(documentInStore)
   const [leftStore, setLeftStore] = useState(false)
   if (documentInStore && !seenInStore) {
     setSeenInStore(true)
   }
-  if (!documentInStore && seenInStore && !leftStore) {
+  if (documentMissing && seenInStore && !leftStore) {
     setLeftStore(true)
   }
 

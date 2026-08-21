@@ -1,6 +1,6 @@
 import {describe, expect, test} from 'vitest'
 
-import {documentExistsInStore} from './documentExistsInStore'
+import {documentExistsInStore, documentMissingFromStore} from './documentExistsInStore'
 
 describe('documentExistsInStore', () => {
   test('returns false when editState is null', () => {
@@ -68,5 +68,44 @@ describe('documentExistsInStore', () => {
         draft: {_id: 'drafts.doc'},
       }),
     ).toBe(true)
+  })
+})
+
+describe('documentMissingFromStore', () => {
+  test('returns false when editState is null (loading, not missing)', () => {
+    expect(documentMissingFromStore(null)).toBe(false)
+  })
+
+  test('returns false when the pair store is not ready yet (loading, not missing)', () => {
+    expect(
+      documentMissingFromStore({
+        ready: false,
+        draft: null,
+        published: null,
+        version: null,
+      }),
+    ).toBe(false)
+  })
+
+  test('returns true when ready with no snapshots (confirmed absence)', () => {
+    expect(
+      documentMissingFromStore({
+        ready: true,
+        draft: null,
+        published: null,
+        version: null,
+      }),
+    ).toBe(true)
+  })
+
+  test('returns false when a snapshot is present', () => {
+    expect(
+      documentMissingFromStore({
+        ready: true,
+        draft: {_id: 'drafts.doc', _rev: 'rev1'},
+        published: null,
+        version: null,
+      }),
+    ).toBe(false)
   })
 })
