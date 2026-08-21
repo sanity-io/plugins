@@ -42,8 +42,10 @@ test.describe('sanity-plugin-internationalized-array', () => {
     try {
       await openI18nPost(page, doc.id)
       await expect(languageLabel(page, 'en')).toBeVisible()
+      await expect(page.getByText('This document has been deleted.')).toHaveCount(0)
 
       await deleteI18nPostInStudio(page)
+      await expect(page.getByText('This document has been deleted.')).toBeVisible()
 
       await expect.poll(async () => getI18nPost(projectName, doc.id), {timeout: 20_000}).toBeNull()
 
