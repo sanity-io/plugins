@@ -3,7 +3,7 @@ import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Button, Card, Stack, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import type React from 'react'
-import {useCallback, useEffect, useMemo, useRef} from 'react'
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
 import {
   type ArrayOfObjectsInputProps,
   ArrayOfObjectsItem,
@@ -142,8 +142,13 @@ export default function InternationalizedArray(
     schemaType.readOnly === true ||
     Boolean(formState?.readOnly) ||
     Boolean(isInitialValueLoading)
+  // Sync in useLayoutEffect so auto-patch timeouts (scheduled in useEffect)
+  // see the committed lock before paint. Writing the ref during render is
+  // forbidden by React Compiler (`react(refs)`).
   const readOnlyRef = useRef(readOnly)
-  readOnlyRef.current = readOnly
+  useLayoutEffect(() => {
+    readOnlyRef.current = readOnly
+  })
 
   const handleAddLanguages = useCallback(
     (addLanguageKeys: string[] | string) => {
