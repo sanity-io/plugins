@@ -55,6 +55,7 @@ const TagViewHeader = ({allowCreate, light, title}: Props) => {
               icon={ComposeIcon}
               mode="bleed"
               onClick={handleTagCreate}
+              aria-label="Create tag"
               style={{
                 background: 'transparent',
                 boxShadow: 'none',

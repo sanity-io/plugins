@@ -4,7 +4,7 @@ Playwright smoke tests for the dedicated [e2e studio](../dev/e2e-studio). Auth f
 
 ## The e2e studio
 
-`dev/e2e-studio` is a **bare-bones studio used only for e2e testing** — separate from `dev/test-studio` (normal development work). It has two workspaces, `/chromium` and `/firefox`, each pointed at that browser’s ephemeral dataset. Plugins (and their schema types) are added one by one together with the e2e tests that cover them. Currently wired: `@sanity/document-internationalization` (`lesson` schema), `sanity-plugin-internationalized-array` (`i18nPost` schema), `sanity-plugin-media` (Media tool), plus a shared `smokeTestDocument` type for the smoke suite.
+`dev/e2e-studio` is a **bare-bones studio used only for e2e testing** — separate from `dev/test-studio` (normal development work). It has two workspaces, `/chromium` and `/firefox`, each pointed at that browser’s ephemeral dataset. Plugins (and their schema types) are added one by one together with the e2e tests that cover them. Currently wired: `@sanity/document-internationalization` (`lesson` schema), `sanity-plugin-internationalized-array` (`i18nPost` schema), `sanity-plugin-media` (Media tool + `mediaProduct` schema with `mediaField`), plus a shared `smokeTestDocument` type for the smoke suite.
 
 ## Test layout
 

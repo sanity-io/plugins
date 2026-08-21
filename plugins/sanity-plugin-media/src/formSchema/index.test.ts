@@ -2,7 +2,13 @@
 
 import {describe, expect, it} from 'vitest'
 
-import {assetFormSchema, tagFormSchema, tagOptionSchema} from './index'
+import {
+  assetFormSchema,
+  folderFormSchema,
+  getAssetFormSchema,
+  tagFormSchema,
+  tagOptionSchema,
+} from './index'
 
 describe('tagOptionSchema', () => {
   it('accepts trimmed non-empty label and value', () => {
@@ -50,6 +56,45 @@ describe('assetFormSchema', () => {
       assetFormSchema.safeParse({
         ...base,
         opt: {media: {tags: [{label: '', value: 'v'}]}},
+      }).success,
+    ).toBe(false)
+  })
+})
+
+describe('folderFormSchema', () => {
+  it('requires a non-empty trimmed name', () => {
+    expect(folderFormSchema.safeParse({name: 'Campaigns'}).success).toBe(true)
+    expect(folderFormSchema.safeParse({name: '   '}).success).toBe(false)
+  })
+})
+
+describe('getAssetFormSchema(locales)', () => {
+  const locales = [{id: 'en'}, {id: 'fr'}]
+
+  it('accepts localized string objects', () => {
+    const schema = getAssetFormSchema(locales)
+    expect(
+      schema.safeParse({
+        altText: {en: 'Alt', fr: ''},
+        creditLine: {en: '', fr: ''},
+        description: {en: 'Desc', fr: 'Desc FR'},
+        opt: {media: {tags: null}},
+        originalFilename: 'file.png',
+        title: {en: 'Title', fr: 'Titre'},
+      }).success,
+    ).toBe(true)
+  })
+
+  it('rejects empty originalFilename even with locales', () => {
+    const schema = getAssetFormSchema(locales)
+    expect(
+      schema.safeParse({
+        altText: {en: '', fr: ''},
+        creditLine: {en: '', fr: ''},
+        description: {en: '', fr: ''},
+        opt: {media: {tags: null}},
+        originalFilename: '',
+        title: {en: '', fr: ''},
       }).success,
     ).toBe(false)
   })
