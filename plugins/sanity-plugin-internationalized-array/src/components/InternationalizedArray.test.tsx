@@ -551,6 +551,114 @@ describe('InternationalizedArray', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 
+  test('does not auto-add default languages while initial value templates are loading', async () => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: false,
+      isDeleted: false,
+      isInitialValueLoading: true,
+    } as ReturnType<typeof useDocumentPane>)
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange, readOnly: false})
+
+    renderInternationalizedArray(props)
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not auto-add when the field is editable but the document form is readOnly', async () => {
+    // The v3.82 race: field `readOnly` is still false while the patch channel
+    // rejects writes because initial values (or another document-level lock)
+    // have not resolved.
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: false,
+      isDeleted: false,
+      formState: {readOnly: true},
+    } as ReturnType<typeof useDocumentPane>)
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange, readOnly: false})
+
+    renderInternationalizedArray(props)
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('auto-adds default languages after initial value templates resolve', async () => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: false,
+      isDeleted: false,
+      isInitialValueLoading: true,
+    } as ReturnType<typeof useDocumentPane>)
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange, readOnly: false})
+
+    const {rerender} = renderInternationalizedArray(props)
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    expect(onChange).not.toHaveBeenCalled()
+
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: false,
+      isDeleted: false,
+      isInitialValueLoading: false,
+    } as ReturnType<typeof useDocumentPane>)
+
+    rerender(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+    )
+
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalled()
+    })
+  })
+
+  test('does not auto-reorder while initial value templates are loading', () => {
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: false,
+      isDeleted: false,
+      isInitialValueLoading: true,
+    } as ReturnType<typeof useDocumentPane>)
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
+
+    const onChange = vi.fn()
+    const value = createValues(['fr', 'en'])
+    const props = createMockArrayProps({onChange, value, readOnly: false})
+
+    renderInternationalizedArray(props)
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
   test('hides "Add all languages" button when buttonAddAll is false', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
       ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,

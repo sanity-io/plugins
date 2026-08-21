@@ -122,6 +122,21 @@ test.describe('sanity-plugin-internationalized-array', () => {
     }
   })
 
+  /**
+   * Repro for SAPP-2921: creating a document with `defaultLanguages` must not
+   * toast "Attempted to patch a read-only document" while initial value
+   * templates are still resolving.
+   */
+  test('creating a document does not toast a read-only patch error', async ({page}) => {
+    await page.goto('intent/create/template=i18nPost;type=i18nPost')
+    await expect(page.getByTestId('studio-navbar')).toBeVisible()
+    const form = page.getByTestId('form-view').first()
+    await expect(form).toBeVisible()
+    // Wait until Studio has dropped the initial-value read-only lock.
+    await expect(form).not.toHaveAttribute('data-read-only', 'true')
+    await expect(page.getByText('Attempted to patch a read-only document')).toHaveCount(0)
+  })
+
   test('language filter hides non-selected array items', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
     const doc = await seedI18nPost(projectName, {
