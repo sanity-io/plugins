@@ -640,6 +640,39 @@ describe('InternationalizedArray', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 
+  test('still auto-adds default languages after a transient not-ready pair-store blip', async () => {
+    vi.useFakeTimers()
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+    const view = renderInternationalizedArray(props)
+
+    mockDocumentPane({
+      editState: {ready: false, draft: null, published: null, version: null},
+    })
+    view.rerender(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+    )
+
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+    view.rerender(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+    )
+
+    await vi.runAllTimersAsync()
+    vi.useRealTimers()
+
+    expect(onChange).toHaveBeenCalled()
+  })
+
   test('does not auto-reorder when the document is no longer in the pair store', () => {
     mockDocumentPane({editState: EMPTY_EDIT_STATE})
 

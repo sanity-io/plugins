@@ -20,7 +20,7 @@ import type {InternationalizedArrayItem} from '../types'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
-import {documentExistsInStore} from '../utils/documentExistsInStore'
+import {documentExistsInStore, documentMissingFromStore} from '../utils/documentExistsInStore'
 import {internationalizedArrayLanguageFilter} from '../utils/internationalizedArrayLanguageFilter'
 import AddButtons from './AddButtons'
 import Feedback from './Feedback'
@@ -43,9 +43,10 @@ import {MigrationBanner} from './MigrationBanner'
  *   `defaultLanguages` when those entries are missing. Only runs while the
  *   document pair store still has a draft/published/version snapshot, so the
  *   effect never recreates a just-deleted document or creates a draft before
- *   the user's first edit. Form `_rev` is not used for this check — it can
- *   linger on the last displayed snapshot after delete, and Studio's Delete
- *   action does not set `useDocumentPane().isDeleting`.
+ *   the user's first edit. A not-ready store is treated as loading, not as a
+ *   delete. Form `_rev` is not used for this check — it can linger on the last
+ *   displayed snapshot after delete, and Studio's Delete action does not set
+ *   `useDocumentPane().isDeleting`.
  * - **Ordering**: When `restoreOrder` is enabled (default), detects when value
  *   items are out of order relative to the master `languages` list and
  *   automatically re-sorts them. Set `restoreOrder: false` to keep the stored
@@ -160,18 +161,21 @@ export default function InternationalizedArray(
   // linger on the last displayed snapshot after delete, and the built-in Delete
   // action never writes pane `isDeleting`, so neither of those is sufficient.
   const documentInStore = documentExistsInStore(editState)
+  const documentMissing = documentMissingFromStore(editState)
 
-  // Latch once this pane instance has observed the document leave the store, or
-  // once its language items disappear after being present. Either means delete
-  // (or equivalent) is in flight; auto-adding would resurrect the document.
-  // Adjusted during render (not in an effect) so the skip is applied on the
-  // same commit that observes the transition.
+  // Latch once this pane instance has observed confirmed absence (store ready
+  // with no snapshots), or once its language items disappear after being
+  // present. Either means delete (or equivalent) is in flight; auto-adding
+  // would resurrect the document. Do not latch on loading (`ready === false` /
+  // missing editState) — that is not a delete. Adjusted during render (not in
+  // an effect) so the skip is applied on the same commit that observes the
+  // transition.
   const [seenInStore, setSeenInStore] = useState(documentInStore)
   const [leftStore, setLeftStore] = useState(false)
   if (documentInStore && !seenInStore) {
     setSeenInStore(true)
   }
-  if (!documentInStore && seenInStore && !leftStore) {
+  if (documentMissing && seenInStore && !leftStore) {
     setLeftStore(true)
   }
 
