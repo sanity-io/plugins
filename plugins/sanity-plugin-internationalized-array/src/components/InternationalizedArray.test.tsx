@@ -102,6 +102,13 @@ describe('InternationalizedArray', () => {
   beforeEach(() => {
     mockToastPush.mockClear()
     mockGetFormValue.mockReset()
+    vi.mocked(useFormValue).mockImplementation(() => 'article')
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: false,
+      isDeleted: false,
+      isInitialValueLoading: false,
+    } as unknown as ReturnType<typeof useDocumentPane>)
   })
 
   afterEach(() => {
@@ -601,13 +608,6 @@ describe('InternationalizedArray', () => {
   })
 
   test('auto-adds default languages after initial value templates resolve', async () => {
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    vi.mocked(useDocumentPane).mockReturnValue({
-      isDeleting: false,
-      isDeleted: false,
-      isInitialValueLoading: true,
-    } as ReturnType<typeof useDocumentPane>)
-
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
       ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       defaultLanguages: ['en'],
@@ -616,11 +616,21 @@ describe('InternationalizedArray', () => {
     const onChange = vi.fn()
     const props = createMockArrayProps({onChange, readOnly: false})
 
-    const {rerender} = renderInternationalizedArray(props)
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    vi.mocked(useDocumentPane).mockReturnValue({
+      isDeleting: false,
+      isDeleted: false,
+      isInitialValueLoading: true,
+    } as ReturnType<typeof useDocumentPane>)
+
+    const {unmount} = renderInternationalizedArray(props)
 
     await new Promise((resolve) => setTimeout(resolve, 10))
     expect(onChange).not.toHaveBeenCalled()
 
+    unmount()
+
+    vi.mocked(useFormValue).mockImplementation(() => 'article')
     // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: false,
@@ -628,10 +638,7 @@ describe('InternationalizedArray', () => {
       isInitialValueLoading: false,
     } as ReturnType<typeof useDocumentPane>)
 
-    rerender(
-      // @ts-expect-error - simplified mock props
-      <InternationalizedArray {...props} />,
-    )
+    renderInternationalizedArray(props)
 
     await waitFor(() => {
       expect(onChange).toHaveBeenCalled()
