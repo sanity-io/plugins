@@ -1,4 +1,4 @@
-import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react'
+import {act, cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
@@ -113,6 +113,7 @@ describe('InternationalizedArray', () => {
 
   afterEach(() => {
     cleanup()
+    vi.useRealTimers()
     vi.restoreAllMocks()
   })
 
@@ -608,6 +609,7 @@ describe('InternationalizedArray', () => {
   })
 
   test('auto-adds default languages after initial value templates resolve', async () => {
+    vi.useFakeTimers()
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
       ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       defaultLanguages: ['en'],
@@ -615,34 +617,36 @@ describe('InternationalizedArray', () => {
 
     const onChange = vi.fn()
     const props = createMockArrayProps({onChange, readOnly: false})
+    mockGetFormValue.mockImplementation(() => props.value)
 
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    vi.mocked(useDocumentPane).mockReturnValue({
-      isDeleting: false,
-      isDeleted: false,
-      isInitialValueLoading: true,
-    } as ReturnType<typeof useDocumentPane>)
+    let loading = true
+    vi.mocked(useDocumentPane).mockImplementation(() => {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- test pane stub
+      return {
+        isDeleting: false,
+        isDeleted: false,
+        isInitialValueLoading: loading,
+      } as unknown as ReturnType<typeof useDocumentPane>
+    })
 
-    const {unmount} = renderInternationalizedArray(props)
+    const {rerender} = renderInternationalizedArray(props)
 
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    act(() => {
+      vi.runAllTimers()
+    })
     expect(onChange).not.toHaveBeenCalled()
 
-    unmount()
+    // Same mounted instance: the document pane flips loading in place.
+    loading = false
+    rerender(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedArray {...props} />,
+    )
 
-    vi.mocked(useFormValue).mockImplementation(() => 'article')
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    vi.mocked(useDocumentPane).mockReturnValue({
-      isDeleting: false,
-      isDeleted: false,
-      isInitialValueLoading: false,
-    } as ReturnType<typeof useDocumentPane>)
-
-    renderInternationalizedArray(props)
-
-    await waitFor(() => {
-      expect(onChange).toHaveBeenCalled()
+    act(() => {
+      vi.runAllTimers()
     })
+    expect(onChange).toHaveBeenCalled()
   })
 
   test('does not auto-reorder while initial value templates are loading', () => {
