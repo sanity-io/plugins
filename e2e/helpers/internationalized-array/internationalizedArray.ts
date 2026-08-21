@@ -91,7 +91,11 @@ export async function getI18nPost(
 
 export async function deleteI18nPostInStudio(page: Page): Promise<void> {
   await page.getByTestId('action-menu-button').click()
-  await page.getByRole('menuitem', {name: /^Delete$/}).click()
+  // Studio includes the shortcut in the accessible name ("Delete Ctrl Alt D").
+  await page
+    .getByRole('menu', {name: 'Open document actions'})
+    .getByRole('menuitem', {name: /^Delete\b/})
+    .click()
   await page.getByRole('button', {name: 'Delete document'}).click()
 }
 

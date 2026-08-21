@@ -78,6 +78,7 @@ Do not dump plugin specs at the top level of `tests/`.
 - Auth: Playwright `storageState` seeds `__studio_auth_token_<projectId>`; preflight `/users/me`. Never use `SANITY_DEPLOY_TOKEN` for e2e session auth.
 - Local pitfall: stale server on `:3333` + `reuseExistingServer` → signed-out studio. Kill and restart.
 - Prefer accessible role/name locators; add `data-testid` + a **patch** changeset only when selectors are flaky or ambiguous (e.g. duplicate add-button grids).
+- Document action menuitems include the keyboard shortcut in the accessible name (`Delete Ctrl Alt D`). `/^Delete$/` will not match — use `{name: 'Delete'}` or `/^Delete\b/`, and scope to `getByRole('menu', {name: 'Open document actions'})`.
 - Seed documents via the Content Lake API; always `try/finally` cleanup.
 - Video: `SANITY_E2E_VIDEO=on` when debugging.
 - Document existence matters: some plugins only auto-seed after the document is in the pair store (draft/published/version snapshot) — seed empty persisted docs, don't rely on brand-new unsaved drafts. Form `_rev` can linger after delete, so it is not a reliable existence check.
