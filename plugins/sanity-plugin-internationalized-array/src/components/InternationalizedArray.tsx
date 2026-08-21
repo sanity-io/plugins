@@ -3,7 +3,7 @@ import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Button, Card, Stack, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import type React from 'react'
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import {
   type ArrayOfObjectsInputProps,
   ArrayOfObjectsItem,
@@ -210,7 +210,10 @@ export default function InternationalizedArray(
     !shouldMigrateArray
 
   const canAutoAddDefaultsRef = useRef(canAutoAddDefaults)
-  useEffect(() => {
+  // Layout effect so the timeout guard updates before paint / before a
+  // previously scheduled setTimeout can run. A passive useEffect write can
+  // land after that macrotask and still emit patches.
+  useLayoutEffect(() => {
     canAutoAddDefaultsRef.current = canAutoAddDefaults
   })
 
