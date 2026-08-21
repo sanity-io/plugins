@@ -532,6 +532,9 @@ importers:
       nodemon:
         specifier: 3.1.14
         version: 3.1.14
+      oxc-transform-react:
+        specifier: 'catalog:'
+        version: 0.145.0
       validate-npm-package-name:
         specifier: 'catalog:'
         version: 8.0.0
@@ -584,6 +587,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.2.1)
 
   plugins/@sanity/assist:
     dependencies:
@@ -3200,6 +3206,24 @@ importers:
       tsdown:
         specifier: 'catalog:'
         version: 0.22.14(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.23)(tsx@4.23.12)(typescript@7.0.2)
+
+  scripts/react-compiler-parity:
+    devDependencies:
+      '@sanity/plugin-kit':
+        specifier: workspace:^
+        version: link:../../packages/@sanity/plugin-kit
+      '@types/node':
+        specifier: ^24.13.3
+        version: 24.13.3
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vite:
+        specifier: ^8.2.1
+        version: 8.2.1(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.0)
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1)(vite@8.2.1)
 
   scripts/trigger-triage:
     devDependencies:
