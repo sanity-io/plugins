@@ -61,6 +61,7 @@ export function Document({
     return null
   }
 
+  // oxlint-disable-next-line typescript/no-deprecated -- same rationale as useDocumentVersionInfo above
   const tooltip = (
     <DocumentStatus
       draft={versionsInfo.draft}
