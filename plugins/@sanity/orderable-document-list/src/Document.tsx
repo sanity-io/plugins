@@ -63,6 +63,7 @@ export function Document({
 
   // oxlint-disable-next-line typescript/no-deprecated -- same rationale as useDocumentVersionInfo above
   const tooltip = (
+    // oxlint-disable-next-line typescript/no-deprecated -- `DocumentStatus` still provides the tooltip text we need and has no drop-in replacement
     <DocumentStatus
       draft={versionsInfo.draft}
       published={versionsInfo.published}
