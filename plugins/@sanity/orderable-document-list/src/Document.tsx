@@ -9,8 +9,7 @@ import {
   PreviewCard,
   Preview,
   DocumentVersionsStatusIndicator,
-  DocumentStatus,
-  useDocumentVersionInfo,
+  DocumentVersionsStatus,
   useDocumentVersions,
   getPublishedId,
 } from 'sanity'
@@ -46,9 +45,8 @@ export function Document({
   const {showIncrements} = useContext(OrderableContext)
   const schema = useSchema()
   const router = usePaneRouter()
-  // oxlint-disable-next-line typescript/no-deprecated -- the replacement, `useDocumentVersions`, would require reimplementing the internal (unexported) `getDocumentVersionInfoFromVersions` util for the DocumentStatus tooltip
-  const versionsInfo = useDocumentVersionInfo(doc._id)
-  const {versions} = useDocumentVersions({documentId: getPublishedId(doc._id)})
+  const documentGroupId = getPublishedId(doc._id)
+  const {versions} = useDocumentVersions({documentId: documentGroupId})
 
   const {ChildLink, groupIndex, routerPanesState} = router
 
@@ -61,13 +59,7 @@ export function Document({
     return null
   }
 
-  const tooltip = (
-    <DocumentStatus
-      draft={versionsInfo.draft}
-      published={versionsInfo.published}
-      versions={versionsInfo.versions}
-    />
-  )
+  const tooltip = <DocumentVersionsStatus documentGroupId={documentGroupId} />
 
   return (
     <PreviewCard
