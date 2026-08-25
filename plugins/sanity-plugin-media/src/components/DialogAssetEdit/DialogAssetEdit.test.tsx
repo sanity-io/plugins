@@ -589,4 +589,36 @@ describe('DialogAssetEdit', () => {
       'Description française',
     )
   })
+
+  it('shows the Credit field when creditLine is enabled', () => {
+    renderAssetDialog({
+      id: 'dlg-1',
+      type: 'assetEdit',
+      assetId: 'a1',
+    })
+
+    expect(inputByName(/asset details/i, screen, 'creditLine')).toBeTruthy()
+  })
+
+  it('disables Credit when the asset source is excluded', () => {
+    renderAssetDialog(
+      {
+        id: 'dlg-1',
+        type: 'assetEdit',
+        assetId: 'a1',
+      },
+      {
+        preloaded: {
+          assets: assetsWith({
+            source: {name: 'unsplash', id: 'u1'},
+          } as Partial<ImageAsset>),
+        },
+        toolOptions: {
+          creditLine: {enabled: true, excludeSources: ['unsplash']},
+        },
+      },
+    )
+
+    expect(inputByName(/asset details/i, screen, 'creditLine')).toBeDisabled()
+  })
 })

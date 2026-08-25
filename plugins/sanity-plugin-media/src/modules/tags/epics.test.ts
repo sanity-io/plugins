@@ -9,7 +9,7 @@ import {
   mockTransactionCommit,
 } from '../../__tests__/fixtures/mockSanityClient'
 import type {Tag} from '../../types'
-import {tagsCreateEpic, tagsDeleteEpic, tagsActions} from './index'
+import {tagsCreateEpic, tagsDeleteEpic, tagsFetchEpic, tagsUpdateEpic, tagsActions} from './index'
 
 const sampleTag: Tag = {
   _id: 't1',
@@ -91,6 +91,96 @@ describe('tagsDeleteEpic', () => {
       expect(tx.delete).toHaveBeenCalledWith('t1')
       expect(tx.commit).toHaveBeenCalled()
       expect(store.getState().tags.byIds['t1']).toBeUndefined()
+    })
+  })
+})
+
+describe('tagsFetchEpic', () => {
+  it('stores fetched tags on fetchComplete', async () => {
+    const client = createMockSanityClient({
+      observable: {
+        fetch: vi.fn(() => of({items: [sampleTag]})),
+      },
+    })
+
+    const store = createEpicTestStore(tagsFetchEpic, client)
+    store.dispatch(tagsActions.fetchRequest())
+
+    await vi.waitFor(() => {
+      expect(store.getState().tags.byIds['t1']?.tag).toEqual(sampleTag)
+      expect(store.getState().tags.fetching).toBe(false)
+      expect(store.getState().tags.fetchCount).toBe(1)
+    })
+  })
+})
+
+describe('tagsUpdateEpic', () => {
+  it('patches the tag name when available', async () => {
+    const updated = {...sampleTag, name: {_type: 'slug' as const, current: 'beta'}}
+    const chain = {
+      set: vi.fn().mockReturnThis(),
+      commit: vi.fn().mockResolvedValue(updated),
+    }
+    const client = createMockSanityClient({
+      fetch: vi.fn().mockResolvedValue(0),
+      patch: vi.fn(() => chain),
+    })
+
+    const store = createEpicTestStore(tagsUpdateEpic, client, {
+      tags: {
+        allIds: ['t1'],
+        byIds: {
+          t1: {_type: 'tag', tag: sampleTag, picked: false, updating: false},
+        },
+        creating: false,
+        fetchCount: 1,
+        fetching: false,
+        panelVisible: true,
+      },
+    })
+
+    store.dispatch(
+      tagsActions.updateRequest({
+        formData: {name: {_type: 'slug', current: 'beta'}},
+        tag: sampleTag,
+      }),
+    )
+
+    await vi.waitFor(() => {
+      expect(client.patch).toHaveBeenCalledWith('t1')
+      expect(chain.set).toHaveBeenCalledWith({name: {_type: 'slug', current: 'beta'}})
+      expect(store.getState().tags.byIds['t1']?.tag.name.current).toBe('beta')
+    })
+  })
+
+  it('dispatches updateError when the name already exists', async () => {
+    const client = createMockSanityClient({
+      fetch: vi.fn().mockResolvedValue(1),
+    })
+
+    const store = createEpicTestStore(tagsUpdateEpic, client, {
+      tags: {
+        allIds: ['t1'],
+        byIds: {
+          t1: {_type: 'tag', tag: sampleTag, picked: false, updating: false},
+        },
+        creating: false,
+        fetchCount: 1,
+        fetching: false,
+        panelVisible: true,
+      },
+    })
+
+    store.dispatch(
+      tagsActions.updateRequest({
+        formData: {name: {_type: 'slug', current: 'dup'}},
+        tag: sampleTag,
+      }),
+    )
+
+    await vi.waitFor(() => {
+      expect(store.getState().tags.byIds['t1']?.error?.statusCode).toBe(409)
+      expect(client.patch).not.toHaveBeenCalled()
     })
   })
 })
