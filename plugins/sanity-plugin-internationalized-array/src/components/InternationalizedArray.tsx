@@ -3,7 +3,7 @@ import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Button, Card, Stack, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import type React from 'react'
-import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
+import {useCallback, useEffect, useMemo} from 'react'
 import {
   type ArrayOfObjectsInputProps,
   ArrayOfObjectsItem,
@@ -142,17 +142,10 @@ export default function InternationalizedArray(
     schemaType.readOnly === true ||
     Boolean(formState?.readOnly) ||
     Boolean(isInitialValueLoading)
-  // Sync in useLayoutEffect so auto-patch timeouts (scheduled in useEffect)
-  // see the committed lock before paint. Writing the ref during render is
-  // forbidden by React Compiler (`react(refs)`).
-  const readOnlyRef = useRef(readOnly)
-  useLayoutEffect(() => {
-    readOnlyRef.current = readOnly
-  })
 
   const handleAddLanguages = useCallback(
     (addLanguageKeys: string[] | string) => {
-      if (readOnlyRef.current) {
+      if (readOnly) {
         return
       }
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion
@@ -171,7 +164,7 @@ export default function InternationalizedArray(
 
       onChange([setIfMissing([]), ...patches])
     },
-    [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path],
+    [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path, readOnly],
   )
 
   // The document only has a revision once it exists in the dataset. Patching
@@ -211,10 +204,9 @@ export default function InternationalizedArray(
       const languagesToAdd = defaultLanguages
         .filter((language) => !addedLanguages.includes(language))
         .filter((language) => languages.find((l) => l.id === language))
-      // Account for strict mode by scheduling the update. Re-check the ref
-      // so a document that became read-only between schedule and fire is skipped.
+      // Account for strict mode by scheduling the update.
       const timeout = setTimeout(() => {
-        if (!readOnlyRef.current) handleAddLanguages(languagesToAdd)
+        handleAddLanguages(languagesToAdd)
       })
       return () => clearTimeout(timeout)
     }
@@ -233,7 +225,7 @@ export default function InternationalizedArray(
 
   // NOTE: This is reordering and re-setting the whole array, it could be surgical
   const handleRestoreOrder = useCallback(() => {
-    if (readOnlyRef.current || !value?.length || !languages?.length) {
+    if (readOnly || !value?.length || !languages?.length) {
       return
     }
 
@@ -259,7 +251,7 @@ export default function InternationalizedArray(
     }
 
     onChange(set(updatedValue))
-  }, [toast, languages, onChange, value])
+  }, [toast, languages, onChange, value, readOnly])
 
   const allKeysAreLanguages = useMemo(() => {
     if (!value?.length || !languages?.length) {
