@@ -44,7 +44,7 @@ export function Document({
   const {showIncrements} = useContext(OrderableContext)
   const schema = useSchema()
   const router = usePaneRouter()
-  // oxlint-disable-next-line typescript/no-deprecated -- the replacement, `useDocumentVersions`, would require reimplementing the internal (unexported) `getDocumentVersionInfoFromVersions` util
+  // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only, and this plugin's peer range admits ^5 || ^6.0.0-0
   const versionsInfo = useDocumentVersionInfo(doc._id)
 
   const {ChildLink, groupIndex, routerPanesState} = router
@@ -113,7 +113,7 @@ export function Document({
 
             <Tooltip content={tooltip} portal placement="right" boundaryElement={null}>
               <Flex align="center" style={{flexShrink: 0}}>
-                {/* oxlint-disable-next-line typescript/no-deprecated -- DocumentVersionsStatusIndicator only exists in sanity 6.11+, which is unreleased; migrate once it is stable */}
+                {/* oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only, and this plugin's peer range admits ^5 || ^6.0.0-0 */}
                 <DocumentStatusIndicator
                   draft={versionsInfo.draft}
                   published={versionsInfo.published}
