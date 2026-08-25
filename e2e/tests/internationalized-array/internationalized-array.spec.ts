@@ -150,10 +150,12 @@ test.describe('sanity-plugin-internationalized-array', () => {
       await expect(languageLabel(page, 'en', 'summary')).toBeVisible()
       await expect(page.getByText('Attempted to patch a read-only document')).toHaveCount(0)
     } finally {
-      const docId = /(?:id=|i18nPost;)([\w-]+)/.exec(decodeURIComponent(page.url()))?.[1]
-      if (docId && docId !== 'i18nPost' && docId !== 'i18nPost-out-of-order') {
-        await deleteI18nPost(projectName, docId)
-      }
+      // Studio may put a published id or `drafts.<id>` in the URL; a UUID match
+      // ignores the prefix and avoids capturing template/type names.
+      const docId = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.exec(
+        decodeURIComponent(page.url()),
+      )?.[0]
+      if (docId) await deleteI18nPost(projectName, docId)
     }
   })
 
