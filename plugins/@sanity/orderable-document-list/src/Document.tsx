@@ -8,11 +8,9 @@ import {
   useSchema,
   PreviewCard,
   Preview,
-  DocumentVersionsStatusIndicator,
+  DocumentStatusIndicator,
   DocumentStatus,
   useDocumentVersionInfo,
-  useDocumentVersions,
-  getPublishedId,
 } from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
 
@@ -46,9 +44,8 @@ export function Document({
   const {showIncrements} = useContext(OrderableContext)
   const schema = useSchema()
   const router = usePaneRouter()
-  // oxlint-disable-next-line typescript/no-deprecated -- the replacement, `useDocumentVersions`, would require reimplementing the internal (unexported) `getDocumentVersionInfoFromVersions` util for the DocumentStatus tooltip
+  // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only
   const versionsInfo = useDocumentVersionInfo(doc._id)
-  const {versions} = useDocumentVersions({documentId: getPublishedId(doc._id)})
 
   const {ChildLink, groupIndex, routerPanesState} = router
 
@@ -62,7 +59,7 @@ export function Document({
   }
 
   const tooltip = (
-    // oxlint-disable-next-line typescript/no-deprecated -- DocumentVersionsStatus takes documentGroupId; this tooltip still uses draft/published/versions from useDocumentVersionInfo
+    // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only
     <DocumentStatus
       draft={versionsInfo.draft}
       published={versionsInfo.published}
@@ -116,7 +113,12 @@ export function Document({
 
             <Tooltip content={tooltip} portal placement="right" boundaryElement={null}>
               <Flex align="center" style={{flexShrink: 0}}>
-                <DocumentVersionsStatusIndicator documentVersions={versions} />
+                {/* oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only */}
+                <DocumentStatusIndicator
+                  draft={versionsInfo.draft}
+                  published={versionsInfo.published}
+                  versions={versionsInfo.versions}
+                />
               </Flex>
             </Tooltip>
           </Flex>
