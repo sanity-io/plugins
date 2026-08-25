@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 6.1.7
+
+### Patch Changes
+
+- [#1851](https://github.com/sanity-io/plugins/pull/1851) [`d0f77d2`](https://github.com/sanity-io/plugins/commit/d0f77d2faee25facc4bbd7b94a292ada1234eaf6) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Improve Media UI accessibility for tag creation (Create tag / Toggle tags panel aria-labels), stop Media browser epics on unmount, and expand automated test coverage
+
 ## 6.1.6
 
 ### Patch Changes
