@@ -59,7 +59,7 @@ export function Document({
   }
 
   const tooltip = (
-    // oxlint-disable-next-line typescript/no-deprecated -- DocumentVersionsStatus takes documentGroupId; this tooltip still uses draft/published/versions from useDocumentVersionInfo
+    // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only, and this plugin's peer range admits ^5 || ^6.0.0-0
     <DocumentStatus
       draft={versionsInfo.draft}
       published={versionsInfo.published}
