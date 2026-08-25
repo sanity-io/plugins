@@ -26,6 +26,32 @@ const i18nPostType = defineType({
 export const internationalizedArrayExample = definePlugin(() => ({
   schema: {
     types: [i18nPostType],
+    templates: (prev) => [
+      ...prev,
+      {
+        id: 'i18nPost-out-of-order',
+        title: 'I18n Post (out of order languages)',
+        schemaType: 'i18nPost',
+        // FR before EN so restoreOrder must patch on create — that is the
+        // SAPP-2921 race against Studio's initial-value read-only lock.
+        value: {
+          title: [
+            {
+              _key: 'title-fr',
+              _type: 'internationalizedArrayStringValue',
+              language: 'fr',
+              value: 'Bonjour',
+            },
+            {
+              _key: 'title-en',
+              _type: 'internationalizedArrayStringValue',
+              language: 'en',
+              value: 'Hello',
+            },
+          ],
+        },
+      },
+    ],
   },
   plugins: [
     internationalizedArray({

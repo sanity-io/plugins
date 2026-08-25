@@ -40,9 +40,13 @@ import {MigrationBanner} from './MigrationBanner'
  *   `buttonLocations` config). Dispatches `setIfMissing` + `insert` patches.
  * - **Default languages**: Automatically adds entries for languages listed in
  *   `defaultLanguages` when those entries are missing. Only runs once the
- *   document exists in the dataset (it has a `_rev`), so the effect never
- *   recreates a just-deleted document or creates a draft before the user's
- *   first edit.
+ *   document exists in the dataset (it has a `_rev`) **and** the document is
+ *   writable — newly created documents stay read-only until initial value
+ *   templates resolve, and the field-level `readOnly` prop can lag that
+ *   document-level lock. Skipping the patch until both are ready avoids
+ *   "Attempted to patch a read-only document" toasts. The `_rev` guard also
+ *   prevents recreating a just-deleted document or creating a draft before
+ *   the user's first edit.
  * - **Ordering**: When `restoreOrder` is enabled (default), detects when value
  *   items are out of order relative to the master `languages` list and
  *   automatically re-sorts them. Set `restoreOrder: false` to keep the stored
@@ -60,7 +64,6 @@ export default function InternationalizedArray(
   const value = _value as InternationalizedArrayItem[]
   const itemsNeedingMigration = value?.filter((v) => !v[LANGUAGE_FIELD_NAME]) ?? []
   const shouldMigrateArray = itemsNeedingMigration.length > 0
-  const readOnly = Boolean(documentReadOnly) || schemaType.readOnly === true
   const toast = useToast()
 
   const getFormValue = useGetFormValue()
@@ -129,8 +132,22 @@ export default function InternationalizedArray(
     ],
   )
 
+  const {isDeleted, isDeleting, isInitialValueLoading, formState} = useDocumentPane()
+
+  // Document-level locks (initial-value templates, permissions, history) are
+  // not always reflected on the field's `readOnly` prop in the same tick as
+  // the patch channel. Gating on both prevents toasts from auto-patches.
+  const readOnly =
+    Boolean(documentReadOnly) ||
+    schemaType.readOnly === true ||
+    Boolean(formState?.readOnly) ||
+    Boolean(isInitialValueLoading)
+
   const handleAddLanguages = useCallback(
     (addLanguageKeys: string[] | string) => {
+      if (readOnly) {
+        return
+      }
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion
       const formValue = getFormValue(props.path) as InternationalizedArrayItem[]
       if (!filteredLanguages?.length) {
@@ -147,10 +164,8 @@ export default function InternationalizedArray(
 
       onChange([setIfMissing([]), ...patches])
     },
-    [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path],
+    [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path, readOnly],
   )
-
-  const {isDeleted, isDeleting} = useDocumentPane()
 
   // The document only has a revision once it exists in the dataset. Patching
   // a nonexistent document would create it: auto-adding default languages to
@@ -183,12 +198,13 @@ export default function InternationalizedArray(
       !isDeleting &&
       !isDeleted &&
       !hasAddedDefaultLanguages &&
-      !shouldMigrateArray
+      !shouldMigrateArray &&
+      !readOnly
     ) {
       const languagesToAdd = defaultLanguages
         .filter((language) => !addedLanguages.includes(language))
         .filter((language) => languages.find((l) => l.id === language))
-      // Account for strict mode by scheduling the update
+      // Account for strict mode by scheduling the update.
       const timeout = setTimeout(() => {
         if (!readOnly) handleAddLanguages(languagesToAdd)
       })
@@ -209,7 +225,7 @@ export default function InternationalizedArray(
 
   // NOTE: This is reordering and re-setting the whole array, it could be surgical
   const handleRestoreOrder = useCallback(() => {
-    if (!value?.length || !languages?.length) {
+    if (readOnly || !value?.length || !languages?.length) {
       return
     }
 
@@ -235,7 +251,7 @@ export default function InternationalizedArray(
     }
 
     onChange(set(updatedValue))
-  }, [toast, languages, onChange, value])
+  }, [toast, languages, onChange, value, readOnly])
 
   const allKeysAreLanguages = useMemo(() => {
     if (!value?.length || !languages?.length) {

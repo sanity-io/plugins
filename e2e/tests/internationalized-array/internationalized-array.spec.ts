@@ -122,6 +122,43 @@ test.describe('sanity-plugin-internationalized-array', () => {
     }
   })
 
+  /**
+   * Repro for SAPP-2921: the `i18nPost-out-of-order` template seeds FR before
+   * EN, so `restoreOrder` must auto-patch while the new document may still
+   * hold Studio's initial-value read-only lock. A patch during the lock
+   * toasts "Attempted to patch a read-only document" and leaves the array
+   * out of order.
+   */
+  test('creating a document does not toast a read-only patch error', async ({page}, testInfo) => {
+    const projectName = testInfo.project.name
+    await page.goto('intent/create/template=i18nPost-out-of-order;type=i18nPost')
+    await expect(page.getByTestId('studio-navbar')).toBeVisible()
+    const form = page.getByTestId('form-view').first()
+    await expect(form).toBeVisible()
+
+    try {
+      await expect(languageLabel(page, 'en')).toBeVisible()
+      await expect(languageLabel(page, 'fr')).toBeVisible()
+      // Deferred restoreOrder re-sorts FR, EN → EN, FR once the document is writable.
+      const codeLabels = page
+        .getByTestId('field-title')
+        .locator('[data-ui="Label"]')
+        .filter({hasText: /^(EN|FR)$/})
+      await expect(codeLabels.first()).toHaveText('EN')
+      // That patch persists the draft (`_rev`), so defaultLanguages can seed
+      // EN on the untouched summary field.
+      await expect(languageLabel(page, 'en', 'summary')).toBeVisible()
+      await expect(page.getByText('Attempted to patch a read-only document')).toHaveCount(0)
+    } finally {
+      // Studio may put a published id or `drafts.<id>` in the URL; a UUID match
+      // ignores the prefix and avoids capturing template/type names.
+      const docId = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.exec(
+        decodeURIComponent(page.url()),
+      )?.[0]
+      if (docId) await deleteI18nPost(projectName, docId)
+    }
+  })
+
   test('language filter hides non-selected array items', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
     const doc = await seedI18nPost(projectName, {

@@ -62,6 +62,7 @@ export function Document({
   }
 
   const tooltip = (
+    // oxlint-disable-next-line typescript/no-deprecated -- DocumentVersionsStatus takes documentGroupId; this tooltip still uses draft/published/versions from useDocumentVersionInfo
     <DocumentStatus
       draft={versionsInfo.draft}
       published={versionsInfo.published}
