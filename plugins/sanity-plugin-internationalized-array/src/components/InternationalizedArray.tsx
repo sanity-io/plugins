@@ -206,7 +206,7 @@ export default function InternationalizedArray(
         .filter((language) => languages.find((l) => l.id === language))
       // Account for strict mode by scheduling the update.
       const timeout = setTimeout(() => {
-        handleAddLanguages(languagesToAdd)
+        if (!readOnly) handleAddLanguages(languagesToAdd)
       })
       return () => clearTimeout(timeout)
     }
