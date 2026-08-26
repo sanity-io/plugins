@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.2.3
+
+### Patch Changes
+
+- [#1940](https://github.com/sanity-io/plugins/pull/1940) [`4b2fcc5`](https://github.com/sanity-io/plugins/commit/4b2fcc5aec40825819b86ae65be6ff5022db1d55) Thanks [@stipsan](https://github.com/stipsan)! - Wait until the document is writable before auto-adding default languages, so creating a document no longer toasts "Attempted to patch a read-only document" while initial value templates are still resolving
+
 ## 5.2.2
 
 ### Patch Changes
