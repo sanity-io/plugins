@@ -1,95 +1,42 @@
 import axios from 'axios'
-import {BehaviorSubject, Observable, concat, defer} from 'rxjs'
-import {debounceTime, distinctUntilChanged, map, switchMap, withLatestFrom} from 'rxjs/operators'
 
-type SearchSubject = BehaviorSubject<string>
-type CursorSubject = BehaviorSubject<any>
+import type {ShopifyAPIResponse} from '../types'
 
-interface fetchProps {
+export interface FetchAssetsProps {
   projectId: string
   dataset: string
   shop: string
-  query: SearchSubject
-  cursor: CursorSubject
+  query: string
+  cursor: string
   resultsPerPage: number
   token?: string
 }
 
-interface searchProps extends Omit<fetchProps, 'query' | 'cursor'> {
-  query: string
-  cursor: string
-}
-interface listProps extends Omit<fetchProps, 'query' | 'cursor'> {
-  cursor: string
-}
-
-const fetchSearch = (props: searchProps): Observable<any> => {
+export async function fetchAssets(props: FetchAssetsProps): Promise<ShopifyAPIResponse> {
   const {projectId, dataset, shop, query, cursor, resultsPerPage, token} = props
 
-  const cursorParam = cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''
-  const url = `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?shop=${encodeURIComponent(
+  const searchParams = new URLSearchParams({
     shop,
-  )}&query=${encodeURIComponent(query)}${cursorParam}&limit=${resultsPerPage}`
+    limit: `${resultsPerPage}`,
+  })
+  if (query.trim()) {
+    searchParams.set('query', query.trim())
+  }
+  if (cursor) {
+    searchParams.set('cursor', cursor)
+  }
 
-  return defer(() =>
-    axios.get(url, {
-      withCredentials: true,
-      method: 'GET',
-      headers: token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {},
-    }),
-  ).pipe(map((result) => result.data))
-}
+  const url = `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?${searchParams}`
 
-const fetchList = (props: listProps): Observable<any> => {
-  const {projectId, dataset, shop, cursor, resultsPerPage, token} = props
-
-  const cursorParam = cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''
-  const url = `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?shop=${encodeURIComponent(
-    shop,
-  )}${cursorParam}&limit=${resultsPerPage}`
-
-  return defer(() =>
-    axios.get(url, {
-      withCredentials: true,
-      method: 'GET',
-      headers: token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {},
-    }),
-  ).pipe(map((result) => result.data))
-}
-
-export const search = (props: fetchProps): Observable<any> => {
-  const {projectId, dataset, shop, query, cursor, resultsPerPage, token} = props
-
-  // No value-based dedupe here on purpose: callers clear results and set their
-  // loading state before pushing to these subjects, so suppressing a repeated
-  // [query, cursor] pair would leave them loading forever. debounceTime already
-  // collapses rapid input and switchMap cancels superseded requests.
-  return concat(
-    query.pipe(
-      withLatestFrom(cursor),
-      debounceTime(500),
-      switchMap(([q, c]) => {
-        if (q) {
-          return fetchSearch({
-            projectId,
-            dataset,
-            shop,
-            query: q,
-            cursor: c,
-            resultsPerPage,
-            token,
-          }).pipe(distinctUntilChanged())
+  const result = await axios.get<ShopifyAPIResponse>(url, {
+    withCredentials: true,
+    method: 'GET',
+    headers: token
+      ? {
+          Authorization: `Bearer ${token}`,
         }
-        return fetchList({projectId, dataset, shop, cursor: c, resultsPerPage, token})
-      }),
-    ),
-  )
+      : {},
+  })
+
+  return result.data
 }

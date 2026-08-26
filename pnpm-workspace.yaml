@@ -72,7 +72,7 @@ catalog:
   react-hook-form: ^7.85.0
   react-icons: ^5.7.0
   react-is: ^19.2.8
-  react-photo-album: ^3.6.0
+  react-photo-album: ^3.6.1
   react-rx: ^4.2.5
   rxjs: ^7.8.2
   sanity: ^6.10.1
