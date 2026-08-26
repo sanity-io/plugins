@@ -102,7 +102,14 @@ export function Document({
           </Flex>
         )}
         <Box style={{width: `100%`}}>
-          <Tooltip content={tooltip} portal placement="right" boundaryElement={null}>
+          <Tooltip
+            content={tooltip}
+            portal
+            placement="right"
+            fallbackPlacements={[`top-end`, `bottom-end`]}
+            delay={{open: 400}}
+            boundaryElement={null}
+          >
             <Flex flex={1} align="center" justify="space-between" paddingRight={3}>
               <Preview layout="default" value={doc} schemaType={schemaType} />
 
