@@ -71,6 +71,8 @@ describe('filterField', () => {
         value: undefined,
         // Required properties for BaseFormNode
         hasUpstreamVersion: false,
+        hasBaseVariant: false,
+        changedFromBaseVariant: false,
         // oxlint-disable-next-line no-unsafe-type-assertion -- Test mock, actual type not needed
         __unstable_computeDiff: () => null as any,
       },
