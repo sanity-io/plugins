@@ -179,12 +179,6 @@ overrides:
   # config callbacks type-check cleanly after the catalog tsx bump.
   tsx: 'catalog:'
 
-peerDependencyRules:
-  allowedVersions:
-    # @bynder/compact-view does not declare react 19 in its peers yet, but works fine with it
-    '@bynder/compact-view>react': '19'
-    '@bynder/compact-view>react-dom': '19'
-
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
   - 'vite'
