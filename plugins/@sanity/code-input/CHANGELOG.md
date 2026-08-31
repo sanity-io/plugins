@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.3.8
+
+### Patch Changes
+
+- [#1949](https://github.com/sanity-io/plugins/pull/1949) [`d692a15`](https://github.com/sanity-io/plugins/commit/d692a1577f9bb5d2f589e700fca209dd35198aa6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @codemirror/view to ^6.43.9
+
 ## 7.3.7
 
 ### Patch Changes
