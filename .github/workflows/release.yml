@@ -22,7 +22,7 @@ jobs:
       contents: read # for checkout
       id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - uses: actions/create-github-app-token@v3
+      - uses: actions/create-github-app-token@v3 # zizmor: ignore[github-app]
         id: app-token
         with:
           client-id: ${{ vars.ECOSPARK_CLIENT_ID }}
