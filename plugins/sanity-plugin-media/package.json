@@ -74,7 +74,7 @@
     "@sanity/tsdown-config": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
-    "@testing-library/user-event": "^14.6.3",
+    "@testing-library/user-event": "^14.6.6",
     "@types/pluralize": "^0.0.33",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

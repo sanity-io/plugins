@@ -44,7 +44,7 @@ catalog:
   '@sanity/vanilla-extract-vite-plugin': ^0.2.15
   '@sanity/vision': ^6.11.0
   '@testing-library/jest-dom': ^7.0.1
-  '@testing-library/react': ^16.3.2
+  '@testing-library/react': ^16.3.3
   '@types/lodash-es': ^4.17.12
   '@types/node': ^24.13.3
   '@types/react': ^19.2.18
