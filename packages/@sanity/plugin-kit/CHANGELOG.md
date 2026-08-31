@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 10.0.9
+
+### Patch Changes
+
+- [#1920](https://github.com/sanity-io/plugins/pull/1920) [`2741154`](https://github.com/sanity-io/plugins/commit/274115495da183550996ef226ae4775d5d7e01e1) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxlint to ^1.80.0
+
 ## 10.0.8
 
 ### Patch Changes
