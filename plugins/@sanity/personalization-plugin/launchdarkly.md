@@ -13,10 +13,10 @@ This plugin allows users to add a/b/n testing experiments to individual fields c
 
 This plugin is built on top of the `fieldLevelExperiments` export so see the main readme for details of:
 
-- [Using complex field configurations](/#using-complex-field-configurations)
-- [Validation of individual array items](/#validation-of-individual-array-items)
-- [Shape of stored data](/#shape-of-stored-data)
-- [Querying data](/#querying-data)
+- [Using complex field configurations](./README.md#using-complex-field-configurations)
+- [Validation of individual array items](./README.md#validation-of-individual-array-items)
+- [Shape of stored data](./README.md#shape-of-stored-data)
+- [Querying data](./README.md#querying-data)
 
 ## Installation
 
