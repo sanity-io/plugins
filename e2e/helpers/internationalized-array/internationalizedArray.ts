@@ -39,7 +39,7 @@ function item(language: string, value = ''): I18nArrayItem {
 /**
  * Create an i18nPost draft via the Content Lake API.
  * Pass `title` / `summary` arrays explicitly — use `[]` when testing
- * `defaultLanguages` seeding (requires a persisted `_rev`).
+ * `defaultLanguages` seeding on a persisted document.
  */
 export async function seedI18nPost(
   projectName: string | undefined,
