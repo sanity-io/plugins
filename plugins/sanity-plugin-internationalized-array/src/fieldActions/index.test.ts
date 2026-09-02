@@ -423,6 +423,31 @@ describe('internationalizedArrayFieldAction', () => {
     expect(actions[3]!.disabled).toBe(false)
   })
 
+  test('treats a non-array value at the field path as missing', () => {
+    mockFormState = {value: {translations: {not: 'an-array'}}}
+
+    const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
+
+    const fieldGroup = result.current.type === 'group' ? result.current : undefined
+    if (!fieldGroup) {
+      throw new Error('Field group not found')
+    }
+
+    fieldGroup.children
+      .slice(0, 4)
+      .filter(isActionItem)
+      .forEach((action) => {
+        expect(action.disabled).toBe(false)
+      })
+
+    const addMissing = fieldGroup.children[fieldGroup.children.length - 1]!
+    if (!isActionItem(addMissing)) {
+      throw new Error('Add missing action is not an action item')
+    }
+    expect(addMissing.hidden).toBe(false)
+    expect(addMissing.title).toBe('Add all languages')
+  })
+
   test('add-missing action disabled when document is readOnly', () => {
     mockFormState = {readOnly: true}
 

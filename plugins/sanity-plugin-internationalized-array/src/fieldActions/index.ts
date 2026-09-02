@@ -37,6 +37,16 @@ function valueAtPath(doc: unknown, path: Path): unknown {
   return node
 }
 
+function internationalizedArrayValueAtPath(
+  doc: unknown,
+  path: Path,
+): InternationalizedArrayItem[] | undefined {
+  const raw = valueAtPath(doc, path)
+  if (!Array.isArray(raw)) return undefined
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+  return raw as InternationalizedArrayItem[]
+}
+
 type FieldActionContext = {
   languages: Language[]
   filteredLanguages: Language[]
@@ -119,10 +129,7 @@ export const internationalizedArrayFieldAction = defineDocumentFieldAction({
       fieldActionProps?.schemaType?.type?.name.startsWith('internationalizedArray')
     const {languages, filteredLanguages} = useInternationalizedArrayContext()
     const {onChange, formState} = useDocumentPane()
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    const value = valueAtPath(formState?.value, fieldActionProps.path) as
-      | InternationalizedArrayItem[]
-      | undefined
+    const value = internationalizedArrayValueAtPath(formState?.value, fieldActionProps.path)
     const context: FieldActionContext = {
       languages,
       filteredLanguages,
