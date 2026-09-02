@@ -11,17 +11,8 @@ import {LANGUAGE_FIELD_NAME} from '../constants'
 import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT, MOCK_LANGUAGES} from '../test/helpers'
 import {internationalizedArrayFieldAction} from './index'
 
-const mockUseFormValue = vi.fn()
 const mockOnChange = vi.fn()
 let mockFormState: Record<string, unknown> | undefined
-
-vi.mock('sanity', async (importOriginal) => {
-  const original = await importOriginal<typeof import('sanity')>()
-  return {
-    ...original,
-    useFormValue: (...args: unknown[]) => mockUseFormValue(...args),
-  }
-})
 
 vi.mock('sanity/structure', () => ({
   useDocumentPane: vi.fn(() => ({
@@ -29,6 +20,13 @@ vi.mock('sanity/structure', () => ({
     formState: mockFormState,
   })),
 }))
+
+function setFieldValue(value: unknown, extras: Record<string, unknown> = {}) {
+  mockFormState = {
+    ...extras,
+    value: {translations: value},
+  }
+}
 
 vi.mock('../components/InternationalizedArrayContext', () => ({
   useInternationalizedArrayContext: vi.fn(() => ({
@@ -60,7 +58,6 @@ const isActionItem = (action: DocumentFieldActionNode): action is DocumentFieldA
 
 describe('internationalizedArrayFieldAction', () => {
   beforeEach(() => {
-    mockUseFormValue.mockReturnValue(undefined)
     mockOnChange.mockClear()
     mockFormState = undefined
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
@@ -133,7 +130,7 @@ describe('internationalizedArrayFieldAction', () => {
 
   test('translate action disabled when language exists in value via LANGUAGE_FIELD_NAME', () => {
     const value = createValues(['en', 'fr'])
-    mockUseFormValue.mockReturnValue(value)
+    setFieldValue(value)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 
@@ -149,7 +146,7 @@ describe('internationalizedArrayFieldAction', () => {
   })
 
   test('all translate actions enabled when value is undefined', () => {
-    mockUseFormValue.mockReturnValue(undefined)
+    setFieldValue(undefined)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 
@@ -188,7 +185,7 @@ describe('internationalizedArrayFieldAction', () => {
   })
 
   test('translate action onAction calls onChange with setIfMissing and insert patches', () => {
-    mockUseFormValue.mockReturnValue(undefined)
+    setFieldValue(undefined)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 
@@ -233,7 +230,7 @@ describe('internationalizedArrayFieldAction', () => {
 
   test('add-missing action hidden when all languages present', () => {
     const value = createValues(['en', 'fr', 'es', 'de'])
-    mockUseFormValue.mockReturnValue(value)
+    setFieldValue(value)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 
@@ -250,7 +247,7 @@ describe('internationalizedArrayFieldAction', () => {
 
   test('add-missing action not hidden when languages are missing', () => {
     const value = createValues(['en'])
-    mockUseFormValue.mockReturnValue(value)
+    setFieldValue(value)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 
@@ -267,7 +264,7 @@ describe('internationalizedArrayFieldAction', () => {
 
   test('add-missing action disabled when all filtered languages in value', () => {
     const value = createValues(['en', 'fr', 'es', 'de'])
-    mockUseFormValue.mockReturnValue(value)
+    setFieldValue(value)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
     const fieldGroup = result.current.type === 'group' ? result.current : undefined
@@ -282,7 +279,7 @@ describe('internationalizedArrayFieldAction', () => {
   })
 
   test('add-missing action not disabled when languages are missing', () => {
-    mockUseFormValue.mockReturnValue(undefined)
+    setFieldValue(undefined)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 
@@ -298,7 +295,7 @@ describe('internationalizedArrayFieldAction', () => {
   })
 
   test('add-missing action title says "Add all languages" when no value', () => {
-    mockUseFormValue.mockReturnValue(undefined)
+    setFieldValue(undefined)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 
@@ -315,7 +312,7 @@ describe('internationalizedArrayFieldAction', () => {
 
   test('add-missing onAction calls onChange with patches for all missing languages', () => {
     const value = createValues(['en'])
-    mockUseFormValue.mockReturnValue(value)
+    setFieldValue(value)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 
@@ -386,7 +383,6 @@ describe('internationalizedArrayFieldAction', () => {
 
   test('all translate actions disabled when document is readOnly', () => {
     mockFormState = {readOnly: true}
-    mockUseFormValue.mockReturnValue(undefined)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 
@@ -400,9 +396,35 @@ describe('internationalizedArrayFieldAction', () => {
     })
   })
 
+  test('reads field value from pane formState at a keyed nested path', () => {
+    const value = createValues(['en', 'fr'])
+    mockFormState = {
+      value: {
+        modules: [{_key: 'hero', translations: value}],
+      },
+    }
+
+    const {result} = renderHook(() =>
+      fieldAction.useAction(
+        createMockFieldActionProps({
+          path: ['modules', {_key: 'hero'}, 'translations'],
+        }),
+      ),
+    )
+
+    const fieldGroup = result.current.type === 'group' ? result.current : undefined
+    if (!fieldGroup) {
+      throw new Error('Field group not found')
+    }
+    const actions = fieldGroup.children.slice(0, 4).filter(isActionItem)
+    expect(actions[0]!.disabled).toBe(true)
+    expect(actions[1]!.disabled).toBe(true)
+    expect(actions[2]!.disabled).toBe(false)
+    expect(actions[3]!.disabled).toBe(false)
+  })
+
   test('add-missing action disabled when document is readOnly', () => {
     mockFormState = {readOnly: true}
-    mockUseFormValue.mockReturnValue(undefined)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
 

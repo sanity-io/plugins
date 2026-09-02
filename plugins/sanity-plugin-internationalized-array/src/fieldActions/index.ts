@@ -5,9 +5,9 @@ import {
   defineDocumentFieldAction,
   type DocumentFieldActionItem,
   type DocumentFieldActionProps,
+  type Path,
   PatchEvent,
   setIfMissing,
-  useFormValue,
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
@@ -18,6 +18,26 @@ import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
 
+/**
+ * Read `path` out of a document value. Field actions render outside the
+ * `FormValueProvider` on Sanity 6, so `useFormValue` cannot be used there; the
+ * pane's `formState.value` is the same document and is always available.
+ */
+function valueAtPath(doc: unknown, path: Path): unknown {
+  let node: unknown = doc
+  for (const seg of path || []) {
+    if (node == null) return undefined
+    if (typeof seg === 'string' || typeof seg === 'number') {
+      node = (node as Record<string | number, unknown>)[seg]
+    } else if (seg && typeof seg === 'object' && '_key' in seg && Array.isArray(node)) {
+      node = node.find((item) => item && (item as {_key?: string})._key === seg._key)
+    } else {
+      return undefined
+    }
+  }
+  return node
+}
+
 const createTranslateFieldActions: (
   fieldActionProps: DocumentFieldActionProps,
   context: {
@@ -26,9 +46,9 @@ const createTranslateFieldActions: (
   },
 ) => DocumentFieldActionItem[] = (fieldActionProps, {languages, filteredLanguages}) =>
   languages.map((language) => {
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    const value = useFormValue(fieldActionProps.path) as InternationalizedArrayItem[]
     const {onChange, formState} = useDocumentPane()
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    const value = valueAtPath(formState?.value, fieldActionProps.path) as InternationalizedArrayItem[]
     const disabled =
       Boolean(formState?.readOnly) ||
       (value && Array.isArray(value)
@@ -69,9 +89,9 @@ const AddMissingTranslationsFieldAction: (
     filteredLanguages: Language[]
   },
 ) => DocumentFieldActionItem = (fieldActionProps, {languages, filteredLanguages}) => {
-  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-  const value = useFormValue(fieldActionProps.path) as InternationalizedArrayItem[]
   const {onChange, formState} = useDocumentPane()
+  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+  const value = valueAtPath(formState?.value, fieldActionProps.path) as InternationalizedArrayItem[]
   const disabled =
     Boolean(formState?.readOnly) || (value && value.length === filteredLanguages.length)
   const hidden = checkAllLanguagesArePresent(filteredLanguages, value)

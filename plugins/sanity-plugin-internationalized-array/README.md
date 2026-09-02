@@ -126,7 +126,7 @@ languages: async (client, {market = ``}) => {
 The "Add translation" buttons can be positioned in one or multiple locations by configuring `buttonLocations`:
 
 - `field` (default) Below the internationalized array field
-- `unstable__fieldAction` Inside a Field Action (currently unstable)
+- `unstable__fieldAction` Inside a Field Action (currently unstable). On Sanity 6 these actions read the current field value from the document pane, because they render outside `FormValueProvider` and cannot call `useFormValue`.
 - `document` Above the document fields, these buttons will add a new language item to every internationalized array field that can be found at the **root of the document**. Nested internationalized arrays are not yet supported.
 
 To control the "Add translation" button titles, configure `languageDisplay`. This also affects language field labels.
