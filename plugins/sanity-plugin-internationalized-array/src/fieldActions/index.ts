@@ -1,6 +1,5 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {TranslateIcon} from '@sanity/icons/Translate'
-import {useCallback} from 'react'
 import {
   defineDocumentFieldAction,
   type DocumentFieldActionItem,
@@ -38,28 +37,64 @@ function valueAtPath(doc: unknown, path: Path): unknown {
   return node
 }
 
-const createTranslateFieldActions: (
+type FieldActionContext = {
+  languages: Language[]
+  filteredLanguages: Language[]
+  value: InternationalizedArrayItem[] | undefined
+  readOnly: boolean
+  onChange: (event: PatchEvent) => void
+}
+
+const createTranslateFieldActions = (
   fieldActionProps: DocumentFieldActionProps,
-  context: {
-    languages: Language[]
-    filteredLanguages: Language[]
-  },
-) => DocumentFieldActionItem[] = (fieldActionProps, {languages, filteredLanguages}) =>
+  {languages, filteredLanguages, value, readOnly, onChange}: FieldActionContext,
+): DocumentFieldActionItem[] =>
   languages.map((language) => {
-    const {onChange, formState} = useDocumentPane()
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-    const value = valueAtPath(formState?.value, fieldActionProps.path) as InternationalizedArrayItem[]
     const disabled =
-      Boolean(formState?.readOnly) ||
+      readOnly ||
       (value && Array.isArray(value)
         ? Boolean(value?.find((item) => item[LANGUAGE_FIELD_NAME] === language.id))
         : false)
     const hidden = !filteredLanguages.some((f) => f.id === language.id)
 
-    const onAction = useCallback(() => {
+    return {
+      type: 'action',
+      icon: AddIcon,
+      onAction: () => {
+        const {schemaType, path} = fieldActionProps
+
+        const addLanguageKeys = [language.id]
+        const patches = createAddLanguagePatches({
+          addLanguageKeys,
+          schemaTypeName: schemaType.name,
+          languages,
+          filteredLanguages,
+          value,
+          path,
+        })
+
+        onChange(PatchEvent.from([setIfMissing([], path), ...patches]))
+      },
+      title: language.title,
+      hidden,
+      disabled,
+    }
+  })
+
+const createAddMissingTranslationsFieldAction = (
+  fieldActionProps: DocumentFieldActionProps,
+  {languages, filteredLanguages, value, readOnly, onChange}: FieldActionContext,
+): DocumentFieldActionItem => {
+  const disabled = readOnly || Boolean(value && value.length === filteredLanguages.length)
+  const hidden = checkAllLanguagesArePresent(filteredLanguages, value)
+
+  return {
+    type: 'action',
+    icon: AddIcon,
+    onAction: () => {
       const {schemaType, path} = fieldActionProps
 
-      const addLanguageKeys = [language.id]
+      const addLanguageKeys: string[] = []
       const patches = createAddLanguagePatches({
         addLanguageKeys,
         schemaTypeName: schemaType.name,
@@ -70,52 +105,7 @@ const createTranslateFieldActions: (
       })
 
       onChange(PatchEvent.from([setIfMissing([], path), ...patches]))
-    }, [language.id, value, onChange])
-
-    return {
-      type: 'action',
-      icon: AddIcon,
-      onAction,
-      title: language.title,
-      hidden,
-      disabled,
-    }
-  })
-
-const AddMissingTranslationsFieldAction: (
-  fieldActionProps: DocumentFieldActionProps,
-  context: {
-    languages: Language[]
-    filteredLanguages: Language[]
-  },
-) => DocumentFieldActionItem = (fieldActionProps, {languages, filteredLanguages}) => {
-  const {onChange, formState} = useDocumentPane()
-  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-  const value = valueAtPath(formState?.value, fieldActionProps.path) as InternationalizedArrayItem[]
-  const disabled =
-    Boolean(formState?.readOnly) || (value && value.length === filteredLanguages.length)
-  const hidden = checkAllLanguagesArePresent(filteredLanguages, value)
-
-  const onAction = useCallback(() => {
-    const {schemaType, path} = fieldActionProps
-
-    const addLanguageKeys: string[] = []
-    const patches = createAddLanguagePatches({
-      addLanguageKeys,
-      schemaTypeName: schemaType.name,
-      languages,
-      filteredLanguages,
-      value,
-      path,
-    })
-
-    onChange(PatchEvent.from([setIfMissing([], path), ...patches]))
-  }, [fieldActionProps, filteredLanguages, languages, onChange, value])
-
-  return {
-    type: 'action',
-    icon: AddIcon,
-    onAction,
+    },
     title: createAddAllTitle(value, filteredLanguages),
     disabled,
     hidden,
@@ -128,11 +118,18 @@ export const internationalizedArrayFieldAction = defineDocumentFieldAction({
     const isInternationalizedArrayField =
       fieldActionProps?.schemaType?.type?.name.startsWith('internationalizedArray')
     const {languages, filteredLanguages} = useInternationalizedArrayContext()
-
-    const translateFieldActions = createTranslateFieldActions(fieldActionProps, {
+    const {onChange, formState} = useDocumentPane()
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+    const value = valueAtPath(formState?.value, fieldActionProps.path) as
+      | InternationalizedArrayItem[]
+      | undefined
+    const context: FieldActionContext = {
       languages,
       filteredLanguages,
-    })
+      value,
+      readOnly: Boolean(formState?.readOnly),
+      onChange,
+    }
 
     return {
       type: 'group',
@@ -141,11 +138,8 @@ export const internationalizedArrayFieldAction = defineDocumentFieldAction({
       renderAsButton: true,
       children: isInternationalizedArrayField
         ? [
-            ...translateFieldActions,
-            AddMissingTranslationsFieldAction(fieldActionProps, {
-              languages,
-              filteredLanguages,
-            }),
+            ...createTranslateFieldActions(fieldActionProps, context),
+            createAddMissingTranslationsFieldAction(fieldActionProps, context),
           ]
         : [],
       hidden: !isInternationalizedArrayField,
