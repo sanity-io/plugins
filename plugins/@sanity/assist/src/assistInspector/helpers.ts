@@ -35,7 +35,11 @@ export interface FieldRef {
   synthetic?: boolean
 }
 
-const maxDepth = 6
+/**
+ * Default for `assist.maxFieldSelectionDepth`: how many path segments deep fields are collected
+ * for the field picker and the per-field assist actions.
+ */
+export const DEFAULT_MAX_FIELD_SELECTION_DEPTH = 6
 
 function getTypeIcon(schemaType: SchemaType): ComponentType {
   let t: SchemaType | undefined = schemaType
@@ -74,10 +78,25 @@ export function getDocumentFieldRef(schemaType: ObjectSchemaType): FieldRef {
   }
 }
 
+/**
+ * Collects every field (and synthetic array item) in `schemaType` that AI Assist can attach
+ * instructions to.
+ *
+ * @param maxDepth - max number of path segments a collected field can have; deeper fields are
+ * skipped. Arrays contribute one segment for the item type (`array[_key="type"]`).
+ */
 export function getFieldRefs(
   schemaType: ObjectSchemaType,
-  parent?: FieldRef,
-  depth = 0,
+  maxDepth = DEFAULT_MAX_FIELD_SELECTION_DEPTH,
+): FieldRef[] {
+  return getObjectFieldRefs(schemaType, undefined, 0, maxDepth)
+}
+
+function getObjectFieldRefs(
+  schemaType: ObjectSchemaType,
+  parent: FieldRef | undefined,
+  depth: number,
+  maxDepth: number,
 ): FieldRef[] {
   if (depth >= maxDepth) {
     return []
@@ -97,10 +116,14 @@ export function getFieldRefs(
           icon: getTypeIcon(field.type),
         }
         const fields =
-          field.type.jsonType === 'object' ? getFieldRefs(field.type, fieldRef, depth + 1) : []
+          field.type.jsonType === 'object'
+            ? getObjectFieldRefs(field.type, fieldRef, depth + 1, maxDepth)
+            : []
 
         const syntheticFields =
-          field.type.jsonType === 'array' ? getSyntheticFields(field.type, fieldRef, depth + 1) : []
+          field.type.jsonType === 'array'
+            ? getSyntheticFields(field.type, fieldRef, depth + 1, maxDepth)
+            : []
         if (!isAssistSupported(field.type)) {
           return [...fields, ...syntheticFields]
         }
@@ -109,7 +132,12 @@ export function getFieldRefs(
   )
 }
 
-function getSyntheticFields(schemaType: ArraySchemaType, parent?: FieldRef, depth = 0) {
+function getSyntheticFields(
+  schemaType: ArraySchemaType,
+  parent: FieldRef | undefined,
+  depth: number,
+  maxDepth: number,
+): FieldRef[] {
   if (depth >= maxDepth) {
     return []
   }
@@ -131,7 +159,9 @@ function getSyntheticFields(schemaType: ArraySchemaType, parent?: FieldRef, dept
           synthetic: true,
         }
         const fields =
-          itemType.jsonType === 'object' ? getFieldRefs(itemType, fieldRef, depth + 1) : []
+          itemType.jsonType === 'object'
+            ? getObjectFieldRefs(itemType, fieldRef, depth + 1, maxDepth)
+            : []
 
         if (!isAssistSupported(itemType)) {
           return fields

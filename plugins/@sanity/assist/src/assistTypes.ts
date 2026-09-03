@@ -38,6 +38,24 @@ export interface AssistConfig {
   maxPathDepth?: number
 
   /**
+   * The max depth for fields that can be selected for AI Assist in the Studio: fields deeper than this
+   * get no AI Assist field action (the sparkle button), are not listed in the field picker when editing
+   * instructions, and cannot be referenced from an instruction prompt.
+   *
+   * Depth is based on field path segments, counted from the document root:
+   * - `title` has depth 1
+   * - `array[_key="no"].title` has depth 3
+   *
+   * Unlike `maxPathDepth`, this does not affect what an instruction can write to once it runs.
+   *
+   * Be careful not to set this too high in studios with recursive document schemas, as it could have
+   * negative impact on performance.
+   *
+   * Default: 6
+   */
+  maxFieldSelectionDepth?: number
+
+  /**
    * Influences how much the output of an instruction will vary.
    *
    * Min: 0 – re-running an instruction will often produce the same outcomes

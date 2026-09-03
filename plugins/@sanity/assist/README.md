@@ -180,6 +180,7 @@ assist({
   assist: {
     localeSettings: () => Intl.DateTimeFormat().resolvedOptions(),
     maxPathDepth: 4,
+    maxFieldSelectionDepth: 6,
     temperature: 0.3,
   },
   translate: {/* see sections about document and field translation */},
@@ -188,6 +189,7 @@ assist({
 
 - `localeSettings`: See section on [date and datetime](#date-and-datetime)
 - `maxPathDepth`: The max depth for document paths AI Assist will write to.
+- `maxFieldSelectionDepth`: The max depth for fields that can be selected for AI Assist. Fields nested deeper than this get no AI Assist field action, are not listed in the field picker when editing instructions, and cannot be referenced from an instruction. Depth is counted in path segments from the document root (`title` has depth 1, `array[_key="no"].title` has depth 3). Be careful not to set this too high in studios with recursive document schemas, as it could have negative impact on performance.
 - `temperature`: Influences how much the output of an instruction will vary between runs.
 
 For more details, please review the TSDocs of the individual config parameters in [assistTypes.ts](./src/assistTypes.ts).
@@ -657,6 +659,8 @@ assist({
 
 Be careful not to set this too high in studios with recursive document schemas, as it could have negative impact on performance.
 maxPathDepth is hard-capped to 50.
+
+`translate.field.maxPathDepth` only affects the "Translate fields" action. Which fields get an AI Assist field action at all is controlled by `assist.maxFieldSelectionDepth` (see [Assist configuration](#assist-configuration-optional)).
 
 ### Loading field languages
 
