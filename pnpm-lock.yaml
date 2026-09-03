@@ -664,8 +664,8 @@ importers:
   plugins/@sanity/block-insert-picker:
     dependencies:
       '@portabletext/plugin-input-rule':
-        specifier: ^6.0.15
-        version: 6.0.18(@portabletext/editor@7.12.3)(@types/react@19.2.18)(react@19.2.8)
+        specifier: ^6.0.21
+        version: 6.0.21(@portabletext/editor@7.12.3)(@types/react@19.2.18)(react@19.2.8)
       '@sanity/icons':
         specifier: 'catalog:'
         version: 5.2.1(react@19.2.8)
@@ -7153,11 +7153,11 @@ packages:
       '@portabletext/editor': ^8.1.1
       react: ^19.2
 
-  '@portabletext/plugin-input-rule@6.0.18':
-    resolution: {integrity: sha512-UHuEziAKTIAspR89UhDnbp0Wf4VlrVF/Vv7FzV6DWTOapQFhAxqxVMbobb5snKlgWKOHVXBkx8hN/dZg5EF1OQ==}
+  '@portabletext/plugin-input-rule@6.0.21':
+    resolution: {integrity: sha512-jVPWrrhfpv8Cwe9mFD9JJVCkVWT6WE4oREBQHSccgRljxvWocYblasmyNkR38+O1gkHk3WbpYSC9XZ4lNmTPdg==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
-      '@portabletext/editor': ^7.12.0
+      '@portabletext/editor': ^7.12.2
       react: ^19.2
 
   '@portabletext/plugin-input-rule@7.0.5':
@@ -20513,12 +20513,12 @@ snapshots:
       '@portabletext/editor': 8.1.1(@types/react@19.2.18)(react@19.2.8)(supports-color@8.1.1)
       react: 19.2.8
 
-  '@portabletext/plugin-input-rule@6.0.18(@portabletext/editor@7.12.3)(@types/react@19.2.18)(react@19.2.8)':
+  '@portabletext/plugin-input-rule@6.0.21(@portabletext/editor@7.12.3)(@types/react@19.2.18)(react@19.2.8)':
     dependencies:
       '@portabletext/editor': 7.12.3(@types/react@19.2.18)(react@19.2.8)(supports-color@10.2.2)
-      '@xstate/react': 6.1.0(@types/react@19.2.18)(react@19.2.8)(xstate@5.32.5)
+      '@xstate/react': 6.1.0(@types/react@19.2.18)(react@19.2.8)(xstate@5.32.6)
       react: 19.2.8
-      xstate: 5.32.5
+      xstate: 5.32.6
     transitivePeerDependencies:
       - '@types/react'
 
