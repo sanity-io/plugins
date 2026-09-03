@@ -1,5 +1,11 @@
 # @sanity/block-insert-picker
 
+## 1.0.10
+
+### Patch Changes
+
+- [#1950](https://github.com/sanity-io/plugins/pull/1950) [`2c2aa54`](https://github.com/sanity-io/plugins/commit/2c2aa54f3140abdfd09c40f4d91d6d2c4b0a167a) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @portabletext/plugin-input-rule to ^6.0.21
+
 ## 1.0.9
 
 ### Patch Changes
