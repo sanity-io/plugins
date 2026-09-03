@@ -322,8 +322,7 @@ export default function InternationalizedArray(
     return <Feedback />
   }
 
-  const useFieldMenu =
-    buttonLocations.includes('fieldMenu') || buttonLocations.includes('field_menu')
+  const useFieldMenu = buttonLocations.includes('fieldMenu')
   const addButtonsAreVisible =
     !shouldMigrateArray &&
     filteredLanguages?.length > 0 &&

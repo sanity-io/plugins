@@ -879,19 +879,6 @@ describe('InternationalizedArray', () => {
     expect(screen.queryByText('Add missing languages')).not.toBeInTheDocument()
   })
 
-  test('accepts field_menu as an alias for fieldMenu', () => {
-    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
-      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
-      buttonLocations: ['field_menu'],
-    })
-
-    const props = createMockArrayProps({value: createValues(['en'])})
-
-    renderInternationalizedArray(props)
-
-    expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
-  })
-
   test('keeps the add-all bar under field and hides it under fieldMenu', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
       MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
