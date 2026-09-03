@@ -38,6 +38,24 @@ export interface AssistConfig {
   maxPathDepth?: number
 
   /**
+   * The max depth for fields offered for selection in the AI Assist UI —
+   * the instruction field picker and per-field assist actions.
+   *
+   * Depth is based on field path segments, counted from the document root:
+   * - `title` has depth 1
+   * - `array[_key="no"].title` has depth 3
+   *
+   * Fields nested deeper than this will not appear in the field picker and
+   * cannot have instructions attached to them directly.
+   *
+   * Be careful not to set this too high in studios with recursive document schemas, as it could have
+   * negative impact on performance.
+   *
+   * Default: 6
+   */
+  maxFieldSelectionDepth?: number
+
+  /**
    * Influences how much the output of an instruction will vary.
    *
    * Min: 0 – re-running an instruction will often produce the same outcomes

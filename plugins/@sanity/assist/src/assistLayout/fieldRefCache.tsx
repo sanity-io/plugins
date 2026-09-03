@@ -6,7 +6,7 @@ import {
   getFieldRefs as createFieldRefs,
 } from '../assistInspector/helpers'
 
-export function createFieldRefCache() {
+export function createFieldRefCache(maxFieldSelectionDepth?: number) {
   const byType: Record<
     string,
     | {
@@ -21,7 +21,7 @@ export function createFieldRefCache() {
     const cached = byType[documentType]
     if (cached) return cached
 
-    const fieldRefs = createFieldRefs(schemaType)
+    const fieldRefs = createFieldRefs(schemaType, undefined, 0, maxFieldSelectionDepth)
     const fieldRefsByTypePath = asFieldRefsByTypePath(fieldRefs)
     const refs = {
       fieldRefs,

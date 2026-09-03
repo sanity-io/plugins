@@ -180,6 +180,7 @@ assist({
   assist: {
     localeSettings: () => Intl.DateTimeFormat().resolvedOptions(),
     maxPathDepth: 4,
+    maxFieldSelectionDepth: 6,
     temperature: 0.3,
   },
   translate: {/* see sections about document and field translation */},
@@ -188,6 +189,7 @@ assist({
 
 - `localeSettings`: See section on [date and datetime](#date-and-datetime)
 - `maxPathDepth`: The max depth for document paths AI Assist will write to.
+- `maxFieldSelectionDepth`: The max depth for fields offered for selection in the AI Assist UI (the instruction field picker and per-field assist actions). Fields nested deeper than this cannot have instructions attached to them directly.
 - `temperature`: Influences how much the output of an instruction will vary between runs.
 
 For more details, please review the TSDocs of the individual config parameters in [assistTypes.ts](./src/assistTypes.ts).

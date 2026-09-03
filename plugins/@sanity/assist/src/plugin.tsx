@@ -54,6 +54,7 @@ export const assist = definePlugin<AssistPluginConfig | void>((config) => {
   const configWithDefaults = config ?? {}
   const styleguide = configWithDefaults.translate?.styleguide || ''
   const maxPathDepth = configWithDefaults.assist?.maxPathDepth
+  const maxFieldSelectionDepth = configWithDefaults.assist?.maxFieldSelectionDepth
   const temperature = configWithDefaults.assist?.temperature
 
   if (typeof styleguide === 'string') {
@@ -63,6 +64,15 @@ export const assist = definePlugin<AssistPluginConfig | void>((config) => {
   if (maxPathDepth !== undefined && (maxPathDepth < 1 || maxPathDepth > 12)) {
     throw new Error(
       `[${packageName}]: \`assist.maxPathDepth\` must be be in the range [1,12] inclusive, but was ${maxPathDepth}`,
+    )
+  }
+
+  if (
+    maxFieldSelectionDepth !== undefined &&
+    (maxFieldSelectionDepth < 1 || maxFieldSelectionDepth > 12)
+  ) {
+    throw new Error(
+      `[${packageName}]: \`assist.maxFieldSelectionDepth\` must be in the range [1,12] inclusive, but was ${maxFieldSelectionDepth}`,
     )
   }
 
