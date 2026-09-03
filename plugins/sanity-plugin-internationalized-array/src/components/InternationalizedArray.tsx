@@ -339,6 +339,7 @@ export default function InternationalizedArray(
           readOnly={readOnly}
           handleClick={handleAddLanguages}
           onAddAll={addAllMissingLanguages}
+          buttonAddAll={buttonAddAll}
         />
       ) : (
         <AddButtons

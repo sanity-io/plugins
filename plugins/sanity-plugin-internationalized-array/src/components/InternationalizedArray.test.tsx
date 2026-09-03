@@ -911,6 +911,32 @@ describe('InternationalizedArray', () => {
     expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
   })
 
+  test('treats fieldMenu as a replacement when field is also listed', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      buttonLocations: ['field', 'fieldMenu'],
+    })
+
+    renderInternationalizedArray(createMockArrayProps())
+
+    expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
+    expect(screen.queryByText('Add all languages')).not.toBeInTheDocument()
+  })
+
+  test('hides the fieldMenu bulk item when buttonAddAll is false', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      buttonLocations: ['fieldMenu'],
+      buttonAddAll: false,
+    })
+
+    renderInternationalizedArray(createMockArrayProps())
+    fireEvent.click(screen.getByTestId('add-translation-menu'))
+
+    expect(screen.queryByTestId('add-missing-translations')).not.toBeInTheDocument()
+    expect(screen.getByTestId('add-en')).toBeInTheDocument()
+  })
+
   test('places the fieldMenu control first, above language rows', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
       ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,

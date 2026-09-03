@@ -86,7 +86,7 @@ describe('CompactAddButton', () => {
 
     openMenu()
 
-    expect(screen.getByTestId('add-all-languages')).toBeDisabled()
+    expect(screen.getByTestId('add-missing-translations')).toBeDisabled()
   })
 
   test('enables "Add missing translations" when languages are missing', () => {
@@ -102,7 +102,25 @@ describe('CompactAddButton', () => {
 
     openMenu()
 
-    expect(screen.getByTestId('add-all-languages')).toBeEnabled()
+    expect(screen.getByTestId('add-missing-translations')).toBeEnabled()
+  })
+
+  test('hides "Add missing translations" when buttonAddAll is false', () => {
+    render(
+      <CompactAddButton
+        readOnly={false}
+        languagesInUse={[]}
+        handleClick={vi.fn()}
+        onAddAll={vi.fn()}
+        buttonAddAll={false}
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    openMenu()
+
+    expect(screen.queryByTestId('add-missing-translations')).not.toBeInTheDocument()
+    expect(screen.getByTestId('add-en')).toBeInTheDocument()
   })
 
   test.each([
@@ -161,7 +179,7 @@ describe('CompactAddButton', () => {
     )
 
     openMenu()
-    fireEvent.click(screen.getByTestId('add-all-languages'))
+    fireEvent.click(screen.getByTestId('add-missing-translations'))
     expect(onAddAll).toHaveBeenCalledTimes(1)
   })
 

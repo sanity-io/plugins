@@ -12,6 +12,7 @@ type CompactAddButtonProps = {
   handleClick: (languageId: string) => void
   languagesInUse: string[]
   onAddAll: () => void
+  buttonAddAll?: boolean
 }
 
 /**
@@ -20,7 +21,7 @@ type CompactAddButtonProps = {
  * when every language is already present.
  */
 function CompactAddButton(props: CompactAddButtonProps) {
-  const {readOnly, languagesInUse, handleClick, onAddAll} = props
+  const {readOnly, languagesInUse, handleClick, onAddAll, buttonAddAll = true} = props
   const {languageDisplay, filteredLanguages: languages} = useInternationalizedArrayContext()
   const menuId = useId()
 
@@ -58,14 +59,18 @@ function CompactAddButton(props: CompactAddButtonProps) {
                 onClick={() => handleClick(language.id)}
               />
             ))}
-            <MenuDivider />
-            <MenuItem
-              text="Add missing translations"
-              icon={TranslateIcon}
-              disabled={readOnly || missing.length === 0}
-              data-testid="add-all-languages"
-              onClick={onAddAll}
-            />
+            {buttonAddAll ? (
+              <>
+                <MenuDivider />
+                <MenuItem
+                  text="Add missing translations"
+                  icon={TranslateIcon}
+                  disabled={readOnly || missing.length === 0}
+                  data-testid="add-missing-translations"
+                  onClick={onAddAll}
+                />
+              </>
+            ) : null}
           </Menu>
         }
       />
