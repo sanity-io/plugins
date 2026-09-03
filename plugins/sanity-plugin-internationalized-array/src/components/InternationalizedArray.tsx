@@ -23,6 +23,7 @@ import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
 import {internationalizedArrayLanguageFilter} from '../utils/internationalizedArrayLanguageFilter'
 import AddButtons from './AddButtons'
+import CompactAddButton from './CompactAddButton'
 import Feedback from './Feedback'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 import {MigrationBanner} from './MigrationBanner'
@@ -53,9 +54,10 @@ function isPristineDocument(
  * - **Language filter integration**: When `@sanity/language-filter` is active
  *   for the current document type, array members are filtered to only show
  *   languages matching the user's selection.
- * - **Adding languages**: Exposes per-language buttons and an "Add all / Add
- *   missing languages" button (controlled by `buttonAddAll` and
- *   `buttonLocations` config). Dispatches `setIfMissing` + `insert` patches.
+ * - **Adding languages**: Exposes per-language buttons, an optional compact
+ *   `fieldMenu`, and an "Add all / Add missing languages" button (controlled
+ *   by `buttonAddAll` and `buttonLocations`). Dispatches `setIfMissing` +
+ *   `insert` patches.
  * - **Default languages**: Automatically adds entries for languages listed in
  *   `defaultLanguages` when those entries are missing. Seeds brand-new
  *   documents once the events store reports they are pristine (no history),
@@ -320,19 +322,48 @@ export default function InternationalizedArray(
     return <Feedback />
   }
 
+  const useFieldMenu =
+    buttonLocations.includes('fieldMenu') || buttonLocations.includes('field_menu')
   const addButtonsAreVisible =
     !shouldMigrateArray &&
-    // Plugin was configured to display buttons here (default!)
-    buttonLocations.includes('field') &&
-    // There's at least one language visible
     filteredLanguages?.length > 0 &&
-    // Not every language has a value yet
-    !allLanguagesArePresent
+    ((buttonLocations.includes('field') && !allLanguagesArePresent) || useFieldMenu)
   const fieldHasMembers = members?.length > 0
   const addAllTitle = createAddAllTitle(value, filteredLanguages)
 
+  const addButtons = addButtonsAreVisible ? (
+    <Stack gap={2}>
+      {useFieldMenu ? (
+        <CompactAddButton
+          languagesInUse={addedLanguages}
+          readOnly={readOnly}
+          handleClick={handleAddLanguages}
+          onAddAll={addAllMissingLanguages}
+        />
+      ) : (
+        <AddButtons
+          languagesInUse={addedLanguages}
+          readOnly={readOnly}
+          handleClick={handleAddLanguages}
+        />
+      )}
+      {buttonAddAll && !useFieldMenu ? (
+        <Button
+          tone="primary"
+          mode="ghost"
+          data-testid="add-all-languages"
+          disabled={readOnly || allLanguagesArePresent}
+          icon={AddIcon}
+          text={addAllTitle}
+          onClick={addAllMissingLanguages}
+        />
+      ) : null}
+    </Stack>
+  ) : null
+
   return (
     <Stack gap={2}>
+      {useFieldMenu ? addButtons : null}
       {filteredMembers.map((member) => {
         if (member.kind === 'item') {
           return <ArrayOfObjectsItem {...props} key={member.key} member={member} />
@@ -348,26 +379,7 @@ export default function InternationalizedArray(
         </Card>
       ) : null}
 
-      {addButtonsAreVisible ? (
-        <Stack gap={2}>
-          <AddButtons
-            languagesInUse={addedLanguages}
-            readOnly={readOnly}
-            handleClick={handleAddLanguages}
-          />
-          {buttonAddAll ? (
-            <Button
-              tone="primary"
-              mode="ghost"
-              data-testid="add-all-languages"
-              disabled={readOnly || allLanguagesArePresent}
-              icon={AddIcon}
-              text={addAllTitle}
-              onClick={addAllMissingLanguages}
-            />
-          ) : null}
-        </Stack>
-      ) : null}
+      {useFieldMenu ? null : addButtons}
     </Stack>
   )
 }

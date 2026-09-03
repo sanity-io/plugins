@@ -1,0 +1,76 @@
+import {AddIcon} from '@sanity/icons/Add'
+import {TranslateIcon} from '@sanity/icons/Translate'
+import {Button, Flex} from '@sanity/ui'
+import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
+import {useId} from 'react'
+
+import {getLanguageDisplay} from '../utils/getLanguageDisplay'
+import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
+
+type CompactAddButtonProps = {
+  readOnly: boolean
+  handleClick: (languageId: string) => void
+  languagesInUse: string[]
+  onAddAll: () => void
+}
+
+/**
+ * One translate-icon button that opens a language menu — the `fieldMenu`
+ * location. Compact, uses only stable `@sanity/ui`, and stays visible even
+ * when every language is already present.
+ */
+function CompactAddButton(props: CompactAddButtonProps) {
+  const {readOnly, languagesInUse, handleClick, onAddAll} = props
+  const {languageDisplay, filteredLanguages: languages} = useInternationalizedArrayContext()
+  const menuId = useId()
+
+  if (!languages.length) return null
+
+  const missing = languages.filter((language) => !languagesInUse.includes(language.id))
+
+  return (
+    <Flex justify="flex-end" data-testid="add-buttons-grid">
+      <MenuButton
+        id={menuId}
+        popover={{portal: true, placement: 'bottom-end'}}
+        button={
+          <Button
+            mode="bleed"
+            tone="default"
+            fontSize={1}
+            padding={2}
+            icon={TranslateIcon}
+            aria-label="Add translation"
+            title="Add translation"
+            data-testid="add-translation-menu"
+            disabled={readOnly}
+          />
+        }
+        menu={
+          <Menu>
+            {languages.map((language) => (
+              <MenuItem
+                key={language.id}
+                text={getLanguageDisplay(languageDisplay, language.title, language.id)}
+                icon={AddIcon}
+                disabled={readOnly || languagesInUse.includes(language.id)}
+                data-testid={`add-${language.id}`}
+                onClick={() => handleClick(language.id)}
+              />
+            ))}
+            <MenuDivider />
+            <MenuItem
+              text="Add missing translations"
+              icon={TranslateIcon}
+              disabled={readOnly || missing.length === 0}
+              data-testid="add-all-languages"
+              onClick={onAddAll}
+            />
+          </Menu>
+        }
+      />
+    </Flex>
+  )
+}
+
+export default CompactAddButton

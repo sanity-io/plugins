@@ -135,10 +135,12 @@ export type PluginConfig = {
   // oxlint-disable-next-line typescript-eslint/no-redundant-type-constituents
   fieldTypes: (string | RuleTypeConstraint | FieldDefinition)[]
   /**
-   * Locations where the "+ EN" add language buttons are visible
+   * Locations where the "+ EN" add language buttons are visible.
+   * `fieldMenu` / `field_menu` is one translate icon per field that opens a
+   * language menu (compact; stable UI; no field actions).
    * @defaultValue ['field']
    * */
-  buttonLocations?: ('field' | 'unstable__fieldAction' | 'document')[]
+  buttonLocations?: ('field' | 'fieldMenu' | 'field_menu' | 'unstable__fieldAction' | 'document')[]
   /**
    * Show or hide the "Add missing languages" button
    * @defaultValue true

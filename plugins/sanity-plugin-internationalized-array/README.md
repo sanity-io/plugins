@@ -126,6 +126,7 @@ languages: async (client, {market = ``}) => {
 The "Add translation" buttons can be positioned in one or multiple locations by configuring `buttonLocations`:
 
 - `field` (default) Below the internationalized array field
+- `fieldMenu` One translate icon per field that opens a language menu (compact; stable UI; no field actions). `field_menu` is an alias.
 - `unstable__fieldAction` Inside a Field Action (currently unstable)
 - `document` Above the document fields, these buttons will add a new language item to every internationalized array field that can be found at the **root of the document**. Nested internationalized arrays are not yet supported.
 
@@ -150,7 +151,7 @@ export default defineConfig({
   plugins: [
     internationalizedArray({
       // ...other config
-      buttonLocations: ['field', 'unstable__fieldAction', 'document'], // default ['field']
+      buttonLocations: ['fieldMenu', 'document'], // default ['field'] — `fieldMenu` is the compact per-field menu
       buttonAddAll: false, // default true
       restoreOrder: false, // default true
       languageDisplay: 'codeOnly', // codeOnly (default) | titleOnly | titleAndCode
