@@ -130,7 +130,7 @@ The "Add translation" buttons can be positioned in one or multiple locations by 
 - `document` Above the document fields, these buttons will add a new language item to every internationalized array field that can be found at the **root of the document**. Nested internationalized arrays are not yet supported.
 
 > [!WARNING]
-> Do not use `unstable__fieldAction` on **this plugin 4.0.4 or later**. It crashes the document editor with `useFormValue must be used within a FormValueProvider` — on Studio 4 and 6.
+> Do not use `unstable__fieldAction` on **this plugin 4.0.4 or later**. It crashes the document editor with `useFormValue must be used within a FormValueProvider` — on Studio 4 and above.
 >
 > The break is this plugin, not a Studio major. **4.0.4** ([#633](https://github.com/sanity-io/plugins/pull/633)) moved the language provider onto `document.components.unstable_layout`, so field actions now run outside `FormValueProvider` and throw. Last working plugin: **4.0.0** (and 3.x). Use `field` and/or `document` instead.
 
