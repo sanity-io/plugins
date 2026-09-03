@@ -3,7 +3,7 @@ import {languageFilter} from '@sanity/language-filter'
 import type {ObjectInputProps, ObjectSchemaType, SchemaTypeDefinition} from 'sanity'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
-import {internationalizedArray, UNSTABLE_FIELD_ACTION_WARNING} from './plugin'
+import {internationalizedArray} from './plugin'
 import {MOCK_LANGUAGES} from './test/helpers'
 
 vi.mock('@sanity/language-filter', () => ({
@@ -114,21 +114,18 @@ describe('internationalizedArray plugin', () => {
     expect(result).toBeTruthy()
   })
 
-  test('warns and skips field actions when buttonLocations includes unstable__fieldAction', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+  test('adds field actions when buttonLocations includes unstable__fieldAction', () => {
     const plugin = createPlugin({buttonLocations: ['field', 'unstable__fieldAction']})
+    const fieldActions = plugin.document!.unstable_fieldActions
+    expect(fieldActions).toBeTypeOf('function')
 
-    expect(plugin.document!.unstable_fieldActions).toBeUndefined()
-    expect(warn).toHaveBeenCalledWith(UNSTABLE_FIELD_ACTION_WARNING)
-    warn.mockRestore()
+    const next = (fieldActions as unknown as (prev: unknown[]) => unknown[])([])
+    expect(next).toHaveLength(1)
   })
 
   test('omits field actions when unstable__fieldAction is not configured', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
     const plugin = createPlugin({buttonLocations: ['field']})
     expect(plugin.document!.unstable_fieldActions).toBeUndefined()
-    expect(warn).not.toHaveBeenCalled()
-    warn.mockRestore()
   })
 
   test('nests languageFilter plugin when languageFilter.documentTypes is set', () => {
