@@ -5,11 +5,22 @@ import {InternationalizedArrayFormInput} from './components/InternationalizedArr
 import {InternationalizedArrayLayout} from './components/InternationalizedArrayLayout'
 import Preload from './components/Preload'
 import {CONFIG_DEFAULT} from './constants'
-import {internationalizedArrayFieldAction} from './fieldActions'
 import array from './schema/array'
 import object from './schema/object'
 import type {PluginConfig} from './types'
 import {hasInternationalizedArrayField} from './utils/hasInternationalizedArrayField'
+
+/**
+ * Studio v4+ resolves `document.unstable_fieldActions` in the document pane
+ * (`FieldActionsResolver`), outside `FormValueProvider`. This plugin's field
+ * actions call `useFormValue()`, which then throws and takes down the editor.
+ * Same layout in Studio v4.0.0, v5.0.0, and v6 — not a v6-only break.
+ */
+export const UNSTABLE_FIELD_ACTION_WARNING =
+  '[sanity-plugin-internationalized-array] `buttonLocations` includes `unstable__fieldAction`. ' +
+  'That location crashes the document editor on Sanity Studio v4, v5, and v6: field actions ' +
+  'resolve outside FormValueProvider, so useFormValue() throws ' +
+  '"useFormValue must be used within a FormValueProvider". Use `field` and/or `document` instead.'
 
 export const internationalizedArray = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...CONFIG_DEFAULT, ...config}
@@ -23,6 +34,11 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
     buttonLocations,
     languageFilter: languageFilterConfig,
   } = pluginConfig
+
+  const wantsUnstableFieldAction = buttonLocations.includes('unstable__fieldAction')
+  if (wantsUnstableFieldAction) {
+    console.warn(UNSTABLE_FIELD_ACTION_WARNING)
+  }
 
   return {
     name: 'sanity-plugin-internationalized-array',
@@ -39,16 +55,12 @@ export const internationalizedArray = definePlugin<PluginConfig>((config) => {
             ),
           },
         },
-    // Optional: render "add language" buttons as field actions
     document: {
       components: {
         unstable_layout: (props) => (
           <InternationalizedArrayLayout {...props} pluginConfig={pluginConfig} />
         ),
       },
-      unstable_fieldActions: buttonLocations.includes('unstable__fieldAction')
-        ? (prev) => [...prev, internationalizedArrayFieldAction]
-        : undefined,
     },
     // Wrap document editor with a language provider
     form: {

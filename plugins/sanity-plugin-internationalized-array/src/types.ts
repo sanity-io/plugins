@@ -137,6 +137,10 @@ export type PluginConfig = {
   /**
    * Locations where the "+ EN" add language buttons are visible
    * @defaultValue ['field']
+   *
+   * `unstable__fieldAction` is not supported on Sanity Studio v4, v5, or v6.
+   * Field actions resolve outside `FormValueProvider`, so `useFormValue()` throws
+   * and crashes the document editor. Use `field` and/or `document` instead.
    * */
   buttonLocations?: ('field' | 'unstable__fieldAction' | 'document')[]
   /**

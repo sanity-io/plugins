@@ -126,8 +126,14 @@ languages: async (client, {market = ``}) => {
 The "Add translation" buttons can be positioned in one or multiple locations by configuring `buttonLocations`:
 
 - `field` (default) Below the internationalized array field
-- `unstable__fieldAction` Inside a Field Action (currently unstable)
 - `document` Above the document fields, these buttons will add a new language item to every internationalized array field that can be found at the **root of the document**. Nested internationalized arrays are not yet supported.
+
+> [!WARNING]
+> Do not use `unstable__fieldAction`. It crashes the document editor on Sanity Studio **v4, v5, and v6** (not v6-only).
+>
+> Studio resolves `document.unstable_fieldActions` with `FieldActionsResolver` in the document pane. That tree is wrapped in `GetFormValueProvider`, not `FormValueProvider`. This plugin's field actions call `useFormValue()`, which throws `useFormValue must be used within a FormValueProvider` and takes down the editor.
+>
+> The same pane layout is in Studio `v4.0.0`, `v5.0.0`, and current v6. The plugin now warns and does not register the field action. Use `field` and/or `document` instead.
 
 To control the "Add translation" button titles, configure `languageDisplay`. This also affects language field labels.
 
@@ -150,7 +156,7 @@ export default defineConfig({
   plugins: [
     internationalizedArray({
       // ...other config
-      buttonLocations: ['field', 'unstable__fieldAction', 'document'], // default ['field']
+      buttonLocations: ['field', 'document'], // default ['field'] — do not add `unstable__fieldAction` (Studio v4+)
       buttonAddAll: false, // default true
       restoreOrder: false, // default true
       languageDisplay: 'codeOnly', // codeOnly (default) | titleOnly | titleAndCode
