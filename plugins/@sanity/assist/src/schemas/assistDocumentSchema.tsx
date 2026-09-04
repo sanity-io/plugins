@@ -69,7 +69,10 @@ export function createFieldReferenceType(maxFieldSelectionDepth?: number) {
               if (!docId) {
                 return `Field reference cannot be used outside document inspector context. Could not resolve document id.`
               }
-              const targetDocType = docId.replace(new RegExp(`^${assistDocumentIdPrefix}`), '')
+              if (!docId.startsWith(assistDocumentIdPrefix)) {
+                return `Field reference cannot be used outside document inspector context. Could not resolve document id: ${docId}`
+              }
+              const targetDocType = docId.slice(assistDocumentIdPrefix.length)
               const schema = context.schema.get(targetDocType)
               if (!schema) {
                 return `Field reference cannot be used outside document inspector context. Could not resolve schema: ${targetDocType}`
