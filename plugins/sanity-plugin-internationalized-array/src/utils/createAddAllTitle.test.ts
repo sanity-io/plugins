@@ -25,6 +25,13 @@ describe('createAddAllTitle', () => {
     expect(createAddAllTitle(value, languages)).toBe('Add missing language')
   })
 
+  test('counts only filtered languages that are missing', () => {
+    const languages = MOCK_LANGUAGES.slice(0, 2) // en, fr
+
+    expect(createAddAllTitle(createValues(['de']), languages)).toBe('Add missing languages')
+    expect(createAddAllTitle(createValues(['de', 'en']), languages)).toBe('Add missing language')
+  })
+
   test('returns "Add all languages" for empty languages array with no value', () => {
     expect(createAddAllTitle(undefined, [])).toBe('Add all languages')
   })
