@@ -11,9 +11,24 @@ export type AssistDocumentContextValue = (
   documentIsNew: boolean
   /**
    * This is the _actual_ id of the current document (ie the document loaded in the pane); it contains draft. versions. prefix ect depending on context
+   *
+   * For variant documents this is the variant-scoped version id (`versions.<scopeId>.<id>`), also when
+   * the draft variant has not been created yet. When `assistTargetAvailable` is false it falls back
+   * to the base document id and must not be written to.
    */
   assistableDocumentId: string
+  /**
+   * Whether the document AI Assist would run on currently exists.
+   * When false, editing the document (which AI Assist does before running) creates it.
+   */
   documentIsAssistable: boolean
+  /**
+   * False when there is no document AI Assist could run on: a variant is selected, but the document
+   * has no version for it in the current perspective that can be edited or created by editing (or
+   * the target is still resolving). Running anything in this state would silently target the base
+   * document instead of the variant, so all AI Assist actions are unavailable while it lasts.
+   */
+  assistTargetAvailable: boolean
   documentSchemaType: ObjectSchemaType
   openInspector: (inspectorName: string, paneParams?: Record<string, string>) => void
   closeInspector: (inspectorName?: string) => void
