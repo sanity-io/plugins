@@ -116,7 +116,6 @@ describe('resolveAssistTarget', () => {
       expect(resolve({targetDocumentState, selectedVariantName: 'premium'})).toEqual({
         kind: 'variant',
         documentId: 'versions.a1b2c3.foo',
-        exists: true,
       })
     })
 
@@ -134,7 +133,7 @@ describe('resolveAssistTarget', () => {
           selectedVariantName: 'premium',
           selectedReleaseId: 'rSummer',
         }),
-      ).toEqual({kind: 'variant', documentId: 'versions.d4e5f6.foo', exists: true})
+      ).toEqual({kind: 'variant', documentId: 'versions.d4e5f6.foo'})
     })
 
     test('targets the advertised draft id when the draft variant can be created by editing', () => {
@@ -148,7 +147,6 @@ describe('resolveAssistTarget', () => {
       expect(resolve({targetDocumentState, selectedVariantName: 'premium'})).toEqual({
         kind: 'variant',
         documentId: 'versions.a1b2c3.foo',
-        exists: false,
       })
     })
 
