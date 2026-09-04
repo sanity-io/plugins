@@ -173,6 +173,15 @@ export default defineConfig([
     title: 'workflow: Document Workflow',
     plugins: [structureTool(), workflowExample()],
   }),
+  // AI Assist on content variants (SAPP-4379). Variants are opt-in and swap the version chips
+  // for the document group inventory in every document, so they get a workspace of their own
+  // rather than changing Home for every other plugin.
+  createWorkspace({
+    name: 'assist-variants',
+    title: 'assist: Content variants',
+    plugins: [structureTool(), assistExample()],
+    beta: {variants: {enabled: true}},
+  }),
   // Destination workspace for @sanity/cross-dataset-duplicator: uses a
   // different dataset so it can be picked as a duplication target.
   {
