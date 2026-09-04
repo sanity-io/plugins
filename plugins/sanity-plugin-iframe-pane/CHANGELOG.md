@@ -1,5 +1,11 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.36
+
+### Patch Changes
+
+- [#1991](https://github.com/sanity-io/plugins/pull/1991) [`49337b4`](https://github.com/sanity-io/plugins/commit/49337b46a970565cba289c91a21c48f2edbdb077) Thanks [@stipsan](https://github.com/stipsan)! - Stop serializing the whole document with `JSON.stringify` on every document change to detect draft-snapshot updates; compare with `dequal/lite` instead. The check runs per keystroke while the pane is open and now short-circuits on the first differing field (typically `_rev`) instead of stringifying both documents twice.
+
 ## 5.0.35
 
 ### Patch Changes
