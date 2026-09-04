@@ -1,9 +1,8 @@
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
-import {LANGUAGE_FIELD_NAME} from '../constants'
 import {ThemeWrapper} from '../test/component-helpers'
-import {createValues, MOCK_INTERNATIONALIZED_ARRAY_CONTEXT} from '../test/helpers'
+import {MOCK_INTERNATIONALIZED_ARRAY_CONTEXT} from '../test/helpers'
 import CompactAddButton from './CompactAddButton'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
@@ -28,9 +27,7 @@ describe('CompactAddButton', () => {
   })
 
   test('renders the icon even when all languages are present', () => {
-    const languagesInUse = createValues(['en', 'fr', 'es', 'de']).map((item) =>
-      String(item[LANGUAGE_FIELD_NAME]),
-    )
+    const languagesInUse = ['en', 'fr', 'es', 'de']
 
     render(
       <CompactAddButton
@@ -38,18 +35,19 @@ describe('CompactAddButton', () => {
         languagesInUse={languagesInUse}
         handleClick={vi.fn()}
         onAddAll={vi.fn()}
+        buttonAddAll
+        addAllTitle="Add missing languages"
+        allLanguagesArePresent
       />,
       {wrapper: ThemeWrapper},
     )
 
     expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
-    expect(screen.getByTestId('add-buttons-grid')).toBeInTheDocument()
+    expect(screen.getByTestId('field-menu')).toBeInTheDocument()
   })
 
   test('disables present languages and leaves missing ones enabled', () => {
-    const languagesInUse = createValues(['en', 'fr']).map((item) =>
-      String(item[LANGUAGE_FIELD_NAME]),
-    )
+    const languagesInUse = ['en', 'fr']
 
     render(
       <CompactAddButton
@@ -57,22 +55,23 @@ describe('CompactAddButton', () => {
         languagesInUse={languagesInUse}
         handleClick={vi.fn()}
         onAddAll={vi.fn()}
+        buttonAddAll
+        addAllTitle="Add missing languages"
+        allLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
 
     openMenu()
 
-    expect(screen.getByTestId('add-en')).toBeDisabled()
-    expect(screen.getByTestId('add-fr')).toBeDisabled()
-    expect(screen.getByTestId('add-es')).toBeEnabled()
-    expect(screen.getByTestId('add-de')).toBeEnabled()
+    expect(screen.getByTestId('field-menu-add-en')).toBeDisabled()
+    expect(screen.getByTestId('field-menu-add-fr')).toBeDisabled()
+    expect(screen.getByTestId('field-menu-add-es')).toBeEnabled()
+    expect(screen.getByTestId('field-menu-add-de')).toBeEnabled()
   })
 
-  test('disables "Add missing translations" when nothing is missing', () => {
-    const languagesInUse = createValues(['en', 'fr', 'es', 'de']).map((item) =>
-      String(item[LANGUAGE_FIELD_NAME]),
-    )
+  test('disables the bulk item when nothing is missing', () => {
+    const languagesInUse = ['en', 'fr', 'es', 'de']
 
     render(
       <CompactAddButton
@@ -80,32 +79,38 @@ describe('CompactAddButton', () => {
         languagesInUse={languagesInUse}
         handleClick={vi.fn()}
         onAddAll={vi.fn()}
+        buttonAddAll
+        addAllTitle="Add missing languages"
+        allLanguagesArePresent
       />,
       {wrapper: ThemeWrapper},
     )
 
     openMenu()
 
-    expect(screen.getByTestId('add-missing-translations')).toBeDisabled()
+    expect(screen.getByTestId('field-menu-add-all')).toBeDisabled()
   })
 
-  test('enables "Add missing translations" when languages are missing', () => {
+  test('enables the bulk item when languages are missing', () => {
     render(
       <CompactAddButton
         readOnly={false}
         languagesInUse={[]}
         handleClick={vi.fn()}
         onAddAll={vi.fn()}
+        buttonAddAll
+        addAllTitle="Add all languages"
+        allLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
 
     openMenu()
 
-    expect(screen.getByTestId('add-missing-translations')).toBeEnabled()
+    expect(screen.getByTestId('field-menu-add-all')).toBeEnabled()
   })
 
-  test('hides "Add missing translations" when buttonAddAll is false', () => {
+  test('hides the bulk item when buttonAddAll is false', () => {
     render(
       <CompactAddButton
         readOnly={false}
@@ -113,14 +118,16 @@ describe('CompactAddButton', () => {
         handleClick={vi.fn()}
         onAddAll={vi.fn()}
         buttonAddAll={false}
+        addAllTitle="Add all languages"
+        allLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
 
     openMenu()
 
-    expect(screen.queryByTestId('add-missing-translations')).not.toBeInTheDocument()
-    expect(screen.getByTestId('add-en')).toBeInTheDocument()
+    expect(screen.queryByTestId('field-menu-add-all')).not.toBeInTheDocument()
+    expect(screen.getByTestId('field-menu-add-en')).toBeInTheDocument()
   })
 
   test.each([
@@ -139,6 +146,9 @@ describe('CompactAddButton', () => {
         languagesInUse={[]}
         handleClick={vi.fn()}
         onAddAll={vi.fn()}
+        buttonAddAll
+        addAllTitle="Add all languages"
+        allLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
@@ -157,12 +167,15 @@ describe('CompactAddButton', () => {
         languagesInUse={[]}
         handleClick={handleClick}
         onAddAll={vi.fn()}
+        buttonAddAll
+        addAllTitle="Add all languages"
+        allLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
 
     openMenu()
-    fireEvent.click(screen.getByTestId('add-fr'))
+    fireEvent.click(screen.getByTestId('field-menu-add-fr'))
     expect(handleClick).toHaveBeenCalledWith('fr')
   })
 
@@ -174,12 +187,15 @@ describe('CompactAddButton', () => {
         languagesInUse={[]}
         handleClick={vi.fn()}
         onAddAll={onAddAll}
+        buttonAddAll
+        addAllTitle="Add all languages"
+        allLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
 
     openMenu()
-    fireEvent.click(screen.getByTestId('add-missing-translations'))
+    fireEvent.click(screen.getByTestId('field-menu-add-all'))
     expect(onAddAll).toHaveBeenCalledTimes(1)
   })
 
@@ -195,11 +211,14 @@ describe('CompactAddButton', () => {
         languagesInUse={[]}
         handleClick={vi.fn()}
         onAddAll={vi.fn()}
+        buttonAddAll
+        addAllTitle="Add all languages"
+        allLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
 
-    expect(screen.queryByTestId('add-buttons-grid')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('field-menu')).not.toBeInTheDocument()
   })
 
   test('disables the trigger when readOnly', () => {
@@ -209,6 +228,9 @@ describe('CompactAddButton', () => {
         languagesInUse={[]}
         handleClick={vi.fn()}
         onAddAll={vi.fn()}
+        buttonAddAll
+        addAllTitle="Add all languages"
+        allLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )

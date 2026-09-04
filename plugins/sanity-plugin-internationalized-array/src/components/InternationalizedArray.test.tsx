@@ -875,8 +875,8 @@ describe('InternationalizedArray', () => {
     renderInternationalizedArray(props)
 
     expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
-    expect(screen.queryByText('Add all languages')).not.toBeInTheDocument()
-    expect(screen.queryByText('Add missing languages')).not.toBeInTheDocument()
+    expect(screen.getByTestId('field-menu-add-all')).toBeDisabled()
+    expect(screen.queryByTestId('add-all-languages')).not.toBeInTheDocument()
   })
 
   test('keeps the add-all bar under field and hides it under fieldMenu', () => {
@@ -894,11 +894,13 @@ describe('InternationalizedArray', () => {
       buttonLocations: ['fieldMenu'],
     })
     renderInternationalizedArray(createMockArrayProps())
-    expect(screen.queryByText('Add all languages')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('add-all-languages')).not.toBeInTheDocument()
+    expect(screen.getByTestId('field-menu-add-all')).toBeEnabled()
+    expect(screen.getByTestId('field-menu-add-all')).toHaveTextContent('Add all languages')
     expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
   })
 
-  test('treats fieldMenu as a replacement when field is also listed', () => {
+  test('renders field and fieldMenu controls together when both are listed', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
       ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
       buttonLocations: ['field', 'fieldMenu'],
@@ -907,7 +909,8 @@ describe('InternationalizedArray', () => {
     renderInternationalizedArray(createMockArrayProps())
 
     expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
-    expect(screen.queryByText('Add all languages')).not.toBeInTheDocument()
+    expect(screen.getByTestId('add-buttons-grid')).toBeInTheDocument()
+    expect(screen.getByTestId('add-all-languages')).toBeInTheDocument()
   })
 
   test('hides the fieldMenu bulk item when buttonAddAll is false', () => {
@@ -920,8 +923,8 @@ describe('InternationalizedArray', () => {
     renderInternationalizedArray(createMockArrayProps())
     fireEvent.click(screen.getByTestId('add-translation-menu'))
 
-    expect(screen.queryByTestId('add-missing-translations')).not.toBeInTheDocument()
-    expect(screen.getByTestId('add-en')).toBeInTheDocument()
+    expect(screen.queryByTestId('field-menu-add-all')).not.toBeInTheDocument()
+    expect(screen.getByTestId('field-menu-add-en')).toBeInTheDocument()
   })
 
   test('places the fieldMenu control first, above language rows', () => {
@@ -947,7 +950,7 @@ describe('InternationalizedArray', () => {
 
     renderInternationalizedArray(props)
 
-    const menu = screen.getByTestId('add-buttons-grid')
+    const menu = screen.getByTestId('field-menu')
     const item = screen.getByTestId('array-item')
     expect(menu.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })

@@ -12,7 +12,9 @@ type CompactAddButtonProps = {
   handleClick: (languageId: string) => void
   languagesInUse: string[]
   onAddAll: () => void
-  buttonAddAll?: boolean
+  buttonAddAll: boolean
+  addAllTitle: string
+  allLanguagesArePresent: boolean
 }
 
 /**
@@ -21,16 +23,22 @@ type CompactAddButtonProps = {
  * when every language is already present.
  */
 function CompactAddButton(props: CompactAddButtonProps) {
-  const {readOnly, languagesInUse, handleClick, onAddAll, buttonAddAll = true} = props
+  const {
+    readOnly,
+    languagesInUse,
+    handleClick,
+    onAddAll,
+    buttonAddAll,
+    addAllTitle,
+    allLanguagesArePresent,
+  } = props
   const {languageDisplay, filteredLanguages: languages} = useInternationalizedArrayContext()
   const menuId = useId()
 
   if (!languages.length) return null
 
-  const missing = languages.filter((language) => !languagesInUse.includes(language.id))
-
   return (
-    <Flex justify="flex-end" data-testid="add-buttons-grid">
+    <Flex justify="flex-end" data-testid="field-menu">
       <MenuButton
         id={menuId}
         popover={{portal: true, placement: 'bottom-end'}}
@@ -55,7 +63,7 @@ function CompactAddButton(props: CompactAddButtonProps) {
                 text={getLanguageDisplay(languageDisplay, language.title, language.id)}
                 icon={AddIcon}
                 disabled={readOnly || languagesInUse.includes(language.id)}
-                data-testid={`add-${language.id}`}
+                data-testid={`field-menu-add-${language.id}`}
                 onClick={() => handleClick(language.id)}
               />
             ))}
@@ -63,10 +71,10 @@ function CompactAddButton(props: CompactAddButtonProps) {
               <>
                 <MenuDivider />
                 <MenuItem
-                  text="Add missing translations"
+                  text={addAllTitle}
                   icon={TranslateIcon}
-                  disabled={readOnly || missing.length === 0}
-                  data-testid="add-missing-translations"
+                  disabled={readOnly || allLanguagesArePresent}
+                  data-testid="field-menu-add-all"
                   onClick={onAddAll}
                 />
               </>

@@ -137,16 +137,15 @@ export type PluginConfig = {
   /**
    * Locations where the "+ EN" add language buttons are visible.
    * `fieldMenu` is one translate icon per field that opens a
-   * language menu (compact; stable UI; no field actions). It replaces the
-   * per-language `field` buttons for that field; listing both is the same as
-   * `fieldMenu` alone. `document` still combines independently.
+   * language menu (compact; stable UI; no field actions). All locations are
+   * additive, so `field`, `fieldMenu`, and `document` can be combined.
    * `unstable__fieldAction` is still accepted but crashes the editor from
    * plugin 4.0.4 onward on Studio 4 and above.
    * @defaultValue ['field']
    * */
   buttonLocations?: ('field' | 'fieldMenu' | 'unstable__fieldAction' | 'document')[]
   /**
-   * Show or hide the "Add missing languages" / "Add missing translations" control.
+   * Show or hide the "Add all languages" / "Add missing languages" control.
    * Under `field` this is the bar below the per-language buttons. Under
    * `fieldMenu` it is the bulk item inside the language menu.
    * @defaultValue true

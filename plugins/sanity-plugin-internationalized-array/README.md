@@ -126,9 +126,11 @@ languages: async (client, {market = ``}) => {
 The "Add translation" buttons can be positioned in one or multiple locations by configuring `buttonLocations`:
 
 - `field` (default) Below the internationalized array field
-- `fieldMenu` One translate icon per field that opens a language menu. This **replaces** the per-language `field` buttons on that field; `['field', 'fieldMenu']` is the same as `['fieldMenu']`. Combine with `document` if you also want the document-level buttons.
+- `fieldMenu` One translate icon per field that opens a language menu
 - `document` Above the document fields, these buttons will add a new language item to every internationalized array field that can be found at the **root of the document**. Nested internationalized arrays are not yet supported.
 - `unstable__fieldAction` Inside a Field Action (still accepted in config; currently unstable)
+
+All locations are additive, so `field`, `fieldMenu`, and `document` can be used together.
 
 ![The fieldMenu control: one translate icon opens a language menu](./img/field-menu.jpeg)
 
@@ -143,7 +145,7 @@ To control the "Add translation" button titles, configure `languageDisplay`. Thi
 - `titleOnly` Shows the language title
 - `titleAndCode` Shows the language title with the code in parentheses
 
-The "Add all languages" / "Add missing translations" control can be hidden with `buttonAddAll`. Under `field` that hides the bar below the per-language buttons. Under `fieldMenu` that hides the bulk item inside the language menu.
+The "Add all languages" / "Add missing languages" control can be hidden with `buttonAddAll`. Under `field` that hides the bar below the per-language buttons. Under `fieldMenu` that hides the bulk item inside the language menu.
 
 By default, opening a document reorders internationalized array items to match
 the configured `languages` order. That can create a draft (and a history entry)
@@ -158,7 +160,7 @@ export default defineConfig({
   plugins: [
     internationalizedArray({
       // ...other config
-      buttonLocations: ['fieldMenu', 'document'], // default ['field'] — skip `unstable__fieldAction` on plugin 4.0.4+
+      buttonLocations: ['field', 'fieldMenu', 'document'], // default ['field'] — locations are additive
       buttonAddAll: false, // default true
       restoreOrder: false, // default true
       languageDisplay: 'codeOnly', // codeOnly (default) | titleOnly | titleAndCode

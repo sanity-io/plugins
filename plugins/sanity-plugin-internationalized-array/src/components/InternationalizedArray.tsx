@@ -322,32 +322,21 @@ export default function InternationalizedArray(
     return <Feedback />
   }
 
-  const useFieldMenu = buttonLocations.includes('fieldMenu')
-  const addButtonsAreVisible =
-    !shouldMigrateArray &&
-    filteredLanguages?.length > 0 &&
-    ((buttonLocations.includes('field') && !allLanguagesArePresent) || useFieldMenu)
+  const canAddLanguages = !shouldMigrateArray && filteredLanguages?.length > 0
+  const showFieldMenu = canAddLanguages && buttonLocations.includes('fieldMenu')
+  const showFieldButtons =
+    canAddLanguages && buttonLocations.includes('field') && !allLanguagesArePresent
   const fieldHasMembers = members?.length > 0
   const addAllTitle = createAddAllTitle(value, filteredLanguages)
 
-  const addButtons = addButtonsAreVisible ? (
+  const fieldButtons = showFieldButtons ? (
     <Stack gap={2}>
-      {useFieldMenu ? (
-        <CompactAddButton
-          languagesInUse={addedLanguages}
-          readOnly={readOnly}
-          handleClick={handleAddLanguages}
-          onAddAll={addAllMissingLanguages}
-          buttonAddAll={buttonAddAll}
-        />
-      ) : (
-        <AddButtons
-          languagesInUse={addedLanguages}
-          readOnly={readOnly}
-          handleClick={handleAddLanguages}
-        />
-      )}
-      {buttonAddAll && !useFieldMenu ? (
+      <AddButtons
+        languagesInUse={addedLanguages}
+        readOnly={readOnly}
+        handleClick={handleAddLanguages}
+      />
+      {buttonAddAll ? (
         <Button
           tone="primary"
           mode="ghost"
@@ -363,7 +352,17 @@ export default function InternationalizedArray(
 
   return (
     <Stack gap={2}>
-      {useFieldMenu ? addButtons : null}
+      {showFieldMenu ? (
+        <CompactAddButton
+          languagesInUse={addedLanguages}
+          readOnly={readOnly}
+          handleClick={handleAddLanguages}
+          onAddAll={addAllMissingLanguages}
+          buttonAddAll={buttonAddAll}
+          addAllTitle={addAllTitle}
+          allLanguagesArePresent={allLanguagesArePresent}
+        />
+      ) : null}
       {filteredMembers.map((member) => {
         if (member.kind === 'item') {
           return <ArrayOfObjectsItem {...props} key={member.key} member={member} />
@@ -373,13 +372,13 @@ export default function InternationalizedArray(
       <MigrationBanner itemsNeedingMigration={itemsNeedingMigration} />
 
       {/* Give some feedback in the UI so the field doesn't look "missing" */}
-      {!addButtonsAreVisible && !fieldHasMembers ? (
+      {!showFieldMenu && !showFieldButtons && !fieldHasMembers ? (
         <Card border tone="transparent" padding={3} radius={2}>
           <Text size={1}>This internationalized field currently has no translations.</Text>
         </Card>
       ) : null}
 
-      {useFieldMenu ? null : addButtons}
+      {fieldButtons}
     </Stack>
   )
 }
