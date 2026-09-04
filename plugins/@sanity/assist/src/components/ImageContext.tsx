@@ -1,5 +1,12 @@
 import {createContext, useEffect, useMemo, useState} from 'react'
-import {getPublishedId, type InputProps, pathToString, usePerspective, useSyncState} from 'sanity'
+import {
+  getPublishedId,
+  getVersionFromId,
+  type InputProps,
+  isVersionId,
+  pathToString,
+  useSyncState,
+} from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
@@ -19,18 +26,19 @@ export function ImageContextProvider(props: InputProps) {
   const {schemaType, path, value, readOnly} = props
   // oxlint-disable-next-line no-unsafe-type-assertion
   const assetRef = (value as any)?.asset?._ref
-  const {selectedReleaseId} = usePerspective()
   const [assetRefState, setAssetRefState] = useState<string | undefined>(assetRef)
 
-  const {assistableDocumentId, documentSchemaType} = useAssistDocumentContext()
+  const {assistableDocumentId, assistTargetAvailable, documentSchemaType} =
+    useAssistDocumentContext()
   const {config, status} = useAiAssistanceConfig()
   const apiClient = useApiClient(config?.__customApiClient)
   const {generateCaption} = useGenerateCaption(apiClient)
 
+  // Sync state of the version AI Assist writes to: the release or the (opaque) variant scope.
   const {isSyncing} = useSyncState(
     getPublishedId(assistableDocumentId),
     documentSchemaType.name,
-    selectedReleaseId,
+    isVersionId(assistableDocumentId) ? getVersionFromId(assistableDocumentId) : undefined,
   )
 
   const router = usePaneRouter()
@@ -41,6 +49,7 @@ export function ImageContextProvider(props: InputProps) {
     if (
       assetRef &&
       assistableDocumentId &&
+      assistTargetAvailable &&
       descriptionField?.updateOnImageChange &&
       assetRef !== assetRefState &&
       !isSyncing &&
@@ -62,6 +71,7 @@ export function ImageContextProvider(props: InputProps) {
     assetRef,
     assetRefState,
     assistableDocumentId,
+    assistTargetAvailable,
     generateCaption,
     isSyncing,
     status,

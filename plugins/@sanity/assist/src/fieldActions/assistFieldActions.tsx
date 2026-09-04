@@ -35,6 +35,8 @@ function node(node: DocumentFieldActionItem | DocumentFieldActionGroup) {
   return node
 }
 
+const NO_CUSTOM_ACTIONS: ReturnType<typeof useCustomFieldActions> = []
+
 export const assistFieldActions: DocumentFieldAction = {
   name: 'sanity-assist-actions',
   useAction(props) {
@@ -44,6 +46,7 @@ export const assistFieldActions: DocumentFieldAction = {
       assistDocument,
       documentIsNew,
       documentIsAssistable,
+      assistTargetAvailable,
       openInspector,
       closeInspector,
       inspector,
@@ -75,7 +78,8 @@ export const assistFieldActions: DocumentFieldAction = {
       useAssistSupported(props.path, schemaType) &&
       isSelectable &&
       isSchemaAssistEnabled(documentSchemaType) &&
-      schemaType.readOnly !== true
+      schemaType.readOnly !== true &&
+      assistTargetAvailable
 
     const fieldAssist = useMemo(
       () =>
@@ -90,9 +94,9 @@ export const assistFieldActions: DocumentFieldAction = {
     const isPathSelected = pathKey === selectedPath
     const isSelected = isInspectorOpen && isPathSelected
 
-    const imageCaptionAction = generateCaptionsActions.useAction(props)
-    const imageGenAction = generateImagActions.useAction(props)
-    const translateAction = translateActions.useAction(
+    const imageCaptionActionNode = generateCaptionsActions.useAction(props)
+    const imageGenActionNode = generateImagActions.useAction(props)
+    const translateActionNode = translateActions.useAction(
       typed<TranslateProps>({
         ...props,
         documentId: assistableDocumentId,
@@ -100,6 +104,11 @@ export const assistFieldActions: DocumentFieldAction = {
         documentSchemaType,
       }),
     )
+    // These write to `assistableDocumentId`, which is just the base document while the variant
+    // target is unavailable, so they are dropped along with the instructions in that state.
+    const imageCaptionAction = assistTargetAvailable ? imageCaptionActionNode : undefined
+    const imageGenAction = assistTargetAvailable ? imageGenActionNode : undefined
+    const translateAction = assistTargetAvailable ? translateActionNode : undefined
     const manageInstructions = useCallback(
       () =>
         isSelected
@@ -223,7 +232,7 @@ export const assistFieldActions: DocumentFieldAction = {
       return typePath ? fieldRefsByTypePath[typePath]?.schemaType : undefined
     }, [fieldRefsByTypePath, props.path, documentSchemaType])
 
-    const customActions = useCustomFieldActions({
+    const configuredCustomActions = useCustomFieldActions({
       actionType: props.path.length ? 'field' : 'document',
       documentIdForAction: assistableDocumentId,
       schemaType,
@@ -233,6 +242,7 @@ export const assistFieldActions: DocumentFieldAction = {
       getConditionalPaths,
       parentSchemaType,
     })
+    const customActions = assistTargetAvailable ? configuredCustomActions : NO_CUSTOM_ACTIONS
 
     const manageInstructionsItem = useMemo(
       () =>

@@ -1,11 +1,12 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {getDraftId, getVersionId, type ObjectSchemaType, usePerspective, useSchema} from 'sanity'
+import {type ObjectSchemaType, usePerspective, useSchema} from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
 import {useAiPaneRouter} from '../../assistInspector/helpers'
 import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'
 import {fieldPathParam, type InstructionTask} from '../../types'
 import type {AssistDocumentContextValue} from '../AssistDocumentContext'
+import {getBaseAssistDocumentId, resolveAssistTarget} from '../assistTarget'
 import {isDocAssistable} from '../RequestRunInstructionProvider'
 import {useStudioAssistDocument} from './useStudioAssistDocument'
 
@@ -35,20 +36,31 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     inspector,
     onChange: documentOnChange,
     editState,
+    // Resolved by the pane for the selected perspective *and* variant (Studio >= 6.6).
+    // Older Studios leave it undefined, which resolves to the base pair below.
+    targetDocumentState,
   } = useDocumentPane()
-  const {selectedReleaseId} = usePerspective()
+  const {selectedReleaseId, selectedVariantName} = usePerspective()
   const {draft, published, version} = editState || {}
 
-  const assistableDocumentId = selectedReleaseId
-    ? getVersionId(documentId, selectedReleaseId)
-    : documentSchemaType.liveEdit
-      ? documentId
-      : getDraftId(documentId)
+  const targetOptions = {
+    documentId,
+    liveEdit: !!documentSchemaType.liveEdit,
+    selectedReleaseId,
+  }
+  const target = resolveAssistTarget({...targetOptions, selectedVariantName, targetDocumentState})
+  const assistTargetAvailable = target.kind !== 'unavailable'
+  // The base id is only a placeholder while the target is unavailable; every action is disabled then.
+  const assistableDocumentId =
+    target.kind === 'unavailable' ? getBaseAssistDocumentId(targetOptions) : target.documentId
 
-  const documentIsNew = selectedReleaseId ? !version?._id : !draft?._id && !published?._id
-  const documentIsAssistable = selectedReleaseId
-    ? !!version
-    : isDocAssistable(documentSchemaType, published, draft)
+  // A version is checked out for variants (the pane resolves the variant scope) and releases, so
+  // `version` is the document AI Assist runs on in both cases.
+  const targetsVersion = target.kind === 'variant' || !!selectedReleaseId
+  const documentIsNew = targetsVersion ? !version?._id : !draft?._id && !published?._id
+  const documentIsAssistable =
+    assistTargetAvailable &&
+    (targetsVersion ? !!version : isDocAssistable(documentSchemaType, published, draft))
 
   const {params} = useAiPaneRouter()
   const selectedPath = params[fieldPathParam]
@@ -63,6 +75,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   const value: AssistDocumentContextValue = useMemo(() => {
     const base = {
       assistableDocumentId,
+      assistTargetAvailable,
       documentSchemaType,
       documentIsNew,
       documentIsAssistable,
@@ -89,6 +102,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     assistDocument,
     documentIsAssistable,
     assistableDocumentId,
+    assistTargetAvailable,
     documentSchemaType,
     documentIsNew,
     openInspector,
