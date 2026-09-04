@@ -34,8 +34,8 @@
     "typegen": "pnpm --filter=test-studio run typegen && pnpm format"
   },
   "dependencies": {
-    "@changesets/changelog-github": "^0.7.0",
-    "@changesets/cli": "^2.31.1",
+    "@changesets/changelog-github": "^1.0.0",
+    "@changesets/cli": "^3.0.1",
     "@sanity/plugin-kit": "workspace:*",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "catalog:",
-    "knip": "^6.32.1",
+    "knip": "^6.33.0",
     "vercel": "^57.0.0"
   },
   "lint-staged": {

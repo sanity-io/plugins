@@ -25,7 +25,8 @@ type Props = {
 }
 
 type CreatedStore = {
-  endEpics: () => void
+  cancelEnd: () => void
+  scheduleEnd: () => void
   store: Store
 }
 
@@ -98,22 +99,43 @@ function createReduxStore(props: Props): CreatedStore {
     rootEpic(action$, state$, dependencies).pipe(takeUntil(action$.pipe(ofType(EPIC_END_TYPE)))),
   )
 
+  /*
+   * Defer epicEnd by a tick. React strict mode runs mount → cleanup → mount
+   * synchronously in development. Ending the epics in that cleanup killed them
+   * on the first mount, and the remount reused this store (useState survives)
+   * with nothing listening — every fetch/listen aborted and the tool sat on
+   * "LOADING…" forever. A remount cancels the pending end; a real unmount
+   * lets the timer fire and ends the epics as before. Keep the eager
+   * `epicMiddleware.run` above: child effects dispatch the initial fetches
+   * before this parent's effect would run, so starting epics in the effect
+   * would drop those actions.
+   */
+  let pendingEnd: ReturnType<typeof setTimeout> | null = null
+
   return {
     store,
-    endEpics: () => {
-      store.dispatch({type: EPIC_END_TYPE})
+    scheduleEnd: () => {
+      if (pendingEnd !== null) return
+      pendingEnd = setTimeout(() => {
+        pendingEnd = null
+        store.dispatch({type: EPIC_END_TYPE})
+      }, 0)
+    },
+    cancelEnd: () => {
+      if (pendingEnd === null) return
+      clearTimeout(pendingEnd)
+      pendingEnd = null
     },
   }
 }
 
 function ReduxProvider({children, ...props}: Props) {
-  const [{endEpics, store}] = useState(() => createReduxStore(props))
+  const [{cancelEnd, scheduleEnd, store}] = useState(() => createReduxStore(props))
 
   useEffect(() => {
-    return () => {
-      endEpics()
-    }
-  }, [endEpics])
+    cancelEnd()
+    return () => scheduleEnd()
+  }, [cancelEnd, scheduleEnd])
 
   return <Provider store={store}>{children}</Provider>
 }

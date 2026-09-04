@@ -1,5 +1,9 @@
 # @sanity/sfcc
 
+## 1.0.32
+
+## 1.0.31
+
 ## 1.0.30
 
 ### Patch Changes

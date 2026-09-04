@@ -1,5 +1,9 @@
 # @sanity/document-internationalization
 
+## 6.2.35
+
+## 6.2.34
+
 ## 6.2.33
 
 ### Patch Changes

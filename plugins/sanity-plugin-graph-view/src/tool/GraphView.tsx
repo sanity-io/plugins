@@ -1,7 +1,7 @@
 import {black, COLOR_HUES, gray, white, hues} from '@sanity/color'
 import {useTheme} from '@sanity/ui'
 import BezierEasing from 'bezier-easing'
-import deepEqual from 'deep-equal'
+import {dequal} from 'dequal/lite'
 import {rgba} from 'polished'
 import {useEffect, useState} from 'react'
 import ForceGraph2D from 'react-force-graph-2d'
@@ -242,7 +242,7 @@ export default function GraphView({
         )
         const newRefs = findRefs(doc).filter((id) => id === doc._id || docsById[id] !== null)
 
-        let graphChanged = !deepEqual(oldRefs, newRefs)
+        let graphChanged = !dequal(oldRefs, newRefs)
         if (graphChanged) {
           newGraph.data.links = newGraph.data.links
             .filter((l: any) => l.source.id !== doc._id)

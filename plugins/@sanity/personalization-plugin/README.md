@@ -49,9 +49,9 @@ Once configured you can query the values using the ids of the experiment and var
     - [Querying with Custom Field Names](#querying-with-custom-field-names)
   - [License](#license)
 
-> For Specific information about the Growthbook FieldLevel export see its [readme](/growthbook.md)
+> For Specific information about the Growthbook FieldLevel export see its [readme](./growthbook.md)
 >
-> For Specific information about the LaunchDarkly FieldLevel export see its [readme](/launchdarkly.md)
+> For Specific information about the LaunchDarkly FieldLevel export see its [readme](./launchdarkly.md)
 
 ## Installation
 
@@ -601,7 +601,7 @@ export default async function Page() {
 
 ### Third-Party Integration
 
-For advanced use cases, you can integrate with experimentation platforms like GrowthBook, LaunchDarkly, or Amplitude. These platforms handle variant assignment and provide analytics. See the [GrowthBook](/growthbook.md) and [LaunchDarkly](/launchdarkly.md) integration guides for details.
+For advanced use cases, you can integrate with experimentation platforms like GrowthBook, LaunchDarkly, or Amplitude. These platforms handle variant assignment and provide analytics. See the [GrowthBook](./growthbook.md) and [LaunchDarkly](./launchdarkly.md) integration guides for details.
 
 ## Split testing (URL-based)
 

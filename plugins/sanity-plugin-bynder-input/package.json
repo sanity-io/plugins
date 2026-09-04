@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-bynder-input",
-  "version": "5.0.6",
+  "version": "5.1.0",
   "keywords": [
     "sanity",
     "sanity-plugin"
@@ -50,7 +50,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@bynder/compact-view": "^5.4.0",
+    "@bynder/compact-view": "^6.0.1",
     "@sanity/ui": "catalog:",
     "video.js": "catalog:"
   },

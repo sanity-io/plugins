@@ -1,5 +1,17 @@
 # sanity-plugin-media
 
+## 6.1.8
+
+### Patch Changes
+
+- [#1980](https://github.com/sanity-io/plugins/pull/1980) [`e72267a`](https://github.com/sanity-io/plugins/commit/e72267a9644f374a89fc2ec4567da1b23b93e7bf) Thanks [@wiiiimm](https://github.com/wiiiimm)! - Keep Media tool epics alive across React strict mode's simulated remount so the browser loads in `sanity dev`.
+
+## 6.1.7
+
+### Patch Changes
+
+- [#1851](https://github.com/sanity-io/plugins/pull/1851) [`d0f77d2`](https://github.com/sanity-io/plugins/commit/d0f77d2faee25facc4bbd7b94a292ada1234eaf6) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Improve Media UI accessibility for tag creation (Create tag / Toggle tags panel aria-labels), stop Media browser epics on unmount, and expand automated test coverage
+
 ## 6.1.6
 
 ### Patch Changes

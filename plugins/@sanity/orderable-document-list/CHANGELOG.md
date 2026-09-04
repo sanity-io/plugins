@@ -1,5 +1,11 @@
 # @sanity/orderable-document-list
 
+## 2.0.23
+
+### Patch Changes
+
+- [#1954](https://github.com/sanity-io/plugins/pull/1954) [`84a1085`](https://github.com/sanity-io/plugins/commit/84a10850f65e0efa8301ea499d15e0a63c79566f) Thanks [@jordanl17](https://github.com/jordanl17)! - Revert to `DocumentStatusIndicator`, as `DocumentVersionsStatusIndicator` only exists in the unreleased `sanity` 6.11 line and broke builds on every released version
+
 ## 2.0.22
 
 ### Patch Changes

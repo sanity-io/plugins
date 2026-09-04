@@ -3,7 +3,7 @@ import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Button, Card, Stack, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import type React from 'react'
-import {useCallback, useEffect, useMemo} from 'react'
+import {useCallback, useContext, useEffect, useMemo} from 'react'
 import {
   type ArrayOfObjectsInputProps,
   ArrayOfObjectsItem,
@@ -13,6 +13,7 @@ import {
   useFormValue,
   useGetFormValue,
 } from 'sanity'
+import {EventsContext} from 'sanity/_singletons'
 import {useDocumentPane} from 'sanity/structure'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
@@ -27,6 +28,23 @@ import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 import {MigrationBanner} from './MigrationBanner'
 
 /**
+ * The events store has finished loading and recorded no history. That is a
+ * brand-new document.
+ *
+ * `sanity/_singletons` is internal; this is the same context `useEvents()`
+ * reads. Using the context directly avoids throwing when the events API is
+ * off (legacy timeline has no `EventsProvider`).
+ */
+function isPristineDocument(
+  events: {events: readonly unknown[]; loading: boolean} | null,
+): boolean {
+  if (!events || events.loading) {
+    return false
+  }
+  return events.events.length === 0
+}
+
+/**
  * Main array input component for internationalized array fields.
  *
  * Replaces the default Sanity array input and manages the full lifecycle of
@@ -39,10 +57,14 @@ import {MigrationBanner} from './MigrationBanner'
  *   missing languages" button (controlled by `buttonAddAll` and
  *   `buttonLocations` config). Dispatches `setIfMissing` + `insert` patches.
  * - **Default languages**: Automatically adds entries for languages listed in
- *   `defaultLanguages` when those entries are missing. Only runs once the
- *   document exists in the dataset (it has a `_rev`), so the effect never
- *   recreates a just-deleted document or creates a draft before the user's
- *   first edit.
+ *   `defaultLanguages` when those entries are missing. Seeds brand-new
+ *   documents once the events store reports they are pristine (no history),
+ *   and seeds persisted documents that already have a `_rev`. A document
+ *   that existed and was deleted is not pristine, so opening it — even in a
+ *   fresh pane — does not recreate it. Newly created documents stay
+ *   read-only until initial value templates resolve, and the field-level
+ *   `readOnly` prop can lag that document-level lock. Skipping the patch
+ *   until writable avoids "Attempted to patch a read-only document" toasts.
  * - **Ordering**: When `restoreOrder` is enabled (default), detects when value
  *   items are out of order relative to the master `languages` list and
  *   automatically re-sorts them. Set `restoreOrder: false` to keep the stored
@@ -60,7 +82,6 @@ export default function InternationalizedArray(
   const value = _value as InternationalizedArrayItem[]
   const itemsNeedingMigration = value?.filter((v) => !v[LANGUAGE_FIELD_NAME]) ?? []
   const shouldMigrateArray = itemsNeedingMigration.length > 0
-  const readOnly = Boolean(documentReadOnly) || schemaType.readOnly === true
   const toast = useToast()
 
   const getFormValue = useGetFormValue()
@@ -73,7 +94,6 @@ export default function InternationalizedArray(
     restoreOrder,
     languageFilter: builtInLanguageFilter,
   } = useInternationalizedArrayContext()
-
   // Support updating the UI if languageFilter is installed
   const {selectedLanguageIds, options: languageFilterOptions} = useLanguageFilterStudioContext()
   const documentType = useFormValue(['_type'])
@@ -129,8 +149,22 @@ export default function InternationalizedArray(
     ],
   )
 
+  const {isDeleted, isDeleting, isInitialValueLoading, formState} = useDocumentPane()
+
+  // Document-level locks (initial-value templates, permissions, history) are
+  // not always reflected on the field's `readOnly` prop in the same tick as
+  // the patch channel. Gating on both prevents toasts from auto-patches.
+  const readOnly =
+    Boolean(documentReadOnly) ||
+    schemaType.readOnly === true ||
+    Boolean(formState?.readOnly) ||
+    Boolean(isInitialValueLoading)
+
   const handleAddLanguages = useCallback(
     (addLanguageKeys: string[] | string) => {
+      if (readOnly) {
+        return
+      }
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion
       const formValue = getFormValue(props.path) as InternationalizedArrayItem[]
       if (!filteredLanguages?.length) {
@@ -147,17 +181,16 @@ export default function InternationalizedArray(
 
       onChange([setIfMissing([]), ...patches])
     },
-    [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path],
+    [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path, readOnly],
   )
 
-  const {isDeleted, isDeleting} = useDocumentPane()
-
-  // The document only has a revision once it exists in the dataset. Patching
-  // a nonexistent document would create it: auto-adding default languages to
-  // a just-deleted document resurrects it as an empty draft (and the deleted
-  // pane can outrace `isDeleted`), and auto-adding to an unsaved new document
-  // creates a draft before the user has made any edits.
+  // `_rev` means the document is in the dataset. No `_rev` is either a
+  // brand-new form or a deleted one. The events store distinguishes those:
+  // pristine (loaded, zero events) has never existed; any history means it
+  // did — including a fresh open of a deleted id, where this pane never saw
+  // a `_rev`.
   const documentExists = Boolean(useFormValue(['_rev']))
+  const isPristine = isPristineDocument(useContext(EventsContext))
 
   // Create a stable dependency string that only changes when language keys change
   const languageKeysFromValue = value
@@ -179,16 +212,17 @@ export default function InternationalizedArray(
       .every((language) => addedLanguages.includes(language))
 
     if (
-      documentExists &&
+      (isPristine || documentExists) &&
       !isDeleting &&
       !isDeleted &&
       !hasAddedDefaultLanguages &&
-      !shouldMigrateArray
+      !shouldMigrateArray &&
+      !readOnly
     ) {
       const languagesToAdd = defaultLanguages
         .filter((language) => !addedLanguages.includes(language))
         .filter((language) => languages.find((l) => l.id === language))
-      // Account for strict mode by scheduling the update
+      // Account for strict mode by scheduling the update.
       const timeout = setTimeout(() => {
         if (!readOnly) handleAddLanguages(languagesToAdd)
       })
@@ -196,6 +230,7 @@ export default function InternationalizedArray(
     }
     return undefined
   }, [
+    isPristine,
     documentExists,
     isDeleted,
     isDeleting,
@@ -209,7 +244,7 @@ export default function InternationalizedArray(
 
   // NOTE: This is reordering and re-setting the whole array, it could be surgical
   const handleRestoreOrder = useCallback(() => {
-    if (!value?.length || !languages?.length) {
+    if (readOnly || !value?.length || !languages?.length) {
       return
     }
 
@@ -235,7 +270,7 @@ export default function InternationalizedArray(
     }
 
     onChange(set(updatedValue))
-  }, [toast, languages, onChange, value])
+  }, [toast, languages, onChange, value, readOnly])
 
   const allKeysAreLanguages = useMemo(() => {
     if (!value?.length || !languages?.length) {

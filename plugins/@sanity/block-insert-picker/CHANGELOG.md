@@ -1,5 +1,17 @@
 # @sanity/block-insert-picker
 
+## 1.0.10
+
+### Patch Changes
+
+- [#1950](https://github.com/sanity-io/plugins/pull/1950) [`2c2aa54`](https://github.com/sanity-io/plugins/commit/2c2aa54f3140abdfd09c40f4d91d6d2c4b0a167a) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @portabletext/plugin-input-rule to ^6.0.21
+
+## 1.0.9
+
+### Patch Changes
+
+- [#1958](https://github.com/sanity-io/plugins/pull/1958) [`af03610`](https://github.com/sanity-io/plugins/commit/af03610a887d1c9a080ca60fec76041994cf8979) Thanks [@stipsan](https://github.com/stipsan)! - Annotate the `usePickerItemsContext` memo with its return type so the plugin keeps compiling against newer Sanity Studio schema types, which are deep enough to hit the compiler's type-comparison depth limit when the type is only inferred
+
 ## 1.0.8
 
 ### Patch Changes

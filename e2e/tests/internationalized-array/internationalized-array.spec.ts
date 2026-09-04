@@ -13,8 +13,7 @@ import {
 
 test.describe('sanity-plugin-internationalized-array', () => {
   /**
-   * `defaultLanguages` only auto-seeds after the document exists in the
-   * dataset (`_rev`). Opening a persisted empty array must create the EN item.
+   * `defaultLanguages` auto-seeds missing EN rows on persisted empty arrays.
    */
   test('seeds default language on an existing empty document', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
@@ -28,6 +27,28 @@ test.describe('sanity-plugin-internationalized-array', () => {
       await expect(fieldAddButton(page, 'en')).toHaveAttribute('data-disabled', 'true')
     } finally {
       await deleteI18nPost(projectName, doc.id)
+    }
+  })
+
+  /**
+   * SAPP-4422: `defaultLanguages` must seed EN on a brand-new form, before
+   * the document has a `_rev`. Opening create and waiting is enough — do not
+   * type into another field first.
+   */
+  test('seeds default language on a new unsaved document', async ({page}, testInfo) => {
+    const projectName = testInfo.project.name
+    await page.goto('intent/create/template=i18nPost;type=i18nPost')
+    await expect(page.getByTestId('studio-navbar')).toBeVisible()
+    await expect(page.getByTestId('form-view').first()).toBeVisible()
+
+    try {
+      await expect(languageLabel(page, 'en', 'title')).toBeVisible()
+      await expect(languageLabel(page, 'en', 'summary')).toBeVisible()
+    } finally {
+      const docId = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.exec(
+        decodeURIComponent(page.url()),
+      )?.[0]
+      if (docId) await deleteI18nPost(projectName, docId)
     }
   })
 
@@ -119,6 +140,43 @@ test.describe('sanity-plugin-internationalized-array', () => {
       await expect(languageLabel(page, 'es', 'summary')).toBeVisible()
     } finally {
       await deleteI18nPost(projectName, doc.id)
+    }
+  })
+
+  /**
+   * Repro for SAPP-2921: the `i18nPost-out-of-order` template seeds FR before
+   * EN, so `restoreOrder` must auto-patch while the new document may still
+   * hold Studio's initial-value read-only lock. A patch during the lock
+   * toasts "Attempted to patch a read-only document" and leaves the array
+   * out of order.
+   */
+  test('creating a document does not toast a read-only patch error', async ({page}, testInfo) => {
+    const projectName = testInfo.project.name
+    await page.goto('intent/create/template=i18nPost-out-of-order;type=i18nPost')
+    await expect(page.getByTestId('studio-navbar')).toBeVisible()
+    const form = page.getByTestId('form-view').first()
+    await expect(form).toBeVisible()
+
+    try {
+      await expect(languageLabel(page, 'en')).toBeVisible()
+      await expect(languageLabel(page, 'fr')).toBeVisible()
+      // Deferred restoreOrder re-sorts FR, EN → EN, FR once the document is writable.
+      const codeLabels = page
+        .getByTestId('field-title')
+        .locator('[data-ui="Label"]')
+        .filter({hasText: /^(EN|FR)$/})
+      await expect(codeLabels.first()).toHaveText('EN')
+      // restoreOrder and defaultLanguages may both patch; summary EN must
+      // appear without a manual edit (SAPP-4422).
+      await expect(languageLabel(page, 'en', 'summary')).toBeVisible()
+      await expect(page.getByText('Attempted to patch a read-only document')).toHaveCount(0)
+    } finally {
+      // Studio may put a published id or `drafts.<id>` in the URL; a UUID match
+      // ignores the prefix and avoids capturing template/type names.
+      const docId = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.exec(
+        decodeURIComponent(page.url()),
+      )?.[0]
+      if (docId) await deleteI18nPost(projectName, docId)
     }
   })
 

@@ -37,7 +37,7 @@ export function usePickerItemsContext(arrayTypeName?: string): PickerItemsContex
   )
   const schema = useSchema()
 
-  return useMemo(() => {
+  return useMemo<PickerItemsContext | null>(() => {
     if (memberSchemaTypes) {
       return {
         memberTypes: memberSchemaTypes.blockObjects,
