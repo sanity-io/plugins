@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 5.0.24
+
+### Patch Changes
+
+- [#1991](https://github.com/sanity-io/plugins/pull/1991) [`49337b4`](https://github.com/sanity-io/plugins/commit/49337b46a970565cba289c91a21c48f2edbdb077) Thanks [@stipsan](https://github.com/stipsan)! - Replace `deep-equal` with `dequal/lite` for the reference-list comparison on live mutations. The previous comparator cost ~180µs per call regardless of input and added ~52 KB (minified) of transitive polyfill code to the studio bundle; `dequal/lite` is ~500 bytes and 400–10,000x faster on these string arrays.
+
 ## 5.0.23
 
 ### Patch Changes

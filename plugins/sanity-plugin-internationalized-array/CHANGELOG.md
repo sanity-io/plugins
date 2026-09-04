@@ -1,5 +1,7 @@
 # sanity-plugin-internationalized-array
 
+## 5.2.5
+
 ## 5.2.4
 
 ### Patch Changes

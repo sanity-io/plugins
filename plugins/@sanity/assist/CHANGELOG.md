@@ -1,5 +1,15 @@
 # @sanity/assist
 
+## 6.2.0
+
+### Minor Changes
+
+- [#1994](https://github.com/sanity-io/plugins/pull/1994) [`532ceff`](https://github.com/sanity-io/plugins/commit/532ceff871720a26928ebf794d6fe2a2ccd84473) Thanks [@kevindice](https://github.com/kevindice)! - Add `assist.maxFieldSelectionDepth` to configure how deeply nested a field can be and still get AI Assist: the field action (sparkle button), the field picker in the instruction editor and field references in instructions. This depth was hardcoded to 6 path segments, so deeper fields silently disappeared from AI Assist and neither `assist.maxPathDepth` nor `translate.field.maxPathDepth` could change that. The default is still 6, so nothing changes unless the option is set.
+
+### Patch Changes
+
+- [#1991](https://github.com/sanity-io/plugins/pull/1991) [`49337b4`](https://github.com/sanity-io/plugins/commit/49337b46a970565cba289c91a21c48f2edbdb077) Thanks [@stipsan](https://github.com/stipsan)! - Replace `react-fast-compare` with `dequal/lite` in `useListeningQuery` and the inspector's pane-param comparison (same verdicts on the JSON payloads these compare, smaller import)
+
 ## 6.1.21
 
 ### Patch Changes
