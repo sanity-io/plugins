@@ -472,6 +472,10 @@ pnpm add lodash-es
 pnpm add lodash
 ```
 
+**Deep equality: `dequal/lite` via the catalog**
+
+For deep equality use `import {dequal} from 'dequal/lite'` (`dequal` is in the catalog). Every prior comparator in this repo (`deep-equal`, `fast-deep-equal`, `react-fast-compare`, `JSON.stringify(a) === JSON.stringify(b)`) benchmarked equal or slower on the JSON payloads plugins compare and cost more bytes; `dequal/lite` returns the same verdicts on plain JSON (see [sanity#14501](https://github.com/sanity-io/sanity/pull/14501) for the same consolidation in the Studio). Reach for full `dequal` only when the values hold `Map`/`Set`/typed arrays, and for `react-fast-compare` only when comparing values that can contain React elements or DOM nodes.
+
 **Catalog shared dependencies**
 
 When a dependency is used by more than one package (two or more), manage its version in the pnpm [catalog](https://pnpm.io/catalogs) instead of repeating a literal range in each `package.json`:
