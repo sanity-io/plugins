@@ -8,7 +8,7 @@ import {getDraftId, getVersionId, type TargetDocumentState} from 'sanity'
  * - `variant` – a variant-scoped version (`versions.<scopeId>.<groupId>`). Variant scope ids are
  *   opaque and server-generated, so the id always comes from the resolved target: the existing
  *   variant document, or the draft id advertised by its published sibling when the draft variant
- *   does not exist yet (`exists: false`). Editing the document creates it at that id.
+ *   does not exist yet. Editing the document creates it at that id.
  * - `unavailable` – a variant is selected, but the document has no version for it in the current
  *   perspective that could be edited or created, or the target is still resolving. Falling back to
  *   the base pair here would run instructions on the wrong document, so AI Assist is disabled
@@ -16,7 +16,7 @@ import {getDraftId, getVersionId, type TargetDocumentState} from 'sanity'
  */
 export type AssistTarget =
   | {kind: 'base'; documentId: string}
-  | {kind: 'variant'; documentId: string; exists: boolean}
+  | {kind: 'variant'; documentId: string}
   | {kind: 'unavailable'}
 
 export interface ResolveAssistTargetOptions {
@@ -67,11 +67,11 @@ export function resolveAssistTarget(options: ResolveAssistTargetOptions): Assist
         return base
       }
       return targetDocumentState.targetDocument
-        ? {kind: 'variant', documentId: targetDocumentState.targetDocument._id, exists: true}
+        ? {kind: 'variant', documentId: targetDocumentState.targetDocument._id}
         : UNAVAILABLE
     case 'variant-missing':
       return targetDocumentState.creatableTarget
-        ? {kind: 'variant', documentId: targetDocumentState.creatableTarget.id, exists: false}
+        ? {kind: 'variant', documentId: targetDocumentState.creatableTarget.id}
         : UNAVAILABLE
     case 'variant-definition-document-not-found':
       return UNAVAILABLE
