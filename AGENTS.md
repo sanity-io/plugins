@@ -289,6 +289,25 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Root Vitest sets `SC_DISABLE_SPEEDY=false` so styled-components keeps its fast CSSOM injection path under jsdom (upstream disables it when `NODE_ENV !== 'production'`, which makes first mounts of styled-heavy trees slow enough to trip default timeouts). Same approach as [sanity#13675](https://github.com/sanity-io/sanity/pull/13675).
 - For plugins that use vanilla-extract: register `vanillaExtractPlugin()` in the plugin’s `vitest.config.ts` (required so `.css.ts` compiles under Vitest) and include `'@vanilla-extract/css/disableRuntimeStyles'` in `setupFiles` (no-op under `node`, skips CSS injection for `jsdom`/`happy-dom` suites; remove only when a test asserts real CSS) — see the `sanity-plugin-best-practices` styling reference (`Disabling runtime styles in tests`)
 
+### React Compiler Vitest parity
+
+If a plugin’s `tsdown.config.ts` has `reactCompiler: {transform: 'oxc'}` (the default from generators), its `vitest.config.ts` **must** register `reactCompilerPluginForVitest()` from `@sanity/plugin-kit/vitest` so unit tests exercise the same compiled output that ships to npm — not uncompiled `src`:
+
+```ts
+import {reactCompilerPluginForVitest} from '@sanity/plugin-kit/vitest'
+import {defineConfig} from 'vitest/config'
+
+export default defineConfig({
+  plugins: [reactCompilerPluginForVitest()],
+  // ...
+})
+```
+
+- Do **not** use `@vitejs/plugin-react` `react({compiler: true})` for Vitest — the compiler should always run for plugin code, but that integration never applies in Vitest (it only compiles browser builds, not Vitest’s server-side transform pipeline). The shared plugin calls `oxc-transform-react` directly instead.
+- The shared plugin skips non-JSX modules that do not import `react` (oxc DCE would otherwise drop unused side-effect imports like `@testing-library/jest-dom/vitest` in setup files); `.tsx`/`.jsx` always compile.
+- Generators already wire both `tsdown.config.ts` and `vitest.config.ts`. `@sanity/plugin-kit` resolves through the root devDependency (like `vitest` and `vitest-package-exports`) — do not add it to plugin `devDependencies`; a per-plugin `workspace:^` devDep breaks the `pnpm pack` step of plugin builds. Do not remove the Vitest compiler plugin when adding vanilla-extract or other plugins — compose into `plugins: [...]`.
+- `scripts/react-compiler-parity` enforces this invariant in `pnpm test` (config text **and** a transform through Vitest’s pipeline that must emit `react/compiler-runtime`). Agents who enable or keep `reactCompiler` in tsdown without mirroring Vitest will fail CI.
+
 ## Pull Request Workflow
 
 ### 1. Create as Draft PR First
