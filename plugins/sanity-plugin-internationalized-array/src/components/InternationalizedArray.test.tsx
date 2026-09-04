@@ -863,6 +863,111 @@ describe('InternationalizedArray', () => {
     expect(mockFilterField).toHaveBeenCalledTimes(2)
   })
 
+  test('renders the fieldMenu icon even when all languages are present', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      buttonLocations: ['fieldMenu'],
+    })
+
+    const value = createValues(['en', 'fr', 'es', 'de'])
+    const props = createMockArrayProps({value})
+
+    renderInternationalizedArray(props)
+
+    expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
+    expect(screen.getByTestId('field-menu-add-all')).toBeDisabled()
+    expect(screen.queryByTestId('add-all-languages')).not.toBeInTheDocument()
+  })
+
+  test('disables add controls when all filtered languages are present', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      buttonLocations: ['field', 'fieldMenu'],
+      filteredLanguages: MOCK_LANGUAGES.slice(0, 1),
+    })
+
+    renderInternationalizedArray(createMockArrayProps({value: createValues(['en', 'fr'])}))
+
+    expect(screen.getByTestId('field-menu-add-all')).toBeDisabled()
+    expect(screen.queryByTestId('add-buttons-grid')).not.toBeInTheDocument()
+  })
+
+  test('keeps the add-all bar under field and hides it under fieldMenu', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
+
+    const {unmount} = renderInternationalizedArray(createMockArrayProps())
+    expect(screen.getByTestId('add-all-languages')).toBeInTheDocument()
+    expect(screen.getByText('Add all languages')).toBeInTheDocument()
+    unmount()
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      buttonLocations: ['fieldMenu'],
+    })
+    renderInternationalizedArray(createMockArrayProps())
+    expect(screen.queryByTestId('add-all-languages')).not.toBeInTheDocument()
+    expect(screen.getByTestId('field-menu-add-all')).toBeEnabled()
+    expect(screen.getByTestId('field-menu-add-all')).toHaveTextContent('Add all languages')
+    expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
+  })
+
+  test('renders field and fieldMenu controls together when both are listed', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      buttonLocations: ['field', 'fieldMenu'],
+    })
+
+    renderInternationalizedArray(createMockArrayProps())
+
+    expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
+    expect(screen.getByTestId('add-buttons-grid')).toBeInTheDocument()
+    expect(screen.getByTestId('add-all-languages')).toBeInTheDocument()
+  })
+
+  test('hides the fieldMenu bulk item when buttonAddAll is false', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      buttonLocations: ['fieldMenu'],
+      buttonAddAll: false,
+    })
+
+    renderInternationalizedArray(createMockArrayProps())
+    fireEvent.click(screen.getByTestId('add-translation-menu'))
+
+    expect(screen.queryByTestId('field-menu-add-all')).not.toBeInTheDocument()
+    expect(screen.getByTestId('field-menu-add-en')).toBeInTheDocument()
+  })
+
+  test('places the fieldMenu control first, above language rows', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      buttonLocations: ['fieldMenu'],
+    })
+
+    const mockMembers = [
+      {
+        kind: 'item',
+        key: 'en',
+        item: {
+          schemaType: {name: 'internationalizedArrayStringValue'},
+          members: [{kind: 'field', name: 'value'}],
+        },
+      },
+    ]
+    const props = createMockArrayProps({
+      members: mockMembers,
+      value: createValues(['en']),
+    })
+
+    renderInternationalizedArray(props)
+
+    const menu = screen.getByTestId('field-menu')
+    const item = screen.getByTestId('array-item')
+    expect(menu.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   test('renders MemberItemError for members with kind !== "item"', () => {
     // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({

@@ -1,3 +1,4 @@
+import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {Language, InternationalizedArrayItem} from '../types'
 
 /**
@@ -13,7 +14,9 @@ export function createAddAllTitle(
   languages: Language[],
 ): string {
   if (value?.length) {
-    return `Add missing ${languages.length - value.length === 1 ? `language` : `languages`}`
+    const languagesInUse = new Set(value.map((item) => item[LANGUAGE_FIELD_NAME]))
+    const missingCount = languages.filter((language) => !languagesInUse.has(language.id)).length
+    return `Add missing ${missingCount === 1 ? `language` : `languages`}`
   }
 
   return languages.length === 1 && languages[0]
