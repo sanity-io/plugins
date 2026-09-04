@@ -39,72 +39,81 @@ import {
 } from '../types'
 import {contextDocumentSchema} from './contextDocumentSchema'
 
-export const fieldReference = defineType({
-  type: 'object',
-  name: fieldReferenceTypeName,
-  title: 'Field',
-  icon: ThListIcon,
+/**
+ * The validation rule resolves the selected path against the same field-ref tree the field picker
+ * offers, so it has to be built with the same `assist.maxFieldSelectionDepth`.
+ */
+export function createFieldReferenceType(maxFieldSelectionDepth?: number) {
+  return defineType({
+    type: 'object',
+    name: fieldReferenceTypeName,
+    title: 'Field',
+    icon: ThListIcon,
 
-  fields: [
-    defineField({
-      type: 'string',
-      name: 'path',
-      title: 'Field',
-      components: {
-        input: FieldRefPathInput,
+    fields: [
+      defineField({
+        type: 'string',
+        name: 'path',
+        title: 'Field',
+        components: {
+          input: FieldRefPathInput,
+        },
+        validation: (rule) => {
+          const getForSchemaType = createFieldRefCache(maxFieldSelectionDepth)
+          return rule.custom((value, context) => {
+            if (!value) {
+              return 'Please select a field'
+            }
+            try {
+              const docId = context.document?._id
+              if (!docId) {
+                return `Field reference cannot be used outside document inspector context. Could not resolve document id.`
+              }
+              if (!docId.startsWith(assistDocumentIdPrefix)) {
+                return `Field reference cannot be used outside document inspector context. Could not resolve document id: ${docId}`
+              }
+              const targetDocType = docId.slice(assistDocumentIdPrefix.length)
+              const schema = context.schema.get(targetDocType)
+              if (!schema) {
+                return `Field reference cannot be used outside document inspector context. Could not resolve schema: ${targetDocType}`
+              }
+              // oxlint-disable-next-line no-unsafe-type-assertion
+              const {fieldRefs} = getForSchemaType(schema as ObjectSchemaType)
+              const fieldRef = fieldRefs.find((r) => r.key === value)
+              if (!fieldRef) {
+                return `Field with path "${value}" does not exist in the schema.`
+              }
+              return true
+            } catch (e) {
+              console.error('Failed to resolve field reference', e)
+              return 'Invalid field reference.'
+            }
+          })
+        },
+      }),
+    ],
+    preview: {
+      select: {
+        path: 'path',
       },
-      validation: (rule) => {
-        const getForSchemaType = createFieldRefCache()
-        return rule.custom((value, context) => {
-          if (!value) {
-            return 'Please select a field'
-          }
-          try {
-            const docId = context.document?._id
-            if (!docId) {
-              return `Field reference cannot be used outside document inspector context. Could not resolve document id.`
-            }
-            const targetDocType = docId.replace(new RegExp(`^${assistDocumentIdPrefix}`), '')
-            const schema = context.schema.get(targetDocType)
-            if (!schema) {
-              return `Field reference cannot be used outside document inspector context. Could not resolve schema: ${targetDocType}`
-            }
-            // oxlint-disable-next-line no-unsafe-type-assertion
-            const {fieldRefs} = getForSchemaType(schema as ObjectSchemaType)
-            const fieldRef = fieldRefs.find((r) => r.key === value)
-            if (!fieldRef) {
-              return `Field with path "${value}" does not exist in the schema.`
-            }
-            return true
-          } catch (e) {
-            console.error('Failed to resolve field reference', e)
-            return 'Invalid field reference.'
-          }
-        })
+      prepare({path}) {
+        return {
+          title: path,
+          path,
+          icon: CodeIcon,
+        }
       },
-    }),
-  ],
-  preview: {
-    select: {
-      path: 'path',
     },
-    prepare({path}) {
-      return {
-        title: path,
-        path,
-        icon: CodeIcon,
-      }
+    components: {
+      preview: FieldRefPreview,
     },
-  },
-  components: {
-    preview: FieldRefPreview,
-  },
-  options: {
-    modal: {
-      type: 'popover',
+    options: {
+      modal: {
+        type: 'popover',
+      },
     },
-  },
-})
+  })
+}
 
 export const userInput = defineType({
   type: 'object',
@@ -196,7 +205,7 @@ export const prompt = defineType({
       },
       of: [
         defineArrayMember({
-          type: fieldReference.name,
+          type: fieldReferenceTypeName,
         }),
         defineArrayMember({
           type: promptContext.name,
@@ -207,7 +216,7 @@ export const prompt = defineType({
       ],
     }),
     /*    defineArrayMember({
-      type: fieldReference.name,
+      type: fieldReferenceTypeName,
     }),
     defineArrayMember({
       type: promptContext.name,
