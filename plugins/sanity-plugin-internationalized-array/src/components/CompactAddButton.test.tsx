@@ -37,7 +37,7 @@ describe('CompactAddButton', () => {
         onAddAll={vi.fn()}
         buttonAddAll
         addAllTitle="Add missing languages"
-        allLanguagesArePresent
+        allFilteredLanguagesArePresent
       />,
       {wrapper: ThemeWrapper},
     )
@@ -57,7 +57,7 @@ describe('CompactAddButton', () => {
         onAddAll={vi.fn()}
         buttonAddAll
         addAllTitle="Add missing languages"
-        allLanguagesArePresent={false}
+        allFilteredLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
@@ -81,7 +81,7 @@ describe('CompactAddButton', () => {
         onAddAll={vi.fn()}
         buttonAddAll
         addAllTitle="Add missing languages"
-        allLanguagesArePresent
+        allFilteredLanguagesArePresent
       />,
       {wrapper: ThemeWrapper},
     )
@@ -100,7 +100,7 @@ describe('CompactAddButton', () => {
         onAddAll={vi.fn()}
         buttonAddAll
         addAllTitle="Add all languages"
-        allLanguagesArePresent={false}
+        allFilteredLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
@@ -119,7 +119,7 @@ describe('CompactAddButton', () => {
         onAddAll={vi.fn()}
         buttonAddAll={false}
         addAllTitle="Add all languages"
-        allLanguagesArePresent={false}
+        allFilteredLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
@@ -148,7 +148,7 @@ describe('CompactAddButton', () => {
         onAddAll={vi.fn()}
         buttonAddAll
         addAllTitle="Add all languages"
-        allLanguagesArePresent={false}
+        allFilteredLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
@@ -169,7 +169,7 @@ describe('CompactAddButton', () => {
         onAddAll={vi.fn()}
         buttonAddAll
         addAllTitle="Add all languages"
-        allLanguagesArePresent={false}
+        allFilteredLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
@@ -189,7 +189,7 @@ describe('CompactAddButton', () => {
         onAddAll={onAddAll}
         buttonAddAll
         addAllTitle="Add all languages"
-        allLanguagesArePresent={false}
+        allFilteredLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
@@ -213,7 +213,7 @@ describe('CompactAddButton', () => {
         onAddAll={vi.fn()}
         buttonAddAll
         addAllTitle="Add all languages"
-        allLanguagesArePresent={false}
+        allFilteredLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )
@@ -230,7 +230,7 @@ describe('CompactAddButton', () => {
         onAddAll={vi.fn()}
         buttonAddAll
         addAllTitle="Add all languages"
-        allLanguagesArePresent={false}
+        allFilteredLanguagesArePresent={false}
       />,
       {wrapper: ThemeWrapper},
     )

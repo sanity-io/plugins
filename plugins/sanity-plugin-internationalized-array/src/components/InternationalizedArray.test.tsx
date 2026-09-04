@@ -879,6 +879,19 @@ describe('InternationalizedArray', () => {
     expect(screen.queryByTestId('add-all-languages')).not.toBeInTheDocument()
   })
 
+  test('disables add controls when all filtered languages are present', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      buttonLocations: ['field', 'fieldMenu'],
+      filteredLanguages: MOCK_LANGUAGES.slice(0, 1),
+    })
+
+    renderInternationalizedArray(createMockArrayProps({value: createValues(['en', 'fr'])}))
+
+    expect(screen.getByTestId('field-menu-add-all')).toBeDisabled()
+    expect(screen.queryByTestId('add-buttons-grid')).not.toBeInTheDocument()
+  })
+
   test('keeps the add-all bar under field and hides it under fieldMenu', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
       MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,

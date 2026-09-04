@@ -14,7 +14,7 @@ type CompactAddButtonProps = {
   onAddAll: () => void
   buttonAddAll: boolean
   addAllTitle: string
-  allLanguagesArePresent: boolean
+  allFilteredLanguagesArePresent: boolean
 }
 
 /**
@@ -30,7 +30,7 @@ function CompactAddButton(props: CompactAddButtonProps) {
     onAddAll,
     buttonAddAll,
     addAllTitle,
-    allLanguagesArePresent,
+    allFilteredLanguagesArePresent,
   } = props
   const {languageDisplay, filteredLanguages: languages} = useInternationalizedArrayContext()
   const menuId = useId()
@@ -73,7 +73,7 @@ function CompactAddButton(props: CompactAddButtonProps) {
                 <MenuItem
                   text={addAllTitle}
                   icon={TranslateIcon}
-                  disabled={readOnly || allLanguagesArePresent}
+                  disabled={readOnly || allFilteredLanguagesArePresent}
                   data-testid="field-menu-add-all"
                   onClick={onAddAll}
                 />

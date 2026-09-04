@@ -18,7 +18,6 @@ import {useDocumentPane} from 'sanity/structure'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {InternationalizedArrayItem} from '../types'
-import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
 import {internationalizedArrayLanguageFilter} from '../utils/internationalizedArrayLanguageFilter'
@@ -309,10 +308,9 @@ export default function InternationalizedArray(
     }
   }, [restoreOrder, languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, readOnly])
 
-  // compare value keys with possible languages
-  const allLanguagesArePresent = useMemo(
-    () => checkAllLanguagesArePresent(filteredLanguages, value),
-    [filteredLanguages, value],
+  const allFilteredLanguagesArePresent = useMemo(
+    () => filteredLanguages.every((language) => addedLanguages.includes(language.id)),
+    [filteredLanguages, addedLanguages],
   )
   const addAllMissingLanguages = useCallback(() => {
     handleAddLanguages(filteredLanguages.map((language) => language.id))
@@ -325,7 +323,7 @@ export default function InternationalizedArray(
   const canAddLanguages = !shouldMigrateArray && filteredLanguages?.length > 0
   const showFieldMenu = canAddLanguages && buttonLocations.includes('fieldMenu')
   const showFieldButtons =
-    canAddLanguages && buttonLocations.includes('field') && !allLanguagesArePresent
+    canAddLanguages && buttonLocations.includes('field') && !allFilteredLanguagesArePresent
   const fieldHasMembers = members?.length > 0
   const addAllTitle = createAddAllTitle(value, filteredLanguages)
 
@@ -341,7 +339,7 @@ export default function InternationalizedArray(
           tone="primary"
           mode="ghost"
           data-testid="add-all-languages"
-          disabled={readOnly || allLanguagesArePresent}
+          disabled={readOnly || allFilteredLanguagesArePresent}
           icon={AddIcon}
           text={addAllTitle}
           onClick={addAllMissingLanguages}
@@ -360,7 +358,7 @@ export default function InternationalizedArray(
           onAddAll={addAllMissingLanguages}
           buttonAddAll={buttonAddAll}
           addAllTitle={addAllTitle}
-          allLanguagesArePresent={allLanguagesArePresent}
+          allFilteredLanguagesArePresent={allFilteredLanguagesArePresent}
         />
       ) : null}
       {filteredMembers.map((member) => {
