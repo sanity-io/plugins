@@ -1360,6 +1360,23 @@ export type LocalizedString = {
   fr?: string
 }
 
+export type AssistImageDescriptionRepro = {
+  _id: string
+  _type: 'assistImageDescriptionRepro'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  featuredImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
+}
+
 export type AssistDeepNestingRepro = {
   _id: string
   _type: 'assistDeepNestingRepro'
@@ -1930,6 +1947,7 @@ export type AllSanitySchemaTypes =
   | EmbeddingsArticle
   | GoogleTranslateTest
   | LocalizedString
+  | AssistImageDescriptionRepro
   | AssistDeepNestingRepro
   | AssistOverviewHours
   | AssistHoursOfOperation

@@ -216,7 +216,7 @@ function AssistInspector(props: DocumentInspectorProps) {
     formState,
   } = documentPane
 
-  const {assistableDocumentId, documentIsAssistable} = useAssistDocumentContext()
+  const {assistableDocumentId, documentIsAssistable, documentIsSyncing} = useAssistDocumentContext()
 
   const formStateRef = useRef(formState)
   // oxlint-disable-next-line react/refs
@@ -225,6 +225,7 @@ function AssistInspector(props: DocumentInspectorProps) {
   const {instructionLoading, requestRunInstruction} = useRequestRunInstruction({
     documentOnChange,
     isDocAssistable: documentIsAssistable,
+    isSyncing: documentIsSyncing,
   })
 
   const typePath = useTypePath(docValue, pathKey ?? '')

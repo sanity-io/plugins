@@ -1,9 +1,16 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {getDraftId, getVersionId, type ObjectSchemaType, usePerspective, useSchema} from 'sanity'
+import {
+  getPublishedId,
+  type ObjectSchemaType,
+  usePerspective,
+  useSchema,
+  useSyncState,
+} from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
 import {useAiPaneRouter} from '../../assistInspector/helpers'
 import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'
+import {getAssistWriteDocumentId} from '../../helpers/ids'
 import {fieldPathParam, type InstructionTask} from '../../types'
 import type {AssistDocumentContextValue} from '../AssistDocumentContext'
 import {isDocAssistable} from '../RequestRunInstructionProvider'
@@ -39,16 +46,20 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   const {selectedReleaseId} = usePerspective()
   const {draft, published, version} = editState || {}
 
-  const assistableDocumentId = selectedReleaseId
-    ? getVersionId(documentId, selectedReleaseId)
-    : documentSchemaType.liveEdit
-      ? documentId
-      : getDraftId(documentId)
+  const assistableDocumentId = getAssistWriteDocumentId(documentId, {
+    liveEdit: documentSchemaType.liveEdit,
+    releaseId: selectedReleaseId,
+  })
 
   const documentIsNew = selectedReleaseId ? !version?._id : !draft?._id && !published?._id
   const documentIsAssistable = selectedReleaseId
     ? !!version
     : isDocAssistable(documentSchemaType, published, draft)
+  const {isSyncing: documentIsSyncing} = useSyncState(
+    getPublishedId(documentId),
+    documentType,
+    selectedReleaseId,
+  )
 
   const {params} = useAiPaneRouter()
   const selectedPath = params[fieldPathParam]
@@ -66,6 +77,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
       documentSchemaType,
       documentIsNew,
       documentIsAssistable,
+      documentIsSyncing,
       openInspector,
       closeInspector,
       inspector,
@@ -88,6 +100,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   }, [
     assistDocument,
     documentIsAssistable,
+    documentIsSyncing,
     assistableDocumentId,
     documentSchemaType,
     documentIsNew,

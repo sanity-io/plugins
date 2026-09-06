@@ -1,6 +1,6 @@
 import {describe, expect, test} from 'vitest'
 
-import {assistDocumentId, assistTasksStatusId} from './ids'
+import {assistDocumentId, assistTasksStatusId, getAssistWriteDocumentId} from './ids'
 
 describe('ids', () => {
   test('assistDocumentId should replace illegal id chars with _', () => {
@@ -25,4 +25,25 @@ describe('ids', () => {
       expect(assistTasksStatusId(documentId)).toEqual(assistId)
     },
   )
+})
+
+describe('getAssistWriteDocumentId', () => {
+  test('targets drafts.* for published or draft ids on non-live-edit types', () => {
+    expect(getAssistWriteDocumentId('article-1')).toBe('drafts.article-1')
+    expect(getAssistWriteDocumentId('drafts.article-1')).toBe('drafts.article-1')
+  })
+
+  test('targets published for live-edit types', () => {
+    expect(getAssistWriteDocumentId('article-1', {liveEdit: true})).toBe('article-1')
+    expect(getAssistWriteDocumentId('drafts.article-1', {liveEdit: true})).toBe('article-1')
+  })
+
+  test('keeps release version ids and builds them from a release id', () => {
+    expect(getAssistWriteDocumentId('versions.rSummer.article-1')).toBe(
+      'versions.rSummer.article-1',
+    )
+    expect(getAssistWriteDocumentId('article-1', {releaseId: 'rSummer'})).toBe(
+      'versions.rSummer.article-1',
+    )
+  })
 })
