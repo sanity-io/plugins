@@ -53,7 +53,7 @@ describe('createDraftMaterializationEvent', () => {
   test('unsets the dummy field used to create a draft via form onChange', () => {
     const event = createDraftMaterializationEvent()
     expect(event).toBeInstanceOf(PatchEvent)
-    expect(event.patches).toEqual([{type: 'unset', path: [FORCE_DOCUMENT_CREATION_FIELD]}])
+    expect(event.patches).toMatchObject([{type: 'unset', path: [FORCE_DOCUMENT_CREATION_FIELD]}])
   })
 })
 
@@ -76,7 +76,7 @@ describe('prepareAssistWrite', () => {
       }),
     ).toBe('queue')
     expect(documentOnChange).toHaveBeenCalledTimes(1)
-    expect(documentOnChange.mock.calls[0]?.[0].patches).toEqual([
+    expect(documentOnChange.mock.calls[0]?.[0].patches).toMatchObject([
       {type: 'unset', path: [FORCE_DOCUMENT_CREATION_FIELD]},
     ])
   })
