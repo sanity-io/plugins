@@ -4,6 +4,7 @@ import {useContext, useMemo} from 'react'
 import type {DocumentFieldAction, DocumentFieldActionGroup, DocumentFieldActionItem} from 'sanity'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
+import {useDraftDelayedTask} from '../assistDocument/RequestRunInstructionProvider'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {ImageContext} from '../components/ImageContext'
 import {usePathKey} from '../helpers/misc'
@@ -23,7 +24,14 @@ export const generateImagActions: DocumentFieldAction = {
     const {generateImage, loading} = useGenerateImage(apiClient)
 
     const imageContext = useContext(ImageContext)
-    const {assistableDocumentId} = useAssistDocumentContext()
+    const {assistableDocumentId, documentOnChange, documentIsAssistable, documentIsSyncing} =
+      useAssistDocumentContext()
+    const generateImageWhenDraftReady = useDraftDelayedTask({
+      documentOnChange,
+      isDocAssistable: documentIsAssistable,
+      isSyncing: documentIsSyncing,
+      task: generateImage,
+    })
 
     const isActive = !!imageContext && pathKey === imageContext?.imageInstructionPath
 
@@ -47,11 +55,11 @@ export const generateImagActions: DocumentFieldAction = {
           if (loading) {
             return
           }
-          void generateImage({path: pathKey, documentId: assistableDocumentId})
+          generateImageWhenDraftReady({path: pathKey, documentId: assistableDocumentId})
         },
         renderAsButton: true,
         disabled: loading,
       })
-    }, [isActive, generateImage, pathKey, assistableDocumentId, loading])
+    }, [isActive, generateImageWhenDraftReady, pathKey, assistableDocumentId, loading])
   },
 }

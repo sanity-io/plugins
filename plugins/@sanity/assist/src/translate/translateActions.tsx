@@ -26,6 +26,7 @@ function node(node: DocumentFieldActionItem | DocumentFieldActionGroup) {
 
 export type TranslateProps = DocumentFieldActionProps & {
   documentIsAssistable?: boolean
+  documentIsSyncing?: boolean
   documentSchemaType?: ObjectSchemaType
 }
 export const translateActions: DocumentFieldAction = {
@@ -40,6 +41,7 @@ export const translateActions: DocumentFieldAction = {
       documentId,
       documentSchemaType,
       documentIsAssistable,
+      documentIsSyncing,
     } = props
     const isDocumentLevel = path.length === 0
     const readOnly = fieldSchemaType.readOnly === true
@@ -71,6 +73,7 @@ export const translateActions: DocumentFieldAction = {
     const translate = useDraftDelayedTask({
       documentOnChange,
       isDocAssistable: documentIsAssistable ?? false,
+      isSyncing: documentIsSyncing,
       task: translationApi.translate,
     })
 
@@ -130,6 +133,7 @@ export const translateActions: DocumentFieldAction = {
     const openFieldTranslation = useDraftDelayedTask({
       documentOnChange,
       isDocAssistable: documentIsAssistable ?? false,
+      isSyncing: documentIsSyncing,
       task: fieldTranslate.openFieldTranslation,
     })
 

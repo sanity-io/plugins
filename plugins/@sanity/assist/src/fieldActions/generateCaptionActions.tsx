@@ -5,6 +5,7 @@ import type {DocumentFieldAction, DocumentFieldActionGroup, DocumentFieldActionI
 import {useDocumentPane} from 'sanity/structure'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
+import {useDraftDelayedTask} from '../assistDocument/RequestRunInstructionProvider'
 import {aiInspectorId} from '../assistInspector/constants'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {ImageContext} from '../components/ImageContext'
@@ -26,7 +27,14 @@ export const generateCaptionsActions: DocumentFieldAction = {
     const apiClient = useApiClient(config?.__customApiClient)
     const {generateCaption, loading} = useGenerateCaption(apiClient)
     const imageContext = useContext(ImageContext)
-    const {assistableDocumentId} = useAssistDocumentContext()
+    const {assistableDocumentId, documentOnChange, documentIsAssistable, documentIsSyncing} =
+      useAssistDocumentContext()
+    const generateCaptionWhenDraftReady = useDraftDelayedTask({
+      documentOnChange,
+      isDocAssistable: documentIsAssistable,
+      isSyncing: documentIsSyncing,
+      task: generateCaption,
+    })
 
     const isActive = !!imageContext && pathKey === imageContext?.imageDescriptionPath
 
@@ -58,7 +66,7 @@ export const generateCaptionsActions: DocumentFieldAction = {
             })
             return
           }
-          void generateCaption({path: pathKey, documentId: assistableDocumentId})
+          generateCaptionWhenDraftReady({path: pathKey, documentId: assistableDocumentId})
         },
         renderAsButton: true,
         disabled: loading,
@@ -67,7 +75,7 @@ export const generateCaptionsActions: DocumentFieldAction = {
     }, [
       isActive,
       imageContext,
-      generateCaption,
+      generateCaptionWhenDraftReady,
       pathKey,
       assistableDocumentId,
       loading,

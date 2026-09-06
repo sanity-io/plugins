@@ -1,8 +1,9 @@
 import {createContext, useEffect, useMemo, useState} from 'react'
-import {getPublishedId, type InputProps, pathToString, usePerspective, useSyncState} from 'sanity'
+import {type InputProps, pathToString} from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
+import {useDraftDelayedTask} from '../assistDocument/RequestRunInstructionProvider'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {getDescriptionFieldOption, getImageInstructionFieldOption} from '../helpers/typeUtils'
 import {canUseAssist, useApiClient, useGenerateCaption} from '../useApiClient'
@@ -19,19 +20,19 @@ export function ImageContextProvider(props: InputProps) {
   const {schemaType, path, value, readOnly} = props
   // oxlint-disable-next-line no-unsafe-type-assertion
   const assetRef = (value as any)?.asset?._ref
-  const {selectedReleaseId} = usePerspective()
   const [assetRefState, setAssetRefState] = useState<string | undefined>(assetRef)
 
-  const {assistableDocumentId, documentSchemaType} = useAssistDocumentContext()
+  const {assistableDocumentId, documentOnChange, documentIsAssistable, documentIsSyncing} =
+    useAssistDocumentContext()
   const {config, status} = useAiAssistanceConfig()
   const apiClient = useApiClient(config?.__customApiClient)
   const {generateCaption} = useGenerateCaption(apiClient)
-
-  const {isSyncing} = useSyncState(
-    getPublishedId(assistableDocumentId),
-    documentSchemaType.name,
-    selectedReleaseId,
-  )
+  const generateCaptionWhenDraftReady = useDraftDelayedTask({
+    documentOnChange,
+    isDocAssistable: documentIsAssistable,
+    isSyncing: documentIsSyncing,
+    task: generateCaption,
+  })
 
   const router = usePaneRouter()
   const isShowingOlderRevision = !!router.params?.['rev']
@@ -43,14 +44,14 @@ export function ImageContextProvider(props: InputProps) {
       assistableDocumentId &&
       descriptionField?.updateOnImageChange &&
       assetRef !== assetRefState &&
-      !isSyncing &&
+      !documentIsSyncing &&
       !isShowingOlderRevision &&
       !readOnly
     ) {
       // oxlint-disable-next-line react/set-state-in-effect
       setAssetRefState(assetRef)
       if (canUseAssist(status)) {
-        void generateCaption({
+        generateCaptionWhenDraftReady({
           path: pathToString([...path, descriptionField.path]),
           documentId: assistableDocumentId,
         })
@@ -62,8 +63,8 @@ export function ImageContextProvider(props: InputProps) {
     assetRef,
     assetRefState,
     assistableDocumentId,
-    generateCaption,
-    isSyncing,
+    generateCaptionWhenDraftReady,
+    documentIsSyncing,
     status,
     readOnly,
     isShowingOlderRevision,
