@@ -15,6 +15,7 @@ import {translationsTabDefaultDocumentNode} from '#translations-tab'
 // the structure, so nothing ever disappears from the studio.
 
 const INPUT_PLUGIN_TYPES = [
+  'assistImageDescriptionRepro', // @sanity/assist (#660, #663)
   'asyncListTest', // @sanity/sanity-plugin-async-list
   'codeTest', // @sanity/code-input
   'colorTest', // @sanity/color-input
