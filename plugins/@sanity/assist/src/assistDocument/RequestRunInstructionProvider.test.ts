@@ -4,10 +4,12 @@ import {describe, expect, test, vi} from 'vitest'
 import {
   canRunQueuedAssistWrite,
   createDraftMaterializationEvent,
-  FORCE_DOCUMENT_CREATION_FIELD,
+  createDraftMaterializationFallbackEvent,
+  EMPTY_ACTION_GUARD_PSEUDO_FIELD,
   isDocAssistable,
   needsDraftMaterialization,
   prepareAssistWrite,
+  shouldFallbackToEmptyActionGuard,
 } from './RequestRunInstructionProvider'
 
 function schema(liveEdit?: boolean) {
@@ -50,10 +52,28 @@ describe('needsDraftMaterialization', () => {
 })
 
 describe('createDraftMaterializationEvent', () => {
-  test('unsets the dummy field used to create a draft via form onChange', () => {
+  test('is an empty / no-op PatchEvent so Studio can create the draft', () => {
     const event = createDraftMaterializationEvent()
     expect(event).toBeInstanceOf(PatchEvent)
-    expect(event.patches).toMatchObject([{type: 'unset', path: [FORCE_DOCUMENT_CREATION_FIELD]}])
+    expect(event.patches).toEqual([])
+  })
+})
+
+describe('createDraftMaterializationFallbackEvent', () => {
+  test('unsets Studio empty-action-guard pseudo field', () => {
+    const event = createDraftMaterializationFallbackEvent()
+    expect(event).toBeInstanceOf(PatchEvent)
+    expect(event.patches).toMatchObject([{type: 'unset', path: [EMPTY_ACTION_GUARD_PSEUDO_FIELD]}])
+    expect(EMPTY_ACTION_GUARD_PSEUDO_FIELD).toBe('_empty_action_guard_pseudo_field_')
+  })
+})
+
+describe('shouldFallbackToEmptyActionGuard', () => {
+  test('is true only when the empty onChange did not create a draft or start sync', () => {
+    expect(shouldFallbackToEmptyActionGuard(false, false, false)).toBe(true)
+    expect(shouldFallbackToEmptyActionGuard(false, true, false)).toBe(false)
+    expect(shouldFallbackToEmptyActionGuard(true, false, false)).toBe(false)
+    expect(shouldFallbackToEmptyActionGuard(false, false, true)).toBe(false)
   })
 })
 
@@ -67,7 +87,7 @@ describe('canRunQueuedAssistWrite', () => {
 })
 
 describe('prepareAssistWrite', () => {
-  test('materializes a draft from published values when the draft is missing', () => {
+  test('fires an empty onChange when the draft is missing', () => {
     const documentOnChange = vi.fn()
     expect(
       prepareAssistWrite({
@@ -76,9 +96,8 @@ describe('prepareAssistWrite', () => {
       }),
     ).toBe('queue')
     expect(documentOnChange).toHaveBeenCalledTimes(1)
-    expect(documentOnChange.mock.calls[0]?.[0].patches).toMatchObject([
-      {type: 'unset', path: [FORCE_DOCUMENT_CREATION_FIELD]},
-    ])
+    expect(documentOnChange.mock.calls[0]?.[0]).toBeInstanceOf(PatchEvent)
+    expect(documentOnChange.mock.calls[0]?.[0].patches).toEqual([])
   })
 
   test('does not dirty a document that already has a real draft', () => {

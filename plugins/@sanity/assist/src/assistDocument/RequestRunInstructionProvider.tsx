@@ -1,18 +1,23 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {type ObjectSchemaType, PatchEvent, type SanityDocument, unset} from 'sanity'
 
 import {useRunInstruction} from '../assistLayout/RunInstructionProvider'
 
 /**
- * Dummy path sent through form `onChange` so Studio's document-store `patch`
- * operation materializes a real `drafts.*` document from published values.
+ * Same pseudo field Studio injects in document-pair `serverOperations/patch`
+ * (`packages/sanity/src/core/store/document/document-pair/serverOperations/patch.ts`)
+ * and in `checkoutPair.toActions` when a transaction would otherwise be empty.
  *
- * After publish, the drafts perspective can still display published values
- * (a virtual draft) while `editState.draft` is null. A normal editor edit
- * goes through the same create-if-not-exists path; Studio uses
- * `_empty_action_guard_pseudo_field_` for that.
+ * Do not invent a different name — the Actions API path is built around this one.
  */
-export const FORCE_DOCUMENT_CREATION_FIELD = '_force_document_creation'
+export const EMPTY_ACTION_GUARD_PSEUDO_FIELD = '_empty_action_guard_pseudo_field_'
+
+/**
+ * How long to wait for an empty `onChange` to start creating the draft
+ * (`useSyncState` / `editState.draft`) before falling back to Studio's
+ * empty-action-guard unset.
+ */
+export const EMPTY_ONCHANGE_FALLBACK_MS = 500
 
 export interface DraftDelayedTaskArgs<T> {
   documentOnChange: (event: PatchEvent) => void
@@ -38,8 +43,22 @@ export function needsDraftMaterialization(isDocAssistable: boolean): boolean {
   return !isDocAssistable
 }
 
+/**
+ * Empty form `onChange`. Studio's `patch.execute` still `createIfNotExists`s
+ * `drafts.*` from published when no draft snapshot exists, even if `patches`
+ * is empty — the form pane always calls `patch.execute(toMutationPatches(event.patches))`.
+ */
 export function createDraftMaterializationEvent(): PatchEvent {
-  return PatchEvent.from([unset([FORCE_DOCUMENT_CREATION_FIELD])])
+  return PatchEvent.from([])
+}
+
+/**
+ * Fallback used only if the empty `onChange` does not materialize a draft.
+ * Unsets Studio's empty-action-guard pseudo field so the document-store patch
+ * path is guaranteed to be a non-empty transaction.
+ */
+export function createDraftMaterializationFallbackEvent(): PatchEvent {
+  return PatchEvent.from([unset([EMPTY_ACTION_GUARD_PSEUDO_FIELD])])
 }
 
 export function canRunQueuedAssistWrite(isDocAssistable: boolean, isSyncing = false): boolean {
@@ -47,8 +66,21 @@ export function canRunQueuedAssistWrite(isDocAssistable: boolean, isSyncing = fa
 }
 
 /**
+ * True when we already fired an empty `onChange`, the draft is still missing,
+ * and no mutation is in flight — so Studio did not create the draft for us.
+ */
+export function shouldFallbackToEmptyActionGuard(
+  isDocAssistable: boolean,
+  isSyncing: boolean,
+  alreadyTriedFallback: boolean,
+): boolean {
+  return !alreadyTriedFallback && needsDraftMaterialization(isDocAssistable) && !isSyncing
+}
+
+/**
  * Decides whether a write can run now or must wait for a real draft.
  * Only calls `documentOnChange` when no write target exists yet.
+ * First attempt is an empty / no-op `onChange`.
  */
 export function prepareAssistWrite(args: {
   isDocAssistable: boolean
@@ -90,14 +122,37 @@ export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
   const {documentOnChange, isDocAssistable, isSyncing, task} = args
 
   const [queuedArgs, setQueuedArgs] = useState<T | undefined>(undefined)
+  const didFallbackRef = useRef(false)
 
   useEffect(() => {
     if (queuedArgs && canRunQueuedAssistWrite(isDocAssistable, isSyncing)) {
       task(queuedArgs)
+      didFallbackRef.current = false
       // oxlint-disable-next-line react/set-state-in-effect
       setQueuedArgs(undefined)
     }
   }, [queuedArgs, isDocAssistable, isSyncing, task])
+
+  useEffect(() => {
+    let timer: number | undefined
+
+    if (!queuedArgs) {
+      didFallbackRef.current = false
+    } else if (
+      shouldFallbackToEmptyActionGuard(isDocAssistable, Boolean(isSyncing), didFallbackRef.current)
+    ) {
+      timer = window.setTimeout(() => {
+        didFallbackRef.current = true
+        documentOnChange(createDraftMaterializationFallbackEvent())
+      }, EMPTY_ONCHANGE_FALLBACK_MS)
+    }
+
+    return () => {
+      if (timer !== undefined) {
+        window.clearTimeout(timer)
+      }
+    }
+  }, [queuedArgs, isDocAssistable, isSyncing, documentOnChange])
 
   return useCallback(
     (taskArgs: T) => {
