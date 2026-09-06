@@ -15,6 +15,7 @@ import {useDraftDelayedTask} from '../assistDocument/RequestRunInstructionProvid
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {isAssistSupported} from '../helpers/assistSupported'
 import {getConditionalMembers} from '../helpers/conditionalMembers'
+import {getAssistWriteDocumentId} from '../helpers/ids'
 import {createStyleGuideResolver} from '../helpers/styleguide'
 import type {AssistOptions} from '../schemas/typeDefExtensions'
 import {API_VERSION_WITH_EXTENDED_TYPES, useApiClient, useTranslate} from '../useApiClient'
@@ -99,15 +100,18 @@ export const translateActions: DocumentFieldAction = {
           if (translationApi.loading || !languagePath || !documentId) {
             return
           }
+          const writeDocumentId = getAssistWriteDocumentId(documentId, {
+            liveEdit: documentSchemaType?.liveEdit,
+          })
           translate({
             languagePath,
             translatePath: path,
             styleguide: createStyleGuideResolver(styleguide, {
               client,
-              documentId,
+              documentId: writeDocumentId,
               schemaType: documentSchemaType,
             }),
-            documentId: documentId ?? '',
+            documentId: writeDocumentId,
             conditionalMembers: formStateRef.current
               ? getConditionalMembers(formStateRef.current)
               : [],
@@ -158,10 +162,13 @@ export const translateActions: DocumentFieldAction = {
                 if (formStateRef.current) {
                   getConditionalMembers(formStateRef.current)
                 }
+                const writeDocumentId = getAssistWriteDocumentId(documentId, {
+                  liveEdit: documentSchemaType?.liveEdit,
+                })
                 openFieldTranslation({
                   document: {
                     ...docRef.current,
-                    _id: documentId,
+                    _id: writeDocumentId,
                   },
                   documentSchema: documentSchemaType,
                   translatePath: path,
