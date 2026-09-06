@@ -17,7 +17,7 @@ export const EMPTY_ACTION_GUARD_PSEUDO_FIELD = '_empty_action_guard_pseudo_field
  * (`useSyncState` / `editState.draft`) before falling back to Studio's
  * empty-action-guard unset.
  */
-export const EMPTY_ONCHANGE_FALLBACK_MS = 500
+const EMPTY_ONCHANGE_FALLBACK_MS = 500
 
 export interface DraftDelayedTaskArgs<T> {
   documentOnChange: (event: PatchEvent) => void
