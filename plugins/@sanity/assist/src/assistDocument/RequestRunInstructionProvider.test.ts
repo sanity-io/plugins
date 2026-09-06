@@ -69,10 +69,10 @@ describe('createDraftMaterializationFallbackEvent', () => {
 })
 
 describe('shouldFallbackToEmptyActionGuard', () => {
-  test('is true only when the empty onChange did not create a draft or start sync', () => {
+  test('fires when empty onChange started no commit, even if a draft looks present', () => {
     expect(shouldFallbackToEmptyActionGuard(false, false, false)).toBe(true)
-    expect(shouldFallbackToEmptyActionGuard(false, true, false)).toBe(false)
     expect(shouldFallbackToEmptyActionGuard(true, false, false)).toBe(false)
+    expect(shouldFallbackToEmptyActionGuard(false, true, false)).toBe(false)
     expect(shouldFallbackToEmptyActionGuard(false, false, true)).toBe(false)
   })
 })
@@ -83,6 +83,12 @@ describe('canRunQueuedAssistWrite', () => {
     expect(canRunQueuedAssistWrite(true, true)).toBe(false)
     expect(canRunQueuedAssistWrite(true, false)).toBe(true)
     expect(canRunQueuedAssistWrite(true)).toBe(true)
+  })
+
+  test('does not POST after materialization until a document-store commit is observed', () => {
+    expect(canRunQueuedAssistWrite(true, false, {waitForCommit: true})).toBe(false)
+    expect(canRunQueuedAssistWrite(true, true, {waitForCommit: true})).toBe(false)
+    expect(canRunQueuedAssistWrite(true, false, {waitForCommit: false})).toBe(true)
   })
 })
 

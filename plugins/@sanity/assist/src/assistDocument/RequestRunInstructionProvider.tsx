@@ -13,9 +13,10 @@ import {useRunInstruction} from '../assistLayout/RunInstructionProvider'
 export const EMPTY_ACTION_GUARD_PSEUDO_FIELD = '_empty_action_guard_pseudo_field_'
 
 /**
- * How long to wait for an empty `onChange` to start creating the draft
- * (`useSyncState` / `editState.draft`) before falling back to Studio's
- * empty-action-guard unset.
+ * How long to wait for an empty `onChange` to start a document-store commit
+ * before falling back to Studio's empty-action-guard unset. Optimistic
+ * `editState.draft` is not enough — we wait until `useSyncState` has seen
+ * that commit (or the fallback starts one).
  */
 const EMPTY_ONCHANGE_FALLBACK_MS = 500
 
@@ -61,20 +62,31 @@ export function createDraftMaterializationFallbackEvent(): PatchEvent {
   return PatchEvent.from([unset([EMPTY_ACTION_GUARD_PSEUDO_FIELD])])
 }
 
-export function canRunQueuedAssistWrite(isDocAssistable: boolean, isSyncing = false): boolean {
-  return isDocAssistable && !isSyncing
+export function canRunQueuedAssistWrite(
+  isDocAssistable: boolean,
+  isSyncing = false,
+  options: {waitForCommit?: boolean} = {},
+): boolean {
+  if (!isDocAssistable || isSyncing) {
+    return false
+  }
+  // After we ask Studio to create a missing draft, do not POST until a commit
+  // has been observed. Optimistic `editState.draft` can flip assistable before
+  // `drafts.*` exists in the Content Lake.
+  return !options.waitForCommit
 }
 
 /**
- * True when we already fired an empty `onChange`, the draft is still missing,
- * and no mutation is in flight — so Studio did not create the draft for us.
+ * True when the empty `onChange` has not started a document-store commit.
+ * Optimistic drafts can make the pane look assistable, so this does **not**
+ * require `!isDocAssistable`.
  */
 export function shouldFallbackToEmptyActionGuard(
-  isDocAssistable: boolean,
   isSyncing: boolean,
   alreadyTriedFallback: boolean,
+  sawCommit = false,
 ): boolean {
-  return !alreadyTriedFallback && needsDraftMaterialization(isDocAssistable) && !isSyncing
+  return !alreadyTriedFallback && !isSyncing && !sawCommit
 }
 
 /**
@@ -123,12 +135,23 @@ export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
 
   const [queuedArgs, setQueuedArgs] = useState<T | undefined>(undefined)
   const didFallbackRef = useRef(false)
+  const pendingMaterializationRef = useRef(false)
+  const sawCommitRef = useRef(false)
 
   useEffect(() => {
-    if (queuedArgs && canRunQueuedAssistWrite(isDocAssistable, isSyncing)) {
+    if (queuedArgs && pendingMaterializationRef.current && isSyncing) {
+      sawCommitRef.current = true
+    }
+    if (
+      queuedArgs &&
+      canRunQueuedAssistWrite(isDocAssistable, isSyncing, {
+        waitForCommit: pendingMaterializationRef.current && !sawCommitRef.current,
+      })
+    ) {
       task(queuedArgs)
       didFallbackRef.current = false
-      // oxlint-disable-next-line react/set-state-in-effect
+      pendingMaterializationRef.current = false
+      sawCommitRef.current = false
       setQueuedArgs(undefined)
     }
   }, [queuedArgs, isDocAssistable, isSyncing, task])
@@ -139,7 +162,11 @@ export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
     if (!queuedArgs) {
       didFallbackRef.current = false
     } else if (
-      shouldFallbackToEmptyActionGuard(isDocAssistable, Boolean(isSyncing), didFallbackRef.current)
+      shouldFallbackToEmptyActionGuard(
+        Boolean(isSyncing),
+        didFallbackRef.current,
+        sawCommitRef.current,
+      )
     ) {
       timer = window.setTimeout(() => {
         didFallbackRef.current = true
@@ -152,13 +179,17 @@ export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
         window.clearTimeout(timer)
       }
     }
-  }, [queuedArgs, isDocAssistable, isSyncing, documentOnChange])
+  }, [queuedArgs, isSyncing, documentOnChange])
 
   return useCallback(
     (taskArgs: T) => {
       if (prepareAssistWrite({isDocAssistable, isSyncing, documentOnChange}) === 'run') {
         task(taskArgs)
         return
+      }
+      if (needsDraftMaterialization(isDocAssistable)) {
+        pendingMaterializationRef.current = true
+        sawCommitRef.current = false
       }
       setQueuedArgs(taskArgs)
     },
