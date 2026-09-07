@@ -1,8 +1,6 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   getPublishedId,
-  getVersionFromId,
-  isVersionId,
   type ObjectSchemaType,
   usePerspective,
   useSchema,
@@ -14,8 +12,13 @@ import {useAiPaneRouter} from '../../assistInspector/helpers'
 import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'
 import {fieldPathParam, type InstructionTask} from '../../types'
 import type {AssistDocumentContextValue} from '../AssistDocumentContext'
-import {getBaseAssistDocumentId, resolveAssistTarget} from '../assistTarget'
-import {isDocAssistable} from '../RequestRunInstructionProvider'
+import {
+  assistWriteTargetExists,
+  getAssistWriteScopeId,
+  getBaseAssistDocumentId,
+  isAssistDocumentNew,
+  resolveAssistTarget,
+} from '../assistTarget'
 import {useStudioAssistDocument} from './useStudioAssistDocument'
 
 export function useAssistDocumentContextValue(documentId: string, documentType: string) {
@@ -51,9 +54,10 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   const {selectedReleaseId, selectedVariantName} = usePerspective()
   const {draft, published, version} = editState || {}
 
+  const liveEdit = !!documentSchemaType.liveEdit
   const targetOptions = {
     documentId,
-    liveEdit: !!documentSchemaType.liveEdit,
+    liveEdit,
     selectedReleaseId,
   }
   const target = resolveAssistTarget({...targetOptions, selectedVariantName, targetDocumentState})
@@ -62,17 +66,20 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   const assistableDocumentId =
     target.kind === 'unavailable' ? getBaseAssistDocumentId(targetOptions) : target.documentId
 
-  // A version is checked out for variants (the pane resolves the variant scope) and releases, so
-  // `version` is the document AI Assist runs on in both cases.
-  const targetsVersion = target.kind === 'variant' || !!selectedReleaseId
-  const documentIsNew = targetsVersion ? !version?._id : !draft?._id && !published?._id
-  const documentIsAssistable =
-    assistTargetAvailable &&
-    (targetsVersion ? !!version : isDocAssistable(documentSchemaType, published, draft))
+  const existenceOptions = {
+    liveEdit,
+    selectedReleaseId,
+    targetDocumentState,
+    draft,
+    published,
+    version,
+  }
+  const documentIsNew = isAssistDocumentNew(existenceOptions)
+  const documentIsAssistable = assistWriteTargetExists(target, existenceOptions)
   const {isSyncing: documentIsSyncing} = useSyncState(
     getPublishedId(documentId),
     documentType,
-    isVersionId(assistableDocumentId) ? getVersionFromId(assistableDocumentId) : undefined,
+    getAssistWriteScopeId(targetDocumentState, assistableDocumentId),
   )
 
   const {params} = useAiPaneRouter()

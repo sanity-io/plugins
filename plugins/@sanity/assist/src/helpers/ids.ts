@@ -21,12 +21,13 @@ export function assistTasksStatusId(documentId: string) {
 /**
  * Document id Assist write endpoints must patch.
  *
- * `documentId` may carry any prefix; only its published id is used. The target
- * is picked in this order:
+ * `documentId` may carry any prefix. The target is picked in this order:
  *
- * 1. `options.releaseId` (the selected perspective) wins and yields that
- *    release's version id, even if `documentId` is already a version id.
- * 2. Without a `releaseId`, a version id is kept as is.
+ * 1. A version id is kept as is. That includes release versions *and* opaque
+ *    variant scopes (`versions.<scopeId>.<id>`). A selected `releaseId` must
+ *    not rewrite a variant id into `versions.<releaseId>.*`.
+ * 2. `options.releaseId` (the selected perspective) yields that release's
+ *    version id when the input is not already a version.
  * 3. Live-edit types write published.
  * 4. Everything else writes `drafts.*`, even when Studio field-action props
  *    still carry the published id (virtual draft after publish).
@@ -35,11 +36,11 @@ export function getAssistWriteDocumentId(
   documentId: string,
   options: {liveEdit?: boolean; releaseId?: string} = {},
 ): string {
-  if (options.releaseId) {
-    return getVersionId(documentId, options.releaseId)
-  }
   if (isVersionId(documentId)) {
     return documentId
+  }
+  if (options.releaseId) {
+    return getVersionId(documentId, options.releaseId)
   }
   if (options.liveEdit) {
     return getPublishedId(documentId)
