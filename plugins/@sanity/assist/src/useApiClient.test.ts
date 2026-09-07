@@ -47,7 +47,7 @@ describe('useGenerateCaption', () => {
     const {result} = renderHook(() => useGenerateCaption(apiClient))
 
     act(() => {
-      result.current.generateCaption({path: 'image.alt', documentId: undefined})
+      void result.current.generateCaption({path: 'image.alt', documentId: undefined})
     })
 
     expect(result.current.loading).toBe(false)
@@ -82,7 +82,7 @@ describe('useGenerateImage', () => {
     const {result} = renderHook(() => useGenerateImage(apiClient))
 
     act(() => {
-      result.current.generateImage({path: 'image', documentId: undefined})
+      void result.current.generateImage({path: 'image', documentId: undefined})
     })
 
     expect(result.current.loading).toBe(false)
