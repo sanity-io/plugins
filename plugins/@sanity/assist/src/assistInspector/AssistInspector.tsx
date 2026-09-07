@@ -276,6 +276,7 @@ function AssistInspector(props: DocumentInspectorProps) {
       instruction &&
       pathKey &&
       typePath &&
+      assistableDocumentId &&
       requestRunInstruction({
         documentId: assistableDocumentId,
         path: pathKey,

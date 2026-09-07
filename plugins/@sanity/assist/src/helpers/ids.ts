@@ -1,4 +1,10 @@
-import {getDraftId, getPublishedId, getVersionFromId, getVersionId, isVersionId} from 'sanity'
+import {
+  getPublishedId,
+  getVersionFromId,
+  isVersionId,
+  type SystemVariant,
+  type TargetDocumentState,
+} from 'sanity'
 
 import {assistDocumentIdPrefix, assistDocumentStatusIdPrefix} from '../types'
 
@@ -32,17 +38,26 @@ export function assistTasksStatusId(documentId: string) {
  *    still carry the published id (virtual draft after publish).
  */
 export function getAssistWriteDocumentId(
-  documentId: string,
-  options: {liveEdit?: boolean; releaseId?: string} = {},
-): string {
+  options: {
+    liveEdit?: boolean
+    releaseId?: string
+    variant?: SystemVariant
+    targetDocumentState?: TargetDocumentState
+  } = {},
+): string | undefined {
+  if (options.targetDocumentState?.status !== 'ready') {
+    return undefined
+  }
   if (options.releaseId) {
-    return getVersionId(documentId, options.releaseId)
+    return options.targetDocumentState.siblings.version?._id
   }
-  if (isVersionId(documentId)) {
-    return documentId
-  }
+
   if (options.liveEdit) {
-    return getPublishedId(documentId)
+    return options.targetDocumentState.siblings.published?._id
   }
-  return getDraftId(documentId)
+  return (
+    options.targetDocumentState.siblings.draft?._id ||
+    // If the draft sibling is missing, but it's a virtual draft we can use the draft id referenced from the published document.
+    options.targetDocumentState.siblings.published?._system?.draft?._ref
+  )
 }

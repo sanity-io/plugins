@@ -11,8 +11,9 @@ export type AssistDocumentContextValue = (
   documentIsNew: boolean
   /**
    * This is the _actual_ id of the current document (ie the document loaded in the pane); it contains draft. versions. prefix ect depending on context
+   * Undefined if the document is not assistable or the target document state is not ready
    */
-  assistableDocumentId: string
+  assistableDocumentId: string | undefined
   /**
    * True when a real write target exists: a `drafts.*` snapshot, the selected
    * release version, or the published document for live-edit types.
