@@ -2,9 +2,9 @@ import type {ArrayOfType, FieldProps, SchemaTypeDefinition} from 'sanity'
 
 import {
   assistDocumentSchema,
+  createFieldReferenceType,
   documentInstructionStatus,
   fieldInstructions,
-  fieldReference,
   instruction,
   instructionTask,
   outputFieldType,
@@ -49,21 +49,27 @@ function excludeComments<T extends SchemaTypeDefinition | ArrayOfType>(type: T):
   }
 }
 
-const instructionForm = [
-  fieldInstructions,
-  instruction,
-  fieldReference,
-  prompt,
-  userInput,
-  promptContext,
-].map(excludeComments)
+/**
+ * @param maxFieldSelectionDepth - see `AssistConfig.maxFieldSelectionDepth`; the field reference
+ * type validates picked paths against the field-ref tree, which must be built with the same depth
+ */
+export function createSchemaTypes(maxFieldSelectionDepth?: number) {
+  const instructionForm = [
+    fieldInstructions,
+    instruction,
+    createFieldReferenceType(maxFieldSelectionDepth),
+    prompt,
+    userInput,
+    promptContext,
+  ].map(excludeComments)
 
-export const schemaTypes = [
-  ...instructionForm,
-  outputFieldType,
-  outputTypeType,
-  assistDocumentSchema,
-  documentInstructionStatus,
-  instructionTask,
-  contextDocumentSchema,
-]
+  return [
+    ...instructionForm,
+    outputFieldType,
+    outputTypeType,
+    assistDocumentSchema,
+    documentInstructionStatus,
+    instructionTask,
+    contextDocumentSchema,
+  ]
+}

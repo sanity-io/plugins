@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.2.4
+
+### Patch Changes
+
+- [#1974](https://github.com/sanity-io/plugins/pull/1974) [`2d8df6f`](https://github.com/sanity-io/plugins/commit/2d8df6f81c3ba5c0126052b4c3b95c3e7ea5a67b) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Seed `defaultLanguages` rows when opening a new document, not only after the first edit. Deleted documents are still not recreated.
+
 ## 5.2.3
 
 ### Patch Changes

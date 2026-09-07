@@ -41,7 +41,7 @@
     "@sanity/icons": "catalog:",
     "@sanity/image-url": "catalog:",
     "@sanity/ui": "catalog:",
-    "react-fast-compare": "catalog:",
+    "dequal": "catalog:",
     "rxjs": "catalog:"
   },
   "devDependencies": {

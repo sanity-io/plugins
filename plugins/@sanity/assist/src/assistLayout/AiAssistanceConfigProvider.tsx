@@ -28,7 +28,10 @@ export function AiAssistanceConfigProvider(props: {
 
   const schema = useSchema()
   const serializedTypes = useMemo(() => serializeSchema(schema, {leanFormat: true}), [schema])
-  const {getFieldRefs, getFieldRefsByTypePath} = useFieldRefGetters(schema)
+  const {getFieldRefs, getFieldRefsByTypePath} = useFieldRefGetters(
+    schema,
+    props.config.assist?.maxFieldSelectionDepth,
+  )
 
   useEffect(() => {
     getInstructStatus()
@@ -85,9 +88,9 @@ export function AiAssistanceConfigProvider(props: {
   )
 }
 
-function useFieldRefGetters(schema: Schema) {
+function useFieldRefGetters(schema: Schema, maxFieldSelectionDepth?: number) {
   return useMemo(() => {
-    const getForSchemaType = createFieldRefCache()
+    const getForSchemaType = createFieldRefCache(maxFieldSelectionDepth)
 
     function getRefsForType(documentType: string) {
       // oxlint-disable-next-line no-unsafe-type-assertion
@@ -103,5 +106,5 @@ function useFieldRefGetters(schema: Schema) {
       getFieldRefsByTypePath: (documentType: string) =>
         getRefsForType(documentType).fieldRefsByTypePath,
     }
-  }, [schema])
+  }, [schema, maxFieldSelectionDepth])
 }

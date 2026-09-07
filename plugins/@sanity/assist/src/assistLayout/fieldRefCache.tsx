@@ -6,7 +6,11 @@ import {
   getFieldRefs as createFieldRefs,
 } from '../assistInspector/helpers'
 
-export function createFieldRefCache() {
+/**
+ * @param maxFieldSelectionDepth - see `AssistConfig.maxFieldSelectionDepth`; uses the plugin
+ * default when omitted
+ */
+export function createFieldRefCache(maxFieldSelectionDepth?: number) {
   const byType: Record<
     string,
     | {
@@ -21,7 +25,7 @@ export function createFieldRefCache() {
     const cached = byType[documentType]
     if (cached) return cached
 
-    const fieldRefs = createFieldRefs(schemaType)
+    const fieldRefs = createFieldRefs(schemaType, maxFieldSelectionDepth)
     const fieldRefsByTypePath = asFieldRefsByTypePath(fieldRefs)
     const refs = {
       fieldRefs,

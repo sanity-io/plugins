@@ -1360,6 +1360,47 @@ export type LocalizedString = {
   fr?: string
 }
 
+export type AssistDeepNestingRepro = {
+  _id: string
+  _type: 'assistDeepNestingRepro'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  hours?: Array<
+    {
+      _key: string
+    } & AssistOverviewHours
+  >
+}
+
+export type AssistOverviewHours = {
+  _type: 'assistOverviewHours'
+  title?: AssistLocaleString
+  hoursOfOperation?: AssistHoursOfOperation
+}
+
+export type AssistHoursOfOperation = {
+  _type: 'assistHoursOfOperation'
+  temporaryHours?: Array<
+    {
+      _key: string
+    } & AssistTemporaryHours
+  >
+}
+
+export type AssistLocaleString = {
+  _type: 'assistLocaleString'
+  en?: string
+  fr?: string
+}
+
+export type AssistTemporaryHours = {
+  _type: 'assistTemporaryHours'
+  date?: string
+  reason?: AssistLocaleString
+}
+
 export type AssistFieldGroupsRepro = {
   _id: string
   _type: 'assistFieldGroupsRepro'
@@ -1889,6 +1930,11 @@ export type AllSanitySchemaTypes =
   | EmbeddingsArticle
   | GoogleTranslateTest
   | LocalizedString
+  | AssistDeepNestingRepro
+  | AssistOverviewHours
+  | AssistHoursOfOperation
+  | AssistLocaleString
+  | AssistTemporaryHours
   | AssistFieldGroupsRepro
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus

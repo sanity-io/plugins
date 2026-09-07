@@ -1,5 +1,11 @@
 # @sanity/personalization-plugin
 
+## 3.1.5
+
+### Patch Changes
+
+- [#1978](https://github.com/sanity-io/plugins/pull/1978) [`d36117b`](https://github.com/sanity-io/plugins/commit/d36117b9495992495733128b1e0813e416c24d8a) Thanks [@netmagik](https://github.com/netmagik)! - Fix broken links between the plugin readme and the GrowthBook/LaunchDarkly guides
+
 ## 3.1.4
 
 ### Patch Changes

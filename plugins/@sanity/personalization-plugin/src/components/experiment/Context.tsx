@@ -1,4 +1,4 @@
-import equal from 'fast-deep-equal'
+import {dequal as equal} from 'dequal/lite'
 import {createContext, useContext, useMemo} from 'react'
 import {type ObjectInputProps, useClient, useWorkspace} from 'sanity'
 import {suspend} from 'suspend-react'

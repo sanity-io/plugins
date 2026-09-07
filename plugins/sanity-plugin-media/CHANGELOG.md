@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 6.1.8
+
+### Patch Changes
+
+- [#1980](https://github.com/sanity-io/plugins/pull/1980) [`e72267a`](https://github.com/sanity-io/plugins/commit/e72267a9644f374a89fc2ec4567da1b23b93e7bf) Thanks [@wiiiimm](https://github.com/wiiiimm)! - Keep Media tool epics alive across React strict mode's simulated remount so the browser loads in `sanity dev`.
+
 ## 6.1.7
 
 ### Patch Changes

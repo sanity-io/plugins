@@ -1,4 +1,4 @@
-import isEqual from 'react-fast-compare'
+import {dequal as isEqual} from 'dequal/lite'
 
 type PaneParams = Record<string, string | undefined>
 

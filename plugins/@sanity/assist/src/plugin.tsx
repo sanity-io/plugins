@@ -19,7 +19,7 @@ import {isSchemaAssistEnabled} from './helpers/assistSupported'
 import {validateStyleguide} from './helpers/styleguide'
 import {isImage} from './helpers/typeUtils'
 import {createAssistDocumentPresence} from './presence/AssistDocumentPresence'
-import {schemaTypes} from './schemas'
+import {createSchemaTypes} from './schemas'
 import type {TranslationConfig} from './translate/types'
 import {assistDocumentTypeName, type AssistPreset} from './types'
 
@@ -54,6 +54,7 @@ export const assist = definePlugin<AssistPluginConfig | void>((config) => {
   const configWithDefaults = config ?? {}
   const styleguide = configWithDefaults.translate?.styleguide || ''
   const maxPathDepth = configWithDefaults.assist?.maxPathDepth
+  const maxFieldSelectionDepth = configWithDefaults.assist?.maxFieldSelectionDepth
   const temperature = configWithDefaults.assist?.temperature
 
   if (typeof styleguide === 'string') {
@@ -63,6 +64,17 @@ export const assist = definePlugin<AssistPluginConfig | void>((config) => {
   if (maxPathDepth !== undefined && (maxPathDepth < 1 || maxPathDepth > 12)) {
     throw new Error(
       `[${packageName}]: \`assist.maxPathDepth\` must be be in the range [1,12] inclusive, but was ${maxPathDepth}`,
+    )
+  }
+
+  if (
+    maxFieldSelectionDepth !== undefined &&
+    (!Number.isInteger(maxFieldSelectionDepth) ||
+      maxFieldSelectionDepth < 1 ||
+      maxFieldSelectionDepth > 12)
+  ) {
+    throw new Error(
+      `[${packageName}]: \`assist.maxFieldSelectionDepth\` must be an integer in the range [1,12] inclusive, but was ${maxFieldSelectionDepth}`,
     )
   }
 
@@ -79,7 +91,7 @@ export const assist = definePlugin<AssistPluginConfig | void>((config) => {
     // oxlint-disable-next-line no-unsafe-type-assertion
     ...({handlesGDR: true} as any),
     schema: {
-      types: schemaTypes,
+      types: createSchemaTypes(maxFieldSelectionDepth),
     },
     i18n: {
       bundles: [{}],

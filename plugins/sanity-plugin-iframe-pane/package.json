@@ -41,6 +41,7 @@
     "@sanity/icons": "catalog:",
     "@sanity/preview-url-secret": "catalog:",
     "@sanity/ui": "catalog:",
+    "dequal": "catalog:",
     "motion": "catalog:",
     "suspend-react": "catalog:"
   },

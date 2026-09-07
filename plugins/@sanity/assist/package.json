@@ -45,8 +45,8 @@
     "@sanity/mutator": "catalog:",
     "@sanity/ui": "catalog:",
     "date-fns": "catalog:",
+    "dequal": "catalog:",
     "lodash-es": "catalog:",
-    "react-fast-compare": "catalog:",
     "rxjs": "catalog:",
     "rxjs-exhaustmap-with-trailing": "^2.1.1"
   },

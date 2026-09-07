@@ -1,5 +1,5 @@
+import {dequal as isEqual} from 'dequal/lite'
 import {useEffect, useRef, useState} from 'react'
-import isEqual from 'react-fast-compare'
 import {of} from 'rxjs'
 import {catchError, distinctUntilChanged} from 'rxjs/operators'
 import {type ListenQueryOptions, useClient} from 'sanity'
