@@ -55,7 +55,7 @@ export const generateCaptionsActions: DocumentFieldAction = {
           : ImageIcon,
         title: 'Generate image description',
         onAction: () => {
-          if (loading) {
+          if (loading || !assistableDocumentId) {
             return
           }
           if (!canUseAssist(status)) {
@@ -69,7 +69,7 @@ export const generateCaptionsActions: DocumentFieldAction = {
           generateCaptionWhenDraftReady({path: pathKey, documentId: assistableDocumentId})
         },
         renderAsButton: true,
-        disabled: loading,
+        disabled: loading || !assistableDocumentId,
         hidden: !imageContext.assetRef,
       })
     }, [

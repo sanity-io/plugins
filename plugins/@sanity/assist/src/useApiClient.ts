@@ -129,7 +129,6 @@ export function useGenerateCaption(apiClient: SanityClient) {
 
   const generateCaption = useCallback(
     ({path, documentId}: {path: string; documentId: string | undefined}) => {
-      setLoading(true)
       if (!documentId) {
         toast.push({
           status: 'error',
@@ -137,6 +136,7 @@ export function useGenerateCaption(apiClient: SanityClient) {
         })
         return undefined
       }
+      setLoading(true)
 
       return apiClient
         .request({
@@ -188,7 +188,6 @@ export function useGenerateImage(apiClient: SanityClient) {
 
   const generateImage = useCallback(
     ({path, documentId}: {path: string; documentId: string | undefined}) => {
-      setLoading(true)
       if (!documentId) {
         toast.push({
           status: 'error',
@@ -196,6 +195,7 @@ export function useGenerateImage(apiClient: SanityClient) {
         })
         return undefined
       }
+      setLoading(true)
 
       return apiClient
         .request({
