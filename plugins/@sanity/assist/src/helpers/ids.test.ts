@@ -137,6 +137,26 @@ describe('getAssistWriteDocumentId', () => {
     ).toBe('versions.scope.article-1')
   })
 
+  test('targets the advertised draft variant after a draft variant is published (variant-missing)', () => {
+    const variant = selectedVariant()
+    expect(
+      getAssistWriteDocumentId({
+        documentId: DOCUMENT_ID,
+        variant,
+        targetDocumentState: {
+          status: 'variant-missing',
+          variant,
+          bundle: 'drafts',
+          siblings: {
+            published: stub('versions.pub.article-1', 'versions.draft.article-1'),
+            draft: undefined,
+            version: undefined,
+          },
+        },
+      }),
+    ).toBe('versions.draft.article-1')
+  })
+
   test('returns undefined when a variant is selected but no advertised draft ref exists', () => {
     expect(
       getAssistWriteDocumentId({
