@@ -5,7 +5,7 @@ import type {DocumentFieldAction, DocumentFieldActionGroup, DocumentFieldActionI
 import {useDocumentPane} from 'sanity/structure'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
-import {useDraftDelayedTask} from '../assistDocument/RequestRunInstructionProvider'
+import {useDraftDelayedTask} from '../assistDocument/useDraftDelayedTask'
 import {aiInspectorId} from '../assistInspector/constants'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {ImageContext} from '../components/ImageContext'

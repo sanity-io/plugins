@@ -3,7 +3,7 @@ import {type InputProps, pathToString} from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
-import {useDraftDelayedTask} from '../assistDocument/RequestRunInstructionProvider'
+import {useDraftDelayedTask} from '../assistDocument/useDraftDelayedTask'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {getDescriptionFieldOption, getImageInstructionFieldOption} from '../helpers/typeUtils'
 import {canUseAssist, useApiClient, useGenerateCaption} from '../useApiClient'

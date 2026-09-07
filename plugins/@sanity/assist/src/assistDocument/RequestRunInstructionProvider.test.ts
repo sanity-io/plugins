@@ -1,12 +1,7 @@
-import {type ObjectSchemaType, PatchEvent, type SanityDocument} from 'sanity'
-import {describe, expect, test, vi} from 'vitest'
+import type {ObjectSchemaType, SanityDocument} from 'sanity'
+import {describe, expect, test} from 'vitest'
 
-import {
-  canRunQueuedAssistWrite,
-  createDraftMaterializationEvent,
-  isDocAssistable,
-  prepareAssistWrite,
-} from './RequestRunInstructionProvider'
+import {isDocAssistable} from './RequestRunInstructionProvider'
 
 function schema(liveEdit?: boolean) {
   // oxlint-disable-next-line no-unsafe-type-assertion
@@ -37,66 +32,5 @@ describe('isDocAssistable', () => {
   test('uses published for live-edit types', () => {
     expect(isDocAssistable(schema(true), doc('article-1'), null)).toBe(true)
     expect(isDocAssistable(schema(true), null, doc('drafts.article-1'))).toBe(false)
-  })
-})
-
-describe('createDraftMaterializationEvent', () => {
-  test('is an empty / no-op PatchEvent so Studio can create the draft', () => {
-    const event = createDraftMaterializationEvent()
-    expect(event).toBeInstanceOf(PatchEvent)
-    expect(event.patches).toEqual([])
-  })
-})
-
-describe('canRunQueuedAssistWrite', () => {
-  test('waits until a real draft exists and the create/patch has committed', () => {
-    expect(canRunQueuedAssistWrite(false)).toBe(false)
-    expect(canRunQueuedAssistWrite(true, true)).toBe(false)
-    expect(canRunQueuedAssistWrite(true, false)).toBe(true)
-    expect(canRunQueuedAssistWrite(true)).toBe(true)
-  })
-
-  test('does not POST after materialization until a document-store commit is observed', () => {
-    expect(canRunQueuedAssistWrite(true, false, {waitForCommit: true})).toBe(false)
-    expect(canRunQueuedAssistWrite(true, true, {waitForCommit: true})).toBe(false)
-    expect(canRunQueuedAssistWrite(true, false, {waitForCommit: false})).toBe(true)
-  })
-})
-
-describe('prepareAssistWrite', () => {
-  test('fires an empty onChange when the draft is missing', () => {
-    const documentOnChange = vi.fn()
-    expect(
-      prepareAssistWrite({
-        isDocAssistable: false,
-        documentOnChange,
-      }),
-    ).toBe('queue')
-    expect(documentOnChange).toHaveBeenCalledTimes(1)
-    expect(documentOnChange.mock.calls[0]?.[0]).toBeInstanceOf(PatchEvent)
-    expect(documentOnChange.mock.calls[0]?.[0].patches).toEqual([])
-  })
-
-  test('does not dirty a document that already has a real draft', () => {
-    const documentOnChange = vi.fn()
-    expect(
-      prepareAssistWrite({
-        isDocAssistable: true,
-        documentOnChange,
-      }),
-    ).toBe('run')
-    expect(documentOnChange).not.toHaveBeenCalled()
-  })
-
-  test('queues without another onChange while an existing draft is still syncing', () => {
-    const documentOnChange = vi.fn()
-    expect(
-      prepareAssistWrite({
-        isDocAssistable: true,
-        isSyncing: true,
-        documentOnChange,
-      }),
-    ).toBe('queue')
-    expect(documentOnChange).not.toHaveBeenCalled()
   })
 })

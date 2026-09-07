@@ -4,7 +4,7 @@ import {useContext, useMemo} from 'react'
 import type {DocumentFieldAction, DocumentFieldActionGroup, DocumentFieldActionItem} from 'sanity'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
-import {useDraftDelayedTask} from '../assistDocument/RequestRunInstructionProvider'
+import {useDraftDelayedTask} from '../assistDocument/useDraftDelayedTask'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {ImageContext} from '../components/ImageContext'
 import {usePathKey} from '../helpers/misc'

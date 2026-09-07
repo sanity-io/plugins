@@ -11,7 +11,7 @@ import {
 } from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import {useDraftDelayedTask} from '../assistDocument/RequestRunInstructionProvider'
+import {useDraftDelayedTask} from '../assistDocument/useDraftDelayedTask'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {isAssistSupported} from '../helpers/assistSupported'
 import {getConditionalMembers} from '../helpers/conditionalMembers'
