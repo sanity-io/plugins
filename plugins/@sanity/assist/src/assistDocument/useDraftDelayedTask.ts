@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useEffectEvent, useRef} from 'react'
 import {PatchEvent} from 'sanity'
 
 export interface DraftDelayedTaskArgs<T> {
@@ -17,6 +17,11 @@ export interface DraftDelayedTaskArgs<T> {
   task: (args: T) => void
 }
 
+interface DocumentSignals {
+  isDocAssistable: boolean
+  isSyncing: boolean
+}
+
 type Phase = 'materializing' | 'awaiting-sync'
 
 interface QueuedTask<T> {
@@ -32,6 +37,46 @@ interface QueuedTask<T> {
 const MAX_MATERIALIZATION_ATTEMPTS = 2
 
 /**
+ * Advances a queued task one step for the given document signals and returns
+ * the queue afterwards. Under unchanged signals a second call is a no-op, so the
+ * caller can invoke it on every signal change without bookkeeping.
+ */
+function advance<T>(
+  queued: QueuedTask<T> | null,
+  {isDocAssistable, isSyncing}: DocumentSignals,
+  {documentOnChange, task}: Pick<DraftDelayedTaskArgs<T>, 'documentOnChange' | 'task'>,
+): QueuedTask<T> | null {
+  if (!queued) {
+    return null
+  }
+
+  if (queued.phase === 'materializing') {
+    // Studio started the create/patch commit; wait for it to finish
+    return isSyncing ? {...queued, phase: 'awaiting-sync'} : queued
+  }
+
+  if (isSyncing) {
+    return queued
+  }
+
+  if (isDocAssistable) {
+    task(queued.args)
+    return null
+  }
+
+  if (queued.attempts >= MAX_MATERIALIZATION_ATTEMPTS) {
+    return null
+  }
+  try {
+    documentOnChange(PatchEvent.from([]))
+  } catch {
+    // Studio throws for read-only documents. Drop the task instead of the tree.
+    return null
+  }
+  return {...queued, phase: 'materializing', attempts: queued.attempts + 1}
+}
+
+/**
  * Runs `task` once the document has a real write target in the Content Lake.
  *
  * After publish the drafts perspective shows a virtual draft with no `drafts.*`
@@ -40,48 +85,21 @@ const MAX_MATERIALIZATION_ATTEMPTS = 2
  * no patches, and the resulting edit action creates it server side. The task then
  * waits until that commit has both started and finished, because the optimistic
  * `editState.draft` appears before the draft exists remotely.
+ *
+ * The queue is never rendered, so it lives in a ref. The effect below only
+ * reacts to the two document signals; nothing it does can re-trigger it.
  */
 export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
   const {documentOnChange, isDocAssistable, isSyncing = false, task} = args
-  const [queued, setQueued] = useState<QueuedTask<T> | null>(null)
+  const queuedRef = useRef<QueuedTask<T> | null>(null)
+
+  const advanceQueue = useEffectEvent((signals: DocumentSignals) => {
+    queuedRef.current = advance(queuedRef.current, signals, {documentOnChange, task})
+  })
 
   useEffect(() => {
-    if (!queued) {
-      return
-    }
-
-    if (queued.phase === 'materializing') {
-      if (isSyncing) {
-        // Studio started the create/patch commit; wait for it to finish
-        // oxlint-disable-next-line react/set-state-in-effect
-        setQueued({...queued, phase: 'awaiting-sync'})
-      }
-      return
-    }
-
-    if (isSyncing) {
-      return
-    }
-
-    if (isDocAssistable) {
-      task(queued.args)
-      setQueued(null)
-      return
-    }
-
-    if (queued.attempts >= MAX_MATERIALIZATION_ATTEMPTS) {
-      setQueued(null)
-      return
-    }
-    try {
-      documentOnChange(PatchEvent.from([]))
-    } catch {
-      // Studio throws for read-only documents. Drop the task instead of the tree.
-      setQueued(null)
-      return
-    }
-    setQueued({...queued, phase: 'materializing', attempts: queued.attempts + 1})
-  }, [queued, isDocAssistable, isSyncing, task, documentOnChange])
+    advanceQueue({isDocAssistable, isSyncing})
+  }, [isDocAssistable, isSyncing])
 
   return useCallback(
     (taskArgs: T) => {
@@ -89,8 +107,12 @@ export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
         task(taskArgs)
         return
       }
-      setQueued({args: taskArgs, phase: 'awaiting-sync', attempts: 0})
+      queuedRef.current = advance(
+        {args: taskArgs, phase: 'awaiting-sync', attempts: 0},
+        {isDocAssistable, isSyncing},
+        {documentOnChange, task},
+      )
     },
-    [isDocAssistable, isSyncing, task],
+    [isDocAssistable, isSyncing, documentOnChange, task],
   )
 }
