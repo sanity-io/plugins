@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   getPublishedId,
+  getVersionFromId,
   type ObjectSchemaType,
   usePerspective,
   useSchema,
@@ -54,6 +55,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     variant: selectedVariant,
     targetDocumentState,
   })
+  const scopeId = assistableDocumentId ? getVersionFromId(assistableDocumentId) : undefined
 
   const documentIsNew = selectedReleaseId ? !version?._id : !draft?._id && !published?._id
   const documentIsAssistable = isDocAssistable(
@@ -61,10 +63,11 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     targetDocumentState,
     selectedReleaseId,
   )
+
   const {isSyncing: documentIsSyncing} = useSyncState(
     getPublishedId(documentId),
     documentType,
-    selectedReleaseId,
+    scopeId,
   )
 
   const {params} = useAiPaneRouter()

@@ -53,7 +53,10 @@ export function getAssistWriteDocumentId({
   variant?: SystemVariant
   targetDocumentState?: TargetDocumentState
 }): string | undefined {
-  if (targetDocumentState?.status !== 'ready') {
+  if (
+    targetDocumentState?.status !== 'ready' &&
+    targetDocumentState?.status !== 'variant-missing'
+  ) {
     return undefined
   }
   if (releaseId) {
