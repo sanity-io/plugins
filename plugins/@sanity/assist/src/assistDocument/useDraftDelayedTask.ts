@@ -5,7 +5,8 @@ export interface DraftDelayedTaskArgs<T> {
   documentOnChange: (event: PatchEvent) => void
   /**
    * True when a real write target exists: a `drafts.*` snapshot, the selected
-   * release version, or the published document for live-edit types.
+   * release version, a variant sibling in the current lane, or the published
+   * document for live-edit types.
    */
   isDocAssistable: boolean
   /**

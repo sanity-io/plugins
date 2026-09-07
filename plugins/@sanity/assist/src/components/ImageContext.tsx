@@ -22,8 +22,13 @@ export function ImageContextProvider(props: InputProps) {
   const assetRef = (value as any)?.asset?._ref
   const [assetRefState, setAssetRefState] = useState<string | undefined>(assetRef)
 
-  const {assistableDocumentId, documentOnChange, documentIsAssistable, documentIsSyncing} =
-    useAssistDocumentContext()
+  const {
+    assistableDocumentId,
+    assistTargetAvailable,
+    documentOnChange,
+    documentIsAssistable,
+    documentIsSyncing,
+  } = useAssistDocumentContext()
   const {config, status} = useAiAssistanceConfig()
   const apiClient = useApiClient(config?.__customApiClient)
   const {generateCaption} = useGenerateCaption(apiClient)
@@ -42,6 +47,7 @@ export function ImageContextProvider(props: InputProps) {
     if (
       assetRef &&
       assistableDocumentId &&
+      assistTargetAvailable &&
       descriptionField?.updateOnImageChange &&
       assetRef !== assetRefState &&
       !documentIsSyncing &&
@@ -63,6 +69,7 @@ export function ImageContextProvider(props: InputProps) {
     assetRef,
     assetRefState,
     assistableDocumentId,
+    assistTargetAvailable,
     generateCaptionWhenDraftReady,
     documentIsSyncing,
     status,

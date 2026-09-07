@@ -216,7 +216,8 @@ function AssistInspector(props: DocumentInspectorProps) {
     formState,
   } = documentPane
 
-  const {assistableDocumentId, documentIsAssistable, documentIsSyncing} = useAssistDocumentContext()
+  const {assistableDocumentId, documentIsAssistable, documentIsSyncing, assistTargetAvailable} =
+    useAssistDocumentContext()
 
   const formStateRef = useRef(formState)
   // oxlint-disable-next-line react/refs
@@ -233,7 +234,13 @@ function AssistInspector(props: DocumentInspectorProps) {
 
   const aiDocId = assistDocumentId(documentType)
 
-  const assistDocument = useStudioAssistDocument({documentId, schemaType, initDoc: true})
+  // Task status is tracked per version (release or variant), so read it for the document AI Assist
+  // actually runs on rather than the published id of the pane.
+  const assistDocument = useStudioAssistDocument({
+    documentId: assistableDocumentId,
+    schemaType,
+    initDoc: true,
+  })
   const assistField = assistDocument?.fields?.find((f) => f.path === typePath)
   const instruction = assistField?.instructions?.find((i) => i._key === instructionKey)
   const tasks = useMemo(
@@ -376,7 +383,7 @@ function AssistInspector(props: DocumentInspectorProps) {
             <Stack flex={1}>
               <Button
                 mode="ghost"
-                disabled={isEmptyPrompt || instructionLoading}
+                disabled={isEmptyPrompt || instructionLoading || !assistTargetAvailable}
                 fontSize={1}
                 icon={instructionLoading ? <Spinner style={{marginTop: 3}} /> : PlayIcon}
                 onClick={runCurrentInstruction}

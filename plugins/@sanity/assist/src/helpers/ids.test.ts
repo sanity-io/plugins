@@ -47,15 +47,21 @@ describe('getAssistWriteDocumentId', () => {
     )
   })
 
-  test('a selected release wins over the prefix the input id carries', () => {
-    expect(getAssistWriteDocumentId('versions.rOld.article-1', {releaseId: 'rSummer'})).toBe(
-      'versions.rSummer.article-1',
-    )
+  test('a selected release is applied when the input is not already a version', () => {
     expect(getAssistWriteDocumentId('drafts.article-1', {releaseId: 'rSummer'})).toBe(
       'versions.rSummer.article-1',
     )
     expect(getAssistWriteDocumentId('article-1', {releaseId: 'rSummer', liveEdit: true})).toBe(
       'versions.rSummer.article-1',
+    )
+  })
+
+  test('keeps a resolved version id, including opaque variant scopes, when a release is selected', () => {
+    expect(getAssistWriteDocumentId('versions.rOld.article-1', {releaseId: 'rSummer'})).toBe(
+      'versions.rOld.article-1',
+    )
+    expect(getAssistWriteDocumentId('versions.a1b2c3.article-1', {releaseId: 'rSummer'})).toBe(
+      'versions.a1b2c3.article-1',
     )
   })
 })

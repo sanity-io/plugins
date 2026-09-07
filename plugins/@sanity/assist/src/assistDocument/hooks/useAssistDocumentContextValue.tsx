@@ -10,10 +10,15 @@ import {useDocumentPane} from 'sanity/structure'
 
 import {useAiPaneRouter} from '../../assistInspector/helpers'
 import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'
-import {getAssistWriteDocumentId} from '../../helpers/ids'
 import {fieldPathParam, type InstructionTask} from '../../types'
 import type {AssistDocumentContextValue} from '../AssistDocumentContext'
-import {isDocAssistable} from '../RequestRunInstructionProvider'
+import {
+  assistWriteTargetExists,
+  getAssistWriteScopeId,
+  getBaseAssistDocumentId,
+  isAssistDocumentNew,
+  resolveAssistTarget,
+} from '../assistTarget'
 import {useStudioAssistDocument} from './useStudioAssistDocument'
 
 export function useAssistDocumentContextValue(documentId: string, documentType: string) {
@@ -42,23 +47,39 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     inspector,
     onChange: documentOnChange,
     editState,
+    // Resolved by the pane for the selected perspective *and* variant (Studio >= 6.6).
+    // Older Studios leave it undefined, which resolves to the base pair below.
+    targetDocumentState,
   } = useDocumentPane()
-  const {selectedReleaseId} = usePerspective()
+  const {selectedReleaseId, selectedVariantName} = usePerspective()
   const {draft, published, version} = editState || {}
 
-  const assistableDocumentId = getAssistWriteDocumentId(documentId, {
-    liveEdit: documentSchemaType.liveEdit,
-    releaseId: selectedReleaseId,
-  })
+  const liveEdit = !!documentSchemaType.liveEdit
+  const targetOptions = {
+    documentId,
+    liveEdit,
+    selectedReleaseId,
+  }
+  const target = resolveAssistTarget({...targetOptions, selectedVariantName, targetDocumentState})
+  const assistTargetAvailable = target.kind !== 'unavailable'
+  // The base id is only a placeholder while the target is unavailable; every action is disabled then.
+  const assistableDocumentId =
+    target.kind === 'unavailable' ? getBaseAssistDocumentId(targetOptions) : target.documentId
 
-  const documentIsNew = selectedReleaseId ? !version?._id : !draft?._id && !published?._id
-  const documentIsAssistable = selectedReleaseId
-    ? !!version
-    : isDocAssistable(documentSchemaType, published, draft)
+  const existenceOptions = {
+    liveEdit,
+    selectedReleaseId,
+    targetDocumentState,
+    draft,
+    published,
+    version,
+  }
+  const documentIsNew = isAssistDocumentNew(existenceOptions)
+  const documentIsAssistable = assistWriteTargetExists(target, existenceOptions)
   const {isSyncing: documentIsSyncing} = useSyncState(
     getPublishedId(documentId),
     documentType,
-    selectedReleaseId,
+    getAssistWriteScopeId(targetDocumentState, assistableDocumentId),
   )
 
   const {params} = useAiPaneRouter()
@@ -74,6 +95,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   const value: AssistDocumentContextValue = useMemo(() => {
     const base = {
       assistableDocumentId,
+      assistTargetAvailable,
       documentSchemaType,
       documentIsNew,
       documentIsAssistable,
@@ -102,6 +124,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     documentIsAssistable,
     documentIsSyncing,
     assistableDocumentId,
+    assistTargetAvailable,
     documentSchemaType,
     documentIsNew,
     openInspector,
