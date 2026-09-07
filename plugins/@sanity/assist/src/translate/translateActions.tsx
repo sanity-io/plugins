@@ -2,7 +2,6 @@ import {TranslateIcon} from '@sanity/icons/Translate'
 import {Box, Spinner} from '@sanity/ui'
 import {useMemo, useRef} from 'react'
 import {
-  type DocumentFieldAction,
   type DocumentFieldActionGroup,
   type DocumentFieldActionItem,
   type DocumentFieldActionProps,
@@ -30,7 +29,7 @@ export type TranslateProps = Omit<DocumentFieldActionProps, 'documentId'> & {
   documentIsSyncing?: boolean
   documentSchemaType?: ObjectSchemaType
 }
-export const translateActions: DocumentFieldAction = {
+export const translateActions = {
   name: 'sanity-assist-translate',
   useAction(props: TranslateProps) {
     const {config, status} = useAiAssistanceConfig()
