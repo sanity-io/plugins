@@ -42,19 +42,23 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     inspector,
     onChange: documentOnChange,
     editState,
+    targetDocumentState,
   } = useDocumentPane()
   const {selectedReleaseId} = usePerspective()
   const {draft, published, version} = editState || {}
 
-  const assistableDocumentId = getAssistWriteDocumentId(documentId, {
+  const assistableDocumentId = getAssistWriteDocumentId({
     liveEdit: documentSchemaType.liveEdit,
     releaseId: selectedReleaseId,
+    targetDocumentState,
   })
 
   const documentIsNew = selectedReleaseId ? !version?._id : !draft?._id && !published?._id
-  const documentIsAssistable = selectedReleaseId
-    ? !!version
-    : isDocAssistable(documentSchemaType, published, draft)
+  const documentIsAssistable = isDocAssistable(
+    documentSchemaType,
+    targetDocumentState,
+    selectedReleaseId,
+  )
   const {isSyncing: documentIsSyncing} = useSyncState(
     getPublishedId(documentId),
     documentType,
@@ -119,7 +123,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   return value
 }
 
-function useSyntheticTasks(assistableDocumentId: string) {
+function useSyntheticTasks(assistableDocumentId: string | undefined) {
   const [syntheticTasks, setSyntheticTasks] = useState<InstructionTask[]>(() => [])
   const addSyntheticTask = useCallback((task: InstructionTask) => {
     setSyntheticTasks((current) => [...current, task])
