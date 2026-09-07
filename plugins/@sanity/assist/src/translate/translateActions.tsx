@@ -24,7 +24,8 @@ function node(node: DocumentFieldActionItem | DocumentFieldActionGroup) {
   return node
 }
 
-export type TranslateProps = DocumentFieldActionProps & {
+export type TranslateProps = Omit<DocumentFieldActionProps, 'documentId'> & {
+  documentId: string | undefined
   documentIsAssistable?: boolean
   documentIsSyncing?: boolean
   documentSchemaType?: ObjectSchemaType
@@ -115,7 +116,7 @@ export const translateActions: DocumentFieldAction = {
           })
         },
         renderAsButton: true,
-        disabled: translationApi.loading || readOnly,
+        disabled: translationApi.loading || readOnly || !documentId,
       })
     }, [
       isActive,
@@ -172,7 +173,7 @@ export const translateActions: DocumentFieldAction = {
                 })
               },
               renderAsButton: true,
-              disabled: fieldTranslate.translationLoading || readOnly,
+              disabled: fieldTranslate.translationLoading || readOnly || !documentId,
             })
           : undefined,
       [

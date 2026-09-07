@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   getPublishedId,
-  getVersionFromId,
   type ObjectSchemaType,
   usePerspective,
   useSchema,
@@ -11,7 +10,7 @@ import {useDocumentPane} from 'sanity/structure'
 
 import {useAiPaneRouter} from '../../assistInspector/helpers'
 import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'
-import {getAssistWriteDocumentId} from '../../helpers/ids'
+import {getAssistSyncScopeId, getAssistWriteDocumentId} from '../../helpers/ids'
 import {fieldPathParam, type InstructionTask} from '../../types'
 import type {AssistDocumentContextValue} from '../AssistDocumentContext'
 import {isDocAssistable} from '../RequestRunInstructionProvider'
@@ -55,7 +54,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     variant: selectedVariant,
     targetDocumentState,
   })
-  const scopeId = assistableDocumentId ? getVersionFromId(assistableDocumentId) : undefined
+  const scopeId = getAssistSyncScopeId(assistableDocumentId)
 
   const documentIsNew = selectedReleaseId ? !version?._id : !draft?._id && !published?._id
   const documentIsAssistable = isDocAssistable(
