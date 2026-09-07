@@ -44,13 +44,6 @@ describe('isDocAssistable', () => {
   })
 })
 
-describe('needsDraftMaterialization', () => {
-  test('is true only when no real write target exists', () => {
-    expect(needsDraftMaterialization(false)).toBe(true)
-    expect(needsDraftMaterialization(true)).toBe(false)
-  })
-})
-
 describe('createDraftMaterializationEvent', () => {
   test('is an empty / no-op PatchEvent so Studio can create the draft', () => {
     const event = createDraftMaterializationEvent()

@@ -40,10 +40,6 @@ export function isDocAssistable(
   return !!(documentSchemaType.liveEdit ? published : draft)
 }
 
-export function needsDraftMaterialization(isDocAssistable: boolean): boolean {
-  return !isDocAssistable
-}
-
 /**
  * Empty form `onChange`. Studio's `patch.execute` still `createIfNotExists`s
  * `drafts.*` from published when no draft snapshot exists, even if `patches`
@@ -99,7 +95,7 @@ export function prepareAssistWrite(args: {
   isSyncing?: boolean
   documentOnChange: (event: PatchEvent) => void
 }): 'run' | 'queue' {
-  if (needsDraftMaterialization(args.isDocAssistable)) {
+  if (!args.isDocAssistable) {
     args.documentOnChange(createDraftMaterializationEvent())
     return 'queue'
   }
@@ -187,7 +183,7 @@ export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
         task(taskArgs)
         return
       }
-      if (needsDraftMaterialization(isDocAssistable)) {
+      if (!isDocAssistable) {
         pendingMaterializationRef.current = true
         sawCommitRef.current = false
       }
