@@ -1,24 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {type ObjectSchemaType, PatchEvent, type SanityDocument, unset} from 'sanity'
+import {type ObjectSchemaType, PatchEvent, type SanityDocument} from 'sanity'
 
 import {useRunInstruction} from '../assistLayout/RunInstructionProvider'
-
-/**
- * Same pseudo field Studio injects in document-pair `serverOperations/patch`
- * (`packages/sanity/src/core/store/document/document-pair/serverOperations/patch.ts`)
- * and in `checkoutPair.toActions` when a transaction would otherwise be empty.
- *
- * Do not invent a different name — the Actions API path is built around this one.
- */
-export const EMPTY_ACTION_GUARD_PSEUDO_FIELD = '_empty_action_guard_pseudo_field_'
-
-/**
- * How long to wait for an empty `onChange` to start a document-store commit
- * before falling back to Studio's empty-action-guard unset. Optimistic
- * `editState.draft` is not enough — we wait until `useSyncState` has seen
- * that commit (or the fallback starts one).
- */
-const EMPTY_ONCHANGE_FALLBACK_MS = 500
 
 export interface DraftDelayedTaskArgs<T> {
   documentOnChange: (event: PatchEvent) => void
@@ -49,15 +32,6 @@ export function createDraftMaterializationEvent(): PatchEvent {
   return PatchEvent.from([])
 }
 
-/**
- * Fallback used only if the empty `onChange` does not materialize a draft.
- * Unsets Studio's empty-action-guard pseudo field so the document-store patch
- * path is guaranteed to be a non-empty transaction.
- */
-export function createDraftMaterializationFallbackEvent(): PatchEvent {
-  return PatchEvent.from([unset([EMPTY_ACTION_GUARD_PSEUDO_FIELD])])
-}
-
 export function canRunQueuedAssistWrite(
   isDocAssistable: boolean,
   isSyncing = false,
@@ -70,19 +44,6 @@ export function canRunQueuedAssistWrite(
   // has been observed. Optimistic `editState.draft` can flip assistable before
   // `drafts.*` exists in the Content Lake.
   return !options.waitForCommit
-}
-
-/**
- * True when the empty `onChange` has not started a document-store commit.
- * Optimistic drafts can make the pane look assistable, so this does **not**
- * require `!isDocAssistable`.
- */
-export function shouldFallbackToEmptyActionGuard(
-  isSyncing: boolean,
-  alreadyTriedFallback: boolean,
-  sawCommit = false,
-): boolean {
-  return !alreadyTriedFallback && !isSyncing && !sawCommit
 }
 
 /**
@@ -151,31 +112,6 @@ export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
       setQueuedArgs(undefined)
     }
   }, [queuedArgs, isDocAssistable, isSyncing, task])
-
-  useEffect(() => {
-    let timer: number | undefined
-
-    if (!queuedArgs) {
-      didFallbackRef.current = false
-    } else if (
-      shouldFallbackToEmptyActionGuard(
-        Boolean(isSyncing),
-        didFallbackRef.current,
-        sawCommitRef.current,
-      )
-    ) {
-      timer = window.setTimeout(() => {
-        didFallbackRef.current = true
-        documentOnChange(createDraftMaterializationFallbackEvent())
-      }, EMPTY_ONCHANGE_FALLBACK_MS)
-    }
-
-    return () => {
-      if (timer !== undefined) {
-        window.clearTimeout(timer)
-      }
-    }
-  }, [queuedArgs, isSyncing, documentOnChange])
 
   return useCallback(
     (taskArgs: T) => {

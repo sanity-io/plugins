@@ -4,12 +4,8 @@ import {describe, expect, test, vi} from 'vitest'
 import {
   canRunQueuedAssistWrite,
   createDraftMaterializationEvent,
-  createDraftMaterializationFallbackEvent,
-  EMPTY_ACTION_GUARD_PSEUDO_FIELD,
   isDocAssistable,
-  needsDraftMaterialization,
   prepareAssistWrite,
-  shouldFallbackToEmptyActionGuard,
 } from './RequestRunInstructionProvider'
 
 function schema(liveEdit?: boolean) {
@@ -49,24 +45,6 @@ describe('createDraftMaterializationEvent', () => {
     const event = createDraftMaterializationEvent()
     expect(event).toBeInstanceOf(PatchEvent)
     expect(event.patches).toEqual([])
-  })
-})
-
-describe('createDraftMaterializationFallbackEvent', () => {
-  test('unsets Studio empty-action-guard pseudo field', () => {
-    const event = createDraftMaterializationFallbackEvent()
-    expect(event).toBeInstanceOf(PatchEvent)
-    expect(event.patches).toMatchObject([{type: 'unset', path: [EMPTY_ACTION_GUARD_PSEUDO_FIELD]}])
-    expect(EMPTY_ACTION_GUARD_PSEUDO_FIELD).toBe('_empty_action_guard_pseudo_field_')
-  })
-})
-
-describe('shouldFallbackToEmptyActionGuard', () => {
-  test('fires when empty onChange started no commit, even if a draft looks present', () => {
-    expect(shouldFallbackToEmptyActionGuard(false, false, false)).toBe(true)
-    expect(shouldFallbackToEmptyActionGuard(true, false, false)).toBe(false)
-    expect(shouldFallbackToEmptyActionGuard(false, true, false)).toBe(false)
-    expect(shouldFallbackToEmptyActionGuard(false, false, true)).toBe(false)
   })
 })
 
