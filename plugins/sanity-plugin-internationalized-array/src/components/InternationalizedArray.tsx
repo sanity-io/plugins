@@ -18,11 +18,11 @@ import {useDocumentPane} from 'sanity/structure'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {InternationalizedArrayItem} from '../types'
-import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
 import {internationalizedArrayLanguageFilter} from '../utils/internationalizedArrayLanguageFilter'
 import AddButtons from './AddButtons'
+import CompactAddButton from './CompactAddButton'
 import Feedback from './Feedback'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 import {MigrationBanner} from './MigrationBanner'
@@ -53,9 +53,10 @@ function isPristineDocument(
  * - **Language filter integration**: When `@sanity/language-filter` is active
  *   for the current document type, array members are filtered to only show
  *   languages matching the user's selection.
- * - **Adding languages**: Exposes per-language buttons and an "Add all / Add
- *   missing languages" button (controlled by `buttonAddAll` and
- *   `buttonLocations` config). Dispatches `setIfMissing` + `insert` patches.
+ * - **Adding languages**: Exposes per-language buttons, an optional compact
+ *   `fieldMenu`, and an "Add all / Add missing languages" button (controlled
+ *   by `buttonAddAll` and `buttonLocations`). Dispatches `setIfMissing` +
+ *   `insert` patches.
  * - **Default languages**: Automatically adds entries for languages listed in
  *   `defaultLanguages` when those entries are missing. Seeds brand-new
  *   documents once the events store reports they are pristine (no history),
@@ -307,10 +308,9 @@ export default function InternationalizedArray(
     }
   }, [restoreOrder, languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, readOnly])
 
-  // compare value keys with possible languages
-  const allLanguagesArePresent = useMemo(
-    () => checkAllLanguagesArePresent(filteredLanguages, value),
-    [filteredLanguages, value],
+  const allFilteredLanguagesArePresent = useMemo(
+    () => filteredLanguages.every((language) => addedLanguages.includes(language.id)),
+    [filteredLanguages, addedLanguages],
   )
   const addAllMissingLanguages = useCallback(() => {
     handleAddLanguages(filteredLanguages.map((language) => language.id))
@@ -320,19 +320,47 @@ export default function InternationalizedArray(
     return <Feedback />
   }
 
-  const addButtonsAreVisible =
-    !shouldMigrateArray &&
-    // Plugin was configured to display buttons here (default!)
-    buttonLocations.includes('field') &&
-    // There's at least one language visible
-    filteredLanguages?.length > 0 &&
-    // Not every language has a value yet
-    !allLanguagesArePresent
+  const canAddLanguages = !shouldMigrateArray && filteredLanguages?.length > 0
+  const showFieldMenu = canAddLanguages && buttonLocations.includes('fieldMenu')
+  const showFieldButtons =
+    canAddLanguages && buttonLocations.includes('field') && !allFilteredLanguagesArePresent
   const fieldHasMembers = members?.length > 0
   const addAllTitle = createAddAllTitle(value, filteredLanguages)
 
+  const fieldButtons = showFieldButtons ? (
+    <Stack gap={2}>
+      <AddButtons
+        languagesInUse={addedLanguages}
+        readOnly={readOnly}
+        handleClick={handleAddLanguages}
+      />
+      {buttonAddAll ? (
+        <Button
+          tone="primary"
+          mode="ghost"
+          data-testid="add-all-languages"
+          disabled={readOnly || allFilteredLanguagesArePresent}
+          icon={AddIcon}
+          text={addAllTitle}
+          onClick={addAllMissingLanguages}
+        />
+      ) : null}
+    </Stack>
+  ) : null
+
   return (
     <Stack gap={2}>
+      {showFieldMenu ? (
+        <CompactAddButton
+          languagesInUse={addedLanguages}
+          readOnly={readOnly}
+          handleClick={handleAddLanguages}
+          onAddAll={addAllMissingLanguages}
+          buttonAddAll={buttonAddAll}
+          addAllTitle={addAllTitle}
+          allFilteredLanguagesArePresent={allFilteredLanguagesArePresent}
+        />
+      ) : null}
       {filteredMembers.map((member) => {
         if (member.kind === 'item') {
           return <ArrayOfObjectsItem {...props} key={member.key} member={member} />
@@ -342,32 +370,13 @@ export default function InternationalizedArray(
       <MigrationBanner itemsNeedingMigration={itemsNeedingMigration} />
 
       {/* Give some feedback in the UI so the field doesn't look "missing" */}
-      {!addButtonsAreVisible && !fieldHasMembers ? (
+      {!showFieldMenu && !showFieldButtons && !fieldHasMembers ? (
         <Card border tone="transparent" padding={3} radius={2}>
           <Text size={1}>This internationalized field currently has no translations.</Text>
         </Card>
       ) : null}
 
-      {addButtonsAreVisible ? (
-        <Stack gap={2}>
-          <AddButtons
-            languagesInUse={addedLanguages}
-            readOnly={readOnly}
-            handleClick={handleAddLanguages}
-          />
-          {buttonAddAll ? (
-            <Button
-              tone="primary"
-              mode="ghost"
-              data-testid="add-all-languages"
-              disabled={readOnly || allLanguagesArePresent}
-              icon={AddIcon}
-              text={addAllTitle}
-              onClick={addAllMissingLanguages}
-            />
-          ) : null}
-        </Stack>
-      ) : null}
+      {fieldButtons}
     </Stack>
   )
 }

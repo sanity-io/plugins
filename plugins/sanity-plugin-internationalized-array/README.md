@@ -126,8 +126,18 @@ languages: async (client, {market = ``}) => {
 The "Add translation" buttons can be positioned in one or multiple locations by configuring `buttonLocations`:
 
 - `field` (default) Below the internationalized array field
-- `unstable__fieldAction` Inside a Field Action (currently unstable)
+- `fieldMenu` One translate icon per field that opens a language menu
 - `document` Above the document fields, these buttons will add a new language item to every internationalized array field that can be found at the **root of the document**. Nested internationalized arrays are not yet supported.
+- `unstable__fieldAction` Inside a Field Action (still accepted in config; currently unstable)
+
+All locations are additive, so `field`, `fieldMenu`, and `document` can be used together.
+
+![The fieldMenu control: one translate icon opens a language menu](./img/field-menu.jpeg)
+
+> [!WARNING]
+> Do not use `unstable__fieldAction` on **this plugin 4.0.4 or later**. It crashes the document editor with `useFormValue must be used within a FormValueProvider` — on Studio 4 and above.
+>
+> The break is this plugin, not a Studio major. **4.0.4** ([#633](https://github.com/sanity-io/plugins/pull/633)) moved the language provider onto `document.components.unstable_layout`, so field actions now run outside `FormValueProvider` and throw. Last working plugin: **4.0.0** (and 3.x). Use `field`, `fieldMenu`, and/or `document` instead.
 
 To control the "Add translation" button titles, configure `languageDisplay`. This also affects language field labels.
 
@@ -135,7 +145,7 @@ To control the "Add translation" button titles, configure `languageDisplay`. Thi
 - `titleOnly` Shows the language title
 - `titleAndCode` Shows the language title with the code in parentheses
 
-The "Add all languages" button can be hidden with `buttonAddAll`.
+The "Add all languages" / "Add missing languages" control can be hidden with `buttonAddAll`. Under `field` that hides the bar below the per-language buttons. Under `fieldMenu` that hides the bulk item inside the language menu.
 
 By default, opening a document reorders internationalized array items to match
 the configured `languages` order. That can create a draft (and a history entry)
@@ -150,7 +160,7 @@ export default defineConfig({
   plugins: [
     internationalizedArray({
       // ...other config
-      buttonLocations: ['field', 'unstable__fieldAction', 'document'], // default ['field']
+      buttonLocations: ['field', 'fieldMenu', 'document'], // default ['field'] — locations are additive
       buttonAddAll: false, // default true
       restoreOrder: false, // default true
       languageDisplay: 'codeOnly', // codeOnly (default) | titleOnly | titleAndCode
