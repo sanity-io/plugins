@@ -87,4 +87,7 @@ export const FOLDERS_PANEL_WIDTH = 260 // px
 export const FOLDER_DOCUMENT_NAME = 'media.folder'
 export const PANEL_HEIGHT = 32 // px
 export const TAG_DOCUMENT_NAME = 'media.tag'
+// `source.name` set by the Sanity Media Library on assets it manages. Used to
+// optionally exclude Media Library assets from this plugin's browser/queries.
+export const MEDIA_LIBRARY_SOURCE_NAME = 'sanity-media-library'
 export const TAGS_PANEL_WIDTH = 250 // px

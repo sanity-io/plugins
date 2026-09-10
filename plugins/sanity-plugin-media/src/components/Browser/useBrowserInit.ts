@@ -13,6 +13,7 @@ import {searchActions} from '../../modules/search'
 import {tagsActions} from '../../modules/tags'
 import type {RootReducerState} from '../../modules/types'
 import type {Asset, Tag} from '../../types'
+import {buildExcludeMediaLibraryFragment} from '../../utils/constructFilter'
 
 function getMediaTagNames(schemaType?: AssetSourceComponentProps['schemaType']): string[] {
   const mediaTags = (schemaType?.options as {mediaTags?: string[]} | undefined)?.mediaTags
@@ -70,6 +71,9 @@ export function useBrowserInit(
   const dispatch = useDispatch()
   const tagsByIds = useSelector((state: RootReducerState) => state.tags.byIds)
   const tagsFetchCount = useSelector((state: RootReducerState) => state.tags.fetchCount)
+  const showMediaLibraryAssets = useSelector(
+    (state: RootReducerState) => state.assets.showMediaLibraryAssets,
+  )
 
   const tagNames = getMediaTagNames(schemaType)
   const hasMediaTags = tagNames.length > 0
@@ -84,9 +88,14 @@ export function useBrowserInit(
     // Fetch all folders
     dispatch(foldersActions.fetchRequest())
 
+    const excludeMediaLibraryFragment = buildExcludeMediaLibraryFragment(showMediaLibraryAssets)
+    const excludeMediaLibraryClause = excludeMediaLibraryFragment
+      ? ` && ${excludeMediaLibraryFragment}`
+      : ''
+
     const assetSubscription = client
       .listen(
-        groq`*[_type in ["sanity.fileAsset", "sanity.imageAsset"] && !(_id in path("drafts.**"))]`,
+        groq`*[_type in ["sanity.fileAsset", "sanity.imageAsset"] && !(_id in path("drafts.**"))${excludeMediaLibraryClause}]`,
       )
       .subscribe(createAssetHandler(dispatch))
 
@@ -103,7 +112,7 @@ export function useBrowserInit(
       tagSubscription.unsubscribe()
       folderSubscription.unsubscribe()
     }
-  }, [client, dispatch, hasMediaTags])
+  }, [client, dispatch, hasMediaTags, showMediaLibraryAssets])
 
   // When mediaTags are configured, wait for the tag fetch to complete then apply facets.
   // Dispatching clear + add synchronously keeps all actions within assetsSearchEpic's

@@ -152,4 +152,25 @@ describe('constructFilter', () => {
       '!(defined(opt.media.tags) && count(opt.media.tags[@._ref in *[_type == "media.tag" && name.current in ["internal","archived"]]._id]) > 0)',
     )
   })
+
+  it('does not exclude Media Library assets by default', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      searchFacets: [],
+      searchQuery: undefined,
+    })
+
+    expect(q).not.toContain('source.name')
+  })
+
+  it('excludes Media Library assets when showMediaLibraryAssets is false', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      searchFacets: [],
+      searchQuery: undefined,
+      showMediaLibraryAssets: false,
+    })
+
+    expect(q).toContain('source.name != "sanity-media-library"')
+  })
 })

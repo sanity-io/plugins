@@ -55,6 +55,7 @@ export type AssetsReducerState = {
   order: Order
   pageIndex: number
   pageSize: number
+  showMediaLibraryAssets: boolean
   view: BrowserView
   // totalCount: number
 }
@@ -92,6 +93,7 @@ export const initialState = {
   },
   pageIndex: 0,
   pageSize: 100,
+  showMediaLibraryAssets: true,
   // totalCount: -1,
   view: 'grid',
 } as AssetsReducerState
@@ -537,6 +539,7 @@ export const assetsFetchPageIndexEpic: MyEpic = (action$, state$) =>
         excludeTagSlugs: state.assets.excludeTagSlugs,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
+        showMediaLibraryAssets: state.assets.showMediaLibraryAssets,
       })
 
       const params = {

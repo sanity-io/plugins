@@ -259,6 +259,7 @@ export const uploadsCheckRequestEpic: MyEpic = (action$, state$, {client}) =>
         excludeTagSlugs: state.assets.excludeTagSlugs,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
+        showMediaLibraryAssets: state.assets.showMediaLibraryAssets,
       })
 
       const query = groq`
