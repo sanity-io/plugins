@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   getPublishedId,
+  getVersionFromId,
   type ObjectSchemaType,
   usePerspective,
   useSchema,
@@ -42,23 +43,31 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     inspector,
     onChange: documentOnChange,
     editState,
+    targetDocumentState,
   } = useDocumentPane()
-  const {selectedReleaseId} = usePerspective()
+  const {selectedReleaseId, selectedVariant} = usePerspective()
   const {draft, published, version} = editState || {}
 
-  const assistableDocumentId = getAssistWriteDocumentId(documentId, {
+  const assistableDocumentId = getAssistWriteDocumentId({
+    documentId,
     liveEdit: documentSchemaType.liveEdit,
     releaseId: selectedReleaseId,
+    variant: selectedVariant,
+    targetDocumentState,
   })
+  const scopeId = assistableDocumentId ? getVersionFromId(assistableDocumentId) : undefined
 
   const documentIsNew = selectedReleaseId ? !version?._id : !draft?._id && !published?._id
-  const documentIsAssistable = selectedReleaseId
-    ? !!version
-    : isDocAssistable(documentSchemaType, published, draft)
+  const documentIsAssistable = isDocAssistable(
+    documentSchemaType,
+    targetDocumentState,
+    selectedReleaseId,
+  )
+
   const {isSyncing: documentIsSyncing} = useSyncState(
     getPublishedId(documentId),
     documentType,
-    selectedReleaseId,
+    scopeId,
   )
 
   const {params} = useAiPaneRouter()
@@ -119,7 +128,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   return value
 }
 
-function useSyntheticTasks(assistableDocumentId: string) {
+function useSyntheticTasks(assistableDocumentId: string | undefined) {
   const [syntheticTasks, setSyntheticTasks] = useState<InstructionTask[]>(() => [])
   const addSyntheticTask = useCallback((task: InstructionTask) => {
     setSyntheticTasks((current) => [...current, task])
