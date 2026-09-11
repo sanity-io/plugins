@@ -1,5 +1,11 @@
 # @sanity/personalization-plugin
 
+## 3.1.6
+
+### Patch Changes
+
+- [#1991](https://github.com/sanity-io/plugins/pull/1991) [`49337b4`](https://github.com/sanity-io/plugins/commit/49337b46a970565cba289c91a21c48f2edbdb077) Thanks [@stipsan](https://github.com/stipsan)! - Replace `fast-deep-equal` with `dequal/lite` for the suspense cache-key comparison (same verdicts, smaller import)
+
 ## 3.1.5
 
 ### Patch Changes
