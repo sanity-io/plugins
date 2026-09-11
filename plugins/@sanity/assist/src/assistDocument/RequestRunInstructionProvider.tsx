@@ -1,14 +1,7 @@
-import {useCallback, useEffect, useState} from 'react'
-import {type ObjectSchemaType, PatchEvent, type SanityDocument, unset} from 'sanity'
+import type {ObjectSchemaType, SanityDocument} from 'sanity'
 
 import {useRunInstruction} from '../assistLayout/RunInstructionProvider'
-
-export interface DraftDelayedTaskArgs<T> {
-  documentOnChange: (event: PatchEvent) => void
-  // indicates if the document is a draft or liveEditable currently
-  isDocAssistable: boolean
-  task: (args: T) => void
-}
+import {type DraftDelayedTaskArgs, useDraftDelayedTask} from './useDraftDelayedTask'
 
 export function isDocAssistable(
   documentSchemaType: ObjectSchemaType,
@@ -18,11 +11,7 @@ export function isDocAssistable(
   return !!(documentSchemaType.liveEdit ? published : draft)
 }
 
-export function useRequestRunInstruction(args: {
-  documentOnChange: (event: PatchEvent) => void
-  // indicates if the document is a draft or liveEditable currently
-  isDocAssistable: boolean
-}) {
+export function useRequestRunInstruction(args: Omit<DraftDelayedTaskArgs<never>, 'task'>) {
   const {runInstruction, instructionLoading} = useRunInstruction()
   const requestRunInstruction = useDraftDelayedTask({
     ...args,
@@ -33,30 +22,4 @@ export function useRequestRunInstruction(args: {
     instructionLoading,
     requestRunInstruction,
   }
-}
-
-/**
- * Ensures that the current document is a draft before running task
- */
-export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
-  const {documentOnChange, isDocAssistable, task} = args
-
-  const [queuedArgs, setQueuedArgs] = useState<T | undefined>(undefined)
-
-  useEffect(() => {
-    if (queuedArgs && isDocAssistable) {
-      task(queuedArgs)
-      // oxlint-disable-next-line react/set-state-in-effect
-      setQueuedArgs(undefined)
-    }
-  }, [queuedArgs, isDocAssistable, task])
-
-  return useCallback(
-    (taskArgs: T) => {
-      // make a dummy edit: this will trigger the document/draft to be created
-      documentOnChange(PatchEvent.from([unset(['_force_document_creation'])]))
-      setQueuedArgs(taskArgs)
-    },
-    [setQueuedArgs, documentOnChange],
-  )
 }
