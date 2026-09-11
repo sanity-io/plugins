@@ -152,4 +152,32 @@ describe('constructFilter', () => {
       '!(defined(opt.media.tags) && count(opt.media.tags[@._ref in *[_type == "media.tag" && name.current in ["internal","archived"]]._id]) > 0)',
     )
   })
+
+  it('does not exclude Media Library assets by default', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      searchFacets: [],
+      searchQuery: undefined,
+    })
+
+    expect(q).not.toContain('source.name')
+    expect(q).not.toContain('media._ref')
+  })
+
+  it('excludes Media Library assets when showMediaLibraryAssets is false', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      searchFacets: [],
+      searchQuery: undefined,
+      showMediaLibraryAssets: false,
+    })
+
+    // The reliable signal is the `media` reference; `source.name` is an optional
+    // confirmation. Both are checked, each guarded with `defined()` so plain
+    // dataset-uploaded assets (which carry neither) are still returned.
+    expect(q).toContain('!string::startsWith(media._ref, "media-library:")')
+    expect(q).toContain('source.name != "sanity-media-library"')
+    expect(q).toContain('!defined(media._ref)')
+    expect(q).toContain('!defined(source.name)')
+  })
 })

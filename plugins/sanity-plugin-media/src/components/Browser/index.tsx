@@ -78,7 +78,7 @@ const BrowserContent = ({
 
 const Browser = (props: Props) => {
   const client = useVersionedClient()
-  const {excludeTagSlugs} = useToolOptions()
+  const {excludeTagSlugs, showMediaLibraryAssets} = useToolOptions()
 
   return (
     <ReduxProvider
@@ -87,6 +87,7 @@ const Browser = (props: Props) => {
       document={props?.document}
       excludeTagSlugs={excludeTagSlugs}
       selectedAssets={props?.selectedAssets}
+      showMediaLibraryAssets={showMediaLibraryAssets}
     >
       <AssetBrowserDispatchProvider isMultiSelect={props?.isMultiSelect} onSelect={props?.onSelect}>
         <GlobalStyle />

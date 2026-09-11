@@ -11,6 +11,7 @@ type ContextProps = {
   directUploads: MediaToolOptions['directUploads']
   excludeTagSlugs: string[]
   locales?: Locale[]
+  showMediaLibraryAssets: boolean
 }
 
 const ToolOptionsContext = createContext<ContextProps | null>(null)
@@ -42,6 +43,7 @@ export const ToolOptionsProvider = ({options, children}: PropsWithChildren<Props
       directUploads: options?.directUploads ?? true,
       excludeTagSlugs: options?.excludeTags?.length ? [...options.excludeTags] : [],
       locales: options?.locales,
+      showMediaLibraryAssets: options?.showMediaLibraryAssets ?? true,
     }
     // oxlint-disable-next-line react/preserve-manual-memoization
   }, [
@@ -53,6 +55,7 @@ export const ToolOptionsProvider = ({options, children}: PropsWithChildren<Props
     options?.maximumUploadSize,
     options?.directUploads,
     options?.locales,
+    options?.showMediaLibraryAssets,
   ])
 
   return <ToolOptionsContext.Provider value={value}>{children}</ToolOptionsContext.Provider>

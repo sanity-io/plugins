@@ -1,7 +1,7 @@
 import groq from 'groq'
 
 import {operators} from '../config/searchFacets'
-import {TAG_DOCUMENT_NAME} from '../constants'
+import {MEDIA_LIBRARY_REF_PREFIX, MEDIA_LIBRARY_SOURCE_NAME, TAG_DOCUMENT_NAME} from '../constants'
 import type {AssetType, SearchFacetInputProps} from '../types'
 
 /** GROQ fragment that excludes assets tagged with any of the given media.tag slugs. */
@@ -15,18 +15,39 @@ export const buildExcludeTagsFragment = (excludeTagSlugs?: string[]): string | u
     : undefined
 }
 
+/**
+ * GROQ fragment that excludes assets managed by the Sanity Media Library.
+ * Returns `undefined` (no filtering) when `showMediaLibraryAssets` is `true`.
+ *
+ * A Media Library asset is a `sanity.imageAsset`/`sanity.fileAsset` document
+ * linked into the dataset. The reliable signal is the `media` global-document
+ * reference (`media-library:LIBRARY_ID:...`); `source.name` is optional and only
+ * a confirmation, so both are checked. Each check is guarded with `defined()` so
+ * ordinary dataset-uploaded assets — which carry neither field — are kept.
+ * See https://www.sanity.io/docs/content-lake/assets
+ */
+export const buildExcludeMediaLibraryFragment = (
+  showMediaLibraryAssets: boolean,
+): string | undefined =>
+  showMediaLibraryAssets
+    ? undefined
+    : groq`(!defined(source.name) || source.name != "${MEDIA_LIBRARY_SOURCE_NAME}") && (!defined(media._ref) || !string::startsWith(media._ref, "${MEDIA_LIBRARY_REF_PREFIX}"))`
+
 const constructFilter = ({
   assetTypes,
   currentFolderId,
   excludeTagSlugs,
   searchFacets,
   searchQuery,
+  showMediaLibraryAssets = true,
 }: {
   assetTypes: AssetType[]
   currentFolderId?: string | null
   excludeTagSlugs?: string[]
   searchFacets: SearchFacetInputProps[]
   searchQuery?: string
+  /** When `false`, assets managed by the Sanity Media Library are excluded. Defaults to `true`. */
+  showMediaLibraryAssets?: boolean
 }): string => {
   // Fetch asset types depending on current context.
   // Either limit to a specific type (if being used as a custom asset source) or fetch both files and images (if being used as a tool)
@@ -38,6 +59,8 @@ const constructFilter = ({
   `
 
   const excludeTagsFragment = buildExcludeTagsFragment(excludeTagSlugs)
+
+  const excludeMediaLibraryFragment = buildExcludeMediaLibraryFragment(showMediaLibraryAssets)
 
   const searchFacetFragments = searchFacets.reduce((acc: string[], facet) => {
     if (facet.type === 'number') {
@@ -103,6 +126,7 @@ const constructFilter = ({
   const constructedQuery = [
     // Base filter
     baseFilter,
+    ...(excludeMediaLibraryFragment ? [excludeMediaLibraryFragment] : []),
     ...(excludeTagsFragment ? [excludeTagsFragment] : []),
     // Search query (if present)
     // NOTE: Currently this only searches direct fields on sanity.fileAsset/sanity.imageAsset and NOT referenced tags

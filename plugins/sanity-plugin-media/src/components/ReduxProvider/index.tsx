@@ -22,6 +22,7 @@ type Props = {
   document?: SanityDocument
   excludeTagSlugs?: string[]
   selectedAssets?: AssetSourceComponentProps['selectedAssets']
+  showMediaLibraryAssets?: boolean
 }
 
 type CreatedStore = {
@@ -51,6 +52,7 @@ function createReduxStore(props: Props): CreatedStore {
         ...assetsInitialState,
         assetTypes: isSupportedAssetType(props?.assetType) ? [props.assetType] : ['file', 'image'],
         excludeTagSlugs: props.excludeTagSlugs?.length ? [...props.excludeTagSlugs] : [],
+        showMediaLibraryAssets: props.showMediaLibraryAssets ?? true,
       },
       debug: {
         badConnection: false,

@@ -42,6 +42,15 @@ export type MediaToolOptions = {
    * https://www.sanity.io/docs/studio/localization#k4da239411955
    */
   locales?: Locale[]
+  /**
+   * When `false`, assets managed by the Sanity Media Library are omitted from
+   * the Media browser grid, asset source/picker queries, folder counts and
+   * realtime listeners. Media Library assets are detected by their `media`
+   * reference (`media-library:...`) — the reliable signal — with `source.name`
+   * (`sanity-media-library`) as an optional confirmation. Defaults to `true`
+   * (Media Library assets are shown).
+   */
+  showMediaLibraryAssets?: boolean
 }
 
 export type Locale = {
