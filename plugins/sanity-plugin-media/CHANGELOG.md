@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 6.2.0
+
+### Minor Changes
+
+- [#2008](https://github.com/sanity-io/plugins/pull/2008) [`1cc4b98`](https://github.com/sanity-io/plugins/commit/1cc4b98b97baab4a2443582e57de395011bcd44d) Thanks [@richhiggins](https://github.com/richhiggins)! - Add `showMediaLibraryAssets` option (default `true`). When set to `false`, assets managed by the Sanity Media Library are excluded from the Media browser grid, asset picker queries, folder counts and realtime listeners. Media Library assets are detected by their `media` reference (`media-library:...`) — the reliable signal — with `source.name` (`sanity-media-library`) as an optional confirmation, so links that omit the optional `source` field are still excluded.
+
 ## 6.1.8
 
 ### Patch Changes
