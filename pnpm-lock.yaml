@@ -106,9 +106,6 @@ catalogs:
     jsdom:
       specifier: ^29.1.1
       version: 29.1.1
-    lexorank:
-      specifier: ^1.0.5
-      version: 1.0.5
     lodash-es:
       specifier: ^4.18.1
       version: 4.18.1
@@ -505,6 +502,18 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
+
+  packages/@sanity/lexorank:
+    devDependencies:
+      '@sanity/tsconfig':
+        specifier: 'catalog:'
+        version: 2.2.1
+      '@sanity/tsdown-config':
+        specifier: 'catalog:'
+        version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.145.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.2.2)
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.22.14(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.24)(tsx@4.23.12)(typescript@7.0.2)
 
   packages/@sanity/plugin-kit:
     dependencies:
@@ -1375,6 +1384,9 @@ importers:
 
   plugins/@sanity/orderable-document-list:
     dependencies:
+      '@sanity/lexorank':
+        specifier: workspace:^
+        version: link:../../../packages/@sanity/lexorank
       '@hello-pangea/dnd':
         specifier: 'catalog:'
         version: 18.0.1(@types/react@19.2.18)(react-dom@19.2.8)(react@19.2.8)
@@ -1387,9 +1399,6 @@ importers:
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.0.7(react-dom@19.2.8)(react@19.2.8)(styled-components@6.5.3)
-      lexorank:
-        specifier: 'catalog:'
-        version: 1.0.5
       sanity:
         specifier: next
         version: 6.13.0-next.85(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@sanity/sdk@3.1.0)(@types/node@24.13.3)(@types/react-dom@19.2.4)(@types/react@19.2.18)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.2.8)(react@19.2.8)(rolldown@1.2.6)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -3050,6 +3059,9 @@ importers:
 
   plugins/sanity-plugin-workflow:
     dependencies:
+      '@sanity/lexorank':
+        specifier: workspace:^
+        version: link:../../packages/@sanity/lexorank
       '@hello-pangea/dnd':
         specifier: 'catalog:'
         version: 18.0.1(@types/react@19.2.18)(react-dom@19.2.8)(react@19.2.8)
@@ -3062,9 +3074,6 @@ importers:
       '@tanstack/react-virtual':
         specifier: ^3.14.10
         version: 3.14.10(react-dom@19.2.8)(react@19.2.8)
-      lexorank:
-        specifier: 'catalog:'
-        version: 1.0.5
       motion:
         specifier: 'catalog:'
         version: 13.1.0(react-dom@19.2.8)(react@19.2.8)
@@ -11802,9 +11811,6 @@ packages:
   leven@4.1.0:
     resolution: {integrity: sha512-KZ9W9nWDT7rF7Dazg8xyLHGLrmpgq2nVNFUckhqdW3szVP6YhCpp/RAnpmVExA9JvrMynjwSLVrEj3AepHR6ew==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  lexorank@1.0.5:
-    resolution: {integrity: sha512-K1B/Yr/gIU0wm68hk/yB0p/mv6xM3ShD5aci42vOwcjof8slG8Kpo3Q7+1WTv7DaRHKWRgLPqrFDt+4GtuFAtA==}
 
   lightningcss-android-arm64@1.33.0:
     resolution: {integrity: sha512-gEpRTalKdosp4Bb8qWtc2iOgE5SeIHlpS1up9bFq2wAyYhl1UdTObYiHe98zEM9SQvSoqQZ1IQD0JNpg3Ml5pg==}
@@ -26696,8 +26702,6 @@ snapshots:
     optional: true
 
   leven@4.1.0: {}
-
-  lexorank@1.0.5: {}
 
   lightningcss-android-arm64@1.33.0:
     optional: true

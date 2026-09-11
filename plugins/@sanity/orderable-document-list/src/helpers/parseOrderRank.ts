@@ -1,4 +1,4 @@
-import {LexoRank} from 'lexorank'
+import {LexoRank} from '@sanity/lexorank'
 
 // Safely parse a LexoRank string; fall back if invalid
 export function parseOrderRank(value: unknown, fallback: LexoRank): LexoRank {
