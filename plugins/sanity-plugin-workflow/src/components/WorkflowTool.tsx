@@ -5,10 +5,10 @@ import {
   Droppable,
   type DropResult,
 } from '@hello-pangea/dnd'
+import {LexoRank} from '@sanity/lexorank'
 import {Box, Card, Container, Flex, Grid, Spinner, useTheme} from '@sanity/ui'
 import {getTheme_v2} from '@sanity/ui/theme'
 import {useToast} from '@sanity/ui/toast'
-import {LexoRank} from 'lexorank'
 import {useCallback, useMemo, useState} from 'react'
 import {type Tool, useCurrentUser} from 'sanity'
 import {Feedback, useProjectUsers} from 'sanity-plugin-utils'

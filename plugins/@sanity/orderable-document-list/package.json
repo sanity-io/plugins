@@ -40,8 +40,8 @@
     "@hello-pangea/dnd": "catalog:",
     "@sanity/client": "catalog:",
     "@sanity/icons": "catalog:",
+    "@sanity/lexorank": "workspace:^",
     "@sanity/ui": "catalog:",
-    "lexorank": "catalog:",
     "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {

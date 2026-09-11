@@ -131,9 +131,10 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 
 ## Tooling Packages
 
-| Package                                               | Description                                             |
-| ----------------------------------------------------- | ------------------------------------------------------- |
-| [`@sanity/plugin-kit`](./packages/@sanity/plugin-kit) | CLI toolkit for developing and verifying Sanity plugins |
+| Package                                               | Description                                                           |
+| ----------------------------------------------------- | --------------------------------------------------------------------- |
+| [`@sanity/lexorank`](./packages/@sanity/lexorank)     | ESM-compatible ordering primitives for lexicographically ranked lists |
+| [`@sanity/plugin-kit`](./packages/@sanity/plugin-kit) | CLI toolkit for developing and verifying Sanity plugins               |
 
 ## Contributing
 

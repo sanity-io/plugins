@@ -1,4 +1,4 @@
-import {LexoRank} from 'lexorank'
+import {LexoRank} from '@sanity/lexorank'
 
 import type {NewItemPosition} from '../types'
 import {parseOrderRank} from './parseOrderRank'

@@ -192,7 +192,10 @@ See the examples above.
 
 ## How it works
 
-Uses [kvandakes](https://github.com/kvandake)'s [TypeScript implementation](https://github.com/kvandake/lexorank-ts) of [Jira's Lexorank](https://www.youtube.com/watch?v=OjQv9xMoFbg) to create a "lexographical" Document order.
+Uses [`@sanity/lexorank`](../../../packages/@sanity/lexorank), an ESM-compatible port of
+[kvandake's TypeScript implementation](https://github.com/kvandake/lexorank-ts) of
+[Jira's LexoRank](https://www.youtube.com/watch?v=OjQv9xMoFbg), to create a lexicographical document
+order.
 
 Put simply it updates the position of an individual – or many – Documents in an ordered list without updating any others. It's fast.
 

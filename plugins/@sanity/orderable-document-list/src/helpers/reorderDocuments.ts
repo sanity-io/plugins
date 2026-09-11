@@ -1,5 +1,5 @@
 import type {DraggableLocation} from '@hello-pangea/dnd'
-import {LexoRank} from 'lexorank'
+import {LexoRank} from '@sanity/lexorank'
 import type {PatchOperations} from 'sanity'
 
 import type {SanityDocumentWithOrder} from '../types'

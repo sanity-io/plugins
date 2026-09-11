@@ -53,9 +53,9 @@
   "dependencies": {
     "@hello-pangea/dnd": "catalog:",
     "@sanity/icons": "catalog:",
+    "@sanity/lexorank": "workspace:^",
     "@sanity/ui": "catalog:",
     "@tanstack/react-virtual": "^3.14.10",
-    "lexorank": "catalog:",
     "motion": "catalog:",
     "sanity-plugin-utils": "workspace:^"
   },
