@@ -161,6 +161,7 @@ describe('constructFilter', () => {
     })
 
     expect(q).not.toContain('source.name')
+    expect(q).not.toContain('media._ref')
   })
 
   it('excludes Media Library assets when showMediaLibraryAssets is false', () => {
@@ -171,6 +172,12 @@ describe('constructFilter', () => {
       showMediaLibraryAssets: false,
     })
 
+    // The reliable signal is the `media` reference; `source.name` is an optional
+    // confirmation. Both are checked, each guarded with `defined()` so plain
+    // dataset-uploaded assets (which carry neither) are still returned.
+    expect(q).toContain('!string::startsWith(media._ref, "media-library:")')
     expect(q).toContain('source.name != "sanity-media-library"')
+    expect(q).toContain('!defined(media._ref)')
+    expect(q).toContain('!defined(source.name)')
   })
 })

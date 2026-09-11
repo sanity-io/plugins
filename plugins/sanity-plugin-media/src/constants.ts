@@ -87,7 +87,12 @@ export const FOLDERS_PANEL_WIDTH = 260 // px
 export const FOLDER_DOCUMENT_NAME = 'media.folder'
 export const PANEL_HEIGHT = 32 // px
 export const TAG_DOCUMENT_NAME = 'media.tag'
-// `source.name` set by the Sanity Media Library on assets it manages. Used to
-// optionally exclude Media Library assets from this plugin's browser/queries.
+// `source.name` set by the Sanity Media Library on assets it manages. This is
+// only a *confirmation* signal: `source` is optional and some Media Library
+// links omit it. See https://www.sanity.io/docs/content-lake/assets
 export const MEDIA_LIBRARY_SOURCE_NAME = 'sanity-media-library'
+// Prefix of the `media` global-document-reference (`media-library:LIBRARY_ID:...`)
+// that the Sanity Media Library sets on every asset it links into a dataset.
+// This is the *reliable* signal for identifying Media Library assets.
+export const MEDIA_LIBRARY_REF_PREFIX = 'media-library:'
 export const TAGS_PANEL_WIDTH = 250 // px

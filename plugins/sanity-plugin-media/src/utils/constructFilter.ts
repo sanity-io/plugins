@@ -1,7 +1,7 @@
 import groq from 'groq'
 
 import {operators} from '../config/searchFacets'
-import {MEDIA_LIBRARY_SOURCE_NAME, TAG_DOCUMENT_NAME} from '../constants'
+import {MEDIA_LIBRARY_REF_PREFIX, MEDIA_LIBRARY_SOURCE_NAME, TAG_DOCUMENT_NAME} from '../constants'
 import type {AssetType, SearchFacetInputProps} from '../types'
 
 /** GROQ fragment that excludes assets tagged with any of the given media.tag slugs. */
@@ -18,11 +18,20 @@ export const buildExcludeTagsFragment = (excludeTagSlugs?: string[]): string | u
 /**
  * GROQ fragment that excludes assets managed by the Sanity Media Library.
  * Returns `undefined` (no filtering) when `showMediaLibraryAssets` is `true`.
+ *
+ * A Media Library asset is a `sanity.imageAsset`/`sanity.fileAsset` document
+ * linked into the dataset. The reliable signal is the `media` global-document
+ * reference (`media-library:LIBRARY_ID:...`); `source.name` is optional and only
+ * a confirmation, so both are checked. Each check is guarded with `defined()` so
+ * ordinary dataset-uploaded assets — which carry neither field — are kept.
+ * See https://www.sanity.io/docs/content-lake/assets
  */
 export const buildExcludeMediaLibraryFragment = (
   showMediaLibraryAssets: boolean,
 ): string | undefined =>
-  showMediaLibraryAssets ? undefined : groq`source.name != "${MEDIA_LIBRARY_SOURCE_NAME}"`
+  showMediaLibraryAssets
+    ? undefined
+    : groq`(!defined(source.name) || source.name != "${MEDIA_LIBRARY_SOURCE_NAME}") && (!defined(media._ref) || !string::startsWith(media._ref, "${MEDIA_LIBRARY_REF_PREFIX}"))`
 
 const constructFilter = ({
   assetTypes,

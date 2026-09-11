@@ -126,8 +126,10 @@ export default defineConfig({
       // dialog still lists all tags so you can assign or remove them on an open asset.
       showMediaLibraryAssets: true,
       // boolean (optional, default true) - when false, assets managed by the Sanity Media
-      // Library (`source.name == "sanity-media-library"`) are omitted from the Media browser
-      // grid, asset picker queries, folder counts and realtime listeners.
+      // Library are omitted from the Media browser grid, asset picker queries, folder counts
+      // and realtime listeners. Media Library assets are detected by their `media` reference
+      // (`media-library:...`) - the reliable signal - with `source.name`
+      // (`sanity-media-library`) as an optional confirmation.
       components: {
         details: CustomDetails,
         // Custom component for asset details (see below)
