@@ -1,5 +1,15 @@
 # sanity-plugin-internationalized-array
 
+## 5.3.0
+
+### Minor Changes
+
+- [#1985](https://github.com/sanity-io/plugins/pull/1985) [`c3fb368`](https://github.com/sanity-io/plugins/commit/c3fb368d4ebb2f8d1c76ad437af77f2ab1be862d) Thanks [@wiiiimm](https://github.com/wiiiimm)! - Add `fieldMenu` — a compact per-field add-translation control. One translate icon opens a language menu on stable `@sanity/ui`, without `document.unstable_fieldActions`.
+
+### Patch Changes
+
+- [#1985](https://github.com/sanity-io/plugins/pull/1985) [`c3fb368`](https://github.com/sanity-io/plugins/commit/c3fb368d4ebb2f8d1c76ad437af77f2ab1be862d) Thanks [@wiiiimm](https://github.com/wiiiimm)! - Document that `buttonLocations: ['unstable__fieldAction']` crashes the document editor from plugin 4.0.4 onward (`useFormValue` outside `FormValueProvider` once the language provider wraps the document pane). Last known working plugin: 4.0.0. Studio 4 and above.
+
 ## 5.2.4
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # sanity-plugin-documents-pane
 
+## 4.1.20
+
+### Patch Changes
+
+- Updated dependencies [[`49337b4`](https://github.com/sanity-io/plugins/commit/49337b46a970565cba289c91a21c48f2edbdb077)]:
+  - sanity-plugin-utils@2.0.18
+
 ## 4.1.19
 
 ### Patch Changes
