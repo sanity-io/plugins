@@ -30,6 +30,7 @@ _Individual asset view_
 - Manage tags directly within the plugin
 - Get previews for audio and video files
 - Easily select and delete multiple assets in bulk
+- Shift-click to pick a run of assets, Ctrl-click (Cmd-click on macOS) to pick individual assets
 
 #### Granular search tools
 

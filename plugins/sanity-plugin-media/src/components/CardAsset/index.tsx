@@ -188,6 +188,9 @@ const CardAsset = (props: Props) => {
       } else {
         dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
       }
+    } else if (e.ctrlKey || e.metaKey) {
+      // Ctrl/Cmd-click toggles a single pick without opening the asset
+      dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
     } else if (shiftPressed.current) {
       if (picked) {
         dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
