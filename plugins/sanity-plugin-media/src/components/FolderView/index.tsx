@@ -4,7 +4,7 @@ import {FolderIcon} from '@sanity/icons/Folder'
 import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Container, Flex, Inline, Label, Text, Tree, TreeItem} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {type DragEvent, type ReactNode, useMemo, useState} from 'react'
+import {type DragEvent, type ReactNode, useEffect, useMemo, useRef, useState} from 'react'
 import {useDispatch} from 'react-redux'
 
 import {PANEL_HEIGHT} from '../../constants'
@@ -32,6 +32,7 @@ const getExpandedIdSet = (
 }
 
 type DropTargetHandlers = {
+  onDragEnter: (e: DragEvent<HTMLLIElement>) => void
   onDragLeave: (e: DragEvent<HTMLLIElement>) => void
   onDragOver: (e: DragEvent<HTMLLIElement>) => void
   onDrop: (e: DragEvent<HTMLLIElement>) => void
@@ -46,10 +47,11 @@ type FolderNodeProps = {
   onSelect: (folderId: string) => void
 }
 
-// Highlight applied to a folder while dragged assets hover over it
-const DROP_TARGET_STYLE = {
-  boxShadow: 'inset 0 0 0 2px var(--card-focus-ring-color)',
-  borderRadius: '3px',
+// Highlight applied to a folder row while dragged assets hover over it.
+// Passed via `linkProps` so it lands on the row box rather than the whole subtree.
+const DROP_TARGET_LINK_PROPS = {
+  'data-drop-target': '',
+  'style': {boxShadow: 'inset 0 0 0 2px var(--card-focus-ring-color)'},
 } as const
 
 // Identifier for the "All assets" drop target, which removes assets from their folder
@@ -175,8 +177,8 @@ const FolderNode = ({
       expanded={expandedIds.has(node.id)}
       id={node.id}
       onClick={() => onSelect(node.id)}
+      linkProps={isDropTarget ? DROP_TARGET_LINK_PROPS : undefined}
       selected={selected}
-      style={isDropTarget ? DROP_TARGET_STYLE : undefined}
       text={<FolderItemText name={node.name} totalCount={node.totalCount} />}
       weight={selected ? 'semibold' : 'medium'}
       {...getDropTargetHandlers(node.id)}
@@ -216,6 +218,20 @@ const FolderView = () => {
 
   // Folder id (or root marker) that dragged assets are currently hovering over
   const [dropTargetId, setDropTargetId] = useState<string | null>(null)
+  // Nesting depth of dragenter/dragleave per target. Browsers fire dragleave when moving
+  // between an element's own descendants (Chrome reports no relatedTarget), so a counter
+  // is the only reliable way to know when the pointer has really left the row.
+  const dragDepth = useRef(new Map<string, number>())
+
+  // Clear any highlight when a drag ends anywhere, including outside the panel
+  useEffect(() => {
+    const handleDragEnd = () => {
+      dragDepth.current.clear()
+      setDropTargetId(null)
+    }
+    window.addEventListener('dragend', handleDragEnd)
+    return () => window.removeEventListener('dragend', handleDragEnd)
+  }, [])
 
   const handleFolderSelect = (folderId: string) => {
     dispatch(foldersActions.currentFolderSet({folderId}))
@@ -232,27 +248,36 @@ const FolderView = () => {
     const targetId = folderId ?? ROOT_DROP_TARGET_ID
 
     return {
+      onDragEnter: (e) => {
+        if (!isAssetDrag(e)) return
+        e.preventDefault()
+        e.stopPropagation()
+        const depth = (dragDepth.current.get(targetId) ?? 0) + 1
+        dragDepth.current.set(targetId, depth)
+        setDropTargetId(targetId)
+      },
       onDragOver: (e) => {
         if (!isAssetDrag(e)) return
         e.preventDefault()
         e.stopPropagation()
         e.dataTransfer.dropEffect = 'move'
-        if (dropTargetId !== targetId) {
-          setDropTargetId(targetId)
-        }
       },
       onDragLeave: (e) => {
+        if (!isAssetDrag(e)) return
         e.stopPropagation()
-        // Ignore leave events fired when moving between this item's own descendants
-        if (e.currentTarget.contains(e.relatedTarget as Node | null)) return
-        if (dropTargetId === targetId) {
-          setDropTargetId(null)
+        const depth = (dragDepth.current.get(targetId) ?? 0) - 1
+        if (depth > 0) {
+          dragDepth.current.set(targetId, depth)
+          return
         }
+        dragDepth.current.delete(targetId)
+        setDropTargetId((current) => (current === targetId ? null : current))
       },
       onDrop: (e) => {
         if (!isAssetDrag(e)) return
         e.preventDefault()
         e.stopPropagation()
+        dragDepth.current.clear()
         setDropTargetId(null)
 
         const assets = getDragAssetIds(e)
@@ -340,8 +365,8 @@ const FolderView = () => {
             <TreeItem
               id={ROOT_DROP_TARGET_ID}
               onClick={() => dispatch(foldersActions.currentFolderClear())}
+              linkProps={dropTargetId === ROOT_DROP_TARGET_ID ? DROP_TARGET_LINK_PROPS : undefined}
               selected={currentFolderId === null}
-              style={dropTargetId === ROOT_DROP_TARGET_ID ? DROP_TARGET_STYLE : undefined}
               text="All assets"
               weight={currentFolderId === null ? 'semibold' : 'medium'}
               {...getDropTargetHandlers(null)}
