@@ -1,6 +1,6 @@
+import {LexoRank} from '@sanity/lexorank'
 import {Button} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
-import {LexoRank} from 'lexorank'
 import {useCallback, useMemo} from 'react'
 import {useClient} from 'sanity'
 import type {UserExtended} from 'sanity-plugin-utils'

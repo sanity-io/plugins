@@ -1,4 +1,4 @@
-import {LexoRank} from 'lexorank'
+import {LexoRank} from '@sanity/lexorank'
 import {describe, expect, it} from 'vitest'
 
 import {parseOrderRank} from '../parseOrderRank'

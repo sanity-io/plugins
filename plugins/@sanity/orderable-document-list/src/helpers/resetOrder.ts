@@ -1,5 +1,5 @@
 import type {MultipleMutationResult, SanityClient} from '@sanity/client'
-import {LexoRank} from 'lexorank'
+import {LexoRank} from '@sanity/lexorank'
 
 import {ORDER_FIELD_NAME} from './constants'
 import {getDocumentQuery, type DocumentListQueryProps} from './query'

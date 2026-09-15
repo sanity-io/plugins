@@ -1,0 +1,51 @@
+{
+  "name": "@sanity/lexorank",
+  "version": "0.0.1",
+  "description": "ESM-compatible LexoRank implementation for lexicographically ordered lists",
+  "keywords": [
+    "jira",
+    "lexorank",
+    "ordering",
+    "ranking",
+    "sanity"
+  ],
+  "homepage": "https://github.com/sanity-io/plugins/tree/main/packages/@sanity/lexorank#readme",
+  "bugs": {
+    "url": "https://github.com/sanity-io/plugins/issues"
+  },
+  "license": "MIT",
+  "author": "Sanity.io <hello@sanity.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sanity-io/plugins.git",
+    "directory": "packages/@sanity/lexorank"
+  },
+  "files": [
+    "dist",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "turbo run build"
+  },
+  "devDependencies": {
+    "@sanity/tsconfig": "catalog:",
+    "@sanity/tsdown-config": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  }
+}
