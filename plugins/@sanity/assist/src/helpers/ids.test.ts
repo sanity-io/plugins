@@ -1,7 +1,12 @@
 import type {SystemVariant, TargetDocumentState, VersionInfoDocumentStub} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
-import {assistDocumentId, assistTasksStatusId, getAssistWriteDocumentId} from './ids'
+import {
+  assistDocumentId,
+  assistTasksStatusId,
+  getAssistSyncScopeId,
+  getAssistWriteDocumentId,
+} from './ids'
 
 const DOCUMENT_ID = 'article-1'
 
@@ -224,5 +229,17 @@ describe('getAssistWriteDocumentId', () => {
         targetDocumentState: readyState({draft: stub(`drafts.${DOCUMENT_ID}`)}),
       }),
     ).toBeUndefined()
+  })
+})
+
+describe('getAssistSyncScopeId', () => {
+  test.each([
+    {documentId: undefined, scopeId: undefined},
+    {documentId: 'article-1', scopeId: undefined},
+    {documentId: 'drafts.article-1', scopeId: undefined},
+    {documentId: 'versions.rSummer.article-1', scopeId: 'rSummer'},
+    {documentId: 'versions.hM3zWXZA25NzhcrD.article-1', scopeId: 'hM3zWXZA25NzhcrD'},
+  ])('returns $scopeId for $documentId', ({documentId, scopeId}) => {
+    expect(getAssistSyncScopeId(documentId)).toBe(scopeId)
   })
 })

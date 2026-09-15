@@ -8,7 +8,9 @@ export function isDocAssistable(
   targetDocumentState: TargetDocumentState,
   selectedReleaseId: string | undefined,
 ) {
-  // Wait until target is resolved and ready, any other state is considered not assistable
+  // A real snapshot must already exist in the Content Lake. `variant-missing`
+  // can still advertise a draft id via getAssistWriteDocumentId; that id is
+  // used to materialize the document, and only then does this become true.
   if (targetDocumentState.status !== 'ready') {
     return false
   }
