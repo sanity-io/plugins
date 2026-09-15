@@ -6,6 +6,7 @@ import {Box, Button, Container, Flex, Inline, Label, Text, Tree, TreeItem} from 
 import {Tooltip} from '@sanity/ui/tooltip'
 import {type DragEvent, type ReactNode, useEffect, useMemo, useRef, useState} from 'react'
 import {useDispatch} from 'react-redux'
+import {styled} from 'styled-components'
 
 import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -47,12 +48,15 @@ type FolderNodeProps = {
   onSelect: (folderId: string) => void
 }
 
-// Highlight applied to a folder row while dragged assets hover over it.
-// Passed via `linkProps` so it lands on the row box rather than the whole subtree.
-const DROP_TARGET_LINK_PROPS = {
-  'data-drop-target': '',
-  'style': {boxShadow: 'inset 0 0 0 2px var(--card-focus-ring-color)'},
-} as const
+// Rings the row box of the folder that dragged assets currently hover over.
+// The attribute sits on the tree item, so the ring must target the direct row box
+// rather than the whole subtree. Styled via CSS because `TreeItem` offers no prop
+// for the row box across supported `@sanity/ui` versions.
+const DropTree = styled(Tree)`
+  [data-drop-target] > [data-ui='TreeItem__box'] {
+    box-shadow: inset 0 0 0 2px var(--card-focus-ring-color);
+  }
+`
 
 // Identifier for the "All assets" drop target, which removes assets from their folder
 const ROOT_DROP_TARGET_ID = '__all-assets'
@@ -177,7 +181,7 @@ const FolderNode = ({
       expanded={expandedIds.has(node.id)}
       id={node.id}
       onClick={() => onSelect(node.id)}
-      linkProps={isDropTarget ? DROP_TARGET_LINK_PROPS : undefined}
+      data-drop-target={isDropTarget ? '' : undefined}
       selected={selected}
       text={<FolderItemText name={node.name} totalCount={node.totalCount} />}
       weight={selected ? 'semibold' : 'medium'}
@@ -361,11 +365,11 @@ const FolderView = () => {
 
       <Box padding={2}>
         <Box>
-          <Tree gap={1} key={treeKey}>
+          <DropTree gap={1} key={treeKey}>
             <TreeItem
+              data-drop-target={dropTargetId === ROOT_DROP_TARGET_ID ? '' : undefined}
               id={ROOT_DROP_TARGET_ID}
               onClick={() => dispatch(foldersActions.currentFolderClear())}
-              linkProps={dropTargetId === ROOT_DROP_TARGET_ID ? DROP_TARGET_LINK_PROPS : undefined}
               selected={currentFolderId === null}
               text="All assets"
               weight={currentFolderId === null ? 'semibold' : 'medium'}
@@ -383,7 +387,7 @@ const FolderView = () => {
                 onSelect={handleFolderSelect}
               />
             ))}
-          </Tree>
+          </DropTree>
 
           {!hasFolders && !fetching && (
             <Box marginTop={3} paddingX={1}>
