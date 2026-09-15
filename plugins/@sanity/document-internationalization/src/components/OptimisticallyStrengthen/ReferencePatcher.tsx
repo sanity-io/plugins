@@ -1,22 +1,18 @@
 import {useEffect} from 'react'
-import {PatchEvent, unset, useClient, useEditState} from 'sanity'
+import {PatchEvent, unset, useUnstableObserveDocument} from 'sanity'
 import {useDocumentPane} from 'sanity/structure'
 
-import {API_VERSION} from '../../constants'
 import type {TranslationReference} from '../../types'
 
 type ReferencePatcherProps = {
   translation: TranslationReference
-  documentType: string
-  metadataId: string
 }
 
 // For every reference, check if it is published, and if so, strengthen the reference
 export default function ReferencePatcher(props: ReferencePatcherProps) {
-  const {translation, documentType, metadataId} = props
-  const editState = useEditState(translation.value._ref, documentType)
-  const client = useClient({apiVersion: API_VERSION})
-  const {onChange} = useDocumentPane()
+  const {translation} = props
+  const {document: publishedDocument, loading} = useUnstableObserveDocument(translation.value._ref)
+  const {onChange, ready, formState} = useDocumentPane()
 
   useEffect(() => {
     if (
@@ -26,10 +22,11 @@ export default function ReferencePatcher(props: ReferencePatcherProps) {
       translation.value._weak &&
       // We also want to keep this check because maybe the user *configured* weak refs
       translation.value._strengthenOnPublish &&
-      // The referenced document has just been published
-      !editState.draft &&
-      editState.published &&
-      editState.ready
+      !loading &&
+      publishedDocument &&
+      // The metadata pane is ready to accept patches
+      ready &&
+      !formState?.readOnly
     ) {
       const referencePathBase = ['translations', {_key: translation._key}, 'value']
 
@@ -40,8 +37,17 @@ export default function ReferencePatcher(props: ReferencePatcherProps) {
         ]),
       )
     }
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies
-  }, [translation, editState, metadataId, client, onChange])
+  }, [
+    formState?.readOnly,
+    loading,
+    onChange,
+    publishedDocument,
+    ready,
+    translation._key,
+    translation.value._ref,
+    translation.value._strengthenOnPublish,
+    translation.value._weak,
+  ])
 
   return null
 }
