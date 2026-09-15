@@ -97,7 +97,7 @@ export const assistFieldActions: DocumentFieldAction = {
     const translateAction = translateActions.useAction(
       typed<TranslateProps>({
         ...props,
-        documentId: assistableDocumentId,
+        documentId: assistableDocumentId || '',
         documentIsAssistable,
         documentIsSyncing,
         documentSchemaType,

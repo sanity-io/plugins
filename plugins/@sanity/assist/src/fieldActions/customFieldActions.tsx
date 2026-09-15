@@ -53,7 +53,7 @@ export interface AssistFieldActionProps {
    * })
    * ```
    */
-  documentIdForAction: string
+  documentIdForAction: string | undefined
 
   /**
    * Schema type of the current document.

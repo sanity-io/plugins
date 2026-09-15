@@ -71,6 +71,9 @@ function createWorkspace(
     dataset,
     ...config,
     basePath: `/${config.name}`,
+    beta: {
+      variants: {enabled: true},
+    },
   }
 }
 
