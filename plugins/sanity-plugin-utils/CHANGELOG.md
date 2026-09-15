@@ -1,5 +1,11 @@
 # sanity-plugin-utils
 
+## 2.0.18
+
+### Patch Changes
+
+- [#1991](https://github.com/sanity-io/plugins/pull/1991) [`49337b4`](https://github.com/sanity-io/plugins/commit/49337b46a970565cba289c91a21c48f2edbdb077) Thanks [@stipsan](https://github.com/stipsan)! - Replace `react-fast-compare` with `dequal/lite` in `useListeningQuery`. Listener results are plain JSON, so the React-element handling was unused; the swap keeps the same verdicts, is marginally faster on no-op emissions, and drops ~1.9 KB of minified JS.
+
 ## 2.0.17
 
 ### Patch Changes
