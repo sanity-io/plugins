@@ -4,15 +4,17 @@ import {FolderIcon} from '@sanity/icons/Folder'
 import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Container, Flex, Inline, Label, Text, Tree, TreeItem} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {type ReactNode, useMemo} from 'react'
+import {type DragEvent, type ReactNode, useMemo, useState} from 'react'
 import {useDispatch} from 'react-redux'
 
 import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
+import {assetsActions} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
 import {foldersActions, selectCanDeleteFolder, selectFolderTree} from '../../modules/folders'
-import type {FolderTreeNode} from '../../types'
+import type {AssetItem, FolderTreeNode} from '../../types'
+import {getDragAssetIds, isAssetDrag} from '../../utils/assetDrag'
 
 const getExpandedIdSet = (
   folderId: string | null,
@@ -29,12 +31,29 @@ const getExpandedIdSet = (
   return expanded
 }
 
+type DropTargetHandlers = {
+  onDragLeave: (e: DragEvent<HTMLLIElement>) => void
+  onDragOver: (e: DragEvent<HTMLLIElement>) => void
+  onDrop: (e: DragEvent<HTMLLIElement>) => void
+}
+
 type FolderNodeProps = {
   currentFolderId: string | null
+  dropTargetId: string | null
   expandedIds: Set<string>
+  getDropTargetHandlers: (folderId: string | null) => DropTargetHandlers
   node: FolderTreeNode
   onSelect: (folderId: string) => void
 }
+
+// Highlight applied to a folder while dragged assets hover over it
+const DROP_TARGET_STYLE = {
+  boxShadow: 'inset 0 0 0 2px var(--card-focus-ring-color)',
+  borderRadius: '3px',
+} as const
+
+// Identifier for the "All assets" drop target, which removes assets from their folder
+const ROOT_DROP_TARGET_ID = '__all-assets'
 
 type FolderHeaderActionProps = {
   disabled?: boolean
@@ -139,9 +158,17 @@ const FolderItemText = ({name, totalCount}: FolderItemTextProps) => (
   </span>
 )
 
-const FolderNode = ({currentFolderId, expandedIds, node, onSelect}: FolderNodeProps) => {
+const FolderNode = ({
+  currentFolderId,
+  dropTargetId,
+  expandedIds,
+  getDropTargetHandlers,
+  node,
+  onSelect,
+}: FolderNodeProps) => {
   const hasChildren = node.children.length > 0
   const selected = currentFolderId === node.id
+  const isDropTarget = dropTargetId === node.id
 
   return (
     <TreeItem
@@ -149,14 +176,18 @@ const FolderNode = ({currentFolderId, expandedIds, node, onSelect}: FolderNodePr
       id={node.id}
       onClick={() => onSelect(node.id)}
       selected={selected}
+      style={isDropTarget ? DROP_TARGET_STYLE : undefined}
       text={<FolderItemText name={node.name} totalCount={node.totalCount} />}
       weight={selected ? 'semibold' : 'medium'}
+      {...getDropTargetHandlers(node.id)}
     >
       {hasChildren &&
         node.children.map((childNode) => (
           <FolderNode
             currentFolderId={currentFolderId}
+            dropTargetId={dropTargetId}
             expandedIds={expandedIds}
+            getDropTargetHandlers={getDropTargetHandlers}
             key={childNode.id}
             node={childNode}
             onSelect={onSelect}
@@ -169,6 +200,7 @@ const FolderNode = ({currentFolderId, expandedIds, node, onSelect}: FolderNodePr
 const FolderView = () => {
   const dispatch = useDispatch()
   const currentFolderId = useTypedSelector((state) => state.folders.currentFolderId)
+  const assetsById = useTypedSelector((state) => state.assets.byIds)
   const byId = useTypedSelector((state) => state.folders.byId)
   const canDeleteFolder = useTypedSelector(selectCanDeleteFolder)
   const fetching = useTypedSelector((state) => state.folders.fetching)
@@ -182,8 +214,58 @@ const FolderView = () => {
 
   const hasFolders = folderTree.length > 0
 
+  // Folder id (or root marker) that dragged assets are currently hovering over
+  const [dropTargetId, setDropTargetId] = useState<string | null>(null)
+
   const handleFolderSelect = (folderId: string) => {
     dispatch(foldersActions.currentFolderSet({folderId}))
+  }
+
+  /**
+   * Drop handlers for a folder tree item. `folderId` of `null` targets "All assets",
+   * which removes the dropped assets from their folder.
+   *
+   * Events stop propagating so nested folders don't also fire on their ancestors, and so
+   * the surrounding upload dropzone never sees them.
+   */
+  const getDropTargetHandlers = (folderId: string | null): DropTargetHandlers => {
+    const targetId = folderId ?? ROOT_DROP_TARGET_ID
+
+    return {
+      onDragOver: (e) => {
+        if (!isAssetDrag(e)) return
+        e.preventDefault()
+        e.stopPropagation()
+        e.dataTransfer.dropEffect = 'move'
+        if (dropTargetId !== targetId) {
+          setDropTargetId(targetId)
+        }
+      },
+      onDragLeave: (e) => {
+        e.stopPropagation()
+        // Ignore leave events fired when moving between this item's own descendants
+        if (e.currentTarget.contains(e.relatedTarget as Node | null)) return
+        if (dropTargetId === targetId) {
+          setDropTargetId(null)
+        }
+      },
+      onDrop: (e) => {
+        if (!isAssetDrag(e)) return
+        e.preventDefault()
+        e.stopPropagation()
+        setDropTargetId(null)
+
+        const assets = getDragAssetIds(e)
+          .map((assetId) => assetsById[assetId])
+          .filter((item): item is AssetItem => Boolean(item))
+          // Skip assets already in the target folder
+          .filter((item) => (item.asset.opt?.media?.folder?._ref ?? null) !== folderId)
+
+        if (assets.length === 0) return
+
+        dispatch(assetsActions.folderSetRequest({assets, folderId}))
+      },
+    }
   }
 
   const handleFolderDelete = () => {
@@ -256,17 +338,21 @@ const FolderView = () => {
         <Box>
           <Tree gap={1} key={treeKey}>
             <TreeItem
-              id="__all-assets"
+              id={ROOT_DROP_TARGET_ID}
               onClick={() => dispatch(foldersActions.currentFolderClear())}
               selected={currentFolderId === null}
+              style={dropTargetId === ROOT_DROP_TARGET_ID ? DROP_TARGET_STYLE : undefined}
               text="All assets"
               weight={currentFolderId === null ? 'semibold' : 'medium'}
+              {...getDropTargetHandlers(null)}
             />
 
             {folderTree.map((node) => (
               <FolderNode
                 currentFolderId={currentFolderId}
+                dropTargetId={dropTargetId}
                 expandedIds={expandedIds}
+                getDropTargetHandlers={getDropTargetHandlers}
                 key={node.id}
                 node={node}
                 onSelect={handleFolderSelect}
