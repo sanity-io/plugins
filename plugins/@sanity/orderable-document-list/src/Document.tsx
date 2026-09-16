@@ -8,9 +8,10 @@ import {
   useSchema,
   PreviewCard,
   Preview,
-  DocumentStatusIndicator,
-  DocumentStatus,
-  useDocumentVersionInfo,
+  DocumentVersionsStatus,
+  DocumentVersionsStatusIndicator,
+  getPublishedId,
+  useDocumentVersions,
 } from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
 
@@ -44,8 +45,8 @@ export function Document({
   const {showIncrements} = useContext(OrderableContext)
   const schema = useSchema()
   const router = usePaneRouter()
-  // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only
-  const versionsInfo = useDocumentVersionInfo(doc._id)
+  const publishedId = getPublishedId(doc._id)
+  const {versions} = useDocumentVersions({documentId: publishedId})
 
   const {ChildLink, groupIndex, routerPanesState} = router
 
@@ -58,14 +59,7 @@ export function Document({
     return null
   }
 
-  const tooltip = (
-    // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only
-    <DocumentStatus
-      draft={versionsInfo.draft}
-      published={versionsInfo.published}
-      versions={versionsInfo.versions}
-    />
-  )
+  const tooltip = <DocumentVersionsStatus documentGroupId={publishedId} />
 
   return (
     <PreviewCard
@@ -108,20 +102,22 @@ export function Document({
           </Flex>
         )}
         <Box style={{width: `100%`}}>
-          <Flex flex={1} align="center" justify="space-between" paddingRight={3}>
-            <Preview layout="default" value={doc} schemaType={schemaType} />
+          <Tooltip
+            content={tooltip}
+            portal
+            placement="right"
+            fallbackPlacements={[`top-end`, `bottom-end`]}
+            delay={{open: 400}}
+            boundaryElement={null}
+          >
+            <Flex flex={1} align="center" justify="space-between" paddingRight={3}>
+              <Preview layout="default" value={doc} schemaType={schemaType} />
 
-            <Tooltip content={tooltip} portal placement="right" boundaryElement={null}>
               <Flex align="center" style={{flexShrink: 0}}>
-                {/* oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only */}
-                <DocumentStatusIndicator
-                  draft={versionsInfo.draft}
-                  published={versionsInfo.published}
-                  versions={versionsInfo.versions}
-                />
+                <DocumentVersionsStatusIndicator documentVersions={versions} />
               </Flex>
-            </Tooltip>
-          </Flex>
+            </Flex>
+          </Tooltip>
         </Box>
         {dragBadge && (
           <Card tone="default" marginRight={4} radius={5}>
