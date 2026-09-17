@@ -224,6 +224,9 @@ When `locales` are provided, all localized fields (title, altText, description, 
 
 This will return the Italian value if present, otherwise English, otherwise French, etc. Adjust the order as needed for your project.
 
+**Sorting by title:**
+When `locales` are configured, "Title: A to Z" / "Title: Z to A" in the sort dropdown sort by the first available translation, checked in the order your `locales` array is declared — the same fallback pattern shown above. Assets missing a title in every configured locale sort as empty.
+
 #### Migrating existing assets to localized format
 
 If you enable `locales` on a project that already has assets with plain string fields (e.g. `title: "My photo"`), you should run the provided migration script to convert those fields to the localized object format (e.g. `title: {en: "My photo"}`).
