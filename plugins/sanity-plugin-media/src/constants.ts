@@ -47,6 +47,16 @@ export const ORDER_OPTIONS: ({direction: OrderDirection; field: string} | null)[
   // Divider
   null,
   {
+    direction: 'asc',
+    field: 'title',
+  },
+  {
+    direction: 'desc',
+    field: 'title',
+  },
+  // Divider
+  null,
+  {
     direction: 'desc',
     field: 'size',
   },
