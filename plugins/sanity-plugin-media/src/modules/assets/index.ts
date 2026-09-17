@@ -16,7 +16,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators'
 
-import {getOrderTitle} from '../../config/orders'
+import {getOrderField, getOrderTitle} from '../../config/orders'
 import {ORDER_OPTIONS} from '../../constants'
 import debugThrottle from '../../operators/debugThrottle'
 import type {
@@ -52,6 +52,7 @@ export type AssetsReducerState = {
   fetching: boolean
   fetchingError?: HttpError
   lastPicked?: string
+  localeIds: string[]
   order: Order
   pageIndex: number
   pageSize: number
@@ -86,6 +87,7 @@ export const initialState = {
   fetching: false,
   fetchingError: undefined,
   lastPicked: undefined,
+  localeIds: [],
   order: {
     direction: defaultOrder.direction,
     field: defaultOrder.field,
@@ -552,7 +554,7 @@ export const assetsFetchPageIndexEpic: MyEpic = (action$, state$) =>
           params,
           queryFilter: constructedFilter,
           selector: groq`[${start}...${end}]`,
-          sort: groq`order(${state.assets?.order?.field} ${state.assets?.order?.direction})`,
+          sort: groq`order(${getOrderField(state.assets.order.field, state.assets.localeIds)} ${state.assets.order.direction})`,
         }),
       )
     }),
