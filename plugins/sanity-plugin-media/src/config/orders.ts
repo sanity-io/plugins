@@ -17,6 +17,10 @@ const ORDER_DICTIONARY: Record<string, {asc: string; desc: string}> = {
     asc: 'File name: A to Z',
     desc: 'File name: Z to A',
   },
+  title: {
+    asc: 'Title: A to Z',
+    desc: 'Title: Z to A',
+  },
   size: {
     asc: 'File size: Smallest first',
     desc: 'File size: Largest first',
