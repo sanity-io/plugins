@@ -1,7 +1,7 @@
-# Sanity Media (for Sanity Studio v3)
+# Sanity Media
 
-> This plugin is for **Sanity Studio v3**.  
-> The Sanity Studio v2 version of this plugin is no longer maintained, but still accessible on the [v2 branch](https://github.com/sanity-io/sanity-plugin-media/tree/studio-v2).
+> This plugin is maintained by Sanity.io.  
+> The legacy Studio v2 version is no longer maintained, but still accessible on the [v2 branch](https://github.com/sanity-io/sanity-plugin-media/tree/studio-v2).
 
 ## What is it?
 
@@ -46,7 +46,7 @@ _Individual asset view_
 - Built with the same [UI components Sanity uses](https://www.sanity.io/ui) under the hood
 - Fully responsive and mobile friendly
 
-## Install (Sanity Studio v3)
+## Install
 
 In your Sanity project folder:
 
