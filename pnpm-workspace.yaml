@@ -161,6 +161,10 @@ minimumReleaseAgeExclude:
   - yuku-parser
 
 overrides:
+  # tsgolint 7.0.2002 reports typescript/no-unsafe-type-assertion on the `as`
+  # token, so existing disable-next-line comments (often one line above a
+  # multi-line assertion) no longer apply. Pin until those disables are migrated.
+  oxlint-tsgolint: 7.0.2001
   '@types/node': 'catalog:'
   # Type errors happen if there are duplicates of `@sanity/client` in node_modules
   '@sanity/client@8': 'catalog:'
