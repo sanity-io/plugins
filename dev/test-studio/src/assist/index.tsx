@@ -92,6 +92,31 @@ const assistDeepNestingRepro = defineType({
   ],
 })
 
+// Fixture for manually testing image description after publish (sanity-io/plugins#660, #663).
+// After the document is published, the drafts perspective still shows published values
+// (a virtual draft) while no `drafts.*` document exists. Generate image description
+// must materialize a real draft before the assist backend patches it.
+const assistImageDescriptionRepro = defineType({
+  name: 'assistImageDescriptionRepro',
+  title: 'AI Assist: Image description',
+  type: 'document',
+  fields: [
+    defineField({name: 'title', title: 'Title', type: 'string'}),
+    defineField({
+      name: 'featuredImage',
+      title: 'Featured image',
+      type: 'image',
+      fields: [defineField({name: 'alt', title: 'Alternative text', type: 'string'})],
+      options: {
+        hotspot: true,
+        aiAssist: {
+          imageDescriptionField: 'alt',
+        },
+      },
+    }),
+  ],
+})
+
 export const assistExample = definePlugin(() => ({
   schema: {
     types: [
@@ -101,6 +126,7 @@ export const assistExample = definePlugin(() => ({
       assistHoursOfOperation,
       assistOverviewHours,
       assistDeepNestingRepro,
+      assistImageDescriptionRepro,
     ],
   },
   plugins: [
