@@ -1,5 +1,12 @@
 # @sanity/assist
 
+## 6.2.1
+
+### Patch Changes
+
+- [#2000](https://github.com/sanity-io/plugins/pull/2000) [`dc37379`](https://github.com/sanity-io/plugins/commit/dc37379cb6e6a70837456200685931f9ffa237e4) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Create a real draft before AI Assist writes when the document was just published. Generate image description, translate document, and translate fields no longer fail or overwrite published content by targeting `drafts.<id>` while only a virtual draft exists.
+  Fixes [#660](https://github.com/sanity-io/plugins/issues/660) [#663](https://github.com/sanity-io/plugins/issues/663) [#666](https://github.com/sanity-io/plugins/issues/666) [#667](https://github.com/sanity-io/plugins/issues/667)
+
 ## 6.2.0
 
 ### Minor Changes
