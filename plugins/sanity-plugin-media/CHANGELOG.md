@@ -1,5 +1,13 @@
 # sanity-plugin-media
 
+## 6.3.0
+
+### Minor Changes
+
+- [#2014](https://github.com/sanity-io/plugins/pull/2014) [`e58d1af`](https://github.com/sanity-io/plugins/commit/e58d1af6021af6551fd7d7713743e1864e1f7d40) Thanks [@ovsw](https://github.com/ovsw)! - Ctrl-click (Cmd-click on macOS) an asset in the grid or table to toggle its pick without opening it.
+
+- [#2014](https://github.com/sanity-io/plugins/pull/2014) [`e58d1af`](https://github.com/sanity-io/plugins/commit/e58d1af6021af6551fd7d7713743e1864e1f7d40) Thanks [@ovsw](https://github.com/ovsw)! - Drag assets onto folders in the folder panel to move them. Dragging a picked asset moves every picked asset; dragging an unpicked asset moves only that one. Dropping on "All assets" removes the dragged assets from their folder.
+
 ## 6.2.0
 
 ### Minor Changes
