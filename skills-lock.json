@@ -13,6 +13,18 @@
       "skillPath": "skills/pnpm/SKILL.md",
       "computedHash": "318f9fca2441a3e06fedc336e195dd18be5dbe901064e4fa71b76b40b096ab3a"
     },
+    "tsdown": {
+      "source": "rolldown/tsdown",
+      "sourceType": "github",
+      "skillPath": "skills/tsdown/SKILL.md",
+      "computedHash": "5764d08af27a89c5fdaf3d49926116636ea33580b864e3aae201a90703a7ef53"
+    },
+    "tsdown-migrate": {
+      "source": "rolldown/tsdown",
+      "sourceType": "github",
+      "skillPath": "skills/tsdown-migrate/SKILL.md",
+      "computedHash": "ef840c62747ce5aed1e8b35197d767b022a690648f4a55d31e5e81ed8c21e0bd"
+    },
     "turborepo": {
       "source": "vercel/turborepo",
       "sourceType": "github",
