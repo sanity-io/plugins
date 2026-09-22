@@ -31,13 +31,13 @@ This plugin is designed as a convenience for Authors to make small, infrequent c
 
 The **Duplicate** Tool allows you to migrate Documents that are returned from any GROQ query.
 
-![Cross Dataset Duplicator Tool in Sanity Studio v3](./img/cdd-tool.png)
+![Cross Dataset Duplicator Tool in Sanity Studio](./img/cdd-tool.png)
 
 ## Document Action
 
 The **Duplicate to...** Document Action allows you to migrate an individual Document.
 
-![Cross Dataset Duplicator Action in Sanity Studio v3](./img/cdd-action.png)
+![Cross Dataset Duplicator Action in Sanity Studio](./img/cdd-action.png)
 
 ## Required Setup
 
