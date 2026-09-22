@@ -16,6 +16,7 @@ import {Tooltip} from '@sanity/ui/tooltip'
 import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
 import {
+  type DragEvent,
   memo,
   type MouseEvent,
   type RefObject,
@@ -32,8 +33,9 @@ import {GRID_TEMPLATE_COLUMNS} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import useKeyPress from '../../hooks/useKeyPress'
 import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions, selectAssetById} from '../../modules/assets'
+import {assetsActions, selectAssetById, selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
+import {setDragAssetIds} from '../../utils/assetDrag'
 import getAssetResolution from '../../utils/getAssetResolution'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import {getUniqueDocuments} from '../../utils/getUniqueDocuments'
@@ -109,6 +111,7 @@ const TableRowAsset = (props: Props) => {
 
   const dispatch = useDispatch()
   const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
+  const assetsPicked = useTypedSelector(selectAssetsPicked)
   const item = useTypedSelector((state) => selectAssetById(state, id))
 
   const mediaIndex = useMediaIndex()
@@ -152,6 +155,9 @@ const TableRowAsset = (props: Props) => {
         } else {
           dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
         }
+      } else if (e.ctrlKey || e.metaKey) {
+        // Ctrl/Cmd-click toggles a single pick without opening the asset
+        dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
       } else if (shiftPressed.current) {
         if (picked) {
           dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
@@ -163,6 +169,18 @@ const TableRowAsset = (props: Props) => {
       }
     },
     [asset, dispatch, isMultiSelect, lastPicked, onSelect, picked, selected, shiftPressed],
+  )
+
+  // Dragging a picked asset drags every picked asset; dragging an unpicked asset drags only itself.
+  const draggable = !selected && !updating
+
+  const handleDragStart = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      if (!asset) return
+      const assetIds = picked ? assetsPicked.map((pickedItem) => pickedItem.asset._id) : [asset._id]
+      setDragAssetIds(e, assetIds)
+    },
+    [asset, assetsPicked, picked],
   )
 
   const opacityCell = updating ? 0.5 : 1
@@ -188,7 +206,9 @@ const TableRowAsset = (props: Props) => {
 
   return (
     <ContainerGrid
+      draggable={draggable}
       onClick={selected ? undefined : handleClick}
+      onDragStart={draggable ? handleDragStart : undefined}
       $scheme={scheme}
       $selected={selected}
       style={{
