@@ -2,7 +2,6 @@ import {ChevronDownIcon} from '@sanity/icons/ChevronDown'
 import {ChevronUpIcon} from '@sanity/icons/ChevronUp'
 import {DragHandleIcon} from '@sanity/icons/DragHandle'
 import {AvatarCounter, Card, Box, Button, Flex, Text} from '@sanity/ui'
-import {Tooltip} from '@sanity/ui/tooltip'
 import {useContext} from 'react'
 import {
   useSchema,
@@ -16,6 +15,7 @@ import {
 import {usePaneRouter} from 'sanity/structure'
 
 import {OrderableContext} from './OrderableContext'
+import {PreviewTooltip} from './PreviewTooltip'
 import type {SanityDocumentWithOrder} from './types'
 
 export interface DocumentProps {
@@ -31,6 +31,7 @@ export interface DocumentProps {
   isFirst: boolean
   isLast: boolean
   dragBadge: number | false
+  disableTooltip: boolean
 }
 
 export function Document({
@@ -41,12 +42,13 @@ export function Document({
   isFirst,
   isLast,
   dragBadge,
+  disableTooltip,
 }: DocumentProps) {
   const {showIncrements} = useContext(OrderableContext)
   const schema = useSchema()
   const router = usePaneRouter()
   const publishedId = getPublishedId(doc._id)
-  const {versions} = useDocumentVersions({documentId: publishedId})
+  const {versions, loading: versionsLoading} = useDocumentVersions({documentId: publishedId})
 
   const {ChildLink, groupIndex, routerPanesState} = router
 
@@ -102,22 +104,17 @@ export function Document({
           </Flex>
         )}
         <Box style={{width: `100%`}}>
-          <Tooltip
-            content={tooltip}
-            portal
-            placement="right"
-            fallbackPlacements={[`top-end`, `bottom-end`]}
-            delay={{open: 400}}
-            boundaryElement={null}
-          >
+          <PreviewTooltip content={tooltip} disabled={disableTooltip}>
             <Flex flex={1} align="center" justify="space-between" paddingRight={3}>
               <Preview layout="default" value={doc} schemaType={schemaType} />
 
               <Flex align="center" style={{flexShrink: 0}}>
-                <DocumentVersionsStatusIndicator documentVersions={versions} />
+                {!versionsLoading && (
+                  <DocumentVersionsStatusIndicator documentVersions={versions} />
+                )}
               </Flex>
             </Flex>
-          </Tooltip>
+          </PreviewTooltip>
         </Box>
         {dragBadge && (
           <Card tone="default" marginRight={4} radius={5}>
