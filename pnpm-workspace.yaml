@@ -164,17 +164,19 @@ overrides:
   '@types/node': 'catalog:'
   # Type errors happen if there are duplicates of `@sanity/client` in node_modules
   '@sanity/client@8': 'catalog:'
-  # Pin the Sanity Studio monorepo to the `next` dist-tag for compatibility testing.
+  # TEMPORARY (do not merge): pin the Sanity Studio monorepo to the pkg.pr.new
+  # preview build of sanity-io/sanity#14840 (commit 3458a8e) to test the
+  # code-split studio shell against every plugin in this monorepo.
   # Keep mutator/schema/types/util/groq in lockstep with sanity so dts emit and
   # transitive deps (cli/migrate/portabletext) cannot leave a second major.minor
   # of those packages in the lockfile.
-  '@sanity/mutator': next
-  '@sanity/schema': next
-  '@sanity/types': next
-  '@sanity/util': next
-  '@sanity/vision': next
-  groq: next
-  sanity: next
+  '@sanity/mutator': https://pkg.pr.new/sanity-io/sanity/@sanity/mutator@3458a8e
+  '@sanity/schema': https://pkg.pr.new/sanity-io/sanity/@sanity/schema@3458a8e
+  '@sanity/types': https://pkg.pr.new/sanity-io/sanity/@sanity/types@3458a8e
+  '@sanity/util': https://pkg.pr.new/sanity-io/sanity/@sanity/util@3458a8e
+  '@sanity/vision': https://pkg.pr.new/sanity-io/sanity/@sanity/vision@3458a8e
+  groq: https://pkg.pr.new/sanity-io/sanity/groq@3458a8e
+  sanity: https://pkg.pr.new/sanity-io/sanity/sanity@3458a8e
   # Keep a single tsx (and thus a single vite types instance) so sanity.cli vite
   # config callbacks type-check cleanly after the catalog tsx bump.
   tsx: 'catalog:'
@@ -190,13 +192,19 @@ publicHoistPattern:
   # that resolution deterministic instead of relying on the implicit hoist layout.
   - '@vanilla-extract/css'
 
+# TEMPORARY (do not merge): pkg.pr.new tarballs of `sanity` depend on sibling
+# `@sanity/*` packages via tarball URLs, which pnpm v11 blocks as exotic
+# subdependencies by default.
+blockExoticSubdeps: false
+
 trustPolicy: no-downgrade
 
 trustPolicyExclude:
   - '@octokit/endpoint@9.0.6'
   - '@octokit/plugin-paginate-rest@9.2.2'
   - '@sanity/import@7.0.1'
-  - '@sanity/sdk@2.1.2 || 3.0.0-rc.1'
+  - '@sanity/sdk@2.1.2 || 3.0.0-rc.1 || 3.4.0'
+  - '@sanity/sdk-react@3.4.0'
   - chokidar@4.0.3
   - groq@3.88.1-typegen-experimental.0
   - react-redux@8.1.3 || 9.2.0
