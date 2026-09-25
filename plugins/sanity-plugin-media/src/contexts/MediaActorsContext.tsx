@@ -1,3 +1,4 @@
+import type {SanityClient} from '@sanity/client'
 import {useToast} from '@sanity/ui/toast'
 import {useActorRef, useSelector} from '@xstate/react'
 import {createContext, type ReactNode, useContext, useMemo} from 'react'
@@ -69,4 +70,10 @@ export function useMediaActors(): MediaActors {
 export function useMediaConfig(): MediaConfig {
   const {media} = useMediaActors()
   return useSelector(media, (snapshot) => snapshot.context.config)
+}
+
+/** The client the media actors make requests with. */
+export function useMediaClient(): SanityClient {
+  const {media} = useMediaActors()
+  return useSelector(media, (snapshot) => snapshot.context.client)
 }

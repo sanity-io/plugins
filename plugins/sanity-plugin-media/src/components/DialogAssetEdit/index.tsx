@@ -5,10 +5,9 @@ import {type SubmitHandler, useForm, useFormState} from 'react-hook-form'
 import {WithReferringDocuments, useColorSchemeValue, useDocumentStore} from 'sanity'
 import {waitFor} from 'xstate'
 
-import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {useMediaActors, useMediaClient} from '../../contexts/MediaActorsContext'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import {getAssetFormSchema} from '../../formSchema'
-import useVersionedClient from '../../hooks/useVersionedClient'
 import {confirmDeleteAssetsDialog, folderMoveDialog} from '../../machines/dialogs'
 import {selectFolderPath} from '../../machines/foldersMachine'
 import {selectIsCreatingTag, selectTags} from '../../machines/tagsMachine'
@@ -60,7 +59,7 @@ const DialogAssetEdit = (props: Props) => {
     dialog: {assetId, id},
   } = props
 
-  const client = useVersionedClient()
+  const client = useMediaClient()
   const scheme = useColorSchemeValue()
 
   const documentStore = useDocumentStore()
