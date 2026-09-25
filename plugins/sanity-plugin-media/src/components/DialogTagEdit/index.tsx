@@ -81,7 +81,11 @@ const DialogTagEdit = (props: Props) => {
     dialogs.send({type: 'dialog.open', dialog: confirmDeleteTagDialog(tagItem.tag, id)})
   }
 
-  const Footer = () => (
+  if (!currentTag) {
+    return null
+  }
+
+  const footer = (
     <Box padding={3}>
       <Flex justify="space-between">
         {/* Delete button */}
@@ -105,20 +109,8 @@ const DialogTagEdit = (props: Props) => {
     </Box>
   )
 
-  if (!currentTag) {
-    return null
-  }
-
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/static-components
-      footer={<Footer />}
-      header="Edit Tag"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Edit Tag" id={id} onClose={handleClose} width={1}>
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Deleted notification */}
