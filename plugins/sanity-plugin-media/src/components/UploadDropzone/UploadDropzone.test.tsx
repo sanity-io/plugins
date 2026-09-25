@@ -1,40 +1,73 @@
-import {describe, expect, it} from 'vitest'
+import {screen, waitFor} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import {describe, expect, it, vi} from 'vitest'
 
-import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
-import {initialState as assetsInitialState} from '../../modules/assets'
+import {renderWithMedia} from '../../__tests__/fixtures/renderWithMedia'
 import UploadDropzone from './index'
 
+const fileInput = (container: HTMLElement) =>
+  container.querySelector<HTMLInputElement>('input[type="file"]')!
+
+const photo = () => new File(['image'], 'photo.png', {type: 'image/png'})
+
 describe('UploadDropzone', () => {
-  it('still renders file input when directUploads is false (dropzone in disabled mode)', () => {
-    const {container} = renderWithProviders(
+  it('uploads picked files', async () => {
+    const user = userEvent.setup()
+    const {actors, container} = await renderWithMedia(
       <UploadDropzone>
         <div />
       </UploadDropzone>,
-      {
-        toolOptions: {creditLine: {enabled: false}, directUploads: false},
-        preloaded: {
-          assets: {...assetsInitialState, assetTypes: ['image', 'file']},
-        },
-      },
     )
+    const send = vi.spyOn(actors.media, 'send')
+    const file = photo()
 
-    expect(container.querySelector('input[type="file"]')).toBeTruthy()
+    await user.upload(fileInput(container), file)
+
+    await waitFor(() => expect(send).toHaveBeenCalledWith({type: 'uploads.add', files: [file]}))
   })
 
-  it('enables file input when directUploads is true', () => {
-    const {container} = renderWithProviders(
+  it('only accepts images when browsing images', async () => {
+    const {container} = await renderWithMedia(
       <UploadDropzone>
         <div />
       </UploadDropzone>,
-      {
-        toolOptions: {creditLine: {enabled: false}, directUploads: true},
-        preloaded: {
-          assets: {...assetsInitialState, assetTypes: ['image', 'file']},
-        },
-      },
+      {assetTypes: ['image']},
     )
 
-    const input = container.querySelector('input[type="file"]')
-    expect(input).not.toHaveAttribute('disabled')
+    expect(fileInput(container)).toHaveAttribute('accept', 'image/*')
+  })
+
+  it('rejects files over the maximum upload size', async () => {
+    const user = userEvent.setup()
+    const {actors, container} = await renderWithMedia(
+      <UploadDropzone>
+        <div />
+      </UploadDropzone>,
+      {toolOptions: {maximumUploadSize: 1}},
+    )
+    const send = vi.spyOn(actors.media, 'send')
+
+    await user.upload(fileInput(container), photo())
+
+    expect(
+      await screen.findByText('One or more files exceed the maximum upload size.'),
+    ).toBeInTheDocument()
+    expect(send).not.toHaveBeenCalledWith(expect.objectContaining({type: 'uploads.add'}))
+  })
+
+  it('ignores files when direct uploads are turned off', async () => {
+    const user = userEvent.setup()
+    const {actors, container} = await renderWithMedia(
+      <UploadDropzone>
+        <div />
+      </UploadDropzone>,
+      {toolOptions: {directUploads: false}},
+    )
+    const send = vi.spyOn(actors.media, 'send')
+
+    expect(fileInput(container)).toBeInTheDocument()
+    await user.upload(fileInput(container), photo())
+
+    expect(send).not.toHaveBeenCalled()
   })
 })

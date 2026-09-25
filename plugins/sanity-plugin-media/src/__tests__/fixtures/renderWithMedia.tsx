@@ -2,11 +2,12 @@ import type {SanityDocument} from '@sanity/client'
 import {ThemeProvider} from '@sanity/ui'
 import {buildTheme} from '@sanity/ui/theme'
 import {ToastProvider} from '@sanity/ui/toast'
-import {render, type RenderResult, waitFor} from '@testing-library/react'
-import type {ReactElement} from 'react'
+import {act, render, type RenderResult, waitFor} from '@testing-library/react'
+import {type ReactElement, type Ref, type RefObject, useImperativeHandle} from 'react'
 import {type AssetSourceComponentProps, ColorSchemeProvider} from 'sanity'
 import {vi} from 'vitest'
 
+import Dialogs from '../../components/Dialogs'
 import {AssetBrowserDispatchProvider} from '../../contexts/AssetSourceDispatchContext'
 import {
   type MediaActors,
@@ -15,7 +16,7 @@ import {
 } from '../../contexts/MediaActorsContext'
 import {ToolOptionsProvider} from '../../contexts/ToolOptionsContext'
 import type {MediaMode} from '../../machines/mediaMachine'
-import type {AssetType, MediaToolOptions} from '../../types'
+import type {AssetType, Dialog, MediaToolOptions} from '../../types'
 import {createMediaFetchMock, type MediaFixtures} from './mediaFetchMock'
 import {createMockSanityClient, type MockSanityClient} from './mockSanityClient'
 
@@ -36,6 +37,13 @@ type Options = MediaFixtures & {
 export type RenderWithMediaResult = RenderResult & {
   actors: MediaActors
   client: MockSanityClient
+}
+
+/** Exposes the actors of the surrounding `MediaActorsProvider` through `ref`. */
+export function CaptureActors({ref}: {ref: Ref<MediaActors>}) {
+  const actors = useMediaActors()
+  useImperativeHandle(ref, () => actors, [actors])
+  return null
 }
 
 /**
@@ -64,11 +72,7 @@ export async function renderWithMedia(
     ...toolOptions,
   }
 
-  let actors: MediaActors | undefined
-  const CaptureActors = () => {
-    actors = useMediaActors()
-    return null
-  }
+  const actorsRef: RefObject<MediaActors | null> = {current: null}
 
   const result = render(
     <ColorSchemeProvider scheme="light">
@@ -86,7 +90,7 @@ export async function renderWithMedia(
               showMediaLibraryAssets={toolOptionsValue.showMediaLibraryAssets ?? true}
             >
               <AssetBrowserDispatchProvider isMultiSelect={isMultiSelect} onSelect={onSelect}>
-                <CaptureActors />
+                <CaptureActors ref={actorsRef} />
                 {ui}
               </AssetBrowserDispatchProvider>
             </MediaActorsProvider>
@@ -96,6 +100,7 @@ export async function renderWithMedia(
     </ColorSchemeProvider>,
   )
 
+  const actors = actorsRef.current
   if (!actors) {
     throw new Error('The media actors were not rendered')
   }
@@ -114,4 +119,14 @@ export async function renderWithMedia(
   }
 
   return {...result, actors, client}
+}
+
+/** Renders the dialog stack, and opens `dialog` in it once the media actors are loaded. */
+export async function renderDialog(
+  dialog: Dialog,
+  options: Options = {},
+): Promise<RenderWithMediaResult> {
+  const result = await renderWithMedia(<Dialogs />, options)
+  act(() => result.actors.dialogs.send({type: 'dialog.open', dialog}))
+  return result
 }

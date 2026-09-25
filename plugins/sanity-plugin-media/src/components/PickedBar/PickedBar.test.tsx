@@ -1,217 +1,144 @@
-import {cleanup, screen} from '@testing-library/react'
+import {act, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {afterEach, describe, expect, it, vi} from 'vitest'
+import {describe, expect, it, vi} from 'vitest'
 
-import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
-import {initialState as assetsInitialState} from '../../modules/assets'
-import type {AssetItem, AssetType, FileAsset, ImageAsset} from '../../types'
+import {assetItem, fileAsset, imageAsset} from '../../__tests__/fixtures/documents'
+import {renderWithMedia} from '../../__tests__/fixtures/renderWithMedia'
+import {selectPickedAssets} from '../../machines/assetsMachine'
+import {
+  confirmDeleteAssetsDialog,
+  folderMoveDialog,
+  replaceAssetDialog,
+} from '../../machines/dialogs'
+import type {Asset} from '../../types'
 import PickedBar from './index'
 
-vi.mock('sanity', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('sanity')>()
-  return {
-    ...actual,
-    useColorSchemeValue: () => 'light',
-  }
-})
+const photo = imageAsset('img-1')
+const other = imageAsset('img-2')
+const pdf = fileAsset('file-1')
 
-const imageAsset = {
-  _id: 'img-1',
-  _type: 'sanity.imageAsset',
-  _createdAt: '',
-  _updatedAt: '',
-  _rev: 'r1',
-  originalFilename: 'photo.png',
-  size: 1,
-  mimeType: 'image/png',
-  url: 'https://example.com/photo.png',
-  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
-} as ImageAsset
-
-const fileAsset = {
-  _id: 'file-1',
-  _type: 'sanity.fileAsset',
-  _createdAt: '',
-  _updatedAt: '',
-  _rev: 'r1',
-  originalFilename: 'doc.pdf',
-  extension: 'pdf',
-  size: 1,
-  mimeType: 'application/pdf',
-  url: 'https://example.com/doc.pdf',
-} as FileAsset
-
-function assetItem(asset: ImageAsset | FileAsset, partial?: Partial<AssetItem>): AssetItem {
-  return {
-    _type: 'asset',
-    asset,
-    picked: false,
-    updating: false,
-    ...partial,
-  }
+async function renderPickedBar({
+  assets = [photo, other, pdf],
+  picked,
+  ...options
+}: Parameters<typeof renderWithMedia>[1] & {picked: string[]}) {
+  const result = await renderWithMedia(<PickedBar />, {assets, ...options})
+  act(() => {
+    for (const assetId of picked) {
+      result.actors.assets.send({type: 'pick.toggle', assetId})
+    }
+  })
+  return result
 }
 
-function assetsState(byIds: Record<string, AssetItem>, extra?: Partial<typeof assetsInitialState>) {
-  return {
-    ...assetsInitialState,
-    assetTypes: ['file', 'image'] as AssetType[],
-    allIds: Object.keys(byIds),
-    byIds,
-    ...extra,
-  }
-}
+const pickedItems = (...assets: Asset[]) => assets.map((asset) => assetItem(asset, {picked: true}))
 
 describe('PickedBar', () => {
-  afterEach(() => {
-    cleanup()
-  })
+  it('only shows while assets are picked', async () => {
+    const {actors} = await renderPickedBar({picked: []})
+    expect(screen.queryByText(/selected/)).not.toBeInTheDocument()
 
-  it('renders nothing when no assets are picked', () => {
-    renderWithProviders(<PickedBar />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset)}),
-      },
-    })
-    expect(screen.queryByText(/selected/i)).toBeNull()
-  })
+    act(() => actors.assets.send({type: 'pick.all'}))
+    expect(screen.getByText('3 assets selected')).toBeInTheDocument()
 
-  it('shows Replace when exactly one image asset is picked', async () => {
-    const user = userEvent.setup()
-    const {store} = renderWithProviders(<PickedBar />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-      },
-    })
-
-    expect(screen.getByText('Replace')).toBeTruthy()
-    await user.click(screen.getByText('Replace'))
-    expect(store.getState().dialog.items.some((d) => d.type === 'dialogAllAssets')).toBe(true)
-    expect(store.getState().dialog.items.find((d) => d.type === 'dialogAllAssets')).toMatchObject({
-      assetId: 'img-1',
-    })
-  })
-
-  it('hides Replace when the only picked asset is a file', () => {
-    renderWithProviders(<PickedBar />, {
-      preloaded: {
-        assets: assetsState({'file-1': assetItem(fileAsset, {picked: true})}),
-      },
-    })
-
-    expect(screen.getByText(/1 asset selected/i)).toBeTruthy()
-    expect(screen.queryByText('Replace')).toBeNull()
-  })
-
-  it('hides Replace when more than one asset is picked', () => {
-    const second = {...imageAsset, _id: 'img-2', originalFilename: 'other.png'} as ImageAsset
-    renderWithProviders(<PickedBar />, {
-      preloaded: {
-        assets: assetsState({
-          'img-1': assetItem(imageAsset, {picked: true}),
-          'img-2': assetItem(second, {picked: true}),
-        }),
-      },
-    })
-
-    expect(screen.getByText(/2 assets selected/i)).toBeTruthy()
-    expect(screen.queryByText('Replace')).toBeNull()
+    act(() => actors.assets.send({type: 'pick.clear'}))
+    expect(screen.queryByText(/selected/)).not.toBeInTheDocument()
   })
 
   it('clears picks when Deselect is clicked', async () => {
     const user = userEvent.setup()
-    const {store} = renderWithProviders(<PickedBar />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-      },
-    })
+    const {actors} = await renderPickedBar({picked: ['img-1']})
 
     await user.click(screen.getByText('Deselect'))
-    expect(store.getState().assets.byIds['img-1']?.picked).toBe(false)
+
+    expect(selectPickedAssets(actors.assets.getSnapshot())).toEqual([])
   })
 
-  it('opens confirm-delete dialog when Delete is clicked', async () => {
+  it('confirms before deleting the picked assets', async () => {
     const user = userEvent.setup()
-    const {store} = renderWithProviders(<PickedBar />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-      },
-    })
+    const {actors} = await renderPickedBar({picked: ['img-1', 'file-1']})
 
     await user.click(screen.getByText('Delete'))
-    expect(store.getState().dialog.items.some((d) => d.type === 'confirm')).toBe(true)
+
+    expect(actors.dialogs.getSnapshot().context.items).toEqual([
+      confirmDeleteAssetsDialog(pickedItems(photo, pdf)),
+    ])
   })
 
-  it('opens folder-move dialog when Move to folder is clicked', async () => {
-    const user = userEvent.setup()
-    const {store} = renderWithProviders(<PickedBar />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-        folders: {
-          byId: {},
-          childrenByParentId: {},
-          rootIds: [],
-          exactCountByFolderId: {},
-          unfiledCount: 0,
-          currentFolderId: null,
-          currentFolderUnfiled: false,
-          panelVisible: false,
-          fetching: false,
-          fetchCount: -1,
-          creating: false,
-          renaming: false,
-        },
-      },
+  describe('replacing', () => {
+    it('replaces the only picked image, browsing the whole library for its replacement', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderPickedBar({picked: ['img-1']})
+
+      await user.click(screen.getByText('Replace'))
+
+      expect(actors.dialogs.getSnapshot().context.items).toEqual([replaceAssetDialog('img-1')])
+      expect(actors.assets.getSnapshot().context.replace).toEqual({assetId: 'img-1'})
     })
 
-    await user.click(screen.getByText('Move to folder'))
-    expect(store.getState().dialog.items.some((d) => d.type === 'folderMove')).toBe(true)
+    it('cannot replace files, which fields reference differently', async () => {
+      await renderPickedBar({picked: ['file-1']})
+
+      expect(screen.getByText('1 asset selected')).toBeInTheDocument()
+      expect(screen.queryByText('Replace')).not.toBeInTheDocument()
+    })
+
+    it('cannot replace several assets at once', async () => {
+      await renderPickedBar({picked: ['img-1', 'img-2']})
+
+      expect(screen.getByText('2 assets selected')).toBeInTheDocument()
+      expect(screen.queryByText('Replace')).not.toBeInTheDocument()
+    })
   })
 
-  it('dispatches folderSetRequest(null) when Remove from folder is clicked', async () => {
-    const user = userEvent.setup()
-    const onAction = vi.fn()
-    renderWithProviders(<PickedBar />, {
-      onAction,
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-        folders: {
-          byId: {f1: {_id: 'f1', name: 'F', parentId: null}},
-          childrenByParentId: {},
-          rootIds: ['f1'],
-          exactCountByFolderId: {},
-          unfiledCount: 0,
-          currentFolderId: 'f1',
-          currentFolderUnfiled: false,
-          panelVisible: true,
-          fetching: false,
-          fetchCount: 1,
-          creating: false,
-          renaming: false,
-        },
-      },
+  describe('folders', () => {
+    it('moves the picked assets to a folder picked in a dialog', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderPickedBar({picked: ['img-1']})
+
+      await user.click(screen.getByText('Move to folder'))
+
+      expect(actors.dialogs.getSnapshot().context.items).toEqual([
+        folderMoveDialog(pickedItems(photo), null),
+      ])
+      expect(screen.queryByText('Remove from folder')).not.toBeInTheDocument()
     })
 
-    await user.click(screen.getByText('Remove from folder'))
-    expect(onAction).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: 'assets/folderSetRequest',
-        payload: expect.objectContaining({folderId: null}),
-      }),
-    )
+    it('removes the picked assets from the current folder', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderPickedBar({
+        folders: [{_id: 'f1', name: 'Campaigns', parentId: null}],
+        picked: [],
+      })
+      act(() => actors.assets.send({type: 'folder.open', folderId: 'f1'}))
+      await waitFor(() => expect(actors.assets.getSnapshot().context.allIds).toHaveLength(3))
+      act(() => actors.assets.send({type: 'pick.toggle', assetId: 'img-1'}))
+      const send = vi.spyOn(actors.assets, 'send')
+
+      await user.click(screen.getByText('Remove from folder'))
+
+      expect(send).toHaveBeenCalledExactlyOnceWith({
+        type: 'assets.folder.set',
+        assets: pickedItems(photo),
+        folderId: null,
+      })
+    })
   })
 
-  it('calls onSelect with picked assets when Insert selected is clicked', async () => {
-    const user = userEvent.setup()
-    const onSelect = vi.fn()
-    renderWithProviders(<PickedBar />, {
-      isMultiSelect: true,
-      onSelect,
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-      },
-    })
+  describe('picking assets for a field', () => {
+    it('inserts the picked assets when the field accepts several', async () => {
+      const user = userEvent.setup()
+      const onSelect = vi.fn()
+      await renderPickedBar({isMultiSelect: true, onSelect, picked: ['img-1', 'file-1']})
 
-    await user.click(screen.getByText('Insert selected'))
-    expect(onSelect).toHaveBeenCalledWith([{kind: 'assetDocumentId', value: 'img-1'}])
+      await user.click(screen.getByText('Insert selected'))
+
+      expect(onSelect).toHaveBeenCalledWith([
+        {kind: 'assetDocumentId', value: 'img-1'},
+        {kind: 'assetDocumentId', value: 'file-1'},
+      ])
+      expect(screen.queryByText('Delete')).not.toBeInTheDocument()
+      expect(screen.queryByText('Move to folder')).not.toBeInTheDocument()
+    })
   })
 })

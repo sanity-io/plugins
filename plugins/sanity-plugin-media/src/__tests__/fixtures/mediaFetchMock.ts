@@ -47,7 +47,9 @@ export function createMediaFetchMock({
     // Asset pages
     if (query.includes('originalFilename') && query.includes('order(')) {
       const assetId = params['assetId']
-      return answer('assets', assetId ? assets.filter((asset) => asset._id === assetId) : assets)
+      const matching = assetId ? assets.filter((asset) => asset._id === assetId) : assets
+      const [, start = 0, end = matching.length] = /\[(\d+)\.\.\.(\d+)\]\s*$/.exec(query) ?? []
+      return answer('assets', matching.slice(Number(start), Number(end)))
     }
     // Documents or assets referencing something that is being deleted or replaced
     return Promise.resolve([])

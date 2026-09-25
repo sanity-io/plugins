@@ -1,121 +1,75 @@
-import {screen, waitFor} from '@testing-library/react'
+import {act, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {describe, expect, it, vi} from 'vitest'
+import {describe, expect, it} from 'vitest'
 
-import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
-import {createTestRootState} from '../../__tests__/fixtures/rootState'
+import {tag} from '../../__tests__/fixtures/documents'
+import {renderDialog} from '../../__tests__/fixtures/renderWithMedia'
 import {getDialogRoot, inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
-import {tagsActions} from '../../modules/tags'
-import DialogTagCreate from './index'
+import {tagCreateDialog, tagsDialog} from '../../machines/dialogs'
+import {selectTags} from '../../machines/tagsMachine'
+
+const dialogName = /create tag/i
+
+const saveButton = () =>
+  withinDialog(dialogName, screen).getByRole('button', {name: /save and close/i})
+const errorIcon = () =>
+  getDialogRoot(dialogName, screen).querySelector('[data-sanity-icon="error-outline"]')
 
 describe('DialogTagCreate', () => {
-  it('dispatches tag create flow when form is valid', async () => {
+  it('creates the tag with a trimmed name, then closes', async () => {
     const user = userEvent.setup()
-    const {store} = renderWithProviders(
-      <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
-        <span />
-      </DialogTagCreate>,
+    const {actors, client} = await renderDialog(tagCreateDialog())
+    client.create.mockImplementation((document: {name: {current: string}}) =>
+      Promise.resolve({...tag('t1', document.name.current)}),
     )
 
-    const dlg = withinDialog(/create tag/i, screen)
-    await user.type(inputByName(/create tag/i, screen, 'name'), 'my-tag')
-    await user.click(dlg.getByRole('button', {name: /save and close/i}))
+    await user.type(inputByName(dialogName, screen, 'name'), '  spaced  ')
+    await user.click(saveButton())
 
-    expect(store.getState().tags.creating).toBe(true)
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+    expect(client.create).toHaveBeenCalledWith({
+      _type: 'media.tag',
+      name: {_type: 'slug', current: 'spaced'},
+    })
+    expect(selectTags(actors.tags.getSnapshot()).map((item) => item.tag.name.current)).toEqual([
+      'spaced',
+    ])
+    expect(await screen.findByText('Tag created')).toBeInTheDocument()
   })
 
-  it('dispatches createRequest with a trimmed tag name', async () => {
+  it('keeps Save disabled until the name is valid', async () => {
     const user = userEvent.setup()
-    const {store} = renderWithProviders(
-      <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
-        <span />
-      </DialogTagCreate>,
-    )
-    const dispatchSpy = vi.spyOn(store, 'dispatch')
-    const dlg = withinDialog(/create tag/i, screen)
+    await renderDialog(tagCreateDialog())
+    expect(saveButton()).toBeDisabled()
 
-    await user.type(inputByName(/create tag/i, screen, 'name'), '  spaced  ')
-    await user.click(dlg.getByRole('button', {name: /save and close/i}))
+    await user.type(inputByName(dialogName, screen, 'name'), 'a')
 
-    await waitFor(() => {
-      let createAction
-      for (const call of dispatchSpy.mock.calls) {
-        const action = call[0]
-        if (tagsActions.createRequest.match(action)) {
-          createAction = action
-          break
-        }
-      }
-      expect(createAction).toBeDefined()
-      expect(createAction?.payload).toEqual({name: 'spaced'})
-    })
+    await waitFor(() => expect(saveButton()).toBeEnabled())
   })
 
-  it('keeps Save disabled until the name is non-empty and valid', async () => {
+  it('shows why the tag could not be created, until the dialog opens again', async () => {
     const user = userEvent.setup()
-    renderWithProviders(
-      <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
-        <span />
-      </DialogTagCreate>,
-    )
+    const {actors, client} = await renderDialog(tagCreateDialog(), {tags: [tag('t1', 'product')]})
 
-    expect(
-      withinDialog(/create tag/i, screen).getByRole('button', {name: /save and close/i}),
-    ).toBeDisabled()
+    await user.type(inputByName(dialogName, screen, 'name'), 'product')
+    await user.click(saveButton())
 
-    const nameInput = inputByName(/create tag/i, screen, 'name')
-    await user.type(nameInput, 'a')
-    await user.tab()
-    await waitFor(() => {
-      expect(
-        withinDialog(/create tag/i, screen).getByRole('button', {name: /save and close/i}),
-      ).not.toBeDisabled()
-    })
+    await waitFor(() => expect(errorIcon()).toBeInTheDocument())
+    expect(client.create).not.toHaveBeenCalled()
+    expect(await screen.findByText('An error occurred: Tag already exists')).toBeInTheDocument()
+
+    act(() => actors.dialogs.send({type: 'dialogs.clear'}))
+    act(() => actors.dialogs.send({type: 'dialog.open', dialog: tagCreateDialog()}))
+    expect(errorIcon()).not.toBeInTheDocument()
   })
 
-  it('clears the entire dialog stack when the dialog close control is used', async () => {
+  it('closes every open dialog when dismissed', async () => {
     const user = userEvent.setup()
-    const base = createTestRootState({
-      dialog: {
-        items: [
-          {id: 'dlg-1', type: 'tagCreate'},
-          {id: 'tags', type: 'tags'},
-        ],
-      },
-    })
+    const {actors} = await renderDialog(tagsDialog())
+    act(() => actors.dialogs.send({type: 'dialog.open', dialog: tagCreateDialog()}))
 
-    const {store} = renderWithProviders(
-      <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
-        <span />
-      </DialogTagCreate>,
-      {preloaded: base},
-    )
+    await user.click(withinDialog(dialogName, screen).getByRole('button', {name: /close dialog/i}))
 
-    const dlg = withinDialog(/create tag/i, screen)
-    await user.click(dlg.getByRole('button', {name: /close dialog/i}))
-
-    expect(store.getState().dialog.items).toEqual([])
-  })
-
-  it('shows an error indicator beside the name when tag creation failed on the server', async () => {
-    const base = createTestRootState({
-      tags: {
-        ...createTestRootState().tags,
-        creatingError: {message: 'Tag already exists', statusCode: 409},
-      },
-    })
-
-    renderWithProviders(
-      <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
-        <span />
-      </DialogTagCreate>,
-      {preloaded: base},
-    )
-
-    await waitFor(() => {
-      expect(
-        getDialogRoot(/create tag/i, screen).querySelector('[data-sanity-icon="error-outline"]'),
-      ).toBeTruthy()
-    })
+    expect(actors.dialogs.getSnapshot().context.items).toEqual([])
   })
 })

@@ -1,6 +1,14 @@
 // oxlint-disable-next-line import/no-unassigned-import
 import '@testing-library/jest-dom/vitest'
-import {vi} from 'vitest'
+import {cleanup, configure} from '@testing-library/react'
+import {afterEach, vi} from 'vitest'
+
+// Testing Library only cleans up on its own with Vitest globals. Unmounting also stops the media
+// actors of rendered components, so their listeners and timers don't leak into later tests.
+afterEach(cleanup)
+
+// Toasts render in a transition, which can take longer than a second while every test file runs
+configure({asyncUtilTimeout: 3000})
 
 if (typeof window !== 'undefined') {
   Object.defineProperty(window, 'matchMedia', {

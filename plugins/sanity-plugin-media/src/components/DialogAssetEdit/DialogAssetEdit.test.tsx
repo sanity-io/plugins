@@ -1,78 +1,31 @@
-import {fireEvent, screen, waitFor} from '@testing-library/react'
+import {act, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {Subject} from 'rxjs'
+import type {Subject} from 'rxjs'
 import {describe, expect, it, vi} from 'vitest'
 
-import DialogAssetEdit from './index'
+import {
+  assetItem,
+  folderReference,
+  imageAsset,
+  tag,
+  tagReference,
+} from '../../__tests__/fixtures/documents'
+import {createMediaFetchMock, type MediaFixtures} from '../../__tests__/fixtures/mediaFetchMock'
+import {mockPatchChain, mockTransaction} from '../../__tests__/fixtures/mockSanityClient'
+import {renderDialog} from '../../__tests__/fixtures/renderWithMedia'
+import {getDialogRoot, inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
+import {
+  assetEditDialog,
+  confirmDeleteAssetsDialog,
+  folderMoveDialog,
+  tagsDialog,
+} from '../../machines/dialogs'
+import type {ImageAsset, MediaToolOptions} from '../../types'
 
 vi.mock('../Image', () => ({default: () => null}))
 vi.mock('../FileAssetPreview', () => ({default: () => null}))
 vi.mock('../DocumentList', () => ({default: () => null}))
 vi.mock('../AssetMetadata', () => ({default: () => null}))
-import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
-import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
-import {createTestRootState} from '../../__tests__/fixtures/rootState'
-import {getDialogRoot, inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
-import {assetsActions, initialState as assetsInitialState} from '../../modules/assets'
-import type {RootReducerState} from '../../modules/types'
-import type {AssetType, ImageAsset, MediaToolOptions} from '../../types'
-
-const asset = {
-  _id: 'a1',
-  _type: 'sanity.imageAsset',
-  _createdAt: '',
-  _updatedAt: '',
-  _rev: 'r1',
-  originalFilename: 'x.png',
-  size: 1,
-  mimeType: 'image/png',
-  url: 'https://example.com/x.png',
-  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
-} as ImageAsset
-
-const assetsPreloaded = {
-  ...assetsInitialState,
-  assetTypes: ['image'] as AssetType[],
-  allIds: ['a1'],
-  byIds: {
-    a1: {_type: 'asset' as const, asset, picked: false, updating: false},
-  },
-}
-
-function assetsWith(overrides: Partial<ImageAsset>) {
-  const next = {...asset, ...overrides} as ImageAsset
-  return {
-    ...assetsInitialState,
-    assetTypes: ['image'] as AssetType[],
-    allIds: ['a1'],
-    byIds: {
-      a1: {_type: 'asset' as const, asset: next, picked: false, updating: false},
-    },
-  }
-}
-
-function withImageDescription(description: string): ImageAsset['metadata'] {
-  return {
-    ...asset.metadata,
-    image: {
-      _type: 'sanity.imageExifTags',
-      ImageDescription: description,
-    },
-  }
-}
-
-function textareaByName(
-  dialogName: RegExp,
-  base: typeof screen,
-  name: string,
-): HTMLTextAreaElement {
-  const root = getDialogRoot(dialogName, base)
-  const el = root.querySelector(`textarea[name="${name}"]`)
-  if (!el || !(el instanceof HTMLTextAreaElement)) {
-    throw new Error(`No textarea name="${name}" in dialog matching ${dialogName}`)
-  }
-  return el
-}
 
 vi.mock('sanity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('sanity')>()
@@ -84,541 +37,344 @@ vi.mock('sanity', async (importOriginal) => {
   }
 })
 
-vi.mock('../../hooks/useVersionedClient', () => ({
-  default: () =>
-    createMockSanityClient({
-      listen: vi.fn(() => new Subject()),
-    }),
-}))
+const dialogName = /asset details/i
+const photo = imageAsset('a1')
+const inProducts = imageAsset('a1', {opt: {media: {folder: folderReference('folder.products')}}})
 
 function renderAssetDialog(
-  dialog: {id: string; type: 'assetEdit'; assetId: string},
-  opts: {
-    preloaded?: Partial<RootReducerState>
-    toolOptions?: Partial<MediaToolOptions>
-  } = {},
+  asset: ImageAsset = photo,
+  {toolOptions, ...fixtures}: MediaFixtures & {toolOptions?: Partial<MediaToolOptions>} = {},
 ) {
-  const {preloaded: extraPreloaded, toolOptions} = opts
-  return renderWithProviders(
-    <DialogAssetEdit dialog={dialog}>
-      <span />
-    </DialogAssetEdit>,
-    {
-      preloaded: {
-        assets: assetsPreloaded,
-        ...extraPreloaded,
-      },
-      toolOptions: {creditLine: {enabled: true}, ...toolOptions},
-    },
-  )
+  return renderDialog(assetEditDialog('a1'), {
+    assets: [asset],
+    toolOptions: {creditLine: {enabled: true}, ...toolOptions},
+    ...fixtures,
+  })
 }
 
+const dialog = () => withinDialog(dialogName, screen)
+const saveButton = () => dialog().getByRole('button', {name: /save and close/i})
+const field = (name: string) => inputByName(dialogName, screen, name)
+const textarea = (name: string) =>
+  getDialogRoot(dialogName, screen).querySelector<HTMLTextAreaElement>(`textarea[name="${name}"]`)!
+
+const withImageDescription = (description: string): ImageAsset['metadata'] => ({
+  ...photo.metadata,
+  image: {_type: 'sanity.imageExifTags', ImageDescription: description},
+})
+
 describe('DialogAssetEdit', () => {
-  it('renders asset details header and details tab', () => {
-    renderAssetDialog({
-      id: 'dlg-1',
-      type: 'assetEdit',
-      assetId: 'a1',
-    })
+  it('shows the details of the asset', async () => {
+    await renderAssetDialog()
 
-    const dlg = withinDialog(/asset details/i, screen)
-    expect(dlg.getByText('Asset details')).toBeInTheDocument()
-    expect(dlg.getByRole('tab', {name: 'Details'})).toBeInTheDocument()
+    expect(dialog().getByText('Asset details')).toBeInTheDocument()
+    expect(dialog().getByRole('tab', {name: 'Details'})).toHaveAttribute('aria-selected', 'true')
+    expect(field('originalFilename')).toHaveValue('a1.png')
   })
 
-  it('keeps Save disabled until a field is edited', () => {
-    renderAssetDialog({
-      id: 'dlg-1',
-      type: 'assetEdit',
-      assetId: 'a1',
-    })
-
-    const dlg = withinDialog(/asset details/i, screen)
-    expect(dlg.getByRole('button', {name: /save and close/i})).toBeDisabled()
-  })
-
-  it('enables Save after editing a string field (title)', async () => {
+  it('switches to the References tab', async () => {
     const user = userEvent.setup()
-    renderAssetDialog({
-      id: 'dlg-1',
-      type: 'assetEdit',
-      assetId: 'a1',
-    })
-
-    const dlg = withinDialog(/asset details/i, screen)
-    const save = dlg.getByRole('button', {name: /save and close/i})
-    expect(save).toBeDisabled()
-
-    await user.type(inputByName(/asset details/i, screen, 'title'), 'Hero image')
-
-    await waitFor(() => {
-      expect(save).not.toBeDisabled()
-    })
-  })
-
-  it('dispatches asset update when a field changes and the form is submitted', async () => {
-    const user = userEvent.setup()
-    const {store} = renderAssetDialog({
-      id: 'dlg-1',
-      type: 'assetEdit',
-      assetId: 'a1',
-    })
-    const dispatchSpy = vi.spyOn(store, 'dispatch')
-    const dlg = withinDialog(/asset details/i, screen)
-
-    await user.type(inputByName(/asset details/i, screen, 'title'), 'Hero image')
-    await user.click(dlg.getByRole('button', {name: /save and close/i}))
-
-    expect(store.getState().assets.byIds['a1']!.updating).toBe(true)
-
-    await waitFor(() => {
-      let updateAction
-      for (const call of dispatchSpy.mock.calls) {
-        const action = call[0]
-        if (assetsActions.updateRequest.match(action)) {
-          updateAction = action
-          break
-        }
-      }
-      expect(updateAction).toBeDefined()
-      expect(updateAction?.payload).toMatchObject({
-        asset,
-        closeDialogId: 'a1',
-        formData: expect.objectContaining({
-          title: 'Hero image',
-          originalFilename: 'x.png',
-        }),
-      })
-    })
-  })
-
-  it('removes only this dialog when closed', async () => {
-    const user = userEvent.setup()
-    const base = createTestRootState({
-      dialog: {
-        items: [
-          {id: 'dlg-1', type: 'assetEdit', assetId: 'a1'},
-          {id: 'tags', type: 'tags'},
-        ],
-      },
-      assets: assetsPreloaded,
-    })
-
-    const {store} = renderWithProviders(
-      <DialogAssetEdit
-        dialog={{
-          id: 'dlg-1',
-          type: 'assetEdit',
-          assetId: 'a1',
-        }}
-      >
-        <span />
-      </DialogAssetEdit>,
-      {
-        preloaded: base,
-        toolOptions: {creditLine: {enabled: true}},
-      },
-    )
-
-    const dlg = withinDialog(/asset details/i, screen)
-    await user.click(dlg.getByRole('button', {name: /close dialog/i}))
-
-    expect(store.getState().dialog.items).toEqual([{id: 'tags', type: 'tags'}])
-  })
-
-  it('opens the delete confirmation dialog when Delete is clicked', async () => {
-    const {store} = renderAssetDialog({
-      id: 'dlg-1',
-      type: 'assetEdit',
-      assetId: 'a1',
-    })
-
-    const dlg = withinDialog(/asset details/i, screen)
-    fireEvent.click(dlg.getByRole('button', {name: /^delete$/i}))
-
-    await waitFor(() => {
-      let confirm
-      for (const d of store.getState().dialog.items) {
-        if (d.type === 'confirm') {
-          confirm = d
-          break
-        }
-      }
-      expect(confirm).toBeDefined()
-      expect(confirm?.title).toMatch(/permanently delete/i)
-      expect(confirm?.headerTitle).toBe('Confirm deletion')
-    })
-  })
-
-  it('shows the current folder path and opens folder move dialog', async () => {
-    const user = userEvent.setup()
-    const assetInFolder = {
-      ...asset,
-      opt: {media: {folder: {_ref: 'folder.products', _type: 'reference' as const, _weak: true}}},
-    } as ImageAsset
-    const {store} = renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: {
-            ...assetsPreloaded,
-            byIds: {
-              a1: {_type: 'asset', asset: assetInFolder, picked: false, updating: false},
-            },
-          },
-          folders: {
-            byId: {
-              'folder.parent': {_id: 'folder.parent', name: 'Parent', parentId: null},
-              'folder.section': {_id: 'folder.section', name: 'Section', parentId: 'folder.parent'},
-              'folder.nested': {_id: 'folder.nested', name: 'Nested', parentId: 'folder.section'},
-              'folder.products': {
-                _id: 'folder.products',
-                name: 'Products',
-                parentId: 'folder.nested',
-              },
-            },
-            childrenByParentId: {
-              'folder.parent': ['folder.section'],
-              'folder.section': ['folder.nested'],
-              'folder.nested': ['folder.products'],
-            },
-            rootIds: ['folder.parent'],
-            exactCountByFolderId: {},
-            unfiledCount: 0,
-            currentFolderId: null,
-            currentFolderUnfiled: false,
-            panelVisible: false,
-            fetching: false,
-            fetchCount: -1,
-            creating: false,
-            renaming: false,
-          },
-        },
-      },
-    )
-
-    const dlg = withinDialog(/asset details/i, screen)
-    expect(dlg.getByText('Parent/.../Nested/Products')).toBeInTheDocument()
-
-    await user.click(dlg.getByRole('button', {name: /change folder/i}))
-
-    const moveDialog = store.getState().dialog.items.find((item) => item.type === 'folderMove')
-    expect(moveDialog).toMatchObject({
-      assets: [store.getState().assets.byIds['a1']],
-      folderId: 'folder.products',
-      id: 'folderMove',
-      type: 'folderMove',
-    })
-  })
-
-  it('preserves the folder reference when saving other metadata fields', async () => {
-    const user = userEvent.setup()
-    const folderRef = {_ref: 'folder.products', _type: 'reference' as const, _weak: true}
-    const assetInFolder = {
-      ...asset,
-      opt: {media: {folder: folderRef}},
-    } as ImageAsset
-    const {store} = renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: {
-            ...assetsPreloaded,
-            byIds: {
-              a1: {_type: 'asset', asset: assetInFolder, picked: false, updating: false},
-            },
-          },
-        },
-      },
-    )
-    const dispatchSpy = vi.spyOn(store, 'dispatch')
-    const dlg = withinDialog(/asset details/i, screen)
-
-    await user.type(inputByName(/asset details/i, screen, 'title'), 'New title')
-    await user.click(dlg.getByRole('button', {name: /save and close/i}))
-
-    await waitFor(() => {
-      let updateAction
-      for (const call of dispatchSpy.mock.calls) {
-        const action = call[0]
-        if (assetsActions.updateRequest.match(action)) {
-          updateAction = action
-          break
-        }
-      }
-      expect(updateAction).toBeDefined()
-      expect(updateAction?.payload.formData['opt'].media.folder).toEqual(folderRef)
-    })
-  })
-
-  it('removes the current folder from the details view', async () => {
-    const user = userEvent.setup()
-    const assetInFolder = {
-      ...asset,
-      opt: {media: {folder: {_ref: 'folder.products', _type: 'reference' as const, _weak: true}}},
-    } as ImageAsset
-    const {store} = renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: {
-            ...assetsPreloaded,
-            byIds: {
-              a1: {_type: 'asset', asset: assetInFolder, picked: false, updating: false},
-            },
-          },
-        },
-      },
-    )
-
-    const dlg = withinDialog(/asset details/i, screen)
-    await user.click(dlg.getByRole('button', {name: /remove from folder/i}))
-
-    expect(store.getState().assets.byIds['a1']?.updating).toBe(true)
-  })
-
-  it('switches to the References tab when that tab is activated', async () => {
-    const user = userEvent.setup()
-    renderAssetDialog({
-      id: 'dlg-1',
-      type: 'assetEdit',
-      assetId: 'a1',
-    })
-
-    const dlg = withinDialog(/asset details/i, screen)
-    const referencesTab = dlg.getByRole('tab', {name: /references/i})
-    expect(referencesTab).toHaveAttribute('aria-selected', 'false')
+    await renderAssetDialog()
+    const referencesTab = dialog().getByRole('tab', {name: /references/i})
 
     await user.click(referencesTab)
 
     expect(referencesTab).toHaveAttribute('aria-selected', 'true')
-    expect(dlg.getByRole('tab', {name: 'Details'})).toHaveAttribute('aria-selected', 'false')
+    expect(dialog().getByRole('tab', {name: 'Details'})).toHaveAttribute('aria-selected', 'false')
   })
 
-  it('prefills Description from EXIF ImageDescription when description is missing', async () => {
-    renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: assetsWith({
-            description: undefined,
-            metadata: withImageDescription('EXIF ImageDescription test'),
-          }),
-        },
-      },
-    )
+  describe('saving', () => {
+    it('keeps Save disabled until a field is edited', async () => {
+      const user = userEvent.setup()
+      await renderAssetDialog()
+      expect(saveButton()).toBeDisabled()
 
-    await waitFor(() => {
-      expect(textareaByName(/asset details/i, screen, 'description')).toHaveValue(
-        'EXIF ImageDescription test',
+      await user.type(field('title'), 'Hero image')
+
+      await waitFor(() => expect(saveButton()).toBeEnabled())
+    })
+
+    it('saves the changes, then closes', async () => {
+      const user = userEvent.setup()
+      const {actors, client} = await renderAssetDialog()
+      const patch = mockPatchChain(imageAsset('a1', {title: 'Hero image'}))
+      client.patch.mockReturnValue(patch)
+
+      await user.type(field('title'), 'Hero image')
+      await user.click(saveButton())
+
+      await waitFor(() => expect(actors.dialogs.getSnapshot().context.items).toEqual([]))
+      expect(client.patch).toHaveBeenCalledWith('a1')
+      expect(patch.set).toHaveBeenCalledWith(
+        expect.objectContaining({originalFilename: 'a1.png', title: 'Hero image'}),
       )
+      expect(actors.assets.getSnapshot().context.byIds['a1']?.asset.title).toBe('Hero image')
     })
-  })
 
-  it('does not override an existing Description with EXIF ImageDescription', async () => {
-    renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: assetsWith({
-            description: 'Already set by editor',
-            metadata: withImageDescription('EXIF ImageDescription test'),
-          }),
-        },
-      },
-    )
+    it('keeps the folder of the asset', async () => {
+      const user = userEvent.setup()
+      const {client} = await renderAssetDialog(inProducts)
+      const patch = mockPatchChain(inProducts)
+      client.patch.mockReturnValue(patch)
 
-    await waitFor(() => {
-      expect(textareaByName(/asset details/i, screen, 'description')).toHaveValue(
-        'Already set by editor',
-      )
-    })
-  })
+      await user.type(field('title'), 'New title')
+      await user.click(saveButton())
 
-  it('does not refill Description from EXIF when it was intentionally cleared', async () => {
-    renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: assetsWith({
-            description: '',
-            metadata: withImageDescription('EXIF ImageDescription test'),
-          }),
-        },
-      },
-    )
-
-    await waitFor(() => {
-      expect(textareaByName(/asset details/i, screen, 'description')).toHaveValue('')
-    })
-  })
-
-  it('persists a cleared Description as empty string so EXIF cannot refill it', async () => {
-    const user = userEvent.setup()
-    const {store} = renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: assetsWith({
-            description: undefined,
-            metadata: withImageDescription('EXIF ImageDescription test'),
-          }),
-        },
-      },
-    )
-    const dispatchSpy = vi.spyOn(store, 'dispatch')
-    const dlg = withinDialog(/asset details/i, screen)
-
-    await waitFor(() => {
-      expect(textareaByName(/asset details/i, screen, 'description')).toHaveValue(
-        'EXIF ImageDescription test',
+      await waitFor(() => expect(patch.set).toHaveBeenCalled())
+      expect(patch.set.mock.lastCall?.[0].opt.media.folder).toEqual(
+        folderReference('folder.products'),
       )
     })
 
-    await user.clear(textareaByName(/asset details/i, screen, 'description'))
-    await user.click(dlg.getByRole('button', {name: /save and close/i}))
+    it('shows the asset as busy while saving', async () => {
+      const user = userEvent.setup()
+      const {client} = await renderAssetDialog()
+      client.patch.mockReturnValue(mockPatchChain(new Promise(() => undefined)))
 
-    await waitFor(() => {
-      let updateAction
-      for (const call of dispatchSpy.mock.calls) {
-        const action = call[0]
-        if (assetsActions.updateRequest.match(action)) {
-          updateAction = action
-          break
-        }
+      await user.type(field('title'), 'Hero image')
+      await user.click(saveButton())
+
+      expect(field('title')).toBeDisabled()
+      expect(saveButton()).toBeDisabled()
+      expect(dialog().getByRole('button', {name: /^delete$/i})).toBeDisabled()
+    })
+  })
+
+  describe('tags', () => {
+    const product = tag('t1', 'product')
+    const sale = tag('t2', 'sale')
+    const tagsInput = () =>
+      getDialogRoot(dialogName, screen).querySelector<HTMLInputElement>('#react-select-tags-input')!
+
+    it('shows the tags of the asset once tags are loaded', async () => {
+      await renderAssetDialog(
+        imageAsset('a1', {opt: {media: {tags: [tagReference('t1'), tagReference('deleted')]}}}),
+        {tags: [product, sale]},
+      )
+
+      expect(dialog().getByText('product')).toBeInTheDocument()
+      expect(dialog().queryByText('sale')).not.toBeInTheDocument()
+    })
+
+    it('creates tags inline, and selects them', async () => {
+      const user = userEvent.setup()
+      const {actors, client} = await renderAssetDialog(photo, {tags: [product]})
+      client.create.mockImplementation((document: {name: {current: string}}) =>
+        Promise.resolve(tag('t-new', document.name.current)),
+      )
+
+      await user.type(tagsInput(), 'fresh{Enter}')
+
+      await waitFor(() => expect(dialog().getByText('fresh')).toBeInTheDocument())
+      expect(actors.tags.getSnapshot().context.allIds).toEqual(['t-new', 't1'])
+      await waitFor(() => expect(saveButton()).toBeEnabled())
+    })
+  })
+
+  describe('folders', () => {
+    const folders = [
+      {_id: 'folder.parent', name: 'Parent', parentId: null},
+      {_id: 'folder.section', name: 'Section', parentId: 'folder.parent'},
+      {_id: 'folder.nested', name: 'Nested', parentId: 'folder.section'},
+      {_id: 'folder.products', name: 'Products', parentId: 'folder.nested'},
+    ]
+
+    it('shows the folder path, and moves the asset to another folder', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderAssetDialog(inProducts, {folders})
+      expect(dialog().getByText('Parent/.../Nested/Products')).toBeInTheDocument()
+
+      await user.click(dialog().getByRole('button', {name: /change folder/i}))
+
+      expect(actors.dialogs.getSnapshot().context.items).toContainEqual(
+        folderMoveDialog([assetItem(inProducts)], 'folder.products'),
+      )
+    })
+
+    it('removes the asset from its folder', async () => {
+      const user = userEvent.setup()
+      const {client} = await renderAssetDialog(inProducts, {folders})
+      const transaction = mockTransaction()
+      client.transaction.mockReturnValue(transaction)
+
+      await user.click(dialog().getByRole('button', {name: /remove from folder/i}))
+
+      await waitFor(() => expect(transaction.commit).toHaveBeenCalled())
+      expect(transaction.patchChain.unset).toHaveBeenCalledWith(['opt.media.folder'])
+    })
+
+    it('tells when the folder no longer exists', async () => {
+      await renderAssetDialog(inProducts)
+
+      expect(dialog().getByText('Folder no longer exists')).toBeInTheDocument()
+    })
+  })
+
+  describe('changes made elsewhere', () => {
+    it('follows them, keeping unsaved edits', async () => {
+      const user = userEvent.setup()
+      const {actors, client} = await renderAssetDialog()
+      await user.type(field('title'), 'Mine')
+
+      client.fetch.mockImplementation(
+        createMediaFetchMock({assets: [imageAsset('a1', {altText: 'Theirs', title: 'Theirs'})]}),
+      )
+      act(() => actors.assets.send({type: 'load'}))
+
+      await waitFor(() => expect(field('altText')).toHaveValue('Theirs'))
+      expect(field('title')).toHaveValue('Mine')
+    })
+
+    it('keeps showing the asset, read-only, once it is deleted', async () => {
+      const {client} = await renderAssetDialog()
+      const assetListener = client.listen.mock.results.find((_, index) =>
+        String(client.listen.mock.calls[index]?.[0]).includes('sanity.imageAsset'),
+      )?.value as Subject<unknown>
+
+      vi.useFakeTimers({toFake: ['setTimeout', 'clearTimeout']})
+      try {
+        act(() => assetListener.next({documentId: 'a1', transition: 'disappear'}))
+        act(() => {
+          vi.advanceTimersByTime(2000)
+        })
+      } finally {
+        vi.useRealTimers()
       }
-      expect(updateAction).toBeDefined()
-      expect(updateAction?.payload.formData).toMatchObject({
-        description: '',
+
+      expect(
+        dialog().getByText('This file cannot be found – it may have been deleted.'),
+      ).toBeInTheDocument()
+      expect(field('originalFilename')).toHaveValue('a1.png')
+      expect(field('originalFilename')).toBeDisabled()
+    })
+  })
+
+  describe('closing', () => {
+    it('only closes its own dialog', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderDialog(tagsDialog(), {assets: [photo]})
+      act(() => actors.dialogs.send({type: 'dialog.open', dialog: assetEditDialog('a1')}))
+
+      await user.click(dialog().getByRole('button', {name: /close dialog/i}))
+
+      expect(actors.dialogs.getSnapshot().context.items).toEqual([tagsDialog()])
+    })
+
+    it('confirms before deleting the asset, then closes', async () => {
+      const user = userEvent.setup()
+      const {actors, client} = await renderAssetDialog()
+
+      await user.click(dialog().getByRole('button', {name: /^delete$/i}))
+      expect(actors.dialogs.getSnapshot().context.items).toEqual([
+        assetEditDialog('a1'),
+        confirmDeleteAssetsDialog([assetItem(photo)], 'a1'),
+      ])
+      await user.click(
+        withinDialog(/confirm deletion/i, screen).getByRole('button', {
+          name: 'Yes, delete 1 asset',
+        }),
+      )
+
+      expect(actors.dialogs.getSnapshot().context.items).toEqual([])
+      await waitFor(() => expect(client.delete).toHaveBeenCalled())
+    })
+  })
+
+  describe('description', () => {
+    it('is prefilled from the EXIF image description when missing', async () => {
+      await renderAssetDialog(
+        imageAsset('a1', {metadata: withImageDescription('EXIF description')}),
+      )
+
+      expect(textarea('description')).toHaveValue('EXIF description')
+    })
+
+    it('keeps an existing description over the EXIF image description', async () => {
+      await renderAssetDialog(
+        imageAsset('a1', {
+          description: 'Written by an editor',
+          metadata: withImageDescription('EXIF description'),
+        }),
+      )
+
+      expect(textarea('description')).toHaveValue('Written by an editor')
+    })
+
+    it('stays empty once cleared on purpose', async () => {
+      await renderAssetDialog(
+        imageAsset('a1', {description: '', metadata: withImageDescription('EXIF description')}),
+      )
+
+      expect(textarea('description')).toHaveValue('')
+    })
+
+    it('is saved as an empty string when cleared, so EXIF cannot fill it again', async () => {
+      const user = userEvent.setup()
+      const {client} = await renderAssetDialog(
+        imageAsset('a1', {metadata: withImageDescription('EXIF description')}),
+      )
+      const patch = mockPatchChain(photo)
+      client.patch.mockReturnValue(patch)
+
+      await user.clear(textarea('description'))
+      await user.click(saveButton())
+
+      await waitFor(() => expect(patch.set).toHaveBeenCalled())
+      expect(patch.set.mock.lastCall?.[0]).toMatchObject({description: ''})
+    })
+
+    describe('with locales', () => {
+      const locales = [
+        {id: 'en', title: 'English'},
+        {id: 'fr', title: 'French'},
+      ]
+
+      it('keeps intentionally empty translations', async () => {
+        const user = userEvent.setup()
+        await renderAssetDialog(
+          imageAsset('a1', {
+            description: {en: '', fr: ''},
+            metadata: withImageDescription('EXIF description'),
+          }),
+          {toolOptions: {locales}},
+        )
+
+        expect(textarea('description.en')).toHaveValue('')
+        await user.click(dialog().getByRole('tab', {name: 'French'}))
+        expect(textarea('description.fr')).toHaveValue('')
+      })
+
+      it('does not fill missing translations from EXIF', async () => {
+        const user = userEvent.setup()
+        await renderAssetDialog(
+          imageAsset('a1', {
+            description: {fr: 'Description française'},
+            metadata: withImageDescription('EXIF description'),
+          }),
+          {toolOptions: {locales}},
+        )
+
+        expect(textarea('description.en')).toHaveValue('')
+        await user.click(dialog().getByRole('tab', {name: 'French'}))
+        expect(textarea('description.fr')).toHaveValue('Description française')
       })
     })
   })
 
-  it('preserves intentionally empty localized description instead of applying EXIF fallback', async () => {
-    const user = userEvent.setup()
-    renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: assetsWith({
-            description: {en: '', fr: ''},
-            metadata: withImageDescription('EXIF ImageDescription test'),
-          }),
-        },
-        toolOptions: {
-          locales: [
-            {id: 'en', title: 'English'},
-            {id: 'fr', title: 'French'},
-          ],
-        },
-      },
-    )
+  describe('credit line', () => {
+    it('can be edited when credit lines are enabled', async () => {
+      await renderAssetDialog()
 
-    await waitFor(() => {
-      expect(textareaByName(/asset details/i, screen, 'description.en')).toHaveValue('')
+      expect(field('creditLine')).toBeEnabled()
     })
 
-    const dlg = withinDialog(/asset details/i, screen)
-    await user.click(dlg.getByRole('tab', {name: 'French'}))
-    expect(textareaByName(/asset details/i, screen, 'description.fr')).toHaveValue('')
-  })
+    it('cannot be edited for assets from excluded sources', async () => {
+      await renderAssetDialog(
+        imageAsset('a1', {source: {id: 'u1', name: 'unsplash'}} as Partial<ImageAsset>),
+        {toolOptions: {creditLine: {enabled: true, excludeSources: ['unsplash']}}},
+      )
 
-  it('does not fill missing locale keys from EXIF when a partial translation exists', async () => {
-    renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: assetsWith({
-            description: {fr: 'Description française'},
-            metadata: withImageDescription('EXIF ImageDescription test'),
-          }),
-        },
-        toolOptions: {
-          locales: [
-            {id: 'en', title: 'English'},
-            {id: 'fr', title: 'French'},
-          ],
-        },
-      },
-    )
-
-    await waitFor(() => {
-      expect(textareaByName(/asset details/i, screen, 'description.en')).toHaveValue('')
+      expect(field('creditLine')).toBeDisabled()
     })
-
-    const dlg = withinDialog(/asset details/i, screen)
-    const user = userEvent.setup()
-    await user.click(dlg.getByRole('tab', {name: 'French'}))
-    expect(textareaByName(/asset details/i, screen, 'description.fr')).toHaveValue(
-      'Description française',
-    )
-  })
-
-  it('shows the Credit field when creditLine is enabled', () => {
-    renderAssetDialog({
-      id: 'dlg-1',
-      type: 'assetEdit',
-      assetId: 'a1',
-    })
-
-    expect(inputByName(/asset details/i, screen, 'creditLine')).toBeTruthy()
-  })
-
-  it('disables Credit when the asset source is excluded', () => {
-    renderAssetDialog(
-      {
-        id: 'dlg-1',
-        type: 'assetEdit',
-        assetId: 'a1',
-      },
-      {
-        preloaded: {
-          assets: assetsWith({
-            source: {name: 'unsplash', id: 'u1'},
-          } as Partial<ImageAsset>),
-        },
-        toolOptions: {
-          creditLine: {enabled: true, excludeSources: ['unsplash']},
-        },
-      },
-    )
-
-    expect(inputByName(/asset details/i, screen, 'creditLine')).toBeDisabled()
   })
 })
