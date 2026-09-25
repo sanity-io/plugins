@@ -59,7 +59,6 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
             props.schemaType.name === METADATA_SCHEMA_NAME &&
             isSanityDocument(props?.value)
           ) {
-            const metadataId = props?.value?._id
             const translations =
               // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
               (props?.value?.['translations'] as TranslationReference[]) ?? []
@@ -71,10 +70,7 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
               <Stack gap={5}>
                 {bulkPublish ? <BulkPublish translations={translations} /> : null}
                 {weakAndTypedTranslations.length > 0 ? (
-                  <OptimisticallyStrengthen
-                    metadataId={metadataId}
-                    translations={weakAndTypedTranslations}
-                  />
+                  <OptimisticallyStrengthen translations={weakAndTypedTranslations} />
                 ) : null}
                 {props.renderDefault(props)}
               </Stack>
