@@ -17,3 +17,6 @@
 
 # The Mux input integration
 /plugins/sanity-plugin-mux-input @sanity-io/mux @sanity-io/media-library
+
+# The Media asset browser plugin
+/plugins/sanity-plugin-media/ @sanity-io/media-library
