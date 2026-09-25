@@ -35,6 +35,8 @@ export type TagsContext = {
   creatingError: HttpError | undefined
   /** Number of tags retrieved by the last fetch, or -1 before it completes. */
   fetchCount: number
+  /** Tag ids known when the in-flight fetch started, the only ones its result can remove. */
+  fetchStartIds: string[]
   listenerEvents: TagListenerEvent[]
   mutations: TagMutation[]
   panelVisible: boolean
@@ -232,6 +234,7 @@ export const tagsMachine = setup({
     client: input.client,
     creatingError: undefined,
     fetchCount: -1,
+    fetchStartIds: [],
     listenerEvents: [],
     mutations: [],
     panelVisible: true,
@@ -308,6 +311,7 @@ export const tagsMachine = setup({
       states: {
         idle: {},
         fetching: {
+          entry: assign({fetchStartIds: ({context}) => context.allIds}),
           invoke: {
             src: 'fetch tags',
             input: ({context}) => ({client: context.client}),
@@ -315,13 +319,17 @@ export const tagsMachine = setup({
               target: 'idle',
               actions: [
                 assign(({context, event}) => {
-                  // Tags missing from the result are gone, the others keep their busy and error state
+                  // Known tags missing from the result are gone, the others keep their busy and
+                  // error state. Tags added while the fetch ran are too recent to be in it.
                   const fetchedIds = new Set(event.output.map((tag) => tag._id))
+                  const knownIds = new Set(context.fetchStartIds)
                   const byIds = Object.fromEntries(
-                    Object.entries(context.byIds).filter(([tagId]) => fetchedIds.has(tagId)),
+                    Object.entries(context.byIds).filter(
+                      ([tagId]) => fetchedIds.has(tagId) || !knownIds.has(tagId),
+                    ),
                   )
                   return {
-                    ...upsertTags({allIds: [], byIds}, event.output),
+                    ...upsertTags({allIds: Object.keys(byIds), byIds}, event.output),
                     fetchCount: event.output.length,
                   }
                 }),

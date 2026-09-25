@@ -248,6 +248,24 @@ describe(tagsMachine.id, () => {
     expect(tagNames(actor)).toEqual(['alpha', 'beta'])
   })
 
+  it('keeps a tag created before an older fetch returned without it', async () => {
+    const {actor, client} = await startWithTags([beta])
+    const fetched = deferred<Tag[]>()
+    client.fetch.mockImplementation((query: string) =>
+      query.startsWith('count(') ? Promise.resolve(0) : fetched.promise,
+    )
+    client.create.mockResolvedValue(alpha)
+
+    actor.send({type: 'fetch'})
+    actor.send({type: 'tag.create', name: 'alpha'})
+    await waitForMutations(actor)
+
+    fetched.resolve([beta])
+    await vi.waitFor(() => expect(actor.getSnapshot().matches({fetch: 'idle'})).toBe(true))
+
+    expect(tagNames(actor)).toEqual(['alpha', 'beta'])
+  })
+
   it('marks tags as busy while assets are being tagged', async () => {
     const {actor} = await startWithTags([alpha])
 
