@@ -112,6 +112,7 @@ linkWorkspacePackages: deep
 # window, add exact `name@version` entries (do not bypass with
 # `--config.minimumReleaseAge=0` — that is not allowed). Avoid permanent
 # third-party package-name excludes solely to land a fresh release.
+minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - '@changesets/cli'
   - '@devframes/*'
@@ -191,6 +192,7 @@ publicHoistPattern:
   - '@vanilla-extract/css'
 
 trustPolicy: no-downgrade
+trustPolicyExcludePrune: true
 
 trustPolicyExclude:
   - '@octokit/endpoint@9.0.6'
