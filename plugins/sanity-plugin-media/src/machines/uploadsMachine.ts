@@ -10,7 +10,6 @@ import {
   fromPromise,
   sendParent,
   setup,
-  type SnapshotFrom,
 } from 'xstate'
 
 import type {Asset, AssetType, HttpError, SanityUploadProgressEvent, UploadItem} from '../types'
@@ -277,4 +276,3 @@ export const uploadsMachine = setup({
 })
 
 export type UploadsActorRef = ActorRefFrom<typeof uploadsMachine>
-export type UploadsSnapshot = SnapshotFrom<typeof uploadsMachine>

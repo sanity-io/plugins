@@ -1,4 +1,4 @@
-import {type ActorRefFrom, enqueueActions, setup, type SnapshotFrom} from 'xstate'
+import {type ActorRefFrom, enqueueActions, setup} from 'xstate'
 
 import type {Dialog} from '../types'
 
@@ -70,4 +70,3 @@ export const dialogsMachine = setup({
 })
 
 export type DialogsActorRef = ActorRefFrom<typeof dialogsMachine>
-export type DialogsSnapshot = SnapshotFrom<typeof dialogsMachine>

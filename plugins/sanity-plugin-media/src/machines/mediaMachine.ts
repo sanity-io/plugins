@@ -1,14 +1,6 @@
 import type {SanityClient, SanityDocument} from '@sanity/client'
 import pluralize from 'pluralize'
-import {
-  type ActorRefFrom,
-  assign,
-  enqueueActions,
-  forwardTo,
-  sendTo,
-  setup,
-  type SnapshotFrom,
-} from 'xstate'
+import {type ActorRefFrom, assign, enqueueActions, forwardTo, sendTo, setup} from 'xstate'
 
 import {inputs} from '../config/searchFacets'
 import type {
@@ -152,7 +144,7 @@ export const mediaMachine = setup({
   },
   actions: {
     /** Provided by the React provider to show toasts. */
-    'notify': (_, _notification: Notification) => undefined,
+    'notify': (_args, _notification: Notification) => undefined,
     /** Provided by the edit asset source to close itself. */
     'close': () => undefined,
     'refresh folders': sendTo(({context}) => context.folders, {type: 'refresh'}),
@@ -562,4 +554,3 @@ export const mediaMachine = setup({
 })
 
 export type MediaActorRef = ActorRefFrom<typeof mediaMachine>
-export type MediaSnapshot = SnapshotFrom<typeof mediaMachine>
