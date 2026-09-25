@@ -1,5 +1,11 @@
 # @sanity/document-internationalization
 
+## 6.2.38
+
+### Patch Changes
+
+- [#2015](https://github.com/sanity-io/plugins/pull/2015) [`90aa52f`](https://github.com/sanity-io/plugins/commit/90aa52f04645b4d3825869852b0c4f7660ef62d5) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix reference strengthening on translation.metadata, in some cases it showed a patch error
+
 ## 6.2.37
 
 ## 6.2.36
