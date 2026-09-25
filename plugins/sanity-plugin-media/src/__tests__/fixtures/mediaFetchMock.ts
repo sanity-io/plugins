@@ -10,6 +10,22 @@ export type MediaFixtures = {
   tags?: Tag[]
 }
 
+/** Rejects like the client does once the request is aborted through its `signal`. */
+function abortable<T>(response: Promise<T>, signal: AbortSignal | undefined): Promise<T> {
+  if (!signal) {
+    return response
+  }
+  return new Promise<T>((resolve, reject) => {
+    const abort = () => reject(new DOMException('The operation was aborted.', 'AbortError'))
+    if (signal.aborted) {
+      abort()
+      return
+    }
+    signal.addEventListener('abort', abort, {once: true})
+    response.then(resolve, reject)
+  })
+}
+
 /**
  * A `client.fetch` mock that answers the queries issued by the media actors from fixtures,
  * so tests can render the browser (or drive the machines) against a known dataset.
@@ -23,7 +39,7 @@ export function createMediaFetchMock({
   const answer = (list: keyof typeof errors, result: unknown) =>
     list in errors ? Promise.reject(errors[list]) : Promise.resolve(result)
 
-  return vi.fn((query: string, params: Record<string, unknown> = {}) => {
+  const respond = (query: string, params: Record<string, unknown>) => {
     // Folder list with asset counts
     if (query.includes('"media.folder"') && query.includes('"count"')) {
       return answer(
@@ -53,5 +69,10 @@ export function createMediaFetchMock({
     }
     // Documents or assets referencing something that is being deleted or replaced
     return Promise.resolve([])
-  })
+  }
+
+  return vi.fn(
+    (query: string, params: Record<string, unknown> = {}, options: {signal?: AbortSignal} = {}) =>
+      abortable(respond(query, params), options.signal),
+  )
 }

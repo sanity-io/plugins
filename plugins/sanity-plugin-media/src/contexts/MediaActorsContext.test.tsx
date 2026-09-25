@@ -32,31 +32,27 @@ function PickedCount() {
 function setup({
   fixtures = {assets: [imageAsset('a1')]},
   mode = {type: 'browser', mediaTagNames: []},
-  strict = false,
-}: {fixtures?: MediaFixtures; mode?: MediaMode; strict?: boolean} = {}) {
+}: {fixtures?: MediaFixtures; mode?: MediaMode} = {}) {
   const client = createMockSanityClient({fetch: createMediaFetchMock(fixtures)})
   const actorsRef: RefObject<MediaActors | null> = {current: null}
-  const Tree = ({children, onClose}: {children?: ReactNode; onClose?: () => void}) => {
-    const tree = (
-      <ThemeProvider theme={studioTheme}>
-        <ToastProvider>
-          <MediaActorsProvider
-            assetTypes={['image']}
-            client={client}
-            excludeTagSlugs={[]}
-            mode={mode}
-            onClose={onClose}
-            selectedAssetIds={['a1']}
-            showMediaLibraryAssets
-          >
-            <CaptureActors ref={actorsRef} />
-            {children}
-          </MediaActorsProvider>
-        </ToastProvider>
-      </ThemeProvider>
-    )
-    return strict ? <StrictMode>{tree}</StrictMode> : tree
-  }
+  const Tree = ({children, onClose}: {children?: ReactNode; onClose?: () => void}) => (
+    <ThemeProvider theme={studioTheme}>
+      <ToastProvider>
+        <MediaActorsProvider
+          assetTypes={['image']}
+          client={client}
+          excludeTagSlugs={[]}
+          mode={mode}
+          onClose={onClose}
+          selectedAssetIds={['a1']}
+          showMediaLibraryAssets
+        >
+          <CaptureActors ref={actorsRef} />
+          {children}
+        </MediaActorsProvider>
+      </ToastProvider>
+    </ThemeProvider>
+  )
   const listeners = () => client.listen.mock.results.map(({value}) => value as Subject<unknown>)
   const getActors = () => {
     if (!actorsRef.current) {
@@ -83,19 +79,30 @@ describe('MediaActorsProvider', () => {
   })
 
   it('keeps working through the remounts of strict mode', async () => {
-    const {Tree, getActors, listeners} = setup({strict: true})
+    const {Tree, client, getActors, listeners} = setup()
+    // Strict mode only remounts the effects of new components below it when it wraps the root
     render(
-      <Tree>
-        <PickedCount />
-      </Tree>,
+      <StrictMode>
+        <Tree>
+          <PickedCount />
+        </Tree>
+      </StrictMode>,
     )
-    const {assets} = getActors()
-    await waitFor(() => expect(assets.getSnapshot().context.allIds).toEqual(['a1']))
+    const {assets, folders, tags} = getActors()
+    await waitFor(() => {
+      expect(assets.getSnapshot().context.allIds).toEqual(['a1'])
+      expect(folders.getSnapshot().context.fetchCount).toBe(0)
+      expect(tags.getSnapshot().context.fetchCount).toBe(0)
+    })
 
     act(() => assets.send({type: 'pick.toggle', assetId: 'a1'}))
 
     expect(screen.getByText('1 picked')).toBeInTheDocument()
+    // The remount aborted the first requests and sent them again
+    const signals = client.fetch.mock.calls.map(([, , options]) => options.signal as AbortSignal)
+    expect(signals.map((signal) => signal.aborted)).toEqual([true, true, true, false, false, false])
     expect(listeners().filter((listener) => listener.observed)).toHaveLength(3)
+    expect(screen.queryByText(/An error occurred/)).not.toBeInTheDocument()
   })
 
   it('shows notifications as toasts', async () => {

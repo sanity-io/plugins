@@ -5,7 +5,6 @@ import {
   type ActorRefFrom,
   assign,
   enqueueActions,
-  fromPromise,
   sendParent,
   setup,
   type SnapshotFrom,
@@ -16,7 +15,7 @@ import type {AssetType, FolderDoc, FolderTreeNode, HttpError} from '../types'
 import {buildExcludeMediaLibraryFragment, buildExcludeTagsFragment} from '../utils/constructFilter'
 import {withBadConnection} from './debugMachine'
 import {buildFolderIndex, type FolderIndex, getFolderAncestry} from './folderTree'
-import {createHttpError, createSelector, toHttpError} from './utils'
+import {createHttpError, createSelector, fromMutation, fromRequest, toHttpError} from './utils'
 
 type FolderMutation =
   | {kind: 'create'; name: string; parentId: string | null}
@@ -65,7 +64,7 @@ type ClientInput = {client: SanityClient}
 const assetDocumentTypes = (assetTypes: AssetType[]) =>
   assetTypes.map((type) => `sanity.${type}Asset`)
 
-const fetchFolders = fromPromise<
+const fetchFolders = fromRequest<
   {exactCountByFolderId: Record<string, number>; folders: FolderDoc[]},
   Omit<FoldersInput, 'client'> & ClientInput
 >(({input, signal, system}) => withBadConnection(system, signal, () => queryFolders(input, signal)))
@@ -114,7 +113,7 @@ async function queryFolders(
 const hasSiblingNamed = (siblings: FolderTreeNode[], name: string) =>
   siblings.some((sibling) => sibling.name.toLowerCase() === name.toLowerCase())
 
-const createFolder = fromPromise<
+const createFolder = fromMutation<
   string,
   ClientInput & {name: string; parentId: string | null; siblings: FolderTreeNode[]}
 >(async ({input, system}) => {
@@ -137,7 +136,7 @@ const createFolder = fromPromise<
   return folderId
 })
 
-const renameFolder = fromPromise<
+const renameFolder = fromMutation<
   void,
   ClientInput & {folder: FolderTreeNode | undefined; name: string; siblings: FolderTreeNode[]}
 >(async ({input, system}) => {
@@ -176,7 +175,7 @@ type DeleteFolderInput = ClientInput & {
   parentId: string | null
 }
 
-const deleteFolder = fromPromise<void, DeleteFolderInput>(({input, system}) =>
+const deleteFolder = fromMutation<void, DeleteFolderInput>(({input, system}) =>
   withBadConnection(system, undefined, () => removeFolder(input)),
 )
 

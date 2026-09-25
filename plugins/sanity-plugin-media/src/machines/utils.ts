@@ -1,4 +1,51 @@
+import {type AnyActorRef, fromPromise, type PromiseActorLogic} from 'xstate'
+
 import type {HttpError} from '../types'
+
+type ActorSystem = AnyActorRef['system']
+
+const never = <T>() => new Promise<T>(() => undefined)
+
+/**
+ * `fromPromise` for requests that are safe to send again, like fetches.
+ *
+ * `@xstate/react` stops and then restarts the same actors when React reconnects the effects of
+ * their provider (strict mode, Fast Refresh), and a restarted actor sends its request again. As
+ * `fromPromise` would settle the restarted actor with the outcome of the stopped attempt (like the
+ * error from aborting it), the stopped attempt never settles instead.
+ */
+export function fromRequest<TOutput, TInput>(
+  request: (args: {input: TInput; signal: AbortSignal; system: ActorSystem}) => Promise<TOutput>,
+): PromiseActorLogic<TOutput, TInput> {
+  return fromPromise<TOutput, TInput>(async ({input, signal, system}) => {
+    try {
+      const output = await request({input, signal, system})
+      return signal.aborted ? never<TOutput>() : output
+    } catch (error) {
+      if (signal.aborted) {
+        return never<TOutput>()
+      }
+      throw error
+    }
+  })
+}
+
+const pendingMutations = new WeakMap<object, Promise<unknown>>()
+
+/**
+ * `fromPromise` for requests that must only be sent once, like mutations: when `@xstate/react`
+ * restarts the actor (see `fromRequest`), it waits for the request that is already in flight.
+ */
+export function fromMutation<TOutput, TInput>(
+  mutate: (args: {input: TInput; system: ActorSystem}) => Promise<TOutput>,
+): PromiseActorLogic<TOutput, TInput> {
+  return fromPromise<TOutput, TInput>(({input, self, system}) => {
+    const pending =
+      (pendingMutations.get(self) as Promise<TOutput> | undefined) ?? mutate({input, system})
+    pendingMutations.set(self, pending)
+    return pending
+  })
+}
 
 /** Normalizes anything thrown by the client (or by an actor) into the shape the UI renders. */
 export function toHttpError(error: unknown): HttpError {

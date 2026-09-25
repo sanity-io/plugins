@@ -7,7 +7,6 @@ import {
   enqueueActions,
   type EventObject,
   fromCallback,
-  fromPromise,
   sendParent,
   setup,
 } from 'xstate'
@@ -15,7 +14,7 @@ import {
 import type {Asset, AssetType, HttpError, SanityUploadProgressEvent, UploadItem} from '../types'
 import {generatePreviewBlobUrl} from '../utils/generatePreviewBlobUrl'
 import {hashFile, uploadAsset$} from '../utils/uploadSanityAsset'
-import {toHttpError} from './utils'
+import {fromRequest, toHttpError} from './utils'
 
 type UploadRequest = {file: File; folderId: string | null; forceAsAssetType?: AssetType}
 
@@ -112,7 +111,7 @@ const uploadAsset = fromCallback<EventObject, UploadInput>(({input, sendBack}) =
   }
 })
 
-const hashUpload = fromPromise<string, {file: File}>(({input}) => hashFile(input.file))
+const hashUpload = fromRequest<string, {file: File}>(({input}) => hashFile(input.file))
 
 /** Uploads dropped or picked files, showing their progress until their assets are listed. */
 export const uploadsMachine = setup({

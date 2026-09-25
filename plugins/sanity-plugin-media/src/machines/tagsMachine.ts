@@ -5,7 +5,6 @@ import {
   assertEvent,
   assign,
   enqueueActions,
-  fromPromise,
   sendParent,
   setup,
   type SnapshotFrom,
@@ -15,7 +14,7 @@ import {TAG_DOCUMENT_NAME} from '../constants'
 import type {Asset, HttpError, Tag, TagItem} from '../types'
 import {assertTagNameAvailable} from '../utils/assertTagNameAvailable'
 import {withBadConnection} from './debugMachine'
-import {createSelector, toHttpError} from './utils'
+import {createSelector, fromMutation, fromRequest, toHttpError} from './utils'
 
 type TagMutation =
   | {kind: 'create'; closeDialogId?: string; name: string}
@@ -113,7 +112,7 @@ function nextMutation<TKind extends TagMutation['kind']>(context: TagsContext, k
 
 type ClientInput = {client: SanityClient}
 
-const fetchTags = fromPromise<Tag[], ClientInput>(({input, signal, system}) =>
+const fetchTags = fromRequest<Tag[], ClientInput>(({input, signal, system}) =>
   withBadConnection(system, signal, () =>
     input.client.fetch<Tag[]>(
       groq`*[
@@ -133,7 +132,7 @@ const fetchTags = fromPromise<Tag[], ClientInput>(({input, signal, system}) =>
   ),
 )
 
-const createTag = fromPromise<Tag, ClientInput & {name: string}>(({input, system}) =>
+const createTag = fromMutation<Tag, ClientInput & {name: string}>(({input, system}) =>
   withBadConnection(system, undefined, async () => {
     await assertTagNameAvailable(input.client, input.name)
     const tag = await input.client.create({
@@ -144,7 +143,7 @@ const createTag = fromPromise<Tag, ClientInput & {name: string}>(({input, system
   }),
 )
 
-const updateTag = fromPromise<Tag, ClientInput & {name: string; tag: Tag}>(({input, system}) =>
+const updateTag = fromMutation<Tag, ClientInput & {name: string; tag: Tag}>(({input, system}) =>
   withBadConnection(system, undefined, async () => {
     await assertTagNameAvailable(input.client, input.name)
     const tag = await input.client
@@ -156,7 +155,7 @@ const updateTag = fromPromise<Tag, ClientInput & {name: string; tag: Tag}>(({inp
 )
 
 /** Removes the tag from every asset referencing it, then deletes it, in one transaction. */
-const deleteTag = fromPromise<void, ClientInput & {tag: Tag}>(({input, system}) =>
+const deleteTag = fromMutation<void, ClientInput & {tag: Tag}>(({input, system}) =>
   withBadConnection(system, undefined, async () => {
     const {client, tag} = input
     const assets = await client.fetch<Pick<Asset, '_id' | '_rev'>[]>(

@@ -1,6 +1,30 @@
+import {renderHook, waitFor} from '@testing-library/react'
+import {useActorRef} from '@xstate/react'
+import {StrictMode} from 'react'
 import {afterEach, describe, expect, it, vi} from 'vitest'
+import {type AnyActorLogic, createActor} from 'xstate'
 
-import {createHttpError, createSelector, delay, toHttpError} from './utils'
+import {
+  createHttpError,
+  createSelector,
+  delay,
+  fromMutation,
+  fromRequest,
+  toHttpError,
+} from './utils'
+
+/** Runs `logic` as the root actor of a component, whose effects strict mode reconnects once. */
+function runInStrictMode<TLogic extends AnyActorLogic>(logic: TLogic) {
+  return renderHook(() => useActorRef(logic), {wrapper: StrictMode}).result.current
+}
+
+/** Resolves with the error of `logic` once it fails. */
+function errorOf(logic: AnyActorLogic) {
+  const actor = createActor(logic)
+  const error = new Promise((resolve) => actor.subscribe({error: resolve}))
+  actor.start()
+  return error
+}
 
 afterEach(() => {
   vi.useRealTimers()
@@ -67,5 +91,47 @@ describe('createSelector', () => {
     expect(select({factor: 3, items})).toEqual([3, 6])
     expect(select({factor: 3, items: [1, 2]})).toEqual([3, 6])
     expect(combine).toHaveBeenCalledTimes(3)
+  })
+})
+
+describe('fromRequest', () => {
+  it('sends the request again when React restarts the actor, ignoring the stopped attempt', async () => {
+    const signals: AbortSignal[] = []
+    const actor = runInStrictMode(
+      fromRequest<number, undefined>(({signal}) => {
+        const attempt = signals.push(signal)
+        return new Promise<number>((resolve, reject) => {
+          signal.addEventListener('abort', () => reject(signal.reason))
+          setTimeout(() => resolve(attempt))
+        })
+      }),
+    )
+
+    await waitFor(() => expect(actor.getSnapshot().status).toBe('done'))
+    expect(actor.getSnapshot().output).toBe(2)
+    expect(signals.map((signal) => signal.aborted)).toEqual([true, false])
+  })
+
+  it('fails with the error of the request', async () => {
+    const logic = fromRequest(() => Promise.reject(createHttpError('Forbidden', 403)))
+
+    await expect(errorOf(logic)).resolves.toMatchObject({statusCode: 403})
+  })
+})
+
+describe('fromMutation', () => {
+  it('waits for the mutation in flight when React restarts the actor', async () => {
+    const mutate = vi.fn(() => new Promise<string>((resolve) => setTimeout(() => resolve('saved'))))
+    const actor = runInStrictMode(fromMutation<string, undefined>(mutate))
+
+    await waitFor(() => expect(actor.getSnapshot().status).toBe('done'))
+    expect(actor.getSnapshot().output).toBe('saved')
+    expect(mutate).toHaveBeenCalledTimes(1)
+  })
+
+  it('fails with the error of the mutation', async () => {
+    const logic = fromMutation(() => Promise.reject(createHttpError('Conflict', 409)))
+
+    await expect(errorOf(logic)).resolves.toMatchObject({statusCode: 409})
   })
 })
