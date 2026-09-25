@@ -61,7 +61,7 @@ In your Studio project folder, install the following plugin dependency:
 npm install @sanity/assist sanity@latest
 ```
 
-This plugin requires `sanity` version `3.26` or greater.
+This plugin requires `sanity` version `6.13.0` or greater.
 
 ### Build errors about missing icon exports
 

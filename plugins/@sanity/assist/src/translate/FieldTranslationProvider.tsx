@@ -20,7 +20,6 @@ import {
 
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import type {ConditionalMemberState} from '../helpers/conditionalMembers'
-import {getAssistWriteDocumentId} from '../helpers/ids'
 import {createStyleGuideResolver} from '../helpers/styleguide'
 import {API_VERSION_WITH_EXTENDED_TYPES, useApiClient, useTranslate} from '../useApiClient'
 import {getLanguageParams} from './getLanguageParams'
@@ -197,15 +196,12 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
   const onRunTranslation = useCallback(() => {
     const translatePath = fieldTranslationParams?.translatePath
     if (fieldLanguageMaps && documentId && translatePath) {
-      const writeDocumentId = getAssistWriteDocumentId(documentId, {
-        liveEdit: fieldTranslationParams?.documentSchema?.liveEdit,
-      })
       void runTranslate({
-        documentId: writeDocumentId,
+        documentId: documentId,
         translatePath,
         styleguide: createStyleGuideResolver(styleguide, {
           client: languageClient,
-          documentId: writeDocumentId,
+          documentId: documentId,
           schemaType: fieldTranslationParams?.documentSchema,
           translatePath,
         }),
