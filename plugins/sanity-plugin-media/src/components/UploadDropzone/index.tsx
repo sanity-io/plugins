@@ -76,7 +76,7 @@ const UploadDropzone = (props: Props) => {
   const isImageAssetType = assetTypes.length === 1 && assetTypes[0] === 'image'
 
   // Callbacks
-  const handleDrop = (acceptedFiles: File[]) => {
+  const handleDropAccepted = (acceptedFiles: File[]) => {
     media.send({type: 'uploads.add', files: acceptedFiles})
   }
 
@@ -132,7 +132,7 @@ const UploadDropzone = (props: Props) => {
     // HACK: Disable drag and drop functionality when in a selecting context
     // (This is currently due to Sanity's native image input taking precedence with drag and drop)
     noDrag: !!onSelect,
-    onDrop: handleDrop,
+    onDropAccepted: handleDropAccepted,
     maxSize,
     onDropRejected: handleDropRejected,
     disabled: !directUploads,
