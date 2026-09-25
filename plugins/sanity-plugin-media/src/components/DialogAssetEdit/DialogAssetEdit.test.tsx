@@ -156,6 +156,46 @@ describe('DialogAssetEdit', () => {
       expect(dialog().queryByText('sale')).not.toBeInTheDocument()
     })
 
+    it('shows the tags of the asset that load after it opened, so saving keeps them', async () => {
+      const user = userEvent.setup()
+      const tagged = imageAsset('a1', {opt: {media: {tags: [tagReference('t1')]}}})
+      const {actors, client} = await renderAssetDialog(tagged)
+      expect(dialog().queryByText('product')).not.toBeInTheDocument()
+
+      client.fetch.mockImplementation(createMediaFetchMock({assets: [tagged], tags: [product]}))
+      act(() => actors.tags.send({type: 'fetch'}))
+      await waitFor(() => expect(dialog().getByText('product')).toBeInTheDocument())
+      const patch = mockPatchChain(tagged)
+      client.patch.mockReturnValue(patch)
+      await user.type(field('title'), 'Tagged')
+      await user.click(saveButton())
+
+      await waitFor(() => expect(patch.set).toHaveBeenCalled())
+      expect(patch.set.mock.lastCall?.[0].opt.media.tags).toEqual([
+        {_ref: 't1', _type: 'reference', _weak: true},
+      ])
+    })
+
+    it('keeps the tags you picked when tags load', async () => {
+      const user = userEvent.setup()
+      const tagged = imageAsset('a1', {opt: {media: {tags: [tagReference('t1')]}}})
+      const {actors, client} = await renderAssetDialog(tagged)
+      client.create.mockImplementation((document: {name: {current: string}}) =>
+        Promise.resolve(tag('t-new', document.name.current)),
+      )
+      await user.type(tagsInput(), 'fresh{Enter}')
+      await waitFor(() => expect(dialog().getByText('fresh')).toBeInTheDocument())
+
+      client.fetch.mockImplementation(
+        createMediaFetchMock({assets: [tagged], tags: [product, tag('t-new', 'fresh')]}),
+      )
+      act(() => actors.tags.send({type: 'fetch'}))
+      await waitFor(() => expect(actors.tags.getSnapshot().context.allIds).toContain('t1'))
+
+      expect(dialog().getByText('fresh')).toBeInTheDocument()
+      expect(dialog().queryByText('product')).not.toBeInTheDocument()
+    })
+
     it('creates tags inline, and selects them', async () => {
       const user = userEvent.setup()
       const {actors, client} = await renderAssetDialog(photo, {tags: [product]})
