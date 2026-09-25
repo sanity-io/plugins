@@ -55,6 +55,7 @@ catalog:
   '@vanilla-extract/dynamic': ^2.1.5
   '@vis.gl/react-google-maps': ^1.9.0
   '@vitest/coverage-v8': ^4.1.11
+  '@xstate/react': ^6.1.0
   date-fns: ^4.4.0
   dequal: ^2.0.3
   groq: ^6.11.0
@@ -84,6 +85,7 @@ catalog:
   validate-npm-package-name: ^8.0.0
   video.js: ^7.21.7
   vitest: ^4.1.11
+  xstate: ^5.32.6
 
 catalogs:
   # Ranges used in `peerDependencies` (referenced as `catalog:peer`).

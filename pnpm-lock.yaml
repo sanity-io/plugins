@@ -97,6 +97,9 @@ catalogs:
     '@vitest/coverage-v8':
       specifier: ^4.1.11
       version: 4.1.11
+    '@xstate/react':
+      specifier: ^6.1.0
+      version: 6.1.0
     date-fns:
       specifier: ^4.4.0
       version: 4.4.0
@@ -175,6 +178,9 @@ catalogs:
     vitest:
       specifier: ^4.1.11
       version: 4.1.11
+    xstate:
+      specifier: ^5.32.6
+      version: 5.32.6
   peer:
     react:
       specifier: ^19.2
@@ -2175,8 +2181,8 @@ importers:
         specifier: ^5.101.4
         version: 5.101.4(react@19.2.8)
       '@xstate/react':
-        specifier: ^6.1.0
-        version: 6.1.0(@types/react@19.2.18)(react@19.2.8)(xstate@5.32.5)
+        specifier: 'catalog:'
+        version: 6.1.0(@types/react@19.2.18)(react@19.2.8)(xstate@5.32.6)
       object-hash:
         specifier: 3.0.0
         version: 3.0.0
@@ -2193,8 +2199,8 @@ importers:
         specifier: ^1.8.1
         version: 1.8.1(react@19.2.8)
       xstate:
-        specifier: ^5.32.5
-        version: 5.32.5
+        specifier: 'catalog:'
+        version: 5.32.6
       yup:
         specifier: ^0.32.11
         version: 0.32.11
@@ -15065,9 +15071,6 @@ packages:
     resolution: {integrity: sha512-TEU+nJVUUnA4CYJFLvK5X9AOeH4KvDvhIfm0vV1GaQRtchnG0hgK5p8hw/xjv8cunWYCsiPCSDzObPyhEwq3KQ==}
     engines: {node: '>=0.4.0'}
 
-  xstate@5.32.5:
-    resolution: {integrity: sha512-ULazi1oe6wGrXl0Frb6otSlkm5HLifbbVTkMk5kkSKqz4TkxJaVpnl6jOJwKeid3ORPxYyZQgNLUSYX9q65SIA==}
-
   xstate@5.32.6:
     resolution: {integrity: sha512-WfA8WNrh6r9osuGwVm+aIPM4jmMW2LKHV1Yv9thYpOtL4HVF/kobh95K/O8v2jDCpDmP2EoY+6uvuqHXCZ6ZLw==}
 
@@ -23677,16 +23680,6 @@ snapshots:
 
   '@xmldom/xmldom@0.8.14': {}
 
-  '@xstate/react@6.1.0(@types/react@19.2.18)(react@19.2.8)(xstate@5.32.5)':
-    dependencies:
-      react: 19.2.8
-      use-isomorphic-layout-effect: 1.2.1(@types/react@19.2.18)(react@19.2.8)
-      use-sync-external-store: 1.6.0(react@19.2.8)
-    optionalDependencies:
-      xstate: 5.32.5
-    transitivePeerDependencies:
-      - '@types/react'
-
   '@xstate/react@6.1.0(@types/react@19.2.18)(react@19.2.8)(xstate@5.32.6)':
     dependencies:
       react: 19.2.8
@@ -30874,8 +30867,6 @@ snapshots:
   xmlchars@2.2.0: {}
 
   xmlhttprequest-ssl@2.1.2: {}
-
-  xstate@5.32.5: {}
 
   xstate@5.32.6: {}
 
