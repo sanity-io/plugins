@@ -1,9 +1,8 @@
 import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {Box, Button, Flex, Stack, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'
-import {useDispatch} from 'react-redux'
 
-import {dialogActions} from '../../modules/dialog'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import type {DialogConfirmProps} from '../../types'
 import Dialog from '../Dialog'
 
@@ -15,29 +14,25 @@ type Props = {
 const DialogConfirm = (props: Props) => {
   const {children, dialog} = props
 
-  // Redux
-  const dispatch = useDispatch()
+  const {dialogs, media} = useMediaActors()
 
-  // Callbacks
   const handleClose = () => {
-    dispatch(dialogActions.remove({id: dialog?.id}))
+    dialogs.send({type: 'dialog.close', id: dialog.id})
   }
 
   const handleConfirm = () => {
     // Close target dialog, if provided
-    if (dialog?.closeDialogId) {
-      dispatch(dialogActions.remove({id: dialog?.closeDialogId}))
+    if (dialog.closeDialogId) {
+      dialogs.send({type: 'dialog.close', id: dialog.closeDialogId})
     }
 
-    if (dialog?.confirmCallbackAction) {
-      dispatch(dialog.confirmCallbackAction)
-    }
+    media.send(dialog.confirmEvent)
 
     // Close self
     handleClose()
   }
 
-  const Footer = () => (
+  const footer = (
     <Box padding={3}>
       <Flex justify="space-between">
         <Button fontSize={1} mode="bleed" onClick={handleClose} text="Cancel" />
@@ -51,7 +46,7 @@ const DialogConfirm = (props: Props) => {
     </Box>
   )
 
-  const Header = () => (
+  const header = (
     <Flex align="center">
       <Box paddingX={1}>
         <WarningOutlineIcon />
@@ -61,16 +56,7 @@ const DialogConfirm = (props: Props) => {
   )
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/static-components
-      footer={<Footer />}
-      // oxlint-disable-next-line react/static-components
-      header={<Header />}
-      id="confirm"
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header={header} id="confirm" onClose={handleClose} width={1}>
       <Box paddingX={4} paddingY={4}>
         <Stack gap={3}>
           {dialog?.title && <Text size={1}>{dialog.title}</Text>}

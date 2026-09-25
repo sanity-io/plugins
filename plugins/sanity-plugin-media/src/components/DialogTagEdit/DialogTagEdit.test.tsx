@@ -1,165 +1,115 @@
-import {fireEvent, screen, waitFor} from '@testing-library/react'
+import {act, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {Subject} from 'rxjs'
-import {describe, expect, it, vi} from 'vitest'
+import {describe, expect, it} from 'vitest'
 
-import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
-import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
-import {createTestRootState} from '../../__tests__/fixtures/rootState'
-import {inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
-import {tagsActions} from '../../modules/tags'
-import type {Tag} from '../../types'
-import DialogTagEdit from './index'
+import {tag} from '../../__tests__/fixtures/documents'
+import {createMediaFetchMock} from '../../__tests__/fixtures/mediaFetchMock'
+import {mockPatchChain, mockTransaction} from '../../__tests__/fixtures/mockSanityClient'
+import {renderDialog} from '../../__tests__/fixtures/renderWithMedia'
+import {getDialogRoot, inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
+import {confirmDeleteTagDialog, tagEditDialog, tagsDialog} from '../../machines/dialogs'
 
-const tag: Tag = {
-  _id: 't1',
-  _type: 'media.tag',
-  _createdAt: '',
-  _updatedAt: '',
-  _rev: 'r1',
-  name: {_type: 'slug', current: 'alpha'},
-}
+const alpha = tag('t1', 'alpha')
+const dialogName = /edit tag/i
 
-const tagsPreloaded = {
-  allIds: ['t1'],
-  byIds: {
-    t1: {_type: 'tag' as const, tag, picked: false, updating: false},
-  },
-  creating: false,
-  fetchCount: -1,
-  fetching: false,
-  panelVisible: true,
-}
-
-vi.mock('../../hooks/useVersionedClient', () => ({
-  default: () =>
-    createMockSanityClient({
-      listen: vi.fn(() => new Subject()),
-    }),
-}))
+const nameInput = () => inputByName(dialogName, screen, 'name')
+const saveButton = () =>
+  withinDialog(dialogName, screen).getByRole('button', {name: /save and close/i})
+const errorIcon = () =>
+  getDialogRoot(dialogName, screen).querySelector('[data-sanity-icon="error-outline"]')
 
 describe('DialogTagEdit', () => {
-  it('dispatches updateRequest when name changes and form submits', async () => {
+  it('renames the tag, then closes only its own dialog', async () => {
     const user = userEvent.setup()
-    const {store} = renderWithProviders(
-      <DialogTagEdit dialog={{id: 'dlg-1', type: 'tagEdit', tagId: 't1'}}>
-        <span />
-      </DialogTagEdit>,
-      {
-        preloaded: {
-          tags: tagsPreloaded,
-        },
-      },
-    )
+    const {actors, client} = await renderDialog(tagsDialog(), {tags: [alpha]})
+    act(() => actors.dialogs.send({type: 'dialog.open', dialog: tagEditDialog('t1')}))
+    const patch = mockPatchChain(tag('t1', 'beta'))
+    client.patch.mockReturnValue(patch)
 
-    const dlg = withinDialog(/edit tag/i, screen)
-    const input = inputByName(/edit tag/i, screen, 'name')
-    await user.clear(input)
-    await user.type(input, 'beta')
-    await user.click(dlg.getByRole('button', {name: /save and close/i}))
+    await user.clear(nameInput())
+    await user.type(nameInput(), 'beta')
+    await user.click(saveButton())
 
-    expect(store.getState().tags.byIds['t1']!.updating).toBe(true)
+    await waitFor(() => expect(actors.dialogs.getSnapshot().context.items).toEqual([tagsDialog()]))
+    expect(client.patch).toHaveBeenCalledWith('t1')
+    expect(patch.set).toHaveBeenCalledWith({name: {_type: 'slug', current: 'beta'}})
+    expect(actors.tags.getSnapshot().context.byIds['t1']?.tag.name.current).toBe('beta')
+    expect(await screen.findByText('Tag updated')).toBeInTheDocument()
   })
 
-  it('dispatches updateRequest with slug-shaped form data', async () => {
+  it('keeps Save disabled until the name is edited', async () => {
+    await renderDialog(tagEditDialog('t1'), {tags: [alpha]})
+
+    expect(nameInput()).toHaveValue('alpha')
+    expect(saveButton()).toBeDisabled()
+  })
+
+  it('follows changes made to the tag elsewhere', async () => {
+    const {actors, client} = await renderDialog(tagEditDialog('t1'), {tags: [alpha]})
+    client.fetch.mockImplementation(createMediaFetchMock({tags: [tag('t1', 'renamed')]}))
+
+    act(() => actors.tags.send({type: 'fetch'}))
+
+    await waitFor(() => expect(nameInput()).toHaveValue('renamed'))
+  })
+
+  it('keeps showing the tag, read-only, once it is deleted elsewhere', async () => {
+    const {actors, client} = await renderDialog(tagEditDialog('t1'), {tags: [alpha]})
+    client.fetch.mockImplementation(createMediaFetchMock({tags: []}))
+
+    act(() => actors.tags.send({type: 'fetch'}))
+
+    expect(
+      await screen.findByText('This tag cannot be found – it may have been deleted.'),
+    ).toBeInTheDocument()
+    expect(nameInput()).toHaveValue('alpha')
+    expect(nameInput()).toBeDisabled()
+    expect(withinDialog(dialogName, screen).getByRole('button', {name: /^delete$/i})).toBeDisabled()
+  })
+
+  it('shows why the tag could not be renamed, until the dialog opens again', async () => {
     const user = userEvent.setup()
-    const {store} = renderWithProviders(
-      <DialogTagEdit dialog={{id: 'dlg-1', type: 'tagEdit', tagId: 't1'}}>
-        <span />
-      </DialogTagEdit>,
-      {
-        preloaded: {
-          tags: tagsPreloaded,
-        },
-      },
-    )
-    const dispatchSpy = vi.spyOn(store, 'dispatch')
-    const dlg = withinDialog(/edit tag/i, screen)
+    const {actors, client} = await renderDialog(tagEditDialog('t1'), {tags: [alpha]})
+    const patch = mockPatchChain()
+    patch.commit.mockRejectedValue({message: 'Revision mismatch', statusCode: 409})
+    client.patch.mockReturnValue(patch)
 
-    const input = inputByName(/edit tag/i, screen, 'name')
-    await user.clear(input)
-    await user.type(input, 'gamma')
-    await user.click(dlg.getByRole('button', {name: /save and close/i}))
+    await user.clear(nameInput())
+    await user.type(nameInput(), 'beta')
+    await user.click(saveButton())
 
-    await waitFor(() => {
-      let updateAction
-      for (const call of dispatchSpy.mock.calls) {
-        const action = call[0]
-        if (tagsActions.updateRequest.match(action)) {
-          updateAction = action
-          break
-        }
-      }
-      expect(updateAction).toBeDefined()
-      expect(updateAction?.payload).toMatchObject({
-        closeDialogId: 't1',
-        formData: {
-          name: {_type: 'slug', current: 'gamma'},
-        },
-        tag,
-      })
-    })
+    await waitFor(() => expect(errorIcon()).toBeInTheDocument())
+    expect(await screen.findByText('An error occurred: Revision mismatch')).toBeInTheDocument()
+
+    act(() => actors.dialogs.send({type: 'dialog.close', id: 't1'}))
+    act(() => actors.dialogs.send({type: 'dialog.open', dialog: tagEditDialog('t1')}))
+    expect(errorIcon()).not.toBeInTheDocument()
   })
 
-  it('does not enable Save until the name is edited', () => {
-    renderWithProviders(
-      <DialogTagEdit dialog={{id: 'dlg-1', type: 'tagEdit', tagId: 't1'}}>
-        <span />
-      </DialogTagEdit>,
-      {
-        preloaded: {
-          tags: tagsPreloaded,
-        },
-      },
-    )
-
-    const dlg = withinDialog(/edit tag/i, screen)
-    expect(dlg.getByRole('button', {name: /save and close/i})).toBeDisabled()
-  })
-
-  it('removes only this dialog when closed', async () => {
+  it('deletes the tag once confirmed, closing its dialog', async () => {
     const user = userEvent.setup()
-    const base = createTestRootState({
-      dialog: {
-        items: [
-          {id: 'dlg-1', type: 'tagEdit', tagId: 't1'},
-          {id: 'tags', type: 'tags'},
-        ],
-      },
-      tags: tagsPreloaded,
-    })
+    const {actors, client} = await renderDialog(tagEditDialog('t1'), {tags: [alpha]})
+    const transaction = mockTransaction()
+    client.transaction.mockReturnValue(transaction)
 
-    const {store} = renderWithProviders(
-      <DialogTagEdit dialog={{id: 'dlg-1', type: 'tagEdit', tagId: 't1'}}>
-        <span />
-      </DialogTagEdit>,
-      {preloaded: base},
+    await user.click(withinDialog(dialogName, screen).getByRole('button', {name: /^delete$/i}))
+    expect(actors.dialogs.getSnapshot().context.items).toEqual([
+      tagEditDialog('t1'),
+      confirmDeleteTagDialog(alpha, 't1'),
+    ])
+    await user.click(
+      withinDialog(/confirm deletion/i, screen).getByRole('button', {name: 'Yes, delete tag'}),
     )
 
-    const dlg = withinDialog(/edit tag/i, screen)
-    await user.click(dlg.getByRole('button', {name: /close dialog/i}))
-
-    expect(store.getState().dialog.items).toEqual([{id: 'tags', type: 'tags'}])
+    expect(actors.dialogs.getSnapshot().context.items).toEqual([])
+    expect(await screen.findByText('Tag deleted')).toBeInTheDocument()
+    expect(transaction.delete).toHaveBeenCalledWith('t1')
+    expect(actors.tags.getSnapshot().context.allIds).toEqual([])
   })
 
-  it('opens the delete confirmation dialog when Delete is clicked', async () => {
-    const {store} = renderWithProviders(
-      <DialogTagEdit dialog={{id: 'dlg-1', type: 'tagEdit', tagId: 't1'}}>
-        <span />
-      </DialogTagEdit>,
-      {
-        preloaded: {
-          tags: tagsPreloaded,
-        },
-      },
-    )
+  it('renders nothing for tags that are not loaded', async () => {
+    await renderDialog(tagEditDialog('unknown'), {tags: [alpha]})
 
-    const dlg = withinDialog(/edit tag/i, screen)
-    fireEvent.click(dlg.getByRole('button', {name: /^delete$/i}))
-
-    const confirm = store.getState().dialog.items.find((d) => d.type === 'confirm')
-    expect(confirm).toBeDefined()
-    expect(confirm?.title).toMatch(/permanently delete/i)
-    expect(confirm?.headerTitle).toBe('Confirm deletion')
+    expect(screen.queryByRole('dialog', {name: dialogName})).not.toBeInTheDocument()
   })
 })

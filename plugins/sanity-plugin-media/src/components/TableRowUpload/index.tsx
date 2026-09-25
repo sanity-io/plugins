@@ -1,12 +1,11 @@
 import {CloseIcon} from '@sanity/icons/Close'
 import {Box, Button, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 import filesize from 'filesize'
-import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {selectUploadById, uploadsActions} from '../../modules/uploads'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
@@ -20,9 +19,8 @@ const TableRowUpload = (props: Props) => {
 
   const scheme = useColorSchemeValue()
 
-  // Redux
-  const dispatch = useDispatch()
-  const item = useTypedSelector((state) => selectUploadById(state, id))
+  const {uploads} = useMediaActors()
+  const item = useSelector(uploads, (snapshot) => snapshot.context.byIds[id])
 
   const mediaIndex = useMediaIndex()
 
@@ -50,7 +48,7 @@ const TableRowUpload = (props: Props) => {
 
   // Callbacks
   const handleCancelUpload = () => {
-    dispatch(uploadsActions.uploadCancel({hash: item.hash}))
+    uploads.send({type: 'upload.cancel', hash: item.hash})
   }
 
   return (

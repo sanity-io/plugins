@@ -1,21 +1,23 @@
-import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Stack, Tab, TabList, TabPanel, Text} from '@sanity/ui'
-import groq from 'groq'
-import {type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useSelector} from '@xstate/react'
+import {type ReactNode, useCallback, useMemo, useState} from 'react'
 import {type SubmitHandler, useForm, useFormState} from 'react-hook-form'
-import {useDispatch} from 'react-redux'
 import {WithReferringDocuments, useColorSchemeValue, useDocumentStore} from 'sanity'
+import {waitFor} from 'xstate'
 
+import {useMediaActors, useMediaClient} from '../../contexts/MediaActorsContext'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import {getAssetFormSchema} from '../../formSchema'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import useVersionedClient from '../../hooks/useVersionedClient'
-import {assetsActions, selectAssetById} from '../../modules/assets'
-import {dialogActions} from '../../modules/dialog'
-import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
-import {selectFolderPathById} from '../../modules/folders'
-import {selectTags, selectTagSelectOptions, tagsActions} from '../../modules/tags'
-import type {Asset, AssetFormData, DialogAssetEditProps, TagSelectOption} from '../../types'
+import {confirmDeleteAssetsDialog, folderMoveDialog} from '../../machines/dialogs'
+import {selectFolderPath} from '../../machines/foldersMachine'
+import {selectIsCreatingTag, selectTags} from '../../machines/tagsMachine'
+import type {
+  Asset,
+  AssetFormData,
+  DialogAssetEditProps,
+  TagItem,
+  TagSelectOption,
+} from '../../types'
 import getTagSelectOptions from '../../utils/getTagSelectOptions'
 import {getUniqueDocuments} from '../../utils/getUniqueDocuments'
 import imageDprUrl from '../../utils/imageDprUrl'
@@ -39,34 +41,53 @@ type Props = {
   dialog: DialogAssetEditProps
 }
 
+/** Options for the asset's tags, skipping references to tags that no longer exist. */
+function getAssetTagOptions(
+  asset: Asset | undefined,
+  tagsById: Record<string, TagItem>,
+): TagSelectOption[] | null {
+  const tagItems = asset?.opt?.media?.tags?.flatMap((reference) => {
+    const tagItem = tagsById[reference._ref]
+    return tagItem ? [tagItem] : []
+  })
+  return tagItems?.length ? getTagSelectOptions(tagItems) : null
+}
+
 const DialogAssetEdit = (props: Props) => {
   const {
     children,
-    dialog: {assetId, id, lastCreatedTag, lastRemovedTagIds},
+    dialog: {assetId, id},
   } = props
 
-  const client = useVersionedClient()
+  const client = useMediaClient()
   const scheme = useColorSchemeValue()
 
   const documentStore = useDocumentStore()
 
-  const dispatch = useDispatch()
-  const assetItem = useTypedSelector((state) => selectAssetById(state, String(assetId))) // TODO: check casting
-  const tags = useTypedSelector(selectTags)
+  const {assets, dialogs, folders, tags} = useMediaActors()
+  const assetItem = useSelector(assets, (snapshot) =>
+    assetId ? snapshot.context.byIds[assetId] : undefined,
+  )
+  const tagItems = useSelector(tags, selectTags)
+  const tagsById = useSelector(tags, (snapshot) => snapshot.context.byIds)
 
-  const assetUpdatedPrev = useRef<string | undefined>(undefined)
-
-  // Generate a snapshot of the current asset
-  const [assetSnapshot, setAssetSnapshot] = useState(assetItem?.asset)
+  // Keep showing the last known version of the asset if it is deleted elsewhere
+  const [lastKnownAsset, setLastKnownAsset] = useState(assetItem?.asset)
+  if (assetItem && assetItem.asset !== lastKnownAsset) {
+    setLastKnownAsset(assetItem.asset)
+  }
   const [tabSection, setTabSection] = useState<'details' | 'references'>('details')
 
-  const currentAsset = assetItem ? assetItem?.asset : assetSnapshot
-  const allTagOptions = getTagSelectOptions(tags)
+  const currentAsset = assetItem?.asset ?? lastKnownAsset
+  const allTagOptions = getTagSelectOptions(tagItems)
 
-  const assetTagOptions = useTypedSelector(selectTagSelectOptions(currentAsset))
+  const assetTagOptions = useMemo(
+    () => getAssetTagOptions(currentAsset, tagsById),
+    [currentAsset, tagsById],
+  )
   const currentFolderId = currentAsset?.opt?.media?.folder?._ref ?? null
-  const currentFolderPath = useTypedSelector((state) =>
-    selectFolderPathById(state, currentFolderId),
+  const currentFolderPath = useSelector(folders, (snapshot) =>
+    selectFolderPath(snapshot, currentFolderId),
   )
 
   // Check if credit line options are configured
@@ -136,10 +157,17 @@ const DialogAssetEdit = (props: Props) => {
     [assetTagOptions, locales],
   )
 
-  const {control, getValues, handleSubmit, register, reset, setValue} = useForm<AssetFormData>({
-    defaultValues: generateDefaultValues(assetItem?.asset),
+  const values = useMemo(
+    () => generateDefaultValues(currentAsset),
+    [currentAsset, generateDefaultValues],
+  )
+
+  const {control, getValues, handleSubmit, register, setValue} = useForm<AssetFormData>({
     mode: 'onChange',
+    // Changes made elsewhere (and tags resolving once loaded) only replace untouched fields
+    resetOptions: {keepDirtyValues: true},
     resolver: zodFormResolver<AssetFormData>(getAssetFormSchema(locales)),
+    values,
   })
 
   // Subscribe via useFormState so React Compiler cannot skip formState Proxy reads
@@ -148,59 +176,55 @@ const DialogAssetEdit = (props: Props) => {
 
   const formUpdating = !assetItem || assetItem?.updating
 
-  const handleClose = useCallback(() => {
-    dispatch(dialogActions.remove({id}))
-  }, [dispatch, id])
+  const handleClose = () => {
+    dialogs.send({type: 'dialog.close', id})
+  }
 
-  const handleDelete = useCallback(() => {
-    if (!assetItem?.asset) {
-      return
-    }
-
-    dispatch(
-      dialogActions.showConfirmDeleteAssets({
-        assets: [assetItem],
-        closeDialogId: assetItem?.asset._id,
-      }),
-    )
-  }, [assetItem, dispatch])
-
-  const handleAssetUpdate = useCallback((update: MutationEvent) => {
-    const {result, transition} = update
-    if (result && transition === 'update') {
-      // Regenerate asset snapshot
-      setAssetSnapshot(result as Asset)
-    }
-  }, [])
-
-  const handleCreateTag = useCallback(
-    (tagName: string) => {
-      // Dispatch action to create new tag
-      dispatch(
-        tagsActions.createRequest({
-          assetId: currentAsset?._id,
-          name: tagName,
-        }),
-      )
-    },
-    [currentAsset?._id, dispatch],
-  )
-
-  const handleChangeFolder = useCallback(() => {
+  const handleDelete = () => {
     if (!assetItem) {
       return
     }
 
-    dispatch(DIALOG_ACTIONS.showFolderMove({assets: [assetItem], folderId: currentFolderId}))
-  }, [assetItem, currentFolderId, dispatch])
+    dialogs.send({type: 'dialog.open', dialog: confirmDeleteAssetsDialog([assetItem], id)})
+  }
 
-  const handleRemoveFolder = useCallback(() => {
+  // Creates the tag, then selects it in this form
+  const handleCreateTag = async (tagName: string) => {
+    const existingTagIds = new Set(tags.getSnapshot().context.allIds)
+    tags.send({type: 'tag.create', name: tagName})
+    try {
+      const snapshot = await waitFor(tags, (tagsSnapshot) => !selectIsCreatingTag(tagsSnapshot))
+      const createdTag = selectTags(snapshot).find(
+        (tagItem) => tagItem.tag.name.current === tagName && !existingTagIds.has(tagItem.tag._id),
+      )?.tag
+      if (createdTag) {
+        const selectedTags = (getValues('opt.media.tags') as TagSelectOption[] | null) ?? []
+        setValue(
+          'opt.media.tags',
+          [...selectedTags, {label: createdTag.name.current, value: createdTag._id}],
+          {shouldDirty: true},
+        )
+      }
+    } catch {
+      // The browser was closed before the tag was created
+    }
+  }
+
+  const handleChangeFolder = () => {
+    if (!assetItem) {
+      return
+    }
+
+    dialogs.send({type: 'dialog.open', dialog: folderMoveDialog([assetItem], currentFolderId)})
+  }
+
+  const handleRemoveFolder = () => {
     if (!assetItem || !currentFolderId) {
       return
     }
 
-    dispatch(assetsActions.folderSetRequest({assets: [assetItem], folderId: null}))
-  }, [assetItem, currentFolderId, dispatch])
+    assets.send({type: 'assets.folder.set', assets: [assetItem], folderId: null})
+  }
 
   // Detect if asset has localized fields (objects) with keys not in the configured locales
   const hasOrphanedLocales = useMemo(() => {
@@ -255,92 +279,46 @@ const DialogAssetEdit = (props: Props) => {
   }, [client, currentAsset, locales])
 
   // Submit react-hook-form
-  const onSubmit: SubmitHandler<AssetFormData> = useCallback(
-    (formData) => {
-      if (!assetItem?.asset) {
-        return
-      }
+  const onSubmit: SubmitHandler<AssetFormData> = (formData) => {
+    if (!assetItem) {
+      return
+    }
 
-      const sanitizedFormData = sanitizeFormData(formData)
+    const sanitizedFormData = sanitizeFormData(formData)
 
-      // Keep an intentionally cleared description as '' (not null) so the EXIF
-      // ImageDescription fallback does not refill it the next time the dialog opens.
-      if (formData.description === '') {
-        sanitizedFormData['description'] = ''
-      }
+    // Keep an intentionally cleared description as '' (not null) so the EXIF
+    // ImageDescription fallback does not refill it the next time the dialog opens.
+    if (formData.description === '') {
+      sanitizedFormData['description'] = ''
+    }
 
-      dispatch(
-        assetsActions.updateRequest({
-          asset: assetItem?.asset,
-          closeDialogId: assetItem?.asset._id,
-          formData: {
-            ...sanitizedFormData,
-            // Map tags to sanity references
-            opt: {
-              media: {
-                ...sanitizedFormData['opt'].media,
-                tags:
-                  sanitizedFormData['opt'].media.tags?.map((tag: TagSelectOption) => ({
-                    _ref: tag.value,
-                    _type: 'reference',
-                    _weak: true,
-                  })) || null,
-                // Preserve the folder reference — it is managed separately and must
-                // not be wiped when patching opt.media via .set().
-                ...(currentAsset?.opt?.media?.folder && {folder: currentAsset.opt.media.folder}),
-              },
-            },
+    assets.send({
+      type: 'asset.update',
+      asset: assetItem.asset,
+      closeDialogId: id,
+      formData: {
+        ...sanitizedFormData,
+        // Map tags to sanity references
+        opt: {
+          media: {
+            ...sanitizedFormData['opt'].media,
+            tags:
+              sanitizedFormData['opt'].media.tags
+                // Tags deleted while the dialog was open
+                ?.filter((tag: TagSelectOption) => tag.value in tagsById)
+                .map((tag: TagSelectOption) => ({
+                  _ref: tag.value,
+                  _type: 'reference',
+                  _weak: true,
+                })) || null,
+            // Preserve the folder reference — it is managed separately and must
+            // not be wiped when patching opt.media via .set().
+            ...(currentAsset?.opt?.media?.folder && {folder: currentAsset.opt.media.folder}),
           },
-        }),
-      )
-    },
-    [assetItem?.asset, currentAsset, dispatch],
-  )
-
-  // Listen for asset mutations and update snapshot
-  useEffect(() => {
-    if (!assetItem?.asset) {
-      return undefined
-    }
-
-    // Remember that Sanity listeners ignore joins, order clauses and projections
-    const subscriptionAsset = client
-      .listen(groq`*[_id == $id]`, {id: assetItem?.asset._id})
-      .subscribe(handleAssetUpdate)
-
-    return () => {
-      subscriptionAsset?.unsubscribe()
-    }
-  }, [assetItem?.asset, client, handleAssetUpdate])
-
-  // Update tags form field (react-select) when a new _inline_ tag has been created
-  useEffect(() => {
-    if (lastCreatedTag) {
-      const existingTags = (getValues('opt.media.tags') as TagSelectOption[]) || []
-      const updatedTags = existingTags.concat([lastCreatedTag])
-      setValue('opt.media.tags', updatedTags, {shouldDirty: true})
-    }
-  }, [getValues, lastCreatedTag, setValue])
-
-  // Update tags form field (react-select) when an _inline_ tag has been removed elsewhere
-  useEffect(() => {
-    if (lastRemovedTagIds) {
-      const existingTags = (getValues('opt.media.tags') as TagSelectOption[]) || []
-      const updatedTags = existingTags.filter((tag) => {
-        return !lastRemovedTagIds.includes(tag.value)
-      })
-
-      setValue('opt.media.tags', updatedTags, {shouldDirty: true})
-    }
-  }, [getValues, lastRemovedTagIds, setValue])
-
-  // Reset react-hook-form local state on mount and every time the asset has been updated elsewhere
-  useEffect(() => {
-    if (assetUpdatedPrev.current !== assetItem?.asset._updatedAt) {
-      reset(generateDefaultValues(assetItem?.asset))
-    }
-    assetUpdatedPrev.current = assetItem?.asset._updatedAt
-  }, [assetItem?.asset, generateDefaultValues, reset])
+        },
+      },
+    })
+  }
 
   const footer = (
     <Box padding={3}>

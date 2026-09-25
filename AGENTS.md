@@ -288,6 +288,8 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Snapshots are generated with `pnpm test -u`
 - Root Vitest sets `SC_DISABLE_SPEEDY=false` so styled-components keeps its fast CSSOM injection path under jsdom (upstream disables it when `NODE_ENV !== 'production'`, which makes first mounts of styled-heavy trees slow enough to trip default timeouts). Same approach as [sanity#13675](https://github.com/sanity-io/sanity/pull/13675).
 - For plugins that use vanilla-extract: register `vanillaExtractPlugin()` in the plugin’s `vitest.config.ts` (required so `.css.ts` compiles under Vitest) and include `'@vanilla-extract/css/disableRuntimeStyles'` in `setupFiles` (no-op under `node`, skips CSS injection for `jsdom`/`happy-dom` suites; remove only when a test asserts real CSS) — see the `sanity-plugin-best-practices` styling reference (`Disabling runtime styles in tests`)
+- Vitest runs without globals, so Testing Library does not clean up rendered trees between tests on its own: register `afterEach(cleanup)` in the plugin's setup file (see `plugins/sanity-plugin-media/vitest.setup.ts`)
+- React only reconnects the effects of newly mounted components in strict mode when `<StrictMode>` wraps the root of the render (for example `renderHook(hook, {wrapper: StrictMode})`), not when it is rendered inside a component
 
 ## Pull Request Workflow
 
@@ -503,6 +505,13 @@ All date handling matches sanity core (`sanity-io/sanity`), so plugins dedupe ag
 - Depend on `date-fns` via `catalog:` (v4) — never pin an older major
 - Import from subpaths, e.g. `import {format} from 'date-fns/format'` — the `date-fns` barrel import is banned by lint
 - For time zone work use the official `@date-fns/tz` package (`TZDate`, `tz`, `tzOffset`, via `catalog:`) together with date-fns v4's `in` context option — the community `date-fns-tz` package is banned by lint. Prefer `Intl.supportedValuesOf('timeZone')`/`Intl.DateTimeFormat` for listing time zones instead of static time zone database packages (e.g. `@vvo/tzdb`)
+
+### State machines (XState)
+
+`sanity-plugin-media` and `sanity-plugin-dashboard-widget-vercel` manage state with XState v5 (`xstate` and `@xstate/react` via the catalog). Pitfalls that tests with mocked clients easily miss:
+
+- `useActorRef` stops and then restarts the _same_ actors when React reconnects the effects of their component (strict mode on mount, Fast Refresh). A restarted `fromPromise` actor runs its promise again, but is also settled by the promise of the stopped attempt (for example with its abort error), and mutations run twice. In `sanity-plugin-media`, create promise actors with `fromRequest` (fetches) or `fromMutation` (mutations) from `src/machines/utils.ts` instead of `fromPromise`, and make client mocks reject aborted requests like the real client does.
+- In a parallel machine, a transition declared on a region node with `reenter: true` resolves to the parallel root and resets every region, restarting in-flight invokes and delayed transitions. Leave `reenter` out of region-level transitions: the active child of the region still exits and re-enters.
 
 ### Formatting
 

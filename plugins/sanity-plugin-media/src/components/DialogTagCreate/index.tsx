@@ -1,12 +1,12 @@
 import {Box, Flex} from '@sanity/ui'
-import {type ReactNode, useEffect} from 'react'
+import {useSelector} from '@xstate/react'
+import {type ReactNode} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
-import {useDispatch} from 'react-redux'
 
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {tagFormSchema} from '../../formSchema'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {dialogActions} from '../../modules/dialog'
-import {tagsActions} from '../../modules/tags'
+import {useServerErrors} from '../../hooks/useServerErrors'
+import {selectIsCreatingTag} from '../../machines/tagsMachine'
 import type {DialogTagCreateProps, TagFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
 import zodFormResolver from '../../utils/zodFormResolver'
@@ -25,52 +25,42 @@ const DialogTagCreate = (props: Props) => {
     dialog: {id},
   } = props
 
-  const dispatch = useDispatch()
-
-  const creating = useTypedSelector((state) => state.tags.creating)
-  const creatingError = useTypedSelector((state) => state.tags.creatingError)
+  const {dialogs, tags} = useMediaActors()
+  const creating = useSelector(tags, selectIsCreatingTag)
+  const creatingError = useSelector(tags, (snapshot) => snapshot.context.creatingError)
+  const serverErrors = useServerErrors<TagFormData>('name', creatingError)
 
   const {
     // Read the formState before render to subscribe the form state through Proxy
     formState: {errors, isDirty, isValid},
     handleSubmit,
     register,
-    setError,
   } = useForm<TagFormData>({
     defaultValues: {
       name: '',
     },
+    errors: serverErrors,
     mode: 'onChange',
     resolver: zodFormResolver<TagFormData>(tagFormSchema),
   })
 
-  const formUpdating = creating
-
   const handleClose = () => {
-    dispatch(dialogActions.clear())
+    dialogs.send({type: 'dialogs.clear'})
   }
 
   // - submit react-hook-form
   const onSubmit: SubmitHandler<TagFormData> = (formData) => {
     const sanitizedFormData = sanitizeFormData(formData)
 
-    dispatch(tagsActions.createRequest({name: sanitizedFormData['name']}))
+    tags.send({type: 'tag.create', closeDialogId: id, name: sanitizedFormData['name']})
   }
 
-  useEffect(() => {
-    if (creatingError) {
-      setError('name', {
-        message: creatingError?.message,
-      })
-    }
-  }, [creatingError, setError])
-
-  const Footer = () => (
+  const footer = (
     <Box padding={3}>
       <Flex justify="flex-end">
         {/* Submit button */}
         <FormSubmitButton
-          disabled={formUpdating || !isDirty || !isValid}
+          disabled={creating || !isDirty || !isValid}
           isValid={isValid}
           onClick={handleSubmit(onSubmit)}
         />
@@ -79,15 +69,7 @@ const DialogTagCreate = (props: Props) => {
   )
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/static-components
-      footer={<Footer />}
-      header="Create Tag"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Create Tag" id={id} onClose={handleClose} width={1}>
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Hidden button to enable enter key submissions */}
@@ -96,7 +78,7 @@ const DialogTagCreate = (props: Props) => {
         {/* Title */}
         <FormFieldInputText
           {...register('name')}
-          disabled={formUpdating}
+          disabled={creating}
           error={errors?.name?.message}
           label="Name"
           name="name"

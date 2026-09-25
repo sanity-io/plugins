@@ -1,16 +1,13 @@
-import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Text} from '@sanity/ui'
-import groq from 'groq'
-import {type ReactNode, useCallback, useEffect, useState} from 'react'
+import {useSelector} from '@xstate/react'
+import {type ReactNode, useMemo, useState} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
-import {useDispatch} from 'react-redux'
 
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {tagFormSchema} from '../../formSchema'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import useVersionedClient from '../../hooks/useVersionedClient'
-import {dialogActions} from '../../modules/dialog'
-import {selectTagById, tagsActions} from '../../modules/tags'
-import type {DialogTagEditProps, Tag, TagFormData} from '../../types'
+import {useServerErrors} from '../../hooks/useServerErrors'
+import {confirmDeleteTagDialog} from '../../machines/dialogs'
+import type {DialogTagEditProps, TagFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
 import zodFormResolver from '../../utils/zodFormResolver'
 import Dialog from '../Dialog'
@@ -28,112 +25,67 @@ const DialogTagEdit = (props: Props) => {
     dialog: {id, tagId},
   } = props
 
-  const client = useVersionedClient()
-
-  const dispatch = useDispatch()
-  const tagItem = useTypedSelector((state) => selectTagById(state, String(tagId))) // TODO: double check string cast
-
-  // - Generate a snapshot of the current tag
-  const [tagSnapshot, setTagSnapshot] = useState(tagItem?.tag)
-
-  const currentTag = tagItem ? tagItem?.tag : tagSnapshot
-  const generateDefaultValues = useCallback(
-    (tag?: Tag) => ({
-      name: tag?.name?.current || '',
-    }),
-    [],
+  const {dialogs, tags} = useMediaActors()
+  const tagItem = useSelector(tags, (snapshot) =>
+    tagId ? snapshot.context.byIds[tagId] : undefined,
   )
+
+  // Keep showing the last known version of the tag if it is deleted elsewhere
+  const [lastKnownTag, setLastKnownTag] = useState(tagItem?.tag)
+  if (tagItem && tagItem.tag !== lastKnownTag) {
+    setLastKnownTag(tagItem.tag)
+  }
+  const currentTag = tagItem?.tag ?? lastKnownTag
+
+  const tagName = currentTag?.name?.current || ''
+  const values = useMemo(() => ({name: tagName}), [tagName])
+  const serverErrors = useServerErrors<TagFormData>('name', tagItem?.error)
 
   const {
     // Read the formState before render to subscribe the form state through Proxy
     formState: {errors, isDirty, isValid},
     handleSubmit,
     register,
-    reset,
-    setError,
   } = useForm<TagFormData>({
-    defaultValues: generateDefaultValues(tagItem?.tag),
+    errors: serverErrors,
     mode: 'onChange',
     resolver: zodFormResolver<TagFormData>(tagFormSchema),
+    // Follows remote changes to the tag
+    values,
   })
 
-  const formUpdating = !tagItem || tagItem?.updating
+  const formUpdating = !tagItem || tagItem.updating
 
   const handleClose = () => {
-    dispatch(dialogActions.remove({id}))
+    dialogs.send({type: 'dialog.close', id})
   }
 
   // Submit react-hook-form
   const onSubmit: SubmitHandler<TagFormData> = (formData) => {
-    if (!tagItem?.tag) {
+    if (!tagItem) {
       return
     }
     const sanitizedFormData = sanitizeFormData(formData)
-    dispatch(
-      tagsActions.updateRequest({
-        closeDialogId: tagItem?.tag?._id,
-        formData: {
-          name: {
-            _type: 'slug',
-            current: sanitizedFormData['name'],
-          },
-        },
-        tag: tagItem?.tag,
-      }),
-    )
+    tags.send({
+      type: 'tag.update',
+      closeDialogId: id,
+      name: sanitizedFormData['name'],
+      tag: tagItem.tag,
+    })
   }
 
   const handleDelete = () => {
-    if (!tagItem?.tag) {
+    if (!tagItem) {
       return
     }
-
-    dispatch(
-      dialogActions.showConfirmDeleteTag({
-        closeDialogId: tagItem?.tag?._id,
-        tag: tagItem?.tag,
-      }),
-    )
+    dialogs.send({type: 'dialog.open', dialog: confirmDeleteTagDialog(tagItem.tag, id)})
   }
 
-  const handleTagUpdate = useCallback(
-    (update: MutationEvent) => {
-      const {result, transition} = update
-      if (result && transition === 'update') {
-        // Regenerate snapshot
-        setTagSnapshot(result as Tag)
-        // Reset react-hook-form
-        reset(generateDefaultValues(result as Tag))
-      }
-    },
-    [reset, generateDefaultValues],
-  )
+  if (!currentTag) {
+    return null
+  }
 
-  useEffect(() => {
-    if (tagItem?.error) {
-      setError('name', {
-        message: tagItem.error?.message,
-      })
-    }
-  }, [setError, tagItem?.error])
-
-  // - Listen for asset mutations and update snapshot
-  useEffect(() => {
-    if (!tagItem?.tag) {
-      return undefined
-    }
-
-    // Remember that Sanity listeners ignore joins, order clauses and projections
-    const subscriptionAsset = client
-      .listen(groq`*[_id == $id]`, {id: tagItem?.tag._id})
-      .subscribe(handleTagUpdate)
-
-    return () => {
-      subscriptionAsset?.unsubscribe()
-    }
-  }, [client, handleTagUpdate, tagItem?.tag])
-
-  const Footer = () => (
+  const footer = (
     <Box padding={3}>
       <Flex justify="space-between">
         {/* Delete button */}
@@ -157,20 +109,8 @@ const DialogTagEdit = (props: Props) => {
     </Box>
   )
 
-  if (!currentTag) {
-    return null
-  }
-
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/static-components
-      footer={<Footer />}
-      header="Edit Tag"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Edit Tag" id={id} onClose={handleClose} width={1}>
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Deleted notification */}

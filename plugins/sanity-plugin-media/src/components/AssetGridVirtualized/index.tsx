@@ -2,7 +2,7 @@ import {memo} from 'react'
 import {VirtuosoGrid} from 'react-virtuoso'
 import {styled} from 'styled-components'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
+import {useMediaConfig} from '../../contexts/MediaActorsContext'
 import type {CardAssetData, CardFolderData, CardUploadData} from '../../types'
 import CardAsset from '../CardAsset'
 import CardFolder from '../CardFolder'
@@ -71,10 +71,7 @@ const ListContainer = (props: any) => {
 const AssetGridVirtualized = (props: Props) => {
   const {items, onLoadMore, source} = props
 
-  // Redux
-  const selectedAssets = useTypedSelector((state) => state.selected.assets)
-
-  const selectedIds = (selectedAssets && selectedAssets.map((asset) => asset._id)) || []
+  const {selectedAssetIds} = useMediaConfig()
   const totalCount = items?.length
 
   if (totalCount === 0) {
@@ -95,7 +92,7 @@ const AssetGridVirtualized = (props: Props) => {
       endReached={onLoadMore}
       itemContent={(index) => {
         const item = items[index]!
-        const selected = selectedIds.includes(item.id)
+        const selected = selectedAssetIds.includes(item.id)
         return <VirtualCell item={item} selected={selected} source={source} />
       }}
       overscan={48}

@@ -1,8 +1,7 @@
 import {Box} from '@sanity/ui'
-import {type ReactNode, useCallback} from 'react'
-import {useDispatch} from 'react-redux'
+import {type ReactNode} from 'react'
 
-import {dialogActions} from '../../modules/dialog'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import type {DialogFoldersProps} from '../../types'
 import Dialog from '../Dialog'
 import FolderView from '../FolderView'
@@ -18,11 +17,11 @@ const DialogFolders = (props: Props) => {
     dialog: {id},
   } = props
 
-  const dispatch = useDispatch()
+  const {dialogs} = useMediaActors()
 
-  const handleClose = useCallback(() => {
-    dispatch(dialogActions.clear())
-  }, [dispatch])
+  const handleClose = () => {
+    dialogs.send({type: 'dialogs.clear'})
+  }
 
   return (
     <Dialog animate header="Folders" id={id} onClose={handleClose} width={1}>
