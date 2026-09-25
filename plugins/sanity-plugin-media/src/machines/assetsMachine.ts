@@ -154,6 +154,7 @@ export type AssetsReport =
   | {type: 'assets.tagged'; assets: AssetItem[]; operation: TagOperation; tag: Tag}
   | {type: 'assets.taggingFailed'; tag: Tag}
   | {type: 'assets.moved'; closeDialogId?: string | undefined}
+  | {type: 'assets.moveFailed'; error: HttpError}
   | {type: 'assets.synced'}
   | {type: 'uploads.verified'; hashes: string[]}
 
@@ -908,14 +909,12 @@ export const assetsMachine = setup({
               target: 'idle',
               actions: enqueueActions(({context, enqueue, event}) => {
                 const {assets} = nextMutation(context, 'move')
+                const error = toHttpError(event.error)
                 enqueue.assign({
-                  byIds: markSettled(
-                    context.byIds,
-                    assetIdsOf(assets),
-                    toHttpError(event.error).message,
-                  ),
+                  byIds: markSettled(context.byIds, assetIdsOf(assets), error.message),
                   mutations: context.mutations.slice(1),
                 })
+                enqueue({type: 'report', params: {type: 'assets.moveFailed', error}})
               }),
             },
           },

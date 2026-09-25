@@ -347,6 +347,9 @@ export const mediaMachine = setup({
         'refresh folders',
       ],
     },
+    'assets.moveFailed': {
+      actions: {type: 'notify', params: ({event}) => errorNotification(event.error)},
+    },
     'assets.synced': {actions: 'refresh folders'},
     'uploads.verified': {
       actions: sendTo(
@@ -394,6 +397,9 @@ export const mediaMachine = setup({
         ({context}) => context.assets,
         ({event}) => ({type: 'folders.synced', folderIds: event.folderIds}),
       ),
+    },
+    'folders.fetchFailed': {
+      actions: {type: 'notify', params: ({event}) => errorNotification(event.error)},
     },
     'folder.created': {
       actions: [

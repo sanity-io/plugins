@@ -71,6 +71,7 @@ const DialogAssetEdit = (props: Props) => {
   )
   const tagItems = useSelector(tags, selectTags)
   const tagsById = useSelector(tags, (snapshot) => snapshot.context.byIds)
+  const tagsFetched = useSelector(tags, (snapshot) => snapshot.context.fetchCount >= 0)
 
   // Keep showing the last known version of the asset if it is deleted elsewhere
   const [lastKnownAsset, setLastKnownAsset] = useState(assetItem?.asset)
@@ -293,6 +294,21 @@ const DialogAssetEdit = (props: Props) => {
       sanitizedFormData['description'] = ''
     }
 
+    const selectedTags: TagSelectOption[] = sanitizedFormData['opt'].media.tags ?? []
+    const tagReferences = [
+      // Tag options only resolve once the tag list is loaded, so until then the asset's own
+      // references are kept: saving must not wipe tags the form could not show.
+      ...(tagsFetched ? [] : (currentAsset?.opt?.media?.tags ?? [])),
+      ...selectedTags
+        // Tags deleted while the dialog was open
+        .filter((tag) => tag.value in tagsById)
+        .map((tag) => ({
+          _ref: tag.value,
+          _type: 'reference',
+          _weak: true,
+        })),
+    ]
+
     assets.send({
       type: 'asset.update',
       asset: assetItem.asset,
@@ -303,15 +319,7 @@ const DialogAssetEdit = (props: Props) => {
         opt: {
           media: {
             ...sanitizedFormData['opt'].media,
-            tags:
-              sanitizedFormData['opt'].media.tags
-                // Tags deleted while the dialog was open
-                ?.filter((tag: TagSelectOption) => tag.value in tagsById)
-                .map((tag: TagSelectOption) => ({
-                  _ref: tag.value,
-                  _type: 'reference',
-                  _weak: true,
-                })) || null,
+            tags: tagReferences.length ? tagReferences : null,
             // Preserve the folder reference — it is managed separately and must
             // not be wiped when patching opt.media via .set().
             ...(currentAsset?.opt?.media?.folder && {folder: currentAsset.opt.media.folder}),

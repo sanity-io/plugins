@@ -53,6 +53,7 @@ export type FoldersEvent =
 
 export type FoldersReport =
   | {type: 'folders.fetched'; folderIds: string[]}
+  | {type: 'folders.fetchFailed'; error: HttpError}
   | {type: 'folder.created'; folderId: string}
   | {type: 'folder.createFailed'; error: HttpError}
   | {type: 'folder.renamed'}
@@ -320,7 +321,16 @@ export const foldersMachine = setup({
                 },
               ],
             },
-            onError: {target: 'idle'},
+            onError: {
+              target: 'idle',
+              actions: {
+                type: 'report',
+                params: ({event}) => ({
+                  type: 'folders.fetchFailed',
+                  error: toHttpError(event.error),
+                }),
+              },
+            },
           },
         },
       },
