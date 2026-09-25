@@ -1,4 +1,4 @@
-import {LexoRank} from 'lexorank'
+import {LexoRank} from '@sanity/lexorank'
 
 function generateMiddleValue(ranks: (LexoRank | undefined)[]) {
   // Has no undefined values
