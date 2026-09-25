@@ -314,10 +314,17 @@ export const tagsMachine = setup({
             onDone: {
               target: 'idle',
               actions: [
-                assign(({context, event}) => ({
-                  ...upsertTags({allIds: [], byIds: context.byIds}, event.output),
-                  fetchCount: event.output.length,
-                })),
+                assign(({context, event}) => {
+                  // Tags missing from the result are gone, the others keep their busy and error state
+                  const fetchedIds = new Set(event.output.map((tag) => tag._id))
+                  const byIds = Object.fromEntries(
+                    Object.entries(context.byIds).filter(([tagId]) => fetchedIds.has(tagId)),
+                  )
+                  return {
+                    ...upsertTags({allIds: [], byIds}, event.output),
+                    fetchCount: event.output.length,
+                  }
+                }),
                 {type: 'report', params: ({event}) => ({type: 'tags.fetched', tags: event.output})},
               ],
             },

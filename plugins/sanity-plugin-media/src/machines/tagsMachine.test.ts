@@ -62,6 +62,19 @@ describe(tagsMachine.id, () => {
       expect(events).toEqual([{type: 'tags.fetched', tags: [beta, alpha]}])
     })
 
+    it('replaces the tags when fetching again, keeping the busy state of the remaining ones', async () => {
+      const {actor, client} = await startWithTags([alpha, beta])
+      actor.send({type: 'tag.updating.set', tagId: 't1', updating: true})
+      client.fetch.mockResolvedValue([tag('t1', 'alpha'), tag('t3', 'gamma')])
+
+      actor.send({type: 'fetch'})
+      await vi.waitFor(() => expect(actor.getSnapshot().matches({fetch: 'idle'})).toBe(true))
+
+      expect(tagNames(actor)).toEqual(['alpha', 'gamma'])
+      expect(actor.getSnapshot().context.byIds['t2']).toBeUndefined()
+      expect(actor.getSnapshot().context.byIds['t1']?.updating).toBe(true)
+    })
+
     it('reports failed fetches', async () => {
       const client = createMockSanityClient({
         fetch: vi.fn().mockRejectedValue({message: 'boom', statusCode: 500}),
