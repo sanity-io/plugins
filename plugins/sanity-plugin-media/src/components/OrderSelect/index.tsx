@@ -1,18 +1,16 @@
 import {SortIcon} from '@sanity/icons/Sort'
 import {Button} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
-import {useDispatch} from 'react-redux'
+import {useSelector} from '@xstate/react'
 
 import {getOrderTitle} from '../../config/orders'
 import {ORDER_OPTIONS} from '../../constants'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions} from '../../modules/assets'
 
 const OrderSelect = () => {
-  // Redux
-  const dispatch = useDispatch()
-  const order = useTypedSelector((state) => state.assets.order)
+  const {assets} = useMediaActors()
+  const order = useSelector(assets, (snapshot) => snapshot.context.order)
 
   const popoverProps = usePortalPopoverProps()
 
@@ -40,11 +38,10 @@ const OrderSelect = () => {
                   iconRight={selected}
                   key={index}
                   onClick={() =>
-                    dispatch(
-                      assetsActions.orderSet({
-                        order: {direction: item.direction, field: item.field},
-                      }),
-                    )
+                    assets.send({
+                      type: 'order.set',
+                      order: {direction: item.direction, field: item.field},
+                    })
                   }
                   padding={2}
                   selected={selected}

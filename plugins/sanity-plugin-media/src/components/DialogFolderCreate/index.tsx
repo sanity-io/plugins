@@ -1,12 +1,12 @@
 import {Box, Flex, Text} from '@sanity/ui'
-import {type ReactNode, useEffect} from 'react'
+import {useSelector} from '@xstate/react'
+import {type ReactNode} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
-import {useDispatch} from 'react-redux'
 
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {folderFormSchema} from '../../formSchema'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {dialogActions} from '../../modules/dialog'
-import {foldersActions, selectFolderPathById} from '../../modules/folders'
+import {useServerErrors} from '../../hooks/useServerErrors'
+import {selectFolderPath, selectIsCreatingFolder} from '../../machines/foldersMachine'
 import type {DialogFolderCreateProps, FolderFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
 import zodFormResolver from '../../utils/zodFormResolver'
@@ -25,43 +25,39 @@ const DialogFolderCreate = (props: Props) => {
     dialog: {parentFolderId, id},
   } = props
 
-  const dispatch = useDispatch()
-  const creating = useTypedSelector((state) => state.folders.creating)
-  const creatingError = useTypedSelector((state) => state.folders.creatingError)
-  const parentPath = useTypedSelector((state) => selectFolderPathById(state, parentFolderId))
+  const {dialogs, folders} = useMediaActors()
+  const creating = useSelector(folders, selectIsCreatingFolder)
+  const creatingError = useSelector(folders, (snapshot) => snapshot.context.creatingError)
+  const parentPath = useSelector(folders, (snapshot) =>
+    selectFolderPath(snapshot, parentFolderId ?? null),
+  )
+  const serverErrors = useServerErrors<FolderFormData>('name', creatingError)
 
   const {
     formState: {errors, isDirty, isValid},
     handleSubmit,
     register,
-    setError,
   } = useForm<FolderFormData>({
     defaultValues: {
       name: '',
     },
+    errors: serverErrors,
     mode: 'onChange',
     resolver: zodFormResolver<FolderFormData>(folderFormSchema),
   })
 
   const handleClose = () => {
-    dispatch(dialogActions.clear())
+    dialogs.send({type: 'dialogs.clear'})
   }
 
   const onSubmit: SubmitHandler<FolderFormData> = (formData) => {
     const sanitizedFormData = sanitizeFormData(formData)
-    dispatch(
-      foldersActions.createRequest({
-        name: sanitizedFormData['name'],
-        parentId: parentFolderId || null,
-      }),
-    )
+    folders.send({
+      type: 'folder.create',
+      name: sanitizedFormData['name'],
+      parentId: parentFolderId || null,
+    })
   }
-
-  useEffect(() => {
-    if (creatingError) {
-      setError('name', {message: creatingError.message})
-    }
-  }, [creatingError, setError])
 
   const Footer = () => (
     <Box padding={3}>

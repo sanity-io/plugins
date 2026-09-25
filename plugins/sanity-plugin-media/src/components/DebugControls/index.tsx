@@ -1,28 +1,24 @@
 import {PlugIcon} from '@sanity/icons/Plug'
 import {Box, Flex, Switch, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
+import {useSelector} from '@xstate/react'
 import {type ChangeEvent} from 'react'
-import {useDispatch} from 'react-redux'
 
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import useKeyPress from '../../hooks/useKeyPress'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {debugActions} from '../../modules/debug'
 
 const DebugControls = () => {
-  // Redux
-  const dispatch = useDispatch()
-  const badConnection = useTypedSelector((state) => state.debug.badConnection)
-  const debugEnabled = useTypedSelector((state) => state.debug.enabled)
+  const {debug} = useMediaActors()
+  const badConnection = useSelector(debug, (snapshot) => snapshot.context.badConnection)
+  const debugEnabled = useSelector(debug, (snapshot) => snapshot.context.enabled)
 
   // Callbacks
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked
-
-    dispatch(debugActions.setBadConnection(checked))
+    debug.send({type: 'debug.badConnection.set', badConnection: e.target.checked})
   }
 
   const handleToggleControls = () => {
-    dispatch(debugActions.toggleEnabled())
+    debug.send({type: 'debug.toggle'})
   }
 
   // Close on escape key press

@@ -1,13 +1,17 @@
-import {Box} from '@sanity/ui'
+import {Box, useMediaIndex} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 
 import {TAGS_PANEL_WIDTH} from '../../constants'
-import useTypedSelector from '../../hooks/useTypedSelector'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import TagView from '../TagView'
 
 const TagsPanel = () => {
-  const tagsPanelVisible = useTypedSelector((state) => state.tags.panelVisible)
+  const {tags} = useMediaActors()
+  const panelVisible = useSelector(tags, (snapshot) => snapshot.context.panelVisible)
+  const mediaIndex = useMediaIndex()
 
-  if (!tagsPanelVisible) {
+  // Smaller breakpoints show tags in a dialog instead
+  if (!panelVisible || mediaIndex <= 1) {
     return null
   }
 

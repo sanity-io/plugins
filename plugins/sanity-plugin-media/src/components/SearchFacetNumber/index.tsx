@@ -1,11 +1,10 @@
 import {SelectIcon} from '@sanity/icons/Select'
 import {Box, Button} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
-import {useDispatch} from 'react-redux'
 
 import {operators} from '../../config/searchFacets'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
-import {searchActions} from '../../modules/search'
 import type {
   SearchFacetInputNumberModifier,
   SearchFacetInputNumberProps,
@@ -20,8 +19,7 @@ type Props = {
 }
 
 const SearchFacetNumber = ({facet}: Props) => {
-  // Redux
-  const dispatch = useDispatch()
+  const {assets} = useMediaActors()
 
   const popoverProps = usePortalPopoverProps()
 
@@ -31,15 +29,15 @@ const SearchFacetNumber = ({facet}: Props) => {
     : modifiers?.[0]
 
   const handleOperatorItemClick = (operatorType: SearchFacetOperatorType) => {
-    dispatch(searchActions.facetsUpdateById({id: facet.id, operatorType}))
+    assets.send({type: 'search.facet.update', facetId: facet.id, update: {operatorType}})
   }
 
   const handleModifierClick = (modifier: SearchFacetInputNumberModifier) => {
-    dispatch(searchActions.facetsUpdateById({id: facet.id, modifier: modifier.name}))
+    assets.send({type: 'search.facet.update', facetId: facet.id, update: {modifier: modifier.name}})
   }
 
   const handleValueChange = (value: number) => {
-    dispatch(searchActions.facetsUpdateById({id: facet.id, value}))
+    assets.send({type: 'search.facet.update', facetId: facet.id, update: {value}})
   }
 
   const selectedOperatorType: SearchFacetOperatorType = facet.operatorType ?? 'greaterThan'

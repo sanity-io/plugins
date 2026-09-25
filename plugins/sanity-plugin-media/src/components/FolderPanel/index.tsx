@@ -1,13 +1,17 @@
-import {Box} from '@sanity/ui'
+import {Box, useMediaIndex} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 
 import {FOLDERS_PANEL_WIDTH} from '../../constants'
-import useTypedSelector from '../../hooks/useTypedSelector'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import FolderView from '../FolderView'
 
 const FolderPanel = () => {
-  const foldersPanelVisible = useTypedSelector((state) => state.folders.panelVisible)
+  const {folders} = useMediaActors()
+  const panelVisible = useSelector(folders, (snapshot) => snapshot.context.panelVisible)
+  const mediaIndex = useMediaIndex()
 
-  if (!foldersPanelVisible) {
+  // Smaller breakpoints show folders in a dialog instead
+  if (!panelVisible || mediaIndex <= 1) {
     return null
   }
 

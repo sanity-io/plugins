@@ -1,11 +1,10 @@
 import {CloseIcon} from '@sanity/icons/Close'
 import {Box, Flex, Label, rem, Text, type ThemeColorSchemeKey} from '@sanity/ui'
 import {type ReactNode} from 'react'
-import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
 
-import {searchActions} from '../../modules/search'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import type {SearchFacetInputProps, WithId} from '../../types'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
@@ -30,11 +29,10 @@ const SearchFacet = (props: Props) => {
 
   const scheme = useColorSchemeValue()
 
-  // Redux
-  const dispatch = useDispatch()
+  const {assets} = useMediaActors()
 
   const handleClose = () => {
-    dispatch(searchActions.facetsRemoveById({facetId: facet.id}))
+    assets.send({type: 'search.facet.remove', facetId: facet.id})
   }
 
   return (

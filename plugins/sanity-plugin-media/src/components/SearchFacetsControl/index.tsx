@@ -1,21 +1,18 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {Button, Flex} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuGroup, MenuItem} from '@sanity/ui/menu'
-import {useDispatch} from 'react-redux'
+import {useSelector} from '@xstate/react'
 
 import {FACETS} from '../../constants'
+import {useMediaActors, useMediaConfig} from '../../contexts/MediaActorsContext'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {searchActions} from '../../modules/search'
 import type {SearchFacetDivider, SearchFacetGroup, SearchFacetInputProps} from '../../types'
 
 const SearchFacetsControl = () => {
-  // Redux
-  const dispatch = useDispatch()
-  const assetTypes = useTypedSelector((state) => state.assets.assetTypes)
-  const searchFacets = useTypedSelector((state) => state.search.facets)
-  const selectedDocument = useTypedSelector((state) => state.selected.document)
+  const {assets} = useMediaActors()
+  const {assetTypes, document: selectedDocument} = useMediaConfig()
+  const searchFacets = useSelector(assets, (snapshot) => snapshot.context.searchFacets)
 
   const popoverProps = usePortalPopoverProps()
 
@@ -89,7 +86,7 @@ const SearchFacetsControl = () => {
                 disabled={disabled}
                 fontSize={1}
                 key={facet.name}
-                onClick={() => dispatch(searchActions.facetsAdd({facet}))}
+                onClick={() => assets.send({type: 'search.facet.add', facet})}
                 padding={2}
                 text={facet.title}
               />
@@ -130,7 +127,7 @@ const SearchFacetsControl = () => {
         <Button
           fontSize={1}
           mode="bleed"
-          onClick={() => dispatch(searchActions.facetsClear())}
+          onClick={() => assets.send({type: 'search.facets.clear'})}
           text="Clear"
         />
       )}

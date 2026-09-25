@@ -6,7 +6,6 @@ import getTagSelectOptions from './getTagSelectOptions'
 function tagItem(partial: Partial<TagItem> & Pick<TagItem, 'tag'>): TagItem {
   return {
     _type: 'tag',
-    picked: false,
     updating: false,
     ...partial,
   }
@@ -37,7 +36,7 @@ describe('getTagSelectOptions', () => {
   it('skips items without a tag', () => {
     const tags = [
       tagItem({tag: makeTag('t1', 'ok')}),
-      {_type: 'tag', tag: undefined, picked: false, updating: false} as unknown as TagItem,
+      {_type: 'tag', tag: undefined, updating: false} as unknown as TagItem,
     ]
     expect(getTagSelectOptions(tags)).toEqual([{label: 'ok', value: 't1'}])
   })

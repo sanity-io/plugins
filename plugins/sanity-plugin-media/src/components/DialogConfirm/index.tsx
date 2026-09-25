@@ -1,9 +1,8 @@
 import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {Box, Button, Flex, Stack, Text} from '@sanity/ui'
 import {type ReactNode} from 'react'
-import {useDispatch} from 'react-redux'
 
-import {dialogActions} from '../../modules/dialog'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import type {DialogConfirmProps} from '../../types'
 import Dialog from '../Dialog'
 
@@ -15,23 +14,19 @@ type Props = {
 const DialogConfirm = (props: Props) => {
   const {children, dialog} = props
 
-  // Redux
-  const dispatch = useDispatch()
+  const {dialogs, media} = useMediaActors()
 
-  // Callbacks
   const handleClose = () => {
-    dispatch(dialogActions.remove({id: dialog?.id}))
+    dialogs.send({type: 'dialog.close', id: dialog.id})
   }
 
   const handleConfirm = () => {
     // Close target dialog, if provided
-    if (dialog?.closeDialogId) {
-      dispatch(dialogActions.remove({id: dialog?.closeDialogId}))
+    if (dialog.closeDialogId) {
+      dialogs.send({type: 'dialog.close', id: dialog.closeDialogId})
     }
 
-    if (dialog?.confirmCallbackAction) {
-      dispatch(dialog.confirmCallbackAction)
-    }
+    media.send(dialog.confirmEvent)
 
     // Close self
     handleClose()

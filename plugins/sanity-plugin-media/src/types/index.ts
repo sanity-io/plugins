@@ -1,17 +1,9 @@
-import type {Action} from '@reduxjs/toolkit'
-import type {
-  SanityAssetDocument,
-  SanityClient,
-  SanityDocument,
-  SanityImageAssetDocument,
-} from '@sanity/client'
+import type {SanityAssetDocument, SanityDocument, SanityImageAssetDocument} from '@sanity/client'
 import type {ComponentType, JSX} from 'react'
-import type {Epic} from 'redux-observable'
 import * as z from 'zod'
 
 import type {DetailsProps} from '../components/DialogAssetEdit/Details'
 import {folderFormSchema, getAssetFormSchema, tagFormSchema, tagOptionSchema} from '../formSchema'
-import type {RootReducerState} from '../modules/types'
 
 export type MediaTagsOptions = {
   mediaTags?: string[]
@@ -150,17 +142,20 @@ export type DialogAssetEditProps = {
   assetId?: string
   closeDialogId?: string
   id: string
-  lastCreatedTag?: {
-    label: string
-    value: string
-  }
-  lastRemovedTagIds?: string[]
   type: 'assetEdit'
 }
 
+/** Sent to the media actor when a confirm dialog is confirmed. */
+export type ConfirmEvent =
+  | {type: 'assets.delete'; assets: Asset[]}
+  | {type: 'assets.tag.add'; assets: AssetItem[]; tag: Tag}
+  | {type: 'assets.tag.remove'; assets: AssetItem[]; tag: Tag}
+  | {type: 'folder.delete'; folderId: string}
+  | {type: 'tag.delete'; tag: Tag}
+
 export type DialogConfirmProps = {
   closeDialogId?: string
-  confirmCallbackAction: Action // TODO: reconsider
+  confirmEvent: ConfirmEvent
   confirmText: string
   description?: string
   headerTitle: string
@@ -239,18 +234,16 @@ export type FolderDoc = {
   parentId: string | null
 }
 
-export type FolderTreeItem = {
-  depth: number
+export type FolderTreeNode = {
+  children: FolderTreeNode[]
+  /** Assets directly in this folder */
   exactCount: number
   id: string
   name: string
   parentId: string | null
   path: string
+  /** Assets in this folder and its nested folders */
   totalCount: number
-}
-
-export type FolderTreeNode = Omit<FolderTreeItem, 'depth'> & {
-  children: FolderTreeNode[]
 }
 
 export type ImageAsset = SanityImageAssetDocument &
@@ -260,15 +253,6 @@ export type ImageAsset = SanityImageAssetDocument &
   }
 
 export type MarkDef = {_key: string; _type: string}
-
-export type MyEpic = Epic<
-  Action,
-  Action,
-  RootReducerState,
-  {
-    client: SanityClient
-  }
->
 
 export type Order = {
   direction: OrderDirection
@@ -414,7 +398,6 @@ export type TagItem = {
   _type: 'tag'
   tag: Tag
   error?: HttpError
-  picked: boolean
   updating: boolean
 }
 

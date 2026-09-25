@@ -1,9 +1,8 @@
-import {firstValueFrom} from 'rxjs'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
-import {generatePreviewBlobUrl$} from './generatePreviewBlobUrl'
+import {generatePreviewBlobUrl} from './generatePreviewBlobUrl'
 
-describe('generatePreviewBlobUrl$', () => {
+describe('generatePreviewBlobUrl', () => {
   beforeEach(() => {
     class MockImage {
       onload: (() => void) | null = null
@@ -60,10 +59,8 @@ describe('generatePreviewBlobUrl$', () => {
     delete (URL as Partial<typeof URL> & {revokeObjectURL?: unknown}).revokeObjectURL
   })
 
-  it('emits a blob URL when canvas preview succeeds', async () => {
-    const url = await firstValueFrom(
-      generatePreviewBlobUrl$(new File(['x'], 'photo.jpg', {type: 'image/jpeg'})),
-    )
+  it('resolves to a blob URL when canvas preview succeeds', async () => {
+    const url = await generatePreviewBlobUrl(new File(['x'], 'photo.jpg', {type: 'image/jpeg'}))
     expect(url).toBe('blob:mock-preview')
   })
 })

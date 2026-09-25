@@ -1,10 +1,9 @@
 import {Box, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
-import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {css, styled} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
-import {foldersActions} from '../../modules/folders'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
 type Props = {
@@ -60,13 +59,13 @@ const FolderBadge = styled(Box)(
 )
 
 const TableRowFolder = ({folderId, name, totalCount}: Props) => {
-  const dispatch = useDispatch()
+  const {assets} = useMediaActors()
   const mediaIndex = useMediaIndex()
   const scheme = useColorSchemeValue()
 
   return (
     <ContainerGrid
-      onClick={() => dispatch(foldersActions.currentFolderSet({folderId}))}
+      onClick={() => assets.send({type: 'folder.open', folderId})}
       style={{
         background: getSchemeColor(scheme, 'bg'),
         gridColumnGap: mediaIndex < 3 ? 0 : '16px',

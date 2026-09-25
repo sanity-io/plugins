@@ -6,17 +6,20 @@ import {SearchIcon} from '@sanity/icons/Search'
 import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Container, Flex, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
+import {useSelector} from '@xstate/react'
 import {type ReactNode} from 'react'
-import {useDispatch} from 'react-redux'
 import {styled} from 'styled-components'
 
 import {inputs} from '../../config/searchFacets'
 import {PANEL_HEIGHT} from '../../constants'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {selectAssetsPicked} from '../../modules/assets'
-import {dialogActions} from '../../modules/dialog'
-import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
-import {searchActions, selectIsSearchFacetTag} from '../../modules/search'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {selectIsTagSearchFacet, selectPickedAssets} from '../../machines/assetsMachine'
+import {
+  confirmAddTagDialog,
+  confirmDeleteTagDialog,
+  confirmRemoveTagDialog,
+  tagEditDialog,
+} from '../../machines/dialogs'
 import type {SearchFacetInputSearchableProps, TagActions, TagItem} from '../../types'
 
 type Props = {
@@ -81,52 +84,44 @@ const TagButton = (props: TagButtonProps) => {
 const Tag = (props: Props) => {
   const {actions, tag} = props
 
-  // Redux
-  const dispatch = useDispatch()
-  const assetsPicked = useTypedSelector(selectAssetsPicked)
-  const isSearchFacetTag = useTypedSelector((state) => selectIsSearchFacetTag(state, tag?.tag?._id))
+  const {assets, dialogs} = useMediaActors()
+  const isSearchFacetTag = useSelector(assets, (snapshot) =>
+    selectIsTagSearchFacet(snapshot, tag.tag._id),
+  )
 
-  // Callbacks
+  // Picked assets are only needed on click, so they don't re-render every tag
+  const getPickedAssets = () => selectPickedAssets(assets.getSnapshot())
+
   const handleSearchFacetTagRemove = () => {
-    dispatch(searchActions.facetsRemoveByTag({tagId: tag.tag._id}))
+    assets.send({type: 'search.tag.remove', tagId: tag.tag._id})
   }
 
   const handleShowAddTagToAssetsDialog = () => {
-    dispatch(dialogActions.showConfirmAssetsTagAdd({assetsPicked, tag: tag.tag}))
+    dialogs.send({type: 'dialog.open', dialog: confirmAddTagDialog(getPickedAssets(), tag.tag)})
   }
 
   const handleShowRemoveTagFromAssetsDialog = () => {
-    dispatch(dialogActions.showConfirmAssetsTagRemove({assetsPicked, tag: tag.tag}))
+    dialogs.send({type: 'dialog.open', dialog: confirmRemoveTagDialog(getPickedAssets(), tag.tag)})
   }
 
   const handleShowTagDeleteDialog = () => {
-    dispatch(dialogActions.showConfirmDeleteTag({tag: tag.tag}))
+    dialogs.send({type: 'dialog.open', dialog: confirmDeleteTagDialog(tag.tag)})
   }
 
   const handleShowTagEditDialog = () => {
-    dispatch(DIALOG_ACTIONS.showTagEdit({tagId: tag?.tag?._id}))
+    dialogs.send({type: 'dialog.open', dialog: tagEditDialog(tag.tag._id)})
   }
 
-  const handleSearchFacetTagAddOrUpdate = () => {
+  const handleSearchFacetTagAdd = () => {
     const searchFacet = {
       ...inputs.tag,
       value: {
-        label: tag?.tag?.name?.current,
-        value: tag?.tag?._id,
+        label: tag.tag.name.current,
+        value: tag.tag._id,
       },
     } as SearchFacetInputSearchableProps
 
-    if (isSearchFacetTag) {
-      dispatch(
-        searchActions.facetsUpdate({
-          name: 'tag',
-          operatorType: 'references',
-          value: searchFacet.value,
-        }),
-      )
-    } else {
-      dispatch(searchActions.facetsAdd({facet: searchFacet}))
-    }
+    assets.send({type: 'search.facet.add', facet: searchFacet})
   }
 
   return (
@@ -151,9 +146,7 @@ const Tag = (props: Props) => {
           <TagButton
             disabled={tag?.updating}
             icon={isSearchFacetTag ? <CloseIcon /> : <SearchIcon />}
-            onClick={
-              isSearchFacetTag ? handleSearchFacetTagRemove : handleSearchFacetTagAddOrUpdate
-            }
+            onClick={isSearchFacetTag ? handleSearchFacetTagRemove : handleSearchFacetTagAdd}
             tooltip={isSearchFacetTag ? 'Remove filter' : 'Filter by tag'}
           />
         )}

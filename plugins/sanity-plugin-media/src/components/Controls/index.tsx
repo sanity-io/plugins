@@ -1,11 +1,10 @@
 import {FolderIcon} from '@sanity/icons/Folder'
 import {Box, Button, Flex, Inline, useMediaIndex} from '@sanity/ui'
-import {useDispatch} from 'react-redux'
+import {useSelector} from '@xstate/react'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {dialogActions} from '../../modules/dialog'
-import {foldersActions} from '../../modules/folders'
-import {tagsActions} from '../../modules/tags'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {selectIsFetching} from '../../machines/assetsMachine'
+import {foldersDialog, searchFacetsDialog, tagsDialog} from '../../machines/dialogs'
 import ButtonViewGroup from '../ButtonViewGroup'
 import OrderSelect from '../OrderSelect'
 import Progress from '../Progress'
@@ -15,35 +14,34 @@ import TagIcon from '../TagIcon'
 import TextInputSearch from '../TextInputSearch'
 
 const Controls = () => {
-  // Redux
-  const dispatch = useDispatch()
-  const fetching = useTypedSelector((state) => state.assets.fetching)
-  const foldersPanelVisible = useTypedSelector((state) => state.folders.panelVisible)
-  const pageIndex = useTypedSelector((state) => state.assets.pageIndex)
-  const searchFacets = useTypedSelector((state) => state.search.facets)
-  const tagsPanelVisible = useTypedSelector((state) => state.tags.panelVisible)
+  const {assets, dialogs, folders, tags} = useMediaActors()
+  const fetching = useSelector(assets, selectIsFetching)
+  const pageIndex = useSelector(assets, (snapshot) => snapshot.context.pageIndex)
+  const searchFacetCount = useSelector(assets, (snapshot) => snapshot.context.searchFacets.length)
+  const foldersPanelVisible = useSelector(folders, (snapshot) => snapshot.context.panelVisible)
+  const tagsPanelVisible = useSelector(tags, (snapshot) => snapshot.context.panelVisible)
 
   const mediaIndex = useMediaIndex()
 
   // Callbacks
   const handleShowSearchFacetDialog = () => {
-    dispatch(dialogActions.showSearchFacets())
+    dialogs.send({type: 'dialog.open', dialog: searchFacetsDialog()})
   }
 
   const handleShowFoldersDialog = () => {
-    dispatch(dialogActions.showFolders())
+    dialogs.send({type: 'dialog.open', dialog: foldersDialog()})
   }
 
   const handleShowTagsDialog = () => {
-    dispatch(dialogActions.showTags())
+    dialogs.send({type: 'dialog.open', dialog: tagsDialog()})
   }
 
   const toggleFoldersPanel = () => {
-    dispatch(foldersActions.panelVisibleSet({panelVisible: !foldersPanelVisible}))
+    folders.send({type: 'panel.visible.set', visible: !foldersPanelVisible})
   }
 
   const toggleTagsPanelToggle = () => {
-    dispatch(tagsActions.panelVisibleSet({panelVisible: !tagsPanelVisible}))
+    tags.send({type: 'panel.visible.set', visible: !tagsPanelVisible})
   }
 
   return (
@@ -94,7 +92,7 @@ const Controls = () => {
                   fontSize={1}
                   mode="ghost"
                   onClick={handleShowSearchFacetDialog}
-                  text={`Filters${searchFacets.length > 0 ? ` (${searchFacets.length})` : ''}`}
+                  text={`Filters${searchFacetCount > 0 ? ` (${searchFacetCount})` : ''}`}
                   tone="primary"
                 />
 

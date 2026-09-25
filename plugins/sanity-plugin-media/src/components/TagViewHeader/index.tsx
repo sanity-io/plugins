@@ -1,11 +1,12 @@
 import {ComposeIcon} from '@sanity/icons/Compose'
 import {Box, Button, Flex, Inline, Label} from '@sanity/ui'
-import {useDispatch} from 'react-redux'
+import {useSelector} from '@xstate/react'
 import {useColorSchemeValue} from 'sanity'
 
 import {PANEL_HEIGHT} from '../../constants'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {tagCreateDialog} from '../../machines/dialogs'
+import {selectIsCreatingTag, selectIsFetchingTags} from '../../machines/tagsMachine'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
 type Props = {
@@ -17,12 +18,12 @@ type Props = {
 const TagViewHeader = ({allowCreate, light, title}: Props) => {
   const scheme = useColorSchemeValue()
 
-  const dispatch = useDispatch()
-  const tagsCreating = useTypedSelector((state) => state.tags.creating)
-  const tagsFetching = useTypedSelector((state) => state.tags.fetching)
+  const {dialogs, tags} = useMediaActors()
+  const tagsCreating = useSelector(tags, selectIsCreatingTag)
+  const tagsFetching = useSelector(tags, selectIsFetchingTags)
 
   const handleTagCreate = () => {
-    dispatch(DIALOG_ACTIONS.showTagCreate())
+    dialogs.send({type: 'dialog.open', dialog: tagCreateDialog()})
   }
 
   return (

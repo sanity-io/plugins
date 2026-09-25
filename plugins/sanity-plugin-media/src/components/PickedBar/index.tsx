@@ -1,24 +1,26 @@
 import {Box, Button, Flex, Label} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 import pluralize from 'pluralize'
-import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 
 import {PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions, selectAssetsPicked} from '../../modules/assets'
-import {dialogActions} from '../../modules/dialog'
-import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {selectPickedAssets} from '../../machines/assetsMachine'
+import {
+  confirmDeleteAssetsDialog,
+  folderMoveDialog,
+  replaceAssetDialog,
+} from '../../machines/dialogs'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import {isImageAsset} from '../../utils/typeGuards'
 
 const PickedBar = () => {
   const scheme = useColorSchemeValue()
 
-  // Redux
-  const dispatch = useDispatch()
-  const assetsPicked = useTypedSelector(selectAssetsPicked)
-  const currentFolderId = useTypedSelector((state) => state.folders.currentFolderId)
+  const {assets, dialogs} = useMediaActors()
+  const assetsPicked = useSelector(assets, selectPickedAssets)
+  const currentFolderId = useSelector(assets, (snapshot) => snapshot.context.currentFolderId)
   const {isMultiSelect, onSelect} = useAssetSourceActions()
 
   // Replace only rewrites image field refs — only offer it for a single image asset.
@@ -27,11 +29,11 @@ const PickedBar = () => {
 
   // Callbacks
   const handlePickClear = () => {
-    dispatch(assetsActions.pickClear())
+    assets.send({type: 'pick.clear'})
   }
 
   const handleDeletePicked = () => {
-    dispatch(dialogActions.showConfirmDeleteAssets({assets: assetsPicked}))
+    dialogs.send({type: 'dialog.open', dialog: confirmDeleteAssetsDialog(assetsPicked)})
   }
 
   const handleReplaceImages = () => {
@@ -39,14 +41,14 @@ const PickedBar = () => {
     if (!assetId) {
       return
     }
-    dispatch(dialogActions.showAllAssetsDialog({assetId}))
+    dialogs.send({type: 'dialog.open', dialog: replaceAssetDialog(assetId)})
   }
 
   const handleMovePicked = () =>
-    dispatch(DIALOG_ACTIONS.showFolderMove({assets: assetsPicked, folderId: currentFolderId}))
+    dialogs.send({type: 'dialog.open', dialog: folderMoveDialog(assetsPicked, currentFolderId)})
 
   const handleRemovePickedFromFolder = () =>
-    dispatch(assetsActions.folderSetRequest({assets: assetsPicked, folderId: null}))
+    assets.send({type: 'assets.folder.set', assets: assetsPicked, folderId: null})
 
   const handleInsertPicked = () => {
     if (!onSelect) {

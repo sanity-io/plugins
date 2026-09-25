@@ -1,26 +1,22 @@
 import {CloseIcon} from '@sanity/icons/Close'
 import {SearchIcon} from '@sanity/icons/Search'
 import {Box, Flex, TextInput} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 import {type ChangeEvent} from 'react'
-import {useDispatch} from 'react-redux'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {searchActions} from '../../modules/search'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 
 const TextInputSearch = () => {
-  // Redux
-  const searchQuery = useTypedSelector((state) => state.search.query)
-
-  // Redux
-  const dispatch = useDispatch()
+  const {assets} = useMediaActors()
+  const searchQuery = useSelector(assets, (snapshot) => snapshot.context.searchQuery)
 
   // Callbacks
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(searchActions.querySet({searchQuery: e.currentTarget.value}))
+    assets.send({type: 'search.query.set', query: e.currentTarget.value})
   }
 
   const handleClear = () => {
-    dispatch(searchActions.querySet({searchQuery: ''}))
+    assets.send({type: 'search.query.set', query: ''})
   }
 
   return (
