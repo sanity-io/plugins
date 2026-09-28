@@ -460,6 +460,23 @@ Exception: peers that must stay in lockstep with the version we develop against 
 
 Note that the `peer` catalog entries are intentionally wider than the default catalog's (e.g. `react: ^19.2` vs `^19.2.7`): the default catalog pins what we develop against, the `peer` catalog declares what consumers may use. Renovate is configured (a `packageRules` entry in `.github/renovate.json` disables the `pnpm.catalog.peer` depType) to never rewrite these ranges — changing a peer range is a deliberate, manual decision.
 
+**Every `catalog:peer` peer also needs a `catalog:` dev dependency**
+
+Because the `peer` catalog ranges are wide, a package that lists `react` (or `react-dom`, `sanity`, `styled-components`) only in `peerDependencies` leaves pnpm free to satisfy that peer itself via `autoInstallPeers`. pnpm resolves it against the wide range and keeps whatever the lockfile already had, so the package silently drifts onto a different version than the rest of the workspace. That duplicate then splits everything downstream of it: a second `react` produces a second `sanity` instance, which breaks `pnpm lint` with `TS2322` "Type … is not assignable to type …" between two `.pnpm/sanity@<version>_<hash>` paths, and breaks `pnpm test` with React's "Incompatible React versions" invariant.
+
+Always pair the peer with a dev dependency on the default catalog so the workspace resolves a single copy:
+
+```jsonc
+"devDependencies": {
+  "react": "catalog:"
+},
+"peerDependencies": {
+  "react": "catalog:peer"
+}
+```
+
+This also keeps Renovate's catalog bumps applying to the package — a peer-only declaration is invisible to them, so the package is left behind on the old version and omitted from the bump's changeset.
+
 **Always use `lodash-es` instead of `lodash`**
 
 When working with lodash utility functions, always use the `lodash-es` package instead of `lodash`. The `lodash-es` package is the ES module version that supports tree-shaking and works correctly with modern build tools.
