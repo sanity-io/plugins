@@ -1,5 +1,11 @@
 # sanity-plugin-bynder-input
 
+## 5.1.1
+
+### Patch Changes
+
+- [#1948](https://github.com/sanity-io/plugins/pull/1948) [`ceb96aa`](https://github.com/sanity-io/plugins/commit/ceb96aafd9c9a75332ad85e3b1dbce4c81a83518) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update react monorepo to ^19.3.0
+
 ## 5.1.0
 
 ### Minor Changes

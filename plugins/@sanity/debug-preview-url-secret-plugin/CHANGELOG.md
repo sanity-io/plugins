@@ -1,5 +1,11 @@
 # @sanity/debug-preview-url-secret-plugin
 
+## 2.0.22
+
+### Patch Changes
+
+- [#2042](https://github.com/sanity-io/plugins/pull/2042) [`8699347`](https://github.com/sanity-io/plugins/commit/8699347321cb26ef43a54de037d7d14599dd7d71) Thanks [@stipsan](https://github.com/stipsan)! - Declare `react` as a dev dependency so it resolves to the same version as the rest of the monorepo
+
 ## 2.0.21
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @sanity/document-internationalization
 
+## 6.2.39
+
+### Patch Changes
+
+- [#1948](https://github.com/sanity-io/plugins/pull/1948) [`ceb96aa`](https://github.com/sanity-io/plugins/commit/ceb96aafd9c9a75332ad85e3b1dbce4c81a83518) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update react monorepo to ^19.3.0
+- Updated dependencies [[`ceb96aa`](https://github.com/sanity-io/plugins/commit/ceb96aafd9c9a75332ad85e3b1dbce4c81a83518)]:
+  - sanity-plugin-utils@2.0.19
+
 ## 6.2.38
 
 ### Patch Changes
