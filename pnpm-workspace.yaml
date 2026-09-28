@@ -213,6 +213,42 @@ trustPolicyExcludePrune: true
 trustPolicyExclude:
   - '@sanity/sdk@3.5.0'
   - '@sanity/sdk-react@3.5.0'
+  # vercel@58.7.0+ and its @vercel/* dependencies ship without npm provenance
+  # attestations (Vercel rotated its trusted-publishing OIDC config). Still GitHub
+  # trusted publishing, same publisher. Needed because only these releases parse pnpm 12's
+  # two-document pnpm-lock.yaml; drop them once Vercel publishes with provenance again.
+  - '@vercel/backends@11.0.1'
+  - '@vercel/build-utils@14.13.1'
+  - '@vercel/cervel@0.1.70'
+  - '@vercel/cli-auth@0.3.9'
+  - '@vercel/cli-config@0.3.0'
+  - '@vercel/cli-exec@1.0.1'
+  - '@vercel/container@11.0.1'
+  - '@vercel/detect-agent@1.2.5'
+  - '@vercel/elysia@11.0.1'
+  - '@vercel/error-utils@2.2.1'
+  - '@vercel/express@11.0.1'
+  - '@vercel/fastify@11.0.1'
+  - '@vercel/gatsby-plugin-vercel-analytics@1.0.12'
+  - '@vercel/gatsby-plugin-vercel-builder@2.2.62'
+  - '@vercel/go@14.0.1'
+  - '@vercel/h3@11.0.1'
+  - '@vercel/hono@11.0.1'
+  - '@vercel/hydrogen@12.0.1'
+  - '@vercel/koa@11.0.1'
+  - '@vercel/nestjs@11.0.1'
+  - '@vercel/next@15.0.1'
+  - '@vercel/node@16.0.1'
+  - '@vercel/oidc@3.8.9'
+  - '@vercel/python-analysis@0.14.0'
+  - '@vercel/python@17.0.1'
+  - '@vercel/redwood@13.0.1'
+  - '@vercel/remix-builder@16.0.1'
+  - '@vercel/ruby@13.0.1'
+  - '@vercel/rust@12.0.1'
+  - '@vercel/static-build@13.0.1'
+  - '@vercel/static-config@3.4.3'
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
   - undici@5.29.0
+  - vercel@60.1.3
