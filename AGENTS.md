@@ -39,7 +39,7 @@ pnpm install
 
 Install the pinned version globally before regenerating `pnpm-lock.yaml`. When an older global pnpm self-switches to the pinned version, the outer shim injects `pnpm_config_pm_on_fail=ignore`, and the inner pnpm then leaves the lockfile's `packageManagerDependencies` block unwritten. Running the pinned version directly (what `pnpm/action-setup` does in CI) records it correctly.
 
-Because pnpm 12 records that block, `pnpm-lock.yaml` is **two YAML documents**: a leading env document with `packageManagerDependencies`, then the dependency graph. Any tool that reads the lockfile must parse multi-document YAML; a single-document parser silently sees only the env document and concludes the project has no dependencies. `dev/e2e-studio/vercel.json` pins `installCommand` for exactly this reason—see [`e2e/README.md`](e2e/README.md) (`Vercel studio preview`).
+Because pnpm 12 records that block, `pnpm-lock.yaml` is **two YAML documents**: a leading env document with `packageManagerDependencies`, then the dependency graph. Any tool that reads the lockfile must parse multi-document YAML; a single-document parser silently sees only the env document and concludes the project has no dependencies. This is why the `vercel` CLI must stay at `58.9.5` or newer, with its un-attested releases listed in `trustPolicyExclude`—see [`e2e/README.md`](e2e/README.md) (`Vercel studio preview`).
 
 `autoDedupe: true` in `pnpm-workspace.yaml` collapses compatible duplicate versions on every non-frozen install, so the lockfile arrives deduped instead of waiting for the `Dedupe lockfile` workflow to open a follow-up PR. Frozen installs never rewrite the lockfile. It requires pnpm >= 12.6.0.
 
