@@ -97,6 +97,8 @@ CI deploys the studio under test to Vercel per run (same as [`sanity-io/sanity`]
 
 The studio preview reuses the same Vercel project and secrets as report hosting (`VERCEL_E2E_REPORT_*`). Report deploys are `--prebuilt` static output, so they are unaffected by the project’s build settings.
 
+`dev/e2e-studio/vercel.json` sets `installCommand` explicitly instead of letting Vercel detect the package manager. `vercel build` runs with the repo's pinned `vercel` CLI, whose bundled `@vercel/build-utils` parses `pnpm-lock.yaml` as a single YAML document. pnpm 12 writes it as two documents (a leading env document holding `packageManagerDependencies`), so detection fails, silently falls back to npm, and `npm install` dies on `workspace:*`. An explicit `installCommand` skips detection entirely. The CLI cannot be bumped past `vercel@58.4.4` to get the fixed parser, because every later release dropped its npm provenance attestations and `trustPolicy: no-downgrade` rejects it — that is why [#1890](https://github.com/sanity-io/plugins/pull/1890) was closed. Drop this override only if that trust gap closes and the CLI is bumped.
+
 ### One-time setup
 
 1. **Set the Root Directory** of the Vercel project to `dev/e2e-studio` (Project Settings → General) and enable “Include source files outside of the Root Directory”. Build command and output dir come from `dev/e2e-studio/vercel.json`.
