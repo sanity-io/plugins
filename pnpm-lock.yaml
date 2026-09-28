@@ -35,8 +35,8 @@ catalogs:
       specifier: ^3.0.8
       version: 3.0.8
     '@sanity/icons':
-      specifier: ^5.2.1
-      version: 5.2.1
+      specifier: ^5.2.2
+      version: 5.2.2
     '@sanity/image-url':
       specifier: ^2.1.1
       version: 2.1.1
@@ -56,14 +56,14 @@ catalogs:
       specifier: ^0.27.1
       version: 0.27.1
     '@sanity/ui':
-      specifier: ^4.0.7
-      version: 4.0.7
+      specifier: ^4.2.7
+      version: 4.2.7
     '@sanity/uuid':
       specifier: ^3.0.3
       version: 3.0.3
     '@sanity/vanilla-extract-vite-plugin':
-      specifier: ^0.2.17
-      version: 0.2.17
+      specifier: ^0.2.20
+      version: 0.2.20
     '@testing-library/jest-dom':
       specifier: ^7.0.1
       version: 7.0.1
@@ -113,8 +113,8 @@ catalogs:
       specifier: ^4.18.1
       version: 4.18.1
     motion:
-      specifier: ^13.1.0
-      version: 13.1.0
+      specifier: ^13.4.4
+      version: 13.4.4
     nanoid:
       specifier: ^6.0.1
       version: 6.0.1
@@ -320,7 +320,7 @@ importers:
         version: link:../../plugins/@sanity/hierarchical-document-list
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/language-filter':
         specifier: workspace:*
         version: link:../../plugins/@sanity/language-filter
@@ -353,10 +353,10 @@ importers:
         version: 0.8.0(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)(sanity@6.17.0-next.108)(styled-components@6.5.3)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.17(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@sanity/vercel-protection-bypass':
         specifier: workspace:*
         version: link:../../plugins/@sanity/vercel-protection-bypass
@@ -595,13 +595,13 @@ importers:
         version: 3.0.8
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/mutator':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -671,10 +671,10 @@ importers:
         version: 6.0.21(@portabletext/editor@7.12.3)(@types/react@19.3.0)(react@19.3.0)
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -759,13 +759,13 @@ importers:
         version: 1.2.3
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/lezer-groq':
         specifier: ^1.0.4
         version: 1.0.4
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@uiw/codemirror-themes':
         specifier: ^4.25.11
         version: 4.25.11(@codemirror/language@6.12.4)(@codemirror/state@6.7.6)(@codemirror/view@6.43.13)
@@ -805,10 +805,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@vanilla-extract/dynamic':
         specifier: 'catalog:'
         version: 2.1.5
@@ -830,7 +830,7 @@ importers:
         version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.17(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -863,7 +863,7 @@ importers:
         version: 2.3.0
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/mutator':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
@@ -872,7 +872,7 @@ importers:
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       dset:
         specifier: ^3.1.4
         version: 3.1.4
@@ -915,13 +915,13 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/image-url':
         specifier: 'catalog:'
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
@@ -964,7 +964,7 @@ importers:
         version: 8.6.1(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -1004,7 +1004,7 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
         version: 4.1.5(@sanity/client@8.6.1)
@@ -1035,13 +1035,13 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/mutator':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
@@ -1105,10 +1105,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       react-rx:
         specifier: ^4.2.5
         version: 4.2.5(react@19.3.0)(rxjs@7.8.2)
@@ -1160,7 +1160,7 @@ importers:
         version: link:../sanity-plugin-async-list
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       h3:
         specifier: ^1.15.11
         version: 1.15.11
@@ -1212,10 +1212,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@vis.gl/react-google-maps':
         specifier: 'catalog:'
         version: 1.9.0(react-dom@19.3.0)(react@19.3.0)
@@ -1231,7 +1231,7 @@ importers:
         version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.17(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@types/google.maps':
         specifier: ^3.65.5
         version: 3.65.5
@@ -1270,13 +1270,13 @@ importers:
         version: 3.0.8
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/mutator':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
@@ -1322,10 +1322,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       react-rx:
         specifier: 'catalog:'
         version: 4.2.5(react@19.3.0)(rxjs@7.8.2)
@@ -1386,10 +1386,10 @@ importers:
         version: 8.6.1(vitest@4.1.11)
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       lexorank:
         specifier: 'catalog:'
         version: 1.0.5
@@ -1432,13 +1432,13 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/studio-secrets':
         specifier: workspace:^
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -1545,10 +1545,10 @@ importers:
         version: 1.5.0
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -1591,13 +1591,13 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/studio-secrets':
         specifier: workspace:^
         version: link:../studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -1640,10 +1640,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -1686,7 +1686,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       react-rx:
         specifier: 'catalog:'
         version: 4.2.5(react@19.3.0)(rxjs@7.8.2)
@@ -1741,10 +1741,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -1787,13 +1787,13 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
         version: 4.1.5(@sanity/client@8.6.1)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -1888,7 +1888,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -1922,10 +1922,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -1971,7 +1971,7 @@ importers:
         version: 6.0.1(@types/react@19.3.0)(immer@11.1.17)(react-dom@19.3.0)(react@19.3.0)(supports-color@10.2.2)(use-sync-external-store@1.7.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -1987,7 +1987,7 @@ importers:
         version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.17(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -2023,13 +2023,13 @@ importers:
         version: 1.22.0
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/studio-secrets':
         specifier: workspace:^
         version: link:../@sanity/studio-secrets
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       nanoid:
         specifier: 'catalog:'
         version: 6.0.1
@@ -2069,7 +2069,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       lodash-es:
         specifier: 'catalog:'
         version: 4.18.1
@@ -2115,7 +2115,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -2161,10 +2161,10 @@ importers:
         version: 3.0.8
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2234,10 +2234,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
@@ -2292,7 +2292,7 @@ importers:
     dependencies:
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -2332,7 +2332,7 @@ importers:
         version: 3.0.8
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       bezier-easing:
         specifier: ^2.1.0
         version: 2.1.0
@@ -2387,7 +2387,7 @@ importers:
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
@@ -2396,7 +2396,7 @@ importers:
         version: 4.18.1
       motion:
         specifier: 'catalog:'
-        version: 13.1.0(react-dom@19.3.0)(react@19.3.0)
+        version: 13.4.4(react-dom@19.3.0)(react@19.3.0)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -2442,19 +2442,19 @@ importers:
         version: 8.6.1(vitest@4.1.11)
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/preview-url-secret':
         specifier: 'catalog:'
         version: 4.1.5(@sanity/client@8.6.1)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       dequal:
         specifier: 'catalog:'
         version: 2.0.3
       motion:
         specifier: 'catalog:'
-        version: 13.1.0(react-dom@19.3.0)(react@19.3.0)
+        version: 13.4.4(react-dom@19.3.0)(react@19.3.0)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -2500,10 +2500,10 @@ importers:
         version: link:../@sanity/assist
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
@@ -2601,7 +2601,7 @@ importers:
         version: 8.6.1(vitest@4.1.11)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       react-simplemde-editor:
         specifier: ^5.2.0
         version: 5.2.0(easymde@2.21.0)(react-dom@19.3.0)(react@19.3.0)
@@ -2653,10 +2653,10 @@ importers:
         version: 3.0.8
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2777,10 +2777,10 @@ importers:
         version: 3.5.0
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
@@ -2865,10 +2865,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       axios:
         specifier: ^1.19.0
         version: 1.20.0(debug@4.4.3)(supports-color@10.2.2)
@@ -3006,13 +3006,13 @@ importers:
         version: 2.3.0
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/image-url':
         specifier: 'catalog:'
         version: 2.1.1
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       dequal:
         specifier: 'catalog:'
         version: 2.0.3
@@ -3058,10 +3058,10 @@ importers:
         version: 18.0.1(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@tanstack/react-virtual':
         specifier: ^3.14.10
         version: 3.14.13(react-dom@19.3.0)(react@19.3.0)
@@ -3070,7 +3070,7 @@ importers:
         version: 1.0.5
       motion:
         specifier: 'catalog:'
-        version: 13.1.0(react-dom@19.3.0)(react@19.3.0)
+        version: 13.4.4(react-dom@19.3.0)(react@19.3.0)
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
@@ -3086,7 +3086,7 @@ importers:
         version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.17(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@types/node':
         specifier: ^24.13.3
         version: 24.13.3
@@ -3113,10 +3113,10 @@ importers:
     dependencies:
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       react-is:
         specifier: 'catalog:'
         version: 19.3.0
@@ -3162,10 +3162,10 @@ importers:
         version: 5.0.3
       '@sanity/icons':
         specifier: 'catalog:'
-        version: 5.2.1(react@19.3.0)
+        version: 5.2.2(react@19.3.0)
       '@sanity/ui':
         specifier: 'catalog:'
-        version: 4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/util':
         specifier: next
         version: 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
@@ -7541,12 +7541,6 @@ packages:
     resolution: {integrity: sha512-+fC2CBbbL5kk4rSO5oDOawJQU+nC2qlyvR8WfJtcrlB7sYJq0vBoj16jyE+cKSw7zt5ZpxhYWkAEgSM6BkQXAQ==}
     engines: {node: '>=20'}
 
-  '@sanity/icons@5.2.1':
-    resolution: {integrity: sha512-P5gY1HRungh4RgCcypdIpu/SKoTwRBTttpbHntZjdW1MO3MK6xEOs+pbAzSARyhh22OcN9PkBBEYk2FL34BvfQ==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      react: ^18 || ^19
-
   '@sanity/icons@5.2.2':
     resolution: {integrity: sha512-v+5dMjYJ6pC4x8IS/4O/GvQBet5GqsXsqJxBiiS6WHZt21EgntpW+q5hxU3dO4q/njiyR8O1JsdLAs3NranoXA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -7734,14 +7728,6 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@sanity/ui@4.0.7':
-    resolution: {integrity: sha512-hdXAqZDlctHUKVH7UJmQpCgeHefVjDIa3b6QUkCiLxS+tPhlRvNjOJRB32HAftWNw7scS6aJhXlqJp2/KvH8SA==}
-    engines: {node: '>=22.12'}
-    peerDependencies:
-      react: ^19.2
-      react-dom: ^19.2
-      styled-components: ^6.1
-
   '@sanity/ui@4.2.7':
     resolution: {integrity: sha512-P/np7nq69M3bmCjzbs2c60M06R4lga2z68ttFV6VFvMFcyw+3aa3qIb73L37e9GkhQS3vEWjnO1G3tcm5OI8sw==}
     engines: {node: '>=22.12'}
@@ -7773,6 +7759,10 @@ packages:
     resolution: {integrity: sha512-GPRCdeEfOOOoOiJb+6uOJxOt8sGTmSYfIz/U2/viQurytOOSz8v++fnSVBG6YLhtKhv2FzUIGgvSyPfiJ69FSQ==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
+  '@sanity/vanilla-extract-integration@0.1.20':
+    resolution: {integrity: sha512-fIrclslCl0luZL0yEjMwo2l5+NMMw60KrQNCwTMkoZNPtUTj1hx8/silD4IclKrvsIOaVuUG80Qv7BT6muysow==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+
   '@sanity/vanilla-extract-rolldown-plugin@0.4.6':
     resolution: {integrity: sha512-vPFIsyAFBq7rqmY0lToNH2lI5UQTtiWkoMYkuwobVQjV9NECld2aLb6ptwHNUeIbKlQ0P/ow3P73V3hVYizf6g==}
     engines: {node: '>=20.19 <22 || >=22.12'}
@@ -7788,8 +7778,8 @@ packages:
     peerDependencies:
       tsdown: ^0.22.5
 
-  '@sanity/vanilla-extract-vite-plugin@0.2.17':
-    resolution: {integrity: sha512-lCbJMlu44RdHcJhFofe67t66M6ajnjgEpyFJfu2zoDUksyljqSjB7C6YpmBAb9k+nAaaoC6DRwlHeXWhGydRLA==}
+  '@sanity/vanilla-extract-vite-plugin@0.2.20':
+    resolution: {integrity: sha512-brZcEk/3S9vofEmolcvT9DPeZ+VPoCfT3ksQA1TsJvqBMyBL16kqh7ZgtDhqmByu/LzX2FkyuvsZOSCuZ4W44w==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       vite: ^8.0.0
@@ -8734,6 +8724,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@yuku-parser/binding-android-arm64@0.11.0':
+    resolution: {integrity: sha512-jqlfj6xjjhC/T81db1HMuzYrCy/rXqFWM0sHLQ63R93CfyApBVKVB8iK5siIaqw5wTs8sGEFN2mM09GNqM1R1g==}
+    cpu: [arm64]
+    os: [android]
+
   '@yuku-parser/binding-android-arm64@0.8.7':
     resolution: {integrity: sha512-eGKYiUDX7Y0V7tDTmg+JTVnXnjMqfXXsorZ+EDf5kxwchQ3Or1HS14MzI2fw+jFhHR85fCWt+mtX33Yao73hIQ==}
     cpu: [arm64]
@@ -8744,6 +8739,11 @@ packages:
     cpu: [arm64]
     os: [android]
 
+  '@yuku-parser/binding-darwin-arm64@0.11.0':
+    resolution: {integrity: sha512-kWwHiaiU7VcdFr0MOI+pWZ4NgRo0gGw1ycE5dvhlr6XLMR0YSL+Ov8MseCwGkzUtOZ8cyFCOeXOwCa7mjMffMQ==}
+    cpu: [arm64]
+    os: [darwin]
+
   '@yuku-parser/binding-darwin-arm64@0.8.7':
     resolution: {integrity: sha512-Re0RHelKLnjEURulY2/KxW+Ngb8zuNA4BRZuMwgGQNzVumT6u4U2N2hc01oeYVNVof0i7GrXE4UCNBgbpRRnjQ==}
     cpu: [arm64]
@@ -8752,6 +8752,11 @@ packages:
   '@yuku-parser/binding-darwin-arm64@0.9.3':
     resolution: {integrity: sha512-hzKvKSKS7z3ufnu1VkQYEoxmS6A5uNnkwukKnc2atxpWdq648nLVOqut4h1jUXjbM2WcoTfuZLF6AHAGFf8cmg==}
     cpu: [arm64]
+    os: [darwin]
+
+  '@yuku-parser/binding-darwin-x64@0.11.0':
+    resolution: {integrity: sha512-Gy1pHdOWyXRJMbB0auuTTf+lbDOLuxWxqnU9cpf4vOrozfTDplXNrGuNbLgfZZ9UOgKz9iBnEx2YJ5fTbtvtLQ==}
+    cpu: [x64]
     os: [darwin]
 
   '@yuku-parser/binding-darwin-x64@0.8.7':
@@ -8764,6 +8769,11 @@ packages:
     cpu: [x64]
     os: [darwin]
 
+  '@yuku-parser/binding-freebsd-x64@0.11.0':
+    resolution: {integrity: sha512-QQ9kdjL/5IknqYYVlbBheQB8ibpbtCQH44KHnz0Iu9c+l4Cbml/bwtV8NntyDe7uOaTpjBbCzlYEdZinT5dw6A==}
+    cpu: [x64]
+    os: [freebsd]
+
   '@yuku-parser/binding-freebsd-x64@0.8.7':
     resolution: {integrity: sha512-bAP2OV8wRuzplX/jYxv9+vvqQT8JxyNphI8fLfXGL054Xs+4/J5u33cIm3y4rxY8rdoLmmdiJs2Tq7r7lrDRfA==}
     cpu: [x64]
@@ -8773,6 +8783,12 @@ packages:
     resolution: {integrity: sha512-WMn9M4LHNVysGNwsAJ9gpRPqQIW2lcPrDNGcyk0agx3IYqCJq1MQugh6Be8Otc5U08eGdE39o8Kx9YWJmXz7GA==}
     cpu: [x64]
     os: [freebsd]
+
+  '@yuku-parser/binding-linux-arm-gnu@0.11.0':
+    resolution: {integrity: sha512-F0MNggsSsLIqF1Os4joWikO5VUwmSSHIBUjVDOrJMllQODXfZfyEsLd9rMQbuvqUlXUr1qBMvjaHcJgnF/uaLA==}
+    cpu: [arm]
+    os: [linux]
+    libc: [glibc]
 
   '@yuku-parser/binding-linux-arm-gnu@0.8.7':
     resolution: {integrity: sha512-kTYwJQQgmZeAWdDIWabiReIZMpmfLueIj1tCmjStUtFGhR1Z0qwxonKVfUC4N7h/VhGGzLZ//7O1kgt1QKqgCg==}
@@ -8786,6 +8802,12 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@yuku-parser/binding-linux-arm-musl@0.11.0':
+    resolution: {integrity: sha512-2QfhRxHPO5hPkblvJNUMyB0PRw/az4Y0YuvLsbcpQtXqPQXL2kL0x8k1MPWtvrWQQPcezsHen3uIhe/2U82QaQ==}
+    cpu: [arm]
+    os: [linux]
+    libc: [musl]
+
   '@yuku-parser/binding-linux-arm-musl@0.8.7':
     resolution: {integrity: sha512-uL4jE8HPT2BLlxAXyD10LqgPuXa9eDa0BKpCdSANmzIJghq/2eZo3/gQNtaxPZMupWoxjYzSad9IXrwu7aYPXQ==}
     cpu: [arm]
@@ -8797,6 +8819,12 @@ packages:
     cpu: [arm]
     os: [linux]
     libc: [musl]
+
+  '@yuku-parser/binding-linux-arm64-gnu@0.11.0':
+    resolution: {integrity: sha512-6qRv2khbDlIYjWjWjkzxdJTkF4EGQvS+Q5WWwh1azACFUexzCr0gU5Krb/JxvQdTbO6sp9QM3Ybfa7iOD3qthg==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
 
   '@yuku-parser/binding-linux-arm64-gnu@0.8.7':
     resolution: {integrity: sha512-3gVN4pWSKZmXiNX7cU164dR9MPvesCHnlH6nPfpK+yQsCuYphjKKplcb4SnZBrhiqmXbgb2HR0c2TS0IZUPhgA==}
@@ -8810,6 +8838,12 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@yuku-parser/binding-linux-arm64-musl@0.11.0':
+    resolution: {integrity: sha512-3olnRYJgIHPtap+Ruc7wlC5Ex5uA2Y7mBECqDLmeUNv0VCt6LmSd5tem5HuItrwREVfPtTmuuFaStYbuE0/Amw==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
   '@yuku-parser/binding-linux-arm64-musl@0.8.7':
     resolution: {integrity: sha512-S0mwfEjoLpxzXeZw802Wa4RaELsQiPtWqG6INcy8j4GtvNFtl4LCX3eGO1XLn9pyLAISLzTRyU3zUCBUPin8lg==}
     cpu: [arm64]
@@ -8821,6 +8855,12 @@ packages:
     cpu: [arm64]
     os: [linux]
     libc: [musl]
+
+  '@yuku-parser/binding-linux-x64-gnu@0.11.0':
+    resolution: {integrity: sha512-xOoQ/wX1CECcBu+u2uVdZ/5jQpDuyfpMST73AsZV/9rFXHMoV4dzpMvFL/LlcOt0ZvI+ec9dou1qHgLpuWE1gw==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
 
   '@yuku-parser/binding-linux-x64-gnu@0.8.7':
     resolution: {integrity: sha512-lnbWdPmerE5D1uH1G4IEZKnPzCrWCStRGrtgpSIe1RibAo5bZIjDbbbPYXmMHCEh4F+x/JaJpElh26a3r+BPbg==}
@@ -8834,6 +8874,12 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@yuku-parser/binding-linux-x64-musl@0.11.0':
+    resolution: {integrity: sha512-rQfgYpctPVlFsEmEdJsgyV/gX38Pih8Jc+UDd5v2ae+Me0ufUSMsqbZAsFv/pYTqYw3ddF+/0UXoutEYbnnuUg==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
   '@yuku-parser/binding-linux-x64-musl@0.8.7':
     resolution: {integrity: sha512-769uwndMvMzUvATWbAcEvyLHKA+DzhHSCl/obBUrRdYfRo26yxui6S8y3z7uJ+Naup7UKrDxrpK7OnQkxkl9KQ==}
     cpu: [x64]
@@ -8846,6 +8892,11 @@ packages:
     os: [linux]
     libc: [musl]
 
+  '@yuku-parser/binding-win32-arm64@0.11.0':
+    resolution: {integrity: sha512-kUhOMR/SKASx9vD+BOkduLQC8nO/0jBygIpnLHrqSwhZocCprtKyRUSiU1hjI9QfVKotmES3ViYY2FALrFsCYQ==}
+    cpu: [arm64]
+    os: [win32]
+
   '@yuku-parser/binding-win32-arm64@0.8.7':
     resolution: {integrity: sha512-mEB/9PlaAkisJ6KWGz0zvywXoU6+80dTlR2LwS7s/jcXXoU6fm2+sitBZXtqu3+Q4DcDgPxM45uWMCzPs0TSRw==}
     cpu: [arm64]
@@ -8854,6 +8905,11 @@ packages:
   '@yuku-parser/binding-win32-arm64@0.9.3':
     resolution: {integrity: sha512-xnGEvdhyjRkXozHtpXVpEEkyGZWAxJ3RoILv7XRV5SvTEztaTCk5GQyfcOzI9An/EJtcL4ERCI8QmS0TpDPJiA==}
     cpu: [arm64]
+    os: [win32]
+
+  '@yuku-parser/binding-win32-x64@0.11.0':
+    resolution: {integrity: sha512-+aWJefFA/FBeL/SeC4nYmw3HB2kXWAYHTNY/BXi3N1ex/CVUPJHn3cCYK1T3M31nsO98ENqllNzWfv9arf6X0w==}
+    cpu: [x64]
     os: [win32]
 
   '@yuku-parser/binding-win32-x64@0.8.7':
@@ -8865,6 +8921,9 @@ packages:
     resolution: {integrity: sha512-N5eShGcuwnrXEprePFmEjtng6acZmtnC4zgazK9xxkavcx1q1uX8Nz8lU5RS973EMlNr902cIc6Cd2D4tqZDBg==}
     cpu: [x64]
     os: [win32]
+
+  '@yuku-toolchain/types@0.11.0':
+    resolution: {integrity: sha512-AlxUWVHNBTty88DtOSKu77115kjo7i8pWICmiF4CK+6/hEvnOkcOTXVoLtDpko7f5UzVAZsTEm92MV6/KoBmWA==}
 
   '@yuku-toolchain/types@0.8.7':
     resolution: {integrity: sha512-2Z53dNxAJL6UvFoIrDZvYf3zlO8s4VJK4O2hhaB4mXVwwpX/7ajtss3cmfqKvamlNLWyt9FSWs4eoYdlbxpnHA==}
@@ -12026,17 +12085,6 @@ packages:
   motion-utils@13.3.0:
     resolution: {integrity: sha512-sgSschQp7EseHInIlR7hBbMuvet3RA0bs28KPZAXJcGKGdxHGvh1ogpYDilY3bOMtl73EqPNmp75sAKHYPU5sg==}
 
-  motion@13.1.0:
-    resolution: {integrity: sha512-qtvscq59uCPdWnNW4SdSkrxR+BS/QYsa923bx7ocA+4p+ZGNbbVQwkSnG4aukB81QWjtl3AxX36plxNyZLmHCA==}
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-
   motion@13.4.4:
     resolution: {integrity: sha512-lyX5kpAum2MmigecKWrFdIj3Sjn7pHek2EUrXY0WGZbOjJ1f5NfX0g4KQAb2Bp2EqL0a6dUzse11s1n7OYr5jg==}
     peerDependencies:
@@ -14874,6 +14922,9 @@ packages:
 
   yuku-codegen@0.8.7:
     resolution: {integrity: sha512-adwDZSh8oVDzhE6Du9PwVWxcOxeV0e2EVhUuMKWfhSY4wkrDq9eqixlxFF3l/XGUV1E7UFzhpz9393MUumkyNw==}
+
+  yuku-parser@0.11.0:
+    resolution: {integrity: sha512-CIhp3qvcfItVvcNotOEDxtP38Il3LDUbMepZQSfFW1ethwcj/2FuuSeWSc3MmVJP0lUKJySS+5nGKxdxE+aaIg==}
 
   yuku-parser@0.8.7:
     resolution: {integrity: sha512-vRD9nwt4L3aYpxNqeSC4WqLv58xrXef0Ong1Mc45CTXTIpvLafx7JO05sczmQZwdLEZvywrLOGdNC5+Rp5N1BQ==}
@@ -19798,7 +19849,7 @@ snapshots:
 
   '@publint/pack@0.1.7':
     dependencies:
-      tinyexec: 1.3.0
+      tinyexec: 1.3.1
 
   '@quansync/fs@1.0.0':
     dependencies:
@@ -21076,10 +21127,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@sanity/icons@5.2.1(react@19.3.0)':
-    dependencies:
-      react: 19.3.0
-
   '@sanity/icons@5.2.2(react@19.3.0)':
     dependencies:
       react: 19.3.0
@@ -21598,20 +21645,6 @@ snapshots:
     transitivePeerDependencies:
       - vitest
 
-  '@sanity/ui@4.0.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)':
-    dependencies:
-      '@floating-ui/react-dom': 2.1.9(react-dom@19.3.0)(react@19.3.0)
-      '@sanity/color': 3.0.8
-      '@sanity/icons': 5.2.2(react@19.3.0)
-      csstype: 3.2.3
-      motion: 13.4.4(react-dom@19.3.0)(react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-      react-is: 19.3.0
-      react-refractor: 4.0.0(react@19.3.0)
-      styled-components: 6.5.3(react-dom@19.3.0)(react@19.3.0)
-      use-effect-event: 2.0.4(react@19.3.0)
-
   '@sanity/ui@4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)':
     dependencies:
       '@floating-ui/react-dom': 2.1.9(react-dom@19.3.0)(react@19.3.0)
@@ -21682,6 +21715,15 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
 
+  '@sanity/vanilla-extract-integration@0.1.20(babel-plugin-macros@3.1.0)':
+    dependencies:
+      '@vanilla-extract/css': 1.21.2(babel-plugin-macros@3.1.0)
+      javascript-stringify: 2.1.0
+      rolldown: 1.2.11
+      yuku-parser: 0.11.0
+    transitivePeerDependencies:
+      - babel-plugin-macros
+
   '@sanity/vanilla-extract-rolldown-plugin@0.4.6(babel-plugin-macros@3.1.0)(rolldown@1.2.11)':
     dependencies:
       '@sanity/vanilla-extract-integration': 0.1.17(babel-plugin-macros@3.1.0)
@@ -21699,9 +21741,9 @@ snapshots:
       - babel-plugin-macros
       - rolldown
 
-  '@sanity/vanilla-extract-vite-plugin@0.2.17(babel-plugin-macros@3.1.0)(vite@8.3.1)':
+  '@sanity/vanilla-extract-vite-plugin@0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)':
     dependencies:
-      '@sanity/vanilla-extract-integration': 0.1.17(babel-plugin-macros@3.1.0)
+      '@sanity/vanilla-extract-integration': 0.1.20(babel-plugin-macros@3.1.0)
       '@vanilla-extract/css': 1.21.2(babel-plugin-macros@3.1.0)
       vite: 8.3.1(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.0)
     transitivePeerDependencies:
@@ -22875,10 +22917,16 @@ snapshots:
   '@yuku-codegen/binding-win32-x64@0.8.7':
     optional: true
 
+  '@yuku-parser/binding-android-arm64@0.11.0':
+    optional: true
+
   '@yuku-parser/binding-android-arm64@0.8.7':
     optional: true
 
   '@yuku-parser/binding-android-arm64@0.9.3':
+    optional: true
+
+  '@yuku-parser/binding-darwin-arm64@0.11.0':
     optional: true
 
   '@yuku-parser/binding-darwin-arm64@0.8.7':
@@ -22887,10 +22935,16 @@ snapshots:
   '@yuku-parser/binding-darwin-arm64@0.9.3':
     optional: true
 
+  '@yuku-parser/binding-darwin-x64@0.11.0':
+    optional: true
+
   '@yuku-parser/binding-darwin-x64@0.8.7':
     optional: true
 
   '@yuku-parser/binding-darwin-x64@0.9.3':
+    optional: true
+
+  '@yuku-parser/binding-freebsd-x64@0.11.0':
     optional: true
 
   '@yuku-parser/binding-freebsd-x64@0.8.7':
@@ -22899,10 +22953,16 @@ snapshots:
   '@yuku-parser/binding-freebsd-x64@0.9.3':
     optional: true
 
+  '@yuku-parser/binding-linux-arm-gnu@0.11.0':
+    optional: true
+
   '@yuku-parser/binding-linux-arm-gnu@0.8.7':
     optional: true
 
   '@yuku-parser/binding-linux-arm-gnu@0.9.3':
+    optional: true
+
+  '@yuku-parser/binding-linux-arm-musl@0.11.0':
     optional: true
 
   '@yuku-parser/binding-linux-arm-musl@0.8.7':
@@ -22911,10 +22971,16 @@ snapshots:
   '@yuku-parser/binding-linux-arm-musl@0.9.3':
     optional: true
 
+  '@yuku-parser/binding-linux-arm64-gnu@0.11.0':
+    optional: true
+
   '@yuku-parser/binding-linux-arm64-gnu@0.8.7':
     optional: true
 
   '@yuku-parser/binding-linux-arm64-gnu@0.9.3':
+    optional: true
+
+  '@yuku-parser/binding-linux-arm64-musl@0.11.0':
     optional: true
 
   '@yuku-parser/binding-linux-arm64-musl@0.8.7':
@@ -22923,10 +22989,16 @@ snapshots:
   '@yuku-parser/binding-linux-arm64-musl@0.9.3':
     optional: true
 
+  '@yuku-parser/binding-linux-x64-gnu@0.11.0':
+    optional: true
+
   '@yuku-parser/binding-linux-x64-gnu@0.8.7':
     optional: true
 
   '@yuku-parser/binding-linux-x64-gnu@0.9.3':
+    optional: true
+
+  '@yuku-parser/binding-linux-x64-musl@0.11.0':
     optional: true
 
   '@yuku-parser/binding-linux-x64-musl@0.8.7':
@@ -22935,10 +23007,16 @@ snapshots:
   '@yuku-parser/binding-linux-x64-musl@0.9.3':
     optional: true
 
+  '@yuku-parser/binding-win32-arm64@0.11.0':
+    optional: true
+
   '@yuku-parser/binding-win32-arm64@0.8.7':
     optional: true
 
   '@yuku-parser/binding-win32-arm64@0.9.3':
+    optional: true
+
+  '@yuku-parser/binding-win32-x64@0.11.0':
     optional: true
 
   '@yuku-parser/binding-win32-x64@0.8.7':
@@ -22946,6 +23024,8 @@ snapshots:
 
   '@yuku-parser/binding-win32-x64@0.9.3':
     optional: true
+
+  '@yuku-toolchain/types@0.11.0': {}
 
   '@yuku-toolchain/types@0.8.7': {}
 
@@ -26306,14 +26386,6 @@ snapshots:
       motion-utils: 13.3.0
 
   motion-utils@13.3.0: {}
-
-  motion@13.1.0(react-dom@19.3.0)(react@19.3.0):
-    dependencies:
-      framer-motion: 13.4.4(react-dom@19.3.0)(react@19.3.0)
-      tslib: 2.8.1
-    optionalDependencies:
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
 
   motion@13.4.4(react-dom@19.3.0)(react@19.3.0):
     dependencies:
@@ -30185,6 +30257,23 @@ snapshots:
       '@yuku-codegen/binding-linux-x64-musl': 0.8.7
       '@yuku-codegen/binding-win32-arm64': 0.8.7
       '@yuku-codegen/binding-win32-x64': 0.8.7
+
+  yuku-parser@0.11.0:
+    dependencies:
+      '@yuku-toolchain/types': 0.11.0
+    optionalDependencies:
+      '@yuku-parser/binding-android-arm64': 0.11.0
+      '@yuku-parser/binding-darwin-arm64': 0.11.0
+      '@yuku-parser/binding-darwin-x64': 0.11.0
+      '@yuku-parser/binding-freebsd-x64': 0.11.0
+      '@yuku-parser/binding-linux-arm-gnu': 0.11.0
+      '@yuku-parser/binding-linux-arm-musl': 0.11.0
+      '@yuku-parser/binding-linux-arm64-gnu': 0.11.0
+      '@yuku-parser/binding-linux-arm64-musl': 0.11.0
+      '@yuku-parser/binding-linux-x64-gnu': 0.11.0
+      '@yuku-parser/binding-linux-x64-musl': 0.11.0
+      '@yuku-parser/binding-win32-arm64': 0.11.0
+      '@yuku-parser/binding-win32-x64': 0.11.0
 
   yuku-parser@0.8.7:
     dependencies:
