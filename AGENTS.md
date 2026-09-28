@@ -496,6 +496,10 @@ When bumping the Studio stack (e.g. `^6.5.0` → `^6.6.0`):
 4. Fix any new document-operation disable reasons (e.g. `TARGET_NOT_FOUND`) by mapping them to Sanity's structure locale keys (`action.*.disabled.*`), not by reusing an unrelated tooltip string.
 5. Add a **separate** changeset per published package whose `package.json` or runtime code changed.
 
+**Lockfile re-resolution also moves the Studio `next` overrides**
+
+While `pnpm-workspace.yaml` overrides `sanity`, `@sanity/mutator`, `@sanity/schema`, `@sanity/types`, `@sanity/util`, `@sanity/vision`, and `groq` to the `next` dist-tag, any full re-resolution (editing `overrides`, `pnpm update <pkg>`, `pnpm dedupe`) also bumps them to the newest `next` prerelease, since pnpm cannot reuse a locked version for a dist-tag. That turns a targeted dependency PR into a Studio upgrade, and the new prerelease can pull in packages that fail `trustPolicy: no-downgrade` (`ERR_PNPM_TRUST_DOWNGRADE`). Either call the Studio bump out in the PR, or keep it out by resolving through a local registry proxy that serves the locked versions as `next` and rewrites tarball URLs to itself (`pnpm update <pkg> -r --registry=http://localhost:<port>/`), then confirm the lockfile gained no `localhost` or `tarball:` entries. Do not temporarily pin these overrides to an exact version instead: pnpm also applies semver overrides to `peerDependencies` ranges, and those rewritten ranges stay in the lockfile.
+
 **date-fns: v4 via the catalog, subpath imports, official `@date-fns/tz`**
 
 All date handling matches sanity core (`sanity-io/sanity`), so plugins dedupe against the `date-fns` instance that `sanity` itself ships:
