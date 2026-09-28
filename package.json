@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo build",
+    "changeset": "changeset",
     "check:deps": "knip --dependencies",
     "dev": "pnpm turbo dev --filter=test-studio",
     "devtools:test-studio": "pnpm devtools:test-studio:build && ENABLE_VITE_DEVTOOLS=true pnpm dev",
@@ -34,8 +35,6 @@
     "typegen": "pnpm --filter=test-studio run typegen && pnpm format"
   },
   "dependencies": {
-    "@changesets/changelog-github": "^1.0.0",
-    "@changesets/cli": "^3.0.1",
     "@sanity/plugin-kit": "workspace:*",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
@@ -49,6 +48,8 @@
     "vitest-package-exports": "^1.2.0"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@vitest/coverage-v8": "catalog:",
     "knip": "^6.33.0",
     "vercel": "^57.0.0"

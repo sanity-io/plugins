@@ -66,6 +66,8 @@ pnpm test
 
 Every PR that changes published packages **must** include changesets. **Important:** Create a separate changeset file for each plugin you modify.
 
+The Changesets setup (`.changeset/config.json`, the `@changesets/*` versions, the `changeset`/`release` scripts and `.github/workflows/release.yml`) matches sanity-io/ui's; only the changelog `repo` differs. `"format": "oxfmt"` makes Changesets format the changesets and changelogs it writes with the repo's oxfmt config, and `"bumpVersionsWithWorkspaceProtocolOnly": true` keeps it from rewriting internal ranges that don't use `workspace:` (like the intentionally wide `sanity-plugin-internationalized-array` peer of `@sanity/sfcc`).
+
 #### Why Separate Changesets?
 
 Each plugin has its own changelog that consumers read. A combined changeset would pollute individual plugin changelogs with irrelevant information. For example, `@sanity/code-input`'s changelog should not mention workflow-specific changes.
