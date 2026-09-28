@@ -97,6 +97,9 @@ catalogs:
     '@vitest/coverage-v8':
       specifier: ^4.1.11
       version: 4.1.11
+    '@xstate/react':
+      specifier: ^6.1.0
+      version: 6.1.0
     date-fns:
       specifier: ^4.4.0
       version: 4.4.0
@@ -154,6 +157,9 @@ catalogs:
     rxjs:
       specifier: ^7.8.2
       version: 7.8.2
+    scroll-into-view-if-needed:
+      specifier: ^3.1.0
+      version: 3.1.0
     styled-components:
       specifier: ^6.5.3
       version: 6.5.3
@@ -175,6 +181,9 @@ catalogs:
     vitest:
       specifier: ^4.1.11
       version: 4.1.11
+    xstate:
+      specifier: ^5.33.2
+      version: 5.33.2
 
 overrides:
   '@types/node': ^24.13.3
@@ -349,8 +358,8 @@ importers:
         specifier: workspace:*
         version: link:../../plugins/@sanity/table
       '@sanity/themer':
-        specifier: ^0.8.0
-        version: 0.8.0(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)(sanity@6.17.0-next.108)(styled-components@6.5.3)
+        specifier: workspace:*
+        version: link:../../plugins/@sanity/themer
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
@@ -1783,6 +1792,88 @@ importers:
         specifier: 'catalog:'
         version: 0.22.14(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.24)(tsx@4.23.12)(typescript@7.0.2)
 
+  plugins/@sanity/themer:
+    dependencies:
+      '@sanity/color':
+        specifier: 'catalog:'
+        version: 3.0.8
+      '@sanity/icons':
+        specifier: 'catalog:'
+        version: 5.2.2(react@19.3.0)
+      '@sanity/themer-legacy':
+        specifier: ^0.2.1
+        version: 0.2.1(react-dom@19.3.0)(react@19.3.0)(sanity@6.17.0-next.108)(styled-components@6.5.3)
+      '@sanity/ui':
+        specifier: 'catalog:'
+        version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
+      '@vanilla-extract/dynamic':
+        specifier: 'catalog:'
+        version: 2.1.5
+      '@xstate/react':
+        specifier: 'catalog:'
+        version: 6.1.0(@types/react@19.3.0)(react@19.3.0)(xstate@5.33.2)
+      motion:
+        specifier: 'catalog:'
+        version: 13.4.4(react-dom@19.3.0)(react@19.3.0)
+      react-refractor:
+        specifier: ^4.0.0
+        version: 4.0.0(react@19.3.0)
+      refractor:
+        specifier: ^5.0.0
+        version: 5.0.0
+      sanity:
+        specifier: next
+        version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
+      scroll-into-view-if-needed:
+        specifier: 'catalog:'
+        version: 3.1.0
+      xstate:
+        specifier: 'catalog:'
+        version: 5.33.2
+    devDependencies:
+      '@sanity/tsconfig':
+        specifier: 'catalog:'
+        version: 2.2.1
+      '@sanity/tsdown-config':
+        specifier: 'catalog:'
+        version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
+      '@sanity/vanilla-extract-vite-plugin':
+        specifier: 'catalog:'
+        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
+      '@types/node':
+        specifier: ^24.13.3
+        version: 24.13.3
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      '@vanilla-extract/css':
+        specifier: 'catalog:'
+        version: 1.21.2(babel-plugin-macros@3.1.0)
+      jsdom:
+        specifier: 'catalog:'
+        version: 29.1.1(@noble/hashes@2.3.0)
+      lightningcss:
+        specifier: ^1.33.0
+        version: 1.33.0
+      oxc-transform-react:
+        specifier: 'catalog:'
+        version: 0.147.0
+      react:
+        specifier: 'catalog:'
+        version: 19.3.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.0(react@19.3.0)
+      styled-components:
+        specifier: 'catalog:'
+        version: 6.5.3(react-dom@19.3.0)(react@19.3.0)
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.22.14(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.24)(tsx@4.23.12)(typescript@7.0.2)
+
   plugins/@sanity/vercel-protection-bypass:
     dependencies:
       '@sanity/icons':
@@ -2172,7 +2263,7 @@ importers:
         specifier: ^5.101.4
         version: 5.101.4(react@19.3.0)
       '@xstate/react':
-        specifier: ^6.1.0
+        specifier: 'catalog:'
         version: 6.1.0(@types/react@19.3.0)(react@19.3.0)(xstate@5.33.2)
       object-hash:
         specifier: 3.0.0
@@ -2190,7 +2281,7 @@ importers:
         specifier: ^1.8.1
         version: 1.8.1(react@19.3.0)
       xstate:
-        specifier: ^5.32.5
+        specifier: 'catalog:'
         version: 5.33.2
       yup:
         specifier: ^0.32.11
@@ -2806,7 +2897,7 @@ importers:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
       scroll-into-view-if-needed:
-        specifier: ^3.1.0
+        specifier: 'catalog:'
         version: 3.1.0
       suspend-react:
         specifier: 'catalog:'
@@ -7684,16 +7775,6 @@ packages:
       sanity:
         optional: true
       styled-components:
-        optional: true
-
-  '@sanity/themer@0.8.0':
-    resolution: {integrity: sha512-HWDpXLjR6l0pk9e7Fu+f9OW+i3ilHLkwu117Xqs3Q1aSF/Q8AWgP2t4UkFswsxvYOGkycJ1ULl8/nRJE4eP2hg==}
-    engines: {node: '>=20.19 <22 || >=22.12'}
-    peerDependencies:
-      react: ^19.3.0
-      sanity: ^3 || ^4 || ^5 || ^6
-    peerDependenciesMeta:
-      sanity:
         optional: true
 
   '@sanity/tsconfig@2.2.1':
@@ -21557,31 +21638,10 @@ snapshots:
       react: 19.3.0
       react-compiler-runtime: 1.0.0(react@19.3.0)
     optionalDependencies:
-      sanity: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
+      sanity: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
       styled-components: 6.5.3(react-dom@19.3.0)(react@19.3.0)
     transitivePeerDependencies:
       - react-dom
-
-  '@sanity/themer@0.8.0(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)(sanity@6.17.0-next.108)(styled-components@6.5.3)':
-    dependencies:
-      '@sanity/color': 3.0.8
-      '@sanity/icons': 5.2.2(react@19.3.0)
-      '@sanity/themer-legacy': 0.2.1(react-dom@19.3.0)(react@19.3.0)(sanity@6.17.0-next.108)(styled-components@6.5.3)
-      '@sanity/ui': 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
-      '@vanilla-extract/dynamic': 2.1.5
-      '@xstate/react': 6.1.0(@types/react@19.3.0)(react@19.3.0)(xstate@5.33.2)
-      motion: 13.4.4(react-dom@19.3.0)(react@19.3.0)
-      react: 19.3.0
-      react-refractor: 4.0.0(react@19.3.0)
-      refractor: 5.0.0
-      scroll-into-view-if-needed: 3.1.0
-      xstate: 5.33.2
-    optionalDependencies:
-      sanity: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react-dom@19.3.0)(@types/react@19.3.0)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(immer@11.1.17)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.63.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)
-    transitivePeerDependencies:
-      - '@types/react'
-      - react-dom
-      - styled-components
 
   '@sanity/tsconfig@2.2.1': {}
 
