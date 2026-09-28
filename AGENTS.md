@@ -27,7 +27,7 @@ Use the **latest LTS** release of Node.js.
 
 ### pnpm Version
 
-The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v11 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
+The exact pnpm version is managed via the `packageManager` field in root `package.json` (currently pnpm **v12**). You only need pnpm **v12 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
 
 ```bash
 # Enable corepack to automatically use the correct pnpm version
@@ -37,7 +37,11 @@ corepack enable
 pnpm install
 ```
 
-pnpm v11 defaults `minimumReleaseAge` to 1 day. `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@4.2.5`) for one-off upgrades still inside that window.
+Install the pinned version globally before regenerating `pnpm-lock.yaml`. When an older global pnpm self-switches to the pinned version, the outer shim injects `pnpm_config_pm_on_fail=ignore`, and the inner pnpm then leaves the lockfile's `packageManagerDependencies` block unwritten. Running the pinned version directly (what `pnpm/action-setup` does in CI) records it correctly.
+
+`autoDedupe: true` in `pnpm-workspace.yaml` collapses compatible duplicate versions on every non-frozen install, so the lockfile arrives deduped instead of waiting for the `Dedupe lockfile` workflow to open a follow-up PR. Frozen installs never rewrite the lockfile. It requires pnpm >= 12.6.0.
+
+pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@4.2.5`) for one-off upgrades still inside that window. With `minimumReleaseAgeExcludePrune` and `trustPolicyExcludePrune` enabled, an install also drops exclude entries that no longer match anything in the tree—expect those lists to shrink on the first install after a stale entry's version leaves the lockfile.
 
 Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
 
@@ -572,7 +576,7 @@ Run `pnpm build` first—some packages need to be built for type information to 
 
 ### "Command not found: pnpm"
 
-Ensure you have pnpm v11+ installed, then run:
+Ensure you have pnpm v12+ installed, then run:
 
 ```bash
 corepack enable
