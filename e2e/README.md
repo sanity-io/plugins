@@ -99,6 +99,8 @@ The studio preview reuses the same Vercel project and secrets as report hosting 
 
 `dev/e2e-studio/vercel.json` sets `installCommand` explicitly instead of letting Vercel detect the package manager. `vercel build` runs with the repo's pinned `vercel` CLI, whose bundled `@vercel/build-utils` parses `pnpm-lock.yaml` as a single YAML document. pnpm 12 writes it as two documents (a leading env document holding `packageManagerDependencies`), so detection fails, silently falls back to npm, and `npm install` dies on `workspace:*`. An explicit `installCommand` skips detection entirely. The CLI cannot be bumped past `vercel@58.4.4` to get the fixed parser, because every later release dropped its npm provenance attestations and `trustPolicy: no-downgrade` rejects it — that is why [#1890](https://github.com/sanity-io/plugins/pull/1890) was closed. Drop this override only if that trust gap closes and the CLI is bumped.
 
+The override bypasses the probe rather than repairing it, so `vercel build` still logs one `Error while parsing config file: ".../pnpm-lock.yaml"` line. That line is expected and harmless — the following `Running "install" command:` line is what matters. Treat a `Installing dependencies...` line followed by `npm error … Unsupported URL Type "workspace:"` as the real regression signal.
+
 ### One-time setup
 
 1. **Set the Root Directory** of the Vercel project to `dev/e2e-studio` (Project Settings → General) and enable “Include source files outside of the Root Directory”. Build command and output dir come from `dev/e2e-studio/vercel.json`.
