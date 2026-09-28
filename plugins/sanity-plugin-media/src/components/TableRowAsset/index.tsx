@@ -384,6 +384,7 @@ const TableRowAsset = (props: Props) => {
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
+          {/* oxlint-disable-next-line react/purity */}
           {formatRelative(new Date(asset._updatedAt), new Date())}
         </Text>
       </Box>
