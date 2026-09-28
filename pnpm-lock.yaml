@@ -8244,9 +8244,6 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@types/react@19.2.18':
-    resolution: {integrity: sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w==}
-
   '@types/react@19.3.0':
     resolution: {integrity: sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg==}
 
@@ -20288,7 +20285,7 @@ snapshots:
       '@sanity/cli-core': 3.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(oxc-transform-react@0.147.0)(tsx@4.23.12)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/schema': 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
-      '@sanity/telemetry': 1.1.0(react@19.2.8)
+      '@sanity/telemetry': 1.1.0(react@19.3.0)
       '@sanity/types': 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
       '@sanity/workbench-cli': 2.8.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.3.0)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxc-transform-react@0.147.0)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@vitejs/plugin-react': 6.1.1(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.147.0)(vite@8.3.1)
@@ -20302,7 +20299,7 @@ snapshots:
       node-html-parser: 7.1.0
       oneline: 2.0.0
       picomatch: 4.0.7
-      react: 19.2.8
+      react: 19.3.0
       react-is: 19.3.0
       semver: 7.8.5
       vite: 8.3.1(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.0)
@@ -20344,7 +20341,7 @@ snapshots:
       '@sanity/cli-core': 3.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(oxc-transform-react@0.145.0)(tsx@4.23.12)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/schema': 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
-      '@sanity/telemetry': 1.1.0(react@19.2.8)
+      '@sanity/telemetry': 1.1.0(react@19.3.0)
       '@sanity/types': 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
       '@sanity/workbench-cli': 2.8.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.3.0)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxc-transform-react@0.145.0)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@vitejs/plugin-react': 6.1.1(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.145.0)(vite@8.3.1)
@@ -20358,7 +20355,7 @@ snapshots:
       node-html-parser: 7.1.0
       oneline: 2.0.0
       picomatch: 4.0.7
-      react: 19.2.8
+      react: 19.3.0
       react-is: 19.3.0
       semver: 7.8.5
       vite: 8.3.1(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.0)
@@ -20400,7 +20397,7 @@ snapshots:
       '@sanity/cli-core': 3.8.1(@noble/hashes@2.3.0)(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(oxc-transform-react@0.147.0)(tsx@4.23.12)(vitest@4.1.11)(yaml@2.9.0)
       '@sanity/generate-help-url': 4.0.0
       '@sanity/schema': 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
-      '@sanity/telemetry': 1.1.0(react@19.2.8)
+      '@sanity/telemetry': 1.1.0(react@19.3.0)
       '@sanity/types': 6.17.0-next.108(@types/react@19.3.0)(vitest@4.1.11)
       '@sanity/workbench-cli': 2.8.0(@noble/hashes@2.3.0)(@rolldown/plugin-babel@0.2.3)(@types/node@24.13.3)(@types/react@19.3.0)(@vitejs/devtools@0.4.12)(babel-plugin-react-compiler@1.0.0)(esbuild@0.28.1)(jiti@2.7.0)(oxc-transform-react@0.147.0)(tsx@4.23.12)(typescript@7.0.2)(vitest@4.1.11)(yaml@2.9.0)
       '@vitejs/plugin-react': 6.1.1(@rolldown/plugin-babel@0.2.3)(babel-plugin-react-compiler@1.0.0)(oxc-transform-react@0.147.0)(vite@8.3.1)
@@ -20414,7 +20411,7 @@ snapshots:
       node-html-parser: 7.1.0
       oneline: 2.0.0
       picomatch: 4.0.7
-      react: 19.2.8
+      react: 19.3.0
       react-is: 19.3.0
       semver: 7.8.5
       vite: 8.3.1(@types/node@24.13.3)(@vitejs/devtools@0.4.12)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.12)(yaml@2.9.0)
@@ -22573,19 +22570,15 @@ snapshots:
 
   '@types/react-file-icon@1.0.5':
     dependencies:
-      '@types/react': 19.2.18
+      '@types/react': 19.3.0
 
   '@types/react-is@19.3.0':
     dependencies:
-      '@types/react': 19.2.18
+      '@types/react': 19.3.0
 
   '@types/react-transition-group@4.4.12(@types/react@19.3.0)':
     dependencies:
       '@types/react': 19.3.0
-
-  '@types/react@19.2.18':
-    dependencies:
-      csstype: 3.2.3
 
   '@types/react@19.3.0':
     dependencies:
@@ -25672,7 +25665,7 @@ snapshots:
 
   ini@5.0.0: {}
 
-  ink@6.8.0(@types/react@19.3.0)(react@19.2.8):
+  ink@6.8.0(@types/react@19.3.0)(react@19.3.0):
     dependencies:
       '@alcalzone/ansi-tokenize': 0.2.5
       ansi-escapes: 7.3.0
@@ -25687,8 +25680,8 @@ snapshots:
       indent-string: 5.0.0
       is-in-ci: 2.0.0
       patch-console: 2.0.0
-      react: 19.2.8
-      react-reconciler: 0.33.0(react@19.2.8)
+      react: 19.3.0
+      react-reconciler: 0.33.0(react@19.3.0)
       scheduler: 0.27.0
       signal-exit: 3.0.7
       slice-ansi: 8.0.0
@@ -27550,7 +27543,7 @@ snapshots:
       gcp-metadata: 8.1.3(supports-color@10.2.2)
       glob: 13.0.6
       http-z: 8.1.1
-      ink: 6.8.0(@types/react@19.3.0)(react@19.2.8)
+      ink: 6.8.0(@types/react@19.3.0)(react@19.3.0)
       istextorbinary: 9.5.0
       jks-js: 1.1.7
       js-rouge: 3.2.0
@@ -27571,7 +27564,7 @@ snapshots:
       proxy-agent: 6.5.0(supports-color@10.2.2)
       proxy-from-env: 2.1.0
       python-shell: 5.0.0
-      react: 19.2.8
+      react: 19.3.0
       rfdc: 1.4.1
       rxjs: 7.8.2
       semver: 7.8.5
@@ -28055,9 +28048,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  react-reconciler@0.33.0(react@19.2.8):
+  react-reconciler@0.33.0(react@19.3.0):
     dependencies:
-      react: 19.2.8
+      react: 19.3.0
       scheduler: 0.27.0
 
   react-redux@9.3.0(@types/react@19.3.0)(react@19.3.0)(redux@5.0.1):
