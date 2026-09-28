@@ -74,11 +74,11 @@ export function ImageHotspotArray(
    * check if there are any changes to the hotspotImage and update the reference
    */
   const hotspotImage = useMemo(() => {
+    // oxlint-disable no-unsafe-type-assertion -- the configured imagePath is expected to point to an image field
     return (
       imageHotspotOptions.imagePath ? get(rootObject, imageHotspotOptions.imagePath) : rootObject
-    ) as
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- the configured imagePath is expected to point to an image field
-      ImageValue | undefined
+    ) as ImageValue | undefined
+    // oxlint-enable no-unsafe-type-assertion
   }, [rootObject, imageHotspotOptions.imagePath])
 
   const displayImage = useMemo(() => {
