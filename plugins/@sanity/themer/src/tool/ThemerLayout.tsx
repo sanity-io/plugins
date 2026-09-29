@@ -1,33 +1,37 @@
-import {Card, Flex, ThemeProvider, useMediaIndex} from '@sanity/ui'
-import {type RootTheme, type ThemeColorSchemeKey} from '@sanity/ui/theme'
-import {useActor, useSelector} from '@xstate/react'
-import {Activity, lazy, useEffect, useMemo, useRef, useState, ViewTransition} from 'react'
-import {type LayoutProps, useColorSchemeValue} from 'sanity'
-
-import {buildTheme} from '../theme/buildTheme'
-import type {BuildThemeOptions} from '../theme/options'
-import {ThemerContext, type ThemerContextValue, type ThemerView} from './context'
-import {selectStoredState, type ThemerInput, themerMachine, type ThemerSnapshot} from './machine'
-import {readStoredState} from './storage'
-import {resolveThemes, type ThemerState} from './themes'
-import {usePrefersReducedMotion} from './usePrefersReducedMotion'
-import {useStudioNavbarHeight} from './useStudioNavbarHeight'
-import {useTypedDeferredValue} from './useTypedDeferredValue'
-
+import {Card, Flex} from '@sanity/ui'
+import type {ThemeColorSchemeKey} from '@sanity/ui/theme'
+import {useActorRef, useSelector} from '@xstate/react'
 import {
-  layout,
-  layoutTransitionType,
-  panelTransitionClasses,
-  splitTransitionClasses,
-  studioScheme,
-} from './ThemerLayout.css'
+  Activity,
+  lazy,
+  startTransition,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  ViewTransition,
+} from 'react'
+import {useColorSchemeValue} from 'sanity'
 
-/**
- * Below this media index the Studio collapses its navbar into a drawer, and
- * the themer follows suit: the sidebar covers the Studio instead of standing
- * next to it, and the split preview stacks instead of sitting side by side.
- */
-const MOBILE_MEDIA_INDEX = 1
+import {addThemerTransitionType} from './addThemerTransitionType'
+import {
+  ToolActorRefContext,
+  ToolDispatchContext,
+  ToolIsOpenContext,
+  ToolSendContext,
+  ToolSplitIsOpenContext,
+  type ThemerProps,
+  type ThemerView,
+} from './context'
+import {selectStoredState, type ThemerInput, themerMachine, type ThemerSnapshot} from './machine'
+import type {ToolReducerAction, ToolReducerState} from './reducer'
+import {resolveActiveThemeOptions} from './selectors'
+import {readStoredState, type readPersistedSnapshot} from './storage'
+import {resolveThemes, type ThemerState} from './themes'
+import {useIsMobile} from './useIsMobile'
+import {useStudioNavbarHeight} from './useStudioNavbarHeight'
+
+import {layout, viewTransitionClasses} from './ViewTransitions.css'
 
 /**
  * The sidebar — everything in it, from the theme list to the snippet dialog —
@@ -67,6 +71,12 @@ function sameView(a: ThemerView, b: ThemerView): boolean {
   )
 }
 
+interface ThemerLayoutProps extends Omit<ToolReducerState, 'theme'> {
+  children: React.ReactNode
+  dispatch: React.Dispatch<ToolReducerAction>
+  persistedSnapshot: ReturnType<typeof readPersistedSnapshot>
+}
+
 /**
  * Wraps the whole Studio so that the theme picked in the themer sidebar
  * applies everywhere while the user browses around, runs the themer machine
@@ -95,238 +105,122 @@ function sameView(a: ThemerView, b: ThemerView): boolean {
  *
  * @internal
  */
-export function ThemerLayout(props: LayoutProps & {baseOptions: BuildThemeOptions}) {
-  const {baseOptions, ...layoutProps} = props
-  const [input] = useState<ThemerInput>(() => ({baseOptions, stored: readStoredState()}))
-  const [snapshot, send, actorRef] = useActor(themerMachine, {input})
+export function ThemerLayout({
+  children,
+  dispatch,
+  open,
+  persistedSnapshot,
+  prerender,
+  prerenderSplitScreen,
+  split,
+}: ThemerLayoutProps) {
+  const [restoredState] = useState(readStoredState)
+  // @TODO make this configurable in themerTool() callback
+  const baseOptions = useMemo(() => ({}), [])
+  const [input] = useState<ThemerInput>(() => ({baseOptions, stored: restoredState}))
+  const actorRef = useActorRef(themerMachine, {input, snapshot: persistedSnapshot})
+  /**
+   * @deprecated use actorRef instead
+   */
+  const send = actorRef.send.bind(actorRef)
+  /**
+   * @deprecated use actorRef instead
+   */
   const stored = useSelector(actorRef, selectStoredState, sameStoredState)
+  /**
+   * @deprecated use actorRef instead
+   */
   const view = useSelector(actorRef, selectView, sameView)
-  const open = snapshot.hasTag('panel')
-  const split = snapshot.hasTag('split')
-  const moving = snapshot.hasTag('moving')
-  const switching = snapshot.hasTag('switching')
-  const {images} = snapshot.context
-  const mobile = useMediaIndex() <= MOBILE_MEDIA_INDEX
+  /**
+   * @deprecated use actorRef instead
+   */
+  const images = useSelector(actorRef, (snapshot) => snapshot.context.images)
+
+  const isMobile = useIsMobile()
   const studioRef = useRef<HTMLDivElement | null>(null)
   const navbarHeight = useStudioNavbarHeight(studioRef)
-
-  // The machine publishes synchronously, which React does not animate. What
-  // shows is deferred: that renders the panel's and the copy's mounts in a
-  // transition — once the sidebar's own changes (the toggle's pressed state)
-  // have committed, so nothing in the sidebar changes while it runs. The
-  // transition carries the layout's type, which tells the stylesheet that the
-  // view transition running is the layout's. Someone who prefers reduced
-  // motion gets no view transition at all: nothing is deferred, so there is
-  // no transition render for React to animate, no boundary has a class, and
-  // what shows changes along with the machine — and should one run anyway,
-  // the stylesheet gives its animations nothing to do
-  const reduceMotion = usePrefersReducedMotion()
-  const deferredOpen = useTypedDeferredValue(reduceMotion ? null : open, layoutTransitionType)
-  const deferredSplit = useTypedDeferredValue(reduceMotion ? null : split, layoutTransitionType)
-  const shownOpen = deferredOpen ?? open
-  const shownSplit = deferredSplit ?? split
-
-  // The sidebar's content mounts the first time it opens — which is when its
-  // code loads — and stays mounted from then on. It goes by a deferred copy
-  // of whether it should be there, deferred even for reduced motion: the
-  // render that loads the code must never be an urgent one. With motion it
-  // arrives with the panel's own deferred reveal; without, in a panel that
-  // already shows, as an update no view transition animates. The two copies
-  // differ while the code loads, which the navbar toggle shows.
-  //
-  // It should be there while open, or once it has been: a sidebar closed
-  // again while its code loads is not mounted into the hidden panel, where
-  // the code could still be loading as a reduced-motion reopen — which is
-  // urgent — reveals it, and the Studio would give way to its loading screen
-  const [panelShown, setPanelShown] = useState(false)
-  const panelWanted = open || panelShown
-  const panelMounted = useTypedDeferredValue(panelWanted, layoutTransitionType)
-  if (panelMounted && !panelShown) setPanelShown(true)
-  const loading = panelWanted !== panelMounted
 
   const {themes, removed, active} = useMemo(
     () => resolveThemes(stored, baseOptions),
     [stored, baseOptions],
   )
 
-  // The theme identity must be stable between renders: it feeds the
-  // styled-components theme context for the whole Studio, and rebuilding it
-  // would re-render everything. Keying on the options object keeps it stable
-  // across unrelated changes, like renaming a theme.
-  const activeOptions = active.source === 'config' ? null : active.options
-  const theme = useMemo(
-    () => (activeOptions === null ? null : buildTheme(activeOptions)),
-    [activeOptions],
-  )
-
-  // The applied theme is deferred the same way, and the Studio and the panel
-  // cross-fade to it while the machine says a theme is being switched to —
-  // edits to the applied theme's colors render deferred too, which keeps the
-  // pickers responsive, but with nothing to animate them they simply show
-  const deferredTheme = useTypedDeferredValue(
-    reduceMotion ? undefined : theme,
-    layoutTransitionType,
-  )
-  const shownTheme = deferredTheme === undefined ? theme : deferredTheme
-
-  // The Studio paints the body with its configured theme from above this
-  // layout, and Safari tints its chrome from the body — so the applied theme
-  // has to reach the body too, in the scheme the Studio is showing
   const scheme = useColorSchemeValue()
   const oppositeScheme: ThemeColorSchemeKey = scheme === 'dark' ? 'light' : 'dark'
 
-  useEffect(() => {
-    const background = shownTheme?.v2?.color[scheme].default.bg
-
-    if (background === undefined) return undefined
-
-    const {style} = document.body
-    const previous = style.backgroundColor
-
-    style.backgroundColor = background
-
-    return () => {
-      style.backgroundColor = previous
-    }
-  }, [scheme, shownTheme])
-
-  // The machine releases the image of a palette as it is replaced or its
-  // theme deleted; whatever it still holds goes with the layout — the actor
-  // keeps its last snapshot once stopped
-  useEffect(
-    () => () => {
-      for (const url of Object.values(actorRef.getSnapshot().context.images)) {
-        URL.revokeObjectURL(url)
-      }
-    },
-    [actorRef],
-  )
-
-  const context = useMemo<ThemerContextValue>(
-    () => ({
-      baseOptions,
-      themes,
-      removed,
-      active,
-      images,
-      view,
-      open,
-      loading,
-      split,
-      mobile,
-      navbarHeight,
-      send,
-    }),
-    [
-      active,
-      baseOptions,
-      images,
-      loading,
-      mobile,
-      navbarHeight,
-      open,
-      removed,
-      send,
-      split,
-      themes,
-      view,
-    ],
-  )
-
-  const studio = layoutProps.renderDefault(layoutProps)
-
-  // Every view transition of the layout tells the machine its motion is under way
-  const transitioned = () => send({type: 'layout.transitioned'})
-
-  // What the view transitions do this render, from what the machine says
-  const classes = reduceMotion
-    ? {
-        copyEnter: 'none',
-        copyExit: 'none',
-        panelEnter: 'none',
-        panelExit: 'none',
-        update: 'none',
-        studioUpdate: 'none',
-      }
-    : {
-        copyEnter: mobile ? splitTransitionClasses.dropIn : splitTransitionClasses.slideIn,
-        copyExit: mobile ? splitTransitionClasses.dropOut : splitTransitionClasses.slideOut,
-        panelEnter: panelTransitionClasses.slideIn,
-        panelExit: panelTransitionClasses.slideOut,
-        // The copy and the panel cross-fade to another theme, in place
-        update: switching ? splitTransitionClasses.crossfade : 'none',
-        // The Studio too — unless it is giving way or taking room, which cross-fades as it goes
-        studioUpdate: moving
-          ? splitTransitionClasses.resize
-          : switching
-            ? splitTransitionClasses.crossfade
-            : 'none',
-      }
-
   return (
-    <ThemerContext.Provider value={context}>
-      <Flex className={layout} direction={mobile ? 'column' : 'row'} height="fill" sizing="border">
-        {/* The opposite scheme comes first — on the far side of the sidebar,
-            or on top on small screens — so the Studio the user was looking at
-            stays where it is, mounted, in its own scheme. A whole second
-            Studio is too costly to keep around (its styled-components alone
-            insert CSS as they render), so it only exists while the sidebar is
-            open — hidden until the split shows, warmed up for the transition */}
-        {shownOpen && (
-          <Activity mode={shownSplit ? 'visible' : 'hidden'}>
-            <ViewTransition
-              key="opposite"
-              enter={classes.copyEnter}
-              exit={classes.copyExit}
-              onEnter={transitioned}
-              onExit={transitioned}
-              onUpdate={transitioned}
-              update={classes.update}
-            >
-              <StudioPreview
-                borderBottom={mobile}
-                borderRight={!mobile}
-                scheme={oppositeScheme}
-                theme={shownTheme}
-              >
-                {studio}
-              </StudioPreview>
-            </ViewTransition>
-          </Activity>
-        )}
-        {/* The Studio gives way and takes room while the machine says the
-            layout is moving, and cross-fades while it says a theme is being
-            switched to — the Studio updates in transitions of its own all the
-            time, and none of those may animate it. Once a transition is under
-            way the machine hears of it, and the Studio is its own again before
-            the next commit */}
-        <ViewTransition key="primary" onUpdate={transitioned} update={classes.studioUpdate}>
-          <StudioPreview ref={studioRef} theme={shownTheme}>
-            {studio}
-          </StudioPreview>
-        </ViewTransition>
-
-        {/* The sidebar is small and cheap: once it has opened it stays
-            mounted, hidden while closed, keeping its state and ready to show.
-            Until then its content is left out — hidden, it would be
-            pre-rendered, and its code loaded, as soon as the Studio renders */}
-        <Activity mode={shownOpen ? 'visible' : 'hidden'}>
-          <ViewTransition
-            key="panel"
-            enter={classes.panelEnter}
-            exit={classes.panelExit}
-            onEnter={transitioned}
-            onExit={transitioned}
-            onUpdate={transitioned}
-            update={classes.update}
-          >
-            <ThemeProvider theme={shownTheme ?? undefined}>
-              {panelMounted && <ResizableSidebar overlay={mobile} />}
-            </ThemeProvider>
-          </ViewTransition>
-        </Activity>
-      </Flex>
-    </ThemerContext.Provider>
+    <>
+      <ToolDispatchContext value={dispatch}>
+        <ToolIsOpenContext value={open}>
+          <ToolSplitIsOpenContext value={split}>
+            <ToolActorRefContext value={actorRef}>
+              <ToolSendContext value={send}>
+                <Flex
+                  className={layout}
+                  direction={isMobile ? 'column' : 'row'}
+                  height="fill"
+                  sizing="border"
+                >
+                  {/* Renders the Studio for the second time, in the opposite scheme of the main studio. Hidden by default */}
+                  <Activity mode={split && open ? 'visible' : 'hidden'}>
+                    <ViewTransition
+                      default="none"
+                      enter={viewTransitionClasses.splitscreen.enter}
+                      update={viewTransitionClasses.splitscreen.update}
+                      exit={viewTransitionClasses.splitscreen.exit}
+                    >
+                      {prerenderSplitScreen && (
+                        <StudioPreview
+                          borderBottom={isMobile}
+                          borderRight={!isMobile}
+                          scheme={oppositeScheme}
+                        >
+                          {children}
+                        </StudioPreview>
+                      )}
+                    </ViewTransition>
+                  </Activity>
+                  {/* Renders the Studio */}
+                  <ViewTransition
+                    default="none"
+                    enter={viewTransitionClasses.studio.enter}
+                    update={viewTransitionClasses.studio.update}
+                    exit={viewTransitionClasses.studio.exit}
+                  >
+                    <StudioPreview ref={studioRef}>{children}</StudioPreview>
+                  </ViewTransition>
+                  {/* Renders the Themer tool, hidden by default */}
+                  <Activity mode={open ? 'visible' : 'hidden'}>
+                    <ViewTransition
+                      default="none"
+                      enter={viewTransitionClasses.sidebar.enter}
+                      update={viewTransitionClasses.sidebar.update}
+                      exit={viewTransitionClasses.sidebar.exit}
+                    >
+                      {prerender && (
+                        <ResizableSidebar
+                          active={active}
+                          actorRef={actorRef}
+                          dispatch={dispatch}
+                          images={images}
+                          navbarHeight={navbarHeight}
+                          removed={removed}
+                          split={split}
+                          themes={themes}
+                          view={view}
+                        />
+                      )}
+                    </ViewTransition>
+                  </Activity>
+                </Flex>
+              </ToolSendContext>
+            </ToolActorRefContext>
+          </ToolSplitIsOpenContext>
+        </ToolIsOpenContext>
+      </ToolDispatchContext>
+      <ThemerThemeCrossfader actorRef={actorRef} dispatch={dispatch} />
+      <RevokeImageUrls actorRef={actorRef} />
+    </>
   )
 }
 
@@ -347,23 +241,58 @@ function StudioPreview(props: {
   children: React.ReactNode
   ref?: React.Ref<HTMLDivElement>
   scheme?: ThemeColorSchemeKey
-  theme: RootTheme | null
 }) {
-  const {borderBottom, borderRight, children, ref, scheme, theme} = props
+  const {borderBottom, borderRight, children, ref, scheme} = props
 
   return (
-    <ThemeProvider scheme={scheme} theme={theme ?? undefined}>
-      <Card
-        borderBottom={borderBottom}
-        borderRight={borderRight}
-        className={scheme ? studioScheme[scheme] : undefined}
-        flex={1}
-        height="fill"
-        overflow="hidden"
-        ref={ref}
-      >
-        {children}
-      </Card>
-    </ThemeProvider>
+    <Card
+      borderBottom={borderBottom}
+      borderRight={borderRight}
+      flex={1}
+      height="fill"
+      overflow="hidden"
+      ref={ref}
+      scheme={scheme}
+    >
+      <ViewTransition update="none">{children}</ViewTransition>
+    </Card>
   )
+}
+
+function ThemerThemeCrossfader({actorRef, dispatch}: Pick<ThemerProps, 'actorRef' | 'dispatch'>) {
+  useEffect(() => {
+    const subscription = actorRef.subscribe((snapshot) => {
+      const switching = snapshot.hasTag('switching')
+      const theme = resolveActiveThemeOptions(snapshot.context)
+      startTransition(() => {
+        if (switching) {
+          addThemerTransitionType('crossfade')
+        }
+        if (!theme) {
+          dispatch({type: 'unset-theme'})
+        } else {
+          dispatch({type: 'set-theme', theme})
+        }
+      })
+    })
+    return () => subscription.unsubscribe()
+  }, [actorRef, dispatch])
+
+  return null
+}
+
+function RevokeImageUrls({actorRef}: Pick<ThemerProps, 'actorRef'>) {
+  // The machine releases the image of a palette as it is replaced or its
+  // theme deleted; whatever it still holds goes with the layout — the actor
+  // keeps its last snapshot once stopped
+  useEffect(
+    () => () => {
+      for (const url of Object.values(actorRef.getSnapshot().context.images)) {
+        URL.revokeObjectURL(url)
+      }
+    },
+    [actorRef],
+  )
+
+  return null
 }

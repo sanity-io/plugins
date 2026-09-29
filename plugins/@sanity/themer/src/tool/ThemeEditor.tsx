@@ -13,7 +13,7 @@ import {
   SCHEMES,
   type SchemeThemeOptions,
 } from '../theme/options'
-import {useThemer} from './context'
+import type {ThemerProps} from './context'
 import {
   applyImagePalette,
   currentImageVariant,
@@ -38,9 +38,7 @@ const SCHEME_TITLES: Record<ThemeColorSchemeKey, string> = {
  * to the sidebar (or at the bottom, stacked on small screens), the other one
  * takes the far side
  */
-function splitHint(own: boolean, mobile: boolean): string {
-  if (mobile) return own ? 'Shown at the bottom' : 'Shown at the top'
-
+function splitHint(own: boolean): string {
   return own ? 'Shown on the right, next to the themer' : 'Shown on the left'
 }
 
@@ -65,9 +63,17 @@ const SCHEME_OPTION_KEYS: Array<keyof SchemeThemeOptions> = [
  *
  * @internal
  */
-export function ThemeEditor(props: {focusTitle: boolean; slug: string}) {
-  const {focusTitle, slug} = props
-  const {themes, images, split, mobile, send} = useThemer()
+export function ThemeEditor({
+  actorRef,
+  focusTitle,
+  images,
+  slug,
+  split,
+  themes,
+}: {focusTitle: boolean; slug: string} & Pick<
+  ThemerProps,
+  'actorRef' | 'images' | 'split' | 'themes'
+>) {
   const theme = themes.find((candidate) => candidate.slug === slug && candidate.source === 'custom')
 
   // The machine only enters the edit flow for a listed custom theme, and
@@ -77,7 +83,7 @@ export function ThemeEditor(props: {focusTitle: boolean; slug: string}) {
   const applyVariant = (variant: ImagePaletteVariant | null) => {
     if (!theme.palette || variant === null) return
 
-    send({
+    actorRef.send({
       type: 'theme.update',
       slug,
       options: applyImagePalette(theme.options, theme.palette, variant),
@@ -88,7 +94,7 @@ export function ThemeEditor(props: {focusTitle: boolean; slug: string}) {
     <ThemeEditorForm
       focusTitle={focusTitle}
       imageUrl={images[slug]}
-      onDone={() => send({type: 'flow.list'})}
+      onDone={() => actorRef.send({type: 'flow.list'})}
       onLucky={() => {
         if (!theme.palette) return
 
@@ -98,9 +104,9 @@ export function ThemeEditor(props: {focusTitle: boolean; slug: string}) {
           }),
         )
       }}
-      onOptionsChange={(options) => send({type: 'theme.update', slug, options})}
+      onOptionsChange={(options) => actorRef.send({type: 'theme.update', slug, options})}
       onPalette={(palette, file) =>
-        send({
+        actorRef.send({
           type: 'theme.update',
           slug,
           options: applyImagePalette(theme.options, palette),
@@ -108,13 +114,12 @@ export function ThemeEditor(props: {focusTitle: boolean; slug: string}) {
           imageUrl: URL.createObjectURL(file),
         })
       }
-      onRemove={() => send({type: 'theme.remove', slug})}
-      onTitleChange={(title) => send({type: 'theme.update', slug, title})}
+      onRemove={() => actorRef.send({type: 'theme.remove', slug})}
+      onTitleChange={(title) => actorRef.send({type: 'theme.update', slug, title})}
       onVariant={applyVariant}
       options={theme.options}
       palette={theme.palette}
       split={split}
-      mobile={mobile}
       title={theme.title}
     />
   )
@@ -136,8 +141,6 @@ function ThemeEditorForm(props: {
   palette?: ImagePalette
   /** Whether the Studio shows in light and dark side by side */
   split: boolean
-  /** Whether the split preview stacks, on a small screen */
-  mobile: boolean
   title: string
 }) {
   const {
@@ -153,7 +156,6 @@ function ThemeEditorForm(props: {
     options,
     palette,
     split,
-    mobile,
     title,
   } = props
   // The scheme the Studio is showing, with the appearance setting resolved
@@ -213,15 +215,15 @@ function ThemeEditorForm(props: {
           <ScrollAreaBleed>
             {SCHEMES.map((scheme) => (
               <SchemeCard
-                active={split || scheme === studioScheme}
                 key={scheme}
+                active={split || scheme === studioScheme}
                 onChange={(changes) => patchScheme(scheme, changes)}
                 options={options[scheme] ?? {}}
                 palette={palettes[scheme]}
                 resolved={resolved[scheme]}
                 scheme={scheme}
                 split={split}
-                splitHint={splitHint(scheme === studioScheme, mobile)}
+                splitHint={splitHint(scheme === studioScheme)}
               />
             ))}
           </ScrollAreaBleed>

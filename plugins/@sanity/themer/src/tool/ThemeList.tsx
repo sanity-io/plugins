@@ -5,7 +5,7 @@ import {Box, Button, Card, Flex, Stack} from '@sanity/ui'
 import {MotionConfig, Reorder} from 'motion/react'
 import {useState} from 'react'
 
-import {useThemer} from './context'
+import type {ThemerProps} from './context'
 import {ImageFileButton} from './ImageFileButton'
 import {optionsFromImagePalette, titleFromFileName} from './imagePalette'
 import {PasteThemeDialog} from './PasteThemeDialog'
@@ -29,15 +29,19 @@ import {cardGrid} from './ThemeList.css'
  *
  * @internal
  */
-export function ThemeList() {
-  const {themes, removed, active, send} = useThemer()
-  const {addThemeFromClipboard} = useThemeCodes()
+export function ThemeList({
+  actorRef,
+  themes,
+  removed,
+  active,
+}: Pick<ThemerProps, 'actorRef' | 'themes' | 'removed' | 'active'>) {
+  const {addThemeFromClipboard} = useThemeCodes({actorRef})
   const [pasting, setPasting] = useState(false)
 
-  usePasteThemeCodes()
+  usePasteThemeCodes({actorRef})
 
   const {busy, pickImage} = useImagePalette((palette, file) =>
-    send({
+    actorRef.send({
       type: 'theme.add',
       title: titleFromFileName(file.name),
       options: optionsFromImagePalette(palette),
@@ -56,11 +60,17 @@ export function ThemeList() {
             <Reorder.Group
               as="div"
               className={cardGrid}
-              onReorder={(order: string[]) => send({type: 'theme.reorder', order})}
+              onReorder={(order: string[]) => actorRef.send({type: 'theme.reorder', order})}
               values={themes.map((theme) => theme.slug)}
             >
               {themes.map((theme) => (
-                <ThemeCard active={theme.slug === active.slug} key={theme.slug} theme={theme} />
+                <ThemeCard
+                  key={theme.slug}
+                  actorRef={actorRef}
+                  active={theme.slug === active.slug}
+                  theme={theme}
+                  themes={themes}
+                />
               ))}
             </Reorder.Group>
           </MotionConfig>
@@ -71,7 +81,7 @@ export function ThemeList() {
               gap={2}
               icon={RestoreIcon}
               mode="bleed"
-              onClick={() => send({type: 'flow.removed'})}
+              onClick={() => actorRef.send({type: 'flow.removed'})}
               padding={2}
               text={`Show removed (${removed.length})`}
               width="fill"
@@ -86,7 +96,7 @@ export function ThemeList() {
             <TooltipButton
               icon={AddIcon}
               mode="ghost"
-              onClick={() => send({type: 'theme.add'})}
+              onClick={() => actorRef.send({type: 'theme.add'})}
               text="Add theme"
               tooltip="Add a theme based on the applied one"
               width="fill"
