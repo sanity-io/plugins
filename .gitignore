@@ -157,6 +157,13 @@ yalc.lock
 # Sanity Studio
 .sanity
 
+# Storybook
+storybook-static
+
+# Vitest browser mode failure screenshots and attachments
+__screenshots__
+.vitest-attachments
+
 # pnpm
 .pnpm-store
 
