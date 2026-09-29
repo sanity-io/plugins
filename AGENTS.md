@@ -219,7 +219,7 @@ Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUse
 
 ## Testing
 
-The monorepo uses [Vitest v4](https://vitest.dev) for testing.
+The monorepo uses [Vitest v5](https://vitest.dev) for testing.
 
 ### Running Tests
 
