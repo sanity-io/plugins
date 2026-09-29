@@ -537,6 +537,8 @@ The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`pa
 
 The oxfmt version, options and ignore patterns match sanity-io/ui's `.oxfmtrc.json`, so keep them in sync. The exceptions are `turbo/**/*.hbs`, which only exists here, and ui's `**/sanity.types.ts`: `pnpm typegen` formats `dev/test-studio/sanity.types.ts` on purpose, since the test studio runs typegen with `formatGeneratedCode: false`. `.vscode/settings.json` points the Oxc extension at `oxfmt.config.ts`; if `oxc.fmt.configPath` names a missing file, the editor silently formats with oxfmt's defaults instead.
 
+Changesets are formatted like any other file, so their frontmatter uses single quotes, and Changesets formats the changesets it writes with oxfmt. Renovate's changeset action writes double quotes, so after a Renovate PR merges, the Auto format workflow opens a `chore(format): 🤖 ✨` PR that requotes it, as in sanity-io/ui.
+
 ### Linting
 
 We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (type-aware, includes TypeScript type checking and [React Compiler rules](https://oxc.rs/blog/2026-08-18-react-compiler-support.html)):
