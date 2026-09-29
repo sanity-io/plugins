@@ -13,4 +13,7 @@ runs:
     - uses: pnpm/setup@v3
       with:
         runtime: ${{ inputs.runtime }}
-        cache: true
+        # The store cache would upload a new ~645 MiB entry after every job (its keys
+        # include the run id) and evict the Playwright browser caches. The lockfile
+        # verification cache is restored and saved regardless of this setting.
+        cache: false
