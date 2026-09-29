@@ -13,6 +13,7 @@ function useInterval(ms: number) {
 
 export function TimeAgo({date}: {date?: string}) {
   useInterval(1000)
+  // oxlint-disable-next-line react/purity
   const timeSince = formatDistanceToNow(date ? new Date(date) : new Date())
   return <span title={timeSince}>{timeSince} ago</span>
 }

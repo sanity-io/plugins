@@ -142,10 +142,10 @@ function createDefiner({
 
     registeredSchemas.set(name, schemaType)
 
-    // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
     return applyMapHooks(
       addTelemetryComponent(schemaType, registryId),
       map,
+      // oxlint-disable-next-line no-unsafe-type-assertion -- runtime value is a valid field definition
     ) as SchemaTypeDefinition & FieldDefinition
   }
 }
@@ -179,7 +179,6 @@ function addTelemetryComponent(
       ? // oxlint-disable-next-line no-unsafe-type-assertion -- presets only produce object/document schema types, whose input components are assignable to ComponentType<InputProps>
         (existing.input as ComponentType<InputProps>)
       : undefined
-  // oxlint-disable-next-line no-unsafe-type-assertion -- spreading a discriminated union loses the discriminant; the runtime shape is still a valid SchemaTypeDefinition
   return {
     ...schemaType,
     components: {
@@ -188,5 +187,6 @@ function addTelemetryComponent(
         <PresetsTelemetryCollector {...props} registryId={registryId} userInput={existingInput} />
       ),
     },
+    // oxlint-disable-next-line no-unsafe-type-assertion -- spreading a discriminated union loses the discriminant; the runtime shape is still a valid SchemaTypeDefinition
   } as SchemaTypeDefinition
 }
