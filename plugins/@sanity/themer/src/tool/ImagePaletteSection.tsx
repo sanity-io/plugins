@@ -102,7 +102,6 @@ export function ImagePaletteSection(props: {
     observer.observe(row)
 
     return () => observer.disconnect()
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies -- the row only renders with a palette, so a new palette has a new row to observe
   }, [palette])
 
   const variants = useMemo(() => {

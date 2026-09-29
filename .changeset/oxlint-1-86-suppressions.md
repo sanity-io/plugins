@@ -8,6 +8,7 @@
 "@sanity/embeddings-index-ui": patch
 "@sanity/personalization-plugin": patch
 "@sanity/sfcc": patch
+"@sanity/themer": patch
 "sanity-naive-html-serializer": patch
 "sanity-plugin-internationalized-array": patch
 "sanity-plugin-markdown": patch
