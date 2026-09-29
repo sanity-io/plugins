@@ -1641,9 +1641,6 @@ importers:
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
-      lexorank:
-        specifier: 'catalog:'
-        version: 1.0.5
       sanity:
         specifier: next
         version: 6.17.0-next.108(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.4.0)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(@types/react-dom@19.3.0)(@types/react@19.3.0)(@vitejs/devtools@0.4.12)(esbuild@0.28.2)(immer@11.1.18)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.71.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.11)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.15)(typescript@7.0.2)(vitest@4.1.11)
@@ -1663,6 +1660,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
+      lexorank:
+        specifier: 'catalog:'
+        version: 1.0.5
       oxc-transform-react:
         specifier: 'catalog:'
         version: 0.147.0

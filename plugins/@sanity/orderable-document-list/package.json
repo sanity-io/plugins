@@ -41,7 +41,6 @@
     "@sanity/client": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "lexorank": "catalog:",
     "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
@@ -49,6 +48,7 @@
     "@sanity/tsdown-config": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "lexorank": "catalog:",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -64,5 +64,8 @@
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
+  },
+  "inlinedDependencies": {
+    "lexorank": "1.0.5"
   }
 }
