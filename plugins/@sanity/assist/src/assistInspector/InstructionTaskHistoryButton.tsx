@@ -104,6 +104,7 @@ export function InstructionTaskHistoryButton(props: InstructionTaskHistoryButton
         ?.filter(
           (task) =>
             task.started &&
+            // oxlint-disable-next-line react/purity
             new Date().getTime() - new Date(task.started).getTime() < maxHistoryVisibilityMs,
         )
         // oxlint-disable-next-line no-map-spread
