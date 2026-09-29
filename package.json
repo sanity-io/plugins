@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "turbo build",
+    "changeset": "changeset",
     "check:deps": "knip --dependencies",
     "dev": "pnpm turbo dev --filter=test-studio",
+    "dev:storybook": "pnpm --filter plugins-storybook dev",
     "devtools:test-studio": "pnpm devtools:test-studio:build && ENABLE_VITE_DEVTOOLS=true pnpm dev",
     "devtools:test-studio:build": "pnpm build && ENABLE_VITE_DEVTOOLS=true pnpm --filter=test-studio build",
     "e2e:build": "pnpm turbo build --filter=e2e-studio...",
@@ -27,14 +29,14 @@
     "pregenerate": "turbo run build --filter='./turbo/generators'",
     "pretest": "turbo run build --filter='!./dev/*'",
     "release": "changeset publish",
+    "storybook:build": "pnpm --filter plugins-storybook build",
     "test": "vitest",
+    "test:browser": "pnpm --filter plugins-storybook test",
     "test:e2e": "pnpm --filter e2e test",
     "turbo:fix": "pnpm dlx rimraf ./node_modules && pnpm install && pnpm turbo scan",
     "typegen": "pnpm --filter=test-studio run typegen && pnpm format"
   },
   "dependencies": {
-    "@changesets/changelog-github": "^1.0.0",
-    "@changesets/cli": "^3.0.1",
     "@sanity/plugin-kit": "workspace:*",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
@@ -46,7 +48,10 @@
     "vitest-package-exports": "^1.2.0"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@vitest/coverage-v8": "catalog:",
+    "eslint-plugin-storybook": "^10.6.0",
     "knip": "^6.33.0",
     "vercel": "^60.1.3"
   },

@@ -5,9 +5,13 @@ import {defineConfig} from 'oxlint'
 // @sanity/plugin-kit config; only workspace-specific ignores and overrides belong here.
 export default defineConfig({
   extends: [sanityPluginKitOxlint],
+  // ESLint plugins loaded through oxlint's JS plugins support. Rules from these
+  // plugins are enabled per-file-pattern in `overrides`.
+  jsPlugins: ['eslint-plugin-storybook'],
   ignorePatterns: [
     // ignorePatterns do not propagate through extends, so spread the shared ones
     ...(sanityPluginKitOxlint.ignorePatterns ?? []),
+    '**/storybook-static/*',
     'turbo/generators/config.ts',
     // Illustrative docs referencing optional third-party form libraries
     // (formik, react-hook-form, @tanstack/react-form, zod); not built or published
@@ -174,6 +178,36 @@ export default defineConfig({
       rules: {
         'no-unsafe-type-assertion': 'off',
         'no-unnecessary-type-assertion': 'off',
+      },
+    },
+    {
+      // The CSF rule set from eslint-plugin-storybook's flat/recommended config,
+      // scoped to the same story file patterns (warn-level rules bumped to error
+      // to match the rest of this config, which also runs with denyWarnings).
+      files: ['**/*.stories.{js,jsx,mjs,cjs,ts,tsx}', '**/*.story.{js,jsx,mjs,cjs,ts,tsx}'],
+      rules: {
+        'storybook/await-interactions': 'error',
+        'storybook/context-in-play-function': 'error',
+        'storybook/default-exports': 'error',
+        'storybook/hierarchy-separator': 'error',
+        'storybook/no-redundant-story-name': 'error',
+        'storybook/no-renderer-packages': 'error',
+        'storybook/prefer-pascal-case': 'error',
+        'storybook/story-exports': 'error',
+        'storybook/use-storybook-expect': 'error',
+        'storybook/use-storybook-testing-library': 'error',
+      },
+    },
+    {
+      // no-uninstalled-addons resolves its packageJsonLocation option relative to
+      // the working directory (the repo root when run via `pnpm lint`), so point
+      // it at the storybook app's manifest where the addons are installed.
+      files: ['**/.storybook/main.{js,cjs,mjs,ts}'],
+      rules: {
+        'storybook/no-uninstalled-addons': [
+          'error',
+          {packageJsonLocation: './dev/storybook/package.json'},
+        ],
       },
     },
   ],

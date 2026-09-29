@@ -1,0 +1,13 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // Workspace plugins export ./src for monorepo consumption, so storybook build
+    // does not need their dist/. Use transit (not ^build) so Turbo still
+    // invalidates this cache when dependency source changes.
+    "build": {
+      "dependsOn": ["transit"],
+      "outputs": ["storybook-static/**"],
+    },
+  },
+}

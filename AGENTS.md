@@ -18,6 +18,8 @@ This guide is for AI agents working on this codebase. Follow these instructions 
 | Cleanup e2e datasets | `pnpm e2e:cleanup`   |
 | Add changeset        | `pnpm changeset add` |
 | Start dev server     | `pnpm dev`           |
+| Start Storybook      | `pnpm dev:storybook` |
+| Run Storybook tests  | `pnpm test:browser`  |
 
 ## Environment Setup
 
@@ -73,6 +75,8 @@ pnpm test
 ### Required: Add Changesets
 
 Every PR that changes published packages **must** include changesets. **Important:** Create a separate changeset file for each plugin you modify.
+
+The Changesets setup (`.changeset/config.json`, the `@changesets/*` versions, the `changeset`/`release` scripts and `.github/workflows/release.yml`) matches sanity-io/ui's; only the changelog `repo` differs. `"format": "oxfmt"` makes Changesets format the changesets and changelogs it writes with the repo's oxfmt config, and `"bumpVersionsWithWorkspaceProtocolOnly": true` keeps it from rewriting internal ranges that don't use `workspace:` (like the intentionally wide `sanity-plugin-internationalized-array` peer of `@sanity/sfcc`).
 
 #### Why Separate Changesets?
 
@@ -210,12 +214,13 @@ Two things are required:
 
 The CI pipeline runs on every PR:
 
-| Job       | What it checks                                         |
-| --------- | ------------------------------------------------------ |
-| **build** | `pnpm build` - All packages compile successfully       |
-| **lint**  | `pnpm lint --format github` - Code passes oxlint       |
-| **knip**  | `pnpm knip` - No unused files, dependencies or exports |
-| **test**  | `pnpm test` - All tests pass (runs after build + lint) |
+| Job                | What it checks                                                 |
+| ------------------ | -------------------------------------------------------------- |
+| **build**          | `pnpm build` - All packages compile successfully               |
+| **lint**           | `pnpm lint --format github` - Code passes oxlint               |
+| **knip**           | `pnpm knip` - No unused files, dependencies or exports         |
+| **test**           | `pnpm test` - All tests pass (runs after build + lint)         |
+| **storybook-test** | `pnpm test:browser` - Every story renders in headless Chromium |
 
 Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUsedInFile`), so removing a type assertion or annotation that was the last reference to an exported type will make knip start flagging that export. Run `pnpm knip` after refactors that remove type references.
 
@@ -375,6 +380,10 @@ How it works:
 `dev/test-studio/sanity.cli.ts` enables React production profiling on Vercel preview and production deployments (`VERCEL_ENV === "preview" || VERCEL_ENV === "production"`). During `sanity build`, it aliases `react-dom/client` → `react-dom/profiling`, emits production source maps, and disables identifier mangling so React DevTools can profile and show readable component names. While that profiling path is active it also sets `deployment.autoUpdates: false`, because auto-updates vendor builds hardcode `react-dom-client.production.js` and would bypass the profiling alias.
 
 React profiling is already available in the development build from `pnpm dev`. `VERCEL_ENV` is listed in `dev/test-studio/turbo.jsonc` so Turbo cache keys differ between Vercel and non-Vercel builds.
+
+### Storybook
+
+`dev/storybook` is a React Storybook set up like sanity-io/ui's `apps/storybook`, next to the other dev apps, with stories in `dev/storybook/stories/<plugin>/` (see its `README.md`). `pnpm dev:storybook` serves it at `http://localhost:6006` without Sanity authentication, `pnpm test:browser` renders every story in headless Chromium through the Storybook Vitest addon (the `storybook-test` CI job), and `pnpm storybook:build` writes the static build to `dev/storybook/storybook-static`. Install the browser once with `pnpm --filter plugins-storybook exec playwright install chromium`. The preview imports `@sanity/ui/styles.css` because the published `@sanity/ui` dist doesn't import its own CSS, and it keeps the vanilla-extract Vite plugin because workspace plugins resolve to their `.css.ts` source. Like the other `dev/*` apps, it's skipped by `pretest` and the CI build job.
 
 ## Creating a New Plugin
 
@@ -562,6 +571,7 @@ The shared rules (plugins, options, categories, rules) live in the `@sanity/plug
 
 ```
 plugins/
+├── dev/storybook/        # React Storybook for plugin components (localhost:6006)
 ├── dev/test-studio/      # Test Sanity Studio (localhost:3333)
 ├── packages/@repo/       # Internal shared packages
 ├── packages/@sanity/     # Published tooling packages (e.g. @sanity/plugin-kit)
@@ -604,9 +614,10 @@ corepack enable
 
 ### Services
 
-| Service                  | Port | Purpose                                       |
-| ------------------------ | ---- | --------------------------------------------- |
-| Test Studio (`pnpm dev`) | 3333 | Local Sanity Studio for manual plugin testing |
+| Service                          | Port | Purpose                                         |
+| -------------------------------- | ---- | ----------------------------------------------- |
+| Test Studio (`pnpm dev`)         | 3333 | Local Sanity Studio for manual plugin testing   |
+| Storybook (`pnpm dev:storybook`) | 6006 | Plugin component stories, no Sanity auth needed |
 
 No Docker, databases, or other local services are required. CI-style verification (`pnpm lint`, `pnpm build`, `pnpm test run`) runs entirely in-process.
 
