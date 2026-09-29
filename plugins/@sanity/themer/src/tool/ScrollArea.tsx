@@ -74,7 +74,7 @@ export function ScrollArea(props: {children: React.ReactNode; padding: number}) 
       ref={ref}
       style={{paddingRight: inset.right}}
     >
-      <ScrollAreaInsetContext.Provider value={inset}>{children}</ScrollAreaInsetContext.Provider>
+      <ScrollAreaInsetContext value={inset}>{children}</ScrollAreaInsetContext>
     </Box>
   )
 }

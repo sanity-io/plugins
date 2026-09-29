@@ -1,6 +1,8 @@
 import {Box, Card, Layer} from '@sanity/ui'
 import {useCallback, useEffect, useRef, useState} from 'react'
 
+import type {ThemerProps} from './context'
+import {PersistActorSnapshot} from './PersistActorSnapshot'
 import {MAXIMUM_WIDTH, MINIMUM_WIDTH} from './sidebarWidth'
 import {ThemerSidebar} from './ThemerSidebar'
 
@@ -45,12 +47,34 @@ function writeStoredWidth(width: number): void {
  *
  * @internal
  */
-export default function ResizableSidebar(props: {overlay: boolean}) {
-  const {overlay} = props
+// dispatch={dispatch} images={images} removed={removed} send={send} themes={themes} view={view}
+export default function ResizableSidebar({
+  active,
+  actorRef,
+  dispatch,
+  images,
+  navbarHeight,
+  removed,
+  split,
+  themes,
+  view,
+}: Pick<
+  ThemerProps,
+  | 'active'
+  | 'actorRef'
+  | 'dispatch'
+  | 'images'
+  | 'navbarHeight'
+  | 'removed'
+  | 'split'
+  | 'themes'
+  | 'view'
+>) {
   const [width, setWidth] = useState(readStoredWidth)
   const [dragging, setDragging] = useState(false)
   const drag = useRef<{pointerId: number; startX: number; startWidth: number} | null>(null)
 
+  // @TODO schedule the write to localStorage to avoid blocking the main thread
   useEffect(() => writeStoredWidth(width), [width])
 
   const handlePointerDown = useCallback(
@@ -95,14 +119,9 @@ export default function ResizableSidebar(props: {overlay: boolean}) {
   }, [])
 
   return (
-    <Layer
-      className={sidebar}
-      data-overlay={overlay}
-      style={overlay ? undefined : {width}}
-      zOffset={100}
-    >
-      <Card borderLeft={!overlay} className={frame} height="fill">
-        {!overlay && (
+    <>
+      <Layer className={sidebar} style={{width}} zOffset={100}>
+        <Card borderLeft className={frame} height="fill">
           <div
             aria-label="Resize the themer"
             className={resizeHandle}
@@ -121,11 +140,22 @@ export default function ResizableSidebar(props: {overlay: boolean}) {
             role="separator"
             tabIndex={0}
           />
-        )}
-        <Box className={content} height="fill" overflow="hidden">
-          <ThemerSidebar />
-        </Box>
-      </Card>
-    </Layer>
+          <Box className={content} height="fill" overflow="hidden">
+            <ThemerSidebar
+              split={split}
+              navbarHeight={navbarHeight}
+              active={active}
+              actorRef={actorRef}
+              dispatch={dispatch}
+              images={images}
+              removed={removed}
+              themes={themes}
+              view={view}
+            />
+          </Box>
+        </Card>
+      </Layer>
+      <PersistActorSnapshot actorRef={actorRef} />
+    </>
   )
 }

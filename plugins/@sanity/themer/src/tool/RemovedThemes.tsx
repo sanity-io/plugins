@@ -1,6 +1,6 @@
 import {Box, Button, Flex, Stack, Text} from '@sanity/ui'
 
-import {useThemer} from './context'
+import type {ThemerProps} from './context'
 import {ScrollArea} from './ScrollArea'
 import {displayTitle} from './themes'
 import {ThemeThumbnail} from './ThemeThumbnail'
@@ -15,14 +15,12 @@ import {removedThumbnail} from './RemovedThemes.css'
  *
  * @internal
  */
-export function RemovedThemes() {
-  const {removed, send} = useThemer()
-
+export function RemovedThemes({actorRef, removed}: Pick<ThemerProps, 'actorRef' | 'removed'>) {
   return (
     <ScrollArea padding={3}>
       <Stack gap={5}>
         {removed.map((theme) => (
-          <Stack gap={3} key={theme.slug}>
+          <Stack key={theme.slug} gap={3}>
             <Box className={removedThumbnail}>
               <ThemeThumbnail options={theme.options} />
             </Box>
@@ -32,14 +30,14 @@ export function RemovedThemes() {
             <Flex gap={2} justify="center">
               <Button
                 mode="ghost"
-                onClick={() => send({type: 'theme.restore', slug: theme.slug})}
+                onClick={() => actorRef.send({type: 'theme.restore', slug: theme.slug})}
                 padding={2}
                 text="Restore"
               />
               {theme.source === 'custom' && (
                 <Button
                   mode="ghost"
-                  onClick={() => send({type: 'theme.delete', slug: theme.slug})}
+                  onClick={() => actorRef.send({type: 'theme.delete', slug: theme.slug})}
                   padding={2}
                   text="Delete"
                   tone="critical"

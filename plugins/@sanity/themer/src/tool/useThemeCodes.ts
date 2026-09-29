@@ -1,7 +1,7 @@
 import {useToast} from '@sanity/ui/toast'
 import {useEffect} from 'react'
 
-import {useThemer} from './context'
+import type {ThemerProps} from './context'
 import {decodeTheme, encodeTheme, type SharedTheme} from './share'
 import {displayTitle} from './themes'
 
@@ -11,14 +11,13 @@ import {displayTitle} from './themes'
  *
  * @internal
  */
-export function useThemeCodes(): {
+export function useThemeCodes({actorRef}: Pick<ThemerProps, 'actorRef'>): {
   copyTheme: (theme: SharedTheme) => Promise<void>
   /** Adds the theme in the text, if there is one — the result says whether there was */
   addThemeFromText: (text: string) => boolean
   /** Adds the theme on the clipboard, if there is one and the browser hands the clipboard over */
   addThemeFromClipboard: () => Promise<'added' | 'no-theme' | 'no-clipboard'>
 } {
-  const {send} = useThemer()
   const toast = useToast()
 
   const copyTheme = async (theme: SharedTheme) => {
@@ -41,7 +40,7 @@ export function useThemeCodes(): {
 
     if (!theme) return false
 
-    send({type: 'theme.import', title: theme.title, options: theme.options})
+    actorRef.send({type: 'theme.import', title: theme.title, options: theme.options})
     toast.push({status: 'success', title: `Added ${theme.title}`})
 
     return true
@@ -68,13 +67,10 @@ export function useThemeCodes(): {
  *
  * @internal
  */
-export function usePasteThemeCodes(): void {
-  const {open, send} = useThemer()
+export function usePasteThemeCodes({actorRef}: Pick<ThemerProps, 'actorRef'>): void {
   const toast = useToast()
 
   useEffect(() => {
-    if (!open) return undefined
-
     const handlePaste = (event: ClipboardEvent) => {
       if (isEditable(event.target)) return
 
@@ -83,14 +79,14 @@ export function usePasteThemeCodes(): void {
       if (!theme) return
 
       event.preventDefault()
-      send({type: 'theme.import', title: theme.title, options: theme.options})
+      actorRef.send({type: 'theme.import', title: theme.title, options: theme.options})
       toast.push({status: 'success', title: `Added ${theme.title}`})
     }
 
     document.addEventListener('paste', handlePaste)
 
     return () => document.removeEventListener('paste', handlePaste)
-  }, [open, send, toast])
+  }, [actorRef, toast])
 }
 
 function isEditable(target: EventTarget | null): boolean {

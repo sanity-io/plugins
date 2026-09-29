@@ -1,171 +1,134 @@
 import {ColorWheelIcon} from '@sanity/icons/ColorWheel'
-import {Button, Text} from '@sanity/ui'
+import {Box, Button, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {animate, useMotionValue} from 'motion/react'
-import {useCallback, useEffect, useState} from 'react'
+import {
+  lazy,
+  startTransition,
+  Suspense,
+  use,
+  useRef,
+  useTransition,
+  ViewTransition,
+} from 'react'
 import {type NavbarProps} from 'sanity'
+import type {NavbarAction} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
-import {AnimatedColorWheelIcon} from './AnimatedColorWheelIcon'
-import {ANIMATION_DURATION} from './colorWheel'
-import {type ThemerContextValue, useThemer} from './context'
-import {hasVisited, markVisited} from './storage'
-import {NAVBAR_SELECTOR} from './useStudioNavbarHeight'
+import {addThemerTransitionType} from './addThemerTransitionType'
+import {
+  PluginConfigContext,
+  ToolDispatchContext,
+  ToolIsOpenContext,
+  ToolShouldDetectNavbarHeightContext,
+  ToolSplitIsOpenContext,
+} from '#context'
 
-/**
- * Starts loading the sidebar's code as the toggle is about to be pressed —
- * the same import `React.lazy` makes, which then waits for this one
- */
-function preloadSidebar() {
-  // A failed load is for the lazy import to report, as the sidebar opens
-  import('./ResizableSidebar').catch(() => {})
-}
+import {viewTransitionClasses} from './ViewTransitions.css'
 
-/**
- * Opens or closes the sidebar — and notes the visit, which is what stops the
- * navbar from introducing the tool
- */
-function toggleSidebar(send: ThemerContextValue['send']) {
-  markVisited()
-  send({type: 'sidebar.toggle'})
-}
+const AnimatedColorWheelIcon = lazy(() => import('./AnimatedColorWheelIcon'))
 
 /**
- * Whether the navbar has had its one chance per page load to introduce the
- * tool. Module state rather than component state on purpose: the button
- * remounts with the navbar (switching workspaces, crossing the narrow-screen
- * breakpoint) and renders once per Studio copy in the split preview, and none
- * of those should earn another introduction — only loading the page again does.
+ * The Studio navbar's root, the `Card` that draws its bottom border — its
+ * test id is stable and unique to the navbar, unlike its `data-ui` name
  */
-let introduced = false
+const NAVBAR_SELECTOR = '[data-testid="studio-navbar"]'
 
-/**
- * The topbar toggle, with an icon that plays its color wheel animation: on
- * hovering the button, every time; on hovering the navbar it sits in, once —
- * a "hey, look, new tool!" for anyone who has never opened the sidebar, which
- * the visit noted by {@link toggleSidebar} ends for good; and lap after lap
- * while the sidebar's code loads, the way a spinner would.
- */
 function ThemerNavbarButton() {
-  const {open, loading, send} = useThemer()
-  const progress = useMotionValue(0)
-  // The button element comes through state rather than a ref: the tooltip
-  // wraps the button and hands the element on once it has rendered, which is
-  // after a plain ref would have been read
-  const [button, setButton] = useState<HTMLButtonElement | null>(null)
+  // THESE NEED TO BE GLOBAL YEAH?
+  const dispatch = use(ToolDispatchContext)
+  const open = use(ToolIsOpenContext)
+  const split = use(ToolSplitIsOpenContext)
+  const shouldDetectNavbarHeight = use(ToolShouldDetectNavbarHeightContext)
+  const title = use(PluginConfigContext)!.title
+  // THESE NEED TO BE GLOBAL YEAH?
+  const [busy, startBusyTransition] = useTransition()
+  const iconRef = useRef<{spin: () => void}>(null)
 
-  const play = useCallback(() => {
-    // A run in progress plays out — hovering again does not cut it short
-    if (progress.isAnimating()) return
+  const handleOpen = () =>
+    startBusyTransition(() => {
+      if (split) addThemerTransitionType('split-screen:open')
+      addThemerTransitionType('open')
+      dispatch({type: 'open'})
+    })
+  const handleClose = () =>
+    startBusyTransition(() => {
+      if (split) addThemerTransitionType('split-screen:close')
+      addThemerTransitionType('close')
+      dispatch({type: 'close'})
+    })
+  const handlePrerender = () =>
+    startTransition(() => {
+      // We want to trigger rerender in a transition, so that clicking the open button
+      // can interrupt a prerender, and hovering over the button won't abort an active view transition.
+      // But we also don't want the transition to trigger a view transition,
+      // so we intentionally do not set a transition type here.
+      dispatch({type: 'prerender'})
+      // Do a little fun spin
+      if (!open) iconRef.current?.spin()
+    })
 
-    animate(progress, [0, 1], {duration: ANIMATION_DURATION, ease: 'linear'})
-  }, [progress])
 
-  // Laps from wherever a hover's run has got to, so the wheel never jumps,
-  // and the lap in progress as the code arrives plays out: at rest, the wheel
-  // looks like the icon again
-  useEffect(() => {
-    if (!loading) return undefined
+  const observeNavbarHeight = (root: HTMLButtonElement | null) => {
+    const navbar = root?.closest(NAVBAR_SELECTOR)
+    if (!navbar) return undefined
+    const resizeObserver = new ResizeObserver((entries) => {
+      const height = entries[0]?.borderBoxSize[0]?.blockSize
+      if (height) {
+        startTransition(() => dispatch({type: 'set-navbar-height', height}))
+      }
+    })
+    resizeObserver.observe(navbar)
+    return () => resizeObserver.disconnect()
+  }
 
-    let looping = true
-    const lap = (from: number) => {
-      animate(progress, [from, 1], {
-        duration: (1 - from) * ANIMATION_DURATION,
-        ease: 'linear',
-        onComplete: () => {
-          if (looping) lap(0)
-        },
-      })
-    }
-
-    lap(progress.get())
-
-    return () => {
-      looping = false
-    }
-  }, [loading, progress])
-
-  useEffect(() => () => progress.stop(), [progress])
-
-  useEffect(() => {
-    const navbar = button?.closest(NAVBAR_SELECTOR)
-
-    if (!navbar || introduced) return undefined
-
-    const introduce = () => {
-      // Another navbar (the split preview's) may have had the chance meanwhile
-      if (introduced) return
-
-      introduced = true
-      // Checked as the pointer comes in, not up front: a click in between
-      // (on the button itself) counts
-      if (!hasVisited()) play()
-    }
-
-    navbar.addEventListener('mouseenter', introduce, {once: true})
-
-    return () => navbar.removeEventListener('mouseenter', introduce)
-  }, [button, play])
-
+  // The <Box> wrapper here works around <ViewTransition> cannot be the direct child of <Tooltip>, it needs a child element that renders a dom node
   return (
-    <Tooltip animate content={<Text size={1}>Themer</Text>} portal>
-      <Button
-        aria-busy={loading}
-        aria-label="Themer"
-        // The wheel itself shows the load, where the `loading` prop would
-        // cover it with a spinner
-        disabled={loading}
-        icon={<AnimatedColorWheelIcon progress={progress} />}
-        mode="bleed"
-        onClick={() => toggleSidebar(send)}
-        onFocus={preloadSidebar}
-        onMouseEnter={() => {
-          preloadSidebar()
-          play()
-        }}
-        // The Studio's own navbar buttons go through a wrapper that pins them
-        // to this padding, where `@sanity/ui` defaults to a roomier 3
-        padding={2}
-        ref={setButton}
-        selected={open}
-      />
-    </Tooltip>
+    <ViewTransition default="none" update={viewTransitionClasses.navbarButtonTooltip.update}>
+      <Tooltip animate content={<Text size={1}>{title}</Text>} portal>
+        <Box>
+          <ViewTransition default="none" update={viewTransitionClasses.navbarButton.update}>
+            <Button
+              ref={shouldDetectNavbarHeight ? observeNavbarHeight : undefined}
+              aria-busy={busy}
+              aria-label={title}
+              // The wheel itself shows the load, where the `loading` prop would
+              // cover it with a spinner
+              // disabled={loading}
+              icon={
+                // The AnimatedColorWheelIcon needs `motion/react`, which is heacy so we lazy load it and use the SVG
+                // that it is reimplemted as its fallback
+                <Suspense fallback={<ColorWheelIcon />}>
+                  <AnimatedColorWheelIcon busy={busy} ref={iconRef} />
+                </Suspense>
+              }
+              mode="bleed"
+              onClick={open ? handleClose : handleOpen}
+              onFocus={handlePrerender}
+              onMouseEnter={handlePrerender}
+              // The Studio's own navbar buttons go through a wrapper that pins them
+              // to this padding, where `@sanity/ui` defaults to a roomier 3
+              padding={2}
+              selected={open || busy}
+            />
+          </ViewTransition>
+        </Box>
+      </Tooltip>
+    </ViewTransition>
   )
 }
 
-/**
- * Adds the toggle that opens and closes the themer sidebar to the Studio
- * navbar — an icon button with a tooltip in the top bar (like the Tasks
- * toggle), and a regular titled action in the narrow-screen sidebar menu.
- *
- * In the split preview every Studio copy renders its own navbar, so the
- * toggle shows up in both — they drive the same sidebar.
- *
- * @internal
- */
 export function ThemerNavbar(props: NavbarProps) {
-  const {open, send} = useThemer()
-
+  'use memo'
+  const button = {
+    location: 'topbar',
+    name: 'themer-topbar',
+    // The component itself rather than a `() => <ThemerNavbarButton />`
+    // wrapper: the Studio renders `render` as a component, and a wrapper
+    // made anew on every render would remount the button each time —
+    // resetting its animation and its once-only introduction
+    render: ThemerNavbarButton,
+  } satisfies NavbarAction
   return props.renderDefault({
     ...props,
-    __internal_actions: [
-      ...(props.__internal_actions ?? []),
-      {
-        location: 'topbar',
-        name: 'themer-topbar',
-        // The component itself rather than a `() => <ThemerNavbarButton />`
-        // wrapper: the Studio renders `render` as a component, and a wrapper
-        // made anew on every render would remount the button each time —
-        // resetting its animation and its once-only introduction
-        render: ThemerNavbarButton,
-      },
-      {
-        icon: ColorWheelIcon,
-        location: 'sidebar',
-        name: 'themer-sidebar',
-        onAction: () => toggleSidebar(send),
-        selected: open,
-        title: 'Themer',
-      },
-    ],
+    __internal_actions: [...(props.__internal_actions ?? []), button],
   })
 }

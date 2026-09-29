@@ -29,6 +29,11 @@
     "*.css"
   ],
   "types": "./dist/index.d.ts",
+  "imports": {
+    "#context": "./src/tool/context.ts",
+    "#reducer": "./src/tool/reducer.ts",
+    "#types": "./src/tool/types.ts"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./legacy": "./src/legacy/index.ts",
@@ -68,10 +73,12 @@
     "@sanity/ui": "catalog:",
     "@vanilla-extract/dynamic": "catalog:",
     "@xstate/react": "catalog:",
+    "dequal": "catalog:",
     "motion": "catalog:",
     "react-refractor": "^4.0.0",
     "refractor": "^5.0.0",
     "scroll-into-view-if-needed": "catalog:",
+    "valibot": "catalog:",
     "xstate": "catalog:"
   },
   "devDependencies": {
@@ -82,7 +89,6 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vanilla-extract/css": "catalog:",
-    "jsdom": "catalog:",
     "lightningcss": "^1.33.0",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",
@@ -93,6 +99,7 @@
   },
   "peerDependencies": {
     "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "sanity": "^3 || ^4 || ^5 || ^6"
   },
   "peerDependenciesMeta": {

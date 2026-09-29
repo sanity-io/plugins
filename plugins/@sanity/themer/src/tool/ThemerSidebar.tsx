@@ -3,14 +3,16 @@ import {CloseIcon} from '@sanity/icons/Close'
 import {CodeBlockIcon} from '@sanity/icons/CodeBlock'
 import {SplitVerticalIcon} from '@sanity/icons/SplitVertical'
 import {Box, Card, Flex, Text} from '@sanity/ui'
-import {useState} from 'react'
+import {Activity, startTransition, useState} from 'react'
 
-import {useThemer} from './context'
+import {addThemerTransitionType} from './addThemerTransitionType'
+import type {ThemerProps} from './context'
 import {RemovedThemes} from './RemovedThemes'
 import {ThemeEditor} from './ThemeEditor'
 import {ThemeList} from './ThemeList'
 import {ThemeSnippetDialog} from './ThemeSnippetDialog'
 import {TooltipButton} from './TooltipButton'
+import {useIsTooSmallForSplitScreen} from './useIsTooSmallForSplitScreen'
 
 import {title} from './ThemerSidebar.css'
 
@@ -28,10 +30,31 @@ const VIEW_TITLES = {
  *
  * @internal
  */
-export function ThemerSidebar() {
-  const {active, split, view, navbarHeight, send} = useThemer()
+export function ThemerSidebar({
+  active,
+  actorRef,
+  dispatch,
+  images,
+  navbarHeight,
+  removed,
+  split,
+  themes,
+  view,
+}: Pick<
+  ThemerProps,
+  | 'active'
+  | 'actorRef'
+  | 'dispatch'
+  | 'images'
+  | 'navbarHeight'
+  | 'removed'
+  | 'split'
+  | 'themes'
+  | 'view'
+>) {
   const [snippetOpen, setSnippetOpen] = useState(false)
   const inList = view.name === 'list'
+  const isTooSmallForSplitScreen = useIsTooSmallForSplitScreen()
 
   return (
     <Card height="fill">
@@ -50,7 +73,7 @@ export function ThemerSidebar() {
               <TooltipButton
                 icon={ArrowLeftIcon}
                 mode="bleed"
-                onClick={() => send({type: 'flow.list'})}
+                onClick={() => actorRef.send({type: 'flow.list'})}
                 padding={2}
                 tooltip="Back to the themes"
               />
@@ -65,15 +88,28 @@ export function ThemerSidebar() {
             <Flex>
               {view.name !== 'removed' && (
                 <>
-                  <TooltipButton
-                    aria-pressed={split}
-                    icon={SplitVerticalIcon}
-                    mode="bleed"
-                    onClick={() => send({type: 'preview.toggle'})}
-                    padding={2}
-                    selected={split}
-                    tooltip="Show light and dark side by side"
-                  />
+                  {!isTooSmallForSplitScreen && (
+                    <TooltipButton
+                      aria-pressed={split}
+                      icon={SplitVerticalIcon}
+                      mode="bleed"
+                      onClick={() =>
+                        startTransition(() => {
+                          const type = split ? 'split-screen:close' : 'split-screen:open'
+                          addThemerTransitionType(type)
+                          dispatch({type})
+                        })
+                      }
+                      onMouseEnter={() =>
+                        startTransition(() => {
+                          dispatch({type: 'split-screen:prerender'})
+                        })
+                      }
+                      padding={2}
+                      selected={split}
+                      tooltip="Show light and dark side by side"
+                    />
+                  )}
                   <TooltipButton
                     icon={CodeBlockIcon}
                     mode="bleed"
@@ -86,7 +122,13 @@ export function ThemerSidebar() {
               <TooltipButton
                 icon={CloseIcon}
                 mode="bleed"
-                onClick={() => send({type: 'sidebar.close'})}
+                onClick={() =>
+                  startTransition(() => {
+                    if (split) addThemerTransitionType('split-screen:close')
+                    addThemerTransitionType('close')
+                    dispatch({type: 'close'})
+                  })
+                }
                 padding={2}
                 tooltip="Close themer"
               />
@@ -94,9 +136,22 @@ export function ThemerSidebar() {
           </Flex>
         </Card>
 
-        {view.name === 'list' && <ThemeList />}
-        {view.name === 'edit' && <ThemeEditor focusTitle={view.focusTitle} slug={view.slug} />}
-        {view.name === 'removed' && <RemovedThemes />}
+        <Activity key="list" mode={view.name === 'list' ? 'visible' : 'hidden'}>
+          <ThemeList actorRef={actorRef} active={active} removed={removed} themes={themes} />
+        </Activity>
+        {view.name === 'edit' && (
+          <ThemeEditor
+            actorRef={actorRef}
+            focusTitle={view.focusTitle}
+            images={images}
+            slug={view.slug}
+            split={split}
+            themes={themes}
+          />
+        )}
+        <Activity key="removed" mode={view.name === 'removed' ? 'visible' : 'hidden'}>
+          <RemovedThemes actorRef={actorRef} removed={removed} />
+        </Activity>
       </Flex>
 
       {snippetOpen && <ThemeSnippetDialog onClose={() => setSnippetOpen(false)} theme={active} />}

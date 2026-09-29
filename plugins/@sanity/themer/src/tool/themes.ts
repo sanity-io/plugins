@@ -52,7 +52,7 @@ export interface ThemerState {
 export const CONFIG_SLUG = 'config'
 
 /** The title of the theme the Studio config was generated from */
-const CONFIG_TITLE = 'Studio config'
+export const CONFIG_TITLE = 'Studio config'
 
 /** The title new themes start out with @internal */
 export const UNTITLED_THEME = 'Untitled theme'

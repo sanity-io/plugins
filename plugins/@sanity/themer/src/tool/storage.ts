@@ -1,3 +1,5 @@
+import type {ActorRefFrom, SnapshotFrom} from 'xstate'
+
 import {isColor} from '../lib/mix'
 import {
   type BuildThemeOptions,
@@ -8,6 +10,7 @@ import {
 } from '../theme/options'
 import {presets} from '../theme/presets'
 import {IMAGE_PALETTE_KEYS, type ImagePalette} from './imagePalette'
+import type {themerMachine} from './machine'
 import {
   CONFIG_SLUG,
   createCustomTheme,
@@ -284,4 +287,38 @@ export function markVisited(): void {
   } catch {
     // Storage can be unavailable (e.g. private browsing) — the tool is introduced again next time
   }
+}
+
+const PERSIST_SNAPSHOT_KEY = 'sanityStudio:themer:snapshot'
+/**
+ * Read the persisted snapshot from localStorage that is given to the actor when it is created
+ * @TODO use valibot to validate the snapshot
+ * @internal
+ */
+export function readPersistedSnapshot():
+  | SnapshotFrom<ActorRefFrom<typeof themerMachine>>
+  | undefined {
+  try {
+    const raw = localStorage.getItem(PERSIST_SNAPSHOT_KEY)
+
+    if (!raw) return undefined
+
+    // @TODO use valibot to validate the snapshot and conform to the snapshot schema
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+    return JSON.parse(raw) as SnapshotFrom<ActorRefFrom<typeof themerMachine>>
+  } catch (error) {
+    console.error('Error reading persisted snapshot', error)
+    return undefined
+  }
+}
+
+/**
+ * Write the persisted snapshot to localStorage that is given to the actor when it is created
+ * @TODO use valibot to validate the snapshot
+ * @internal
+ */
+export function writePersistedSnapshot(
+  snapshot: ReturnType<ActorRefFrom<typeof themerMachine>['getPersistedSnapshot']>,
+): void {
+  localStorage.setItem(PERSIST_SNAPSHOT_KEY, JSON.stringify(snapshot))
 }

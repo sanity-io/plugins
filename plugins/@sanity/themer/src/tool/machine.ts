@@ -1,4 +1,4 @@
-import {assign, not, or, setup, type SnapshotFrom, stateIn} from 'xstate'
+import {assign, not, setup, type SnapshotFrom} from 'xstate'
 
 import type {BuildThemeOptions} from '../theme/options'
 import type {ImagePalette} from './imagePalette'
@@ -13,12 +13,11 @@ import {
 } from './themes'
 
 /**
- * How long the layout's motions — the panel's and the split preview's, and
- * the cross-fade to another theme — are taken to last when the layout never
- * says: it reports every view transition it starts, so this only ends a
- * motion that has none (reduced motion, a browser without view transitions),
- * where the `moving` and `switching` tags have nothing to affect. Generous,
- * so that it never runs out before a slow deferred commit starts the real one.
+ * How long the machine stays `switching` after an event that applies another
+ * theme, when no edit to the applied theme ends it sooner. The layout
+ * cross-fades the Studio to the theme in the commit that follows the switch,
+ * so this only bounds how long the tag lingers once that is done. Generous,
+ * so that it never runs out before a slow deferred commit starts the fade.
  *
  * @internal
  */
@@ -51,20 +50,6 @@ export interface ThemerMachineContext extends ThemerState {
 
 /** @internal */
 export type ThemerEvent =
-  | {type: 'sidebar.toggle'}
-  | {type: 'sidebar.close'}
-  /**
-   * A view transition of the layout is under way — the panel or the split copy
-   * arriving or leaving, the Studio giving way, taking room or cross-fading to
-   * another theme — and the layout is no longer `moving` or `switching` for
-   * the machine
-   */
-  | {type: 'layout.transitioned'}
-  /**
-   * Switches between showing the Studio once, in its own appearance, and
-   * twice side by side, in light and dark
-   */
-  | {type: 'preview.toggle'}
   /** Applies a theme to the whole Studio */
   | {type: 'theme.pick'; slug: string}
   /**
@@ -116,27 +101,22 @@ function revokeObjectUrl(url: string) {
 }
 
 /**
- * The state of the themer tool: three parallel regions, whether the
- * `sidebar` is open, which `flow` it is in — picking a theme from the `list`,
- * `edit`ing one of the user's own themes, or restoring `removed` ones — and
- * whether the `preview` shows the Studio once (`single`) or in light and dark
- * side by side (`split`). The context carries the persisted state (the
- * applied theme, the user's themes and what was removed) alongside what the
- * flows need.
+ * The themes of the themer tool and the sidebar's way through them: which
+ * `flow` the sidebar is in — picking a theme from the `list`, `edit`ing one of
+ * the user's own themes, or restoring `removed` ones — and, in a parallel
+ * `theme` region, whether another theme was just applied. The context carries
+ * the persisted state (the applied theme, the user's themes and what was
+ * removed) alongside what the flows need. Whether the sidebar is open and
+ * whether the Studio shows twice is not the machine's: the tool reducer in
+ * `plugin.tsx` owns that, so that the navbar toggle and the sidebar can
+ * change it in transitions of their own.
  *
- * The sidebar and the preview pass through `opening`/`closing` and
- * `splitting`/`unsplitting` on their way, states tagged for the UI: `panel`
- * and `split` say what shows (the panel from `opening` on, the split copy from
- * `splitting` on), `moving` that the Studio is about to give way or take room
- * — which is when, and only when, the layout lets a view transition animate
- * it. A fourth region, `theme`, is `switching` (its tag) right after an event
- * that applies another theme — picking one, adding, duplicating, importing or
- * editing one, removing or deleting the applied one — when the layout
- * cross-fades to it; edits to the applied theme's colors are not switches,
- * they follow the pointer. These states last until the layout reports its
- * transition under way — every boundary reports, the panel's and the copy's
- * entering and leaving as much as the Studio's morphing — or for
- * `MOTION_DURATION` when nothing animates.
+ * The `theme` region is `switching` (its tag) right after an event that
+ * applies another theme — picking one, adding, duplicating, importing or
+ * editing one, removing or deleting the applied one — which is when the
+ * layout cross-fades the Studio to it. Edits to the applied theme's colors are
+ * not switches, they follow the pointer: the first one ends the switch, and so
+ * does `MOTION_DURATION` when none follows.
  *
  * Theme operations are handled in every flow, and the flows leave on their
  * own when they lose their subject: the editor when its theme is removed or
@@ -165,7 +145,6 @@ export const themerMachine = setup({
         (theme) => theme.slug === context.editing?.slug && theme.source === 'custom',
       ),
     hasRemovedThemes: ({context}) => themesOf(context).removed.length > 0,
-    sidebarShown: or([stateIn({sidebar: 'opening'}), stateIn({sidebar: 'open'})]),
     // Only another theme than the applied one changes anything to cross-fade to
     isAnotherTheme: ({context}, params: {slug: string}) =>
       params.slug !== (context.active ?? CONFIG_SLUG),
@@ -176,14 +155,6 @@ export const themerMachine = setup({
       params.options !== undefined,
   },
   actions: {
-    // The state that survives sessions is written as the machine starts — that
-    // completes the migration of what an earlier version stored — and on
-    // every change to it
-    persist: ({context}) => {
-      const {active, custom, removed, order} = context
-
-      writeStoredState({active, custom, removed, order})
-    },
     // The image of a replaced palette or a deleted theme is released from memory
     revokeImage: (_, params: {url: string | undefined}) => {
       if (params.url) revokeObjectUrl(params.url)
@@ -312,77 +283,16 @@ export const themerMachine = setup({
     editing: null,
     images: {},
   }),
-  entry: 'persist',
   type: 'parallel',
   states: {
-    sidebar: {
-      initial: 'closed',
-      states: {
-        closed: {
-          on: {'sidebar.toggle': 'opening'},
-        },
-        opening: {
-          tags: ['panel', 'moving'],
-          after: {[MOTION_DURATION]: 'open'},
-          on: {
-            'layout.transitioned': 'open',
-            'sidebar.toggle': 'closing',
-            'sidebar.close': 'closing',
-          },
-        },
-        open: {
-          tags: ['panel'],
-          on: {'sidebar.toggle': 'closing', 'sidebar.close': 'closing'},
-        },
-        closing: {
-          tags: ['moving'],
-          after: {[MOTION_DURATION]: 'closed'},
-          on: {'layout.transitioned': 'closed', 'sidebar.toggle': 'opening'},
-        },
-      },
-    },
-    // The split preview belongs to a sidebar session: closing the sidebar —
-    // from its header or from the navbar — ends the split with it
-    preview: {
-      initial: 'single',
-      states: {
-        single: {
-          on: {'preview.toggle': 'splitting'},
-        },
-        splitting: {
-          tags: ['split', 'moving'],
-          after: {[MOTION_DURATION]: 'split'},
-          on: {
-            'layout.transitioned': 'split',
-            'preview.toggle': 'unsplitting',
-            'sidebar.close': 'unsplitting',
-            'sidebar.toggle': {guard: 'sidebarShown', target: 'unsplitting'},
-          },
-        },
-        split: {
-          tags: ['split'],
-          on: {
-            'preview.toggle': 'unsplitting',
-            'sidebar.close': 'unsplitting',
-            'sidebar.toggle': {guard: 'sidebarShown', target: 'unsplitting'},
-          },
-        },
-        unsplitting: {
-          tags: ['moving'],
-          after: {[MOTION_DURATION]: 'single'},
-          on: {'layout.transitioned': 'single', 'preview.toggle': 'splitting'},
-        },
-      },
-    },
     theme: {
       initial: 'applied',
       states: {
         // Only events that change what is applied count: adding a copy of the
         // applied theme, editing or duplicating it, picking it again, or
         // removing another theme leaves the Studio looking the same — with
-        // nothing to cross-fade, nothing would report the switch over, and the
-        // first edit that followed would cross-fade instead of following the
-        // pointer
+        // nothing to cross-fade, the switch would only linger until the first
+        // edit that followed, which must follow the pointer
         applied: {
           on: {
             'theme.pick': {
@@ -416,7 +326,10 @@ export const themerMachine = setup({
           tags: ['switching'],
           after: {[MOTION_DURATION]: 'applied'},
           on: {
-            'layout.transitioned': 'applied',
+            // The editor edits the applied theme, and its colors must follow
+            // the pointer rather than cross-fade — a switch is over at the
+            // first edit, however soon it comes
+            'theme.update': 'applied',
             // Another switch starts the clock over
             'theme.pick': {
               guard: {type: 'isAnotherTheme', params: ({event}) => ({slug: event.slug})},
@@ -457,7 +370,7 @@ export const themerMachine = setup({
       initial: 'list',
       on: {
         'theme.pick': {
-          actions: [{type: 'pick', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'pick', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.add': {
           target: '.edit',
@@ -471,17 +384,16 @@ export const themerMachine = setup({
                 imageUrl: event.imageUrl,
               }),
             },
-            'persist',
           ],
         },
         'theme.duplicate': {
           target: '.edit',
-          actions: [{type: 'duplicate', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'duplicate', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.edit': {
           target: '.edit',
           guard: {type: 'isCustomTheme', params: ({event}) => ({slug: event.slug})},
-          actions: [{type: 'startEditing', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'startEditing', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.update': {
           actions: [
@@ -502,14 +414,13 @@ export const themerMachine = setup({
                 imageUrl: event.imageUrl,
               }),
             },
-            'persist',
           ],
         },
         'theme.remove': {
-          actions: [{type: 'remove', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'remove', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.restore': {
-          actions: [{type: 'restore', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'restore', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.delete': {
           actions: [
@@ -518,11 +429,10 @@ export const themerMachine = setup({
               params: ({context, event}) => ({url: context.images[event.slug]}),
             },
             {type: 'delete', params: ({event}) => ({slug: event.slug})},
-            'persist',
           ],
         },
         'theme.reorder': {
-          actions: [{type: 'reorder', params: ({event}) => ({order: event.order})}, 'persist'],
+          actions: [{type: 'reorder', params: ({event}) => ({order: event.order})}],
         },
         'theme.import': {
           actions: [
@@ -530,7 +440,6 @@ export const themerMachine = setup({
               type: 'import',
               params: ({event}) => ({title: event.title, options: event.options}),
             },
-            'persist',
           ],
         },
         'flow.list': '.list',

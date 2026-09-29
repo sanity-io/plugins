@@ -88,6 +88,7 @@ export default defineConfig([
     name: 'home',
     title: 'Home',
     icon: HomeIcon,
+    beta: {...beta, variants: {enabled: true}},
     plugins: [
       // Order matters for the top navigation: Workspaces Home, Structure, then
       // the most-used plugin tools first.
@@ -137,10 +138,10 @@ export default defineConfig([
       vercelWidgetExample(),
       contentGraphView(),
       scriptRunnerTool(),
-      themerTool(),
       debugSecrets(),
       vercelProtectionBypassTool(),
       visionTool(),
+      themerTool({title: 'Themer 2.0'}),
     ],
   }),
   // Re-registers `internationalizedArray` with async languages loaded from
@@ -148,34 +149,34 @@ export default defineConfig([
   createWorkspace({
     name: 'internationalized-array-async-languages',
     title: 'internationalized-array: Async Languages',
-    plugins: [internationalizedArrayAsyncLanguages()],
+    plugins: [internationalizedArrayAsyncLanguages(), themerTool()],
   }),
   // Demos the translations tab at the internationalized-array level, with its own
   // `internationalizedArray` language set (en/de/no_nb/is) — conflicts with Home.
   createWorkspace({
     name: 'i18n-array-translation',
     title: 'sanity-translations-tab: i18n Array',
-    plugins: [i18nArrayTranslationExample()],
+    plugins: [i18nArrayTranslationExample(), themerTool()],
   }),
   // A second `documentInternationalization` registration (for docI18nLocalizedPage)
   // that cannot coexist with Home's `lesson` configuration.
   createWorkspace({
     name: 'doc-i18n-translation',
     title: 'document-internationalization: Translations',
-    plugins: [documentInternationalizationTranslationExample()],
+    plugins: [documentInternationalizationTranslationExample(), themerTool()],
   }),
   // Registers its own `internationalizedArray` (en_US/fr) and `product`/`category`
   // types (`product` collides with the workflow workspace).
   createWorkspace({
     name: 'sfcc',
     title: 'sfcc: Salesforce Commerce Cloud',
-    plugins: [sfccExample()],
+    plugins: [sfccExample(), themerTool()],
   }),
   // Defines `product`/`article`; `product` collides with the sfcc workspace.
   createWorkspace({
     name: 'workflow',
     title: 'workflow: Document Workflow',
-    plugins: [structureTool(), workflowExample()],
+    plugins: [structureTool(), workflowExample(), themerTool()],
   }),
   // Destination workspace for @sanity/cross-dataset-duplicator: uses a
   // different dataset so it can be picked as a duplication target.
@@ -186,6 +187,6 @@ export default defineConfig([
     name: 'cross-dataset-duplicator-target',
     title: 'cross-dataset-duplicator: Target',
     basePath: '/cross-dataset-duplicator-target',
-    plugins: [structureTool(), crossDatasetDuplicatorExample()],
+    plugins: [structureTool(), crossDatasetDuplicatorExample(), themerTool({title: 'Not Themer'})],
   },
 ])

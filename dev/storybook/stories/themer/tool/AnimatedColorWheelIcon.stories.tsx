@@ -3,7 +3,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite'
 import {animate, useMotionValue} from 'motion/react'
 import {useEffect} from 'react'
 
-import {AnimatedColorWheelIcon} from '../../../../../plugins/@sanity/themer/src/tool/AnimatedColorWheelIcon'
+import AnimatedColorWheelIcon from '../../../../../plugins/@sanity/themer/src/tool/AnimatedColorWheelIcon'
 import {ANIMATION_DURATION} from '../../../../../plugins/@sanity/themer/src/tool/colorWheel'
 
 interface WheelArgs {
