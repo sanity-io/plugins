@@ -5,5 +5,10 @@ import {defineConfig} from 'oxfmt'
 // only workspace-specific ignore patterns belong here.
 export default defineConfig({
   ...pluginKitOxfmt,
-  ignorePatterns: [...(pluginKitOxfmt.ignorePatterns ?? []), 'turbo/**/*.hbs'],
+  ignorePatterns: [
+    ...(pluginKitOxfmt.ignorePatterns ?? []),
+    'storybook-static/**',
+    'CHANGELOG.md',
+    'turbo/**/*.hbs',
+  ],
 })

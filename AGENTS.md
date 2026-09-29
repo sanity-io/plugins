@@ -535,6 +535,8 @@ pnpm format
 
 The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`packages/@sanity/plugin-kit/src/oxfmt.ts`), which the root `oxfmt.config.ts` extends with workspace-specific `ignorePatterns` (for example `turbo/**/*.hbs`). Standalone plugins scaffolded with `plugin-kit init` reuse the same preset. Note that loading the TypeScript config requires Node `^20.19 || >=22.18`.
 
+The oxfmt version, options and ignore patterns match sanity-io/ui's `.oxfmtrc.json`, so keep them in sync. The exceptions are `turbo/**/*.hbs`, which only exists here, and ui's `**/sanity.types.ts`: `pnpm typegen` formats `dev/test-studio/sanity.types.ts` on purpose, since the test studio runs typegen with `formatGeneratedCode: false`. `.vscode/settings.json` points the Oxc extension at `oxfmt.config.ts`; if `oxc.fmt.configPath` names a missing file, the editor silently formats with oxfmt's defaults instead.
+
 ### Linting
 
 We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (type-aware, includes TypeScript type checking and [React Compiler rules](https://oxc.rs/blog/2026-08-18-react-compiler-support.html)):

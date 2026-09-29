@@ -1,5 +1,5 @@
 {
   "js/ts.experimental.useTsgo": true,
-  "oxc.fmt.configPath": ".oxfmtrc.json",
+  "oxc.fmt.configPath": "oxfmt.config.ts",
   "oxc.typeAware": true
 }
