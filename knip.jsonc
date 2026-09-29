@@ -136,6 +136,9 @@
     "plugins/@sanity/block-insert-picker": {
       "project": ["src/**/*.{ts,tsx}"],
     },
+    "plugins/@sanity/themer": {
+      "project": ["src/**/*.{ts,tsx}"],
+    },
     // add new plugin workspaces here
     "plugins/@sanity/embeddings-index-ui": {
       "project": ["src/**/*.{ts,tsx}"],
