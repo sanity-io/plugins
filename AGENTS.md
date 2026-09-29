@@ -557,10 +557,10 @@ The oxfmt version, options and ignore patterns match sanity-io/ui's `.oxfmtrc.js
 
 Changesets are formatted like any other file, so their frontmatter uses single quotes, and Changesets formats the changesets it writes with oxfmt. Renovate's changeset action writes double quotes, so after a Renovate PR merges, the Auto format workflow opens a `chore(format): 🤖 ✨` PR that requotes it, as in sanity-io/ui.
 
-A lefthook pre-commit hook (`lefthook.yml`, set up like sanity-io/sanity's) runs oxfmt on the staged files and re-stages them. `pnpm install` installs the hook through lefthook's own install script, which `allowBuilds` in `pnpm-workspace.yaml` permits and which skips when `CI` is set. Skip the hook once with `LEFTHOOK=0 git commit`.
+A lefthook pre-commit hook (`lefthook.yml`, set up like sanity-io/sanity's) runs oxfmt on the staged files, then `oxlint --fix --quiet` on the staged scripts, and re-stages them; a lint error that `--fix` can't resolve blocks the commit. `pnpm install` installs the hook through lefthook's own install script, which `allowBuilds` in `pnpm-workspace.yaml` permits and which skips when `CI` is set. Skip the hook once with `LEFTHOOK=0 git commit`.
 
 - **Clones that ran husky:** they still have `core.hooksPath` set to `.husky/_`, and lefthook won't install there. Run `git config --unset core.hooksPath && pnpm install` once.
-- **Hook commands:** they call `node_modules/.bin/oxfmt` directly. `pnpm <bin>` in a hook runs pnpm 12's implicit install, which flips the peer toggle described under pnpm Version.
+- **Hook commands:** they call `node_modules/.bin/oxfmt` and `node_modules/.bin/oxlint` directly. `pnpm <bin>` in a hook runs pnpm 12's implicit install, which flips the peer toggle described under pnpm Version.
 - **Local scripts:** `pnpm --config.verify-deps-before-run=false <script>` avoids that implicit install too.
 
 ### Linting
@@ -572,7 +572,7 @@ pnpm lint        # Run the linter (includes type checking)
 pnpm lint:fix    # Auto-fix what's possible
 ```
 
-The shared rules (plugins, options, categories, rules) live in the `@sanity/plugin-kit/oxlint` config (`packages/@sanity/plugin-kit/src/oxlint.ts`), which the root `oxlint.config.ts` extends; only workspace-specific ignores and overrides belong in the root config. Standalone plugins scaffolded with `plugin-kit init` re-export the same shared config. Note that `ignorePatterns` do not propagate through `extends`, so the root config spreads the shared patterns before adding its own. Like `pnpm format`, `pnpm lint` requires Node `>=22.18` to load the TypeScript config.
+The shared rules (plugins, options, categories, rules) live in the `@sanity/plugin-kit/oxlint` config (`packages/@sanity/plugin-kit/src/oxlint.ts`), which the root `oxlint.config.ts` extends; only workspace-specific ignores and overrides belong in the root config. Standalone plugins scaffolded with `plugin-kit init` re-export the same shared config. Note that `ignorePatterns` do not propagate through `extends`, so the root config spreads the shared patterns before adding its own. Like `pnpm format`, `pnpm lint` requires Node `>=22.18` to load the TypeScript config. The pre-commit hook lints staged scripts with the same config (see the lefthook notes under Formatting), so it needs that Node version too.
 
 ## Project Structure
 
