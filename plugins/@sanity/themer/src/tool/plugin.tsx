@@ -1,8 +1,9 @@
 import {definePlugin, type LayoutProps} from 'sanity'
 
-import type {BuildThemeOptions} from '../theme/options'
-import {ThemerLayout} from './ThemerLayout'
+import type {PluginConfig} from '#types'
+
 import {ThemerNavbar} from './ThemerNavbar'
+import {ThemerProvider} from './ThemerProvider'
 
 /**
  * Options for the {@link themerTool} plugin.
@@ -14,20 +15,10 @@ import {ThemerNavbar} from './ThemerNavbar'
  */
 export interface ThemerToolOptions {
   /**
-   * The `buildTheme` options that the Studio's configured theme was generated
-   * from — the themer starts editing from these, so pass the same object that
-   * the `theme` in the Studio config uses:
-   *
-   * ```ts
-   * const config: BuildThemeOptions = {light: {accent: '#1cb485'}, dark: {accent: '#22fca8'}}
-   *
-   * export default defineConfig({
-   *   theme: buildTheme(config),
-   *   plugins: [themerTool({config})],
-   * })
-   * ```
+   * What the tool goes by in the Studio navbar — the toggle's label and
+   * tooltip. Defaults to `Themer`.
    */
-  config?: BuildThemeOptions
+  title?: string
 }
 
 /**
@@ -59,21 +50,23 @@ export interface ThemerToolOptions {
  * @alpha
  */
 export const themerTool = definePlugin<ThemerToolOptions | void>((options) => {
-  // No options generate the stock theme, which is what a Studio without a
-  // `theme` in its config gets
-  const baseOptions = options?.config ?? {}
-
-  function ThemerLayoutWithOptions(props: LayoutProps) {
-    return <ThemerLayout {...props} baseOptions={baseOptions} />
-  }
+  const {title = 'Themer'} = options ?? {}
+  const ThemerLayoutProvider = defineThemerLayout({title})
 
   return {
     name: '@sanity/themer/tool',
     studio: {
-      components: {
-        layout: ThemerLayoutWithOptions,
-        navbar: ThemerNavbar,
-      },
+      components: {layout: ThemerLayoutProvider, navbar: ThemerNavbar},
     },
   }
 })
+
+// This wrapper creates a clean closure that allows safely using the `'use memo'` directive
+// so that the dynamically created component can be memoized by react compiler
+function defineThemerLayout(config: PluginConfig) {
+  return function DefinedThemerLayoutProvider(props: LayoutProps) {
+    'use memo'
+
+    return <ThemerProvider config={config}>{props.renderDefault(props)}</ThemerProvider>
+  }
+}

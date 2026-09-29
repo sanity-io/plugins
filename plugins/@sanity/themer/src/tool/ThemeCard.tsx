@@ -12,7 +12,8 @@ import {Reorder, useDragControls} from 'motion/react'
 import {useRef, useState} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 
-import {useThemer} from './context'
+import type {ThemerProps} from '#types'
+
 import {displayTitle, type ThemerTheme} from './themes'
 import {ThemeThumbnail} from './ThemeThumbnail'
 import {useThemeCodes} from './useThemeCodes'
@@ -37,10 +38,13 @@ function scrollRefIntoViewIfNeeded(node: HTMLElement | null) {
  *
  * @internal
  */
-export function ThemeCard(props: {active: boolean; theme: ThemerTheme}) {
-  const {active, theme} = props
-  const {themes, send} = useThemer()
-  const {copyTheme} = useThemeCodes()
+export function ThemeCard({
+  actorRef,
+  active,
+  theme,
+  themes,
+}: {active: boolean; theme: ThemerTheme} & Pick<ThemerProps, 'actorRef' | 'themes'>) {
+  const {copyTheme} = useThemeCodes({actorRef})
   const {scheme} = useRootTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const dragControls = useDragControls()
@@ -48,12 +52,14 @@ export function ThemeCard(props: {active: boolean; theme: ThemerTheme}) {
   const dragged = useRef(false)
   const title = displayTitle(theme.title)
   const index = themes.findIndex((candidate) => candidate.slug === theme.slug)
+  // The configured theme sits ahead of the list, and does not move within it
+  const listed = index !== -1
 
   const moveTo = (to: number) => {
     const order = themes.map((candidate) => candidate.slug)
 
     order.splice(to, 0, ...order.splice(index, 1))
-    send({type: 'theme.reorder', order})
+    actorRef.send({type: 'theme.reorder', order})
   }
 
   return (
@@ -79,12 +85,12 @@ export function ThemeCard(props: {active: boolean; theme: ThemerTheme}) {
         aria-pressed={active}
         className={pickButton}
         onClick={() => {
-          if (!dragged.current) send({type: 'theme.pick', slug: theme.slug})
+          if (!dragged.current) actorRef.send({type: 'theme.pick', slug: theme.slug})
         }}
         onPointerDown={(event) => {
           // A mouse or pen drags the card off the button; a finger scrolls the
           // list instead, and moves themes from the menu
-          if (event.pointerType !== 'touch') dragControls.start(event)
+          if (listed && event.pointerType !== 'touch') dragControls.start(event)
         }}
         type="button"
       >
@@ -125,29 +131,33 @@ export function ThemeCard(props: {active: boolean; theme: ThemerTheme}) {
               id={`themer-theme-${theme.slug}`}
               menu={
                 <Menu>
-                  <MenuItem
-                    disabled={index <= 0}
-                    icon={ArrowUpIcon}
-                    onClick={() => moveTo(index - 1)}
-                    text="Move up"
-                  />
-                  <MenuItem
-                    disabled={index >= themes.length - 1}
-                    icon={ArrowDownIcon}
-                    onClick={() => moveTo(index + 1)}
-                    text="Move down"
-                  />
-                  <MenuDivider />
+                  {listed && (
+                    <>
+                      <MenuItem
+                        disabled={index <= 0}
+                        icon={ArrowUpIcon}
+                        onClick={() => moveTo(index - 1)}
+                        text="Move up"
+                      />
+                      <MenuItem
+                        disabled={index >= themes.length - 1}
+                        icon={ArrowDownIcon}
+                        onClick={() => moveTo(index + 1)}
+                        text="Move down"
+                      />
+                      <MenuDivider />
+                    </>
+                  )}
                   {theme.source === 'custom' && (
                     <MenuItem
                       icon={EditIcon}
-                      onClick={() => send({type: 'theme.edit', slug: theme.slug})}
+                      onClick={() => actorRef.send({type: 'theme.edit', slug: theme.slug})}
                       text="Edit"
                     />
                   )}
                   <MenuItem
                     icon={CopyIcon}
-                    onClick={() => send({type: 'theme.duplicate', slug: theme.slug})}
+                    onClick={() => actorRef.send({type: 'theme.duplicate', slug: theme.slug})}
                     text={theme.source === 'custom' ? 'Duplicate' : 'Duplicate to edit'}
                   />
                   <MenuItem
@@ -160,7 +170,7 @@ export function ThemeCard(props: {active: boolean; theme: ThemerTheme}) {
                       <MenuDivider />
                       <MenuItem
                         icon={TrashIcon}
-                        onClick={() => send({type: 'theme.remove', slug: theme.slug})}
+                        onClick={() => actorRef.send({type: 'theme.remove', slug: theme.slug})}
                         text="Remove"
                         tone="critical"
                       />

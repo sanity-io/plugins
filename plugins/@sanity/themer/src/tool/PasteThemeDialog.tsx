@@ -1,6 +1,8 @@
 import {Button, Card, Dialog, Flex, Stack, Text, TextInput} from '@sanity/ui'
 import {useState} from 'react'
 
+import type {ThemerProps} from '#types'
+
 import {useThemeCodes} from './useThemeCodes'
 
 /**
@@ -9,9 +11,9 @@ import {useThemeCodes} from './useThemeCodes'
  *
  * @internal
  */
-export function PasteThemeDialog(props: {onClose: () => void}) {
-  const {onClose} = props
-  const {addThemeFromText} = useThemeCodes()
+export function PasteThemeDialog(props: {onClose: () => void} & Pick<ThemerProps, 'actorRef'>) {
+  const {actorRef, onClose} = props
+  const {addThemeFromText} = useThemeCodes({actorRef})
   const [text, setText] = useState('')
   const [invalid, setInvalid] = useState(false)
 

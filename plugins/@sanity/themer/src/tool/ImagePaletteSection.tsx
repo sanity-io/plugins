@@ -178,13 +178,14 @@ export function ImagePaletteSection(props: {
 
                 return (
                   <Tooltip
+                    key={key}
                     animate
                     content={
                       <Text size={1}>
                         {hex ? `${title} · ${hex}` : `No ${title.toLowerCase()} color`}
                       </Text>
                     }
-                    key={key}
+
                     placement="bottom"
                     portal
                   >
@@ -213,9 +214,9 @@ export function ImagePaletteSection(props: {
                 {variants.map(({variant, title, options: variantOptions}) => (
                   // oxlint-disable-next-line control-has-associated-label -- the title below the thumbnail is the label, deeper than the rule looks
                   <button
+                    key={variant}
                     aria-pressed={variant === current}
                     className={variantButton}
-                    key={variant}
                     onClick={() => onVariant(variant)}
                     type="button"
                   >

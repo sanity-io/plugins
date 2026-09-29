@@ -1,15 +1,36 @@
-import {createContext, useContext} from 'react'
+import {createContext} from 'react'
 
-import type {BuildThemeOptions} from '../theme/options'
-import type {ThemerEvent} from './machine'
-import type {ThemerTheme} from './themes'
+import type {PluginConfig} from '#types'
 
-/**
- * The flow the sidebar is in: picking a theme from the list, editing one of
- * the user's own themes, or restoring removed ones.
- *
- * @internal
+import type {ToolReducerAction} from './reducer'
+
+/*
+ * The tool reducer's state that the navbar toggle shows and changes. The
+ * Studio renders the navbar itself, out of the layout's reach, so this is
+ * where the reducer's values travel by context — the layout and the sidebar
+ * get them as props. One context per value, on purpose: a consumer only
+ * re-renders for the value it reads, where one object would re-render every
+ * consumer for any change.
  */
+
+/** @internal */
+export const ToolIsOpenContext = createContext<boolean>(false)
+/**
+ * The global top-level useReducer dispatch() for state that persists through open/close of the tool
+ * @internal */
+export const ToolDispatchContext = createContext<React.Dispatch<ToolReducerAction>>(() => {
+  throw new Error('ToolDispatchContext not initialized')
+})
+/** @internal */
+export const ToolSplitIsOpenContext = createContext<boolean>(false)
+
+/** @internal */
+export const ToolShouldDetectNavbarHeightContext = createContext<boolean>(false)
+
+/** @internal */
+export const PluginConfigContext = createContext<Required<PluginConfig> | null>(null)
+
+/** @internal */
 export type ThemerView =
   | {name: 'list'}
   | {
@@ -19,44 +40,3 @@ export type ThemerView =
       focusTitle: boolean
     }
   | {name: 'removed'}
-
-/** @internal */
-export interface ThemerContextValue {
-  /** The theme options the Studio's configured theme was generated from */
-  baseOptions: BuildThemeOptions
-  /** The themes to pick from, in list order */
-  themes: ThemerTheme[]
-  /** The removed themes, which can be restored */
-  removed: ThemerTheme[]
-  /** The applied theme */
-  active: ThemerTheme
-  /** Object URLs of the images themes took their palette from this session, by slug */
-  images: Record<string, string>
-  view: ThemerView
-  /** Whether the themer sidebar is open */
-  open: boolean
-  /** Whether the sidebar is on its way to opening for the first time, pending while its code loads */
-  loading: boolean
-  /** Whether the Studio shows twice side by side, in light and dark */
-  split: boolean
-  /** Whether the Studio is on a small screen, where the sidebar covers it and the split preview stacks */
-  mobile: boolean
-  /** The height of the Studio navbar, which the sidebar's header matches — `null` until it has rendered */
-  navbarHeight: number | null
-  /** Sends an event to the themer machine */
-  send: (event: ThemerEvent) => void
-}
-
-/** @internal */
-export const ThemerContext = createContext<ThemerContextValue | null>(null)
-
-/** @internal */
-export function useThemer(): ThemerContextValue {
-  const context = useContext(ThemerContext)
-
-  if (!context) {
-    throw new Error('useThemer must be used within the `themerTool` plugin')
-  }
-
-  return context
-}
