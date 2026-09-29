@@ -18,12 +18,14 @@ function AssistDocumentPresence() {
     const anyPresence = [...(assistDocument?.tasks ?? []), ...(syntheticTasks ?? [])]
       ?.filter((run) => !run.ended && !run.reason)
       ?.flatMap((run) => run.presence ?? [])
+      // oxlint-disable-next-line react/purity
       .find((f) => f.started && new Date().getTime() - new Date(f.started).getTime() < 30000)
     if (anyPresence) {
       return aiPresence(anyPresence, [])
     }
     const anyRun = assistDocument?.tasks
       ?.filter((run) => !run.ended && !run.reason)
+      // oxlint-disable-next-line react/purity
       ?.find((f) => f.started && new Date().getTime() - new Date(f.started).getTime() < 30000)
     return anyRun
       ? aiPresence(
