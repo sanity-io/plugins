@@ -1,0 +1,14 @@
+# Call node_modules/.bin binaries directly: `pnpm <bin>` runs pnpm 12's implicit install,
+# which flips the optional-peer toggle in pnpm-lock.yaml that AGENTS.md describes.
+pre-commit:
+  parallel: true
+  jobs:
+    - name: format-scripts
+      glob: '*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}'
+      stage_fixed: true
+      run: node_modules/.bin/oxfmt --no-error-on-unmatched-pattern {staged_files}
+
+    - name: format-other
+      glob: '*.{md,yml,yaml,css,json,jsonc}'
+      stage_fixed: true
+      run: node_modules/.bin/oxfmt --no-error-on-unmatched-pattern {staged_files}
