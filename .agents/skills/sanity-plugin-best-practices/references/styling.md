@@ -173,7 +173,7 @@ import {defineConfig} from '@sanity/tsdown-config'
 import type {UserConfig} from 'tsdown'
 
 export default defineConfig({
-  reactCompiler: true,
+  reactCompiler: {transform: 'oxc'},
   vanillaExtract: true,
 }) satisfies Promise<UserConfig | UserConfig[]>
 ```
@@ -204,11 +204,13 @@ drop-in match:
 
 ```ts
 // plugins/@sanity/google-maps-input/vitest.config.ts
+import {reactCompilerPluginForVitest} from '@sanity/plugin-kit/vitest'
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
-  plugins: [vanillaExtractPlugin()],
+  // Keep React Compiler (matches tsdown `reactCompiler: {transform: 'oxc'}`) and compose VE.
+  plugins: [reactCompilerPluginForVitest(), vanillaExtractPlugin()],
   // ...
 })
 ```
@@ -234,11 +236,12 @@ in `setupFiles` (the generator emits it when you opt into styling):
 
 ```ts
 // vitest.config.ts
+import {reactCompilerPluginForVitest} from '@sanity/plugin-kit/vitest'
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
-  plugins: [vanillaExtractPlugin()],
+  plugins: [reactCompilerPluginForVitest(), vanillaExtractPlugin()],
   test: {
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],
     // ...

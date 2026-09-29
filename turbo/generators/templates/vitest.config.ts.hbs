@@ -1,12 +1,17 @@
+import {reactCompilerPluginForVitest} from '@sanity/plugin-kit/vitest'
 {{#if hasVanillaExtract}}
 import {vanillaExtractPlugin} from '@sanity/vanilla-extract-vite-plugin'
 {{/if}}
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
+  // Match `reactCompiler: {transform: 'oxc'}` in tsdown.config.ts so tests exercise compiled output.
+  plugins: [
+    reactCompilerPluginForVitest(),
 {{#if hasVanillaExtract}}
-  plugins: [vanillaExtractPlugin()],
+    vanillaExtractPlugin(),
 {{/if}}
+  ],
   test: {
 {{#if hasVanillaExtract}}
     setupFiles: ['@vanilla-extract/css/disableRuntimeStyles'],

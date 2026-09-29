@@ -1,9 +1,9 @@
+import {reactCompilerPluginForVitest} from '@sanity/plugin-kit/vitest'
 import {defineConfig} from 'vitest/config'
 
 export default defineConfig({
-  oxc: {
-    jsx: {runtime: 'automatic'},
-  },
+  // Match `reactCompiler: {transform: 'oxc'}` in tsdown.config.ts so tests exercise compiled output.
+  plugins: [reactCompilerPluginForVitest()],
   test: {
     environment: 'jsdom',
     globals: false,

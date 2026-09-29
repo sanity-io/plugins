@@ -20,6 +20,9 @@ test('package exports', {timeout: 30_000}, async () => {
       "./oxlint": {
         "default": "object",
       },
+      "./vitest": {
+        "reactCompilerPluginForVitest": "function",
+      },
     }
   `)
 })
