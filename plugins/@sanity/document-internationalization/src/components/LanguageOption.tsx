@@ -103,10 +103,10 @@ export default function LanguageOption(props: LanguageOptionProps) {
     }
 
     // Remove fields / paths we don't want to duplicate
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     newTranslationDocument = removeExcludedPaths(
       newTranslationDocument,
       schemaType,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     ) as SanityDocument
 
     transaction.create(newTranslationDocument)

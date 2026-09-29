@@ -35,7 +35,7 @@ const listen = (
   params: ListenQueryParams,
   options: ListenQueryOptions,
 ) =>
-  // oxlint-disable-next-line no-unsafe-type-assertion
+  // oxlint-disable no-unsafe-type-assertion
   defer(() =>
     // getVersionedClient(options.apiVersion)
     client.listen(query, params, {
@@ -45,6 +45,7 @@ const listen = (
       tag: options.tag,
     }),
   ) as Observable<ReconnectEvent | WelcomeEvent | MutationEvent>
+// oxlint-enable no-unsafe-type-assertion
 
 function isWelcomeEvent(
   event: MutationEvent | ReconnectEvent | WelcomeEvent,

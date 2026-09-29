@@ -111,11 +111,11 @@ function AssistDocumentFormEditable(props: ObjectInputProps) {
       onPathOpen: (path) => {
         if (!instruction && path.length === 4 && path[2] === 'instructions') {
           setParams(
-            // oxlint-disable-next-line no-unsafe-type-assertion
             typed<AssistInspectorRouteParams>({
               ...params,
               // oxlint-disable-next-line no-unsafe-type-assertion
               [instructionParam]: (path[3] as KeyedSegment)?._key,
+              // oxlint-disable-next-line no-unsafe-type-assertion
             }) as Record<keyof AssistInspectorRouteParams, string | undefined>,
           )
         } else {
@@ -283,7 +283,6 @@ function FieldsInitializer({
     }
     onChange(event)
     initialized.current = true
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [activePath, onChange, pathKey, existingField, missingPresetInstructions])
 
   return null

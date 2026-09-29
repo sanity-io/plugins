@@ -128,11 +128,11 @@ describe('InternationalizedArray', () => {
     mockToastPush.mockClear()
     mockGetFormValue.mockReset()
     vi.mocked(useFormValue).mockImplementation(() => 'article')
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: false,
       isDeleted: false,
       isInitialValueLoading: false,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as unknown as ReturnType<typeof useDocumentPane>)
   })
 
@@ -504,9 +504,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('does not auto-add default languages when document is being deleted', () => {
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: true,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
@@ -522,10 +522,10 @@ describe('InternationalizedArray', () => {
   })
 
   test('does not auto-add default languages when document has been deleted', async () => {
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleted: true,
       isDeleting: false,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
@@ -656,11 +656,11 @@ describe('InternationalizedArray', () => {
   })
 
   test('does not auto-add default languages while initial value templates are loading', async () => {
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: false,
       isDeleted: false,
       isInitialValueLoading: true,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
@@ -682,11 +682,11 @@ describe('InternationalizedArray', () => {
     // The v3.82 race: field `readOnly` is still false while the patch channel
     // rejects writes because initial values (or another document-level lock)
     // have not resolved.
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: false,
       isDeleted: false,
       formState: {readOnly: true},
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
@@ -717,11 +717,11 @@ describe('InternationalizedArray', () => {
 
     let loading = true
     vi.mocked(useDocumentPane).mockImplementation(() => {
-      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- test pane stub
       return {
         isDeleting: false,
         isDeleted: false,
         isInitialValueLoading: loading,
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- test pane stub
       } as unknown as ReturnType<typeof useDocumentPane>
     })
 
@@ -743,11 +743,11 @@ describe('InternationalizedArray', () => {
   })
 
   test('does not auto-reorder while initial value templates are loading', () => {
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: false,
       isDeleted: false,
       isInitialValueLoading: true,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
@@ -969,9 +969,9 @@ describe('InternationalizedArray', () => {
   })
 
   test('renders MemberItemError for members with kind !== "item"', () => {
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: false,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useLanguageFilterStudioContext).mockReturnValue({
