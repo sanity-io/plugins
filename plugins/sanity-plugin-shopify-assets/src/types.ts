@@ -5,11 +5,18 @@ export interface PluginConfig {
    * Your *.myshopify.com domain. Do not include https:// or any path.
    */
   shopifyDomain: string
+  /**
+   * Dataset that holds the Sanity Connect Shopify sync.
+   * When omitted, asset requests use the active Studio dataset.
+   * A field-level `options.dataset` overrides this value.
+   */
+  dataset?: string
 }
 
 export interface ObjectSchemaWithOptions extends ObjectSchemaType {
   options: {
     shopifyDomain: string
+    dataset?: string
   }
 }
 

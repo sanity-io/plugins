@@ -18,14 +18,27 @@ const PHOTO_PADDING = 1
 
 export interface AssetPickerProps extends ObjectInputProps<Asset> {
   shopifyDomain: string
+  /**
+   * Dataset connected to Shopify. Falls back to the active Studio dataset.
+   */
+  dataset?: string
   isOpen: boolean
   onClose: () => void
 }
 
 export default function ShopifyAssetPicker(props: AssetPickerProps) {
-  const {isOpen, onClose, shopifyDomain, onChange, schemaType, value} = props
+  const {
+    isOpen,
+    onClose,
+    shopifyDomain,
+    dataset: configuredDataset,
+    onChange,
+    schemaType,
+    value,
+  } = props
   const projectId = useProjectId()
-  const dataset = useDataset()
+  const studioDataset = useDataset()
+  const dataset = configuredDataset || studioDataset
   const client = useClient({apiVersion: '2021-06-07'})
   const token = client.config().token
 
