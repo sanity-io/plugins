@@ -37,7 +37,7 @@ corepack enable
 pnpm install
 ```
 
-Install the pinned version globally before regenerating `pnpm-lock.yaml`. When an older global pnpm self-switches to the pinned version, the outer shim injects `pnpm_config_pm_on_fail=ignore`, and the inner pnpm then leaves the lockfile's `packageManagerDependencies` block unwritten. Running the pinned version directly (what `pnpm/action-setup` does in CI) records it correctly.
+Install the pinned version globally before regenerating `pnpm-lock.yaml`. When an older global pnpm self-switches to the pinned version, the outer shim injects `pnpm_config_pm_on_fail=ignore`, and the inner pnpm then leaves the lockfile's `packageManagerDependencies` block unwritten. Running the pinned version directly (what `pnpm/setup` does in CI) records it correctly.
 
 Because pnpm 12 records that block, `pnpm-lock.yaml` is **two YAML documents**: a leading env document with `packageManagerDependencies`, then the dependency graph. Any tool that reads the lockfile must parse multi-document YAML; a single-document parser silently sees only the env document and concludes the project has no dependencies. This is why the `vercel` CLI must stay at `58.9.5` or newer, with the versions `pnpm install` reports as trust downgrades listed in `trustPolicyExclude`—see [`e2e/README.md`](e2e/README.md) (`Vercel studio preview`).
 
