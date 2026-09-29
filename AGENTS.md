@@ -213,7 +213,8 @@ Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUse
 
 ### Lint Specifics
 
-- **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors). React Compiler rules run natively via the [React Compiler vendored into oxlint](https://oxc.rs/blog/2026-08-18-react-compiler-support.html); the root `oxlint.config.ts` enables all of them (stricter than the plugin-kit preset) since this monorepo builds plugins with React Compiler.
+- **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors). React Compiler rules run natively via the [React Compiler vendored into oxlint](https://oxc.rs/blog/2026-08-18-react-compiler-support.html); the root `oxlint.config.ts` enables all of them (stricter than the plugin-kit preset) since this monorepo builds plugins with React Compiler, except `react/exhaustive-effect-dependencies`, which only checks effects and duplicates `react/exhaustive-deps`. Keep the `oxlint`/`oxlint-tsgolint` versions and the rules in line with sanity-io/ui.
+- **`oxc/no-barrel-file`** fails files whose `export *` re-exports load more than 100 modules, counting everything they import, type-only imports included. Prefer named re-exports (or `export type *` for modules that only export types); the existing `export *` entry points carry inline suppressions.
 - **TypeScript type checking** is included in `pnpm lint` via oxlint — no separate `tsc` needed
 - Run `pnpm lint:fix` to auto-fix issues when possible
 
