@@ -7,10 +7,8 @@
 "@sanity/document-internationalization": patch
 "@sanity/embeddings-index-ui": patch
 "@sanity/personalization-plugin": patch
-"@sanity/presets": patch
 "@sanity/sfcc": patch
 "sanity-naive-html-serializer": patch
-"sanity-plugin-hotspot-array": patch
 "sanity-plugin-internationalized-array": patch
 "sanity-plugin-markdown": patch
 "sanity-plugin-media": patch
@@ -19,4 +17,4 @@
 "sanity-translations-tab": patch
 ---
 
-Update inline oxlint suppressions for oxlint 1.86 and the updated shared lint rules
+Update inline oxlint suppressions for the updated shared lint rules
