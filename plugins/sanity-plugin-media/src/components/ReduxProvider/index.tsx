@@ -21,6 +21,7 @@ type Props = {
   client: SanityClient
   document?: SanityDocument
   excludeTagSlugs?: string[]
+  localeIds?: string[]
   selectedAssets?: AssetSourceComponentProps['selectedAssets']
   showMediaLibraryAssets?: boolean
 }
@@ -52,6 +53,7 @@ function createReduxStore(props: Props): CreatedStore {
         ...assetsInitialState,
         assetTypes: isSupportedAssetType(props?.assetType) ? [props.assetType] : ['file', 'image'],
         excludeTagSlugs: props.excludeTagSlugs?.length ? [...props.excludeTagSlugs] : [],
+        localeIds: props.localeIds?.length ? [...props.localeIds] : [],
         showMediaLibraryAssets: props.showMediaLibraryAssets ?? true,
       },
       debug: {
