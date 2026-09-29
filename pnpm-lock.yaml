@@ -353,6 +353,7 @@ overrides:
   '@sanity/vision': next
   groq: next
   sanity: next
+  sanity>@tanstack/react-table: '-'
   tsx: ^4.23.12
   vite@8.3.1>rolldown: 1.2.9
 
