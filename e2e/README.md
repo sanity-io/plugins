@@ -97,6 +97,10 @@ CI deploys the studio under test to Vercel per run (same as [`sanity-io/sanity`]
 
 The studio preview reuses the same Vercel project and secrets as report hosting (`VERCEL_E2E_REPORT_*`). Report deploys are `--prebuilt` static output, so they are unaffected by the project’s build settings.
 
+`vercel build` runs with the repo's pinned `vercel` CLI, which must be **`vercel@58.9.5` or newer**. Older releases bundle an `@vercel/build-utils` that parses `pnpm-lock.yaml` as a single YAML document; pnpm 12 writes it as two (a leading env document holding `packageManagerDependencies`), so package-manager detection fails, silently falls back to npm, and `npm install` dies on `Unsupported URL Type "workspace:"`. If that error reappears, check the CLI version first.
+
+From `58.7.0` on, `vercel` and some of its `@vercel/*` dependencies are published without the npm provenance attestations earlier releases had, so `trustPolicy: no-downgrade` rejects those versions unless they are listed in `trustPolicyExclude` in `pnpm-workspace.yaml`. Each CLI bump therefore needs the exact versions that `pnpm install` reports as `ERR_PNPM_TRUST_DOWNGRADE` added there, one at a time (`trustPolicyExcludePrune` drops the old ones). Don't add `@vercel/*` versions that pnpm doesn't report.
+
 ### One-time setup
 
 1. **Set the Root Directory** of the Vercel project to `dev/e2e-studio` (Project Settings → General) and enable “Include source files outside of the Root Directory”. Build command and output dir come from `dev/e2e-studio/vercel.json`.
