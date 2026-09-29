@@ -189,6 +189,9 @@ overrides:
   tsx: ^4.23.12
   vite@8.3.1>rolldown: 1.2.9
 
+patchedDependencies:
+  rolldown-plugin-dts@0.28.6: b9c2c28ca6a2decbf1e59a976798dae1ca9452fdef636be93e6c952be0f319e8
+
 importers:
 
   .:
@@ -28240,7 +28243,7 @@ snapshots:
   robot3@0.4.1:
     optional: true
 
-  rolldown-plugin-dts@0.28.6(oxc-resolver@11.24.2)(rolldown@1.2.11)(typescript@7.0.2):
+  rolldown-plugin-dts@0.28.6(patch_hash=b9c2c28ca6a2decbf1e59a976798dae1ca9452fdef636be93e6c952be0f319e8)(oxc-resolver@11.24.2)(rolldown@1.2.11)(typescript@7.0.2):
     dependencies:
       dts-resolver: 3.0.0(oxc-resolver@11.24.2)
       get-tsconfig: 5.0.0-beta.6
@@ -29820,7 +29823,7 @@ snapshots:
       obug: 2.1.4
       picomatch: 4.0.7
       rolldown: 1.2.11
-      rolldown-plugin-dts: 0.28.6(oxc-resolver@11.24.2)(rolldown@1.2.11)(typescript@7.0.2)
+      rolldown-plugin-dts: 0.28.6(patch_hash=b9c2c28ca6a2decbf1e59a976798dae1ca9452fdef636be93e6c952be0f319e8)(oxc-resolver@11.24.2)(rolldown@1.2.11)(typescript@7.0.2)
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tree-kill: 1.2.2

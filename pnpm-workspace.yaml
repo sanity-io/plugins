@@ -223,3 +223,11 @@ trustPolicyExclude:
   - ts-api-utils@2.3.0
   - undici@5.29.0
   - vite@6.4.1
+
+patchedDependencies:
+  # Since 0.28.2 (tsdown 0.23), bundled `.d.ts` files export declarations inline and can end up
+  # without an `export {…}` statement, and TypeScript treats every top-level declaration of such a
+  # file as exported: option types a plugin never exported would become importable from it
+  # (rolldown/tsdown#1087). The patch is the upstream fix, sxzz/rolldown-plugin-dts#310, which
+  # appends `export {}` like tsc does. Delete it once a rolldown-plugin-dts release includes it.
+  rolldown-plugin-dts@0.28.6: patches/rolldown-plugin-dts@0.28.6.patch

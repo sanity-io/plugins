@@ -1,0 +1,27 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index cb3854eccb1c8208bdd18bde6d9026a6261dff61..525e5982d26046cadb717eda69a630e0643fb05a 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -1421,7 +1421,7 @@ function createFakeJsPlugin({ sourcemap, cjsDefault, sideEffects }) {
+ 			code: EMPTY_STUB,
+ 			map: null
+ 		};
+-		if (!program.body.some(isModuleStatement)) program.body.push(b.ExportNamedDeclaration({
++		if (!program.body.some(isModuleStatement) || !program.body.some(isScopeMarker) && program.body.some(isImplicitlyExported)) program.body.push(b.ExportNamedDeclaration({
+ 			declaration: null,
+ 			specifiers: [],
+ 			source: null,
+@@ -1480,6 +1480,13 @@ function isModuleStatement(node) {
+ 		"TSExportAssignment"
+ 	]) || node.type === "TSImportEqualsDeclaration" && node.moduleReference.type === "TSExternalModuleReference";
+ }
++function isScopeMarker(node) {
++	return node.type === "ExportNamedDeclaration" && !node.declaration || is.oneOf(node, ["ExportAllDeclaration", "TSExportAssignment"]) || node.type === "ExportDefaultDeclaration" && !is.Declaration(node.declaration);
++}
++function isImplicitlyExported(node) {
++	if (!is.Declaration(node) || node.type === "TSImportEqualsDeclaration") return false;
++	return node.type !== "TSModuleDeclaration" || node.kind !== "global" && !is.StringLiteral(node.id);
++}
+ //#endregion
+ //#region src/tsc/vue.ts
+ const debug$3 = createDebug("rolldown-plugin-dts:vue");
