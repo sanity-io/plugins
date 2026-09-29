@@ -213,10 +213,11 @@ trustPolicyExcludePrune: true
 trustPolicyExclude:
   - '@sanity/sdk@3.5.0'
   - '@sanity/sdk-react@3.5.0'
-  # vercel@58.7.0+ and its @vercel/* dependencies ship without npm provenance
-  # attestations (Vercel rotated its trusted-publishing OIDC config). Still GitHub
-  # trusted publishing, same publisher. Needed because only these releases parse pnpm 12's
-  # two-document pnpm-lock.yaml; drop them once Vercel publishes with provenance again.
+  # The vercel CLI (root devDependency) only parses pnpm 12's two-document pnpm-lock.yaml
+  # from 58.9.5 on. From 58.7.0 on, vercel and some of its @vercel/* dependencies are still
+  # published from GitHub Actions, but without the npm provenance attestations earlier
+  # releases had. These are the exact versions `pnpm install` reports as
+  # ERR_PNPM_TRUST_DOWNGRADE; drop them once Vercel publishes with provenance again.
   - '@vercel/backends@11.0.1'
   - '@vercel/build-utils@14.13.1'
   - '@vercel/cervel@0.1.70'
