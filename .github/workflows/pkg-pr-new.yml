@@ -28,7 +28,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Build
-        run: pnpm turbo run build --filter='!./dev/*' --filter='!./apps/*'
+        run: pnpm turbo run build --filter='!./dev/*'
 
       - name: Detect changed plugin packages from changesets
         id: changed-packages

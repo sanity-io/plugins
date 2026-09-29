@@ -5,7 +5,7 @@ A React [Storybook](https://storybook.js.org) for the plugins in this monorepo, 
 ```sh
 pnpm dev:storybook   # http://localhost:6006
 pnpm test:browser    # every story as a browser test
-pnpm storybook:build # static build in apps/storybook/storybook-static
+pnpm storybook:build # static build in dev/storybook/storybook-static
 ```
 
 ## Storybook guidelines

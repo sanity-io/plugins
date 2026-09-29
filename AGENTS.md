@@ -375,7 +375,7 @@ React profiling is already available in the development build from `pnpm dev`. `
 
 ### Storybook
 
-`apps/storybook` is a React Storybook set up like sanity-io/ui's, with stories in `apps/storybook/stories/<plugin>/` (see its `README.md`). `pnpm dev:storybook` serves it at `http://localhost:6006` without Sanity authentication, `pnpm test:browser` renders every story in headless Chromium through the Storybook Vitest addon (the `storybook-test` CI job), and `pnpm storybook:build` writes the static build to `apps/storybook/storybook-static`. Install the browser once with `pnpm --filter plugins-storybook exec playwright install chromium`. The preview imports `@sanity/ui/styles.css` because the published `@sanity/ui` dist doesn't import its own CSS, and it keeps the vanilla-extract Vite plugin because workspace plugins resolve to their `.css.ts` source. `pretest` and the CI build job skip `./apps/*` the way they skip `./dev/*`.
+`dev/storybook` is a React Storybook set up like sanity-io/ui's `apps/storybook`, next to the other dev apps, with stories in `dev/storybook/stories/<plugin>/` (see its `README.md`). `pnpm dev:storybook` serves it at `http://localhost:6006` without Sanity authentication, `pnpm test:browser` renders every story in headless Chromium through the Storybook Vitest addon (the `storybook-test` CI job), and `pnpm storybook:build` writes the static build to `dev/storybook/storybook-static`. Install the browser once with `pnpm --filter plugins-storybook exec playwright install chromium`. The preview imports `@sanity/ui/styles.css` because the published `@sanity/ui` dist doesn't import its own CSS, and it keeps the vanilla-extract Vite plugin because workspace plugins resolve to their `.css.ts` source. Like the other `dev/*` apps, it's skipped by `pretest` and the CI build job.
 
 ## Creating a New Plugin
 
@@ -559,7 +559,7 @@ The shared rules (plugins, options, categories, rules) live in the `@sanity/plug
 
 ```
 plugins/
-├── apps/storybook/       # React Storybook for plugin components (localhost:6006)
+├── dev/storybook/        # React Storybook for plugin components (localhost:6006)
 ├── dev/test-studio/      # Test Sanity Studio (localhost:3333)
 ├── packages/@repo/       # Internal shared packages
 ├── packages/@sanity/     # Published tooling packages (e.g. @sanity/plugin-kit)

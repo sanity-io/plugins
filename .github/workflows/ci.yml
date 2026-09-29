@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - name: Build
-        run: pnpm turbo run build --filter='!./dev/*' --filter='!./apps/*'
+        run: pnpm turbo run build --filter='!./dev/*'
 
   lint:
     runs-on: ubuntu-latest
@@ -71,7 +71,7 @@ jobs:
         if: failure()
         with:
           name: vitest-failure-screenshots
-          path: apps/storybook/**/__screenshots__/
+          path: dev/storybook/**/__screenshots__/
           if-no-files-found: ignore
 
   test_shards:

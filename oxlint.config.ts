@@ -206,7 +206,7 @@ export default defineConfig({
       rules: {
         'storybook/no-uninstalled-addons': [
           'error',
-          {packageJsonLocation: './apps/storybook/package.json'},
+          {packageJsonLocation: './dev/storybook/package.json'},
         ],
       },
     },

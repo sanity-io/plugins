@@ -28,7 +28,7 @@
     "postgenerate": "pnpm install && pnpm format && pnpm build",
     "postinstall": "husky",
     "pregenerate": "turbo run build --filter='./turbo/generators'",
-    "pretest": "turbo run build --filter='!./dev/*' --filter='!./apps/*'",
+    "pretest": "turbo run build --filter='!./dev/*'",
     "release": "changeset publish",
     "storybook:build": "pnpm --filter plugins-storybook build",
     "test": "vitest",
