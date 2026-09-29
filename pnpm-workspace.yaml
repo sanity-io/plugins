@@ -96,6 +96,11 @@ catalogs:
     sanity: ^5 || ^6.0.0-0
     styled-components: ^6.1
 
+# Collapse compatible versions of the same dependency on every install, so the
+# lockfile stays deduped without waiting for the `Dedupe lockfile` workflow to
+# open a follow-up PR. Frozen installs leave the lockfile untouched.
+autoDedupe: true
+
 # When running `pnpm add`, reuse a dependency's catalog version automatically if
 # it already exists in a catalog, so shared deps stay aligned on a single version.
 catalogMode: prefer
@@ -103,8 +108,9 @@ dedupeDirectDeps: true
 
 dedupePeers: true
 linkWorkspacePackages: deep
+strictPeerDependencies: false
 
-# minimumReleaseAge defaults to 1440 (1 day) in pnpm v11 — do not set it
+# minimumReleaseAge defaults to 1440 (1 day) since pnpm v11 — do not set it
 # explicitly unless overriding the default.
 #
 # Keep this list to first-party packages and closely tracked tooling that may
@@ -154,10 +160,7 @@ minimumReleaseAgeExclude:
   - react-is
   - react-is@19.3.0
   - react-rx@4.2.5
-  - react-rx@5.1.1
-  - react-rx@6.0.0
   - rolldown-plugin-dts
-  - rollup
   - sanity
   - tsdown
   - verkit
@@ -209,18 +212,46 @@ trustPolicy: no-downgrade
 trustPolicyExcludePrune: true
 
 trustPolicyExclude:
-  - '@octokit/endpoint@9.0.6'
-  - '@octokit/plugin-paginate-rest@9.2.2'
-  - '@sanity/import@7.0.1'
-  - '@sanity/sdk@2.1.2 || 3.0.0-rc.1 || 3.5.0'
+  - '@sanity/sdk@3.5.0'
   - '@sanity/sdk-react@3.5.0'
-  - chokidar@4.0.3
-  - groq@3.88.1-typegen-experimental.0
-  - react-redux@8.1.3 || 9.2.0
-  - reselect@5.1.1
+  # The vercel CLI (root devDependency) only parses pnpm 12's two-document pnpm-lock.yaml
+  # from 58.9.5 on. From 58.7.0 on, vercel and some of its @vercel/* dependencies are still
+  # published from GitHub Actions, but without the npm provenance attestations earlier
+  # releases had. These are the exact versions `pnpm install` reports as
+  # ERR_PNPM_TRUST_DOWNGRADE; drop them once Vercel publishes with provenance again.
+  - '@vercel/backends@11.0.1'
+  - '@vercel/build-utils@14.13.1'
+  - '@vercel/cervel@0.1.70'
+  - '@vercel/cli-auth@0.3.9'
+  - '@vercel/cli-config@0.3.0'
+  - '@vercel/cli-exec@1.0.1'
+  - '@vercel/container@11.0.1'
+  - '@vercel/detect-agent@1.2.5'
+  - '@vercel/elysia@11.0.1'
+  - '@vercel/error-utils@2.2.1'
+  - '@vercel/express@11.0.1'
+  - '@vercel/fastify@11.0.1'
+  - '@vercel/gatsby-plugin-vercel-analytics@1.0.12'
+  - '@vercel/gatsby-plugin-vercel-builder@2.2.62'
+  - '@vercel/go@14.0.1'
+  - '@vercel/h3@11.0.1'
+  - '@vercel/hono@11.0.1'
+  - '@vercel/hydrogen@12.0.1'
+  - '@vercel/koa@11.0.1'
+  - '@vercel/nestjs@11.0.1'
+  - '@vercel/next@15.0.1'
+  - '@vercel/node@16.0.1'
+  - '@vercel/oidc@3.8.9'
+  - '@vercel/python-analysis@0.14.0'
+  - '@vercel/python@17.0.1'
+  - '@vercel/redwood@13.0.1'
+  - '@vercel/remix-builder@16.0.1'
+  - '@vercel/ruby@13.0.1'
+  - '@vercel/rust@12.0.1'
+  - '@vercel/static-build@13.0.1'
+  - '@vercel/static-config@3.4.3'
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
-  - ts-api-utils@2.3.0
   - undici@5.29.0
-  - vite@6.4.1
+  - vercel@60.1.3
   - why-is-node-running@3.2.2

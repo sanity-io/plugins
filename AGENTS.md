@@ -27,7 +27,7 @@ Use the **latest LTS** release of Node.js.
 
 ### pnpm Version
 
-The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v11 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
+The exact pnpm version is managed via the `packageManager` field in root `package.json` (currently pnpm **v12**). You only need pnpm **v12 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
 
 ```bash
 # Enable corepack to automatically use the correct pnpm version
@@ -37,7 +37,15 @@ corepack enable
 pnpm install
 ```
 
-pnpm v11 defaults `minimumReleaseAge` to 1 day. `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@4.2.5`) for one-off upgrades still inside that window.
+Install the pinned version globally before regenerating `pnpm-lock.yaml`. When an older global pnpm self-switches to the pinned version, the outer shim injects `pnpm_config_pm_on_fail=ignore`, and the inner pnpm then leaves the lockfile's `packageManagerDependencies` block unwritten. Running the pinned version directly (what `pnpm/setup` does in CI) records it correctly.
+
+Because pnpm 12 records that block, `pnpm-lock.yaml` is **two YAML documents**: a leading env document with `packageManagerDependencies`, then the dependency graph. Any tool that reads the lockfile must parse multi-document YAML; a single-document parser silently sees only the env document and concludes the project has no dependencies. This is why the `vercel` CLI must stay at `58.9.5` or newer, with the versions `pnpm install` reports as trust downgrades listed in `trustPolicyExclude`—see [`e2e/README.md`](e2e/README.md) (`Vercel studio preview`).
+
+`autoDedupe: true` in `pnpm-workspace.yaml` collapses compatible duplicate versions on every non-frozen install, so the lockfile arrives deduped instead of waiting for the `Dedupe lockfile` workflow to open a follow-up PR. Frozen installs never rewrite the lockfile. It requires pnpm >= 12.6.0.
+
+pnpm 12.6.0 doesn't settle on one set of optional peers for `plugins/@sanity/debug-preview-url-secret-plugin`. A fresh install, and any install or `pnpm dedupe` that re-resolves the lockfile, toggles `@vitejs/devtools` and `oxc-transform-react` in the peer suffixes of its `sanity` and `@sanity/tsdown-config` entries. No version changes and frozen installs are unaffected, so don't commit a `pnpm-lock.yaml` diff that only toggles those suffixes. The `Dedupe lockfile` workflow runs `pnpm dedupe` twice for the same reason.
+
+pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@4.2.5`) for one-off upgrades still inside that window. `minimumReleaseAgeExcludePrune` and `trustPolicyExcludePrune` drop exclude entries that no longer match anything in the tree, but only on an install that actually rewrites the lockfile—a no-op install leaves stale entries in place.
 
 Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
 
@@ -577,7 +585,7 @@ Run `pnpm build` first—some packages need to be built for type information to 
 
 ### "Command not found: pnpm"
 
-Ensure you have pnpm v11+ installed, then run:
+Ensure you have pnpm v12+ installed, then run:
 
 ```bash
 corepack enable
