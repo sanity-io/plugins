@@ -17,11 +17,11 @@ export const assistInspector: DocumentInspector = {
   component: AssistInspectorWrapper,
   onClose({params}) {
     return {
-      // oxlint-disable-next-line no-unsafe-type-assertion
       params: typed<AssistInspectorRouteParams>({
         ...params,
         [fieldPathParam]: undefined,
         [instructionParam]: undefined,
+        // oxlint-disable-next-line no-unsafe-type-assertion
       }) as typeof params,
     }
   },

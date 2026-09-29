@@ -7,10 +7,10 @@ import {MigrationBanner, type MigrationBannerProps} from './MigrationBanner'
 // Helper to create old format value (language in _key, no language field)
 function createOldFormatValue(languageId: string, content?: unknown): InternationalizedArrayItem {
   // Cast needed because Value type now requires language field
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   return {
     _key: languageId,
     value: content,
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   } as InternationalizedArrayItem
 }
 
