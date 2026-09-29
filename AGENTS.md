@@ -574,6 +574,10 @@ Run `pnpm build` first—some packages need to be built for type information to 
 
 `@sanity/tsdown-config` overloads `defineConfig` so `reactCompiler.reactServer: true` returns `Promise<UserConfig[]>` (dual client / `react-server` builds) and every other call returns `Promise<UserConfig>`. Annotate plugin configs with `satisfies Promise<UserConfig | UserConfig[]>` so both overloads type-check — do not use `satisfies Promise<UserConfig>` alone. The generator template already uses the union.
 
+### `ERR_PNPM_UNUSED_PATCH` for `rolldown-plugin-dts`
+
+`pnpm-workspace.yaml` patches `rolldown-plugin-dts@0.28.6`, tsdown's declaration bundler, with the upstream fix for [rolldown/tsdown#1087](https://github.com/rolldown/tsdown/issues/1087): without it, a bundled `.d.ts` whose exports are all inline has no `export {…}` statement, and TypeScript then exports every top-level declaration in it, including option types the plugin never exported. When a tsdown bump or lockfile maintenance resolves a newer `rolldown-plugin-dts`, installs fail with `ERR_PNPM_UNUSED_PATCH`. If that release includes [sxzz/rolldown-plugin-dts#310](https://github.com/sxzz/rolldown-plugin-dts/pull/310), delete the `patchedDependencies` entry and the file in `patches/`; otherwise redo the patch for the new version with `pnpm patch` and `pnpm patch-commit`.
+
 ### "Command not found: pnpm"
 
 Ensure you have pnpm v11+ installed, then run:
@@ -638,7 +642,7 @@ Tests run against the dedicated bare-bones `dev/e2e-studio` (workspaces `/chromi
 
 ### Node.js version notes
 
-`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 24 is preferred when available, and **Node >= 22.18 is required for a full `pnpm build`**: the `@repo/generators` build runs `tsdown`, which loads its `.mts` config through Node's native TypeScript support. On older Node 22.x (e.g. the `v22.14.0` that may be the VM default) that build fails with `Failed to import module "unrun"`. **`pnpm format` and `pnpm lint` also require Node >= 22.18** (oxfmt and oxlint load the TypeScript `oxfmt.config.ts` / `oxlint.config.ts` through the same mechanism). A new enough runtime is usually available via `nvm` (e.g. `export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH"`). `pnpm test` works on older Node 22 too.
+`dev/test-studio` declares `engines.node: "24"`; the monorepo otherwise targets latest LTS. Node 24 is preferred when available, and **Node >= 22.18 is required for a full `pnpm build`**: the `@repo/generators` build runs `tsdown`, which loads its `.mts` config through Node's native TypeScript support. tsdown 0.23 (like `@sanity/tsdown-config` 0.28 and `@sanity/pkg-utils` 13) supports Node `^22.18.0 || ^24.11.0 || >=26.0.0`, so Node 25 is not supported for builds. On older Node 22.x (e.g. the `v22.14.0` that may be the VM default) that build fails with `Failed to import module "unrun"`. **`pnpm format` and `pnpm lint` also require Node >= 22.18** (oxfmt and oxlint load the TypeScript `oxfmt.config.ts` / `oxlint.config.ts` through the same mechanism). A new enough runtime is usually available via `nvm` (e.g. `export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH"`). `pnpm test` works on older Node 22 too.
 
 ### Lint / build / test
 
