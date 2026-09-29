@@ -23,8 +23,8 @@ lib-cov
 coverage
 *.lcov
 
-# Vitest blob reports
-.vitest-reports
+# Vitest reports and attachments
+.vitest
 
 # nyc test coverage
 .nyc_output

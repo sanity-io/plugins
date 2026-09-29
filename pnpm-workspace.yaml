@@ -56,7 +56,7 @@ catalog:
   '@vanilla-extract/css': ^1.21.2
   '@vanilla-extract/dynamic': ^2.1.5
   '@vis.gl/react-google-maps': ^1.9.0
-  '@vitest/coverage-v8': ^4.1.11
+  '@vitest/coverage-v8': ^5.0.2
   '@xstate/react': ^6.1.0
   date-fns: ^4.4.0
   dequal: ^2.0.3
@@ -87,7 +87,7 @@ catalog:
   typescript: 7.0.2
   validate-npm-package-name: ^8.0.0
   video.js: ^7.21.7
-  vitest: ^4.1.11
+  vitest: ^5.0.2
   xstate: ^5.33.2
 
 catalogs:
@@ -259,3 +259,4 @@ trustPolicyExclude:
   - semver@5.7.2 || 6.3.1
   - undici@5.29.0
   - vercel@60.1.3
+  - why-is-node-running@3.2.2

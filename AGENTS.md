@@ -232,7 +232,7 @@ Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUse
 
 ## Testing
 
-The monorepo uses [Vitest v4](https://vitest.dev) for testing.
+The monorepo uses [Vitest v5](https://vitest.dev) for testing.
 
 ### Running Tests
 
@@ -301,6 +301,7 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Snapshots are generated with `pnpm test -u`
 - Root Vitest sets `SC_DISABLE_SPEEDY=false` so styled-components keeps its fast CSSOM injection path under jsdom (upstream disables it when `NODE_ENV !== 'production'`, which makes first mounts of styled-heavy trees slow enough to trip default timeouts). Same approach as [sanity#13675](https://github.com/sanity-io/sanity/pull/13675).
 - For plugins that use vanilla-extract: register `vanillaExtractPlugin()` in the plugin’s `vitest.config.ts` (required so `.css.ts` compiles under Vitest) and include `'@vanilla-extract/css/disableRuntimeStyles'` in `setupFiles` (no-op under `node`, skips CSS injection for `jsdom`/`happy-dom` suites; remove only when a test asserts real CSS) — see the `sanity-plugin-best-practices` styling reference (`Disabling runtime styles in tests`)
+- For suites that use `@testing-library/jest-dom`: register its matchers in the setup file with `expect.extend(matchers)` from `@testing-library/jest-dom/matchers`, and get their types from `/// <reference types="@testing-library/jest-dom/vitest" />` (see `plugins/@sanity/presets/src/test/setup.ts`), as sanity-io/ui does. Don't import the `@testing-library/jest-dom/vitest` entry: it extends whichever vitest pnpm links next to jest-dom, which can be a different copy than the one running the tests.
 
 ## Pull Request Workflow
 
