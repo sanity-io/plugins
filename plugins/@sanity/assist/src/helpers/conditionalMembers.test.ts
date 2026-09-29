@@ -17,7 +17,6 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -27,6 +26,7 @@ describe('conditionalMembers', () => {
           field: {path: [docSchema.fields[0]!.name], schemaType: docSchema.fields[0]!.type},
         },
       ],
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as any
     const conditionalMembers = getConditionalMembers(docState)
 
@@ -45,7 +45,6 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -55,6 +54,7 @@ describe('conditionalMembers', () => {
           field: {path: [docSchema.fields[0]!.name], schemaType: docSchema.fields[0]!.type},
         },
       ],
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as any
     const conditionalMembers = getConditionalMembers(docState)
 
@@ -74,7 +74,6 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -84,6 +83,7 @@ describe('conditionalMembers', () => {
           field: {path: [docSchema.fields[0]!.name], schemaType: docSchema.fields[0]!.type},
         },
       ],
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as any
     const conditionalMembers = getConditionalMembers(docState)
 
@@ -102,7 +102,6 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -126,6 +125,7 @@ describe('conditionalMembers', () => {
           },
         },
       ],
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as any
     const conditionalMembers = getConditionalMembers(docState)
 
@@ -156,7 +156,6 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -179,6 +178,7 @@ describe('conditionalMembers', () => {
           },
         },
       ],
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as any
     const conditionalMembers = getConditionalMembers(docState)
 
@@ -204,7 +204,6 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -223,6 +222,7 @@ describe('conditionalMembers', () => {
           },
         },
       ],
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as any
     const conditionalMembers = getConditionalMembers(docState)
 
@@ -248,7 +248,6 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -267,6 +266,7 @@ describe('conditionalMembers', () => {
           },
         },
       ],
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as any
     const conditionalMembers = getConditionalMembers(docState)
 
@@ -298,7 +298,6 @@ describe('conditionalMembers', () => {
       ],
     }).get('article')
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     const docState = {
       path: [],
       schemaType: docSchema,
@@ -321,6 +320,7 @@ describe('conditionalMembers', () => {
           },
         },
       ],
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as any
     const conditionalMembers = getConditionalMembers(docState, 1)
 
