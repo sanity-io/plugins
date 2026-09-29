@@ -33,12 +33,12 @@ catalog:
   '@sanity/icons': ^5.2.2
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.16.0
-  '@sanity/pkg-utils': ^12.3.4
+  '@sanity/pkg-utils': ^13.0.3
   '@sanity/preview-url-secret': ^4.1.5
   '@sanity/schema': ^6.16.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.1
-  '@sanity/tsdown-config': ^0.27.1
+  '@sanity/tsdown-config': ^0.28.2
   '@sanity/types': ^6.16.0
   '@sanity/ui': ^4.2.7
   '@sanity/util': ^6.16.0
@@ -82,7 +82,7 @@ catalog:
   scroll-into-view-if-needed: ^3.1.0
   styled-components: ^6.5.3
   suspend-react: ^0.1.3
-  tsdown: ^0.22.14
+  tsdown: ^0.23.0
   tsx: ^4.23.12
   typescript: 7.0.2
   validate-npm-package-name: ^8.0.0
@@ -259,3 +259,11 @@ trustPolicyExclude:
   - semver@5.7.2 || 6.3.1
   - undici@5.29.0
   - vercel@60.1.3
+
+patchedDependencies:
+  # Since 0.28.2 (tsdown 0.23), bundled `.d.ts` files export declarations inline and can end up
+  # without an `export {…}` statement, and TypeScript treats every top-level declaration of such a
+  # file as exported: option types a plugin never exported would become importable from it
+  # (rolldown/tsdown#1087). The patch is the upstream fix, sxzz/rolldown-plugin-dts#310, which
+  # appends `export {}` like tsc does. Delete it once a rolldown-plugin-dts release includes it.
+  rolldown-plugin-dts@0.28.6: patches/rolldown-plugin-dts@0.28.6.patch
