@@ -1,5 +1,11 @@
 # @sanity/themer
 
+## 0.8.1
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Move `@sanity/themer` from the sanity-io/ui monorepo to the Sanity plugins monorepo. The package builds to the same JavaScript and CSS, with the same exports and dependency ranges; issues and pull requests now go to [sanity-io/plugins](https://github.com/sanity-io/plugins).
+
 ## 0.8.0
 
 ### Minor Changes
