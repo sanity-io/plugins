@@ -1,5 +1,5 @@
 ---
-"@sanity/themer": patch
+'@sanity/themer': patch
 ---
 
 author: @stipsan
