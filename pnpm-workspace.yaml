@@ -14,6 +14,8 @@ allowBuilds:
   '@swc/core': false
   better-sqlite3: false
   esbuild: false
+  # Its install script installs the git hooks from lefthook.yml
+  lefthook: true
   onnxruntime-node: false
   protobufjs: false
   sharp: false

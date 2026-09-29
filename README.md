@@ -53,7 +53,7 @@ pnpm lint
 # Build all packages
 pnpm build
 
-# Format code
+# Format code (this also runs through a pre-commit git hook)
 pnpm format
 ```
 
