@@ -108,6 +108,7 @@ dedupeDirectDeps: true
 
 dedupePeers: true
 linkWorkspacePackages: deep
+strictPeerDependencies: false
 
 # minimumReleaseAge defaults to 1440 (1 day) since pnpm v11 — do not set it
 # explicitly unless overriding the default.
