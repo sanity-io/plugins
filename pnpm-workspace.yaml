@@ -96,8 +96,9 @@ catalogs:
     sanity: ^5 || ^6.0.0-0
     styled-components: ^6.1
 
-# Collapse compatible versions of the same dependency on every non-frozen
-# install, so the lockfile stays deduped. Frozen installs leave it untouched.
+# Collapse compatible versions of the same dependency on every install, so the
+# lockfile stays deduped without waiting for the `Dedupe lockfile` workflow to
+# open a follow-up PR. Frozen installs leave the lockfile untouched.
 autoDedupe: true
 
 # When running `pnpm add`, reuse a dependency's catalog version automatically if
