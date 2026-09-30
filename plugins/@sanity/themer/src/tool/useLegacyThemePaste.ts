@@ -3,14 +3,7 @@ import {useEffect} from 'react'
 
 import {useThemer} from './context'
 import {convertLegacyTheme} from './legacyTheme'
-
-/** Whether a paste lands in a field that takes it as text */
-function isEditable(target: EventTarget | null): boolean {
-  return (
-    target instanceof HTMLElement &&
-    (target.isContentEditable || target.matches('input, textarea, select'))
-  )
-}
+import {isEditable} from './useThemeCodes'
 
 /**
  * Imports the hosted Themer themes pasted while the sidebar shows: pasting a
