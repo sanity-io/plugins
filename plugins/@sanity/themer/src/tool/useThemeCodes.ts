@@ -64,7 +64,8 @@ export function useThemeCodes(): {
 
 /**
  * Adds a theme pasted anywhere in the Studio while the themer's list is
- * showing — pastes into inputs and other editable things are theirs.
+ * showing — pastes into inputs and other editable things are theirs, and so
+ * are pastes that something else, like the import dialog, already took.
  *
  * @internal
  */
@@ -76,7 +77,7 @@ export function usePasteThemeCodes(): void {
     if (!open) return undefined
 
     const handlePaste = (event: ClipboardEvent) => {
-      if (isEditable(event.target)) return
+      if (event.defaultPrevented || isEditable(event.target)) return
 
       const theme = decodeTheme(event.clipboardData?.getData('text/plain') ?? '')
 
@@ -93,7 +94,12 @@ export function usePasteThemeCodes(): void {
   }, [open, send, toast])
 }
 
-function isEditable(target: EventTarget | null): boolean {
+/**
+ * Whether a paste lands in a field that takes it as text
+ *
+ * @internal
+ */
+export function isEditable(target: EventTarget | null): boolean {
   return (
     target instanceof HTMLElement &&
     (target.isContentEditable || target.matches('input, textarea, select'))
