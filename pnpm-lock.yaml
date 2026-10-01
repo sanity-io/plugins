@@ -356,6 +356,9 @@ overrides:
   tsx: ^4.23.12
   vite@8.3.1>rolldown: 1.2.9
 
+patchedDependencies:
+  '@sanity/vanilla-extract-vite-plugin@0.2.20': 9ee96b99c08ea8eb09844f6dad729fb63d4915e76b2ba2e75cfe716e32378f58
+
 importers:
 
   .:
@@ -463,7 +466,7 @@ importers:
         version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(patch_hash=9ee96b99c08ea8eb09844f6dad729fb63d4915e76b2ba2e75cfe716e32378f58)(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@storybook/addon-a11y':
         specifier: ^10.6.0
         version: 10.6.0(storybook@10.6.0)
@@ -607,7 +610,7 @@ importers:
         version: 4.2.7(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(patch_hash=9ee96b99c08ea8eb09844f6dad729fb63d4915e76b2ba2e75cfe716e32378f58)(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@sanity/vercel-protection-bypass':
         specifier: workspace:*
         version: link:../../plugins/@sanity/vercel-protection-bypass
@@ -1081,7 +1084,7 @@ importers:
         version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(patch_hash=9ee96b99c08ea8eb09844f6dad729fb63d4915e76b2ba2e75cfe716e32378f58)(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -1482,7 +1485,7 @@ importers:
         version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(patch_hash=9ee96b99c08ea8eb09844f6dad729fb63d4915e76b2ba2e75cfe716e32378f58)(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@types/google.maps':
         specifier: ^3.65.5
         version: 3.66.4
@@ -2081,7 +2084,7 @@ importers:
         version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(patch_hash=9ee96b99c08ea8eb09844f6dad729fb63d4915e76b2ba2e75cfe716e32378f58)(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@types/node':
         specifier: ^24.13.3
         version: 24.19.0
@@ -2320,7 +2323,7 @@ importers:
         version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(patch_hash=9ee96b99c08ea8eb09844f6dad729fb63d4915e76b2ba2e75cfe716e32378f58)(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@types/node':
         specifier: ^24.13.3
         version: 24.19.0
@@ -3419,7 +3422,7 @@ importers:
         version: 0.27.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.147.0)(tsdown@0.22.14)(typescript@7.0.2)(vite@8.3.1)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
-        version: 0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)
+        version: 0.2.20(patch_hash=9ee96b99c08ea8eb09844f6dad729fb63d4915e76b2ba2e75cfe716e32378f58)(babel-plugin-macros@3.1.0)(vite@8.3.1)
       '@types/node':
         specifier: ^24.13.3
         version: 24.19.0
@@ -23359,7 +23362,7 @@ snapshots:
       - babel-plugin-macros
       - rolldown
 
-  '@sanity/vanilla-extract-vite-plugin@0.2.20(babel-plugin-macros@3.1.0)(vite@8.3.1)':
+  '@sanity/vanilla-extract-vite-plugin@0.2.20(patch_hash=9ee96b99c08ea8eb09844f6dad729fb63d4915e76b2ba2e75cfe716e32378f58)(babel-plugin-macros@3.1.0)(vite@8.3.1)':
     dependencies:
       '@sanity/vanilla-extract-integration': 0.1.20(babel-plugin-macros@3.1.0)
       '@vanilla-extract/css': 1.21.2(babel-plugin-macros@3.1.0)
