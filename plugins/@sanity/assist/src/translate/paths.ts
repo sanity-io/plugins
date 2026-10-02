@@ -83,7 +83,7 @@ function outputTargetsLockedField(enclosingType: SchemaType, outputPath: Path): 
     return false
   }
   const field = enclosingType.fields.find((candidate) => candidate.name === segment)
-  return field ? isStaticAssistLocked(field.type) : false
+  return field ? isFieldLockedForTranslation(enclosingType, field) : false
 }
 
 function extractPaths(
