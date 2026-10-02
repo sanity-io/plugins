@@ -91,6 +91,10 @@ export interface FieldTranslationConfig {
    * The function should return `undefined` for all documentMembers that should not be directly translated,
    * or are nested fields under a translated path.
    *
+   * Output paths that are literally `readOnly: true` or `hidden: true`, or that sit under such a field,
+   * are dropped before translation runs. The same applies to fields with `options.aiAssist.exclude: true`.
+   * Conditional `readOnly` / `hidden` functions are not dropped here.
+   *
    * ## Default function
    *
    * The default function for `translationOutputs` is configured to be automatically compatible with sanity-plugin-internationalized-array

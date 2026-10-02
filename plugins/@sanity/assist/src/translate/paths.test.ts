@@ -261,4 +261,126 @@ describe('paths', () => {
     const members = getDocumentMembersFlat(doc, docSchema, 1)
     expect(members.map((p) => pathToString(p.path))).toEqual(['translations'])
   })
+
+  test('does not translate fields that are literally readOnly, hidden, or excluded', () => {
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'object',
+          name: 'internationalizedArrayString',
+          fields: [{type: 'string', name: 'value'}],
+        }),
+        defineType({
+          type: 'document',
+          name: 'article',
+          fields: [
+            {
+              type: 'array',
+              name: 'title',
+              of: [{type: 'internationalizedArrayString'}],
+            },
+            {
+              type: 'array',
+              name: 'slug',
+              readOnly: true,
+              of: [{type: 'internationalizedArrayString'}],
+            },
+            {
+              type: 'array',
+              name: 'internalName',
+              hidden: true,
+              of: [{type: 'internationalizedArrayString'}],
+            },
+            {
+              type: 'array',
+              name: 'sku',
+              options: {aiAssist: {exclude: true}},
+              of: [{type: 'internationalizedArrayString'}],
+            },
+            {
+              type: 'array',
+              name: 'lockedByCondition',
+              readOnly: () => true,
+              of: [{type: 'internationalizedArrayString'}],
+            },
+          ],
+        }),
+      ],
+    }).get('article')
+
+    const item = (value: string) => ({
+      _type: 'internationalizedArrayString',
+      _key: 'en',
+      value,
+    })
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'article',
+      title: [item('Hello')],
+      slug: [item('hello')],
+      internalName: [item('Hello')],
+      sku: [item('SKU-1')],
+      lockedByCondition: [item('Hello')],
+    }
+
+    const members = getDocumentMembersFlat(doc, docSchema)
+    const transMap = getFieldLanguageMap(docSchema, members, 'en', ['nl'], defaultLanguageOutputs)
+
+    expect(transMap.map((map) => pathToString(map.inputPath))).toEqual([
+      'title[_key=="en"]',
+      // conditional readOnly is not decided from the schema literal
+      'lockedByCondition[_key=="en"]',
+    ])
+    expect(
+      transMap.map((map) => map.outputs.map((output) => pathToString(output.outputPath))),
+    ).toEqual([['title[_key=="nl"]'], ['lockedByCondition[_key=="nl"]']])
+  })
+
+  test('does not write a locale translation into a readOnly language field', () => {
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'object',
+          name: 'localeString',
+          fields: [
+            {type: 'string', name: 'en'},
+            {type: 'string', name: 'nl', readOnly: true},
+            {type: 'string', name: 'de'},
+          ],
+        }),
+        defineType({
+          type: 'document',
+          name: 'article',
+          fields: [{type: 'localeString', name: 'title'}],
+        }),
+      ],
+    }).get('article')
+
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'article',
+      title: {en: 'Hello', nl: 'Hallo', de: 'Hallo'},
+    }
+
+    const members = getDocumentMembersFlat(doc, docSchema)
+    const transMap = getFieldLanguageMap(
+      docSchema,
+      members,
+      'en',
+      ['nl', 'de'],
+      defaultLanguageOutputs,
+    )
+
+    expect(transMap).toEqual(
+      typed<FieldLanguageMap[]>([
+        {
+          inputLanguageId: 'en',
+          inputPath: ['title', 'en'],
+          outputs: [{id: 'de', outputPath: ['title', 'de']}],
+        },
+      ]),
+    )
+  })
 })

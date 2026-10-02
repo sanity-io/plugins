@@ -1,16 +1,23 @@
 // oxlint-disable no-accumulating-spread
 import {extractWithPath} from '@sanity/mutator'
 import {
+  isArraySchemaType,
   isDocumentSchemaType,
+  isIndexSegment,
+  isIndexTuple,
   isKeySegment,
+  isObjectSchemaType,
+  isRecord,
   type ObjectSchemaType,
   type Path,
+  type PathSegment,
   pathToString,
   type SanityDocumentLike,
-  isRecord,
+  type SchemaType,
 } from 'sanity'
 
 import {randomKey} from '../_lib/randomKey'
+import {isSchemaAssistEnabled} from '../helpers/assistSupported'
 import type {DocumentMember, TranslationOutput, TranslationOutputsFunction} from './types'
 
 export interface FieldLanguageMap {
@@ -214,9 +221,13 @@ export function getFieldLanguageMap(
       enclosingType,
       translateFromLanguageId,
       outputLanguageIds,
-    )?.filter((translation) => translation.id !== translateFromLanguageId)
+    )?.filter(
+      (translation) =>
+        translation.id !== translateFromLanguageId &&
+        !writesStaticallyIgnoredField(documentSchema, translation.outputPath),
+    )
 
-    if (translations) {
+    if (translations?.length) {
       translationMaps.push({
         inputLanguageId: translateFromLanguageId,
         inputPath: member.path,
@@ -227,4 +238,64 @@ export function getFieldLanguageMap(
   }
 
   return translationMaps
+}
+
+/**
+ * Translate fields sends explicit output paths. Literal `readOnly` / `hidden`
+ * fields (and anything nested under them) must not be targets — the same fields
+ * Assist otherwise skips. Conditional functions are left alone; their runtime
+ * state is sent separately as conditional members.
+ *
+ * `options.aiAssist.exclude` is included because those fields are removed from
+ * the serialized schema, and requesting them makes the translate task fail.
+ */
+function isStaticallyIgnored(schemaType: SchemaType): boolean {
+  return (
+    schemaType.readOnly === true || schemaType.hidden === true || !isSchemaAssistEnabled(schemaType)
+  )
+}
+
+function writesStaticallyIgnoredField(rootSchema: ObjectSchemaType, outputPath: Path): boolean {
+  if (isStaticallyIgnored(rootSchema)) return true
+
+  let current: SchemaType = rootSchema
+  for (const segment of outputPath) {
+    if (
+      entersArrayItem(segment) &&
+      isArraySchemaType(current) &&
+      current.of.length > 0 &&
+      current.of.every((itemType) => isStaticallyIgnored(itemType))
+    ) {
+      return true
+    }
+    const next = schemaAtSegment(current, segment)
+    if (!next) return false
+    if (isStaticallyIgnored(next)) return true
+    current = next
+  }
+  return false
+}
+
+function entersArrayItem(segment: PathSegment): segment is Exclude<PathSegment, string> {
+  return isIndexSegment(segment) || isKeySegment(segment) || isIndexTuple(segment)
+}
+
+function schemaAtSegment(current: SchemaType, segment: PathSegment): SchemaType | undefined {
+  if (typeof segment === 'string') {
+    if (!isObjectSchemaType(current)) return undefined
+    return current.fields.find((field) => field.name === segment)?.type
+  }
+
+  if (entersArrayItem(segment)) {
+    if (!isArraySchemaType(current)) return undefined
+    const objectItems = current.of.filter((itemType) => isObjectSchemaType(itemType))
+    if (objectItems.length === 1) return objectItems[0]
+    if (objectItems.length === 0 && current.of.length === 1) return current.of[0]
+    // Several item types: the key does not say which one. Stop so a sibling
+    // type's readOnly flag cannot hide a writable item.
+    return undefined
+  }
+
+  const exhaustive: never = segment
+  return exhaustive
 }
