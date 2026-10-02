@@ -1,5 +1,7 @@
-import {Box, Card, Layer} from '@sanity/ui'
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {BoundaryElementProvider, Box, Card, Layer} from '@sanity/ui'
+import {startTransition, useCallback, useEffect, useRef, useState} from 'react'
+
+import type {ThemerProps} from '#types'
 
 import {MAXIMUM_WIDTH, MINIMUM_WIDTH} from './sidebarWidth'
 import {ThemerSidebar} from './ThemerSidebar'
@@ -45,12 +47,17 @@ function writeStoredWidth(width: number): void {
  *
  * @internal
  */
-export default function ResizableSidebar(props: {overlay: boolean}) {
-  const {overlay} = props
+export default function ResizableSidebar({
+  actorRef,
+  dispatch,
+  navbarHeight,
+  split,
+}: Pick<ThemerProps, 'actorRef' | 'dispatch' | 'navbarHeight' | 'split'>) {
   const [width, setWidth] = useState(readStoredWidth)
   const [dragging, setDragging] = useState(false)
   const drag = useRef<{pointerId: number; startX: number; startWidth: number} | null>(null)
 
+  // @TODO schedule the write to localStorage to avoid blocking the main thread
   useEffect(() => writeStoredWidth(width), [width])
 
   const handlePointerDown = useCallback(
@@ -94,36 +101,47 @@ export default function ResizableSidebar(props: {overlay: boolean}) {
     setWidth((current) => clampWidth(current + step))
   }, [])
 
+  const [boundaryElement, setBoundaryElement] = useState<HTMLDivElement | null>(null)
+
   return (
-    <Layer
-      className={sidebar}
-      data-overlay={overlay}
-      style={overlay ? undefined : {width}}
-      zOffset={100}
-    >
-      <Card borderLeft={!overlay} className={frame} height="fill">
-        {!overlay && (
-          <div
-            aria-label="Resize the themer"
-            className={resizeHandle}
-            aria-orientation="vertical"
-            aria-valuemax={MAXIMUM_WIDTH}
-            aria-valuemin={MINIMUM_WIDTH}
-            aria-valuenow={width}
-            data-dragging={dragging}
-            onDoubleClick={() => setWidth(MINIMUM_WIDTH)}
-            onKeyDown={handleKeyDown}
-            onPointerCancel={handlePointerUp}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            // oxlint-disable-next-line prefer-tag-over-role -- a window splitter is a focusable, draggable separator, which an hr is not
-            role="separator"
-            tabIndex={0}
-          />
-        )}
+    <Layer className={sidebar} style={{width}} zOffset={100}>
+      <Card
+        borderLeft
+        className={frame}
+        height="fill"
+        ref={(boundaryElement) => {
+          startTransition(() => setBoundaryElement(boundaryElement))
+          // Intentionally not unsetting the element as it would create unnecessary work when <Activity> unhides
+          return () => {}
+        }}
+      >
+        <div
+          aria-label="Resize the themer"
+          className={resizeHandle}
+          aria-orientation="vertical"
+          aria-valuemax={MAXIMUM_WIDTH}
+          aria-valuemin={MINIMUM_WIDTH}
+          aria-valuenow={width}
+          data-dragging={dragging}
+          onDoubleClick={() => setWidth(MINIMUM_WIDTH)}
+          onKeyDown={handleKeyDown}
+          onPointerCancel={handlePointerUp}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          // oxlint-disable-next-line prefer-tag-over-role -- a window splitter is a focusable, draggable separator, which an hr is not
+          role="separator"
+          tabIndex={0}
+        />
         <Box className={content} height="fill" overflow="hidden">
-          <ThemerSidebar />
+          <BoundaryElementProvider element={boundaryElement}>
+            <ThemerSidebar
+              split={split}
+              navbarHeight={navbarHeight}
+              actorRef={actorRef}
+              dispatch={dispatch}
+            />
+          </BoundaryElementProvider>
         </Box>
       </Card>
     </Layer>
