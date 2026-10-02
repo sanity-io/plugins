@@ -1,5 +1,11 @@
 # @sanity/themer
 
+## 0.9.0
+
+### Minor Changes
+
+- [#2065](https://github.com/sanity-io/plugins/pull/2065) [`e1c357b`](https://github.com/sanity-io/plugins/commit/e1c357b612641bae98f9a5fcb80b37b6de41d2bc) Thanks [@stipsan](https://github.com/stipsan)! - Adopt <Activity>, <ViewTransition> and React.lazy APIs according to best practice. Removes the top-level default theme config, it will be added back again later
+
 ## 0.8.1
 
 ### Patch Changes
