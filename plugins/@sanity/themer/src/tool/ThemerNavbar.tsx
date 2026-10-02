@@ -7,10 +7,10 @@ import type {NavbarAction} from 'sanity/_dangerously_use_private_internals_that_
 
 import {addThemerTransitionType} from './addThemerTransitionType'
 import {
-  PluginConfigContext,
   ToolDispatchContext,
   ToolIsOpenContext,
   ToolSplitIsOpenContext,
+  usePluginConfig,
 } from './context'
 
 import {viewTransitionClasses} from './ViewTransitions.css'
@@ -47,7 +47,7 @@ function ThemerNavbarButton() {
       if (!open) iconRef.current?.spin()
     })
 
-  const title = use(PluginConfigContext)!.title
+  const {title} = usePluginConfig()
 
   return (
     <ViewTransition default="none" update={viewTransitionClasses.navbarButtonTooltip.update}>
@@ -59,7 +59,6 @@ function ThemerNavbarButton() {
               aria-label={title}
               // The wheel itself shows the load, where the `loading` prop would
               // cover it with a spinner
-              // disabled={loading}
               icon={
                 <Suspense fallback={<ColorWheelIcon />}>
                   <AnimatedColorWheelIcon busy={busy} ref={iconRef} />
@@ -89,7 +88,7 @@ export function ThemerNavbar(props: NavbarProps) {
     // The component itself rather than a `() => <ThemerNavbarButton />`
     // wrapper: the Studio renders `render` as a component, and a wrapper
     // made anew on every render would remount the button each time —
-    // resetting its animation and its once-only introduction
+    // resetting its animation
     render: ThemerNavbarButton,
   } satisfies NavbarAction
   return props.renderDefault({

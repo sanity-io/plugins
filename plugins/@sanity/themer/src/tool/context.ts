@@ -1,10 +1,10 @@
 import {createContext, useContext} from 'react'
 import type {ActorRefFrom} from 'xstate'
-import {createEmptyActor} from 'xstate'
 
 import type {BuildThemeOptions} from '../theme/options'
-import type {ThemerEvent, themerMachine} from './machine'
+import type {themerMachine} from './machine'
 import type {ToolReducerAction, ToolReducerState} from './reducer'
+import type {ThemerView} from './selectors'
 import type {ThemerTheme} from './themes'
 
 /*
@@ -24,21 +24,13 @@ export const ToolIsOpenContext = createContext<boolean>(false)
 export const ToolDispatchContext = createContext<React.Dispatch<ToolReducerAction>>(() => {
   throw new Error('ToolDispatchContext not initialized')
 })
-/**
- * The themer machine's actor, for everything in the sidebar to select from
- * and send to. We don't do null checks on this one because we ensure it is
- * always provided in other ways
- * @internal
- */
-export const ToolActorRefContext = createContext<ActorRefFrom<typeof themerMachine>>(
-  // oxlint-disable-next-line no-unsafe-type-assertion -- a stand-in until the layout provides the actor
-  createEmptyActor() as unknown as ActorRefFrom<typeof themerMachine>,
-)
 /** @internal */
 export const ToolSplitIsOpenContext = createContext<boolean>(false)
 
 /** The `themerTool` options, resolved with their defaults @internal */
 export interface PluginConfig {
+  /** The theme options the Studio's configured theme was generated from */
+  baseOptions: BuildThemeOptions
   /** What the tool goes by in the navbar toggle's label and tooltip */
   title: string
 }
@@ -57,70 +49,27 @@ export function usePluginConfig(): PluginConfig {
   return config
 }
 
-/** @deprecated prop drill instead pls */
-export type ThemerView =
-  | {name: 'list'}
-  | {
-      name: 'edit'
-      slug: string
-      /** Whether the title input should take focus, for themes that were just created */
-      focusTitle: boolean
-    }
-  | {name: 'removed'}
-
-/** @deprecated prop drill instead pls */
-export interface ThemerContextValue {
-  /** @deprecated prop drill instead pls */
-  baseOptions: BuildThemeOptions
-  /** @deprecated prop drill instead pls */
-  themes: ThemerTheme[]
-  /** @deprecated prop drill instead pls */
-  removed: ThemerTheme[]
-  /** @deprecated prop drill instead pls */
-  active: ThemerTheme
-  /** @deprecated prop drill instead pls */
-  images: Record<string, string>
-  /** @deprecated prop drill instead pls */
-  view: ThemerView
-  /** @deprecated prop drill instead pls */
-  send: (event: ThemerEvent) => void
-}
-
-/** @deprecated prop drill instead pls */
-export const ThemerContext = createContext<ThemerContextValue | null>(null)
-
 /**
- * The state machine send() method that for when the tool is open (the machine is paused when closed)
- * @internal
- * @deprecated use ToolActorRefContext instead
- */
-export const ToolSendContext = createContext<(event: ThemerEvent) => void>(() => {
-  throw new Error('ToolSendContext not initialized')
-})
-
-/**
- * Prop-drilled props
+ * What the layout hands down to the sidebar and its flows, each component
+ * picking what it needs (`Pick<ThemerProps, ...>`): the tool reducer's
+ * state, the machine's actor to select from and send to, and what the
+ * layout has selected from it already — the themes, which flow the sidebar
+ * is in, the images of this session and the Studio navbar's height.
+ *
  * @internal
  */
 export interface ThemerProps extends ToolReducerState {
   actorRef: ActorRefFrom<typeof themerMachine>
   dispatch: React.Dispatch<ToolReducerAction>
+  /** The themes to pick from, in list order */
   themes: ThemerTheme[]
+  /** The removed themes, which can be restored */
   removed: ThemerTheme[]
+  /** The applied theme */
   active: ThemerTheme
+  /** Object URLs of the images themes took their palette from this session, by slug */
   images: Record<string, string>
+  /** The height of the Studio navbar, which the sidebar's header matches — `null` until it has rendered */
   navbarHeight: number | null
-  /** @deprecated we do not support mobile layouts yet */
-  mobile: boolean
-  view:
-    | {name: 'list'}
-    | {
-        name: 'edit'
-        slug: string
-        /** Whether the title input should take focus, for themes that were just created */
-        focusTitle: boolean
-      }
-    | {name: 'removed'}
-  /** @deprecated use actorRef.send() instead */
-  send: (event: ThemerEvent) => void
+  view: ThemerView
 }

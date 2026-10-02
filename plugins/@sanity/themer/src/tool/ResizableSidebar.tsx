@@ -2,7 +2,6 @@ import {Box, Card, Layer} from '@sanity/ui'
 import {useCallback, useEffect, useRef, useState} from 'react'
 
 import type {ThemerProps} from './context'
-import {PersistActorSnapshot} from './PersistActorSnapshot'
 import {MAXIMUM_WIDTH, MINIMUM_WIDTH} from './sidebarWidth'
 import {ThemerSidebar} from './ThemerSidebar'
 
@@ -42,12 +41,10 @@ function writeStoredWidth(width: number): void {
 /**
  * The themer sidebar, in a layer along the right edge of the Studio. Its left
  * edge drags (or arrow-keys) it wider, up to twice its default width — the
- * width sticks between sessions. As an overlay (small screens) it covers the
- * Studio edge to edge instead, with nothing to resize.
+ * width sticks between sessions.
  *
  * @internal
  */
-// dispatch={dispatch} images={images} removed={removed} send={send} themes={themes} view={view}
 export default function ResizableSidebar({
   active,
   actorRef,
@@ -119,43 +116,40 @@ export default function ResizableSidebar({
   }, [])
 
   return (
-    <>
-      <Layer className={sidebar} style={{width}} zOffset={100}>
-        <Card borderLeft className={frame} height="fill">
-          <div
-            aria-label="Resize the themer"
-            className={resizeHandle}
-            aria-orientation="vertical"
-            aria-valuemax={MAXIMUM_WIDTH}
-            aria-valuemin={MINIMUM_WIDTH}
-            aria-valuenow={width}
-            data-dragging={dragging}
-            onDoubleClick={() => setWidth(MINIMUM_WIDTH)}
-            onKeyDown={handleKeyDown}
-            onPointerCancel={handlePointerUp}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            // oxlint-disable-next-line prefer-tag-over-role -- a window splitter is a focusable, draggable separator, which an hr is not
-            role="separator"
-            tabIndex={0}
+    <Layer className={sidebar} style={{width}} zOffset={100}>
+      <Card borderLeft className={frame} height="fill">
+        <div
+          aria-label="Resize the themer"
+          className={resizeHandle}
+          aria-orientation="vertical"
+          aria-valuemax={MAXIMUM_WIDTH}
+          aria-valuemin={MINIMUM_WIDTH}
+          aria-valuenow={width}
+          data-dragging={dragging}
+          onDoubleClick={() => setWidth(MINIMUM_WIDTH)}
+          onKeyDown={handleKeyDown}
+          onPointerCancel={handlePointerUp}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          // oxlint-disable-next-line prefer-tag-over-role -- a window splitter is a focusable, draggable separator, which an hr is not
+          role="separator"
+          tabIndex={0}
+        />
+        <Box className={content} height="fill" overflow="hidden">
+          <ThemerSidebar
+            split={split}
+            navbarHeight={navbarHeight}
+            active={active}
+            actorRef={actorRef}
+            dispatch={dispatch}
+            images={images}
+            removed={removed}
+            themes={themes}
+            view={view}
           />
-          <Box className={content} height="fill" overflow="hidden">
-            <ThemerSidebar
-              split={split}
-              navbarHeight={navbarHeight}
-              active={active}
-              actorRef={actorRef}
-              dispatch={dispatch}
-              images={images}
-              removed={removed}
-              themes={themes}
-              view={view}
-            />
-          </Box>
-        </Card>
-      </Layer>
-      <PersistActorSnapshot actorRef={actorRef} />
-    </>
+        </Box>
+      </Card>
+    </Layer>
   )
 }

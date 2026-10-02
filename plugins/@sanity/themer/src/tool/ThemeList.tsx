@@ -18,10 +18,6 @@ import {usePasteThemeCodes, useThemeCodes} from './useThemeCodes'
 import {cardGrid} from './ThemeList.css'
 
 /**
- * One column at the sidebar's default width; wider sidebars — and the
- * overlay on small screens — fit more cards per row
- */
-/**
  * The flow for picking a theme: a grid of theme cards — the configured theme,
  * the presets and the user's own themes — that drag into the order the user
  * wants, with the entry points to the add and restore flows below. A theme
@@ -120,7 +116,7 @@ export function ThemeList({
         </Flex>
       </Card>
 
-      {pasting && <PasteThemeDialog onClose={() => setPasting(false)} />}
+      {pasting && <PasteThemeDialog actorRef={actorRef} onClose={() => setPasting(false)} />}
     </>
   )
 }
