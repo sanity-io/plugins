@@ -3,14 +3,17 @@ import {extractWithPath} from '@sanity/mutator'
 import {
   isDocumentSchemaType,
   isKeySegment,
+  isObjectSchemaType,
   type ObjectSchemaType,
   type Path,
   pathToString,
   type SanityDocumentLike,
+  type SchemaType,
   isRecord,
 } from 'sanity'
 
 import {randomKey} from '../_lib/randomKey'
+import {isSchemaAssistEnabled} from '../helpers/assistSupported'
 import type {DocumentMember, TranslationOutput, TranslationOutputsFunction} from './types'
 
 export interface FieldLanguageMap {
@@ -33,7 +36,36 @@ export function getDocumentMembersFlat(
     return []
   }
 
+  // A locked document has no writable fields to translate.
+  if (isStaticAssistLocked(schemaType)) {
+    return []
+  }
+
   return extractPaths(doc, schemaType, [], Math.min(maxDepth, ABSOLUTE_MAX_DEPTH))
+}
+
+/**
+ * Literal `readOnly` / `hidden` fields are skipped by AI Assist, and
+ * `options.aiAssist.exclude` drops the field from the serialized schema.
+ * Translate fields sends an explicit path map, so these fields must be left
+ * out here. Otherwise the API overwrites them (and can write a value that
+ * fails validation), or fails because the excluded field has no schema.
+ * Conditional (`function`) readOnly/hidden is reported separately via
+ * conditionalMembers and is not treated as locked here.
+ */
+function isStaticAssistLocked(schemaType: SchemaType): boolean {
+  return (
+    schemaType.readOnly === true || schemaType.hidden === true || !isSchemaAssistEnabled(schemaType)
+  )
+}
+
+function outputTargetsLockedField(enclosingType: SchemaType, outputPath: Path): boolean {
+  const segment = outputPath.at(-1)
+  if (typeof segment !== 'string' || !isObjectSchemaType(enclosingType)) {
+    return false
+  }
+  const field = enclosingType.fields.find((candidate) => candidate.name === segment)
+  return field ? isStaticAssistLocked(field.type) : false
 }
 
 function extractPaths(
@@ -52,7 +84,7 @@ function extractPaths(
     const parentValue = path.length ? extractWithPath(pathToString(path), doc)[0]?.value : doc
     const value = isRecord(parentValue) ? parentValue[field.name] : undefined
 
-    if (value === undefined || value === null) {
+    if (value === undefined || value === null || isStaticAssistLocked(fieldSchema)) {
       return acc
     }
 
@@ -95,7 +127,7 @@ function extractPaths(
               },
             )
           }
-          if (item._key && itemSchema) {
+          if (item._key && itemSchema && !isStaticAssistLocked(itemSchema)) {
             const innerFields = extractPaths(
               doc,
               // oxlint-disable-next-line no-unsafe-type-assertion
@@ -214,9 +246,13 @@ export function getFieldLanguageMap(
       enclosingType,
       translateFromLanguageId,
       outputLanguageIds,
-    )?.filter((translation) => translation.id !== translateFromLanguageId)
+    )?.filter(
+      (translation) =>
+        translation.id !== translateFromLanguageId &&
+        !outputTargetsLockedField(enclosingType, translation.outputPath),
+    )
 
-    if (translations) {
+    if (translations?.length) {
       translationMaps.push({
         inputLanguageId: translateFromLanguageId,
         inputPath: member.path,

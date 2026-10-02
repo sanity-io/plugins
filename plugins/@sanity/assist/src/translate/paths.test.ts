@@ -261,4 +261,158 @@ describe('paths', () => {
     const members = getDocumentMembersFlat(doc, docSchema, 1)
     expect(members.map((p) => pathToString(p.path))).toEqual(['translations'])
   })
+
+  test('does not translate readOnly, hidden, or assist-excluded internationalized array fields', () => {
+    const internationalizedString = {
+      type: 'object' as const,
+      name: 'internationalizedArrayStringValue',
+      fields: [
+        {type: 'string' as const, name: 'value'},
+        // The language id is hidden in sanity-plugin-internationalized-array.
+        // It must not block translating the writable item around it.
+        {type: 'string' as const, name: 'language', hidden: true},
+      ],
+    }
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'document',
+          name: 'product',
+          fields: [
+            {
+              type: 'array',
+              name: 'title',
+              of: [internationalizedString],
+            },
+            {
+              type: 'array',
+              name: 'slug',
+              readOnly: true,
+              of: [internationalizedString],
+            },
+            {
+              type: 'array',
+              name: 'internalName',
+              hidden: true,
+              of: [internationalizedString],
+            },
+            {
+              type: 'array',
+              name: 'sku',
+              options: {aiAssist: {exclude: true}},
+              of: [internationalizedString],
+            },
+            {
+              type: 'object',
+              name: 'locked',
+              readOnly: true,
+              fields: [
+                {
+                  type: 'array',
+                  name: 'title',
+                  of: [internationalizedString],
+                },
+              ],
+            },
+          ],
+        }),
+      ],
+    }).get('product')
+
+    const item = (value: string) => ({
+      _type: 'internationalizedArrayStringValue',
+      _key: 'english-key',
+      language: 'en',
+      value,
+    })
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'product',
+      title: [item('Hello')],
+      slug: [item('hello')],
+      internalName: [item('secret')],
+      sku: [item('sku-1')],
+      locked: {title: [item('Locked')]},
+    }
+
+    const members = getDocumentMembersFlat(doc, docSchema)
+    expect(members.map((member) => pathToString(member.path))).toEqual([
+      'title',
+      'title[_key=="english-key"]',
+      'title[_key=="english-key"].value',
+    ])
+
+    const transMap = getFieldLanguageMap(docSchema, members, 'en', ['nl'], defaultLanguageOutputs)
+    expect(transMap).toEqual(
+      typed<FieldLanguageMap[]>([
+        {
+          inputLanguageId: 'en',
+          inputPath: ['title', {_key: 'english-key'}],
+          outputs: [{id: 'nl', outputPath: ['title', {_key: expect.any(String)}]}],
+          relativeLanguagePath: ['language'],
+        },
+      ]),
+    )
+  })
+
+  test('does not output translations into readOnly or hidden locale fields', () => {
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'object',
+          name: 'localeString',
+          fields: [
+            {type: 'string', name: 'en'},
+            {type: 'string', name: 'nl', readOnly: true},
+            {type: 'string', name: 'de', hidden: true},
+            {type: 'string', name: 'fr', options: {aiAssist: {exclude: true}}},
+            {type: 'string', name: 'es'},
+          ],
+        }),
+        defineType({
+          type: 'document',
+          name: 'article',
+          fields: [{type: 'localeString', name: 'title'}],
+        }),
+      ],
+    }).get('article')
+
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'article',
+      title: {
+        en: 'Hello',
+        nl: 'Hallo',
+        de: 'Hallo',
+        fr: 'Bonjour',
+        es: 'Hola',
+      },
+    }
+
+    const members = getDocumentMembersFlat(doc, docSchema)
+    expect(members.map((member) => pathToString(member.path))).toEqual([
+      'title',
+      'title.en',
+      'title.es',
+    ])
+
+    const transMap = getFieldLanguageMap(
+      docSchema,
+      members,
+      'en',
+      ['nl', 'de', 'fr', 'es'],
+      defaultLanguageOutputs,
+    )
+    expect(transMap).toEqual(
+      typed<FieldLanguageMap[]>([
+        {
+          inputLanguageId: 'en',
+          inputPath: ['title', 'en'],
+          outputs: [{id: 'es', outputPath: ['title', 'es']}],
+        },
+      ]),
+    )
+  })
 })
