@@ -1,4 +1,11 @@
-import {motion, MotionValue, useTransform, animate, useMotionValue} from 'motion/react'
+import {
+  animate,
+  motion,
+  type MotionValue,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+} from 'motion/react'
 import {useEffect, useImperativeHandle} from 'react'
 
 import {
@@ -81,7 +88,10 @@ export default function AnimatedColorWheelIcon({
   ref: React.Ref<{spin: () => void}>
 }) {
   const progress = useMotionValue(0)
-  const rotate = useTransform(progress, (value) => wheelRotation(value))
+  // The spin is a transform the motion value drives, which `MotionConfig`'s
+  // reduced-motion setting does not reach, so it is left out here
+  const reducedMotion = useReducedMotion()
+  const rotate = useTransform(progress, (value) => (reducedMotion ? 0 : wheelRotation(value)))
 
   useImperativeHandle(
     ref,

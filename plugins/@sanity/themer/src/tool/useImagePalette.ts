@@ -17,7 +17,6 @@ export function useImagePalette(onPalette: (palette: ImagePalette, file: File) =
   const toast = useToast()
   const [busy, setBusy] = useState(false)
   const onPaletteRef = useRef(onPalette)
-  const mountedRef = useRef(true)
   // Picks are numbered so that a slow earlier image cannot overwrite a later
   // pick once its extraction finishes
   const latestPickRef = useRef(0)
@@ -26,23 +25,17 @@ export function useImagePalette(onPalette: (palette: ImagePalette, file: File) =
     onPaletteRef.current = onPalette
   }, [onPalette])
 
-  useEffect(() => {
-    mountedRef.current = true
-
-    return () => {
-      mountedRef.current = false
-    }
-  }, [])
-
   const pickImage = useCallback(
     (file: File) => {
       const pick = ++latestPickRef.current
 
       setBusy(true)
 
-      // Whether this pick still matters: it is the latest one and the
-      // component that asked for it is still around
-      const isCurrent = () => mountedRef.current && latestPickRef.current === pick
+      // Whether this pick is still the latest one. Nothing checks whether the
+      // component still shows: adding the theme opens the editor, which hides
+      // the list in an `Activity` — its state survives that, and the flag
+      // must clear before the list shows again
+      const isCurrent = () => latestPickRef.current === pick
 
       const extract = async () => {
         const palette = extractImagePalette(await readImagePixels(file))
