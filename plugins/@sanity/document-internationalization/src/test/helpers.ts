@@ -115,7 +115,6 @@ export function createActionProps(opts: {
   draft?: SanityDocument | null
   published?: SanityDocument | null
 }): DocumentActionProps {
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   return {
     id: opts.draft?._id?.replace('drafts.', '') ?? opts.published?._id ?? 'meta-1',
     type: 'translation.metadata',
@@ -123,5 +122,6 @@ export function createActionProps(opts: {
     published: opts.published ?? null,
     liveEdit: true,
     onComplete: vi.fn(),
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   } as unknown as DocumentActionProps
 }

@@ -3,14 +3,13 @@ import ReferencePatcher from './ReferencePatcher'
 
 type OptimisticallyStrengthenProps = {
   translations: TranslationReference[]
-  metadataId: string
 }
 
 // There's no good reason to leave published references as weak
 // So this component will run on every render and strengthen them
 export default function OptimisticallyStrengthen(props: OptimisticallyStrengthenProps) {
   // oxlint-disable-next-line no-useless-default-assignment
-  const {translations = [], metadataId} = props
+  const {translations = []} = props
 
   if (!translations.length) {
     return null
@@ -20,12 +19,7 @@ export default function OptimisticallyStrengthen(props: OptimisticallyStrengthen
     <>
       {translations.map((translation) =>
         translation.value._strengthenOnPublish?.type ? (
-          <ReferencePatcher
-            key={translation._key}
-            translation={translation}
-            documentType={translation.value._strengthenOnPublish.type}
-            metadataId={metadataId}
-          />
+          <ReferencePatcher key={translation._key} translation={translation} />
         ) : null,
       )}
     </>

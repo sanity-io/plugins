@@ -14,6 +14,8 @@ allowBuilds:
   '@swc/core': false
   better-sqlite3: false
   esbuild: false
+  # Its install script installs the git hooks from lefthook.yml
+  lefthook: true
   onnxruntime-node: false
   protobufjs: false
   sharp: false
@@ -28,62 +30,66 @@ catalog:
   '@sanity/asset-utils': ^2.3.0
   '@sanity/client': ^8.6.1
   '@sanity/color': ^3.0.8
-  '@sanity/icons': ^5.2.1
+  '@sanity/icons': ^5.2.2
   '@sanity/image-url': ^2.1.1
-  '@sanity/mutator': ^6.11.0
+  '@sanity/mutator': ^6.16.0
   '@sanity/pkg-utils': ^12.3.4
   '@sanity/preview-url-secret': ^4.1.5
-  '@sanity/schema': ^6.11.0
+  '@sanity/schema': ^6.16.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.1
   '@sanity/tsdown-config': ^0.27.1
-  '@sanity/types': ^6.11.0
-  '@sanity/ui': ^4.0.7
-  '@sanity/util': ^6.11.0
+  '@sanity/types': ^6.16.0
+  '@sanity/ui': ^4.3.0
+  '@sanity/util': ^6.16.0
   '@sanity/uuid': ^3.0.3
-  '@sanity/vanilla-extract-vite-plugin': ^0.2.17
-  '@sanity/vision': ^6.11.0
+  '@sanity/vanilla-extract-vite-plugin': ^0.2.20
+  '@sanity/vision': ^6.16.0
   '@testing-library/jest-dom': ^7.0.1
   '@testing-library/react': ^16.3.3
   '@types/lodash-es': ^4.17.12
   '@types/node': ^24.13.3
-  '@types/react': ^19.2.18
-  '@types/react-dom': ^19.2.4
-  '@types/react-is': ^19.2.0
+  '@types/react': ^19.3.0
+  '@types/react-dom': ^19.3.0
+  '@types/react-is': ^19.3.0
   '@types/video.js': ^7.3.58
   '@vanilla-extract/css': ^1.21.2
   '@vanilla-extract/dynamic': ^2.1.5
   '@vis.gl/react-google-maps': ^1.9.0
   '@vitest/coverage-v8': ^4.1.11
+  '@xstate/react': ^6.1.0
   date-fns: ^4.4.0
   dequal: ^2.0.3
-  groq: ^6.11.0
+  groq: ^6.16.0
   jsdom: ^29.1.1
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
-  motion: ^13.1.0
+  motion: ^13.4.4
   nanoid: ^6.0.1
   oxc-transform-react: ^0.147.0
-  oxfmt: ^0.63.0
+  oxfmt: ^0.71.0
   oxlint: ^1.83.0
   oxlint-tsgolint: ^7.0.2001
-  react: ^19.2.8
-  react-dom: ^19.2.8
+  react: ^19.3.0
+  react-dom: ^19.3.0
   react-hook-form: ^7.85.0
   react-icons: ^5.7.0
-  react-is: ^19.2.8
+  react-is: ^19.3.0
   react-photo-album: ^3.6.0
   react-rx: ^4.2.5
   rxjs: ^7.8.2
-  sanity: ^6.11.0
+  sanity: ^6.16.0
+  scroll-into-view-if-needed: ^3.1.0
   styled-components: ^6.5.3
   suspend-react: ^0.1.3
   tsdown: ^0.22.14
   tsx: ^4.23.12
   typescript: 7.0.2
+  valibot: ^1.5.0
   validate-npm-package-name: ^8.0.0
   video.js: ^7.21.7
   vitest: ^4.1.11
+  xstate: ^5.33.2
 
 catalogs:
   # Ranges used in `peerDependencies` (referenced as `catalog:peer`).
@@ -96,6 +102,11 @@ catalogs:
     sanity: ^5 || ^6.0.0-0
     styled-components: ^6.1
 
+# Collapse compatible versions of the same dependency on every install, so the
+# lockfile stays deduped without waiting for the `Dedupe lockfile` workflow to
+# open a follow-up PR. Frozen installs leave the lockfile untouched.
+autoDedupe: true
+
 # When running `pnpm add`, reuse a dependency's catalog version automatically if
 # it already exists in a catalog, so shared deps stay aligned on a single version.
 catalogMode: prefer
@@ -103,8 +114,9 @@ dedupeDirectDeps: true
 
 dedupePeers: true
 linkWorkspacePackages: deep
+strictPeerDependencies: false
 
-# minimumReleaseAge defaults to 1440 (1 day) in pnpm v11 — do not set it
+# minimumReleaseAge defaults to 1440 (1 day) since pnpm v11 — do not set it
 # explicitly unless overriding the default.
 #
 # Keep this list to first-party packages and closely tracked tooling that may
@@ -112,6 +124,7 @@ linkWorkspacePackages: deep
 # window, add exact `name@version` entries (do not bypass with
 # `--config.minimumReleaseAge=0` — that is not allowed). Avoid permanent
 # third-party package-name excludes solely to land a fresh release.
+minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - '@changesets/cli'
   - '@devframes/*'
@@ -123,6 +136,9 @@ minimumReleaseAgeExclude:
   - '@rollup/*'
   - '@sanity/*'
   - '@types/*'
+  - '@types/react@19.3.0'
+  - '@types/react-dom@19.3.0'
+  - '@types/react-is@19.3.0'
   - '@typescript/*'
   - '@vite/*'
   - '@vitejs/devtools'
@@ -144,13 +160,13 @@ minimumReleaseAgeExclude:
   - oxlint-tsgolint
   - publint
   - react
+  - react@19.3.0
   - react-dom
+  - react-dom@19.3.0
   - react-is
+  - react-is@19.3.0
   - react-rx@4.2.5
-  - react-rx@5.1.1
-  - react-rx@6.0.0
   - rolldown-plugin-dts
-  - rollup
   - sanity
   - tsdown
   - verkit
@@ -178,6 +194,14 @@ overrides:
   # Keep a single tsx (and thus a single vite types instance) so sanity.cli vite
   # config callbacks type-check cleanly after the catalog tsx bump.
   tsx: 'catalog:'
+  # Vite 8.3.1's bundled-dev client (`unstable_bundledDev` in dev/test-studio) inlines rolldown
+  # 1.2.9's browser runtime, but its `rolldown: ~1.2.9` range resolves 1.2.10+, whose compiler
+  # emits `registerFactory(id, fn)` (rolldown#10915) against the inlined
+  # `registerFactory(id, kind, fn)`: every lazy `import()` and HMR update then fails with
+  # `factory.fn is not a function`. Scoped to 8.3.1 because the next Vite release serves the
+  # runtime from the installed rolldown instead (https://github.com/vitejs/vite/pull/23568),
+  # so delete this entry when bumping past 8.3.1.
+  'vite@8.3.1>rolldown': '1.2.9'
 
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
@@ -191,18 +215,46 @@ publicHoistPattern:
   - '@vanilla-extract/css'
 
 trustPolicy: no-downgrade
+trustPolicyExcludePrune: true
 
 trustPolicyExclude:
-  - '@octokit/endpoint@9.0.6'
-  - '@octokit/plugin-paginate-rest@9.2.2'
-  - '@sanity/import@7.0.1'
-  - '@sanity/sdk@2.1.2 || 3.0.0-rc.1'
-  - chokidar@4.0.3
-  - groq@3.88.1-typegen-experimental.0
-  - react-redux@8.1.3 || 9.2.0
-  - reselect@5.1.1
+  # The vercel CLI (root devDependency) only parses pnpm 12's two-document pnpm-lock.yaml
+  # from 58.9.5 on. From 58.7.0 on, vercel and some of its @vercel/* dependencies are still
+  # published from GitHub Actions, but without the npm provenance attestations earlier
+  # releases had. These are the exact versions `pnpm install` reports as
+  # ERR_PNPM_TRUST_DOWNGRADE; drop them once Vercel publishes with provenance again.
+  - '@vercel/backends@11.0.1'
+  - '@vercel/build-utils@14.13.1'
+  - '@vercel/cervel@0.1.70'
+  - '@vercel/cli-auth@0.3.9'
+  - '@vercel/cli-config@0.3.0'
+  - '@vercel/cli-exec@1.0.1'
+  - '@vercel/container@11.0.1'
+  - '@vercel/detect-agent@1.2.5'
+  - '@vercel/elysia@11.0.1'
+  - '@vercel/error-utils@2.2.1'
+  - '@vercel/express@11.0.1'
+  - '@vercel/fastify@11.0.1'
+  - '@vercel/gatsby-plugin-vercel-analytics@1.0.12'
+  - '@vercel/gatsby-plugin-vercel-builder@2.2.62'
+  - '@vercel/go@14.0.1'
+  - '@vercel/h3@11.0.1'
+  - '@vercel/hono@11.0.1'
+  - '@vercel/hydrogen@12.0.1'
+  - '@vercel/koa@11.0.1'
+  - '@vercel/nestjs@11.0.1'
+  - '@vercel/next@15.0.1'
+  - '@vercel/node@16.0.1'
+  - '@vercel/oidc@3.8.9'
+  - '@vercel/python-analysis@0.14.0'
+  - '@vercel/python@17.0.1'
+  - '@vercel/redwood@13.0.1'
+  - '@vercel/remix-builder@16.0.1'
+  - '@vercel/ruby@13.0.1'
+  - '@vercel/rust@12.0.1'
+  - '@vercel/static-build@13.0.1'
+  - '@vercel/static-config@3.4.3'
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
-  - ts-api-utils@2.3.0
   - undici@5.29.0
-  - vite@6.4.1
+  - vercel@60.1.3

@@ -13,7 +13,7 @@ import {
 } from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {memo, type MouseEvent, type RefObject} from 'react'
+import {type DragEvent, memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
@@ -24,6 +24,7 @@ import useKeyPress from '../../hooks/useKeyPress'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {assetsActions, selectAssetById, selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
+import {setDragAssetIds} from '../../utils/assetDrag'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import imageDprUrl from '../../utils/imageDprUrl'
 import {isFileAsset, isImageAsset} from '../../utils/typeGuards'
@@ -187,6 +188,9 @@ const CardAsset = (props: Props) => {
       } else {
         dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
       }
+    } else if (e.ctrlKey || e.metaKey) {
+      // Ctrl/Cmd-click toggles a single pick without opening the asset
+      dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
     } else if (shiftPressed.current) {
       if (picked) {
         dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
@@ -219,12 +223,26 @@ const CardAsset = (props: Props) => {
     }
   }
 
+  // Dragging a picked asset drags every picked asset; dragging an unpicked asset drags only itself.
+  const draggable = !selected && !updating && source !== 'replace-asset'
+
+  const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
+    const assetIds = picked ? assetsPicked.map((pickedItem) => pickedItem.asset._id) : [asset._id]
+    setDragAssetIds(e, assetIds)
+  }
+
   const opacityContainer = updating ? 0.5 : 1
   const opacityPreview = selected || updating ? 0.25 : 1
 
   return (
     <CardWrapper padding={1}>
-      <CardContainer direction="column" $picked={picked} $updating={item.updating}>
+      <CardContainer
+        direction="column"
+        draggable={draggable}
+        onDragStart={draggable ? handleDragStart : undefined}
+        $picked={picked}
+        $updating={item.updating}
+      >
         {/* Image */}
         <Box
           flex={1}
