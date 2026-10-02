@@ -316,6 +316,47 @@ describe('syncing the themer across tabs', () => {
     stopC()
   })
 
+  it('keeps the newer of two answers when the first told it nothing new', async () => {
+    const bus = createBus()
+    const channelC = bus.open()
+    const tabA = startTab({...initialThemerState, custom: [custom]})
+    // Read from storage the other tab had written, so its answer changes nothing here
+    const tabC = startTab({active: 'verdant', custom: [custom], removed: [], order: []})
+
+    const stopA = syncThemer(tabA, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks: undefined,
+      schedule: immediately,
+    })
+    tabA.send({type: 'theme.pick', slug: 'verdant'})
+    await tick()
+
+    const stopC = syncThemer(tabC, {
+      persist: () => {},
+      openChannel: () => channelC,
+      locks: undefined,
+      schedule: immediately,
+    })
+    await tick()
+    await tick()
+
+    // A second answer to the same hello, from a tab that missed the pick
+    bus.broadcast({
+      type: 'state',
+      state: {active: 'dew', custom: [custom], removed: [], order: []},
+      revision: 0,
+      from: 'stale',
+      to: helloFrom(channelC.posted[0]),
+    })
+    await tick()
+
+    expect(tabC.getSnapshot().context.active).toBe('verdant')
+
+    stopA()
+    stopC()
+  })
+
   it('does not let a late answer undo what the asking tab changed meanwhile', async () => {
     const bus = createBus()
     const locks = createLocks()

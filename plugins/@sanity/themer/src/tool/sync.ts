@@ -186,7 +186,7 @@ export function syncThemer(
   /** The revision `shared` is at, and the tab whose change it was */
   let revision = 0
   let origin = id
-  /** Whether this tab still has what it started with, so that an answer to its `hello` is welcome */
+  /** Whether this tab has neither changed nor heard a state yet, so that an answer to its `hello` is welcome */
   let unchanged = true
   /** The tabs that said hello before this one held the lock, to answer once it does */
   const unanswered = new Set<string>()
@@ -288,10 +288,13 @@ export function syncThemer(
 
       revision = message.revision
       origin = message.from
+      // Set before the state is compared: a tab that heard one is at the other
+      // tabs' revision, so a later answer is ordered against it like any other
+      // state — even when what it heard was what it had
+      unchanged = false
       if (dequal(message.state, shared)) return
 
       shared = message.state
-      unchanged = false
       applying = true
       try {
         actorRef.send({type: 'themes.sync', state: message.state})
