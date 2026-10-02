@@ -61,9 +61,9 @@ export const getDocumentsToTranslate = (
   }
   if (typeof value === 'object' && value) {
     const startsWithUnderscoreRegex = /^_/
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     const itemKeys = Object.keys(value).filter(
       (key) => !key.match(startsWithUnderscoreRegex),
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
     ) as (keyof typeof value)[]
 
     return itemKeys.flatMap((item) => {

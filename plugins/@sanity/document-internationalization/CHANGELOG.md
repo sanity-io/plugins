@@ -1,5 +1,21 @@
 # @sanity/document-internationalization
 
+## 6.2.39
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+- Updated dependencies [[`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420)]:
+  - sanity-plugin-utils@2.0.19
+
+## 6.2.38
+
+### Patch Changes
+
+- [#2015](https://github.com/sanity-io/plugins/pull/2015) [`90aa52f`](https://github.com/sanity-io/plugins/commit/90aa52f04645b4d3825869852b0c4f7660ef62d5) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix reference strengthening on translation.metadata, in some cases it showed a patch error
+
+## 6.2.37
+
 ## 6.2.36
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @sanity/plugin-kit
 
+## 10.0.11
+
+### Patch Changes
+
+- [#2047](https://github.com/sanity-io/plugins/pull/2047) [`89bbaf7`](https://github.com/sanity-io/plugins/commit/89bbaf789d9bc5d48a1c0396d1b27dffea1ceab1) Thanks [@stipsan](https://github.com/stipsan)! - Update the optional `oxfmt` peer dependency to ^0.71.0
+
+- [#2047](https://github.com/sanity-io/plugins/pull/2047) [`89bbaf7`](https://github.com/sanity-io/plugins/commit/89bbaf789d9bc5d48a1c0396d1b27dffea1ceab1) Thanks [@stipsan](https://github.com/stipsan)! - The `@sanity/plugin-kit/oxfmt` preset no longer formats `.changeset/*.md` files with double quotes, so their frontmatter gets single quotes like the rest of your code. Changesets 3 formats the changesets it writes with oxfmt when it finds your `oxfmt.config.ts`, or when `.changeset/config.json` sets `"format": "oxfmt"`, so they come out the same way.
+
 ## 10.0.10
 
 ### Patch Changes

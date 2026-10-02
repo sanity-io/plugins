@@ -63,17 +63,17 @@ export function AssistAvatar(props: {state?: 'present' | 'active'}) {
 
   const style = useMemo(() => {
     if (scheme === 'dark') {
-      // oxlint-disable-next-line no-unsafe-type-assertion
       return {
         [`--ai-avatar-stroke-color`]: purple[400].hex,
         [`--ai-avatar-disc-color`]: purple[600].hex,
+        // oxlint-disable-next-line no-unsafe-type-assertion
       } as CSSProperties
     }
 
-    // oxlint-disable-next-line no-unsafe-type-assertion
     return {
       [`--ai-avatar-stroke-color`]: purple[500].hex,
       [`--ai-avatar-disc-color`]: purple[600].hex,
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as CSSProperties
   }, [scheme])
 

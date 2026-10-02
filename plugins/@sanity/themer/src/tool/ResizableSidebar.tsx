@@ -1,0 +1,149 @@
+import {BoundaryElementProvider, Box, Card, Layer} from '@sanity/ui'
+import {startTransition, useCallback, useEffect, useRef, useState} from 'react'
+
+import type {ThemerProps} from '#types'
+
+import {MAXIMUM_WIDTH, MINIMUM_WIDTH} from './sidebarWidth'
+import {ThemerSidebar} from './ThemerSidebar'
+
+import {content, frame, resizeHandle, sidebar} from './ResizableSidebar.css'
+
+/** How far one arrow key press resizes the sidebar */
+const KEYBOARD_STEP = 16
+
+const WIDTH_STORAGE_KEY = 'sanityStudio:themer:width'
+
+function clampWidth(width: number): number {
+  return Math.min(MAXIMUM_WIDTH, Math.max(MINIMUM_WIDTH, Math.round(width)))
+}
+
+function readStoredWidth(): number {
+  try {
+    const stored = Number(localStorage.getItem(WIDTH_STORAGE_KEY))
+
+    return Number.isFinite(stored) && stored > 0 ? clampWidth(stored) : MINIMUM_WIDTH
+  } catch {
+    return MINIMUM_WIDTH
+  }
+}
+
+function writeStoredWidth(width: number): void {
+  try {
+    if (width === MINIMUM_WIDTH) {
+      localStorage.removeItem(WIDTH_STORAGE_KEY)
+    } else {
+      localStorage.setItem(WIDTH_STORAGE_KEY, String(width))
+    }
+  } catch {
+    // Storage can be unavailable (e.g. private browsing) — the width just won't persist
+  }
+}
+
+/**
+ * The themer sidebar, in a layer along the right edge of the Studio. Its left
+ * edge drags (or arrow-keys) it wider, up to twice its default width — the
+ * width sticks between sessions. As an overlay (small screens) it covers the
+ * Studio edge to edge instead, with nothing to resize.
+ *
+ * @internal
+ */
+export default function ResizableSidebar({
+  actorRef,
+  dispatch,
+  navbarHeight,
+  split,
+}: Pick<ThemerProps, 'actorRef' | 'dispatch' | 'navbarHeight' | 'split'>) {
+  const [width, setWidth] = useState(readStoredWidth)
+  const [dragging, setDragging] = useState(false)
+  const drag = useRef<{pointerId: number; startX: number; startWidth: number} | null>(null)
+
+  // @TODO schedule the write to localStorage to avoid blocking the main thread
+  useEffect(() => writeStoredWidth(width), [width])
+
+  const handlePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (event.button !== 0) return
+
+      event.preventDefault()
+      event.currentTarget.setPointerCapture(event.pointerId)
+      drag.current = {pointerId: event.pointerId, startX: event.clientX, startWidth: width}
+      setDragging(true)
+    },
+    [width],
+  )
+
+  const handlePointerMove = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current || drag.current.pointerId !== event.pointerId) return
+
+    // The sidebar sits on the right, so dragging left makes it wider
+    setWidth(clampWidth(drag.current.startWidth - (event.clientX - drag.current.startX)))
+  }, [])
+
+  const handlePointerUp = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current || drag.current.pointerId !== event.pointerId) return
+
+    drag.current = null
+    setDragging(false)
+  }, [])
+
+  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
+    const steps: Record<string, number> = {
+      ArrowLeft: KEYBOARD_STEP,
+      ArrowRight: -KEYBOARD_STEP,
+      Home: MAXIMUM_WIDTH,
+      End: -MAXIMUM_WIDTH,
+    }
+    const step = steps[event.key]
+
+    if (step === undefined) return
+
+    event.preventDefault()
+    setWidth((current) => clampWidth(current + step))
+  }, [])
+
+  const [boundaryElement, setBoundaryElement] = useState<HTMLDivElement | null>(null)
+
+  return (
+    <Layer className={sidebar} style={{width}} zOffset={100}>
+      <Card
+        borderLeft
+        className={frame}
+        height="fill"
+        ref={(boundaryElement) => {
+          startTransition(() => setBoundaryElement(boundaryElement))
+          // Intentionally not unsetting the element as it would create unnecessary work when <Activity> unhides
+          return () => {}
+        }}
+      >
+        <div
+          aria-label="Resize the themer"
+          className={resizeHandle}
+          aria-orientation="vertical"
+          aria-valuemax={MAXIMUM_WIDTH}
+          aria-valuemin={MINIMUM_WIDTH}
+          aria-valuenow={width}
+          data-dragging={dragging}
+          onDoubleClick={() => setWidth(MINIMUM_WIDTH)}
+          onKeyDown={handleKeyDown}
+          onPointerCancel={handlePointerUp}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          // oxlint-disable-next-line prefer-tag-over-role -- a window splitter is a focusable, draggable separator, which an hr is not
+          role="separator"
+          tabIndex={0}
+        />
+        <Box className={content} height="fill" overflow="hidden">
+          <BoundaryElementProvider element={boundaryElement}>
+            <ThemerSidebar
+              split={split}
+              navbarHeight={navbarHeight}
+              actorRef={actorRef}
+              dispatch={dispatch}
+            />
+          </BoundaryElementProvider>
+        </Box>
+      </Card>
+    </Layer>
+  )
+}

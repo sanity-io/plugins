@@ -30,6 +30,7 @@ _Individual asset view_
 - Manage tags directly within the plugin
 - Get previews for audio and video files
 - Easily select and delete multiple assets in bulk
+- Shift-click to pick a run of assets, Ctrl-click (Cmd-click on macOS) to pick individual assets
 
 #### Granular search tools
 
@@ -363,6 +364,7 @@ Note that tags and folders are namespaced within `opt.media`. Tag names are acce
 - Asset folder assignment is stored as a weak reference at `opt.media.folder`
 - The default asset browser view shows all assets. Opening a folder filters the asset list to assets assigned to that folder.
 - You can move selected assets to a folder from the selection bar, remove selected assets from the current folder, or change/remove an individual asset's folder from the asset details dialog
+- You can also drag assets onto a folder in the folder panel. Dragging a picked asset moves every picked asset. Dropping on "All assets" removes them from their folder
 - Deleting a folder deletes only the folder document. Assets assigned to it stay in the library and have their folder assignment removed; nested folders move up one level.
 
 </details>

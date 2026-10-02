@@ -1,6 +1,6 @@
 {
   "name": "@sanity/assist",
-  "version": "6.2.0",
+  "version": "6.2.2",
   "description": "You create the instructions; Sanity AI Assist does the rest.",
   "keywords": [
     "ai",
@@ -54,10 +54,12 @@
     "@sanity/schema": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@testing-library/react": "catalog:",
     "@types/lodash-es": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "jsdom": "catalog:",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

@@ -1,5 +1,25 @@
 # sanity-plugin-media
 
+## 6.3.2
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+
+## 6.3.1
+
+### Patch Changes
+
+- [#2028](https://github.com/sanity-io/plugins/pull/2028) [`82ac806`](https://github.com/sanity-io/plugins/commit/82ac806a4d84a0f71caf07f412c7d6e8a2a2c770) Thanks [@stipsan](https://github.com/stipsan)! - Remove `crossOrigin="anonymous"` from the image thumbnail component. The Firefox Opaque Response Blocking issue it worked around — Sanity CDN asset responses sending `Vary: Origin` — is fixed at the API gateway, verified by green Firefox e2e runs in [sanity-io/sanity#14928](https://github.com/sanity-io/sanity/pull/14928). Thumbnails now load in Firefox without the client opting into CORS requests, so the workaround added in [#1108](https://github.com/sanity-io/plugins/pull/1108) (thanks [@oxygensmith](https://github.com/oxygensmith)) is no longer needed.
+
+## 6.3.0
+
+### Minor Changes
+
+- [#2014](https://github.com/sanity-io/plugins/pull/2014) [`e58d1af`](https://github.com/sanity-io/plugins/commit/e58d1af6021af6551fd7d7713743e1864e1f7d40) Thanks [@ovsw](https://github.com/ovsw)! - Ctrl-click (Cmd-click on macOS) an asset in the grid or table to toggle its pick without opening it.
+
+- [#2014](https://github.com/sanity-io/plugins/pull/2014) [`e58d1af`](https://github.com/sanity-io/plugins/commit/e58d1af6021af6551fd7d7713743e1864e1f7d40) Thanks [@ovsw](https://github.com/ovsw)! - Drag assets onto folders in the folder panel to move them. Dragging a picked asset moves every picked asset; dragging an unpicked asset moves only that one. Dropping on "All assets" removes the dragged assets from their folder.
+
 ## 6.2.0
 
 ### Minor Changes

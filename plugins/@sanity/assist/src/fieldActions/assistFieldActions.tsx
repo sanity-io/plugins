@@ -44,6 +44,7 @@ export const assistFieldActions: DocumentFieldAction = {
       assistDocument,
       documentIsNew,
       documentIsAssistable,
+      documentIsSyncing,
       openInspector,
       closeInspector,
       inspector,
@@ -68,6 +69,7 @@ export const assistFieldActions: DocumentFieldAction = {
     const {requestRunInstruction} = useRequestRunInstruction({
       documentOnChange,
       isDocAssistable: documentIsAssistable ?? false,
+      isSyncing: documentIsSyncing,
     })
 
     const isSelectable = !!useSelectedField(documentSchemaType, typePath)
@@ -97,6 +99,7 @@ export const assistFieldActions: DocumentFieldAction = {
         ...props,
         documentId: assistableDocumentId,
         documentIsAssistable,
+        documentIsSyncing,
         documentSchemaType,
       }),
     )

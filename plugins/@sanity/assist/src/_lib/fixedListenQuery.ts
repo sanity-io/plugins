@@ -35,15 +35,16 @@ const listen = (
   params: ListenQueryParams,
   options: ListenQueryOptions,
 ) =>
-  // oxlint-disable-next-line no-unsafe-type-assertion
-  defer(() =>
-    // getVersionedClient(options.apiVersion)
-    client.listen(query, params, {
-      events: ['welcome', 'mutation', 'reconnect'],
-      includeResult: false,
-      visibility: 'query',
-      tag: options.tag,
-    }),
+  defer(
+    () =>
+      // getVersionedClient(options.apiVersion)
+      client.listen(query, params, {
+        events: ['welcome', 'mutation', 'reconnect'],
+        includeResult: false,
+        visibility: 'query',
+        tag: options.tag,
+      }),
+    // oxlint-disable-next-line no-unsafe-type-assertion
   ) as Observable<ReconnectEvent | WelcomeEvent | MutationEvent>
 
 function isWelcomeEvent(
