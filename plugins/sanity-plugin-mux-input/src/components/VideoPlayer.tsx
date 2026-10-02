@@ -1,6 +1,7 @@
 import {type MuxPlayerProps, type MuxPlayerRefAttributes} from '@mux/mux-player-react'
 import MuxPlayer from '@mux/mux-player-react/lazy'
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {PlayIcon} from '@sanity/icons/Play'
 import {Card, Text} from '@sanity/ui'
 import {type PropsWithChildren, Suspense, useMemo, useRef, useState} from 'react'
 
@@ -19,12 +20,14 @@ import CaptionsDialog from './CaptionsDialog'
 import EditThumbnailDialog from './EditThumbnailDialog'
 import {AudioIcon} from './icons/Audio'
 import MezzanineDialog from './MezzanineDialog'
+import {PlayButton} from './PlayButton'
 
 export default function VideoPlayer({
   asset,
   thumbnailWidth = 250,
   children,
   hlsConfig,
+  deferPlayer = false,
   ...props
 }: PropsWithChildren<
   {
@@ -32,6 +35,12 @@ export default function VideoPlayer({
     thumbnailWidth?: number
     forceAspectRatio?: number
     hlsConfig?: MuxPlayerProps['_hlsConfig']
+    /**
+     * Render the poster as a play button and mount `<MuxPlayer>` only once it's clicked.
+     * Mounting the player's media-chrome controls forces many full-document layouts,
+     * which freezes Safari for seconds when a form shows several video fields.
+     */
+    deferPlayer?: boolean
   } & Partial<Pick<MuxPlayerProps, 'autoPlay'>>
 >) {
   const client = useClient()
@@ -41,6 +50,8 @@ export default function VideoPlayer({
   const muxPlayer = useRef<MuxPlayerRefAttributes>(null)
   const playerContainerRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<Error>()
+  const [playerRequested, setPlayerRequested] = useState(false)
+  const showPlayer = !deferPlayer || playerRequested
 
   /* Playback ID that will be used to play the video */
   const playbackId = useMemo(() => {
@@ -176,33 +187,54 @@ export default function VideoPlayer({
                 }}
               />
             )}
-            <Suspense fallback={null}>
-              <MuxPlayer
-                poster={isAudio ? undefined : poster}
-                ref={muxPlayer}
-                {...props}
-                playsInline
-                playbackId={playbackId}
-                tokens={tokens}
-                preload="metadata"
-                crossOrigin="anonymous"
-                metadata={{
-                  player_name: 'Sanity Admin Dashboard',
-                  player_version: PLUGIN_VERSION,
-                  page_type: 'Preview Player',
-                }}
-                audio={isAudio}
-                _hlsConfig={hlsConfig}
-                style={{
-                  ...(!isAudio && {height: '100%'}),
-                  width: '100%',
-                  display: 'block',
-                  objectFit: 'contain',
-                  ...(isAudio && {alignSelf: 'end'}),
-                }}
-              />
-              {children}
-            </Suspense>
+            {showPlayer ? (
+              <Suspense fallback={null}>
+                <MuxPlayer
+                  poster={isAudio ? undefined : poster}
+                  ref={muxPlayer}
+                  {...props}
+                  autoPlay={deferPlayer || props.autoPlay}
+                  playsInline
+                  playbackId={playbackId}
+                  tokens={tokens}
+                  preload="metadata"
+                  crossOrigin="anonymous"
+                  metadata={{
+                    player_name: 'Sanity Admin Dashboard',
+                    player_version: PLUGIN_VERSION,
+                    page_type: 'Preview Player',
+                  }}
+                  audio={isAudio}
+                  _hlsConfig={hlsConfig}
+                  style={{
+                    ...(!isAudio && {height: '100%'}),
+                    width: '100%',
+                    display: 'block',
+                    objectFit: 'contain',
+                    ...(isAudio && {alignSelf: 'end'}),
+                  }}
+                />
+                {children}
+              </Suspense>
+            ) : (
+              <PlayButton
+                type="button"
+                aria-label={isAudio ? 'Play audio' : 'Play video'}
+                onClick={() => setPlayerRequested(true)}
+                style={{position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0}}
+              >
+                {!isAudio && (
+                  <img
+                    src={poster}
+                    alt=""
+                    style={{width: '100%', height: '100%', display: 'block', objectFit: 'contain'}}
+                  />
+                )}
+                <div data-play style={{opacity: 1}}>
+                  <PlayIcon />
+                </div>
+              </PlayButton>
+            )}
           </>
         )}
         {error ? (
