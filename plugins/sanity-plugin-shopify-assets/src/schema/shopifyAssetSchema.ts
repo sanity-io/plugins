@@ -3,19 +3,18 @@ import {defineField, defineType} from 'sanity'
 import AssetDiff from '../components/AssetDiff'
 import AssetPreview from '../components/AssetPreview'
 import ShopifyAssetInput from '../components/ShopifyAssetInput'
-
-interface ObjectConfig {
-  shopifyDomain: string
-}
+import type {PluginConfig} from '../types'
 
 declare module 'sanity' {
   interface ObjectOptions {
     shopifyDomain?: string
+    dataset?: string
   }
 }
 
-export const shopifyAssetSchema = (config: ObjectConfig) => {
+export const shopifyAssetSchema = (config: PluginConfig) => {
   const {shopifyDomain} = config
+  const dataset = config.dataset?.trim()
 
   return defineType({
     type: 'object',
@@ -23,6 +22,7 @@ export const shopifyAssetSchema = (config: ObjectConfig) => {
     title: 'Shopify Asset',
     options: {
       shopifyDomain,
+      ...(dataset ? {dataset} : {}),
     },
     fields: [
       defineField({
