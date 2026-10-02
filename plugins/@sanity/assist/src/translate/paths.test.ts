@@ -12,6 +12,7 @@ import {
   defaultLanguageOutputs,
   type FieldLanguageMap,
   fieldLanguageMapsForLanguages,
+  fieldLanguageMapsUnderPath,
   getDocumentMembersFlat,
   getFieldLanguageMap,
 } from './paths'
@@ -43,6 +44,10 @@ describe('paths', () => {
     ])
     expect(fieldLanguageMapsForLanguages(maps, ['nl'])).toHaveLength(2)
     expect(fieldLanguageMapsForLanguages(maps, [])).toEqual([])
+    expect(
+      fieldLanguageMapsUnderPath(maps, ['title']).map((map) => pathToString(map.inputPath)),
+    ).toEqual(['title.en'])
+    expect(fieldLanguageMapsUnderPath(maps, [])).toHaveLength(2)
   })
 
   test('should return internationalizedArrayString paths and find translation mappings', () => {

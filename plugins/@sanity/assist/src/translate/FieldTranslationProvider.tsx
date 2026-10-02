@@ -10,13 +10,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import {
-  type ObjectSchemaType,
-  type Path,
-  pathToString,
-  type SanityDocumentLike,
-  useClient,
-} from 'sanity'
+import {type ObjectSchemaType, type Path, type SanityDocumentLike, useClient} from 'sanity'
 
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import type {ConditionalMemberState} from '../helpers/conditionalMembers'
@@ -30,6 +24,7 @@ import {
   type FieldLanguageMap,
   getDocumentMembersFlat,
   fieldLanguageMapsForLanguages,
+  fieldLanguageMapsUnderPath,
   getFieldLanguageMap,
 } from './paths'
 import type {Language} from './types'
@@ -60,11 +55,8 @@ function hasValuesToTranslate(
   fromLanguage: Language | undefined,
   basePath: Path,
 ) {
-  return fieldLanguageMaps?.some(
-    (map) =>
-      map.inputLanguageId === fromLanguage?.id &&
-      map.inputPath &&
-      pathToString(map.inputPath).startsWith(pathToString(basePath)),
+  return fieldLanguageMapsUnderPath(fieldLanguageMaps ?? [], basePath).some(
+    (map) => map.inputLanguageId === fromLanguage?.id && map.inputPath,
   )
 }
 
@@ -126,7 +118,8 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
             )
           : undefined
       setFieldLanguageMaps(transMap)
-      const outputIds = new Set(transMap?.flatMap((map) => map.outputs.map((output) => output.id)))
+      const scopedMaps = fieldLanguageMapsUnderPath(transMap ?? [], params.translatePath)
+      const outputIds = new Set(scopedMaps.flatMap((map) => map.outputs.map((output) => output.id)))
       setToLanguages(
         allToLanguages.filter(
           (language) =>
@@ -194,7 +187,10 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
     toLanguages?.map((language) => language.id) ?? [],
   )
   const outputLanguageIds = new Set(
-    fieldLanguageMaps?.flatMap((map) => map.outputs.map((output) => output.id)),
+    fieldLanguageMapsUnderPath(
+      fieldLanguageMaps ?? [],
+      fieldTranslationParams?.translatePath ?? [],
+    ).flatMap((map) => map.outputs.map((output) => output.id)),
   )
   const runDisabled =
     !fromLanguage ||

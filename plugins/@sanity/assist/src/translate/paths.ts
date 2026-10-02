@@ -379,6 +379,21 @@ export function getFieldLanguageMap(
   return translationMaps
 }
 
+/** Maps whose input is the translate path or a field under it. */
+export function fieldLanguageMapsUnderPath(
+  maps: FieldLanguageMap[],
+  basePath: Path,
+): FieldLanguageMap[] {
+  const prefix = pathToString(basePath)
+  if (!prefix) {
+    return maps
+  }
+  return maps.filter((map) => {
+    const path = pathToString(map.inputPath)
+    return path === prefix || path.startsWith(`${prefix}.`) || path.startsWith(`${prefix}[`)
+  })
+}
+
 /** Keep only outputs for the selected languages, and drop maps that then have none. */
 export function fieldLanguageMapsForLanguages(
   maps: FieldLanguageMap[],
