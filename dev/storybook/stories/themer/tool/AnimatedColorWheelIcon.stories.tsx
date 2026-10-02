@@ -1,13 +1,11 @@
 import {Button, Flex, Text} from '@sanity/ui'
 import type {Meta, StoryObj} from '@storybook/react-vite'
-import {animate, useMotionValue} from 'motion/react'
-import {useEffect} from 'react'
+import {useRef} from 'react'
 
 import AnimatedColorWheelIcon from '../../../../../plugins/@sanity/themer/src/tool/AnimatedColorWheelIcon'
-import {ANIMATION_DURATION} from '../../../../../plugins/@sanity/themer/src/tool/colorWheel'
 
 interface WheelArgs {
-  progress: number
+  busy: boolean
 }
 
 /**
@@ -21,54 +19,41 @@ const meta: Meta<WheelArgs> = {
 export default meta
 type Story = StoryObj<WheelArgs>
 
-function NavbarButton() {
-  const progress = useMotionValue(0)
-
-  const play = () => {
-    // A run in progress plays out, like on the Studio navbar
-    if (progress.isAnimating()) return
-
-    animate(progress, [0, 1], {duration: ANIMATION_DURATION, ease: 'linear'})
-  }
+function NavbarButton(props: {busy: boolean}) {
+  const {busy} = props
+  const ref = useRef<{spin: () => void}>(null)
 
   return (
     <Flex align="center" gap={3}>
       <Button
+        aria-busy={busy}
         aria-label="Themer"
-        icon={<AnimatedColorWheelIcon progress={progress} />}
+        icon={<AnimatedColorWheelIcon busy={busy} ref={ref} />}
         mode="bleed"
-        onMouseEnter={play}
+        onMouseEnter={() => ref.current?.spin()}
+        selected={busy}
       />
       <Text muted size={1}>
-        Hover the button to play the animation
+        {busy
+          ? 'The wheel laps while the toggle is busy'
+          : 'Hover the button to play the animation'}
       </Text>
     </Flex>
   )
 }
 
-/** The navbar toggle, which plays the animation on hover */
+/** The navbar toggle, which plays the animation once on hover */
 export const Default: Story = {
-  render: () => <NavbarButton />,
+  render: () => <NavbarButton busy={false} />,
 }
 
-function WheelAtProgress(props: {progress: number}) {
-  const progress = useMotionValue(props.progress)
-
-  useEffect(() => {
-    progress.set(props.progress)
-  }, [progress, props.progress])
-
-  return (
-    <Text size={4}>
-      <AnimatedColorWheelIcon progress={progress} />
-    </Text>
-  )
-}
-
-/** The wheel at any point of the animation, from 0 to 1 */
-export const Progress: Story = {
-  args: {progress: 0.5},
-  argTypes: {progress: {control: {type: 'range', min: 0, max: 1, step: 0.01}}},
-  parameters: {controls: {include: ['progress']}},
-  render: (args) => <WheelAtProgress progress={args.progress} />,
+/**
+ * The navbar toggle while the sidebar loads: the wheel laps from wherever a hover's run has got
+ * to, and the lap in progress plays out once the toggle is no longer busy
+ */
+export const Busy: Story = {
+  args: {busy: true},
+  argTypes: {busy: {control: {type: 'boolean'}}},
+  parameters: {controls: {include: ['busy']}},
+  render: (args) => <NavbarButton busy={args.busy} />,
 }
