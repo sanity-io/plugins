@@ -415,4 +415,66 @@ describe('paths', () => {
       ]),
     )
   })
+
+  test('does not translate fields in a literally hidden or readOnly fieldset', () => {
+    const internationalizedString = {
+      type: 'object' as const,
+      name: 'internationalizedArrayStringValue',
+      fields: [
+        {type: 'string' as const, name: 'value'},
+        {type: 'string' as const, name: 'language', hidden: true},
+      ],
+    }
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'document',
+          name: 'product',
+          fieldsets: [
+            {name: 'secret', hidden: true},
+            {name: 'locked', readOnly: true},
+            {name: 'conditional', hidden: () => false},
+          ],
+          fields: [
+            {type: 'array', name: 'title', of: [internationalizedString]},
+            {type: 'array', name: 'slug', fieldset: 'secret', of: [internationalizedString]},
+            {type: 'array', name: 'sku', fieldset: 'locked', of: [internationalizedString]},
+            {type: 'array', name: 'note', fieldset: 'conditional', of: [internationalizedString]},
+          ],
+        }),
+      ],
+    }).get('product')
+
+    const item = (value: string) => ({
+      _type: 'internationalizedArrayStringValue',
+      _key: 'english-key',
+      language: 'en',
+      value,
+    })
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'product',
+      title: [item('Hello')],
+      slug: [item('hello')],
+      sku: [item('SKU-1')],
+      note: [item('A note')],
+    }
+
+    const members = getDocumentMembersFlat(doc, docSchema)
+    expect(members.map((member) => pathToString(member.path))).toEqual([
+      'title',
+      'title[_key=="english-key"]',
+      'title[_key=="english-key"].value',
+      'note',
+      'note[_key=="english-key"]',
+      'note[_key=="english-key"].value',
+    ])
+
+    const transMap = getFieldLanguageMap(docSchema, members, 'en', ['nl'], defaultLanguageOutputs)
+    expect(transMap.map((entry) => pathToString(entry.inputPath))).toEqual([
+      'title[_key=="english-key"]',
+      'note[_key=="english-key"]',
+    ])
+  })
 })

@@ -4,6 +4,7 @@ import {
   isDocumentSchemaType,
   isKeySegment,
   isObjectSchemaType,
+  type ObjectField,
   type ObjectSchemaType,
   type Path,
   pathToString,
@@ -59,6 +60,23 @@ function isStaticAssistLocked(schemaType: SchemaType): boolean {
   )
 }
 
+/**
+ * A fieldset's literal `hidden` / `readOnly` is not copied onto `field.type`.
+ * Schema serialization overlays fieldset `hidden` onto each child; translation
+ * must do the same, and also honor a read-only fieldset, or those children
+ * stay in the field language map.
+ * A function on the fieldset stays conditional and is not treated as locked.
+ */
+function isFieldLockedForTranslation(parent: ObjectSchemaType, field: ObjectField): boolean {
+  const fieldset = field.fieldset
+    ? parent.fieldsets?.find((candidate) => !candidate.single && candidate.name === field.fieldset)
+    : undefined
+  if (fieldset && !fieldset.single && (fieldset.hidden === true || fieldset.readOnly === true)) {
+    return true
+  }
+  return isStaticAssistLocked(field.type)
+}
+
 function outputTargetsLockedField(enclosingType: SchemaType, outputPath: Path): boolean {
   const segment = outputPath.at(-1)
   if (typeof segment !== 'string' || !isObjectSchemaType(enclosingType)) {
@@ -84,7 +102,7 @@ function extractPaths(
     const parentValue = path.length ? extractWithPath(pathToString(path), doc)[0]?.value : doc
     const value = isRecord(parentValue) ? parentValue[field.name] : undefined
 
-    if (value === undefined || value === null || isStaticAssistLocked(fieldSchema)) {
+    if (value === undefined || value === null || isFieldLockedForTranslation(schemaType, field)) {
       return acc
     }
 
