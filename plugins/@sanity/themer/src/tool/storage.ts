@@ -1,30 +1,28 @@
-import type {ActorRefFrom, SnapshotFrom} from 'xstate'
+import * as v from 'valibot'
+import type {Snapshot} from 'xstate'
 
-import {isColor} from '../lib/mix'
+import type {BuildThemeOptions} from '../theme/options'
 import {
-  type BuildThemeOptions,
-  MAXIMUM_CONTRAST,
-  MINIMUM_CONTRAST,
-  SCHEMES,
-  type SchemeThemeOptions,
-} from '../theme/options'
-import {presets} from '../theme/presets'
-import {IMAGE_PALETTE_KEYS, type ImagePalette} from './imagePalette'
-import type {themerMachine} from './machine'
-import {
-  CONFIG_SLUG,
-  createCustomTheme,
-  type CustomTheme,
-  displayTitle,
-  initialThemerState,
-  type ThemerState,
-} from './themes'
+  parseThemerState,
+  type PersistedThemerSnapshot,
+  persistedSnapshotSchema,
+  themeOptionsSchema,
+} from './schemas'
+import {createCustomTheme, initialThemerState, type ThemerState} from './themes'
 
-const STORAGE_KEY = 'sanityStudio:themer:state'
+/** Where the machine's snapshot is kept between sessions */
+const SNAPSHOT_STORAGE_KEY = 'sanityStudio:themer:snapshot'
 
 /**
- * Where earlier versions of the tool kept their single draft theme — it is
- * migrated into a custom theme, so a draft survives the upgrade.
+ * Where earlier versions kept the persisted state — the applied theme, the
+ * user's themes and what was removed and reordered — before the machine's
+ * whole snapshot was persisted. Read until the first snapshot is written.
+ */
+const STATE_STORAGE_KEY = 'sanityStudio:themer:state'
+
+/**
+ * Where the earliest versions of the tool kept their single draft theme — it
+ * is migrated into a custom theme, so a draft survives the upgrade.
  */
 const LEGACY_STORAGE_KEY = 'sanityStudio:themer:options'
 
@@ -37,220 +35,99 @@ const LEGACY_DRAFT_TITLE = 'Draft theme'
  */
 const VISITED_STORAGE_KEY = 'sanityStudio:themer:visited'
 
-function sanitizeColor(value: unknown): string | null {
-  return typeof value === 'string' && isColor(value) ? value.toLowerCase() : null
+/** What an earlier session left for this one to start from @internal */
+export interface PersistedThemer {
+  /**
+   * The machine's snapshot, when the last session persisted one that still
+   * fits the machine — restored, the machine picks up where it left off
+   */
+  snapshot: PersistedThemerSnapshot | undefined
+  /**
+   * The persisted themes — from the snapshot, or from what earlier versions
+   * stored — which the machine starts from without a snapshot, and the tool
+   * reducer applies before the machine has published anything
+   */
+  state: ThemerState
 }
 
-function sanitizeContrast(value: unknown): number | null {
-  return typeof value === 'number' && Number.isFinite(value)
-    ? Math.min(MAXIMUM_CONTRAST, Math.max(MINIMUM_CONTRAST, value))
-    : null
-}
+const NOTHING_PERSISTED: PersistedThemer = {snapshot: undefined, state: initialThemerState}
 
-function sanitizeSchemeOptions(value: unknown): SchemeThemeOptions {
-  const options: SchemeThemeOptions = {}
+function readJson(key: string): unknown {
+  const raw = localStorage.getItem(key)
 
-  if (!value || typeof value !== 'object') return options
-
-  const accent = sanitizeColor(Reflect.get(value, 'accent'))
-  const text = sanitizeColor(Reflect.get(value, 'text'))
-  const background = sanitizeColor(Reflect.get(value, 'background'))
-  const contrast = sanitizeContrast(Reflect.get(value, 'contrast'))
-
-  if (accent) options.accent = accent
-  if (text) options.text = text
-  if (background) options.background = background
-  if (contrast !== null) options.contrast = contrast
-
-  return options
+  return raw ? JSON.parse(raw) : undefined
 }
 
 /**
- * Options from before they were grouped by scheme: one accent, text color and
- * contrast for both schemes, and a background per scheme. Both schemes get
- * the shared colors, so the theme keeps looking the same.
- */
-function sanitizeFlatOptions(value: object): BuildThemeOptions | null {
-  const accent = sanitizeColor(Reflect.get(value, 'accent'))
-
-  if (!accent) return null
-
-  const shared: SchemeThemeOptions = {accent}
-  const text = sanitizeColor(Reflect.get(value, 'text'))
-  const contrast = sanitizeContrast(Reflect.get(value, 'contrast'))
-
-  if (text) shared.text = text
-  if (contrast !== null) shared.contrast = contrast
-
-  const backgrounds: unknown = Reflect.get(value, 'background')
-  const options: BuildThemeOptions = {}
-
-  for (const scheme of SCHEMES) {
-    const background =
-      backgrounds && typeof backgrounds === 'object'
-        ? sanitizeColor(Reflect.get(backgrounds, scheme))
-        : null
-
-    options[scheme] = background ? {...shared, background} : {...shared}
-  }
-
-  return options
-}
-
-function sanitizeOptions(value: unknown): BuildThemeOptions | null {
-  if (!value || typeof value !== 'object') return null
-
-  // The flat shape always had an accent, the scheme shape never has one at the top
-  if ('accent' in value) {
-    return sanitizeFlatOptions(value)
-  }
-
-  const options: BuildThemeOptions = {}
-
-  for (const scheme of SCHEMES) {
-    const schemeOptions = sanitizeSchemeOptions(Reflect.get(value, scheme))
-
-    if (Object.keys(schemeOptions).length > 0) options[scheme] = schemeOptions
-  }
-
-  return options
-}
-
-function isReservedSlug(slug: string): boolean {
-  return slug === CONFIG_SLUG || presets.some((preset) => preset.slug === slug)
-}
-
-function sanitizeCustomTheme(value: unknown): CustomTheme | null {
-  if (!value || typeof value !== 'object') return null
-
-  const slug: unknown = Reflect.get(value, 'slug')
-
-  if (typeof slug !== 'string' || !slug || isReservedSlug(slug)) return null
-
-  const options = sanitizeOptions(Reflect.get(value, 'options'))
-
-  if (!options) return null
-
-  const title: unknown = Reflect.get(value, 'title')
-  const palette = sanitizePalette(Reflect.get(value, 'palette'))
-
-  return {
-    slug,
-    title: displayTitle(typeof title === 'string' ? title : ''),
-    options,
-    ...(palette ? {palette} : {}),
-  }
-}
-
-function sanitizePalette(value: unknown): ImagePalette | null {
-  if (!value || typeof value !== 'object') return null
-
-  const palette: Partial<ImagePalette> = {}
-  let swatches = 0
-
-  for (const key of IMAGE_PALETTE_KEYS) {
-    const swatch = sanitizeColor(Reflect.get(value, key))
-
-    palette[key] = swatch
-    if (swatch) swatches++
-  }
-
-  // oxlint-disable-next-line no-unsafe-type-assertion -- the loop assigns every key
-  return swatches > 0 ? (palette as ImagePalette) : null
-}
-
-function sanitizeState(value: unknown): ThemerState {
-  if (!value || typeof value !== 'object') return initialThemerState
-
-  const custom: CustomTheme[] = []
-  const rawCustom: unknown = Reflect.get(value, 'custom')
-
-  if (Array.isArray(rawCustom)) {
-    for (const item of rawCustom) {
-      const theme = sanitizeCustomTheme(item)
-
-      if (theme && !custom.some((existing) => existing.slug === theme.slug)) {
-        custom.push(theme)
-      }
-    }
-  }
-
-  const removed: string[] = []
-  const rawRemoved: unknown = Reflect.get(value, 'removed')
-
-  if (Array.isArray(rawRemoved)) {
-    for (const slug of rawRemoved) {
-      const known =
-        typeof slug === 'string' &&
-        slug !== CONFIG_SLUG &&
-        (presets.some((preset) => preset.slug === slug) ||
-          custom.some((theme) => theme.slug === slug))
-
-      if (known && !removed.includes(slug)) removed.push(slug)
-    }
-  }
-
-  const order: string[] = []
-  const rawOrder: unknown = Reflect.get(value, 'order')
-
-  if (Array.isArray(rawOrder)) {
-    for (const slug of rawOrder) {
-      const known =
-        typeof slug === 'string' &&
-        (slug === CONFIG_SLUG ||
-          presets.some((preset) => preset.slug === slug) ||
-          custom.some((theme) => theme.slug === slug))
-
-      if (known && !order.includes(slug)) order.push(slug)
-    }
-  }
-
-  const rawActive: unknown = Reflect.get(value, 'active')
-
-  return {active: typeof rawActive === 'string' ? rawActive : null, custom, removed, order}
-}
-
-function readLegacyState(): ThemerState | null {
-  const raw = localStorage.getItem(LEGACY_STORAGE_KEY)
-
-  if (!raw) return null
-
-  const options = sanitizeOptions(JSON.parse(raw))
-
-  if (!options) return null
-
-  const theme = createCustomTheme(LEGACY_DRAFT_TITLE, options)
-
-  return {active: theme.slug, custom: [theme], removed: [], order: []}
-}
-
-/**
- * Restores the themer state from localStorage, so the user's themes survive
- * studio reloads. Falls back to the initial state when nothing usable is
- * stored.
+ * Restores what the last session persisted, so the user's themes survive
+ * Studio reloads: the machine's snapshot where there is one that fits, the
+ * themes alone where the snapshot no longer fits the machine, and what
+ * earlier versions of the tool stored where there is no snapshot yet. Falls
+ * back to the initial state when nothing usable is stored — or storage
+ * cannot be read at all.
+ *
+ * The parsing is the schemas' (see `schemas.ts`): nothing here or in the
+ * machine looks at what is stored beyond handing it over.
  *
  * @internal
  */
-export function readStoredState(): ThemerState {
+export function readPersistedThemer(baseOptions: BuildThemeOptions): PersistedThemer {
   try {
-    if (typeof localStorage === 'undefined') return initialThemerState
+    if (typeof localStorage === 'undefined') return NOTHING_PERSISTED
 
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const persisted = readJson(SNAPSHOT_STORAGE_KEY)
 
-    if (raw) return sanitizeState(JSON.parse(raw))
+    if (persisted !== undefined) {
+      const snapshot = v.safeParse(persistedSnapshotSchema(baseOptions), persisted)
 
-    return readLegacyState() ?? initialThemerState
+      if (snapshot.success) {
+        const {active, custom, removed, order} = snapshot.output.context
+
+        return {snapshot: snapshot.output, state: {active, custom, removed, order}}
+      }
+
+      // A snapshot from a version of the machine with other states still
+      // holds the themes, which is what matters
+      const state = parseThemerState(
+        persisted && typeof persisted === 'object' ? Reflect.get(persisted, 'context') : undefined,
+      )
+
+      if (state) return {snapshot: undefined, state}
+    }
+
+    const state = parseThemerState(readJson(STATE_STORAGE_KEY))
+
+    if (state) return {snapshot: undefined, state}
+
+    return readLegacyDraft() ?? NOTHING_PERSISTED
   } catch {
-    return initialThemerState
+    return NOTHING_PERSISTED
   }
 }
 
-/** @internal */
-export function writeStoredState(state: ThemerState): void {
+function readLegacyDraft(): PersistedThemer | null {
+  const options = v.safeParse(themeOptionsSchema, readJson(LEGACY_STORAGE_KEY))
+
+  if (!options.success) return null
+
+  const theme = createCustomTheme(LEGACY_DRAFT_TITLE, options.output)
+
+  return {snapshot: undefined, state: {active: theme.slug, custom: [theme], removed: [], order: []}}
+}
+
+/**
+ * Persists the machine's snapshot for the next session, and lets go of what
+ * earlier versions stored once it is written — which completes their
+ * migration.
+ *
+ * @internal
+ */
+export function writePersistedSnapshot(snapshot: Snapshot<unknown>): void {
   try {
     if (typeof localStorage === 'undefined') return
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    localStorage.setItem(SNAPSHOT_STORAGE_KEY, JSON.stringify(snapshot))
+    localStorage.removeItem(STATE_STORAGE_KEY)
     localStorage.removeItem(LEGACY_STORAGE_KEY)
   } catch {
     // Storage can be unavailable (e.g. private browsing) — themes just won't persist
@@ -287,38 +164,4 @@ export function markVisited(): void {
   } catch {
     // Storage can be unavailable (e.g. private browsing) — the tool is introduced again next time
   }
-}
-
-const PERSIST_SNAPSHOT_KEY = 'sanityStudio:themer:snapshot'
-/**
- * Read the persisted snapshot from localStorage that is given to the actor when it is created
- * @TODO use valibot to validate the snapshot
- * @internal
- */
-export function readPersistedSnapshot():
-  | SnapshotFrom<ActorRefFrom<typeof themerMachine>>
-  | undefined {
-  try {
-    const raw = localStorage.getItem(PERSIST_SNAPSHOT_KEY)
-
-    if (!raw) return undefined
-
-    // @TODO use valibot to validate the snapshot and conform to the snapshot schema
-    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
-    return JSON.parse(raw) as SnapshotFrom<ActorRefFrom<typeof themerMachine>>
-  } catch (error) {
-    console.error('Error reading persisted snapshot', error)
-    return undefined
-  }
-}
-
-/**
- * Write the persisted snapshot to localStorage that is given to the actor when it is created
- * @TODO use valibot to validate the snapshot
- * @internal
- */
-export function writePersistedSnapshot(
-  snapshot: ReturnType<ActorRefFrom<typeof themerMachine>['getPersistedSnapshot']>,
-): void {
-  localStorage.setItem(PERSIST_SNAPSHOT_KEY, JSON.stringify(snapshot))
 }

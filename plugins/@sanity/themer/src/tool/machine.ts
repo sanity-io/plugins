@@ -2,7 +2,6 @@ import {assign, not, setup, type SnapshotFrom} from 'xstate'
 
 import type {BuildThemeOptions} from '../theme/options'
 import type {ImagePalette} from './imagePalette'
-import {writeStoredState} from './storage'
 import {
   CONFIG_SLUG,
   createCustomTheme,
@@ -27,7 +26,7 @@ export const MOTION_DURATION = 2000
 export interface ThemerInput {
   /** The theme options the Studio's configured theme was generated from */
   baseOptions: BuildThemeOptions
-  /** The persisted state of an earlier session */
+  /** The persisted state of an earlier session — where there is no snapshot of the machine to restore instead */
   stored: ThemerState
 }
 
@@ -89,6 +88,11 @@ export type ThemerEvent =
   | {type: 'flow.list'}
   /** On to restoring removed themes */
   | {type: 'flow.removed'}
+  /**
+   * Takes over the persisted state as another tab of the same Studio changed
+   * it, so that every tab shows the same themes (see `sync.ts`)
+   */
+  | {type: 'themes.sync'; state: ThemerState}
 
 function themesOf(context: ThemerMachineContext) {
   return resolveThemes(context, context.baseOptions)
@@ -109,7 +113,10 @@ function revokeObjectUrl(url: string) {
  * removed) alongside what the flows need. Whether the sidebar is open and
  * whether the Studio shows twice is not the machine's: the tool reducer in
  * `plugin.tsx` owns that, so that the navbar toggle and the sidebar can
- * change it in transitions of their own.
+ * change it in transitions of their own. Nor is persisting: the machine
+ * never touches storage — its snapshot is written and restored around it
+ * (see `storage.ts` and `sync.ts`), and the persisted state of other tabs
+ * reaches it as a `themes.sync` event like any other.
  *
  * The `theme` region is `switching` (its tag) right after an event that
  * applies another theme — picking one, adding, duplicating, importing or
@@ -150,19 +157,22 @@ export const themerMachine = setup({
       params.slug !== (context.active ?? CONFIG_SLUG),
     // Removing or deleting the applied theme is what changes the applied theme
     isAppliedTheme: ({context}, params: {slug: string}) => params.slug === context.active,
+    // Another tab applied another theme, which is as much of a switch as picking it here
+    appliesAnotherTheme: ({context}, params: {state: ThemerState}) =>
+      params.state.active !== context.active,
     // A theme added from given options (an image's) looks different from the applied one
     hasOptions: (_, params: {options: BuildThemeOptions | undefined}) =>
       params.options !== undefined,
   },
   actions: {
-    // The state that survives sessions is written as the machine starts — that
-    // completes the migration of what an earlier version stored — and on
-    // every change to it
-    persist: ({context}) => {
-      const {active, custom, removed, order} = context
-
-      writeStoredState({active, custom, removed, order})
-    },
+    // Another tab's persisted state replaces this one's: themes, order and
+    // all. The images of this session stay, they are this tab's
+    sync: assign((_, params: {state: ThemerState}) => ({
+      active: params.state.active,
+      custom: params.state.custom,
+      removed: params.state.removed,
+      order: params.state.order,
+    })),
     // The image of a replaced palette or a deleted theme is released from memory
     revokeImage: (_, params: {url: string | undefined}) => {
       if (params.url) revokeObjectUrl(params.url)
@@ -291,7 +301,6 @@ export const themerMachine = setup({
     editing: null,
     images: {},
   }),
-  entry: 'persist',
   type: 'parallel',
   states: {
     theme: {
@@ -329,6 +338,10 @@ export const themerMachine = setup({
               target: 'switching',
             },
             'theme.import': 'switching',
+            'themes.sync': {
+              guard: {type: 'appliesAnotherTheme', params: ({event}) => ({state: event.state})},
+              target: 'switching',
+            },
           },
         },
         switching: {
@@ -371,6 +384,11 @@ export const themerMachine = setup({
               reenter: true,
             },
             'theme.import': {target: 'switching', reenter: true},
+            'themes.sync': {
+              guard: {type: 'appliesAnotherTheme', params: ({event}) => ({state: event.state})},
+              target: 'switching',
+              reenter: true,
+            },
           },
         },
       },
@@ -379,7 +397,7 @@ export const themerMachine = setup({
       initial: 'list',
       on: {
         'theme.pick': {
-          actions: [{type: 'pick', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'pick', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.add': {
           target: '.edit',
@@ -393,17 +411,16 @@ export const themerMachine = setup({
                 imageUrl: event.imageUrl,
               }),
             },
-            'persist',
           ],
         },
         'theme.duplicate': {
           target: '.edit',
-          actions: [{type: 'duplicate', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'duplicate', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.edit': {
           target: '.edit',
           guard: {type: 'isCustomTheme', params: ({event}) => ({slug: event.slug})},
-          actions: [{type: 'startEditing', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'startEditing', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.update': {
           actions: [
@@ -424,14 +441,13 @@ export const themerMachine = setup({
                 imageUrl: event.imageUrl,
               }),
             },
-            'persist',
           ],
         },
         'theme.remove': {
-          actions: [{type: 'remove', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'remove', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.restore': {
-          actions: [{type: 'restore', params: ({event}) => ({slug: event.slug})}, 'persist'],
+          actions: [{type: 'restore', params: ({event}) => ({slug: event.slug})}],
         },
         'theme.delete': {
           actions: [
@@ -440,11 +456,10 @@ export const themerMachine = setup({
               params: ({context, event}) => ({url: context.images[event.slug]}),
             },
             {type: 'delete', params: ({event}) => ({slug: event.slug})},
-            'persist',
           ],
         },
         'theme.reorder': {
-          actions: [{type: 'reorder', params: ({event}) => ({order: event.order})}, 'persist'],
+          actions: [{type: 'reorder', params: ({event}) => ({order: event.order})}],
         },
         'theme.import': {
           actions: [
@@ -452,8 +467,10 @@ export const themerMachine = setup({
               type: 'import',
               params: ({event}) => ({title: event.title, options: event.options}),
             },
-            'persist',
           ],
+        },
+        'themes.sync': {
+          actions: {type: 'sync', params: ({event}) => ({state: event.state})},
         },
         'flow.list': '.list',
         'flow.removed': {
