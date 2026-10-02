@@ -503,9 +503,6 @@ importers:
       '@vitest/browser-playwright':
         specifier: ^4.1.11
         version: 4.1.11(playwright@1.63.0)(vite@8.3.1)(vitest@4.1.11)
-      motion:
-        specifier: 'catalog:'
-        version: 13.4.6(react-dom@19.3.0)(react@19.3.0)
       oxc-transform-react:
         specifier: 'catalog:'
         version: 0.147.0
