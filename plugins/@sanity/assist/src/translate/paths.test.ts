@@ -534,4 +534,60 @@ describe('paths', () => {
       ]),
     )
   })
+
+  test('resolves locked outputs from the document path, not the source parent', () => {
+    const locale = (name: string, locked: 'nl' | 'none') =>
+      defineType({
+        type: 'object',
+        name,
+        fieldsets: locked === 'nl' ? [{name: 'secret', hidden: true}] : undefined,
+        fields: [
+          {type: 'string', name: 'en'},
+          {type: 'string', name: 'nl', fieldset: locked === 'nl' ? 'secret' : undefined},
+          {type: 'string', name: 'es'},
+        ],
+      })
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        locale('localeSource', 'none'),
+        locale('localeTarget', 'nl'),
+        defineType({
+          type: 'document',
+          name: 'article',
+          fields: [
+            {type: 'localeSource', name: 'source'},
+            {type: 'localeTarget', name: 'target'},
+          ],
+        }),
+      ],
+    }).get('article')
+
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'article',
+      source: {en: 'Hello', nl: 'Hallo', es: 'Hola'},
+      target: {en: 'Hello', nl: 'Hallo', es: 'Hola'},
+    }
+    const members = getDocumentMembersFlat(doc, docSchema)
+
+    const transMap = getFieldLanguageMap(docSchema, members, 'en', ['nl', 'es'], (member) =>
+      member.path.length === 2 && pathToString(member.path) === 'source.en'
+        ? [
+            {id: 'nl', outputPath: ['target', 'nl']},
+            {id: 'es', outputPath: ['target', 'es']},
+          ]
+        : undefined,
+    )
+
+    expect(transMap).toEqual(
+      typed<FieldLanguageMap[]>([
+        {
+          inputLanguageId: 'en',
+          inputPath: ['source', 'en'],
+          outputs: [{id: 'es', outputPath: ['target', 'es']}],
+        },
+      ]),
+    )
+  })
 })

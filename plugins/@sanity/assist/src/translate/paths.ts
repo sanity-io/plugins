@@ -77,13 +77,51 @@ function isFieldLockedForTranslation(parent: ObjectSchemaType, field: ObjectFiel
   return isStaticAssistLocked(field.type)
 }
 
-function outputTargetsLockedField(enclosingType: SchemaType, outputPath: Path): boolean {
-  const segment = outputPath.at(-1)
-  if (typeof segment !== 'string' || !isObjectSchemaType(enclosingType)) {
+function outputTargetsLockedField(documentSchema: ObjectSchemaType, outputPath: Path): boolean {
+  return schemaPathLocked(documentSchema, outputPath)
+}
+
+/**
+ * `outputPath` is a full document path. A custom output function can point at
+ * a different object than the source field, so the lock check walks from the
+ * document schema and applies field and fieldset locks along that path.
+ * Array items with more than one possible type are locked only when every
+ * candidate type is locked; the path does not include `_type`.
+ */
+function schemaPathLocked(current: SchemaType, path: Path): boolean {
+  const segment = path[0]
+  if (segment === undefined) {
     return false
   }
-  const field = enclosingType.fields.find((candidate) => candidate.name === segment)
-  return field ? isFieldLockedForTranslation(enclosingType, field) : false
+  const rest = path.slice(1)
+
+  if (typeof segment === 'string') {
+    if (!isObjectSchemaType(current)) {
+      return false
+    }
+    const field = current.fields.find((candidate) => candidate.name === segment)
+    if (!field) {
+      return false
+    }
+    if (isFieldLockedForTranslation(current, field)) {
+      return true
+    }
+    return schemaPathLocked(field.type, rest)
+  }
+
+  if (
+    (isKeySegment(segment) || typeof segment === 'number') &&
+    current.jsonType === 'array' &&
+    'of' in current
+  ) {
+    const itemTypes = current.of.filter((item) => isObjectSchemaType(item) || rest.length === 0)
+    if (itemTypes.length === 0) {
+      return false
+    }
+    return itemTypes.every((item) => isStaticAssistLocked(item) || schemaPathLocked(item, rest))
+  }
+
+  return false
 }
 
 function extractPaths(
@@ -267,7 +305,7 @@ export function getFieldLanguageMap(
     )?.filter(
       (translation) =>
         translation.id !== translateFromLanguageId &&
-        !outputTargetsLockedField(enclosingType, translation.outputPath),
+        !outputTargetsLockedField(documentSchema, translation.outputPath),
     )
 
     if (translations?.length) {
