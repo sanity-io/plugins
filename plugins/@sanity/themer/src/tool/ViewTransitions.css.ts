@@ -148,14 +148,6 @@ export const viewTransitionClasses = {
   } as const satisfies Record<string, ViewTransitionClass>,
   studio: {
     update: {
-      // [viewTransitionTypes.crossfade]: createViewTransitionType(
-      //   {
-      //     imagePair: {perspective: '1000px', transformStyle: 'preserve-3d'},
-      //     group: {animationDuration: '6s !important', animationTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1) !important', animationFillMode: 'both'},
-      //     old: {animationName: flipOut, backfaceVisibility: 'hidden', },
-      //     new: {animationName: flipIn, backfaceVisibility: 'hidden', }},
-      //   'crossfadeStudio',
-      // ),
       [viewTransitionTypes['open']]: resizeStudioTransition,
       [viewTransitionTypes['close']]: resizeStudioTransition,
       [viewTransitionTypes['split-screen:open']]: splitStudioTransition,
