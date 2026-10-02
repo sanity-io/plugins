@@ -3,29 +3,15 @@ import {
   globalStyle,
   keyframes,
   style,
-  styleVariants,
   type GlobalStyleRule,
 } from '@vanilla-extract/css'
 import type {ViewTransitionClass} from 'react'
 
 /**
- * The view transition classes of the split preview — what React puts in
- * `view-transition-class`, which the pseudo-element rules below select on.
- * Scoped identifiers, so nothing else on the page can mean the same.
+ * A view transition class — what React puts in `view-transition-class` —
+ * with pseudo-element rules of its own. Scoped identifiers, so nothing else
+ * on the page can mean the same.
  */
-export const splitTransitionClasses = {
-  /** The Studio the user was looking at cross-fades between its two widths */
-  resize: createViewTransition('splitResize'),
-  /** The Studio and the panel cross-fade to another theme, in place */
-  crossfade: createViewTransition('themeCrossfade'),
-  /** The split copy slides in from the side, or out to it */
-  slideIn: createViewTransition('splitSlideIn'),
-  slideOut: createViewTransition('splitSlideOut'),
-  /** The split copy drops in from the top, or out to it, where the copies stack */
-  dropIn: createViewTransition('splitDropIn'),
-  dropOut: createViewTransition('splitDropOut'),
-}
-
 function createViewTransitionType(
   rules: Partial<Record<'new' | 'old' | 'group' | 'imagePair', GlobalStyleRule>>,
   debugId?: string,
@@ -46,20 +32,14 @@ function createViewTransitionType(
   return type
 }
 
-const slideIn = keyframes({from: {transform: 'translateX(-100%)'}})
-const slideOut = keyframes({to: {transform: 'translateX(-100%)'}})
-const dropIn = keyframes({from: {transform: 'translateY(-100%)'}})
-const dropOut = keyframes({to: {transform: 'translateY(-100%)'}})
 const slideInFromEnd = keyframes({from: {transform: 'translateX(100%)'}})
 const slideOutToEnd = keyframes({to: {transform: 'translateX(100%)'}})
-const flipOut = keyframes({from: {transform: 'rotateY(0deg)'}, to: {transform: 'rotateY(-180deg)'}})
-const flipIn = keyframes({from: {transform: 'rotateY(180deg)'}, to: {transform: 'rotateY(0deg)'}})
 
 /**
- * The transition type of the layout's motions — what `ThemerLayout` adds to
- * every transition it starts, and React passes on to the view transition.
- * `:active-view-transition-type()` tells the layout's transitions from any
- * other on the page while they run.
+ * The transition type of the layout's motions — what `addThemerTransitionType`
+ * adds to every transition the themer starts, and React passes on to the view
+ * transition. `:active-view-transition-type()` tells the layout's transitions
+ * from any other on the page while they run.
  *
  * It's used on all transition types that userland might want to participate in, for example by setting their own:
  * ```tsx
@@ -80,27 +60,10 @@ export const viewTransitionTypes = {
 }
 
 /**
- * Used with <ViewTransition> as object values, setting a view transition class depending on the transition type
+ * The navbar toggle and the sidebar update along with the layout's motions —
+ * the toggle's pressed state, the sidebar's split toggle — but must not
+ * cross-fade on their own: the new state shows at once, the old one not at all
  */
-//The view transition classes of the panel, which slides in from its edge and out to it
-export const panelTransitionClasses = {
-  slideIn: createViewTransition('panelSlideIn'),
-  slideOut: createViewTransition('panelSlideOut'),
-  [viewTransitionTypes.open]: createViewTransitionType(
-    {new: {animationName: slideInFromEnd}},
-    'panelSlideIn',
-  ),
-  [viewTransitionTypes.close]: createViewTransitionType(
-    {old: {animationName: slideOutToEnd}},
-    'panelSlideOut',
-  ),
-}
-
-export const redOutlines = createViewTransitionType(
-  {new: {outline: '2px solid red'}},
-  'redOutlines',
-)
-
 const navbarButtonUpdateTransition = createViewTransitionType({
   new: {animation: 'none'},
   old: {display: 'none'},
@@ -109,29 +72,55 @@ const sidebarUpdateTransition = createViewTransitionType({
   new: {animation: 'none'},
   old: {display: 'none'},
 })
-const sidebarSplitScreenTransition = createViewTransitionType({
-  new: {animation: 'none'},
-  old: {display: 'none'},
-})
 
+/**
+ * The Studio gives way and takes room as the sidebar and the split copy come
+ * and go: its snapshots stretch to the group's size, so it resizes instead of
+ * cross-fading between its two widths
+ */
 const resizeStudioRules = {inlineSize: '100%', blockSize: '100%', objectFit: 'fill'} as const
 const resizeStudioTransition = createViewTransitionType(
   {old: resizeStudioRules, new: resizeStudioRules},
   'resizeStudio',
 )
 
+/**
+ * The Studio blurs out of its old width and into its new one as the split
+ * copy comes and goes — the snapshots differ too much for the plain resize to
+ * look right, and the copy's slide takes the eye meanwhile
+ */
 const splitScreenFilter = 'blur(12px)'
+const splitStudioTransition = createViewTransitionType(
+  {
+    old: {
+      ...resizeStudioRules,
+      animationName: keyframes({to: {opacity: 0, filter: splitScreenFilter}}),
+    },
+    new: {
+      ...resizeStudioRules,
+      animationName: keyframes({from: {opacity: 0, filter: splitScreenFilter}}),
+    },
+  },
+  'splitStudio',
+)
 
-const animationDuration = '5s'
+/**
+ * The split copy slides in from the side, or out to it — hidden for the first
+ * quarter of the way in, and for the last quarter of the way out
+ */
+const splitScreenSlideIn = keyframes({
+  'from': {transform: 'translateX(-100%)', opacity: 0},
+  '25%': {opacity: 0},
+})
+const splitScreenSlideOut = keyframes({
+  'to': {transform: 'translateX(-100%)', opacity: 0},
+  '75%': {opacity: 0},
+})
+
+/**
+ * Used with <ViewTransition> as object values, setting a view transition class depending on the transition type
+ */
 export const viewTransitionClasses = {
-  [viewTransitionTypes.open]: createViewTransitionType({
-    new: {animationDuration},
-    old: {animationDuration},
-  }),
-  [viewTransitionTypes.close]: createViewTransitionType({
-    new: {animationDuration},
-    old: {animationDuration},
-  }),
   navbarButton: {
     update: {
       [viewTransitionTypes['split-screen:open']]: 'none',
@@ -139,7 +128,6 @@ export const viewTransitionClasses = {
       [viewTransitionTypes.open]: navbarButtonUpdateTransition,
       [viewTransitionTypes.close]: navbarButtonUpdateTransition,
       [viewTransitionTypes.crossfade]: navbarButtonUpdateTransition,
-      debug: redOutlines,
       default: 'none',
     },
   } as const satisfies Record<string, ViewTransitionClass>,
@@ -149,7 +137,6 @@ export const viewTransitionClasses = {
       [viewTransitionTypes['split-screen:close']]: 'none',
       [viewTransitionTypes.open]: 'auto',
       [viewTransitionTypes.close]: 'auto',
-      debug: redOutlines,
       default: 'none',
     },
   } as const satisfies Record<string, ViewTransitionClass>,
@@ -162,8 +149,7 @@ export const viewTransitionClasses = {
       default: 'none',
     },
     update: {
-      [viewTransitionTypes['split-screen:open']]: 'none',
-      [viewTransitionTypes['split-screen:close']]: 'none',
+      [viewTransitionTypes['split-screen:open']]: sidebarUpdateTransition,
       [viewTransitionTypes.crossfade]: 'auto',
       default: 'none',
     },
@@ -172,24 +158,15 @@ export const viewTransitionClasses = {
         {old: {animationName: slideOutToEnd}},
         'panelSlideOut',
       ),
-      debug: redOutlines,
       default: 'none',
     },
   } as const satisfies Record<string, ViewTransitionClass>,
   splitscreen: {
     enter: {
       [viewTransitionTypes['split-screen:open']]: createViewTransitionType(
-        {
-          new: {
-            animationName: keyframes({
-              'from': {transform: 'translateX(-100%)', opacity: 0},
-              '25%': {opacity: 0},
-            }),
-          },
-        },
+        {new: {animationName: splitScreenSlideIn}},
         'slideIn',
       ),
-      debug: redOutlines,
       default: 'none',
     },
     update: {
@@ -198,73 +175,25 @@ export const viewTransitionClasses = {
     },
     exit: {
       [viewTransitionTypes['split-screen:close']]: createViewTransitionType(
-        {
-          old: {
-            animationName: keyframes({
-              'to': {transform: 'translateX(-100%)', opacity: 0},
-              '75%': {opacity: 0},
-            }),
-          },
-        },
+        {old: {animationName: splitScreenSlideOut}},
         'slideOut',
       ),
-      debug: redOutlines,
       default: 'none',
     },
   } as const satisfies Record<string, ViewTransitionClass>,
   studio: {
     enter: {
-      debug: redOutlines,
       default: 'none',
     },
     update: {
-      // [viewTransitionTypes.crossfade]: createViewTransitionType(
-      //   {
-      //     imagePair: {perspective: '1000px', transformStyle: 'preserve-3d'},
-      //     group: {animationDuration: '6s !important', animationTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1) !important', animationFillMode: 'both'},
-      //     old: {animationName: flipOut, backfaceVisibility: 'hidden', },
-      //     new: {animationName: flipIn, backfaceVisibility: 'hidden', }},
-      //   'crossfadeStudio',
-      // ),
       [viewTransitionTypes['open']]: resizeStudioTransition,
       [viewTransitionTypes['close']]: resizeStudioTransition,
-      // [viewTransitionTypes['split-screen:open']]: resizeStudioTransition,
-      [viewTransitionTypes['split-screen:open']]: createViewTransitionType({
-        old: {
-          ...resizeStudioRules,
-          // animationName: keyframes({to: {transform: 'translateX(50%) scaleX(2)', opacity: 0}, '50%': {opacity: 0}}),
-          animationName: keyframes({to: {opacity: 0, filter: splitScreenFilter}}),
-        },
-        new: {
-          ...resizeStudioRules,
-          // animationName: keyframes({from: {transform: 'translateX(-25%) scaleX(0.5)', opacity: 0}, '50%': {opacity: 0}}),
-          // animationName: keyframes({from: { opacity: 0}, '50%': {opacity: 0}}),
-          animationName: keyframes({from: {opacity: 0, filter: splitScreenFilter}}),
-        },
-      }),
-      // [viewTransitionTypes['split-screen:close']]: resizeStudioTransition,
-      [viewTransitionTypes['split-screen:close']]: createViewTransitionType({
-        old: {
-          ...resizeStudioRules,
-          // animationName: keyframes({to: {transform: 'translateX(50%) scaleX(2)', opacity: 0}, '50%': {opacity: 0}}),
-          animationName: keyframes({to: {opacity: 0, filter: splitScreenFilter}}),
-        },
-        new: {
-          ...resizeStudioRules,
-          // animationName: keyframes({from: {transform: 'translateX(-25%) scaleX(0.5)', opacity: 0}, '50%': {opacity: 0}}),
-          // animationName: keyframes({from: { opacity: 0}, '50%': {opacity: 0}}),
-          animationName: keyframes({from: {opacity: 0, filter: splitScreenFilter}}),
-        },
-      }),
+      [viewTransitionTypes['split-screen:open']]: splitStudioTransition,
+      [viewTransitionTypes['split-screen:close']]: splitStudioTransition,
       [viewTransitionTypes.crossfade]: 'auto',
       default: 'none',
     },
     exit: {
-      // [viewTransitionTypes.close]: createViewTransitionType(
-      //   {old: {animationName: slideOutToEnd}},
-      //   'panelSlideOut',
-      // ),
-      debug: redOutlines,
       default: 'none',
     },
   } as const satisfies Record<string, ViewTransitionClass>,
@@ -278,6 +207,10 @@ globalStyle(
   {animationDuration: '320ms', animationTimingFunction: 'cubic-bezier(0.65, 0, 0.35, 1)'},
 )
 
+/**
+ * The split copy has the whole Studio's width to cross, so its motions get
+ * more time than the others
+ */
 globalStyle(
   [
     `:root:active-view-transition-type(${viewTransitionTypes['split-screen:open']})::view-transition-group(*)`,
@@ -285,42 +218,6 @@ globalStyle(
   ].join(','),
   {animationDuration: '480ms'},
 )
-
-/** The layout's `Flex` positions the sidebar overlay on small screens */
-export const layout = style({
-  position: 'relative',
-})
-
-/** A copy of the Studio in a color scheme of its own, for `color-scheme` */
-export const studioScheme = styleVariants({
-  light: {colorScheme: 'light'},
-  dark: {colorScheme: 'dark'},
-})
-
-globalStyle(
-  [
-    `::view-transition-old(.${splitTransitionClasses.resize})`,
-    `::view-transition-new(.${splitTransitionClasses.resize})`,
-  ].join(', '),
-  {
-    inlineSize: '100%',
-    blockSize: '100%',
-    objectFit: 'fill',
-  },
-)
-
-globalStyle(`::view-transition-new(.${splitTransitionClasses.slideIn})`, {animationName: slideIn})
-globalStyle(`::view-transition-old(.${splitTransitionClasses.slideOut})`, {
-  animationName: slideOut,
-})
-globalStyle(`::view-transition-new(.${splitTransitionClasses.dropIn})`, {animationName: dropIn})
-globalStyle(`::view-transition-old(.${splitTransitionClasses.dropOut})`, {animationName: dropOut})
-globalStyle(`::view-transition-new(.${panelTransitionClasses.slideIn})`, {
-  animationName: slideInFromEnd,
-})
-globalStyle(`::view-transition-old(.${panelTransitionClasses.slideOut})`, {
-  animationName: slideOutToEnd,
-})
 
 /**
  * Disable animations automatically for themer view transitions if the user signals to do so
