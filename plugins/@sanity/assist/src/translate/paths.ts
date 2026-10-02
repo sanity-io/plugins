@@ -378,3 +378,15 @@ export function getFieldLanguageMap(
 
   return translationMaps
 }
+
+/** Keep only outputs for the selected languages, and drop maps that then have none. */
+export function fieldLanguageMapsForLanguages(
+  maps: FieldLanguageMap[],
+  languageIds: readonly string[],
+): FieldLanguageMap[] {
+  const selected = new Set(languageIds)
+  return maps.flatMap((map) => {
+    const outputs = map.outputs.filter((output) => selected.has(output.id))
+    return outputs.length ? [{...map, outputs}] : []
+  })
+}

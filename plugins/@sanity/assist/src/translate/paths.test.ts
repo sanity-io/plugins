@@ -11,11 +11,40 @@ import {describe, expect, test} from 'vitest'
 import {
   defaultLanguageOutputs,
   type FieldLanguageMap,
+  fieldLanguageMapsForLanguages,
   getDocumentMembersFlat,
   getFieldLanguageMap,
 } from './paths'
 
 describe('paths', () => {
+  test('drops translation maps whose selected outputs were locked', () => {
+    const maps: FieldLanguageMap[] = [
+      {
+        inputLanguageId: 'en',
+        inputPath: ['title', 'en'],
+        outputs: [
+          {id: 'nl', outputPath: ['title', 'nl']},
+          {id: 'es', outputPath: ['title', 'es']},
+        ],
+      },
+      {
+        inputLanguageId: 'en',
+        inputPath: ['body', 'en'],
+        outputs: [{id: 'nl', outputPath: ['body', 'nl']}],
+      },
+    ]
+
+    expect(fieldLanguageMapsForLanguages(maps, ['es'])).toEqual([
+      {
+        inputLanguageId: 'en',
+        inputPath: ['title', 'en'],
+        outputs: [{id: 'es', outputPath: ['title', 'es']}],
+      },
+    ])
+    expect(fieldLanguageMapsForLanguages(maps, ['nl'])).toHaveLength(2)
+    expect(fieldLanguageMapsForLanguages(maps, [])).toEqual([])
+  })
+
   test('should return internationalizedArrayString paths and find translation mappings', () => {
     const docSchema: ObjectSchemaType = Schema.compile({
       name: 'test',
