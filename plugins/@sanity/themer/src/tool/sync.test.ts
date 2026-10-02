@@ -288,6 +288,43 @@ describe('syncing the themer across tabs', () => {
     stopC()
   })
 
+  it('answers the tabs that asked before the lock was granted', async () => {
+    const bus = createBus()
+    const grants: Array<() => void> = []
+    // A lock manager that grants when the test says so, which is after both tabs have asked
+    const locks: SyncLocks = {
+      request: (_name, _options, callback) =>
+        new Promise((resolve) => grants.push(() => resolve(callback()))),
+    }
+    const tabA = startTab({active: 'custom-1', custom: [custom], removed: ['dew'], order: []})
+    const tabB = startTab()
+
+    const stopA = syncThemer(tabA, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+    })
+    const stopB = syncThemer(tabB, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+    })
+    await tick()
+
+    // Two tabs starting together both ask while no tab persists yet
+    expect(selectStoredState(tabB.getSnapshot())).toEqual(initialThemerState)
+
+    grants[0]?.()
+    await tick()
+
+    expect(selectStoredState(tabB.getSnapshot())).toEqual(selectStoredState(tabA.getSnapshot()))
+
+    stopA()
+    stopB()
+  })
+
   it('ends up with one state when two tabs change at the same time', async () => {
     const bus = createBus()
     const locks = createLocks()

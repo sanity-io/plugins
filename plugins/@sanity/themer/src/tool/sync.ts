@@ -188,10 +188,15 @@ export function syncThemer(
   let origin = id
   /** Whether this tab still has what it started with, so that an answer to its `hello` is welcome */
   let unchanged = true
+  /** The tabs whose `hello` is still waiting for an answer, this one not persisting yet */
+  const asked = new Set<string>()
 
   const isNewer = (message: {revision: number; from: string}) =>
     message.revision > revision || (message.revision === revision && message.from > origin)
 
+  const answer = (to: string) => {
+    channel?.post({type: 'state', state: shared, revision, from: origin, to} satisfies SyncMessage)
+  }
   const persistNow = () => {
     cancelPersist?.()
     cancelPersist = undefined
@@ -203,6 +208,10 @@ export function syncThemer(
   }
   const becomeLeader = () => {
     leader = true
+    // The tabs that asked before the lock was granted, or as the tab that
+    // was to answer them went away, hear their answer now
+    for (const to of asked) answer(to)
+    asked.clear()
     persistNow()
   }
 
@@ -246,16 +255,11 @@ export function syncThemer(
       if (!message) return
 
       if (message.type === 'hello') {
-        // The tab that persists speaks for all, so that the newcomer hears one answer
-        if (leader) {
-          channel.post({
-            type: 'state',
-            state: shared,
-            revision,
-            from: origin,
-            to: message.from,
-          } satisfies SyncMessage)
-        }
+        // The tab that persists speaks for all, so that the newcomer hears
+        // one answer — until one does, every tab keeps the ask, in case the
+        // persisting comes to it
+        if (leader) answer(message.from)
+        else asked.add(message.from)
 
         return
       }
