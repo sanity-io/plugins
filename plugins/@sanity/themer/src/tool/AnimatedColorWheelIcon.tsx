@@ -1,7 +1,13 @@
 import {motion, MotionValue, useTransform, animate, useMotionValue} from 'motion/react'
 import {useEffect, useImperativeHandle} from 'react'
 
-import {isSliceFilled, SLICE_COLORS, SLICE_COUNT, wheelRotation, ANIMATION_DURATION} from './colorWheel'
+import {
+  isSliceFilled,
+  SLICE_COLORS,
+  SLICE_COUNT,
+  wheelRotation,
+  ANIMATION_DURATION,
+} from './colorWheel'
 
 /**
  * The geometry of `ColorWheelIcon` from `@sanity/icons`: a ring between two
