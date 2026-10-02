@@ -5,6 +5,8 @@ import {type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {useMemo} from 'react'
 import {useColorSchemeValue} from 'sanity'
 
+import type {ThemerProps} from '#types'
+
 import {buildPalette, type GeneratedColorPalette} from '../theme/buildPalette'
 import {
   type BuildThemeOptions,
@@ -13,7 +15,6 @@ import {
   SCHEMES,
   type SchemeThemeOptions,
 } from '../theme/options'
-import type {ThemerProps} from './context'
 import {
   applyImagePalette,
   currentImageVariant,

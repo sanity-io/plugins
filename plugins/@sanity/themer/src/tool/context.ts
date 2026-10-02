@@ -1,12 +1,8 @@
 import {createContext, useContext} from 'react'
-import type {ActorRefFrom} from 'xstate'
-import {createEmptyActor} from 'xstate'
 
-import type {BuildThemeOptions} from '../theme/options'
-import type {ThemerEvent, themerMachine} from './machine'
+import type {PluginConfig} from '#types'
+
 import type {ToolReducerAction} from './reducer'
-import type {ThemerTheme} from './themes'
-import type { PluginConfig } from '#types';
 
 /*
  * The tool reducer's state that the navbar toggle shows and changes. The
@@ -25,23 +21,15 @@ export const ToolIsOpenContext = createContext<boolean>(false)
 export const ToolDispatchContext = createContext<React.Dispatch<ToolReducerAction>>(() => {
   throw new Error('ToolDispatchContext not initialized')
 })
-/**
- * The themer machine's actor, for everything in the sidebar to select from
- * and send to. We don't do null checks on this one because we ensure it is
- * always provided in other ways
- * @internal
- */
-export const ToolActorRefContext = createContext<ActorRefFrom<typeof themerMachine>>(
-  // oxlint-disable-next-line no-unsafe-type-assertion -- a stand-in until the layout provides the actor
-  createEmptyActor() as unknown as ActorRefFrom<typeof themerMachine>,
-)
 /** @internal */
 export const ToolSplitIsOpenContext = createContext<boolean>(false)
-
-/** @internal */
+/**
+ * Whether the navbar toggle is the one to measure the Studio navbar's height
+ * for the sidebar's header — the Studio renders the navbar in the split copy
+ * too, which must stay quiet
+ * @internal
+ */
 export const ToolShouldDetectNavbarHeightContext = createContext<boolean>(false)
-
-
 
 /** @internal */
 export const PluginConfigContext = createContext<PluginConfig | null>(null)
@@ -56,46 +44,3 @@ export function usePluginConfig(): PluginConfig {
 
   return config
 }
-
-/** @deprecated prop drill instead pls */
-export type ThemerView =
-  | {name: 'list'}
-  | {
-      name: 'edit'
-      slug: string
-      /** Whether the title input should take focus, for themes that were just created */
-      focusTitle: boolean
-    }
-  | {name: 'removed'}
-
-/** @deprecated prop drill instead pls */
-export interface ThemerContextValue {
-  /** @deprecated prop drill instead pls */
-  baseOptions: BuildThemeOptions
-  /** @deprecated prop drill instead pls */
-  themes: ThemerTheme[]
-  /** @deprecated prop drill instead pls */
-  removed: ThemerTheme[]
-  /** @deprecated prop drill instead pls */
-  active: ThemerTheme
-  /** @deprecated prop drill instead pls */
-  images: Record<string, string>
-  /** @deprecated prop drill instead pls */
-  view: ThemerView
-  /** @deprecated prop drill instead pls */
-  send: (event: ThemerEvent) => void
-}
-
-/** @deprecated prop drill instead pls */
-export const ThemerContext = createContext<ThemerContextValue | null>(null)
-
-/**
- * The state machine send() method that for when the tool is open (the machine is paused when closed)
- * @internal
- * @deprecated use ToolActorRefContext instead
- */
-export const ToolSendContext = createContext<(event: ThemerEvent) => void>(() => {
-  throw new Error('ToolSendContext not initialized')
-})
-
-

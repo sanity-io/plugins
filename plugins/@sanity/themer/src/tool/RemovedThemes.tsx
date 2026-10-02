@@ -1,6 +1,7 @@
 import {Box, Button, Flex, Stack, Text} from '@sanity/ui'
 
-import type {ThemerProps} from './context'
+import type {ThemerProps} from '#types'
+
 import {ScrollArea} from './ScrollArea'
 import {displayTitle} from './themes'
 import {ThemeThumbnail} from './ThemeThumbnail'

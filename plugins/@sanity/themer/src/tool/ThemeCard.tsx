@@ -12,7 +12,8 @@ import {Reorder, useDragControls} from 'motion/react'
 import {useRef, useState} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 
-import type {ThemerProps} from './context'
+import type {ThemerProps} from '#types'
+
 import {displayTitle, type ThemerTheme} from './themes'
 import {ThemeThumbnail} from './ThemeThumbnail'
 import {useThemeCodes} from './useThemeCodes'

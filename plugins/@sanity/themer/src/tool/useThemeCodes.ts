@@ -1,7 +1,8 @@
 import {useToast} from '@sanity/ui/toast'
 import {useEffect} from 'react'
 
-import type {ThemerProps} from './context'
+import type {ThemerProps} from '#types'
+
 import {decodeTheme, encodeTheme, type SharedTheme} from './share'
 import {displayTitle} from './themes'
 

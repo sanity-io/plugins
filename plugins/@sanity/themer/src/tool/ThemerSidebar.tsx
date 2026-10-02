@@ -5,8 +5,9 @@ import {SplitVerticalIcon} from '@sanity/icons/SplitVertical'
 import {Box, Card, Flex, Text} from '@sanity/ui'
 import {Activity, startTransition, useState} from 'react'
 
+import type {ThemerProps} from '#types'
+
 import {addThemerTransitionType} from './addThemerTransitionType'
-import type {ThemerProps} from './context'
 import {RemovedThemes} from './RemovedThemes'
 import {ThemeEditor} from './ThemeEditor'
 import {ThemeList} from './ThemeList'

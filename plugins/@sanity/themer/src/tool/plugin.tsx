@@ -1,14 +1,14 @@
 import {ThemeProvider} from '@sanity/ui'
-import {useReducer, use, useState} from 'react'
+import {use, useReducer, useState} from 'react'
 import {browser} from 'react-dom'
 import {definePlugin, type LayoutProps} from 'sanity'
 
+import type {PluginConfig} from '#types'
+
 import {buildTheme} from '../theme/buildTheme'
 import type {BuildThemeOptions} from '../theme/options'
-import {type PluginConfig, PluginConfigContext} from './context'
-import {toolReducer} from './reducer'
-import {resolveActiveThemeOptions} from './selectors'
-import {readPersistedSnapshot} from './storage'
+import {initialToolState, toolReducer} from './reducer'
+import {readPersistedThemer} from './storage'
 import {ThemerLayout} from './ThemerLayout'
 import {ThemerNavbar} from './ThemerNavbar'
 import {useIsMobile} from './useIsMobile'
@@ -38,6 +38,11 @@ export interface ThemerToolOptions {
    * ```
    */
   config?: BuildThemeOptions
+  /**
+   * What the tool goes by in the Studio navbar — the toggle's label and
+   * tooltip. Defaults to `Themer`.
+   */
+  title?: string
 }
 
 /**
@@ -68,9 +73,12 @@ export interface ThemerToolOptions {
  *
  * @alpha
  */
-export const themerTool = definePlugin<PluginConfig | void>((options) => {
-  const {title = 'Themer'} = options ?? {}
-  const ThemerLayoutProvider = defineThemerLayout({title})
+export const themerTool = definePlugin<ThemerToolOptions | void>((options) => {
+  // No options generate the stock theme, which is what a Studio without a
+  // `theme` in its config gets
+  const {config: baseOptions = {}, title = 'Themer'} = options ?? {}
+  const ThemerLayoutProvider = defineThemerLayout({baseOptions, title})
+
   return {
     name: '@sanity/themer/tool',
     studio: {
@@ -79,7 +87,7 @@ export const themerTool = definePlugin<PluginConfig | void>((options) => {
   }
 })
 
-function defineThemerLayout(config: Required<PluginConfig>) {
+function defineThemerLayout(config: PluginConfig) {
   return function DefinedThemerLayoutProvider(props: LayoutProps) {
     'use memo'
 
@@ -93,31 +101,11 @@ function defineThemerLayout(config: Required<PluginConfig>) {
  * and that need to survive open/close of the tool
  * @TODO will mount on the future `studio.components.provider`  entrypoint
  */
-function ThemerProvider({
-  children,
-  config,
-}: {
-  children: React.ReactNode
-  config: Required<PluginConfig>
-}) {
+function ThemerProvider({children, config}: {children: React.ReactNode; config: PluginConfig}) {
   use(browser('The current theme is stored in localStorage.'))
 
-  const [persistedSnapshot] = useState(readPersistedSnapshot)
-  const [state, dispatch] = useReducer(
-    toolReducer,
-    {navbarHeight: null,
-      open: false,
-      prerender: false,
-      prerenderSplitScreen: false,
-      split: false,
-      theme: null,
-    },
-    (initialState) => {
-      if (!persistedSnapshot) return initialState
-      const theme = resolveActiveThemeOptions(persistedSnapshot.context)
-      return theme ? {...initialState, theme} : initialState
-    },
-  )
+  const [persisted] = useState(() => readPersistedThemer(config.baseOptions))
+  const [state, dispatch] = useReducer(toolReducer, persisted.state, initialToolState)
   const isMobile = useIsMobile()
   const isTooSmallForSplitScreen = useIsTooSmallForSplitScreen()
   // @TODO Themer does not yet support mobile
@@ -127,20 +115,18 @@ function ThemerProvider({
 
   return (
     <ThemeProvider theme={(state.theme !== null ? buildTheme(state.theme) : null) ?? undefined}>
-      {/* @TODO PluginContext only needed by ThemerNavbar and can be setup in StudioPreview in ThemerLayout and then prop-drill */}
-      <PluginConfigContext value={config}>
-        <ThemerLayout
-          dispatch={dispatch}
-          navbarHeight={state.navbarHeight}
-          open={open}
-          persistedSnapshot={persistedSnapshot}
-          prerender={state.prerender}
-          prerenderSplitScreen={state.prerenderSplitScreen}
-          split={split}
-        >
-          {children}
-        </ThemerLayout>
-      </PluginConfigContext>
+      <ThemerLayout
+        config={config}
+        dispatch={dispatch}
+        navbarHeight={state.navbarHeight}
+        open={open}
+        persisted={persisted}
+        prerender={state.prerender}
+        prerenderSplitScreen={state.prerenderSplitScreen}
+        split={split}
+      >
+        {children}
+      </ThemerLayout>
     </ThemeProvider>
   )
 }
