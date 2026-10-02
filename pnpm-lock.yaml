@@ -178,8 +178,8 @@ catalogs:
       specifier: ^5.2.0
       version: 5.2.0
     '@portabletext/to-html':
-      specifier: ^5.0.3
-      version: 5.0.3
+      specifier: ^6.0.0
+      version: 6.0.0
     '@portabletext/types':
       specifier: ^4.0.2
       version: 4.0.2
@@ -2169,7 +2169,7 @@ importers:
         version: 5.2.0(@types/react@19.3.0)(vitest@4.1.11)
       '@portabletext/to-html':
         specifier: 'catalog:'
-        version: 5.0.3
+        version: 6.0.0
       '@sanity/mutator':
         specifier: next
         version: 6.18.0-next.25(@types/react@19.3.0)(vitest@4.1.11)
@@ -3495,7 +3495,7 @@ importers:
         version: 5.2.0(@types/react@19.3.0)(vitest@4.1.11)
       '@portabletext/to-html':
         specifier: 'catalog:'
-        version: 5.0.3
+        version: 6.0.0
       '@sanity/icons':
         specifier: 'catalog:'
         version: 5.2.3(react@19.3.0)
