@@ -70,7 +70,7 @@
   "peerDependencies": {
     "react": "catalog:peer",
     "react-dom": "catalog:peer",
-    "sanity": "catalog:peer",
+    "sanity": "^6.13.0-0",
     "styled-components": "catalog:peer"
   },
   "engines": {

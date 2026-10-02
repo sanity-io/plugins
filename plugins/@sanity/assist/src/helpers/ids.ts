@@ -1,4 +1,11 @@
-import {getDraftId, getPublishedId, getVersionFromId, getVersionId, isVersionId} from 'sanity'
+import {
+  getDraftId,
+  getPublishedId,
+  getVersionFromId,
+  isVersionId,
+  type SystemVariant,
+  type TargetDocumentState,
+} from 'sanity'
 
 import {assistDocumentIdPrefix, assistDocumentStatusIdPrefix} from '../types'
 
@@ -19,30 +26,51 @@ export function assistTasksStatusId(documentId: string) {
 }
 
 /**
- * Document id Assist write endpoints must patch.
+ * Document id Assist write endpoints must patch, once `targetDocumentState` is
+ * ready. The target is picked in this order:
  *
- * `documentId` may carry any prefix; only its published id is used. The target
- * is picked in this order:
+ * 1. `releaseId` (the selected perspective) wins and yields the version sibling.
+ * 2. Live-edit types write published.
+ * 3. Otherwise the draft sibling, if it exists.
+ * 4. If the draft sibling is missing and a content variant is selected, the
+ *    draft id advertised by the published sibling (`_system.draft`).
+ * 5. Without a variant, `drafts.*` derived from `documentId` (virtual draft
+ *    after publish).
  *
- * 1. `options.releaseId` (the selected perspective) wins and yields that
- *    release's version id, even if `documentId` is already a version id.
- * 2. Without a `releaseId`, a version id is kept as is.
- * 3. Live-edit types write published.
- * 4. Everything else writes `drafts.*`, even when Studio field-action props
- *    still carry the published id (virtual draft after publish).
+ * Returns `undefined` until the target is ready, or when a selected release
+ * or variant has no writable sibling.
  */
-export function getAssistWriteDocumentId(
-  documentId: string,
-  options: {liveEdit?: boolean; releaseId?: string} = {},
-): string {
-  if (options.releaseId) {
-    return getVersionId(documentId, options.releaseId)
+export function getAssistWriteDocumentId({
+  documentId,
+  liveEdit,
+  releaseId,
+  variant,
+  targetDocumentState,
+}: {
+  documentId: string
+  liveEdit?: boolean
+  releaseId?: string
+  variant?: SystemVariant
+  targetDocumentState?: TargetDocumentState
+}): string | undefined {
+  if (
+    targetDocumentState?.status !== 'ready' &&
+    targetDocumentState?.status !== 'variant-missing'
+  ) {
+    return undefined
   }
-  if (isVersionId(documentId)) {
-    return documentId
+  if (releaseId) {
+    return targetDocumentState.siblings.version?._id
   }
-  if (options.liveEdit) {
-    return getPublishedId(documentId)
+
+  if (liveEdit) {
+    return targetDocumentState.siblings.published?._id
   }
-  return getDraftId(documentId)
+  return (
+    targetDocumentState.siblings.draft?._id ||
+    // If the draft sibling is missing, but it's a virtual draft we can use the draft id referenced from the published document.
+    (variant
+      ? targetDocumentState.siblings.published?._system?.draft?._ref
+      : getDraftId(documentId))
+  )
 }
