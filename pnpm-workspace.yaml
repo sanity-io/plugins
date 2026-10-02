@@ -68,8 +68,8 @@ catalog:
   nanoid: ^6.0.1
   oxc-transform-react: ^0.147.0
   oxfmt: ^0.71.0
-  oxlint: ^1.83.0
-  oxlint-tsgolint: ^7.0.2001
+  oxlint: ^1.86.0
+  oxlint-tsgolint: ^7.0.2003
   react: ^19.3.0
   react-dom: ^19.3.0
   react-hook-form: ^7.85.0

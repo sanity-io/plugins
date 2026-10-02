@@ -6,6 +6,7 @@ import {shopifyAssetPreviewSchema} from './schema/shopifyAssetPreviewSchema'
 import {shopifyAssetSchema} from './schema/shopifyAssetSchema'
 import type {PluginConfig} from './types'
 
+// oxlint-disable-next-line oxc/no-barrel-file
 export * from './types'
 
 // enables autocompletion and validation of document options

@@ -518,7 +518,6 @@ export function BlockInsertPicker({
 
   useEffect(() => {
     highlightedRowRef.current?.scrollIntoView({block: 'nearest'})
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [highlightedIndex])
 
   // Stable virtual element derived from the captured rect — keeps Popover

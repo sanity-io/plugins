@@ -32,7 +32,7 @@ import type {OxlintConfig} from 'oxlint'
  * @public
  */
 const config: OxlintConfig = {
-  plugins: ['typescript', 'unicorn', 'react', 'oxc', 'import', 'jsx-a11y', 'promise'],
+  plugins: ['typescript', 'unicorn', 'react', 'react-perf', 'oxc', 'import', 'jsx-a11y', 'promise'],
   ignorePatterns: ['**/.sanity/*', '**/dist/*', '**/sanity.types.ts'],
   options: {
     denyWarnings: true,
@@ -66,6 +66,11 @@ const config: OxlintConfig = {
             name: 'date-fns-tz',
             message:
               'Use the official `@date-fns/tz` package (TZDate, tz, tzOffset) with date-fns v4 instead, matching sanity core.',
+          },
+          {
+            name: 'styled-components',
+            importNames: ['default'],
+            message: 'Please use `import {styled} from "styled-components"` instead.',
           },
           {
             name: 'react',
@@ -118,6 +123,9 @@ const config: OxlintConfig = {
     'typescript/prefer-ts-expect-error': 'error',
     'import/no-commonjs': 'error',
     'import/no-unassigned-import': ['error', {allow: ['**/*.css']}],
+    // Ban `export *` barrel files that pull in large module graphs; import
+    // directly from the module that defines a symbol instead
+    'oxc/no-barrel-file': 'error',
     'no-restricted-globals': [
       'error',
       {name: '__dirname', message: 'Use path.dirname(fileURLToPath(import.meta.url)) instead'},
