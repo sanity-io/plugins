@@ -1,6 +1,8 @@
+import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
 import {ResetIcon} from '@sanity/icons/Reset'
 import {TrashIcon} from '@sanity/icons/Trash'
 import {Badge, Box, Button, Card, Flex, Stack, Text, TextInput} from '@sanity/ui'
+import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
 import {type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {useSelector} from '@xstate/react'
 import {useMemo} from 'react'
@@ -229,18 +231,21 @@ function ThemeEditorForm(props: {
         </Stack>
       </ScrollArea>
 
+      {/* Like the Studio's document footer: one primary action, the rest in the menu */}
       <Card borderTop padding={3}>
-        <Flex gap={2}>
-          <TooltipButton
-            icon={TrashIcon}
-            mode="ghost"
-            onClick={onRemove}
-            text="Remove"
-            tone="critical"
-            tooltip="Remove the theme — it can be restored until it is deleted"
+        <Flex align="center" gap={2} justify="flex-end">
+          <Button onClick={onDone} text="Done" tone="primary" />
+          <MenuButton
+            button={<Button aria-label="More actions" icon={EllipsisHorizontalIcon} mode="bleed" />}
+            id="themer-editor-actions"
+            menu={
+              <Menu>
+                {/* The theme can be restored until it is deleted from the removed themes */}
+                <MenuItem icon={TrashIcon} onClick={onRemove} text="Remove" tone="critical" />
+              </Menu>
+            }
+            popover={{placement: 'top-end', portal: true}}
           />
-          <Box flex={1} />
-          <Button mode="ghost" onClick={onDone} padding={2} text="Done" />
         </Flex>
       </Card>
     </>
