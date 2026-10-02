@@ -3,10 +3,11 @@ import {use, useReducer, useState} from 'react'
 import {browser} from 'react-dom'
 import {useColorSchemeValue} from 'sanity'
 
-import {MIN_MEDIA_INDEX_FOR_SPLIT_SCREEN} from '#constants'
+import {MIN_MEDIA_INDEX_FOR_SIDEBAR, MIN_MEDIA_INDEX_FOR_SPLIT_SCREEN} from '#constants'
 import type {ThemerProps} from '#types'
 
 import {buildTheme} from '../theme/buildTheme'
+import {resolveThemeOptions} from '../theme/options'
 import {initialToolState, toolReducer} from './reducer'
 import {resolveActiveThemeOptions} from './selectors'
 import {readPersistedSnapshot} from './storage'
@@ -35,7 +36,7 @@ export function ThemerProvider({
 
   const scheme = useColorSchemeValue()
   const index = useMediaIndex()
-  const isMobile = index <= 2
+  const isMobile = index < MIN_MEDIA_INDEX_FOR_SIDEBAR
   const isTooSmallForSplitScreen = index <= MIN_MEDIA_INDEX_FOR_SPLIT_SCREEN
 
   // @TODO Themer does not yet support mobile
@@ -47,7 +48,10 @@ export function ThemerProvider({
     <ThemeProvider theme={(state.theme !== null ? buildTheme(state.theme) : null) ?? undefined}>
       <ThemerLayout
         config={config}
-        backgroundColor={state.theme?.[scheme]?.background}
+        // The resolved background, not the raw option: a theme that only sets an accent has one too
+        backgroundColor={
+          state.theme ? resolveThemeOptions(state.theme)[scheme].background : undefined
+        }
         dispatch={dispatch}
         navbarHeight={state.navbarHeight}
         open={open}
