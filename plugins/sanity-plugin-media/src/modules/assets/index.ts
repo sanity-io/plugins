@@ -52,6 +52,8 @@ export type AssetsReducerState = {
   fetching: boolean
   fetchingError?: HttpError
   lastPicked?: string
+  /** Plugin locale ids. Text search uses these to match localized alt text, title, description, and credit line. */
+  localeIds: string[]
   order: Order
   pageIndex: number
   pageSize: number
@@ -86,6 +88,7 @@ export const initialState = {
   fetching: false,
   fetchingError: undefined,
   lastPicked: undefined,
+  localeIds: [],
   order: {
     direction: defaultOrder.direction,
     field: defaultOrder.field,
@@ -537,6 +540,7 @@ export const assetsFetchPageIndexEpic: MyEpic = (action$, state$) =>
         assetTypes: state.assets.assetTypes,
         currentFolderId: state.folders.currentFolderId,
         excludeTagSlugs: state.assets.excludeTagSlugs,
+        localeIds: state.assets.localeIds,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
         showMediaLibraryAssets: state.assets.showMediaLibraryAssets,
