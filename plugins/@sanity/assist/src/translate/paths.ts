@@ -77,23 +77,34 @@ function isFieldLockedForTranslation(parent: ObjectSchemaType, field: ObjectFiel
   return isStaticAssistLocked(field.type)
 }
 
-function outputTargetsLockedField(documentSchema: ObjectSchemaType, outputPath: Path): boolean {
-  return schemaPathLocked(documentSchema, outputPath)
+function outputTargetsLockedField(
+  documentSchema: ObjectSchemaType,
+  outputPath: Path,
+  documentMembers: DocumentMember[],
+): boolean {
+  return schemaPathLocked(documentSchema, outputPath, documentMembers, [])
 }
 
 /**
  * `outputPath` is a full document path. A custom output function can point at
  * a different object than the source field, so the lock check walks from the
  * document schema and applies field and fieldset locks along that path.
- * Array items with more than one possible type are locked only when every
- * candidate type is locked; the path does not include `_type`.
+ * Keyed array items use the existing item's `_type` from the array value.
+ * When the item is not in the document yet, the output is dropped if any
+ * candidate item type is locked.
  */
-function schemaPathLocked(current: SchemaType, path: Path): boolean {
+function schemaPathLocked(
+  current: SchemaType,
+  path: Path,
+  documentMembers: DocumentMember[],
+  walked: Path,
+): boolean {
   const segment = path[0]
   if (segment === undefined) {
     return false
   }
   const rest = path.slice(1)
+  const nextWalked = [...walked, segment]
 
   if (typeof segment === 'string') {
     if (!isObjectSchemaType(current)) {
@@ -106,7 +117,7 @@ function schemaPathLocked(current: SchemaType, path: Path): boolean {
     if (isFieldLockedForTranslation(current, field)) {
       return true
     }
-    return schemaPathLocked(field.type, rest)
+    return schemaPathLocked(field.type, rest, documentMembers, nextWalked)
   }
 
   if (
@@ -114,14 +125,61 @@ function schemaPathLocked(current: SchemaType, path: Path): boolean {
     current.jsonType === 'array' &&
     'of' in current
   ) {
+    const itemType = arrayItemSchema(current, nextWalked, documentMembers)
+    if (itemType) {
+      return (
+        isStaticAssistLocked(itemType) ||
+        schemaPathLocked(itemType, rest, documentMembers, nextWalked)
+      )
+    }
     const itemTypes = current.of.filter((item) => isObjectSchemaType(item) || rest.length === 0)
     if (itemTypes.length === 0) {
       return false
     }
-    return itemTypes.every((item) => isStaticAssistLocked(item) || schemaPathLocked(item, rest))
+    return itemTypes.some(
+      (item) =>
+        isStaticAssistLocked(item) || schemaPathLocked(item, rest, documentMembers, nextWalked),
+    )
   }
 
   return false
+}
+
+function arrayItemSchema(
+  arraySchema: SchemaType & {of: SchemaType[]},
+  itemPath: Path,
+  documentMembers: DocumentMember[],
+): SchemaType | undefined {
+  const member = documentMembers.find(
+    (candidate) => pathToString(candidate.path) === pathToString(itemPath),
+  )
+  if (member) {
+    return member.schemaType
+  }
+
+  const parent = documentMembers.find(
+    (candidate) => pathToString(candidate.path) === pathToString(itemPath.slice(0, -1)),
+  )
+  if (!parent || !Array.isArray(parent.value)) {
+    return undefined
+  }
+
+  const segment = itemPath.at(-1)
+  if (segment === undefined) {
+    return undefined
+  }
+  const item = isKeySegment(segment)
+    ? parent.value.find((entry) => isRecord(entry) && entry['_key'] === segment._key)
+    : typeof segment === 'number'
+      ? parent.value[segment]
+      : undefined
+  if (!isRecord(item)) {
+    return undefined
+  }
+  if (typeof item['_type'] === 'string') {
+    return arraySchema.of.find((candidate) => candidate.name === item['_type'])
+  }
+  return arraySchema.of.length === 1 ? arraySchema.of[0] : undefined
 }
 
 function extractPaths(
@@ -305,7 +363,7 @@ export function getFieldLanguageMap(
     )?.filter(
       (translation) =>
         translation.id !== translateFromLanguageId &&
-        !outputTargetsLockedField(documentSchema, translation.outputPath),
+        !outputTargetsLockedField(documentSchema, translation.outputPath, documentMembers),
     )
 
     if (translations?.length) {

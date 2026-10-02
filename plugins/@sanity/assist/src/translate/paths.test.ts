@@ -590,4 +590,71 @@ describe('paths', () => {
       ]),
     )
   })
+
+  test('uses the existing array item type when the array allows several types', () => {
+    const docSchema: ObjectSchemaType = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'object',
+          name: 'lockedLocale',
+          readOnly: true,
+          fields: [
+            {type: 'string', name: 'en'},
+            {type: 'string', name: 'nl'},
+          ],
+        }),
+        defineType({
+          type: 'object',
+          name: 'openLocale',
+          fields: [
+            {type: 'string', name: 'en'},
+            {type: 'string', name: 'nl'},
+          ],
+        }),
+        defineType({
+          type: 'document',
+          name: 'article',
+          fields: [
+            {type: 'string', name: 'title'},
+            {
+              type: 'array',
+              name: 'blocks',
+              of: [{type: 'lockedLocale'}, {type: 'openLocale'}],
+            },
+          ],
+        }),
+      ],
+    }).get('article')
+
+    const doc: SanityDocumentLike = {
+      _id: 'na',
+      _type: 'article',
+      title: 'Hello',
+      blocks: [
+        {_key: 'locked', _type: 'lockedLocale', en: 'Hello', nl: 'Hallo'},
+        {_key: 'open', _type: 'openLocale', en: 'Hello', nl: 'Hallo'},
+      ],
+    }
+    const members = getDocumentMembersFlat(doc, docSchema)
+
+    const transMap = getFieldLanguageMap(docSchema, members, 'en', ['nl'], (member) =>
+      pathToString(member.path) === 'title'
+        ? [
+            {id: 'nl', outputPath: ['blocks', {_key: 'locked'}, 'nl']},
+            {id: 'nl', outputPath: ['blocks', {_key: 'open'}, 'nl']},
+          ]
+        : undefined,
+    )
+
+    expect(transMap).toEqual(
+      typed<FieldLanguageMap[]>([
+        {
+          inputLanguageId: 'en',
+          inputPath: ['title'],
+          outputs: [{id: 'nl', outputPath: ['blocks', {_key: 'open'}, 'nl']}],
+        },
+      ]),
+    )
+  })
 })
