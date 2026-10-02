@@ -12,8 +12,8 @@ export function useDocumentInternationalizationContext(): PluginConfigContext {
 }
 
 type DocumentInternationalizationProviderProps = LayoutProps & {
-  pluginConfig: Required<Omit<PluginConfig, 'metadataInternationalization'>> &
-    Pick<PluginConfig, 'metadataInternationalization'>
+  pluginConfig: Required<Omit<PluginConfig, 'metadataInternationalization' | 'metadataPreview'>> &
+    Pick<PluginConfig, 'metadataInternationalization' | 'metadataPreview'>
 }
 
 // Simple promise cache for React.use
