@@ -1,6 +1,8 @@
 import {assist} from '@sanity/assist'
 import {defineArrayMember, defineField, definePlugin, defineType} from 'sanity'
 
+import {issue912ExcludeRepro, issue912Repro} from './issue-912-repro'
+
 // Fixture for manually testing AI Assist together with field groups (tabs).
 // Reproduces SAPP-3970: opening / editing AI Assist instructions used to reset
 // the selected field group in the host document.
@@ -127,6 +129,8 @@ export const assistExample = definePlugin(() => ({
       assistOverviewHours,
       assistDeepNestingRepro,
       assistImageDescriptionRepro,
+      issue912Repro,
+      issue912ExcludeRepro,
     ],
   },
   plugins: [
@@ -142,7 +146,7 @@ export const assistExample = definePlugin(() => ({
           documentTypes: ['lesson'],
         },
         field: {
-          documentTypes: ['internationalizedPost'],
+          documentTypes: ['internationalizedPost', 'issue912Repro', 'issue912ExcludeRepro'],
           languages: [
             {id: 'en', title: 'English'},
             {id: 'es', title: 'Spanish'},

@@ -16,6 +16,8 @@ import {translationsTabDefaultDocumentNode} from '#translations-tab'
 
 const INPUT_PLUGIN_TYPES = [
   'assistImageDescriptionRepro', // @sanity/assist (#660, #663)
+  'issue912Repro', // @sanity/assist (#912)
+  'issue912ExcludeRepro', // @sanity/assist (#912)
   'asyncListTest', // @sanity/sanity-plugin-async-list
   'codeTest', // @sanity/code-input
   'colorTest', // @sanity/color-input
