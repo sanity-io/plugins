@@ -40,6 +40,62 @@ describe('constructFilter', () => {
     )
   })
 
+  // Reproduction: searching for `don't` or `O'Brien` builds
+  // `match '*don't*'` / `match '*O'Brien*'`. The apostrophe ends the GROQ
+  // string early, the query no longer parses, and the Media tool shows an error.
+  it.each(["don't", "O'Brien"])(
+    'keeps %j inside one GROQ string literal in the search filter',
+    (searchQuery) => {
+      const q = constructFilter({
+        assetTypes: ['file', 'image'],
+        searchFacets: [],
+        searchQuery,
+      })
+
+      expect(q).toContain(
+        `[_id, altText, assetId, creditLine, description, originalFilename, title, url] match ${JSON.stringify(`*${searchQuery}*`)}`,
+      )
+    },
+  )
+
+  it('keeps a backslash in the search text inside one GROQ string literal', () => {
+    const q = constructFilter({
+      assetTypes: ['file', 'image'],
+      searchFacets: [],
+      searchQuery: 'file\\name',
+    })
+
+    expect(q).toContain(`match ${JSON.stringify('*file\\name*')}`)
+  })
+
+  it('keeps an apostrophe in a string facet includes filter inside one GROQ string literal', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      searchFacets: [
+        {...inputs.title, operatorType: 'includes', value: "don't"} as SearchFacetInputProps,
+      ],
+      searchQuery: undefined,
+    })
+
+    expect(q).toContain(`title match ${JSON.stringify("*don't*")}`)
+  })
+
+  it('keeps an apostrophe in a string facet does-not-include filter inside one GROQ string literal', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      searchFacets: [
+        {
+          ...inputs.description,
+          operatorType: 'doesNotInclude',
+          value: "O'Brien",
+        } as SearchFacetInputProps,
+      ],
+      searchQuery: undefined,
+    })
+
+    expect(q).toContain(`!(description match ${JSON.stringify("*O'Brien*")})`)
+  })
+
   it('composes number facet with field modifier (size / KB)', () => {
     const q = constructFilter({
       assetTypes: ['image'],
