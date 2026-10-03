@@ -264,9 +264,21 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
   },
 }
 
+/**
+ * Wildcard `match` pattern for text the user typed.
+ *
+ * `JSON.stringify` produces a GROQ string literal, the same way folder ids are
+ * embedded. Interpolating into `'*...*'` lets `'` or `\` end or rewrite the
+ * literal, so the query no longer parses.
+ */
+export function groqWildcardMatch(term: string): string {
+  return JSON.stringify(`*${term}*`)
+}
+
 export const operators: SearchFacetOperators = {
   doesNotInclude: {
-    fn: (value, field) => (value ? `!(${field} match '*${value}*')` : undefined),
+    fn: (value, field) =>
+      value ? `!(${field} match ${groqWildcardMatch(String(value))})` : undefined,
     label: 'does not include',
   },
   doesNotReference: {
@@ -291,7 +303,8 @@ export const operators: SearchFacetOperators = {
     label: 'is greater than or equal to',
   },
   includes: {
-    fn: (value, field) => (value ? `${field} match '*${value}*'` : undefined),
+    fn: (value, field) =>
+      value ? `${field} match ${groqWildcardMatch(String(value))}` : undefined,
     label: 'includes',
   },
   is: {
