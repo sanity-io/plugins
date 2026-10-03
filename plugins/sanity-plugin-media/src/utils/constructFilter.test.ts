@@ -36,7 +36,7 @@ describe('constructFilter', () => {
     })
 
     expect(q).toContain(
-      "[_id, altText, assetId, creditLine, description, originalFilename, title, url] match '*hello*'",
+      `[_id, altText, assetId, creditLine, description, originalFilename, title, url] match ${JSON.stringify('*hello*')}`,
     )
   })
 
@@ -57,6 +57,17 @@ describe('constructFilter', () => {
       )
     },
   )
+
+  it('keeps a quote-break attempt inside one GROQ string literal', () => {
+    const searchQuery = `' && true || '`
+    const q = constructFilter({
+      assetTypes: ['file', 'image'],
+      searchFacets: [],
+      searchQuery,
+    })
+
+    expect(q).toContain(`match ${JSON.stringify(`*${searchQuery}*`)}`)
+  })
 
   it('keeps a backslash in the search text inside one GROQ string literal', () => {
     const q = constructFilter({
@@ -160,7 +171,7 @@ describe('constructFilter', () => {
     const normalized = q.replace(/\s+/g, ' ').trim()
 
     expect(normalized).toBe(
-      '_type in ["sanity.fileAsset","sanity.imageAsset"] && !(_id in path("drafts.**")) && [_id, altText, assetId, creditLine, description, originalFilename, title, url] match \'*portrait*\' && round(size / 1000) > 100 && references(\'abc123\')',
+      `_type in ["sanity.fileAsset","sanity.imageAsset"] && !(_id in path("drafts.**")) && [_id, altText, assetId, creditLine, description, originalFilename, title, url] match ${JSON.stringify('*portrait*')} && round(size / 1000) > 100 && references('abc123')`,
     )
   })
 
