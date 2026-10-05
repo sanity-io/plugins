@@ -92,7 +92,7 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
   }
 
   return (
-    <VideoPlayer asset={asset} hlsConfig={config?.hlsConfig}>
+    <VideoPlayer key={asset._id} asset={asset} hlsConfig={config?.hlsConfig} deferPlayer>
       {buttons && <TopControls slot="top-chrome">{buttons}</TopControls>}
       {isPreparingStaticRenditions && (
         <Card
