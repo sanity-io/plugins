@@ -59,12 +59,12 @@ export default defineConfig({
 
 Colors are hex values, such as `#f00` or `#ff0000`.
 
-| Option       | What it changes                            | Default                                     |
-| ------------ | ------------------------------------------ | ------------------------------------------- |
-| `accent`     | Primary buttons, focus rings, and links     | Studio blue                                 |
-| `text`       | Text, icons, borders, and neutral surfaces  | A mostly desaturated accent                 |
+| Option       | What it changes                            | Default                                      |
+| ------------ | ------------------------------------------ | -------------------------------------------- |
+| `accent`     | Primary buttons, focus rings, and links    | Studio blue                                  |
+| `text`       | Text, icons, borders, and neutral surfaces | A mostly desaturated accent                  |
 | `background` | The background other colors blend onto     | White in light mode; near-black in dark mode |
-| `contrast`   | How much accent tint text and borders have  | `85`                                        |
+| `contrast`   | How much accent tint text and borders have | `85`                                         |
 
 **The contrast slider runs from `15` to `100`:**
 
