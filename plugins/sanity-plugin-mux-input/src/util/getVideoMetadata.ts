@@ -1,5 +1,6 @@
 import {formatSeconds} from './formatSeconds'
-import type {MuxTextTrack, VideoAssetDocument} from './types'
+import {isCaptionTrack} from './tracks'
+import type {VideoAssetDocument} from './types'
 
 export default function getVideoMetadata(doc: VideoAssetDocument) {
   const id = doc.assetId || doc._id || ''
@@ -17,7 +18,6 @@ export default function getVideoMetadata(doc: VideoAssetDocument) {
     aspect_ratio: doc.data?.aspect_ratio,
     max_stored_resolution: doc.data?.max_stored_resolution,
     max_stored_frame_rate: doc.data?.max_stored_frame_rate,
-    text_tracks:
-      doc.data?.tracks?.filter((track): track is MuxTextTrack => track.type === 'text') || [],
+    text_tracks: doc.data?.tracks?.filter(isCaptionTrack) || [],
   }
 }

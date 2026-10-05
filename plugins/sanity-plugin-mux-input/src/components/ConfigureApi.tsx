@@ -154,6 +154,8 @@ export function ConfigureApiDialog({secrets, setDialogState}: ConfigureApiDialog
                     <br />
                     To use Signed URLs, the token must also have System permissions.
                     <br />
+                    To use Robots, the token also needs the robots:* scope.
+                    <br />
                     The credentials will be stored safely in a hidden document only available to
                     editors.
                   </Text>

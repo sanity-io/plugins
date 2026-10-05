@@ -6,13 +6,14 @@ import {useClient} from '../../hooks/useClient'
 import useDocReferences from '../../hooks/useDocReferences'
 import {useResyncAsset} from '../../hooks/useResyncAsset'
 import getVideoMetadata from '../../util/getVideoMetadata'
-import {type VideoAssetDocument} from '../../util/types'
+import {type PluginConfig, type VideoAssetDocument} from '../../util/types'
 
 type VideoDetailsState = 'idle' | 'saving' | 'deleting' | 'closing' | 'resyncing'
 
 export interface VideoDetailsProps {
   closeDialog: () => void
   asset: VideoAssetDocument & {autoPlay?: boolean}
+  config: PluginConfig
 }
 
 export default function useVideoDetails(props: VideoDetailsProps) {

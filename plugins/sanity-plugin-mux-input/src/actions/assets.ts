@@ -83,7 +83,7 @@ export function addTextTrackFromUrl(
   options: {
     language_code: string
     name: string
-    text_type?: 'subtitles'
+    text_type?: 'subtitles' | 'chapters'
   },
 ) {
   const {dataset} = client.config()

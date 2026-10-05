@@ -6,7 +6,9 @@ import {useAssetDocumentValues} from '../hooks/useAssetDocumentValues'
 import {useClient} from '../hooks/useClient'
 import {useDialogState} from '../hooks/useDialogState'
 import {useMuxPolling} from '../hooks/useMuxPolling'
+import {useRobotsSync} from '../hooks/useRobotsSync'
 import {useSecretsDocumentValues} from '../hooks/useSecretsDocumentValues'
+import {hasUnfinishedRobotsWork} from '../robots/records'
 import type {MuxInputProps, PluginConfig} from '../util/types'
 import {ConfigureApiDialog} from './ConfigureApi'
 import ErrorBoundaryCard from './ErrorBoundaryCard'
@@ -22,6 +24,12 @@ const Input = (props: InputProps) => {
   const secretDocumentValues = useSecretsDocumentValues()
   const assetDocumentValues = useAssetDocumentValues(props.value?.asset)
   const poll = useMuxPolling(props.readOnly ? undefined : assetDocumentValues?.value || undefined)
+  // Keeps an unfinished Robots job, run or create moving without the panel open.
+  const asset = assetDocumentValues?.value
+  useRobotsSync(asset, {
+    enabled: !props.readOnly && !!asset && hasUnfinishedRobotsWork(asset),
+    defaultDirectiveIds: props.config.defaultDirectiveIds,
+  })
   const [dialogState, setDialogState] = useDialogState()
   const {hasConfigAccess} = useAccessControl(props.config)
 

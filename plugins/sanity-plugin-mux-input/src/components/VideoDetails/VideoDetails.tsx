@@ -5,6 +5,7 @@ import {CropIcon} from '@sanity/icons/Crop'
 import {EditIcon} from '@sanity/icons/Edit'
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {RevertIcon} from '@sanity/icons/Revert'
+import {RobotIcon} from '@sanity/icons/Robot'
 import {SearchIcon} from '@sanity/icons/Search'
 import {SyncIcon} from '@sanity/icons/Sync'
 import {TagIcon} from '@sanity/icons/Tag'
@@ -26,12 +27,15 @@ import {
 import {type InputEvent, useEffect, useRef, useState} from 'react'
 
 import {DIALOGS_Z_INDEX} from '../../util/constants'
-import type {MuxPlaybackId, MuxTextTrack, PlaybackPolicy} from '../../util/types'
+import {isCaptionTrack} from '../../util/tracks'
+import type {MuxPlaybackId, PlaybackPolicy} from '../../util/types'
 import FormField from '../FormField'
 import IconInfo from '../IconInfo'
 import {ResolutionIcon} from '../icons/Resolution'
 import {StopWatchIcon} from '../icons/StopWatch'
 import Mezzanine from '../Mezzanine'
+import {RobotsErrorBoundary} from '../robots/RobotsErrorBoundary'
+import {RobotsPanel} from '../robots/RobotsPanel'
 import TextTracksManager from '../TextTracksManager'
 import VideoPlayer from '../VideoPlayer'
 import DeleteDialog from './DeleteDialog'
@@ -58,7 +62,7 @@ const AssetInput: React.FC<{
 )
 
 const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
-  const [tab, setTab] = useState<'details' | 'references'>('details')
+  const [tab, setTab] = useState<'details' | 'references' | 'robots'>('details')
   const {
     displayInfo,
     filename,
@@ -220,7 +224,8 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
         >
           <Stack gap={4} flex={1} sizing="border">
             <VideoPlayer asset={props.asset} autoPlay={props.asset.autoPlay || false} />
-            {tab === 'details' && (
+            {/* Kept on the Robots tab too, so the captions stay in view while a job runs. */}
+            {tab !== 'references' && (
               <>
                 <TextTracksManager
                   asset={props.asset}
@@ -228,9 +233,7 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
                   collapseTracks
                   tracks={
                     displayInfo?.text_tracks ||
-                    props.asset.data?.tracks?.filter(
-                      (track): track is MuxTextTrack => track.type === 'text',
-                    ) ||
+                    props.asset.data?.tracks?.filter(isCaptionTrack) ||
                     []
                   }
                 />
@@ -255,6 +258,14 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
                 label={`Used by ${references ? `(${references.length})` : ''}`}
                 onClick={() => setTab('references')}
                 selected={tab === 'references'}
+              />
+              <Tab
+                aria-controls="robots-panel"
+                icon={RobotIcon}
+                id="robots-tab"
+                label="Robots"
+                onClick={() => setTab('robots')}
+                selected={tab === 'robots'}
               />
             </TabList>
             <TabPanel
@@ -323,6 +334,13 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
               hidden={tab !== 'references'}
             >
               <VideoReferences references={references} isLoaded={!referencesLoading} />
+            </TabPanel>
+            <TabPanel aria-labelledby="robots-tab" id="robots-panel" hidden={tab !== 'robots'}>
+              {tab === 'robots' && (
+                <RobotsErrorBoundary>
+                  <RobotsPanel asset={props.asset} config={props.config} />
+                </RobotsErrorBoundary>
+              )}
             </TabPanel>
           </Stack>
         </Flex>

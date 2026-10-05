@@ -10,6 +10,7 @@ import {PatchEvent, set, setIfMissing} from 'sanity'
 import {uploadFile, uploadUrl} from '../actions/upload'
 import {DialogStateProvider} from '../context/DialogStateContext'
 import {type DialogState, type SetDialogState} from '../hooks/useDialogState'
+import {useRobotsUploadCheck} from '../hooks/useRobotsUploadCheck'
 import {isServerError, isValidUrl} from '../util/asserters'
 import {extractDroppedFiles} from '../util/extractFiles'
 import {hasPlaybackPolicy} from '../util/getPlaybackPolicy'
@@ -78,6 +79,7 @@ type UploaderStateAction =
  */
 export default function Uploader(props: Props) {
   const toast = useToast()
+  const checkRobotsAfterUpload = useRobotsUploadCheck(props.asset)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const dragEnteredEls = useRef<EventTarget[]>([])
@@ -209,6 +211,7 @@ export default function Uploader(props: Props) {
     const {stagedUpload} = state
     if (!stagedUpload || uploadRef.current) return
     dispatch({action: 'commitUpload'})
+    const directiveIds = settings.directives?.map(({id}) => id) ?? []
     let uploadObservable: Observable<UploadFileEvent | UploadUrlEvent>
     switch (stagedUpload.type) {
       case 'url':
@@ -257,6 +260,7 @@ export default function Uploader(props: Props) {
           case 'success':
             dispatch({action: 'progress', percent: 100})
             uploadingDocumentId.current = null
+            checkRobotsAfterUpload(event.asset._id, directiveIds)
             props.onChange(
               PatchEvent.from([
                 setIfMissing({asset: {}}),
