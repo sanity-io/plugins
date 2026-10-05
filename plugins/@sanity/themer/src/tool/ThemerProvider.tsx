@@ -7,6 +7,7 @@ import {MIN_MEDIA_INDEX_FOR_SIDEBAR, MIN_MEDIA_INDEX_FOR_SPLIT_SCREEN} from '#co
 import type {ThemerProps} from '#types'
 
 import {buildTheme} from '../theme/buildTheme'
+import {resolveThemeOptions} from '../theme/options'
 import {initialToolState, toolReducer} from './reducer'
 import {resolveActiveThemeOptions} from './selectors'
 import {readPersistedSnapshot} from './storage'
@@ -47,7 +48,11 @@ export function ThemerProvider({
     <ThemeProvider theme={(state.theme !== null ? buildTheme(state.theme) : null) ?? undefined}>
       <ThemerLayout
         config={config}
-        backgroundColor={state.theme?.[scheme]?.background}
+        // The resolved background, not the raw option: a theme that only sets
+        // an accent has one too, which the Studio shows behind the transitions
+        backgroundColor={
+          state.theme ? resolveThemeOptions(state.theme)[scheme].background : undefined
+        }
         dispatch={dispatch}
         navbarHeight={state.navbarHeight}
         open={open}
