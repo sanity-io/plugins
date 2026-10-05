@@ -155,7 +155,7 @@ function tabId(): string {
  * around to the other tabs on a `BroadcastChannel` as it changes, where it
  * reaches their machines as a `themes.sync` event: the same themes
  * everywhere, with the flow each tab is in, the tool's open and split state
- * (the reducer's, in `plugin.tsx`) and the images of this session staying
+ * (the reducer's, in `ThemerProvider`) and the images of this session staying
  * the tab's own. A tab that starts asks the others for the current state,
  * in case what it read from storage was not written yet.
  *
