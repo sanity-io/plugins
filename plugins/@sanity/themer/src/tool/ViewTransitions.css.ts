@@ -74,7 +74,7 @@ const resizeStudioTransition = createViewTransitionType(
  */
 const splitScreenFilter = 'blur(6px)'
 const splitStudioTransition = createViewTransitionType({
-  imagePair: {animationName: keyframes({'50%': {filter: splitScreenFilter}})},
+  imagePair: {animationName: keyframes({'50%': {filter: splitScreenFilter}}), animationTimingFunction: 'inherit'},
   old: {...resizeStudioRules, animationName: keyframes({to: {opacity: 0}})},
   new: {...resizeStudioRules, animationName: keyframes({from: {opacity: 0}})},
 })
@@ -192,8 +192,18 @@ globalStyle(
   {
     '@media': {
       '(prefers-reduced-motion: reduce)': {
-        animation: 'none !important',
+        animationDuration: '0s !important',
+        animationDelay: '0s !important',
       },
     },
   },
 )
+
+/**
+ * Allow clicks and interactivity during themer animations
+ */
+globalStyle(
+  `:root:active-view-transition-type(${layoutTransitionType})::view-transition`, {pointerEvents: 'none',},
+)
+
+
