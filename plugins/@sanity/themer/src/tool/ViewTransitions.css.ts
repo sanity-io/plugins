@@ -127,10 +127,22 @@ export const viewTransitionClasses = {
       ),
       default: 'none',
     },
+    /**
+     * The sidebar takes no part in any update, the cross-fade to a picked
+     * theme included: an element a view transition captures does not respond
+     * to hit-testing while the transition runs (CSS View Transitions Level 1,
+     * "Rendering model"), so a sidebar that faded along would drop the clicks
+     * of the next pick for the duration. Left out, it re-colors at once and
+     * stays live while the Studio fades. The Studio copies stay captured —
+     * they are what fades — and so does the whole page while the Studio
+     * resizes (opening, closing, the split copy coming and going): React
+     * keeps the root in the transition when a boundary changes size, and a
+     * captured root takes the page's hit-testing with it
+     */
     update: {
       [viewTransitionTypes['split-screen:open']]: 'none',
       [viewTransitionTypes['split-screen:close']]: 'none',
-      [viewTransitionTypes.crossfade]: 'auto',
+      [viewTransitionTypes.crossfade]: 'none',
       default: 'none',
     },
     exit: {
@@ -207,9 +219,17 @@ globalStyle(
   },
 )
 
-/**
- * Allow clicks and interactivity during themer animations
+/*
+ * There is no `::view-transition { pointer-events: none }` here, though the
+ * Next.js guide suggests it to keep a page clickable while a transition runs:
+ * with React 19.3 it changes nothing. What is clickable during a transition
+ * is what the transition does not capture, and React already shrinks the
+ * `::view-transition` overlay to nothing when it leaves the root out; while a
+ * boundary resizes it keeps the root in, and a captured root makes the whole
+ * page unresponsive to hit-testing whatever the overlay does. Keeping the
+ * root out of the layout's transitions by hand (`view-transition-name: none`
+ * on `:root`) would make the sidebar clickable while the split copy comes
+ * and goes, but Safari (WebKit, as of 26.6) then paints the live boxes of
+ * the captured elements under their snapshots, and the split copy and the
+ * sidebar would show up at once instead of sliding in
  */
-globalStyle(`:root:active-view-transition-type(${layoutTransitionType})::view-transition`, {
-  pointerEvents: 'none',
-})

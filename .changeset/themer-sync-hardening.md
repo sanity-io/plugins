@@ -10,3 +10,5 @@ Syncing themes across tabs is sturdier:
 - Deleting a theme, or giving it a new image, in one tab frees the old image in the other tabs.
 - Titles arrive in the other tabs as typed, so a blank title no longer differs from tab to tab.
 - A corrupt snapshot in `localStorage` no longer hides what earlier versions stored.
+
+Picking themes in a row works: the sidebar stays clickable while the Studio cross-fades to the picked theme, so a click during the fade is no longer dropped. The sidebar's own colors switch at once instead of fading along.
