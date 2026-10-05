@@ -32,10 +32,17 @@ const LEGACY_STORAGE_KEY = 'sanityStudio:themer:options'
  */
 const LEGACY_DRAFT: Omit<CustomTheme, 'options'> = {slug: 'custom-draft', title: 'Draft theme'}
 
+/** What is stored under the key — `undefined` when nothing is, or nothing that parses */
 function readJson(key: string): unknown {
   const raw = localStorage.getItem(key)
 
-  return raw ? JSON.parse(raw) : undefined
+  if (!raw) return undefined
+
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return undefined
+  }
 }
 
 /**
