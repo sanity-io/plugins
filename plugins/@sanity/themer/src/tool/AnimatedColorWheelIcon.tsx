@@ -1,11 +1,4 @@
-import {
-  animate,
-  motion,
-  type MotionValue,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-} from 'motion/react'
+import {animate, motion, type MotionValue, useMotionValue, useTransform} from 'motion/react'
 import {useEffect, useImperativeHandle} from 'react'
 
 import {
@@ -75,8 +68,8 @@ function Slice(props: {index: number; progress: MotionValue<number>}) {
  * as the 6 o'clock slice pops in, and the colors pop out the same way round,
  * carrying the spin's speed to a rest (see `colorWheel.ts`). At rest — at
  * either end — it looks exactly like the icon it stands in for. With
- * `prefers-reduced-motion: reduce` the wheel keeps still; only the colors come
- * and go.
+ * `prefers-reduced-motion: reduce` the navbar renders that icon instead of
+ * this one, so nothing here moves.
  *
  * @internal
  */
@@ -88,10 +81,7 @@ export default function AnimatedColorWheelIcon({
   ref: React.Ref<{spin: () => void}>
 }) {
   const progress = useMotionValue(0)
-  // The spin is a transform the motion value drives, which `MotionConfig`'s
-  // reduced-motion setting does not reach, so it is left out here
-  const reducedMotion = useReducedMotion()
-  const rotate = useTransform(progress, (value) => (reducedMotion ? 0 : wheelRotation(value)))
+  const rotate = useTransform(progress, (value) => wheelRotation(value))
 
   useImperativeHandle(
     ref,
