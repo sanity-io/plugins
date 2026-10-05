@@ -1,24 +1,22 @@
 // @vitest-environment jsdom
 /**
- * Reproduction for the hierarchy view hanging on trees of a few dozen documents.
+ * Regression for the hierarchy view hanging on trees of a few dozen documents.
  *
  * Each row used to mount the scaffold's global stylesheet. styled-components
  * keeps one instance per mount and, on unmount, clears and reinserts every
- * surviving instance. Leaving the view therefore rebuilds the group once per
- * row. Measured under jsdom with speedy CSS injection disabled (the Studio
- * development path):
+ * surviving instance. Leaving the view therefore rebuilt the group once per
+ * row. Measured under jsdom against the browser build of styled-components:
  *
- * - 8 rows: 32 keyframe copies, unmount ~0.5s
- * - 16 rows: 64 keyframe copies, unmount ~3.5s
+ * - 1 row: 2 keyframe copies
+ * - 40 rows: 80 keyframe copies, and tearing them down exceeds several seconds
  *
- * The reported case is ~40 documents. Copies below are counted before unmount
- * so a failing run does not sit in that quadratic teardown.
+ * Copies are counted before unmount so a failing run does not sit in that teardown.
  */
-import {act, createElement} from 'react'
+import {act} from 'react'
 import {createRoot, type Root} from 'react-dom/client'
 import {expect, test} from 'vitest'
 
-import TreeNodeRendererScaffold from './TreeNodeRendererScaffold'
+import TreeNodeRendererScaffold, {TreeScaffoldStyles} from './TreeNodeRendererScaffold'
 
 const KEYFRAME = 'arrow-pulse'
 
@@ -26,8 +24,7 @@ const KEYFRAME = 'arrow-pulse'
 
 function countKeyframeCopies(): number {
   let copies = 0
-  for (const node of document.querySelectorAll('style')) {
-    const style = node as HTMLStyleElement
+  for (const style of document.querySelectorAll('style')) {
     const sheet = style.sheet
     if (sheet && sheet.cssRules.length > 0) {
       for (const rule of sheet.cssRules) {
@@ -53,19 +50,29 @@ function scaffoldProps(index: number) {
   }
 }
 
-async function mountRows(size: number): Promise<{copies: number; unmount: () => Promise<void>}> {
+function ScaffoldRows({size, sharedSheet}: {size: number; sharedSheet: boolean}) {
+  return (
+    <>
+      {sharedSheet ? <TreeScaffoldStyles /> : null}
+      {Array.from({length: size}, (_, index) => (
+        <TreeNodeRendererScaffold key={index} {...scaffoldProps(index)} />
+      ))}
+    </>
+  )
+}
+
+async function mount(
+  size: number,
+  sharedSheet: boolean,
+): Promise<{copies: number; unmount: () => Promise<void>}> {
   const container = document.createElement('div')
   document.body.appendChild(container)
   const root: Root = createRoot(container)
   await act(async () => {
     root.render(
-      createElement(
-        'div',
-        null,
-        Array.from({length: size}, (_, index) =>
-          createElement(TreeNodeRendererScaffold, {key: index, ...scaffoldProps(index)}),
-        ),
-      ),
+      <div>
+        <ScaffoldRows size={size} sharedSheet={sharedSheet} />
+      </div>,
     )
   })
   const copies = countKeyframeCopies()
@@ -80,21 +87,25 @@ async function mountRows(size: number): Promise<{copies: number; unmount: () => 
   }
 }
 
-test('scaffold styles do not grow with the number of rows', {timeout: 15_000}, async () => {
-  const oneRow = await mountRows(1)
+test('rows do not each inject scaffold styles', async () => {
+  const reportedTree = await mount(40, false)
+  try {
+    expect(reportedTree.copies).toBe(0)
+  } finally {
+    if (reportedTree.copies === 0) await reportedTree.unmount()
+  }
+})
+
+test('scaffold styles are injected once for the whole tree', {timeout: 15_000}, async () => {
+  const oneRow = await mount(1, true)
   const oneCopies = oneRow.copies
-  // Unmount the single row before mounting the large tree. Tearing one
-  // instance down while dozens of copies are still mounted is the hang.
   await oneRow.unmount()
 
-  const reportedTree = await mountRows(40)
+  const reportedTree = await mount(40, true)
   try {
-    // One injection mentions the keyframe a handful of times (including prefixes).
-    // Forty rows must not multiply that.
     expect(oneCopies).toBeGreaterThan(0)
     expect(reportedTree.copies).toBe(oneCopies)
   } finally {
-    // Skip the quadratic teardown when the assertion already failed.
     if (reportedTree.copies === oneCopies) {
       const started = performance.now()
       await reportedTree.unmount()
