@@ -11,7 +11,7 @@ import {
 import {presets} from '../theme/presets'
 import type {ImagePalette} from './imagePalette'
 import type {ThemerMachineContext} from './machine'
-import {CONFIG_SLUG, type CustomTheme, displayTitle, type ThemerState} from './themes'
+import {CONFIG_SLUG, type CustomTheme, type ThemerState} from './themes'
 
 /*
  * What the tool keeps in `localStorage` is parsed with these schemas as it is
@@ -137,9 +137,12 @@ const customThemeSchema = v.pipe(
     options: themeOptionsSchema,
     palette: v.fallback(v.optional(paletteSchema), undefined),
   }),
+  // The title stays as it is — a blank one is shown as untitled, not stored
+  // so — which is what lets a state go through this parser unchanged, as
+  // another tab's does (see `sync.ts`)
   v.transform(({slug, title, options, palette}): CustomTheme => ({
     slug,
-    title: displayTitle(title ?? ''),
+    title: title ?? '',
     options,
     ...(palette ? {palette} : {}),
   })),
