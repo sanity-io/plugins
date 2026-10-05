@@ -4,6 +4,7 @@ import {definePlugin} from 'sanity'
 import createStudioTool, {DEFAULT_TOOL_CONFIG} from '../components/StudioTool'
 import {muxVideoCustomRendering} from '../plugin'
 import {muxVideoSchema, schemaTypes} from '../schema'
+import {normalizeMuxApiHost} from '../util/muxAddonClient'
 import type {PluginConfig, StaticRenditionResolution} from '../util/types'
 export type {VideoAssetDocument} from '../util/types'
 
@@ -60,6 +61,10 @@ export const muxInput = definePlugin<Partial<PluginConfig> | void>((userConfig) 
     ...defaultConfig,
     ...userConfig,
     ...convertLegacyConfig(userConfig || {}),
+  }
+  if (config.muxApiHost !== undefined) {
+    // Fail early on an invalid value (including an empty string), instead of on the first Mux request
+    config.muxApiHost = normalizeMuxApiHost(config.muxApiHost)
   }
   return {
     name: 'mux-input',

@@ -441,6 +441,27 @@ export default defineType({
 })
 ```
 
+### Mux API host (`muxApiHost`)
+
+By default, the plugin sends Mux requests (`/v<apiVersion>/addons/mux/...`) to the same API host as the rest of the Studio. Set `muxApiHost` to send only these Mux requests to a different host, for example a local development server. Queries, listeners and `mux.videoAsset` documents still use the Studio API host.
+
+```js
+import {muxInput} from 'sanity-plugin-mux-input'
+
+export default defineConfig({
+  plugins: [
+    muxInput({
+      muxApiHost: 'http://127.0.0.1:8080',
+    }),
+  ],
+})
+```
+
+- The value must be an `http` or `https` origin without a path. The plugin adds `/v<apiVersion>/addons/mux/...`.
+- The plugin uses the host as-is. It does not add the project id to the hostname. If your server needs the project id in the hostname, include it in the value, for example `http://<projectId>.example.test:8000`.
+- Auth: if the Studio uses token auth, the plugin sends the token as `Authorization: Bearer <token>` to `muxApiHost`. Session cookies for the Studio API host are not sent to a different host, so cookie-only auth does not work with this option. Only use a host that you trust with the token.
+- The requests use `credentials: 'include'`. The host must allow CORS from the Studio origin with `Access-Control-Allow-Credentials: true` and must not reply with `Access-Control-Allow-Origin: *`.
+
 ## Contributing
 
 This plugin lives in the [`sanity-io/plugins`](https://github.com/sanity-io/plugins) monorepo. Issues and pull requests are welcome — see the monorepo [CONTRIBUTING guide](https://github.com/sanity-io/plugins/blob/main/CONTRIBUTING.md) for development, testing, and release instructions.
