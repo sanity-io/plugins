@@ -1,171 +1,174 @@
 import {ColorWheelIcon} from '@sanity/icons/ColorWheel'
-import {Button, Text} from '@sanity/ui'
+import {Box, Button, Text, usePrefersReducedMotion} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {animate, useMotionValue} from 'motion/react'
-import {useCallback, useEffect, useState} from 'react'
+import {lazy, startTransition, Suspense, use, useRef, useTransition, ViewTransition} from 'react'
 import {type NavbarProps} from 'sanity'
+import type {NavbarAction} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
-import {AnimatedColorWheelIcon} from './AnimatedColorWheelIcon'
-import {ANIMATION_DURATION} from './colorWheel'
-import {type ThemerContextValue, useThemer} from './context'
-import {hasVisited, markVisited} from './storage'
-import {NAVBAR_SELECTOR} from './useStudioNavbarHeight'
+import {NAVBAR_SELECTOR} from '#constants'
+import {
+  PluginConfigContext,
+  ToolDispatchContext,
+  ToolIsOpenContext,
+  ToolShouldDetectNavbarHeightContext,
+  ToolSplitIsOpenContext,
+} from '#context'
+import type {ThemerProps} from '#types'
 
-/**
- * Starts loading the sidebar's code as the toggle is about to be pressed —
- * the same import `React.lazy` makes, which then waits for this one
- */
-function preloadSidebar() {
-  // A failed load is for the lazy import to report, as the sidebar opens
-  import('./ResizableSidebar').catch(() => {})
-}
+import {addThemerTransitionType} from './addThemerTransitionType'
 
-/**
- * Opens or closes the sidebar — and notes the visit, which is what stops the
- * navbar from introducing the tool
- */
-function toggleSidebar(send: ThemerContextValue['send']) {
-  markVisited()
-  send({type: 'sidebar.toggle'})
-}
+import {viewTransitionClasses} from './ViewTransitions.css'
 
-/**
- * Whether the navbar has had its one chance per page load to introduce the
- * tool. Module state rather than component state on purpose: the button
- * remounts with the navbar (switching workspaces, crossing the narrow-screen
- * breakpoint) and renders once per Studio copy in the split preview, and none
- * of those should earn another introduction — only loading the page again does.
- */
-let introduced = false
+const AnimatedColorWheelIcon = lazy(() => import('./AnimatedColorWheelIcon'))
 
-/**
- * The topbar toggle, with an icon that plays its color wheel animation: on
- * hovering the button, every time; on hovering the navbar it sits in, once —
- * a "hey, look, new tool!" for anyone who has never opened the sidebar, which
- * the visit noted by {@link toggleSidebar} ends for good; and lap after lap
- * while the sidebar's code loads, the way a spinner would.
- */
 function ThemerNavbarButton() {
-  const {open, loading, send} = useThemer()
-  const progress = useMotionValue(0)
-  // The button element comes through state rather than a ref: the tooltip
-  // wraps the button and hands the element on once it has rendered, which is
-  // after a plain ref would have been read
-  const [button, setButton] = useState<HTMLButtonElement | null>(null)
+  const config = use(PluginConfigContext)
+  const dispatch = use(ToolDispatchContext)
+  const open = use(ToolIsOpenContext)
+  const shouldDetectNavbarHeight = use(ToolShouldDetectNavbarHeightContext)
+  const split = use(ToolSplitIsOpenContext)
 
-  const play = useCallback(() => {
-    // A run in progress plays out — hovering again does not cut it short
-    if (progress.isAnimating()) return
+  if (!config) {
+    throw new TypeError('PluginConfigContext.Provider is missing')
+  }
 
-    animate(progress, [0, 1], {duration: ANIMATION_DURATION, ease: 'linear'})
-  }, [progress])
+  const [busy, startBusyTransition] = useTransition()
+  const iconRef = useRef<{spin: () => void}>(null)
+  const prefersReducedMotion = usePrefersReducedMotion()
 
-  // Laps from wherever a hover's run has got to, so the wheel never jumps,
-  // and the lap in progress as the code arrives plays out: at rest, the wheel
-  // looks like the icon again
-  useEffect(() => {
-    if (!loading) return undefined
+  const handleOpen = () =>
+    startBusyTransition(() => {
+      if (split) addThemerTransitionType('split-screen:open')
+      addThemerTransitionType('open')
+      dispatch({type: 'open'})
+    })
+  const handleClose = () =>
+    startBusyTransition(() => {
+      if (split) addThemerTransitionType('split-screen:close')
+      addThemerTransitionType('close')
+      dispatch({type: 'close'})
+    })
+  const handlePrerender = () =>
+    startTransition(() => {
+      // We want to trigger rerender in a transition, so that clicking the open button
+      // can interrupt a prerender, and hovering over the button won't abort an active view transition.
+      // But we also don't want the transition to trigger a view transition,
+      // so we intentionally do not set a transition type here.
+      dispatch({type: 'prerender'})
+      // Do a little fun spin
+      if (!open) iconRef.current?.spin()
+    })
 
-    let looping = true
-    const lap = (from: number) => {
-      animate(progress, [from, 1], {
-        duration: (1 - from) * ANIMATION_DURATION,
-        ease: 'linear',
-        onComplete: () => {
-          if (looping) lap(0)
-        },
-      })
-    }
+  // The sidebar's header takes the height of the Studio navbar, so the two
+  // line up — whatever height the Studio, its breakpoint or a custom navbar
+  // gives it. The button sits inside the navbar, so it is the one to measure
+  // it, as a ref callback: observed from mount to unmount, in a transition,
+  // since nothing urgent hangs on the number
+  const observeNavbarHeight = (root: HTMLButtonElement | null) => {
+    const navbar = root?.closest(NAVBAR_SELECTOR)
 
-    lap(progress.get())
+    if (!navbar) return undefined
 
-    return () => {
-      looping = false
-    }
-  }, [loading, progress])
+    const resizeObserver = new ResizeObserver((entries) => {
+      const height = entries[0]?.borderBoxSize[0]?.blockSize
 
-  useEffect(() => () => progress.stop(), [progress])
+      if (height) {
+        startTransition(() => dispatch({type: 'set-navbar-height', height}))
+      }
+    })
 
-  useEffect(() => {
-    const navbar = button?.closest(NAVBAR_SELECTOR)
+    resizeObserver.observe(navbar)
 
-    if (!navbar || introduced) return undefined
+    return () => resizeObserver.disconnect()
+  }
 
-    const introduce = () => {
-      // Another navbar (the split preview's) may have had the chance meanwhile
-      if (introduced) return
+  const {title} = config
 
-      introduced = true
-      // Checked as the pointer comes in, not up front: a click in between
-      // (on the button itself) counts
-      if (!hasVisited()) play()
-    }
-
-    navbar.addEventListener('mouseenter', introduce, {once: true})
-
-    return () => navbar.removeEventListener('mouseenter', introduce)
-  }, [button, play])
-
+  // The `Box` is here because a `ViewTransition` cannot be the direct child
+  // of the `Tooltip`: it needs a child that renders a DOM node
   return (
-    <Tooltip animate content={<Text size={1}>Themer</Text>} portal>
-      <Button
-        aria-busy={loading}
-        aria-label="Themer"
-        // The wheel itself shows the load, where the `loading` prop would
-        // cover it with a spinner
-        disabled={loading}
-        icon={<AnimatedColorWheelIcon progress={progress} />}
-        mode="bleed"
-        onClick={() => toggleSidebar(send)}
-        onFocus={preloadSidebar}
-        onMouseEnter={() => {
-          preloadSidebar()
-          play()
-        }}
-        // The Studio's own navbar buttons go through a wrapper that pins them
-        // to this padding, where `@sanity/ui` defaults to a roomier 3
-        padding={2}
-        ref={setButton}
-        selected={open}
-      />
-    </Tooltip>
+    <ViewTransition default="none" update={viewTransitionClasses.navbarButtonTooltip.update}>
+      <Tooltip animate content={<Text size={1}>{title}</Text>} portal>
+        <Box>
+          <ViewTransition default="none" update={viewTransitionClasses.navbarButton.update}>
+            <Button
+              ref={shouldDetectNavbarHeight ? observeNavbarHeight : undefined}
+              aria-busy={busy}
+              aria-label={title}
+              // The wheel itself shows the load, where the `loading` prop would
+              // cover it with a spinner
+              icon={
+                // The animated wheel needs `motion/react`, which is heavy, so it
+                // loads lazily — behind the plain icon it reimplements, which is
+                // all there is to show with `prefers-reduced-motion: reduce`
+                prefersReducedMotion ? (
+                  <ColorWheelIcon />
+                ) : (
+                  <Suspense fallback={<ColorWheelIcon />}>
+                    <AnimatedColorWheelIcon busy={busy} ref={iconRef} />
+                  </Suspense>
+                )
+              }
+              mode="bleed"
+              onClick={open ? handleClose : handleOpen}
+              onFocus={handlePrerender}
+              onMouseEnter={handlePrerender}
+              // The Studio's own navbar buttons go through a wrapper that pins them
+              // to this padding, where `@sanity/ui` defaults to a roomier 3
+              padding={2}
+              selected={open || busy}
+            />
+          </ViewTransition>
+        </Box>
+      </Tooltip>
+    </ViewTransition>
   )
 }
 
-/**
- * Adds the toggle that opens and closes the themer sidebar to the Studio
- * navbar — an icon button with a tooltip in the top bar (like the Tasks
- * toggle), and a regular titled action in the narrow-screen sidebar menu.
- *
- * In the split preview every Studio copy renders its own navbar, so the
- * toggle shows up in both — they drive the same sidebar.
- *
- * @internal
- */
+// This component isn't auto identified by react compiler as a react component,
+// the 'use memo' directive opts it in
 export function ThemerNavbar(props: NavbarProps) {
-  const {open, send} = useThemer()
-
+  'use memo'
+  const button = {
+    location: 'topbar',
+    name: 'themer-topbar',
+    // The component itself rather than a `() => <ThemerNavbarButton />`
+    // wrapper: the Studio renders `render` as a component, and a wrapper
+    // made anew on every render would remount the button each time —
+    // resetting its animation
+    render: ThemerNavbarButton,
+  } satisfies NavbarAction
   return props.renderDefault({
     ...props,
-    __internal_actions: [
-      ...(props.__internal_actions ?? []),
-      {
-        location: 'topbar',
-        name: 'themer-topbar',
-        // The component itself rather than a `() => <ThemerNavbarButton />`
-        // wrapper: the Studio renders `render` as a component, and a wrapper
-        // made anew on every render would remount the button each time —
-        // resetting its animation and its once-only introduction
-        render: ThemerNavbarButton,
-      },
-      {
-        icon: ColorWheelIcon,
-        location: 'sidebar',
-        name: 'themer-sidebar',
-        onAction: () => toggleSidebar(send),
-        selected: open,
-        title: 'Themer',
-      },
-    ],
+    __internal_actions: [...(props.__internal_actions ?? []), button],
   })
+}
+
+// It can be easy to forget which contexts that ThemerNavbar requires and expects to be defined,
+// especially since TypeScript is unable to detect missing contexts statically,
+// parent views uses this component to ensure it doesn't miss anything and the props interface gives us type check validation.
+export function ThemerNavbarProvider({
+  children,
+  config,
+  dispatch,
+  open,
+  shouldDetectNavbarHeight,
+  split,
+}: {children: React.ReactNode; shouldDetectNavbarHeight?: boolean} & Pick<
+  ThemerProps,
+  'dispatch' | 'config' | 'open' | 'split'
+>) {
+  return (
+    <PluginConfigContext value={config}>
+      <ToolDispatchContext value={dispatch}>
+        <ToolIsOpenContext value={open}>
+          <ToolSplitIsOpenContext value={split}>
+            <ToolShouldDetectNavbarHeightContext value={shouldDetectNavbarHeight ?? false}>
+              {children}
+            </ToolShouldDetectNavbarHeightContext>
+          </ToolSplitIsOpenContext>
+        </ToolIsOpenContext>
+      </ToolDispatchContext>
+    </PluginConfigContext>
+  )
 }

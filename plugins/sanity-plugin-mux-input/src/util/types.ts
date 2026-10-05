@@ -219,6 +219,22 @@ export interface PluginConfig extends MuxInputConfig {
    * @defaultValue []
    */
   allowedRolesForConfiguration: string[]
+
+  /**
+   * Send only Mux addon requests (`/v<apiVersion>/addons/mux/...`) to this host, for example a
+   * local development server. Content Lake requests (queries, listeners, asset documents)
+   * still use the Studio API host.
+   *
+   * The host is used as-is: the plugin does not prepend the project id to it. If your server needs
+   * the project id in the hostname, include it in the host, like `http://<projectId>.example.test:8000`.
+   *
+   * Auth: the Studio token (if any) is sent as `Authorization: Bearer`. Session cookies for the
+   * Studio API host are not sent to a different host.
+   *
+   * @example 'http://127.0.0.1:8080'
+   * @defaultValue undefined
+   */
+  muxApiHost?: string
 }
 
 export const SUPPORTED_MUX_LANGUAGES = [

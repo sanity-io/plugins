@@ -31,14 +31,13 @@
     "@vanilla-extract/css": "catalog:",
     "@vitejs/plugin-react": "^6.1.1",
     "@vitest/browser-playwright": "^4.1.11",
-    "motion": "catalog:",
     "oxc-transform-react": "catalog:",
     "playwright": "^1.63.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "storybook": "^10.6.0",
     "styled-components": "catalog:",
-    "vite": "^8.3.1",
+    "vite": "^8.3.2",
     "vitest": "catalog:"
   }
 }

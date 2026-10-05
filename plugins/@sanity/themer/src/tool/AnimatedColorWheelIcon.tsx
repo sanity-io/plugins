@@ -1,7 +1,13 @@
-import {usePrefersReducedMotion} from '@sanity/ui'
-import {motion, MotionValue, useTransform} from 'motion/react'
+import {animate, motion, type MotionValue, useMotionValue, useTransform} from 'motion/react'
+import {useEffect, useImperativeHandle} from 'react'
 
-import {isSliceFilled, SLICE_COLORS, SLICE_COUNT, wheelRotation} from './colorWheel'
+import {
+  isSliceFilled,
+  SLICE_COLORS,
+  SLICE_COUNT,
+  wheelRotation,
+  ANIMATION_DURATION,
+} from './colorWheel'
 
 /**
  * The geometry of `ColorWheelIcon` from `@sanity/icons`: a ring between two
@@ -62,17 +68,63 @@ function Slice(props: {index: number; progress: MotionValue<number>}) {
  * as the 6 o'clock slice pops in, and the colors pop out the same way round,
  * carrying the spin's speed to a rest (see `colorWheel.ts`). At rest — at
  * either end — it looks exactly like the icon it stands in for. With
- * `prefers-reduced-motion: reduce` the wheel keeps still; only the colors come
- * and go.
+ * `prefers-reduced-motion: reduce` the navbar renders that icon instead of
+ * this one, so nothing here moves.
  *
  * @internal
  */
-export function AnimatedColorWheelIcon(props: {progress: MotionValue<number>}) {
-  const {progress} = props
-  const prefersReducedMotion = usePrefersReducedMotion()
-  const rotate = useTransform(progress, (value) =>
-    prefersReducedMotion ? 0 : wheelRotation(value),
+export default function AnimatedColorWheelIcon({
+  busy,
+  ref,
+}: {
+  busy: boolean
+  ref: React.Ref<{spin: () => void}>
+}) {
+  const progress = useMotionValue(0)
+  const rotate = useTransform(progress, (value) => wheelRotation(value))
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      spin: () => {
+        // A run in progress plays out — hovering again does not cut it short
+        if (progress.isAnimating()) return
+
+        animate(progress, [0, 1], {duration: ANIMATION_DURATION, ease: 'linear'})
+      },
+    }),
+    [progress],
   )
+
+  // Laps from wherever a hover's run has got to, so the wheel never jumps,
+  // and the lap in progress as the code arrives plays out: at rest, the wheel
+  // looks like the icon again
+  useEffect(() => {
+    if (!busy) return undefined
+
+    let looping = false
+    const raf = setTimeout(() => {
+      looping = true
+      const lap = (from: number) => {
+        animate(progress, [from, 1], {
+          duration: (1 - from) * ANIMATION_DURATION,
+          ease: 'linear',
+          onComplete: () => {
+            if (looping) lap(0)
+          },
+        })
+      }
+
+      lap(progress.get())
+    }, 160)
+
+    return () => {
+      clearTimeout(raf)
+      looping = false
+    }
+  }, [busy, progress])
+
+  useEffect(() => () => progress.stop(), [progress])
 
   return (
     <motion.svg
@@ -85,7 +137,7 @@ export function AnimatedColorWheelIcon(props: {progress: MotionValue<number>}) {
       xmlns="http://www.w3.org/2000/svg"
     >
       {SLICE_COLORS.map((color, index) => (
-        <Slice index={index} key={color} progress={progress} />
+        <Slice key={color} index={index} progress={progress} />
       ))}
       <path d={OUTLINE} stroke="currentColor" strokeLinejoin="round" strokeWidth={1.2} />
     </motion.svg>

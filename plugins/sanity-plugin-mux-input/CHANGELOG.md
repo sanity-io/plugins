@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 5.1.0
+
+### Minor Changes
+
+- [#2085](https://github.com/sanity-io/plugins/pull/2085) [`3a5e335`](https://github.com/sanity-io/plugins/commit/3a5e335238844f54058973dba4bea87e4fdd8707) Thanks [@sjelfull](https://github.com/sjelfull)! - Add the `muxApiHost` option. It sends only Mux addon requests to a different host, for example a local development server. Other Studio requests do not change.
+
 ## 5.0.13
 
 ### Patch Changes

@@ -40,7 +40,7 @@ catalog:
   '@sanity/tsconfig': ^2.2.1
   '@sanity/tsdown-config': ^0.27.1
   '@sanity/types': ^6.16.0
-  '@sanity/ui': ^4.2.7
+  '@sanity/ui': ^4.3.0
   '@sanity/util': ^6.16.0
   '@sanity/uuid': ^3.0.3
   '@sanity/vanilla-extract-vite-plugin': ^0.2.20
@@ -85,6 +85,7 @@ catalog:
   tsdown: ^0.22.14
   tsx: ^4.23.12
   typescript: 7.0.2
+  valibot: ^1.5.0
   validate-npm-package-name: ^8.0.0
   video.js: ^7.21.7
   vitest: ^4.1.11
@@ -193,14 +194,6 @@ overrides:
   # Keep a single tsx (and thus a single vite types instance) so sanity.cli vite
   # config callbacks type-check cleanly after the catalog tsx bump.
   tsx: 'catalog:'
-  # Vite 8.3.1's bundled-dev client (`unstable_bundledDev` in dev/test-studio) inlines rolldown
-  # 1.2.9's browser runtime, but its `rolldown: ~1.2.9` range resolves 1.2.10+, whose compiler
-  # emits `registerFactory(id, fn)` (rolldown#10915) against the inlined
-  # `registerFactory(id, kind, fn)`: every lazy `import()` and HMR update then fails with
-  # `factory.fn is not a function`. Scoped to 8.3.1 because the next Vite release serves the
-  # runtime from the installed rolldown instead (https://github.com/vitejs/vite/pull/23568),
-  # so delete this entry when bumping past 8.3.1.
-  'vite@8.3.1>rolldown': '1.2.9'
 
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
@@ -217,8 +210,6 @@ trustPolicy: no-downgrade
 trustPolicyExcludePrune: true
 
 trustPolicyExclude:
-  - '@sanity/sdk@3.5.0'
-  - '@sanity/sdk-react@3.5.0'
   # The vercel CLI (root devDependency) only parses pnpm 12's two-document pnpm-lock.yaml
   # from 58.9.5 on. From 58.7.0 on, vercel and some of its @vercel/* dependencies are still
   # published from GitHub Actions, but without the npm provenance attestations earlier

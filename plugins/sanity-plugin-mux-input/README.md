@@ -441,6 +441,27 @@ export default defineType({
 })
 ```
 
+### Mux API host (`muxApiHost`)
+
+By default, the plugin sends Mux requests (`/v<apiVersion>/addons/mux/...`) to the same API host as the rest of the Studio. Set `muxApiHost` to send only these Mux requests to a different host, for example a local development server. Queries, listeners and `mux.videoAsset` documents still use the Studio API host.
+
+```js
+import {muxInput} from 'sanity-plugin-mux-input'
+
+export default defineConfig({
+  plugins: [
+    muxInput({
+      muxApiHost: 'http://127.0.0.1:8080',
+    }),
+  ],
+})
+```
+
+- The value must be an `http` or `https` origin without a path. The plugin adds `/v<apiVersion>/addons/mux/...`.
+- The plugin uses the host as-is. It does not add the project id to the hostname. If your server needs the project id in the hostname, include it in the value, for example `http://<projectId>.example.test:8000`.
+- Auth: if the Studio uses token auth, the plugin sends the token as `Authorization: Bearer <token>` to `muxApiHost`. Session cookies for the Studio API host are not sent to a different host, so cookie-only auth does not work with this option. Only use a host that you trust with the token.
+- The requests use `credentials: 'include'`. The host must allow CORS from the Studio origin with `Access-Control-Allow-Credentials: true` and must not reply with `Access-Control-Allow-Origin: *`.
+
 ## Mux Robots
 
 [Mux Robots](https://www.mux.com/docs/guides/robots) runs AI workflows on your videos: premium captions, caption edits and translations, dubbing, summaries, questions, key moments, thumbnails, engagement insights, chapters, scenes and moderation. Open **Robots** from a video's menu in the input, or from the **Robots** tab of a video in the Videos tool, to run a workflow, follow its jobs and read their outputs.

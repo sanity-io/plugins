@@ -1,43 +1,59 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {ClipboardIcon} from '@sanity/icons/Clipboard'
+import {CodeBlockIcon} from '@sanity/icons/CodeBlock'
+import {CopyIcon} from '@sanity/icons/Copy'
+import {EditIcon} from '@sanity/icons/Edit'
+import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
+import {ImageIcon} from '@sanity/icons/Image'
 import {RestoreIcon} from '@sanity/icons/Restore'
-import {Box, Button, Card, Flex, Stack} from '@sanity/ui'
+import {Button, Card, Flex, Stack} from '@sanity/ui'
+import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
+import {useSelector} from '@xstate/react'
 import {MotionConfig, Reorder} from 'motion/react'
-import {useState} from 'react'
+import {useId, useRef} from 'react'
 
-import {useThemer} from './context'
-import {ImageFileButton} from './ImageFileButton'
+import type {ThemerProps} from '#types'
+
+import {ImageFileInput} from './ImageFileButton'
 import {optionsFromImagePalette, titleFromFileName} from './imagePalette'
+import type {ThemerSnapshot} from './machine'
 import {PasteThemeDialog} from './PasteThemeDialog'
 import {ScrollArea} from './ScrollArea'
 import {ThemeCard} from './ThemeCard'
-import {TooltipButton} from './TooltipButton'
+import {CONFIG_SLUG, CONFIG_TITLE} from './themes'
+import {ThemeSnippetDialog} from './ThemeSnippetDialog'
 import {useImagePalette} from './useImagePalette'
 import {usePasteThemeCodes, useThemeCodes} from './useThemeCodes'
 
 import {cardGrid} from './ThemeList.css'
 
 /**
- * One column at the sidebar's default width; wider sidebars — and the
- * overlay on small screens — fit more cards per row
- */
-/**
  * The flow for picking a theme: a grid of theme cards — the configured theme,
  * the presets and the user's own themes — that drag into the order the user
- * wants, with the entry points to the add and restore flows below. A theme
- * code someone shared pastes right into the list, or through the paste button.
+ * wants, with the entry point to the restore flow below. The footer takes the
+ * applied theme on to the editor — a copy of it, for a preset or the
+ * configured theme — and keeps the ways to add a theme and the applied
+ * theme's code behind its menu. A theme code someone shared pastes right into
+ * the list too.
  *
  * @internal
  */
-export function ThemeList() {
-  const {themes, removed, active, send} = useThemer()
-  const {addThemeFromClipboard} = useThemeCodes()
-  const [pasting, setPasting] = useState(false)
+export function ThemeList({
+  actorRef,
+  themes,
+  removed,
+  active,
+}: Pick<ThemerProps, 'actorRef' | 'themes' | 'removed' | 'active'>) {
+  const {addThemeFromClipboard} = useThemeCodes({actorRef})
+  // Which of the list's dialogs is open is the machine's: a state of the list flow
+  const dialog = useSelector(actorRef, selectDialog)
+  const imageInputRef = useRef<HTMLInputElement | null>(null)
+  const actionsId = useId()
 
-  usePasteThemeCodes()
+  usePasteThemeCodes({actorRef})
 
   const {busy, pickImage} = useImagePalette((palette, file) =>
-    send({
+    actorRef.send({
       type: 'theme.add',
       title: titleFromFileName(file.name),
       options: optionsFromImagePalette(palette),
@@ -56,11 +72,28 @@ export function ThemeList() {
             <Reorder.Group
               as="div"
               className={cardGrid}
-              onReorder={(order: string[]) => send({type: 'theme.reorder', order})}
+              onReorder={(order: string[]) => actorRef.send({type: 'theme.reorder', order})}
               values={themes.map((theme) => theme.slug)}
             >
+              <ThemeCard
+                actorRef={actorRef}
+                active={!active}
+                theme={{
+                  slug: CONFIG_SLUG,
+                  title: CONFIG_TITLE,
+                  options: {},
+                  source: 'config',
+                }}
+                themes={themes}
+              />
               {themes.map((theme) => (
-                <ThemeCard active={theme.slug === active.slug} key={theme.slug} theme={theme} />
+                <ThemeCard
+                  key={theme.slug}
+                  actorRef={actorRef}
+                  active={theme.slug === active?.slug}
+                  theme={theme}
+                  themes={themes}
+                />
               ))}
             </Reorder.Group>
           </MotionConfig>
@@ -71,7 +104,7 @@ export function ThemeList() {
               gap={2}
               icon={RestoreIcon}
               mode="bleed"
-              onClick={() => send({type: 'flow.removed'})}
+              onClick={() => actorRef.send({type: 'flow.removed'})}
               padding={2}
               text={`Show removed (${removed.length})`}
               width="fill"
@@ -80,37 +113,102 @@ export function ThemeList() {
         </Stack>
       </ScrollArea>
 
+      {/* Like the Studio's document footer: one primary action, the rest in
+          the menu, in the size of the Studio's own buttons (padding and gap of 2) */}
       <Card borderTop padding={3}>
-        <Flex gap={2}>
-          <Box flex={1}>
-            <TooltipButton
-              icon={AddIcon}
+        <Flex align="center" gap={2} justify="flex-end">
+          {active?.source === 'custom' ? (
+            <Button
+              gap={2}
+              icon={EditIcon}
+              onClick={() => actorRef.send({type: 'theme.edit', slug: active.slug})}
+              padding={2}
+              text="Edit"
               mode="ghost"
-              onClick={() => send({type: 'theme.add'})}
-              text="Add theme"
-              tooltip="Add a theme based on the applied one"
-              width="fill"
             />
-          </Box>
-          <ImageFileButton
-            loading={busy}
-            mode="ghost"
-            onFile={pickImage}
-            tooltip="Add a theme from the colors of an image"
-          />
-          <TooltipButton
-            icon={ClipboardIcon}
-            mode="ghost"
-            onClick={async () => {
-              // Straight from the clipboard where the browser allows; by hand otherwise
-              if ((await addThemeFromClipboard()) !== 'added') setPasting(true)
-            }}
-            tooltip="Add a theme from a code someone shared"
+          ) : (
+            <Button
+              gap={2}
+              icon={CopyIcon}
+              onClick={() =>
+                actorRef.send({type: 'theme.duplicate', slug: active?.slug ?? CONFIG_SLUG})
+              }
+              padding={2}
+              text="Duplicate & Edit"
+              mode="ghost"
+            />
+          )}
+          <MenuButton
+            button={
+              <Button
+                aria-label="More actions"
+                icon={EllipsisHorizontalIcon}
+                // The image's colors are read on device, which the menu button shows while it lasts
+                loading={busy}
+                mode="bleed"
+                padding={2}
+              />
+            }
+            id={actionsId}
+            menu={
+              // Short labels: the menu is confined to the sidebar, which can be narrow
+              <Menu>
+                <MenuItem
+                  icon={AddIcon}
+                  onClick={() => actorRef.send({type: 'theme.add'})}
+                  text="Add theme"
+                />
+                <MenuItem
+                  icon={ImageIcon}
+                  onClick={() => imageInputRef.current?.click()}
+                  text="Add from image"
+                />
+                <MenuItem
+                  icon={ClipboardIcon}
+                  onClick={async () => {
+                    // Straight from the clipboard where the browser allows; by hand otherwise
+                    if ((await addThemeFromClipboard()) !== 'added') {
+                      actorRef.send({type: 'dialog.paste'})
+                    }
+                  }}
+                  text="Add from code"
+                />
+                {active && (
+                  <>
+                    <MenuDivider />
+                    <MenuItem
+                      icon={CodeBlockIcon}
+                      onClick={() => actorRef.send({type: 'dialog.snippet'})}
+                      text="Show theme code"
+                    />
+                  </>
+                )}
+              </Menu>
+            }
+            popover={{animate: true, placement: 'top-end', portal: true}}
           />
         </Flex>
       </Card>
 
-      {pasting && <PasteThemeDialog onClose={() => setPasting(false)} />}
+      <ImageFileInput onFile={pickImage} ref={imageInputRef} />
+
+      {dialog === 'paste' && (
+        <PasteThemeDialog
+          actorRef={actorRef}
+          onClose={() => actorRef.send({type: 'dialog.close'})}
+        />
+      )}
+      {dialog === 'snippet' && active && (
+        <ThemeSnippetDialog onClose={() => actorRef.send({type: 'dialog.close'})} theme={active} />
+      )}
     </>
   )
+}
+
+/** The dialog the list has open, if any — a state of the machine's list flow */
+function selectDialog(snapshot: ThemerSnapshot): 'paste' | 'snippet' | null {
+  if (snapshot.matches({flow: {list: 'pasting'}})) return 'paste'
+  if (snapshot.matches({flow: {list: 'snippet'}})) return 'snippet'
+
+  return null
 }
