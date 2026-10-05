@@ -145,17 +145,19 @@ function createPage() {
       target.dispatchEvent(Object.assign(new Event('pageshow'), {persisted: true}))
     },
     /** Opens the page's channel on a bus: frozen, the page hears nothing of what is posted */
-    open: (open: () => SyncChannel) => (): SyncChannel => {
-      const channel = open()
+    open:
+      <Channel extends SyncChannel>(open: () => Channel) =>
+      (): Channel => {
+        const channel = open()
 
-      return {
-        ...channel,
-        listen: (listener) =>
-          channel.listen((data) => {
-            if (!cached) listener(data)
-          }),
-      }
-    },
+        return {
+          ...channel,
+          listen: (listener: (data: unknown) => void) =>
+            channel.listen((data) => {
+              if (!cached) listener(data)
+            }),
+        }
+      },
   }
 }
 
@@ -864,6 +866,119 @@ describe('syncing the themer across tabs', () => {
 
     stopA()
     stopC()
+  })
+
+  it('reads what was written while it was cached without a lock manager too', async () => {
+    const bus = createBus()
+    const store = createStore()
+    const pageA = createPage()
+    const tabA = startTab({...initialThemerState, custom: [custom]})
+    const tabB = startTab({...initialThemerState, custom: [custom]})
+    const persistA = vi.fn(store.persist)
+
+    const stopA = syncThemer(tabA, {
+      persist: persistA,
+      restore: store.restore,
+      openChannel: pageA.open(bus.open),
+      locks: undefined,
+      schedule: immediately,
+      page: pageA,
+    })
+    const stopB = syncThemer(tabB, {
+      persist: store.persist,
+      openChannel: bus.open,
+      locks: undefined,
+      schedule: immediately,
+    })
+    await tick()
+
+    pageA.hide()
+    await tick()
+    tabB.send({type: 'theme.pick', slug: 'verdant'})
+    await tick()
+    stopB()
+    await tick()
+    persistA.mockClear()
+
+    // Every tab persists for itself here: back, this one reads what the other
+    // wrote before it writes anything of its own again
+    pageA.show()
+    await tick()
+    expect(tabA.getSnapshot().context.active).toBe('verdant')
+    expect(persistA).toHaveBeenCalledTimes(1)
+    expect(persistA.mock.calls[0][0]).toMatchObject({context: {active: 'verdant'}})
+
+    // A change to the flow alone writes the themes as read, not as frozen
+    tabA.send({type: 'dialog.paste'})
+    await tick()
+    expect(persistA).toHaveBeenCalledTimes(2)
+    expect(persistA.mock.calls[1][0]).toMatchObject({context: {active: 'verdant'}})
+
+    stopA()
+  })
+
+  it('ignores an answer to the hello it said before it was cached', async () => {
+    const bus = createBus()
+    const locks = createLocks()
+    const store = createStore()
+    const pageA = createPage()
+    const tabA = startTab({...initialThemerState, custom: [custom]})
+    const tabB = startTab({...initialThemerState, custom: [custom]})
+    const channels: Array<SyncChannel & {posted: unknown[]}> = []
+    const persistA = vi.fn(store.persist)
+
+    const stopA = syncThemer(tabA, {
+      persist: persistA,
+      restore: store.restore,
+      openChannel: () => {
+        const channel = pageA.open(bus.open)()
+
+        channels.push(channel)
+
+        return channel
+      },
+      locks,
+      schedule: immediately,
+      page: pageA,
+    })
+    const stopB = syncThemer(tabB, {
+      persist: store.persist,
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+    })
+    await tick()
+    const idBefore = helloFrom(channels[0].posted[0])
+
+    pageA.hide()
+    await tick()
+    tabB.send({type: 'theme.pick', slug: 'verdant'})
+    await tick()
+    stopB()
+    await tick()
+    persistA.mockClear()
+
+    pageA.show()
+    await tick()
+    await tick()
+    expect(tabA.getSnapshot().context.active).toBe('verdant')
+    const idAfter = helloFrom(channels[0].posted.at(-1))
+    expect(idAfter).not.toBe(idBefore)
+
+    // An answer still on its way to the hello said before the cache is not
+    // this tab's to take any more, whatever revision it claims
+    bus.broadcast({
+      type: 'state',
+      state: {active: 'dew', custom: [custom], removed: [], order: []},
+      revision: 99,
+      from: 'ghost',
+      to: idBefore,
+    })
+    await tick()
+    expect(tabA.getSnapshot().context.active).toBe('verdant')
+    expect(persistA).toHaveBeenCalledTimes(1)
+
+    stopA()
   })
 
   it('ignores what it cannot use from the channel', async () => {

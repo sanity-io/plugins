@@ -199,7 +199,13 @@ export function syncThemer(
   // Given as `undefined` means no lock manager, not the browser's: Node has
   // one too these days
   const locks = channel ? ('locks' in options ? options.locks : browserLocks()) : undefined
-  const id = tabId()
+  /**
+   * What the other tabs know this tab as — new as it starts and again as it
+   * comes back from the back/forward cache, so that an answer to the hello it
+   * said before it was cached, still on its way, is not taken for an answer
+   * to the one it says coming back
+   */
+  let id = tabId()
   /** Cancels the pending lock request, or lets a held lock go */
   let abort = new AbortController()
   let leader = false
@@ -368,25 +374,28 @@ export function syncThemer(
 
     // Into the back/forward cache: frozen, this tab can neither persist nor
     // answer, so the lock goes to the next tab in line until it shows again
-    if ('persisted' in event && event.persisted === true && locks) {
+    if ('persisted' in event && event.persisted === true && channel) {
       leader = false
-      abort.abort()
+      if (locks) abort.abort()
     }
   }
   const show = (event: Event) => {
-    if (!('persisted' in event) || event.persisted !== true || !locks) return
+    if (!('persisted' in event) || event.persisted !== true || !channel) return
 
     // What changed meanwhile comes back as an answer, ordered like any other
     // state — until it does, this tab's state is not the one to persist. The
     // answer is as welcome as to a tab that just started: what this tab
     // changed before it was cached went around then, and the answer has it
     // — taken for a late reply to that change, it would be answered with the
-    // frozen state as the newest
+    // frozen state as the newest. Without a lock manager this tab persists
+    // for itself and is its own leader at once, which reads what was written
+    // meanwhile before it writes again
     restored = true
     unchanged = true
+    id = tabId()
     abort = new AbortController()
     queueForLock()
-    channel?.post({type: 'hello', from: id} satisfies SyncMessage)
+    channel.post({type: 'hello', from: id} satisfies SyncMessage)
   }
 
   page?.addEventListener('pagehide', hide)
