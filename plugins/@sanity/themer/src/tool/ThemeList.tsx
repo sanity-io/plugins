@@ -9,7 +9,7 @@ import {RestoreIcon} from '@sanity/icons/Restore'
 import {Button, Card, Flex, Stack} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
 import {MotionConfig, Reorder} from 'motion/react'
-import {useRef, useState} from 'react'
+import {useId, useRef, useState} from 'react'
 
 import type {ThemerProps} from '#types'
 
@@ -46,6 +46,7 @@ export function ThemeList({
   const [pasting, setPasting] = useState(false)
   const [snippetOpen, setSnippetOpen] = useState(false)
   const imageInputRef = useRef<HTMLInputElement | null>(null)
+  const actionsId = useId()
 
   usePasteThemeCodes({actorRef})
 
@@ -146,7 +147,7 @@ export function ThemeList({
                 padding={2}
               />
             }
-            id="themer-list-actions"
+            id={actionsId}
             menu={
               // Short labels: the menu is confined to the sidebar, which can be narrow
               <Menu>
@@ -180,7 +181,7 @@ export function ThemeList({
                 )}
               </Menu>
             }
-            popover={{placement: 'top-end', portal: true}}
+            popover={{animate: true, placement: 'top-end', portal: true}}
           />
         </Flex>
       </Card>

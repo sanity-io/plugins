@@ -6,7 +6,7 @@ import {Badge, Box, Button, Card, Flex, Stack, Text, TextInput} from '@sanity/ui
 import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
 import {type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {useSelector} from '@xstate/react'
-import {useMemo} from 'react'
+import {useId, useMemo} from 'react'
 import {useColorSchemeValue} from 'sanity'
 
 import type {ThemerProps} from '#types'
@@ -162,6 +162,7 @@ function ThemeEditorForm(props: {
   } = props
   // The scheme the Studio is showing, with the appearance setting resolved
   const studioScheme = useColorSchemeValue()
+  const actionsId = useId()
   const resolved = useMemo(() => resolveThemeOptions(options), [options])
   const palettes = useMemo(() => buildPalette(options), [options])
 
@@ -253,14 +254,14 @@ function ThemeEditorForm(props: {
                 padding={2}
               />
             }
-            id="themer-editor-actions"
+            id={actionsId}
             menu={
               <Menu>
                 {/* The theme can be restored until it is deleted from the removed themes */}
                 <MenuItem icon={TrashIcon} onClick={onRemove} text="Remove" tone="critical" />
               </Menu>
             }
-            popover={{placement: 'top-end', portal: true}}
+            popover={{animate: true, placement: 'top-end', portal: true}}
           />
         </Flex>
       </Card>

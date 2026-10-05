@@ -1,5 +1,5 @@
 import {Button, Card, Dialog, Flex, Stack, Text, TextInput} from '@sanity/ui'
-import {useState} from 'react'
+import {useId, useState} from 'react'
 
 import type {ThemerProps} from '#types'
 
@@ -16,6 +16,8 @@ export function PasteThemeDialog(props: {onClose: () => void} & Pick<ThemerProps
   const {addThemeFromText} = useThemeCodes({actorRef})
   const [text, setText] = useState('')
   const [invalid, setInvalid] = useState(false)
+  const id = useId()
+  const errorId = `${id}-error`
 
   const add = () => {
     if (addThemeFromText(text)) {
@@ -41,7 +43,7 @@ export function PasteThemeDialog(props: {onClose: () => void} & Pick<ThemerProps
         </Flex>
       }
       header="Add a shared theme"
-      id="themer-paste"
+      id={id}
       onClickOutside={onClose}
       onClose={onClose}
       width={0}
@@ -58,7 +60,7 @@ export function PasteThemeDialog(props: {onClose: () => void} & Pick<ThemerProps
             applied.
           </Text>
           <TextInput
-            aria-describedby={invalid ? 'themer-paste-error' : undefined}
+            aria-describedby={invalid ? errorId : undefined}
             aria-invalid={invalid}
             aria-label="Theme code"
             autoFocus
@@ -72,7 +74,7 @@ export function PasteThemeDialog(props: {onClose: () => void} & Pick<ThemerProps
             value={text}
           />
           {invalid && (
-            <Card id="themer-paste-error" padding={3} radius={2} role="alert" tone="critical">
+            <Card id={errorId} padding={3} radius={2} role="alert" tone="critical">
               <Text size={1}>
                 That is not a theme code — codes are one word, copied from a theme&apos;s menu.
               </Text>
