@@ -131,12 +131,28 @@ function startTab(stored: ThemerState = initialThemerState) {
 /** A page that can go into the back/forward cache and come back */
 function createPage() {
   const target = new EventTarget()
+  let frozen = false
 
   return {
     addEventListener: target.addEventListener.bind(target),
     removeEventListener: target.removeEventListener.bind(target),
-    hide: () => target.dispatchEvent(Object.assign(new Event('pagehide'), {persisted: true})),
-    show: () => target.dispatchEvent(Object.assign(new Event('pageshow'), {persisted: true})),
+    /** Wraps a channel so that what the others post while this page is frozen passes it by */
+    open: (channel: SyncChannel): SyncChannel => ({
+      post: (message) => channel.post(message),
+      listen: (listener) =>
+        channel.listen((data) => {
+          if (!frozen) listener(data)
+        }),
+      close: () => channel.close(),
+    }),
+    hide: () => {
+      target.dispatchEvent(Object.assign(new Event('pagehide'), {persisted: true}))
+      frozen = true
+    },
+    show: () => {
+      frozen = false
+      target.dispatchEvent(Object.assign(new Event('pageshow'), {persisted: true}))
+    },
   }
 }
 
@@ -676,6 +692,109 @@ describe('syncing the themer across tabs', () => {
     expect(persistA.mock.calls[0][0]).toMatchObject({context: {active: 'verdant'}})
 
     stopA()
+  })
+
+  it('takes what changed meanwhile as it comes back, having changed something before it was cached', async () => {
+    const bus = createBus()
+    const locks = createLocks()
+    const pageA = createPage()
+    const tabA = startTab({...initialThemerState, custom: [custom]})
+    const tabB = startTab({...initialThemerState, custom: [custom]})
+
+    const stopA = syncThemer(tabA, {
+      persist: () => {},
+      openChannel: () => pageA.open(bus.open()),
+      locks,
+      schedule: immediately,
+      page: pageA,
+    })
+    const stopB = syncThemer(tabB, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+    })
+    await tick()
+
+    // A change of its own, before the browser cached it
+    tabA.send({type: 'theme.pick', slug: 'custom-1'})
+    await tick()
+    pageA.hide()
+    await tick()
+
+    // What the other tab changed while this one was frozen passed it by
+    tabB.send({type: 'theme.pick', slug: 'verdant'})
+    await tick()
+    expect(tabA.getSnapshot().context.active).toBe('custom-1')
+
+    pageA.show()
+    await tick()
+    await tick()
+
+    // Back, it takes the holder's state rather than putting its own over it
+    expect(tabA.getSnapshot().context.active).toBe('verdant')
+    expect(tabB.getSnapshot().context.active).toBe('verdant')
+
+    stopA()
+    stopB()
+  })
+
+  it('leaves the newcomers to a tab that knows the state, not to one just back from the cache', async () => {
+    const bus = createBus()
+    const locks = createLocks()
+    const pageA = createPage()
+    const tabA = startTab({...initialThemerState, custom: [custom]})
+    const tabB = startTab({...initialThemerState, custom: [custom]})
+
+    const stopA = syncThemer(tabA, {
+      persist: () => {},
+      openChannel: () => pageA.open(bus.open()),
+      locks,
+      schedule: immediately,
+      page: pageA,
+    })
+    const stopB = syncThemer(tabB, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+    })
+    await tick()
+
+    pageA.hide()
+    await tick()
+
+    // The other tab changes something, persists it and leaves, all unheard
+    tabB.send({type: 'theme.pick', slug: 'verdant'})
+    await tick()
+    stopB()
+    await tick()
+
+    // Back, and the holder again, without having heard what changed meanwhile
+    pageA.show()
+    await tick()
+
+    // A tab starting now keeps what it read from storage, which is the newer state
+    const tabC = startTab({active: 'verdant', custom: [custom], removed: [], order: []})
+    const stopC = syncThemer(tabC, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+    })
+    await tick()
+    await tick()
+
+    expect(tabC.getSnapshot().context.active).toBe('verdant')
+
+    // A change of its own is a state the restored tab can answer with again
+    tabA.send({type: 'theme.pick', slug: 'dew'})
+    await tick()
+
+    expect(tabC.getSnapshot().context.active).toBe('dew')
+
+    stopA()
+    stopC()
   })
 
   it('does not persist over the other tabs right after coming back from the cache', async () => {

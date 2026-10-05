@@ -202,9 +202,9 @@ export function syncThemer(
   /** The revision `shared` is at, and the tab whose change it was */
   let revision = 0
   let origin = id
-  /** Whether this tab still has what it started with, so that an answer to its `hello` is welcome */
+  /** Whether this tab has changed nothing since it asked, so that an answer to its `hello` is welcome */
   let unchanged = true
-  /** The tabs that said hello before this one held the lock, to answer once it does */
+  /** The tabs that said hello while this one could not answer for all, to answer once it can */
   const unanswered = new Set<string>()
   /**
    * Whether this tab is back from the back/forward cache without having heard
@@ -227,12 +227,22 @@ export function syncThemer(
   const answer = (to: string) => {
     channel?.post({type: 'state', state: shared, revision, from: origin, to} satisfies SyncMessage)
   }
+  /**
+   * Answers the tabs that asked while this one could not speak for them: before
+   * it held the lock, or while it was back from the cache without knowing yet
+   * what changed meanwhile — answering then would hand on a state the others
+   * are past
+   */
+  const answerUnanswered = () => {
+    if (!leader || restored) return
+
+    for (const from of unanswered) answer(from)
+    unanswered.clear()
+  }
   const becomeLeader = () => {
     leader = true
     if (!restored) persistNow()
-    // Tabs that started alongside this one asked before anyone held the lock
-    for (const from of unanswered) answer(from)
-    unanswered.clear()
+    answerUnanswered()
   }
 
   const queueForLock = () => {
@@ -273,6 +283,8 @@ export function syncThemer(
         revision += 1
         origin = id
         channel?.post({type: 'state', state, revision, from: id} satisfies SyncMessage)
+        // A change of its own is a state this tab can answer with again
+        answerUnanswered()
       }
     }
 
@@ -280,19 +292,15 @@ export function syncThemer(
   })
 
   if (channel) {
-    channel.listen((data) => {
+    const receive = (data: unknown) => {
       const message = parseMessage(data)
 
       if (!message) return
 
       if (message.type === 'hello') {
         // The tab that persists speaks for all, so that the newcomer hears one
-        // answer — or hears it once a tab holds the lock
-        if (leader) {
-          answer(message.from)
-        } else {
-          unanswered.add(message.from)
-        }
+        // answer — once a tab holds the lock and knows what to answer with
+        unanswered.add(message.from)
 
         return
       }
@@ -337,6 +345,12 @@ export function syncThemer(
       } finally {
         applying = false
       }
+    }
+
+    channel.listen((data) => {
+      receive(data)
+      // What came in may have caught this tab up, so that it can answer at last
+      answerUnanswered()
     })
     channel.post({type: 'hello', from: id} satisfies SyncMessage)
   }
@@ -360,6 +374,9 @@ export function syncThemer(
     // What changed meanwhile comes back as an answer, ordered like any other
     // state — until it does, this tab's state is not the one to persist
     restored = true
+    // Asking again makes the answer welcome again: a change this tab made
+    // before it was cached went around then, so the answer is the later state
+    unchanged = true
     abort = new AbortController()
     queueForLock()
     channel?.post({type: 'hello', from: id} satisfies SyncMessage)
