@@ -63,6 +63,13 @@ export interface SyncLocks {
 export interface ThemerSyncOptions {
   /** Persists the machine's snapshot — from the one tab that holds the lock */
   persist: (snapshot: Snapshot<unknown>) => void
+  /**
+   * Reads the themes the last persist wrote — what a tab back from the
+   * back/forward cache catches up on when no other tab is left to tell it
+   * what changed. Without it, such a tab persists nothing until it hears
+   * from another tab or changes something of its own
+   */
+  restore?: () => ThemerState | undefined
   /** Opens the channel to the other tabs, or `null` where there is none */
   openChannel?: () => SyncChannel | null
   /** Elects the tab that persists, or `undefined` where there is no lock manager */
@@ -165,9 +172,10 @@ function tabId(): string {
  * over persists right away, in case the last one left with a write pending.
  * A page going into the back/forward cache lets go of the lock too — frozen,
  * it could neither persist nor answer — and queues for it again, asking the
- * others what changed, as it comes back. Writes happen when the browser is
- * idle — a run of edits is written once — and as the page hides, so that
- * nothing pending is lost.
+ * others what changed, as it comes back; the lock coming to it before any
+ * tab answered, no other tab is left to, and it reads what the last one
+ * wrote instead. Writes happen when the browser is idle — a run of edits is
+ * written once — and as the page hides, so that nothing pending is lost.
  *
  * Returns what stops the sync: it lets go of the lock, which hands the
  * persisting on, and closes the channel.
@@ -180,6 +188,7 @@ export function syncThemer(
 ): () => void {
   const {
     persist,
+    restore,
     openChannel = openBroadcastChannel,
     schedule = scheduleIdle,
     page = typeof window === 'undefined' ? undefined : window,
@@ -227,7 +236,25 @@ export function syncThemer(
   const answer = (to: string) => {
     channel?.post({type: 'state', state: shared, revision, from: origin, to} satisfies SyncMessage)
   }
+  /** Sends another source's state into the machine, as nothing to pass on */
+  const apply = (state: ThemerState) => {
+    shared = state
+    applying = true
+    try {
+      actorRef.send({type: 'themes.sync', state})
+    } finally {
+      applying = false
+    }
+  }
   const becomeLeader = () => {
+    // Back from the cache and the lock this tab's before any answer came: no
+    // other tab is left to say what changed, so what the last one wrote did
+    if (restored && restore) {
+      const stored = restore()
+
+      restored = false
+      if (stored && !dequal(stored, shared)) apply(stored)
+    }
     leader = true
     if (!restored) persistNow()
     // Tabs that started alongside this one asked before anyone held the lock
@@ -328,15 +355,7 @@ export function syncThemer(
       // is at: the answers that may follow are ordered like any other state
       unchanged = false
       restored = false
-      if (dequal(message.state, shared)) return
-
-      shared = message.state
-      applying = true
-      try {
-        actorRef.send({type: 'themes.sync', state: message.state})
-      } finally {
-        applying = false
-      }
+      if (!dequal(message.state, shared)) apply(message.state)
     })
     channel.post({type: 'hello', from: id} satisfies SyncMessage)
   }
@@ -358,8 +377,13 @@ export function syncThemer(
     if (!('persisted' in event) || event.persisted !== true || !locks) return
 
     // What changed meanwhile comes back as an answer, ordered like any other
-    // state — until it does, this tab's state is not the one to persist
+    // state — until it does, this tab's state is not the one to persist. The
+    // answer is as welcome as to a tab that just started: what this tab
+    // changed before it was cached went around then, and the answer has it
+    // — taken for a late reply to that change, it would be answered with the
+    // frozen state as the newest
     restored = true
+    unchanged = true
     abort = new AbortController()
     queueForLock()
     channel?.post({type: 'hello', from: id} satisfies SyncMessage)

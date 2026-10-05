@@ -8,7 +8,7 @@ import {
   snapshotFromState,
   themeOptionsSchema,
 } from './schemas'
-import type {CustomTheme} from './themes'
+import type {CustomTheme, ThemerState} from './themes'
 
 /** Where the machine's snapshot is kept between sessions */
 const SNAPSHOT_STORAGE_KEY = 'sanityStudio:themer:snapshot'
@@ -87,6 +87,23 @@ export function readPersistedSnapshot(): PersistedThemerSnapshot | undefined {
   } catch {
     return undefined
   }
+}
+
+/**
+ * The themes as the last persist left them — what a tab back from the
+ * back/forward cache catches up on when no other tab is left to tell it what
+ * changed; see `sync.ts`. `undefined` when nothing usable is stored.
+ *
+ * @internal
+ */
+export function readPersistedState(): ThemerState | undefined {
+  const snapshot = readPersistedSnapshot()
+
+  if (!snapshot) return undefined
+
+  const {active, custom, removed, order} = snapshot.context
+
+  return {active, custom, removed, order}
 }
 
 function readLegacyDraft(): PersistedThemerSnapshot | undefined {

@@ -2,7 +2,7 @@ import {useEffect} from 'react'
 
 import type {ThemerProps} from '#types'
 
-import {writePersistedSnapshot} from './storage'
+import {readPersistedState, writePersistedSnapshot} from './storage'
 import {syncThemer} from './sync'
 
 /**
@@ -14,7 +14,10 @@ import {syncThemer} from './sync'
  * not.
  */
 export function PersistActorSnapshot({actorRef}: Pick<ThemerProps, 'actorRef'>) {
-  useEffect(() => syncThemer(actorRef, {persist: writePersistedSnapshot}), [actorRef])
+  useEffect(
+    () => syncThemer(actorRef, {persist: writePersistedSnapshot, restore: readPersistedState}),
+    [actorRef],
+  )
 
   return null
 }
