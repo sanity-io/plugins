@@ -62,8 +62,8 @@ export const muxInput = definePlugin<Partial<PluginConfig> | void>((userConfig) 
     ...userConfig,
     ...convertLegacyConfig(userConfig || {}),
   }
-  if (config.muxApiHost) {
-    // Fail early on an invalid value, instead of on the first Mux request
+  if (config.muxApiHost !== undefined) {
+    // Fail early on an invalid value (including an empty string), instead of on the first Mux request
     config.muxApiHost = normalizeMuxApiHost(config.muxApiHost)
   }
   return {
