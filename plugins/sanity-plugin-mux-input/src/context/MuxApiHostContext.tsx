@@ -9,7 +9,6 @@ export function MuxApiHostProvider({
   muxApiHost: string | undefined
   children: React.ReactNode
 }) {
-  if (!muxApiHost) return children
   return <MuxApiHostContext.Provider value={muxApiHost}>{children}</MuxApiHostContext.Provider>
 }
 
