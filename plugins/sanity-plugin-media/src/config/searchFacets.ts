@@ -272,7 +272,7 @@ export const inputs: Record<SearchFacetName, SearchFacetInputProps> = {
  * literal, so the query no longer parses.
  */
 export function groqWildcardMatch(term: string): string {
-  return JSON.stringify(`*${term}*`)
+  return JSON.stringify(`*${term}*`)!
 }
 
 export const operators: SearchFacetOperators = {
