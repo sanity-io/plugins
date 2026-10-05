@@ -62,16 +62,21 @@ const resizeStudioTransition = createViewTransitionType(
   'resizeStudio',
 )
 
-const splitScreenFilter = 'blur(12px)'
+/**
+ * The Studio blurs out of its old width and into its new one as the split copy
+ * comes and goes. The blur sits on the image pair that holds both snapshots,
+ * not on the snapshots themselves: Safari (WebKit, as of Technology Preview
+ * 253) paints a filtered snapshot as raw layer contents, losing the
+ * `object-fit` stretch of `resizeStudioRules`, so the Studio scaled wrongly
+ * while it resized there. One blur peaking at the cross-over, where the two
+ * snapshots meet at half opacity, looks the same as the pair of 12px blurs
+ * the snapshots carried before — their visible blur peaked at 6px there too
+ */
+const splitScreenFilter = 'blur(6px)'
 const splitStudioTransition = createViewTransitionType({
-  old: {
-    ...resizeStudioRules,
-    animationName: keyframes({to: {opacity: 0, filter: splitScreenFilter}}),
-  },
-  new: {
-    ...resizeStudioRules,
-    animationName: keyframes({from: {opacity: 0, filter: splitScreenFilter}}),
-  },
+  imagePair: {animationName: keyframes({'50%': {filter: splitScreenFilter}})},
+  old: {...resizeStudioRules, animationName: keyframes({to: {opacity: 0}})},
+  new: {...resizeStudioRules, animationName: keyframes({from: {opacity: 0}})},
 })
 /**
  * The split copy slides in from the side, or out to it — hidden for the first
@@ -148,14 +153,6 @@ export const viewTransitionClasses = {
   } as const satisfies Record<string, ViewTransitionClass>,
   studio: {
     update: {
-      // [viewTransitionTypes.crossfade]: createViewTransitionType(
-      //   {
-      //     imagePair: {perspective: '1000px', transformStyle: 'preserve-3d'},
-      //     group: {animationDuration: '6s !important', animationTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1) !important', animationFillMode: 'both'},
-      //     old: {animationName: flipOut, backfaceVisibility: 'hidden', },
-      //     new: {animationName: flipIn, backfaceVisibility: 'hidden', }},
-      //   'crossfadeStudio',
-      // ),
       [viewTransitionTypes['open']]: resizeStudioTransition,
       [viewTransitionTypes['close']]: resizeStudioTransition,
       [viewTransitionTypes['split-screen:open']]: splitStudioTransition,

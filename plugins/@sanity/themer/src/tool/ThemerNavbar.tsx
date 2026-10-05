@@ -1,5 +1,5 @@
 import {ColorWheelIcon} from '@sanity/icons/ColorWheel'
-import {Box, Button, Text} from '@sanity/ui'
+import {Box, Button, Text, usePrefersReducedMotion} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {lazy, startTransition, Suspense, use, useRef, useTransition, ViewTransition} from 'react'
 import {type NavbarProps} from 'sanity'
@@ -34,6 +34,7 @@ function ThemerNavbarButton() {
 
   const [busy, startBusyTransition] = useTransition()
   const iconRef = useRef<{spin: () => void}>(null)
+  const prefersReducedMotion = usePrefersReducedMotion()
 
   const handleOpen = () =>
     startBusyTransition(() => {
@@ -98,10 +99,15 @@ function ThemerNavbarButton() {
               // cover it with a spinner
               icon={
                 // The animated wheel needs `motion/react`, which is heavy, so it
-                // loads lazily — behind the plain icon it reimplements
-                <Suspense fallback={<ColorWheelIcon />}>
-                  <AnimatedColorWheelIcon busy={busy} ref={iconRef} />
-                </Suspense>
+                // loads lazily — behind the plain icon it reimplements, which is
+                // all there is to show with `prefers-reduced-motion: reduce`
+                prefersReducedMotion ? (
+                  <ColorWheelIcon />
+                ) : (
+                  <Suspense fallback={<ColorWheelIcon />}>
+                    <AnimatedColorWheelIcon busy={busy} ref={iconRef} />
+                  </Suspense>
+                )
               }
               mode="bleed"
               onClick={open ? handleClose : handleOpen}

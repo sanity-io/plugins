@@ -2,6 +2,7 @@ import {ClipboardIcon} from '@sanity/icons/Clipboard'
 import {Box, Button, Card, Dialog, Flex, Stack, Text} from '@sanity/ui'
 import {Code} from '@sanity/ui/code'
 import {useToast} from '@sanity/ui/toast'
+import {useId} from 'react'
 import {registerLanguage} from 'react-refractor'
 import typescript from 'refractor/typescript'
 
@@ -24,6 +25,7 @@ registerLanguage(typescript)
 export function ThemeSnippetDialog(props: {onClose: () => void; theme: ThemerTheme}) {
   const {onClose, theme} = props
   const toast = useToast()
+  const id = useId()
   const snippet = createThemeSnippet(theme.options)
 
   const handleCopy = async () => {
@@ -51,7 +53,7 @@ export function ThemeSnippetDialog(props: {onClose: () => void; theme: ThemerThe
         </Flex>
       }
       header="Add to your config"
-      id="themer-snippet"
+      id={id}
       onClickOutside={onClose}
       onClose={onClose}
       width={1}
