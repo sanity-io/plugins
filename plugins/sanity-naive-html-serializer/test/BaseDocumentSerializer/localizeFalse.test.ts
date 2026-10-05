@@ -147,12 +147,15 @@ const moduleValue = {
   ],
 }
 
-function serialize(types: Record<string, any>[], doc: SanityDocument) {
+function serialize(types: Record<string, any>[], doc: Record<string, any>) {
   const schema: InstanceType<typeof Schema> = new Schema({name: 'repro', types})
-  return BaseDocumentSerializer(schema).serializeDocument(doc, 'document')
+  return BaseDocumentSerializer(schema).serializeDocument(
+    doc as unknown as SanityDocument,
+    'document',
+  )
 }
 
-function htmlOf(types: Record<string, any>[], doc: SanityDocument) {
+function htmlOf(types: Record<string, any>[], doc: Record<string, any>) {
   return getHTMLNode(serialize(types, doc)).body.innerHTML
 }
 
@@ -165,7 +168,7 @@ test('document fields marked localize: false are not serialized', () => {
       _rev: 'rev',
       heading: 'Real videos by real people',
       margin: 'spacious',
-    } as SanityDocument,
+    },
   )
 
   expect(html).toContain('<span class="heading">Real videos by real people</span>')
@@ -180,7 +183,7 @@ test('localize: false on a page-builder module and its inline objects is not ser
     _rev: 'rev',
     title: 'Home',
     modules: [moduleValue],
-  } as SanityDocument)
+  })
 
   expect(html).toContain('<span class="heading">Real videos by real people</span>')
   expect(html).toContain('<span class="title">Clip</span>')
@@ -197,7 +200,7 @@ test('localize: false on a nested object field is not serialized', () => {
     _rev: 'rev',
     title: 'Home',
     hero: moduleValue,
-  } as SanityDocument)
+  })
 
   // Reported Smartling payload mixed the translatable heading with margin.
   expect(html).toContain('<span class="heading">Real videos by real people</span>')
@@ -213,7 +216,7 @@ test('localize: false on an inline object type that is not registered globally i
     _rev: 'rev',
     title: 'Home',
     modules: [moduleValue],
-  } as SanityDocument)
+  })
 
   expect(html).toContain('<span class="heading">Real videos by real people</span>')
   expect(html).not.toContain('<span class="margin">spacious</span>')
@@ -226,7 +229,7 @@ test('localize: false on an anonymous inline object is not serialized', () => {
     _type: 'anonymousSettingsPage',
     _rev: 'rev',
     settings: {_type: 'object', title: 'Hello', theme: 'dark'},
-  } as SanityDocument)
+  })
 
   expect(html).toContain('<span class="title">Hello</span>')
   expect(html).not.toContain('dark')
@@ -241,10 +244,13 @@ test('fields skipped by localize: false are preserved when translations are merg
     title: 'Home',
     modules: [moduleValue],
     hero: moduleValue,
-  } as SanityDocument
+  }
   const serialized = serialize([...registeredTypes, page], original)
   const deserialized = BaseDocumentDeserializer.deserializeDocument(serialized.content)
-  const merged = BaseDocumentMerger.documentLevelMerge(deserialized, original)
+  const merged = BaseDocumentMerger.documentLevelMerge(
+    deserialized,
+    original as unknown as SanityDocument,
+  )
 
   expect(deserialized.hero.margin).toBeUndefined()
   expect(deserialized.hero.background).toBeUndefined()
