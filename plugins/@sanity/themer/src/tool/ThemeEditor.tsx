@@ -1,9 +1,12 @@
+import {CheckmarkIcon} from '@sanity/icons/Checkmark'
+import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
 import {ResetIcon} from '@sanity/icons/Reset'
 import {TrashIcon} from '@sanity/icons/Trash'
 import {Badge, Box, Button, Card, Flex, Stack, Text, TextInput} from '@sanity/ui'
+import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
 import {type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {useSelector} from '@xstate/react'
-import {useMemo} from 'react'
+import {useId, useMemo} from 'react'
 import {useColorSchemeValue} from 'sanity'
 
 import type {ThemerProps} from '#types'
@@ -159,6 +162,7 @@ function ThemeEditorForm(props: {
   } = props
   // The scheme the Studio is showing, with the appearance setting resolved
   const studioScheme = useColorSchemeValue()
+  const actionsId = useId()
   const resolved = useMemo(() => resolveThemeOptions(options), [options])
   const palettes = useMemo(() => buildPalette(options), [options])
 
@@ -229,18 +233,36 @@ function ThemeEditorForm(props: {
         </Stack>
       </ScrollArea>
 
+      {/* Like the Studio's document footer: one primary action, the rest in
+          the menu, in the size of the Studio's own buttons (padding and gap of 2) */}
       <Card borderTop padding={3}>
-        <Flex gap={2}>
-          <TooltipButton
-            icon={TrashIcon}
+        <Flex align="center" gap={2} justify="flex-end">
+          <Button
+            gap={2}
+            icon={CheckmarkIcon}
+            onClick={onDone}
+            padding={2}
+            text="Done"
             mode="ghost"
-            onClick={onRemove}
-            text="Remove"
-            tone="critical"
-            tooltip="Remove the theme — it can be restored until it is deleted"
           />
-          <Box flex={1} />
-          <Button mode="ghost" onClick={onDone} padding={2} text="Done" />
+          <MenuButton
+            button={
+              <Button
+                aria-label="More actions"
+                icon={EllipsisHorizontalIcon}
+                mode="bleed"
+                padding={2}
+              />
+            }
+            id={actionsId}
+            menu={
+              <Menu>
+                {/* The theme can be restored until it is deleted from the removed themes */}
+                <MenuItem icon={TrashIcon} onClick={onRemove} text="Remove" tone="critical" />
+              </Menu>
+            }
+            popover={{animate: true, placement: 'top-end', portal: true}}
+          />
         </Flex>
       </Card>
     </>
