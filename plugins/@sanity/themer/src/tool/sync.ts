@@ -193,12 +193,22 @@ export function syncThemer(
     schedule = scheduleIdle,
     page = typeof window === 'undefined' ? undefined : window,
   } = options
-  const channel = openChannel()
+  /**
+   * The channel to the other tabs — closed as the page goes into the
+   * back/forward cache and opened anew as it comes back: a message on its
+   * way to this tab as it froze is delivered as it thaws, and would pass for
+   * news of what the others did meanwhile, ahead of what they wrote; a
+   * closed channel delivers nothing (HTML, `BroadcastChannel`'s message
+   * steps check the closed flag as the message arrives)
+   */
+  let channel = openChannel()
   // Without a channel the tabs cannot hear of each other's changes, so each
   // persists its own — a lock would only silence the tabs not holding it.
   // Given as `undefined` means no lock manager, not the browser's: Node has
   // one too these days
   const locks = channel ? ('locks' in options ? options.locks : browserLocks()) : undefined
+  /** Whether the page is in the back/forward cache, its channel closed */
+  let cached = false
   /**
    * What the other tabs know this tab as — new as it starts and again as it
    * comes back from the back/forward cache, so that an answer to the hello it
@@ -312,59 +322,65 @@ export function syncThemer(
     if (leader && !restored) persistSoon()
   })
 
-  if (channel) {
-    channel.listen((data) => {
-      const message = parseMessage(data)
+  const receive = (data: unknown) => {
+    const message = parseMessage(data)
 
-      if (!message) return
+    if (!message) return
 
-      if (message.type === 'hello') {
-        // The tab that persists speaks for all, so that the newcomer hears one
-        // answer — or hears it once a tab holds the lock
-        if (leader) {
-          answer(message.from)
-        } else {
-          unanswered.add(message.from)
-        }
-
-        return
+    if (message.type === 'hello') {
+      // The tab that persists speaks for all, so that the newcomer hears one
+      // answer — or hears it once a tab holds the lock
+      if (leader) {
+        answer(message.from)
+      } else {
+        unanswered.add(message.from)
       }
 
-      if (message.to !== undefined) {
-        if (message.to !== id) return
+      return
+    }
 
-        // An answer is the holder's current state: whether it is ahead of
-        // this tab or not, what this tab has is current once it is in
-        restored = false
+    if (message.to !== undefined) {
+      if (message.to !== id) return
 
-        if (!unchanged) {
-          // Asked before this tab changed anything, answered after: the change
-          // is the later one, and goes around again ahead of the answer
-          if (origin === id) {
-            revision = Math.max(revision, message.revision) + 1
-            channel.post({type: 'state', state: shared, revision, from: id} satisfies SyncMessage)
-
-            return
-          }
-
-          // Answered twice — without a lock manager every tab answers — the
-          // answers are ordered like any other state
-          if (!isNewer(message)) return
-        }
-      } else if (!isNewer(message)) {
-        return
-      }
-
-      revision = message.revision
-      origin = message.from
-      // Even an answer that only confirms what this tab had settles what it
-      // is at: the answers that may follow are ordered like any other state
-      unchanged = false
+      // An answer is the holder's current state: whether it is ahead of
+      // this tab or not, what this tab has is current once it is in
       restored = false
-      if (!dequal(message.state, shared)) apply(message.state)
-    })
+
+      if (!unchanged) {
+        // Asked before this tab changed anything, answered after: the change
+        // is the later one, and goes around again ahead of the answer
+        if (origin === id) {
+          revision = Math.max(revision, message.revision) + 1
+          channel?.post({type: 'state', state: shared, revision, from: id} satisfies SyncMessage)
+
+          return
+        }
+
+        // Answered twice — without a lock manager every tab answers — the
+        // answers are ordered like any other state
+        if (!isNewer(message)) return
+      }
+    } else if (!isNewer(message)) {
+      return
+    }
+
+    revision = message.revision
+    origin = message.from
+    // Even an answer that only confirms what this tab had settles what it
+    // is at: the answers that may follow are ordered like any other state
+    unchanged = false
+    restored = false
+    if (!dequal(message.state, shared)) apply(message.state)
+  }
+  /** Listens on the channel and asks the other tabs for the current state */
+  const join = () => {
+    if (!channel) return
+
+    channel.listen(receive)
     channel.post({type: 'hello', from: id} satisfies SyncMessage)
   }
+
+  join()
 
   const flush = () => {
     if (leader && cancelPersist) persistNow()
@@ -373,14 +389,19 @@ export function syncThemer(
     flush()
 
     // Into the back/forward cache: frozen, this tab can neither persist nor
-    // answer, so the lock goes to the next tab in line until it shows again
+    // answer, so the lock goes to the next tab in line until it shows again,
+    // and the channel closes, so that nothing on its way to this tab now is
+    // delivered as it comes back (see `channel`)
     if ('persisted' in event && event.persisted === true && channel) {
+      cached = true
       leader = false
       if (locks) abort.abort()
+      channel.close()
+      channel = null
     }
   }
   const show = (event: Event) => {
-    if (!('persisted' in event) || event.persisted !== true || !channel) return
+    if (!('persisted' in event) || event.persisted !== true || !cached) return
 
     // What changed meanwhile comes back as an answer, ordered like any other
     // state — until it does, this tab's state is not the one to persist. The
@@ -390,12 +411,14 @@ export function syncThemer(
     // frozen state as the newest. Without a lock manager this tab persists
     // for itself and is its own leader at once, which reads what was written
     // meanwhile before it writes again
+    cached = false
     restored = true
     unchanged = true
     id = tabId()
     abort = new AbortController()
+    channel = openChannel()
     queueForLock()
-    channel.post({type: 'hello', from: id} satisfies SyncMessage)
+    join()
   }
 
   page?.addEventListener('pagehide', hide)

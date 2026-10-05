@@ -32,44 +32,71 @@ const immediately = (callback: () => void) => {
   return () => {}
 }
 
-/** A `BroadcastChannel` stand-in: every channel on a bus hears what the others post */
-function createBus() {
-  const channels = new Set<{listeners: Set<(data: unknown) => void>}>()
+/** A channel on the fake bus: what it posted, and whether its page is fully active */
+interface BusChannel extends SyncChannel {
+  posted: unknown[]
+  active: boolean
+  /** Delivers what arrived while the page was not fully active, now that it is again */
+  wake(): void
+}
+
+/**
+ * A `BroadcastChannel` stand-in: every channel on a bus hears what the others
+ * post, the way the HTML spec has it — a message is queued for the channels
+ * whose page is fully active as it is posted, and delivered `delay` later to
+ * those still open; a page that is not fully active by then holds the message
+ * until it is, as its tasks wait
+ */
+function createBus(delay = 0) {
+  type Channel = BusChannel & {listeners: Set<(data: unknown) => void>; held: unknown[]}
+  const channels = new Set<Channel>()
+  const deliver = (to: Channel, message: unknown) => {
+    setTimeout(() => {
+      if (!channels.has(to)) return
+      if (!to.active) {
+        to.held.push(message)
+
+        return
+      }
+      for (const listener of to.listeners) listener(structuredClone(message))
+    }, delay)
+  }
 
   return {
-    open: (): SyncChannel & {posted: unknown[]} => {
-      const listeners = new Set<(data: unknown) => void>()
-      const self = {listeners}
-      const posted: unknown[] = []
-
-      channels.add(self)
-
-      return {
-        posted,
+    open: (): BusChannel => {
+      const self: Channel = {
+        listeners: new Set(),
+        held: [],
+        posted: [],
+        active: true,
         post(message) {
-          posted.push(message)
+          self.posted.push(message)
           for (const other of channels) {
-            if (other === self) continue
-            for (const listener of other.listeners) {
-              setTimeout(() => listener(structuredClone(message)), 0)
-            }
+            if (other !== self && other.active) deliver(other, message)
           }
         },
         listen(listener) {
-          listeners.add(listener)
+          self.listeners.add(listener)
 
-          return () => listeners.delete(listener)
+          return () => self.listeners.delete(listener)
         },
         close() {
           channels.delete(self)
-          listeners.clear()
+          self.listeners.clear()
+        },
+        wake() {
+          for (const message of self.held.splice(0)) deliver(self, message)
         },
       }
+
+      channels.add(self)
+
+      return self
     },
     /** Something another page put on the channel */
     broadcast: (message: unknown) => {
       for (const channel of channels) {
-        for (const listener of channel.listeners) setTimeout(() => listener(message), 0)
+        if (channel.active) deliver(channel, message)
       }
     },
   }
@@ -128,36 +155,37 @@ function startTab(stored: ThemerState = initialThemerState) {
   return createActor(themerMachine, {snapshot: snapshotFromState(stored)}).start()
 }
 
-/** A page that can go into the back/forward cache and come back */
+/**
+ * A page that can go into the back/forward cache and come back: cached, it is
+ * not fully active, and nothing posted meanwhile is queued for its channels
+ */
 function createPage() {
   const target = new EventTarget()
-  let cached = false
+  const channels: BusChannel[] = []
 
   return {
+    channels,
     addEventListener: target.addEventListener.bind(target),
     removeEventListener: target.removeEventListener.bind(target),
     hide: () => {
-      cached = true
       target.dispatchEvent(Object.assign(new Event('pagehide'), {persisted: true}))
+      for (const channel of channels) channel.active = false
     },
     show: () => {
-      cached = false
+      for (const channel of channels) {
+        channel.active = true
+        channel.wake()
+      }
       target.dispatchEvent(Object.assign(new Event('pageshow'), {persisted: true}))
     },
-    /** Opens the page's channel on a bus: frozen, the page hears nothing of what is posted */
-    open:
-      <Channel extends SyncChannel>(open: () => Channel) =>
-      (): Channel => {
-        const channel = open()
+    /** Opens the page's channel on a bus */
+    open: (open: () => BusChannel) => (): BusChannel => {
+      const channel = open()
 
-        return {
-          ...channel,
-          listen: (listener: (data: unknown) => void) =>
-            channel.listen((data) => {
-              if (!cached) listener(data)
-            }),
-        }
-      },
+      channels.push(channel)
+
+      return channel
+    },
   }
 }
 
@@ -924,19 +952,12 @@ describe('syncing the themer across tabs', () => {
     const pageA = createPage()
     const tabA = startTab({...initialThemerState, custom: [custom]})
     const tabB = startTab({...initialThemerState, custom: [custom]})
-    const channels: Array<SyncChannel & {posted: unknown[]}> = []
     const persistA = vi.fn(store.persist)
 
     const stopA = syncThemer(tabA, {
       persist: persistA,
       restore: store.restore,
-      openChannel: () => {
-        const channel = pageA.open(bus.open)()
-
-        channels.push(channel)
-
-        return channel
-      },
+      openChannel: pageA.open(bus.open),
       locks,
       schedule: immediately,
       page: pageA,
@@ -948,7 +969,7 @@ describe('syncing the themer across tabs', () => {
       schedule: immediately,
     })
     await tick()
-    const idBefore = helloFrom(channels[0].posted[0])
+    const idBefore = helloFrom(pageA.channels[0].posted[0])
 
     pageA.hide()
     await tick()
@@ -962,7 +983,8 @@ describe('syncing the themer across tabs', () => {
     await tick()
     await tick()
     expect(tabA.getSnapshot().context.active).toBe('verdant')
-    const idAfter = helloFrom(channels[0].posted.at(-1))
+    // Said on a channel of its own: the one it had is closed
+    const idAfter = helloFrom(pageA.channels[1].posted[0])
     expect(idAfter).not.toBe(idBefore)
 
     // An answer still on its way to the hello said before the cache is not
@@ -980,6 +1002,63 @@ describe('syncing the themer across tabs', () => {
 
     stopA()
   })
+
+  // A message posted as the page froze is a task still queued in it, and runs
+  // as the page comes back — before the lock is granted again, or after,
+  // depending on how long the message takes
+  for (const [delivery, delay] of [
+    ['before', 0],
+    ['after', 10],
+  ] as const) {
+    it(`drops what was on its way to it as it was cached, delivered ${delivery} the lock is granted again`, async () => {
+      const bus = createBus(delay)
+      const locks = createLocks()
+      const store = createStore()
+      const pageA = createPage()
+      const tabA = startTab({...initialThemerState, custom: [custom]})
+      const tabB = startTab({...initialThemerState, custom: [custom]})
+      const persistA = vi.fn(store.persist)
+      const settle = () => new Promise<void>((resolve) => setTimeout(resolve, delay + 5))
+
+      const stopA = syncThemer(tabA, {
+        persist: persistA,
+        restore: store.restore,
+        openChannel: pageA.open(bus.open),
+        locks,
+        schedule: immediately,
+        page: pageA,
+      })
+      const stopB = syncThemer(tabB, {
+        persist: store.persist,
+        openChannel: bus.open,
+        locks,
+        schedule: immediately,
+      })
+      await settle()
+
+      // The other tab's change is on its way as this tab goes into the cache
+      tabB.send({type: 'theme.pick', slug: 'dew'})
+      pageA.hide()
+      await settle()
+      // Cached, this tab hears nothing of the next change, which is written
+      tabB.send({type: 'theme.pick', slug: 'verdant'})
+      await settle()
+      stopB()
+      await settle()
+      persistA.mockClear()
+
+      // Back, what was written is the state — the change that was on its
+      // way is not news, and does not undo it
+      pageA.show()
+      await settle()
+      await settle()
+      expect(tabA.getSnapshot().context.active).toBe('verdant')
+      expect(persistA).toHaveBeenCalledTimes(1)
+      expect(persistA.mock.calls[0][0]).toMatchObject({context: {active: 'verdant'}})
+
+      stopA()
+    })
+  }
 
   it('ignores what it cannot use from the channel', async () => {
     const bus = createBus()
