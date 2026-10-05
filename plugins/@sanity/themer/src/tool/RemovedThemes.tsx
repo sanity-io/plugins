@@ -1,3 +1,4 @@
+import {CheckmarkIcon} from '@sanity/icons/Checkmark'
 import {Box, Button, Card, Flex, Stack, Text} from '@sanity/ui'
 
 import type {ThemerProps} from '#types'
@@ -52,9 +53,17 @@ export function RemovedThemes({actorRef, removed}: Pick<ThemerProps, 'actorRef' 
         </Stack>
       </ScrollArea>
 
+      {/* In the size of the Studio's own buttons (padding and gap of 2) */}
       <Card borderTop padding={3}>
         <Flex justify="flex-end">
-          <Button onClick={() => actorRef.send({type: 'flow.list'})} text="Done" tone="primary" />
+          <Button
+            gap={2}
+            icon={CheckmarkIcon}
+            onClick={() => actorRef.send({type: 'flow.list'})}
+            padding={2}
+            text="Done"
+            tone="primary"
+          />
         </Flex>
       </Card>
     </>

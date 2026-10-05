@@ -1,6 +1,8 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {ClipboardIcon} from '@sanity/icons/Clipboard'
 import {CodeBlockIcon} from '@sanity/icons/CodeBlock'
+import {CopyIcon} from '@sanity/icons/Copy'
+import {EditIcon} from '@sanity/icons/Edit'
 import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
 import {ImageIcon} from '@sanity/icons/Image'
 import {RestoreIcon} from '@sanity/icons/Restore'
@@ -108,20 +110,27 @@ export function ThemeList({
         </Stack>
       </ScrollArea>
 
-      {/* Like the Studio's document footer: one primary action, the rest in the menu */}
+      {/* Like the Studio's document footer: one primary action, the rest in
+          the menu, in the size of the Studio's own buttons (padding and gap of 2) */}
       <Card borderTop padding={3}>
         <Flex align="center" gap={2} justify="flex-end">
           {active?.source === 'custom' ? (
             <Button
+              gap={2}
+              icon={EditIcon}
               onClick={() => actorRef.send({type: 'theme.edit', slug: active.slug})}
+              padding={2}
               text="Edit"
               tone="primary"
             />
           ) : (
             <Button
+              gap={2}
+              icon={CopyIcon}
               onClick={() =>
                 actorRef.send({type: 'theme.duplicate', slug: active?.slug ?? CONFIG_SLUG})
               }
+              padding={2}
               text="Duplicate & Edit"
               tone="primary"
             />
@@ -134,6 +143,7 @@ export function ThemeList({
                 // The image's colors are read on device, which the menu button shows while it lasts
                 loading={busy}
                 mode="bleed"
+                padding={2}
               />
             }
             id="themer-list-actions"

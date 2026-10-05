@@ -1,3 +1,4 @@
+import {CheckmarkIcon} from '@sanity/icons/Checkmark'
 import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
 import {ResetIcon} from '@sanity/icons/Reset'
 import {TrashIcon} from '@sanity/icons/Trash'
@@ -231,12 +232,27 @@ function ThemeEditorForm(props: {
         </Stack>
       </ScrollArea>
 
-      {/* Like the Studio's document footer: one primary action, the rest in the menu */}
+      {/* Like the Studio's document footer: one primary action, the rest in
+          the menu, in the size of the Studio's own buttons (padding and gap of 2) */}
       <Card borderTop padding={3}>
         <Flex align="center" gap={2} justify="flex-end">
-          <Button onClick={onDone} text="Done" tone="primary" />
+          <Button
+            gap={2}
+            icon={CheckmarkIcon}
+            onClick={onDone}
+            padding={2}
+            text="Done"
+            tone="primary"
+          />
           <MenuButton
-            button={<Button aria-label="More actions" icon={EllipsisHorizontalIcon} mode="bleed" />}
+            button={
+              <Button
+                aria-label="More actions"
+                icon={EllipsisHorizontalIcon}
+                mode="bleed"
+                padding={2}
+              />
+            }
             id="themer-editor-actions"
             menu={
               <Menu>
