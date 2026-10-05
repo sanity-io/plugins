@@ -194,14 +194,6 @@ overrides:
   # Keep a single tsx (and thus a single vite types instance) so sanity.cli vite
   # config callbacks type-check cleanly after the catalog tsx bump.
   tsx: 'catalog:'
-  # Vite 8.3.1's bundled-dev client (`unstable_bundledDev` in dev/test-studio) inlines rolldown
-  # 1.2.9's browser runtime, but its `rolldown: ~1.2.9` range resolves 1.2.10+, whose compiler
-  # emits `registerFactory(id, fn)` (rolldown#10915) against the inlined
-  # `registerFactory(id, kind, fn)`: every lazy `import()` and HMR update then fails with
-  # `factory.fn is not a function`. Scoped to 8.3.1 because the next Vite release serves the
-  # runtime from the installed rolldown instead (https://github.com/vitejs/vite/pull/23568),
-  # so delete this entry when bumping past 8.3.1.
-  'vite@8.3.1>rolldown': '1.2.9'
 
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
