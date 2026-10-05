@@ -2,4 +2,11 @@
 '@sanity/themer': patch
 ---
 
-Syncing themes across the Studio's tabs is sturdier: a tab the browser puts in its back/forward cache hands the persisting on and catches up as it comes back — from the other tabs, or from what the last one wrote when none is left — without passing its frozen state off as the newest, an answer heard out of order no longer undoes newer state, malformed messages are ignored, and a theme deleted or given another image in one tab lets go of the image another tab was showing for it. Themes travel between tabs as they are, so a blank title no longer differs from tab to tab. A corrupt snapshot in `localStorage` no longer hides what earlier versions stored.
+Syncing themes across tabs is sturdier:
+
+- A tab back from the back/forward cache catches up on what changed, from the other tabs or from `localStorage` when none is left, instead of pushing its stale state onto them.
+- A late answer to a tab's hello no longer undoes newer changes.
+- Malformed messages on the channel are ignored.
+- Deleting a theme, or giving it a new image, in one tab frees the old image in the other tabs.
+- Titles arrive in the other tabs as typed, so a blank title no longer differs from tab to tab.
+- A corrupt snapshot in `localStorage` no longer hides what earlier versions stored.
