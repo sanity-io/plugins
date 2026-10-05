@@ -242,7 +242,7 @@ function ThemeEditorForm(props: {
             onClick={onDone}
             padding={2}
             text="Done"
-            tone="primary"
+            mode="ghost"
           />
           <MenuButton
             button={

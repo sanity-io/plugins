@@ -62,7 +62,7 @@ export function RemovedThemes({actorRef, removed}: Pick<ThemerProps, 'actorRef' 
             onClick={() => actorRef.send({type: 'flow.list'})}
             padding={2}
             text="Done"
-            tone="primary"
+            mode="ghost"
           />
         </Flex>
       </Card>

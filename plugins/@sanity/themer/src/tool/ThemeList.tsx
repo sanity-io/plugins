@@ -121,7 +121,7 @@ export function ThemeList({
               onClick={() => actorRef.send({type: 'theme.edit', slug: active.slug})}
               padding={2}
               text="Edit"
-              tone="primary"
+              mode="ghost"
             />
           ) : (
             <Button
@@ -132,7 +132,7 @@ export function ThemeList({
               }
               padding={2}
               text="Duplicate & Edit"
-              tone="primary"
+              mode="ghost"
             />
           )}
           <MenuButton
