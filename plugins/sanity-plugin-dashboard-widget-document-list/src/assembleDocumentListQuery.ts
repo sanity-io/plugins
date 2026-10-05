@@ -15,7 +15,7 @@ export function assembleDocumentListQuery(input: AssembleDocumentListQueryInput)
   params: Record<string, any>
 } {
   if (input.query) {
-    return {assembledQuery: input.query, params: input.queryParams ?? {}}
+    return {assembledQuery: input.query, params: input.queryParams ?? input.params ?? {}}
   }
 
   return {
