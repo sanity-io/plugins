@@ -8,13 +8,15 @@ import {ImageIcon} from '@sanity/icons/Image'
 import {RestoreIcon} from '@sanity/icons/Restore'
 import {Button, Card, Flex, Stack} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
+import {useSelector} from '@xstate/react'
 import {MotionConfig, Reorder} from 'motion/react'
-import {useId, useRef, useState} from 'react'
+import {useId, useRef} from 'react'
 
 import type {ThemerProps} from '#types'
 
 import {ImageFileInput} from './ImageFileButton'
 import {optionsFromImagePalette, titleFromFileName} from './imagePalette'
+import type {ThemerSnapshot} from './machine'
 import {PasteThemeDialog} from './PasteThemeDialog'
 import {ScrollArea} from './ScrollArea'
 import {ThemeCard} from './ThemeCard'
@@ -43,8 +45,8 @@ export function ThemeList({
   active,
 }: Pick<ThemerProps, 'actorRef' | 'themes' | 'removed' | 'active'>) {
   const {addThemeFromClipboard} = useThemeCodes({actorRef})
-  const [pasting, setPasting] = useState(false)
-  const [snippetOpen, setSnippetOpen] = useState(false)
+  // Which of the list's dialogs is open is the machine's: a state of the list flow
+  const dialog = useSelector(actorRef, selectDialog)
   const imageInputRef = useRef<HTMLInputElement | null>(null)
   const actionsId = useId()
 
@@ -165,7 +167,9 @@ export function ThemeList({
                   icon={ClipboardIcon}
                   onClick={async () => {
                     // Straight from the clipboard where the browser allows; by hand otherwise
-                    if ((await addThemeFromClipboard()) !== 'added') setPasting(true)
+                    if ((await addThemeFromClipboard()) !== 'added') {
+                      actorRef.send({type: 'dialog.paste'})
+                    }
                   }}
                   text="Add from code"
                 />
@@ -174,7 +178,7 @@ export function ThemeList({
                     <MenuDivider />
                     <MenuItem
                       icon={CodeBlockIcon}
-                      onClick={() => setSnippetOpen(true)}
+                      onClick={() => actorRef.send({type: 'dialog.snippet'})}
                       text="Show theme code"
                     />
                   </>
@@ -188,10 +192,23 @@ export function ThemeList({
 
       <ImageFileInput onFile={pickImage} ref={imageInputRef} />
 
-      {pasting && <PasteThemeDialog actorRef={actorRef} onClose={() => setPasting(false)} />}
-      {active && snippetOpen && (
-        <ThemeSnippetDialog onClose={() => setSnippetOpen(false)} theme={active} />
+      {dialog === 'paste' && (
+        <PasteThemeDialog
+          actorRef={actorRef}
+          onClose={() => actorRef.send({type: 'dialog.close'})}
+        />
+      )}
+      {dialog === 'snippet' && active && (
+        <ThemeSnippetDialog onClose={() => actorRef.send({type: 'dialog.close'})} theme={active} />
       )}
     </>
   )
+}
+
+/** The dialog the list has open, if any — a state of the machine's list flow */
+function selectDialog(snapshot: ThemerSnapshot): 'paste' | 'snippet' | null {
+  if (snapshot.matches({flow: {list: 'pasting'}})) return 'paste'
+  if (snapshot.matches({flow: {list: 'snippet'}})) return 'snippet'
+
+  return null
 }
