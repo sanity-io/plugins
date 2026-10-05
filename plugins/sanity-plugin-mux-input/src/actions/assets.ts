@@ -1,11 +1,12 @@
 import type {SanityClient} from 'sanity'
 
+import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
 import type {MuxAsset, VideoAssetDocument} from '../util/types'
 
 export function deleteAssetOnMux(client: SanityClient, assetId: string) {
   const {dataset} = client.config()
-  return client.request<void>({
+  return getMuxAddonClient(client).request<void>({
     url: `/addons/mux/assets/${dataset}/${assetId}`,
     withCredentials: true,
     method: 'DELETE',
@@ -43,7 +44,7 @@ export async function deleteAsset({
 
 export function getAsset(client: SanityClient, assetId: string) {
   const {dataset} = client.config()
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/data/${assetId}`,
     withCredentials: true,
     method: 'GET',
@@ -65,7 +66,7 @@ export function listAssets(
     query.cursor = options.cursor
   }
 
-  return client.request<{data: MuxAsset[]; next_cursor?: string | null}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset[]; next_cursor?: string | null}>({
     url: `/addons/mux/assets/${dataset}/data/list`,
     withCredentials: true,
     method: 'GET',
@@ -88,7 +89,7 @@ export function addTextTrackFromUrl(
 ) {
   const {dataset} = client.config()
 
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/${assetId}/tracks`,
     withCredentials: true,
     method: 'POST',
@@ -119,7 +120,7 @@ export function generateSubtitles(
   },
 ) {
   const {dataset} = client.config()
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/${assetId}/tracks/${audioTrackId}/generate-subtitles`,
     withCredentials: true,
     method: 'POST',
@@ -143,7 +144,7 @@ export function generateSubtitles(
  */
 export function deleteTextTrack(client: SanityClient, assetId: string, trackId: string) {
   const {dataset} = client.config()
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/${assetId}/tracks/${trackId}`,
     withCredentials: true,
     method: 'DELETE',
@@ -161,7 +162,7 @@ export function updateMasterAccess(
   masterAccess: 'temporary' | 'none',
 ) {
   const {dataset} = client.config()
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/${assetId}/master-access`,
     withCredentials: true,
     method: 'PUT',

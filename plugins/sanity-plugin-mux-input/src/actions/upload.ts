@@ -5,6 +5,7 @@ import type {SanityClient} from 'sanity'
 
 import {createUpChunkObservable} from '../clients/upChunkObservable'
 import {formatDriveShareLink} from '../util/formatDriveShareLink'
+import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
 import {roundPxString} from '../util/roundPxString'
 import type {MuxAsset, MuxNewAssetSettings, WatermarkConfig} from '../util/types'
@@ -39,7 +40,7 @@ function sanitizePxStringsInJson(json: string): string {
 }
 
 function cancelUpload(client: SanityClient, uuid: string) {
-  return client.observable.request({
+  return getMuxAddonClient(client).observable.request({
     url: `/addons/mux/uploads/${client.config().dataset}/${uuid}`,
     withCredentials: true,
     method: 'DELETE',
@@ -82,7 +83,7 @@ export function uploadUrl({
 
             const dataset = client.config().dataset
             return defer(() =>
-              client.observable.request({
+              getMuxAddonClient(client).observable.request({
                 url: `/addons/mux/assets/${dataset}`,
                 withCredentials: true,
                 method: 'POST',
@@ -138,7 +139,7 @@ export function uploadFile({
             return concat(
               of({type: 'uuid' as const, uuid}),
               defer(() =>
-                client.observable.request<{
+                getMuxAddonClient(client).observable.request<{
                   sanityAssetId: string
                   upload: {
                     cors_origin: string
@@ -202,7 +203,7 @@ type UploadResponse = {
 }
 function getUpload(client: SanityClient, assetId: string) {
   const {dataset} = client.config()
-  return client.request<UploadResponse>({
+  return getMuxAddonClient(client).request<UploadResponse>({
     url: `/addons/mux/uploads/${dataset}/${assetId}`,
     withCredentials: true,
     method: 'GET',
