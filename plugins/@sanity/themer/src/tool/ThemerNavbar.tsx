@@ -1,11 +1,11 @@
 import {ColorWheelIcon} from '@sanity/icons/ColorWheel'
-import {Box, Button, Text, useMediaIndex, usePrefersReducedMotion} from '@sanity/ui'
+import {Box, Button, Text, usePrefersReducedMotion} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {lazy, startTransition, Suspense, use, useRef, useTransition, ViewTransition} from 'react'
 import {type NavbarProps} from 'sanity'
 import type {NavbarAction} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
-import {MIN_MEDIA_INDEX_FOR_SIDEBAR, NAVBAR_SELECTOR} from '#constants'
+import {NAVBAR_SELECTOR} from '#constants'
 import {
   PluginConfigContext,
   ToolDispatchContext,
@@ -129,7 +129,6 @@ function ThemerNavbarButton() {
 // the 'use memo' directive opts it in
 export function ThemerNavbar(props: NavbarProps) {
   'use memo'
-  const mediaIndex = useMediaIndex()
   const button = {
     location: 'topbar',
     name: 'themer-topbar',
@@ -139,11 +138,6 @@ export function ThemerNavbar(props: NavbarProps) {
     // resetting its animation
     render: ThemerNavbarButton,
   } satisfies NavbarAction
-
-  // The tool has no layout for phone-sized screens yet: `ThemerProvider`
-  // keeps the sidebar closed there, so the toggle would do nothing
-  if (mediaIndex < MIN_MEDIA_INDEX_FOR_SIDEBAR) return props.renderDefault(props)
-
   return props.renderDefault({
     ...props,
     __internal_actions: [...(props.__internal_actions ?? []), button],
