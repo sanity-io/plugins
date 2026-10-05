@@ -2,13 +2,28 @@
 
 Generate [Sanity Studio](https://www.sanity.io/studio) themes from a handful of colors.
 
+**Pick your starting point:**
+
+- **I want to pick colors visually** → [Use the Studio tool](#studio-tool).
+- **I want to configure a theme in code** → [Build a theme](#usage).
+- **I want a ready-made theme** → [Use a preset](#use-a-preset).
+- **I use the hosted Themer service** → [Migrate an existing theme](#migrating-from-themersanitybuild).
+
+## Install
+
 ```sh
 npm install @sanity/themer
 ```
 
+**Using the Studio tool?** It requires React and React DOM **19.3 or newer** within the supported React 19 range.
+
 ## Usage
 
-`buildTheme` builds the same type of theme as `buildTheme` from `@sanity/ui/theme` — ready for the `theme` property of a Studio config — but takes a handful of colors per color scheme instead of design tokens. Under the hood it only swaps out the color palette that `@sanity/ui/theme` otherwise fills with [`@sanity/color`](https://www.sanity.io/docs/color), once for each scheme:
+### Build a theme
+
+Call `buildTheme` with your colors, then pass the result to your Studio config's `theme` property.
+
+Light and dark mode have separate settings. You can customize either or both.
 
 ```ts
 import {buildTheme} from '@sanity/themer'
@@ -33,27 +48,84 @@ export default defineConfig({
 })
 ```
 
-Everything is optional — both schemes, and every color in them. Whatever is omitted falls back to the stock Studio colors, so `buildTheme({})` matches `buildTheme()` from `@sanity/ui/theme` with no options exactly, and the two schemes are free to differ in every color rather than only their background:
+**You don't need to set everything.** Both schemes and every option are optional.
 
-- `accent` replaces the `blue` scale of the scheme's palette, which Sanity UI uses for primary buttons, focus rings and links.
-- `text` replaces the `gray` scale — text, icons, borders and neutral surfaces. When omitted it is derived from `accent`: a mostly desaturated version of it, the way the stock gray carries a hint of the stock blue.
-- `background` replaces `black` in the dark scheme and `white` in the light scheme — the background that every other color of the scheme blends onto.
-- `contrast` controls how strongly text and borders separate from the accent. The default `85` uses the text color as-is; `100` removes its tint entirely (a high contrast scheme with no mixing of text and accent), and lower values blend more and more of the accent into the text scale, giving text and borders more color.
+- Leave out a scheme to keep its default Studio colors.
+- Leave out `accent` or `background` to use the Studio default.
+- Leave out `text` to derive a subtle tint from the accent.
+- Use `buildTheme({})` to get the default Studio theme.
 
-A few ground rules keep the generated palettes usable: the accent and text colors cannot be too dark or too light (they would mess with the rest of their scales), the dark background is made darker until it has enough contrast with both of them (it can never be lighter than either), and the light background can never be darker than either.
+### What each option does
 
-`buildPalette` returns the generated `@sanity/color`-shaped palettes (`{light, dark}`) without building a theme from them, and `presets` ships the hosted Themer service presets translated to `buildTheme` options:
+Colors are hex values, such as `#f00` or `#ff0000`.
+
+| Option       | What it changes                            | Default                                     |
+| ------------ | ------------------------------------------ | ------------------------------------------- |
+| `accent`     | Primary buttons, focus rings, and links     | Studio blue                                 |
+| `text`       | Text, icons, borders, and neutral surfaces  | A mostly desaturated accent                 |
+| `background` | The background other colors blend onto     | White in light mode; near-black in dark mode |
+| `contrast`   | How much accent tint text and borders have  | `85`                                        |
+
+**The contrast slider runs from `15` to `100`:**
+
+- **`85`** — keeps the text color's tint as-is.
+- **`100`** — removes the tint for neutral text and borders.
+- **Below `85`** — blends more accent color into text and borders.
+
+Themer may adjust your colors to keep the palette usable:
+
+- Very dark or very light accent and text colors are brought into a usable range.
+- Dark backgrounds are darkened until they have enough contrast with text and accent colors.
+- Light backgrounds are kept lighter than text and accent colors.
+
+### Use a preset
+
+`presets` includes the hosted Themer service's presets, ready to use with `buildTheme`.
 
 ```ts
 import {buildTheme, presets} from '@sanity/themer'
 
 const verdant = presets.find((preset) => preset.slug === 'verdant')
-const theme = buildTheme(verdant.options)
+const theme = buildTheme(verdant?.options)
 ```
+
+### Get palettes without building a theme
+
+Use `buildPalette` if you only need the generated colors. It returns `{light, dark}` palettes in the `@sanity/color` shape.
+
+```ts
+import {buildPalette} from '@sanity/themer'
+
+const {light, dark} = buildPalette({
+  light: {accent: '#f00'},
+  dark: {accent: '#f66'},
+})
+```
+
+<details>
+<summary>How this relates to Sanity UI themes</summary>
+
+`buildTheme` returns the same theme type as `buildTheme` from `@sanity/ui/theme`. Instead of design tokens, you provide a few colors per scheme.
+
+Under the hood, Themer replaces parts of the default [`@sanity/color`](https://www.sanity.io/docs/color) palette:
+
+- `accent` replaces the `blue` scale.
+- `text` replaces the `gray` scale.
+- `background` replaces `black` for dark mode and `white` for light mode.
+
+The other color scales keep their defaults. With no options, the result matches `buildTheme()` from `@sanity/ui/theme` exactly.
+
+</details>
 
 ## Studio tool
 
-`@sanity/themer/tool` adds a themer sidebar to the Studio for these themes. It lists the configured theme, the presets and your own themes, each previewed as a tiny Studio in both color schemes, and picking one applies it live to the whole Studio while you browse around — in the appearance the Studio is set to or, with the split-screen toggle in the sidebar header, twice: the Studio next to the sidebar keeps the appearance it is set to, and a copy in the opposite scheme slides in from off screen on the far side, through React's `ViewTransition` — which is why the tool requires React 19.3. The cards drag into any order (or move from their menu), which sticks between sessions, and a theme's menu copies it as a short code to share — paste a code into the list, or add it through the paste button, to get the theme in another Studio. Your own themes are edited scheme by scheme — a light mode and a dark mode card with accent/text/background pickers and a contrast slider each, the one the Studio is showing marked as active — add one from scratch, duplicate a preset to start from it, or take the colors from an image: its palette is read on device (the image is drawn onto a canvas and its vibrant and muted colors extracted right there, nothing is uploaded), the vibrant color becomes the accent (adjusted until a button label reads on it), the muted one the text color and the light and dark muted colors tint the backgrounds, and a row of variants previews the theme built around each swatch instead — with an "I'm feeling lucky" button that picks an interesting one. Themes can be removed and restored, and a dialog shows the `buildTheme` snippet that makes the applied theme permanent:
+**Pick, edit, and preview themes without writing color values by hand.**
+
+The tool adds a sidebar to your Studio. Selecting a theme previews it live across the Studio while you browse.
+
+### 1. Add the tool
+
+Add `themerTool()` to your Studio's plugins:
 
 ```ts
 import {themerTool} from '@sanity/themer/tool'
@@ -65,21 +137,89 @@ export default defineConfig({
 })
 ```
 
-The navbar toggle's label and tooltip call the tool `Themer` — pass a `title` to call it something else: `themerTool({title: 'Appearance'})`.
+The navbar toggle is called **Themer**. To rename it, pass a title: `themerTool({title: 'Appearance'})`.
 
-The tool's styles are a stylesheet, `@sanity/themer/bundle.css`, that `@sanity/themer/tool` imports itself — the Studio's bundler picks it up, nothing to add to the config. The sidebar's code loads the first time it's needed, starting as the pointer moves onto the navbar toggle — pressed before the code has arrived, the toggle's color wheel goes round until it has — so the tool adds little to the Studio's startup. The sidebar slides in from the edge (and closing it ends the split preview), its header takes the height of the Studio navbar so the two line up, and with `prefers-reduced-motion` the sidebar and the split preview switch layouts without animating.
+**No CSS setup needed.** The tool imports `@sanity/themer/bundle.css` automatically.
+
+### 2. Try a theme
+
+Open **Themer** in the navbar. The sidebar shows:
+
+- Your configured Studio theme.
+- Built-in presets.
+- Your own themes.
+
+Each card previews a tiny Studio in both light and dark mode. Select a card to apply its theme live.
+
+**Want to compare modes?** Use the split-screen toggle in the sidebar header. Your Studio keeps its current appearance, and a second view shows the opposite mode beside it.
+
+### 3. Make it yours
+
+Start from scratch, duplicate a preset, or [use colors from an image](#use-colors-from-an-image).
+
+Your custom theme has separate **light** and **dark** mode cards. Each has:
+
+- Accent, text, and background color pickers.
+- A contrast slider.
+- An active marker when the Studio is showing that mode.
+
+### 4. Make it permanent
+
+**Previewing a theme is not the same as configuring it.**
+
+Use the tool's code dialog to get the `buildTheme` snippet, then add it to your Studio config's `theme` property.
+
+### Use colors from an image
+
+Choose an image to generate a starting palette.
+
+**Your image stays on your device. Nothing is uploaded.** The tool reads its colors locally using a canvas.
+
+- A vibrant color becomes the accent, adjusted so button labels remain readable.
+- A muted color becomes the text color.
+- Light and dark muted colors tint the backgrounds.
+
+Try the swatch variants to preview different starting colors, or select **I'm feeling lucky** to let the tool pick one.
+
+### Organize and share themes
+
+- **Reorder:** drag cards, or move them from their menus. The order is saved between sessions.
+- **Share:** copy a theme's short code from its menu.
+- **Import:** paste a code into the list, or use the paste button—even in another Studio.
+- **Remove or restore:** themes can be removed and brought back.
+
+<details>
+<summary>Loading, animation, and reduced motion</summary>
+
+The sidebar code loads only when needed. Loading starts when your pointer moves onto the navbar toggle. If you open it before loading finishes, the color wheel spins while you wait.
+
+The sidebar slides in from the edge, with its header aligned to the Studio navbar. Closing it also closes the split preview.
+
+The split preview uses React's `ViewTransition`, which is why the tool requires React 19.3.
+
+With `prefers-reduced-motion`, both the sidebar and split preview change layouts without animation.
+
+</details>
 
 ## Migrating from themer.sanity.build
 
-The npm migration path off the hosted Themer service ([themer.sanity.build](https://themer.sanity.build)) is [`@sanity/themer-legacy`](https://www.npmjs.com/package/@sanity/themer-legacy): the exact same generator, running locally.
+**Want to keep your existing hosted theme?** Use [`@sanity/themer-legacy`](https://www.npmjs.com/package/@sanity/themer-legacy). It runs the same generator as [themer.sanity.build](https://themer.sanity.build), but locally.
 
-`@sanity/themer/legacy` still works as a deprecated re-export of that package until `@sanity/themer@1.0` removes it; import from `@sanity/themer-legacy` instead. Migrating a hosted URL import looks like this:
+1. Install the legacy package:
 
-```diff
--import {theme} from 'https://themer.sanity.build/api/hues?preset=verdant&primary=22fca8'
-+import {buildThemeFromUrl} from '@sanity/themer-legacy'
-+const theme = buildThemeFromUrl('https://themer.sanity.build/api/hues?preset=verdant&primary=22fca8')
-```
+   ```sh
+   npm install @sanity/themer-legacy
+   ```
+
+2. Replace your hosted URL import:
+
+   ```diff
+   -import {theme} from 'https://themer.sanity.build/api/hues?preset=verdant&primary=22fca8'
+   +import {buildThemeFromUrl} from '@sanity/themer-legacy'
+   +const theme = buildThemeFromUrl('https://themer.sanity.build/api/hues?preset=verdant&primary=22fca8')
+   ```
+
+**Already importing from `@sanity/themer/legacy`?** Switch to `@sanity/themer-legacy`. The old import is deprecated and will be removed in `@sanity/themer@1.0`.
 
 ## License
 
