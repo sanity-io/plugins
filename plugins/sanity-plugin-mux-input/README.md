@@ -518,7 +518,9 @@ Robots data lives at the root of each `mux.videoAsset` document, next to `data`:
 }
 ```
 
-Workflows that write to the Mux asset are picked up when their job finishes: new caption and audio tracks, the chapters track from **Generate chapters**, and the thumbnail from **Find best thumbnails** when it's asked to set it, which the plugin also copies into `thumbTime`. A chapters track is listed apart from the captions and never counts as one.
+Workflows that write to the Mux asset are picked up when their job finishes: new caption and audio tracks, the chapters track from **Generate chapters**, and the thumbnail from **Find best thumbnails** when it's asked to set it, which the plugin also copies into `thumbTime`. The Studio player reloads once a new track is ready, so it plays without a page refresh. A chapters track is listed apart from the captions and never counts as one.
+
+**Moderate** can delete every playback ID on the asset when it flags content. The video then can't play anywhere, and the Studio player says how to restore it: add a playback ID to the asset in the Mux dashboard, then resync the video. A resync also points the document's `playbackId` at a playback ID the asset still has.
 
 While a job, directive run or unconfirmed run is in progress, the plugin checks Mux every 6 seconds, including when the Robots panel is closed, as long as the document is open. A Studio that never opens Robots and configures no directives makes no Robots requests.
 

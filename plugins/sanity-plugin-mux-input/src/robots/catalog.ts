@@ -1,14 +1,10 @@
 import type {RobotsWorkflow} from './types'
 
 /**
- * The twelve Robots workflows as data: one descriptor per parameter, so the run dialog renders
- * itself and this file alone decides what reaches Mux. Every name, nesting level, enum member
- * and limit is checked against the API spec; where the reference and a guide disagree, the
- * stricter figure wins. Left out on purpose: the deprecated `replace_existing` and
+ * The Robots workflows as data, so the run dialog renders from it and this file alone decides
+ * what reaches Mux. Names, enums and limits follow the API reference; where it and a guide
+ * disagree, the stricter figure wins. Left out on purpose: the deprecated `replace_existing` and
  * `prompt_overrides`, and `auto_censor_profanity.detection_method` (one value, the default).
- *
- * `name` is a dotted path into `parameters` (`thresholds.sexual`); `buildRobotsParameters`
- * expands it back into the nested object.
  */
 
 export type RobotsParamKind =
@@ -44,7 +40,6 @@ export interface RobotsAssetContext {
   duration?: number
 }
 
-/** When a field is shown, and therefore sent. */
 export type RobotsFieldCondition =
   | {field: string; equals: unknown}
   | {context: keyof RobotsAssetContext; notEquals: unknown}
@@ -98,7 +93,6 @@ export interface RobotsParamField {
   maxItems?: number
   /** `stringList`. */
   maxItemLength?: number
-  /** `taxonomy`. */
   taxonomyLimits?: RobotsTaxonomyLimits
   /** The form's starting value. `''` means untouched and is never sent. */
   defaultValue?: string | number | boolean
@@ -220,7 +214,6 @@ const TOPIC_TAXONOMY: RobotsParamField = {
   },
 }
 
-/** `replace_existing_tracks`, which replaces the deprecated `replace_existing`. */
 function replaceExistingTracksField(track: 'caption' | 'audio'): RobotsParamField {
   const noun = track === 'audio' ? 'audio track' : 'caption track'
   const warning = (whenValue: string, which: string): RobotsConfirmWarning => ({
@@ -990,7 +983,6 @@ export function workflowUnavailableReason(
     : undefined
 }
 
-/** `preferred` if this asset can run it, the default workflow otherwise. */
 export function availableWorkflow(
   preferred: RobotsWorkflow,
   context: RobotsAssetContext = {},
@@ -1001,8 +993,8 @@ export function availableWorkflow(
 }
 
 /**
- * Expands dotted-path values into the nested `parameters` object. Empty strings, empty arrays
- * and `undefined` are dropped: an untouched optional field must not become a 400.
+ * Expands dotted-path values into the nested `parameters` object. Empty strings, empty arrays,
+ * `null` and `undefined` are dropped: an untouched optional field must not become a 400.
  */
 export function buildRobotsParameters(
   assetId: string,
@@ -1098,7 +1090,6 @@ function splitCommaList(text: string | undefined): string[] {
     .filter(Boolean)
 }
 
-/** The form's starting values: only the defaults the catalog declares. */
 export function defaultParamValues(fields: RobotsParamField[]): Record<string, unknown> {
   const values: Record<string, unknown> = {}
   for (const field of fields) {
@@ -1208,7 +1199,6 @@ function toApiParamValue(field: RobotsParamField, value: unknown): unknown {
   }
 }
 
-/** The job's `parameters`, from the form's flat values. */
 export function paramsFromFormValues(
   definition: RobotsWorkflowDefinition,
   assetId: string,
@@ -1224,7 +1214,6 @@ export function paramsFromFormValues(
   return buildRobotsParameters(assetId, apiValues)
 }
 
-/** The warnings the confirm step shows for what the form currently describes. */
 export function confirmWarnings(
   definition: RobotsWorkflowDefinition,
   values: Record<string, unknown>,

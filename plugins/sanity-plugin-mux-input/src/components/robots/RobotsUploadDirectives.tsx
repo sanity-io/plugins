@@ -7,7 +7,6 @@ import {ROBOTS_UPLOAD_DIRECTIVES_GUIDE_URL} from '../../robots/capability'
 import FormField from '../FormField'
 import {RobotsNote} from './RobotsNote'
 
-/** Why the attached directives won't run, when the listing says this token can't use Robots. */
 function unavailableWarning(listing: RobotsDirectiveListing): string | undefined {
   if (listing.status !== 'failed') return undefined
   if (listing.capability?.state === 'scope-missing') {
@@ -19,10 +18,7 @@ function unavailableWarning(listing: RobotsDirectiveListing): string | undefined
   return undefined
 }
 
-/**
- * The Robots directives this upload attaches. They're chosen in the plugin config and checked
- * here; a directive attaches at asset creation, so this is the only moment to opt out.
- */
+/** Directives attach at asset creation, so the upload dialog is the only moment to opt out. */
 export function RobotsUploadDirectives({
   configuredIds,
   missingIds,
@@ -38,7 +34,7 @@ export function RobotsUploadDirectives({
   directiveNames: Record<string, string>
   listing: RobotsDirectiveListing
   uncheckedIds: string[]
-  /** For someone who can't run Robots: the same directives, without checkboxes. They still run. */
+  /** Shows the directives without checkboxes; they still run. */
   isReadOnly: boolean
   onToggle: (directiveId: string, checked: boolean) => void
 }) {

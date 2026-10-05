@@ -14,14 +14,10 @@ import type {RobotsWorkflow} from '../../robots/types'
 import {RobotsJsonBlock} from './RobotsJsonBlock'
 import {RobotsNote} from './RobotsNote'
 
-/**
- * Per-workflow views of a job's `outputs`. Each says whether it can draw what it got, so a
- * payload it can't read falls back to the raw JSON rather than an empty view.
- */
-
 type Outputs = Record<string, unknown>
 
 interface OutputView {
+  /** False for a payload this view can't draw, so the raw JSON shows instead of an empty view. */
   hasContent: (outputs: Outputs) => boolean
   render: (outputs: Outputs) => ReactElement
 }

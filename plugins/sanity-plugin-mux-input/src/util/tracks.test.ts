@@ -1,6 +1,12 @@
 import {describe, expect, test} from 'vitest'
 
-import {hasUsableCaptionTrack, isCaptionTrack, isChaptersTrack} from './tracks'
+import {
+  hasPreparingTracks,
+  hasUsableCaptionTrack,
+  isCaptionTrack,
+  isChaptersTrack,
+  readyTracksKey,
+} from './tracks'
 
 // As the asset GET returns them after a generate-chapters job.
 const subtitles = {
@@ -41,5 +47,26 @@ describe('text tracks', () => {
     expect(hasUsableCaptionTrack([{...subtitles, status: 'errored'}])).toBe(false)
     expect(hasUsableCaptionTrack([chapters, {...subtitles, status: 'preparing'}])).toBe(true)
     expect(hasUsableCaptionTrack(undefined)).toBe(false)
+  })
+})
+
+describe('what the player plays', () => {
+  const video = {type: 'video', id: 'v1'}
+  const audio = {type: 'audio', id: 'a1'}
+
+  test('the key follows the ready text and audio tracks only', () => {
+    const preparing = {...subtitles, id: 'new', status: 'preparing'}
+    const before = readyTracksKey([video, audio, subtitles, preparing])
+    expect(before).toBe('a1,6JrrUxP9')
+    expect(readyTracksKey([video, audio, subtitles, {...preparing, status: 'ready'}])).not.toBe(
+      before,
+    )
+    expect(readyTracksKey([video, audio, subtitles, preparing])).toBe(before)
+  })
+
+  test('a preparing text or audio track is worth waiting for', () => {
+    expect(hasPreparingTracks([video, subtitles])).toBe(false)
+    expect(hasPreparingTracks([{...audio, status: 'preparing'}])).toBe(true)
+    expect(hasPreparingTracks(undefined)).toBe(false)
   })
 })

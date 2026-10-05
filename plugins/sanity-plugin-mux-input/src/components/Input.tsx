@@ -24,7 +24,7 @@ const Input = (props: InputProps) => {
   const secretDocumentValues = useSecretsDocumentValues()
   const assetDocumentValues = useAssetDocumentValues(props.value?.asset)
   const poll = useMuxPolling(props.readOnly ? undefined : assetDocumentValues?.value || undefined)
-  // Keeps an unfinished Robots job, run or create moving without the panel open.
+  // Polls unfinished Robots work even with the panel closed, so its results reach the document.
   const asset = assetDocumentValues?.value
   useRobotsSync(asset, {
     enabled: !props.readOnly && !!asset && hasUnfinishedRobotsWork(asset),

@@ -24,7 +24,6 @@ function definitionOf(workflow: RobotsWorkflow) {
   return ROBOTS_CATALOG_BY_KEY[workflow]
 }
 
-/** The `parameters` a run of `workflow` sends with `changes` over the form's defaults. */
 function paramsFor(
   workflow: RobotsWorkflow,
   changes: Record<string, unknown> = {},
@@ -101,7 +100,7 @@ describe('buildRobotsParameters', () => {
 })
 
 describe('defaults and untouched fields', () => {
-  test('a summarize run nobody changed sends only the asset id', () => {
+  test('a summarize run nobody changed sends only the asset id and the defaults', () => {
     expect(paramsFor('summarize')).toEqual({asset_id: ASSET, update_asset_meta: false})
   })
 

@@ -13,6 +13,7 @@ import {
   startRobotsJob,
 } from '../actions/robots'
 import {addKeysToMuxData} from '../util/addKeysToMuxData'
+import {hasPreparingTracks} from '../util/tracks'
 import {
   advisoryFromError,
   cachedRobotsCapability,
@@ -55,18 +56,17 @@ import type {
 
 /**
  * One Robots poll loop per asset per browser tab, shared by every input and panel showing that
- * asset. It reads the job list (which also decides capability), job details, and the runs of
- * the directives the asset is tied to; refreshes the asset once jobs finish; records what it
- * reads on the document; and makes the creates, each guarded by a placeholder saved first.
- *
- * It polls only while something subscribes and something is in flight, so a Studio that never
- * opens Robots sends nothing.
+ * asset. It polls only while something subscribes and something is in flight, so a Studio that
+ * never opens Robots sends nothing.
  */
 
 const POLL_INTERVAL_MS = 6000
 
 /** How many ticks a pending create keeps the loop looking for its job or run. */
 const UNCONFIRMED_RECHECK_TICKS = 10
+
+/** Times to re-read the asset while a track from a finished job is still preparing (2 minutes). */
+const TRACK_RECHECKS = 20
 
 const JOB_LIST_LIMIT = 100
 const DIRECTIVE_RUNS_LIMIT = 25
@@ -160,6 +160,7 @@ export class RobotsSyncStore {
   private document: RobotsDocumentState | undefined
 
   private pollTimer: ReturnType<typeof setTimeout> | undefined
+  private trackTimer: ReturnType<typeof setTimeout> | undefined
   /** Someone came back after nobody watched: read afresh once their inputs arrive. */
   private needsFreshRead = false
   private isFetching = false
@@ -210,7 +211,6 @@ export class RobotsSyncStore {
 
   readonly getSnapshot = (): RobotsSyncSnapshot => this.snapshot
 
-  /** A panel or input starts showing this asset. Returns the way to stop. */
   register(client: SanityClient): {
     update: (inputs: SubscriberInputs) => void
     unregister: () => void
@@ -227,7 +227,9 @@ export class RobotsSyncStore {
       },
       unregister: () => {
         this.subscribers.delete(token)
-        if (this.subscribers.size === 0) this.stopPolling()
+        if (this.subscribers.size > 0) return
+        this.stopPolling()
+        this.awaitTracks(0)
       },
     }
   }
@@ -284,7 +286,7 @@ export class RobotsSyncStore {
 
   private setDocument(document: RobotsDocumentState | undefined) {
     this.document = document
-    // A create this tab hasn't seen (from another tab, say) gets a full look-for budget.
+    // A create this tab hasn't seen (from another tab, say) gets a full recheck budget.
     for (const pending of pendingCreatesOf(document)) {
       if (this.seenRequestIds.has(pending.requestId)) continue
       this.seenRequestIds.add(pending.requestId)
@@ -440,20 +442,47 @@ export class RobotsSyncStore {
     if (finished.length === 0) return
     for (const job of finished) this.resyncingJobIds.add(job.id)
     try {
-      const {data} = await getAsset(this.client, this.assetId)
-      const fields = {status: data.status, data: addKeysToMuxData(data)}
-      // Most jobs leave the asset as it was, and every session re-checks the finished ones.
-      if (!holdsAssetFields(this.document, fields)) {
-        await this.client.patch(this.documentId).set(fields).commit({returnDocuments: false})
-      }
+      const isTrackPreparing = await this.refreshAsset()
       for (const job of finished) this.resyncedJobIds.add(job.id)
       // A thumbnail job can now be applied from the fresh `thumbnail_time`.
       this.persist()
+      if (isTrackPreparing) this.awaitTracks(TRACK_RECHECKS)
     } catch (error) {
       console.error(`${LOG_PREFIX} Could not refresh the asset after a Robots job`, error)
     } finally {
       for (const job of finished) this.resyncingJobIds.delete(job.id)
     }
+  }
+
+  /** Writes the asset as Mux has it now. Resolves to whether a track is still preparing. */
+  private async refreshAsset(): Promise<boolean> {
+    const {data} = await getAsset(this.client, this.assetId)
+    const fields = {status: data.status, data: addKeysToMuxData(data)}
+    // Most jobs leave the asset as it was, and every session re-checks the finished ones.
+    if (!holdsAssetFields(this.document, fields)) {
+      await this.client.patch(this.documentId).set(fields).commit({returnDocuments: false})
+    }
+    return hasPreparingTracks(data.tracks)
+  }
+
+  /**
+   * A caption or audio track a job added can still be preparing, and players only get it once
+   * the document says it's ready, so the asset is read again a few times. `0` stops.
+   */
+  private awaitTracks(remaining: number) {
+    if (this.trackTimer) clearTimeout(this.trackTimer)
+    this.trackTimer = undefined
+    if (remaining <= 0 || this.subscribers.size === 0) return
+    this.trackTimer = setTimeout(() => {
+      this.trackTimer = undefined
+      this.refreshAsset()
+        .then((isTrackPreparing) => {
+          if (isTrackPreparing) this.awaitTracks(remaining - 1)
+        })
+        .catch((error: unknown) => {
+          console.error(`${LOG_PREFIX} Could not refresh the asset after a Robots job`, error)
+        })
+    }, POLL_INTERVAL_MS)
   }
 
   /** The detail pass: a few of the newest terminal jobs at a time, each read once. */

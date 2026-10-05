@@ -32,11 +32,6 @@ import {ROBOTS_VERIFIED_LANGUAGES} from '../../robots/languages'
 import type {MuxTextTrack} from '../../util/types'
 import FormField from '../FormField'
 
-/**
- * Renders a workflow's parameters from its catalog descriptors. Hidden fields are neither shown
- * nor sent, off the same `isFieldVisible` the catalog uses.
- */
-
 type OnChange = (name: string, value: unknown) => void
 
 interface FieldProps {
@@ -92,7 +87,7 @@ function LabelledCheckbox({
   )
 }
 
-/** Splits into trimmed, non-empty lines; interior spaces are legal everywhere this is used. */
+/** Interior spaces are kept: they're legal in every list this is used for. */
 function splitLines(text: string): string[] {
   return text
     .split('\n')
@@ -128,7 +123,15 @@ function StringListInput({field, value, onChange, inputId}: FieldProps) {
   )
 }
 
-function QuestionsInput({field, value, onChange}: FieldProps) {
+function RowLabel({htmlFor, children}: {htmlFor: string; children: string}) {
+  return (
+    <Text size={1} weight="medium" as="label" htmlFor={htmlFor}>
+      {children}
+    </Text>
+  )
+}
+
+function QuestionsInput({field, value, onChange, inputId}: FieldProps) {
   const rows = Array.isArray(value) ? (value as QuestionRow[]) : [emptyQuestionRow()]
   const update = (next: QuestionRow[]) => onChange(field.name, next)
   const patch = (index: number, changes: Partial<QuestionRow>) =>
@@ -136,28 +139,32 @@ function QuestionsInput({field, value, onChange}: FieldProps) {
   return (
     <Stack gap={2}>
       {rows.map((row, index) => {
+        const number = index + 1
+        const modeId = `${inputId}-answer-mode-${index}`
+        const optionsId = `${inputId}-answer-options-${index}`
         const isFreeForm = row.answerMode === 'free_form'
         return (
           // oxlint-disable-next-line react/no-array-index-key -- controlled rows, no local state
-          <Card key={index} padding={2} radius={2} border>
-            <Stack gap={2}>
+          <Card key={index} padding={3} radius={2} border>
+            <Stack gap={3}>
               <Flex gap={2} align="center">
                 <Box flex={1}>
                   <TextInput
-                    aria-label={`Question ${index + 1}`}
+                    aria-label={`Question ${number}`}
                     placeholder="Is there a person on screen?"
                     value={row.question}
                     onChange={(event) => patch(index, {question: event.currentTarget.value})}
                   />
                 </Box>
                 <RemoveButton
-                  label={`Remove question ${index + 1}`}
+                  label={`Remove question ${number}`}
                   onClick={() => update(rows.filter((_, i) => i !== index))}
                 />
               </Flex>
-              <Flex gap={2}>
+              <Stack gap={2}>
+                <RowLabel htmlFor={modeId}>Answer</RowLabel>
                 <Select
-                  aria-label={`How question ${index + 1} is answered`}
+                  id={modeId}
                   value={row.answerMode ?? 'options'}
                   onChange={(event) =>
                     patch(index, {
@@ -171,16 +178,25 @@ function QuestionsInput({field, value, onChange}: FieldProps) {
                     </option>
                   ))}
                 </Select>
-                <Box flex={1}>
+              </Stack>
+              {isFreeForm ? (
+                <Text size={1} muted>
+                  Mux answers in its own words. Treat the answer as generated text.
+                </Text>
+              ) : (
+                <Stack gap={2}>
+                  <RowLabel htmlFor={optionsId}>Answer options</RowLabel>
                   <TextInput
-                    aria-label={`Answer options for question ${index + 1}`}
-                    placeholder={isFreeForm ? 'Not used' : 'yes, no'}
-                    disabled={isFreeForm}
-                    value={isFreeForm ? '' : row.answerOptions}
+                    id={optionsId}
+                    placeholder="yes, no"
+                    value={row.answerOptions}
                     onChange={(event) => patch(index, {answerOptions: event.currentTarget.value})}
                   />
-                </Box>
-              </Flex>
+                  <Text size={1} muted>
+                    Comma separated. Leave empty for yes or no.
+                  </Text>
+                </Stack>
+              )}
             </Stack>
           </Card>
         )
@@ -276,7 +292,6 @@ function SpeakerReplacementsInput({field, value, onChange}: FieldProps) {
   )
 }
 
-/** A name, a list of values, and whether anything outside them is allowed. */
 function TaxonomyInput({field, value, onChange, inputId}: FieldProps) {
   const taxonomy = asTaxonomyValue(value)
   const patch = (changes: Partial<typeof taxonomy>) =>
@@ -329,7 +344,6 @@ function TaxonomyInput({field, value, onChange, inputId}: FieldProps) {
         text="Add value"
         onClick={() => patch({values: [...taxonomy.values, emptyTaxonomyRow()]})}
       />
-      {/* A checkbox, not a select: the API rejects the object without `allow_other`. */}
       <LabelledCheckbox
         id={`${inputId}-allow-other`}
         label="Allow values outside this list"

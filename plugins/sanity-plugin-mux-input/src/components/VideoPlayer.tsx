@@ -1,18 +1,21 @@
 import {type MuxPlayerProps, type MuxPlayerRefAttributes} from '@mux/mux-player-react'
 import MuxPlayer from '@mux/mux-player-react/lazy'
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
-import {Card, Text} from '@sanity/ui'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
+import {Card, Flex, Stack, Text} from '@sanity/ui'
 import {type PropsWithChildren, Suspense, useMemo, useRef, useState} from 'react'
 
 import {PLUGIN_VERSION} from '../constants'
 import {useDialogStateContext} from '../context/DialogStateContext'
 import {useClient} from '../hooks/useClient'
+import {ROBOTS_DASHBOARD_URL} from '../robots/capability'
 import {AUDIO_ASPECT_RATIO, MIN_ASPECT_RATIO} from '../util/constants'
 import {generateJwt} from '../util/generateJwt'
 import {getPlaybackId} from '../util/getPlaybackPolicy'
 import {getPlaybackPolicyById} from '../util/getPlaybackPolicy'
 import {getPosterSrc} from '../util/getPosterSrc'
 import {getVideoSrc} from '../util/getVideoSrc'
+import {readyTracksKey} from '../util/tracks'
 import {tryWithSuspend} from '../util/tryWithSuspend'
 import type {VideoAssetDocument} from '../util/types'
 import CaptionsDialog from './CaptionsDialog'
@@ -42,35 +45,26 @@ export default function VideoPlayer({
   const playerContainerRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<Error>()
 
+  // Robots `moderate` can delete every playback ID; the notice below says how to restore one.
+  const hasPlaybackIds = !!asset.data?.playback_ids?.length
   /* Playback ID that will be used to play the video */
-  const playbackId = useMemo(() => {
-    try {
-      return getPlaybackId(asset, ['public', 'signed', 'drm'])
-    } catch (e) {
-      // oxlint-disable-next-line react/set-state-in-render
-      setError(new TypeError('Asset has no playback ID', {cause: e}))
-      return undefined
-    }
-  }, [asset])
-
-  const muxPlaybackId = useMemo(() => {
-    if (!playbackId) return undefined
-    return getPlaybackPolicyById(asset, playbackId)
-  }, [asset, playbackId])
+  const playbackId = hasPlaybackIds ? getPlaybackId(asset, ['public', 'signed', 'drm']) : undefined
+  // Strings, so an unrelated document change doesn't sign a new token and reload the player.
+  const policy = playbackId ? getPlaybackPolicyById(asset, playbackId)?.policy : undefined
 
   const src = useMemo(() => {
-    if (!playbackId) return undefined
-    if (!muxPlaybackId) return undefined
+    if (!playbackId || !policy) return undefined
     return tryWithSuspend(
-      () => getVideoSrc({muxPlaybackId, client}),
+      () => getVideoSrc({muxPlaybackId: {id: playbackId, policy}, client}),
       (e: Error) => {
         setError(e)
         return undefined
       },
     )
-  }, [muxPlaybackId, playbackId, client])
+  }, [playbackId, policy, client])
 
   const poster = useMemo(() => {
+    if (!hasPlaybackIds) return undefined
     return tryWithSuspend(
       () => getPosterSrc({asset, client, width: thumbnailWidth}),
       (e: Error) => {
@@ -78,7 +72,7 @@ export default function VideoPlayer({
         return undefined
       },
     )
-  }, [asset, client, thumbnailWidth])
+  }, [asset, client, thumbnailWidth, hasPlaybackIds])
 
   const signedToken = useMemo(() => {
     try {
@@ -90,7 +84,7 @@ export default function VideoPlayer({
   }, [src])
   const drmToken = useMemo(() => {
     if (!playbackId) return undefined
-    if (muxPlaybackId?.policy !== 'drm') return undefined
+    if (policy !== 'drm') return undefined
 
     return tryWithSuspend(
       () => generateJwt(client, playbackId, 'd'),
@@ -99,7 +93,7 @@ export default function VideoPlayer({
         return undefined
       },
     )
-  }, [client, muxPlaybackId?.policy, playbackId])
+  }, [client, policy, playbackId])
   const tokens:
     | Partial<{
         playback?: string
@@ -178,6 +172,8 @@ export default function VideoPlayer({
             )}
             <Suspense fallback={null}>
               <MuxPlayer
+                // A new caption or audio track reaches the player only with a fresh manifest.
+                key={readyTracksKey(asset.data?.tracks)}
                 poster={isAudio ? undefined : poster}
                 ref={muxPlayer}
                 {...props}
@@ -205,6 +201,7 @@ export default function VideoPlayer({
             </Suspense>
           </>
         )}
+        {!hasPlaybackIds && <NoPlaybackIdNotice />}
         {error ? (
           <div
             style={{
@@ -235,6 +232,33 @@ export default function VideoPlayer({
       {dialogState === 'edit-captions' && <CaptionsDialog asset={asset} />}
       {dialogState === 'mezzanine' && <MezzanineDialog asset={asset} />}
     </>
+  )
+}
+
+function NoPlaybackIdNotice() {
+  return (
+    <Flex
+      align="center"
+      justify="center"
+      padding={4}
+      style={{position: 'absolute', inset: 0, overflow: 'auto'}}
+    >
+      <Stack gap={3} style={{maxWidth: '30rem'}}>
+        <Text size={1} weight="semibold">
+          <WarningOutlineIcon style={{marginRight: '0.25em'}} />
+          This video has no playback ID
+        </Text>
+        <Text size={1} muted>
+          It can’t play here or wherever it’s embedded. Robots Moderate deletes playback IDs when it
+          flags content, and they can also be removed in Mux. To restore playback, add a playback ID
+          to this asset in the{' '}
+          <a href={ROBOTS_DASHBOARD_URL} target="_blank" rel="noopener noreferrer">
+            Mux dashboard
+          </a>
+          , then resync the video.
+        </Text>
+      </Stack>
+    </Flex>
   )
 }
 

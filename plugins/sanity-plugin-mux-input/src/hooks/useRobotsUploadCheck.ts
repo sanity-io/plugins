@@ -88,7 +88,7 @@ export function useRobotsUploadCheck(asset: VideoAssetDocument | null | undefine
     }
   }, [client, toast, upload, readyAssetId])
 
-  /** Called when an upload that attached directives finishes. */
+  /** Call when an upload finishes, with the directives it attached. */
   return (documentId: string, directiveIds: string[]) => {
     if (directiveIds.length > 0) setUpload({documentId, directiveIds})
   }

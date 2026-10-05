@@ -1,5 +1,3 @@
-/** Robots directives on a new upload. */
-
 /** The configured directives an upload attaches: not the ones Mux doesn't have or were unchecked. */
 export function directivesToAttach(
   configuredIds: string[],
@@ -9,9 +7,8 @@ export function directivesToAttach(
 }
 
 /**
- * Adds `directives` to the new asset settings only when there are any, so every other upload
- * request stays exactly as it was. Both upload paths send these settings: the proxy moves them
- * into `new_asset_settings` for a file, and a URL ingest sends them to Mux as they are.
+ * Adds `directives` only when there are any, so other uploads keep the request they had. The
+ * proxy moves it into `new_asset_settings` for a file; a URL ingest sends it to Mux as is.
  */
 export function withDirectives<T extends object>(
   settings: T,

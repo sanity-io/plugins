@@ -20,9 +20,8 @@ interface PatchOperations {
 type KeyedItem = {_key: string}
 
 /**
- * The patches that turn `current` into `next`: new array items inserted by key, changed ones
- * set by key, removed ones unset by key. One patch holds only one insert, so each array with
- * new items gets its own. Empty when nothing changed.
+ * The keyed patches that turn `current` into `next`. One patch holds only one insert, so each
+ * array with new items gets its own.
  */
 export function robotsPatchOperations(
   current: RobotsDocumentState,
@@ -71,7 +70,6 @@ interface PatchMutation {
   patch: PatchOperations & {id: string; ifRevisionID?: string}
 }
 
-/** The raw mutations, guarded by the revision they were computed from. */
 export function robotsMutations(
   documentId: string,
   revision: string,

@@ -141,7 +141,6 @@ function isNewerOutput(
   return candidateAt > currentAt || (candidateAt === currentAt && candidate.jobId > current.jobId)
 }
 
-/** The newest of the current output and every candidate, per `isNewerOutput`. */
 function newestOutput<T extends {jobId: string; completedAt?: number}>(
   current: T | undefined,
   candidates: (T | undefined)[],
@@ -153,7 +152,6 @@ function newestOutput<T extends {jobId: string; completedAt?: number}>(
   return newest
 }
 
-/** The newest completed summarize and moderate outputs of this asset. */
 function mergeRobotsOutputs(
   existing: RobotsOutputs | undefined,
   jobs: RobotsJob[],
@@ -266,7 +264,6 @@ export function jobsAwaitingDetail(
     .filter((job) => isTerminalStatus(job.status) && !attempted.has(job.id))
 }
 
-/** The next batch of detail reads, a few per tick. */
 export function jobsNeedingDetail(
   jobs: RobotsJob[],
   attempted: ReadonlySet<string>,
@@ -451,7 +448,6 @@ interface MatchCandidate {
   at: number
 }
 
-/** Closest to the request first; ties to the earlier time, then the smaller id. */
 function closestTo(requestedAt: number, candidates: MatchCandidate[]): MatchCandidate | undefined {
   return candidates.toSorted(
     (a, b) =>
@@ -468,7 +464,7 @@ function inMatchWindow(at: number, requestedAt: number): boolean {
 /**
  * Which job or run resolves which placeholder, as `requestId` → id. A create this tab holds a
  * response for (`links`) resolves to it; the rest, oldest first, take the closest unused match
- * inside the window that the document hasn't already recorded. Pure, on reads already made.
+ * inside the window that the document hasn't already recorded.
  */
 export function matchPendingCreates(
   pendings: RobotsPendingCreate[],
@@ -647,7 +643,6 @@ export type RobotsTableRow<T> =
   | {key: string; pending: PendingCreateRow; item?: undefined}
   | {key: string; pending?: undefined; item: T}
 
-/** Newest first. A missing time sorts last; on a tie a pending row comes first. */
 function tableRows<T>(
   pendingRows: PendingCreateRow[],
   items: T[],
@@ -688,7 +683,7 @@ export function runTableRows(pendingRows: PendingCreateRow[], runs: RobotsDirect
   )
 }
 
-/** The live list, plus jobs the document recorded that Mux no longer lists (deleted after 30 days). */
+/** The live list, plus recorded jobs Mux no longer lists: it deletes them after 30 days. */
 export function jobsWithHistory(
   jobs: RobotsJob[],
   records: RobotsJobRecord[] | undefined,
@@ -734,11 +729,7 @@ export function unitsCell(
 
 // --- Thumbnails ---
 
-/**
- * Completed find-best-thumbnails jobs that asked to set the asset's thumbnail and whose winner
- * isn't in `thumbTime` yet. Recent ones only: an old job must not overwrite a thumbnail someone
- * picked since.
- */
+/** Recent jobs only: an old one must not overwrite a thumbnail someone picked since. */
 export function thumbnailJobsToApply(
   state: RobotsDocumentState,
   jobs: RobotsJob[],

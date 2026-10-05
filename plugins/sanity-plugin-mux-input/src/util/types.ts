@@ -191,7 +191,7 @@ export interface MuxInputConfig {
 
   /**
    * Mux Robots directives attached to every new upload. They run once Mux has ingested the
-   * video, and consume Mux AI units. Editors who can run Robots can uncheck them per upload.
+   * video, and consume Mux AI units. People who can run Robots can uncheck them per upload.
    * @see {@link https://www.mux.com/docs/guides/robots-directives}
    * @defaultValue []
    */

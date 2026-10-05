@@ -47,6 +47,18 @@ export function getPlaybackPolicy(
   )
 }
 
+/**
+ * Frontends query the document's top-level `playbackId`, so a deleted id (Robots `moderate`
+ * deletes them all) would keep failing after playback is restored.
+ */
+export function playbackIdToKeep(
+  current: string | undefined,
+  playbackIds: Pick<MuxPlaybackId, 'id'>[] | undefined,
+): string | undefined {
+  const ids = (playbackIds ?? []).map((entry) => entry.id)
+  return current && ids.includes(current) ? current : ids[0]
+}
+
 export function getPlaybackPolicyById(
   asset: Pick<VideoAssetDocument, 'data'>,
   playbackId: string,

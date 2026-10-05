@@ -22,10 +22,7 @@ import FormField from '../FormField'
 import {RobotsNote} from './RobotsNote'
 import {RobotsParamFields} from './RobotsParamFields'
 
-/**
- * Picks a workflow and its options, then asks for an explicit confirm that names the workflow,
- * the spend and any destructive choice. Nothing runs without it.
- */
+/** Nothing runs until a confirm step names the workflow, the spend and any destructive choice. */
 export function RobotsRunDialog({
   assetId,
   captionTracks,
@@ -48,7 +45,7 @@ export function RobotsRunDialog({
   const [valuesByWorkflow, setValuesByWorkflow] = useState<
     Partial<Record<RobotsWorkflow, Record<string, unknown>>>
   >({})
-  /** The workflow the confirm step is for, so a workflow that changes under it leaves the step. */
+  // A workflow, not a boolean: if the workflow changes under the confirm step, the step ends.
   const [confirmedWorkflow, setConfirmedWorkflow] = useState<RobotsWorkflow>()
 
   // Derived: the asset kind can arrive after the choice was made.
@@ -205,7 +202,7 @@ export function RobotsRunDialog({
               context={context}
             />
 
-            {/* Shown as the form changes, not held back until Continue. */}
+            {/* Shown live: Continue stays disabled until these are fixed. */}
             {errors.length > 0 && (
               <Card padding={3} radius={2} tone="critical" border>
                 <Stack gap={2}>

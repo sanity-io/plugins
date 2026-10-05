@@ -7,6 +7,7 @@ import type {
   RobotsJobStatus,
   RobotsWorkflow,
 } from '../robots/types'
+import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
 
 /**
@@ -68,7 +69,7 @@ async function robotsRequest<T>(
 ): Promise<MuxData<T>> {
   const {dataset} = client.config()
   try {
-    return await client.request<MuxData<T>>({
+    return await getMuxAddonClient(client).request<MuxData<T>>({
       url: `/addons/mux/robots/${dataset}/${segments.map(encodeURIComponent).join('/')}`,
       withCredentials: true,
       method,

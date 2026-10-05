@@ -3,7 +3,7 @@ import {Badge, type BadgeTone} from '@sanity/ui'
 import type {PendingCreateRowPhase} from '../../robots/records'
 import type {RobotsDirectiveRunStatus, RobotsJobStatus, RobotsNodeStatus} from '../../robots/types'
 
-/** One mapping for jobs, runs, run steps and pending creates, so an idea keeps its colour. */
+/** One table for all four kinds, so equivalent states share a tone. */
 const TONES: Record<'job' | 'run' | 'node' | 'create', Record<string, BadgeTone>> = {
   job: {
     pending: 'default',
@@ -33,7 +33,7 @@ const TONES: Record<'job' | 'run' | 'node' | 'create', Record<string, BadgeTone>
   >,
 }
 
-/** A pending create is ours to name, not Mux's. */
+/** Create phases are the plugin's own, not Mux statuses, so they get proper labels. */
 const CREATE_LABELS: Record<string, string> = {starting: 'Starting…', unconfirmed: 'Not confirmed'}
 
 export function RobotsStatusBadge({

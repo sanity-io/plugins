@@ -17,7 +17,6 @@ function directivePrompt(listing: RobotsDirectiveListing, available: RobotsDirec
     : 'Could not list directives'
 }
 
-/** Directive runs on this video, and, for runners, a way to start one. */
 export function RobotsDirectivesSection({
   canRun,
   listing,
@@ -49,14 +48,13 @@ export function RobotsDirectivesSection({
 }) {
   const id = useId()
   const [selectedId, setSelectedId] = useState('')
-  // A failed listing falls back to the configured ids.
   const available: RobotsDirective[] =
     listing.status === 'loaded'
       ? listing.directives
       : listing.status === 'failed'
         ? configuredIds.map((directiveId) => ({id: directiveId}))
         : []
-  // A choice the latest listing no longer offers is no choice: running it would be a 404.
+  // Drop a choice the latest listing no longer offers: running it would 404.
   const chosenId = available.some((directive) => directive.id === selectedId) ? selectedId : ''
 
   return (

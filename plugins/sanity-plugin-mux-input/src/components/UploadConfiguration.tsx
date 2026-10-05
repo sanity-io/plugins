@@ -274,7 +274,6 @@ export default function UploadConfiguration({
   const {disableTextTrackConfig, disableUploadConfig} = pluginConfig
   const skipConfig = disableTextTrackConfig && disableUploadConfig
 
-  // Robots directives: configured in the plugin, unchecked per upload by those who can run Robots.
   const configuredDirectiveIds = pluginConfig.defaultDirectiveIds ?? NO_DIRECTIVES
   const canRunRobots = useCanRunRobots(pluginConfig)
   const {listing: directiveListing} = useRobotsDirectives(

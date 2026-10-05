@@ -61,10 +61,7 @@ function readError(error: unknown): string {
   return error instanceof Error ? error.message : 'Could not load this job from Mux.'
 }
 
-/**
- * A job's output, read live from Mux: shaped per workflow, with the whole job as raw JSON.
- * Only summarize and moderate outputs are stored on the document; the rest live in Mux.
- */
+/** A job's output, read from Mux: the document stores only summarize and moderate outputs. */
 export function RobotsOutputDialog({
   job,
   detailState,

@@ -36,7 +36,7 @@ export interface RobotsPanelProps {
   readOnly?: boolean | undefined
 }
 
-/** Seconds now, re-rendered when a pending create crosses its grace period to be relabelled. */
+/** The current time in seconds, updated only when a pending create's row is due to relabel. */
 function useRelabelClock(pendings: RobotsPendingCreate[]): number {
   const [nowS, setNowS] = useState(() => Math.floor(Date.now() / 1000))
   const wakeAt = nextPendingRelabelAt(pendings, nowS)
@@ -112,7 +112,7 @@ function RobotsPanelForAsset({
   const unconfirmedJobRows = jobRows.filter((row) => row.phase === 'unconfirmed')
   const unconfirmedRunRows = runRows.filter((row) => row.phase === 'unconfirmed')
   const runDisabledReason = pendingReason(jobRows, 'jobs')
-  // A directive run waits on both: an unconfirmed job create may be the same work.
+  // A directive run waits on both: a pending job create may be the same work.
   const directiveRunDisabledReason =
     pendingReason(runRows, 'directive runs') ?? pendingReason(jobRows, 'jobs')
 
@@ -230,10 +230,7 @@ function RobotsPanelForAsset({
   )
 }
 
-/**
- * Mux Robots for one video: run workflows and directives, follow their jobs, read their
- * outputs. Keyed by asset, so nothing read for one video can cross to another.
- */
+/** Keyed by document and asset, so no state from one video carries over to another. */
 export function RobotsPanel(props: RobotsPanelProps) {
   const {assetId, _id: documentId} = props.asset
   if (!assetId) return <RobotsNote>Add a video before running Robots workflows.</RobotsNote>

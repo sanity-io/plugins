@@ -239,6 +239,34 @@ describe('RobotsSyncStore', () => {
     ])
   })
 
+  test('reads the asset again while a track a finished job added is preparing', async () => {
+    vi.useFakeTimers()
+    try {
+      const completed = job('j1', {status: 'completed'})
+      api.listRobotsJobs.mockResolvedValue({data: [completed]})
+      api.getRobotsJob.mockResolvedValue({data: completed})
+      const track = {type: 'text', id: 't1', status: 'preparing'}
+      const preparing = {id: ASSET, status: 'ready', tracks: [track]}
+      const ready = {...preparing, tracks: [{...track, status: 'ready'}]}
+      vi.mocked(getAsset)
+        .mockResolvedValueOnce({data: preparing} as never)
+        .mockResolvedValueOnce({data: ready} as never)
+      const lake = fakeContentLake({assetId: ASSET})
+      subscribe(lake)
+
+      await vi.advanceTimersByTimeAsync(10)
+      expect(getAsset).toHaveBeenCalledTimes(1)
+      await vi.advanceTimersByTimeAsync(6000)
+      expect(getAsset).toHaveBeenCalledTimes(2)
+      expect(lake.assetWrites.at(-1)).toMatchObject({data: {tracks: [{status: 'ready'}]}})
+      // Ready: nothing more to wait for.
+      await vi.advanceTimersByTimeAsync(12_000)
+      expect(getAsset).toHaveBeenCalledTimes(2)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   test('sends nothing when the placeholder cannot be saved', async () => {
     const lake = fakeContentLake({assetId: 'another-asset'})
     const store = subscribe(lake)

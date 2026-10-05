@@ -1,6 +1,6 @@
 /**
- * Mux Robots shapes. API shapes keep Mux's snake_case; the records stored on `mux.videoAsset`
- * are ours, camelCase, with the `_key` and `_type` Sanity arrays need.
+ * API shapes keep Mux's snake_case. The records stored on `mux.videoAsset` are camelCase, except
+ * the fields a job record copies straight from Mux.
  */
 
 /** The twelve workflows, as they appear in `POST /robots/v0/jobs/{workflow}`. */
@@ -188,7 +188,6 @@ export interface RobotsPendingCreate {
   requestedAt: number
 }
 
-/** The Robots fields on `mux.videoAsset`. */
 export interface RobotsFields {
   robotsJobs?: RobotsJobRecord[]
   robotsOutputs?: RobotsOutputs

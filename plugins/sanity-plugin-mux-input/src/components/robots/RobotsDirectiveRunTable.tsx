@@ -10,7 +10,6 @@ import type {RobotsDirectiveRun, RobotsNodeState} from '../../robots/types'
 import {RobotsNote} from './RobotsNote'
 import {RobotsStatusBadge} from './RobotsStatusBadge'
 
-/** A run's steps, in the order of the directive's workflows. */
 function NodeStates({
   nodeStates,
   viewableJobIds,
@@ -103,7 +102,6 @@ function RunRow({
   )
 }
 
-/** Directive runs on this video, each expanding to its steps. */
 export function RobotsDirectiveRunTable({
   runs,
   pendingRows,

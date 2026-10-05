@@ -4,10 +4,8 @@ import type {CurrentUser} from 'sanity'
 export const DEFAULT_ALLOWED_ROLES_FOR_ROBOTS = ['administrator']
 
 /**
- * Whether this user sees the controls that start or cancel Robots runs. Everyone sees results.
- * An empty list opens it to every role. No user means no, so a gap narrows access.
- *
- * A UI guardrail, not a permission: the proxy accepts any project member.
+ * Whether this user sees the controls that start or cancel Robots runs. An empty list opens it
+ * to every role. A UI guardrail, not a permission: the proxy accepts any project member.
  */
 export function canRunRobots(
   user: Pick<CurrentUser, 'roles'> | null | undefined,
@@ -28,6 +26,6 @@ export function robotsRunnersOnlyNote(allowedRoles: string[] | undefined): strin
   return `${who} A developer can let more roles run Robots with the plugin’s allowedRolesForRobots option.`
 }
 
-/** The upload dialog, above the directives someone who can't run Robots still gets. */
+/** Upload dialog text for someone who can't run Robots, whose uploads still get the directives. */
 export const ROBOTS_DIRECTIVES_SET_BY_DEVELOPER =
   'These directives run on every upload. A developer sets them in the plugin configuration.'

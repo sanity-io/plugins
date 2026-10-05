@@ -1,7 +1,6 @@
 import {Card, type CardTone, Stack, Text} from '@sanity/ui'
 import type {ReactNode} from 'react'
 
-/** A short note in the Robots panel. */
 export function RobotsNote({
   tone = 'transparent',
   children,

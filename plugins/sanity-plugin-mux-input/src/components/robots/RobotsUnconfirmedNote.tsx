@@ -22,10 +22,7 @@ function unconfirmedText(rows: PendingCreateRow[], directiveNames: Record<string
   return `Mux hasn’t confirmed ${what}, requested at ${formatTimeOfDay(only.pending.requestedAt)}. It may already be running and billing, so nothing was retried. ${refusal}`
 }
 
-/**
- * The one place that explains an unconfirmed create and offers the way out, which clears
- * exactly the rows marked Not confirmed.
- */
+/** The note the Not confirmed rows point to. Its button clears exactly those rows. */
 export function RobotsUnconfirmedNote({
   rows,
   directiveNames = NO_NAMES,

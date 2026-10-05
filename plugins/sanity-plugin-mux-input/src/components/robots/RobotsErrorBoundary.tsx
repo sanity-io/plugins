@@ -5,7 +5,6 @@ interface State {
   error?: Error
 }
 
-/** Keeps a fault in the Robots panel from taking the rest of the video field down with it. */
 export class RobotsErrorBoundary extends Component<PropsWithChildren, State> {
   override state: State = {}
 

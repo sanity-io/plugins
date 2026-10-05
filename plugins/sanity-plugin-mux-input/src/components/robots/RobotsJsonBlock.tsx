@@ -4,7 +4,6 @@ import {Code} from '@sanity/ui/code'
 
 import {RobotsNote} from './RobotsNote'
 
-/** Pretty-printed JSON, or `undefined` for every way of having nothing to print. */
 function prettyJson(value: unknown): string | undefined {
   try {
     const text = JSON.stringify(value, null, 2)
