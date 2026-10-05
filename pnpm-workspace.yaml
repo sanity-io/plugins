@@ -40,7 +40,7 @@ catalog:
   '@sanity/tsconfig': ^2.2.1
   '@sanity/tsdown-config': ^0.27.1
   '@sanity/types': ^6.16.0
-  '@sanity/ui': ^4.2.7
+  '@sanity/ui': ^4.3.0
   '@sanity/util': ^6.16.0
   '@sanity/uuid': ^3.0.3
   '@sanity/vanilla-extract-vite-plugin': ^0.2.20
@@ -85,6 +85,7 @@ catalog:
   tsdown: ^0.22.14
   tsx: ^4.23.12
   typescript: 7.0.2
+  valibot: ^1.5.0
   validate-npm-package-name: ^8.0.0
   video.js: ^7.21.7
   vitest: ^4.1.11
@@ -224,8 +225,6 @@ trustPolicy: no-downgrade
 trustPolicyExcludePrune: true
 
 trustPolicyExclude:
-  - '@sanity/sdk@3.5.0'
-  - '@sanity/sdk-react@3.5.0'
   # The vercel CLI (root devDependency) only parses pnpm 12's two-document pnpm-lock.yaml
   # from 58.9.5 on. From 58.7.0 on, vercel and some of its @vercel/* dependencies are still
   # published from GitHub Actions, but without the npm provenance attestations earlier

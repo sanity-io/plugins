@@ -94,7 +94,7 @@ function MockStudio(props: {scheme: ThemeColorSchemeKey}) {
             const isSelected = index === 1
 
             return (
-              <div className={listRow} data-selected={isSelected} key={width}>
+              <div key={width} className={listRow} data-selected={isSelected}>
                 <div className={isSelected ? line.selected : line.muted} style={{width}} />
               </div>
             )
@@ -105,7 +105,7 @@ function MockStudio(props: {scheme: ThemeColorSchemeKey}) {
           <div className={form}>
             <div className={line.fg} style={{width: '45%'}} />
             {FIELDS.map((width) => (
-              <div className={field} key={width}>
+              <div key={width} className={field}>
                 <div className={line.muted} style={{width}} />
                 <div className={input} />
               </div>
