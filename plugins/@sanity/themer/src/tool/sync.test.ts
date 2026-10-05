@@ -128,6 +128,18 @@ function startTab(stored: ThemerState = initialThemerState) {
   return createActor(themerMachine, {snapshot: snapshotFromState(stored)}).start()
 }
 
+/** A page that can go into the back/forward cache and come back */
+function createPage() {
+  const target = new EventTarget()
+
+  return {
+    addEventListener: target.addEventListener.bind(target),
+    removeEventListener: target.removeEventListener.bind(target),
+    hide: () => target.dispatchEvent(Object.assign(new Event('pagehide'), {persisted: true})),
+    show: () => target.dispatchEvent(Object.assign(new Event('pageshow'), {persisted: true})),
+  }
+}
+
 describe('syncing the themer across tabs', () => {
   beforeEach(() => {
     // Node 24 has `navigator.locks` too — the sync must only use what it is given
@@ -538,6 +550,181 @@ describe('syncing the themer across tabs', () => {
     expect(persist.mock.lastCall?.[0]).toMatchObject({context: {active: 'dew'}})
   })
 
+  it('orders the answers that follow one that only confirmed what it had', async () => {
+    const bus = createBus()
+    const channelC = bus.open()
+    const tabA = startTab({...initialThemerState, custom: [custom]})
+    const tabC = startTab({...initialThemerState, active: 'verdant', custom: [custom]})
+
+    const stopA = syncThemer(tabA, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks: undefined,
+      schedule: immediately,
+    })
+    // The first tab is one change ahead, at the state the newcomer loaded
+    tabA.send({type: 'theme.pick', slug: 'verdant'})
+    await tick()
+
+    const stopC = syncThemer(tabC, {
+      persist: () => {},
+      openChannel: () => channelC,
+      locks: undefined,
+      schedule: immediately,
+    })
+    await tick()
+    await tick()
+
+    // The first answer changed nothing; a second, from a tab behind, must not either
+    const from = helloFrom(channelC.posted[0])
+    bus.broadcast({
+      type: 'state',
+      state: {active: 'dew', custom: [custom], removed: [], order: []},
+      revision: 0,
+      from: 'stale',
+      to: from,
+    })
+    await tick()
+
+    expect(tabC.getSnapshot().context.active).toBe('verdant')
+
+    stopA()
+    stopC()
+  })
+
+  it('hands the themes over as they are — a blank title, a deleted theme out of the order', async () => {
+    const bus = createBus()
+    const tabA = startTab({...initialThemerState, custom: [custom]})
+    const tabB = startTab({...initialThemerState, custom: [custom]})
+
+    const stopA = syncThemer(tabA, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks: undefined,
+      schedule: immediately,
+    })
+    const stopB = syncThemer(tabB, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks: undefined,
+      schedule: immediately,
+    })
+    await tick()
+
+    tabA.send({type: 'theme.update', slug: 'custom-1', title: ''})
+    tabA.send({type: 'theme.duplicate', slug: 'verdant'})
+    const copy = tabA.getSnapshot().context.active!
+    tabA.send({type: 'theme.reorder', order: [copy, 'custom-1', 'verdant']})
+    tabA.send({type: 'theme.delete', slug: copy})
+    await tick()
+
+    expect(selectStoredState(tabB.getSnapshot())).toEqual(selectStoredState(tabA.getSnapshot()))
+    expect(tabB.getSnapshot().context.custom[0].title).toBe('')
+    expect(tabB.getSnapshot().context.order).toEqual(['custom-1', 'verdant'])
+
+    stopA()
+    stopB()
+  })
+
+  it('lets go of the lock while cached, and catches up before it persists again', async () => {
+    const bus = createBus()
+    const locks = createLocks()
+    const pageA = createPage()
+    const tabA = startTab({...initialThemerState, custom: [custom]})
+    const tabB = startTab({...initialThemerState, custom: [custom]})
+    const persistA = vi.fn()
+    const persistB = vi.fn()
+
+    const stopA = syncThemer(tabA, {
+      persist: persistA,
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+      page: pageA,
+    })
+    const stopB = syncThemer(tabB, {
+      persist: persistB,
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+    })
+    await tick()
+    expect(persistA).toHaveBeenCalledTimes(1)
+    expect(persistB).not.toHaveBeenCalled()
+
+    // Into the cache: the second tab takes over the persisting
+    pageA.hide()
+    await tick()
+    expect(persistB).toHaveBeenCalledTimes(1)
+
+    tabB.send({type: 'theme.pick', slug: 'verdant'})
+    await tick()
+    expect(persistB).toHaveBeenCalledTimes(2)
+    persistA.mockClear()
+
+    // Back, behind the second tab in line: it asks what changed, and hears
+    pageA.show()
+    await tick()
+    await tick()
+    expect(tabA.getSnapshot().context.active).toBe('verdant')
+    expect(persistA).not.toHaveBeenCalled()
+
+    // The holder goes away: this tab persists again, with what it caught up on
+    stopB()
+    await tick()
+    expect(persistA).toHaveBeenCalledTimes(1)
+    expect(persistA.mock.calls[0][0]).toMatchObject({context: {active: 'verdant'}})
+
+    stopA()
+  })
+
+  it('does not persist over the other tabs right after coming back from the cache', async () => {
+    const bus = createBus()
+    const locks = createLocks()
+    const pageA = createPage()
+    const tabA = startTab({...initialThemerState, custom: [custom]})
+    const tabB = startTab({...initialThemerState, custom: [custom]})
+    const persistA = vi.fn()
+
+    const stopA = syncThemer(tabA, {
+      persist: persistA,
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+      page: pageA,
+    })
+    const stopB = syncThemer(tabB, {
+      persist: () => {},
+      openChannel: bus.open,
+      locks,
+      schedule: immediately,
+    })
+    await tick()
+
+    pageA.hide()
+    await tick()
+    tabB.send({type: 'theme.pick', slug: 'verdant'})
+    await tick()
+    // The other tab leaves with the newer state persisted, before this one is back
+    stopB()
+    await tick()
+    persistA.mockClear()
+
+    pageA.show()
+    await tick()
+    await tick()
+
+    // The lock is this tab's again, but what it has is not what to write
+    expect(persistA).not.toHaveBeenCalled()
+
+    // Its own next change is
+    tabA.send({type: 'theme.pick', slug: 'dew'})
+    await tick()
+    expect(persistA).toHaveBeenCalledTimes(1)
+
+    stopA()
+  })
+
   it('ignores what it cannot use from the channel', async () => {
     const bus = createBus()
     const tab = startTab({...initialThemerState, custom: [custom]})
@@ -553,6 +740,12 @@ describe('syncing the themer across tabs', () => {
     bus.broadcast({type: 'nonsense'})
     bus.broadcast({type: 'state', state: 'nope', revision: 1, from: 'other'})
     bus.broadcast({type: 'state', state: {active: 'verdant'}})
+    // Revisions that cannot order, and a recipient that is not a tab
+    const state = {active: 'verdant', custom: [custom], removed: [], order: []}
+    bus.broadcast({type: 'state', state, revision: -1, from: 'other'})
+    bus.broadcast({type: 'state', state, revision: 1.5, from: 'other'})
+    bus.broadcast({type: 'state', state, revision: Number.MAX_SAFE_INTEGER + 1, from: 'other'})
+    bus.broadcast({type: 'state', state, revision: 1, from: 'other', to: 42})
     await tick()
 
     expect(selectStoredState(tab.getSnapshot())).toEqual(selectStoredState(before))
