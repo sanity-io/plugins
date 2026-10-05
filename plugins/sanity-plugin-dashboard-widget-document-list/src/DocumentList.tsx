@@ -1,6 +1,5 @@
 import {DashboardWidgetContainer} from '@sanity/dashboard'
 import {Card, Flex, Spinner, Stack} from '@sanity/ui'
-import intersection from 'lodash-es/intersection.js'
 import {type ReactNode, useEffect, useMemo, useState} from 'react'
 import {
   getPublishedId,
@@ -11,12 +10,16 @@ import {
   useSchema,
 } from 'sanity'
 
+import {assembleDocumentListQuery} from './assembleDocumentListQuery'
 import {getSubscription} from './sanityConnector'
 
 export interface DocumentListConfig {
   title?: string
   types?: string[]
   query?: string
+  /** Parameters for a custom `query`. This is the documented option. */
+  params?: Record<string, any>
+  /** Alias of `params`, kept for configs that already use this name. */
   queryParams?: Record<string, any>
   order?: string
   limit?: number
@@ -29,25 +32,15 @@ const defaultProps = {
   title: 'Last created',
   order: '_createdAt desc',
   limit: 10,
-  queryParams: {},
   showCreateButton: true,
   apiVersion: 'v1',
 }
 
 function DocumentList(props: DocumentListConfig): ReactNode {
-  const {
-    query,
-    limit,
-    apiVersion,
-    queryParams,
-    types,
-    order,
-    title,
-    showCreateButton,
-    createButtonText,
-  } = {
+  const {params: paramsOption, queryParams, ...rest} = props
+  const {query, limit, apiVersion, types, order, title, showCreateButton, createButtonText} = {
     ...defaultProps,
-    ...props,
+    ...rest,
   }
 
   const [documents, setDocuments] = useState<SanityDocument[] | undefined>()
@@ -58,20 +51,21 @@ function DocumentList(props: DocumentListConfig): ReactNode {
   const schema = useSchema()
 
   const {assembledQuery, params} = useMemo(() => {
-    if (query) {
-      return {assembledQuery: query, params: queryParams}
-    }
-
-    const documentTypes = schema.getTypeNames().filter((typeName) => {
+    const documentTypeNames = schema.getTypeNames().filter((typeName) => {
       const schemaType = schema.get(typeName)
       return schemaType?.type?.name === 'document'
     })
 
-    return {
-      assembledQuery: `*[_type in $types] | order(${order}) [0...${limit * 2}]`,
-      params: {types: types ? intersection(types, documentTypes) : documentTypes},
-    }
-  }, [schema, query, queryParams, order, limit, types])
+    return assembleDocumentListQuery({
+      query,
+      params: paramsOption,
+      queryParams,
+      types,
+      order,
+      limit,
+      documentTypeNames,
+    })
+  }, [schema, query, paramsOption, queryParams, order, limit, types])
 
   useEffect(() => {
     if (!assembledQuery) {
