@@ -21,6 +21,30 @@ function applyCodeFieldChange(
   return patches.reduce(applyPatch, documentValue)
 }
 
+function pathKey(segment: FormPatch['path'][number]): string {
+  if (typeof segment === 'string') return segment
+  if (typeof segment === 'number') return `${segment}`
+  throw new Error(`Unsupported path segment: ${JSON.stringify(segment)}`)
+}
+
+function objectAt(parent: Record<string, unknown>, key: string): Record<string, unknown> {
+  const existing = parent[key]
+  if (existing === undefined) {
+    const created: Record<string, unknown> = {}
+    parent[key] = created
+    return created
+  }
+  if (typeof existing !== 'object' || existing === null || Array.isArray(existing)) {
+    throw new Error(`Expected an object at ${key}`)
+  }
+  const copy: Record<string, unknown> = {}
+  for (const childKey of Object.keys(existing)) {
+    copy[childKey] = Reflect.get(existing, childKey)
+  }
+  parent[key] = copy
+  return copy
+}
+
 function applyPatch(root: Record<string, unknown>, patch: FormPatch): Record<string, unknown> {
   const next = structuredClone(root)
   const path = patch.path
@@ -28,36 +52,36 @@ function applyPatch(root: Record<string, unknown>, patch: FormPatch): Record<str
     throw new Error(`Unexpected root patch: ${patch.type}`)
   }
 
-  let cursor: Record<string, unknown> = next
+  let cursor = next
   for (const segment of path.slice(0, -1)) {
-    const key = String(segment)
-    const child = cursor[key]
-    if (child === undefined) {
-      cursor[key] = {}
-      cursor = cursor[key] as Record<string, unknown>
-    } else if (typeof child === 'object' && child !== null) {
-      cursor = child as Record<string, unknown>
-    } else {
-      throw new Error(`Cannot apply ${patch.type} through ${key}`)
-    }
+    cursor = objectAt(cursor, pathKey(segment))
   }
 
-  const last = String(path.at(-1))
-  if (patch.type === 'set') {
-    cursor[last] = patch.value
-    return next
+  const tail = path[path.length - 1]
+  if (tail === undefined) {
+    throw new Error(`Unexpected empty path for ${patch.type}`)
   }
-  if (patch.type === 'setIfMissing') {
-    if (cursor[last] === undefined) {
+  const last = pathKey(tail)
+  switch (patch.type) {
+    case 'set':
       cursor[last] = patch.value
+      return next
+    case 'setIfMissing':
+      if (cursor[last] === undefined) {
+        cursor[last] = patch.value
+      }
+      return next
+    case 'unset':
+      delete cursor[last]
+      return next
+    case 'insert':
+    case 'diffMatchPatch':
+      throw new Error(`Unsupported patch: ${patch.type}`)
+    default: {
+      const unsupported: never = patch
+      throw new Error(`Unsupported patch: ${JSON.stringify(unsupported)}`)
     }
-    return next
   }
-  if (patch.type === 'unset') {
-    delete cursor[last]
-    return next
-  }
-  throw new Error(`Unsupported patch: ${patch.type}`)
 }
 
 describe('code field language', () => {
@@ -86,7 +110,7 @@ describe('code field language', () => {
       selectedLanguage: 'text',
     })
 
-    expect(applyCodeFieldChange({}, 'example', patches).example).toMatchObject({
+    expect(applyCodeFieldChange({}, 'example', patches)['example']).toMatchObject({
       language: 'text',
       code: 'hello',
     })
