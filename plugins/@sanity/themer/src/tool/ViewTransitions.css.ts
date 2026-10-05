@@ -76,6 +76,11 @@ const splitScreenFilter = 'blur(6px)'
 const splitStudioTransition = createViewTransitionType({
   imagePair: {
     animationName: keyframes({'50%': {filter: splitScreenFilter}}),
+    // The image pair inherits the group's duration, delay and fill mode from
+    // the UA stylesheet, but not its timing function, so without this the
+    // blur would run on `ease` while the group runs the layout's curve, and
+    // peak off the cross-over; see
+    // https://css-tricks.com/almanac/pseudo-selectors/v/view-transition-image-pair/#default-styles
     animationTimingFunction: 'inherit',
   },
   old: {...resizeStudioRules, animationName: keyframes({to: {opacity: 0}})},
