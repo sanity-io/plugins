@@ -43,7 +43,7 @@ catalog:
   '@sanity/ui': ^4.3.0
   '@sanity/util': ^6.16.0
   '@sanity/uuid': ^3.0.3
-  '@sanity/vanilla-extract-vite-plugin': ^0.2.20
+  '@sanity/vanilla-extract-vite-plugin': ^0.2.22
   '@sanity/vision': ^6.16.0
   '@testing-library/jest-dom': ^7.0.1
   '@testing-library/react': ^16.3.3
@@ -202,13 +202,6 @@ overrides:
   # runtime from the installed rolldown instead (https://github.com/vitejs/vite/pull/23568),
   # so delete this entry when bumping past 8.3.1.
   'vite@8.3.1>rolldown': '1.2.9'
-
-# Applies https://github.com/sanity-io/pkg-utils/pull/3536 so editing a `.css.ts` file under
-# `sanity dev` with `unstable_bundledDev` hot-updates its styles instead of serving the CSS
-# compiled at startup until the dev server restarts. Delete this entry and `patches/` when
-# bumping `@sanity/vanilla-extract-vite-plugin` to the release that includes the fix.
-patchedDependencies:
-  '@sanity/vanilla-extract-vite-plugin@0.2.20': patches/@sanity__vanilla-extract-vite-plugin@0.2.20.patch
 
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
