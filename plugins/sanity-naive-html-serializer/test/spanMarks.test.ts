@@ -107,10 +107,17 @@ function blockByKey(blocks: PortableTextBlock[], key: string): PortableTextBlock
 }
 
 function spanByText(block: PortableTextBlock, text: string): PortableTextSpan {
-  const span = (block.children ?? []).find(
-    (child): child is PortableTextSpan =>
-      child._type === 'span' && 'text' in child && child.text === text,
-  )
+  const children: unknown[] = Array.isArray(block.children) ? block.children : []
+  const span = children.find((child): child is PortableTextSpan => {
+    return (
+      typeof child === 'object' &&
+      child !== null &&
+      '_type' in child &&
+      child._type === 'span' &&
+      'text' in child &&
+      child.text === text
+    )
+  })
   if (!span) {
     throw new Error(`Missing span "${text}"`)
   }
