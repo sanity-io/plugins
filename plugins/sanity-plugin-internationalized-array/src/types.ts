@@ -110,6 +110,18 @@ export type PluginConfig = {
    */
   defaultLanguages?: string[]
   /**
+   * When `false` (default), languages in `defaultLanguages` cannot be removed.
+   * A missing row is inserted again whenever the document is open.
+   *
+   * Set to `true` to treat those languages as initial values. They are still
+   * added when the field has no value yet, and editors can remove them
+   * afterwards. A removed row is not inserted again, including on later opens,
+   * as long as the field value is an array (including `[]`).
+   *
+   * @defaultValue false
+   */
+  allowRemovingDefaultLanguages?: boolean
+  /**
    * Can be a string matching core field types, as well as custom ones:
    * ```tsx
    * {
