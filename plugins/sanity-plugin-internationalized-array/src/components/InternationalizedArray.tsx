@@ -3,7 +3,7 @@ import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Button, Card, Stack, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import type React from 'react'
-import {useCallback, useContext, useEffect, useMemo, useRef} from 'react'
+import {useCallback, useContext, useEffect, useMemo} from 'react'
 import {
   type ArrayOfObjectsInputProps,
   ArrayOfObjectsItem,
@@ -66,9 +66,9 @@ function isPristineDocument(
  *   read-only until initial value templates resolve, and the field-level
  *   `readOnly` prop can lag that document-level lock. Skipping the patch
  *   until writable avoids "Attempted to patch a read-only document" toasts.
- *   With `allowRemovingDefaultLanguages`, those rows are initial values: they
- *   are seeded while the field has no value, and a removed row is left alone
- *   once the field is an array (including an empty one).
+ *   With `allowRemovingDefaultLanguages`, those rows are initial values for a
+ *   pristine document only. Once the document has history, a removed row is
+ *   left alone, including when the field value is `undefined`.
  * - **Ordering**: When `restoreOrder` is enabled (default), detects when value
  *   items are out of order relative to the master `languages` list and
  *   automatically re-sorts them. Set `restoreOrder: false` to keep the stored
@@ -211,16 +211,10 @@ export default function InternationalizedArray(
     return languages.filter((l) => languageKeys?.find((key) => key === l.id)).map((l) => l.id)
   }, [languageKeysFromValue, languages])
 
-  // `allowRemovingDefaultLanguages` seeds once. After the field is an array
-  // (including `[]`), or after this mount has already seeded, a removed
-  // default language stays removed — even if the value flickers back to
-  // undefined in the same session.
-  const defaultLanguagesSettled = useRef(false)
-  const fieldIsInitialized = Array.isArray(value)
-
   useEffect(() => {
-    if (allowRemovingDefaultLanguages && (defaultLanguagesSettled.current || fieldIsInitialized)) {
-      defaultLanguagesSettled.current = true
+    if (allowRemovingDefaultLanguages && !isPristine) {
+      // A pristine document has never existed, so it still receives default languages.
+      // Once it has history, a removed row stays removed.
       return undefined
     }
 
@@ -241,19 +235,13 @@ export default function InternationalizedArray(
         .filter((language) => languages.find((l) => l.id === language))
       // Account for strict mode by scheduling the update.
       const timeout = setTimeout(() => {
-        if (!readOnly) {
-          if (allowRemovingDefaultLanguages) {
-            defaultLanguagesSettled.current = true
-          }
-          handleAddLanguages(languagesToAdd)
-        }
+        if (!readOnly) handleAddLanguages(languagesToAdd)
       })
       return () => clearTimeout(timeout)
     }
     return undefined
   }, [
     allowRemovingDefaultLanguages,
-    fieldIsInitialized,
     isPristine,
     documentExists,
     isDeleted,

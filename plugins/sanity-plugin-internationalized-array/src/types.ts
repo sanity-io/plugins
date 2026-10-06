@@ -114,9 +114,9 @@ export type PluginConfig = {
    * A missing row is inserted again whenever the document is open.
    *
    * Set to `true` to treat those languages as initial values. They are still
-   * added when the field has no value yet, and editors can remove them
-   * afterwards. A removed row is not inserted again, including on later opens,
-   * as long as the field value is an array (including `[]`).
+   * added on a pristine document, and editors can remove them afterwards.
+   * Once the document has history, a removed row is not inserted again, even
+   * when the field value is `undefined`.
    *
    * @defaultValue false
    */
