@@ -102,6 +102,14 @@ describe('PreviewCode inline layout', () => {
     expect(screen.getByTestId('inline-code-preview').textContent).toBe('Code')
   })
 
+  test('uses the uppercased language when the preview has no title or filename', () => {
+    renderInlinePreview({
+      selection: {language: 'javascript'},
+    })
+
+    expect(screen.getByTestId('inline-code-preview').textContent).toBe('JAVASCRIPT')
+  })
+
   test('uses the first code line when the preview has no title or filename', () => {
     renderInlinePreview({
       selection: {
