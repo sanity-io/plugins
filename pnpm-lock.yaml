@@ -274,8 +274,8 @@ catalogs:
       specifier: ^4.18.1
       version: 4.18.1
     motion:
-      specifier: ^13.4.4
-      version: 13.4.6
+      specifier: ^14.0.0
+      version: 14.0.0
     nanoid:
       specifier: ^6.0.1
       version: 6.0.1
@@ -2058,7 +2058,7 @@ importers:
         version: 2.0.3
       motion:
         specifier: 'catalog:'
-        version: 13.4.6(react-dom@19.3.0)(react@19.3.0)
+        version: 14.0.0(react-dom@19.3.0)(react@19.3.0)
       react-refractor:
         specifier: ^4.0.0
         version: 4.0.0(react@19.3.0)
@@ -2731,7 +2731,7 @@ importers:
         version: 4.18.1
       motion:
         specifier: 'catalog:'
-        version: 13.4.6(react-dom@19.3.0)(react@19.3.0)
+        version: 14.0.0(react-dom@19.3.0)(react@19.3.0)
       sanity:
         specifier: next
         version: 6.18.0-next.62(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.4.0)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(@types/react-dom@19.3.0)(@types/react@19.3.0)(@vitejs/devtools@0.4.12)(esbuild@0.28.2)(immer@11.1.18)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.71.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.12)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.15)(typescript@7.0.2)(vitest@4.1.11)
@@ -2789,7 +2789,7 @@ importers:
         version: 2.0.3
       motion:
         specifier: 'catalog:'
-        version: 13.4.6(react-dom@19.3.0)(react@19.3.0)
+        version: 14.0.0(react-dom@19.3.0)(react@19.3.0)
       sanity:
         specifier: next
         version: 6.18.0-next.62(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.4.0)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(@types/react-dom@19.3.0)(@types/react@19.3.0)(@vitejs/devtools@0.4.12)(esbuild@0.28.2)(immer@11.1.18)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.71.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.12)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.15)(typescript@7.0.2)(vitest@4.1.11)
@@ -3405,7 +3405,7 @@ importers:
         version: 1.0.5
       motion:
         specifier: 'catalog:'
-        version: 13.4.6(react-dom@19.3.0)(react@19.3.0)
+        version: 14.0.0(react-dom@19.3.0)(react@19.3.0)
       sanity:
         specifier: next
         version: 6.18.0-next.62(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.4.0)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(@types/react-dom@19.3.0)(@types/react@19.3.0)(@vitejs/devtools@0.4.12)(esbuild@0.28.2)(immer@11.1.18)(jiti@2.7.0)(oxc-transform-react@0.147.0)(oxfmt@0.71.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.12)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.15)(typescript@7.0.2)(vitest@4.1.11)
@@ -11958,17 +11958,6 @@ packages:
   fraction.js@5.3.4:
     resolution: {integrity: sha512-1X1NTtiJphryn/uLQz3whtY6jK3fTqoE3ohKs0tT+Ujr1W59oopxmoEh7Lu5p6vBaPbgoM0bzveAW4Qi5RyWDQ==}
 
-  framer-motion@13.4.6:
-    resolution: {integrity: sha512-TwKWt2CC8rjhARzwV00TZIh04ipumSAqyKM/JZmS+urdncSHg6wTF/mfj/Fd6Oi2W01TZSWsiA3uxXDrXZtKyw==}
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-
   framer-motion@14.0.0:
     resolution: {integrity: sha512-QAtHmybrDFSliyW1sexMtSQTQd+1jw2ajibEmzpuI4XdPVzQkn+dAzJMm2sW3pl9MJuSS4xN51djQ7huhlP/VA==}
     peerDependencies:
@@ -13454,28 +13443,11 @@ packages:
     resolution: {integrity: sha512-oFcFL3dsX5tDzMwBD+GGoDqKIj6RNG3bu3oqlvcUIgPulHP14/6N7c07j3s0XgbrlT7U/lbiXOD89hmPtEXnfQ==}
     engines: {node: '>=20.19.0'}
 
-  motion-dom@13.4.5:
-    resolution: {integrity: sha512-p63p2Doq+US/O5wADauIPUVx0/eONHMLPzsudBM9XMWRuBQLXogdxH0vwIA8WYQZw864pyzoV723xoDqakwWTg==}
-
   motion-dom@14.0.0:
     resolution: {integrity: sha512-aU3ApXo1yTpeUi3JU+jbDk2TELjxPE3MbBMUP7nZHlARb6RweJK+ojmLjpuB0YsY6zhbBl1YWGo8LMsI1/Llqw==}
 
-  motion-utils@13.3.0:
-    resolution: {integrity: sha512-sgSschQp7EseHInIlR7hBbMuvet3RA0bs28KPZAXJcGKGdxHGvh1ogpYDilY3bOMtl73EqPNmp75sAKHYPU5sg==}
-
   motion-utils@14.0.0:
     resolution: {integrity: sha512-jBsyjVxTTRZNeuvd/v+btVXr90LQkYl4HhRu9T2ARc+PMnvkmjsjRVeAg4Qm10b6TlTw+kykWI8gu/6LuvpLSQ==}
-
-  motion@13.4.6:
-    resolution: {integrity: sha512-zDXi6lIdyhda6wZlTsv9QgT2ed6UExAfRegtl/akQmZb5iaeLlArXr9Gmo/hx3iTx2y4R7tmdb9k9koFQmV+NQ==}
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
 
   motion@14.0.0:
     resolution: {integrity: sha512-oGc2lkge2lkRZCP+J8/JsnYu4NFjqP1MtXirNdetn3QbvK2JqwM9A200EdT4C598KfzDhjLT12zF21xDM4Oilw==}
@@ -27104,15 +27076,6 @@ snapshots:
 
   fraction.js@5.3.4: {}
 
-  framer-motion@13.4.6(react-dom@19.3.0)(react@19.3.0):
-    dependencies:
-      motion-dom: 13.4.5
-      motion-utils: 13.3.0
-      tslib: 2.8.1
-    optionalDependencies:
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-
   framer-motion@14.0.0(react-dom@19.3.0)(react@19.3.0):
     dependencies:
       motion-dom: 14.0.0
@@ -28753,25 +28716,11 @@ snapshots:
       - socks
     optional: true
 
-  motion-dom@13.4.5:
-    dependencies:
-      motion-utils: 13.3.0
-
   motion-dom@14.0.0:
     dependencies:
       motion-utils: 14.0.0
 
-  motion-utils@13.3.0: {}
-
   motion-utils@14.0.0: {}
-
-  motion@13.4.6(react-dom@19.3.0)(react@19.3.0):
-    dependencies:
-      framer-motion: 13.4.6(react-dom@19.3.0)(react@19.3.0)
-      tslib: 2.8.1
-    optionalDependencies:
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
 
   motion@14.0.0(react-dom@19.3.0)(react@19.3.0):
     dependencies:
