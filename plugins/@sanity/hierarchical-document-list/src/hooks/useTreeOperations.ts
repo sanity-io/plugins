@@ -11,9 +11,13 @@ function placeholder() {
   // no-op
 }
 
+function placeholderAsync(): Promise<void> {
+  return Promise.resolve()
+}
+
 export const TreeOperationsContext = createContext<ContextValue>({
   addItem: placeholder,
-  duplicateItem: placeholder,
+  duplicateItem: placeholderAsync,
   removeItem: placeholder,
   handleMovedNode: placeholder,
   moveItemDown: placeholder,

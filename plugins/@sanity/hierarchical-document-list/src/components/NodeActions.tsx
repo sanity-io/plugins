@@ -4,10 +4,12 @@ import {LaunchIcon} from '@sanity/icons/Launch'
 import {RemoveCircleIcon} from '@sanity/icons/RemoveCircle'
 import {Button} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
+import {useState} from 'react'
 import {IntentButton as IntentLink} from 'sanity'
 
 import useTreeOperations from '../hooks/useTreeOperations'
 import type {NodeProps} from '../types'
+import {hasResolvableDocument} from '../utils/treeData'
 
 /**
  * Applicable only to nodes inside the main tree.
@@ -18,8 +20,9 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
   const {node} = nodeProps
   const {reference, docType} = node?.value || {}
   const referenceId = reference?._ref
+  const [isDuplicating, setIsDuplicating] = useState(false)
 
-  const isValid = !!node.publishedId
+  const isValid = hasResolvableDocument(node)
   return (
     <MenuButton
       button={<Button padding={2} mode="bleed" icon={EllipsisVerticalIcon} />}
@@ -35,8 +38,13 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
           <MenuItem
             text="Duplicate item"
             icon={CopyIcon}
-            disabled={!isValid}
-            onClick={() => operations.duplicateItem(nodeProps)}
+            disabled={!isValid || isDuplicating}
+            onClick={() => {
+              setIsDuplicating(true)
+              void operations.duplicateItem(nodeProps).finally(() => {
+                setIsDuplicating(false)
+              })
+            }}
           />
           {/* <MenuItem
             text="Move up"

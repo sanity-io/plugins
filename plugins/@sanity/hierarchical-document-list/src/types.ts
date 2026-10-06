@@ -43,8 +43,9 @@ export interface EnhancedTreeItem extends StoredTreeItem {
   draftId?: string
   draftUpdatedAt?: string
   /**
-   * If not present, DocumentInNode will show up an error for invalid document.
-   *  - undefined `publishedId` could mean the document is either deleted, or it doesn't match GROQ filters anymore
+   * Published id when the referenced document is published.
+   * Missing when the document is only a draft, was deleted, or no longer matches the hierarchy filters.
+   * A node with neither `publishedId` nor `draftId` is invalid.
    */
   publishedId?: string
   publishedUpdatedAt?: string
