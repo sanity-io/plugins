@@ -61,6 +61,18 @@ const codeTest = defineType({
         },
       ],
     },
+    {
+      name: 'inlineCode',
+      title: 'Portable text with inline code',
+      description: 'Code inserted from the inline object menu of a text block',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          of: [{type: 'code', title: 'Inline code'}],
+        },
+      ],
+    },
   ],
 })
 
