@@ -128,8 +128,15 @@ export function useGenerateCaption(apiClient: SanityClient) {
   const toast = useToast()
 
   const generateCaption = useCallback(
-    ({path, documentId}: {path: string; documentId: string}) => {
+    ({path, documentId}: {path: string; documentId: string | undefined}) => {
       setLoading(true)
+      if (!documentId) {
+        toast.push({
+          status: 'error',
+          title: 'Document ID is required',
+        })
+        return undefined
+      }
 
       return apiClient
         .request({
@@ -180,8 +187,15 @@ export function useGenerateImage(apiClient: SanityClient) {
   const toast = useToast()
 
   const generateImage = useCallback(
-    ({path, documentId}: {path: string; documentId: string}) => {
+    ({path, documentId}: {path: string; documentId: string | undefined}) => {
       setLoading(true)
+      if (!documentId) {
+        toast.push({
+          status: 'error',
+          title: 'Document ID is required',
+        })
+        return undefined
+      }
 
       return apiClient
         .request({

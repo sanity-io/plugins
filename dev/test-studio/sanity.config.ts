@@ -75,6 +75,9 @@ function createWorkspace(
     beta,
     ...config,
     basePath: `/${config.name}`,
+    beta: {
+      variants: {enabled: true},
+    },
   }
 }
 
