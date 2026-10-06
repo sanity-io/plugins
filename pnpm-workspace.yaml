@@ -135,6 +135,7 @@ minimumReleaseAgeExclude:
   - '@publint/*'
   - '@rollup/*'
   - '@sanity/*'
+  - '@sanity-labs/*'
   - '@types/*'
   - '@types/react@19.3.0'
   - '@types/react-dom@19.3.0'
