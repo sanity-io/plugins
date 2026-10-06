@@ -1,7 +1,7 @@
 import {ColorWheelIcon} from '@sanity/icons/ColorWheel'
 import {Box, Button, Text, usePrefersReducedMotion} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {lazy, startTransition, Suspense, use, useRef, useTransition, ViewTransition} from 'react'
+import {lazy, startTransition, Suspense, use, useRef, useTransition, ViewTransition, useMemo} from 'react'
 import {type NavbarProps} from 'sanity'
 import type {NavbarAction} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
@@ -125,11 +125,9 @@ function ThemerNavbarButton() {
   )
 }
 
-// This component isn't auto identified by react compiler as a react component,
-// the 'use memo' directive opts it in
+
 export function ThemerNavbar(props: NavbarProps) {
-  'use memo'
-  const button = {
+  const button = useMemo(() => ({
     location: 'topbar',
     name: 'themer-topbar',
     // The component itself rather than a `() => <ThemerNavbarButton />`
@@ -137,7 +135,7 @@ export function ThemerNavbar(props: NavbarProps) {
     // made anew on every render would remount the button each time —
     // resetting its animation
     render: ThemerNavbarButton,
-  } satisfies NavbarAction
+  }) satisfies NavbarAction, [])
   return props.renderDefault({
     ...props,
     __internal_actions: [...(props.__internal_actions ?? []), button],
