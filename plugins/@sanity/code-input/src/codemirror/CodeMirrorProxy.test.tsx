@@ -9,7 +9,7 @@ import CodeMirrorProxy from './CodeMirrorProxy'
 
 // jsdom has no matchMedia; @sanity/ui's ThemeProvider queries it for the
 // prefers-color-scheme lookup.
-// oxlint-disable-next-line no-unsafe-type-assertion
+// oxlint-disable no-unsafe-type-assertion
 window.matchMedia ??= ((query: string) =>
   ({
     addEventListener: () => {},
@@ -21,6 +21,7 @@ window.matchMedia ??= ((query: string) =>
     removeEventListener: () => {},
     removeListener: () => {},
   }) as unknown as MediaQueryList) as typeof window.matchMedia
+// oxlint-enable no-unsafe-type-assertion
 
 const theme = buildTheme()
 
