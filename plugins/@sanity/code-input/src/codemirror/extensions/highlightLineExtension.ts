@@ -1,7 +1,8 @@
-import {type Extension, StateEffect, StateField} from '@codemirror/state'
+import {type Extension, StateEffect, StateField, type Text} from '@codemirror/state'
 import {Decoration, type DecorationSet, EditorView, lineNumbers} from '@codemirror/view'
 import type {ThemeContextValue} from '@sanity/ui'
 import {rgba} from '@sanity/ui/theme'
+import {ExternalChange} from '@uiw/react-codemirror'
 
 import {getBackwardsCompatibleTone} from './backwardsCompatibleTone'
 
@@ -32,16 +33,7 @@ const lineHighlightField = StateField.define({
     return lines
   },
   toJSON(value, state) {
-    const highlightLines: number[] = []
-    const iter = value.iter()
-    while (iter.value) {
-      const lineNumber = state.doc.lineAt(iter.from).number
-      if (!highlightLines.includes(lineNumber)) {
-        highlightLines.push(lineNumber)
-      }
-      iter.next()
-    }
-    return highlightLines
+    return getHighlightedLines(value, state.doc)
   },
   fromJSON(value: number[], state) {
     const lines = state.doc.lines
@@ -64,6 +56,40 @@ const lineHighlightField = StateField.define({
 const lineHighlightMark = Decoration.line({
   class: highlightLineClass,
 })
+
+function getHighlightedLines(lines: DecorationSet, doc: Text): number[] {
+  const highlightLines: number[] = []
+  const iter = lines.iter()
+  while (iter.value) {
+    const lineNumber = doc.lineAt(iter.from).number
+    if (!highlightLines.includes(lineNumber)) {
+      highlightLines.push(lineNumber)
+    }
+    iter.next()
+  }
+  return highlightLines
+}
+
+/**
+ * Reports highlighted lines that moved because the code was edited, so the stored line
+ * numbers follow the highlighted content.
+ */
+function highlightChangeListener(onHighlightChange: (lines: number[]) => void): Extension {
+  return EditorView.updateListener.of((update) => {
+    // Values synced from outside the editor come with their own highlighted lines
+    if (!update.docChanged || update.transactions.some((tr) => tr.annotation(ExternalChange))) {
+      return
+    }
+    const previous = getHighlightedLines(
+      update.startState.field(lineHighlightField),
+      update.startState.doc,
+    )
+    const next = getHighlightedLines(update.state.field(lineHighlightField), update.state.doc)
+    if (previous.length !== next.length || previous.some((line, i) => line !== next[i])) {
+      onHighlightChange(next)
+    }
+  })
+}
 
 export const highlightState: {
   [prop: string]: StateField<DecorationSet>
@@ -151,6 +177,9 @@ export const highlightLine = (config: HighlightLineConfig): Extension => {
             },
           },
         }),
+    config.readOnly || !config.onHighlightChange
+      ? []
+      : highlightChangeListener(config.onHighlightChange),
     highlightTheme,
   ]
 }
