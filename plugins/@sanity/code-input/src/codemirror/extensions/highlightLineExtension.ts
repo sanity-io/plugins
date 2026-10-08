@@ -1,4 +1,12 @@
-import {type Extension, StateEffect, StateField, type Text} from '@codemirror/state'
+import {
+  type ChangeDesc,
+  type Extension,
+  type Range,
+  StateEffect,
+  StateField,
+  type Text,
+  type Transaction,
+} from '@codemirror/state'
 import {Decoration, type DecorationSet, EditorView, lineNumbers} from '@codemirror/view'
 import type {ThemeContextValue} from '@sanity/ui'
 import {rgba} from '@sanity/ui/theme'
@@ -16,7 +24,9 @@ const lineHighlightField = StateField.define({
     return Decoration.none
   },
   update(lines, tr) {
-    lines = lines.map(tr.changes)
+    if (tr.docChanged) {
+      lines = mapLineHighlights(lines, tr)
+    }
     for (const e of tr.effects) {
       if (e.is(addLineHighlight)) {
         lines = lines.update({add: [lineHighlightMark.range(e.value)]})
@@ -56,6 +66,43 @@ const lineHighlightField = StateField.define({
 const lineHighlightMark = Decoration.line({
   class: highlightLineClass,
 })
+
+function isRemoved(changes: ChangeDesc, from: number, to: number): boolean {
+  let pos = from
+  changes.iterChangedRanges((fromA, toA) => {
+    if (fromA <= pos && toA > pos) {
+      pos = toA
+    }
+  })
+  return pos >= to
+}
+
+/**
+ * Moves highlights to the line their content ends up on, and drops them only when their line
+ * is deleted (its content and one of its line breaks are removed). `DecorationSet.map` keeps
+ * line decorations in front of text inserted at the start of the line, and drops them when
+ * the line break before the line is deleted.
+ */
+function mapLineHighlights(lines: DecorationSet, tr: Transaction): DecorationSet {
+  const {changes, startState} = tr
+  const doc = startState.doc
+  const ranges: Range<Decoration>[] = []
+  const iter = lines.iter()
+  while (iter.value) {
+    const line = doc.lineAt(iter.from)
+    const lineBreakRemoved =
+      (line.from > 0 && isRemoved(changes, line.from - 1, line.from)) ||
+      (line.to < doc.length && isRemoved(changes, line.to, line.to + 1))
+    if (!lineBreakRemoved || !isRemoved(changes, line.from, line.to)) {
+      const from = tr.newDoc.lineAt(changes.mapPos(line.from, 1)).from
+      if (ranges.at(-1)?.from !== from) {
+        ranges.push(lineHighlightMark.range(from))
+      }
+    }
+    iter.next()
+  }
+  return Decoration.set(ranges)
+}
 
 function getHighlightedLines(lines: DecorationSet, doc: Text): number[] {
   const highlightLines: number[] = []

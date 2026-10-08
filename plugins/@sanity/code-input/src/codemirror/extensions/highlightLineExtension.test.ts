@@ -86,6 +86,14 @@ describe('mapping highlighted lines through edits', () => {
       changes: {from: 0, to: doc.length, insert: 'new'},
       expected: [],
     },
+    {
+      name: 'inserting line breaks with multiple cursors',
+      changes: [
+        {from: 0, insert: '\n'},
+        {from: 8, insert: '\n'},
+      ],
+      expected: [{line: 5, text: 'three'}],
+    },
   ])('$name', ({changes, expected}) => {
     const state = createState(doc, [3])
     expect(getHighlights(state)).toEqual([{line: 3, text: 'three'}])
@@ -97,6 +105,12 @@ describe('mapping highlighted lines through edits', () => {
     const state = createState(doc, [2, 3]).update({changes: {from: 7, to: 8}}).state
 
     expect(getHighlights(state)).toEqual([{line: 2, text: 'twothree'}])
+  })
+
+  test('keeps the highlight of an empty line when typing on it', () => {
+    const state = createState('one\n\nthree', [2]).update({changes: {from: 4, insert: 'x'}}).state
+
+    expect(getHighlights(state)).toEqual([{line: 2, text: 'x'}])
   })
 
   test('removes the highlight of an empty line when the line is deleted', () => {
