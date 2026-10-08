@@ -192,6 +192,58 @@ describe('DialogAssetEdit', () => {
     })
   })
 
+  it('saves without a closeDialogId when Save is clicked, leaving the dialog open', async () => {
+    const user = userEvent.setup()
+    const base = createTestRootState({
+      dialog: {
+        items: [{id: 'dlg-1', type: 'assetEdit', assetId: 'a1'}],
+      },
+      assets: assetsPreloaded,
+    })
+
+    const {store} = renderWithProviders(
+      <DialogAssetEdit
+        dialog={{
+          id: 'dlg-1',
+          type: 'assetEdit',
+          assetId: 'a1',
+        }}
+      >
+        <span />
+      </DialogAssetEdit>,
+      {
+        preloaded: base,
+        toolOptions: {creditLine: {enabled: true}},
+      },
+    )
+    const dispatchSpy = vi.spyOn(store, 'dispatch')
+    const dlg = withinDialog(/asset details/i, screen)
+
+    await user.type(inputByName(/asset details/i, screen, 'title'), 'Hero image')
+    await user.click(dlg.getByRole('button', {name: /^save$/i}))
+
+    await waitFor(() => {
+      let updateAction
+      for (const call of dispatchSpy.mock.calls) {
+        const action = call[0]
+        if (assetsActions.updateRequest.match(action)) {
+          updateAction = action
+          break
+        }
+      }
+      expect(updateAction).toBeDefined()
+      // No closeDialogId is what keeps the dialog open — dialogClearOnAssetUpdateEpic
+      // only dismisses a dialog when the completed action carries one.
+      expect(updateAction?.payload.closeDialogId).toBeUndefined()
+      expect(updateAction?.payload).toMatchObject({
+        asset,
+        formData: expect.objectContaining({title: 'Hero image'}),
+      })
+    })
+
+    expect(store.getState().dialog.items).toEqual([{id: 'dlg-1', type: 'assetEdit', assetId: 'a1'}])
+  })
+
   it('removes only this dialog when closed', async () => {
     const user = userEvent.setup()
     const base = createTestRootState({
