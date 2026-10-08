@@ -366,7 +366,7 @@ To inspect a **new** build after making changes—while `pnpm devtools:test-stud
 pnpm devtools:test-studio:build
 ```
 
-Builds are not hooked into HMR; `sanity build` must be invoked manually (via the command above) each time you want a new session to inspect. Sessions can be compared against each other in the DevTools UI to diff bundle changes.
+Sessions can be compared against each other in the DevTools UI to diff bundle changes.
 
 How it works:
 
