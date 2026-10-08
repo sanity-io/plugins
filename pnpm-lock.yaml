@@ -289,7 +289,7 @@ catalogs:
       specifier: ^1.83.0
       version: 1.86.0
     oxlint-tsgolint:
-      specifier: ^7.0.2001
+      specifier: ^7.0.2003
       version: 7.0.2003
     react:
       specifier: ^19.3.0
