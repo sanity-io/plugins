@@ -72,7 +72,7 @@ catalog:
   oxlint-tsgolint: ^7.0.2001
   react: ^19.3.0
   react-dom: ^19.3.0
-  react-hook-form: ^7.85.0
+  react-hook-form: ^7.89.0
   react-icons: ^5.7.0
   react-is: ^19.3.0
   react-photo-album: ^3.6.0
