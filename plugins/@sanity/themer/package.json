@@ -70,7 +70,7 @@
   "dependencies": {
     "@sanity/color": "catalog:",
     "@sanity/icons": "catalog:",
-    "@sanity/themer-legacy": "^0.2.1",
+    "@sanity/themer-legacy": "^0.2.2",
     "@sanity/ui": "catalog:",
     "@vanilla-extract/dynamic": "catalog:",
     "@xstate/react": "catalog:",

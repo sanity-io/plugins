@@ -2042,8 +2042,8 @@ importers:
         specifier: 'catalog:'
         version: 5.2.3(react@19.3.0)
       '@sanity/themer-legacy':
-        specifier: ^0.2.1
-        version: 0.2.1(react-dom@19.3.0)(react@19.3.0)(sanity@6.19.0-next.13)(styled-components@6.5.3)
+        specifier: ^0.2.2
+        version: 0.2.2(react-dom@19.3.0)(react@19.3.0)(sanity@6.19.0-next.13)(styled-components@6.5.3)
       '@sanity/ui':
         specifier: 'catalog:'
         version: 4.4.0(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
@@ -8510,8 +8510,8 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  '@sanity/themer-legacy@0.2.1':
-    resolution: {integrity: sha512-8vQ4xXO5KUz0SYDeXHcReKtSRUvNsQzhqjnQGj6JqzsoA8nXHzhR/AfMnhZ2jV86pLy/7R/ffTHg5GJVmtm25Q==}
+  '@sanity/themer-legacy@0.2.2':
+    resolution: {integrity: sha512-lQLwDXHGG+prAjxrLX4F18PKbBuMkewyj3r60OMSc5f/Fk+KThdhNIMkC+v/ymhZMldClBzvYDk+FP0+ZU2Y6w==}
     engines: {node: '>=20.19 <22 || >=22.12'}
     peerDependencies:
       react: ^18 || ^19
@@ -23076,7 +23076,7 @@ snapshots:
     dependencies:
       yaml: 2.9.1
 
-  '@sanity/themer-legacy@0.2.1(react-dom@19.3.0)(react@19.3.0)(sanity@6.19.0-next.13)(styled-components@6.5.3)':
+  '@sanity/themer-legacy@0.2.2(react-dom@19.3.0)(react@19.3.0)(sanity@6.19.0-next.13)(styled-components@6.5.3)':
     dependencies:
       '@sanity/color': 3.0.9
       '@sanity/icons': 5.2.3(react@19.3.0)
