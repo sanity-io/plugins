@@ -1,5 +1,15 @@
 # @sanity/themer
 
+## 0.10.1
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2109](https://github.com/sanity-io/plugins/pull/2109) [`5bd1c62`](https://github.com/sanity-io/plugins/commit/5bd1c621dd7d4b150be1fbdfd527c11ca348b848) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to v14
+
+- [#2118](https://github.com/sanity-io/plugins/pull/2118) [`2212443`](https://github.com/sanity-io/plugins/commit/2212443ab5e26e212fe53bd50a121cbc00737db3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @sanity/themer-legacy to ^0.2.2
+
 ## 0.10.0
 
 ### Minor Changes
