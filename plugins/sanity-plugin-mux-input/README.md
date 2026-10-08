@@ -500,6 +500,10 @@ With `disableUploadConfig` and `disableTextTrackConfig` both on, the upload dial
 
 Directives are authored in Mux. The Robots panel starts a directive on one video at a time.
 
+### Applying a summary
+
+Opened from a video field, the Robots panel has **Apply summary**: it copies the newest **Summarize** title, description and tags into fields of the document that holds the video. A preview lists each output with the field it goes to, the field's current value and the new one. Fields named `title`, `description` and `tags` are picked when they're empty; a field that already has content is only replaced when you pick it. Only top-level text fields, and arrays of text for the tags, are offered. The change is an ordinary edit, so it stays a draft until you publish, and nothing is sent to Mux.
+
 ### What's stored on the video document
 
 Robots data lives at the root of each `mux.videoAsset` document, next to `data`:

@@ -1,12 +1,13 @@
 import {PlayIcon} from '@sanity/icons/Play'
-import {Box, Button, Flex, Select, Stack, Text} from '@sanity/ui'
+import {Box, Flex, Select, Stack, Text} from '@sanity/ui'
 import {useId, useState} from 'react'
 
 import type {RobotsDirectiveListing} from '../../hooks/useRobotsDirectives'
 import {ROBOTS_DIRECTIVES_DOCS_URL} from '../../robots/capability'
 import type {PendingCreateRow} from '../../robots/records'
-import type {RobotsDirective, RobotsDirectiveRun} from '../../robots/types'
+import type {RobotsDirective, RobotsDirectiveRun, RobotsJob} from '../../robots/types'
 import {RobotsDirectiveRunTable} from './RobotsDirectiveRunTable'
+import {RobotsReasonButton} from './RobotsReasonButton'
 import {RobotsUnconfirmedNote} from './RobotsUnconfirmedNote'
 
 function directivePrompt(listing: RobotsDirectiveListing, available: RobotsDirective[]): string {
@@ -27,7 +28,7 @@ export function RobotsDirectivesSection({
   unconfirmedRows,
   isLoading,
   runDisabledReason,
-  viewableJobIds,
+  jobsById,
   onRun,
   onClearUnconfirmed,
   onViewJob,
@@ -41,7 +42,7 @@ export function RobotsDirectivesSection({
   unconfirmedRows: PendingCreateRow[]
   isLoading: boolean
   runDisabledReason?: string | undefined
-  viewableJobIds: ReadonlySet<string>
+  jobsById: ReadonlyMap<string, RobotsJob>
   onRun: (directiveId: string) => void
   onClearUnconfirmed: () => void
   onViewJob: (jobId: string) => void
@@ -91,12 +92,13 @@ export function RobotsDirectivesSection({
                 ))}
               </Select>
             </Box>
-            <Button
+            <RobotsReasonButton
               icon={PlayIcon}
               text="Run directive"
               mode="ghost"
-              disabled={!chosenId || !!runDisabledReason}
-              title={runDisabledReason}
+              disabledReason={
+                runDisabledReason ?? (chosenId ? undefined : 'Pick a directive first.')
+              }
               onClick={() => onRun(chosenId)}
             />
           </Flex>
@@ -114,7 +116,7 @@ export function RobotsDirectivesSection({
         directiveNames={directiveNames}
         pointsToNote={canRun}
         isLoading={isLoading}
-        viewableJobIds={viewableJobIds}
+        jobsById={jobsById}
         onViewJob={onViewJob}
       />
     </Stack>

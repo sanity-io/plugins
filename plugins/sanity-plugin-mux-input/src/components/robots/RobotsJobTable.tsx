@@ -87,7 +87,7 @@ function JobRow({job, ...props}: {job: RobotsJob} & RobotsJobTableProps) {
           </Text>
           <Flex align="center" gap={1} wrap="wrap">
             <Text size={1} muted>
-              {formatTimestamp(job.created_at)} · AI units:
+              {formatTimestamp(job.created_at)} · Mux AI units:
             </Text>
             {units.isLoadable ? (
               <Button

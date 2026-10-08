@@ -45,13 +45,14 @@ import {
   type RobotsDocumentState,
   thumbnailJobsToApply,
 } from './records'
-import type {
-  RobotsAdvisory,
-  RobotsCapability,
-  RobotsDirectiveRun,
-  RobotsJob,
-  RobotsPendingCreate,
-  RobotsWorkflow,
+import {
+  isTerminalStatus,
+  type RobotsAdvisory,
+  type RobotsCapability,
+  type RobotsDirectiveRun,
+  type RobotsJob,
+  type RobotsPendingCreate,
+  type RobotsWorkflow,
 } from './types'
 
 /**
@@ -508,9 +509,11 @@ export class RobotsSyncStore {
 
   private async readDetail(job: RobotsJob): Promise<boolean> {
     try {
-      const response = await getRobotsJob(this.client, job.workflow, job.id)
-      if (response.data) {
-        this.details.set(job.id, response.data)
+      const detail = (await getRobotsJob(this.client, job.workflow, job.id)).data
+      // The single-job GET can trail the list; an unfinished read is retried on a later pass.
+      if (detail && !isTerminalStatus(detail.status)) return false
+      if (detail) {
+        this.details.set(job.id, detail)
         return true
       }
     } catch (error) {
@@ -534,9 +537,10 @@ export class RobotsSyncStore {
     if (loaded) this.persist()
   }
 
-  /** Keeps what the output dialog already fetched. */
+  /** Keeps what the output dialog fetched, once the job is final: an earlier read would pin
+   * the status it had then. */
   readonly rememberJobDetail = (job: RobotsJob) => {
-    if (this.details.has(job.id)) return
+    if (!isTerminalStatus(job.status) || this.details.has(job.id)) return
     this.details.set(job.id, job)
     this.publishReads()
     this.persist()

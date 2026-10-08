@@ -21,6 +21,7 @@ import type {MuxTextTrack} from '../../util/types'
 import FormField from '../FormField'
 import {RobotsNote} from './RobotsNote'
 import {RobotsParamFields} from './RobotsParamFields'
+import {RobotsReasonButton} from './RobotsReasonButton'
 
 /** Nothing runs until a confirm step names the workflow, the spend and any destructive choice. */
 export function RobotsRunDialog({
@@ -77,11 +78,10 @@ export function RobotsRunDialog({
   ) : (
     <Flex justify="flex-end" gap={2} padding={3}>
       <Button text="Cancel" mode="bleed" onClick={onClose} />
-      <Button
+      <RobotsReasonButton
         text="Continue"
         tone="primary"
-        disabled={!!runDisabledReason || errors.length > 0}
-        title={runDisabledReason ?? errors[0]}
+        disabledReason={runDisabledReason ?? errors[0]}
         onClick={() => {
           if (errors.length === 0) setConfirmedWorkflow(workflow)
         }}

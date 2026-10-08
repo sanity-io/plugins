@@ -1,7 +1,7 @@
-import {CopyIcon} from '@sanity/icons/Copy'
-import {Button, Card, Flex, Stack} from '@sanity/ui'
+import {Card, Flex, Stack} from '@sanity/ui'
 import {Code} from '@sanity/ui/code'
 
+import {RobotsCopyButton} from './RobotsCopyButton'
 import {RobotsNote} from './RobotsNote'
 
 function prettyJson(value: unknown): string | undefined {
@@ -25,14 +25,7 @@ export function RobotsJsonBlock({value, what}: {value: unknown; what: string}) {
   return (
     <Stack gap={2}>
       <Flex justify="flex-end">
-        <Button
-          icon={CopyIcon}
-          text="Copy"
-          mode="bleed"
-          fontSize={1}
-          padding={2}
-          onClick={() => void navigator.clipboard?.writeText(text)}
-        />
+        <RobotsCopyButton value={text} label="Copy the JSON" text="Copy" />
       </Flex>
       <Card
         padding={3}

@@ -732,7 +732,7 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
     description: 'Turn accumulated viewing data into per-moment engagement insights.',
     requiresViewData: true,
     notes: [
-      'Needs Mux Data views on this asset. With no views recorded there is nothing to analyse.',
+      'Needs Mux Data views on this asset. With no views recorded there is nothing to analyze.',
     ],
     params: [],
   },

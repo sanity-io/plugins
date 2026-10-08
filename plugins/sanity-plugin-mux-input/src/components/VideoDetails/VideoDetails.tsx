@@ -252,20 +252,20 @@ const VideoDetails: React.FC<VideoDetailsProps> = (props) => {
                 selected={tab === 'details'}
               />
               <Tab
-                aria-controls="references-panel"
-                icon={SearchIcon}
-                id="references-tab"
-                label={`Used by ${references ? `(${references.length})` : ''}`}
-                onClick={() => setTab('references')}
-                selected={tab === 'references'}
-              />
-              <Tab
                 aria-controls="robots-panel"
                 icon={RobotIcon}
                 id="robots-tab"
                 label="Robots"
                 onClick={() => setTab('robots')}
                 selected={tab === 'robots'}
+              />
+              <Tab
+                aria-controls="references-panel"
+                icon={SearchIcon}
+                id="references-tab"
+                label={`Used by ${references ? `(${references.length})` : ''}`}
+                onClick={() => setTab('references')}
+                selected={tab === 'references'}
               />
             </TabList>
             <TabPanel

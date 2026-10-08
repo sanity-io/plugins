@@ -10,6 +10,7 @@ import {formatTimestamp} from '../../robots/format'
 import {type RobotsJobDetailState, unitsCell} from '../../robots/records'
 import {type RobotsJob, robotsJobErrorMessage} from '../../robots/types'
 import {DIALOGS_Z_INDEX} from '../../util/constants'
+import {RobotsCopyButton} from './RobotsCopyButton'
 import {RobotsJsonBlock} from './RobotsJsonBlock'
 import {RobotsNote} from './RobotsNote'
 import {OUTPUT_VIEWS} from './RobotsOutputViews'
@@ -103,22 +104,30 @@ export function RobotsOutputDialog({
       width={2}
     >
       <Stack gap={4} padding={4}>
-        <Grid gap={3} style={{gridTemplateColumns: 'max-content minmax(0, 1fr)'}}>
+        <Grid
+          gap={3}
+          style={{gridTemplateColumns: 'max-content minmax(0, 1fr)', alignItems: 'center'}}
+        >
           <Fact label="Status">
             <Flex>
               <RobotsStatusBadge kind="job" status={shown.status} />
             </Flex>
           </Fact>
-          <Fact label="AI units">
+          <Fact label="Mux AI units">
             <Text size={1}>{isLoading ? 'Loading…' : unitsCell(shown, detail).label}</Text>
           </Fact>
           <Fact label="Started">
             <Text size={1}>{formatTimestamp(shown.created_at)}</Text>
           </Fact>
           <Fact label="Job ID">
-            <Text size={1} textOverflow="ellipsis" title={shown.id}>
-              {shown.id}
-            </Text>
+            <Flex align="center" gap={2}>
+              <Box flex={1} style={{minWidth: 0}}>
+                <Text size={1} textOverflow="ellipsis" title={shown.id}>
+                  {shown.id}
+                </Text>
+              </Box>
+              <RobotsCopyButton value={shown.id} label="Copy job ID" />
+            </Flex>
           </Fact>
         </Grid>
 

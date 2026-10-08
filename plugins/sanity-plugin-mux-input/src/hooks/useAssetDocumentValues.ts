@@ -14,6 +14,7 @@ const path = [
   'robotsJobs',
   'robotsDirectiveRuns',
   'robotsPendingCreates',
+  'robotsOutputs',
 ]
 export const useAssetDocumentValues = (asset: Reference | null | undefined) =>
   useDocumentValues<VideoAssetDocument | null | undefined>(

@@ -4,48 +4,63 @@ import {Box, Button, Card, Flex, Stack, Text} from '@sanity/ui'
 import {useState} from 'react'
 
 import {workflowLabel} from '../../robots/catalog'
-import {EM_DASH, formatTimestamp, nodeStateDetail, runStatusNote} from '../../robots/format'
+import {
+  EM_DASH,
+  formatTimestamp,
+  nodeStateDetail,
+  runStatusNote,
+  stepCountLabel,
+} from '../../robots/format'
 import {type PendingCreateRow, runTableRows} from '../../robots/records'
-import type {RobotsDirectiveRun, RobotsNodeState} from '../../robots/types'
+import type {RobotsDirectiveRun, RobotsJob, RobotsNodeState} from '../../robots/types'
 import {RobotsNote} from './RobotsNote'
 import {RobotsStatusBadge} from './RobotsStatusBadge'
 
 function NodeStates({
   nodeStates,
-  viewableJobIds,
+  jobsById,
   onViewJob,
 }: {
   nodeStates: RobotsNodeState[]
-  viewableJobIds: ReadonlySet<string>
+  jobsById: ReadonlyMap<string, RobotsJob>
   onViewJob: (jobId: string) => void
 }) {
   return (
     <Stack gap={2}>
-      {nodeStates.map((node, index) => (
-        <Flex key={node.job_id ?? node.reference_id ?? index} align="center" gap={3} wrap="wrap">
-          <Box flex={1} style={{minWidth: '8rem'}}>
-            <Text size={1}>
-              {node.workflow_name
-                ? workflowLabel(node.workflow_name)
-                : (node.reference_id ?? `Step ${index + 1}`)}
-            </Text>
-          </Box>
-          <RobotsStatusBadge kind="node" status={node.status} />
-          {node.job_id && viewableJobIds.has(node.job_id) ? (
-            <Button
-              text="View job"
-              mode="bleed"
-              fontSize={1}
-              padding={2}
-              onClick={() => onViewJob(node.job_id!)}
-            />
-          ) : (
-            <Text size={1} muted>
-              {nodeStateDetail(node)}
-            </Text>
-          )}
-        </Flex>
-      ))}
+      {nodeStates.map((node, index) => {
+        // A step stays "dispatched" for good; once its job is listed, the job says how it went.
+        const job = node.job_id ? jobsById.get(node.job_id) : undefined
+        return (
+          <Flex key={node.job_id ?? node.reference_id ?? index} align="center" gap={3} wrap="wrap">
+            <Box flex={1} style={{minWidth: '8rem'}}>
+              <Text size={1}>
+                {node.workflow_name
+                  ? workflowLabel(node.workflow_name)
+                  : (node.reference_id ?? `Step ${index + 1}`)}
+              </Text>
+            </Box>
+            {job ? (
+              <>
+                <RobotsStatusBadge kind="job" status={job.status} />
+                <Button
+                  text="View job"
+                  mode="bleed"
+                  fontSize={1}
+                  padding={2}
+                  onClick={() => onViewJob(job.id)}
+                />
+              </>
+            ) : (
+              <>
+                <RobotsStatusBadge kind="node" status={node.status} />
+                <Text size={1} muted>
+                  {nodeStateDetail(node)}
+                </Text>
+              </>
+            )}
+          </Flex>
+        )
+      })}
     </Stack>
   )
 }
@@ -53,12 +68,12 @@ function NodeStates({
 function RunRow({
   run,
   name,
-  viewableJobIds,
+  jobsById,
   onViewJob,
 }: {
   run: RobotsDirectiveRun
   name: string
-  viewableJobIds: ReadonlySet<string>
+  jobsById: ReadonlyMap<string, RobotsJob>
   onViewJob: (jobId: string) => void
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -72,7 +87,7 @@ function RunRow({
               {name}
             </Text>
             <Text size={1} muted>
-              {formatTimestamp(run.started_at)} · {nodeStates.length} steps
+              {formatTimestamp(run.started_at)} · {stepCountLabel(nodeStates.length)}
             </Text>
           </Stack>
           <RobotsStatusBadge kind="run" status={run.status} />
@@ -91,11 +106,7 @@ function RunRow({
           </Text>
         )}
         {isExpanded && (
-          <NodeStates
-            nodeStates={nodeStates}
-            viewableJobIds={viewableJobIds}
-            onViewJob={onViewJob}
-          />
+          <NodeStates nodeStates={nodeStates} jobsById={jobsById} onViewJob={onViewJob} />
         )}
       </Stack>
     </Card>
@@ -108,7 +119,7 @@ export function RobotsDirectiveRunTable({
   directiveNames,
   pointsToNote,
   isLoading,
-  viewableJobIds,
+  jobsById,
   onViewJob,
 }: {
   runs: RobotsDirectiveRun[]
@@ -116,8 +127,8 @@ export function RobotsDirectiveRunTable({
   directiveNames: Record<string, string>
   pointsToNote: boolean
   isLoading: boolean
-  /** Jobs the panel lists, which a dispatched step can open. */
-  viewableJobIds: ReadonlySet<string>
+  /** Jobs the panel lists, which a dispatched step shows and opens. */
+  jobsById: ReadonlyMap<string, RobotsJob>
   onViewJob: (jobId: string) => void
 }) {
   const rows = runTableRows(pendingRows, runs)
@@ -159,7 +170,7 @@ export function RobotsDirectiveRunTable({
             key={row.key}
             run={row.item}
             name={nameOf(row.item.directive_id)}
-            viewableJobIds={viewableJobIds}
+            jobsById={jobsById}
             onViewJob={onViewJob}
           />
         ),

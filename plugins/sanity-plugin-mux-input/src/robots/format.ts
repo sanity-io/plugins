@@ -48,12 +48,23 @@ export function nodeStateDetail(node: RobotsNodeState): string {
   if (node.source_workflows?.length) {
     return `Waiting on ${node.source_workflows.map(workflowLabel).join(', ')}`
   }
-  if (node.status === 'waiting_for_resources') return 'Waiting for resources'
+  if (node.status === 'waiting_for_resources') return 'Waiting for a resource, such as captions'
   if (node.status === 'dispatched') return 'Dispatched'
   return EM_DASH
 }
 
-/** A final run status that needs words beside its badge. */
+/** How many steps a run has, before Mux has listed any. */
+export function stepCountLabel(count: number): string {
+  if (count === 0) return 'No steps yet'
+  return count === 1 ? '1 step' : `${count} steps`
+}
+
+/** A run status that needs words beside its badge. */
 export function runStatusNote(status: RobotsDirectiveRunStatus | undefined): string | undefined {
-  return status === 'partial' ? 'Some workflows finished and others failed.' : undefined
+  if (status === 'partial') return 'Some workflows finished and others failed.'
+  // A directive whose workflows read captions stalls on a video that has none.
+  if (status === 'waiting') {
+    return 'Waiting for something this video doesn’t have yet, such as a caption track. The run goes on once it’s there.'
+  }
+  return undefined
 }

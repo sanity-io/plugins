@@ -52,9 +52,9 @@ const COPY: Record<
     title: 'Not enough Mux AI units left this month',
     body: () => (
       <>
-        Mux refused the last run. Every Mux account gets 100,000 AI units a month at no cost, and
-        this one doesn’t have enough left for it. A cheaper workflow may still fit. Units reset next
-        month, or sooner on a paid plan.{' '}
+        Mux refused the last run. Every Mux account gets 100,000 Mux AI units a month at no cost,
+        and this one doesn’t have enough left for it. A cheaper workflow may still fit. Units reset
+        next month, or sooner on a paid plan.{' '}
         <a href={ROBOTS_PRICING_URL} target="_blank" rel="noopener noreferrer">
           See Robots pricing
         </a>

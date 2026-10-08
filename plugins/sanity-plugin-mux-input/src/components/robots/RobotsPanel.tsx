@@ -1,12 +1,13 @@
 import {RefreshIcon} from '@sanity/icons/Refresh'
 import {RobotIcon} from '@sanity/icons/Robot'
-import {Box, Button, Flex, Spinner, Stack, Text} from '@sanity/ui'
+import {Button, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {useEffect, useState} from 'react'
 
 import {useCanRunRobots} from '../../hooks/useCanRunRobots'
 import {directiveNamesById, useRobotsDirectives} from '../../hooks/useRobotsDirectives'
 import {useRobotsSync} from '../../hooks/useRobotsSync'
+import type {SummaryTarget} from '../../hooks/useSummaryTarget'
 import {robotsRunnersOnlyNote} from '../../robots/access'
 import type {RobotsAssetContext} from '../../robots/catalog'
 import {
@@ -20,20 +21,27 @@ import type {RobotsToast} from '../../robots/sync'
 import type {RobotsPendingCreate} from '../../robots/types'
 import {hasUsableCaptionTrack, isCaptionTrack} from '../../util/tracks'
 import type {MuxInputConfig, MuxTextTrack, VideoAssetDocument} from '../../util/types'
+import {RobotsApplySummaryDialog} from './RobotsApplySummaryDialog'
 import {RobotsCapabilityCard} from './RobotsCapabilityCard'
 import {RobotsDirectivesSection} from './RobotsDirectivesSection'
 import {detailStateOf, RobotsJobTable} from './RobotsJobTable'
 import {RobotsNote} from './RobotsNote'
 import {RobotsOutputDialog} from './RobotsOutputDialog'
+import {RobotsReasonButton} from './RobotsReasonButton'
 import {RobotsRunDialog} from './RobotsRunDialog'
 import {RobotsUnconfirmedNote} from './RobotsUnconfirmedNote'
 
 const NO_DIRECTIVES: string[] = []
 
+const APPLY_SUMMARY_EMPTY =
+  'Run a Summarize workflow to apply its title, description and tags to this document’s own fields.'
+
 export interface RobotsPanelProps {
   asset: VideoAssetDocument
   config: Pick<MuxInputConfig, 'allowedRolesForRobots' | 'defaultDirectiveIds'>
   readOnly?: boolean | undefined
+  /** The document the video field is in, when there is one: the summary can be applied to it. */
+  summaryTarget?: SummaryTarget | undefined
 }
 
 /** The current time in seconds, updated only when a pending create's row is due to relabel. */
@@ -64,6 +72,7 @@ function RobotsPanelForAsset({
   assetId,
   config,
   readOnly,
+  summaryTarget,
 }: RobotsPanelProps & {assetId: string}) {
   const toast = useToast()
   const canRun = useCanRunRobots(config) && !readOnly
@@ -72,6 +81,7 @@ function RobotsPanelForAsset({
   const isEnabled = snapshot.capability?.state === 'enabled'
   const {listing, reload: reloadDirectives} = useRobotsDirectives(isEnabled)
   const [isRunDialogOpen, setIsRunDialogOpen] = useState(false)
+  const [isApplySummaryOpen, setIsApplySummaryOpen] = useState(false)
   const [viewedJobId, setViewedJobId] = useState<string>()
 
   const pendings = pendingCreatesOf(asset)
@@ -132,22 +142,30 @@ function RobotsPanelForAsset({
   const shownJobs = jobsWithHistory(snapshot.jobs, asset.robotsJobs)
   const viewedJob = shownJobs.find((job) => job.id === viewedJobId)
   const directiveNames = directiveNamesById(listing, defaultDirectiveIds)
+  const summary = asset.robotsOutputs?.summarize
 
   return (
     <Stack gap={4}>
       <Flex justify="space-between" align="center" gap={2} wrap="wrap">
-        {canRun ? (
-          <Button
-            icon={RobotIcon}
-            text="Run a workflow"
-            tone="primary"
-            disabled={!!runDisabledReason}
-            title={runDisabledReason}
-            onClick={() => setIsRunDialogOpen(true)}
-          />
-        ) : (
-          <Box />
-        )}
+        <Flex gap={2} wrap="wrap">
+          {canRun && (
+            <RobotsReasonButton
+              icon={RobotIcon}
+              text="Run a workflow"
+              tone="primary"
+              disabledReason={runDisabledReason}
+              onClick={() => setIsRunDialogOpen(true)}
+            />
+          )}
+          {summaryTarget && (
+            <RobotsReasonButton
+              text="Apply summary"
+              mode="ghost"
+              disabledReason={summary ? undefined : APPLY_SUMMARY_EMPTY}
+              onClick={() => setIsApplySummaryOpen(true)}
+            />
+          )}
+        </Flex>
         <Button
           icon={RefreshIcon}
           text="Refresh"
@@ -200,7 +218,7 @@ function RobotsPanelForAsset({
         unconfirmedRows={unconfirmedRunRows}
         isLoading={snapshot.areDirectiveRunsPending}
         runDisabledReason={directiveRunDisabledReason}
-        viewableJobIds={new Set(shownJobs.map((job) => job.id))}
+        jobsById={new Map(shownJobs.map((job) => [job.id, job]))}
         onRun={(directiveId) => void store.startDirectiveRun(directiveId, notify)}
         onClearUnconfirmed={() =>
           store.clearUnconfirmed(unconfirmedRunRows.map((row) => row.pending))
@@ -216,6 +234,13 @@ function RobotsPanelForAsset({
           runDisabledReason={runDisabledReason}
           onRun={(workflow, parameters) => void store.startJob(workflow, parameters, notify)}
           onClose={() => setIsRunDialogOpen(false)}
+        />
+      )}
+      {summaryTarget && summary && isApplySummaryOpen && (
+        <RobotsApplySummaryDialog
+          summary={summary}
+          target={summaryTarget}
+          onClose={() => setIsApplySummaryOpen(false)}
         />
       )}
       {viewedJob && (

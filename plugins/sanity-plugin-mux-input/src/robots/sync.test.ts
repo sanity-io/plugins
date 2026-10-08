@@ -267,6 +267,26 @@ describe('RobotsSyncStore', () => {
     }
   })
 
+  test('a job read while it runs never pins that status', async () => {
+    api.listRobotsJobs.mockResolvedValue({data: [job('j1')]})
+    const store = subscribe(fakeContentLake({assetId: ASSET}))
+    await flush()
+    // The output dialog opened while the job was processing.
+    store.rememberJobDetail(job('j1'))
+
+    const completed = job('j1', {status: 'completed', outputs: {title: 'Done'}})
+    api.listRobotsJobs.mockResolvedValue({data: [job('j1', {status: 'completed'})]})
+    api.getRobotsJob.mockResolvedValue({data: completed})
+    store.refreshNow()
+    await flush()
+    await flush()
+
+    expect(store.getSnapshot().jobs[0]).toMatchObject({
+      status: 'completed',
+      outputs: {title: 'Done'},
+    })
+  })
+
   test('sends nothing when the placeholder cannot be saved', async () => {
     const lake = fakeContentLake({assetId: 'another-asset'})
     const store = subscribe(lake)
