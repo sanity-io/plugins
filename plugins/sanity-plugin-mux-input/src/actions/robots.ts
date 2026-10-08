@@ -37,7 +37,7 @@ interface ProxyErrorBody {
   mux?: {type?: unknown; message?: unknown}
 }
 
-function toRobotsRequestError(error: unknown): RobotsRequestError {
+export function toRobotsRequestError(error: unknown): RobotsRequestError {
   const {statusCode, response} = (error ?? {}) as {
     statusCode?: unknown
     response?: {body?: unknown}

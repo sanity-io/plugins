@@ -930,8 +930,8 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
         label: 'If the video is flagged',
         helpText:
           'Deleting the playback IDs makes the video unplayable everywhere it is embedded, the ' +
-          'moment the job finishes. The asset itself is kept; add a new playback ID in the Mux ' +
-          'dashboard, then resync the video.',
+          'moment the job finishes. The asset itself is kept, and the video’s player can create ' +
+          'a new playback ID.',
         options: [
           {value: '', label: 'Do nothing — just record the scores'},
           {value: 'delete_playback_ids', label: 'Delete every playback ID'},
@@ -946,8 +946,7 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
               'asset. Playback stops everywhere the video is embedded, not just in Sanity, and ' +
               'anything that needs a playback ID breaks with it, including other workflows in a ' +
               'directive run on this asset. The asset, its captions and the Robots history on ' +
-              'this document are kept. Add a new playback ID in the Mux dashboard, then resync ' +
-              'the video.',
+              'this document are kept, and the video’s player can create a new playback ID.',
           },
         ],
       },

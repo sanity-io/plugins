@@ -1,14 +1,12 @@
 import {type MuxPlayerProps, type MuxPlayerRefAttributes} from '@mux/mux-player-react'
 import MuxPlayer from '@mux/mux-player-react/lazy'
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
-import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
-import {Card, Flex, Stack, Text} from '@sanity/ui'
+import {Card, Text} from '@sanity/ui'
 import {type PropsWithChildren, Suspense, useMemo, useRef, useState} from 'react'
 
 import {PLUGIN_VERSION} from '../constants'
 import {useDialogStateContext} from '../context/DialogStateContext'
 import {useClient} from '../hooks/useClient'
-import {ROBOTS_DASHBOARD_URL} from '../robots/capability'
 import {AUDIO_ASPECT_RATIO, MIN_ASPECT_RATIO} from '../util/constants'
 import {generateJwt} from '../util/generateJwt'
 import {getPlaybackId} from '../util/getPlaybackPolicy'
@@ -22,12 +20,14 @@ import CaptionsDialog from './CaptionsDialog'
 import EditThumbnailDialog from './EditThumbnailDialog'
 import {AudioIcon} from './icons/Audio'
 import MezzanineDialog from './MezzanineDialog'
+import {NoPlaybackIdNotice} from './NoPlaybackIdNotice'
 
 export default function VideoPlayer({
   asset,
   thumbnailWidth = 250,
   children,
   hlsConfig,
+  readOnly,
   ...props
 }: PropsWithChildren<
   {
@@ -35,6 +35,7 @@ export default function VideoPlayer({
     thumbnailWidth?: number
     forceAspectRatio?: number
     hlsConfig?: MuxPlayerProps['_hlsConfig']
+    readOnly?: boolean
   } & Partial<Pick<MuxPlayerProps, 'autoPlay'>>
 >) {
   const client = useClient()
@@ -201,7 +202,7 @@ export default function VideoPlayer({
             </Suspense>
           </>
         )}
-        {!hasPlaybackIds && <NoPlaybackIdNotice />}
+        {!hasPlaybackIds && <NoPlaybackIdNotice asset={asset} readOnly={readOnly} />}
         {error ? (
           <div
             style={{
@@ -232,33 +233,6 @@ export default function VideoPlayer({
       {dialogState === 'edit-captions' && <CaptionsDialog asset={asset} />}
       {dialogState === 'mezzanine' && <MezzanineDialog asset={asset} />}
     </>
-  )
-}
-
-function NoPlaybackIdNotice() {
-  return (
-    <Flex
-      align="center"
-      justify="center"
-      padding={4}
-      style={{position: 'absolute', inset: 0, overflow: 'auto'}}
-    >
-      <Stack gap={3} style={{maxWidth: '30rem'}}>
-        <Text size={1} weight="semibold">
-          <WarningOutlineIcon style={{marginRight: '0.25em'}} />
-          This video has no playback ID
-        </Text>
-        <Text size={1} muted>
-          It can’t play here or wherever it’s embedded. Robots Moderate deletes playback IDs when it
-          flags content, and they can also be removed in Mux. To restore playback, add a playback ID
-          to this asset in the{' '}
-          <a href={ROBOTS_DASHBOARD_URL} target="_blank" rel="noopener noreferrer">
-            Mux dashboard
-          </a>
-          , then resync the video.
-        </Text>
-      </Stack>
-    </Flex>
   )
 }
 
