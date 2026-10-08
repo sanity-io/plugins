@@ -673,6 +673,8 @@ Tests run against the dedicated bare-bones `dev/e2e-studio` (workspaces `/chromi
 
 Standard commands from the Quick Reference table apply. Run `pnpm build` before `pnpm lint` if type errors reference missing `dist/` output. `pretest` automatically builds all packages except `dev/*` before Vitest runs.
 
+Cursor Cloud VMs set `core.hooksPath` to a directory outside the repo, so `pnpm knip` reports `lefthook` as an unused devDependency: outside CI, knip only counts it as used when a git hook in that directory runs it. Point git at the repo's hooks for the one command with `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=.git/hooks pnpm knip`.
+
 ## Related Documentation
 
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Human contributor guide
