@@ -3398,7 +3398,7 @@ importers:
         specifier: 'catalog:'
         version: 4.4.0(react-dom@19.3.0)(react@19.3.0)(styled-components@6.5.3)
       '@tanstack/react-virtual':
-        specifier: ^3.14.10
+        specifier: ^3.14.13
         version: 3.14.13(react-dom@19.3.0)(react@19.3.0)
       lexorank:
         specifier: 'catalog:'
