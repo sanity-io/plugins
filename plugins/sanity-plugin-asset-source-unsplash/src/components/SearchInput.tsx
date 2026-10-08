@@ -16,6 +16,9 @@ const rotate = keyframes`
 
 const AnimatedSpinnerIcon = styled(SpinnerIcon)`
   animation: ${rotate} 500ms linear infinite;
+  /* Prevents a wobbly spinner on Safari */
+  height: round(1em, 2px);
+  width: round(1em, 2px);
 `
 
 export function SearchInput({
