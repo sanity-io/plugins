@@ -875,6 +875,7 @@ describe('InternationalizedArray', () => {
     renderInternationalizedArray(props)
 
     expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
+    fireEvent.click(screen.getByTestId('add-translation-menu'))
     expect(screen.getByTestId('field-menu-add-all')).toBeDisabled()
     expect(screen.queryByTestId('add-all-languages')).not.toBeInTheDocument()
   })
@@ -888,6 +889,7 @@ describe('InternationalizedArray', () => {
 
     renderInternationalizedArray(createMockArrayProps({value: createValues(['en', 'fr'])}))
 
+    fireEvent.click(screen.getByTestId('add-translation-menu'))
     expect(screen.getByTestId('field-menu-add-all')).toBeDisabled()
     expect(screen.queryByTestId('add-buttons-grid')).not.toBeInTheDocument()
   })
@@ -908,6 +910,7 @@ describe('InternationalizedArray', () => {
     })
     renderInternationalizedArray(createMockArrayProps())
     expect(screen.queryByTestId('add-all-languages')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByTestId('add-translation-menu'))
     expect(screen.getByTestId('field-menu-add-all')).toBeEnabled()
     expect(screen.getByTestId('field-menu-add-all')).toHaveTextContent('Add all languages')
     expect(screen.getByTestId('add-translation-menu')).toBeInTheDocument()
