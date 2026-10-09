@@ -34,7 +34,6 @@ export function useRobotsUploadCheck(asset: VideoAssetDocument | null | undefine
     if (!upload || !readyAssetId || checkedDocumentId.current === upload.documentId) {
       return undefined
     }
-    checkedDocumentId.current = upload.documentId
     let cancelled = false
 
     const check = async () => {
@@ -82,7 +81,10 @@ export function useRobotsUploadCheck(asset: VideoAssetDocument | null | undefine
       }
     }
 
-    void check()
+    // Marked once it ends, so a check a re-run cut short starts over.
+    void check().then(() => {
+      if (!cancelled) checkedDocumentId.current = upload.documentId
+    })
     return () => {
       cancelled = true
     }

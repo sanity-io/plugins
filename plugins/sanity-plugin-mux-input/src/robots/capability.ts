@@ -41,7 +41,7 @@ function dashboardUrlIn(message: string): string | undefined {
   return /https:\/\/dashboard\.mux\.com\/[^\s"'<>]*/.exec(message)?.[0].replace(/[.,;:)]+$/, '')
 }
 
-/** Answered once per browser session: a token doesn't gain the scope between two documents. */
+/** Shared by every document until new secrets are saved or someone checks again. */
 let capabilityCache: RobotsCapability | undefined
 
 export function cachedRobotsCapability(): RobotsCapability | undefined {

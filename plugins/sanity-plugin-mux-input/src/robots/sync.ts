@@ -218,17 +218,17 @@ export class RobotsSyncStore {
 
   readonly getSnapshot = (): RobotsSyncSnapshot => this.snapshot
 
-  register(client: SanityClient): {
-    update: (inputs: SubscriberInputs) => void
+  register(): {
+    update: (inputs: SubscriberInputs & {client: SanityClient}) => void
     unregister: () => void
   } {
     const token = Symbol('robots-subscriber')
     const isFirst = this.subscribers.size === 0
-    this.client = client
     this.subscribers.set(token, {document: this.document, defaultDirectiveIds: []})
     if (isFirst && this.snapshot.hasLoadedOnce) this.needsFreshRead = true
     return {
-      update: (inputs) => {
+      update: ({client, ...inputs}) => {
+        this.client = client
         this.subscribers.set(token, inputs)
         this.setDocument(inputs.document)
       },
@@ -393,7 +393,7 @@ export class RobotsSyncStore {
       for (const id of this.locallyCreated.keys())
         if (listed.has(id)) this.locallyCreated.delete(id)
       this.liveJobs = [...this.locallyCreated.values(), ...fetched]
-      // A successful list is the capability check, for the whole session.
+      // A successful list is the capability check, for every document.
       recordRobotsCapability({state: 'enabled'})
       this.set({
         capability:

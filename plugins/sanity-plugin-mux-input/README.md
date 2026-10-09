@@ -470,7 +470,7 @@ Every run consumes Mux AI units, and the plugin asks for confirmation before eac
 
 ### Access token
 
-Robots needs an access token with the `robots:*` scope, and the Robots terms accepted in your Mux dashboard. The scope can't be added to an existing token: create a new one and paste it into **Configure API**. A token without the scope keeps working for everything else, and the Robots panel explains what's missing.
+Robots needs an access token with the `robots:*` scope, and the Robots terms accepted in your Mux dashboard. The scope can't be added to an existing token: create a new one and paste it into **Configure API**. A token without the scope keeps working for everything else, and the Robots panel explains what's missing, with a **Check again** button for once it's fixed.
 
 ### Who can run Robots
 

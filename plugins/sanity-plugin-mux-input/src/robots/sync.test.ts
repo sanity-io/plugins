@@ -115,8 +115,8 @@ describe('RobotsSyncStore', () => {
 
   function subscribe(lake: ReturnType<typeof fakeContentLake>) {
     const store = new RobotsSyncStore(lake.client, 'doc-1', ASSET)
-    const subscription = store.register(lake.client)
-    subscription.update({document: lake.doc, defaultDirectiveIds: []})
+    const subscription = store.register()
+    subscription.update({client: lake.client, document: lake.doc, defaultDirectiveIds: []})
     unregister = subscription.unregister
     return store
   }
@@ -128,8 +128,8 @@ describe('RobotsSyncStore', () => {
     await flush()
     expect(api.listRobotsJobs).not.toHaveBeenCalled()
 
-    const subscription = store.register(lake.client)
-    subscription.update({document: lake.doc, defaultDirectiveIds: []})
+    const subscription = store.register()
+    subscription.update({client: lake.client, document: lake.doc, defaultDirectiveIds: []})
     unregister = subscription.unregister
     await flush()
     await flush()
@@ -138,7 +138,7 @@ describe('RobotsSyncStore', () => {
     expect(lake.doc.robotsJobs?.map((record) => record.id)).toEqual(['j1'])
   })
 
-  test('decides capability from the job list and caches it for the session', async () => {
+  test('decides capability from the job list and caches it for other documents', async () => {
     const lake = fakeContentLake({assetId: ASSET})
     api.listRobotsJobs.mockRejectedValue(
       new RobotsRequestError('No robots scope', {
@@ -154,6 +154,29 @@ describe('RobotsSyncStore', () => {
     const next = subscribe(fakeContentLake({assetId: ASSET}))
     expect(next.getSnapshot().capability).toEqual({state: 'scope-missing'})
     expect(api.listRobotsJobs).toHaveBeenCalledTimes(1)
+  })
+
+  test('checks again on demand, and other documents then skip the cached refusal', async () => {
+    api.listRobotsJobs.mockRejectedValueOnce(
+      new RobotsRequestError('No robots scope', {
+        status: 401,
+        type: 'unauthorized',
+        muxAnswered: true,
+      }),
+    )
+    const store = subscribe(fakeContentLake({assetId: ASSET}))
+    await flush()
+    expect(store.getSnapshot().capability).toEqual({state: 'scope-missing'})
+
+    // The token was replaced in Configure API.
+    store.refreshNow()
+    await flush()
+    expect(store.getSnapshot().capability).toEqual({state: 'enabled'})
+
+    const next = subscribe(fakeContentLake({assetId: ASSET}))
+    await flush()
+    expect(next.getSnapshot().capability).toEqual({state: 'enabled'})
+    expect(api.listRobotsJobs).toHaveBeenCalledTimes(3)
   })
 
   test('saves the placeholder before creating, then swaps it for the job', async () => {

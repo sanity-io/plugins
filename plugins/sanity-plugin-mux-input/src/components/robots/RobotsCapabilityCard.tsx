@@ -1,4 +1,4 @@
-import {Card, type CardTone, Stack, Text} from '@sanity/ui'
+import {Box, Button, Card, type CardTone, Stack, Text} from '@sanity/ui'
 import type {ReactNode} from 'react'
 
 import {
@@ -68,9 +68,14 @@ const COPY: Record<
 export function RobotsCapabilityCard({
   state,
   termsUrl,
+  onCheckAgain,
+  isChecking,
 }: {
   state: CardState
   termsUrl?: string | undefined
+  /** In place of the panel, the only way to ask Mux again after fixing the token or terms. */
+  onCheckAgain?: () => void
+  isChecking?: boolean
 }) {
   const copy = COPY[state]
   return (
@@ -80,6 +85,18 @@ export function RobotsCapabilityCard({
           {copy.title}
         </Text>
         <Text size={1}>{copy.body(termsUrl ?? ROBOTS_DASHBOARD_URL)}</Text>
+        {onCheckAgain && (
+          <Box>
+            <Button
+              text="Check again"
+              mode="ghost"
+              fontSize={1}
+              padding={2}
+              loading={isChecking}
+              onClick={onCheckAgain}
+            />
+          </Box>
+        )}
       </Stack>
     </Card>
   )

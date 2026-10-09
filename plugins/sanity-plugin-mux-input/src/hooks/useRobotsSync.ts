@@ -40,20 +40,23 @@ export function useRobotsSync(
   )
 
   const subscription = useRef<ReturnType<RobotsSyncStore['register']>>(undefined)
+  // Only `store` re-registers, so the effect below always follows with the inputs, which a
+  // returning subscriber needs to resume polling.
   useEffect(() => {
     if (!store) return undefined
-    const registered = store.register(client)
+    const registered = store.register()
     subscription.current = registered
     return () => {
       registered.unregister()
       subscription.current = undefined
     }
-  }, [store, client])
+  }, [store])
 
-  // Also after `store` changes, so a new subscription gets the inputs straight away.
   useEffect(() => {
-    if (store) subscription.current?.update({document: asset ?? undefined, defaultDirectiveIds})
-  }, [store, asset, defaultDirectiveIds])
+    if (store) {
+      subscription.current?.update({client, document: asset ?? undefined, defaultDirectiveIds})
+    }
+  }, [store, client, asset, defaultDirectiveIds])
 
   return {store, snapshot}
 }

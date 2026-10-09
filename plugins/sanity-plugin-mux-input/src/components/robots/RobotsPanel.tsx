@@ -90,7 +90,14 @@ function RobotsPanelForAsset({
   if (!store) return null
   const {capability} = snapshot
   if (capability && capability.state !== 'enabled') {
-    return <RobotsCapabilityCard state={capability.state} termsUrl={capability.termsUrl} />
+    return (
+      <RobotsCapabilityCard
+        state={capability.state}
+        termsUrl={capability.termsUrl}
+        onCheckAgain={() => store.refreshNow()}
+        isChecking={snapshot.isRefreshing}
+      />
+    )
   }
   if (!snapshot.hasLoadedOnce && !isEnabled) {
     return (
