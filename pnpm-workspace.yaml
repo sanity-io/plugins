@@ -67,7 +67,7 @@ catalog:
   motion: ^14.0.0
   nanoid: ^6.0.2
   oxc-transform-react: ^0.153.0
-  oxfmt: ^0.71.0
+  oxfmt: ^0.72.0
   oxlint: ^1.83.0
   oxlint-tsgolint: ^7.0.2003
   react: ^19.3.0
