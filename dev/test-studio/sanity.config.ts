@@ -53,6 +53,7 @@ import {shopifyAssetsExample} from '#shopify-assets'
 import {smartlingExample} from '#smartling'
 import {studioSecretsExample} from '#studio-secrets'
 import {tableExample} from '#table'
+import {themerExample} from '#themer'
 import {transifexExample} from '#transifex'
 import {translationsTabExample} from '#translations-tab'
 import {unsplashExample} from '#unsplash'
@@ -141,7 +142,7 @@ export default defineConfig([
       debugSecrets(),
       vercelProtectionBypassTool(),
       visionTool(),
-      themerTool({title: 'Themer 2.0'}),
+      themerExample(),
     ],
   }),
   // Re-registers `internationalizedArray` with async languages loaded from
