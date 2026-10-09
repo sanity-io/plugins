@@ -3,7 +3,6 @@ import {
   type TreeItem,
   getFlatDataFromTree,
 } from '@nosferatu500/react-sortable-tree'
-import {randomKey} from '@sanity/util/content'
 import * as Patch from 'sanity'
 
 import type {LocalTreeItem, NodeProps} from '../types'
@@ -49,16 +48,29 @@ export function getAddItemPatch(item: LocalTreeItem): unknown[] {
   ]
 }
 
-export function getDuplicateItemPatch(nodeProps: NodeProps): unknown[] {
-  const newItem = {
-    ...nodeProps.node,
-    _key: randomKey(12),
+export function getDuplicateItemPatch(
+  nodeProps: NodeProps,
+  options: {referenceId: string; key: string},
+): unknown[] {
+  const {node} = nodeProps
+  const value = node.value
+  const newItem: LocalTreeItem = {
+    ...node,
+    _key: options.key,
+    value: value?.reference
+      ? {
+          ...value,
+          reference: {
+            ...value.reference,
+            _ref: options.referenceId,
+          },
+        }
+      : value,
   }
-  const normalizedNode = normalizeNodeForStorage(newItem)
 
   return [
-    // Add duplicated node before the existing one
-    Patch.insert([normalizedNode], 'before', [{_key: nodeProps.node._key}]),
+    // Add duplicated node before the existing one, pointing at the new document
+    Patch.insert([normalizeNodeForStorage(newItem)], 'before', [{_key: node._key}]),
   ]
 }
 
