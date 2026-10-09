@@ -144,8 +144,8 @@ To limit which users can see the AI Assist actions in the Studio, use a custom-p
 that filters out the inspector and actions, based on user properties:
 
 ```ts
-import {CurrentUser, defineConfig} from 'sanity'
 import {assist} from '@sanity/assist'
+import {CurrentUser, defineConfig} from 'sanity'
 export default defineConfig({
   // ...
   plugins: [
@@ -919,9 +919,9 @@ or other custom actions into the AI Assist document and field action menus, use 
 Because of react hook linting, we recommend defining the `useExampleFieldActions` outside the plugin config:
 
 ```ts
+import {assist, type AssistFieldActionProps, defineAssistFieldAction} from '@sanity/assist'
 //sanity.config.ts
 import {defineConfig} from 'sanity'
-import {assist, type AssistFieldActionProps, defineAssistFieldAction} from '@sanity/assist'
 function useExampleFieldActions(props: AssistFieldActionProps) {
   return useMemo(
     () => [

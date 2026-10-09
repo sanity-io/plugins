@@ -25,8 +25,8 @@ or
 In `sanity.config.js` (or .ts), add the dashboard tool to the defineConfig plugins array:
 
 ```ts
-import {defineConfig} from 'sanity'
 import {dashboardTool} from '@sanity/dashboard'
+import {defineConfig} from 'sanity'
 export default defineConfig({
   /* ... */
   plugins: [dashboardTool({widgets: []})],
@@ -41,13 +41,13 @@ It should show an empty dashboard, with a message encouraging you to add some wi
 Now, add any widgets you might want. The dashboard plugin provides three widgets out-of-the-box:
 
 ```ts
-import {defineConfig} from 'sanity'
 import {
   dashboardTool,
   sanityTutorialsWidget,
   projectUsersWidget,
   projectInfoWidget,
 } from '@sanity/dashboard'
+import {defineConfig} from 'sanity'
 
 // configure the dashboard tool with widgets
 dashboardTool({
@@ -64,9 +64,9 @@ projectUsersWidget({layout: {width: 'medium'}})
 You can change the name, title and icon of the dashboard tool should you want to - which also allows you to configure multiple dashboards with different configurations:
 
 ```ts
-import {defineConfig} from 'sanity'
 import {dashboardTool} from '@sanity/dashboard'
 import {ActivityIcon} from '@sanity/icons/Activity'
+import {defineConfig} from 'sanity'
 
 dashboardTool({
   name: 'stats',
