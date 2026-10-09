@@ -8,7 +8,7 @@ import debounce from 'lodash-es/debounce.js'
 import {type JSX, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {set, type StringInputProps, unset, useClient} from 'sanity'
 
-import type {AsyncListInputOptions} from '../types'
+import type {AsyncListInputOptions, AsyncListOption} from '../types'
 
 // Spinner shown in the Autocomplete `icon` slot while the loader is fetching.
 // Defined at module scope so it has a stable identity across renders.
@@ -36,14 +36,9 @@ function LoadingIcon(): JSX.Element {
   )
 }
 
-// Object for Autocomplete's `options` prop
-interface OptionsItem {
-  value: string
-  [key: string]: unknown
-}
-
-// Autocomplete options validation
-function validOptions(arr: unknown): arr is OptionsItem[] {
+// Autocomplete options validation. Only `value` is checked at runtime; other
+// fields on `Option` are the loader's contract and are enforced at compile time.
+function validOptions<Option extends AsyncListOption>(arr: unknown): arr is Option[] {
   return (
     Array.isArray(arr) &&
     arr.every(
@@ -62,8 +57,10 @@ function validOptions(arr: unknown): arr is OptionsItem[] {
  *
  * @public
  */
-export interface AsyncListInputProps extends StringInputProps {
-  options: AsyncListInputOptions
+export interface AsyncListInputProps<
+  Option extends AsyncListOption = AsyncListOption,
+> extends StringInputProps {
+  options: AsyncListInputOptions<Option>
 }
 
 /**
@@ -79,7 +76,9 @@ export interface AsyncListInputProps extends StringInputProps {
  *
  * @public
  */
-export function AsyncList(props: AsyncListInputProps): JSX.Element {
+export function AsyncList<Option extends AsyncListOption = AsyncListOption>(
+  props: AsyncListInputProps<Option>,
+): JSX.Element {
   const {options} = props
   const namespace =
     options.secrets?.namespace ??
@@ -103,7 +102,7 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
   }, [secretsKeys, secretsNamespace, schemaType])
 
   const {secrets} = useSecrets<Record<string, string> | undefined>(namespace)
-  const [data, setData] = useState<OptionsItem[] | null>(null)
+  const [data, setData] = useState<Option[] | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
   const [showSettings, setShowSettings] = useState(false)
@@ -121,7 +120,7 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
         const loaderData = await options.loader({secrets, query, client})
 
         // Validate and set data
-        if (validOptions(loaderData)) {
+        if (validOptions<Option>(loaderData)) {
           setData(loaderData)
         } else {
           console.error(
@@ -286,8 +285,8 @@ export function AsyncList(props: AsyncListInputProps): JSX.Element {
  *
  * @public
  */
-export function createAsyncListInput(
-  options: AsyncListInputOptions,
+export function createAsyncListInput<Option extends AsyncListOption = AsyncListOption>(
+  options: AsyncListInputOptions<Option>,
 ): (props: StringInputProps) => JSX.Element {
   return function AsyncListInput(props: StringInputProps): JSX.Element {
     'use memo'
