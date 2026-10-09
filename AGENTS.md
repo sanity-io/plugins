@@ -385,6 +385,10 @@ React profiling is already available in the development build from `pnpm dev`. `
 
 `dev/storybook` is a React Storybook set up like sanity-io/ui's `apps/storybook`, next to the other dev apps, with stories in `dev/storybook/stories/<plugin>/` (see its `README.md`). `pnpm dev:storybook` serves it at `http://localhost:6006` without Sanity authentication, `pnpm test:browser` renders every story in headless Chromium through the Storybook Vitest addon (the `storybook-test` CI job), and `pnpm storybook:build` writes the static build to `dev/storybook/storybook-static`. Install the browser once with `pnpm --filter plugins-storybook exec playwright install chromium`. The preview imports `@sanity/ui/styles.css` because the published `@sanity/ui` dist doesn't import its own CSS, and it keeps the vanilla-extract Vite plugin because workspace plugins resolve to their `.css.ts` source. Like the other `dev/*` apps, it's skipped by `pretest` and the CI build job.
 
+### `@sanity/ui` v5 (`ui5`)
+
+`sanity` renders the `@sanity/ui` v5 alpha next to v4, aliased as `ui5` (`"ui5": "npm:@sanity/ui@<version>"`). `dev/test-studio` depends on the same alias, pinned to the exact version `sanity` depends on, so that both resolve one instance and one stylesheet. Renovate leaves it alone (a `packageRules` entry in `.github/renovate.json`), so bump it by hand when the Studio's `ui5` moves. The test studio's **UI v5** tool (`/home/ui5`, `dev/test-studio/src/themer/ui5`) explores how far Themer's themes reach into v5, and flags when the two versions drift.
+
 ## Creating a New Plugin
 
 Use the generator:
