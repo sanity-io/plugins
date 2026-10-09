@@ -503,6 +503,84 @@ describe('InternationalizedArray', () => {
     ])
   })
 
+  test('seeds default languages on a pristine document when allowRemovingDefaultLanguages is set', async () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+      allowRemovingDefaultLanguages: true,
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    renderInternationalizedArray(props, {events: [], loading: false})
+
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalled()
+    })
+  })
+
+  test('does not restore default languages on a document with history when the field was unset', async () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+      allowRemovingDefaultLanguages: true,
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange, value: undefined})
+
+    renderInternationalizedArray(props, {
+      events: [{type: 'createDocumentVersion'}],
+      loading: false,
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not restore a missing default language on a document with history when allowRemovingDefaultLanguages is set', async () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+      allowRemovingDefaultLanguages: true,
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange, value: createValues(['fr'])})
+
+    renderInternationalizedArray(props, {
+      events: [{type: 'createDocumentVersion'}],
+      loading: false,
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not seed default languages again after a pristine document gains history', async () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+      allowRemovingDefaultLanguages: true,
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+    const {rerender} = renderInternationalizedArray(props, {events: [], loading: false})
+
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalled()
+    })
+    onChange.mockClear()
+
+    const removed = createMockArrayProps({onChange, value: undefined})
+    rerender(withEvents(removed, {events: [{type: 'edit'}], loading: false}))
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
   test('does not auto-add default languages when document is being deleted', () => {
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: true,
