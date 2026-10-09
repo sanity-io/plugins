@@ -15,8 +15,8 @@ Add the plugin to your `sanity.config.ts`:
 // ./sanity.config.ts
 import {debugSecrets} from '@sanity/debug-preview-url-secret-plugin'
 import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
 import {presentationTool} from 'sanity/presentation'
+import {structureTool} from 'sanity/structure'
 
 export default defineConfig({
   // ... other options

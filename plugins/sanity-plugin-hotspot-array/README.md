@@ -193,8 +193,8 @@ options: {
 In this example our `value` object has a `reference` field to the `product` schema type, and will show a document preview.
 
 ```jsx
-import {useSchema} from 'sanity'
 import {Box} from '@sanity/ui'
+import {useSchema} from 'sanity'
 
 export function ProductPreview({value, renderPreview}) {
   const productSchemaType = useSchema().get('product')

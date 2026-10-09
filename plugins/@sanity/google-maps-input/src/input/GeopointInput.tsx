@@ -37,9 +37,9 @@ export function GeopointInput(props: GeopointInputProps) {
 
   const {
     id,
-    ref: inputRef,
-    onBlur: handleBlur,
-    onFocus: handleFocus,
+    'ref': inputRef,
+    'onBlur': handleBlur,
+    'onFocus': handleFocus,
     'aria-describedby': ariaDescribedBy,
   } = elementProps
 

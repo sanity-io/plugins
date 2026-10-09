@@ -102,6 +102,7 @@ export default defineConfig({
 ```ts
 // sanity.config.ts
 import {media} from 'sanity-plugin-media'
+
 import {CustomDetails} from './MyCustomDetails'
 
 export default defineConfig({

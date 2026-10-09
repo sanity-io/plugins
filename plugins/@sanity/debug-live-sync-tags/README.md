@@ -23,8 +23,8 @@ yarn add @sanity/debug-live-sync-tags
 Add it as a plugin in sanity.config.ts:
 
 ```js
-import {defineConfig} from 'sanity'
 import {debugLiveSyncTags} from '@sanity/debug-live-sync-tags'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   // ...

@@ -11,8 +11,8 @@ npm install my-plugin
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {myPlugin} from 'my-plugin'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   // ...
