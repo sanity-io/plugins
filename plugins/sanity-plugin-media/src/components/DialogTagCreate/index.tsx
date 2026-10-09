@@ -65,10 +65,12 @@ const DialogTagCreate = (props: Props) => {
     }
   }, [creatingError, setError])
 
-  const Footer = () => (
+  // Element, not an inner component: a new component type each render remounts the
+  // footer between mousedown and mouseup (tooltip / layer updates), so the
+  // browser never fires click and Save and close does nothing.
+  const footer = (
     <Box padding={3}>
       <Flex justify="flex-end">
-        {/* Submit button */}
         <FormSubmitButton
           disabled={formUpdating || !isDirty || !isValid}
           isValid={isValid}
@@ -79,15 +81,7 @@ const DialogTagCreate = (props: Props) => {
   )
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/static-components
-      footer={<Footer />}
-      header="Create Tag"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Create Tag" id={id} onClose={handleClose} width={1}>
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Hidden button to enable enter key submissions */}
