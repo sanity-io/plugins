@@ -40,6 +40,111 @@ describe('constructFilter', () => {
     )
   })
 
+  it('matches localized alt text, title, description, and credit line when locales are configured', () => {
+    const q = constructFilter({
+      assetTypes: ['file', 'image'],
+      localeIds: ['en', 'zh-CN'],
+      searchFacets: [],
+      searchQuery: 'faucet',
+    })
+
+    // Bracket access: `altText.zh-CN` is subtraction, so `match` would miss the locale value.
+    // The bare field stays so assets not yet migrated from a plain string still match.
+    expect(q).toContain(
+      '[_id, altText, altText["en"], altText["zh-CN"], assetId, creditLine, creditLine["en"], creditLine["zh-CN"], description, description["en"], description["zh-CN"], originalFilename, title, title["en"], title["zh-CN"], url] match \'*faucet*\'',
+    )
+  })
+
+  it('matches an alt text facet against each configured locale', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      localeIds: ['en', 'zh-CN'],
+      searchFacets: [
+        {...inputs.altText, operatorType: 'includes', value: 'faucet'} as SearchFacetInputProps,
+      ],
+      searchQuery: undefined,
+    })
+
+    expect(q).toContain('[altText, altText["en"], altText["zh-CN"]] match \'*faucet*\'')
+  })
+
+  it('excludes localized alt text for the does-not-include facet', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      localeIds: ['en'],
+      searchFacets: [
+        {
+          ...inputs.altText,
+          operatorType: 'doesNotInclude',
+          value: 'faucet',
+        } as SearchFacetInputProps,
+      ],
+      searchQuery: undefined,
+    })
+
+    expect(q).toContain('!([altText, altText["en"]] match \'*faucet*\')')
+  })
+
+  it('treats a localized alt text field as empty only when no locale value is set', () => {
+    const empty = constructFilter({
+      assetTypes: ['image', 'file'],
+      localeIds: ['en', 'zh-CN'],
+      searchFacets: [{...inputs.altText, operatorType: 'empty'} as SearchFacetInputProps],
+      searchQuery: undefined,
+    })
+    const notEmpty = constructFilter({
+      assetTypes: ['image', 'file'],
+      localeIds: ['en', 'zh-CN'],
+      searchFacets: [{...inputs.altText, operatorType: 'notEmpty'} as SearchFacetInputProps],
+      searchQuery: undefined,
+    })
+
+    const present =
+      '((string(altText) == altText && defined(altText)) || defined(altText["en"]) || defined(altText["zh-CN"]))'
+    expect(empty).toContain(`!(${present})`)
+    expect(notEmpty).toContain(present)
+  })
+
+  it('does not localize facets that stay plain strings', () => {
+    const q = constructFilter({
+      assetTypes: ['image', 'file'],
+      localeIds: ['en'],
+      searchFacets: [
+        {...inputs.fileName, operatorType: 'includes', value: 'photo'} as SearchFacetInputProps,
+      ],
+      searchQuery: undefined,
+    })
+
+    expect(q).toContain("originalFilename match '*photo*'")
+    expect(q).not.toContain('originalFilename["en"]')
+  })
+
+  it('quotes locale ids so they cannot break out of the GROQ string', () => {
+    const q = constructFilter({
+      assetTypes: ['image'],
+      localeIds: ['en"'],
+      searchFacets: [
+        {...inputs.title, operatorType: 'includes', value: 'Kitchen'} as SearchFacetInputProps,
+      ],
+      searchQuery: undefined,
+    })
+
+    expect(q).toContain('[title, title["en\\""]] match \'*Kitchen*\'')
+  })
+
+  it('ignores blank locale ids and does not repeat a locale', () => {
+    const q = constructFilter({
+      assetTypes: ['image'],
+      localeIds: ['en', '', 'en'],
+      searchFacets: [],
+      searchQuery: 'faucet',
+    })
+
+    expect(q).toContain('altText, altText["en"], assetId')
+    expect(q).not.toContain('altText[""]')
+    expect(q.match(/altText\["en"\]/g)).toHaveLength(1)
+  })
+
   it('composes number facet with field modifier (size / KB)', () => {
     const q = constructFilter({
       assetTypes: ['image'],
