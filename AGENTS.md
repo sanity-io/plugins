@@ -47,7 +47,7 @@ Because pnpm 12 records that block, `pnpm-lock.yaml` is **two YAML documents**: 
 
 pnpm 12.6.0 doesn't settle on one set of optional peers for `plugins/@sanity/debug-preview-url-secret-plugin`. A fresh install, and any install or `pnpm dedupe` that re-resolves the lockfile, toggles `@vitejs/devtools` and `oxc-transform-react` in the peer suffixes of its `sanity` and `@sanity/tsdown-config` entries. No version changes and frozen installs are unaffected, so don't commit a `pnpm-lock.yaml` diff that only toggles those suffixes. The `Dedupe lockfile` workflow runs `pnpm dedupe` twice for the same reason.
 
-pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@4.2.5`) for one-off upgrades still inside that window. `minimumReleaseAgeExcludePrune` and `trustPolicyExcludePrune` drop exclude entries that no longer match anything in the tree, but only on an install that actually rewrites the lockfile—a no-op install leaves stale entries in place.
+pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific `name@version` pins (e.g. `yuku-core@0.18.1`) for one-off upgrades still inside that window. `minimumReleaseAgeExcludePrune` and `trustPolicyExcludePrune` drop exclude entries that no longer match anything in the tree, but only on an install that actually rewrites the lockfile—a no-op install leaves stale entries in place.
 
 Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
 
@@ -263,6 +263,7 @@ Example test file (`src/index.test.ts`):
 
 ```ts
 import {fileURLToPath} from 'node:url'
+
 import {expect, test} from 'vitest'
 import {getPackageExportsManifest} from 'vitest-package-exports'
 
@@ -566,7 +567,7 @@ A lefthook pre-commit hook (`lefthook.yml`, set up like sanity-io/sanity's) runs
 
 - **Clones that ran husky:** they still have `core.hooksPath` set to `.husky/_`, and lefthook won't install there. Run `git config --unset core.hooksPath && pnpm install` once.
 - **Hook commands:** they call `node_modules/.bin/oxfmt` directly. `pnpm <bin>` in a hook runs pnpm 12's implicit install, which flips the peer toggle described under pnpm Version.
-- **Local scripts:** `pnpm --config.verify-deps-before-run=false <script>` avoids that implicit install too. Turbo tasks (`pnpm build`, the `pretest` build) run plain `pnpm run` in every package, so locally they trigger it as well, and that install is not frozen: it re-resolves the Studio `next` overrides (see `Lockfile re-resolution also moves the Studio next overrides`) and rewrites `pnpm-lock.yaml`. When the lockfile must stay put, run the package scripts through that flag instead, and if it already happened, `git checkout pnpm-lock.yaml && pnpm install --frozen-lockfile` puts `node_modules` back on the locked versions.
+- **Local scripts:** `pnpm --config.verify-deps-before-run=false <script>` avoids that implicit install too. Turbo tasks (`pnpm build`, the `pretest` build) run plain `pnpm run` in every package, so locally they trigger it as well, and that install is not frozen: it re-resolves the Studio `next` overrides (see `Lockfile re-resolution also moves the Studio next overrides`) and rewrites `pnpm-lock.yaml`. When the lockfile must stay put, run the package scripts through that flag instead, or export `pnpm_config_verify_deps_before_run=false` for the shell session—pnpm 12 reads `pnpm_config_*` environment variables (not `npm_config_*`), and the variable also reaches the nested `pnpm run` invocations inside turbo tasks that the CLI flag cannot. If it already happened, `git checkout pnpm-lock.yaml && pnpm install --frozen-lockfile` puts `node_modules` back on the locked versions.
 
 ### Linting
 

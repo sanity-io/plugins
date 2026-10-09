@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {useObservable} from 'react-rx'
+import {useSyncObservable} from 'react-rx'
 import {map} from 'rxjs'
 import {useClient, useDocumentPreviewStore} from 'sanity'
 
@@ -32,7 +32,11 @@ export function useSecrets<T>(namespace: string): Secrets<T> {
     [id, documentPreviewStore],
   )
 
-  const {loading: readLoading, secrets} = useObservable(secrets$, INITIAL_STATE)
+  // Kept synchronous: the stream is keyed to the live `namespace` and consumers
+  // read `secrets` straight into API clients and form state, so a deferred
+  // snapshot could hand them the previous namespace's secrets as `loading: false`
+  // or lag a just-saved value behind the store.
+  const {loading: readLoading, secrets} = useSyncObservable(secrets$, INITIAL_STATE)
 
   const storeSecrets = useCallback(
     (updatedSecret: T) => {

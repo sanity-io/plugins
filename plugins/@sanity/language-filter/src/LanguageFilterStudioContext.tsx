@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext, useMemo, useState} from 'react'
 import {useObservable} from 'react-rx'
-import {catchError, defer, from, of, tap} from 'rxjs'
+import {catchError, defer, from, of} from 'rxjs'
 import {type LayoutProps, useClient} from 'sanity'
 
 import {defaultFilterField} from './filterField'
@@ -48,29 +48,27 @@ export function LanguageFilterStudioProvider(
   const client = useClient({apiVersion: '2023-01-01'})
   const supportedLanguages = props.options.supportedLanguages
   const defaultLanguages = props.options.defaultLanguages
-  const [selectedLanguageIds, setSelectedLanguageIds] = useState<string[]>([])
-  const [languages$] = useState(() => {
-    // We first resolve the languages from the callback or the array.
-    const languagesObservable = Array.isArray(supportedLanguages)
+  // Resolved once per provider: the callback form may fetch, and react-rx subscribes on commit
+  // and re-subscribes whenever the observable identity changes.
+  const [languages$] = useState(() =>
+    Array.isArray(supportedLanguages)
       ? of(supportedLanguages)
       : defer(() => from(supportedLanguages(client, {}))).pipe(
           // If language resolution fails, keep the plugin operational with no selectable languages.
           catchError(() => of([])),
-        )
-
-    // After resolving the languages we can get the persisted languages by checking localStorage.
-    return languagesObservable.pipe(
-      tap((languages) => {
-        const persistedLanguageIds = getPersistedLanguageIds({
-          supportedLanguages: languages,
-          defaultLanguages,
-        })
-        setSelectedLanguageIds(persistedLanguageIds)
-      }),
-    )
-  })
+        ),
+  )
 
   const languages = useObservable(languages$, INITIAL_VALUE)
+
+  // The languages picked in this session, or `null` while the persisted selection still applies.
+  const [sessionLanguageIds, setSessionLanguageIds] = useState<string[] | null>(null)
+  // Derived from the resolved languages, so the persisted selection is scoped to them.
+  const persistedLanguageIds = useMemo(
+    () => getPersistedLanguageIds({supportedLanguages: languages, defaultLanguages}),
+    [languages, defaultLanguages],
+  )
+  const selectedLanguageIds = sessionLanguageIds ?? persistedLanguageIds
 
   const options = useMemo<Required<LanguageFilterConfigProcessed>>(() => {
     return {
@@ -81,7 +79,7 @@ export function LanguageFilterStudioProvider(
   }, [props.options, languages])
 
   const onSelectedLanguageIdsChange = useCallback((ids: string[]) => {
-    setSelectedLanguageIds(ids)
+    setSessionLanguageIds(ids)
     setPersistedLanguageIds(ids)
   }, [])
 
