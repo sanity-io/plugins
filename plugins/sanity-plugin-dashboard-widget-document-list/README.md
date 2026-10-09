@@ -91,6 +91,8 @@ documentListWidget({
 
 Customized GROQ query with params for maximum control. If you use the query option, the `types`, `order`, and `limit` options will cease to function. You're on your own.
 
+`queryParams` is accepted as an alias of `params`. When both are set, `queryParams` is used.
+
 ```js
 documentListWidget({
   title: 'Published books by title',
