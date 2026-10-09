@@ -257,18 +257,30 @@ async function updateAssetDocumentFromUpload(
     return Promise.reject(err)
   }
 
-  const doc = {
-    _id: uuid,
-    _type: 'mux.videoAsset',
+  const fields = {
     status: asset.data.status,
     data: asset.data,
     assetId: asset.data.id,
     playbackId: asset.data.playback_ids[0]?.id,
     uploadId: upload.data.id,
   }
-  return client.createOrReplace(doc).then(() => {
-    return doc
-  })
+  await uploadedAssetTransaction(client, uuid, fields).commit({returnDocuments: false})
+  return {_id: uuid, _type: 'mux.videoAsset', ...fields}
+}
+
+/**
+ * Writes what a finished upload produced onto its asset document. A patch, not a replace, so
+ * fields written since the upload was created (`filename`, Robots data) are kept.
+ */
+export function uploadedAssetTransaction(
+  client: Pick<SanityClient, 'transaction'>,
+  uuid: string,
+  fields: Record<string, unknown>,
+) {
+  return client
+    .transaction()
+    .createIfNotExists({_id: uuid, _type: 'mux.videoAsset'})
+    .patch(uuid, (patch) => patch.set(fields))
 }
 
 function testFile(file: File) {

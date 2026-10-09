@@ -1,9 +1,11 @@
 import {Card, Text} from '@sanity/ui'
 import {useEffect, useMemo, useRef} from 'react'
 
+import {useDialogStateContext} from '../context/DialogStateContext'
 import {useCancelUpload} from '../hooks/useCancelUpload'
 import type {MuxInputProps, PluginConfig, VideoAssetDocument} from '../util/types'
 import {TopControls} from './Player.styled'
+import RobotsDialog from './robots/RobotsDialog'
 import {UploadProgress} from './UploadProgress'
 import VideoPlayer from './VideoPlayer'
 
@@ -14,6 +16,7 @@ interface Props extends Pick<MuxInputProps, 'onChange' | 'readOnly'> {
 }
 
 const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
+  const {dialogState} = useDialogStateContext()
   const isLoading = useMemo<boolean | string>(() => {
     if (asset?.status === 'preparing') {
       return 'Preparing the video'
@@ -92,25 +95,30 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
   }
 
   return (
-    <VideoPlayer asset={asset} hlsConfig={config?.hlsConfig}>
-      {buttons && <TopControls slot="top-chrome">{buttons}</TopControls>}
-      {isPreparingStaticRenditions && (
-        <Card
-          padding={2}
-          radius={1}
-          style={{
-            background: 'var(--card-fg-color)',
-            position: 'absolute',
-            top: '0.5em',
-            left: '0.5em',
-          }}
-        >
-          <Text size={1} style={{color: 'var(--card-bg-color)'}}>
-            MUX is preparing static renditions, please stand by
-          </Text>
-        </Card>
+    <>
+      <VideoPlayer asset={asset} hlsConfig={config?.hlsConfig} readOnly={readOnly}>
+        {buttons && <TopControls slot="top-chrome">{buttons}</TopControls>}
+        {isPreparingStaticRenditions && (
+          <Card
+            padding={2}
+            radius={1}
+            style={{
+              background: 'var(--card-fg-color)',
+              position: 'absolute',
+              top: '0.5em',
+              left: '0.5em',
+            }}
+          >
+            <Text size={1} style={{color: 'var(--card-bg-color)'}}>
+              MUX is preparing static renditions, please stand by
+            </Text>
+          </Card>
+        )}
+      </VideoPlayer>
+      {dialogState === 'robots' && config && (
+        <RobotsDialog asset={asset} config={config} readOnly={readOnly} />
       )}
-    </VideoPlayer>
+    </>
   )
 }
 

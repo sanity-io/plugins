@@ -2,6 +2,7 @@ import {useCallback} from 'react'
 import type {SanityClient} from 'sanity'
 
 import {createSigningKeys, haveValidSigningKeys, saveSecrets, testSecrets} from '../actions/secrets'
+import {resetRobotsCapabilityCache} from '../robots/capability'
 import type {Secrets} from '../util/types'
 
 export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
@@ -32,6 +33,8 @@ export const useSaveSecrets = (client: SanityClient, secrets: Secrets) => {
           // oxlint-disable-next-line react/todo
           throw new Error('Invalid secrets')
         }
+        // A new token may have the Robots scope, so the next panel asks Mux again.
+        resetRobotsCapabilityCache()
       } catch (err) {
         console.error('Error while trying to save secrets:', err)
         throw err

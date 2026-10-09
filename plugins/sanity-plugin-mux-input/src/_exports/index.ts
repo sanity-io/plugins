@@ -3,6 +3,7 @@ import {definePlugin} from 'sanity'
 
 import createStudioTool, {DEFAULT_TOOL_CONFIG} from '../components/StudioTool'
 import {muxVideoCustomRendering} from '../plugin'
+import {DEFAULT_ALLOWED_ROLES_FOR_ROBOTS} from '../robots/access'
 import {muxVideoSchema, schemaTypes} from '../schema'
 import {normalizeMuxApiHost} from '../util/muxAddonClient'
 import type {PluginConfig, StaticRenditionResolution} from '../util/types'
@@ -21,6 +22,8 @@ export const defaultConfig: PluginConfig = {
   tool: DEFAULT_TOOL_CONFIG,
   allowedRolesForConfiguration: [],
   acceptedMimeTypes: ['video/*', 'audio/*'],
+  allowedRolesForRobots: DEFAULT_ALLOWED_ROLES_FOR_ROBOTS,
+  defaultDirectiveIds: [],
 }
 
 /**

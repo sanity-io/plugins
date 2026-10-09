@@ -4,6 +4,7 @@ import {getAsset} from '../actions/assets'
 import {generateJwt} from './generateJwt'
 import {getPlaybackId} from './getPlaybackPolicy'
 import {getPlaybackPolicy} from './getPlaybackPolicy'
+import {isCaptionTrack} from './tracks'
 import type {MuxTextTrack, VideoAssetDocument} from './types'
 
 export function extractErrorMessage(
@@ -105,8 +106,7 @@ export async function pollTrackStatus(
       }
 
       const assetData = await getAsset(client, assetId)
-      const textTracks =
-        assetData.data.tracks?.filter((track): track is MuxTextTrack => track.type === 'text') || []
+      const textTracks = assetData.data.tracks?.filter(isCaptionTrack) || []
 
       const foundTrack = findTrack(textTracks)
 

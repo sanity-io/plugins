@@ -3105,10 +3105,10 @@ importers:
   plugins/sanity-plugin-mux-input:
     dependencies:
       '@mux/mux-player':
-        specifier: ^3.13.2
+        specifier: ^3.14.0
         version: 3.14.0(react@19.3.0)
       '@mux/mux-player-react':
-        specifier: ^3.13.2
+        specifier: ^3.14.0
         version: 3.14.0(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
       '@mux/upchunk':
         specifier: ^3.5.0
@@ -3122,6 +3122,9 @@ importers:
       '@sanity/uuid':
         specifier: 'catalog:'
         version: 3.0.3
+      dequal:
+        specifier: 'catalog:'
+        version: 2.0.3
       iso-639-1:
         specifier: ^3.1.6
         version: 3.1.6

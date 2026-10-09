@@ -7,8 +7,15 @@ import LanguagesList from 'iso-639-1'
 import {memo, useEffect, useId, useReducer, useRef, useState} from 'react'
 import {FormField} from 'sanity'
 
+import {useCanRunRobots} from '../hooks/useCanRunRobots'
 import {useFetchFileSize} from '../hooks/useFetchFileSize'
 import {useMediaMetadata, type VideoAssetMetadata} from '../hooks/useMediaMetadata'
+import {
+  directiveNamesById,
+  missingDirectiveIds,
+  useRobotsDirectives,
+} from '../hooks/useRobotsDirectives'
+import {directivesToAttach, withDirectives} from '../robots/upload'
 import {convertWatermarkToMuxOverlay} from '../util/convertWatermarkToMux'
 import formatBytes from '../util/formatBytes'
 import {formatSeconds} from '../util/formatSeconds'
@@ -27,6 +34,7 @@ import {
   type WatermarkConfig,
 } from '../util/types'
 import DraggableWatermark, {WatermarkControls} from './DraggableWatermark'
+import {RobotsUploadDirectives} from './robots/RobotsUploadDirectives'
 import TextTracksEditor, {type TrackAction} from './TextTracksEditor'
 import PlaybackPolicy from './uploadConfiguration/PlaybackPolicy'
 import {
@@ -46,6 +54,8 @@ export type UploadConfigurationStateAction =
   | {action: 'drm_policy'; value: UploadConfig['drm_policy']}
   | {action: 'watermark'; value: WatermarkConfig}
   | TrackAction
+
+const NO_DIRECTIVES: string[] = []
 
 const VIDEO_QUALITY_LEVELS = [
   {value: 'basic', label: 'Basic'},
@@ -263,12 +273,27 @@ export default function UploadConfiguration({
   // This can include auto-generated subtitles!
   const {disableTextTrackConfig, disableUploadConfig} = pluginConfig
   const skipConfig = disableTextTrackConfig && disableUploadConfig
+
+  const configuredDirectiveIds = pluginConfig.defaultDirectiveIds ?? NO_DIRECTIVES
+  const canRunRobots = useCanRunRobots(pluginConfig)
+  const {listing: directiveListing} = useRobotsDirectives(
+    configuredDirectiveIds.length > 0 && !skipConfig,
+  )
+  const [uncheckedDirectiveIds, setUncheckedDirectiveIds] = useState<string[]>([])
+  const isDirectivesReadOnly = !canRunRobots || !!disableUploadConfig
+  const missingIds = missingDirectiveIds(directiveListing, configuredDirectiveIds)
+  const attachedDirectiveIds = directivesToAttach(configuredDirectiveIds, {
+    missingIds,
+    uncheckedIds: isDirectivesReadOnly ? [] : uncheckedDirectiveIds,
+  })
+
   useEffect(() => {
     if (skipConfig) {
       const {settings, watermark} = formatUploadConfig(config, secrets, {
         videoAspectRatio: videoAssetMetadata?.aspectRatio,
       })
-      startUpload(settings, watermark)
+      // No dialog, so no opt-out: every configured directive attaches.
+      startUpload(withDirectives(settings, configuredDirectiveIds), watermark)
     }
     // oxlint-disable-next-line react/rule-suppression
     // oxlint-disable-next-line react/exhaustive-deps -- intentionally mount-only: start upload once with developer-specified config
@@ -430,6 +455,20 @@ export default function UploadConfiguration({
           </Stack>
         )}
 
+        <RobotsUploadDirectives
+          configuredIds={configuredDirectiveIds}
+          missingIds={missingIds}
+          directiveNames={directiveNamesById(directiveListing, configuredDirectiveIds)}
+          listing={directiveListing}
+          uncheckedIds={uncheckedDirectiveIds}
+          isReadOnly={isDirectivesReadOnly}
+          onToggle={(directiveId, checked) =>
+            setUncheckedDirectiveIds((previous) =>
+              checked ? previous.filter((id) => id !== directiveId) : [...previous, directiveId],
+            )
+          }
+        />
+
         <Box marginTop={4}>
           <Button
             disabled={
@@ -446,7 +485,7 @@ export default function UploadConfiguration({
                 const {settings, watermark} = formatUploadConfig(config, secrets, {
                   videoAspectRatio: videoAssetMetadata?.aspectRatio,
                 })
-                startUpload(settings, watermark)
+                startUpload(withDirectives(settings, attachedDirectiveIds), watermark)
               }
             }}
           />

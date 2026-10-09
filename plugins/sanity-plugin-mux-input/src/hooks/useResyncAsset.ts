@@ -3,6 +3,7 @@ import {useCallback, useState} from 'react'
 
 import {getAsset} from '../actions/assets'
 import {addKeysToMuxData} from '../util/addKeysToMuxData'
+import {playbackIdToKeep} from '../util/getPlaybackPolicy'
 import type {MuxAsset, VideoAssetDocument} from '../util/types'
 import {useClient} from './useClient'
 
@@ -62,15 +63,15 @@ export function useResyncAsset(options?: UseResyncAssetOptions): UseResyncAssetR
         const response = await getAsset(client, asset.assetId)
         const muxData = response.data
         const dataWithKeys = addKeysToMuxData(muxData)
+        const playbackId = playbackIdToKeep(asset.playbackId, muxData.playback_ids)
 
-        await client
-          .patch(asset._id)
-          .set({
-            status: muxData.status,
-            data: dataWithKeys,
-            ...(muxData.meta?.title && {filename: muxData.meta.title}),
-          })
-          .commit({returnDocuments: false})
+        const patch = client.patch(asset._id).set({
+          status: muxData.status,
+          data: dataWithKeys,
+          ...(muxData.meta?.title && {filename: muxData.meta.title}),
+          ...(playbackId && {playbackId}),
+        })
+        await (playbackId ? patch : patch.unset(['playbackId'])).commit({returnDocuments: false})
 
         setResyncState('success')
         if (showToast) {
