@@ -1746,8 +1746,8 @@ importers:
         version: 6.19.0-next.36(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.4.0)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.0)(@types/react-dom@19.3.0)(@types/react@19.3.0)(esbuild@0.28.2)(immer@11.1.18)(jiti@2.7.0)(oxc-transform-react@0.153.0)(oxfmt@0.71.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.12)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.15)(typescript@7.0.2)(vitest@4.1.11)
     devDependencies:
       '@sanity/ailf':
-        specifier: ^7.36.0
-        version: 7.38.1(@aws-sdk/credential-provider-node@3.972.84)(@noble/hashes@2.4.0)(@smithy/signature-v4@5.7.4)(@types/json-schema@7.0.15)(@types/node@24.19.0)(@types/react@19.3.0)(babel-plugin-macros@3.1.0)(debug@4.4.3)(pg@8.23.0)(playwright-core@1.63.0)(socks@2.8.10)(supports-color@10.2.2)
+        specifier: ^7.41.0
+        version: 7.41.0(@aws-sdk/credential-provider-node@3.972.84)(@noble/hashes@2.4.0)(@smithy/signature-v4@5.7.4)(@types/json-schema@7.0.15)(@types/node@24.19.0)(@types/react@19.3.0)(babel-plugin-macros@3.1.0)(debug@4.4.3)(pg@8.23.0)(playwright-core@1.63.0)(socks@2.8.10)(supports-color@10.2.2)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
@@ -8249,8 +8249,8 @@ packages:
     peerDependencies:
       react: ^19.2.2
 
-  '@sanity/ailf@7.38.1':
-    resolution: {integrity: sha512-dL19KSlNLQc0UshiACGC9SX0gJSO+E7RRxuSkhfHkPBPvwdfTqLi2P7I4L0WK3wL9Wtu/Y4lKr+ebPLlBYVBTQ==}
+  '@sanity/ailf@7.41.0':
+    resolution: {integrity: sha512-FjoZKGvunjLm/tJ85q/FrGm6lKuevnNw24UNbDGvBpmNrCw+YTz/o0+46KYrnQOdlr8fzEPy206LaPJ1Auv1aw==}
     hasBin: true
 
   '@sanity/asset-utils@2.3.0':
@@ -22235,7 +22235,7 @@ snapshots:
       - styled-components
       - vitest
 
-  '@sanity/ailf@7.38.1(@aws-sdk/credential-provider-node@3.972.84)(@noble/hashes@2.4.0)(@smithy/signature-v4@5.7.4)(@types/json-schema@7.0.15)(@types/node@24.19.0)(@types/react@19.3.0)(babel-plugin-macros@3.1.0)(debug@4.4.3)(pg@8.23.0)(playwright-core@1.63.0)(socks@2.8.10)(supports-color@10.2.2)':
+  '@sanity/ailf@7.41.0(@aws-sdk/credential-provider-node@3.972.84)(@noble/hashes@2.4.0)(@smithy/signature-v4@5.7.4)(@types/json-schema@7.0.15)(@types/node@24.19.0)(@types/react@19.3.0)(babel-plugin-macros@3.1.0)(debug@4.4.3)(pg@8.23.0)(playwright-core@1.63.0)(socks@2.8.10)(supports-color@10.2.2)':
     dependencies:
       '@google-cloud/bigquery': 8.3.1(supports-color@10.2.2)
       '@google-cloud/storage': 7.22.0(supports-color@10.2.2)
