@@ -703,6 +703,9 @@ importers:
       styled-components:
         specifier: 'catalog:'
         version: 6.5.3(react-dom@19.3.0)(react@19.3.0)
+      ui5:
+        specifier: npm:@sanity/ui@5.0.0-alpha.14
+        version: '@sanity/ui@5.0.0-alpha.14(react-dom@19.3.0)(react@19.3.0)'
     devDependencies:
       '@tsconfig/vite-react':
         specifier: ^8.1.1
