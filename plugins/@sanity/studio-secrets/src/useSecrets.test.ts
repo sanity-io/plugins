@@ -2,7 +2,7 @@ import {act, renderHook, waitFor} from '@testing-library/react'
 import {BehaviorSubject, Subject} from 'rxjs'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
-import {useSecrets} from './useSecrets'
+import {type Secrets, useSecrets} from './useSecrets'
 
 // --- Mocks ---
 
@@ -19,11 +19,16 @@ const mockClient = {
   transaction: vi.fn(),
 }
 
+// The Studio hands out one store instance for the lifetime of the workspace. The mock must be
+// just as stable: `useSecrets` memoizes its observable on the store, and react-rx re-subscribes
+// whenever that identity changes.
+const mockDocumentPreviewStore = {
+  unstable_observeDocument: mockObserveDocument,
+}
+
 vi.mock('sanity', () => ({
   useClient: () => mockClient,
-  useDocumentPreviewStore: () => ({
-    unstable_observeDocument: mockObserveDocument,
-  }),
+  useDocumentPreviewStore: () => mockDocumentPreviewStore,
 }))
 
 beforeEach(() => {
@@ -41,8 +46,9 @@ afterEach(() => {
 
 /**
  * Helper: create a BehaviorSubject that emits a document synchronously.
- * useObservable eagerly subscribes on init, so BehaviorSubject ensures
- * the value is captured during the first render.
+ * react-rx subscribes on commit, so the value lands right after the first
+ * render — `renderHook` wraps rendering in `act()`, which flushes that update
+ * before returning.
  */
 function mockDocumentWithValue(doc: Record<string, unknown> | undefined) {
   const subject = new BehaviorSubject<Record<string, unknown> | undefined>(doc)
@@ -84,6 +90,61 @@ describe('useSecrets', () => {
     const {result} = renderHook(() => useSecrets('my-plugin'))
 
     expect(result.current.loading).toBe(false)
+  })
+
+  test('renders the loading state first, even when the document emits synchronously', () => {
+    mockDocumentWithValue({_id: 'secrets.my-plugin', secrets: {apiKey: 'abc123'}})
+    const renders: Secrets<Record<string, string>>[] = []
+
+    const {result} = renderHook(() => {
+      const value = useSecrets<Record<string, string>>('my-plugin')
+      renders.push(value)
+      return value
+    })
+
+    // The subscription starts on commit, so the first render shows the initial state and the
+    // synchronous emission replaces it right after.
+    expect(renders[0]).toMatchObject({loading: true, secrets: undefined})
+    expect(result.current).toMatchObject({loading: false, secrets: {apiKey: 'abc123'}})
+  })
+
+  test('keeps observing the same document across re-renders', () => {
+    const subject = mockDocumentWithValue({_id: 'secrets.my-plugin', secrets: {apiKey: 'abc123'}})
+    mockObserveDocument.mockClear()
+
+    const {result, rerender} = renderHook(() => useSecrets<Record<string, string>>('my-plugin'))
+    rerender()
+    rerender()
+
+    expect(mockObserveDocument).toHaveBeenCalledTimes(1)
+    expect(subject.observed).toBe(true)
+    expect(result.current).toMatchObject({loading: false, secrets: {apiKey: 'abc123'}})
+  })
+
+  test('switches to the new document when the namespace changes', async () => {
+    const subjectA = mockDocumentWithValue({_id: 'secrets.plugin-a', secrets: {apiKey: 'a'}})
+
+    const {result, rerender} = renderHook(
+      ({namespace}) => useSecrets<Record<string, string>>(namespace),
+      {initialProps: {namespace: 'plugin-a'}},
+    )
+    expect(result.current.secrets).toEqual({apiKey: 'a'})
+
+    const subjectB = mockDocumentDeferred()
+    rerender({namespace: 'plugin-b'})
+
+    // The previous namespace's secrets never render under the new one.
+    expect(mockObserveDocument).toHaveBeenLastCalledWith('secrets.plugin-b')
+    expect(result.current).toMatchObject({loading: true, secrets: undefined})
+
+    act(() => {
+      subjectB.next({_id: 'secrets.plugin-b', secrets: {apiKey: 'b'}})
+    })
+
+    await waitFor(() => {
+      expect(result.current).toMatchObject({loading: false, secrets: {apiKey: 'b'}})
+    })
+    expect(subjectA.observed).toBe(false)
   })
 
   test('populates secrets from document', () => {
