@@ -267,6 +267,74 @@ describe('RobotsSyncStore', () => {
     }
   })
 
+  test('keeps reading a preparing track after the last subscriber leaves', async () => {
+    vi.useFakeTimers()
+    try {
+      const completed = job('j1', {status: 'completed'})
+      api.listRobotsJobs.mockResolvedValue({data: [completed]})
+      api.getRobotsJob.mockResolvedValue({data: completed})
+      const track = {type: 'audio', id: 't1', status: 'preparing'}
+      const preparing = {id: ASSET, status: 'ready', tracks: [track]}
+      const ready = {...preparing, tracks: [{...track, status: 'ready'}]}
+      vi.mocked(getAsset)
+        .mockResolvedValueOnce({data: preparing} as never)
+        .mockResolvedValueOnce({data: ready} as never)
+      const lake = fakeContentLake({assetId: ASSET})
+      subscribe(lake)
+
+      await vi.advanceTimersByTimeAsync(10)
+      // The input unsubscribes once the job's record says completed.
+      unregister?.()
+      await vi.advanceTimersByTimeAsync(6000)
+      expect(getAsset).toHaveBeenCalledTimes(2)
+      expect(lake.assetWrites.at(-1)).toMatchObject({data: {tracks: [{status: 'ready'}]}})
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  test('reads a job detail again while it trails the list, without undoing its status', async () => {
+    vi.useFakeTimers()
+    try {
+      api.listRobotsJobs.mockResolvedValue({data: [job('j1', {status: 'completed'})]})
+      const parameters = {asset_id: ASSET}
+      api.getRobotsJob
+        .mockResolvedValueOnce({data: job('j1', {parameters})})
+        .mockResolvedValueOnce({
+          data: job('j1', {status: 'completed', parameters, outputs: {title: 'Done'}}),
+        })
+      const lake = fakeContentLake({assetId: ASSET})
+      const store = subscribe(lake)
+
+      await vi.advanceTimersByTimeAsync(10)
+      expect(api.getRobotsJob).toHaveBeenCalledTimes(1)
+      expect(store.getSnapshot().jobs[0]?.status).toBe('completed')
+      expect(store.getSnapshot().pendingDetailIds).toContain('j1')
+      unregister?.()
+
+      await vi.advanceTimersByTimeAsync(6000)
+      expect(api.getRobotsJob).toHaveBeenCalledTimes(2)
+      expect(lake.doc.robotsOutputs?.summarize?.title).toBe('Done')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  test('gives up on a job detail that keeps trailing the list', async () => {
+    vi.useFakeTimers()
+    try {
+      api.listRobotsJobs.mockResolvedValue({data: [job('j1', {status: 'completed'})]})
+      api.getRobotsJob.mockResolvedValue({data: job('j1')})
+      const store = subscribe(fakeContentLake({assetId: ASSET}))
+
+      await vi.advanceTimersByTimeAsync(120_000)
+      expect(api.getRobotsJob).toHaveBeenCalledTimes(10)
+      expect(store.getSnapshot().failedDetailIds).toContain('j1')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   test('a job read while it runs never pins that status', async () => {
     api.listRobotsJobs.mockResolvedValue({data: [job('j1')]})
     const store = subscribe(fakeContentLake({assetId: ASSET}))

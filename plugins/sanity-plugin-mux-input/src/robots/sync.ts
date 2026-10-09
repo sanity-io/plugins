@@ -69,6 +69,9 @@ const UNCONFIRMED_RECHECK_TICKS = 10
 /** Times to re-read the asset while a track from a finished job is still preparing (2 minutes). */
 const TRACK_RECHECKS = 20
 
+/** Times to read a job whose detail still trails the list's terminal status (1 minute). */
+const DETAIL_RECHECKS = 10
+
 const JOB_LIST_LIMIT = 100
 const DIRECTIVE_RUNS_LIMIT = 25
 
@@ -171,6 +174,9 @@ export class RobotsSyncStore {
   private readonly locallyCreated = new Map<string, RobotsJob>()
   private readonly details = new Map<string, RobotsJob>()
   private readonly failedDetails = new Set<string>()
+  /** Jobs the list calls finished but whose detail didn't yet, with the reads so far. */
+  private readonly trailingDetails = new Map<string, {job: RobotsJob; reads: number}>()
+  private detailTimer: ReturnType<typeof setTimeout> | undefined
   private isDetailPassRunning = false
   /** Jobs whose completion already refreshed the asset this session. */
   private readonly resyncedJobIds = new Set<string>()
@@ -230,7 +236,6 @@ export class RobotsSyncStore {
         this.subscribers.delete(token)
         if (this.subscribers.size > 0) return
         this.stopPolling()
-        this.awaitTracks(0)
       },
     }
   }
@@ -468,12 +473,13 @@ export class RobotsSyncStore {
 
   /**
    * A caption or audio track a job added can still be preparing, and players only get it once
-   * the document says it's ready, so the asset is read again a few times. `0` stops.
+   * the document says it's ready, so the asset is read again a few times. It outlives the last
+   * subscriber: the input stops subscribing once the job's record says completed.
    */
   private awaitTracks(remaining: number) {
     if (this.trackTimer) clearTimeout(this.trackTimer)
     this.trackTimer = undefined
-    if (remaining <= 0 || this.subscribers.size === 0) return
+    if (remaining <= 0) return
     this.trackTimer = setTimeout(() => {
       this.trackTimer = undefined
       this.refreshAsset()
@@ -489,13 +495,19 @@ export class RobotsSyncStore {
   /** The detail pass: a few of the newest terminal jobs at a time, each read once. */
   private async loadDetails() {
     if (this.isDetailPassRunning || this.subscribers.size === 0) return
-    const attempted = new Set([...this.details.keys(), ...this.failedDetails])
+    // Trailing reads wait for their own timer, or this pass would spend their rechecks at once.
+    const attempted = new Set([
+      ...this.details.keys(),
+      ...this.failedDetails,
+      ...this.trailingDetails.keys(),
+    ])
     const batch = jobsNeedingDetail(this.liveJobs, attempted)
     if (batch.length === 0) return
 
     this.isDetailPassRunning = true
     const results = await Promise.all(batch.map((job) => this.readDetail(job)))
     this.isDetailPassRunning = false
+    this.retryTrailingDetails()
     if (results.every((result) => !result)) {
       this.publishReads()
       return
@@ -507,16 +519,43 @@ export class RobotsSyncStore {
     void this.loadDetails()
   }
 
+  /**
+   * Re-reads the trailing details on a timer of their own, since nothing else may poll once the
+   * list says every job is done. Bounded, so it outlives the last subscriber like `awaitTracks`.
+   */
+  private retryTrailingDetails() {
+    if (this.detailTimer || this.trailingDetails.size === 0) return
+    this.detailTimer = setTimeout(() => {
+      this.detailTimer = undefined
+      const jobs = [...this.trailingDetails.values()].map((entry) => entry.job)
+      void Promise.all(jobs.map((job) => this.readDetail(job))).then((results) => {
+        this.publishReads()
+        if (results.some(Boolean)) {
+          this.persist()
+          void this.loadDirectiveRuns()
+        }
+        this.retryTrailingDetails()
+      })
+    }, POLL_INTERVAL_MS)
+  }
+
   private async readDetail(job: RobotsJob): Promise<boolean> {
     try {
       const detail = (await getRobotsJob(this.client, job.workflow, job.id)).data
-      // The single-job GET can trail the list; an unfinished read is retried on a later pass.
-      if (detail && !isTerminalStatus(detail.status)) return false
-      if (detail) {
+      // The single-job GET can trail the list. Kept out of `details`, it can't undo the list's
+      // terminal status, and it's read again a few times.
+      const reads = (this.trailingDetails.get(job.id)?.reads ?? 0) + 1
+      if (detail && !isTerminalStatus(detail.status) && reads < DETAIL_RECHECKS) {
+        this.trailingDetails.set(job.id, {job, reads})
+        return false
+      }
+      this.trailingDetails.delete(job.id)
+      if (detail && isTerminalStatus(detail.status)) {
         this.details.set(job.id, detail)
         return true
       }
     } catch (error) {
+      this.trailingDetails.delete(job.id)
       console.error(`${LOG_PREFIX} Could not load Robots job ${job.id}`, error)
     }
     // Failed reads aren't retried this session, so a deleted job isn't asked for every tick.
@@ -542,6 +581,7 @@ export class RobotsSyncStore {
   readonly rememberJobDetail = (job: RobotsJob) => {
     if (!isTerminalStatus(job.status) || this.details.has(job.id)) return
     this.details.set(job.id, job)
+    this.trailingDetails.delete(job.id)
     this.publishReads()
     this.persist()
   }
