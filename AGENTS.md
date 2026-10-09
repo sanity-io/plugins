@@ -51,7 +51,7 @@ pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclud
 
 Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
 
-pnpm also writes such entries itself: when a package that `minimumReleaseAgeExclude` already lists (e.g. `yuku-parser`) resolves to a release that pins an exact, still-too-new version of a subdependency (e.g. `yuku-core@0.18.1` and its `@yuku-core/binding-*` platform packages), a lockfile-rewriting install appends those `name@version` entries to `pnpm-workspace.yaml`. Keep them in the PR; `minimumReleaseAgeExcludePrune` removes them once they age out.
+pnpm also writes such entries itself: when a package that `minimumReleaseAgeExclude` already lists (e.g. `yuku-parser`) resolves to a release that pins an exact, still-too-new version of a subdependency (e.g. `yuku-core@0.18.1` and its `@yuku-core/binding-*` platform packages), a lockfile-rewriting install appends those `name@version` entries to `pnpm-workspace.yaml`. Commit them (or a scoped glob such as `'@yuku-core/*'` for a family of platform binaries) with a short dated comment—`pnpm install --frozen-lockfile` in CI re-verifies the lockfile against `minimumReleaseAge` and fails with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` if the lockfile pins a too-new version that is not excluded. `minimumReleaseAgeExcludePrune` removes the exact entries once they age out.
 
 ## Before Submitting a PR
 
