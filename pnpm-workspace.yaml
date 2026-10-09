@@ -150,6 +150,9 @@ minimumReleaseAgeExclude:
   - '@vitejs/plugin-react'
   - '@vitest/*'
   - '@yuku-codegen/*'
+  # Fresh releases published 2026-10-09. `minimumReleaseAgeExcludePrune: true` drops these later.
+  - '@yuku-core/*'
+  - yuku-core@0.18.1
   - '@yuku-parser/*'
   - '@yuku-toolchain/*'
   - devframe
