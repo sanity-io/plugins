@@ -21,6 +21,7 @@ import {getUnaddedItems} from '../utils/treeData'
 import type {HandleMovedNodeData} from '../utils/treePatches'
 import DocumentInNode from './DocumentInNode'
 import {TreeEditorErrorBoundary} from './TreeEditorErrorBoundary'
+import {TreeScaffoldStyles} from './TreeNodeRendererScaffold'
 
 interface TreeEditorProps {
   tree: StoredTreeItem[]
@@ -87,6 +88,7 @@ function TreeEditor(props: TreeEditorProps) {
 
   return (
     <TreeEditorErrorBoundary>
+      <TreeScaffoldStyles />
       {/*Use this Box-wrapper to get a context Element to prevent DndProvider to have to HTML% backend at the same time https://github.com/react-dnd/react-dnd/issues/186#issuecomment-978206387 */}
       <Box id={documentId} ref={setContext}>
         {context ? (
