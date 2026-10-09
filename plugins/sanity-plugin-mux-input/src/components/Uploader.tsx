@@ -10,7 +10,6 @@ import {PatchEvent, set, setIfMissing} from 'sanity'
 import {uploadFile, uploadUrl} from '../actions/upload'
 import {DialogStateProvider} from '../context/DialogStateContext'
 import {type DialogState, type SetDialogState} from '../hooks/useDialogState'
-import {useRobotsUploadCheck} from '../hooks/useRobotsUploadCheck'
 import {isServerError, isValidUrl} from '../util/asserters'
 import {extractDroppedFiles} from '../util/extractFiles'
 import {hasPlaybackPolicy} from '../util/getPlaybackPolicy'
@@ -37,6 +36,8 @@ interface Props extends Pick<MuxInputProps, 'onChange' | 'readOnly'> {
   dialogState: DialogState
   setDialogState: SetDialogState
   needsSetup: boolean
+  /** Called when an upload finishes, with the directives it attached. */
+  onUploadWithDirectives: (documentId: string, directiveIds: string[]) => void
 }
 
 export type StagedUpload = {type: 'file'; files: FileList | File[]} | {type: 'url'; url: string}
@@ -79,7 +80,6 @@ type UploaderStateAction =
  */
 export default function Uploader(props: Props) {
   const toast = useToast()
-  const checkRobotsAfterUpload = useRobotsUploadCheck(props.asset)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const dragEnteredEls = useRef<EventTarget[]>([])
@@ -260,7 +260,7 @@ export default function Uploader(props: Props) {
           case 'success':
             dispatch({action: 'progress', percent: 100})
             uploadingDocumentId.current = null
-            checkRobotsAfterUpload(event.asset._id, directiveIds)
+            props.onUploadWithDirectives(event.asset._id, directiveIds)
             props.onChange(
               PatchEvent.from([
                 setIfMissing({asset: {}}),

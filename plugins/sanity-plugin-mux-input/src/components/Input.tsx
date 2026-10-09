@@ -7,6 +7,7 @@ import {useClient} from '../hooks/useClient'
 import {useDialogState} from '../hooks/useDialogState'
 import {useMuxPolling} from '../hooks/useMuxPolling'
 import {useRobotsSync} from '../hooks/useRobotsSync'
+import {useRobotsUploadCheck} from '../hooks/useRobotsUploadCheck'
 import {useSecretsDocumentValues} from '../hooks/useSecretsDocumentValues'
 import {hasUnfinishedRobotsWork} from '../robots/records'
 import type {MuxInputProps, PluginConfig} from '../util/types'
@@ -30,6 +31,8 @@ const Input = (props: InputProps) => {
     enabled: !props.readOnly && !!asset && hasUnfinishedRobotsWork(asset),
     defaultDirectiveIds: props.config.defaultDirectiveIds,
   })
+  // Here and not in Uploader, which unmounts while the new asset's document loads.
+  const checkRobotsAfterUpload = useRobotsUploadCheck(asset)
   const [dialogState, setDialogState] = useDialogState()
   const {hasConfigAccess} = useAccessControl(props.config)
 
@@ -66,6 +69,7 @@ const Input = (props: InputProps) => {
                   dialogState={dialogState}
                   setDialogState={setDialogState}
                   needsSetup={secretDocumentValues.value.needsSetup}
+                  onUploadWithDirectives={checkRobotsAfterUpload}
                 />
               )}
 

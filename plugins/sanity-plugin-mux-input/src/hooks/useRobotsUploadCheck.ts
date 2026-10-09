@@ -6,7 +6,8 @@ import {capabilityFromError} from '../robots/capability'
 import type {VideoAssetDocument} from '../util/types'
 import {useClient} from './useClient'
 
-const ATTEMPTS = 4
+/** A minute: Mux can take a while to list the run once the asset is ready. */
+const ATTEMPTS = 12
 const INTERVAL_MS = 5000
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
