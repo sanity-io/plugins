@@ -4,14 +4,14 @@ import {useCallback, useState} from 'react'
 import {type ObjectInputProps, PatchEvent, unset} from 'sanity'
 
 import type {Asset} from '../types'
+import {resolveShopifyAssetConfig} from '../utils/resolveShopifyAssetConfig'
 import AssetPreview from './AssetPreview'
 import ShopifyAssetPicker from './ShopifyAssetPicker'
 import ShopifyIcon from './ShopifyIcon'
 
 export default function ShopifyAssetInput(props: ObjectInputProps<Asset>) {
   const {onChange, readOnly, value, schemaType} = props
-  const {options} = schemaType
-  const shopifyDomain = options?.shopifyDomain
+  const {shopifyDomain, dataset} = resolveShopifyAssetConfig(schemaType)
 
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -51,6 +51,7 @@ export default function ShopifyAssetInput(props: ObjectInputProps<Asset>) {
         <ShopifyAssetPicker
           {...props}
           shopifyDomain={shopifyDomain}
+          dataset={dataset}
           isOpen={dialogOpen}
           onClose={onClose}
           value={value}
