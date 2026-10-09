@@ -12,6 +12,7 @@ Build a library for distribution:
 ```ts
 // vite.config.ts
 import {resolve} from 'node:path'
+
 import {defineConfig} from 'vite'
 
 export default defineConfig({

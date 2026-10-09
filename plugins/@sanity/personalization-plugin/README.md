@@ -85,8 +85,8 @@ This plugin supports two types of A/B testing:
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {fieldLevelExperiments} from '@sanity/personalization-plugin'
+import {defineConfig} from 'sanity'
 
 // Example: Testing different homepage headlines
 const headlineExperiment = {
@@ -242,8 +242,8 @@ This approach lets content editors create and manage experiments directly in San
 For more control over the value field, you can pass a schema definition into the fields array.
 
 ```ts
-import {defineConfig, defineField} from 'sanity'
 import {fieldLevelExperiments} from '@sanity/personalization-plugin'
+import {defineConfig, defineField} from 'sanity'
 
 export default defineConfig({
   //...
@@ -282,8 +282,8 @@ You can use this plugin to A/B test entire pages by experimenting on reference f
 ### Step 1: Configure the Plugin with a Reference Field
 
 ```ts
-import {defineConfig, defineField} from 'sanity'
 import {fieldLevelExperiments} from '@sanity/personalization-plugin'
+import {defineConfig, defineField} from 'sanity'
 
 const homepageExperiment = {
   id: 'homepage-redesign',
@@ -535,11 +535,11 @@ const experiment = {
 The most common approach is to assign variants via cookies on first visit. Using MurmurHash with a userId gives better distribution and deterministic assignment (the same user always gets the same variant):
 
 ```ts
+import MurmurHash3 from 'imurmurhash'
 // In Next.js proxy (proxy.ts)
 import {NextResponse} from 'next/server'
 import type {NextRequest} from 'next/server'
 import {v4} from 'uuid'
-import MurmurHash3 from 'imurmurhash'
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 
@@ -682,11 +682,12 @@ export const routing = defineType({
 Use a proxy to intercept requests and route users to the appropriate page based on their variant assignment:
 
 ```ts
+import MurmurHash3 from 'imurmurhash'
 // proxy.ts
 import {NextResponse} from 'next/server'
 import type {NextRequest} from 'next/server'
 import {v4} from 'uuid'
-import MurmurHash3 from 'imurmurhash'
+
 import {client} from './lib/sanity'
 
 const ROUTING_QUERY = `*[
@@ -794,8 +795,8 @@ If your use case doesn't match the "experiment/variant" terminology, you can ren
 ### Example: Audience Segmentation
 
 ```ts
-import {defineConfig} from 'sanity'
 import {fieldLevelExperiments} from '@sanity/personalization-plugin'
+import {defineConfig} from 'sanity'
 
 // Define your audiences and segments
 const audiences = [
