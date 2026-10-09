@@ -263,6 +263,7 @@ Example test file (`src/index.test.ts`):
 
 ```ts
 import {fileURLToPath} from 'node:url'
+
 import {expect, test} from 'vitest'
 import {getPackageExportsManifest} from 'vitest-package-exports'
 
@@ -562,7 +563,7 @@ A lefthook pre-commit hook (`lefthook.yml`, set up like sanity-io/sanity's) runs
 
 - **Clones that ran husky:** they still have `core.hooksPath` set to `.husky/_`, and lefthook won't install there. Run `git config --unset core.hooksPath && pnpm install` once.
 - **Hook commands:** they call `node_modules/.bin/oxfmt` directly. `pnpm <bin>` in a hook runs pnpm 12's implicit install, which flips the peer toggle described under pnpm Version.
-- **Local scripts:** `pnpm --config.verify-deps-before-run=false <script>` avoids that implicit install too. Turbo tasks (`pnpm build`, the `pretest` build) run plain `pnpm run` in every package, so locally they trigger it as well, and that install is not frozen: it re-resolves the Studio `next` overrides (see `Lockfile re-resolution also moves the Studio next overrides`) and rewrites `pnpm-lock.yaml`. When the lockfile must stay put, run the package scripts through that flag instead, and if it already happened, `git checkout pnpm-lock.yaml && pnpm install --frozen-lockfile` puts `node_modules` back on the locked versions.
+- **Local scripts:** `pnpm --config.verify-deps-before-run=false <script>` avoids that implicit install too. Turbo tasks (`pnpm build`, the `pretest` build) run plain `pnpm run` in every package, so locally they trigger it as well, and that install is not frozen: it re-resolves the Studio `next` overrides (see `Lockfile re-resolution also moves the Studio next overrides`) and rewrites `pnpm-lock.yaml`. When the lockfile must stay put, run the package scripts through that flag instead, or export `pnpm_config_verify_deps_before_run=false` for the shell session—pnpm 12 reads `pnpm_config_*` environment variables (not `npm_config_*`), and the variable also reaches the nested `pnpm run` invocations inside turbo tasks that the CLI flag cannot. If it already happened, `git checkout pnpm-lock.yaml && pnpm install --frozen-lockfile` puts `node_modules` back on the locked versions.
 
 ### Linting
 
