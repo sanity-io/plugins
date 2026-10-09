@@ -28,23 +28,23 @@ catalog:
   '@portabletext/to-html': ^5.0.3
   '@portabletext/types': ^4.0.2
   '@sanity/asset-utils': ^2.3.0
-  '@sanity/client': ^8.6.1
-  '@sanity/color': ^3.0.8
-  '@sanity/icons': ^5.2.2
+  '@sanity/client': ^8.9.0
+  '@sanity/color': ^3.0.9
+  '@sanity/icons': ^5.2.3
   '@sanity/image-url': ^2.1.1
-  '@sanity/mutator': ^6.16.0
-  '@sanity/pkg-utils': ^12.3.4
+  '@sanity/mutator': ^6.18.0
+  '@sanity/pkg-utils': ^13.0.8
   '@sanity/preview-url-secret': ^4.1.5
-  '@sanity/schema': ^6.16.0
+  '@sanity/schema': ^6.18.0
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.1
   '@sanity/tsdown-config': ^0.27.1
-  '@sanity/types': ^6.16.0
-  '@sanity/ui': ^4.3.0
-  '@sanity/util': ^6.16.0
+  '@sanity/types': ^6.18.0
+  '@sanity/ui': ^4.4.0
+  '@sanity/util': ^6.18.0
   '@sanity/uuid': ^3.0.3
-  '@sanity/vanilla-extract-vite-plugin': ^0.2.20
-  '@sanity/vision': ^6.16.0
+  '@sanity/vanilla-extract-vite-plugin': ^0.2.23
+  '@sanity/vision': ^6.18.0
   '@testing-library/jest-dom': ^7.0.1
   '@testing-library/react': ^16.3.3
   '@types/lodash-es': ^4.17.12
@@ -53,37 +53,37 @@ catalog:
   '@types/react-dom': ^19.3.0
   '@types/react-is': ^19.3.0
   '@types/video.js': ^7.3.58
-  '@vanilla-extract/css': ^1.21.2
+  '@vanilla-extract/css': ^1.21.3
   '@vanilla-extract/dynamic': ^2.1.5
-  '@vis.gl/react-google-maps': ^1.9.0
+  '@vis.gl/react-google-maps': ^1.10.1
   '@vitest/coverage-v8': ^4.1.11
   '@xstate/react': ^6.1.0
   date-fns: ^4.4.0
   dequal: ^2.0.3
-  groq: ^6.16.0
+  groq: ^6.18.0
   jsdom: ^29.1.1
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
-  motion: ^13.4.4
-  nanoid: ^6.0.1
-  oxc-transform-react: ^0.147.0
+  motion: ^14.0.0
+  nanoid: ^6.0.2
+  oxc-transform-react: ^0.153.0
   oxfmt: ^0.71.0
   oxlint: ^1.83.0
-  oxlint-tsgolint: ^7.0.2001
+  oxlint-tsgolint: ^7.0.2003
   react: ^19.3.0
   react-dom: ^19.3.0
-  react-hook-form: ^7.85.0
+  react-hook-form: ^7.89.0
   react-icons: ^5.7.0
   react-is: ^19.3.0
   react-photo-album: ^3.6.0
   react-rx: ^4.2.5
   rxjs: ^7.8.2
-  sanity: ^6.16.0
+  sanity: ^6.18.0
   scroll-into-view-if-needed: ^3.1.0
   styled-components: ^6.5.3
   suspend-react: ^0.1.3
-  tsdown: ^0.22.14
-  tsx: ^4.23.12
+  tsdown: ^0.23.0
+  tsx: ^4.23.15
   typescript: 7.0.2
   valibot: ^1.5.0
   validate-npm-package-name: ^8.0.0
@@ -135,6 +135,7 @@ minimumReleaseAgeExclude:
   - '@publint/*'
   - '@rollup/*'
   - '@sanity/*'
+  - '@sanity-labs/*'
   - '@types/*'
   - '@types/react@19.3.0'
   - '@types/react-dom@19.3.0'
@@ -149,6 +150,8 @@ minimumReleaseAgeExclude:
   - '@vitejs/plugin-react'
   - '@vitest/*'
   - '@yuku-codegen/*'
+  # 2026-10-09: @yuku-core/binding-*@0.18.1 (platform binaries of yuku-core@0.18.1, see below)
+  - '@yuku-core/*'
   - '@yuku-parser/*'
   - '@yuku-toolchain/*'
   - devframe
@@ -160,11 +163,8 @@ minimumReleaseAgeExclude:
   - oxlint-tsgolint
   - publint
   - react
-  - react@19.3.0
   - react-dom
-  - react-dom@19.3.0
   - react-is
-  - react-is@19.3.0
   - react-rx@4.2.5
   - rolldown-plugin-dts
   - sanity
@@ -175,6 +175,10 @@ minimumReleaseAgeExclude:
   - yuku-ast
   - yuku-codegen
   - yuku-parser
+  # 2026-10-09: yuku-parser@0.18.1 (via @sanity/vanilla-extract-integration@0.1.25, pulled in by
+  # @sanity/pkg-utils v13) pins yuku-core@0.18.1 exactly, published the same day. Exempt it like the
+  # other yuku-* toolchain packages; the exact entry prunes itself once it ages out.
+  - yuku-core@0.18.1
 
 overrides:
   '@types/node': 'catalog:'

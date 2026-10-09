@@ -1,5 +1,15 @@
 # sanity-plugin-media
 
+## 6.3.3
+
+### Patch Changes
+
+- [#1947](https://github.com/sanity-io/plugins/pull/1947) [`2d83ac7`](https://github.com/sanity-io/plugins/commit/2d83ac79cad3d8946b09fa06efa7d94de3370ff6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.89.0
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2134](https://github.com/sanity-io/plugins/pull/2134) [`d3ceaaa`](https://github.com/sanity-io/plugins/commit/d3ceaaad3f943a886dc412138eaa73e07cc98182) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to ^6.0.2
+
 ## 6.3.2
 
 ### Patch Changes

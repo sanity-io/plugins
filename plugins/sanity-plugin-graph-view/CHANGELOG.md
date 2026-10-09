@@ -1,5 +1,13 @@
 # sanity-plugin-graph-view
 
+## 5.0.26
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2122](https://github.com/sanity-io/plugins/pull/2122) [`6ef4a5c`](https://github.com/sanity-io/plugins/commit/6ef4a5c8f6567ab193277095c81d52bd21f9db77) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-force-graph-2d to ^1.29.2
+
 ## 5.0.25
 
 ### Patch Changes

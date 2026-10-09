@@ -1,6 +1,6 @@
 {
   "name": "@sanity/presets",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Production ready preset patterns for Sanity Studio",
   "keywords": [
     "sanity",
@@ -44,7 +44,7 @@
     "@sanity/uuid": "catalog:"
   },
   "devDependencies": {
-    "@sanity/ailf": "^7.36.0",
+    "@sanity/ailf": "^7.41.0",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@testing-library/jest-dom": "catalog:",

@@ -1,6 +1,6 @@
 {
   "name": "@sanity/themer",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Generate Sanity Studio themes, and preview them with a Studio tool.",
   "keywords": [
     "sanity",
@@ -70,7 +70,7 @@
   "dependencies": {
     "@sanity/color": "catalog:",
     "@sanity/icons": "catalog:",
-    "@sanity/themer-legacy": "^0.2.1",
+    "@sanity/themer-legacy": "^0.2.2",
     "@sanity/ui": "catalog:",
     "@vanilla-extract/dynamic": "catalog:",
     "@xstate/react": "catalog:",

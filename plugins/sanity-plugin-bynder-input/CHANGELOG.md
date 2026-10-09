@@ -1,5 +1,13 @@
 # sanity-plugin-bynder-input
 
+## 5.1.2
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2117](https://github.com/sanity-io/plugins/pull/2117) [`3c50600`](https://github.com/sanity-io/plugins/commit/3c506000c456cf11eb3ea3fa753c13c7ce84c9e5) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @bynder/compact-view to ^6.1.0
+
 ## 5.1.1
 
 ### Patch Changes

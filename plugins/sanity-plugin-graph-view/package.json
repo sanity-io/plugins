@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-graph-view",
-  "version": "5.0.25",
+  "version": "5.0.26",
   "description": "",
   "homepage": "https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-graph-view#readme",
   "bugs": {
@@ -38,7 +38,7 @@
     "bezier-easing": "^2.1.0",
     "dequal": "catalog:",
     "polished": "^4.3.1",
-    "react-force-graph-2d": "^1.29.1",
+    "react-force-graph-2d": "^1.29.2",
     "uuid": "^14.0.1"
   },
   "devDependencies": {

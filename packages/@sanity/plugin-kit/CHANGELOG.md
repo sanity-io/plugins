@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 10.0.12
+
+### Patch Changes
+
+- [#2121](https://github.com/sanity-io/plugins/pull/2121) [`408048b`](https://github.com/sanity-io/plugins/commit/408048babce5791d2e4433a0c73f658b9bd74994) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxlint-tsgolint to ^7.0.2003
+
 ## 10.0.11
 
 ### Patch Changes
