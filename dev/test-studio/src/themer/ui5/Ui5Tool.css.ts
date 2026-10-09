@@ -80,6 +80,15 @@ export const mono = style({
   overflowWrap: 'anywhere',
 })
 
+/** Token names that wrap between names, never inside one */
+export const tokenList = style({
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '2px 8px',
+})
+
+export const tokenName = style([mono, {whiteSpace: 'nowrap'}])
+
 /** The component catalog: a name column, then the light and the dark scheme */
 export const catalogRow = style({
   display: 'grid',

@@ -11,6 +11,7 @@ import * as ui5 from 'ui5'
 import {rootTokensReadingScales, scaleProperties, toStyle, ui5Properties} from './palette'
 import {
   ColorValue,
+  ColumnLabel,
   type PreviewSettings,
   previewRevision,
   PreviewScope,
@@ -272,12 +273,8 @@ function StudioUsage({
               <Stack gap={2}>
                 <div className={usageRow}>
                   <SchemeLabel scheme={scheme} />
-                  <Text muted size={0} weight="medium">
-                    v4
-                  </Text>
-                  <Text muted size={0} weight="medium">
-                    v5
-                  </Text>
+                  <ColumnLabel>v4</ColumnLabel>
+                  <ColumnLabel>v5</ColumnLabel>
                 </div>
                 {USAGE_ROWS.map((row) => (
                   <div className={usageRow} key={row.id}>

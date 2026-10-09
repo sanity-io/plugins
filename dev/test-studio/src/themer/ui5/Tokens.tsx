@@ -3,6 +3,7 @@ import type {ThemeColorSchemeKey} from '@sanity/ui/theme'
 import * as ui5 from 'ui5'
 
 import {
+  ColumnLabel,
   type PreviewSettings,
   previewRevision,
   PreviewScope,
@@ -136,18 +137,12 @@ function TokenTable({
         </Text>
       </Stack>
       <div className={tokenRow}>
-        <Text muted size={0} weight="medium">
-          Token
-        </Text>
-        <Text muted size={0} weight="medium">
-          Source
-        </Text>
+        <ColumnLabel>Token</ColumnLabel>
+        <ColumnLabel>Source</ColumnLabel>
         {SCHEMES.map((scheme) => (
           <SchemeLabel key={scheme} scheme={scheme} />
         ))}
-        <Text muted size={0} weight="medium">
-          Status
-        </Text>
+        <ColumnLabel>Status</ColumnLabel>
       </div>
       {tokens.map((token) => (
         <div className={tokenRow} key={token.name}>

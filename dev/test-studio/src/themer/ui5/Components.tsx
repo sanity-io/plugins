@@ -25,6 +25,7 @@ import {type ComponentType, useId, useState} from 'react'
 import * as ui5 from 'ui5'
 
 import {
+  ColumnLabel,
   type PreviewSettings,
   PreviewScope,
   SCHEMES,
@@ -34,7 +35,7 @@ import {
 } from './Preview'
 import {getUi5Stylesheet, TONES} from './stylesheet'
 
-import {catalogRow, mono} from './Ui5Tool.css'
+import {catalogRow, tokenList, tokenName} from './Ui5Tool.css'
 
 interface CatalogEntry {
   name: string
@@ -670,16 +671,20 @@ function CatalogRow({entry}: {entry: CatalogEntry}) {
         )}
         <SourceBadges sources={sources} />
         {tokens.length > 0 && (
-          <span className={mono}>{tokens.map((token) => token.name).join(' ')}</span>
+          <div className={tokenList}>
+            {tokens.map((token) => (
+              <code className={tokenName} key={token.name}>
+                {token.name}
+              </code>
+            ))}
+          </div>
         )}
       </Stack>
       {SCHEMES.map((scheme) => (
         <SchemeCard key={scheme} scheme={scheme}>
           <Grid gap={3} gridTemplateColumns={2}>
             <Stack gap={3}>
-              <Text muted size={0} weight="medium">
-                v4
-              </Text>
+              <ColumnLabel>v4</ColumnLabel>
               {V4 ? (
                 <V4 />
               ) : (
@@ -689,9 +694,7 @@ function CatalogRow({entry}: {entry: CatalogEntry}) {
               )}
             </Stack>
             <Stack gap={3}>
-              <Text muted size={0} weight="medium">
-                v5
-              </Text>
+              <ColumnLabel>v5</ColumnLabel>
               <V5 />
             </Stack>
           </Grid>

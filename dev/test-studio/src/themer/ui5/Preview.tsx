@@ -78,12 +78,17 @@ export function SchemeCard({children, scheme}: {children: ReactNode; scheme: The
   )
 }
 
-export function SchemeLabel({scheme}: {scheme: ThemeColorSchemeKey}) {
+/** The heading of a column in the screen's tables */
+export function ColumnLabel({children}: {children: ReactNode}) {
   return (
-    <Text muted size={0} weight="medium">
-      {scheme === 'light' ? 'Light' : 'Dark'}
+    <Text muted size={1} weight="medium">
+      {children}
     </Text>
   )
+}
+
+export function SchemeLabel({scheme}: {scheme: ThemeColorSchemeKey}) {
+  return <ColumnLabel>{scheme === 'light' ? 'Light' : 'Dark'}</ColumnLabel>
 }
 
 /** A color as a probe read it — a swatch and its hex — or a placeholder until it has */
