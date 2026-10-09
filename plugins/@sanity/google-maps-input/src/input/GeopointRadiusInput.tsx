@@ -37,9 +37,9 @@ export function GeopointRadiusInput(props: GeopointRadiusInputProps) {
 
   const {
     id,
-    ref: inputRef,
-    onBlur: handleBlur,
-    onFocus: handleFocus,
+    'ref': inputRef,
+    'onBlur': handleBlur,
+    'onFocus': handleFocus,
     'aria-describedby': ariaDescribedBy,
   } = elementProps
 

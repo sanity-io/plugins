@@ -263,6 +263,7 @@ Example test file (`src/index.test.ts`):
 
 ```ts
 import {fileURLToPath} from 'node:url'
+
 import {expect, test} from 'vitest'
 import {getPackageExportsManifest} from 'vitest-package-exports'
 
