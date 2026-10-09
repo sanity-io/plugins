@@ -150,6 +150,8 @@ minimumReleaseAgeExclude:
   - '@vitejs/plugin-react'
   - '@vitest/*'
   - '@yuku-codegen/*'
+  # 2026-10-09: @yuku-core/binding-*@0.18.1 (platform binaries of yuku-core@0.18.1, see below)
+  - '@yuku-core/*'
   - '@yuku-parser/*'
   - '@yuku-toolchain/*'
   - devframe
@@ -161,11 +163,8 @@ minimumReleaseAgeExclude:
   - oxlint-tsgolint
   - publint
   - react
-  - react@19.3.0
   - react-dom
-  - react-dom@19.3.0
   - react-is
-  - react-is@19.3.0
   - react-rx@4.2.5
   - rolldown-plugin-dts
   - sanity
@@ -176,6 +175,10 @@ minimumReleaseAgeExclude:
   - yuku-ast
   - yuku-codegen
   - yuku-parser
+  # 2026-10-09: yuku-parser@0.18.1 (via @sanity/vanilla-extract-integration@0.1.25, pulled in by
+  # @sanity/pkg-utils v13) pins yuku-core@0.18.1 exactly, published the same day. Exempt it like the
+  # other yuku-* toolchain packages; the exact entry prunes itself once it ages out.
+  - yuku-core@0.18.1
 
 overrides:
   '@types/node': 'catalog:'

@@ -51,6 +51,8 @@ pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclud
 
 Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
 
+pnpm also writes such entries itself: when a package that `minimumReleaseAgeExclude` already lists (e.g. `yuku-parser`) resolves to a release that pins an exact, still-too-new version of a subdependency (e.g. `yuku-core@0.18.1` and its `@yuku-core/binding-*` platform packages), a lockfile-rewriting install appends those `name@version` entries to `pnpm-workspace.yaml`. Keep them in the PR; `minimumReleaseAgeExcludePrune` removes them once they age out.
+
 ## Before Submitting a PR
 
 Run these commands in order. **All must pass** or CI will fail:
@@ -672,6 +674,8 @@ Tests run against the dedicated bare-bones `dev/e2e-studio` (workspaces `/chromi
 ### Lint / build / test
 
 Standard commands from the Quick Reference table apply. Run `pnpm build` before `pnpm lint` if type errors reference missing `dist/` output. `pretest` automatically builds all packages except `dev/*` before Vitest runs.
+
+`pnpm knip` reports `lefthook` as an unused devDependency on these VMs because knip's lefthook plugin follows `git config core.hooksPath`, which Cursor Cloud points at its own agent hooks directory instead of `.git/hooks`. CI is unaffected. To reproduce the CI result locally, override the setting for that one process: `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=.git/hooks pnpm knip`.
 
 ## Related Documentation
 
