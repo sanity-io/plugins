@@ -69,7 +69,7 @@ catalog:
   oxc-transform-react: ^0.153.0
   oxfmt: ^0.72.0
   oxlint: ^1.83.0
-  oxlint-tsgolint: ^7.0.2003
+  oxlint-tsgolint: ^7.0.2004
   react: ^19.3.0
   react-dom: ^19.3.0
   react-hook-form: ^7.89.0
