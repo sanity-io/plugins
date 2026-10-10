@@ -64,7 +64,7 @@ catalog:
   jsdom: ^29.1.1
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
-  motion: ^14.0.0
+  motion: ^14.1.0
   nanoid: ^6.0.2
   oxc-transform-react: ^0.153.0
   oxfmt: ^0.72.0
