@@ -9,6 +9,7 @@ import type {AssetSourceComponentProps, SanityDocument} from 'sanity'
 import {rootEpic, rootReducer} from '../../modules'
 import {initialState as assetsInitialState} from '../../modules/assets'
 import type {RootReducerState} from '../../modules/types'
+import type {Locale} from '../../types'
 import getDocumentAssetIds from '../../utils/getDocumentAssetIds'
 import {isSupportedAssetType} from '../../utils/isSupportedAssetType'
 
@@ -21,6 +22,7 @@ type Props = {
   client: SanityClient
   document?: SanityDocument
   excludeTagSlugs?: string[]
+  locales?: Locale[]
   selectedAssets?: AssetSourceComponentProps['selectedAssets']
   showMediaLibraryAssets?: boolean
 }
@@ -52,6 +54,7 @@ function createReduxStore(props: Props): CreatedStore {
         ...assetsInitialState,
         assetTypes: isSupportedAssetType(props?.assetType) ? [props.assetType] : ['file', 'image'],
         excludeTagSlugs: props.excludeTagSlugs?.length ? [...props.excludeTagSlugs] : [],
+        localeIds: props.locales?.length ? props.locales.map((locale) => locale.id) : [],
         showMediaLibraryAssets: props.showMediaLibraryAssets ?? true,
       },
       debug: {
