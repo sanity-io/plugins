@@ -29,8 +29,8 @@ npm install @sanity/personalization-plugin
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {fieldLevelExperiments} from '@sanity/personalization-plugin/growthbook'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...

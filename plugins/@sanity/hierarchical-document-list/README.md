@@ -22,9 +22,9 @@ npm i @sanity/hierarchical-document-list
 ### 1. Add the plugin and the default documentType to the sanity.config.ts
 
 ```js
+import {hierarchicalDocumentList, hierarchyTree} from '@sanity/hierarchical-document-list'
 // sanity.config.js
 import {defineConfig} from 'sanity'
-import {hierarchicalDocumentList, hierarchyTree} from '@sanity/hierarchical-document-list'
 
 export default defineConfig({
   // ...
@@ -43,14 +43,14 @@ export default defineConfig({
 💡 _To learn about custom desk structures, refer to the [Structure Builder docs](https://www.sanity.io/docs/overview-structure-builder)._
 
 ```ts
-// sanity.config.ts
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
 import {
   createStructureHierarchy,
   hierarchicalDocumentList,
   hierarchyTree,
 } from '@sanity/hierarchical-document-list'
+// sanity.config.ts
+import {defineConfig} from 'sanity'
+import {structureTool} from 'sanity/structure'
 
 export default defineConfig({
   // ...
@@ -301,8 +301,9 @@ export default createHierarchicalSchemas(hierarchicalOptions)
 And add these schemas to your studio:
 
 ```js
-import createSchema from 'part:@sanity/base/schema-creator'
 import schemaTypes from 'all:part:@sanity/base/schema-type'
+import createSchema from 'part:@sanity/base/schema-creator'
+
 import hierarchicalSchemas from './hierarchicalSchemas'
 
 export default createSchema({

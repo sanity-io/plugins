@@ -50,9 +50,9 @@ The config parameter requires `type`, `S` and `context`. It also accepts `title`
 `S` and `context` are available in desk-tool structure callback, and should be forwarded as is:
 
 ```ts
+import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 import {defineConfig} from 'sanity'
 import {structureTool, StructureBuilder} from 'sanity/structure'
-import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 
 export default defineConfig({
   //...

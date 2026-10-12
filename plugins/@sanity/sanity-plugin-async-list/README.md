@@ -17,8 +17,8 @@ npm install @sanity/sanity-plugin-async-list
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {asyncList} from '@sanity/sanity-plugin-async-list'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...
@@ -91,9 +91,9 @@ defineField({
 ### Example configurations
 
 ```ts
+import {asyncList} from '@sanity/sanity-plugin-async-list'
 // sanity.config.ts
 import {defineConfig} from 'sanity'
-import {asyncList} from '@sanity/sanity-plugin-async-list'
 
 export default defineConfig({
   // ...rest of config
