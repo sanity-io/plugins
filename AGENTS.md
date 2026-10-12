@@ -310,11 +310,11 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 
 Always open PRs as **draft** initially. The prompter (person who requested the work) reviews first before marking ready for team review.
 
-### 2. Apply the "🤖 bot" Label
+### 2. Apply the "✨ ai" Label
 
-**All PRs created by AI agents must be labeled with "🤖 bot".** This label helps the team identify bot-created PRs and ensures proper tracking and review workflows.
+**All PRs created by AI agents must be labeled with "✨ ai".** This label helps the team identify AI-created PRs and ensures proper tracking and review workflows. Do not use `🤖 bot` — that label is reserved for PRs opened by CI automations and Renovate, not AI agents.
 
-When creating or updating a PR, always ensure the `🤖 bot` label is applied.
+When creating or updating a PR, always ensure the `✨ ai` label is applied.
 
 ### 3. Move Out of Draft
 
