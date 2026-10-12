@@ -1,5 +1,11 @@
 # sanity-translations-tab
 
+## 6.1.24
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
 ## 6.1.23
 
 ### Patch Changes
