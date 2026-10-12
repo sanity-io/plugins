@@ -1,5 +1,13 @@
 # sanity-plugin-mux-input
 
+## 5.1.2
+
+### Patch Changes
+
+- [#2157](https://github.com/sanity-io/plugins/pull/2157) [`22cddf3`](https://github.com/sanity-io/plugins/commit/22cddf3e3d83a1901e1a148e7dbadbabbe62b3ab) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @mux/mux-player to ^3.14.0
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
 ## 5.1.1
 
 ### Patch Changes
