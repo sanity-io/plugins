@@ -79,8 +79,8 @@ import shaderCode from './shader.glsl?raw'
 ### Inline/No-Inline
 
 ```ts
-import inlined from './small.png?inline' // Force base64 inline
 import notInlined from './large.png?no-inline' // Force separate file
+import inlined from './small.png?inline' // Force base64 inline
 ```
 
 ### Web Workers
