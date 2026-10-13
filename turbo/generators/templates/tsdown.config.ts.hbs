@@ -7,6 +7,6 @@ export default defineConfig({
 {{/if}}
   reactCompiler: {transform: 'oxc'},
 {{#if hasVanillaExtract}}
-  vanillaExtract: true,
+  vanillaExtract: {identifiers: 'safe'},
 {{/if}}
 }) satisfies Promise<UserConfig | UserConfig[]>
