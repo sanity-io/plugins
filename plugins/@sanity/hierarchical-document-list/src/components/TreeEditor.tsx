@@ -88,7 +88,14 @@ function TreeEditor(props: TreeEditorProps) {
   return (
     <TreeEditorErrorBoundary>
       {/*Use this Box-wrapper to get a context Element to prevent DndProvider to have to HTML% backend at the same time https://github.com/react-dnd/react-dnd/issues/186#issuecomment-978206387 */}
-      <Box id={documentId} ref={setContext}>
+      <Box
+        id={documentId}
+        // The box is always rendered, so the only `null` React passes is the detach while an
+        // `<Activity>` boundary hides the tool; keeping the element keeps the tree mounted.
+        ref={(element) => {
+          if (element) setContext(element)
+        }}
+      >
         {context ? (
           <DndProvider backend={HTML5Backend} options={{rootElement: context}}>
             <TreeOperationsContext.Provider value={operationContext}>
