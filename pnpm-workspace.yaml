@@ -192,8 +192,9 @@ minimumReleaseAgeExclude:
   - yuku-ast
   - yuku-codegen
   - yuku-parser
-  - '@tanstack/react-virtual@3.14.17'
-  - '@tanstack/virtual-core@3.19.2'
+  # 2026-10-13: versions required by the Sanity next update in this lockfile
+  - '@tanstack/react-virtual@3.14.18'
+  - '@tanstack/virtual-core@3.19.3'
   - cac@7.1.0
   - i18next@26.4.4
   - '@sentry/browser-utils@11.7.0'
