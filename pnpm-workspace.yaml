@@ -192,6 +192,9 @@ minimumReleaseAgeExclude:
   - yuku-ast
   - yuku-codegen
   - yuku-parser
+  # 2026-10-13: transient versions pulled by the Sanity next override
+  - '@tanstack/react-virtual@3.14.18'
+  - '@tanstack/virtual-core@3.19.3'
   - '@tanstack/react-virtual@3.14.17'
   - '@tanstack/virtual-core@3.19.2'
   - cac@7.1.0

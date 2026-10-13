@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "catalog:",
-    "@reduxjs/toolkit": "^2.12.0",
+    "@reduxjs/toolkit": "^2.13.0",
     "@sanity/client": "catalog:",
     "@sanity/color": "catalog:",
     "@sanity/icons": "catalog:",
