@@ -39,4 +39,14 @@ describe('tags slice', () => {
     expect(state.fetching).toBe(false)
     expect(state.byIds['tag-1']!.tag).toEqual(sampleTag)
   })
+
+  it('fetchComplete does not list a tag it already has twice', () => {
+    let state = tagsReducer(undefined, {type: '@@INIT'})
+    state = tagsReducer(state, tagsActions.fetchComplete({tags: [sampleTag]}))
+    const updatedTag = {...sampleTag, _rev: 'r2'}
+    state = tagsReducer(state, tagsActions.fetchComplete({tags: [updatedTag]}))
+    expect(state.allIds).toEqual(['tag-1'])
+    expect(state.byIds['tag-1']!.tag).toEqual(updatedTag)
+    expect(state.fetchCount).toBe(1)
+  })
 })
