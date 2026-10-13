@@ -124,10 +124,21 @@ strictPeerDependencies: false
 # window, add exact `name@version` entries (do not bypass with
 # `--config.minimumReleaseAge=0` — that is not allowed). Avoid permanent
 # third-party package-name excludes solely to land a fresh release.
+#
+# The motion packages, the oxc transform packages and `styled-components` are
+# the exception. Renovate forces their bumps from the Dependency Dashboard while
+# the release is still inside the window, and the `name@version` entries pnpm
+# writes for them never survive: Renovate only commits `pnpm-lock.yaml`, so CI's
+# frozen install then rejects the lockfile with
+# ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION. Each release also pins its siblings
+# and platform bindings to exact versions, so the whole family has to be listed,
+# not just the package Renovate names.
 minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - '@changesets/cli'
   - '@devframes/*'
+  - '@oxc-transform/*'
+  - '@oxc-transform-react/*'
   - '@oxfmt/*'
   - '@oxlint/*'
   - '@oxlint-tsgolint/*'
@@ -155,9 +166,15 @@ minimumReleaseAgeExclude:
   - '@yuku-parser/*'
   - '@yuku-toolchain/*'
   - devframe
+  - framer-motion
   - get-it
   - groq
   - groq-js
+  - motion
+  - motion-dom
+  - motion-utils
+  - oxc-transform
+  - oxc-transform-react
   - oxfmt
   - oxlint
   - oxlint-tsgolint
@@ -167,6 +184,7 @@ minimumReleaseAgeExclude:
   - react-is
   - rolldown-plugin-dts
   - sanity
+  - styled-components
   - tsdown
   - verkit
   - vite
