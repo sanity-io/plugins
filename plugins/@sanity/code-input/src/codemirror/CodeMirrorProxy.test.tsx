@@ -1,7 +1,7 @@
 import {EditorView} from '@codemirror/view'
 import {ThemeProvider} from '@sanity/ui'
 import {buildTheme} from '@sanity/ui/theme'
-import {act, cleanup, render, screen} from '@testing-library/react'
+import {act, cleanup, render, screen, waitFor} from '@testing-library/react'
 import {useCallback, useState} from 'react'
 import {afterEach, describe, expect, test, vi} from 'vitest'
 
@@ -57,6 +57,22 @@ function CodeInputHarness(props: {
         onHighlightChange={handleHighlightChange}
       />
       <output data-testid="highlighted-lines">{highlightedLines.join(',')}</output>
+    </ThemeProvider>
+  )
+}
+
+/**
+ * An editor whose code and highlighted lines only change through props, like when the
+ * document is edited somewhere else.
+ */
+function ExternallyControlledEditor(props: {
+  value: string
+  highlightLines: number[]
+  onHighlightChange: (lines: number[]) => void
+}) {
+  return (
+    <ThemeProvider theme={theme}>
+      <CodeMirrorProxy languageMode="text" onChange={noop} {...props} />
     </ThemeProvider>
   )
 }
@@ -142,29 +158,51 @@ describe('highlighted lines', () => {
   test('are not written back when the value is replaced from outside the editor', () => {
     const onHighlightChange = vi.fn()
     const {container, rerender} = render(
-      <ThemeProvider theme={theme}>
-        <CodeMirrorProxy
-          languageMode="text"
-          value={'first\nsecond\nthird'}
-          onChange={noop}
-          highlightLines={[2]}
-          onHighlightChange={onHighlightChange}
-        />
-      </ThemeProvider>,
+      <ExternallyControlledEditor
+        value={'first\nsecond\nthird'}
+        highlightLines={[2]}
+        onHighlightChange={onHighlightChange}
+      />,
     )
     expect(getHighlightedLineText(container)).toEqual(['second'])
 
     rerender(
-      <ThemeProvider theme={theme}>
-        <CodeMirrorProxy
-          languageMode="text"
-          value={'zero\nfirst\nsecond\nthird'}
-          onChange={noop}
-          highlightLines={[3]}
-          onHighlightChange={onHighlightChange}
-        />
-      </ThemeProvider>,
+      <ExternallyControlledEditor
+        value={'zero\nfirst\nsecond\nthird'}
+        highlightLines={[3]}
+        onHighlightChange={onHighlightChange}
+      />,
     )
+
+    expect(getHighlightedLineText(container)).toEqual(['second'])
+    expect(onHighlightChange).not.toHaveBeenCalled()
+  })
+
+  test('are applied to a value replaced from outside the editor right after typing', async () => {
+    const onHighlightChange = vi.fn()
+    const {container, rerender} = render(
+      <ExternallyControlledEditor
+        value={'first\nsecond\nthird'}
+        highlightLines={[2]}
+        onHighlightChange={onHighlightChange}
+      />,
+    )
+    const view = getEditorView(container)
+    typeText(view, view.state.doc.line(3).to, '!')
+
+    // @uiw/react-codemirror holds back value props that arrive while typing, and applies them
+    // once typing pauses
+    rerender(
+      <ExternallyControlledEditor
+        value={'zero\nfirst\nsecond\nthird'}
+        highlightLines={[3]}
+        onHighlightChange={onHighlightChange}
+      />,
+    )
+    expect(view.state.doc.toString()).toBe('first\nsecond\nthird!')
+    await waitFor(() => expect(view.state.doc.toString()).toBe('zero\nfirst\nsecond\nthird'), {
+      timeout: 2_000,
+    })
 
     expect(getHighlightedLineText(container)).toEqual(['second'])
     expect(onHighlightChange).not.toHaveBeenCalled()

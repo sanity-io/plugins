@@ -1,5 +1,6 @@
 import {
   type ChangeDesc,
+  EditorState,
   type Extension,
   type Range,
   StateEffect,
@@ -18,6 +19,8 @@ const highlightLineClass = 'cm-highlight-line'
 
 const addLineHighlight = StateEffect.define<number>()
 const removeLineHighlight = StateEffect.define<number>()
+/** Replaces all highlights, with line numbers in the document the transaction produces */
+const setLineHighlights = StateEffect.define<number[]>()
 
 const lineHighlightField = StateField.define({
   create() {
@@ -28,6 +31,9 @@ const lineHighlightField = StateField.define({
       lines = mapLineHighlights(lines, tr)
     }
     for (const e of tr.effects) {
+      if (e.is(setLineHighlights)) {
+        lines = createLineHighlights(e.value, tr.newDoc)
+      }
       if (e.is(addLineHighlight)) {
         lines = lines.update({add: [lineHighlightMark.range(e.value)]})
       }
@@ -46,19 +52,7 @@ const lineHighlightField = StateField.define({
     return getHighlightedLines(value, state.doc)
   },
   fromJSON(value: number[], state) {
-    const lines = state.doc.lines
-    const highlights = value
-      .filter((line) => line <= lines) // one-indexed
-      .map((line) => lineHighlightMark.range(state.doc.line(line).from))
-    highlights.sort((a, b) => a.from - b.from)
-    try {
-      return Decoration.none.update({
-        add: highlights,
-      })
-    } catch (e) {
-      console.error(e)
-      return Decoration.none
-    }
+    return createLineHighlights(value, state.doc)
   },
   provide: (f) => EditorView.decorations.from(f),
 })
@@ -66,6 +60,15 @@ const lineHighlightField = StateField.define({
 const lineHighlightMark = Decoration.line({
   class: highlightLineClass,
 })
+
+function createLineHighlights(lineNumbers: number[], doc: Text): DecorationSet {
+  return Decoration.set(
+    lineNumbers
+      .filter((line) => Number.isInteger(line) && line >= 1 && line <= doc.lines)
+      .map((line) => lineHighlightMark.range(doc.line(line).from)),
+    true,
+  )
+}
 
 function isRemoved(changes: ChangeDesc, from: number, to: number): boolean {
   let pos = from
@@ -137,6 +140,33 @@ function highlightChangeListener(onHighlightChange: (lines: number[]) => void): 
     }
   })
 }
+
+/** The highlighted lines last set from outside the editor, with `setHighlightedLines` */
+const syncedHighlightLinesField = StateField.define<number[]>({
+  create() {
+    return []
+  },
+  update(lines, tr) {
+    for (const e of tr.effects) {
+      if (e.is(setLineHighlights)) {
+        lines = e.value
+      }
+    }
+    return lines
+  },
+})
+
+/**
+ * Values synced from outside the editor replace the whole document, which drops the
+ * highlights. They can also land after the highlighted lines that belong to them were set,
+ * since `@uiw/react-codemirror` holds them back while the user is typing. So the latest
+ * highlighted lines are applied in the same transaction.
+ */
+const externalValueHighlights = EditorState.transactionExtender.of((tr) =>
+  tr.annotation(ExternalChange)
+    ? {effects: setLineHighlights.of(tr.startState.field(syncedHighlightLinesField))}
+    : null,
+)
 
 export const highlightState: {
   [prop: string]: StateField<DecorationSet>
@@ -227,27 +257,17 @@ export const highlightLine = (config: HighlightLineConfig): Extension => {
     config.readOnly || !config.onHighlightChange
       ? []
       : highlightChangeListener(config.onHighlightChange),
+    syncedHighlightLinesField,
+    externalValueHighlights,
     highlightTheme,
   ]
 }
 
 /**
- * Adds and removes highlights to the provided view using highlightLines
+ * Replaces the highlights of the provided view with highlightLines
  * @param view
  * @param highlightLines
  */
 export function setHighlightedLines(view: EditorView, highlightLines: number[]): void {
-  const doc = view.state.doc
-  const lines = doc.lines
-  //1-based line numbers
-  const allLineNumbers = Array.from({length: lines}, (_x, i) => i + 1)
-  view.dispatch({
-    effects: allLineNumbers.map((lineNumber) => {
-      const line = doc.line(lineNumber)
-      if (highlightLines?.includes(lineNumber)) {
-        return addLineHighlight.of(line.from)
-      }
-      return removeLineHighlight.of(line.from)
-    }),
-  })
+  view.dispatch({effects: setLineHighlights.of(highlightLines)})
 }
