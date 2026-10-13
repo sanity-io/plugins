@@ -30,7 +30,7 @@ import type {
   OrderDirection,
   Tag,
 } from '../../types'
-import constructFilter from '../../utils/constructFilter'
+import constructFilter, {buildExcludeMediaLibraryFragment} from '../../utils/constructFilter'
 import {findImageAssets} from '../../utils/ReplaceImages'
 import {searchActions} from '../search'
 import type {RootReducerState} from '../types'
@@ -328,6 +328,9 @@ const assetsSlice = createSlice({
           state.allIds.push(assetId)
         }
       })
+    },
+    listenRequest() {
+      //
     },
     listenerCreateQueue(_state, _action: PayloadAction<{asset: Asset}>) {
       //
@@ -645,6 +648,48 @@ export const assetsSearchEpic: MyEpic = (action$) =>
         assetsActions.clear(), //
         assetsActions.loadPageIndex({pageIndex: 0}),
       )
+    }),
+  )
+
+/**
+ * Listens for asset mutations for the lifetime of the store, so changes made while the
+ * browser is hidden (the Studio keeps recently used tools mounted) still reach it.
+ */
+export const assetsListenEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.listenRequest.match),
+    withLatestFrom(state$),
+    switchMap(([, state]) => {
+      const excludeMediaLibraryFragment = buildExcludeMediaLibraryFragment(
+        state.assets.showMediaLibraryAssets,
+      )
+      const excludeMediaLibraryClause = excludeMediaLibraryFragment
+        ? ` && ${excludeMediaLibraryFragment}`
+        : ''
+
+      return client
+        .listen(
+          groq`*[_type in ["sanity.fileAsset", "sanity.imageAsset"] && !(_id in path("drafts.**"))${excludeMediaLibraryClause}]`,
+        )
+        .pipe(
+          mergeMap(({documentId, result, transition}) => {
+            switch (transition) {
+              case 'appear':
+                return of(assetsActions.listenerCreateQueue({asset: result as Asset}))
+              case 'disappear':
+                return of(assetsActions.listenerDeleteQueue({assetId: documentId}))
+              case 'update':
+                return of(assetsActions.listenerUpdateQueue({asset: result as Asset}))
+              default:
+                return EMPTY
+            }
+          }),
+          // A failed listener must not take the root epic, and the rest of the browser, with it
+          catchError((error: unknown) => {
+            console.error(error)
+            return EMPTY
+          }),
+        )
     }),
   )
 

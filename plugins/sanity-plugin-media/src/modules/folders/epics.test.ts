@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import {of} from 'rxjs'
+import {of, Subject} from 'rxjs'
 import {describe, expect, it, vi} from 'vitest'
 
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
@@ -14,6 +14,7 @@ import {
   foldersCurrentFolderEpic,
   foldersDeleteEpic,
   foldersFetchEpic,
+  foldersListenEpic,
   foldersRenameEpic,
 } from './index'
 
@@ -370,5 +371,21 @@ describe('foldersFetchEpic', () => {
       expect(store.getState().folders.unfiledCount).toBe(5)
       expect(store.getState().folders.fetching).toBe(false)
     })
+  })
+})
+
+describe('foldersListenEpic', () => {
+  it('re-fetches the folder tree on folder mutations', () => {
+    const events = new Subject<{documentId: string; transition: string}>()
+    const listen = vi.fn((_query: string) => events)
+    const store = createEpicTestStore(foldersListenEpic, createMockSanityClient({listen}))
+
+    store.dispatch(foldersActions.listenRequest())
+    expect(listen).toHaveBeenCalledTimes(1)
+    expect(listen.mock.calls[0]![0]).toContain('media.folder')
+    expect(store.getState().folders.fetching).toBe(false)
+
+    events.next({documentId: 'f1', transition: 'update'})
+    expect(store.getState().folders.fetching).toBe(true)
   })
 })

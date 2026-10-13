@@ -1,5 +1,7 @@
 // @vitest-environment node
 
+import {combineEpics} from 'redux-observable'
+import {Subject} from 'rxjs'
 import {describe, expect, it, vi, beforeEach, afterEach} from 'vitest'
 
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
@@ -11,6 +13,7 @@ import type {ImageAsset, Tag} from '../../types'
 import {ASSETS_ACTIONS} from './actions'
 import {
   assetsActions,
+  assetsListenEpic,
   assetsListenerCreateQueueEpic,
   assetsListenerDeleteQueueEpic,
   assetsListenerUpdateQueueEpic,
@@ -202,5 +205,91 @@ describe('assets listener queue epics', () => {
     await vi.waitFor(() => {
       expect(store.getState().assets.byIds['a1']!.asset.title).toBe('Buffered')
     })
+  })
+})
+
+describe('assetsListenEpic', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('feeds asset mutations into the listener queues', async () => {
+    const events = new Subject<{documentId: string; result?: unknown; transition: string}>()
+    const listen = vi.fn((_query: string) => events)
+    const store = createEpicTestStore(
+      combineEpics(assetsListenEpic, assetsListenerUpdateQueueEpic, assetsListenerDeleteQueueEpic),
+      createMockSanityClient({listen}),
+      {
+        assets: {
+          ...assetsInitialState,
+          assetTypes: ['image'],
+          allIds: ['a1'],
+          byIds: {
+            a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false},
+          },
+        },
+      },
+    )
+
+    store.dispatch(assetsActions.listenRequest())
+    expect(listen).toHaveBeenCalledTimes(1)
+    expect(listen.mock.calls[0]![0]).toContain('sanity.imageAsset')
+
+    events.next({
+      documentId: 'a1',
+      result: {...sampleAsset, title: 'Listened'},
+      transition: 'update',
+    })
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(store.getState().assets.byIds['a1']!.asset.title).toBe('Listened')
+
+    events.next({documentId: 'a1', transition: 'disappear'})
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(store.getState().assets.byIds['a1']).toBeUndefined()
+  })
+
+  it('keeps the other epics running when the listener fails', async () => {
+    const events = new Subject<{documentId: string; result?: unknown; transition: string}>()
+    const listen = vi.fn((_query: string) => events)
+    const store = createEpicTestStore(
+      combineEpics(assetsListenEpic, assetsListenerDeleteQueueEpic),
+      createMockSanityClient({listen}),
+      {
+        assets: {
+          ...assetsInitialState,
+          assetTypes: ['image'],
+          allIds: ['a1'],
+          byIds: {
+            a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false},
+          },
+        },
+      },
+    )
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    store.dispatch(assetsActions.listenRequest())
+    events.error(new Error('listener gone'))
+    expect(error).toHaveBeenCalledWith(new Error('listener gone'))
+
+    store.dispatch(assetsActions.listenerDeleteQueue({assetId: 'a1'}))
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(store.getState().assets.byIds['a1']).toBeUndefined()
+
+    error.mockRestore()
+  })
+
+  it('excludes Media Library assets from the listener when they are hidden', () => {
+    const listen = vi.fn((_query: string) => new Subject())
+    const store = createEpicTestStore(assetsListenEpic, createMockSanityClient({listen}), {
+      assets: {...assetsInitialState, assetTypes: ['image'], showMediaLibraryAssets: false},
+    })
+
+    store.dispatch(assetsActions.listenRequest())
+
+    expect(listen.mock.calls[0]![0]).toContain('source.name')
   })
 })
