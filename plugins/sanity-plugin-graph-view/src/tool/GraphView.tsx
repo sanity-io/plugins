@@ -1,15 +1,17 @@
+import type {MutationEvent} from '@sanity/client'
 import {black, COLOR_HUES, gray, white, hues} from '@sanity/color'
 import {useTheme} from '@sanity/ui'
 import BezierEasing from 'bezier-easing'
 import {dequal} from 'dequal/lite'
+import ForceGraph from 'force-graph'
 import {rgba} from 'polished'
-import {useEffect, useState} from 'react'
-import ForceGraph2D from 'react-force-graph-2d'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {useClient, useUserColorManager, type SanityClient, type SanityDocument} from 'sanity'
 import {useRouter} from 'sanity/router'
 import {v4 as uuidv4} from 'uuid'
 
 import {GraphRoot, GraphWrapper, HoverNode, Legend, LegendBadge, LegendRow} from './GraphViewStyle'
+import {disposeOnUnmount} from './onRemovedFromDocument'
 import {sortBy, loadImage, sizeOf, truncate} from './utils'
 
 const DEFAULT_QUERY = `
@@ -121,7 +123,7 @@ class Session {
   angle: number = 0
 }
 
-class GraphData {
+export class GraphData {
   sessions: Session[] = []
   data: any
 
@@ -176,6 +178,80 @@ class GraphData {
 
 const users = new Users()
 
+export interface GraphState {
+  documents: SanityDocument[]
+  graph: GraphData
+}
+
+/**
+ * Applies a listener mutation to the loaded documents and graph. Existing node objects are
+ * kept, so the force simulation continues from their positions.
+ */
+export function applyMutation(
+  state: GraphState,
+  update: MutationEvent,
+): {next: GraphState; docNode?: any} {
+  const {documents, graph} = state
+  const doc = update.result
+  if (doc) {
+    doc._id = stripDraftId(doc._id)
+
+    const docsById: Record<string, SanityDocument> = {}
+    for (const d of documents) {
+      docsById[d._id] = d
+    }
+
+    let oldDoc
+    const docs = [...documents]
+    const idx = documents.findIndex((d) => d._id === doc._id)
+    if (idx >= 0) {
+      oldDoc = docs[idx]
+      docs[idx] = doc
+    } else {
+      docs.push(doc)
+    }
+
+    const newGraph = graph.clone()
+
+    const oldRefs = findRefs(oldDoc || {}).filter((id) => id === doc._id || docsById[id] !== null)
+    const newRefs = findRefs(doc).filter((id) => id === doc._id || docsById[id] !== null)
+
+    let graphChanged = !dequal(oldRefs, newRefs)
+    if (graphChanged) {
+      newGraph.data.links = newGraph.data.links
+        .filter((l: any) => l.source.id !== doc._id)
+        .concat(newRefs.map((ref) => ({source: doc._id, target: ref})))
+    }
+
+    let docNode
+    const nodeIdx = graph.data.nodes.findIndex((n: any) => n.doc && n.doc._id === doc._id)
+    if (nodeIdx >= 0) {
+      docNode = graph.data.nodes[nodeIdx]
+      docNode.doc = doc
+    } else {
+      docNode = {id: doc._id, type: 'document', doc: doc}
+      newGraph.data.nodes.push(docNode)
+      graphChanged = true
+    }
+
+    return {next: {documents: docs, graph: graphChanged ? newGraph : graph}, docNode}
+  }
+
+  if (update.transition === 'disappear') {
+    const docId = stripDraftId(update.documentId)
+
+    const newGraph = graph.clone()
+    newGraph.data.links = newGraph.data.links.filter(
+      (l: any) => l.source.id !== docId && l.target.id !== docId,
+    )
+    newGraph.data.nodes = newGraph.data.nodes.filter((n: any) => n.id !== docId)
+
+    return {next: {documents: documents.filter((d) => d._id !== docId), graph: newGraph}}
+  }
+
+  return {next: state}
+}
+
 interface GraphViewConfig {
   query?: string
   /** default: '2022-09-01' */
@@ -191,100 +267,277 @@ export default function GraphView({
   const apiVersion = props.apiVersion ?? '2022-09-01'
 
   const userColorManager = useUserColorManager()
-  const [maxSize, setMaxSize] = useState(0)
   const [hoverNode, setHoverNode] = useState<any>(null)
-  const [documents, setDocuments] = useState<SanityDocument[]>([])
-  const [docTypes, setDocTypes] = useState<Record<string, number>>({})
-  const [graph, setGraph] = useState(() => new GraphData())
+  const [state, setState] = useState<GraphState>(() => ({documents: [], graph: new GraphData()}))
+  const {documents, graph} = state
+  const docTypes = useMemo(() => getDocTypeCounts(documents), [documents])
+  const maxSize = useMemo(
+    () => (documents.length > 0 ? Math.max(...documents.map(sizeOf)) : 0),
+    [documents],
+  )
   const router = useRouter()
   const client = useClient({apiVersion})
 
+  // The element the graph is drawn into. It is rendered for as long as this component is, so
+  // the only `null` React passes is the detach while an `<Activity>` boundary hides the tool.
+  const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
+  // The documents, the listener and the force-graph instance live for as long as this component
+  // does, not only while it is visible: an `<Activity>` hide only pauses the animation loop, so
+  // returning to the tool continues where it left off, with nothing fetched again and the canvas
+  // keeping its zoom and node positions. Both effects hand their cleanup to `disposeOnUnmount`.
+  const stateRef = useRef(state)
+  const loaded = useRef<{client: SanityClient; query: string; dispose: () => void} | null>(null)
+  const stopWatchingData = useRef<(() => void) | null>(null)
   useEffect(() => {
-    void client.fetch(query).then((_docs) => {
-      const docs = deduplicateDrafts(_docs)
-      setMaxSize(Math.max(...docs.map(sizeOf)))
-      setDocuments(docs)
-      setDocTypes(getDocTypeCounts(docs))
-      setGraph(new GraphData(docs))
-      return undefined
+    if (!container) return undefined
+    stopWatchingData.current?.()
+
+    let current = loaded.current
+    if (!current || current.client !== client || current.query !== query) {
+      current?.dispose()
+
+      let active = true
+      const commit = (next: GraphState) => {
+        if (!active) return
+        stateRef.current = next
+        setState(next)
+      }
+      void client.fetch(query).then((_docs) => {
+        const docs = deduplicateDrafts(_docs)
+        commit({documents: docs, graph: new GraphData(docs)})
+        return undefined
+      })
+      const subscription = client.listen(query, {}, {}).subscribe(async (update) => {
+        if (update.type !== 'mutation') return
+        const {next, docNode} = applyMutation(stateRef.current, update)
+        if (next !== stateRef.current) commit(next)
+        if (docNode) {
+          const user = await users.getById(update.identity, client)
+          next.graph.setSession(user, docNode)
+        }
+      })
+      current = {
+        client,
+        query,
+        dispose: () => {
+          active = false
+          subscription.unsubscribe()
+        },
+      }
+      loaded.current = current
+    }
+
+    const entry = current
+    const dispose = () => {
+      entry.dispose()
+      if (loaded.current === entry) loaded.current = null
+    }
+    return () => {
+      stopWatchingData.current = disposeOnUnmount(container, dispose)
+    }
+  }, [client, query, container])
+
+  const forceGraph = useRef<ForceGraph | null>(null)
+  const stopWatchingGraph = useRef<(() => void) | null>(null)
+  useEffect(() => {
+    if (!container) return undefined
+    stopWatchingGraph.current?.()
+
+    let fg = forceGraph.current
+    if (!fg) {
+      fg = new ForceGraph(container)
+        .nodeAutoColorBy('group')
+        .enableNodeDrag(false)
+        .linkColor(() => rgba(gray[500].hex, 0.25))
+        .nodeLabel(() => '')
+        .nodeRelSize(1)
+        .linkCanvasObject((link: any, ctx, globalScale) => {
+          ctx.beginPath()
+          ctx.strokeStyle = rgba(gray[500].hex, 0.125)
+          ctx.lineWidth = 2 / globalScale
+          ctx.moveTo(link.source.x, link.source.y)
+          ctx.lineTo(link.target.x, link.target.y)
+          ctx.stroke()
+        })
+      forceGraph.current = fg
+    }
+    fg.resumeAnimation()
+
+    const destroy = () => {
+      fg._destructor()
+      forceGraph.current = null
+    }
+    return () => {
+      stopWatchingGraph.current = disposeOnUnmount(container, destroy, () => fg.pauseAnimation())
+    }
+  }, [container])
+
+  // Handing the simulation the same data again would reheat it, so only changed data is passed
+  const graphDataApplied = useRef<unknown>(null)
+  useEffect(() => {
+    const fg = forceGraph.current
+    if (!container || !fg || graphDataApplied.current === graph.data) return
+    graphDataApplied.current = graph.data
+    fg.graphData(graph.data)
+  }, [graph, container])
+
+  useEffect(() => {
+    const fg = forceGraph.current
+    if (!container || !fg) return
+    fg.onNodeHover((node: any) => setHoverNode(node)).onNodeClick((node: any) => {
+      router.navigateIntent('edit', {id: node.doc._id, documentType: node.doc._type})
     })
-  }, [client, query])
+  }, [router, container])
 
   useEffect(() => {
-    const subscription = client.listen(query, {}, {}).subscribe(async (update) => {
-      if (update.type !== 'mutation') return
-      const doc = update.result
-      if (doc) {
-        doc._id = stripDraftId(doc._id)
+    const fg = forceGraph.current
+    if (!container || !fg) return
+    fg.nodeVal((node: any) => valueFor(node.doc, maxSize)).nodeCanvasObject(
+      (node: any, ctx, globalScale) => {
+        switch (node.type) {
+          case 'document': {
+            const nodeColor = getDocTypeColor(node.doc._type)
+            const radius = Math.sqrt(valueFor(node.doc, maxSize))
+            const fontSize = Math.min(100, 10.0 / globalScale)
 
-        const docsById: Record<string, SanityDocument> = {}
-        for (const d of documents) {
-          docsById[d._id] = d
+            ctx.beginPath()
+            ctx.fillStyle =
+              hoverNode !== null && node.doc._id === hoverNode.doc._id
+                ? rgba(gray[500].hex, 0.8)
+                : nodeColor.fill
+            ctx.strokeStyle = nodeColor.border
+            ctx.lineWidth = 0.5
+            ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
+            ctx.stroke()
+            ctx.fill()
+
+            if (radius * globalScale > 10) {
+              ctx.font = `${fontSize}px sans-serif`
+              const w = radius * 2 + 30 / globalScale
+              for (let len = 50; len >= 5; len /= 1.2) {
+                const label = truncate(labelFor(node.doc), Math.round(len))
+                const textMetrics = ctx.measureText(label)
+                if (textMetrics.width < w) {
+                  // ctx.fillStyle = rgba(color.white.hex, 1.0)
+                  ctx.textAlign = 'center'
+                  ctx.textBaseline = 'top'
+
+                  ctx.strokeStyle = rgba(black.hex, 0.5)
+                  ctx.lineWidth = 2 / globalScale
+                  ctx.strokeText(label, node.x, node.y + radius + 5 / globalScale)
+
+                  ctx.fillText(label, node.x, node.y + radius + 5 / globalScale)
+                  break
+                }
+              }
+            }
+          }
         }
+      },
+    )
+  }, [hoverNode, maxSize, container])
 
-        let oldDoc
-        const docs = [...documents]
-        const idx = documents.findIndex((d) => d._id === doc._id)
-        if (idx >= 0) {
-          oldDoc = docs[idx]
-          docs[idx] = doc
-        } else {
-          docs.push(doc)
+  useEffect(() => {
+    const fg = forceGraph.current
+    if (!container || !fg) return
+    fg.onRenderFramePost((ctx, globalScale) => {
+      for (const session of graph.sessions) {
+        const node = graph.data.nodes.find((n: any) => n.doc && n.doc._id === session?.doc?._id)
+        if (node) {
+          const idleFactorRange = idleTimeout
+          const angle = session.angle
+          const radius = Math.sqrt(valueFor(node.doc, maxSize))
+          const image = session.user.image
+          const userColor = userColorManager.get(session.user.displayName).tints[400].hex
+          const distance = radius * globalScale + 40
+          const imgW = image ? image.width : 0
+          const imgH = image ? image.height : 0
+          const x = node.x + (Math.sin(angle) * distance) / globalScale
+          const y = node.y + (Math.cos(angle) * distance) / globalScale
+
+          ctx.save()
+          // oxlint-disable-next-line react/todo
+          try {
+            ctx.globalAlpha = fadeEasing(
+              1 - Math.min(idleFactorRange, Date.now() - session.lastActive) / idleFactorRange,
+            )
+            ctx.font = `bold ${Math.round(12 / globalScale)}px sans-serif`
+
+            ctx.beginPath()
+            ctx.strokeStyle = rgba(white.hex, 1.0)
+            ctx.lineWidth = 2 / globalScale
+            ctx.moveTo(
+              node.x + (Math.sin(angle) * (distance - imgW / 2)) / globalScale,
+              node.y + (Math.cos(angle) * (distance - imgH / 2)) / globalScale,
+            )
+            ctx.lineTo(node.x + Math.sin(angle) * radius, node.y + Math.cos(angle) * radius)
+            ctx.stroke()
+
+            ctx.beginPath()
+            ctx.strokeStyle = rgba(white.hex, 1.0)
+            ctx.lineWidth = 2 / globalScale
+            ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
+            ctx.stroke()
+
+            if (image) {
+              ctx.save()
+              try {
+                const dur = 700
+                const f = softEasing(Math.max(0, (dur - (Date.now() - session.startTime)) / dur))
+                if (f > 0) {
+                  ctx.beginPath()
+                  ctx.fillStyle = rgba(userColor, f)
+                  ctx.arc(x, y, (imgW / 2 + 10) / globalScale, 0, 2 * Math.PI, false)
+                  ctx.fill()
+                }
+
+                ctx.beginPath()
+                ctx.fillStyle = rgba(white.hex, 1.0)
+                ctx.arc(x, y, imgW / globalScale / 2, 0, 2 * Math.PI, false)
+                ctx.clip()
+
+                ctx.drawImage(
+                  image,
+                  x - imgW / globalScale / 2,
+                  y - imgH / globalScale / 2,
+                  imgW / globalScale,
+                  imgH / globalScale,
+                )
+
+                ctx.strokeStyle = black.hex
+                ctx.lineWidth = 6 / globalScale
+                ctx.stroke()
+
+                ctx.strokeStyle = userColor
+                ctx.lineWidth = 4 / globalScale
+                ctx.stroke()
+              } finally {
+                ctx.restore()
+              }
+            }
+
+            ctx.beginPath()
+            ctx.strokeStyle = rgba(black.hex, 1)
+            ctx.lineWidth = 0.5 / globalScale
+            ctx.arc(x, y, imgW / globalScale / 2, 0, 2 * Math.PI, false)
+            ctx.stroke()
+
+            const above = angle >= Math.PI / 2 && angle < Math.PI * 1.5
+            const textY = above
+              ? y - (imgH / 2 + 5) / globalScale
+              : y + (imgH / 2 + 5) / globalScale
+            ctx.fillStyle = rgba(white.hex, 1.0)
+            ctx.textAlign = 'center'
+            ctx.textBaseline = above ? 'bottom' : 'top'
+            ctx.fillText(session.user.displayName, x, textY)
+          } finally {
+            ctx.restore()
+          }
         }
-        setDocuments(docs)
-        setDocTypes(getDocTypeCounts(docs))
-        setMaxSize(Math.max(...docs.map(sizeOf)))
-
-        const newGraph = graph.clone()
-
-        const oldRefs = findRefs(oldDoc || {}).filter(
-          (id) => id === doc._id || docsById[id] !== null,
-        )
-        const newRefs = findRefs(doc).filter((id) => id === doc._id || docsById[id] !== null)
-
-        let graphChanged = !dequal(oldRefs, newRefs)
-        if (graphChanged) {
-          newGraph.data.links = newGraph.data.links
-            .filter((l: any) => l.source.id !== doc._id)
-            .concat(newRefs.map((ref) => ({source: doc._id, target: ref})))
-        }
-
-        let docNode
-        const nodeIdx = graph.data.nodes.findIndex((n: any) => n.doc && n.doc._id === doc._id)
-        if (nodeIdx >= 0) {
-          docNode = graph.data.nodes[nodeIdx]
-          docNode.doc = doc
-        } else {
-          docNode = {id: doc._id, type: 'document', doc: doc}
-          newGraph.data.nodes.push(docNode)
-          graphChanged = true
-        }
-        if (graphChanged) {
-          setGraph(newGraph)
-        }
-
-        const user = await users.getById(update.identity, client)
-        graph.setSession(user, docNode)
-      } else if (update.transition === 'disappear') {
-        const docId = stripDraftId(update.documentId)
-
-        const docs = documents.filter((d) => d._id !== docId)
-        setDocuments(docs)
-        setDocTypes(getDocTypeCounts(docs))
-        setMaxSize(Math.max(...docs.map(sizeOf)))
-
-        const newGraph = graph.clone()
-        newGraph.data.links = newGraph.data.links.filter(
-          (l: any) => l.source.id !== docId && l.target.id !== docId,
-        )
-        newGraph.data.nodes = newGraph.data.nodes.filter((n: any) => n.id !== docId)
-        setGraph(newGraph)
       }
     })
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [client, query, documents, graph])
+  }, [graph, maxSize, userColorManager, container])
 
   useEffect(() => {
     const interval = setInterval(() => graph.reapSessions(), 1000)
@@ -309,167 +562,9 @@ export default function GraphView({
           ))}
         </Legend>
         {hoverNode && <HoverNode theme={theme}>{labelFor(hoverNode.doc)}</HoverNode>}
-        <ForceGraph2D
-          graphData={graph.data}
-          nodeAutoColorBy="group"
-          enableNodeDrag={false}
-          onNodeHover={(node: any) => setHoverNode(node)}
-          onNodeClick={(node: any) => {
-            router.navigateIntent('edit', {id: node.doc._id, documentType: node.doc._type})
-          }}
-          linkColor={() => rgba(gray[500].hex, 0.25)}
-          nodeLabel={() => ''}
-          nodeRelSize={1}
-          nodeVal={(node: any) => valueFor(node.doc, maxSize)}
-          onRenderFramePost={(ctx, globalScale) => {
-            for (const session of graph.sessions) {
-              const node = graph.data.nodes.find(
-                (n: any) => n.doc && n.doc._id === session?.doc?._id,
-              )
-              if (node) {
-                const idleFactorRange = idleTimeout
-                const angle = session.angle
-                const radius = Math.sqrt(valueFor(node.doc, maxSize))
-                const image = session.user.image
-                const userColor = userColorManager.get(session.user.displayName).tints[400].hex
-                const distance = radius * globalScale + 40
-                const imgW = image ? image.width : 0
-                const imgH = image ? image.height : 0
-                const x = node.x + (Math.sin(angle) * distance) / globalScale
-                const y = node.y + (Math.cos(angle) * distance) / globalScale
-
-                ctx.save()
-                // oxlint-disable-next-line react/todo
-                try {
-                  ctx.globalAlpha = fadeEasing(
-                    1 -
-                      Math.min(idleFactorRange, Date.now() - session.lastActive) / idleFactorRange,
-                  )
-                  ctx.font = `bold ${Math.round(12 / globalScale)}px sans-serif`
-
-                  ctx.beginPath()
-                  ctx.strokeStyle = rgba(white.hex, 1.0)
-                  ctx.lineWidth = 2 / globalScale
-                  ctx.moveTo(
-                    node.x + (Math.sin(angle) * (distance - imgW / 2)) / globalScale,
-                    node.y + (Math.cos(angle) * (distance - imgH / 2)) / globalScale,
-                  )
-                  ctx.lineTo(node.x + Math.sin(angle) * radius, node.y + Math.cos(angle) * radius)
-                  ctx.stroke()
-
-                  ctx.beginPath()
-                  ctx.strokeStyle = rgba(white.hex, 1.0)
-                  ctx.lineWidth = 2 / globalScale
-                  ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
-                  ctx.stroke()
-
-                  if (image) {
-                    ctx.save()
-                    try {
-                      const dur = 700
-                      const f = softEasing(
-                        Math.max(0, (dur - (Date.now() - session.startTime)) / dur),
-                      )
-                      if (f > 0) {
-                        ctx.beginPath()
-                        ctx.fillStyle = rgba(userColor, f)
-                        ctx.arc(x, y, (imgW / 2 + 10) / globalScale, 0, 2 * Math.PI, false)
-                        ctx.fill()
-                      }
-
-                      ctx.beginPath()
-                      ctx.fillStyle = rgba(white.hex, 1.0)
-                      ctx.arc(x, y, imgW / globalScale / 2, 0, 2 * Math.PI, false)
-                      ctx.clip()
-
-                      ctx.drawImage(
-                        image,
-                        x - imgW / globalScale / 2,
-                        y - imgH / globalScale / 2,
-                        imgW / globalScale,
-                        imgH / globalScale,
-                      )
-
-                      ctx.strokeStyle = black.hex
-                      ctx.lineWidth = 6 / globalScale
-                      ctx.stroke()
-
-                      ctx.strokeStyle = userColor
-                      ctx.lineWidth = 4 / globalScale
-                      ctx.stroke()
-                    } finally {
-                      ctx.restore()
-                    }
-                  }
-
-                  ctx.beginPath()
-                  ctx.strokeStyle = rgba(black.hex, 1)
-                  ctx.lineWidth = 0.5 / globalScale
-                  ctx.arc(x, y, imgW / globalScale / 2, 0, 2 * Math.PI, false)
-                  ctx.stroke()
-
-                  const above = angle >= Math.PI / 2 && angle < Math.PI * 1.5
-                  const textY = above
-                    ? y - (imgH / 2 + 5) / globalScale
-                    : y + (imgH / 2 + 5) / globalScale
-                  ctx.fillStyle = rgba(white.hex, 1.0)
-                  ctx.textAlign = 'center'
-                  ctx.textBaseline = above ? 'bottom' : 'top'
-                  ctx.fillText(session.user.displayName, x, textY)
-                } finally {
-                  ctx.restore()
-                }
-              }
-            }
-          }}
-          nodeCanvasObject={(node: any, ctx, globalScale) => {
-            switch (node.type) {
-              case 'document': {
-                const nodeColor = getDocTypeColor(node.doc._type)
-                const radius = Math.sqrt(valueFor(node.doc, maxSize))
-                const fontSize = Math.min(100, 10.0 / globalScale)
-
-                ctx.beginPath()
-                ctx.fillStyle =
-                  hoverNode !== null && node.doc._id === hoverNode.doc._id
-                    ? rgba(gray[500].hex, 0.8)
-                    : nodeColor.fill
-                ctx.strokeStyle = nodeColor.border
-                ctx.lineWidth = 0.5
-                ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
-                ctx.stroke()
-                ctx.fill()
-
-                if (radius * globalScale > 10) {
-                  ctx.font = `${fontSize}px sans-serif`
-                  const w = radius * 2 + 30 / globalScale
-                  for (let len = 50; len >= 5; len /= 1.2) {
-                    const label = truncate(labelFor(node.doc), Math.round(len))
-                    const textMetrics = ctx.measureText(label)
-                    if (textMetrics.width < w) {
-                      // ctx.fillStyle = rgba(color.white.hex, 1.0)
-                      ctx.textAlign = 'center'
-                      ctx.textBaseline = 'top'
-
-                      ctx.strokeStyle = rgba(black.hex, 0.5)
-                      ctx.lineWidth = 2 / globalScale
-                      ctx.strokeText(label, node.x, node.y + radius + 5 / globalScale)
-
-                      ctx.fillText(label, node.x, node.y + radius + 5 / globalScale)
-                      break
-                    }
-                  }
-                }
-              }
-            }
-          }}
-          linkCanvasObject={(link: any, ctx, globalScale) => {
-            ctx.beginPath()
-            ctx.strokeStyle = rgba(gray[500].hex, 0.125)
-            ctx.lineWidth = 2 / globalScale
-            ctx.moveTo(link.source.x, link.source.y)
-            ctx.lineTo(link.target.x, link.target.y)
-            ctx.stroke()
+        <div
+          ref={(element) => {
+            if (element) setContainer(element)
           }}
         />
       </GraphRoot>
