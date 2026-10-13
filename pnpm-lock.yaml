@@ -2677,12 +2677,12 @@ importers:
       dequal:
         specifier: 'catalog:'
         version: 2.0.3
+      force-graph:
+        specifier: ^1.52.0
+        version: 1.52.0
       polished:
         specifier: ^4.3.1
         version: 4.3.1
-      react-force-graph-2d:
-        specifier: ^1.29.2
-        version: 1.29.2(react@19.3.0)
       sanity:
         specifier: next
         version: 6.19.0-next.89(@babel/core@7.29.7)(@babel/runtime@7.29.7)(@noble/hashes@2.4.0)(@rolldown/plugin-babel@0.2.4)(@sanity/workflow-blueprint@0.36.0)(@types/node@24.19.2)(@types/react-dom@19.3.0)(@types/react@19.3.0)(@vitejs/devtools@0.4.12)(esbuild@0.28.2)(immer@11.1.18)(jiti@2.7.0)(oxc-transform-react@0.153.0)(oxfmt@0.73.0)(react-dom@19.3.0)(react@19.3.0)(rolldown@1.2.13)(styled-components@6.5.3)(supports-color@10.2.2)(tsx@4.23.15)(typescript@7.0.2)(vitest@4.1.11)
@@ -2690,18 +2690,27 @@ importers:
         specifier: ^14.0.1
         version: 14.0.3
     devDependencies:
+      '@sanity/client':
+        specifier: 'catalog:'
+        version: 8.9.0(vitest@4.1.11)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
         version: 0.28.8(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.153.0)(tsdown@0.23.1)(typescript@7.0.2)(vite@8.3.4)
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.0)(react@19.3.0)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
+      jsdom:
+        specifier: 'catalog:'
+        version: 29.1.1(@noble/hashes@2.4.0)
       oxc-transform-react:
         specifier: 'catalog:'
         version: 0.153.0
@@ -12588,10 +12597,6 @@ packages:
   javascript-time-ago@2.6.4:
     resolution: {integrity: sha512-7K/Z37LuwVaxxjutUDd1pXpznufPcox0b1UYu00ksAMMlV6IsxIvduwL3kgfPxuBVF8jVj7nhrKMPDslMq94aQ==}
 
-  jerrypick@1.1.2:
-    resolution: {integrity: sha512-YKnxXEekXKzhpf7CLYA0A+oDP8V0OhICNCr5lv96FvSsDEmrb0GKM776JgQvHTMjr7DTTPEVv/1Ciaw0uEWzBA==}
-    engines: {node: '>=12'}
-
   jiti@2.7.0:
     resolution: {integrity: sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==}
     hasBin: true
@@ -14428,12 +14433,6 @@ packages:
       '@types/react':
         optional: true
 
-  react-force-graph-2d@1.29.2:
-    resolution: {integrity: sha512-ofAJXlnOufwViZ9YCV8c5S0ZEb2D1pXnD+j2NbVqSzgg217QiycTPrmKQsmODSg6aSssK5BdAX3vhCxM2YmGCQ==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      react: '*'
-
   react-hook-form@7.90.0:
     resolution: {integrity: sha512-+NdG0FLzCPhFOp2NNxaUYLF9fyZhNjx9FTBBSYWF71/l6BBlmIc/j6xlp3DbaHWLJbIG7Zd8oznA19xJClU97w==}
     engines: {node: '>=18.0.0'}
@@ -14487,12 +14486,6 @@ packages:
 
   react-is@19.3.0:
     resolution: {integrity: sha512-UpMYezM4v5/18F28aC66AEsjXIgE02kyEMH6yLdgLXu/UTfa1Ntwck/nNLrbqJsEXW7gPb0coNO9FQse9WTovA==}
-
-  react-kapsule@2.6.0:
-    resolution: {integrity: sha512-HzLJoYb1n1kfwjXbqFFcRR0EA6oPsJ64tNdDmCSaL/bz2o9wUZRSb0cMe//grLFeF9EVoL4CD/e6ozLyzEv+PQ==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      react: '>=16.13.1'
 
   react-photo-album@2.4.1:
     resolution: {integrity: sha512-dzqP5QbYAugA0uZTl3qsVldckzDXYDkDOvA8CpACl51hSEfhJmCfwhbnI4WBHnETQHv48nnNQ1jhrulst8njLA==}
@@ -30122,15 +30115,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  react-force-graph-2d@1.29.2(react@19.3.0):
-    dependencies:
-      force-graph: 1.52.0
-      prop-types: 15.8.1
-      react: 19.3.0
-      react-kapsule: 2.6.0(react@19.3.0)
-    transitivePeerDependencies:
-      - preact-render-to-string
-
   react-hook-form@7.90.0(@types/react@19.3.0)(react@19.3.0):
     dependencies:
       react: 19.3.0
@@ -30168,11 +30152,6 @@ snapshots:
   react-is@17.0.2: {}
 
   react-is@19.3.0: {}
-
-  react-kapsule@2.6.0(react@19.3.0):
-    dependencies:
-      jerrypick: 1.1.2
-      react: 19.3.0
 
   react-photo-album@2.4.1(react@19.3.0):
     dependencies:
