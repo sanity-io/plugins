@@ -1,5 +1,5 @@
 ---
-"@sanity/code-input": patch
+'@sanity/code-input': patch
 ---
 
 fix(deps): update codemirror
