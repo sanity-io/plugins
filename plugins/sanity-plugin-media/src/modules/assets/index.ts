@@ -4,15 +4,17 @@ import groq from 'groq'
 import {nanoid} from 'nanoid'
 import type {Selector} from 'react-redux'
 import {ofType} from 'redux-observable'
-import {EMPTY, from, of} from 'rxjs'
+import {concat, EMPTY, from, merge, of} from 'rxjs'
 import {
   bufferTime,
   catchError,
   concatMap,
   debounceTime,
   filter,
+  map,
   mergeMap,
   switchMap,
+  take,
   withLatestFrom,
 } from 'rxjs/operators'
 
@@ -30,7 +32,7 @@ import type {
   OrderDirection,
   Tag,
 } from '../../types'
-import constructFilter from '../../utils/constructFilter'
+import constructFilter, {buildExcludeMediaLibraryFragment} from '../../utils/constructFilter'
 import {findImageAssets} from '../../utils/ReplaceImages'
 import {searchActions} from '../search'
 import type {RootReducerState} from '../types'
@@ -332,6 +334,9 @@ const assetsSlice = createSlice({
         }
       })
     },
+    listenRequest() {
+      //
+    },
     listenerCreateQueue(_state, _action: PayloadAction<{asset: Asset}>) {
       //
     },
@@ -524,43 +529,44 @@ export const assetsFetchEpic: MyEpic = (action$, state$, {client}) =>
     }),
   )
 
+/** The `fetchRequest` for one page of the browser's current filter and order. */
+function fetchPageRequest(state: RootReducerState, pageIndex: number) {
+  const pageSize = state.assets.pageSize
+  const start = pageIndex * pageSize
+  const end = start + pageSize
+
+  // Document ID can be null when operating on pristine / unsaved drafts
+  const documentId = state?.selected.document?._id
+  const documentAssetIds = state?.selected?.documentAssetIds
+
+  const constructedFilter = constructFilter({
+    assetTypes: state.assets.assetTypes,
+    currentFolderId: state.folders.currentFolderId,
+    excludeTagSlugs: state.assets.excludeTagSlugs,
+    localeIds: state.assets.localeIds,
+    searchFacets: state.search.facets,
+    searchQuery: state.search.query,
+    showMediaLibraryAssets: state.assets.showMediaLibraryAssets,
+  })
+
+  const params = {
+    ...(documentId ? {documentId} : {}),
+    documentAssetIds,
+  }
+
+  return assetsActions.fetchRequest({
+    params,
+    queryFilter: constructedFilter,
+    selector: groq`[${start}...${end}]`,
+    sort: groq`order(${getOrderField(state.assets.order.field, state.assets.localeIds)} ${state.assets.order.direction})`,
+  })
+}
+
 export const assetsFetchPageIndexEpic: MyEpic = (action$, state$) =>
   action$.pipe(
     filter(assetsActions.loadPageIndex.match),
     withLatestFrom(state$),
-    switchMap(([action, state]) => {
-      const pageSize = state.assets.pageSize
-      const start = action.payload.pageIndex * pageSize
-      const end = start + pageSize
-
-      // Document ID can be null when operating on pristine / unsaved drafts
-      const documentId = state?.selected.document?._id
-      const documentAssetIds = state?.selected?.documentAssetIds
-
-      const constructedFilter = constructFilter({
-        assetTypes: state.assets.assetTypes,
-        currentFolderId: state.folders.currentFolderId,
-        excludeTagSlugs: state.assets.excludeTagSlugs,
-        localeIds: state.assets.localeIds,
-        searchFacets: state.search.facets,
-        searchQuery: state.search.query,
-        showMediaLibraryAssets: state.assets.showMediaLibraryAssets,
-      })
-
-      const params = {
-        ...(documentId ? {documentId} : {}),
-        documentAssetIds,
-      }
-
-      return of(
-        assetsActions.fetchRequest({
-          params,
-          queryFilter: constructedFilter,
-          selector: groq`[${start}...${end}]`,
-          sort: groq`order(${getOrderField(state.assets.order.field, state.assets.localeIds)} ${state.assets.order.direction})`,
-        }),
-      )
-    }),
+    switchMap(([action, state]) => of(fetchPageRequest(state, action.payload.pageIndex))),
   )
 
 export const assetsFetchNextPageEpic: MyEpic = (action$, state$) =>
@@ -653,14 +659,74 @@ export const assetsSearchEpic: MyEpic = (action$) =>
     }),
   )
 
-export const assetsListenerCreateQueueEpic: MyEpic = (action$) =>
+/**
+ * Listens for asset mutations for the lifetime of the store, so changes made while the
+ * browser is hidden (the Studio keeps recently used tools mounted) still reach it.
+ */
+export const assetsListenEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.listenRequest.match),
+    withLatestFrom(state$),
+    switchMap(([, state]) => {
+      const excludeMediaLibraryFragment = buildExcludeMediaLibraryFragment(
+        state.assets.showMediaLibraryAssets,
+      )
+      const excludeMediaLibraryClause = excludeMediaLibraryFragment
+        ? ` && ${excludeMediaLibraryFragment}`
+        : ''
+
+      return client
+        .listen(
+          groq`*[_type in ["sanity.fileAsset", "sanity.imageAsset"] && !(_id in path("drafts.**"))${excludeMediaLibraryClause}]`,
+        )
+        .pipe(
+          mergeMap(({documentId, result, transition}) => {
+            switch (transition) {
+              case 'appear':
+                return of(assetsActions.listenerCreateQueue({asset: result as Asset}))
+              case 'disappear':
+                return of(assetsActions.listenerDeleteQueue({assetId: documentId}))
+              case 'update':
+                return of(assetsActions.listenerUpdateQueue({asset: result as Asset}))
+              default:
+                return EMPTY
+            }
+          }),
+          // A failed listener must not take the root epic, and the rest of the browser, with it
+          catchError((error: unknown) => {
+            console.error(error)
+            return EMPTY
+          }),
+        )
+    }),
+  )
+
+export const assetsListenerCreateQueueEpic: MyEpic = (action$, state$) =>
   action$.pipe(
     filter(assetsActions.listenerCreateQueue.match),
     bufferTime(2000),
     filter((actions) => actions.length > 0),
-    mergeMap((actions) => {
+    withLatestFrom(state$),
+    mergeMap(([actions, state]) => {
       const assets = actions?.map((action) => action.payload.asset)
-      return of(assetsActions.listenerCreateQueueComplete({assets}))
+      const complete = of(assetsActions.listenerCreateQueueComplete({assets}))
+      if (assets.every((asset) => state.assets.byIds[asset._id])) {
+        return complete
+      }
+      // The grid is a page of a server-side query, so an asset the store has not seen (an
+      // upload from elsewhere, or one made while the browser was hidden) is fetched back in
+      // through the current filter and order instead of being inserted blind. The first page
+      // is requested directly, leaving the paging cursor where it is; without `clear()`,
+      // `fetchComplete` only appends what is new and the grid stays put, and the appended ids
+      // are sorted into place once that fetch has landed.
+      // Subscribed before the request is emitted, so the fetch result is not missed
+      const sorted = action$.pipe(
+        ofType(assetsActions.fetchComplete.type, assetsActions.fetchError.type),
+        take(1),
+        filter(assetsActions.fetchComplete.match),
+        map(() => assetsActions.sort()),
+      )
+      return merge(sorted, concat(complete, of(fetchPageRequest(state, 0))))
     }),
   )
 

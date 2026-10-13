@@ -1,5 +1,7 @@
 // @vitest-environment node
 
+import {combineEpics} from 'redux-observable'
+import {of, Subject} from 'rxjs'
 import {describe, expect, it, vi, beforeEach, afterEach} from 'vitest'
 
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
@@ -11,6 +13,8 @@ import type {ImageAsset, Tag} from '../../types'
 import {ASSETS_ACTIONS} from './actions'
 import {
   assetsActions,
+  assetsFetchEpic,
+  assetsListenEpic,
   assetsListenerCreateQueueEpic,
   assetsListenerDeleteQueueEpic,
   assetsListenerUpdateQueueEpic,
@@ -163,6 +167,69 @@ describe('assets listener queue epics', () => {
     })
   })
 
+  it('assetsListenerCreateQueueEpic does not refetch for assets the store already has', async () => {
+    const fetch = vi.fn(() => of({items: []}))
+    const client = createMockSanityClient({observable: {fetch}})
+    const store = createEpicTestStore(
+      combineEpics(assetsListenerCreateQueueEpic, assetsFetchEpic),
+      client,
+      {
+        assets: {
+          ...assetsInitialState,
+          assetTypes: ['image'],
+          allIds: ['a1'],
+          byIds: {
+            a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false},
+          },
+        },
+      },
+    )
+
+    store.dispatch(assetsActions.listenerCreateQueue({asset: sampleAsset}))
+    await vi.advanceTimersByTimeAsync(2000)
+
+    expect(fetch).not.toHaveBeenCalled()
+    expect(store.getState().assets.allIds).toEqual(['a1'])
+  })
+
+  it('assetsListenerCreateQueueEpic fetches a new asset into the grid without clearing it', async () => {
+    const newer = {...sampleAsset, _id: 'a2', _createdAt: '2026-01-02'} as ImageAsset
+    const older = {...sampleAsset, _createdAt: '2026-01-01'}
+    // Page 0 as the server would return it for the default order (`_createdAt desc`)
+    const fetch = vi.fn((_query: string) => of({items: [newer, older]}))
+    const client = createMockSanityClient({observable: {fetch}})
+    const store = createEpicTestStore(
+      combineEpics(assetsListenerCreateQueueEpic, assetsFetchEpic),
+      client,
+      {
+        assets: {
+          ...assetsInitialState,
+          assetTypes: ['image'],
+          allIds: ['a1'],
+          byIds: {
+            a1: {_type: 'asset', asset: older, picked: true, updating: false},
+          },
+          // The user has paged past the first page
+          pageIndex: 2,
+        },
+      },
+    )
+
+    store.dispatch(assetsActions.listenerCreateQueue({asset: newer}))
+    await vi.advanceTimersByTimeAsync(2000)
+
+    await vi.waitFor(() => {
+      expect(store.getState().assets.allIds).toEqual(['a2', 'a1'])
+    })
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch.mock.calls[0]![0]).toContain('[0...')
+    // The existing asset was never removed, so its selection survives, and the paging cursor
+    // is left where the user had scrolled to
+    expect(store.getState().assets.byIds['a1']!.picked).toBe(true)
+    expect(store.getState().assets.byIds['a2']!.asset).toEqual(newer)
+    expect(store.getState().assets.pageIndex).toBe(2)
+  })
+
   it('assetsListenerDeleteQueueEpic batches deletes', async () => {
     const store = createEpicTestStore(assetsListenerDeleteQueueEpic, createMockSanityClient(), {
       assets: {
@@ -202,5 +269,91 @@ describe('assets listener queue epics', () => {
     await vi.waitFor(() => {
       expect(store.getState().assets.byIds['a1']!.asset.title).toBe('Buffered')
     })
+  })
+})
+
+describe('assetsListenEpic', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('feeds asset mutations into the listener queues', async () => {
+    const events = new Subject<{documentId: string; result?: unknown; transition: string}>()
+    const listen = vi.fn((_query: string) => events)
+    const store = createEpicTestStore(
+      combineEpics(assetsListenEpic, assetsListenerUpdateQueueEpic, assetsListenerDeleteQueueEpic),
+      createMockSanityClient({listen}),
+      {
+        assets: {
+          ...assetsInitialState,
+          assetTypes: ['image'],
+          allIds: ['a1'],
+          byIds: {
+            a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false},
+          },
+        },
+      },
+    )
+
+    store.dispatch(assetsActions.listenRequest())
+    expect(listen).toHaveBeenCalledTimes(1)
+    expect(listen.mock.calls[0]![0]).toContain('sanity.imageAsset')
+
+    events.next({
+      documentId: 'a1',
+      result: {...sampleAsset, title: 'Listened'},
+      transition: 'update',
+    })
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(store.getState().assets.byIds['a1']!.asset.title).toBe('Listened')
+
+    events.next({documentId: 'a1', transition: 'disappear'})
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(store.getState().assets.byIds['a1']).toBeUndefined()
+  })
+
+  it('keeps the other epics running when the listener fails', async () => {
+    const events = new Subject<{documentId: string; result?: unknown; transition: string}>()
+    const listen = vi.fn((_query: string) => events)
+    const store = createEpicTestStore(
+      combineEpics(assetsListenEpic, assetsListenerDeleteQueueEpic),
+      createMockSanityClient({listen}),
+      {
+        assets: {
+          ...assetsInitialState,
+          assetTypes: ['image'],
+          allIds: ['a1'],
+          byIds: {
+            a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false},
+          },
+        },
+      },
+    )
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    store.dispatch(assetsActions.listenRequest())
+    events.error(new Error('listener gone'))
+    expect(error).toHaveBeenCalledWith(new Error('listener gone'))
+
+    store.dispatch(assetsActions.listenerDeleteQueue({assetId: 'a1'}))
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(store.getState().assets.byIds['a1']).toBeUndefined()
+
+    error.mockRestore()
+  })
+
+  it('excludes Media Library assets from the listener when they are hidden', () => {
+    const listen = vi.fn((_query: string) => new Subject())
+    const store = createEpicTestStore(assetsListenEpic, createMockSanityClient({listen}), {
+      assets: {...assetsInitialState, assetTypes: ['image'], showMediaLibraryAssets: false},
+    })
+
+    store.dispatch(assetsActions.listenRequest())
+
+    expect(listen.mock.calls[0]![0]).toContain('source.name')
   })
 })
