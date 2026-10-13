@@ -1,5 +1,19 @@
 # @sanity/language-filter
 
+## 5.0.21
+
+### Patch Changes
+
+- [#2150](https://github.com/sanity-io/plugins/pull/2150) [`9a107b5`](https://github.com/sanity-io/plugins/commit/9a107b5085be23d0d0fd6531fe2dac16108f6f22) Thanks [@stipsan](https://github.com/stipsan)! - Update `react-rx` to v7. The selected language ids exposed by `useLanguageFilterStudioContext` are now derived from the resolved languages and the persisted selection during render, instead of being pushed into state from inside the language stream. Languages are still resolved once per Studio session and the selection behaves as before. `react-rx` v7 requires React `^19.2` (already required) and declares Node `>=22.12`.
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 5.0.20
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
 ## 5.0.19
 
 ### Patch Changes

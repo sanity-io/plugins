@@ -21,6 +21,12 @@ interface ResultPreviewProps {
   style?: CSSProperties
 }
 
+const INITIAL_PREVIEW_STATE = {
+  snapshot: null,
+  isLoading: true,
+  original: null,
+}
+
 export function DocumentPreview({
   documentId,
   style,
@@ -89,11 +95,7 @@ function DocumentPreviewInner({
     snapshot,
     original,
     isLoading: previewIsLoading,
-  } = useObservable(previewStateObservable, {
-    snapshot: null,
-    isLoading: true,
-    original: null,
-  })
+  } = useObservable(previewStateObservable, INITIAL_PREVIEW_STATE)
 
   const sanityDocument = useMemo(() => {
     return {

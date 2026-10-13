@@ -1,5 +1,19 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.31
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 4.0.30
+
+### Patch Changes
+
+- [#1947](https://github.com/sanity-io/plugins/pull/1947) [`2d83ac7`](https://github.com/sanity-io/plugins/commit/2d83ac79cad3d8946b09fa06efa7d94de3370ff6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.89.0
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
 ## 4.0.29
 
 ### Patch Changes

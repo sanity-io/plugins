@@ -1,5 +1,21 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.39
+
+### Patch Changes
+
+- [#2164](https://github.com/sanity-io/plugins/pull/2164) [`222ad55`](https://github.com/sanity-io/plugins/commit/222ad55b7cb8a42c19b830b59f70612778e36de8) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency motion to ^14.1.0
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 5.0.38
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2109](https://github.com/sanity-io/plugins/pull/2109) [`5bd1c62`](https://github.com/sanity-io/plugins/commit/5bd1c621dd7d4b150be1fbdfd527c11ca348b848) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to v14
+
 ## 5.0.37
 
 ### Patch Changes

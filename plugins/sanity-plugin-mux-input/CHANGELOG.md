@@ -1,5 +1,21 @@
 # sanity-plugin-mux-input
 
+## 5.1.2
+
+### Patch Changes
+
+- [#2157](https://github.com/sanity-io/plugins/pull/2157) [`22cddf3`](https://github.com/sanity-io/plugins/commit/22cddf3e3d83a1901e1a148e7dbadbabbe62b3ab) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @mux/mux-player to ^3.14.0
+
+- [#2150](https://github.com/sanity-io/plugins/pull/2150) [`9a107b5`](https://github.com/sanity-io/plugins/commit/9a107b5085be23d0d0fd6531fe2dac16108f6f22) Thanks [@stipsan](https://github.com/stipsan)! - Update `react-rx` to v7. The document list preview now renders its loading placeholder on the first paint and subscribes to the preview state once mounted, matching the Studio's own pane item preview. `react-rx` v7 requires React `^19.2` (already required) and declares Node `>=22.12`.
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 5.1.1
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
 ## 5.1.0
 
 ### Minor Changes
