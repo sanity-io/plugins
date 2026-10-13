@@ -1,7 +1,17 @@
-import {type Extension, StateEffect, StateField} from '@codemirror/state'
+import {
+  type ChangeDesc,
+  EditorState,
+  type Extension,
+  type Range,
+  StateEffect,
+  StateField,
+  type Text,
+  type Transaction,
+} from '@codemirror/state'
 import {Decoration, type DecorationSet, EditorView, lineNumbers} from '@codemirror/view'
 import type {ThemeContextValue} from '@sanity/ui'
 import {rgba} from '@sanity/ui/theme'
+import {ExternalChange} from '@uiw/react-codemirror'
 
 import {getBackwardsCompatibleTone} from './backwardsCompatibleTone'
 
@@ -9,14 +19,21 @@ const highlightLineClass = 'cm-highlight-line'
 
 const addLineHighlight = StateEffect.define<number>()
 const removeLineHighlight = StateEffect.define<number>()
+/** Replaces all highlights, with line numbers in the document the transaction produces */
+const setLineHighlights = StateEffect.define<number[]>()
 
 const lineHighlightField = StateField.define({
   create() {
     return Decoration.none
   },
   update(lines, tr) {
-    lines = lines.map(tr.changes)
+    if (tr.docChanged) {
+      lines = mapLineHighlights(lines, tr)
+    }
     for (const e of tr.effects) {
+      if (e.is(setLineHighlights)) {
+        lines = createLineHighlights(e.value, tr.newDoc)
+      }
       if (e.is(addLineHighlight)) {
         lines = lines.update({add: [lineHighlightMark.range(e.value)]})
       }
@@ -32,31 +49,10 @@ const lineHighlightField = StateField.define({
     return lines
   },
   toJSON(value, state) {
-    const highlightLines: number[] = []
-    const iter = value.iter()
-    while (iter.value) {
-      const lineNumber = state.doc.lineAt(iter.from).number
-      if (!highlightLines.includes(lineNumber)) {
-        highlightLines.push(lineNumber)
-      }
-      iter.next()
-    }
-    return highlightLines
+    return getHighlightedLines(value, state.doc)
   },
   fromJSON(value: number[], state) {
-    const lines = state.doc.lines
-    const highlights = value
-      .filter((line) => line <= lines) // one-indexed
-      .map((line) => lineHighlightMark.range(state.doc.line(line).from))
-    highlights.sort((a, b) => a.from - b.from)
-    try {
-      return Decoration.none.update({
-        add: highlights,
-      })
-    } catch (e) {
-      console.error(e)
-      return Decoration.none
-    }
+    return createLineHighlights(value, state.doc)
   },
   provide: (f) => EditorView.decorations.from(f),
 })
@@ -64,6 +60,113 @@ const lineHighlightField = StateField.define({
 const lineHighlightMark = Decoration.line({
   class: highlightLineClass,
 })
+
+function createLineHighlights(lineNumbers: number[], doc: Text): DecorationSet {
+  return Decoration.set(
+    lineNumbers
+      .filter((line) => Number.isInteger(line) && line >= 1 && line <= doc.lines)
+      .map((line) => lineHighlightMark.range(doc.line(line).from)),
+    true,
+  )
+}
+
+function isRemoved(changes: ChangeDesc, from: number, to: number): boolean {
+  let pos = from
+  changes.iterChangedRanges((fromA, toA) => {
+    if (fromA <= pos && toA > pos) {
+      pos = toA
+    }
+  })
+  return pos >= to
+}
+
+/**
+ * Moves highlights to the line their content ends up on, and drops them only when their line
+ * is deleted (its content and one of its line breaks are removed). `DecorationSet.map` keeps
+ * line decorations in front of text inserted at the start of the line, and drops them when
+ * the line break before the line is deleted.
+ */
+function mapLineHighlights(lines: DecorationSet, tr: Transaction): DecorationSet {
+  const {changes, startState} = tr
+  const doc = startState.doc
+  const ranges: Range<Decoration>[] = []
+  const iter = lines.iter()
+  while (iter.value) {
+    const line = doc.lineAt(iter.from)
+    const lineBreakRemoved =
+      (line.from > 0 && isRemoved(changes, line.from - 1, line.from)) ||
+      (line.to < doc.length && isRemoved(changes, line.to, line.to + 1))
+    if (!lineBreakRemoved || !isRemoved(changes, line.from, line.to)) {
+      const from = tr.newDoc.lineAt(changes.mapPos(line.from, 1)).from
+      if (ranges.at(-1)?.from !== from) {
+        ranges.push(lineHighlightMark.range(from))
+      }
+    }
+    iter.next()
+  }
+  return Decoration.set(ranges)
+}
+
+function getHighlightedLines(lines: DecorationSet, doc: Text): number[] {
+  const highlightLines: number[] = []
+  const iter = lines.iter()
+  while (iter.value) {
+    const lineNumber = doc.lineAt(iter.from).number
+    if (!highlightLines.includes(lineNumber)) {
+      highlightLines.push(lineNumber)
+    }
+    iter.next()
+  }
+  return highlightLines
+}
+
+/**
+ * Reports highlighted lines that moved because the code was edited, so the stored line
+ * numbers follow the highlighted content.
+ */
+function highlightChangeListener(onHighlightChange: (lines: number[]) => void): Extension {
+  return EditorView.updateListener.of((update) => {
+    // Values synced from outside the editor come with their own highlighted lines
+    if (!update.docChanged || update.transactions.some((tr) => tr.annotation(ExternalChange))) {
+      return
+    }
+    const previous = getHighlightedLines(
+      update.startState.field(lineHighlightField),
+      update.startState.doc,
+    )
+    const next = getHighlightedLines(update.state.field(lineHighlightField), update.state.doc)
+    if (previous.length !== next.length || previous.some((line, i) => line !== next[i])) {
+      onHighlightChange(next)
+    }
+  })
+}
+
+/** The highlighted lines last set from outside the editor, with `setHighlightedLines` */
+const syncedHighlightLinesField = StateField.define<number[]>({
+  create() {
+    return []
+  },
+  update(lines, tr) {
+    for (const e of tr.effects) {
+      if (e.is(setLineHighlights)) {
+        lines = e.value
+      }
+    }
+    return lines
+  },
+})
+
+/**
+ * Values synced from outside the editor replace the whole document, which drops the
+ * highlights. They can also land after the highlighted lines that belong to them were set,
+ * since `@uiw/react-codemirror` holds them back while the user is typing. So the latest
+ * highlighted lines are applied in the same transaction.
+ */
+const externalValueHighlights = EditorState.transactionExtender.of((tr) =>
+  tr.annotation(ExternalChange)
+    ? {effects: setLineHighlights.of(tr.startState.field(syncedHighlightLinesField))}
+    : null,
+)
 
 export const highlightState: {
   [prop: string]: StateField<DecorationSet>
@@ -151,27 +254,20 @@ export const highlightLine = (config: HighlightLineConfig): Extension => {
             },
           },
         }),
+    config.readOnly || !config.onHighlightChange
+      ? []
+      : highlightChangeListener(config.onHighlightChange),
+    syncedHighlightLinesField,
+    externalValueHighlights,
     highlightTheme,
   ]
 }
 
 /**
- * Adds and removes highlights to the provided view using highlightLines
+ * Replaces the highlights of the provided view with highlightLines
  * @param view
  * @param highlightLines
  */
 export function setHighlightedLines(view: EditorView, highlightLines: number[]): void {
-  const doc = view.state.doc
-  const lines = doc.lines
-  //1-based line numbers
-  const allLineNumbers = Array.from({length: lines}, (_x, i) => i + 1)
-  view.dispatch({
-    effects: allLineNumbers.map((lineNumber) => {
-      const line = doc.line(lineNumber)
-      if (highlightLines?.includes(lineNumber)) {
-        return addLineHighlight.of(line.from)
-      }
-      return removeLineHighlight.of(line.from)
-    }),
-  })
+  view.dispatch({effects: setLineHighlights.of(highlightLines)})
 }
