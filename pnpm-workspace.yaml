@@ -179,6 +179,13 @@ minimumReleaseAgeExclude:
   - '@tanstack/virtual-core@3.19.2'
   - cac@7.1.0
   - i18next@26.4.4
+  - '@sentry/browser-utils@11.7.0'
+  - '@sentry/browser@11.7.0'
+  - '@sentry/core@11.7.0'
+  - '@sentry/feedback@11.7.0'
+  - '@sentry/react@11.7.0'
+  - '@sentry/replay-canvas@11.7.0'
+  - '@sentry/replay@11.7.0'
 
 overrides:
   '@types/node': 'catalog:'
