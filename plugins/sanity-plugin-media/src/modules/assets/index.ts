@@ -30,7 +30,7 @@ import type {
   OrderDirection,
   Tag,
 } from '../../types'
-import constructFilter from '../../utils/constructFilter'
+import constructFilter, {buildExcludeMediaLibraryFragment} from '../../utils/constructFilter'
 import {findImageAssets} from '../../utils/ReplaceImages'
 import {searchActions} from '../search'
 import type {RootReducerState} from '../types'
@@ -326,21 +326,32 @@ const assetsSlice = createSlice({
     insertUploads(state, action: PayloadAction<{results: Record<string, string | null>}>) {
       const {results} = action.payload
 
-      Object.entries(results).forEach(([hash, assetId]) => {
-        if (assetId && !state.allIds.includes(hash)) {
+      // The listener may already have added the asset (its `appear` can land before
+      // `uploadComplete`), so the guard is on the id that is pushed, not the upload hash
+      Object.values(results).forEach((assetId) => {
+        if (assetId && !state.allIds.includes(assetId)) {
           state.allIds.push(assetId)
         }
       })
     },
+    listenRequest() {
+      //
+    },
     listenerCreateQueue(_state, _action: PayloadAction<{asset: Asset}>) {
       //
     },
+    // `assets` are the appeared assets the epic has checked against the browser's current
+    // filter: known ones are refreshed, new ones are added (and sorted into place by the epic)
     listenerCreateQueueComplete(state, action: PayloadAction<{assets: Asset[]}>) {
       const {assets} = action.payload
       assets?.forEach((asset) => {
-        if (state.byIds[asset?._id]?.asset) {
-          state.byIds[asset._id]!.asset = asset
+        const existing = state.byIds[asset._id]
+        if (existing) {
+          existing.asset = asset
+          return
         }
+        state.allIds.push(asset._id)
+        state.byIds[asset._id] = {_type: 'asset', asset, picked: false, updating: false}
       })
     },
     listenerDeleteQueue(_state, _action: PayloadAction<{assetId: string}>) {
@@ -653,14 +664,90 @@ export const assetsSearchEpic: MyEpic = (action$) =>
     }),
   )
 
-export const assetsListenerCreateQueueEpic: MyEpic = (action$) =>
+/**
+ * Listens for asset mutations for the lifetime of the store, so changes made while the
+ * browser is hidden (the Studio keeps recently used tools mounted) still reach it.
+ */
+export const assetsListenEpic: MyEpic = (action$, state$, {client}) =>
+  action$.pipe(
+    filter(assetsActions.listenRequest.match),
+    withLatestFrom(state$),
+    switchMap(([, state]) => {
+      const excludeMediaLibraryFragment = buildExcludeMediaLibraryFragment(
+        state.assets.showMediaLibraryAssets,
+      )
+      const excludeMediaLibraryClause = excludeMediaLibraryFragment
+        ? ` && ${excludeMediaLibraryFragment}`
+        : ''
+
+      return client
+        .listen(
+          groq`*[_type in ["sanity.fileAsset", "sanity.imageAsset"] && !(_id in path("drafts.**"))${excludeMediaLibraryClause}]`,
+        )
+        .pipe(
+          mergeMap(({documentId, result, transition}) => {
+            switch (transition) {
+              case 'appear':
+                return of(assetsActions.listenerCreateQueue({asset: result as Asset}))
+              case 'disappear':
+                return of(assetsActions.listenerDeleteQueue({assetId: documentId}))
+              case 'update':
+                return of(assetsActions.listenerUpdateQueue({asset: result as Asset}))
+              default:
+                return EMPTY
+            }
+          }),
+          // A failed listener must not take the root epic, and the rest of the browser, with it
+          catchError((error: unknown) => {
+            console.error(error)
+            return EMPTY
+          }),
+        )
+    }),
+  )
+
+export const assetsListenerCreateQueueEpic: MyEpic = (action$, state$, {client}) =>
   action$.pipe(
     filter(assetsActions.listenerCreateQueue.match),
     bufferTime(2000),
     filter((actions) => actions.length > 0),
-    mergeMap((actions) => {
+    withLatestFrom(state$),
+    mergeMap(([actions, state]) => {
       const assets = actions?.map((action) => action.payload.asset)
-      return of(assetsActions.listenerCreateQueueComplete({assets}))
+      const known = assets.filter((asset) => state.assets.byIds[asset._id])
+      const unknown = assets.filter((asset) => !state.assets.byIds[asset._id])
+      if (unknown.length === 0) {
+        return of(assetsActions.listenerCreateQueueComplete({assets}))
+      }
+      // The grid shows the assets matching the browser's filter, so an asset the store has not
+      // seen (an upload from elsewhere, or one made while the browser was hidden) is checked
+      // against that filter the way uploads are, and the matches are added and sorted into
+      // place. This fetch stays out of `assetsFetchEpic`, whose `switchMap` would cancel a page
+      // the user is loading, and leaves `fetching` and the paging cursor alone.
+      const query = groq`*[${constructFilter({
+        assetTypes: state.assets.assetTypes,
+        currentFolderId: state.folders.currentFolderId,
+        excludeTagSlugs: state.assets.excludeTagSlugs,
+        localeIds: state.assets.localeIds,
+        searchFacets: state.search.facets,
+        searchQuery: state.search.query,
+        showMediaLibraryAssets: state.assets.showMediaLibraryAssets,
+      })} && _id in $ids]._id`
+      return client.observable
+        .fetch<string[]>(query, {ids: unknown.map((asset) => asset._id)})
+        .pipe(
+          mergeMap((matchingIds) => {
+            const matching = unknown.filter((asset) => matchingIds.includes(asset._id))
+            return of(
+              assetsActions.listenerCreateQueueComplete({assets: [...known, ...matching]}),
+              ...(matching.length > 0 ? [assetsActions.sort()] : []),
+            )
+          }),
+          catchError((error: unknown) => {
+            console.error(error)
+            return of(assetsActions.listenerCreateQueueComplete({assets: known}))
+          }),
+        )
     }),
   )
 
