@@ -1,5 +1,11 @@
 # @sanity/vercel-protection-bypass
 
+## 5.0.27
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
 ## 5.0.26
 
 ### Patch Changes

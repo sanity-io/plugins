@@ -1,5 +1,11 @@
 # @sanity/plugin-kit
 
+## 10.0.14
+
+### Patch Changes
+
+- [#2176](https://github.com/sanity-io/plugins/pull/2176) [`e137301`](https://github.com/sanity-io/plugins/commit/e13730102a1711eba3eec87522bfe746494f2abe) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxfmt to ^0.73.0
+
 ## 10.0.13
 
 ### Patch Changes
