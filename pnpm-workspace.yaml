@@ -125,14 +125,14 @@ strictPeerDependencies: false
 # `--config.minimumReleaseAge=0` — that is not allowed). Avoid permanent
 # third-party package-name excludes solely to land a fresh release.
 #
-# The motion packages, the oxc transform packages and `styled-components` are
-# the exception. Renovate forces their bumps from the Dependency Dashboard while
-# the release is still inside the window, and the `name@version` entries pnpm
-# writes for them never survive: Renovate only commits `pnpm-lock.yaml`, so CI's
-# frozen install then rejects the lockfile with
-# ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION. Each release also pins its siblings
-# and platform bindings to exact versions, so the whole family has to be listed,
-# not just the package Renovate names.
+# The motion packages, the oxc transform packages, the TanStack virtual packages
+# and `styled-components` are the exception. Renovate forces their bumps from
+# the Dependency Dashboard while the release is still inside the window, and the
+# `name@version` entries pnpm writes for them never survive: Renovate only
+# commits `pnpm-lock.yaml`, so CI's frozen install then rejects the lockfile
+# with ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION. Each release also pins its
+# siblings and platform bindings to exact versions, so the whole family has to
+# be listed, not just the package Renovate names.
 minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - '@changesets/cli'
@@ -147,6 +147,8 @@ minimumReleaseAgeExclude:
   - '@rollup/*'
   - '@sanity/*'
   - '@sanity-labs/*'
+  - '@tanstack/react-virtual'
+  - '@tanstack/virtual-core'
   - '@types/*'
   - '@types/react@19.3.0'
   - '@types/react-dom@19.3.0'
@@ -192,8 +194,6 @@ minimumReleaseAgeExclude:
   - yuku-ast
   - yuku-codegen
   - yuku-parser
-  - '@tanstack/react-virtual@3.14.17'
-  - '@tanstack/virtual-core@3.19.2'
   - cac@7.1.0
   - i18next@26.4.4
   - '@sentry/browser-utils@11.7.0'
