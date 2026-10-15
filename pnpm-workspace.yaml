@@ -184,6 +184,7 @@ minimumReleaseAgeExclude:
   - react
   - react-dom
   - react-is
+  - react-rx
   - rolldown-plugin-dts
   - sanity
   - styled-components
