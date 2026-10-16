@@ -7,9 +7,6 @@ export function isDocAssistable(
   writeDocumentId: string | undefined,
   editState: Pick<EditStateFor, 'draft' | 'published' | 'version'> | null | undefined,
 ) {
-  // Read the edit state, not `targetDocumentState.siblings`: siblings come from
-  // the preview store and lag the commit that materializes the document, while
-  // useDraftDelayedTask needs the optimistic snapshot to appear before sync ends.
   if (!writeDocumentId || !editState) {
     return false
   }

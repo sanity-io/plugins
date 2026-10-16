@@ -27,31 +27,20 @@ export function assistTasksStatusId(documentId: string) {
 }
 
 /**
- * Document id Assist write endpoints must patch, once `targetDocumentState` is
- * ready. The target is picked in this order:
+ * Returns the id Assist writes to, or `undefined` if there is none. The first
+ * matching case applies:
  *
- * 1. `releaseId` (the selected perspective) wins and yields the version sibling.
- *    A pane that already holds a version id without `releaseId` (for example a
- *    pinned release pane) also uses the version sibling, so we never fall
- *    through to `getDraftId` and rewrite `versions.*` to the base draft.
- *    Variant document ids are also version ids; those keep the draft path
- *    when `variant` is set. A brand-new document (no siblings at all) under a
- *    release gets the derived release version id: Studio creates that version
- *    on first edit. An existing document outside the release has no write
- *    target; Studio blocks editing it until it is added to the release.
- * 2. Live-edit types write published, or the derived published id for a
- *    brand-new document without a variant.
- * 3. Otherwise the draft sibling, if it exists.
- * 4. If the draft sibling is missing, only a drafts-bundle `variant-missing`
- *    creatable target may use the advertised draft id (`creatableTarget.id`,
- *    or `_system.draft` on the published sibling). A ready published variant
- *    can advertise the same ref while the pane is read-only; that is not a
- *    write target.
- * 5. Without a variant, `drafts.*` derived from `documentId` (virtual draft
- *    after publish).
- *
- * Returns `undefined` until the target is ready, or when a selected release
- * or variant has no writable sibling.
+ * 1. With `releaseId`, use the version sibling, or the derived version id for
+ *    a new document without a variant. A version `documentId`, as in a pinned
+ *    release pane, also uses the version sibling, so Assist never writes to
+ *    the base draft. Variant ids are version ids too, so variants skip this.
+ * 2. For live-edit types, use the published sibling, or the derived published
+ *    id for a new document without a variant.
+ * 3. Use the draft sibling.
+ * 4. For `variant-missing` in the `drafts` bundle, use `creatableTarget.id` or
+ *    the published sibling's `_system.draft` ref. A `ready` published variant
+ *    can have the same ref, but its pane is read-only.
+ * 5. Without a variant, use the derived draft id.
  */
 export function getAssistWriteDocumentId({
   documentId,
@@ -73,35 +62,21 @@ export function getAssistWriteDocumentId({
     return undefined
   }
   const {published, draft, version} = targetDocumentState.siblings
-  const isNewDocument = !published && !draft && !version
+  const isNew = !variant && !published && !draft && !version
 
   if (releaseId || (!variant && isVersionId(documentId))) {
-    if (version) {
-      return version._id
-    }
-    return releaseId && !variant && isNewDocument ? getVersionId(documentId, releaseId) : undefined
+    return version?._id ?? (releaseId && isNew ? getVersionId(documentId, releaseId) : undefined)
   }
-
   if (liveEdit) {
-    if (published) {
-      return published._id
-    }
-    return !variant && isNewDocument ? getPublishedId(documentId) : undefined
+    return published?._id ?? (isNew ? getPublishedId(documentId) : undefined)
   }
-
-  if (draft?._id) {
+  if (draft) {
     return draft._id
   }
-
   if (targetDocumentState.status === 'variant-missing' && targetDocumentState.bundle === 'drafts') {
     return targetDocumentState.creatableTarget?.id ?? published?._system?.draft?._ref
   }
-
-  if (variant) {
-    return undefined
-  }
-
-  return getDraftId(documentId)
+  return variant ? undefined : getDraftId(documentId)
 }
 
 /**

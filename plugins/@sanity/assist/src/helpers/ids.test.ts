@@ -136,11 +136,11 @@ describe('getAssistWriteDocumentId', () => {
         documentId: DOCUMENT_ID,
         variant: selectedVariant(),
         targetDocumentState: readyState({
-          published: stub('versions.pub.article-1', 'versions.draft.article-1'),
-          draft: stub('versions.draft.article-1'),
+          published: stub('versions.pub.article-1', 'versions.draftScope.article-1'),
+          draft: stub('versions.draftScope.article-1'),
         }),
       }),
-    ).toBe('versions.draft.article-1')
+    ).toBe('versions.draftScope.article-1')
   })
 
   test('does not use the advertised draft of a ready published variant', () => {
@@ -166,13 +166,13 @@ describe('getAssistWriteDocumentId', () => {
           variant,
           bundle: 'drafts',
           siblings: {
-            published: stub('versions.pub.article-1', 'versions.draft.article-1'),
+            published: stub('versions.pub.article-1', 'versions.draftScope.article-1'),
             draft: undefined,
             version: undefined,
           },
         },
       }),
-    ).toBe('versions.draft.article-1')
+    ).toBe('versions.draftScope.article-1')
   })
 
   test('prefers creatableTarget.id for a drafts-bundle variant-missing target', () => {
@@ -190,10 +190,10 @@ describe('getAssistWriteDocumentId', () => {
             draft: undefined,
             version: undefined,
           },
-          creatableTarget: {id: 'versions.draft.article-1', scopeId: 'draft'},
+          creatableTarget: {id: 'versions.draftScope.article-1', scopeId: 'draft'},
         },
       }),
-    ).toBe('versions.draft.article-1')
+    ).toBe('versions.draftScope.article-1')
   })
 
   test('returns undefined for a published-bundle variant-missing target', () => {
@@ -207,7 +207,7 @@ describe('getAssistWriteDocumentId', () => {
           variant,
           bundle: 'published',
           siblings: {
-            published: stub('versions.pub.article-1', 'versions.draft.article-1'),
+            published: stub('versions.pub.article-1', 'versions.draftScope.article-1'),
             draft: undefined,
             version: undefined,
           },
