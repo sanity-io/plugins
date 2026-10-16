@@ -1,36 +1,37 @@
 import {ThemeProvider, useTheme_v2} from '@sanity/ui'
 import {type ThemeColorSchemeKey} from '@sanity/ui/theme'
-import {assignInlineVars} from '@vanilla-extract/dynamic'
-import {useMemo} from 'react'
+import {type CSSProperties, useMemo} from 'react'
 
 import {buildTheme} from '../theme/buildTheme'
 import type {BuildThemeOptions} from '../theme/options'
 
-import {
-  avatar,
-  body,
-  button,
-  colors,
-  field,
-  footer,
-  form,
-  input,
-  line,
-  list,
-  listRow,
-  logo,
-  navbar,
-  pane,
-  root,
-  spacer,
-  studio,
-} from './ThemePreview.css'
+import styles from './ThemePreview.module.css'
 
 /** The document rows in the list pane — the widths of their title lines */
 const LIST_ROWS = ['62%', '46%', '70%', '52%']
 
 /** The fields in the document form — the widths of their labels */
 const FIELDS = ['32%', '24%']
+
+/**
+ * The colors a mockup paints with — only the ones the theme options change —
+ * as the custom properties `ThemePreview.module.css` reads, assigned per
+ * color scheme from the theme it previews. React's `CSSProperties` does not
+ * know custom properties, so the inline `style` is typed through this
+ * extension of it.
+ */
+interface PreviewColors extends CSSProperties {
+  '--themer-preview-bg': string
+  '--themer-preview-fg': string
+  '--themer-preview-muted-fg': string
+  '--themer-preview-border': string
+  '--themer-preview-accent': string
+  '--themer-preview-avatar': string
+  '--themer-preview-selected-bg': string
+  '--themer-preview-selected-fg': string
+  '--themer-preview-input-bg': string
+  '--themer-preview-input-border': string
+}
 
 /**
  * A tiny, lo-fi mockup of a Studio in the given theme — the navbar over the
@@ -48,7 +49,7 @@ export function ThemePreview(props: {options: BuildThemeOptions}) {
   const theme = useMemo(() => buildTheme(options), [options])
 
   return (
-    <div aria-hidden className={root}>
+    <div aria-hidden className={styles.root}>
       <ThemeProvider scheme="light" theme={theme} tone="default">
         <MockStudio scheme="light" />
       </ThemeProvider>
@@ -64,58 +65,63 @@ function MockStudio(props: {scheme: ThemeColorSchemeKey}) {
   const {color} = useTheme_v2()
   const selected = color.selectable.default.selected
   const inputColor = color.input.default.enabled
+  const colors: PreviewColors = {
+    '--themer-preview-bg': color.bg,
+    '--themer-preview-fg': color.fg,
+    '--themer-preview-muted-fg': color.muted.fg,
+    '--themer-preview-border': color.border,
+    '--themer-preview-accent': color.button.default.primary.enabled.bg,
+    '--themer-preview-avatar': color.avatar.blue.bg,
+    '--themer-preview-selected-bg': selected.bg,
+    '--themer-preview-selected-fg': selected.fg,
+    '--themer-preview-input-bg': inputColor.bg,
+    '--themer-preview-input-border': inputColor.border,
+  }
 
   return (
-    <div
-      className={studio[scheme]}
-      style={assignInlineVars({
-        [colors.bg]: color.bg,
-        [colors.fg]: color.fg,
-        [colors.mutedFg]: color.muted.fg,
-        [colors.border]: color.border,
-        [colors.accent]: color.button.default.primary.enabled.bg,
-        [colors.avatar]: color.avatar.blue.bg,
-        [colors.selectedBg]: selected.bg,
-        [colors.selectedFg]: selected.fg,
-        [colors.inputBg]: inputColor.bg,
-        [colors.inputBorder]: inputColor.border,
-      })}
-    >
-      <div className={navbar}>
-        <div className={logo} />
-        <div className={line.fg} style={{width: '22%'}} />
-        <div className={spacer} />
-        <div className={avatar} />
+    <div className={styles.studio} data-scheme={scheme} style={colors}>
+      <div className={styles.navbar}>
+        <div className={styles.logo} />
+        <Line color="fg" width="22%" />
+        <div className={styles.spacer} />
+        <div className={styles.avatar} />
       </div>
 
-      <div className={body}>
-        <div className={list}>
+      <div className={styles.body}>
+        <div className={styles.list}>
           {LIST_ROWS.map((width, index) => {
             const isSelected = index === 1
 
             return (
-              <div key={width} className={listRow} data-selected={isSelected}>
-                <div className={isSelected ? line.selected : line.muted} style={{width}} />
+              <div key={width} className={styles.listRow} data-selected={isSelected}>
+                <Line color={isSelected ? 'selected' : 'muted'} width={width} />
               </div>
             )
           })}
         </div>
 
-        <div className={pane}>
-          <div className={form}>
-            <div className={line.fg} style={{width: '45%'}} />
+        <div className={styles.pane}>
+          <div className={styles.form}>
+            <Line color="fg" width="45%" />
             {FIELDS.map((width) => (
-              <div key={width} className={field}>
-                <div className={line.muted} style={{width}} />
-                <div className={input} />
+              <div key={width} className={styles.field}>
+                <Line color="muted" width={width} />
+                <div className={styles.input} />
               </div>
             ))}
           </div>
-          <div className={footer}>
-            <div className={button} />
+          <div className={styles.footer}>
+            <div className={styles.button} />
           </div>
         </div>
       </div>
     </div>
   )
+}
+
+/** A line of text, in one of the text colors */
+function Line(props: {color: 'fg' | 'muted' | 'selected'; width: string}) {
+  const {color, width} = props
+
+  return <div className={styles.line} data-color={color} style={{width}} />
 }

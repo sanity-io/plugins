@@ -18,7 +18,7 @@ import {displayTitle, type ThemerTheme} from './themes'
 import {ThemeThumbnail} from './ThemeThumbnail'
 import {useThemeCodes} from './useThemeCodes'
 
-import {frame, menuCard, menuSlot, pickButton, root} from './ThemeCard.css'
+import styles from './ThemeCard.module.css'
 
 /**
  * Scrolls the applied theme's card into view when it is not already, as a
@@ -66,7 +66,7 @@ export function ThemeCard({
   return (
     <Reorder.Item
       as="div"
-      className={root}
+      className={styles.root}
       dragControls={dragControls}
       dragListener={false}
       onDragEnd={() => {
@@ -84,7 +84,7 @@ export function ThemeCard({
     >
       <button
         aria-pressed={active}
-        className={pickButton}
+        className={styles.pickButton}
         onClick={() => {
           if (!dragged.current) actorRef.send({type: 'theme.pick', slug: theme.slug})
         }}
@@ -95,7 +95,7 @@ export function ThemeCard({
         }}
         type="button"
       >
-        <span className={frame}>
+        <span className={styles.frame}>
           <ThemeThumbnail options={theme.options} />
         </span>
         <Box as="span" display="block" paddingTop={2} paddingX={2}>
@@ -115,9 +115,9 @@ export function ThemeCard({
           clones its button to wire it up, which a tooltip in between would
           swallow. The card keeps the button dark, as it sits on the dark
           half of the thumbnail, while the menu opens in the sidebar's scheme */}
-      <div className={menuSlot} data-visible={menuOpen}>
+      <div className={styles.menuSlot} data-visible={menuOpen}>
         <Tooltip animate content={<Text size={1}>Show more</Text>} placement="bottom" portal>
-          <Card className={menuCard} radius={2} scheme="dark">
+          <Card className={styles.menuCard} radius={2} scheme="dark">
             <MenuButton
               button={
                 <Button

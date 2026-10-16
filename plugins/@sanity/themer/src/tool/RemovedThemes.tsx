@@ -7,7 +7,7 @@ import {ScrollArea} from './ScrollArea'
 import {displayTitle} from './themes'
 import {ThemeThumbnail} from './ThemeThumbnail'
 
-import {removedThumbnail} from './RemovedThemes.css'
+import styles from './RemovedThemes.module.css'
 
 /**
  * The flow for restoring removed themes: the presets and custom themes the
@@ -25,7 +25,7 @@ export function RemovedThemes({actorRef, removed}: Pick<ThemerProps, 'actorRef' 
         <Stack gap={5}>
           {removed.map((theme) => (
             <Stack key={theme.slug} gap={3}>
-              <Box className={removedThumbnail}>
+              <Box className={styles.removedThumbnail}>
                 <ThemeThumbnail options={theme.options} />
               </Box>
               <Text align="center" size={1} textOverflow="ellipsis">

@@ -1,0 +1,49 @@
+.sidebar {
+  flex: none;
+}
+
+/*
+ * Draws the sidebar's border and gives the resize handle its card colors. It
+ * does not clip, so the handle can straddle the border — the content is
+ * clipped one level down instead.
+ */
+.frame {
+  position: relative;
+}
+
+/*
+ * The grab area along the sidebar's left edge. It straddles the border so it
+ * is easy to hit, and highlights while hovered, focused or dragged.
+ */
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  z-index: 1;
+  width: 7px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.resizeHandle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2px;
+  width: 3px;
+  background: var(--card-focus-ring-color);
+  opacity: 0;
+  transition: opacity 100ms;
+}
+
+.resizeHandle:focus {
+  outline: none;
+}
+
+.resizeHandle:hover::after,
+.resizeHandle:focus-visible::after,
+.resizeHandle[data-dragging='true']::after {
+  opacity: 1;
+}

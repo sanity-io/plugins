@@ -1,0 +1,153 @@
+/*
+ * The colors a mockup paints with — only the ones the theme options change —
+ * come in as custom properties, assigned per color scheme from the theme it
+ * previews (`ThemePreview.tsx`).
+ */
+.root {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.studio {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--themer-preview-bg);
+}
+
+/*
+ * The dark scheme covers the right side of the preview behind a diagonal cut,
+ * like the "Auto" appearance preview in macOS System Settings shows both
+ * schemes at once.
+ */
+.studio[data-scheme='dark'] {
+  clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%);
+}
+
+.navbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 18%;
+  padding: 0 5%;
+  border-bottom: 1px solid var(--themer-preview-border);
+}
+
+.logo {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--themer-preview-accent);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.avatar {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--themer-preview-avatar);
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.list {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: 36%;
+  border-right: 1px solid var(--themer-preview-border);
+}
+
+.listRow {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 18%;
+  padding: 0 9%;
+}
+
+.listRow[data-selected='true'] {
+  background: var(--themer-preview-selected-bg);
+}
+
+.pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9% 8% 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.field {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.input {
+  height: 12px;
+  border-radius: 3px;
+  background: var(--themer-preview-input-bg);
+  box-shadow: inset 0 0 0 1px var(--themer-preview-input-border);
+}
+
+.footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 20%;
+  padding: 0 8%;
+  border-top: 1px solid var(--themer-preview-border);
+}
+
+.button {
+  width: 32%;
+  height: 50%;
+  border-radius: 3px;
+  background: var(--themer-preview-accent);
+}
+
+/*
+ * A line of text, in one of the text colors — its width is set inline. 4px
+ * thick: bold enough to survive a half-size preview.
+ */
+.line {
+  flex: none;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.line[data-color='fg'] {
+  background: var(--themer-preview-fg);
+}
+
+.line[data-color='muted'] {
+  background: var(--themer-preview-muted-fg);
+}
+
+.line[data-color='selected'] {
+  background: var(--themer-preview-selected-fg);
+}

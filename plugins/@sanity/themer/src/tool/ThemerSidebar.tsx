@@ -17,7 +17,7 @@ import {resolveThemes} from './themes'
 import {TooltipButton} from './TooltipButton'
 import {useIsTooSmallForSplitScreen} from './useIsTooSmallForSplitScreen'
 
-import {title} from './ThemerSidebar.css'
+import styles from './ThemerSidebar.module.css'
 
 const VIEW_TITLES = {
   list: 'Themer',
@@ -63,7 +63,7 @@ export function ThemerSidebar({
           style={navbarHeight === null ? undefined : {height: navbarHeight}}
         >
           <Flex align="center" gap={1} height="fill">
-            <Box className={title} flex={1}>
+            <Box className={styles.title} flex={1}>
               <Text size={1} textOverflow="ellipsis" weight="semibold">
                 {VIEW_TITLES[view.name]}
               </Text>

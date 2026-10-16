@@ -1,8 +1,17 @@
 {
   "extends": ["@sanity/tsconfig/strictest"],
-  "include": ["**/*.ts", "**/*.tsx"],
+  // The CSS modules are included for css-modules-kit (`pnpm css:types`), which reads this
+  // file's `include`; TypeScript itself only picks up the `.ts`/`.tsx` files
+  "include": ["**/*.ts", "**/*.tsx", "src/**/*.module.css"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
-    "noUncheckedIndexedAccess": false
+    "noUncheckedIndexedAccess": false,
+    // Resolves `./X.module.css` to the `X.module.css.d.ts` css-modules-kit writes under `generated/`
+    "rootDirs": [".", "generated"]
+  },
+  "cmkOptions": {
+    "enabled": true,
+    // Lightning CSS exports container names along with the class and keyframes names
+    "container": true
   }
 }

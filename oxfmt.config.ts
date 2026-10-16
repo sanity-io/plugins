@@ -10,5 +10,8 @@ export default defineConfig({
     'storybook-static/**',
     'CHANGELOG.md',
     'turbo/**/*.hbs',
+    // The CSS module typings css-modules-kit writes (`pnpm css:types`); `pnpm lint` checks them
+    // against the generator's output byte for byte
+    '**/generated/**/*.module.css.d.ts',
   ],
 })

@@ -1,7 +1,7 @@
 import {Box, useTheme_v2} from '@sanity/ui'
 import {createContext, useContext, useEffect, useMemo, useRef, useState} from 'react'
 
-import {root} from './ScrollArea.css'
+import styles from './ScrollArea.module.css'
 
 /** How far the content of a scroll area sits from its edges, in pixels */
 interface ScrollAreaInset {
@@ -67,7 +67,7 @@ export function ScrollArea(props: {children: React.ReactNode; padding: number}) 
 
   return (
     <Box
-      className={root}
+      className={styles.root}
       flex={1}
       overflow="auto"
       padding={padding}

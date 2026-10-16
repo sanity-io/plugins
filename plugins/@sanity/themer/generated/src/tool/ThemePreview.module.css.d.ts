@@ -1,0 +1,25 @@
+// @ts-nocheck
+declare const styles = {
+  'root': '' as string,
+  'studio': '' as string,
+  'studio': '' as string,
+  'navbar': '' as string,
+  'logo': '' as string,
+  'spacer': '' as string,
+  'avatar': '' as string,
+  'body': '' as string,
+  'list': '' as string,
+  'listRow': '' as string,
+  'listRow': '' as string,
+  'pane': '' as string,
+  'form': '' as string,
+  'field': '' as string,
+  'input': '' as string,
+  'footer': '' as string,
+  'button': '' as string,
+  'line': '' as string,
+  'line': '' as string,
+  'line': '' as string,
+  'line': '' as string,
+} as const;
+export default styles;

@@ -35,6 +35,7 @@
     ".": "./src/index.ts",
     "./oxfmt": "./src/oxfmt.ts",
     "./oxlint": "./src/oxlint.ts",
+    "./stylelint": "./src/stylelint.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -42,6 +43,7 @@
       ".": "./dist/index.js",
       "./oxfmt": "./dist/oxfmt.js",
       "./oxlint": "./dist/oxlint.js",
+      "./stylelint": "./dist/stylelint.js",
       "./package.json": "./package.json"
     }
   },
@@ -59,6 +61,8 @@
     "inquirer": "^14.0.2",
     "meow": "^14.1.0",
     "nodemon": "3.1.14",
+    "stylelint-config-css-modules": "^4.6.0",
+    "stylelint-config-recommended": "^18.0.0",
     "validate-npm-package-name": "catalog:",
     "yalc": "1.0.0-pre.53"
   },
@@ -76,19 +80,24 @@
     "react-dom": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
+    "stylelint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
     "@sanity/pkg-utils": "catalog:",
     "oxfmt": "catalog:",
-    "oxlint": "catalog:"
+    "oxlint": "catalog:",
+    "stylelint": "catalog:"
   },
   "peerDependenciesMeta": {
     "oxfmt": {
       "optional": true
     },
     "oxlint": {
+      "optional": true
+    },
+    "stylelint": {
       "optional": true
     }
   },

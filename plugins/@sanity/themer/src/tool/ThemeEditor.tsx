@@ -31,7 +31,7 @@ import {ScrollArea, ScrollAreaBleed} from './ScrollArea'
 import {ThemeThumbnail} from './ThemeThumbnail'
 import {TooltipButton} from './TooltipButton'
 
-import {colorRowText, range, swatch} from './ThemeEditor.css'
+import styles from './ThemeEditor.module.css'
 
 const SCHEME_TITLES: Record<ThemeColorSchemeKey, string> = {
   dark: 'Dark mode',
@@ -54,11 +54,6 @@ const SCHEME_OPTION_KEYS: Array<keyof SchemeThemeOptions> = [
   'contrast',
 ]
 
-/**
- * `<input type="color">` paints the color into a shadow-DOM swatch that brings
- * its own border and padding, which then sits inside ours as a second border.
- * Stripping that chrome leaves the themed border as the only one.
- */
 /**
  * The flow for editing one of the user's own themes: its title, a live
  * preview, and a card per color scheme with the accent/text/background
@@ -364,7 +359,7 @@ function SchemeCard(props: {
           </Flex>
           <input
             aria-label={`${name} contrast`}
-            className={range}
+            className={styles.range}
             max={100}
             min={15}
             onChange={(event) => onChange({contrast: Number(event.currentTarget.value)})}
@@ -402,12 +397,12 @@ function ColorRow(props: {
     <Flex align="center" gap={2}>
       <input
         aria-label={label}
-        className={swatch}
+        className={styles.swatch}
         onChange={(event) => onChange(event.currentTarget.value)}
         type="color"
         value={value}
       />
-      <Stack className={colorRowText} flex={1} gap={2}>
+      <Stack className={styles.colorRowText} flex={1} gap={2}>
         <Text size={1}>{title}</Text>
         <Text muted size={0} textOverflow="ellipsis">
           {value}

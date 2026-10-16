@@ -13,8 +13,9 @@ import type {ToolReducerState} from './reducer'
 import {resolveActiveThemeOptions} from './selectors'
 import type {readPersistedSnapshot} from './storage'
 import {ThemerNavbarProvider} from './ThemerNavbar'
+import {viewTransitionClasses} from './viewTransitions'
 
-import {layout, viewTransitionClasses} from './ViewTransitions.css'
+import styles from './ThemerLayout.module.css'
 
 /**
  * The sidebar — everything in it, from the theme list to the snippet dialog —
@@ -49,7 +50,7 @@ interface ThemerLayoutProps extends Omit<ToolReducerState, 'theme'> {
  * (see `addThemerTransitionType`), and the `ViewTransition` boundaries below
  * pick their classes by that type, so React animates the sidebar sliding in
  * and out, the split copy coming and going and a picked theme cross-fading
- * in (React 19.3), styled in `ViewTransitions.css.ts`. The sidebar and the
+ * in (React 19.3), styled in `viewTransitions.module.css`. The sidebar and the
  * split copy stay mounted while hidden, in `Activity`, so that opening them
  * again is instant and they can prerender ahead of the transition. The
  * navbar toggle, which the Studio renders somewhere in `children`, reads the
@@ -70,7 +71,7 @@ interface ThemerLayoutProps extends Omit<ToolReducerState, 'theme'> {
  * Studio names so it moves as one piece — comes along in step: every
  * transition the layout starts carries `layoutTransitionType`, which the
  * stylesheet keys on to move every group in the layout's time (see
- * `ViewTransitions.css.ts`).
+ * `viewTransitions.module.css`).
  *
  * @internal
  */
@@ -94,7 +95,7 @@ export function ThemerLayout({
   return (
     <>
       <Flex
-        className={layout}
+        className={styles.root}
         direction={'row'}
         height="fill"
         sizing="border"

@@ -1,8 +1,7 @@
 import {SparklesIcon} from '@sanity/icons/Sparkles'
 import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {assignInlineVars} from '@vanilla-extract/dynamic'
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {type CSSProperties, useEffect, useMemo, useRef, useState} from 'react'
 
 import type {BuildThemeOptions} from '../theme/options'
 import {ImageFileButton} from './ImageFileButton'
@@ -15,25 +14,12 @@ import {
   type ImagePaletteKey,
   type ImagePaletteVariant,
 } from './imagePalette'
+import {ROW_PADDING, VARIANT_FRAME, VARIANT_GAP, VARIANT_WIDTH} from './imagePaletteLayout'
 import {ThemeThumbnail} from './ThemeThumbnail'
 import {TooltipButton} from './TooltipButton'
 import {useImagePalette} from './useImagePalette'
 
-import {
-  imageTile,
-  paletteGrid,
-  ROW_PADDING,
-  tile,
-  VARIANT_FRAME,
-  VARIANT_GAP,
-  VARIANT_WIDTH,
-  variantButton,
-  variantFrame,
-  variantRow,
-  variantScale,
-  variantScaleBox,
-  variantWidth,
-} from './ImagePaletteSection.css'
+import styles from './ImagePaletteSection.module.css'
 
 /** The swatches on display: the vibrant family over the muted one */
 const TILES: ImagePaletteKey[] = [
@@ -53,6 +39,18 @@ const VISIBLE_VARIANTS = 2.5
 
 /** The width of one variant, before the row has been measured */
 const FALLBACK_VARIANT_WIDTH = 58
+
+/**
+ * The width of one variant's thumbnail, set on the row once it is measured,
+ * and how much that scales the thumbnail down from `VARIANT_WIDTH` — the
+ * custom properties `ImagePaletteSection.module.css` sizes the variants
+ * with. React's `CSSProperties` does not know custom properties, so the
+ * inline `style` is typed through this extension of it.
+ */
+interface VariantRowStyle extends CSSProperties {
+  '--themer-variant-width': string
+  '--themer-variant-scale': string
+}
 
 /**
  * Takes the colors of a theme from an image, on device: the image is read
@@ -104,6 +102,11 @@ export function ImagePaletteSection(props: {
     return () => observer.disconnect()
     // oxlint-disable-next-line react/exhaustive-effect-dependencies -- the row only renders with a palette, so a new palette has a new row to observe
   }, [palette])
+
+  const variantRowStyle: VariantRowStyle = {
+    '--themer-variant-width': `${thumbnailWidth}px`,
+    '--themer-variant-scale': String(thumbnailWidth / VARIANT_WIDTH),
+  }
 
   const variants = useMemo(() => {
     if (!palette) return []
@@ -170,8 +173,8 @@ export function ImagePaletteSection(props: {
 
         {palette ? (
           <>
-            <div className={paletteGrid} data-with-image={imageUrl !== undefined}>
-              {imageUrl && <img alt="" className={imageTile} src={imageUrl} />}
+            <div className={styles.paletteGrid} data-with-image={imageUrl !== undefined}>
+              {imageUrl && <img alt="" className={styles.imageTile} src={imageUrl} />}
               {TILES.map((key) => {
                 const hex = palette[key]
                 const title = IMAGE_PALETTE_TITLES[key]
@@ -190,7 +193,7 @@ export function ImagePaletteSection(props: {
                     portal
                   >
                     <span
-                      className={tile}
+                      className={styles.tile}
                       data-empty={hex === null}
                       style={{background: hex ?? undefined}}
                     />
@@ -203,25 +206,18 @@ export function ImagePaletteSection(props: {
               <Text muted size={0}>
                 Pick the swatch to build the theme around
               </Text>
-              <div
-                className={variantRow}
-                ref={rowRef}
-                style={assignInlineVars({
-                  [variantWidth]: `${thumbnailWidth}px`,
-                  [variantScale]: String(thumbnailWidth / VARIANT_WIDTH),
-                })}
-              >
+              <div className={styles.variantRow} ref={rowRef} style={variantRowStyle}>
                 {variants.map(({variant, title, options: variantOptions}) => (
                   // oxlint-disable-next-line control-has-associated-label -- the title below the thumbnail is the label, deeper than the rule looks
                   <button
                     key={variant}
                     aria-pressed={variant === current}
-                    className={variantButton}
+                    className={styles.variantButton}
                     onClick={() => onVariant(variant)}
                     type="button"
                   >
-                    <span className={variantFrame}>
-                      <span className={variantScaleBox}>
+                    <span className={styles.variantFrame}>
+                      <span className={styles.variantScaleBox}>
                         <ThemeThumbnail options={variantOptions} />
                       </span>
                     </span>
