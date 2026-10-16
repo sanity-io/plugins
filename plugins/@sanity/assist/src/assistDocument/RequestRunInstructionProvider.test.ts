@@ -144,4 +144,32 @@ describe('isDocAssistable', () => {
       isDocAssistable(schema(), readyState({draft: stub('drafts.article-1')}), 'rSummer'),
     ).toBe(false)
   })
+
+  test('uses the version sibling when documentId is already a version id', () => {
+    expect(
+      isDocAssistable(
+        schema(),
+        readyState({
+          draft: stub('drafts.article-1'),
+          version: stub('versions.rSummer.article-1'),
+        }),
+        undefined,
+        'versions.rSummer.article-1',
+      ),
+    ).toBe(true)
+  })
+
+  test('still uses the draft sibling for a variant version id', () => {
+    expect(
+      isDocAssistable(
+        schema(),
+        readyState({
+          published: stub('versions.pub.article-1'),
+          draft: stub('versions.scope.article-1'),
+        }),
+        undefined,
+        'versions.scope.article-1',
+      ),
+    ).toBe(true)
+  })
 })

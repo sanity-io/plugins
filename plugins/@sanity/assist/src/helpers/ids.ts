@@ -30,6 +30,11 @@ export function assistTasksStatusId(documentId: string) {
  * ready. The target is picked in this order:
  *
  * 1. `releaseId` (the selected perspective) wins and yields the version sibling.
+ *    A pane that already holds a version id without `releaseId` (for example a
+ *    pinned release pane) also uses the version sibling, so we never fall
+ *    through to `getDraftId` and rewrite `versions.*` to the base draft.
+ *    Variant document ids are also version ids; those keep the draft path
+ *    when `variant` is set.
  * 2. Live-edit types write published.
  * 3. Otherwise the draft sibling, if it exists.
  * 4. If the draft sibling is missing, only a drafts-bundle `variant-missing`
@@ -62,7 +67,7 @@ export function getAssistWriteDocumentId({
   ) {
     return undefined
   }
-  if (releaseId) {
+  if (releaseId || (!variant && isVersionId(documentId))) {
     return targetDocumentState.siblings.version?._id
   }
 

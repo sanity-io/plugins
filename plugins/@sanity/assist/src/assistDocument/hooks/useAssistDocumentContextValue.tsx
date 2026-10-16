@@ -61,6 +61,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     documentSchemaType,
     targetDocumentState,
     selectedReleaseId,
+    documentId,
   )
 
   const {isSyncing: documentIsSyncing} = useSyncState(
