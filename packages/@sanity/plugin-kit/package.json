@@ -35,6 +35,7 @@
     ".": "./src/index.ts",
     "./oxfmt": "./src/oxfmt.ts",
     "./oxlint": "./src/oxlint.ts",
+    "./vitest": "./src/vitest.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -42,6 +43,7 @@
       ".": "./dist/index.js",
       "./oxfmt": "./dist/oxfmt.js",
       "./oxlint": "./dist/oxlint.js",
+      "./vitest": "./dist/vitest.js",
       "./package.json": "./package.json"
     }
   },
@@ -59,6 +61,7 @@
     "inquirer": "^14.0.2",
     "meow": "^14.1.0",
     "nodemon": "3.1.14",
+    "oxc-transform-react": "catalog:",
     "validate-npm-package-name": "catalog:",
     "yalc": "1.0.0-pre.53"
   },
@@ -77,18 +80,23 @@
     "sanity": "catalog:",
     "styled-components": "catalog:",
     "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "@sanity/pkg-utils": "catalog:",
     "oxfmt": "catalog:",
-    "oxlint": "catalog:"
+    "oxlint": "catalog:",
+    "vitest": "^4"
   },
   "peerDependenciesMeta": {
     "oxfmt": {
       "optional": true
     },
     "oxlint": {
+      "optional": true
+    },
+    "vitest": {
       "optional": true
     }
   },

@@ -49,6 +49,8 @@ These files are required for monorepo conventions and are scaffolded for you:
 - `tsconfig.json`
 - `vitest.config.ts`
 
+`tsdown.config.ts` enables React Compiler (`reactCompiler: {transform: 'oxc'}`) and `vitest.config.ts` mirrors it with `reactCompilerPluginForVitest()` from `@sanity/plugin-kit/vitest` — keep both in sync so tests exercise the same compiled output that ships to npm.
+
 Do not bring over standalone-repo config that is not used here (for example custom root build/lint/test configs and CI files).
 
 ## 3. Update package.json Dependencies
