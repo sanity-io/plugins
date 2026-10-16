@@ -70,6 +70,7 @@ export const assistFieldActions: DocumentFieldAction = {
       documentOnChange,
       isDocAssistable: documentIsAssistable ?? false,
       isSyncing: documentIsSyncing,
+      writeTargetId: assistableDocumentId,
     })
 
     const isSelectable = !!useSelectedField(documentSchemaType, typePath)

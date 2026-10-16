@@ -33,6 +33,7 @@ export const generateCaptionsActions: DocumentFieldAction = {
       documentOnChange,
       isDocAssistable: documentIsAssistable,
       isSyncing: documentIsSyncing,
+      writeTargetId: assistableDocumentId,
       task: generateCaption,
     })
 

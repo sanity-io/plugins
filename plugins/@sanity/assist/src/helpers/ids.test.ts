@@ -246,6 +246,44 @@ describe('getAssistWriteDocumentId', () => {
     ).toBe('article-1')
   })
 
+  test('targets the version sibling when documentId is already a version id', () => {
+    expect(
+      getAssistWriteDocumentId({
+        documentId: 'versions.rSummer.article-1',
+        targetDocumentState: readyState({
+          published: stub(DOCUMENT_ID),
+          draft: stub(`drafts.${DOCUMENT_ID}`),
+          version: stub('versions.rSummer.article-1'),
+        }),
+      }),
+    ).toBe('versions.rSummer.article-1')
+  })
+
+  test('does not rewrite a versioned documentId to the base draft', () => {
+    expect(
+      getAssistWriteDocumentId({
+        documentId: 'versions.rSummer.article-1',
+        targetDocumentState: readyState({
+          published: stub(DOCUMENT_ID),
+          draft: stub(`drafts.${DOCUMENT_ID}`),
+        }),
+      }),
+    ).toBeUndefined()
+  })
+
+  test('keeps the draft path for a variant version id when a variant is selected', () => {
+    expect(
+      getAssistWriteDocumentId({
+        documentId: 'versions.scope.article-1',
+        variant: selectedVariant(),
+        targetDocumentState: readyState({
+          published: stub('versions.pub.article-1'),
+          draft: stub('versions.scope.article-1'),
+        }),
+      }),
+    ).toBe('versions.scope.article-1')
+  })
+
   test('targets the version sibling when a release is selected', () => {
     expect(
       getAssistWriteDocumentId({

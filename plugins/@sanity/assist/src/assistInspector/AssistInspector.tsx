@@ -226,6 +226,7 @@ function AssistInspector(props: DocumentInspectorProps) {
     documentOnChange,
     isDocAssistable: documentIsAssistable,
     isSyncing: documentIsSyncing,
+    writeTargetId: assistableDocumentId,
   })
 
   const typePath = useTypePath(docValue, pathKey ?? '')
