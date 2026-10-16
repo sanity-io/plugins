@@ -385,20 +385,62 @@ describe('themerMachine', () => {
     it('takes over the persisted state of another tab, and nothing of this one', () => {
       const actor = startWithCustom()
       actor.send({type: 'theme.add', imageUrl: 'blob:mine'})
-      const mine = actor.getSnapshot().context.active!
+      const mine = actor.getSnapshot().context.custom.at(-1)!
 
       const theirs: ThemerState = {
         active: 'verdant',
-        custom: [custom, {slug: 'custom-9', title: 'Theirs', options: {dark: {accent: '#00ff00'}}}],
+        custom: [
+          custom,
+          mine,
+          {slug: 'custom-9', title: 'Theirs', options: {dark: {accent: '#00ff00'}}},
+        ],
         removed: ['dew'],
         order: ['verdant', CONFIG_SLUG],
       }
       actor.send({type: 'themes.sync', state: theirs})
 
       expect(selectStoredState(actor.getSnapshot())).toEqual(theirs)
-      // This tab's images and flow are its own
-      expect(actor.getSnapshot().context.images).toEqual({[mine]: 'blob:mine'})
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      // This tab's images and flow are its own: the editor stays on its theme
+      expect(actor.getSnapshot().context.images).toEqual({[mine.slug]: 'blob:mine'})
+      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+    })
+
+    it('lets go of the images of themes the other tab deleted or gave another image', () => {
+      const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined)
+      revoke.mockClear()
+      const palette = {
+        dominant: '#e11d48',
+        vibrant: '#e11d48',
+        lightVibrant: null,
+        darkVibrant: null,
+        muted: '#7a7e8a',
+        lightMuted: null,
+        darkMuted: null,
+      }
+      const actor = startWithCustom()
+      actor.send({type: 'theme.add', title: 'deleted', palette, imageUrl: 'blob:deleted'})
+      actor.send({type: 'theme.add', title: 'repainted', palette, imageUrl: 'blob:repainted'})
+      actor.send({type: 'theme.add', title: 'kept', palette, imageUrl: 'blob:kept'})
+      const [, deleted, repainted, kept] = actor.getSnapshot().context.custom
+
+      actor.send({
+        type: 'themes.sync',
+        state: {
+          active: null,
+          custom: [custom, {...repainted, palette: {...palette, dominant: '#000000'}}, kept],
+          removed: [],
+          order: [],
+        },
+      })
+
+      expect(actor.getSnapshot().context.images).toEqual({[kept.slug]: 'blob:kept'})
+      expect(revoke.mock.calls.map(([url]) => url).sort()).toEqual([
+        'blob:deleted',
+        'blob:repainted',
+      ])
+      expect(deleted.slug).not.toBe(kept.slug)
+
+      revoke.mockRestore()
     })
 
     it('is a switch when the other tab applied another theme, not when it edited the applied one', () => {
@@ -598,14 +640,21 @@ describe('themerMachine', () => {
       expect(selectStoredState(actor.getSnapshot())).toEqual(initialThemerState)
     })
 
-    it('deletes custom themes only', () => {
-      const actor = startWithCustom({active: 'custom-1', removed: ['custom-1']})
+    it('deletes custom themes only, and takes them out of the order', () => {
+      const actor = startWithCustom({
+        active: 'custom-1',
+        removed: ['custom-1'],
+        order: ['custom-1', 'verdant'],
+      })
 
       actor.send({type: 'theme.delete', slug: 'verdant'})
       expect(actor.getSnapshot().context.removed).toEqual(['custom-1'])
 
       actor.send({type: 'theme.delete', slug: 'custom-1'})
-      expect(selectStoredState(actor.getSnapshot())).toEqual(initialThemerState)
+      expect(selectStoredState(actor.getSnapshot())).toEqual({
+        ...initialThemerState,
+        order: ['verdant'],
+      })
     })
   })
 })
