@@ -17,10 +17,14 @@ import {
 } from 'react'
 import {FormFieldHeaderText} from 'sanity'
 
+import {
+  discardRecentInstructionRun,
+  recordRecentInstructionRun,
+} from '../assistDocument/recentInstructionRuns'
 import type {CustomInputResult, GetUserInput} from '../fieldActions/useUserInput'
 import {getInstructionTitle} from '../helpers/misc'
-import {type UserInputBlock, userInputTypeName} from '../types'
-import {useApiClient, useRunInstructionApi} from '../useApiClient'
+import {type StudioInstruction, type UserInputBlock, userInputTypeName} from '../types'
+import {useApiClient, type RunInstructionRequest, useRunInstructionApi} from '../useApiClient'
 import {useAiAssistanceConfig} from './AiAssistanceConfigContext'
 import type {RunInstructionArgs} from './AssistLayout'
 
@@ -85,6 +89,28 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
     })
   }, [])
 
+  const submitInstruction = useCallback(
+    (request: RunInstructionRequest, instruction: StudioInstruction) => {
+      const runId = recordRecentInstructionRun({
+        documentId: request.documentId,
+        path: request.path,
+        typePath: request.typePath,
+        instructionKey: request.instructionKey,
+        title: instruction.title?.trim() ? instruction.title : undefined,
+        requestedAt: Date.now(),
+      })
+      const pending = runInstructionRequest(request)
+      if (!pending) {
+        discardRecentInstructionRun(runId)
+        return
+      }
+      void pending.catch(() => {
+        discardRecentInstructionRun(runId)
+      })
+    },
+    [runInstructionRequest],
+  )
+
   const runInstruction = useCallback(
     (req: RunInstructionArgs) => {
       if (loading) {
@@ -99,11 +125,14 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
         .filter(isUserInputBlock)
 
       if (!userInputBlocks?.length) {
-        void runInstructionRequest({
-          ...request,
-          instructionKey,
-          userTexts: undefined,
-        })
+        submitInstruction(
+          {
+            ...request,
+            instructionKey,
+            userTexts: undefined,
+          },
+          instruction,
+        )
         return
       }
 
@@ -112,7 +141,7 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
         userInputBlocks,
       })
     },
-    [runInstructionRequest, loading],
+    [submitInstruction, loading],
   )
 
   const close = useCallback(() => {
@@ -128,14 +157,17 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
     if (runRequest) {
       if ('instruction' in runRequest) {
         const {instruction, userInputBlocks: _, ...request} = runRequest
-        void runInstructionRequest({
-          ...request,
-          instructionKey: instruction._key,
-          userTexts: Object.entries(inputs).map(([key, value]) => ({
-            blockKey: key,
-            userInput: value,
-          })),
-        })
+        submitInstruction(
+          {
+            ...request,
+            instructionKey: instruction._key,
+            userTexts: Object.entries(inputs).map(([key, value]) => ({
+              blockKey: key,
+              userInput: value,
+            })),
+          },
+          instruction,
+        )
       } else {
         const userInputs = Object.values(inputs).map((input, i) => {
           const userInputBlock = runRequest.userInputBlocks[i]!
@@ -153,7 +185,7 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
       }
     }
     close()
-  }, [close, runInstructionRequest, runRequest, inputs, resolveUserInput])
+  }, [close, submitInstruction, runRequest, inputs, resolveUserInput])
 
   const open = !!runRequest
 

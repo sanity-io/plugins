@@ -12,6 +12,11 @@ import {
   type StudioAssistField,
   type StudioInstruction,
 } from '../../types'
+import {
+  enrichInstructionTasks,
+  getRecentInstructionRuns,
+  useBackfillInstructionTaskMeta,
+} from '../recentInstructionRuns'
 import {useDocumentState} from './useDocumentState'
 
 interface UseAssistDocumentProps {
@@ -38,6 +43,8 @@ export function useStudioAssistDocument({
   )
 
   const client = useClient({apiVersion: '2023-01-01'})
+  const rawTasks = assistTasksStatus?.tasks
+  useBackfillInstructionTaskMeta(documentId, rawTasks)
 
   useEffect(() => {
     if (!assistDocument && initDoc) {
@@ -56,7 +63,7 @@ export function useStudioAssistDocument({
     if (!assistDocument) {
       return undefined
     }
-    const tasks = assistTasksStatus?.tasks ?? []
+    const tasks = enrichInstructionTasks(rawTasks ?? [], getRecentInstructionRuns(), documentId)
     // oxlint-disable-next-line no-map-spread
     const fields = (assistDocument?.fields ?? []).map((assistField): StudioAssistField => {
       return {
@@ -81,7 +88,7 @@ export function useStudioAssistDocument({
       }),
       fields: fields,
     })
-  }, [assistDocument, assistTasksStatus, currentUser])
+  }, [assistDocument, currentUser, documentId, rawTasks])
 }
 
 function asStudioInstruction(
