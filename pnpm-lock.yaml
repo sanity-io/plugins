@@ -8595,6 +8595,7 @@ packages:
   '@sanity/ui@4.4.7':
     resolution: {integrity: sha512-2hJI+KMLBi7xasZVlwVlWTv2OfRpvmQXtV08vC23HI/dJ/nNSfEUXAZ8GNTNK91Z+sm5v5SO0PfEVJt0OxtPaw==}
     engines: {node: '>=22.12'}
+    deprecated: styles.css uses CSS cascade layers, so app styles override Sanity UI hover/focus/selected states. Upgrade to 4.4.8.
     peerDependencies:
       react: ^19.2
       react-dom: ^19.2
