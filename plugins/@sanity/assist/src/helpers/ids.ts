@@ -2,6 +2,7 @@ import {
   getDraftId,
   getPublishedId,
   getVersionFromId,
+  getVersionId,
   isVersionId,
   type SystemVariant,
   type TargetDocumentState,
@@ -34,8 +35,12 @@ export function assistTasksStatusId(documentId: string) {
  *    pinned release pane) also uses the version sibling, so we never fall
  *    through to `getDraftId` and rewrite `versions.*` to the base draft.
  *    Variant document ids are also version ids; those keep the draft path
- *    when `variant` is set.
- * 2. Live-edit types write published.
+ *    when `variant` is set. A brand-new document (no siblings at all) under a
+ *    release gets the derived release version id: Studio creates that version
+ *    on first edit. An existing document outside the release has no write
+ *    target; Studio blocks editing it until it is added to the release.
+ * 2. Live-edit types write published, or the derived published id for a
+ *    brand-new document without a variant.
  * 3. Otherwise the draft sibling, if it exists.
  * 4. If the draft sibling is missing, only a drafts-bundle `variant-missing`
  *    creatable target may use the advertised draft id (`creatableTarget.id`,
@@ -67,23 +72,29 @@ export function getAssistWriteDocumentId({
   ) {
     return undefined
   }
+  const {published, draft, version} = targetDocumentState.siblings
+  const isNewDocument = !published && !draft && !version
+
   if (releaseId || (!variant && isVersionId(documentId))) {
-    return targetDocumentState.siblings.version?._id
+    if (version) {
+      return version._id
+    }
+    return releaseId && !variant && isNewDocument ? getVersionId(documentId, releaseId) : undefined
   }
 
   if (liveEdit) {
-    return targetDocumentState.siblings.published?._id
+    if (published) {
+      return published._id
+    }
+    return !variant && isNewDocument ? getPublishedId(documentId) : undefined
   }
 
-  if (targetDocumentState.siblings.draft?._id) {
-    return targetDocumentState.siblings.draft._id
+  if (draft?._id) {
+    return draft._id
   }
 
   if (targetDocumentState.status === 'variant-missing' && targetDocumentState.bundle === 'drafts') {
-    return (
-      targetDocumentState.creatableTarget?.id ??
-      targetDocumentState.siblings.published?._system?.draft?._ref
-    )
+    return targetDocumentState.creatableTarget?.id ?? published?._system?.draft?._ref
   }
 
   if (variant) {

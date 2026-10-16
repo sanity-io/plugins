@@ -16,9 +16,9 @@ export type AssistDocumentContextValue = (
    *
    * `undefined` while the target is resolving, or when the selected variant or
    * release has no writable sibling. Can still be set while
-   * `documentIsAssistable` is false: a virtual draft after publish, and a
-   * creatable `variant-missing` target, both advertise an id used to
-   * materialize the snapshot first.
+   * `documentIsAssistable` is false: a virtual draft after publish, a creatable
+   * `variant-missing` target, and a brand-new release or live-edit document
+   * all advertise an id used to materialize the snapshot first.
    */
   assistableDocumentId: string | undefined
   /**

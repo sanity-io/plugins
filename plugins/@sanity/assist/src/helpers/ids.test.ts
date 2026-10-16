@@ -321,6 +321,94 @@ describe('getAssistWriteDocumentId', () => {
         targetDocumentState: readyState({draft: stub(`drafts.${DOCUMENT_ID}`)}),
       }),
     ).toBeUndefined()
+    expect(
+      getAssistWriteDocumentId({
+        documentId: DOCUMENT_ID,
+        releaseId: 'rSummer',
+        targetDocumentState: readyState({published: stub(DOCUMENT_ID)}),
+      }),
+    ).toBeUndefined()
+  })
+
+  test('derives the release version id for a brand-new document', () => {
+    expect(
+      getAssistWriteDocumentId({
+        documentId: DOCUMENT_ID,
+        releaseId: 'rSummer',
+        targetDocumentState: readyState({}),
+      }),
+    ).toBe('versions.rSummer.article-1')
+    expect(
+      getAssistWriteDocumentId({
+        documentId: DOCUMENT_ID,
+        liveEdit: true,
+        releaseId: 'rSummer',
+        targetDocumentState: readyState({}),
+      }),
+    ).toBe('versions.rSummer.article-1')
+  })
+
+  test('does not derive a release version id when a variant is selected', () => {
+    const variant = selectedVariant()
+    expect(
+      getAssistWriteDocumentId({
+        documentId: DOCUMENT_ID,
+        releaseId: 'rSummer',
+        variant,
+        targetDocumentState: {
+          status: 'variant-missing',
+          variant,
+          bundle: 'rSummer',
+          siblings: {published: undefined, draft: undefined, version: undefined},
+        },
+      }),
+    ).toBeUndefined()
+  })
+
+  test('does not derive an id for a brand-new document from a versioned pane id', () => {
+    expect(
+      getAssistWriteDocumentId({
+        documentId: 'versions.rSummer.article-1',
+        targetDocumentState: readyState({}),
+      }),
+    ).toBeUndefined()
+  })
+
+  test('derives the published id for a brand-new live-edit document', () => {
+    expect(
+      getAssistWriteDocumentId({
+        documentId: DOCUMENT_ID,
+        liveEdit: true,
+        targetDocumentState: readyState({}),
+      }),
+    ).toBe('article-1')
+  })
+
+  test('returns undefined for live-edit when only a draft exists', () => {
+    expect(
+      getAssistWriteDocumentId({
+        documentId: DOCUMENT_ID,
+        liveEdit: true,
+        targetDocumentState: readyState({draft: stub(`drafts.${DOCUMENT_ID}`)}),
+      }),
+    ).toBeUndefined()
+  })
+
+  test('returns undefined for a live-edit variant without a published sibling', () => {
+    const variant = selectedVariant()
+    expect(
+      getAssistWriteDocumentId({
+        documentId: DOCUMENT_ID,
+        liveEdit: true,
+        variant,
+        targetDocumentState: {
+          status: 'variant-missing',
+          variant,
+          bundle: 'drafts',
+          siblings: {published: undefined, draft: undefined, version: undefined},
+        },
+      }),
+    ).toBeUndefined()
   })
 })
 
