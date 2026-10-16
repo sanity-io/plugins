@@ -274,7 +274,7 @@ catalogs:
       specifier: ^4.18.1
       version: 4.18.1
     motion:
-      specifier: ^14.2.0
+      specifier: ^14.3.0
       version: 14.3.0
     nanoid:
       specifier: ^6.0.2
