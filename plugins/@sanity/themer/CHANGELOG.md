@@ -1,5 +1,21 @@
 # @sanity/themer
 
+## 0.10.3
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - Build the vanilla-extract styles with `identifiers: 'safe'`, so every release gets its own class names. The previous hash covered only the package name and file path, so a release that reordered a file's styles reused the class names of the previous release for different rules, and a page that loaded the stylesheets of both releases styled elements with the wrong rules.
+
+## 0.10.2
+
+### Patch Changes
+
+- [#2164](https://github.com/sanity-io/plugins/pull/2164) [`222ad55`](https://github.com/sanity-io/plugins/commit/222ad55b7cb8a42c19b830b59f70612778e36de8) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency motion to ^14.1.0
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
 ## 0.10.1
 
 ### Patch Changes

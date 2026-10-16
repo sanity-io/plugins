@@ -139,8 +139,8 @@ Update your plugins array to load the plugin like you would any other. For confi
 ```ts
 // ./sanity.config.ts
 
-import {createSchema} from '@sanity/schema'
 import {documentInternationalization} from '@sanity/document-internationalization'
+import {createSchema} from '@sanity/schema'
 // ...all other imports
 
 export default defineConfig({

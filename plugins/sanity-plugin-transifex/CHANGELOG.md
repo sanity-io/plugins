@@ -1,5 +1,19 @@
 # sanity-plugin-transifex
 
+## 5.1.25
+
+### Patch Changes
+
+- Updated dependencies [[`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3)]:
+  - sanity-translations-tab@6.1.25
+
+## 5.1.24
+
+### Patch Changes
+
+- Updated dependencies [[`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30)]:
+  - sanity-translations-tab@6.1.24
+
 ## 5.1.23
 
 ### Patch Changes

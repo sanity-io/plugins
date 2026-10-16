@@ -1,6 +1,6 @@
 {
   "name": "@sanity/embeddings-index-ui",
-  "version": "4.0.19",
+  "version": "4.0.21",
   "description": "Various Sanity Studio plugins for integrating with the embeddings index API",
   "keywords": [
     "sanity",
@@ -39,7 +39,7 @@
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "react-rx": "^4.2.5"
+    "react-rx": "catalog:"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",

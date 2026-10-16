@@ -1,5 +1,19 @@
 # @sanity/studio-secrets
 
+## 4.0.23
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+## 4.0.22
+
+### Patch Changes
+
+- [#2150](https://github.com/sanity-io/plugins/pull/2150) [`9a107b5`](https://github.com/sanity-io/plugins/commit/9a107b5085be23d0d0fd6531fe2dac16108f6f22) Thanks [@stipsan](https://github.com/stipsan)! - Update `react-rx` to v7. `useSecrets` now reads the secrets document with `useSyncObservable`, so `loading` and `secrets` stay in sync with the store and with the namespace passed to the hook. The first render always reports `loading: true`; the document is observed once the component mounts, so a document that is already available resolves right after the first paint instead of during it. `react-rx` v7 requires React `^19.2` (already required) and declares Node `>=22.12`.
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
 ## 4.0.21
 
 ### Patch Changes

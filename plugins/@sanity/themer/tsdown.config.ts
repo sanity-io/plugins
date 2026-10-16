@@ -20,6 +20,10 @@ export default defineConfig({
   // side-effect free, bundlers may bypass the entry and drop the bare CSS
   // import with it before the stylesheet's own side-effect status is consulted
   vanillaExtract: {
+    // Hashes the package version into the class names, so a release that
+    // reorders a file's styles can't reuse the class names of the previous
+    // release for different rules when both stylesheets end up on one page
+    identifiers: 'safe',
     // Readable output keeps CSS diffs between published versions easy to review
     minify: false,
     lightningcss: {

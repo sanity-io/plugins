@@ -47,9 +47,11 @@ Because pnpm 12 records that block, `pnpm-lock.yaml` is **two YAML documents**: 
 
 pnpm 12.6.0 doesn't settle on one set of optional peers for `plugins/@sanity/debug-preview-url-secret-plugin`. A fresh install, and any install or `pnpm dedupe` that re-resolves the lockfile, toggles `@vitejs/devtools` and `oxc-transform-react` in the peer suffixes of its `sanity` and `@sanity/tsdown-config` entries. No version changes and frozen installs are unaffected, so don't commit a `pnpm-lock.yaml` diff that only toggles those suffixes. The `Dedupe lockfile` workflow runs `pnpm dedupe` twice for the same reason.
 
-pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@4.2.5`) for one-off upgrades still inside that window. `minimumReleaseAgeExcludePrune` and `trustPolicyExcludePrune` drop exclude entries that no longer match anything in the tree, but only on an install that actually rewrites the lockfile—a no-op install leaves stale entries in place.
+pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific `name@version` pins (e.g. `yuku-core@0.18.1`) for one-off upgrades still inside that window. `minimumReleaseAgeExcludePrune` and `trustPolicyExcludePrune` drop exclude entries that no longer match anything in the tree, but only on an install that actually rewrites the lockfile—a no-op install leaves stale entries in place.
 
 Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
+
+A `name@version` pin is only enough when the bump is a one-off. Renovate's artifact update commits `pnpm-lock.yaml` alone, so the entries pnpm writes into `pnpm-workspace.yaml` during that install are discarded and CI's frozen install then rejects the lockfile with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`. For dependencies Renovate bumps regularly and forces from the Dependency Dashboard before the window closes, list the whole family by package name instead — the whole family, because each release pins its siblings and platform bindings to exact versions, so excluding only the package Renovate names leaves the rest flagged. That is why `motion`/`framer-motion`/`motion-dom`/`motion-utils`, `oxc-transform`/`oxc-transform-react` with their `@oxc-transform/*` and `@oxc-transform-react/*` bindings, `@tanstack/react-virtual`/`@tanstack/virtual-core`, and `styled-components` are listed by name.
 
 pnpm also writes such entries itself: when a package that `minimumReleaseAgeExclude` already lists (e.g. `yuku-parser`) resolves to a release that pins an exact, still-too-new version of a subdependency (e.g. `yuku-core@0.18.1` and its `@yuku-core/binding-*` platform packages), a lockfile-rewriting install appends those `name@version` entries to `pnpm-workspace.yaml`. Commit them (or a scoped glob such as `'@yuku-core/*'` for a family of platform binaries) with a short dated comment—`pnpm install --frozen-lockfile` in CI re-verifies the lockfile against `minimumReleaseAge` and fails with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` if the lockfile pins a too-new version that is not excluded. `minimumReleaseAgeExcludePrune` removes the exact entries once they age out.
 
@@ -263,6 +265,7 @@ Example test file (`src/index.test.ts`):
 
 ```ts
 import {fileURLToPath} from 'node:url'
+
 import {expect, test} from 'vitest'
 import {getPackageExportsManifest} from 'vitest-package-exports'
 
@@ -310,11 +313,11 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 
 Always open PRs as **draft** initially. The prompter (person who requested the work) reviews first before marking ready for team review.
 
-### 2. Apply the "🤖 bot" Label
+### 2. Apply the "✨ ai" Label
 
-**All PRs created by AI agents must be labeled with "🤖 bot".** This label helps the team identify bot-created PRs and ensures proper tracking and review workflows.
+**All PRs created by AI agents must be labeled with "✨ ai".** This label helps the team identify AI-created PRs and ensures proper tracking and review workflows. Do not use `🤖 bot` — that label is reserved for PRs opened by CI automations and Renovate, not AI agents.
 
-When creating or updating a PR, always ensure the `🤖 bot` label is applied.
+When creating or updating a PR, always ensure the `✨ ai` label is applied.
 
 ### 3. Move Out of Draft
 
@@ -368,7 +371,7 @@ To inspect a **new** build after making changes—while `pnpm devtools:test-stud
 pnpm devtools:test-studio:build
 ```
 
-Builds are not hooked into HMR; `sanity build` must be invoked manually (via the command above) each time you want a new session to inspect. Sessions can be compared against each other in the DevTools UI to diff bundle changes.
+Sessions can be compared against each other in the DevTools UI to diff bundle changes.
 
 How it works:
 
@@ -386,6 +389,10 @@ React profiling is already available in the development build from `pnpm dev`. `
 ### Storybook
 
 `dev/storybook` is a React Storybook set up like sanity-io/ui's `apps/storybook`, next to the other dev apps, with stories in `dev/storybook/stories/<plugin>/` (see its `README.md`). `pnpm dev:storybook` serves it at `http://localhost:6006` without Sanity authentication, `pnpm test:browser` renders every story in headless Chromium through the Storybook Vitest addon (the `storybook-test` CI job), and `pnpm storybook:build` writes the static build to `dev/storybook/storybook-static`. Install the browser once with `pnpm --filter plugins-storybook exec playwright install chromium`. The preview imports `@sanity/ui/styles.css` because the published `@sanity/ui` dist doesn't import its own CSS, and it keeps the vanilla-extract Vite plugin because workspace plugins resolve to their `.css.ts` source. Like the other `dev/*` apps, it's skipped by `pretest` and the CI build job.
+
+### `@sanity/ui` v5 (`ui5`)
+
+`sanity` renders the `@sanity/ui` v5 alpha next to v4, aliased as `ui5` (`"ui5": "npm:@sanity/ui@<version>"`). `dev/test-studio` depends on the same alias, pinned to the exact version `sanity` depends on, so that both resolve one instance and one stylesheet. Renovate leaves it alone (a `packageRules` entry in `.github/renovate.json`), so bump it by hand when the Studio's `ui5` moves. The test studio's **UI v5** tool (`/home/ui5`, `dev/test-studio/src/themer/ui5`) explores how far Themer's themes reach into v5, and flags when the two versions drift.
 
 ## Creating a New Plugin
 
@@ -562,7 +569,7 @@ A lefthook pre-commit hook (`lefthook.yml`, set up like sanity-io/sanity's) runs
 
 - **Clones that ran husky:** they still have `core.hooksPath` set to `.husky/_`, and lefthook won't install there. Run `git config --unset core.hooksPath && pnpm install` once.
 - **Hook commands:** they call `node_modules/.bin/oxfmt` directly. `pnpm <bin>` in a hook runs pnpm 12's implicit install, which flips the peer toggle described under pnpm Version.
-- **Local scripts:** `pnpm --config.verify-deps-before-run=false <script>` avoids that implicit install too. Turbo tasks (`pnpm build`, the `pretest` build) run plain `pnpm run` in every package, so locally they trigger it as well, and that install is not frozen: it re-resolves the Studio `next` overrides (see `Lockfile re-resolution also moves the Studio next overrides`) and rewrites `pnpm-lock.yaml`. When the lockfile must stay put, run the package scripts through that flag instead, and if it already happened, `git checkout pnpm-lock.yaml && pnpm install --frozen-lockfile` puts `node_modules` back on the locked versions.
+- **Local scripts:** `pnpm --config.verify-deps-before-run=false <script>` avoids that implicit install too. Turbo tasks (`pnpm build`, the `pretest` build) run plain `pnpm run` in every package, so locally they trigger it as well, and that install is not frozen: it re-resolves the Studio `next` overrides (see `Lockfile re-resolution also moves the Studio next overrides`) and rewrites `pnpm-lock.yaml`. When the lockfile must stay put, run the package scripts through that flag instead, or export `pnpm_config_verify_deps_before_run=false` for the shell session—pnpm 12 reads `pnpm_config_*` environment variables (not `npm_config_*`), and the variable also reaches the nested `pnpm run` invocations inside turbo tasks that the CLI flag cannot. If it already happened, `git checkout pnpm-lock.yaml && pnpm install --frozen-lockfile` puts `node_modules` back on the locked versions.
 
 ### Linting
 
