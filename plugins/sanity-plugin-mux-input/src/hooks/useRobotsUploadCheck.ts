@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from 'react'
 
 import {listRobotsDirectiveRuns, listRobotsJobs} from '../actions/robots'
 import {capabilityFromError} from '../robots/capability'
+import {getRobotsSyncStore} from '../robots/sync'
 import type {VideoAssetDocument} from '../util/types'
 import {useClient} from './useClient'
 
@@ -38,6 +39,7 @@ export function useRobotsUploadCheck(asset: VideoAssetDocument | null | undefine
     let cancelled = false
 
     const check = async () => {
+      let hasToasted = false
       for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
         if (attempt > 0) await wait(INTERVAL_MS)
         if (cancelled) return
@@ -51,12 +53,19 @@ export function useRobotsUploadCheck(asset: VideoAssetDocument | null | undefine
             (runs.data ?? []).some((run) => run.subject_id === readyAssetId),
           )
           if (cancelled) return
-          if ((jobs.data ?? []).length > 0 || hasRun) {
+          const hasJob = (jobs.data ?? []).length > 0
+          if ((hasJob || hasRun) && !hasToasted) {
+            hasToasted = true
             toast.push({
               status: 'success',
               title: 'Robots is working on this video',
               description: 'Open Robots from the video’s menu to follow along.',
             })
+          }
+          // Recording its jobs turns on the background sync, so their results and new tracks
+          // reach the document even if Robots is never opened. A run alone has none yet.
+          if (hasJob) {
+            getRobotsSyncStore(client, upload.documentId, readyAssetId).refreshNow()
             return
           }
         } catch (error) {

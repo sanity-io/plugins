@@ -282,6 +282,9 @@ export default function UploadConfiguration({
   const [uncheckedDirectiveIds, setUncheckedDirectiveIds] = useState<string[]>([])
   const isDirectivesReadOnly = !canRunRobots || !!disableUploadConfig
   const missingIds = missingDirectiveIds(directiveListing, configuredDirectiveIds)
+  // Until the listing answers, a configured id the account doesn't have can't be left out.
+  const isCheckingDirectives =
+    configuredDirectiveIds.length > 0 && directiveListing.status === 'pending'
   const attachedDirectiveIds = directivesToAttach(configuredDirectiveIds, {
     missingIds,
     uncheckedIds: isDirectivesReadOnly ? [] : uncheckedDirectiveIds,
@@ -475,6 +478,7 @@ export default function UploadConfiguration({
               (!basicConfig && !playbackPolicySelected) ||
               validationError !== null ||
               isLoadingMetadata ||
+              isCheckingDirectives ||
               (isLoadingFileSize && !canSkipFileSizeValidation)
             }
             icon={UploadIcon}
