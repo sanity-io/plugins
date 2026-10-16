@@ -1,5 +1,21 @@
 # sanity-plugin-mux-input
 
+## 5.2.0
+
+### Minor Changes
+
+- [#2143](https://github.com/sanity-io/plugins/pull/2143) [`b8dd2cd`](https://github.com/sanity-io/plugins/commit/b8dd2cdc4343dbeb1018e650a27bfa738c2c3d27) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - Attach Mux Robots directives to every upload with `defaultDirectiveIds` and run a directive on a video from its Robots panel. The upload dialog shows the directives that will run, or how to set them up when none are configured
+
+- [#2143](https://github.com/sanity-io/plugins/pull/2143) [`b8dd2cd`](https://github.com/sanity-io/plugins/commit/b8dd2cdc4343dbeb1018e650a27bfa738c2c3d27) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - Run Mux Robots workflows from the Studio: open Robots from a video's menu or from its tab in the Videos tool to run any of the twelve workflows, follow and cancel jobs, and read their outputs. Every job on the video and the newest summarize and moderate outputs are recorded on the `mux.videoAsset` document, and **Apply summary** copies the summary's title, description and tags into the document that holds the video, after a preview. Only administrators can run Robots by default; set `allowedRolesForRobots` to choose the roles. Chapters tracks are now listed apart from captions and no longer count as captions.
+
+### Patch Changes
+
+- [#2209](https://github.com/sanity-io/plugins/pull/2209) [`19e2fca`](https://github.com/sanity-io/plugins/commit/19e2fca5f1fb6e5d42cdc5c40c6109b2b688f659) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-rx to ^7.1.0
+
+- [#2143](https://github.com/sanity-io/plugins/pull/2143) [`b8dd2cd`](https://github.com/sanity-io/plugins/commit/b8dd2cdc4343dbeb1018e650a27bfa738c2c3d27) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - The Studio player picks up new caption and audio tracks without a page refresh, and a signed video no longer reloads when an unrelated field of its document changes. A video without playback IDs can get a new one from its player instead of showing a bare error, and resyncing a video now also points `playbackId` at a playback ID the asset still has.
+
+- [#2143](https://github.com/sanity-io/plugins/pull/2143) [`b8dd2cd`](https://github.com/sanity-io/plugins/commit/b8dd2cdc4343dbeb1018e650a27bfa738c2c3d27) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - Update the video document in place when a file upload finishes, instead of replacing it, so fields written in the meantime are kept
+
 ## 5.1.3
 
 ### Patch Changes

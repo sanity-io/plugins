@@ -1,5 +1,11 @@
 # @sanity/themer
 
+## 0.10.4
+
+### Patch Changes
+
+- [#2198](https://github.com/sanity-io/plugins/pull/2198) [`c905155`](https://github.com/sanity-io/plugins/commit/c905155393631a2d2468ae160037c81588e45069) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.2.0
+
 ## 0.10.3
 
 ### Patch Changes
