@@ -31,6 +31,7 @@ export function ImageContextProvider(props: InputProps) {
     documentOnChange,
     isDocAssistable: documentIsAssistable,
     isSyncing: documentIsSyncing,
+    writeTargetId: assistableDocumentId,
     task: generateCaption,
   })
 

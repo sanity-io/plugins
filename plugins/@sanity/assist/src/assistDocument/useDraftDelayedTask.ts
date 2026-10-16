@@ -14,6 +14,12 @@ export interface DraftDelayedTaskArgs<T> {
    * optimistically in the Studio.
    */
   isSyncing?: boolean
+  /**
+   * Current Assist write-target id. Pending work is dropped when this changes
+   * (variant/release switch) so a queued mutation cannot run against the
+   * previous document.
+   */
+  writeTargetId: string | undefined
   task: (args: T) => void
 }
 
@@ -90,16 +96,21 @@ function advance<T>(
  * reacts to the two document signals; nothing it does can re-trigger it.
  */
 export function useDraftDelayedTask<T>(args: DraftDelayedTaskArgs<T>) {
-  const {documentOnChange, isDocAssistable, isSyncing = false, task} = args
+  const {documentOnChange, isDocAssistable, isSyncing = false, writeTargetId, task} = args
   const queuedRef = useRef<QueuedTask<T> | null>(null)
+  const writeTargetIdRef = useRef(writeTargetId)
 
   const advanceQueue = useEffectEvent((signals: DocumentSignals) => {
     queuedRef.current = advance(queuedRef.current, signals, {documentOnChange, task})
   })
 
   useEffect(() => {
+    if (writeTargetIdRef.current !== writeTargetId) {
+      writeTargetIdRef.current = writeTargetId
+      queuedRef.current = null
+    }
     advanceQueue({isDocAssistable, isSyncing})
-  }, [isDocAssistable, isSyncing])
+  }, [isDocAssistable, isSyncing, writeTargetId])
 
   return useCallback(
     (taskArgs: T) => {

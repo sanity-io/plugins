@@ -74,6 +74,7 @@ export const translateActions = {
       documentOnChange,
       isDocAssistable: documentIsAssistable ?? false,
       isSyncing: documentIsSyncing,
+      writeTargetId: documentId,
       task: translationApi.translate,
     })
 
@@ -135,6 +136,7 @@ export const translateActions = {
       documentOnChange,
       isDocAssistable: documentIsAssistable ?? false,
       isSyncing: documentIsSyncing,
+      writeTargetId: documentId,
       task: fieldTranslate.openFieldTranslation,
     })
 

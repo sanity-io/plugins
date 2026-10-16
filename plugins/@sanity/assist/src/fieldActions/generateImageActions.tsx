@@ -30,6 +30,7 @@ export const generateImagActions: DocumentFieldAction = {
       documentOnChange,
       isDocAssistable: documentIsAssistable,
       isSyncing: documentIsSyncing,
+      writeTargetId: assistableDocumentId,
       task: generateImage,
     })
 
