@@ -382,7 +382,7 @@ function AssistInspector(props: DocumentInspectorProps) {
             <Stack flex={1}>
               <Button
                 mode="ghost"
-                disabled={isEmptyPrompt || instructionLoading}
+                disabled={isEmptyPrompt || instructionLoading || !assistableDocumentId}
                 fontSize={1}
                 icon={instructionLoading ? <Spinner style={{marginTop: 3}} /> : PlayIcon}
                 onClick={runCurrentInstruction}
