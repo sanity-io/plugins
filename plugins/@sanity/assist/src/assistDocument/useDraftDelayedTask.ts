@@ -4,8 +4,8 @@ import {PatchEvent} from 'sanity'
 export interface DraftDelayedTaskArgs<T> {
   documentOnChange: (event: PatchEvent) => void
   /**
-   * True when a real write target exists: a `drafts.*` snapshot, the selected
-   * release version, or the published document for live-edit types.
+   * True when the edit state holds the write-target document. The snapshot is
+   * optimistic, so it appears before the materializing commit has synced.
    */
   isDocAssistable: boolean
   /**

@@ -22,8 +22,8 @@ export type AssistDocumentContextValue = (
    */
   assistableDocumentId: string | undefined
   /**
-   * True when a real write target exists: a `drafts.*` snapshot, the selected
-   * release version, or the published document for live-edit types.
+   * True when the pane's edit state holds the `assistableDocumentId` document,
+   * including optimistic snapshots that have not finished syncing.
    *
    * After publish, the drafts perspective can still display published values
    * (a virtual draft) while this is false because `editState.draft` is null.

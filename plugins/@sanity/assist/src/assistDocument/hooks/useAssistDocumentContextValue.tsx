@@ -57,12 +57,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   const scopeId = getAssistSyncScopeId(assistableDocumentId)
 
   const documentIsNew = selectedReleaseId ? !version?._id : !draft?._id && !published?._id
-  const documentIsAssistable = isDocAssistable(
-    documentSchemaType,
-    targetDocumentState,
-    selectedReleaseId,
-    documentId,
-  )
+  const documentIsAssistable = isDocAssistable(assistableDocumentId, editState)
 
   const {isSyncing: documentIsSyncing} = useSyncState(
     getPublishedId(documentId),

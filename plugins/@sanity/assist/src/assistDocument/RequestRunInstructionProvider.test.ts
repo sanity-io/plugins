@@ -1,175 +1,91 @@
-import type {
-  ObjectSchemaType,
-  SystemVariant,
-  TargetDocumentState,
-  VersionInfoDocumentStub,
-} from 'sanity'
+import type {EditStateFor, SanityDocument} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
 import {isDocAssistable} from './RequestRunInstructionProvider'
 
-function schema(liveEdit?: boolean) {
-  // oxlint-disable-next-line no-unsafe-type-assertion
-  return {liveEdit} as ObjectSchemaType
+function doc(id: string): SanityDocument {
+  return {_id: id, _type: 'article', _rev: '1', _createdAt: '', _updatedAt: ''}
 }
 
-function stub(id: string): VersionInfoDocumentStub {
+function editState(
+  documents: Partial<Record<'draft' | 'published' | 'version', SanityDocument>>,
+): Pick<EditStateFor, 'draft' | 'published' | 'version'> {
   return {
-    _id: id,
-    _type: 'article',
-    _rev: '1',
-    _createdAt: '',
-    _updatedAt: '',
-    _system: {group: {_ref: 'article-1', _weak: true}},
-  }
-}
-
-function readyState(siblings: {
-  published?: VersionInfoDocumentStub
-  draft?: VersionInfoDocumentStub
-  version?: VersionInfoDocumentStub
-}): Extract<TargetDocumentState, {status: 'ready'}> {
-  return {
-    status: 'ready',
-    targetDocument: siblings.version ?? siblings.draft ?? siblings.published,
-    scopeId: undefined,
-    variant: undefined,
-    siblings: {
-      published: siblings.published,
-      draft: siblings.draft,
-      version: siblings.version,
-    },
-  }
-}
-
-function selectedVariant(): SystemVariant {
-  return {
-    _id: '_.variants.en',
-    _type: 'system.variant',
-    _rev: '1',
-    _createdAt: '',
-    _updatedAt: '',
-    conditions: {},
-    priority: 0,
+    draft: documents.draft ?? null,
+    published: documents.published ?? null,
+    version: documents.version ?? null,
   }
 }
 
 describe('isDocAssistable', () => {
-  test.each([
-    {status: 'resolving'} satisfies TargetDocumentState,
-    {
-      status: 'variant-definition-document-not-found',
-      requestedVariantName: 'en',
-    } satisfies TargetDocumentState,
-  ])('is false when targetDocumentState is $status', (targetDocumentState) => {
-    expect(isDocAssistable(schema(), targetDocumentState, undefined)).toBe(false)
+  test('is false without a write target id', () => {
+    expect(isDocAssistable(undefined, editState({draft: doc('drafts.article-1')}))).toBe(false)
   })
 
-  test('is false for variant-missing even when a draft ref is advertised', () => {
-    const variant = selectedVariant()
-    expect(
-      isDocAssistable(
-        schema(),
-        {
-          status: 'variant-missing',
-          variant,
-          bundle: 'drafts',
-          siblings: {
-            published: {
-              ...stub('versions.pub.article-1'),
-              _system: {
-                group: {_ref: 'article-1', _weak: true},
-                draft: {_ref: 'versions.draft.article-1', _weak: true},
-              },
-            },
-            draft: undefined,
-            version: undefined,
-          },
-        },
-        undefined,
-      ),
-    ).toBe(false)
+  test('is false without an edit state', () => {
+    expect(isDocAssistable('drafts.article-1', null)).toBe(false)
   })
 
   test('is false after publish when only published values exist (virtual draft)', () => {
-    expect(isDocAssistable(schema(), readyState({published: stub('article-1')}), undefined)).toBe(
+    expect(isDocAssistable('drafts.article-1', editState({published: doc('article-1')}))).toBe(
       false,
     )
   })
 
-  test('is true when a real draft snapshot exists', () => {
+  test('is true when the draft snapshot exists, including an optimistic one', () => {
     expect(
       isDocAssistable(
-        schema(),
-        readyState({
-          published: stub('article-1'),
-          draft: stub('drafts.article-1'),
-        }),
-        undefined,
+        'drafts.article-1',
+        editState({published: doc('article-1'), draft: doc('drafts.article-1')}),
       ),
     ).toBe(true)
   })
 
-  test('is true for a draft-only unpublished document', () => {
-    expect(
-      isDocAssistable(schema(), readyState({draft: stub('drafts.article-1')}), undefined),
-    ).toBe(true)
+  test('is false for a brand-new document that has not been created yet', () => {
+    expect(isDocAssistable('drafts.article-1', editState({}))).toBe(false)
+    expect(isDocAssistable('versions.rSummer.article-1', editState({}))).toBe(false)
+    expect(isDocAssistable('article-1', editState({}))).toBe(false)
   })
 
-  test('is false when neither draft nor published exists', () => {
-    expect(isDocAssistable(schema(), readyState({}), undefined)).toBe(false)
+  test('matches the published document for live-edit types', () => {
+    expect(isDocAssistable('article-1', editState({published: doc('article-1')}))).toBe(true)
+    expect(isDocAssistable('article-1', editState({draft: doc('drafts.article-1')}))).toBe(false)
   })
 
-  test('uses published for live-edit types', () => {
-    expect(
-      isDocAssistable(schema(true), readyState({published: stub('article-1')}), undefined),
-    ).toBe(true)
-    expect(
-      isDocAssistable(schema(true), readyState({draft: stub('drafts.article-1')}), undefined),
-    ).toBe(false)
-  })
-
-  test('uses the version sibling when a release is selected', () => {
+  test('matches the release version, not the base draft', () => {
     expect(
       isDocAssistable(
-        schema(),
-        readyState({
-          draft: stub('drafts.article-1'),
-          version: stub('versions.rSummer.article-1'),
-        }),
-        'rSummer',
-      ),
-    ).toBe(true)
-    expect(
-      isDocAssistable(schema(), readyState({draft: stub('drafts.article-1')}), 'rSummer'),
-    ).toBe(false)
-  })
-
-  test('uses the version sibling when documentId is already a version id', () => {
-    expect(
-      isDocAssistable(
-        schema(),
-        readyState({
-          draft: stub('drafts.article-1'),
-          version: stub('versions.rSummer.article-1'),
-        }),
-        undefined,
         'versions.rSummer.article-1',
+        editState({
+          draft: doc('drafts.article-1'),
+          version: doc('versions.rSummer.article-1'),
+        }),
+      ),
+    ).toBe(true)
+    expect(
+      isDocAssistable('versions.rSummer.article-1', editState({draft: doc('drafts.article-1')})),
+    ).toBe(false)
+  })
+
+  test('matches a draft variant checked out as the pane version', () => {
+    expect(
+      isDocAssistable(
+        'versions.scope.article-1',
+        editState({
+          published: doc('article-1'),
+          draft: doc('drafts.article-1'),
+          version: doc('versions.scope.article-1'),
+        }),
       ),
     ).toBe(true)
   })
 
-  test('still uses the draft sibling for a variant version id', () => {
+  test('is false for a creatable variant until its draft exists, even with base documents', () => {
     expect(
       isDocAssistable(
-        schema(),
-        readyState({
-          published: stub('versions.pub.article-1'),
-          draft: stub('versions.scope.article-1'),
-        }),
-        undefined,
         'versions.scope.article-1',
+        editState({published: doc('article-1'), draft: doc('drafts.article-1')}),
       ),
-    ).toBe(true)
+    ).toBe(false)
   })
 })
