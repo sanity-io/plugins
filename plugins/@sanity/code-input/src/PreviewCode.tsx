@@ -35,25 +35,21 @@ export interface PreviewCodeProps extends PreviewProps {
   selection?: CodeInputValue
 }
 
-function inlineCodeLabel(props: PreviewCodeProps): string {
-  if (typeof props.title === 'string') {
-    const title = props.title.trim()
-    if (title) return title
-  }
+const inlineCodePreviewMaxLength = 20
 
-  const filename = props.selection?.filename?.trim()
-  if (filename) return filename
+function capInlineCodePreview(value: string): string {
+  if (value.length <= inlineCodePreviewMaxLength) return value
+  return `${value.slice(0, inlineCodePreviewMaxLength - 1)}…`
+}
+
+function inlineCodeLabel(props: PreviewCodeProps): string {
+  const firstLine = props.selection?.code?.split('\n')[0]?.trim()
+  if (firstLine) return capInlineCodePreview(firstLine)
 
   const language = props.selection?.language?.trim()
-  if (language) return language.toUpperCase()
+  if (language) return capInlineCodePreview(language.toUpperCase())
 
-  const firstLine = props.selection?.code
-    ?.split('\n')
-    .map((line) => line.trim())
-    .find((line) => line.length > 0)
-  if (firstLine) return firstLine
-
-  return 'Code'
+  return 'UNKNOWN'
 }
 
 /**

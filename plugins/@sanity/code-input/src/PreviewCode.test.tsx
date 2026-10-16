@@ -88,7 +88,7 @@ describe('PreviewCode inline layout', () => {
     expect(previewCards).toEqual([])
 
     const label = screen.getByTestId('inline-code-preview')
-    expect(label.textContent).toBe('index.js')
+    expect(label.textContent).toBe('const answer = 42')
     expect(label.querySelector('.cm-editor')).toBeNull()
     const style = getComputedStyle(label)
     expect(style.paddingTop).toBe('0px')
@@ -96,28 +96,61 @@ describe('PreviewCode inline layout', () => {
     expect(style.whiteSpace).toBe('nowrap')
   })
 
-  test('falls back to a code label when the value is empty', () => {
-    renderInlinePreview()
+  test('falls back to UNKNOWN when the first line and language are empty', () => {
+    renderInlinePreview({
+      selection: {code: '\n  const answer = 42', filename: 'index.js'},
+      title: 'index.js',
+    })
 
-    expect(screen.getByTestId('inline-code-preview').textContent).toBe('Code')
+    expect(screen.getByTestId('inline-code-preview').textContent).toBe('UNKNOWN')
   })
 
-  test('uses the uppercased language when the preview has no title or filename', () => {
+  test('falls back to the language when the first line is empty', () => {
     renderInlinePreview({
-      selection: {language: 'javascript'},
+      selection: {
+        code: '   \nconst answer = 42',
+        filename: 'index.js',
+        language: 'javascript',
+      },
+      title: 'index.js',
     })
 
     expect(screen.getByTestId('inline-code-preview').textContent).toBe('JAVASCRIPT')
   })
 
-  test('uses the first code line when the preview has no title or filename', () => {
+  test('uses the first code line instead of the language or filename', () => {
     renderInlinePreview({
       selection: {
-        code: '\n  const answer = 42\n  return answer',
+        code: 'const answer = 42\nreturn answer',
+        filename: 'index.js',
+        language: 'javascript',
       },
+      title: 'JAVASCRIPT',
     })
 
     expect(screen.getByTestId('inline-code-preview').textContent).toBe('const answer = 42')
+  })
+
+  test('caps the first code line at 20 characters', () => {
+    renderInlinePreview({
+      selection: {
+        code: 'abcdefghijklmnopqrstuvwxyz',
+        language: 'javascript',
+      },
+      title: 'JAVASCRIPT',
+    })
+
+    const label = screen.getByTestId('inline-code-preview').textContent
+    expect(label).toBe('abcdefghijklmnopqrs…')
+    expect(label).toHaveLength(20)
+  })
+
+  test('leaves a 20 character first line unchanged', () => {
+    renderInlinePreview({
+      selection: {code: 'abcdefghijklmnopqrst'},
+    })
+
+    expect(screen.getByTestId('inline-code-preview').textContent).toBe('abcdefghijklmnopqrst')
   })
 
   test('keeps the padded code card for block previews', () => {
