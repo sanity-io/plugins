@@ -3,7 +3,7 @@ import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import {Button, Card, Stack, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import type React from 'react'
-import {useCallback, useContext, useEffect, useMemo} from 'react'
+import {useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import {
   type ArrayOfObjectsInputProps,
   ArrayOfObjectsItem,
@@ -20,6 +20,7 @@ import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {InternationalizedArrayItem} from '../types'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
+import {documentExistsInStore, documentMissingFromStore} from '../utils/documentExistsInStore'
 import {internationalizedArrayLanguageFilter} from '../utils/internationalizedArrayLanguageFilter'
 import AddButtons from './AddButtons'
 import CompactAddButton from './CompactAddButton'
@@ -60,12 +61,14 @@ function isPristineDocument(
  * - **Default languages**: Automatically adds entries for languages listed in
  *   `defaultLanguages` when those entries are missing. Seeds brand-new
  *   documents once the events store reports they are pristine (no history),
- *   and seeds persisted documents that already have a `_rev`. A document
- *   that existed and was deleted is not pristine, so opening it — even in a
- *   fresh pane — does not recreate it. Newly created documents stay
- *   read-only until initial value templates resolve, and the field-level
- *   `readOnly` prop can lag that document-level lock. Skipping the patch
- *   until writable avoids "Attempted to patch a read-only document" toasts.
+ *   and seeds persisted documents that still have a pair-store snapshot.
+ *   A not-ready store is treated as loading, not as a delete. Form `_rev` is
+ *   not used for that check — it can linger on the last displayed snapshot
+ *   after delete, and Studio's Delete action does not set
+ *   `useDocumentPane().isDeleting`. Newly created documents stay read-only
+ *   until initial value templates resolve, and the field-level `readOnly`
+ *   prop can lag that document-level lock. Skipping the patch until writable
+ *   avoids "Attempted to patch a read-only document" toasts.
  * - **Ordering**: When `restoreOrder` is enabled (default), detects when value
  *   items are out of order relative to the master `languages` list and
  *   automatically re-sorts them. Set `restoreOrder: false` to keep the stored
@@ -150,7 +153,7 @@ export default function InternationalizedArray(
     ],
   )
 
-  const {isDeleted, isDeleting, isInitialValueLoading, formState} = useDocumentPane()
+  const {isDeleted, isDeleting, isInitialValueLoading, formState, editState} = useDocumentPane()
 
   // Document-level locks (initial-value templates, permissions, history) are
   // not always reflected on the field's `readOnly` prop in the same tick as
@@ -185,13 +188,36 @@ export default function InternationalizedArray(
     [filteredLanguages, languages, onChange, schemaType, getFormValue, props.path, readOnly],
   )
 
-  // `_rev` means the document is in the dataset. No `_rev` is either a
-  // brand-new form or a deleted one. The events store distinguishes those:
-  // pristine (loaded, zero events) has never existed; any history means it
-  // did — including a fresh open of a deleted id, where this pane never saw
-  // a `_rev`.
-  const documentExists = Boolean(useFormValue(['_rev']))
+  // Pair-store snapshots are the existence check for persisted documents.
+  // Patching a document that is no longer in the store recreates it as an
+  // empty draft. Form `_rev` can linger on the last displayed snapshot after
+  // delete, and the built-in Delete action never writes pane `isDeleting`.
+  const documentInStore = documentExistsInStore(editState)
+  const documentMissing = documentMissingFromStore(editState)
   const isPristine = isPristineDocument(useContext(EventsContext))
+
+  // Latch once this pane instance has observed confirmed absence (store ready
+  // with no snapshots), or once its language items disappear after being
+  // present. Either means delete (or equivalent) is in flight; auto-adding
+  // would resurrect the document. Do not latch on loading (`ready === false` /
+  // missing editState) — that is not a delete. Adjusted during render (not in
+  // an effect) so the skip is applied on the same commit that observes the
+  // transition.
+  const [seenInStore, setSeenInStore] = useState(documentInStore)
+  const [leftStore, setLeftStore] = useState(false)
+  if (documentInStore && !seenInStore) {
+    setSeenInStore(true)
+  }
+  if (documentMissing && seenInStore && !leftStore) {
+    setLeftStore(true)
+  }
+
+  const [hadItems, setHadItems] = useState(() => Boolean(value?.length))
+  if (value?.length && !hadItems) {
+    setHadItems(true)
+  }
+
+  const itemsDisappeared = hadItems && !value?.length
 
   // Create a stable dependency string that only changes when language keys change
   const languageKeysFromValue = value
@@ -207,41 +233,49 @@ export default function InternationalizedArray(
     return languages.filter((l) => languageKeys?.find((key) => key === l.id)).map((l) => l.id)
   }, [languageKeysFromValue, languages])
 
+  const canAutoAddDefaults =
+    (documentInStore || isPristine) &&
+    !leftStore &&
+    !itemsDisappeared &&
+    !isDeleting &&
+    !isDeleted &&
+    !readOnly &&
+    !shouldMigrateArray
+
+  const canAutoAddDefaultsRef = useRef(canAutoAddDefaults)
+  // Layout effect so the timeout guard updates before paint / before a
+  // previously scheduled setTimeout can run. A passive useEffect write can
+  // land after that macrotask and still emit patches.
+  useLayoutEffect(() => {
+    canAutoAddDefaultsRef.current = canAutoAddDefaults
+  })
+
   useEffect(() => {
     const hasAddedDefaultLanguages = defaultLanguages
       .filter((language) => languages.find((l) => l.id === language))
       .every((language) => addedLanguages.includes(language))
 
-    if (
-      (isPristine || documentExists) &&
-      !isDeleting &&
-      !isDeleted &&
-      !hasAddedDefaultLanguages &&
-      !shouldMigrateArray &&
-      !readOnly
-    ) {
-      const languagesToAdd = defaultLanguages
-        .filter((language) => !addedLanguages.includes(language))
-        .filter((language) => languages.find((l) => l.id === language))
-      // Account for strict mode by scheduling the update.
-      const timeout = setTimeout(() => {
-        if (!readOnly) handleAddLanguages(languagesToAdd)
-      })
-      return () => clearTimeout(timeout)
+    if (!canAutoAddDefaults || hasAddedDefaultLanguages) {
+      return undefined
     }
-    return undefined
-  }, [
-    isPristine,
-    documentExists,
-    isDeleted,
-    isDeleting,
-    handleAddLanguages,
-    defaultLanguages,
-    addedLanguages,
-    languages,
-    readOnly,
-    shouldMigrateArray,
-  ])
+
+    const languagesToAdd = defaultLanguages
+      .filter((language) => !addedLanguages.includes(language))
+      .filter((language) => languages.find((l) => l.id === language))
+
+    if (languagesToAdd.length === 0) {
+      return undefined
+    }
+
+    // Account for strict mode by scheduling the update. Re-check the ref
+    // inside the timeout so a delete that lands before the macrotask cannot
+    // still emit setIfMissing and recreate the document.
+    const timeout = setTimeout(() => {
+      if (!canAutoAddDefaultsRef.current) return
+      handleAddLanguages(languagesToAdd)
+    })
+    return () => clearTimeout(timeout)
+  }, [canAutoAddDefaults, handleAddLanguages, defaultLanguages, addedLanguages, languages])
 
   // NOTE: This is reordering and re-setting the whole array, it could be surgical
   const handleRestoreOrder = useCallback(() => {
@@ -303,10 +337,23 @@ export default function InternationalizedArray(
 
   // Automatically restore order of fields (opt out with restoreOrder: false)
   useEffect(() => {
-    if (restoreOrder && languagesOutOfOrder.length > 0 && allKeysAreLanguages && !readOnly) {
+    if (
+      restoreOrder &&
+      languagesOutOfOrder.length > 0 &&
+      allKeysAreLanguages &&
+      !readOnly &&
+      canAutoAddDefaults
+    ) {
       handleRestoreOrder()
     }
-  }, [restoreOrder, languagesOutOfOrder, allKeysAreLanguages, handleRestoreOrder, readOnly])
+  }, [
+    restoreOrder,
+    languagesOutOfOrder,
+    allKeysAreLanguages,
+    handleRestoreOrder,
+    readOnly,
+    canAutoAddDefaults,
+  ])
 
   const allFilteredLanguagesArePresent = useMemo(
     () => filteredLanguages.every((language) => addedLanguages.includes(language.id)),
