@@ -1,14 +1,8 @@
 import {Box, Stack, Text} from '@sanity/ui'
 import {Suspense, useCallback} from 'react'
-import {
-  MemberField,
-  type ObjectInputProps,
-  type RenderInputCallback,
-  set,
-  setIfMissing,
-  unset,
-} from 'sanity'
+import {MemberField, type ObjectInputProps, type RenderInputCallback, set} from 'sanity'
 
+import {codeChangePatches} from './codeChangePatches'
 import {EditorContainer, FullscreenEditor} from './CodeInputFullscreen'
 import {CodeMirrorProxy, useMounted} from './codemirror/useCodeMirror'
 import {useLanguageMode} from './codemirror/useLanguageMode'
@@ -46,6 +40,8 @@ export function CodeInput(props: CodeInputProps): React.JSX.Element {
     onPathFocus(PATH_CODE)
   }, [onPathFocus])
 
+  const {languages, language, languageMode} = useLanguageMode(props.schemaType, props.value)
+
   const onHighlightChange = useCallback(
     (lines: number[]) => onChange(set(lines, ['highlightedLines'])),
     [onChange],
@@ -53,17 +49,17 @@ export function CodeInput(props: CodeInputProps): React.JSX.Element {
 
   const handleCodeChange = useCallback(
     (code: string) => {
-      const path = PATH_CODE
-      const fixedLanguage = type.options?.language
-
-      onChange([
-        setIfMissing({_type: type.name, language: fixedLanguage}),
-        code ? set(code, path) : unset(path),
-      ])
+      onChange(
+        codeChangePatches({
+          code,
+          typeName: type.name,
+          storedLanguage: value?.language,
+          selectedLanguage: language,
+        }),
+      )
     },
-    [onChange, type],
+    [language, onChange, type.name, value?.language],
   )
-  const {languages, language, languageMode} = useLanguageMode(props.schemaType, props.value)
 
   const mounted = useMounted()
 
