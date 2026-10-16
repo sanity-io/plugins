@@ -378,6 +378,21 @@ describe('RobotsSyncStore', () => {
     })
   })
 
+  test('a refresh nobody watches still records the outputs, as after an upload', async () => {
+    const lake = fakeContentLake({assetId: ASSET})
+    const completed = job('j1', {status: 'completed', updated_at: 100})
+    api.listRobotsJobs.mockResolvedValue({data: [completed]})
+    api.getRobotsJob.mockResolvedValue({
+      data: {...completed, parameters: {asset_id: ASSET}, outputs: {title: 'Boxing match'}},
+    })
+
+    new RobotsSyncStore(lake.client, 'doc-1', ASSET).refreshNow()
+    await flush()
+    await flush()
+
+    expect(lake.doc.robotsOutputs?.summarize?.title).toBe('Boxing match')
+  })
+
   test('sends nothing when the placeholder cannot be saved', async () => {
     const lake = fakeContentLake({assetId: 'another-asset'})
     const store = subscribe(lake)

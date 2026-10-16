@@ -492,9 +492,12 @@ export class RobotsSyncStore {
     }, POLL_INTERVAL_MS)
   }
 
-  /** The detail pass: a few of the newest terminal jobs at a time, each read once. */
+  /**
+   * The detail pass: a few of the newest terminal jobs at a time, each read once. It follows a
+   * read even with nobody subscribed, as after an upload, so outputs still reach the document.
+   */
   private async loadDetails() {
-    if (this.isDetailPassRunning || this.subscribers.size === 0) return
+    if (this.isDetailPassRunning) return
     // Trailing reads wait for their own timer, or this pass would spend their rechecks at once.
     const attempted = new Set([
       ...this.details.keys(),

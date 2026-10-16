@@ -39,7 +39,7 @@ export function useRobotsUploadCheck(asset: VideoAssetDocument | null | undefine
     let cancelled = false
 
     const check = async () => {
-      let hasToasted = false
+      let hasFound = false
       for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
         if (attempt > 0) await wait(INTERVAL_MS)
         if (cancelled) return
@@ -54,40 +54,38 @@ export function useRobotsUploadCheck(asset: VideoAssetDocument | null | undefine
           )
           if (cancelled) return
           const hasJob = (jobs.data ?? []).length > 0
-          if ((hasJob || hasRun) && !hasToasted) {
-            hasToasted = true
+          if ((hasJob || hasRun) && !hasFound) {
+            hasFound = true
             toast.push({
               status: 'success',
               title: 'Robots is working on this video',
               description: 'Open Robots from the video’s menu to follow along.',
             })
           }
-          // Recording its jobs turns on the background sync, so their results and new tracks
-          // reach the document even if Robots is never opened. A run alone has none yet.
-          if (hasJob) {
-            getRobotsSyncStore(client, upload.documentId, readyAssetId).refreshNow()
-            return
-          }
+          if (hasJob) break
         } catch (error) {
           const unavailable = capabilityFromError(error)
-          if (!cancelled && unavailable && unavailable.state !== 'unavailable') {
-            toast.push({
-              status: 'warning',
-              title: 'The video uploaded, but Robots couldn’t run its directives',
-              description:
-                unavailable.state === 'scope-missing'
-                  ? 'This Mux token can’t use Robots.'
-                  : 'Robots isn’t enabled for this Mux account.',
-            })
-          } else {
-            // Nobody asked for this check, so any other failure stays quiet.
-            console.error(
-              '[sanity-plugin-mux-input] Could not check Robots on the new video',
-              error,
-            )
+          if (unavailable) {
+            if (!cancelled && unavailable.state !== 'unavailable') {
+              toast.push({
+                status: 'warning',
+                title: 'The video uploaded, but Robots couldn’t run its directives',
+                description:
+                  unavailable.state === 'scope-missing'
+                    ? 'This Mux token can’t use Robots.'
+                    : 'Robots isn’t enabled for this Mux account.',
+              })
+            }
+            return
           }
-          return
+          // Nobody asked for this check, so a passing failure stays quiet and the next try runs.
+          console.error('[sanity-plugin-mux-input] Could not check Robots on the new video', error)
         }
+      }
+      // Recording the jobs turns on the background sync, so their outputs and new tracks reach
+      // the document even if Robots is never opened. Also when time ran out on a run alone.
+      if (hasFound && !cancelled) {
+        getRobotsSyncStore(client, upload.documentId, readyAssetId).refreshNow()
       }
     }
 
