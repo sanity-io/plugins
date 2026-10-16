@@ -307,6 +307,7 @@ export function DraggableList({data, listIsUpdating, setListIsUpdating}: Draggab
                             isFirst={index === 0}
                             isLast={index === displayedData.length - 1}
                             dragBadge={dragBadge}
+                            disableTooltip={Boolean(draggingId)}
                           />
                         </Card>
                       </Box>

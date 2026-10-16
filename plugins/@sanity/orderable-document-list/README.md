@@ -10,6 +10,8 @@ This plugin aims to be OS-like in that you can select and move multiple document
 
 ## Requirements
 
+`sanity` 6.11 or newer.
+
 A Sanity Studio with [Desk Structure](https://www.sanity.io/docs/structure-builder-introduction) configured:
 
 ```ts
