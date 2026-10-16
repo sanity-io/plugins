@@ -7,6 +7,7 @@ import {type RouterPaneGroup, usePaneRouter} from 'sanity/structure'
 
 import useTreeOperations from '../hooks/useTreeOperations'
 import type {LocalTreeItem} from '../types'
+import {hasResolvableDocument} from '../utils/treeData'
 import DocumentPreviewStatus from './DocumentPreviewStatus'
 
 /**
@@ -29,6 +30,7 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
   const type = useMemo(() => {
     return docType ? schema.get(docType) : undefined
   }, [docType, schema])
+  const canPreview = hasResolvableDocument({publishedId, draftId})
 
   if (!reference?._ref) {
     return null
@@ -37,7 +39,7 @@ const DocumentInNode = (props: {item: LocalTreeItem; action?: ReactNode}) => {
   return (
     <Flex gap={2} align="center" style={{flex: 1}}>
       {/* Show loading preview while allItems aren't ready */}
-      {publishedId || allItemsStatus !== 'success' ? (
+      {canPreview || allItemsStatus !== 'success' ? (
         /* Card loosely copied from @sanity/desk-tool's PaneItem.tsx */
         <Card
           __unstable_focusRing

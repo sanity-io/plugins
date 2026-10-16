@@ -7,6 +7,8 @@ import {Box, Button, Flex, Spinner} from '@sanity/ui'
 import {useMemo} from 'react'
 import {styled} from 'styled-components'
 
+import {hasResolvableDocument} from '../utils/treeData'
+
 const Root = styled.div`
   // Adapted from react-sortable-tree/style.css
   &[data-landing='true'] > *,
@@ -62,25 +64,26 @@ const NodeContentRenderer: any = (props: any) => {
       return <Spinner />
     }
 
+    const documentExists = hasResolvableDocument(node)
     const button = (
       <Button
         mode="bleed"
         paddingX={0}
         paddingY={1}
         style={{
-          cursor: node.publishedId ? 'grab' : 'default',
+          cursor: documentExists ? 'grab' : 'default',
           fontSize: '1.5625rem',
         }}
         data-ui="DragHandleButton"
         data-drag-handle={canDrag}
-        disabled={!node.publishedId}
+        disabled={!documentExists}
       >
         <DragHandleIcon style={{marginBottom: '-0.1em'}} />
       </Button>
     )
 
     // Don't allow editors to drag invalid documents
-    if (!node.publishedId) {
+    if (!documentExists) {
       return <div>{button}</div>
     }
 

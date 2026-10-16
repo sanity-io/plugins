@@ -101,6 +101,15 @@ export const getUnaddedItems = (data: {
     })
 }
 
+/**
+ * A node can be opened when either the published document or its draft exists.
+ * Draft-only documents are the result of duplicating an item: the tree points at
+ * the new published id before that document has been published.
+ */
+export function hasResolvableDocument(item: {publishedId?: string; draftId?: string}): boolean {
+  return Boolean(item.publishedId || item.draftId)
+}
+
 export function normalizeNodeForStorage(item: LocalTreeItem): StoredTreeItem {
   return {
     _key: item._key,
