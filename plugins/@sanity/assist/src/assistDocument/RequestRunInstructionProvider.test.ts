@@ -1,4 +1,9 @@
-import type {ObjectSchemaType, TargetDocumentState, VersionInfoDocumentStub} from 'sanity'
+import type {
+  ObjectSchemaType,
+  SystemVariant,
+  TargetDocumentState,
+  VersionInfoDocumentStub,
+} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
 import {isDocAssistable} from './RequestRunInstructionProvider'
@@ -37,6 +42,18 @@ function readyState(siblings: {
   }
 }
 
+function selectedVariant(): SystemVariant {
+  return {
+    _id: '_.variants.en',
+    _type: 'system.variant',
+    _rev: '1',
+    _createdAt: '',
+    _updatedAt: '',
+    conditions: {},
+    priority: 0,
+  }
+}
+
 describe('isDocAssistable', () => {
   test.each([
     {status: 'resolving'} satisfies TargetDocumentState,
@@ -46,6 +63,32 @@ describe('isDocAssistable', () => {
     } satisfies TargetDocumentState,
   ])('is false when targetDocumentState is $status', (targetDocumentState) => {
     expect(isDocAssistable(schema(), targetDocumentState, undefined)).toBe(false)
+  })
+
+  test('is false for variant-missing even when a draft ref is advertised', () => {
+    const variant = selectedVariant()
+    expect(
+      isDocAssistable(
+        schema(),
+        {
+          status: 'variant-missing',
+          variant,
+          bundle: 'drafts',
+          siblings: {
+            published: {
+              ...stub('versions.pub.article-1'),
+              _system: {
+                group: {_ref: 'article-1', _weak: true},
+                draft: {_ref: 'versions.draft.article-1', _weak: true},
+              },
+            },
+            draft: undefined,
+            version: undefined,
+          },
+        },
+        undefined,
+      ),
+    ).toBe(false)
   })
 
   test('is false after publish when only published values exist (virtual draft)', () => {

@@ -74,3 +74,14 @@ export function getAssistWriteDocumentId({
       : getDraftId(documentId))
   )
 }
+
+/**
+ * Perspective scope for `useSyncState` while Assist waits on a write.
+ * Version documents use their version name; drafts and published use the default scope.
+ */
+export function getAssistSyncScopeId(documentId: string | undefined): string | undefined {
+  if (!documentId || !isVersionId(documentId)) {
+    return undefined
+  }
+  return getVersionFromId(documentId)
+}
