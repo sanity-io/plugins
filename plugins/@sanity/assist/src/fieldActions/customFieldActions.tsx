@@ -37,11 +37,16 @@ export interface AssistFieldActionProps {
    */
   actionType: 'document' | 'field'
   /**
-   * This is the id of the current document pane; it contains `drafts.`or `versions. prefix` ect depending on context.
-   * Use this for `documentId` when calling any `client.agent.action`.
+   * Write-target id for Agent Actions. Drafts and release/variant documents
+   * include a `drafts.` or `versions.` prefix; live-edit documents use the
+   * published id with no prefix. `undefined` while the target is resolving,
+   * or when the selected variant or release has no writable sibling.
    *
-   * It is generally recommended to call actions from the studio like this:
+   * Guard this id before calling any `client.agent.action`:
    * ```ts
+   * if (!props.documentIdForAction) {
+   *   return
+   * }
    * await client.agent.action.generate({
    *   targetDocument: {
    *      operation: 'createIfNotExists',
@@ -53,7 +58,7 @@ export interface AssistFieldActionProps {
    * })
    * ```
    */
-  documentIdForAction: string
+  documentIdForAction: string | undefined
 
   /**
    * Schema type of the current document.
@@ -85,6 +90,9 @@ export interface AssistFieldActionProps {
    *
    * It is generally recommended to call actions from the studio like this:
    * ```ts
+   * if (!props.documentIdForAction) {
+   *   return
+   * }
    * await client.agent.action.generate({
    *   targetDocument: {
    *      operation: 'createIfNotExists',
@@ -106,6 +114,9 @@ export interface AssistFieldActionProps {
    *
    * It is generally recommended to call actions from the studio like this:
    * ```ts
+   * if (!props.documentIdForAction) {
+   *   return
+   * }
    * await client.agent.action.generate({
    *   targetDocument: {
    *      operation: 'createIfNotExists',

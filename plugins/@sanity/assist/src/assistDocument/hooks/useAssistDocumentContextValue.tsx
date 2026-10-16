@@ -10,7 +10,7 @@ import {useDocumentPane} from 'sanity/structure'
 
 import {useAiPaneRouter} from '../../assistInspector/helpers'
 import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'
-import {getAssistWriteDocumentId} from '../../helpers/ids'
+import {getAssistSyncScopeId, getAssistWriteDocumentId} from '../../helpers/ids'
 import {fieldPathParam, type InstructionTask} from '../../types'
 import type {AssistDocumentContextValue} from '../AssistDocumentContext'
 import {isDocAssistable} from '../RequestRunInstructionProvider'
@@ -42,23 +42,27 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
     inspector,
     onChange: documentOnChange,
     editState,
+    targetDocumentState,
   } = useDocumentPane()
-  const {selectedReleaseId} = usePerspective()
+  const {selectedReleaseId, selectedVariants} = usePerspective()
   const {draft, published, version} = editState || {}
 
-  const assistableDocumentId = getAssistWriteDocumentId(documentId, {
+  const assistableDocumentId = getAssistWriteDocumentId({
+    documentId,
     liveEdit: documentSchemaType.liveEdit,
     releaseId: selectedReleaseId,
+    variant: selectedVariants[0],
+    targetDocumentState,
   })
+  const scopeId = getAssistSyncScopeId(assistableDocumentId)
 
   const documentIsNew = selectedReleaseId ? !version?._id : !draft?._id && !published?._id
-  const documentIsAssistable = selectedReleaseId
-    ? !!version
-    : isDocAssistable(documentSchemaType, published, draft)
+  const documentIsAssistable = isDocAssistable(assistableDocumentId, editState)
+
   const {isSyncing: documentIsSyncing} = useSyncState(
     getPublishedId(documentId),
     documentType,
-    selectedReleaseId,
+    scopeId,
   )
 
   const {params} = useAiPaneRouter()
@@ -119,7 +123,7 @@ export function useAssistDocumentContextValue(documentId: string, documentType: 
   return value
 }
 
-function useSyntheticTasks(assistableDocumentId: string) {
+function useSyntheticTasks(assistableDocumentId: string | undefined) {
   const [syntheticTasks, setSyntheticTasks] = useState<InstructionTask[]>(() => [])
   const addSyntheticTask = useCallback((task: InstructionTask) => {
     setSyntheticTasks((current) => [...current, task])

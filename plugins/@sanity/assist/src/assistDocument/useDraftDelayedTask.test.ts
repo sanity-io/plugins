@@ -8,6 +8,7 @@ import {useDraftDelayedTask} from './useDraftDelayedTask'
 interface DocumentState {
   isDocAssistable: boolean
   isSyncing?: boolean
+  writeTargetId?: string
 }
 
 const TASK_ARGS = {path: 'featuredImage.alt', documentId: 'drafts.article-1'}
@@ -16,7 +17,13 @@ function setup(initial: DocumentState) {
   const task = vi.fn()
   const documentOnChange = vi.fn()
   const hook = renderHook(
-    (state: DocumentState) => useDraftDelayedTask({...state, task, documentOnChange}),
+    (state: DocumentState) =>
+      useDraftDelayedTask({
+        writeTargetId: 'drafts.article-1',
+        ...state,
+        task,
+        documentOnChange,
+      }),
     {initialProps: initial},
   )
   const request = () => act(() => hook.result.current(TASK_ARGS))
@@ -141,5 +148,21 @@ describe('useDraftDelayedTask', () => {
 
     update({isDocAssistable: true, isSyncing: false})
     expect(task).toHaveBeenCalledTimes(1)
+  })
+
+  test('drops a queued task when the write target changes', () => {
+    const {task, request, update} = setup({
+      isDocAssistable: true,
+      isSyncing: true,
+      writeTargetId: 'versions.en.article-1',
+    })
+
+    request()
+    update({
+      isDocAssistable: true,
+      isSyncing: false,
+      writeTargetId: 'versions.fr.article-1',
+    })
+    expect(task).not.toHaveBeenCalled()
   })
 })

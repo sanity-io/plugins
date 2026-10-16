@@ -70,6 +70,7 @@ export const assistFieldActions: DocumentFieldAction = {
       documentOnChange,
       isDocAssistable: documentIsAssistable ?? false,
       isSyncing: documentIsSyncing,
+      writeTargetId: assistableDocumentId,
     })
 
     const isSelectable = !!useSelectedField(documentSchemaType, typePath)
@@ -173,6 +174,7 @@ export const assistFieldActions: DocumentFieldAction = {
                   // oxlint-disable-next-line no-unnecessary-type-conversion
                   documentIsNew: !!documentIsNew,
                   assistSupported,
+                  disabled: !assistableDocumentId,
                 }),
               ) || []),
               imageCaptionAction,
@@ -191,6 +193,7 @@ export const assistFieldActions: DocumentFieldAction = {
       imageCaptionAction,
       translateAction,
       imageGenAction,
+      assistableDocumentId,
     ])
 
     const getDocumentValue = useCallback(() => {
@@ -315,8 +318,9 @@ function instructionItem(props: {
   assistSupported: boolean
   documentIsNew: boolean
   hidden: boolean
+  disabled?: boolean
 }) {
-  const {hidden, isPrivate, onInstructionAction, assistSupported, instruction} = props
+  const {hidden, isPrivate, onInstructionAction, assistSupported, instruction, disabled} = props
   // @TODO investigate in studio core why we can't accept JSX.Element and only accept ComponentType
   function IconLeft() {
     return <Icon symbol={getIcon(instruction.icon)} />
@@ -327,7 +331,7 @@ function instructionItem(props: {
     iconRight: isPrivate ? PrivateIcon : undefined,
     title: getInstructionTitle(instruction),
     onAction: () => onInstructionAction(instruction),
-    disabled: !assistSupported,
+    disabled: !assistSupported || Boolean(disabled),
     hidden,
   })
 }

@@ -15,7 +15,7 @@ import {
 import {useDocumentState} from './useDocumentState'
 
 interface UseAssistDocumentProps {
-  documentId: string
+  documentId: string | undefined
   schemaType: ObjectSchemaType
   initDoc?: boolean
 }

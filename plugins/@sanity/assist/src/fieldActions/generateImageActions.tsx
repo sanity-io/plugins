@@ -30,6 +30,7 @@ export const generateImagActions: DocumentFieldAction = {
       documentOnChange,
       isDocAssistable: documentIsAssistable,
       isSyncing: documentIsSyncing,
+      writeTargetId: assistableDocumentId,
       task: generateImage,
     })
 
@@ -52,13 +53,13 @@ export const generateImagActions: DocumentFieldAction = {
           : ImageIcon,
         title: 'Generate image from prompt',
         onAction: () => {
-          if (loading) {
+          if (loading || !assistableDocumentId) {
             return
           }
           generateImageWhenDraftReady({path: pathKey, documentId: assistableDocumentId})
         },
         renderAsButton: true,
-        disabled: loading,
+        disabled: loading || !assistableDocumentId,
       })
     }, [isActive, generateImageWhenDraftReady, pathKey, assistableDocumentId, loading])
   },

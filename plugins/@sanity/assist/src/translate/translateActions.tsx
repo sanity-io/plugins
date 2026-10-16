@@ -2,7 +2,6 @@ import {TranslateIcon} from '@sanity/icons/Translate'
 import {Box, Spinner} from '@sanity/ui'
 import {useMemo, useRef} from 'react'
 import {
-  type DocumentFieldAction,
   type DocumentFieldActionGroup,
   type DocumentFieldActionItem,
   type DocumentFieldActionProps,
@@ -15,7 +14,6 @@ import {useDraftDelayedTask} from '../assistDocument/useDraftDelayedTask'
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {isAssistSupported} from '../helpers/assistSupported'
 import {getConditionalMembers} from '../helpers/conditionalMembers'
-import {getAssistWriteDocumentId} from '../helpers/ids'
 import {createStyleGuideResolver} from '../helpers/styleguide'
 import type {AssistOptions} from '../schemas/typeDefExtensions'
 import {API_VERSION_WITH_EXTENDED_TYPES, useApiClient, useTranslate} from '../useApiClient'
@@ -25,12 +23,13 @@ function node(node: DocumentFieldActionItem | DocumentFieldActionGroup) {
   return node
 }
 
-export type TranslateProps = DocumentFieldActionProps & {
+export type TranslateProps = Omit<DocumentFieldActionProps, 'documentId'> & {
+  documentId: string | undefined
   documentIsAssistable?: boolean
   documentIsSyncing?: boolean
   documentSchemaType?: ObjectSchemaType
 }
-export const translateActions: DocumentFieldAction = {
+export const translateActions = {
   name: 'sanity-assist-translate',
   useAction(props: TranslateProps) {
     const {config, status} = useAiAssistanceConfig()
@@ -75,6 +74,7 @@ export const translateActions: DocumentFieldAction = {
       documentOnChange,
       isDocAssistable: documentIsAssistable ?? false,
       isSyncing: documentIsSyncing,
+      writeTargetId: documentId,
       task: translationApi.translate,
     })
 
@@ -100,25 +100,23 @@ export const translateActions: DocumentFieldAction = {
           if (translationApi.loading || !languagePath || !documentId) {
             return
           }
-          const writeDocumentId = getAssistWriteDocumentId(documentId, {
-            liveEdit: documentSchemaType?.liveEdit,
-          })
+
           translate({
             languagePath,
             translatePath: path,
             styleguide: createStyleGuideResolver(styleguide, {
               client,
-              documentId: writeDocumentId,
+              documentId: documentId,
               schemaType: documentSchemaType,
             }),
-            documentId: writeDocumentId,
+            documentId: documentId,
             conditionalMembers: formStateRef.current
               ? getConditionalMembers(formStateRef.current)
               : [],
           })
         },
         renderAsButton: true,
-        disabled: translationApi.loading || readOnly,
+        disabled: translationApi.loading || readOnly || !documentId,
       })
     }, [
       isActive,
@@ -138,6 +136,7 @@ export const translateActions: DocumentFieldAction = {
       documentOnChange,
       isDocAssistable: documentIsAssistable ?? false,
       isSyncing: documentIsSyncing,
+      writeTargetId: documentId,
       task: fieldTranslate.openFieldTranslation,
     })
 
@@ -162,13 +161,10 @@ export const translateActions: DocumentFieldAction = {
                 if (formStateRef.current) {
                   getConditionalMembers(formStateRef.current)
                 }
-                const writeDocumentId = getAssistWriteDocumentId(documentId, {
-                  liveEdit: documentSchemaType?.liveEdit,
-                })
                 openFieldTranslation({
                   document: {
                     ...docRef.current,
-                    _id: writeDocumentId,
+                    _id: documentId,
                   },
                   documentSchema: documentSchemaType,
                   translatePath: path,
@@ -178,7 +174,7 @@ export const translateActions: DocumentFieldAction = {
                 })
               },
               renderAsButton: true,
-              disabled: fieldTranslate.translationLoading || readOnly,
+              disabled: fieldTranslate.translationLoading || readOnly || !documentId,
             })
           : undefined,
       [

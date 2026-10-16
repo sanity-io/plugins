@@ -63,7 +63,9 @@ export type CustomInputResult = {
  *         defineAssistFieldAction({
  *           title: 'Log user input',
  *           icon: UserIcon,
+ *           disabled: !documentIdForAction,
  *           onAction: async () => {
+ *             if (!documentIdForAction) return
  *             const input = await getUserInput({
  *               title: 'Topic',
  *               inputs: [{id: 'about', title: 'What should the article be about?'}],

@@ -226,6 +226,7 @@ function AssistInspector(props: DocumentInspectorProps) {
     documentOnChange,
     isDocAssistable: documentIsAssistable,
     isSyncing: documentIsSyncing,
+    writeTargetId: assistableDocumentId,
   })
 
   const typePath = useTypePath(docValue, pathKey ?? '')
@@ -233,7 +234,11 @@ function AssistInspector(props: DocumentInspectorProps) {
 
   const aiDocId = assistDocumentId(documentType)
 
-  const assistDocument = useStudioAssistDocument({documentId, schemaType, initDoc: true})
+  const assistDocument = useStudioAssistDocument({
+    documentId: assistableDocumentId,
+    schemaType,
+    initDoc: true,
+  })
   const assistField = assistDocument?.fields?.find((f) => f.path === typePath)
   const instruction = assistField?.instructions?.find((i) => i._key === instructionKey)
   const tasks = useMemo(
@@ -276,6 +281,7 @@ function AssistInspector(props: DocumentInspectorProps) {
       instruction &&
       pathKey &&
       typePath &&
+      assistableDocumentId &&
       requestRunInstruction({
         documentId: assistableDocumentId,
         path: pathKey,
@@ -376,7 +382,7 @@ function AssistInspector(props: DocumentInspectorProps) {
             <Stack flex={1}>
               <Button
                 mode="ghost"
-                disabled={isEmptyPrompt || instructionLoading}
+                disabled={isEmptyPrompt || instructionLoading || !assistableDocumentId}
                 fontSize={1}
                 icon={instructionLoading ? <Spinner style={{marginTop: 3}} /> : PlayIcon}
                 onClick={runCurrentInstruction}

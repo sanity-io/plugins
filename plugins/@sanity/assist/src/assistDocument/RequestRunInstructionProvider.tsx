@@ -1,14 +1,18 @@
-import type {ObjectSchemaType, SanityDocument} from 'sanity'
+import type {EditStateFor} from 'sanity'
 
 import {useRunInstruction} from '../assistLayout/RunInstructionProvider'
 import {type DraftDelayedTaskArgs, useDraftDelayedTask} from './useDraftDelayedTask'
 
 export function isDocAssistable(
-  documentSchemaType: ObjectSchemaType,
-  published?: SanityDocument | null,
-  draft?: SanityDocument | null,
+  writeDocumentId: string | undefined,
+  editState: Pick<EditStateFor, 'draft' | 'published' | 'version'> | null | undefined,
 ) {
-  return !!(documentSchemaType.liveEdit ? published : draft)
+  if (!writeDocumentId || !editState) {
+    return false
+  }
+  return [editState.draft, editState.published, editState.version].some(
+    (document) => document?._id === writeDocumentId,
+  )
 }
 
 export function useRequestRunInstruction(args: Omit<DraftDelayedTaskArgs<never>, 'task'>) {

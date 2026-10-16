@@ -61,7 +61,7 @@ In your Studio project folder, install the following plugin dependency:
 npm install @sanity/assist sanity@latest
 ```
 
-This plugin requires `sanity` version `3.26` or greater.
+This plugin requires `sanity` version `6.17.0` or greater.
 
 ### Build errors about missing icon exports
 
@@ -960,6 +960,7 @@ It is recommended to wrap the returned actions in `useMemo`. The returned array 
 These will be filtered out.
 See TSDocs for [AssistFieldActionProps](./src/fieldActions/customFieldActions.tsx) for details on how each
 prop can be used to parameterize Agent Actions on sanity client.
+`documentIdForAction` is `undefined` until a writable target exists; disable the action or return early when it is missing.
 
 #### Agent Action examples
 
@@ -988,7 +989,11 @@ function useExampleFieldActions(props: AssistFieldActionProps) {
       defineAssistFieldAction({
         title: 'Fix spelling',
         icon: TranslateIcon,
+        disabled: !documentIdForAction,
         onAction: async () => {
+          if (!documentIdForAction) {
+            return
+          }
           await client.agent.action.transform({
             schemaId,
             documentId: documentIdForAction,
@@ -1046,7 +1051,11 @@ function useExampleFieldActions(props: AssistFieldActionProps) {
       defineAssistFieldAction({
         title: 'Fill field',
         icon: EditIcon,
+        disabled: !documentIdForAction,
         onAction: async () => {
+          if (!documentIdForAction) {
+            return
+          }
           await client.agent.action.generate({
             schemaId,
             targetDocument: {
