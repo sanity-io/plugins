@@ -45,6 +45,7 @@ export const MOCK_INTERNATIONALIZED_ARRAY_CONTEXT: InternationalizedArrayContext
   languages: MOCK_LANGUAGES,
   filteredLanguages: MOCK_LANGUAGES,
   defaultLanguages: [],
+  allowRemovingDefaultLanguages: false,
   buttonAddAll: true,
   buttonLocations: ['field'],
   restoreOrder: true,
