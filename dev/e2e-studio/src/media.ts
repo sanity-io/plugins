@@ -1,4 +1,4 @@
-import {definePlugin, defineType} from 'sanity'
+import {defineField, definePlugin, defineType} from 'sanity'
 import {media, mediaField} from 'sanity-plugin-media'
 
 /**
@@ -26,7 +26,38 @@ const mediaProductType = defineType({
   ],
 })
 
+/** Page-builder block with a single image field, opened in a dialog (issue #1109). */
+const mediaImageBlock = defineType({
+  name: 'mediaImageBlock',
+  title: 'Image block',
+  type: 'object',
+  options: {modal: {type: 'dialog'}},
+  fields: [
+    defineField({
+      name: 'image',
+      title: 'Block image',
+      type: 'image',
+    }),
+  ],
+})
+
+const mediaPageType = defineType({
+  name: 'mediaPage',
+  title: 'Media Page',
+  type: 'document',
+  fields: [
+    defineField({name: 'title', title: 'Title', type: 'string'}),
+    defineField({
+      name: 'pageBuilder',
+      title: 'Page builder',
+      type: 'array',
+      of: [{type: 'mediaImageBlock'}],
+      options: {modal: {type: 'dialog'}},
+    }),
+  ],
+})
+
 export const mediaExample = definePlugin(() => ({
-  schema: {types: [mediaProductType]},
+  schema: {types: [mediaProductType, mediaImageBlock, mediaPageType]},
   plugins: [media()],
 }))
