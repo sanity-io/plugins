@@ -37,9 +37,10 @@ export interface AssistFieldActionProps {
    */
   actionType: 'document' | 'field'
   /**
-   * Write-target id for Agent Actions (`drafts.` or `versions.` prefix depending
-   * on perspective). `undefined` while the target is resolving, or when the
-   * selected variant or release has no writable sibling.
+   * Write-target id for Agent Actions. Drafts and release/variant documents
+   * include a `drafts.` or `versions.` prefix; live-edit documents use the
+   * published id with no prefix. `undefined` while the target is resolving,
+   * or when the selected variant or release has no writable sibling.
    *
    * Guard this id before calling any `client.agent.action`:
    * ```ts
