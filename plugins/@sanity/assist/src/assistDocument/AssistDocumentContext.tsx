@@ -16,14 +16,14 @@ export type AssistDocumentContextValue = (
    *
    * `undefined` while the target is resolving, or when the selected variant or
    * release has no writable sibling. Can still be set while
-   * `documentIsAssistable` is false: a virtual draft after publish, and a
-   * creatable `variant-missing` target, both advertise an id used to
-   * materialize the snapshot first.
+   * `documentIsAssistable` is false: a virtual draft after publish, a creatable
+   * `variant-missing` target, and a brand-new release or live-edit document
+   * all advertise an id used to materialize the snapshot first.
    */
   assistableDocumentId: string | undefined
   /**
-   * True when a real write target exists: a `drafts.*` snapshot, the selected
-   * release version, or the published document for live-edit types.
+   * True when the pane's edit state holds the `assistableDocumentId` document,
+   * including optimistic snapshots that have not finished syncing.
    *
    * After publish, the drafts perspective can still display published values
    * (a virtual draft) while this is false because `editState.draft` is null.
