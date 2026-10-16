@@ -32,8 +32,11 @@ export function assistTasksStatusId(documentId: string) {
  * 1. `releaseId` (the selected perspective) wins and yields the version sibling.
  * 2. Live-edit types write published.
  * 3. Otherwise the draft sibling, if it exists.
- * 4. If the draft sibling is missing and a content variant is selected, the
- *    draft id advertised by the published sibling (`_system.draft`).
+ * 4. If the draft sibling is missing, only a drafts-bundle `variant-missing`
+ *    creatable target may use the advertised draft id (`creatableTarget.id`,
+ *    or `_system.draft` on the published sibling). A ready published variant
+ *    can advertise the same ref while the pane is read-only; that is not a
+ *    write target.
  * 5. Without a variant, `drafts.*` derived from `documentId` (virtual draft
  *    after publish).
  *
@@ -66,13 +69,23 @@ export function getAssistWriteDocumentId({
   if (liveEdit) {
     return targetDocumentState.siblings.published?._id
   }
-  return (
-    targetDocumentState.siblings.draft?._id ||
-    // If the draft sibling is missing, but it's a virtual draft we can use the draft id referenced from the published document.
-    (variant
-      ? targetDocumentState.siblings.published?._system?.draft?._ref
-      : getDraftId(documentId))
-  )
+
+  if (targetDocumentState.siblings.draft?._id) {
+    return targetDocumentState.siblings.draft._id
+  }
+
+  if (targetDocumentState.status === 'variant-missing' && targetDocumentState.bundle === 'drafts') {
+    return (
+      targetDocumentState.creatableTarget?.id ??
+      targetDocumentState.siblings.published?._system?.draft?._ref
+    )
+  }
+
+  if (variant) {
+    return undefined
+  }
+
+  return getDraftId(documentId)
 }
 
 /**
