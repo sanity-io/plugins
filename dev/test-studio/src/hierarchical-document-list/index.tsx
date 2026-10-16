@@ -62,5 +62,14 @@ export function hierarchicalDocumentListDeskItems(S: StructureBuilder, context: 
       referenceTo: ['hierarchyAuthor', 'hierarchyBook'],
       maxDepth: 3,
     }),
+    // Dedicated fixture for https://github.com/sanity-io/plugins/issues/1239
+    createStructureHierarchy({
+      S,
+      context,
+      title: 'Issue #1239 hierarchy hang',
+      documentId: 'issue-1239-hierarchy',
+      referenceTo: ['hierarchyAuthor', 'hierarchyBook'],
+      maxDepth: 3,
+    }),
   ]
 }
