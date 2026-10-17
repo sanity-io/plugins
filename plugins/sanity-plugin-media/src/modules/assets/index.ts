@@ -16,7 +16,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators'
 
-import {getOrderField, getOrderTitle} from '../../config/orders'
+import {getOrderField, getOrderTitle, getOrderValue} from '../../config/orders'
 import {ORDER_OPTIONS} from '../../constants'
 import debugThrottle from '../../operators/debugThrottle'
 import type {
@@ -412,8 +412,9 @@ const assetsSlice = createSlice({
     },
     sort(state) {
       state.allIds.sort((a, b) => {
-        const tagA = state.byIds[a]!.asset[state.order.field]
-        const tagB = state.byIds[b]!.asset[state.order.field]
+        const {field} = state.order
+        const tagA = getOrderValue(state.byIds[a]!.asset[field], field, state.localeIds)
+        const tagB = getOrderValue(state.byIds[b]!.asset[field], field, state.localeIds)
 
         if (tagA < tagB) {
           return state.order.direction === 'asc' ? -1 : 1
