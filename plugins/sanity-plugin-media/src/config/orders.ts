@@ -55,3 +55,24 @@ export const getOrderField = (field: string, localeIds: string[]): string => {
 
   return groq`coalesce(${localizedFieldAccessors.join(', ')})`
 }
+
+/**
+ * Client-side counterpart to `getOrderField`, used when re-sorting assets already in the store
+ * (after uploads, edits and listener updates). For localized fields it returns the first
+ * translation that isn't `null`/`undefined`, in the order the locales are declared, the same way
+ * `coalesce()` resolves it in the GROQ query, so the client and the server agree on the order.
+ */
+export const getOrderValue = <T>(value: T, field: string, localeIds: string[]): T | undefined => {
+  if (
+    localeIds.length === 0 ||
+    !LOCALIZED_ORDER_FIELDS.has(field) ||
+    typeof value !== 'object' ||
+    value === null
+  ) {
+    return value
+  }
+
+  const localizedValues = value as Record<string, T>
+
+  return localeIds.map((localeId) => localizedValues[localeId]).find((v) => v != null)
+}
