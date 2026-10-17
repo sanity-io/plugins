@@ -1,367 +1,253 @@
-import {act, cleanup, screen} from '@testing-library/react'
-import {afterEach, describe, expect, it, vi} from 'vitest'
+import {cleanup, screen, waitFor} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import {useState} from 'react'
+import {of, throwError} from 'rxjs'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
+import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
 import {createTestRootState} from '../../__tests__/fixtures/rootState'
-import {inputs} from '../../config/searchFacets'
-import {assetsActions, initialState as assetsInitialState} from '../../modules/assets'
-import type {AssetItem, AssetType, FileAsset, ImageAsset} from '../../types'
-import ReplaceAssetsOverview from './index'
+import type {ImageAsset, Tag} from '../../types'
+import {
+  REPLACEMENT_PAGE_SIZE,
+  type ReplacementQueryParams,
+} from '../../utils/constructReplacementQuery'
+import ReplaceAssetsOverview, {
+  initialReplaceAssetsFilterState,
+  type ReplaceAssetsFilterState,
+} from './index'
 
-vi.mock('../AssetGridVirtualized', () => ({
-  default: ({items}: {items: {id: string; type: string}[]}) => (
-    <div data-testid="replace-grid">
+const {fetchMock} = vi.hoisted(() => ({fetchMock: vi.fn()}))
+
+vi.mock('../../hooks/useVersionedClient', () => {
+  // `useClient` returns a stable client; a new one per render would refetch forever.
+  const client = createMockSanityClient({observable: {fetch: fetchMock}})
+  return {default: () => client}
+})
+
+vi.mock('../ReplacementAssetGrid', () => ({
+  default: ({
+    items,
+    onLoadMore,
+    onSelect,
+  }: {
+    items: ImageAsset[]
+    onLoadMore: () => void
+    onSelect: (asset: ImageAsset) => void
+  }) => (
+    <div data-testid="replacement-grid">
       {items.map((item) => (
-        <div key={item.id} data-testid={`replace-item-${item.id}`} data-type={item.type} />
+        <button key={item._id} onClick={() => onSelect(item)} type="button">
+          {item.originalFilename}
+        </button>
       ))}
+      <button onClick={onLoadMore} type="button">
+        load more
+      </button>
     </div>
   ),
 }))
 
-const foldersState = createTestRootState().folders
-
-const imageAsset = {
-  _id: 'img-1',
-  _type: 'sanity.imageAsset',
-  _createdAt: '',
-  _updatedAt: '',
-  _rev: 'r1',
-  originalFilename: 'photo.png',
-  size: 1,
-  mimeType: 'image/png',
-  url: 'https://example.com/photo.png',
-  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
-} as ImageAsset
-
-const replacementImage = {
-  ...imageAsset,
-  _id: 'img-2',
-  originalFilename: 'other.png',
-} as ImageAsset
-
-const fileAsset = {
-  _id: 'file-1',
-  _type: 'sanity.fileAsset',
-  _createdAt: '',
-  _updatedAt: '',
-  _rev: 'r1',
-  originalFilename: 'doc.pdf',
-  extension: 'pdf',
-  size: 1,
-  mimeType: 'application/pdf',
-  url: 'https://example.com/doc.pdf',
-} as FileAsset
-
-function assetItem(asset: ImageAsset | FileAsset, partial?: Partial<AssetItem>): AssetItem {
+function image(id: string, originalFilename = `${id}.png`): ImageAsset {
   return {
-    _type: 'asset',
-    asset,
-    picked: false,
-    updating: false,
-    ...partial,
-  }
+    _id: id,
+    _type: 'sanity.imageAsset',
+    originalFilename,
+    url: `https://cdn.example.com/${id}.png`,
+    metadata: {dimensions: {height: 100, width: 100}, isOpaque: true},
+  } as ImageAsset
 }
 
-function assetsState(byIds: Record<string, AssetItem>, extra?: Partial<typeof assetsInitialState>) {
-  return {
-    ...assetsInitialState,
-    assetTypes: ['file', 'image'] as AssetType[],
-    allIds: Object.keys(byIds),
-    byIds,
-    fetchCount: Object.keys(byIds).length,
-    ...extra,
-  }
+const tag = {_id: 'tag-1', _type: 'media.tag', name: {_type: 'slug', current: 'campaign'}} as Tag
+
+type FetchParams = ReplacementQueryParams
+
+function lastFetchParams(): FetchParams {
+  return fetchMock.mock.lastCall?.[1] as FetchParams
+}
+
+const noop = () => {}
+
+function Harness({
+  initialFilterState = initialReplaceAssetsFilterState,
+  onSelect = noop,
+}: {
+  initialFilterState?: ReplaceAssetsFilterState
+  onSelect?: (asset: ImageAsset) => void
+}) {
+  const [filterState, setFilterState] = useState(initialFilterState)
+  return (
+    <ReplaceAssetsOverview
+      assetToReplaceId="image-original"
+      filterState={filterState}
+      onFilterStateChange={setFilterState}
+      onSelect={onSelect}
+    />
+  )
 }
 
 describe('ReplaceAssetsOverview', () => {
+  beforeEach(() => {
+    fetchMock.mockReset()
+    fetchMock.mockImplementation(() => of([image('image-a'), image('image-b')]))
+  })
+
   afterEach(() => {
     cleanup()
   })
 
-  it('lists only other image assets as replace candidates', () => {
-    renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        assets: assetsState(
-          {
-            'img-1': assetItem(imageAsset, {picked: true}),
-            'img-2': assetItem(replacementImage),
-            'file-1': assetItem(fileAsset),
-          },
-          {lastPicked: undefined},
-        ),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-        uploads: {
-          allIds: ['upload-1'],
-          byIds: {},
-        },
-      },
+  it('starts a fresh search that ignores the browser search, facets and folder', async () => {
+    const preloaded = createTestRootState({
+      search: {facets: [], query: 'browser query'},
     })
+    preloaded.folders.currentFolderId = 'folder-browser'
 
-    expect(screen.getByTestId('replace-item-img-2')).toBeTruthy()
-    expect(screen.queryByTestId('replace-item-img-1')).toBeNull()
-    expect(screen.queryByTestId('replace-item-file-1')).toBeNull()
-    expect(screen.queryByTestId('replace-item-upload-1')).toBeNull()
+    const {store} = renderWithProviders(<Harness />, {preloaded})
+
+    expect(await screen.findByText('image-a.png')).toBeTruthy()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    const [query] = fetchMock.mock.lastCall as [string, FetchParams]
+    expect(query).not.toContain('browser query')
+    expect(lastFetchParams()).toEqual({assetToReplaceId: 'image-original', end: 100, start: 0})
+
+    // The browser's own state is left alone.
+    expect(store.getState().search.query).toBe('browser query')
+    expect(store.getState().folders.currentFolderId).toBe('folder-browser')
   })
 
-  it('excludes the dialog target even when lastPicked is stale/cleared', () => {
-    renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        assets: assetsState(
-          {
-            'img-1': assetItem(imageAsset, {picked: true}),
-            'img-2': assetItem(replacementImage),
-          },
-          {lastPicked: undefined},
-        ),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-      },
-    })
+  it('searches with the typed text after a short debounce', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />)
+    await screen.findByText('image-a.png')
 
-    expect(screen.queryByTestId('replace-item-img-1')).toBeNull()
-    expect(screen.getByTestId('replace-item-img-2')).toBeTruthy()
+    fetchMock.mockImplementation(() => of([image('image-c', 'match.png')]))
+    await user.type(screen.getByRole('textbox', {name: 'Search images'}), 'match')
+
+    expect(await screen.findByText('match.png')).toBeTruthy()
+    expect(lastFetchParams().searchPattern).toBe('*match*')
+    // Typing is debounced into a single search request.
+    expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
-  it('shows empty state when the only image is the one being replaced', () => {
-    renderWithProviders(<ReplaceAssetsOverview />, {
+  it('filters by tag', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />, {
       preloaded: {
-        assets: assetsState({
-          'img-1': assetItem(imageAsset, {picked: true}),
-          'file-1': assetItem(fileAsset),
-        }),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
+        tags: {
+          ...createTestRootState().tags,
+          allIds: ['tag-1'],
+          byIds: {'tag-1': {_type: 'tag', picked: false, tag, updating: false}},
         },
       },
     })
+    await screen.findByText('image-a.png')
 
-    expect(screen.getByText('There are no replacement images')).toBeTruthy()
-    expect(screen.queryByTestId('replace-grid')).toBeNull()
+    await user.selectOptions(screen.getByRole('combobox', {name: 'Filter by tag'}), 'tag-1')
+
+    await waitFor(() => expect(lastFetchParams().tagId).toBe('tag-1'))
   })
 
-  it('clears the folder scope on open and restores it on close', () => {
-    const {store, unmount} = renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: false})}),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-        folders: {...foldersState, currentFolderId: 'folder-1'},
-      },
-    })
+  it('filters by folder, listing nested folders by path', async () => {
+    const user = userEvent.setup()
+    const preloaded = createTestRootState()
+    preloaded.folders.byId = {
+      parent: {_id: 'parent', name: 'Campaigns', parentId: null},
+      child: {_id: 'child', name: '2024', parentId: 'parent'},
+    }
+    preloaded.folders.rootIds = ['parent']
+    preloaded.folders.childrenByParentId = {parent: ['child']}
 
-    expect(store.getState().folders.currentFolderId).toBeNull()
+    renderWithProviders(<Harness />, {preloaded})
+    await screen.findByText('image-a.png')
 
-    unmount()
+    const folderSelect = screen.getByRole('combobox', {name: 'Filter by folder'})
+    expect(screen.getByRole('option', {name: 'Campaigns/2024'})).toBeTruthy()
 
-    expect(store.getState().folders.currentFolderId).toBe('folder-1')
-    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
+    await user.selectOptions(folderSelect, 'child')
+
+    await waitFor(() => expect(lastFetchParams().folderId).toBe('child'))
   })
 
-  it('clears the browser search and facets on open', () => {
-    const {store} = renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-        search: {facets: [{...inputs.title, id: 'facet-1'}], query: 'photo'},
-      },
-    })
+  it('hides the tag and folder filters when there are none', async () => {
+    renderWithProviders(<Harness />)
+    await screen.findByText('image-a.png')
 
-    expect(store.getState().search.query).toBe('')
-    expect(store.getState().search.facets).toHaveLength(0)
+    expect(screen.queryByRole('combobox', {name: 'Filter by tag'})).toBeNull()
+    expect(screen.queryByRole('combobox', {name: 'Filter by folder'})).toBeNull()
   })
 
-  it('restores the search and the cleared pick when the dialog closes', () => {
-    const facet = {...inputs.title, id: 'facet-1'}
-    const {store, unmount} = renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        // `assetsUnpickEpic` clears picks whenever the search changes.
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: false})}),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-        search: {facets: [facet], query: 'photo'},
-      },
-    })
+  it('shows the no-replacements message when there are no other images', async () => {
+    fetchMock.mockImplementation(() => of([]))
+    renderWithProviders(<Harness />)
 
-    unmount()
-
-    expect(store.getState().search.query).toBe('photo')
-    expect(store.getState().search.facets).toHaveLength(1)
-    expect(store.getState().search.facets[0]!.name).toBe('title')
-    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
+    expect(await screen.findByText('There are no replacement images')).toBeTruthy()
+    expect(screen.queryByRole('button', {name: 'Clear search and filters'})).toBeNull()
   })
 
-  it('leaves the pick alone when no filters were active', () => {
-    const {store, unmount} = renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-      },
-    })
+  it('offers to clear the search when nothing matches', async () => {
+    const user = userEvent.setup()
+    fetchMock.mockImplementation((_query: string, params: FetchParams) =>
+      of(params.searchPattern ? [] : [image('image-a')]),
+    )
+    renderWithProviders(
+      <Harness initialFilterState={{...initialReplaceAssetsFilterState, searchInput: 'nothing'}} />,
+    )
 
-    unmount()
+    expect(await screen.findByText('No images match your search')).toBeTruthy()
 
-    expect(store.getState().search.query).toBe('')
-    expect(store.getState().search.facets).toHaveLength(0)
-    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
+    await user.click(screen.getByRole('button', {name: 'Clear search and filters'}))
+
+    expect(await screen.findByText('image-a.png')).toBeTruthy()
+    expect(screen.getByRole<HTMLInputElement>('textbox', {name: 'Search images'}).value).toBe('')
   })
 
-  it('does not flash the empty state while the unfiltered refetch is pending', () => {
-    renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        // Filtered page held only the asset being replaced, and was a partial page.
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-        search: {facets: [], query: 'photo'},
-      },
-    })
+  it('loads the next page when more results are available', async () => {
+    const user = userEvent.setup()
+    const firstPage = Array.from({length: REPLACEMENT_PAGE_SIZE}, (_, index) =>
+      image(`image-${index}`),
+    )
+    fetchMock.mockImplementation((_query: string, params: FetchParams) =>
+      of(params.start === 0 ? firstPage : [image('image-last', 'last.png')]),
+    )
+    renderWithProviders(<Harness />)
+    await screen.findByText('image-0.png')
 
-    expect(screen.queryByText('There are no replacement images')).toBeNull()
+    await user.click(screen.getByRole('button', {name: 'load more'}))
+
+    expect(await screen.findByText('last.png')).toBeTruthy()
+    expect(lastFetchParams()).toMatchObject({end: 200, start: 100})
+    expect(screen.getByText('image-0.png')).toBeTruthy()
   })
 
-  it('shows the empty state once the unfiltered refetch completes with no candidates', () => {
-    const {store} = renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-        search: {facets: [], query: 'photo'},
-      },
-    })
+  it('does not request another page after a short page', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />)
+    await screen.findByText('image-a.png')
 
-    expect(screen.queryByText('There are no replacement images')).toBeNull()
+    await user.click(screen.getByRole('button', {name: 'load more'}))
 
-    act(() => {
-      store.dispatch(assetsActions.clear())
-      store.dispatch(assetsActions.fetchRequest({queryFilter: ''}))
-      store.dispatch(assetsActions.fetchComplete({assets: [imageAsset]}))
-    })
-
-    expect(screen.getByText('There are no replacement images')).toBeTruthy()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
-  it('loads the next page while a full page holds no replacement candidates', () => {
-    const actions: {type: string}[] = []
-    renderWithProviders(<ReplaceAssetsOverview />, {
-      onAction: (action) => actions.push(action),
-      preloaded: {
-        assets: assetsState(
-          {'img-1': assetItem(imageAsset, {picked: true})},
-          {fetchCount: assetsInitialState.pageSize},
-        ),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-      },
-    })
+  it('shows an error with a retry button when loading fails', async () => {
+    const user = userEvent.setup()
+    fetchMock.mockImplementationOnce(() => throwError(() => new Error('Network down')))
+    renderWithProviders(<Harness />)
 
-    expect(actions.some((action) => action.type === assetsActions.loadNextPage.type)).toBe(true)
+    expect(await screen.findByText(/Network down/)).toBeTruthy()
+
+    await user.click(screen.getByRole('button', {name: 'Try again'}))
+
+    expect(await screen.findByText('image-a.png')).toBeTruthy()
   })
 
-  it('stops paging when the last fetch failed', () => {
-    const actions: {type: string}[] = []
-    renderWithProviders(<ReplaceAssetsOverview />, {
-      onAction: (action) => actions.push(action),
-      preloaded: {
-        assets: assetsState(
-          {'img-1': assetItem(imageAsset, {picked: true})},
-          {
-            fetchCount: assetsInitialState.pageSize,
-            fetchingError: {message: 'Internal error', statusCode: 500},
-          },
-        ),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-      },
-    })
+  it('passes the chosen image to onSelect', async () => {
+    const user = userEvent.setup()
+    const onSelect = vi.fn()
+    renderWithProviders(<Harness onSelect={onSelect} />)
 
-    expect(actions.some((action) => action.type === assetsActions.loadNextPage.type)).toBe(false)
-  })
+    await user.click(await screen.findByText('image-b.png'))
 
-  it('resolves the wait when a fetch in flight on open is replaced by the rescoped one', () => {
-    const {store} = renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}, {fetching: true}),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-        search: {facets: [], query: 'photo'},
-      },
-    })
-
-    expect(screen.queryByText('There are no replacement images')).toBeNull()
-
-    act(() => {
-      // `assetsFetchEpic` uses switchMap, so `fetching` never drops between the two fetches.
-      store.dispatch(assetsActions.clear())
-      store.dispatch(assetsActions.fetchRequest({queryFilter: ''}))
-      store.dispatch(assetsActions.fetchComplete({assets: [imageAsset]}))
-    })
-
-    expect(screen.getByText('There are no replacement images')).toBeTruthy()
-  })
-
-  it('keeps waiting when a second rescoped refetch follows the first', () => {
-    const {store} = renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-        // Folder scope clears immediately, the search clear lands after its debounce.
-        folders: {...foldersState, currentFolderId: 'folder-1'},
-        search: {facets: [], query: 'photo'},
-      },
-    })
-
-    act(() => {
-      store.dispatch(assetsActions.clear())
-      store.dispatch(assetsActions.fetchRequest({queryFilter: ''}))
-      store.dispatch(assetsActions.fetchComplete({assets: [imageAsset]}))
-    })
-
-    expect(screen.getByText('There are no replacement images')).toBeTruthy()
-
-    act(() => {
-      store.dispatch(assetsActions.clear())
-    })
-
-    expect(screen.queryByText('There are no replacement images')).toBeNull()
-
-    act(() => {
-      store.dispatch(assetsActions.fetchRequest({queryFilter: ''}))
-      store.dispatch(assetsActions.fetchComplete({assets: [imageAsset, replacementImage]}))
-    })
-
-    expect(screen.getByTestId('replace-item-img-2')).toBeTruthy()
-  })
-
-  it('excludes the replace target from dialog assetId even when picks were cleared', () => {
-    renderWithProviders(<ReplaceAssetsOverview />, {
-      preloaded: {
-        assets: assetsState({
-          'img-1': assetItem(imageAsset, {picked: false}),
-          'img-2': assetItem(replacementImage),
-        }),
-        dialog: {
-          items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-        },
-      },
-    })
-
-    expect(screen.queryByTestId('replace-item-img-1')).toBeNull()
-    expect(screen.getByTestId('replace-item-img-2')).toBeTruthy()
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({_id: 'image-b'}))
   })
 })
