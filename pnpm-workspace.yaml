@@ -87,7 +87,7 @@ catalog:
   typescript: 7.0.2
   valibot: ^1.5.0
   validate-npm-package-name: ^8.0.0
-  video.js: ^7.21.7
+  video.js: ^10.1.0
   vitest: ^4.1.11
   xstate: ^5.33.2
 
