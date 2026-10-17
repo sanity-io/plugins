@@ -61,6 +61,7 @@ const AssetMetadata = (props: Props) => {
           <Row label="MIME type" value={asset?.mimeType} />
           <Row label="Extension" value={asset?.extension?.toUpperCase()} />
           {isImageAsset(asset) && <Row label="Dimensions" value={getAssetResolution(asset)} />}
+          <Row label="Uploaded" value={format(new Date(asset._createdAt), 'PPp')} />
         </Stack>
       </Box>
       {/* EXIF */}
